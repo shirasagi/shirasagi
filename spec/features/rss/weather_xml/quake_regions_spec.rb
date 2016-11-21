@@ -37,8 +37,8 @@ describe 'rss_weather_xml_regions', dbscope: :example do
       click_on '保存'
       expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
 
-      expect(Rss::WeatherXml::QuakeRegion.count).to eq 1
-      Rss::WeatherXml::QuakeRegion.first.tap do |region|
+      expect(Jmaxml::QuakeRegion.count).to eq 1
+      Jmaxml::QuakeRegion.first.tap do |region|
         expect(region.name).to eq name0
         expect(region.code).to eq code
       end
@@ -52,7 +52,7 @@ describe 'rss_weather_xml_regions', dbscope: :example do
       click_on '保存'
       expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
 
-      Rss::WeatherXml::QuakeRegion.first.tap do |region|
+      Jmaxml::QuakeRegion.first.tap do |region|
         expect(region.name).to eq name1
       end
 

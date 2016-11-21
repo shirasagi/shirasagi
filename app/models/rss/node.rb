@@ -31,7 +31,7 @@ module Rss::Node
     include Cms::Addon::Meta
     include Rss::Addon::PubSubHubbub
     include Rss::Addon::AnpiMailSetting
-    include Rss::Addon::WeatherXml::Filter
+    include Jmaxml::Addon::Filter
     include Cms::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission

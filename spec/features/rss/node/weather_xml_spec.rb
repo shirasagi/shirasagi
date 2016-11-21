@@ -21,7 +21,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
     let(:name1) { unique_id }
     let(:rss_link) { "http://example.jp/#{unique_id}.html" }
     let(:html) { "<p>#{unique_id}</p>" }
-    let(:xml) { File.read(Rails.root.join(*%w(spec fixtures rss 9b43a982-fecf-3866-95e7-c375226a7c87.xml))) }
+    let(:xml) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 9b43a982-fecf-3866-95e7-c375226a7c87.xml))) }
 
     before { login_cms_user }
 

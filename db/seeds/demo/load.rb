@@ -1249,15 +1249,15 @@ save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組�
 ## -------------------------------------
 puts "# weather xml"
 
-Rss::WeatherXml::QuakeRegionImportJob.import_from_zip("weather_xml_regions/quake_regions.zip", site_id: @site)
-Rss::WeatherXml::TsunamiRegionImportJob.import_from_zip("weather_xml_regions/tsunami_regions.zip", site_id: @site)
-Rss::WeatherXml::ForecastRegionImportJob.import_from_zip("weather_xml_regions/forecaset_regions.zip", site_id: @site)
-Rss::WeatherXml::FloodRegionImportJob.import_from_zip("weather_xml_regions/flood_regions.zip", site_id: @site)
-Rss::WeatherXml::FloodRegionImportJob.import_from_zip("weather_xml_regions/water_level_stations.zip", site_id: @site)
+Jmaxml::QuakeRegionImportJob.import_from_zip("weather_xml_regions/quake_regions.zip", site_id: @site)
+Jmaxml::TsunamiRegionImportJob.import_from_zip("weather_xml_regions/tsunami_regions.zip", site_id: @site)
+Jmaxml::ForecastRegionImportJob.import_from_zip("weather_xml_regions/forecaset_regions.zip", site_id: @site)
+Jmaxml::FloodRegionImportJob.import_from_zip("weather_xml_regions/flood_regions.zip", site_id: @site)
+Jmaxml::WaterLevelStationImportJob.import_from_zip("weather_xml_regions/water_level_stations.zip", site_id: @site)
 
 save_node route: "rss/weather_xml", filename: "weather", name: "気象庁防災XML", layout_id: layouts["one"].id,
   page_state: "closed", earthquake_intensity: "5+", anpi_mail_id: ezine_anpi.id, my_anpi_post_id: anpi_node.id,
-  target_region_ids: %w(350 351 352).map { |code| Rss::WeatherXml::QuakeRegion.site(@site).find_by(code: code).id }
+  target_region_ids: %w(350 351 352).map { |code| Jmaxml::QuakeRegion.site(@site).find_by(code: code).id }
 
 ## -------------------------------------
 puts "# max file size"

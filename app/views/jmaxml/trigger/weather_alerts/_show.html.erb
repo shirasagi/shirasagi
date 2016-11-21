@@ -1,0 +1,18 @@
+<h2><%= @item.class.model_name.human %></h2>
+
+<dl class="see mod-rss-weather-xml-trigger-weather-alert">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :training_status %></dt>
+  <dd><%= @item.label :training_status %></dd>
+
+  <dt><%= @model.t :test_status %></dt>
+  <dd><%= @item.label :test_status %></dd>
+
+  <dt><%= @model.t :sub_types %></dt>
+  <dd><%= br @item.sub_types.select(&:present?).map { |sub_type| I18n.t("jmaxml.options.weather_alert_sub_type.#{sub_type}") }.join("\n") %></dd>
+
+  <dt><%= @model.t :target_region_ids %></dt>
+  <dd><%= br @item.target_regions.pluck(:name).join("\n") %></dd>
+</dl>

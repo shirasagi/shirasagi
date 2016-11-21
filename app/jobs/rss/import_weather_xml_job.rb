@@ -89,7 +89,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
       xmldoc = REXML::Document.new(page.xml)
       status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()').to_s.strip
-      return if status != Rss::WeatherXml::Status::NORMAL
+      return if status != Jmaxml::Status::NORMAL
 
       info_kind = REXML::XPath.first(xmldoc, '/Report/Head/InfoKind/text()').to_s.strip
       return if info_kind != '震度速報'
@@ -114,7 +114,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
           area_code = area.elements['Code'].text
           area_max_int = area.elements['MaxInt'].text
 
-          region = Rss::WeatherXml::QuakeRegion.site(site).where(code: area_code).first
+          region = Jmaxml::QuakeRegion.site(site).where(code: area_code).first
           next if region.blank?
 
           next unless node.target_region_ids.include?(region.id)

@@ -1,0 +1,520 @@
+ja:
+  jmaxml:
+    region: 気象庁区域
+    manage_filter: フィルターを管理する
+
+    options:
+      weather_alert_sub_type:
+        special_alert: 特別警報
+        alert: 警報
+        warning: 注意報
+      ash_fall_sub_type:
+        flash: 速報
+        regular: 定時
+        detail: 詳細
+    apis:
+      quake_regions:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
+      tsunami_regions:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
+      forecast_regions:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
+      flood_regions:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
+      water_level_stations:
+        index: 水位観測所を選択する
+        search: 水位観測所を検索
+        select: 水位観測所を設定する
+    templates:
+      status: "【#{status}】"
+      info_type: "【#{info_type}】"
+      cancel_html: "<div class=\"jmaxml cancel\">#{headline_text}</div>"
+      quake:
+        title: "#{title}"
+        upper_text: "#{target_time}ごろ地震がありました。\n各地の震度は下記の通りです。"
+        loop_text: "#{area_name}：震度 #{intensity_label}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml quake\">"
+          - "  <h2>#{target_time}ごろ地震がありました。</h2>"
+          - "  <p>各地の震度は下記の通りです。</p>"
+          - "  <ul>"
+        loop_html:
+          - "    <li>#{area_name}：震度 #{intensity_label}</li>"
+        lower_html:
+          - "  </ul>"
+          - "  <div>"
+          - "    <h2>震源</h2>"
+          - "    <dl>"
+          - "      <dt>震源地</dt><dd>#{hypocenter_area_name} #{hypocenter_area_namefrommark}</dd>"
+          - "      <dt>座標・深さ</dt><dd>#{hypocenter_coordinate}</dd>"
+          - "      <dt>マグニチュード</dt><dd>#{earthquake_magnitude}</dd>"
+          - "    </dl>"
+          - "  </div>"
+          - "  <p>#{forecast_comment}</p>"
+          - "</div>"
+      tsunami:
+        title: "#{title}"
+        upper_text:
+          - "#{headline_text}"
+        loop_text:
+          - "#{area_name}：#{category_name}　第1波 #{first_height_label}　高さ #{tsunami_height}"
+        lower_text:
+          - "関連する地震情報"
+          - "地震発生時刻：#{earthquake_origin_time}"
+          - "震源地：#{hypocenter_area_name} #{hypocenter_name_from_mark}"
+          - "座標・深さ：#{hypocenter_coordinate}"
+          - "マグニチュード：#{earthquake_magnitude}"
+          - ""
+          - "#{warning_comment}"
+        upper_html:
+          - "<div class=\"jmaxml tsunami\">"
+          - "  <p>#{headline_text}</p>"
+          - "  <table>"
+          - "  <thead>"
+          - "    <tr><td>地域</td><td>警報・注意報</td><td>第1波</td><td>高さ</td></tr>"
+          - "  </thead>"
+          - "  <tbody>"
+        loop_html:
+          - "    <tr><td>#{area_name}</td><td>#{category_name}</td><td>#{first_height_label}</td><td>#{tsunami_height}</td></tr>"
+        lower_html:
+          - "  </tbody>"
+          - "  </table>"
+          - "  <div>"
+          - "    <h2>関連する地震情報</h2>"
+          - "    <dl>"
+          - "      <dt>地震発生時刻</dt><dd>#{earthquake_origin_time}</dd>"
+          - "      <dt>震源地</dt><dd>#{hypocenter_area_name} #{hypocenter_name_from_mark}</dd>"
+          - "      <dt>座標・深さ</dt><dd>#{hypocenter_coordinate}</dd>"
+          - "      <dt>マグニチュード</dt><dd>#{earthquake_magnitude}</dd>"
+          - "    </dl>"
+          - "  </div>"
+          - "  <p>#{warning_comment}</p>"
+          - "</div>"
+      forecase:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - ""
+          - "#{headline_text}"
+          - ""
+        loop_text:
+          - "＜#{area_name}＞"
+          - "#{kind_names}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml forecast\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{headline_text}</p>"
+          - "  <table>"
+          - "  <thead>"
+          - "    <tr><td>市町村</td><td>警報・注意報</td></tr>"
+          - "  </thead>"
+          - "  <tbody>"
+        loop_html:
+          - "    <tr><td>#{area_name}</td><td>#{kind_names}</td></tr>"
+        lower_html:
+          - "  </tbody>"
+          - "  </table>"
+          - "</div>"
+      flood:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - ""
+          - "#{headline_text}"
+          - ""
+        loop_text:
+          - "＜#{river_name}＞#{kind_name}　#{kind_condition}"
+          - "#{main_sentence}"
+          - ""
+          - "水位観測所：#{station_name}（#{station_location}）"
+          - ""
+        lower_text:
+          - "#{rainfall_text}"
+        upper_html:
+          - "<div class=\"jmaxml flood\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{headline_text}</p>"
+        loop_html:
+          - "  <dl>"
+          - "    <dt>河川</dt><dd>#{river_name}</dd>"
+          - "    <dt>発表種別</dt><dd>#{kind_name}</dd>"
+          - "    <dt>洪水予報種別</dt><dd>#{kind_condition}</dd>"
+          - "    <dt>内容</dt><dd>#{main_sentence}</dd>"
+          - "    <dt>水位観測所</dt><dd>#{station_name}（#{station_location}）</dd>"
+          - "  </dl>"
+        lower_html:
+          - "  <p>#{rainfall_text}</p>"
+          - "</div>"
+      landslide:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - ""
+          - "#{headline_text}"
+          - ""
+        loop_text:
+          - "#{kind_name}：#{area_names}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml landslide\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{headline_text}</p>"
+          - "  <table>"
+          - "  <thead>"
+          - "    <tr><td>発表種別</td><td>市町村</td></tr>"
+          - "  </thead>"
+          - "  <tbody>"
+        loop_html:
+          - "    <tr><td>#{kind_name}</td><td>#{area_names}</td></tr>"
+        lower_html:
+          - "  </tbody>"
+          - "  </table>"
+          - "</div>"
+      volcano:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - "#{volcano_headline}"
+          - "#{volcano_activity}"
+          - ""
+          - "対象市町村"
+        loop_text:
+          - "・#{area_name}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml volcano\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{volcano_headline}</p>"
+          - "  <p>#{volcano_activity}</p>"
+          - "  <p>対象市町村</p>"
+          - "  <ul>"
+        loop_html:
+          - "    <li>#{area_name}</li>"
+        lower_html:
+          - "  </ul>"
+          - "</div>"
+      ash_fall:
+        title: "#{head_title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - ""
+          - "#{headline_text}"
+          - ""
+        loop_text:
+          - "＜#{kind_name}＞"
+          - "#{area_names}"
+          - ""
+        lower_text:
+          - "#{volcano_activity}"
+          - ""
+          - "#{volcano_prevention}"
+          - ""
+          - "#{appendix}"
+        upper_html:
+          - "<div class=\"jmaxml ashfall\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{headline_text}</p>"
+          - "  <p>降灰予報</p>"
+          - "  <table>"
+          - "  <thead>"
+          - "    <tr><td>予報</td><td>市町村</td></tr>"
+          - "  </thead>"
+          - "  <tbody>"
+        loop_html:
+          - "    <tr><td>#{kind_name}</td><td>#{area_names}</td></tr>"
+        lower_html:
+          - "  </tbody>"
+          - "  </table>"
+          - "  <div>"
+          - "    <p>#{volcano_activity}</p>"
+          - "    <p>#{volcano_prevention}</p>"
+          - "    <p>#{appendix}</p>"
+          - "  </div>"
+          - "</div>"
+      tornado:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - ""
+          - "#{headline_text}"
+          - ""
+          - "対象市町村"
+        loop_text:
+          - "#{area_name}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml tornado\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{headline_text}</p>"
+          - "  <p>対象市町村</p>"
+          - "  <ul>"
+        loop_html:
+          - "    <li>#{area_name}</li>"
+        lower_html:
+          - "  </ul>"
+          - "</div>"
+
+  modules:
+    jmaxml: 気象庁防災情報XML
+    addons:
+      jmaxml/filter: フィルター
+
+  cms:
+    nodes:
+
+  job:
+    models:
+      jmaxml/quake_region_import_job: 地震情報区域取込
+      jmaxml/tsunami_region_import_job: 津波予報区取込
+      jmaxml/forecast_region_import_job: 気象情報区域取込
+      jmaxml/flood_region_import_job: 河川洪水予報区域取込
+      jmaxml/water_level_station_import_job: 水観測所取込
+
+  mongoid:
+    models:
+      jmaxml/quake_region: 地震情報区域
+      jmaxml/tsunami_region: 津波予報区
+      jmaxml/forecast_region: 気象情報区域
+      jmaxml/flood_region: 河川洪水予報区域
+      jmaxml/water_level_station: 水位観測所
+      jmaxml/trigger/base: 受信条件
+      jmaxml/trigger/quake_intensity_flash: 震度速報
+      jmaxml/trigger/quake_info: 震源・震度に関する情報
+      jmaxml/trigger/tsunami_alert: 津波警報・注意報・予報
+      jmaxml/trigger/tsunami_info: 津波情報
+      jmaxml/trigger/weather_alert: 気象特別警報・警報
+      jmaxml/trigger/landslide_info: 土砂災害警戒情報
+      jmaxml/trigger/flood_forecast: 指定河川洪水予報
+      jmaxml/trigger/volcano_flash: 噴火速報
+      jmaxml/trigger/ash_fall_forecast: 降灰予報
+      jmaxml/trigger/tornado_alert: 竜巻注意情報
+      jmaxml/action/base: 受信時の動作
+      jmaxml/action/publish_page: 記事ページ作成
+      jmaxml/action/send_mail: メール送信
+      jmaxml/action/switch_urgency: 緊急災害レイアウト切替
+    attributes:
+      jmaxml/quake_region:
+        code: コード
+        name: 名称
+        yomi: よみ
+        order: 並び順
+        state: 状態
+      jmaxml/tsunami_region:
+        code: コード
+        name: 名称
+        yomi: よみ
+        order: 並び順
+        state: 状態
+      jmaxml/forecast_region:
+        code: コード
+        name: 名称
+        yomi: よみ
+        short_name: 短い名称
+        short_yomi: 短い名称のよみ
+        order: 並び順
+        state: 状態
+      jmaxml/flood_region:
+        code: コード
+        name: 名称
+        yomi: よみ
+        order: 並び順
+        state: 状態
+      jmaxml/water_level_station:
+        code: コード
+        name: 名称
+        region_name: 予報区域名
+        order: 並び順
+        state: 状態
+      jmaxml/trigger/base:
+        in_type: 種別
+        name: 名前
+        training_status: 訓練XML
+        test_status: 試験XML
+      jmaxml/trigger/quake_intensity_flash:
+        earthquake_intensity: 震度
+        target_region_ids: 対象区域
+      jmaxml/trigger/quake_info:
+        earthquake_intensity: 震度
+        target_region_ids: 対象区域
+      jmaxml/trigger/tsunami_alert:
+        target_region_ids: 対象区域
+      jmaxml/trigger/tsunami_info:
+        target_region_ids: 対象区域
+      jmaxml/trigger/weather_alert:
+        sub_types: 種類
+        target_region_ids: 対象区域
+      jmaxml/trigger/landslide_info:
+        target_region_ids: 対象区域
+      jmaxml/trigger/flood_forecast:
+        target_region_ids: 対象区域
+      jmaxml/trigger/volcano_flash:
+        target_region_ids: 対象区域
+      jmaxml/trigger/ash_fall_forecast:
+        sub_types: 種類
+        target_region_ids: 対象区域
+      jmaxml/trigger/tornado_alert:
+        target_region_ids: 対象区域
+      jmaxml/action/base:
+        in_type: 種別
+        name: 名前
+      jmaxml/action/publish_page:
+        publish_to_id: フォルダー
+        publish_state: 公開状態
+      jmaxml/action/switch_urgency:
+        urgency_layout_id: 緊急災害レイアウト
+
+  tooltip:
+    jmaxml/quake_region:
+      code:
+        - 区域コードを指定します。
+      name:
+        - 区域の名称を指定します。
+      yomi:
+        - 区域の名称のよみを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    jmaxml/tsunami_region:
+      code:
+        - 予報区コードを指定します。
+      name:
+        - 予報区の名称を指定します。
+      yomi:
+        - 予報区の名称のよみを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    jmaxml/forecast_region:
+      code:
+        - 区域コードを指定します。
+      name:
+        - 区域の名称を指定します。
+      yomi:
+        - 区域の名称のよみを指定します。
+      short_name:
+        - 区域の短い名称を指定します。
+      short_yomi:
+        - 区域の短い名称のよみを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    jmaxml/flood_region:
+      code:
+        - 区域コードを指定します。
+      name:
+        - 区域の名称を指定します。
+      yomi:
+        - 区域の名称のよみを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    jmaxml/water_level_station:
+      code:
+        - 水位観測所コードを指定します。
+      name:
+        - 水位観測所の名称を指定します。
+      region_name:
+        - 予報区域名を指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    jmaxml/trigger/base:
+      in_type:
+        - 受信条件の種別を選択します。
+      name:
+        - 名前を指定します。
+      training_status:
+        - 訓練XMLを対象とするかどうかを選択します。
+        - 有効を選択した場合、訓練XMLを受信した場合にも受信時の動作が実行されます。
+      test_status:
+        - 試験XMLを対象とするかどうかを選択します。
+        - 有効を選択した場合、試験XMLを受信した場合にも受信時の動作が実行されます。
+
+    jmaxml/trigger/quake_intensity_flash:
+      earthquake_intensity:
+        - 震度を選択します。
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/quake_info:
+      earthquake_intensity:
+        - 震度を選択します。
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/tsunami_alert:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/tsunami_info:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/weather_alert:
+      sub_types:
+        - 種類を選択します。
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/landslide_info:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/flood_forecast:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/volcano_flash:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/ash_fall_forecast:
+      sub_types:
+        - 種類を選択します。
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/trigger/tornado_alert:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/action/base:
+      in_type:
+        - 受信時の動作の種別を選択します。
+      name:
+        - 名前を指定します。
+
+    jmaxml/action/publish_page:
+      publish_to_id:
+        - 記事ページを作成するフォルダーを選択します。
+      publish_state:
+        - 作成した記事ページの公開状態を選択します。
+
+    jmaxml/action/switch_urgency:
+      urgency_layout_id:
+        - 緊急災害レイアウトを選択します。

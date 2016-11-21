@@ -15,12 +15,12 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
   context "when importing weather sample xml" do
     let(:site) { cms_site }
-    let(:filepath) { Rails.root.join(*%w(spec fixtures rss weather-sample.xml)) }
+    let(:filepath) { Rails.root.join(*%w(spec fixtures jmaxml weather-sample.xml)) }
     let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed') }
     let(:file) { Rss::TempFile.create_from_post(site, File.read(filepath), 'application/xml+rss') }
     let(:model) { Rss::WeatherXmlPage }
-    let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss afeedc52-107a-3d1d-9196-b108234d6e0f.xml))) }
-    let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures rss 2b441518-4e79-342c-a271-7c25597f3a69.xml))) }
+    let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml afeedc52-107a-3d1d-9196-b108234d6e0f.xml))) }
+    let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 2b441518-4e79-342c-a271-7c25597f3a69.xml))) }
 
     before do
       stub_request(:get, 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').
@@ -56,7 +56,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
   context "when importing earthquake sample xml and sending anpi mail" do
     let(:site) { cms_site }
-    let(:filepath) { Rails.root.join(*%w(spec fixtures rss earthquake-sample-1.xml)) }
+    let(:filepath) { Rails.root.join(*%w(spec fixtures jmaxml earthquake-sample-1.xml)) }
     let(:node) do
       create(
         :rss_node_weather_xml,
@@ -79,7 +79,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     let(:node_my_anpi_post) { create(:member_node_my_anpi_post, cur_site: site) }
     let(:file) { Rss::TempFile.create_from_post(site, File.read(filepath), 'application/xml+rss') }
     let(:model) { Rss::WeatherXmlPage }
-    let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 9b43a982-fecf-3866-95e7-c375226a7c87.xml))) }
+    let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 9b43a982-fecf-3866-95e7-c375226a7c87.xml))) }
 
     before do
       stub_request(:get, 'http://xml.kishou.go.jp/data/9b43a982-fecf-3866-95e7-c375226a7c87.xml').
@@ -148,7 +148,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
   context "when 2011 tohoku earthquake is given" do
     let(:site) { cms_site }
-    let(:filepath) { Rails.root.join(*%w(spec fixtures rss earthquake-sample-2.xml)) }
+    let(:filepath) { Rails.root.join(*%w(spec fixtures jmaxml earthquake-sample-2.xml)) }
     let(:node) do
       create(
         :rss_node_weather_xml,
@@ -171,7 +171,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     let(:node_my_anpi_post) { create(:member_node_my_anpi_post, cur_site: site) }
     let(:file) { Rss::TempFile.create_from_post(site, File.read(filepath), 'application/xml+rss') }
     let(:model) { Rss::WeatherXmlPage }
-    let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_32-39_11_120615_01shindosokuhou3.xml))) }
+    let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
 
     before do
       stub_request(:get, 'http://xml.kishou.go.jp/data/70_32-39_11_120615_01shindosokuhou3.xml').

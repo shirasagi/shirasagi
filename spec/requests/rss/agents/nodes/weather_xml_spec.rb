@@ -23,7 +23,7 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
     end
 
     describe "POST /subscriber" do
-      let(:file) { Rails.root.join(*%w(spec fixtures rss weather-sample.xml)) }
+      let(:file) { Rails.root.join(*%w(spec fixtures jmaxml weather-sample.xml)) }
       let(:payload) { File.read(file) }
       let(:content_type) { 'application/xml+rss' }
 
@@ -83,7 +83,7 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
     let(:node) { create(:rss_node_weather_xml, cur_site: site, secret: secret) }
     let(:subscriber_path) { "#{node.url}subscriber" }
     let(:challenge) { "1234567890" }
-    let(:file) { Rails.root.join(*%w(spec fixtures rss weather-sample.xml)) }
+    let(:file) { Rails.root.join(*%w(spec fixtures jmaxml weather-sample.xml)) }
     let(:payload) { File.read(file) }
     let(:content_type) { 'application/xml+rss' }
 
