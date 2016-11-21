@@ -287,6 +287,7 @@ ja:
       jmaxml/forecast_region: 気象情報区域
       jmaxml/flood_region: 河川洪水予報区域
       jmaxml/water_level_station: 水位観測所
+      jmaxml/filter: フィルター
       jmaxml/trigger/base: 受信条件
       jmaxml/trigger/quake_intensity_flash: 震度速報
       jmaxml/trigger/quake_info: 震源・震度に関する情報
@@ -335,6 +336,11 @@ ja:
         region_name: 予報区域名
         order: 並び順
         state: 状態
+      jmaxml/filter:
+        name: 名前
+        state: 状態
+        trigger_ids: 受信条件
+        action_ids: 受信時の動作
       jmaxml/trigger/base:
         in_type: 種別
         name: 名前
@@ -442,6 +448,16 @@ ja:
         - 数字が小さいほど一覧ページの上位に表示されます。
       state:
         - 状態を選択します。
+
+    jmaxml/filter:
+      name:
+        - フィルター名を指定します。
+      state:
+        - フィルターの状態を指定します。
+      trigger_ids:
+        - 受信条件を選択します。
+      action_ids:
+        - 受信時の動作を選択します。
 
     jmaxml/trigger/base:
       in_type:
