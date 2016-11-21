@@ -1,0 +1,18 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <button class="btn destroy-all">
+      <%= t :"views.links.delete" %></button>
+    <button class="btn update-all set-seen-all" data-href="<%= url_for action: :set_seen %>">
+      <%= t :"webmail.links.set_seen" %></button>
+    <button class="btn update-all unset-seen-all" data-href="<%= url_for action: :unset_seen %>">
+      <%= t :"webmail.links.unset_seen" %></button>
+    <button class="btn update-all set-star-all" data-href="<%= url_for action: :set_star %>">
+      <%= t :"webmail.links.set_star" %></button>
+    <button class="btn update-all unset-star-all" data-href="<%= url_for action: :unset_star %>">
+      <%= t :"webmail.links.unset_star" %></button>
+  </div>
+
+  <%= render file: "_search" %>
+</div>

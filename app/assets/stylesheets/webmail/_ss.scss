@@ -19,15 +19,11 @@
   }
   .icon-star {
     display: inline-block;
-    margin-top: -4px;
-    font-size: 140%;
+    margin-top: -8px;
+    font-size: 160%;
     &:before { content: '★'; }
-    &--on {
-      color: #fb0;
-    }
-    &--off {
-      color: #ccc;
-    }
+    &--on { color: #fb0; }
+    &--off { color: #ccc; }
   }
   // attachment
   .label-attachment {

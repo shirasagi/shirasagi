@@ -165,9 +165,10 @@ td {
     }
   }
   .webmail h2 a {
-    padding: 15px 20px 15px 20px;
+    padding: 15px 20px 15px 60px;
+    background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
     &.current, &:hover {
-      background: $white;
+      background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
     }
   }
   .env {

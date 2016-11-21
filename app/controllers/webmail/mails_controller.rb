@@ -93,8 +93,10 @@ class Webmail::MailsController < ApplicationController
         item.try(action) if item
       end
 
+      location = params[:redirect].presence || { action: :index }
+
       respond_to do |format|
-        format.html { redirect_to({ action: :index }, { notice: t('webmail.notice.changed') }) }
+        format.html { redirect_to location, notice: t('webmail.notice.changed') }
         format.json { head :no_content }
       end
     end
