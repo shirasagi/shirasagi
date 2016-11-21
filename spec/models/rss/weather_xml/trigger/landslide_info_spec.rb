@@ -20,10 +20,10 @@ describe Rss::WeatherXml::Trigger::LandslideInfo, dbscope: :example do
     subject { create(:rss_weather_xml_trigger_landslide_info) }
 
     before do
-      region1 = create(:rss_weather_xml_forecast_region_120200)
-      region2 = create(:rss_weather_xml_forecast_region_123600)
-      region3 = create(:rss_weather_xml_forecast_region_133100)
-      region4 = create(:rss_weather_xml_forecast_region_133200)
+      region1 = create(:rss_weather_xml_forecast_region_0120200)
+      region2 = create(:rss_weather_xml_forecast_region_0123600)
+      region3 = create(:rss_weather_xml_forecast_region_0133100)
+      region4 = create(:rss_weather_xml_forecast_region_0133200)
       subject.target_region_ids = [ region1.id, region2.id, region3.id, region4.id ]
       subject.save!
     end
@@ -37,7 +37,7 @@ describe Rss::WeatherXml::Trigger::LandslideInfo, dbscope: :example do
     it "returns true" do
       expect(subject.verify(page, context)).to be_truthy
       expect(context.type).to eq Rss::WeatherXml::Type::LAND_SLIDE
-      expect(context.area_codes).to eq %w(133100 133200)
+      expect(context.area_codes).to eq %w(0133100 0133200)
     end
 
     it "calls block" do
@@ -47,7 +47,7 @@ describe Rss::WeatherXml::Trigger::LandslideInfo, dbscope: :example do
       end
       expect(flag).to eq 1
       expect(context.type).to eq Rss::WeatherXml::Type::LAND_SLIDE
-      expect(context.area_codes).to eq %w(133100 133200)
+      expect(context.area_codes).to eq %w(0133100 0133200)
     end
   end
 end

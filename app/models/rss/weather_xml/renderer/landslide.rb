@@ -29,8 +29,6 @@ class Rss::WeatherXml::Renderer::Landslide < Rss::WeatherXml::Renderer::Base
       REXML::XPath.match(@context.xmldoc, '/Report/Head/Headline/Information[@type="土砂災害警戒情報"]/Item').each do |item|
         xpath = 'Areas[@codeType="気象・地震・火山情報／市町村等"]/Area/Code/text()'
         area_codes = REXML::XPath.match(item, xpath).map { |code| code.to_s.strip }
-        # 土砂災害警戒情報の area_code はなぜか先頭に 0 がつくので削除する
-        area_codes = normalize_area_codes(area_codes)
         area_codes = @context.area_codes & area_codes
         next if area_codes.blank?
 
@@ -40,25 +38,13 @@ class Rss::WeatherXml::Renderer::Landslide < Rss::WeatherXml::Renderer::Base
       text
     end
 
-    def normalize_area_codes(area_codes)
-      area_codes.map { |area_code| normalize_area_code(area_code) }
-    end
-
-    def normalize_area_code(area_code)
-      if area_code.start_with?('0') && area_code.length == 7
-        area_code[1..-1]
-      else
-        area_code
-      end
-    end
-
     def template_variable_handler_kind_name(name, xml_node, *_)
       REXML::XPath.first(xml_node, 'Kind/Name/text()').to_s.strip
     end
 
     def template_variable_handler_area_names(name, xml_node, area_codes, *_)
       areas = REXML::XPath.match(xml_node, 'Areas[@codeType="気象・地震・火山情報／市町村等"]/Area').select do |area|
-        area_codes.include?(normalize_area_code(area.elements['Code'].text.to_s.strip))
+        area_codes.include?(area.elements['Code'].text.to_s.strip)
       end
 
       areas.map { |area| area.elements['Name'].text.to_s.strip }.join('、')

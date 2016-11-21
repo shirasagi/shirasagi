@@ -31,8 +31,6 @@ class Rss::WeatherXml::Trigger::LandslideInfo < Rss::WeatherXml::Trigger::Base
         next if kind_code.blank? || kind_code == '0'
 
         area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
-        # 土砂災害警戒情報の area_code はなぜか先頭に 0 がつくので削除する
-        area_code = area_code[1..-1] if area_code.start_with?('0') && area_code.length == 7
         region = target_regions.site(site).where(code: area_code).first
         next if region.blank?
 

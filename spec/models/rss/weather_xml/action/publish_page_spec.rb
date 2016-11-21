@@ -271,10 +271,10 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
           end
 
           before do
-            region1 = create(:rss_weather_xml_forecast_region_120200)
-            region2 = create(:rss_weather_xml_forecast_region_123600)
-            region3 = create(:rss_weather_xml_forecast_region_133100)
-            region4 = create(:rss_weather_xml_forecast_region_133200)
+            region1 = create(:rss_weather_xml_forecast_region_0120200)
+            region2 = create(:rss_weather_xml_forecast_region_0123600)
+            region3 = create(:rss_weather_xml_forecast_region_0133100)
+            region4 = create(:rss_weather_xml_forecast_region_0133200)
             trigger.target_region_ids = [ region1.id, region2.id, region3.id, region4.id ]
             trigger.save!
 

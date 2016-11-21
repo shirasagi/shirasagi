@@ -2,3824 +2,3824 @@ FactoryGirl.define do
   factory :rss_weather_xml_forecast_region_base, class: Rss::WeatherXml::ForecastRegion do
     cur_site { cms_site }
 
-    factory :rss_weather_xml_forecast_region_110000 do
-      code "110000"
+    factory :rss_weather_xml_forecast_region_0110000 do
+      code "0110000"
       name "北海道札幌市"
       yomi "ほっかいどうさっぽろし"
       short_name "札幌市"
       short_yomi "さっぽろし"
     end
 
-    factory :rss_weather_xml_forecast_region_120200 do
-      code "120200"
+    factory :rss_weather_xml_forecast_region_0120200 do
+      code "0120200"
       name "北海道函館市"
       yomi "ほっかいどうはこだてし"
       short_name "函館市"
       short_yomi "はこだてし"
     end
 
-    factory :rss_weather_xml_forecast_region_120300 do
-      code "120300"
+    factory :rss_weather_xml_forecast_region_0120300 do
+      code "0120300"
       name "北海道小樽市"
       yomi "ほっかいどうおたるし"
       short_name "小樽市"
       short_yomi "おたるし"
     end
 
-    factory :rss_weather_xml_forecast_region_120400 do
-      code "120400"
+    factory :rss_weather_xml_forecast_region_0120400 do
+      code "0120400"
       name "北海道旭川市"
       yomi "ほっかいどうあさひかわし"
       short_name "旭川市"
       short_yomi "あさひかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_120500 do
-      code "120500"
+    factory :rss_weather_xml_forecast_region_0120500 do
+      code "0120500"
       name "北海道室蘭市"
       yomi "ほっかいどうむろらんし"
       short_name "室蘭市"
       short_yomi "むろらんし"
     end
 
-    factory :rss_weather_xml_forecast_region_120600 do
-      code "120600"
+    factory :rss_weather_xml_forecast_region_0120600 do
+      code "0120600"
       name "北海道釧路市"
       yomi "ほっかいどうくしろし"
       short_name "釧路市"
       short_yomi "くしろし"
     end
 
-    factory :rss_weather_xml_forecast_region_120700 do
-      code "120700"
+    factory :rss_weather_xml_forecast_region_0120700 do
+      code "0120700"
       name "北海道帯広市"
       yomi "ほっかいどうおびひろし"
       short_name "帯広市"
       short_yomi "おびひろし"
     end
 
-    factory :rss_weather_xml_forecast_region_120800 do
-      code "120800"
+    factory :rss_weather_xml_forecast_region_0120800 do
+      code "0120800"
       name "北海道北見市"
       yomi "ほっかいどうきたみし"
       short_name "北見市"
       short_yomi "きたみし"
     end
 
-    factory :rss_weather_xml_forecast_region_120900 do
-      code "120900"
+    factory :rss_weather_xml_forecast_region_0120900 do
+      code "0120900"
       name "北海道夕張市"
       yomi "ほっかいどうゆうばりし"
       short_name "夕張市"
       short_yomi "ゆうばりし"
     end
 
-    factory :rss_weather_xml_forecast_region_121000 do
-      code "121000"
+    factory :rss_weather_xml_forecast_region_0121000 do
+      code "0121000"
       name "北海道岩見沢市"
       yomi "ほっかいどういわみざわし"
       short_name "岩見沢市"
       short_yomi "いわみざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_121100 do
-      code "121100"
+    factory :rss_weather_xml_forecast_region_0121100 do
+      code "0121100"
       name "北海道網走市"
       yomi "ほっかいどうあばしりし"
       short_name "網走市"
       short_yomi "あばしりし"
     end
 
-    factory :rss_weather_xml_forecast_region_121200 do
-      code "121200"
+    factory :rss_weather_xml_forecast_region_0121200 do
+      code "0121200"
       name "北海道留萌市"
       yomi "ほっかいどうるもいし"
       short_name "留萌市"
       short_yomi "るもいし"
     end
 
-    factory :rss_weather_xml_forecast_region_121300 do
-      code "121300"
+    factory :rss_weather_xml_forecast_region_0121300 do
+      code "0121300"
       name "北海道苫小牧市"
       yomi "ほっかいどうとまこまいし"
       short_name "苫小牧市"
       short_yomi "とまこまいし"
     end
 
-    factory :rss_weather_xml_forecast_region_121400 do
-      code "121400"
+    factory :rss_weather_xml_forecast_region_0121400 do
+      code "0121400"
       name "北海道稚内市"
       yomi "ほっかいどうわっかないし"
       short_name "稚内市"
       short_yomi "わっかないし"
     end
 
-    factory :rss_weather_xml_forecast_region_121500 do
-      code "121500"
+    factory :rss_weather_xml_forecast_region_0121500 do
+      code "0121500"
       name "北海道美唄市"
       yomi "ほっかいどうびばいし"
       short_name "美唄市"
       short_yomi "びばいし"
     end
 
-    factory :rss_weather_xml_forecast_region_121600 do
-      code "121600"
+    factory :rss_weather_xml_forecast_region_0121600 do
+      code "0121600"
       name "北海道芦別市"
       yomi "ほっかいどうあしべつし"
       short_name "芦別市"
       short_yomi "あしべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_121700 do
-      code "121700"
+    factory :rss_weather_xml_forecast_region_0121700 do
+      code "0121700"
       name "北海道江別市"
       yomi "ほっかいどうえべつし"
       short_name "江別市"
       short_yomi "えべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_121800 do
-      code "121800"
+    factory :rss_weather_xml_forecast_region_0121800 do
+      code "0121800"
       name "北海道赤平市"
       yomi "ほっかいどうあかびらし"
       short_name "赤平市"
       short_yomi "あかびらし"
     end
 
-    factory :rss_weather_xml_forecast_region_121900 do
-      code "121900"
+    factory :rss_weather_xml_forecast_region_0121900 do
+      code "0121900"
       name "北海道紋別市"
       yomi "ほっかいどうもんべつし"
       short_name "紋別市"
       short_yomi "もんべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_122000 do
-      code "122000"
+    factory :rss_weather_xml_forecast_region_0122000 do
+      code "0122000"
       name "北海道士別市"
       yomi "ほっかいどうしべつし"
       short_name "士別市"
       short_yomi "しべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_122100 do
-      code "122100"
+    factory :rss_weather_xml_forecast_region_0122100 do
+      code "0122100"
       name "北海道名寄市"
       yomi "ほっかいどうなよろし"
       short_name "名寄市"
       short_yomi "なよろし"
     end
 
-    factory :rss_weather_xml_forecast_region_122200 do
-      code "122200"
+    factory :rss_weather_xml_forecast_region_0122200 do
+      code "0122200"
       name "北海道三笠市"
       yomi "ほっかいどうみかさし"
       short_name "三笠市"
       short_yomi "みかさし"
     end
 
-    factory :rss_weather_xml_forecast_region_122300 do
-      code "122300"
+    factory :rss_weather_xml_forecast_region_0122300 do
+      code "0122300"
       name "北海道根室市"
       yomi "ほっかいどうねむろし"
       short_name "根室市"
       short_yomi "ねむろし"
     end
 
-    factory :rss_weather_xml_forecast_region_122400 do
-      code "122400"
+    factory :rss_weather_xml_forecast_region_0122400 do
+      code "0122400"
       name "北海道千歳市"
       yomi "ほっかいどうちとせし"
       short_name "千歳市"
       short_yomi "ちとせし"
     end
 
-    factory :rss_weather_xml_forecast_region_122500 do
-      code "122500"
+    factory :rss_weather_xml_forecast_region_0122500 do
+      code "0122500"
       name "北海道滝川市"
       yomi "ほっかいどうたきかわし"
       short_name "滝川市"
       short_yomi "たきかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_122600 do
-      code "122600"
+    factory :rss_weather_xml_forecast_region_0122600 do
+      code "0122600"
       name "北海道砂川市"
       yomi "ほっかいどうすながわし"
       short_name "砂川市"
       short_yomi "すながわし"
     end
 
-    factory :rss_weather_xml_forecast_region_122700 do
-      code "122700"
+    factory :rss_weather_xml_forecast_region_0122700 do
+      code "0122700"
       name "北海道歌志内市"
       yomi "ほっかいどううたしないし"
       short_name "歌志内市"
       short_yomi "うたしないし"
     end
 
-    factory :rss_weather_xml_forecast_region_122800 do
-      code "122800"
+    factory :rss_weather_xml_forecast_region_0122800 do
+      code "0122800"
       name "北海道深川市"
       yomi "ほっかいどうふかがわし"
       short_name "深川市"
       short_yomi "ふかがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_122900 do
-      code "122900"
+    factory :rss_weather_xml_forecast_region_0122900 do
+      code "0122900"
       name "北海道富良野市"
       yomi "ほっかいどうふらのし"
       short_name "富良野市"
       short_yomi "ふらのし"
     end
 
-    factory :rss_weather_xml_forecast_region_123000 do
-      code "123000"
+    factory :rss_weather_xml_forecast_region_0123000 do
+      code "0123000"
       name "北海道登別市"
       yomi "ほっかいどうのぼりべつし"
       short_name "登別市"
       short_yomi "のぼりべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_123100 do
-      code "123100"
+    factory :rss_weather_xml_forecast_region_0123100 do
+      code "0123100"
       name "北海道恵庭市"
       yomi "ほっかいどうえにわし"
       short_name "恵庭市"
       short_yomi "えにわし"
     end
 
-    factory :rss_weather_xml_forecast_region_123300 do
-      code "123300"
+    factory :rss_weather_xml_forecast_region_0123300 do
+      code "0123300"
       name "北海道伊達市"
       yomi "ほっかいどうだてし"
       short_name "伊達市"
       short_yomi "だてし"
     end
 
-    factory :rss_weather_xml_forecast_region_123400 do
-      code "123400"
+    factory :rss_weather_xml_forecast_region_0123400 do
+      code "0123400"
       name "北海道北広島市"
       yomi "ほっかいどうきたひろしまし"
       short_name "北広島市"
       short_yomi "きたひろしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_123500 do
-      code "123500"
+    factory :rss_weather_xml_forecast_region_0123500 do
+      code "0123500"
       name "北海道石狩市"
       yomi "ほっかいどういしかりし"
       short_name "石狩市"
       short_yomi "いしかりし"
     end
 
-    factory :rss_weather_xml_forecast_region_123600 do
-      code "123600"
+    factory :rss_weather_xml_forecast_region_0123600 do
+      code "0123600"
       name "北海道北斗市"
       yomi "ほっかいどうほくとし"
       short_name "北斗市"
       short_yomi "ほくとし"
     end
 
-    factory :rss_weather_xml_forecast_region_130300 do
-      code "130300"
+    factory :rss_weather_xml_forecast_region_0130300 do
+      code "0130300"
       name "北海道当別町"
       yomi "ほっかいどうとうべつちょう"
       short_name "当別町"
       short_yomi "とうべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_130400 do
-      code "130400"
+    factory :rss_weather_xml_forecast_region_0130400 do
+      code "0130400"
       name "北海道新篠津村"
       yomi "ほっかいどうしんしのつむら"
       short_name "新篠津村"
       short_yomi "しんしのつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_133100 do
-      code "133100"
+    factory :rss_weather_xml_forecast_region_0133100 do
+      code "0133100"
       name "北海道松前町"
       yomi "ほっかいどうまつまえちょう"
       short_name "松前町"
       short_yomi "まつまえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_133200 do
-      code "133200"
+    factory :rss_weather_xml_forecast_region_0133200 do
+      code "0133200"
       name "北海道福島町"
       yomi "ほっかいどうふくしまちょう"
       short_name "福島町"
       short_yomi "ふくしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_133300 do
-      code "133300"
+    factory :rss_weather_xml_forecast_region_0133300 do
+      code "0133300"
       name "北海道知内町"
       yomi "ほっかいどうしりうちちょう"
       short_name "知内町"
       short_yomi "しりうちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_133400 do
-      code "133400"
+    factory :rss_weather_xml_forecast_region_0133400 do
+      code "0133400"
       name "北海道木古内町"
       yomi "ほっかいどうきこないちょう"
       short_name "木古内町"
       short_yomi "きこないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_133700 do
-      code "133700"
+    factory :rss_weather_xml_forecast_region_0133700 do
+      code "0133700"
       name "北海道七飯町"
       yomi "ほっかいどうななえちょう"
       short_name "七飯町"
       short_yomi "ななえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_134300 do
-      code "134300"
+    factory :rss_weather_xml_forecast_region_0134300 do
+      code "0134300"
       name "北海道鹿部町"
       yomi "ほっかいどうしかべちょう"
       short_name "鹿部町"
       short_yomi "しかべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_134500 do
-      code "134500"
+    factory :rss_weather_xml_forecast_region_0134500 do
+      code "0134500"
       name "北海道森町"
       yomi "ほっかいどうもりまち"
       short_name "森町"
       short_yomi "もりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_134600 do
-      code "134600"
+    factory :rss_weather_xml_forecast_region_0134600 do
+      code "0134600"
       name "北海道八雲町"
       yomi "ほっかいどうやくもちょう"
       short_name "八雲町"
       short_yomi "やくもちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_134700 do
-      code "134700"
+    factory :rss_weather_xml_forecast_region_0134700 do
+      code "0134700"
       name "北海道長万部町"
       yomi "ほっかいどうおしゃまんべちょう"
       short_name "長万部町"
       short_yomi "おしゃまんべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_136100 do
-      code "136100"
+    factory :rss_weather_xml_forecast_region_0136100 do
+      code "0136100"
       name "北海道江差町"
       yomi "ほっかいどうえさしちょう"
       short_name "江差町"
       short_yomi "えさしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_136200 do
-      code "136200"
+    factory :rss_weather_xml_forecast_region_0136200 do
+      code "0136200"
       name "北海道上ノ国町"
       yomi "ほっかいどうかみのくにちょう"
       short_name "上ノ国町"
       short_yomi "かみのくにちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_136300 do
-      code "136300"
+    factory :rss_weather_xml_forecast_region_0136300 do
+      code "0136300"
       name "北海道厚沢部町"
       yomi "ほっかいどうあっさぶちょう"
       short_name "厚沢部町"
       short_yomi "あっさぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_136400 do
-      code "136400"
+    factory :rss_weather_xml_forecast_region_0136400 do
+      code "0136400"
       name "北海道乙部町"
       yomi "ほっかいどうおとべちょう"
       short_name "乙部町"
       short_yomi "おとべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_136700 do
-      code "136700"
+    factory :rss_weather_xml_forecast_region_0136700 do
+      code "0136700"
       name "北海道奥尻町"
       yomi "ほっかいどうおくしりちょう"
       short_name "奥尻町"
       short_yomi "おくしりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_137000 do
-      code "137000"
+    factory :rss_weather_xml_forecast_region_0137000 do
+      code "0137000"
       name "北海道今金町"
       yomi "ほっかいどういまかねちょう"
       short_name "今金町"
       short_yomi "いまかねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_137100 do
-      code "137100"
+    factory :rss_weather_xml_forecast_region_0137100 do
+      code "0137100"
       name "北海道せたな町"
       yomi "ほっかいどうせたなちょう"
       short_name "せたな町"
       short_yomi "せたなちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_139100 do
-      code "139100"
+    factory :rss_weather_xml_forecast_region_0139100 do
+      code "0139100"
       name "北海道島牧村"
       yomi "ほっかいどうしままきむら"
       short_name "島牧村"
       short_yomi "しままきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_139200 do
-      code "139200"
+    factory :rss_weather_xml_forecast_region_0139200 do
+      code "0139200"
       name "北海道寿都町"
       yomi "ほっかいどうすっつちょう"
       short_name "寿都町"
       short_yomi "すっつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_139300 do
-      code "139300"
+    factory :rss_weather_xml_forecast_region_0139300 do
+      code "0139300"
       name "北海道黒松内町"
       yomi "ほっかいどうくろまつないちょう"
       short_name "黒松内町"
       short_yomi "くろまつないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_139400 do
-      code "139400"
+    factory :rss_weather_xml_forecast_region_0139400 do
+      code "0139400"
       name "北海道蘭越町"
       yomi "ほっかいどうらんこしちょう"
       short_name "蘭越町"
       short_yomi "らんこしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_139500 do
-      code "139500"
+    factory :rss_weather_xml_forecast_region_0139500 do
+      code "0139500"
       name "北海道ニセコ町"
       yomi "ほっかいどうにせこちょう"
       short_name "ニセコ町"
       short_yomi "にせこちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_139600 do
-      code "139600"
+    factory :rss_weather_xml_forecast_region_0139600 do
+      code "0139600"
       name "北海道真狩村"
       yomi "ほっかいどうまっかりむら"
       short_name "真狩村"
       short_yomi "まっかりむら"
     end
 
-    factory :rss_weather_xml_forecast_region_139700 do
-      code "139700"
+    factory :rss_weather_xml_forecast_region_0139700 do
+      code "0139700"
       name "北海道留寿都村"
       yomi "ほっかいどうるすつむら"
       short_name "留寿都村"
       short_yomi "るすつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_139800 do
-      code "139800"
+    factory :rss_weather_xml_forecast_region_0139800 do
+      code "0139800"
       name "北海道喜茂別町"
       yomi "ほっかいどうきもべつちょう"
       short_name "喜茂別町"
       short_yomi "きもべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_139900 do
-      code "139900"
+    factory :rss_weather_xml_forecast_region_0139900 do
+      code "0139900"
       name "北海道京極町"
       yomi "ほっかいどうきょうごくちょう"
       short_name "京極町"
       short_yomi "きょうごくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140000 do
-      code "140000"
+    factory :rss_weather_xml_forecast_region_0140000 do
+      code "0140000"
       name "北海道倶知安町"
       yomi "ほっかいどうくっちゃんちょう"
       short_name "倶知安町"
       short_yomi "くっちゃんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140100 do
-      code "140100"
+    factory :rss_weather_xml_forecast_region_0140100 do
+      code "0140100"
       name "北海道共和町"
       yomi "ほっかいどうきょうわちょう"
       short_name "共和町"
       short_yomi "きょうわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140200 do
-      code "140200"
+    factory :rss_weather_xml_forecast_region_0140200 do
+      code "0140200"
       name "北海道岩内町"
       yomi "ほっかいどういわないちょう"
       short_name "岩内町"
       short_yomi "いわないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140300 do
-      code "140300"
+    factory :rss_weather_xml_forecast_region_0140300 do
+      code "0140300"
       name "北海道泊村"
       yomi "ほっかいどうとまりむら"
       short_name "泊村"
       short_yomi "とまりむら"
     end
 
-    factory :rss_weather_xml_forecast_region_140400 do
-      code "140400"
+    factory :rss_weather_xml_forecast_region_0140400 do
+      code "0140400"
       name "北海道神恵内村"
       yomi "ほっかいどうかもえないむら"
       short_name "神恵内村"
       short_yomi "かもえないむら"
     end
 
-    factory :rss_weather_xml_forecast_region_140500 do
-      code "140500"
+    factory :rss_weather_xml_forecast_region_0140500 do
+      code "0140500"
       name "北海道積丹町"
       yomi "ほっかいどうしゃこたんちょう"
       short_name "積丹町"
       short_yomi "しゃこたんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140600 do
-      code "140600"
+    factory :rss_weather_xml_forecast_region_0140600 do
+      code "0140600"
       name "北海道古平町"
       yomi "ほっかいどうふるびらちょう"
       short_name "古平町"
       short_yomi "ふるびらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140700 do
-      code "140700"
+    factory :rss_weather_xml_forecast_region_0140700 do
+      code "0140700"
       name "北海道仁木町"
       yomi "ほっかいどうにきちょう"
       short_name "仁木町"
       short_yomi "にきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140800 do
-      code "140800"
+    factory :rss_weather_xml_forecast_region_0140800 do
+      code "0140800"
       name "北海道余市町"
       yomi "ほっかいどうよいちちょう"
       short_name "余市町"
       short_yomi "よいちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_140900 do
-      code "140900"
+    factory :rss_weather_xml_forecast_region_0140900 do
+      code "0140900"
       name "北海道赤井川村"
       yomi "ほっかいどうあかいがわむら"
       short_name "赤井川村"
       short_yomi "あかいがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_142300 do
-      code "142300"
+    factory :rss_weather_xml_forecast_region_0142300 do
+      code "0142300"
       name "北海道南幌町"
       yomi "ほっかいどうなんぽろちょう"
       short_name "南幌町"
       short_yomi "なんぽろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_142400 do
-      code "142400"
+    factory :rss_weather_xml_forecast_region_0142400 do
+      code "0142400"
       name "北海道奈井江町"
       yomi "ほっかいどうないえちょう"
       short_name "奈井江町"
       short_yomi "ないえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_142500 do
-      code "142500"
+    factory :rss_weather_xml_forecast_region_0142500 do
+      code "0142500"
       name "北海道上砂川町"
       yomi "ほっかいどうかみすながわちょう"
       short_name "上砂川町"
       short_yomi "かみすながわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_142700 do
-      code "142700"
+    factory :rss_weather_xml_forecast_region_0142700 do
+      code "0142700"
       name "北海道由仁町"
       yomi "ほっかいどうゆにちょう"
       short_name "由仁町"
       short_yomi "ゆにちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_142800 do
-      code "142800"
+    factory :rss_weather_xml_forecast_region_0142800 do
+      code "0142800"
       name "北海道長沼町"
       yomi "ほっかいどうながぬまちょう"
       short_name "長沼町"
       short_yomi "ながぬまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_142900 do
-      code "142900"
+    factory :rss_weather_xml_forecast_region_0142900 do
+      code "0142900"
       name "北海道栗山町"
       yomi "ほっかいどうくりやまちょう"
       short_name "栗山町"
       short_yomi "くりやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143000 do
-      code "143000"
+    factory :rss_weather_xml_forecast_region_0143000 do
+      code "0143000"
       name "北海道月形町"
       yomi "ほっかいどうつきがたちょう"
       short_name "月形町"
       short_yomi "つきがたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143100 do
-      code "143100"
+    factory :rss_weather_xml_forecast_region_0143100 do
+      code "0143100"
       name "北海道浦臼町"
       yomi "ほっかいどううらうすちょう"
       short_name "浦臼町"
       short_yomi "うらうすちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143200 do
-      code "143200"
+    factory :rss_weather_xml_forecast_region_0143200 do
+      code "0143200"
       name "北海道新十津川町"
       yomi "ほっかいどうしんとつかわちょう"
       short_name "新十津川町"
       short_yomi "しんとつかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143300 do
-      code "143300"
+    factory :rss_weather_xml_forecast_region_0143300 do
+      code "0143300"
       name "北海道妹背牛町"
       yomi "ほっかいどうもせうしちょう"
       short_name "妹背牛町"
       short_yomi "もせうしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143400 do
-      code "143400"
+    factory :rss_weather_xml_forecast_region_0143400 do
+      code "0143400"
       name "北海道秩父別町"
       yomi "ほっかいどうちっぷべつちょう"
       short_name "秩父別町"
       short_yomi "ちっぷべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143600 do
-      code "143600"
+    factory :rss_weather_xml_forecast_region_0143600 do
+      code "0143600"
       name "北海道雨竜町"
       yomi "ほっかいどううりゅうちょう"
       short_name "雨竜町"
       short_yomi "うりゅうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143700 do
-      code "143700"
+    factory :rss_weather_xml_forecast_region_0143700 do
+      code "0143700"
       name "北海道北竜町"
       yomi "ほっかいどうほくりゅうちょう"
       short_name "北竜町"
       short_yomi "ほくりゅうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_143800 do
-      code "143800"
+    factory :rss_weather_xml_forecast_region_0143800 do
+      code "0143800"
       name "北海道沼田町"
       yomi "ほっかいどうぬまたちょう"
       short_name "沼田町"
       short_yomi "ぬまたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145200 do
-      code "145200"
+    factory :rss_weather_xml_forecast_region_0145200 do
+      code "0145200"
       name "北海道鷹栖町"
       yomi "ほっかいどうたかすちょう"
       short_name "鷹栖町"
       short_yomi "たかすちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145300 do
-      code "145300"
+    factory :rss_weather_xml_forecast_region_0145300 do
+      code "0145300"
       name "北海道東神楽町"
       yomi "ほっかいどうひがしかぐらちょう"
       short_name "東神楽町"
       short_yomi "ひがしかぐらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145400 do
-      code "145400"
+    factory :rss_weather_xml_forecast_region_0145400 do
+      code "0145400"
       name "北海道当麻町"
       yomi "ほっかいどうとうまちょう"
       short_name "当麻町"
       short_yomi "とうまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145500 do
-      code "145500"
+    factory :rss_weather_xml_forecast_region_0145500 do
+      code "0145500"
       name "北海道比布町"
       yomi "ほっかいどうぴっぷちょう"
       short_name "比布町"
       short_yomi "ぴっぷちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145600 do
-      code "145600"
+    factory :rss_weather_xml_forecast_region_0145600 do
+      code "0145600"
       name "北海道愛別町"
       yomi "ほっかいどうあいべつちょう"
       short_name "愛別町"
       short_yomi "あいべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145700 do
-      code "145700"
+    factory :rss_weather_xml_forecast_region_0145700 do
+      code "0145700"
       name "北海道上川町"
       yomi "ほっかいどうかみかわちょう"
       short_name "上川町"
       short_yomi "かみかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145800 do
-      code "145800"
+    factory :rss_weather_xml_forecast_region_0145800 do
+      code "0145800"
       name "北海道東川町"
       yomi "ほっかいどうひがしかわちょう"
       short_name "東川町"
       short_yomi "ひがしかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_145900 do
-      code "145900"
+    factory :rss_weather_xml_forecast_region_0145900 do
+      code "0145900"
       name "北海道美瑛町"
       yomi "ほっかいどうびえいちょう"
       short_name "美瑛町"
       short_yomi "びえいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_146000 do
-      code "146000"
+    factory :rss_weather_xml_forecast_region_0146000 do
+      code "0146000"
       name "北海道上富良野町"
       yomi "ほっかいどうかみふらのちょう"
       short_name "上富良野町"
       short_yomi "かみふらのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_146100 do
-      code "146100"
+    factory :rss_weather_xml_forecast_region_0146100 do
+      code "0146100"
       name "北海道中富良野町"
       yomi "ほっかいどうなかふらのちょう"
       short_name "中富良野町"
       short_yomi "なかふらのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_146200 do
-      code "146200"
+    factory :rss_weather_xml_forecast_region_0146200 do
+      code "0146200"
       name "北海道南富良野町"
       yomi "ほっかいどうみなみふらのちょう"
       short_name "南富良野町"
       short_yomi "みなみふらのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_146300 do
-      code "146300"
+    factory :rss_weather_xml_forecast_region_0146300 do
+      code "0146300"
       name "北海道占冠村"
       yomi "ほっかいどうしむかっぷむら"
       short_name "占冠村"
       short_yomi "しむかっぷむら"
     end
 
-    factory :rss_weather_xml_forecast_region_146400 do
-      code "146400"
+    factory :rss_weather_xml_forecast_region_0146400 do
+      code "0146400"
       name "北海道和寒町"
       yomi "ほっかいどうわっさむちょう"
       short_name "和寒町"
       short_yomi "わっさむちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_146500 do
-      code "146500"
+    factory :rss_weather_xml_forecast_region_0146500 do
+      code "0146500"
       name "北海道剣淵町"
       yomi "ほっかいどうけんぶちちょう"
       short_name "剣淵町"
       short_yomi "けんぶちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_146800 do
-      code "146800"
+    factory :rss_weather_xml_forecast_region_0146800 do
+      code "0146800"
       name "北海道下川町"
       yomi "ほっかいどうしもかわちょう"
       short_name "下川町"
       short_yomi "しもかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_146900 do
-      code "146900"
+    factory :rss_weather_xml_forecast_region_0146900 do
+      code "0146900"
       name "北海道美深町"
       yomi "ほっかいどうびふかちょう"
       short_name "美深町"
       short_yomi "びふかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_147000 do
-      code "147000"
+    factory :rss_weather_xml_forecast_region_0147000 do
+      code "0147000"
       name "北海道音威子府村"
       yomi "ほっかいどうおといねっぷむら"
       short_name "音威子府村"
       short_yomi "おといねっぷむら"
     end
 
-    factory :rss_weather_xml_forecast_region_147100 do
-      code "147100"
+    factory :rss_weather_xml_forecast_region_0147100 do
+      code "0147100"
       name "北海道中川町"
       yomi "ほっかいどうなかがわちょう"
       short_name "中川町"
       short_yomi "なかがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_147200 do
-      code "147200"
+    factory :rss_weather_xml_forecast_region_0147200 do
+      code "0147200"
       name "北海道幌加内町"
       yomi "ほっかいどうほろかないちょう"
       short_name "幌加内町"
       short_yomi "ほろかないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_148100 do
-      code "148100"
+    factory :rss_weather_xml_forecast_region_0148100 do
+      code "0148100"
       name "北海道増毛町"
       yomi "ほっかいどうましけちょう"
       short_name "増毛町"
       short_yomi "ましけちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_148200 do
-      code "148200"
+    factory :rss_weather_xml_forecast_region_0148200 do
+      code "0148200"
       name "北海道小平町"
       yomi "ほっかいどうおびらちょう"
       short_name "小平町"
       short_yomi "おびらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_148300 do
-      code "148300"
+    factory :rss_weather_xml_forecast_region_0148300 do
+      code "0148300"
       name "北海道苫前町"
       yomi "ほっかいどうとままえちょう"
       short_name "苫前町"
       short_yomi "とままえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_148400 do
-      code "148400"
+    factory :rss_weather_xml_forecast_region_0148400 do
+      code "0148400"
       name "北海道羽幌町"
       yomi "ほっかいどうはぼろちょう"
       short_name "羽幌町"
       short_yomi "はぼろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_148500 do
-      code "148500"
+    factory :rss_weather_xml_forecast_region_0148500 do
+      code "0148500"
       name "北海道初山別村"
       yomi "ほっかいどうしょさんべつむら"
       short_name "初山別村"
       short_yomi "しょさんべつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_148600 do
-      code "148600"
+    factory :rss_weather_xml_forecast_region_0148600 do
+      code "0148600"
       name "北海道遠別町"
       yomi "ほっかいどうえんべつちょう"
       short_name "遠別町"
       short_yomi "えんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_148700 do
-      code "148700"
+    factory :rss_weather_xml_forecast_region_0148700 do
+      code "0148700"
       name "北海道天塩町"
       yomi "ほっかいどうてしおちょう"
       short_name "天塩町"
       short_yomi "てしおちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_151100 do
-      code "151100"
+    factory :rss_weather_xml_forecast_region_0151100 do
+      code "0151100"
       name "北海道猿払村"
       yomi "ほっかいどうさるふつむら"
       short_name "猿払村"
       short_yomi "さるふつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_151200 do
-      code "151200"
+    factory :rss_weather_xml_forecast_region_0151200 do
+      code "0151200"
       name "北海道浜頓別町"
       yomi "ほっかいどうはまとんべつちょう"
       short_name "浜頓別町"
       short_yomi "はまとんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_151300 do
-      code "151300"
+    factory :rss_weather_xml_forecast_region_0151300 do
+      code "0151300"
       name "北海道中頓別町"
       yomi "ほっかいどうなかとんべつちょう"
       short_name "中頓別町"
       short_yomi "なかとんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_151400 do
-      code "151400"
+    factory :rss_weather_xml_forecast_region_0151400 do
+      code "0151400"
       name "北海道枝幸町"
       yomi "ほっかいどうえさしちょう"
       short_name "枝幸町"
       short_yomi "えさしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_151600 do
-      code "151600"
+    factory :rss_weather_xml_forecast_region_0151600 do
+      code "0151600"
       name "北海道豊富町"
       yomi "ほっかいどうとよとみちょう"
       short_name "豊富町"
       short_yomi "とよとみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_151700 do
-      code "151700"
+    factory :rss_weather_xml_forecast_region_0151700 do
+      code "0151700"
       name "北海道礼文町"
       yomi "ほっかいどうれぶんちょう"
       short_name "礼文町"
       short_yomi "れぶんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_151800 do
-      code "151800"
+    factory :rss_weather_xml_forecast_region_0151800 do
+      code "0151800"
       name "北海道利尻町"
       yomi "ほっかいどうりしりちょう"
       short_name "利尻町"
       short_yomi "りしりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_151900 do
-      code "151900"
+    factory :rss_weather_xml_forecast_region_0151900 do
+      code "0151900"
       name "北海道利尻富士町"
       yomi "ほっかいどうりしりふじちょう"
       short_name "利尻富士町"
       short_yomi "りしりふじちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_152000 do
-      code "152000"
+    factory :rss_weather_xml_forecast_region_0152000 do
+      code "0152000"
       name "北海道幌延町"
       yomi "ほっかいどうほろのべちょう"
       short_name "幌延町"
       short_yomi "ほろのべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_154300 do
-      code "154300"
+    factory :rss_weather_xml_forecast_region_0154300 do
+      code "0154300"
       name "北海道美幌町"
       yomi "ほっかいどうびほろちょう"
       short_name "美幌町"
       short_yomi "びほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_154400 do
-      code "154400"
+    factory :rss_weather_xml_forecast_region_0154400 do
+      code "0154400"
       name "北海道津別町"
       yomi "ほっかいどうつべつちょう"
       short_name "津別町"
       short_yomi "つべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_154500 do
-      code "154500"
+    factory :rss_weather_xml_forecast_region_0154500 do
+      code "0154500"
       name "北海道斜里町"
       yomi "ほっかいどうしゃりちょう"
       short_name "斜里町"
       short_yomi "しゃりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_154600 do
-      code "154600"
+    factory :rss_weather_xml_forecast_region_0154600 do
+      code "0154600"
       name "北海道清里町"
       yomi "ほっかいどうきよさとちょう"
       short_name "清里町"
       short_yomi "きよさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_154700 do
-      code "154700"
+    factory :rss_weather_xml_forecast_region_0154700 do
+      code "0154700"
       name "北海道小清水町"
       yomi "ほっかいどうこしみずちょう"
       short_name "小清水町"
       short_yomi "こしみずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_154900 do
-      code "154900"
+    factory :rss_weather_xml_forecast_region_0154900 do
+      code "0154900"
       name "北海道訓子府町"
       yomi "ほっかいどうくんねっぷちょう"
       short_name "訓子府町"
       short_yomi "くんねっぷちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_155000 do
-      code "155000"
+    factory :rss_weather_xml_forecast_region_0155000 do
+      code "0155000"
       name "北海道置戸町"
       yomi "ほっかいどうおけとちょう"
       short_name "置戸町"
       short_yomi "おけとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_155200 do
-      code "155200"
+    factory :rss_weather_xml_forecast_region_0155200 do
+      code "0155200"
       name "北海道佐呂間町"
       yomi "ほっかいどうさろまちょう"
       short_name "佐呂間町"
       short_yomi "さろまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_155500 do
-      code "155500"
+    factory :rss_weather_xml_forecast_region_0155500 do
+      code "0155500"
       name "北海道遠軽町"
       yomi "ほっかいどうえんがるちょう"
       short_name "遠軽町"
       short_yomi "えんがるちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_155900 do
-      code "155900"
+    factory :rss_weather_xml_forecast_region_0155900 do
+      code "0155900"
       name "北海道湧別町"
       yomi "ほっかいどうゆうべつちょう"
       short_name "湧別町"
       short_yomi "ゆうべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_156000 do
-      code "156000"
+    factory :rss_weather_xml_forecast_region_0156000 do
+      code "0156000"
       name "北海道滝上町"
       yomi "ほっかいどうたきのうえちょう"
       short_name "滝上町"
       short_yomi "たきのうえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_156100 do
-      code "156100"
+    factory :rss_weather_xml_forecast_region_0156100 do
+      code "0156100"
       name "北海道興部町"
       yomi "ほっかいどうおこっぺちょう"
       short_name "興部町"
       short_yomi "おこっぺちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_156200 do
-      code "156200"
+    factory :rss_weather_xml_forecast_region_0156200 do
+      code "0156200"
       name "北海道西興部村"
       yomi "ほっかいどうにしおこっぺむら"
       short_name "西興部村"
       short_yomi "にしおこっぺむら"
     end
 
-    factory :rss_weather_xml_forecast_region_156300 do
-      code "156300"
+    factory :rss_weather_xml_forecast_region_0156300 do
+      code "0156300"
       name "北海道雄武町"
       yomi "ほっかいどうおうむちょう"
       short_name "雄武町"
       short_yomi "おうむちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_156400 do
-      code "156400"
+    factory :rss_weather_xml_forecast_region_0156400 do
+      code "0156400"
       name "北海道大空町"
       yomi "ほっかいどうおおぞらちょう"
       short_name "大空町"
       short_yomi "おおぞらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_157100 do
-      code "157100"
+    factory :rss_weather_xml_forecast_region_0157100 do
+      code "0157100"
       name "北海道豊浦町"
       yomi "ほっかいどうとようらちょう"
       short_name "豊浦町"
       short_yomi "とようらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_157500 do
-      code "157500"
+    factory :rss_weather_xml_forecast_region_0157500 do
+      code "0157500"
       name "北海道壮瞥町"
       yomi "ほっかいどうそうべつちょう"
       short_name "壮瞥町"
       short_yomi "そうべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_157800 do
-      code "157800"
+    factory :rss_weather_xml_forecast_region_0157800 do
+      code "0157800"
       name "北海道白老町"
       yomi "ほっかいどうしらおいちょう"
       short_name "白老町"
       short_yomi "しらおいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_158100 do
-      code "158100"
+    factory :rss_weather_xml_forecast_region_0158100 do
+      code "0158100"
       name "北海道厚真町"
       yomi "ほっかいどうあつまちょう"
       short_name "厚真町"
       short_yomi "あつまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_158400 do
-      code "158400"
+    factory :rss_weather_xml_forecast_region_0158400 do
+      code "0158400"
       name "北海道洞爺湖町"
       yomi "ほっかいどうとうやこちょう"
       short_name "洞爺湖町"
       short_yomi "とうやこちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_158500 do
-      code "158500"
+    factory :rss_weather_xml_forecast_region_0158500 do
+      code "0158500"
       name "北海道安平町"
       yomi "ほっかいどうあびらちょう"
       short_name "安平町"
       short_yomi "あびらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_158600 do
-      code "158600"
+    factory :rss_weather_xml_forecast_region_0158600 do
+      code "0158600"
       name "北海道むかわ町"
       yomi "ほっかいどうむかわちょう"
       short_name "むかわ町"
       short_yomi "むかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_160100 do
-      code "160100"
+    factory :rss_weather_xml_forecast_region_0160100 do
+      code "0160100"
       name "北海道日高町"
       yomi "ほっかいどうひだかちょう"
       short_name "日高町"
       short_yomi "ひだかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_160200 do
-      code "160200"
+    factory :rss_weather_xml_forecast_region_0160200 do
+      code "0160200"
       name "北海道平取町"
       yomi "ほっかいどうびらとりちょう"
       short_name "平取町"
       short_yomi "びらとりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_160400 do
-      code "160400"
+    factory :rss_weather_xml_forecast_region_0160400 do
+      code "0160400"
       name "北海道新冠町"
       yomi "ほっかいどうにいかっぷちょう"
       short_name "新冠町"
       short_yomi "にいかっぷちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_160700 do
-      code "160700"
+    factory :rss_weather_xml_forecast_region_0160700 do
+      code "0160700"
       name "北海道浦河町"
       yomi "ほっかいどううらかわちょう"
       short_name "浦河町"
       short_yomi "うらかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_160800 do
-      code "160800"
+    factory :rss_weather_xml_forecast_region_0160800 do
+      code "0160800"
       name "北海道様似町"
       yomi "ほっかいどうさまにちょう"
       short_name "様似町"
       short_yomi "さまにちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_160900 do
-      code "160900"
+    factory :rss_weather_xml_forecast_region_0160900 do
+      code "0160900"
       name "北海道えりも町"
       yomi "ほっかいどうえりもちょう"
       short_name "えりも町"
       short_yomi "えりもちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_161000 do
-      code "161000"
+    factory :rss_weather_xml_forecast_region_0161000 do
+      code "0161000"
       name "北海道新ひだか町"
       yomi "ほっかいどうしんひだかちょう"
       short_name "新ひだか町"
       short_yomi "しんひだかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163100 do
-      code "163100"
+    factory :rss_weather_xml_forecast_region_0163100 do
+      code "0163100"
       name "北海道音更町"
       yomi "ほっかいどうおとふけちょう"
       short_name "音更町"
       short_yomi "おとふけちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163200 do
-      code "163200"
+    factory :rss_weather_xml_forecast_region_0163200 do
+      code "0163200"
       name "北海道士幌町"
       yomi "ほっかいどうしほろちょう"
       short_name "士幌町"
       short_yomi "しほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163300 do
-      code "163300"
+    factory :rss_weather_xml_forecast_region_0163300 do
+      code "0163300"
       name "北海道上士幌町"
       yomi "ほっかいどうかみしほろちょう"
       short_name "上士幌町"
       short_yomi "かみしほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163400 do
-      code "163400"
+    factory :rss_weather_xml_forecast_region_0163400 do
+      code "0163400"
       name "北海道鹿追町"
       yomi "ほっかいどうしかおいちょう"
       short_name "鹿追町"
       short_yomi "しかおいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163500 do
-      code "163500"
+    factory :rss_weather_xml_forecast_region_0163500 do
+      code "0163500"
       name "北海道新得町"
       yomi "ほっかいどうしんとくちょう"
       short_name "新得町"
       short_yomi "しんとくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163600 do
-      code "163600"
+    factory :rss_weather_xml_forecast_region_0163600 do
+      code "0163600"
       name "北海道清水町"
       yomi "ほっかいどうしみずちょう"
       short_name "清水町"
       short_yomi "しみずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163700 do
-      code "163700"
+    factory :rss_weather_xml_forecast_region_0163700 do
+      code "0163700"
       name "北海道芽室町"
       yomi "ほっかいどうめむろちょう"
       short_name "芽室町"
       short_yomi "めむろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_163800 do
-      code "163800"
+    factory :rss_weather_xml_forecast_region_0163800 do
+      code "0163800"
       name "北海道中札内村"
       yomi "ほっかいどうなかさつないむら"
       short_name "中札内村"
       short_yomi "なかさつないむら"
     end
 
-    factory :rss_weather_xml_forecast_region_163900 do
-      code "163900"
+    factory :rss_weather_xml_forecast_region_0163900 do
+      code "0163900"
       name "北海道更別村"
       yomi "ほっかいどうさらべつむら"
       short_name "更別村"
       short_yomi "さらべつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_164100 do
-      code "164100"
+    factory :rss_weather_xml_forecast_region_0164100 do
+      code "0164100"
       name "北海道大樹町"
       yomi "ほっかいどうたいきちょう"
       short_name "大樹町"
       short_yomi "たいきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164200 do
-      code "164200"
+    factory :rss_weather_xml_forecast_region_0164200 do
+      code "0164200"
       name "北海道広尾町"
       yomi "ほっかいどうひろおちょう"
       short_name "広尾町"
       short_yomi "ひろおちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164300 do
-      code "164300"
+    factory :rss_weather_xml_forecast_region_0164300 do
+      code "0164300"
       name "北海道幕別町"
       yomi "ほっかいどうまくべつちょう"
       short_name "幕別町"
       short_yomi "まくべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164400 do
-      code "164400"
+    factory :rss_weather_xml_forecast_region_0164400 do
+      code "0164400"
       name "北海道池田町"
       yomi "ほっかいどういけだちょう"
       short_name "池田町"
       short_yomi "いけだちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164500 do
-      code "164500"
+    factory :rss_weather_xml_forecast_region_0164500 do
+      code "0164500"
       name "北海道豊頃町"
       yomi "ほっかいどうとよころちょう"
       short_name "豊頃町"
       short_yomi "とよころちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164600 do
-      code "164600"
+    factory :rss_weather_xml_forecast_region_0164600 do
+      code "0164600"
       name "北海道本別町"
       yomi "ほっかいどうほんべつちょう"
       short_name "本別町"
       short_yomi "ほんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164700 do
-      code "164700"
+    factory :rss_weather_xml_forecast_region_0164700 do
+      code "0164700"
       name "北海道足寄町"
       yomi "ほっかいどうあしょろちょう"
       short_name "足寄町"
       short_yomi "あしょろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164800 do
-      code "164800"
+    factory :rss_weather_xml_forecast_region_0164800 do
+      code "0164800"
       name "北海道陸別町"
       yomi "ほっかいどうりくべつちょう"
       short_name "陸別町"
       short_yomi "りくべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_164900 do
-      code "164900"
+    factory :rss_weather_xml_forecast_region_0164900 do
+      code "0164900"
       name "北海道浦幌町"
       yomi "ほっかいどううらほろちょう"
       short_name "浦幌町"
       short_yomi "うらほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_166100 do
-      code "166100"
+    factory :rss_weather_xml_forecast_region_0166100 do
+      code "0166100"
       name "北海道釧路町"
       yomi "ほっかいどうくしろちょう"
       short_name "釧路町"
       short_yomi "くしろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_166200 do
-      code "166200"
+    factory :rss_weather_xml_forecast_region_0166200 do
+      code "0166200"
       name "北海道厚岸町"
       yomi "ほっかいどうあっけしちょう"
       short_name "厚岸町"
       short_yomi "あっけしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_166300 do
-      code "166300"
+    factory :rss_weather_xml_forecast_region_0166300 do
+      code "0166300"
       name "北海道浜中町"
       yomi "ほっかいどうはまなかちょう"
       short_name "浜中町"
       short_yomi "はまなかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_166400 do
-      code "166400"
+    factory :rss_weather_xml_forecast_region_0166400 do
+      code "0166400"
       name "北海道標茶町"
       yomi "ほっかいどうしべちゃちょう"
       short_name "標茶町"
       short_yomi "しべちゃちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_166500 do
-      code "166500"
+    factory :rss_weather_xml_forecast_region_0166500 do
+      code "0166500"
       name "北海道弟子屈町"
       yomi "ほっかいどうてしかがちょう"
       short_name "弟子屈町"
       short_yomi "てしかがちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_166700 do
-      code "166700"
+    factory :rss_weather_xml_forecast_region_0166700 do
+      code "0166700"
       name "北海道鶴居村"
       yomi "ほっかいどうつるいむら"
       short_name "鶴居村"
       short_yomi "つるいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_166800 do
-      code "166800"
+    factory :rss_weather_xml_forecast_region_0166800 do
+      code "0166800"
       name "北海道白糠町"
       yomi "ほっかいどうしらぬかちょう"
       short_name "白糠町"
       short_yomi "しらぬかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_169001 do
-      code "169001"
+    factory :rss_weather_xml_forecast_region_0169001 do
+      code "0169001"
       name "北海道国後島"
       yomi "ほっかいどうくなしりとう"
       short_name "0"
       short_yomi "0"
     end
 
-    factory :rss_weather_xml_forecast_region_169002 do
-      code "169002"
+    factory :rss_weather_xml_forecast_region_0169002 do
+      code "0169002"
       name "北海道択捉島"
       yomi "ほっかいどうえとろふとう"
       short_name "0"
       short_yomi "0"
     end
 
-    factory :rss_weather_xml_forecast_region_169100 do
-      code "169100"
+    factory :rss_weather_xml_forecast_region_0169100 do
+      code "0169100"
       name "北海道別海町"
       yomi "ほっかいどうべつかいちょう"
       short_name "別海町"
       short_yomi "べつかいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_169200 do
-      code "169200"
+    factory :rss_weather_xml_forecast_region_0169200 do
+      code "0169200"
       name "北海道中標津町"
       yomi "ほっかいどうなかしべつちょう"
       short_name "中標津町"
       short_yomi "なかしべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_169300 do
-      code "169300"
+    factory :rss_weather_xml_forecast_region_0169300 do
+      code "0169300"
       name "北海道標津町"
       yomi "ほっかいどうしべつちょう"
       short_name "標津町"
       short_yomi "しべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_169400 do
-      code "169400"
+    factory :rss_weather_xml_forecast_region_0169400 do
+      code "0169400"
       name "北海道羅臼町"
       yomi "ほっかいどうらうすちょう"
       short_name "羅臼町"
       short_yomi "らうすちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_169500 do
-      code "169500"
+    factory :rss_weather_xml_forecast_region_0169500 do
+      code "0169500"
       name "北海道色丹村"
       yomi "ほっかいどうしこたんむら"
       short_name "0"
       short_yomi "0"
     end
 
-    factory :rss_weather_xml_forecast_region_220100 do
-      code "220100"
+    factory :rss_weather_xml_forecast_region_0220100 do
+      code "0220100"
       name "青森県青森市"
       yomi "あおもりけんあおもりし"
       short_name "青森市"
       short_yomi "あおもりし"
     end
 
-    factory :rss_weather_xml_forecast_region_220200 do
-      code "220200"
+    factory :rss_weather_xml_forecast_region_0220200 do
+      code "0220200"
       name "青森県弘前市"
       yomi "あおもりけんひろさきし"
       short_name "弘前市"
       short_yomi "ひろさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_220300 do
-      code "220300"
+    factory :rss_weather_xml_forecast_region_0220300 do
+      code "0220300"
       name "青森県八戸市"
       yomi "あおもりけんはちのへし"
       short_name "八戸市"
       short_yomi "はちのへし"
     end
 
-    factory :rss_weather_xml_forecast_region_220400 do
-      code "220400"
+    factory :rss_weather_xml_forecast_region_0220400 do
+      code "0220400"
       name "青森県黒石市"
       yomi "あおもりけんくろいしし"
       short_name "黒石市"
       short_yomi "くろいしし"
     end
 
-    factory :rss_weather_xml_forecast_region_220500 do
-      code "220500"
+    factory :rss_weather_xml_forecast_region_0220500 do
+      code "0220500"
       name "青森県五所川原市"
       yomi "あおもりけんごしょがわらし"
       short_name "五所川原市"
       short_yomi "ごしょがわらし"
     end
 
-    factory :rss_weather_xml_forecast_region_220600 do
-      code "220600"
+    factory :rss_weather_xml_forecast_region_0220600 do
+      code "0220600"
       name "青森県十和田市"
       yomi "あおもりけんとわだし"
       short_name "十和田市"
       short_yomi "とわだし"
     end
 
-    factory :rss_weather_xml_forecast_region_220700 do
-      code "220700"
+    factory :rss_weather_xml_forecast_region_0220700 do
+      code "0220700"
       name "青森県三沢市"
       yomi "あおもりけんみさわし"
       short_name "三沢市"
       short_yomi "みさわし"
     end
 
-    factory :rss_weather_xml_forecast_region_220800 do
-      code "220800"
+    factory :rss_weather_xml_forecast_region_0220800 do
+      code "0220800"
       name "青森県むつ市"
       yomi "あおもりけんむつし"
       short_name "むつ市"
       short_yomi "むつし"
     end
 
-    factory :rss_weather_xml_forecast_region_220900 do
-      code "220900"
+    factory :rss_weather_xml_forecast_region_0220900 do
+      code "0220900"
       name "青森県つがる市"
       yomi "あおもりけんつがるし"
       short_name "つがる市"
       short_yomi "つがるし"
     end
 
-    factory :rss_weather_xml_forecast_region_221000 do
-      code "221000"
+    factory :rss_weather_xml_forecast_region_0221000 do
+      code "0221000"
       name "青森県平川市"
       yomi "あおもりけんひらかわし"
       short_name "平川市"
       short_yomi "ひらかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_230100 do
-      code "230100"
+    factory :rss_weather_xml_forecast_region_0230100 do
+      code "0230100"
       name "青森県平内町"
       yomi "あおもりけんひらないまち"
       short_name "平内町"
       short_yomi "ひらないまち"
     end
 
-    factory :rss_weather_xml_forecast_region_230300 do
-      code "230300"
+    factory :rss_weather_xml_forecast_region_0230300 do
+      code "0230300"
       name "青森県今別町"
       yomi "あおもりけんいまべつまち"
       short_name "今別町"
       short_yomi "いまべつまち"
     end
 
-    factory :rss_weather_xml_forecast_region_230400 do
-      code "230400"
+    factory :rss_weather_xml_forecast_region_0230400 do
+      code "0230400"
       name "青森県蓬田村"
       yomi "あおもりけんよもぎたむら"
       short_name "蓬田村"
       short_yomi "よもぎたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_230700 do
-      code "230700"
+    factory :rss_weather_xml_forecast_region_0230700 do
+      code "0230700"
       name "青森県外ヶ浜町"
       yomi "あおもりけんそとがはままち"
       short_name "外ヶ浜町"
       short_yomi "そとがはままち"
     end
 
-    factory :rss_weather_xml_forecast_region_232100 do
-      code "232100"
+    factory :rss_weather_xml_forecast_region_0232100 do
+      code "0232100"
       name "青森県鰺ヶ沢町"
       yomi "あおもりけんあじがさわまち"
       short_name "鰺ヶ沢町"
       short_yomi "あじがさわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_232300 do
-      code "232300"
+    factory :rss_weather_xml_forecast_region_0232300 do
+      code "0232300"
       name "青森県深浦町"
       yomi "あおもりけんふかうらまち"
       short_name "深浦町"
       short_yomi "ふかうらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_234300 do
-      code "234300"
+    factory :rss_weather_xml_forecast_region_0234300 do
+      code "0234300"
       name "青森県西目屋村"
       yomi "あおもりけんにしめやむら"
       short_name "西目屋村"
       short_yomi "にしめやむら"
     end
 
-    factory :rss_weather_xml_forecast_region_236100 do
-      code "236100"
+    factory :rss_weather_xml_forecast_region_0236100 do
+      code "0236100"
       name "青森県藤崎町"
       yomi "あおもりけんふじさきまち"
       short_name "藤崎町"
       short_yomi "ふじさきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_236200 do
-      code "236200"
+    factory :rss_weather_xml_forecast_region_0236200 do
+      code "0236200"
       name "青森県大鰐町"
       yomi "あおもりけんおおわにまち"
       short_name "大鰐町"
       short_yomi "おおわにまち"
     end
 
-    factory :rss_weather_xml_forecast_region_236700 do
-      code "236700"
+    factory :rss_weather_xml_forecast_region_0236700 do
+      code "0236700"
       name "青森県田舎館村"
       yomi "あおもりけんいなかだてむら"
       short_name "田舎館村"
       short_yomi "いなかだてむら"
     end
 
-    factory :rss_weather_xml_forecast_region_238100 do
-      code "238100"
+    factory :rss_weather_xml_forecast_region_0238100 do
+      code "0238100"
       name "青森県板柳町"
       yomi "あおもりけんいたやなぎまち"
       short_name "板柳町"
       short_yomi "いたやなぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_238400 do
-      code "238400"
+    factory :rss_weather_xml_forecast_region_0238400 do
+      code "0238400"
       name "青森県鶴田町"
       yomi "あおもりけんつるたまち"
       short_name "鶴田町"
       short_yomi "つるたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_238700 do
-      code "238700"
+    factory :rss_weather_xml_forecast_region_0238700 do
+      code "0238700"
       name "青森県中泊町"
       yomi "あおもりけんなかどまりまち"
       short_name "中泊町"
       short_yomi "なかどまりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_240100 do
-      code "240100"
+    factory :rss_weather_xml_forecast_region_0240100 do
+      code "0240100"
       name "青森県野辺地町"
       yomi "あおもりけんのへじまち"
       short_name "野辺地町"
       short_yomi "のへじまち"
     end
 
-    factory :rss_weather_xml_forecast_region_240200 do
-      code "240200"
+    factory :rss_weather_xml_forecast_region_0240200 do
+      code "0240200"
       name "青森県七戸町"
       yomi "あおもりけんしちのへまち"
       short_name "七戸町"
       short_yomi "しちのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_240500 do
-      code "240500"
+    factory :rss_weather_xml_forecast_region_0240500 do
+      code "0240500"
       name "青森県六戸町"
       yomi "あおもりけんろくのへまち"
       short_name "六戸町"
       short_yomi "ろくのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_240600 do
-      code "240600"
+    factory :rss_weather_xml_forecast_region_0240600 do
+      code "0240600"
       name "青森県横浜町"
       yomi "あおもりけんよこはままち"
       short_name "横浜町"
       short_yomi "よこはままち"
     end
 
-    factory :rss_weather_xml_forecast_region_240800 do
-      code "240800"
+    factory :rss_weather_xml_forecast_region_0240800 do
+      code "0240800"
       name "青森県東北町"
       yomi "あおもりけんとうほくまち"
       short_name "東北町"
       short_yomi "とうほくまち"
     end
 
-    factory :rss_weather_xml_forecast_region_241100 do
-      code "241100"
+    factory :rss_weather_xml_forecast_region_0241100 do
+      code "0241100"
       name "青森県六ヶ所村"
       yomi "あおもりけんろっかしょむら"
       short_name "六ヶ所村"
       short_yomi "ろっかしょむら"
     end
 
-    factory :rss_weather_xml_forecast_region_241200 do
-      code "241200"
+    factory :rss_weather_xml_forecast_region_0241200 do
+      code "0241200"
       name "青森県おいらせ町"
       yomi "あおもりけんおいらせちょう"
       short_name "おいらせ町"
       short_yomi "おいらせちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_242300 do
-      code "242300"
+    factory :rss_weather_xml_forecast_region_0242300 do
+      code "0242300"
       name "青森県大間町"
       yomi "あおもりけんおおままち"
       short_name "大間町"
       short_yomi "おおままち"
     end
 
-    factory :rss_weather_xml_forecast_region_242400 do
-      code "242400"
+    factory :rss_weather_xml_forecast_region_0242400 do
+      code "0242400"
       name "青森県東通村"
       yomi "あおもりけんひがしどおりむら"
       short_name "東通村"
       short_yomi "ひがしどおりむら"
     end
 
-    factory :rss_weather_xml_forecast_region_242500 do
-      code "242500"
+    factory :rss_weather_xml_forecast_region_0242500 do
+      code "0242500"
       name "青森県風間浦村"
       yomi "あおもりけんかざまうらむら"
       short_name "風間浦村"
       short_yomi "かざまうらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_242600 do
-      code "242600"
+    factory :rss_weather_xml_forecast_region_0242600 do
+      code "0242600"
       name "青森県佐井村"
       yomi "あおもりけんさいむら"
       short_name "佐井村"
       short_yomi "さいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_244100 do
-      code "244100"
+    factory :rss_weather_xml_forecast_region_0244100 do
+      code "0244100"
       name "青森県三戸町"
       yomi "あおもりけんさんのへまち"
       short_name "三戸町"
       short_yomi "さんのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_244200 do
-      code "244200"
+    factory :rss_weather_xml_forecast_region_0244200 do
+      code "0244200"
       name "青森県五戸町"
       yomi "あおもりけんごのへまち"
       short_name "五戸町"
       short_yomi "ごのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_244300 do
-      code "244300"
+    factory :rss_weather_xml_forecast_region_0244300 do
+      code "0244300"
       name "青森県田子町"
       yomi "あおもりけんたっこまち"
       short_name "田子町"
       short_yomi "たっこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_244500 do
-      code "244500"
+    factory :rss_weather_xml_forecast_region_0244500 do
+      code "0244500"
       name "青森県南部町"
       yomi "あおもりけんなんぶちょう"
       short_name "南部町"
       short_yomi "なんぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_244600 do
-      code "244600"
+    factory :rss_weather_xml_forecast_region_0244600 do
+      code "0244600"
       name "青森県階上町"
       yomi "あおもりけんはしかみちょう"
       short_name "階上町"
       short_yomi "はしかみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_245000 do
-      code "245000"
+    factory :rss_weather_xml_forecast_region_0245000 do
+      code "0245000"
       name "青森県新郷村"
       yomi "あおもりけんしんごうむら"
       short_name "新郷村"
       short_yomi "しんごうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_320100 do
-      code "320100"
+    factory :rss_weather_xml_forecast_region_0320100 do
+      code "0320100"
       name "岩手県盛岡市"
       yomi "いわてけんもりおかし"
       short_name "盛岡市"
       short_yomi "もりおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_320200 do
-      code "320200"
+    factory :rss_weather_xml_forecast_region_0320200 do
+      code "0320200"
       name "岩手県宮古市"
       yomi "いわてけんみやこし"
       short_name "宮古市"
       short_yomi "みやこし"
     end
 
-    factory :rss_weather_xml_forecast_region_320300 do
-      code "320300"
+    factory :rss_weather_xml_forecast_region_0320300 do
+      code "0320300"
       name "岩手県大船渡市"
       yomi "いわてけんおおふなとし"
       short_name "大船渡市"
       short_yomi "おおふなとし"
     end
 
-    factory :rss_weather_xml_forecast_region_320500 do
-      code "320500"
+    factory :rss_weather_xml_forecast_region_0320500 do
+      code "0320500"
       name "岩手県花巻市"
       yomi "いわてけんはなまきし"
       short_name "花巻市"
       short_yomi "はなまきし"
     end
 
-    factory :rss_weather_xml_forecast_region_320600 do
-      code "320600"
+    factory :rss_weather_xml_forecast_region_0320600 do
+      code "0320600"
       name "岩手県北上市"
       yomi "いわてけんきたかみし"
       short_name "北上市"
       short_yomi "きたかみし"
     end
 
-    factory :rss_weather_xml_forecast_region_320700 do
-      code "320700"
+    factory :rss_weather_xml_forecast_region_0320700 do
+      code "0320700"
       name "岩手県久慈市"
       yomi "いわてけんくじし"
       short_name "久慈市"
       short_yomi "くじし"
     end
 
-    factory :rss_weather_xml_forecast_region_320800 do
-      code "320800"
+    factory :rss_weather_xml_forecast_region_0320800 do
+      code "0320800"
       name "岩手県遠野市"
       yomi "いわてけんとおのし"
       short_name "遠野市"
       short_yomi "とおのし"
     end
 
-    factory :rss_weather_xml_forecast_region_320900 do
-      code "320900"
+    factory :rss_weather_xml_forecast_region_0320900 do
+      code "0320900"
       name "岩手県一関市"
       yomi "いわてけんいちのせきし"
       short_name "一関市"
       short_yomi "いちのせきし"
     end
 
-    factory :rss_weather_xml_forecast_region_321000 do
-      code "321000"
+    factory :rss_weather_xml_forecast_region_0321000 do
+      code "0321000"
       name "岩手県陸前高田市"
       yomi "いわてけんりくぜんたかたし"
       short_name "陸前高田市"
       short_yomi "りくぜんたかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_321100 do
-      code "321100"
+    factory :rss_weather_xml_forecast_region_0321100 do
+      code "0321100"
       name "岩手県釜石市"
       yomi "いわてけんかまいしし"
       short_name "釜石市"
       short_yomi "かまいしし"
     end
 
-    factory :rss_weather_xml_forecast_region_321300 do
-      code "321300"
+    factory :rss_weather_xml_forecast_region_0321300 do
+      code "0321300"
       name "岩手県二戸市"
       yomi "いわてけんにのへし"
       short_name "二戸市"
       short_yomi "にのへし"
     end
 
-    factory :rss_weather_xml_forecast_region_321400 do
-      code "321400"
+    factory :rss_weather_xml_forecast_region_0321400 do
+      code "0321400"
       name "岩手県八幡平市"
       yomi "いわてけんはちまんたいし"
       short_name "八幡平市"
       short_yomi "はちまんたいし"
     end
 
-    factory :rss_weather_xml_forecast_region_321500 do
-      code "321500"
+    factory :rss_weather_xml_forecast_region_0321500 do
+      code "0321500"
       name "岩手県奥州市"
       yomi "いわてけんおうしゅうし"
       short_name "奥州市"
       short_yomi "おうしゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_321600 do
-      code "321600"
+    factory :rss_weather_xml_forecast_region_0321600 do
+      code "0321600"
       name "岩手県滝沢市"
       yomi "いわてけんたきざわし"
       short_name "滝沢市"
       short_yomi "たきざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_330100 do
-      code "330100"
+    factory :rss_weather_xml_forecast_region_0330100 do
+      code "0330100"
       name "岩手県雫石町"
       yomi "いわてけんしずくいしちょう"
       short_name "雫石町"
       short_yomi "しずくいしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_330200 do
-      code "330200"
+    factory :rss_weather_xml_forecast_region_0330200 do
+      code "0330200"
       name "岩手県葛巻町"
       yomi "いわてけんくずまきまち"
       short_name "葛巻町"
       short_yomi "くずまきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_330300 do
-      code "330300"
+    factory :rss_weather_xml_forecast_region_0330300 do
+      code "0330300"
       name "岩手県岩手町"
       yomi "いわてけんいわてまち"
       short_name "岩手町"
       short_yomi "いわてまち"
     end
 
-    factory :rss_weather_xml_forecast_region_332100 do
-      code "332100"
+    factory :rss_weather_xml_forecast_region_0332100 do
+      code "0332100"
       name "岩手県紫波町"
       yomi "いわてけんしわちょう"
       short_name "紫波町"
       short_yomi "しわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_332200 do
-      code "332200"
+    factory :rss_weather_xml_forecast_region_0332200 do
+      code "0332200"
       name "岩手県矢巾町"
       yomi "いわてけんやはばちょう"
       short_name "矢巾町"
       short_yomi "やはばちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_336600 do
-      code "336600"
+    factory :rss_weather_xml_forecast_region_0336600 do
+      code "0336600"
       name "岩手県西和賀町"
       yomi "いわてけんにしわがまち"
       short_name "西和賀町"
       short_yomi "にしわがまち"
     end
 
-    factory :rss_weather_xml_forecast_region_338100 do
-      code "338100"
+    factory :rss_weather_xml_forecast_region_0338100 do
+      code "0338100"
       name "岩手県金ケ崎町"
       yomi "いわてけんかねがさきちょう"
       short_name "金ケ崎町"
       short_yomi "かねがさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_340200 do
-      code "340200"
+    factory :rss_weather_xml_forecast_region_0340200 do
+      code "0340200"
       name "岩手県平泉町"
       yomi "いわてけんひらいずみちょう"
       short_name "平泉町"
       short_yomi "ひらいずみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_344100 do
-      code "344100"
+    factory :rss_weather_xml_forecast_region_0344100 do
+      code "0344100"
       name "岩手県住田町"
       yomi "いわてけんすみたちょう"
       short_name "住田町"
       short_yomi "すみたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_346100 do
-      code "346100"
+    factory :rss_weather_xml_forecast_region_0346100 do
+      code "0346100"
       name "岩手県大槌町"
       yomi "いわてけんおおつちちょう"
       short_name "大槌町"
       short_yomi "おおつちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_348200 do
-      code "348200"
+    factory :rss_weather_xml_forecast_region_0348200 do
+      code "0348200"
       name "岩手県山田町"
       yomi "いわてけんやまだまち"
       short_name "山田町"
       short_yomi "やまだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_348300 do
-      code "348300"
+    factory :rss_weather_xml_forecast_region_0348300 do
+      code "0348300"
       name "岩手県岩泉町"
       yomi "いわてけんいわいずみちょう"
       short_name "岩泉町"
       short_yomi "いわいずみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_348400 do
-      code "348400"
+    factory :rss_weather_xml_forecast_region_0348400 do
+      code "0348400"
       name "岩手県田野畑村"
       yomi "いわてけんたのはたむら"
       short_name "田野畑村"
       short_yomi "たのはたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_348500 do
-      code "348500"
+    factory :rss_weather_xml_forecast_region_0348500 do
+      code "0348500"
       name "岩手県普代村"
       yomi "いわてけんふだいむら"
       short_name "普代村"
       short_yomi "ふだいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_350100 do
-      code "350100"
+    factory :rss_weather_xml_forecast_region_0350100 do
+      code "0350100"
       name "岩手県軽米町"
       yomi "いわてけんかるまいまち"
       short_name "軽米町"
       short_yomi "かるまいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_350300 do
-      code "350300"
+    factory :rss_weather_xml_forecast_region_0350300 do
+      code "0350300"
       name "岩手県野田村"
       yomi "いわてけんのだむら"
       short_name "野田村"
       short_yomi "のだむら"
     end
 
-    factory :rss_weather_xml_forecast_region_350600 do
-      code "350600"
+    factory :rss_weather_xml_forecast_region_0350600 do
+      code "0350600"
       name "岩手県九戸村"
       yomi "いわてけんくのへむら"
       short_name "九戸村"
       short_yomi "くのへむら"
     end
 
-    factory :rss_weather_xml_forecast_region_350700 do
-      code "350700"
+    factory :rss_weather_xml_forecast_region_0350700 do
+      code "0350700"
       name "岩手県洋野町"
       yomi "いわてけんひろのちょう"
       short_name "洋野町"
       short_yomi "ひろのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_352400 do
-      code "352400"
+    factory :rss_weather_xml_forecast_region_0352400 do
+      code "0352400"
       name "岩手県一戸町"
       yomi "いわてけんいちのへまち"
       short_name "一戸町"
       short_yomi "いちのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_410000 do
-      code "410000"
+    factory :rss_weather_xml_forecast_region_0410000 do
+      code "0410000"
       name "宮城県仙台市"
       yomi "みやぎけんせんだいし"
       short_name "仙台市"
       short_yomi "せんだいし"
     end
 
-    factory :rss_weather_xml_forecast_region_420200 do
-      code "420200"
+    factory :rss_weather_xml_forecast_region_0420200 do
+      code "0420200"
       name "宮城県石巻市"
       yomi "みやぎけんいしのまきし"
       short_name "石巻市"
       short_yomi "いしのまきし"
     end
 
-    factory :rss_weather_xml_forecast_region_420300 do
-      code "420300"
+    factory :rss_weather_xml_forecast_region_0420300 do
+      code "0420300"
       name "宮城県塩竈市"
       yomi "みやぎけんしおがまし"
       short_name "塩竈市"
       short_yomi "しおがまし"
     end
 
-    factory :rss_weather_xml_forecast_region_420500 do
-      code "420500"
+    factory :rss_weather_xml_forecast_region_0420500 do
+      code "0420500"
       name "宮城県気仙沼市"
       yomi "みやぎけんけせんぬまし"
       short_name "気仙沼市"
       short_yomi "けせんぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_420600 do
-      code "420600"
+    factory :rss_weather_xml_forecast_region_0420600 do
+      code "0420600"
       name "宮城県白石市"
       yomi "みやぎけんしろいしし"
       short_name "白石市"
       short_yomi "しろいしし"
     end
 
-    factory :rss_weather_xml_forecast_region_420700 do
-      code "420700"
+    factory :rss_weather_xml_forecast_region_0420700 do
+      code "0420700"
       name "宮城県名取市"
       yomi "みやぎけんなとりし"
       short_name "名取市"
       short_yomi "なとりし"
     end
 
-    factory :rss_weather_xml_forecast_region_420800 do
-      code "420800"
+    factory :rss_weather_xml_forecast_region_0420800 do
+      code "0420800"
       name "宮城県角田市"
       yomi "みやぎけんかくだし"
       short_name "角田市"
       short_yomi "かくだし"
     end
 
-    factory :rss_weather_xml_forecast_region_420900 do
-      code "420900"
+    factory :rss_weather_xml_forecast_region_0420900 do
+      code "0420900"
       name "宮城県多賀城市"
       yomi "みやぎけんたがじょうし"
       short_name "多賀城市"
       short_yomi "たがじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_421100 do
-      code "421100"
+    factory :rss_weather_xml_forecast_region_0421100 do
+      code "0421100"
       name "宮城県岩沼市"
       yomi "みやぎけんいわぬまし"
       short_name "岩沼市"
       short_yomi "いわぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_421200 do
-      code "421200"
+    factory :rss_weather_xml_forecast_region_0421200 do
+      code "0421200"
       name "宮城県登米市"
       yomi "みやぎけんとめし"
       short_name "登米市"
       short_yomi "とめし"
     end
 
-    factory :rss_weather_xml_forecast_region_421300 do
-      code "421300"
+    factory :rss_weather_xml_forecast_region_0421300 do
+      code "0421300"
       name "宮城県栗原市"
       yomi "みやぎけんくりはらし"
       short_name "栗原市"
       short_yomi "くりはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_421400 do
-      code "421400"
+    factory :rss_weather_xml_forecast_region_0421400 do
+      code "0421400"
       name "宮城県東松島市"
       yomi "みやぎけんひがしまつしまし"
       short_name "東松島市"
       short_yomi "ひがしまつしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_421500 do
-      code "421500"
+    factory :rss_weather_xml_forecast_region_0421500 do
+      code "0421500"
       name "宮城県大崎市"
       yomi "みやぎけんおおさきし"
       short_name "大崎市"
       short_yomi "おおさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_430100 do
-      code "430100"
+    factory :rss_weather_xml_forecast_region_0430100 do
+      code "0430100"
       name "宮城県蔵王町"
       yomi "みやぎけんざおうまち"
       short_name "蔵王町"
       short_yomi "ざおうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_430200 do
-      code "430200"
+    factory :rss_weather_xml_forecast_region_0430200 do
+      code "0430200"
       name "宮城県七ヶ宿町"
       yomi "みやぎけんしちかしゅくまち"
       short_name "七ヶ宿町"
       short_yomi "しちかしゅくまち"
     end
 
-    factory :rss_weather_xml_forecast_region_432100 do
-      code "432100"
+    factory :rss_weather_xml_forecast_region_0432100 do
+      code "0432100"
       name "宮城県大河原町"
       yomi "みやぎけんおおがわらまち"
       short_name "大河原町"
       short_yomi "おおがわらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_432200 do
-      code "432200"
+    factory :rss_weather_xml_forecast_region_0432200 do
+      code "0432200"
       name "宮城県村田町"
       yomi "みやぎけんむらたまち"
       short_name "村田町"
       short_yomi "むらたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_432300 do
-      code "432300"
+    factory :rss_weather_xml_forecast_region_0432300 do
+      code "0432300"
       name "宮城県柴田町"
       yomi "みやぎけんしばたまち"
       short_name "柴田町"
       short_yomi "しばたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_432400 do
-      code "432400"
+    factory :rss_weather_xml_forecast_region_0432400 do
+      code "0432400"
       name "宮城県川崎町"
       yomi "みやぎけんかわさきまち"
       short_name "川崎町"
       short_yomi "かわさきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_434100 do
-      code "434100"
+    factory :rss_weather_xml_forecast_region_0434100 do
+      code "0434100"
       name "宮城県丸森町"
       yomi "みやぎけんまるもりまち"
       short_name "丸森町"
       short_yomi "まるもりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_436100 do
-      code "436100"
+    factory :rss_weather_xml_forecast_region_0436100 do
+      code "0436100"
       name "宮城県亘理町"
       yomi "みやぎけんわたりちょう"
       short_name "亘理町"
       short_yomi "わたりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_436200 do
-      code "436200"
+    factory :rss_weather_xml_forecast_region_0436200 do
+      code "0436200"
       name "宮城県山元町"
       yomi "みやぎけんやまもとちょう"
       short_name "山元町"
       short_yomi "やまもとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_440100 do
-      code "440100"
+    factory :rss_weather_xml_forecast_region_0440100 do
+      code "0440100"
       name "宮城県松島町"
       yomi "みやぎけんまつしままち"
       short_name "松島町"
       short_yomi "まつしままち"
     end
 
-    factory :rss_weather_xml_forecast_region_440400 do
-      code "440400"
+    factory :rss_weather_xml_forecast_region_0440400 do
+      code "0440400"
       name "宮城県七ヶ浜町"
       yomi "みやぎけんしちがはままち"
       short_name "七ヶ浜町"
       short_yomi "しちがはままち"
     end
 
-    factory :rss_weather_xml_forecast_region_440600 do
-      code "440600"
+    factory :rss_weather_xml_forecast_region_0440600 do
+      code "0440600"
       name "宮城県利府町"
       yomi "みやぎけんりふちょう"
       short_name "利府町"
       short_yomi "りふちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_442100 do
-      code "442100"
+    factory :rss_weather_xml_forecast_region_0442100 do
+      code "0442100"
       name "宮城県大和町"
       yomi "みやぎけんたいわちょう"
       short_name "大和町"
       short_yomi "たいわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_442200 do
-      code "442200"
+    factory :rss_weather_xml_forecast_region_0442200 do
+      code "0442200"
       name "宮城県大郷町"
       yomi "みやぎけんおおさとちょう"
       short_name "大郷町"
       short_yomi "おおさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_442300 do
-      code "442300"
+    factory :rss_weather_xml_forecast_region_0442300 do
+      code "0442300"
       name "宮城県富谷町"
       yomi "みやぎけんとみやまち"
       short_name "富谷町"
       short_yomi "とみやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_442400 do
-      code "442400"
+    factory :rss_weather_xml_forecast_region_0442400 do
+      code "0442400"
       name "宮城県大衡村"
       yomi "みやぎけんおおひらむら"
       short_name "大衡村"
       short_yomi "おおひらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_444400 do
-      code "444400"
+    factory :rss_weather_xml_forecast_region_0444400 do
+      code "0444400"
       name "宮城県色麻町"
       yomi "みやぎけんしかまちょう"
       short_name "色麻町"
       short_yomi "しかまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_444500 do
-      code "444500"
+    factory :rss_weather_xml_forecast_region_0444500 do
+      code "0444500"
       name "宮城県加美町"
       yomi "みやぎけんかみまち"
       short_name "加美町"
       short_yomi "かみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_450100 do
-      code "450100"
+    factory :rss_weather_xml_forecast_region_0450100 do
+      code "0450100"
       name "宮城県涌谷町"
       yomi "みやぎけんわくやちょう"
       short_name "涌谷町"
       short_yomi "わくやちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_450500 do
-      code "450500"
+    factory :rss_weather_xml_forecast_region_0450500 do
+      code "0450500"
       name "宮城県美里町"
       yomi "みやぎけんみさとまち"
       short_name "美里町"
       short_yomi "みさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_458100 do
-      code "458100"
+    factory :rss_weather_xml_forecast_region_0458100 do
+      code "0458100"
       name "宮城県女川町"
       yomi "みやぎけんおながわちょう"
       short_name "女川町"
       short_yomi "おながわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_460600 do
-      code "460600"
+    factory :rss_weather_xml_forecast_region_0460600 do
+      code "0460600"
       name "宮城県南三陸町"
       yomi "みやぎけんみなみさんりくちょう"
       short_name "南三陸町"
       short_yomi "みなみさんりくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_520100 do
-      code "520100"
+    factory :rss_weather_xml_forecast_region_0520100 do
+      code "0520100"
       name "秋田県秋田市"
       yomi "あきたけんあきたし"
       short_name "秋田市"
       short_yomi "あきたし"
     end
 
-    factory :rss_weather_xml_forecast_region_520200 do
-      code "520200"
+    factory :rss_weather_xml_forecast_region_0520200 do
+      code "0520200"
       name "秋田県能代市"
       yomi "あきたけんのしろし"
       short_name "能代市"
       short_yomi "のしろし"
     end
 
-    factory :rss_weather_xml_forecast_region_520300 do
-      code "520300"
+    factory :rss_weather_xml_forecast_region_0520300 do
+      code "0520300"
       name "秋田県横手市"
       yomi "あきたけんよこてし"
       short_name "横手市"
       short_yomi "よこてし"
     end
 
-    factory :rss_weather_xml_forecast_region_520400 do
-      code "520400"
+    factory :rss_weather_xml_forecast_region_0520400 do
+      code "0520400"
       name "秋田県大館市"
       yomi "あきたけんおおだてし"
       short_name "大館市"
       short_yomi "おおだてし"
     end
 
-    factory :rss_weather_xml_forecast_region_520600 do
-      code "520600"
+    factory :rss_weather_xml_forecast_region_0520600 do
+      code "0520600"
       name "秋田県男鹿市"
       yomi "あきたけんおがし"
       short_name "男鹿市"
       short_yomi "おがし"
     end
 
-    factory :rss_weather_xml_forecast_region_520700 do
-      code "520700"
+    factory :rss_weather_xml_forecast_region_0520700 do
+      code "0520700"
       name "秋田県湯沢市"
       yomi "あきたけんゆざわし"
       short_name "湯沢市"
       short_yomi "ゆざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_520900 do
-      code "520900"
+    factory :rss_weather_xml_forecast_region_0520900 do
+      code "0520900"
       name "秋田県鹿角市"
       yomi "あきたけんかづのし"
       short_name "鹿角市"
       short_yomi "かづのし"
     end
 
-    factory :rss_weather_xml_forecast_region_521000 do
-      code "521000"
+    factory :rss_weather_xml_forecast_region_0521000 do
+      code "0521000"
       name "秋田県由利本荘市"
       yomi "あきたけんゆりほんじょうし"
       short_name "由利本荘市"
       short_yomi "ゆりほんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_521100 do
-      code "521100"
+    factory :rss_weather_xml_forecast_region_0521100 do
+      code "0521100"
       name "秋田県潟上市"
       yomi "あきたけんかたがみし"
       short_name "潟上市"
       short_yomi "かたがみし"
     end
 
-    factory :rss_weather_xml_forecast_region_521200 do
-      code "521200"
+    factory :rss_weather_xml_forecast_region_0521200 do
+      code "0521200"
       name "秋田県大仙市"
       yomi "あきたけんだいせんし"
       short_name "大仙市"
       short_yomi "だいせんし"
     end
 
-    factory :rss_weather_xml_forecast_region_521300 do
-      code "521300"
+    factory :rss_weather_xml_forecast_region_0521300 do
+      code "0521300"
       name "秋田県北秋田市"
       yomi "あきたけんきたあきたし"
       short_name "北秋田市"
       short_yomi "きたあきたし"
     end
 
-    factory :rss_weather_xml_forecast_region_521400 do
-      code "521400"
+    factory :rss_weather_xml_forecast_region_0521400 do
+      code "0521400"
       name "秋田県にかほ市"
       yomi "あきたけんにかほし"
       short_name "にかほ市"
       short_yomi "にかほし"
     end
 
-    factory :rss_weather_xml_forecast_region_521500 do
-      code "521500"
+    factory :rss_weather_xml_forecast_region_0521500 do
+      code "0521500"
       name "秋田県仙北市"
       yomi "あきたけんせんぼくし"
       short_name "仙北市"
       short_yomi "せんぼくし"
     end
 
-    factory :rss_weather_xml_forecast_region_530300 do
-      code "530300"
+    factory :rss_weather_xml_forecast_region_0530300 do
+      code "0530300"
       name "秋田県小坂町"
       yomi "あきたけんこさかまち"
       short_name "小坂町"
       short_yomi "こさかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_532700 do
-      code "532700"
+    factory :rss_weather_xml_forecast_region_0532700 do
+      code "0532700"
       name "秋田県上小阿仁村"
       yomi "あきたけんかみこあにむら"
       short_name "上小阿仁村"
       short_yomi "かみこあにむら"
     end
 
-    factory :rss_weather_xml_forecast_region_534600 do
-      code "534600"
+    factory :rss_weather_xml_forecast_region_0534600 do
+      code "0534600"
       name "秋田県藤里町"
       yomi "あきたけんふじさとまち"
       short_name "藤里町"
       short_yomi "ふじさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_534800 do
-      code "534800"
+    factory :rss_weather_xml_forecast_region_0534800 do
+      code "0534800"
       name "秋田県三種町"
       yomi "あきたけんみたねちょう"
       short_name "三種町"
       short_yomi "みたねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_534900 do
-      code "534900"
+    factory :rss_weather_xml_forecast_region_0534900 do
+      code "0534900"
       name "秋田県八峰町"
       yomi "あきたけんはっぽうちょう"
       short_name "八峰町"
       short_yomi "はっぽうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_536100 do
-      code "536100"
+    factory :rss_weather_xml_forecast_region_0536100 do
+      code "0536100"
       name "秋田県五城目町"
       yomi "あきたけんごじょうめまち"
       short_name "五城目町"
       short_yomi "ごじょうめまち"
     end
 
-    factory :rss_weather_xml_forecast_region_536300 do
-      code "536300"
+    factory :rss_weather_xml_forecast_region_0536300 do
+      code "0536300"
       name "秋田県八郎潟町"
       yomi "あきたけんはちろうがたまち"
       short_name "八郎潟町"
       short_yomi "はちろうがたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_536600 do
-      code "536600"
+    factory :rss_weather_xml_forecast_region_0536600 do
+      code "0536600"
       name "秋田県井川町"
       yomi "あきたけんいかわまち"
       short_name "井川町"
       short_yomi "いかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_536800 do
-      code "536800"
+    factory :rss_weather_xml_forecast_region_0536800 do
+      code "0536800"
       name "秋田県大潟村"
       yomi "あきたけんおおがたむら"
       short_name "大潟村"
       short_yomi "おおがたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_543400 do
-      code "543400"
+    factory :rss_weather_xml_forecast_region_0543400 do
+      code "0543400"
       name "秋田県美郷町"
       yomi "あきたけんみさとちょう"
       short_name "美郷町"
       short_yomi "みさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_546300 do
-      code "546300"
+    factory :rss_weather_xml_forecast_region_0546300 do
+      code "0546300"
       name "秋田県羽後町"
       yomi "あきたけんうごまち"
       short_name "羽後町"
       short_yomi "うごまち"
     end
 
-    factory :rss_weather_xml_forecast_region_546400 do
-      code "546400"
+    factory :rss_weather_xml_forecast_region_0546400 do
+      code "0546400"
       name "秋田県東成瀬村"
       yomi "あきたけんひがしなるせむら"
       short_name "東成瀬村"
       short_yomi "ひがしなるせむら"
     end
 
-    factory :rss_weather_xml_forecast_region_620100 do
-      code "620100"
+    factory :rss_weather_xml_forecast_region_0620100 do
+      code "0620100"
       name "山形県山形市"
       yomi "やまがたけんやまがたし"
       short_name "山形市"
       short_yomi "やまがたし"
     end
 
-    factory :rss_weather_xml_forecast_region_620200 do
-      code "620200"
+    factory :rss_weather_xml_forecast_region_0620200 do
+      code "0620200"
       name "山形県米沢市"
       yomi "やまがたけんよねざわし"
       short_name "米沢市"
       short_yomi "よねざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_620300 do
-      code "620300"
+    factory :rss_weather_xml_forecast_region_0620300 do
+      code "0620300"
       name "山形県鶴岡市"
       yomi "やまがたけんつるおかし"
       short_name "鶴岡市"
       short_yomi "つるおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_620400 do
-      code "620400"
+    factory :rss_weather_xml_forecast_region_0620400 do
+      code "0620400"
       name "山形県酒田市"
       yomi "やまがたけんさかたし"
       short_name "酒田市"
       short_yomi "さかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_620500 do
-      code "620500"
+    factory :rss_weather_xml_forecast_region_0620500 do
+      code "0620500"
       name "山形県新庄市"
       yomi "やまがたけんしんじょうし"
       short_name "新庄市"
       short_yomi "しんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_620600 do
-      code "620600"
+    factory :rss_weather_xml_forecast_region_0620600 do
+      code "0620600"
       name "山形県寒河江市"
       yomi "やまがたけんさがえし"
       short_name "寒河江市"
       short_yomi "さがえし"
     end
 
-    factory :rss_weather_xml_forecast_region_620700 do
-      code "620700"
+    factory :rss_weather_xml_forecast_region_0620700 do
+      code "0620700"
       name "山形県上山市"
       yomi "やまがたけんかみのやまし"
       short_name "上山市"
       short_yomi "かみのやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_620800 do
-      code "620800"
+    factory :rss_weather_xml_forecast_region_0620800 do
+      code "0620800"
       name "山形県村山市"
       yomi "やまがたけんむらやまし"
       short_name "村山市"
       short_yomi "むらやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_620900 do
-      code "620900"
+    factory :rss_weather_xml_forecast_region_0620900 do
+      code "0620900"
       name "山形県長井市"
       yomi "やまがたけんながいし"
       short_name "長井市"
       short_yomi "ながいし"
     end
 
-    factory :rss_weather_xml_forecast_region_621000 do
-      code "621000"
+    factory :rss_weather_xml_forecast_region_0621000 do
+      code "0621000"
       name "山形県天童市"
       yomi "やまがたけんてんどうし"
       short_name "天童市"
       short_yomi "てんどうし"
     end
 
-    factory :rss_weather_xml_forecast_region_621100 do
-      code "621100"
+    factory :rss_weather_xml_forecast_region_0621100 do
+      code "0621100"
       name "山形県東根市"
       yomi "やまがたけんひがしねし"
       short_name "東根市"
       short_yomi "ひがしねし"
     end
 
-    factory :rss_weather_xml_forecast_region_621200 do
-      code "621200"
+    factory :rss_weather_xml_forecast_region_0621200 do
+      code "0621200"
       name "山形県尾花沢市"
       yomi "やまがたけんおばなざわし"
       short_name "尾花沢市"
       short_yomi "おばなざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_621300 do
-      code "621300"
+    factory :rss_weather_xml_forecast_region_0621300 do
+      code "0621300"
       name "山形県南陽市"
       yomi "やまがたけんなんようし"
       short_name "南陽市"
       short_yomi "なんようし"
     end
 
-    factory :rss_weather_xml_forecast_region_630100 do
-      code "630100"
+    factory :rss_weather_xml_forecast_region_0630100 do
+      code "0630100"
       name "山形県山辺町"
       yomi "やまがたけんやまのべまち"
       short_name "山辺町"
       short_yomi "やまのべまち"
     end
 
-    factory :rss_weather_xml_forecast_region_630200 do
-      code "630200"
+    factory :rss_weather_xml_forecast_region_0630200 do
+      code "0630200"
       name "山形県中山町"
       yomi "やまがたけんなかやままち"
       short_name "中山町"
       short_yomi "なかやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_632100 do
-      code "632100"
+    factory :rss_weather_xml_forecast_region_0632100 do
+      code "0632100"
       name "山形県河北町"
       yomi "やまがたけんかほくちょう"
       short_name "河北町"
       short_yomi "かほくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_632200 do
-      code "632200"
+    factory :rss_weather_xml_forecast_region_0632200 do
+      code "0632200"
       name "山形県西川町"
       yomi "やまがたけんにしかわまち"
       short_name "西川町"
       short_yomi "にしかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_632300 do
-      code "632300"
+    factory :rss_weather_xml_forecast_region_0632300 do
+      code "0632300"
       name "山形県朝日町"
       yomi "やまがたけんあさひまち"
       short_name "朝日町"
       short_yomi "あさひまち"
     end
 
-    factory :rss_weather_xml_forecast_region_632400 do
-      code "632400"
+    factory :rss_weather_xml_forecast_region_0632400 do
+      code "0632400"
       name "山形県大江町"
       yomi "やまがたけんおおえまち"
       short_name "大江町"
       short_yomi "おおえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_634100 do
-      code "634100"
+    factory :rss_weather_xml_forecast_region_0634100 do
+      code "0634100"
       name "山形県大石田町"
       yomi "やまがたけんおおいしだまち"
       short_name "大石田町"
       short_yomi "おおいしだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_636100 do
-      code "636100"
+    factory :rss_weather_xml_forecast_region_0636100 do
+      code "0636100"
       name "山形県金山町"
       yomi "やまがたけんかねやままち"
       short_name "金山町"
       short_yomi "かねやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_636200 do
-      code "636200"
+    factory :rss_weather_xml_forecast_region_0636200 do
+      code "0636200"
       name "山形県最上町"
       yomi "やまがたけんもがみまち"
       short_name "最上町"
       short_yomi "もがみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_636300 do
-      code "636300"
+    factory :rss_weather_xml_forecast_region_0636300 do
+      code "0636300"
       name "山形県舟形町"
       yomi "やまがたけんふながたまち"
       short_name "舟形町"
       short_yomi "ふながたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_636400 do
-      code "636400"
+    factory :rss_weather_xml_forecast_region_0636400 do
+      code "0636400"
       name "山形県真室川町"
       yomi "やまがたけんまむろがわまち"
       short_name "真室川町"
       short_yomi "まむろがわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_636500 do
-      code "636500"
+    factory :rss_weather_xml_forecast_region_0636500 do
+      code "0636500"
       name "山形県大蔵村"
       yomi "やまがたけんおおくらむら"
       short_name "大蔵村"
       short_yomi "おおくらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_636600 do
-      code "636600"
+    factory :rss_weather_xml_forecast_region_0636600 do
+      code "0636600"
       name "山形県鮭川村"
       yomi "やまがたけんさけがわむら"
       short_name "鮭川村"
       short_yomi "さけがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_636700 do
-      code "636700"
+    factory :rss_weather_xml_forecast_region_0636700 do
+      code "0636700"
       name "山形県戸沢村"
       yomi "やまがたけんとざわむら"
       short_name "戸沢村"
       short_yomi "とざわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_638100 do
-      code "638100"
+    factory :rss_weather_xml_forecast_region_0638100 do
+      code "0638100"
       name "山形県高畠町"
       yomi "やまがたけんたかはたまち"
       short_name "高畠町"
       short_yomi "たかはたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_638200 do
-      code "638200"
+    factory :rss_weather_xml_forecast_region_0638200 do
+      code "0638200"
       name "山形県川西町"
       yomi "やまがたけんかわにしまち"
       short_name "川西町"
       short_yomi "かわにしまち"
     end
 
-    factory :rss_weather_xml_forecast_region_640100 do
-      code "640100"
+    factory :rss_weather_xml_forecast_region_0640100 do
+      code "0640100"
       name "山形県小国町"
       yomi "やまがたけんおぐにまち"
       short_name "小国町"
       short_yomi "おぐにまち"
     end
 
-    factory :rss_weather_xml_forecast_region_640200 do
-      code "640200"
+    factory :rss_weather_xml_forecast_region_0640200 do
+      code "0640200"
       name "山形県白鷹町"
       yomi "やまがたけんしらたかまち"
       short_name "白鷹町"
       short_yomi "しらたかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_640300 do
-      code "640300"
+    factory :rss_weather_xml_forecast_region_0640300 do
+      code "0640300"
       name "山形県飯豊町"
       yomi "やまがたけんいいでまち"
       short_name "飯豊町"
       short_yomi "いいでまち"
     end
 
-    factory :rss_weather_xml_forecast_region_642600 do
-      code "642600"
+    factory :rss_weather_xml_forecast_region_0642600 do
+      code "0642600"
       name "山形県三川町"
       yomi "やまがたけんみかわまち"
       short_name "三川町"
       short_yomi "みかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_642800 do
-      code "642800"
+    factory :rss_weather_xml_forecast_region_0642800 do
+      code "0642800"
       name "山形県庄内町"
       yomi "やまがたけんしょうないまち"
       short_name "庄内町"
       short_yomi "しょうないまち"
     end
 
-    factory :rss_weather_xml_forecast_region_646100 do
-      code "646100"
+    factory :rss_weather_xml_forecast_region_0646100 do
+      code "0646100"
       name "山形県遊佐町"
       yomi "やまがたけんゆざまち"
       short_name "遊佐町"
       short_yomi "ゆざまち"
     end
 
-    factory :rss_weather_xml_forecast_region_720100 do
-      code "720100"
+    factory :rss_weather_xml_forecast_region_0720100 do
+      code "0720100"
       name "福島県福島市"
       yomi "ふくしまけんふくしまし"
       short_name "福島市"
       short_yomi "ふくしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_720200 do
-      code "720200"
+    factory :rss_weather_xml_forecast_region_0720200 do
+      code "0720200"
       name "福島県会津若松市"
       yomi "ふくしまけんあいづわかまつし"
       short_name "会津若松市"
       short_yomi "あいづわかまつし"
     end
 
-    factory :rss_weather_xml_forecast_region_720300 do
-      code "720300"
+    factory :rss_weather_xml_forecast_region_0720300 do
+      code "0720300"
       name "福島県郡山市"
       yomi "ふくしまけんこおりやまし"
       short_name "郡山市"
       short_yomi "こおりやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_720400 do
-      code "720400"
+    factory :rss_weather_xml_forecast_region_0720400 do
+      code "0720400"
       name "福島県いわき市"
       yomi "ふくしまけんいわきし"
       short_name "いわき市"
       short_yomi "いわきし"
     end
 
-    factory :rss_weather_xml_forecast_region_720500 do
-      code "720500"
+    factory :rss_weather_xml_forecast_region_0720500 do
+      code "0720500"
       name "福島県白河市"
       yomi "ふくしまけんしらかわし"
       short_name "白河市"
       short_yomi "しらかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_720700 do
-      code "720700"
+    factory :rss_weather_xml_forecast_region_0720700 do
+      code "0720700"
       name "福島県須賀川市"
       yomi "ふくしまけんすかがわし"
       short_name "須賀川市"
       short_yomi "すかがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_720800 do
-      code "720800"
+    factory :rss_weather_xml_forecast_region_0720800 do
+      code "0720800"
       name "福島県喜多方市"
       yomi "ふくしまけんきたかたし"
       short_name "喜多方市"
       short_yomi "きたかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_720900 do
-      code "720900"
+    factory :rss_weather_xml_forecast_region_0720900 do
+      code "0720900"
       name "福島県相馬市"
       yomi "ふくしまけんそうまし"
       short_name "相馬市"
       short_yomi "そうまし"
     end
 
-    factory :rss_weather_xml_forecast_region_721000 do
-      code "721000"
+    factory :rss_weather_xml_forecast_region_0721000 do
+      code "0721000"
       name "福島県二本松市"
       yomi "ふくしまけんにほんまつし"
       short_name "二本松市"
       short_yomi "にほんまつし"
     end
 
-    factory :rss_weather_xml_forecast_region_721100 do
-      code "721100"
+    factory :rss_weather_xml_forecast_region_0721100 do
+      code "0721100"
       name "福島県田村市"
       yomi "ふくしまけんたむらし"
       short_name "田村市"
       short_yomi "たむらし"
     end
 
-    factory :rss_weather_xml_forecast_region_721200 do
-      code "721200"
+    factory :rss_weather_xml_forecast_region_0721200 do
+      code "0721200"
       name "福島県南相馬市"
       yomi "ふくしまけんみなみそうまし"
       short_name "南相馬市"
       short_yomi "みなみそうまし"
     end
 
-    factory :rss_weather_xml_forecast_region_721300 do
-      code "721300"
+    factory :rss_weather_xml_forecast_region_0721300 do
+      code "0721300"
       name "福島県伊達市"
       yomi "ふくしまけんだてし"
       short_name "伊達市"
       short_yomi "だてし"
     end
 
-    factory :rss_weather_xml_forecast_region_721400 do
-      code "721400"
+    factory :rss_weather_xml_forecast_region_0721400 do
+      code "0721400"
       name "福島県本宮市"
       yomi "ふくしまけんもとみやし"
       short_name "本宮市"
       short_yomi "もとみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_730100 do
-      code "730100"
+    factory :rss_weather_xml_forecast_region_0730100 do
+      code "0730100"
       name "福島県桑折町"
       yomi "ふくしまけんこおりまち"
       short_name "桑折町"
       short_yomi "こおりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_730300 do
-      code "730300"
+    factory :rss_weather_xml_forecast_region_0730300 do
+      code "0730300"
       name "福島県国見町"
       yomi "ふくしまけんくにみまち"
       short_name "国見町"
       short_yomi "くにみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_730800 do
-      code "730800"
+    factory :rss_weather_xml_forecast_region_0730800 do
+      code "0730800"
       name "福島県川俣町"
       yomi "ふくしまけんかわまたまち"
       short_name "川俣町"
       short_yomi "かわまたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_732200 do
-      code "732200"
+    factory :rss_weather_xml_forecast_region_0732200 do
+      code "0732200"
       name "福島県大玉村"
       yomi "ふくしまけんおおたまむら"
       short_name "大玉村"
       short_yomi "おおたまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_734200 do
-      code "734200"
+    factory :rss_weather_xml_forecast_region_0734200 do
+      code "0734200"
       name "福島県鏡石町"
       yomi "ふくしまけんかがみいしまち"
       short_name "鏡石町"
       short_yomi "かがみいしまち"
     end
 
-    factory :rss_weather_xml_forecast_region_734400 do
-      code "734400"
+    factory :rss_weather_xml_forecast_region_0734400 do
+      code "0734400"
       name "福島県天栄村"
       yomi "ふくしまけんてんえいむら"
       short_name "天栄村"
       short_yomi "てんえいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_736200 do
-      code "736200"
+    factory :rss_weather_xml_forecast_region_0736200 do
+      code "0736200"
       name "福島県下郷町"
       yomi "ふくしまけんしもごうまち"
       short_name "下郷町"
       short_yomi "しもごうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_736400 do
-      code "736400"
+    factory :rss_weather_xml_forecast_region_0736400 do
+      code "0736400"
       name "福島県檜枝岐村"
       yomi "ふくしまけんひのえまたむら"
       short_name "檜枝岐村"
       short_yomi "ひのえまたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_736700 do
-      code "736700"
+    factory :rss_weather_xml_forecast_region_0736700 do
+      code "0736700"
       name "福島県只見町"
       yomi "ふくしまけんただみまち"
       short_name "只見町"
       short_yomi "ただみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_736800 do
-      code "736800"
+    factory :rss_weather_xml_forecast_region_0736800 do
+      code "0736800"
       name "福島県南会津町"
       yomi "ふくしまけんみなみあいづまち"
       short_name "南会津町"
       short_yomi "みなみあいづまち"
     end
 
-    factory :rss_weather_xml_forecast_region_740200 do
-      code "740200"
+    factory :rss_weather_xml_forecast_region_0740200 do
+      code "0740200"
       name "福島県北塩原村"
       yomi "ふくしまけんきたしおばらむら"
       short_name "北塩原村"
       short_yomi "きたしおばらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_740500 do
-      code "740500"
+    factory :rss_weather_xml_forecast_region_0740500 do
+      code "0740500"
       name "福島県西会津町"
       yomi "ふくしまけんにしあいづまち"
       short_name "西会津町"
       short_yomi "にしあいづまち"
     end
 
-    factory :rss_weather_xml_forecast_region_740700 do
-      code "740700"
+    factory :rss_weather_xml_forecast_region_0740700 do
+      code "0740700"
       name "福島県磐梯町"
       yomi "ふくしまけんばんだいまち"
       short_name "磐梯町"
       short_yomi "ばんだいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_740800 do
-      code "740800"
+    factory :rss_weather_xml_forecast_region_0740800 do
+      code "0740800"
       name "福島県猪苗代町"
       yomi "ふくしまけんいなわしろまち"
       short_name "猪苗代町"
       short_yomi "いなわしろまち"
     end
 
-    factory :rss_weather_xml_forecast_region_742100 do
-      code "742100"
+    factory :rss_weather_xml_forecast_region_0742100 do
+      code "0742100"
       name "福島県会津坂下町"
       yomi "ふくしまけんあいづばんげまち"
       short_name "会津坂下町"
       short_yomi "あいづばんげまち"
     end
 
-    factory :rss_weather_xml_forecast_region_742200 do
-      code "742200"
+    factory :rss_weather_xml_forecast_region_0742200 do
+      code "0742200"
       name "福島県湯川村"
       yomi "ふくしまけんゆがわむら"
       short_name "湯川村"
       short_yomi "ゆがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_742300 do
-      code "742300"
+    factory :rss_weather_xml_forecast_region_0742300 do
+      code "0742300"
       name "福島県柳津町"
       yomi "ふくしまけんやないづまち"
       short_name "柳津町"
       short_yomi "やないづまち"
     end
 
-    factory :rss_weather_xml_forecast_region_744400 do
-      code "744400"
+    factory :rss_weather_xml_forecast_region_0744400 do
+      code "0744400"
       name "福島県三島町"
       yomi "ふくしまけんみしままち"
       short_name "三島町"
       short_yomi "みしままち"
     end
 
-    factory :rss_weather_xml_forecast_region_744500 do
-      code "744500"
+    factory :rss_weather_xml_forecast_region_0744500 do
+      code "0744500"
       name "福島県金山町"
       yomi "ふくしまけんかねやままち"
       short_name "金山町"
       short_yomi "かねやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_744600 do
-      code "744600"
+    factory :rss_weather_xml_forecast_region_0744600 do
+      code "0744600"
       name "福島県昭和村"
       yomi "ふくしまけんしょうわむら"
       short_name "昭和村"
       short_yomi "しょうわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_744700 do
-      code "744700"
+    factory :rss_weather_xml_forecast_region_0744700 do
+      code "0744700"
       name "福島県会津美里町"
       yomi "ふくしまけんあいづみさとまち"
       short_name "会津美里町"
       short_yomi "あいづみさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_746100 do
-      code "746100"
+    factory :rss_weather_xml_forecast_region_0746100 do
+      code "0746100"
       name "福島県西郷村"
       yomi "ふくしまけんにしごうむら"
       short_name "西郷村"
       short_yomi "にしごうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_746400 do
-      code "746400"
+    factory :rss_weather_xml_forecast_region_0746400 do
+      code "0746400"
       name "福島県泉崎村"
       yomi "ふくしまけんいずみざきむら"
       short_name "泉崎村"
       short_yomi "いずみざきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_746500 do
-      code "746500"
+    factory :rss_weather_xml_forecast_region_0746500 do
+      code "0746500"
       name "福島県中島村"
       yomi "ふくしまけんなかじまむら"
       short_name "中島村"
       short_yomi "なかじまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_746600 do
-      code "746600"
+    factory :rss_weather_xml_forecast_region_0746600 do
+      code "0746600"
       name "福島県矢吹町"
       yomi "ふくしまけんやぶきまち"
       short_name "矢吹町"
       short_yomi "やぶきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_748100 do
-      code "748100"
+    factory :rss_weather_xml_forecast_region_0748100 do
+      code "0748100"
       name "福島県棚倉町"
       yomi "ふくしまけんたなぐらまち"
       short_name "棚倉町"
       short_yomi "たなぐらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_748200 do
-      code "748200"
+    factory :rss_weather_xml_forecast_region_0748200 do
+      code "0748200"
       name "福島県矢祭町"
       yomi "ふくしまけんやまつりまち"
       short_name "矢祭町"
       short_yomi "やまつりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_748300 do
-      code "748300"
+    factory :rss_weather_xml_forecast_region_0748300 do
+      code "0748300"
       name "福島県塙町"
       yomi "ふくしまけんはなわまち"
       short_name "塙町"
       short_yomi "はなわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_748400 do
-      code "748400"
+    factory :rss_weather_xml_forecast_region_0748400 do
+      code "0748400"
       name "福島県鮫川村"
       yomi "ふくしまけんさめがわむら"
       short_name "鮫川村"
       short_yomi "さめがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_750100 do
-      code "750100"
+    factory :rss_weather_xml_forecast_region_0750100 do
+      code "0750100"
       name "福島県石川町"
       yomi "ふくしまけんいしかわまち"
       short_name "石川町"
       short_yomi "いしかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_750200 do
-      code "750200"
+    factory :rss_weather_xml_forecast_region_0750200 do
+      code "0750200"
       name "福島県玉川村"
       yomi "ふくしまけんたまかわむら"
       short_name "玉川村"
       short_yomi "たまかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_750300 do
-      code "750300"
+    factory :rss_weather_xml_forecast_region_0750300 do
+      code "0750300"
       name "福島県平田村"
       yomi "ふくしまけんひらたむら"
       short_name "平田村"
       short_yomi "ひらたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_750400 do
-      code "750400"
+    factory :rss_weather_xml_forecast_region_0750400 do
+      code "0750400"
       name "福島県浅川町"
       yomi "ふくしまけんあさかわまち"
       short_name "浅川町"
       short_yomi "あさかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_750500 do
-      code "750500"
+    factory :rss_weather_xml_forecast_region_0750500 do
+      code "0750500"
       name "福島県古殿町"
       yomi "ふくしまけんふるどのまち"
       short_name "古殿町"
       short_yomi "ふるどのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_752100 do
-      code "752100"
+    factory :rss_weather_xml_forecast_region_0752100 do
+      code "0752100"
       name "福島県三春町"
       yomi "ふくしまけんみはるまち"
       short_name "三春町"
       short_yomi "みはるまち"
     end
 
-    factory :rss_weather_xml_forecast_region_752200 do
-      code "752200"
+    factory :rss_weather_xml_forecast_region_0752200 do
+      code "0752200"
       name "福島県小野町"
       yomi "ふくしまけんおのまち"
       short_name "小野町"
       short_yomi "おのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_754100 do
-      code "754100"
+    factory :rss_weather_xml_forecast_region_0754100 do
+      code "0754100"
       name "福島県広野町"
       yomi "ふくしまけんひろのまち"
       short_name "広野町"
       short_yomi "ひろのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_754200 do
-      code "754200"
+    factory :rss_weather_xml_forecast_region_0754200 do
+      code "0754200"
       name "福島県楢葉町"
       yomi "ふくしまけんならはまち"
       short_name "楢葉町"
       short_yomi "ならはまち"
     end
 
-    factory :rss_weather_xml_forecast_region_754300 do
-      code "754300"
+    factory :rss_weather_xml_forecast_region_0754300 do
+      code "0754300"
       name "福島県富岡町"
       yomi "ふくしまけんとみおかまち"
       short_name "富岡町"
       short_yomi "とみおかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_754400 do
-      code "754400"
+    factory :rss_weather_xml_forecast_region_0754400 do
+      code "0754400"
       name "福島県川内村"
       yomi "ふくしまけんかわうちむら"
       short_name "川内村"
       short_yomi "かわうちむら"
     end
 
-    factory :rss_weather_xml_forecast_region_754500 do
-      code "754500"
+    factory :rss_weather_xml_forecast_region_0754500 do
+      code "0754500"
       name "福島県大熊町"
       yomi "ふくしまけんおおくままち"
       short_name "大熊町"
       short_yomi "おおくままち"
     end
 
-    factory :rss_weather_xml_forecast_region_754600 do
-      code "754600"
+    factory :rss_weather_xml_forecast_region_0754600 do
+      code "0754600"
       name "福島県双葉町"
       yomi "ふくしまけんふたばまち"
       short_name "双葉町"
       short_yomi "ふたばまち"
     end
 
-    factory :rss_weather_xml_forecast_region_754700 do
-      code "754700"
+    factory :rss_weather_xml_forecast_region_0754700 do
+      code "0754700"
       name "福島県浪江町"
       yomi "ふくしまけんなみえまち"
       short_name "浪江町"
       short_yomi "なみえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_754800 do
-      code "754800"
+    factory :rss_weather_xml_forecast_region_0754800 do
+      code "0754800"
       name "福島県葛尾村"
       yomi "ふくしまけんかつらおむら"
       short_name "葛尾村"
       short_yomi "かつらおむら"
     end
 
-    factory :rss_weather_xml_forecast_region_756100 do
-      code "756100"
+    factory :rss_weather_xml_forecast_region_0756100 do
+      code "0756100"
       name "福島県新地町"
       yomi "ふくしまけんしんちまち"
       short_name "新地町"
       short_yomi "しんちまち"
     end
 
-    factory :rss_weather_xml_forecast_region_756400 do
-      code "756400"
+    factory :rss_weather_xml_forecast_region_0756400 do
+      code "0756400"
       name "福島県飯舘村"
       yomi "ふくしまけんいいたてむら"
       short_name "飯舘村"
       short_yomi "いいたてむら"
     end
 
-    factory :rss_weather_xml_forecast_region_820100 do
-      code "820100"
+    factory :rss_weather_xml_forecast_region_0820100 do
+      code "0820100"
       name "茨城県水戸市"
       yomi "いばらきけんみとし"
       short_name "水戸市"
       short_yomi "みとし"
     end
 
-    factory :rss_weather_xml_forecast_region_820200 do
-      code "820200"
+    factory :rss_weather_xml_forecast_region_0820200 do
+      code "0820200"
       name "茨城県日立市"
       yomi "いばらきけんひたちし"
       short_name "日立市"
       short_yomi "ひたちし"
     end
 
-    factory :rss_weather_xml_forecast_region_820300 do
-      code "820300"
+    factory :rss_weather_xml_forecast_region_0820300 do
+      code "0820300"
       name "茨城県土浦市"
       yomi "いばらきけんつちうらし"
       short_name "土浦市"
       short_yomi "つちうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_820400 do
-      code "820400"
+    factory :rss_weather_xml_forecast_region_0820400 do
+      code "0820400"
       name "茨城県古河市"
       yomi "いばらきけんこがし"
       short_name "古河市"
       short_yomi "こがし"
     end
 
-    factory :rss_weather_xml_forecast_region_820500 do
-      code "820500"
+    factory :rss_weather_xml_forecast_region_0820500 do
+      code "0820500"
       name "茨城県石岡市"
       yomi "いばらきけんいしおかし"
       short_name "石岡市"
       short_yomi "いしおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_820700 do
-      code "820700"
+    factory :rss_weather_xml_forecast_region_0820700 do
+      code "0820700"
       name "茨城県結城市"
       yomi "いばらきけんゆうきし"
       short_name "結城市"
       short_yomi "ゆうきし"
     end
 
-    factory :rss_weather_xml_forecast_region_820800 do
-      code "820800"
+    factory :rss_weather_xml_forecast_region_0820800 do
+      code "0820800"
       name "茨城県龍ケ崎市"
       yomi "いばらきけんりゅうがさきし"
       short_name "龍ケ崎市"
       short_yomi "りゅうがさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_821000 do
-      code "821000"
+    factory :rss_weather_xml_forecast_region_0821000 do
+      code "0821000"
       name "茨城県下妻市"
       yomi "いばらきけんしもつまし"
       short_name "下妻市"
       short_yomi "しもつまし"
     end
 
-    factory :rss_weather_xml_forecast_region_821100 do
-      code "821100"
+    factory :rss_weather_xml_forecast_region_0821100 do
+      code "0821100"
       name "茨城県常総市"
       yomi "いばらきけんじょうそうし"
       short_name "常総市"
       short_yomi "じょうそうし"
     end
 
-    factory :rss_weather_xml_forecast_region_821200 do
-      code "821200"
+    factory :rss_weather_xml_forecast_region_0821200 do
+      code "0821200"
       name "茨城県常陸太田市"
       yomi "いばらきけんひたちおおたし"
       short_name "常陸太田市"
       short_yomi "ひたちおおたし"
     end
 
-    factory :rss_weather_xml_forecast_region_821400 do
-      code "821400"
+    factory :rss_weather_xml_forecast_region_0821400 do
+      code "0821400"
       name "茨城県高萩市"
       yomi "いばらきけんたかはぎし"
       short_name "高萩市"
       short_yomi "たかはぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_821500 do
-      code "821500"
+    factory :rss_weather_xml_forecast_region_0821500 do
+      code "0821500"
       name "茨城県北茨城市"
       yomi "いばらきけんきたいばらきし"
       short_name "北茨城市"
       short_yomi "きたいばらきし"
     end
 
-    factory :rss_weather_xml_forecast_region_821600 do
-      code "821600"
+    factory :rss_weather_xml_forecast_region_0821600 do
+      code "0821600"
       name "茨城県笠間市"
       yomi "いばらきけんかさまし"
       short_name "笠間市"
       short_yomi "かさまし"
     end
 
-    factory :rss_weather_xml_forecast_region_821700 do
-      code "821700"
+    factory :rss_weather_xml_forecast_region_0821700 do
+      code "0821700"
       name "茨城県取手市"
       yomi "いばらきけんとりでし"
       short_name "取手市"
       short_yomi "とりでし"
     end
 
-    factory :rss_weather_xml_forecast_region_821900 do
-      code "821900"
+    factory :rss_weather_xml_forecast_region_0821900 do
+      code "0821900"
       name "茨城県牛久市"
       yomi "いばらきけんうしくし"
       short_name "牛久市"
       short_yomi "うしくし"
     end
 
-    factory :rss_weather_xml_forecast_region_822000 do
-      code "822000"
+    factory :rss_weather_xml_forecast_region_0822000 do
+      code "0822000"
       name "茨城県つくば市"
       yomi "いばらきけんつくばし"
       short_name "つくば市"
       short_yomi "つくばし"
     end
 
-    factory :rss_weather_xml_forecast_region_822100 do
-      code "822100"
+    factory :rss_weather_xml_forecast_region_0822100 do
+      code "0822100"
       name "茨城県ひたちなか市"
       yomi "いばらきけんひたちなかし"
       short_name "ひたちなか市"
       short_yomi "ひたちなかし"
     end
 
-    factory :rss_weather_xml_forecast_region_822200 do
-      code "822200"
+    factory :rss_weather_xml_forecast_region_0822200 do
+      code "0822200"
       name "茨城県鹿嶋市"
       yomi "いばらきけんかしまし"
       short_name "鹿嶋市"
       short_yomi "かしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_822300 do
-      code "822300"
+    factory :rss_weather_xml_forecast_region_0822300 do
+      code "0822300"
       name "茨城県潮来市"
       yomi "いばらきけんいたこし"
       short_name "潮来市"
       short_yomi "いたこし"
     end
 
-    factory :rss_weather_xml_forecast_region_822400 do
-      code "822400"
+    factory :rss_weather_xml_forecast_region_0822400 do
+      code "0822400"
       name "茨城県守谷市"
       yomi "いばらきけんもりやし"
       short_name "守谷市"
       short_yomi "もりやし"
     end
 
-    factory :rss_weather_xml_forecast_region_822500 do
-      code "822500"
+    factory :rss_weather_xml_forecast_region_0822500 do
+      code "0822500"
       name "茨城県常陸大宮市"
       yomi "いばらきけんひたちおおみやし"
       short_name "常陸大宮市"
       short_yomi "ひたちおおみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_822600 do
-      code "822600"
+    factory :rss_weather_xml_forecast_region_0822600 do
+      code "0822600"
       name "茨城県那珂市"
       yomi "いばらきけんなかし"
       short_name "那珂市"
       short_yomi "なかし"
     end
 
-    factory :rss_weather_xml_forecast_region_822700 do
-      code "822700"
+    factory :rss_weather_xml_forecast_region_0822700 do
+      code "0822700"
       name "茨城県筑西市"
       yomi "いばらきけんちくせいし"
       short_name "筑西市"
       short_yomi "ちくせいし"
     end
 
-    factory :rss_weather_xml_forecast_region_822800 do
-      code "822800"
+    factory :rss_weather_xml_forecast_region_0822800 do
+      code "0822800"
       name "茨城県坂東市"
       yomi "いばらきけんばんどうし"
       short_name "坂東市"
       short_yomi "ばんどうし"
     end
 
-    factory :rss_weather_xml_forecast_region_822900 do
-      code "822900"
+    factory :rss_weather_xml_forecast_region_0822900 do
+      code "0822900"
       name "茨城県稲敷市"
       yomi "いばらきけんいなしきし"
       short_name "稲敷市"
       short_yomi "いなしきし"
     end
 
-    factory :rss_weather_xml_forecast_region_823000 do
-      code "823000"
+    factory :rss_weather_xml_forecast_region_0823000 do
+      code "0823000"
       name "茨城県かすみがうら市"
       yomi "いばらきけんかすみがうらし"
       short_name "かすみがうら市"
       short_yomi "かすみがうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_823100 do
-      code "823100"
+    factory :rss_weather_xml_forecast_region_0823100 do
+      code "0823100"
       name "茨城県桜川市"
       yomi "いばらきけんさくらがわし"
       short_name "桜川市"
       short_yomi "さくらがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_823200 do
-      code "823200"
+    factory :rss_weather_xml_forecast_region_0823200 do
+      code "0823200"
       name "茨城県神栖市"
       yomi "いばらきけんかみすし"
       short_name "神栖市"
       short_yomi "かみすし"
     end
 
-    factory :rss_weather_xml_forecast_region_823300 do
-      code "823300"
+    factory :rss_weather_xml_forecast_region_0823300 do
+      code "0823300"
       name "茨城県行方市"
       yomi "いばらきけんなめがたし"
       short_name "行方市"
       short_yomi "なめがたし"
     end
 
-    factory :rss_weather_xml_forecast_region_823400 do
-      code "823400"
+    factory :rss_weather_xml_forecast_region_0823400 do
+      code "0823400"
       name "茨城県鉾田市"
       yomi "いばらきけんほこたし"
       short_name "鉾田市"
       short_yomi "ほこたし"
     end
 
-    factory :rss_weather_xml_forecast_region_823500 do
-      code "823500"
+    factory :rss_weather_xml_forecast_region_0823500 do
+      code "0823500"
       name "茨城県つくばみらい市"
       yomi "いばらきけんつくばみらいし"
       short_name "つくばみらい市"
       short_yomi "つくばみらいし"
     end
 
-    factory :rss_weather_xml_forecast_region_823600 do
-      code "823600"
+    factory :rss_weather_xml_forecast_region_0823600 do
+      code "0823600"
       name "茨城県小美玉市"
       yomi "いばらきけんおみたまし"
       short_name "小美玉市"
       short_yomi "おみたまし"
     end
 
-    factory :rss_weather_xml_forecast_region_830200 do
-      code "830200"
+    factory :rss_weather_xml_forecast_region_0830200 do
+      code "0830200"
       name "茨城県茨城町"
       yomi "いばらきけんいばらきまち"
       short_name "茨城町"
       short_yomi "いばらきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_830900 do
-      code "830900"
+    factory :rss_weather_xml_forecast_region_0830900 do
+      code "0830900"
       name "茨城県大洗町"
       yomi "いばらきけんおおあらいまち"
       short_name "大洗町"
       short_yomi "おおあらいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_831000 do
-      code "831000"
+    factory :rss_weather_xml_forecast_region_0831000 do
+      code "0831000"
       name "茨城県城里町"
       yomi "いばらきけんしろさとまち"
       short_name "城里町"
       short_yomi "しろさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_834100 do
-      code "834100"
+    factory :rss_weather_xml_forecast_region_0834100 do
+      code "0834100"
       name "茨城県東海村"
       yomi "いばらきけんとうかいむら"
       short_name "東海村"
       short_yomi "とうかいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_836400 do
-      code "836400"
+    factory :rss_weather_xml_forecast_region_0836400 do
+      code "0836400"
       name "茨城県大子町"
       yomi "いばらきけんだいごまち"
       short_name "大子町"
       short_yomi "だいごまち"
     end
 
-    factory :rss_weather_xml_forecast_region_844200 do
-      code "844200"
+    factory :rss_weather_xml_forecast_region_0844200 do
+      code "0844200"
       name "茨城県美浦村"
       yomi "いばらきけんみほむら"
       short_name "美浦村"
       short_yomi "みほむら"
     end
 
-    factory :rss_weather_xml_forecast_region_844300 do
-      code "844300"
+    factory :rss_weather_xml_forecast_region_0844300 do
+      code "0844300"
       name "茨城県阿見町"
       yomi "いばらきけんあみまち"
       short_name "阿見町"
       short_yomi "あみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_844700 do
-      code "844700"
+    factory :rss_weather_xml_forecast_region_0844700 do
+      code "0844700"
       name "茨城県河内町"
       yomi "いばらきけんかわちまち"
       short_name "河内町"
       short_yomi "かわちまち"
     end
 
-    factory :rss_weather_xml_forecast_region_852100 do
-      code "852100"
+    factory :rss_weather_xml_forecast_region_0852100 do
+      code "0852100"
       name "茨城県八千代町"
       yomi "いばらきけんやちよまち"
       short_name "八千代町"
       short_yomi "やちよまち"
     end
 
-    factory :rss_weather_xml_forecast_region_854200 do
-      code "854200"
+    factory :rss_weather_xml_forecast_region_0854200 do
+      code "0854200"
       name "茨城県五霞町"
       yomi "いばらきけんごかまち"
       short_name "五霞町"
       short_yomi "ごかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_854600 do
-      code "854600"
+    factory :rss_weather_xml_forecast_region_0854600 do
+      code "0854600"
       name "茨城県境町"
       yomi "いばらきけんさかいまち"
       short_name "境町"
       short_yomi "さかいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_856400 do
-      code "856400"
+    factory :rss_weather_xml_forecast_region_0856400 do
+      code "0856400"
       name "茨城県利根町"
       yomi "いばらきけんとねまち"
       short_name "利根町"
       short_yomi "とねまち"
     end
 
-    factory :rss_weather_xml_forecast_region_920100 do
-      code "920100"
+    factory :rss_weather_xml_forecast_region_0920100 do
+      code "0920100"
       name "栃木県宇都宮市"
       yomi "とちぎけんうつのみやし"
       short_name "宇都宮市"
       short_yomi "うつのみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_920200 do
-      code "920200"
+    factory :rss_weather_xml_forecast_region_0920200 do
+      code "0920200"
       name "栃木県足利市"
       yomi "とちぎけんあしかがし"
       short_name "足利市"
       short_yomi "あしかがし"
     end
 
-    factory :rss_weather_xml_forecast_region_920300 do
-      code "920300"
+    factory :rss_weather_xml_forecast_region_0920300 do
+      code "0920300"
       name "栃木県栃木市"
       yomi "とちぎけんとちぎし"
       short_name "栃木市"
       short_yomi "とちぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_920400 do
-      code "920400"
+    factory :rss_weather_xml_forecast_region_0920400 do
+      code "0920400"
       name "栃木県佐野市"
       yomi "とちぎけんさのし"
       short_name "佐野市"
       short_yomi "さのし"
     end
 
-    factory :rss_weather_xml_forecast_region_920500 do
-      code "920500"
+    factory :rss_weather_xml_forecast_region_0920500 do
+      code "0920500"
       name "栃木県鹿沼市"
       yomi "とちぎけんかぬまし"
       short_name "鹿沼市"
       short_yomi "かぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_920600 do
-      code "920600"
+    factory :rss_weather_xml_forecast_region_0920600 do
+      code "0920600"
       name "栃木県日光市"
       yomi "とちぎけんにっこうし"
       short_name "日光市"
       short_yomi "にっこうし"
     end
 
-    factory :rss_weather_xml_forecast_region_920800 do
-      code "920800"
+    factory :rss_weather_xml_forecast_region_0920800 do
+      code "0920800"
       name "栃木県小山市"
       yomi "とちぎけんおやまし"
       short_name "小山市"
       short_yomi "おやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_920900 do
-      code "920900"
+    factory :rss_weather_xml_forecast_region_0920900 do
+      code "0920900"
       name "栃木県真岡市"
       yomi "とちぎけんもおかし"
       short_name "真岡市"
       short_yomi "もおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_921000 do
-      code "921000"
+    factory :rss_weather_xml_forecast_region_0921000 do
+      code "0921000"
       name "栃木県大田原市"
       yomi "とちぎけんおおたわらし"
       short_name "大田原市"
       short_yomi "おおたわらし"
     end
 
-    factory :rss_weather_xml_forecast_region_921100 do
-      code "921100"
+    factory :rss_weather_xml_forecast_region_0921100 do
+      code "0921100"
       name "栃木県矢板市"
       yomi "とちぎけんやいたし"
       short_name "矢板市"
       short_yomi "やいたし"
     end
 
-    factory :rss_weather_xml_forecast_region_921300 do
-      code "921300"
+    factory :rss_weather_xml_forecast_region_0921300 do
+      code "0921300"
       name "栃木県那須塩原市"
       yomi "とちぎけんなすしおばらし"
       short_name "那須塩原市"
       short_yomi "なすしおばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_921400 do
-      code "921400"
+    factory :rss_weather_xml_forecast_region_0921400 do
+      code "0921400"
       name "栃木県さくら市"
       yomi "とちぎけんさくらし"
       short_name "さくら市"
       short_yomi "さくらし"
     end
 
-    factory :rss_weather_xml_forecast_region_921500 do
-      code "921500"
+    factory :rss_weather_xml_forecast_region_0921500 do
+      code "0921500"
       name "栃木県那須烏山市"
       yomi "とちぎけんなすからすやまし"
       short_name "那須烏山市"
       short_yomi "なすからすやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_921600 do
-      code "921600"
+    factory :rss_weather_xml_forecast_region_0921600 do
+      code "0921600"
       name "栃木県下野市"
       yomi "とちぎけんしもつけし"
       short_name "下野市"
       short_yomi "しもつけし"
     end
 
-    factory :rss_weather_xml_forecast_region_930100 do
-      code "930100"
+    factory :rss_weather_xml_forecast_region_0930100 do
+      code "0930100"
       name "栃木県上三川町"
       yomi "とちぎけんかみのかわまち"
       short_name "上三川町"
       short_yomi "かみのかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_934200 do
-      code "934200"
+    factory :rss_weather_xml_forecast_region_0934200 do
+      code "0934200"
       name "栃木県益子町"
       yomi "とちぎけんましこまち"
       short_name "益子町"
       short_yomi "ましこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_934300 do
-      code "934300"
+    factory :rss_weather_xml_forecast_region_0934300 do
+      code "0934300"
       name "栃木県茂木町"
       yomi "とちぎけんもてぎまち"
       short_name "茂木町"
       short_yomi "もてぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_934400 do
-      code "934400"
+    factory :rss_weather_xml_forecast_region_0934400 do
+      code "0934400"
       name "栃木県市貝町"
       yomi "とちぎけんいちかいまち"
       short_name "市貝町"
       short_yomi "いちかいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_934500 do
-      code "934500"
+    factory :rss_weather_xml_forecast_region_0934500 do
+      code "0934500"
       name "栃木県芳賀町"
       yomi "とちぎけんはがまち"
       short_name "芳賀町"
       short_yomi "はがまち"
     end
 
-    factory :rss_weather_xml_forecast_region_936100 do
-      code "936100"
+    factory :rss_weather_xml_forecast_region_0936100 do
+      code "0936100"
       name "栃木県壬生町"
       yomi "とちぎけんみぶまち"
       short_name "壬生町"
       short_yomi "みぶまち"
     end
 
-    factory :rss_weather_xml_forecast_region_936400 do
-      code "936400"
+    factory :rss_weather_xml_forecast_region_0936400 do
+      code "0936400"
       name "栃木県野木町"
       yomi "とちぎけんのぎまち"
       short_name "野木町"
       short_yomi "のぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_938400 do
-      code "938400"
+    factory :rss_weather_xml_forecast_region_0938400 do
+      code "0938400"
       name "栃木県塩谷町"
       yomi "とちぎけんしおやまち"
       short_name "塩谷町"
       short_yomi "しおやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_938600 do
-      code "938600"
+    factory :rss_weather_xml_forecast_region_0938600 do
+      code "0938600"
       name "栃木県高根沢町"
       yomi "とちぎけんたかねざわまち"
       short_name "高根沢町"
       short_yomi "たかねざわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_940700 do
-      code "940700"
+    factory :rss_weather_xml_forecast_region_0940700 do
+      code "0940700"
       name "栃木県那須町"
       yomi "とちぎけんなすまち"
       short_name "那須町"
       short_yomi "なすまち"
     end
 
-    factory :rss_weather_xml_forecast_region_941100 do
-      code "941100"
+    factory :rss_weather_xml_forecast_region_0941100 do
+      code "0941100"
       name "栃木県那珂川町"
       yomi "とちぎけんなかがわまち"
       short_name "那珂川町"
