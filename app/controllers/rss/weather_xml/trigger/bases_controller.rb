@@ -31,6 +31,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to rss_weather_xml_trigger_flood_forecast_path
       when 'Rss::WeatherXml::Trigger::VolcanoFlash'
         redirect_to rss_weather_xml_trigger_volcano_flash_path
+      when 'Rss::WeatherXml::Trigger::AshFallForecast'
+        redirect_to rss_weather_xml_trigger_ash_fall_forecast_path
       when 'Rss::WeatherXml::Trigger::TornadoAlert'
         redirect_to rss_weather_xml_trigger_tornado_alert_path
       else
@@ -59,6 +61,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to new_rss_weather_xml_trigger_flood_forecast_path
       when 'Rss::WeatherXml::Trigger::VolcanoFlash'
         redirect_to new_rss_weather_xml_trigger_volcano_flash_path
+      when 'Rss::WeatherXml::Trigger::AshFallForecast'
+        redirect_to new_rss_weather_xml_trigger_ash_fall_forecast_path
       when 'Rss::WeatherXml::Trigger::TornadoAlert'
         redirect_to new_rss_weather_xml_trigger_tornado_alert_path
       else
@@ -86,6 +90,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to edit_rss_weather_xml_trigger_flood_forecast_path
       when 'Rss::WeatherXml::Trigger::VolcanoFlash'
         redirect_to edit_rss_weather_xml_trigger_volcano_flash_path
+      when 'Rss::WeatherXml::Trigger::AshFallForecast'
+        redirect_to edit_rss_weather_xml_trigger_ash_fall_forecast_path
       when 'Rss::WeatherXml::Trigger::TornadoAlert'
         redirect_to edit_rss_weather_xml_trigger_tornado_alert_path
       else
@@ -113,6 +119,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to delete_rss_weather_xml_trigger_flood_forecast_path
       when 'Rss::WeatherXml::Trigger::VolcanoFlash'
         redirect_to delete_rss_weather_xml_trigger_volcano_flash_path
+      when 'Rss::WeatherXml::Trigger::AshFallForecast'
+        redirect_to delete_rss_weather_xml_trigger_ash_fall_forecast_path
       when 'Rss::WeatherXml::Trigger::TornadoAlert'
         redirect_to delete_rss_weather_xml_trigger_tornado_alert_path
       else

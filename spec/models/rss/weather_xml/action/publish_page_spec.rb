@@ -334,6 +334,43 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
           end
         end
 
+        context 'when ash fall forecast is given' do
+          let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_66_01_141024_VFVO53.xml))) }
+          let(:trigger) { create(:rss_weather_xml_trigger_ash_fall_forecast) }
+
+          before do
+            region_4620100 = create(:rss_weather_xml_forecast_region_4620100)
+            region_4620300 = create(:rss_weather_xml_forecast_region_4620300)
+            region_4621400 = create(:rss_weather_xml_forecast_region_4621400)
+            region_4621700 = create(:rss_weather_xml_forecast_region_4621700)
+            trigger.target_region_ids = [ region_4620100.id, region_4620300.id, region_4621400.id, region_4621700.id ]
+            trigger.save!
+
+            subject.publish_to_id = article_node.id
+            subject.save!
+          end
+
+          it do
+            trigger.verify(page, context) do
+              subject.execute(page, context)
+            end
+
+            expect(Article::Page.count).to eq 1
+            Article::Page.first.tap do |page|
+              expect(page.name).to eq '火山名　桜島　降灰予報（定時）'
+              expect(page.state).to eq subject.publish_state
+              puts page.html
+              expect(page.html).to include('<div class="jmaxml ashfall">')
+              expect(page.html).to include('<h2>2014年6月6日 06時00分 気象庁地震火山部発表</h2>')
+              expect(page.html).to include('<p>　現在、桜島は噴火警戒レベル３（入山規制）です。')
+              expect(page.html).to include('<tr><td>降灰</td><td>鹿児島県鹿児島市、鹿児島県鹿屋市、鹿児島県垂水市、鹿児島県曽於市</td></tr>')
+              expect(page.html).to include('<tr><td>小さな噴石の落下</td><td>鹿児島県鹿児島市</td></tr>')
+              expect(page.html).to include('<p>　６日０６時から６日２４時までに噴火が発生した場合には、')
+              expect(page.html).to include('<p>　噴煙が高さ３０００ｍまで上がった場合の火山灰')
+            end
+          end
+        end
+
         context 'when tornado alert is given' do
           let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_19_01_091210_tatsumakijyohou1.xml))) }
           let(:trigger) { create(:rss_weather_xml_trigger_tornado_alert) }

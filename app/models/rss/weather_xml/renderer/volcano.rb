@@ -3,10 +3,9 @@ class Rss::WeatherXml::Renderer::Volcano < Rss::WeatherXml::Renderer::Base
   include Rss::WeatherXml::Renderer::HeadHandler
   include Rss::WeatherXml::Renderer::EarthquakeHandler
   include Rss::WeatherXml::Renderer::CommentHandler
+  include Rss::WeatherXml::Renderer::VolcanoHandler
 
   template_variable_handler(:area_name, :template_variable_handler_area_name)
-  template_variable_handler(:volcano_headline, :template_variable_handler_volcano_headline)
-  template_variable_handler(:volcano_activity, :template_variable_handler_volcano_activity)
 
   private
     def title_template
@@ -40,13 +39,5 @@ class Rss::WeatherXml::Renderer::Volcano < Rss::WeatherXml::Renderer::Base
 
     def template_variable_handler_area_name(name, xml_node, *_)
       xml_node.elements['Name'].text.to_s.strip
-    end
-
-    def template_variable_handler_volcano_headline(*_)
-      REXML::XPath.first(@context.xmldoc, '/Report/Body/VolcanoInfoContent/VolcanoHeadline/text()').to_s.strip
-    end
-
-    def template_variable_handler_volcano_activity(*_)
-      REXML::XPath.first(@context.xmldoc, '/Report/Body/VolcanoInfoContent/VolcanoActivity/text()').to_s.strip
     end
 end

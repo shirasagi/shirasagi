@@ -34,6 +34,11 @@ FactoryGirl.define do
   factory :rss_weather_xml_trigger_volcano_flash,
           class: Rss::WeatherXml::Trigger::VolcanoFlash, traits: [:rss_weather_xml_trigger_base]
 
+  factory :rss_weather_xml_trigger_ash_fall_forecast,
+          class: Rss::WeatherXml::Trigger::AshFallForecast, traits: [:rss_weather_xml_trigger_base] do
+    sub_types %w(flash regular detail)
+  end
+
   factory :rss_weather_xml_trigger_tornado_alert,
           class: Rss::WeatherXml::Trigger::TornadoAlert, traits: [:rss_weather_xml_trigger_base]
 end

@@ -2,9 +2,14 @@ module Rss::WeatherXml::Renderer::HeadHandler
   extend ActiveSupport::Concern
 
   included do
+    template_variable_handler(:head_title, :template_variable_handler_head_title)
     template_variable_handler(:headline_text, :template_variable_handler_headline_text)
     template_variable_handler(:target_time, :template_variable_handler_target_time)
     template_variable_handler(:info_type, :template_variable_handler_info_type)
+  end
+
+  def head_title
+    REXML::XPath.first(@context.xmldoc, '/Report/Head/Title/text()').to_s.strip
   end
 
   def head_headline_text
@@ -24,6 +29,10 @@ module Rss::WeatherXml::Renderer::HeadHandler
   end
 
   private
+    def template_variable_handler_head_title(*_)
+      head_title
+    end
+
     def template_variable_handler_headline_text(*_)
       head_headline_text
     end

@@ -43,6 +43,7 @@ class Rss::WeatherXml::Trigger::Base
       Rss::WeatherXml::Trigger::LandslideInfo,
       Rss::WeatherXml::Trigger::FloodForecast,
       Rss::WeatherXml::Trigger::VolcanoFlash,
+      Rss::WeatherXml::Trigger::AshFallForecast,
       Rss::WeatherXml::Trigger::TornadoAlert ]
     sub_classes.map do |v|
       [ v.model_name.human, v.name ]

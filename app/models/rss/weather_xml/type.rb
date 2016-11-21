@@ -41,6 +41,12 @@ module Rss::WeatherXml::Type
     end
   end
 
+  class AshFall
+    def renderer(page, context)
+      Rss::WeatherXml::Renderer::AshFall.new(page, context)
+    end
+  end
+
   EARTH_QUAKE = EarthQuake.new.freeze
   TSUNAMI = Tsunami.new.freeze
   FLOOD = Flood.new.freeze
@@ -48,4 +54,5 @@ module Rss::WeatherXml::Type
   LAND_SLIDE = Landslide.new.freeze
   VOLCANO = Volcano.new.freeze
   TORNADO = Tornado.new.freeze
+  ASH_FALL = AshFall.new.freeze
 end
