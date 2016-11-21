@@ -33,6 +33,7 @@ class Rss::WeatherXml::Renderer::Tsunami < Rss::WeatherXml::Renderer::Base
         next unless @context.area_codes.include?(area_code)
 
         text << render_template(template, item)
+        text << "\n"
       end
       text
     end
@@ -62,12 +63,9 @@ class Rss::WeatherXml::Renderer::Tsunami < Rss::WeatherXml::Renderer::Base
     end
 
     def template_variable_handler_tsunami_height(name, xml_node, *_)
-      max_height = xml_node.elements['MaxHeight']
-      return if max_height.blank?
-
-      tsunami_height = max_height.elements['jmx_eb:TsunamiHeight']
+      tsunami_height = REXML::XPath.first(xml_node, 'MaxHeight/jmx_eb:TsunamiHeight/text()').to_s.strip
       return if tsunami_height.blank?
 
-      return "#{tsunami_height.text.to_s.strip}m"
+      "#{tsunami_height}m"
     end
 end
