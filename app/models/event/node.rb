@@ -13,6 +13,7 @@ module Event::Node
     include Event::Addon::CalendarList
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
+    include Cms::Addon::MaxFileSizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

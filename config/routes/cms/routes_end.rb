@@ -141,6 +141,20 @@ SS::Application.routes.draw do
         get :thumb, on: :member
         get :download, on: :member
       end
+      resources :temp_files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
+      namespace :node, path: "node:cid/cms", cid: /\w+/ do
+          resources :temp_files, concerns: :deletion do
+          get :select, on: :member
+          get :view, on: :member
+          get :thumb, on: :member
+          get :download, on: :member
+        end
+      end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
       end
@@ -164,6 +178,7 @@ SS::Application.routes.draw do
     resource :conf, concerns: [:copy, :move] do
       get :delete, :on => :member
     end
+    resources :max_file_sizes, concerns: :deletion
     resources :nodes, concerns: :deletion
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :contain_links]
     resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]

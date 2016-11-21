@@ -70,6 +70,8 @@ ja:
     postal_code_normalize_city: 以下に掲載がない場合
     calendar_view: カレンダー表示
     list_view: リスト表示
+    max_file_size: 最大ファイルサイズ
+    add_max_file_size: 最大ファイルサイズを設定する
 
     adobe_reader:
       remark:
@@ -321,6 +323,7 @@ ja:
       cms/opendata_ref/license: オープンデータ/ライセンス
       cms/monthly_nav: アーカイブナビ（月次）
       cms/archive_view_switcher: アーカイブ用表示設定
+      cms/max_file_size_setting: 最大ファイルサイズ設定
 
   mongoid:
     models:
@@ -1155,6 +1158,10 @@ ja:
           oshirase
           oshirase/event
           shisei/jinji
+
+    cms/addon/max_file_size_setting:
+      max_file_size_setting:
+        - フォルダー内のページ編集時に「ファイル>アップロード」から添付ファイルをアップする際のサイズ制限を設定可能です。
 
   all_content:
     page_id: ページID

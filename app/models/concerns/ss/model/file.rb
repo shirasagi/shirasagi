@@ -147,6 +147,7 @@ module SS::Model::File
       item = self.class.new(attributes)
       item.cur_site = cur_site if respond_to?(:cur_site)
       item.cur_user = cur_user if respond_to?(:cur_user)
+      item.cur_node = cur_node if respond_to?(:cur_node)
       item.in_file = file
       item.resizing = resizing
       next if item.save

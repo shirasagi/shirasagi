@@ -364,7 +364,7 @@ ja:
         file_resizing_width: 幅
         file_resizing_height: 高さ
         file_resizing_label: "%{size}（サイト設定）"
-      ss/max_file_size:
+      ss/model/max_file_size:
         name: 名前
         extensions: 拡張子
         size: 制限サイズ
