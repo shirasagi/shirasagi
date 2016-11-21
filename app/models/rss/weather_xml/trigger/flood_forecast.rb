@@ -1,10 +1,11 @@
+# 指定河川洪水予報
 class Rss::WeatherXml::Trigger::FloodForecast < Rss::WeatherXml::Trigger::Base
   embeds_ids :target_regions, class_name: "Rss::WeatherXml::WaterLevelStation"
   permit_params target_region_ids: []
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip
-    return false if control_title != '指定河川洪水予報'
+    return false unless control_title.start_with?('指定河川洪水予報')
 
     control_status = REXML::XPath.first(context.xmldoc, '/Report/Control/Status/text()').to_s.strip
     return false unless weather_xml_status_enabled?(control_status)

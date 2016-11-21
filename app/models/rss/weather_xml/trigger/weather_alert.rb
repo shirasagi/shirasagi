@@ -8,7 +8,7 @@ class Rss::WeatherXml::Trigger::WeatherAlert < Rss::WeatherXml::Trigger::Base
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip
-    return false if control_title != '気象特別警報・警報・注意報'
+    return false unless control_title.start_with?('気象特別警報・警報・注意報')
 
     control_status = REXML::XPath.first(context.xmldoc, '/Report/Control/Status/text()').to_s.strip
     return false unless weather_xml_status_enabled?(control_status)

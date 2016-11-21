@@ -5,7 +5,7 @@ class Rss::WeatherXml::Trigger::TornadoAlert < Rss::WeatherXml::Trigger::Base
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip
-    return false if control_title != '竜巻注意情報'
+    return false unless control_title.start_with?('竜巻注意情報')
 
     control_status = REXML::XPath.first(context.xmldoc, '/Report/Control/Status/text()').to_s.strip
     return false unless weather_xml_status_enabled?(control_status)
