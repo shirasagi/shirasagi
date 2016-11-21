@@ -55,6 +55,7 @@ gem 'fast_blank'
 gem 'oj'
 gem 'open_uri_redirections'
 gem 'romaji'
+gem 'jquery-minicolors-rails'
 
 # OAuth
 gem 'omniauth'

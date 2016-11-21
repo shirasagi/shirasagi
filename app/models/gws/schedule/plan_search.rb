@@ -80,6 +80,12 @@ class Gws::Schedule::PlanSearch
     return free_times
   end
 
+  def link_params(params = {})
+    params[:member_ids] = member_ids if member_ids.present?
+    params[:facility_ids] = facility_ids if facility_ids.present?
+    params
+  end
+
   private
     def validate_wdays
       self.wdays = wdays.reject(&:blank?).map(&:to_i)
@@ -98,6 +104,16 @@ class Gws::Schedule::PlanSearch
 
       return if members.blank?
       @condition << { member_ids: { '$in' => members.map(&:id) } }
+
+      set_member_custom_groups_condition
+    end
+
+    def set_member_custom_groups_condition
+      groups = Gws::CustomGroup.site(@cur_site).
+        any_in(member_ids: member_ids)
+
+      return if groups.blank?
+      @condition << { member_custom_group_ids: { '$in' => groups.map(&:id) } }
     end
 
     def set_facilities_condition
