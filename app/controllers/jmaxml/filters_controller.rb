@@ -32,6 +32,15 @@ class Jmaxml::FiltersController < ApplicationController
       raise e
     end
 
+    def set_selected_items
+      ids = params[:ids]
+      raise "400" unless ids
+      ids = ids.split(",") if ids.kind_of?(String)
+      set_items
+      @items = @items.in(id: ids)
+      raise "400" unless @items.present?
+    end
+
   public
     def index
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
