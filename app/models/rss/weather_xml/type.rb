@@ -35,10 +35,17 @@ module Rss::WeatherXml::Type
     end
   end
 
+  class Tornado
+    def renderer(page, context)
+      Rss::WeatherXml::Renderer::Tornado.new(page, context)
+    end
+  end
+
   EARTH_QUAKE = EarthQuake.new.freeze
   TSUNAMI = Tsunami.new.freeze
   FLOOD = Flood.new.freeze
   FORECAST = Forecast.new.freeze
   LAND_SLIDE = Landslide.new.freeze
   VOLCANO = Volcano.new.freeze
+  TORNADO = Tornado.new.freeze
 end

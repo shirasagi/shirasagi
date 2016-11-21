@@ -333,6 +333,43 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
             end
           end
         end
+
+        context 'when tornado alert is given' do
+          let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_19_01_091210_tatsumakijyohou1.xml))) }
+          let(:trigger) { create(:rss_weather_xml_trigger_tornado_alert) }
+
+          before do
+            region_1310100 = create(:rss_weather_xml_forecast_region_1310100)
+            region_1310200 = create(:rss_weather_xml_forecast_region_1310200)
+            region_1310300 = create(:rss_weather_xml_forecast_region_1310300)
+            region_1310400 = create(:rss_weather_xml_forecast_region_1310400)
+            trigger.target_region_ids = [ region_1310100.id, region_1310200.id, region_1310300.id, region_1310400.id ]
+            trigger.save!
+
+            subject.publish_to_id = article_node.id
+            subject.save!
+          end
+
+          it do
+            trigger.verify(page, context) do
+              subject.execute(page, context)
+            end
+
+            expect(Article::Page.count).to eq 1
+            Article::Page.first.tap do |page|
+              expect(page.name).to eq '竜巻注意情報'
+              expect(page.state).to eq subject.publish_state
+              puts page.html
+              expect(page.html).to include('<div class="jmaxml tornado">')
+              expect(page.html).to include('<h2>2009年8月10日 07時38分 気象庁予報部発表</h2>')
+              expect(page.html).to include('<p>東京地方では、竜巻発生のおそれがあります。')
+              expect(page.html).to include('<li>千代田区</li>')
+              expect(page.html).to include('<li>中央区</li>')
+              expect(page.html).to include('<li>港区</li>')
+              expect(page.html).to include('<li>新宿区</li>')
+            end
+          end
+        end
       end
     end
 

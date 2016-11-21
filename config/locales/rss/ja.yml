@@ -227,6 +227,28 @@ ja:
         lower_html:
           - "  </ul>"
           - "</div>"
+      tornado:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - ""
+          - "#{headline_text}"
+          - ""
+          - "対象市町村"
+        loop_text:
+          - "#{area_name}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml tornado\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{headline_text}</p>"
+          - "  <p>対象市町村</p>"
+          - "  <ul>"
+        loop_html:
+          - "    <li>#{area_name}</li>"
+        lower_html:
+          - "  </ul>"
+          - "</div>"
 
   modules:
     rss: RSS取込
@@ -271,6 +293,7 @@ ja:
       rss/weather_xml/trigger/landslide_info: 土砂災害警戒情報
       rss/weather_xml/trigger/flood_forecast: 指定河川洪水予報
       rss/weather_xml/trigger/volcano_flash: 噴火速報
+      rss/weather_xml/trigger/tornado_alert: 竜巻注意情報
       rss/weather_xml/action/base: 受信時の動作
       rss/weather_xml/action/publish_page: 記事ページ作成
       rss/weather_xml/action/send_mail: メール送信
