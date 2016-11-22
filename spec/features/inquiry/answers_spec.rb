@@ -77,7 +77,7 @@ describe "inquiry_answers", dbscope: :example do
       click_on "削除する"
       click_on "削除"
 
-      expect(page).not_to have_css(".list-item a", text: answer.data_summary)
+      expect(page).to have_no_css(".list-item a", text: answer.data_summary)
       expect(Inquiry::Answer.count).to eq 0
     end
   end
@@ -106,7 +106,7 @@ describe "inquiry_answers", dbscope: :example do
       click_on "削除する"
       click_on "削除"
 
-      expect(page).not_to have_css(".list-item a", text: answer.data_summary)
+      expect(page).to have_no_css(".list-item a", text: answer.data_summary)
       expect(Inquiry::Answer.count).to eq 0
     end
   end

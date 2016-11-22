@@ -18,7 +18,9 @@ describe "cms_search", dbscope: :example, js: true do
   end
 
   context "with auth" do
-    before { login_cms_user }
+    before do
+      login_cms_user
+    end
 
     context "search_contents_pages" do
       let(:node_name) { unique_id }
@@ -371,10 +373,10 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).not_to have_css(".result table a", text: "[TEST]1.html")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
         within "form.index-search" do
           fill_in "keyword", with: "くらし"
@@ -382,20 +384,20 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "全置換"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).not_to have_css(".result table a", text: "[TEST]1.html")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
         within "form.index-search" do
           fill_in "keyword", with: "戸籍"
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).not_to have_css(".result table a", text: "[TEST]1.html")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
       end
 
       it "replace_html with url" do
@@ -407,10 +409,10 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).to     have_css(".result table a", text: "[TEST]1")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_css(".result table a", text: "[TEST]1")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
         within "form.index-search" do
           fill_in "keyword", with: "/top/child/"
@@ -419,10 +421,10 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "全置換"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).to     have_css(".result table a", text: "[TEST]1")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_css(".result table a", text: "[TEST]1")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
         within "form.index-search" do
           fill_in "keyword", with: "/kurashi/koseki/"
@@ -430,10 +432,10 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).to     have_css(".result table a", text: "[TEST]1")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_css(".result table a", text: "[TEST]1")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
       end
 
       it "replace_html with regexp" do
@@ -445,10 +447,10 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).not_to have_css(".result table a", text: "[TEST]1")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
         within "form.index-search" do
           fill_in "keyword", with: '<p>.+?<\/p>'
@@ -457,10 +459,10 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "全置換"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).not_to have_css(".result table a", text: "[TEST]1")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
         within "form.index-search" do
           fill_in "keyword", with: '<s>.+?<\/s>'
@@ -468,10 +470,10 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]child")
-        expect(page).not_to have_css(".result table a", text: "[TEST]1")
-        expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
       end
     end
 
@@ -490,8 +492,8 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).to     have_css(".result table a", text: "[TEST]top")
-        expect(page).not_to have_css(".result table a", text: "[TEST]TOP")
+        expect(page).to have_css(".result table a", text: "[TEST]top")
+        expect(page).to have_no_css(".result table a", text: "[TEST]TOP")
 
         within "form.index-search" do
           fill_in "keyword", with: "anchor"
@@ -499,8 +501,8 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "全置換"
         end
         expect(status_code).to eq 200
-        expect(page).to     have_css(".result table a", text: "[TEST]top")
-        expect(page).not_to have_css(".result table a", text: "[TEST]TOP")
+        expect(page).to have_css(".result table a", text: "[TEST]top")
+        expect(page).to have_no_css(".result table a", text: "[TEST]TOP")
       end
 
       it "replace_url with string" do
@@ -512,8 +514,8 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "検索"
         end
         wait_for_ajax
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]TOP")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]TOP")
 
         within "form.index-search" do
           fill_in "keyword", with: "/TOP/"
@@ -522,8 +524,8 @@ describe "cms_search", dbscope: :example, js: true do
           click_button "全置換"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_css(".result table a", text: "[TEST]top")
-        expect(page).to     have_css(".result table a", text: "[TEST]TOP")
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_css(".result table a", text: "[TEST]TOP")
       end
     end
   end

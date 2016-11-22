@@ -70,7 +70,7 @@ describe "opendata_agents_nodes_member", dbscope: :example, js: true do
 
     it do
       visit show_path
-      expect(page).not_to have_selector("a#cms-tab-#{member.id}-0-name")
+      expect(page).to have_no_selector("a#cms-tab-#{member.id}-0-name")
       expect(page).to     have_selector("a#cms-tab-#{member.id}-1-name", text: 'アプリ')
       expect(page).to     have_selector("a#cms-tab-#{member.id}-2-name", text: 'アイデア')
     end
@@ -85,7 +85,7 @@ describe "opendata_agents_nodes_member", dbscope: :example, js: true do
     it do
       visit show_path
       expect(page).to     have_selector("a#cms-tab-#{member.id}-0-name", text: 'データセット')
-      expect(page).not_to have_selector("a#cms-tab-#{member.id}-1-name")
+      expect(page).to have_no_selector("a#cms-tab-#{member.id}-1-name")
       expect(page).to     have_selector("a#cms-tab-#{member.id}-2-name", text: 'アイデア')
     end
   end
@@ -100,7 +100,7 @@ describe "opendata_agents_nodes_member", dbscope: :example, js: true do
       visit show_path
       expect(page).to     have_selector("a#cms-tab-#{member.id}-0-name", text: 'データセット')
       expect(page).to     have_selector("a#cms-tab-#{member.id}-1-name", text: 'アプリ')
-      expect(page).not_to have_selector("a#cms-tab-#{member.id}-2-name")
+      expect(page).to have_no_selector("a#cms-tab-#{member.id}-2-name")
     end
   end
 end

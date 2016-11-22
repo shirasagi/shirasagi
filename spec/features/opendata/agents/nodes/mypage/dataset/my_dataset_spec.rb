@@ -103,7 +103,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
     expect(current_path).to eq index_url.path
 
     within "table.opendata-datasets" do
-      expect(page).not_to have_content item_name2
+      expect(page).to have_no_content item_name2
     end
   end
 

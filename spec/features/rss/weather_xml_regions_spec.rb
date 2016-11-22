@@ -81,7 +81,7 @@ describe 'rss_weather_xml_regions', dbscope: :example do
       fill_in 's[keyword]', with: unique_id
       click_on '検索'
 
-      expect(page).not_to have_css('.list-item .title', text: region.name)
+      expect(page).to have_no_css('.list-item .title', text: region.name)
     end
   end
 end

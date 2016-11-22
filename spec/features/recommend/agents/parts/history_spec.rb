@@ -22,23 +22,23 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example do
         visit node.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
-        expect(page).to_not have_link(node.name, href: node.url)
-        expect(page).to_not have_link(article_page.name, href: article_page.url)
-        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        expect(page).to have_no_link(node.name, href: node.url)
+        expect(page).to have_no_link(article_page.name, href: article_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit article_page.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_link(node.name, href: node.url)
-        expect(page).to_not have_link(article_page.name, href: article_page.url)
-        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        expect(page).to have_no_link(article_page.name, href: article_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit cms_page.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_link(node.name, href: node.url)
         expect(page).to have_link(article_page.name, href: article_page.url)
-        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit part.url
         expect(status_code).to eq 200
@@ -58,30 +58,30 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example do
         visit node.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
-        expect(page).to_not have_link(node.name, href: node.url)
-        expect(page).to_not have_link(article_page.name, href: article_page.url)
-        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        expect(page).to have_no_link(node.name, href: node.url)
+        expect(page).to have_no_link(article_page.name, href: article_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit article_page.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
-        expect(page).to_not have_link(node.name, href: node.url)
-        expect(page).to_not have_link(article_page.name, href: article_page.url)
-        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        expect(page).to have_no_link(node.name, href: node.url)
+        expect(page).to have_no_link(article_page.name, href: article_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit cms_page.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
-        expect(page).to_not have_link(node.name, href: node.url)
-        expect(page).to_not have_link(article_page.name, href: article_page.url)
-        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        expect(page).to have_no_link(node.name, href: node.url)
+        expect(page).to have_no_link(article_page.name, href: article_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit part.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
-        expect(page).to_not have_link(node.name, href: node.url)
-        expect(page).to_not have_link(article_page.name, href: article_page.url)
-        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        expect(page).to have_no_link(node.name, href: node.url)
+        expect(page).to have_no_link(article_page.name, href: article_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
       end
     end
   end

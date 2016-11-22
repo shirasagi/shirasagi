@@ -79,7 +79,7 @@ describe "gws_board_categories", type: :feature, dbscope: :example do
       category = Gws::Board::Category.site(site).where(name: name).first
       expect(category).to be_nil
 
-      expect(page).not_to have_css("div.info")
+      expect(page).to have_no_css("div.info")
     end
   end
 end

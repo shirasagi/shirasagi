@@ -37,7 +37,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
-      expect(page).not_to have_css("form#item-form")
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#show" do
@@ -53,7 +53,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path
-      expect(page).not_to have_css("form#item-form")
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#delete" do
@@ -121,7 +121,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       expect(group.expiration_date).to eq expiration_date
 
       visit index_path
-      expect(page).not_to have_css(".expandable", text: group_name)
+      expect(page).to have_no_css(".expandable", text: group_name)
 
       select I18n.t("views.options.state.all"), from: "s[state]"
       click_on I18n.t('views.button.search')

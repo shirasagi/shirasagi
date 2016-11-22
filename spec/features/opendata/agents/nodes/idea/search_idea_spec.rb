@@ -228,7 +228,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('time')
         expect(page).to have_css('h2 a')
-        expect(page).not_to have_css('h2 .point')
+        expect(page).to have_no_css('h2 .point')
         expect(page).to have_css('.categories .category')
         expect(page).to have_css('.categories .area')
         expect(page).to have_css('.categories .tag')

@@ -54,7 +54,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
           click_button "保存"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_css("form#item-form")
+        expect(page).to have_no_css("form#item-form")
       end
     end
   end

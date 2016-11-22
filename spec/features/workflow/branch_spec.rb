@@ -76,7 +76,7 @@ describe "workflow_branch", dbscope: :example do
 
         visit show_path
         expect(page).to have_css("#addon-basic", :text => "[TEST] br_replace")
-        expect(page).not_to have_css("#addon-cms-agents-addons-release", :text => "非公開")
+        expect(page).to have_no_css("#addon-cms-agents-addons-release", :text => "非公開")
       end
     end
   end

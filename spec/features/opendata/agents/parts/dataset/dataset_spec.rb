@@ -18,7 +18,7 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
       within "div.pages" do
         expect(page).to have_content(page_dataset.name)
       end
-      expect(page).not_to have_css("nav.feed")
+      expect(page).to have_no_css("nav.feed")
     end
   end
 end

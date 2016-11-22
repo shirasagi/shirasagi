@@ -42,7 +42,7 @@ describe "rss_pages", dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
-      expect(page).not_to have_css("form#item-form")
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#import" do
@@ -82,7 +82,7 @@ describe "rss_pages", dbscope: :example do
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq sns_login_path
-        expect(page).not_to have_css("form#item-form")
+        expect(page).to have_no_css("form#item-form")
       end
 
       it "#delete" do

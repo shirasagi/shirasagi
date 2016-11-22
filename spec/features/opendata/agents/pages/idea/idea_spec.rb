@@ -69,7 +69,7 @@ describe "opendata_agents_pages_idea", dbscope: :example, js: true do
       expect(page).to have_css("header .id", text: page_idea.id.to_s)
       expect(page).to have_css("header .name", text: page_idea.name)
 
-      expect(page).not_to have_css("#idea-point")
+      expect(page).to have_no_css("#idea-point")
 
       expect(page).to have_css(".categories .category", text: node_category.name)
       expect(page).to have_css(".categories .area", text: node_area.name)
@@ -133,8 +133,8 @@ describe "opendata_agents_pages_idea", dbscope: :example, js: true do
       expect(page).to have_css(".note p", text: page_idea.note.split("\n")[0])
 
       expect(page).to have_css(".idea-tabs .comment header h1", text: 'コメント')
-      expect(page).not_to have_css(".idea-tabs .related-dataset")
-      expect(page).not_to have_css(".idea-tabs .related-app")
+      expect(page).to have_no_css(".idea-tabs .related-dataset")
+      expect(page).to have_no_css(".idea-tabs .related-app")
 
       expect(page).to have_css(".detail .info-wrap .author")
     end

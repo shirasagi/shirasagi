@@ -25,9 +25,9 @@ describe "cms_agents_nodes_group_page", type: :feature, dbscope: :example do
       expect(page).to have_link(item_1.name)
       expect(page).to have_link(item_2.name)
       expect(page).to have_link(item_3.name)
-      expect(page).not_to have_link(item_4.name)
-      expect(page).not_to have_link(item_5.name)
-      expect(page).not_to have_link(item_6.name)
+      expect(page).to have_no_link(item_4.name)
+      expect(page).to have_no_link(item_5.name)
+      expect(page).to have_no_link(item_6.name)
     end
   end
 
@@ -57,9 +57,9 @@ describe "cms_agents_nodes_group_page", type: :feature, dbscope: :example do
       expect(page).to have_link(item_1.name)
       expect(page).to have_link(item_2.name)
       expect(page).to have_link(item_3.name)
-      expect(page).not_to have_link(item_4.name)
-      expect(page).not_to have_link(item_5.name)
-      expect(page).not_to have_link(item_6.name)
+      expect(page).to have_no_link(item_4.name)
+      expect(page).to have_no_link(item_5.name)
+      expect(page).to have_no_link(item_6.name)
     end
   end
 end

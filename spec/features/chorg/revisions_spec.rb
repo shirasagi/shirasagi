@@ -23,7 +23,7 @@ describe "chorg_revisions", dbscope: :example do
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
-        expect(page).not_to have_selector("ul.list-items li.list-item nav.tap-menu")
+        expect(page).to have_no_selector("ul.list-items li.list-item nav.tap-menu")
       end
     end
 
@@ -52,7 +52,7 @@ describe "chorg_revisions", dbscope: :example do
           click_button "保存"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_selector("div#errorExplanation")
+        expect(page).to have_no_selector("div#errorExplanation")
         expect(Chorg::Revision.count).to be > 0
       end
     end
