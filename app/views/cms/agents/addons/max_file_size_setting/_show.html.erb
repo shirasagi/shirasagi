@@ -1,6 +1,6 @@
 <dl class="see mod-max-file-size-setting">
   <dd class="wide" style="margin-bottom: 5px;">
-    <%= link_to t("cms.add_max_file_size"), node_max_file_sizes_path %>
+    <%= link_to t("cms.add_max_file_size"), node_max_file_sizes_path(cid: @item.id) %>
     <%= @model.tt :max_file_size_setting %>
   </dd>
 
