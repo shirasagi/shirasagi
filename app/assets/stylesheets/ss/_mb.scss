@@ -104,7 +104,7 @@ body {
 
 // -------------------------------------------------------------------------------------------------
 // menu
-nav.main-menu, nav.sub-menu, nav.nav-menu, nav.page-menu, nav.addon-menu {
+nav.main-menu, nav.sub-menu, nav.nav-menu, nav.page-menu, nav.addon-menu, nav.sns-nav-menu {
   @include clear;
   margin: 0;
   background-color: $white;
@@ -143,20 +143,20 @@ nav.main-menu, nav.sub-menu, nav.nav-menu, nav.page-menu, nav.addon-menu {
 #mod-menu a {
   display: block !important;
 }
-.nav-menu {
+.nav-menu, .sns-nav-menu {
   @include clear;
   padding: 10px;
-}
-nav-menu a {
-  display: inline-block;
-  @include btn;
-  padding: 8px 15px 5px;
+  a {
+    display: inline-block;
+    @include btn;
+    padding: 8px 15px 5px;
+  }
+  div {
+    padding: 0;
+  }
 }
 nav.addon-menu header h1, nav.page-menu header h1 {
   border: none;
-}
-nav-menu div {
-  padding: 0;
 }
 // -------------------------------------------------------------------------------------------------
 // common

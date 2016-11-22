@@ -77,7 +77,25 @@
   }
 }
 
-#login-notice {
+@include mb {
+  .login-box {
+    padding: 10px;
+    @include box-sizing(border-box);
+    header {
+      @include clear;
+      margin: 0px 0px 20px;
+      h1 {
+        float: left;
+      }
+      .version {
+        float: right;
+        color: #888;
+      }
+    }
+  }
+}
+
+.login-notice {
   float: left;
   margin: 20px 10px;
 
@@ -94,12 +112,12 @@
     margin-left: 5px;
     color: #888;
   }
-
-
+  li {
+    width: 320px;
+  }
 }
-
 @include mb {
-  .login-box {
+  .login-notice {
     padding: 10px;
     @include box-sizing(border-box);
     header {
@@ -112,6 +130,9 @@
         float: right;
         color: #888;
       }
+    }
+    li {
+      width: 215px;
     }
   }
 }

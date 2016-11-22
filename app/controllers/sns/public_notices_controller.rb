@@ -3,7 +3,10 @@ class Sns::PublicNoticesController < ApplicationController
   include Sys::CrudFilter
 
   model Sys::Notice
-  skip_action_callback :logged_in?, only: [:show]
+  skip_action_callback :logged_in?, only: [:index, :show]
+
+  layout "ss/login"
+  navi_view nil
 
   private
     def set_crumbs
