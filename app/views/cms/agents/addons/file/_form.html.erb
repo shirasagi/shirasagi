@@ -23,7 +23,11 @@ $ ->
     <% end %>
 
     <span class="upload-menu-new">
-      <%= link_to :upload, sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+      <% if @cur_node %>
+        <%= link_to :upload, cms_apis_node_temp_files_path, class: "ajax-box btn" %>
+      <% else %>
+        <%= link_to :upload, cms_apis_temp_files_path, class: "ajax-box btn" %>
+      <% end %>
     </span>
     <span class="upload-menu-select">
       <%= link_to :"sns.user_file", sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>

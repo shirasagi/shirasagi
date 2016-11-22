@@ -14,6 +14,7 @@ module Article::Node
     include Cms::Addon::OpendataRef::Site
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
+    include Cms::Addon::MaxFileSizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

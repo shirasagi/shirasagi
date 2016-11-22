@@ -26,6 +26,7 @@ module Category::Node
     include Event::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
+    include Cms::Addon::MaxFileSizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Category::Addon::Integration
