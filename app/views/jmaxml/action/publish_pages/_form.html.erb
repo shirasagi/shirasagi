@@ -25,6 +25,32 @@
       </tbody>
     </table>
   </dd>
+</dl>
+
+<dl class="see mod-rss-weather-xml-action-publish-page">
+  <dt><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
+  <dd>
+    <%= f.hidden_field "category_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to :"cms.apis.categories.index", cms_apis_categories_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Node.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.categories.each do |cate| %>
+        <tr data-id="<%= cate.id %>">
+          <td><%= f.hidden_field "category_ids[]", value: cate.id %> <%= cate.name %></td>
+          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
 
   <dt><%= @model.t :publish_state %><%= @model.tt :publish_state %></dt>
   <dd><%= f.select :publish_state, @item.publish_state_options %></dd>

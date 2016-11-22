@@ -376,6 +376,7 @@ ja:
       jmaxml/action/publish_page:
         publish_to_id: フォルダー
         publish_state: 公開状態
+        category_ids: カテゴリー
       jmaxml/action/switch_urgency:
         urgency_layout_id: 緊急災害レイアウト
 
@@ -530,6 +531,8 @@ ja:
         - 記事ページを作成するフォルダーを選択します。
       publish_state:
         - 作成した記事ページの公開状態を選択します。
+      category_ids:
+        - 作成した記事ページに設定するカテゴリーを選択します。
 
     jmaxml/action/switch_urgency:
       urgency_layout_id:

@@ -19,6 +19,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
       let(:rss_node) { create(:rss_node_weather_xml) }
       let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml1) }
       let!(:article_node) { create(:article_node_page) }
+      let!(:category_node) { create(:category_node_page, cur_node: article_node) }
       let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
       subject { create(:rss_weather_xml_action_publish_page) }
 
@@ -41,6 +42,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -53,6 +55,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '震度速報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml quake">')
             expect(page.html).to include('<h2>2011年3月11日 14時46分ごろ地震がありました。</h2>')
@@ -79,6 +82,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -91,6 +95,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '震源・震度に関する情報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml quake">')
             expect(page.html).to include('<h2>2008年6月14日 08時47分ごろ地震がありました。</h2>')
@@ -116,6 +121,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -128,6 +134,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '津波警報・注意報・予報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml tsunami">')
             expect(page.html).to include('東日本大震災クラスの津波が来襲します。')
@@ -156,6 +163,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -168,6 +176,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '津波情報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml tsunami">')
             expect(page.html).to include('<p>各地の満潮時刻と津波到達予想時刻をお知らせします。</p>')
@@ -197,6 +206,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -209,6 +219,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '気象特別警報・警報・注意報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml forecast">')
             expect(page.html).to include('<h2>2011年9月4日 00時10分 奈良地方気象台発表</h2>')
@@ -237,6 +248,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             trigger.save!
 
             subject.publish_to_id = article_node.id
+            subject.category_ids = [ category_node.id ]
             subject.save!
           end
 
@@ -249,6 +261,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             Article::Page.first.tap do |page|
               expect(page.name).to eq '指定河川洪水予報'
               expect(page.state).to eq subject.publish_state
+              expect(page.category_ids).to eq [ category_node.id ]
               puts page.html
               expect(page.html).to include('<div class="jmaxml flood">')
               expect(page.html).to include('<h2>2008年9月3日 04時15分 木曽川上流河川事務所 岐阜地方気象台発表</h2>')
@@ -279,6 +292,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             trigger.save!
 
             subject.publish_to_id = article_node.id
+            subject.category_ids = [ category_node.id ]
             subject.save!
           end
 
@@ -291,6 +305,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             Article::Page.first.tap do |page|
               expect(page.name).to eq '土砂災害警戒情報'
               expect(page.state).to eq subject.publish_state
+              expect(page.category_ids).to eq [ category_node.id ]
               puts page.html
               expect(page.html).to include('<div class="jmaxml landslide">')
               expect(page.html).to include('<h2>2013年8月23日 22時15分 北海道渡島総合振興局 函館地方気象台発表</h2>')
@@ -311,6 +326,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             trigger.save!
 
             subject.publish_to_id = article_node.id
+            subject.category_ids = [ category_node.id ]
             subject.save!
           end
 
@@ -323,6 +339,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             Article::Page.first.tap do |page|
               expect(page.name).to eq '噴火速報'
               expect(page.state).to eq subject.publish_state
+              expect(page.category_ids).to eq [ category_node.id ]
               puts page.html
               expect(page.html).to include('<div class="jmaxml volcano">')
               expect(page.html).to include('<h2>2014年9月27日 11時53分 気象庁地震火山部発表</h2>')
@@ -347,6 +364,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             trigger.save!
 
             subject.publish_to_id = article_node.id
+            subject.category_ids = [ category_node.id ]
             subject.save!
           end
 
@@ -359,6 +377,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             Article::Page.first.tap do |page|
               expect(page.name).to eq '火山名　桜島　降灰予報（定時）'
               expect(page.state).to eq subject.publish_state
+              expect(page.category_ids).to eq [ category_node.id ]
               puts page.html
               expect(page.html).to include('<div class="jmaxml ashfall">')
               expect(page.html).to include('<h2>2014年6月6日 06時00分 気象庁地震火山部発表</h2>')
@@ -384,6 +403,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             trigger.save!
 
             subject.publish_to_id = article_node.id
+            subject.category_ids = [ category_node.id ]
             subject.save!
           end
 
@@ -396,6 +416,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             Article::Page.first.tap do |page|
               expect(page.name).to eq '竜巻注意情報'
               expect(page.state).to eq subject.publish_state
+              expect(page.category_ids).to eq [ category_node.id ]
               puts page.html
               expect(page.html).to include('<div class="jmaxml tornado">')
               expect(page.html).to include('<h2>2009年8月10日 07時38分 気象庁予報部発表</h2>')
@@ -419,6 +440,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
       let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml1) }
       let!(:rss_page2) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml2) }
       let!(:article_node) { create(:article_node_page) }
+      let!(:category_node) { create(:category_node_page, cur_node: article_node) }
       let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
       subject { create(:rss_weather_xml_action_publish_page) }
 
@@ -442,6 +464,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -454,6 +477,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '【取消】震度速報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml cancel">緊急地震速報（警報）を取り消します。</div>')
           end
@@ -474,6 +498,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -486,6 +511,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '【取消】震源・震度に関する情報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml cancel">震源・震度情報を取り消します。</div>')
           end
@@ -504,6 +530,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           trigger.save!
 
           subject.publish_to_id = article_node.id
+          subject.category_ids = [ category_node.id ]
           subject.save!
         end
 
@@ -516,6 +543,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           Article::Page.first.tap do |page|
             expect(page.name).to eq '【取消】噴火速報'
             expect(page.state).to eq subject.publish_state
+            expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
             expect(page.html).to include('<div class="jmaxml cancel">噴火速報を取り消します。</div>')
           end
