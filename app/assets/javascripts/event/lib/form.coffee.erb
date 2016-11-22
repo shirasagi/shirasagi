@@ -20,7 +20,7 @@ class @Event_Form
         return
 
       $("form").submit ->
-        terms = $(".mod-event dd.dates")
+        terms = $(".mod-event .dates")
         dates = []
 
         for term in terms
@@ -36,7 +36,6 @@ class @Event_Form
 
       Event_Form.setStoredDates()
       return
-
   @dateToString: (date)->
     yy = date.getYear()
     mm = date.getMonth() + 1
