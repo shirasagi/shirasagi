@@ -24,7 +24,7 @@ module Cms::Addon
     end
 
     def search_state_options
-      %w(public closed ready).map do |w|
+      %w(public closed ready closing).map do |w|
         [ I18n.t("views.options.state.#{w}"), w ]
       end
     end
@@ -150,7 +150,7 @@ module Cms::Addon
       permit_params search_category_ids: [], search_group_ids: [], search_node_ids: [], search_user_ids: [], search_routes: []
 
       before_validation :normalize_search_routes
-      validates :search_state, inclusion: { in: %w(public closed ready), allow_blank: true }
+      validates :search_state, inclusion: { in: %w(public closed ready closing), allow_blank: true }
       validates :search_approver_state, inclusion: { in: %w(request approve remand), allow_blank: true }
       validates :search_released_start, datetime: true
       validates :search_released_close, datetime: true
@@ -166,7 +166,7 @@ module Cms::Addon
         categories     = search_category_ids.present? ? { category_ids: search_category_ids } : {}
         groups         = search_group_ids.present? ? { group_ids: search_group_ids } : {}
         users          = search_user_ids.present? ? { user_id: search_user_ids } : {}
-        state          = search_state.present? ? { state: search_state } : {}
+        state          = build_search_state_criteria
         nodes          = build_search_nodes_criteria
         routes         = build_search_routes_criteria
         approver       = build_search_approver_criteria
@@ -190,7 +190,7 @@ module Cms::Addon
           in(groups).
           in(routes).
           in(users).
-          where(state).
+          and(state).
           and(released).
           and(updated).
           and(approver).
@@ -225,6 +225,16 @@ module Cms::Addon
       def normalize_search_routes
         return if search_routes.blank?
         self.search_routes = search_routes.dup.select(&:present?)
+      end
+
+      def build_search_state_criteria
+        return {} unless search_state.present?
+
+        if search_state == "closing"
+          { "$and" => [ { :state => "public" }, { :close_date.exists => true  } ] }
+        else
+          { state: search_state }
+        end
       end
 
       def build_search_keyword_criteria

@@ -118,6 +118,7 @@ ja:
         disabled: 無効
         public: 公開
         closed: 非公開
+        closing: 公開終了待ち
         draft: 下書き
         ready: 公開待ち
         active: 有効

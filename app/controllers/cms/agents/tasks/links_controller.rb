@@ -11,6 +11,38 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       #
     end
 
+    def unset_errors_in_contents
+      Cms::Page.site(@site).has_check_links_errors.each do |content|
+        content.unset(:check_links_errors_updated, :check_links_errors)
+      end
+
+      Cms::Node.site(@site).has_check_links_errors.each do |content|
+        content.unset(:check_links_errors_updated, :check_links_errors)
+      end
+    end
+
+    def set_errors_in_contents(ref, urls)
+      content = find_content_from_ref(ref)
+      if content
+        content.set(check_links_errors_updated: @task.started, check_links_errors: urls)
+      end
+    end
+
+    def find_content_from_ref(ref)
+      filename = ref.sub(/^\//, "")
+      filename.sub!(/\?.*$/, "")
+      filename += "index.html" if ref =~ /\/$/
+
+      page = Cms::Page.site(@site).where(filename: filename).first
+      return page if page
+
+      filename.sub!(/\/(index\.html)?$/, "")
+      node = Cms::Node.site(@site).where(filename: filename).first
+      return node if node
+
+      return nil
+    end
+
   public
     # Checks the URLs by task.
     def check
@@ -21,6 +53,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       @urls    = { @site.url => "Site" }
       @results = {}
       @errors  = {}
+
+      @html_request_timeout = SS::Config.cms.check_links["html_request_timeout"] rescue 10
+      @head_request_timeout = SS::Config.cms.check_links["head_request_timeout"] rescue 5
 
       (10*1000*1000).times do |i|
         break if @urls.blank?
@@ -50,6 +85,12 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
           subject: "[#{@site.name}] Link Check: #{@errors.size} errors",
           body: msg
         ).deliver_now
+      end
+
+      unset_errors_in_contents
+      @errors.map do |ref, urls|
+        urls = urls.map { |url| (url[0] == "/") ? File.join(@base_url, url) : url }
+        set_errors_in_contents(ref, urls)
       end
     end
 
@@ -151,7 +192,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
 
       begin
-        Timeout.timeout(10) do
+        Timeout.timeout(@html_request_timeout) do
           data = []
           open(url, proxy: true, allow_redirections: :all) do |f|
             f.each_line { |line| data << line }
@@ -165,7 +206,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
     end
 
-    # Cheks the existence with HEAD request.
+    # Checks the existence with HEAD request.
     def check_head(url)
       if url =~ /^\/\//
         url = @base_url.sub(/\/\/.*$/, url)
@@ -174,7 +215,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
 
       begin
-        Timeout.timeout(5) do
+        Timeout.timeout(@head_request_timeout) do
           open url, proxy: true, allow_redirections: :all, progress_proc: ->(size) { raise "200" }
         end
         false

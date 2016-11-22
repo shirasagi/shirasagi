@@ -95,5 +95,4 @@ class Cms::Node
       { '$or' => cond }
     end
   end
-
 end

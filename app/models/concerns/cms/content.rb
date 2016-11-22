@@ -6,6 +6,7 @@ module Cms::Content
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::GroupPermission
+  include Cms::Addon::CheckLinks
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files

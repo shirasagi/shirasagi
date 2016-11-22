@@ -18,6 +18,9 @@ ja:
     layout: レイアウト
     body_layout: 本文レイアウト
     link_check: リンクチェック
+    check_links: リンクチェック実行結果
+    check_links_pages: ページ
+    check_links_nodes: フォルダー
     source_cleaner: ソースクリーニング
     word_dictionary: 単語置換辞書
     preview: プレビュー
@@ -546,6 +549,11 @@ ja:
         periods: 表示期間
       cms/addon/archive_view_switcher:
         archive_view: 表示設定
+      cms/addon/check_links:
+        check_links_errors_url: URL
+        check_links_errors: 検出されたリンク切れ
+        check_links_errors_updated: 検出日時
+        check_links_errors_remark: ※集計時のタイミングやサーバー負荷状況によっては誤検出の場合がございます。
 
   errors:
     messages:

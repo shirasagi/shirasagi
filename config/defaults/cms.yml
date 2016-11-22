@@ -60,6 +60,11 @@ production: &production
   # Session Lifetime in seconds
   session_lifetime: 1800
 
+  # check_links job's timeout
+  check_links:
+    html_request_timeout: 10
+    head_request_timeout: 5
+
 test:
   <<: *production
 

@@ -123,6 +123,9 @@ SS::Application.routes.draw do
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
 
+    resources :check_links_pages, only: [:show, :index]
+    resources :check_links_nodes, only: [:show, :index]
+
     namespace "apis" do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
