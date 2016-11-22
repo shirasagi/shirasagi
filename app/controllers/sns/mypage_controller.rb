@@ -1,6 +1,8 @@
 class Sns::MypageController < ApplicationController
   include Sns::BaseFilter
 
+  before_action :notices, only: [:index]
+
   private
     def cms_sites
       SS::Site.all.select do |site|
@@ -10,6 +12,10 @@ class Sns::MypageController < ApplicationController
 
     def gws_sites
       @cur_user.root_groups
+    end
+
+    def notices
+      @notices = Sys::Notice.and_public.sys_admin_notice.page(1).per(5)
     end
 
   public
@@ -37,4 +43,5 @@ class Sns::MypageController < ApplicationController
         redirect_to sns_mypage_path
       end
     end
+
 end

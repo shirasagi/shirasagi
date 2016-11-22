@@ -62,7 +62,7 @@ module SS::EditorHelper
     end
   end
 
-  def ckeditor_editor_options(opts = {})
+  def ckeditor_editor_options(opts = {}, is_sys = false)
     opts = opts.symbolize_keys
 
     base_opts = SS.config.cms.ckeditor['options'].symbolize_keys
@@ -90,7 +90,9 @@ module SS::EditorHelper
 
     if opts[:templates]
       opts[:templates_files] ||= []
-      opts[:templates_files] << "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}"
+      if !is_sys
+        opts[:templates_files] << "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}"
+      end
     else
       opts.delete(:templates)
       opts.delete(:templates_files)
@@ -106,6 +108,19 @@ module SS::EditorHelper
       controller.javascript js
     end
     opts = ckeditor_editor_options(opts)
+    jquery do
+      "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
+    end
+  end
+
+  def sys_html_editor_ckeditor(elem, opts = {})
+    SS.config.cms.ckeditor.fetch('stylesheets', []).each do |ss|
+      controller.stylesheet ss
+    end
+    SS.config.cms.ckeditor.fetch('javascripts', []).each do |js|
+      controller.javascript js
+    end
+    opts = ckeditor_editor_options(opts, true)
     jquery do
       "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
     end
