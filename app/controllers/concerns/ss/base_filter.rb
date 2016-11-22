@@ -13,6 +13,7 @@ module SS::BaseFilter
     before_action :set_model
     before_action :set_ss_assets
     before_action :logged_in?
+    before_action :check_api_user
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
     rescue_from RuntimeError, with: :rescue_action
     layout "ss/base"
@@ -92,6 +93,15 @@ module SS::BaseFilter
       end
       redirect_to sns_mypage_path if opt[:redirect]
       @cur_user = user
+    end
+
+    def check_api_user
+      return if @cur_user.blank?
+      return unless @cur_user.restricted_api_only?
+      return if request.path_info.end_with?('.json')
+
+      # api user only allowd .json
+      raise "403"
     end
 
     def rescue_action(e)

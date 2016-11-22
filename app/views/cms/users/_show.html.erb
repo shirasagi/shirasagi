@@ -35,6 +35,16 @@
   <dd><%= @item.label :initial_password_warning %></dd>
   <% end %>
 
+  <% if @item.session_lifetime.present? %>
+  <dt><%= @model.t :session_lifetime %></dt>
+  <dd><%= @item.label(:session_lifetime) || I18n.t('datetime.distance_in_words.x_seconds', count: @item.session_lifetime) %></dd>
+  <% end %>
+
+  <% if @item.restriction.present? %>
+  <dt><%= @model.t :restriction %></dt>
+  <dd><%= @item.label :restriction %></dd>
+  <% end %>
+
   <% group_ids = Cms::Group.unscoped.site(@cur_site).pluck(:id) %>
   <dt><%= @model.t :group_ids %></dt>
   <dd><%= br @item.groups.order_by(name: 1).select{ |c| group_ids.include?(c.id) }.map{|c| c.name}.join("\n") %></dd>

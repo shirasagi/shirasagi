@@ -171,6 +171,14 @@ ja:
       first_released:
         published: 公開済み
         draft: 未公開
+      session_lifetime:
+        5min: 5分
+        15min: 15分
+        30min: 30分
+        60min: 60分
+      restriction:
+        none: 制限なし
+        api_only: API利用のみ
 
     state:
       public: 公開中
@@ -300,6 +308,8 @@ ja:
         account_start_date: 有効期限（開始）
         account_expiration_date: 有効期限（終了）
         initial_password_warning: 初期パスワード警告
+        session_lifetime: セッション寿命
+        restriction: 利用制限
         remark: 備考
       ss/model/user_title:
         name: 役職名
@@ -437,6 +447,10 @@ ja:
         - 有効期限の終了日を入力します。
       initial_password_warning:
         - 初期パスワード警告を有効にするかどうかを選択します。
+      session_lifetime:
+        - セッションの寿命を秒数で指定します。
+        - 最大 3600（1時間）です。
+        - 空欄の場合は、システムの既定値が用いられます。
       remark:
         - 備考を入力します。
     ss/model/group:

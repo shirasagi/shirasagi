@@ -45,6 +45,19 @@
   <dt><%= @model.t :initial_password_warning %><%= @model.tt :initial_password_warning %></dt>
   <dd><%= f.select :initial_password_warning, @item.initial_password_warning_options %></dd>
 
+  <dt><%= @model.t :session_lifetime %><%= @model.tt :session_lifetime %></dt>
+  <dd>
+    <%= f.number_field :session_lifetime, autocomplete: :on, list: :session_lifetime %>
+    <datalist id="session_lifetime">
+      <% @item.session_lifetime_options.each do |label, value| %>
+        <option label="<%= label %>" value="<%= value %>">
+      <% end %>
+    </datalist>
+  </dd>
+
+  <dt><%= @model.t :restriction %><%= @model.tt :restriction %></dt>
+  <dd><%= f.select :restriction, @item.restriction_options %></dd>
+
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>

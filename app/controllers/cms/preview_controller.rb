@@ -6,6 +6,7 @@ class Cms::PreviewController < ApplicationController
   include Fs::FileFilter
 
   before_action :set_group
+  before_action :check_api_user
   before_action :set_path_with_preview, prepend: true
   after_action :render_form_preview, only: :form_preview
   after_action :render_preview, if: ->{ @file =~ /\.html$/ }
@@ -14,6 +15,7 @@ class Cms::PreviewController < ApplicationController
   if SS.config.cms.remote_preview
     skip_action_callback :logged_in?
     skip_action_callback :set_group
+    skip_action_callback :check_api_user
   end
 
   skip_action_callback :set_ss_assets
