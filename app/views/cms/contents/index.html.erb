@@ -5,14 +5,14 @@
     <% @sys_notices.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to item.name, sns_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+        <%= link_to item.name, cms_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
         <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
       </div>
     </li>
     <% end %>
   </ul>
   <% if @sys_notices.next_page %>
-  <div class="notices-more"><%= link_to I18n.t("views.links.more"), sns_public_notices_path %></div>
+  <div class="notices-more"><%= link_to I18n.t("views.links.more"), cms_sys_notices_path %></div>
   <% end %>
 </div>
 <% end %>
