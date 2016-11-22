@@ -4,83 +4,51 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   helper Event::EventHelper
   helper Cms::ListHelper
 
+  before_action :set_params
+
   def index
     @categories = []
     @items = []
     if @cur_node.parent
       @categories = Cms::Node.site(@cur_site).where({:id.in => @cur_node.parent.st_category_ids}).sort(filename: 1)
     end
-    if params[:search_keyword].present? ||
-        params[:event_dates].present? ||
-        params[:category_ids].present?
+    if @keyword.present? || @category_ids.present? || @start_date.present? || @close_date.present?
       list_events
     end
-    @keyword = params[:search_keyword]
-    @category_ids = params[:category_ids].present? ? params[:category_ids] : []
   end
 
   private
-
-    def search_by_date(event_dates)
-      search = {}
-      search[:list_days] = {}
-      search[:dates] = {}
-
-      return search unless event_dates.present?
-
-      list_days = {}
-      days = []
-
-      event_dates.split(/\r\n|\n/).each do |date|
-        d = Date.parse(date)
-        days << d
+    def set_params
+      safe_params = params.permit(:search_keyword, category_ids: [], event: [ :start_date, :close_date])
+      @keyword = safe_params[:search_keyword].presence
+      @category_ids = safe_params[:category_ids].presence || []
+      @category_ids = @category_ids.map(&:to_i)
+      if params[:event].present? && params[:event][0].present?
+        @start_date = params[:event][0][:start_date].presence
+        @close_date = params[:event][0][:close_date].presence
       end
-
-      @start_date = days.first
-      @close_date = days.last
-
-      (@start_date...@close_date + 1.day).each do |d|
-        list_days[d] = []
-      end
-
-      search[:list_days] = list_days
-      search[:dates] = (@start_date...@close_date + 1.day).map { |m| m.mongoize }
-
-      search
-    end
-
-    def lte_close_date?
-      params[:event][0][:start_date].blank? && params[:event][0][:close_date].present?
-    end
-
-    def gte_start_date?
-      params[:event][0][:close_date].blank? && params[:event][0][:start_date].present?
+      @start_date = Date.parse(@start_date) if @start_date.present?
+      @close_date = Date.parse(@close_date) if @close_date.present?
     end
 
     def list_events
-      @items = {}
-      search = {}
-      if lte_close_date?
-        key_date = "close_date"
-        search[:dates] = Date.parse(params[:event][0][:close_date])
-        @close_date = search[:dates]
-      elsif gte_start_date?
-        key_date = "start_date"
-        search[:dates] = Date.parse(params[:event][0][:start_date])
-        @start_date = search[:dates]
+      criteria = Cms::Page.site(@cur_site).and_public
+      criteria = criteria.search(keyword: @keyword) if @keyword.present?
+      criteria = criteria.where(@cur_node.condition_hash)
+      criteria = criteria.in(category_ids: @category_ids) if @category_ids.present?
+
+      if @start_date.present? && @close_date.present?
+        criteria = criteria.search(dates: @start_date..@close_date)
+      elsif @start_date.present?
+        criteria = criteria.search(start_date: @start_date)
+      elsif @close_date.present?
+        criteria = criteria.search(close_date: @close_date)
       else
-        search = search_by_date(params[:event_dates])
-        key_date = "dates"
+        criteria = criteria.exists(event_dates: 1)
       end
 
-      @items = Event::Page.site(@cur_site).search(
-        keyword: params[:search_keyword],
-        categories: params[:category_ids],
-        :"#{key_date}" => search[:dates]
-      ).and_public.page(params[:page]).
-      per(@cur_node.limit).entries.
-      sort_by{ |page| page.event_dates.size }
-
-      @items = @items.sort_by { |key, value| key }
+      @items = criteria.order_by(@cur_node.sort_hash).
+        page(params[:page]).
+        per(@cur_node.limit)
     end
 end

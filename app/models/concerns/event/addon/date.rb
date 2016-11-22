@@ -10,6 +10,9 @@ module Event::Addon
 
       validate :validate_event
 
+      scope :gte_event_dates, ->(start_date){ where(:event_dates.gte => start_date) }
+      scope :lte_event_dates, ->(close_date){ where(:event_dates.lte => close_date) }
+
       if respond_to?(:template_variable_handler)
         template_variable_handler('event_dates') do |name, issuer|
           template_variable_handler_event_dates(name, issuer)
@@ -32,6 +35,28 @@ module Event::Addon
         template_variable_handler('event_dates.full') do |name, issuer|
           template_variable_handler_event_dates(name, issuer, :full)
         end
+      end
+    end
+
+    module ClassMethods
+      def search(params = {})
+        params ||= {}
+        criteria = super
+
+        if params[:dates].present?
+          criteria = criteria.gte_event_dates(params[:dates].first)
+          criteria = criteria.lte_event_dates(params[:dates].last)
+        end
+
+        if params[:start_date].present?
+          criteria = criteria.gte_event_dates(params[:start_date])
+        end
+
+        if params[:close_date].present?
+          criteria = criteria.lte_event_dates(params[:close_date])
+        end
+
+        criteria
       end
     end
 
