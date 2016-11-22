@@ -231,7 +231,7 @@ module Cms::Addon
         return {} unless search_state.present?
 
         if search_state == "closing"
-          { "$and" => [ { :state => "public" }, { :close_date.exists => true  } ] }
+          { "$and" => [ { :state => "public" }, { :close_date.ne => nil } ] }
         else
           { state: search_state }
         end
