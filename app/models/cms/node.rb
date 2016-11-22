@@ -95,12 +95,4 @@ class Cms::Node
       { '$or' => cond }
     end
   end
-
-  class CheckLinks
-    include Cms::Model::Node
-    include Cms::Addon::CheckLinks
-    include Cms::Addon::GroupPermission
-
-    default_scope ->{ where(:check_links_errors.exists => true) }
-  end
 end

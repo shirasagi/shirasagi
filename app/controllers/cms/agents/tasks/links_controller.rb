@@ -12,11 +12,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
 
     def unset_errors_in_contents
-      Cms::Page::CheckLinks.site(@site).each do |content|
+      Cms::Page.site(@site).has_check_links_errors.each do |content|
         content.unset(:check_links_errors_updated, :check_links_errors)
       end
 
-      Cms::Node::CheckLinks.site(@site).each do |content|
+      Cms::Node.site(@site).has_check_links_errors.each do |content|
         content.unset(:check_links_errors_updated, :check_links_errors)
       end
     end
@@ -33,11 +33,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       filename.sub!(/\?.*$/, "")
       filename += "index.html" if ref =~ /\/$/
 
-      page = Cms::Page::CheckLinks.unscoped.site(@site).where(filename: filename).first
+      page = Cms::Page.site(@site).where(filename: filename).first
       return page if page
 
       filename.sub!(/\/(index\.html)?$/, "")
-      node = Cms::Node::CheckLinks.unscoped.site(@site).where(filename: filename).first
+      node = Cms::Node.site(@site).where(filename: filename).first
       return node if node
 
       return nil

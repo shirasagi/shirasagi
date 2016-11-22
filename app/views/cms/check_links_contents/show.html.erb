@@ -5,7 +5,7 @@
       <dl class="see">
         <dt>
           <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @item.parent) %>
-            <%= link_to @item.name, @item.private_show_path, target: :_blank %>
+            <%= link_to @item.name, @item.private_show_path %>
           <% else %>
             <%= @item.name %>
           <% end %>
