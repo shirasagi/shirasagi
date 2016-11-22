@@ -54,6 +54,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       @results = {}
       @errors  = {}
 
+      @html_request_timeout = SS::Config.cms.check_links["html_request_timeout"] rescue 10
+      @head_request_timeout = SS::Config.cms.check_links["head_request_timeout"] rescue 5
+
       (10*1000*1000).times do |i|
         break if @urls.blank?
         url, ref = @urls.shift
@@ -189,7 +192,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
 
       begin
-        Timeout.timeout(10) do
+        Timeout.timeout(@html_request_timeout) do
           data = []
           open(url, proxy: true, allow_redirections: :all) do |f|
             f.each_line { |line| data << line }
@@ -212,7 +215,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
 
       begin
-        Timeout.timeout(5) do
+        Timeout.timeout(@head_request_timeout) do
           open url, proxy: true, allow_redirections: :all, progress_proc: ->(size) { raise "200" }
         end
         false
