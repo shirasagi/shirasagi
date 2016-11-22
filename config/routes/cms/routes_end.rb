@@ -149,6 +149,7 @@ SS::Application.routes.draw do
 
   namespace "cms", path: ".cms" do
     match "link_check/check" => "link_check#check", via: [:post, :options], as: "link_check"
+    match "mobile_size_check/check" => "mobile_size_check#check", via: [:post, :options], as: "mobile_size_check"
   end
 
   content "cms", name: "node", module: "cms/node" do

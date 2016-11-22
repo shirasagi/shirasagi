@@ -21,6 +21,14 @@ module Cms::Addon
       end
     end
 
+    def mobile_size_enable?
+      self.site.mobile_enabled?
+    end
+
+    def mobile_size
+      self.site.mobile_size
+    end
+
     private
       def template_variable_handler_img_src(name, issuer)
         extract_img_src(html) || default_img_src

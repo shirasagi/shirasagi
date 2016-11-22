@@ -40,6 +40,7 @@ ja:
     site: サイト
     site_menu: サイトメニュー
     syntax_check: アクセシビリティチェック
+    mobile_size_check: 携帯データサイズチェック
     user: ユーザー
     view_page: 公開画面
     view_site: サイト確認
@@ -550,6 +551,8 @@ ja:
     messages:
       set_filename: ファイル名を入力してください。
       invalid_filename: ファイル名は不正な値です。
+      too_bigsize: 携帯電話で表示する場合、ファイルサイズ合計(%{total})が制限値の%{mobile_size}以下になるようにしてください。
+      too_bigfile: 携帯電話で表示する場合、%{filename}(%{filesize})のファイルサイズを%{mobile_size}以下になるようにしてください。
       set_name: タイトルを入力してください。
       same_filename: 移動先と移動前が同じファイル名です。
       exist_physical_file: 移動先に物理ファイルが既に存在します。
@@ -566,6 +569,12 @@ ja:
       link_check_success: 成功
       link_check_failure: 失敗
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
+      mobile_size_check_success: 成功
+      mobile_size_check_failure: 失敗
+      mobile_size_check_disable: モバイルサイズが設定されていません。
+      mobile_size_check_size: 本文のデータサイズはOKです。
+      mobile_size_check_failed_to_size: 携帯で表示する場合、本文のデータサイズが%{mobile_size}以下になるようにしてください。
+      mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
       invalid_order_of_h: 見出しの順番が不正です。
