@@ -1,10 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :"cms.node_config", node_conf_path, class: "back_to_index" %>
-    <% end %>
-
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, { action: :new }, class: :new %>
     <% end %>
     <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>

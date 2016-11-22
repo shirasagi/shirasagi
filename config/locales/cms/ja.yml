@@ -71,6 +71,7 @@ ja:
     calendar_view: カレンダー表示
     list_view: リスト表示
     max_file_size: 最大ファイルサイズ
+    max_file_size_setting: 最大ファイルサイズ設定
     add_max_file_size: 最大ファイルサイズを設定する
 
     adobe_reader:
