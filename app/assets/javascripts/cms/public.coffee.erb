@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require jquery.cookie
 //= require jquery.form
+//= require jquery.datetimepicker
 //= require_self
 //= require ss/lib/module
 //= require ss/lib/mobile
@@ -9,6 +10,7 @@
 //= require ads/lib/banner
 //= require event/lib/monthly
 //= require event/lib/calendar
+//= require event/lib/form
 //= require inquiry/lib/form
 //= require inquiry/lib/chart
 //= require key_visual/lib/slide
@@ -33,6 +35,17 @@ $ ->
     SS_Recommend.render()
   $(".ss-part").each ->
     SS.renderPart $(this)
+
+  $.datetimepicker.setLocale('ja');
+  if ($.support.opacity)
+    $(".js-date").datetimepicker
+      timepicker: false
+      format:'Y/m/d'
+      closeOnDateSelect: true
+      scrollInput: false
+    $(".js-datetime").datetimepicker
+      roundTime: 'ceil'
+      step: 30
 
 class @SS
   @head = ""
