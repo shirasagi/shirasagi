@@ -2,21 +2,20 @@ class Cms::ImportController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Cms::Node::ImportNode
+  model Cms::ImportJobFile
 
   navi_view "cms/main/navi"
   menu_view nil
 
   def import
+    return if request.get?
+
     @item = @model.new get_params
-    @item.cur_site = @cur_site
-    result = @item.save_with_import
-    flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
-    render_create result, location: redirect_url, render: { file: :index }
+    render_create @item.save_with_import, location: { action: :import }, render: { file: :import }, notice: t("views.notice.import")
   end
 
   private
-    def redirect_url
-      cms_import_path(cid: @cur_node)
+    def fix_params
+      { cur_site: @cur_site, cur_user: @cur_user }
     end
 end

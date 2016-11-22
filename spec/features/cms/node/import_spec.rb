@@ -19,32 +19,15 @@ describe "cms_node_import", type: :feature, dbscope: :example do
   context "with auth" do
     before { login_cms_user }
 
-    it "#index" do
+    it "#import" do
       visit index_path
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
-    end
-
-    it "#import" do
-      visit index_path
       within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/import/site.zip"
         click_button "取り込み"
       end
       expect(status_code).to eq 200
-
-      pages = Cms::ImportPage.all.entries
-      nodes = Cms::Node::ImportNode.all.entries
-      expect(pages.map(&:name)).to eq %w(page.html index.html)
-      expect(nodes.map(&:name)).to eq %w(import article css img)
-
-      pages.each do |page|
-        expect(page.html.present?).to eq true
-        page.html.scan(/(href|src)="\/(.+?)"/) do
-          path = $2
-          expect(path =~ /#{node.filename}\//).to eq 0
-        end
-      end
     end
   end
 end

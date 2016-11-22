@@ -42,4 +42,8 @@ namespace :cms do
   task :check_links => :environment do
     with_node(Cms::CheckLinksJob, email: ENV["email"])
   end
+
+  task :import_files => :environment do
+    with_site(Cms::ImportFilesJob)
+  end
 end
