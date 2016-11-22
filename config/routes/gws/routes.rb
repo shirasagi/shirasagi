@@ -18,6 +18,7 @@ SS::Application.routes.draw do
     resources :roles, concerns: [:deletion]
     resources :notices, concerns: [:deletion]
     resources :public_notices, only: [:index, :show]
+    resources :sys_notices, only: [:index, :show]
     resources :links, concerns: [:deletion]
     resources :public_links, only: [:index, :show]
     resources :reminders, only: [:index, :destroy], concerns: [:deletion]

@@ -683,9 +683,8 @@ td {
 // -------------------------------------------------------------------------------------------------
 // menu
 #menu {
-  .nav-menu {
+  .nav-menu, .sns-nav-menu {
     margin: 20px;
-    margin-left: 230px;
     @include mb {
       margin: 0;
       padding: 10px;
@@ -697,6 +696,9 @@ td {
       color: $black;
       &:hover { color: $orange;}
     }
+  }
+  .nav-menu {
+    margin-left: 230px;
   }
 }
 

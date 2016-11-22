@@ -4,6 +4,10 @@
   margin-top: 10px;
   @include mb { width: 100%; }
 }
+.mypage-box.notices {
+  width: 100%;
+}
+
 .mypage-sites {
   min-height: 150px;
   margin-right:5px;

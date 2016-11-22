@@ -94,6 +94,7 @@ SS::Application.routes.draw do
       get :copy, :on => :member
       put :copy, :on => :member
     end
+    resources :sys_notices, only: [:index, :show]
 
     resources :files, concerns: [:deletion, :template] do
       get :view, on: :member

@@ -2,12 +2,14 @@
   <h2><%= link_to :"sys.conf", sys_sites_path %></h2>
 
   <h3><%= link_to :"sys.info", sys_conf_path %></h3>
-
   <% if Sys::Site.allowed?(:edit, @cur_user) %>
     <h3><%= link_to :"sys.site", sys_sites_path %></h3>
   <% end %>
   <% if Sys::Group.allowed?(:edit, @cur_user) %>
     <h3><%= link_to :"sys.group", sys_groups_path %></h3>
+  <% end %>
+  <% if Sys::Notice.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to :"sys.notice", sys_notice_index_path %></h3>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>
     <h3><%= link_to :"sys.user", sys_users_path %></h3>
@@ -31,5 +33,4 @@
   <% if SS::User.allowed?(:edit, @cur_user) %>
     <h3><%= link_to :"job.main", job_sys_main_path %></h3>
   <% end %>
-
 </nav>

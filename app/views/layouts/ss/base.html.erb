@@ -100,10 +100,12 @@
     </div>
 
     <article id="main">
-      <% if @cur_user.initial_password_warning.present? %>
-      <div class="warning">
-        <%= link_to t("views.warning.initial_password"), sns_cur_user_account_path %>
-      </div>
+      <% if @cur_user.present? %>
+        <% if @cur_user.initial_password_warning.present? %>
+        <div class="warning">
+          <%= link_to t("views.warning.initial_password"), sns_cur_user_account_path %>
+        </div>
+        <% end %>
       <% end %>
 
       <% if @crumbs.size > 0 %>
