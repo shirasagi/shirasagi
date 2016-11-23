@@ -30,53 +30,37 @@ describe "workflow_branch", dbscope: :example do
       it "#branch_create" do
         visit show_path
         click_button "差し替えページを作成する"
-        wait_for_ajax
 
         click_link("[TEST] br_page")
-        expect(page).to have_css("#addon-cms-agents-addons-release", :text => "非公開")
-        br_show_path = current_path
-
         click_link("編集する")
-        br_edit_path = current_path
         within "form#item-form" do
           fill_in "item[name]", with: "[TEST] br_replace"
           click_button "下書き保存"
         end
-        wait_for_ajax
-        if current_path == br_edit_path
-          click_button "警告を無視する"
-        end
-        expect(current_path).to eq br_show_path
-        expect(page).to have_css("#addon-cms-agents-addons-release", :text => "非公開")
+        expect(page).to have_css("#notice", text: "保存しました。")
 
         master = Article::Page.where(name: "[TEST] br_page").first
         branch = Article::Page.where(name: "[TEST] br_replace").first
-        expect(master).not_to eq(nil)
-        expect(master.branches).not_to eq([])
-        expect(branch).not_to eq(nil)
+        expect(master).not_to be_nil
+        expect(master.state).to eq "public"
+        expect(branch).not_to be_nil
+        expect(branch.state).to eq "closed"
         expect(master.branches.first.id).to eq(branch.id)
         master_id = master.id
         branch_id = branch.id
 
         click_link("編集する")
-        br_edit_path = current_path
         within "form#item-form" do
           click_button "公開保存"
         end
-        wait_for_ajax
-        if current_path == br_edit_path
-          click_button "警告を無視する"
-        end
-        expect(current_path).to eq index_path
+        expect(page).to have_css("#notice", text: "保存しました。")
 
         master = Article::Page.where(id: master_id).first
         branch = Article::Page.where(id: branch_id).first
-        expect(master).not_to eq(nil)
-        expect(branch).to eq(nil)
-
-        visit show_path
-        expect(page).to have_css("#addon-basic", :text => "[TEST] br_replace")
-        expect(page).to have_no_css("#addon-cms-agents-addons-release", :text => "非公開")
+        expect(master).not_to be_nil
+        expect(master.name).to eq "[TEST] br_replace"
+        expect(master.state).to eq "public"
+        expect(branch).to be_nil
       end
     end
   end
