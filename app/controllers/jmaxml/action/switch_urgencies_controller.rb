@@ -4,6 +4,7 @@ class Jmaxml::Action::SwitchUrgenciesController < ApplicationController
 
   model Jmaxml::Action::SwitchUrgency
   navi_view "rss/main/navi"
+  append_view_path 'app/views/jmaxml/action/bases'
 
   private
     def fix_params

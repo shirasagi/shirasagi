@@ -4,7 +4,8 @@ describe Jmaxml::Action::SwitchUrgency, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do
-    subject { create(:jmaxml_action_switch_urgency) }
+    let!(:layout1) { create_cms_layout }
+    subject { create(:jmaxml_action_switch_urgency, urgency_layout_id: layout1.id) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
   end
@@ -17,12 +18,7 @@ describe Jmaxml::Action::SwitchUrgency, dbscope: :example do
     let(:node) { create(:rss_node_weather_xml) }
     let(:page) { create(:rss_weather_xml_page, cur_node: node) }
     let(:context) { OpenStruct.new(site: site, node: node) }
-    subject { create(:jmaxml_action_switch_urgency) }
-
-    before do
-      subject.urgency_layout_id = layout2.id
-      subject.save!
-    end
+    subject { create(:jmaxml_action_switch_urgency, urgency_layout_id: layout2.id) }
 
     it do
       subject.execute(page, context)

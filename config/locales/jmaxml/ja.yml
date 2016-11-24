@@ -275,6 +275,8 @@ ja:
     jmaxml: 気象庁防災情報XML
     addons:
       jmaxml/filter: フィルター
+      jmaxml/publish_page: 記事作成
+      jmaxml/switch_urgency: 緊急災害レイアウト切替
       jmaxml/sender: 送信者設定
       jmaxml/recipient: 受信者設定
 
@@ -382,11 +384,11 @@ ja:
       jmaxml/action/base:
         in_type: 種別
         name: 名前
-      jmaxml/action/publish_page:
+      jmaxml/addon/publish_page:
         publish_to_id: フォルダー
         publish_state: 公開状態
         category_ids: カテゴリー
-      jmaxml/action/switch_urgency:
+      jmaxml/addon/switch_urgency:
         urgency_layout_id: 緊急災害レイアウト
       jmaxml/addon/sender:
         sender_name: 送信者名
@@ -542,7 +544,7 @@ ja:
       name:
         - 名前を指定します。
 
-    jmaxml/action/publish_page:
+    jmaxml/addon/publish_page:
       publish_to_id:
         - 記事ページを作成するフォルダーを選択します。
       publish_state:
@@ -550,7 +552,7 @@ ja:
       category_ids:
         - 作成した記事ページに設定するカテゴリーを選択します。
 
-    jmaxml/action/switch_urgency:
+    jmaxml/addon/switch_urgency:
       urgency_layout_id:
         - 緊急災害レイアウトを選択します。
 

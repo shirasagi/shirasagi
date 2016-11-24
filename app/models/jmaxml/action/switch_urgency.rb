@@ -1,6 +1,5 @@
 class Jmaxml::Action::SwitchUrgency < Jmaxml::Action::Base
-  belongs_to :urgency_layout, class_name: "Cms::Layout"
-  permit_params :urgency_layout_id
+  include Jmaxml::Addon::SwitchUrgency
 
   def execute(page, context)
     node = Urgency::Node::Layout.site(context.site).order_by(depth: 1, id: 1).first

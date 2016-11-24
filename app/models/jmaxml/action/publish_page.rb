@@ -1,13 +1,5 @@
 class Jmaxml::Action::PublishPage < Jmaxml::Action::Base
-  belongs_to :publish_to, class_name: "Cms::Node"
-  field :publish_state, type: String
-  embeds_ids :categories, class_name: "Cms::Node"
-  permit_params :publish_to_id, :publish_state
-  permit_params category_ids: []
-
-  def publish_state_options
-    %w(draft public).map { |v| [ I18n.t("views.options.state.#{v}"), v ] }
-  end
+  include Jmaxml::Addon::PublishPage
 
   def execute(page, context)
     renderer = context.type.renderer(page, context)
