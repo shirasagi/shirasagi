@@ -94,7 +94,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     end
 
     before do
-      region_152 = create(:rss_weather_xml_region_152)
+      region_152 = create(:jmaxml_region_152)
       node.target_region_ids = [ region_152.id ]
       node.earthquake_intensity = '3'
       node.my_anpi_post_id = node_my_anpi_post.id
@@ -186,10 +186,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     end
 
     before do
-      region_210 = create(:rss_weather_xml_region_210)
-      region_211 = create(:rss_weather_xml_region_211)
-      region_212 = create(:rss_weather_xml_region_212)
-      region_213 = create(:rss_weather_xml_region_213)
+      region_210 = create(:jmaxml_region_210)
+      region_211 = create(:jmaxml_region_211)
+      region_212 = create(:jmaxml_region_212)
+      region_213 = create(:jmaxml_region_213)
       node.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
       node.earthquake_intensity = '5+'
       node.my_anpi_post_id = node_my_anpi_post.id

@@ -4,7 +4,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do
-    subject { create(:rss_weather_xml_action_send_mail) }
+    subject { create(:jmaxml_action_send_mail) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
     its(:title_mail_text) { is_expected.not_to be_nil }
@@ -27,14 +27,14 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
     let(:context) { OpenStruct.new(site: site, xmldoc: REXML::Document.new(page.xml)) }
-    let(:trigger) { create(:rss_weather_xml_trigger_quake_intensity_flash) }
-    subject { create(:rss_weather_xml_action_send_mail) }
+    let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
+    subject { create(:jmaxml_action_send_mail) }
 
     before do
-      region_210 = create(:rss_weather_xml_region_210)
-      region_211 = create(:rss_weather_xml_region_211)
-      region_212 = create(:rss_weather_xml_region_212)
-      region_213 = create(:rss_weather_xml_region_213)
+      region_210 = create(:jmaxml_region_210)
+      region_211 = create(:jmaxml_region_211)
+      region_212 = create(:jmaxml_region_212)
+      region_213 = create(:jmaxml_region_213)
       trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
       trigger.save!
 

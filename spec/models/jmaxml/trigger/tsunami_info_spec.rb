@@ -4,7 +4,7 @@ describe Jmaxml::Trigger::TsunamiInfo, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do
-    subject { create(:rss_weather_xml_trigger_tsunami_info) }
+    subject { create(:jmaxml_trigger_tsunami_info) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
     its(:training_status) { is_expected.to eq 'disabled' }
@@ -17,13 +17,13 @@ describe Jmaxml::Trigger::TsunamiInfo, dbscope: :example do
     let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
     let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
-    subject { create(:rss_weather_xml_trigger_tsunami_info) }
+    subject { create(:jmaxml_trigger_tsunami_info) }
 
     before do
-      region_100 = create(:rss_weather_xml_tsunami_region_100)
-      region_101 = create(:rss_weather_xml_tsunami_region_101)
-      region_102 = create(:rss_weather_xml_tsunami_region_102)
-      region_110 = create(:rss_weather_xml_tsunami_region_110)
+      region_100 = create(:jmaxml_tsunami_region_100)
+      region_101 = create(:jmaxml_tsunami_region_101)
+      region_102 = create(:jmaxml_tsunami_region_102)
+      region_110 = create(:jmaxml_tsunami_region_110)
       subject.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id ]
       subject.save!
     end

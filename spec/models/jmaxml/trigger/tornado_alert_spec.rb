@@ -4,7 +4,7 @@ describe Jmaxml::Trigger::TornadoAlert, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do
-    subject { create(:rss_weather_xml_trigger_tornado_alert) }
+    subject { create(:jmaxml_trigger_tornado_alert) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
     its(:training_status) { is_expected.to eq 'disabled' }
@@ -17,13 +17,13 @@ describe Jmaxml::Trigger::TornadoAlert, dbscope: :example do
     let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
     let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
-    subject { create(:rss_weather_xml_trigger_tornado_alert) }
+    subject { create(:jmaxml_trigger_tornado_alert) }
 
     before do
-      region_1310100 = create(:rss_weather_xml_forecast_region_1310100)
-      region_1310200 = create(:rss_weather_xml_forecast_region_1310200)
-      region_1310300 = create(:rss_weather_xml_forecast_region_1310300)
-      region_1310400 = create(:rss_weather_xml_forecast_region_1310400)
+      region_1310100 = create(:jmaxml_forecast_region_1310100)
+      region_1310200 = create(:jmaxml_forecast_region_1310200)
+      region_1310300 = create(:jmaxml_forecast_region_1310300)
+      region_1310400 = create(:jmaxml_forecast_region_1310400)
       subject.target_region_ids = [ region_1310100.id, region_1310200.id, region_1310300.id, region_1310400.id ]
       subject.save!
     end

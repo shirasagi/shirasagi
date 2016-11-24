@@ -4,7 +4,7 @@ describe Jmaxml::Trigger::AshFallForecast, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do
-    subject { create(:rss_weather_xml_trigger_ash_fall_forecast) }
+    subject { create(:jmaxml_trigger_ash_fall_forecast) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
     its(:training_status) { is_expected.to eq 'disabled' }
@@ -18,13 +18,13 @@ describe Jmaxml::Trigger::AshFallForecast, dbscope: :example do
     let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
     let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
-    subject { create(:rss_weather_xml_trigger_ash_fall_forecast) }
+    subject { create(:jmaxml_trigger_ash_fall_forecast) }
 
     before do
-      region_4620100 = create(:rss_weather_xml_forecast_region_4620100)
-      region_4620300 = create(:rss_weather_xml_forecast_region_4620300)
-      region_4621400 = create(:rss_weather_xml_forecast_region_4621400)
-      region_4621700 = create(:rss_weather_xml_forecast_region_4621700)
+      region_4620100 = create(:jmaxml_forecast_region_4620100)
+      region_4620300 = create(:jmaxml_forecast_region_4620300)
+      region_4621400 = create(:jmaxml_forecast_region_4621400)
+      region_4621700 = create(:jmaxml_forecast_region_4621700)
       subject.target_region_ids = [ region_4620100.id, region_4620300.id, region_4621400.id, region_4621700.id ]
       subject.save!
     end

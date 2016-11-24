@@ -1,8 +1,8 @@
 FactoryGirl.define do
-  factory :rss_weather_xml_forecast_region_base, class: Jmaxml::ForecastRegion do
+  factory :jmaxml_forecast_region_base, class: Jmaxml::ForecastRegion do
     cur_site { cms_site }
 
-    factory :rss_weather_xml_forecast_region_0110000 do
+    factory :jmaxml_forecast_region_0110000 do
       code "0110000"
       name "北海道札幌市"
       yomi "ほっかいどうさっぽろし"
@@ -10,7 +10,7 @@ FactoryGirl.define do
       short_yomi "さっぽろし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120200 do
+    factory :jmaxml_forecast_region_0120200 do
       code "0120200"
       name "北海道函館市"
       yomi "ほっかいどうはこだてし"
@@ -18,7 +18,7 @@ FactoryGirl.define do
       short_yomi "はこだてし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120300 do
+    factory :jmaxml_forecast_region_0120300 do
       code "0120300"
       name "北海道小樽市"
       yomi "ほっかいどうおたるし"
@@ -26,7 +26,7 @@ FactoryGirl.define do
       short_yomi "おたるし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120400 do
+    factory :jmaxml_forecast_region_0120400 do
       code "0120400"
       name "北海道旭川市"
       yomi "ほっかいどうあさひかわし"
@@ -34,7 +34,7 @@ FactoryGirl.define do
       short_yomi "あさひかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120500 do
+    factory :jmaxml_forecast_region_0120500 do
       code "0120500"
       name "北海道室蘭市"
       yomi "ほっかいどうむろらんし"
@@ -42,7 +42,7 @@ FactoryGirl.define do
       short_yomi "むろらんし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120600 do
+    factory :jmaxml_forecast_region_0120600 do
       code "0120600"
       name "北海道釧路市"
       yomi "ほっかいどうくしろし"
@@ -50,7 +50,7 @@ FactoryGirl.define do
       short_yomi "くしろし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120700 do
+    factory :jmaxml_forecast_region_0120700 do
       code "0120700"
       name "北海道帯広市"
       yomi "ほっかいどうおびひろし"
@@ -58,7 +58,7 @@ FactoryGirl.define do
       short_yomi "おびひろし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120800 do
+    factory :jmaxml_forecast_region_0120800 do
       code "0120800"
       name "北海道北見市"
       yomi "ほっかいどうきたみし"
@@ -66,7 +66,7 @@ FactoryGirl.define do
       short_yomi "きたみし"
     end
 
-    factory :rss_weather_xml_forecast_region_0120900 do
+    factory :jmaxml_forecast_region_0120900 do
       code "0120900"
       name "北海道夕張市"
       yomi "ほっかいどうゆうばりし"
@@ -74,7 +74,7 @@ FactoryGirl.define do
       short_yomi "ゆうばりし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121000 do
+    factory :jmaxml_forecast_region_0121000 do
       code "0121000"
       name "北海道岩見沢市"
       yomi "ほっかいどういわみざわし"
@@ -82,7 +82,7 @@ FactoryGirl.define do
       short_yomi "いわみざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121100 do
+    factory :jmaxml_forecast_region_0121100 do
       code "0121100"
       name "北海道網走市"
       yomi "ほっかいどうあばしりし"
@@ -90,7 +90,7 @@ FactoryGirl.define do
       short_yomi "あばしりし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121200 do
+    factory :jmaxml_forecast_region_0121200 do
       code "0121200"
       name "北海道留萌市"
       yomi "ほっかいどうるもいし"
@@ -98,7 +98,7 @@ FactoryGirl.define do
       short_yomi "るもいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121300 do
+    factory :jmaxml_forecast_region_0121300 do
       code "0121300"
       name "北海道苫小牧市"
       yomi "ほっかいどうとまこまいし"
@@ -106,7 +106,7 @@ FactoryGirl.define do
       short_yomi "とまこまいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121400 do
+    factory :jmaxml_forecast_region_0121400 do
       code "0121400"
       name "北海道稚内市"
       yomi "ほっかいどうわっかないし"
@@ -114,7 +114,7 @@ FactoryGirl.define do
       short_yomi "わっかないし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121500 do
+    factory :jmaxml_forecast_region_0121500 do
       code "0121500"
       name "北海道美唄市"
       yomi "ほっかいどうびばいし"
@@ -122,7 +122,7 @@ FactoryGirl.define do
       short_yomi "びばいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121600 do
+    factory :jmaxml_forecast_region_0121600 do
       code "0121600"
       name "北海道芦別市"
       yomi "ほっかいどうあしべつし"
@@ -130,7 +130,7 @@ FactoryGirl.define do
       short_yomi "あしべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121700 do
+    factory :jmaxml_forecast_region_0121700 do
       code "0121700"
       name "北海道江別市"
       yomi "ほっかいどうえべつし"
@@ -138,7 +138,7 @@ FactoryGirl.define do
       short_yomi "えべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121800 do
+    factory :jmaxml_forecast_region_0121800 do
       code "0121800"
       name "北海道赤平市"
       yomi "ほっかいどうあかびらし"
@@ -146,7 +146,7 @@ FactoryGirl.define do
       short_yomi "あかびらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0121900 do
+    factory :jmaxml_forecast_region_0121900 do
       code "0121900"
       name "北海道紋別市"
       yomi "ほっかいどうもんべつし"
@@ -154,7 +154,7 @@ FactoryGirl.define do
       short_yomi "もんべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122000 do
+    factory :jmaxml_forecast_region_0122000 do
       code "0122000"
       name "北海道士別市"
       yomi "ほっかいどうしべつし"
@@ -162,7 +162,7 @@ FactoryGirl.define do
       short_yomi "しべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122100 do
+    factory :jmaxml_forecast_region_0122100 do
       code "0122100"
       name "北海道名寄市"
       yomi "ほっかいどうなよろし"
@@ -170,7 +170,7 @@ FactoryGirl.define do
       short_yomi "なよろし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122200 do
+    factory :jmaxml_forecast_region_0122200 do
       code "0122200"
       name "北海道三笠市"
       yomi "ほっかいどうみかさし"
@@ -178,7 +178,7 @@ FactoryGirl.define do
       short_yomi "みかさし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122300 do
+    factory :jmaxml_forecast_region_0122300 do
       code "0122300"
       name "北海道根室市"
       yomi "ほっかいどうねむろし"
@@ -186,7 +186,7 @@ FactoryGirl.define do
       short_yomi "ねむろし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122400 do
+    factory :jmaxml_forecast_region_0122400 do
       code "0122400"
       name "北海道千歳市"
       yomi "ほっかいどうちとせし"
@@ -194,7 +194,7 @@ FactoryGirl.define do
       short_yomi "ちとせし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122500 do
+    factory :jmaxml_forecast_region_0122500 do
       code "0122500"
       name "北海道滝川市"
       yomi "ほっかいどうたきかわし"
@@ -202,7 +202,7 @@ FactoryGirl.define do
       short_yomi "たきかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122600 do
+    factory :jmaxml_forecast_region_0122600 do
       code "0122600"
       name "北海道砂川市"
       yomi "ほっかいどうすながわし"
@@ -210,7 +210,7 @@ FactoryGirl.define do
       short_yomi "すながわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122700 do
+    factory :jmaxml_forecast_region_0122700 do
       code "0122700"
       name "北海道歌志内市"
       yomi "ほっかいどううたしないし"
@@ -218,7 +218,7 @@ FactoryGirl.define do
       short_yomi "うたしないし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122800 do
+    factory :jmaxml_forecast_region_0122800 do
       code "0122800"
       name "北海道深川市"
       yomi "ほっかいどうふかがわし"
@@ -226,7 +226,7 @@ FactoryGirl.define do
       short_yomi "ふかがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0122900 do
+    factory :jmaxml_forecast_region_0122900 do
       code "0122900"
       name "北海道富良野市"
       yomi "ほっかいどうふらのし"
@@ -234,7 +234,7 @@ FactoryGirl.define do
       short_yomi "ふらのし"
     end
 
-    factory :rss_weather_xml_forecast_region_0123000 do
+    factory :jmaxml_forecast_region_0123000 do
       code "0123000"
       name "北海道登別市"
       yomi "ほっかいどうのぼりべつし"
@@ -242,7 +242,7 @@ FactoryGirl.define do
       short_yomi "のぼりべつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0123100 do
+    factory :jmaxml_forecast_region_0123100 do
       code "0123100"
       name "北海道恵庭市"
       yomi "ほっかいどうえにわし"
@@ -250,7 +250,7 @@ FactoryGirl.define do
       short_yomi "えにわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0123300 do
+    factory :jmaxml_forecast_region_0123300 do
       code "0123300"
       name "北海道伊達市"
       yomi "ほっかいどうだてし"
@@ -258,7 +258,7 @@ FactoryGirl.define do
       short_yomi "だてし"
     end
 
-    factory :rss_weather_xml_forecast_region_0123400 do
+    factory :jmaxml_forecast_region_0123400 do
       code "0123400"
       name "北海道北広島市"
       yomi "ほっかいどうきたひろしまし"
@@ -266,7 +266,7 @@ FactoryGirl.define do
       short_yomi "きたひろしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0123500 do
+    factory :jmaxml_forecast_region_0123500 do
       code "0123500"
       name "北海道石狩市"
       yomi "ほっかいどういしかりし"
@@ -274,7 +274,7 @@ FactoryGirl.define do
       short_yomi "いしかりし"
     end
 
-    factory :rss_weather_xml_forecast_region_0123600 do
+    factory :jmaxml_forecast_region_0123600 do
       code "0123600"
       name "北海道北斗市"
       yomi "ほっかいどうほくとし"
@@ -282,7 +282,7 @@ FactoryGirl.define do
       short_yomi "ほくとし"
     end
 
-    factory :rss_weather_xml_forecast_region_0130300 do
+    factory :jmaxml_forecast_region_0130300 do
       code "0130300"
       name "北海道当別町"
       yomi "ほっかいどうとうべつちょう"
@@ -290,7 +290,7 @@ FactoryGirl.define do
       short_yomi "とうべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0130400 do
+    factory :jmaxml_forecast_region_0130400 do
       code "0130400"
       name "北海道新篠津村"
       yomi "ほっかいどうしんしのつむら"
@@ -298,7 +298,7 @@ FactoryGirl.define do
       short_yomi "しんしのつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0133100 do
+    factory :jmaxml_forecast_region_0133100 do
       code "0133100"
       name "北海道松前町"
       yomi "ほっかいどうまつまえちょう"
@@ -306,7 +306,7 @@ FactoryGirl.define do
       short_yomi "まつまえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0133200 do
+    factory :jmaxml_forecast_region_0133200 do
       code "0133200"
       name "北海道福島町"
       yomi "ほっかいどうふくしまちょう"
@@ -314,7 +314,7 @@ FactoryGirl.define do
       short_yomi "ふくしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0133300 do
+    factory :jmaxml_forecast_region_0133300 do
       code "0133300"
       name "北海道知内町"
       yomi "ほっかいどうしりうちちょう"
@@ -322,7 +322,7 @@ FactoryGirl.define do
       short_yomi "しりうちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0133400 do
+    factory :jmaxml_forecast_region_0133400 do
       code "0133400"
       name "北海道木古内町"
       yomi "ほっかいどうきこないちょう"
@@ -330,7 +330,7 @@ FactoryGirl.define do
       short_yomi "きこないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0133700 do
+    factory :jmaxml_forecast_region_0133700 do
       code "0133700"
       name "北海道七飯町"
       yomi "ほっかいどうななえちょう"
@@ -338,7 +338,7 @@ FactoryGirl.define do
       short_yomi "ななえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0134300 do
+    factory :jmaxml_forecast_region_0134300 do
       code "0134300"
       name "北海道鹿部町"
       yomi "ほっかいどうしかべちょう"
@@ -346,7 +346,7 @@ FactoryGirl.define do
       short_yomi "しかべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0134500 do
+    factory :jmaxml_forecast_region_0134500 do
       code "0134500"
       name "北海道森町"
       yomi "ほっかいどうもりまち"
@@ -354,7 +354,7 @@ FactoryGirl.define do
       short_yomi "もりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0134600 do
+    factory :jmaxml_forecast_region_0134600 do
       code "0134600"
       name "北海道八雲町"
       yomi "ほっかいどうやくもちょう"
@@ -362,7 +362,7 @@ FactoryGirl.define do
       short_yomi "やくもちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0134700 do
+    factory :jmaxml_forecast_region_0134700 do
       code "0134700"
       name "北海道長万部町"
       yomi "ほっかいどうおしゃまんべちょう"
@@ -370,7 +370,7 @@ FactoryGirl.define do
       short_yomi "おしゃまんべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0136100 do
+    factory :jmaxml_forecast_region_0136100 do
       code "0136100"
       name "北海道江差町"
       yomi "ほっかいどうえさしちょう"
@@ -378,7 +378,7 @@ FactoryGirl.define do
       short_yomi "えさしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0136200 do
+    factory :jmaxml_forecast_region_0136200 do
       code "0136200"
       name "北海道上ノ国町"
       yomi "ほっかいどうかみのくにちょう"
@@ -386,7 +386,7 @@ FactoryGirl.define do
       short_yomi "かみのくにちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0136300 do
+    factory :jmaxml_forecast_region_0136300 do
       code "0136300"
       name "北海道厚沢部町"
       yomi "ほっかいどうあっさぶちょう"
@@ -394,7 +394,7 @@ FactoryGirl.define do
       short_yomi "あっさぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0136400 do
+    factory :jmaxml_forecast_region_0136400 do
       code "0136400"
       name "北海道乙部町"
       yomi "ほっかいどうおとべちょう"
@@ -402,7 +402,7 @@ FactoryGirl.define do
       short_yomi "おとべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0136700 do
+    factory :jmaxml_forecast_region_0136700 do
       code "0136700"
       name "北海道奥尻町"
       yomi "ほっかいどうおくしりちょう"
@@ -410,7 +410,7 @@ FactoryGirl.define do
       short_yomi "おくしりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0137000 do
+    factory :jmaxml_forecast_region_0137000 do
       code "0137000"
       name "北海道今金町"
       yomi "ほっかいどういまかねちょう"
@@ -418,7 +418,7 @@ FactoryGirl.define do
       short_yomi "いまかねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0137100 do
+    factory :jmaxml_forecast_region_0137100 do
       code "0137100"
       name "北海道せたな町"
       yomi "ほっかいどうせたなちょう"
@@ -426,7 +426,7 @@ FactoryGirl.define do
       short_yomi "せたなちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0139100 do
+    factory :jmaxml_forecast_region_0139100 do
       code "0139100"
       name "北海道島牧村"
       yomi "ほっかいどうしままきむら"
@@ -434,7 +434,7 @@ FactoryGirl.define do
       short_yomi "しままきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0139200 do
+    factory :jmaxml_forecast_region_0139200 do
       code "0139200"
       name "北海道寿都町"
       yomi "ほっかいどうすっつちょう"
@@ -442,7 +442,7 @@ FactoryGirl.define do
       short_yomi "すっつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0139300 do
+    factory :jmaxml_forecast_region_0139300 do
       code "0139300"
       name "北海道黒松内町"
       yomi "ほっかいどうくろまつないちょう"
@@ -450,7 +450,7 @@ FactoryGirl.define do
       short_yomi "くろまつないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0139400 do
+    factory :jmaxml_forecast_region_0139400 do
       code "0139400"
       name "北海道蘭越町"
       yomi "ほっかいどうらんこしちょう"
@@ -458,7 +458,7 @@ FactoryGirl.define do
       short_yomi "らんこしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0139500 do
+    factory :jmaxml_forecast_region_0139500 do
       code "0139500"
       name "北海道ニセコ町"
       yomi "ほっかいどうにせこちょう"
@@ -466,7 +466,7 @@ FactoryGirl.define do
       short_yomi "にせこちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0139600 do
+    factory :jmaxml_forecast_region_0139600 do
       code "0139600"
       name "北海道真狩村"
       yomi "ほっかいどうまっかりむら"
@@ -474,7 +474,7 @@ FactoryGirl.define do
       short_yomi "まっかりむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0139700 do
+    factory :jmaxml_forecast_region_0139700 do
       code "0139700"
       name "北海道留寿都村"
       yomi "ほっかいどうるすつむら"
@@ -482,7 +482,7 @@ FactoryGirl.define do
       short_yomi "るすつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0139800 do
+    factory :jmaxml_forecast_region_0139800 do
       code "0139800"
       name "北海道喜茂別町"
       yomi "ほっかいどうきもべつちょう"
@@ -490,7 +490,7 @@ FactoryGirl.define do
       short_yomi "きもべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0139900 do
+    factory :jmaxml_forecast_region_0139900 do
       code "0139900"
       name "北海道京極町"
       yomi "ほっかいどうきょうごくちょう"
@@ -498,7 +498,7 @@ FactoryGirl.define do
       short_yomi "きょうごくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140000 do
+    factory :jmaxml_forecast_region_0140000 do
       code "0140000"
       name "北海道倶知安町"
       yomi "ほっかいどうくっちゃんちょう"
@@ -506,7 +506,7 @@ FactoryGirl.define do
       short_yomi "くっちゃんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140100 do
+    factory :jmaxml_forecast_region_0140100 do
       code "0140100"
       name "北海道共和町"
       yomi "ほっかいどうきょうわちょう"
@@ -514,7 +514,7 @@ FactoryGirl.define do
       short_yomi "きょうわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140200 do
+    factory :jmaxml_forecast_region_0140200 do
       code "0140200"
       name "北海道岩内町"
       yomi "ほっかいどういわないちょう"
@@ -522,7 +522,7 @@ FactoryGirl.define do
       short_yomi "いわないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140300 do
+    factory :jmaxml_forecast_region_0140300 do
       code "0140300"
       name "北海道泊村"
       yomi "ほっかいどうとまりむら"
@@ -530,7 +530,7 @@ FactoryGirl.define do
       short_yomi "とまりむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0140400 do
+    factory :jmaxml_forecast_region_0140400 do
       code "0140400"
       name "北海道神恵内村"
       yomi "ほっかいどうかもえないむら"
@@ -538,7 +538,7 @@ FactoryGirl.define do
       short_yomi "かもえないむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0140500 do
+    factory :jmaxml_forecast_region_0140500 do
       code "0140500"
       name "北海道積丹町"
       yomi "ほっかいどうしゃこたんちょう"
@@ -546,7 +546,7 @@ FactoryGirl.define do
       short_yomi "しゃこたんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140600 do
+    factory :jmaxml_forecast_region_0140600 do
       code "0140600"
       name "北海道古平町"
       yomi "ほっかいどうふるびらちょう"
@@ -554,7 +554,7 @@ FactoryGirl.define do
       short_yomi "ふるびらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140700 do
+    factory :jmaxml_forecast_region_0140700 do
       code "0140700"
       name "北海道仁木町"
       yomi "ほっかいどうにきちょう"
@@ -562,7 +562,7 @@ FactoryGirl.define do
       short_yomi "にきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140800 do
+    factory :jmaxml_forecast_region_0140800 do
       code "0140800"
       name "北海道余市町"
       yomi "ほっかいどうよいちちょう"
@@ -570,7 +570,7 @@ FactoryGirl.define do
       short_yomi "よいちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0140900 do
+    factory :jmaxml_forecast_region_0140900 do
       code "0140900"
       name "北海道赤井川村"
       yomi "ほっかいどうあかいがわむら"
@@ -578,7 +578,7 @@ FactoryGirl.define do
       short_yomi "あかいがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0142300 do
+    factory :jmaxml_forecast_region_0142300 do
       code "0142300"
       name "北海道南幌町"
       yomi "ほっかいどうなんぽろちょう"
@@ -586,7 +586,7 @@ FactoryGirl.define do
       short_yomi "なんぽろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0142400 do
+    factory :jmaxml_forecast_region_0142400 do
       code "0142400"
       name "北海道奈井江町"
       yomi "ほっかいどうないえちょう"
@@ -594,7 +594,7 @@ FactoryGirl.define do
       short_yomi "ないえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0142500 do
+    factory :jmaxml_forecast_region_0142500 do
       code "0142500"
       name "北海道上砂川町"
       yomi "ほっかいどうかみすながわちょう"
@@ -602,7 +602,7 @@ FactoryGirl.define do
       short_yomi "かみすながわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0142700 do
+    factory :jmaxml_forecast_region_0142700 do
       code "0142700"
       name "北海道由仁町"
       yomi "ほっかいどうゆにちょう"
@@ -610,7 +610,7 @@ FactoryGirl.define do
       short_yomi "ゆにちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0142800 do
+    factory :jmaxml_forecast_region_0142800 do
       code "0142800"
       name "北海道長沼町"
       yomi "ほっかいどうながぬまちょう"
@@ -618,7 +618,7 @@ FactoryGirl.define do
       short_yomi "ながぬまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0142900 do
+    factory :jmaxml_forecast_region_0142900 do
       code "0142900"
       name "北海道栗山町"
       yomi "ほっかいどうくりやまちょう"
@@ -626,7 +626,7 @@ FactoryGirl.define do
       short_yomi "くりやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143000 do
+    factory :jmaxml_forecast_region_0143000 do
       code "0143000"
       name "北海道月形町"
       yomi "ほっかいどうつきがたちょう"
@@ -634,7 +634,7 @@ FactoryGirl.define do
       short_yomi "つきがたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143100 do
+    factory :jmaxml_forecast_region_0143100 do
       code "0143100"
       name "北海道浦臼町"
       yomi "ほっかいどううらうすちょう"
@@ -642,7 +642,7 @@ FactoryGirl.define do
       short_yomi "うらうすちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143200 do
+    factory :jmaxml_forecast_region_0143200 do
       code "0143200"
       name "北海道新十津川町"
       yomi "ほっかいどうしんとつかわちょう"
@@ -650,7 +650,7 @@ FactoryGirl.define do
       short_yomi "しんとつかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143300 do
+    factory :jmaxml_forecast_region_0143300 do
       code "0143300"
       name "北海道妹背牛町"
       yomi "ほっかいどうもせうしちょう"
@@ -658,7 +658,7 @@ FactoryGirl.define do
       short_yomi "もせうしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143400 do
+    factory :jmaxml_forecast_region_0143400 do
       code "0143400"
       name "北海道秩父別町"
       yomi "ほっかいどうちっぷべつちょう"
@@ -666,7 +666,7 @@ FactoryGirl.define do
       short_yomi "ちっぷべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143600 do
+    factory :jmaxml_forecast_region_0143600 do
       code "0143600"
       name "北海道雨竜町"
       yomi "ほっかいどううりゅうちょう"
@@ -674,7 +674,7 @@ FactoryGirl.define do
       short_yomi "うりゅうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143700 do
+    factory :jmaxml_forecast_region_0143700 do
       code "0143700"
       name "北海道北竜町"
       yomi "ほっかいどうほくりゅうちょう"
@@ -682,7 +682,7 @@ FactoryGirl.define do
       short_yomi "ほくりゅうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0143800 do
+    factory :jmaxml_forecast_region_0143800 do
       code "0143800"
       name "北海道沼田町"
       yomi "ほっかいどうぬまたちょう"
@@ -690,7 +690,7 @@ FactoryGirl.define do
       short_yomi "ぬまたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145200 do
+    factory :jmaxml_forecast_region_0145200 do
       code "0145200"
       name "北海道鷹栖町"
       yomi "ほっかいどうたかすちょう"
@@ -698,7 +698,7 @@ FactoryGirl.define do
       short_yomi "たかすちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145300 do
+    factory :jmaxml_forecast_region_0145300 do
       code "0145300"
       name "北海道東神楽町"
       yomi "ほっかいどうひがしかぐらちょう"
@@ -706,7 +706,7 @@ FactoryGirl.define do
       short_yomi "ひがしかぐらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145400 do
+    factory :jmaxml_forecast_region_0145400 do
       code "0145400"
       name "北海道当麻町"
       yomi "ほっかいどうとうまちょう"
@@ -714,7 +714,7 @@ FactoryGirl.define do
       short_yomi "とうまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145500 do
+    factory :jmaxml_forecast_region_0145500 do
       code "0145500"
       name "北海道比布町"
       yomi "ほっかいどうぴっぷちょう"
@@ -722,7 +722,7 @@ FactoryGirl.define do
       short_yomi "ぴっぷちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145600 do
+    factory :jmaxml_forecast_region_0145600 do
       code "0145600"
       name "北海道愛別町"
       yomi "ほっかいどうあいべつちょう"
@@ -730,7 +730,7 @@ FactoryGirl.define do
       short_yomi "あいべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145700 do
+    factory :jmaxml_forecast_region_0145700 do
       code "0145700"
       name "北海道上川町"
       yomi "ほっかいどうかみかわちょう"
@@ -738,7 +738,7 @@ FactoryGirl.define do
       short_yomi "かみかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145800 do
+    factory :jmaxml_forecast_region_0145800 do
       code "0145800"
       name "北海道東川町"
       yomi "ほっかいどうひがしかわちょう"
@@ -746,7 +746,7 @@ FactoryGirl.define do
       short_yomi "ひがしかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0145900 do
+    factory :jmaxml_forecast_region_0145900 do
       code "0145900"
       name "北海道美瑛町"
       yomi "ほっかいどうびえいちょう"
@@ -754,7 +754,7 @@ FactoryGirl.define do
       short_yomi "びえいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0146000 do
+    factory :jmaxml_forecast_region_0146000 do
       code "0146000"
       name "北海道上富良野町"
       yomi "ほっかいどうかみふらのちょう"
@@ -762,7 +762,7 @@ FactoryGirl.define do
       short_yomi "かみふらのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0146100 do
+    factory :jmaxml_forecast_region_0146100 do
       code "0146100"
       name "北海道中富良野町"
       yomi "ほっかいどうなかふらのちょう"
@@ -770,7 +770,7 @@ FactoryGirl.define do
       short_yomi "なかふらのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0146200 do
+    factory :jmaxml_forecast_region_0146200 do
       code "0146200"
       name "北海道南富良野町"
       yomi "ほっかいどうみなみふらのちょう"
@@ -778,7 +778,7 @@ FactoryGirl.define do
       short_yomi "みなみふらのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0146300 do
+    factory :jmaxml_forecast_region_0146300 do
       code "0146300"
       name "北海道占冠村"
       yomi "ほっかいどうしむかっぷむら"
@@ -786,7 +786,7 @@ FactoryGirl.define do
       short_yomi "しむかっぷむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0146400 do
+    factory :jmaxml_forecast_region_0146400 do
       code "0146400"
       name "北海道和寒町"
       yomi "ほっかいどうわっさむちょう"
@@ -794,7 +794,7 @@ FactoryGirl.define do
       short_yomi "わっさむちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0146500 do
+    factory :jmaxml_forecast_region_0146500 do
       code "0146500"
       name "北海道剣淵町"
       yomi "ほっかいどうけんぶちちょう"
@@ -802,7 +802,7 @@ FactoryGirl.define do
       short_yomi "けんぶちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0146800 do
+    factory :jmaxml_forecast_region_0146800 do
       code "0146800"
       name "北海道下川町"
       yomi "ほっかいどうしもかわちょう"
@@ -810,7 +810,7 @@ FactoryGirl.define do
       short_yomi "しもかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0146900 do
+    factory :jmaxml_forecast_region_0146900 do
       code "0146900"
       name "北海道美深町"
       yomi "ほっかいどうびふかちょう"
@@ -818,7 +818,7 @@ FactoryGirl.define do
       short_yomi "びふかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0147000 do
+    factory :jmaxml_forecast_region_0147000 do
       code "0147000"
       name "北海道音威子府村"
       yomi "ほっかいどうおといねっぷむら"
@@ -826,7 +826,7 @@ FactoryGirl.define do
       short_yomi "おといねっぷむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0147100 do
+    factory :jmaxml_forecast_region_0147100 do
       code "0147100"
       name "北海道中川町"
       yomi "ほっかいどうなかがわちょう"
@@ -834,7 +834,7 @@ FactoryGirl.define do
       short_yomi "なかがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0147200 do
+    factory :jmaxml_forecast_region_0147200 do
       code "0147200"
       name "北海道幌加内町"
       yomi "ほっかいどうほろかないちょう"
@@ -842,7 +842,7 @@ FactoryGirl.define do
       short_yomi "ほろかないちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0148100 do
+    factory :jmaxml_forecast_region_0148100 do
       code "0148100"
       name "北海道増毛町"
       yomi "ほっかいどうましけちょう"
@@ -850,7 +850,7 @@ FactoryGirl.define do
       short_yomi "ましけちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0148200 do
+    factory :jmaxml_forecast_region_0148200 do
       code "0148200"
       name "北海道小平町"
       yomi "ほっかいどうおびらちょう"
@@ -858,7 +858,7 @@ FactoryGirl.define do
       short_yomi "おびらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0148300 do
+    factory :jmaxml_forecast_region_0148300 do
       code "0148300"
       name "北海道苫前町"
       yomi "ほっかいどうとままえちょう"
@@ -866,7 +866,7 @@ FactoryGirl.define do
       short_yomi "とままえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0148400 do
+    factory :jmaxml_forecast_region_0148400 do
       code "0148400"
       name "北海道羽幌町"
       yomi "ほっかいどうはぼろちょう"
@@ -874,7 +874,7 @@ FactoryGirl.define do
       short_yomi "はぼろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0148500 do
+    factory :jmaxml_forecast_region_0148500 do
       code "0148500"
       name "北海道初山別村"
       yomi "ほっかいどうしょさんべつむら"
@@ -882,7 +882,7 @@ FactoryGirl.define do
       short_yomi "しょさんべつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0148600 do
+    factory :jmaxml_forecast_region_0148600 do
       code "0148600"
       name "北海道遠別町"
       yomi "ほっかいどうえんべつちょう"
@@ -890,7 +890,7 @@ FactoryGirl.define do
       short_yomi "えんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0148700 do
+    factory :jmaxml_forecast_region_0148700 do
       code "0148700"
       name "北海道天塩町"
       yomi "ほっかいどうてしおちょう"
@@ -898,7 +898,7 @@ FactoryGirl.define do
       short_yomi "てしおちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0151100 do
+    factory :jmaxml_forecast_region_0151100 do
       code "0151100"
       name "北海道猿払村"
       yomi "ほっかいどうさるふつむら"
@@ -906,7 +906,7 @@ FactoryGirl.define do
       short_yomi "さるふつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0151200 do
+    factory :jmaxml_forecast_region_0151200 do
       code "0151200"
       name "北海道浜頓別町"
       yomi "ほっかいどうはまとんべつちょう"
@@ -914,7 +914,7 @@ FactoryGirl.define do
       short_yomi "はまとんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0151300 do
+    factory :jmaxml_forecast_region_0151300 do
       code "0151300"
       name "北海道中頓別町"
       yomi "ほっかいどうなかとんべつちょう"
@@ -922,7 +922,7 @@ FactoryGirl.define do
       short_yomi "なかとんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0151400 do
+    factory :jmaxml_forecast_region_0151400 do
       code "0151400"
       name "北海道枝幸町"
       yomi "ほっかいどうえさしちょう"
@@ -930,7 +930,7 @@ FactoryGirl.define do
       short_yomi "えさしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0151600 do
+    factory :jmaxml_forecast_region_0151600 do
       code "0151600"
       name "北海道豊富町"
       yomi "ほっかいどうとよとみちょう"
@@ -938,7 +938,7 @@ FactoryGirl.define do
       short_yomi "とよとみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0151700 do
+    factory :jmaxml_forecast_region_0151700 do
       code "0151700"
       name "北海道礼文町"
       yomi "ほっかいどうれぶんちょう"
@@ -946,7 +946,7 @@ FactoryGirl.define do
       short_yomi "れぶんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0151800 do
+    factory :jmaxml_forecast_region_0151800 do
       code "0151800"
       name "北海道利尻町"
       yomi "ほっかいどうりしりちょう"
@@ -954,7 +954,7 @@ FactoryGirl.define do
       short_yomi "りしりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0151900 do
+    factory :jmaxml_forecast_region_0151900 do
       code "0151900"
       name "北海道利尻富士町"
       yomi "ほっかいどうりしりふじちょう"
@@ -962,7 +962,7 @@ FactoryGirl.define do
       short_yomi "りしりふじちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0152000 do
+    factory :jmaxml_forecast_region_0152000 do
       code "0152000"
       name "北海道幌延町"
       yomi "ほっかいどうほろのべちょう"
@@ -970,7 +970,7 @@ FactoryGirl.define do
       short_yomi "ほろのべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0154300 do
+    factory :jmaxml_forecast_region_0154300 do
       code "0154300"
       name "北海道美幌町"
       yomi "ほっかいどうびほろちょう"
@@ -978,7 +978,7 @@ FactoryGirl.define do
       short_yomi "びほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0154400 do
+    factory :jmaxml_forecast_region_0154400 do
       code "0154400"
       name "北海道津別町"
       yomi "ほっかいどうつべつちょう"
@@ -986,7 +986,7 @@ FactoryGirl.define do
       short_yomi "つべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0154500 do
+    factory :jmaxml_forecast_region_0154500 do
       code "0154500"
       name "北海道斜里町"
       yomi "ほっかいどうしゃりちょう"
@@ -994,7 +994,7 @@ FactoryGirl.define do
       short_yomi "しゃりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0154600 do
+    factory :jmaxml_forecast_region_0154600 do
       code "0154600"
       name "北海道清里町"
       yomi "ほっかいどうきよさとちょう"
@@ -1002,7 +1002,7 @@ FactoryGirl.define do
       short_yomi "きよさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0154700 do
+    factory :jmaxml_forecast_region_0154700 do
       code "0154700"
       name "北海道小清水町"
       yomi "ほっかいどうこしみずちょう"
@@ -1010,7 +1010,7 @@ FactoryGirl.define do
       short_yomi "こしみずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0154900 do
+    factory :jmaxml_forecast_region_0154900 do
       code "0154900"
       name "北海道訓子府町"
       yomi "ほっかいどうくんねっぷちょう"
@@ -1018,7 +1018,7 @@ FactoryGirl.define do
       short_yomi "くんねっぷちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0155000 do
+    factory :jmaxml_forecast_region_0155000 do
       code "0155000"
       name "北海道置戸町"
       yomi "ほっかいどうおけとちょう"
@@ -1026,7 +1026,7 @@ FactoryGirl.define do
       short_yomi "おけとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0155200 do
+    factory :jmaxml_forecast_region_0155200 do
       code "0155200"
       name "北海道佐呂間町"
       yomi "ほっかいどうさろまちょう"
@@ -1034,7 +1034,7 @@ FactoryGirl.define do
       short_yomi "さろまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0155500 do
+    factory :jmaxml_forecast_region_0155500 do
       code "0155500"
       name "北海道遠軽町"
       yomi "ほっかいどうえんがるちょう"
@@ -1042,7 +1042,7 @@ FactoryGirl.define do
       short_yomi "えんがるちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0155900 do
+    factory :jmaxml_forecast_region_0155900 do
       code "0155900"
       name "北海道湧別町"
       yomi "ほっかいどうゆうべつちょう"
@@ -1050,7 +1050,7 @@ FactoryGirl.define do
       short_yomi "ゆうべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0156000 do
+    factory :jmaxml_forecast_region_0156000 do
       code "0156000"
       name "北海道滝上町"
       yomi "ほっかいどうたきのうえちょう"
@@ -1058,7 +1058,7 @@ FactoryGirl.define do
       short_yomi "たきのうえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0156100 do
+    factory :jmaxml_forecast_region_0156100 do
       code "0156100"
       name "北海道興部町"
       yomi "ほっかいどうおこっぺちょう"
@@ -1066,7 +1066,7 @@ FactoryGirl.define do
       short_yomi "おこっぺちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0156200 do
+    factory :jmaxml_forecast_region_0156200 do
       code "0156200"
       name "北海道西興部村"
       yomi "ほっかいどうにしおこっぺむら"
@@ -1074,7 +1074,7 @@ FactoryGirl.define do
       short_yomi "にしおこっぺむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0156300 do
+    factory :jmaxml_forecast_region_0156300 do
       code "0156300"
       name "北海道雄武町"
       yomi "ほっかいどうおうむちょう"
@@ -1082,7 +1082,7 @@ FactoryGirl.define do
       short_yomi "おうむちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0156400 do
+    factory :jmaxml_forecast_region_0156400 do
       code "0156400"
       name "北海道大空町"
       yomi "ほっかいどうおおぞらちょう"
@@ -1090,7 +1090,7 @@ FactoryGirl.define do
       short_yomi "おおぞらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0157100 do
+    factory :jmaxml_forecast_region_0157100 do
       code "0157100"
       name "北海道豊浦町"
       yomi "ほっかいどうとようらちょう"
@@ -1098,7 +1098,7 @@ FactoryGirl.define do
       short_yomi "とようらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0157500 do
+    factory :jmaxml_forecast_region_0157500 do
       code "0157500"
       name "北海道壮瞥町"
       yomi "ほっかいどうそうべつちょう"
@@ -1106,7 +1106,7 @@ FactoryGirl.define do
       short_yomi "そうべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0157800 do
+    factory :jmaxml_forecast_region_0157800 do
       code "0157800"
       name "北海道白老町"
       yomi "ほっかいどうしらおいちょう"
@@ -1114,7 +1114,7 @@ FactoryGirl.define do
       short_yomi "しらおいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0158100 do
+    factory :jmaxml_forecast_region_0158100 do
       code "0158100"
       name "北海道厚真町"
       yomi "ほっかいどうあつまちょう"
@@ -1122,7 +1122,7 @@ FactoryGirl.define do
       short_yomi "あつまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0158400 do
+    factory :jmaxml_forecast_region_0158400 do
       code "0158400"
       name "北海道洞爺湖町"
       yomi "ほっかいどうとうやこちょう"
@@ -1130,7 +1130,7 @@ FactoryGirl.define do
       short_yomi "とうやこちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0158500 do
+    factory :jmaxml_forecast_region_0158500 do
       code "0158500"
       name "北海道安平町"
       yomi "ほっかいどうあびらちょう"
@@ -1138,7 +1138,7 @@ FactoryGirl.define do
       short_yomi "あびらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0158600 do
+    factory :jmaxml_forecast_region_0158600 do
       code "0158600"
       name "北海道むかわ町"
       yomi "ほっかいどうむかわちょう"
@@ -1146,7 +1146,7 @@ FactoryGirl.define do
       short_yomi "むかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0160100 do
+    factory :jmaxml_forecast_region_0160100 do
       code "0160100"
       name "北海道日高町"
       yomi "ほっかいどうひだかちょう"
@@ -1154,7 +1154,7 @@ FactoryGirl.define do
       short_yomi "ひだかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0160200 do
+    factory :jmaxml_forecast_region_0160200 do
       code "0160200"
       name "北海道平取町"
       yomi "ほっかいどうびらとりちょう"
@@ -1162,7 +1162,7 @@ FactoryGirl.define do
       short_yomi "びらとりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0160400 do
+    factory :jmaxml_forecast_region_0160400 do
       code "0160400"
       name "北海道新冠町"
       yomi "ほっかいどうにいかっぷちょう"
@@ -1170,7 +1170,7 @@ FactoryGirl.define do
       short_yomi "にいかっぷちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0160700 do
+    factory :jmaxml_forecast_region_0160700 do
       code "0160700"
       name "北海道浦河町"
       yomi "ほっかいどううらかわちょう"
@@ -1178,7 +1178,7 @@ FactoryGirl.define do
       short_yomi "うらかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0160800 do
+    factory :jmaxml_forecast_region_0160800 do
       code "0160800"
       name "北海道様似町"
       yomi "ほっかいどうさまにちょう"
@@ -1186,7 +1186,7 @@ FactoryGirl.define do
       short_yomi "さまにちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0160900 do
+    factory :jmaxml_forecast_region_0160900 do
       code "0160900"
       name "北海道えりも町"
       yomi "ほっかいどうえりもちょう"
@@ -1194,7 +1194,7 @@ FactoryGirl.define do
       short_yomi "えりもちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0161000 do
+    factory :jmaxml_forecast_region_0161000 do
       code "0161000"
       name "北海道新ひだか町"
       yomi "ほっかいどうしんひだかちょう"
@@ -1202,7 +1202,7 @@ FactoryGirl.define do
       short_yomi "しんひだかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163100 do
+    factory :jmaxml_forecast_region_0163100 do
       code "0163100"
       name "北海道音更町"
       yomi "ほっかいどうおとふけちょう"
@@ -1210,7 +1210,7 @@ FactoryGirl.define do
       short_yomi "おとふけちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163200 do
+    factory :jmaxml_forecast_region_0163200 do
       code "0163200"
       name "北海道士幌町"
       yomi "ほっかいどうしほろちょう"
@@ -1218,7 +1218,7 @@ FactoryGirl.define do
       short_yomi "しほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163300 do
+    factory :jmaxml_forecast_region_0163300 do
       code "0163300"
       name "北海道上士幌町"
       yomi "ほっかいどうかみしほろちょう"
@@ -1226,7 +1226,7 @@ FactoryGirl.define do
       short_yomi "かみしほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163400 do
+    factory :jmaxml_forecast_region_0163400 do
       code "0163400"
       name "北海道鹿追町"
       yomi "ほっかいどうしかおいちょう"
@@ -1234,7 +1234,7 @@ FactoryGirl.define do
       short_yomi "しかおいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163500 do
+    factory :jmaxml_forecast_region_0163500 do
       code "0163500"
       name "北海道新得町"
       yomi "ほっかいどうしんとくちょう"
@@ -1242,7 +1242,7 @@ FactoryGirl.define do
       short_yomi "しんとくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163600 do
+    factory :jmaxml_forecast_region_0163600 do
       code "0163600"
       name "北海道清水町"
       yomi "ほっかいどうしみずちょう"
@@ -1250,7 +1250,7 @@ FactoryGirl.define do
       short_yomi "しみずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163700 do
+    factory :jmaxml_forecast_region_0163700 do
       code "0163700"
       name "北海道芽室町"
       yomi "ほっかいどうめむろちょう"
@@ -1258,7 +1258,7 @@ FactoryGirl.define do
       short_yomi "めむろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0163800 do
+    factory :jmaxml_forecast_region_0163800 do
       code "0163800"
       name "北海道中札内村"
       yomi "ほっかいどうなかさつないむら"
@@ -1266,7 +1266,7 @@ FactoryGirl.define do
       short_yomi "なかさつないむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0163900 do
+    factory :jmaxml_forecast_region_0163900 do
       code "0163900"
       name "北海道更別村"
       yomi "ほっかいどうさらべつむら"
@@ -1274,7 +1274,7 @@ FactoryGirl.define do
       short_yomi "さらべつむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0164100 do
+    factory :jmaxml_forecast_region_0164100 do
       code "0164100"
       name "北海道大樹町"
       yomi "ほっかいどうたいきちょう"
@@ -1282,7 +1282,7 @@ FactoryGirl.define do
       short_yomi "たいきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164200 do
+    factory :jmaxml_forecast_region_0164200 do
       code "0164200"
       name "北海道広尾町"
       yomi "ほっかいどうひろおちょう"
@@ -1290,7 +1290,7 @@ FactoryGirl.define do
       short_yomi "ひろおちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164300 do
+    factory :jmaxml_forecast_region_0164300 do
       code "0164300"
       name "北海道幕別町"
       yomi "ほっかいどうまくべつちょう"
@@ -1298,7 +1298,7 @@ FactoryGirl.define do
       short_yomi "まくべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164400 do
+    factory :jmaxml_forecast_region_0164400 do
       code "0164400"
       name "北海道池田町"
       yomi "ほっかいどういけだちょう"
@@ -1306,7 +1306,7 @@ FactoryGirl.define do
       short_yomi "いけだちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164500 do
+    factory :jmaxml_forecast_region_0164500 do
       code "0164500"
       name "北海道豊頃町"
       yomi "ほっかいどうとよころちょう"
@@ -1314,7 +1314,7 @@ FactoryGirl.define do
       short_yomi "とよころちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164600 do
+    factory :jmaxml_forecast_region_0164600 do
       code "0164600"
       name "北海道本別町"
       yomi "ほっかいどうほんべつちょう"
@@ -1322,7 +1322,7 @@ FactoryGirl.define do
       short_yomi "ほんべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164700 do
+    factory :jmaxml_forecast_region_0164700 do
       code "0164700"
       name "北海道足寄町"
       yomi "ほっかいどうあしょろちょう"
@@ -1330,7 +1330,7 @@ FactoryGirl.define do
       short_yomi "あしょろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164800 do
+    factory :jmaxml_forecast_region_0164800 do
       code "0164800"
       name "北海道陸別町"
       yomi "ほっかいどうりくべつちょう"
@@ -1338,7 +1338,7 @@ FactoryGirl.define do
       short_yomi "りくべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0164900 do
+    factory :jmaxml_forecast_region_0164900 do
       code "0164900"
       name "北海道浦幌町"
       yomi "ほっかいどううらほろちょう"
@@ -1346,7 +1346,7 @@ FactoryGirl.define do
       short_yomi "うらほろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0166100 do
+    factory :jmaxml_forecast_region_0166100 do
       code "0166100"
       name "北海道釧路町"
       yomi "ほっかいどうくしろちょう"
@@ -1354,7 +1354,7 @@ FactoryGirl.define do
       short_yomi "くしろちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0166200 do
+    factory :jmaxml_forecast_region_0166200 do
       code "0166200"
       name "北海道厚岸町"
       yomi "ほっかいどうあっけしちょう"
@@ -1362,7 +1362,7 @@ FactoryGirl.define do
       short_yomi "あっけしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0166300 do
+    factory :jmaxml_forecast_region_0166300 do
       code "0166300"
       name "北海道浜中町"
       yomi "ほっかいどうはまなかちょう"
@@ -1370,7 +1370,7 @@ FactoryGirl.define do
       short_yomi "はまなかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0166400 do
+    factory :jmaxml_forecast_region_0166400 do
       code "0166400"
       name "北海道標茶町"
       yomi "ほっかいどうしべちゃちょう"
@@ -1378,7 +1378,7 @@ FactoryGirl.define do
       short_yomi "しべちゃちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0166500 do
+    factory :jmaxml_forecast_region_0166500 do
       code "0166500"
       name "北海道弟子屈町"
       yomi "ほっかいどうてしかがちょう"
@@ -1386,7 +1386,7 @@ FactoryGirl.define do
       short_yomi "てしかがちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0166700 do
+    factory :jmaxml_forecast_region_0166700 do
       code "0166700"
       name "北海道鶴居村"
       yomi "ほっかいどうつるいむら"
@@ -1394,7 +1394,7 @@ FactoryGirl.define do
       short_yomi "つるいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0166800 do
+    factory :jmaxml_forecast_region_0166800 do
       code "0166800"
       name "北海道白糠町"
       yomi "ほっかいどうしらぬかちょう"
@@ -1402,7 +1402,7 @@ FactoryGirl.define do
       short_yomi "しらぬかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0169001 do
+    factory :jmaxml_forecast_region_0169001 do
       code "0169001"
       name "北海道国後島"
       yomi "ほっかいどうくなしりとう"
@@ -1410,7 +1410,7 @@ FactoryGirl.define do
       short_yomi "0"
     end
 
-    factory :rss_weather_xml_forecast_region_0169002 do
+    factory :jmaxml_forecast_region_0169002 do
       code "0169002"
       name "北海道択捉島"
       yomi "ほっかいどうえとろふとう"
@@ -1418,7 +1418,7 @@ FactoryGirl.define do
       short_yomi "0"
     end
 
-    factory :rss_weather_xml_forecast_region_0169100 do
+    factory :jmaxml_forecast_region_0169100 do
       code "0169100"
       name "北海道別海町"
       yomi "ほっかいどうべつかいちょう"
@@ -1426,7 +1426,7 @@ FactoryGirl.define do
       short_yomi "べつかいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0169200 do
+    factory :jmaxml_forecast_region_0169200 do
       code "0169200"
       name "北海道中標津町"
       yomi "ほっかいどうなかしべつちょう"
@@ -1434,7 +1434,7 @@ FactoryGirl.define do
       short_yomi "なかしべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0169300 do
+    factory :jmaxml_forecast_region_0169300 do
       code "0169300"
       name "北海道標津町"
       yomi "ほっかいどうしべつちょう"
@@ -1442,7 +1442,7 @@ FactoryGirl.define do
       short_yomi "しべつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0169400 do
+    factory :jmaxml_forecast_region_0169400 do
       code "0169400"
       name "北海道羅臼町"
       yomi "ほっかいどうらうすちょう"
@@ -1450,7 +1450,7 @@ FactoryGirl.define do
       short_yomi "らうすちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0169500 do
+    factory :jmaxml_forecast_region_0169500 do
       code "0169500"
       name "北海道色丹村"
       yomi "ほっかいどうしこたんむら"
@@ -1458,7 +1458,7 @@ FactoryGirl.define do
       short_yomi "0"
     end
 
-    factory :rss_weather_xml_forecast_region_0220100 do
+    factory :jmaxml_forecast_region_0220100 do
       code "0220100"
       name "青森県青森市"
       yomi "あおもりけんあおもりし"
@@ -1466,7 +1466,7 @@ FactoryGirl.define do
       short_yomi "あおもりし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220200 do
+    factory :jmaxml_forecast_region_0220200 do
       code "0220200"
       name "青森県弘前市"
       yomi "あおもりけんひろさきし"
@@ -1474,7 +1474,7 @@ FactoryGirl.define do
       short_yomi "ひろさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220300 do
+    factory :jmaxml_forecast_region_0220300 do
       code "0220300"
       name "青森県八戸市"
       yomi "あおもりけんはちのへし"
@@ -1482,7 +1482,7 @@ FactoryGirl.define do
       short_yomi "はちのへし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220400 do
+    factory :jmaxml_forecast_region_0220400 do
       code "0220400"
       name "青森県黒石市"
       yomi "あおもりけんくろいしし"
@@ -1490,7 +1490,7 @@ FactoryGirl.define do
       short_yomi "くろいしし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220500 do
+    factory :jmaxml_forecast_region_0220500 do
       code "0220500"
       name "青森県五所川原市"
       yomi "あおもりけんごしょがわらし"
@@ -1498,7 +1498,7 @@ FactoryGirl.define do
       short_yomi "ごしょがわらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220600 do
+    factory :jmaxml_forecast_region_0220600 do
       code "0220600"
       name "青森県十和田市"
       yomi "あおもりけんとわだし"
@@ -1506,7 +1506,7 @@ FactoryGirl.define do
       short_yomi "とわだし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220700 do
+    factory :jmaxml_forecast_region_0220700 do
       code "0220700"
       name "青森県三沢市"
       yomi "あおもりけんみさわし"
@@ -1514,7 +1514,7 @@ FactoryGirl.define do
       short_yomi "みさわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220800 do
+    factory :jmaxml_forecast_region_0220800 do
       code "0220800"
       name "青森県むつ市"
       yomi "あおもりけんむつし"
@@ -1522,7 +1522,7 @@ FactoryGirl.define do
       short_yomi "むつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0220900 do
+    factory :jmaxml_forecast_region_0220900 do
       code "0220900"
       name "青森県つがる市"
       yomi "あおもりけんつがるし"
@@ -1530,7 +1530,7 @@ FactoryGirl.define do
       short_yomi "つがるし"
     end
 
-    factory :rss_weather_xml_forecast_region_0221000 do
+    factory :jmaxml_forecast_region_0221000 do
       code "0221000"
       name "青森県平川市"
       yomi "あおもりけんひらかわし"
@@ -1538,7 +1538,7 @@ FactoryGirl.define do
       short_yomi "ひらかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0230100 do
+    factory :jmaxml_forecast_region_0230100 do
       code "0230100"
       name "青森県平内町"
       yomi "あおもりけんひらないまち"
@@ -1546,7 +1546,7 @@ FactoryGirl.define do
       short_yomi "ひらないまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0230300 do
+    factory :jmaxml_forecast_region_0230300 do
       code "0230300"
       name "青森県今別町"
       yomi "あおもりけんいまべつまち"
@@ -1554,7 +1554,7 @@ FactoryGirl.define do
       short_yomi "いまべつまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0230400 do
+    factory :jmaxml_forecast_region_0230400 do
       code "0230400"
       name "青森県蓬田村"
       yomi "あおもりけんよもぎたむら"
@@ -1562,7 +1562,7 @@ FactoryGirl.define do
       short_yomi "よもぎたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0230700 do
+    factory :jmaxml_forecast_region_0230700 do
       code "0230700"
       name "青森県外ヶ浜町"
       yomi "あおもりけんそとがはままち"
@@ -1570,7 +1570,7 @@ FactoryGirl.define do
       short_yomi "そとがはままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0232100 do
+    factory :jmaxml_forecast_region_0232100 do
       code "0232100"
       name "青森県鰺ヶ沢町"
       yomi "あおもりけんあじがさわまち"
@@ -1578,7 +1578,7 @@ FactoryGirl.define do
       short_yomi "あじがさわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0232300 do
+    factory :jmaxml_forecast_region_0232300 do
       code "0232300"
       name "青森県深浦町"
       yomi "あおもりけんふかうらまち"
@@ -1586,7 +1586,7 @@ FactoryGirl.define do
       short_yomi "ふかうらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0234300 do
+    factory :jmaxml_forecast_region_0234300 do
       code "0234300"
       name "青森県西目屋村"
       yomi "あおもりけんにしめやむら"
@@ -1594,7 +1594,7 @@ FactoryGirl.define do
       short_yomi "にしめやむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0236100 do
+    factory :jmaxml_forecast_region_0236100 do
       code "0236100"
       name "青森県藤崎町"
       yomi "あおもりけんふじさきまち"
@@ -1602,7 +1602,7 @@ FactoryGirl.define do
       short_yomi "ふじさきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0236200 do
+    factory :jmaxml_forecast_region_0236200 do
       code "0236200"
       name "青森県大鰐町"
       yomi "あおもりけんおおわにまち"
@@ -1610,7 +1610,7 @@ FactoryGirl.define do
       short_yomi "おおわにまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0236700 do
+    factory :jmaxml_forecast_region_0236700 do
       code "0236700"
       name "青森県田舎館村"
       yomi "あおもりけんいなかだてむら"
@@ -1618,7 +1618,7 @@ FactoryGirl.define do
       short_yomi "いなかだてむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0238100 do
+    factory :jmaxml_forecast_region_0238100 do
       code "0238100"
       name "青森県板柳町"
       yomi "あおもりけんいたやなぎまち"
@@ -1626,7 +1626,7 @@ FactoryGirl.define do
       short_yomi "いたやなぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0238400 do
+    factory :jmaxml_forecast_region_0238400 do
       code "0238400"
       name "青森県鶴田町"
       yomi "あおもりけんつるたまち"
@@ -1634,7 +1634,7 @@ FactoryGirl.define do
       short_yomi "つるたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0238700 do
+    factory :jmaxml_forecast_region_0238700 do
       code "0238700"
       name "青森県中泊町"
       yomi "あおもりけんなかどまりまち"
@@ -1642,7 +1642,7 @@ FactoryGirl.define do
       short_yomi "なかどまりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0240100 do
+    factory :jmaxml_forecast_region_0240100 do
       code "0240100"
       name "青森県野辺地町"
       yomi "あおもりけんのへじまち"
@@ -1650,7 +1650,7 @@ FactoryGirl.define do
       short_yomi "のへじまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0240200 do
+    factory :jmaxml_forecast_region_0240200 do
       code "0240200"
       name "青森県七戸町"
       yomi "あおもりけんしちのへまち"
@@ -1658,7 +1658,7 @@ FactoryGirl.define do
       short_yomi "しちのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0240500 do
+    factory :jmaxml_forecast_region_0240500 do
       code "0240500"
       name "青森県六戸町"
       yomi "あおもりけんろくのへまち"
@@ -1666,7 +1666,7 @@ FactoryGirl.define do
       short_yomi "ろくのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0240600 do
+    factory :jmaxml_forecast_region_0240600 do
       code "0240600"
       name "青森県横浜町"
       yomi "あおもりけんよこはままち"
@@ -1674,7 +1674,7 @@ FactoryGirl.define do
       short_yomi "よこはままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0240800 do
+    factory :jmaxml_forecast_region_0240800 do
       code "0240800"
       name "青森県東北町"
       yomi "あおもりけんとうほくまち"
@@ -1682,7 +1682,7 @@ FactoryGirl.define do
       short_yomi "とうほくまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0241100 do
+    factory :jmaxml_forecast_region_0241100 do
       code "0241100"
       name "青森県六ヶ所村"
       yomi "あおもりけんろっかしょむら"
@@ -1690,7 +1690,7 @@ FactoryGirl.define do
       short_yomi "ろっかしょむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0241200 do
+    factory :jmaxml_forecast_region_0241200 do
       code "0241200"
       name "青森県おいらせ町"
       yomi "あおもりけんおいらせちょう"
@@ -1698,7 +1698,7 @@ FactoryGirl.define do
       short_yomi "おいらせちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0242300 do
+    factory :jmaxml_forecast_region_0242300 do
       code "0242300"
       name "青森県大間町"
       yomi "あおもりけんおおままち"
@@ -1706,7 +1706,7 @@ FactoryGirl.define do
       short_yomi "おおままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0242400 do
+    factory :jmaxml_forecast_region_0242400 do
       code "0242400"
       name "青森県東通村"
       yomi "あおもりけんひがしどおりむら"
@@ -1714,7 +1714,7 @@ FactoryGirl.define do
       short_yomi "ひがしどおりむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0242500 do
+    factory :jmaxml_forecast_region_0242500 do
       code "0242500"
       name "青森県風間浦村"
       yomi "あおもりけんかざまうらむら"
@@ -1722,7 +1722,7 @@ FactoryGirl.define do
       short_yomi "かざまうらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0242600 do
+    factory :jmaxml_forecast_region_0242600 do
       code "0242600"
       name "青森県佐井村"
       yomi "あおもりけんさいむら"
@@ -1730,7 +1730,7 @@ FactoryGirl.define do
       short_yomi "さいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0244100 do
+    factory :jmaxml_forecast_region_0244100 do
       code "0244100"
       name "青森県三戸町"
       yomi "あおもりけんさんのへまち"
@@ -1738,7 +1738,7 @@ FactoryGirl.define do
       short_yomi "さんのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0244200 do
+    factory :jmaxml_forecast_region_0244200 do
       code "0244200"
       name "青森県五戸町"
       yomi "あおもりけんごのへまち"
@@ -1746,7 +1746,7 @@ FactoryGirl.define do
       short_yomi "ごのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0244300 do
+    factory :jmaxml_forecast_region_0244300 do
       code "0244300"
       name "青森県田子町"
       yomi "あおもりけんたっこまち"
@@ -1754,7 +1754,7 @@ FactoryGirl.define do
       short_yomi "たっこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0244500 do
+    factory :jmaxml_forecast_region_0244500 do
       code "0244500"
       name "青森県南部町"
       yomi "あおもりけんなんぶちょう"
@@ -1762,7 +1762,7 @@ FactoryGirl.define do
       short_yomi "なんぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0244600 do
+    factory :jmaxml_forecast_region_0244600 do
       code "0244600"
       name "青森県階上町"
       yomi "あおもりけんはしかみちょう"
@@ -1770,7 +1770,7 @@ FactoryGirl.define do
       short_yomi "はしかみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0245000 do
+    factory :jmaxml_forecast_region_0245000 do
       code "0245000"
       name "青森県新郷村"
       yomi "あおもりけんしんごうむら"
@@ -1778,7 +1778,7 @@ FactoryGirl.define do
       short_yomi "しんごうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0320100 do
+    factory :jmaxml_forecast_region_0320100 do
       code "0320100"
       name "岩手県盛岡市"
       yomi "いわてけんもりおかし"
@@ -1786,7 +1786,7 @@ FactoryGirl.define do
       short_yomi "もりおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_0320200 do
+    factory :jmaxml_forecast_region_0320200 do
       code "0320200"
       name "岩手県宮古市"
       yomi "いわてけんみやこし"
@@ -1794,7 +1794,7 @@ FactoryGirl.define do
       short_yomi "みやこし"
     end
 
-    factory :rss_weather_xml_forecast_region_0320300 do
+    factory :jmaxml_forecast_region_0320300 do
       code "0320300"
       name "岩手県大船渡市"
       yomi "いわてけんおおふなとし"
@@ -1802,7 +1802,7 @@ FactoryGirl.define do
       short_yomi "おおふなとし"
     end
 
-    factory :rss_weather_xml_forecast_region_0320500 do
+    factory :jmaxml_forecast_region_0320500 do
       code "0320500"
       name "岩手県花巻市"
       yomi "いわてけんはなまきし"
@@ -1810,7 +1810,7 @@ FactoryGirl.define do
       short_yomi "はなまきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0320600 do
+    factory :jmaxml_forecast_region_0320600 do
       code "0320600"
       name "岩手県北上市"
       yomi "いわてけんきたかみし"
@@ -1818,7 +1818,7 @@ FactoryGirl.define do
       short_yomi "きたかみし"
     end
 
-    factory :rss_weather_xml_forecast_region_0320700 do
+    factory :jmaxml_forecast_region_0320700 do
       code "0320700"
       name "岩手県久慈市"
       yomi "いわてけんくじし"
@@ -1826,7 +1826,7 @@ FactoryGirl.define do
       short_yomi "くじし"
     end
 
-    factory :rss_weather_xml_forecast_region_0320800 do
+    factory :jmaxml_forecast_region_0320800 do
       code "0320800"
       name "岩手県遠野市"
       yomi "いわてけんとおのし"
@@ -1834,7 +1834,7 @@ FactoryGirl.define do
       short_yomi "とおのし"
     end
 
-    factory :rss_weather_xml_forecast_region_0320900 do
+    factory :jmaxml_forecast_region_0320900 do
       code "0320900"
       name "岩手県一関市"
       yomi "いわてけんいちのせきし"
@@ -1842,7 +1842,7 @@ FactoryGirl.define do
       short_yomi "いちのせきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0321000 do
+    factory :jmaxml_forecast_region_0321000 do
       code "0321000"
       name "岩手県陸前高田市"
       yomi "いわてけんりくぜんたかたし"
@@ -1850,7 +1850,7 @@ FactoryGirl.define do
       short_yomi "りくぜんたかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0321100 do
+    factory :jmaxml_forecast_region_0321100 do
       code "0321100"
       name "岩手県釜石市"
       yomi "いわてけんかまいしし"
@@ -1858,7 +1858,7 @@ FactoryGirl.define do
       short_yomi "かまいしし"
     end
 
-    factory :rss_weather_xml_forecast_region_0321300 do
+    factory :jmaxml_forecast_region_0321300 do
       code "0321300"
       name "岩手県二戸市"
       yomi "いわてけんにのへし"
@@ -1866,7 +1866,7 @@ FactoryGirl.define do
       short_yomi "にのへし"
     end
 
-    factory :rss_weather_xml_forecast_region_0321400 do
+    factory :jmaxml_forecast_region_0321400 do
       code "0321400"
       name "岩手県八幡平市"
       yomi "いわてけんはちまんたいし"
@@ -1874,7 +1874,7 @@ FactoryGirl.define do
       short_yomi "はちまんたいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0321500 do
+    factory :jmaxml_forecast_region_0321500 do
       code "0321500"
       name "岩手県奥州市"
       yomi "いわてけんおうしゅうし"
@@ -1882,7 +1882,7 @@ FactoryGirl.define do
       short_yomi "おうしゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0321600 do
+    factory :jmaxml_forecast_region_0321600 do
       code "0321600"
       name "岩手県滝沢市"
       yomi "いわてけんたきざわし"
@@ -1890,7 +1890,7 @@ FactoryGirl.define do
       short_yomi "たきざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0330100 do
+    factory :jmaxml_forecast_region_0330100 do
       code "0330100"
       name "岩手県雫石町"
       yomi "いわてけんしずくいしちょう"
@@ -1898,7 +1898,7 @@ FactoryGirl.define do
       short_yomi "しずくいしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0330200 do
+    factory :jmaxml_forecast_region_0330200 do
       code "0330200"
       name "岩手県葛巻町"
       yomi "いわてけんくずまきまち"
@@ -1906,7 +1906,7 @@ FactoryGirl.define do
       short_yomi "くずまきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0330300 do
+    factory :jmaxml_forecast_region_0330300 do
       code "0330300"
       name "岩手県岩手町"
       yomi "いわてけんいわてまち"
@@ -1914,7 +1914,7 @@ FactoryGirl.define do
       short_yomi "いわてまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0332100 do
+    factory :jmaxml_forecast_region_0332100 do
       code "0332100"
       name "岩手県紫波町"
       yomi "いわてけんしわちょう"
@@ -1922,7 +1922,7 @@ FactoryGirl.define do
       short_yomi "しわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0332200 do
+    factory :jmaxml_forecast_region_0332200 do
       code "0332200"
       name "岩手県矢巾町"
       yomi "いわてけんやはばちょう"
@@ -1930,7 +1930,7 @@ FactoryGirl.define do
       short_yomi "やはばちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0336600 do
+    factory :jmaxml_forecast_region_0336600 do
       code "0336600"
       name "岩手県西和賀町"
       yomi "いわてけんにしわがまち"
@@ -1938,7 +1938,7 @@ FactoryGirl.define do
       short_yomi "にしわがまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0338100 do
+    factory :jmaxml_forecast_region_0338100 do
       code "0338100"
       name "岩手県金ケ崎町"
       yomi "いわてけんかねがさきちょう"
@@ -1946,7 +1946,7 @@ FactoryGirl.define do
       short_yomi "かねがさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0340200 do
+    factory :jmaxml_forecast_region_0340200 do
       code "0340200"
       name "岩手県平泉町"
       yomi "いわてけんひらいずみちょう"
@@ -1954,7 +1954,7 @@ FactoryGirl.define do
       short_yomi "ひらいずみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0344100 do
+    factory :jmaxml_forecast_region_0344100 do
       code "0344100"
       name "岩手県住田町"
       yomi "いわてけんすみたちょう"
@@ -1962,7 +1962,7 @@ FactoryGirl.define do
       short_yomi "すみたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0346100 do
+    factory :jmaxml_forecast_region_0346100 do
       code "0346100"
       name "岩手県大槌町"
       yomi "いわてけんおおつちちょう"
@@ -1970,7 +1970,7 @@ FactoryGirl.define do
       short_yomi "おおつちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0348200 do
+    factory :jmaxml_forecast_region_0348200 do
       code "0348200"
       name "岩手県山田町"
       yomi "いわてけんやまだまち"
@@ -1978,7 +1978,7 @@ FactoryGirl.define do
       short_yomi "やまだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0348300 do
+    factory :jmaxml_forecast_region_0348300 do
       code "0348300"
       name "岩手県岩泉町"
       yomi "いわてけんいわいずみちょう"
@@ -1986,7 +1986,7 @@ FactoryGirl.define do
       short_yomi "いわいずみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0348400 do
+    factory :jmaxml_forecast_region_0348400 do
       code "0348400"
       name "岩手県田野畑村"
       yomi "いわてけんたのはたむら"
@@ -1994,7 +1994,7 @@ FactoryGirl.define do
       short_yomi "たのはたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0348500 do
+    factory :jmaxml_forecast_region_0348500 do
       code "0348500"
       name "岩手県普代村"
       yomi "いわてけんふだいむら"
@@ -2002,7 +2002,7 @@ FactoryGirl.define do
       short_yomi "ふだいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0350100 do
+    factory :jmaxml_forecast_region_0350100 do
       code "0350100"
       name "岩手県軽米町"
       yomi "いわてけんかるまいまち"
@@ -2010,7 +2010,7 @@ FactoryGirl.define do
       short_yomi "かるまいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0350300 do
+    factory :jmaxml_forecast_region_0350300 do
       code "0350300"
       name "岩手県野田村"
       yomi "いわてけんのだむら"
@@ -2018,7 +2018,7 @@ FactoryGirl.define do
       short_yomi "のだむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0350600 do
+    factory :jmaxml_forecast_region_0350600 do
       code "0350600"
       name "岩手県九戸村"
       yomi "いわてけんくのへむら"
@@ -2026,7 +2026,7 @@ FactoryGirl.define do
       short_yomi "くのへむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0350700 do
+    factory :jmaxml_forecast_region_0350700 do
       code "0350700"
       name "岩手県洋野町"
       yomi "いわてけんひろのちょう"
@@ -2034,7 +2034,7 @@ FactoryGirl.define do
       short_yomi "ひろのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0352400 do
+    factory :jmaxml_forecast_region_0352400 do
       code "0352400"
       name "岩手県一戸町"
       yomi "いわてけんいちのへまち"
@@ -2042,7 +2042,7 @@ FactoryGirl.define do
       short_yomi "いちのへまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0410000 do
+    factory :jmaxml_forecast_region_0410000 do
       code "0410000"
       name "宮城県仙台市"
       yomi "みやぎけんせんだいし"
@@ -2050,7 +2050,7 @@ FactoryGirl.define do
       short_yomi "せんだいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0420200 do
+    factory :jmaxml_forecast_region_0420200 do
       code "0420200"
       name "宮城県石巻市"
       yomi "みやぎけんいしのまきし"
@@ -2058,7 +2058,7 @@ FactoryGirl.define do
       short_yomi "いしのまきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0420300 do
+    factory :jmaxml_forecast_region_0420300 do
       code "0420300"
       name "宮城県塩竈市"
       yomi "みやぎけんしおがまし"
@@ -2066,7 +2066,7 @@ FactoryGirl.define do
       short_yomi "しおがまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0420500 do
+    factory :jmaxml_forecast_region_0420500 do
       code "0420500"
       name "宮城県気仙沼市"
       yomi "みやぎけんけせんぬまし"
@@ -2074,7 +2074,7 @@ FactoryGirl.define do
       short_yomi "けせんぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0420600 do
+    factory :jmaxml_forecast_region_0420600 do
       code "0420600"
       name "宮城県白石市"
       yomi "みやぎけんしろいしし"
@@ -2082,7 +2082,7 @@ FactoryGirl.define do
       short_yomi "しろいしし"
     end
 
-    factory :rss_weather_xml_forecast_region_0420700 do
+    factory :jmaxml_forecast_region_0420700 do
       code "0420700"
       name "宮城県名取市"
       yomi "みやぎけんなとりし"
@@ -2090,7 +2090,7 @@ FactoryGirl.define do
       short_yomi "なとりし"
     end
 
-    factory :rss_weather_xml_forecast_region_0420800 do
+    factory :jmaxml_forecast_region_0420800 do
       code "0420800"
       name "宮城県角田市"
       yomi "みやぎけんかくだし"
@@ -2098,7 +2098,7 @@ FactoryGirl.define do
       short_yomi "かくだし"
     end
 
-    factory :rss_weather_xml_forecast_region_0420900 do
+    factory :jmaxml_forecast_region_0420900 do
       code "0420900"
       name "宮城県多賀城市"
       yomi "みやぎけんたがじょうし"
@@ -2106,7 +2106,7 @@ FactoryGirl.define do
       short_yomi "たがじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0421100 do
+    factory :jmaxml_forecast_region_0421100 do
       code "0421100"
       name "宮城県岩沼市"
       yomi "みやぎけんいわぬまし"
@@ -2114,7 +2114,7 @@ FactoryGirl.define do
       short_yomi "いわぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0421200 do
+    factory :jmaxml_forecast_region_0421200 do
       code "0421200"
       name "宮城県登米市"
       yomi "みやぎけんとめし"
@@ -2122,7 +2122,7 @@ FactoryGirl.define do
       short_yomi "とめし"
     end
 
-    factory :rss_weather_xml_forecast_region_0421300 do
+    factory :jmaxml_forecast_region_0421300 do
       code "0421300"
       name "宮城県栗原市"
       yomi "みやぎけんくりはらし"
@@ -2130,7 +2130,7 @@ FactoryGirl.define do
       short_yomi "くりはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0421400 do
+    factory :jmaxml_forecast_region_0421400 do
       code "0421400"
       name "宮城県東松島市"
       yomi "みやぎけんひがしまつしまし"
@@ -2138,7 +2138,7 @@ FactoryGirl.define do
       short_yomi "ひがしまつしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0421500 do
+    factory :jmaxml_forecast_region_0421500 do
       code "0421500"
       name "宮城県大崎市"
       yomi "みやぎけんおおさきし"
@@ -2146,7 +2146,7 @@ FactoryGirl.define do
       short_yomi "おおさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0430100 do
+    factory :jmaxml_forecast_region_0430100 do
       code "0430100"
       name "宮城県蔵王町"
       yomi "みやぎけんざおうまち"
@@ -2154,7 +2154,7 @@ FactoryGirl.define do
       short_yomi "ざおうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0430200 do
+    factory :jmaxml_forecast_region_0430200 do
       code "0430200"
       name "宮城県七ヶ宿町"
       yomi "みやぎけんしちかしゅくまち"
@@ -2162,7 +2162,7 @@ FactoryGirl.define do
       short_yomi "しちかしゅくまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0432100 do
+    factory :jmaxml_forecast_region_0432100 do
       code "0432100"
       name "宮城県大河原町"
       yomi "みやぎけんおおがわらまち"
@@ -2170,7 +2170,7 @@ FactoryGirl.define do
       short_yomi "おおがわらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0432200 do
+    factory :jmaxml_forecast_region_0432200 do
       code "0432200"
       name "宮城県村田町"
       yomi "みやぎけんむらたまち"
@@ -2178,7 +2178,7 @@ FactoryGirl.define do
       short_yomi "むらたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0432300 do
+    factory :jmaxml_forecast_region_0432300 do
       code "0432300"
       name "宮城県柴田町"
       yomi "みやぎけんしばたまち"
@@ -2186,7 +2186,7 @@ FactoryGirl.define do
       short_yomi "しばたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0432400 do
+    factory :jmaxml_forecast_region_0432400 do
       code "0432400"
       name "宮城県川崎町"
       yomi "みやぎけんかわさきまち"
@@ -2194,7 +2194,7 @@ FactoryGirl.define do
       short_yomi "かわさきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0434100 do
+    factory :jmaxml_forecast_region_0434100 do
       code "0434100"
       name "宮城県丸森町"
       yomi "みやぎけんまるもりまち"
@@ -2202,7 +2202,7 @@ FactoryGirl.define do
       short_yomi "まるもりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0436100 do
+    factory :jmaxml_forecast_region_0436100 do
       code "0436100"
       name "宮城県亘理町"
       yomi "みやぎけんわたりちょう"
@@ -2210,7 +2210,7 @@ FactoryGirl.define do
       short_yomi "わたりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0436200 do
+    factory :jmaxml_forecast_region_0436200 do
       code "0436200"
       name "宮城県山元町"
       yomi "みやぎけんやまもとちょう"
@@ -2218,7 +2218,7 @@ FactoryGirl.define do
       short_yomi "やまもとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0440100 do
+    factory :jmaxml_forecast_region_0440100 do
       code "0440100"
       name "宮城県松島町"
       yomi "みやぎけんまつしままち"
@@ -2226,7 +2226,7 @@ FactoryGirl.define do
       short_yomi "まつしままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0440400 do
+    factory :jmaxml_forecast_region_0440400 do
       code "0440400"
       name "宮城県七ヶ浜町"
       yomi "みやぎけんしちがはままち"
@@ -2234,7 +2234,7 @@ FactoryGirl.define do
       short_yomi "しちがはままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0440600 do
+    factory :jmaxml_forecast_region_0440600 do
       code "0440600"
       name "宮城県利府町"
       yomi "みやぎけんりふちょう"
@@ -2242,7 +2242,7 @@ FactoryGirl.define do
       short_yomi "りふちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0442100 do
+    factory :jmaxml_forecast_region_0442100 do
       code "0442100"
       name "宮城県大和町"
       yomi "みやぎけんたいわちょう"
@@ -2250,7 +2250,7 @@ FactoryGirl.define do
       short_yomi "たいわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0442200 do
+    factory :jmaxml_forecast_region_0442200 do
       code "0442200"
       name "宮城県大郷町"
       yomi "みやぎけんおおさとちょう"
@@ -2258,7 +2258,7 @@ FactoryGirl.define do
       short_yomi "おおさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0442300 do
+    factory :jmaxml_forecast_region_0442300 do
       code "0442300"
       name "宮城県富谷町"
       yomi "みやぎけんとみやまち"
@@ -2266,7 +2266,7 @@ FactoryGirl.define do
       short_yomi "とみやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0442400 do
+    factory :jmaxml_forecast_region_0442400 do
       code "0442400"
       name "宮城県大衡村"
       yomi "みやぎけんおおひらむら"
@@ -2274,7 +2274,7 @@ FactoryGirl.define do
       short_yomi "おおひらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0444400 do
+    factory :jmaxml_forecast_region_0444400 do
       code "0444400"
       name "宮城県色麻町"
       yomi "みやぎけんしかまちょう"
@@ -2282,7 +2282,7 @@ FactoryGirl.define do
       short_yomi "しかまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0444500 do
+    factory :jmaxml_forecast_region_0444500 do
       code "0444500"
       name "宮城県加美町"
       yomi "みやぎけんかみまち"
@@ -2290,7 +2290,7 @@ FactoryGirl.define do
       short_yomi "かみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0450100 do
+    factory :jmaxml_forecast_region_0450100 do
       code "0450100"
       name "宮城県涌谷町"
       yomi "みやぎけんわくやちょう"
@@ -2298,7 +2298,7 @@ FactoryGirl.define do
       short_yomi "わくやちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0450500 do
+    factory :jmaxml_forecast_region_0450500 do
       code "0450500"
       name "宮城県美里町"
       yomi "みやぎけんみさとまち"
@@ -2306,7 +2306,7 @@ FactoryGirl.define do
       short_yomi "みさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0458100 do
+    factory :jmaxml_forecast_region_0458100 do
       code "0458100"
       name "宮城県女川町"
       yomi "みやぎけんおながわちょう"
@@ -2314,7 +2314,7 @@ FactoryGirl.define do
       short_yomi "おながわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0460600 do
+    factory :jmaxml_forecast_region_0460600 do
       code "0460600"
       name "宮城県南三陸町"
       yomi "みやぎけんみなみさんりくちょう"
@@ -2322,7 +2322,7 @@ FactoryGirl.define do
       short_yomi "みなみさんりくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0520100 do
+    factory :jmaxml_forecast_region_0520100 do
       code "0520100"
       name "秋田県秋田市"
       yomi "あきたけんあきたし"
@@ -2330,7 +2330,7 @@ FactoryGirl.define do
       short_yomi "あきたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0520200 do
+    factory :jmaxml_forecast_region_0520200 do
       code "0520200"
       name "秋田県能代市"
       yomi "あきたけんのしろし"
@@ -2338,7 +2338,7 @@ FactoryGirl.define do
       short_yomi "のしろし"
     end
 
-    factory :rss_weather_xml_forecast_region_0520300 do
+    factory :jmaxml_forecast_region_0520300 do
       code "0520300"
       name "秋田県横手市"
       yomi "あきたけんよこてし"
@@ -2346,7 +2346,7 @@ FactoryGirl.define do
       short_yomi "よこてし"
     end
 
-    factory :rss_weather_xml_forecast_region_0520400 do
+    factory :jmaxml_forecast_region_0520400 do
       code "0520400"
       name "秋田県大館市"
       yomi "あきたけんおおだてし"
@@ -2354,7 +2354,7 @@ FactoryGirl.define do
       short_yomi "おおだてし"
     end
 
-    factory :rss_weather_xml_forecast_region_0520600 do
+    factory :jmaxml_forecast_region_0520600 do
       code "0520600"
       name "秋田県男鹿市"
       yomi "あきたけんおがし"
@@ -2362,7 +2362,7 @@ FactoryGirl.define do
       short_yomi "おがし"
     end
 
-    factory :rss_weather_xml_forecast_region_0520700 do
+    factory :jmaxml_forecast_region_0520700 do
       code "0520700"
       name "秋田県湯沢市"
       yomi "あきたけんゆざわし"
@@ -2370,7 +2370,7 @@ FactoryGirl.define do
       short_yomi "ゆざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0520900 do
+    factory :jmaxml_forecast_region_0520900 do
       code "0520900"
       name "秋田県鹿角市"
       yomi "あきたけんかづのし"
@@ -2378,7 +2378,7 @@ FactoryGirl.define do
       short_yomi "かづのし"
     end
 
-    factory :rss_weather_xml_forecast_region_0521000 do
+    factory :jmaxml_forecast_region_0521000 do
       code "0521000"
       name "秋田県由利本荘市"
       yomi "あきたけんゆりほんじょうし"
@@ -2386,7 +2386,7 @@ FactoryGirl.define do
       short_yomi "ゆりほんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0521100 do
+    factory :jmaxml_forecast_region_0521100 do
       code "0521100"
       name "秋田県潟上市"
       yomi "あきたけんかたがみし"
@@ -2394,7 +2394,7 @@ FactoryGirl.define do
       short_yomi "かたがみし"
     end
 
-    factory :rss_weather_xml_forecast_region_0521200 do
+    factory :jmaxml_forecast_region_0521200 do
       code "0521200"
       name "秋田県大仙市"
       yomi "あきたけんだいせんし"
@@ -2402,7 +2402,7 @@ FactoryGirl.define do
       short_yomi "だいせんし"
     end
 
-    factory :rss_weather_xml_forecast_region_0521300 do
+    factory :jmaxml_forecast_region_0521300 do
       code "0521300"
       name "秋田県北秋田市"
       yomi "あきたけんきたあきたし"
@@ -2410,7 +2410,7 @@ FactoryGirl.define do
       short_yomi "きたあきたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0521400 do
+    factory :jmaxml_forecast_region_0521400 do
       code "0521400"
       name "秋田県にかほ市"
       yomi "あきたけんにかほし"
@@ -2418,7 +2418,7 @@ FactoryGirl.define do
       short_yomi "にかほし"
     end
 
-    factory :rss_weather_xml_forecast_region_0521500 do
+    factory :jmaxml_forecast_region_0521500 do
       code "0521500"
       name "秋田県仙北市"
       yomi "あきたけんせんぼくし"
@@ -2426,7 +2426,7 @@ FactoryGirl.define do
       short_yomi "せんぼくし"
     end
 
-    factory :rss_weather_xml_forecast_region_0530300 do
+    factory :jmaxml_forecast_region_0530300 do
       code "0530300"
       name "秋田県小坂町"
       yomi "あきたけんこさかまち"
@@ -2434,7 +2434,7 @@ FactoryGirl.define do
       short_yomi "こさかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0532700 do
+    factory :jmaxml_forecast_region_0532700 do
       code "0532700"
       name "秋田県上小阿仁村"
       yomi "あきたけんかみこあにむら"
@@ -2442,7 +2442,7 @@ FactoryGirl.define do
       short_yomi "かみこあにむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0534600 do
+    factory :jmaxml_forecast_region_0534600 do
       code "0534600"
       name "秋田県藤里町"
       yomi "あきたけんふじさとまち"
@@ -2450,7 +2450,7 @@ FactoryGirl.define do
       short_yomi "ふじさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0534800 do
+    factory :jmaxml_forecast_region_0534800 do
       code "0534800"
       name "秋田県三種町"
       yomi "あきたけんみたねちょう"
@@ -2458,7 +2458,7 @@ FactoryGirl.define do
       short_yomi "みたねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0534900 do
+    factory :jmaxml_forecast_region_0534900 do
       code "0534900"
       name "秋田県八峰町"
       yomi "あきたけんはっぽうちょう"
@@ -2466,7 +2466,7 @@ FactoryGirl.define do
       short_yomi "はっぽうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0536100 do
+    factory :jmaxml_forecast_region_0536100 do
       code "0536100"
       name "秋田県五城目町"
       yomi "あきたけんごじょうめまち"
@@ -2474,7 +2474,7 @@ FactoryGirl.define do
       short_yomi "ごじょうめまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0536300 do
+    factory :jmaxml_forecast_region_0536300 do
       code "0536300"
       name "秋田県八郎潟町"
       yomi "あきたけんはちろうがたまち"
@@ -2482,7 +2482,7 @@ FactoryGirl.define do
       short_yomi "はちろうがたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0536600 do
+    factory :jmaxml_forecast_region_0536600 do
       code "0536600"
       name "秋田県井川町"
       yomi "あきたけんいかわまち"
@@ -2490,7 +2490,7 @@ FactoryGirl.define do
       short_yomi "いかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0536800 do
+    factory :jmaxml_forecast_region_0536800 do
       code "0536800"
       name "秋田県大潟村"
       yomi "あきたけんおおがたむら"
@@ -2498,7 +2498,7 @@ FactoryGirl.define do
       short_yomi "おおがたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0543400 do
+    factory :jmaxml_forecast_region_0543400 do
       code "0543400"
       name "秋田県美郷町"
       yomi "あきたけんみさとちょう"
@@ -2506,7 +2506,7 @@ FactoryGirl.define do
       short_yomi "みさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0546300 do
+    factory :jmaxml_forecast_region_0546300 do
       code "0546300"
       name "秋田県羽後町"
       yomi "あきたけんうごまち"
@@ -2514,7 +2514,7 @@ FactoryGirl.define do
       short_yomi "うごまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0546400 do
+    factory :jmaxml_forecast_region_0546400 do
       code "0546400"
       name "秋田県東成瀬村"
       yomi "あきたけんひがしなるせむら"
@@ -2522,7 +2522,7 @@ FactoryGirl.define do
       short_yomi "ひがしなるせむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0620100 do
+    factory :jmaxml_forecast_region_0620100 do
       code "0620100"
       name "山形県山形市"
       yomi "やまがたけんやまがたし"
@@ -2530,7 +2530,7 @@ FactoryGirl.define do
       short_yomi "やまがたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620200 do
+    factory :jmaxml_forecast_region_0620200 do
       code "0620200"
       name "山形県米沢市"
       yomi "やまがたけんよねざわし"
@@ -2538,7 +2538,7 @@ FactoryGirl.define do
       short_yomi "よねざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620300 do
+    factory :jmaxml_forecast_region_0620300 do
       code "0620300"
       name "山形県鶴岡市"
       yomi "やまがたけんつるおかし"
@@ -2546,7 +2546,7 @@ FactoryGirl.define do
       short_yomi "つるおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620400 do
+    factory :jmaxml_forecast_region_0620400 do
       code "0620400"
       name "山形県酒田市"
       yomi "やまがたけんさかたし"
@@ -2554,7 +2554,7 @@ FactoryGirl.define do
       short_yomi "さかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620500 do
+    factory :jmaxml_forecast_region_0620500 do
       code "0620500"
       name "山形県新庄市"
       yomi "やまがたけんしんじょうし"
@@ -2562,7 +2562,7 @@ FactoryGirl.define do
       short_yomi "しんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620600 do
+    factory :jmaxml_forecast_region_0620600 do
       code "0620600"
       name "山形県寒河江市"
       yomi "やまがたけんさがえし"
@@ -2570,7 +2570,7 @@ FactoryGirl.define do
       short_yomi "さがえし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620700 do
+    factory :jmaxml_forecast_region_0620700 do
       code "0620700"
       name "山形県上山市"
       yomi "やまがたけんかみのやまし"
@@ -2578,7 +2578,7 @@ FactoryGirl.define do
       short_yomi "かみのやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620800 do
+    factory :jmaxml_forecast_region_0620800 do
       code "0620800"
       name "山形県村山市"
       yomi "やまがたけんむらやまし"
@@ -2586,7 +2586,7 @@ FactoryGirl.define do
       short_yomi "むらやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0620900 do
+    factory :jmaxml_forecast_region_0620900 do
       code "0620900"
       name "山形県長井市"
       yomi "やまがたけんながいし"
@@ -2594,7 +2594,7 @@ FactoryGirl.define do
       short_yomi "ながいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0621000 do
+    factory :jmaxml_forecast_region_0621000 do
       code "0621000"
       name "山形県天童市"
       yomi "やまがたけんてんどうし"
@@ -2602,7 +2602,7 @@ FactoryGirl.define do
       short_yomi "てんどうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0621100 do
+    factory :jmaxml_forecast_region_0621100 do
       code "0621100"
       name "山形県東根市"
       yomi "やまがたけんひがしねし"
@@ -2610,7 +2610,7 @@ FactoryGirl.define do
       short_yomi "ひがしねし"
     end
 
-    factory :rss_weather_xml_forecast_region_0621200 do
+    factory :jmaxml_forecast_region_0621200 do
       code "0621200"
       name "山形県尾花沢市"
       yomi "やまがたけんおばなざわし"
@@ -2618,7 +2618,7 @@ FactoryGirl.define do
       short_yomi "おばなざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0621300 do
+    factory :jmaxml_forecast_region_0621300 do
       code "0621300"
       name "山形県南陽市"
       yomi "やまがたけんなんようし"
@@ -2626,7 +2626,7 @@ FactoryGirl.define do
       short_yomi "なんようし"
     end
 
-    factory :rss_weather_xml_forecast_region_0630100 do
+    factory :jmaxml_forecast_region_0630100 do
       code "0630100"
       name "山形県山辺町"
       yomi "やまがたけんやまのべまち"
@@ -2634,7 +2634,7 @@ FactoryGirl.define do
       short_yomi "やまのべまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0630200 do
+    factory :jmaxml_forecast_region_0630200 do
       code "0630200"
       name "山形県中山町"
       yomi "やまがたけんなかやままち"
@@ -2642,7 +2642,7 @@ FactoryGirl.define do
       short_yomi "なかやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0632100 do
+    factory :jmaxml_forecast_region_0632100 do
       code "0632100"
       name "山形県河北町"
       yomi "やまがたけんかほくちょう"
@@ -2650,7 +2650,7 @@ FactoryGirl.define do
       short_yomi "かほくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_0632200 do
+    factory :jmaxml_forecast_region_0632200 do
       code "0632200"
       name "山形県西川町"
       yomi "やまがたけんにしかわまち"
@@ -2658,7 +2658,7 @@ FactoryGirl.define do
       short_yomi "にしかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0632300 do
+    factory :jmaxml_forecast_region_0632300 do
       code "0632300"
       name "山形県朝日町"
       yomi "やまがたけんあさひまち"
@@ -2666,7 +2666,7 @@ FactoryGirl.define do
       short_yomi "あさひまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0632400 do
+    factory :jmaxml_forecast_region_0632400 do
       code "0632400"
       name "山形県大江町"
       yomi "やまがたけんおおえまち"
@@ -2674,7 +2674,7 @@ FactoryGirl.define do
       short_yomi "おおえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0634100 do
+    factory :jmaxml_forecast_region_0634100 do
       code "0634100"
       name "山形県大石田町"
       yomi "やまがたけんおおいしだまち"
@@ -2682,7 +2682,7 @@ FactoryGirl.define do
       short_yomi "おおいしだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0636100 do
+    factory :jmaxml_forecast_region_0636100 do
       code "0636100"
       name "山形県金山町"
       yomi "やまがたけんかねやままち"
@@ -2690,7 +2690,7 @@ FactoryGirl.define do
       short_yomi "かねやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0636200 do
+    factory :jmaxml_forecast_region_0636200 do
       code "0636200"
       name "山形県最上町"
       yomi "やまがたけんもがみまち"
@@ -2698,7 +2698,7 @@ FactoryGirl.define do
       short_yomi "もがみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0636300 do
+    factory :jmaxml_forecast_region_0636300 do
       code "0636300"
       name "山形県舟形町"
       yomi "やまがたけんふながたまち"
@@ -2706,7 +2706,7 @@ FactoryGirl.define do
       short_yomi "ふながたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0636400 do
+    factory :jmaxml_forecast_region_0636400 do
       code "0636400"
       name "山形県真室川町"
       yomi "やまがたけんまむろがわまち"
@@ -2714,7 +2714,7 @@ FactoryGirl.define do
       short_yomi "まむろがわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0636500 do
+    factory :jmaxml_forecast_region_0636500 do
       code "0636500"
       name "山形県大蔵村"
       yomi "やまがたけんおおくらむら"
@@ -2722,7 +2722,7 @@ FactoryGirl.define do
       short_yomi "おおくらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0636600 do
+    factory :jmaxml_forecast_region_0636600 do
       code "0636600"
       name "山形県鮭川村"
       yomi "やまがたけんさけがわむら"
@@ -2730,7 +2730,7 @@ FactoryGirl.define do
       short_yomi "さけがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0636700 do
+    factory :jmaxml_forecast_region_0636700 do
       code "0636700"
       name "山形県戸沢村"
       yomi "やまがたけんとざわむら"
@@ -2738,7 +2738,7 @@ FactoryGirl.define do
       short_yomi "とざわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0638100 do
+    factory :jmaxml_forecast_region_0638100 do
       code "0638100"
       name "山形県高畠町"
       yomi "やまがたけんたかはたまち"
@@ -2746,7 +2746,7 @@ FactoryGirl.define do
       short_yomi "たかはたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0638200 do
+    factory :jmaxml_forecast_region_0638200 do
       code "0638200"
       name "山形県川西町"
       yomi "やまがたけんかわにしまち"
@@ -2754,7 +2754,7 @@ FactoryGirl.define do
       short_yomi "かわにしまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0640100 do
+    factory :jmaxml_forecast_region_0640100 do
       code "0640100"
       name "山形県小国町"
       yomi "やまがたけんおぐにまち"
@@ -2762,7 +2762,7 @@ FactoryGirl.define do
       short_yomi "おぐにまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0640200 do
+    factory :jmaxml_forecast_region_0640200 do
       code "0640200"
       name "山形県白鷹町"
       yomi "やまがたけんしらたかまち"
@@ -2770,7 +2770,7 @@ FactoryGirl.define do
       short_yomi "しらたかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0640300 do
+    factory :jmaxml_forecast_region_0640300 do
       code "0640300"
       name "山形県飯豊町"
       yomi "やまがたけんいいでまち"
@@ -2778,7 +2778,7 @@ FactoryGirl.define do
       short_yomi "いいでまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0642600 do
+    factory :jmaxml_forecast_region_0642600 do
       code "0642600"
       name "山形県三川町"
       yomi "やまがたけんみかわまち"
@@ -2786,7 +2786,7 @@ FactoryGirl.define do
       short_yomi "みかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0642800 do
+    factory :jmaxml_forecast_region_0642800 do
       code "0642800"
       name "山形県庄内町"
       yomi "やまがたけんしょうないまち"
@@ -2794,7 +2794,7 @@ FactoryGirl.define do
       short_yomi "しょうないまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0646100 do
+    factory :jmaxml_forecast_region_0646100 do
       code "0646100"
       name "山形県遊佐町"
       yomi "やまがたけんゆざまち"
@@ -2802,7 +2802,7 @@ FactoryGirl.define do
       short_yomi "ゆざまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0720100 do
+    factory :jmaxml_forecast_region_0720100 do
       code "0720100"
       name "福島県福島市"
       yomi "ふくしまけんふくしまし"
@@ -2810,7 +2810,7 @@ FactoryGirl.define do
       short_yomi "ふくしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0720200 do
+    factory :jmaxml_forecast_region_0720200 do
       code "0720200"
       name "福島県会津若松市"
       yomi "ふくしまけんあいづわかまつし"
@@ -2818,7 +2818,7 @@ FactoryGirl.define do
       short_yomi "あいづわかまつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0720300 do
+    factory :jmaxml_forecast_region_0720300 do
       code "0720300"
       name "福島県郡山市"
       yomi "ふくしまけんこおりやまし"
@@ -2826,7 +2826,7 @@ FactoryGirl.define do
       short_yomi "こおりやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0720400 do
+    factory :jmaxml_forecast_region_0720400 do
       code "0720400"
       name "福島県いわき市"
       yomi "ふくしまけんいわきし"
@@ -2834,7 +2834,7 @@ FactoryGirl.define do
       short_yomi "いわきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0720500 do
+    factory :jmaxml_forecast_region_0720500 do
       code "0720500"
       name "福島県白河市"
       yomi "ふくしまけんしらかわし"
@@ -2842,7 +2842,7 @@ FactoryGirl.define do
       short_yomi "しらかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0720700 do
+    factory :jmaxml_forecast_region_0720700 do
       code "0720700"
       name "福島県須賀川市"
       yomi "ふくしまけんすかがわし"
@@ -2850,7 +2850,7 @@ FactoryGirl.define do
       short_yomi "すかがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0720800 do
+    factory :jmaxml_forecast_region_0720800 do
       code "0720800"
       name "福島県喜多方市"
       yomi "ふくしまけんきたかたし"
@@ -2858,7 +2858,7 @@ FactoryGirl.define do
       short_yomi "きたかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0720900 do
+    factory :jmaxml_forecast_region_0720900 do
       code "0720900"
       name "福島県相馬市"
       yomi "ふくしまけんそうまし"
@@ -2866,7 +2866,7 @@ FactoryGirl.define do
       short_yomi "そうまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0721000 do
+    factory :jmaxml_forecast_region_0721000 do
       code "0721000"
       name "福島県二本松市"
       yomi "ふくしまけんにほんまつし"
@@ -2874,7 +2874,7 @@ FactoryGirl.define do
       short_yomi "にほんまつし"
     end
 
-    factory :rss_weather_xml_forecast_region_0721100 do
+    factory :jmaxml_forecast_region_0721100 do
       code "0721100"
       name "福島県田村市"
       yomi "ふくしまけんたむらし"
@@ -2882,7 +2882,7 @@ FactoryGirl.define do
       short_yomi "たむらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0721200 do
+    factory :jmaxml_forecast_region_0721200 do
       code "0721200"
       name "福島県南相馬市"
       yomi "ふくしまけんみなみそうまし"
@@ -2890,7 +2890,7 @@ FactoryGirl.define do
       short_yomi "みなみそうまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0721300 do
+    factory :jmaxml_forecast_region_0721300 do
       code "0721300"
       name "福島県伊達市"
       yomi "ふくしまけんだてし"
@@ -2898,7 +2898,7 @@ FactoryGirl.define do
       short_yomi "だてし"
     end
 
-    factory :rss_weather_xml_forecast_region_0721400 do
+    factory :jmaxml_forecast_region_0721400 do
       code "0721400"
       name "福島県本宮市"
       yomi "ふくしまけんもとみやし"
@@ -2906,7 +2906,7 @@ FactoryGirl.define do
       short_yomi "もとみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_0730100 do
+    factory :jmaxml_forecast_region_0730100 do
       code "0730100"
       name "福島県桑折町"
       yomi "ふくしまけんこおりまち"
@@ -2914,7 +2914,7 @@ FactoryGirl.define do
       short_yomi "こおりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0730300 do
+    factory :jmaxml_forecast_region_0730300 do
       code "0730300"
       name "福島県国見町"
       yomi "ふくしまけんくにみまち"
@@ -2922,7 +2922,7 @@ FactoryGirl.define do
       short_yomi "くにみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0730800 do
+    factory :jmaxml_forecast_region_0730800 do
       code "0730800"
       name "福島県川俣町"
       yomi "ふくしまけんかわまたまち"
@@ -2930,7 +2930,7 @@ FactoryGirl.define do
       short_yomi "かわまたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0732200 do
+    factory :jmaxml_forecast_region_0732200 do
       code "0732200"
       name "福島県大玉村"
       yomi "ふくしまけんおおたまむら"
@@ -2938,7 +2938,7 @@ FactoryGirl.define do
       short_yomi "おおたまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0734200 do
+    factory :jmaxml_forecast_region_0734200 do
       code "0734200"
       name "福島県鏡石町"
       yomi "ふくしまけんかがみいしまち"
@@ -2946,7 +2946,7 @@ FactoryGirl.define do
       short_yomi "かがみいしまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0734400 do
+    factory :jmaxml_forecast_region_0734400 do
       code "0734400"
       name "福島県天栄村"
       yomi "ふくしまけんてんえいむら"
@@ -2954,7 +2954,7 @@ FactoryGirl.define do
       short_yomi "てんえいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0736200 do
+    factory :jmaxml_forecast_region_0736200 do
       code "0736200"
       name "福島県下郷町"
       yomi "ふくしまけんしもごうまち"
@@ -2962,7 +2962,7 @@ FactoryGirl.define do
       short_yomi "しもごうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0736400 do
+    factory :jmaxml_forecast_region_0736400 do
       code "0736400"
       name "福島県檜枝岐村"
       yomi "ふくしまけんひのえまたむら"
@@ -2970,7 +2970,7 @@ FactoryGirl.define do
       short_yomi "ひのえまたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0736700 do
+    factory :jmaxml_forecast_region_0736700 do
       code "0736700"
       name "福島県只見町"
       yomi "ふくしまけんただみまち"
@@ -2978,7 +2978,7 @@ FactoryGirl.define do
       short_yomi "ただみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0736800 do
+    factory :jmaxml_forecast_region_0736800 do
       code "0736800"
       name "福島県南会津町"
       yomi "ふくしまけんみなみあいづまち"
@@ -2986,7 +2986,7 @@ FactoryGirl.define do
       short_yomi "みなみあいづまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0740200 do
+    factory :jmaxml_forecast_region_0740200 do
       code "0740200"
       name "福島県北塩原村"
       yomi "ふくしまけんきたしおばらむら"
@@ -2994,7 +2994,7 @@ FactoryGirl.define do
       short_yomi "きたしおばらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0740500 do
+    factory :jmaxml_forecast_region_0740500 do
       code "0740500"
       name "福島県西会津町"
       yomi "ふくしまけんにしあいづまち"
@@ -3002,7 +3002,7 @@ FactoryGirl.define do
       short_yomi "にしあいづまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0740700 do
+    factory :jmaxml_forecast_region_0740700 do
       code "0740700"
       name "福島県磐梯町"
       yomi "ふくしまけんばんだいまち"
@@ -3010,7 +3010,7 @@ FactoryGirl.define do
       short_yomi "ばんだいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0740800 do
+    factory :jmaxml_forecast_region_0740800 do
       code "0740800"
       name "福島県猪苗代町"
       yomi "ふくしまけんいなわしろまち"
@@ -3018,7 +3018,7 @@ FactoryGirl.define do
       short_yomi "いなわしろまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0742100 do
+    factory :jmaxml_forecast_region_0742100 do
       code "0742100"
       name "福島県会津坂下町"
       yomi "ふくしまけんあいづばんげまち"
@@ -3026,7 +3026,7 @@ FactoryGirl.define do
       short_yomi "あいづばんげまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0742200 do
+    factory :jmaxml_forecast_region_0742200 do
       code "0742200"
       name "福島県湯川村"
       yomi "ふくしまけんゆがわむら"
@@ -3034,7 +3034,7 @@ FactoryGirl.define do
       short_yomi "ゆがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0742300 do
+    factory :jmaxml_forecast_region_0742300 do
       code "0742300"
       name "福島県柳津町"
       yomi "ふくしまけんやないづまち"
@@ -3042,7 +3042,7 @@ FactoryGirl.define do
       short_yomi "やないづまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0744400 do
+    factory :jmaxml_forecast_region_0744400 do
       code "0744400"
       name "福島県三島町"
       yomi "ふくしまけんみしままち"
@@ -3050,7 +3050,7 @@ FactoryGirl.define do
       short_yomi "みしままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0744500 do
+    factory :jmaxml_forecast_region_0744500 do
       code "0744500"
       name "福島県金山町"
       yomi "ふくしまけんかねやままち"
@@ -3058,7 +3058,7 @@ FactoryGirl.define do
       short_yomi "かねやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0744600 do
+    factory :jmaxml_forecast_region_0744600 do
       code "0744600"
       name "福島県昭和村"
       yomi "ふくしまけんしょうわむら"
@@ -3066,7 +3066,7 @@ FactoryGirl.define do
       short_yomi "しょうわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0744700 do
+    factory :jmaxml_forecast_region_0744700 do
       code "0744700"
       name "福島県会津美里町"
       yomi "ふくしまけんあいづみさとまち"
@@ -3074,7 +3074,7 @@ FactoryGirl.define do
       short_yomi "あいづみさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0746100 do
+    factory :jmaxml_forecast_region_0746100 do
       code "0746100"
       name "福島県西郷村"
       yomi "ふくしまけんにしごうむら"
@@ -3082,7 +3082,7 @@ FactoryGirl.define do
       short_yomi "にしごうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0746400 do
+    factory :jmaxml_forecast_region_0746400 do
       code "0746400"
       name "福島県泉崎村"
       yomi "ふくしまけんいずみざきむら"
@@ -3090,7 +3090,7 @@ FactoryGirl.define do
       short_yomi "いずみざきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0746500 do
+    factory :jmaxml_forecast_region_0746500 do
       code "0746500"
       name "福島県中島村"
       yomi "ふくしまけんなかじまむら"
@@ -3098,7 +3098,7 @@ FactoryGirl.define do
       short_yomi "なかじまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0746600 do
+    factory :jmaxml_forecast_region_0746600 do
       code "0746600"
       name "福島県矢吹町"
       yomi "ふくしまけんやぶきまち"
@@ -3106,7 +3106,7 @@ FactoryGirl.define do
       short_yomi "やぶきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0748100 do
+    factory :jmaxml_forecast_region_0748100 do
       code "0748100"
       name "福島県棚倉町"
       yomi "ふくしまけんたなぐらまち"
@@ -3114,7 +3114,7 @@ FactoryGirl.define do
       short_yomi "たなぐらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0748200 do
+    factory :jmaxml_forecast_region_0748200 do
       code "0748200"
       name "福島県矢祭町"
       yomi "ふくしまけんやまつりまち"
@@ -3122,7 +3122,7 @@ FactoryGirl.define do
       short_yomi "やまつりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0748300 do
+    factory :jmaxml_forecast_region_0748300 do
       code "0748300"
       name "福島県塙町"
       yomi "ふくしまけんはなわまち"
@@ -3130,7 +3130,7 @@ FactoryGirl.define do
       short_yomi "はなわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0748400 do
+    factory :jmaxml_forecast_region_0748400 do
       code "0748400"
       name "福島県鮫川村"
       yomi "ふくしまけんさめがわむら"
@@ -3138,7 +3138,7 @@ FactoryGirl.define do
       short_yomi "さめがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0750100 do
+    factory :jmaxml_forecast_region_0750100 do
       code "0750100"
       name "福島県石川町"
       yomi "ふくしまけんいしかわまち"
@@ -3146,7 +3146,7 @@ FactoryGirl.define do
       short_yomi "いしかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0750200 do
+    factory :jmaxml_forecast_region_0750200 do
       code "0750200"
       name "福島県玉川村"
       yomi "ふくしまけんたまかわむら"
@@ -3154,7 +3154,7 @@ FactoryGirl.define do
       short_yomi "たまかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0750300 do
+    factory :jmaxml_forecast_region_0750300 do
       code "0750300"
       name "福島県平田村"
       yomi "ふくしまけんひらたむら"
@@ -3162,7 +3162,7 @@ FactoryGirl.define do
       short_yomi "ひらたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0750400 do
+    factory :jmaxml_forecast_region_0750400 do
       code "0750400"
       name "福島県浅川町"
       yomi "ふくしまけんあさかわまち"
@@ -3170,7 +3170,7 @@ FactoryGirl.define do
       short_yomi "あさかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0750500 do
+    factory :jmaxml_forecast_region_0750500 do
       code "0750500"
       name "福島県古殿町"
       yomi "ふくしまけんふるどのまち"
@@ -3178,7 +3178,7 @@ FactoryGirl.define do
       short_yomi "ふるどのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0752100 do
+    factory :jmaxml_forecast_region_0752100 do
       code "0752100"
       name "福島県三春町"
       yomi "ふくしまけんみはるまち"
@@ -3186,7 +3186,7 @@ FactoryGirl.define do
       short_yomi "みはるまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0752200 do
+    factory :jmaxml_forecast_region_0752200 do
       code "0752200"
       name "福島県小野町"
       yomi "ふくしまけんおのまち"
@@ -3194,7 +3194,7 @@ FactoryGirl.define do
       short_yomi "おのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0754100 do
+    factory :jmaxml_forecast_region_0754100 do
       code "0754100"
       name "福島県広野町"
       yomi "ふくしまけんひろのまち"
@@ -3202,7 +3202,7 @@ FactoryGirl.define do
       short_yomi "ひろのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0754200 do
+    factory :jmaxml_forecast_region_0754200 do
       code "0754200"
       name "福島県楢葉町"
       yomi "ふくしまけんならはまち"
@@ -3210,7 +3210,7 @@ FactoryGirl.define do
       short_yomi "ならはまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0754300 do
+    factory :jmaxml_forecast_region_0754300 do
       code "0754300"
       name "福島県富岡町"
       yomi "ふくしまけんとみおかまち"
@@ -3218,7 +3218,7 @@ FactoryGirl.define do
       short_yomi "とみおかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0754400 do
+    factory :jmaxml_forecast_region_0754400 do
       code "0754400"
       name "福島県川内村"
       yomi "ふくしまけんかわうちむら"
@@ -3226,7 +3226,7 @@ FactoryGirl.define do
       short_yomi "かわうちむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0754500 do
+    factory :jmaxml_forecast_region_0754500 do
       code "0754500"
       name "福島県大熊町"
       yomi "ふくしまけんおおくままち"
@@ -3234,7 +3234,7 @@ FactoryGirl.define do
       short_yomi "おおくままち"
     end
 
-    factory :rss_weather_xml_forecast_region_0754600 do
+    factory :jmaxml_forecast_region_0754600 do
       code "0754600"
       name "福島県双葉町"
       yomi "ふくしまけんふたばまち"
@@ -3242,7 +3242,7 @@ FactoryGirl.define do
       short_yomi "ふたばまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0754700 do
+    factory :jmaxml_forecast_region_0754700 do
       code "0754700"
       name "福島県浪江町"
       yomi "ふくしまけんなみえまち"
@@ -3250,7 +3250,7 @@ FactoryGirl.define do
       short_yomi "なみえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0754800 do
+    factory :jmaxml_forecast_region_0754800 do
       code "0754800"
       name "福島県葛尾村"
       yomi "ふくしまけんかつらおむら"
@@ -3258,7 +3258,7 @@ FactoryGirl.define do
       short_yomi "かつらおむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0756100 do
+    factory :jmaxml_forecast_region_0756100 do
       code "0756100"
       name "福島県新地町"
       yomi "ふくしまけんしんちまち"
@@ -3266,7 +3266,7 @@ FactoryGirl.define do
       short_yomi "しんちまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0756400 do
+    factory :jmaxml_forecast_region_0756400 do
       code "0756400"
       name "福島県飯舘村"
       yomi "ふくしまけんいいたてむら"
@@ -3274,7 +3274,7 @@ FactoryGirl.define do
       short_yomi "いいたてむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0820100 do
+    factory :jmaxml_forecast_region_0820100 do
       code "0820100"
       name "茨城県水戸市"
       yomi "いばらきけんみとし"
@@ -3282,7 +3282,7 @@ FactoryGirl.define do
       short_yomi "みとし"
     end
 
-    factory :rss_weather_xml_forecast_region_0820200 do
+    factory :jmaxml_forecast_region_0820200 do
       code "0820200"
       name "茨城県日立市"
       yomi "いばらきけんひたちし"
@@ -3290,7 +3290,7 @@ FactoryGirl.define do
       short_yomi "ひたちし"
     end
 
-    factory :rss_weather_xml_forecast_region_0820300 do
+    factory :jmaxml_forecast_region_0820300 do
       code "0820300"
       name "茨城県土浦市"
       yomi "いばらきけんつちうらし"
@@ -3298,7 +3298,7 @@ FactoryGirl.define do
       short_yomi "つちうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0820400 do
+    factory :jmaxml_forecast_region_0820400 do
       code "0820400"
       name "茨城県古河市"
       yomi "いばらきけんこがし"
@@ -3306,7 +3306,7 @@ FactoryGirl.define do
       short_yomi "こがし"
     end
 
-    factory :rss_weather_xml_forecast_region_0820500 do
+    factory :jmaxml_forecast_region_0820500 do
       code "0820500"
       name "茨城県石岡市"
       yomi "いばらきけんいしおかし"
@@ -3314,7 +3314,7 @@ FactoryGirl.define do
       short_yomi "いしおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_0820700 do
+    factory :jmaxml_forecast_region_0820700 do
       code "0820700"
       name "茨城県結城市"
       yomi "いばらきけんゆうきし"
@@ -3322,7 +3322,7 @@ FactoryGirl.define do
       short_yomi "ゆうきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0820800 do
+    factory :jmaxml_forecast_region_0820800 do
       code "0820800"
       name "茨城県龍ケ崎市"
       yomi "いばらきけんりゅうがさきし"
@@ -3330,7 +3330,7 @@ FactoryGirl.define do
       short_yomi "りゅうがさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821000 do
+    factory :jmaxml_forecast_region_0821000 do
       code "0821000"
       name "茨城県下妻市"
       yomi "いばらきけんしもつまし"
@@ -3338,7 +3338,7 @@ FactoryGirl.define do
       short_yomi "しもつまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821100 do
+    factory :jmaxml_forecast_region_0821100 do
       code "0821100"
       name "茨城県常総市"
       yomi "いばらきけんじょうそうし"
@@ -3346,7 +3346,7 @@ FactoryGirl.define do
       short_yomi "じょうそうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821200 do
+    factory :jmaxml_forecast_region_0821200 do
       code "0821200"
       name "茨城県常陸太田市"
       yomi "いばらきけんひたちおおたし"
@@ -3354,7 +3354,7 @@ FactoryGirl.define do
       short_yomi "ひたちおおたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821400 do
+    factory :jmaxml_forecast_region_0821400 do
       code "0821400"
       name "茨城県高萩市"
       yomi "いばらきけんたかはぎし"
@@ -3362,7 +3362,7 @@ FactoryGirl.define do
       short_yomi "たかはぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821500 do
+    factory :jmaxml_forecast_region_0821500 do
       code "0821500"
       name "茨城県北茨城市"
       yomi "いばらきけんきたいばらきし"
@@ -3370,7 +3370,7 @@ FactoryGirl.define do
       short_yomi "きたいばらきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821600 do
+    factory :jmaxml_forecast_region_0821600 do
       code "0821600"
       name "茨城県笠間市"
       yomi "いばらきけんかさまし"
@@ -3378,7 +3378,7 @@ FactoryGirl.define do
       short_yomi "かさまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821700 do
+    factory :jmaxml_forecast_region_0821700 do
       code "0821700"
       name "茨城県取手市"
       yomi "いばらきけんとりでし"
@@ -3386,7 +3386,7 @@ FactoryGirl.define do
       short_yomi "とりでし"
     end
 
-    factory :rss_weather_xml_forecast_region_0821900 do
+    factory :jmaxml_forecast_region_0821900 do
       code "0821900"
       name "茨城県牛久市"
       yomi "いばらきけんうしくし"
@@ -3394,7 +3394,7 @@ FactoryGirl.define do
       short_yomi "うしくし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822000 do
+    factory :jmaxml_forecast_region_0822000 do
       code "0822000"
       name "茨城県つくば市"
       yomi "いばらきけんつくばし"
@@ -3402,7 +3402,7 @@ FactoryGirl.define do
       short_yomi "つくばし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822100 do
+    factory :jmaxml_forecast_region_0822100 do
       code "0822100"
       name "茨城県ひたちなか市"
       yomi "いばらきけんひたちなかし"
@@ -3410,7 +3410,7 @@ FactoryGirl.define do
       short_yomi "ひたちなかし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822200 do
+    factory :jmaxml_forecast_region_0822200 do
       code "0822200"
       name "茨城県鹿嶋市"
       yomi "いばらきけんかしまし"
@@ -3418,7 +3418,7 @@ FactoryGirl.define do
       short_yomi "かしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822300 do
+    factory :jmaxml_forecast_region_0822300 do
       code "0822300"
       name "茨城県潮来市"
       yomi "いばらきけんいたこし"
@@ -3426,7 +3426,7 @@ FactoryGirl.define do
       short_yomi "いたこし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822400 do
+    factory :jmaxml_forecast_region_0822400 do
       code "0822400"
       name "茨城県守谷市"
       yomi "いばらきけんもりやし"
@@ -3434,7 +3434,7 @@ FactoryGirl.define do
       short_yomi "もりやし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822500 do
+    factory :jmaxml_forecast_region_0822500 do
       code "0822500"
       name "茨城県常陸大宮市"
       yomi "いばらきけんひたちおおみやし"
@@ -3442,7 +3442,7 @@ FactoryGirl.define do
       short_yomi "ひたちおおみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822600 do
+    factory :jmaxml_forecast_region_0822600 do
       code "0822600"
       name "茨城県那珂市"
       yomi "いばらきけんなかし"
@@ -3450,7 +3450,7 @@ FactoryGirl.define do
       short_yomi "なかし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822700 do
+    factory :jmaxml_forecast_region_0822700 do
       code "0822700"
       name "茨城県筑西市"
       yomi "いばらきけんちくせいし"
@@ -3458,7 +3458,7 @@ FactoryGirl.define do
       short_yomi "ちくせいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822800 do
+    factory :jmaxml_forecast_region_0822800 do
       code "0822800"
       name "茨城県坂東市"
       yomi "いばらきけんばんどうし"
@@ -3466,7 +3466,7 @@ FactoryGirl.define do
       short_yomi "ばんどうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0822900 do
+    factory :jmaxml_forecast_region_0822900 do
       code "0822900"
       name "茨城県稲敷市"
       yomi "いばらきけんいなしきし"
@@ -3474,7 +3474,7 @@ FactoryGirl.define do
       short_yomi "いなしきし"
     end
 
-    factory :rss_weather_xml_forecast_region_0823000 do
+    factory :jmaxml_forecast_region_0823000 do
       code "0823000"
       name "茨城県かすみがうら市"
       yomi "いばらきけんかすみがうらし"
@@ -3482,7 +3482,7 @@ FactoryGirl.define do
       short_yomi "かすみがうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0823100 do
+    factory :jmaxml_forecast_region_0823100 do
       code "0823100"
       name "茨城県桜川市"
       yomi "いばらきけんさくらがわし"
@@ -3490,7 +3490,7 @@ FactoryGirl.define do
       short_yomi "さくらがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_0823200 do
+    factory :jmaxml_forecast_region_0823200 do
       code "0823200"
       name "茨城県神栖市"
       yomi "いばらきけんかみすし"
@@ -3498,7 +3498,7 @@ FactoryGirl.define do
       short_yomi "かみすし"
     end
 
-    factory :rss_weather_xml_forecast_region_0823300 do
+    factory :jmaxml_forecast_region_0823300 do
       code "0823300"
       name "茨城県行方市"
       yomi "いばらきけんなめがたし"
@@ -3506,7 +3506,7 @@ FactoryGirl.define do
       short_yomi "なめがたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0823400 do
+    factory :jmaxml_forecast_region_0823400 do
       code "0823400"
       name "茨城県鉾田市"
       yomi "いばらきけんほこたし"
@@ -3514,7 +3514,7 @@ FactoryGirl.define do
       short_yomi "ほこたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0823500 do
+    factory :jmaxml_forecast_region_0823500 do
       code "0823500"
       name "茨城県つくばみらい市"
       yomi "いばらきけんつくばみらいし"
@@ -3522,7 +3522,7 @@ FactoryGirl.define do
       short_yomi "つくばみらいし"
     end
 
-    factory :rss_weather_xml_forecast_region_0823600 do
+    factory :jmaxml_forecast_region_0823600 do
       code "0823600"
       name "茨城県小美玉市"
       yomi "いばらきけんおみたまし"
@@ -3530,7 +3530,7 @@ FactoryGirl.define do
       short_yomi "おみたまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0830200 do
+    factory :jmaxml_forecast_region_0830200 do
       code "0830200"
       name "茨城県茨城町"
       yomi "いばらきけんいばらきまち"
@@ -3538,7 +3538,7 @@ FactoryGirl.define do
       short_yomi "いばらきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0830900 do
+    factory :jmaxml_forecast_region_0830900 do
       code "0830900"
       name "茨城県大洗町"
       yomi "いばらきけんおおあらいまち"
@@ -3546,7 +3546,7 @@ FactoryGirl.define do
       short_yomi "おおあらいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0831000 do
+    factory :jmaxml_forecast_region_0831000 do
       code "0831000"
       name "茨城県城里町"
       yomi "いばらきけんしろさとまち"
@@ -3554,7 +3554,7 @@ FactoryGirl.define do
       short_yomi "しろさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0834100 do
+    factory :jmaxml_forecast_region_0834100 do
       code "0834100"
       name "茨城県東海村"
       yomi "いばらきけんとうかいむら"
@@ -3562,7 +3562,7 @@ FactoryGirl.define do
       short_yomi "とうかいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0836400 do
+    factory :jmaxml_forecast_region_0836400 do
       code "0836400"
       name "茨城県大子町"
       yomi "いばらきけんだいごまち"
@@ -3570,7 +3570,7 @@ FactoryGirl.define do
       short_yomi "だいごまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0844200 do
+    factory :jmaxml_forecast_region_0844200 do
       code "0844200"
       name "茨城県美浦村"
       yomi "いばらきけんみほむら"
@@ -3578,7 +3578,7 @@ FactoryGirl.define do
       short_yomi "みほむら"
     end
 
-    factory :rss_weather_xml_forecast_region_0844300 do
+    factory :jmaxml_forecast_region_0844300 do
       code "0844300"
       name "茨城県阿見町"
       yomi "いばらきけんあみまち"
@@ -3586,7 +3586,7 @@ FactoryGirl.define do
       short_yomi "あみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0844700 do
+    factory :jmaxml_forecast_region_0844700 do
       code "0844700"
       name "茨城県河内町"
       yomi "いばらきけんかわちまち"
@@ -3594,7 +3594,7 @@ FactoryGirl.define do
       short_yomi "かわちまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0852100 do
+    factory :jmaxml_forecast_region_0852100 do
       code "0852100"
       name "茨城県八千代町"
       yomi "いばらきけんやちよまち"
@@ -3602,7 +3602,7 @@ FactoryGirl.define do
       short_yomi "やちよまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0854200 do
+    factory :jmaxml_forecast_region_0854200 do
       code "0854200"
       name "茨城県五霞町"
       yomi "いばらきけんごかまち"
@@ -3610,7 +3610,7 @@ FactoryGirl.define do
       short_yomi "ごかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0854600 do
+    factory :jmaxml_forecast_region_0854600 do
       code "0854600"
       name "茨城県境町"
       yomi "いばらきけんさかいまち"
@@ -3618,7 +3618,7 @@ FactoryGirl.define do
       short_yomi "さかいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0856400 do
+    factory :jmaxml_forecast_region_0856400 do
       code "0856400"
       name "茨城県利根町"
       yomi "いばらきけんとねまち"
@@ -3626,7 +3626,7 @@ FactoryGirl.define do
       short_yomi "とねまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0920100 do
+    factory :jmaxml_forecast_region_0920100 do
       code "0920100"
       name "栃木県宇都宮市"
       yomi "とちぎけんうつのみやし"
@@ -3634,7 +3634,7 @@ FactoryGirl.define do
       short_yomi "うつのみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_0920200 do
+    factory :jmaxml_forecast_region_0920200 do
       code "0920200"
       name "栃木県足利市"
       yomi "とちぎけんあしかがし"
@@ -3642,7 +3642,7 @@ FactoryGirl.define do
       short_yomi "あしかがし"
     end
 
-    factory :rss_weather_xml_forecast_region_0920300 do
+    factory :jmaxml_forecast_region_0920300 do
       code "0920300"
       name "栃木県栃木市"
       yomi "とちぎけんとちぎし"
@@ -3650,7 +3650,7 @@ FactoryGirl.define do
       short_yomi "とちぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_0920400 do
+    factory :jmaxml_forecast_region_0920400 do
       code "0920400"
       name "栃木県佐野市"
       yomi "とちぎけんさのし"
@@ -3658,7 +3658,7 @@ FactoryGirl.define do
       short_yomi "さのし"
     end
 
-    factory :rss_weather_xml_forecast_region_0920500 do
+    factory :jmaxml_forecast_region_0920500 do
       code "0920500"
       name "栃木県鹿沼市"
       yomi "とちぎけんかぬまし"
@@ -3666,7 +3666,7 @@ FactoryGirl.define do
       short_yomi "かぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0920600 do
+    factory :jmaxml_forecast_region_0920600 do
       code "0920600"
       name "栃木県日光市"
       yomi "とちぎけんにっこうし"
@@ -3674,7 +3674,7 @@ FactoryGirl.define do
       short_yomi "にっこうし"
     end
 
-    factory :rss_weather_xml_forecast_region_0920800 do
+    factory :jmaxml_forecast_region_0920800 do
       code "0920800"
       name "栃木県小山市"
       yomi "とちぎけんおやまし"
@@ -3682,7 +3682,7 @@ FactoryGirl.define do
       short_yomi "おやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0920900 do
+    factory :jmaxml_forecast_region_0920900 do
       code "0920900"
       name "栃木県真岡市"
       yomi "とちぎけんもおかし"
@@ -3690,7 +3690,7 @@ FactoryGirl.define do
       short_yomi "もおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_0921000 do
+    factory :jmaxml_forecast_region_0921000 do
       code "0921000"
       name "栃木県大田原市"
       yomi "とちぎけんおおたわらし"
@@ -3698,7 +3698,7 @@ FactoryGirl.define do
       short_yomi "おおたわらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0921100 do
+    factory :jmaxml_forecast_region_0921100 do
       code "0921100"
       name "栃木県矢板市"
       yomi "とちぎけんやいたし"
@@ -3706,7 +3706,7 @@ FactoryGirl.define do
       short_yomi "やいたし"
     end
 
-    factory :rss_weather_xml_forecast_region_0921300 do
+    factory :jmaxml_forecast_region_0921300 do
       code "0921300"
       name "栃木県那須塩原市"
       yomi "とちぎけんなすしおばらし"
@@ -3714,7 +3714,7 @@ FactoryGirl.define do
       short_yomi "なすしおばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0921400 do
+    factory :jmaxml_forecast_region_0921400 do
       code "0921400"
       name "栃木県さくら市"
       yomi "とちぎけんさくらし"
@@ -3722,7 +3722,7 @@ FactoryGirl.define do
       short_yomi "さくらし"
     end
 
-    factory :rss_weather_xml_forecast_region_0921500 do
+    factory :jmaxml_forecast_region_0921500 do
       code "0921500"
       name "栃木県那須烏山市"
       yomi "とちぎけんなすからすやまし"
@@ -3730,7 +3730,7 @@ FactoryGirl.define do
       short_yomi "なすからすやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_0921600 do
+    factory :jmaxml_forecast_region_0921600 do
       code "0921600"
       name "栃木県下野市"
       yomi "とちぎけんしもつけし"
@@ -3738,7 +3738,7 @@ FactoryGirl.define do
       short_yomi "しもつけし"
     end
 
-    factory :rss_weather_xml_forecast_region_0930100 do
+    factory :jmaxml_forecast_region_0930100 do
       code "0930100"
       name "栃木県上三川町"
       yomi "とちぎけんかみのかわまち"
@@ -3746,7 +3746,7 @@ FactoryGirl.define do
       short_yomi "かみのかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0934200 do
+    factory :jmaxml_forecast_region_0934200 do
       code "0934200"
       name "栃木県益子町"
       yomi "とちぎけんましこまち"
@@ -3754,7 +3754,7 @@ FactoryGirl.define do
       short_yomi "ましこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0934300 do
+    factory :jmaxml_forecast_region_0934300 do
       code "0934300"
       name "栃木県茂木町"
       yomi "とちぎけんもてぎまち"
@@ -3762,7 +3762,7 @@ FactoryGirl.define do
       short_yomi "もてぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0934400 do
+    factory :jmaxml_forecast_region_0934400 do
       code "0934400"
       name "栃木県市貝町"
       yomi "とちぎけんいちかいまち"
@@ -3770,7 +3770,7 @@ FactoryGirl.define do
       short_yomi "いちかいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0934500 do
+    factory :jmaxml_forecast_region_0934500 do
       code "0934500"
       name "栃木県芳賀町"
       yomi "とちぎけんはがまち"
@@ -3778,7 +3778,7 @@ FactoryGirl.define do
       short_yomi "はがまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0936100 do
+    factory :jmaxml_forecast_region_0936100 do
       code "0936100"
       name "栃木県壬生町"
       yomi "とちぎけんみぶまち"
@@ -3786,7 +3786,7 @@ FactoryGirl.define do
       short_yomi "みぶまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0936400 do
+    factory :jmaxml_forecast_region_0936400 do
       code "0936400"
       name "栃木県野木町"
       yomi "とちぎけんのぎまち"
@@ -3794,7 +3794,7 @@ FactoryGirl.define do
       short_yomi "のぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0938400 do
+    factory :jmaxml_forecast_region_0938400 do
       code "0938400"
       name "栃木県塩谷町"
       yomi "とちぎけんしおやまち"
@@ -3802,7 +3802,7 @@ FactoryGirl.define do
       short_yomi "しおやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0938600 do
+    factory :jmaxml_forecast_region_0938600 do
       code "0938600"
       name "栃木県高根沢町"
       yomi "とちぎけんたかねざわまち"
@@ -3810,7 +3810,7 @@ FactoryGirl.define do
       short_yomi "たかねざわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0940700 do
+    factory :jmaxml_forecast_region_0940700 do
       code "0940700"
       name "栃木県那須町"
       yomi "とちぎけんなすまち"
@@ -3818,7 +3818,7 @@ FactoryGirl.define do
       short_yomi "なすまち"
     end
 
-    factory :rss_weather_xml_forecast_region_0941100 do
+    factory :jmaxml_forecast_region_0941100 do
       code "0941100"
       name "栃木県那珂川町"
       yomi "とちぎけんなかがわまち"
@@ -3826,7 +3826,7 @@ FactoryGirl.define do
       short_yomi "なかがわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1020100 do
+    factory :jmaxml_forecast_region_1020100 do
       code "1020100"
       name "群馬県前橋市"
       yomi "ぐんまけんまえばしし"
@@ -3834,7 +3834,7 @@ FactoryGirl.define do
       short_yomi "まえばしし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020200 do
+    factory :jmaxml_forecast_region_1020200 do
       code "1020200"
       name "群馬県高崎市"
       yomi "ぐんまけんたかさきし"
@@ -3842,7 +3842,7 @@ FactoryGirl.define do
       short_yomi "たかさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020300 do
+    factory :jmaxml_forecast_region_1020300 do
       code "1020300"
       name "群馬県桐生市"
       yomi "ぐんまけんきりゅうし"
@@ -3850,7 +3850,7 @@ FactoryGirl.define do
       short_yomi "きりゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020400 do
+    factory :jmaxml_forecast_region_1020400 do
       code "1020400"
       name "群馬県伊勢崎市"
       yomi "ぐんまけんいせさきし"
@@ -3858,7 +3858,7 @@ FactoryGirl.define do
       short_yomi "いせさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020500 do
+    factory :jmaxml_forecast_region_1020500 do
       code "1020500"
       name "群馬県太田市"
       yomi "ぐんまけんおおたし"
@@ -3866,7 +3866,7 @@ FactoryGirl.define do
       short_yomi "おおたし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020600 do
+    factory :jmaxml_forecast_region_1020600 do
       code "1020600"
       name "群馬県沼田市"
       yomi "ぐんまけんぬまたし"
@@ -3874,7 +3874,7 @@ FactoryGirl.define do
       short_yomi "ぬまたし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020700 do
+    factory :jmaxml_forecast_region_1020700 do
       code "1020700"
       name "群馬県館林市"
       yomi "ぐんまけんたてばやしし"
@@ -3882,7 +3882,7 @@ FactoryGirl.define do
       short_yomi "たてばやしし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020800 do
+    factory :jmaxml_forecast_region_1020800 do
       code "1020800"
       name "群馬県渋川市"
       yomi "ぐんまけんしぶかわし"
@@ -3890,7 +3890,7 @@ FactoryGirl.define do
       short_yomi "しぶかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1020900 do
+    factory :jmaxml_forecast_region_1020900 do
       code "1020900"
       name "群馬県藤岡市"
       yomi "ぐんまけんふじおかし"
@@ -3898,7 +3898,7 @@ FactoryGirl.define do
       short_yomi "ふじおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1021000 do
+    factory :jmaxml_forecast_region_1021000 do
       code "1021000"
       name "群馬県富岡市"
       yomi "ぐんまけんとみおかし"
@@ -3906,7 +3906,7 @@ FactoryGirl.define do
       short_yomi "とみおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1021100 do
+    factory :jmaxml_forecast_region_1021100 do
       code "1021100"
       name "群馬県安中市"
       yomi "ぐんまけんあんなかし"
@@ -3914,7 +3914,7 @@ FactoryGirl.define do
       short_yomi "あんなかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1021200 do
+    factory :jmaxml_forecast_region_1021200 do
       code "1021200"
       name "群馬県みどり市"
       yomi "ぐんまけんみどりし"
@@ -3922,7 +3922,7 @@ FactoryGirl.define do
       short_yomi "みどりし"
     end
 
-    factory :rss_weather_xml_forecast_region_1034400 do
+    factory :jmaxml_forecast_region_1034400 do
       code "1034400"
       name "群馬県榛東村"
       yomi "ぐんまけんしんとうむら"
@@ -3930,7 +3930,7 @@ FactoryGirl.define do
       short_yomi "しんとうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1034500 do
+    factory :jmaxml_forecast_region_1034500 do
       code "1034500"
       name "群馬県吉岡町"
       yomi "ぐんまけんよしおかまち"
@@ -3938,7 +3938,7 @@ FactoryGirl.define do
       short_yomi "よしおかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1036600 do
+    factory :jmaxml_forecast_region_1036600 do
       code "1036600"
       name "群馬県上野村"
       yomi "ぐんまけんうえのむら"
@@ -3946,7 +3946,7 @@ FactoryGirl.define do
       short_yomi "うえのむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1036700 do
+    factory :jmaxml_forecast_region_1036700 do
       code "1036700"
       name "群馬県神流町"
       yomi "ぐんまけんかんなまち"
@@ -3954,7 +3954,7 @@ FactoryGirl.define do
       short_yomi "かんなまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1038200 do
+    factory :jmaxml_forecast_region_1038200 do
       code "1038200"
       name "群馬県下仁田町"
       yomi "ぐんまけんしもにたまち"
@@ -3962,7 +3962,7 @@ FactoryGirl.define do
       short_yomi "しもにたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1038300 do
+    factory :jmaxml_forecast_region_1038300 do
       code "1038300"
       name "群馬県南牧村"
       yomi "ぐんまけんなんもくむら"
@@ -3970,7 +3970,7 @@ FactoryGirl.define do
       short_yomi "なんもくむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1038400 do
+    factory :jmaxml_forecast_region_1038400 do
       code "1038400"
       name "群馬県甘楽町"
       yomi "ぐんまけんかんらまち"
@@ -3978,7 +3978,7 @@ FactoryGirl.define do
       short_yomi "かんらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1042100 do
+    factory :jmaxml_forecast_region_1042100 do
       code "1042100"
       name "群馬県中之条町"
       yomi "ぐんまけんなかのじょうまち"
@@ -3986,7 +3986,7 @@ FactoryGirl.define do
       short_yomi "なかのじょうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1042400 do
+    factory :jmaxml_forecast_region_1042400 do
       code "1042400"
       name "群馬県長野原町"
       yomi "ぐんまけんながのはらまち"
@@ -3994,7 +3994,7 @@ FactoryGirl.define do
       short_yomi "ながのはらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1042500 do
+    factory :jmaxml_forecast_region_1042500 do
       code "1042500"
       name "群馬県嬬恋村"
       yomi "ぐんまけんつまごいむら"
@@ -4002,7 +4002,7 @@ FactoryGirl.define do
       short_yomi "つまごいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1042600 do
+    factory :jmaxml_forecast_region_1042600 do
       code "1042600"
       name "群馬県草津町"
       yomi "ぐんまけんくさつまち"
@@ -4010,7 +4010,7 @@ FactoryGirl.define do
       short_yomi "くさつまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1042800 do
+    factory :jmaxml_forecast_region_1042800 do
       code "1042800"
       name "群馬県高山村"
       yomi "ぐんまけんたかやまむら"
@@ -4018,7 +4018,7 @@ FactoryGirl.define do
       short_yomi "たかやまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1042900 do
+    factory :jmaxml_forecast_region_1042900 do
       code "1042900"
       name "群馬県東吾妻町"
       yomi "ぐんまけんひがしあがつままち"
@@ -4026,7 +4026,7 @@ FactoryGirl.define do
       short_yomi "ひがしあがつままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1044300 do
+    factory :jmaxml_forecast_region_1044300 do
       code "1044300"
       name "群馬県片品村"
       yomi "ぐんまけんかたしなむら"
@@ -4034,7 +4034,7 @@ FactoryGirl.define do
       short_yomi "かたしなむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1044400 do
+    factory :jmaxml_forecast_region_1044400 do
       code "1044400"
       name "群馬県川場村"
       yomi "ぐんまけんかわばむら"
@@ -4042,7 +4042,7 @@ FactoryGirl.define do
       short_yomi "かわばむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1044800 do
+    factory :jmaxml_forecast_region_1044800 do
       code "1044800"
       name "群馬県昭和村"
       yomi "ぐんまけんしょうわむら"
@@ -4050,7 +4050,7 @@ FactoryGirl.define do
       short_yomi "しょうわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1044900 do
+    factory :jmaxml_forecast_region_1044900 do
       code "1044900"
       name "群馬県みなかみ町"
       yomi "ぐんまけんみなかみまち"
@@ -4058,7 +4058,7 @@ FactoryGirl.define do
       short_yomi "みなかみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1046400 do
+    factory :jmaxml_forecast_region_1046400 do
       code "1046400"
       name "群馬県玉村町"
       yomi "ぐんまけんたまむらまち"
@@ -4066,7 +4066,7 @@ FactoryGirl.define do
       short_yomi "たまむらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1052100 do
+    factory :jmaxml_forecast_region_1052100 do
       code "1052100"
       name "群馬県板倉町"
       yomi "ぐんまけんいたくらまち"
@@ -4074,7 +4074,7 @@ FactoryGirl.define do
       short_yomi "いたくらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1052200 do
+    factory :jmaxml_forecast_region_1052200 do
       code "1052200"
       name "群馬県明和町"
       yomi "ぐんまけんめいわまち"
@@ -4082,7 +4082,7 @@ FactoryGirl.define do
       short_yomi "めいわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1052300 do
+    factory :jmaxml_forecast_region_1052300 do
       code "1052300"
       name "群馬県千代田町"
       yomi "ぐんまけんちよだまち"
@@ -4090,7 +4090,7 @@ FactoryGirl.define do
       short_yomi "ちよだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1052400 do
+    factory :jmaxml_forecast_region_1052400 do
       code "1052400"
       name "群馬県大泉町"
       yomi "ぐんまけんおおいずみまち"
@@ -4098,7 +4098,7 @@ FactoryGirl.define do
       short_yomi "おおいずみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1052500 do
+    factory :jmaxml_forecast_region_1052500 do
       code "1052500"
       name "群馬県邑楽町"
       yomi "ぐんまけんおうらまち"
@@ -4106,7 +4106,7 @@ FactoryGirl.define do
       short_yomi "おうらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1110000 do
+    factory :jmaxml_forecast_region_1110000 do
       code "1110000"
       name "埼玉県さいたま市"
       yomi "さいたまけんさいたまし"
@@ -4114,7 +4114,7 @@ FactoryGirl.define do
       short_yomi "さいたまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1120100 do
+    factory :jmaxml_forecast_region_1120100 do
       code "1120100"
       name "埼玉県川越市"
       yomi "さいたまけんかわごえし"
@@ -4122,7 +4122,7 @@ FactoryGirl.define do
       short_yomi "かわごえし"
     end
 
-    factory :rss_weather_xml_forecast_region_1120200 do
+    factory :jmaxml_forecast_region_1120200 do
       code "1120200"
       name "埼玉県熊谷市"
       yomi "さいたまけんくまがやし"
@@ -4130,7 +4130,7 @@ FactoryGirl.define do
       short_yomi "くまがやし"
     end
 
-    factory :rss_weather_xml_forecast_region_1120300 do
+    factory :jmaxml_forecast_region_1120300 do
       code "1120300"
       name "埼玉県川口市"
       yomi "さいたまけんかわぐちし"
@@ -4138,7 +4138,7 @@ FactoryGirl.define do
       short_yomi "かわぐちし"
     end
 
-    factory :rss_weather_xml_forecast_region_1120600 do
+    factory :jmaxml_forecast_region_1120600 do
       code "1120600"
       name "埼玉県行田市"
       yomi "さいたまけんぎょうだし"
@@ -4146,7 +4146,7 @@ FactoryGirl.define do
       short_yomi "ぎょうだし"
     end
 
-    factory :rss_weather_xml_forecast_region_1120700 do
+    factory :jmaxml_forecast_region_1120700 do
       code "1120700"
       name "埼玉県秩父市"
       yomi "さいたまけんちちぶし"
@@ -4154,7 +4154,7 @@ FactoryGirl.define do
       short_yomi "ちちぶし"
     end
 
-    factory :rss_weather_xml_forecast_region_1120800 do
+    factory :jmaxml_forecast_region_1120800 do
       code "1120800"
       name "埼玉県所沢市"
       yomi "さいたまけんところざわし"
@@ -4162,7 +4162,7 @@ FactoryGirl.define do
       short_yomi "ところざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1120900 do
+    factory :jmaxml_forecast_region_1120900 do
       code "1120900"
       name "埼玉県飯能市"
       yomi "さいたまけんはんのうし"
@@ -4170,7 +4170,7 @@ FactoryGirl.define do
       short_yomi "はんのうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121000 do
+    factory :jmaxml_forecast_region_1121000 do
       code "1121000"
       name "埼玉県加須市"
       yomi "さいたまけんかぞし"
@@ -4178,7 +4178,7 @@ FactoryGirl.define do
       short_yomi "かぞし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121100 do
+    factory :jmaxml_forecast_region_1121100 do
       code "1121100"
       name "埼玉県本庄市"
       yomi "さいたまけんほんじょうし"
@@ -4186,7 +4186,7 @@ FactoryGirl.define do
       short_yomi "ほんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121200 do
+    factory :jmaxml_forecast_region_1121200 do
       code "1121200"
       name "埼玉県東松山市"
       yomi "さいたまけんひがしまつやまし"
@@ -4194,7 +4194,7 @@ FactoryGirl.define do
       short_yomi "ひがしまつやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121400 do
+    factory :jmaxml_forecast_region_1121400 do
       code "1121400"
       name "埼玉県春日部市"
       yomi "さいたまけんかすかべし"
@@ -4202,7 +4202,7 @@ FactoryGirl.define do
       short_yomi "かすかべし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121500 do
+    factory :jmaxml_forecast_region_1121500 do
       code "1121500"
       name "埼玉県狭山市"
       yomi "さいたまけんさやまし"
@@ -4210,7 +4210,7 @@ FactoryGirl.define do
       short_yomi "さやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121600 do
+    factory :jmaxml_forecast_region_1121600 do
       code "1121600"
       name "埼玉県羽生市"
       yomi "さいたまけんはにゅうし"
@@ -4218,7 +4218,7 @@ FactoryGirl.define do
       short_yomi "はにゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121700 do
+    factory :jmaxml_forecast_region_1121700 do
       code "1121700"
       name "埼玉県鴻巣市"
       yomi "さいたまけんこうのすし"
@@ -4226,7 +4226,7 @@ FactoryGirl.define do
       short_yomi "こうのすし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121800 do
+    factory :jmaxml_forecast_region_1121800 do
       code "1121800"
       name "埼玉県深谷市"
       yomi "さいたまけんふかやし"
@@ -4234,7 +4234,7 @@ FactoryGirl.define do
       short_yomi "ふかやし"
     end
 
-    factory :rss_weather_xml_forecast_region_1121900 do
+    factory :jmaxml_forecast_region_1121900 do
       code "1121900"
       name "埼玉県上尾市"
       yomi "さいたまけんあげおし"
@@ -4242,7 +4242,7 @@ FactoryGirl.define do
       short_yomi "あげおし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122100 do
+    factory :jmaxml_forecast_region_1122100 do
       code "1122100"
       name "埼玉県草加市"
       yomi "さいたまけんそうかし"
@@ -4250,7 +4250,7 @@ FactoryGirl.define do
       short_yomi "そうかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122200 do
+    factory :jmaxml_forecast_region_1122200 do
       code "1122200"
       name "埼玉県越谷市"
       yomi "さいたまけんこしがやし"
@@ -4258,7 +4258,7 @@ FactoryGirl.define do
       short_yomi "こしがやし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122300 do
+    factory :jmaxml_forecast_region_1122300 do
       code "1122300"
       name "埼玉県蕨市"
       yomi "さいたまけんわらびし"
@@ -4266,7 +4266,7 @@ FactoryGirl.define do
       short_yomi "わらびし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122400 do
+    factory :jmaxml_forecast_region_1122400 do
       code "1122400"
       name "埼玉県戸田市"
       yomi "さいたまけんとだし"
@@ -4274,7 +4274,7 @@ FactoryGirl.define do
       short_yomi "とだし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122500 do
+    factory :jmaxml_forecast_region_1122500 do
       code "1122500"
       name "埼玉県入間市"
       yomi "さいたまけんいるまし"
@@ -4282,7 +4282,7 @@ FactoryGirl.define do
       short_yomi "いるまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122700 do
+    factory :jmaxml_forecast_region_1122700 do
       code "1122700"
       name "埼玉県朝霞市"
       yomi "さいたまけんあさかし"
@@ -4290,7 +4290,7 @@ FactoryGirl.define do
       short_yomi "あさかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122800 do
+    factory :jmaxml_forecast_region_1122800 do
       code "1122800"
       name "埼玉県志木市"
       yomi "さいたまけんしきし"
@@ -4298,7 +4298,7 @@ FactoryGirl.define do
       short_yomi "しきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1122900 do
+    factory :jmaxml_forecast_region_1122900 do
       code "1122900"
       name "埼玉県和光市"
       yomi "さいたまけんわこうし"
@@ -4306,7 +4306,7 @@ FactoryGirl.define do
       short_yomi "わこうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123000 do
+    factory :jmaxml_forecast_region_1123000 do
       code "1123000"
       name "埼玉県新座市"
       yomi "さいたまけんにいざし"
@@ -4314,7 +4314,7 @@ FactoryGirl.define do
       short_yomi "にいざし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123100 do
+    factory :jmaxml_forecast_region_1123100 do
       code "1123100"
       name "埼玉県桶川市"
       yomi "さいたまけんおけがわし"
@@ -4322,7 +4322,7 @@ FactoryGirl.define do
       short_yomi "おけがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123200 do
+    factory :jmaxml_forecast_region_1123200 do
       code "1123200"
       name "埼玉県久喜市"
       yomi "さいたまけんくきし"
@@ -4330,7 +4330,7 @@ FactoryGirl.define do
       short_yomi "くきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123300 do
+    factory :jmaxml_forecast_region_1123300 do
       code "1123300"
       name "埼玉県北本市"
       yomi "さいたまけんきたもとし"
@@ -4338,7 +4338,7 @@ FactoryGirl.define do
       short_yomi "きたもとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123400 do
+    factory :jmaxml_forecast_region_1123400 do
       code "1123400"
       name "埼玉県八潮市"
       yomi "さいたまけんやしおし"
@@ -4346,7 +4346,7 @@ FactoryGirl.define do
       short_yomi "やしおし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123500 do
+    factory :jmaxml_forecast_region_1123500 do
       code "1123500"
       name "埼玉県富士見市"
       yomi "さいたまけんふじみし"
@@ -4354,7 +4354,7 @@ FactoryGirl.define do
       short_yomi "ふじみし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123700 do
+    factory :jmaxml_forecast_region_1123700 do
       code "1123700"
       name "埼玉県三郷市"
       yomi "さいたまけんみさとし"
@@ -4362,7 +4362,7 @@ FactoryGirl.define do
       short_yomi "みさとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123800 do
+    factory :jmaxml_forecast_region_1123800 do
       code "1123800"
       name "埼玉県蓮田市"
       yomi "さいたまけんはすだし"
@@ -4370,7 +4370,7 @@ FactoryGirl.define do
       short_yomi "はすだし"
     end
 
-    factory :rss_weather_xml_forecast_region_1123900 do
+    factory :jmaxml_forecast_region_1123900 do
       code "1123900"
       name "埼玉県坂戸市"
       yomi "さいたまけんさかどし"
@@ -4378,7 +4378,7 @@ FactoryGirl.define do
       short_yomi "さかどし"
     end
 
-    factory :rss_weather_xml_forecast_region_1124000 do
+    factory :jmaxml_forecast_region_1124000 do
       code "1124000"
       name "埼玉県幸手市"
       yomi "さいたまけんさってし"
@@ -4386,7 +4386,7 @@ FactoryGirl.define do
       short_yomi "さってし"
     end
 
-    factory :rss_weather_xml_forecast_region_1124100 do
+    factory :jmaxml_forecast_region_1124100 do
       code "1124100"
       name "埼玉県鶴ヶ島市"
       yomi "さいたまけんつるがしまし"
@@ -4394,7 +4394,7 @@ FactoryGirl.define do
       short_yomi "つるがしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1124200 do
+    factory :jmaxml_forecast_region_1124200 do
       code "1124200"
       name "埼玉県日高市"
       yomi "さいたまけんひだかし"
@@ -4402,7 +4402,7 @@ FactoryGirl.define do
       short_yomi "ひだかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1124300 do
+    factory :jmaxml_forecast_region_1124300 do
       code "1124300"
       name "埼玉県吉川市"
       yomi "さいたまけんよしかわし"
@@ -4410,7 +4410,7 @@ FactoryGirl.define do
       short_yomi "よしかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1124500 do
+    factory :jmaxml_forecast_region_1124500 do
       code "1124500"
       name "埼玉県ふじみ野市"
       yomi "さいたまけんふじみのし"
@@ -4418,7 +4418,7 @@ FactoryGirl.define do
       short_yomi "ふじみのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1124600 do
+    factory :jmaxml_forecast_region_1124600 do
       code "1124600"
       name "埼玉県白岡市"
       yomi "さいたまけんしらおかし"
@@ -4426,7 +4426,7 @@ FactoryGirl.define do
       short_yomi "しらおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1130100 do
+    factory :jmaxml_forecast_region_1130100 do
       code "1130100"
       name "埼玉県伊奈町"
       yomi "さいたまけんいなまち"
@@ -4434,7 +4434,7 @@ FactoryGirl.define do
       short_yomi "いなまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1132400 do
+    factory :jmaxml_forecast_region_1132400 do
       code "1132400"
       name "埼玉県三芳町"
       yomi "さいたまけんみよしまち"
@@ -4442,7 +4442,7 @@ FactoryGirl.define do
       short_yomi "みよしまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1132600 do
+    factory :jmaxml_forecast_region_1132600 do
       code "1132600"
       name "埼玉県毛呂山町"
       yomi "さいたまけんもろやままち"
@@ -4450,7 +4450,7 @@ FactoryGirl.define do
       short_yomi "もろやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1132700 do
+    factory :jmaxml_forecast_region_1132700 do
       code "1132700"
       name "埼玉県越生町"
       yomi "さいたまけんおごせまち"
@@ -4458,7 +4458,7 @@ FactoryGirl.define do
       short_yomi "おごせまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1134100 do
+    factory :jmaxml_forecast_region_1134100 do
       code "1134100"
       name "埼玉県滑川町"
       yomi "さいたまけんなめがわまち"
@@ -4466,7 +4466,7 @@ FactoryGirl.define do
       short_yomi "なめがわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1134200 do
+    factory :jmaxml_forecast_region_1134200 do
       code "1134200"
       name "埼玉県嵐山町"
       yomi "さいたまけんらんざんまち"
@@ -4474,7 +4474,7 @@ FactoryGirl.define do
       short_yomi "らんざんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1134300 do
+    factory :jmaxml_forecast_region_1134300 do
       code "1134300"
       name "埼玉県小川町"
       yomi "さいたまけんおがわまち"
@@ -4482,7 +4482,7 @@ FactoryGirl.define do
       short_yomi "おがわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1134600 do
+    factory :jmaxml_forecast_region_1134600 do
       code "1134600"
       name "埼玉県川島町"
       yomi "さいたまけんかわじままち"
@@ -4490,7 +4490,7 @@ FactoryGirl.define do
       short_yomi "かわじままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1134700 do
+    factory :jmaxml_forecast_region_1134700 do
       code "1134700"
       name "埼玉県吉見町"
       yomi "さいたまけんよしみまち"
@@ -4498,7 +4498,7 @@ FactoryGirl.define do
       short_yomi "よしみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1134800 do
+    factory :jmaxml_forecast_region_1134800 do
       code "1134800"
       name "埼玉県鳩山町"
       yomi "さいたまけんはとやままち"
@@ -4506,7 +4506,7 @@ FactoryGirl.define do
       short_yomi "はとやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1134900 do
+    factory :jmaxml_forecast_region_1134900 do
       code "1134900"
       name "埼玉県ときがわ町"
       yomi "さいたまけんときがわまち"
@@ -4514,7 +4514,7 @@ FactoryGirl.define do
       short_yomi "ときがわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1136100 do
+    factory :jmaxml_forecast_region_1136100 do
       code "1136100"
       name "埼玉県横瀬町"
       yomi "さいたまけんよこぜまち"
@@ -4522,7 +4522,7 @@ FactoryGirl.define do
       short_yomi "よこぜまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1136200 do
+    factory :jmaxml_forecast_region_1136200 do
       code "1136200"
       name "埼玉県皆野町"
       yomi "さいたまけんみなのまち"
@@ -4530,7 +4530,7 @@ FactoryGirl.define do
       short_yomi "みなのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1136300 do
+    factory :jmaxml_forecast_region_1136300 do
       code "1136300"
       name "埼玉県長瀞町"
       yomi "さいたまけんながとろまち"
@@ -4538,7 +4538,7 @@ FactoryGirl.define do
       short_yomi "ながとろまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1136500 do
+    factory :jmaxml_forecast_region_1136500 do
       code "1136500"
       name "埼玉県小鹿野町"
       yomi "さいたまけんおがのまち"
@@ -4546,7 +4546,7 @@ FactoryGirl.define do
       short_yomi "おがのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1136900 do
+    factory :jmaxml_forecast_region_1136900 do
       code "1136900"
       name "埼玉県東秩父村"
       yomi "さいたまけんひがしちちぶむら"
@@ -4554,7 +4554,7 @@ FactoryGirl.define do
       short_yomi "ひがしちちぶむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1138100 do
+    factory :jmaxml_forecast_region_1138100 do
       code "1138100"
       name "埼玉県美里町"
       yomi "さいたまけんみさとまち"
@@ -4562,7 +4562,7 @@ FactoryGirl.define do
       short_yomi "みさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1138300 do
+    factory :jmaxml_forecast_region_1138300 do
       code "1138300"
       name "埼玉県神川町"
       yomi "さいたまけんかみかわまち"
@@ -4570,7 +4570,7 @@ FactoryGirl.define do
       short_yomi "かみかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1138500 do
+    factory :jmaxml_forecast_region_1138500 do
       code "1138500"
       name "埼玉県上里町"
       yomi "さいたまけんかみさとまち"
@@ -4578,7 +4578,7 @@ FactoryGirl.define do
       short_yomi "かみさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1140800 do
+    factory :jmaxml_forecast_region_1140800 do
       code "1140800"
       name "埼玉県寄居町"
       yomi "さいたまけんよりいまち"
@@ -4586,7 +4586,7 @@ FactoryGirl.define do
       short_yomi "よりいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1144200 do
+    factory :jmaxml_forecast_region_1144200 do
       code "1144200"
       name "埼玉県宮代町"
       yomi "さいたまけんみやしろまち"
@@ -4594,7 +4594,7 @@ FactoryGirl.define do
       short_yomi "みやしろまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1146400 do
+    factory :jmaxml_forecast_region_1146400 do
       code "1146400"
       name "埼玉県杉戸町"
       yomi "さいたまけんすぎとまち"
@@ -4602,7 +4602,7 @@ FactoryGirl.define do
       short_yomi "すぎとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1146500 do
+    factory :jmaxml_forecast_region_1146500 do
       code "1146500"
       name "埼玉県松伏町"
       yomi "さいたまけんまつぶしまち"
@@ -4610,7 +4610,7 @@ FactoryGirl.define do
       short_yomi "まつぶしまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1210000 do
+    factory :jmaxml_forecast_region_1210000 do
       code "1210000"
       name "千葉県千葉市"
       yomi "ちばけんちばし"
@@ -4618,7 +4618,7 @@ FactoryGirl.define do
       short_yomi "ちばし"
     end
 
-    factory :rss_weather_xml_forecast_region_1220200 do
+    factory :jmaxml_forecast_region_1220200 do
       code "1220200"
       name "千葉県銚子市"
       yomi "ちばけんちょうしし"
@@ -4626,7 +4626,7 @@ FactoryGirl.define do
       short_yomi "ちょうしし"
     end
 
-    factory :rss_weather_xml_forecast_region_1220300 do
+    factory :jmaxml_forecast_region_1220300 do
       code "1220300"
       name "千葉県市川市"
       yomi "ちばけんいちかわし"
@@ -4634,7 +4634,7 @@ FactoryGirl.define do
       short_yomi "いちかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1220400 do
+    factory :jmaxml_forecast_region_1220400 do
       code "1220400"
       name "千葉県船橋市"
       yomi "ちばけんふなばしし"
@@ -4642,7 +4642,7 @@ FactoryGirl.define do
       short_yomi "ふなばしし"
     end
 
-    factory :rss_weather_xml_forecast_region_1220500 do
+    factory :jmaxml_forecast_region_1220500 do
       code "1220500"
       name "千葉県館山市"
       yomi "ちばけんたてやまし"
@@ -4650,7 +4650,7 @@ FactoryGirl.define do
       short_yomi "たてやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1220600 do
+    factory :jmaxml_forecast_region_1220600 do
       code "1220600"
       name "千葉県木更津市"
       yomi "ちばけんきさらづし"
@@ -4658,7 +4658,7 @@ FactoryGirl.define do
       short_yomi "きさらづし"
     end
 
-    factory :rss_weather_xml_forecast_region_1220700 do
+    factory :jmaxml_forecast_region_1220700 do
       code "1220700"
       name "千葉県松戸市"
       yomi "ちばけんまつどし"
@@ -4666,7 +4666,7 @@ FactoryGirl.define do
       short_yomi "まつどし"
     end
 
-    factory :rss_weather_xml_forecast_region_1220800 do
+    factory :jmaxml_forecast_region_1220800 do
       code "1220800"
       name "千葉県野田市"
       yomi "ちばけんのだし"
@@ -4674,7 +4674,7 @@ FactoryGirl.define do
       short_yomi "のだし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221000 do
+    factory :jmaxml_forecast_region_1221000 do
       code "1221000"
       name "千葉県茂原市"
       yomi "ちばけんもばらし"
@@ -4682,7 +4682,7 @@ FactoryGirl.define do
       short_yomi "もばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221100 do
+    factory :jmaxml_forecast_region_1221100 do
       code "1221100"
       name "千葉県成田市"
       yomi "ちばけんなりたし"
@@ -4690,7 +4690,7 @@ FactoryGirl.define do
       short_yomi "なりたし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221200 do
+    factory :jmaxml_forecast_region_1221200 do
       code "1221200"
       name "千葉県佐倉市"
       yomi "ちばけんさくらし"
@@ -4698,7 +4698,7 @@ FactoryGirl.define do
       short_yomi "さくらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221300 do
+    factory :jmaxml_forecast_region_1221300 do
       code "1221300"
       name "千葉県東金市"
       yomi "ちばけんとうがねし"
@@ -4706,7 +4706,7 @@ FactoryGirl.define do
       short_yomi "とうがねし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221500 do
+    factory :jmaxml_forecast_region_1221500 do
       code "1221500"
       name "千葉県旭市"
       yomi "ちばけんあさひし"
@@ -4714,7 +4714,7 @@ FactoryGirl.define do
       short_yomi "あさひし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221600 do
+    factory :jmaxml_forecast_region_1221600 do
       code "1221600"
       name "千葉県習志野市"
       yomi "ちばけんならしのし"
@@ -4722,7 +4722,7 @@ FactoryGirl.define do
       short_yomi "ならしのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221700 do
+    factory :jmaxml_forecast_region_1221700 do
       code "1221700"
       name "千葉県柏市"
       yomi "ちばけんかしわし"
@@ -4730,7 +4730,7 @@ FactoryGirl.define do
       short_yomi "かしわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221800 do
+    factory :jmaxml_forecast_region_1221800 do
       code "1221800"
       name "千葉県勝浦市"
       yomi "ちばけんかつうらし"
@@ -4738,7 +4738,7 @@ FactoryGirl.define do
       short_yomi "かつうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1221900 do
+    factory :jmaxml_forecast_region_1221900 do
       code "1221900"
       name "千葉県市原市"
       yomi "ちばけんいちはらし"
@@ -4746,7 +4746,7 @@ FactoryGirl.define do
       short_yomi "いちはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222000 do
+    factory :jmaxml_forecast_region_1222000 do
       code "1222000"
       name "千葉県流山市"
       yomi "ちばけんながれやまし"
@@ -4754,7 +4754,7 @@ FactoryGirl.define do
       short_yomi "ながれやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222100 do
+    factory :jmaxml_forecast_region_1222100 do
       code "1222100"
       name "千葉県八千代市"
       yomi "ちばけんやちよし"
@@ -4762,7 +4762,7 @@ FactoryGirl.define do
       short_yomi "やちよし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222200 do
+    factory :jmaxml_forecast_region_1222200 do
       code "1222200"
       name "千葉県我孫子市"
       yomi "ちばけんあびこし"
@@ -4770,7 +4770,7 @@ FactoryGirl.define do
       short_yomi "あびこし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222300 do
+    factory :jmaxml_forecast_region_1222300 do
       code "1222300"
       name "千葉県鴨川市"
       yomi "ちばけんかもがわし"
@@ -4778,7 +4778,7 @@ FactoryGirl.define do
       short_yomi "かもがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222400 do
+    factory :jmaxml_forecast_region_1222400 do
       code "1222400"
       name "千葉県鎌ケ谷市"
       yomi "ちばけんかまがやし"
@@ -4786,7 +4786,7 @@ FactoryGirl.define do
       short_yomi "かまがやし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222500 do
+    factory :jmaxml_forecast_region_1222500 do
       code "1222500"
       name "千葉県君津市"
       yomi "ちばけんきみつし"
@@ -4794,7 +4794,7 @@ FactoryGirl.define do
       short_yomi "きみつし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222600 do
+    factory :jmaxml_forecast_region_1222600 do
       code "1222600"
       name "千葉県富津市"
       yomi "ちばけんふっつし"
@@ -4802,7 +4802,7 @@ FactoryGirl.define do
       short_yomi "ふっつし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222700 do
+    factory :jmaxml_forecast_region_1222700 do
       code "1222700"
       name "千葉県浦安市"
       yomi "ちばけんうらやすし"
@@ -4810,7 +4810,7 @@ FactoryGirl.define do
       short_yomi "うらやすし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222800 do
+    factory :jmaxml_forecast_region_1222800 do
       code "1222800"
       name "千葉県四街道市"
       yomi "ちばけんよつかいどうし"
@@ -4818,7 +4818,7 @@ FactoryGirl.define do
       short_yomi "よつかいどうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1222900 do
+    factory :jmaxml_forecast_region_1222900 do
       code "1222900"
       name "千葉県袖ケ浦市"
       yomi "ちばけんそでがうらし"
@@ -4826,7 +4826,7 @@ FactoryGirl.define do
       short_yomi "そでがうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223000 do
+    factory :jmaxml_forecast_region_1223000 do
       code "1223000"
       name "千葉県八街市"
       yomi "ちばけんやちまたし"
@@ -4834,7 +4834,7 @@ FactoryGirl.define do
       short_yomi "やちまたし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223100 do
+    factory :jmaxml_forecast_region_1223100 do
       code "1223100"
       name "千葉県印西市"
       yomi "ちばけんいんざいし"
@@ -4842,7 +4842,7 @@ FactoryGirl.define do
       short_yomi "いんざいし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223200 do
+    factory :jmaxml_forecast_region_1223200 do
       code "1223200"
       name "千葉県白井市"
       yomi "ちばけんしろいし"
@@ -4850,7 +4850,7 @@ FactoryGirl.define do
       short_yomi "しろいし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223300 do
+    factory :jmaxml_forecast_region_1223300 do
       code "1223300"
       name "千葉県富里市"
       yomi "ちばけんとみさとし"
@@ -4858,7 +4858,7 @@ FactoryGirl.define do
       short_yomi "とみさとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223400 do
+    factory :jmaxml_forecast_region_1223400 do
       code "1223400"
       name "千葉県南房総市"
       yomi "ちばけんみなみぼうそうし"
@@ -4866,7 +4866,7 @@ FactoryGirl.define do
       short_yomi "みなみぼうそうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223500 do
+    factory :jmaxml_forecast_region_1223500 do
       code "1223500"
       name "千葉県匝瑳市"
       yomi "ちばけんそうさし"
@@ -4874,7 +4874,7 @@ FactoryGirl.define do
       short_yomi "そうさし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223600 do
+    factory :jmaxml_forecast_region_1223600 do
       code "1223600"
       name "千葉県香取市"
       yomi "ちばけんかとりし"
@@ -4882,7 +4882,7 @@ FactoryGirl.define do
       short_yomi "かとりし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223700 do
+    factory :jmaxml_forecast_region_1223700 do
       code "1223700"
       name "千葉県山武市"
       yomi "ちばけんさんむし"
@@ -4890,7 +4890,7 @@ FactoryGirl.define do
       short_yomi "さんむし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223800 do
+    factory :jmaxml_forecast_region_1223800 do
       code "1223800"
       name "千葉県いすみ市"
       yomi "ちばけんいすみし"
@@ -4898,7 +4898,7 @@ FactoryGirl.define do
       short_yomi "いすみし"
     end
 
-    factory :rss_weather_xml_forecast_region_1223900 do
+    factory :jmaxml_forecast_region_1223900 do
       code "1223900"
       name "千葉県大網白里市"
       yomi "ちばけんおおあみしらさとし"
@@ -4906,7 +4906,7 @@ FactoryGirl.define do
       short_yomi "おおあみしらさとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1232200 do
+    factory :jmaxml_forecast_region_1232200 do
       code "1232200"
       name "千葉県酒々井町"
       yomi "ちばけんしすいまち"
@@ -4914,7 +4914,7 @@ FactoryGirl.define do
       short_yomi "しすいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1232900 do
+    factory :jmaxml_forecast_region_1232900 do
       code "1232900"
       name "千葉県栄町"
       yomi "ちばけんさかえまち"
@@ -4922,7 +4922,7 @@ FactoryGirl.define do
       short_yomi "さかえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1234200 do
+    factory :jmaxml_forecast_region_1234200 do
       code "1234200"
       name "千葉県神崎町"
       yomi "ちばけんこうざきまち"
@@ -4930,7 +4930,7 @@ FactoryGirl.define do
       short_yomi "こうざきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1234700 do
+    factory :jmaxml_forecast_region_1234700 do
       code "1234700"
       name "千葉県多古町"
       yomi "ちばけんたこまち"
@@ -4938,7 +4938,7 @@ FactoryGirl.define do
       short_yomi "たこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1234900 do
+    factory :jmaxml_forecast_region_1234900 do
       code "1234900"
       name "千葉県東庄町"
       yomi "ちばけんとうのしょうまち"
@@ -4946,7 +4946,7 @@ FactoryGirl.define do
       short_yomi "とうのしょうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1240300 do
+    factory :jmaxml_forecast_region_1240300 do
       code "1240300"
       name "千葉県九十九里町"
       yomi "ちばけんくじゅうくりまち"
@@ -4954,7 +4954,7 @@ FactoryGirl.define do
       short_yomi "くじゅうくりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1240900 do
+    factory :jmaxml_forecast_region_1240900 do
       code "1240900"
       name "千葉県芝山町"
       yomi "ちばけんしばやままち"
@@ -4962,7 +4962,7 @@ FactoryGirl.define do
       short_yomi "しばやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1241000 do
+    factory :jmaxml_forecast_region_1241000 do
       code "1241000"
       name "千葉県横芝光町"
       yomi "ちばけんよこしばひかりまち"
@@ -4970,7 +4970,7 @@ FactoryGirl.define do
       short_yomi "よこしばひかりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1242100 do
+    factory :jmaxml_forecast_region_1242100 do
       code "1242100"
       name "千葉県一宮町"
       yomi "ちばけんいちのみやまち"
@@ -4978,7 +4978,7 @@ FactoryGirl.define do
       short_yomi "いちのみやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1242200 do
+    factory :jmaxml_forecast_region_1242200 do
       code "1242200"
       name "千葉県睦沢町"
       yomi "ちばけんむつざわまち"
@@ -4986,7 +4986,7 @@ FactoryGirl.define do
       short_yomi "むつざわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1242300 do
+    factory :jmaxml_forecast_region_1242300 do
       code "1242300"
       name "千葉県長生村"
       yomi "ちばけんちょうせいむら"
@@ -4994,7 +4994,7 @@ FactoryGirl.define do
       short_yomi "ちょうせいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1242400 do
+    factory :jmaxml_forecast_region_1242400 do
       code "1242400"
       name "千葉県白子町"
       yomi "ちばけんしらこまち"
@@ -5002,7 +5002,7 @@ FactoryGirl.define do
       short_yomi "しらこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1242600 do
+    factory :jmaxml_forecast_region_1242600 do
       code "1242600"
       name "千葉県長柄町"
       yomi "ちばけんながらまち"
@@ -5010,7 +5010,7 @@ FactoryGirl.define do
       short_yomi "ながらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1242700 do
+    factory :jmaxml_forecast_region_1242700 do
       code "1242700"
       name "千葉県長南町"
       yomi "ちばけんちょうなんまち"
@@ -5018,7 +5018,7 @@ FactoryGirl.define do
       short_yomi "ちょうなんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1244100 do
+    factory :jmaxml_forecast_region_1244100 do
       code "1244100"
       name "千葉県大多喜町"
       yomi "ちばけんおおたきまち"
@@ -5026,7 +5026,7 @@ FactoryGirl.define do
       short_yomi "おおたきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1244300 do
+    factory :jmaxml_forecast_region_1244300 do
       code "1244300"
       name "千葉県御宿町"
       yomi "ちばけんおんじゅくまち"
@@ -5034,7 +5034,7 @@ FactoryGirl.define do
       short_yomi "おんじゅくまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1246300 do
+    factory :jmaxml_forecast_region_1246300 do
       code "1246300"
       name "千葉県鋸南町"
       yomi "ちばけんきょなんまち"
@@ -5042,7 +5042,7 @@ FactoryGirl.define do
       short_yomi "きょなんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1310100 do
+    factory :jmaxml_forecast_region_1310100 do
       code "1310100"
       name "東京都千代田区"
       yomi "とうきょうとちよだく"
@@ -5050,7 +5050,7 @@ FactoryGirl.define do
       short_yomi "ちよだく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310200 do
+    factory :jmaxml_forecast_region_1310200 do
       code "1310200"
       name "東京都中央区"
       yomi "とうきょうとちゅうおうく"
@@ -5058,7 +5058,7 @@ FactoryGirl.define do
       short_yomi "ちゅうおうく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310300 do
+    factory :jmaxml_forecast_region_1310300 do
       code "1310300"
       name "東京都港区"
       yomi "とうきょうとみなとく"
@@ -5066,7 +5066,7 @@ FactoryGirl.define do
       short_yomi "みなとく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310400 do
+    factory :jmaxml_forecast_region_1310400 do
       code "1310400"
       name "東京都新宿区"
       yomi "とうきょうとしんじゅくく"
@@ -5074,7 +5074,7 @@ FactoryGirl.define do
       short_yomi "しんじゅくく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310500 do
+    factory :jmaxml_forecast_region_1310500 do
       code "1310500"
       name "東京都文京区"
       yomi "とうきょうとぶんきょうく"
@@ -5082,7 +5082,7 @@ FactoryGirl.define do
       short_yomi "ぶんきょうく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310600 do
+    factory :jmaxml_forecast_region_1310600 do
       code "1310600"
       name "東京都台東区"
       yomi "とうきょうとたいとうく"
@@ -5090,7 +5090,7 @@ FactoryGirl.define do
       short_yomi "たいとうく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310700 do
+    factory :jmaxml_forecast_region_1310700 do
       code "1310700"
       name "東京都墨田区"
       yomi "とうきょうとすみだく"
@@ -5098,7 +5098,7 @@ FactoryGirl.define do
       short_yomi "すみだく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310800 do
+    factory :jmaxml_forecast_region_1310800 do
       code "1310800"
       name "東京都江東区"
       yomi "とうきょうとこうとうく"
@@ -5106,7 +5106,7 @@ FactoryGirl.define do
       short_yomi "こうとうく"
     end
 
-    factory :rss_weather_xml_forecast_region_1310900 do
+    factory :jmaxml_forecast_region_1310900 do
       code "1310900"
       name "東京都品川区"
       yomi "とうきょうとしながわく"
@@ -5114,7 +5114,7 @@ FactoryGirl.define do
       short_yomi "しながわく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311000 do
+    factory :jmaxml_forecast_region_1311000 do
       code "1311000"
       name "東京都目黒区"
       yomi "とうきょうとめぐろく"
@@ -5122,7 +5122,7 @@ FactoryGirl.define do
       short_yomi "めぐろく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311100 do
+    factory :jmaxml_forecast_region_1311100 do
       code "1311100"
       name "東京都大田区"
       yomi "とうきょうとおおたく"
@@ -5130,7 +5130,7 @@ FactoryGirl.define do
       short_yomi "おおたく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311200 do
+    factory :jmaxml_forecast_region_1311200 do
       code "1311200"
       name "東京都世田谷区"
       yomi "とうきょうとせたがやく"
@@ -5138,7 +5138,7 @@ FactoryGirl.define do
       short_yomi "せたがやく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311300 do
+    factory :jmaxml_forecast_region_1311300 do
       code "1311300"
       name "東京都渋谷区"
       yomi "とうきょうとしぶやく"
@@ -5146,7 +5146,7 @@ FactoryGirl.define do
       short_yomi "しぶやく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311400 do
+    factory :jmaxml_forecast_region_1311400 do
       code "1311400"
       name "東京都中野区"
       yomi "とうきょうとなかのく"
@@ -5154,7 +5154,7 @@ FactoryGirl.define do
       short_yomi "なかのく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311500 do
+    factory :jmaxml_forecast_region_1311500 do
       code "1311500"
       name "東京都杉並区"
       yomi "とうきょうとすぎなみく"
@@ -5162,7 +5162,7 @@ FactoryGirl.define do
       short_yomi "すぎなみく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311600 do
+    factory :jmaxml_forecast_region_1311600 do
       code "1311600"
       name "東京都豊島区"
       yomi "とうきょうととしまく"
@@ -5170,7 +5170,7 @@ FactoryGirl.define do
       short_yomi "としまく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311700 do
+    factory :jmaxml_forecast_region_1311700 do
       code "1311700"
       name "東京都北区"
       yomi "とうきょうときたく"
@@ -5178,7 +5178,7 @@ FactoryGirl.define do
       short_yomi "きたく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311800 do
+    factory :jmaxml_forecast_region_1311800 do
       code "1311800"
       name "東京都荒川区"
       yomi "とうきょうとあらかわく"
@@ -5186,7 +5186,7 @@ FactoryGirl.define do
       short_yomi "あらかわく"
     end
 
-    factory :rss_weather_xml_forecast_region_1311900 do
+    factory :jmaxml_forecast_region_1311900 do
       code "1311900"
       name "東京都板橋区"
       yomi "とうきょうといたばしく"
@@ -5194,7 +5194,7 @@ FactoryGirl.define do
       short_yomi "いたばしく"
     end
 
-    factory :rss_weather_xml_forecast_region_1312000 do
+    factory :jmaxml_forecast_region_1312000 do
       code "1312000"
       name "東京都練馬区"
       yomi "とうきょうとねりまく"
@@ -5202,7 +5202,7 @@ FactoryGirl.define do
       short_yomi "ねりまく"
     end
 
-    factory :rss_weather_xml_forecast_region_1312100 do
+    factory :jmaxml_forecast_region_1312100 do
       code "1312100"
       name "東京都足立区"
       yomi "とうきょうとあだちく"
@@ -5210,7 +5210,7 @@ FactoryGirl.define do
       short_yomi "あだちく"
     end
 
-    factory :rss_weather_xml_forecast_region_1312200 do
+    factory :jmaxml_forecast_region_1312200 do
       code "1312200"
       name "東京都葛飾区"
       yomi "とうきょうとかつしかく"
@@ -5218,7 +5218,7 @@ FactoryGirl.define do
       short_yomi "かつしかく"
     end
 
-    factory :rss_weather_xml_forecast_region_1312300 do
+    factory :jmaxml_forecast_region_1312300 do
       code "1312300"
       name "東京都江戸川区"
       yomi "とうきょうとえどがわく"
@@ -5226,7 +5226,7 @@ FactoryGirl.define do
       short_yomi "えどがわく"
     end
 
-    factory :rss_weather_xml_forecast_region_1320100 do
+    factory :jmaxml_forecast_region_1320100 do
       code "1320100"
       name "東京都八王子市"
       yomi "とうきょうとはちおうじし"
@@ -5234,7 +5234,7 @@ FactoryGirl.define do
       short_yomi "はちおうじし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320200 do
+    factory :jmaxml_forecast_region_1320200 do
       code "1320200"
       name "東京都立川市"
       yomi "とうきょうとたちかわし"
@@ -5242,7 +5242,7 @@ FactoryGirl.define do
       short_yomi "たちかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320300 do
+    factory :jmaxml_forecast_region_1320300 do
       code "1320300"
       name "東京都武蔵野市"
       yomi "とうきょうとむさしのし"
@@ -5250,7 +5250,7 @@ FactoryGirl.define do
       short_yomi "むさしのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320400 do
+    factory :jmaxml_forecast_region_1320400 do
       code "1320400"
       name "東京都三鷹市"
       yomi "とうきょうとみたかし"
@@ -5258,7 +5258,7 @@ FactoryGirl.define do
       short_yomi "みたかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320500 do
+    factory :jmaxml_forecast_region_1320500 do
       code "1320500"
       name "東京都青梅市"
       yomi "とうきょうとおうめし"
@@ -5266,7 +5266,7 @@ FactoryGirl.define do
       short_yomi "おうめし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320600 do
+    factory :jmaxml_forecast_region_1320600 do
       code "1320600"
       name "東京都府中市"
       yomi "とうきょうとふちゅうし"
@@ -5274,7 +5274,7 @@ FactoryGirl.define do
       short_yomi "ふちゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320700 do
+    factory :jmaxml_forecast_region_1320700 do
       code "1320700"
       name "東京都昭島市"
       yomi "とうきょうとあきしまし"
@@ -5282,7 +5282,7 @@ FactoryGirl.define do
       short_yomi "あきしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320800 do
+    factory :jmaxml_forecast_region_1320800 do
       code "1320800"
       name "東京都調布市"
       yomi "とうきょうとちょうふし"
@@ -5290,7 +5290,7 @@ FactoryGirl.define do
       short_yomi "ちょうふし"
     end
 
-    factory :rss_weather_xml_forecast_region_1320900 do
+    factory :jmaxml_forecast_region_1320900 do
       code "1320900"
       name "東京都町田市"
       yomi "とうきょうとまちだし"
@@ -5298,7 +5298,7 @@ FactoryGirl.define do
       short_yomi "まちだし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321000 do
+    factory :jmaxml_forecast_region_1321000 do
       code "1321000"
       name "東京都小金井市"
       yomi "とうきょうとこがねいし"
@@ -5306,7 +5306,7 @@ FactoryGirl.define do
       short_yomi "こがねいし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321100 do
+    factory :jmaxml_forecast_region_1321100 do
       code "1321100"
       name "東京都小平市"
       yomi "とうきょうとこだいらし"
@@ -5314,7 +5314,7 @@ FactoryGirl.define do
       short_yomi "こだいらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321200 do
+    factory :jmaxml_forecast_region_1321200 do
       code "1321200"
       name "東京都日野市"
       yomi "とうきょうとひのし"
@@ -5322,7 +5322,7 @@ FactoryGirl.define do
       short_yomi "ひのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321300 do
+    factory :jmaxml_forecast_region_1321300 do
       code "1321300"
       name "東京都東村山市"
       yomi "とうきょうとひがしむらやまし"
@@ -5330,7 +5330,7 @@ FactoryGirl.define do
       short_yomi "ひがしむらやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321400 do
+    factory :jmaxml_forecast_region_1321400 do
       code "1321400"
       name "東京都国分寺市"
       yomi "とうきょうとこくぶんじし"
@@ -5338,7 +5338,7 @@ FactoryGirl.define do
       short_yomi "こくぶんじし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321500 do
+    factory :jmaxml_forecast_region_1321500 do
       code "1321500"
       name "東京都国立市"
       yomi "とうきょうとくにたちし"
@@ -5346,7 +5346,7 @@ FactoryGirl.define do
       short_yomi "くにたちし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321800 do
+    factory :jmaxml_forecast_region_1321800 do
       code "1321800"
       name "東京都福生市"
       yomi "とうきょうとふっさし"
@@ -5354,7 +5354,7 @@ FactoryGirl.define do
       short_yomi "ふっさし"
     end
 
-    factory :rss_weather_xml_forecast_region_1321900 do
+    factory :jmaxml_forecast_region_1321900 do
       code "1321900"
       name "東京都狛江市"
       yomi "とうきょうとこまえし"
@@ -5362,7 +5362,7 @@ FactoryGirl.define do
       short_yomi "こまえし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322000 do
+    factory :jmaxml_forecast_region_1322000 do
       code "1322000"
       name "東京都東大和市"
       yomi "とうきょうとひがしやまとし"
@@ -5370,7 +5370,7 @@ FactoryGirl.define do
       short_yomi "ひがしやまとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322100 do
+    factory :jmaxml_forecast_region_1322100 do
       code "1322100"
       name "東京都清瀬市"
       yomi "とうきょうときよせし"
@@ -5378,7 +5378,7 @@ FactoryGirl.define do
       short_yomi "きよせし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322200 do
+    factory :jmaxml_forecast_region_1322200 do
       code "1322200"
       name "東京都東久留米市"
       yomi "とうきょうとひがしくるめし"
@@ -5386,7 +5386,7 @@ FactoryGirl.define do
       short_yomi "ひがしくるめし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322300 do
+    factory :jmaxml_forecast_region_1322300 do
       code "1322300"
       name "東京都武蔵村山市"
       yomi "とうきょうとむさしむらやまし"
@@ -5394,7 +5394,7 @@ FactoryGirl.define do
       short_yomi "むさしむらやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322400 do
+    factory :jmaxml_forecast_region_1322400 do
       code "1322400"
       name "東京都多摩市"
       yomi "とうきょうとたまし"
@@ -5402,7 +5402,7 @@ FactoryGirl.define do
       short_yomi "たまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322500 do
+    factory :jmaxml_forecast_region_1322500 do
       code "1322500"
       name "東京都稲城市"
       yomi "とうきょうといなぎし"
@@ -5410,7 +5410,7 @@ FactoryGirl.define do
       short_yomi "いなぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322700 do
+    factory :jmaxml_forecast_region_1322700 do
       code "1322700"
       name "東京都羽村市"
       yomi "とうきょうとはむらし"
@@ -5418,7 +5418,7 @@ FactoryGirl.define do
       short_yomi "はむらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322800 do
+    factory :jmaxml_forecast_region_1322800 do
       code "1322800"
       name "東京都あきる野市"
       yomi "とうきょうとあきるのし"
@@ -5426,7 +5426,7 @@ FactoryGirl.define do
       short_yomi "あきるのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1322900 do
+    factory :jmaxml_forecast_region_1322900 do
       code "1322900"
       name "東京都西東京市"
       yomi "とうきょうとにしとうきょうし"
@@ -5434,7 +5434,7 @@ FactoryGirl.define do
       short_yomi "にしとうきょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1330300 do
+    factory :jmaxml_forecast_region_1330300 do
       code "1330300"
       name "東京都瑞穂町"
       yomi "とうきょうとみずほまち"
@@ -5442,7 +5442,7 @@ FactoryGirl.define do
       short_yomi "みずほまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1330500 do
+    factory :jmaxml_forecast_region_1330500 do
       code "1330500"
       name "東京都日の出町"
       yomi "とうきょうとひのでまち"
@@ -5450,7 +5450,7 @@ FactoryGirl.define do
       short_yomi "ひのでまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1330700 do
+    factory :jmaxml_forecast_region_1330700 do
       code "1330700"
       name "東京都檜原村"
       yomi "とうきょうとひのはらむら"
@@ -5458,7 +5458,7 @@ FactoryGirl.define do
       short_yomi "ひのはらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1330800 do
+    factory :jmaxml_forecast_region_1330800 do
       code "1330800"
       name "東京都奥多摩町"
       yomi "とうきょうとおくたままち"
@@ -5466,7 +5466,7 @@ FactoryGirl.define do
       short_yomi "おくたままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1336100 do
+    factory :jmaxml_forecast_region_1336100 do
       code "1336100"
       name "東京都大島町"
       yomi "とうきょうとおおしままち"
@@ -5474,7 +5474,7 @@ FactoryGirl.define do
       short_yomi "おおしままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1336200 do
+    factory :jmaxml_forecast_region_1336200 do
       code "1336200"
       name "東京都利島村"
       yomi "とうきょうととしまむら"
@@ -5482,7 +5482,7 @@ FactoryGirl.define do
       short_yomi "としまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1336300 do
+    factory :jmaxml_forecast_region_1336300 do
       code "1336300"
       name "東京都新島村"
       yomi "とうきょうとにいじまむら"
@@ -5490,7 +5490,7 @@ FactoryGirl.define do
       short_yomi "にいじまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1336400 do
+    factory :jmaxml_forecast_region_1336400 do
       code "1336400"
       name "東京都神津島村"
       yomi "とうきょうとこうづしまむら"
@@ -5498,7 +5498,7 @@ FactoryGirl.define do
       short_yomi "こうづしまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1338100 do
+    factory :jmaxml_forecast_region_1338100 do
       code "1338100"
       name "東京都三宅村"
       yomi "とうきょうとみやけむら"
@@ -5506,7 +5506,7 @@ FactoryGirl.define do
       short_yomi "みやけむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1338200 do
+    factory :jmaxml_forecast_region_1338200 do
       code "1338200"
       name "東京都御蔵島村"
       yomi "とうきょうとみくらじまむら"
@@ -5514,7 +5514,7 @@ FactoryGirl.define do
       short_yomi "みくらじまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1340000 do
+    factory :jmaxml_forecast_region_1340000 do
       code "1340000"
       name "東京都のうち八丈支庁管内"
       yomi "とうきょうとはちじょうしちょう"
@@ -5522,7 +5522,7 @@ FactoryGirl.define do
       short_yomi "0"
     end
 
-    factory :rss_weather_xml_forecast_region_1340100 do
+    factory :jmaxml_forecast_region_1340100 do
       code "1340100"
       name "東京都八丈町"
       yomi "とうきょうとはちじょうまち"
@@ -5530,7 +5530,7 @@ FactoryGirl.define do
       short_yomi "はちじょうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1340200 do
+    factory :jmaxml_forecast_region_1340200 do
       code "1340200"
       name "東京都青ヶ島村"
       yomi "とうきょうとあおがしまむら"
@@ -5538,7 +5538,7 @@ FactoryGirl.define do
       short_yomi "あおがしまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1342100 do
+    factory :jmaxml_forecast_region_1342100 do
       code "1342100"
       name "東京都小笠原村"
       yomi "とうきょうとおがさわらむら"
@@ -5546,7 +5546,7 @@ FactoryGirl.define do
       short_yomi "おがさわらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1410000 do
+    factory :jmaxml_forecast_region_1410000 do
       code "1410000"
       name "神奈川県横浜市"
       yomi "かながわけんよこはまし"
@@ -5554,7 +5554,7 @@ FactoryGirl.define do
       short_yomi "よこはまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1413000 do
+    factory :jmaxml_forecast_region_1413000 do
       code "1413000"
       name "神奈川県川崎市"
       yomi "かながわけんかわさきし"
@@ -5562,7 +5562,7 @@ FactoryGirl.define do
       short_yomi "かわさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1415000 do
+    factory :jmaxml_forecast_region_1415000 do
       code "1415000"
       name "神奈川県相模原市"
       yomi "かながわけんさがみはらし"
@@ -5570,7 +5570,7 @@ FactoryGirl.define do
       short_yomi "さがみはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1420100 do
+    factory :jmaxml_forecast_region_1420100 do
       code "1420100"
       name "神奈川県横須賀市"
       yomi "かながわけんよこすかし"
@@ -5578,7 +5578,7 @@ FactoryGirl.define do
       short_yomi "よこすかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1420300 do
+    factory :jmaxml_forecast_region_1420300 do
       code "1420300"
       name "神奈川県平塚市"
       yomi "かながわけんひらつかし"
@@ -5586,7 +5586,7 @@ FactoryGirl.define do
       short_yomi "ひらつかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1420400 do
+    factory :jmaxml_forecast_region_1420400 do
       code "1420400"
       name "神奈川県鎌倉市"
       yomi "かながわけんかまくらし"
@@ -5594,7 +5594,7 @@ FactoryGirl.define do
       short_yomi "かまくらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1420500 do
+    factory :jmaxml_forecast_region_1420500 do
       code "1420500"
       name "神奈川県藤沢市"
       yomi "かながわけんふじさわし"
@@ -5602,7 +5602,7 @@ FactoryGirl.define do
       short_yomi "ふじさわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1420600 do
+    factory :jmaxml_forecast_region_1420600 do
       code "1420600"
       name "神奈川県小田原市"
       yomi "かながわけんおだわらし"
@@ -5610,7 +5610,7 @@ FactoryGirl.define do
       short_yomi "おだわらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1420700 do
+    factory :jmaxml_forecast_region_1420700 do
       code "1420700"
       name "神奈川県茅ヶ崎市"
       yomi "かながわけんちがさきし"
@@ -5618,7 +5618,7 @@ FactoryGirl.define do
       short_yomi "ちがさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1420800 do
+    factory :jmaxml_forecast_region_1420800 do
       code "1420800"
       name "神奈川県逗子市"
       yomi "かながわけんずしし"
@@ -5626,7 +5626,7 @@ FactoryGirl.define do
       short_yomi "ずしし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421000 do
+    factory :jmaxml_forecast_region_1421000 do
       code "1421000"
       name "神奈川県三浦市"
       yomi "かながわけんみうらし"
@@ -5634,7 +5634,7 @@ FactoryGirl.define do
       short_yomi "みうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421100 do
+    factory :jmaxml_forecast_region_1421100 do
       code "1421100"
       name "神奈川県秦野市"
       yomi "かながわけんはだのし"
@@ -5642,7 +5642,7 @@ FactoryGirl.define do
       short_yomi "はだのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421200 do
+    factory :jmaxml_forecast_region_1421200 do
       code "1421200"
       name "神奈川県厚木市"
       yomi "かながわけんあつぎし"
@@ -5650,7 +5650,7 @@ FactoryGirl.define do
       short_yomi "あつぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421300 do
+    factory :jmaxml_forecast_region_1421300 do
       code "1421300"
       name "神奈川県大和市"
       yomi "かながわけんやまとし"
@@ -5658,7 +5658,7 @@ FactoryGirl.define do
       short_yomi "やまとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421400 do
+    factory :jmaxml_forecast_region_1421400 do
       code "1421400"
       name "神奈川県伊勢原市"
       yomi "かながわけんいせはらし"
@@ -5666,7 +5666,7 @@ FactoryGirl.define do
       short_yomi "いせはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421500 do
+    factory :jmaxml_forecast_region_1421500 do
       code "1421500"
       name "神奈川県海老名市"
       yomi "かながわけんえびなし"
@@ -5674,7 +5674,7 @@ FactoryGirl.define do
       short_yomi "えびなし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421600 do
+    factory :jmaxml_forecast_region_1421600 do
       code "1421600"
       name "神奈川県座間市"
       yomi "かながわけんざまし"
@@ -5682,7 +5682,7 @@ FactoryGirl.define do
       short_yomi "ざまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421700 do
+    factory :jmaxml_forecast_region_1421700 do
       code "1421700"
       name "神奈川県南足柄市"
       yomi "かながわけんみなみあしがらし"
@@ -5690,7 +5690,7 @@ FactoryGirl.define do
       short_yomi "みなみあしがらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1421800 do
+    factory :jmaxml_forecast_region_1421800 do
       code "1421800"
       name "神奈川県綾瀬市"
       yomi "かながわけんあやせし"
@@ -5698,7 +5698,7 @@ FactoryGirl.define do
       short_yomi "あやせし"
     end
 
-    factory :rss_weather_xml_forecast_region_1430100 do
+    factory :jmaxml_forecast_region_1430100 do
       code "1430100"
       name "神奈川県葉山町"
       yomi "かながわけんはやままち"
@@ -5706,7 +5706,7 @@ FactoryGirl.define do
       short_yomi "はやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1432100 do
+    factory :jmaxml_forecast_region_1432100 do
       code "1432100"
       name "神奈川県寒川町"
       yomi "かながわけんさむかわまち"
@@ -5714,7 +5714,7 @@ FactoryGirl.define do
       short_yomi "さむかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1434100 do
+    factory :jmaxml_forecast_region_1434100 do
       code "1434100"
       name "神奈川県大磯町"
       yomi "かながわけんおおいそまち"
@@ -5722,7 +5722,7 @@ FactoryGirl.define do
       short_yomi "おおいそまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1434200 do
+    factory :jmaxml_forecast_region_1434200 do
       code "1434200"
       name "神奈川県二宮町"
       yomi "かながわけんにのみやまち"
@@ -5730,7 +5730,7 @@ FactoryGirl.define do
       short_yomi "にのみやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1436100 do
+    factory :jmaxml_forecast_region_1436100 do
       code "1436100"
       name "神奈川県中井町"
       yomi "かながわけんなかいまち"
@@ -5738,7 +5738,7 @@ FactoryGirl.define do
       short_yomi "なかいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1436200 do
+    factory :jmaxml_forecast_region_1436200 do
       code "1436200"
       name "神奈川県大井町"
       yomi "かながわけんおおいまち"
@@ -5746,7 +5746,7 @@ FactoryGirl.define do
       short_yomi "おおいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1436300 do
+    factory :jmaxml_forecast_region_1436300 do
       code "1436300"
       name "神奈川県松田町"
       yomi "かながわけんまつだまち"
@@ -5754,7 +5754,7 @@ FactoryGirl.define do
       short_yomi "まつだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1436400 do
+    factory :jmaxml_forecast_region_1436400 do
       code "1436400"
       name "神奈川県山北町"
       yomi "かながわけんやまきたまち"
@@ -5762,7 +5762,7 @@ FactoryGirl.define do
       short_yomi "やまきたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1436600 do
+    factory :jmaxml_forecast_region_1436600 do
       code "1436600"
       name "神奈川県開成町"
       yomi "かながわけんかいせいまち"
@@ -5770,7 +5770,7 @@ FactoryGirl.define do
       short_yomi "かいせいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1438200 do
+    factory :jmaxml_forecast_region_1438200 do
       code "1438200"
       name "神奈川県箱根町"
       yomi "かながわけんはこねまち"
@@ -5778,7 +5778,7 @@ FactoryGirl.define do
       short_yomi "はこねまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1438300 do
+    factory :jmaxml_forecast_region_1438300 do
       code "1438300"
       name "神奈川県真鶴町"
       yomi "かながわけんまなづるまち"
@@ -5786,7 +5786,7 @@ FactoryGirl.define do
       short_yomi "まなづるまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1438400 do
+    factory :jmaxml_forecast_region_1438400 do
       code "1438400"
       name "神奈川県湯河原町"
       yomi "かながわけんゆがわらまち"
@@ -5794,7 +5794,7 @@ FactoryGirl.define do
       short_yomi "ゆがわらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1440100 do
+    factory :jmaxml_forecast_region_1440100 do
       code "1440100"
       name "神奈川県愛川町"
       yomi "かながわけんあいかわまち"
@@ -5802,7 +5802,7 @@ FactoryGirl.define do
       short_yomi "あいかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1440200 do
+    factory :jmaxml_forecast_region_1440200 do
       code "1440200"
       name "神奈川県清川村"
       yomi "かながわけんきよかわむら"
@@ -5810,7 +5810,7 @@ FactoryGirl.define do
       short_yomi "きよかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1510000 do
+    factory :jmaxml_forecast_region_1510000 do
       code "1510000"
       name "新潟県新潟市"
       yomi "にいがたけんにいがたし"
@@ -5818,7 +5818,7 @@ FactoryGirl.define do
       short_yomi "にいがたし"
     end
 
-    factory :rss_weather_xml_forecast_region_1520200 do
+    factory :jmaxml_forecast_region_1520200 do
       code "1520200"
       name "新潟県長岡市"
       yomi "にいがたけんながおかし"
@@ -5826,7 +5826,7 @@ FactoryGirl.define do
       short_yomi "ながおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1520400 do
+    factory :jmaxml_forecast_region_1520400 do
       code "1520400"
       name "新潟県三条市"
       yomi "にいがたけんさんじょうし"
@@ -5834,7 +5834,7 @@ FactoryGirl.define do
       short_yomi "さんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1520500 do
+    factory :jmaxml_forecast_region_1520500 do
       code "1520500"
       name "新潟県柏崎市"
       yomi "にいがたけんかしわざきし"
@@ -5842,7 +5842,7 @@ FactoryGirl.define do
       short_yomi "かしわざきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1520600 do
+    factory :jmaxml_forecast_region_1520600 do
       code "1520600"
       name "新潟県新発田市"
       yomi "にいがたけんしばたし"
@@ -5850,7 +5850,7 @@ FactoryGirl.define do
       short_yomi "しばたし"
     end
 
-    factory :rss_weather_xml_forecast_region_1520800 do
+    factory :jmaxml_forecast_region_1520800 do
       code "1520800"
       name "新潟県小千谷市"
       yomi "にいがたけんおぢやし"
@@ -5858,7 +5858,7 @@ FactoryGirl.define do
       short_yomi "おぢやし"
     end
 
-    factory :rss_weather_xml_forecast_region_1520900 do
+    factory :jmaxml_forecast_region_1520900 do
       code "1520900"
       name "新潟県加茂市"
       yomi "にいがたけんかもし"
@@ -5866,7 +5866,7 @@ FactoryGirl.define do
       short_yomi "かもし"
     end
 
-    factory :rss_weather_xml_forecast_region_1521000 do
+    factory :jmaxml_forecast_region_1521000 do
       code "1521000"
       name "新潟県十日町市"
       yomi "にいがたけんとおかまちし"
@@ -5874,7 +5874,7 @@ FactoryGirl.define do
       short_yomi "とおかまちし"
     end
 
-    factory :rss_weather_xml_forecast_region_1521100 do
+    factory :jmaxml_forecast_region_1521100 do
       code "1521100"
       name "新潟県見附市"
       yomi "にいがたけんみつけし"
@@ -5882,7 +5882,7 @@ FactoryGirl.define do
       short_yomi "みつけし"
     end
 
-    factory :rss_weather_xml_forecast_region_1521200 do
+    factory :jmaxml_forecast_region_1521200 do
       code "1521200"
       name "新潟県村上市"
       yomi "にいがたけんむらかみし"
@@ -5890,7 +5890,7 @@ FactoryGirl.define do
       short_yomi "むらかみし"
     end
 
-    factory :rss_weather_xml_forecast_region_1521300 do
+    factory :jmaxml_forecast_region_1521300 do
       code "1521300"
       name "新潟県燕市"
       yomi "にいがたけんつばめし"
@@ -5898,7 +5898,7 @@ FactoryGirl.define do
       short_yomi "つばめし"
     end
 
-    factory :rss_weather_xml_forecast_region_1521600 do
+    factory :jmaxml_forecast_region_1521600 do
       code "1521600"
       name "新潟県糸魚川市"
       yomi "にいがたけんいといがわし"
@@ -5906,7 +5906,7 @@ FactoryGirl.define do
       short_yomi "いといがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1521700 do
+    factory :jmaxml_forecast_region_1521700 do
       code "1521700"
       name "新潟県妙高市"
       yomi "にいがたけんみょうこうし"
@@ -5914,7 +5914,7 @@ FactoryGirl.define do
       short_yomi "みょうこうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1521800 do
+    factory :jmaxml_forecast_region_1521800 do
       code "1521800"
       name "新潟県五泉市"
       yomi "にいがたけんごせんし"
@@ -5922,7 +5922,7 @@ FactoryGirl.define do
       short_yomi "ごせんし"
     end
 
-    factory :rss_weather_xml_forecast_region_1522200 do
+    factory :jmaxml_forecast_region_1522200 do
       code "1522200"
       name "新潟県上越市"
       yomi "にいがたけんじょうえつし"
@@ -5930,7 +5930,7 @@ FactoryGirl.define do
       short_yomi "じょうえつし"
     end
 
-    factory :rss_weather_xml_forecast_region_1522300 do
+    factory :jmaxml_forecast_region_1522300 do
       code "1522300"
       name "新潟県阿賀野市"
       yomi "にいがたけんあがのし"
@@ -5938,7 +5938,7 @@ FactoryGirl.define do
       short_yomi "あがのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1522400 do
+    factory :jmaxml_forecast_region_1522400 do
       code "1522400"
       name "新潟県佐渡市"
       yomi "にいがたけんさどし"
@@ -5946,7 +5946,7 @@ FactoryGirl.define do
       short_yomi "さどし"
     end
 
-    factory :rss_weather_xml_forecast_region_1522500 do
+    factory :jmaxml_forecast_region_1522500 do
       code "1522500"
       name "新潟県魚沼市"
       yomi "にいがたけんうおぬまし"
@@ -5954,7 +5954,7 @@ FactoryGirl.define do
       short_yomi "うおぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1522600 do
+    factory :jmaxml_forecast_region_1522600 do
       code "1522600"
       name "新潟県南魚沼市"
       yomi "にいがたけんみなみうおぬまし"
@@ -5962,7 +5962,7 @@ FactoryGirl.define do
       short_yomi "みなみうおぬまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1522700 do
+    factory :jmaxml_forecast_region_1522700 do
       code "1522700"
       name "新潟県胎内市"
       yomi "にいがたけんたいないし"
@@ -5970,7 +5970,7 @@ FactoryGirl.define do
       short_yomi "たいないし"
     end
 
-    factory :rss_weather_xml_forecast_region_1530700 do
+    factory :jmaxml_forecast_region_1530700 do
       code "1530700"
       name "新潟県聖籠町"
       yomi "にいがたけんせいろうまち"
@@ -5978,7 +5978,7 @@ FactoryGirl.define do
       short_yomi "せいろうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1534200 do
+    factory :jmaxml_forecast_region_1534200 do
       code "1534200"
       name "新潟県弥彦村"
       yomi "にいがたけんやひこむら"
@@ -5986,7 +5986,7 @@ FactoryGirl.define do
       short_yomi "やひこむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1536100 do
+    factory :jmaxml_forecast_region_1536100 do
       code "1536100"
       name "新潟県田上町"
       yomi "にいがたけんたがみまち"
@@ -5994,7 +5994,7 @@ FactoryGirl.define do
       short_yomi "たがみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1538500 do
+    factory :jmaxml_forecast_region_1538500 do
       code "1538500"
       name "新潟県阿賀町"
       yomi "にいがたけんあがまち"
@@ -6002,7 +6002,7 @@ FactoryGirl.define do
       short_yomi "あがまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1540500 do
+    factory :jmaxml_forecast_region_1540500 do
       code "1540500"
       name "新潟県出雲崎町"
       yomi "にいがたけんいずもざきまち"
@@ -6010,7 +6010,7 @@ FactoryGirl.define do
       short_yomi "いずもざきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1546100 do
+    factory :jmaxml_forecast_region_1546100 do
       code "1546100"
       name "新潟県湯沢町"
       yomi "にいがたけんゆざわまち"
@@ -6018,7 +6018,7 @@ FactoryGirl.define do
       short_yomi "ゆざわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1548200 do
+    factory :jmaxml_forecast_region_1548200 do
       code "1548200"
       name "新潟県津南町"
       yomi "にいがたけんつなんまち"
@@ -6026,7 +6026,7 @@ FactoryGirl.define do
       short_yomi "つなんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1550400 do
+    factory :jmaxml_forecast_region_1550400 do
       code "1550400"
       name "新潟県刈羽村"
       yomi "にいがたけんかりわむら"
@@ -6034,7 +6034,7 @@ FactoryGirl.define do
       short_yomi "かりわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1558100 do
+    factory :jmaxml_forecast_region_1558100 do
       code "1558100"
       name "新潟県関川村"
       yomi "にいがたけんせきかわむら"
@@ -6042,7 +6042,7 @@ FactoryGirl.define do
       short_yomi "せきかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1558600 do
+    factory :jmaxml_forecast_region_1558600 do
       code "1558600"
       name "新潟県粟島浦村"
       yomi "にいがたけんあわしまうらむら"
@@ -6050,7 +6050,7 @@ FactoryGirl.define do
       short_yomi "あわしまうらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1620100 do
+    factory :jmaxml_forecast_region_1620100 do
       code "1620100"
       name "富山県富山市"
       yomi "とやまけんとやまし"
@@ -6058,7 +6058,7 @@ FactoryGirl.define do
       short_yomi "とやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1620200 do
+    factory :jmaxml_forecast_region_1620200 do
       code "1620200"
       name "富山県高岡市"
       yomi "とやまけんたかおかし"
@@ -6066,7 +6066,7 @@ FactoryGirl.define do
       short_yomi "たかおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_1620400 do
+    factory :jmaxml_forecast_region_1620400 do
       code "1620400"
       name "富山県魚津市"
       yomi "とやまけんうおづし"
@@ -6074,7 +6074,7 @@ FactoryGirl.define do
       short_yomi "うおづし"
     end
 
-    factory :rss_weather_xml_forecast_region_1620500 do
+    factory :jmaxml_forecast_region_1620500 do
       code "1620500"
       name "富山県氷見市"
       yomi "とやまけんひみし"
@@ -6082,7 +6082,7 @@ FactoryGirl.define do
       short_yomi "ひみし"
     end
 
-    factory :rss_weather_xml_forecast_region_1620600 do
+    factory :jmaxml_forecast_region_1620600 do
       code "1620600"
       name "富山県滑川市"
       yomi "とやまけんなめりかわし"
@@ -6090,7 +6090,7 @@ FactoryGirl.define do
       short_yomi "なめりかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1620700 do
+    factory :jmaxml_forecast_region_1620700 do
       code "1620700"
       name "富山県黒部市"
       yomi "とやまけんくろべし"
@@ -6098,7 +6098,7 @@ FactoryGirl.define do
       short_yomi "くろべし"
     end
 
-    factory :rss_weather_xml_forecast_region_1620800 do
+    factory :jmaxml_forecast_region_1620800 do
       code "1620800"
       name "富山県砺波市"
       yomi "とやまけんとなみし"
@@ -6106,7 +6106,7 @@ FactoryGirl.define do
       short_yomi "となみし"
     end
 
-    factory :rss_weather_xml_forecast_region_1620900 do
+    factory :jmaxml_forecast_region_1620900 do
       code "1620900"
       name "富山県小矢部市"
       yomi "とやまけんおやべし"
@@ -6114,7 +6114,7 @@ FactoryGirl.define do
       short_yomi "おやべし"
     end
 
-    factory :rss_weather_xml_forecast_region_1621000 do
+    factory :jmaxml_forecast_region_1621000 do
       code "1621000"
       name "富山県南砺市"
       yomi "とやまけんなんとし"
@@ -6122,7 +6122,7 @@ FactoryGirl.define do
       short_yomi "なんとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1621100 do
+    factory :jmaxml_forecast_region_1621100 do
       code "1621100"
       name "富山県射水市"
       yomi "とやまけんいみずし"
@@ -6130,7 +6130,7 @@ FactoryGirl.define do
       short_yomi "いみずし"
     end
 
-    factory :rss_weather_xml_forecast_region_1632100 do
+    factory :jmaxml_forecast_region_1632100 do
       code "1632100"
       name "富山県舟橋村"
       yomi "とやまけんふなはしむら"
@@ -6138,7 +6138,7 @@ FactoryGirl.define do
       short_yomi "ふなはしむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1632200 do
+    factory :jmaxml_forecast_region_1632200 do
       code "1632200"
       name "富山県上市町"
       yomi "とやまけんかみいちまち"
@@ -6146,7 +6146,7 @@ FactoryGirl.define do
       short_yomi "かみいちまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1632300 do
+    factory :jmaxml_forecast_region_1632300 do
       code "1632300"
       name "富山県立山町"
       yomi "とやまけんたてやままち"
@@ -6154,7 +6154,7 @@ FactoryGirl.define do
       short_yomi "たてやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_1634200 do
+    factory :jmaxml_forecast_region_1634200 do
       code "1634200"
       name "富山県入善町"
       yomi "とやまけんにゅうぜんまち"
@@ -6162,7 +6162,7 @@ FactoryGirl.define do
       short_yomi "にゅうぜんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1634300 do
+    factory :jmaxml_forecast_region_1634300 do
       code "1634300"
       name "富山県朝日町"
       yomi "とやまけんあさひまち"
@@ -6170,7 +6170,7 @@ FactoryGirl.define do
       short_yomi "あさひまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1720100 do
+    factory :jmaxml_forecast_region_1720100 do
       code "1720100"
       name "石川県金沢市"
       yomi "いしかわけんかなざわし"
@@ -6178,7 +6178,7 @@ FactoryGirl.define do
       short_yomi "かなざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_1720200 do
+    factory :jmaxml_forecast_region_1720200 do
       code "1720200"
       name "石川県七尾市"
       yomi "いしかわけんななおし"
@@ -6186,7 +6186,7 @@ FactoryGirl.define do
       short_yomi "ななおし"
     end
 
-    factory :rss_weather_xml_forecast_region_1720300 do
+    factory :jmaxml_forecast_region_1720300 do
       code "1720300"
       name "石川県小松市"
       yomi "いしかわけんこまつし"
@@ -6194,7 +6194,7 @@ FactoryGirl.define do
       short_yomi "こまつし"
     end
 
-    factory :rss_weather_xml_forecast_region_1720400 do
+    factory :jmaxml_forecast_region_1720400 do
       code "1720400"
       name "石川県輪島市"
       yomi "いしかわけんわじまし"
@@ -6202,7 +6202,7 @@ FactoryGirl.define do
       short_yomi "わじまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1720500 do
+    factory :jmaxml_forecast_region_1720500 do
       code "1720500"
       name "石川県珠洲市"
       yomi "いしかわけんすずし"
@@ -6210,7 +6210,7 @@ FactoryGirl.define do
       short_yomi "すずし"
     end
 
-    factory :rss_weather_xml_forecast_region_1720600 do
+    factory :jmaxml_forecast_region_1720600 do
       code "1720600"
       name "石川県加賀市"
       yomi "いしかわけんかがし"
@@ -6218,7 +6218,7 @@ FactoryGirl.define do
       short_yomi "かがし"
     end
 
-    factory :rss_weather_xml_forecast_region_1720700 do
+    factory :jmaxml_forecast_region_1720700 do
       code "1720700"
       name "石川県羽咋市"
       yomi "いしかわけんはくいし"
@@ -6226,7 +6226,7 @@ FactoryGirl.define do
       short_yomi "はくいし"
     end
 
-    factory :rss_weather_xml_forecast_region_1720900 do
+    factory :jmaxml_forecast_region_1720900 do
       code "1720900"
       name "石川県かほく市"
       yomi "いしかわけんかほくし"
@@ -6234,7 +6234,7 @@ FactoryGirl.define do
       short_yomi "かほくし"
     end
 
-    factory :rss_weather_xml_forecast_region_1721000 do
+    factory :jmaxml_forecast_region_1721000 do
       code "1721000"
       name "石川県白山市"
       yomi "いしかわけんはくさんし"
@@ -6242,7 +6242,7 @@ FactoryGirl.define do
       short_yomi "はくさんし"
     end
 
-    factory :rss_weather_xml_forecast_region_1721100 do
+    factory :jmaxml_forecast_region_1721100 do
       code "1721100"
       name "石川県能美市"
       yomi "いしかわけんのみし"
@@ -6250,7 +6250,7 @@ FactoryGirl.define do
       short_yomi "のみし"
     end
 
-    factory :rss_weather_xml_forecast_region_1721200 do
+    factory :jmaxml_forecast_region_1721200 do
       code "1721200"
       name "石川県野々市市"
       yomi "いしかわけんののいちし"
@@ -6258,7 +6258,7 @@ FactoryGirl.define do
       short_yomi "ののいちし"
     end
 
-    factory :rss_weather_xml_forecast_region_1732400 do
+    factory :jmaxml_forecast_region_1732400 do
       code "1732400"
       name "石川県川北町"
       yomi "いしかわけんかわきたまち"
@@ -6266,7 +6266,7 @@ FactoryGirl.define do
       short_yomi "かわきたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1736100 do
+    factory :jmaxml_forecast_region_1736100 do
       code "1736100"
       name "石川県津幡町"
       yomi "いしかわけんつばたまち"
@@ -6274,7 +6274,7 @@ FactoryGirl.define do
       short_yomi "つばたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1736500 do
+    factory :jmaxml_forecast_region_1736500 do
       code "1736500"
       name "石川県内灘町"
       yomi "いしかわけんうちなだまち"
@@ -6282,7 +6282,7 @@ FactoryGirl.define do
       short_yomi "うちなだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1738400 do
+    factory :jmaxml_forecast_region_1738400 do
       code "1738400"
       name "石川県志賀町"
       yomi "いしかわけんしかまち"
@@ -6290,7 +6290,7 @@ FactoryGirl.define do
       short_yomi "しかまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1738600 do
+    factory :jmaxml_forecast_region_1738600 do
       code "1738600"
       name "石川県宝達志水町"
       yomi "いしかわけんほうだつしみずちょう"
@@ -6298,7 +6298,7 @@ FactoryGirl.define do
       short_yomi "ほうだつしみずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1740700 do
+    factory :jmaxml_forecast_region_1740700 do
       code "1740700"
       name "石川県中能登町"
       yomi "いしかわけんなかのとまち"
@@ -6306,7 +6306,7 @@ FactoryGirl.define do
       short_yomi "なかのとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1746100 do
+    factory :jmaxml_forecast_region_1746100 do
       code "1746100"
       name "石川県穴水町"
       yomi "いしかわけんあなみずまち"
@@ -6314,7 +6314,7 @@ FactoryGirl.define do
       short_yomi "あなみずまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1746300 do
+    factory :jmaxml_forecast_region_1746300 do
       code "1746300"
       name "石川県能登町"
       yomi "いしかわけんのとちょう"
@@ -6322,7 +6322,7 @@ FactoryGirl.define do
       short_yomi "のとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1820100 do
+    factory :jmaxml_forecast_region_1820100 do
       code "1820100"
       name "福井県福井市"
       yomi "ふくいけんふくいし"
@@ -6330,7 +6330,7 @@ FactoryGirl.define do
       short_yomi "ふくいし"
     end
 
-    factory :rss_weather_xml_forecast_region_1820200 do
+    factory :jmaxml_forecast_region_1820200 do
       code "1820200"
       name "福井県敦賀市"
       yomi "ふくいけんつるがし"
@@ -6338,7 +6338,7 @@ FactoryGirl.define do
       short_yomi "つるがし"
     end
 
-    factory :rss_weather_xml_forecast_region_1820400 do
+    factory :jmaxml_forecast_region_1820400 do
       code "1820400"
       name "福井県小浜市"
       yomi "ふくいけんおばまし"
@@ -6346,7 +6346,7 @@ FactoryGirl.define do
       short_yomi "おばまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1820500 do
+    factory :jmaxml_forecast_region_1820500 do
       code "1820500"
       name "福井県大野市"
       yomi "ふくいけんおおのし"
@@ -6354,7 +6354,7 @@ FactoryGirl.define do
       short_yomi "おおのし"
     end
 
-    factory :rss_weather_xml_forecast_region_1820600 do
+    factory :jmaxml_forecast_region_1820600 do
       code "1820600"
       name "福井県勝山市"
       yomi "ふくいけんかつやまし"
@@ -6362,7 +6362,7 @@ FactoryGirl.define do
       short_yomi "かつやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_1820700 do
+    factory :jmaxml_forecast_region_1820700 do
       code "1820700"
       name "福井県鯖江市"
       yomi "ふくいけんさばえし"
@@ -6370,7 +6370,7 @@ FactoryGirl.define do
       short_yomi "さばえし"
     end
 
-    factory :rss_weather_xml_forecast_region_1820800 do
+    factory :jmaxml_forecast_region_1820800 do
       code "1820800"
       name "福井県あわら市"
       yomi "ふくいけんあわらし"
@@ -6378,7 +6378,7 @@ FactoryGirl.define do
       short_yomi "あわらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1820900 do
+    factory :jmaxml_forecast_region_1820900 do
       code "1820900"
       name "福井県越前市"
       yomi "ふくいけんえちぜんし"
@@ -6386,7 +6386,7 @@ FactoryGirl.define do
       short_yomi "えちぜんし"
     end
 
-    factory :rss_weather_xml_forecast_region_1821000 do
+    factory :jmaxml_forecast_region_1821000 do
       code "1821000"
       name "福井県坂井市"
       yomi "ふくいけんさかいし"
@@ -6394,7 +6394,7 @@ FactoryGirl.define do
       short_yomi "さかいし"
     end
 
-    factory :rss_weather_xml_forecast_region_1832200 do
+    factory :jmaxml_forecast_region_1832200 do
       code "1832200"
       name "福井県永平寺町"
       yomi "ふくいけんえいへいじちょう"
@@ -6402,7 +6402,7 @@ FactoryGirl.define do
       short_yomi "えいへいじちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1838200 do
+    factory :jmaxml_forecast_region_1838200 do
       code "1838200"
       name "福井県池田町"
       yomi "ふくいけんいけだちょう"
@@ -6410,7 +6410,7 @@ FactoryGirl.define do
       short_yomi "いけだちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1840400 do
+    factory :jmaxml_forecast_region_1840400 do
       code "1840400"
       name "福井県南越前町"
       yomi "ふくいけんみなみえちぜんちょう"
@@ -6418,7 +6418,7 @@ FactoryGirl.define do
       short_yomi "みなみえちぜんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1842300 do
+    factory :jmaxml_forecast_region_1842300 do
       code "1842300"
       name "福井県越前町"
       yomi "ふくいけんえちぜんちょう"
@@ -6426,7 +6426,7 @@ FactoryGirl.define do
       short_yomi "えちぜんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1844200 do
+    factory :jmaxml_forecast_region_1844200 do
       code "1844200"
       name "福井県美浜町"
       yomi "ふくいけんみはまちょう"
@@ -6434,7 +6434,7 @@ FactoryGirl.define do
       short_yomi "みはまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1848100 do
+    factory :jmaxml_forecast_region_1848100 do
       code "1848100"
       name "福井県高浜町"
       yomi "ふくいけんたかはまちょう"
@@ -6442,7 +6442,7 @@ FactoryGirl.define do
       short_yomi "たかはまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1848300 do
+    factory :jmaxml_forecast_region_1848300 do
       code "1848300"
       name "福井県おおい町"
       yomi "ふくいけんおおいちょう"
@@ -6450,7 +6450,7 @@ FactoryGirl.define do
       short_yomi "おおいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1850100 do
+    factory :jmaxml_forecast_region_1850100 do
       code "1850100"
       name "福井県若狭町"
       yomi "ふくいけんわかさちょう"
@@ -6458,7 +6458,7 @@ FactoryGirl.define do
       short_yomi "わかさちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1920100 do
+    factory :jmaxml_forecast_region_1920100 do
       code "1920100"
       name "山梨県甲府市"
       yomi "やまなしけんこうふし"
@@ -6466,7 +6466,7 @@ FactoryGirl.define do
       short_yomi "こうふし"
     end
 
-    factory :rss_weather_xml_forecast_region_1920200 do
+    factory :jmaxml_forecast_region_1920200 do
       code "1920200"
       name "山梨県富士吉田市"
       yomi "やまなしけんふじよしだし"
@@ -6474,7 +6474,7 @@ FactoryGirl.define do
       short_yomi "ふじよしだし"
     end
 
-    factory :rss_weather_xml_forecast_region_1920400 do
+    factory :jmaxml_forecast_region_1920400 do
       code "1920400"
       name "山梨県都留市"
       yomi "やまなしけんつるし"
@@ -6482,7 +6482,7 @@ FactoryGirl.define do
       short_yomi "つるし"
     end
 
-    factory :rss_weather_xml_forecast_region_1920500 do
+    factory :jmaxml_forecast_region_1920500 do
       code "1920500"
       name "山梨県山梨市"
       yomi "やまなしけんやまなしし"
@@ -6490,7 +6490,7 @@ FactoryGirl.define do
       short_yomi "やまなしし"
     end
 
-    factory :rss_weather_xml_forecast_region_1920600 do
+    factory :jmaxml_forecast_region_1920600 do
       code "1920600"
       name "山梨県大月市"
       yomi "やまなしけんおおつきし"
@@ -6498,7 +6498,7 @@ FactoryGirl.define do
       short_yomi "おおつきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1920700 do
+    factory :jmaxml_forecast_region_1920700 do
       code "1920700"
       name "山梨県韮崎市"
       yomi "やまなしけんにらさきし"
@@ -6506,7 +6506,7 @@ FactoryGirl.define do
       short_yomi "にらさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1920800 do
+    factory :jmaxml_forecast_region_1920800 do
       code "1920800"
       name "山梨県南アルプス市"
       yomi "やまなしけんみなみあるぷすし"
@@ -6514,7 +6514,7 @@ FactoryGirl.define do
       short_yomi "みなみあるぷすし"
     end
 
-    factory :rss_weather_xml_forecast_region_1920900 do
+    factory :jmaxml_forecast_region_1920900 do
       code "1920900"
       name "山梨県北杜市"
       yomi "やまなしけんほくとし"
@@ -6522,7 +6522,7 @@ FactoryGirl.define do
       short_yomi "ほくとし"
     end
 
-    factory :rss_weather_xml_forecast_region_1921000 do
+    factory :jmaxml_forecast_region_1921000 do
       code "1921000"
       name "山梨県甲斐市"
       yomi "やまなしけんかいし"
@@ -6530,7 +6530,7 @@ FactoryGirl.define do
       short_yomi "かいし"
     end
 
-    factory :rss_weather_xml_forecast_region_1921100 do
+    factory :jmaxml_forecast_region_1921100 do
       code "1921100"
       name "山梨県笛吹市"
       yomi "やまなしけんふえふきし"
@@ -6538,7 +6538,7 @@ FactoryGirl.define do
       short_yomi "ふえふきし"
     end
 
-    factory :rss_weather_xml_forecast_region_1921200 do
+    factory :jmaxml_forecast_region_1921200 do
       code "1921200"
       name "山梨県上野原市"
       yomi "やまなしけんうえのはらし"
@@ -6546,7 +6546,7 @@ FactoryGirl.define do
       short_yomi "うえのはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_1921300 do
+    factory :jmaxml_forecast_region_1921300 do
       code "1921300"
       name "山梨県甲州市"
       yomi "やまなしけんこうしゅうし"
@@ -6554,7 +6554,7 @@ FactoryGirl.define do
       short_yomi "こうしゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1921400 do
+    factory :jmaxml_forecast_region_1921400 do
       code "1921400"
       name "山梨県中央市"
       yomi "やまなしけんちゅうおうし"
@@ -6562,7 +6562,7 @@ FactoryGirl.define do
       short_yomi "ちゅうおうし"
     end
 
-    factory :rss_weather_xml_forecast_region_1934600 do
+    factory :jmaxml_forecast_region_1934600 do
       code "1934600"
       name "山梨県市川三郷町"
       yomi "やまなしけんいちかわみさとちょう"
@@ -6570,7 +6570,7 @@ FactoryGirl.define do
       short_yomi "いちかわみさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1936400 do
+    factory :jmaxml_forecast_region_1936400 do
       code "1936400"
       name "山梨県早川町"
       yomi "やまなしけんはやかわちょう"
@@ -6578,7 +6578,7 @@ FactoryGirl.define do
       short_yomi "はやかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1936500 do
+    factory :jmaxml_forecast_region_1936500 do
       code "1936500"
       name "山梨県身延町"
       yomi "やまなしけんみのぶちょう"
@@ -6586,7 +6586,7 @@ FactoryGirl.define do
       short_yomi "みのぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1936600 do
+    factory :jmaxml_forecast_region_1936600 do
       code "1936600"
       name "山梨県南部町"
       yomi "やまなしけんなんぶちょう"
@@ -6594,7 +6594,7 @@ FactoryGirl.define do
       short_yomi "なんぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1936800 do
+    factory :jmaxml_forecast_region_1936800 do
       code "1936800"
       name "山梨県富士川町"
       yomi "やまなしけんふじかわちょう"
@@ -6602,7 +6602,7 @@ FactoryGirl.define do
       short_yomi "ふじかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1938400 do
+    factory :jmaxml_forecast_region_1938400 do
       code "1938400"
       name "山梨県昭和町"
       yomi "やまなしけんしょうわちょう"
@@ -6610,7 +6610,7 @@ FactoryGirl.define do
       short_yomi "しょうわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1942200 do
+    factory :jmaxml_forecast_region_1942200 do
       code "1942200"
       name "山梨県道志村"
       yomi "やまなしけんどうしむら"
@@ -6618,7 +6618,7 @@ FactoryGirl.define do
       short_yomi "どうしむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1942300 do
+    factory :jmaxml_forecast_region_1942300 do
       code "1942300"
       name "山梨県西桂町"
       yomi "やまなしけんにしかつらちょう"
@@ -6626,7 +6626,7 @@ FactoryGirl.define do
       short_yomi "にしかつらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_1942400 do
+    factory :jmaxml_forecast_region_1942400 do
       code "1942400"
       name "山梨県忍野村"
       yomi "やまなしけんおしのむら"
@@ -6634,7 +6634,7 @@ FactoryGirl.define do
       short_yomi "おしのむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1942500 do
+    factory :jmaxml_forecast_region_1942500 do
       code "1942500"
       name "山梨県山中湖村"
       yomi "やまなしけんやまなかこむら"
@@ -6642,7 +6642,7 @@ FactoryGirl.define do
       short_yomi "やまなかこむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1942900 do
+    factory :jmaxml_forecast_region_1942900 do
       code "1942900"
       name "山梨県鳴沢村"
       yomi "やまなしけんなるさわむら"
@@ -6650,7 +6650,7 @@ FactoryGirl.define do
       short_yomi "なるさわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1943000 do
+    factory :jmaxml_forecast_region_1943000 do
       code "1943000"
       name "山梨県富士河口湖町"
       yomi "やまなしけんふじかわぐちこまち"
@@ -6658,7 +6658,7 @@ FactoryGirl.define do
       short_yomi "ふじかわぐちこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_1944200 do
+    factory :jmaxml_forecast_region_1944200 do
       code "1944200"
       name "山梨県小菅村"
       yomi "やまなしけんこすげむら"
@@ -6666,7 +6666,7 @@ FactoryGirl.define do
       short_yomi "こすげむら"
     end
 
-    factory :rss_weather_xml_forecast_region_1944300 do
+    factory :jmaxml_forecast_region_1944300 do
       code "1944300"
       name "山梨県丹波山村"
       yomi "やまなしけんたばやまむら"
@@ -6674,7 +6674,7 @@ FactoryGirl.define do
       short_yomi "たばやまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2020100 do
+    factory :jmaxml_forecast_region_2020100 do
       code "2020100"
       name "長野県長野市"
       yomi "ながのけんながのし"
@@ -6682,7 +6682,7 @@ FactoryGirl.define do
       short_yomi "ながのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020200 do
+    factory :jmaxml_forecast_region_2020200 do
       code "2020200"
       name "長野県松本市"
       yomi "ながのけんまつもとし"
@@ -6690,7 +6690,7 @@ FactoryGirl.define do
       short_yomi "まつもとし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020300 do
+    factory :jmaxml_forecast_region_2020300 do
       code "2020300"
       name "長野県上田市"
       yomi "ながのけんうえだし"
@@ -6698,7 +6698,7 @@ FactoryGirl.define do
       short_yomi "うえだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020400 do
+    factory :jmaxml_forecast_region_2020400 do
       code "2020400"
       name "長野県岡谷市"
       yomi "ながのけんおかやし"
@@ -6706,7 +6706,7 @@ FactoryGirl.define do
       short_yomi "おかやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020500 do
+    factory :jmaxml_forecast_region_2020500 do
       code "2020500"
       name "長野県飯田市"
       yomi "ながのけんいいだし"
@@ -6714,7 +6714,7 @@ FactoryGirl.define do
       short_yomi "いいだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020600 do
+    factory :jmaxml_forecast_region_2020600 do
       code "2020600"
       name "長野県諏訪市"
       yomi "ながのけんすわし"
@@ -6722,7 +6722,7 @@ FactoryGirl.define do
       short_yomi "すわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020700 do
+    factory :jmaxml_forecast_region_2020700 do
       code "2020700"
       name "長野県須坂市"
       yomi "ながのけんすざかし"
@@ -6730,7 +6730,7 @@ FactoryGirl.define do
       short_yomi "すざかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020800 do
+    factory :jmaxml_forecast_region_2020800 do
       code "2020800"
       name "長野県小諸市"
       yomi "ながのけんこもろし"
@@ -6738,7 +6738,7 @@ FactoryGirl.define do
       short_yomi "こもろし"
     end
 
-    factory :rss_weather_xml_forecast_region_2020900 do
+    factory :jmaxml_forecast_region_2020900 do
       code "2020900"
       name "長野県伊那市"
       yomi "ながのけんいなし"
@@ -6746,7 +6746,7 @@ FactoryGirl.define do
       short_yomi "いなし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021000 do
+    factory :jmaxml_forecast_region_2021000 do
       code "2021000"
       name "長野県駒ヶ根市"
       yomi "ながのけんこまがねし"
@@ -6754,7 +6754,7 @@ FactoryGirl.define do
       short_yomi "こまがねし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021100 do
+    factory :jmaxml_forecast_region_2021100 do
       code "2021100"
       name "長野県中野市"
       yomi "ながのけんなかのし"
@@ -6762,7 +6762,7 @@ FactoryGirl.define do
       short_yomi "なかのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021200 do
+    factory :jmaxml_forecast_region_2021200 do
       code "2021200"
       name "長野県大町市"
       yomi "ながのけんおおまちし"
@@ -6770,7 +6770,7 @@ FactoryGirl.define do
       short_yomi "おおまちし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021300 do
+    factory :jmaxml_forecast_region_2021300 do
       code "2021300"
       name "長野県飯山市"
       yomi "ながのけんいいやまし"
@@ -6778,7 +6778,7 @@ FactoryGirl.define do
       short_yomi "いいやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021400 do
+    factory :jmaxml_forecast_region_2021400 do
       code "2021400"
       name "長野県茅野市"
       yomi "ながのけんちのし"
@@ -6786,7 +6786,7 @@ FactoryGirl.define do
       short_yomi "ちのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021500 do
+    factory :jmaxml_forecast_region_2021500 do
       code "2021500"
       name "長野県塩尻市"
       yomi "ながのけんしおじりし"
@@ -6794,7 +6794,7 @@ FactoryGirl.define do
       short_yomi "しおじりし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021700 do
+    factory :jmaxml_forecast_region_2021700 do
       code "2021700"
       name "長野県佐久市"
       yomi "ながのけんさくし"
@@ -6802,7 +6802,7 @@ FactoryGirl.define do
       short_yomi "さくし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021800 do
+    factory :jmaxml_forecast_region_2021800 do
       code "2021800"
       name "長野県千曲市"
       yomi "ながのけんちくまし"
@@ -6810,7 +6810,7 @@ FactoryGirl.define do
       short_yomi "ちくまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2021900 do
+    factory :jmaxml_forecast_region_2021900 do
       code "2021900"
       name "長野県東御市"
       yomi "ながのけんとうみし"
@@ -6818,7 +6818,7 @@ FactoryGirl.define do
       short_yomi "とうみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2022000 do
+    factory :jmaxml_forecast_region_2022000 do
       code "2022000"
       name "長野県安曇野市"
       yomi "ながのけんあづみのし"
@@ -6826,7 +6826,7 @@ FactoryGirl.define do
       short_yomi "あづみのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2030300 do
+    factory :jmaxml_forecast_region_2030300 do
       code "2030300"
       name "長野県小海町"
       yomi "ながのけんこうみまち"
@@ -6834,7 +6834,7 @@ FactoryGirl.define do
       short_yomi "こうみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2030400 do
+    factory :jmaxml_forecast_region_2030400 do
       code "2030400"
       name "長野県川上村"
       yomi "ながのけんかわかみむら"
@@ -6842,7 +6842,7 @@ FactoryGirl.define do
       short_yomi "かわかみむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2030500 do
+    factory :jmaxml_forecast_region_2030500 do
       code "2030500"
       name "長野県南牧村"
       yomi "ながのけんみなみまきむら"
@@ -6850,7 +6850,7 @@ FactoryGirl.define do
       short_yomi "みなみまきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2030600 do
+    factory :jmaxml_forecast_region_2030600 do
       code "2030600"
       name "長野県南相木村"
       yomi "ながのけんみなみあいきむら"
@@ -6858,7 +6858,7 @@ FactoryGirl.define do
       short_yomi "みなみあいきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2030700 do
+    factory :jmaxml_forecast_region_2030700 do
       code "2030700"
       name "長野県北相木村"
       yomi "ながのけんきたあいきむら"
@@ -6866,7 +6866,7 @@ FactoryGirl.define do
       short_yomi "きたあいきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2030900 do
+    factory :jmaxml_forecast_region_2030900 do
       code "2030900"
       name "長野県佐久穂町"
       yomi "ながのけんさくほまち"
@@ -6874,7 +6874,7 @@ FactoryGirl.define do
       short_yomi "さくほまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2032100 do
+    factory :jmaxml_forecast_region_2032100 do
       code "2032100"
       name "長野県軽井沢町"
       yomi "ながのけんかるいざわまち"
@@ -6882,7 +6882,7 @@ FactoryGirl.define do
       short_yomi "かるいざわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2032300 do
+    factory :jmaxml_forecast_region_2032300 do
       code "2032300"
       name "長野県御代田町"
       yomi "ながのけんみよたまち"
@@ -6890,7 +6890,7 @@ FactoryGirl.define do
       short_yomi "みよたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2032400 do
+    factory :jmaxml_forecast_region_2032400 do
       code "2032400"
       name "長野県立科町"
       yomi "ながのけんたてしなまち"
@@ -6898,7 +6898,7 @@ FactoryGirl.define do
       short_yomi "たてしなまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2034900 do
+    factory :jmaxml_forecast_region_2034900 do
       code "2034900"
       name "長野県青木村"
       yomi "ながのけんあおきむら"
@@ -6906,7 +6906,7 @@ FactoryGirl.define do
       short_yomi "あおきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2035000 do
+    factory :jmaxml_forecast_region_2035000 do
       code "2035000"
       name "長野県長和町"
       yomi "ながのけんながわまち"
@@ -6914,7 +6914,7 @@ FactoryGirl.define do
       short_yomi "ながわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2036100 do
+    factory :jmaxml_forecast_region_2036100 do
       code "2036100"
       name "長野県下諏訪町"
       yomi "ながのけんしもすわまち"
@@ -6922,7 +6922,7 @@ FactoryGirl.define do
       short_yomi "しもすわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2036200 do
+    factory :jmaxml_forecast_region_2036200 do
       code "2036200"
       name "長野県富士見町"
       yomi "ながのけんふじみまち"
@@ -6930,7 +6930,7 @@ FactoryGirl.define do
       short_yomi "ふじみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2036300 do
+    factory :jmaxml_forecast_region_2036300 do
       code "2036300"
       name "長野県原村"
       yomi "ながのけんはらむら"
@@ -6938,7 +6938,7 @@ FactoryGirl.define do
       short_yomi "はらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2038200 do
+    factory :jmaxml_forecast_region_2038200 do
       code "2038200"
       name "長野県辰野町"
       yomi "ながのけんたつのまち"
@@ -6946,7 +6946,7 @@ FactoryGirl.define do
       short_yomi "たつのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2038300 do
+    factory :jmaxml_forecast_region_2038300 do
       code "2038300"
       name "長野県箕輪町"
       yomi "ながのけんみのわまち"
@@ -6954,7 +6954,7 @@ FactoryGirl.define do
       short_yomi "みのわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2038400 do
+    factory :jmaxml_forecast_region_2038400 do
       code "2038400"
       name "長野県飯島町"
       yomi "ながのけんいいじままち"
@@ -6962,7 +6962,7 @@ FactoryGirl.define do
       short_yomi "いいじままち"
     end
 
-    factory :rss_weather_xml_forecast_region_2038500 do
+    factory :jmaxml_forecast_region_2038500 do
       code "2038500"
       name "長野県南箕輪村"
       yomi "ながのけんみなみみのわむら"
@@ -6970,7 +6970,7 @@ FactoryGirl.define do
       short_yomi "みなみみのわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2038600 do
+    factory :jmaxml_forecast_region_2038600 do
       code "2038600"
       name "長野県中川村"
       yomi "ながのけんなかがわむら"
@@ -6978,7 +6978,7 @@ FactoryGirl.define do
       short_yomi "なかがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2038800 do
+    factory :jmaxml_forecast_region_2038800 do
       code "2038800"
       name "長野県宮田村"
       yomi "ながのけんみやだむら"
@@ -6986,7 +6986,7 @@ FactoryGirl.define do
       short_yomi "みやだむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2040200 do
+    factory :jmaxml_forecast_region_2040200 do
       code "2040200"
       name "長野県松川町"
       yomi "ながのけんまつかわまち"
@@ -6994,7 +6994,7 @@ FactoryGirl.define do
       short_yomi "まつかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2040300 do
+    factory :jmaxml_forecast_region_2040300 do
       code "2040300"
       name "長野県高森町"
       yomi "ながのけんたかもりまち"
@@ -7002,7 +7002,7 @@ FactoryGirl.define do
       short_yomi "たかもりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2040400 do
+    factory :jmaxml_forecast_region_2040400 do
       code "2040400"
       name "長野県阿南町"
       yomi "ながのけんあなんちょう"
@@ -7010,7 +7010,7 @@ FactoryGirl.define do
       short_yomi "あなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2040700 do
+    factory :jmaxml_forecast_region_2040700 do
       code "2040700"
       name "長野県阿智村"
       yomi "ながのけんあちむら"
@@ -7018,7 +7018,7 @@ FactoryGirl.define do
       short_yomi "あちむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2040900 do
+    factory :jmaxml_forecast_region_2040900 do
       code "2040900"
       name "長野県平谷村"
       yomi "ながのけんひらやむら"
@@ -7026,7 +7026,7 @@ FactoryGirl.define do
       short_yomi "ひらやむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041000 do
+    factory :jmaxml_forecast_region_2041000 do
       code "2041000"
       name "長野県根羽村"
       yomi "ながのけんねばむら"
@@ -7034,7 +7034,7 @@ FactoryGirl.define do
       short_yomi "ねばむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041100 do
+    factory :jmaxml_forecast_region_2041100 do
       code "2041100"
       name "長野県下條村"
       yomi "ながのけんしもじょうむら"
@@ -7042,7 +7042,7 @@ FactoryGirl.define do
       short_yomi "しもじょうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041200 do
+    factory :jmaxml_forecast_region_2041200 do
       code "2041200"
       name "長野県売木村"
       yomi "ながのけんうるぎむら"
@@ -7050,7 +7050,7 @@ FactoryGirl.define do
       short_yomi "うるぎむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041300 do
+    factory :jmaxml_forecast_region_2041300 do
       code "2041300"
       name "長野県天龍村"
       yomi "ながのけんてんりゅうむら"
@@ -7058,7 +7058,7 @@ FactoryGirl.define do
       short_yomi "てんりゅうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041400 do
+    factory :jmaxml_forecast_region_2041400 do
       code "2041400"
       name "長野県泰阜村"
       yomi "ながのけんやすおかむら"
@@ -7066,7 +7066,7 @@ FactoryGirl.define do
       short_yomi "やすおかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041500 do
+    factory :jmaxml_forecast_region_2041500 do
       code "2041500"
       name "長野県喬木村"
       yomi "ながのけんたかぎむら"
@@ -7074,7 +7074,7 @@ FactoryGirl.define do
       short_yomi "たかぎむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041600 do
+    factory :jmaxml_forecast_region_2041600 do
       code "2041600"
       name "長野県豊丘村"
       yomi "ながのけんとよおかむら"
@@ -7082,7 +7082,7 @@ FactoryGirl.define do
       short_yomi "とよおかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2041700 do
+    factory :jmaxml_forecast_region_2041700 do
       code "2041700"
       name "長野県大鹿村"
       yomi "ながのけんおおしかむら"
@@ -7090,7 +7090,7 @@ FactoryGirl.define do
       short_yomi "おおしかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2042200 do
+    factory :jmaxml_forecast_region_2042200 do
       code "2042200"
       name "長野県上松町"
       yomi "ながのけんあげまつまち"
@@ -7098,7 +7098,7 @@ FactoryGirl.define do
       short_yomi "あげまつまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2042300 do
+    factory :jmaxml_forecast_region_2042300 do
       code "2042300"
       name "長野県南木曽町"
       yomi "ながのけんなぎそまち"
@@ -7106,7 +7106,7 @@ FactoryGirl.define do
       short_yomi "なぎそまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2042500 do
+    factory :jmaxml_forecast_region_2042500 do
       code "2042500"
       name "長野県木祖村"
       yomi "ながのけんきそむら"
@@ -7114,7 +7114,7 @@ FactoryGirl.define do
       short_yomi "きそむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2042900 do
+    factory :jmaxml_forecast_region_2042900 do
       code "2042900"
       name "長野県王滝村"
       yomi "ながのけんおうたきむら"
@@ -7122,7 +7122,7 @@ FactoryGirl.define do
       short_yomi "おうたきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2043000 do
+    factory :jmaxml_forecast_region_2043000 do
       code "2043000"
       name "長野県大桑村"
       yomi "ながのけんおおくわむら"
@@ -7130,7 +7130,7 @@ FactoryGirl.define do
       short_yomi "おおくわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2043200 do
+    factory :jmaxml_forecast_region_2043200 do
       code "2043200"
       name "長野県木曽町"
       yomi "ながのけんきそまち"
@@ -7138,7 +7138,7 @@ FactoryGirl.define do
       short_yomi "きそまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2044600 do
+    factory :jmaxml_forecast_region_2044600 do
       code "2044600"
       name "長野県麻績村"
       yomi "ながのけんおみむら"
@@ -7146,7 +7146,7 @@ FactoryGirl.define do
       short_yomi "おみむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2044800 do
+    factory :jmaxml_forecast_region_2044800 do
       code "2044800"
       name "長野県生坂村"
       yomi "ながのけんいくさかむら"
@@ -7154,7 +7154,7 @@ FactoryGirl.define do
       short_yomi "いくさかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2045000 do
+    factory :jmaxml_forecast_region_2045000 do
       code "2045000"
       name "長野県山形村"
       yomi "ながのけんやまがたむら"
@@ -7162,7 +7162,7 @@ FactoryGirl.define do
       short_yomi "やまがたむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2045100 do
+    factory :jmaxml_forecast_region_2045100 do
       code "2045100"
       name "長野県朝日村"
       yomi "ながのけんあさひむら"
@@ -7170,7 +7170,7 @@ FactoryGirl.define do
       short_yomi "あさひむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2045200 do
+    factory :jmaxml_forecast_region_2045200 do
       code "2045200"
       name "長野県筑北村"
       yomi "ながのけんちくほくむら"
@@ -7178,7 +7178,7 @@ FactoryGirl.define do
       short_yomi "ちくほくむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2048100 do
+    factory :jmaxml_forecast_region_2048100 do
       code "2048100"
       name "長野県池田町"
       yomi "ながのけんいけだまち"
@@ -7186,7 +7186,7 @@ FactoryGirl.define do
       short_yomi "いけだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2048200 do
+    factory :jmaxml_forecast_region_2048200 do
       code "2048200"
       name "長野県松川村"
       yomi "ながのけんまつかわむら"
@@ -7194,7 +7194,7 @@ FactoryGirl.define do
       short_yomi "まつかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2048500 do
+    factory :jmaxml_forecast_region_2048500 do
       code "2048500"
       name "長野県白馬村"
       yomi "ながのけんはくばむら"
@@ -7202,7 +7202,7 @@ FactoryGirl.define do
       short_yomi "はくばむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2048600 do
+    factory :jmaxml_forecast_region_2048600 do
       code "2048600"
       name "長野県小谷村"
       yomi "ながのけんおたりむら"
@@ -7210,7 +7210,7 @@ FactoryGirl.define do
       short_yomi "おたりむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2052100 do
+    factory :jmaxml_forecast_region_2052100 do
       code "2052100"
       name "長野県坂城町"
       yomi "ながのけんさかきまち"
@@ -7218,7 +7218,7 @@ FactoryGirl.define do
       short_yomi "さかきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2054100 do
+    factory :jmaxml_forecast_region_2054100 do
       code "2054100"
       name "長野県小布施町"
       yomi "ながのけんおぶせまち"
@@ -7226,7 +7226,7 @@ FactoryGirl.define do
       short_yomi "おぶせまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2054300 do
+    factory :jmaxml_forecast_region_2054300 do
       code "2054300"
       name "長野県高山村"
       yomi "ながのけんたかやまむら"
@@ -7234,7 +7234,7 @@ FactoryGirl.define do
       short_yomi "たかやまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2056100 do
+    factory :jmaxml_forecast_region_2056100 do
       code "2056100"
       name "長野県山ノ内町"
       yomi "ながのけんやまのうちまち"
@@ -7242,7 +7242,7 @@ FactoryGirl.define do
       short_yomi "やまのうちまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2056200 do
+    factory :jmaxml_forecast_region_2056200 do
       code "2056200"
       name "長野県木島平村"
       yomi "ながのけんきじまだいらむら"
@@ -7250,7 +7250,7 @@ FactoryGirl.define do
       short_yomi "きじまだいらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2056300 do
+    factory :jmaxml_forecast_region_2056300 do
       code "2056300"
       name "長野県野沢温泉村"
       yomi "ながのけんのざわおんせんむら"
@@ -7258,7 +7258,7 @@ FactoryGirl.define do
       short_yomi "のざわおんせんむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2058300 do
+    factory :jmaxml_forecast_region_2058300 do
       code "2058300"
       name "長野県信濃町"
       yomi "ながのけんしなのまち"
@@ -7266,7 +7266,7 @@ FactoryGirl.define do
       short_yomi "しなのまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2058800 do
+    factory :jmaxml_forecast_region_2058800 do
       code "2058800"
       name "長野県小川村"
       yomi "ながのけんおがわむら"
@@ -7274,7 +7274,7 @@ FactoryGirl.define do
       short_yomi "おがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2059000 do
+    factory :jmaxml_forecast_region_2059000 do
       code "2059000"
       name "長野県飯綱町"
       yomi "ながのけんいいづなまち"
@@ -7282,7 +7282,7 @@ FactoryGirl.define do
       short_yomi "いいづなまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2060200 do
+    factory :jmaxml_forecast_region_2060200 do
       code "2060200"
       name "長野県栄村"
       yomi "ながのけんさかえむら"
@@ -7290,7 +7290,7 @@ FactoryGirl.define do
       short_yomi "さかえむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2120100 do
+    factory :jmaxml_forecast_region_2120100 do
       code "2120100"
       name "岐阜県岐阜市"
       yomi "ぎふけんぎふし"
@@ -7298,7 +7298,7 @@ FactoryGirl.define do
       short_yomi "ぎふし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120200 do
+    factory :jmaxml_forecast_region_2120200 do
       code "2120200"
       name "岐阜県大垣市"
       yomi "ぎふけんおおがきし"
@@ -7306,7 +7306,7 @@ FactoryGirl.define do
       short_yomi "おおがきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120300 do
+    factory :jmaxml_forecast_region_2120300 do
       code "2120300"
       name "岐阜県高山市"
       yomi "ぎふけんたかやまし"
@@ -7314,7 +7314,7 @@ FactoryGirl.define do
       short_yomi "たかやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120400 do
+    factory :jmaxml_forecast_region_2120400 do
       code "2120400"
       name "岐阜県多治見市"
       yomi "ぎふけんたじみし"
@@ -7322,7 +7322,7 @@ FactoryGirl.define do
       short_yomi "たじみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120500 do
+    factory :jmaxml_forecast_region_2120500 do
       code "2120500"
       name "岐阜県関市"
       yomi "ぎふけんせきし"
@@ -7330,7 +7330,7 @@ FactoryGirl.define do
       short_yomi "せきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120600 do
+    factory :jmaxml_forecast_region_2120600 do
       code "2120600"
       name "岐阜県中津川市"
       yomi "ぎふけんなかつがわし"
@@ -7338,7 +7338,7 @@ FactoryGirl.define do
       short_yomi "なかつがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120700 do
+    factory :jmaxml_forecast_region_2120700 do
       code "2120700"
       name "岐阜県美濃市"
       yomi "ぎふけんみのし"
@@ -7346,7 +7346,7 @@ FactoryGirl.define do
       short_yomi "みのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120800 do
+    factory :jmaxml_forecast_region_2120800 do
       code "2120800"
       name "岐阜県瑞浪市"
       yomi "ぎふけんみずなみし"
@@ -7354,7 +7354,7 @@ FactoryGirl.define do
       short_yomi "みずなみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2120900 do
+    factory :jmaxml_forecast_region_2120900 do
       code "2120900"
       name "岐阜県羽島市"
       yomi "ぎふけんはしまし"
@@ -7362,7 +7362,7 @@ FactoryGirl.define do
       short_yomi "はしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121000 do
+    factory :jmaxml_forecast_region_2121000 do
       code "2121000"
       name "岐阜県恵那市"
       yomi "ぎふけんえなし"
@@ -7370,7 +7370,7 @@ FactoryGirl.define do
       short_yomi "えなし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121100 do
+    factory :jmaxml_forecast_region_2121100 do
       code "2121100"
       name "岐阜県美濃加茂市"
       yomi "ぎふけんみのかもし"
@@ -7378,7 +7378,7 @@ FactoryGirl.define do
       short_yomi "みのかもし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121200 do
+    factory :jmaxml_forecast_region_2121200 do
       code "2121200"
       name "岐阜県土岐市"
       yomi "ぎふけんときし"
@@ -7386,7 +7386,7 @@ FactoryGirl.define do
       short_yomi "ときし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121300 do
+    factory :jmaxml_forecast_region_2121300 do
       code "2121300"
       name "岐阜県各務原市"
       yomi "ぎふけんかかみがはらし"
@@ -7394,7 +7394,7 @@ FactoryGirl.define do
       short_yomi "かかみがはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121400 do
+    factory :jmaxml_forecast_region_2121400 do
       code "2121400"
       name "岐阜県可児市"
       yomi "ぎふけんかにし"
@@ -7402,7 +7402,7 @@ FactoryGirl.define do
       short_yomi "かにし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121500 do
+    factory :jmaxml_forecast_region_2121500 do
       code "2121500"
       name "岐阜県山県市"
       yomi "ぎふけんやまがたし"
@@ -7410,7 +7410,7 @@ FactoryGirl.define do
       short_yomi "やまがたし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121600 do
+    factory :jmaxml_forecast_region_2121600 do
       code "2121600"
       name "岐阜県瑞穂市"
       yomi "ぎふけんみずほし"
@@ -7418,7 +7418,7 @@ FactoryGirl.define do
       short_yomi "みずほし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121700 do
+    factory :jmaxml_forecast_region_2121700 do
       code "2121700"
       name "岐阜県飛騨市"
       yomi "ぎふけんひだし"
@@ -7426,7 +7426,7 @@ FactoryGirl.define do
       short_yomi "ひだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121800 do
+    factory :jmaxml_forecast_region_2121800 do
       code "2121800"
       name "岐阜県本巣市"
       yomi "ぎふけんもとすし"
@@ -7434,7 +7434,7 @@ FactoryGirl.define do
       short_yomi "もとすし"
     end
 
-    factory :rss_weather_xml_forecast_region_2121900 do
+    factory :jmaxml_forecast_region_2121900 do
       code "2121900"
       name "岐阜県郡上市"
       yomi "ぎふけんぐじょうし"
@@ -7442,7 +7442,7 @@ FactoryGirl.define do
       short_yomi "ぐじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2122000 do
+    factory :jmaxml_forecast_region_2122000 do
       code "2122000"
       name "岐阜県下呂市"
       yomi "ぎふけんげろし"
@@ -7450,7 +7450,7 @@ FactoryGirl.define do
       short_yomi "げろし"
     end
 
-    factory :rss_weather_xml_forecast_region_2122100 do
+    factory :jmaxml_forecast_region_2122100 do
       code "2122100"
       name "岐阜県海津市"
       yomi "ぎふけんかいづし"
@@ -7458,7 +7458,7 @@ FactoryGirl.define do
       short_yomi "かいづし"
     end
 
-    factory :rss_weather_xml_forecast_region_2130200 do
+    factory :jmaxml_forecast_region_2130200 do
       code "2130200"
       name "岐阜県岐南町"
       yomi "ぎふけんぎなんちょう"
@@ -7466,7 +7466,7 @@ FactoryGirl.define do
       short_yomi "ぎなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2130300 do
+    factory :jmaxml_forecast_region_2130300 do
       code "2130300"
       name "岐阜県笠松町"
       yomi "ぎふけんかさまつちょう"
@@ -7474,7 +7474,7 @@ FactoryGirl.define do
       short_yomi "かさまつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2134100 do
+    factory :jmaxml_forecast_region_2134100 do
       code "2134100"
       name "岐阜県養老町"
       yomi "ぎふけんようろうちょう"
@@ -7482,7 +7482,7 @@ FactoryGirl.define do
       short_yomi "ようろうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2136100 do
+    factory :jmaxml_forecast_region_2136100 do
       code "2136100"
       name "岐阜県垂井町"
       yomi "ぎふけんたるいちょう"
@@ -7490,7 +7490,7 @@ FactoryGirl.define do
       short_yomi "たるいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2136200 do
+    factory :jmaxml_forecast_region_2136200 do
       code "2136200"
       name "岐阜県関ケ原町"
       yomi "ぎふけんせきがはらちょう"
@@ -7498,7 +7498,7 @@ FactoryGirl.define do
       short_yomi "せきがはらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2138100 do
+    factory :jmaxml_forecast_region_2138100 do
       code "2138100"
       name "岐阜県神戸町"
       yomi "ぎふけんごうどちょう"
@@ -7506,7 +7506,7 @@ FactoryGirl.define do
       short_yomi "ごうどちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2138200 do
+    factory :jmaxml_forecast_region_2138200 do
       code "2138200"
       name "岐阜県輪之内町"
       yomi "ぎふけんわのうちちょう"
@@ -7514,7 +7514,7 @@ FactoryGirl.define do
       short_yomi "わのうちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2138300 do
+    factory :jmaxml_forecast_region_2138300 do
       code "2138300"
       name "岐阜県安八町"
       yomi "ぎふけんあんぱちちょう"
@@ -7522,7 +7522,7 @@ FactoryGirl.define do
       short_yomi "あんぱちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2140100 do
+    factory :jmaxml_forecast_region_2140100 do
       code "2140100"
       name "岐阜県揖斐川町"
       yomi "ぎふけんいびがわちょう"
@@ -7530,7 +7530,7 @@ FactoryGirl.define do
       short_yomi "いびがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2140300 do
+    factory :jmaxml_forecast_region_2140300 do
       code "2140300"
       name "岐阜県大野町"
       yomi "ぎふけんおおのちょう"
@@ -7538,7 +7538,7 @@ FactoryGirl.define do
       short_yomi "おおのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2140400 do
+    factory :jmaxml_forecast_region_2140400 do
       code "2140400"
       name "岐阜県池田町"
       yomi "ぎふけんいけだちょう"
@@ -7546,7 +7546,7 @@ FactoryGirl.define do
       short_yomi "いけだちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2142100 do
+    factory :jmaxml_forecast_region_2142100 do
       code "2142100"
       name "岐阜県北方町"
       yomi "ぎふけんきたがたちょう"
@@ -7554,7 +7554,7 @@ FactoryGirl.define do
       short_yomi "きたがたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2150100 do
+    factory :jmaxml_forecast_region_2150100 do
       code "2150100"
       name "岐阜県坂祝町"
       yomi "ぎふけんさかほぎちょう"
@@ -7562,7 +7562,7 @@ FactoryGirl.define do
       short_yomi "さかほぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2150200 do
+    factory :jmaxml_forecast_region_2150200 do
       code "2150200"
       name "岐阜県富加町"
       yomi "ぎふけんとみかちょう"
@@ -7570,7 +7570,7 @@ FactoryGirl.define do
       short_yomi "とみかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2150300 do
+    factory :jmaxml_forecast_region_2150300 do
       code "2150300"
       name "岐阜県川辺町"
       yomi "ぎふけんかわべちょう"
@@ -7578,7 +7578,7 @@ FactoryGirl.define do
       short_yomi "かわべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2150400 do
+    factory :jmaxml_forecast_region_2150400 do
       code "2150400"
       name "岐阜県七宗町"
       yomi "ぎふけんひちそうちょう"
@@ -7586,7 +7586,7 @@ FactoryGirl.define do
       short_yomi "ひちそうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2150500 do
+    factory :jmaxml_forecast_region_2150500 do
       code "2150500"
       name "岐阜県八百津町"
       yomi "ぎふけんやおつちょう"
@@ -7594,7 +7594,7 @@ FactoryGirl.define do
       short_yomi "やおつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2150600 do
+    factory :jmaxml_forecast_region_2150600 do
       code "2150600"
       name "岐阜県白川町"
       yomi "ぎふけんしらかわちょう"
@@ -7602,7 +7602,7 @@ FactoryGirl.define do
       short_yomi "しらかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2150700 do
+    factory :jmaxml_forecast_region_2150700 do
       code "2150700"
       name "岐阜県東白川村"
       yomi "ぎふけんひがししらかわむら"
@@ -7610,7 +7610,7 @@ FactoryGirl.define do
       short_yomi "ひがししらかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2152100 do
+    factory :jmaxml_forecast_region_2152100 do
       code "2152100"
       name "岐阜県御嵩町"
       yomi "ぎふけんみたけちょう"
@@ -7618,7 +7618,7 @@ FactoryGirl.define do
       short_yomi "みたけちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2160400 do
+    factory :jmaxml_forecast_region_2160400 do
       code "2160400"
       name "岐阜県白川村"
       yomi "ぎふけんしらかわむら"
@@ -7626,7 +7626,7 @@ FactoryGirl.define do
       short_yomi "しらかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2210000 do
+    factory :jmaxml_forecast_region_2210000 do
       code "2210000"
       name "静岡県静岡市"
       yomi "しずおかけんしずおかし"
@@ -7634,7 +7634,7 @@ FactoryGirl.define do
       short_yomi "しずおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2213000 do
+    factory :jmaxml_forecast_region_2213000 do
       code "2213000"
       name "静岡県浜松市"
       yomi "しずおかけんはままつし"
@@ -7642,7 +7642,7 @@ FactoryGirl.define do
       short_yomi "はままつし"
     end
 
-    factory :rss_weather_xml_forecast_region_2220300 do
+    factory :jmaxml_forecast_region_2220300 do
       code "2220300"
       name "静岡県沼津市"
       yomi "しずおかけんぬまづし"
@@ -7650,7 +7650,7 @@ FactoryGirl.define do
       short_yomi "ぬまづし"
     end
 
-    factory :rss_weather_xml_forecast_region_2220500 do
+    factory :jmaxml_forecast_region_2220500 do
       code "2220500"
       name "静岡県熱海市"
       yomi "しずおかけんあたみし"
@@ -7658,7 +7658,7 @@ FactoryGirl.define do
       short_yomi "あたみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2220600 do
+    factory :jmaxml_forecast_region_2220600 do
       code "2220600"
       name "静岡県三島市"
       yomi "しずおかけんみしまし"
@@ -7666,7 +7666,7 @@ FactoryGirl.define do
       short_yomi "みしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2220700 do
+    factory :jmaxml_forecast_region_2220700 do
       code "2220700"
       name "静岡県富士宮市"
       yomi "しずおかけんふじのみやし"
@@ -7674,7 +7674,7 @@ FactoryGirl.define do
       short_yomi "ふじのみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2220800 do
+    factory :jmaxml_forecast_region_2220800 do
       code "2220800"
       name "静岡県伊東市"
       yomi "しずおかけんいとうし"
@@ -7682,7 +7682,7 @@ FactoryGirl.define do
       short_yomi "いとうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2220900 do
+    factory :jmaxml_forecast_region_2220900 do
       code "2220900"
       name "静岡県島田市"
       yomi "しずおかけんしまだし"
@@ -7690,7 +7690,7 @@ FactoryGirl.define do
       short_yomi "しまだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221000 do
+    factory :jmaxml_forecast_region_2221000 do
       code "2221000"
       name "静岡県富士市"
       yomi "しずおかけんふじし"
@@ -7698,7 +7698,7 @@ FactoryGirl.define do
       short_yomi "ふじし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221100 do
+    factory :jmaxml_forecast_region_2221100 do
       code "2221100"
       name "静岡県磐田市"
       yomi "しずおかけんいわたし"
@@ -7706,7 +7706,7 @@ FactoryGirl.define do
       short_yomi "いわたし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221200 do
+    factory :jmaxml_forecast_region_2221200 do
       code "2221200"
       name "静岡県焼津市"
       yomi "しずおかけんやいづし"
@@ -7714,7 +7714,7 @@ FactoryGirl.define do
       short_yomi "やいづし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221300 do
+    factory :jmaxml_forecast_region_2221300 do
       code "2221300"
       name "静岡県掛川市"
       yomi "しずおかけんかけがわし"
@@ -7722,7 +7722,7 @@ FactoryGirl.define do
       short_yomi "かけがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221400 do
+    factory :jmaxml_forecast_region_2221400 do
       code "2221400"
       name "静岡県藤枝市"
       yomi "しずおかけんふじえだし"
@@ -7730,7 +7730,7 @@ FactoryGirl.define do
       short_yomi "ふじえだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221500 do
+    factory :jmaxml_forecast_region_2221500 do
       code "2221500"
       name "静岡県御殿場市"
       yomi "しずおかけんごてんばし"
@@ -7738,7 +7738,7 @@ FactoryGirl.define do
       short_yomi "ごてんばし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221600 do
+    factory :jmaxml_forecast_region_2221600 do
       code "2221600"
       name "静岡県袋井市"
       yomi "しずおかけんふくろいし"
@@ -7746,7 +7746,7 @@ FactoryGirl.define do
       short_yomi "ふくろいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2221900 do
+    factory :jmaxml_forecast_region_2221900 do
       code "2221900"
       name "静岡県下田市"
       yomi "しずおかけんしもだし"
@@ -7754,7 +7754,7 @@ FactoryGirl.define do
       short_yomi "しもだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2222000 do
+    factory :jmaxml_forecast_region_2222000 do
       code "2222000"
       name "静岡県裾野市"
       yomi "しずおかけんすそのし"
@@ -7762,7 +7762,7 @@ FactoryGirl.define do
       short_yomi "すそのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2222100 do
+    factory :jmaxml_forecast_region_2222100 do
       code "2222100"
       name "静岡県湖西市"
       yomi "しずおかけんこさいし"
@@ -7770,7 +7770,7 @@ FactoryGirl.define do
       short_yomi "こさいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2222200 do
+    factory :jmaxml_forecast_region_2222200 do
       code "2222200"
       name "静岡県伊豆市"
       yomi "しずおかけんいずし"
@@ -7778,7 +7778,7 @@ FactoryGirl.define do
       short_yomi "いずし"
     end
 
-    factory :rss_weather_xml_forecast_region_2222300 do
+    factory :jmaxml_forecast_region_2222300 do
       code "2222300"
       name "静岡県御前崎市"
       yomi "しずおかけんおまえざきし"
@@ -7786,7 +7786,7 @@ FactoryGirl.define do
       short_yomi "おまえざきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2222400 do
+    factory :jmaxml_forecast_region_2222400 do
       code "2222400"
       name "静岡県菊川市"
       yomi "しずおかけんきくがわし"
@@ -7794,7 +7794,7 @@ FactoryGirl.define do
       short_yomi "きくがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2222500 do
+    factory :jmaxml_forecast_region_2222500 do
       code "2222500"
       name "静岡県伊豆の国市"
       yomi "しずおかけんいずのくにし"
@@ -7802,7 +7802,7 @@ FactoryGirl.define do
       short_yomi "いずのくにし"
     end
 
-    factory :rss_weather_xml_forecast_region_2222600 do
+    factory :jmaxml_forecast_region_2222600 do
       code "2222600"
       name "静岡県牧之原市"
       yomi "しずおかけんまきのはらし"
@@ -7810,7 +7810,7 @@ FactoryGirl.define do
       short_yomi "まきのはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2230100 do
+    factory :jmaxml_forecast_region_2230100 do
       code "2230100"
       name "静岡県東伊豆町"
       yomi "しずおかけんひがしいずちょう"
@@ -7818,7 +7818,7 @@ FactoryGirl.define do
       short_yomi "ひがしいずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2230200 do
+    factory :jmaxml_forecast_region_2230200 do
       code "2230200"
       name "静岡県河津町"
       yomi "しずおかけんかわづちょう"
@@ -7826,7 +7826,7 @@ FactoryGirl.define do
       short_yomi "かわづちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2230400 do
+    factory :jmaxml_forecast_region_2230400 do
       code "2230400"
       name "静岡県南伊豆町"
       yomi "しずおかけんみなみいずちょう"
@@ -7834,7 +7834,7 @@ FactoryGirl.define do
       short_yomi "みなみいずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2230500 do
+    factory :jmaxml_forecast_region_2230500 do
       code "2230500"
       name "静岡県松崎町"
       yomi "しずおかけんまつざきちょう"
@@ -7842,7 +7842,7 @@ FactoryGirl.define do
       short_yomi "まつざきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2230600 do
+    factory :jmaxml_forecast_region_2230600 do
       code "2230600"
       name "静岡県西伊豆町"
       yomi "しずおかけんにしいずちょう"
@@ -7850,7 +7850,7 @@ FactoryGirl.define do
       short_yomi "にしいずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2232500 do
+    factory :jmaxml_forecast_region_2232500 do
       code "2232500"
       name "静岡県函南町"
       yomi "しずおかけんかんなみちょう"
@@ -7858,7 +7858,7 @@ FactoryGirl.define do
       short_yomi "かんなみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2234100 do
+    factory :jmaxml_forecast_region_2234100 do
       code "2234100"
       name "静岡県清水町"
       yomi "しずおかけんしみずちょう"
@@ -7866,7 +7866,7 @@ FactoryGirl.define do
       short_yomi "しみずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2234200 do
+    factory :jmaxml_forecast_region_2234200 do
       code "2234200"
       name "静岡県長泉町"
       yomi "しずおかけんながいずみちょう"
@@ -7874,7 +7874,7 @@ FactoryGirl.define do
       short_yomi "ながいずみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2234400 do
+    factory :jmaxml_forecast_region_2234400 do
       code "2234400"
       name "静岡県小山町"
       yomi "しずおかけんおやまちょう"
@@ -7882,7 +7882,7 @@ FactoryGirl.define do
       short_yomi "おやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2242400 do
+    factory :jmaxml_forecast_region_2242400 do
       code "2242400"
       name "静岡県吉田町"
       yomi "しずおかけんよしだちょう"
@@ -7890,7 +7890,7 @@ FactoryGirl.define do
       short_yomi "よしだちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2242900 do
+    factory :jmaxml_forecast_region_2242900 do
       code "2242900"
       name "静岡県川根本町"
       yomi "しずおかけんかわねほんちょう"
@@ -7898,7 +7898,7 @@ FactoryGirl.define do
       short_yomi "かわねほんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2246100 do
+    factory :jmaxml_forecast_region_2246100 do
       code "2246100"
       name "静岡県森町"
       yomi "しずおかけんもりまち"
@@ -7906,7 +7906,7 @@ FactoryGirl.define do
       short_yomi "もりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_2310000 do
+    factory :jmaxml_forecast_region_2310000 do
       code "2310000"
       name "愛知県名古屋市"
       yomi "あいちけんなごやし"
@@ -7914,7 +7914,7 @@ FactoryGirl.define do
       short_yomi "なごやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320100 do
+    factory :jmaxml_forecast_region_2320100 do
       code "2320100"
       name "愛知県豊橋市"
       yomi "あいちけんとよはしし"
@@ -7922,7 +7922,7 @@ FactoryGirl.define do
       short_yomi "とよはしし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320200 do
+    factory :jmaxml_forecast_region_2320200 do
       code "2320200"
       name "愛知県岡崎市"
       yomi "あいちけんおかざきし"
@@ -7930,7 +7930,7 @@ FactoryGirl.define do
       short_yomi "おかざきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320300 do
+    factory :jmaxml_forecast_region_2320300 do
       code "2320300"
       name "愛知県一宮市"
       yomi "あいちけんいちのみやし"
@@ -7938,7 +7938,7 @@ FactoryGirl.define do
       short_yomi "いちのみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320400 do
+    factory :jmaxml_forecast_region_2320400 do
       code "2320400"
       name "愛知県瀬戸市"
       yomi "あいちけんせとし"
@@ -7946,7 +7946,7 @@ FactoryGirl.define do
       short_yomi "せとし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320500 do
+    factory :jmaxml_forecast_region_2320500 do
       code "2320500"
       name "愛知県半田市"
       yomi "あいちけんはんだし"
@@ -7954,7 +7954,7 @@ FactoryGirl.define do
       short_yomi "はんだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320600 do
+    factory :jmaxml_forecast_region_2320600 do
       code "2320600"
       name "愛知県春日井市"
       yomi "あいちけんかすがいし"
@@ -7962,7 +7962,7 @@ FactoryGirl.define do
       short_yomi "かすがいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320700 do
+    factory :jmaxml_forecast_region_2320700 do
       code "2320700"
       name "愛知県豊川市"
       yomi "あいちけんとよかわし"
@@ -7970,7 +7970,7 @@ FactoryGirl.define do
       short_yomi "とよかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320800 do
+    factory :jmaxml_forecast_region_2320800 do
       code "2320800"
       name "愛知県津島市"
       yomi "あいちけんつしまし"
@@ -7978,7 +7978,7 @@ FactoryGirl.define do
       short_yomi "つしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2320900 do
+    factory :jmaxml_forecast_region_2320900 do
       code "2320900"
       name "愛知県碧南市"
       yomi "あいちけんへきなんし"
@@ -7986,7 +7986,7 @@ FactoryGirl.define do
       short_yomi "へきなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321000 do
+    factory :jmaxml_forecast_region_2321000 do
       code "2321000"
       name "愛知県刈谷市"
       yomi "あいちけんかりやし"
@@ -7994,7 +7994,7 @@ FactoryGirl.define do
       short_yomi "かりやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321100 do
+    factory :jmaxml_forecast_region_2321100 do
       code "2321100"
       name "愛知県豊田市"
       yomi "あいちけんとよたし"
@@ -8002,7 +8002,7 @@ FactoryGirl.define do
       short_yomi "とよたし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321200 do
+    factory :jmaxml_forecast_region_2321200 do
       code "2321200"
       name "愛知県安城市"
       yomi "あいちけんあんじょうし"
@@ -8010,7 +8010,7 @@ FactoryGirl.define do
       short_yomi "あんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321300 do
+    factory :jmaxml_forecast_region_2321300 do
       code "2321300"
       name "愛知県西尾市"
       yomi "あいちけんにしおし"
@@ -8018,7 +8018,7 @@ FactoryGirl.define do
       short_yomi "にしおし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321400 do
+    factory :jmaxml_forecast_region_2321400 do
       code "2321400"
       name "愛知県蒲郡市"
       yomi "あいちけんがまごおりし"
@@ -8026,7 +8026,7 @@ FactoryGirl.define do
       short_yomi "がまごおりし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321500 do
+    factory :jmaxml_forecast_region_2321500 do
       code "2321500"
       name "愛知県犬山市"
       yomi "あいちけんいぬやまし"
@@ -8034,7 +8034,7 @@ FactoryGirl.define do
       short_yomi "いぬやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321600 do
+    factory :jmaxml_forecast_region_2321600 do
       code "2321600"
       name "愛知県常滑市"
       yomi "あいちけんとこなめし"
@@ -8042,7 +8042,7 @@ FactoryGirl.define do
       short_yomi "とこなめし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321700 do
+    factory :jmaxml_forecast_region_2321700 do
       code "2321700"
       name "愛知県江南市"
       yomi "あいちけんこうなんし"
@@ -8050,7 +8050,7 @@ FactoryGirl.define do
       short_yomi "こうなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2321900 do
+    factory :jmaxml_forecast_region_2321900 do
       code "2321900"
       name "愛知県小牧市"
       yomi "あいちけんこまきし"
@@ -8058,7 +8058,7 @@ FactoryGirl.define do
       short_yomi "こまきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322000 do
+    factory :jmaxml_forecast_region_2322000 do
       code "2322000"
       name "愛知県稲沢市"
       yomi "あいちけんいなざわし"
@@ -8066,7 +8066,7 @@ FactoryGirl.define do
       short_yomi "いなざわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322100 do
+    factory :jmaxml_forecast_region_2322100 do
       code "2322100"
       name "愛知県新城市"
       yomi "あいちけんしんしろし"
@@ -8074,7 +8074,7 @@ FactoryGirl.define do
       short_yomi "しんしろし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322200 do
+    factory :jmaxml_forecast_region_2322200 do
       code "2322200"
       name "愛知県東海市"
       yomi "あいちけんとうかいし"
@@ -8082,7 +8082,7 @@ FactoryGirl.define do
       short_yomi "とうかいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322300 do
+    factory :jmaxml_forecast_region_2322300 do
       code "2322300"
       name "愛知県大府市"
       yomi "あいちけんおおぶし"
@@ -8090,7 +8090,7 @@ FactoryGirl.define do
       short_yomi "おおぶし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322400 do
+    factory :jmaxml_forecast_region_2322400 do
       code "2322400"
       name "愛知県知多市"
       yomi "あいちけんちたし"
@@ -8098,7 +8098,7 @@ FactoryGirl.define do
       short_yomi "ちたし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322500 do
+    factory :jmaxml_forecast_region_2322500 do
       code "2322500"
       name "愛知県知立市"
       yomi "あいちけんちりゅうし"
@@ -8106,7 +8106,7 @@ FactoryGirl.define do
       short_yomi "ちりゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322600 do
+    factory :jmaxml_forecast_region_2322600 do
       code "2322600"
       name "愛知県尾張旭市"
       yomi "あいちけんおわりあさひし"
@@ -8114,7 +8114,7 @@ FactoryGirl.define do
       short_yomi "おわりあさひし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322700 do
+    factory :jmaxml_forecast_region_2322700 do
       code "2322700"
       name "愛知県高浜市"
       yomi "あいちけんたかはまし"
@@ -8122,7 +8122,7 @@ FactoryGirl.define do
       short_yomi "たかはまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322800 do
+    factory :jmaxml_forecast_region_2322800 do
       code "2322800"
       name "愛知県岩倉市"
       yomi "あいちけんいわくらし"
@@ -8130,7 +8130,7 @@ FactoryGirl.define do
       short_yomi "いわくらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2322900 do
+    factory :jmaxml_forecast_region_2322900 do
       code "2322900"
       name "愛知県豊明市"
       yomi "あいちけんとよあけし"
@@ -8138,7 +8138,7 @@ FactoryGirl.define do
       short_yomi "とよあけし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323000 do
+    factory :jmaxml_forecast_region_2323000 do
       code "2323000"
       name "愛知県日進市"
       yomi "あいちけんにっしんし"
@@ -8146,7 +8146,7 @@ FactoryGirl.define do
       short_yomi "にっしんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323100 do
+    factory :jmaxml_forecast_region_2323100 do
       code "2323100"
       name "愛知県田原市"
       yomi "あいちけんたはらし"
@@ -8154,7 +8154,7 @@ FactoryGirl.define do
       short_yomi "たはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323200 do
+    factory :jmaxml_forecast_region_2323200 do
       code "2323200"
       name "愛知県愛西市"
       yomi "あいちけんあいさいし"
@@ -8162,7 +8162,7 @@ FactoryGirl.define do
       short_yomi "あいさいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323300 do
+    factory :jmaxml_forecast_region_2323300 do
       code "2323300"
       name "愛知県清須市"
       yomi "あいちけんきよすし"
@@ -8170,7 +8170,7 @@ FactoryGirl.define do
       short_yomi "きよすし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323400 do
+    factory :jmaxml_forecast_region_2323400 do
       code "2323400"
       name "愛知県北名古屋市"
       yomi "あいちけんきたなごやし"
@@ -8178,7 +8178,7 @@ FactoryGirl.define do
       short_yomi "きたなごやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323500 do
+    factory :jmaxml_forecast_region_2323500 do
       code "2323500"
       name "愛知県弥富市"
       yomi "あいちけんやとみし"
@@ -8186,7 +8186,7 @@ FactoryGirl.define do
       short_yomi "やとみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323600 do
+    factory :jmaxml_forecast_region_2323600 do
       code "2323600"
       name "愛知県みよし市"
       yomi "あいちけんみよしし"
@@ -8194,7 +8194,7 @@ FactoryGirl.define do
       short_yomi "みよしし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323700 do
+    factory :jmaxml_forecast_region_2323700 do
       code "2323700"
       name "愛知県あま市"
       yomi "あいちけんあまし"
@@ -8202,7 +8202,7 @@ FactoryGirl.define do
       short_yomi "あまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2323800 do
+    factory :jmaxml_forecast_region_2323800 do
       code "2323800"
       name "愛知県長久手市"
       yomi "あいちけんながくてし"
@@ -8210,7 +8210,7 @@ FactoryGirl.define do
       short_yomi "ながくてし"
     end
 
-    factory :rss_weather_xml_forecast_region_2330200 do
+    factory :jmaxml_forecast_region_2330200 do
       code "2330200"
       name "愛知県東郷町"
       yomi "あいちけんとうごうちょう"
@@ -8218,7 +8218,7 @@ FactoryGirl.define do
       short_yomi "とうごうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2334200 do
+    factory :jmaxml_forecast_region_2334200 do
       code "2334200"
       name "愛知県豊山町"
       yomi "あいちけんとよやまちょう"
@@ -8226,7 +8226,7 @@ FactoryGirl.define do
       short_yomi "とよやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2336100 do
+    factory :jmaxml_forecast_region_2336100 do
       code "2336100"
       name "愛知県大口町"
       yomi "あいちけんおおぐちちょう"
@@ -8234,7 +8234,7 @@ FactoryGirl.define do
       short_yomi "おおぐちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2336200 do
+    factory :jmaxml_forecast_region_2336200 do
       code "2336200"
       name "愛知県扶桑町"
       yomi "あいちけんふそうちょう"
@@ -8242,7 +8242,7 @@ FactoryGirl.define do
       short_yomi "ふそうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2342400 do
+    factory :jmaxml_forecast_region_2342400 do
       code "2342400"
       name "愛知県大治町"
       yomi "あいちけんおおはるちょう"
@@ -8250,7 +8250,7 @@ FactoryGirl.define do
       short_yomi "おおはるちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2342500 do
+    factory :jmaxml_forecast_region_2342500 do
       code "2342500"
       name "愛知県蟹江町"
       yomi "あいちけんかにえちょう"
@@ -8258,7 +8258,7 @@ FactoryGirl.define do
       short_yomi "かにえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2342700 do
+    factory :jmaxml_forecast_region_2342700 do
       code "2342700"
       name "愛知県飛島村"
       yomi "あいちけんとびしまむら"
@@ -8266,7 +8266,7 @@ FactoryGirl.define do
       short_yomi "とびしまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2344100 do
+    factory :jmaxml_forecast_region_2344100 do
       code "2344100"
       name "愛知県阿久比町"
       yomi "あいちけんあぐいちょう"
@@ -8274,7 +8274,7 @@ FactoryGirl.define do
       short_yomi "あぐいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2344200 do
+    factory :jmaxml_forecast_region_2344200 do
       code "2344200"
       name "愛知県東浦町"
       yomi "あいちけんひがしうらちょう"
@@ -8282,7 +8282,7 @@ FactoryGirl.define do
       short_yomi "ひがしうらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2344500 do
+    factory :jmaxml_forecast_region_2344500 do
       code "2344500"
       name "愛知県南知多町"
       yomi "あいちけんみなみちたちょう"
@@ -8290,7 +8290,7 @@ FactoryGirl.define do
       short_yomi "みなみちたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2344600 do
+    factory :jmaxml_forecast_region_2344600 do
       code "2344600"
       name "愛知県美浜町"
       yomi "あいちけんみはまちょう"
@@ -8298,7 +8298,7 @@ FactoryGirl.define do
       short_yomi "みはまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2344700 do
+    factory :jmaxml_forecast_region_2344700 do
       code "2344700"
       name "愛知県武豊町"
       yomi "あいちけんたけとよちょう"
@@ -8306,7 +8306,7 @@ FactoryGirl.define do
       short_yomi "たけとよちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2350100 do
+    factory :jmaxml_forecast_region_2350100 do
       code "2350100"
       name "愛知県幸田町"
       yomi "あいちけんこうたちょう"
@@ -8314,7 +8314,7 @@ FactoryGirl.define do
       short_yomi "こうたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2356100 do
+    factory :jmaxml_forecast_region_2356100 do
       code "2356100"
       name "愛知県設楽町"
       yomi "あいちけんしたらちょう"
@@ -8322,7 +8322,7 @@ FactoryGirl.define do
       short_yomi "したらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2356200 do
+    factory :jmaxml_forecast_region_2356200 do
       code "2356200"
       name "愛知県東栄町"
       yomi "あいちけんとうえいちょう"
@@ -8330,7 +8330,7 @@ FactoryGirl.define do
       short_yomi "とうえいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2356300 do
+    factory :jmaxml_forecast_region_2356300 do
       code "2356300"
       name "愛知県豊根村"
       yomi "あいちけんとよねむら"
@@ -8338,7 +8338,7 @@ FactoryGirl.define do
       short_yomi "とよねむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2420100 do
+    factory :jmaxml_forecast_region_2420100 do
       code "2420100"
       name "三重県津市"
       yomi "みえけんつし"
@@ -8346,7 +8346,7 @@ FactoryGirl.define do
       short_yomi "つし"
     end
 
-    factory :rss_weather_xml_forecast_region_2420200 do
+    factory :jmaxml_forecast_region_2420200 do
       code "2420200"
       name "三重県四日市市"
       yomi "みえけんよっかいちし"
@@ -8354,7 +8354,7 @@ FactoryGirl.define do
       short_yomi "よっかいちし"
     end
 
-    factory :rss_weather_xml_forecast_region_2420300 do
+    factory :jmaxml_forecast_region_2420300 do
       code "2420300"
       name "三重県伊勢市"
       yomi "みえけんいせし"
@@ -8362,7 +8362,7 @@ FactoryGirl.define do
       short_yomi "いせし"
     end
 
-    factory :rss_weather_xml_forecast_region_2420400 do
+    factory :jmaxml_forecast_region_2420400 do
       code "2420400"
       name "三重県松阪市"
       yomi "みえけんまつさかし"
@@ -8370,7 +8370,7 @@ FactoryGirl.define do
       short_yomi "まつさかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2420500 do
+    factory :jmaxml_forecast_region_2420500 do
       code "2420500"
       name "三重県桑名市"
       yomi "みえけんくわなし"
@@ -8378,7 +8378,7 @@ FactoryGirl.define do
       short_yomi "くわなし"
     end
 
-    factory :rss_weather_xml_forecast_region_2420700 do
+    factory :jmaxml_forecast_region_2420700 do
       code "2420700"
       name "三重県鈴鹿市"
       yomi "みえけんすずかし"
@@ -8386,7 +8386,7 @@ FactoryGirl.define do
       short_yomi "すずかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2420800 do
+    factory :jmaxml_forecast_region_2420800 do
       code "2420800"
       name "三重県名張市"
       yomi "みえけんなばりし"
@@ -8394,7 +8394,7 @@ FactoryGirl.define do
       short_yomi "なばりし"
     end
 
-    factory :rss_weather_xml_forecast_region_2420900 do
+    factory :jmaxml_forecast_region_2420900 do
       code "2420900"
       name "三重県尾鷲市"
       yomi "みえけんおわせし"
@@ -8402,7 +8402,7 @@ FactoryGirl.define do
       short_yomi "おわせし"
     end
 
-    factory :rss_weather_xml_forecast_region_2421000 do
+    factory :jmaxml_forecast_region_2421000 do
       code "2421000"
       name "三重県亀山市"
       yomi "みえけんかめやまし"
@@ -8410,7 +8410,7 @@ FactoryGirl.define do
       short_yomi "かめやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2421100 do
+    factory :jmaxml_forecast_region_2421100 do
       code "2421100"
       name "三重県鳥羽市"
       yomi "みえけんとばし"
@@ -8418,7 +8418,7 @@ FactoryGirl.define do
       short_yomi "とばし"
     end
 
-    factory :rss_weather_xml_forecast_region_2421200 do
+    factory :jmaxml_forecast_region_2421200 do
       code "2421200"
       name "三重県熊野市"
       yomi "みえけんくまのし"
@@ -8426,7 +8426,7 @@ FactoryGirl.define do
       short_yomi "くまのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2421400 do
+    factory :jmaxml_forecast_region_2421400 do
       code "2421400"
       name "三重県いなべ市"
       yomi "みえけんいなべし"
@@ -8434,7 +8434,7 @@ FactoryGirl.define do
       short_yomi "いなべし"
     end
 
-    factory :rss_weather_xml_forecast_region_2421500 do
+    factory :jmaxml_forecast_region_2421500 do
       code "2421500"
       name "三重県志摩市"
       yomi "みえけんしまし"
@@ -8442,7 +8442,7 @@ FactoryGirl.define do
       short_yomi "しまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2421600 do
+    factory :jmaxml_forecast_region_2421600 do
       code "2421600"
       name "三重県伊賀市"
       yomi "みえけんいがし"
@@ -8450,7 +8450,7 @@ FactoryGirl.define do
       short_yomi "いがし"
     end
 
-    factory :rss_weather_xml_forecast_region_2430300 do
+    factory :jmaxml_forecast_region_2430300 do
       code "2430300"
       name "三重県木曽岬町"
       yomi "みえけんきそさきちょう"
@@ -8458,7 +8458,7 @@ FactoryGirl.define do
       short_yomi "きそさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2432400 do
+    factory :jmaxml_forecast_region_2432400 do
       code "2432400"
       name "三重県東員町"
       yomi "みえけんとういんちょう"
@@ -8466,7 +8466,7 @@ FactoryGirl.define do
       short_yomi "とういんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2434100 do
+    factory :jmaxml_forecast_region_2434100 do
       code "2434100"
       name "三重県菰野町"
       yomi "みえけんこものちょう"
@@ -8474,7 +8474,7 @@ FactoryGirl.define do
       short_yomi "こものちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2434300 do
+    factory :jmaxml_forecast_region_2434300 do
       code "2434300"
       name "三重県朝日町"
       yomi "みえけんあさひちょう"
@@ -8482,7 +8482,7 @@ FactoryGirl.define do
       short_yomi "あさひちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2434400 do
+    factory :jmaxml_forecast_region_2434400 do
       code "2434400"
       name "三重県川越町"
       yomi "みえけんかわごえちょう"
@@ -8490,7 +8490,7 @@ FactoryGirl.define do
       short_yomi "かわごえちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2444100 do
+    factory :jmaxml_forecast_region_2444100 do
       code "2444100"
       name "三重県多気町"
       yomi "みえけんたきちょう"
@@ -8498,7 +8498,7 @@ FactoryGirl.define do
       short_yomi "たきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2444200 do
+    factory :jmaxml_forecast_region_2444200 do
       code "2444200"
       name "三重県明和町"
       yomi "みえけんめいわちょう"
@@ -8506,7 +8506,7 @@ FactoryGirl.define do
       short_yomi "めいわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2444300 do
+    factory :jmaxml_forecast_region_2444300 do
       code "2444300"
       name "三重県大台町"
       yomi "みえけんおおだいちょう"
@@ -8514,7 +8514,7 @@ FactoryGirl.define do
       short_yomi "おおだいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2446100 do
+    factory :jmaxml_forecast_region_2446100 do
       code "2446100"
       name "三重県玉城町"
       yomi "みえけんたまきちょう"
@@ -8522,7 +8522,7 @@ FactoryGirl.define do
       short_yomi "たまきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2447000 do
+    factory :jmaxml_forecast_region_2447000 do
       code "2447000"
       name "三重県度会町"
       yomi "みえけんわたらいちょう"
@@ -8530,7 +8530,7 @@ FactoryGirl.define do
       short_yomi "わたらいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2447100 do
+    factory :jmaxml_forecast_region_2447100 do
       code "2447100"
       name "三重県大紀町"
       yomi "みえけんたいきちょう"
@@ -8538,7 +8538,7 @@ FactoryGirl.define do
       short_yomi "たいきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2447200 do
+    factory :jmaxml_forecast_region_2447200 do
       code "2447200"
       name "三重県南伊勢町"
       yomi "みえけんみなみいせちょう"
@@ -8546,7 +8546,7 @@ FactoryGirl.define do
       short_yomi "みなみいせちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2454300 do
+    factory :jmaxml_forecast_region_2454300 do
       code "2454300"
       name "三重県紀北町"
       yomi "みえけんきほくちょう"
@@ -8554,7 +8554,7 @@ FactoryGirl.define do
       short_yomi "きほくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2456100 do
+    factory :jmaxml_forecast_region_2456100 do
       code "2456100"
       name "三重県御浜町"
       yomi "みえけんみはまちょう"
@@ -8562,7 +8562,7 @@ FactoryGirl.define do
       short_yomi "みはまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2456200 do
+    factory :jmaxml_forecast_region_2456200 do
       code "2456200"
       name "三重県紀宝町"
       yomi "みえけんきほうちょう"
@@ -8570,7 +8570,7 @@ FactoryGirl.define do
       short_yomi "きほうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2520100 do
+    factory :jmaxml_forecast_region_2520100 do
       code "2520100"
       name "滋賀県大津市"
       yomi "しがけんおおつし"
@@ -8578,7 +8578,7 @@ FactoryGirl.define do
       short_yomi "おおつし"
     end
 
-    factory :rss_weather_xml_forecast_region_2520200 do
+    factory :jmaxml_forecast_region_2520200 do
       code "2520200"
       name "滋賀県彦根市"
       yomi "しがけんひこねし"
@@ -8586,7 +8586,7 @@ FactoryGirl.define do
       short_yomi "ひこねし"
     end
 
-    factory :rss_weather_xml_forecast_region_2520300 do
+    factory :jmaxml_forecast_region_2520300 do
       code "2520300"
       name "滋賀県長浜市"
       yomi "しがけんながはまし"
@@ -8594,7 +8594,7 @@ FactoryGirl.define do
       short_yomi "ながはまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2520400 do
+    factory :jmaxml_forecast_region_2520400 do
       code "2520400"
       name "滋賀県近江八幡市"
       yomi "しがけんおうみはちまんし"
@@ -8602,7 +8602,7 @@ FactoryGirl.define do
       short_yomi "おうみはちまんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2520600 do
+    factory :jmaxml_forecast_region_2520600 do
       code "2520600"
       name "滋賀県草津市"
       yomi "しがけんくさつし"
@@ -8610,7 +8610,7 @@ FactoryGirl.define do
       short_yomi "くさつし"
     end
 
-    factory :rss_weather_xml_forecast_region_2520700 do
+    factory :jmaxml_forecast_region_2520700 do
       code "2520700"
       name "滋賀県守山市"
       yomi "しがけんもりやまし"
@@ -8618,7 +8618,7 @@ FactoryGirl.define do
       short_yomi "もりやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2520800 do
+    factory :jmaxml_forecast_region_2520800 do
       code "2520800"
       name "滋賀県栗東市"
       yomi "しがけんりっとうし"
@@ -8626,7 +8626,7 @@ FactoryGirl.define do
       short_yomi "りっとうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2520900 do
+    factory :jmaxml_forecast_region_2520900 do
       code "2520900"
       name "滋賀県甲賀市"
       yomi "しがけんこうかし"
@@ -8634,7 +8634,7 @@ FactoryGirl.define do
       short_yomi "こうかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2521000 do
+    factory :jmaxml_forecast_region_2521000 do
       code "2521000"
       name "滋賀県野洲市"
       yomi "しがけんやすし"
@@ -8642,7 +8642,7 @@ FactoryGirl.define do
       short_yomi "やすし"
     end
 
-    factory :rss_weather_xml_forecast_region_2521100 do
+    factory :jmaxml_forecast_region_2521100 do
       code "2521100"
       name "滋賀県湖南市"
       yomi "しがけんこなんし"
@@ -8650,7 +8650,7 @@ FactoryGirl.define do
       short_yomi "こなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2521200 do
+    factory :jmaxml_forecast_region_2521200 do
       code "2521200"
       name "滋賀県高島市"
       yomi "しがけんたかしまし"
@@ -8658,7 +8658,7 @@ FactoryGirl.define do
       short_yomi "たかしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2521300 do
+    factory :jmaxml_forecast_region_2521300 do
       code "2521300"
       name "滋賀県東近江市"
       yomi "しがけんひがしおうみし"
@@ -8666,7 +8666,7 @@ FactoryGirl.define do
       short_yomi "ひがしおうみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2521400 do
+    factory :jmaxml_forecast_region_2521400 do
       code "2521400"
       name "滋賀県米原市"
       yomi "しがけんまいばらし"
@@ -8674,7 +8674,7 @@ FactoryGirl.define do
       short_yomi "まいばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2538300 do
+    factory :jmaxml_forecast_region_2538300 do
       code "2538300"
       name "滋賀県日野町"
       yomi "しがけんひのちょう"
@@ -8682,7 +8682,7 @@ FactoryGirl.define do
       short_yomi "ひのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2538400 do
+    factory :jmaxml_forecast_region_2538400 do
       code "2538400"
       name "滋賀県竜王町"
       yomi "しがけんりゅうおうちょう"
@@ -8690,7 +8690,7 @@ FactoryGirl.define do
       short_yomi "りゅうおうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2542500 do
+    factory :jmaxml_forecast_region_2542500 do
       code "2542500"
       name "滋賀県愛荘町"
       yomi "しがけんあいしょうちょう"
@@ -8698,7 +8698,7 @@ FactoryGirl.define do
       short_yomi "あいしょうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2544100 do
+    factory :jmaxml_forecast_region_2544100 do
       code "2544100"
       name "滋賀県豊郷町"
       yomi "しがけんとよさとちょう"
@@ -8706,7 +8706,7 @@ FactoryGirl.define do
       short_yomi "とよさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2544200 do
+    factory :jmaxml_forecast_region_2544200 do
       code "2544200"
       name "滋賀県甲良町"
       yomi "しがけんこうらちょう"
@@ -8714,7 +8714,7 @@ FactoryGirl.define do
       short_yomi "こうらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2544300 do
+    factory :jmaxml_forecast_region_2544300 do
       code "2544300"
       name "滋賀県多賀町"
       yomi "しがけんたがちょう"
@@ -8722,7 +8722,7 @@ FactoryGirl.define do
       short_yomi "たがちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2610000 do
+    factory :jmaxml_forecast_region_2610000 do
       code "2610000"
       name "京都府京都市"
       yomi "きょうとふきょうとし"
@@ -8730,7 +8730,7 @@ FactoryGirl.define do
       short_yomi "きょうとし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620100 do
+    factory :jmaxml_forecast_region_2620100 do
       code "2620100"
       name "京都府福知山市"
       yomi "きょうとふふくちやまし"
@@ -8738,7 +8738,7 @@ FactoryGirl.define do
       short_yomi "ふくちやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620200 do
+    factory :jmaxml_forecast_region_2620200 do
       code "2620200"
       name "京都府舞鶴市"
       yomi "きょうとふまいづるし"
@@ -8746,7 +8746,7 @@ FactoryGirl.define do
       short_yomi "まいづるし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620300 do
+    factory :jmaxml_forecast_region_2620300 do
       code "2620300"
       name "京都府綾部市"
       yomi "きょうとふあやべし"
@@ -8754,7 +8754,7 @@ FactoryGirl.define do
       short_yomi "あやべし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620400 do
+    factory :jmaxml_forecast_region_2620400 do
       code "2620400"
       name "京都府宇治市"
       yomi "きょうとふうじし"
@@ -8762,7 +8762,7 @@ FactoryGirl.define do
       short_yomi "うじし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620500 do
+    factory :jmaxml_forecast_region_2620500 do
       code "2620500"
       name "京都府宮津市"
       yomi "きょうとふみやづし"
@@ -8770,7 +8770,7 @@ FactoryGirl.define do
       short_yomi "みやづし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620600 do
+    factory :jmaxml_forecast_region_2620600 do
       code "2620600"
       name "京都府亀岡市"
       yomi "きょうとふかめおかし"
@@ -8778,7 +8778,7 @@ FactoryGirl.define do
       short_yomi "かめおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620700 do
+    factory :jmaxml_forecast_region_2620700 do
       code "2620700"
       name "京都府城陽市"
       yomi "きょうとふじょうようし"
@@ -8786,7 +8786,7 @@ FactoryGirl.define do
       short_yomi "じょうようし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620800 do
+    factory :jmaxml_forecast_region_2620800 do
       code "2620800"
       name "京都府向日市"
       yomi "きょうとふむこうし"
@@ -8794,7 +8794,7 @@ FactoryGirl.define do
       short_yomi "むこうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2620900 do
+    factory :jmaxml_forecast_region_2620900 do
       code "2620900"
       name "京都府長岡京市"
       yomi "きょうとふながおかきょうし"
@@ -8802,7 +8802,7 @@ FactoryGirl.define do
       short_yomi "ながおかきょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2621000 do
+    factory :jmaxml_forecast_region_2621000 do
       code "2621000"
       name "京都府八幡市"
       yomi "きょうとふやわたし"
@@ -8810,7 +8810,7 @@ FactoryGirl.define do
       short_yomi "やわたし"
     end
 
-    factory :rss_weather_xml_forecast_region_2621100 do
+    factory :jmaxml_forecast_region_2621100 do
       code "2621100"
       name "京都府京田辺市"
       yomi "きょうとふきょうたなべし"
@@ -8818,7 +8818,7 @@ FactoryGirl.define do
       short_yomi "きょうたなべし"
     end
 
-    factory :rss_weather_xml_forecast_region_2621200 do
+    factory :jmaxml_forecast_region_2621200 do
       code "2621200"
       name "京都府京丹後市"
       yomi "きょうとふきょうたんごし"
@@ -8826,7 +8826,7 @@ FactoryGirl.define do
       short_yomi "きょうたんごし"
     end
 
-    factory :rss_weather_xml_forecast_region_2621300 do
+    factory :jmaxml_forecast_region_2621300 do
       code "2621300"
       name "京都府南丹市"
       yomi "きょうとふなんたんし"
@@ -8834,7 +8834,7 @@ FactoryGirl.define do
       short_yomi "なんたんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2621400 do
+    factory :jmaxml_forecast_region_2621400 do
       code "2621400"
       name "京都府木津川市"
       yomi "きょうとふきづがわし"
@@ -8842,7 +8842,7 @@ FactoryGirl.define do
       short_yomi "きづがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2630300 do
+    factory :jmaxml_forecast_region_2630300 do
       code "2630300"
       name "京都府大山崎町"
       yomi "きょうとふおおやまざきちょう"
@@ -8850,7 +8850,7 @@ FactoryGirl.define do
       short_yomi "おおやまざきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2632200 do
+    factory :jmaxml_forecast_region_2632200 do
       code "2632200"
       name "京都府久御山町"
       yomi "きょうとふくみやまちょう"
@@ -8858,7 +8858,7 @@ FactoryGirl.define do
       short_yomi "くみやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2634300 do
+    factory :jmaxml_forecast_region_2634300 do
       code "2634300"
       name "京都府井手町"
       yomi "きょうとふいでちょう"
@@ -8866,7 +8866,7 @@ FactoryGirl.define do
       short_yomi "いでちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2634400 do
+    factory :jmaxml_forecast_region_2634400 do
       code "2634400"
       name "京都府宇治田原町"
       yomi "きょうとふうじたわらちょう"
@@ -8874,7 +8874,7 @@ FactoryGirl.define do
       short_yomi "うじたわらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2636400 do
+    factory :jmaxml_forecast_region_2636400 do
       code "2636400"
       name "京都府笠置町"
       yomi "きょうとふかさぎちょう"
@@ -8882,7 +8882,7 @@ FactoryGirl.define do
       short_yomi "かさぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2636500 do
+    factory :jmaxml_forecast_region_2636500 do
       code "2636500"
       name "京都府和束町"
       yomi "きょうとふわづかちょう"
@@ -8890,7 +8890,7 @@ FactoryGirl.define do
       short_yomi "わづかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2636600 do
+    factory :jmaxml_forecast_region_2636600 do
       code "2636600"
       name "京都府精華町"
       yomi "きょうとふせいかちょう"
@@ -8898,7 +8898,7 @@ FactoryGirl.define do
       short_yomi "せいかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2636700 do
+    factory :jmaxml_forecast_region_2636700 do
       code "2636700"
       name "京都府南山城村"
       yomi "きょうとふみなみやましろむら"
@@ -8906,7 +8906,7 @@ FactoryGirl.define do
       short_yomi "みなみやましろむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2640700 do
+    factory :jmaxml_forecast_region_2640700 do
       code "2640700"
       name "京都府京丹波町"
       yomi "きょうとふきょうたんばちょう"
@@ -8914,7 +8914,7 @@ FactoryGirl.define do
       short_yomi "きょうたんばちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2646300 do
+    factory :jmaxml_forecast_region_2646300 do
       code "2646300"
       name "京都府伊根町"
       yomi "きょうとふいねちょう"
@@ -8922,7 +8922,7 @@ FactoryGirl.define do
       short_yomi "いねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2646500 do
+    factory :jmaxml_forecast_region_2646500 do
       code "2646500"
       name "京都府与謝野町"
       yomi "きょうとふよさのちょう"
@@ -8930,7 +8930,7 @@ FactoryGirl.define do
       short_yomi "よさのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2710000 do
+    factory :jmaxml_forecast_region_2710000 do
       code "2710000"
       name "大阪府大阪市"
       yomi "おおさかふおおさかし"
@@ -8938,7 +8938,7 @@ FactoryGirl.define do
       short_yomi "おおさかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2714000 do
+    factory :jmaxml_forecast_region_2714000 do
       code "2714000"
       name "大阪府堺市"
       yomi "おおさかふさかいし"
@@ -8946,7 +8946,7 @@ FactoryGirl.define do
       short_yomi "さかいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720200 do
+    factory :jmaxml_forecast_region_2720200 do
       code "2720200"
       name "大阪府岸和田市"
       yomi "おおさかふきしわだし"
@@ -8954,7 +8954,7 @@ FactoryGirl.define do
       short_yomi "きしわだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720300 do
+    factory :jmaxml_forecast_region_2720300 do
       code "2720300"
       name "大阪府豊中市"
       yomi "おおさかふとよなかし"
@@ -8962,7 +8962,7 @@ FactoryGirl.define do
       short_yomi "とよなかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720400 do
+    factory :jmaxml_forecast_region_2720400 do
       code "2720400"
       name "大阪府池田市"
       yomi "おおさかふいけだし"
@@ -8970,7 +8970,7 @@ FactoryGirl.define do
       short_yomi "いけだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720500 do
+    factory :jmaxml_forecast_region_2720500 do
       code "2720500"
       name "大阪府吹田市"
       yomi "おおさかふすいたし"
@@ -8978,7 +8978,7 @@ FactoryGirl.define do
       short_yomi "すいたし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720600 do
+    factory :jmaxml_forecast_region_2720600 do
       code "2720600"
       name "大阪府泉大津市"
       yomi "おおさかふいずみおおつし"
@@ -8986,7 +8986,7 @@ FactoryGirl.define do
       short_yomi "いずみおおつし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720700 do
+    factory :jmaxml_forecast_region_2720700 do
       code "2720700"
       name "大阪府高槻市"
       yomi "おおさかふたかつきし"
@@ -8994,7 +8994,7 @@ FactoryGirl.define do
       short_yomi "たかつきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720800 do
+    factory :jmaxml_forecast_region_2720800 do
       code "2720800"
       name "大阪府貝塚市"
       yomi "おおさかふかいづかし"
@@ -9002,7 +9002,7 @@ FactoryGirl.define do
       short_yomi "かいづかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2720900 do
+    factory :jmaxml_forecast_region_2720900 do
       code "2720900"
       name "大阪府守口市"
       yomi "おおさかふもりぐちし"
@@ -9010,7 +9010,7 @@ FactoryGirl.define do
       short_yomi "もりぐちし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721000 do
+    factory :jmaxml_forecast_region_2721000 do
       code "2721000"
       name "大阪府枚方市"
       yomi "おおさかふひらかたし"
@@ -9018,7 +9018,7 @@ FactoryGirl.define do
       short_yomi "ひらかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721100 do
+    factory :jmaxml_forecast_region_2721100 do
       code "2721100"
       name "大阪府茨木市"
       yomi "おおさかふいばらきし"
@@ -9026,7 +9026,7 @@ FactoryGirl.define do
       short_yomi "いばらきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721200 do
+    factory :jmaxml_forecast_region_2721200 do
       code "2721200"
       name "大阪府八尾市"
       yomi "おおさかふやおし"
@@ -9034,7 +9034,7 @@ FactoryGirl.define do
       short_yomi "やおし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721300 do
+    factory :jmaxml_forecast_region_2721300 do
       code "2721300"
       name "大阪府泉佐野市"
       yomi "おおさかふいずみさのし"
@@ -9042,7 +9042,7 @@ FactoryGirl.define do
       short_yomi "いずみさのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721400 do
+    factory :jmaxml_forecast_region_2721400 do
       code "2721400"
       name "大阪府富田林市"
       yomi "おおさかふとんだばやしし"
@@ -9050,7 +9050,7 @@ FactoryGirl.define do
       short_yomi "とんだばやしし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721500 do
+    factory :jmaxml_forecast_region_2721500 do
       code "2721500"
       name "大阪府寝屋川市"
       yomi "おおさかふねやがわし"
@@ -9058,7 +9058,7 @@ FactoryGirl.define do
       short_yomi "ねやがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721600 do
+    factory :jmaxml_forecast_region_2721600 do
       code "2721600"
       name "大阪府河内長野市"
       yomi "おおさかふかわちながのし"
@@ -9066,7 +9066,7 @@ FactoryGirl.define do
       short_yomi "かわちながのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721700 do
+    factory :jmaxml_forecast_region_2721700 do
       code "2721700"
       name "大阪府松原市"
       yomi "おおさかふまつばらし"
@@ -9074,7 +9074,7 @@ FactoryGirl.define do
       short_yomi "まつばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721800 do
+    factory :jmaxml_forecast_region_2721800 do
       code "2721800"
       name "大阪府大東市"
       yomi "おおさかふだいとうし"
@@ -9082,7 +9082,7 @@ FactoryGirl.define do
       short_yomi "だいとうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2721900 do
+    factory :jmaxml_forecast_region_2721900 do
       code "2721900"
       name "大阪府和泉市"
       yomi "おおさかふいずみし"
@@ -9090,7 +9090,7 @@ FactoryGirl.define do
       short_yomi "いずみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722000 do
+    factory :jmaxml_forecast_region_2722000 do
       code "2722000"
       name "大阪府箕面市"
       yomi "おおさかふみのおし"
@@ -9098,7 +9098,7 @@ FactoryGirl.define do
       short_yomi "みのおし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722100 do
+    factory :jmaxml_forecast_region_2722100 do
       code "2722100"
       name "大阪府柏原市"
       yomi "おおさかふかしわらし"
@@ -9106,7 +9106,7 @@ FactoryGirl.define do
       short_yomi "かしわらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722200 do
+    factory :jmaxml_forecast_region_2722200 do
       code "2722200"
       name "大阪府羽曳野市"
       yomi "おおさかふはびきのし"
@@ -9114,7 +9114,7 @@ FactoryGirl.define do
       short_yomi "はびきのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722300 do
+    factory :jmaxml_forecast_region_2722300 do
       code "2722300"
       name "大阪府門真市"
       yomi "おおさかふかどまし"
@@ -9122,7 +9122,7 @@ FactoryGirl.define do
       short_yomi "かどまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722400 do
+    factory :jmaxml_forecast_region_2722400 do
       code "2722400"
       name "大阪府摂津市"
       yomi "おおさかふせっつし"
@@ -9130,7 +9130,7 @@ FactoryGirl.define do
       short_yomi "せっつし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722500 do
+    factory :jmaxml_forecast_region_2722500 do
       code "2722500"
       name "大阪府高石市"
       yomi "おおさかふたかいしし"
@@ -9138,7 +9138,7 @@ FactoryGirl.define do
       short_yomi "たかいしし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722600 do
+    factory :jmaxml_forecast_region_2722600 do
       code "2722600"
       name "大阪府藤井寺市"
       yomi "おおさかふふじいでらし"
@@ -9146,7 +9146,7 @@ FactoryGirl.define do
       short_yomi "ふじいでらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722700 do
+    factory :jmaxml_forecast_region_2722700 do
       code "2722700"
       name "大阪府東大阪市"
       yomi "おおさかふひがしおおさかし"
@@ -9154,7 +9154,7 @@ FactoryGirl.define do
       short_yomi "ひがしおおさかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722800 do
+    factory :jmaxml_forecast_region_2722800 do
       code "2722800"
       name "大阪府泉南市"
       yomi "おおさかふせんなんし"
@@ -9162,7 +9162,7 @@ FactoryGirl.define do
       short_yomi "せんなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2722900 do
+    factory :jmaxml_forecast_region_2722900 do
       code "2722900"
       name "大阪府四條畷市"
       yomi "おおさかふしじょうなわてし"
@@ -9170,7 +9170,7 @@ FactoryGirl.define do
       short_yomi "しじょうなわてし"
     end
 
-    factory :rss_weather_xml_forecast_region_2723000 do
+    factory :jmaxml_forecast_region_2723000 do
       code "2723000"
       name "大阪府交野市"
       yomi "おおさかふかたのし"
@@ -9178,7 +9178,7 @@ FactoryGirl.define do
       short_yomi "かたのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2723100 do
+    factory :jmaxml_forecast_region_2723100 do
       code "2723100"
       name "大阪府大阪狭山市"
       yomi "おおさかふおおさかさやまし"
@@ -9186,7 +9186,7 @@ FactoryGirl.define do
       short_yomi "おおさかさやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2723200 do
+    factory :jmaxml_forecast_region_2723200 do
       code "2723200"
       name "大阪府阪南市"
       yomi "おおさかふはんなんし"
@@ -9194,7 +9194,7 @@ FactoryGirl.define do
       short_yomi "はんなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_2730100 do
+    factory :jmaxml_forecast_region_2730100 do
       code "2730100"
       name "大阪府島本町"
       yomi "おおさかふしまもとちょう"
@@ -9202,7 +9202,7 @@ FactoryGirl.define do
       short_yomi "しまもとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2732100 do
+    factory :jmaxml_forecast_region_2732100 do
       code "2732100"
       name "大阪府豊能町"
       yomi "おおさかふとよのちょう"
@@ -9210,7 +9210,7 @@ FactoryGirl.define do
       short_yomi "とよのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2732200 do
+    factory :jmaxml_forecast_region_2732200 do
       code "2732200"
       name "大阪府能勢町"
       yomi "おおさかふのせちょう"
@@ -9218,7 +9218,7 @@ FactoryGirl.define do
       short_yomi "のせちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2734100 do
+    factory :jmaxml_forecast_region_2734100 do
       code "2734100"
       name "大阪府忠岡町"
       yomi "おおさかふただおかちょう"
@@ -9226,7 +9226,7 @@ FactoryGirl.define do
       short_yomi "ただおかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2736100 do
+    factory :jmaxml_forecast_region_2736100 do
       code "2736100"
       name "大阪府熊取町"
       yomi "おおさかふくまとりちょう"
@@ -9234,7 +9234,7 @@ FactoryGirl.define do
       short_yomi "くまとりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2736200 do
+    factory :jmaxml_forecast_region_2736200 do
       code "2736200"
       name "大阪府田尻町"
       yomi "おおさかふたじりちょう"
@@ -9242,7 +9242,7 @@ FactoryGirl.define do
       short_yomi "たじりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2736600 do
+    factory :jmaxml_forecast_region_2736600 do
       code "2736600"
       name "大阪府岬町"
       yomi "おおさかふみさきちょう"
@@ -9250,7 +9250,7 @@ FactoryGirl.define do
       short_yomi "みさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2738100 do
+    factory :jmaxml_forecast_region_2738100 do
       code "2738100"
       name "大阪府太子町"
       yomi "おおさかふたいしちょう"
@@ -9258,7 +9258,7 @@ FactoryGirl.define do
       short_yomi "たいしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2738200 do
+    factory :jmaxml_forecast_region_2738200 do
       code "2738200"
       name "大阪府河南町"
       yomi "おおさかふかなんちょう"
@@ -9266,7 +9266,7 @@ FactoryGirl.define do
       short_yomi "かなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2738300 do
+    factory :jmaxml_forecast_region_2738300 do
       code "2738300"
       name "大阪府千早赤阪村"
       yomi "おおさかふちはやあかさかむら"
@@ -9274,7 +9274,7 @@ FactoryGirl.define do
       short_yomi "ちはやあかさかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2810000 do
+    factory :jmaxml_forecast_region_2810000 do
       code "2810000"
       name "兵庫県神戸市"
       yomi "ひょうごけんこうべし"
@@ -9282,7 +9282,7 @@ FactoryGirl.define do
       short_yomi "こうべし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820100 do
+    factory :jmaxml_forecast_region_2820100 do
       code "2820100"
       name "兵庫県姫路市"
       yomi "ひょうごけんひめじし"
@@ -9290,7 +9290,7 @@ FactoryGirl.define do
       short_yomi "ひめじし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820200 do
+    factory :jmaxml_forecast_region_2820200 do
       code "2820200"
       name "兵庫県尼崎市"
       yomi "ひょうごけんあまがさきし"
@@ -9298,7 +9298,7 @@ FactoryGirl.define do
       short_yomi "あまがさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820300 do
+    factory :jmaxml_forecast_region_2820300 do
       code "2820300"
       name "兵庫県明石市"
       yomi "ひょうごけんあかしし"
@@ -9306,7 +9306,7 @@ FactoryGirl.define do
       short_yomi "あかしし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820400 do
+    factory :jmaxml_forecast_region_2820400 do
       code "2820400"
       name "兵庫県西宮市"
       yomi "ひょうごけんにしのみやし"
@@ -9314,7 +9314,7 @@ FactoryGirl.define do
       short_yomi "にしのみやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820500 do
+    factory :jmaxml_forecast_region_2820500 do
       code "2820500"
       name "兵庫県洲本市"
       yomi "ひょうごけんすもとし"
@@ -9322,7 +9322,7 @@ FactoryGirl.define do
       short_yomi "すもとし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820600 do
+    factory :jmaxml_forecast_region_2820600 do
       code "2820600"
       name "兵庫県芦屋市"
       yomi "ひょうごけんあしやし"
@@ -9330,7 +9330,7 @@ FactoryGirl.define do
       short_yomi "あしやし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820700 do
+    factory :jmaxml_forecast_region_2820700 do
       code "2820700"
       name "兵庫県伊丹市"
       yomi "ひょうごけんいたみし"
@@ -9338,7 +9338,7 @@ FactoryGirl.define do
       short_yomi "いたみし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820800 do
+    factory :jmaxml_forecast_region_2820800 do
       code "2820800"
       name "兵庫県相生市"
       yomi "ひょうごけんあいおいし"
@@ -9346,7 +9346,7 @@ FactoryGirl.define do
       short_yomi "あいおいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2820900 do
+    factory :jmaxml_forecast_region_2820900 do
       code "2820900"
       name "兵庫県豊岡市"
       yomi "ひょうごけんとよおかし"
@@ -9354,7 +9354,7 @@ FactoryGirl.define do
       short_yomi "とよおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821000 do
+    factory :jmaxml_forecast_region_2821000 do
       code "2821000"
       name "兵庫県加古川市"
       yomi "ひょうごけんかこがわし"
@@ -9362,7 +9362,7 @@ FactoryGirl.define do
       short_yomi "かこがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821200 do
+    factory :jmaxml_forecast_region_2821200 do
       code "2821200"
       name "兵庫県赤穂市"
       yomi "ひょうごけんあこうし"
@@ -9370,7 +9370,7 @@ FactoryGirl.define do
       short_yomi "あこうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821300 do
+    factory :jmaxml_forecast_region_2821300 do
       code "2821300"
       name "兵庫県西脇市"
       yomi "ひょうごけんにしわきし"
@@ -9378,7 +9378,7 @@ FactoryGirl.define do
       short_yomi "にしわきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821400 do
+    factory :jmaxml_forecast_region_2821400 do
       code "2821400"
       name "兵庫県宝塚市"
       yomi "ひょうごけんたからづかし"
@@ -9386,7 +9386,7 @@ FactoryGirl.define do
       short_yomi "たからづかし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821500 do
+    factory :jmaxml_forecast_region_2821500 do
       code "2821500"
       name "兵庫県三木市"
       yomi "ひょうごけんみきし"
@@ -9394,7 +9394,7 @@ FactoryGirl.define do
       short_yomi "みきし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821600 do
+    factory :jmaxml_forecast_region_2821600 do
       code "2821600"
       name "兵庫県高砂市"
       yomi "ひょうごけんたかさごし"
@@ -9402,7 +9402,7 @@ FactoryGirl.define do
       short_yomi "たかさごし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821700 do
+    factory :jmaxml_forecast_region_2821700 do
       code "2821700"
       name "兵庫県川西市"
       yomi "ひょうごけんかわにしし"
@@ -9410,7 +9410,7 @@ FactoryGirl.define do
       short_yomi "かわにしし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821800 do
+    factory :jmaxml_forecast_region_2821800 do
       code "2821800"
       name "兵庫県小野市"
       yomi "ひょうごけんおのし"
@@ -9418,7 +9418,7 @@ FactoryGirl.define do
       short_yomi "おのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2821900 do
+    factory :jmaxml_forecast_region_2821900 do
       code "2821900"
       name "兵庫県三田市"
       yomi "ひょうごけんさんだし"
@@ -9426,7 +9426,7 @@ FactoryGirl.define do
       short_yomi "さんだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822000 do
+    factory :jmaxml_forecast_region_2822000 do
       code "2822000"
       name "兵庫県加西市"
       yomi "ひょうごけんかさいし"
@@ -9434,7 +9434,7 @@ FactoryGirl.define do
       short_yomi "かさいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822100 do
+    factory :jmaxml_forecast_region_2822100 do
       code "2822100"
       name "兵庫県篠山市"
       yomi "ひょうごけんささやまし"
@@ -9442,7 +9442,7 @@ FactoryGirl.define do
       short_yomi "ささやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822200 do
+    factory :jmaxml_forecast_region_2822200 do
       code "2822200"
       name "兵庫県養父市"
       yomi "ひょうごけんやぶし"
@@ -9450,7 +9450,7 @@ FactoryGirl.define do
       short_yomi "やぶし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822300 do
+    factory :jmaxml_forecast_region_2822300 do
       code "2822300"
       name "兵庫県丹波市"
       yomi "ひょうごけんたんばし"
@@ -9458,7 +9458,7 @@ FactoryGirl.define do
       short_yomi "たんばし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822400 do
+    factory :jmaxml_forecast_region_2822400 do
       code "2822400"
       name "兵庫県南あわじ市"
       yomi "ひょうごけんみなみあわじし"
@@ -9466,7 +9466,7 @@ FactoryGirl.define do
       short_yomi "みなみあわじし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822500 do
+    factory :jmaxml_forecast_region_2822500 do
       code "2822500"
       name "兵庫県朝来市"
       yomi "ひょうごけんあさごし"
@@ -9474,7 +9474,7 @@ FactoryGirl.define do
       short_yomi "あさごし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822600 do
+    factory :jmaxml_forecast_region_2822600 do
       code "2822600"
       name "兵庫県淡路市"
       yomi "ひょうごけんあわじし"
@@ -9482,7 +9482,7 @@ FactoryGirl.define do
       short_yomi "あわじし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822700 do
+    factory :jmaxml_forecast_region_2822700 do
       code "2822700"
       name "兵庫県宍粟市"
       yomi "ひょうごけんしそうし"
@@ -9490,7 +9490,7 @@ FactoryGirl.define do
       short_yomi "しそうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822800 do
+    factory :jmaxml_forecast_region_2822800 do
       code "2822800"
       name "兵庫県加東市"
       yomi "ひょうごけんかとうし"
@@ -9498,7 +9498,7 @@ FactoryGirl.define do
       short_yomi "かとうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2822900 do
+    factory :jmaxml_forecast_region_2822900 do
       code "2822900"
       name "兵庫県たつの市"
       yomi "ひょうごけんたつのし"
@@ -9506,7 +9506,7 @@ FactoryGirl.define do
       short_yomi "たつのし"
     end
 
-    factory :rss_weather_xml_forecast_region_2830100 do
+    factory :jmaxml_forecast_region_2830100 do
       code "2830100"
       name "兵庫県猪名川町"
       yomi "ひょうごけんいながわちょう"
@@ -9514,7 +9514,7 @@ FactoryGirl.define do
       short_yomi "いながわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2836500 do
+    factory :jmaxml_forecast_region_2836500 do
       code "2836500"
       name "兵庫県多可町"
       yomi "ひょうごけんたかちょう"
@@ -9522,7 +9522,7 @@ FactoryGirl.define do
       short_yomi "たかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2838100 do
+    factory :jmaxml_forecast_region_2838100 do
       code "2838100"
       name "兵庫県稲美町"
       yomi "ひょうごけんいなみちょう"
@@ -9530,7 +9530,7 @@ FactoryGirl.define do
       short_yomi "いなみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2838200 do
+    factory :jmaxml_forecast_region_2838200 do
       code "2838200"
       name "兵庫県播磨町"
       yomi "ひょうごけんはりまちょう"
@@ -9538,7 +9538,7 @@ FactoryGirl.define do
       short_yomi "はりまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2844200 do
+    factory :jmaxml_forecast_region_2844200 do
       code "2844200"
       name "兵庫県市川町"
       yomi "ひょうごけんいちかわちょう"
@@ -9546,7 +9546,7 @@ FactoryGirl.define do
       short_yomi "いちかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2844300 do
+    factory :jmaxml_forecast_region_2844300 do
       code "2844300"
       name "兵庫県福崎町"
       yomi "ひょうごけんふくさきちょう"
@@ -9554,7 +9554,7 @@ FactoryGirl.define do
       short_yomi "ふくさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2844600 do
+    factory :jmaxml_forecast_region_2844600 do
       code "2844600"
       name "兵庫県神河町"
       yomi "ひょうごけんかみかわちょう"
@@ -9562,7 +9562,7 @@ FactoryGirl.define do
       short_yomi "かみかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2846400 do
+    factory :jmaxml_forecast_region_2846400 do
       code "2846400"
       name "兵庫県太子町"
       yomi "ひょうごけんたいしちょう"
@@ -9570,7 +9570,7 @@ FactoryGirl.define do
       short_yomi "たいしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2848100 do
+    factory :jmaxml_forecast_region_2848100 do
       code "2848100"
       name "兵庫県上郡町"
       yomi "ひょうごけんかみごおりちょう"
@@ -9578,7 +9578,7 @@ FactoryGirl.define do
       short_yomi "かみごおりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2850100 do
+    factory :jmaxml_forecast_region_2850100 do
       code "2850100"
       name "兵庫県佐用町"
       yomi "ひょうごけんさようちょう"
@@ -9586,7 +9586,7 @@ FactoryGirl.define do
       short_yomi "さようちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2858500 do
+    factory :jmaxml_forecast_region_2858500 do
       code "2858500"
       name "兵庫県香美町"
       yomi "ひょうごけんかみちょう"
@@ -9594,7 +9594,7 @@ FactoryGirl.define do
       short_yomi "かみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2858600 do
+    factory :jmaxml_forecast_region_2858600 do
       code "2858600"
       name "兵庫県新温泉町"
       yomi "ひょうごけんしんおんせんちょう"
@@ -9602,7 +9602,7 @@ FactoryGirl.define do
       short_yomi "しんおんせんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2920100 do
+    factory :jmaxml_forecast_region_2920100 do
       code "2920100"
       name "奈良県奈良市"
       yomi "ならけんならし"
@@ -9610,7 +9610,7 @@ FactoryGirl.define do
       short_yomi "ならし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920200 do
+    factory :jmaxml_forecast_region_2920200 do
       code "2920200"
       name "奈良県大和高田市"
       yomi "ならけんやまとたかだし"
@@ -9618,7 +9618,7 @@ FactoryGirl.define do
       short_yomi "やまとたかだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920300 do
+    factory :jmaxml_forecast_region_2920300 do
       code "2920300"
       name "奈良県大和郡山市"
       yomi "ならけんやまとこおりやまし"
@@ -9626,7 +9626,7 @@ FactoryGirl.define do
       short_yomi "やまとこおりやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920400 do
+    factory :jmaxml_forecast_region_2920400 do
       code "2920400"
       name "奈良県天理市"
       yomi "ならけんてんりし"
@@ -9634,7 +9634,7 @@ FactoryGirl.define do
       short_yomi "てんりし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920500 do
+    factory :jmaxml_forecast_region_2920500 do
       code "2920500"
       name "奈良県橿原市"
       yomi "ならけんかしはらし"
@@ -9642,7 +9642,7 @@ FactoryGirl.define do
       short_yomi "かしはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920600 do
+    factory :jmaxml_forecast_region_2920600 do
       code "2920600"
       name "奈良県桜井市"
       yomi "ならけんさくらいし"
@@ -9650,7 +9650,7 @@ FactoryGirl.define do
       short_yomi "さくらいし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920700 do
+    factory :jmaxml_forecast_region_2920700 do
       code "2920700"
       name "奈良県五條市"
       yomi "ならけんごじょうし"
@@ -9658,7 +9658,7 @@ FactoryGirl.define do
       short_yomi "ごじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920800 do
+    factory :jmaxml_forecast_region_2920800 do
       code "2920800"
       name "奈良県御所市"
       yomi "ならけんごせし"
@@ -9666,7 +9666,7 @@ FactoryGirl.define do
       short_yomi "ごせし"
     end
 
-    factory :rss_weather_xml_forecast_region_2920900 do
+    factory :jmaxml_forecast_region_2920900 do
       code "2920900"
       name "奈良県生駒市"
       yomi "ならけんいこまし"
@@ -9674,7 +9674,7 @@ FactoryGirl.define do
       short_yomi "いこまし"
     end
 
-    factory :rss_weather_xml_forecast_region_2921000 do
+    factory :jmaxml_forecast_region_2921000 do
       code "2921000"
       name "奈良県香芝市"
       yomi "ならけんかしばし"
@@ -9682,7 +9682,7 @@ FactoryGirl.define do
       short_yomi "かしばし"
     end
 
-    factory :rss_weather_xml_forecast_region_2921100 do
+    factory :jmaxml_forecast_region_2921100 do
       code "2921100"
       name "奈良県葛城市"
       yomi "ならけんかつらぎし"
@@ -9690,7 +9690,7 @@ FactoryGirl.define do
       short_yomi "かつらぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_2921200 do
+    factory :jmaxml_forecast_region_2921200 do
       code "2921200"
       name "奈良県宇陀市"
       yomi "ならけんうだし"
@@ -9698,7 +9698,7 @@ FactoryGirl.define do
       short_yomi "うだし"
     end
 
-    factory :rss_weather_xml_forecast_region_2932200 do
+    factory :jmaxml_forecast_region_2932200 do
       code "2932200"
       name "奈良県山添村"
       yomi "ならけんやまぞえむら"
@@ -9706,7 +9706,7 @@ FactoryGirl.define do
       short_yomi "やまぞえむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2934200 do
+    factory :jmaxml_forecast_region_2934200 do
       code "2934200"
       name "奈良県平群町"
       yomi "ならけんへぐりちょう"
@@ -9714,7 +9714,7 @@ FactoryGirl.define do
       short_yomi "へぐりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2934300 do
+    factory :jmaxml_forecast_region_2934300 do
       code "2934300"
       name "奈良県三郷町"
       yomi "ならけんさんごうちょう"
@@ -9722,7 +9722,7 @@ FactoryGirl.define do
       short_yomi "さんごうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2934400 do
+    factory :jmaxml_forecast_region_2934400 do
       code "2934400"
       name "奈良県斑鳩町"
       yomi "ならけんいかるがちょう"
@@ -9730,7 +9730,7 @@ FactoryGirl.define do
       short_yomi "いかるがちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2934500 do
+    factory :jmaxml_forecast_region_2934500 do
       code "2934500"
       name "奈良県安堵町"
       yomi "ならけんあんどちょう"
@@ -9738,7 +9738,7 @@ FactoryGirl.define do
       short_yomi "あんどちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2936100 do
+    factory :jmaxml_forecast_region_2936100 do
       code "2936100"
       name "奈良県川西町"
       yomi "ならけんかわにしちょう"
@@ -9746,7 +9746,7 @@ FactoryGirl.define do
       short_yomi "かわにしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2936200 do
+    factory :jmaxml_forecast_region_2936200 do
       code "2936200"
       name "奈良県三宅町"
       yomi "ならけんみやけちょう"
@@ -9754,7 +9754,7 @@ FactoryGirl.define do
       short_yomi "みやけちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2936300 do
+    factory :jmaxml_forecast_region_2936300 do
       code "2936300"
       name "奈良県田原本町"
       yomi "ならけんたわらもとちょう"
@@ -9762,7 +9762,7 @@ FactoryGirl.define do
       short_yomi "たわらもとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2938500 do
+    factory :jmaxml_forecast_region_2938500 do
       code "2938500"
       name "奈良県曽爾村"
       yomi "ならけんそにむら"
@@ -9770,7 +9770,7 @@ FactoryGirl.define do
       short_yomi "そにむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2938600 do
+    factory :jmaxml_forecast_region_2938600 do
       code "2938600"
       name "奈良県御杖村"
       yomi "ならけんみつえむら"
@@ -9778,7 +9778,7 @@ FactoryGirl.define do
       short_yomi "みつえむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2940100 do
+    factory :jmaxml_forecast_region_2940100 do
       code "2940100"
       name "奈良県高取町"
       yomi "ならけんたかとりちょう"
@@ -9786,7 +9786,7 @@ FactoryGirl.define do
       short_yomi "たかとりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2940200 do
+    factory :jmaxml_forecast_region_2940200 do
       code "2940200"
       name "奈良県明日香村"
       yomi "ならけんあすかむら"
@@ -9794,7 +9794,7 @@ FactoryGirl.define do
       short_yomi "あすかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2942400 do
+    factory :jmaxml_forecast_region_2942400 do
       code "2942400"
       name "奈良県上牧町"
       yomi "ならけんかんまきちょう"
@@ -9802,7 +9802,7 @@ FactoryGirl.define do
       short_yomi "かんまきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2942500 do
+    factory :jmaxml_forecast_region_2942500 do
       code "2942500"
       name "奈良県王寺町"
       yomi "ならけんおうじちょう"
@@ -9810,7 +9810,7 @@ FactoryGirl.define do
       short_yomi "おうじちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2942600 do
+    factory :jmaxml_forecast_region_2942600 do
       code "2942600"
       name "奈良県広陵町"
       yomi "ならけんこうりょうちょう"
@@ -9818,7 +9818,7 @@ FactoryGirl.define do
       short_yomi "こうりょうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2942700 do
+    factory :jmaxml_forecast_region_2942700 do
       code "2942700"
       name "奈良県河合町"
       yomi "ならけんかわいちょう"
@@ -9826,7 +9826,7 @@ FactoryGirl.define do
       short_yomi "かわいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2944100 do
+    factory :jmaxml_forecast_region_2944100 do
       code "2944100"
       name "奈良県吉野町"
       yomi "ならけんよしのちょう"
@@ -9834,7 +9834,7 @@ FactoryGirl.define do
       short_yomi "よしのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2944200 do
+    factory :jmaxml_forecast_region_2944200 do
       code "2944200"
       name "奈良県大淀町"
       yomi "ならけんおおよどちょう"
@@ -9842,7 +9842,7 @@ FactoryGirl.define do
       short_yomi "おおよどちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2944300 do
+    factory :jmaxml_forecast_region_2944300 do
       code "2944300"
       name "奈良県下市町"
       yomi "ならけんしもいちちょう"
@@ -9850,7 +9850,7 @@ FactoryGirl.define do
       short_yomi "しもいちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_2944400 do
+    factory :jmaxml_forecast_region_2944400 do
       code "2944400"
       name "奈良県黒滝村"
       yomi "ならけんくろたきむら"
@@ -9858,7 +9858,7 @@ FactoryGirl.define do
       short_yomi "くろたきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2944600 do
+    factory :jmaxml_forecast_region_2944600 do
       code "2944600"
       name "奈良県天川村"
       yomi "ならけんてんかわむら"
@@ -9866,7 +9866,7 @@ FactoryGirl.define do
       short_yomi "てんかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2944700 do
+    factory :jmaxml_forecast_region_2944700 do
       code "2944700"
       name "奈良県野迫川村"
       yomi "ならけんのせがわむら"
@@ -9874,7 +9874,7 @@ FactoryGirl.define do
       short_yomi "のせがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2944900 do
+    factory :jmaxml_forecast_region_2944900 do
       code "2944900"
       name "奈良県十津川村"
       yomi "ならけんとつかわむら"
@@ -9882,7 +9882,7 @@ FactoryGirl.define do
       short_yomi "とつかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2945000 do
+    factory :jmaxml_forecast_region_2945000 do
       code "2945000"
       name "奈良県下北山村"
       yomi "ならけんしもきたやまむら"
@@ -9890,7 +9890,7 @@ FactoryGirl.define do
       short_yomi "しもきたやまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2945100 do
+    factory :jmaxml_forecast_region_2945100 do
       code "2945100"
       name "奈良県上北山村"
       yomi "ならけんかみきたやまむら"
@@ -9898,7 +9898,7 @@ FactoryGirl.define do
       short_yomi "かみきたやまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2945200 do
+    factory :jmaxml_forecast_region_2945200 do
       code "2945200"
       name "奈良県川上村"
       yomi "ならけんかわかみむら"
@@ -9906,7 +9906,7 @@ FactoryGirl.define do
       short_yomi "かわかみむら"
     end
 
-    factory :rss_weather_xml_forecast_region_2945300 do
+    factory :jmaxml_forecast_region_2945300 do
       code "2945300"
       name "奈良県東吉野村"
       yomi "ならけんひがしよしのむら"
@@ -9914,7 +9914,7 @@ FactoryGirl.define do
       short_yomi "ひがしよしのむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3020100 do
+    factory :jmaxml_forecast_region_3020100 do
       code "3020100"
       name "和歌山県和歌山市"
       yomi "わかやまけんわかやまし"
@@ -9922,7 +9922,7 @@ FactoryGirl.define do
       short_yomi "わかやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020200 do
+    factory :jmaxml_forecast_region_3020200 do
       code "3020200"
       name "和歌山県海南市"
       yomi "わかやまけんかいなんし"
@@ -9930,7 +9930,7 @@ FactoryGirl.define do
       short_yomi "かいなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020300 do
+    factory :jmaxml_forecast_region_3020300 do
       code "3020300"
       name "和歌山県橋本市"
       yomi "わかやまけんはしもとし"
@@ -9938,7 +9938,7 @@ FactoryGirl.define do
       short_yomi "はしもとし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020400 do
+    factory :jmaxml_forecast_region_3020400 do
       code "3020400"
       name "和歌山県有田市"
       yomi "わかやまけんありだし"
@@ -9946,7 +9946,7 @@ FactoryGirl.define do
       short_yomi "ありだし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020500 do
+    factory :jmaxml_forecast_region_3020500 do
       code "3020500"
       name "和歌山県御坊市"
       yomi "わかやまけんごぼうし"
@@ -9954,7 +9954,7 @@ FactoryGirl.define do
       short_yomi "ごぼうし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020600 do
+    factory :jmaxml_forecast_region_3020600 do
       code "3020600"
       name "和歌山県田辺市"
       yomi "わかやまけんたなべし"
@@ -9962,7 +9962,7 @@ FactoryGirl.define do
       short_yomi "たなべし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020700 do
+    factory :jmaxml_forecast_region_3020700 do
       code "3020700"
       name "和歌山県新宮市"
       yomi "わかやまけんしんぐうし"
@@ -9970,7 +9970,7 @@ FactoryGirl.define do
       short_yomi "しんぐうし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020800 do
+    factory :jmaxml_forecast_region_3020800 do
       code "3020800"
       name "和歌山県紀の川市"
       yomi "わかやまけんきのかわし"
@@ -9978,7 +9978,7 @@ FactoryGirl.define do
       short_yomi "きのかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_3020900 do
+    factory :jmaxml_forecast_region_3020900 do
       code "3020900"
       name "和歌山県岩出市"
       yomi "わかやまけんいわでし"
@@ -9986,7 +9986,7 @@ FactoryGirl.define do
       short_yomi "いわでし"
     end
 
-    factory :rss_weather_xml_forecast_region_3030400 do
+    factory :jmaxml_forecast_region_3030400 do
       code "3030400"
       name "和歌山県紀美野町"
       yomi "わかやまけんきみのちょう"
@@ -9994,7 +9994,7 @@ FactoryGirl.define do
       short_yomi "きみのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3034100 do
+    factory :jmaxml_forecast_region_3034100 do
       code "3034100"
       name "和歌山県かつらぎ町"
       yomi "わかやまけんかつらぎちょう"
@@ -10002,7 +10002,7 @@ FactoryGirl.define do
       short_yomi "かつらぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3034300 do
+    factory :jmaxml_forecast_region_3034300 do
       code "3034300"
       name "和歌山県九度山町"
       yomi "わかやまけんくどやまちょう"
@@ -10010,7 +10010,7 @@ FactoryGirl.define do
       short_yomi "くどやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3034400 do
+    factory :jmaxml_forecast_region_3034400 do
       code "3034400"
       name "和歌山県高野町"
       yomi "わかやまけんこうやちょう"
@@ -10018,7 +10018,7 @@ FactoryGirl.define do
       short_yomi "こうやちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3036100 do
+    factory :jmaxml_forecast_region_3036100 do
       code "3036100"
       name "和歌山県湯浅町"
       yomi "わかやまけんゆあさちょう"
@@ -10026,7 +10026,7 @@ FactoryGirl.define do
       short_yomi "ゆあさちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3036200 do
+    factory :jmaxml_forecast_region_3036200 do
       code "3036200"
       name "和歌山県広川町"
       yomi "わかやまけんひろがわちょう"
@@ -10034,7 +10034,7 @@ FactoryGirl.define do
       short_yomi "ひろがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3036600 do
+    factory :jmaxml_forecast_region_3036600 do
       code "3036600"
       name "和歌山県有田川町"
       yomi "わかやまけんありだがわちょう"
@@ -10042,7 +10042,7 @@ FactoryGirl.define do
       short_yomi "ありだがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3038100 do
+    factory :jmaxml_forecast_region_3038100 do
       code "3038100"
       name "和歌山県美浜町"
       yomi "わかやまけんみはまちょう"
@@ -10050,7 +10050,7 @@ FactoryGirl.define do
       short_yomi "みはまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3038200 do
+    factory :jmaxml_forecast_region_3038200 do
       code "3038200"
       name "和歌山県日高町"
       yomi "わかやまけんひだかちょう"
@@ -10058,7 +10058,7 @@ FactoryGirl.define do
       short_yomi "ひだかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3038300 do
+    factory :jmaxml_forecast_region_3038300 do
       code "3038300"
       name "和歌山県由良町"
       yomi "わかやまけんゆらちょう"
@@ -10066,7 +10066,7 @@ FactoryGirl.define do
       short_yomi "ゆらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3039000 do
+    factory :jmaxml_forecast_region_3039000 do
       code "3039000"
       name "和歌山県印南町"
       yomi "わかやまけんいなみちょう"
@@ -10074,7 +10074,7 @@ FactoryGirl.define do
       short_yomi "いなみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3039100 do
+    factory :jmaxml_forecast_region_3039100 do
       code "3039100"
       name "和歌山県みなべ町"
       yomi "わかやまけんみなべちょう"
@@ -10082,7 +10082,7 @@ FactoryGirl.define do
       short_yomi "みなべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3039200 do
+    factory :jmaxml_forecast_region_3039200 do
       code "3039200"
       name "和歌山県日高川町"
       yomi "わかやまけんひだかがわちょう"
@@ -10090,7 +10090,7 @@ FactoryGirl.define do
       short_yomi "ひだかがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3040100 do
+    factory :jmaxml_forecast_region_3040100 do
       code "3040100"
       name "和歌山県白浜町"
       yomi "わかやまけんしらはまちょう"
@@ -10098,7 +10098,7 @@ FactoryGirl.define do
       short_yomi "しらはまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3040400 do
+    factory :jmaxml_forecast_region_3040400 do
       code "3040400"
       name "和歌山県上富田町"
       yomi "わかやまけんかみとんだちょう"
@@ -10106,7 +10106,7 @@ FactoryGirl.define do
       short_yomi "かみとんだちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3040600 do
+    factory :jmaxml_forecast_region_3040600 do
       code "3040600"
       name "和歌山県すさみ町"
       yomi "わかやまけんすさみちょう"
@@ -10114,7 +10114,7 @@ FactoryGirl.define do
       short_yomi "すさみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3042100 do
+    factory :jmaxml_forecast_region_3042100 do
       code "3042100"
       name "和歌山県那智勝浦町"
       yomi "わかやまけんなちかつうらちょう"
@@ -10122,7 +10122,7 @@ FactoryGirl.define do
       short_yomi "なちかつうらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3042200 do
+    factory :jmaxml_forecast_region_3042200 do
       code "3042200"
       name "和歌山県太地町"
       yomi "わかやまけんたいじちょう"
@@ -10130,7 +10130,7 @@ FactoryGirl.define do
       short_yomi "たいじちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3042400 do
+    factory :jmaxml_forecast_region_3042400 do
       code "3042400"
       name "和歌山県古座川町"
       yomi "わかやまけんこざがわちょう"
@@ -10138,7 +10138,7 @@ FactoryGirl.define do
       short_yomi "こざがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3042700 do
+    factory :jmaxml_forecast_region_3042700 do
       code "3042700"
       name "和歌山県北山村"
       yomi "わかやまけんきたやまむら"
@@ -10146,7 +10146,7 @@ FactoryGirl.define do
       short_yomi "きたやまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3042800 do
+    factory :jmaxml_forecast_region_3042800 do
       code "3042800"
       name "和歌山県串本町"
       yomi "わかやまけんくしもとちょう"
@@ -10154,7 +10154,7 @@ FactoryGirl.define do
       short_yomi "くしもとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3120100 do
+    factory :jmaxml_forecast_region_3120100 do
       code "3120100"
       name "鳥取県鳥取市"
       yomi "とっとりけんとっとりし"
@@ -10162,7 +10162,7 @@ FactoryGirl.define do
       short_yomi "とっとりし"
     end
 
-    factory :rss_weather_xml_forecast_region_3120200 do
+    factory :jmaxml_forecast_region_3120200 do
       code "3120200"
       name "鳥取県米子市"
       yomi "とっとりけんよなごし"
@@ -10170,7 +10170,7 @@ FactoryGirl.define do
       short_yomi "よなごし"
     end
 
-    factory :rss_weather_xml_forecast_region_3120300 do
+    factory :jmaxml_forecast_region_3120300 do
       code "3120300"
       name "鳥取県倉吉市"
       yomi "とっとりけんくらよしし"
@@ -10178,7 +10178,7 @@ FactoryGirl.define do
       short_yomi "くらよしし"
     end
 
-    factory :rss_weather_xml_forecast_region_3120400 do
+    factory :jmaxml_forecast_region_3120400 do
       code "3120400"
       name "鳥取県境港市"
       yomi "とっとりけんさかいみなとし"
@@ -10186,7 +10186,7 @@ FactoryGirl.define do
       short_yomi "さかいみなとし"
     end
 
-    factory :rss_weather_xml_forecast_region_3130200 do
+    factory :jmaxml_forecast_region_3130200 do
       code "3130200"
       name "鳥取県岩美町"
       yomi "とっとりけんいわみちょう"
@@ -10194,7 +10194,7 @@ FactoryGirl.define do
       short_yomi "いわみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3132500 do
+    factory :jmaxml_forecast_region_3132500 do
       code "3132500"
       name "鳥取県若桜町"
       yomi "とっとりけんわかさちょう"
@@ -10202,7 +10202,7 @@ FactoryGirl.define do
       short_yomi "わかさちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3132800 do
+    factory :jmaxml_forecast_region_3132800 do
       code "3132800"
       name "鳥取県智頭町"
       yomi "とっとりけんちづちょう"
@@ -10210,7 +10210,7 @@ FactoryGirl.define do
       short_yomi "ちづちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3132900 do
+    factory :jmaxml_forecast_region_3132900 do
       code "3132900"
       name "鳥取県八頭町"
       yomi "とっとりけんやずちょう"
@@ -10218,7 +10218,7 @@ FactoryGirl.define do
       short_yomi "やずちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3136400 do
+    factory :jmaxml_forecast_region_3136400 do
       code "3136400"
       name "鳥取県三朝町"
       yomi "とっとりけんみささちょう"
@@ -10226,7 +10226,7 @@ FactoryGirl.define do
       short_yomi "みささちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3137000 do
+    factory :jmaxml_forecast_region_3137000 do
       code "3137000"
       name "鳥取県湯梨浜町"
       yomi "とっとりけんゆりはまちょう"
@@ -10234,7 +10234,7 @@ FactoryGirl.define do
       short_yomi "ゆりはまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3137100 do
+    factory :jmaxml_forecast_region_3137100 do
       code "3137100"
       name "鳥取県琴浦町"
       yomi "とっとりけんことうらちょう"
@@ -10242,7 +10242,7 @@ FactoryGirl.define do
       short_yomi "ことうらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3137200 do
+    factory :jmaxml_forecast_region_3137200 do
       code "3137200"
       name "鳥取県北栄町"
       yomi "とっとりけんほくえいちょう"
@@ -10250,7 +10250,7 @@ FactoryGirl.define do
       short_yomi "ほくえいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3138400 do
+    factory :jmaxml_forecast_region_3138400 do
       code "3138400"
       name "鳥取県日吉津村"
       yomi "とっとりけんひえづそん"
@@ -10258,7 +10258,7 @@ FactoryGirl.define do
       short_yomi "ひえづそん"
     end
 
-    factory :rss_weather_xml_forecast_region_3138600 do
+    factory :jmaxml_forecast_region_3138600 do
       code "3138600"
       name "鳥取県大山町"
       yomi "とっとりけんだいせんちょう"
@@ -10266,7 +10266,7 @@ FactoryGirl.define do
       short_yomi "だいせんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3138900 do
+    factory :jmaxml_forecast_region_3138900 do
       code "3138900"
       name "鳥取県南部町"
       yomi "とっとりけんなんぶちょう"
@@ -10274,7 +10274,7 @@ FactoryGirl.define do
       short_yomi "なんぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3139000 do
+    factory :jmaxml_forecast_region_3139000 do
       code "3139000"
       name "鳥取県伯耆町"
       yomi "とっとりけんほうきちょう"
@@ -10282,7 +10282,7 @@ FactoryGirl.define do
       short_yomi "ほうきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3140100 do
+    factory :jmaxml_forecast_region_3140100 do
       code "3140100"
       name "鳥取県日南町"
       yomi "とっとりけんにちなんちょう"
@@ -10290,7 +10290,7 @@ FactoryGirl.define do
       short_yomi "にちなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3140200 do
+    factory :jmaxml_forecast_region_3140200 do
       code "3140200"
       name "鳥取県日野町"
       yomi "とっとりけんひのちょう"
@@ -10298,7 +10298,7 @@ FactoryGirl.define do
       short_yomi "ひのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3140300 do
+    factory :jmaxml_forecast_region_3140300 do
       code "3140300"
       name "鳥取県江府町"
       yomi "とっとりけんこうふちょう"
@@ -10306,7 +10306,7 @@ FactoryGirl.define do
       short_yomi "こうふちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3220100 do
+    factory :jmaxml_forecast_region_3220100 do
       code "3220100"
       name "島根県松江市"
       yomi "しまねけんまつえし"
@@ -10314,7 +10314,7 @@ FactoryGirl.define do
       short_yomi "まつえし"
     end
 
-    factory :rss_weather_xml_forecast_region_3220200 do
+    factory :jmaxml_forecast_region_3220200 do
       code "3220200"
       name "島根県浜田市"
       yomi "しまねけんはまだし"
@@ -10322,7 +10322,7 @@ FactoryGirl.define do
       short_yomi "はまだし"
     end
 
-    factory :rss_weather_xml_forecast_region_3220300 do
+    factory :jmaxml_forecast_region_3220300 do
       code "3220300"
       name "島根県出雲市"
       yomi "しまねけんいずもし"
@@ -10330,7 +10330,7 @@ FactoryGirl.define do
       short_yomi "いずもし"
     end
 
-    factory :rss_weather_xml_forecast_region_3220400 do
+    factory :jmaxml_forecast_region_3220400 do
       code "3220400"
       name "島根県益田市"
       yomi "しまねけんますだし"
@@ -10338,7 +10338,7 @@ FactoryGirl.define do
       short_yomi "ますだし"
     end
 
-    factory :rss_weather_xml_forecast_region_3220500 do
+    factory :jmaxml_forecast_region_3220500 do
       code "3220500"
       name "島根県大田市"
       yomi "しまねけんおおだし"
@@ -10346,7 +10346,7 @@ FactoryGirl.define do
       short_yomi "おおだし"
     end
 
-    factory :rss_weather_xml_forecast_region_3220600 do
+    factory :jmaxml_forecast_region_3220600 do
       code "3220600"
       name "島根県安来市"
       yomi "しまねけんやすぎし"
@@ -10354,7 +10354,7 @@ FactoryGirl.define do
       short_yomi "やすぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_3220700 do
+    factory :jmaxml_forecast_region_3220700 do
       code "3220700"
       name "島根県江津市"
       yomi "しまねけんごうつし"
@@ -10362,7 +10362,7 @@ FactoryGirl.define do
       short_yomi "ごうつし"
     end
 
-    factory :rss_weather_xml_forecast_region_3220900 do
+    factory :jmaxml_forecast_region_3220900 do
       code "3220900"
       name "島根県雲南市"
       yomi "しまねけんうんなんし"
@@ -10370,7 +10370,7 @@ FactoryGirl.define do
       short_yomi "うんなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_3234300 do
+    factory :jmaxml_forecast_region_3234300 do
       code "3234300"
       name "島根県奥出雲町"
       yomi "しまねけんおくいずもちょう"
@@ -10378,7 +10378,7 @@ FactoryGirl.define do
       short_yomi "おくいずもちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3238600 do
+    factory :jmaxml_forecast_region_3238600 do
       code "3238600"
       name "島根県飯南町"
       yomi "しまねけんいいなんちょう"
@@ -10386,7 +10386,7 @@ FactoryGirl.define do
       short_yomi "いいなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3244100 do
+    factory :jmaxml_forecast_region_3244100 do
       code "3244100"
       name "島根県川本町"
       yomi "しまねけんかわもとまち"
@@ -10394,7 +10394,7 @@ FactoryGirl.define do
       short_yomi "かわもとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_3244800 do
+    factory :jmaxml_forecast_region_3244800 do
       code "3244800"
       name "島根県美郷町"
       yomi "しまねけんみさとちょう"
@@ -10402,7 +10402,7 @@ FactoryGirl.define do
       short_yomi "みさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3244900 do
+    factory :jmaxml_forecast_region_3244900 do
       code "3244900"
       name "島根県邑南町"
       yomi "しまねけんおおなんちょう"
@@ -10410,7 +10410,7 @@ FactoryGirl.define do
       short_yomi "おおなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3250100 do
+    factory :jmaxml_forecast_region_3250100 do
       code "3250100"
       name "島根県津和野町"
       yomi "しまねけんつわのちょう"
@@ -10418,7 +10418,7 @@ FactoryGirl.define do
       short_yomi "つわのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3250500 do
+    factory :jmaxml_forecast_region_3250500 do
       code "3250500"
       name "島根県吉賀町"
       yomi "しまねけんよしかちょう"
@@ -10426,7 +10426,7 @@ FactoryGirl.define do
       short_yomi "よしかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3252500 do
+    factory :jmaxml_forecast_region_3252500 do
       code "3252500"
       name "島根県海士町"
       yomi "しまねけんあまちょう"
@@ -10434,7 +10434,7 @@ FactoryGirl.define do
       short_yomi "あまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3252600 do
+    factory :jmaxml_forecast_region_3252600 do
       code "3252600"
       name "島根県西ノ島町"
       yomi "しまねけんにしのしまちょう"
@@ -10442,7 +10442,7 @@ FactoryGirl.define do
       short_yomi "にしのしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3252700 do
+    factory :jmaxml_forecast_region_3252700 do
       code "3252700"
       name "島根県知夫村"
       yomi "しまねけんちぶむら"
@@ -10450,7 +10450,7 @@ FactoryGirl.define do
       short_yomi "ちぶむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3252800 do
+    factory :jmaxml_forecast_region_3252800 do
       code "3252800"
       name "島根県隠岐の島町"
       yomi "しまねけんおきのしまちょう"
@@ -10458,7 +10458,7 @@ FactoryGirl.define do
       short_yomi "おきのしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3310000 do
+    factory :jmaxml_forecast_region_3310000 do
       code "3310000"
       name "岡山県岡山市"
       yomi "おかやまけんおかやまし"
@@ -10466,7 +10466,7 @@ FactoryGirl.define do
       short_yomi "おかやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3320200 do
+    factory :jmaxml_forecast_region_3320200 do
       code "3320200"
       name "岡山県倉敷市"
       yomi "おかやまけんくらしきし"
@@ -10474,7 +10474,7 @@ FactoryGirl.define do
       short_yomi "くらしきし"
     end
 
-    factory :rss_weather_xml_forecast_region_3320300 do
+    factory :jmaxml_forecast_region_3320300 do
       code "3320300"
       name "岡山県津山市"
       yomi "おかやまけんつやまし"
@@ -10482,7 +10482,7 @@ FactoryGirl.define do
       short_yomi "つやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3320400 do
+    factory :jmaxml_forecast_region_3320400 do
       code "3320400"
       name "岡山県玉野市"
       yomi "おかやまけんたまのし"
@@ -10490,7 +10490,7 @@ FactoryGirl.define do
       short_yomi "たまのし"
     end
 
-    factory :rss_weather_xml_forecast_region_3320500 do
+    factory :jmaxml_forecast_region_3320500 do
       code "3320500"
       name "岡山県笠岡市"
       yomi "おかやまけんかさおかし"
@@ -10498,7 +10498,7 @@ FactoryGirl.define do
       short_yomi "かさおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_3320700 do
+    factory :jmaxml_forecast_region_3320700 do
       code "3320700"
       name "岡山県井原市"
       yomi "おかやまけんいばらし"
@@ -10506,7 +10506,7 @@ FactoryGirl.define do
       short_yomi "いばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_3320800 do
+    factory :jmaxml_forecast_region_3320800 do
       code "3320800"
       name "岡山県総社市"
       yomi "おかやまけんそうじゃし"
@@ -10514,7 +10514,7 @@ FactoryGirl.define do
       short_yomi "そうじゃし"
     end
 
-    factory :rss_weather_xml_forecast_region_3320900 do
+    factory :jmaxml_forecast_region_3320900 do
       code "3320900"
       name "岡山県高梁市"
       yomi "おかやまけんたかはしし"
@@ -10522,7 +10522,7 @@ FactoryGirl.define do
       short_yomi "たかはしし"
     end
 
-    factory :rss_weather_xml_forecast_region_3321000 do
+    factory :jmaxml_forecast_region_3321000 do
       code "3321000"
       name "岡山県新見市"
       yomi "おかやまけんにいみし"
@@ -10530,7 +10530,7 @@ FactoryGirl.define do
       short_yomi "にいみし"
     end
 
-    factory :rss_weather_xml_forecast_region_3321100 do
+    factory :jmaxml_forecast_region_3321100 do
       code "3321100"
       name "岡山県備前市"
       yomi "おかやまけんびぜんし"
@@ -10538,7 +10538,7 @@ FactoryGirl.define do
       short_yomi "びぜんし"
     end
 
-    factory :rss_weather_xml_forecast_region_3321200 do
+    factory :jmaxml_forecast_region_3321200 do
       code "3321200"
       name "岡山県瀬戸内市"
       yomi "おかやまけんせとうちし"
@@ -10546,7 +10546,7 @@ FactoryGirl.define do
       short_yomi "せとうちし"
     end
 
-    factory :rss_weather_xml_forecast_region_3321300 do
+    factory :jmaxml_forecast_region_3321300 do
       code "3321300"
       name "岡山県赤磐市"
       yomi "おかやまけんあかいわし"
@@ -10554,7 +10554,7 @@ FactoryGirl.define do
       short_yomi "あかいわし"
     end
 
-    factory :rss_weather_xml_forecast_region_3321400 do
+    factory :jmaxml_forecast_region_3321400 do
       code "3321400"
       name "岡山県真庭市"
       yomi "おかやまけんまにわし"
@@ -10562,7 +10562,7 @@ FactoryGirl.define do
       short_yomi "まにわし"
     end
 
-    factory :rss_weather_xml_forecast_region_3321500 do
+    factory :jmaxml_forecast_region_3321500 do
       code "3321500"
       name "岡山県美作市"
       yomi "おかやまけんみまさかし"
@@ -10570,7 +10570,7 @@ FactoryGirl.define do
       short_yomi "みまさかし"
     end
 
-    factory :rss_weather_xml_forecast_region_3321600 do
+    factory :jmaxml_forecast_region_3321600 do
       code "3321600"
       name "岡山県浅口市"
       yomi "おかやまけんあさくちし"
@@ -10578,7 +10578,7 @@ FactoryGirl.define do
       short_yomi "あさくちし"
     end
 
-    factory :rss_weather_xml_forecast_region_3334600 do
+    factory :jmaxml_forecast_region_3334600 do
       code "3334600"
       name "岡山県和気町"
       yomi "おかやまけんわけちょう"
@@ -10586,7 +10586,7 @@ FactoryGirl.define do
       short_yomi "わけちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3342300 do
+    factory :jmaxml_forecast_region_3342300 do
       code "3342300"
       name "岡山県早島町"
       yomi "おかやまけんはやしまちょう"
@@ -10594,7 +10594,7 @@ FactoryGirl.define do
       short_yomi "はやしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3344500 do
+    factory :jmaxml_forecast_region_3344500 do
       code "3344500"
       name "岡山県里庄町"
       yomi "おかやまけんさとしょうちょう"
@@ -10602,7 +10602,7 @@ FactoryGirl.define do
       short_yomi "さとしょうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3346100 do
+    factory :jmaxml_forecast_region_3346100 do
       code "3346100"
       name "岡山県矢掛町"
       yomi "おかやまけんやかげちょう"
@@ -10610,7 +10610,7 @@ FactoryGirl.define do
       short_yomi "やかげちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3358600 do
+    factory :jmaxml_forecast_region_3358600 do
       code "3358600"
       name "岡山県新庄村"
       yomi "おかやまけんしんじょうそん"
@@ -10618,7 +10618,7 @@ FactoryGirl.define do
       short_yomi "しんじょうそん"
     end
 
-    factory :rss_weather_xml_forecast_region_3360600 do
+    factory :jmaxml_forecast_region_3360600 do
       code "3360600"
       name "岡山県鏡野町"
       yomi "おかやまけんかがみのちょう"
@@ -10626,7 +10626,7 @@ FactoryGirl.define do
       short_yomi "かがみのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3362200 do
+    factory :jmaxml_forecast_region_3362200 do
       code "3362200"
       name "岡山県勝央町"
       yomi "おかやまけんしょうおうちょう"
@@ -10634,7 +10634,7 @@ FactoryGirl.define do
       short_yomi "しょうおうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3362300 do
+    factory :jmaxml_forecast_region_3362300 do
       code "3362300"
       name "岡山県奈義町"
       yomi "おかやまけんなぎちょう"
@@ -10642,7 +10642,7 @@ FactoryGirl.define do
       short_yomi "なぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3364300 do
+    factory :jmaxml_forecast_region_3364300 do
       code "3364300"
       name "岡山県西粟倉村"
       yomi "おかやまけんにしあわくらそん"
@@ -10650,7 +10650,7 @@ FactoryGirl.define do
       short_yomi "にしあわくらそん"
     end
 
-    factory :rss_weather_xml_forecast_region_3366300 do
+    factory :jmaxml_forecast_region_3366300 do
       code "3366300"
       name "岡山県久米南町"
       yomi "おかやまけんくめなんちょう"
@@ -10658,7 +10658,7 @@ FactoryGirl.define do
       short_yomi "くめなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3366600 do
+    factory :jmaxml_forecast_region_3366600 do
       code "3366600"
       name "岡山県美咲町"
       yomi "おかやまけんみさきちょう"
@@ -10666,7 +10666,7 @@ FactoryGirl.define do
       short_yomi "みさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3368100 do
+    factory :jmaxml_forecast_region_3368100 do
       code "3368100"
       name "岡山県吉備中央町"
       yomi "おかやまけんきびちゅうおうちょう"
@@ -10674,7 +10674,7 @@ FactoryGirl.define do
       short_yomi "きびちゅうおうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3410000 do
+    factory :jmaxml_forecast_region_3410000 do
       code "3410000"
       name "広島県広島市"
       yomi "ひろしまけんひろしまし"
@@ -10682,7 +10682,7 @@ FactoryGirl.define do
       short_yomi "ひろしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3420200 do
+    factory :jmaxml_forecast_region_3420200 do
       code "3420200"
       name "広島県呉市"
       yomi "ひろしまけんくれし"
@@ -10690,7 +10690,7 @@ FactoryGirl.define do
       short_yomi "くれし"
     end
 
-    factory :rss_weather_xml_forecast_region_3420300 do
+    factory :jmaxml_forecast_region_3420300 do
       code "3420300"
       name "広島県竹原市"
       yomi "ひろしまけんたけはらし"
@@ -10698,7 +10698,7 @@ FactoryGirl.define do
       short_yomi "たけはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_3420400 do
+    factory :jmaxml_forecast_region_3420400 do
       code "3420400"
       name "広島県三原市"
       yomi "ひろしまけんみはらし"
@@ -10706,7 +10706,7 @@ FactoryGirl.define do
       short_yomi "みはらし"
     end
 
-    factory :rss_weather_xml_forecast_region_3420500 do
+    factory :jmaxml_forecast_region_3420500 do
       code "3420500"
       name "広島県尾道市"
       yomi "ひろしまけんおのみちし"
@@ -10714,7 +10714,7 @@ FactoryGirl.define do
       short_yomi "おのみちし"
     end
 
-    factory :rss_weather_xml_forecast_region_3420700 do
+    factory :jmaxml_forecast_region_3420700 do
       code "3420700"
       name "広島県福山市"
       yomi "ひろしまけんふくやまし"
@@ -10722,7 +10722,7 @@ FactoryGirl.define do
       short_yomi "ふくやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3420800 do
+    factory :jmaxml_forecast_region_3420800 do
       code "3420800"
       name "広島県府中市"
       yomi "ひろしまけんふちゅうし"
@@ -10730,7 +10730,7 @@ FactoryGirl.define do
       short_yomi "ふちゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_3420900 do
+    factory :jmaxml_forecast_region_3420900 do
       code "3420900"
       name "広島県三次市"
       yomi "ひろしまけんみよしし"
@@ -10738,7 +10738,7 @@ FactoryGirl.define do
       short_yomi "みよしし"
     end
 
-    factory :rss_weather_xml_forecast_region_3421000 do
+    factory :jmaxml_forecast_region_3421000 do
       code "3421000"
       name "広島県庄原市"
       yomi "ひろしまけんしょうばらし"
@@ -10746,7 +10746,7 @@ FactoryGirl.define do
       short_yomi "しょうばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_3421100 do
+    factory :jmaxml_forecast_region_3421100 do
       code "3421100"
       name "広島県大竹市"
       yomi "ひろしまけんおおたけし"
@@ -10754,7 +10754,7 @@ FactoryGirl.define do
       short_yomi "おおたけし"
     end
 
-    factory :rss_weather_xml_forecast_region_3421200 do
+    factory :jmaxml_forecast_region_3421200 do
       code "3421200"
       name "広島県東広島市"
       yomi "ひろしまけんひがしひろしまし"
@@ -10762,7 +10762,7 @@ FactoryGirl.define do
       short_yomi "ひがしひろしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3421300 do
+    factory :jmaxml_forecast_region_3421300 do
       code "3421300"
       name "広島県廿日市市"
       yomi "ひろしまけんはつかいちし"
@@ -10770,7 +10770,7 @@ FactoryGirl.define do
       short_yomi "はつかいちし"
     end
 
-    factory :rss_weather_xml_forecast_region_3421400 do
+    factory :jmaxml_forecast_region_3421400 do
       code "3421400"
       name "広島県安芸高田市"
       yomi "ひろしまけんあきたかたし"
@@ -10778,7 +10778,7 @@ FactoryGirl.define do
       short_yomi "あきたかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_3421500 do
+    factory :jmaxml_forecast_region_3421500 do
       code "3421500"
       name "広島県江田島市"
       yomi "ひろしまけんえたじまし"
@@ -10786,7 +10786,7 @@ FactoryGirl.define do
       short_yomi "えたじまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3430200 do
+    factory :jmaxml_forecast_region_3430200 do
       code "3430200"
       name "広島県府中町"
       yomi "ひろしまけんふちゅうちょう"
@@ -10794,7 +10794,7 @@ FactoryGirl.define do
       short_yomi "ふちゅうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3430400 do
+    factory :jmaxml_forecast_region_3430400 do
       code "3430400"
       name "広島県海田町"
       yomi "ひろしまけんかいたちょう"
@@ -10802,7 +10802,7 @@ FactoryGirl.define do
       short_yomi "かいたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3430700 do
+    factory :jmaxml_forecast_region_3430700 do
       code "3430700"
       name "広島県熊野町"
       yomi "ひろしまけんくまのちょう"
@@ -10810,7 +10810,7 @@ FactoryGirl.define do
       short_yomi "くまのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3430900 do
+    factory :jmaxml_forecast_region_3430900 do
       code "3430900"
       name "広島県坂町"
       yomi "ひろしまけんさかちょう"
@@ -10818,7 +10818,7 @@ FactoryGirl.define do
       short_yomi "さかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3436800 do
+    factory :jmaxml_forecast_region_3436800 do
       code "3436800"
       name "広島県安芸太田町"
       yomi "ひろしまけんあきおおたちょう"
@@ -10826,7 +10826,7 @@ FactoryGirl.define do
       short_yomi "あきおおたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3436900 do
+    factory :jmaxml_forecast_region_3436900 do
       code "3436900"
       name "広島県北広島町"
       yomi "ひろしまけんきたひろしまちょう"
@@ -10834,7 +10834,7 @@ FactoryGirl.define do
       short_yomi "きたひろしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3443100 do
+    factory :jmaxml_forecast_region_3443100 do
       code "3443100"
       name "広島県大崎上島町"
       yomi "ひろしまけんおおさきかみじまちょう"
@@ -10842,7 +10842,7 @@ FactoryGirl.define do
       short_yomi "おおさきかみじまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3446200 do
+    factory :jmaxml_forecast_region_3446200 do
       code "3446200"
       name "広島県世羅町"
       yomi "ひろしまけんせらちょう"
@@ -10850,7 +10850,7 @@ FactoryGirl.define do
       short_yomi "せらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3454500 do
+    factory :jmaxml_forecast_region_3454500 do
       code "3454500"
       name "広島県神石高原町"
       yomi "ひろしまけんじんせきこうげんちょう"
@@ -10858,7 +10858,7 @@ FactoryGirl.define do
       short_yomi "じんせきこうげんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3520100 do
+    factory :jmaxml_forecast_region_3520100 do
       code "3520100"
       name "山口県下関市"
       yomi "やまぐちけんしものせきし"
@@ -10866,7 +10866,7 @@ FactoryGirl.define do
       short_yomi "しものせきし"
     end
 
-    factory :rss_weather_xml_forecast_region_3520200 do
+    factory :jmaxml_forecast_region_3520200 do
       code "3520200"
       name "山口県宇部市"
       yomi "やまぐちけんうべし"
@@ -10874,7 +10874,7 @@ FactoryGirl.define do
       short_yomi "うべし"
     end
 
-    factory :rss_weather_xml_forecast_region_3520300 do
+    factory :jmaxml_forecast_region_3520300 do
       code "3520300"
       name "山口県山口市"
       yomi "やまぐちけんやまぐちし"
@@ -10882,7 +10882,7 @@ FactoryGirl.define do
       short_yomi "やまぐちし"
     end
 
-    factory :rss_weather_xml_forecast_region_3520400 do
+    factory :jmaxml_forecast_region_3520400 do
       code "3520400"
       name "山口県萩市"
       yomi "やまぐちけんはぎし"
@@ -10890,7 +10890,7 @@ FactoryGirl.define do
       short_yomi "はぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_3520600 do
+    factory :jmaxml_forecast_region_3520600 do
       code "3520600"
       name "山口県防府市"
       yomi "やまぐちけんほうふし"
@@ -10898,7 +10898,7 @@ FactoryGirl.define do
       short_yomi "ほうふし"
     end
 
-    factory :rss_weather_xml_forecast_region_3520700 do
+    factory :jmaxml_forecast_region_3520700 do
       code "3520700"
       name "山口県下松市"
       yomi "やまぐちけんくだまつし"
@@ -10906,7 +10906,7 @@ FactoryGirl.define do
       short_yomi "くだまつし"
     end
 
-    factory :rss_weather_xml_forecast_region_3520800 do
+    factory :jmaxml_forecast_region_3520800 do
       code "3520800"
       name "山口県岩国市"
       yomi "やまぐちけんいわくにし"
@@ -10914,7 +10914,7 @@ FactoryGirl.define do
       short_yomi "いわくにし"
     end
 
-    factory :rss_weather_xml_forecast_region_3521000 do
+    factory :jmaxml_forecast_region_3521000 do
       code "3521000"
       name "山口県光市"
       yomi "やまぐちけんひかりし"
@@ -10922,7 +10922,7 @@ FactoryGirl.define do
       short_yomi "ひかりし"
     end
 
-    factory :rss_weather_xml_forecast_region_3521100 do
+    factory :jmaxml_forecast_region_3521100 do
       code "3521100"
       name "山口県長門市"
       yomi "やまぐちけんながとし"
@@ -10930,7 +10930,7 @@ FactoryGirl.define do
       short_yomi "ながとし"
     end
 
-    factory :rss_weather_xml_forecast_region_3521200 do
+    factory :jmaxml_forecast_region_3521200 do
       code "3521200"
       name "山口県柳井市"
       yomi "やまぐちけんやないし"
@@ -10938,7 +10938,7 @@ FactoryGirl.define do
       short_yomi "やないし"
     end
 
-    factory :rss_weather_xml_forecast_region_3521300 do
+    factory :jmaxml_forecast_region_3521300 do
       code "3521300"
       name "山口県美祢市"
       yomi "やまぐちけんみねし"
@@ -10946,7 +10946,7 @@ FactoryGirl.define do
       short_yomi "みねし"
     end
 
-    factory :rss_weather_xml_forecast_region_3521500 do
+    factory :jmaxml_forecast_region_3521500 do
       code "3521500"
       name "山口県周南市"
       yomi "やまぐちけんしゅうなんし"
@@ -10954,7 +10954,7 @@ FactoryGirl.define do
       short_yomi "しゅうなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_3521600 do
+    factory :jmaxml_forecast_region_3521600 do
       code "3521600"
       name "山口県山陽小野田市"
       yomi "やまぐちけんさんようおのだし"
@@ -10962,7 +10962,7 @@ FactoryGirl.define do
       short_yomi "さんようおのだし"
     end
 
-    factory :rss_weather_xml_forecast_region_3530500 do
+    factory :jmaxml_forecast_region_3530500 do
       code "3530500"
       name "山口県周防大島町"
       yomi "やまぐちけんすおうおおしまちょう"
@@ -10970,7 +10970,7 @@ FactoryGirl.define do
       short_yomi "すおうおおしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3532100 do
+    factory :jmaxml_forecast_region_3532100 do
       code "3532100"
       name "山口県和木町"
       yomi "やまぐちけんわきちょう"
@@ -10978,7 +10978,7 @@ FactoryGirl.define do
       short_yomi "わきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3534100 do
+    factory :jmaxml_forecast_region_3534100 do
       code "3534100"
       name "山口県上関町"
       yomi "やまぐちけんかみのせきちょう"
@@ -10986,7 +10986,7 @@ FactoryGirl.define do
       short_yomi "かみのせきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3534300 do
+    factory :jmaxml_forecast_region_3534300 do
       code "3534300"
       name "山口県田布施町"
       yomi "やまぐちけんたぶせちょう"
@@ -10994,7 +10994,7 @@ FactoryGirl.define do
       short_yomi "たぶせちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3534400 do
+    factory :jmaxml_forecast_region_3534400 do
       code "3534400"
       name "山口県平生町"
       yomi "やまぐちけんひらおちょう"
@@ -11002,7 +11002,7 @@ FactoryGirl.define do
       short_yomi "ひらおちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3550200 do
+    factory :jmaxml_forecast_region_3550200 do
       code "3550200"
       name "山口県阿武町"
       yomi "やまぐちけんあぶちょう"
@@ -11010,7 +11010,7 @@ FactoryGirl.define do
       short_yomi "あぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3620100 do
+    factory :jmaxml_forecast_region_3620100 do
       code "3620100"
       name "徳島県徳島市"
       yomi "とくしまけんとくしまし"
@@ -11018,7 +11018,7 @@ FactoryGirl.define do
       short_yomi "とくしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3620200 do
+    factory :jmaxml_forecast_region_3620200 do
       code "3620200"
       name "徳島県鳴門市"
       yomi "とくしまけんなるとし"
@@ -11026,7 +11026,7 @@ FactoryGirl.define do
       short_yomi "なるとし"
     end
 
-    factory :rss_weather_xml_forecast_region_3620300 do
+    factory :jmaxml_forecast_region_3620300 do
       code "3620300"
       name "徳島県小松島市"
       yomi "とくしまけんこまつしまし"
@@ -11034,7 +11034,7 @@ FactoryGirl.define do
       short_yomi "こまつしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3620400 do
+    factory :jmaxml_forecast_region_3620400 do
       code "3620400"
       name "徳島県阿南市"
       yomi "とくしまけんあなんし"
@@ -11042,7 +11042,7 @@ FactoryGirl.define do
       short_yomi "あなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_3620500 do
+    factory :jmaxml_forecast_region_3620500 do
       code "3620500"
       name "徳島県吉野川市"
       yomi "とくしまけんよしのがわし"
@@ -11050,7 +11050,7 @@ FactoryGirl.define do
       short_yomi "よしのがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_3620600 do
+    factory :jmaxml_forecast_region_3620600 do
       code "3620600"
       name "徳島県阿波市"
       yomi "とくしまけんあわし"
@@ -11058,7 +11058,7 @@ FactoryGirl.define do
       short_yomi "あわし"
     end
 
-    factory :rss_weather_xml_forecast_region_3620700 do
+    factory :jmaxml_forecast_region_3620700 do
       code "3620700"
       name "徳島県美馬市"
       yomi "とくしまけんみまし"
@@ -11066,7 +11066,7 @@ FactoryGirl.define do
       short_yomi "みまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3620800 do
+    factory :jmaxml_forecast_region_3620800 do
       code "3620800"
       name "徳島県三好市"
       yomi "とくしまけんみよしし"
@@ -11074,7 +11074,7 @@ FactoryGirl.define do
       short_yomi "みよしし"
     end
 
-    factory :rss_weather_xml_forecast_region_3630100 do
+    factory :jmaxml_forecast_region_3630100 do
       code "3630100"
       name "徳島県勝浦町"
       yomi "とくしまけんかつうらちょう"
@@ -11082,7 +11082,7 @@ FactoryGirl.define do
       short_yomi "かつうらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3630200 do
+    factory :jmaxml_forecast_region_3630200 do
       code "3630200"
       name "徳島県上勝町"
       yomi "とくしまけんかみかつちょう"
@@ -11090,7 +11090,7 @@ FactoryGirl.define do
       short_yomi "かみかつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3632100 do
+    factory :jmaxml_forecast_region_3632100 do
       code "3632100"
       name "徳島県佐那河内村"
       yomi "とくしまけんさなごうちそん"
@@ -11098,7 +11098,7 @@ FactoryGirl.define do
       short_yomi "さなごうちそん"
     end
 
-    factory :rss_weather_xml_forecast_region_3634100 do
+    factory :jmaxml_forecast_region_3634100 do
       code "3634100"
       name "徳島県石井町"
       yomi "とくしまけんいしいちょう"
@@ -11106,7 +11106,7 @@ FactoryGirl.define do
       short_yomi "いしいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3634200 do
+    factory :jmaxml_forecast_region_3634200 do
       code "3634200"
       name "徳島県神山町"
       yomi "とくしまけんかみやまちょう"
@@ -11114,7 +11114,7 @@ FactoryGirl.define do
       short_yomi "かみやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3636800 do
+    factory :jmaxml_forecast_region_3636800 do
       code "3636800"
       name "徳島県那賀町"
       yomi "とくしまけんなかちょう"
@@ -11122,7 +11122,7 @@ FactoryGirl.define do
       short_yomi "なかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3638300 do
+    factory :jmaxml_forecast_region_3638300 do
       code "3638300"
       name "徳島県牟岐町"
       yomi "とくしまけんむぎちょう"
@@ -11130,7 +11130,7 @@ FactoryGirl.define do
       short_yomi "むぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3638700 do
+    factory :jmaxml_forecast_region_3638700 do
       code "3638700"
       name "徳島県美波町"
       yomi "とくしまけんみなみちょう"
@@ -11138,7 +11138,7 @@ FactoryGirl.define do
       short_yomi "みなみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3638800 do
+    factory :jmaxml_forecast_region_3638800 do
       code "3638800"
       name "徳島県海陽町"
       yomi "とくしまけんかいようちょう"
@@ -11146,7 +11146,7 @@ FactoryGirl.define do
       short_yomi "かいようちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3640100 do
+    factory :jmaxml_forecast_region_3640100 do
       code "3640100"
       name "徳島県松茂町"
       yomi "とくしまけんまつしげちょう"
@@ -11154,7 +11154,7 @@ FactoryGirl.define do
       short_yomi "まつしげちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3640200 do
+    factory :jmaxml_forecast_region_3640200 do
       code "3640200"
       name "徳島県北島町"
       yomi "とくしまけんきたじまちょう"
@@ -11162,7 +11162,7 @@ FactoryGirl.define do
       short_yomi "きたじまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3640300 do
+    factory :jmaxml_forecast_region_3640300 do
       code "3640300"
       name "徳島県藍住町"
       yomi "とくしまけんあいずみちょう"
@@ -11170,7 +11170,7 @@ FactoryGirl.define do
       short_yomi "あいずみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3640400 do
+    factory :jmaxml_forecast_region_3640400 do
       code "3640400"
       name "徳島県板野町"
       yomi "とくしまけんいたのちょう"
@@ -11178,7 +11178,7 @@ FactoryGirl.define do
       short_yomi "いたのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3640500 do
+    factory :jmaxml_forecast_region_3640500 do
       code "3640500"
       name "徳島県上板町"
       yomi "とくしまけんかみいたちょう"
@@ -11186,7 +11186,7 @@ FactoryGirl.define do
       short_yomi "かみいたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3646800 do
+    factory :jmaxml_forecast_region_3646800 do
       code "3646800"
       name "徳島県つるぎ町"
       yomi "とくしまけんつるぎちょう"
@@ -11194,7 +11194,7 @@ FactoryGirl.define do
       short_yomi "つるぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3648900 do
+    factory :jmaxml_forecast_region_3648900 do
       code "3648900"
       name "徳島県東みよし町"
       yomi "とくしまけんひがしみよしちょう"
@@ -11202,7 +11202,7 @@ FactoryGirl.define do
       short_yomi "ひがしみよしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3720100 do
+    factory :jmaxml_forecast_region_3720100 do
       code "3720100"
       name "香川県高松市"
       yomi "かがわけんたかまつし"
@@ -11210,7 +11210,7 @@ FactoryGirl.define do
       short_yomi "たかまつし"
     end
 
-    factory :rss_weather_xml_forecast_region_3720200 do
+    factory :jmaxml_forecast_region_3720200 do
       code "3720200"
       name "香川県丸亀市"
       yomi "かがわけんまるがめし"
@@ -11218,7 +11218,7 @@ FactoryGirl.define do
       short_yomi "まるがめし"
     end
 
-    factory :rss_weather_xml_forecast_region_3720300 do
+    factory :jmaxml_forecast_region_3720300 do
       code "3720300"
       name "香川県坂出市"
       yomi "かがわけんさかいでし"
@@ -11226,7 +11226,7 @@ FactoryGirl.define do
       short_yomi "さかいでし"
     end
 
-    factory :rss_weather_xml_forecast_region_3720400 do
+    factory :jmaxml_forecast_region_3720400 do
       code "3720400"
       name "香川県善通寺市"
       yomi "かがわけんぜんつうじし"
@@ -11234,7 +11234,7 @@ FactoryGirl.define do
       short_yomi "ぜんつうじし"
     end
 
-    factory :rss_weather_xml_forecast_region_3720500 do
+    factory :jmaxml_forecast_region_3720500 do
       code "3720500"
       name "香川県観音寺市"
       yomi "かがわけんかんおんじし"
@@ -11242,7 +11242,7 @@ FactoryGirl.define do
       short_yomi "かんおんじし"
     end
 
-    factory :rss_weather_xml_forecast_region_3720600 do
+    factory :jmaxml_forecast_region_3720600 do
       code "3720600"
       name "香川県さぬき市"
       yomi "かがわけんさぬきし"
@@ -11250,7 +11250,7 @@ FactoryGirl.define do
       short_yomi "さぬきし"
     end
 
-    factory :rss_weather_xml_forecast_region_3720700 do
+    factory :jmaxml_forecast_region_3720700 do
       code "3720700"
       name "香川県東かがわ市"
       yomi "かがわけんひがしかがわし"
@@ -11258,7 +11258,7 @@ FactoryGirl.define do
       short_yomi "ひがしかがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_3720800 do
+    factory :jmaxml_forecast_region_3720800 do
       code "3720800"
       name "香川県三豊市"
       yomi "かがわけんみとよし"
@@ -11266,7 +11266,7 @@ FactoryGirl.define do
       short_yomi "みとよし"
     end
 
-    factory :rss_weather_xml_forecast_region_3732200 do
+    factory :jmaxml_forecast_region_3732200 do
       code "3732200"
       name "香川県土庄町"
       yomi "かがわけんとのしょうちょう"
@@ -11274,7 +11274,7 @@ FactoryGirl.define do
       short_yomi "とのしょうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3732400 do
+    factory :jmaxml_forecast_region_3732400 do
       code "3732400"
       name "香川県小豆島町"
       yomi "かがわけんしょうどしまちょう"
@@ -11282,7 +11282,7 @@ FactoryGirl.define do
       short_yomi "しょうどしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3734100 do
+    factory :jmaxml_forecast_region_3734100 do
       code "3734100"
       name "香川県三木町"
       yomi "かがわけんみきちょう"
@@ -11290,7 +11290,7 @@ FactoryGirl.define do
       short_yomi "みきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3736400 do
+    factory :jmaxml_forecast_region_3736400 do
       code "3736400"
       name "香川県直島町"
       yomi "かがわけんなおしまちょう"
@@ -11298,7 +11298,7 @@ FactoryGirl.define do
       short_yomi "なおしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3738600 do
+    factory :jmaxml_forecast_region_3738600 do
       code "3738600"
       name "香川県宇多津町"
       yomi "かがわけんうたづちょう"
@@ -11306,7 +11306,7 @@ FactoryGirl.define do
       short_yomi "うたづちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3738700 do
+    factory :jmaxml_forecast_region_3738700 do
       code "3738700"
       name "香川県綾川町"
       yomi "かがわけんあやがわちょう"
@@ -11314,7 +11314,7 @@ FactoryGirl.define do
       short_yomi "あやがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3740300 do
+    factory :jmaxml_forecast_region_3740300 do
       code "3740300"
       name "香川県琴平町"
       yomi "かがわけんことひらちょう"
@@ -11322,7 +11322,7 @@ FactoryGirl.define do
       short_yomi "ことひらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3740400 do
+    factory :jmaxml_forecast_region_3740400 do
       code "3740400"
       name "香川県多度津町"
       yomi "かがわけんたどつちょう"
@@ -11330,7 +11330,7 @@ FactoryGirl.define do
       short_yomi "たどつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3740600 do
+    factory :jmaxml_forecast_region_3740600 do
       code "3740600"
       name "香川県まんのう町"
       yomi "かがわけんまんのうちょう"
@@ -11338,7 +11338,7 @@ FactoryGirl.define do
       short_yomi "まんのうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3820100 do
+    factory :jmaxml_forecast_region_3820100 do
       code "3820100"
       name "愛媛県松山市"
       yomi "えひめけんまつやまし"
@@ -11346,7 +11346,7 @@ FactoryGirl.define do
       short_yomi "まつやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3820200 do
+    factory :jmaxml_forecast_region_3820200 do
       code "3820200"
       name "愛媛県今治市"
       yomi "えひめけんいまばりし"
@@ -11354,7 +11354,7 @@ FactoryGirl.define do
       short_yomi "いまばりし"
     end
 
-    factory :rss_weather_xml_forecast_region_3820300 do
+    factory :jmaxml_forecast_region_3820300 do
       code "3820300"
       name "愛媛県宇和島市"
       yomi "えひめけんうわじまし"
@@ -11362,7 +11362,7 @@ FactoryGirl.define do
       short_yomi "うわじまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3820400 do
+    factory :jmaxml_forecast_region_3820400 do
       code "3820400"
       name "愛媛県八幡浜市"
       yomi "えひめけんやわたはまし"
@@ -11370,7 +11370,7 @@ FactoryGirl.define do
       short_yomi "やわたはまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3820500 do
+    factory :jmaxml_forecast_region_3820500 do
       code "3820500"
       name "愛媛県新居浜市"
       yomi "えひめけんにいはまし"
@@ -11378,7 +11378,7 @@ FactoryGirl.define do
       short_yomi "にいはまし"
     end
 
-    factory :rss_weather_xml_forecast_region_3820600 do
+    factory :jmaxml_forecast_region_3820600 do
       code "3820600"
       name "愛媛県西条市"
       yomi "えひめけんさいじょうし"
@@ -11386,7 +11386,7 @@ FactoryGirl.define do
       short_yomi "さいじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_3820700 do
+    factory :jmaxml_forecast_region_3820700 do
       code "3820700"
       name "愛媛県大洲市"
       yomi "えひめけんおおずし"
@@ -11394,7 +11394,7 @@ FactoryGirl.define do
       short_yomi "おおずし"
     end
 
-    factory :rss_weather_xml_forecast_region_3821000 do
+    factory :jmaxml_forecast_region_3821000 do
       code "3821000"
       name "愛媛県伊予市"
       yomi "えひめけんいよし"
@@ -11402,7 +11402,7 @@ FactoryGirl.define do
       short_yomi "いよし"
     end
 
-    factory :rss_weather_xml_forecast_region_3821300 do
+    factory :jmaxml_forecast_region_3821300 do
       code "3821300"
       name "愛媛県四国中央市"
       yomi "えひめけんしこくちゅうおうし"
@@ -11410,7 +11410,7 @@ FactoryGirl.define do
       short_yomi "しこくちゅうおうし"
     end
 
-    factory :rss_weather_xml_forecast_region_3821400 do
+    factory :jmaxml_forecast_region_3821400 do
       code "3821400"
       name "愛媛県西予市"
       yomi "えひめけんせいよし"
@@ -11418,7 +11418,7 @@ FactoryGirl.define do
       short_yomi "せいよし"
     end
 
-    factory :rss_weather_xml_forecast_region_3821500 do
+    factory :jmaxml_forecast_region_3821500 do
       code "3821500"
       name "愛媛県東温市"
       yomi "えひめけんとうおんし"
@@ -11426,7 +11426,7 @@ FactoryGirl.define do
       short_yomi "とうおんし"
     end
 
-    factory :rss_weather_xml_forecast_region_3835600 do
+    factory :jmaxml_forecast_region_3835600 do
       code "3835600"
       name "愛媛県上島町"
       yomi "えひめけんかみじまちょう"
@@ -11434,7 +11434,7 @@ FactoryGirl.define do
       short_yomi "かみじまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3838600 do
+    factory :jmaxml_forecast_region_3838600 do
       code "3838600"
       name "愛媛県久万高原町"
       yomi "えひめけんくまこうげんちょう"
@@ -11442,7 +11442,7 @@ FactoryGirl.define do
       short_yomi "くまこうげんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3840100 do
+    factory :jmaxml_forecast_region_3840100 do
       code "3840100"
       name "愛媛県松前町"
       yomi "えひめけんまさきちょう"
@@ -11450,7 +11450,7 @@ FactoryGirl.define do
       short_yomi "まさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3840200 do
+    factory :jmaxml_forecast_region_3840200 do
       code "3840200"
       name "愛媛県砥部町"
       yomi "えひめけんとべちょう"
@@ -11458,7 +11458,7 @@ FactoryGirl.define do
       short_yomi "とべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3842200 do
+    factory :jmaxml_forecast_region_3842200 do
       code "3842200"
       name "愛媛県内子町"
       yomi "えひめけんうちこちょう"
@@ -11466,7 +11466,7 @@ FactoryGirl.define do
       short_yomi "うちこちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3844200 do
+    factory :jmaxml_forecast_region_3844200 do
       code "3844200"
       name "愛媛県伊方町"
       yomi "えひめけんいかたちょう"
@@ -11474,7 +11474,7 @@ FactoryGirl.define do
       short_yomi "いかたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3848400 do
+    factory :jmaxml_forecast_region_3848400 do
       code "3848400"
       name "愛媛県松野町"
       yomi "えひめけんまつのちょう"
@@ -11482,7 +11482,7 @@ FactoryGirl.define do
       short_yomi "まつのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3848800 do
+    factory :jmaxml_forecast_region_3848800 do
       code "3848800"
       name "愛媛県鬼北町"
       yomi "えひめけんきほくちょう"
@@ -11490,7 +11490,7 @@ FactoryGirl.define do
       short_yomi "きほくちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3850600 do
+    factory :jmaxml_forecast_region_3850600 do
       code "3850600"
       name "愛媛県愛南町"
       yomi "えひめけんあいなんちょう"
@@ -11498,7 +11498,7 @@ FactoryGirl.define do
       short_yomi "あいなんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3920100 do
+    factory :jmaxml_forecast_region_3920100 do
       code "3920100"
       name "高知県高知市"
       yomi "こうちけんこうちし"
@@ -11506,7 +11506,7 @@ FactoryGirl.define do
       short_yomi "こうちし"
     end
 
-    factory :rss_weather_xml_forecast_region_3920200 do
+    factory :jmaxml_forecast_region_3920200 do
       code "3920200"
       name "高知県室戸市"
       yomi "こうちけんむろとし"
@@ -11514,7 +11514,7 @@ FactoryGirl.define do
       short_yomi "むろとし"
     end
 
-    factory :rss_weather_xml_forecast_region_3920300 do
+    factory :jmaxml_forecast_region_3920300 do
       code "3920300"
       name "高知県安芸市"
       yomi "こうちけんあきし"
@@ -11522,7 +11522,7 @@ FactoryGirl.define do
       short_yomi "あきし"
     end
 
-    factory :rss_weather_xml_forecast_region_3920400 do
+    factory :jmaxml_forecast_region_3920400 do
       code "3920400"
       name "高知県南国市"
       yomi "こうちけんなんこくし"
@@ -11530,7 +11530,7 @@ FactoryGirl.define do
       short_yomi "なんこくし"
     end
 
-    factory :rss_weather_xml_forecast_region_3920500 do
+    factory :jmaxml_forecast_region_3920500 do
       code "3920500"
       name "高知県土佐市"
       yomi "こうちけんとさし"
@@ -11538,7 +11538,7 @@ FactoryGirl.define do
       short_yomi "とさし"
     end
 
-    factory :rss_weather_xml_forecast_region_3920600 do
+    factory :jmaxml_forecast_region_3920600 do
       code "3920600"
       name "高知県須崎市"
       yomi "こうちけんすさきし"
@@ -11546,7 +11546,7 @@ FactoryGirl.define do
       short_yomi "すさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_3920800 do
+    factory :jmaxml_forecast_region_3920800 do
       code "3920800"
       name "高知県宿毛市"
       yomi "こうちけんすくもし"
@@ -11554,7 +11554,7 @@ FactoryGirl.define do
       short_yomi "すくもし"
     end
 
-    factory :rss_weather_xml_forecast_region_3920900 do
+    factory :jmaxml_forecast_region_3920900 do
       code "3920900"
       name "高知県土佐清水市"
       yomi "こうちけんとさしみずし"
@@ -11562,7 +11562,7 @@ FactoryGirl.define do
       short_yomi "とさしみずし"
     end
 
-    factory :rss_weather_xml_forecast_region_3921000 do
+    factory :jmaxml_forecast_region_3921000 do
       code "3921000"
       name "高知県四万十市"
       yomi "こうちけんしまんとし"
@@ -11570,7 +11570,7 @@ FactoryGirl.define do
       short_yomi "しまんとし"
     end
 
-    factory :rss_weather_xml_forecast_region_3921100 do
+    factory :jmaxml_forecast_region_3921100 do
       code "3921100"
       name "高知県香南市"
       yomi "こうちけんこうなんし"
@@ -11578,7 +11578,7 @@ FactoryGirl.define do
       short_yomi "こうなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_3921200 do
+    factory :jmaxml_forecast_region_3921200 do
       code "3921200"
       name "高知県香美市"
       yomi "こうちけんかみし"
@@ -11586,7 +11586,7 @@ FactoryGirl.define do
       short_yomi "かみし"
     end
 
-    factory :rss_weather_xml_forecast_region_3930100 do
+    factory :jmaxml_forecast_region_3930100 do
       code "3930100"
       name "高知県東洋町"
       yomi "こうちけんとうようちょう"
@@ -11594,7 +11594,7 @@ FactoryGirl.define do
       short_yomi "とうようちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3930200 do
+    factory :jmaxml_forecast_region_3930200 do
       code "3930200"
       name "高知県奈半利町"
       yomi "こうちけんなはりちょう"
@@ -11602,7 +11602,7 @@ FactoryGirl.define do
       short_yomi "なはりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3930300 do
+    factory :jmaxml_forecast_region_3930300 do
       code "3930300"
       name "高知県田野町"
       yomi "こうちけんたのちょう"
@@ -11610,7 +11610,7 @@ FactoryGirl.define do
       short_yomi "たのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3930400 do
+    factory :jmaxml_forecast_region_3930400 do
       code "3930400"
       name "高知県安田町"
       yomi "こうちけんやすだちょう"
@@ -11618,7 +11618,7 @@ FactoryGirl.define do
       short_yomi "やすだちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3930500 do
+    factory :jmaxml_forecast_region_3930500 do
       code "3930500"
       name "高知県北川村"
       yomi "こうちけんきたがわむら"
@@ -11626,7 +11626,7 @@ FactoryGirl.define do
       short_yomi "きたがわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3930600 do
+    factory :jmaxml_forecast_region_3930600 do
       code "3930600"
       name "高知県馬路村"
       yomi "こうちけんうまじむら"
@@ -11634,7 +11634,7 @@ FactoryGirl.define do
       short_yomi "うまじむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3930700 do
+    factory :jmaxml_forecast_region_3930700 do
       code "3930700"
       name "高知県芸西村"
       yomi "こうちけんげいせいむら"
@@ -11642,7 +11642,7 @@ FactoryGirl.define do
       short_yomi "げいせいむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3934100 do
+    factory :jmaxml_forecast_region_3934100 do
       code "3934100"
       name "高知県本山町"
       yomi "こうちけんもとやまちょう"
@@ -11650,7 +11650,7 @@ FactoryGirl.define do
       short_yomi "もとやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3934400 do
+    factory :jmaxml_forecast_region_3934400 do
       code "3934400"
       name "高知県大豊町"
       yomi "こうちけんおおとよちょう"
@@ -11658,7 +11658,7 @@ FactoryGirl.define do
       short_yomi "おおとよちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3936300 do
+    factory :jmaxml_forecast_region_3936300 do
       code "3936300"
       name "高知県土佐町"
       yomi "こうちけんとさちょう"
@@ -11666,7 +11666,7 @@ FactoryGirl.define do
       short_yomi "とさちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3936400 do
+    factory :jmaxml_forecast_region_3936400 do
       code "3936400"
       name "高知県大川村"
       yomi "こうちけんおおかわむら"
@@ -11674,7 +11674,7 @@ FactoryGirl.define do
       short_yomi "おおかわむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3938600 do
+    factory :jmaxml_forecast_region_3938600 do
       code "3938600"
       name "高知県いの町"
       yomi "こうちけんいのちょう"
@@ -11682,7 +11682,7 @@ FactoryGirl.define do
       short_yomi "いのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3938700 do
+    factory :jmaxml_forecast_region_3938700 do
       code "3938700"
       name "高知県仁淀川町"
       yomi "こうちけんによどがわちょう"
@@ -11690,7 +11690,7 @@ FactoryGirl.define do
       short_yomi "によどがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3940100 do
+    factory :jmaxml_forecast_region_3940100 do
       code "3940100"
       name "高知県中土佐町"
       yomi "こうちけんなかとさちょう"
@@ -11698,7 +11698,7 @@ FactoryGirl.define do
       short_yomi "なかとさちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3940200 do
+    factory :jmaxml_forecast_region_3940200 do
       code "3940200"
       name "高知県佐川町"
       yomi "こうちけんさかわちょう"
@@ -11706,7 +11706,7 @@ FactoryGirl.define do
       short_yomi "さかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3940300 do
+    factory :jmaxml_forecast_region_3940300 do
       code "3940300"
       name "高知県越知町"
       yomi "こうちけんおちちょう"
@@ -11714,7 +11714,7 @@ FactoryGirl.define do
       short_yomi "おちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3940500 do
+    factory :jmaxml_forecast_region_3940500 do
       code "3940500"
       name "高知県檮原町"
       yomi "こうちけんゆすはらちょう"
@@ -11722,7 +11722,7 @@ FactoryGirl.define do
       short_yomi "ゆすはらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3941000 do
+    factory :jmaxml_forecast_region_3941000 do
       code "3941000"
       name "高知県日高村"
       yomi "こうちけんひだかむら"
@@ -11730,7 +11730,7 @@ FactoryGirl.define do
       short_yomi "ひだかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3941100 do
+    factory :jmaxml_forecast_region_3941100 do
       code "3941100"
       name "高知県津野町"
       yomi "こうちけんつのちょう"
@@ -11738,7 +11738,7 @@ FactoryGirl.define do
       short_yomi "つのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3941200 do
+    factory :jmaxml_forecast_region_3941200 do
       code "3941200"
       name "高知県四万十町"
       yomi "こうちけんしまんとちょう"
@@ -11746,7 +11746,7 @@ FactoryGirl.define do
       short_yomi "しまんとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3942400 do
+    factory :jmaxml_forecast_region_3942400 do
       code "3942400"
       name "高知県大月町"
       yomi "こうちけんおおつきちょう"
@@ -11754,7 +11754,7 @@ FactoryGirl.define do
       short_yomi "おおつきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_3942700 do
+    factory :jmaxml_forecast_region_3942700 do
       code "3942700"
       name "高知県三原村"
       yomi "こうちけんみはらむら"
@@ -11762,7 +11762,7 @@ FactoryGirl.define do
       short_yomi "みはらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_3942800 do
+    factory :jmaxml_forecast_region_3942800 do
       code "3942800"
       name "高知県黒潮町"
       yomi "こうちけんくろしおちょう"
@@ -11770,7 +11770,7 @@ FactoryGirl.define do
       short_yomi "くろしおちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4010000 do
+    factory :jmaxml_forecast_region_4010000 do
       code "4010000"
       name "福岡県北九州市"
       yomi "ふくおかけんきたきゅうしゅうし"
@@ -11778,7 +11778,7 @@ FactoryGirl.define do
       short_yomi "きたきゅうしゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_4013000 do
+    factory :jmaxml_forecast_region_4013000 do
       code "4013000"
       name "福岡県福岡市"
       yomi "ふくおかけんふくおかし"
@@ -11786,7 +11786,7 @@ FactoryGirl.define do
       short_yomi "ふくおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_4020200 do
+    factory :jmaxml_forecast_region_4020200 do
       code "4020200"
       name "福岡県大牟田市"
       yomi "ふくおかけんおおむたし"
@@ -11794,7 +11794,7 @@ FactoryGirl.define do
       short_yomi "おおむたし"
     end
 
-    factory :rss_weather_xml_forecast_region_4020300 do
+    factory :jmaxml_forecast_region_4020300 do
       code "4020300"
       name "福岡県久留米市"
       yomi "ふくおかけんくるめし"
@@ -11802,7 +11802,7 @@ FactoryGirl.define do
       short_yomi "くるめし"
     end
 
-    factory :rss_weather_xml_forecast_region_4020400 do
+    factory :jmaxml_forecast_region_4020400 do
       code "4020400"
       name "福岡県直方市"
       yomi "ふくおかけんのおがたし"
@@ -11810,7 +11810,7 @@ FactoryGirl.define do
       short_yomi "のおがたし"
     end
 
-    factory :rss_weather_xml_forecast_region_4020500 do
+    factory :jmaxml_forecast_region_4020500 do
       code "4020500"
       name "福岡県飯塚市"
       yomi "ふくおかけんいいづかし"
@@ -11818,7 +11818,7 @@ FactoryGirl.define do
       short_yomi "いいづかし"
     end
 
-    factory :rss_weather_xml_forecast_region_4020600 do
+    factory :jmaxml_forecast_region_4020600 do
       code "4020600"
       name "福岡県田川市"
       yomi "ふくおかけんたがわし"
@@ -11826,7 +11826,7 @@ FactoryGirl.define do
       short_yomi "たがわし"
     end
 
-    factory :rss_weather_xml_forecast_region_4020700 do
+    factory :jmaxml_forecast_region_4020700 do
       code "4020700"
       name "福岡県柳川市"
       yomi "ふくおかけんやながわし"
@@ -11834,7 +11834,7 @@ FactoryGirl.define do
       short_yomi "やながわし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021000 do
+    factory :jmaxml_forecast_region_4021000 do
       code "4021000"
       name "福岡県八女市"
       yomi "ふくおかけんやめし"
@@ -11842,7 +11842,7 @@ FactoryGirl.define do
       short_yomi "やめし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021100 do
+    factory :jmaxml_forecast_region_4021100 do
       code "4021100"
       name "福岡県筑後市"
       yomi "ふくおかけんちくごし"
@@ -11850,7 +11850,7 @@ FactoryGirl.define do
       short_yomi "ちくごし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021200 do
+    factory :jmaxml_forecast_region_4021200 do
       code "4021200"
       name "福岡県大川市"
       yomi "ふくおかけんおおかわし"
@@ -11858,7 +11858,7 @@ FactoryGirl.define do
       short_yomi "おおかわし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021300 do
+    factory :jmaxml_forecast_region_4021300 do
       code "4021300"
       name "福岡県行橋市"
       yomi "ふくおかけんゆくはしし"
@@ -11866,7 +11866,7 @@ FactoryGirl.define do
       short_yomi "ゆくはしし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021400 do
+    factory :jmaxml_forecast_region_4021400 do
       code "4021400"
       name "福岡県豊前市"
       yomi "ふくおかけんぶぜんし"
@@ -11874,7 +11874,7 @@ FactoryGirl.define do
       short_yomi "ぶぜんし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021500 do
+    factory :jmaxml_forecast_region_4021500 do
       code "4021500"
       name "福岡県中間市"
       yomi "ふくおかけんなかまし"
@@ -11882,7 +11882,7 @@ FactoryGirl.define do
       short_yomi "なかまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021600 do
+    factory :jmaxml_forecast_region_4021600 do
       code "4021600"
       name "福岡県小郡市"
       yomi "ふくおかけんおごおりし"
@@ -11890,7 +11890,7 @@ FactoryGirl.define do
       short_yomi "おごおりし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021700 do
+    factory :jmaxml_forecast_region_4021700 do
       code "4021700"
       name "福岡県筑紫野市"
       yomi "ふくおかけんちくしのし"
@@ -11898,7 +11898,7 @@ FactoryGirl.define do
       short_yomi "ちくしのし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021800 do
+    factory :jmaxml_forecast_region_4021800 do
       code "4021800"
       name "福岡県春日市"
       yomi "ふくおかけんかすがし"
@@ -11906,7 +11906,7 @@ FactoryGirl.define do
       short_yomi "かすがし"
     end
 
-    factory :rss_weather_xml_forecast_region_4021900 do
+    factory :jmaxml_forecast_region_4021900 do
       code "4021900"
       name "福岡県大野城市"
       yomi "ふくおかけんおおのじょうし"
@@ -11914,7 +11914,7 @@ FactoryGirl.define do
       short_yomi "おおのじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022000 do
+    factory :jmaxml_forecast_region_4022000 do
       code "4022000"
       name "福岡県宗像市"
       yomi "ふくおかけんむなかたし"
@@ -11922,7 +11922,7 @@ FactoryGirl.define do
       short_yomi "むなかたし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022100 do
+    factory :jmaxml_forecast_region_4022100 do
       code "4022100"
       name "福岡県太宰府市"
       yomi "ふくおかけんだざいふし"
@@ -11930,7 +11930,7 @@ FactoryGirl.define do
       short_yomi "だざいふし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022300 do
+    factory :jmaxml_forecast_region_4022300 do
       code "4022300"
       name "福岡県古賀市"
       yomi "ふくおかけんこがし"
@@ -11938,7 +11938,7 @@ FactoryGirl.define do
       short_yomi "こがし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022400 do
+    factory :jmaxml_forecast_region_4022400 do
       code "4022400"
       name "福岡県福津市"
       yomi "ふくおかけんふくつし"
@@ -11946,7 +11946,7 @@ FactoryGirl.define do
       short_yomi "ふくつし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022500 do
+    factory :jmaxml_forecast_region_4022500 do
       code "4022500"
       name "福岡県うきは市"
       yomi "ふくおかけんうきはし"
@@ -11954,7 +11954,7 @@ FactoryGirl.define do
       short_yomi "うきはし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022600 do
+    factory :jmaxml_forecast_region_4022600 do
       code "4022600"
       name "福岡県宮若市"
       yomi "ふくおかけんみやわかし"
@@ -11962,7 +11962,7 @@ FactoryGirl.define do
       short_yomi "みやわかし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022700 do
+    factory :jmaxml_forecast_region_4022700 do
       code "4022700"
       name "福岡県嘉麻市"
       yomi "ふくおかけんかまし"
@@ -11970,7 +11970,7 @@ FactoryGirl.define do
       short_yomi "かまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022800 do
+    factory :jmaxml_forecast_region_4022800 do
       code "4022800"
       name "福岡県朝倉市"
       yomi "ふくおかけんあさくらし"
@@ -11978,7 +11978,7 @@ FactoryGirl.define do
       short_yomi "あさくらし"
     end
 
-    factory :rss_weather_xml_forecast_region_4022900 do
+    factory :jmaxml_forecast_region_4022900 do
       code "4022900"
       name "福岡県みやま市"
       yomi "ふくおかけんみやまし"
@@ -11986,7 +11986,7 @@ FactoryGirl.define do
       short_yomi "みやまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4023000 do
+    factory :jmaxml_forecast_region_4023000 do
       code "4023000"
       name "福岡県糸島市"
       yomi "ふくおかけんいとしまし"
@@ -11994,7 +11994,7 @@ FactoryGirl.define do
       short_yomi "いとしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4030500 do
+    factory :jmaxml_forecast_region_4030500 do
       code "4030500"
       name "福岡県那珂川町"
       yomi "ふくおかけんなかがわまち"
@@ -12002,7 +12002,7 @@ FactoryGirl.define do
       short_yomi "なかがわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4034100 do
+    factory :jmaxml_forecast_region_4034100 do
       code "4034100"
       name "福岡県宇美町"
       yomi "ふくおかけんうみまち"
@@ -12010,7 +12010,7 @@ FactoryGirl.define do
       short_yomi "うみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4034200 do
+    factory :jmaxml_forecast_region_4034200 do
       code "4034200"
       name "福岡県篠栗町"
       yomi "ふくおかけんささぐりまち"
@@ -12018,7 +12018,7 @@ FactoryGirl.define do
       short_yomi "ささぐりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4034300 do
+    factory :jmaxml_forecast_region_4034300 do
       code "4034300"
       name "福岡県志免町"
       yomi "ふくおかけんしめまち"
@@ -12026,7 +12026,7 @@ FactoryGirl.define do
       short_yomi "しめまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4034400 do
+    factory :jmaxml_forecast_region_4034400 do
       code "4034400"
       name "福岡県須恵町"
       yomi "ふくおかけんすえまち"
@@ -12034,7 +12034,7 @@ FactoryGirl.define do
       short_yomi "すえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4034500 do
+    factory :jmaxml_forecast_region_4034500 do
       code "4034500"
       name "福岡県新宮町"
       yomi "ふくおかけんしんぐうまち"
@@ -12042,7 +12042,7 @@ FactoryGirl.define do
       short_yomi "しんぐうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4034800 do
+    factory :jmaxml_forecast_region_4034800 do
       code "4034800"
       name "福岡県久山町"
       yomi "ふくおかけんひさやままち"
@@ -12050,7 +12050,7 @@ FactoryGirl.define do
       short_yomi "ひさやままち"
     end
 
-    factory :rss_weather_xml_forecast_region_4034900 do
+    factory :jmaxml_forecast_region_4034900 do
       code "4034900"
       name "福岡県粕屋町"
       yomi "ふくおかけんかすやまち"
@@ -12058,7 +12058,7 @@ FactoryGirl.define do
       short_yomi "かすやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4038100 do
+    factory :jmaxml_forecast_region_4038100 do
       code "4038100"
       name "福岡県芦屋町"
       yomi "ふくおかけんあしやまち"
@@ -12066,7 +12066,7 @@ FactoryGirl.define do
       short_yomi "あしやまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4038200 do
+    factory :jmaxml_forecast_region_4038200 do
       code "4038200"
       name "福岡県水巻町"
       yomi "ふくおかけんみずまきまち"
@@ -12074,7 +12074,7 @@ FactoryGirl.define do
       short_yomi "みずまきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4038300 do
+    factory :jmaxml_forecast_region_4038300 do
       code "4038300"
       name "福岡県岡垣町"
       yomi "ふくおかけんおかがきまち"
@@ -12082,7 +12082,7 @@ FactoryGirl.define do
       short_yomi "おかがきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4038400 do
+    factory :jmaxml_forecast_region_4038400 do
       code "4038400"
       name "福岡県遠賀町"
       yomi "ふくおかけんおんがちょう"
@@ -12090,7 +12090,7 @@ FactoryGirl.define do
       short_yomi "おんがちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4040100 do
+    factory :jmaxml_forecast_region_4040100 do
       code "4040100"
       name "福岡県小竹町"
       yomi "ふくおかけんこたけまち"
@@ -12098,7 +12098,7 @@ FactoryGirl.define do
       short_yomi "こたけまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4040200 do
+    factory :jmaxml_forecast_region_4040200 do
       code "4040200"
       name "福岡県鞍手町"
       yomi "ふくおかけんくらてまち"
@@ -12106,7 +12106,7 @@ FactoryGirl.define do
       short_yomi "くらてまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4042100 do
+    factory :jmaxml_forecast_region_4042100 do
       code "4042100"
       name "福岡県桂川町"
       yomi "ふくおかけんけいせんまち"
@@ -12114,7 +12114,7 @@ FactoryGirl.define do
       short_yomi "けいせんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4044700 do
+    factory :jmaxml_forecast_region_4044700 do
       code "4044700"
       name "福岡県筑前町"
       yomi "ふくおかけんちくぜんまち"
@@ -12122,7 +12122,7 @@ FactoryGirl.define do
       short_yomi "ちくぜんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4044800 do
+    factory :jmaxml_forecast_region_4044800 do
       code "4044800"
       name "福岡県東峰村"
       yomi "ふくおかけんとうほうむら"
@@ -12130,7 +12130,7 @@ FactoryGirl.define do
       short_yomi "とうほうむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4050300 do
+    factory :jmaxml_forecast_region_4050300 do
       code "4050300"
       name "福岡県大刀洗町"
       yomi "ふくおかけんたちあらいまち"
@@ -12138,7 +12138,7 @@ FactoryGirl.define do
       short_yomi "たちあらいまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4052200 do
+    factory :jmaxml_forecast_region_4052200 do
       code "4052200"
       name "福岡県大木町"
       yomi "ふくおかけんおおきまち"
@@ -12146,7 +12146,7 @@ FactoryGirl.define do
       short_yomi "おおきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4054400 do
+    factory :jmaxml_forecast_region_4054400 do
       code "4054400"
       name "福岡県広川町"
       yomi "ふくおかけんひろかわまち"
@@ -12154,7 +12154,7 @@ FactoryGirl.define do
       short_yomi "ひろかわまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4060100 do
+    factory :jmaxml_forecast_region_4060100 do
       code "4060100"
       name "福岡県香春町"
       yomi "ふくおかけんかわらまち"
@@ -12162,7 +12162,7 @@ FactoryGirl.define do
       short_yomi "かわらまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4060200 do
+    factory :jmaxml_forecast_region_4060200 do
       code "4060200"
       name "福岡県添田町"
       yomi "ふくおかけんそえだまち"
@@ -12170,7 +12170,7 @@ FactoryGirl.define do
       short_yomi "そえだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4060400 do
+    factory :jmaxml_forecast_region_4060400 do
       code "4060400"
       name "福岡県糸田町"
       yomi "ふくおかけんいとだまち"
@@ -12178,7 +12178,7 @@ FactoryGirl.define do
       short_yomi "いとだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4060500 do
+    factory :jmaxml_forecast_region_4060500 do
       code "4060500"
       name "福岡県川崎町"
       yomi "ふくおかけんかわさきまち"
@@ -12186,7 +12186,7 @@ FactoryGirl.define do
       short_yomi "かわさきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4060800 do
+    factory :jmaxml_forecast_region_4060800 do
       code "4060800"
       name "福岡県大任町"
       yomi "ふくおかけんおおとうまち"
@@ -12194,7 +12194,7 @@ FactoryGirl.define do
       short_yomi "おおとうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4060900 do
+    factory :jmaxml_forecast_region_4060900 do
       code "4060900"
       name "福岡県赤村"
       yomi "ふくおかけんあかむら"
@@ -12202,7 +12202,7 @@ FactoryGirl.define do
       short_yomi "あかむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4061000 do
+    factory :jmaxml_forecast_region_4061000 do
       code "4061000"
       name "福岡県福智町"
       yomi "ふくおかけんふくちまち"
@@ -12210,7 +12210,7 @@ FactoryGirl.define do
       short_yomi "ふくちまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4062100 do
+    factory :jmaxml_forecast_region_4062100 do
       code "4062100"
       name "福岡県苅田町"
       yomi "ふくおかけんかんだまち"
@@ -12218,7 +12218,7 @@ FactoryGirl.define do
       short_yomi "かんだまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4062500 do
+    factory :jmaxml_forecast_region_4062500 do
       code "4062500"
       name "福岡県みやこ町"
       yomi "ふくおかけんみやこまち"
@@ -12226,7 +12226,7 @@ FactoryGirl.define do
       short_yomi "みやこまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4064200 do
+    factory :jmaxml_forecast_region_4064200 do
       code "4064200"
       name "福岡県吉富町"
       yomi "ふくおかけんよしとみまち"
@@ -12234,7 +12234,7 @@ FactoryGirl.define do
       short_yomi "よしとみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4064600 do
+    factory :jmaxml_forecast_region_4064600 do
       code "4064600"
       name "福岡県上毛町"
       yomi "ふくおかけんこうげまち"
@@ -12242,7 +12242,7 @@ FactoryGirl.define do
       short_yomi "こうげまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4064700 do
+    factory :jmaxml_forecast_region_4064700 do
       code "4064700"
       name "福岡県築上町"
       yomi "ふくおかけんちくじょうまち"
@@ -12250,7 +12250,7 @@ FactoryGirl.define do
       short_yomi "ちくじょうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4120100 do
+    factory :jmaxml_forecast_region_4120100 do
       code "4120100"
       name "佐賀県佐賀市"
       yomi "さがけんさがし"
@@ -12258,7 +12258,7 @@ FactoryGirl.define do
       short_yomi "さがし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120200 do
+    factory :jmaxml_forecast_region_4120200 do
       code "4120200"
       name "佐賀県唐津市"
       yomi "さがけんからつし"
@@ -12266,7 +12266,7 @@ FactoryGirl.define do
       short_yomi "からつし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120300 do
+    factory :jmaxml_forecast_region_4120300 do
       code "4120300"
       name "佐賀県鳥栖市"
       yomi "さがけんとすし"
@@ -12274,7 +12274,7 @@ FactoryGirl.define do
       short_yomi "とすし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120400 do
+    factory :jmaxml_forecast_region_4120400 do
       code "4120400"
       name "佐賀県多久市"
       yomi "さがけんたくし"
@@ -12282,7 +12282,7 @@ FactoryGirl.define do
       short_yomi "たくし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120500 do
+    factory :jmaxml_forecast_region_4120500 do
       code "4120500"
       name "佐賀県伊万里市"
       yomi "さがけんいまりし"
@@ -12290,7 +12290,7 @@ FactoryGirl.define do
       short_yomi "いまりし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120600 do
+    factory :jmaxml_forecast_region_4120600 do
       code "4120600"
       name "佐賀県武雄市"
       yomi "さがけんたけおし"
@@ -12298,7 +12298,7 @@ FactoryGirl.define do
       short_yomi "たけおし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120700 do
+    factory :jmaxml_forecast_region_4120700 do
       code "4120700"
       name "佐賀県鹿島市"
       yomi "さがけんかしまし"
@@ -12306,7 +12306,7 @@ FactoryGirl.define do
       short_yomi "かしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120800 do
+    factory :jmaxml_forecast_region_4120800 do
       code "4120800"
       name "佐賀県小城市"
       yomi "さがけんおぎし"
@@ -12314,7 +12314,7 @@ FactoryGirl.define do
       short_yomi "おぎし"
     end
 
-    factory :rss_weather_xml_forecast_region_4120900 do
+    factory :jmaxml_forecast_region_4120900 do
       code "4120900"
       name "佐賀県嬉野市"
       yomi "さがけんうれしのし"
@@ -12322,7 +12322,7 @@ FactoryGirl.define do
       short_yomi "うれしのし"
     end
 
-    factory :rss_weather_xml_forecast_region_4121000 do
+    factory :jmaxml_forecast_region_4121000 do
       code "4121000"
       name "佐賀県神埼市"
       yomi "さがけんかんざきし"
@@ -12330,7 +12330,7 @@ FactoryGirl.define do
       short_yomi "かんざきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4132700 do
+    factory :jmaxml_forecast_region_4132700 do
       code "4132700"
       name "佐賀県吉野ヶ里町"
       yomi "さがけんよしのがりちょう"
@@ -12338,7 +12338,7 @@ FactoryGirl.define do
       short_yomi "よしのがりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4134100 do
+    factory :jmaxml_forecast_region_4134100 do
       code "4134100"
       name "佐賀県基山町"
       yomi "さがけんきやまちょう"
@@ -12346,7 +12346,7 @@ FactoryGirl.define do
       short_yomi "きやまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4134500 do
+    factory :jmaxml_forecast_region_4134500 do
       code "4134500"
       name "佐賀県上峰町"
       yomi "さがけんかみみねちょう"
@@ -12354,7 +12354,7 @@ FactoryGirl.define do
       short_yomi "かみみねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4134600 do
+    factory :jmaxml_forecast_region_4134600 do
       code "4134600"
       name "佐賀県みやき町"
       yomi "さがけんみやきちょう"
@@ -12362,7 +12362,7 @@ FactoryGirl.define do
       short_yomi "みやきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4138700 do
+    factory :jmaxml_forecast_region_4138700 do
       code "4138700"
       name "佐賀県玄海町"
       yomi "さがけんげんかいちょう"
@@ -12370,7 +12370,7 @@ FactoryGirl.define do
       short_yomi "げんかいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4140100 do
+    factory :jmaxml_forecast_region_4140100 do
       code "4140100"
       name "佐賀県有田町"
       yomi "さがけんありたちょう"
@@ -12378,7 +12378,7 @@ FactoryGirl.define do
       short_yomi "ありたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4142300 do
+    factory :jmaxml_forecast_region_4142300 do
       code "4142300"
       name "佐賀県大町町"
       yomi "さがけんおおまちちょう"
@@ -12386,7 +12386,7 @@ FactoryGirl.define do
       short_yomi "おおまちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4142400 do
+    factory :jmaxml_forecast_region_4142400 do
       code "4142400"
       name "佐賀県江北町"
       yomi "さがけんこうほくまち"
@@ -12394,7 +12394,7 @@ FactoryGirl.define do
       short_yomi "こうほくまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4142500 do
+    factory :jmaxml_forecast_region_4142500 do
       code "4142500"
       name "佐賀県白石町"
       yomi "さがけんしろいしちょう"
@@ -12402,7 +12402,7 @@ FactoryGirl.define do
       short_yomi "しろいしちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4144100 do
+    factory :jmaxml_forecast_region_4144100 do
       code "4144100"
       name "佐賀県太良町"
       yomi "さがけんたらちょう"
@@ -12410,7 +12410,7 @@ FactoryGirl.define do
       short_yomi "たらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4220100 do
+    factory :jmaxml_forecast_region_4220100 do
       code "4220100"
       name "長崎県長崎市"
       yomi "ながさきけんながさきし"
@@ -12418,7 +12418,7 @@ FactoryGirl.define do
       short_yomi "ながさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4220200 do
+    factory :jmaxml_forecast_region_4220200 do
       code "4220200"
       name "長崎県佐世保市"
       yomi "ながさきけんさせぼし"
@@ -12426,7 +12426,7 @@ FactoryGirl.define do
       short_yomi "させぼし"
     end
 
-    factory :rss_weather_xml_forecast_region_4220300 do
+    factory :jmaxml_forecast_region_4220300 do
       code "4220300"
       name "長崎県島原市"
       yomi "ながさきけんしまばらし"
@@ -12434,7 +12434,7 @@ FactoryGirl.define do
       short_yomi "しまばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_4220400 do
+    factory :jmaxml_forecast_region_4220400 do
       code "4220400"
       name "長崎県諫早市"
       yomi "ながさきけんいさはやし"
@@ -12442,7 +12442,7 @@ FactoryGirl.define do
       short_yomi "いさはやし"
     end
 
-    factory :rss_weather_xml_forecast_region_4220500 do
+    factory :jmaxml_forecast_region_4220500 do
       code "4220500"
       name "長崎県大村市"
       yomi "ながさきけんおおむらし"
@@ -12450,7 +12450,7 @@ FactoryGirl.define do
       short_yomi "おおむらし"
     end
 
-    factory :rss_weather_xml_forecast_region_4220700 do
+    factory :jmaxml_forecast_region_4220700 do
       code "4220700"
       name "長崎県平戸市"
       yomi "ながさきけんひらどし"
@@ -12458,7 +12458,7 @@ FactoryGirl.define do
       short_yomi "ひらどし"
     end
 
-    factory :rss_weather_xml_forecast_region_4220800 do
+    factory :jmaxml_forecast_region_4220800 do
       code "4220800"
       name "長崎県松浦市"
       yomi "ながさきけんまつうらし"
@@ -12466,7 +12466,7 @@ FactoryGirl.define do
       short_yomi "まつうらし"
     end
 
-    factory :rss_weather_xml_forecast_region_4220900 do
+    factory :jmaxml_forecast_region_4220900 do
       code "4220900"
       name "長崎県対馬市"
       yomi "ながさきけんつしまし"
@@ -12474,7 +12474,7 @@ FactoryGirl.define do
       short_yomi "つしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4221000 do
+    factory :jmaxml_forecast_region_4221000 do
       code "4221000"
       name "長崎県壱岐市"
       yomi "ながさきけんいきし"
@@ -12482,7 +12482,7 @@ FactoryGirl.define do
       short_yomi "いきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4221100 do
+    factory :jmaxml_forecast_region_4221100 do
       code "4221100"
       name "長崎県五島市"
       yomi "ながさきけんごとうし"
@@ -12490,7 +12490,7 @@ FactoryGirl.define do
       short_yomi "ごとうし"
     end
 
-    factory :rss_weather_xml_forecast_region_4221200 do
+    factory :jmaxml_forecast_region_4221200 do
       code "4221200"
       name "長崎県西海市"
       yomi "ながさきけんさいかいし"
@@ -12498,7 +12498,7 @@ FactoryGirl.define do
       short_yomi "さいかいし"
     end
 
-    factory :rss_weather_xml_forecast_region_4221300 do
+    factory :jmaxml_forecast_region_4221300 do
       code "4221300"
       name "長崎県雲仙市"
       yomi "ながさきけんうんぜんし"
@@ -12506,7 +12506,7 @@ FactoryGirl.define do
       short_yomi "うんぜんし"
     end
 
-    factory :rss_weather_xml_forecast_region_4221400 do
+    factory :jmaxml_forecast_region_4221400 do
       code "4221400"
       name "長崎県南島原市"
       yomi "ながさきけんみなみしまばらし"
@@ -12514,7 +12514,7 @@ FactoryGirl.define do
       short_yomi "みなみしまばらし"
     end
 
-    factory :rss_weather_xml_forecast_region_4230700 do
+    factory :jmaxml_forecast_region_4230700 do
       code "4230700"
       name "長崎県長与町"
       yomi "ながさきけんながよちょう"
@@ -12522,7 +12522,7 @@ FactoryGirl.define do
       short_yomi "ながよちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4230800 do
+    factory :jmaxml_forecast_region_4230800 do
       code "4230800"
       name "長崎県時津町"
       yomi "ながさきけんとぎつちょう"
@@ -12530,7 +12530,7 @@ FactoryGirl.define do
       short_yomi "とぎつちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4232100 do
+    factory :jmaxml_forecast_region_4232100 do
       code "4232100"
       name "長崎県東彼杵町"
       yomi "ながさきけんひがしそのぎちょう"
@@ -12538,7 +12538,7 @@ FactoryGirl.define do
       short_yomi "ひがしそのぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4232200 do
+    factory :jmaxml_forecast_region_4232200 do
       code "4232200"
       name "長崎県川棚町"
       yomi "ながさきけんかわたなちょう"
@@ -12546,7 +12546,7 @@ FactoryGirl.define do
       short_yomi "かわたなちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4232300 do
+    factory :jmaxml_forecast_region_4232300 do
       code "4232300"
       name "長崎県波佐見町"
       yomi "ながさきけんはさみちょう"
@@ -12554,7 +12554,7 @@ FactoryGirl.define do
       short_yomi "はさみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4238300 do
+    factory :jmaxml_forecast_region_4238300 do
       code "4238300"
       name "長崎県小値賀町"
       yomi "ながさきけんおぢかちょう"
@@ -12562,7 +12562,7 @@ FactoryGirl.define do
       short_yomi "おぢかちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4239100 do
+    factory :jmaxml_forecast_region_4239100 do
       code "4239100"
       name "長崎県佐々町"
       yomi "ながさきけんさざちょう"
@@ -12570,7 +12570,7 @@ FactoryGirl.define do
       short_yomi "さざちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4241100 do
+    factory :jmaxml_forecast_region_4241100 do
       code "4241100"
       name "長崎県新上五島町"
       yomi "ながさきけんしんかみごとうちょう"
@@ -12578,7 +12578,7 @@ FactoryGirl.define do
       short_yomi "しんかみごとうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4310000 do
+    factory :jmaxml_forecast_region_4310000 do
       code "4310000"
       name "熊本県熊本市"
       yomi "くまもとけんくまもとし"
@@ -12586,7 +12586,7 @@ FactoryGirl.define do
       short_yomi "くまもとし"
     end
 
-    factory :rss_weather_xml_forecast_region_4320200 do
+    factory :jmaxml_forecast_region_4320200 do
       code "4320200"
       name "熊本県八代市"
       yomi "くまもとけんやつしろし"
@@ -12594,7 +12594,7 @@ FactoryGirl.define do
       short_yomi "やつしろし"
     end
 
-    factory :rss_weather_xml_forecast_region_4320300 do
+    factory :jmaxml_forecast_region_4320300 do
       code "4320300"
       name "熊本県人吉市"
       yomi "くまもとけんひとよしし"
@@ -12602,7 +12602,7 @@ FactoryGirl.define do
       short_yomi "ひとよしし"
     end
 
-    factory :rss_weather_xml_forecast_region_4320400 do
+    factory :jmaxml_forecast_region_4320400 do
       code "4320400"
       name "熊本県荒尾市"
       yomi "くまもとけんあらおし"
@@ -12610,7 +12610,7 @@ FactoryGirl.define do
       short_yomi "あらおし"
     end
 
-    factory :rss_weather_xml_forecast_region_4320500 do
+    factory :jmaxml_forecast_region_4320500 do
       code "4320500"
       name "熊本県水俣市"
       yomi "くまもとけんみなまたし"
@@ -12618,7 +12618,7 @@ FactoryGirl.define do
       short_yomi "みなまたし"
     end
 
-    factory :rss_weather_xml_forecast_region_4320600 do
+    factory :jmaxml_forecast_region_4320600 do
       code "4320600"
       name "熊本県玉名市"
       yomi "くまもとけんたまなし"
@@ -12626,7 +12626,7 @@ FactoryGirl.define do
       short_yomi "たまなし"
     end
 
-    factory :rss_weather_xml_forecast_region_4320800 do
+    factory :jmaxml_forecast_region_4320800 do
       code "4320800"
       name "熊本県山鹿市"
       yomi "くまもとけんやまがし"
@@ -12634,7 +12634,7 @@ FactoryGirl.define do
       short_yomi "やまがし"
     end
 
-    factory :rss_weather_xml_forecast_region_4321000 do
+    factory :jmaxml_forecast_region_4321000 do
       code "4321000"
       name "熊本県菊池市"
       yomi "くまもとけんきくちし"
@@ -12642,7 +12642,7 @@ FactoryGirl.define do
       short_yomi "きくちし"
     end
 
-    factory :rss_weather_xml_forecast_region_4321100 do
+    factory :jmaxml_forecast_region_4321100 do
       code "4321100"
       name "熊本県宇土市"
       yomi "くまもとけんうとし"
@@ -12650,7 +12650,7 @@ FactoryGirl.define do
       short_yomi "うとし"
     end
 
-    factory :rss_weather_xml_forecast_region_4321200 do
+    factory :jmaxml_forecast_region_4321200 do
       code "4321200"
       name "熊本県上天草市"
       yomi "くまもとけんかみあまくさし"
@@ -12658,7 +12658,7 @@ FactoryGirl.define do
       short_yomi "かみあまくさし"
     end
 
-    factory :rss_weather_xml_forecast_region_4321300 do
+    factory :jmaxml_forecast_region_4321300 do
       code "4321300"
       name "熊本県宇城市"
       yomi "くまもとけんうきし"
@@ -12666,7 +12666,7 @@ FactoryGirl.define do
       short_yomi "うきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4321400 do
+    factory :jmaxml_forecast_region_4321400 do
       code "4321400"
       name "熊本県阿蘇市"
       yomi "くまもとけんあそし"
@@ -12674,7 +12674,7 @@ FactoryGirl.define do
       short_yomi "あそし"
     end
 
-    factory :rss_weather_xml_forecast_region_4321500 do
+    factory :jmaxml_forecast_region_4321500 do
       code "4321500"
       name "熊本県天草市"
       yomi "くまもとけんあまくさし"
@@ -12682,7 +12682,7 @@ FactoryGirl.define do
       short_yomi "あまくさし"
     end
 
-    factory :rss_weather_xml_forecast_region_4321600 do
+    factory :jmaxml_forecast_region_4321600 do
       code "4321600"
       name "熊本県合志市"
       yomi "くまもとけんこうしし"
@@ -12690,7 +12690,7 @@ FactoryGirl.define do
       short_yomi "こうしし"
     end
 
-    factory :rss_weather_xml_forecast_region_4334800 do
+    factory :jmaxml_forecast_region_4334800 do
       code "4334800"
       name "熊本県美里町"
       yomi "くまもとけんみさとまち"
@@ -12698,7 +12698,7 @@ FactoryGirl.define do
       short_yomi "みさとまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4336400 do
+    factory :jmaxml_forecast_region_4336400 do
       code "4336400"
       name "熊本県玉東町"
       yomi "くまもとけんぎょくとうまち"
@@ -12706,7 +12706,7 @@ FactoryGirl.define do
       short_yomi "ぎょくとうまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4336700 do
+    factory :jmaxml_forecast_region_4336700 do
       code "4336700"
       name "熊本県南関町"
       yomi "くまもとけんなんかんまち"
@@ -12714,7 +12714,7 @@ FactoryGirl.define do
       short_yomi "なんかんまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4336800 do
+    factory :jmaxml_forecast_region_4336800 do
       code "4336800"
       name "熊本県長洲町"
       yomi "くまもとけんながすまち"
@@ -12722,7 +12722,7 @@ FactoryGirl.define do
       short_yomi "ながすまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4336900 do
+    factory :jmaxml_forecast_region_4336900 do
       code "4336900"
       name "熊本県和水町"
       yomi "くまもとけんなごみまち"
@@ -12730,7 +12730,7 @@ FactoryGirl.define do
       short_yomi "なごみまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4340300 do
+    factory :jmaxml_forecast_region_4340300 do
       code "4340300"
       name "熊本県大津町"
       yomi "くまもとけんおおづまち"
@@ -12738,7 +12738,7 @@ FactoryGirl.define do
       short_yomi "おおづまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4340400 do
+    factory :jmaxml_forecast_region_4340400 do
       code "4340400"
       name "熊本県菊陽町"
       yomi "くまもとけんきくようまち"
@@ -12746,7 +12746,7 @@ FactoryGirl.define do
       short_yomi "きくようまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4342300 do
+    factory :jmaxml_forecast_region_4342300 do
       code "4342300"
       name "熊本県南小国町"
       yomi "くまもとけんみなみおぐにまち"
@@ -12754,7 +12754,7 @@ FactoryGirl.define do
       short_yomi "みなみおぐにまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4342400 do
+    factory :jmaxml_forecast_region_4342400 do
       code "4342400"
       name "熊本県小国町"
       yomi "くまもとけんおぐにまち"
@@ -12762,7 +12762,7 @@ FactoryGirl.define do
       short_yomi "おぐにまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4342500 do
+    factory :jmaxml_forecast_region_4342500 do
       code "4342500"
       name "熊本県産山村"
       yomi "くまもとけんうぶやまむら"
@@ -12770,7 +12770,7 @@ FactoryGirl.define do
       short_yomi "うぶやまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4342800 do
+    factory :jmaxml_forecast_region_4342800 do
       code "4342800"
       name "熊本県高森町"
       yomi "くまもとけんたかもりまち"
@@ -12778,7 +12778,7 @@ FactoryGirl.define do
       short_yomi "たかもりまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4343200 do
+    factory :jmaxml_forecast_region_4343200 do
       code "4343200"
       name "熊本県西原村"
       yomi "くまもとけんにしはらむら"
@@ -12786,7 +12786,7 @@ FactoryGirl.define do
       short_yomi "にしはらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4343300 do
+    factory :jmaxml_forecast_region_4343300 do
       code "4343300"
       name "熊本県南阿蘇村"
       yomi "くまもとけんみなみあそむら"
@@ -12794,7 +12794,7 @@ FactoryGirl.define do
       short_yomi "みなみあそむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4344100 do
+    factory :jmaxml_forecast_region_4344100 do
       code "4344100"
       name "熊本県御船町"
       yomi "くまもとけんみふねまち"
@@ -12802,7 +12802,7 @@ FactoryGirl.define do
       short_yomi "みふねまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4344200 do
+    factory :jmaxml_forecast_region_4344200 do
       code "4344200"
       name "熊本県嘉島町"
       yomi "くまもとけんかしままち"
@@ -12810,7 +12810,7 @@ FactoryGirl.define do
       short_yomi "かしままち"
     end
 
-    factory :rss_weather_xml_forecast_region_4344300 do
+    factory :jmaxml_forecast_region_4344300 do
       code "4344300"
       name "熊本県益城町"
       yomi "くまもとけんましきまち"
@@ -12818,7 +12818,7 @@ FactoryGirl.define do
       short_yomi "ましきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4344400 do
+    factory :jmaxml_forecast_region_4344400 do
       code "4344400"
       name "熊本県甲佐町"
       yomi "くまもとけんこうさまち"
@@ -12826,7 +12826,7 @@ FactoryGirl.define do
       short_yomi "こうさまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4344700 do
+    factory :jmaxml_forecast_region_4344700 do
       code "4344700"
       name "熊本県山都町"
       yomi "くまもとけんやまとちょう"
@@ -12834,7 +12834,7 @@ FactoryGirl.define do
       short_yomi "やまとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4346800 do
+    factory :jmaxml_forecast_region_4346800 do
       code "4346800"
       name "熊本県氷川町"
       yomi "くまもとけんひかわちょう"
@@ -12842,7 +12842,7 @@ FactoryGirl.define do
       short_yomi "ひかわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4348200 do
+    factory :jmaxml_forecast_region_4348200 do
       code "4348200"
       name "熊本県芦北町"
       yomi "くまもとけんあしきたまち"
@@ -12850,7 +12850,7 @@ FactoryGirl.define do
       short_yomi "あしきたまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4348400 do
+    factory :jmaxml_forecast_region_4348400 do
       code "4348400"
       name "熊本県津奈木町"
       yomi "くまもとけんつなぎまち"
@@ -12858,7 +12858,7 @@ FactoryGirl.define do
       short_yomi "つなぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4350100 do
+    factory :jmaxml_forecast_region_4350100 do
       code "4350100"
       name "熊本県錦町"
       yomi "くまもとけんにしきまち"
@@ -12866,7 +12866,7 @@ FactoryGirl.define do
       short_yomi "にしきまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4350500 do
+    factory :jmaxml_forecast_region_4350500 do
       code "4350500"
       name "熊本県多良木町"
       yomi "くまもとけんたらぎまち"
@@ -12874,7 +12874,7 @@ FactoryGirl.define do
       short_yomi "たらぎまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4350600 do
+    factory :jmaxml_forecast_region_4350600 do
       code "4350600"
       name "熊本県湯前町"
       yomi "くまもとけんゆのまえまち"
@@ -12882,7 +12882,7 @@ FactoryGirl.define do
       short_yomi "ゆのまえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4350700 do
+    factory :jmaxml_forecast_region_4350700 do
       code "4350700"
       name "熊本県水上村"
       yomi "くまもとけんみずかみむら"
@@ -12890,7 +12890,7 @@ FactoryGirl.define do
       short_yomi "みずかみむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4351000 do
+    factory :jmaxml_forecast_region_4351000 do
       code "4351000"
       name "熊本県相良村"
       yomi "くまもとけんさがらむら"
@@ -12898,7 +12898,7 @@ FactoryGirl.define do
       short_yomi "さがらむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4351100 do
+    factory :jmaxml_forecast_region_4351100 do
       code "4351100"
       name "熊本県五木村"
       yomi "くまもとけんいつきむら"
@@ -12906,7 +12906,7 @@ FactoryGirl.define do
       short_yomi "いつきむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4351200 do
+    factory :jmaxml_forecast_region_4351200 do
       code "4351200"
       name "熊本県山江村"
       yomi "くまもとけんやまえむら"
@@ -12914,7 +12914,7 @@ FactoryGirl.define do
       short_yomi "やまえむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4351300 do
+    factory :jmaxml_forecast_region_4351300 do
       code "4351300"
       name "熊本県球磨村"
       yomi "くまもとけんくまむら"
@@ -12922,7 +12922,7 @@ FactoryGirl.define do
       short_yomi "くまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4351400 do
+    factory :jmaxml_forecast_region_4351400 do
       code "4351400"
       name "熊本県あさぎり町"
       yomi "くまもとけんあさぎりちょう"
@@ -12930,7 +12930,7 @@ FactoryGirl.define do
       short_yomi "あさぎりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4353100 do
+    factory :jmaxml_forecast_region_4353100 do
       code "4353100"
       name "熊本県苓北町"
       yomi "くまもとけんれいほくまち"
@@ -12938,7 +12938,7 @@ FactoryGirl.define do
       short_yomi "れいほくまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4420100 do
+    factory :jmaxml_forecast_region_4420100 do
       code "4420100"
       name "大分県大分市"
       yomi "おおいたけんおおいたし"
@@ -12946,7 +12946,7 @@ FactoryGirl.define do
       short_yomi "おおいたし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420200 do
+    factory :jmaxml_forecast_region_4420200 do
       code "4420200"
       name "大分県別府市"
       yomi "おおいたけんべっぷし"
@@ -12954,7 +12954,7 @@ FactoryGirl.define do
       short_yomi "べっぷし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420300 do
+    factory :jmaxml_forecast_region_4420300 do
       code "4420300"
       name "大分県中津市"
       yomi "おおいたけんなかつし"
@@ -12962,7 +12962,7 @@ FactoryGirl.define do
       short_yomi "なかつし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420400 do
+    factory :jmaxml_forecast_region_4420400 do
       code "4420400"
       name "大分県日田市"
       yomi "おおいたけんひたし"
@@ -12970,7 +12970,7 @@ FactoryGirl.define do
       short_yomi "ひたし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420500 do
+    factory :jmaxml_forecast_region_4420500 do
       code "4420500"
       name "大分県佐伯市"
       yomi "おおいたけんさいきし"
@@ -12978,7 +12978,7 @@ FactoryGirl.define do
       short_yomi "さいきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420600 do
+    factory :jmaxml_forecast_region_4420600 do
       code "4420600"
       name "大分県臼杵市"
       yomi "おおいたけんうすきし"
@@ -12986,7 +12986,7 @@ FactoryGirl.define do
       short_yomi "うすきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420700 do
+    factory :jmaxml_forecast_region_4420700 do
       code "4420700"
       name "大分県津久見市"
       yomi "おおいたけんつくみし"
@@ -12994,7 +12994,7 @@ FactoryGirl.define do
       short_yomi "つくみし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420800 do
+    factory :jmaxml_forecast_region_4420800 do
       code "4420800"
       name "大分県竹田市"
       yomi "おおいたけんたけたし"
@@ -13002,7 +13002,7 @@ FactoryGirl.define do
       short_yomi "たけたし"
     end
 
-    factory :rss_weather_xml_forecast_region_4420900 do
+    factory :jmaxml_forecast_region_4420900 do
       code "4420900"
       name "大分県豊後高田市"
       yomi "おおいたけんぶんごたかだし"
@@ -13010,7 +13010,7 @@ FactoryGirl.define do
       short_yomi "ぶんごたかだし"
     end
 
-    factory :rss_weather_xml_forecast_region_4421000 do
+    factory :jmaxml_forecast_region_4421000 do
       code "4421000"
       name "大分県杵築市"
       yomi "おおいたけんきつきし"
@@ -13018,7 +13018,7 @@ FactoryGirl.define do
       short_yomi "きつきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4421100 do
+    factory :jmaxml_forecast_region_4421100 do
       code "4421100"
       name "大分県宇佐市"
       yomi "おおいたけんうさし"
@@ -13026,7 +13026,7 @@ FactoryGirl.define do
       short_yomi "うさし"
     end
 
-    factory :rss_weather_xml_forecast_region_4421200 do
+    factory :jmaxml_forecast_region_4421200 do
       code "4421200"
       name "大分県豊後大野市"
       yomi "おおいたけんぶんごおおのし"
@@ -13034,7 +13034,7 @@ FactoryGirl.define do
       short_yomi "ぶんごおおのし"
     end
 
-    factory :rss_weather_xml_forecast_region_4421300 do
+    factory :jmaxml_forecast_region_4421300 do
       code "4421300"
       name "大分県由布市"
       yomi "おおいたけんゆふし"
@@ -13042,7 +13042,7 @@ FactoryGirl.define do
       short_yomi "ゆふし"
     end
 
-    factory :rss_weather_xml_forecast_region_4421400 do
+    factory :jmaxml_forecast_region_4421400 do
       code "4421400"
       name "大分県国東市"
       yomi "おおいたけんくにさきし"
@@ -13050,7 +13050,7 @@ FactoryGirl.define do
       short_yomi "くにさきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4432200 do
+    factory :jmaxml_forecast_region_4432200 do
       code "4432200"
       name "大分県姫島村"
       yomi "おおいたけんひめしまむら"
@@ -13058,7 +13058,7 @@ FactoryGirl.define do
       short_yomi "ひめしまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4434100 do
+    factory :jmaxml_forecast_region_4434100 do
       code "4434100"
       name "大分県日出町"
       yomi "おおいたけんひじまち"
@@ -13066,7 +13066,7 @@ FactoryGirl.define do
       short_yomi "ひじまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4446100 do
+    factory :jmaxml_forecast_region_4446100 do
       code "4446100"
       name "大分県九重町"
       yomi "おおいたけんここのえまち"
@@ -13074,7 +13074,7 @@ FactoryGirl.define do
       short_yomi "ここのえまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4446200 do
+    factory :jmaxml_forecast_region_4446200 do
       code "4446200"
       name "大分県玖珠町"
       yomi "おおいたけんくすまち"
@@ -13082,7 +13082,7 @@ FactoryGirl.define do
       short_yomi "くすまち"
     end
 
-    factory :rss_weather_xml_forecast_region_4520100 do
+    factory :jmaxml_forecast_region_4520100 do
       code "4520100"
       name "宮崎県宮崎市"
       yomi "みやざきけんみやざきし"
@@ -13090,7 +13090,7 @@ FactoryGirl.define do
       short_yomi "みやざきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520200 do
+    factory :jmaxml_forecast_region_4520200 do
       code "4520200"
       name "宮崎県都城市"
       yomi "みやざきけんみやこのじょうし"
@@ -13098,7 +13098,7 @@ FactoryGirl.define do
       short_yomi "みやこのじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520300 do
+    factory :jmaxml_forecast_region_4520300 do
       code "4520300"
       name "宮崎県延岡市"
       yomi "みやざきけんのべおかし"
@@ -13106,7 +13106,7 @@ FactoryGirl.define do
       short_yomi "のべおかし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520400 do
+    factory :jmaxml_forecast_region_4520400 do
       code "4520400"
       name "宮崎県日南市"
       yomi "みやざきけんにちなんし"
@@ -13114,7 +13114,7 @@ FactoryGirl.define do
       short_yomi "にちなんし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520500 do
+    factory :jmaxml_forecast_region_4520500 do
       code "4520500"
       name "宮崎県小林市"
       yomi "みやざきけんこばやしし"
@@ -13122,7 +13122,7 @@ FactoryGirl.define do
       short_yomi "こばやしし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520600 do
+    factory :jmaxml_forecast_region_4520600 do
       code "4520600"
       name "宮崎県日向市"
       yomi "みやざきけんひゅうがし"
@@ -13130,7 +13130,7 @@ FactoryGirl.define do
       short_yomi "ひゅうがし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520700 do
+    factory :jmaxml_forecast_region_4520700 do
       code "4520700"
       name "宮崎県串間市"
       yomi "みやざきけんくしまし"
@@ -13138,7 +13138,7 @@ FactoryGirl.define do
       short_yomi "くしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520800 do
+    factory :jmaxml_forecast_region_4520800 do
       code "4520800"
       name "宮崎県西都市"
       yomi "みやざきけんさいとし"
@@ -13146,7 +13146,7 @@ FactoryGirl.define do
       short_yomi "さいとし"
     end
 
-    factory :rss_weather_xml_forecast_region_4520900 do
+    factory :jmaxml_forecast_region_4520900 do
       code "4520900"
       name "宮崎県えびの市"
       yomi "みやざきけんえびのし"
@@ -13154,7 +13154,7 @@ FactoryGirl.define do
       short_yomi "えびのし"
     end
 
-    factory :rss_weather_xml_forecast_region_4534100 do
+    factory :jmaxml_forecast_region_4534100 do
       code "4534100"
       name "宮崎県三股町"
       yomi "みやざきけんみまたちょう"
@@ -13162,7 +13162,7 @@ FactoryGirl.define do
       short_yomi "みまたちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4536100 do
+    factory :jmaxml_forecast_region_4536100 do
       code "4536100"
       name "宮崎県高原町"
       yomi "みやざきけんたかはるちょう"
@@ -13170,7 +13170,7 @@ FactoryGirl.define do
       short_yomi "たかはるちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4538200 do
+    factory :jmaxml_forecast_region_4538200 do
       code "4538200"
       name "宮崎県国富町"
       yomi "みやざきけんくにとみちょう"
@@ -13178,7 +13178,7 @@ FactoryGirl.define do
       short_yomi "くにとみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4538300 do
+    factory :jmaxml_forecast_region_4538300 do
       code "4538300"
       name "宮崎県綾町"
       yomi "みやざきけんあやちょう"
@@ -13186,7 +13186,7 @@ FactoryGirl.define do
       short_yomi "あやちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4540100 do
+    factory :jmaxml_forecast_region_4540100 do
       code "4540100"
       name "宮崎県高鍋町"
       yomi "みやざきけんたかなべちょう"
@@ -13194,7 +13194,7 @@ FactoryGirl.define do
       short_yomi "たかなべちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4540200 do
+    factory :jmaxml_forecast_region_4540200 do
       code "4540200"
       name "宮崎県新富町"
       yomi "みやざきけんしんとみちょう"
@@ -13202,7 +13202,7 @@ FactoryGirl.define do
       short_yomi "しんとみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4540300 do
+    factory :jmaxml_forecast_region_4540300 do
       code "4540300"
       name "宮崎県西米良村"
       yomi "みやざきけんにしめらそん"
@@ -13210,7 +13210,7 @@ FactoryGirl.define do
       short_yomi "にしめらそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4540400 do
+    factory :jmaxml_forecast_region_4540400 do
       code "4540400"
       name "宮崎県木城町"
       yomi "みやざきけんきじょうちょう"
@@ -13218,7 +13218,7 @@ FactoryGirl.define do
       short_yomi "きじょうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4540500 do
+    factory :jmaxml_forecast_region_4540500 do
       code "4540500"
       name "宮崎県川南町"
       yomi "みやざきけんかわみなみちょう"
@@ -13226,7 +13226,7 @@ FactoryGirl.define do
       short_yomi "かわみなみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4540600 do
+    factory :jmaxml_forecast_region_4540600 do
       code "4540600"
       name "宮崎県都農町"
       yomi "みやざきけんつのちょう"
@@ -13234,7 +13234,7 @@ FactoryGirl.define do
       short_yomi "つのちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4542100 do
+    factory :jmaxml_forecast_region_4542100 do
       code "4542100"
       name "宮崎県門川町"
       yomi "みやざきけんかどがわちょう"
@@ -13242,7 +13242,7 @@ FactoryGirl.define do
       short_yomi "かどがわちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4542900 do
+    factory :jmaxml_forecast_region_4542900 do
       code "4542900"
       name "宮崎県諸塚村"
       yomi "みやざきけんもろつかそん"
@@ -13250,7 +13250,7 @@ FactoryGirl.define do
       short_yomi "もろつかそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4543000 do
+    factory :jmaxml_forecast_region_4543000 do
       code "4543000"
       name "宮崎県椎葉村"
       yomi "みやざきけんしいばそん"
@@ -13258,7 +13258,7 @@ FactoryGirl.define do
       short_yomi "しいばそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4543100 do
+    factory :jmaxml_forecast_region_4543100 do
       code "4543100"
       name "宮崎県美郷町"
       yomi "みやざきけんみさとちょう"
@@ -13266,7 +13266,7 @@ FactoryGirl.define do
       short_yomi "みさとちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4544100 do
+    factory :jmaxml_forecast_region_4544100 do
       code "4544100"
       name "宮崎県高千穂町"
       yomi "みやざきけんたかちほちょう"
@@ -13274,7 +13274,7 @@ FactoryGirl.define do
       short_yomi "たかちほちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4544200 do
+    factory :jmaxml_forecast_region_4544200 do
       code "4544200"
       name "宮崎県日之影町"
       yomi "みやざきけんひのかげちょう"
@@ -13282,7 +13282,7 @@ FactoryGirl.define do
       short_yomi "ひのかげちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4544300 do
+    factory :jmaxml_forecast_region_4544300 do
       code "4544300"
       name "宮崎県五ヶ瀬町"
       yomi "みやざきけんごかせちょう"
@@ -13290,7 +13290,7 @@ FactoryGirl.define do
       short_yomi "ごかせちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4620100 do
+    factory :jmaxml_forecast_region_4620100 do
       code "4620100"
       name "鹿児島県鹿児島市"
       yomi "かごしまけんかごしまし"
@@ -13298,7 +13298,7 @@ FactoryGirl.define do
       short_yomi "かごしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4620300 do
+    factory :jmaxml_forecast_region_4620300 do
       code "4620300"
       name "鹿児島県鹿屋市"
       yomi "かごしまけんかのやし"
@@ -13306,7 +13306,7 @@ FactoryGirl.define do
       short_yomi "かのやし"
     end
 
-    factory :rss_weather_xml_forecast_region_4620400 do
+    factory :jmaxml_forecast_region_4620400 do
       code "4620400"
       name "鹿児島県枕崎市"
       yomi "かごしまけんまくらざきし"
@@ -13314,7 +13314,7 @@ FactoryGirl.define do
       short_yomi "まくらざきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4620600 do
+    factory :jmaxml_forecast_region_4620600 do
       code "4620600"
       name "鹿児島県阿久根市"
       yomi "かごしまけんあくねし"
@@ -13322,7 +13322,7 @@ FactoryGirl.define do
       short_yomi "あくねし"
     end
 
-    factory :rss_weather_xml_forecast_region_4620800 do
+    factory :jmaxml_forecast_region_4620800 do
       code "4620800"
       name "鹿児島県出水市"
       yomi "かごしまけんいずみし"
@@ -13330,7 +13330,7 @@ FactoryGirl.define do
       short_yomi "いずみし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621000 do
+    factory :jmaxml_forecast_region_4621000 do
       code "4621000"
       name "鹿児島県指宿市"
       yomi "かごしまけんいぶすきし"
@@ -13338,7 +13338,7 @@ FactoryGirl.define do
       short_yomi "いぶすきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621300 do
+    factory :jmaxml_forecast_region_4621300 do
       code "4621300"
       name "鹿児島県西之表市"
       yomi "かごしまけんにしのおもてし"
@@ -13346,7 +13346,7 @@ FactoryGirl.define do
       short_yomi "にしのおもてし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621400 do
+    factory :jmaxml_forecast_region_4621400 do
       code "4621400"
       name "鹿児島県垂水市"
       yomi "かごしまけんたるみずし"
@@ -13354,7 +13354,7 @@ FactoryGirl.define do
       short_yomi "たるみずし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621500 do
+    factory :jmaxml_forecast_region_4621500 do
       code "4621500"
       name "鹿児島県薩摩川内市"
       yomi "かごしまけんさつませんだいし"
@@ -13362,7 +13362,7 @@ FactoryGirl.define do
       short_yomi "さつませんだいし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621600 do
+    factory :jmaxml_forecast_region_4621600 do
       code "4621600"
       name "鹿児島県日置市"
       yomi "かごしまけんひおきし"
@@ -13370,7 +13370,7 @@ FactoryGirl.define do
       short_yomi "ひおきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621700 do
+    factory :jmaxml_forecast_region_4621700 do
       code "4621700"
       name "鹿児島県曽於市"
       yomi "かごしまけんそおし"
@@ -13378,7 +13378,7 @@ FactoryGirl.define do
       short_yomi "そおし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621800 do
+    factory :jmaxml_forecast_region_4621800 do
       code "4621800"
       name "鹿児島県霧島市"
       yomi "かごしまけんきりしまし"
@@ -13386,7 +13386,7 @@ FactoryGirl.define do
       short_yomi "きりしまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4621900 do
+    factory :jmaxml_forecast_region_4621900 do
       code "4621900"
       name "鹿児島県いちき串木野市"
       yomi "かごしまけんいちきくしきのし"
@@ -13394,7 +13394,7 @@ FactoryGirl.define do
       short_yomi "いちきくしきのし"
     end
 
-    factory :rss_weather_xml_forecast_region_4622000 do
+    factory :jmaxml_forecast_region_4622000 do
       code "4622000"
       name "鹿児島県南さつま市"
       yomi "かごしまけんみなみさつまし"
@@ -13402,7 +13402,7 @@ FactoryGirl.define do
       short_yomi "みなみさつまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4622100 do
+    factory :jmaxml_forecast_region_4622100 do
       code "4622100"
       name "鹿児島県志布志市"
       yomi "かごしまけんしぶしし"
@@ -13410,7 +13410,7 @@ FactoryGirl.define do
       short_yomi "しぶしし"
     end
 
-    factory :rss_weather_xml_forecast_region_4622200 do
+    factory :jmaxml_forecast_region_4622200 do
       code "4622200"
       name "鹿児島県奄美市"
       yomi "かごしまけんあまみし"
@@ -13418,7 +13418,7 @@ FactoryGirl.define do
       short_yomi "あまみし"
     end
 
-    factory :rss_weather_xml_forecast_region_4622300 do
+    factory :jmaxml_forecast_region_4622300 do
       code "4622300"
       name "鹿児島県南九州市"
       yomi "かごしまけんみなみきゅうしゅうし"
@@ -13426,7 +13426,7 @@ FactoryGirl.define do
       short_yomi "みなみきゅうしゅうし"
     end
 
-    factory :rss_weather_xml_forecast_region_4622400 do
+    factory :jmaxml_forecast_region_4622400 do
       code "4622400"
       name "鹿児島県伊佐市"
       yomi "かごしまけんいさし"
@@ -13434,7 +13434,7 @@ FactoryGirl.define do
       short_yomi "いさし"
     end
 
-    factory :rss_weather_xml_forecast_region_4622500 do
+    factory :jmaxml_forecast_region_4622500 do
       code "4622500"
       name "鹿児島県姶良市"
       yomi "かごしまけんあいらし"
@@ -13442,7 +13442,7 @@ FactoryGirl.define do
       short_yomi "あいらし"
     end
 
-    factory :rss_weather_xml_forecast_region_4630300 do
+    factory :jmaxml_forecast_region_4630300 do
       code "4630300"
       name "鹿児島県三島村"
       yomi "かごしまけんみしまむら"
@@ -13450,7 +13450,7 @@ FactoryGirl.define do
       short_yomi "みしまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4630400 do
+    factory :jmaxml_forecast_region_4630400 do
       code "4630400"
       name "鹿児島県十島村"
       yomi "かごしまけんとしまむら"
@@ -13458,7 +13458,7 @@ FactoryGirl.define do
       short_yomi "としまむら"
     end
 
-    factory :rss_weather_xml_forecast_region_4639200 do
+    factory :jmaxml_forecast_region_4639200 do
       code "4639200"
       name "鹿児島県さつま町"
       yomi "かごしまけんさつまちょう"
@@ -13466,7 +13466,7 @@ FactoryGirl.define do
       short_yomi "さつまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4640400 do
+    factory :jmaxml_forecast_region_4640400 do
       code "4640400"
       name "鹿児島県長島町"
       yomi "かごしまけんながしまちょう"
@@ -13474,7 +13474,7 @@ FactoryGirl.define do
       short_yomi "ながしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4645200 do
+    factory :jmaxml_forecast_region_4645200 do
       code "4645200"
       name "鹿児島県湧水町"
       yomi "かごしまけんゆうすいちょう"
@@ -13482,7 +13482,7 @@ FactoryGirl.define do
       short_yomi "ゆうすいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4646800 do
+    factory :jmaxml_forecast_region_4646800 do
       code "4646800"
       name "鹿児島県大崎町"
       yomi "かごしまけんおおさきちょう"
@@ -13490,7 +13490,7 @@ FactoryGirl.define do
       short_yomi "おおさきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4648200 do
+    factory :jmaxml_forecast_region_4648200 do
       code "4648200"
       name "鹿児島県東串良町"
       yomi "かごしまけんひがしくしらちょう"
@@ -13498,7 +13498,7 @@ FactoryGirl.define do
       short_yomi "ひがしくしらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4649000 do
+    factory :jmaxml_forecast_region_4649000 do
       code "4649000"
       name "鹿児島県錦江町"
       yomi "かごしまけんきんこうちょう"
@@ -13506,7 +13506,7 @@ FactoryGirl.define do
       short_yomi "きんこうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4649100 do
+    factory :jmaxml_forecast_region_4649100 do
       code "4649100"
       name "鹿児島県南大隅町"
       yomi "かごしまけんみなみおおすみちょう"
@@ -13514,7 +13514,7 @@ FactoryGirl.define do
       short_yomi "みなみおおすみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4649200 do
+    factory :jmaxml_forecast_region_4649200 do
       code "4649200"
       name "鹿児島県肝付町"
       yomi "かごしまけんきもつきちょう"
@@ -13522,7 +13522,7 @@ FactoryGirl.define do
       short_yomi "きもつきちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4650100 do
+    factory :jmaxml_forecast_region_4650100 do
       code "4650100"
       name "鹿児島県中種子町"
       yomi "かごしまけんなかたねちょう"
@@ -13530,7 +13530,7 @@ FactoryGirl.define do
       short_yomi "なかたねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4650200 do
+    factory :jmaxml_forecast_region_4650200 do
       code "4650200"
       name "鹿児島県南種子町"
       yomi "かごしまけんみなみたねちょう"
@@ -13538,7 +13538,7 @@ FactoryGirl.define do
       short_yomi "みなみたねちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4650500 do
+    factory :jmaxml_forecast_region_4650500 do
       code "4650500"
       name "鹿児島県屋久島町"
       yomi "かごしまけんやくしまちょう"
@@ -13546,7 +13546,7 @@ FactoryGirl.define do
       short_yomi "やくしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4652300 do
+    factory :jmaxml_forecast_region_4652300 do
       code "4652300"
       name "鹿児島県大和村"
       yomi "かごしまけんやまとそん"
@@ -13554,7 +13554,7 @@ FactoryGirl.define do
       short_yomi "やまとそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4652400 do
+    factory :jmaxml_forecast_region_4652400 do
       code "4652400"
       name "鹿児島県宇検村"
       yomi "かごしまけんうけんそん"
@@ -13562,7 +13562,7 @@ FactoryGirl.define do
       short_yomi "うけんそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4652500 do
+    factory :jmaxml_forecast_region_4652500 do
       code "4652500"
       name "鹿児島県瀬戸内町"
       yomi "かごしまけんせとうちちょう"
@@ -13570,7 +13570,7 @@ FactoryGirl.define do
       short_yomi "せとうちちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4652700 do
+    factory :jmaxml_forecast_region_4652700 do
       code "4652700"
       name "鹿児島県龍郷町"
       yomi "かごしまけんたつごうちょう"
@@ -13578,7 +13578,7 @@ FactoryGirl.define do
       short_yomi "たつごうちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4652900 do
+    factory :jmaxml_forecast_region_4652900 do
       code "4652900"
       name "鹿児島県喜界町"
       yomi "かごしまけんきかいちょう"
@@ -13586,7 +13586,7 @@ FactoryGirl.define do
       short_yomi "きかいちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4653000 do
+    factory :jmaxml_forecast_region_4653000 do
       code "4653000"
       name "鹿児島県徳之島町"
       yomi "かごしまけんとくのしまちょう"
@@ -13594,7 +13594,7 @@ FactoryGirl.define do
       short_yomi "とくのしまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4653100 do
+    factory :jmaxml_forecast_region_4653100 do
       code "4653100"
       name "鹿児島県天城町"
       yomi "かごしまけんあまぎちょう"
@@ -13602,7 +13602,7 @@ FactoryGirl.define do
       short_yomi "あまぎちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4653200 do
+    factory :jmaxml_forecast_region_4653200 do
       code "4653200"
       name "鹿児島県伊仙町"
       yomi "かごしまけんいせんちょう"
@@ -13610,7 +13610,7 @@ FactoryGirl.define do
       short_yomi "いせんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4653300 do
+    factory :jmaxml_forecast_region_4653300 do
       code "4653300"
       name "鹿児島県和泊町"
       yomi "かごしまけんわどまりちょう"
@@ -13618,7 +13618,7 @@ FactoryGirl.define do
       short_yomi "わどまりちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4653400 do
+    factory :jmaxml_forecast_region_4653400 do
       code "4653400"
       name "鹿児島県知名町"
       yomi "かごしまけんちなちょう"
@@ -13626,7 +13626,7 @@ FactoryGirl.define do
       short_yomi "ちなちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4653500 do
+    factory :jmaxml_forecast_region_4653500 do
       code "4653500"
       name "鹿児島県与論町"
       yomi "かごしまけんよろんちょう"
@@ -13634,7 +13634,7 @@ FactoryGirl.define do
       short_yomi "よろんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4720100 do
+    factory :jmaxml_forecast_region_4720100 do
       code "4720100"
       name "沖縄県那覇市"
       yomi "おきなわけんなはし"
@@ -13642,7 +13642,7 @@ FactoryGirl.define do
       short_yomi "なはし"
     end
 
-    factory :rss_weather_xml_forecast_region_4720500 do
+    factory :jmaxml_forecast_region_4720500 do
       code "4720500"
       name "沖縄県宜野湾市"
       yomi "おきなわけんぎのわんし"
@@ -13650,7 +13650,7 @@ FactoryGirl.define do
       short_yomi "ぎのわんし"
     end
 
-    factory :rss_weather_xml_forecast_region_4720700 do
+    factory :jmaxml_forecast_region_4720700 do
       code "4720700"
       name "沖縄県石垣市"
       yomi "おきなわけんいしがきし"
@@ -13658,7 +13658,7 @@ FactoryGirl.define do
       short_yomi "いしがきし"
     end
 
-    factory :rss_weather_xml_forecast_region_4720800 do
+    factory :jmaxml_forecast_region_4720800 do
       code "4720800"
       name "沖縄県浦添市"
       yomi "おきなわけんうらそえし"
@@ -13666,7 +13666,7 @@ FactoryGirl.define do
       short_yomi "うらそえし"
     end
 
-    factory :rss_weather_xml_forecast_region_4720900 do
+    factory :jmaxml_forecast_region_4720900 do
       code "4720900"
       name "沖縄県名護市"
       yomi "おきなわけんなごし"
@@ -13674,7 +13674,7 @@ FactoryGirl.define do
       short_yomi "なごし"
     end
 
-    factory :rss_weather_xml_forecast_region_4721000 do
+    factory :jmaxml_forecast_region_4721000 do
       code "4721000"
       name "沖縄県糸満市"
       yomi "おきなわけんいとまんし"
@@ -13682,7 +13682,7 @@ FactoryGirl.define do
       short_yomi "いとまんし"
     end
 
-    factory :rss_weather_xml_forecast_region_4721100 do
+    factory :jmaxml_forecast_region_4721100 do
       code "4721100"
       name "沖縄県沖縄市"
       yomi "おきなわけんおきなわし"
@@ -13690,7 +13690,7 @@ FactoryGirl.define do
       short_yomi "おきなわし"
     end
 
-    factory :rss_weather_xml_forecast_region_4721200 do
+    factory :jmaxml_forecast_region_4721200 do
       code "4721200"
       name "沖縄県豊見城市"
       yomi "おきなわけんとみぐすくし"
@@ -13698,7 +13698,7 @@ FactoryGirl.define do
       short_yomi "とみぐすくし"
     end
 
-    factory :rss_weather_xml_forecast_region_4721300 do
+    factory :jmaxml_forecast_region_4721300 do
       code "4721300"
       name "沖縄県うるま市"
       yomi "おきなわけんうるまし"
@@ -13706,7 +13706,7 @@ FactoryGirl.define do
       short_yomi "うるまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4721400 do
+    factory :jmaxml_forecast_region_4721400 do
       code "4721400"
       name "沖縄県宮古島市"
       yomi "おきなわけんみやこじまし"
@@ -13714,7 +13714,7 @@ FactoryGirl.define do
       short_yomi "みやこじまし"
     end
 
-    factory :rss_weather_xml_forecast_region_4721500 do
+    factory :jmaxml_forecast_region_4721500 do
       code "4721500"
       name "沖縄県南城市"
       yomi "おきなわけんなんじょうし"
@@ -13722,7 +13722,7 @@ FactoryGirl.define do
       short_yomi "なんじょうし"
     end
 
-    factory :rss_weather_xml_forecast_region_4730100 do
+    factory :jmaxml_forecast_region_4730100 do
       code "4730100"
       name "沖縄県国頭村"
       yomi "おきなわけんくにがみそん"
@@ -13730,7 +13730,7 @@ FactoryGirl.define do
       short_yomi "くにがみそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4730200 do
+    factory :jmaxml_forecast_region_4730200 do
       code "4730200"
       name "沖縄県大宜味村"
       yomi "おきなわけんおおぎみそん"
@@ -13738,7 +13738,7 @@ FactoryGirl.define do
       short_yomi "おおぎみそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4730300 do
+    factory :jmaxml_forecast_region_4730300 do
       code "4730300"
       name "沖縄県東村"
       yomi "おきなわけんひがしそん"
@@ -13746,7 +13746,7 @@ FactoryGirl.define do
       short_yomi "ひがしそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4730600 do
+    factory :jmaxml_forecast_region_4730600 do
       code "4730600"
       name "沖縄県今帰仁村"
       yomi "おきなわけんなきじんそん"
@@ -13754,7 +13754,7 @@ FactoryGirl.define do
       short_yomi "なきじんそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4730800 do
+    factory :jmaxml_forecast_region_4730800 do
       code "4730800"
       name "沖縄県本部町"
       yomi "おきなわけんもとぶちょう"
@@ -13762,7 +13762,7 @@ FactoryGirl.define do
       short_yomi "もとぶちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4731100 do
+    factory :jmaxml_forecast_region_4731100 do
       code "4731100"
       name "沖縄県恩納村"
       yomi "おきなわけんおんなそん"
@@ -13770,7 +13770,7 @@ FactoryGirl.define do
       short_yomi "おんなそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4731300 do
+    factory :jmaxml_forecast_region_4731300 do
       code "4731300"
       name "沖縄県宜野座村"
       yomi "おきなわけんぎのざそん"
@@ -13778,7 +13778,7 @@ FactoryGirl.define do
       short_yomi "ぎのざそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4731400 do
+    factory :jmaxml_forecast_region_4731400 do
       code "4731400"
       name "沖縄県金武町"
       yomi "おきなわけんきんちょう"
@@ -13786,7 +13786,7 @@ FactoryGirl.define do
       short_yomi "きんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4731500 do
+    factory :jmaxml_forecast_region_4731500 do
       code "4731500"
       name "沖縄県伊江村"
       yomi "おきなわけんいえそん"
@@ -13794,7 +13794,7 @@ FactoryGirl.define do
       short_yomi "いえそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4732400 do
+    factory :jmaxml_forecast_region_4732400 do
       code "4732400"
       name "沖縄県読谷村"
       yomi "おきなわけんよみたんそん"
@@ -13802,7 +13802,7 @@ FactoryGirl.define do
       short_yomi "よみたんそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4732500 do
+    factory :jmaxml_forecast_region_4732500 do
       code "4732500"
       name "沖縄県嘉手納町"
       yomi "おきなわけんかでなちょう"
@@ -13810,7 +13810,7 @@ FactoryGirl.define do
       short_yomi "かでなちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4732600 do
+    factory :jmaxml_forecast_region_4732600 do
       code "4732600"
       name "沖縄県北谷町"
       yomi "おきなわけんちゃたんちょう"
@@ -13818,7 +13818,7 @@ FactoryGirl.define do
       short_yomi "ちゃたんちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4732700 do
+    factory :jmaxml_forecast_region_4732700 do
       code "4732700"
       name "沖縄県北中城村"
       yomi "おきなわけんきたなかぐすくそん"
@@ -13826,7 +13826,7 @@ FactoryGirl.define do
       short_yomi "きたなかぐすくそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4732800 do
+    factory :jmaxml_forecast_region_4732800 do
       code "4732800"
       name "沖縄県中城村"
       yomi "おきなわけんなかぐすくそん"
@@ -13834,7 +13834,7 @@ FactoryGirl.define do
       short_yomi "なかぐすくそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4732900 do
+    factory :jmaxml_forecast_region_4732900 do
       code "4732900"
       name "沖縄県西原町"
       yomi "おきなわけんにしはらちょう"
@@ -13842,7 +13842,7 @@ FactoryGirl.define do
       short_yomi "にしはらちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4734800 do
+    factory :jmaxml_forecast_region_4734800 do
       code "4734800"
       name "沖縄県与那原町"
       yomi "おきなわけんよなばるちょう"
@@ -13850,7 +13850,7 @@ FactoryGirl.define do
       short_yomi "よなばるちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4735000 do
+    factory :jmaxml_forecast_region_4735000 do
       code "4735000"
       name "沖縄県南風原町"
       yomi "おきなわけんはえばるちょう"
@@ -13858,7 +13858,7 @@ FactoryGirl.define do
       short_yomi "はえばるちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4735300 do
+    factory :jmaxml_forecast_region_4735300 do
       code "4735300"
       name "沖縄県渡嘉敷村"
       yomi "おきなわけんとかしきそん"
@@ -13866,7 +13866,7 @@ FactoryGirl.define do
       short_yomi "とかしきそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4735400 do
+    factory :jmaxml_forecast_region_4735400 do
       code "4735400"
       name "沖縄県座間味村"
       yomi "おきなわけんざまみそん"
@@ -13874,7 +13874,7 @@ FactoryGirl.define do
       short_yomi "ざまみそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4735500 do
+    factory :jmaxml_forecast_region_4735500 do
       code "4735500"
       name "沖縄県粟国村"
       yomi "おきなわけんあぐにそん"
@@ -13882,7 +13882,7 @@ FactoryGirl.define do
       short_yomi "あぐにそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4735600 do
+    factory :jmaxml_forecast_region_4735600 do
       code "4735600"
       name "沖縄県渡名喜村"
       yomi "おきなわけんとなきそん"
@@ -13890,7 +13890,7 @@ FactoryGirl.define do
       short_yomi "となきそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4735700 do
+    factory :jmaxml_forecast_region_4735700 do
       code "4735700"
       name "沖縄県南大東村"
       yomi "おきなわけんみなみだいとうそん"
@@ -13898,7 +13898,7 @@ FactoryGirl.define do
       short_yomi "みなみだいとうそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4735800 do
+    factory :jmaxml_forecast_region_4735800 do
       code "4735800"
       name "沖縄県北大東村"
       yomi "おきなわけんきただいとうそん"
@@ -13906,7 +13906,7 @@ FactoryGirl.define do
       short_yomi "きただいとうそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4735900 do
+    factory :jmaxml_forecast_region_4735900 do
       code "4735900"
       name "沖縄県伊平屋村"
       yomi "おきなわけんいへやそん"
@@ -13914,7 +13914,7 @@ FactoryGirl.define do
       short_yomi "いへやそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4736000 do
+    factory :jmaxml_forecast_region_4736000 do
       code "4736000"
       name "沖縄県伊是名村"
       yomi "おきなわけんいぜなそん"
@@ -13922,7 +13922,7 @@ FactoryGirl.define do
       short_yomi "いぜなそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4736100 do
+    factory :jmaxml_forecast_region_4736100 do
       code "4736100"
       name "沖縄県久米島町"
       yomi "おきなわけんくめじまちょう"
@@ -13930,7 +13930,7 @@ FactoryGirl.define do
       short_yomi "くめじまちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4736200 do
+    factory :jmaxml_forecast_region_4736200 do
       code "4736200"
       name "沖縄県八重瀬町"
       yomi "おきなわけんやえせちょう"
@@ -13938,7 +13938,7 @@ FactoryGirl.define do
       short_yomi "やえせちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4737500 do
+    factory :jmaxml_forecast_region_4737500 do
       code "4737500"
       name "沖縄県多良間村"
       yomi "おきなわけんたらまそん"
@@ -13946,7 +13946,7 @@ FactoryGirl.define do
       short_yomi "たらまそん"
     end
 
-    factory :rss_weather_xml_forecast_region_4738100 do
+    factory :jmaxml_forecast_region_4738100 do
       code "4738100"
       name "沖縄県竹富町"
       yomi "おきなわけんたけとみちょう"
@@ -13954,7 +13954,7 @@ FactoryGirl.define do
       short_yomi "たけとみちょう"
     end
 
-    factory :rss_weather_xml_forecast_region_4738200 do
+    factory :jmaxml_forecast_region_4738200 do
       code "4738200"
       name "沖縄県与那国町"
       yomi "おきなわけんよなぐにちょう"

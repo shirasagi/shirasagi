@@ -4,7 +4,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do
-    subject { create(:rss_weather_xml_action_publish_page) }
+    subject { create(:jmaxml_action_publish_page) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
     its(:publish_state) { is_expected.to eq 'draft' }
@@ -21,7 +21,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
       let!(:article_node) { create(:article_node_page) }
       let!(:category_node) { create(:category_node_page, cur_node: article_node) }
       let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
-      subject { create(:rss_weather_xml_action_publish_page) }
+      subject { create(:jmaxml_action_publish_page) }
 
       around do |example|
         Timecop.travel(report_time) do
@@ -31,13 +31,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
       context 'when quake intensity flash is given' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_quake_intensity_flash) }
+        let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
 
         before do
-          region_210 = create(:rss_weather_xml_region_210)
-          region_211 = create(:rss_weather_xml_region_211)
-          region_212 = create(:rss_weather_xml_region_212)
-          region_213 = create(:rss_weather_xml_region_213)
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
 
@@ -70,13 +70,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
       context 'when quake info is given' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-35_06_100915_03zenkokusaisumo1.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_quake_info) }
+        let(:trigger) { create(:jmaxml_trigger_quake_info) }
 
         before do
-          region_210 = create(:rss_weather_xml_region_210)
-          region_211 = create(:rss_weather_xml_region_211)
-          region_212 = create(:rss_weather_xml_region_212)
-          region_213 = create(:rss_weather_xml_region_213)
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
           trigger.earthquake_intensity = '4'
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
@@ -110,13 +110,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
       context 'when tsunami alert is given' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_10_120615_02tsunamiyohou1.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_tsunami_alert) }
+        let(:trigger) { create(:jmaxml_trigger_tsunami_alert) }
 
         before do
-          region_100 = create(:rss_weather_xml_tsunami_region_100)
-          region_101 = create(:rss_weather_xml_tsunami_region_101)
-          region_102 = create(:rss_weather_xml_tsunami_region_102)
-          region_110 = create(:rss_weather_xml_tsunami_region_110)
+          region_100 = create(:jmaxml_tsunami_region_100)
+          region_101 = create(:jmaxml_tsunami_region_101)
+          region_102 = create(:jmaxml_tsunami_region_102)
+          region_110 = create(:jmaxml_tsunami_region_110)
           trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id ]
           trigger.save!
 
@@ -152,13 +152,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
       context 'when tsunami info is given' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_05_100831_11tsunamijohou1.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_tsunami_info) }
+        let(:trigger) { create(:jmaxml_trigger_tsunami_info) }
 
         before do
-          region_100 = create(:rss_weather_xml_tsunami_region_100)
-          region_101 = create(:rss_weather_xml_tsunami_region_101)
-          region_102 = create(:rss_weather_xml_tsunami_region_102)
-          region_110 = create(:rss_weather_xml_tsunami_region_110)
+          region_100 = create(:jmaxml_tsunami_region_100)
+          region_101 = create(:jmaxml_tsunami_region_101)
+          region_102 = create(:jmaxml_tsunami_region_102)
+          region_110 = create(:jmaxml_tsunami_region_110)
           trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id ]
           trigger.save!
 
@@ -195,13 +195,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
       context 'when weather alert is given' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_15_08_130412_02VPWW53.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_weather_alert) }
+        let(:trigger) { create(:jmaxml_trigger_weather_alert) }
 
         before do
-          region_2920100 = create(:rss_weather_xml_forecast_region_2920100)
-          region_2920200 = create(:rss_weather_xml_forecast_region_2920200)
-          region_2920300 = create(:rss_weather_xml_forecast_region_2920300)
-          region_2920400 = create(:rss_weather_xml_forecast_region_2920400)
+          region_2920100 = create(:jmaxml_forecast_region_2920100)
+          region_2920200 = create(:jmaxml_forecast_region_2920200)
+          region_2920300 = create(:jmaxml_forecast_region_2920300)
+          region_2920400 = create(:jmaxml_forecast_region_2920400)
           trigger.target_region_ids = [ region_2920100.id, region_2920200.id, region_2920300.id, region_2920400.id ]
           trigger.save!
 
@@ -233,7 +233,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
         context 'when flood forecast is given' do
           let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_16_01_100806_kasenkozui1.xml))) }
-          let(:trigger) { create(:rss_weather_xml_trigger_flood_forecast) }
+          let(:trigger) { create(:jmaxml_trigger_flood_forecast) }
           let(:main_sentence) do
             %w(
               揖斐川中流の万石水位観測所では、はん濫注意水位・流量（レベル２）に到達しました。
@@ -241,9 +241,9 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           end
 
           before do
-            region1 = create(:rss_weather_xml_water_level_station_85050900020300042)
-            region2 = create(:rss_weather_xml_water_level_station_85050900020300045)
-            region3 = create(:rss_weather_xml_water_level_station_85050900020300053)
+            region1 = create(:jmaxml_water_level_station_85050900020300042)
+            region2 = create(:jmaxml_water_level_station_85050900020300045)
+            region3 = create(:jmaxml_water_level_station_85050900020300053)
             trigger.target_region_ids = [ region1.id, region2.id, region3.id ]
             trigger.save!
 
@@ -278,16 +278,16 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
         context 'when landslide info is given' do
           let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_17_02_130906_VXWW40_03.xml))) }
-          let(:trigger) { create(:rss_weather_xml_trigger_landslide_info) }
+          let(:trigger) { create(:jmaxml_trigger_landslide_info) }
           let(:headline_text) do
             "《全警戒解除》\n大雨が弱まり、多発的な土砂災害が発生するおそれは少なくなりました。"
           end
 
           before do
-            region1 = create(:rss_weather_xml_forecast_region_0120200)
-            region2 = create(:rss_weather_xml_forecast_region_0123600)
-            region3 = create(:rss_weather_xml_forecast_region_0133100)
-            region4 = create(:rss_weather_xml_forecast_region_0133200)
+            region1 = create(:jmaxml_forecast_region_0120200)
+            region2 = create(:jmaxml_forecast_region_0123600)
+            region3 = create(:jmaxml_forecast_region_0133100)
+            region4 = create(:jmaxml_forecast_region_0133200)
             trigger.target_region_ids = [ region1.id, region2.id, region3.id, region4.id ]
             trigger.save!
 
@@ -317,11 +317,11 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
         context 'when volcano flash is given' do
           let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_67_01_150514_VFVO56-1.xml))) }
-          let(:trigger) { create(:rss_weather_xml_trigger_volcano_flash) }
+          let(:trigger) { create(:jmaxml_trigger_volcano_flash) }
 
           before do
-            region1 = create(:rss_weather_xml_forecast_region_2042900)
-            region2 = create(:rss_weather_xml_forecast_region_2043200)
+            region1 = create(:jmaxml_forecast_region_2042900)
+            region2 = create(:jmaxml_forecast_region_2043200)
             trigger.target_region_ids = [ region1.id, region2.id ]
             trigger.save!
 
@@ -353,13 +353,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
         context 'when ash fall forecast is given' do
           let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_66_01_141024_VFVO53.xml))) }
-          let(:trigger) { create(:rss_weather_xml_trigger_ash_fall_forecast) }
+          let(:trigger) { create(:jmaxml_trigger_ash_fall_forecast) }
 
           before do
-            region_4620100 = create(:rss_weather_xml_forecast_region_4620100)
-            region_4620300 = create(:rss_weather_xml_forecast_region_4620300)
-            region_4621400 = create(:rss_weather_xml_forecast_region_4621400)
-            region_4621700 = create(:rss_weather_xml_forecast_region_4621700)
+            region_4620100 = create(:jmaxml_forecast_region_4620100)
+            region_4620300 = create(:jmaxml_forecast_region_4620300)
+            region_4621400 = create(:jmaxml_forecast_region_4621400)
+            region_4621700 = create(:jmaxml_forecast_region_4621700)
             trigger.target_region_ids = [ region_4620100.id, region_4620300.id, region_4621400.id, region_4621700.id ]
             trigger.save!
 
@@ -392,13 +392,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
         context 'when tornado alert is given' do
           let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_19_01_091210_tatsumakijyohou1.xml))) }
-          let(:trigger) { create(:rss_weather_xml_trigger_tornado_alert) }
+          let(:trigger) { create(:jmaxml_trigger_tornado_alert) }
 
           before do
-            region_1310100 = create(:rss_weather_xml_forecast_region_1310100)
-            region_1310200 = create(:rss_weather_xml_forecast_region_1310200)
-            region_1310300 = create(:rss_weather_xml_forecast_region_1310300)
-            region_1310400 = create(:rss_weather_xml_forecast_region_1310400)
+            region_1310100 = create(:jmaxml_forecast_region_1310100)
+            region_1310200 = create(:jmaxml_forecast_region_1310200)
+            region_1310300 = create(:jmaxml_forecast_region_1310300)
+            region_1310400 = create(:jmaxml_forecast_region_1310400)
             trigger.target_region_ids = [ region_1310100.id, region_1310200.id, region_1310300.id, region_1310400.id ]
             trigger.save!
 
@@ -442,7 +442,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
       let!(:article_node) { create(:article_node_page) }
       let!(:category_node) { create(:category_node_page, cur_node: article_node) }
       let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
-      subject { create(:rss_weather_xml_action_publish_page) }
+      subject { create(:jmaxml_action_publish_page) }
 
       around do |example|
         Timecop.travel(report_time) do
@@ -453,13 +453,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
       context 'when quake intensity flash is canceled' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
         let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_99shindosokuhou3.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_quake_intensity_flash) }
+        let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
 
         before do
-          region_210 = create(:rss_weather_xml_region_210)
-          region_211 = create(:rss_weather_xml_region_211)
-          region_212 = create(:rss_weather_xml_region_212)
-          region_213 = create(:rss_weather_xml_region_213)
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
 
@@ -487,13 +487,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
       context 'when quake info is canceled' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-35_06_100915_03zenkokusaisumo1.xml))) }
         let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-35_06_100915_06zenkokusaisumo1.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_quake_info) }
+        let(:trigger) { create(:jmaxml_trigger_quake_info) }
 
         before do
-          region_210 = create(:rss_weather_xml_region_210)
-          region_211 = create(:rss_weather_xml_region_211)
-          region_212 = create(:rss_weather_xml_region_212)
-          region_213 = create(:rss_weather_xml_region_213)
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
           trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
           trigger.save!
 
@@ -521,11 +521,11 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
       context 'when volcano flash is canceled' do
         let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_67_01_150514_VFVO56-1.xml))) }
         let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_67_01_150514_VFVO56-4.xml))) }
-        let(:trigger) { create(:rss_weather_xml_trigger_volcano_flash) }
+        let(:trigger) { create(:jmaxml_trigger_volcano_flash) }
 
         before do
-          region1 = create(:rss_weather_xml_forecast_region_2042900)
-          region2 = create(:rss_weather_xml_forecast_region_2043200)
+          region1 = create(:jmaxml_forecast_region_2042900)
+          region2 = create(:jmaxml_forecast_region_2043200)
           trigger.target_region_ids = [ region1.id, region2.id ]
           trigger.save!
 

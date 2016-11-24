@@ -4,7 +4,7 @@ describe Jmaxml::Trigger::FloodForecast, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do
-    subject { create(:rss_weather_xml_trigger_flood_forecast) }
+    subject { create(:jmaxml_trigger_flood_forecast) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
     its(:training_status) { is_expected.to eq 'disabled' }
@@ -17,12 +17,12 @@ describe Jmaxml::Trigger::FloodForecast, dbscope: :example do
     let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
     let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
-    subject { create(:rss_weather_xml_trigger_flood_forecast) }
+    subject { create(:jmaxml_trigger_flood_forecast) }
 
     before do
-      region1 = create(:rss_weather_xml_water_level_station_85050900020300042)
-      region2 = create(:rss_weather_xml_water_level_station_85050900020300045)
-      region3 = create(:rss_weather_xml_water_level_station_85050900020300053)
+      region1 = create(:jmaxml_water_level_station_85050900020300042)
+      region2 = create(:jmaxml_water_level_station_85050900020300045)
+      region3 = create(:jmaxml_water_level_station_85050900020300053)
       subject.target_region_ids = [ region1.id, region2.id, region3.id ]
       subject.save!
     end

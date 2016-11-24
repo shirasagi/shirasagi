@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe 'rss_weather_xml_regions', dbscope: :example do
+describe 'jmaxml_regions', dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create(:rss_node_weather_xml, cur_site: site) }
-  let(:index_path) { rss_weather_xml_regions_path site.id, node }
+  let(:index_path) { jmaxml_regions_path site.id, node }
 
   context 'without login' do
     it do
@@ -65,7 +65,7 @@ describe 'rss_weather_xml_regions', dbscope: :example do
   end
 
   context 'search' do
-    let!(:region) { create :rss_weather_xml_region_126 }
+    let!(:region) { create :jmaxml_region_126 }
 
     before { login_cms_user }
 
