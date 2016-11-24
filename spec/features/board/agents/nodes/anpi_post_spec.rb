@@ -110,7 +110,7 @@ describe 'board_agents_nodes_anpi_post', dbscope: :example, js: true do
       fill_in 'keyword', with: item.name
       click_on '人を探す'
 
-      expect(page).not_to have_css('.anpi-post')
+      expect(page).to have_no_css('.anpi-post')
     end
   end
 end

@@ -20,7 +20,7 @@ describe "sns_login", type: :feature, dbscope: :example do
         click_button "ログイン"
       end
       expect(current_path).to eq sns_mypage_path
-      expect(page).not_to have_css(".login-box")
+      expect(page).to have_no_css(".login-box")
     end
   end
 
@@ -35,7 +35,7 @@ describe "sns_login", type: :feature, dbscope: :example do
           click_button "ログイン"
         end
         expect(current_path).to eq sns_mypage_path
-        expect(page).not_to have_css(".login-box")
+        expect(page).to have_no_css(".login-box")
       end
     end
 
@@ -50,7 +50,7 @@ describe "sns_login", type: :feature, dbscope: :example do
           click_button "ログイン"
         end
         expect(current_path).to eq sns_mypage_path
-        expect(page).not_to have_css(".login-box")
+        expect(page).to have_no_css(".login-box")
       end
     end
   end
@@ -69,7 +69,7 @@ describe "sns_login", type: :feature, dbscope: :example do
         click_button "ログイン"
       end
       expect(current_path).to eq sns_mypage_path
-      expect(page).not_to have_css(".login-box")
+      expect(page).to have_no_css(".login-box")
     end
   end
 
@@ -86,7 +86,7 @@ describe "sns_login", type: :feature, dbscope: :example do
         click_button "ログイン"
       end
       expect(current_path).to eq sns_mypage_path
-      expect(page).not_to have_css(".login-box")
+      expect(page).to have_no_css(".login-box")
     end
   end
 

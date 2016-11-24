@@ -75,7 +75,7 @@ describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
       expect(status_code).to eq 200
 
       within "table.opendata-dataset-resources" do
-        expect(page).not_to have_content(item_name)
+        expect(page).to have_no_content(item_name)
         expect(page).to have_content(item_name2)
       end
       within "nav.menu" do
@@ -87,8 +87,8 @@ describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
       expect(status_code).to eq 200
 
       within "table.opendata-resources" do
-        expect(page).not_to have_content(item_name)
-        expect(page).not_to have_content(item_name2)
+        expect(page).to have_no_content(item_name)
+        expect(page).to have_no_content(item_name2)
       end
     end
   end

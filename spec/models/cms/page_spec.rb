@@ -59,7 +59,6 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
-        sleep 1
         expect(page).to have_css "form #errorMobileChecker"
         expect(page).to have_selector "form #errorMobileChecker p.error", text: /携帯で表示する場合、本文のデータサイズが(.+)/i
       end
@@ -73,7 +72,6 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
-        sleep 1
 
         expect(page).to have_css "form #errorMobileChecker"
         expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
@@ -89,15 +87,13 @@ describe Cms::Page do
         site.mobile_size = 1_024
         site.save!
 
-        html_text = ""
-        html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"
+        html_text = "<img src=\"/fs/#{file.id}/_/logo.png\">"
 
         login_cms_user
         visit new_cms_page_path(site)
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
-        sleep 1
 
         expect(page).to have_css "form #errorMobileChecker"
         expect(page).to have_selector "form #errorMobileChecker p", text: /携帯電話で表示する場合、ファイルサイズ合計(.+)/i
@@ -117,7 +113,6 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
-        sleep 1
         expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
       end
 
@@ -136,7 +131,6 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
-        sleep 1
         expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
 
         3.times.each do
@@ -145,9 +139,7 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
-        sleep 1
         expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
-
       end
 
       it "many different files in html" do
@@ -173,7 +165,6 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
-        sleep 1
         expect(page).to have_selector "form #errorMobileChecker p", text: /携帯電話で表示する場合、ファイルサイズ合計(.+)/i
       end
     end
@@ -184,8 +175,6 @@ describe Cms::Page do
       $('textarea##{locator}').text(#{content});
       CKEDITOR.instances['#{locator}'].setData(#{content});
     SCRIPT
-
-    sleep 1
   end
 
 end

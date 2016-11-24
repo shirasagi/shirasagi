@@ -53,7 +53,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
-        expect(page).not_to have_css("form#item-form")
+        expect(page).to have_no_css("form#item-form")
       end
     end
 
@@ -99,7 +99,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
             click_button "保存"
           end
           expect(current_path).not_to eq sns_login_path
-          expect(page).not_to have_css("form#item-form")
+          expect(page).to have_no_css("form#item-form")
         end
       end
 
@@ -222,10 +222,10 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           expect(page).to have_content(area1.name)
         end
         within 'div#addon-opendata-agents-addons-category' do
-          expect(page).not_to have_css('dd.disallowed-categories')
+          expect(page).to have_no_css('dd.disallowed-categories')
         end
         within 'div#addon-opendata-agents-addons-area' do
-          expect(page).not_to have_css('dd.disallowed-areas')
+          expect(page).to have_no_css('dd.disallowed-areas')
         end
       end
     end

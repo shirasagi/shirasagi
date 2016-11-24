@@ -26,13 +26,13 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
   describe "kana public filter" do
     it do
       visit item.full_url
-      expect(page).not_to have_css('ruby')
+      expect(page).to have_no_css('ruby')
 
       click_on 'ふりがなをつける'
       expect(page).to have_css('ruby')
 
       click_on 'ふりがなをはずす'
-      expect(page).not_to have_css('ruby')
+      expect(page).to have_no_css('ruby')
     end
   end
 

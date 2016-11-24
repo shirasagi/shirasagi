@@ -88,7 +88,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         click_on cms_member.name
         click_on '削除する'
         click_on '削除'
-        expect(page).not_to have_css('table.member-anpi-post')
+        expect(page).to have_no_css('table.member-anpi-post')
 
         expect(Board::AnpiPost.count).to eq 0
       end
@@ -143,7 +143,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         click_on name
         click_on '削除する'
         click_on '削除'
-        expect(page).not_to have_css('table.member-anpi-post')
+        expect(page).to have_no_css('table.member-anpi-post')
 
         expect(Board::AnpiPost.count).to eq 0
       end

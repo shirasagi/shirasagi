@@ -205,7 +205,7 @@ describe "uploader_files", dbscope: :example, type: :feature do
 
       click_link "削除する"
       click_button "削除"
-      expect(page).not_to have_css(".list-item")
+      expect(page).to have_no_css(".list-item")
 
       #
       # examine directory crud
@@ -230,7 +230,7 @@ describe "uploader_files", dbscope: :example, type: :feature do
 
       click_link "削除する"
       click_button "削除"
-      expect(page).not_to have_css(".list-item")
+      expect(page).to have_no_css(".list-item")
     end
   end
 end

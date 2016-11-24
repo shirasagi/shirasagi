@@ -91,21 +91,21 @@ describe "cms_check_links_pages", dbscope: :example do
         visit index_path
         expect(current_path).not_to eq sns_login_path
 
-        expect(page).not_to have_link node1.name
-        expect(page).not_to have_link node2.name
+        expect(page).to have_no_link node1.name
+        expect(page).to have_no_link node2.name
 
         expect(page).to have_link item1.name
         expect(page).to have_link item2.name
-        expect(page).not_to have_link item3.name
-        expect(page).not_to have_link item4.name
+        expect(page).to have_no_link item3.name
+        expect(page).to have_no_link item4.name
 
-        expect(page).not_to have_link site2_node1.name
-        expect(page).not_to have_link site2_node2.name
+        expect(page).to have_no_link site2_node1.name
+        expect(page).to have_no_link site2_node2.name
 
-        expect(page).not_to have_link site2_item1.name
-        expect(page).not_to have_link site2_item2.name
-        expect(page).not_to have_link site2_item3.name
-        expect(page).not_to have_link site2_item4.name
+        expect(page).to have_no_link site2_item1.name
+        expect(page).to have_no_link site2_item2.name
+        expect(page).to have_no_link site2_item3.name
+        expect(page).to have_no_link site2_item4.name
 
         click_link item1.name
         expect(page).to have_link item1.name

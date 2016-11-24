@@ -44,18 +44,18 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".side-right .point .count")
-        expect(page).not_to have_css(".side-right .download-all", visible: false)
+        expect(page).to have_no_css(".side-right .download-all", visible: false)
         expect(page).to have_css(".categories")
         expect(page).to have_css(".text", text: app.text.split("\n")[0])
         expect(page).to have_css(".detail #tabs .names #url")
         expect(page).to have_css(".detail #tabs .names #dataset")
         expect(page).to have_css(".detail #tabs .names #idea")
         expect(page).to have_css(".detail #tabs .tab-body #tab-url")
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-dataset", visible: true)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-dataset", visible: true)
         expect(page).to have_css(".detail #tabs .tab-body #tab-dataset", visible: false)
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-idea", visible: true)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-idea", visible: true)
         expect(page).to have_css(".detail #tabs .tab-body #tab-idea", visible: false)
-        expect(page).not_to have_css(".detail .author dt", text: "実行回数", visible: false)
+        expect(page).to have_no_css(".detail .author dt", text: "実行回数", visible: false)
         expect(page).to have_css(".detail .author dt", text: "ライセンス")
         expect(page).to have_css(".detail .author dt", text: "更新日時")
       end
@@ -74,7 +74,7 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         visit app.full_url
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
-        expect(page).not_to have_css(".side-right .point", visible: false)
+        expect(page).to have_no_css(".side-right .point", visible: false)
         expect(page).to have_css(".categories")
       end
     end
@@ -93,10 +93,10 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".detail #tabs .names #url")
-        expect(page).not_to have_css(".detail #tabs .names #dataset", visible: false)
+        expect(page).to have_no_css(".detail #tabs .names #dataset", visible: false)
         expect(page).to have_css(".detail #tabs .names #idea")
         expect(page).to have_css(".detail #tabs .tab-body #tab-url")
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-dataset", visible: false)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-dataset", visible: false)
         expect(page).to have_css(".detail #tabs .tab-body #tab-idea", visible: false)
       end
     end
@@ -116,10 +116,10 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".detail #tabs .names #url")
         expect(page).to have_css(".detail #tabs .names #dataset")
-        expect(page).not_to have_css(".detail #tabs .names #idea", visible: false)
+        expect(page).to have_no_css(".detail #tabs .names #idea", visible: false)
         expect(page).to have_css(".detail #tabs .tab-body #tab-url")
         expect(page).to have_css(".detail #tabs .tab-body #tab-dataset", visible: false)
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-idea", visible: false)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-idea", visible: false)
       end
     end
 
@@ -137,10 +137,10 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         visit app.full_url
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
-        expect(page).not_to have_css(".detail #tabs .names")
+        expect(page).to have_no_css(".detail #tabs .names")
         expect(page).to have_css(".detail #tabs .tab-body #tab-url")
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-dataset")
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-idea")
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-dataset")
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-idea")
       end
     end
   end
@@ -204,7 +204,7 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         visit app.full_url
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
-        expect(page).not_to have_css(".side-right .point", visible: false)
+        expect(page).to have_no_css(".side-right .point", visible: false)
         expect(page).to have_css(".side-right .download-all")
       end
     end
@@ -222,9 +222,9 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         visit app.full_url
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
-        expect(page).not_to have_css(".detail #tabs .names #dataset", visible: false)
+        expect(page).to have_no_css(".detail #tabs .names #dataset", visible: false)
         expect(page).to have_css(".detail #tabs .names #idea")
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-dataset", visible: false)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-dataset", visible: false)
         expect(page).to have_css(".detail #tabs .tab-body #tab-idea", visible: false)
       end
     end
@@ -243,9 +243,9 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
         expect(page).to have_css(".detail #tabs .names #dataset")
-        expect(page).not_to have_css(".detail #tabs .names #idea", visible: false)
+        expect(page).to have_no_css(".detail #tabs .names #idea", visible: false)
         expect(page).to have_css(".detail #tabs .tab-body #tab-dataset", visible: false)
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-idea", visible: false)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-idea", visible: false)
       end
     end
 
@@ -263,10 +263,10 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         visit app.full_url
         expect(current_path).to eq app.url
         expect(page).to have_css("h1.name", text: app.name)
-        expect(page).not_to have_css(".detail #tabs .names #dataset", visible: false)
-        expect(page).not_to have_css(".detail #tabs .names #idea", visible: false)
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-dataset", visible: false)
-        expect(page).not_to have_css(".detail #tabs .tab-body #tab-idea", visible: false)
+        expect(page).to have_no_css(".detail #tabs .names #dataset", visible: false)
+        expect(page).to have_no_css(".detail #tabs .names #idea", visible: false)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-dataset", visible: false)
+        expect(page).to have_no_css(".detail #tabs .tab-body #tab-idea", visible: false)
       end
     end
   end

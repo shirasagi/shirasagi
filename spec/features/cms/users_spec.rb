@@ -47,7 +47,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
-      expect(page).not_to have_css("form#item-form")
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#show" do
@@ -66,7 +66,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
-      expect(page).not_to have_css("form#item-form")
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#delete" do
@@ -99,7 +99,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
-      expect(page).not_to have_css("form#item-form")
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#show" do
@@ -118,7 +118,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
-      expect(page).not_to have_css("form#item-form")
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#delete" do
@@ -281,7 +281,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(test_user.account_expiration_date).to eq account_expiration_date
 
       visit index_path
-      expect(page).not_to have_css(".list-item .title", text: user_name)
+      expect(page).to have_no_css(".list-item .title", text: user_name)
 
       select I18n.t("views.options.state.all"), from: "s[state]"
       click_on I18n.t('views.button.search')
@@ -343,7 +343,7 @@ describe "cms_users", type: :feature, dbscope: :example do
     it do
       visit sns_mypage_path
       expect(status_code).to eq 200
-      expect(page).not_to have_css(".mypage-sites .title", text: cms_site.name)
+      expect(page).to have_no_css(".mypage-sites .title", text: cms_site.name)
 
       visit cms_contents_path(site)
       expect(status_code).to eq 403

@@ -39,7 +39,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           end
           expect(status_code).to eq 200
           expect(current_path).not_to eq new_path
-          expect(page).not_to have_css("form#item-form")
+          expect(page).to have_no_css("form#item-form")
         end
       end
 
@@ -65,7 +65,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
             click_button I18n.t("views.button.save")
           end
           expect(current_path).not_to eq sns_login_path
-          expect(page).not_to have_css("form#item-form")
+          expect(page).to have_no_css("form#item-form")
         end
       end
 
@@ -105,7 +105,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           end
           expect(status_code).to eq 200
           expect(current_path).not_to eq new_path
-          expect(page).not_to have_css("form#item-form")
+          expect(page).to have_no_css("form#item-form")
         end
       end
 
@@ -131,7 +131,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
             click_button I18n.t("views.button.save")
           end
           expect(current_path).not_to eq sns_login_path
-          expect(page).not_to have_css("form#item-form")
+          expect(page).to have_no_css("form#item-form")
         end
       end
 
@@ -146,7 +146,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           end
           expect(current_path).to eq index_path
           within "ul.list-items" do
-            expect(page).not_to have_text(item.name)
+            expect(page).to have_no_text(item.name)
           end
         end
       end

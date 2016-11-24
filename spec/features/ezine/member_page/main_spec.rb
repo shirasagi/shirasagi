@@ -141,7 +141,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
         expect(page).to have_css(".list-items .list-item .info .up", count: 1)
-        expect(page).not_to have_css(".list-items .list-item .info .title")
+        expect(page).to have_no_css(".list-items .list-item .info .title")
       end
     end
 
@@ -174,7 +174,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
 
         fill_in "s[keyword]", with: unique_id
         click_on "検索"
-        expect(page).not_to have_css(".list-item .title", text: email)
+        expect(page).to have_no_css(".list-item .title", text: email)
       end
 
       it "sends text mail" do

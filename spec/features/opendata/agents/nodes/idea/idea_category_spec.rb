@@ -62,8 +62,8 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
     expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: page_idea.name, visible: false)
     expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: page_idea.point.to_s, visible: false)
     expect(page).to have_css(".opendata-tabs .tab-attention h2", text: "注目順", visible: false)
-    expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 a", text: page_idea.name, visible: false)
-    expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: page_idea.point.to_s, visible: false)
+    expect(page).to have_no_css(".opendata-tabs .tab-attention .pages h2 a", text: page_idea.name, visible: false)
+    expect(page).to have_no_css(".opendata-tabs .tab-attention .pages h2 .point", text: page_idea.point.to_s, visible: false)
     expect(page).to have_css(".areas .name", text: node_area.name)
     expect(page).to have_css(".tags .name", text: page_idea.tags[0])
     expect(page).to have_css(".tags .name", text: page_idea.tags[1])
@@ -92,13 +92,13 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
       visit index_path
       expect(page).to have_css(".opendata-tabs .tab-released h2", text: "新着順", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
-      expect(page).not_to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s, visible: false)
       expect(page).to have_css(".opendata-tabs .tab-popular h2", text: "人気順", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: page_idea.name, visible: false)
-      expect(page).not_to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-popular .pages h2 .point", text: page_idea.point.to_s, visible: false)
       expect(page).to have_css(".opendata-tabs .tab-attention h2", text: "注目順", visible: false)
-      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 a", text: page_idea.name, visible: false)
-      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-attention .pages h2 a", text: page_idea.name, visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-attention .pages h2 .point", text: page_idea.point.to_s, visible: false)
     end
   end
 
@@ -113,13 +113,13 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(page).not_to have_css(".opendata-tabs .names", visible: false)
+      expect(page).to have_no_css(".opendata-tabs .names", visible: false)
 
       expect(page).to have_css(".opendata-tabs .tab-released h2", text: "新着順", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s, visible: false)
-      expect(page).not_to have_css(".opendata-tabs .tab-popular", visible: false)
-      expect(page).not_to have_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-popular", visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
     end
   end
 
@@ -135,13 +135,13 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(page).not_to have_css(".opendata-tabs .names", visible: false)
+      expect(page).to have_no_css(".opendata-tabs .names", visible: false)
 
       expect(page).to have_css(".opendata-tabs .tab-released h2", text: "アイデア一覧", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s, visible: false)
-      expect(page).not_to have_css(".opendata-tabs .tab-popular", visible: false)
-      expect(page).not_to have_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-popular", visible: false)
+      expect(page).to have_no_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
     end
   end
 end

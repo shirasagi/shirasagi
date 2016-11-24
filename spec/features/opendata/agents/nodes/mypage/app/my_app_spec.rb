@@ -92,7 +92,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
       expect(current_path).to eq index_path
 
       within "table.opendata-app" do
-        expect(page).not_to have_content "あぷり2"
+        expect(page).to have_no_content "あぷり2"
       end
     end
   end

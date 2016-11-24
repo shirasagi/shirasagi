@@ -116,7 +116,7 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
       expect(page).to have_css("dd", text: findable_value)
       expect(page).to have_css("dd", text: comment_value.split("\n")[0])
       expect(page).to have_css("dd", text: comment_value.split("\n")[1])
-      expect(page).not_to have_css(".captcha-label", text: "画像の数字を入力してください")
+      expect(page).to have_no_css(".captcha-label", text: "画像の数字を入力してください")
 
       # proceed ahead
       click_on "送信する"

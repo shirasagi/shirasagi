@@ -80,7 +80,7 @@ describe "article_pages", dbscope: :example, js: true do
     #  visit index_path
     #  expect(page).to have_content 'test_1_title'
     #  expect(page).to have_content 'test_2_title'
-    #  expect(page).to_not have_content 'test_3_title'
+    #  expect(page).to have_no_content 'test_3_title'
     #end
   end
 end
