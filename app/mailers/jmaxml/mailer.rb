@@ -1,5 +1,9 @@
 class Jmaxml::Mailer < ActionMailer::Base
-  def create_mail(opts)
-    mail(from: opts[:from], to: opts[:to], subject: opts[:subject], body: opts[:body])
+  def create_mail(page, context, action)
+    @page = page
+    @context = context
+    @action = action
+    @renderer = @context.type.renderer(@page, @context)
+    mail
   end
 end

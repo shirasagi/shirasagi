@@ -17,10 +17,14 @@ FactoryGirl.define do
   end
 
   factory :jmaxml_trigger_tsunami_alert,
-          class: Jmaxml::Trigger::TsunamiAlert, traits: [:jmaxml_trigger_base]
+          class: Jmaxml::Trigger::TsunamiAlert, traits: [:jmaxml_trigger_base] do
+    sub_types %w(special_alert alert warning)
+  end
 
   factory :jmaxml_trigger_tsunami_info,
-          class: Jmaxml::Trigger::TsunamiInfo, traits: [:jmaxml_trigger_base]
+          class: Jmaxml::Trigger::TsunamiInfo, traits: [:jmaxml_trigger_base] do
+    sub_types %w(special_alert alert warning)
+  end
 
   factory :jmaxml_trigger_weather_alert,
           class: Jmaxml::Trigger::WeatherAlert, traits: [:jmaxml_trigger_base] do

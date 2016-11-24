@@ -132,7 +132,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
           expect(Article::Page.count).to eq 1
           Article::Page.first.tap do |page|
-            expect(page.name).to eq '津波警報・注意報・予報'
+            expect(page.name).to eq '大津波警報・津波警報・津波注意報・津波予報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
@@ -174,7 +174,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
 
           expect(Article::Page.count).to eq 1
           Article::Page.first.tap do |page|
-            expect(page.name).to eq '津波情報'
+            expect(page.name).to eq '各地の満潮時刻・津波到達予想時刻に関する情報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
             puts page.html
@@ -183,7 +183,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.html).to include('<tr><td>北海道太平洋沿岸東部</td><td>津波の津波警報</td><td>2010年2月28日 13時00分</td><td>2m</td></tr>')
             expect(page.html).to include('<tr><td>北海道太平洋沿岸中部</td><td>津波の津波警報</td><td>2010年2月28日 13時30分</td><td>2m</td></tr>')
             expect(page.html).to include('<tr><td>北海道太平洋沿岸西部</td><td>津波の津波警報</td><td>2010年2月28日 14時00分</td><td>1m</td></tr>')
-            expect(page.html).to include('<tr><td>北海道日本海沿岸北部</td><td>津波予報（若干の海面変動）</td><td></td><td>0.2m</td></tr>')
             expect(page.html).to include('<dt>地震発生時刻</dt><dd>2010年2月27日 15時34分</dd>')
             expect(page.html).to include('<dt>震源地</dt><dd>南米西部 </dd>')
             expect(page.html).to include('<dt>座標・深さ</dt><dd>南緯３６．１度　西経　７２．６度　深さ不明</dd>')

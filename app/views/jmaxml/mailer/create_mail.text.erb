@@ -1,0 +1,4 @@
+
+<% message.subject = @renderer.render_title %>
+<%= render file: "jmaxml/action/send_mails/_#{@context.type.name}" %>
+<%= @action.signature_text %>

@@ -8,6 +8,11 @@ ja:
         special_alert: 特別警報
         alert: 警報
         warning: 注意報
+      tsunami_sub_type:
+        special_alert: 大津波警報
+        alert: 津波警報
+        warning: 津波注意報
+        forecast: 津波予報
       ash_fall_sub_type:
         flash: 速報
         regular: 定時
@@ -364,8 +369,10 @@ ja:
         earthquake_intensity: 震度
         target_region_ids: 対象区域
       jmaxml/trigger/tsunami_alert:
+        sub_types: 種類
         target_region_ids: 対象区域
       jmaxml/trigger/tsunami_info:
+        sub_types: 種類
         target_region_ids: 対象区域
       jmaxml/trigger/weather_alert:
         sub_types: 種類
@@ -503,10 +510,14 @@ ja:
         - 対象区域を選択します。
 
     jmaxml/trigger/tsunami_alert:
+      sub_types:
+        - 種類を選択します。
       target_region_ids:
         - 対象区域を選択します。
 
     jmaxml/trigger/tsunami_info:
+      sub_types:
+        - 種類を選択します。
       target_region_ids:
         - 対象区域を選択します。
 

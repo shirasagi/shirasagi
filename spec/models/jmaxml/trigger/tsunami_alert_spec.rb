@@ -9,6 +9,7 @@ describe Jmaxml::Trigger::TsunamiAlert, dbscope: :example do
     its(:name) { is_expected.not_to be_nil }
     its(:training_status) { is_expected.to eq 'disabled' }
     its(:test_status) { is_expected.to eq 'disabled' }
+    its(:sub_types) { is_expected.to eq %w(special_alert alert warning) }
   end
 
   describe '#verify' do

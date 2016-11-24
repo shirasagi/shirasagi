@@ -1,47 +1,79 @@
 module Jmaxml::Type
   class EarthQuake
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::Quake.new(page, context)
     end
   end
 
   class Tsunami
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::Tsunami.new(page, context)
     end
   end
 
   class Flood
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::Flood.new(page, context)
     end
   end
 
   class Forecast
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::Forecast.new(page, context)
     end
   end
 
   class Landslide
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::Landslide.new(page, context)
     end
   end
 
   class Volcano
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::Volcano.new(page, context)
     end
   end
 
   class Tornado
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::Tornado.new(page, context)
     end
   end
 
   class AshFall
+    def name
+      self.class.class_name.underscore
+    end
+
     def renderer(page, context)
       Jmaxml::Renderer::AshFall.new(page, context)
     end

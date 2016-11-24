@@ -9,6 +9,7 @@ describe Jmaxml::Trigger::TsunamiInfo, dbscope: :example do
     its(:name) { is_expected.not_to be_nil }
     its(:training_status) { is_expected.to eq 'disabled' }
     its(:test_status) { is_expected.to eq 'disabled' }
+    its(:sub_types) { is_expected.to eq %w(special_alert alert warning) }
   end
 
   describe '#verify' do
@@ -37,7 +38,7 @@ describe Jmaxml::Trigger::TsunamiInfo, dbscope: :example do
     it "returns true" do
       expect(subject.verify(page, context)).to be_truthy
       expect(context.type).to eq Jmaxml::Type::TSUNAMI
-      expect(context.area_codes).to eq %w(100 101 102 110)
+      expect(context.area_codes).to eq %w(100 101 102)
     end
 
     it "calls block" do
@@ -45,7 +46,7 @@ describe Jmaxml::Trigger::TsunamiInfo, dbscope: :example do
       subject.verify(page, context) do
         flag = 1
         expect(context.type).to eq Jmaxml::Type::TSUNAMI
-        expect(context.area_codes).to eq %w(100 101 102 110)
+        expect(context.area_codes).to eq %w(100 101 102)
       end
       expect(flag).to eq 1
     end

@@ -79,10 +79,10 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.subject).to eq '震度速報'
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2011年3月11日 14時46分ごろ地震がありました。')
-            expect(mail.body.raw_source).to include('岩手県沿岸南部：震度 6弱')
-            expect(mail.body.raw_source).to include('岩手県内陸南部：震度 6弱')
-            expect(mail.body.raw_source).to include('岩手県沿岸北部：震度 5強')
-            expect(mail.body.raw_source).to include('岩手県内陸北部：震度 5強')
+            expect(mail.body.raw_source).to include('岩手県沿岸南部：震度６弱')
+            expect(mail.body.raw_source).to include('岩手県内陸南部：震度６弱')
+            expect(mail.body.raw_source).to include('岩手県沿岸北部：震度５強')
+            expect(mail.body.raw_source).to include('岩手県内陸北部：震度５強')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           puts mail_body
@@ -117,10 +117,10 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.subject).to eq '震源・震度に関する情報'
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2008年6月14日 08時47分ごろ地震がありました。')
-            expect(mail.body.raw_source).to include('岩手県内陸南部：震度 6強')
-            expect(mail.body.raw_source).to include('岩手県沿岸北部：震度 4')
-            expect(mail.body.raw_source).to include('岩手県沿岸南部：震度 4')
-            expect(mail.body.raw_source).to include('岩手県内陸北部：震度 4')
+            expect(mail.body.raw_source).to include('岩手県内陸南部：震度６強')
+            expect(mail.body.raw_source).to include('岩手県沿岸北部：震度４')
+            expect(mail.body.raw_source).to include('岩手県沿岸南部：震度４')
+            expect(mail.body.raw_source).to include('岩手県内陸北部：震度４')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           puts mail_body
@@ -136,7 +136,8 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
           region_101 = create(:jmaxml_tsunami_region_101)
           region_102 = create(:jmaxml_tsunami_region_102)
           region_110 = create(:jmaxml_tsunami_region_110)
-          trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id ]
+          region_210 = create(:jmaxml_tsunami_region_210)
+          trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id, region_210.id ]
           trigger.save!
         end
 
@@ -154,11 +155,12 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.subject).to eq '大津波警報・津波警報・津波注意報・津波予報'
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('東日本大震災クラスの津波が来襲します。')
-            expect(mail.body.raw_source).to include('北海道太平洋沿岸中部：津波警報　第1波 2011年3月11日 15時30分　高さ')
-            expect(mail.body.raw_source).to include('北海道太平洋沿岸東部：津波注意報　第1波 2011年3月11日 15時30分　高さ')
-            expect(mail.body.raw_source).to include('北海道太平洋沿岸西部：津波注意報　第1波 2011年3月11日 15時40分　高さ')
-            expect(mail.body.raw_source).to include('地震発生時刻：2011年3月11日 14時46分')
-            expect(mail.body.raw_source).to include('震源地：三陸沖 牡鹿半島の東南東１３０ｋｍ付近')
+            expect(mail.body.raw_source).to include('岩手県　　　　　　　　　　第１波：津波到達中と推測')
+            expect(mail.body.raw_source).to include('北海道太平洋沿岸中部　　　第１波：2011年3月11日 15時30分')
+            expect(mail.body.raw_source).to include('北海道太平洋沿岸東部　　　第１波：2011年3月11日 15時30分')
+            expect(mail.body.raw_source).to include('北海道太平洋沿岸西部　　　第１波：2011年3月11日 15時40分')
+            expect(mail.body.raw_source).to include('地震発生時刻：　　2011年3月11日 14時46分ごろ')
+            expect(mail.body.raw_source).to include('震源地：　　　　　三陸沖 牡鹿半島の東南東１３０ｋｍ付近')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           puts mail_body
@@ -174,7 +176,8 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
           region_101 = create(:jmaxml_tsunami_region_101)
           region_102 = create(:jmaxml_tsunami_region_102)
           region_110 = create(:jmaxml_tsunami_region_110)
-          trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id ]
+          region_201 = create(:jmaxml_tsunami_region_201)
+          trigger.target_region_ids = [ region_100.id, region_101.id, region_102.id, region_110.id, region_201.id ]
           trigger.save!
         end
 
@@ -192,12 +195,12 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.subject).to eq '各地の満潮時刻・津波到達予想時刻に関する情報'
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('各地の満潮時刻と津波到達予想時刻をお知らせします。')
-            expect(mail.body.raw_source).to include('北海道太平洋沿岸東部：津波の津波警報　第1波 2010年2月28日 13時00分　高さ 2m')
-            expect(mail.body.raw_source).to include('北海道太平洋沿岸中部：津波の津波警報　第1波 2010年2月28日 13時30分　高さ 2m')
-            expect(mail.body.raw_source).to include('北海道太平洋沿岸西部：津波の津波警報　第1波 2010年2月28日 14時00分　高さ 1m')
-            expect(mail.body.raw_source).to include('北海道日本海沿岸北部：津波予報（若干の海面変動）　第1波 　高さ 0.2m')
-            expect(mail.body.raw_source).to include('地震発生時刻：2010年2月27日 15時34分')
-            expect(mail.body.raw_source).to include('震源地：南米西部')
+            expect(mail.body.raw_source).to include('青森県太平洋沿岸　　　　　第１波：2010年2月28日 13時30分　高さ：３ｍ')
+            expect(mail.body.raw_source).to include('北海道太平洋沿岸東部　　　第１波：2010年2月28日 13時00分　高さ：２ｍ')
+            expect(mail.body.raw_source).to include('北海道太平洋沿岸中部　　　第１波：2010年2月28日 13時30分　高さ：２ｍ')
+            expect(mail.body.raw_source).to include('北海道太平洋沿岸西部　　　第１波：2010年2月28日 14時00分　高さ：１ｍ')
+            expect(mail.body.raw_source).to include('地震発生時刻：　　2010年2月27日 15時34分ごろ')
+            expect(mail.body.raw_source).to include('震源地：　　　　　南米西部')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           puts mail_body
@@ -245,7 +248,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('緊急地震速報（警報）を取り消します。')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
-
           puts mail_body
         end
       end

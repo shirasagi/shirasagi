@@ -1,0 +1,22 @@
+<%= I18n.l(@renderer.head_target_datetime, format: :long) %> <%= @renderer.control_publishing_office %><%= @renderer.head_info_type %>
+
+<%= @renderer.head_headline_text %>
+<% %w(special_alert alert warning forecast).each do |sub_type| %>
+<% area_infos = @renderer.info_group_by(sub_type) %>
+<% if area_infos.present? %>
+
+＜<%= I18n.t("jmaxml.options.tsunami_sub_type.#{sub_type}") %>＞
+<% area_infos.each do |area| %>
+　<%= area[:area_name] %><% if area[:first_wave].present? %>　<%= "　" * (12 - area[:area_name].length) %>第１波：<%= area[:first_wave] %><% end %><% if area[:height].present? %>　高さ：<%= area[:height].to_s.tr('0-9a-zA-Z', '０-９ａ-ｚＡ-Ｚ') %><% end %>
+<% end %>
+<% end %>
+<% end %>
+
+［解説］
+<%= @renderer.body_comments_warning_comment %>
+
+［震源・規模］
+地震発生時刻：　　<%= I18n.l(@renderer.body_earthquake_origin_time, format: :long) %>ごろ
+震源地：　　　　　<%= @renderer.body_earthquake_hypocenter_area_name %> <%= @renderer.body_earthquake_hypocenter_area_namefrommark %>
+座標・深さ：　　　<%= @renderer.body_earthquake_hypocenter_area_coordinate %>
+マグニチュード：　<%= @renderer.body_earthquake_magnitude %>
