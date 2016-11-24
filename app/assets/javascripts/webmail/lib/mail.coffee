@@ -13,6 +13,10 @@ class @Webmail_Mail
       return Webmail_Mail.updateMail(url, ids: checked, redirect: location.href)
 
   @renderDetail: ->
+    $("img[data-src]").each ->
+      $(this).attr('src', $(this).data('src'))
+      $(this).data('src', '')
+
     $(".update-mail").on "click", ->
       url = $(this).attr('href')
       return Webmail_Mail.updateMail(url)

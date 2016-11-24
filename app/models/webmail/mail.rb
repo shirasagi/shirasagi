@@ -82,6 +82,27 @@ class Webmail::Mail
     imap.conn.uid_store(uid, '-FLAGS', values.map(&:to_sym)) # required symbole
   end
 
+  def sanitized_html
+    html = self.html
+    html.gsub!(/<img [^>]*?>/i) do |img|
+      img.sub(/ src="cid:.*?"/i) do |src|
+        cid = src.sub(/.*?cid:(.*?)".*/i, '<\\1>')
+        attachments.each do |file|
+          if cid == file.content_id
+            type = file.content_type.sub(/;.*/, '')
+            src = %( data-src="data:#{type};base64,#{Base64.strict_encode64(file.read)}")
+            break
+          end
+        end
+        src
+      end
+    end
+
+    tags = ActionView::Base.sanitized_allowed_tags
+    attr = ActionView::Base.sanitized_allowed_attributes + %w(data-src)
+    ApplicationController.helpers.sanitize(html, tags: tags, attributes: attr)
+  end
+
   def attachments?
     attachments_count > 0
   end
@@ -113,15 +134,8 @@ class Webmail::Mail
     self.rfc822 = msg.attr['RFC822']
     mail = ::Mail.read_from_string(rfc822)
 
-    if mail.body.multipart?
-      mail.body.parts.each do |part|
-        self.text ||= part.decoded.toutf8 if part.content_type.start_with?('text/plain')
-        self.html ||= part.decoded.toutf8 if part.content_type.start_with?('text/html')
-      end
-    else
-      self.text = mail.body.decoded.toutf8
-    end
-
+    self.text = mail.text_part.decoded.toutf8 if mail.text_part
+    self.html = mail.html_part.decoded.toutf8 if mail.html_part
     self.attachments = mail.attachments
   end
 
