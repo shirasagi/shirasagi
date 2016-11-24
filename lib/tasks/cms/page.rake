@@ -44,6 +44,6 @@ namespace :cms do
   end
 
   task :import_files => :environment do
-    with_site(Cms::ImportFilesJob)
+    Cms::ImportFilesJob.perform_now()
   end
 end
