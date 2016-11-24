@@ -31,7 +31,7 @@ class Cms::ImportJobFile
         if root_node.save
           self.cur_node = root_node
         else
-          self.errors.add :base, "ルートフォルダーを作成できませんでした。"
+          self.errors.add :base, I18n.t("errors.messages.root_node_save_error")
           root_node.errors.full_messages.each do |e|
             self.errors.add :base, e
           end
