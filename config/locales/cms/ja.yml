@@ -293,6 +293,7 @@ ja:
 
   modules:
     cms: 標準機能
+    import_page: 取り込みページ
     addons:
       cms/role: ロール
       cms/group_permission: 権限
@@ -443,6 +444,11 @@ ja:
       cms/word_dictionary:
         name: 名前
         body: 設定
+      cms/import_job_file:
+        name: タイトル
+        basename: フォルダー名
+        in_file: ファイル
+        import_date: インポート開始日時
       cms/addon/meta:
         keywords: キーワード
         description: 概要
@@ -664,11 +670,21 @@ ja:
         - 追加情報の項目名を入力します。
       value:
         - 項目の内容を入力します。
-    cms/addon/import/page:
+    cms/import_job_file:
       in_file:
         - 取り込むファイルを設定します。
         - ルートフォルダーが含まれるZIPファイルもしくは単一のHTMLファイルを選択してください。
-        - フォルダー配下に 取り込みページ/フォルダー/アップロードファイル として展開されます。
+        - フォルダー配下に 取り込みページ、フォルダー、アップロードファイル として展開されます。
+        - ファイル名は全て半角英数とする必要があります。
+        - HTMLファイルはutf-8でエンコードされている必要があります。
+      title:
+        - トップへのフォルダー取り込みの場合、インポート前にフォルダーを作成し、内部にファイルを展開します。
+        - フォルダーのタイトルを設定します。
+      basename:
+        - トップへのフォルダー取り込みの場合、インポート前にフォルダーを作成し、内部にファイルを展開します。
+        - フォルダー名を設定します。
+      import_date:
+        - インポートを実行する日時を設定できます。
 
     cms/addon/captcha:
       captcha:
@@ -1233,3 +1249,4 @@ ja:
       cms/postal_code/import_job: 郵便番号インポート
       cms/postal_code/official_csv_import_job: 日本郵便CSVインポート
       cms/node/copy_nodes_job: フォルダー複製
+      cms/import_files_job: ページ/フォルダー取り込み

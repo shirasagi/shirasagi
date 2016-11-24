@@ -141,6 +141,7 @@ ja:
       file_scan_exception: "ウイルススキャンに失敗しました。"
       not_exist: は存在しません。
       not_found_parent_nodes: に親フォルダー「%{name}」がありません。
+      root_node_save_error: ルートフォルダーを作成できませんでした。
     template:
       body: 次の項目を確認してください。
       header:

@@ -7,8 +7,8 @@ module Cms::Addon::Import
     extend SS::Addon
 
     included do
-      attr_accessor :in_file, :root_files, :imported
-      permit_params :in_file, :root_files
+      attr_accessor :in_file, :root_files, :import_date, :imported
+      permit_params :in_file, :root_files, :import_date
 
       validates :in_file, presence: true, on: :import
     end

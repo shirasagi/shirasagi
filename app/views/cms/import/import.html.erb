@@ -10,7 +10,6 @@ $(".file").on("change", function() {
 
 <%= form_for :item, url: { action: :import }, html: {id: "item-form", method: :post, multipart: true} do |f| %>
   <%= error_messages_for :item %>
-  <%= f.hidden_field "group_ids[]", value: @cur_user.groups.map(&:id) %>
 
   <section class="main-box">
     <header><h2><%= t :"cms.import_node" %></h2></header>
@@ -22,13 +21,19 @@ $(".file").on("change", function() {
       <dt><%= @model.t :name %><%= @model.tt :title %></dt>
       <dd><%= f.text_field :name, class: "name" %></dd>
 
-      <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
+      <dt><%= @model.t :basename %><%= @model.tt :basename %></dt>
       <dd><%= f.text_field :basename, class: "filename" %></dd>
+
+      <dt><%= @model.t :import_date %><%= @model.tt :import_date %></dt>
+      <dd><%= f.text_field :import_date, class: "date js-datetime" %></dd>
+
+      <dt><%= t "views.import_log" %></dt>
+      <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
     </dl>
   </section>
 
   <footer class="send">
     <%= f.submit t("views.button.import"), class: :save %>
-    <%= f.button t("views.button.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    <%= f.button t("views.button.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{cms_contents_path}'; return false;" %>
   </footer>
 <% end %>

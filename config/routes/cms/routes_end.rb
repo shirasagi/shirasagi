@@ -116,7 +116,7 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
-    get "import" => "import#index"
+    get "import" => "import#import"
     post "import" => "import#import"
     get "all_contents(.:format)" => "all_contents#index", format: { default: :html }, as: "all_contents"
     get "search_contents/html" => "search_contents/html#index"
@@ -176,7 +176,7 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
-    get "import" => "import#index"
+    get "import" => "import#import"
     post "import" => "import#import"
     get "copy_nodes" => "copy_nodes#index", as: :copy
     post "copy_nodes" => "copy_nodes#run"
