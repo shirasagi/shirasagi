@@ -35,7 +35,7 @@ class Jmaxml::Renderer::Base
     text = ''
     if upper_template.present?
       text = render_template(upper_template)
-      text << "\n\n"
+      text << "\n"
     end
     if loop_template.present?
       text << render_loop_html(loop_template)
@@ -61,7 +61,7 @@ class Jmaxml::Renderer::Base
     text = ''
     if upper_template.present?
       text = render_template(upper_template)
-      text << "\n\n"
+      text << "\n"
     end
     if loop_template.present?
       text << render_loop_html(loop_template)

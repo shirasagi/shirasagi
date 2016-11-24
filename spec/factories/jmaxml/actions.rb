@@ -13,6 +13,6 @@ FactoryGirl.define do
   factory :jmaxml_action_send_mail, class: Jmaxml::Action::SendMail, traits: [:jmaxml_action_base] do
     sender_name { unique_id }
     sender_email { "#{sender_name}@example.jp" }
-    signature_text { "--------\n#{sender_email}"}
+    signature_text { "\n--------\n#{sender_email}"}
   end
 end

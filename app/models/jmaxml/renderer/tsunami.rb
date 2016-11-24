@@ -25,6 +25,18 @@ class Jmaxml::Renderer::Tsunami < Jmaxml::Renderer::Base
     I18n.t('jmaxml.templates.tsunami.lower_html')
   end
 
+  def upper_text_template
+    I18n.t('jmaxml.templates.tsunami.upper_text')
+  end
+
+  def loop_text_template
+    I18n.t('jmaxml.templates.tsunami.loop_text')
+  end
+
+  def lower_text_template
+    I18n.t('jmaxml.templates.tsunami.lower_text')
+  end
+
   private
     def render_loop_html(template)
       text = ''

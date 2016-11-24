@@ -40,7 +40,9 @@ ja:
       cancel_text: "#{headline_text}\n"
       quake:
         title: "#{title}"
-        upper_text: "#{target_time}ごろ地震がありました。\n各地の震度は下記の通りです。"
+        upper_text:
+          - "#{target_time}ごろ地震がありました。\n各地の震度は下記の通りです。"
+          - ""
         loop_text: "#{area_name}：震度 #{intensity_label}"
         lower_text: ""
         upper_html:
@@ -63,9 +65,12 @@ ja:
           - "  <p>#{forecast_comment}</p>"
           - "</div>"
       tsunami:
-        title: "#{title}"
+        title: "#{head_title}"
         upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - ""
           - "#{headline_text}"
+          - ""
         loop_text:
           - "#{area_name}：#{category_name}　第1波 #{first_height_label}　高さ #{tsunami_height}"
         lower_text:
@@ -76,6 +81,7 @@ ja:
           - "マグニチュード：#{earthquake_magnitude}"
           - ""
           - "#{warning_comment}"
+          - ""
         upper_html:
           - "<div class=\"jmaxml tsunami\">"
           - "  <p>#{headline_text}</p>"
