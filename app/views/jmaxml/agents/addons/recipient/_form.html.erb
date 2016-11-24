@@ -1,0 +1,51 @@
+<dl class="see mod-jmaxml-recipient">
+  <dt><%= @model.t :user_ids %><%= @model.tt :user_ids %></dt>
+  <dd>
+    <%= f.hidden_field "user_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to :"cms.apis.users.index", cms_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::User.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.users.each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "user_ids[]", value: user.id %> <%= user.name %></td>
+          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-jmaxml-recipient">
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to :"ss.apis.groups.index", cms_apis_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Group.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.groups.each do |group| %>
+        <tr data-id="<%= group.id %>">
+          <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -29,6 +29,18 @@ class Jmaxml::Renderer::Quake < Jmaxml::Renderer::Base
       I18n.t('jmaxml.templates.quake.lower_html')
     end
 
+    def upper_text_template
+      I18n.t('jmaxml.templates.quake.upper_text')
+    end
+
+    def loop_text_template
+      I18n.t('jmaxml.templates.quake.loop_text')
+    end
+
+    def lower_text_template
+      I18n.t('jmaxml.templates.quake.lower_text')
+    end
+
     def render_loop_html(template)
       text = ''
       @context.region_eq_infos.each do |cur_info|

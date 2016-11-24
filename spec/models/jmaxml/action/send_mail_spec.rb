@@ -7,73 +7,172 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
     subject { create(:jmaxml_action_send_mail) }
     its(:site_id) { is_expected.to eq site.id }
     its(:name) { is_expected.not_to be_nil }
-    its(:title_mail_text) { is_expected.not_to be_nil }
-    its(:upper_mail_text) { is_expected.not_to be_nil }
-    its(:loop_mail_text) { is_expected.not_to be_nil }
-    its(:lower_mail_text) { is_expected.not_to be_nil }
+    its(:sender_name) { is_expected.not_to be_nil }
+    its(:sender_email) { is_expected.to eq "#{subject.sender_name}@example.jp" }
+    its(:signature_text) { is_expected.to end_with "#{subject.sender_name}@example.jp" }
   end
 
   describe '#execute' do
-    let(:node_ezine_member_page) do
-      create(
-        :ezine_node_member_page,
-        cur_site: site,
-        sender_name: 'test',
-        sender_email: 'test@example.jp',
-        signature_html: '<br>--------<br>test@example.jp<br>',
-        signature_text: "\n--------\ntest@example.jp\n")
-    end
-    let(:node_my_anpi_post) { create(:member_node_my_anpi_post, cur_site: site) }
-    let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
-    let(:page) { create(:rss_weather_xml_page, xml: xml1) }
-    let(:context) { OpenStruct.new(site: site, xmldoc: REXML::Document.new(page.xml)) }
-    let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
+    let!(:group1) { create(:cms_group, name: unique_id) }
+    let!(:group2) { create(:cms_group, name: unique_id) }
+    let!(:group3) { create(:cms_group, name: unique_id) }
+    let!(:user1) { create(:cms_test_user, group_ids: [ group1.id ]) }
+    let!(:user2) { create(:cms_test_user, group_ids: [ group2.id ]) }
+    let!(:user3) { create(:cms_test_user, group_ids: [ group2.id ]) }
+    let!(:user4) { create(:cms_test_user, group_ids: [ group1.id, group3.id ]) }
+    let(:emails) { [ user1.email, user2.email, user3.email, user4.email ] }
     subject { create(:jmaxml_action_send_mail) }
 
     before do
-      region_210 = create(:jmaxml_region_210)
-      region_211 = create(:jmaxml_region_211)
-      region_212 = create(:jmaxml_region_212)
-      region_213 = create(:jmaxml_region_213)
-      trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
-      trigger.save!
+      ActionMailer::Base.deliveries = []
+    end
 
-      subject.my_anpi_post_id = node_my_anpi_post.id
-      subject.anpi_mail_id = node_ezine_member_page.id
+    after do
+      ActionMailer::Base.deliveries = []
+    end
+
+    before do
+      subject.user_ids = [ user1.id ]
+      subject.group_ids = [ group2.id, group3.id ]
       subject.save!
-
-      # sends 10 mails
-      id = node_ezine_member_page.id
-      10.times do |i|
-        create(:cms_member, subscription_ids: [ id ], email_type: %w(text html)[i % 2])
-      end
     end
 
     around do |example|
-      Timecop.travel('2011-03-11T05:50:00Z') do
+      Timecop.travel(report_time) do
         example.run
       end
     end
 
-    it do
-      trigger.verify(page, context) do
-        subject.execute(page, context)
+    context 'when alert/info is received' do
+      let(:xmldoc) { REXML::Document.new(xml1) }
+      let(:report_time) { REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
+      let(:target_time) { REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()').to_s.strip }
+      let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
+      let(:rss_node) { create(:rss_node_weather_xml) }
+      let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml1) }
+      let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
+
+      context 'when quake intensity flash is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
+
+        before do
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
+          trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '震度速報'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2011年3月11日 14時46分ごろ地震がありました。')
+            expect(mail.body.raw_source).to include('岩手県沿岸南部：震度 6弱')
+            expect(mail.body.raw_source).to include('岩手県内陸南部：震度 6弱')
+            expect(mail.body.raw_source).to include('岩手県沿岸北部：震度 5強')
+            expect(mail.body.raw_source).to include('岩手県内陸北部：震度 5強')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+
+          puts mail_body
+        end
       end
 
-      expect(ActionMailer::Base.deliveries.length).to eq 10
+      context 'when quake info is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-35_06_100915_03zenkokusaisumo1.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_quake_info) }
 
-      ActionMailer::Base.deliveries.each do |mail|
-        expect(mail).not_to be_nil
-        expect(mail.from.first).to eq "test@example.jp"
-        expect(Cms::Member.site(site).map(&:email)).to include mail.to.first
-        expect(mail.subject).to eq '2011年3月11日 14時46分 ころ地震がありました'
-        expect(mail.body.raw_source).to include('2011年3月11日 14時46分 ころ地震がありました。')
-        expect(mail.body.raw_source).to include('岩手県沿岸南部：6弱')
-        expect(mail.body.raw_source).to include('岩手県内陸南部：6弱')
-        expect(mail.body.raw_source).to include('岩手県沿岸北部：5強')
-        expect(mail.body.raw_source).to include('岩手県内陸北部：5強')
-        expect(mail.body.raw_source).to include(node_my_anpi_post.full_url)
-        expect(mail.body.raw_source).to end_with("\n--------\ntest@example.jp\n")
+        before do
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
+          trigger.earthquake_intensity = '4'
+          trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '震源・震度に関する情報'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2008年6月14日 08時47分ごろ地震がありました。')
+            expect(mail.body.raw_source).to include('岩手県内陸南部：震度 6強')
+            expect(mail.body.raw_source).to include('岩手県沿岸北部：震度 4')
+            expect(mail.body.raw_source).to include('岩手県沿岸南部：震度 4')
+            expect(mail.body.raw_source).to include('岩手県内陸北部：震度 4')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+
+          puts mail_body
+        end
+      end
+    end
+
+    context 'when alert/info is canceled' do
+      let(:xmldoc) { REXML::Document.new(xml2) }
+      let(:report_time) { REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
+      let(:target_time) { REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()').to_s.strip }
+      let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
+      let(:rss_node) { create(:rss_node_weather_xml) }
+      let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml1) }
+      let!(:rss_page2) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml2) }
+      let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
+
+      context 'when quake intensity flash is canceled' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
+        let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_99shindosokuhou3.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
+
+        before do
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
+          trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page2, context) do
+            subject.execute(rss_page2, context)
+          end
+
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '【取消】震度速報'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('緊急地震速報（警報）を取り消します。')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+
+          puts mail_body
+        end
       end
     end
   end

@@ -48,6 +48,32 @@ class Jmaxml::Renderer::Base
     text
   end
 
+  def render_text(options = {})
+    if head_info_type == '取消'
+      cancel_template = normalize_template(options[:cancel_template].presence || cancel_text_template)
+      return render_template(cancel_template) << "\n"
+    end
+
+    upper_template = normalize_template(options[:upper_template].presence || upper_text_template)
+    loop_template = normalize_template(options[:loop_template].presence || loop_text_template)
+    lower_template = normalize_template(options[:lower_template].presence || lower_text_template)
+
+    text = ''
+    if upper_template.present?
+      text = render_template(upper_template)
+      text << "\n\n"
+    end
+    if loop_template.present?
+      text << render_loop_html(loop_template)
+      text << "\n"
+    end
+    if lower_template.present?
+      text << render_template(lower_template)
+      text << "\n"
+    end
+    text
+  end
+
   private
     def normalize_template(template)
       if template.is_a?(Array)
@@ -79,5 +105,25 @@ class Jmaxml::Renderer::Base
 
     def cancel_html_template
       I18n.t('jmaxml.templates.cancel_html')
+    end
+
+    def upper_text_template
+      raise NotImplementedError
+    end
+
+    def loop_text_template
+      raise NotImplementedError
+    end
+
+    def lower_text_template
+      raise NotImplementedError
+    end
+
+    def render_loop_text(template)
+      render_loop_html(template)
+    end
+
+    def cancel_text_template
+      I18n.t('jmaxml.templates.cancel_text')
     end
 end

@@ -47,8 +47,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
         end
 
         it do
-          trigger.verify(page, context) do
-            subject.execute(page, context)
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
           end
 
           expect(Article::Page.count).to eq 1
@@ -87,8 +87,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
         end
 
         it do
-          trigger.verify(page, context) do
-            subject.execute(page, context)
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
           end
 
           expect(Article::Page.count).to eq 1
@@ -126,8 +126,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
         end
 
         it do
-          trigger.verify(page, context) do
-            subject.execute(page, context)
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
           end
 
           expect(Article::Page.count).to eq 1
@@ -168,8 +168,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
         end
 
         it do
-          trigger.verify(page, context) do
-            subject.execute(page, context)
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
           end
 
           expect(Article::Page.count).to eq 1
@@ -211,8 +211,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
         end
 
         it do
-          trigger.verify(page, context) do
-            subject.execute(page, context)
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
           end
 
           expect(Article::Page.count).to eq 1
@@ -253,8 +253,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           end
 
           it do
-            trigger.verify(page, context) do
-              subject.execute(page, context)
+            trigger.verify(rss_page1, context) do
+              subject.execute(rss_page1, context)
             end
 
             expect(Article::Page.count).to eq 1
@@ -297,8 +297,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           end
 
           it do
-            trigger.verify(page, context) do
-              subject.execute(page, context)
+            trigger.verify(rss_page1, context) do
+              subject.execute(rss_page1, context)
             end
 
             expect(Article::Page.count).to eq 1
@@ -331,8 +331,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           end
 
           it do
-            trigger.verify(page, context) do
-              subject.execute(page, context)
+            trigger.verify(rss_page1, context) do
+              subject.execute(rss_page1, context)
             end
 
             expect(Article::Page.count).to eq 1
@@ -369,8 +369,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           end
 
           it do
-            trigger.verify(page, context) do
-              subject.execute(page, context)
+            trigger.verify(rss_page1, context) do
+              subject.execute(rss_page1, context)
             end
 
             expect(Article::Page.count).to eq 1
@@ -408,8 +408,8 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
           end
 
           it do
-            trigger.verify(page, context) do
-              subject.execute(page, context)
+            trigger.verify(rss_page1, context) do
+              subject.execute(rss_page1, context)
             end
 
             expect(Article::Page.count).to eq 1

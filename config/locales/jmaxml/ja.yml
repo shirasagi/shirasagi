@@ -37,6 +37,7 @@ ja:
       status: "【#{status}】"
       info_type: "【#{info_type}】"
       cancel_html: "<div class=\"jmaxml cancel\">#{headline_text}</div>"
+      cancel_text: "#{headline_text}\n"
       quake:
         title: "#{title}"
         upper_text: "#{target_time}ごろ地震がありました。\n各地の震度は下記の通りです。"
@@ -268,6 +269,8 @@ ja:
     jmaxml: 気象庁防災情報XML
     addons:
       jmaxml/filter: フィルター
+      jmaxml/sender: 送信者設定
+      jmaxml/recipient: 受信者設定
 
   cms:
     nodes:
@@ -301,8 +304,8 @@ ja:
       jmaxml/trigger/tornado_alert: 竜巻注意情報
       jmaxml/action/base: 受信時の動作
       jmaxml/action/publish_page: 記事ページ作成
-      jmaxml/action/send_mail: メール送信
       jmaxml/action/switch_urgency: 緊急災害レイアウト切替
+      jmaxml/action/send_mail: メール送信
     attributes:
       jmaxml/quake_region:
         code: コード
@@ -379,6 +382,13 @@ ja:
         category_ids: カテゴリー
       jmaxml/action/switch_urgency:
         urgency_layout_id: 緊急災害レイアウト
+      jmaxml/addon/sender:
+        sender_name: 送信者名
+        sender_email: 送信メールアドレス
+        signature_text: 署名（テキスト版）
+      jmaxml/addon/recipient:
+        user_ids: ユーザー
+        group_ids: グループ
 
   tooltip:
     jmaxml/quake_region:
@@ -537,3 +547,17 @@ ja:
     jmaxml/action/switch_urgency:
       urgency_layout_id:
         - 緊急災害レイアウトを選択します。
+
+    jmaxml/addon/sender:
+      sender_name:
+        - メールの送信者名を記載します。
+      sender_email:
+        - メールの送信者名に利用するメールアドレスを記載します。
+      signature_text:
+        - メールに記載する署名を入力します。
+
+    jmaxml/addon/recipient:
+      user_ids:
+        - ユーザーを選択します。
+      group_ids:
+        - グループを選択します。
