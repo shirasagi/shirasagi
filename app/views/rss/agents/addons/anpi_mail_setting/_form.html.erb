@@ -22,7 +22,7 @@
   <dt><%= @model.t :target_regions %><%= @model.tt :target_regions %></dt>
   <dd>
     <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to :"rss.apis.weather_xml/quake_regions.index", jmaxml_apis_quake_regions_path, class: "ajax-box" %>
+    <%= link_to :"jmaxml.apis.quake_regions.index", jmaxml_apis_quake_regions_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
