@@ -10,8 +10,7 @@ module Jmaxml::Addon::Recipient
 
   def recipient_emails
     addreeses = groups.map { |g| g.users.pluck(:email) }
-    addreeses = addreeses.flatten
     addreeses << users.pluck(:email)
-    addreeses.uniq.select(&:present?)
+    addreeses.flatten.uniq.select(&:present?)
   end
 end
