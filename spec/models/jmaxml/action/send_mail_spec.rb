@@ -439,6 +439,44 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
           puts mail_body
         end
       end
+
+      context 'when tornado alert is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_19_01_091210_tatsumakijyohou1.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_tornado_alert) }
+
+        before do
+          region_1310100 = create(:jmaxml_forecast_region_1310100)
+          region_1310200 = create(:jmaxml_forecast_region_1310200)
+          region_1310300 = create(:jmaxml_forecast_region_1310300)
+          region_1310400 = create(:jmaxml_forecast_region_1310400)
+          trigger.target_region_ids = [ region_1310100.id, region_1310200.id, region_1310300.id, region_1310400.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          mail_subject = nil
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '東京都竜巻注意情報'
+            mail_subject ||= mail.subject
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2009年8月10日 07時38分　気象庁予報部発表')
+            expect(mail.body.raw_source).to include("東京地方では、竜巻発生のおそれがあります。")
+            expect(mail.body.raw_source).to include("千代田区、中央区、港区、新宿区")
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_subject
+          puts mail_body
+        end
+      end
     end
 
     context 'when alert/info is canceled' do
