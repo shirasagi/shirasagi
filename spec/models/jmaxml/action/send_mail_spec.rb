@@ -20,7 +20,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
     let!(:user2) { create(:cms_test_user, group_ids: [ group2.id ]) }
     let!(:user3) { create(:cms_test_user, group_ids: [ group2.id ]) }
     let!(:user4) { create(:cms_test_user, group_ids: [ group1.id, group3.id ]) }
-    let(:emails) { [ user1.email, user2.email, user3.email, user4.email ] }
     subject { create(:jmaxml_action_send_mail) }
 
     before do
@@ -72,11 +71,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
-            expect(mail.to.first).to be_in(emails)
+            expect(mail.to.first.to_s).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '震度速報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -114,11 +115,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '震源・震度情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -156,11 +159,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '大津波警報・津波警報・津波注意報・津波予報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -199,11 +204,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '各地の満潮時刻・津波到達予想時刻に関する情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -241,11 +248,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '奈良県気象警報・注意報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -287,11 +296,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '揖斐川中流はん濫注意情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -343,11 +354,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '福岡県土砂災害警戒情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -381,11 +394,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '火山名　御嶽山　噴火速報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -419,11 +434,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '火山名　桜島　降灰予報（定時）'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -460,11 +477,13 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '東京都竜巻注意情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -510,16 +529,96 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
 
           mail_subject = nil
           mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
             expect(mail.subject).to eq '【取消】震度速報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2011年3月11日 14時46分　気象庁発表')
             expect(mail.body.raw_source).to include('緊急地震速報（警報）を取り消します。')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_subject
+          puts mail_body
+        end
+      end
+
+      context 'when quake info is canceled' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-35_06_100915_03zenkokusaisumo1.xml))) }
+        let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-35_06_100915_06zenkokusaisumo1.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_quake_info) }
+
+        before do
+          region_210 = create(:jmaxml_region_210)
+          region_211 = create(:jmaxml_region_211)
+          region_212 = create(:jmaxml_region_212)
+          region_213 = create(:jmaxml_region_213)
+          trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page2, context) do
+            subject.execute(rss_page2, context)
+          end
+
+          mail_subject = nil
+          mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
+            expect(mail.subject).to eq '【取消】震源・震度情報'
+            mail_subject ||= mail.subject
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2008年6月14日 09時06分　気象庁発表')
+            expect(mail.body.raw_source).to include('震源・震度情報を取り消します。')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_subject
+          puts mail_body
+        end
+      end
+
+      context 'when volcano flash is canceled' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_67_01_150514_VFVO56-1.xml))) }
+        let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_67_01_150514_VFVO56-4.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_volcano_flash) }
+
+        before do
+          region1 = create(:jmaxml_forecast_region_2042900)
+          region2 = create(:jmaxml_forecast_region_2043200)
+          trigger.target_region_ids = [ region1.id, region2.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page2, context) do
+            subject.execute(rss_page2, context)
+          end
+
+          mail_subject = nil
+          mail_body = nil
+          emails = [ user1.email, user2.email, user3.email, user4.email ]
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            emails = emails - [ mail.to.first ]
+            expect(mail.subject).to eq '【取消】火山名　御嶽山　噴火速報'
+            mail_subject ||= mail.subject
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2014年9月27日 11時53分　気象庁地震火山部発表')
+            expect(mail.body.raw_source).to include('噴火速報を取り消します。')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           puts mail_subject
