@@ -374,6 +374,44 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
           puts mail_body
         end
       end
+
+      context 'when ash fall forecast is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_66_01_141024_VFVO53.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_ash_fall_forecast) }
+
+        before do
+          region_4620100 = create(:jmaxml_forecast_region_4620100)
+          region_4620300 = create(:jmaxml_forecast_region_4620300)
+          region_4621400 = create(:jmaxml_forecast_region_4621400)
+          region_4621700 = create(:jmaxml_forecast_region_4621700)
+          trigger.target_region_ids = [ region_4620100.id, region_4620300.id, region_4621400.id, region_4621700.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '火山名　桜島　降灰予報（定時）'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2014年6月6日 05時00分　気象庁地震火山部発表')
+            expect(mail.body.raw_source).to include("＜降灰＞\n鹿児島県鹿児島市、鹿児島県鹿屋市、")
+            expect(mail.body.raw_source).to include("＜小さな噴石の落下＞\n鹿児島県鹿児島市")
+            expect(mail.body.raw_source).to include('６日０６時から６日２４時までに噴火が発生した場合には、')
+            expect(mail.body.raw_source).to include('６日０６時から０９時まで　南東（垂水・鹿屋方向）')
+            expect(mail.body.raw_source).to include('噴煙が高さ３０００ｍまで上がった場合の')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_body
+        end
+      end
     end
 
     context 'when alert/info is canceled' do

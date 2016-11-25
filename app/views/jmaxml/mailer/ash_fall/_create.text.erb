@@ -1,0 +1,24 @@
+<% @helper.volcano_infos.each_with_index do |volcano_info, index| %>
+<% if index > 0 %>
+
+<% end %>
+＜<%= volcano_info[:kind_name] %>＞
+<% volcano_info[:area_names].each_slice(5) do |area_names| %>
+<%= area_names.join('、') %>
+<% end %>
+<% end %>
+<% if (activity = @helper.volcano_info_content_volcano_activity).present? %>
+
+［詳細］
+<%= activity %>
+<% end %>
+<% if (prevention = @helper.volcano_info_content_volcano_prevention).present? %>
+
+［留意事項］
+<%= prevention %>
+<% end %>
+<% if (appendix = @helper.volcano_info_content_appendix).present? %>
+
+［補足］
+<%= appendix %>
+<% end %>
