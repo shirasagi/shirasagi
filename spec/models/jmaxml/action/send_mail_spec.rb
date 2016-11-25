@@ -268,22 +268,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             subject.execute(rss_page1, context)
           end
 
-          # expect(Article::Page.count).to eq 1
-          # Article::Page.first.tap do |page|
-          #   expect(page.name).to eq '指定河川洪水予報'
-          #   expect(page.state).to eq subject.publish_state
-          #   expect(page.category_ids).to eq [ category_node.id ]
-          #   puts page.html
-          #   expect(page.html).to include('<div class="jmaxml flood">')
-          #   expect(page.html).to include('<h2>2008年9月3日 04時15分 木曽川上流河川事務所 岐阜地方気象台発表</h2>')
-          #   expect(page.html).to include('<p>揖斐川中流では　はん濫注意水位・流量に到達　水位はさらに上昇</p>')
-          #   expect(page.html).to include('<dt>河川</dt><dd>揖斐川</dd>')
-          #   expect(page.html).to include('<dt>発表種別</dt><dd>はん濫注意情報</dd>')
-          #   expect(page.html).to include('<dt>洪水予報種別</dt><dd>洪水注意報（発表）</dd>')
-          #   expect(page.html).to include("<dt>内容</dt><dd>#{main_sentence}</dd>")
-          #   expect(page.html).to include('<dt>水位観測所</dt><dd>万石水位観測所（岐阜県大垣市万石）</dd>')
-          #   expect(page.html).to include('<p>所により１時間に５０ミリの雨が降っています。この雨は今後次第に弱まるでしょう。</p>')
-          # end
           mail_body = nil
           expect(ActionMailer::Base.deliveries.length).to eq 4
           ActionMailer::Base.deliveries.each do |mail|
@@ -293,10 +277,63 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.subject).to eq '揖斐川中流はん濫注意情報'
             mail_body ||= mail.body.raw_source
             expect(mail.body.raw_source).to include('2008年9月3日 04時15分 木曽川上流河川事務所・岐阜地方気象台　共同発表')
-            expect(mail.body.raw_source).to include('揖斐川中流の万石水位観測所では、はん濫注意水位・流量（レベル２）に到達しました。')
+            expect(mail.body.raw_source).to include(main_sentence)
             expect(mail.body.raw_source).to include('＜岐阜県△△市＞')
             expect(mail.body.raw_source).to include('△△地区 △△地区 △△地区')
             expect(mail.body.raw_source).to include('所により１時間に５０ミリの雨が降っています。')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_body
+        end
+      end
+
+      context 'when landslide info is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_17_01_130906_VXWW40-modified.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_landslide_info) }
+        let(:area_codes) do
+          %w(
+            4010000 4013000 4020200 4020300 4020400 4020500 4020600 4020700
+            4021000 4021100 4021200 4021300 4021400 4021500 4021600 4021700
+            4021800 4021900 4022000 4022100 4022300 4022400 4022500 4022600
+            4022700 4022800 4022900 4023000 4030500 4034100 4034200 4034300
+            4034400 4034500 4034800 4034900 4038100 4038200 4038300 4038400
+            4040100 4040200 4042100 4044700 4044800 4050300 4052200 4054400
+            4060100 4060200 4060400 4060500 4060800 4060900 4061000 4062100
+            4062500 4064200 4064600 4064700
+          )
+        end
+        let(:headline_text) do
+          "＜概況＞\n　降り続く大雨のため、警戒対象地域では土砂災害の危険度が高まっています。\n\n＜とるべき措置＞\n　崖の近くなど土砂災害の発生しやすい地区にお住まいの方は、"
+        end
+
+        before do
+          target_region_ids = []
+          area_codes.each do |area_code|
+            region = create("jmaxml_forecast_region_#{area_code}".to_sym)
+            target_region_ids << region.id
+          end
+          trigger.target_region_ids = target_region_ids
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '福岡県土砂災害警戒情報'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2013年8月31日 11時05分 福岡県・福岡管区気象台　共同発表')
+            expect(mail.body.raw_source).to include(headline_text)
+            expect(mail.body.raw_source).to include("＜警戒（発表）＞\n北九州市、福岡市")
+            expect(mail.body.raw_source).to include("＜警戒（継続）＞\n直方市、飯塚市、田川市、行橋市、筑紫野市")
+            expect(mail.body.raw_source).to include("＜解除＞\n大牟田市、久留米市、八女市、中間市、小郡市")
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           puts mail_body

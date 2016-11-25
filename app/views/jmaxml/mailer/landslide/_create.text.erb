@@ -1,0 +1,29 @@
+<%= @helper.head_headline_text %>
+<% landslide_infos = @helper.landslide_infos %>
+<% landslide_infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] == '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
+<% if area_names.present? %>
+
+＜警戒（発表）＞
+<% area_names.each_slice(5) do |names| %>
+<%= names.join("、") %>
+<% end %>
+<% end %>
+<% end %>
+<% landslide_infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] != '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
+<% if area_names.present? %>
+
+＜警戒（継続）＞
+<% area_names.each_slice(5) do |names| %>
+<%= names.join("、") %>
+<% end %>
+<% end %>
+<% end %>
+<% landslide_infos.select { |info| info[:kind_name] == '解除' }.map { |info| info[:area_name] }.tap do |area_names| %>
+<% if area_names.present? %>
+
+＜解除＞
+<% area_names.each_slice(5) do |names| %>
+<%= names.join("、") %>
+<% end %>
+<% end %>
+<% end %>
