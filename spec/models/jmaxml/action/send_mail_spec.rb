@@ -245,6 +245,63 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
           puts mail_body
         end
       end
+
+      context 'when flood forecast is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_16_01_100806_kasenkozui1.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_flood_forecast) }
+        let(:main_sentence) do
+          %w(
+            揖斐川中流の万石水位観測所では、はん濫注意水位・流量（レベル２）に到達しました。
+            水位・流量はさらに上昇する見込みです。今後の洪水予報に注意して下さい。).join
+        end
+
+        before do
+          region1 = create(:jmaxml_water_level_station_85050900020300042)
+          region2 = create(:jmaxml_water_level_station_85050900020300045)
+          region3 = create(:jmaxml_water_level_station_85050900020300053)
+          trigger.target_region_ids = [ region1.id, region2.id, region3.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          # expect(Article::Page.count).to eq 1
+          # Article::Page.first.tap do |page|
+          #   expect(page.name).to eq '指定河川洪水予報'
+          #   expect(page.state).to eq subject.publish_state
+          #   expect(page.category_ids).to eq [ category_node.id ]
+          #   puts page.html
+          #   expect(page.html).to include('<div class="jmaxml flood">')
+          #   expect(page.html).to include('<h2>2008年9月3日 04時15分 木曽川上流河川事務所 岐阜地方気象台発表</h2>')
+          #   expect(page.html).to include('<p>揖斐川中流では　はん濫注意水位・流量に到達　水位はさらに上昇</p>')
+          #   expect(page.html).to include('<dt>河川</dt><dd>揖斐川</dd>')
+          #   expect(page.html).to include('<dt>発表種別</dt><dd>はん濫注意情報</dd>')
+          #   expect(page.html).to include('<dt>洪水予報種別</dt><dd>洪水注意報（発表）</dd>')
+          #   expect(page.html).to include("<dt>内容</dt><dd>#{main_sentence}</dd>")
+          #   expect(page.html).to include('<dt>水位観測所</dt><dd>万石水位観測所（岐阜県大垣市万石）</dd>')
+          #   expect(page.html).to include('<p>所により１時間に５０ミリの雨が降っています。この雨は今後次第に弱まるでしょう。</p>')
+          # end
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '揖斐川中流はん濫注意情報'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2008年9月3日 04時15分 木曽川上流河川事務所・岐阜地方気象台　共同発表')
+            expect(mail.body.raw_source).to include('揖斐川中流の万石水位観測所では、はん濫注意水位・流量（レベル２）に到達しました。')
+            expect(mail.body.raw_source).to include('＜岐阜県△△市＞')
+            expect(mail.body.raw_source).to include('△△地区 △△地区 △△地区')
+            expect(mail.body.raw_source).to include('所により１時間に５０ミリの雨が降っています。')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_body
+        end
+      end
     end
 
     context 'when alert/info is canceled' do

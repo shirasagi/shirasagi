@@ -4,6 +4,7 @@ class Jmaxml::Mailer::Main < ActionMailer::Base
   include Jmaxml::Helper::EarthquakeHandler
   include Jmaxml::Helper::VolcanoHandler
   include Jmaxml::Helper::CommentHandler
+  include Jmaxml::Helper::OfficeInfoHandler
 
   def self.inherited(child)
     attr_reader :xmldoc
@@ -30,5 +31,11 @@ class Jmaxml::Mailer::Main < ActionMailer::Base
     else
       mail template_path: template_paths
     end
+  end
+
+  def publishing_offices
+    names = office_info_names
+    return names if names.present?
+    [ control_publishing_office ]
   end
 end
