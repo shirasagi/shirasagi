@@ -206,6 +206,45 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
           puts mail_body
         end
       end
+
+      context 'when weather alert is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_15_08_130412_02VPWW53.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_weather_alert) }
+
+        before do
+          region_2920100 = create(:jmaxml_forecast_region_2920100)
+          region_2920200 = create(:jmaxml_forecast_region_2920200)
+          region_2920300 = create(:jmaxml_forecast_region_2920300)
+          region_2920400 = create(:jmaxml_forecast_region_2920400)
+          trigger.target_region_ids = [ region_2920100.id, region_2920200.id, region_2920300.id, region_2920400.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '奈良県気象警報・注意報'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2011年9月4日 00時10分 奈良地方気象台発表')
+            expect(mail.body.raw_source).to include('【特別警報（大雨）】奈良県では、４日昼過ぎまで土砂災害に、４日朝まで低い土地の浸水や河川の増水に警戒して下さい。')
+            expect(mail.body.raw_source).to include('＜奈良市＞')
+            expect(mail.body.raw_source).to include('大雨特別警報、雷注意報、強風注意報、洪水注意報')
+            expect(mail.body.raw_source).to include('＜大和高田市＞')
+            expect(mail.body.raw_source).to include('＜大和郡山市＞')
+            expect(mail.body.raw_source).to include('＜天理市＞')
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_body
+        end
+      end
     end
 
     context 'when alert/info is canceled' do
