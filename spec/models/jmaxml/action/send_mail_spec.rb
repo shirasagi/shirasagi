@@ -78,6 +78,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.to.first).to be_in(emails)
             expect(mail.subject).to eq '震度速報'
             mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2011年3月11日 14時48分　気象庁発表')
             expect(mail.body.raw_source).to include('2011年3月11日 14時46分ごろ地震がありました。')
             expect(mail.body.raw_source).to include('岩手県沿岸南部：震度６弱')
             expect(mail.body.raw_source).to include('岩手県内陸南部：震度６弱')
@@ -116,6 +117,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.to.first).to be_in(emails)
             expect(mail.subject).to eq '震源・震度情報'
             mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2008年6月14日 08時47分　気象庁発表')
             expect(mail.body.raw_source).to include('2008年6月14日 08時43分ごろ地震がありました。')
             expect(mail.body.raw_source).to include('岩手県内陸南部：震度６強')
             expect(mail.body.raw_source).to include('岩手県沿岸北部：震度４')
@@ -233,7 +235,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.to.first).to be_in(emails)
             expect(mail.subject).to eq '奈良県気象警報・注意報'
             mail_body ||= mail.body.raw_source
-            expect(mail.body.raw_source).to include('2011年9月4日 00時10分 奈良地方気象台発表')
+            expect(mail.body.raw_source).to include('2011年9月4日 00時10分　奈良地方気象台発表')
             expect(mail.body.raw_source).to include('【特別警報（大雨）】奈良県では、４日昼過ぎまで土砂災害に、４日朝まで低い土地の浸水や河川の増水に警戒して下さい。')
             expect(mail.body.raw_source).to include('＜奈良市＞')
             expect(mail.body.raw_source).to include('大雨特別警報、雷注意報、強風注意報、洪水注意報')
@@ -276,7 +278,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.to.first).to be_in(emails)
             expect(mail.subject).to eq '揖斐川中流はん濫注意情報'
             mail_body ||= mail.body.raw_source
-            expect(mail.body.raw_source).to include('2008年9月3日 04時15分 木曽川上流河川事務所・岐阜地方気象台　共同発表')
+            expect(mail.body.raw_source).to include('2008年9月3日 04時15分　木曽川上流河川事務所・岐阜地方気象台　共同発表')
             expect(mail.body.raw_source).to include(main_sentence)
             expect(mail.body.raw_source).to include('＜岐阜県△△市＞')
             expect(mail.body.raw_source).to include('△△地区 △△地区 △△地区')
@@ -329,7 +331,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.to.first).to be_in(emails)
             expect(mail.subject).to eq '福岡県土砂災害警戒情報'
             mail_body ||= mail.body.raw_source
-            expect(mail.body.raw_source).to include('2013年8月31日 11時05分 福岡県・福岡管区気象台　共同発表')
+            expect(mail.body.raw_source).to include('2013年8月31日 11時05分　福岡県・福岡管区気象台　共同発表')
             expect(mail.body.raw_source).to include(headline_text)
             expect(mail.body.raw_source).to include("＜警戒（発表）＞\n北九州市、福岡市")
             expect(mail.body.raw_source).to include("＜警戒（継続）＞\n直方市、飯塚市、田川市、行橋市、筑紫野市")
@@ -378,6 +380,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.to.first).to be_in(emails)
             expect(mail.subject).to eq '【取消】震度速報'
             mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2011年3月11日 14時46分　気象庁発表')
             expect(mail.body.raw_source).to include('緊急地震速報（警報）を取り消します。')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
