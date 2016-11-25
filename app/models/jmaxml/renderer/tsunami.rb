@@ -37,34 +37,6 @@ class Jmaxml::Renderer::Tsunami < Jmaxml::Renderer::Base
     I18n.t('jmaxml.templates.tsunami.lower_text')
   end
 
-  def info_group_by(target_sub_type)
-    REXML::XPath.match(@context.xmldoc, '/Report/Body/Tsunami/Forecast/Item').map do |item|
-      area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
-      next nil unless @context.area_codes.include?(area_code)
-
-      kind_code = REXML::XPath.first(item, 'Category/Kind/Code/text()').to_s.strip
-      case kind_code
-        when '52'
-          kind_code = 'special_alert'
-        when '51'
-          kind_code = 'alert'
-        when '62'
-          kind_code = 'warning'
-        when '71'
-          kind_code = 'forecast'
-        else
-          kind_code = ''
-      end
-      next nil if kind_code != target_sub_type.to_s
-
-      area_name = REXML::XPath.first(item, 'Area/Name/text()').to_s.strip
-      first_wave = template_variable_handler_first_height_label(nil, item)
-      height = template_variable_handler_tsunami_height(nil, item)
-
-      { area_name: area_name, first_wave: first_wave, height: height }
-    end.compact
-  end
-
   private
     def render_loop_html(template)
       text = ''

@@ -114,9 +114,9 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            expect(mail.subject).to eq '震源・震度に関する情報'
+            expect(mail.subject).to eq '震源・震度情報'
             mail_body ||= mail.body.raw_source
-            expect(mail.body.raw_source).to include('2008年6月14日 08時47分ごろ地震がありました。')
+            expect(mail.body.raw_source).to include('2008年6月14日 08時43分ごろ地震がありました。')
             expect(mail.body.raw_source).to include('岩手県内陸南部：震度６強')
             expect(mail.body.raw_source).to include('岩手県沿岸北部：震度４')
             expect(mail.body.raw_source).to include('岩手県沿岸南部：震度４')

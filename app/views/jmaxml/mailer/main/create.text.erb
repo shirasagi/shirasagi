@@ -1,0 +1,5 @@
+<% message.subject = @helper.render_title %>
+<%= @helper.control_datetime_format %> <%= @helper.control_publishing_office %><%= @helper.head_info_type %>
+
+<%= render file: "_create" %>
+<%= @action.signature_text %>

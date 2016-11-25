@@ -1,0 +1,16 @@
+<%= @helper.body_earthquake_origin_time_format || @helper.head_target_datetime_format %>ごろ地震がありました。
+各地の震度は下記の通りです。
+
+<% @context.region_eq_infos.each do |cur_info| %>
+<%= cur_info[:area_name] %>：震度<%= I18n.t("rss.options.earthquake_intensity.#{cur_info[:area_max_int]}", default: cur_info[:area_max_int].to_s).tr('0-9', '０-９') %>
+<% end %>
+
+<%= @helper.body_comments_forecast_comment %>
+<% if @helper.body_earthquake_origin_time_format %>
+
+［震源・規模］
+地震発生時刻：　　<%= @helper.body_earthquake_origin_time_format %>ごろ
+震源地：　　　　　<%= @helper.body_earthquake_hypocenter_area_name %> <%= @helper.body_earthquake_hypocenter_area_namefrommark %>
+座標・深さ：　　　<%= @helper.body_earthquake_hypocenter_area_coordinate %>
+マグニチュード：　<%= @helper.body_earthquake_magnitude %>
+<% end %>

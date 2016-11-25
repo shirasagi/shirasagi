@@ -1,0 +1,5 @@
+<% message.subject = "【#{@helper.head_info_type}】#{@helper.render_title}" %>
+<%= @helper.head_target_datetime_format %> <%= @helper.control_publishing_office %><%= @helper.head_info_type %>
+
+<%= render file: "_cancel" %>
+<%= @action.signature_text %>

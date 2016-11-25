@@ -1,11 +1,12 @@
 class Jmaxml::Renderer::Base
   include SS::TemplateVariable
 
-  attr_reader :page, :context
+  attr_reader :page, :context, :xmldoc
 
   def initialize(page, context)
     @page = page
     @context = context
+    @xmldoc = @context.xmldoc
   end
 
   def render_title(options = {})
