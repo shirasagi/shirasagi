@@ -341,6 +341,39 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
           puts mail_body
         end
       end
+
+      context 'when volcano flash is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_67_01_150514_VFVO56-1.xml))) }
+        let(:trigger) { create(:jmaxml_trigger_volcano_flash) }
+
+        before do
+          region1 = create(:jmaxml_forecast_region_2042900)
+          region2 = create(:jmaxml_forecast_region_2043200)
+          trigger.target_region_ids = [ region1.id, region2.id ]
+          trigger.save!
+        end
+
+        it do
+          trigger.verify(rss_page1, context) do
+            subject.execute(rss_page1, context)
+          end
+
+          mail_body = nil
+          expect(ActionMailer::Base.deliveries.length).to eq 4
+          ActionMailer::Base.deliveries.each do |mail|
+            expect(mail).not_to be_nil
+            expect(mail.from).to eq [ subject.sender_email ]
+            expect(mail.to.first).to be_in(emails)
+            expect(mail.subject).to eq '火山名　御嶽山　噴火速報'
+            mail_body ||= mail.body.raw_source
+            expect(mail.body.raw_source).to include('2014年9月27日 12時00分　気象庁地震火山部発表')
+            expect(mail.body.raw_source).to include('御嶽山で、平成２６年９月２７日１１時５３分頃、噴火が発生しました。')
+            expect(mail.body.raw_source).to include("長野県王滝村、長野県木曽町")
+            expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
+          end
+          puts mail_body
+        end
+      end
     end
 
     context 'when alert/info is canceled' do
