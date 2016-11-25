@@ -1,6 +1,6 @@
 class Sns::UserAccountsController < ApplicationController
   include Sns::UserFilter
-  include Sns::CrudFilter
+  include SS::CrudFilter
 
   model SS::User
 
