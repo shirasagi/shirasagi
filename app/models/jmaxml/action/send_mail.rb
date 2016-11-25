@@ -7,8 +7,9 @@ class Jmaxml::Action::SendMail < Jmaxml::Action::Base
     mail = mailer.create(page, context, self)
     mail.from = full_sender_email
     recipient_emails.each do |to|
-      mail.to = to
-      mail.deliver_now
+      m = mail.dup
+      m.to = to
+      m.deliver_now
     end
   end
 end
