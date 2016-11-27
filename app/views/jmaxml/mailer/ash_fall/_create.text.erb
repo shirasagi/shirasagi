@@ -1,4 +1,8 @@
-<% @helper.volcano_infos.each_with_index do |volcano_info, index| %>
+<%= mailer.head_headline_text %>
+
+各地の予報は下記の通りです。
+
+<% mailer.volcano_infos.each_with_index do |volcano_info, index| %>
 <% if index > 0 %>
 
 <% end %>
@@ -7,17 +11,17 @@
 <%= area_names.join('、') %>
 <% end %>
 <% end %>
-<% if (activity = @helper.volcano_info_content_volcano_activity).present? %>
+<% if (activity = mailer.volcano_info_content_volcano_activity).present? %>
 
 ［詳細］
 <%= activity %>
 <% end %>
-<% if (prevention = @helper.volcano_info_content_volcano_prevention).present? %>
+<% if (prevention = mailer.volcano_info_content_volcano_prevention).present? %>
 
 ［留意事項］
 <%= prevention %>
 <% end %>
-<% if (appendix = @helper.volcano_info_content_appendix).present? %>
+<% if (appendix = mailer.volcano_info_content_appendix).present? %>
 
 ［補足］
 <%= appendix %>

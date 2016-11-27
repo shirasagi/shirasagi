@@ -1,0 +1,39 @@
+<p><%= renderer.head_headline_text %></p>
+<% %w(special_alert alert warning forecast).each do |sub_type| %>
+  <% area_infos = renderer.info_group_by(sub_type) %>
+  <% if area_infos.present? %>
+    <% has_first_wave = area_infos.find { |area| area[:first_wave].present? }.present? %>
+    <% has_height = area_infos.find { |area| area[:height].present? }.present? %>
+
+    <h2 class="<%= sub_type.dasherize %>"><%= I18n.t("jmaxml.options.tsunami_sub_type.#{sub_type}") %></h2>
+    <table>
+    <thead>
+      <tr>
+        <th>地域</th>
+        <% if has_first_wave %><th>第１波</th><% end %>
+        <% if has_height %><th>高さ</th><% end %>
+      </tr>
+    </thead>
+    <tbody>
+    <% area_infos.each do |area| %>
+      <tr>
+        <td><%= area[:area_name] %></td>
+        <% if has_first_wave %><td><% if area[:first_wave].present? %><%= area[:first_wave] %><% end %></td><% end %>
+        <% if has_height %><td><% if area[:height].present? %><%= renderer.to_zenkaku(area[:height]) %><% end %></td><% end %>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+  <% end %>
+<% end %>
+
+<h3>解説</h3>
+<p><%= renderer.body_comments_warning_comment %></p>
+
+<h3>震源・規模</h3>
+<dl>
+  <dt>地震発生時刻</dt><dd><%= renderer.body_earthquake_origin_time_format %>ごろ</dd>
+  <dt>震源地</dt><dd><%= renderer.body_earthquake_hypocenter_area_name %> <%= renderer.body_earthquake_hypocenter_area_namefrommark %></dd>
+  <dt>座標・深さ</dt><dd><%= renderer.body_earthquake_hypocenter_area_coordinate %></dd>
+  <dt>マグニチュード</dt><dd><%= renderer.body_earthquake_magnitude %></dd>
+</dl>

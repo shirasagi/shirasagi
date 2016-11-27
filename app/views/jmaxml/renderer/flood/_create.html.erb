@@ -1,0 +1,17 @@
+<h3>主文</h3>
+<% renderer.main_sentences.each_with_index do |main_sentence, index| %>
+  <p><%= main_sentence[:body] %></p>
+<% end %>
+
+<h3>氾濫による浸水が想定される地区</h3>
+<dl>
+<% renderer.flooding_areas.each_with_index do |flooding_area, index| %>
+  <dt><%= flooding_area[:prefecture] %><%= flooding_area[:city] %></dt>
+  <dd><%= flooding_area[:sub_city_list] %></dd>
+<% end %>
+</dl>
+
+<h3>雨量</h3>
+<% renderer.rainfalls.each_with_index do |rainfall, index| %>
+  <p><%= rainfall[:body] %></p>
+<% end %>

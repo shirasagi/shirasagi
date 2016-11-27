@@ -1,19 +1,10 @@
 class Jmaxml::Mailer::Main < ActionMailer::Base
-  include Jmaxml::Helper::ControlHandler
-  include Jmaxml::Helper::HeadHandler
-  include Jmaxml::Helper::EarthquakeHandler
-  include Jmaxml::Helper::VolcanoHandler
-  include Jmaxml::Helper::CommentHandler
-  include Jmaxml::Helper::OfficeInfoHandler
+  include Jmaxml::Helper::Main
 
   def self.inherited(child)
     attr_reader :xmldoc
     child.append_view_path "#{Rails.root}/app/views/#{child.mailer_name}"
     child.append_view_path "#{Rails.root}/app/views/#{self.mailer_name}"
-  end
-
-  def render_title
-    head_title
   end
 
   def template_paths
@@ -25,17 +16,10 @@ class Jmaxml::Mailer::Main < ActionMailer::Base
     @context = context
     @action = action
     @xmldoc = @context.xmldoc
-    @helper = self
     if head_info_type == '取消'
       mail template_path: template_paths, template_name: 'cancel'
     else
       mail template_path: template_paths
     end
-  end
-
-  def publishing_offices
-    names = office_info_names
-    return names if names.present?
-    [ control_publishing_office ]
   end
 end

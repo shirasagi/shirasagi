@@ -1,5 +1,5 @@
-<% message.subject = "【#{@helper.head_info_type}】#{@helper.render_title}" %>
-<%= @helper.head_target_datetime_format %>　<%= @helper.control_publishing_office %>発表
+<% message.subject = "【#{mailer.head_info_type}】#{mailer.render_title}" %>
+<%= mailer.head_target_datetime_format %>　<%= mailer.control_publishing_office %>発表
 
 <%= render file: "_cancel" %>
 <%= @action.signature_text %>

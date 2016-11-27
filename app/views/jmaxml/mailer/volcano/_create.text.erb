@@ -1,7 +1,7 @@
-<%= @helper.volcano_info_content_volcano_headline %>
-<%= @helper.volcano_info_content_volcano_activity %>
+<%= mailer.volcano_info_content_volcano_headline %>
+<%= mailer.volcano_info_content_volcano_activity %>
 
 ＜対象市町村＞
-<% @helper.area_names.each_slice(5) do |area_names| %>
+<% mailer.area_names.each_slice(5) do |area_names| %>
 <%= area_names.join("、") %>
 <% end %>

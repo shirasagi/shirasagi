@@ -1,0 +1,41 @@
+<p><%= renderer.head_headline_text %></p>
+
+<% infos = renderer.landslide_infos %>
+<% infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] == '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
+  <% if area_names.present? %>
+    <div class="warning published">
+      <h3>警戒（発表）</h3>
+      <ul>
+      <% area_names.each do |name| %>
+        <li><%= name %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
+
+<% infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] != '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
+  <% if area_names.present? %>
+    <div class="warning continued">
+      <h3>警戒（継続）</h3>
+      <ul>
+      <% area_names.each do |name| %>
+        <li><%= name %></li>
+      <% end %>
+      </ul>
+    </div>
+    <% end %>
+<% end %>
+
+<% infos.select { |info| info[:kind_name] == '解除' }.map { |info| info[:area_name] }.tap do |area_names| %>
+  <% if area_names.present? %>
+    <div class="warning canceled">
+      <h3>解除</h3>
+      <ul>
+      <% area_names.each do |name| %>
+        <li><%= name %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

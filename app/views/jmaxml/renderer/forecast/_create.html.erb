@@ -1,0 +1,11 @@
+<p><%= renderer.head_headline_text %></p>
+<dl>
+<% renderer.each_areas do |area| %>
+  <dt class="area"><%= area[:area_name] %></dt>
+  <dd>
+  <% area[:kinds].each do |kind| %>
+    <span class="<%= kind[:kind_type] %>"><%= kind[:kind_name] %></span>
+  <% end %>
+  </dd>
+<% end %>
+</dl>

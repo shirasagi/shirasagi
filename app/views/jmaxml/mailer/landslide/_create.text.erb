@@ -1,6 +1,6 @@
-<%= @helper.head_headline_text %>
-<% landslide_infos = @helper.landslide_infos %>
-<% landslide_infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] == '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
+<%= mailer.head_headline_text %>
+<% infos = mailer.landslide_infos %>
+<% infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] == '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
 <% if area_names.present? %>
 
 ＜警戒（発表）＞
@@ -9,7 +9,7 @@
 <% end %>
 <% end %>
 <% end %>
-<% landslide_infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] != '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
+<% infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] != '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>
 <% if area_names.present? %>
 
 ＜警戒（継続）＞
@@ -18,7 +18,7 @@
 <% end %>
 <% end %>
 <% end %>
-<% landslide_infos.select { |info| info[:kind_name] == '解除' }.map { |info| info[:area_name] }.tap do |area_names| %>
+<% infos.select { |info| info[:kind_name] == '解除' }.map { |info| info[:area_name] }.tap do |area_names| %>
 <% if area_names.present? %>
 
 ＜解除＞

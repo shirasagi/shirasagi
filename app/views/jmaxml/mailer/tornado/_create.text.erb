@@ -1,7 +1,7 @@
-<%= @helper.head_headline_text %>
+<%= mailer.head_headline_text %>
 
 次の地域に竜巻注意情報が発表されました。
 
-<% @helper.area_names.each_slice(5) do |area_names| %>
+<% mailer.area_names.each_slice(5) do |area_names| %>
 <%= area_names.join('、') %>
 <% end %>

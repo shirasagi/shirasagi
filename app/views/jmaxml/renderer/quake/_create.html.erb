@@ -1,0 +1,24 @@
+<p>
+  <%= renderer.body_earthquake_origin_time_format || renderer.head_target_datetime_format %>ごろ地震がありました。
+  各地の震度は下記の通りです。
+</p>
+
+<dl>
+<% @context.region_eq_infos.each do |cur_info| %>
+  <dt><%= cur_info[:area_name] %></dt><dd>震度<%= I18n.t("rss.options.earthquake_intensity.#{cur_info[:area_max_int]}", default: cur_info[:area_max_int].to_s).tr('0-9', '０-９') %></dd>
+<% end %>
+</dl>
+
+<p><%= renderer.body_comments_forecast_comment %></p>
+
+<% if renderer.body_earthquake_origin_time_format %>
+<div>
+  <h3>震源・規模</h3>
+  <dl>
+    <dt>地震発生時刻</dt><dd><%= renderer.body_earthquake_origin_time_format %>ごろ</dd>
+    <dt>震源地</dt><dd><%= renderer.body_earthquake_hypocenter_area_name %> <%= renderer.body_earthquake_hypocenter_area_namefrommark %></dd>
+    <dt>座標・深さ</dt><dd><%= renderer.body_earthquake_hypocenter_area_coordinate %></dd>
+    <dt>マグニチュード</dt><dd><%= renderer.body_earthquake_magnitude %></dd>
+  </dl>
+</div>
+<% end %>

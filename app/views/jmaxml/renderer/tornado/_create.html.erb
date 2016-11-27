@@ -1,0 +1,9 @@
+<p><%= renderer.head_headline_text %></p>
+
+<p>次の地域に竜巻注意情報が発表されました。</p>
+
+<ul>
+<% renderer.area_names.each do |area_name| %>
+  <li><%= area_name %></li>
+<% end %>
+</ul>

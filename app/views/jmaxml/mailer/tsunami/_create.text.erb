@@ -1,20 +1,20 @@
-<%= @helper.head_headline_text %>
+<%= mailer.head_headline_text %>
 <% %w(special_alert alert warning forecast).each do |sub_type| %>
-<% area_infos = @helper.info_group_by(sub_type) %>
+<% area_infos = mailer.info_group_by(sub_type) %>
 <% if area_infos.present? %>
 
 ＜<%= I18n.t("jmaxml.options.tsunami_sub_type.#{sub_type}") %>＞
 <% area_infos.each do |area| %>
-　<%= area[:area_name] %><% if area[:first_wave].present? %>　<%= "　" * (12 - area[:area_name].length) %>第１波：<%= area[:first_wave] %><% end %><% if area[:height].present? %>　高さ：<%= area[:height].to_s.tr('0-9a-zA-Z', '０-９ａ-ｚＡ-Ｚ') %><% end %>
+　<%= area[:area_name] %><% if area[:first_wave].present? %>　<%= "　" * (12 - area[:area_name].length) %>第１波：<%= area[:first_wave] %><% end %><% if area[:height].present? %>　高さ：<%= mailer.to_zenkaku(area[:height]) %><% end %>
 <% end %>
 <% end %>
 <% end %>
 
 ［解説］
-<%= @helper.body_comments_warning_comment %>
+<%= mailer.body_comments_warning_comment %>
 
 ［震源・規模］
-地震発生時刻：　　<%= @helper.body_earthquake_origin_time_format %>ごろ
-震源地：　　　　　<%= @helper.body_earthquake_hypocenter_area_name %> <%= @helper.body_earthquake_hypocenter_area_namefrommark %>
-座標・深さ：　　　<%= @helper.body_earthquake_hypocenter_area_coordinate %>
-マグニチュード：　<%= @helper.body_earthquake_magnitude %>
+地震発生時刻：　　<%= mailer.body_earthquake_origin_time_format %>ごろ
+震源地：　　　　　<%= mailer.body_earthquake_hypocenter_area_name %> <%= mailer.body_earthquake_hypocenter_area_namefrommark %>
+座標・深さ：　　　<%= mailer.body_earthquake_hypocenter_area_coordinate %>
+マグニチュード：　<%= mailer.body_earthquake_magnitude %>

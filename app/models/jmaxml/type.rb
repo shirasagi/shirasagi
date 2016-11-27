@@ -1,7 +1,7 @@
 module Jmaxml::Type
   class EarthQuake
-    def renderer(page, context)
-      Jmaxml::Renderer::Quake.new(page, context)
+    def renderer
+      Jmaxml::Renderer::Quake
     end
 
     def mailer
@@ -10,8 +10,8 @@ module Jmaxml::Type
   end
 
   class Tsunami
-    def renderer(page, context)
-      Jmaxml::Renderer::Tsunami.new(page, context)
+    def renderer
+      Jmaxml::Renderer::Tsunami
     end
 
     def mailer
@@ -20,8 +20,8 @@ module Jmaxml::Type
   end
 
   class Flood
-    def renderer(page, context)
-      Jmaxml::Renderer::Flood.new(page, context)
+    def renderer
+      Jmaxml::Renderer::Flood
     end
 
     def mailer
@@ -30,8 +30,8 @@ module Jmaxml::Type
   end
 
   class Forecast
-    def renderer(page, context)
-      Jmaxml::Renderer::Forecast.new(page, context)
+    def renderer
+      Jmaxml::Renderer::Forecast
     end
 
     def mailer
@@ -40,8 +40,8 @@ module Jmaxml::Type
   end
 
   class Landslide
-    def renderer(page, context)
-      Jmaxml::Renderer::Landslide.new(page, context)
+    def renderer
+      Jmaxml::Renderer::Landslide
     end
 
     def mailer
@@ -50,8 +50,8 @@ module Jmaxml::Type
   end
 
   class Volcano
-    def renderer(page, context)
-      Jmaxml::Renderer::Volcano.new(page, context)
+    def renderer
+      Jmaxml::Renderer::Volcano
     end
 
     def mailer
@@ -60,8 +60,8 @@ module Jmaxml::Type
   end
 
   class Tornado
-    def renderer(page, context)
-      Jmaxml::Renderer::Tornado.new(page, context)
+    def renderer
+      Jmaxml::Renderer::Tornado
     end
 
     def mailer
@@ -70,8 +70,8 @@ module Jmaxml::Type
   end
 
   class AshFall
-    def renderer(page, context)
-      Jmaxml::Renderer::AshFall.new(page, context)
+    def renderer
+      Jmaxml::Renderer::AshFall
     end
 
     def mailer

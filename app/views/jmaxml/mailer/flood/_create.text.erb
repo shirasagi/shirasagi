@@ -1,5 +1,5 @@
 ［主文］
-<% @helper.main_sentences.each_with_index do |main_sentence, index| %>
+<% mailer.main_sentences.each_with_index do |main_sentence, index| %>
 <% if index > 0 %>
 
 <% end %>
@@ -7,7 +7,7 @@
 <% end %>
 
 ［氾濫による浸水が想定される地区］
-<% @helper.flooding_areas.each_with_index do |flooding_area, index| %>
+<% mailer.flooding_areas.each_with_index do |flooding_area, index| %>
 <% if index > 0 %>
 
 <% end %>
@@ -16,7 +16,7 @@
 <% end %>
 
 ［雨量］
-<% @helper.rainfalls.each_with_index do |rainfall, index| %>
+<% mailer.rainfalls.each_with_index do |rainfall, index| %>
 <% if index > 0 %>
 
 <% end %>

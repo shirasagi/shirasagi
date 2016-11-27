@@ -1,130 +1,86 @@
-class Jmaxml::Renderer::Base
-  include SS::TemplateVariable
+class Jmaxml::Renderer::Base < AbstractController::Base
 
-  attr_reader :page, :context, :xmldoc
+  abstract!
 
-  def initialize(page, context)
-    @page = page
-    @context = context
-    @xmldoc = @context.xmldoc
-  end
+  include AbstractController::Rendering
+  include AbstractController::Logger
+  include AbstractController::Helpers
+  include AbstractController::Translation
+  include AbstractController::AssetPaths
+  include AbstractController::Callbacks
+  include ActionView::Layouts
 
-  def render_title(options = {})
-    template = normalize_template(options[:template].presence || title_template)
-    return if template.blank?
+  private_class_method :new
 
-    status = control_status
-    status_template = I18n.t('jmaxml.templates.status') if status != '通常'
-    info_type = head_info_type
-    info_type_template = I18n.t('jmaxml.templates.info_type') if info_type == '取消'
+  helper Jmaxml::RendererHelper
 
-    template = "#{status_template}#{info_type_template}#{template}"
-
-    render_template(template)
-  end
-
-  def render_html(options = {})
-    if head_info_type == '取消'
-      cancel_template = normalize_template(options[:cancel_template].presence || cancel_html_template)
-      return render_template(cancel_template)
+  class << self
+    def renderer_name
+      @renderer_name ||= anonymous? ? "anonymous" : name.underscore
     end
+    # Allows to set the name of current mailer.
+    attr_writer :renderer_name
+    alias :controller_path :renderer_name
 
-    upper_template = normalize_template(options[:upper_template].presence || upper_html_template)
-    loop_template = normalize_template(options[:loop_template].presence || loop_html_template)
-    lower_template = normalize_template(options[:lower_template].presence || lower_html_template)
-
-    text = ''
-    if upper_template.present?
-      text = render_template(upper_template)
-      text << "\n"
-    end
-    if loop_template.present?
-      text << render_loop_html(loop_template)
-      text << "\n"
-    end
-    if lower_template.present?
-      text << render_template(lower_template)
-      text << "\n"
-    end
-    text
-  end
-
-  def render_text(options = {})
-    if head_info_type == '取消'
-      cancel_template = normalize_template(options[:cancel_template].presence || cancel_text_template)
-      return render_template(cancel_template) << "\n"
-    end
-
-    upper_template = normalize_template(options[:upper_template].presence || upper_text_template)
-    loop_template = normalize_template(options[:loop_template].presence || loop_text_template)
-    lower_template = normalize_template(options[:lower_template].presence || lower_text_template)
-
-    text = ''
-    if upper_template.present?
-      text = render_template(upper_template)
-      text << "\n"
-    end
-    if loop_template.present?
-      text << render_loop_html(loop_template)
-      text << "\n"
-    end
-    if lower_template.present?
-      text << render_template(lower_template)
-      text << "\n"
-    end
-    text
-  end
-
-  private
-    def normalize_template(template)
-      if template.is_a?(Array)
-        template.join("\n")
+    def method_missing(method_name, *args) # :nodoc:
+      if action_methods.include?(method_name.to_s)
+        new.process(method_name, *args)
       else
-        template
+        super
+      end
+    end
+  end
+
+  prepend_view_path(SS::Application.config.paths["app/views"].existent)
+
+  def self.inherited(child)
+    child.cattr_accessor(:page_class) { Article::Page }
+  end
+
+  attr_internal :page
+
+  def initialize
+    @_page = self.class.page_class.new
+  end
+
+  def page(attributes = {}, &block)
+    @_page.attributes = attributes.except(:parts_order, :content_type, :body, :template_name, :template_path)
+    responses = collect_responses(attributes, &block)
+    @_page.html = responses.first[:html]
+    @_page
+  end
+
+  def collect_responses(headers, &block)
+    responses = []
+
+    if headers[:html]
+      responses << {
+        html: headers.delete(:html),
+        content_type: self.class.default[:content_type] || "text/html"
+      }
+    else
+      templates_path = headers.delete(:template_path) || self.class.renderer_name
+      templates_name = headers.delete(:template_name) || action_name
+
+      each_template(Array(templates_path), templates_name) do |template|
+        self.formats = template.formats
+
+        responses << {
+          html: render(template: template),
+          content_type: template.type.to_s
+        }
       end
     end
 
-    def title_template
-      raise NotImplementedError
-    end
+    responses
+  end
 
-    def upper_html_template
-      raise NotImplementedError
+  def each_template(paths, name, &block)
+    templates = lookup_context.find_all(name, paths)
+    if templates.empty?
+      raise ActionView::MissingTemplate.new(paths, name, paths, false, 'renderer')
+    else
+      templates.uniq { |t| t.formats }.each(&block)
     end
-
-    def loop_html_template
-      raise NotImplementedError
-    end
-
-    def lower_html_template
-      raise NotImplementedError
-    end
-
-    def render_loop_html(template)
-      raise NotImplementedError
-    end
-
-    def cancel_html_template
-      I18n.t('jmaxml.templates.cancel_html')
-    end
-
-    def upper_text_template
-      raise NotImplementedError
-    end
-
-    def loop_text_template
-      raise NotImplementedError
-    end
-
-    def lower_text_template
-      raise NotImplementedError
-    end
-
-    def render_loop_text(template)
-      render_loop_html(template)
-    end
-
-    def cancel_text_template
-      I18n.t('jmaxml.templates.cancel_text')
-    end
+  end
 end
