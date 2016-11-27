@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Voice::SynthesisJob, dbscope: :example, http_server: true do
-  http.default port: 33_190
-  http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
-
+describe Voice::SynthesisJob, dbscope: :example do
   let(:site) { cms_site }
+
+  before { WebMock.reset! }
+  after { WebMock.reset! }
 
   describe '#perform', open_jtalk: true do
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
@@ -13,13 +13,14 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
       let(:file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       before do
-        http.options real_path: "/test-001.html"
-        perform_enqueued_jobs { Voice::SynthesisJob.bind(site_id: site).perform_later file.id.to_s }
+        path = Rails.root.join("spec", "fixtures", "voice", "test-001.html")
+        body = ::File.read(path)
+        last_modified = ::File.mtime(path).httpdate
+        stub_request(:get, url).to_return(status: 200, body: body, headers: { 'Last-Modified' => last_modified })
       end
 
       it "generates voice file" do
-        expect(enqueued_jobs.count).to eq 0
-        expect(performed_jobs.count).to eq 1
+        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
 
         file.reload
         expect(file.exists?).to be_truthy
@@ -31,10 +32,11 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
         expect(file.age).to be > 0
 
         expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
       end
     end
 
@@ -44,22 +46,21 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
       let(:file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       before do
-        http.options real_path: "/test-001.html", status_code: 400
-        perform_enqueued_jobs { Voice::SynthesisJob.bind(site_id: site).perform_later file.id.to_s }
+        stub_request(:get, url).to_return(status: [400, 'Bad Request'])
       end
 
       it "does not generate voice file" do
-        expect(enqueued_jobs.count).to eq 0
-        expect(performed_jobs.count).to eq 1
+        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
         expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-        expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (400 Bad Request ):"))
-        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
+          expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (400 Bad Request):"))
+          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        end
       end
     end
 
@@ -69,22 +70,21 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
       let(:file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       before do
-        http.options real_path: "/test-001.html", status_code: 404
-        perform_enqueued_jobs { Voice::SynthesisJob.bind(site_id: site).perform_later file.id.to_s }
+        stub_request(:get, url).to_return(status: [404, 'Not Found'])
       end
 
       it "does not generate voice file" do
-        expect(enqueued_jobs.count).to eq 0
-        expect(performed_jobs.count).to eq 1
+        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
         expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-        expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (404 Not Found ):"))
-        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
+          expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (404 Not Found):"))
+          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        end
       end
     end
 
@@ -94,22 +94,21 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
       let(:file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       before do
-        http.options real_path: "/test-001.html", status_code: 500
-        perform_enqueued_jobs { Voice::SynthesisJob.bind(site_id: site).perform_later file.id.to_s }
+        stub_request(:get, url).to_return(status: [500, 'Internal Server Error'])
       end
 
       it "does not generate voice file" do
-        expect(enqueued_jobs.count).to eq 0
-        expect(performed_jobs.count).to eq 1
+        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
         expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-        expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (500 Internal Server Error ):"))
-        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
+          expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (500 Internal Server Error):"))
+          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        end
       end
     end
 
@@ -120,22 +119,21 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
       let(:wait) { SS.config.voice.download['timeout_sec'] + 5 }
 
       before do
-        http.options real_path: "/test-001.html", wait: wait
-        perform_enqueued_jobs { Voice::SynthesisJob.bind(site_id: site).perform_later file.id.to_s }
+        stub_request(:get, url).to_timeout
       end
 
       it "does not generate voice file" do
-        expect(enqueued_jobs.count).to eq 0
-        expect(performed_jobs.count).to eq 1
+        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
         expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-        expect(log.logs).to include(include("WARN -- : Net::ReadTimeout (Net::ReadTimeout):"))
-        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
+          expect(log.logs).to include(include("WARN -- : Timeout::Error (execution expired):"))
+          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        end
       end
     end
 
@@ -145,13 +143,13 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
       let(:file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       before do
-        http.options real_path: "/test-001.html", last_modified: nil
-        perform_enqueued_jobs { Voice::SynthesisJob.bind(site_id: site).perform_later file.id.to_s }
+        # http.options real_path: "/test-001.html", last_modified: nil
+        body = ::File.read(Rails.root.join("spec", "fixtures", "voice", "test-001.html"))
+        stub_request(:get, url).to_return(status: 200, body: body)
       end
 
       it "generates voice file" do
-        expect(enqueued_jobs.count).to eq 0
-        expect(performed_jobs.count).to eq 1
+        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
 
         file.reload
         expect(file.page_identity).not_to be_nil
@@ -161,10 +159,11 @@ describe Voice::SynthesisJob, dbscope: :example, http_server: true do
         expect(file.age).to be > 0
 
         expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
       end
     end
   end
