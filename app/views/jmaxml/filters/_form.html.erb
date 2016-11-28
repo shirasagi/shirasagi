@@ -1,3 +1,17 @@
+<style>
+dl.see > dd.actions > select {
+  display: block;
+}
+dl.see > dd.actions > select:first-child {
+  margin-top: -5px;
+  margin-bottom: 0px;
+}
+dl.see > dd.actions > select ~ select {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+</style>
+
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -9,5 +23,10 @@
   <dd><%= select_tag "#{f.object_name}[trigger_ids][]", options_for_select(@item.trigger_options, @item.triggers.first.try(:id)), include_blank: true %></dd>
 
   <dt><%= @model.t :action_ids %><%= @model.tt :action_ids %></dt>
-  <dd><%= select_tag "#{f.object_name}[action_ids][]", options_for_select(@item.action_options, @item.actions.first.try(:id)), include_blank: true %></dd>
+  <dd class="actions">
+  <% 0.upto(4).each do |i| %>
+    <% action = @item.actions[i] %>
+    <%= select_tag "#{f.object_name}[action_ids][]", options_for_select(@item.action_options, action.try(:id)), include_blank: true, id: "#{f.object_name}_action_ids_#{i}" %>
+  <% end %>
+  </dd>
 </dl>

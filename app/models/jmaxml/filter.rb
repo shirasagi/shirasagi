@@ -49,14 +49,14 @@ class Jmaxml::Filter
   def execute(page, context)
     trigger = triggers.first
     return if trigger.blank?
-    action = actions.first
-    return if action.blank?
 
     xmldoc = REXML::Document.new(page.xml)
     context[:xmldoc] = xmldoc
 
     trigger.verify(page, context) do
-      action.execute(page, context)
+      actions.each do |action|
+        action.execute(page, context)
+      end
     end
   end
 end
