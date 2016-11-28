@@ -20,7 +20,6 @@ SS::Application.routes.draw do
       get "quake_regions" => "quake_regions#index"
       get "tsunami_regions" => "tsunami_regions#index"
       get "forecast_regions" => "forecast_regions#index"
-      get "flood_regions" => "flood_regions#index"
       get "water_level_stations" => "water_level_stations#index"
     end
   end
@@ -29,7 +28,6 @@ SS::Application.routes.draw do
     resources :quake_regions, concerns: [:deletion, :download, :import]
     resources :tsunami_regions, concerns: [:deletion, :download, :import]
     resources :forecast_regions, concerns: [:deletion, :download, :import]
-    resources :flood_regions, concerns: [:deletion, :download, :import]
     resources :water_level_stations, concerns: [:deletion, :download, :import]
     resources :filters, concerns: [:deletion]
     scope module: :trigger, as: :trigger do

@@ -30,10 +30,6 @@ ja:
         index: 区域を選択する
         search: 区域を検索
         select: 区域を設定する
-      flood_regions:
-        index: 区域を選択する
-        search: 区域を検索
-        select: 区域を設定する
       water_level_stations:
         index: 水位観測所を選択する
         search: 水位観測所を検索
@@ -64,7 +60,6 @@ ja:
       jmaxml/quake_region_import_job: 地震情報区域取込
       jmaxml/tsunami_region_import_job: 津波予報区取込
       jmaxml/forecast_region_import_job: 気象情報区域取込
-      jmaxml/flood_region_import_job: 河川洪水予報区域取込
       jmaxml/water_level_station_import_job: 水観測所取込
 
   mongoid:
@@ -72,7 +67,6 @@ ja:
       jmaxml/quake_region: 地震情報区域
       jmaxml/tsunami_region: 津波予報区
       jmaxml/forecast_region: 気象情報区域
-      jmaxml/flood_region: 河川洪水予報区域
       jmaxml/water_level_station: 水位観測所
       jmaxml/filter: フィルター
       jmaxml/trigger/base: 受信条件
@@ -111,12 +105,6 @@ ja:
         short_yomi: 短い名称のよみ
         order: 並び順
         state: 状態
-      jmaxml/flood_region:
-        code: コード
-        name: 名称
-        yomi: よみ
-        order: 並び順
-        state: 状態
       jmaxml/water_level_station:
         code: コード
         name: 名称
@@ -145,7 +133,7 @@ ja:
       jmaxml/addon/trigger/landslide_info:
         target_region_ids: 対象区域
       jmaxml/addon/trigger/flood_forecast:
-        target_region_ids: 対象区域
+        target_region_ids: 水位観測所
       jmaxml/addon/trigger/volcano_flash:
         target_region_ids: 対象区域
       jmaxml/addon/trigger/ash_fall_forecast:
@@ -214,19 +202,6 @@ ja:
       state:
         - 状態を選択します。
 
-    jmaxml/flood_region:
-      code:
-        - 区域コードを指定します。
-      name:
-        - 区域の名称を指定します。
-      yomi:
-        - 区域の名称のよみを指定します。
-      order:
-        - 並び順を指定します。
-        - 数字が小さいほど一覧ページの上位に表示されます。
-      state:
-        - 状態を選択します。
-
     jmaxml/water_level_station:
       code:
         - 水位観測所コードを指定します。
@@ -286,7 +261,7 @@ ja:
 
     jmaxml/addon/trigger/flood_forecast:
       target_region_ids:
-        - 対象区域を選択します。
+        - 水位観測所を選択します。
 
     jmaxml/addon/trigger/volcano_flash:
       target_region_ids:

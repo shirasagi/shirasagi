@@ -1249,10 +1249,16 @@ save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組�
 ## -------------------------------------
 puts "# weather xml"
 
+puts Jmaxml::QuakeRegion.model_name.human
 Jmaxml::QuakeRegionImportJob.import_from_zip("weather_xml_regions/quake_regions.zip", site_id: @site)
+
+puts Jmaxml::TsunamiRegion.model_name.human
 Jmaxml::TsunamiRegionImportJob.import_from_zip("weather_xml_regions/tsunami_regions.zip", site_id: @site)
+
+puts Jmaxml::ForecastRegion.model_name.human
 Jmaxml::ForecastRegionImportJob.import_from_zip("weather_xml_regions/forecaset_regions.zip", site_id: @site)
-Jmaxml::FloodRegionImportJob.import_from_zip("weather_xml_regions/flood_regions.zip", site_id: @site)
+
+puts Jmaxml::WaterLevelStation.model_name.human
 Jmaxml::WaterLevelStationImportJob.import_from_zip("weather_xml_regions/water_level_stations.zip", site_id: @site)
 
 save_node route: "rss/weather_xml", filename: "weather", name: "気象庁防災XML", layout_id: layouts["one"].id,
