@@ -685,10 +685,10 @@ class @Mobile_Size_Checker
     for src in $(html).find('img[src]')
       str_src = $(src).attr('src')
       str_id = str_src.match(/^\/fs\/(.+?)\/_\//)
-      isThumb[str_id[1].replace(/\//, "")] = str_src.match(/_\/thumb\//)
+      isThumb[str_id[1].replace(/\//g, "")] = str_src.match(/_\/thumb\//)
 
       imgs.push(
-        parseInt(str_id[1].replace(/\//, ""))
+        parseInt(str_id[1].replace(/\//g, ""))
       )
 
     $.ajax {

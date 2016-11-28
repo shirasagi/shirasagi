@@ -56,6 +56,8 @@
       var dd2 = $(".mod-cms-parent_crumbs .crumb-categories").first().clone(true);
 
       dd1.find("input").val("");
+      dd2.find("select option[value!='']").remove();
+      dd2.find("select").removeClass("pulled");
       dd.before(dd1);
       dd.before(dd2);
     }

@@ -20,31 +20,17 @@ class Cms::MobileSizeCheckController < ApplicationController
     img_files.each do |file|
       next if result[:file_id].include?(file.id)
 
-      if is_thumb[file.id.to_s]
-        if file.thumb.size > mobile_size
-          result[:errors] << I18n.t(
-            "errors.messages.too_bigfile",
-            filename: file.name,
-            filesize: view_context.number_to_human_size(file.thumb.size),
-            mobile_size: view_context.number_to_human_size(mobile_size)
-          )
-        end
-
-        size += file.thumb.size
-      else
-        if file.size > mobile_size
-          result[:errors] << I18n.t(
-            "errors.messages.too_bigfile",
-            filename: file.name,
-            filesize: view_context.number_to_human_size(file.size),
-            mobile_size: view_context.number_to_human_size(mobile_size)
-          )
-        end
-
-        size += file.size
-        result[:file_id] << file.id
+      thumb = file.thumb
+      next unless thumb
+      if file.thumb.size > mobile_size
+        result[:errors] << I18n.t(
+         "errors.messages.too_bigfile",
+          filename: file.name,
+          filesize: view_context.number_to_human_size(file.thumb.size),
+          mobile_size: view_context.number_to_human_size(mobile_size)
+        )
       end
-
+      size += thumb.size
     end
     if size > mobile_size
       result[:errors] << I18n.t(
