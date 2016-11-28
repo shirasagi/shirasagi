@@ -1,0 +1,11 @@
+# event
+
+production: &production
+  # Max Number of Event Term
+  max_term_form: 10
+
+test:
+  <<: *production
+
+development:
+  <<: *production

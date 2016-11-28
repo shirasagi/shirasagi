@@ -35,7 +35,11 @@ class @Event_Form
 #        yearRange: "-10:+10"
 
       Event_Form.setStoredDates()
+
+      if $(".mod-event dd.dates").length >= @maxTermForm
+        $(".mod-event .setting-dates").hide()
       return
+
   @dateToString: (date)->
     yy = date.getYear()
     mm = date.getMonth() + 1
@@ -143,7 +147,8 @@ class @Event_Form
       #yearRange: "-10:+10"
 
     if $(".mod-event dd.dates").length >= @maxTermForm
-      $(".mod-event button:button.add-date").attr "disabled", true
+      $(".mod-event .setting-dates").hide()
+      #$(".mod-event button:button.add-date").attr "disabled", true
 
   @clearTermForm: (ele)->
     ele.find(".start").val ""
@@ -151,4 +156,5 @@ class @Event_Form
     ele.remove() if $(".mod-event dd.dates").length > 1
 
     if $(".mod-event dd.dates").length < @maxTermForm
-      $(".mod-event button:button.add-date").removeAttr "disabled"
+      $(".mod-event .setting-dates").show()
+      #$(".mod-event button:button.add-date").removeAttr "disabled"
