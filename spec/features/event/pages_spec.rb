@@ -99,10 +99,8 @@ describe "event_pages" do
     end
 
     it "#contain_links" do
-      visit delete_path
-      click_link "このページへのリンクを確認する。"
-
-      expect(current_path).to eq contain_links_path
+      visit contain_links_path
+      expect(status_code).to eq 200
     end
   end
 end

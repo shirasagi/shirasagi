@@ -9,7 +9,7 @@ $ ->
   <% if @item.try(:public?) %>
   $(".save").attr("data-close-confirmation", "<%= @item.state %>")
   <% contain_links_path = url_for(action: 'contain_links') rescue nil %>
-  <% if contain_links_path %>
+  <% if contain_links_path && @contain_link_items.present? %>
   $(".save").attr("data-contain-links-path", "<%= contain_links_path %>")
   <% end %>
   <% end %>

@@ -4,7 +4,7 @@ module Cms::PageFilter
 
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock, :move, :copy, :contain_links]
-    before_action :set_contain_link_items, only: [:contain_links]
+    before_action :set_contain_link_items, only: [:contain_links, :edit, :delete]
   end
 
   private
