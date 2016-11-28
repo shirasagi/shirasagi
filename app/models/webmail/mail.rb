@@ -98,9 +98,7 @@ class Webmail::Mail
       end
     end
 
-    tags = ActionView::Base.sanitized_allowed_tags
-    attr = ActionView::Base.sanitized_allowed_attributes + %w(data-src)
-    ApplicationController.helpers.sanitize(html, tags: tags, attributes: attr)
+    ApplicationController.helpers.sanitize_with(html, attributes: %w(data-src))
   end
 
   def attachments?
