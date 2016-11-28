@@ -1,7 +1,6 @@
 # 竜巻注意情報
 class Jmaxml::Trigger::TornadoAlert < Jmaxml::Trigger::Base
-  embeds_ids :target_regions, class_name: "Jmaxml::ForecastRegion"
-  permit_params target_region_ids: []
+  include Jmaxml::Addon::Trigger::TornadoAlert
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip

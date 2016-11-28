@@ -1,7 +1,6 @@
 # 指定河川洪水予報
 class Jmaxml::Trigger::FloodForecast < Jmaxml::Trigger::Base
-  embeds_ids :target_regions, class_name: "Jmaxml::WaterLevelStation"
-  permit_params target_region_ids: []
+  include Jmaxml::Addon::Trigger::FloodForecast
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip

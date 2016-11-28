@@ -4,6 +4,7 @@ class Jmaxml::Trigger::TornadoAlertsController < ApplicationController
 
   model Jmaxml::Trigger::TornadoAlert
   navi_view "rss/main/navi"
+  append_view_path 'app/views/jmaxml/trigger/bases'
 
   private
     def fix_params

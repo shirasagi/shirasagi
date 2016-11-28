@@ -1,7 +1,6 @@
 # 噴火速報
 class Jmaxml::Trigger::VolcanoFlash < Jmaxml::Trigger::Base
-  embeds_ids :target_regions, class_name: "Jmaxml::ForecastRegion"
-  permit_params target_region_ids: []
+  include Jmaxml::Addon::Trigger::VolcanoFlash
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip

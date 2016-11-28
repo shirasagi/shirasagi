@@ -4,7 +4,7 @@ class Jmaxml::Trigger::TsunamiAlertsController < ApplicationController
 
   model Jmaxml::Trigger::TsunamiAlert
   navi_view "rss/main/navi"
-  append_view_path "app/views/jmaxml/trigger/tsunami_main"
+  append_view_path 'app/views/jmaxml/trigger/bases'
 
   private
     def fix_params

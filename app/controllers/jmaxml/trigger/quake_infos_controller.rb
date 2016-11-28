@@ -4,7 +4,7 @@ class Jmaxml::Trigger::QuakeInfosController < ApplicationController
 
   model Jmaxml::Trigger::QuakeInfo
   navi_view "rss/main/navi"
-  append_view_path "app/views/jmaxml/trigger/quake_main"
+  append_view_path 'app/views/jmaxml/trigger/bases'
 
   private
     def fix_params

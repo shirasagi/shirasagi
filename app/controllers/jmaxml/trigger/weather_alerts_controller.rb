@@ -4,6 +4,7 @@ class Jmaxml::Trigger::WeatherAlertsController < ApplicationController
 
   model Jmaxml::Trigger::WeatherAlert
   navi_view "rss/main/navi"
+  append_view_path 'app/views/jmaxml/trigger/bases'
 
   private
     def fix_params

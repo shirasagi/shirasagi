@@ -1,8 +1,6 @@
 # 気象特別警報・警報・注意報
 class Jmaxml::Trigger::WeatherAlert < Jmaxml::Trigger::Base
-  field :sub_types, type: SS::Extensions::Words
-  embeds_ids :target_regions, class_name: "Jmaxml::ForecastRegion"
-  permit_params sub_types: [], target_region_ids: []
+  include Jmaxml::Addon::Trigger::WeatherAlert
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip

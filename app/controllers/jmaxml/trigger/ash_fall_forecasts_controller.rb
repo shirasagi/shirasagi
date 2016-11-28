@@ -4,6 +4,7 @@ class Jmaxml::Trigger::AshFallForecastsController < ApplicationController
 
   model Jmaxml::Trigger::AshFallForecast
   navi_view "rss/main/navi"
+  append_view_path 'app/views/jmaxml/trigger/bases'
 
   private
     def fix_params

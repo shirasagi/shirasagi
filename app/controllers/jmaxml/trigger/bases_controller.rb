@@ -40,6 +40,12 @@ class Jmaxml::Trigger::BasesController < ApplicationController
       end
     end
 
+    def new
+      @item = @model.new pre_params.merge(fix_params)
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      render file: :choice
+    end
+
     def create
       @item = @model.new get_params
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)

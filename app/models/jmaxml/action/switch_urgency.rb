@@ -1,5 +1,5 @@
 class Jmaxml::Action::SwitchUrgency < Jmaxml::Action::Base
-  include Jmaxml::Addon::SwitchUrgency
+  include Jmaxml::Addon::Action::SwitchUrgency
 
   def execute(page, context)
     node = Urgency::Node::Layout.site(context.site).order_by(depth: 1, id: 1).first

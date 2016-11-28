@@ -1,0 +1,25 @@
+<dl class="see mod-jmaxml-trigger-flood-forecast">
+  <dt><%= @model.t :target_region_ids %><%= @model.tt :target_region_ids %></dt>
+  <dd>
+    <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to :"jmaxml.apis.water_level_stations.index", jmaxml_apis_water_level_stations_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Jmaxml::WaterLevelStation.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.target_regions.each do |region| %>
+          <tr data-id="<%= region.id %>">
+            <td><%= f.hidden_field "target_region_ids[]", value: region.id %> <%= region.name %></td>
+            <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

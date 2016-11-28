@@ -43,10 +43,18 @@ ja:
     jmaxml: 気象庁防災情報XML
     addons:
       jmaxml/filter: フィルター
-      jmaxml/publish_page: 記事作成
-      jmaxml/switch_urgency: 緊急災害レイアウト切替
-      jmaxml/sender: 送信者設定
-      jmaxml/recipient: 受信者設定
+      jmaxml/trigger/quake: 地震
+      jmaxml/trigger/tsunami: 津波
+      jmaxml/trigger/ash_fall_forecast: 降灰予報
+      jmaxml/trigger/flood_forecast: 指定河川洪水予報
+      jmaxml/trigger/landslide_info: 土砂災害警戒情報
+      jmaxml/trigger/tornado_alert: 竜巻注意情報
+      jmaxml/trigger/volcano_flash: 噴火速報
+      jmaxml/trigger/weather_alert: 気象特別警報・警報
+      jmaxml/action/publish_page: 記事作成
+      jmaxml/action/switch_urgency: 緊急災害レイアウト切替
+      jmaxml/action/sender: 送信者設定
+      jmaxml/action/recipient: 受信者設定
 
   cms:
     nodes:
@@ -125,46 +133,40 @@ ja:
         name: 名前
         training_status: 訓練XML
         test_status: 試験XML
-      jmaxml/trigger/quake_intensity_flash:
+      jmaxml/addon/trigger/quake:
         earthquake_intensity: 震度
         target_region_ids: 対象区域
-      jmaxml/trigger/quake_info:
-        earthquake_intensity: 震度
-        target_region_ids: 対象区域
-      jmaxml/trigger/tsunami_alert:
+      jmaxml/addon/trigger/tsunami:
         sub_types: 種類
         target_region_ids: 対象区域
-      jmaxml/trigger/tsunami_info:
+      jmaxml/addon/trigger/weather_alert:
         sub_types: 種類
         target_region_ids: 対象区域
-      jmaxml/trigger/weather_alert:
+      jmaxml/addon/trigger/landslide_info:
+        target_region_ids: 対象区域
+      jmaxml/addon/trigger/flood_forecast:
+        target_region_ids: 対象区域
+      jmaxml/addon/trigger/volcano_flash:
+        target_region_ids: 対象区域
+      jmaxml/addon/trigger/ash_fall_forecast:
         sub_types: 種類
         target_region_ids: 対象区域
-      jmaxml/trigger/landslide_info:
-        target_region_ids: 対象区域
-      jmaxml/trigger/flood_forecast:
-        target_region_ids: 対象区域
-      jmaxml/trigger/volcano_flash:
-        target_region_ids: 対象区域
-      jmaxml/trigger/ash_fall_forecast:
-        sub_types: 種類
-        target_region_ids: 対象区域
-      jmaxml/trigger/tornado_alert:
+      jmaxml/addon/trigger/tornado_alert:
         target_region_ids: 対象区域
       jmaxml/action/base:
         in_type: 種別
         name: 名前
-      jmaxml/addon/publish_page:
+      jmaxml/addon/action/publish_page:
         publish_to_id: フォルダー
         publish_state: 公開状態
         category_ids: カテゴリー
-      jmaxml/addon/switch_urgency:
+      jmaxml/addon/action/switch_urgency:
         urgency_layout_id: 緊急災害レイアウト
-      jmaxml/addon/sender:
+      jmaxml/addon/action/sender:
         sender_name: 送信者名
         sender_email: 送信メールアドレス
         signature_text: 署名（テキスト版）
-      jmaxml/addon/recipient:
+      jmaxml/addon/action/recipient:
         user_ids: ユーザー
         group_ids: グループ
 
@@ -260,55 +262,43 @@ ja:
         - 試験XMLを対象とするかどうかを選択します。
         - 有効を選択した場合、試験XMLを受信した場合にも受信時の動作が実行されます。
 
-    jmaxml/trigger/quake_intensity_flash:
+    jmaxml/addon/trigger/quake:
       earthquake_intensity:
         - 震度を選択します。
       target_region_ids:
         - 対象区域を選択します。
 
-    jmaxml/trigger/quake_info:
-      earthquake_intensity:
-        - 震度を選択します。
-      target_region_ids:
-        - 対象区域を選択します。
-
-    jmaxml/trigger/tsunami_alert:
+    jmaxml/addon/trigger/tsunami:
       sub_types:
         - 種類を選択します。
       target_region_ids:
         - 対象区域を選択します。
 
-    jmaxml/trigger/tsunami_info:
+    jmaxml/addon/trigger/weather_alert:
       sub_types:
         - 種類を選択します。
       target_region_ids:
         - 対象区域を選択します。
 
-    jmaxml/trigger/weather_alert:
+    jmaxml/addon/trigger/landslide_info:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/addon/trigger/flood_forecast:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/addon/trigger/volcano_flash:
+      target_region_ids:
+        - 対象区域を選択します。
+
+    jmaxml/addon/trigger/ash_fall_forecast:
       sub_types:
         - 種類を選択します。
       target_region_ids:
         - 対象区域を選択します。
 
-    jmaxml/trigger/landslide_info:
-      target_region_ids:
-        - 対象区域を選択します。
-
-    jmaxml/trigger/flood_forecast:
-      target_region_ids:
-        - 対象区域を選択します。
-
-    jmaxml/trigger/volcano_flash:
-      target_region_ids:
-        - 対象区域を選択します。
-
-    jmaxml/trigger/ash_fall_forecast:
-      sub_types:
-        - 種類を選択します。
-      target_region_ids:
-        - 対象区域を選択します。
-
-    jmaxml/trigger/tornado_alert:
+    jmaxml/addon/trigger/tornado_alert:
       target_region_ids:
         - 対象区域を選択します。
 
@@ -318,7 +308,7 @@ ja:
       name:
         - 名前を指定します。
 
-    jmaxml/addon/publish_page:
+    jmaxml/addon/action/publish_page:
       publish_to_id:
         - 記事ページを作成するフォルダーを選択します。
       publish_state:
@@ -326,11 +316,11 @@ ja:
       category_ids:
         - 作成した記事ページに設定するカテゴリーを選択します。
 
-    jmaxml/addon/switch_urgency:
+    jmaxml/addon/action/switch_urgency:
       urgency_layout_id:
         - 緊急災害レイアウトを選択します。
 
-    jmaxml/addon/sender:
+    jmaxml/addon/action/sender:
       sender_name:
         - メールの送信者名を記載します。
       sender_email:
@@ -338,7 +328,7 @@ ja:
       signature_text:
         - メールに記載する署名を入力します。
 
-    jmaxml/addon/recipient:
+    jmaxml/addon/action/recipient:
       user_ids:
         - ユーザーを選択します。
       group_ids:

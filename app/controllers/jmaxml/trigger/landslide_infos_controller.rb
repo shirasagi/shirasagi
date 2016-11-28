@@ -4,6 +4,7 @@ class Jmaxml::Trigger::LandslideInfosController < ApplicationController
 
   model Jmaxml::Trigger::LandslideInfo
   navi_view "rss/main/navi"
+  append_view_path 'app/views/jmaxml/trigger/bases'
 
   private
     def fix_params

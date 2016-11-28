@@ -1,6 +1,6 @@
 class Jmaxml::Action::SendMail < Jmaxml::Action::Base
-  include Jmaxml::Addon::Sender
-  include Jmaxml::Addon::Recipient
+  include Jmaxml::Addon::Action::Sender
+  include Jmaxml::Addon::Action::Recipient
 
   def execute(page, context)
     mailer = context.type.mailer
