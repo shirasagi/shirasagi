@@ -1,8 +1,8 @@
 <% page.name = "【#{renderer.head_info_type}】#{renderer.render_title}" %>
 <div class="jmaxml cancel <%= renderer.jmaxml_type %>">
-  <h2>
-    <time datetime="<%= renderer.control_datetime.iso8601 %>"><%= renderer.control_datetime_format %></time>
-    <span class="publishing-office"><%= renderer.publishing_offices.join("・") %><%= renderer.publishing_offices.length > 1 ? "　共同発表" : "発表" %></span>
-  </h2>
+  <% if @action.publishing_office_state == 'show' %>
+  <time datetime="<%= renderer.control_datetime.iso8601 %>"><%= renderer.control_datetime_format %></time>
+  <span class="publishing-office"><%= renderer.publishing_offices.join("・") %><%= renderer.publishing_offices.length > 1 ? "　共同発表" : "発表" %></span>
+  <% end %>
   <%= render file: "_cancel" %>
 </div>

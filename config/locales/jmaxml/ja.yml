@@ -51,6 +51,7 @@ ja:
       jmaxml/action/switch_urgency: 緊急災害レイアウト切替
       jmaxml/action/sender: 送信者設定
       jmaxml/action/recipient: 受信者設定
+      jmaxml/action/publishing_office: 発表気象台
 
   cms:
     nodes:
@@ -148,6 +149,8 @@ ja:
         publish_to_id: フォルダー
         publish_state: 公開状態
         category_ids: カテゴリー
+      jmaxml/addon/action/publishing_office:
+        publishing_office_state: 気象台発表
       jmaxml/addon/action/switch_urgency:
         urgency_layout_id: 緊急災害レイアウト
       jmaxml/addon/action/sender:
@@ -290,6 +293,10 @@ ja:
         - 作成した記事ページの公開状態を選択します。
       category_ids:
         - 作成した記事ページに設定するカテゴリーを選択します。
+
+    jmaxml/addon/action/publishing_office:
+      publishing_office_state:
+        - 気象台発表を表示するかどうかを選択します。
 
     jmaxml/addon/action/switch_urgency:
       urgency_layout_id:

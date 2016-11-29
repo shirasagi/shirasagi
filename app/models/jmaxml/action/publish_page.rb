@@ -1,5 +1,6 @@
 class Jmaxml::Action::PublishPage < Jmaxml::Action::Base
   include Jmaxml::Addon::Action::PublishPage
+  include Jmaxml::Addon::Action::PublishingOffice
 
   def execute(page, context)
     renderer = context.type.renderer

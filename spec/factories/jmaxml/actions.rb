@@ -6,6 +6,7 @@ FactoryGirl.define do
 
   factory :jmaxml_action_publish_page, class: Jmaxml::Action::PublishPage, traits: [:jmaxml_action_base] do
     publish_state 'draft'
+    publishing_office_state 'show'
   end
 
   factory :jmaxml_action_switch_urgency, class: Jmaxml::Action::SwitchUrgency, traits: [:jmaxml_action_base]
@@ -23,5 +24,6 @@ FactoryGirl.define do
         FAX：999-999-9999
       ).join("\n")
     end
+    publishing_office_state 'show'
   end
 end
