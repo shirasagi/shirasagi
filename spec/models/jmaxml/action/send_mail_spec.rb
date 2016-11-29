@@ -31,8 +31,8 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
     end
 
     before do
-      subject.user_ids = [ user1.id ]
-      subject.group_ids = [ group2.id, group3.id ]
+      subject.recipient_user_ids = [ user1.id ]
+      subject.recipient_group_ids = [ group2.id, group3.id ]
       subject.save!
     end
 

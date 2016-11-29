@@ -18,7 +18,7 @@ describe Jmaxml::Filter, dbscope: :example do
   let(:context) { OpenStruct.new(site: site, node: rss_node) }
   let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }
   let(:action1) { create(:jmaxml_action_publish_page, publish_to_id: article_node.id, category_ids: [ category_node.id ]) }
-  let(:action2) { create(:jmaxml_action_send_mail, user_ids: [ user1.id ]) }
+  let(:action2) { create(:jmaxml_action_send_mail, recipient_user_ids: [ user1.id ]) }
 
   let(:filter) { rss_node.filters.first }
 

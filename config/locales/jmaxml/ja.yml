@@ -158,8 +158,8 @@ ja:
         sender_email: 送信メールアドレス
         signature_text: 署名（テキスト版）
       jmaxml/addon/action/recipient:
-        user_ids: ユーザー
-        group_ids: グループ
+        recipient_user_ids: 受信ユーザー
+        recipient_group_ids: 受信グループ
 
   tooltip:
     jmaxml/quake_region:
@@ -311,7 +311,7 @@ ja:
         - メールに記載する署名を入力します。
 
     jmaxml/addon/action/recipient:
-      user_ids:
-        - ユーザーを選択します。
-      group_ids:
-        - グループを選択します。
+      recipient_user_ids:
+        - メールを受信するユーザーを選択します。
+      recipient_group_ids:
+        - メールを受信するグループを選択します。
