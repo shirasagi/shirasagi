@@ -3,15 +3,18 @@
     <%= link_to(:new, { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user) %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
-  <% elsif params[:action] =~ /edit|update/ %>
-    <%= link_to(:back_to_index, sns_message_thread_posts_path(thread_id: @item), class: "back-to-index") %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to(:back_to_show, { action: :show }, class: "back-to-show") %>
+    <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
   <% else %>
-    <%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %>
-    <%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %>
-    <%= link_to t('views.download'), { action: :download } %>
+    <%= link_to(:delete, { action: :delete }, class: :delete) %>
     <%= link_to t('webmail.links.set_seen'), { action: :set_seen }, { class: 'update-mail set-seen' } %>
     <%= link_to t('webmail.links.unset_seen'), { action: :unset_seen }, { class: 'update-mail unset-seen' } %>
     <%= link_to t('webmail.links.set_star'), { action: :set_star }, { class: 'update-mail set-star' } %>
     <%= link_to t('webmail.links.unset_star'), { action: :unset_star }, { class: 'update-mail unset-star' } %>
+    <%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %>
+    <%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %>
+    <%= link_to t('views.download'), { action: :download } %>
+    <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
   <% end %>
 </nav>

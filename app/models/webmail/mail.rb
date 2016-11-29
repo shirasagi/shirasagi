@@ -7,9 +7,12 @@ class Webmail::Mail
   # Webmail::Imap
   cattr_accessor :imap
 
+  attr_accessor :sync
+
   attr_accessor :rfc822, :text, :html, :attachments
 
   field :host, type: String
+  field :account, type: String
   field :mailbox, type: String
   field :uid, type: Integer
   field :message_id, type: String
@@ -26,7 +29,16 @@ class Webmail::Mail
   field :subject, type: String
   field :attachments_count, type: Integer
 
+  validates :host, presence: true
+  validates :account, presence: true
+  validates :mailbox, presence: true
+  validates :uid, presence: true
+
   permit_params :text, :html
+
+  before_destroy :imap_delete, if: ->{ imap.present? && @sync }
+
+  default_scope -> { order_by date: -1 }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -40,6 +52,10 @@ class Webmail::Mail
     true
   end
 
+  def imap
+    self.class.imap
+  end
+
   def seen?
     flags.to_a.include?('Seen')
   end
@@ -50,6 +66,11 @@ class Webmail::Mail
 
   def star?
     flags.to_a.include?('Flagged')
+  end
+
+  def set_deleted
+    imap.select(mailbox)
+    set_flags(['Deleted'])
   end
 
   def set_seen
@@ -137,6 +158,19 @@ class Webmail::Mail
     self.attachments = mail.attachments
   end
 
+  private
+    def imap_delete
+      set_deleted
+      imap.conn.expunge
+    rescue Net::IMAP::NoResponseError => e
+      rescue_imap_error(e)
+    end
+
+    def rescue_imap_error(e)
+      errors.add :base, e.to_s
+      return false
+    end
+
   class << self
     def build_addresses(addresses)
       return [] unless addresses
@@ -151,6 +185,10 @@ class Webmail::Mail
 
     def allowed?(action, user, opts = {})
       true
+    end
+
+    def cache_key
+      imap.cache_key.merge(mailbox: mailbox)
     end
 
     # Criteria: where(mailbox: String)
@@ -174,46 +212,46 @@ class Webmail::Mail
       limit = scope.limit_value
       offset = scope.offset_value
 
-      imap.conn.examine(mailbox)
+      imap.examine(mailbox)
       uids = imap.conn.uid_sort(sort_value, search_value, 'UTF-8')
       size = uids.size
       uids = uids.slice(offset, limit) || []
 
-      items = uids.map { |uid| cache_find(uid) }
+      items = cache_all(uids)
+      items = items.sort { |a, b| b.date <=> a.date }
 
       Kaminari.paginate_array(items, total_count: size).page(page).per(limit)
     end
 
     def imap_find(uid)
-      imap.conn.examine(mailbox)
+      imap.examine(mailbox)
 
-      item = cache_find(uid)
+      item = cache_all([uid]).first
       item.fetch_body
       item
     end
 
     private
-      def cache_key(uid)
-        { uid: uid, user_id: imap.user.id, mailbox: mailbox, host: imap.conf[:host] }
-      end
-
-      def cache_find(uid)
-        cond = cache_key(uid)
-        item = Mongoid::Criteria.new(self).where(cond).first
-
-        if item
-          # cache
-          item.flags = imap.conn.uid_fetch(uid, ['FLAGS'])[0].attr['FLAGS'].map(&:to_s)
+      def cache_all(uids)
+        items = Mongoid::Criteria.new(self).where(cache_key).in(uid: uids).map do |item|
+          item.flags = imap.conn.uid_fetch(item.uid, ['FLAGS'])[0].attr['FLAGS'].map(&:to_s)
           item.save if item.changed?
-        else
-          # ALL - FLAGS INTERNALDATE RFC822.SIZE ENVELOPE
-          msg = imap.conn.uid_fetch(uid, %w(ALL UID RFC822))[0]
-          item = self.new(cond)
-          item.parse_message(msg)
-          item.save
+          uids.delete(item.uid)
+          item
         end
 
-        item
+        uids.each do |uid|
+          # ALL - FLAGS INTERNALDATE RFC822.SIZE ENVELOPE
+          msg = imap.conn.uid_fetch(uid, %w(ALL UID RFC822))[0]
+
+          item = self.new(cache_key)
+          item.uid = uid
+          item.parse_message(msg)
+          item.save
+          items << item
+        end
+
+        items
       end
   end
 end

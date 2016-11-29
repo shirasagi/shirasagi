@@ -37,4 +37,18 @@ class Webmail::Imap
   def logged_in?
     @logged_in == true
   end
+
+  def cache_key
+    { user_id: user.id, host: conf[:host], account: conf[:account] }
+  end
+
+  def examine(mailbox)
+    conn.examine(mailbox)
+  end
+
+  def select(mailbox)
+    return if @selected == mailbox
+    @selected = @mailbox
+    conn.select(mailbox)
+  end
 end

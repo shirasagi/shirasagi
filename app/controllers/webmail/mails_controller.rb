@@ -19,12 +19,21 @@ class Webmail::MailsController < ApplicationController
     end
 
     def fix_params
-      { cur_user: @cur_user }
+      @imap.cache_key.merge(cur_user: @cur_user, sync: true, mailbox: @mailbox)
     end
 
     def set_item
       set_mailbox
       @item = @model.where(mailbox: @mailbox).imap_find params[:id].to_i
+      @item.attributes = fix_params
+    end
+
+    def set_destroy_items
+      @items = @model.
+        in(uid: params[:ids]).
+        entries
+
+      @items.each { |item| item.sync = true }
     end
 
     def crud_redirect_url
@@ -113,25 +122,5 @@ class Webmail::MailsController < ApplicationController
       msg = SS::Mailer.new_message(send_params).deliver_now
 
       render_create true
-    end
-
-    def destroy
-      raise "403" unless @item.allowed?(:delete, @cur_user)
-      render_destroy @item.leave_member(@cur_user)
-    end
-
-    def destroy_all
-      entries = @items.entries
-      @items = []
-
-      entries.each do |item|
-        if item.allowed?(:delete, @cur_user)
-          next if item.leave_member(@cur_user)
-        else
-          item.errors.add :base, :auth_error
-        end
-        @items << item
-      end
-      render_destroy_all(entries.size != @items.size)
     end
 end

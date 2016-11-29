@@ -1,7 +1,7 @@
 <nav class="main-navi">
   <h2><%= link_to t('webmail.box.inbox'), webmail_mails_path %></h2>
 
-  <% if @imap.try(:logged_in?) %>
+  <% if @model == Webmail::Mail && @imap.try(:logged_in?) %>
   <div class="webmail-mailboxes">
     <% Webmail::Mailbox.imap_all.each do |box| %>
       <%= link_to webmail_mails_path(box: box.original_name), class: box.css_class do %>
@@ -15,6 +15,7 @@
 
 <nav class="mod-navi">
   <h2><%= t('views.config') %></h2>
-  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
+  <h3><%= link_to t('webmail.mailbox'), webmail_mailboxes_path %></h3>
   <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
+  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
 </nav>

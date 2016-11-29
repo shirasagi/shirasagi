@@ -3,31 +3,31 @@
 <% end %>
 
 <dl class="see">
-  <dt>Subject</dt>
+  <dt><%= @model.t :subject %></dt>
   <dd><%= @item.subject %></dd>
 
-  <dt>Date</dt>
+  <dt><%= @model.t :date %></dt>
   <dd><%= @item.date.strftime("%Y/%m/%d %H:%M") %></dd>
 
-  <dt>From</dt>
+  <dt><%= @model.t :from %></dt>
   <dd><%= @item.from %></dd>
 
   <% if @item.to.present? %>
-  <dt>To</dt>
+  <dt><%= @model.t :to %></dt>
   <dd><%= @item.to.join('; ') %></dd>
   <% end %>
 
   <% if @item.cc.present? %>
-  <dt>Cc</dt>
+  <dt><%= @model.t :cc %></dt>
   <dd><%= @item.cc.join('; ') %></dd>
   <% end %>
 
   <% if @item.bcc.present? %>
-  <dt>Bcc</dt>
+  <dt><%= @model.t :bcc %></dt>
   <dd><%= @item.bcc.join('; ') %></dd>
   <% end %>
 
-  <dt>Body</dt>
+  <dt><%= @model.t :body %></dt>
   <% if @item.html %>
     <dd><%= @item.sanitized_html %>
   <% else %>
@@ -35,7 +35,7 @@
   <% end %>
 
   <% if @item.attachments.present? %>
-  <dt>Attachments</dt>
+  <dt><%= @model.t :attachments %></dt>
   <% @item.attachments.each_with_index do |at, idx| %>
     <% target = at.content_type.start_with?('image') ? '_blank' : nil %>
     <dd><%= link_to at.filename, { action: :attachment, idx: idx }, target: target %></dd>
