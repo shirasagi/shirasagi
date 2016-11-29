@@ -77,7 +77,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first.to_s).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '震度速報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -89,6 +89,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('岩手県内陸北部：震度５強')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -121,7 +122,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '震源・震度情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -133,6 +134,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('岩手県内陸北部：震度４')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -165,7 +167,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '大津波警報・津波警報・津波注意報・津波予報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -178,6 +180,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('震源地：　　　　　三陸沖 牡鹿半島の東南東１３０ｋｍ付近')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -210,7 +213,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '各地の満潮時刻・津波到達予想時刻に関する情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -223,6 +226,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('震源地：　　　　　南米西部')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -254,7 +258,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '奈良県気象警報・注意報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -267,6 +271,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('＜天理市＞')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -302,7 +307,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '揖斐川中流はん濫注意情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -313,6 +318,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('所により１時間に５０ミリの雨が降っています。')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -360,7 +366,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '福岡県土砂災害警戒情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -371,6 +377,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include("＜解除＞\n大牟田市、久留米市、八女市、中間市、小郡市")
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -400,7 +407,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '火山名　御嶽山　噴火速報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -409,6 +416,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include("長野県王滝村、長野県木曽町")
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -440,7 +448,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '火山名　桜島　降灰予報（定時）'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -452,6 +460,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('噴煙が高さ３０００ｍまで上がった場合の')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -483,7 +492,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '東京都竜巻注意情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -492,6 +501,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include("千代田区、中央区、港区、新宿区")
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -535,7 +545,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '【取消】震度速報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -543,6 +553,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('緊急地震速報（警報）を取り消します。')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -575,7 +586,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '【取消】震源・震度情報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -583,6 +594,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('震源・震度情報を取り消します。')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end
@@ -613,7 +625,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail).not_to be_nil
             expect(mail.from).to eq [ subject.sender_email ]
             expect(mail.to.first).to be_in(emails)
-            emails = emails - [ mail.to.first ]
+            emails.delete(mail.to.first)
             expect(mail.subject).to eq '【取消】火山名　御嶽山　噴火速報'
             mail_subject ||= mail.subject
             mail_body ||= mail.body.raw_source
@@ -621,6 +633,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to include('噴火速報を取り消します。')
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
+          expect(emails).to eq []
           puts mail_subject
           puts mail_body
         end

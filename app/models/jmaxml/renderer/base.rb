@@ -20,7 +20,7 @@ class Jmaxml::Renderer::Base < AbstractController::Base
     end
     # Allows to set the name of current mailer.
     attr_writer :renderer_name
-    alias :controller_path :renderer_name
+    alias controller_path renderer_name
 
     def method_missing(method_name, *args) # :nodoc:
       if action_methods.include?(method_name.to_s)

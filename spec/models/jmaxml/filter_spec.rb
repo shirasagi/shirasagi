@@ -44,7 +44,9 @@ describe Jmaxml::Filter, dbscope: :example do
     trigger.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
     trigger.save!
 
-    rss_node.filters.new(name: unique_id, state: 'enabled', trigger_ids: [ trigger.id.to_s ], action_ids: [ action1.id.to_s, action2.id.to_s ])
+    rss_node.filters.new(
+      name: unique_id, state: 'enabled', trigger_ids: [ trigger.id.to_s ],
+      action_ids: [ action1.id.to_s, action2.id.to_s ])
     rss_node.save!
   end
 

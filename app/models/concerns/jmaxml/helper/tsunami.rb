@@ -9,16 +9,16 @@ module Jmaxml::Helper::Tsunami
 
       kind_code = REXML::XPath.first(item, 'Category/Kind/Code/text()').to_s.strip
       case kind_code
-        when '52'
-          kind_code = 'special_alert'
-        when '51'
-          kind_code = 'alert'
-        when '62'
-          kind_code = 'warning'
-        when '71'
-          kind_code = 'forecast'
-        else
-          kind_code = ''
+      when '52'
+        kind_code = 'special_alert'
+      when '51'
+        kind_code = 'alert'
+      when '62'
+        kind_code = 'warning'
+      when '71'
+        kind_code = 'forecast'
+      else
+        kind_code = ''
       end
       next nil if kind_code != target_sub_type.to_s
 
