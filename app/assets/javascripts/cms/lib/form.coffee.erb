@@ -7,7 +7,8 @@ class @Cms_Form
 
     Form_Alert.addValidation(Form_Alert.clonedName)
     Form_Alert.addValidation(Form_Alert.closeConfirmation)
-    Form_Alert.addValidation(Form_Alert.presence)
+    #Form_Alert.addValidation(Form_Alert.presence)
+    Form_Alert.addValidation(Form_Alert.validateReplaceWord)
     Form_Alert.addValidation(Syntax_Checker.validateHtml)
     Form_Alert.addValidation(Mobile_Size_Checker.validateHtml)
 
@@ -941,6 +942,21 @@ class @Form_Alert
 
   @justText: (ele)->
     $(ele).clone().children().remove().end().text()
+
+  @validateReplaceWord: (form, submit)->
+    words = Syntax_Checker.config["replace_words"]
+    return unless words
+
+    addonIds = ["#addon-basic", "#addon-cms-agents-addons-meta", "#addon-event-agents-addons-date", "#addon-map-agents-addons-page"]
+    excludes = ['[name="item[basename]"]', "location-search.keyword"]
+    for k, v of words
+      $(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each ->
+        val = $(this).val()
+        if val && !$.isEmptyObject(val.match(///#{k}///g))
+          $(this).closest("dl").show()
+          addonName = $(this).closest(".addon-view").find(".addon-head").text()
+          fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"))
+          Form_Alert.add addonName, this, fieldName + "<%= I18n.t("errors.messages.replace_word_validation") %>" + "「#{k}」→「#{v}」"
 
 class @Form_Preview
   @form_preview_path
