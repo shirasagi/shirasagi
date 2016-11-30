@@ -36,7 +36,7 @@ describe "jmaxml/quake_regions", dbscope: :example do
         fill_in 'item[yomi]', with: yomi1
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(Jmaxml::QuakeRegion.count).to eq 1
       Jmaxml::QuakeRegion.first.tap do |region|
@@ -56,7 +56,7 @@ describe "jmaxml/quake_regions", dbscope: :example do
         fill_in 'item[yomi]', with: yomi2
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(Jmaxml::QuakeRegion.count).to eq 1
       Jmaxml::QuakeRegion.first.tap do |region|
@@ -75,7 +75,7 @@ describe "jmaxml/quake_regions", dbscope: :example do
       within 'form' do
         click_on I18n.t('views.button.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(Jmaxml::QuakeRegion.count).to eq 0
     end

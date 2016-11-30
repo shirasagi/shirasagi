@@ -49,7 +49,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(model.count).to eq 1
       model.first.tap do |trigger|
@@ -72,7 +72,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
         uncheck 'item_sub_type_warning'
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(model.count).to eq 1
       model.first.tap do |trigger|
@@ -93,7 +93,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('views.button.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(model.count).to eq 0
     end

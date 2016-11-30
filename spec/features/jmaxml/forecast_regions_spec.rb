@@ -41,7 +41,7 @@ describe "jmaxml/forecast_regions", dbscope: :example do
         fill_in 'item[short_yomi]', with: short_yomi1
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(Jmaxml::ForecastRegion.count).to eq 1
       Jmaxml::ForecastRegion.first.tap do |region|
@@ -64,7 +64,7 @@ describe "jmaxml/forecast_regions", dbscope: :example do
         fill_in 'item[short_yomi]', with: short_yomi2
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(Jmaxml::ForecastRegion.count).to eq 1
       Jmaxml::ForecastRegion.first.tap do |region|
@@ -85,7 +85,7 @@ describe "jmaxml/forecast_regions", dbscope: :example do
       within 'form' do
         click_on I18n.t('views.button.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       expect(Jmaxml::ForecastRegion.count).to eq 0
     end

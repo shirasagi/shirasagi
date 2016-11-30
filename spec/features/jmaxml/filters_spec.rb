@@ -45,7 +45,7 @@ describe "jmaxml/filters", dbscope: :example do
         select action2.name, from: 'item_action_ids_1'
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       node.reload
       expect(node.filters.count).to eq 1
@@ -67,7 +67,7 @@ describe "jmaxml/filters", dbscope: :example do
         fill_in 'item[name]', with: name2
         click_on I18n.t('views.button.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       node.reload
       expect(node.filters.count).to eq 1
@@ -88,7 +88,7 @@ describe "jmaxml/filters", dbscope: :example do
       within 'form' do
         click_on I18n.t('views.button.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       node.reload
       expect(node.filters.count).to eq 0

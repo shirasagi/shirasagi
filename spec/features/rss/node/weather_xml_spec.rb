@@ -92,7 +92,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       fill_in 'item[loop_mail_text]', with: unique_id
       fill_in 'item[lower_mail_text]', with: unique_id
       select '6弱', from: 'item[earthquake_intensity]'
-      click_on '地域を選択する'
+      click_on '区域を選択する'
       click_on region.name
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
         click_on 'フォルダーを選択する'
