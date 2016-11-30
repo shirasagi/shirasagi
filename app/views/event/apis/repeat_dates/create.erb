@@ -1,0 +1,31 @@
+<% max_term_form = SS.config.event.max_term_form.to_i %>
+<%= coffee do %>
+Event_Form.maxTermForm = <%= (max_term_form > 0) ? max_term_form : 1 %>
+dates = <%= raw @dates.to_json %>
+
+$(".mod-event dd.dates").each ->
+  if !$(this).find(".start").val() && !$(this).find(".close").val()
+    if $(".mod-event dd.dates").length > 1
+      $(this).remove()
+
+i = 0
+term = dates[i]
+dd = $(".mod-event dd.dates:last")
+if !dd.find(".start").val() && !dd.find(".close").val()
+  dd.find(".start").val(term[0])
+  dd.find(".close").val(term[1])
+  i += 1
+
+while ( i < dates.length )
+  if $(".mod-event dd.dates").length >= Event_Form.maxTermForm
+    $(".mod-event .setting-dates").hide()
+    break
+
+  term = dates[i]
+  Event_Form.cloneTermForm()
+  $(".mod-event dd.dates:last").find(".start").val(term[0])
+  $(".mod-event dd.dates:last").find(".close").val(term[1])
+  i += 1
+
+$.colorbox.close()
+<% end %>

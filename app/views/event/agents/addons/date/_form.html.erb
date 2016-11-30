@@ -1,5 +1,7 @@
+<% max_term_form = SS.config.event.max_term_form.to_i %>
 <%= jquery do%>
   SS_AddonTabs.hide(".mod-event");
+  Event_Form.maxTermForm = <%= (max_term_form > 0) ? max_term_form : 1 %>;
   Event_Form.render();
 <% end %>
 
@@ -13,6 +15,9 @@
     - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
     <%= button_tag t("event.del_date"), { type: :button, class: "clear btn" } %>
   </dd>
-  <dd><%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %></dd>
+  <dd class="setting-dates">
+    <%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %>
+    <%= link_to t("event.add_repeat_dates"), event_apis_repeat_dates_path, class: "ajax-box btn" %>
+  </dd>
   <dd style="display: none;"><%= f.text_area :event_dates, class: "event-dates btn" %></dd>
 </dl>

@@ -3,6 +3,7 @@ ja:
     page: イベントページ
     category: カテゴリー
     add_date: 日付フォームを追加する
+    add_repeat_dates: 一括設定
     del_date: 削除
     next_month: 次の月へ
     prev_month: 前の月へ
@@ -36,6 +37,17 @@ ja:
         order: 指定順
         event_dates: イベント日
         unfinished_event_dates: イベント日（未終了）
+
+    apis:
+      repeat_dates:
+        start: 開始日
+        end: 終了日
+        wdays: 該当曜日
+        days: 該当日
+        add_dates: 追加する
+        start_blank: 開始日を入力してください。
+        end_blank: 終了日を入力してください。
+        not_found_dates: 該当する日付が見つかりませんでした。
 
   modules:
     event: イベント

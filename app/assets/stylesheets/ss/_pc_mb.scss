@@ -1604,6 +1604,23 @@ form .CodeMirror {
   background-color: #ffd;
 }
 
+// event-repeat-dates-ui
+.event-repeat-dates-ui-form {
+  margin: 0 0 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  td label {
+    display: inline-block;
+    width: 40px;
+  }
+}
+.event-repeat-dates-ui-select {
+  margin: 10px 0 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #ffd;
+}
+
 // -------------------------------------------------------------------------------------------------
 // facility
 
