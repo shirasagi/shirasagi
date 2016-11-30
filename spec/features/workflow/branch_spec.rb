@@ -53,7 +53,7 @@ describe "workflow_branch", dbscope: :example do
         within "form#item-form" do
           click_button "公開保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css("#notice", text: "保存しました。", wait: 30)
 
         master = Article::Page.where(id: master_id).first
         branch = Article::Page.where(id: branch_id).first
