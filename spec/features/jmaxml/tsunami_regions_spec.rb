@@ -80,4 +80,25 @@ describe "jmaxml/tsunami_regions", dbscope: :example do
       expect(Jmaxml::TsunamiRegion.count).to eq 0
     end
   end
+
+  context 'search' do
+    let!(:region) { create :jmaxml_tsunami_region_100 }
+
+    before { login_cms_user }
+
+    it do
+      visit index_path
+      expect(page).to have_css('.list-item .title', text: region.name)
+
+      fill_in 's[keyword]', with: region.name
+      click_on '検索'
+      expect(page).to have_css('.list-item .title', text: region.name)
+
+      visit index_path
+      fill_in 's[keyword]', with: unique_id
+      click_on '検索'
+
+      expect(page).to have_no_css('.list-item .title', text: region.name)
+    end
+  end
 end
