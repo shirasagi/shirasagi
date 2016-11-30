@@ -174,7 +174,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       filters = node.filters
       return if filters.blank?
 
-      filters.each do |filter|
+      filters.and_enabled.each do |filter|
         context = OpenStruct.new
         context[:site] = site
         context[:user] = user

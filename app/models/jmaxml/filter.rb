@@ -13,6 +13,8 @@ class Jmaxml::Filter
   permit_params :name, :state
   permit_params trigger_ids: [], action_ids: []
 
+  scope :and_enabled, -> { where(state: 'enabled') }
+
   class << self
     def search(params = {})
       criteria = self.all
