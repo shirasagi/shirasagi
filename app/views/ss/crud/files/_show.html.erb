@@ -20,6 +20,9 @@
   <dt><%= @model.t :content_type %></dt>
   <dd><%= @item.content_type %></dd>
 
+  <dt><%= @model.t :geo_location %></dt>
+  <dd><%= @item.geo_location %></dd>
+
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to :download, { action: :download }, { class: "btn" } %></dd>
 </dl>
