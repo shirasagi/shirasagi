@@ -40,7 +40,9 @@ class Event::Apis::RepeatDatesController < ApplicationController
         range << d
       end
       dates << range if range.present?
-      @dates = dates.map { |range| [range.first, range.last] }
+      @dates = dates.map do |range|
+        [range.first.strftime("%Y/%m/%d"), range.last.strftime("%Y/%m/%d")]
+      end
 
       @errors << I18n.t("event.apis.repeat_dates.not_found_dates") if @dates.blank?
       if @errors.present?
