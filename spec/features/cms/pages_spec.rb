@@ -208,7 +208,7 @@ describe "cms_pages" do
       it "many different files in html" do
 
         site.mobile_state = "enabled"
-        site.mobile_size = 20 * 1_024
+        site.mobile_size = 6 * 1_024
         site.save!
         site.reload
 
