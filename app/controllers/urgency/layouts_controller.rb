@@ -30,6 +30,7 @@ class Urgency::LayoutsController < ApplicationController
         return
       end
 
+      @cur_node = @cur_node.becomes_with_route
       @index_page = @cur_node.find_index_page
       if @index_page.blank?
         redirect_to urgency_error_path(id: 2)
