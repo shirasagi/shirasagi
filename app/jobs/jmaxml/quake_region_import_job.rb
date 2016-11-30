@@ -3,7 +3,7 @@ class Jmaxml::QuakeRegionImportJob < Cms::ApplicationJob
 
   private
     def import_file
-      table = ::CSV.table(@cur_file.path, encoding: 'SJIS:UTF-8')
+      table = ::CSV.table(@cur_file.path, converters: nil, encoding: 'SJIS:UTF-8')
       table.each do |row|
         import_row(row)
       end
