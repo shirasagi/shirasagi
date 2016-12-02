@@ -109,7 +109,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.html).to include('<dt>岩手県沿岸北部</dt><dd>震度４</dd>')
             expect(page.html).to include('<dt>岩手県沿岸南部</dt><dd>震度４</dd>')
             expect(page.html).to include('<dt>岩手県内陸北部</dt><dd>震度４</dd>')
-            expect(page.html).to include("<p>この地震による津波の心配はありません。\nこの地震について、緊急地震速報を発表しています。</p>")
+            expect(page.html).to include('<p>この地震による津波の心配はありません。<br />この地震について、緊急地震速報を発表しています。</p>')
             expect(page.html).to include('<dt>地震発生時刻</dt><dd>2008年6月14日 08時43分ごろ</dd>')
             expect(page.html).to include('<dt>震源地</dt><dd>岩手県内陸南部 </dd>')
             expect(page.html).to include('<dt>座標・深さ</dt><dd>北緯３９．０度　東経１４０．９度　深さ　１０ｋｍ</dd>')
@@ -150,7 +150,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.html).to include('<div class="jmaxml tsunami">')
             expect(page.html).to include('<time datetime="2011-03-11T14:49:59+09:00">2011年3月11日 14時49分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
-            expect(page.html).to include('東日本大震災クラスの津波が来襲します。')
+            expect(page.html).to include('<p>東日本大震災クラスの津波が来襲します。<br />大津波警報・津波警報を発表しました。<br />')
             expect(page.html).to include('<h2 class="alert">津波警報</h2>')
             expect(page.html).to include('<td>北海道太平洋沿岸中部</td>')
             expect(page.html).to include('<td>2011年3月11日 15時30分</td>')
@@ -159,6 +159,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.html).to include('<td>2011年3月11日 15時30分</td>')
             expect(page.html).to include('<td>北海道太平洋沿岸西部</td>')
             expect(page.html).to include('<td>2011年3月11日 15時40分</td>')
+            expect(page.html).to include('<strong>大津波警報</strong><br />')
             expect(page.html).to include('大きな津波が襲い甚大な被害が発生します。')
             expect(page.html).to include('<dt>地震発生時刻</dt><dd>2011年3月11日 14時46分ごろ</dd>')
             expect(page.html).to include('<dt>震源地</dt><dd>三陸沖 牡鹿半島の東南東１３０ｋｍ付近</dd>')
@@ -323,7 +324,13 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             )
           end
           let(:headline_text) do
-            "＜概況＞\n　降り続く大雨のため、警戒対象地域では土砂災害の危険度が高まっています。\n\n＜とるべき措置＞\n　崖の近くなど土砂災害の発生しやすい地区にお住まいの方は、"
+            [
+              '<strong>概況</strong>',
+              '　降り続く大雨のため、警戒対象地域では土砂災害の危険度が高まっています。',
+              '',
+              '<strong>とるべき措置</strong>',
+              '　崖の近くなど土砂災害の発生しやすい地区にお住まいの方は、'
+            ].join('<br />')
           end
 
           before do
@@ -404,7 +411,7 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
               expect(page.html).to include('<div class="jmaxml volcano">')
               expect(page.html).to include('<time datetime="2014-09-27T12:00:12+09:00">2014年9月27日 12時00分</time>')
               expect(page.html).to include('<span class="publishing-office">気象庁地震火山部発表</span>')
-              expect(page.html).to include('＜御嶽山で噴火が発生＞')
+              expect(page.html).to include('<strong>御嶽山で噴火が発生</strong><br />')
               expect(page.html).to include('御嶽山で、平成２６年９月２７日１１時５３分頃、噴火が発生しました。')
               expect(page.html).to include('<li>長野県王滝村</li>')
               expect(page.html).to include('<li>長野県木曽町</li>')

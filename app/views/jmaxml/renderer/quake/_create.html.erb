@@ -1,5 +1,5 @@
 <p>
-  <%= renderer.body_earthquake_origin_time_format || renderer.head_target_datetime_format %>ごろ地震がありました。
+  <%= renderer.body_earthquake_origin_time_format || renderer.head_target_datetime_format %>ごろ地震がありました。<br/>
   各地の震度は下記の通りです。
 </p>
 
@@ -9,7 +9,7 @@
 <% end %>
 </dl>
 
-<p><%= renderer.body_comments_forecast_comment %></p>
+<p><%= br(jmaxml_emphasize(renderer.body_comments_forecast_comment)) %></p>
 
 <% if renderer.body_earthquake_origin_time_format %>
 <div>

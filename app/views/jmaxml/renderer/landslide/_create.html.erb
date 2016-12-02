@@ -1,4 +1,4 @@
-<p><%= renderer.head_headline_text %></p>
+<p><%= br(jmaxml_emphasize(renderer.head_headline_text)) %></p>
 
 <% infos = renderer.landslide_infos %>
 <% infos.select { |info| info[:kind_name] == '警戒' && info[:kind_status] == '発表' }.map { |info| info[:area_name] }.tap do |area_names| %>

@@ -13,6 +13,7 @@ class Jmaxml::Renderer::Base < AbstractController::Base
   private_class_method :new
 
   helper Jmaxml::RendererHelper
+  helper ::ApplicationHelper
 
   class << self
     def renderer_name

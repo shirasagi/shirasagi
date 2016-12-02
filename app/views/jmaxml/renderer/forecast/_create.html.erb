@@ -1,4 +1,4 @@
-<p><%= renderer.head_headline_text %></p>
+<p><%= br(jmaxml_emphasize(renderer.head_headline_text)) %></p>
 <dl>
 <% renderer.each_areas do |area| %>
   <dt class="area"><%= area[:area_name] %></dt>

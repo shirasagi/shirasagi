@@ -1,4 +1,4 @@
-<p><%= renderer.head_headline_text %></p>
+<p><%= br(jmaxml_emphasize(renderer.head_headline_text)) %></p>
 <% %w(special_alert alert warning forecast).each do |sub_type| %>
   <% area_infos = renderer.info_group_by(sub_type) %>
   <% if area_infos.present? %>
@@ -28,7 +28,7 @@
 <% end %>
 
 <h3>解説</h3>
-<p><%= renderer.body_comments_warning_comment %></p>
+<p><%= br(jmaxml_emphasize(renderer.body_comments_warning_comment)) %></p>
 
 <h3>震源・規模</h3>
 <dl>

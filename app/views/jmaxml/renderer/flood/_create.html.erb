@@ -1,6 +1,6 @@
 <h3>主文</h3>
 <% renderer.main_sentences.each_with_index do |main_sentence, index| %>
-  <p><%= main_sentence[:body] %></p>
+  <p><%= br(jmaxml_emphasize(main_sentence[:body])) %></p>
 <% end %>
 
 <h3>氾濫による浸水が想定される地区</h3>
@@ -13,5 +13,5 @@
 
 <h3>雨量</h3>
 <% renderer.rainfalls.each_with_index do |rainfall, index| %>
-  <p><%= rainfall[:body] %></p>
+  <p><%= br(jmaxml_emphasize(rainfall[:body])) %></p>
 <% end %>
