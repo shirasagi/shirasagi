@@ -29,7 +29,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
 
     def find_content_from_ref(ref)
-      filename = ref.sub(/^\//, "")
+      filename = ref.sub(/^#{@site.url}/, "")
       filename.sub!(/\?.*$/, "")
       filename += "index.html" if ref =~ /\/$/
 

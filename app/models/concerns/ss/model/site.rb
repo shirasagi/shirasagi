@@ -9,16 +9,21 @@ module SS::Model::Site
   included do
     store_in collection: "ss_sites"
     index({ host: 1 }, { unique: true })
-    index({ domains: 1 }, { unique: true })
+    index({ domains_with_subdir: 1 }, { unique: true })
 
     seqid :id
     field :name, type: String
     field :host, type: String
     field :domains, type: SS::Extensions::Words
+    field :domains_with_subdir, type: Array
+    field :subdir, type: String
     field :https, type: String, default: "disabled"
     embeds_ids :groups, class_name: "SS::Group"
+    belongs_to :parent, class_name: "SS::Site"
 
-    permit_params :name, :host, :domains, :https, group_ids: []
+    attr_accessor :cur_domain
+
+    permit_params :name, :host, :domains, :subdir, :parent_id, :https, :document_root, group_ids: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
@@ -26,20 +31,57 @@ module SS::Model::Site
     validate :validate_domains, if: ->{ domains.present? }
 
     def domain
-      domains[0]
+      cur_domain ? cur_domain : domains[0]
+    end
+
+    def domain_with_subdir
+      subdir.present? ? "#{domain}/#{subdir}" : domain
     end
 
     def path
-      "#{self.class.root}/" + host.split(//).join("/") + "/_"
+      subdir.present? ? "#{root_path}/#{subdir}" : root_path
+    end
+
+    def root_path
+      if parent
+        parent.root_path
+      else
+        "#{self.class.root}/" + (host.split(//).join("/") + "/_")
+      end
     end
 
     def url
-      domain.index("/") ? domain.sub(/^.*?\//, "/") : "/"
+      subdir.present? ? "/#{subdir}/" : "/"
+    end
+
+    def root_url
+      "/"
     end
 
     def full_url
       schema = (https == 'enabled') ? "https" : "http"
-      "#{schema}://#{domain}/".sub(/\/+$/, "/")
+      root = "#{schema}://#{domain_with_subdir}/".sub(/\/+$/, "/")
+      root
+    end
+
+    def full_root_url
+      schema = (https == 'enabled') ? "https" : "http"
+      root = "#{schema}://#{domain}/".sub(/\/+$/, "/")
+      root
+    end
+
+    def filtered_domains
+      filtered = []
+      domains_with_subdir.each do |domain_with_subdir|
+        if SS.config.kana.location.present?
+          filtered << "#{domain_with_subdir}/".sub("/", "#{SS.config.kana.location}/").sub(/\/$/, "")
+        end
+
+        if !mobile_disabled? && mobile_location.present?
+          filtered << "#{domain_with_subdir}/".sub("/", "#{mobile_location}/").sub(/\/$/, "")
+        end
+      end
+      filtered
     end
 
     def root_groups
@@ -69,7 +111,15 @@ module SS::Model::Site
 
     private
       def validate_domains
-        errors.add :domains, :duplicate if self.class.ne(id: id).any_in(domains: domains).exists?
+        self.domains = domains.uniq
+        self.domains_with_subdir = []
+        domains.each do |domain|
+          self.domains_with_subdir << (subdir.present? ? "#{domain}/#{subdir}" : domain)
+        end
+
+        if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
+          errors.add :domains_with_subdir, :duplicate
+        end
       end
 
     class << self
@@ -77,9 +127,29 @@ module SS::Model::Site
         "#{Rails.public_path}/sites"
       end
 
-      def find_by_domain(host)
-        site = SS::Site.find_by domains: host rescue nil
-        site ||= SS::Site.first if Rails.env.development?
+      def find_by_domain(host, path = nil)
+        sites = SS::Site.in(domains: host).to_a
+        if sites.size <= 1
+          site = sites.first
+        else
+          site = nil
+          host_with_path = ::File.join(host, path.to_s)
+          host_with_path += "/" if host_with_path !~ /\/$/
+          depth = 0
+
+          sites.each do |s|
+            domains = s.domains_with_subdir + s.filtered_domains
+            domains.each do |domain|
+              if host_with_path =~ /^#{domain}\// && "#{domain}/".count("/")
+                site = s
+                depth = "#{domain}/".count("/")
+              end
+            end
+          end
+        end
+
+        #site ||= SS::Site.first if Rails.env.development?
+        site.cur_domain = host if site
         site
       end
     end

@@ -21,18 +21,18 @@
         <% if @model.collection_name == :cms_nodes %>
           <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
           <% if @cur_site.mobile_enabled? %>
-            <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
-            <%= link_to(:mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank) %>
+            <%= link_to :pc_preview, cms_preview_path(path: item.preview_path), target: :_blank %>
+            <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
           <% else %>
-            <%= link_to :preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+            <%= link_to :preview, cms_preview_path(path: item.preview_path), target: :_blank %>
           <% end %>
         <% elsif @model.collection_name == :cms_pages %>
           <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
           <% if @cur_site.mobile_enabled? %>
-            <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
-            <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank) %>
+            <%= link_to :pc_preview, cms_preview_path(path: item.preview_path), target: :_blank %>
+            <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
           <% else %>
-            <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
+            <%= link_to :preview, cms_preview_path(path: item.preview_path), target: :_blank %>
           <% end %>
         <% end %>
 
