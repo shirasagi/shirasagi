@@ -35,7 +35,7 @@ describe 'rss_weather_xml_regions', dbscope: :example do
       fill_in 'item[code]', with: code
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
 
       expect(Rss::WeatherXmlRegion.count).to eq 1
       Rss::WeatherXmlRegion.first.tap do |region|
@@ -50,7 +50,7 @@ describe 'rss_weather_xml_regions', dbscope: :example do
       fill_in 'item[name]', with: name1
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
 
       Rss::WeatherXmlRegion.first.tap do |region|
         expect(region.name).to eq name1
@@ -60,7 +60,7 @@ describe 'rss_weather_xml_regions', dbscope: :example do
       click_on name1
       click_on '削除する'
       click_on '削除'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
     end
   end
 

@@ -56,7 +56,7 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
       click_on '実行'
 
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice .wrap', text: 'サイト複製を開始しました。')
+      expect(page).to have_css('#notice .wrap', text: 'サイト複製を開始しました。', wait: 60)
 
       expect(Sys::SiteCopyTask.count).to eq 1
       Sys::SiteCopyTask.first.tap do |task|

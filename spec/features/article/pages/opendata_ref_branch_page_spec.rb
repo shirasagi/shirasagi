@@ -61,7 +61,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
       end
       click_on I18n.t('views.button.publish_save')
 
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'public'
       expect(article_page.opendata_dataset_state).to eq 'public'
