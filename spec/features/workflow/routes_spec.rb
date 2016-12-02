@@ -35,26 +35,30 @@ describe "workflow_routes", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "sample"
         end
 
-        click_link "グループを選択する"
-        wait_for_cbox
+        click_on "グループを選択する"
         within "div#ajax-box table.index" do
-          click_link group.name
+          click_on group.name
         end
 
         within "dl.workflow-level-1" do
-          click_link "承認者を選択する"
+          click_on "承認者を選択する"
         end
-        # wait a while to load contents of dialog
-        wait_for_cbox
         within "div#ajax-box table.index tbody.items" do
-          click_link user.name
+          click_on user.name
         end
 
         within "form#item-form" do
-          click_button "保存"
+          click_on "保存"
         end
-        expect(status_code).to eq 200
-        expect(page).to have_no_css("form#item-form")
+        expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+
+        expect(Workflow::Route.count).to eq 1
+        Workflow::Route.all.first.tap do |route|
+          expect(route.name).to eq "sample"
+          expect(route.group_ids).to eq [ group.id ]
+          expect(route.approvers).to include({ level: 1, user_id: user.id })
+          expect(route.required_counts).to eq [false, false, false, false, false]
+        end
       end
     end
   end
