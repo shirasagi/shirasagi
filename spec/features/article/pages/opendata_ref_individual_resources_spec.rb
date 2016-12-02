@@ -47,7 +47,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
     end
 
     context "basic" do
-      xit do
+      it do
         #
         # individual resources setting
         #
@@ -159,6 +159,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
         click_on I18n.t('views.links.edit')
 
         click_on I18n.t('views.button.draft_save')
+        click_on I18n.t('views.button.ignore_alert')
 
         expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
         article_page.reload
@@ -190,7 +191,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
     end
 
     context "after associated with resource, move attachment file to another dataset" do
-      xit do
+      it do
         #
         # individual resources setting
         #
