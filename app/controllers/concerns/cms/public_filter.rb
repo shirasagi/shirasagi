@@ -45,11 +45,15 @@ module Cms::PublicFilter
 
   private
     def set_site
+      host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+      path = request.env["REQUEST_PATH"] || request.path
+
       @cur_site ||= begin
-        host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
-        request.env["ss.site"] = SS::Site.find_by_domain host
+        site = SS::Site.find_by_domain host, path
+        request.env["ss.site"] = site
       end
       raise "404" if !@cur_site
+      @cur_site_subdir = @cur_site.subdir(host)
     end
 
     def set_request_path
@@ -75,7 +79,7 @@ module Cms::PublicFilter
     def parse_path
       @cur_path.sub!(/\/$/, "/index.html")
       @html = @cur_path.sub(/\.\w+$/, ".html")
-      @file = File.join(@cur_site.path, @cur_path)
+      @file = File.join(@cur_site.root_path, @cur_path)
     end
 
     def compile_scss

@@ -284,6 +284,7 @@ ja:
         name: サイト名
         host: ホスト名
         domains: ドメイン
+        root_urls: ドメイン
         https: HTTPS
         group_ids: グループ
       ss/model/user:

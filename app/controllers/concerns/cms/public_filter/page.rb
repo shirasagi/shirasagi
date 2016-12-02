@@ -4,7 +4,9 @@ module Cms::PublicFilter::Page
 
   private
     def find_page(path)
-      page = Cms::Page.site(@cur_site).filename(path).first
+      page_path = path.dup
+      page_path.sub!(/^\/#{@cur_site_subdir}\//, "") if @cur_site_subdir.present?
+      page = Cms::Page.site(@cur_site).filename(page_path).first
       return unless page
       @preview || page.public? ? page.becomes_with_route : nil
     end

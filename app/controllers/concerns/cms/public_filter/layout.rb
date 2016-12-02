@@ -13,7 +13,9 @@ module Cms::PublicFilter::Layout
     end
 
     def find_part(path)
-      part = Cms::Part.site(@cur_site).filename(path).first
+      part_path = path.dup
+      part_path.sub!(/^\/#{@cur_site_subdir}\//, "") if @cur_site_subdir.present?
+      part = Cms::Part.site(@cur_site).filename(part_path).first
       return unless part
       @preview || part.public? ? part.becomes_with_route : nil
     end
