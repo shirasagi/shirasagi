@@ -1,0 +1,14 @@
+<%
+
+@s = OpenStruct.new params[:s]
+
+columns = %w(text subject body from to).map { |c| [I18n.t("webmail.search.columns.#{c}"), c] }
+
+%>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.select :column, columns %>
+    <%= f.text_field :keyword, style: "width: 300px;" %>
+    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+  <% end %>
+</div>

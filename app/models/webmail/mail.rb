@@ -3,13 +3,14 @@ require "mail"
 class Webmail::Mail
   include SS::Document
   include SS::Reference::User
+  include SS::FreePermission
+  include Webmail::Mail::Flag
+  include Webmail::Mail::Parser
 
   # Webmail::Imap
   cattr_accessor :imap
 
-  attr_accessor :sync
-
-  attr_accessor :rfc822, :text, :html, :attachments
+  attr_accessor :sync, :rfc822, :text, :html, :attachments, :format, :reply_uid, :forward_uid, :signature
 
   field :host, type: String
   field :account, type: String
@@ -27,14 +28,14 @@ class Webmail::Mail
   field :reply_to, type: Array, default: []
   field :in_reply_to, type: Array, default: []
   field :subject, type: String
-  field :attachments_count, type: Integer
+  field :attachments_count, type: Integer, default: 0
+
+  permit_params :to, :cc, :bcc, :subject, :text, :html, :format, :reply_uid, :forward_uid
 
   validates :host, presence: true
   validates :account, presence: true
   validates :mailbox, presence: true
   validates :uid, presence: true
-
-  permit_params :text, :html
 
   before_destroy :imap_delete, if: ->{ imap.present? && @sync }
 
@@ -48,120 +49,74 @@ class Webmail::Mail
     criteria
   }
 
-  def allowed?(action, user, opts = {})
-    true
-  end
+  scope :imap_search, ->(params) {
+    criteria = where({})
+    return criteria if params.blank?
+
+    if params[:keyword].present?
+      column = params[:column].presence || "TEXT"
+      criteria = criteria.where search: [column, params[:keyword].dup.force_encoding('ASCII-8BIT')]
+    end
+    criteria
+  }
 
   def imap
     self.class.imap
   end
 
-  def seen?
-    flags.to_a.include?('Seen')
+  def format_options
+    %w(text html).map { |c| [c.upcase, c] }
   end
 
-  def unseen?
-    !seen?
-  end
-
-  def star?
-    flags.to_a.include?('Flagged')
-  end
-
-  def set_deleted
-    imap.select(mailbox)
-    set_flags(['Deleted'])
-  end
-
-  def set_seen
-    set_flags(['Seen'])
-  end
-
-  def unset_seen
-    unset_flags(['Seen'])
-  end
-
-  def set_star
-    set_flags(['Flagged'])
-  end
-
-  def unset_star
-    unset_flags(['Flagged'])
-  end
-
-  def set_flags(values)
-    self.flags ||= []
-    self.flags = (self.flags + values).uniq
-    self.save if changed?
-    imap.conn.uid_store(uid, '+FLAGS', values.map(&:to_sym)) # required symbole
-  end
-
-  def unset_flags(values)
-    self.flags ||= []
-    self.flags -= values
-    self.save if changed?
-    imap.conn.uid_store(uid, '-FLAGS', values.map(&:to_sym)) # required symbole
-  end
-
-  def sanitized_html
-    html = self.html
-    html.gsub!(/<img [^>]*?>/i) do |img|
-      img.sub(/ src="cid:.*?"/i) do |src|
-        cid = src.sub(/.*?cid:(.*?)".*/i, '<\\1>')
-        attachments.each do |file|
-          if cid == file.content_id
-            type = file.content_type.sub(/;.*/, '')
-            src = %( data-src="data:#{type};base64,#{Base64.strict_encode64(file.read)}")
-            break
-          end
-        end
-        src
-      end
+  def signature_options
+    Webmail::Signature.user(user).map do |c|
+      [c.name, c.text]
     end
+  end
 
-    ApplicationController.helpers.sanitize_with(html, attributes: %w(data-src))
+  def html?
+    return format == 'html' if format.present?
+    !html.nil?
   end
 
   def attachments?
     attachments_count > 0
   end
 
-  def parse_message(msg)
-    envelope = msg.attr["ENVELOPE"]
-    mail = ::Mail.read_from_string msg.attr['RFC822']
-
-    self.attributes = {
-      uid: msg.attr["UID"],
-      message_id: envelope.message_id,
-      size: msg.attr['RFC822.SIZE'],
-      flags: msg.attr['FLAGS'].map(&:to_s).presence,
-      date: envelope.date,
-      from: self.class.build_addresses(envelope.from)[0],
-      sender: self.class.build_addresses(envelope.sender)[0],
-      to: self.class.build_addresses(envelope.to).presence,
-      cc: self.class.build_addresses(envelope.cc).presence,
-      bcc: self.class.build_addresses(envelope.bcc).presence,
-      reply_to: self.class.build_addresses(envelope.reply_to).presence,
-      in_reply_to: self.class.build_addresses(envelope.in_reply_to).presence,
-      subject: envelope.subject.toutf8,
-      attachments_count: mail.attachments.size
-    }
+  def save_to_sent(msg)
+    if reply_uid.present?
+      ref = self.class.imap_find(reply_uid)
+      ref.set_flags(['Answered'])
+    elsif forward_uid.present?
+      #Forwarded?
+    end
+    imap.conn.append(imap.user.imap_sent_box, msg, [:Seen], Time.zone.now)
   end
 
-  def fetch_body
-    msg = imap.conn.uid_fetch(uid, ['RFC822'])[0]
-    self.rfc822 = msg.attr['RFC822']
-    mail = ::Mail.read_from_string(rfc822)
+  def save_to_draft(msg)
+    imap.conn.append(imap.user.imap_draft_box, msg, [:Draft], Time.zone.now)
+  end
 
-    self.text = mail.text_part.decoded.toutf8 if mail.text_part
-    self.html = mail.html_part.decoded.toutf8 if mail.html_part
-    self.attachments = mail.attachments
+  def move(mailbox)
+    imap.conn.uid_copy(uid, mailbox)
+    self.sync = true
+    destroy
+  end
+
+  def copy(mailbox)
+    imap.conn.uid_copy(uid, mailbox)
+  end
+
+  def destroy_or_trash
+    trash = imap.user.imap_trash_box
+    copy(trash) if mailbox != trash
+    destroy
   end
 
   private
     def imap_delete
       set_deleted
-      imap.conn.expunge
+      #imap.conn.expunge
     rescue Net::IMAP::NoResponseError => e
       rescue_imap_error(e)
     end
@@ -181,10 +136,6 @@ class Webmail::Mail
           "#{addr.mailbox}@#{addr.host}"
         end
       end
-    end
-
-    def allowed?(action, user, opts = {})
-      true
     end
 
     def cache_key
@@ -212,22 +163,25 @@ class Webmail::Mail
       limit = scope.limit_value
       offset = scope.offset_value
 
-      imap.examine(mailbox)
+      #imap.examine(mailbox)
       uids = imap.conn.uid_sort(sort_value, search_value, 'UTF-8')
       size = uids.size
       uids = uids.slice(offset, limit) || []
 
       items = cache_all(uids)
-      items = items.sort { |a, b| b.date <=> a.date }
+      items = items.sort { |a, b| (b.date || b.created) <=> (a.date || a.created) }
 
       Kaminari.paginate_array(items, total_count: size).page(page).per(limit)
     end
 
     def imap_find(uid)
-      imap.examine(mailbox)
+      uid = uid.to_i
+
+      #imap.examine(mailbox)
+      msg = imap.conn.uid_fetch(uid, ['RFC822'])[0]
 
       item = cache_all([uid]).first
-      item.fetch_body
+      item.parse_body(msg)
       item
     end
 
@@ -246,8 +200,15 @@ class Webmail::Mail
 
           item = self.new(cache_key)
           item.uid = uid
-          item.parse_message(msg)
-          item.save
+
+          begin
+            item.parse_message(msg)
+            item.save
+          rescue => e
+            item.subject = "[Error] #{e}"
+            def item.save; end
+          end
+
           items << item
         end
 

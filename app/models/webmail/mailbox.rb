@@ -2,6 +2,7 @@ require "net/imap"
 class Webmail::Mailbox
   include SS::Document
   include SS::Reference::User
+  include SS::FreePermission
 
   # Webmail::Imap
   cattr_accessor :imap
@@ -15,12 +16,12 @@ class Webmail::Mailbox
   field :order, type: Integer, default: 0
   field :depth, type: Integer
 
+  permit_params :name
+
   validates :host, presence: true
   validates :account, presence: true
   validates :name, presence: true
   validates :downcase_name, presence: true
-
-  permit_params :name
 
   before_validation :validate_name, if: ->{ name.present? }
   before_create :imap_create, if: ->{ imap.present? && @sync }
@@ -28,10 +29,6 @@ class Webmail::Mailbox
   before_destroy :imap_delete, if: ->{ imap.present? && @sync }
 
   default_scope -> { order_by order: 1, downcase_name: 1 }
-
-  def allowed?(action, user, opts = {})
-    true
-  end
 
   def imap
     self.class.imap
@@ -53,8 +50,17 @@ class Webmail::Mailbox
     Webmail::Mail.where(mailbox: name)
   end
 
+  def unseen_size
+    return @unseen_size if @unseen_size
+    imap.examine(original_name)
+    @unseen_size = imap.conn.uid_search(%w(UNSEEN), 'UTF-8').size
+  rescue Net::IMAP::NoResponseError
+    @unseen_size = 0
+  end
+
   private
     def validate_name
+      self.name = self.name.tr('/', '.')
       self.name = "INBOX.#{name}" unless self.name =~ /^INBOX\./
       self.downcase_name = self.name.downcase
       self.depth = self.name.split('.').size - 1
@@ -86,10 +92,6 @@ class Webmail::Mailbox
     end
 
   class << self
-    def allowed?(action, user, opts = {})
-      true
-    end
-
     def cache_key
       imap.cache_key
     end
@@ -97,6 +99,15 @@ class Webmail::Mailbox
     def imap_all
       items = imap.conn.list('INBOX', '*')
       items = cache_all(items)
+
+      (imap.user.imap_special_mailboxes - items.map(&:name)).each do |name|
+        item = self.new(cache_key)
+        item.sync = true
+        item.name = name
+        item.save
+        items << item
+      end
+
       items.sort { |a, b| a.downcase_name <=> b.downcase_name }
     end
 

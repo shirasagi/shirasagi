@@ -7,6 +7,8 @@
     <%= link_to(:back_to_show, { action: :show }, class: "back-to-show") %>
     <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
   <% else %>
+    <%= link_to t('webmail.links.reply'), { action: :new, reply: @item.uid }, { class: 'send-reply' } unless @item.draft? %>
+    <%= link_to t('webmail.links.forward'), { action: :new, forward: @item.uid }, { class: 'send-forward' } unless @item.draft? %>
     <%= link_to(:delete, { action: :delete }, class: :delete) %>
     <%= link_to t('webmail.links.set_seen'), { action: :set_seen }, { class: 'update-mail set-seen' } %>
     <%= link_to t('webmail.links.unset_seen'), { action: :unset_seen }, { class: 'update-mail unset-seen' } %>
@@ -15,6 +17,7 @@
     <%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %>
     <%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %>
     <%= link_to t('views.download'), { action: :download } %>
+    <%= link_to t('webmail.links.print'), '#', class: 'print-mail' %>
     <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
   <% end %>
 </nav>

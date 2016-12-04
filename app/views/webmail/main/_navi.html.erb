@@ -4,9 +4,14 @@
   <% if @model == Webmail::Mail && @imap.try(:logged_in?) %>
   <div class="webmail-mailboxes">
     <% Webmail::Mailbox.imap_all.each do |box| %>
-      <%= link_to webmail_mails_path(box: box.original_name), class: box.css_class do %>
+      <%= link_to webmail_mails_path(mailbox: box.original_name),
+        class: box.css_class, "data-name" => box.original_name do %>
+
         <%== "<span class='pad'></span>" * box.depth %>
-        <span class="mailbox-name"><%= box.basename %></span>
+        <span class="mailbox-name""><%= box.basename %></span>
+        <% if box.unseen_size > 0 %>
+          <span class="mailbox-unseen-count">(<%= box.unseen_size %>)</span>
+        <% end %>
       <% end %>
     <% end %>
   </div>
@@ -15,7 +20,15 @@
 
 <nav class="mod-navi">
   <h2><%= t('views.config') %></h2>
-  <h3><%= link_to t('webmail.mailbox'), webmail_mailboxes_path %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path %></h3>
+  <h3><%= link_to t('webmail.settings.special_mailbox'), webmail_special_mailbox_path %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path %></h3>
   <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
   <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
 </nav>
+
+<% if @imap.try(:logged_in?) %>
+<div class="webmail-quota">
+  <%= @imap.quota_info %>
+</div>
+<% end %>

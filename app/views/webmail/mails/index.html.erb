@@ -7,20 +7,28 @@
 
   <ul class="list-items ss-messages webmail-mails">
     <% @items.each do |item| %>
-    <li class="list-item <%= item.seen? ? 'seen' : 'unseen' %>">
+    <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %>">
+      <nav class="tap-menu">
+        <%= link_to :show, action: :show, id: item.uid %>
+        <%#= link_to :edit, action: :edit, id: item.uid if item.draft? %>
+        <%= link_to t('webmail.links.reply'), action: :new, reply: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.forward'), action: :new, forward: item.uid unless item.draft? %>
+        <%= link_to :delete, action: :delete, id: item.uid %>
+      </nav>
+
       <label class="check">
         <input type="checkbox" name="ids[]" value="<%= item.uid %>" />
       </label>
       <div class="label-star">
-        <span class="icon-star icon-star--<%= item.star? ? 'on' : 'off' %>"></span>
+        <%= link_to "", { action: :show, id: item.uid }, class: "icon-star icon-star--" + (item.star? ? 'on' : 'off') %>
       </div>
       <div class="label-attachment">
         <span class="icon-attachment icon-attachment--<%= item.attachments? ? 'on' : 'off' %>"></span>
       </div>
       <div class="info">
-        <%= link_to item.subject, { action: :show, id: item.uid }, class: "title" %>
+        <%= link_to item.subject.presence || "No title", { action: :show, id: item.uid }, class: "title" %>
         <div class="meta">
-          <span class="datetime"><%= item.date.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
           <span class="from"><%= item.from %></span>
           <span class="size"><%= number_to_human_size(item.size) %></span>
         </div>
@@ -31,3 +39,4 @@
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+

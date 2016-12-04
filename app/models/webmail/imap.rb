@@ -51,4 +51,10 @@ class Webmail::Imap
     @selected = @mailbox
     conn.select(mailbox)
   end
+
+  def quota_info
+    quota = conn.getquotaroot('INBOX')[1]
+    ApplicationController.helpers.number_to_human_size(quota.usage.to_i * 1024) +
+      "/" + ApplicationController.helpers.number_to_human_size(quota.quota.to_i * 1024)
+  end
 end

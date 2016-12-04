@@ -1,7 +1,15 @@
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
-  <div class="list-head-action">
+  <div class="list-head-action webmail-mails-head">
+    <div class="dropdown">
+      <button class="btn move-all" data-href="<%= url_for action: :move %>">
+        <%= t :"webmail.links.move" %></button>
+    </div>
+    <div class="dropdown">
+      <button class="btn copy-all" data-href="<%= url_for action: :copy %>">
+        <%= t :"webmail.links.copy" %></button>
+    </div>
     <button class="btn destroy-all">
       <%= t :"views.links.delete" %></button>
     <button class="btn update-all set-seen-all" data-href="<%= url_for action: :set_seen %>">

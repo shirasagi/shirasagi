@@ -5,11 +5,20 @@ ja:
   webmail:
     mail: メール
     mailbox: フォルダー
+    signature: 署名
     box:
       inbox: 受信メール
     settings:
-      account: アカウント
       cache: キャッシュ
+      account: アカウント
+      special_mailbox: 特別なフォルダー
+    search:
+      columns:
+        text: キーワード
+        from: 差出人
+        to: 宛先
+        subject: 件名
+        body: 本文
     buttons:
       clear_cache: キャッシュ クリア
     confirm:
@@ -22,25 +31,37 @@ ja:
       unset_seen: 未読にする
       set_star: スターをつける
       unset_star: スターをはずす
+      reply: 返信する
+      forward: 転送する
+      move: 移動する
+      copy: コピーする
+      print: 印刷する
     notice:
       deleted_cache: キャッシュを削除しました。
       changed: 変更しました。
 
   mongoid:
+    models:
+      webmail/mail: メール
+      webmail/mailbox: フォルダー
+      webmail/signature: 署名
     attributes:
       ss/model/user:
         imap_host: IMAP/ホスト
         imap_account: IMAP/ユーザーID
         imap_password: IMAP/パスワード
         in_imap_password: IMAP/パスワード
+        imap_sent_box: 送信済みフォルダー
+        imap_draft_box: 下書きフォルダー
+        imap_trash_box: ゴミ箱フォルダー
       webmail/mailbox:
         name: フォルダー名
       webmail/mail:
         size: サイズ
         date: 日付
         flags: フラウ
-        from: 送信者
-        sender: 送信者
+        from: 差出人
+        sender: 差出人
         to: 宛先
         cc: CC
         bcc: BCC
@@ -49,3 +70,7 @@ ja:
         subject: 件名
         body: 本文
         attachments: 添付ファイル
+      webmail/signature:
+        name: 名称
+        text: 本文
+        default: 既定の署名

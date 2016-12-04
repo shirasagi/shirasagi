@@ -1,0 +1,11 @@
+production: &production
+  # Disable Webmail.
+  disable: true
+
+test:
+  <<: *production
+  disable: false
+
+development:
+  <<: *production
+  disable: false

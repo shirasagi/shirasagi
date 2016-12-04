@@ -6,8 +6,10 @@ class Webmail::MailsController < ApplicationController
   model Webmail::Mail
 
   before_action :set_mailbox
+  before_action :select_mailbox, only: [:move, :destroy, :destroy_all]
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
                                   :attachment, :download, :header_view, :source_view]
+  after_action :expunge, only: [:move, :destroy, :destroy_all]
 
   private
     def set_crumbs
@@ -15,7 +17,12 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_mailbox
-      @mailbox = params[:box]
+      @mailbox = params[:mailbox]
+      @imap.examine(@mailbox)
+    end
+
+    def select_mailbox
+      @imap.select(@mailbox)
     end
 
     def fix_params
@@ -24,26 +31,26 @@ class Webmail::MailsController < ApplicationController
 
     def set_item
       set_mailbox
-      @item = @model.where(mailbox: @mailbox).imap_find params[:id].to_i
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id]
       @item.attributes = fix_params
     end
 
     def set_destroy_items
-      @items = @model.
-        in(uid: params[:ids]).
-        entries
-
-      @items.each { |item| item.sync = true }
     end
 
     def crud_redirect_url
       { action: :index }
     end
 
+    def expunge
+      @imap.conn.expunge
+    end
+
   public
     def index
       @items = @model.
         where(mailbox: @mailbox).
+        imap_search(params[:s]).
         page(params[:page]).
         per(50).
         imap_all
@@ -98,29 +105,89 @@ class Webmail::MailsController < ApplicationController
 
     def change_flag(action)
       (params[:ids] || [params[:id]]).each do |id|
-        item = @model.where(mailbox: @mailbox).imap_find(id.to_i) rescue nil
+        item = @model.where(mailbox: @mailbox).imap_find(id) rescue nil
         item.try(action) if item
       end
 
-      location = params[:redirect].presence || { action: :index }
+      render_change
+    end
 
+    def move
+      (params[:ids] || [params[:id]]).each do |id|
+        item = @model.where(mailbox: @mailbox).imap_find(id) rescue nil
+        item.move(params[:dst]) if item
+      end
+      render_change
+    end
+
+    def copy
+      (params[:ids] || [params[:id]]).each do |id|
+        item = @model.where(mailbox: @mailbox).imap_find(id) rescue nil
+        item.copy(params[:dst]) if item
+      end
+      render_change
+    end
+
+    def render_change
+      location = params[:redirect].presence || { action: :index }
       respond_to do |format|
         format.html { redirect_to location, notice: t('webmail.notice.changed') }
         format.json { head :no_content }
       end
     end
 
-    def create
-      @item = @model.new get_params
+    def new
+      @item = @model.new pre_params.merge(fix_params)
 
-      send_params = {
-        from: "#{@cur_user.name} <#{@cur_user.email}>",
-        to: @item.to,
-        subject: @item.subject,
-        body: @item.text
-      }
-      msg = SS::Mailer.new_message(send_params).deliver_now
+      if params[:reply]
+        @item.new_reply params[:reply]
+      elsif params[:forward]
+        @item.new_forward params[:forward]
+      else
+        @item.new_create
+      end
+
+      raise "403" unless @item.allowed?(:edit, @cur_user)
+    end
+
+    def create
+      @item = @model.new
+      @item.mail_attributes = get_params
+
+      msg = Webmail::Mailer.new_message(@item)
+
+      if params[:commit] == I18n.t("views.button.save")
+        @item.save_to_draft(msg.to_s)
+      else
+        @item.save_to_sent(msg.deliver_now.to_s)
+      end
 
       render_create true
+    end
+
+    def destroy
+      raise "403" unless @item.allowed?(:delete, @cur_user)
+      render_destroy @item.destroy_or_trash
+    end
+
+    def destroy_all
+      @items = @model.
+        where(mailbox: @mailbox).
+        in(uid: params[:ids]).
+        entries
+      @items.each { |item| item.sync = true }
+
+      entries = @items.entries
+      @items = []
+
+      entries.each do |item|
+        if item.allowed?(:delete, @cur_user)
+          next if item.destroy_or_trash
+        else
+          item.errors.add :base, :auth_error
+        end
+        @items << item
+      end
+      render_destroy_all(entries.size != @items.size)
     end
 end
