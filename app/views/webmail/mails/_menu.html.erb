@@ -8,6 +8,7 @@
     <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
   <% else %>
     <%= link_to t('webmail.links.reply'), { action: :new, reply: @item.uid }, { class: 'send-reply' } unless @item.draft? %>
+    <%= link_to t('webmail.links.reply_all'), { action: :new, reply_all: @item.uid }, { class: 'send-reply-all' } unless @item.draft? %>
     <%= link_to t('webmail.links.forward'), { action: :new, forward: @item.uid }, { class: 'send-forward' } unless @item.draft? %>
     <%= link_to(:delete, { action: :delete }, class: :delete) %>
     <%= link_to t('webmail.links.set_seen'), { action: :set_seen }, { class: 'update-mail set-seen' } %>

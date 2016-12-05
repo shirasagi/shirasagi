@@ -1,6 +1,8 @@
 ja:
   modules:
     webmail: ウェブメール
+    addons:
+      webmail/file: 添付ファイル
 
   webmail:
     mail: メール
@@ -32,6 +34,7 @@ ja:
       set_star: スターをつける
       unset_star: スターをはずす
       reply: 返信する
+      reply_all: 全員に返信する
       forward: 転送する
       move: 移動する
       copy: コピーする
@@ -44,6 +47,7 @@ ja:
     models:
       webmail/mail: メール
       webmail/mailbox: フォルダー
+      webmail/address: アドレス帳
       webmail/signature: 署名
     attributes:
       ss/model/user:
@@ -54,8 +58,6 @@ ja:
         imap_sent_box: 送信済みフォルダー
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
-      webmail/mailbox:
-        name: フォルダー名
       webmail/mail:
         size: サイズ
         date: 日付
@@ -70,6 +72,11 @@ ja:
         subject: 件名
         body: 本文
         attachments: 添付ファイル
+      webmail/mailbox:
+        name: フォルダー名
+      webmail/address:
+        name: 氏名
+        email: メールアドレス
       webmail/signature:
         name: 名称
         text: 本文

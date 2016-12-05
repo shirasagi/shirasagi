@@ -36,9 +36,14 @@ SS::Application.routes.draw do
     resources :mails, concerns: [:deletion, :mail], path: 'mails/:mailbox',
       mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
     resources :mailboxes, concerns: [:deletion]
+    resources :addresses, concerns: [:deletion]
     resources :signatures, concerns: [:deletion]
     resource :cache_setting, only: [:show, :update]
     resource :special_mailbox, only: [:show, :edit, :update]
     resource :account_setting, only: [:show, :edit, :update]
+
+    namespace "apis" do
+      get "addresses" => "addresses#index"
+    end
   end
 end

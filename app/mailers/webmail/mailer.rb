@@ -4,12 +4,16 @@ class Webmail::Mailer < ActionMailer::Base
     user = item.imap.user
 
     params = {
-      from: "#{user.name} <#{user.email}>",
+      from: user.email_address,
       to: item.to,
       cc: item.cc,
       bcc: item.bcc,
       subject: item.subject
     }
+
+    item.files.each do |file|
+      attachments[file.name] = file.read
+    end
 
     mail(params) do |format|
       if item.html?

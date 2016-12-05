@@ -42,16 +42,6 @@ class Webmail::Imap
     { user_id: user.id, host: conf[:host], account: conf[:account] }
   end
 
-  def examine(mailbox)
-    conn.examine(mailbox)
-  end
-
-  def select(mailbox)
-    return if @selected == mailbox
-    @selected = @mailbox
-    conn.select(mailbox)
-  end
-
   def quota_info
     quota = conn.getquotaroot('INBOX')[1]
     ApplicationController.helpers.number_to_human_size(quota.usage.to_i * 1024) +

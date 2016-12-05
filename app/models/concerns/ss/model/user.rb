@@ -130,6 +130,10 @@ module SS::Model::User
     end
   end
 
+  def email_address
+    %("#{name}" <#{email}>)
+  end
+
   def encrypt_password
     self.password = SS::Crypt.crypt(in_password)
   end

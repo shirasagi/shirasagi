@@ -7,13 +7,22 @@
 
 <dl class="see mod-webmail-mail">
   <dt><%= @model.t :to %></dt>
-  <dd><%= f.text_area :to, required: true, value: @item.to.join('; '), style: "height: 4em;" %></dd>
+  <dd>
+    <%= f.text_area :to_text, style: "height: 4em;" %>
+    <%= render 'address_form', { f: f, field: :to } %>
+  </dd>
 
   <dt><%= @model.t :cc %></dt>
-  <dd><%= f.text_area :cc, value: @item.cc.join('; '), style: "height: 4em;" %></dd>
+  <dd>
+    <%= f.text_area :cc_text, style: "height: 4em;" %>
+    <%= render 'address_form', { f: f, field: :cc } %>
+  </dd>
 
   <dt><%= @model.t :bcc %></dt>
-  <dd><%= f.text_area :bcc, value: @item.bcc.join('; '), style: "height: 4em;" %></dd>
+  <dd>
+    <%= f.text_area :bcc_text, style: "height: 4em;" %>
+    <%= render 'address_form', { f: f, field: :bcc } %>
+  </dd>
 
   <dt><%= @model.t :subject %></dt>
   <dd><%= f.text_field :subject %></dd>

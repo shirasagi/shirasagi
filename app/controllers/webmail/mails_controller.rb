@@ -6,7 +6,7 @@ class Webmail::MailsController < ApplicationController
   model Webmail::Mail
 
   before_action :set_mailbox
-  before_action :select_mailbox, only: [:move, :destroy, :destroy_all]
+  #before_action :select_mailbox, only: [:move, :destroy, :destroy_all]
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
                                   :attachment, :download, :header_view, :source_view]
   after_action :expunge, only: [:move, :destroy, :destroy_all]
@@ -18,11 +18,12 @@ class Webmail::MailsController < ApplicationController
 
     def set_mailbox
       @mailbox = params[:mailbox]
-      @imap.examine(@mailbox)
-    end
 
-    def select_mailbox
-      @imap.select(@mailbox)
+      if params[:action] =~ /index|show|attachment|download|_view/
+        @imap.conn.examine(@mailbox)
+      else
+        @imap.conn.select(@mailbox)
+      end
     end
 
     def fix_params
@@ -141,6 +142,8 @@ class Webmail::MailsController < ApplicationController
 
       if params[:reply]
         @item.new_reply params[:reply]
+      elsif params[:reply_all]
+        @item.new_reply_all params[:reply_all]
       elsif params[:forward]
         @item.new_forward params[:forward]
       else
@@ -158,8 +161,10 @@ class Webmail::MailsController < ApplicationController
 
       if params[:commit] == I18n.t("views.button.save")
         @item.save_to_draft(msg.to_s)
+        @item.destroy_files
       else
         @item.save_to_sent(msg.deliver_now.to_s)
+        @item.destroy_files
       end
 
       render_create true

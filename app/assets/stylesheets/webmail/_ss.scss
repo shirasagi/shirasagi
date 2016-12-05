@@ -83,6 +83,19 @@
     border: 1px solid #ccc;
   }
 }
+.webmail-addresses {
+  display: block;
+  tbody, tr, td {
+    display: inline;
+  }
+  td {
+    margin: 5px 5px 5px 0px;
+    .deselect {
+      margin: 0 4px;
+      padding: 2px 4px;
+    }
+  }
+}
 @media print {
   .webmail-print {
     #head, #foot, #navi, #crumbs, #menu {

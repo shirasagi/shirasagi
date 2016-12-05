@@ -5,4 +5,9 @@
   <% end %>
 <% end %>
 
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="filename"><%= truncate item.text, length: 40 %></span>
+<% end %>
+
 <%= render file: "ss/crud/index" %>

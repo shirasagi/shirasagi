@@ -1,0 +1,25 @@
+<% return "" if @item.files.blank? %>
+
+<dl class="see">
+  <dd class="wide">
+    <div id="selected-files">
+      <% @item.files.each do |file| %>
+        <div class="file-view">
+          <%= link_to file.url, class: :thumb, target: "_blank" do %>
+            <% if file.image? %>
+              <%= image_tag file.thumb_url, alt: file.name %>
+            <% else %>
+              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <% end %>
+          <% end %>
+
+          <div class="name">
+            <label>
+              <%= file.name %>
+            </label><br />
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </dd>
+</dl>

@@ -29,6 +29,10 @@ SS::Application.routes.draw do
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
     end
+
+    namespace "apis" do
+      get "users" => "users#index", path: "users/:group"
+    end
   end
 
   namespace "sns", path: ".u:user", user: /\d+/ do

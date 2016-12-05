@@ -52,7 +52,7 @@ class Webmail::Mailbox
 
   def unseen_size
     return @unseen_size if @unseen_size
-    imap.examine(original_name)
+    imap.conn.examine(original_name)
     @unseen_size = imap.conn.uid_search(%w(UNSEEN), 'UTF-8').size
   rescue Net::IMAP::NoResponseError
     @unseen_size = 0

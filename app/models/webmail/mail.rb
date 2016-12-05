@@ -6,11 +6,13 @@ class Webmail::Mail
   include SS::FreePermission
   include Webmail::Mail::Flag
   include Webmail::Mail::Parser
+  include Webmail::Addon::File
 
   # Webmail::Imap
   cattr_accessor :imap
 
-  attr_accessor :sync, :rfc822, :text, :html, :attachments, :format, :reply_uid, :forward_uid, :signature
+  attr_accessor :sync, :rfc822, :text, :html, :attachments, :format, :reply_uid, :forward_uid, :signature,
+                :to_text, :cc_text, :bcc_text
 
   field :host, type: String
   field :account, type: String
@@ -30,7 +32,9 @@ class Webmail::Mail
   field :subject, type: String
   field :attachments_count, type: Integer, default: 0
 
-  permit_params :to, :cc, :bcc, :subject, :text, :html, :format, :reply_uid, :forward_uid
+  permit_params :subject, :text, :html, :format, :reply_uid, :forward_uid,
+                :to_text, :cc_text, :bcc_text,
+                to: [], cc: [], bcc: [], reply_to: []
 
   validates :host, presence: true
   validates :account, presence: true
@@ -88,7 +92,7 @@ class Webmail::Mail
       ref = self.class.imap_find(reply_uid)
       ref.set_flags(['Answered'])
     elsif forward_uid.present?
-      #Forwarded?
+      #Forwarded
     end
     imap.conn.append(imap.user.imap_sent_box, msg, [:Seen], Time.zone.now)
   end
@@ -163,7 +167,6 @@ class Webmail::Mail
       limit = scope.limit_value
       offset = scope.offset_value
 
-      #imap.examine(mailbox)
       uids = imap.conn.uid_sort(sort_value, search_value, 'UTF-8')
       size = uids.size
       uids = uids.slice(offset, limit) || []
@@ -177,7 +180,6 @@ class Webmail::Mail
     def imap_find(uid)
       uid = uid.to_i
 
-      #imap.examine(mailbox)
       msg = imap.conn.uid_fetch(uid, ['RFC822'])[0]
 
       item = cache_all([uid]).first

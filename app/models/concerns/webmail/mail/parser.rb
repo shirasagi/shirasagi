@@ -59,11 +59,15 @@ module Webmail::Mail::Parser
   end
 
   def mail_attributes=(attr)
-    [:to, :cc, :bcc].each do |key|
-      attr[key] = attr[key].split(/;/).compact if attr[key].is_a?(String)
-    end
-
     self.attributes = attr
+
+    self.to = join_address_field(to, to_text)
+    self.cc = join_address_field(cc, cc_text)
+    self.bcc = join_address_field(bcc, bcc_text)
+  end
+
+  def join_address_field(addr, str)
+    (addr + str.to_s.split(/;/)).uniq.select { |c| c.present? }
   end
 
   def new_create
@@ -76,6 +80,18 @@ module Webmail::Mail::Parser
     ref = self.class.imap_find(reply_uid)
 
     self.to = [ref.from] if ref.from.present?
+
+    sign = Webmail::Signature.default_sign(user)
+    self.subject = "Re: " + ref.subject.to_s.gsub(/^Re:\s*/, '')
+    self.text = [sign, "------ Original Message ------", ref.text.to_s.gsub(/^/m, "> ")].compact.join("\n\n")
+    self.html = [sign, ref.html].compact.join("<hr />") if ref.html?
+  end
+
+  def new_reply_all(uid)
+    self.reply_uid = uid
+    ref = self.class.imap_find(reply_uid)
+
+    self.to = ([ref.from] + ref.to).reject { |c| c.include?(imap.user.email) } if ref.from.present?
     self.cc = ref.cc if ref.cc.present?
 
     sign = Webmail::Signature.default_sign(user)

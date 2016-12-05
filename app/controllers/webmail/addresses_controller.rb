@@ -1,12 +1,12 @@
-class Webmail::SignaturesController < ApplicationController
+class Webmail::AddressesController < ApplicationController
   include Webmail::BaseFilter
   include Sns::CrudFilter
 
-  model Webmail::Signature
+  model Webmail::Address
 
   private
     def set_crumbs
-      @crumbs << [:'mongoid.models.webmail/signature', { action: :index } ]
+      @crumbs << [:'mongoid.models.webmail/address', { action: :index } ]
     end
 
     def fix_params

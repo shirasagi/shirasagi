@@ -18,6 +18,14 @@ class Webmail::Signature
 
   scope :default, -> { where default: 'enabled' }
 
+  scope :search, ->(params) {
+    criteria = where({})
+    return criteria if params.blank?
+
+    criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
+    criteria
+  }
+
   def default_options
     %w(enabled disabled).map { |m| [I18n.t("views.options.state.#{m}"), m] }
   end
