@@ -72,11 +72,20 @@ module Workflow::Addon
           ids[f.id] = file.id
 
           html = self.html
-          next unless html.present?
+          if respond_to?(:html) && html.present?
+            html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
+            html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+            self.html = html
+          end
 
-          html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-          html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-          self.html = html
+          if respond_to?(:body_parts) && body_parts.present?
+            self.body_parts = body_parts.map do |html|
+              html = html.to_s
+              html = html.gsub("=\"#{f.url}\"", "=\"#{file.url}\"")
+              html = html.gsub("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+              html
+            end
+          end
         end
         self.file_ids = ids.values
         ids
