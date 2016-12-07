@@ -110,6 +110,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
 
       click_on I18n.t('views.links.edit')
       click_on I18n.t('views.button.publish_save')
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       # completely change file ids
       save_file_ids = article_page.file_ids.dup
