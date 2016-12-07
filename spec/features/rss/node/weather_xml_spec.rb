@@ -37,7 +37,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       fill_in 'item[xml]', with: xml
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
 
       expect(Rss::WeatherXmlPage.count).to eq 1
       Rss::WeatherXmlPage.first.tap do |item|
@@ -53,7 +53,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       fill_in 'item[name]', with: name1
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
 
       Rss::WeatherXmlPage.first.tap do |item|
         expect(item.name).to eq name1
@@ -63,7 +63,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       click_on name1
       click_on '削除する'
       click_on '削除'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
     end
   end
 
@@ -106,7 +106,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       click_on "close"
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
     end
   end
 end

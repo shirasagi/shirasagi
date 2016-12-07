@@ -37,7 +37,7 @@ describe "workflow_branch", dbscope: :example do
           fill_in "item[name]", with: "[TEST] br_replace"
           click_button "下書き保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css("#notice", text: "保存しました。", wait: 60)
 
         master = Article::Page.where(name: "[TEST] br_page").first
         branch = Article::Page.where(name: "[TEST] br_replace").first

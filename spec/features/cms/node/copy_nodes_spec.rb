@@ -32,7 +32,7 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example do
       fill_in 'item[target_node_name]', with: target_node_name
       click_on '実行'
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice .wrap', text: '処理を開始します。ジョブ実行履歴で結果をご確認下さい')
+      expect(page).to have_css('#notice .wrap', text: '処理を開始します。ジョブ実行履歴で結果をご確認下さい', wait: 60)
       expect(Cms::CopyNodesTask.first.target_node_name).to eq target_node_name
       expect(enqueued_jobs.first[:job]).to eq Cms::Node::CopyNodesJob
     end

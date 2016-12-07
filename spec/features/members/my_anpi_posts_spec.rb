@@ -58,7 +58,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       end
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -75,7 +75,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       fill_in 'item[text]', with: text1
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -87,7 +87,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       click_on member.name
       click_on '削除する'
       click_on '削除'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
     end
   end
 
@@ -126,7 +126,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       click_on item.name
       click_on 'Google Person Finderに安否情報を提供する'
       click_on '登録'
-      expect(page).to have_css('#notice', text: 'Google Person Finder に登録しました。')
+      expect(page).to have_css('#notice', text: 'Google Person Finder に登録しました。', wait: 60)
     end
   end
 end
