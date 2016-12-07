@@ -3,9 +3,11 @@ module SS::Model::File
   extend SS::Translation
   include SS::Document
   include SS::Reference::User
+  include SS::FileFactory
+  include SS::ExifGeoLocation
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :in_files, :resizing
+  attr_accessor :in_file, :resizing
 
   included do
     cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/files" }
@@ -21,8 +23,7 @@ module SS::Model::File
 
     belongs_to :site, class_name: "SS::Site"
 
-    permit_params :state, :name, :filename, :resizing
-    permit_params :in_file, :in_files, in_files: []
+    permit_params :in_file, :state, :name, :filename, :resizing
 
     before_validation :set_filename, if: ->{ in_file.present? }
 
@@ -140,24 +141,6 @@ module SS::Model::File
     Fs.exists?(path) ? Fs.binread(path) : nil
   end
 
-  def save_files
-    return false unless valid?
-
-    in_files.each do |file|
-      item = self.class.new(attributes)
-      item.cur_site = cur_site if respond_to?(:cur_site)
-      item.cur_user = cur_user if respond_to?(:cur_user)
-      item.cur_node = cur_node if respond_to?(:cur_node)
-      item.in_file = file
-      item.resizing = resizing
-      next if item.save
-
-      item.errors.full_messages.each { |m| errors.add :base, m }
-      return false
-    end
-    true
-  end
-
   def uploaded_file(&block)
     Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type, &block)
   end
@@ -195,6 +178,7 @@ module SS::Model::File
       if image?
         list = Magick::ImageList.new
         list.from_blob(in_file.read)
+        extract_geo_location(list)
         list.each do |image|
           case SS.config.env.image_exif_option
           when "auto_orient"

@@ -350,6 +350,7 @@ ja:
         size: ファイルサイズ
         content_type: Content Type
         resizing: リサイズ
+        geo_location: 緯度・経度
       ss/model/role:
         name: ロール名
         permission_level: 権限レベル
@@ -526,6 +527,8 @@ ja:
         - ファイル名（表示用）を入力します。
       filename:
         - ファイル名を入力します。
+      geo_location:
+        - 緯度・経度を10進で入力します。
     ss/model/user_title:
       name:
         - 役職名を入力します。
