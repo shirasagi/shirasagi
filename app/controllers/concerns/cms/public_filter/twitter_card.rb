@@ -34,34 +34,49 @@ module Cms::PublicFilter::TwitterCard
   private
     def twitter_description
       if @cur_item && @cur_item.respond_to?(:html)
-        ApplicationController.helpers.sanitize(@cur_item.html.to_s, tags: []).squish.truncate(200)
+        description = @cur_item.html.to_s
       elsif @cur_item && @cur_item.respond_to?(:text)
-        ApplicationController.helpers.sanitize(@cur_item.text.to_s, tags: []).squish.truncate(200)
+        description = @cur_item.text.to_s
       end
+      return if description.blank?
+
+      %w(script style).each do |tag|
+        description = description.gsub(/<#{tag}.+?<\/#{tag}>/mi, '')
+      end
+      ApplicationController.helpers.sanitize(description, tags: []).squish.truncate(200)
     end
 
     def twitter_image_urls
-      if @cur_item && @cur_item.respond_to?(:html)
-        html = @cur_item.html.to_s
-      end
-
-      return [] if html.blank?
+      return if @cur_item.blank?
 
       urls = []
-      regex = /\<\s*?img\s+[^>]*\/?>/i
-      regex.match(html) do |m|
-        next unless m[0] =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
-
-        url = $1
-        url = url[1..-1] if url.start_with?("'", '"')
-        url = url[0..-2] if url.end_with?("'", '"')
-        url = url.strip
-
-        next unless url.start_with?("/")
-
-        urls << "#{@cur_site.full_url}#{url[1..-1]}"
+      if @cur_item.respond_to?(:thumb)
+        thumb = @cur_item.thumb
+        if thumb.present?
+          urls << thumb.full_url
+        end
       end
 
-      urls
+      if @cur_item.respond_to?(:html)
+        html = @cur_item.html.to_s
+        if html.present?
+          # extract image from html
+          regex = /\<\s*?img\s+[^>]*\/?>/i
+          regex.match(html) do |m|
+            next unless m[0] =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
+
+            url = $1
+            url = url[1..-1] if url.start_with?("'", '"')
+            url = url[0..-2] if url.end_with?("'", '"')
+            url = url.strip
+
+            next unless url.start_with?("/")
+
+            urls << "#{@cur_site.full_url}#{url[1..-1]}"
+          end
+
+          urls
+        end
+      end
     end
 end
