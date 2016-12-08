@@ -60,6 +60,12 @@ module SS::Model::Site
       root
     end
 
+    def full_root_url
+      schema = (https == 'enabled') ? "https" : "http"
+      root = "#{schema}://#{domain}/".sub(/\/+$/, "/")
+      root
+    end
+
     def filtered_root_urls
       urls = []
       root_urls.each do |root_url|
