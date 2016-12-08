@@ -5,6 +5,7 @@ class Fs::FilesController < ApplicationController
 
   before_action :set_item
   before_action :deny
+  rescue_from StandardError, with: :rescue_action
 
   private
     def set_item
@@ -30,6 +31,19 @@ class Fs::FilesController < ApplicationController
 
     def set_last_modified
       response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
+    end
+
+    def rescue_action(e = nil)
+      if e.to_s =~ /^\d+$/
+        status = e.to_s.to_i
+        return render status: status, file: error_template(status), layout: false
+      end
+      raise e
+    end
+
+    def error_template(status)
+      file = "#{Rails.public_path}/#{status}.html"
+      Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
     end
 
   public

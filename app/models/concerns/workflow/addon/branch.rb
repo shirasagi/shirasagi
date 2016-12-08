@@ -71,8 +71,8 @@ module Workflow::Addon
           file.save validate: false
           ids[f.id] = file.id
 
-          html = self.html
           if respond_to?(:html) && html.present?
+            html = self.html
             html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
             html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
             self.html = html
