@@ -83,7 +83,7 @@ class Uploader::File
 
   def filename
     return path.sub(/.*?\/_\//, "") if Fs.mode == :grid_fs
-    path.sub(/^#{Regexp.escape(SS::Site.root)}.+?\/_\//, "")
+    path.sub(/^#{site.path}\//, "")
   end
 
   def filename=(n)
