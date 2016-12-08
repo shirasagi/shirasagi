@@ -43,7 +43,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
       end
     end
 
-    xit do
+    it do
       visit article_pages_path(site, article_node)
       click_on article_page.name
 
@@ -116,6 +116,8 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
       click_on I18n.t('views.links.edit')
 
       click_on I18n.t('views.button.draft_save')
+      expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
+      click_on I18n.t('views.button.ignore_alert')
 
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
       article_page.reload
