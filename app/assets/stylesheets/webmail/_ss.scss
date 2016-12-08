@@ -83,17 +83,26 @@
     border: 1px solid #ccc;
   }
 }
+.see.webmail-address-form {
+  padding: 0;
+}
 .webmail-addresses {
+  @include clear;
   display: block;
-  tbody, tr, td {
+  tbody, td {
     display: inline;
   }
-  td {
-    margin: 5px 5px 5px 0px;
-    .deselect {
-      margin: 0 4px;
-      padding: 2px 4px;
-    }
+  tr {
+    display: inline-block;
+    float: left;
+    margin: 5px 5px 0 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-left-width: 5px;
+  }
+  .deselect {
+    margin-left: 2px;
+    padding: 2px 4px;
   }
 }
 @media print {

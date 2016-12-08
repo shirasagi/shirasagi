@@ -17,10 +17,17 @@ module Webmail::Mail::Parser
       cc: self.class.build_addresses(envelope.cc).presence,
       bcc: self.class.build_addresses(envelope.bcc).presence,
       reply_to: self.class.build_addresses(envelope.reply_to).presence,
-      in_reply_to: self.class.build_addresses(envelope.in_reply_to).presence,
+      in_reply_to: envelope.in_reply_to.presence,
+      references: parse_references(mail.references),
       subject: envelope.subject.try(:toutf8),
       attachments_count: mail.attachments.size
     }
+  end
+
+  def parse_references(references)
+    return [] if references.blank?
+    references = [references] if references.is_a?(String)
+    references.map { |c| "<#{c}>" }
   end
 
   def parse_body(msg)
@@ -56,57 +63,5 @@ module Webmail::Mail::Parser
     end
 
     ApplicationController.helpers.sanitize_with(html, attributes: %w(data-src))
-  end
-
-  def mail_attributes=(attr)
-    self.attributes = attr
-
-    self.to = join_address_field(to, to_text)
-    self.cc = join_address_field(cc, cc_text)
-    self.bcc = join_address_field(bcc, bcc_text)
-  end
-
-  def join_address_field(addr, str)
-    (addr + str.to_s.split(/;/)).uniq.select { |c| c.present? }
-  end
-
-  def new_create
-    sign = Webmail::Signature.default_sign(user)
-    self.text = "\n\n#{sign}"
-  end
-
-  def new_reply(uid)
-    self.reply_uid = uid
-    ref = self.class.imap_find(reply_uid)
-
-    self.to = [ref.from] if ref.from.present?
-
-    sign = Webmail::Signature.default_sign(user)
-    self.subject = "Re: " + ref.subject.to_s.gsub(/^Re:\s*/, '')
-    self.text = [sign, "------ Original Message ------", ref.text.to_s.gsub(/^/m, "> ")].compact.join("\n\n")
-    self.html = [sign, ref.html].compact.join("<hr />") if ref.html?
-  end
-
-  def new_reply_all(uid)
-    self.reply_uid = uid
-    ref = self.class.imap_find(reply_uid)
-
-    self.to = ([ref.from] + ref.to).reject { |c| c.include?(imap.user.email) } if ref.from.present?
-    self.cc = ref.cc if ref.cc.present?
-
-    sign = Webmail::Signature.default_sign(user)
-    self.subject = "Re: " + ref.subject.to_s.gsub(/^Re:\s*/, '')
-    self.text = [sign, "------ Original Message ------", ref.text.to_s.gsub(/^/m, "> ")].compact.join("\n\n")
-    self.html = [sign, ref.html].compact.join("<hr />") if ref.html?
-  end
-
-  def new_forward(uid)
-    self.forward_uid = uid
-    ref = self.class.imap_find(forward_uid)
-
-    sign = Webmail::Signature.default_sign(user)
-    self.subject = "Fw: " + ref.subject.to_s
-    self.text = [sign, "------ Original Message ------", ref.text].compact.join("\n\n")
-    self.html = [sign, ref.html].compact.join("<hr />") if ref.html?
   end
 end

@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+root = File.dirname(__dir__)
+
+## log
+
+puts "# Clean logs"
+Dir.glob("#{root}/log/*.log") do |file|
+  puts file
+  File.write(file, "")
+end
+
+## directories
+
+puts "\n# Clean directories"
+puts `find #{root}/private -type d -empty`
+puts `find #{root}/private -type d -empty -delete`

@@ -6,6 +6,7 @@ class Webmail::Mail
   include SS::FreePermission
   include Webmail::Mail::Flag
   include Webmail::Mail::Parser
+  include Webmail::Mail::Maker
   include Webmail::Addon::File
 
   # Webmail::Imap
@@ -28,7 +29,8 @@ class Webmail::Mail
   field :cc, type: Array, default: []
   field :bcc, type: Array, default: []
   field :reply_to, type: Array, default: []
-  field :in_reply_to, type: Array, default: []
+  field :in_reply_to, type: String
+  field :references, type: Array, default: []
   field :subject, type: String
   field :attachments_count, type: Integer, default: 0
 
@@ -207,6 +209,7 @@ class Webmail::Mail
             item.parse_message(msg)
             item.save
           rescue => e
+            raise e if Rails.env.development?
             item.subject = "[Error] #{e}"
             def item.save; end
           end

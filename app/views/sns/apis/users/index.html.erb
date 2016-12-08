@@ -1,5 +1,5 @@
 <%= jquery do %>
-  Sns_SearchUI_Email.modal();
+  SS_SearchUI.modal();
 <% end %>
 
 <div class="search-ui-form">
@@ -12,7 +12,7 @@
       <dt><%= t "mongoid.models.ss/group" %></dt>
       <dd>
         <% if browser.ie?(["<10"]) %>
-          <%= render partial: "group_dropdown_normal", locals: { f: f } %>
+          <%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id))) %>
         <% else %>
           <%= render partial: "group_dropdown_tree", locals: { f: f } %>
         <% end %>
