@@ -47,6 +47,7 @@ module Cms::PublicFilter
     def set_site
       host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
       path = request.env["REQUEST_PATH"] || request.path
+      #raise [host, path].to_s
 
       @cur_site ||= begin
         site = SS::Site.find_by_domain host, path

@@ -60,6 +60,20 @@ module SS::Model::Site
       root
     end
 
+    def filtered_root_urls
+      urls = []
+      root_urls.each do |root_url|
+        if SS.config.kana.location.present?
+          urls << root_url.sub("/", "#{SS.config.kana.location}/")
+        end
+
+        if !mobile_disabled? && mobile_location.present?
+          urls << root_url.sub("/", "#{mobile_location}/")
+        end
+      end
+      urls
+    end
+
     def root_groups
       root_group_ids = groups.map do |group|
         group.root.id
@@ -121,7 +135,8 @@ module SS::Model::Site
           depth = 0
 
           sites.each do |s|
-            s.root_urls.each do |root_url|
+            root_urls = s.root_urls + s.filtered_root_urls
+            root_urls.each do |root_url|
               if url =~ /^#{root_url}/ && url.count("/") > depth
                 site = s
                 depth = root_url.count("/")
