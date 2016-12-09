@@ -202,6 +202,7 @@ ja:
       hatena_add: このエントリーをはてなブックマークに追加
       google: Google+
       evernote: Evernote
+      line: LINEで送る
 
     opendata_ref/license:
       ref_opendata: オープンデータ側の設定にしたがう
