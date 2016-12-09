@@ -33,6 +33,10 @@ module Cms::Model::Page
     released || super
   end
 
+  def preview_path
+    site.subdir ?  "#{site.subdir}/#{filename}" : filename
+  end
+
   def generate_file
     return false unless serve_static_file?
     return false unless public?
