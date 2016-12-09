@@ -4,6 +4,9 @@ class Cms::Apis::CategoriesController < ApplicationController
   model Cms::Node
 
   def index
+    @single = params[:single].present?
+    @multi = !@single
+
     @items = @model.site(@cur_site).
       where(route: /^(category\/|opendata\/category)/).
       search(params[:s]).
