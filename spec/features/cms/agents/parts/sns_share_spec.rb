@@ -21,6 +21,7 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       expect(page).to have_css(".hatena")
       expect(page).to have_css(".google")
       expect(page).to have_css(".evernote")
+      expect(page).to have_css(".line")
     end
   end
 end
