@@ -9,5 +9,9 @@ FactoryGirl.define do
 
   factory :cms_layout, class: Cms::Layout, traits: [:cms_layout] do
     #
+
+    factory :cms_layout_basename_invalid do
+      basename "lay/out"
+    end
   end
 end

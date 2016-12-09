@@ -11,6 +11,13 @@ end
 describe Cms::Node::Node do
   let(:item) { create :cms_node_node }
   it_behaves_like "cms_node#spec"
+
+  describe "validation" do
+    it "basename" do
+      item = build(:cms_node_node_basename_invalid)
+      expect(item.invalid?).to be_truthy
+    end
+  end
 end
 
 describe Cms::Node::Page do

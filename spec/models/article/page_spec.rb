@@ -17,6 +17,13 @@ describe Article::Page, dbscope: :example do
     it { expect(item.private_show_path).to eq show_path }
   end
 
+  describe "validation" do
+    it "basename" do
+      item = build(:article_page_basename_invalid)
+      expect(item.invalid?).to be_truthy
+    end
+  end
+
   describe "shirasagi-442" do
     subject { create :article_page, cur_node: node, html: "   <p>あ。&rarr;い</p>\r\n   " }
     its(:summary) { is_expected.to eq "あ。→い" }
