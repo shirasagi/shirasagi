@@ -20,6 +20,8 @@ module SS::Model::Site
     field :https, type: String, default: "disabled"
     embeds_ids :groups, class_name: "SS::Group"
 
+    attr_accessor :cur_domain
+
     permit_params :name, :host, :root_urls, :https, group_ids: []
 
     validates :name, presence: true, length: { maximum: 40 }
@@ -28,28 +30,34 @@ module SS::Model::Site
     validate :validate_root_urls, if: ->{ root_urls.present? }
 
     def domain
-      domains[0]
+      cur_domain ? cur_domain : domains[0]
     end
 
-    def subdir(domain = nil)
-      return subdirs[0] unless domain
-
-      i = domains.index(domain)
-      return nil unless i
-      subdirs[i]
-    end
-
-    def root_path
-      "#{self.class.root}/" + host.split(//).join("/") + "/_"
+    def subdir
+      if cur_domain
+        i = domains.index(cur_domain)
+        i ? subdirs[i] : nil
+      else
+        subdirs[0]
+      end
     end
 
     def path
       subdir.present? ? "#{root_path}/#{subdir}" : root_path
     end
 
+    def root_path
+      "#{self.class.root}/" + host.split(//).join("/") + "/_"
+    end
+
     def url
       root = domain.index("/") ? domain.sub(/^.*?\//, "/") : "/"
       root += "#{subdir}/" if subdir.present?
+      root
+    end
+
+    def root_url
+      root = domain.index("/") ? domain.sub(/^.*?\//, "/") : "/"
       root
     end
 
@@ -123,6 +131,11 @@ module SS::Model::Site
           self.domains << root_url.shift
           self.subdirs << root_url.join("/").presence
         end
+
+        if self.domains.uniq.count != self.domains.count
+          errors.add :domains, :duplicate
+          return
+        end
       end
 
     class << self
@@ -152,6 +165,7 @@ module SS::Model::Site
         end
 
         #site ||= SS::Site.first if Rails.env.development?
+        site.cur_domain = host if site
         site
       end
     end

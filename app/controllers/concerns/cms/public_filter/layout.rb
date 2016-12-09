@@ -13,9 +13,7 @@ module Cms::PublicFilter::Layout
     end
 
     def find_part(path)
-      part_path = path.dup
-      part_path.sub!(/^\/#{@cur_site_subdir}\//, "") if @cur_site_subdir.present?
-      part = Cms::Part.site(@cur_site).filename(part_path).first
+      part = Cms::Part.site(@cur_site).filename(path).first
       return unless part
       @preview || part.public? ? part.becomes_with_route : nil
     end
@@ -58,13 +56,11 @@ module Cms::PublicFilter::Layout
       @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
       @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
-      cur_path = @cur_path.dup
-      cur_path = @cur_path.sub(/^\/#{@cur_site_subdir}\//, "/") if @cur_site_subdir.present?
       body = @cur_layout.body.to_s
       body = body.sub(/<body.*?>/) do |m|
-        m = m.sub(/ class="/, %( class="#{body_class(cur_path)} )     ) if m =~ / class="/
-        m = m.sub(/<body/,    %(<body class="#{body_class(cur_path)}")) unless m =~ / class="/
-        m = m.sub(/<body/,    %(<body id="#{body_id(cur_path)}")      ) unless m =~ / id="/
+        m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
+        m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
+        m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
         m
       end
 

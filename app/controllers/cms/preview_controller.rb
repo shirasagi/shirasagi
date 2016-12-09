@@ -5,7 +5,6 @@ class Cms::PreviewController < ApplicationController
   include Kana::PublicFilter
   include Fs::FileFilter
 
-  before_action :set_site
   before_action :set_group
   before_action :check_api_user
   before_action :set_path_with_preview, prepend: true
@@ -64,16 +63,15 @@ class Cms::PreviewController < ApplicationController
 
   private
     def set_site
-      host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
       @cur_site = request.env["ss.site"] = SS::Site.find params[:site]
-      @cur_site_subdir = @cur_site.subdir(host)
+      @cur_site.cur_domain = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
       @preview  = true
     end
 
     def set_path_with_preview
       set_site
       @cur_path ||= request.env["REQUEST_PATH"] || request.path
-      @cur_path.sub!(/^\/#{@cur_site_subdir}\//, "") if @cur_site_subdir.present?
+      @cur_path.sub!(/^\/#{@cur_site.subdir}\//, "") if @cur_site.subdir.present?
       @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
       @cur_path = URI.decode(@cur_path)

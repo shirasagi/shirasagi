@@ -33,5 +33,6 @@ class Recommend::History::ReceiverController < ApplicationController
   private
     def set_site
       @cur_site = Cms::Site.find id: params[:site]
+      @cur_site.cur_domain = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
     end
 end

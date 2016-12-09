@@ -26,6 +26,7 @@ module Cms::BaseFilter
       @ss_mode = :cms
       @cur_site = Cms::Site.find id: params[:site]
       request.env["ss.site"] = @cur_site
+      @cur_site.cur_domain = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
       @crumbs << [@cur_site.name, cms_contents_path]
     end
 

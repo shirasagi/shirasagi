@@ -19,21 +19,23 @@ module Cms::PublicFilter
       page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
       params[:page] = page.to_i
       @cur_path.sub!(/\.p\d+\.html$/, ".html")
+      @cur_main_path.sub!(/\.p\d+\.html$/, ".html")
     end
 
     if @html =~ /\.part\.html$/
       part = find_part(@html)
       raise "404" unless part
       @cur_path = params[:ref] || "/"
+      set_main_path
       if resp = render_part(part)
         return send_part(resp)
       end
-    elsif page = find_page(@cur_path)
+    elsif page = find_page(@cur_main_path)
       if resp = render_page(page)
         self.response = resp
         return send_page(page)
       end
-    elsif node = find_node(@cur_path)
+    elsif node = find_node(@cur_main_path)
       if resp = render_node(node)
         self.response = resp
         return send_page(node)
@@ -47,14 +49,12 @@ module Cms::PublicFilter
     def set_site
       host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
       path = request.env["REQUEST_PATH"] || request.path
-      #raise [host, path].to_s
 
       @cur_site ||= begin
         site = SS::Site.find_by_domain host, path
         request.env["ss.site"] = site
       end
       raise "404" if !@cur_site
-      @cur_site_subdir = @cur_site.subdir(host)
     end
 
     def set_request_path
@@ -65,6 +65,15 @@ module Cms::PublicFilter
       filter_methods.each do |name|
         send(name)
         break if cur_path != @cur_path
+      end
+      set_main_path
+    end
+
+    def set_main_path
+      if @cur_site.subdir.present?
+        @cur_main_path = @cur_path.sub(/^\/#{@cur_site.subdir}/, "")
+      else
+        @cur_main_path = @cur_path.dup
       end
     end
 
@@ -79,7 +88,8 @@ module Cms::PublicFilter
 
     def parse_path
       @cur_path.sub!(/\/$/, "/index.html")
-      @html = @cur_path.sub(/\.\w+$/, ".html")
+      @cur_main_path.sub!(/\/$/, "/index.html")
+      @html = @cur_main_path.sub(/\.\w+$/, ".html")
       @file = File.join(@cur_site.root_path, @cur_path)
     end
 

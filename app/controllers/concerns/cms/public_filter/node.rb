@@ -10,19 +10,13 @@ module Cms::PublicFilter::Node
     end
 
     def find_node(path)
-      node_path = path.dup
-      node_path.sub!(/^\/#{@cur_site_subdir}\//, "") if @cur_site_subdir.present?
-      node = Cms::Node.site(@cur_site).in_path(node_path).sort(depth: -1).to_a.first
+      node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).to_a.first
       return unless node
       @preview || node.public? ? node.becomes_with_route : nil
     end
 
     def render_node(node)
-      if @cur_site_subdir.present?
-        rest = @cur_path.sub(/^\/#{@cur_site_subdir}\/#{node.filename}/, "").sub(/\/index\.html$/, "")
-      else
-        rest = @cur_path.sub(/^\/#{node.filename}/, "").sub(/\/index\.html$/, "")
-      end
+      rest = @cur_main_path.sub(/^\/#{node.filename}/, "").sub(/\/index\.html$/, "")
       path = "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
       spec = recognize_agent path
       return unless spec
