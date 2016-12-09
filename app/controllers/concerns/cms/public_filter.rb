@@ -47,8 +47,8 @@ module Cms::PublicFilter
 
   private
     def set_site
-      host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
-      path = request.env["REQUEST_PATH"] || request.path
+      host = request_host
+      path = request_path
 
       @cur_site ||= begin
         site = SS::Site.find_by_domain host, path
@@ -58,7 +58,7 @@ module Cms::PublicFilter
     end
 
     def set_request_path
-      @cur_path ||= request.env["REQUEST_PATH"] || request.path
+      @cur_path ||= request_path
       cur_path = @cur_path.dup
 
       filter_methods = self.class.private_instance_methods.select { |m| m =~ /^set_request_path_with_/ }

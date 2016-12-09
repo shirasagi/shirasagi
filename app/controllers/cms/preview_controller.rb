@@ -64,13 +64,13 @@ class Cms::PreviewController < ApplicationController
   private
     def set_site
       @cur_site = request.env["ss.site"] = SS::Site.find params[:site]
-      @cur_site.cur_domain = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+      @cur_site.cur_domain = request_host
       @preview  = true
     end
 
     def set_path_with_preview
       set_site
-      @cur_path ||= request.env["REQUEST_PATH"] || request.path
+      @cur_path ||= request_path
       @cur_path.sub!(/^\/#{@cur_site.subdir}\//, "") if @cur_site.subdir.present?
       @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
