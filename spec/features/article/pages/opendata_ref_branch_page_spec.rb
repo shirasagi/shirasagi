@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", dbscope: :example, tmpdir: true, js: true do
+describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: true do
   let(:site) { cms_site }
   let(:article_node) { create :article_node_page, cur_site: site }
   let(:html) do
