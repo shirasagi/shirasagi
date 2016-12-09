@@ -71,10 +71,10 @@ class Cms::PreviewController < ApplicationController
     def set_path_with_preview
       set_site
       @cur_path ||= request_path
-      @cur_path.sub!(/^\/#{@cur_site.subdir}\//, "") if @cur_site.subdir.present?
       @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
       @cur_path = URI.decode(@cur_path)
+      set_main_path
       @cur_date = params[:preview_date].present? ? params[:preview_date].in_time_zone : Time.zone.now
       filters << :preview
     end
