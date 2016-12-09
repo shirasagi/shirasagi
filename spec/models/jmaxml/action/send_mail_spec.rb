@@ -90,8 +90,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -135,8 +133,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -181,8 +177,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -227,8 +221,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -272,8 +264,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -319,8 +309,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -378,8 +366,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -417,8 +403,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -461,8 +445,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -502,8 +484,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
     end
@@ -554,8 +534,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -595,8 +573,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
 
@@ -634,8 +610,6 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail.body.raw_source).to end_with("\n#{subject.signature_text}\n")
           end
           expect(emails).to eq []
-          puts mail_subject
-          puts mail_body
         end
       end
     end

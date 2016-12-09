@@ -56,8 +56,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '震度速報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml quake">')
             expect(page.html).to include('<time datetime="2011-03-11T14:48:10+09:00">2011年3月11日 14時48分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
@@ -99,8 +97,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '震源・震度情報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml quake">')
             expect(page.html).to include('<time datetime="2008-06-14T08:47:47+09:00">2008年6月14日 08時47分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
@@ -145,8 +141,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '大津波警報・津波警報・津波注意報・津波予報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml tsunami">')
             expect(page.html).to include('<time datetime="2011-03-11T14:49:59+09:00">2011年3月11日 14時49分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
@@ -196,8 +190,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '各地の満潮時刻・津波到達予想時刻に関する情報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml tsunami">')
             expect(page.html).to include('<time datetime="2010-02-28T09:37:14+09:00">2010年2月28日 09時37分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
@@ -247,8 +239,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '奈良県気象警報・注意報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml forecast">')
             expect(page.html).to include('<time datetime="2011-09-04T00:10:39+09:00">2011年9月4日 00時10分</time>')
             expect(page.html).to include('<span class="publishing-office">奈良地方気象台発表</span>')
@@ -295,8 +285,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
               expect(page.name).to eq '揖斐川中流はん濫注意情報'
               expect(page.state).to eq subject.publish_state
               expect(page.category_ids).to eq [ category_node.id ]
-              puts page.name
-              puts page.html
               expect(page.html).to include('<div class="jmaxml flood">')
               expect(page.html).to include('<time datetime="2008-09-03T04:15:00+09:00">2008年9月3日 04時15分</time>')
               expect(page.html).to include('<span class="publishing-office">木曽川上流河川事務所・岐阜地方気象台　共同発表</span>')
@@ -357,8 +345,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
               expect(page.name).to eq '福岡県土砂災害警戒情報'
               expect(page.state).to eq subject.publish_state
               expect(page.category_ids).to eq [ category_node.id ]
-              puts page.name
-              puts page.html
               expect(page.html).to include('<div class="jmaxml landslide">')
               expect(page.html).to include('<time datetime="2013-08-31T11:05:17+09:00">2013年8月31日 11時05分</time>')
               expect(page.html).to include('<span class="publishing-office">福岡県・福岡管区気象台　共同発表</span>')
@@ -406,8 +392,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
               expect(page.name).to eq '火山名　御嶽山　噴火速報'
               expect(page.state).to eq subject.publish_state
               expect(page.category_ids).to eq [ category_node.id ]
-              puts page.name
-              puts page.html
               expect(page.html).to include('<div class="jmaxml volcano">')
               expect(page.html).to include('<time datetime="2014-09-27T12:00:12+09:00">2014年9月27日 12時00分</time>')
               expect(page.html).to include('<span class="publishing-office">気象庁地震火山部発表</span>')
@@ -446,8 +430,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
               expect(page.name).to eq '火山名　桜島　降灰予報（定時）'
               expect(page.state).to eq subject.publish_state
               expect(page.category_ids).to eq [ category_node.id ]
-              puts page.name
-              puts page.html
               expect(page.html).to include('<div class="jmaxml ashfall">')
               expect(page.html).to include('<time datetime="2014-06-06T05:00:00+09:00">2014年6月6日 05時00分</time>')
               expect(page.html).to include('<span class="publishing-office">気象庁地震火山部発表</span>')
@@ -490,8 +472,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
               expect(page.name).to eq '東京都竜巻注意情報'
               expect(page.state).to eq subject.publish_state
               expect(page.category_ids).to eq [ category_node.id ]
-              puts page.name
-              puts page.html
               expect(page.html).to include('<div class="jmaxml tornado">')
               expect(page.html).to include('<time datetime="2009-08-10T07:38:00+09:00">2009年8月10日 07時38分</time>')
               expect(page.html).to include('<span class="publishing-office">気象庁予報部発表</span>')
@@ -553,8 +533,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '【取消】震度速報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml cancel quake">')
             expect(page.html).to include('<time datetime="2011-03-11T14:48:10+09:00">2011年3月11日 14時48分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
@@ -591,8 +569,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '【取消】震源・震度情報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml cancel quake">')
             expect(page.html).to include('<time datetime="2008-06-14T09:06:34+09:00">2008年6月14日 09時06分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
@@ -627,8 +603,6 @@ describe Jmaxml::Action::PublishPage, dbscope: :example do
             expect(page.name).to eq '【取消】火山名　御嶽山　噴火速報'
             expect(page.state).to eq subject.publish_state
             expect(page.category_ids).to eq [ category_node.id ]
-            puts page.name
-            puts page.html
             expect(page.html).to include('<div class="jmaxml cancel volcano">')
             expect(page.html).to include('<time datetime="2014-09-27T12:10:12+09:00">2014年9月27日 12時10分</time>')
             expect(page.html).to include('<span class="publishing-office">気象庁地震火山部発表</span>')
