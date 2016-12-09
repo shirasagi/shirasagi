@@ -108,7 +108,7 @@ describe "cms_pages" do
     let(:site) { cms_site }
 
     context "check_mobile_html_size" do
-      it "on click check_size_button html_size too big" do
+      it "on click check_size_button html_size too big", fragile: true do
         site.mobile_size = 1_024
         site.save!
 
