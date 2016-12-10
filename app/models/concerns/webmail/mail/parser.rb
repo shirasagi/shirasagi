@@ -44,6 +44,8 @@ module Webmail::Mail::Parser
         self.text ||= mail.body.decoded.toutf8
       end
     end
+
+    self.format = self.html.nil? ? 'text' : 'html'
     self.attachments = mail.attachments
   end
 

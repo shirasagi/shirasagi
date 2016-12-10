@@ -7,6 +7,7 @@ class Webmail::Mail
   include Webmail::Mail::Flag
   include Webmail::Mail::Parser
   include Webmail::Mail::Maker
+  include Webmail::Mail::Search
   include Webmail::Addon::File
 
   # Webmail::Imap
@@ -52,17 +53,6 @@ class Webmail::Mail
     return criteria if params.blank?
 
     criteria = criteria.keyword_in params[:keyword], :subject, :text, :html if params[:keyword].present?
-    criteria
-  }
-
-  scope :imap_search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    if params[:keyword].present?
-      column = params[:column].presence || "TEXT"
-      criteria = criteria.where search: [column, params[:keyword].dup.force_encoding('ASCII-8BIT')]
-    end
     criteria
   }
 

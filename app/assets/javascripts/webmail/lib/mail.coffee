@@ -5,6 +5,12 @@ class @Webmail_Mail
     @renderForm()
 
   @renderList: ->
+    $(".list-head .search").on "click", ->
+      $('.webmail-mail-search').animate( { height: 'toggle' }, 'fast' )
+    $(".webmail-mail-search .reset").on "click", ->
+      $(".webmail-mail-search input[type=text]").val("")
+      $(".webmail-mail-search .search").click()
+
     $(".list-head .update-all").on "click", ->
       checked = $(".list-item input:checkbox:checked").map ->
         $(this).val()

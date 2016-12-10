@@ -6,6 +6,7 @@ ja:
 
   webmail:
     mail: メール
+    message: メッセージ
     mailbox: フォルダー
     signature: 署名
     box:

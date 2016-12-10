@@ -22,5 +22,9 @@
       <%= t :"webmail.links.unset_star" %></button>
   </div>
 
-  <%= render file: "_search" %>
+  <div class="list-head-search">
+    <input type="button" value="<%= t 'views.button.search' %>" class="btn search" />
+  </div>
 </div>
+
+<%= render file: "_search" %>
