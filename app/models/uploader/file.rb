@@ -144,8 +144,10 @@ class Uploader::File
       return if ext != ".scss"
       return if ::File.basename(@path)[0] == "_"
       opts = Rails.application.config.sass
+      load_paths = opts.load_paths[1..-1]
+      load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
       sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
-        syntax: :scss, cache: false, load_paths: opts.load_paths[1..-1],
+        syntax: :scss, cache: false, load_paths: load_paths,
         style: :expanded, debug_info: true
       @css = sass.render
     rescue Sass::SyntaxError => e

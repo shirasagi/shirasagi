@@ -142,7 +142,7 @@ module SS::Model::File
   end
 
   def uploaded_file(&block)
-    Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type, &block)
+    Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type, fs_mode: ::Fs.mode, &block)
   end
 
   def generate_public_file

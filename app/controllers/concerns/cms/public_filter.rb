@@ -89,8 +89,10 @@ module Cms::PublicFilter
       css = ""
       begin
         opts = Rails.application.config.sass
+        load_paths = opts.load_paths[1..-1]
+        load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
         sass = Sass::Engine.new Fs.read(@scss), filename: @scss, syntax: :scss, cache: false,
-          load_paths: opts.load_paths[1..-1],
+          load_paths: load_paths,
           style: :compressed,
           debug_info: false
         css = sass.render
@@ -114,7 +116,7 @@ module Cms::PublicFilter
       if Fs.mode == :file
         send_file file, type: Fs.content_type(file), disposition: :inline, x_sendfile: true
       else
-        send_data Fs.binread(file), type: Fs.content_type(file)
+        send_data Fs.binread(file), type: Fs.content_type(file), disposition: :inline
       end
     end
 
