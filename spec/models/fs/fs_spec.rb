@@ -125,8 +125,8 @@ describe Fs, tmpdir: true do
       expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
       expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
       # write empty
-      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", [])).to eq 2
-      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", [])).to eq 2
+      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
+      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
     end
   end
 
