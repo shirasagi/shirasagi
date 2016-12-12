@@ -51,7 +51,7 @@ module Cms::Model::Member
     validate :validate_password, if: ->{ (in_password.present? && oauth_type.blank? && enabled?) || in_check_password }
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
-    before_save :set_site_email, if: ->{ email.present? }
+    before_validation :set_site_email, if: ->{ email.present? }
 
     after_create :send_verification_mail, if: ->{ oauth_type.blank? }
 

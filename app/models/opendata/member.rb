@@ -9,6 +9,7 @@ class Opendata::Member
     dependent: :destroy
 
   validate "convert_icon", if: ->{ in_icon.present? }
+  validates :email, uniqueness: { scope: :site_id }, if: ->{ email.present? }
 
   def convert_icon
     begin
