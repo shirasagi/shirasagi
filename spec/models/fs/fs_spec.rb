@@ -111,28 +111,22 @@ describe Fs, tmpdir: true do
   end
 
   describe '.binwrite' do
-    it do
-      # full path
-      expect(filesystem.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", data)).to eq data.length
-      expect(grid_fs.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", data)).to eq data.length
-      # write nil
-      expect(filesystem.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", nil)).to eq 0
-      expect(grid_fs.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", nil)).to eq 0
-      # write empty
-      expect(filesystem.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", [])).to eq 2
-      expect(grid_fs.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", [])).to eq 2
+    let(:tmp_dir) { "#{tmpdir}/spec/fs" }
+
+    before do
+      ::FileUtils.mkdir_p(tmp_dir)
     end
 
     it do
-      # relative path
-      expect(filesystem.binwrite("spec/fixtures/ss/logo.png", data)).to eq data.length
-      expect(grid_fs.binwrite("spec/fixtures/ss/logo.png", data)).to eq data.length
+      # full path
+      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
+      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
       # write nil
-      expect(filesystem.binwrite("spec/fixtures/ss/logo.png", nil)).to eq 0
-      expect(grid_fs.binwrite("spec/fixtures/ss/logo.png", nil)).to eq 0
+      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
+      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
       # write empty
-      expect(filesystem.binwrite("spec/fixtures/ss/logo.png", [])).to eq 2
-      expect(grid_fs.binwrite("spec/fixtures/ss/logo.png", [])).to eq 2
+      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", [])).to eq 2
+      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", [])).to eq 2
     end
   end
 
