@@ -35,7 +35,7 @@ module Cms::PublicFilter::Layout
       body = resp.body
 
       if body =~ /\#\{.*?parent_name\}/
-        parent = Cms::Node.filename(@cur_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
+        parent = Cms::Node.site(@cur_site).filename(@cur_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
         if parent
           body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
           body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
