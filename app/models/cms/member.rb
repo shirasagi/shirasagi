@@ -17,7 +17,6 @@ class Cms::Member
         member.oauth_id = auth.uid
         member.oauth_token = auth.credentials.token
         member.name = name_of(auth.info)
-        member.email = email_of(auth.info)
       end
     end
 
@@ -36,10 +35,6 @@ class Cms::Member
       end
 
       name
-    end
-
-    def email_of(info)
-      info.email
     end
 
     def search(params = {})
