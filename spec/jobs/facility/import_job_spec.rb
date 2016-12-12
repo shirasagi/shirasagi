@@ -57,8 +57,8 @@ describe Facility::ImportJob, dbscope: :example do
 
       it do
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("INFO -- : Completed Job")
 
         csv = Facility::Node::Page.site(site).where(filename: /^#{node.filename}\//, depth: 2).to_csv
         table = CSV.parse(csv).map { |row| row.map{ |v| v ? v.split("\n") : v }.flatten.compact }

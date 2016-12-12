@@ -15,8 +15,8 @@ describe SS::ExampleJob, dbscope: :example do
         expect(performed_jobs.size).to eq 1
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -29,9 +29,9 @@ describe SS::ExampleJob, dbscope: :example do
         expect(performed_jobs.size).to eq 1
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, #{site.domain}!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, #{site.domain}!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -44,9 +44,9 @@ describe SS::ExampleJob, dbscope: :example do
         expect(performed_jobs.size).to eq 1
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, #{group.name}!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, #{group.name}!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -59,9 +59,9 @@ describe SS::ExampleJob, dbscope: :example do
         expect(performed_jobs.size).to eq 1
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, #{user.name}!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, #{user.name}!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -74,9 +74,9 @@ describe SS::ExampleJob, dbscope: :example do
         expect(performed_jobs.size).to eq 1
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, world!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, world!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
   end
@@ -90,8 +90,8 @@ describe SS::ExampleJob, dbscope: :example do
       it do
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -103,9 +103,9 @@ describe SS::ExampleJob, dbscope: :example do
       it do
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, #{site.domain}!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, #{site.domain}!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -117,9 +117,9 @@ describe SS::ExampleJob, dbscope: :example do
       it do
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, #{group.name}!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, #{group.name}!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -131,9 +131,9 @@ describe SS::ExampleJob, dbscope: :example do
       it do
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, #{user.name}!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, #{user.name}!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
 
@@ -145,9 +145,9 @@ describe SS::ExampleJob, dbscope: :example do
       it do
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, world!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("Hello, world!")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
   end

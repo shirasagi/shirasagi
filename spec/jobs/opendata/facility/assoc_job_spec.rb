@@ -24,8 +24,8 @@ describe Opendata::Facility::AssocJob, dbscope: :example, js: true do
       expect(Job::Log.site(site).count).to eq 0
       expect(Job::Log.site(od_site).count).to eq 1
       Job::Log.site(od_site).first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
 
       expect(Opendata::Dataset.site(site).count).to eq 0

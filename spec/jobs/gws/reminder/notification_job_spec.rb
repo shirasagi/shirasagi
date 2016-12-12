@@ -39,8 +39,8 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
 
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
   end
@@ -67,8 +67,8 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
 
       expect(Gws::Job::Log.count).to eq 2
       Gws::Job::Log.all.each do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.log).to include("INFO -- : Started Job")
+        expect(log.log).to include("INFO -- : Completed Job")
       end
     end
   end

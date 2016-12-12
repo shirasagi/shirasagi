@@ -10,7 +10,6 @@ describe Job::Log, dbscope: :example do
     it { expect(subject.delete_term_options).not_to be_nil }
     it { expect(subject.start_label).to eq subject.started.strftime("%Y-%m-%d %H:%M") }
     it { expect(subject.closed_label).to eq "" }
-    it { expect(subject.joined_jobs).to eq subject.logs.join("\n") }
   end
 
   context "with completed log" do
@@ -20,6 +19,5 @@ describe Job::Log, dbscope: :example do
     it { expect(subject.delete_term_options).not_to be_nil }
     it { expect(subject.start_label).to eq subject.started.strftime("%Y-%m-%d %H:%M") }
     it { expect(subject.closed_label).to eq subject.closed.strftime("%Y-%m-%d %H:%M") }
-    it { expect(subject.joined_jobs).to eq subject.logs.join("\n") }
   end
 end

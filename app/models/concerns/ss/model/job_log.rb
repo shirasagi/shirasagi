@@ -11,7 +11,8 @@ module SS::Model::JobLog
   included do
     store_in collection: "job_logs"
 
-    index({ updated: -1 })
+    # set TTL index
+    index({ updated: -1 }, { expire_after_seconds: 2.weeks })
 
     attr_accessor :save_term
 
@@ -20,7 +21,8 @@ module SS::Model::JobLog
     field :state, type: String
     field :started, type: DateTime
     field :closed, type: DateTime
-    field :logs, type: Array, default: []
+    # field :logs, type: Array, default: []
+    field :log, type: String
     field :pool, type: String
     field :class_name, type: String
     field :args, type: Array
@@ -48,16 +50,22 @@ module SS::Model::JobLog
   end
 
   def start_label
-    started ? started.strftime("%Y-%m-%d %H:%M") : ""
+    started ? I18n.l(started, format: :iso) : ""
   end
 
   def closed_label
-    closed ? closed.strftime("%Y-%m-%d %H:%M") : ""
+    closed ? I18n.l(closed, format: :iso) : ""
   end
 
-  def joined_jobs
-    logs.blank? ? '' : logs.join("\n")
-  end
+  # def joined_jobs
+  #   return log if log.present?
+  #   return logs.join("\n") if logs.present?
+  #   ''
+  # end
+  #
+  # def logs
+  #   attributes[:logs]
+  # end
 
   module ClassMethods
     def term_to_date(name)
