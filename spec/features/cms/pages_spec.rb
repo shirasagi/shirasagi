@@ -145,7 +145,7 @@ describe "cms_pages" do
       let(:file) { create(:ss_file, filename: "logo.png") }
       let(:test_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
 
-      it "mobile_size 1" do
+      it "mobile_size 1", fragile: true do
         site.mobile_state = "enabled"
         site.mobile_size = 1_024
         site.save!
@@ -205,7 +205,7 @@ describe "cms_pages" do
         expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
       end
 
-      it "many different files in html" do
+      it "many different files in html", fragile: true do
 
         site.mobile_state = "enabled"
         site.mobile_size = 6 * 1_024
