@@ -61,6 +61,12 @@ url = File.join(@cur_site.full_url, @cur_path)
       <a href="#" onclick="Evernote.doClip({ url: '<%= url %>' }); return false;">
         <img src="//static.evernote.com/article-clipper.png" alt="Clip to Evernote" /></a>
     </div>
+
+  <% elsif service == "line" %>
+    <div class="site line">
+      <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" ></div>
+      <script src="//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" async="async" defer="defer" ></script>
+    </div>
   <% end %>
 <% end %>
 </div>
