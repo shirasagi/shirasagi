@@ -21,7 +21,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
     let(:name1) { unique_id }
     let(:rss_link) { "http://example.jp/#{unique_id}.html" }
     let(:html) { "<p>#{unique_id}</p>" }
-    let(:xml) { File.read(Rails.root.join(*%w(spec fixtures rss 9b43a982-fecf-3866-95e7-c375226a7c87.xml))) }
+    let(:xml) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 9b43a982-fecf-3866-95e7-c375226a7c87.xml))) }
 
     before { login_cms_user }
 
@@ -68,7 +68,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
   end
 
   context "node conf" do
-    let!(:region) { create :rss_weather_xml_region_126 }
+    let!(:region) { create :jmaxml_region_126 }
     let!(:member_node_my_anpi_post) { create :member_node_my_anpi_post, cur_site: site }
     let!(:ezine_node_member_page) { create(:ezine_node_member_page, cur_site: site) }
 
@@ -92,7 +92,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       fill_in 'item[loop_mail_text]', with: unique_id
       fill_in 'item[lower_mail_text]', with: unique_id
       select '6弱', from: 'item[earthquake_intensity]'
-      click_on '地域を選択する'
+      click_on '区域を選択する'
       click_on region.name
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
         click_on 'フォルダーを選択する'

@@ -1,0 +1,30 @@
+<p><%= br(jmaxml_emphasize(renderer.head_headline_text)) %></p>
+
+<p>各地の予報は下記の通りです。</p>
+<dl>
+  <% renderer.volcano_infos.each_with_index do |volcano_info, index| %>
+    <dt><%= volcano_info[:kind_name] %></dt>
+    <dd>
+      <ul>
+      <% volcano_info[:area_names].each do |area_name| %>
+        <li><%= area_name %></li>
+      <% end %>
+      </ul>
+    </dd>
+  <% end %>
+</dl>
+
+<% if (activity = renderer.volcano_info_content_volcano_activity).present? %>
+<h3>詳細</h3>
+<p><%= br(jmaxml_emphasize(activity)) %></p>
+<% end %>
+
+<% if (prevention = renderer.volcano_info_content_volcano_prevention).present? %>
+<h3>留意事項</h3>
+<p><%= br(jmaxml_emphasize(prevention)) %></p>
+<% end %>
+
+<% if (appendix = renderer.volcano_info_content_appendix).present? %>
+<h3>補足</h3>
+<p><%= br(jmaxml_emphasize(appendix)) %></p>
+<% end %>

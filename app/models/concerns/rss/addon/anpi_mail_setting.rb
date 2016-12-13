@@ -5,7 +5,7 @@ module Rss::Addon
 
     included do
       field :earthquake_intensity, type: String, default: '5+'
-      embeds_ids :target_regions, class_name: "Rss::WeatherXmlRegion"
+      embeds_ids :target_regions, class_name: "Jmaxml::QuakeRegion"
       belongs_to :my_anpi_post, class_name: "Cms::Node"
       belongs_to :anpi_mail, class_name: "Cms::Node"
       field :title_mail_text, type: String

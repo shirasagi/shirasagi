@@ -11,17 +11,10 @@ SS::Application.routes.draw do
     match :import, via: [:get, :post], on: :collection
   end
 
-  namespace "rss", path: ".s:site/rss" do
-    namespace "apis" do
-      get "weather_xml_regions" => "weather_xml_regions#index"
-    end
-  end
-
   content "rss" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: [:deletion, :import]
     resources :weather_xmls, concerns: [:deletion]
-    resources :weather_xml_regions, concerns: [:deletion]
   end
 
   node "rss" do

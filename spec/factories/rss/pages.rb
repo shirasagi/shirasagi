@@ -10,4 +10,8 @@ FactoryGirl.define do
     route "rss/page"
     rss_link { "http://example.com/#{filename}" }
   end
+
+  factory :rss_weather_xml_page, class: Rss::WeatherXmlPage, traits: [:cms_page] do
+    route "rss/weather_xml_page"
+  end
 end

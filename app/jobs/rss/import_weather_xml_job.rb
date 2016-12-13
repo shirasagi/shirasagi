@@ -6,14 +6,9 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     set_model Rss::WeatherXmlPage
   end
 
-  class Status
-    NORMAL = "通常".freeze
-    TRAINING = "訓練".freeze
-    TEST = "試験".freeze
-  end
-
   private
     def before_import(file, *args)
+      @weather_xml_page = nil
       super
 
       @cur_file = Rss::TempFile.where(site_id: site.id, id: file).first
@@ -40,6 +35,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       content = download(page.rss_link)
       return page if content.nil?
 
+      page.event_id = extract_event_id(content) rescue nil
       page.xml = content
       page.save!
 
@@ -47,6 +43,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         process_earthquake(page)
       end
 
+      execute_weather_xml_filter(page)
       page
     end
 
@@ -60,6 +57,11 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       res.body.force_encoding('UTF-8')
     rescue
       nil
+    end
+
+    def extract_event_id(xml)
+      xmldoc = REXML::Document.new(xml)
+      REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip
     end
 
     def process_earthquake(page)
@@ -86,17 +88,17 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       return if node.anpi_mail.blank?
 
       xmldoc = REXML::Document.new(page.xml)
-      status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()')
-      return if status != Status::NORMAL
+      status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()').to_s.strip
+      return if status != Jmaxml::Status::NORMAL
 
-      info_kind = REXML::XPath.first(xmldoc, '/Report/Head/InfoKind/text()')
+      info_kind = REXML::XPath.first(xmldoc, '/Report/Head/InfoKind/text()').to_s.strip
       return if info_kind != '震度速報'
 
-      @report_datetime = REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()')
+      @report_datetime = REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip
       if @report_datetime.present?
         @report_datetime = Time.zone.parse(@report_datetime.to_s) rescue nil
       end
-      @target_datetime = REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()')
+      @target_datetime = REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()').to_s.strip
       if @target_datetime.present?
         @target_datetime = Time.zone.parse(@target_datetime.to_s) rescue nil
       end
@@ -112,7 +114,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
           area_code = area.elements['Code'].text
           area_max_int = area.elements['MaxInt'].text
 
-          region = Rss::WeatherXmlRegion.site(site).where(code: area_code).first
+          region = Jmaxml::QuakeRegion.site(site).where(code: area_code).first
           next if region.blank?
 
           next unless node.target_region_ids.include?(region.id)
@@ -164,5 +166,21 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       ret += 1 if int[1] == '-'
       ret += 9 if int[1] == '+'
       ret
+    end
+
+    def execute_weather_xml_filter(page)
+      return if page.blank?
+      return if node.try(:filters).blank?
+      filters = node.filters
+      return if filters.blank?
+
+      filters.and_enabled.each do |filter|
+        context = OpenStruct.new
+        context[:site] = site
+        context[:user] = user
+        context[:node] = node
+
+        filter.execute(page, context) rescue next
+      end
     end
 end

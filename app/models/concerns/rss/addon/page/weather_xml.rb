@@ -4,8 +4,9 @@ module Rss::Addon::Page
     extend ActiveSupport::Concern
 
     included do
+      field :event_id, type: String
       field :xml, type: String
-      permit_params :xml
+      permit_params :event_id, :xml
     end
   end
 end

@@ -1,0 +1,8 @@
+<%= mailer.head_headline_text %>
+<% mailer.each_areas do |area| %>
+
+＜<%= area[:area_name] %>＞
+<% area[:kinds].map { |k| k[:kind_name] }.each_slice(5) do |kind_names| %>
+<%= kind_names.join("、") %>
+<% end %>
+<% end %>

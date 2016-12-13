@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://xml.kishou.go.jp/jmaxml1/" xmlns:jmx="http://xml.kishou.go.jp/jmaxml1/">
+<Control>
+	<Title>津波警報・注意報・予報</Title>
+	<DateTime>2011-03-11T05:49:59Z</DateTime>
+	<Status>通常</Status>
+	<EditorialOffice>大阪管区気象台</EditorialOffice>
+	<PublishingOffice>気象庁</PublishingOffice>
+</Control>
+<Head xmlns="http://xml.kishou.go.jp/jmaxml1/informationBasis1/">
+	<Title>大津波警報・津波警報・津波注意報・津波予報</Title>
+	<ReportDateTime>2011-03-11T14:49:00+09:00</ReportDateTime>
+	<TargetDateTime>2011-03-11T14:49:00+09:00</TargetDateTime>
+	<EventID>20110311144640</EventID>
+	<InfoType>発表</InfoType>
+	<Serial></Serial>
+	<InfoKind>津波警報・注意報・予報</InfoKind>
+	<InfoKindVersion>1.0_0</InfoKindVersion>
+	<Headline>
+		<Text>東日本大震災クラスの津波が来襲します。
+大津波警報・津波警報を発表しました。
+ただちに避難してください。</Text>
+		<Information type="津波予報領域表現">
+			<Item>
+				<Kind><Name>大津波警報</Name><Code>52</Code></Kind>
+				<Areas codeType="津波予報区">
+					<Area><Name>東北地方太平洋沿岸</Name><Code>291</Code></Area>
+				</Areas>
+			</Item>
+			<Item>
+				<Kind><Name>津波警報</Name><Code>51</Code></Kind>
+				<Areas codeType="津波予報区">
+					<Area><Name>北海道太平洋沿岸中部</Name><Code>101</Code></Area>
+					<Area><Name>茨城県</Name><Code>300</Code></Area>
+					<Area><Name>千葉県九十九里・外房</Name><Code>310</Code></Area>
+					<Area><Name>伊豆諸島</Name><Code>320</Code></Area>
+				</Areas>
+			</Item>
+		</Information>
+	</Headline>
+</Head>
+<Body xmlns="http://xml.kishou.go.jp/jmaxml1/body/seismology1/" xmlns:jmx_eb="http://xml.kishou.go.jp/jmaxml1/elementBasis1/">
+	<Tsunami>
+	<Forecast>
+		<CodeDefine>
+			<Type xpath="Item/Area/Code">津波予報区</Type>
+			<Type xpath="Item/Category/Kind/Code">警報等情報要素／津波警報・注意報・予報</Type>
+			<Type xpath="Item/Category/LastKind/Code">警報等情報要素／津波警報・注意報・予報</Type>
+		</CodeDefine>
+		<Item>
+			<Area><Name>岩手県</Name><Code>210</Code></Area>
+			<Category>
+				<Kind><Name>大津波警報：発表</Name><Code>52</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<Condition>津波到達中と推測</Condition>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>宮城県</Name><Code>220</Code></Area>
+			<Category>
+				<Kind><Name>大津波警報：発表</Name><Code>52</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:00:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>福島県</Name><Code>250</Code></Area>
+			<Category>
+				<Kind><Name>大津波警報：発表</Name><Code>52</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:10:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>北海道太平洋沿岸中部</Name><Code>101</Code></Area>
+			<Category>
+				<Kind><Name>津波警報</Name><Code>51</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:30:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>青森県太平洋沿岸</Name><Code>201</Code></Area>
+			<Category>
+				<Kind><Name>津波警報</Name><Code>51</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:30:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>茨城県</Name><Code>300</Code></Area>
+			<Category>
+				<Kind><Name>津波警報</Name><Code>51</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:30:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>千葉県九十九里・外房</Name><Code>310</Code></Area>
+			<Category>
+				<Kind><Name>津波警報</Name><Code>51</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:20:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>伊豆諸島</Name><Code>320</Code></Area>
+			<Category>
+				<Kind><Name>津波警報</Name><Code>51</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:20:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>北海道太平洋沿岸東部</Name><Code>100</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:30:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>北海道太平洋沿岸西部</Name><Code>102</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:40:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>青森県日本海沿岸</Name><Code>200</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T16:10:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>千葉県内房</Name><Code>311</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:20:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>小笠原諸島</Name><Code>321</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T16:00:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>相模湾・三浦半島</Name><Code>330</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:30:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>静岡県</Name><Code>380</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T15:30:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>愛知県外海</Name><Code>390</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T16:10:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>三重県南部</Name><Code>400</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T16:00:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>和歌山県</Name><Code>530</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T16:10:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>徳島県</Name><Code>580</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T16:40:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>高知県</Name><Code>610</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T16:30:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>宮崎県</Name><Code>760</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T17:00:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>種子島・屋久島地方</Name><Code>771</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T17:10:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>奄美諸島・トカラ列島</Name><Code>772</Code></Area>
+			<Category>
+				<Kind><Name>津波注意報</Name><Code>62</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+			<FirstHeight>
+				<ArrivalTime>2011-03-11T17:10:00+09:00</ArrivalTime>
+			</FirstHeight>
+		</Item>
+		<Item>
+			<Area><Name>北海道日本海沿岸南部</Name><Code>111</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>陸奥湾</Name><Code>202</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>東京湾内湾</Name><Code>312</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>伊勢・三河湾</Name><Code>391</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>大阪府</Name><Code>510</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>兵庫県瀬戸内海沿岸</Name><Code>521</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>淡路島南部</Name><Code>522</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>岡山県</Name><Code>560</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>香川県</Name><Code>590</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>愛媛県宇和海沿岸</Name><Code>600</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>有明・八代海</Name><Code>712</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>長崎県西方</Name><Code>730</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>熊本県天草灘沿岸</Name><Code>740</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>大分県瀬戸内海沿岸</Name><Code>750</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>大分県豊後水道沿岸</Name><Code>751</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>鹿児島県東部</Name><Code>770</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>鹿児島県西部</Name><Code>773</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>沖縄本島地方</Name><Code>800</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>大東島地方</Name><Code>801</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+		<Item>
+			<Area><Name>宮古島・八重山地方</Name><Code>802</Code></Area>
+			<Category>
+				<Kind><Name>津波予報（若干の海面変動）</Name><Code>71</Code></Kind>
+				<LastKind><Name>津波なし</Name><Code>00</Code></LastKind>
+			</Category>
+		</Item>
+	</Forecast>
+	</Tsunami>
+	<Earthquake>
+		<OriginTime>2011-03-11T14:46:00+09:00</OriginTime>
+		<ArrivalTime>2011-03-11T14:46:00+09:00</ArrivalTime>
+		<Hypocenter>
+			<Area>
+				<Name>三陸沖</Name>
+				<Code type="震央地名">288</Code>
+				<jmx_eb:Coordinate description="北緯３８．０度　東経１４２．９度　深さ　１０ｋｍ" datum="日本測地系">+38.0+142.9-10000/</jmx_eb:Coordinate>
+				<NameFromMark>牡鹿半島の東南東１３０ｋｍ付近</NameFromMark>
+				<MarkCode type="震央補助">202</MarkCode>
+				<Direction>東南東</Direction>
+				<Distance unit="km">130</Distance>
+			</Area>
+		</Hypocenter>
+		<jmx_eb:Magnitude type="Mj" condition="不明" description="Ｍ８を超える巨大地震">NaN</jmx_eb:Magnitude>
+	</Earthquake>
+	<Comments>
+		<WarningComment codeType="固定付加文">
+			<Text>東日本大震災クラスの津波が来襲します。
+
+ただちに避難してください。
+
+＜大津波警報＞
+大きな津波が襲い甚大な被害が発生します。
+沿岸部や川沿いにいる人はただちに高台や避難ビルなど安全な場所へ避難してください。
+津波は繰り返し襲ってきます。警報が解除されるまで安全な場所から離れないでください。
+
+＜津波警報＞
+津波による被害が発生します。
+沿岸部や川沿いにいる人はただちに高台や避難ビルなど安全な場所へ避難してください。
+津波は繰り返し襲ってきます。警報が解除されるまで安全な場所から離れないでください。
+
+＜津波注意報＞
+海の中や海岸付近は危険です。
+海の中にいる人はただちに海から上がって、海岸から離れてください。
+潮の流れが速い状態が続きますので、注意報が解除されるまで海に入ったり海岸に近づいたりしないようにしてください。
+
+＜津波予報（若干の海面変動）＞
+若干の海面変動が予想されますが、被害の心配はありません。
+
+警報が発表された沿岸部や川沿いにいる人はただちに高台や避難ビルなど安全な場所へ避難してください。
+到達予想時刻は、予報区のなかで最も早く津波が到達する時刻です。場所によっては、この時刻よりもかなり遅れて津波が襲ってくることがあります。
+到達予想時刻から津波が最も高くなるまでに数時間以上かかることがありますので、観測された津波の高さにかかわらず、警報が解除されるまで安全な場所から離れないでください。</Text>
+			<Code></Code>
+		</WarningComment>
+	</Comments>
+</Body>
+</Report>

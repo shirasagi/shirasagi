@@ -1,0 +1,7 @@
+<% message.subject = "【#{mailer.head_info_type}】#{mailer.render_title}" %>
+<% if @action.publishing_office_state == 'show' %>
+<%= mailer.head_target_datetime_format %>　<%= mailer.control_publishing_office %>発表
+
+<% end %>
+<%= render file: "_cancel" %>
+<%= @action.signature_text %>

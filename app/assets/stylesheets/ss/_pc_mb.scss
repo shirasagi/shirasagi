@@ -475,6 +475,11 @@ td {
       text-decoration: none;
     }
   }
+  h3 .label {
+    display: block;
+    padding: 5px 15px 5px 60px;
+    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+  }
   h3 span {
     display: block;
     padding: 5px 15px 5px 60px;

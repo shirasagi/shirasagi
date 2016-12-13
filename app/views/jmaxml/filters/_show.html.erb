@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :trigger_ids %></dt>
+  <dd><%= @item.triggers.first.try(:name) %></dd>
+
+  <dt><%= @model.t :action_ids %></dt>
+  <dd><%= br @item.actions.pluck(:name).join("\n") %></dd>
+</dl>

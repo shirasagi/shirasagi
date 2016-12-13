@@ -1,0 +1,11 @@
+<p>
+<%= br(jmaxml_emphasize(renderer.volcano_info_content_volcano_headline)) %><br />
+<%= br(jmaxml_emphasize(renderer.volcano_info_content_volcano_activity)) %>
+</p>
+
+<h3>対象市町村</h3>
+<ul>
+<% renderer.area_names.each do |area_name| %>
+  <li><%= area_name %></li>
+<% end %>
+</ul>

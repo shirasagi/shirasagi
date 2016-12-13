@@ -1,4 +1,7 @@
 <dl class="see mod-rss-page-weather-xml">
+  <dt><%= @model.t :event_id %></dt>
+  <dd><%= @item.event_id %></dd>
+
   <dt><%= @model.t :xml %></dt>
   <dd><%= text_area_tag "mod-rss-page-weather-xml", @item.xml, class: "monospace", style: "height: 400px;" %></dd>
 </dl>

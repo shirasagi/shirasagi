@@ -28,6 +28,27 @@ class ApplicationController < ActionController::Base
     new_agent(controller_name).invoke(action)
   end
 
+  def send_enum(enum, options = {})
+    content_type = options.fetch(:type, DEFAULT_SEND_FILE_TYPE)
+    self.content_type = content_type
+
+    disposition = options.fetch(:disposition, DEFAULT_SEND_FILE_DISPOSITION)
+    unless disposition.nil?
+      disposition  = disposition.to_s
+      disposition += "; filename=\"#{options[:filename]}\"" if options[:filename]
+      headers['Content-Disposition'] = disposition
+    end
+
+    # nginx doc: Setting this to "no" will allow unbuffered responses suitable for Comet and HTTP streaming applications
+    headers['X-Accel-Buffering'] = 'no'
+    headers['Cache-Control'] = 'no-cache'
+    headers['Transfer-Encoding'] = 'chunked'
+    headers.delete('Content-Length')
+
+    # output csv by streaming
+    self.response_body = Rack::Chunked::Body.new(enum)
+  end
+
   private
     def protect_csrf?
       SS.config.env.protect_csrf

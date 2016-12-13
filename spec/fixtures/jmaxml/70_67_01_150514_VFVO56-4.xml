@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://xml.kishou.go.jp/jmaxml1/" xmlns:jmx="http://xml.kishou.go.jp/jmaxml1/">
+<Control>
+<Title>噴火速報</Title>
+<DateTime>2014-09-27T03:10:12Z</DateTime>
+<Status>通常</Status>
+<EditorialOffice>気象庁本庁</EditorialOffice>
+<PublishingOffice>気象庁地震火山部</PublishingOffice>
+</Control>
+<Head xmlns="http://xml.kishou.go.jp/jmaxml1/informationBasis1/">
+<Title>火山名　御嶽山　噴火速報</Title>
+<ReportDateTime>2014-09-27T12:10:00+09:00</ReportDateTime>
+<TargetDateTime>2014-09-27T11:53:00+09:00</TargetDateTime>
+<EventID>20140927120000_312</EventID>
+<InfoType>取消</InfoType>
+<Serial />
+<InfoKind>噴火速報</InfoKind>
+<InfoKindVersion>1.2_0</InfoKindVersion>
+<Headline>
+<Text>噴火速報を取り消します。</Text>
+</Headline>
+</Head>
+<Body xmlns="http://xml.kishou.go.jp/jmaxml1/body/volcanology1/" xmlns:jmx_eb="http://xml.kishou.go.jp/jmaxml1/elementBasis1/">
+<Text>平成２６年９月２７日１２時００分に発表した御嶽山の噴火速報を取り消します。</Text>
+</Body>
+</Report>

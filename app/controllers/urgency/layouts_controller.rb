@@ -30,9 +30,8 @@ class Urgency::LayoutsController < ApplicationController
         return
       end
 
-      index_page = @cur_node.parent ? "#{@cur_node.parent.filename}/index.html" : "index.html"
-      @index_page = Cms::Page.site(@cur_site).where(filename: /^#{index_page}$/, depth: @cur_node.depth).first
-
+      @cur_node = @cur_node.becomes_with_route
+      @index_page = @cur_node.find_index_page
       if @index_page.blank?
         redirect_to urgency_error_path(id: 2)
         return
@@ -73,8 +72,7 @@ class Urgency::LayoutsController < ApplicationController
     end
 
     def update
-      @index_page.layout_id = @item.id
-      render_update @index_page.update, location: { action: :index }
+      render_update @cur_node.switch_layout(@item), location: { action: :index }
     end
 
     def error
