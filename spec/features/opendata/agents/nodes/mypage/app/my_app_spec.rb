@@ -23,7 +23,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
 
   let!(:node_search) { create :opendata_node_search_app, cur_site: site, layout_id: layout.id }
 
-  let(:node_category_folder) { create(:cms_node_node, cur_site: site, layout_id: layout.id, basename: "category") }
+  let(:node_category_folder) { create(:cms_node_node, cur_site: site, layout_id: layout.id, filename: "category") }
   let!(:category) do
     create(
       :opendata_node_category,
@@ -33,7 +33,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
       name: "カテゴリー")
   end
 
-  let!(:node_auth) { create :opendata_node_mypage, cur_site: site, layout_id: layout.id, basename: "opendata/mypage" }
+  let!(:node_auth) { create :opendata_node_mypage, cur_site: site, layout_id: layout.id, filename: "opendata/mypage" }
 
   let(:index_path) { node_myapp.url }
 

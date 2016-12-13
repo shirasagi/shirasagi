@@ -19,7 +19,7 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
   let!(:node_dataset) { create_once :opendata_node_dataset }
   let!(:node_dataset_group_01) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
   let!(:node_dataset_group_02) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 2 }) ]) }
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, basename: "dataset/search" }
+  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:page_dataset_01) do
     create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_01.id],
                               area_ids: [ node_area.id ], tags: ["TEST_1"])

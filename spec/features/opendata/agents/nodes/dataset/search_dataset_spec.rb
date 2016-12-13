@@ -2,27 +2,27 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_search_dataset", dbscope: :example do
   let(:site) { cms_site }
-  let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
+  let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
   let(:node_dataset) { create_once :opendata_node_dataset }
   let(:node_area) { create :opendata_node_area }
-  let(:category_folder) { create_once(:cms_node_node, basename: "category") }
+  let(:category_folder) { create_once(:cms_node_node, filename: "category") }
   let(:category) do
     create_once(
       :opendata_node_category,
-      basename: "#{category_folder.filename}/opendata_category1",
+      filename: "#{category_folder.filename}/opendata_category1",
       depth: category_folder.depth + 1)
   end
   let!(:node_search_dataset) do
     create_once(
       :opendata_node_search_dataset,
-      basename: "#{node_dataset.filename}/search",
+      filename: "#{node_dataset.filename}/search",
       depth: node_dataset.depth + 1)
   end
   let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset, area_ids: [ node_area.id ]) }
   let!(:node_dataset_category) do
     create_once(
       :opendata_node_dataset_category,
-      basename: "#{node_dataset.filename}/category",
+      filename: "#{node_dataset.filename}/category",
       depth: node_dataset.depth + 1)
   end
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
