@@ -41,14 +41,20 @@ module SS::FileFilter
       set_last_modified
 
       if @item.try(:thumb)
-        return send_file @item.thumb.path, type: @item.content_type, filename: @item.filename, disposition: :inline
+        if Fs.mode == :file && Fs.file?(@item.thumb.path)
+          send_file @item.thumb.path, type: @item.thumb.content_type, filename: @item.thumb.filename,
+            disposition: :inline, x_sendfile: true
+        else
+          send_data @item.thumb.read, type: @item.thumb.content_type, filename: @item.thumb.filename,
+            disposition: :inline
+        end
+      else
+        require 'rmagick'
+        image = Magick::Image.from_blob(@item.read).shift
+        image = image.resize_to_fit 120, 90 if image.columns > 120 || image.rows > 90
+
+        send_data image.to_blob, type: @item.content_type, filename: @item.filename, disposition: :inline
       end
-
-      require 'rmagick'
-      image = Magick::Image.from_blob(@item.read).shift
-      image = image.resize_to_fit 120, 90 if image.columns > 120 || image.rows > 90
-
-      send_data image.to_blob, type: @item.content_type, filename: @item.filename, disposition: :inline
     rescue
       raise "500"
     end
