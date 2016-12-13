@@ -101,16 +101,16 @@ module Cms::Model::Node
     return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{Regexp.escape(fix_extname || "")})?$/
 
     return errors.add :base, :same_filename if filename == dst
-    return errors.add :filename, :taken if self.class.where(site_id: site_id, filename: dst).first
+    return errors.add :filename, :taken if Cms::Node.site(site).where(filename: dst).first
     return errors.add :base, :exist_physical_file if Fs.exists?("#{site.path}/#{dst}")
 
     if dst_dir.present?
-      dst_parent = Cms::Node.where(site_id: site_id, filename: dst_dir).first
+      dst_parent = Cms::Node.site(site).where(filename: dst_dir).first
 
       return errors.add :base, :not_found_parent_node if dst_parent.blank?
       return errors.add :base, :subnode_of_itself if filename == dst_parent.filename
 
-      allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site)
       return errors.add :base, :not_have_parent_read_permission unless allowed
     end
   end
@@ -119,8 +119,9 @@ module Cms::Model::Node
     validate_destination_filename(dst)
     return false unless errors.empty?
 
-    @cur_node = nil
-    @basename = dst
+    self.cur_node = nil
+    self.filename = dst
+    self.basename = nil
     save
   end
 

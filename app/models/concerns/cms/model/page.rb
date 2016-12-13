@@ -70,15 +70,15 @@ module Cms::Model::Page
     return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
 
     return errors.add :base, :same_filename if filename == dst
-    return errors.add :filename, :taken if self.class.where(site_id: site_id, filename: dst).first
+    return errors.add :filename, :taken if Cms::Page.site(site).where(filename: dst).first
     return errors.add :base, :exist_physical_file if Fs.exists?("#{site.path}/#{dst}")
 
     if dst_dir.present?
-      dst_parent = Cms::Node.where(site_id: site_id, filename: dst_dir).first
+      dst_parent = Cms::Node.site(site).where(filename: dst_dir).first
 
       return errors.add :base, :not_found_parent_node if dst_parent.blank?
 
-      allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site)
       return errors.add :base, :not_have_parent_read_permission unless allowed
     elsif route != "cms/page"
       return errors.add :base, :not_cms_page_in_root
@@ -92,8 +92,9 @@ module Cms::Model::Page
     end
     return false unless errors.empty?
 
-    @cur_node = nil
-    @basename = dst
+    self.cur_node = nil
+    self.filename = dst
+    self.basename = nil
     if is_a?(Cms::Addon::EditLock)
       remove_attribute(:lock_owner_id) if has_attribute?(:lock_owner_id)
       remove_attribute(:lock_until) if has_attribute?(:lock_until)
