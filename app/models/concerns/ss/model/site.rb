@@ -9,37 +9,32 @@ module SS::Model::Site
   included do
     store_in collection: "ss_sites"
     index({ host: 1 }, { unique: true })
-    index({ root_urls: 1 }, { unique: true })
+    index({ domains_with_subdir: 1 }, { unique: true })
 
     seqid :id
     field :name, type: String
     field :host, type: String
-    field :root_urls, type: SS::Extensions::Words
-    field :domains, type: Array
-    field :subdirs, type: Array
+    field :domains, type: SS::Extensions::Words
+    field :domains_with_subdir, type: Array
+    field :subdir, type: String
     field :https, type: String, default: "disabled"
     embeds_ids :groups, class_name: "SS::Group"
 
     attr_accessor :cur_domain
 
-    permit_params :name, :host, :root_urls, :https, group_ids: []
+    permit_params :name, :host, :domains, :subdir, :https, group_ids: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
 
-    validate :validate_root_urls, if: ->{ root_urls.present? }
+    validate :validate_domains, if: ->{ domains.present? }
 
     def domain
       cur_domain ? cur_domain : domains[0]
     end
 
-    def subdir
-      if cur_domain
-        i = domains.index(cur_domain)
-        i ? subdirs[i] : nil
-      else
-        subdirs[0]
-      end
+    def domain_with_subdir
+      subdir.present? ? "#{domain}/#{subdir}" : domain
     end
 
     def path
@@ -51,20 +46,16 @@ module SS::Model::Site
     end
 
     def url
-      root = domain.index("/") ? domain.sub(/^.*?\//, "/") : "/"
-      root += "#{subdir}/" if subdir.present?
-      root
+      subdir.present? ? "/#{subdir}/" : "/"
     end
 
     def root_url
-      root = domain.index("/") ? domain.sub(/^.*?\//, "/") : "/"
-      root
+      "/"
     end
 
     def full_url
       schema = (https == 'enabled') ? "https" : "http"
-      root = "#{schema}://#{domain}/".sub(/\/+$/, "/")
-      root += "#{subdir}/" if subdir.present?
+      root = "#{schema}://#{domain_with_subdir}/".sub(/\/+$/, "/")
       root
     end
 
@@ -74,18 +65,18 @@ module SS::Model::Site
       root
     end
 
-    def filtered_root_urls
-      urls = []
-      root_urls.each do |root_url|
+    def filtered_domains
+      filtered = []
+      domains_with_subdir.each do |domain_with_subdir|
         if SS.config.kana.location.present?
-          urls << root_url.sub("/", "#{SS.config.kana.location}/")
+          filtered << "#{domain_with_subdir}/".sub("/", "#{SS.config.kana.location}/")
         end
 
         if !mobile_disabled? && mobile_location.present?
-          urls << root_url.sub("/", "#{mobile_location}/")
+          filtered << "#{domain_with_subdir}/".sub("/", "#{mobile_location}/")
         end
       end
-      urls
+      filtered
     end
 
     def root_groups
@@ -114,27 +105,15 @@ module SS::Model::Site
     end
 
     private
-      def validate_root_urls
-        self.root_urls = root_urls.map do |root_url|
-          (root_url =~ /\/$/) ? root_url : "#{root_url}/"
-        end.uniq
-
-        if self.class.ne(id: id).any_in(root_urls: root_urls).exists?
-          errors.add :domains, :duplicate
-          return
+      def validate_domains
+        self.domains = domains.uniq
+        self.domains_with_subdir = []
+        domains.each do |domain|
+          self.domains_with_subdir << (subdir.present? ? "#{domain}/#{subdir}" : domain)
         end
 
-        self.domains = []
-        self.subdirs = []
-        root_urls.each do |root_url|
-          root_url = root_url.split(/\//)
-          self.domains << root_url.shift
-          self.subdirs << root_url.join("/").presence
-        end
-
-        if self.domains.uniq.count != self.domains.count
+        if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
           errors.add :domains, :duplicate
-          return
         end
       end
 
@@ -144,21 +123,21 @@ module SS::Model::Site
       end
 
       def find_by_domain(host, path = nil)
-        sites = SS::Site.in(domains: host)
-        site = nil
-        if sites.count <= 1
+        sites = SS::Site.in(domains: host).to_a
+        if sites.size <= 1
           site = sites.first
         else
-          url = "#{host}#{path}"
-          url = "#{url}/" if url !~ /\/$/
+          site = nil
+          host_with_path = ::File.join(host, path.to_s)
+          host_with_path += "/" if host_with_path !~ /\/$/
           depth = 0
 
           sites.each do |s|
-            root_urls = s.root_urls + s.filtered_root_urls
-            root_urls.each do |root_url|
-              if url =~ /^#{root_url}/ && url.count("/") > depth
+            domains = s.domains_with_subdir + s.filtered_domains
+            domains.each do |domain|
+              if host_with_path =~ /^#{domain}\// && "#{domain}/".count("/")
                 site = s
-                depth = root_url.count("/")
+                depth = "#{domain}/".count("/")
               end
             end
           end
