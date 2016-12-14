@@ -7,11 +7,13 @@ class Cms::Member
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
   index({ site_email: 1 }, { unique: true, sparse: true })
+  validates :email, uniqueness: { scope: :site_id }, if: ->{ email.present? }
 
   class << self
     def create_auth_member(auth, site)
       create! do |member|
         member.site_id = site.id
+        member.state = 'enabled'
         member.oauth_type = auth.provider
         member.oauth_id = auth.uid
         member.oauth_token = auth.credentials.token
