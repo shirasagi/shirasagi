@@ -19,7 +19,7 @@ describe Cms::File, type: :model, dbscope: :example do
     its(:state) { is_expected.to eq "closed" }
     its(:name) { is_expected.to eq "logo.png" }
     its(:filename) { is_expected.to eq "logo.png" }
-    its(:size) { is_expected.to eq ::File.size(subject.path) }
+    its(:size) { is_expected.to eq ::Fs.size(subject.path) }
     its(:content_type) { is_expected.to eq "image/png" }
     its(:site_id) { is_expected.to eq site.id }
   end

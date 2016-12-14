@@ -2,9 +2,10 @@ require 'csv'
 
 class Cms::PostalCode::ImportJob < Cms::PostalCode::ImportBase
   def import_file
-    table = ::CSV.read(@cur_file.path, headers: false, encoding: 'SJIS:UTF-8')
-    table.each_with_index do |row, i|
-      import_row(row, i)
+    open_csv_table(headers: false, encoding: 'SJIS:UTF-8') do |table|
+      table.each_with_index do |row, i|
+        import_row(row, i)
+      end
     end
     nil
   end

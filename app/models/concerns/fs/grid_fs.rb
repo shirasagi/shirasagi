@@ -1,6 +1,9 @@
 module Fs::GridFs
   extend ActiveSupport::Concern
 
+  class GridFsError < StandardError; end
+  class FileNotFoundError < GridFsError; end
+
   class Stat
     attr_reader :size, :atime, :mtime, :ctime
 
@@ -36,18 +39,25 @@ module Fs::GridFs
     end
 
     def directory?(path)
-      !file?(path)
+      return false if file?(path)
+      Mongoid::GridFs.find(filename: /#{Regexp.escape(path_filter(path))}/) != nil
     end
 
     def read(path)
-      get(path).data
+      binread(path)
     end
 
     def binread(path)
-      read(path)
+      obj = get(path)
+      raise FileNotFoundError if obj.nil?
+      obj.data
     end
 
     def write(path, data)
+      binwrite(path, data)
+    end
+
+    def binwrite(path, data)
       file = Fs::UploadedFile.new("grid_fs")
       file.binmode
       file.write(data)
@@ -57,14 +67,13 @@ module Fs::GridFs
         fs.delete
       end
       fs = Mongoid::GridFs.put file, filename: path_filter(path)
-    end
-
-    def binwrite(path, data)
-      write(path, data)
+      fs.length
     end
 
     def stat(path)
-      Stat.new get(path)
+      obj = get(path)
+      raise FileNotFoundError if obj.nil?
+      Stat.new obj
     end
 
     def size(path)
@@ -80,19 +89,24 @@ module Fs::GridFs
     end
 
     def mv(src, dest)
+      src = path_filter(src)
       dest = path_filter(dest)
-      dest = Regexp.escape(dest)
 
-      Mongoid::GridFs.file_model.where(filename: /^#{src}(\/.*|$)/).each do |fs|
+      count = 0
+      Mongoid::GridFs.file_model.where(filename: /^#{Regexp.escape(src)}(\/.*|$)/).each do |fs|
+        count += 1
         fs.filename = fs.filename.sub(src, dest)
         fs.save
       end
+      raise FileNotFoundError if count == 0
+      0
     end
 
     def rm_rf(path)
-      path = path_filter(path)
-      path = Regexp.escape(path)
-      Mongoid::GridFs.file_model.where(filename: /^#{path}(\/.*|$)/).destroy
+      path0 = path_filter(path)
+      path0 = Regexp.escape(path0)
+      Mongoid::GridFs.file_model.where(filename: /^#{path0}(\/.*|$)/).destroy
+      [ path ]
     end
 
     def glob(path)
