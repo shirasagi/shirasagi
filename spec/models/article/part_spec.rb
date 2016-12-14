@@ -4,6 +4,13 @@ describe Article::Part::Page, type: :model, dbscope: :example do
   let(:item) { create :article_part_page }
   it_behaves_like "cms_part#spec"
 
+  describe "validation" do
+    it "basename" do
+      item = build(:article_part_page_basename_invalid)
+      expect(item.invalid?).to be_truthy
+    end
+  end
+
   describe '#render_loop_html - name' do
     let(:page) { create(:article_page, name: 'ページ &') }
 

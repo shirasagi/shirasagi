@@ -22,7 +22,7 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
   let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
   let!(:appfile) { create_appfile(app, file, "CSV") }
 
-  let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
+  let!(:node_auth) { create_once :opendata_node_mypage, filename: "opendata/mypage" }
 
   let(:index_path) { "#{node_myapp.url}#{app.id}/appfiles/" }
   let(:new_path) { "#{node_myapp.url}#{app.id}/appfiles/new" }

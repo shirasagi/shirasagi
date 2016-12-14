@@ -21,13 +21,20 @@ describe Cms::Layout do
     it { expect(item.parent).to eq false }
   end
 
-  context "duplicated filename" do
-    let(:entity1) { build(:cms_layout, name: "layout1", filename: "layout1.layout.html") }
-    let(:entity2) { build(:cms_layout, name: "layout2", filename: "layout1.layout.html") }
+  describe "validation" do
+    it "basename" do
+      item = build(:cms_node_node_basename_invalid)
+      expect(item.invalid?).to be_truthy
+    end
 
-    it do
-      expect{ entity1.save! }.not_to raise_error
-      expect{ entity2.save! }.to raise_error Mongoid::Errors::Validations
+    context "duplicated filename" do
+      let(:entity1) { build(:cms_layout, name: "layout1", filename: "layout1.layout.html") }
+      let(:entity2) { build(:cms_layout, name: "layout2", filename: "layout1.layout.html") }
+
+      it do
+        expect{ entity1.save! }.not_to raise_error
+        expect{ entity2.save! }.to raise_error Mongoid::Errors::Validations
+      end
     end
   end
 

@@ -13,6 +13,13 @@ end
 describe Cms::Part::Free, type: :model, dbscope: :example do
   let(:item) { create :cms_part_free }
   it_behaves_like "cms_part#spec"
+
+  describe "validation" do
+    it "basename" do
+      item = build(:cms_part_free_basename_invalid)
+      expect(item.invalid?).to be_truthy
+    end
+  end
 end
 
 describe Cms::Part::Node, type: :model, dbscope: :example do

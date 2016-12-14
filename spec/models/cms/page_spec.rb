@@ -22,6 +22,13 @@ describe Cms::Page do
     it { expect(item.private_show_path).to eq show_path }
   end
 
+  describe "validation" do
+    it "basename" do
+      item = build(:cms_page_basename_invalid)
+      expect(item.invalid?).to be_truthy
+    end
+  end
+
   describe "#becomes_with_route" do
     subject { create(:cms_page, route: "article/page") }
     it { expect(subject.becomes_with_route).to be_kind_of(Article::Page) }

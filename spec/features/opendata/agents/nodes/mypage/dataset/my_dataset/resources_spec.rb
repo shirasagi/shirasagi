@@ -4,7 +4,7 @@ describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
   let(:site) { cms_site }
   let(:member) { opendata_member(site: site) }
   let!(:node_member) { create :opendata_node_member }
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, basename: "dataset/search" }
+  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:node_dataset) { create :opendata_node_dataset }
 
   let!(:node_mypage) { create :opendata_node_mypage, filename: "mypage" }

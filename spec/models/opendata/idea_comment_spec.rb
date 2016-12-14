@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Opendata::IdeaComment, dbscope: :example do
 
   before do
-    create_once :opendata_node_search_idea, basename: "idea/search"
+    create_once :opendata_node_search_idea, filename: "idea/search"
   end
 
   let!(:node_idea) { create_once :opendata_node_idea }

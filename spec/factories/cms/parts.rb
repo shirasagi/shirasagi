@@ -17,6 +17,10 @@ FactoryGirl.define do
 
   factory :cms_part_free, class: Cms::Part::Free, traits: [:cms_part] do
     route "cms/free"
+
+    factory :cms_part_free_basename_invalid do
+      basename "pa/rt"
+    end
   end
 
   factory :cms_part_node, class: Cms::Part::Node, traits: [:cms_part] do

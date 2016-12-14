@@ -194,6 +194,7 @@ module Cms::Content
       if @basename
         return errors.add :basename, :empty if @basename.blank?
         errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+        errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{fix_extname})?$/
       else
         return errors.add :filename, :empty if filename.blank?
         errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/

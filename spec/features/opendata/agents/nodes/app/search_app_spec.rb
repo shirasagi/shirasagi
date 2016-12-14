@@ -6,15 +6,15 @@ describe "opendata_search_apps", dbscope: :example do
   let(:node) do
     create_once(
       :opendata_node_search_app,
-      basename: "#{node_app.filename}/search",
+      filename: "#{node_app.filename}/search",
       depth: node_app.depth + 1,
       name: "opendata_search_apps")
   end
   before do
-    node_category_folder = create_once(:cms_node_node, basename: "category")
+    node_category_folder = create_once(:cms_node_node, filename: "category")
     create_once(
       :opendata_node_category,
-      basename: "#{node_category_folder.filename}/kurashi",
+      filename: "#{node_category_folder.filename}/kurashi",
       depth: node_category_folder.depth + 1)
   end
 

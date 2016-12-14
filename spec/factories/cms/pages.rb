@@ -9,6 +9,10 @@ FactoryGirl.define do
 
   factory :cms_page, class: Cms::Page, traits: [:cms_page] do
     #
+
+    factory :cms_page_basename_invalid do
+      basename "pa/ge.html"
+    end
   end
 
   factory :cms_import_page, class: Cms::ImportPage, traits: [:cms_page] do

@@ -5,7 +5,7 @@ describe "opendata_agents_parts_app", dbscope: :example do
   let!(:parts) { create(:opendata_part_app) }
   let(:index_path) { parts.url }
   before do
-    create_once :opendata_node_search_app, basename: "app/search"
+    create_once :opendata_node_search_app, filename: "app/search"
   end
 
   it "#index" do

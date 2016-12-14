@@ -17,6 +17,10 @@ FactoryGirl.define do
 
   factory :cms_node_node, class: Cms::Node::Node, traits: [:cms_node] do
     route "cms/node"
+
+    factory :cms_node_node_basename_invalid do
+      basename "no/de"
+    end
   end
 
   factory :cms_node_page, class: Cms::Node::Page, traits: [:cms_node] do

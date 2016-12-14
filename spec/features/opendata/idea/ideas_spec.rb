@@ -30,12 +30,12 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
 
     describe "#new" do
       before do
-        category_folder = create_once(:cms_node_node, basename: "category")
+        category_folder = create_once(:cms_node_node, filename: "category")
         create_once(
           :opendata_node_category,
-          basename: "#{category_folder.filename}/opendata_category1",
+          filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
-        create_once(:opendata_node_area, basename: "opendata_area_1")
+        create_once(:opendata_node_area, filename: "opendata_area_1")
       end
 
       it do
@@ -54,14 +54,14 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
     end
 
     context "with item" do
-      let(:category_folder) { create_once(:cms_node_node, basename: "category") }
+      let(:category_folder) { create_once(:cms_node_node, filename: "category") }
       let(:category) do
         create_once(
           :opendata_node_category,
-          basename: "#{category_folder.filename}/opendata_category1",
+          filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
       end
-      let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
+      let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
       let(:item) do
         create :opendata_idea,
                cur_site: site,
@@ -135,8 +135,8 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
   end
 
   context "public side" do
-    let(:category) { create_once :opendata_node_category, basename: "opendata_category1" }
-    let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
+    let(:category) { create_once :opendata_node_category, filename: "opendata_category1" }
+    let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
     let(:item) do
       create :opendata_idea,
              cur_site: site,
