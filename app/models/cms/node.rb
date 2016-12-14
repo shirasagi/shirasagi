@@ -66,6 +66,7 @@ class Cms::Node
 
   class GroupPage
     include Cms::Model::Node
+    include Cms::Addon::NodeSetting
     include Cms::Addon::PageGroupList
     include History::Addon::Backup
 
