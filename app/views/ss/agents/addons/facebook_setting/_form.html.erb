@@ -10,4 +10,7 @@
 
   <dt><%= @model.t :opengraph_type %><%= @model.tt :opengraph_type %></dt>
   <dd><%= f.select :opengraph_type, @item.opengraph_type_options %></dd>
+
+  <dt><%= @model.t :opengraph_defaul_image_url %><%= @model.tt :opengraph_defaul_image_url %></dt>
+  <dd><%= f.text_field :opengraph_defaul_image_url %></dd>
 </dl>

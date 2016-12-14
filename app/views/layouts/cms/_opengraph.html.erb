@@ -7,14 +7,17 @@
 <meta property="article:author" content="<%= @cur_site.facebook_page_url %>" />
 <meta property="article:publisher" content="<%= @cur_site.facebook_page_url %>" />
 <% end %>
-<meta property="og:type" content="<%= controller.opengraph("og:type").first %>" />
-<meta property="og:url" content="<%= controller.opengraph("og:url").first %>" />
-<meta property="og:site_name" content="<%= controller.opengraph("og:site_name").first %>" />
-<meta property="og:title" content="<%= controller.opengraph("og:title").first %>" />
-<meta property="og:description" content="<%= controller.opengraph("og:description").first %>">
+<% %w(og:type og:url og:site_name og:title og:description).each do |key| %>
+<% v = controller.opengraph(key).first %>
+<% if v.present? %>
+<meta property="<%= key %>" content="<%= v %>" />
+<% end %>
+<% end %>
 <% controller.opengraph("og:image").each do |url| %>
+<% next if url.blank? %>
 <meta property="og:image" content="<%= url %>" />
 <% end %>
 <% controller.opengraph("og:video").each do |url| %>
+<% next if url.blank? %>
 <meta property="og:video" content="<%= url %>" />
 <% end %>

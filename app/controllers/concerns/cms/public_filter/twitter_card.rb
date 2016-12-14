@@ -34,32 +34,56 @@ module Cms::PublicFilter::TwitterCard
   private
     def twitter_description
       if @cur_item && @cur_item.respond_to?(:html)
-        ApplicationController.helpers.sanitize(@cur_item.html.to_s, tags: []).squish.truncate(200)
+        description = @cur_item.html.to_s
       elsif @cur_item && @cur_item.respond_to?(:text)
-        ApplicationController.helpers.sanitize(@cur_item.text.to_s, tags: []).squish.truncate(200)
+        description = @cur_item.text.to_s
       end
+      return if description.blank?
+
+      %w(script style).each do |tag|
+        description = description.gsub(/<#{tag}.+?<\/#{tag}>/mi, '')
+      end
+      ApplicationController.helpers.sanitize(description, tags: []).squish.truncate(200)
     end
 
     def twitter_image_urls
-      if @cur_item && @cur_item.respond_to?(:html)
-        html = @cur_item.html.to_s
+      urls = extract_image_urls
+      if urls.blank?
+        urls << @cur_site.twitter_default_image_url if @cur_site.twitter_default_image_url.present?
+      end
+      urls
+    end
+
+    def extract_image_urls
+      if @cur_item
+        if @cur_item.respond_to?(:thumb)
+          thumb = @cur_item.thumb
+        end
+        if @cur_item.respond_to?(:html)
+          html = @cur_item.html.to_s
+        end
       end
 
-      return [] if html.blank?
-
       urls = []
-      regex = /\<\s*?img\s+[^>]*\/?>/i
-      regex.match(html) do |m|
-        next unless m[0] =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
+      if thumb.present?
+        urls << thumb.full_url
+      end
 
-        url = $1
-        url = url[1..-1] if url.start_with?("'", '"')
-        url = url[0..-2] if url.end_with?("'", '"')
-        url = url.strip
+      if html.present?
+        # extract image from html
+        regex = /\<\s*?img\s+[^>]*\/?>/i
+        regex.match(html) do |m|
+          next unless m[0] =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
 
-        next unless url.start_with?("/")
+          url = $1
+          url = url[1..-1] if url.start_with?("'", '"')
+          url = url[0..-2] if url.end_with?("'", '"')
+          url = url.strip
 
-        urls << "#{@cur_site.full_url}#{url[1..-1]}"
+          next unless url.start_with?("/")
+
+          urls << "#{@cur_site.full_url}#{url[1..-1]}"
+        end
       end
 
       urls
