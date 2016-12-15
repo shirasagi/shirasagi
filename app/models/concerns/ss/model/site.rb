@@ -113,7 +113,7 @@ module SS::Model::Site
         end
 
         if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
-          errors.add :domains, :duplicate
+          errors.add :domains_with_subdir, :duplicate
         end
       end
 
