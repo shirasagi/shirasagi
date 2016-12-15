@@ -45,6 +45,14 @@ module Cms::Model::Node
     filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
   end
 
+  def url
+    "#{site.url}#{filename}/"
+  end
+
+  def full_url
+    "#{site.full_url}#{filename}/"
+  end
+
   def preview_path
     site.subdir ?  "#{site.subdir}/#{filename}/" : "#{filename}/"
   end
