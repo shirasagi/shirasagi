@@ -36,7 +36,7 @@ module Member::Node
 
     def children
       Member::Node::Base.and_public.
-        where(filename: /^#{filename}\//, depth: depth + 1).
+        where(site_id: site_id, filename: /^#{filename}\//, depth: depth + 1).
         order_by(order: 1)
     end
   end
