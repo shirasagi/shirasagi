@@ -7,9 +7,9 @@
   <dd>
     <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
     (
-    <%= link_to :"cms.preview_pc_page", cms_preview_path(path: @item.filename), target: "_blank" %>
+    <%= link_to :"cms.preview_pc_page", cms_preview_path(path: @item.preview_path), target: "_blank" %>
     |
-    <%= link_to :"cms.preview_mobile_page", cms_mobile_preview_path(path: @item.filename), target: :_blank %>
+    <%= link_to :"cms.preview_mobile_page", cms_mobile_preview_path(path: @item.preview_path), target: :_blank %>
     )
   </dd>
 
