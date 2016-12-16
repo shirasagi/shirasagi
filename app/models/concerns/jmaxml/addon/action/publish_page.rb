@@ -4,7 +4,7 @@ module Jmaxml::Addon::Action::PublishPage
 
   included do
     belongs_to :publish_to, class_name: "Cms::Node"
-    field :publish_state, type: String
+    field :publish_state, type: String, default: 'draft'
     embeds_ids :categories, class_name: "Cms::Node"
     permit_params :publish_to_id, :publish_state
     permit_params category_ids: []
