@@ -18,9 +18,8 @@ class Webmail::MailboxesController < ApplicationController
       @items = @model.
         in(id: params[:ids]).
         reorder(depth: -1).
-        entries
-
-      @items.each { |item| item.sync = true }
+        entries.
+        map(&:sync)
     end
 
     def crud_redirect_url

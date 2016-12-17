@@ -5,8 +5,9 @@ class Webmail::MailsController < ApplicationController
 
   model Webmail::Mail
 
+  before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
-  #before_action :select_mailbox, only: [:move, :destroy, :destroy_all]
+  before_action :select_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
                                   :attachment, :download, :header_view, :source_view]
   after_action :expunge, only: [:move, :destroy, :destroy_all]
@@ -16,10 +17,21 @@ class Webmail::MailsController < ApplicationController
       @crumbs << [:'webmail.mail', { action: :index } ]
     end
 
+    def apply_filters
+      count = Webmail::Filter.user(@cur_user).enabled.map do |filter|
+        filter.apply_recent
+      end.inject(:+)
+
+      flash[:notice] = t('webmail.notice.filter_applied', count: count) if count > 0
+    end
+
     def set_mailbox
       @mailbox = params[:mailbox]
+      @navi_mailboxes = true
+    end
 
-      if params[:action] =~ /index|show|attachment|download|_view/
+    def select_mailbox
+      if request.get? || params[:action] =~ /copy|set_/
         @imap.conn.examine(@mailbox)
       else
         @imap.conn.select(@mailbox)
@@ -179,8 +191,8 @@ class Webmail::MailsController < ApplicationController
       @items = @model.
         where(mailbox: @mailbox).
         in(uid: params[:ids]).
-        entries
-      @items.each { |item| item.sync = true }
+        entries.
+        map(&:sync)
 
       entries = @items.entries
       @items = []

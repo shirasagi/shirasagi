@@ -3,6 +3,7 @@ ja:
     webmail: ウェブメール
     addons:
       webmail/file: 添付ファイル
+      webmail/apply_filter: フィルター適用
 
   webmail:
     mail: メール
@@ -24,8 +25,11 @@ ja:
         body: 本文
     buttons:
       clear_cache: キャッシュ クリア
-    confirm:
-      clear_cache: キャッシュを削除してよろしいですか？
+    options:
+      action:
+        move: 移動する
+        copy: コピーする
+        delete: 削除する
     links:
       download: ダウンロード
       source_view: ソース表示
@@ -40,9 +44,16 @@ ja:
       move: 移動する
       copy: コピーする
       print: 印刷する
+      apply: 適用する
+    confirm:
+      clear_cache: キャッシュを削除してよろしいですか？
+      apply_filter: フィルターを適用してよろしいですか？
     notice:
       deleted_cache: キャッシュを削除しました。
       changed: 変更しました。
+      filter_applied: "%{count} 件のメールにフィルターを適用しました。"
+    errors:
+      blank_conditions: 条件を入力してください。
 
   mongoid:
     models:
@@ -50,6 +61,7 @@ ja:
       webmail/mailbox: フォルダー
       webmail/address: アドレス帳
       webmail/signature: 署名
+      webmail/filter: フィルター
     attributes:
       ss/model/user:
         imap_host: IMAP/ホスト
@@ -82,3 +94,11 @@ ja:
         name: 名称
         text: 本文
         default: 既定の署名
+      webmail/filter:
+        name: フィルター名
+        order: 並び順
+        from: 条件/差出人
+        to: 条件/宛先
+        subject: 条件/件名
+        action: アクション
+        mailbox: フォルダー

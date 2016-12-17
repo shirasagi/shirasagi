@@ -4,10 +4,7 @@ class Webmail::Mailbox
   include SS::Reference::User
   include SS::FreePermission
 
-  # Webmail::Imap
-  cattr_accessor :imap
-
-  attr_accessor :sync
+  attr_accessor :sync, :messages, :unseen
 
   field :host, type: String
   field :account, type: String
@@ -34,8 +31,20 @@ class Webmail::Mailbox
     self.class.imap
   end
 
+  def stat
+    status = imap.conn.status(original_name, %w(MESSAGES UNSEEN))
+    self.messages = status['MESSAGES']
+    self.unseen = status['UNSEEN']
+  rescue Net::IMAP::NoResponseError
+    self.unseen = -1
+  end
+
   def basename
     name.sub(/.*\./, '')
+  end
+
+  def short_name
+    name.sub(/^INBOX\./, '')
   end
 
   def original_name(name = self.name)
@@ -43,19 +52,14 @@ class Webmail::Mailbox
   end
 
   def css_class
-    original_name.tr('.', '-').downcase
+    list = [original_name.gsub(/[^\w]/, '-').downcase]
+    list << 'mailbox--unseen' if unseen > 0
+    list << 'mailbox--virtual' if unseen == -1
+    list.join(' ')
   end
 
   def mails
     Webmail::Mail.where(mailbox: name)
-  end
-
-  def unseen_size
-    return @unseen_size if @unseen_size
-    imap.conn.examine(original_name)
-    @unseen_size = imap.conn.uid_search(%w(UNSEEN), 'UTF-8').size
-  rescue Net::IMAP::NoResponseError
-    @unseen_size = 0
   end
 
   private
@@ -92,6 +96,14 @@ class Webmail::Mailbox
     end
 
   class << self
+    def imap
+      Webmail::Mail.imap
+    end
+
+    def inbox_unseen
+      imap.conn.status('INBOX', ["UNSEEN"])["UNSEEN"]
+    end
+
     def cache_key
       imap.cache_key
     end
@@ -102,13 +114,20 @@ class Webmail::Mailbox
 
       (imap.user.imap_special_mailboxes - items.map(&:name)).each do |name|
         item = self.new(cache_key)
-        item.sync = true
         item.name = name
-        item.save
+        item.sync.save
         items << item
       end
 
+      items.map(&:stat)
       items.sort { |a, b| a.downcase_name <=> b.downcase_name }
+    end
+
+    def to_options
+      options = []
+      options << [I18n.t("webmail.box.inbox"), 'INBOX']
+      options += where({}).map { |c| [c.short_name, c.original_name] }
+      options
     end
 
     private

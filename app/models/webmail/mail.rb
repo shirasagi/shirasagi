@@ -60,6 +60,11 @@ class Webmail::Mail
     self.class.imap
   end
 
+  def sync
+    @sync = true
+    self
+  end
+
   def format_options
     %w(text html).map { |c| [c.upcase, c] }
   end
@@ -82,7 +87,7 @@ class Webmail::Mail
   def save_to_sent(msg)
     if reply_uid.present?
       ref = self.class.imap_find(reply_uid)
-      ref.set_flags(['Answered'])
+      ref.set_flags([:Answered])
     elsif forward_uid.present?
       #Forwarded
     end
@@ -95,8 +100,7 @@ class Webmail::Mail
 
   def move(mailbox)
     imap.conn.uid_copy(uid, mailbox)
-    self.sync = true
-    destroy
+    sync.destroy
   end
 
   def copy(mailbox)
@@ -144,12 +148,12 @@ class Webmail::Mail
     end
 
     # Criteria: where(sort: Array)
-    def sort_value
+    def sort_keys
       where({}).selector['sort'] || %w(REVERSE DATE)
     end
 
     # Criteria: where(search: Array)
-    def search_value
+    def search_keys
       where({}).selector['search'] || %w(UNDELETED)
     end
 
@@ -159,7 +163,7 @@ class Webmail::Mail
       limit = scope.limit_value
       offset = scope.offset_value
 
-      uids = imap.conn.uid_sort(sort_value, search_value, 'UTF-8')
+      uids = imap.conn.uid_sort(sort_keys, search_keys, 'UTF-8')
       size = uids.size
       uids = uids.slice(offset, limit) || []
 

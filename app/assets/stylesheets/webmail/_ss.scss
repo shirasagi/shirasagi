@@ -42,45 +42,67 @@
   }
 }
 
-.webmail-mailboxes {
-  a {
-    display: inline-block;
-    width: 100%;
-    padding: 5px 0 5px 10px;
+.webmail-navi-mailboxes {
+  .unseen-count {
+    color: $orange;
+    font-weight: bold;
   }
-  a:last-child {
-    margin-bottom: 8px;
-  }
-  .pad {
-    display: inline-block;
-    width: 20px;
-  }
-  .mailbox-name {
-    padding-left: 25px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat;
-  }
-  .mailbox-unseen-count {
-  }
-  a:hover {
-    text-decoration: none;
+  .mailboxes {
+    a {
+      display: inline-block;
+      width: 100%;
+      padding: 5px 0 5px 10px;
+    }
+    a:last-child {
+      margin-bottom: 8px;
+    }
+    .pad {
+      display: inline-block;
+      width: 20px;
+    }
     .mailbox-name {
-      background: url(/assets/img/ic-arrow16-on.png) no-repeat;
+      padding-left: 25px;
+      background: url(/assets/img/ic-arrow16-off.png) no-repeat;
+    }
+    a:hover {
+      text-decoration: none;
+      .mailbox-name {
+        background: url(/assets/img/ic-arrow16-on.png) no-repeat;
+      }
+    }
+    .mailbox--virtual:hover {
+      color: inherit;
     }
   }
 }
 .webmail-quota {
   margin: 10px;
 }
+
 .webmail-mails-head {
   .dropdown {
     display: inline;
   }
   .dropdown-menu {
+    top: 23px;
     left: 0px;
     width: 200px;
     margin: 0;
-    background: #fff;
+    padding: 5px 0;
     border: 1px solid #ccc;
+    @include box-shadow(0px 1px 3px #gray4);
+    background: #fff;
+    text-align: left;
+    a {
+      @include truncate;
+      padding: 5px 10px;
+      color: $black;
+    }
+    a:hover {
+      background-color: $gray1;
+      color: $orange;
+      text-decoration: none;
+    }
   }
 }
 .webmail-mail-search-label {
@@ -96,6 +118,20 @@
 .see.webmail-address-form {
   padding: 0;
 }
+@media print {
+  .webmail-print {
+    #head, #foot, #navi, #crumbs, #menu {
+      display: none;
+    }
+    #page:after {
+      display: none;
+    }
+    #main, #main .wrap {
+      margin: 0;
+    }
+  }
+}
+
 .webmail-addresses {
   @include clear;
   display: block;
@@ -115,16 +151,8 @@
     padding: 2px 4px;
   }
 }
-@media print {
-  .webmail-print {
-    #head, #foot, #navi, #crumbs, #menu {
-      display: none;
-    }
-    #page:after {
-      display: none;
-    }
-    #main, #main .wrap {
-      margin: 0;
-    }
+.webmail-filter-conditions {
+  div {
+    margin: 15px 0 0;
   }
 }

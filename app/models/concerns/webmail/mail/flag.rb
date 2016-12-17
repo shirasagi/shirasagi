@@ -22,36 +22,36 @@ module Webmail::Mail::Flag
   end
 
   def set_seen
-    set_flags(['Seen'])
+    set_flags([:Seen])
   end
 
   def unset_seen
-    unset_flags(['Seen'])
+    unset_flags([:Seen])
   end
 
   def set_star
-    set_flags(['Flagged'])
+    set_flags([:Flagged])
   end
 
   def unset_star
-    unset_flags(['Flagged'])
+    unset_flags([:Flagged])
   end
 
   def set_deleted
-    set_flags(['Deleted'])
+    set_flags([:Deleted])
   end
 
   def set_flags(values)
     self.flags ||= []
-    self.flags = (self.flags + values).uniq
+    self.flags = (self.flags + values.map(&:to_s)).uniq
     self.save if changed?
-    imap.conn.uid_store(uid, '+FLAGS', values.map(&:to_sym)) # required symbole
+    imap.conn.uid_store(uid, '+FLAGS', values) # required symbole
   end
 
   def unset_flags(values)
     self.flags ||= []
-    self.flags -= values
+    self.flags -= values.map(&:to_s)
     self.save if changed?
-    imap.conn.uid_store(uid, '-FLAGS', values.map(&:to_sym)) # required symbole
+    imap.conn.uid_store(uid, '-FLAGS', values) # required symbole
   end
 end

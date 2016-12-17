@@ -1,16 +1,25 @@
-<nav class="main-navi">
-  <h2><%= link_to t('webmail.box.inbox'), webmail_mails_path %></h2>
+<nav class="main-navi webmail-navi-mailboxes">
+  <h2>
+    <%= link_to webmail_mails_path do %>
+      <%= t('webmail.box.inbox') %>
 
-  <% if @model == Webmail::Mail && @imap.try(:logged_in?) %>
-  <div class="webmail-mailboxes">
+      <% if @navi_mailboxes && 0 < unseen = Webmail::Mailbox.inbox_unseen %>
+        <span class="unseen-count">(<%= unseen %>)</span>
+      <% end %>
+    <% end %>
+  </h2>
+
+  <% if @navi_mailboxes %>
+  <div class="mailboxes">
     <% Webmail::Mailbox.imap_all.each do |box| %>
       <%= link_to webmail_mails_path(mailbox: box.original_name),
         class: box.css_class, "data-name" => box.original_name do %>
 
         <%== "<span class='pad'></span>" * box.depth %>
         <span class="mailbox-name""><%= box.basename %></span>
-        <% if box.unseen_size > 0 %>
-          <span class="mailbox-unseen-count">(<%= box.unseen_size %>)</span>
+
+        <% if 0 < box.unseen %>
+          <span class="unseen-count">(<%= box.unseen %>)</span>
         <% end %>
       <% end %>
     <% end %>
@@ -18,14 +27,23 @@
   <% end %>
 </nav>
 
+<div id="webmail-mailboxes-list" style="display: none;">
+  <ul class="dropdown-menu">
+    <% Webmail::Mailbox.user(@cur_user).to_options.each do |label, value| %>
+    <li><a href="#" data-name="<%= value %>"><%= label %></a></li>
+    <% end %>
+  </ul>
+</div>
+
 <nav class="mod-navi">
   <h2><%= t('views.config') %></h2>
   <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path %></h3>
   <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path %></h3>
   <h3><%= link_to t('webmail.settings.special_mailbox'), webmail_special_mailbox_path %></h3>
   <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path %></h3>
-  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path %></h3>
   <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
+  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
 </nav>
 
 <% if @imap.try(:logged_in?) %>
