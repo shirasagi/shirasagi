@@ -23,7 +23,7 @@ module SS::Model::Site
 
     attr_accessor :cur_domain
 
-    permit_params :name, :host, :domains, :public_path, :https, :document_root, group_ids: []
+    permit_params :name, :host, :domains, :subdir, :public_path, :https, :document_root, group_ids: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
