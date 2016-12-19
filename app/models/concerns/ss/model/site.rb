@@ -18,11 +18,12 @@ module SS::Model::Site
     field :domains_with_subdir, type: Array
     field :subdir, type: String
     field :https, type: String, default: "disabled"
+    field :public_path, type: String
     embeds_ids :groups, class_name: "SS::Group"
 
     attr_accessor :cur_domain
 
-    permit_params :name, :host, :domains, :subdir, :https, group_ids: []
+    permit_params :name, :host, :domains, :public_path, :https, :document_root, group_ids: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
@@ -42,7 +43,8 @@ module SS::Model::Site
     end
 
     def root_path
-      "#{self.class.root}/" + host.split(//).join("/") + "/_"
+      root = "#{self.class.root}/"
+      root += public_path.present? ? public_path : (host.split(//).join("/") + "/_")
     end
 
     def url
@@ -114,6 +116,10 @@ module SS::Model::Site
 
         if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
           errors.add :domains_with_subdir, :duplicate
+        end
+
+        if public_path.blank? && host.present?
+          self.public_path = host.split(//).join("/") + "/_"
         end
       end
 

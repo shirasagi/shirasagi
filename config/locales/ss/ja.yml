@@ -285,6 +285,7 @@ ja:
         host: ホスト名
         domains: ドメイン
         subdir: サブディレクトリ
+        public_path: 静的ファイルパス
         https: HTTPS
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
@@ -506,6 +507,8 @@ ja:
         - ドメインを設定します。
       subdir:
         - サブディレクトリを設定します。
+      public_path:
+        - 静的ファイルのパスを設定します。
       https:
         - HTTPSの有効無効を設定します。
       released:

@@ -11,6 +11,12 @@
   <dt><%= @model.t :subdir %><%= @model.tt :subdir %></dt>
   <dd><%= f.text_field :subdir %></dd>
 
+  <dt><%= @model.t :public_path %><%= @model.tt :public_path %></dt>
+  <dd>
+    <%= link_to :edit, "#", class: "public-path", onClick: '$(".public-path").toggle(); return false;' %>
+    <%= f.text_field :public_path, class: "public-path", style: "display: none;" %>
+  </dd>
+
   <dt><%= @model.t :https %><%= @model.tt :https %></dt>
   <dd><%= f.select :https, @item.https_options %></dd>
 </dl>
