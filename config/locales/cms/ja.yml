@@ -390,7 +390,6 @@ ja:
         files: ファイル
         category_ids: カテゴリー
         categories: カテゴリー
-        related_pages: 関連記事
       cms/model/part:
         name: パーツ名
         route: パーツ属性
@@ -575,6 +574,10 @@ ja:
         st_tags: タグ
       cms/addon/tag:
         tags: タグ
+      cms/addon/related_page:
+        related_pages: 関連記事
+        related_page_ids: 関連記事
+        related_page_sort: 並び順
 
   errors:
     messages:
@@ -1219,6 +1222,13 @@ ja:
       tags:
         - ページのタグを設定します。
         - スペースやカンマで区切ることで複数のタグを設定できます。
+
+    cms/addon/related_page:
+      related_page_ids:
+        - このページの内容に関連するページへのリンクを選択します。
+        - 選択したページへのリンクが本文の下部に表示されます。
+      related_page_sort:
+        - 関連記事の並び順を選択します。
 
   all_content:
     page_id: ページID
