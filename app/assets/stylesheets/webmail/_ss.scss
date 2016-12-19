@@ -76,7 +76,21 @@
   }
 }
 .webmail-quota {
-  margin: 10px;
+  .total {
+    height: 1.6em;
+    margin: 10px;
+    border: 1px solid #ccc;
+    background-color: #ddd;
+  }
+  .label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+  }
+  .used {
+    height: 100%;
+    background-color: #6c6;
+  }
 }
 
 .webmail-mails-head {

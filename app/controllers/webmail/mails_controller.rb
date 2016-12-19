@@ -5,12 +5,11 @@ class Webmail::MailsController < ApplicationController
 
   model Webmail::Mail
 
+  skip_action_callback :set_destroy_items
   before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
-  before_action :select_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
                                   :attachment, :download, :header_view, :source_view]
-  after_action :expunge, only: [:move, :destroy, :destroy_all]
 
   private
     def set_crumbs
@@ -19,7 +18,7 @@ class Webmail::MailsController < ApplicationController
 
     def apply_filters
       count = Webmail::Filter.user(@cur_user).enabled.map do |filter|
-        filter.apply_recent
+        filter.apply 'INBOX', ['NEW']
       end.inject(:+)
 
       flash[:notice] = t('webmail.notice.filter_applied', count: count) if count > 0
@@ -28,14 +27,7 @@ class Webmail::MailsController < ApplicationController
     def set_mailbox
       @mailbox = params[:mailbox]
       @navi_mailboxes = true
-    end
-
-    def select_mailbox
-      if request.get? || params[:action] =~ /copy|set_/
-        @imap.conn.examine(@mailbox)
-      else
-        @imap.conn.select(@mailbox)
-      end
+      @imap.examine(@mailbox)
     end
 
     def fix_params
@@ -48,15 +40,12 @@ class Webmail::MailsController < ApplicationController
       @item.attributes = fix_params
     end
 
-    def set_destroy_items
-    end
-
     def crud_redirect_url
       { action: :index }
     end
 
-    def expunge
-      @imap.conn.expunge
+    def get_uids
+      params[:ids].presence || [params[:id]]
     end
 
   public
@@ -100,55 +89,6 @@ class Webmail::MailsController < ApplicationController
       render inline: ApplicationController.helpers.br(data), layout: false
     end
 
-    def set_seen
-      change_flag(:set_seen)
-    end
-
-    def unset_seen
-      change_flag(:unset_seen)
-    end
-
-    def set_star
-      change_flag(:set_star)
-    end
-
-    def unset_star
-      change_flag(:unset_star)
-    end
-
-    def change_flag(action)
-      (params[:ids] || [params[:id]]).each do |id|
-        item = @model.where(mailbox: @mailbox).imap_find(id) rescue nil
-        item.try(action) if item
-      end
-
-      render_change
-    end
-
-    def move
-      (params[:ids] || [params[:id]]).each do |id|
-        item = @model.where(mailbox: @mailbox).imap_find(id) rescue nil
-        item.move(params[:dst]) if item
-      end
-      render_change
-    end
-
-    def copy
-      (params[:ids] || [params[:id]]).each do |id|
-        item = @model.where(mailbox: @mailbox).imap_find(id) rescue nil
-        item.copy(params[:dst]) if item
-      end
-      render_change
-    end
-
-    def render_change
-      location = params[:redirect].presence || { action: :index }
-      respond_to do |format|
-        format.html { redirect_to location, notice: t('webmail.notice.changed') }
-        format.json { head :no_content }
-      end
-    end
-
     def new
       @item = @model.new pre_params.merge(fix_params)
 
@@ -184,27 +124,46 @@ class Webmail::MailsController < ApplicationController
 
     def destroy
       raise "403" unless @item.allowed?(:delete, @cur_user)
-      render_destroy @item.destroy_or_trash
+      render_destroy @item.move_trash
+    end
+
+    def set_seen
+      render_change :set_seen, @model.set_seen(get_uids).size
+    end
+
+    def unset_seen
+      render_change :unset_seen, @model.unset_seen(get_uids).size
+    end
+
+    def set_star
+      render_change :set_star, @model.set_star(get_uids).size
+    end
+
+    def unset_star
+      render_change :unset_star, @model.unset_star(get_uids).size
     end
 
     def destroy_all
-      @items = @model.
-        where(mailbox: @mailbox).
-        in(uid: params[:ids]).
-        entries.
-        map(&:sync)
+      render_change :delete, @model.uids_move_trash(get_uids).size
+    end
 
-      entries = @items.entries
-      @items = []
+    def copy
+      render_change :copy, @model.uids_copy(get_uids, params[:dst]).size
+    end
 
-      entries.each do |item|
-        if item.allowed?(:delete, @cur_user)
-          next if item.destroy_or_trash
-        else
-          item.errors.add :base, :auth_error
-        end
-        @items << item
+    def move
+      render_change :move, @model.uids_move(get_uids, params[:dst]).size
+    end
+
+    def render_change(action, count)
+      location = params[:redirect].presence || { action: :index }
+
+      multiple = (count == 1) ? '' : 'multiple.'
+      notice = t("webmail.notice.#{multiple}#{action}", count: count)
+
+      respond_to do |format|
+        format.html { redirect_to location, notice: notice }
+        format.json { head :no_content }
       end
-      render_destroy_all(entries.size != @items.size)
     end
 end

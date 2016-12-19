@@ -29,10 +29,10 @@ class Webmail::FiltersController < ApplicationController
       return redirect_to(location) if mailbox.blank?
 
       set_item
-      count = @item.apply_mailbox(mailbox)
+      count = @item.apply(mailbox)
 
       respond_to do |format|
-        format.html { redirect_to location, notice: t('webmail.notice.filter_applied', count: count) }
+        format.html { redirect_to location, notice: t('webmail.notice.multiple.filtered', count: count) }
         format.json { head :no_content }
       end
     end

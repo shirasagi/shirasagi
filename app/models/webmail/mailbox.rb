@@ -3,6 +3,7 @@ class Webmail::Mailbox
   include SS::Document
   include SS::Reference::User
   include SS::FreePermission
+  include Webmail::ImapConnection
 
   attr_accessor :sync, :messages, :unseen
 
@@ -27,12 +28,8 @@ class Webmail::Mailbox
 
   default_scope -> { order_by order: 1, downcase_name: 1 }
 
-  def imap
-    self.class.imap
-  end
-
   def stat
-    status = imap.conn.status(original_name, %w(MESSAGES UNSEEN))
+    status = imap.conn.status(encode_name, %w(MESSAGES UNSEEN))
     self.messages = status['MESSAGES']
     self.unseen = status['UNSEEN']
   rescue Net::IMAP::NoResponseError
@@ -47,12 +44,12 @@ class Webmail::Mailbox
     name.sub(/^INBOX\./, '')
   end
 
-  def original_name(name = self.name)
+  def encode_name(name = self.name)
     Net::IMAP.encode_utf7(name)
   end
 
   def css_class
-    list = [original_name.gsub(/[^\w]/, '-').downcase]
+    list = [encode_name.gsub(/[^\w]/, '-').downcase]
     list << 'mailbox--unseen' if unseen > 0
     list << 'mailbox--virtual' if unseen == -1
     list.join(' ')
@@ -71,20 +68,20 @@ class Webmail::Mailbox
     end
 
     def imap_create
-      imap.conn.create original_name
+      imap.conn.create encode_name
     rescue Net::IMAP::NoResponseError => e
       rescue_imap_error(e)
     end
 
     def imap_update
-      imap.conn.rename original_name(name_was), original_name
+      imap.conn.rename encode_name(name_was), encode_name
       Webmail::Mail.where(mailbox: name_was).update_all(mailbox: name)
     rescue Net::IMAP::NoResponseError => e
       rescue_imap_error(e)
     end
 
     def imap_delete
-      imap.conn.delete original_name
+      imap.conn.delete encode_name
       mails.destroy_all
     rescue Net::IMAP::NoResponseError => e
       rescue_imap_error(e)
@@ -96,10 +93,6 @@ class Webmail::Mailbox
     end
 
   class << self
-    def imap
-      Webmail::Mail.imap
-    end
-
     def inbox_unseen
       imap.conn.status('INBOX', ["UNSEEN"])["UNSEEN"]
     end
@@ -126,7 +119,7 @@ class Webmail::Mailbox
     def to_options
       options = []
       options << [I18n.t("webmail.box.inbox"), 'INBOX']
-      options += where({}).map { |c| [c.short_name, c.original_name] }
+      options += where({}).map { |c| [c.short_name, c.encode_name] }
       options
     end
 

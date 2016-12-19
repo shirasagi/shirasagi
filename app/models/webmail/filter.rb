@@ -2,9 +2,11 @@ class Webmail::Filter
   include SS::Document
   include SS::Reference::User
   include SS::UserPermission
+  include Webmail::ImapConnection
   include Webmail::Addon::ApplyFilter
 
-  APPLY_PER = 2 # 100
+  # 一括処理件数
+  APPLY_PER = 100
 
   field :name, type: String
   field :state, type: String
@@ -19,7 +21,7 @@ class Webmail::Filter
 
   validates :name, presence: true
   validates :action, presence: true
-  validates :mailbox, presence: true, if: ->{ action =~ /move|copy/ }
+  validates :mailbox, presence: true, if: ->{ action =~ /copy|move/ }
 
   validate :validate_conditions
 
@@ -35,16 +37,12 @@ class Webmail::Filter
     criteria
   }
 
-  def imap
-    self.class.imap
-  end
-
   def state_options
     %w(enabled disabled).map { |m| [I18n.t("views.options.state.#{m}"), m] }
   end
 
   def action_options
-    %w(move copy delete).map { |m| [I18n.t("webmail.options.action.#{m}"), m] }
+    %w(copy move trash delete).map { |m| [I18n.t("webmail.options.action.#{m}"), m] }
   end
 
   def mailbox_options
@@ -52,6 +50,7 @@ class Webmail::Filter
   end
 
   def decode_mailbox
+    return nil if mailbox.blank?
     Net::IMAP.decode_utf7(mailbox).sub(/^INBOX\./, '')
   end
 
@@ -63,57 +62,30 @@ class Webmail::Filter
     keys
   end
 
-  def apply_recent
-    src_mailbox = 'INBOX'
-    imap.conn.select(src_mailbox)
-    uids = imap.conn.uid_sort(['DATE'], ['NEW'] + search_keys, 'UTF-8')
-    uids_apply(uids, src_mailbox)
+  def apply(mailbox, add_search_keys = [])
+    imap.examine(mailbox)
+    uids = imap.conn.uid_sort(['DATE'], add_search_keys + search_keys, 'UTF-8')
+    uids_apply(uids, mailbox)
   end
 
-  def apply_mailbox(src_mailbox)
-    imap.conn.select(src_mailbox)
-    uids = imap.conn.uid_sort(['DATE'], search_keys, 'UTF-8')
-    uids_apply(uids, src_mailbox)
-  end
-
-  def uids_apply(uids, src_mailbox)
+  def uids_apply(uids, mailbox)
     count = 0
+    return count if uids.blank?
 
     uids.each_slice(APPLY_PER) do |sliced_uids|
-      applied_uids = []
-
-      sliced_uids.each do |uid|
-        next unless uid_apply(uid)
-        applied_uids << uid
-        count += 1
-      end
-
-      if applied_uids.present? && action =~ /move|delete/
-        imap.conn.expunge
-        Webmail::Mail.where(imap.cache_key).
-          where(mailbox: src_mailbox, :uid.in => applied_uids).
-          destroy
+      if action == "copy"
+        count += Webmail::Mail.uids_copy(sliced_uids, self.mailbox).size
+      elsif action == "move"
+        imap.examine(mailbox)
+        count += Webmail::Mail.uids_move(sliced_uids, self.mailbox).size
+      elsif action == "trash"
+        count += Webmail::Mail.uids_move_trash(sliced_uids).size
+      elsif action == "delete"
+        count += Webmail::Mail.uids_delete(sliced_uids).size
       end
     end
 
     count
-  end
-
-  def uid_apply(uid)
-    begin
-      if action == "move"
-        imap.conn.uid_copy(uid, mailbox)
-        imap.conn.uid_store(uid, '+FLAGS', [:Deleted])
-      elsif action == "copy"
-        imap.conn.uid_copy(uid, mailbox)
-      elsif action == "delete"
-        imap.conn.uid_store(uid, '+FLAGS', [:Deleted])
-      end
-      true
-    rescue Net::IMAP::NoResponseError => e
-      raise e if Rails.env.development?
-      false
-    end
   end
 
   private
@@ -123,10 +95,4 @@ class Webmail::Filter
       end
       errors.add :base, I18n.t("webmail.errors.blank_conditions")
     end
-
-  class << self
-    def imap
-      Webmail::Mail.imap
-    end
-  end
 end

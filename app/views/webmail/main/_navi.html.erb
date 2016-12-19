@@ -12,8 +12,8 @@
   <% if @navi_mailboxes %>
   <div class="mailboxes">
     <% Webmail::Mailbox.imap_all.each do |box| %>
-      <%= link_to webmail_mails_path(mailbox: box.original_name),
-        class: box.css_class, "data-name" => box.original_name do %>
+      <%= link_to webmail_mails_path(mailbox: box.encode_name),
+        class: box.css_class, "data-name" => box.encode_name do %>
 
         <%== "<span class='pad'></span>" * box.depth %>
         <span class="mailbox-name""><%= box.basename %></span>
@@ -46,8 +46,11 @@
   <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
 </nav>
 
-<% if @imap.try(:logged_in?) %>
+<% if @navi_mailboxes %>
 <div class="webmail-quota">
-  <%= @imap.quota_info %>
+  <div class="total">
+    <div class="label"><%= number_to_human_size @imap.quota_used %>/<%= number_to_human_size @imap.quota_total %></div>
+    <div class="used" style="width: <%= @imap.quota_per %>%"></div>
+  </div>
 </div>
 <% end %>

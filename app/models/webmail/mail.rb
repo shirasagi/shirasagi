@@ -4,14 +4,12 @@ class Webmail::Mail
   include SS::Document
   include SS::Reference::User
   include SS::FreePermission
+  include Webmail::ImapConnection
   include Webmail::Mail::Flag
   include Webmail::Mail::Parser
   include Webmail::Mail::Maker
   include Webmail::Mail::Search
   include Webmail::Addon::File
-
-  # Webmail::Imap
-  cattr_accessor :imap
 
   attr_accessor :sync, :rfc822, :text, :html, :attachments, :format, :reply_uid, :forward_uid, :signature,
                 :to_text, :cc_text, :bcc_text
@@ -56,10 +54,6 @@ class Webmail::Mail
     criteria
   }
 
-  def imap
-    self.class.imap
-  end
-
   def sync
     @sync = true
     self
@@ -98,25 +92,9 @@ class Webmail::Mail
     imap.conn.append(imap.user.imap_draft_box, msg, [:Draft], Time.zone.now)
   end
 
-  def move(mailbox)
-    imap.conn.uid_copy(uid, mailbox)
-    sync.destroy
-  end
-
-  def copy(mailbox)
-    imap.conn.uid_copy(uid, mailbox)
-  end
-
-  def destroy_or_trash
-    trash = imap.user.imap_trash_box
-    copy(trash) if mailbox != trash
-    destroy
-  end
-
   private
     def imap_delete
       set_deleted
-      #imap.conn.expunge
     rescue Net::IMAP::NoResponseError => e
       rescue_imap_error(e)
     end

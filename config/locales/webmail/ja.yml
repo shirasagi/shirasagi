@@ -27,9 +27,10 @@ ja:
       clear_cache: キャッシュ クリア
     options:
       action:
-        move: 移動する
         copy: コピーする
-        delete: 削除する
+        move: 移動する
+        trash: 削除する
+        delete: サーバから削除する
     links:
       download: ダウンロード
       source_view: ソース表示
@@ -50,8 +51,22 @@ ja:
       apply_filter: フィルターを適用してよろしいですか？
     notice:
       deleted_cache: キャッシュを削除しました。
-      changed: 変更しました。
-      filter_applied: "%{count} 件のメールにフィルターを適用しました。"
+      copy: コピーしました。
+      move: 移動しました。
+      delete: 削除しました。
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
+      set_star: スターをつけました。
+      unset_star: スターをはずしました。
+      multiple:
+        copy: "%{count} 件のメールをコピーしました。"
+        move: "%{count} 件のメールを移動しました。"
+        delete: "%{count} 件のメールを削除しました。"
+        set_seen: "%{count} 件のメールを既読にしました。"
+        unset_seen: "%{count} 件のメールを未読にしました。"
+        set_star: "%{count} 件のメールにスターをつけました。"
+        unset_star: "%{count} 件のメールからスターをはずしました。"
+        filtered: "%{count} 件のメールにフィルターを適用しました。"
     errors:
       blank_conditions: 条件を入力してください。
 
