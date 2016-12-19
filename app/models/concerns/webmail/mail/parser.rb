@@ -9,7 +9,7 @@ module Webmail::Mail::Parser
       uid: msg.attr["UID"],
       message_id: envelope.message_id,
       size: msg.attr['RFC822.SIZE'],
-      flags: msg.attr['FLAGS'].map(&:to_s).presence,
+      flags: msg.attr['FLAGS'].map(&:to_s),
       date: envelope.date,
       from: self.class.build_addresses(envelope.from)[0],
       sender: self.class.build_addresses(envelope.sender)[0],

@@ -5,11 +5,19 @@ class @Webmail_Mail
     @renderForm()
 
   @renderList: ->
-    $(".list-head .search").on "click", ->
-      $('.webmail-mail-search').animate( { height: 'toggle' }, 'fast' )
-    $(".webmail-mail-search .reset").on "click", ->
-      $(".webmail-mail-search input[type=text]").val("")
-      $(".webmail-mail-search .search").click()
+    $(".list-head .move-all, .list-head .copy-all").each ->
+      url = $(this).data('href')
+      menu = $("#webmail-mailboxes-list .dropdown-menu").clone()
+      menu.find("a").click ->
+        checked = $(".list-item input:checkbox:checked").map ->
+          $(this).val()
+        return Webmail_Mail.updateMail(url, ids: checked, dst: $(this).data('name'))
+      $(this).append(menu)
+
+    $(".list-head .move-all, .list-head .copy-all").on "click", ->
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
 
     $(".list-head .update-all").on "click", ->
       checked = $(".list-item input:checkbox:checked").map ->
@@ -19,19 +27,12 @@ class @Webmail_Mail
       url = $(this).data('href')
       return Webmail_Mail.updateMail(url, ids: checked, redirect: location.href)
 
-    $(".list-head .move-all, .list-head .copy-all").on "click", ->
-      checked = $(".list-item input:checkbox:checked").map ->
-        $(this).val()
-      return false if checked.length == 0
+    $(".list-head .search").on "click", ->
+      $('.webmail-mail-search').animate( { height: 'toggle' }, 'fast' )
 
-      url = $(this).data('href')
-      wrap = $(this).parent()
-      if wrap.find('.dropdown-menu').length == 0
-        navi = $('.main-navi').clone().addClass('dropdown-menu')
-        navi.find('.mailbox-unseen-count').remove()
-        navi.find('a').click ->
-          return Webmail_Mail.updateMail(url, ids: checked, dst: $(this).data('name'))
-        wrap.append(navi)
+    $(".webmail-mail-search .reset").on "click", ->
+      $(".webmail-mail-search input[type=text]").val("")
+      $(".webmail-mail-search .search").click()
 
     $(".icon-star").on "click", ->
       star = $(this)

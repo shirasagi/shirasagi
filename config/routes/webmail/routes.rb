@@ -30,6 +30,10 @@ SS::Application.routes.draw do
     end
   end
 
+  concern :filter do
+    post :apply, :on => :member
+  end
+
   namespace "webmail", path: ".webmail" do
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }, as: :cur_user
 
@@ -38,6 +42,7 @@ SS::Application.routes.draw do
     resources :mailboxes, concerns: [:deletion]
     resources :addresses, concerns: [:deletion]
     resources :signatures, concerns: [:deletion]
+    resources :filters, concerns: [:deletion, :filter]
     resource :cache_setting, only: [:show, :update]
     resource :special_mailbox, only: [:show, :edit, :update]
     resource :account_setting, only: [:show, :edit, :update]

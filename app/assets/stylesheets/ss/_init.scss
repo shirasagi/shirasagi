@@ -225,3 +225,10 @@ $border-white: 1px solid $white;
   @include background-image(linear-gradient(top, #f2d150, #f2a950));
   @include filter-gradient(#f2d150, #f2a950, vertical);
 }
+
+@mixin truncate {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

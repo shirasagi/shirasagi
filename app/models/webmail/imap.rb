@@ -30,7 +30,6 @@ class Webmail::Imap
     end
 
     Webmail::Mail.imap = self
-    Webmail::Mailbox.imap = self
     @logged_in = true
   end
 
