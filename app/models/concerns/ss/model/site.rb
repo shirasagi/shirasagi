@@ -71,11 +71,11 @@ module SS::Model::Site
       filtered = []
       domains_with_subdir.each do |domain_with_subdir|
         if SS.config.kana.location.present?
-          filtered << "#{domain_with_subdir}/".sub("/", "#{SS.config.kana.location}/")
+          filtered << "#{domain_with_subdir}/".sub("/", "#{SS.config.kana.location}/").sub(/\/$/, "")
         end
 
         if !mobile_disabled? && mobile_location.present?
-          filtered << "#{domain_with_subdir}/".sub("/", "#{mobile_location}/")
+          filtered << "#{domain_with_subdir}/".sub("/", "#{mobile_location}/").sub(/\/$/, "")
         end
       end
       filtered
