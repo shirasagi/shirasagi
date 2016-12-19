@@ -26,7 +26,6 @@ module Cms::BaseFilter
       @ss_mode = :cms
       @cur_site = Cms::Site.find id: params[:site]
       request.env["ss.site"] = @cur_site
-      @cur_site.cur_domain = request_host
       @crumbs << [@cur_site.name, cms_contents_path]
     end
 

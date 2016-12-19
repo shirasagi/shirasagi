@@ -64,7 +64,6 @@ class Cms::PreviewController < ApplicationController
   private
     def set_site
       @cur_site = request.env["ss.site"] = SS::Site.find params[:site]
-      @cur_site.cur_domain = request_host
       @preview  = true
     end
 
