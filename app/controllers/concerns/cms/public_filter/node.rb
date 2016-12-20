@@ -16,9 +16,6 @@ module Cms::PublicFilter::Node
     end
 
     def render_node(node)
-      dump(@cur_site.name)
-      dump("render_node")
-      dump([node, @cur_path, @cur_main_path])
       rest = @cur_main_path.sub(/^\/#{node.filename}/, "").sub(/\/index\.html$/, "")
       path = "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
       spec = recognize_agent path

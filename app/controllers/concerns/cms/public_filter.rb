@@ -58,9 +58,6 @@ module Cms::PublicFilter
     end
 
     def set_request_path
-      dump("set_request_path")
-      dump(request.request_method)
-      dump(request.path)
       @cur_path ||= request_path
       cur_path = @cur_path.dup
 
@@ -73,13 +70,10 @@ module Cms::PublicFilter
     end
 
     def set_main_path
-      dump("set_main_path")
       if @cur_site.subdir.present?
         @cur_main_path = @cur_path.sub(/^\/#{@cur_site.subdir}/, "")
-        dump("cur_main_path")
       else
         @cur_main_path = @cur_path.dup
-        dump("cur_main_path.dup")
       end
     end
 
