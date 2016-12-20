@@ -14,7 +14,10 @@ module SS::AuthFilter
 
     user_id = session[:user]["user_id"]
     user = self.user_class.find(user_id) rescue nil
-    user = nil unless user.enabled?
+    if user
+      user.decrypted_password = SS::Crypt.decrypt(session[:user]["password"])
+      user = nil unless user.enabled?
+    end
     user
   end
 

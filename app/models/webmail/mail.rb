@@ -153,18 +153,23 @@ class Webmail::Mail
 
     def imap_find(uid)
       uid = uid.to_i
-
-      msg = imap.conn.uid_fetch(uid, ['RFC822'])[0]
+      msg = imap_fetch(uid, ['RFC822'])
 
       item = cache_all([uid]).first
       item.parse_body(msg)
       item
     end
 
+    def imap_fetch(uid, attr)
+      msg = imap.conn.uid_fetch(uid, attr)
+      return msg[0] if msg
+      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid)
+    end
+
     private
       def cache_all(uids)
         items = Mongoid::Criteria.new(self).where(cache_key).in(uid: uids).map do |item|
-          item.flags = imap.conn.uid_fetch(item.uid, ['FLAGS'])[0].attr['FLAGS'].map(&:to_s)
+          item.flags = imap_fetch(item.uid, ['FLAGS']).attr['FLAGS'].map(&:to_s)
           item.save if item.changed?
           uids.delete(item.uid)
           item
@@ -172,7 +177,7 @@ class Webmail::Mail
 
         uids.each do |uid|
           # ALL - FLAGS INTERNALDATE RFC822.SIZE ENVELOPE
-          msg = imap.conn.uid_fetch(uid, %w(ALL UID RFC822))[0]
+          msg = imap_fetch(uid, %w(ALL UID RFC822))
 
           item = self.new(cache_key)
           item.uid = uid

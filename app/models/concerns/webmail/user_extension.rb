@@ -5,30 +5,39 @@ module Webmail::UserExtension
 
   included do
     field :imap_host, type: String
+    field :imap_auth_type, type: String
     field :imap_account, type: String
     field :imap_password, type: String
     field :imap_sent_box, type: String
     field :imap_draft_box, type: String
     field :imap_trash_box, type: String
 
-    permit_params :imap_host, :imap_account, :in_imap_password
-    permit_params :imap_sent_box, :imap_draft_box, :imap_trash_box
+    permit_params :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+                  :imap_sent_box, :imap_draft_box, :imap_trash_box
 
-    before_validation :set_imap_password, if: ->{ in_imap_password.present? }
+    before_validation :set_imap_password, if: ->{ in_imap_password }
   end
 
   def imap_settings
     conf = {
-      host: imap_host,
-      account: imap_account,
-      password: imap_decrypted_password
+      host: imap_host.presence,
+      options: SS.config.webmail.clients.dig('default', 'options'),
+      auth_type: imap_auth_type.presence,
+      account: imap_account.presence,
+      password: decrypt_imap_password.presence
     }
-    return nil if conf[:host].blank? || conf[:account].blank? || conf[:password].blank?
+
+    default = SS.config.webmail.clients['default'] || {}
+    conf[:host] ||= default['host']
+    conf[:options] ||= {}
+    conf[:auth_type] ||= default['auth_type']
+    conf[:account] ||= send default['account']
+    conf[:password] ||= decrypted_password
     conf
   end
 
-  def imap_special_mailboxes
-    [imap_sent_box, imap_draft_box, imap_trash_box]
+  def imap_auth_type_options
+    %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5).map { |c| [c, c] }
   end
 
   def imap_sent_box
@@ -43,7 +52,11 @@ module Webmail::UserExtension
     self[:imap_trash_box].presence || "INBOX.Trash"
   end
 
-  def imap_decrypted_password
+  def imap_special_mailboxes
+    [imap_sent_box, imap_draft_box, imap_trash_box]
+  end
+
+  def decrypt_imap_password
     SS::Crypt.decrypt(imap_password)
   end
 

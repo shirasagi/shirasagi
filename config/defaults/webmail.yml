@@ -2,6 +2,18 @@ production: &production
   # Disable Webmail.
   disable: true
 
+  # default settings
+  clients:
+    default:
+      # host
+      host: localhost
+      options:
+        port: 143
+      # auth_type: LOGIN, PLAIN, CRAM-MD5, DIGEST-MD5
+      auth_type: LOGIN
+      # user: uid, email
+      account: email
+
 test:
   <<: *production
   disable: false

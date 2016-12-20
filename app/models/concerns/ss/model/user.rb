@@ -7,7 +7,7 @@ module SS::Model::User
   include SS::Reference::UserExpiration
   include Ldap::Addon::User
 
-  attr_accessor :cur_site, :cur_user, :in_password, :self_edit
+  attr_accessor :cur_site, :cur_user, :in_password, :decrypted_password, :self_edit
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze

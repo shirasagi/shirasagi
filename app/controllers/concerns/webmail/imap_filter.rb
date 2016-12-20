@@ -10,7 +10,7 @@ module Webmail::ImapFilter
 
   private
     def set_imap
-      @imap = Webmail::Imap.instance
+      @imap = Webmail::Imap.new
       return if @imap.login(@cur_user)
 
       redirect_to webmail_account_setting_path
@@ -18,6 +18,7 @@ module Webmail::ImapFilter
 
     def unset_imap
       @imap.disconnect rescue nil
+      @imap = nil
     end
 
     def rescue_no_response_error(e)

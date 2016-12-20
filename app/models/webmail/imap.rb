@@ -1,7 +1,9 @@
 require "net/imap"
 class Webmail::Imap
   include ActiveModel::Validations
-  include Singleton
+  #include Singleton
+
+  cattr_accessor :instance
 
   # Net::IMAP
   attr_accessor :conn
@@ -17,15 +19,11 @@ class Webmail::Imap
     self.user = user
     self.conf = user.imap_settings
 
-    if conf.blank?
-      errors.add :base, "no settings"
-      return false
-    end
-
     begin
-      self.conn = Net::IMAP.new(conf[:host])
-      conn.authenticate('LOGIN', conf[:account], conf[:password])
-    rescue Net::IMAP::NoResponseError => e
+      self.conn = Net::IMAP.new conf[:host], conf[:options]
+      conn.authenticate conf[:auth_type], conf[:account], conf[:password]
+      self.class.instance = self
+    rescue SocketError, Net::IMAP::NoResponseError => e
       errors.add :base, e.to_s
       return @logged_in = false
     end

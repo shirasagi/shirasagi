@@ -10,6 +10,7 @@ ja:
     message: メッセージ
     mailbox: フォルダー
     signature: 署名
+    default_settings: 既定の設定
     box:
       inbox: 受信メール
     settings:
@@ -24,6 +25,7 @@ ja:
         subject: 件名
         body: 本文
     buttons:
+      test_connection: 接続確認
       clear_cache: キャッシュ クリア
     options:
       action:
@@ -80,7 +82,8 @@ ja:
     attributes:
       ss/model/user:
         imap_host: IMAP/ホスト
-        imap_account: IMAP/ユーザーID
+        imap_auth_type: IMAP/認証方式
+        imap_account: IMAP/ユーザー名
         imap_password: IMAP/パスワード
         in_imap_password: IMAP/パスワード
         imap_sent_box: 送信済みフォルダー

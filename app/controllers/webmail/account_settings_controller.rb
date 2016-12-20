@@ -16,13 +16,7 @@ class Webmail::AccountSettingsController < ApplicationController
     end
 
     def permit_fields
-      [:imap_host, :imap_account, :in_imap_password]
-    end
-
-    def get_params
-      para = super
-      para.delete(:password) if para[:password].blank?
-      para
+      [:imap_host, :imap_auth_type, :imap_account, :in_imap_password]
     end
 
     def set_item
@@ -32,5 +26,19 @@ class Webmail::AccountSettingsController < ApplicationController
   public
     def show
       # render
+    end
+
+    def test_connection
+      user = @cur_user.clone
+      user.attributes = get_params
+      user.valid?
+
+      @imap = Webmail::Imap.new
+
+      if @imap.login(user)
+        render text: "Login Success."
+      else
+        render text: @imap.errors.full_messages.join(' ')
+      end
     end
 end

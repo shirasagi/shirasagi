@@ -134,6 +134,7 @@ module Cms::PublicFilter
     end
 
     def page_not_found
+      logger.error("404 #{@cur_path}") if Rails.env.development?
       raise "404"
     end
 
