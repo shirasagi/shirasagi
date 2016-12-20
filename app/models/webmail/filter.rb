@@ -95,4 +95,13 @@ class Webmail::Filter
       end
       errors.add :base, I18n.t("webmail.errors.blank_conditions")
     end
+
+  class << self
+    def apply_all(mailbox, add_search_keys = [])
+      counts = all.map do |filter|
+        filter.apply mailbox, add_search_keys
+      end
+      counts.inject(:+) || 0
+    end
+  end
 end

@@ -1,4 +1,4 @@
-module Webmail::Mail::Maker
+module Webmail::Mail::MessageBuilder
   extend ActiveSupport::Concern
 
   def mail_attributes=(attr)

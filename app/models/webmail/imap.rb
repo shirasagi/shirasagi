@@ -1,9 +1,7 @@
 require "net/imap"
 class Webmail::Imap
   include ActiveModel::Validations
-
-  # singleton instance
-  cattr_accessor :imap
+  include Singleton
 
   # Net::IMAP
   attr_accessor :conn
@@ -32,7 +30,6 @@ class Webmail::Imap
       return @logged_in = false
     end
 
-    Webmail::Imap.imap = self
     @logged_in = true
   end
 

@@ -10,7 +10,7 @@ module Webmail::ImapFilter
 
   private
     def set_imap
-      @imap = Webmail::Imap.new
+      @imap = Webmail::Imap.instance
       return if @imap.login(@cur_user)
 
       redirect_to webmail_account_setting_path

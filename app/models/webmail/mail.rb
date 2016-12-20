@@ -7,8 +7,8 @@ class Webmail::Mail
   include Webmail::ImapConnection
   include Webmail::Mail::Flag
   include Webmail::Mail::Parser
-  include Webmail::Mail::Maker
   include Webmail::Mail::Search
+  include Webmail::Mail::MessageBuilder
   include Webmail::Addon::File
 
   attr_accessor :sync, :rfc822, :text, :html, :attachments, :format, :reply_uid, :forward_uid, :signature,

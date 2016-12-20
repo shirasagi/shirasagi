@@ -17,10 +17,7 @@ class Webmail::MailsController < ApplicationController
     end
 
     def apply_filters
-      count = Webmail::Filter.user(@cur_user).enabled.map do |filter|
-        filter.apply 'INBOX', ['NEW']
-      end.inject(:+)
-
+      count = Webmail::Filter.user(@cur_user).enabled.apply_all 'INBOX', ['NEW']
       flash[:notice] = t('webmail.notice.filter_applied', count: count) if count > 0
     end
 
