@@ -5,8 +5,9 @@ class Webmail::Address
 
   field :name, type: String
   field :email, type: String
+  field :memo, type: String
 
-  permit_params :name, :email
+  permit_params :name, :email, :memo
 
   validates :name, presence: true
   validates :email, presence: true, email: true
@@ -17,7 +18,7 @@ class Webmail::Address
     criteria = where({})
     return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name, :email if params[:keyword].present?
+    criteria = criteria.keyword_in params[:keyword], :name, :email, :memo if params[:keyword].present?
     criteria
   }
 

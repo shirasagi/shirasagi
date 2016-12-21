@@ -108,6 +108,7 @@ ja:
       webmail/address:
         name: 氏名
         email: メールアドレス
+        memo: メモ
       webmail/signature:
         name: 名称
         text: 本文

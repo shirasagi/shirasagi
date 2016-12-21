@@ -9,7 +9,7 @@ class Webmail::Filter
   APPLY_PER = 100
 
   field :name, type: String
-  field :state, type: String
+  field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
   field :from, type: String
   field :to, type: String

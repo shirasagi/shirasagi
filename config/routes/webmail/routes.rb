@@ -44,7 +44,6 @@ SS::Application.routes.draw do
     resources :signatures, concerns: [:deletion]
     resources :filters, concerns: [:deletion, :filter]
     resource :cache_setting, only: [:show, :update]
-    resource :special_mailbox, only: [:show, :edit, :update]
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, :on => :member
     end

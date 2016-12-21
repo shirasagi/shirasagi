@@ -1,6 +1,6 @@
 class Webmail::AccountSettingsController < ApplicationController
   include Webmail::BaseFilter
-  include Sns::CrudFilter
+  include SS::CrudFilter
 
   model SS::User
 
@@ -16,7 +16,8 @@ class Webmail::AccountSettingsController < ApplicationController
     end
 
     def permit_fields
-      [:imap_host, :imap_auth_type, :imap_account, :in_imap_password]
+      [ :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+        :imap_sent_box, :imap_draft_box, :imap_trash_box ]
     end
 
     def set_item
