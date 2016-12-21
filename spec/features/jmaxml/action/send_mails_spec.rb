@@ -6,17 +6,6 @@ describe "jmaxml/action/send_mails", dbscope: :example, js: true do
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_action_bases_path(site, node) }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "basic crud" do
     let!(:group1) { create(:cms_group, name: "#{group.name}/#{unique_id}") }
     let!(:group2) { create(:cms_group, name: "#{group.name}/#{unique_id}") }

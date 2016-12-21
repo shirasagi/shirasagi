@@ -5,17 +5,6 @@ describe "jmaxml/quake_regions", dbscope: :example do
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_quake_regions_path(site, node) }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "basic crud" do
     let(:code) { unique_id }
     let(:name) { unique_id }

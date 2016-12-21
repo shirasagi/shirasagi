@@ -5,17 +5,6 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
   let(:node) { create(:rss_node_weather_xml, cur_site: site) }
   let(:index_path) { rss_weather_xmls_path site.id, node }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "basic crud" do
     let(:name0) { unique_id }
     let(:name1) { unique_id }

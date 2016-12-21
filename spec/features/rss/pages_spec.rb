@@ -7,22 +7,6 @@ describe "rss_pages", dbscope: :example do
   let(:new_path) { new_rss_page_path site.id, node.id }
   let(:import_path) { import_rss_pages_path site.id, node.id }
 
-  context "without login" do
-    it do
-      visit index_path
-      expect(status_code).to eq 200
-      expect(current_path).to eq sns_login_path
-    end
-  end
-
-  context "without auth" do
-    it do
-      login_ss_user
-      visit index_path
-      expect(status_code).to eq 403
-    end
-  end
-
   context "with auth" do
     before { login_cms_user }
 

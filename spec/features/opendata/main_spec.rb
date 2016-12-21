@@ -3,27 +3,6 @@ require 'spec_helper'
 describe "opendata_main", dbscope: :example do
   let(:site) { cms_site }
 
-  context "without login" do
-    let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-    let(:index_path) { opendata_main_path site, node }
-
-    it do
-      visit index_path
-      expect(current_path).to eq sns_login_path
-    end
-  end
-
-  context "without auth" do
-    let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-    let(:index_path) { opendata_main_path site, node }
-
-    it do
-      login_ss_user
-      visit index_path
-      expect(status_code).to eq 403
-    end
-  end
-
   context "with auth" do
     before { login_cms_user }
 

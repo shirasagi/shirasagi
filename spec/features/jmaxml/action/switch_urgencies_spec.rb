@@ -6,17 +6,6 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_action_bases_path(site, node) }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "basic crud" do
     let!(:urgency_node) { create :urgency_node_layout, cur_site: site }
     let!(:layout1) { create_cms_layout([], cur_node: urgency_node) }

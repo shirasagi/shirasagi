@@ -35,17 +35,6 @@ describe "opendata_url_resource", dbscope: :example, http_server: true do
     subject.save!
   end
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "without auth" do
     before { login_cms_user }
 

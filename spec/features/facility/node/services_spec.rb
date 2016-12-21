@@ -12,17 +12,6 @@ describe "facility_node_services", type: :feature, dbscope: :example do
   let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
   let(:expected_addon_titles) { %w(フォルダー設定 メタ情報 リスト表示 公開設定 基本情報 施設の地域 施設の用途 施設の種類 権限).sort }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

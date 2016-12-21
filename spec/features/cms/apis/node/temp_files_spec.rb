@@ -11,17 +11,6 @@ describe "cms_apis_node_temp_files" do
   let(:delete_path) { delete_cms_apis_node_temp_file_path site.id, node.id, item }
   let(:select_path) { select_cms_apis_node_temp_file_path site.id, node.id, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

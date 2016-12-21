@@ -6,17 +6,6 @@ describe "chorg_changesets", dbscope: :example do
   let(:index_path) { chorg_changesets_changesets_path site.id, revision.id, "add" }
   let(:revision_show_path) { chorg_revisions_revision_path site.id, revision.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   it "#index" do
     login_cms_user
     visit index_path

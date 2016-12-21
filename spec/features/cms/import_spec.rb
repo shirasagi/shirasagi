@@ -4,17 +4,6 @@ describe "cms_import" do
   subject(:site) { cms_site }
   subject(:index_path) { cms_import_path site.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth", js: true do
     before { login_cms_user }
 

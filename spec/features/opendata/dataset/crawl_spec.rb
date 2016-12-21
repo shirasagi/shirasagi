@@ -12,17 +12,6 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
   let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
   let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth seatch updated and deleted" do
     before { login_cms_user }
 

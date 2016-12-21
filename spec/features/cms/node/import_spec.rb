@@ -5,17 +5,6 @@ describe "cms_node_import", type: :feature, dbscope: :example do
   let(:node) { create_once :cms_node_import_node, name: "import" }
   let(:index_path) { node_import_path site.id, node }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

@@ -26,17 +26,6 @@ describe "history_cms_backups", dbscope: :example do
     history_cms_restore_path site.id, source, backup_item._id
   end
 
-  it "without login" do
-    visit show_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit show_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

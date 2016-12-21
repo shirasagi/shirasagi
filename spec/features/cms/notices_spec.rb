@@ -12,17 +12,6 @@ describe "cms_notices", dbscope: :example, type: :feature do
   let(:public_index_path) { cms_public_notices_path site.id }
   let(:public_show_path) { cms_public_notice_path site.id, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

@@ -4,19 +4,6 @@ describe "cms_page_search", dbscope: :example do
   let(:site) { cms_site }
   let(:index_path) { cms_page_searches_path site.id }
 
-  context "without auth" do
-    it "without login" do
-      visit index_path
-      expect(current_path).to eq sns_login_path
-    end
-
-    it "without auth" do
-      login_ss_user
-      visit index_path
-      expect(status_code).to eq 403
-    end
-  end
-
   context "basic crud" do
     let(:name) { unique_id }
     let(:name2) { unique_id }

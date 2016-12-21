@@ -6,17 +6,6 @@ describe "cms_search", dbscope: :example, js: true do
   let(:html_index_path) { cms_search_contents_html_path site.id }
   let(:user) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
 
-  it "without login" do
-    visit html_index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit html_index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before do
       login_cms_user

@@ -6,19 +6,6 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example do
 
   let(:index_path) { node_copy_path site.id, node.id}
 
-  context 'without login/auth' do
-    it 'without login' do
-      visit index_path
-      expect(current_path).to eq sns_login_path
-    end
-
-    it 'without auth' do
-      login_ss_user
-      visit index_path
-      expect(status_code).to eq 403
-    end
-  end
-
   context 'run copy nodes' do
     let(:target_node_name) { unique_id }
 

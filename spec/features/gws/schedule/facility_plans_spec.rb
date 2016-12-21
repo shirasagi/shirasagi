@@ -10,17 +10,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
   let(:edit_path) { edit_gws_schedule_facility_plan_path site, facility, item }
   let(:delete_path) { delete_gws_schedule_facility_plan_path site, facility, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth", js: true do
     before { login_gws_user }
 

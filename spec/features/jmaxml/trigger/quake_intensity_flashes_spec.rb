@@ -5,17 +5,6 @@ describe "jmaxml/trigger/quake_intensity_flashes", dbscope: :example, js: true d
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_trigger_bases_path(site, node) }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "basic crud" do
     let!(:region) { create(:jmaxml_region_135) }
     let(:model) { Jmaxml::Trigger::QuakeIntensityFlash }

@@ -3,17 +3,6 @@ require 'spec_helper'
 describe "history_sys_logs", dbscope: :example do
   subject(:index_path) { history_sys_logs_path }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before do
       role = create(:sys_role_admin, name: unique_id)

@@ -5,17 +5,6 @@ describe "chorg_results", dbscope: :example do
   let(:revision) { create(:revision, site_id: site.id) }
   let(:index_path) { chorg_results_results_path site.id, revision.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   describe "#index" do
     context "no items" do
       it do

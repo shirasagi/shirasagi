@@ -5,17 +5,6 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
   let(:path) { gws_custom_groups_path site }
   let(:item) { create :gws_custom_group }
 
-  it "without login" do
-    visit path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit path
-    expect(status_code).to eq 403
-  end
-
   context "with auth", js: true do
     before { login_gws_user }
 
