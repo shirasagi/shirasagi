@@ -2,6 +2,14 @@
 shared_examples "cms_part#spec" do
   let(:item_class) { item.class }
 
+  describe "save" do
+    it { expect(item.new_record?).to be_falsy }
+  end
+end
+
+shared_examples "cms_part#spec_detail" do
+  let(:item_class) { item.class }
+
   describe "scopes" do
     it { expect(item_class.filename('path')).not_to eq nil }
     it { expect(item_class.node(nil)).not_to eq nil }
