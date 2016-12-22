@@ -28,8 +28,12 @@ ehthumbs.db
 /*.iml
 /.idea/
 
+# NetBeans
+/nbproject
+
 # Local Guardfile
 /Guardfile.local
 
 # Dotenv
 /.env
+
