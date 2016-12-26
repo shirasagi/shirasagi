@@ -56,6 +56,7 @@ GEM
       terminal-table (~> 1.4)
     browser (2.0.2)
     bson (4.0.4)
+    buftok (0.2.0)
     builder (3.2.2)
     bxslider-rails (4.2.5.1)
     byebug (8.2.2)
@@ -106,6 +107,8 @@ GEM
     diff-lcs (1.2.5)
     diffy (3.1.0)
     docile (1.1.5)
+    domain_name (0.5.20161129)
+      unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.0)
     dotenv-rails (2.1.0)
       dotenv (= 2.1.0)
@@ -115,6 +118,7 @@ GEM
       haml (~> 4.0)
       rdf (~> 1.1)
       sxp (~> 0.1, >= 0.1.3)
+    equalizer (0.0.10)
     erubis (2.7.0)
     execjs (2.6.0)
     factory_girl (4.5.0)
@@ -161,6 +165,15 @@ GEM
     highline (1.7.8)
     holiday_japan (1.2.2)
     htmlentities (4.3.4)
+    http (1.0.4)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 1.0.1)
+      http_parser.rb (~> 0.6.0)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+    http-form_data (1.0.1)
+    http_parser.rb (0.6.0)
     httpauth (0.2.1)
     i18n (0.7.0)
     jbuilder (2.4.1)
@@ -196,6 +209,10 @@ GEM
     kaminari-mongoid (0.1.2)
       kaminari
     kgio (2.10.0)
+    koala (2.4.0)
+      addressable
+      faraday
+      multi_json (>= 1.3.0)
     kramdown (1.10.0)
     levenshtein (0.2.2)
     libv8 (3.16.14.15)
@@ -212,6 +229,8 @@ GEM
     mail-iso-2022-jp (2.0.4)
       mail (>= 2.2.6, <= 2.6.3)
     marked-rails (0.3.2.0)
+    memoizable (0.4.2)
+      thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
     mime-types (2.99.1)
     mini_portile2 (2.0.0)
@@ -237,6 +256,7 @@ GEM
     multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    naught (1.1.0)
     nenv (0.3.0)
     net-http-persistent (1.9)
     net-ldap (0.14.0)
@@ -421,6 +441,7 @@ GEM
     shellany (0.0.1)
     simple_captcha2 (0.4.0)
       rails (>= 4.1)
+    simple_oauth (0.3.1)
     simplecov (0.11.2)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -465,6 +486,17 @@ GEM
     tins (1.6.0)
     turbolinks (2.5.3)
       coffee-rails
+    twitter (5.17.0)
+      addressable (~> 2.3)
+      buftok (~> 0.2.0)
+      equalizer (= 0.0.10)
+      faraday (~> 0.9.0)
+      http (~> 1.0)
+      http_parser.rb (~> 0.6.0)
+      json (~> 1.8)
+      memoizable (~> 0.4.0)
+      naught (~> 1.0)
+      simple_oauth (~> 0.3.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.2)
@@ -534,6 +566,7 @@ DEPENDENCIES
   json-jwt
   kaminari
   kaminari-mongoid
+  koala
   kramdown
   levenshtein
   mail-iso-2022-jp
@@ -579,6 +612,7 @@ DEPENDENCIES
   therubyracer (~> 0.12)
   timecop
   turbolinks
+  twitter
   uglifier (>= 1.3.0)
   unf
   ungarbled

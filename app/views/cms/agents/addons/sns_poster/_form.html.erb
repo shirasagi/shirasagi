@@ -1,0 +1,11 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-sns_poster"); <% end %>
+<dl class="see mod-cms-sns_poster">
+  <dt><%= @model.t :fbposter %><%= @model.tt :sns_poster_fb %></dt>
+  <dd><%= f.select :fbauto, @item.sns_poster_fb_options %></dd>
+
+  <dt><%= @model.t :twposter %><%= @model.tt :sns_poster_tw %></dt>
+  <dd><%= f.select :twauto, @item.sns_poster_tw_options %></dd>
+
+  <dt><%= @model.t :autodeleter %><%= @model.tt :sns_poster_delete %></dt>
+  <dd><%= f.select :deleteauto, @item.sns_poster_delete_options %></dd>
+</dl>

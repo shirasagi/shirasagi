@@ -1,0 +1,52 @@
+ja:
+  modules:
+    addons:
+      sns_poster/pages: "SNS自動投稿設定"
+
+  mongoid:
+    attributes:
+      cms/page: &cmspage
+        sns_poster: SNS自動投稿設定
+        fbposter: Facebook自動投稿
+        twposter: Twitter自動投稿
+        autodeleter: 非公開時に投稿を削除
+        option_on: 有効
+        option_off: 無効
+        fbauto:
+          active: 有効
+          expired: 無効
+        twauto:
+          active: 有効
+          expired: 無効
+        deleteauto:
+          active: 有効
+          expired: 無効
+        active: 有効
+        expired: 無効
+      article/page: &cmspage
+        sns_poster: SNS自動投稿設定
+        fbposter: Facebook自動投稿
+        twposter: Twitter自動投稿
+        autodeleter: 非公開時に投稿を削除
+        option_on: 有効
+        option_off: 無効
+        fbauto:
+          active: 有効
+          expired: 無効
+        twauto:
+          active: 有効
+          expired: 無効
+        deleteauto:
+          active: 有効
+          expired: 無効
+        active: 有効
+        expired: 無効
+
+  tooltip:
+    cms/addon/sns_poster:
+      sns_poster_fb:
+        - Facebookへの自動投稿の設定を行います。
+      sns_poster_tw:
+        - Twitterへの自動投稿の設定を行います。
+      sns_poster_delete:
+        - 記事非公開時にSNSへ投稿した内容を削除します。

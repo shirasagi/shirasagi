@@ -1,0 +1,25 @@
+<dl class="see">
+  <dt><%= @model.t :fbposter %><%= @model.tt :sns_poster_fb %></dt>
+  <dd>
+    <%=
+      # @item.fbauto
+      @item.sns_poster_fb_options_ja
+    %>
+  </dd>
+  <dd><a href="#" target="_blank">https://www.facebook.com/webtips.inc/</a></dd>
+
+  <dt><%= @model.t :twposter %><%= @model.tt :sns_poster_tw %></dt>
+  <dd>
+    <%=
+      # @item.twauto
+      @item.sns_poster_tw_options_ja
+    %>
+  </dd>
+  <dd><a href="#" target="_blank">https://twitter.com/</a></dd>
+
+  <dt><%= @model.t :autodeleter %><%= @model.tt :sns_poster_delete %></dt>
+  <dd><%=
+    # @item.deleteauto
+    @item.sns_poster_delete_options_ja
+  %></dd>
+</dl>
