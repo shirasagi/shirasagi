@@ -75,13 +75,7 @@ class Inquiry::AnswersController < ApplicationController
 
     def destroy
       raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
-      afile_destroy @item
       render_destroy @item.destroy
-    end
-    
-    def destroy_all
-      @items.destroy_all
-      render_destroy_all true
     end
 
     def download
@@ -92,7 +86,7 @@ class Inquiry::AnswersController < ApplicationController
         order_by(updated: -1)
       send_csv @items
     end
-    
+
     def download_afile
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
       if params[:id]

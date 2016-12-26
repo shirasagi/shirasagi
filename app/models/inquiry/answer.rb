@@ -104,10 +104,8 @@ class Inquiry::Answer
         values = [value.to_s]
         value  = value.to_s
       end
-      
       self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value, values: values, confirm: confirm)
     end
-
   end
 
   def data_summary
