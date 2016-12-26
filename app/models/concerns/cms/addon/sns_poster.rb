@@ -55,11 +55,13 @@ module Cms::Addon
         # tweet
         if twauto === "active"
           require 'twitter'
+          require 'yaml'
+          snskeys = YAML.load_file(Rails.root.join("config")+"sns_keys.yml")
           client = Twitter::REST::Client.new do |config|
-            config.consumer_key        = 'xxxxxxxxxxxxxxxxx'
-            config.consumer_secret     = 'xxxxxxxxxxxxxxxxx'
-            config.access_token        = 'xxxxxxxxxxxxxxxxx'
-            config.access_token_secret = 'xxxxxxxxxxxxxxxxx'
+            config.consumer_key        = snskeys["consumer_key"]
+            config.consumer_secret     = snskeys["consumer_secret"]
+            config.access_token        = snskeys["access_token"]
+            config.access_token_secret = snskeys["access_token_secret"]
           end
           tweet = "#{name}｜#{tweet_url}"
           twitter_param = client.update(tweet)
@@ -71,7 +73,9 @@ module Cms::Addon
         # facebook
         if fbauto === "active"
           require 'koala'
-          access_token = 'EAACEdEose0cBAD0Cn4c5qLTtIh5ls3aw2vY9FErHTVJpZCntyHIY42xl0Qe3GHGwwGj3tqM0swHPTlmoeciKVmjzMZBlNUk4sKwYjFmH9JsPg0iilFb19DkZA5VTBRsRZAiMptzxvXIVptjBOQSdxpxN17UfPUeKJl1ezJMYZCgZDZD'
+          require 'yaml'
+          snskeys = YAML.load_file(Rails.root.join("config")+"sns_keys.yml")
+          access_token = snskeys["access_token_f"]
           graph = Koala::Facebook::API.new(access_token)
           facebook_param = graph.put_wall_post("ホームページを更新しました。", {
             "name" => "#{name} - #{site_name}",

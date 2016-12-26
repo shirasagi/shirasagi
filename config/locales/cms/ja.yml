@@ -334,6 +334,7 @@ ja:
       cms/opendata_ref/license: オープンデータ/ライセンス
       cms/monthly_nav: アーカイブナビ（月次）
       cms/archive_view_switcher: アーカイブ用表示設定
+      cms/sns_poster: SNS自動投稿設定
       cms/max_file_size_setting: 最大ファイルサイズ設定
       cms/tag_setting: タグ設定
       cms/tag: タグ
