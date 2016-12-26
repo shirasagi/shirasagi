@@ -27,6 +27,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
     node.columns.create! attributes_for(:inquiry_column_radio).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_select).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_check).reverse_merge({cur_site: site})
+    node.columns.create! attributes_for(:inquiry_column_upload_file).reverse_merge({cur_site: site})
     node.reload
   end
 
@@ -53,6 +54,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
           choose "item_4_0"
           select "50代", from: "item[5]"
           check "item[6][2]"
+          attach_file "item[7]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
         end
         click_button "確認画面へ"
       end
@@ -66,6 +68,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
           expect(find('#item_4')['value']).to eq '男性'
           expect(find('#item_5')['value']).to eq '50代'
           expect(find('#item_6_2')['value']).to eq '申請について'
+          expect(find('#item_7')['value']).to eq '1' # SS::File._id in confirm 
         end
         # within 'div.simple-captcha' do
         #   fill_in "answer[captcha]", with: "xxxx"
@@ -81,7 +84,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
       expect(answer.node_id).to eq node.id
-      expect(answer.data.count).to eq 6
+      expect(answer.data.count).to eq 7
       expect(answer.data[0].value).to eq 'シラサギ太郎'
       expect(answer.data[0].confirm).to be_nil
       expect(answer.data[1].value).to eq '株式会社シラサギ'
@@ -94,6 +97,9 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       expect(answer.data[4].confirm).to be_nil
       expect(answer.data[5].values).to eq ['申請について']
       expect(answer.data[5].confirm).to be_nil
+      expect(answer.data[6].values[0]).to eq 1
+      expect(answer.data[6].values[1]).to eq 'logo.png'
+      expect(answer.data[6].confirm).to be_nil
 
       expect(ActionMailer::Base.deliveries.count).to eq 2
 
@@ -166,7 +172,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
       expect(answer.node_id).to eq node.id
-      expect(answer.data.count).to eq 6
+      expect(answer.data.count).to eq 7
       expect(answer.data[0].value).to eq 'シラサギ太郎'
       expect(answer.data[0].confirm).to be_nil
       expect(answer.data[1].value).to eq '株式会社シラサギ'

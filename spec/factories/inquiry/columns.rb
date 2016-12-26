@@ -76,4 +76,13 @@ FactoryGirl.define do
     html "<p>このページに関するご意見・ご要望がありましたらご記入ください。</p>"
     order 30
   end
+
+  factory :inquiry_column_upload_file, class: Inquiry::Column do
+    name "添付ファイル"
+    input_type "upload_file"
+    required "optional"
+    html ""
+    max_upload_file_size 2
+    order 70
+  end
 end

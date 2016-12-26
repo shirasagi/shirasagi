@@ -24,6 +24,9 @@ class Inquiry::Answer
   validates :node_id, presence: true
   validate :validate_data
 
+  before_save :update_file_data
+  before_destroy :delete_file_data
+
   class << self
     def search(params)
       criteria = self.where({})
@@ -84,13 +87,27 @@ class Inquiry::Answer
       if value.kind_of?(Hash)
         values = value.values
         value  = value.map {|k, v| v}.join("\n")
+      elsif value.kind_of? ActionDispatch::Http::UploadedFile
+        ss_file = SS::File.new
+        ss_file.in_file = value
+        ss_file.site_id = cur_site.id
+        ss_file.state = "closed"
+        ss_file.model = "inquiry/temp_file"
+        ss_file.save
+        values = [ ss_file._id, ss_file.filename, ss_file.size ]
+        value = ss_file._id
+      elsif value.kind_of? SS::File
+        ss_file = value
+        values = [ ss_file._id, ss_file.filename, ss_file.size ]
+        value = ss_file.name
       else
         values = [value.to_s]
         value  = value.to_s
       end
-
+      
       self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value, values: values, confirm: confirm)
     end
+
   end
 
   def data_summary
@@ -130,5 +147,28 @@ class Inquiry::Answer
       return if source.blank?
 
       self.source_name = source.name
+    end
+
+    def update_file_data
+      self.data.each do |data|
+        unless data.values[0].blank?
+          file_id = data.values[0]
+          file = SS::File.find(file_id) rescue nil
+          unless file.nil?
+            file.model = "inquiry/answer"
+            file.update
+          end
+        end
+      end
+    end
+
+    def delete_file_data
+      self.data.each do |data|
+        unless data.values[0].blank?
+          file_id = data.values[0]
+          file = SS::File.find(file_id) rescue nil
+          file.destroy unless file.nil?
+        end
+      end
     end
 end
