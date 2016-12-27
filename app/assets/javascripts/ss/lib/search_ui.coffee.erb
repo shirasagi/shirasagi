@@ -2,24 +2,27 @@ class @SS_SearchUI
   @anchorAjaxBox
 
   @select: (item) ->
-    # create tr element and append to form
-    tr    = $("<tr>").attr("data-id", item["id"])
-    input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false)
-    input = input.val(item["id"]).removeClass("hidden-ids")
-    a     = $('<a class="deselect btn" href="#"><%= I18n.t "views.button.delete" %></a>').on "click", SS_SearchUI.deselect
+    self = this
 
-    tr.append($('<td>').append($(input)).append(item["name"]))
-    tr.append($('<td>').append($(a)))
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr)
-    return
+    data = item.closest("[data-id]")
+    id   = data.data("id")
+    name = data.data("name") || data.find(".select-item").text() || item.text() || data.text()
+
+    tr    = $("<tr />").attr("data-id", id) #attr
+    input = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false)
+    input = input.val(id).removeClass("hidden-ids")
+    a     = $('<a class="deselect btn" href="#"><%= I18n.t "views.button.delete" %></a>').on "click", self.deselect
+
+    tr.append($('<td />').append(input).append(name))
+    tr.append($('<td />').append(a))
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr)
 
   @selectItems: ->
+    self = this
+
     $("#ajax-box .items input:checkbox").filter(":checked").each ->
-      id = $(this).closest("[data-id]").attr("data-id")
-      name = $(this).closest("[data-id]").find(".select-item").text()
-      name = $(this).closest("[data-id]").text() if name == ""
-      SS_SearchUI.select({ id: id, name: name })
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
+      self.select($(this))
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
 
   @deselect: (e)->
     table = $(this).parents(".ajax-selected:first")
@@ -35,14 +38,18 @@ class @SS_SearchUI
       $("#ajax-box .select-items").parent("div").hide()
 
   @render: ()->
+    self = this
+
     $(".ajax-selected").each ->
-      $(this).find("a.deselect").on "click", SS_SearchUI.deselect
+      $(this).find("a.deselect").on "click", self.deselect
       if $(this).find("a.deselect").size() == 0
         $(this).hide()
 
   @modal: (options = {})->
+    self = this
+
     if $.colorbox.element().hasClass("ajax-box")
-      SS_SearchUI.anchorAjaxBox = $.colorbox.element()
+      self.anchorAjaxBox = $.colorbox.element()
 
     $("#ajax-box form.search").on "submit", (e)->
       $(this).ajaxSubmit(
@@ -55,21 +62,21 @@ class @SS_SearchUI
       e.preventDefault()
 
     $("#ajax-box .pagination a").on "click", (e)->
-      SS_SearchUI.selectItems()
+      self.selectItems()
 
     submit_on_changes = options.submit_on_changes
     submit_on_changes = [ "#s_group" ] unless submit_on_changes
     for el in submit_on_changes
       $("#ajax-box #{el}").on "change", (e)->
-        SS_SearchUI.selectItems()
+        self.selectItems()
         $("#ajax-box form.search").submit()
 
     $("#ajax-box .submit-on-change").on "change", (e)->
-      SS_SearchUI.selectItems()
+      self.selectItems()
       $("#ajax-box form.search").submit()
 
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
-      id = $(this).attr("data-id")
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
+      id = $(this).data("id")
       tr = $("#colorbox .items [data-id='#{id}']")
       tr.find("input[type=checkbox]").remove()
       item = tr.find(".select-item,.select-single-item").html()
@@ -79,34 +86,30 @@ class @SS_SearchUI
 
     $("#ajax-box a.select-item").on "click", (e)->
       return false unless SS.disableClick($(this))
-      id = $(this).closest("[data-id]").attr("data-id")
-      name = $(this).text()
       # append newly selected item
-      SS_SearchUI.select({ id: id, name: name })
-      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
+      self.select($(this))
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
       e.preventDefault()
       $.colorbox.close()
 
     $("#ajax-box .select-single-item").on "click", (e)->
       return false unless SS.disableClick($(this))
-      id = $(this).closest("[data-id]").attr("data-id")
-      name = $(this).text()
       # remove old items
-      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
         if $(this).find("input[value]").length
           $(this).remove()
       # append newly selected item
-      SS_SearchUI.select({ id: id, name: name })
-      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
+      self.select($(this))
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
       e.preventDefault()
       $.colorbox.close()
 
     $("#ajax-box .select-items").on "click", (e)->
       return false unless SS.disableClick($(this))
-      SS_SearchUI.selectItems()
+      self.selectItems()
       e.preventDefault()
       $.colorbox.close()
 
     $("#ajax-box .index").on "change", (e)->
-      SS_SearchUI.toggleSelectButton()
-    SS_SearchUI.toggleSelectButton()
+      self.toggleSelectButton()
+    self.toggleSelectButton()

@@ -39,6 +39,16 @@
     </div>
     <% end %>
 
+    <% if SS.config.webmail.disable.blank? %>
+    <div class="webmail">
+      <% if @ss_mode == :webmail %>
+      <h2><%= link_to t('webmail.mail'), webmail_mails_path, class: "current" %></h2>
+      <% else %>
+      <h2><%= link_to t('webmail.mail'), webmail_mails_path %></h2>
+      <% end %>
+    </div>
+    <% end %>
+
     <% if Rails.env.development? %>
     <div class="env dev">&lt;Development&gt;</div>
     <% end %>

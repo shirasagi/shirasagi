@@ -1,0 +1,123 @@
+ja:
+  modules:
+    webmail: ウェブメール
+    addons:
+      webmail/file: 添付ファイル
+      webmail/apply_filter: フィルター適用
+
+  webmail:
+    mail: メール
+    message: メッセージ
+    mailbox: フォルダー
+    signature: 署名
+    default_settings: 既定の設定
+    box:
+      inbox: 受信メール
+    settings:
+      cache: キャッシュ
+      account: アカウント
+      special_mailbox: 特別なフォルダー
+    search:
+      columns:
+        text: キーワード
+        from: 差出人
+        to: 宛先
+        subject: 件名
+        body: 本文
+    buttons:
+      test_connection: 接続確認
+      clear_cache: キャッシュ クリア
+    options:
+      action:
+        copy: コピーする
+        move: 移動する
+        trash: 削除する
+        delete: サーバから削除する
+    links:
+      download: ダウンロード
+      source_view: ソース表示
+      header_view: ヘッダー表示
+      set_seen: 既読にする
+      unset_seen: 未読にする
+      set_star: スターをつける
+      unset_star: スターをはずす
+      reply: 返信する
+      reply_all: 全員に返信する
+      forward: 転送する
+      move: 移動する
+      copy: コピーする
+      print: 印刷する
+      apply: 適用する
+    confirm:
+      clear_cache: キャッシュを削除してよろしいですか？
+      apply_filter: フィルターを適用してよろしいですか？
+    notice:
+      deleted_cache: キャッシュを削除しました。
+      copy: コピーしました。
+      move: 移動しました。
+      delete: 削除しました。
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
+      set_star: スターをつけました。
+      unset_star: スターをはずしました。
+      multiple:
+        copy: "%{count} 件のメールをコピーしました。"
+        move: "%{count} 件のメールを移動しました。"
+        delete: "%{count} 件のメールを削除しました。"
+        set_seen: "%{count} 件のメールを既読にしました。"
+        unset_seen: "%{count} 件のメールを未読にしました。"
+        set_star: "%{count} 件のメールにスターをつけました。"
+        unset_star: "%{count} 件のメールからスターをはずしました。"
+        filtered: "%{count} 件のメールにフィルターを適用しました。"
+    errors:
+      blank_conditions: 条件を入力してください。
+
+  mongoid:
+    models:
+      webmail/mail: メール
+      webmail/mailbox: フォルダー
+      webmail/address: アドレス帳
+      webmail/signature: 署名
+      webmail/filter: フィルター
+    attributes:
+      ss/model/user:
+        imap_host: IMAP/ホスト
+        imap_auth_type: IMAP/認証方式
+        imap_account: IMAP/ユーザー名
+        imap_password: IMAP/パスワード
+        in_imap_password: IMAP/パスワード
+        imap_sent_box: 送信済みフォルダー
+        imap_draft_box: 下書きフォルダー
+        imap_trash_box: ゴミ箱フォルダー
+      webmail/mail:
+        size: サイズ
+        date: 日付
+        flags: フラウ
+        from: 差出人
+        sender: 差出人
+        to: 宛先
+        cc: CC
+        bcc: BCC
+        reply_to: 返信先
+        in_reply_to: 返信先
+        subject: 件名
+        body: 本文
+        attachments: 添付ファイル
+      webmail/mailbox:
+        name: フォルダー名
+      webmail/address:
+        name: 氏名
+        email: メールアドレス
+        memo: メモ
+      webmail/signature:
+        name: 名称
+        text: 本文
+        default: 既定の署名
+      webmail/filter:
+        name: フィルター名
+        order: 並び順
+        from: 条件/差出人
+        to: 条件/宛先
+        subject: 条件/件名
+        action: アクション
+        mailbox: フォルダー

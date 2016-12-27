@@ -1,0 +1,34 @@
+<%
+@s = OpenStruct.new params[:s]
+%>
+<% if label = @model.imap_search_label(params[:s]) %>
+<div class="webmail-mail-search-label">
+  <%= label %>
+</div>
+<% end %>
+
+<div class="webmail-mail-search">
+  <%= form_for :s, url: "", html: { method: :get } do |f| %>
+    <dl class="see">
+      <dt><%= @model.t :from %></dt>
+      <dd><%= f.text_field :from, style: "width: 300px;" %></dd>
+      <dt><%= @model.t :to %></dt>
+      <dd><%= f.text_field :to, style: "width: 300px;" %></dd>
+      <dt><%= @model.t :subject %></dt>
+      <dd><%= f.text_field :subject, style: "width: 300px;" %></dd>
+      <dt><%= t :"webmail.message" %></dt>
+      <dd><%= f.text_field :text, style: "width: 300px;" %></dd>
+      <dt><%= @model.t :date %></dt>
+      <dd>
+        <%= f.text_field :since, class: "date js-date" %>
+        - <%= f.text_field :before, class: "date js-date" %>
+      </dd>
+
+      <dt></dt>
+      <dd>
+        <input type="submit" value="<%= t 'views.button.search' %>" class="btn search" />
+        <input type="reset" value="<%= t 'views.button.reset' %>" class="btn reset" />
+      </dd>
+    </dl>
+  <% end %>
+</div>

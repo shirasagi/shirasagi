@@ -1,9 +1,9 @@
 <div class="index ">
   <%= render file: "_list_head" %>
 
-  <ul class="list-items sns-message-threads">
+  <ul class="list-items ss-messages sns-message-threads">
     <% @items.each do |item| %>
-    <li class="list-item <%= 'unseen' if item.unseen?(@cur_user) %>">
+    <li class="list-item <%= item.seen?(@cur_user) ? 'seen' : 'unseen' %>">
       <!--
       <nav class="tap-menu">
         <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>

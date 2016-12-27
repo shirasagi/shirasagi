@@ -148,7 +148,10 @@ module Cms::PublicFilter
 
     def render_error(e, opts = {})
       # for development
-      raise e if Rails.application.config.consider_all_requests_local
+      if Rails.application.config.consider_all_requests_local
+        logger.error "404 #{@cur_path}"
+        raise e
+      end
 
       self.response = ActionDispatch::Response.new
 
