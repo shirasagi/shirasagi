@@ -49,7 +49,7 @@ module SS
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
-    config.middleware.use "Mongoid::QueryCache::Middleware"
+    config.middleware.use Mongoid::QueryCache::Middleware
   end
 
   def self.config
