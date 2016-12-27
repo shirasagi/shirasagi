@@ -2,7 +2,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
   include Cms::NodeFilter::View
   include Member::LoginFilter
 
-  skip_action_callback :logged_in?, only: [:login, :logout, :callback, :failure]
+  skip_before_action :logged_in?, only: [:login, :logout, :callback, :failure]
 
   private
     def get_params

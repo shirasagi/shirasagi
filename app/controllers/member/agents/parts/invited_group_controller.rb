@@ -3,7 +3,7 @@ class Member::Agents::Parts::InvitedGroupController < ApplicationController
   include Member::LoginFilter
   helper Cms::ListHelper
 
-  skip_action_callback :logged_in?
+  skip_before_action :logged_in?
   before_action :becomes_with_route
   before_action :set_member
   before_action :set_my_group_node

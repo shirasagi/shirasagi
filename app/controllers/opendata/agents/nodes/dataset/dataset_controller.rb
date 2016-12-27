@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   before_action :set_dataset, only: [:show_point, :add_point, :point_members]
   before_action :set_apps, only: [:show_apps]
   before_action :set_ideas, only: [:show_ideas]
-  skip_action_callback :logged_in?
+  skip_before_action :logged_in?
 
   private
     def set_dataset

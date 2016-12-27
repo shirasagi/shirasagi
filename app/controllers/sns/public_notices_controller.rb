@@ -3,7 +3,7 @@ class Sns::PublicNoticesController < ApplicationController
   include Sys::CrudFilter
   include Sns::PublicNoticeFilter
 
-  skip_action_callback :logged_in?, only: [:index, :show]
+  skip_before_action :logged_in?, only: [:index, :show]
 
   layout "ss/login"
   navi_view nil

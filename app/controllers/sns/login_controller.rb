@@ -4,7 +4,7 @@ class Sns::LoginController < ApplicationController
 
   protect_from_forgery except: :remote_login
   skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
-  skip_action_callback :logged_in?, only: [:login, :remote_login, :status]
+  skip_before_action :logged_in?, only: [:login, :remote_login, :status]
 
   layout "ss/login"
   navi_view nil

@@ -6,7 +6,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   helper Opendata::UrlHelper
 
   before_action :set_idea, only: [:show_point, :add_point, :point_members]
-  skip_action_callback :logged_in?
+  skip_before_action :logged_in?
 
   private
     def set_idea
