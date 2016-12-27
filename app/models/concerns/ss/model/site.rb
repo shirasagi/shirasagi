@@ -148,7 +148,7 @@ module SS::Model::Site
           end
         end
 
-        #site ||= SS::Site.first if Rails.env.development?
+        site ||= SS::Site.first if Rails.env.development?
         site.cur_domain = host if site
         site
       end
