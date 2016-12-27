@@ -1,38 +1,41 @@
 module SS::Config
   class << self
-    def config_exists?(name)
-      main_conf = "#{Rails.root}/config/defaults/#{name}.yml"
-      user_conf = "#{Rails.root}/config/#{name}.yml"
-      File.exists?(main_conf) || File.exists?(user_conf)
+    def setup
+      @@config = {}
+      Dir.glob("#{Rails.root}/config/defaults/*.yml").each do |path|
+        @@config[File.basename(path, '.yml').to_sym] = nil
+      end
+      self
+    end
+
+    def env
+      return send(:environment) if @@config[:environment]
+      @@config[:environment] = true
+      load_config(:environment, nil)
     end
 
     def load_config(name, section = nil)
-      main_conf = load_yml("#{Rails.root}/config/defaults/#{name}.yml", section)
-      user_conf = load_yml("#{Rails.root}/config/#{name}.yml", section)
-      main_conf = main_conf.deep_merge(user_conf) if user_conf
+      conf = load_yml("#{Rails.root}/config/defaults/#{name}.yml", section)
+      path = "#{Rails.root}/config/#{name}.yml"
+      conf = conf.deep_merge(load_yml(path, section)) if File.exists?(path)
 
-      conf_struct = OpenStruct.new(main_conf).freeze
-      define_singleton_method(name) { conf_struct }
-
-      conf_struct
+      struct = OpenStruct.new(conf).freeze
+      define_singleton_method(name) { struct }
+      struct
     end
 
     def load_yml(file, section = nil)
-      return {} unless File.exists?(file)
       conf = YAML.load_file(file)
       section ? conf[section] : conf
     end
 
-    def env
-      load_config(:environment)
-    end
-
     def method_missing(name, *args, &block)
-      load_config(name, Rails.env)
+      load_config(name, Rails.env) if @@config.key?(name)
+      #super
     end
 
     def respond_to?(name, *args)
-      config_exists?(name)
+      @@config.key?(name)
     end
 
     def respond_to_missing?(*args)

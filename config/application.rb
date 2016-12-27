@@ -49,7 +49,7 @@ module SS
 
   def self.config
     # lazy loading
-    @_ss_config ||= "SS::Config".constantize
+    @_ss_config ||= "SS::Config".constantize.setup
   end
 end
 
