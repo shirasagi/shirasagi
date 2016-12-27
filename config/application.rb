@@ -1,17 +1,22 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
-# require "active_record/railtie"
+#require 'rails/all'
 require "action_controller/railtie"
 require "action_mailer/railtie"
 require "sprockets/railtie"
-# require "rails/test_unit/railtie"
 
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module SS
   mattr_reader(:version) { "1.4.1" }
 
   class Application < Rails::Application
+    # Settings in config/environments/* take precedence over those specified here.
+    # Application configuration should go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded.
+
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
@@ -44,7 +49,7 @@ module SS
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
-    config.middleware.use Mongoid::QueryCache::Middleware
+    config.middleware.use "Mongoid::QueryCache::Middleware"
   end
 
   def self.config
@@ -56,3 +61,4 @@ end
 def dump(*args)
   SS::Debug.dump(*args) #::File.open("#{Rails.root}/log/dump.log", "a") {|f| f.puts args.inspect }
 end
+

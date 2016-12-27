@@ -1,15 +1,18 @@
 source "https://rubygems.org"
 
-gem "rails", "4.2.5.2"
+gem "rails", "5.0.1"
 gem 'sass-rails', '~> 5.0'
 gem "uglifier", ">= 1.3.0"
-gem 'coffee-rails', '~> 4.1.0'
-gem "therubyracer", "~> 0.12", platforms: :ruby
+gem 'coffee-rails', '~> 4.2'
+gem "therubyracer", platforms: :ruby
 gem "jquery-rails"
 gem 'jquery-ui-rails'
 gem "turbolinks"
-gem 'jbuilder', '~> 2.0'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'jbuilder', '~> 2.5'
+gem 'sdoc', group: :doc
+
+gem "sprockets", "~> 3.5.0"
+gem "sprockets-rails", "~> 3.0.0"
 
 # gem 'bcrypt', '~> 3.1.7'
 gem "unicorn"
@@ -17,7 +20,7 @@ gem "unicorn-worker-killer"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
-gem "mongoid", "~> 5.1.0" #, git: 'https://github.com/mongodb/mongoid.git'
+gem "mongoid", git: 'https://github.com/mongodb/mongoid.git'
 gem "mongoid-rspec"
 gem "mongo_session_store-rails4"
 #gem "mongo_mapper"
@@ -92,8 +95,8 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'poltergeist', require: false
   gem 'guard'
-  gem 'guard-rubocop', '~> 1.1.0'
-  gem 'guard-rspec', '~> 4.3.1'
+  gem 'guard-rubocop', '~> 1.2.0'
+  gem 'guard-rspec', '~> 4.7.3'
   gem 'fuubar'
   gem 'timecop'
   gem 'pry-rails'

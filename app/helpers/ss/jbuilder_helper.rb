@@ -90,3 +90,5 @@ module SS::JbuilderHelper
         path: node.private_show_path, updated: node.updated }
     end
 end
+
+Ss::JbuilderHelper = SS::JbuilderHelper
