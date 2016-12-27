@@ -13,6 +13,7 @@ class Sys::Db::DocsController < ApplicationController
     end
 
     def set_db
+      raise '500' unless Rails.env =~ /development|test/
       @db = Mongoid.default_client
       @coll = @db[params[:coll]]
     end

@@ -1,0 +1,11 @@
+<%= form_for :item, url: { action: :apply } do |f| %>
+<%= error_messages_for :item %>
+
+<dl class="see">
+  <dd class="wide">
+    <%= f.select_tag :mailbox, options_for_select(@item.mailbox_options) %>
+    <%= f.submit t("webmail.links.apply"), class: 'btn', data: { confirm: t("webmail.confirm.apply_filter") } %>
+  </dd>
+</dl>
+
+<% end %>

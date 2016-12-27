@@ -1,0 +1,2 @@
+module Webmail::MailHelper
+end

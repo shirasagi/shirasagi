@@ -1,0 +1,172 @@
+ // TODO: Mode to ss
+ // Messages list
+.ss-messages {
+  .unseen .info {
+    font-weight: bold;
+  }
+  .seen {
+    border-color: #e8e8e8;
+    background-color: #f4f4f4;
+  }
+  .seen:hover {
+    background: $orange2;
+  }
+  // star
+  .label-star {
+    float: left;
+    width: 30px;
+    margin-left: -7px;
+  }
+  .icon-star {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url(/assets/img/ic-star-on.png);
+    background-repeat: no-repeat;
+    &--on { }
+    &--off { background-image: url(/assets/img/ic-star-off.png); }
+  }
+  // attachment
+  .label-attachment {
+    float: left;
+    width: 30px;
+  }
+  .icon-attachment {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url(/assets/img/gws/ic-file.png);
+    background-repeat: no-repeat;
+    &--on { }
+    &--off { background-image: none; }
+  }
+}
+
+.webmail-navi-mailboxes {
+  .unseen-count {
+    color: $orange;
+    font-weight: bold;
+  }
+  .mailboxes {
+    a {
+      display: inline-block;
+      width: 100%;
+      padding: 5px 0 5px 10px;
+    }
+    a:last-child {
+      margin-bottom: 8px;
+    }
+    .pad {
+      display: inline-block;
+      width: 20px;
+    }
+    .mailbox-name {
+      padding-left: 25px;
+      background: url(/assets/img/ic-arrow16-off.png) no-repeat;
+    }
+    a:hover {
+      text-decoration: none;
+      .mailbox-name {
+        background: url(/assets/img/ic-arrow16-on.png) no-repeat;
+      }
+    }
+    .mailbox--virtual:hover {
+      color: inherit;
+    }
+  }
+}
+.webmail-quota {
+  .total {
+    height: 1.6em;
+    margin: 10px;
+    border: 1px solid #ccc;
+    background-color: #ddd;
+  }
+  .label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+  }
+  .used {
+    height: 100%;
+    background-color: #6c6;
+  }
+}
+
+.webmail-mails-head {
+  .dropdown {
+    display: inline;
+  }
+  .dropdown-menu {
+    top: 23px;
+    left: 0px;
+    width: 200px;
+    margin: 0;
+    padding: 5px 0;
+    border: 1px solid #ccc;
+    @include box-shadow(0px 1px 3px #gray4);
+    background: #fff;
+    text-align: left;
+    a {
+      @include truncate;
+      padding: 5px 10px;
+      color: $black;
+    }
+    a:hover {
+      background-color: $gray1;
+      color: $orange;
+      text-decoration: none;
+    }
+  }
+}
+.webmail-mail-search-label {
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+}
+.webmail-mail-search {
+  display: none;
+  margin: 0 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+}
+.see.webmail-address-form {
+  padding: 0;
+}
+@media print {
+  .webmail-print {
+    #head, #foot, #navi, #crumbs, #menu {
+      display: none;
+    }
+    #page:after {
+      display: none;
+    }
+    #main, #main .wrap {
+      margin: 0;
+    }
+  }
+}
+
+.webmail-addresses {
+  @include clear;
+  display: block;
+  tbody, td {
+    display: inline;
+  }
+  tr {
+    display: inline-block;
+    float: left;
+    margin: 5px 5px 0 0;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-left-width: 5px;
+  }
+  .deselect {
+    margin-left: 2px;
+    padding: 2px 4px;
+  }
+}
+.webmail-filter-conditions {
+  div {
+    margin: 15px 0 0;
+  }
+}

@@ -12,6 +12,7 @@ class Sys::Db::CollsController < ApplicationController
     end
 
     def set_db
+      raise '500' unless Rails.env =~ /development|test/
       @db = SS::User.collection.database
     end
 

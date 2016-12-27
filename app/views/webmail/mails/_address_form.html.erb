@@ -1,0 +1,31 @@
+<%
+## locals: [:f, :field]
+addresses = @item.send(field)
+
+%>
+<dl class="see webmail-address-form">
+  <dd class="wide">
+    <%= f.hidden_field "#{field}[]", value: "", class: "hidden-ids" %>
+
+    <%= link_to webmail_apis_addresses_path, class: "ajax-box" do %>
+      <%= t "mongoid.models.webmail/address" %>
+    <% end %>
+    <% @cur_user.root_groups.each do |group| %>
+      <%= link_to sns_apis_users_path(group: group), class: "ajax-box" do %>
+        <%= group.name %><%= t "ss.apis.users.index" %>
+      <% end %>
+    <% end %>
+  </dd>
+  <dd class="wide">
+    <table class="webmail-addresses ajax-selected">
+      <tbody>
+        <% addresses.each do |addr| %>
+          <tr data-id="<%= addr %>">
+            <td><%= f.hidden_field "#{field}[]", value: addr %> <%= addr %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -1,0 +1,59 @@
+<%= jquery do %>
+  SS_SearchUI.modal();
+<% end %>
+
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <% @inherit_keys.each do |key| %>
+      <%= hidden_field_tag key, params[key] %>
+    <% end %>
+
+    <dl class="see">
+      <dt><%= t "mongoid.models.ss/group" %></dt>
+      <dd>
+        <% if browser.ie?(["<10"]) %>
+          <%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id))) %>
+        <% else %>
+          <%= render partial: "group_dropdown_tree", locals: { f: f } %>
+        <% end %>
+      </dd>
+      <dt><%= t "mongoid.models.ss/user" %></dt>
+      <dd>
+        <%= f.text_field :keyword, value: params.dig(:s, :keyword) %>
+        <%= f.submit  t("views.button.search"), class: :btn %>
+      </dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <% end %>
+      <th class="name"><%= @model.t :name %></th>
+      <th><%= @model.t :group_ids %></th>
+    </tr>
+  </thead>
+
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr class="list-item" data-id="<%= item.email_address %>" data-name="<%= item.name %>">
+        <% if @multi %>
+        <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
+        <% end %>
+        <td><%= link_to item.long_name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= tryb { item.groups.in_group(@root_group).first.trailing_name } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @multi %>
+<div class="search-ui-select">
+  <%= button_tag t("views.links.select"), { type: :button, class: "select-items btn" } %>
+</div>
+<% end %>
+
+<%= paginate @items if @items.try(:current_page) %>

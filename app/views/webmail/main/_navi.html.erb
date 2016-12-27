@@ -1,0 +1,55 @@
+<nav class="main-navi webmail-navi-mailboxes">
+  <h2>
+    <%= link_to webmail_mails_path do %>
+      <%= t('webmail.box.inbox') %>
+
+      <% if @navi_mailboxes && 0 < unseen = Webmail::Mailbox.inbox_unseen %>
+        <span class="unseen-count">(<%= unseen %>)</span>
+      <% end %>
+    <% end %>
+  </h2>
+
+  <% if @navi_mailboxes %>
+  <div class="mailboxes">
+    <% Webmail::Mailbox.imap_all.each do |box| %>
+      <%= link_to webmail_mails_path(mailbox: box.encode_name),
+        class: box.css_class, "data-name" => box.encode_name do %>
+
+        <%== "<span class='pad'></span>" * box.depth %>
+        <span class="mailbox-name""><%= box.basename %></span>
+
+        <% if 0 < box.unseen %>
+          <span class="unseen-count">(<%= box.unseen %>)</span>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <% end %>
+</nav>
+
+<div id="webmail-mailboxes-list" style="display: none;">
+  <ul class="dropdown-menu">
+    <% Webmail::Mailbox.user(@cur_user).to_options.each do |label, value| %>
+    <li><a href="#" data-name="<%= value %>"><%= label %></a></li>
+    <% end %>
+  </ul>
+</div>
+
+<nav class="mod-navi">
+  <h2><%= t('views.config') %></h2>
+  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path %></h3>
+  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
+  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
+</nav>
+
+<% if @navi_mailboxes %>
+<div class="webmail-quota">
+  <div class="total">
+    <div class="label"><%= number_to_human_size @imap.quota_used %>/<%= number_to_human_size @imap.quota_total %></div>
+    <div class="used" style="width: <%= @imap.quota_per %>%"></div>
+  </div>
+</div>
+<% end %>

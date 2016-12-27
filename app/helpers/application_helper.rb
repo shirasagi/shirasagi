@@ -21,6 +21,12 @@ module ApplicationHelper
     "#{str.to_s[0..len-1]}#{str.to_s.size > len ? ".." : ""}".html_safe
   end
 
+  def sanitize_with(html, options = {})
+    options[:tags] += ActionView::Base.sanitized_allowed_tags.to_a if options[:tags]
+    options[:attributes] += ActionView::Base.sanitized_allowed_attributes.to_a if options[:attributes]
+    ApplicationController.helpers.sanitize(html, options)
+  end
+
   def current_url?(url)
     current = @cur_path.sub(/\?.*/, "")
     return nil if current.delete("/").blank?

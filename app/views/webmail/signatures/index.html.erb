@@ -1,0 +1,13 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, { action: :show, id: item.id }, class: "title" %>
+  <% if item.default? %>
+    (<%= item.t :default %>)
+  <% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="filename"><%= truncate item.text, length: 40 %></span>
+<% end %>
+
+<%= render file: "ss/crud/index" %>

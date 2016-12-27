@@ -7,7 +7,7 @@ module SS::Model::User
   include SS::Reference::UserExpiration
   include Ldap::Addon::User
 
-  attr_accessor :cur_site, :cur_user, :in_password, :self_edit
+  attr_accessor :cur_site, :cur_user, :in_password, :decrypted_password, :self_edit
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -135,6 +135,10 @@ module SS::Model::User
     def type_options
       [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
     end
+  end
+
+  def email_address
+    %("#{name}" <#{email}>)
   end
 
   def encrypt_password
