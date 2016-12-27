@@ -17,7 +17,7 @@ gem "unicorn-worker-killer"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
-gem "mongoid", "~> 5.1.0"
+gem "mongoid", "~> 5.1.0" #, git: 'https://github.com/mongodb/mongoid.git'
 gem "mongoid-rspec"
 gem "mongo_session_store-rails4"
 #gem "mongo_mapper"
@@ -25,7 +25,7 @@ gem "mongo_session_store-rails4"
 gem "dynamic_form"
 gem "zipruby"
 gem "jquery-turbolinks"
-gem "jquery-cookie-rails"
+gem "js_cookie_rails"
 gem 'jquery-form-rails'
 gem "kramdown"
 gem "compass-rails"
@@ -46,7 +46,7 @@ gem "net-ldap"
 gem "diffy"
 gem "ungarbled"
 gem 'momentjs-rails'
-gem 'fullcalendar.io-rails'
+gem 'fullcalendar.io-rails', '~> 2.6.0'
 gem 'bxslider-rails'
 gem 'marked-rails'
 gem 'clam_scan'

@@ -1,6 +1,6 @@
 //= require jquery
 //= require jquery_ujs
-//= require jquery.cookie
+//= require js.cookie
 //= require jquery.form
 //= require jquery.datetimepicker
 //= require_self
@@ -221,7 +221,7 @@ class @SS_Theme
 
       a.on "click", (e) ->
         cls = $(this).attr("class")
-        $.cookie("ss-theme", cls, { expires: 7, path: '/' })
+        Cookies.set("ss-theme", cls, { expires: 7, path: '/' })
         SS_Theme.switchTheme(cls)
         return false
 
@@ -230,7 +230,7 @@ class @SS_Theme
     style = $('<style type="text/css" class="ss-theme">' + css + '</style>')
     $("head").append(style)
 
-    cls = $.cookie("ss-theme")
+    cls = Cookies.get("ss-theme")
     if cls
       SS_Theme.switchTheme(cls)
 
@@ -253,7 +253,7 @@ class @SS_Font
   @size = null # %
 
   @render: ->
-    @size = parseInt($.cookie("ss-font")) || 100
+    @size = parseInt(Cookies.get("ss-font")) || 100
     @set(@size) if @size != 100
 
     vr = $("#ss-medium")
@@ -273,7 +273,7 @@ class @SS_Font
 
     @size = size
     $("body").css "font-size", size + "%"
-    $.cookie("ss-font", size, { expires: 7, path: '/' })
+    Cookies.set("ss-font", size, { expires: 7, path: '/' })
     return false
 
 class @SS_AdobeReader

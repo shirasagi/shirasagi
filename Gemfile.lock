@@ -164,8 +164,6 @@ GEM
     jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
-    jquery-cookie-rails (1.3.1.1)
-      railties (>= 3.2.0, < 5.0)
     jquery-form-rails (1.0.1)
       jquery-rails
     jquery-minicolors-rails (2.2.3.0)
@@ -180,6 +178,8 @@ GEM
       turbolinks
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
+    js_cookie_rails (2.1.3)
+      railties (>= 3.1)
     json (1.8.3)
     json-jwt (1.5.2)
       activesupport
@@ -512,7 +512,7 @@ DEPENDENCIES
   dynamic_form
   factory_girl_rails
   fast_blank
-  fullcalendar.io-rails
+  fullcalendar.io-rails (~> 2.6.0)
   fuubar
   guard
   guard-brakeman
@@ -520,12 +520,12 @@ DEPENDENCIES
   guard-rubocop (~> 1.1.0)
   holiday_japan
   jbuilder (~> 2.0)
-  jquery-cookie-rails
   jquery-form-rails
   jquery-minicolors-rails
   jquery-rails
   jquery-turbolinks
   jquery-ui-rails
+  js_cookie_rails
   json-jwt
   kaminari
   kramdown
