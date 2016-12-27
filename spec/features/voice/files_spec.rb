@@ -5,17 +5,6 @@ describe "voice_files" do
   subject(:index_path) { voice_files_path site.id }
   subject(:download_path) { download_voice_files_path site.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     subject(:item) { create(:voice_voice_file) }
     subject(:show_path) { voice_file_path site.id, item }

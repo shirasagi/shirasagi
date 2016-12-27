@@ -10,11 +10,6 @@ describe "sns_apis_user_files" do
   let(:delete_path) { delete_sns_apis_user_file_path user.id, item }
   let(:select_path) { select_sns_apis_user_file_path user.id, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
   context "with auth" do
     before { login_ss_user }
 

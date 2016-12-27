@@ -11,17 +11,6 @@ describe "cms_editor_templates", dbscope: :example, type: :feature do
   let(:thumb_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s }
   let(:template_path) { template_cms_editor_templates_path site.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

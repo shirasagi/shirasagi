@@ -11,17 +11,6 @@ describe "gws_notices", type: :feature, dbscope: :example do
   let(:public_index_path) { gws_public_notices_path site }
   let(:public_show_path) { gws_public_notice_path site, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_gws_user }
 

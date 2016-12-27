@@ -3,11 +3,6 @@ require 'spec_helper'
 describe "sys_db", type: :feature, dbscope: :example do
   let(:index_path) { sys_db_colls_path }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
   it "without auth" do
     login_ss_user
     visit index_path

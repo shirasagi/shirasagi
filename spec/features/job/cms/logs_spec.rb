@@ -10,17 +10,6 @@ describe "job_cms_logs", dbscope: :example do
   let(:log3) { create(:job_log, :job_log_failed, job: job) }
   let(:logs) { [log1, log2, log3] }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

@@ -11,17 +11,6 @@ describe "cms_users", type: :feature, dbscope: :example do
   let(:delete_path) { delete_cms_user_path site.id, item }
   let(:import_path) { import_cms_users_path site.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   it "#index" do
     login_cms_user
     visit index_path

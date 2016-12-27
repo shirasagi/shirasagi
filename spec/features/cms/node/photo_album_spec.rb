@@ -5,22 +5,6 @@ describe "cms_node_photo_album", type: :feature, dbscope: :example do
   let(:node) { create :cms_node_photo_album, cur_site: site }
   let(:index_path) { node_photo_albums_path site, node }
 
-  context "without login" do
-    it do
-      visit index_path
-      expect(current_path).to eq sns_login_path
-    end
-  end
-
-  context "without auth" do
-    before { login_ss_user }
-
-    it do
-      visit index_path
-      expect(status_code).to eq 403
-    end
-  end
-
   context "basic crud" do
     before { login_cms_user }
 

@@ -11,11 +11,6 @@ describe "sns_user_profies", dbscope: :example, type: :feature do
     user.save!
   end
 
-  it "without login" do
-    visit show_path
-    expect(current_path).to eq sns_login_path
-  end
-
   context "with auth" do
     before { login_ss_user }
 

@@ -9,17 +9,6 @@ describe "cms_theme_templates", dbscope: :example, type: :feature do
   let(:edit_path) { edit_cms_theme_template_path site.id, item }
   let(:delete_path) { delete_cms_theme_template_path site.id, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

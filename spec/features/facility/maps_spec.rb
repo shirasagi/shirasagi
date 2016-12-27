@@ -12,17 +12,6 @@ describe "facility_maps" do
   let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
   let(:expected_addon_titles) { %w(メタ情報 公開予約 公開設定 地図 基本情報 承認 権限).sort }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

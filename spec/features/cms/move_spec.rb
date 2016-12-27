@@ -4,17 +4,6 @@ describe "move_cms_pages" do
   subject(:site) { cms_site }
   subject(:index_path) { cms_pages_path site.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth", js: true do
     let(:page_html) { '<a href="/A/B/C/">/A/B/C/</a>' }
     let(:page2_html) { '<a href="/page.html">page.html</a>' }

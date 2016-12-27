@@ -4,17 +4,6 @@ describe "history_cms_logs" do
   subject(:site) { cms_site }
   subject(:index_path) { history_cms_logs_path site.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before do
       login_cms_user

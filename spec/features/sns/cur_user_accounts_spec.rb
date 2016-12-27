@@ -4,11 +4,6 @@ describe "sns_cur_user_accounts", dbscope: :example do
   let!(:show_path) { sns_cur_user_account_path }
   let!(:edit_path) { edit_sns_cur_user_account_path }
 
-  it "without login" do
-    visit show_path
-    expect(current_path).to eq sns_login_path
-  end
-
   context "with auth" do
     before { login_ss_user }
 

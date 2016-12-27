@@ -31,4 +31,11 @@ Rails.application.configure do
 
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :test
+
+  config.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
+  config.assets.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
+  config.assets.configure do |env|
+    env.cache = ActiveSupport::Cache.lookup_store(:memory_store)
+  end
+
 end

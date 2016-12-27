@@ -10,17 +10,6 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:index_path) { opendata_dataset_resources_path site, node, dataset.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     let(:resource_file_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     let(:resource_tsv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }

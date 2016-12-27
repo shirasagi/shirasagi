@@ -9,11 +9,6 @@ describe "sns_message_posts", type: :feature, dbscope: :example do
   let(:item) { create :sns_message_post, thread_id: thread.id }
   let(:path) { sns_message_thread_posts_path(thread_id: thread.id) }
 
-  it "without login" do
-    visit path
-    expect(current_path).to eq sns_login_path
-  end
-
   context "with auth" do
     before { login_ss_user }
 

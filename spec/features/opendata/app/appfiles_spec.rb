@@ -19,17 +19,6 @@ describe "opendata_appfiles", dbscope: :example do
   let(:new_path) { new_opendata_app_appfile_path site, node, app_id: app.id }
   let(:download_path) { opendata_app_appfile_file_path site, node, app_id: app.id, appfile_id: appfile.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

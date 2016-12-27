@@ -10,17 +10,6 @@ describe "board_posts", dbscope: :example do
   let(:edit_path) { edit_board_post_path site.id, node, item }
   let(:delete_path) { delete_board_post_path site.id, node, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

@@ -8,11 +8,6 @@ describe "sns_message_threads", type: :feature, dbscope: :example do
   let(:item) { create :sns_message_thread, member_ids: [user1.id, user2.id, user3.id] }
   let(:path) { sns_message_threads_path }
 
-  it "without login" do
-    visit path
-    expect(current_path).to eq sns_login_path
-  end
-
   context "with auth" do
     before { login_ss_user }
 

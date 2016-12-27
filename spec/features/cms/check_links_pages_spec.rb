@@ -5,17 +5,6 @@ describe "cms_check_links_pages", dbscope: :example do
   let!(:site2) { create :cms_site, name: "another", host: "another", domains: "another.localhost.jp" }
   let!(:index_path) { cms_check_links_pages_path site.id }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
     before { login_cms_user }
 

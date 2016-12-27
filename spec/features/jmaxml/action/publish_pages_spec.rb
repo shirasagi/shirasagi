@@ -5,17 +5,6 @@ describe "jmaxml/action/publish_pages", dbscope: :example, js: true do
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_action_bases_path(site, node) }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "basic crud" do
     let!(:article_node) { create(:article_node_page) }
     let!(:category_node) { create(:category_node_page) }

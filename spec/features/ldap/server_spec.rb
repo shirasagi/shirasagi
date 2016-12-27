@@ -30,17 +30,6 @@ describe "ldap_server", ldap: true do
       SS.config.replace_value_at(:ldap, :auth_method, save_auth_method)
     end
 
-    it "without login" do
-      visit index_path
-      expect(current_path).to eq sns_login_path
-    end
-
-    it "without auth" do
-      login_ss_user
-      visit index_path
-      expect(status_code).to eq 403
-    end
-
     context "with auth" do
       it "#index" do
         login_user(user)

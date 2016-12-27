@@ -3,17 +3,10 @@ require 'spec_helper'
 describe 'sys_site_copy', type: :feature, dbscope: :example do
   let(:index_path) { sys_site_copy_path }
 
-  context 'without login/auth' do
-    it 'without login' do
-      visit index_path
-      expect(current_path).to eq sns_login_path
-    end
-
-    it 'without auth' do
-      login_ss_user
-      visit index_path
-      expect(status_code).to eq 403
-    end
+  it "without auth" do
+    login_ss_user
+    visit index_path
+    expect(status_code).to eq 403
   end
 
   context 'run site copy', js: true do

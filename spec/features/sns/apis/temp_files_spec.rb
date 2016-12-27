@@ -9,11 +9,6 @@ describe "sns_apis_temp_files" do
   let(:edit_path) { edit_sns_apis_temp_file_path user.id, item }
   let(:delete_path) { delete_sns_apis_temp_file_path user.id, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
   context "with auth" do
     before { login_ss_user }
 

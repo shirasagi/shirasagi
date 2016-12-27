@@ -4,17 +4,6 @@ describe "gws_schedule_user_settings", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:path) { gws_schedule_user_setting_path site }
 
-  it "without login" do
-    visit path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit path
-    expect(status_code).to eq 403
-  end
-
   context "with auth", js: true do
     let(:item) { gws_user.groups.in_group(site).first }
 
