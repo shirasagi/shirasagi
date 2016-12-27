@@ -33,6 +33,7 @@ gem 'jquery-form-rails'
 gem "kramdown"
 gem "compass-rails"
 gem "kaminari"
+gem "kaminari-mongoid"
 gem "non-stupid-digest-assets"
 gem "mongoid-grid_fs"
 #gem "carrierwave"

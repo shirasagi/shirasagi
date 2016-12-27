@@ -195,6 +195,8 @@ GEM
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    kaminari-mongoid (0.1.2)
+      kaminari
     kgio (2.11.0)
     kramdown (1.13.1)
     levenshtein (0.2.2)
@@ -517,6 +519,7 @@ DEPENDENCIES
   js_cookie_rails
   json-jwt
   kaminari
+  kaminari-mongoid
   kramdown
   levenshtein
   mail-iso-2022-jp
