@@ -24,6 +24,11 @@ module SS::BaseFilter
       def model(cls)
         self.model_class = cls if cls
       end
+
+      # TODO: <Monkey patch> resolve view_paths
+      def local_prefixes
+        [controller_path, '']
+      end
   end
 
   def stylesheets
