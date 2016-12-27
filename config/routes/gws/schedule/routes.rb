@@ -5,7 +5,7 @@ SS::Application.routes.draw do
     get :events, on: :collection
     get :popup, on: :member
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection
   end
 
   gws "schedule" do

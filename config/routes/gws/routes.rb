@@ -3,7 +3,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, :on => :collection
+    delete :destroy_all, on: :collection
   end
 
   get '.g:site/', to: 'gws/portal#index', as: :gws_portal
