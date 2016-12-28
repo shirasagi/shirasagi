@@ -11,7 +11,7 @@ describe Facility::ImportJob, dbscope: :example do
     create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id])
   end
   let!(:site) { create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id]) }
-  let!(:layout) { create(:cms_layout, name: "施設レイアウト") }
+  let!(:layout) { create(:cms_layout, site: site, name: "施設レイアウト") }
   let!(:group) { create(:cms_group, name: "地図管理係") }
 
   let!(:node_categories) { create(:cms_node_node, site: site, filename: "facilities/categories") }
