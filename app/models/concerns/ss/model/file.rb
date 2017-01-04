@@ -67,7 +67,7 @@ module SS::Model::File
   end
 
   def public_path
-    "#{site.path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
   def url

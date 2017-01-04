@@ -22,10 +22,10 @@
       <%= link_to :delete, action: :delete, id: @item %>
     <% end %>
     <% if @cur_site.mobile_enabled? %>
-      <%= link_to :pc_preview, cms_preview_path(path: "#{@item.filename}/"), target: :_blank %>
-      <%= link_to(:mobile_preview, cms_mobile_preview_path(path: "#{@item.filename}/"), target: :_blank) %>
+      <%= link_to :pc_preview, cms_preview_path(path: @item.preview_path), target: :_blank %>
+      <%= link_to(:mobile_preview, cms_mobile_preview_path(path: @item.preview_path), target: :_blank) %>
     <% else %>
-      <%= link_to :preview, cms_preview_path(path: "#{@item.filename}/"), target: :_blank %>
+      <%= link_to :preview, cms_preview_path(path: @item.preview_path), target: :_blank %>
     <% end %>
     <%= link_to :back_to_index, action: :index %>
   <% end %>

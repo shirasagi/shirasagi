@@ -21,7 +21,7 @@
   <%= html_editor ".mod-cms-body .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
   <%= jquery do %>
     Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
-    Link_Checker.rootUrl           = "<%= @cur_site.full_url %>";
+    Link_Checker.rootUrl           = "<%= @cur_site.full_root_url %>";
     Mobile_Size_Checker.enabled    = <%= @cur_site.mobile_enabled? %>;
     Mobile_Size_Checker.mobile_size = <%= @cur_site.mobile_size %>;
     Mobile_Size_Checker.check_size = "<%= number_to_human_size(@cur_site.mobile_size) %>";

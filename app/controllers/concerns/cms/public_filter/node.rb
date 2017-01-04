@@ -16,7 +16,7 @@ module Cms::PublicFilter::Node
     end
 
     def render_node(node)
-      rest = @cur_path.sub(/^\/#{node.filename}/, "").sub(/\/index\.html$/, "")
+      rest = @cur_main_path.sub(/^\/#{node.filename}/, "").sub(/\/index\.html$/, "")
       path = "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
       spec = recognize_agent path
       return unless spec
@@ -34,9 +34,10 @@ module Cms::PublicFilter::Node
       path = opts[:url] || "#{node.filename}/index.html"
       return if Cms::Page.site(node.site).and_public.filename(path).first
 
-      @cur_path   = opts[:url] || node.url
-      @cur_site   = node.site
-      @csrf_token = false
+      @cur_site      = node.site
+      @cur_path      = opts[:url] || node.url
+      @cur_main_path = @cur_path.sub(@cur_site.url, "/")
+      @csrf_token    = false
 
       params.merge! opts[:params] if opts[:params]
 

@@ -21,7 +21,7 @@ SS_TreeUI.render(".index.topics");
             <%= link_to :reply, action: :new_reply, id: topic if topic.allowed?(:edit, @cur_user, site: @cur_site) %>
             <%= link_to :delete, action: :delete, id: topic if topic.allowed?(:delete, @cur_user, site: @cur_site) %>
             <%= link_to :view_site, @cur_node.full_url, target: :_blank if @cur_node.public? %>
-            <%= link_to :pc_preview, cms_preview_path(path: "#{@cur_node.filename}/"), target: :_blank %>
+            <%= link_to :pc_preview, cms_preview_path(path: @cur_node.preview_path), target: :_blank %>
           </nav>
           <td class="expandable">
             <%= link_to topic.name, action: :show, id: topic %>
@@ -36,7 +36,7 @@ SS_TreeUI.render(".index.topics");
               <%= link_to :edit, action: :edit, id: comment if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
               <%= link_to :delete, action: :delete, id: comment if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
               <%= link_to :view_site, @cur_node.full_url, target: :_blank if @cur_node.public? %>
-              <%= link_to :pc_preview, cms_preview_path(path: "#{@cur_node.filename}/"), target: :_blank %>
+              <%= link_to :pc_preview, cms_preview_path(path: @cur_node.preview_path), target: :_blank %>
             </nav>
             <td class="expandable">
               <%= link_to comment.name, action: :show, id: comment %>

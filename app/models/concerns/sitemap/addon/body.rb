@@ -71,7 +71,7 @@ module Sitemap::Addon
       entries = []
       tree.flatten("/", entries)
 
-      urls = entries.map { |m| opts[:name] ? "#{m.url} ##{m.name}" : m.url }
+      urls = entries.map { |m| opts[:name] ? "/#{m.filename}/ ##{m.name}" : "/#{m.filename}/" }
       urls
     end
 

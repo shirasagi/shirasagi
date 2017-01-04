@@ -20,7 +20,7 @@ module Cms::Model::Node
     permit_params :view_route, :shortcut
 
     validates :route, presence: true
-    validate :validate_node_filename
+    validate :validate_invalid_filename
 
     after_save :rename_children, if: ->{ @db_changes }
     after_save :remove_directory, if: ->{ @db_changes && @db_changes["state"] && !public? }
@@ -51,6 +51,10 @@ module Cms::Model::Node
 
   def full_url
     "#{site.full_url}#{filename}/"
+  end
+
+  def preview_path
+    site.subdir ?  "#{site.subdir}/#{filename}/" : "#{filename}/"
   end
 
   def parents
@@ -152,8 +156,19 @@ module Cms::Model::Node
   end
 
   private
-    def validate_node_filename
-      errors.add :basename, :invalid if filename == "fs"
+    def validate_invalid_filename
+      if filename == "fs"
+        errors.add :basename, :invalid
+        return
+      end
+
+      url = cur_site ? "#{cur_site.url}#{filename}/" : "#{site.url}#{filename}/"
+      SS::Site.each do |s|
+        if s.url == url
+          errors.add :basename, :invalid
+          break
+        end
+      end
     end
 
     def rename_children

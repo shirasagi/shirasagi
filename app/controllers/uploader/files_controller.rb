@@ -43,7 +43,7 @@ class Uploader::FilesController < ApplicationController
       @files.each do |file|
         next unless file.present?
         path = ::File.join(@cur_site.path, @item.filename, file.original_filename)
-        item = @model.new(path: path, binary: file.read)
+        item = @model.new(path: path, binary: file.read, site: @cur_site)
 
         if !item.save
           item.errors.each do |n, e|
@@ -57,7 +57,7 @@ class Uploader::FilesController < ApplicationController
 
     def create_directory
       path = "#{@item.path}/#{@directory}"
-      item = @model.new path: path, is_dir: true
+      item = @model.new(path: path, is_dir: true, site: @cur_site)
 
       if !item.save
         item.errors.each do |n, e|
@@ -135,6 +135,7 @@ class Uploader::FilesController < ApplicationController
         @text ? (@item.text = @text) : @item.read
       end
       @item.filename = @filename if @filename && @filename =~ /^#{@cur_node.filename}/
+      @item.site = @cur_site
       result = @item.save
       @item.path = @item.saved_path unless result
 
