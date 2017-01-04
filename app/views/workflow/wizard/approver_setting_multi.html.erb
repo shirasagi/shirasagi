@@ -53,9 +53,7 @@ $ ->
     <dd>
       <%
         users = @route.approver_users_at(level)
-        users = users.select(&:present?).select do |user|
-          @item.allowed?(:approve, user, site: @cur_site)
-        end
+        users = users.select(&:present?).select { |user| @item.allowed?(:approve, user, site: @cur_site) && user.enabled? }
         names = users.map(&:long_name)
       %>
       <% users.each do |user| %>

@@ -90,7 +90,7 @@ class Cms::ImportJobFile
     def upload_import_file(file, import_filename)
       import_path = "#{site.path}/#{import_filename}"
 
-      item = Uploader::File.new(path: import_path, binary: file.read)
+      item = Uploader::File.new(path: import_path, binary: file.read, site: site)
       item.save
 
       set_errors(item, import_filename)

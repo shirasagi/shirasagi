@@ -50,6 +50,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+    def request_host
+      request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+    end
+
+    def request_path
+      request.env["REQUEST_PATH"] || request.path
+    end
+
     def protect_csrf?
       SS.config.env.protect_csrf
     end

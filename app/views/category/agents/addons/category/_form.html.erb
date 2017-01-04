@@ -16,7 +16,7 @@ end
 
 def cate_form(item)
   h = %(<label>)
-  h << @f.check_box("category_ids[]", { "data-url": item.url }, item.id)
+  h << @f.check_box("category_ids[]", { "data-url": "#{item.filename}" }, item.id)
   h << %(#{item.name}</label>)
 
   children = Category::Node::Base.site(@cur_site).node(item)
@@ -24,7 +24,7 @@ def cate_form(item)
   if children.size > 0
     cc = children.map { |c| c.children.size }.max != 0
     h = %(<label class="parent">)
-    h << @f.check_box("category_ids[]", { "data-url": item.url }, item.id)
+    h << @f.check_box("category_ids[]", { "data-url": "/#{item.filename}/" }, item.id)
     h << %(#{item.name}</label>)
     h << %(<div class="child #{cc ? 'grandchild' : ''}">).html_safe
     children.each { |c| h += cate_form c }

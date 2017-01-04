@@ -48,7 +48,7 @@ module SS::Addon
       def default_mobile_css
         dir = "#{self.path}/css"
         css = Fs.exists?("#{dir}/mobile.css") || Fs.exists?("#{dir}/mobile.scss")
-        css = css ? '/css/mobile.css' : '%{assets_prefix}/cms/mobile.css'
+        css = css ? "#{self.url}css/mobile.css" : '%{assets_prefix}/cms/mobile.css'
         [css]
       end
 

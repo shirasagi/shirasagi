@@ -2,7 +2,7 @@ require "csv"
 
 class Facility::ImportJob < Cms::ApplicationJob
   def put_log(message)
-    Rails.logger.info(message)
+    Rails.logger.warn(message)
   end
 
   def perform(ss_file_id)
@@ -33,9 +33,9 @@ class Facility::ImportJob < Cms::ApplicationJob
 
   def update_row(row)
     filename = "#{node.filename}/#{row[@model.t(:filename)]}"
-    item = @model.find_or_create_by filename: filename
+    item = @model.find_or_initialize_by filename: filename, site_id: site.id
+    item.cur_site = site
     set_page_attributes(row, item)
-    item.site = site
 
     if item.save
       name = item.name
@@ -57,7 +57,7 @@ class Facility::ImportJob < Cms::ApplicationJob
 
   def set_page_attributes(row, item)
     item.name            = row[@model.t(:name)].try(:squish)
-    item.layout          = Cms::Layout.where(name: row[@model.t(:layout)].try(:squish)).first
+    item.layout          = Cms::Layout.site(site).where(name: row[@model.t(:layout)].try(:squish)).first
     item.kana            = row[@model.t(:kana)].try(:squish)
     item.address         = row[@model.t(:address)].try(:squish)
     item.postcode        = row[@model.t(:postcode)].try(:squish)

@@ -21,7 +21,7 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
       urls.each do |url|
         item = []
         item << [@cur_part.home_label, @root_node.url]
-        find_node(item, url)
+        find_node(item, url.sub(/^#{@cur_site.url}/, ""))
 
         item << [@preview_page.name, @preview_page.url] if @preview_page
         if page

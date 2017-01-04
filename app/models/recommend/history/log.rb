@@ -27,7 +27,7 @@ class Recommend::History::Log
   end
 
   def content
-    filename = path.sub(/^\//, "")
+    filename = path.sub(/^#{site.url}/, "")
     page = Cms::Page.site(site).where(filename: filename).first
     return page if page
 
@@ -56,7 +56,7 @@ class Recommend::History::Log
       path = opts[:path]
       path += "index.html" if path =~ /\/$/
       receiver_path = Rails.application.routes.url_helpers.recommend_history_receiver_path(site: site.id)
-      receiver_url = ::File.join(site.full_url, receiver_path)
+      receiver_url = ::File.join(site.full_root_url, receiver_path)
 
       h[:recommend][:receiver_url] = receiver_url
       h[:recommend][:params] = {}
