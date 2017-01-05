@@ -87,4 +87,11 @@ class ApplicationController < ActionController::Base
         response.headers["Expires"] = "-1"
       end
     end
+
+  class << self
+    private
+      def local_prefixes
+        ['', controller_path]
+      end
+  end
 end

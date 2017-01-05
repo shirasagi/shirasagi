@@ -5,7 +5,7 @@ class Webmail::MailsController < ApplicationController
 
   model Webmail::Mail
 
-  skip_before_action :set_destroy_items
+  skip_before_action :set_selected_items
   before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
