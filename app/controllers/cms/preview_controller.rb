@@ -13,14 +13,14 @@ class Cms::PreviewController < ApplicationController
   after_action :render_mobile, if: ->{ mobile_path? }
 
   if SS.config.cms.remote_preview
-    skip_action_callback :logged_in?
-    skip_action_callback :set_group
-    skip_action_callback :check_api_user
+    skip_before_action :logged_in?
+    skip_before_action :set_group
+    skip_before_action :check_api_user
   end
 
-  skip_action_callback :set_site
-  skip_action_callback :set_ss_assets
-  skip_action_callback :set_cms_assets
+  skip_before_action :set_site
+  skip_before_action :set_ss_assets
+  skip_before_action :set_cms_assets
 
   def form_preview
     path = params[:path]

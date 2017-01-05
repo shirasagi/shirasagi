@@ -9,7 +9,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   before_action :set_comments, only: [:index, :add, :delete]
   before_action :set_workflow
 
-  skip_action_callback :logged_in?
+  skip_before_action :logged_in?
 
   private
     def set_comments

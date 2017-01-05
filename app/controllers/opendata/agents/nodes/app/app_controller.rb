@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   before_action :set_app, only: [:download, :show_point, :add_point, :point_members, :show_executed, :add_executed, :full]
   before_action :set_ideas, only: [:show_ideas]
   before_action :set_file, only: [:app_index, :text]
-  skip_action_callback :logged_in?
+  skip_before_action :logged_in?
 
   private
     def set_app

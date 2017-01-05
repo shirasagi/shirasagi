@@ -4,7 +4,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  skip_action_callback :logged_in?
+  skip_before_action :logged_in?
   before_action :set_item
 
   model Sys::Auth::OpenIdConnect

@@ -1,8 +1,8 @@
 class Sns::Login::SamlController < ApplicationController
   include Sns::BaseFilter
 
-  skip_action_callback :verify_authenticity_token, only: :consume
-  skip_action_callback :logged_in?
+  skip_before_action :verify_authenticity_token, only: :consume
+  skip_before_action :logged_in?
   before_action :set_item
 
   model Sys::Auth::Saml

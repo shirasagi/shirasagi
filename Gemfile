@@ -1,52 +1,53 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "rails", "4.2.5.2"
+gem 'rails', '4.2.5.2'
 gem 'sass-rails', '~> 5.0'
-gem "uglifier", ">= 1.3.0"
+gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
-gem "therubyracer", "~> 0.12", platforms: :ruby
-gem "jquery-rails"
+gem 'therubyracer', '~> 0.12', platforms: :ruby
+gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem "turbolinks"
+gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 # gem 'bcrypt', '~> 3.1.7'
-gem "unicorn"
-gem "unicorn-worker-killer"
+gem 'unicorn'
+gem 'unicorn-worker-killer'
 # gem 'capistrano-rails', group: :development
-# gem "debugger", group: [:development, :test]
+# gem 'debugger', group: [:development, :test]
 
-gem "mongoid", "~> 5.1.0"
-gem "mongoid-rspec"
-gem "mongo_session_store-rails4"
-#gem "mongo_mapper"
-#gem "bson_ext"
-gem "dynamic_form"
-gem "zipruby"
-gem "jquery-turbolinks"
-gem "jquery-cookie-rails"
+gem 'mongoid', '~> 5.1.0' #, git: 'https://github.com/mongodb/mongoid.git'
+gem 'mongoid-rspec'
+gem 'mongo_session_store-rails4'
+#gem 'mongo_mapper'
+#gem 'bson_ext'
+gem 'dynamic_form'
+gem 'zipruby'
+gem 'jquery-turbolinks'
+gem 'js_cookie_rails'
 gem 'jquery-form-rails'
-gem "kramdown"
-gem "compass-rails"
-gem "kaminari"
-gem "non-stupid-digest-assets"
-gem "mongoid-grid_fs"
-#gem "carrierwave"
-#gem "carrierwave-mongoid", require: "carrierwave/mongoid"
-gem "rmagick"
-gem "holiday_japan"
-gem "mail-iso-2022-jp"
+gem 'kramdown'
+gem 'compass-rails'
+gem 'kaminari'
+gem 'kaminari-mongoid'
+gem 'non-stupid-digest-assets'
+gem 'mongoid-grid_fs'
+#gem 'carrierwave'
+#gem 'carrierwave-mongoid', require: 'carrierwave/mongoid'
+gem 'rmagick'
+gem 'holiday_japan'
+gem 'mail-iso-2022-jp'
 gem 'simple_captcha2', require: 'simple_captcha'
-gem "rails_autolink"
-gem "browser"
+gem 'rails_autolink'
+gem 'browser'
 #gem 'sass-rails-source-maps'
 #gem 'coffee-rails-source-maps'
-gem "net-ldap"
-gem "diffy"
-gem "ungarbled"
+gem 'net-ldap'
+gem 'diffy'
+gem 'ungarbled'
 gem 'momentjs-rails'
-gem 'fullcalendar.io-rails'
+gem 'fullcalendar.io-rails', '~> 2.6.0'
 gem 'bxslider-rails'
 gem 'marked-rails'
 gem 'clam_scan'
@@ -78,7 +79,7 @@ gem 'rdf-rdfxml'
 gem 'levenshtein'
 gem 'unf'
 
-#gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
+#gem 'rails-dev-boost', git: 'git://github.com/thedarkone/rails-dev-boost.git', group: :development
 
 group :development, :test do
   gem 'spring', '~> 1.1.3'
