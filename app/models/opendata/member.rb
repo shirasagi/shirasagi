@@ -8,7 +8,7 @@ class Opendata::Member
   has_one :points, primary_key: :member_id, class_name: "Opendata::MemberNotice",
     dependent: :destroy
 
-  validate "convert_icon", if: ->{ in_icon.present? }
+  validate :convert_icon, if: ->{ in_icon.present? }
   validates :email, uniqueness: { scope: :site_id }, if: ->{ email.present? }
 
   def convert_icon

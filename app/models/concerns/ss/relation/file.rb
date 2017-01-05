@@ -12,10 +12,10 @@ module SS::Relation::File
       attr_accessor "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}", "rm_#{name}"
 
-      before_save "validate_relation_#{name}", if: ->{ send("in_#{name}").present? }
-      before_save "save_relation_#{name}", if: ->{ send("in_#{name}").present? }
-      before_save "remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
-      after_save "update_relation_#{name}_state", if: ->{ send(name).present? }
+      before_save :"validate_relation_#{name}", if: ->{ send("in_#{name}").present? }
+      before_save :"save_relation_#{name}", if: ->{ send("in_#{name}").present? }
+      before_save :"remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
+      after_save :"update_relation_#{name}_state", if: ->{ send(name).present? }
 
       define_method("validate_relation_#{name}") do
         file = relation_file(name, opts)

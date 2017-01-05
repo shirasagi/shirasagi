@@ -2,8 +2,8 @@ class Sns::Login::EnvironmentController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  skip_action_callback :verify_authenticity_token, only: :consume
-  skip_action_callback :logged_in?
+  skip_before_action :verify_authenticity_token, only: :consume
+  skip_before_action :logged_in?
   before_action :set_item
 
   model Sys::Auth::Environment

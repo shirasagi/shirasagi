@@ -1,7 +1,7 @@
 class @SS_Mobile
   @render: ->
     if navigator.userAgent.match(/(Android|iPad|iPhone)/)
-      if $.cookie("ss-mobile") == "pc"
+      if Cookies.get("ss-mobile") == "pc"
         head = $("head")
         head.children("meta[name=viewport]").remove()
         head.append '<meta name="viewport" content="width=1024" />'
@@ -12,11 +12,11 @@ class @SS_Mobile
         vr.html('<a href="#" onclick="return SS_Mobile.setPc()">' + vr.text() + '</a>').show()
 
   @unset: ->
-    $.removeCookie("ss-mobile", { expires: 7, path: '/' })
+    Cookies.remove("ss-mobile", { path: '/' })
     location.reload()
     return false
 
   @setPc: ->
-    $.cookie("ss-mobile", "pc", { expires: 7, path: '/' })
+    Cookies.set("ss-mobile", "pc", { expires: 7, path: '/' })
     location.reload()
     return false

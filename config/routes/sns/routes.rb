@@ -2,7 +2,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, :on => :member
-    delete action: :destroy_all, :on => :collection
+    delete action: :destroy_all, on: :collection
   end
 
   namespace "sns", path: ".u" do
@@ -33,7 +33,8 @@ SS::Application.routes.draw do
     end
 
     namespace "apis" do
-      get "users" => "users#index", path: "users/:group"
+      #get "users" => "users#index", path: "users/:group"
+      get "users/:group" => "users#index", as: "users", action: "users"
     end
   end
 
