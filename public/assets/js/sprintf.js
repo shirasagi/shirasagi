@@ -217,7 +217,7 @@ function toInteger(n, f, w, p) {
 		if(n < 0)
 			str = str.substring(1);
 		var pos_e = str.indexOf('e');
-		if(pos_e != -1) {		//w”
+		if(pos_e != -1) {		//æŒ‡æ•°
 			var exp = parseInt(str.substring(pos_e + 2));
 			var pos_dot = str.indexOf('.');
 			if(pos_dot == -1) {
@@ -239,7 +239,7 @@ function toInteger(n, f, w, p) {
 		}
 	}
 	
-	//¸“x
+	//ç²¾åº¦
 	var len = str.length;
 	if(len < p) {
 		var c = "0";
@@ -248,7 +248,7 @@ function toInteger(n, f, w, p) {
 		len = p;
 	}
 	
-	//ƒtƒ‰ƒO‚Ìˆ—
+	//ãƒ•ãƒ©ã‚°ã®å‡¦ç†
 	return ProcFlag(str, f, w - len, n >= 0);
 }
 
@@ -269,7 +269,7 @@ function toFloatingPoint(n, f, w, p) {
 	
 	str = toFloatingPoint2(n, f, p);
 	
-	//ƒtƒ‰ƒO‚Ìˆ—
+	//ãƒ•ãƒ©ã‚°ã®å‡¦ç†
 	return ProcFlag(str, f, w - str.length, bpositive);
 }
 
@@ -280,7 +280,7 @@ function toFloatingPoint2(n, f, p) {
 	var pos_e = str.indexOf('e');
 	if(pos_e != -1) {
 		var exp = parseInt(str.substring(pos_e + 1));
-		if(exp > 0) {			//w”‚ğ®”‚É
+		if(exp > 0) {			//æŒ‡æ•°ã‚’æ•´æ•°ã«
 			var pos_dot = str.indexOf('.');
 			if(pos_dot == -1) {
 				str = str.substring(0, pos_e) + "000000000000000000000";
@@ -293,11 +293,11 @@ function toFloatingPoint2(n, f, p) {
 			for( ; exp; exp--)
 				str += "0";
 		}
-		else {					//w”‚ğ¬”‚É
+		else {					//æŒ‡æ•°ã‚’å°æ•°ã«
 			var equive_p = exp + p;
-			if(equive_p < -1)	//¸“x–³‚µ
+			if(equive_p < -1)	//ç²¾åº¦ç„¡ã—
 				str = "0";
-			else if(equive_p >= 0) {	//¸“x—L‚è
+			else if(equive_p >= 0) {	//ç²¾åº¦æœ‰ã‚Š
 				str = str.substring(0, pos_e);
 				var pos_dot = str.indexOf(".");
 				if(pos_dot != -1)
@@ -307,36 +307,36 @@ function toFloatingPoint2(n, f, p) {
 					str = "0" + str;
 				str = "0." + str;
 			}
-			else {				//”÷–­
+			else {				//å¾®å¦™
 				var tmp = parseFloat(str.substring(0, pos_e));
-				if(tmp > 5) {	//Ø‚èã‚°
+				if(tmp > 5) {	//åˆ‡ã‚Šä¸Šã’
 					str = "0.00000";
 					for(var i = exp + 7; i; i++)
 						str += "0";
 					str += "1";
 				}
-				else			//ØÌ‚Ä
+				else			//åˆ‡æ¨ã¦
 					str = "0";
 			}
 		}
 	}
 	
-	//¸“x‚Å®Œ`
+	//ç²¾åº¦ã§æ•´å½¢
 	var len = str.length;
 	var pos_dot = str.indexOf(".");
 	if(pos_dot != -1) {
 		var dec = len - pos_dot - 1;
-		if(dec > p) {		//Ø‚é
+		if(dec > p) {		//åˆ‡ã‚‹
 			var tmp = parseFloat(str.charAt(pos_dot + p + 1)
 									+ "." + str.substring(pos_dot + p + 2));
-			if(tmp > 5) {	//Ø‚èã‚°
+			if(tmp > 5) {	//åˆ‡ã‚Šä¸Šã’
 				var i;
 				if(n < 1) {
 					i = 2;
 					while(str.charAt(i) == "0")
 						i++;
 					tmp = (parseInt(str.substring(i, p + 2)) + 1).toString();
-					if(tmp.length > p + 2 - i) {		//Œ…‘
+					if(tmp.length > p + 2 - i) {		//æ¡å¢—
 						if(i == 2)
 							str = "1." + tmp.substring(1);
 						else
@@ -348,7 +348,7 @@ function toFloatingPoint2(n, f, p) {
 				else {
 					tmp = (parseInt(str.substring(0, pos_dot) + str.substring(
 								pos_dot + 1, pos_dot + p + 1)) + 1).toString();
-					if(tmp.length > pos_dot + p)				//Œ…‘
+					if(tmp.length > pos_dot + p)				//æ¡å¢—
 						str = tmp.substring(0, pos_dot + 1)
 									+ "." +  tmp.substring(pos_dot + 1);
 					else
@@ -356,11 +356,11 @@ function toFloatingPoint2(n, f, p) {
 									+ "." + tmp.substring(pos_dot);
 				}
 			}
-			else {		//ØÌ‚Ä
+			else {		//åˆ‡æ¨ã¦
 				str = str.substring(0, p ? pos_dot + p + 1 : pos_dot);
 			}
 		}
-		else if(dec < p) {	//"0"‚ğ[“U
+		else if(dec < p) {	//"0"ã‚’å……å¡«
 			for(var i = p - dec; i; i--)
 				str += "0";
 		}
@@ -397,12 +397,12 @@ function toExponential(n, f, w, p, e) {
 	var type = ((pos_e != -1) << 1) + (pos_dot != -1);
 	var exp;
 	
-	//‰¼”•”‚Æw”•”‚É•ª‚¯‚é
-	if(type == 0) {			//®”
+	//ä»®æ•°éƒ¨ã¨æŒ‡æ•°éƒ¨ã«åˆ†ã‘ã‚‹
+	if(type == 0) {			//æ•´æ•°
 		if(exp = str.length - 1)
 			str = str.charAt(0) + "." + str.substring(pos_dot = 1);
 	}
-	else if(type == 1) {	//¬”
+	else if(type == 1) {	//å°æ•°
 		if(n > 10) {
 			exp = pos_dot - 1;
 			str = str.substring(0, 1) + "."
@@ -422,21 +422,21 @@ function toExponential(n, f, w, p, e) {
 			pos_dot = 1;
 		}
 	}
-	else {	//w”
+	else {	//æŒ‡æ•°
 		exp = parseInt(str.substring(pos_e + 1));
 		str = str.substring(0, pos_e);
 	}
 	
-	//‰¼”•”‚Ì®Œ`
+	//ä»®æ•°éƒ¨ã®æ•´å½¢
 	str = toFloatingPoint2(parseFloat(str), f, p);
 	
-	//w”•”‚Ì®Œ`
+	//æŒ‡æ•°éƒ¨ã®æ•´å½¢
 	if(exp >= 0)
 		str += e + (exp < 10 ? "+0" : "+") + exp;
 	else
 		str += e + (exp > -10 ? "-0" + (-exp) : exp);
 	
-	//ƒtƒ‰ƒO‚Ìˆ—
+	//ãƒ•ãƒ©ã‚°ã®å‡¦ç†
 	str = ProcFlag(str, f, w - str.length, bpositive);
 	
 	return str;
