@@ -119,4 +119,49 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
       end
     end
   end
+
+  context "place rss/weather_xml node under some node" do
+    let(:parent_node) { create(:category_node_page, cur_site: site) }
+    let(:node) { create(:rss_node_weather_xml, cur_site: site, cur_node: parent_node) }
+    let(:subscriber_path) { "#{node.url}subscriber" }
+    let(:challenge) { "1234567890" }
+
+    describe "GET /subscriber" do
+      before do
+        get(
+          "#{subscriber_path}?hub.mode=subscribe&hub.topic=http://example.org/&hub.challenge=#{challenge}",
+          {},
+          { 'HTTP_HOST' => site.domain })
+      end
+
+      it do
+        expect(response.status).to eq 200
+        expect(response.body).to eq challenge
+      end
+    end
+
+    describe "POST /subscriber" do
+      let(:file) { Rails.root.join(*%w(spec fixtures jmaxml weather-sample.xml)) }
+      let(:payload) { File.read(file) }
+      let(:content_type) { 'application/xml+rss' }
+
+      before do
+        node.rss_max_docs = 1
+        node.save!
+
+        perform_enqueued_jobs do
+          post(
+            subscriber_path,
+            {},
+            { 'HTTP_HOST' => site.domain, 'RAW_POST_DATA' => payload, 'CONTENT_TYPE' => content_type })
+        end
+      end
+
+      it do
+        expect(response.status).to eq 200
+        expect(response.body).to eq ''
+        expect(Rss::WeatherXmlPage.count).to eq 1
+      end
+    end
+  end
 end

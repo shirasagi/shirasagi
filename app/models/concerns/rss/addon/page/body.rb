@@ -14,7 +14,7 @@ module Rss::Addon::Page
       def limit_docs(site, node, max)
         return if max.blank? || max <= 0
 
-        criteria = Rss::Page.site(site).node(node)
+        criteria = self.site(site).node(node)
         count = criteria.count
         if count > max
           limit = count - max
