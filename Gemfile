@@ -11,8 +11,8 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.5'
 gem 'sdoc', group: :doc
 
-gem 'sprockets', '~> 3.5.0'
-gem 'sprockets-rails', '~> 3.0.0'
+gem 'sprockets', '~> 3.7.0'
+gem 'sprockets-rails', '~> 3.2.0'
 
 # gem 'bcrypt', '~> 3.1.7'
 gem 'unicorn'
