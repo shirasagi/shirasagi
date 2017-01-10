@@ -85,7 +85,12 @@ class Workflow::PagesController < ApplicationController
                    site: @cur_site, page: @item,
                    url: params[:url], comment: params[:remand_comment] }
           Workflow::Mailer.approve_mail(args).deliver_now if args[:t_uid]
-          @item.delete if @item.try(:branch?) && @item.state == "public"
+
+          if @item.try(:branch?) && @item.state == "public"
+            master = @item.master
+            @item.delete
+            master.remove_file
+          end
         end
 
         render json: { workflow_state: workflow_state }
