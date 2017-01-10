@@ -224,8 +224,9 @@ GEM
       railties (>= 3.1)
     mongo (2.4.1)
       bson (>= 4.2.1, < 5.0.0)
-    mongo_session_store-rails4 (6.0.0)
+    mongo_session_store-rails5 (7.0.0)
       actionpack (>= 3.1)
+      rails (>= 5.0, < 6.0)
     mongoid-grid_fs (2.3.0)
       mime-types (>= 1.0, < 4.0)
       mongoid (>= 3.0, < 7.0)
@@ -525,7 +526,7 @@ DEPENDENCIES
   mail-iso-2022-jp
   marked-rails
   momentjs-rails
-  mongo_session_store-rails4
+  mongo_session_store-rails5
   mongoid!
   mongoid-grid_fs
   mongoid-rspec

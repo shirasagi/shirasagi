@@ -22,7 +22,7 @@ gem 'unicorn-worker-killer'
 
 gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git'
 gem 'mongoid-rspec'
-gem 'mongo_session_store-rails4'
+gem 'mongo_session_store-rails5'
 #gem 'mongo_mapper'
 #gem 'bson_ext'
 gem 'dynamic_form'
