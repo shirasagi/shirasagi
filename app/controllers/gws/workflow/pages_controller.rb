@@ -87,7 +87,7 @@ class Gws::Workflow::PagesController < ApplicationController
           if @item.try(:branch?) && @item.state == "public"
             master = @item.master
             @item.delete
-            master.remove_file
+            master.generate_file
           end
         end
 

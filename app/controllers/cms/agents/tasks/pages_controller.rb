@@ -80,7 +80,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
         if page.try(:branch?) && page.state == "public"
           master = page.master
           page.delete
-          master.remove_file
+          master.generate_file
         end
       elsif @task
         @task.log "error: " + page.errors.full_messages.join(', ')
