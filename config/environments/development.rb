@@ -30,9 +30,9 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   #config.active_record.migration_error = :page_load
 
-  # Assets.
+  # Assets pipeline.
   config.assets.debug = false
-  config.assets.quiet = true
+  config.assets.quiet = false
   config.assets.compress = true
   config.assets.prefix = "/assets-dev"
   config.sass.debug_info = false
