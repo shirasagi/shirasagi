@@ -184,7 +184,7 @@ GEM
       railties (>= 3.2.16)
     js_cookie_rails (2.1.3)
       railties (>= 3.1)
-    json (1.8.3)
+    json (1.8.5)
     json-jwt (1.7.0)
       activesupport
       bindata
@@ -192,11 +192,21 @@ GEM
       securecompare
       url_safe_base64
     jwt (1.5.6)
-    kaminari (0.17.0)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
-    kaminari-mongoid (0.1.2)
-      kaminari
+    kaminari (1.0.0)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.0.0)
+      kaminari-activerecord (= 1.0.0)
+      kaminari-core (= 1.0.0)
+    kaminari-actionview (1.0.0)
+      actionview
+      kaminari-core (= 1.0.0)
+    kaminari-activerecord (1.0.0)
+      activerecord
+      kaminari-core (= 1.0.0)
+    kaminari-core (1.0.0)
+    kaminari-mongoid (1.0.0)
+      kaminari-core (= 1.0.0)
+      mongoid
     kgio (2.11.0)
     kramdown (1.13.2)
     levenshtein (0.2.2)
@@ -255,7 +265,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    oj (2.18.0)
+    oj (2.18.1)
     omniauth (1.3.1)
       hashie (>= 1.2, < 4)
       rack (>= 1.0, < 3)
@@ -275,9 +285,9 @@ GEM
     omniauth-oauth2 (1.4.0)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
-    omniauth-twitter (1.2.1)
-      json (~> 1.3)
+    omniauth-twitter (1.3.0)
       omniauth-oauth (~> 1.1)
+      rack
     omniauth-yahoojp (0.1.2)
       httpauth
       omniauth (~> 1.0)
@@ -399,7 +409,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
-    ruby-saml (1.4.1)
+    ruby-saml (1.4.2)
       nokogiri (>= 1.5.10)
     ruby_dep (1.5.0)
     safe_yaml (1.0.4)
