@@ -74,6 +74,7 @@ module SS
         end
       end
     end
+  end
 end
 
 ActiveSupport.on_load(:action_controller) do
