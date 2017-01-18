@@ -5,7 +5,7 @@ class Category::Agents::Parts::NodeController < ApplicationController
   def index
     @cur_node = @cur_part.parent
 
-    path = @cur_path.sub(/\/[^\/]*$/, "")
+    path = @cur_main_path.sub(/\/[^\/]*$/, "")
     node = Category::Node::Base.site(@cur_site).filename(path).first || @cur_node
 
     if node && node.dirname

@@ -5,7 +5,7 @@ class Member::Agents::Parts::BlogPageController < ApplicationController
   def index
     @cur_part = @cur_part.becomes_with_route
     @items = Member::BlogPage.site(@cur_site).and_public(@cur_date).
-      where(@cur_part.condition_hash(cur_path: @cur_path)).
+      where(@cur_part.condition_hash(cur_main_path: @cur_main_path)).
       order_by(@cur_part.sort_hash).
       limit(@cur_part.limit)
   end
