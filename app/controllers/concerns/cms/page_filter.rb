@@ -92,7 +92,9 @@ module Cms::PageFilter
       location = nil
       if result && @item.try(:branch?) && @item.state == "public"
         location = { action: :index }
+        master = @item.master
         @item.delete
+        master.generate_file
       end
       render_update result, location: location
     end

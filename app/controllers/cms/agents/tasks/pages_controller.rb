@@ -77,7 +77,11 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       end
 
       if page.save
-        page.delete if page.try(:branch?) && page.state == "public"
+        if page.try(:branch?) && page.state == "public"
+          master = page.master
+          page.delete
+          master.generate_file
+        end
       elsif @task
         @task.log "error: " + page.errors.full_messages.join(', ')
       end
