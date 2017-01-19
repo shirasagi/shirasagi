@@ -162,9 +162,9 @@ module Cms::Model::Node
         return
       end
 
-      url = cur_site ? "#{cur_site.url}#{filename}/" : "#{site.url}#{filename}/"
+      full_url = cur_site ? "#{cur_site.full_url}#{filename}/" : "#{site.full_url}#{filename}/"
       SS::Site.each do |s|
-        if s.url == url
+        if s.full_url == full_url
           errors.add :basename, :invalid
           break
         end
