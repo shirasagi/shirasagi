@@ -51,7 +51,7 @@ class Sns::LoginController < ApplicationController
 
     def status
       if @cur_user = get_user_by_session
-        render inline: 'OK'
+        render plain: 'OK'
       else
         raise '403'
       end

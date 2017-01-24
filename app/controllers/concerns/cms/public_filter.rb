@@ -122,14 +122,14 @@ module Cms::PublicFilter
 
     def send_part(body)
       respond_to do |format|
-        format.html { render inline: body, layout: false }
+        format.html { render html: body.html_safe, layout: false }
         format.json { render json: body.to_json }
       end
     end
 
     def send_page(page)
       if response.content_type == "text/html" && page.layout
-        render inline: render_layout(page.layout), layout: (request.xhr? ? false : "cms/page")
+        render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
       else
         @_response_body = response.body
       end

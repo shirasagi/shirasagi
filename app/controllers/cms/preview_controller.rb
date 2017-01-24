@@ -52,7 +52,7 @@ class Cms::PreviewController < ApplicationController
     self.response = resp
 
     if page.layout
-      render inline: render_layout(page.layout), layout: "cms/page"
+      render html: render_layout(page.layout).html_safe, layout: "cms/page"
     else
       @_response_body = response.body
     end

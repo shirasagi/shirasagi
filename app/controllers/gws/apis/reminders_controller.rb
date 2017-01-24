@@ -33,9 +33,9 @@ class Gws::Apis::RemindersController < ApplicationController
       item.read_at = Time.zone.now
 
       if item.save
-        render inline: I18n.t("gws.reminder.states.entry"), layout: false
+        render plain: I18n.t("gws.reminder.states.entry"), layout: false
       else
-        render inline: "Error", layout: false
+        render plain: "Error", layout: false
       end
     end
 
@@ -43,9 +43,9 @@ class Gws::Apis::RemindersController < ApplicationController
       item = find_item
 
       if item.blank? || item.destroy
-        render inline: I18n.t("gws.reminder.states.empty"), layout: false
+        render plain: I18n.t("gws.reminder.states.empty"), layout: false
       else
-        render inline: "Error", layout: false
+        render plain: "Error", layout: false
       end
     end
 
@@ -58,9 +58,9 @@ class Gws::Apis::RemindersController < ApplicationController
       notification.attributes = params.require(:item).permit(:in_notify_before)
 
       if notification.valid? && item.save
-        render inline: I18n.t("gws.reminder.states.entry"), layout: false
+        render plain: I18n.t("gws.reminder.states.entry"), layout: false
       else
-        render inline: "Error", layout: false
+        render plain: "Error", layout: false
       end
     end
 end

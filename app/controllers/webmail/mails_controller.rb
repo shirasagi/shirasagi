@@ -78,12 +78,12 @@ class Webmail::MailsController < ApplicationController
 
     def header_view
       data = @item.rfc822.sub(/(\r\n|\n){2}.*/m, '')
-      render inline: ApplicationController.helpers.br(data), layout: false
+      render plain: data, layout: false
     end
 
     def source_view
       data = @item.rfc822
-      render inline: ApplicationController.helpers.br(data), layout: false
+      render plain: data, layout: false
     end
 
     def new
