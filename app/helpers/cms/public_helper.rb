@@ -25,6 +25,7 @@ module Cms::PublicHelper
       params = Rack::Utils.parse_nested_query(query)
       params.delete("amp")
       params.delete("public_path")
+      params.delete("rack.session")
       page = params.delete("page")
 
       path = @cur_path
