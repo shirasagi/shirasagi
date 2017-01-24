@@ -6,7 +6,7 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
   end
 
   def count
-    filename = @cur_path.sub(".count", "")
+    filename = @cur_main_path.sub(".count", "")
 
     @item = Ads::Banner.site(@cur_site).and_public.
       filename(filename).first
