@@ -61,7 +61,9 @@ class Cms::AllContent
         return size unless content.respond_to?(:files)
 
         content.files.each do |file|
-          size += File.exist?(file.public_path) ? File.stat(file.public_path).size : nil
+          if File.exist?(file.public_path)
+            size += File.stat(file.public_path).size.to_i
+          end
         end
         size
       end
