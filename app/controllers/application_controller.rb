@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 
   #before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
+  before_action :skip_auto_render, if: -> { self.class.to_s =~ /^\w+::Agents::Tasks::/ }
 
   def t(key, opts = {})
     opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
@@ -86,6 +87,10 @@ class ApplicationController < ActionController::Base
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "-1"
       end
+    end
+
+    def skip_auto_render
+      head :ok
     end
 
   class << self
