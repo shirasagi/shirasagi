@@ -77,7 +77,7 @@ class ApplicationController < ActionController::Base
         headers["Access-Control-Max-Age"] = "86400"
         headers["Content-Length"] = "0"
         headers["Content-Type"] = "text/plain"
-        render text: ""
+        render plain: ""
       end
     end
 
