@@ -85,7 +85,17 @@ RSpec.configure do |config|
       # found phantomjs, register poltergeist as a Capybara driver.
       require 'capybara/poltergeist'
       Capybara.register_driver :poltergeist do |app|
-        Capybara::Poltergeist::Driver.new(app, :inspector => true)
+        Capybara::Poltergeist::Driver.new(
+          app,
+          {
+            inspector: true,
+            phantomjs_options: [
+              '--load-images=no',
+              '--ignore-ssl-errors=yes',
+              '--ssl-protocol=any'
+            ]
+          }
+        )
       end
       Capybara.javascript_driver = :poltergeist
       Capybara.default_max_wait_time = 15
