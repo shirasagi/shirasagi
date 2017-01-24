@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
   class << self
     private
       def local_prefixes
-        ['', controller_path]
+        [controller_path, '']
       end
   end
 end
