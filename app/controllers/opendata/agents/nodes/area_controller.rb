@@ -2,6 +2,6 @@ class Opendata::Agents::Nodes::AreaController < ApplicationController
   include Cms::NodeFilter::View
 
   def index
-    render nothing: true
+    head :ok
   end
 end

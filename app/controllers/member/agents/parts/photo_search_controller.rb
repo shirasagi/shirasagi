@@ -3,7 +3,7 @@ class Member::Agents::Parts::PhotoSearchController < ApplicationController
 
   def index
     @node = @cur_part.parent
-    return render nothing: true unless @node
+    return head :ok unless @node
 
     @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public
     @categories = Member::Node::PhotoCategory.site(@cur_site).and_public

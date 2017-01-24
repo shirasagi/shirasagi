@@ -15,6 +15,6 @@ class Urgency::Agents::Nodes::LayoutController < ApplicationController
   end
 
   def empty
-    render nothing: true
+    head :ok
   end
 end

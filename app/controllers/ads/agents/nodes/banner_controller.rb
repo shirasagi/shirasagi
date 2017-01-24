@@ -2,7 +2,7 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
   include Cms::NodeFilter::View
 
   def index
-    render nothing: true
+    head :ok
   end
 
   def count
@@ -27,6 +27,6 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
 
-    render nothing: true
+    head :ok
   end
 end

@@ -36,6 +36,6 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
       @item = @dataset.resources.find_by id: params[:id]
       raise "404" unless @item.tsv_present?
 
-      render nothing: true unless @data = @item.parse_tsv
+      head :ok unless @data = @item.parse_tsv
     end
 end
