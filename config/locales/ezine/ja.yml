@@ -135,3 +135,8 @@ ja:
       deliver_date:
         - 配信予約日時を設定します。
         - 指定した日時が来ると配信を行います。
+
+  job:
+    models:
+      ezine/deliver_job: 単メール配信
+      ezine/deliver_reserved_job: メール配信
