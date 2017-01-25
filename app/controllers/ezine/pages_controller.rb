@@ -47,7 +47,7 @@ class Ezine::PagesController < ApplicationController
       @crumbs << [:"ezine.deliver", action: :delivery_confirmation]
 
       page = Ezine::Page.find(params[:id])
-      SS::RakeRunner.run_async "ezine:deliver", "page_id=#{page.id}"
+      Ezine::DeliverJob.bind(site_id: @cur_site, node_id: @cur_node, page_id: page).perform_later
       redirect_to({ action: :delivery_confirmation }, { notice: t("ezine.notice.delivered") })
     end
 
