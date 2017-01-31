@@ -64,7 +64,7 @@ class Webmail::Filter
 
   def apply(mailbox, add_search_keys = [])
     imap.examine(mailbox)
-    uids = imap.conn.uid_sort(['DATE'], add_search_keys + search_keys, 'UTF-8')
+    uids = imap.conn.uid_sort(%w(REVERSE ARRIVAL), add_search_keys + search_keys, 'UTF-8')
     uids_apply(uids, mailbox)
   end
 

@@ -11,6 +11,8 @@ class Webmail::Mail
   include Webmail::Mail::MessageBuilder
   include Webmail::Addon::File
 
+  #index({ uid: 1, user_id: 1, host: 1, account: 1, mailbox: 1 }, { unique: true })
+
   attr_accessor :sync, :rfc822, :text, :html, :attachments, :format, :reply_uid, :forward_uid, :signature,
                 :to_text, :cc_text, :bcc_text
 
@@ -127,12 +129,12 @@ class Webmail::Mail
 
     # Criteria: where(sort: Array)
     def sort_keys
-      where({}).selector['sort'] || %w(REVERSE DATE)
+      where({}).selector['sort'] || %w(REVERSE ARRIVAL)
     end
 
     # Criteria: where(search: Array)
     def search_keys
-      where({}).selector['search'] || %w(UNDELETED)
+      where({}).selector['search'] || %w(ALL) # %w(UNDELETED)
     end
 
     def imap_all
@@ -153,34 +155,40 @@ class Webmail::Mail
 
     def imap_find(uid)
       uid = uid.to_i
-      msg = imap_fetch(uid, ['RFC822'])
+      msg = imap.conn.uid_fetch(uid, ['RFC822'])
+      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless msg
 
       item = cache_all([uid]).first
-      item.parse_body(msg)
+      item.parse_body(msg[0])
       item
-    end
-
-    def imap_fetch(uid, attr)
-      msg = imap.conn.uid_fetch(uid, attr)
-      return msg[0] if msg
-      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid)
     end
 
     private
       def cache_all(uids)
-        items = Mongoid::Criteria.new(self).where(cache_key).in(uid: uids).map do |item|
-          item.flags = imap_fetch(item.uid, ['FLAGS']).attr['FLAGS'].map(&:to_s)
-          item.save if item.changed?
-          uids.delete(item.uid)
-          item
+        items = Mongoid::Criteria.new(self).where(cache_key).in(uid: uids)
+        item_uids = items.map(&:uid)
+
+        if items.present?
+          flags = []
+
+          messages = imap.conn.uid_fetch(item_uids, ['FLAGS']) || []
+          messages.each do |msg|
+            flags[msg.attr['UID']] = (msg.attr['FLAGS'] || []).map(&:to_s)
+          end
+
+          items.each do |item|
+            item.set flags: flags[item.uid] if item.flags != flags[item.uid]
+          end
         end
 
-        uids.each do |uid|
-          # ALL - FLAGS INTERNALDATE RFC822.SIZE ENVELOPE
-          msg = imap_fetch(uid, %w(ALL UID RFC822))
+        uids = uids - item_uids
+        return items if uids.blank?
 
+        # ALL - FLAGS INTERNALDATE RFC822.SIZE ENVELOPE
+        messages = imap.conn.uid_fetch(uids, %w(ALL RFC822)) || []
+        messages.each do |msg|
           item = self.new(cache_key)
-          item.uid = uid
+          items << item
 
           begin
             item.parse_message(msg)
@@ -190,8 +198,6 @@ class Webmail::Mail
             item.subject = "[Error] #{e}"
             def item.save; end
           end
-
-          items << item
         end
 
         items

@@ -42,7 +42,8 @@ class Webmail::MailsController < ApplicationController
     end
 
     def get_uids
-      params[:ids].presence || [params[:id]]
+      ids = params[:ids].presence || [params[:id]]
+      ids.map(&:to_i)
     end
 
   public
