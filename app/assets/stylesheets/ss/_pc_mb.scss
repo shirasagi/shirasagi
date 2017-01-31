@@ -1228,7 +1228,7 @@ div.index {
     @include mb { margin-left: 26px; }
   }
   .up {
-    padding: 2px 0 3px 25px;
+    padding: 4px 0 4px 25px;
     background: url(/assets/img/ic-arrow16up-off.png) no-repeat left center;
     &:hover {
       background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
@@ -1240,7 +1240,7 @@ div.index {
     @include mb { font-size: $px14; }
   }
   .info {
-    display: inline-block;
+    @include truncate;
   }
   .meta {
     span {

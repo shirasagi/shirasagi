@@ -60,35 +60,48 @@ module Webmail::Mail::Flag
 
   class_methods do
     def set_seen(uids)
-      uids_update(uids) { |uid| imap.conn.uid_store uid, '+FLAGS', [:Seen] }
+      return [] if uids.blank?
+      imap.conn.uid_store uids, '+FLAGS', [:Seen] || []
     end
 
     def unset_seen(uids)
-      uids_update(uids) { |uid| imap.conn.uid_store uid, '-FLAGS', [:Seen] }
+      return [] if uids.blank?
+      imap.conn.uid_store uids, '-FLAGS', [:Seen] || []
     end
 
     def set_star(uids)
-      uids_update(uids) { |uid| imap.conn.uid_store uid, '+FLAGS', [:Flagged] }
+      return [] if uids.blank?
+      imap.conn.uid_store uids, '+FLAGS', [:Flagged] || []
     end
 
     def unset_star(uids)
-      uids_update(uids) { |uid| imap.conn.uid_store uid, '-FLAGS', [:Flagged] }
+      return [] if uids.blank?
+      imap.conn.uid_store uids, '-FLAGS', [:Flagged] || []
     end
 
     def uids_delete(uids)
+      return [] if uids.blank?
       imap.select
-      resp = uids_update(uids) { |uid| imap.conn.uid_store uid, '+FLAGS', [:Deleted] }
+      resp = imap.conn.uid_store uids, '+FLAGS', [:Deleted] || []
+      uids = resp.map { |r| r.attr['UID'] }
       imap.conn.expunge
 
-      self.where(imap.cache_key).where(mailbox: imap.mailbox, :uid.in => resp).destroy_all
+      self.where(imap.cache_key).where(mailbox: imap.mailbox, :uid.in => uids).destroy_all
       resp
     end
 
     def uids_copy(uids, dst_mailbox)
-      uids_update(uids) { |uid| imap.conn.uid_copy(uid, dst_mailbox) }
+      return [] if uids.blank?
+      resp = imap.conn.uid_copy(uids, dst_mailbox)
+      code = resp.data.code #ex. <struct Net::IMAP::ResponseCode data="453719372 63,62 70:71">
+      return [] unless code
+
+      uids = code.data.split(/ /)[1].split(/,/).presence || []
+      uids.map(&:to_i)
     end
 
     def uids_move(uids, dst_mailbox)
+      return [] if uids.blank?
       resp = uids_copy(uids, dst_mailbox)
       uids_delete(resp)
     end
@@ -98,18 +111,5 @@ module Webmail::Mail::Flag
       return uids_move(uids, trash) if imap.mailbox != trash
       uids_delete(uids)
     end
-
-    private
-      def uids_update(uids, &block)
-        resp = uids.map do |uid|
-          begin
-            yield uid = uid.to_i
-            uid
-          rescue Net::IMAP::NoResponseError
-            nil
-          end
-        end
-        resp.compact
-      end
-    end
+  end
 end

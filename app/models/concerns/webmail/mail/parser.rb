@@ -10,7 +10,7 @@ module Webmail::Mail::Parser
       message_id: envelope.message_id,
       size: msg.attr['RFC822.SIZE'],
       flags: msg.attr['FLAGS'].map(&:to_s),
-      date: envelope.date,
+      date: msg.attr['INTERNALDATE'],
       from: self.class.build_addresses(envelope.from)[0],
       sender: self.class.build_addresses(envelope.sender)[0],
       to: self.class.build_addresses(envelope.to).presence,
@@ -38,7 +38,7 @@ module Webmail::Mail::Parser
     self.html = mail.html_part.decoded.toutf8 if mail.html_part
 
     if mail.body.present?
-      if mail.content_type.start_with?('text/html')
+      if mail.content_type.try(:start_with?, 'text/html')
         self.html ||= mail.body.decoded.toutf8
       else
         self.text ||= mail.body.decoded.toutf8
