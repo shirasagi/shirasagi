@@ -111,18 +111,5 @@ module Webmail::Mail::Flag
       return uids_move(uids, trash) if imap.mailbox != trash
       uids_delete(uids)
     end
-
-    private
-      def uids_update(uids, &block)
-        resp = uids.map do |uid|
-          begin
-            yield uid = uid.to_i
-            uid
-          rescue Net::IMAP::NoResponseError
-            nil
-          end
-        end
-        resp.compact
-      end
-    end
+  end
 end
