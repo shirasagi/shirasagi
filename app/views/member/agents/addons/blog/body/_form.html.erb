@@ -1,4 +1,4 @@
-<%= html_editor "#item_html", public_side: true %>
+<%= html_editor "#item_html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
 <dl class="see member-body">
   <dd class="wide"><%= f.text_area :html, id: :item_html %></dd>

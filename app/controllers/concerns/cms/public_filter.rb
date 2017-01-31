@@ -19,21 +19,23 @@ module Cms::PublicFilter
       page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
       params[:page] = page.to_i
       @cur_path.sub!(/\.p\d+\.html$/, ".html")
+      @cur_main_path.sub!(/\.p\d+\.html$/, ".html")
     end
 
     if @html =~ /\.part\.html$/
       part = find_part(@html)
       raise "404" unless part
       @cur_path = params[:ref] || "/"
+      set_main_path
       if resp = render_part(part)
         return send_part(resp)
       end
-    elsif page = find_page(@cur_path)
+    elsif page = find_page(@cur_main_path)
       if resp = render_page(page)
         self.response = resp
         return send_page(page)
       end
-    elsif node = find_node(@cur_path)
+    elsif node = find_node(@cur_main_path)
       if resp = render_node(node)
         self.response = resp
         return send_page(node)
@@ -45,21 +47,33 @@ module Cms::PublicFilter
 
   private
     def set_site
+      host = request_host
+      path = request_path
+
       @cur_site ||= begin
-        host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
-        request.env["ss.site"] = SS::Site.find_by_domain host
+        site = SS::Site.find_by_domain host, path
+        request.env["ss.site"] = site
       end
       raise "404" if !@cur_site
     end
 
     def set_request_path
-      @cur_path ||= request.env["REQUEST_PATH"] || request.path
+      @cur_path ||= request_path
       cur_path = @cur_path.dup
 
       filter_methods = self.class.private_instance_methods.select { |m| m =~ /^set_request_path_with_/ }
       filter_methods.each do |name|
         send(name)
         break if cur_path != @cur_path
+      end
+      set_main_path
+    end
+
+    def set_main_path
+      if @cur_site.subdir.present?
+        @cur_main_path = @cur_path.sub(/^\/#{@cur_site.subdir}/, "")
+      else
+        @cur_main_path = @cur_path.dup
       end
     end
 
@@ -74,8 +88,9 @@ module Cms::PublicFilter
 
     def parse_path
       @cur_path.sub!(/\/$/, "/index.html")
-      @html = @cur_path.sub(/\.\w+$/, ".html")
-      @file = File.join(@cur_site.path, @cur_path)
+      @cur_main_path.sub!(/\/$/, "/index.html")
+      @html = @cur_main_path.sub(/\.\w+$/, ".html")
+      @file = File.join(@cur_site.root_path, @cur_path)
     end
 
     def compile_scss

@@ -10,6 +10,12 @@ module Cms::GeneratorFilter::Rss
       @cur_site   = node.site
       @csrf_token = false
 
+      if @cur_site.subdir.present?
+        @cur_main_path = @cur_path.sub(/^\/#{@cur_site.subdir}/, "")
+      else
+        @cur_main_path = @cur_path.dup
+      end
+
       params.merge! opts[:params] if opts[:params]
 
       begin

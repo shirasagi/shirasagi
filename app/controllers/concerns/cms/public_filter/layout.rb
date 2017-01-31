@@ -35,7 +35,7 @@ module Cms::PublicFilter::Layout
       body = resp.body
 
       if body =~ /\#\{.*?parent_name\}/
-        parent = Cms::Node.site(@cur_site).filename(@cur_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
+        parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
         if parent
           body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
           body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
@@ -58,9 +58,9 @@ module Cms::PublicFilter::Layout
 
       body = @cur_layout.body.to_s
       body = body.sub(/<body.*?>/) do |m|
-        m = m.sub(/ class="/, %( class="#{body_class(@cur_path)} )     ) if m =~ / class="/
-        m = m.sub(/<body/,    %(<body class="#{body_class(@cur_path)}")) unless m =~ / class="/
-        m = m.sub(/<body/,    %(<body id="#{body_id(@cur_path)}")      ) unless m =~ / id="/
+        m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
+        m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
+        m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
         m
       end
 

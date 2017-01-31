@@ -24,9 +24,10 @@ module Cms::PublicFilter::Page
 
   public
     def generate_page(page)
-      @cur_path   = page.url
-      @cur_site   = page.site
-      @csrf_token = false
+      @cur_site      = page.site
+      @cur_path      = page.url
+      @cur_main_path = @cur_path.sub(@cur_site.url, "/")
+      @csrf_token    = false
 
       #self.params   = ActionController::Parameters.new format: "html"
       #self.request  = ActionDispatch::Request.new method: "GET"

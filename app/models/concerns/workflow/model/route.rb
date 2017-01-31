@@ -28,7 +28,7 @@ module Workflow::Model::Route
     def route_options(user)
       ret = [ [ t("my_group"), "my_group" ] ]
       group_ids = user.group_ids.to_a
-      Workflow::Route.where(:group_ids.in => group_ids).each do |route|
+      criteria.and(:group_ids.in => group_ids).each do |route|
         ret << [ route.name, route.id ]
       end
       ret

@@ -28,7 +28,11 @@ $ ->
 <dl class="see">
   <dt><%= t("workflow.request") %><%= @model.tt :workflow_routes %></dt>
   <dd>
-    <%= select_tag :workflow_route, options_for_select(Workflow::Route.route_options(@cur_user)) %>
+    <% if @ss_mode == :cms %>
+      <%= select_tag :workflow_route, options_for_select(Workflow::Route.site(@cur_site).route_options(@cur_user)) %>
+    <% else %>
+      <%= select_tag :workflow_route, options_for_select(Workflow::Route.route_options(@cur_user)) %>
+    <% end %>
     <%= link_to t("workflow.button.select"), "#", class: "workflow-route-start cboxElement btn" %>
   </dd>
 </dl>
