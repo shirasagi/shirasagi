@@ -55,8 +55,7 @@ module Cms::Addon
         # tweet
         if twauto === "active"
           require 'twitter'
-          require 'yaml'
-          snskeys = YAML.load_file(Rails.root.join("config")+"sns_keys.yml")
+          snskeys = SS.config.cms.sns_poster
           client = Twitter::REST::Client.new do |config|
             config.consumer_key        = snskeys["consumer_key"]
             config.consumer_secret     = snskeys["consumer_secret"]
@@ -73,8 +72,6 @@ module Cms::Addon
         # facebook
         if fbauto === "active"
           require 'koala'
-          require 'yaml'
-          snskeys = YAML.load_file(Rails.root.join("config")+"sns_keys.yml")
           access_token = snskeys["access_token_f"]
           graph = Koala::Facebook::API.new(access_token)
           facebook_param = graph.put_wall_post("ホームページを更新しました。", {
