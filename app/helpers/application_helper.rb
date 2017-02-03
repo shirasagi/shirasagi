@@ -2,7 +2,7 @@ module ApplicationHelper
   def tryb(&block)
     begin
       yield
-    rescue NoMethodError
+    rescue
       nil
     end
   end
