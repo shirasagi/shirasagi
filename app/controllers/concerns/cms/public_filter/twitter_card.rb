@@ -6,6 +6,7 @@ module Cms::PublicFilter::TwitterCard
       [
         [ 'twitter:card', @cur_site.twitter_card ],
         [ 'twitter:site', @cur_site.twitter_username ],
+        [ 'twitter:url', ->() { @cur_item.full_url } ],
         [ 'twitter:title', ->() { @window_name } ],
         [ 'twitter:description', ->() { twitter_description } ],
         [ 'twitter:image', ->() { twitter_image_urls } ],
@@ -33,10 +34,12 @@ module Cms::PublicFilter::TwitterCard
 
   private
     def twitter_description
-      if @cur_item && @cur_item.respond_to?(:html)
-        description = @cur_item.html.to_s
-      elsif @cur_item && @cur_item.respond_to?(:text)
-        description = @cur_item.text.to_s
+      if @cur_item
+        description ||= @cur_item.html.presence if @cur_item.respond_to?(:html)
+        description ||= @cur_item.text.presence if @cur_item.respond_to?(:text)
+        description ||= @cur_item.description.presence if @cur_item.respond_to?(:description)
+        description ||= @cur_item.summary.presence if @cur_item.respond_to?(:summary)
+        description ||= (@cur_item.keywords.presence || []).join(' ').presence if @cur_item.respond_to?(:keywords)
       end
       return if description.blank?
 
