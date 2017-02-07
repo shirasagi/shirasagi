@@ -26,7 +26,8 @@ ja:
         body: 本文
     buttons:
       test_connection: 接続確認
-      clear_cache: キャッシュ クリア
+      clear_cache: キャッシュ削除
+      clear_cache_all: キャッシュ全削除
     options:
       action:
         copy: コピーする

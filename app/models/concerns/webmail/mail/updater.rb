@@ -64,56 +64,84 @@ module Webmail::Mail::Updater
 
   class_methods do
     def set_seen(uids)
-      return [] if uids.blank?
-      imap.conn.uid_store uids, '+FLAGS', [:Seen] || []
+      return nil if uids.blank?
+      imap.conn.uid_store uids, '+FLAGS', [:Seen]
     end
 
     def unset_seen(uids)
-      return [] if uids.blank?
-      imap.conn.uid_store uids, '-FLAGS', [:Seen] || []
+      return nil if uids.blank?
+      imap.conn.uid_store uids, '-FLAGS', [:Seen]
     end
 
     def set_star(uids)
-      return [] if uids.blank?
-      imap.conn.uid_store uids, '+FLAGS', [:Flagged] || []
+      return nil if uids.blank?
+      imap.conn.uid_store uids, '+FLAGS', [:Flagged]
     end
 
     def unset_star(uids)
-      return [] if uids.blank?
-      imap.conn.uid_store uids, '-FLAGS', [:Flagged] || []
+      return nil if uids.blank?
+      imap.conn.uid_store uids, '-FLAGS', [:Flagged]
     end
 
-    def uids_delete(uids)
-      return [] if uids.blank?
-      imap.select
-      resp = imap.conn.uid_store uids, '+FLAGS', [:Deleted] || []
-      uids = resp.map { |r| r.attr['UID'] }
-      imap.conn.expunge
+    # @return [Net::IMAP::ResponseCode]
+    #   <ResponseCode data="453719372 63,62 70:71">
+    def uids_copy(uids, dst_mailbox)
+      return nil if uids.blank?
 
-      self.where(imap.cache_key).where(mailbox: imap.mailbox, :uid.in => uids).destroy_all
+      resp = imap.conn.uid_copy(uids, dst_mailbox)
+      @imap_last_response_size = response_code_to_size(resp.data.code)
       resp
     end
 
-    def uids_copy(uids, dst_mailbox)
-      return [] if uids.blank?
-      resp = imap.conn.uid_copy(uids, dst_mailbox)
-      code = resp.data.code #ex. <struct Net::IMAP::ResponseCode data="453719372 63,62 70:71">
-      return [] unless code
+    # @return [Array<Net::IMAP::FetchData>]
+    #   <FetchData seqno=3, attr={"UID"=>95, "FLAGS"=>[:Flagged, :Seen]}>
+    def uids_delete(uids)
+      return nil if uids.blank?
 
-      uids = code.data.split(/ /)[1].split(/,/).presence || []
-      uids.map(&:to_i)
+      imap.select
+      resp = imap.conn.uid_store uids, '+FLAGS', [:Deleted]
+      imap.conn.expunge
+      @imap_last_response_size = resp ? resp.size : 0
+
+      self.where(imap.account_attributes).where(mailbox: imap.mailbox, :uid.in => uids).delete_all
+      resp
     end
 
+    # @return [Net::IMAP::FetchData]
     def uids_move(uids, dst_mailbox)
-      return [] if uids.blank?
+      return nil if uids.blank?
       resp = uids_copy(uids, dst_mailbox)
-      uids_delete(resp)
+      resp ? uids_delete(uids) : nil
     end
 
+    # @return [Net::IMAP::FetchData]
     def uids_move_trash(uids)
       trash = imap.user.imap_trash_box
       return uids_move(uids, trash) if imap.mailbox != trash
       uids_delete(uids)
+    end
+
+    def imap_last_response_size
+      @imap_last_response_size
+    end
+
+    # Returns the uids count for Net::IMAP::ResponseCode#data
+    # @example "70:73" #=> 4
+    # @param [Net::IMAP::ResponseCode#data]
+    # @return [Integer] count
+    def response_code_to_size(resp)
+      return 0 unless resp
+      count = 0
+
+      resp.data.split(/ /)[2].split(/,/).each do |num|
+        if num =~ /:/
+          arr = num.split(/:/)
+          count += arr[1].to_i - arr[0].to_i + 1
+        else
+          count += 1
+        end
+      end
+      count
     end
   end
 end

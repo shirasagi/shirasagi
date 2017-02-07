@@ -54,6 +54,10 @@ class Webmail::Mail
 
   default_scope -> { order_by internal_date: -1 }
 
+  scope :user, ->(user) {
+      where host: user.imap_host, account: user.imap_account
+  }
+
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
@@ -104,8 +108,8 @@ class Webmail::Mail
     end
 
   class << self
-    def cache_key
-      imap.cache_key.merge(mailbox: mailbox)
+    def mailbox_attributes
+      imap.account_attributes.merge(mailbox: mailbox)
     end
 
     # Criteria: where(mailbox: String)
@@ -152,7 +156,7 @@ class Webmail::Mail
       resp = imap.conn.uid_fetch(uid, attr)
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
 
-      item = self.new(cache_key)
+      item = self.new(mailbox_attributes)
       item.parse(resp[0])
       item.fetch_body if division.include?(:body)
       item
@@ -164,7 +168,7 @@ class Webmail::Mail
       resp = imap.conn.uid_fetch(uid, ['BODYSTRUCTURE', "BODY[#{section}.TEXT]"])
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
 
-      item = self.new(cache_key)
+      item = self.new(mailbox_attributes)
       item.body_structure = resp[0].attr['BODYSTRUCTURE']
 
       part = item.all_parts[section]
@@ -175,7 +179,7 @@ class Webmail::Mail
 
     private
       def cache_all(uids, ref_items)
-        items = Mongoid::Criteria.new(self).where(cache_key).in(uid: uids)
+        items = Mongoid::Criteria.new(self).where(mailbox_attributes).in(uid: uids)
         item_uids = items.map(&:uid)
 
         flags = []
@@ -202,7 +206,7 @@ class Webmail::Mail
           uid = data.attr['UID']
           uids.delete(uid)
 
-          item = self.new(cache_key)
+          item = self.new(mailbox_attributes)
           ref_items[uid] = item
 
           begin

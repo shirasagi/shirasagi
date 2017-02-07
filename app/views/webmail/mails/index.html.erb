@@ -27,10 +27,14 @@
         <span class="icon-attachment icon-attachment--<%= item.attachments? ? 'on' : 'off' %>"></span>
       </div>
       <div class="info">
-        <span class="field from"><%= item.display_sender %></span>
+        <% if @cur_user.imap_sent_box.start_with?(@mailbox) %>
+          <span class="field from"><%= item.display_to.join(',') %></span>
+        <% else %>
+          <span class="field from"><%= item.display_sender %></span>
+        <% end %>
         <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title" %>
-          <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
-          <span class="field size"><%= item.display_size %></span>
+        <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
+        <span class="field size"><%= item.display_size %></span>
       </div>
     </li>
     <% end %>

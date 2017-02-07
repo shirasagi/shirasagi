@@ -74,15 +74,17 @@ class Webmail::Filter
 
     uids.each_slice(APPLY_PER) do |sliced_uids|
       if action == "copy"
-        count += Webmail::Mail.uids_copy(sliced_uids, self.mailbox).size
+        Webmail::Mail.uids_copy(sliced_uids, self.mailbox)
       elsif action == "move"
         imap.examine(mailbox)
-        count += Webmail::Mail.uids_move(sliced_uids, self.mailbox).size
+        Webmail::Mail.uids_move(sliced_uids, self.mailbox)
       elsif action == "trash"
-        count += Webmail::Mail.uids_move_trash(sliced_uids).size
+        Webmail::Mail.uids_move_trash(sliced_uids)
       elsif action == "delete"
-        count += Webmail::Mail.uids_delete(sliced_uids).size
+        Webmail::Mail.uids_delete(sliced_uids)
       end
+
+      count += Webmail::Mail.imap_last_response_size
     end
 
     count

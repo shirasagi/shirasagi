@@ -8,7 +8,7 @@ class Webmail::MailsController < ApplicationController
   skip_before_action :set_selected_items
   before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy ]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
 
   private
     def set_crumbs
@@ -21,13 +21,12 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_mailbox
-      @mailbox = params[:mailbox]
       @navi_mailboxes = true
-      @imap.examine(@mailbox)
+      @imap.examine(@mailbox = params[:mailbox])
     end
 
     def fix_params
-      @imap.cache_key.merge(cur_user: @cur_user, sync: true, mailbox: @mailbox)
+      @imap.account_attributes.merge(cur_user: @cur_user, sync: true, mailbox: @mailbox)
     end
 
     def set_item
@@ -122,41 +121,45 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_seen
-      render_change :set_seen, @model.set_seen(get_uids).size
+      @model.set_seen get_uids
+      render_change :set_seen
     end
 
     def unset_seen
-      render_change :unset_seen, @model.unset_seen(get_uids).size
+      @model.unset_seen get_uids
+      render_change :unset_seen
     end
 
     def set_star
-      render_change :set_star, @model.set_star(get_uids).size, redirect: { action: :show }
+      @model.set_star get_uids
+      render_change :set_star, redirect: { action: :show }
     end
 
     def unset_star
-      render_change :unset_star, @model.unset_star(get_uids).size, redirect: { action: :show }
+      @model.unset_star get_uids
+      render_change :unset_star, redirect: { action: :show }
     end
 
     def destroy_all
-      render_change :delete, @model.uids_move_trash(get_uids).size
+      @model.uids_move_trash get_uids
+      render_change :delete
     end
 
     def copy
-      render_change :copy, @model.uids_copy(get_uids, params[:dst]).size, redirect: { action: :show }
+      @model.uids_copy get_uids, params[:dst]
+      render_change :copy
     end
 
     def move
-      render_change :move, @model.uids_move(get_uids, params[:dst]).size, redirect: { action: :show }
+      @model.uids_move get_uids, params[:dst]
+      render_change :move
     end
 
-    def render_change(action, count, opts = {})
+    def render_change(action, opts = {})
       location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
-      multiple = (count == 1) ? '' : 'multiple.'
-      notice = t("webmail.notice.#{multiple}#{action}", count: count)
-
       respond_to do |format|
-        format.html { redirect_to location, notice: notice }
+        format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
         format.json { head :no_content }
       end
     end

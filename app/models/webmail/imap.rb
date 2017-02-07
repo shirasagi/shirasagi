@@ -49,7 +49,7 @@ class Webmail::Imap
     conn.select(mailbox)
   end
 
-  def cache_key
+  def account_attributes
     { host: conf[:host], account: conf[:account] }
   end
 

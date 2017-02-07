@@ -11,7 +11,7 @@ class Webmail::MailboxesController < ApplicationController
     end
 
     def fix_params
-      @imap.cache_key.merge(cur_user: @cur_user, sync: true)
+      @imap.account_attributes.merge(cur_user: @cur_user, sync: true)
     end
 
     def set_destroy_items

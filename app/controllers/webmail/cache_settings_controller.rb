@@ -22,12 +22,20 @@ class Webmail::CacheSettingsController < ApplicationController
     end
 
     def clear_cache_mail
-      Webmail::Mail.user(@cur_user).destroy_all
+      if params[:target] == 'all'
+        Webmail::Mail.delete_all
+      else
+        Webmail::Mail.user(@cur_user).delete_all
+      end
       render_destroy
     end
 
     def clear_cache_mailbox
-      Webmail::Mailbox.user(@cur_user).destroy_all
+      if params[:target] == 'all'
+        Webmail::Mailbox.delete_all
+      else
+        Webmail::Mailbox.user(@cur_user).delete_all
+      end
       render_destroy
     end
 

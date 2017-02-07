@@ -1,15 +1,37 @@
-<div class="main-box">
+<style>
+.webmail-cache-settings form {
+  display: inline-block;
+}
+</style>
+
+<div class="main-box webmail-cache-settings">
   <header><h2><%= t('webmail.mail') %></h2></header>
-  <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+  <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put } do |f| %>
     <%= hidden_field_tag :model, 'mail', id: nil %>
-    <%= f.submit t('webmail.buttons.clear_cache'), class: 'btn-primary save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+    <%= f.submit t('webmail.buttons.clear_cache'), class: 'btn save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+  <% end %>
+
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put } do |f| %>
+      <%= hidden_field_tag :model, 'mail', id: nil %>
+      <%= hidden_field_tag :target, 'all', id: nil %>
+      <%= f.submit t('webmail.buttons.clear_cache_all'), class: 'btn save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+    <% end %>
   <% end %>
 </div>
 
-<div class="main-box">
+<div class="main-box webmail-cache-settings">
   <header><h2><%= t('webmail.mailbox') %></h2></header>
-  <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+  <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put } do |f| %>
     <%= hidden_field_tag :model, 'mailbox', id: nil %>
-    <%= f.submit t('webmail.buttons.clear_cache'), class: 'btn-primary save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+    <%= f.submit t('webmail.buttons.clear_cache'), class: 'btn save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+  <% end %>
+
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put } do |f| %>
+      <%= hidden_field_tag :model, 'mailbox', id: nil %>
+      <%= hidden_field_tag :target, 'all', id: nil %>
+      <%= f.submit t('webmail.buttons.clear_cache_all'), class: 'btn save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+    <% end %>
   <% end %>
 </div>

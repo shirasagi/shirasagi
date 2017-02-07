@@ -27,13 +27,15 @@
   <% end %>
 </nav>
 
-<div id="webmail-mailboxes-list" style="display: none;">
+<% if @navi_mailboxes %>
+<div id="webmail-mailboxes-list" style="display: non;">
   <ul class="dropdown-menu">
     <% Webmail::Mailbox.user(@cur_user).to_options.each do |label, value| %>
     <li><a href="#" data-name="<%= value %>"><%= label %></a></li>
     <% end %>
   </ul>
 </div>
+<% end %>
 
 <nav class="mod-navi">
   <h2><%= t('views.config') %></h2>
