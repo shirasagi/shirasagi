@@ -62,7 +62,7 @@ $ ->
               <% content = image_tag file.url, alt: file.name %>
               <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
               <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to :"sns.thumb_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;", :class => "thumb-paste" %>
+              <%= link_to :"sns.thumb_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
             <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>
