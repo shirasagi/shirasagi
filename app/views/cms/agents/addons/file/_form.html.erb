@@ -55,7 +55,7 @@ $ ->
             </label><br />
           </div>
 
-          <div class="action paste">
+          <div class="action">
             <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
             <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% if file.image? %>
@@ -64,11 +64,8 @@ $ ->
               <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
               <%= link_to :"sns.thumb_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;", :class => "thumb-paste" %>
             <% end %>
-          </div>
-          <div class="action delete">
             <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>
-
         </div>
       <% end %>
     </div>
