@@ -32,7 +32,7 @@ module Webmail::Mail::MessageBuilder
   end
 
   def new_create
-    sign = Webmail::Signature.default_sign(user)
+    sign = Webmail::Signature.default_sign(imap.user)
     self.text = "\n\n#{sign}"
   end
 
@@ -64,7 +64,7 @@ module Webmail::Mail::MessageBuilder
   end
 
   def new_reply_body(ref)
-    sign = Webmail::Signature.default_sign(user)
+    sign = Webmail::Signature.default_sign(imap.user)
     self.format = ref.format
     self.text = [sign, ref.reply_text].compact.join("\n\n")
     self.html = [sign, ref.reply_html].compact.join("<br />\n<br />\n")
@@ -72,7 +72,7 @@ module Webmail::Mail::MessageBuilder
 
   def reply_header
     data = ["------ Original Message ------"]
-    data << "Date: #{date.strftime('%a, %d %b %Y %H:%M:%S %z')}" if date.present?
+    data << "Date: #{internal_date.strftime('%a, %d %b %Y %H:%M:%S %z')}" if internal_date.present?
     data << "From: #{from}" if from.present?
     data << "To: #{to.join(' ; ')}" if to.present?
     data << "Cc: #{cc.join(' ; ')}" if cc.present?

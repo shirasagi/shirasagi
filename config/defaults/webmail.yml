@@ -2,7 +2,7 @@ production: &production
   # Disable Webmail.
   disable: true
 
-  # default settings
+  # Default settings
   clients:
     default:
       # host
@@ -13,6 +13,9 @@ production: &production
       auth_type: LOGIN
       # user: uid, email
       account: email
+
+  # Cache mails
+  cache_mails: true
 
 test:
   <<: *production

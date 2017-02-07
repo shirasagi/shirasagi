@@ -1,53 +1,115 @@
 module Webmail::Mail::Parser
   extend ActiveSupport::Concern
 
-  def parse_message(msg)
-    envelope = msg.attr["ENVELOPE"]
-    mail = ::Mail.read_from_string msg.attr['RFC822']
+  attr_accessor :header, :rfc822, :body_structure,
+                :text_part_no, :text_part,
+                :html_part_no, :html_part
+
+  def parse(data)
+    self.attributes = {
+      uid: data.attr["UID"],
+      internal_date: data.attr['INTERNALDATE'],
+      flags: data.attr['FLAGS'] || [],
+      size: data.attr['RFC822.SIZE'],
+    }
+
+    if data.attr['RFC822']
+      self.rfc822 = data.attr['RFC822']
+    end
+
+    if data.attr['RFC822.HEADER']
+      self.header = data.attr['RFC822.HEADER']
+      parse_header
+    end
+
+    if data.attr['BODYSTRUCTURE']
+      self.body_structure = data.attr['BODYSTRUCTURE']
+      parse_body_structure
+    end
+  end
+
+  def parse_header
+    mail = ::Mail.read_from_string(header)
 
     self.attributes = {
-      uid: msg.attr["UID"],
-      message_id: envelope.message_id,
-      size: msg.attr['RFC822.SIZE'],
-      flags: msg.attr['FLAGS'].map(&:to_s),
-      date: msg.attr['INTERNALDATE'],
-      from: self.class.build_addresses(envelope.from)[0],
-      sender: self.class.build_addresses(envelope.sender)[0],
-      to: self.class.build_addresses(envelope.to).presence,
-      cc: self.class.build_addresses(envelope.cc).presence,
-      bcc: self.class.build_addresses(envelope.bcc).presence,
-      reply_to: self.class.build_addresses(envelope.reply_to).presence,
-      in_reply_to: envelope.in_reply_to.presence,
-      references: parse_references(mail.references),
-      subject: envelope.subject.try(:toutf8),
-      attachments_count: mail.attachments.size
+      sender: mail.sender,
+      from: parse_address_field(mail[:from]),
+      to: parse_address_field(mail[:to]),
+      cc: parse_address_field(mail[:cc]),
+      bcc: parse_address_field(mail[:bcc]),
+      reply_to: parse_address_field(mail[:reply_to]),
+      in_reply_to: mail.in_reply_to,
+      references: parse_header_references(mail.references),
+      subject: mail.subject,
+      content_type: mail.message_content_type,
+      has_attachment: (mail.message_content_type =='multipart/mixed' ? true : nil)
     }
   end
 
-  def parse_references(references)
+  def parse_address_field(field)
+    return [] if field.blank?
+
+    ::Mail::AddressList.new(field.value).addresses.map do |addr|
+      if addr.display_name.present?
+        addr.decoded
+      else
+        addr.address.sub(/^"/, '').sub(/"$/, '')
+      end
+    end
+  end
+
+  def parse_header_references(references)
     return [] if references.blank?
     references = [references] if references.is_a?(String)
     references.map { |c| "<#{c}>" }
   end
 
-  def parse_body(msg)
-    self.rfc822 = msg.attr['RFC822']
-    mail = ::Mail.read_from_string(rfc822)
-
-    self.text = mail.text_part.decoded.toutf8 if mail.text_part
-    self.html = mail.html_part.decoded.toutf8 if mail.html_part
-
-    if mail.body.present?
-      if mail.content_type.try(:start_with?, 'text/html')
-        self.html ||= mail.body.decoded.toutf8
-      else
-        self.text ||= mail.body.decoded.toutf8
-      end
+  def parse_body_structure
+    if body_structure.multipart? #&& body_structure.media_subtype == "MIXED"
+      self.attachments = Webmail::MailPart.list(all_parts).select(&:attachment?)
+    else
+      self.attachments = []
     end
 
-    self.format = self.html.nil? ? 'text' : 'html'
-    self.attachments = mail.attachments
+    if info = find_first_mime_type('text/plain')
+      self.text_part_no = info[0]
+      self.text_part    = info[1]
+    end
+
+    if info = find_first_mime_type('text/html')
+      self.html_part_no = info[0]
+      self.html_part    = info[1]
+    end
   end
+
+  def all_parts
+    return @_all_parts if @_all_parts
+    @_all_parts = flatten_all_parts(body_structure)
+  end
+
+  def find_first_mime_type(mime)
+    all_parts.each do |pos, part|
+      next if "#{part.media_type}/#{part.media_subtype}" != mime.upcase
+      next if part.disposition && part.disposition.dsp_type == 'ATTACHMENT'
+      return [pos, part]
+    end
+    return nil
+  end
+
+  def fetch_body
+    attr = []
+    attr << "BODY[#{text_part_no}]" if text_part_no
+    attr << "BODY[#{html_part_no}]" if html_part_no
+    return if attr.blank?
+
+    resp = imap.conn.uid_fetch(uid, attr)
+    self.text = Webmail::MailPart.decode resp[0].attr["BODY[#{text_part_no}]"], text_part
+    self.html = Webmail::MailPart.decode resp[0].attr["BODY[#{html_part_no}]"], html_part
+  end
+
+#  def parse_body(msg)
+#    self.format = self.html.nil? ? 'text' : 'html'
+#  end
 
   def sanitize_html
     html = self.html.gsub!(/<img [^>]*?>/i) do |img|
@@ -66,4 +128,17 @@ module Webmail::Mail::Parser
 
     ApplicationController.helpers.sanitize_with(html, attributes: %w(data-src))
   end
+
+  private
+    def flatten_all_parts(part, pos = [], buf = {})
+      if part.multipart?
+        part.parts.each_with_index do |p, idx|
+          buf = flatten_all_parts(p, pos + [idx + 1], buf)
+        end
+      else
+        pos = [1] if pos.blank?
+        buf[pos.join('.')] = part
+      end
+      buf
+    end
 end

@@ -8,8 +8,7 @@ class Webmail::MailsController < ApplicationController
   skip_before_action :set_selected_items
   before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
-                                  :attachment, :download, :header_view, :source_view]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy ]
 
   private
     def set_crumbs
@@ -32,8 +31,7 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_item
-      set_mailbox
-      @item = @model.where(mailbox: @mailbox).imap_find params[:id]
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :body
       @item.attributes = fix_params
     end
 
@@ -60,31 +58,29 @@ class Webmail::MailsController < ApplicationController
       @item.set_seen if @item.unseen?
     end
 
-    def attachment
-      @item.attachments.each_with_index do |at, idx|
-        next unless idx == params[:idx].to_i
-
-        disposition = at.content_type.start_with?('image') ? :inline : :attachment
-        return send_data at.read, filename: at.filename, content_type: at.content_type, disposition: disposition
-      end
-
-      raise '404'
-    end
-
-    def download
-      data = @item.rfc822
-      name = @item.subject + '.eml'
-      send_data data, filename: name, content_type: 'message/rfc822', disposition: :attachment
-    end
-
     def header_view
-      data = @item.rfc822.sub(/(\r\n|\n){2}.*/m, '')
-      render inline: ApplicationController.helpers.br(data), layout: false
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id]
+      render plain: @item.header, layout: false
     end
 
     def source_view
-      data = @item.rfc822
-      render inline: ApplicationController.helpers.br(data), layout: false
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :rfc822
+      render plain: @item.rfc822, layout: false
+    end
+
+    def download
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :rfc822
+
+      send_data @item.rfc822, filename: "#{@item.subject}.eml",
+                content_type: 'message/rfc822', disposition: :attachment
+    end
+
+    def parts
+      part = @model.where(mailbox: @mailbox).find_part params[:id], params[:section]
+      disposition = part.image? ? :inline : :attachment
+
+      send_data part.decoded, filename: part.filename,
+                content_type: part.content_type, disposition: disposition
     end
 
     def new
@@ -134,11 +130,11 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_star
-      render_change :set_star, @model.set_star(get_uids).size
+      render_change :set_star, @model.set_star(get_uids).size, redirect: { action: :show }
     end
 
     def unset_star
-      render_change :unset_star, @model.unset_star(get_uids).size
+      render_change :unset_star, @model.unset_star(get_uids).size, redirect: { action: :show }
     end
 
     def destroy_all
@@ -146,15 +142,15 @@ class Webmail::MailsController < ApplicationController
     end
 
     def copy
-      render_change :copy, @model.uids_copy(get_uids, params[:dst]).size
+      render_change :copy, @model.uids_copy(get_uids, params[:dst]).size, redirect: { action: :show }
     end
 
     def move
-      render_change :move, @model.uids_move(get_uids, params[:dst]).size
+      render_change :move, @model.uids_move(get_uids, params[:dst]).size, redirect: { action: :show }
     end
 
-    def render_change(action, count)
-      location = params[:redirect].presence || { action: :index }
+    def render_change(action, count, opts = {})
+      location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
       multiple = (count == 1) ? '' : 'multiple.'
       notice = t("webmail.notice.#{multiple}#{action}", count: count)

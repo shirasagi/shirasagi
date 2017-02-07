@@ -50,7 +50,7 @@ class Webmail::Imap
   end
 
   def cache_key
-    { user_id: user.id, host: conf[:host], account: conf[:account] }
+    { host: conf[:host], account: conf[:account] }
   end
 
   def quota_info

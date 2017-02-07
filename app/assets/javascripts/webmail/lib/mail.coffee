@@ -28,7 +28,7 @@ class @Webmail_Mail
       return Webmail_Mail.updateMail(url, ids: checked, redirect: location.href)
 
     $(".list-head .search").on "click", ->
-      $('.webmail-mail-search').animate( { height: 'toggle' }, 'fast' )
+      $('.webmail-mail-search').animate({ height: 'toggle' }, 'fast')
 
     $(".webmail-mail-search .reset").on "click", ->
       $(".webmail-mail-search input[type=text]").val("")

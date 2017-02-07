@@ -22,6 +22,7 @@ module Webmail::ImapFilter
     end
 
     def rescue_no_response_error(e)
+      raise e if Rails.env.development?
       render inline: e.to_s, layout: true
     end
 end

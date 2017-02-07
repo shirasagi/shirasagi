@@ -1,8 +1,8 @@
-module Webmail::Mail::Flag
+module Webmail::Mail::Updater
   extend ActiveSupport::Concern
 
   def seen?
-    flags.to_a.include?('Seen')
+    flags.to_a.include?(:Seen)
   end
 
   def unseen?
@@ -10,15 +10,15 @@ module Webmail::Mail::Flag
   end
 
   def star?
-    flags.to_a.include?('Flagged')
+    flags.to_a.include?(:Flagged)
   end
 
   def draft?
-    flags.to_a.include?('Draft')
+    flags.to_a.include?(:Draft)
   end
 
   def answerd?
-    flags.to_a.include?('Answered')
+    flags.to_a.include?(:Answered)
   end
 
   def set_seen
@@ -35,6 +35,10 @@ module Webmail::Mail::Flag
 
   def unset_star
     imap.conn.uid_store uid, '-FLAGS', [:Flagged]
+  end
+
+  def set_answered
+    imap.conn.uid_store uid, '+FLAGS', [:Answered]
   end
 
   def set_deleted

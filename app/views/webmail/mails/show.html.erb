@@ -1,0 +1,41 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<div class="addon-views">
+  <div class="addon-view webmail-mail" id="addon-basic">
+    <div class="addon-head">
+      <h2 class="subject"><%= @item.display_subject %></h2>
+      <div class="from"><%= @item.sender || @item.from[0] %></div>
+      <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
+    </div>
+
+    <% if (@item.to + @item.cc + @item.bcc).present? %>
+    <div class="addresses">
+      <% if @item.to.present? %>
+      <div class="address">
+        <div class="label"><%= @model.t :to %></div>
+        <div class="value"><%= @item.display_to.join('; ') %></div>
+      </div>
+      <% end %>
+
+      <% if @item.cc.present? %>
+      <div class="address">
+        <div class="label"><%= @model.t :cc %></div>
+        <div class="value"><%= @item.display_cc.join('; ') %></div>
+      </div>
+      <% end %>
+
+      <% if @item.bcc.present? %>
+      <div class="address">
+        <div class="label"><%= @model.t :bcc %></div>
+        <div class="value"><%= @item.display_bcc.join('; ') %></div>
+      </div>
+      <% end %>
+    </div>
+    <% end %>
+
+    <div class="addon-body">
+      <%= render file: "_show" %>
+    </div>
+  </div>
+  <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+</div>

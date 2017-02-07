@@ -91,7 +91,7 @@ class Webmail::Filter
   private
     def validate_conditions
       %w(from to subject).each do |key|
-        return if send(key).present?
+        return true if send(key).present?
       end
       errors.add :base, I18n.t("webmail.errors.blank_conditions")
     end
