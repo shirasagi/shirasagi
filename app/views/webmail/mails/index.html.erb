@@ -20,11 +20,17 @@
       <label class="check">
         <input type="checkbox" name="ids[]" value="<%= item.uid %>" />
       </label>
-      <div class="icon label-star">
-        <%= link_to "", { action: :show, id: item.uid }, class: "icon-star icon-star--" + (item.star? ? 'on' : 'off') %>
+      <div class="icon icon-star <%= item.star? ? 'on' : 'off' %>">
+        <%= link_to action: :show, id: item.uid do %>
+          <i class="material-icons md-18">star</i>
+        <% end %>
       </div>
-      <div class="icon label-attachment">
-        <span class="icon-attachment icon-attachment--<%= item.attachments? ? 'on' : 'off' %>"></span>
+      <div class="icon icon-attachment">
+        <% if item.attachments? %>
+          <i class="material-icons md-14">attach_file</i>
+        <% else %>
+          &nbsp;
+        <% end %>
       </div>
       <div class="info">
         <% if @cur_user.imap_sent_box.start_with?(@mailbox) %>

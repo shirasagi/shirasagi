@@ -12,24 +12,22 @@
     a {
       display: inline-block;
       width: 100%;
-      padding: 5px 0 5px 10px;
+      padding: 5px 0 5px 16px;
     }
     a:last-child {
       margin-bottom: 8px;
     }
     .pad {
       display: inline-block;
-      width: 20px;
+      width: 16px;
+    }
+    .material-icons {
+      margin-right: 2px;
     }
     .mailbox-name {
-      padding-left: 25px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat;
     }
     a:hover {
       text-decoration: none;
-      .mailbox-name {
-        background: url(/assets/img/ic-arrow16-on.png) no-repeat;
-      }
     }
     .mailbox--virtual:hover {
       color: inherit;

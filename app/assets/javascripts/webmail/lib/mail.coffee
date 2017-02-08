@@ -34,9 +34,10 @@ class @Webmail_Mail
       $(".webmail-mail-search input[type=text]").val("")
       $(".webmail-mail-search .search").click()
 
-    $(".icon-star").on "click", ->
+    $(".icon-star a").on "click", ->
       star = $(this)
-      if $(this).hasClass('icon-star--on')
+      wrap = star.parent()
+      if wrap.hasClass('on')
         url = star.attr('href') + '/unset_star'
         chk = false
       else
@@ -50,11 +51,11 @@ class @Webmail_Mail
           _method: 'put'
         success: (data, a, b)->
           if chk
-            star.removeClass('icon-star--off')
-            star.addClass('icon-star--on')
+            wrap.removeClass('off')
+            wrap.addClass('on')
           else
-            star.removeClass('icon-star--on')
-            star.addClass('icon-star--off')
+            wrap.removeClass('on')
+            wrap.addClass('off')
       return false
 
   @renderDetail: ->
