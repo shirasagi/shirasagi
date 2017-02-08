@@ -7,6 +7,7 @@ class Webmail::Mail
   include Webmail::ImapConnection
   include Webmail::Mail::Fields
   include Webmail::Mail::Parser
+  include Webmail::Mail::Uids
   include Webmail::Mail::Updater
   include Webmail::Mail::Search
   include Webmail::Mail::MessageBuilder

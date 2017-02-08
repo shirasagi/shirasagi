@@ -88,7 +88,7 @@ module Webmail::Mail::Updater
     def uids_copy(uids, dst_mailbox)
       return nil if uids.blank?
 
-      resp = imap.conn.uid_copy(uids, dst_mailbox)
+      resp = imap.conn.uid_copy uids_compress(uids), dst_mailbox
       @imap_last_response_size = response_code_to_size(resp.data.code)
       resp
     end
@@ -99,7 +99,7 @@ module Webmail::Mail::Updater
       return nil if uids.blank?
 
       imap.select
-      resp = imap.conn.uid_store uids, '+FLAGS', [:Deleted]
+      resp = imap.conn.uid_store uids_compress(uids), '+FLAGS', [:Deleted]
       imap.conn.expunge
       @imap_last_response_size = resp ? resp.size : 0
 
@@ -117,31 +117,22 @@ module Webmail::Mail::Updater
     # @return [Net::IMAP::FetchData]
     def uids_move_trash(uids)
       trash = imap.user.imap_trash_box
-      return uids_move(uids, trash) if imap.mailbox != trash
-      uids_delete(uids)
+      if imap.mailbox == trash
+        uids_delete(uids)
+      else
+        uids_move(uids, trash)
+      end
     end
 
     def imap_last_response_size
       @imap_last_response_size
     end
 
-    # Returns the uids count for Net::IMAP::ResponseCode#data
-    # @example "70:73" #=> 4
-    # @param [Net::IMAP::ResponseCode#data]
+    # @param [Net::IMAP::ResponseCode]
     # @return [Integer] count
     def response_code_to_size(resp)
       return 0 unless resp
-      count = 0
-
-      resp.data.split(/ /)[2].split(/,/).each do |num|
-        if num =~ /:/
-          arr = num.split(/:/)
-          count += arr[1].to_i - arr[0].to_i + 1
-        else
-          count += 1
-        end
-      end
-      count
+      uids_size resp.data.split(/ /)[2]
     end
   end
 end
