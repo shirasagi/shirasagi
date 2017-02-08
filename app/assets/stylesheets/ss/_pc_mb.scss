@@ -78,6 +78,10 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
+.material-icons {
+  margin-bottom: 1px;
+  vertical-align: middle;
+}
 .hide {
   display: none;
 }
@@ -456,6 +460,19 @@ td {
         white-space: nowrap;
         text-overflow: ellipsis;
       }
+    }
+  }
+}
+.main-navi-md {
+  h2 {
+    a {
+      padding-left: 10px;
+    }
+    a:before {
+      background: none !important;
+    }
+    .material-icons {
+      margin-right: 2px;
     }
   }
 }
@@ -1229,9 +1246,6 @@ div.index {
       background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
     }
   }
-  .icon {
-    padding-top: 1px;
-  }
   .title {
     color: $orange;
     font-size: $px15;
@@ -1645,34 +1659,17 @@ form .CodeMirror {
   .seen:hover {
     background: $orange2;
   }
-  // star
-  .label-star {
+  .icon-star {
     float: left;
     width: 30px;
     margin-left: -7px;
-  }
-  .icon-star {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-image: url(/assets/img/ic-star-on.png);
-    background-repeat: no-repeat;
-    &--on { }
-    &--off { background-image: url(/assets/img/ic-star-off.png); }
-  }
-  // attachment
-  .label-attachment {
-    float: left;
-    width: 30px;
+    &.on  .material-icons { color: #f70; }
+    &.off .material-icons { color: #ccc; }
+    &.off .material-icons:hover { color: #aaa; }
   }
   .icon-attachment {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-image: url(/assets/img/gws/ic-file.png);
-    background-repeat: no-repeat;
-    &--on { }
-    &--off { background-image: none; }
+    float: left;
+    width: 30px;
   }
 }
 
