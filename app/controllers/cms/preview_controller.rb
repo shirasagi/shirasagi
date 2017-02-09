@@ -12,6 +12,8 @@ class Cms::PreviewController < ApplicationController
   after_action :render_preview, if: ->{ @file =~ /\.html$/ }
   after_action :render_mobile, if: ->{ mobile_path? }
 
+  rescue_from StandardError, with: :rescue_action
+
   if SS.config.cms.remote_preview
     skip_before_action :logged_in?
     skip_before_action :set_group
@@ -86,30 +88,32 @@ class Cms::PreviewController < ApplicationController
 
       if @cur_path =~ /^\/fs\//
         fs_path  = SS::Application.routes.recognize_path(@cur_path)
-        id_path  = fs_path[:id_path]
+        id_path  = fs_path[:id_path] || fs_path[:id]
         action   = fs_path[:action]
         size     = fs_path[:size]
         filename = fs_path[:filename]
+        width    = params[:width]
+        height   = params[:height]
 
-        id = id_path.delete("/")
-        @item = SS::File.find_by id: id, filename: filename
-        if action == "thumb"
-          thumb = size ? @item.thumb : @item.thumb(size)
-
-          if thumb
-            @item = thumb
-          else
-            @thumb_width  = params[:width]
-            @thumb_height = params[:height]
-          end
-        end
-
-        if @thumb_width && @thumb_height
+        @item = SS::File.find_by(id: id_path.delete("/"), filename: filename) rescue nil
+        raise "404" unless @item
+        if width.present? && height.present?
           send_thumb @item.read, type: @item.content_type, filename: @item.filename,
-            disposition: :inline, width: @thumb_width, height: @thumb_height
+            disposition: :inline, width: width, height: height
         else
-          send_file @item.path, type: @item.content_type, filename: @item.filename,
-            disposition: :inline, x_sendfile: true
+          if action == "thumb"
+            thumb = @item.thumb
+            thumb = @item.thumb(size) if size
+            @item = thumb if thumb
+          end
+
+          if @thumb_width && @thumb_height
+            send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+              disposition: :inline, width: width, height: height
+          else
+            send_file @item.path, type: @item.content_type, filename: @item.filename,
+              disposition: :inline, x_sendfile: true
+          end
         end
       end
       #raise "404" unless Fs.exists?(file)
@@ -185,5 +189,18 @@ class Cms::PreviewController < ApplicationController
       end
 
       response.body = body
+    end
+
+    def rescue_action(e = nil)
+      if e.to_s =~ /^\d+$/
+        status = e.to_s.to_i
+        return render status: status, file: error_template(status), layout: false
+      end
+      raise e
+    end
+
+    def error_template(status)
+      file = "#{Rails.public_path}/#{status}.html"
+      Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
     end
 end

@@ -65,13 +65,17 @@ class Fs::FilesController < ApplicationController
       height = params[:height]
       thumb  = @item.thumb(size)
 
-      if thumb
+      if width.present? && height.present?
+        set_last_modified
+        send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+          disposition: :inline, width: width, height: height
+      elsif thumb
         @item = thumb
         index
       else
         set_last_modified
-        send_thumb @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline,
-          width: width, height: height
+        send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+          disposition: :inline
       end
     rescue => e
       raise "500"
