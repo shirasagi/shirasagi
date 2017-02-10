@@ -12,5 +12,7 @@ SS::Application.routes.draw do
     get ":id/:filename" => "files#index", filename: %r{[^\/]+}, as: :file_old
     # @deprecated
     get ":id/thumb/:filename" => "files#thumb", filename: %r{[^\/]+}, as: :thumb_old
+    # @deprecated
+    get ":id/thumb/:size/:filename" => "files#thumb", filename: %r{[^\/]+}, size: %r{[^\/]+}
   end
 end
