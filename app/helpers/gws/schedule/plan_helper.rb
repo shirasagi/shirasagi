@@ -1,6 +1,6 @@
 module Gws::Schedule::PlanHelper
   def search_query
-    params.select { |k, v| k == 's' }.to_query
+    params.to_h.select { |k, v| k == 's' }.to_param
   end
 
   def term(item)

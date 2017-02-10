@@ -6,6 +6,6 @@ class Sns::Message::Apis::UnseenController < ApplicationController
       where(unseen_member_ids: @cur_user.id).
       size
 
-    render text: count
+    render plain: count
   end
 end

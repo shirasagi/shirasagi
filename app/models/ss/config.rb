@@ -30,6 +30,7 @@ module SS::Config
     end
 
     def method_missing(name, *args, &block)
+      setup unless defined?(@@config)
       load_config(name, Rails.env) if @@config.key?(name)
       #super
     end

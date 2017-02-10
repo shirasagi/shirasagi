@@ -151,3 +151,5 @@ module SS::EditorHelper
   def html_editor_markdown(elem, opts = {})
   end
 end
+
+Ss::EditorHelper = SS::EditorHelper

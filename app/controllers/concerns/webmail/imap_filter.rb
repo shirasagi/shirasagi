@@ -22,6 +22,6 @@ module Webmail::ImapFilter
     end
 
     def rescue_no_response_error(e)
-      render inline: e.to_s, layout: true
+      render plain: e.to_s, layout: true
     end
 end

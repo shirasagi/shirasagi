@@ -47,6 +47,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
     def call_node_index(node_class)
       cont = new_agent(node_class)
       cont.controller.params = {}
+      cont.controller.request.formats = [ :html ]
 
       pages = nil
 

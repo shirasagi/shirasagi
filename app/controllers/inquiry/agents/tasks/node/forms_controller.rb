@@ -21,7 +21,7 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
     end
 
     if response.content_type == "text/html" && node.layout
-      html = render_to_string inline: render_layout(node.layout), layout: "cms/page"
+      html = render_to_string html: render_layout(node.layout).html_safe, layout: "cms/page"
     else
       html = response.body
     end

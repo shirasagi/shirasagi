@@ -32,20 +32,23 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     def set_answer
+      data = {}
+      data = params.require(:item).to_unsafe_h if params[:item]
+
       @items = []
       @data = {}
       @columns.each do |column|
-        @items << [column, params[:item].try(:[], column.id.to_s)]
-        @data[column.id] = [params[:item].try(:[], column.id.to_s)]
+        @items << [column, data.try(:[], column.id.to_s)]
+        @data[column.id] = [data.try(:[], column.id.to_s)]
         if column.input_confirm == "enabled"
-          @items.last << params[:item].try(:[], "#{column.id}_confirm")
-          @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")
+          @items.last << data.try(:[], "#{column.id}_confirm")
+          @data[column.id] << data.try(:[], "#{column.id}_confirm")
         end
       end
       @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
       @answer.remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip
       @answer.user_agent = request.user_agent
-      @answer.source_url = params[:item].try(:[], :source_url)
+      @answer.source_url = data.try(:[], :source_url)
       @answer.set_data(@data)
     end
 

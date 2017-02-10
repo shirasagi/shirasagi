@@ -11,10 +11,10 @@ class Urgency::Agents::Nodes::LayoutController < ApplicationController
     @cur_node.layout_id = params[:layout]
     @cur_node.name = page.name
 
-    render inline: render_page(page).body
+    render html: render_page(page).body.html_safe
   end
 
   def empty
-    render nothing: true
+    head :ok
   end
 end

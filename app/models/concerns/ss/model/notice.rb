@@ -22,9 +22,9 @@ module SS::Model::Notice
     NOTICE_TARGET_SYS_ADMIN
   ].freeze
 
-included do
+  included do
     seqid :id
-    field :html, type: String
+    #field :html, type: String, overwrite: true
     field :state, type: String, default: "public"
     field :name, type: String
     field :released, type: DateTime

@@ -35,12 +35,12 @@ describe "webapi login", dbscope: :example, type: :request do
   context "login" do
     describe "POST /.mypage/login.json" do
       it "422" do
-        post login_path, invalid_login_params
+        post login_path, params: invalid_login_params
         expect(response.status).to eq 422
       end
 
       it "204" do
-        post login_path, correct_login_params
+        post login_path, params: correct_login_params
         expect(response.status).to eq 204
       end
     end
@@ -54,7 +54,7 @@ describe "webapi login", dbscope: :example, type: :request do
       end
 
       it "204" do
-        post login_path, correct_login_params
+        post login_path, params: correct_login_params
         expect(response.status).to eq 204
 
         get logout_path

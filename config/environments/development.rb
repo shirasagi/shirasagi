@@ -1,36 +1,55 @@
 Rails.application.configure do
+  # Settings specified here will take precedence over those in config/application.rb.
 
   # Code loading.
   config.cache_classes = false
   config.eager_load = false
 
-  # Don't include all helpers
-  config.action_controller.include_all_helpers = false
-
-  # Show full error reports and disable caching.
+  # Show full error reports.
   config.consider_all_requests_local = true
-  config.action_controller.perform_caching = false
+
+  # Enable/disable caching. By default caching is disabled.
+  if Rails.root.join('tmp/caching-dev.txt').exist?
+    config.action_controller.perform_caching = true
+    config.cache_store = :memory_store
+    config.public_file_server.headers = {
+      'Cache-Control' => 'public, max-age=172800'
+    }
+  else
+    config.action_controller.perform_caching = false
+    config.cache_store = :null_store
+  end
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
-  # Asset pipeline.
-  config.assets.compress = true
+  # Raise an error on page load if there are pending migrations.
+  #config.active_record.migration_error = :page_load
+
+  # Assets pipeline.
   config.assets.debug = false
+  config.assets.quiet = false
+  config.assets.compress = true
   config.assets.prefix = "/assets-dev"
-  #config.assets.raise_runtime_errors = true
   config.sass.debug_info = false
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # Use an evented file watcher to asynchronously detect changes in source code,
+  # routes, locales, etc. This feature depends on the listen gem.
+  # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Don't include all helpers
+  config.action_controller.include_all_helpers = false
+
   # Logger
   config.logger = Logger.new("#{Rails.root}/log/development.log")
   config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :warn
-  # config.log_level = :debug
 
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :shirasagi
