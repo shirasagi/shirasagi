@@ -17,7 +17,7 @@ class Recommend::CreateSimilarityScoresJob < Cms::ApplicationJob
     prefs = Recommend::History::Log.to_path_axis_aggregation(match)
 
     Rails.logger.info("create similarity scores and save in db")
-    max_neighbors = SS::Config.recommend.max_neighbors
+    max_neighbors = SS.config.recommend.max_neighbors
     count = prefs.count
     prefs.keys.each_with_index do |key, idx|
       Rails.logger.info("#{idx + 1}/#{count} #{key}")

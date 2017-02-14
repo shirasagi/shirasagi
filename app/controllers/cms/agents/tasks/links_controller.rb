@@ -54,8 +54,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       @results = {}
       @errors  = {}
 
-      @html_request_timeout = SS::Config.cms.check_links["html_request_timeout"] rescue 10
-      @head_request_timeout = SS::Config.cms.check_links["head_request_timeout"] rescue 5
+      @html_request_timeout = SS.config.cms.check_links["html_request_timeout"] rescue 10
+      @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
 
       (10*1000*1000).times do |i|
         break if @urls.blank?
