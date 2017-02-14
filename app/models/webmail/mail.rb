@@ -147,7 +147,7 @@ class Webmail::Mail
 
     # Criteria: where(search: Array)
     def search_keys
-      where({}).selector['search'] || %w(ALL) # %w(UNDELETED)
+      where({}).selector['search'] || %w(UNDELETED)
     end
 
     def imap_all
