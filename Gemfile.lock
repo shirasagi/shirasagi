@@ -39,6 +39,8 @@ GEM
     addressable (2.4.0)
     arel (6.0.3)
     ast (2.2.0)
+    autosize-rails (1.18.17)
+      rails (>= 3.1)
     bindata (2.2.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -501,6 +503,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  autosize-rails
   brakeman
   browser
   bxslider-rails
