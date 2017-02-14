@@ -1,5 +1,5 @@
 module Webmail::Addon
-  module File
+  module MailFile
     extend ActiveSupport::Concern
     extend SS::Addon
 

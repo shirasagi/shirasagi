@@ -46,6 +46,8 @@ module Webmail::Mail::Parser
     }
   end
 
+  # @param field [Mail::Field]
+  # @return [Array]
   def parse_address_field(field)
     return [] if field.blank?
 

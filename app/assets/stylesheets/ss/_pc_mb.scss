@@ -79,6 +79,7 @@ td {
 // -------------------------------------------------------------------------------------------------
 
 .material-icons {
+  margin-top: -1px;
   margin-bottom: 1px;
   vertical-align: middle;
 }
@@ -848,7 +849,7 @@ dl.see {
     padding-top: 0px;
     border-top: 0px;
     button, .ajax-box {
-      margin-right: 15px;
+      margin-right: 5px;
     }
   }
   > dt.depth-2 {
@@ -1656,20 +1657,18 @@ form .CodeMirror {
     border-color: #e8e8e8;
     background-color: #f4f4f4;
   }
-  .seen:hover {
-    background: $orange2;
+  .unseen:hover, .seen:hover {
+    background: #ebebeb;
   }
+  .icon {
+    float: left;
+    width: 28px;
+    &:first-of-type { margin-left: -7px; }
+  }
+  .icon a:hover .material-icons { opacity: 0.8; }
   .icon-star {
-    float: left;
-    width: 30px;
-    margin-left: -7px;
     &.on  .material-icons { color: #f70; }
-    &.off .material-icons { color: #ccc; }
-    &.off .material-icons:hover { color: #aaa; }
-  }
-  .icon-attachment {
-    float: left;
-    width: 30px;
+    &.off .material-icons { color: #bbb; }
   }
 }
 

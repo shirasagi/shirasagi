@@ -87,6 +87,12 @@ class @Webmail_Mail
     return false
 
   @renderForm: ->
+    $('.js-autosize').autosize()
+
+    $('.cc-bcc-label').click ->
+      $('.webmail-mail-form-address.cc-bcc').animate({ height: 'toggle' }, 'fast')
+      return false
+
     $('#item_format').change ->
       Webmail_Mail.renderBodyForm($(this).val())
     Webmail_Mail.renderBodyForm($('#item_format').val())

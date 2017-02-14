@@ -1,7 +1,7 @@
 <nav class="main-navi main-navi-md webmail-navi-mailboxes">
   <h2>
     <%= link_to webmail_mails_path do %>
-      <i class="material-icons">mail_outline</i>
+      <i class="material-icons">&#xE0E1;</i>
       <%= t('webmail.box.inbox') %>
 
       <% if @navi_mailboxes && 0 < unseen = Webmail::Mailbox.inbox_unseen %>
@@ -17,7 +17,7 @@
         class: box.css_class, "data-name" => box.encode_name do %>
 
         <%== "<span class='pad'></span>" * (box.depth - 1) %>
-        <i class="material-icons md-18">folder_open</i>
+        <i class="material-icons md-18">&#xE2C8;</i>
         <span class="mailbox-name""><%= box.basename %></span>
 
         <% if 0 < box.unseen %>
@@ -30,7 +30,7 @@
 </nav>
 
 <% if @navi_mailboxes %>
-<div id="webmail-mailboxes-list" style="display: non;">
+<div id="webmail-mailboxes-list">
   <ul class="dropdown-menu">
     <% Webmail::Mailbox.user(@cur_user).to_options.each do |label, value| %>
     <li><a href="#" data-name="<%= value %>"><%= label %></a></li>

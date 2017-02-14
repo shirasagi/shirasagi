@@ -7,13 +7,3 @@
 <% else %>
   <div class="body body--text"><%= br @item.text %></div>
 <% end %>
-
-<% if @item.attachments.present? %>
-  <div class="attachments">
-    <% @item.attachments.each do |part| %>
-      <div class="file">
-        <%= link_to part.filename, { action: :parts, section: part.section }, target: part.link_target %>
-      </div>
-    <% end %>
-  </div>
-<% end %>

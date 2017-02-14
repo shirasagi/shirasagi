@@ -9,6 +9,7 @@ class Webmail::MailsController < ApplicationController
   before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_view_name, only: [:new, :create, :edit, :update]
 
   private
     def set_crumbs
@@ -32,6 +33,10 @@ class Webmail::MailsController < ApplicationController
     def set_item
       @item = @model.where(mailbox: @mailbox).imap_find params[:id], :body
       @item.attributes = fix_params
+    end
+
+    def set_view_name
+      @addon_basic_name = @model.t :to
     end
 
     def crud_redirect_url

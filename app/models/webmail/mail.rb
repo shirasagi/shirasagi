@@ -11,7 +11,8 @@ class Webmail::Mail
   include Webmail::Mail::Updater
   include Webmail::Mail::Search
   include Webmail::Mail::MessageBuilder
-  include Webmail::Addon::File
+  include Webmail::Addon::MailBody
+  include Webmail::Addon::MailFile
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
@@ -51,12 +52,13 @@ class Webmail::Mail
   validates :uid, presence: true, uniqueness: { scope: [:host, :account, :mailbox] }
   validates :internal_date, presence: true
 
-  before_destroy :imap_delete, if: ->{ imap.present? && @sync }
+  before_destroy :imap_delete, if: ->{ @sync && imap.present? }
 
   default_scope -> { order_by internal_date: -1 }
 
   scope :user, ->(user) {
-      where host: user.imap_host, account: user.imap_account
+    conf = user.imap_settings
+    where host: conf[:host], account: conf[:account]
   }
 
   scope :search, ->(params) {

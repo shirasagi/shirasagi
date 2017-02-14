@@ -3,21 +3,9 @@
 addresses = @item.send(field)
 
 %>
-<dl class="see webmail-address-form">
+<dl class="see webmail-address-field">
   <dd class="wide">
-    <%= f.hidden_field "#{field}[]", value: "", class: "hidden-ids" %>
-
-    <%= link_to webmail_apis_addresses_path, class: "ajax-box" do %>
-      <%= t "mongoid.models.webmail/address" %>
-    <% end %>
-    <% @cur_user.root_groups.each do |group| %>
-      <%= link_to sns_apis_users_path(group: group), class: "ajax-box" do %>
-        <%= group.name %><%= t "ss.apis.users.index" %>
-      <% end %>
-    <% end %>
-  </dd>
-  <dd class="wide">
-    <table class="webmail-addresses ajax-selected">
+    <table class="addresses ajax-selected">
       <tbody>
         <% addresses.each do |addr| %>
           <tr data-id="<%= addr %>">
@@ -27,5 +15,17 @@ addresses = @item.send(field)
         <% end %>
       </tbody>
     </table>
+  </dd>
+  <dd class="wide">
+    <%= f.hidden_field "#{field}[]", value: "", class: "hidden-ids" %>
+
+    <%= link_to webmail_apis_addresses_path, class: "ajax-box" do %>
+      <%= t "mongoid.models.webmail/address" %>
+    <% end %>
+    <% @cur_user.root_groups.each do |group| %>
+      <%= link_to sns_apis_users_path(group: group), class: "ajax-box" do %>
+        <%= group.name %><%= t "mongoid.models.ss/user" %>
+      <% end %>
+    <% end %>
   </dd>
 </dl>

@@ -91,9 +91,6 @@
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
 }
-.see.webmail-address-form {
-  padding: 0;
-}
 
 @media print {
   .webmail-print {
@@ -155,6 +152,10 @@
       display: block;
       margin: 15px 0;
       font-size: 130%;
+      .material-icons {
+        position: absolute;
+        margin-left: 5px;
+      }
     }
     .from {
       float: left;
@@ -182,30 +183,102 @@
     min-height: 200px;
     border-top: 1px solid #e4e4e4;
   }
+  .attachments {
+    padding: 15px 15px 5px;
+    border-top: 1px solid #e4e4e4;
+    .file {
+      display: inline-block;
+      margin: 0 10px 10px 0;
+    }
+  }
+}
+
+// form
+.webmail-mail-form-address {
+  margin: 0;
+  padding: 0 10px;
+  &.cc-bcc {
+    //display: none;
+    margin-top: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #e4e4e4;
+  }
+  dt {
+    float: left;
+    min-width: 50px;
+    color: #a0522d;
+    font-weight: bold;
+  }
+  dd {
+    margin-left: 50px;
+  }
+  .address {
+    height: auto;
+  }
+}
+.cc-bcc-label {
+  display: inline-block;
+  margin: 0 0 0 60px;
+  color: #888;
+}
+.webmail-addon-mail-body {
+  .subject {
+    float: left;
+    width: calc(100% - 300px);
+    widht: -webkit-calc(100% - 300px);
+    min-width: 300px;
+    margin-bottom: 15px;
+    input {
+      width: 100%;
+      padding: 10px 6px;
+    }
+  }
+  .options {
+    float: right;
+    margin-bottom: 15px;
+    text-align: right;
+  }
+  #item_signature {
+    max-width: 200px;
+  }
+  .body-content {
+    clear: both;
+    margin-top: 15px;
+  }
+}
+// form-addresses
+.webmail-address-field.see {
+  padding: 0;
+  .ajax-box {
+    float: left;
+  }
+  .addresses {
+    @include clear;
+    display: block;
+    tbody, td {
+      display: inline;
+      float: left;
+    }
+    tr {
+      display: inline-block;
+      float: left;
+      margin: 4px 10px 6px 0;
+      td:first-of-type {
+        padding: 2px 0;
+        border-bottom: 1px dashed #aaa;
+        color: #048;
+      }
+    }
+    .deselect {
+      margin-left: 4px;
+      padding: 2px 4px;
+    }
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
-// addresses and etc
+// filter
 
-.webmail-addresses {
-  @include clear;
-  display: block;
-  tbody, td {
-    display: inline;
-  }
-  tr {
-    display: inline-block;
-    float: left;
-    margin: 5px 5px 0 0;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-left-width: 5px;
-  }
-  .deselect {
-    margin-left: 2px;
-    padding: 2px 4px;
-  }
-}
 .webmail-filter-conditions {
   div {
     margin: 15px 0 0;

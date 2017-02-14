@@ -40,7 +40,7 @@ module Webmail::Mail::MessageBuilder
     self.reply_uid = uid
     ref = self.class.imap_find(reply_uid)
 
-    self.to = [ref.from] if ref.from.present?
+    self.to = ref.from #if ref.from.present?
     self.subject = "Re: " + ref.subject.to_s.gsub(/^Re:\s*/, '')
     new_reply_body(ref)
   end
@@ -49,7 +49,7 @@ module Webmail::Mail::MessageBuilder
     self.reply_uid = uid
     ref = self.class.imap_find(reply_uid)
 
-    self.to = ([ref.from] + ref.to).reject { |c| c.include?(imap.user.email) } if ref.from.present?
+    self.to = (ref.from + ref.to).reject { |c| c.include?(imap.user.email) } #if ref.from.present?
     self.cc = ref.cc if ref.cc.present?
     self.subject = "Re: " + ref.subject.to_s.gsub(/^Re:\s*/, '')
     new_reply_body(ref)
@@ -67,7 +67,7 @@ module Webmail::Mail::MessageBuilder
     sign = Webmail::Signature.default_sign(imap.user)
     self.format = ref.format
     self.text = [sign, ref.reply_text].compact.join("\n\n")
-    self.html = [sign, ref.reply_html].compact.join("<br />\n<br />\n")
+    self.html = [sign, ref.reply_html].compact.join("<br />\n<br />\n").html_safe
   end
 
   def reply_header
