@@ -32,6 +32,7 @@ module Webmail::Mail::Parser
     mail = ::Mail.read_from_string(header)
 
     self.attributes = {
+      message_id: mail.message_id,
       sender: mail.sender,
       from: parse_address_field(mail[:from]),
       to: parse_address_field(mail[:to]),
@@ -39,14 +40,14 @@ module Webmail::Mail::Parser
       bcc: parse_address_field(mail[:bcc]),
       reply_to: parse_address_field(mail[:reply_to]),
       in_reply_to: mail.in_reply_to,
-      references: parse_header_references(mail.references),
+      references: parse_references(mail.references),
       subject: mail.subject,
       content_type: mail.message_content_type,
       has_attachment: (mail.message_content_type =='multipart/mixed' ? true : nil)
     }
   end
 
-  # @param field [Mail::Field]
+  # @param [Mail::Field] field
   # @return [Array]
   def parse_address_field(field)
     return [] if field.blank?
@@ -60,10 +61,9 @@ module Webmail::Mail::Parser
     end
   end
 
-  def parse_header_references(references)
+  def parse_references(references)
     return [] if references.blank?
-    references = [references] if references.is_a?(String)
-    references.map { |c| "<#{c}>" }
+    references.is_a?(Array) ? references : [references]
   end
 
   def parse_body_structure
@@ -108,10 +108,6 @@ module Webmail::Mail::Parser
     self.text = Webmail::MailPart.decode resp[0].attr["BODY[#{text_part_no}]"], text_part
     self.html = Webmail::MailPart.decode resp[0].attr["BODY[#{html_part_no}]"], html_part
   end
-
-#  def parse_body(msg)
-#    self.format = self.html.nil? ? 'text' : 'html'
-#  end
 
   def sanitize_html
     html = self.html.gsub!(/<img [^>]*?>/i) do |img|

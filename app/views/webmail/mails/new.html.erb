@@ -1,6 +1,6 @@
 <% @crud_buttons = proc do |f| %>
-  <%= f.submit t("views.button.send"), class: 'btn-primary save' %>
-  <%= f.submit t("views.button.save"), class: 'btn-default' %>
+  <%= f.submit t("views.button.send"), class: 'btn-primary save js-send' %>
+  <%= f.submit t("views.button.draft_save"), class: 'btn-default js-save' %>
 <% end %>
 
 <%= render file: "ss/crud/new" %>

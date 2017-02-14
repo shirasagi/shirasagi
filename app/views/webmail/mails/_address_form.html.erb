@@ -1,6 +1,6 @@
 <%
 ## locals: [:f, :field]
-addresses = @item.send(field)
+addresses = @item.send(field).map(&:presence).uniq.compact
 
 %>
 <dl class="see webmail-address-field">

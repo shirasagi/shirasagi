@@ -89,35 +89,44 @@ class Webmail::MailsController < ApplicationController
 
     def new
       @item = @model.new pre_params.merge(fix_params)
+      @item.new_mail
+    end
 
-      if params[:reply]
-        @item.new_reply params[:reply]
-      elsif params[:reply_all]
-        @item.new_reply_all params[:reply_all]
-      elsif params[:forward]
-        @item.new_forward params[:forward]
-      else
-        @item.new_create
-      end
+    def reply
+      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @item = @model.new pre_params.merge(fix_params)
+      @item.new_reply(@ref)
+      render :new
+    end
 
-      raise "403" unless @item.allowed?(:edit, @cur_user)
+    def reply_all
+      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @item = @model.new pre_params.merge(fix_params)
+      @item.new_reply_all(@ref)
+      render :new
+    end
+
+    def forward
+      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @item = @model.new pre_params.merge(fix_params)
+      @item.new_forward(@ref)
+      render :new
     end
 
     def create
       @item = @model.new
-      @item.mail_attributes = get_params
+      @item.attributes = get_params
 
-      msg = Webmail::Mailer.new_message(@item)
-
-      if params[:commit] == I18n.t("views.button.save")
-        @item.save_to_draft(msg.to_s)
+      if params[:commit] == I18n.t('views.button.draft_save')
+        notice = nil
+        resp = @item.save_draft
       else
-        @item.save_to_sent(msg.deliver_now.to_s)
+        notice = t('views.notice.sent')
+        resp = @item.send_mail
       end
 
       @item.destroy_files
-
-      render_create true
+      render_create resp, notice: notice
     end
 
     def destroy

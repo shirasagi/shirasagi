@@ -105,6 +105,17 @@ class @Webmail_Mail
         Webmail_Mail.insertText($("#item_text"), $(this).val())
       $(this).val("")
 
+    # Send mail
+    $('.js-send').click ->
+      if !$('input[name="item[to][]"][value!=""]').length
+        $('#item_to_text').attr('required', true)
+      else
+        $('#item_to_text').attr('required', false)
+
+    # Save as draft
+    $('.js-save').click ->
+      $('#item_to_text').attr('required', false);
+
   @renderBodyForm: (format)->
     if format == 'html'
       $('.body-text').hide()

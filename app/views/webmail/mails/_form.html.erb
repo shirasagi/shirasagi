@@ -1,9 +1,14 @@
 <%= jquery do %>
+  SS_Form.disableEnterKey('#item_subject');
   Webmail_Mail.render();
 <% end %>
 
-<%= f.hidden_field :reply_uid %>
-<%= f.hidden_field :forward_uid %>
+<%= f.hidden_field :reply_uid, id: nil %>
+<%= f.hidden_field :forward_uid, id: nil %>
+<%= f.hidden_field_tag 'item[in_reply_to]', "<#{@item.in_reply_to}>", id: nil %>
+<% @item.references.to_a.each do |mid| %>
+  <%= f.hidden_field_tag 'item[references][]', "<#{mid}>", id: nil %>
+<% end %>
 
 <dl class="webmail-mail-form-address to">
   <dt><%= @model.t :to %></dt>

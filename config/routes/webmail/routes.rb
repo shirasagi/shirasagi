@@ -27,6 +27,9 @@ SS::Application.routes.draw do
       put :unset_star
       put :move
       put :copy
+      get :reply
+      get :reply_all
+      get :forward
     end
   end
 

@@ -23,6 +23,6 @@ class Webmail::Address
   }
 
   def email_address
-    %("#{name}" <#{email}>)
+    %(#{name} <#{email}>)
   end
 end

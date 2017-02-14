@@ -10,7 +10,7 @@ class Webmail::Mail
   include Webmail::Mail::Uids
   include Webmail::Mail::Updater
   include Webmail::Mail::Search
-  include Webmail::Mail::MessageBuilder
+  include Webmail::Mail::Message
   include Webmail::Addon::MailBody
   include Webmail::Addon::MailFile
 
@@ -18,7 +18,7 @@ class Webmail::Mail
 
   attr_accessor :sync, :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
-                :to_text, :cc_text, :bcc_text
+                :to_text, :cc_text, :bcc_text, :references
 
   field :host, type: String
   field :account, type: String
@@ -42,9 +42,10 @@ class Webmail::Mail
   field :subject, type: String
   field :has_attachment, type: Boolean
 
-  permit_params :subject, :text, :html, :format, :reply_uid, :forward_uid,
-                :to_text, :cc_text, :bcc_text,
-                to: [], cc: [], bcc: [], reply_to: []
+  permit_params :reply_uid, :forward_uid,
+                :subject, :text, :html, :format,
+                :to_text, :cc_text, :bcc_text, :in_reply_to,
+                to: [], cc: [], bcc: [], reply_to: [], references: []
 
   validates :host, presence: true
   validates :account, presence: true
@@ -84,18 +85,37 @@ class Webmail::Mail
     end
   end
 
-  def save_to_sent(msg)
-    if reply_uid.present?
-      ref = self.class.imap_find(reply_uid)
-      ref.set_answered
-    elsif forward_uid.present?
-      #Forwarded
-    end
-    imap.conn.append(imap.user.imap_sent_box, msg, [:Seen], Time.zone.now)
+  def replied_mail
+    return nil if reply_uid.blank?
+    return @replied_mail if @replied_mail
+    @replied_mail = self.class.imap_find(reply_uid)
   end
 
-  def save_to_draft(msg)
-    imap.conn.append(imap.user.imap_draft_box, msg, [:Draft], Time.zone.now)
+  def forwarded_mail
+    return nil if forward_uid.blank?
+    return @forwarded_mail if @forwarded_mail
+    @forwarded_mail = self.class.imap_find(reply_uid)
+  end
+
+  def save_draft
+    msg = Webmail::Mailer.new_message(self)
+    imap.conn.append(imap.user.imap_draft_box, msg.to_s, [:Draft], Time.zone.now)
+    true
+  end
+
+  def validate_message(msg)
+    errors.add :to, :blank if msg.to.blank?
+    errors.blank?
+  end
+
+  def send_mail
+    msg = Webmail::Mailer.new_message(self)
+    return false unless validate_message(msg)
+
+    msg = msg.deliver_now.to_s
+    replied_mail.set_answered if replied_mail
+    imap.conn.append(imap.user.imap_sent_box, msg.to_s, [:Seen], Time.zone.now)
+    true
   end
 
   private

@@ -3,9 +3,11 @@ module Webmail::Mail::Uids
 
   module ClassMethods
     # Compress uids for uid_xxx command
+    #
     # @example
     #   '1,2,3,9' #=> [1..3, 9]
-    # @param uids [Array] uid List
+    #
+    # @param [Array] uids
     # @return [Array] compressed uids
     def uids_compress(uids)
       prev = uids[0]
@@ -17,10 +19,12 @@ module Webmail::Mail::Uids
       }
     end
 
-    # Counts the uids for Net::IMAP::ResponseCode#data
+    # Counts the uids
+    #
     # @example
     #   '1,2,5:7' #=> 5
-    # @param uids [String] response code
+    #
+    # @param [String] uids Net::IMAP::ResponseCode#data
     # @return [Integer] uids size
     def uids_size(uids)
       size = 0;

@@ -6,7 +6,7 @@ class Webmail::Mailer < ActionMailer::Base
       attachments[file.name] = file.read
     end
 
-    mail(@item.mail_attributes) do |format|
+    mail(@item.mail_headers) do |format|
       if @item.html?
         format.html
       else

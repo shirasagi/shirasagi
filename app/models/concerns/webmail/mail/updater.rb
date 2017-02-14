@@ -128,11 +128,11 @@ module Webmail::Mail::Updater
       @imap_last_response_size
     end
 
-    # @param [Net::IMAP::ResponseCode]
+    # @param [Net::IMAP::ResponseCode] code
     # @return [Integer] count
-    def response_code_to_size(resp)
-      return 0 unless resp
-      uids_size resp.data.split(/ /)[2]
+    def response_code_to_size(code)
+      return 0 unless code
+      uids_size code.data.split(/ /)[2]
     end
   end
 end
