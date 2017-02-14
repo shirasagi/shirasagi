@@ -62,12 +62,12 @@ module Webmail::Mail::Message
 
     self.text = "\n\n"
     self.text += "#{sign}\n\n" if sign
-    self.text += info.join("\n") + "\n"
+    self.text += info.join("\n") + "\n\n"
     self.text += reply_body_text(ref).to_s
 
     self.html = "<p></p>"
     self.html += sign.gsub(/\r\n|\n/, '<br />') + "<br /><br />" if sign
-    self.html += info.join("<br />") + "<br />"
+    self.html += info.join("<br />") + "<br /><br />"
     self.html += reply_body_html(ref).to_s
     self.html = self.html.html_safe
   end
@@ -88,6 +88,6 @@ module Webmail::Mail::Message
   end
 
   def reply_body_html(ref)
-    ref.html
+    ref.html || ref.text.to_s.gsub(/\r\n|\n/, '<br />')
   end
 end

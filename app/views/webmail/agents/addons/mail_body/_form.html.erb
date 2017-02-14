@@ -3,8 +3,7 @@
     <%= f.text_field :subject, placeholder: @model.t(:subject) %>
   </div>
   <div class="options">
-    <% format = @item.html? ? 'html' : '' %>
-    <%= f.select :format, @item.format_options, selected: format %>
+    <%= f.select :format, @item.format_options, selected: @item.format %>
     <%= f.select :signature, @item.signature_options, include_blank: t('mongoid.models.webmail/signature') %>
   </div>
   <div class="body-content body-text">
