@@ -112,6 +112,7 @@ ja:
       saved: 保存しました。
       deleted: 削除しました。
       import: インポートを開始しました。
+      sent: 送信しました。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。

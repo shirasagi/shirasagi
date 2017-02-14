@@ -2,43 +2,8 @@
   Webmail_Mail.render();
 <% end %>
 
-<dl class="see">
-  <dt><%= @model.t :subject %></dt>
-  <dd><%= @item.subject %></dd>
-
-  <dt><%= @model.t :date %></dt>
-  <dd><%= tryb { @item.date.strftime("%Y/%m/%d %H:%M") } %></dd>
-
-  <dt><%= @model.t :from %></dt>
-  <dd><%= @item.from %></dd>
-
-  <% if @item.to.present? %>
-  <dt><%= @model.t :to %></dt>
-  <dd><%= @item.to.join('; ') %></dd>
-  <% end %>
-
-  <% if @item.cc.present? %>
-  <dt><%= @model.t :cc %></dt>
-  <dd><%= @item.cc.join('; ') %></dd>
-  <% end %>
-
-  <% if @item.bcc.present? %>
-  <dt><%= @model.t :bcc %></dt>
-  <dd><%= @item.bcc.join('; ') %></dd>
-  <% end %>
-
-  <dt class="wide"><%= @model.t :body %></dt>
-  <% if @item.html? %>
-    <dd class="wide"><%= @item.sanitize_html %>
-  <% else %>
-    <dd class="wide"><%= br @item.text %></dd>
-  <% end %>
-
-  <% if @item.attachments.present? %>
-  <dt class="wide"><%= @model.t :attachments %></dt>
-  <% @item.attachments.each_with_index do |at, idx| %>
-    <% target = at.content_type.start_with?('image') ? '_blank' : nil %>
-    <dd class="wide"><%= link_to at.filename, { action: :attachment, idx: idx }, target: target %></dd>
-  <% end %>
-  <% end %>
-</dl>
+<% if @item.html? %>
+  <div class="body body--html"><%= @item.html %></div>
+<% else %>
+  <div class="body body--text"><%= br @item.text %></div>
+<% end %>

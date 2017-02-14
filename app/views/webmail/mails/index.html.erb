@@ -20,19 +20,23 @@
       <label class="check">
         <input type="checkbox" name="ids[]" value="<%= item.uid %>" />
       </label>
-      <div class="label-star">
-        <%= link_to "", { action: :show, id: item.uid }, class: "icon-star icon-star--" + (item.star? ? 'on' : 'off') %>
+      <div class="icon icon-star <%= item.star? ? 'on' : 'off' %>">
+        <%= link_to action: :show, id: item.uid do %>
+          <i class="material-icons md-18">&#xE838;</i>
+        <% end %>
       </div>
-      <div class="label-attachment">
-        <span class="icon-attachment icon-attachment--<%= item.attachments? ? 'on' : 'off' %>"></span>
+      <div class="icon icon-attachment">
+        <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
       </div>
       <div class="info">
-        <%= link_to item.subject.presence || "No title", { action: :show, id: item.uid }, class: "title" %>
-        <div class="meta">
-          <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
-          <span class="from"><%= item.from %></span>
-          <span class="size"><%= number_to_human_size(item.size) %></span>
-        </div>
+        <% if @cur_user.imap_sent_box.start_with?(@mailbox) %>
+          <span class="field from"><%= item.display_to.join(',') %></span>
+        <% else %>
+          <span class="field from"><%= item.display_sender %></span>
+        <% end %>
+        <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title" %>
+        <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
+        <span class="field size"><%= item.display_size %></span>
       </div>
     </li>
     <% end %>

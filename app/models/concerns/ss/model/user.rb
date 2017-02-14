@@ -138,7 +138,7 @@ module SS::Model::User
   end
 
   def email_address
-    %("#{name}" <#{email}>)
+    %(#{name} <#{email}>)
   end
 
   def encrypt_password

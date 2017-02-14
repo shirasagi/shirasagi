@@ -1,10 +1,4 @@
-<style>
-.webmail-addon-file .paste {
-  display: none;
-}
-</style>
-
-<dl class="see webmail-addon-file">
+<dl class="see webmail-addon-mail-file">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
     <span class="upload-menu-new">
@@ -33,10 +27,7 @@
             </label><br />
           </div>
 
-          <div class="action paste">
-          </div>
-
-          <div class="action delete">
+          <div class="action">
             <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>
         </div>

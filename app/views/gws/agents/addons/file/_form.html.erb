@@ -13,12 +13,6 @@ $ ->
 
 <% end %>
 
-<style>
-  #addon-gws-agents-addons-file .action.paste {
-    display: none;
-  }
-</style>
-
 <dl class="see gws-addon-file">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
@@ -49,16 +43,15 @@ $ ->
             </label><br />
           </div>
 
-          <div class="action paste">
+          <div class="action">
+            <!--
             <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
             <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% if file.image? %>
               <% content = image_tag file.url, alt: "#{file.name}" %>
               <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
-          </div>
-
-          <div class="action delete">
+            -->
             <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>
         </div>

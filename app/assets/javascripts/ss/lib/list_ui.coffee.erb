@@ -10,8 +10,9 @@ class @SS_ListUI
       list.find("input:checkbox").change ->
         list.toggleClass("checked", $(this).prop("checked"))
       list.mouseup (e) ->
-        if !$(e.target).is('a') && !$(e.target).is("input") && !$(e.target).is("label")
-          list.find(".tap-menu").css("left", e.pageX).css("top", e.pageY).show()
+        return if $(e.target).is('a') || $(e.target).closest('a,label').length
+        menu = list.find(".tap-menu")
+        menu.css("left", e.pageX - menu.width() + 5).css("top", e.pageY).animate({ height: 'show' }, 'fast')
       list.mouseleave ->
         $(".tap-menu").hide()
 

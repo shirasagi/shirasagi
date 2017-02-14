@@ -57,6 +57,7 @@ gem 'oj'
 gem 'open_uri_redirections'
 gem 'romaji'
 gem 'jquery-minicolors-rails'
+gem 'autosize-rails'
 
 # OAuth
 gem 'omniauth'

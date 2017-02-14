@@ -18,7 +18,7 @@ SS::Application.routes.draw do
     end
     member do
       get :download
-      get :attachment
+      get :parts, path: 'parts/:section'
       get :header_view
       get :source_view
       put :set_seen
@@ -27,6 +27,9 @@ SS::Application.routes.draw do
       put :unset_star
       put :move
       put :copy
+      get :reply
+      get :reply_all
+      get :forward
     end
   end
 

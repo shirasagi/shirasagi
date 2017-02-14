@@ -28,6 +28,11 @@ class Webmail::Mailbox
 
   default_scope -> { order_by order: 1, downcase_name: 1 }
 
+  scope :user, ->(user) {
+    conf = user.imap_settings
+    where host: conf[:host], account: conf[:account]
+  }
+
   def stat
     status = imap.conn.status(encode_name, %w(MESSAGES UNSEEN))
     self.messages = status['MESSAGES']
@@ -56,7 +61,7 @@ class Webmail::Mailbox
   end
 
   def mails
-    Webmail::Mail.where(mailbox: name)
+    Webmail::Mail.where(imap.account_attributes).where(mailbox: name)
   end
 
   private
@@ -75,14 +80,14 @@ class Webmail::Mailbox
 
     def imap_update
       imap.conn.rename encode_name(name_was), encode_name
-      Webmail::Mail.where(mailbox: name_was).update_all(mailbox: name)
+      Webmail::Mail.where(imap.account_attributes).where(mailbox: name_was).update_all(mailbox: name)
     rescue Net::IMAP::NoResponseError => e
       rescue_imap_error(e)
     end
 
     def imap_delete
       imap.conn.delete encode_name
-      mails.destroy_all
+      mails.delete_all
     rescue Net::IMAP::NoResponseError => e
       rescue_imap_error(e)
     end
@@ -94,11 +99,11 @@ class Webmail::Mailbox
 
   class << self
     def inbox_unseen
-      imap.conn.status('INBOX', ["UNSEEN"])["UNSEEN"]
+      imap.conn.status('INBOX', ['UNSEEN'])['UNSEEN']
     end
 
-    def cache_key
-      imap.cache_key
+    def account_attributes
+      imap.account_attributes
     end
 
     def imap_all
@@ -106,7 +111,7 @@ class Webmail::Mailbox
       items = cache_all(items)
 
       (imap.user.imap_special_mailboxes - items.map(&:name)).each do |name|
-        item = self.new(cache_key)
+        item = self.new(account_attributes)
         item.name = name
         item.sync.save
         items << item
@@ -128,18 +133,18 @@ class Webmail::Mailbox
         names = list.map { |c| Net::IMAP.decode_utf7(c.name) }
         items = []
 
-        Mongoid::Criteria.new(self).where(cache_key).each do |item|
+        Mongoid::Criteria.new(self).where(account_attributes).each do |item|
           if names.index(item.name)
             items << item
             names.delete(item.name)
           else
-            item.mails.destroy_all
+            item.mails.delete_all
             item.destroy
           end
         end
 
         names.each do |name|
-          item = self.new(cache_key)
+          item = self.new(account_attributes)
           item.name = name
           item.save
           items << item

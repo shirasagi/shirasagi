@@ -8,8 +8,8 @@ class Webmail::MailsController < ApplicationController
   skip_before_action :set_selected_items
   before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
-                                  :attachment, :download, :header_view, :source_view]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_view_name, only: [:new, :create, :edit, :update]
 
   private
     def set_crumbs
@@ -22,19 +22,21 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_mailbox
-      @mailbox = params[:mailbox]
       @navi_mailboxes = true
-      @imap.examine(@mailbox)
+      @imap.examine(@mailbox = params[:mailbox])
     end
 
     def fix_params
-      @imap.cache_key.merge(cur_user: @cur_user, sync: true, mailbox: @mailbox)
+      @imap.account_attributes.merge(cur_user: @cur_user, sync: true, mailbox: @mailbox)
     end
 
     def set_item
-      set_mailbox
-      @item = @model.where(mailbox: @mailbox).imap_find params[:id]
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :body
       @item.attributes = fix_params
+    end
+
+    def set_view_name
+      @addon_basic_name = @model.t :to
     end
 
     def crud_redirect_url
@@ -60,64 +62,71 @@ class Webmail::MailsController < ApplicationController
       @item.set_seen if @item.unseen?
     end
 
-    def attachment
-      @item.attachments.each_with_index do |at, idx|
-        next unless idx == params[:idx].to_i
-
-        disposition = at.content_type.start_with?('image') ? :inline : :attachment
-        return send_data at.read, filename: at.filename, content_type: at.content_type, disposition: disposition
-      end
-
-      raise '404'
-    end
-
-    def download
-      data = @item.rfc822
-      name = @item.subject + '.eml'
-      send_data data, filename: name, content_type: 'message/rfc822', disposition: :attachment
-    end
-
     def header_view
-      data = @item.rfc822.sub(/(\r\n|\n){2}.*/m, '')
-      render inline: ApplicationController.helpers.br(data), layout: false
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id]
+      render plain: @item.header, layout: false
     end
 
     def source_view
-      data = @item.rfc822
-      render inline: ApplicationController.helpers.br(data), layout: false
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :rfc822
+      render plain: @item.rfc822, layout: false
+    end
+
+    def download
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :rfc822
+
+      send_data @item.rfc822, filename: "#{@item.subject}.eml",
+                content_type: 'message/rfc822', disposition: :attachment
+    end
+
+    def parts
+      part = @model.where(mailbox: @mailbox).find_part params[:id], params[:section]
+      disposition = part.image? ? :inline : :attachment
+
+      send_data part.decoded, filename: part.filename,
+                content_type: part.content_type, disposition: disposition
     end
 
     def new
       @item = @model.new pre_params.merge(fix_params)
+      @item.new_mail
+    end
 
-      if params[:reply]
-        @item.new_reply params[:reply]
-      elsif params[:reply_all]
-        @item.new_reply_all params[:reply_all]
-      elsif params[:forward]
-        @item.new_forward params[:forward]
-      else
-        @item.new_create
-      end
+    def reply
+      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @item = @model.new pre_params.merge(fix_params)
+      @item.new_reply(@ref)
+      render :new
+    end
 
-      raise "403" unless @item.allowed?(:edit, @cur_user)
+    def reply_all
+      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @item = @model.new pre_params.merge(fix_params)
+      @item.new_reply_all(@ref)
+      render :new
+    end
+
+    def forward
+      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @item = @model.new pre_params.merge(fix_params)
+      @item.new_forward(@ref)
+      render :new
     end
 
     def create
       @item = @model.new
-      @item.mail_attributes = get_params
+      @item.attributes = get_params
 
-      msg = Webmail::Mailer.new_message(@item)
-
-      if params[:commit] == I18n.t("views.button.save")
-        @item.save_to_draft(msg.to_s)
+      if params[:commit] == I18n.t('views.button.draft_save')
+        notice = nil
+        resp = @item.save_draft
       else
-        @item.save_to_sent(msg.deliver_now.to_s)
+        notice = t('views.notice.sent')
+        resp = @item.send_mail
       end
 
       @item.destroy_files
-
-      render_create true
+      render_create resp, notice: notice
     end
 
     def destroy
@@ -126,41 +135,45 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_seen
-      render_change :set_seen, @model.set_seen(get_uids).size
+      @model.set_seen get_uids
+      render_change :set_seen
     end
 
     def unset_seen
-      render_change :unset_seen, @model.unset_seen(get_uids).size
+      @model.unset_seen get_uids
+      render_change :unset_seen
     end
 
     def set_star
-      render_change :set_star, @model.set_star(get_uids).size
+      @model.set_star get_uids
+      render_change :set_star, redirect: { action: :show }
     end
 
     def unset_star
-      render_change :unset_star, @model.unset_star(get_uids).size
+      @model.unset_star get_uids
+      render_change :unset_star, redirect: { action: :show }
     end
 
     def destroy_all
-      render_change :delete, @model.uids_move_trash(get_uids).size
+      @model.uids_move_trash get_uids
+      render_change :delete
     end
 
     def copy
-      render_change :copy, @model.uids_copy(get_uids, params[:dst]).size
+      @model.uids_copy get_uids, params[:dst]
+      render_change :copy
     end
 
     def move
-      render_change :move, @model.uids_move(get_uids, params[:dst]).size
+      @model.uids_move get_uids, params[:dst]
+      render_change :move
     end
 
-    def render_change(action, count)
-      location = params[:redirect].presence || { action: :index }
-
-      multiple = (count == 1) ? '' : 'multiple.'
-      notice = t("webmail.notice.#{multiple}#{action}", count: count)
+    def render_change(action, opts = {})
+      location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
       respond_to do |format|
-        format.html { redirect_to location, notice: notice }
+        format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
         format.json { head :no_content }
       end
     end

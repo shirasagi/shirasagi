@@ -28,15 +28,16 @@ class @Webmail_Mail
       return Webmail_Mail.updateMail(url, ids: checked, redirect: location.href)
 
     $(".list-head .search").on "click", ->
-      $('.webmail-mail-search').animate( { height: 'toggle' }, 'fast' )
+      $('.webmail-mail-search').animate({ height: 'toggle' }, 'fast')
 
     $(".webmail-mail-search .reset").on "click", ->
       $(".webmail-mail-search input[type=text]").val("")
       $(".webmail-mail-search .search").click()
 
-    $(".icon-star").on "click", ->
+    $(".icon-star a").on "click", ->
       star = $(this)
-      if $(this).hasClass('icon-star--on')
+      wrap = star.parent()
+      if wrap.hasClass('on')
         url = star.attr('href') + '/unset_star'
         chk = false
       else
@@ -50,11 +51,11 @@ class @Webmail_Mail
           _method: 'put'
         success: (data, a, b)->
           if chk
-            star.removeClass('icon-star--off')
-            star.addClass('icon-star--on')
+            wrap.removeClass('off')
+            wrap.addClass('on')
           else
-            star.removeClass('icon-star--on')
-            star.addClass('icon-star--off')
+            wrap.removeClass('on')
+            wrap.addClass('off')
       return false
 
   @renderDetail: ->
@@ -86,6 +87,12 @@ class @Webmail_Mail
     return false
 
   @renderForm: ->
+    $('.js-autosize').autosize()
+
+    $('.cc-bcc-label').click ->
+      $('.webmail-mail-form-address.cc-bcc').animate({ height: 'toggle' }, 'fast')
+      return false
+
     $('#item_format').change ->
       Webmail_Mail.renderBodyForm($(this).val())
     Webmail_Mail.renderBodyForm($('#item_format').val())
@@ -97,6 +104,17 @@ class @Webmail_Mail
       else
         Webmail_Mail.insertText($("#item_text"), $(this).val())
       $(this).val("")
+
+    # Send mail
+    $('.js-send').click ->
+      if !$('input[name="item[to][]"][value!=""]').length
+        $('#item_to_text').attr('required', true)
+      else
+        $('#item_to_text').attr('required', false)
+
+    # Save as draft
+    $('.js-save').click ->
+      $('#item_to_text').attr('required', false);
 
   @renderBodyForm: (format)->
     if format == 'html'

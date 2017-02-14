@@ -2,7 +2,8 @@ ja:
   modules:
     webmail: ウェブメール
     addons:
-      webmail/file: 添付ファイル
+      webmail/mail_body: 内容
+      webmail/mail_file: 添付ファイル
       webmail/apply_filter: フィルター適用
 
   webmail:
@@ -26,7 +27,8 @@ ja:
         body: 本文
     buttons:
       test_connection: 接続確認
-      clear_cache: キャッシュ クリア
+      clear_cache: キャッシュ削除
+      clear_cache_all: キャッシュ全削除
     options:
       action:
         copy: コピーする
@@ -48,6 +50,7 @@ ja:
       copy: コピーする
       print: 印刷する
       apply: 適用する
+      show_cc_bcc: CC , BCC の表示
     confirm:
       clear_cache: キャッシュを削除してよろしいですか？
       apply_filter: フィルターを適用してよろしいですか？

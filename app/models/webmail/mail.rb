@@ -5,48 +5,62 @@ class Webmail::Mail
   include SS::Reference::User
   include SS::FreePermission
   include Webmail::ImapConnection
-  include Webmail::Mail::Flag
+  include Webmail::Mail::Fields
   include Webmail::Mail::Parser
+  include Webmail::Mail::Uids
+  include Webmail::Mail::Updater
   include Webmail::Mail::Search
-  include Webmail::Mail::MessageBuilder
-  include Webmail::Addon::File
+  include Webmail::Mail::Message
+  include Webmail::Addon::MailBody
+  include Webmail::Addon::MailFile
 
-  #index({ uid: 1, user_id: 1, host: 1, account: 1, mailbox: 1 }, { unique: true })
+  #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
-  attr_accessor :sync, :rfc822, :text, :html, :attachments, :format, :reply_uid, :forward_uid, :signature,
-                :to_text, :cc_text, :bcc_text
+  attr_accessor :sync, :flags, :text, :html, :attachments, :format,
+                :reply_uid, :forward_uid, :signature,
+                :to_text, :cc_text, :bcc_text, :references
 
   field :host, type: String
   field :account, type: String
   field :mailbox, type: String
   field :uid, type: Integer
-  field :message_id, type: String
+  field :internal_date, type: DateTime
   field :size, type: Integer
+
+  ## header
+  field :message_id, type: String
   field :date, type: DateTime
-  field :flags, type: Array, default: []
-  field :from, type: String
   field :sender, type: String
+  field :from, type: Array, default: []
   field :to, type: Array, default: []
   field :cc, type: Array, default: []
   field :bcc, type: Array, default: []
   field :reply_to, type: Array, default: []
   field :in_reply_to, type: String
   field :references, type: Array, default: []
+  field :content_type, type: String
   field :subject, type: String
-  field :attachments_count, type: Integer, default: 0
+  field :has_attachment, type: Boolean
 
-  permit_params :subject, :text, :html, :format, :reply_uid, :forward_uid,
-                :to_text, :cc_text, :bcc_text,
-                to: [], cc: [], bcc: [], reply_to: []
+  permit_params :reply_uid, :forward_uid,
+                :subject, :text, :html, :format,
+                :to_text, :cc_text, :bcc_text, :in_reply_to,
+                to: [], cc: [], bcc: [], reply_to: [], references: []
 
   validates :host, presence: true
   validates :account, presence: true
   validates :mailbox, presence: true
-  validates :uid, presence: true
+  validates :uid, presence: true, uniqueness: { scope: [:host, :account, :mailbox] }
+  validates :internal_date, presence: true
 
-  before_destroy :imap_delete, if: ->{ imap.present? && @sync }
+  before_destroy :imap_delete, if: ->{ @sync && imap.present? }
 
-  default_scope -> { order_by date: -1 }
+  default_scope -> { order_by internal_date: -1 }
+
+  scope :user, ->(user) {
+    conf = user.imap_settings
+    where host: conf[:host], account: conf[:account]
+  }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -66,32 +80,42 @@ class Webmail::Mail
   end
 
   def signature_options
-    Webmail::Signature.user(user).map do |c|
+    Webmail::Signature.user(cur_user).map do |c|
       [c.name, c.text]
     end
   end
 
-  def html?
-    return format == 'html' if format.present?
-    !html.nil?
+  def replied_mail
+    return nil if reply_uid.blank?
+    return @replied_mail if @replied_mail
+    @replied_mail = self.class.imap_find(reply_uid)
   end
 
-  def attachments?
-    attachments_count > 0
+  def forwarded_mail
+    return nil if forward_uid.blank?
+    return @forwarded_mail if @forwarded_mail
+    @forwarded_mail = self.class.imap_find(reply_uid)
   end
 
-  def save_to_sent(msg)
-    if reply_uid.present?
-      ref = self.class.imap_find(reply_uid)
-      ref.set_flags([:Answered])
-    elsif forward_uid.present?
-      #Forwarded
-    end
-    imap.conn.append(imap.user.imap_sent_box, msg, [:Seen], Time.zone.now)
+  def save_draft
+    msg = Webmail::Mailer.new_message(self)
+    imap.conn.append(imap.user.imap_draft_box, msg.to_s, [:Draft], Time.zone.now)
+    true
   end
 
-  def save_to_draft(msg)
-    imap.conn.append(imap.user.imap_draft_box, msg, [:Draft], Time.zone.now)
+  def validate_message(msg)
+    errors.add :to, :blank if msg.to.blank?
+    errors.blank?
+  end
+
+  def send_mail
+    msg = Webmail::Mailer.new_message(self)
+    return false unless validate_message(msg)
+
+    msg = msg.deliver_now.to_s
+    replied_mail.set_answered if replied_mail
+    imap.conn.append(imap.user.imap_sent_box, msg.to_s, [:Seen], Time.zone.now)
+    true
   end
 
   private
@@ -107,19 +131,8 @@ class Webmail::Mail
     end
 
   class << self
-    def build_addresses(addresses)
-      return [] unless addresses
-      addresses.map do |addr|
-        if addr.name.present?
-          "#{addr.name.toutf8} <#{addr.mailbox}@#{addr.host}>"
-        else
-          "#{addr.mailbox}@#{addr.host}"
-        end
-      end
-    end
-
-    def cache_key
-      imap.cache_key.merge(mailbox: mailbox)
+    def mailbox_attributes
+      imap.account_attributes.merge(mailbox: mailbox)
     end
 
     # Criteria: where(mailbox: String)
@@ -138,69 +151,97 @@ class Webmail::Mail
     end
 
     def imap_all
-      scope = where({})
-      page = scope.current_page
-      limit = scope.limit_value
+      scope  = where({})
+      page   = scope.current_page
+      limit  = scope.limit_value
       offset = scope.offset_value
 
       uids = imap.conn.uid_sort(sort_keys, search_keys, 'UTF-8')
       size = uids.size
       uids = uids.slice(offset, limit) || []
 
-      items = cache_all(uids)
-      items = items.sort { |a, b| (b.date || b.created) <=> (a.date || a.created) }
+      items = {}
+      uids.each { |uid| items[uid] = nil }
 
-      Kaminari.paginate_array(items, total_count: size).page(page).per(limit)
+      uids = cache_all(uids, items) if uids.present? && SS.config.webmail.cache_mails
+      uids = fetch_all(uids, items) if uids.present?
+
+      Kaminari.paginate_array(items.values, total_count: size).page(page).per(limit)
     end
 
-    def imap_find(uid)
+    def imap_find(uid, *division)
       uid = uid.to_i
-      msg = imap.conn.uid_fetch(uid, ['RFC822'])
-      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless msg
 
-      item = cache_all([uid]).first
-      item.parse_body(msg[0])
+      attr = %w(FAST RFC822.HEADER) # FAST: FLAGS INTERNALDATE RFC822.SIZE
+      attr += %w(BODYSTRUCTURE) if division.include?(:body)
+      attr << 'RFC822' if division.include?(:rfc822)
+
+      resp = imap.conn.uid_fetch(uid, attr)
+      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
+
+      item = self.new(mailbox_attributes)
+      item.parse(resp[0])
+      item.fetch_body if division.include?(:body)
       item
     end
 
+    def find_part(uid, section)
+      uid = uid.to_i
+
+      resp = imap.conn.uid_fetch(uid, ['BODYSTRUCTURE', "BODY[#{section}.TEXT]"])
+      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
+
+      item = self.new(mailbox_attributes)
+      item.body_structure = resp[0].attr['BODYSTRUCTURE']
+
+      part = item.all_parts[section]
+      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless part
+
+      Webmail::MailPart.new(part, section, resp[0].attr["BODY[#{section}.TEXT]"])
+    end
+
     private
-      def cache_all(uids)
-        items = Mongoid::Criteria.new(self).where(cache_key).in(uid: uids)
+      def cache_all(uids, ref_items)
+        items = Mongoid::Criteria.new(self).where(mailbox_attributes).in(uid: uids)
         item_uids = items.map(&:uid)
 
+        flags = []
+
         if items.present?
-          flags = []
-
-          messages = imap.conn.uid_fetch(item_uids, ['FLAGS']) || []
-          messages.each do |msg|
-            flags[msg.attr['UID']] = (msg.attr['FLAGS'] || []).map(&:to_s)
-          end
-
-          items.each do |item|
-            item.set flags: flags[item.uid] if item.flags != flags[item.uid]
+          resp = imap.conn.uid_fetch(item_uids, ['FLAGS']) || []
+          resp.each do |data|
+            flags[data.attr['UID']] = data.attr['FLAGS'] || []
           end
         end
 
-        uids = uids - item_uids
-        return items if uids.blank?
+        items.each do |item|
+          next if ref_items[item.uid]
+          item.flags = flags[item.uid]
+          ref_items[item.uid] = item
+        end
 
-        # ALL - FLAGS INTERNALDATE RFC822.SIZE ENVELOPE
-        messages = imap.conn.uid_fetch(uids, %w(ALL RFC822)) || []
-        messages.each do |msg|
-          item = self.new(cache_key)
-          items << item
+        uids - item_uids
+      end
+
+      def fetch_all(uids, ref_items)
+        resp = imap.conn.uid_fetch(uids, %w(FAST RFC822.HEADER)) || []
+        resp.each do |data|
+          uid = data.attr['UID']
+          uids.delete(uid)
+
+          item = self.new(mailbox_attributes)
+          ref_items[uid] = item
 
           begin
-            item.parse_message(msg)
-            item.save
+            item.parse(data)
+            item.save if SS.config.webmail.cache_mails
           rescue => e
             raise e if Rails.env.development?
             item.subject = "[Error] #{e}"
-            def item.save; end
           end
         end
 
-        items
+        uids
       end
   end
 end

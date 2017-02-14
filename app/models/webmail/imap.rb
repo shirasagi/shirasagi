@@ -49,8 +49,8 @@ class Webmail::Imap
     conn.select(mailbox)
   end
 
-  def cache_key
-    { user_id: user.id, host: conf[:host], account: conf[:account] }
+  def account_attributes
+    { host: conf[:host], account: conf[:account] }
   end
 
   def quota_info
