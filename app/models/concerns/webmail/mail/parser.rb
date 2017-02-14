@@ -74,11 +74,13 @@ module Webmail::Mail::Parser
     end
 
     if info = find_first_mime_type('text/plain')
+      self.format       = 'text'
       self.text_part_no = info[0]
       self.text_part    = info[1]
     end
 
     if info = find_first_mime_type('text/html')
+      self.format       = 'html'
       self.html_part_no = info[0]
       self.html_part    = info[1]
     end
