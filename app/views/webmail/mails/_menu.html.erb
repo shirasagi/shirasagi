@@ -14,18 +14,16 @@
     <%#= link_to t('webmail.links.set_seen'), { action: :set_seen }, { class: 'update-mail set-seen' } %>
     <%= link_to t('webmail.links.unset_seen'), { action: :unset_seen }, { class: 'update-mail unset-seen' } %>
 
-    <% if @item.star? %>
-      <%= link_to t('webmail.links.unset_star'), { action: :unset_star }, { class: 'update-mail unset-star' } %>
-    <% else %>
-      <%= link_to t('webmail.links.set_star'), { action: :set_star }, { class: 'update-mail set-star' } %>
-    <% end %>
-
-    <div class="webmail-mail-menu--show">
-      <%= link_to t('webmail.links.print'), '#', class: 'print-mail' %>
-      <%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %>
-      <%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %>
-      <%= link_to t('views.download'), { action: :download } %>
-      <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
+    <div class="dropdown">
+      <a><%= t 'webmail.links.etc' %></a>
+      <ul class="dropdown-menu webmail-dropdown-menu">
+        <li><%= link_to t('webmail.links.print'), '#', class: 'print-mail' %></li>
+        <li><%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %></li>
+        <li><%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %></li>
+        <li><%= link_to t('views.download'), { action: :download } %></li>
+      </ul>
     </div>
+
+    <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
   <% end %>
 </nav>

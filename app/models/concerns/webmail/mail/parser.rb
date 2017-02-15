@@ -111,24 +111,6 @@ module Webmail::Mail::Parser
     self.html = Webmail::MailPart.decode resp[0].attr["BODY[#{html_part_no}]"], html_part
   end
 
-  def sanitize_html
-    html = self.html.gsub!(/<img [^>]*?>/i) do |img|
-      img.sub(/ src="cid:.*?"/i) do |src|
-        cid = src.sub(/.*?cid:(.*?)".*/i, '<\\1>')
-        attachments.each do |file|
-          if cid == file.content_id
-            type = file.content_type.sub(/;.*/, '')
-            src = %( data-src="data:#{type};base64,#{Base64.strict_encode64(file.read)}")
-            break
-          end
-        end
-        src
-      end
-    end
-
-    ApplicationController.helpers.sanitize_with(html, attributes: %w(data-src))
-  end
-
   private
     def flatten_all_parts(part, pos = [], buf = {})
       if part.multipart?

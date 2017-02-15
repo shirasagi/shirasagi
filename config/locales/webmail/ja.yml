@@ -36,6 +36,7 @@ ja:
         trash: 削除する
         delete: サーバから削除する
     links:
+      etc: その他
       download: ダウンロード
       source_view: ソース表示
       header_view: ヘッダー表示
@@ -44,13 +45,14 @@ ja:
       set_star: スターをつける
       unset_star: スターをはずす
       reply: 返信する
-      reply_all: 全員に返信する
+      reply_all: 全員に返信
       forward: 転送する
       move: 移動する
       copy: コピーする
       print: 印刷する
       apply: 適用する
       show_cc_bcc: CC , BCC の表示
+      show_image: 画像の表示
     confirm:
       clear_cache: キャッシュを削除してよろしいですか？
       apply_filter: フィルターを適用してよろしいですか？

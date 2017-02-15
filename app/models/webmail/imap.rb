@@ -53,19 +53,8 @@ class Webmail::Imap
     { host: conf[:host], account: conf[:account] }
   end
 
-  def quota_info
-    @quota_info ||= conn.getquotaroot('INBOX')[1]
-  end
-
-  def quota_total
-    quota_info.quota.to_i * 1024
-  end
-
-  def quota_used
-    quota_info.usage.to_i * 1024
-  end
-
-  def quota_per
-    (quota_used.to_f / quota_total.to_f * 100).to_f
+  def quota
+    @quota ||= Webmail::Quota.new(conn)
+    @quota.exist? ? @quota : nil
   end
 end
