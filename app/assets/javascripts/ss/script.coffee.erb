@@ -72,6 +72,9 @@ $ ->
 
   # dropdown
   $(".dropdown").click (e) ->
+    $(".dropdown").not($(e.target).closest('.dropdown').get(0)).each ->
+      $(this).removeClass('active')
+      $(this).find('.dropdown-menu').removeClass('active')
     $(this).toggleClass('active')
     $(this).find('.dropdown-menu').toggleClass('active')
     e.stopPropagation()
