@@ -1,7 +1,7 @@
 <dl class="see">
   <% @item.data.each do |data| %>
   <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
-  <dd><%= data.value %></dd>
+  <dd><%= br data.value %></dd>
   <% end %>
 
   <dt><%= @model.t :remote_addr %></dt>
