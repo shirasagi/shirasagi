@@ -115,7 +115,8 @@ module Facility::Node
 
       cond << { filename: /^#{filename}\// } if conditions.blank?
       conditions.each do |url|
-        node = Cms::Node.filename(url).first
+        s = cur_site || site rescue nil
+        node = Cms::Node.site(s).filename(url).first
         next unless node
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
       end
@@ -142,7 +143,8 @@ module Facility::Node
 
       cids << id
       conditions.each do |url|
-        node = Cms::Node.filename(url).first
+        s = cur_site || site rescue nil
+        node = Cms::Node.site(s).filename(url).first
         next unless node
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
         cids << node.id
@@ -170,7 +172,8 @@ module Facility::Node
 
       cids << id
       conditions.each do |url|
-        node = Cms::Node.filename(url).first
+        s = cur_site || site rescue nil
+        node = Cms::Node.site(s).filename(url).first
         next unless node
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
         cids << node.id
@@ -199,7 +202,8 @@ module Facility::Node
 
       cids << id
       conditions.each do |url|
-        node = Cms::Node.filename(url).first
+        s = cur_site || site rescue nil
+        node = Cms::Node.site(s).filename(url).first
         next unless node
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
         cids << node.id
