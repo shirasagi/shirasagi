@@ -18,7 +18,7 @@ SS::Application.routes.draw do
     end
     member do
       get :download
-      get :parts, path: 'parts/:section'
+      get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
       get :header_view
       get :source_view
       put :set_seen

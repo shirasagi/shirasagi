@@ -3,7 +3,7 @@
 <% end %>
 
 <% if @item.html? %>
-  <div class="body body--html"><%= @item.html %></div>
+  <div class="body body--html"><%= @item.sanitize_html %></div>
 <% else %>
   <div class="body body--text"><%= br @item.text %></div>
 <% end %>

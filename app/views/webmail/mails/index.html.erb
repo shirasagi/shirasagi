@@ -29,8 +29,8 @@
         <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
       </div>
       <div class="info">
-        <% if @cur_user.imap_sent_box.start_with?(@mailbox) %>
-          <span class="field from"><%= item.display_to.join(',') %></span>
+        <% if @mailbox.start_with?(@cur_user.imap_sent_box) %>
+          <span class="field to"><%= item.display_to.join(',') %></span>
         <% else %>
           <span class="field from"><%= item.display_sender %></span>
         <% end %>

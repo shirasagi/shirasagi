@@ -31,7 +31,7 @@
 
 <% if @navi_mailboxes %>
 <div id="webmail-mailboxes-list">
-  <ul class="dropdown-menu">
+  <ul class="dropdown-menu webmail-dropdown-menu">
     <% Webmail::Mailbox.user(@cur_user).to_options.each do |label, value| %>
     <li><a href="#" data-name="<%= value %>"><%= label %></a></li>
     <% end %>
@@ -49,11 +49,11 @@
   <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
 </nav>
 
-<% if @navi_mailboxes %>
+<% if @navi_mailboxes && quota = @imap.quota %>
 <div class="webmail-quota">
   <div class="total">
-    <div class="label"><%= number_to_human_size @imap.quota_used %>/<%= number_to_human_size @imap.quota_total %></div>
-    <div class="used" style="width: <%= @imap.quota_per %>%"></div>
+    <div class="label"><%= number_to_human_size quota.used %>/<%= number_to_human_size quota.total %></div>
+    <div class="used" style="width: <%= quota.per %>%"></div>
   </div>
 </div>
 <% end %>

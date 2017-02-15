@@ -3,9 +3,23 @@
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
     <div class="addon-head">
+      <div class="icons">
+        <% if @item.star? %>
+          <%= link_to({ action: :unset_star }, { class: 'update-mail unset-star icon-star on' }) do %>
+            <i class="material-icons">&#xE838;</i>
+          <% end %>
+        <% else %>
+          <%= link_to({ action: :set_star }, { class: 'update-mail set-star icon-star off' }) do %>
+            <i class="material-icons">&#xE838;</i>
+          <% end %>
+        <% end %>
+
+        <span class="icon-attachment">
+          <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
+        </span>
+      </div>
       <h2 class="subject">
         <%= @item.display_subject %>
-        <i class="material-icons md-18"><%== @item.attachments? ? '&#xE226;' : '' %></i>
       </h2>
       <div class="from"><%= @item.sender || @item.from[0] %></div>
       <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
@@ -41,7 +55,7 @@
     </div>
 
     <% if @item.attachments.present? %>
-    <div class="attachments">
+    <div class="attachments" id="mail-attachments">
       <% @item.attachments.each do |part| %>
         <div class="file">
           <%= link_to({ action: :parts, section: part.section }, target: part.link_target) do %>

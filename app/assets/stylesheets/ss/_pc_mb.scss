@@ -467,7 +467,7 @@ td {
 .main-navi-md {
   h2 {
     a {
-      padding-left: 10px;
+      padding: 8px 10px;
     }
     a:before {
       background: none !important;
@@ -721,7 +721,7 @@ td {
     }
     a {
       display: inline-block;
-      margin-right: 24px;
+      margin-right: 16px;
       @include arrow;
       color: $black;
       &:hover { color: $orange;}

@@ -12,7 +12,7 @@ class @Webmail_Mail
         checked = $(".list-item input:checkbox:checked").map ->
           $(this).val()
         return Webmail_Mail.updateMail(url, ids: checked, dst: $(this).data('name'))
-      $(this).append(menu)
+      $(this).after(menu)
 
     $(".list-head .move-all, .list-head .copy-all").on "click", ->
       checked = $(".list-item input:checkbox:checked").map ->
@@ -59,9 +59,17 @@ class @Webmail_Mail
       return false
 
   @renderDetail: ->
-    $("img[data-src]").each ->
-      $(this).attr('src', $(this).data('src'))
-      $(this).data('src', '')
+    body = $('.webmail-mail .body--html')
+
+    if body.find('img[data-url]').length
+      body.before('<a class="show-image" href="#"><%= I18n.t('webmail.links.show_image') %></a>')
+      $('.show-image').click ->
+        $(this).hide()
+        $("img[data-url]").each ->
+          url = $(this).data('url')
+          url = "#{location.pathname}/#{url}" if url.match(/^parts\//)
+          $(this).attr('src', url)
+        return false
 
     $(".update-mail").on "click", ->
       url = $(this).attr('href')
