@@ -37,7 +37,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       end
 
       @item.attributes = get_params
-      member = Cms::Member.site(@cur_site).where(email: @item.email, password: SS::Crypt.crypt(@item.password)).first
+      member = Cms::Member.site(@cur_site).and_enabled.where(email: @item.email, password: SS::Crypt.crypt(@item.password)).first
       unless member
         @error = t "sns.errors.invalid_login"
         return
@@ -55,11 +55,11 @@ class Member::Agents::Nodes::LoginController < ApplicationController
 
     def callback
       auth = request.env["omniauth.auth"]
-      member = Cms::Member.where(oauth_type: auth.provider, oauth_id: auth.uid).first
+      member = Cms::Member.site(@cur_site).and_enabled.where(oauth_type: auth.provider, oauth_id: auth.uid).first
       if member.blank?
         #外部認証していない場合、ログイン情報を保存してから、ログインさせる
         Cms::Member.create_auth_member(auth, @cur_site)
-        member = Cms::Member.where(oauth_type: auth.provider, oauth_id: auth.uid).first
+        member = Cms::Member.site(@cur_site).and_enabled.where(oauth_type: auth.provider, oauth_id: auth.uid).first
       end
 
       set_member_and_redirect member
