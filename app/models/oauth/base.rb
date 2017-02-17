@@ -14,14 +14,16 @@ module Oauth::Base
   def node
     return if site.blank?
     @node ||= begin
-      path = request.env["REQUEST_PATH"] || request.path
-      if site.subdir.present?
-        main_path = path.sub(/^\/#{site.subdir}/, "")
-      else
-        main_path = path.dup
-      end
+      request.env["ss.node"] ||= begin
+        path = request.env["REQUEST_PATH"] || request.path
+        if site.subdir.present?
+          main_path = path.sub(/^\/#{site.subdir}/, "")
+        else
+          main_path = path.dup
+        end
 
-      Member::Node::Login.site(site).in_path(main_path).sort(depth: -1).first
+        Member::Node::Login.site(site).in_path(main_path).sort(depth: -1).first
+      end
     end
   end
 

@@ -1,8 +1,11 @@
 if SS.config.oauth.prefix_path
   OmniAuth.configure do |config|
     config.logger = Rails.logger
-    config.on_failure = proc { |env| OmniAuth::FailureEndpoint.new(env).redirect_to_failure }
     config.path_prefix = SS.config.oauth.prefix_path
+    config.on_failure = proc do |env|
+      config.path_prefix = env["ss.node"].url
+      OmniAuth::FailureEndpoint.new(env).redirect_to_failure
+    end
   end
 
   Rails.application.config.middleware.use OmniAuth::Builder do
