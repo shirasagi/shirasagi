@@ -18,6 +18,14 @@ module Cms::CrudFilter
         allow(:read, @cur_user, site: @cur_site)
     end
 
+    def set_item
+      @item = @model.site(@cur_site).find(params[:id])
+      @item.attributes = fix_params
+    rescue Mongoid::Errors::DocumentNotFound => e
+      return render_destroy(true) if params[:action] == 'destroy'
+      raise e
+    end
+
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
