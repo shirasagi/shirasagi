@@ -3,11 +3,8 @@
 $ ->
   SS_SearchUI.modal()
   $("#ajax-box .select-group").on "click", (e) ->
-    id = $(this).closest("[data-id]").attr("data-id")
-    name = $(this).text()
-
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").remove()
-    SS_SearchUI.select({id: id, name: name})
+    SS_SearchUI.select($(this))
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
 
     tel = $(this).parents("tr:first").find(".contact-tel").text()
