@@ -197,6 +197,15 @@ class @SS
       e.preventDefault();
       return false
 
+  @notice: (message) ->
+    notice = $('#notice')
+    if !notice.hasClass('js-notice')
+      notice.addClass('js-notice').click ->
+        notice.slideUp('normal')
+    notice.find('.wrap').html(message)
+    notice.slideDown('normal')
+    return setTimeout (-> $('#notice').slideUp('normal')), 1800
+
   @confirmUnloading: ->
     $("input[type=text],textarea,select").change ->
       $(window).on "beforeunload", ->

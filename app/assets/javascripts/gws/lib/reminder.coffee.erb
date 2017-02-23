@@ -39,16 +39,9 @@ class @Gws_Reminder
           $('#notice').hide()
         when 'updated'
           item.find('.updated').show()
-          unless $('#notice')[0]
-            $('#page').append('<aside id="notice"><div class="wrap"></div></aside>')
-          $('#notice .wrap').html "<%= I18n.t('views.notice.saved') %>"
-          $('#notice').show()
-          @noticeTimer = setTimeout ->
-            $('#notice').slideUp("fast")
-          , 1500
+          @noticeTimer = SS.notice("<%= I18n.t('views.notice.saved') %>")
         else
           item.find('.updated').hide()
-
 
     $('.list-item').each ->
       $(this).find('.links').append('<a class="restore" href="#" style="display: none;"><%= I18n.t('gws.links.restore_reminder') %></a>')

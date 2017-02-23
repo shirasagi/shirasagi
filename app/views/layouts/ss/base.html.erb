@@ -83,11 +83,12 @@
   </div>
 <!-- /#head --></header>
 
-<% if notice %>
 <aside id="notice">
-  <div class="wrap"><%= notice %></div>
+  <div class="wrap"></div>
 </aside>
-<script> setTimeout(function() { $('#notice').slideUp("fast"); }, 1500); </script>
+
+<% if notice %>
+<script> SS.notice('<%= notice %>'); </script>
 <% end %>
 
 <div id="wrap">
