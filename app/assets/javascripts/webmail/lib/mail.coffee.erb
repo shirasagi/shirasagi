@@ -1,8 +1,44 @@
 class @Webmail_Mail
   @render: ->
+    @renderNavi()
     @renderList()
     @renderDetail()
     @renderForm()
+
+  @renderNavi: ->
+    navi = $('.webmail-navi-mailboxes')
+    navi.find('.reload').click ->
+      btn = $(this)
+      return false if btn.hasClass('disabled')
+      $.ajax
+        url: btn.attr('href')
+        beforeSend: ->
+          btn.addClass('disabled')
+          navi.find('.unseen').remove()
+        success: (data) ->
+          for i, mailbox of data.mailboxes
+            if mailbox.unseen > 0
+              h = " <span class='unseen'>(#{mailbox.unseen})</span>"
+              navi.find("a[data-name='#{mailbox.name}']").append(h)
+          SS.notice(data.notice) if data.notice
+          btn.removeClass('disabled')
+      return false
+
+    quota = $('.webmail-navi-quota')
+    quota.find('.reload').click ->
+      btn = $(this)
+      return false if btn.hasClass('disabled')
+      $.ajax
+        url: btn.attr('href')
+        beforeSend: ->
+          btn.addClass('disabled')
+          quota.find('.label').html('--/--')
+          quota.find('.usage').css('width', 0)
+        success: (data) ->
+          quota.find('.label').html(data.label)
+          quota.find('.usage').css('width', data.percentage + '%')
+          btn.removeClass('disabled')
+      return false
 
   @renderList: ->
     $(".list-head .move-all, .list-head .copy-all").each ->
@@ -62,6 +98,8 @@ class @Webmail_Mail
     body = $('.webmail-mail .body--html')
 
     if body.find('img[data-url]').length
+      body.find('img[data-url][height]').each ->
+        $(this).css('height', $(this).attr('height') + 'px')
       body.before('<a class="show-image" href="#"><%= I18n.t('webmail.links.show_image') %></a>')
       $('.show-image').click ->
         $(this).hide()
@@ -69,6 +107,8 @@ class @Webmail_Mail
           url = $(this).data('url')
           url = "#{location.pathname}/#{url}" if url.match(/^parts\//)
           $(this).attr('src', url)
+          $(this).css('height', 'auto')
+          $(this).removeAttr('data-url')
         return false
 
     $(".update-mail").on "click", ->

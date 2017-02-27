@@ -2,7 +2,7 @@ class Webmail::Filter
   include SS::Document
   include SS::Reference::User
   include SS::UserPermission
-  include Webmail::ImapConnection
+  include Webmail::ImapAccessor
   include Webmail::Addon::ApplyFilter
 
   # 一括処理件数
@@ -46,12 +46,15 @@ class Webmail::Filter
   end
 
   def mailbox_options
-    Webmail::Mailbox.user(@cur_user).to_options
+    imap.mailboxes.all.map do |box|
+      pad = '&nbsp;' * 4 * (box.depth)
+      ["#{pad}#{ERB::Util.html_escape(box.basename)}".html_safe, box.original_name]
+    end
   end
 
   def decode_mailbox
     return nil if mailbox.blank?
-    Net::IMAP.decode_utf7(mailbox).sub(/^INBOX\./, '')
+    Net::IMAP.decode_utf7(mailbox)
   end
 
   def search_keys
@@ -68,34 +71,34 @@ class Webmail::Filter
     uids_apply(uids, mailbox)
   end
 
-  def uids_apply(uids, mailbox)
-    count = 0
-    return count if uids.blank?
-
-    uids.each_slice(APPLY_PER) do |sliced_uids|
-      if action == "copy"
-        Webmail::Mail.uids_copy(sliced_uids, self.mailbox)
-      elsif action == "move"
-        imap.examine(mailbox)
-        Webmail::Mail.uids_move(sliced_uids, self.mailbox)
-      elsif action == "trash"
-        Webmail::Mail.uids_move_trash(sliced_uids)
-      elsif action == "delete"
-        Webmail::Mail.uids_delete(sliced_uids)
-      end
-
-      count += Webmail::Mail.imap_last_response_size
-    end
-
-    count
-  end
-
   private
     def validate_conditions
       %w(from to subject).each do |key|
         return true if send(key).present?
       end
       errors.add :base, I18n.t("webmail.errors.blank_conditions")
+    end
+
+    def uids_apply(uids, mailbox)
+      count = 0
+      return count if uids.blank?
+
+      uids.each_slice(APPLY_PER) do |sliced_uids|
+        if action == "copy"
+          imap.uids_copy(sliced_uids, self.mailbox)
+        elsif action == "move"
+          imap.examine(mailbox)
+          imap.uids_move(sliced_uids, self.mailbox)
+        elsif action == "trash"
+          imap.uids_move_trash(sliced_uids)
+        elsif action == "delete"
+          imap.uids_delete(sliced_uids)
+        end
+
+        count += imap.last_response_size
+      end
+
+      count
     end
 
   class << self

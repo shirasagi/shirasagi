@@ -8,7 +8,7 @@
   margin: 0;
   padding: 5px 0;
   border: 1px solid #ccc;
-  @include box-shadow(0px 1px 3px #gray4);
+  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
   background: #fff;
   text-align: left;
   a {
@@ -20,6 +20,10 @@
     background-color: $gray1;
     color: $orange;
     text-decoration: none;
+  }
+  .pad {
+    display: inline-block;
+    width: 10px;
   }
 }
 #menu .nav-menu .dropdown {
@@ -36,8 +40,22 @@
 // -------------------------------------------------------------------------------------------------
 // navi
 
+.webmail-navi {
+  .reload {
+    &:hover { background: none !important; }
+    &:hover .material-icons { color: $orange; }
+    &.disabled .material-icons { color: rgba(0,0,0,.2); }
+  }
+}
 .webmail-navi-mailboxes {
-  .unseen-count {
+  .reload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    padding: 7px 8px 9px;
+  }
+  .unseen {
     color: $orange;
     font-weight: bold;
   }
@@ -58,30 +76,39 @@
       margin-right: 2px;
     }
     .mailbox-name {
+      vertical-align: middle;
     }
     a:hover {
       text-decoration: none;
     }
-    .mailbox--virtual:hover {
-      color: inherit;
+    .mailbox--noselect .material-icons {
+      color: rgba(0,0,0,.5);
     }
   }
 }
-.webmail-quota {
-  .total {
-    height: 1.6em;
-    margin: 10px;
+.webmail-navi-quota {
+  position: relative;
+  .reload {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+  }
+  .quota {
+    margin: 0 10px 10px;
     border: 1px solid #ccc;
     background-color: #ddd;
+    @include background(linear-gradient(top, #ddd, #eee));
+    line-height: 20px;
   }
   .label {
     position: absolute;
     width: 100%;
     text-align: center;
   }
-  .used {
-    height: 100%;
-    background-color: #6c6;
+  .usage {
+    height: 20px;
+    background-color: #6d6;
+    @include background(linear-gradient(top, #dfd, #4b4));
   }
 }
 
@@ -128,6 +155,7 @@
     padding: 5px 8px;
   }
   .info {
+    @include truncate;
     .field {
       display: inline-block;
       overflow: hidden;
@@ -161,18 +189,12 @@
 .webmail-mail {
   .addon-head {
     padding: 1px 15px 15px;
-    .icons {
+    .icon-star {
       float: right;
       margin: 15px 0 0;
-      .material-icons {
-        float: left;
-        margin-right: 5px;
-      }
-      .icon-star {
-        &.on    .material-icons { color: #f70; }
-        &.off   .material-icons { color: #bbb; }
-        &:hover .material-icons { opacity: 0.8; }
-      }
+      &.on    .material-icons { color: #f70; }
+      &.off   .material-icons { color: #bbb; }
+      &:hover .material-icons { opacity: 0.8; }
     }
     .subject {
       display: block;
@@ -220,6 +242,9 @@
   .addon-body {
     min-height: 200px;
     border-top: 1px solid #e4e4e4;
+    .body--html img[data-url] {
+       height: none;
+    }
   }
   .attachments {
     padding: 15px 15px 5px;

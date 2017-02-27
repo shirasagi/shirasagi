@@ -9,7 +9,9 @@ module Webmail::Addon
       html = html.gsub(/<script.*?<\/script>/im, '')
 
       html = html.gsub(/(<img [^>]*)src="(.*?)"([^>]*>)/im) do |img|
-        pre, src, suf = $1, $2, $3
+        pre = $1
+        src = $2
+        suf = $3
         if src =~ /^cid:/
           all_parts.each do |pos, part|
             next unless part.content_id.to_s.include?(src.sub(/^cid:/, ''))

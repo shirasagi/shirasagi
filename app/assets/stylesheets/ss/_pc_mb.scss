@@ -78,14 +78,18 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
+.hide { display: none; }
+
 .material-icons {
-  margin-top: -1px;
-  margin-bottom: 1px;
   vertical-align: middle;
 }
-.hide {
-  display: none;
+@-moz-document url-prefix() {
+  .material-icons {
+    margin-top: 1px;
+    margin-bottom: -1px;
+  }
 }
+
 .dropdown {
   position: relative;
   cursor: pointer;

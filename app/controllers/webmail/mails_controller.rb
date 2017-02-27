@@ -2,6 +2,7 @@ class Webmail::MailsController < ApplicationController
   include Webmail::BaseFilter
   include Webmail::ImapFilter
   include Sns::CrudFilter
+  helper Webmail::MailHelper
 
   model Webmail::Mail
 
@@ -22,16 +23,22 @@ class Webmail::MailsController < ApplicationController
     end
 
     def set_mailbox
+      @mailbox = params[:mailbox]
       @navi_mailboxes = true
-      @imap.examine(@mailbox = params[:mailbox])
+
+      if params[:action] == 'index'
+        @imap.select(@mailbox)
+      else
+        @imap.examine(@mailbox)
+      end
     end
 
     def fix_params
-      @imap.account_attributes.merge(cur_user: @cur_user, sync: true, mailbox: @mailbox)
+      @imap.account_scope.merge(cur_user: @cur_user, mailbox: @mailbox)
     end
 
     def set_item
-      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @item = @imap.mails.find params[:id], :body
       @item.attributes = fix_params
     end
 
@@ -50,12 +57,12 @@ class Webmail::MailsController < ApplicationController
 
   public
     def index
-      @items = @model.
-        where(mailbox: @mailbox).
-        imap_search(params[:s]).
+      @items = @imap.mails.
+        mailbox(@mailbox).
+        search(params[:s]).
         page(params[:page]).
         per(50).
-        imap_all
+        all
     end
 
     def show
@@ -63,24 +70,24 @@ class Webmail::MailsController < ApplicationController
     end
 
     def header_view
-      @item = @model.where(mailbox: @mailbox).imap_find params[:id]
+      @item = @imap.mails.find params[:id]
       render plain: @item.header, layout: false
     end
 
     def source_view
-      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :rfc822
+      @item = @imap.mails.find params[:id], :rfc822
       render plain: @item.rfc822, layout: false
     end
 
     def download
-      @item = @model.where(mailbox: @mailbox).imap_find params[:id], :rfc822
+      @item = @imap.mails.find params[:id], :rfc822
 
       send_data @item.rfc822, filename: "#{@item.subject}.eml",
                 content_type: 'message/rfc822', disposition: :attachment
     end
 
     def parts
-      part = @model.where(mailbox: @mailbox).find_part params[:id], params[:section]
+      part = @imap.mails.find_part params[:id], params[:section]
       disposition = part.image? ? :inline : :attachment
 
       send_data part.decoded, filename: part.filename,
@@ -93,21 +100,21 @@ class Webmail::MailsController < ApplicationController
     end
 
     def reply
-      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @ref  = @imap.mails.find params[:id], :body
       @item = @model.new pre_params.merge(fix_params)
       @item.new_reply(@ref)
       render :new
     end
 
     def reply_all
-      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @ref  = @imap.mails.find params[:id], :body
       @item = @model.new pre_params.merge(fix_params)
       @item.new_reply_all(@ref)
       render :new
     end
 
     def forward
-      @ref  = @model.where(mailbox: @mailbox).imap_find params[:id], :body
+      @ref  = @imap.mails.find params[:id], :body
       @item = @model.new pre_params.merge(fix_params)
       @item.new_forward(@ref)
       render :new
@@ -130,42 +137,42 @@ class Webmail::MailsController < ApplicationController
     end
 
     def destroy
-      raise "403" unless @item.allowed?(:delete, @cur_user)
-      render_destroy @item.move_trash
+      @imap.uids_move_trash [@item.uid]
+      render_destroy true
     end
 
     def set_seen
-      @model.set_seen get_uids
+      @imap.uids_set_seen get_uids
       render_change :set_seen
     end
 
     def unset_seen
-      @model.unset_seen get_uids
+      @imap.uids_unset_seen get_uids
       render_change :unset_seen
     end
 
     def set_star
-      @model.set_star get_uids
+      @imap.uids_set_star get_uids
       render_change :set_star, redirect: { action: :show }
     end
 
     def unset_star
-      @model.unset_star get_uids
+      @imap.uids_unset_star get_uids
       render_change :unset_star, redirect: { action: :show }
     end
 
     def destroy_all
-      @model.uids_move_trash get_uids
+      @imap.uids_move_trash get_uids
       render_change :delete
     end
 
     def copy
-      @model.uids_copy get_uids, params[:dst]
+      @imap.uids_copy get_uids, params[:dst]
       render_change :copy
     end
 
     def move
-      @model.uids_move get_uids, params[:dst]
+      @imap.uids_move get_uids, params[:dst]
       render_change :move
     end
 

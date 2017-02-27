@@ -1,10 +1,20 @@
 <%= form_for :item, url: { action: :apply } do |f| %>
 <%= error_messages_for :item %>
 
+<%= jquery do %>
+$('.btn.apply-filter').click(function(){
+  if ($('.apply-mailbox').val() == '') {
+    alert("<%= t('webmail.errors.blank_apply_mailbox') %>");
+    return false;
+  }
+  return confirm("<%= t('webmail.confirm.apply_filter') %>");
+});
+<% end %>
+
 <dl class="see">
   <dd class="wide">
-    <%= f.select_tag :mailbox, options_for_select(@item.mailbox_options), include_blank: '' %>
-    <%= f.submit t("webmail.links.apply"), class: 'btn', data: { confirm: t("webmail.confirm.apply_filter") } %>
+    <%= f.select_tag :mailbox, options_for_select(@item.mailbox_options), class: 'apply-mailbox', include_blank: '' %>
+    <%= f.submit t("webmail.links.apply"), class: 'btn apply-filter' %>
   </dd>
 </dl>
 

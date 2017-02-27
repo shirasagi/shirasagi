@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+root = File.dirname(__dir__)
+
+## logs
+puts "# Clean logs"
+
+Dir.glob("#{root}/log/*.log") do |file|
+  next if File::Stat.new(file).size == 0 
+  puts file
+  File.write(file, "")
+end
+
+## empty directories
+puts "# Clean directories"
+
+resp = `find #{root}/private -type d -empty`.strip
+puts resp if resp.strip != ''
+
+resp = `find #{root}/private -type d -empty -delete`.strip
+puts resp if resp.strip != ''
+
+## tmp:clear
+puts "# rake tmp:clear"
+`bundle exec rake tmp:clear`

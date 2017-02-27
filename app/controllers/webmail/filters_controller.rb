@@ -5,8 +5,7 @@ class Webmail::FiltersController < ApplicationController
 
   model Webmail::Filter
 
-  before_action :set_imap, only: [:apply]
-  after_action :unset_imap, only: [:apply]
+  before_action :imap_login, only: [:apply]
 
   private
     def set_crumbs

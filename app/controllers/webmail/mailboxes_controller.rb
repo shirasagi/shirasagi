@@ -11,7 +11,7 @@ class Webmail::MailboxesController < ApplicationController
     end
 
     def fix_params
-      @imap.account_attributes.merge(cur_user: @cur_user, sync: true)
+      @imap.account_scope.merge(cur_user: @cur_user, sync: true)
     end
 
     def set_destroy_items
@@ -28,10 +28,48 @@ class Webmail::MailboxesController < ApplicationController
 
   public
     def index
-      @model.imap_all
+      @items = @imap.mailboxes.load.without_inbox
+    end
 
-      @items = @model.
-        page(params[:page]).
-        per(50)
+    def reload
+      @reload_info = @imap.mailboxes.reload_info
+
+      if request.post?
+        @imap.mailboxes.reload
+        redirect_to url_for(action: :index), notice: t('webmail.notice.reloaded_mailboxes')
+      end
+    end
+
+    def recent
+      mailboxes = @imap.mailboxes.load
+      inbox = mailboxes.inbox.status
+
+      resp = {}
+      resp[:notice] = t('webmail.notice.recent_mail', count: inbox.recent) if inbox.recent > 0
+      resp[:inbox] = {
+        recent: inbox.recent,
+        uidnext: inbox.uidnext,
+        unseen: inbox.unseen,
+        url: webmail_mails_path
+      }
+      resp[:mailboxes] = mailboxes.all.map do |box|
+        box.status.save
+        { name: box.original_name, recent: box.recent, uidnext: box.uidnext, unseen: box.unseen }
+      end
+
+      render json: resp.to_json
+    end
+
+    def quota
+      item = @imap.quota.reload
+
+      resp = {
+        label: item.label,
+        quota: item.quota,
+        usage: item.usage,
+        percentage: item.percentage
+      }
+
+      render json: resp.to_json
     end
 end

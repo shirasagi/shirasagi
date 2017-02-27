@@ -1,8 +1,11 @@
 class Webmail::AccountSettingsController < ApplicationController
   include Webmail::BaseFilter
   include SS::CrudFilter
+  include Webmail::ImapFilter
 
   model SS::User
+
+  skip_before_action :imap_login
 
   menu_view "ss/crud/resource_menu"
 
@@ -34,12 +37,12 @@ class Webmail::AccountSettingsController < ApplicationController
       user.attributes = get_params
       user.valid?
 
-      @imap = Webmail::Imap.new
+      @imap = Webmail::Imap.set_user(user)
 
-      if @imap.login(user)
+      if @imap.login
         render text: "Login Success."
       else
-        render text: @imap.errors.full_messages.join(' ')
+        render text: @imap.error
       end
     end
 end

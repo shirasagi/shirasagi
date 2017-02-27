@@ -52,10 +52,6 @@ module Webmail::UserExtension
     self[:imap_trash_box].presence || "INBOX.Trash"
   end
 
-  def imap_special_mailboxes
-    [imap_sent_box, imap_draft_box, imap_trash_box]
-  end
-
   def decrypt_imap_password
     SS::Crypt.decrypt(imap_password)
   end

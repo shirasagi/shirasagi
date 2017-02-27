@@ -1,7 +1,7 @@
 <%
 @s = OpenStruct.new params[:s]
 %>
-<% if label = @model.imap_search_label(params[:s]) %>
+<% if label = searched_label(params[:s]) %>
 <div class="webmail-mail-search-label">
   <%= label %>
 </div>

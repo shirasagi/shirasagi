@@ -3,26 +3,28 @@ module Webmail::ImapFilter
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_imap
-    after_action :unset_imap
+    before_action :imap_init
+    before_action :imap_login
+    after_action :imap_disconnect
     rescue_from Net::IMAP::NoResponseError, with: :rescue_no_response_error
   end
 
   private
-    def set_imap
-      @imap = Webmail::Imap.new
-      return if @imap.login(@cur_user)
+    def imap_init
+      @imap = Webmail::Imap.set_user(@cur_user)
+    end
 
+    def imap_login
+      return if @imap.login
       redirect_to webmail_account_setting_path
     end
 
-    def unset_imap
-      @imap.disconnect rescue nil
-      @imap = nil
+    def imap_disconnect
+      @imap.disconnect
     end
 
     def rescue_no_response_error(e)
       raise e if Rails.env.development?
-      render inline: e.to_s, layout: true
+      render plain: e.to_s, layout: true
     end
 end

@@ -1,39 +1,60 @@
-<nav class="main-navi main-navi-md webmail-navi-mailboxes">
+<%
+
+if @navi_mailboxes
+  @mailboxes = @imap.mailboxes.load
+  @quota = @imap.quota.load
+end
+
+%>
+<nav class="main-navi main-navi-md webmail-navi webmail-navi-mailboxes">
+  <%= link_to recent_webmail_mailboxes_path, class: "reload" do %>
+    <i class="material-icons md-dark">&#xE5D5;</i>
+  <% end if @mailboxes  %>
+
   <h2>
-    <%= link_to webmail_mails_path do %>
+    <%= link_to webmail_mails_path, 'data-name' => 'INBOX' do %>
       <i class="material-icons">&#xE0E1;</i>
       <%= t('webmail.box.inbox') %>
 
-      <% if @navi_mailboxes && 0 < unseen = Webmail::Mailbox.inbox_unseen %>
-        <span class="unseen-count">(<%= unseen %>)</span>
+      <% if @mailboxes && inbox = @mailboxes.inbox.status %>
+        <% if inbox.unseen > 0 %>
+          <span class="unseen">(<%= inbox.unseen %>)</span>
+        <% end %>
       <% end %>
     <% end %>
   </h2>
 
-  <% if @navi_mailboxes %>
+  <% if @mailboxes %>
   <div class="mailboxes">
-    <% Webmail::Mailbox.imap_all.each do |box| %>
-      <%= link_to webmail_mails_path(mailbox: box.encode_name),
-        class: box.css_class, "data-name" => box.encode_name do %>
-
+    <% @mailboxes.without_inbox.each do |box| %>
+      <a class="<%= box.css_class %>" data-name="<%= box.original_name %>"
+        <% if !box.noselect? %>
+          href="<%= webmail_mails_path(mailbox: box.original_name) %>"
+        <% end %>
+      >
         <%== "<span class='pad'></span>" * (box.depth - 1) %>
-        <i class="material-icons md-18">&#xE2C8;</i>
+        <i class="material-icons md-18"><%== box.icon %></i>
         <span class="mailbox-name""><%= box.basename %></span>
 
         <% if 0 < box.unseen %>
-          <span class="unseen-count">(<%= box.unseen %>)</span>
+          <span class="unseen">(<%= box.unseen %>)</span>
         <% end %>
-      <% end %>
+      </a>
     <% end %>
   </div>
   <% end %>
 </nav>
 
-<% if @navi_mailboxes %>
+<% if @mailboxes %>
 <div id="webmail-mailboxes-list">
   <ul class="dropdown-menu webmail-dropdown-menu">
-    <% Webmail::Mailbox.user(@cur_user).to_options.each do |label, value| %>
-    <li><a href="#" data-name="<%= value %>"><%= label %></a></li>
+    <% @mailboxes.all.each do |box| %>
+    <li>
+      <a href="#" data-name="<%= box.original_name %>">
+        <%== "<span class='pad'></span>" * box.depth %>
+        <%= box.basename %>
+      </a>
+    </li>
     <% end %>
   </ul>
 </div>
@@ -49,11 +70,19 @@
   <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
 </nav>
 
-<% if @navi_mailboxes && quota = @imap.quota %>
-<div class="webmail-quota">
-  <div class="total">
-    <div class="label"><%= number_to_human_size quota.used %>/<%= number_to_human_size quota.total %></div>
-    <div class="used" style="width: <%= quota.per %>%"></div>
+<% if @quota %>
+<nav class="mod-navi webmail-navi webmail-navi-quota">
+  <h2><%= t('mongoid.models.webmail/quota') %></h2>
+
+  <%= link_to quota_webmail_mailboxes_path, class: "reload" do %>
+    <i class="material-icons md-dark">&#xE5D5;</i>
+  <% end if @quota.quota?  %>
+
+  <div class="quota">
+    <div class="label">
+      <%= @quota.label %>
+    </div>
+    <div class="usage" style="width: <%= @quota.percentage %>%"></div>
   </div>
 </div>
 <% end %>

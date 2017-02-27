@@ -3,23 +3,22 @@
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
     <div class="addon-head">
-      <div class="icons">
-        <% if @item.star? %>
-          <%= link_to({ action: :unset_star }, { class: 'update-mail unset-star icon-star on' }) do %>
-            <i class="material-icons">&#xE838;</i>
-          <% end %>
-        <% else %>
-          <%= link_to({ action: :set_star }, { class: 'update-mail set-star icon-star off' }) do %>
-            <i class="material-icons">&#xE838;</i>
-          <% end %>
+      <% if @item.star? %>
+        <%= link_to({ action: :unset_star }, { class: 'update-mail unset-star icon-star on' }) do %>
+          <i class="material-icons">&#xE838;</i>
         <% end %>
-
+      <% else %>
+        <%= link_to({ action: :set_star }, { class: 'update-mail set-star icon-star off' }) do %>
+          <i class="material-icons">&#xE838;</i>
+        <% end %>
+      <% end %>
+      <h2 class="subject">
+        <%= @item.display_subject %>
+        <!--
         <span class="icon-attachment">
           <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
         </span>
-      </div>
-      <h2 class="subject">
-        <%= @item.display_subject %>
+        -->
       </h2>
       <div class="from"><%= @item.sender || @item.from[0] %></div>
       <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
@@ -50,10 +49,6 @@
     </div>
     <% end %>
 
-    <div class="addon-body">
-      <%= render file: "_show" %>
-    </div>
-
     <% if @item.attachments.present? %>
     <div class="attachments" id="mail-attachments">
       <% @item.attachments.each do |part| %>
@@ -66,6 +61,10 @@
       <% end %>
     </div>
     <% end %>
+
+    <div class="addon-body">
+      <%= render file: "_show" %>
+    </div>
   </div>
   <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
 </div>
