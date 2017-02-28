@@ -65,6 +65,7 @@ ja:
       apply_filter: フィルターを適用してよろしいですか？
     notice:
       recent_mail: "%{count} 件の新着メールがあります。"
+      no_recent_mail: "新着メールはありません。"
       deleted_cache: キャッシュを削除しました。
       copy: コピーしました。
       move: 移動しました。

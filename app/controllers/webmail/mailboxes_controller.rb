@@ -45,7 +45,13 @@ class Webmail::MailboxesController < ApplicationController
       inbox = mailboxes.inbox.status
 
       resp = {}
-      resp[:notice] = t('webmail.notice.recent_mail', count: inbox.recent) if inbox.recent > 0
+
+      if inbox.recent > 0
+        resp[:notice] = t('webmail.notice.recent_mail', count: inbox.recent)
+      else
+        resp[:notice] = t('webmail.notice.no_recent_mail')
+      end
+
       resp[:inbox] = {
         recent: inbox.recent,
         uidnext: inbox.uidnext,

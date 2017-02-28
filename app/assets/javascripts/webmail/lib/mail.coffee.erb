@@ -21,6 +21,8 @@ class @Webmail_Mail
               h = " <span class='unseen'>(#{mailbox.unseen})</span>"
               navi.find("a[data-name='#{mailbox.name}']").append(h)
           SS.notice(data.notice) if data.notice
+          if data.inbox.recent > 0
+            location.href = data.inbox.url if location.pathname == data.inbox.url
           btn.removeClass('disabled')
       return false
 
