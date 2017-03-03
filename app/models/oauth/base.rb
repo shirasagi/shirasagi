@@ -2,18 +2,33 @@ require 'oauth2'
 
 module Oauth::Base
   def site
-    host = @env["HTTP_X_FORWARDED_HOST"] || @env["HTTP_HOST"] || request.host_with_port
-    @site ||= SS::Site.find_by_domain host
+    @site ||= begin
+      request.env["ss.site"] ||= begin
+        host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+        path = request.env["REQUEST_PATH"] || request.path
+        SS::Site.find_by_domain host, path
+      end
+    end
   end
 
   def node
-    path = request.env["REQUEST_PATH"] || request.path
-    @node ||= Member::Node::Login.site(site).in_path(path).sort(depth: -1).first
+    return if site.blank?
+    @node ||= begin
+      request.env["ss.node"] ||= begin
+        path = request.env["REQUEST_PATH"] || request.path
+        if site.subdir.present?
+          main_path = path.sub(/^\/#{site.subdir}/, "")
+        else
+          main_path = path.dup
+        end
+
+        Member::Node::Login.site(site).in_path(main_path).sort(depth: -1).first
+      end
+    end
   end
 
   def client_id
     @client_id ||= begin
-      Rails.logger.debug("fetch client id from #{node.try(:filename)} node")
       id = node.try("#{name}_client_id".downcase)
       id = SS.config.oauth.try(:[], "#{name}_client_id") if id.blank?
       id
@@ -22,7 +37,6 @@ module Oauth::Base
 
   def client_secret
     @client_secret ||= begin
-      Rails.logger.debug("fetch client secret from #{node.try(:filename)} node")
       secret = node.try("#{name}_client_secret".downcase)
       secret = SS.config.oauth.try(:[], "#{name}_client_secret") if secret.blank?
       secret
