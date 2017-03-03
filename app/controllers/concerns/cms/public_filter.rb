@@ -59,6 +59,7 @@ module Cms::PublicFilter
 
     def set_request_path
       @cur_path ||= request_path
+      cur_path = @cur_path.dup
 
       filter_methods = self.class.private_instance_methods.select { |m| m =~ /^set_request_path_with_/ }
       filter_methods.each do |name|
