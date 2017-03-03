@@ -34,8 +34,6 @@ SS::Application.routes.draw do
   end
 
   concern :mailbox do
-    get :recent, :on => :collection
-    get :quota, :on => :collection
     get :reload, :on => :collection
     post :reload, :on => :collection
   end
@@ -59,6 +57,8 @@ SS::Application.routes.draw do
     end
 
     namespace "apis" do
+      get "recent" => "imap#recent"
+      get "quota" => "imap#quota"
       get "addresses" => "addresses#index"
     end
   end

@@ -7,7 +7,6 @@ class Webmail::MailsController < ApplicationController
   model Webmail::Mail
 
   skip_before_action :set_selected_items
-  before_action :apply_filters, if: ->{ request.get? }
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
@@ -15,11 +14,6 @@ class Webmail::MailsController < ApplicationController
   private
     def set_crumbs
       @crumbs << [:'webmail.mail', { action: :index } ]
-    end
-
-    def apply_filters
-      count = Webmail::Filter.user(@cur_user).enabled.apply_all 'INBOX', ['NEW']
-      flash[:notice] = t('webmail.notice.filter_applied', count: count) if count > 0
     end
 
     def set_mailbox
@@ -57,6 +51,9 @@ class Webmail::MailsController < ApplicationController
 
   public
     def index
+      @mailboxes = @imap.mailboxes.load
+      @mailboxes.apply_recent_filters
+
       @items = @imap.mails.
         mailbox(@mailbox).
         search(params[:s]).
@@ -66,7 +63,10 @@ class Webmail::MailsController < ApplicationController
     end
 
     def show
-      @item.set_seen if @item.unseen?
+      if @item.unseen?
+        @item.set_seen
+        @mailboxes = @imap.mailboxes.update_status
+      end
     end
 
     def header_view
@@ -143,12 +143,12 @@ class Webmail::MailsController < ApplicationController
 
     def set_seen
       @imap.uids_set_seen get_uids
-      render_change :set_seen
+      render_change :set_seen, reload: true
     end
 
     def unset_seen
       @imap.uids_unset_seen get_uids
-      render_change :unset_seen
+      render_change :unset_seen, reload: true
     end
 
     def set_star
@@ -163,20 +163,22 @@ class Webmail::MailsController < ApplicationController
 
     def destroy_all
       @imap.uids_move_trash get_uids
-      render_change :delete
+      render_change :delete, reload: true
     end
 
     def copy
       @imap.uids_copy get_uids, params[:dst]
-      render_change :copy
+      render_change :copy, reload: true
     end
 
     def move
       @imap.uids_move get_uids, params[:dst]
-      render_change :move
+      render_change :move, reload: true
     end
 
     def render_change(action, opts = {})
+      @imap.mailboxes.update_status if opts[:reload]
+
       location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
       respond_to do |format|

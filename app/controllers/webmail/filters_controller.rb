@@ -33,6 +33,8 @@ class Webmail::FiltersController < ApplicationController
       set_item
       count = @item.apply(mailbox)
 
+      @imap.mailboxes.update_status
+
       respond_to do |format|
         format.html { redirect_to location, notice: t('webmail.notice.multiple.filtered', count: count) }
         format.json { head :no_content }

@@ -1,10 +1,4 @@
 class @Webmail_Mail
-  @render: ->
-    @renderNavi()
-    @renderList()
-    @renderDetail()
-    @renderForm()
-
   @renderNavi: ->
     navi = $('.webmail-navi-mailboxes')
     navi.find('.reload').click ->
@@ -17,9 +11,8 @@ class @Webmail_Mail
           navi.find('.unseen').remove()
         success: (data) ->
           for i, mailbox of data.mailboxes
-            if mailbox.unseen > 0
-              h = " <span class='unseen'>(#{mailbox.unseen})</span>"
-              navi.find("a[data-name='#{mailbox.name}']").append(h)
+            h = " <span class='unseen count#{mailbox.unseen}'>(#{mailbox.unseen})</span>"
+            navi.find("a[data-name='#{mailbox.name}']").append(h)
           SS.notice(data.notice) if data.notice
           if data.inbox.recent > 0
             location.href = data.inbox.url if location.pathname == data.inbox.url

@@ -59,6 +59,9 @@
     color: $orange;
     font-weight: bold;
   }
+  .unseen.count0 {
+    display: none;
+  }
   .mailboxes {
     a {
       display: inline-block;

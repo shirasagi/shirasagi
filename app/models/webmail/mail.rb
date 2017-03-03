@@ -16,7 +16,7 @@ class Webmail::Mail
 
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
-                :to_text, :cc_text, :bcc_text, :references
+                :to_text, :cc_text, :bcc_text
 
   field :host, type: String
   field :account, type: String
@@ -35,15 +35,15 @@ class Webmail::Mail
   field :bcc, type: Array, default: []
   field :reply_to, type: Array, default: []
   field :in_reply_to, type: String
-  field :references, type: Array, default: []
+  field :references, type: SS::Extensions::Words
   field :content_type, type: String
   field :subject, type: String
   field :has_attachment, type: Boolean
 
-  permit_params :reply_uid, :forward_uid,
+  permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
                 :subject, :text, :html, :format,
-                :to_text, :cc_text, :bcc_text, :in_reply_to,
-                to: [], cc: [], bcc: [], reply_to: [], references: []
+                :to_text, :cc_text, :bcc_text,
+                to: [], cc: [], bcc: [], reply_to: []
 
   validates :host, presence: true, uniqueness: { scope: [:account, :mailbox, :uid] }
   validates :account, presence: true

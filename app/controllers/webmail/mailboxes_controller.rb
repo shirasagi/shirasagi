@@ -33,49 +33,9 @@ class Webmail::MailboxesController < ApplicationController
 
     def reload
       @reload_info = @imap.mailboxes.reload_info
+      return unless request.post?
 
-      if request.post?
-        @imap.mailboxes.reload
-        redirect_to url_for(action: :index), notice: t('webmail.notice.reloaded_mailboxes')
-      end
-    end
-
-    def recent
-      mailboxes = @imap.mailboxes.load
-      inbox = mailboxes.inbox.status
-
-      resp = {}
-
-      if inbox.recent > 0
-        resp[:notice] = t('webmail.notice.recent_mail', count: inbox.recent)
-      else
-        resp[:notice] = t('webmail.notice.no_recent_mail')
-      end
-
-      resp[:inbox] = {
-        recent: inbox.recent,
-        uidnext: inbox.uidnext,
-        unseen: inbox.unseen,
-        url: webmail_mails_path
-      }
-      resp[:mailboxes] = mailboxes.all.map do |box|
-        box.status.save
-        { name: box.original_name, recent: box.recent, uidnext: box.uidnext, unseen: box.unseen }
-      end
-
-      render json: resp.to_json
-    end
-
-    def quota
-      item = @imap.quota.reload
-
-      resp = {
-        label: item.label,
-        quota: item.quota,
-        usage: item.usage,
-        percentage: item.percentage
-      }
-
-      render json: resp.to_json
+      @imap.mailboxes.reload
+      redirect_to url_for(action: :index), notice: t('webmail.notice.reloaded_mailboxes')
     end
 end

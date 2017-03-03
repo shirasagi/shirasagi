@@ -1,25 +1,28 @@
 <%
 
 if @navi_mailboxes
-  @mailboxes = @imap.mailboxes.load
+  if @mailboxes.nil?
+    @mailboxes = @imap.mailboxes.load
+    @mailboxes.inbox.status
+  end
   @quota = @imap.quota.load
 end
 
 %>
+<%= jquery do %>
+  Webmail_Mail.renderNavi();
+<% end %>
+
 <nav class="main-navi main-navi-md webmail-navi webmail-navi-mailboxes">
-  <%= link_to recent_webmail_mailboxes_path, class: "reload" do %>
+  <%= link_to webmail_apis_recent_path, class: "reload" do %>
     <i class="material-icons md-dark">&#xE5D5;</i>
   <% end if @mailboxes  %>
 
   <h2>
     <%= link_to webmail_mails_path, 'data-name' => 'INBOX' do %>
-      <i class="material-icons">&#xE0E1;</i>
-      <%= t('webmail.box.inbox') %>
-
-      <% if @mailboxes && inbox = @mailboxes.inbox.status %>
-        <% if inbox.unseen > 0 %>
-          <span class="unseen">(<%= inbox.unseen %>)</span>
-        <% end %>
+      <i class="material-icons">&#xE0E1;</i> <%= t('webmail.box.inbox') %>
+      <% if @mailboxes && inbox = @mailboxes.inbox %>
+        <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
       <% end %>
     <% end %>
   </h2>
@@ -35,24 +38,20 @@ end
         <%== "<span class='pad'></span>" * (box.depth - 1) %>
         <i class="material-icons md-18"><%== box.icon %></i>
         <span class="mailbox-name""><%= box.basename %></span>
-
-        <% if 0 < box.unseen %>
-          <span class="unseen">(<%= box.unseen %>)</span>
-        <% end %>
+        <span class="unseen count<%= box.unseen %>">(<%= box.unseen %>)</span>
       </a>
     <% end %>
   </div>
   <% end %>
 </nav>
 
-<% if @mailboxes %>
+<% if @navi_mailboxes %>
 <div id="webmail-mailboxes-list">
   <ul class="dropdown-menu webmail-dropdown-menu">
     <% @mailboxes.all.each do |box| %>
     <li>
       <a href="#" data-name="<%= box.original_name %>">
-        <%== "<span class='pad'></span>" * box.depth %>
-        <%= box.basename %>
+        <%== "<span class='pad'></span>" * box.depth %><%= box.basename %>
       </a>
     </li>
     <% end %>
@@ -74,14 +73,12 @@ end
 <nav class="mod-navi webmail-navi webmail-navi-quota">
   <h2><%= t('mongoid.models.webmail/quota') %></h2>
 
-  <%= link_to quota_webmail_mailboxes_path, class: "reload" do %>
+  <%= link_to webmail_apis_quota_path, class: "reload" do %>
     <i class="material-icons md-dark">&#xE5D5;</i>
   <% end if @quota.quota?  %>
 
   <div class="quota">
-    <div class="label">
-      <%= @quota.label %>
-    </div>
+    <div class="label"><%= @quota.label %></div>
     <div class="usage" style="width: <%= @quota.percentage %>%"></div>
   </div>
 </div>

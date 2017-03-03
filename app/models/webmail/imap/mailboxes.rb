@@ -70,6 +70,22 @@ module Webmail::Imap
       info
     end
 
+    def update_status
+      @list.each { |item| item.status.save }
+      self
+    end
+
+    def apply_recent_filters
+      return 0 if inbox.status.recent == 0
+
+      counts = Webmail::Filter.user(imap.user).enabled.map do |filter|
+        filter.apply 'INBOX', ['NEW']
+      end
+
+      update_status
+      counts.inject(:+) || 0
+    end
+
     def cache_find
       Webmail::Mailbox.where(imap.account_scope).entries
     end
