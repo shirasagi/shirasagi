@@ -2,7 +2,7 @@ class @Ads_Banner
   # randomize banners
   @randomize: (selector) ->
     wrap = $(selector)
-    list = wrap.find("a")
+    list = wrap.find("a").parent("span")
     list = list.sort ->
       return Math.random() - .5
     list.each ->
