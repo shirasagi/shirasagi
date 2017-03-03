@@ -28,7 +28,7 @@
               <%= hidden_field_tag "#{f.object_name}[#{column.id}]", ans.values[0] if ans.values[0] %>
             <% end %>
           <% end %>
-          <%= data.original_filename if data %><br />
+          <%= tryb { data.original_filename } || tryb { data.name } if data %><br />
         <% else %>
           <%= f.hidden_field column.id, value: data %><%=br data %>
           <% if column.input_confirm == "enabled" %>

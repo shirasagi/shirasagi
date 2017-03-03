@@ -35,13 +35,14 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @items = []
       @data = {}
       @columns.each do |column|
-        @items << [column, params[:item].try(:[], column.id.to_s)]
-        @data[column.id] = [params[:item].try(:[], column.id.to_s)]
+        param = params[:item].try(:[], column.id.to_s)
         if column.input_type == "upload_file" &&
-            !@data[column.id].last.blank? &&
-            !@data[column.id].last.kind_of?(ActionDispatch::Http::UploadedFile)
-          @data[column.id] = SS::File.find(@data[column.id])
+            !param.blank? &&
+            !param.kind_of?(ActionDispatch::Http::UploadedFile)
+          param = SS::File.find(param)
         end
+        @items << [column, param]
+        @data[column.id] = [param]
         if column.input_confirm == "enabled"
           @items.last << params[:item].try(:[], "#{column.id}_confirm")
           @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")
