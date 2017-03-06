@@ -15,8 +15,7 @@ module Cms::Addon
       field :fbid, type: String
       field :fbuid, type: String
       field :fbpid, type: String
-      field :fburl, type: String
-      permit_params :fbauto, :twauto, :deleteauto, :twid, :twuid, :fbid, :fbuid, :fbpid, :fburl
+      permit_params :fbauto, :twauto, :deleteauto, :twid, :twuid, :fbid, :fbuid, :fbpid
       after_generate_file { post_sns() }
       after_remove_file { delete_sns() }
     end
@@ -75,7 +74,7 @@ module Cms::Addon
 
     def fb_url
       if fbauto == "active"
-        fburl
+        "https://www.facebook.com/#{fbuid}/posts/#{fbpid}"
       end
     end
 
@@ -134,20 +133,6 @@ module Cms::Addon
           
           self.set(fbuid: fbidArray[0])
           self.set(fbpid: fbidArray[1])
-
-          fbinfo = graph.get_object('me?fields=link')
-          self.set(fburl: fbinfo['link'].to_s)
-
-          logger.error "site_url=>"
-          logger.error site_url
-          logger.error "site_full_url=>"
-          logger.error site_full_url
-          logger.error "file_ids=>"
-          logger.error file_ids.to_a.first
-          logger.error "image_path=>"
-          logger.error image_path
-          logger.error "site=>"
-          logger.error site.inspect
 
         end
       end
