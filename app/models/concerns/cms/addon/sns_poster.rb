@@ -16,8 +16,8 @@ module Cms::Addon
       field :fbuid, type: String
       field :fbpid, type: String
       permit_params :fbauto, :twauto, :deleteauto, :twid, :twuid, :fbid, :fbuid, :fbpid
-      after_generate_file { post_sns() }
-      after_remove_file { delete_sns() }
+      after_generate_file { post_sns }
+      after_remove_file { delete_sns }
     end
 
     def sns_poster_fb_options
@@ -79,7 +79,7 @@ module Cms::Addon
     end
 
     def fbid_separator(facebook_param)
-      fbidArray = facebook_param.split("_")
+      fbid_array = facebook_param.split("_")
     end
 
     def twSnskeys(snskeys)
@@ -102,7 +102,7 @@ module Cms::Addon
         snskeys = SS.config.cms.sns_poster
 
         # tweet
-        if twauto === "active"
+        if twauto == "active"
           client = twSnskeys(snskeys)
           tweet = "#{name}｜#{tweet_url}"
           twitter_param = client.update(tweet)
@@ -113,33 +113,29 @@ module Cms::Addon
         end
 
         # facebook
-        if fbauto === "active"
+        if fbauto == "active"
           require 'koala'
           access_token = snskeys["access_token_f"]
           graph = Koala::Facebook::API.new(access_token)
           facebook_param = graph.put_wall_post( message, {
-            "name" => "#{name} - #{site_name}",
-            # 有効なurlでないとエラーになるようなので、ダミーデータを代入
-            "link" => "http://www.google.co.jp/",
-            # 本来はこっち
-            # "link" => site_full_url,
-            "description" => "#{description}"
+            "link"=> site_full_url,
+            "description"=> "#{description}"
           })
           facebook_param = facebook_param['id'].to_s
           self.set(fbid: facebook_param)
 
           # UID/PID取得
-          fbidArray = fbid_separator(facebook_param)
-          
-          self.set(fbuid: fbidArray[0])
-          self.set(fbpid: fbidArray[1])
+          fbid_array = fbid_separator(facebook_param)
+
+          self.set(fbuid: fbid_array[0])
+          self.set(fbpid: fbid_array[1])
 
         end
       end
 
       def delete_sns
         snskeys = SS.config.cms.sns_poster
-        if deleteauto === "active"
+        if deleteauto == "active"
           if twid.present?
             client = twSnskeys(snskeys)
             client.destroy_status(twid)
