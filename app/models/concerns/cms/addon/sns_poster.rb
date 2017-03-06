@@ -82,7 +82,7 @@ module Cms::Addon
       fbid_array = facebook_param.split("_")
     end
 
-    def twSnskeys(snskeys)
+    def tw_snskeys(snskeys)
       client = Twitter::REST::Client.new do |config|
         config.consumer_key        = snskeys["consumer_key"]
         config.consumer_secret     = snskeys["consumer_secret"]
@@ -103,7 +103,7 @@ module Cms::Addon
 
         # tweet
         if twauto == "active"
-          client = twSnskeys(snskeys)
+          client = tw_snskeys(snskeys)
           tweet = "#{name}｜#{tweet_url}"
           twitter_param = client.update(tweet)
           twitter_id = twitter_param.id
@@ -144,7 +144,7 @@ module Cms::Addon
         snskeys = SS.config.cms.sns_poster
         if deleteauto == "active"
           if twid.present?
-            client = twSnskeys(snskeys)
+            client = tw_snskeys(snskeys)
             client.destroy_status(twid)
           end
           if fbid.present?
