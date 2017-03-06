@@ -74,7 +74,7 @@ production: &production
     access_token_secret: eH8nF6UAvUwZ3olfDXo0c0A4YIUUWMBDhyq7xXhGy4QX5
 
     #facebook 既定値
-    access_token_f: EAABwMDsNljwBAHdavZAT5uaxN5QQvZB0yvN846kXjWkwQsQq8WonmCfea38lYkwpinPC4moYtTKRKztMS4Lw4FOStaELL2UFgUZBBzCRSdGlNm2L4U1HYkwcXB19W4X5kH61U8sjTobF62dznMDQYX6ZBrVh5HJcZAzvoRVNqcOkCt6yHcgIOLMSTs0DqStQZD
+    access_token_f: EAABwMDsNljwBAHytrVaWzHyJuuvomAmTbT4pG2KYud8LCtxPNf2Hh0OFzPZC0L07oMCAI9xLIBvo4c62LTnhndoorXSaE1lRz7xn5tLAZAgDViWtitMWllrvuOYRbCELDtY3Y2zWvqygHeNupQNXMcwnmPrhUZD
 
 test:
   <<: *production
