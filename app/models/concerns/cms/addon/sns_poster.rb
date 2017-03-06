@@ -117,10 +117,17 @@ module Cms::Addon
           require 'koala'
           access_token = snskeys["access_token_f"]
           graph = Koala::Facebook::API.new(access_token)
-          facebook_param = graph.put_wall_post( message, {
-            "link"=> site_full_url,
-            "description"=> "#{description}"
-          })
+          facebook_param = graph.put_wall_post(
+            message,
+            {
+              "name"=> "#{name} - #{site_name}",
+              # 有効なurlでないとエラーになるようなので、ダミーデータを代入
+              "link"=> "http://www.google.co.jp/",
+              # 本来はこっち
+              # "link"=> site_full_url,
+              "description"=> description
+            }
+          )
           facebook_param = facebook_param['id'].to_s
           self.set(fbid: facebook_param)
 
