@@ -1,9 +1,10 @@
 class Webmail::MailboxesController < ApplicationController
   include Webmail::BaseFilter
-  include Webmail::ImapFilter
   include Sns::CrudFilter
 
   model Webmail::Mailbox
+
+  before_action :imap_login
 
   private
     def set_crumbs

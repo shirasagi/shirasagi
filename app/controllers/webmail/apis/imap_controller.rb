@@ -1,7 +1,8 @@
 class Webmail::Apis::ImapController < ApplicationController
   include Webmail::BaseFilter
-  include Webmail::ImapFilter
   include SS::AjaxFilter
+
+  before_action :imap_login
 
   def recent
     @mailboxes = @imap.mailboxes.load

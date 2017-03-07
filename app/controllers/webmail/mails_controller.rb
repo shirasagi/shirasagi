@@ -1,12 +1,12 @@
 class Webmail::MailsController < ApplicationController
   include Webmail::BaseFilter
-  include Webmail::ImapFilter
   include Sns::CrudFilter
   helper Webmail::MailHelper
 
   model Webmail::Mail
 
   skip_before_action :set_selected_items
+  before_action :imap_login
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_view_name, only: [:new, :create, :edit, :update]

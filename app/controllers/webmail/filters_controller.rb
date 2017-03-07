@@ -1,7 +1,6 @@
 class Webmail::FiltersController < ApplicationController
   include Webmail::BaseFilter
   include Sns::CrudFilter
-  include Webmail::ImapFilter
 
   model Webmail::Filter
 

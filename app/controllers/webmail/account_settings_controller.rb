@@ -1,11 +1,8 @@
 class Webmail::AccountSettingsController < ApplicationController
   include Webmail::BaseFilter
   include SS::CrudFilter
-  include Webmail::ImapFilter
 
   model SS::User
-
-  skip_before_action :imap_login
 
   menu_view "ss/crud/resource_menu"
 
