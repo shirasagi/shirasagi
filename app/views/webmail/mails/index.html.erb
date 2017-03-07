@@ -1,5 +1,5 @@
 <%= jquery do %>
-  Webmail_Mail.render();
+  Webmail_Mail.renderList();
 <% end %>
 
 <div class="index ">
@@ -29,7 +29,7 @@
         <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
       </div>
       <div class="info">
-        <% if @mailbox.start_with?(@cur_user.imap_sent_box) %>
+        <% if @imap.sent_box?(@mailbox) %>
           <span class="field to"><%= item.display_to.join(',') %></span>
         <% else %>
           <span class="field from"><%= item.display_sender %></span>

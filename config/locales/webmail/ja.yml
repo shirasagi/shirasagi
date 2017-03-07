@@ -12,8 +12,13 @@ ja:
     mailbox: フォルダー
     signature: 署名
     default_settings: 既定の設定
+    create_mailbox_for_reload: 作成されるフォルダー
+    delete_mailbox_for_reload: 削除されるフォルダー
     box:
-      inbox: 受信メール
+      inbox: 受信トレイ
+      sent: 送信済み
+      draft: 下書き
+      trash: ゴミ箱
     settings:
       cache: キャッシュ
       account: アカウント
@@ -29,6 +34,7 @@ ja:
       test_connection: 接続確認
       clear_cache: キャッシュ削除
       clear_cache_all: キャッシュ全削除
+      sync: 同期
     options:
       action:
         copy: コピーする
@@ -53,10 +59,13 @@ ja:
       apply: 適用する
       show_cc_bcc: CC , BCC の表示
       show_image: 画像の表示
+      reload_mailboxes: メールサーバと同期する
     confirm:
       clear_cache: キャッシュを削除してよろしいですか？
       apply_filter: フィルターを適用してよろしいですか？
     notice:
+      recent_mail: "%{count} 件の新着メールがあります。"
+      no_recent_mail: "新着メールはありません。"
       deleted_cache: キャッシュを削除しました。
       copy: コピーしました。
       move: 移動しました。
@@ -65,6 +74,7 @@ ja:
       unset_seen: 未読にしました。
       set_star: スターをつけました。
       unset_star: スターをはずしました。
+      reloaded_mailboxes: 同期しました。
       multiple:
         copy: "%{count} 件のメールをコピーしました。"
         move: "%{count} 件のメールを移動しました。"
@@ -76,11 +86,13 @@ ja:
         filtered: "%{count} 件のメールにフィルターを適用しました。"
     errors:
       blank_conditions: 条件を入力してください。
+      blank_apply_mailbox: 適用するフォルダーを選択してください。
 
   mongoid:
     models:
       webmail/mail: メール
       webmail/mailbox: フォルダー
+      webmail/quota: 容量
       webmail/address: アドレス帳
       webmail/signature: 署名
       webmail/filter: フィルター

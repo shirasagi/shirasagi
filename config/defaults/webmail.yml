@@ -14,8 +14,14 @@ production: &production
       # user: uid, email
       account: email
 
-  # Cache mails
+  # Mail cache
   cache_mails: true
+
+  # Quota cache
+  cache_quota: true
+
+  # Quota cache expires (Hours)
+  cache_quota_expires: 24
 
 test:
   <<: *production

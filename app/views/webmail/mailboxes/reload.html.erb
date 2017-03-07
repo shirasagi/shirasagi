@@ -1,0 +1,28 @@
+<%= form_for :item, url: { action: :reload }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<section class="main-box">
+  <header><h2><%= t('webmail.links.reload_mailboxes') %></h2></header>
+
+  <dl class="see">
+    <dt><%= t 'webmail.create_mailbox_for_reload' %></dt>
+    <dd>
+      <% @reload_info[:create].each do |name| %>
+        <%= name %><br />
+      <% end %>
+    </dd>
+
+    <dt><%= t 'webmail.delete_mailbox_for_reload' %></dt>
+    <dd>
+      <% @reload_info[:delete].each do |name| %>
+        <%= name %><br />
+      <% end %>
+    </dd>
+  </dl>
+</section>
+
+<footer class="send">
+  <%= f.submit t('webmail.buttons.sync'), class: :save %>
+</footer>
+
+<% end %>

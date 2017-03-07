@@ -1,13 +1,13 @@
-module Webmail::ImapConnection
+module Webmail::ImapAccessor
   extend ActiveSupport::Concern
 
   def imap
-    Webmail::Imap.instance
+    Webmail::Imap
   end
 
   class_methods do
     def imap
-      Webmail::Imap.instance
+      Webmail::Imap
     end
   end
 end

@@ -1,12 +1,10 @@
 class Webmail::FiltersController < ApplicationController
   include Webmail::BaseFilter
   include Sns::CrudFilter
-  include Webmail::ImapFilter
 
   model Webmail::Filter
 
-  before_action :set_imap, only: [:apply]
-  after_action :unset_imap, only: [:apply]
+  before_action :imap_login, only: [:apply]
 
   private
     def set_crumbs
@@ -33,6 +31,8 @@ class Webmail::FiltersController < ApplicationController
 
       set_item
       count = @item.apply(mailbox)
+
+      @imap.mailboxes.update_status
 
       respond_to do |format|
         format.html { redirect_to location, notice: t('webmail.notice.multiple.filtered', count: count) }

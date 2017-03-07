@@ -7,10 +7,10 @@ module Webmail::Mail::Message
       cc: merge_address_field(cc, cc_text),
       bcc: merge_address_field(bcc, bcc_text),
       from: imap.user.email_address,
-      in_reply_to: in_reply_to,
-      references: references,
       subject: subject
     }
+    headers[:in_reply_to] = "<#{in_reply_to}>" if in_reply_to.present?
+    headers[:references] = references.to_a.map { |m| "<#{m}>" } if references.present?
 
     headers.select { |k, v| v.present? }
   end
@@ -58,36 +58,38 @@ module Webmail::Mail::Message
 
   def set_reply_body(ref)
     sign = Webmail::Signature.default_sign(imap.user)
-    info = reply_body_info(ref)
-
-    self.text = "\n\n"
-    self.text += "#{sign}\n\n" if sign
-    self.text += info.join("\n") + "\n\n"
-    self.text += reply_body_text(ref).to_s
-
-    self.html = "<p></p>"
-    self.html += sign.gsub(/\r\n|\n/, '<br />') + "<br /><br />" if sign
-    self.html += info.join("<br />") + "<br /><br />"
-    self.html += reply_body_html(ref).to_s
-    self.html = self.html.html_safe
+    self.format = ref.format
+    self.text = reply_body_text(ref, sign)
+    self.html = reply_body_html(ref, sign)
   end
 
   def reply_body_info(ref)
-    data = ["------ Original Message ------"]
-    data << "Date: #{ref.internal_date.strftime('%a, %d %b %Y %H:%M:%S %z')}"
-    data << "From: #{ref.from.join('; ')}" if ref.from.present?
-    data << "To: #{ref.to.join(' ; ')}" if ref.to.present?
-    data << "Cc: #{ref.cc.join(' ; ')}" if ref.cc.present?
-    data << "Subject: #{ref.subject}" if ref.subject.present?
-    data
+    I18n.l(ref.internal_date, format: :long) + ' ' + ref.from.join(', ').to_s + ':'
   end
 
-  def reply_body_text(ref)
-    #ref.text.to_s.gsub(/^/m, "> ")
-    ref.text
+  def reply_body_text(ref, sign = nil)
+    text = "\n\n"
+    text += "#{sign}\n\n" if sign.present?
+    text += reply_body_info(ref) + "\n"
+    text += ref.text.to_s.gsub(/^/m, "> ")
+    text
   end
 
-  def reply_body_html(ref)
-    ref.html || ref.text.to_s.gsub(/\r\n|\n/, '<br />')
+  def reply_body_html(ref, sign = nil)
+    if ref.html.present?
+      bq = ref.sanitize_html
+    else
+      bq = h(ref.text.to_s).gsub(/\r\n|\n/, '<br />')
+    end
+
+    html = "<p></p>"
+    html += "<p>" + h(sign).gsub(/\r\n|\n/, '<br />') + "</p>" if sign.present?
+    html += "<div>" + h(reply_body_info(ref)) + "</div>"
+    html += "<blockquote style='margin: 0 0 0 1ex'>#{bq}</blockquote>"
+    html
+  end
+
+  def h(str)
+    ERB::Util.h(str)
   end
 end

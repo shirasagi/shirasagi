@@ -78,14 +78,18 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
+.hide { display: none; }
+
 .material-icons {
-  margin-top: -1px;
-  margin-bottom: 1px;
   vertical-align: middle;
 }
-.hide {
-  display: none;
+@-moz-document url-prefix() {
+  .material-icons {
+    margin-top: 1px;
+    margin-bottom: -1px;
+  }
 }
+
 .dropdown {
   position: relative;
   cursor: pointer;
@@ -467,7 +471,7 @@ td {
 .main-navi-md {
   h2 {
     a {
-      padding: 8px 10px;
+      padding: 7px 10px;
     }
     a:before {
       background: none !important;
@@ -1165,7 +1169,7 @@ footer.send {
   padding: 5px 0px;
   border: $border-gray4;
   background: $white;
-  @include box-shadow(0px 1px 3px rgba(0,0,0,.1));
+  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
   a {
     display: block;
     padding: 5px 15px;
@@ -1253,7 +1257,7 @@ div.index {
     @include mb { font-size: $px14; }
   }
   .info {
-    @include truncate;
+    display: inline-block;
   }
   .meta {
     span {
@@ -1480,23 +1484,18 @@ form .CodeMirror {
 // form
 
 #notice {
-  display: table;
+  display: none;
   position: fixed;
   top: 0px;
   left: 0px;
   z-index: 100;
   width: 100%;
-  height: 40px;
-  padding: 0px 10px;
-  box-shadow: 0px 1px 2px #888;
-  background-color: #48f;
-  background-color:rgba(40, 80, 120, 0.8);
+  padding: 16px 8px;
+  box-shadow: 0px 6px 12px rgba(0,0,0,.2);
+  background-color:rgba(90,90,90,.94);
   color: #fff;
-  line-height: 2.4;
   .wrap {
-    display: table-cell;
     text-align: center;
-    vertical-align: middle;
   }
 }
 .errorExplanation {

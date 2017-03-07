@@ -1,0 +1,11 @@
+<% @index_title = proc do |item| %>
+  <%= link_to({ action: :show, id: item.id }, class: "title") do %>
+    <%= item.basename %>
+  <% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id"><%= item.name %></span>
+<% end %>
+
+<%= render file: "ss/crud/index" %>

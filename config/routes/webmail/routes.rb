@@ -33,6 +33,11 @@ SS::Application.routes.draw do
     end
   end
 
+  concern :mailbox do
+    get :reload, :on => :collection
+    post :reload, :on => :collection
+  end
+
   concern :filter do
     post :apply, :on => :member
   end
@@ -42,7 +47,7 @@ SS::Application.routes.draw do
 
     resources :mails, concerns: [:deletion, :mail], path: 'mails/:mailbox',
       mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
-    resources :mailboxes, concerns: [:deletion]
+    resources :mailboxes, concerns: [:deletion, :mailbox]
     resources :addresses, concerns: [:deletion]
     resources :signatures, concerns: [:deletion]
     resources :filters, concerns: [:deletion, :filter]
@@ -52,6 +57,8 @@ SS::Application.routes.draw do
     end
 
     namespace "apis" do
+      get "recent" => "imap#recent"
+      get "quota" => "imap#quota"
       get "addresses" => "addresses#index"
     end
   end

@@ -1,9 +1,10 @@
 class Webmail::MailboxesController < ApplicationController
   include Webmail::BaseFilter
-  include Webmail::ImapFilter
   include Sns::CrudFilter
 
   model Webmail::Mailbox
+
+  before_action :imap_login
 
   private
     def set_crumbs
@@ -11,7 +12,7 @@ class Webmail::MailboxesController < ApplicationController
     end
 
     def fix_params
-      @imap.account_attributes.merge(cur_user: @cur_user, sync: true)
+      @imap.account_scope.merge(cur_user: @cur_user, sync: true)
     end
 
     def set_destroy_items
@@ -28,10 +29,14 @@ class Webmail::MailboxesController < ApplicationController
 
   public
     def index
-      @model.imap_all
+      @items = @imap.mailboxes.load.without_inbox
+    end
 
-      @items = @model.
-        page(params[:page]).
-        per(50)
+    def reload
+      @reload_info = @imap.mailboxes.reload_info
+      return unless request.post?
+
+      @imap.mailboxes.reload
+      redirect_to url_for(action: :index), notice: t('webmail.notice.reloaded_mailboxes')
     end
 end
