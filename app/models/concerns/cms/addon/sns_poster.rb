@@ -4,46 +4,47 @@ module Cms::Addon
     include Cms::Content
     extend SS::Addon
 
-   require 'twitter'
-   require 'koala'
-
     included do
-      field :fbauto,     type: String, default: 'expired'
-      field :twauto,     type: String, default: 'expired'
-      field :deleteauto, type: String, default: 'expired'
 
-      # twuid…ツイッター＊ユーザID
-        field :twuid, type: String
-      # twid…ツイッター＊投稿ID
-        field :twid, type: String
-      # fbuid…フェイスブック＊ユーザID
-        field :fbuid, type: String
-      # fbpid…フェイスブック＊投稿ID
-        field :fbpid, type: String
+      field :twitter_auto_post,  type: String, default: 'expired'
+      field :facebook_auto_post, type: String, default: 'expired'
+      field :sns_auto_delete,    type: String, default: 'expired'
+      field :twitter_user_id,    type: String
+      field :twitter_post_id,    type: String
+      field :facebook_user_id,   type: String
+      field :facebook_post_id,   type: String
 
-      permit_params :fbauto, :twauto, :deleteauto, :twid, :twuid, :fbuid, :fbpid
+      permit_params :facebook_auto_post,
+                    :twitter_auto_post,
+                    :sns_auto_delete,
+                    :twitter_post_id,
+                    :twitter_user_id,
+                    :facebook_user_id,
+                    :facebook_post_id
+
       after_generate_file { post_sns }
       after_remove_file { delete_sns }
     end
 
+    # TODO(s.kudo): 実装完了時にdammy_data?関数を削除する
     def dammy_data?
       true
     end
 
-    def sns_poster_fb_options
+    def sns_poster_facebook_options
       definition_state
     end
 
-    def sns_poster_fb_options_ja
-      I18n.t("views.options.state.#{fbauto}")
+    def sns_poster_facebook_options_ja
+      I18n.t("views.options.state.#{facebook_auto_post}")
     end
 
-    def sns_poster_tw_options
+    def sns_poster_twitter_options
       definition_state
     end
 
-    def sns_poster_tw_options_ja
-      I18n.t("views.options.state.#{twauto}")
+    def sns_poster_twitter_options_ja
+      I18n.t("views.options.state.#{twitter_auto_post}")
     end
 
     def sns_poster_delete_options
@@ -51,14 +52,7 @@ module Cms::Addon
     end
 
     def sns_poster_delete_options_ja
-      I18n.t("views.options.state.#{deleteauto}")
-    end
-
-    def definition_state
-      [
-        [I18n.t('views.options.state.active'), 'active'],
-        [I18n.t('views.options.state.expired'), 'expired'],
-      ]
+      I18n.t("views.options.state.#{sns_auto_delete}")
     end
 
     def site_url
@@ -69,16 +63,14 @@ module Cms::Addon
       "#{site.full_url}#{filename}/"
     end
 
-    def access_token_f(snskeys)
-      access_token = snskeys["access_token_f"]
+    def access_token_facebook(snskeys)
+      access_token = snskeys["access_token_facebook"]
       graph = Koala::Facebook::API.new(access_token)
     end
 
     def image_path
       if file_ids.present?
         image_paths = Article::Page.find(_id).files.first.full_url
-        logger.error "image_paths =>"
-        logger.error image_paths
       end
     end
 
@@ -87,23 +79,27 @@ module Cms::Addon
       html = ActionController::Base.helpers.truncate(html, :length=> 253)
     end
 
-    def tw_url
-      if twauto == "active"
-        "https://twitter.com/#{twuid}/status/#{twid}"
-      end
+    def use_twitter_post?
+      twitter_auto_post == "active"
     end
 
-    def fb_url
-      if fbauto == "active"
-        "https://www.facebook.com/#{fbuid}/posts/#{fbpid}"
-      end
+    def use_facebook_post?
+      twitter_auto_post == "active"
     end
 
-    def fbid_separator(facebook_param)
-      fbid_array = facebook_param.split("_")
+    def twitter_url
+      "https://twitter.com/#{twitter_user_id}/status/#{twitter_post_id}" if use_twitter_post?
     end
 
-    def tw_snskeys(snskeys)
+    def facebook_url
+      "https://www.facebook.com/#{facebook_user_id}/posts/#{facebook_post_id}" if use_facebook_post?
+    end
+
+    def facebook_id_separator(facebook_param)
+      facebook_id_array = facebook_param.split("_")
+    end
+
+    def connect_twitter(snskeys)
       client = Twitter::REST::Client.new do |config|
         config.consumer_key        = snskeys["consumer_key"]
         config.consumer_secret     = snskeys["consumer_secret"]
@@ -129,7 +125,8 @@ module Cms::Addon
         message = message_format(html)
         snskeys = SS.config.cms.sns_poster
 
-        #　localhostで動かすなど、ダミーデータが必要な状況下であればダミーデータを代入
+        # TODO(s.kudo): 実装完了時に「if dammy_data?」をまるっと削除する
+        # localhostで動かすなど、ダミーデータが必要な状況下であればダミーデータを代入
         if dammy_data?
           site_full_url = "http://www.google.co.jp/"
           if file_ids.present?
@@ -138,11 +135,10 @@ module Cms::Addon
         end
 
         # tweet
-        if twauto == "active"
+        if use_twitter_post?
           tweet = "#{name}｜#{site_full_url}"
-          # アクセストークンを用いてTwitterに接続
-            client = tw_snskeys(snskeys)
-          # 画像の添付がればupdate_with_mediaを用いて投稿
+          client = connect_twitter(snskeys)
+          # 画像の添付があればupdate_with_mediaを用いて投稿
             if file_ids.present?
               twitter_param = client.update_with_media(tweet, open_from_url(image_path))
           # 画像の添付がなければupdateを用いて投稿
@@ -151,16 +147,15 @@ module Cms::Addon
             end
           # 戻り値から投稿IDを取得し、DBに保存
             twitter_id = twitter_param.id
-            self.set(twid: twitter_id)
+            self.set(twitter_post_id: twitter_id)
           # URLを表示するためにスクリーンネームを取得し、DBに保存
             user_screen_id = client.user.screen_name
-            self.set(twuid: user_screen_id)
+            self.set(twitter_user_id: user_screen_id)
         end
 
         # facebook
-        if fbauto == "active"
-          # アクセストークンを用いてfacebookに接続
-            graph = access_token_f(snskeys)
+        if use_facebook_post?
+          graph = access_token_facebook(snskeys)
           # facebokに投稿し、戻り値を取得
             facebook_params = graph.put_wall_post(
               message,
@@ -172,30 +167,33 @@ module Cms::Addon
               }
             )
             facebook_param = facebook_params['id'].to_s
-          # 戻り値からUID/PID取得
-            fbid_array = fbid_separator(facebook_param)
-          # UID/PIDをDBへ保存
-            self.set(fbuid: fbid_array[0])
-            self.set(fbpid: fbid_array[1])
+          # 戻り値からUID/PID取得し、DBに保存
+            facebook_id_array = facebook_id_separator(facebook_param)
+            self.set(facebook_user_id: facebook_id_array[0])
+            self.set(facebook_post_id: facebook_id_array[1])
         end
       end
 
       def delete_sns
         snskeys = SS.config.cms.sns_poster
-        if deleteauto == "active"
-          if twid.present?
-          # アクセストークンを用いてTwitterに接続
-            client = tw_snskeys(snskeys)
-          # 投稿IDをもとに、投稿を削除
-            client.destroy_status(twid)
+        if sns_auto_delete == "active"
+          if twitter_post_id.present?
+            client = connect_twitter(snskeys)
+            client.destroy_status(twitter_post_id)
           end
-          if fbpid.present?
-            # アクセストークンを用いてfacebookに接続
-              graph = access_token_f(snskeys)
+          if facebook_post_id.present?
+            graph = access_token_facebook(snskeys)
             # UID_PIDの形式に組み替え、投稿を削除
-              graph.delete_object("#{fbuid}_#{fbpid}")
+              graph.delete_object("#{facebook_user_id}_#{facebook_post_id}")
           end
         end
+      end
+
+      def definition_state
+        [
+          [I18n.t('views.options.state.active'), 'active'],
+          [I18n.t('views.options.state.expired'), 'expired'],
+        ]
       end
   end
 end

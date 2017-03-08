@@ -1,25 +1,22 @@
 <dl class="see">
-  <dt><%= @model.t :fbposter %><%= @model.tt :sns_poster_fb %></dt>
+  <dt><%= @model.t :facebook_poster %><%= @model.tt :sns_poster_facebook %></dt>
   <dd>
     <%=
-      # @item.fbauto
-      @item.sns_poster_fb_options_ja
+      @item.sns_poster_facebook_options_ja
     %>
   </dd>
-  <dd><a href="<%= @item.fb_url %>" target="_blank"><%= @item.fb_url %></a></dd>
+  <dd><a href="<%= @item.facebook_url %>" target="_blank"><%= @item.facebook_url %></a></dd>
 
-  <dt><%= @model.t :twposter %><%= @model.tt :sns_poster_tw %></dt>
+  <dt><%= @model.t :twitter_poster %><%= @model.tt :sns_poster_twitter %></dt>
   <dd>
     <%=
-      # @item.twauto
-      @item.sns_poster_tw_options_ja
+      @item.sns_poster_twitter_options_ja
     %>
   </dd>
-  <dd><a href="<%= @item.tw_url %>" target="_blank"><%= @item.tw_url %></a></dd>
+  <dd><a href="<%= @item.twitter_url %>" target="_blank"><%= @item.twitter_url %></a></dd>
 
   <dt><%= @model.t :autodeleter %><%= @model.tt :sns_poster_delete %></dt>
   <dd><%=
-    # @item.deleteauto
     @item.sns_poster_delete_options_ja
   %></dd>
 </dl>
