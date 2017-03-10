@@ -158,6 +158,9 @@ module Cms::Addon
 
         # facebook
         if use_facebook_post?
+          if file_ids.present?
+            image_path = image_path.first
+          end
           graph = access_token_facebook(snskeys)
           # facebokに投稿し、戻り値を取得
             facebook_params = graph.put_wall_post(
@@ -165,7 +168,7 @@ module Cms::Addon
               {
                 "name"=> "#{name} - #{site_name}",
                 "link"=> site_full_url,
-                "picture"=> image_path.first,
+                "picture"=> image_path,
                 "description"=> description
               }
             )

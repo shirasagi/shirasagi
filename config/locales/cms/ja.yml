@@ -499,8 +499,8 @@ ja:
         sns_share_orders: 並び順
       cms/addon/sns_poster:
         sns_poster: SNS自動投稿設定
-        fbposter: Facebook自動投稿
-        twposter: Twitter自動投稿
+        facebook_poster: Facebook自動投稿
+        twitter_poster: Twitter自動投稿
         autodeleter: 非公開時に投稿を削除
         option_on: 有効
         option_off: 無効
