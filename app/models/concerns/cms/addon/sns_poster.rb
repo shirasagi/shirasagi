@@ -138,12 +138,7 @@ module Cms::Addon
                 i += 1
                 break if i >= 4
               end
-              twitter_param = client.update(
-                tweet,
-                {
-                  "media_ids"=> image_param.join(',')
-                }
-              )
+              twitter_param = client.update( tweet, { "media_ids"=> image_param.join(',') } )
           # 画像の添付がなければupdateを用いて投稿
             else
               twitter_param = client.update(tweet)
