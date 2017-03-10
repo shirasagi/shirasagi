@@ -26,11 +26,6 @@ module Cms::Addon
       after_remove_file { delete_sns }
     end
 
-    # TODO(s.kudo): 実装完了時にdammy_data?関数を削除する
-    def dammy_data?
-      true
-    end
-
     def sns_poster_facebook_options
       definition_state
     end
@@ -70,7 +65,12 @@ module Cms::Addon
 
     def image_path
       if file_ids.present?
-        image_paths = Article::Page.find(_id).files.first.full_url
+        files_info = []
+        image_paths = []
+        files_info = Article::Page.find(_id).files
+        files_info.each do |file_info|
+          image_paths << file_info.full_url
+        end
       end
     end
 
@@ -84,7 +84,7 @@ module Cms::Addon
     end
 
     def use_facebook_post?
-      twitter_auto_post == "active"
+      facebook_auto_post == "active"
     end
 
     def twitter_url
@@ -121,26 +121,29 @@ module Cms::Addon
 
     private
       def post_sns
+        image_param = []
         site_name = site.name
         message = message_format(html)
         snskeys = SS.config.cms.sns_poster
-
-        # TODO(s.kudo): 実装完了時に「if dammy_data?」をまるっと削除する
-        # localhostで動かすなど、ダミーデータが必要な状況下であればダミーデータを代入
-        if dammy_data?
-          site_full_url = "http://www.google.co.jp/"
-          if file_ids.present?
-            image_path = "http://fmbee.com/image/i_02.jpg"
-          end
-        end
 
         # tweet
         if use_twitter_post?
           tweet = "#{name}｜#{site_full_url}"
           client = connect_twitter(snskeys)
-          # 画像の添付があればupdate_with_mediaを用いて投稿
+          # 画像の添付があればuploadとupdateを用いて投稿
             if file_ids.present?
-              twitter_param = client.update_with_media(tweet, open_from_url(image_path))
+              i = 0
+              image_path.each do |image_code|
+                image_param << client.upload(open_from_url(image_code))
+                i += 1
+                break if i >= 4
+              end
+              twitter_param = client.update(
+                tweet,
+                {
+                  "media_ids"=> image_param.join(',')
+                }
+              )
           # 画像の添付がなければupdateを用いて投稿
             else
               twitter_param = client.update(tweet)
@@ -162,7 +165,7 @@ module Cms::Addon
               {
                 "name"=> "#{name} - #{site_name}",
                 "link"=> site_full_url,
-                "picture"=> image_path,
+                "picture"=> image_path.first,
                 "description"=> description
               }
             )
