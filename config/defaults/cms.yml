@@ -68,13 +68,13 @@ production: &production
   # SNS自動投稿設定
   sns_poster:
     # twitter 既定値
-    consumer_key: **********
-    consumer_secret: **********
-    access_token: **********
-    access_token_secret: **********
+    consumer_key: xxxxxxxxxxxxx
+    consumer_secret: xxxxxxxxxxxxx
+    access_token: xxxxxxxxxxxxx
+    access_token_secret: xxxxxxxxxxxxx
 
     #facebook 既定値
-    access_token_facebook: **********
+    access_token_facebook: xxxxxxxxxxxxx
 
 test:
   <<: *production
