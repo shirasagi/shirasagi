@@ -18,13 +18,15 @@ module SS::Model::Site
     field :domains_with_subdir, type: Array
     field :subdir, type: String
     field :https, type: String, default: "disabled"
+    field :mypage_schema, type: String, default: 'http'
+    field :mypage_domain, type: String
     embeds_ids :groups, class_name: "SS::Group"
     belongs_to :parent, class_name: "SS::Site"
 
     attr_accessor :cur_domain
 
     permit_params :name, :host, :domains, :subdir, :parent_id, :https, :document_root, group_ids: []
-
+    permit_params :mypage_schema, :mypage_domain
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
 
@@ -84,6 +86,14 @@ module SS::Model::Site
       filtered
     end
 
+    def mypage_full_url
+      if mypage_domain.present?
+        "#{mypage_schema.presence || 'http'}://#{mypage_domain}/".sub(/\/+$/, "/")
+      else
+        full_root_url
+      end
+    end
+
     def root_groups
       root_group_ids = groups.map do |group|
         group.root.id
@@ -106,6 +116,13 @@ module SS::Model::Site
       [
         [I18n.t("views.options.state.enabled"), "enabled"],
         [I18n.t("views.options.state.disabled"), "disabled"],
+      ]
+    end
+
+    def mypage_schema_options
+      [
+        %w(http http),
+        %w(https https),
       ]
     end
 
