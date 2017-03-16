@@ -71,6 +71,7 @@ module Cms::Addon
         files_info.each do |file_info|
           image_paths << file_info.full_url
         end
+        image_paths
       end
     end
 
