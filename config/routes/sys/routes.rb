@@ -41,6 +41,7 @@ SS::Application.routes.draw do
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
     resources :postal_codes, concerns: [:deletion, :download, :import]
+    resources :mail_logs, concerns: :deletion, only: [ :index, :show, :delete, :destroy ]
 
     namespace "apis" do
       get "groups" => "groups#index"

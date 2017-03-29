@@ -71,6 +71,7 @@ ja:
       sys/site_copy_task: サイト複製タスク
       sys/notice: システムのお知らせ
       sys/postal_code: 郵便番号
+      sys/mail_log: メール
     attributes:
       sys/notice:
         html: 本文
@@ -114,6 +115,13 @@ ja:
         target_host_domains: ドメイン
         source_site_id: 複製するサイト
         copy_contents: 複製する項目
+      sys/mail_log:
+        subject: 件名
+        from: 差出人
+        to: 宛先
+        bcc: Bcc
+        cc: Cc
+        mail: 内容
 
   errors:
     messages:
