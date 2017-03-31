@@ -10,7 +10,7 @@ class Sys::MailLogsController < ApplicationController
 
     @items = @model.
       search(params[:s]).
-      order_by(released: -1).
+      order_by(id: -1).
       page(params[:page]).per(50)
   end
 
