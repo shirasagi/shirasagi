@@ -866,8 +866,8 @@ ja:
         - ホスト名を入力します。
       domains:
         - サイトのドメインを入力します。
-      mypage_schema:
-        - マイページスキーマを入力します。
+      mypage_scheme:
+        - マイページスキームを入力します。
       mypage_domain:
         - マイページドメインを入力します。
       auto_keywords:

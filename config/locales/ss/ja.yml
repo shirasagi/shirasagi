@@ -289,7 +289,7 @@ ja:
         subdir: サブディレクトリ
         parent_id: 親サイト
         https: HTTPS
-        mypage_schema: マイページスキーマ
+        mypage_scheme: マイページスキーム
         mypage_domain: マイページドメイン
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
