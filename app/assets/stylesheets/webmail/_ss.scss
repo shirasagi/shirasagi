@@ -122,6 +122,9 @@
   .dropdown {
     display: inline;
     font-weight: normal;
+    .btn {
+      padding-right: 8px;
+    }
   }
   .dropdown-menu {
     width: 200px;
@@ -194,9 +197,9 @@
     padding: 1px 15px 15px;
     .icon-star {
       float: right;
-      margin: 15px 0 0;
+      margin: 12px 0 0;
       &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #bbb; }
+      &.off   .material-icons { color: #ddd; }
       &:hover .material-icons { opacity: 0.8; }
     }
     .subject {

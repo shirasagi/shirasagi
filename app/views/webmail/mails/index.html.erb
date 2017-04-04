@@ -7,7 +7,7 @@
 
   <ul class="list-items ss-messages webmail-mails">
     <% @items.each do |item| %>
-    <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %>">
+    <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %>" data-uid="<%= item.uid %>">
       <nav class="tap-menu">
         <%= link_to :show, action: :show, id: item.uid %>
         <%#= link_to :edit, action: :edit, id: item.uid if item.draft? %>

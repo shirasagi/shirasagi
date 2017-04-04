@@ -183,7 +183,7 @@ class Webmail::MailsController < ApplicationController
 
       respond_to do |format|
         format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
-        format.json { head :no_content }
+        format.json { render json: { action: params[:action], notice: t("webmail.notice.#{action}") } }
       end
     end
 end
