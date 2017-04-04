@@ -88,17 +88,17 @@ class Inquiry::Column
 
   def validate_upload_file(answer, data)
     # MegaBytes >> Bytes
-    if self.max_upload_file_size.to_i > 0 
-      fileSize  = data.values[2].to_i
-      limitSize = (self.max_upload_file_size * 1024 * 1024).to_i
+    if self.max_upload_file_size.to_i > 0
+      file_size  = data.values[2].to_i
+      limit_size = (self.max_upload_file_size * 1024 * 1024).to_i
 
       if data.present? && data.value.present?
-        if fileSize > limitSize
+        if file_size > limit_size
           answer.errors.add :base, "#{name}#{I18n.t(
-              "errors.messages.too_large_file",
-              filename: data.values[1],
-              size: ApplicationController.helpers.number_to_human_size(fileSize),
-              limit: ApplicationController.helpers.number_to_human_size(limitSize))}"
+            "errors.messages.too_large_file",
+            filename: data.values[1],
+            size: ApplicationController.helpers.number_to_human_size(file_size),
+            limit: ApplicationController.helpers.number_to_human_size(limit_size))}"
         end
       end
     end

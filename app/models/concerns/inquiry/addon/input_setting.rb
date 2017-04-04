@@ -12,7 +12,9 @@ module Inquiry::Addon
       field :max_upload_file_size, type: Integer, default: 0
       permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm, :max_upload_file_size
 
-      validates :input_type, presence: true, inclusion: { in: %w(text_field text_area email_field radio_button select check_box upload_file) }
+      validates :input_type, presence: true, inclusion: do
+        in: %w(text_field text_area email_field radio_button select check_box upload_file)
+      end
       validate :validate_select_options
       validate :validate_input_confirm_options
       #validate :validate_max_upload_file_size_options
@@ -64,12 +66,11 @@ module Inquiry::Addon
           errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
         end
       end
-=begin
-      def validate_max_upload_file_size_options
-        if input_type =~ /(max_upload_file_size)/
-          errors.add :select_options, :blank if select_options.blank?
-        end
-      end
-=end
+
+      #def validate_max_upload_file_size_options
+      #  if input_type =~ /(max_upload_file_size)/
+      #    errors.add :select_options, :blank if select_options.blank?
+      #  end
+      #end
   end
 end

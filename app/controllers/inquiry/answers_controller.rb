@@ -46,7 +46,7 @@ class Inquiry::AnswersController < ApplicationController
       filedata = []
       filepath = file.path
       File.open(filepath, 'rb') do |of|
-        filedata = of.read()
+        filedata = of.read
       end
       unless filedata.blank?
         send_data(filedata, :filename => file.name)

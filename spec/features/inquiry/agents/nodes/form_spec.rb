@@ -68,7 +68,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
           expect(find('#item_4')['value']).to eq '男性'
           expect(find('#item_5')['value']).to eq '50代'
           expect(find('#item_6_2')['value']).to eq '申請について'
-          expect(find('#item_7')['value']).to eq '1' # SS::File._id in confirm 
+          expect(find('#item_7')['value']).to eq '1'
         end
         # within 'div.simple-captcha' do
         #   fill_in "answer[captcha]", with: "xxxx"
