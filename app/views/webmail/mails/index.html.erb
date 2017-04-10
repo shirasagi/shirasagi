@@ -10,10 +10,9 @@
     <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %>" data-uid="<%= item.uid %>">
       <nav class="tap-menu">
         <%= link_to :show, action: :show, id: item.uid %>
-        <%#= link_to :edit, action: :edit, id: item.uid if item.draft? %>
-        <%= link_to t('webmail.links.reply'), action: :new, reply: item.uid unless item.draft? %>
-        <%= link_to t('webmail.links.reply_all'), action: :new, reply_all: item.uid unless item.draft? %>
-        <%= link_to t('webmail.links.forward'), action: :new, forward: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.reply'), action: :reply, id: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.reply_all'), action: :reply_all, id: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.forward'), action: :forward, id: item.uid unless item.draft? %>
         <%= link_to :delete, action: :delete, id: item.uid %>
       </nav>
 
