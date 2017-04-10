@@ -161,11 +161,6 @@ class Webmail::MailsController < ApplicationController
       render_change :unset_star, redirect: { action: :show }
     end
 
-    def destroy_all
-      @imap.uids_move_trash get_uids
-      render_change :delete, reload: true
-    end
-
     def copy
       @imap.uids_copy get_uids, params[:dst]
       render_change :copy, reload: true
@@ -174,6 +169,16 @@ class Webmail::MailsController < ApplicationController
     def move
       @imap.uids_move get_uids, params[:dst]
       render_change :move, reload: true
+    end
+
+    def destroy_all
+      @imap.uids_move_trash get_uids
+      render_change :delete, reload: true
+    end
+
+    def empty
+      @imap.uids_move_trash @imap.mails.mailbox(@mailbox).uids
+      render_change :empty, reload: true
     end
 
     def render_change(action, opts = {})

@@ -49,6 +49,10 @@ module Webmail::Imap
       self
     end
 
+    def uids
+      imap.conn.uid_sort(@sort, @search, 'UTF-8')
+    end
+
     def all
       uids = imap.conn.uid_sort(@sort, @search, 'UTF-8')
       size = uids.size

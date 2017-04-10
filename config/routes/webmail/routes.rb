@@ -15,6 +15,7 @@ SS::Application.routes.draw do
       put :unset_star
       put :move
       put :copy
+      delete :empty
     end
     member do
       get :download

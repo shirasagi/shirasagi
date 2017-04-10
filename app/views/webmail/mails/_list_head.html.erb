@@ -28,19 +28,10 @@
           <%= t :"webmail.links.set_star" %></a></li>
         <li><a class="update-all unset-star-all" href="<%= url_for action: :unset_star %>">
           <%= t :"webmail.links.unset_star" %></a></li>
+        <li><a class="delete-all" href="<%= url_for action: :empty %>">
+          <%= t :"webmail.links.empty_mailbox" %></a></li>
       </ul>
     </div>
-
-    <!--
-    <button class="btn update-all set-seen-all" data-href="<%= url_for action: :set_seen %>">
-      <%= t :"webmail.links.set_seen" %></button>
-    <button class="btn update-all unset-seen-all" data-href="<%= url_for action: :unset_seen %>">
-      <%= t :"webmail.links.unset_seen" %></button>
-    <button class="btn update-all set-star-all" data-href="<%= url_for action: :set_star %>">
-      <%= t :"webmail.links.set_star" %></button>
-    <button class="btn update-all unset-star-all" data-href="<%= url_for action: :unset_star %>">
-      <%= t :"webmail.links.unset_star" %></button>
-    -->
   </div>
 
   <div class="list-head-search">

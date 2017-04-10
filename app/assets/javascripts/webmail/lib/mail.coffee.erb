@@ -81,6 +81,23 @@ class @Webmail_Mail
           SS.notice(data.notice)
       return false
 
+    $(".list-head .delete-all").on "click", ->
+      return false unless confirm('<%= I18n.t("webmail.confirm.empty_mailbox") %>')
+      $('.dropdown-menu').removeClass('active')
+
+      $.ajax
+        url: $(this).attr('href')
+        method: 'POST'
+        dataType: 'json'
+        data:
+          _method: 'delete'
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        success: (data)->
+          $('.webmail-mails .list-item').remove()
+          $('.pagination').remove()
+          SS.notice(data.notice)
+      return false
+
   @findCheckedUids: ->
     checked = $('.webmail-mails .list-item input:checkbox:checked').map ->
       $(this).val()
