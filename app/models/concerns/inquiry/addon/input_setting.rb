@@ -9,15 +9,19 @@ module Inquiry::Addon
       field :required, type: String, default: "required"
       field :additional_attr, type: String, default: ""
       field :input_confirm, type: String, default: ""
-      permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm
+      field :max_upload_file_size, type: Integer, default: 0
+      permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm, :max_upload_file_size
 
-      validates :input_type, presence: true, inclusion: { in: %w(text_field text_area email_field radio_button select check_box) }
+      validates :input_type, presence: true, inclusion: {
+        in: %w(text_field text_area email_field radio_button select check_box upload_file)
+      }
       validate :validate_select_options
       validate :validate_input_confirm_options
+      #validate :validate_max_upload_file_size_options
     end
 
     def input_type_options
-      %w(text_field text_area email_field radio_button select check_box).map do |v|
+      %w(text_field text_area email_field radio_button select check_box upload_file).map do |v|
         [ I18n.t("inquiry.options.input_type.#{v}"), v ]
       end
     end
@@ -35,6 +39,10 @@ module Inquiry::Addon
         [I18n.t('inquiry.options.input_confirm.enabled'), 'enabled'],
       ]
     end
+
+    #def max_upload_file_size_options
+    #  [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
+    #end
 
     def required?
       required == "required"
@@ -54,9 +62,15 @@ module Inquiry::Addon
       end
 
       def validate_input_confirm_options
-        if input_type =~ /(select|radio_button|check_box|text_area)/ && input_confirm == 'enabled'
+        if input_type =~ /(select|radio_button|check_box|text_area|upload_file)/ && input_confirm == 'enabled'
           errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
         end
       end
+
+      #def validate_max_upload_file_size_options
+      #  if input_type =~ /(max_upload_file_size)/
+      #    errors.add :select_options, :blank if select_options.blank?
+      #  end
+      #end
   end
 end

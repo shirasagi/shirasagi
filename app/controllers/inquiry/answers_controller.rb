@@ -42,6 +42,17 @@ class Inquiry::AnswersController < ApplicationController
         filename: "inquiry_answers_#{Time.zone.now.to_i}.csv"
     end
 
+    def send_afile(file)
+      filedata = []
+      filepath = file.path
+      File.open(filepath, 'rb') do |of|
+        filedata = of.read
+      end
+      unless filedata.blank?
+        send_data(filedata, :filename => file.name)
+      end
+    end
+
   public
     def index
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
@@ -74,5 +85,16 @@ class Inquiry::AnswersController < ApplicationController
         search(params[:s]).
         order_by(updated: -1)
       send_csv @items
+    end
+
+    def download_afile
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+      if params[:id]
+        file = ::SS::File.find(params[:fid].to_i) rescue nil
+        unless file.blank?
+          send_afile file
+        end
+        return
+      end
     end
 end

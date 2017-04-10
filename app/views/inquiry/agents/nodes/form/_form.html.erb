@@ -22,9 +22,18 @@
           <%= hidden_field_tag "#{f.object_name}[#{column.id}][#{key}]", value, opt %><%= value %><br />
         <% end %>
       <% else %>
-        <%= f.hidden_field column.id, value: data %><%=br data %>
-        <% if column.input_confirm == "enabled" %>
-          <%= f.hidden_field "#{column.id}_confirm", value: confirm_data %>
+        <% if column.input_type =~ /upload_file/ %>
+          <% @answer.data.each do |ans|  %>
+            <% if ans.column_id == column.id %>
+              <%= hidden_field_tag "#{f.object_name}[#{column.id}]", ans.values[0] if ans.values[0] %>
+            <% end %>
+          <% end %>
+          <%= tryb { data.original_filename } || tryb { data.name } if data %><br />
+        <% else %>
+          <%= f.hidden_field column.id, value: data %><%=br data %>
+          <% if column.input_confirm == "enabled" %>
+            <%= f.hidden_field "#{column.id}_confirm", value: confirm_data %>
+          <% end %>
         <% end %>
       <% end %>
     <% else %>
@@ -57,6 +66,10 @@
           <% end %>
         <% end %>
         </fieldset>
+      <% elsif column.input_type =~ /upload_file/ %>
+        <% opt = {id: "#{f.object_name}_#{column.id}" } %>
+        <% opt.merge!(column.additional_attr_to_h) %>
+        <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %>
       <% end %>
     <% end %>
     </dd>

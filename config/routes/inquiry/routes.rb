@@ -19,6 +19,7 @@ SS::Application.routes.draw do
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :destroy]
     get "results" => "results#index", as: :results
     resources :feedbacks, only: [:index, :show]
+    get "answers/:id/fileid/:fid/download" => "answers#download_afile"
   end
 
   node "inquiry" do

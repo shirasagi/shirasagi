@@ -9,6 +9,7 @@ class Inquiry::Column
     [ :radio_button, :validate_radio_button ].freeze,
     [ :select, :validate_select ].freeze,
     [ :check_box, :validate_check_box ].freeze,
+    [ :upload_file, :validate_upload_file ].freeze,
   ].freeze
 
   seqid :id
@@ -17,12 +18,13 @@ class Inquiry::Column
   field :name, type: String
   field :html, type: String, default: ""
   field :order, type: Integer, default: 0
+  field :max_upload_file_size, type: Integer, default: 0
 
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
 
-  permit_params :id, :node_id, :state, :name, :html, :order
+  permit_params :id, :node_id, :state, :name, :html, :order, :max_upload_file_size
 
-  validates :node_id, :state, :name, presence: true
+  validates :node_id, :state, :name, :max_upload_file_size, presence: true
 
   def answer_data(opts = {})
     node.answers.search(opts).
@@ -80,6 +82,24 @@ class Inquiry::Column
     if data.present? && data.values.present?
       if (data.values.select(&:present?) - select_options).present?
         answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
+      end
+    end
+  end
+
+  def validate_upload_file(answer, data)
+    # MegaBytes >> Bytes
+    if self.max_upload_file_size.to_i > 0
+      file_size  = data.values[2].to_i
+      limit_size = (self.max_upload_file_size * 1024 * 1024).to_i
+
+      if data.present? && data.value.present?
+        if file_size > limit_size
+          answer.errors.add :base, "#{name}#{I18n.t(
+            "errors.messages.too_large_file",
+            filename: data.values[1],
+            size: ApplicationController.helpers.number_to_human_size(file_size),
+            limit: ApplicationController.helpers.number_to_human_size(limit_size))}"
+        end
       end
     end
   end

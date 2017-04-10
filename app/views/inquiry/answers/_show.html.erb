@@ -1,7 +1,11 @@
 <dl class="see">
   <% @item.data.each do |data| %>
   <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
-  <dd><%= br data.value %></dd>
+    <% if data.column.input_type =~ /upload_file/ %>
+      <dd><%= link_to data.value, inquiry_path(params[:site], params[:cid], params[:id], data.values[0]) %></dd>
+    <% else %>
+      <dd><%= br data.value %></dd>
+    <% end %>
   <% end %>
 
   <dt><%= @model.t :remote_addr %></dt>
