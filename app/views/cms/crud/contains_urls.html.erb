@@ -16,15 +16,15 @@
 
 <div class="index">
   <div class="list-head">
-    <% if @contain_link_items.present? %>
-      <%= t("cms.confirm.contain_links_exists")%>
+    <% if @contains_urls.present? %>
+      <%= t("cms.confirm.contains_urls_exists")%>
     <% else %>
-      <%= t("cms.confirm.contain_links_not_found")%>
+      <%= t("cms.confirm.contains_urls_not_found")%>
     <% end %>
   </div>
 
   <ul class="list-items">
-    <% @contain_link_items.each do |item| %>
+    <% @contains_urls.each do |item| %>
       <li class="list-item">
 
         <% if item.allowed?(:read, @cur_user, site: @cur_site, node: item.parent) %>

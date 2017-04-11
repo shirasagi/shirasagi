@@ -35,8 +35,8 @@ SS::Application.routes.draw do
     post :update_opendata_resources, on: :member
   end
 
-  concern :contain_links do
-    get :contain_links, on: :member
+  concern :contains_urls do
+    get :contains_urls, on: :member
   end
 
   concern :tag do
@@ -48,7 +48,7 @@ SS::Application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     get "generate" => "generate#index"
     post "generate" => "generate#run"
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :opendata_ref, :contain_links, :tag]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :opendata_ref, :contains_urls, :tag]
   end
 
   content "article" do
