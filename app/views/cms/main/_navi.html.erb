@@ -30,7 +30,7 @@
   <h2><%= link_to :"cms.site_config", cms_site_path, class: "icon-conf" %></h2>
   <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <% if @cur_node %>
-      <h2><%= link_to :"cms.import", node_import_path, class: "icon-conf" %></h2>
+      <h2><%= link_to :"cms.import_page", node_import_path, class: "icon-conf" %></h2>
     <% else %>
       <h2><%= link_to :"cms.import_node", cms_import_path, class: "icon-conf" %></h2>
     <% end %>
