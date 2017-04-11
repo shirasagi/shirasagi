@@ -9,7 +9,7 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
-  let(:contain_links_path) { contain_links_node_page_path site.id, node, item }
+  let(:contains_urls_path) { contains_urls_node_page_path site.id, node, item }
 
   context "with auth" do
     before { login_cms_user }
@@ -55,8 +55,8 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
     end
 
-    it "#contain_links" do
-      visit contain_links_path
+    it "#contains_urls" do
+      visit contains_urls_path
       expect(status_code).to eq 200
     end
   end

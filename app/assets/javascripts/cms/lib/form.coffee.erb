@@ -930,7 +930,7 @@ class @Form_Alert
       addonName = '<%= I18n.t("cms.confirm.close") %>'
       msg = null
       if $(submit).attr("data-contain-links-path")
-        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank">' + '<%= I18n.t("cms.confirm.check_contain_links") %>' + '</a>'
+        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank">' + '<%= I18n.t("cms.confirm.check_contains_urls") %>' + '</a>'
       Form_Alert.add addonName, null, msg
 
   @add: (addon, ele, msg)->

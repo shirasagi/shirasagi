@@ -6,7 +6,10 @@ module Cms::Addon
     included do
       field :html, type: String
       field :markdown, type: String
+      field :contains_urls, type: Array, default: []
       permit_params :html, :markdown
+
+      before_validation :set_contains_urls
 
       if respond_to?(:template_variable_handler)
         template_variable_handler('img.src', :template_variable_handler_img_src)
@@ -30,6 +33,11 @@ module Cms::Addon
     end
 
     private
+      def set_contains_urls
+        return if html.blank?
+        self.contains_urls = html.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+      end
+
       def template_variable_handler_img_src(name, issuer)
         extract_img_src(html) || default_img_src
       end

@@ -3,8 +3,8 @@ module Cms::PageFilter
   include Cms::CrudFilter
 
   included do
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock, :move, :copy, :contain_links]
-    before_action :set_contain_link_items, only: [:contain_links, :edit, :delete]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock, :move, :copy, :contains_urls]
+    before_action :set_contains_urls_items, only: [:contains_urls, :edit, :delete]
   end
 
   private
@@ -30,22 +30,17 @@ module Cms::PageFilter
         .order_by(updated: -1)
     end
 
-    def set_contain_link_items
-      @contain_link_items = []
+    def set_contains_urls_items
+      @contains_urls = []
       return unless @item.class.include?(Cms::Model::Page)
 
       cond = []
       if @item.respond_to?(:url) && @item.respond_to?(:full_url)
-        urls = [@item.url, @item.full_url]
-        urls.each do |url|
-          cond << { html: /href="#{Regexp.escape(url)}/ }
-        end
+        cond << { contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
       end
 
-      if @item.respond_to?(:files)
-        @item.files.each do |file|
-          cond << { html: /(href|src)="#{Regexp.escape(file.url)}/ }
-        end
+      if @item.respond_to?(:files) && @item.files.present?
+        cond << { contains_urls: { '$in' => @item.files.map(&:url) } }
       end
 
       if @item.respond_to?(:related_page_ids)
@@ -53,7 +48,7 @@ module Cms::PageFilter
       end
 
       if cond.present?
-        @contain_link_items = Cms::Page.site(@cur_site).where(:id.ne => @item.id).or(cond).
+        @contains_urls = Cms::Page.site(@cur_site).where(:id.ne => @item.id).or(cond).
           page(params[:page]).per(50)
       end
     end
@@ -143,7 +138,7 @@ module Cms::PageFilter
       render_update @copy.save, location: { action: :index }, render: { file: :copy }
     end
 
-    def contain_links
+    def contains_urls
       raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
       render
     end

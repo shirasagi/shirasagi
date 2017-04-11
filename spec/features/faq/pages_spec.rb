@@ -11,7 +11,7 @@ describe "faq_pages" do
   subject(:delete_path) { delete_faq_page_path site.id, node, item }
   subject(:move_path) { move_faq_page_path site.id, node, item }
   subject(:copy_path) { copy_faq_page_path site.id, node, item }
-  subject(:contain_links_path) { contain_links_faq_page_path site.id, node, item }
+  subject(:contains_urls_path) { contains_urls_faq_page_path site.id, node, item }
 
   context "with auth" do
     before { login_cms_user }
@@ -87,8 +87,8 @@ describe "faq_pages" do
       expect(current_path).to eq index_path
     end
 
-    it "#contain_links" do
-      visit contain_links_path
+    it "#contains_urls" do
+      visit contains_urls_path
       expect(status_code).to eq 200
     end
   end

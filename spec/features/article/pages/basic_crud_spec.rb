@@ -11,7 +11,7 @@ describe "article_pages", dbscope: :example do
   let(:delete_path) { delete_article_page_path site.id, node, item }
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
-  let(:contain_links_path) { contain_links_article_page_path site.id, node, item }
+  let(:contains_urls_path) { contains_urls_article_page_path site.id, node, item }
 
   context "basic crud" do
     before { login_cms_user }
@@ -87,8 +87,8 @@ describe "article_pages", dbscope: :example do
       expect(current_path).to eq index_path
     end
 
-    it "#contain_links" do
-      visit contain_links_path
+    it "#contains_urls" do
+      visit contains_urls_path
       expect(status_code).to eq 200
     end
   end
