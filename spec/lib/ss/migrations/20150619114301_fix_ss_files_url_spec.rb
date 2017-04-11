@@ -18,10 +18,21 @@ RSpec.describe SS::Migration20150619114301, dbscope: :example do
     create_once :cms_part_free, name: "free_part", html: @before_html
     create_once :article_part_page, name: "list_part", upper_html: @before_html, lower_html: @before_html
     create_once :cms_layout, name: "layout", html: @before_layout_html
+
+    SS.config.replace_value_at(:env, :multibyte_filename, "underscore")
+    SS::File.destroy_all
+    file = SS::File.new
+    file.in_file = Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png")
+    file.model = "ss/file"
+    file.id = 1000
+    file.save!
+    file.set(filename: "ロゴ.png")
+    file.set(name: nil)
   end
 
   it do
     described_class.new.change
+
     Cms::Page.all.each do |item|
       expect(item.html).to eq(@after_html.strip)
     end
