@@ -36,7 +36,7 @@ ja:
     links:
       new_from_metadata: メタデータ インポート
       new_from_discovery: Discovery から作成
-      back_to_contents: 戻る
+      back_to_contents: マイページへ戻る
     apis:
       sites:
         index: サイトを選択する

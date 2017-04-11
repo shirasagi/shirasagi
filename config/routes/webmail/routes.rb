@@ -56,6 +56,7 @@ SS::Application.routes.draw do
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, :on => :member
     end
+    resources :sys_notices, only: [:index, :show]
 
     namespace "apis" do
       get "recent" => "imap#recent"

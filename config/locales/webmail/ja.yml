@@ -42,6 +42,7 @@ ja:
         trash: 削除する
         delete: サーバから削除する
     links:
+      back_to_contents: 受信トレイへ戻る
       etc: その他
       download: ダウンロード
       source_view: ソース表示

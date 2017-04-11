@@ -51,6 +51,8 @@ class Webmail::MailsController < ApplicationController
 
   public
     def index
+      @sys_notices = Sys::Notice.and_public.webmail_admin_notice.page(1).per(2)
+
       @mailboxes = @imap.mailboxes.load
       @mailboxes.apply_recent_filters
 

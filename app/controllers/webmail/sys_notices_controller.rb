@@ -1,6 +1,6 @@
-class Gws::SysNoticesController < ApplicationController
-  include Gws::BaseFilter
-  include Gws::CrudFilter
+class Webmail::SysNoticesController < ApplicationController
+  include Webmail::BaseFilter
+  include Sns::CrudFilter
   include Sns::PublicNoticeFilter
 
   append_view_path 'app/views/sns/public_notices'
@@ -13,7 +13,7 @@ class Gws::SysNoticesController < ApplicationController
   public
     def index
       @items = @model.and_public.
-        gw_admin_notice.
+        webmail_admin_notice.
         search(params[:s]).
         page(params[:page]).per(50)
     end

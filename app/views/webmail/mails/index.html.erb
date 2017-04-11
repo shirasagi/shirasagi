@@ -2,7 +2,30 @@
   Webmail_Mail.renderList();
 <% end %>
 
-<div class="index ">
+<% if @sys_notices.present? %>
+<div class="notices">
+  <div class="index">
+    <!--
+    <div class="list-head"><%= t "sys.notice" %></div>
+    -->
+    <ul class="list-items">
+      <% @sys_notices.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, webmail_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+          <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+    <% if @sys_notices.next_page %>
+    <div class="notices-more"><%= link_to I18n.t("views.links.more"), webmail_sys_notices_path %></div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+<div class="index">
   <%= render file: "_list_head" %>
 
   <ul class="list-items ss-messages webmail-mails">

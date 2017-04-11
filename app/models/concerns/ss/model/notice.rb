@@ -14,11 +14,13 @@ module SS::Model::Notice
   NOTICE_TARGET_LOGIN_VIEW = "login_view".freeze
   NOTICE_TARGET_CMS_ADMIN = "cms_admin".freeze
   NOTICE_TARGET_GROUP_WEAR = "gw_admin".freeze
+  NOTICE_TARGET_WEB_MAIL = "webmail_admin".freeze
   NOTICE_TARGET_SYS_ADMIN = "sys_admin".freeze
   NOTICE_TARGETS = [
     NOTICE_TARGET_LOGIN_VIEW,
     NOTICE_TARGET_CMS_ADMIN,
     NOTICE_TARGET_GROUP_WEAR,
+    NOTICE_TARGET_WEB_MAIL,
     NOTICE_TARGET_SYS_ADMIN
   ].freeze
 
@@ -53,6 +55,10 @@ included do
 
     scope :gw_admin_notice, -> {
       where(:notice_target.in => [NOTICE_TARGET_GROUP_WEAR])
+    }
+
+    scope :webmail_admin_notice, -> {
+      where(:notice_target.in => [NOTICE_TARGET_WEB_MAIL])
     }
 
     scope :and_show_login, -> {
