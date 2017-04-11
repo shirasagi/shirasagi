@@ -7,9 +7,10 @@ ja:
     content: コンテンツ
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
-    import_page: 取り込みページ
-    import: ページ取り込み
+    import_page: ページ取り込み
     import_node: フォルダー取り込み
+    import_page_index: 取り込みページ
+    import_node_index: 取り込みフォルダー
     all_contents: 全コンテンツ一覧出力
     all_content:
       description: サイト内の全コンテンツを出力します。

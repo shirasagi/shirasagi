@@ -4,7 +4,7 @@ class Cms::Node::ImportController < ApplicationController
 
   model Cms::ImportJobFile
 
-  navi_view "cms/main/navi"
+  navi_view "cms/node/import/navi"
   menu_view nil
 
   def import
