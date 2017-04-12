@@ -30,6 +30,7 @@ module Cms::Content
     validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
     validates :released, datetime: true
 
+    after_validation :set_released, if: -> { public? }
     before_validation :set_filename
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
@@ -184,6 +185,12 @@ module Cms::Content
 
     def set_depth
       self.depth = filename.scan("/").size + 1
+    end
+
+    def set_released
+      now = Time.zone.now
+      self.released ||= now
+      self.first_released ||= now
     end
 
     def fix_extname

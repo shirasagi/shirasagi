@@ -20,7 +20,6 @@ module Cms::Model::Page
 
     permit_params category_ids: []
 
-    after_validation :set_released, if: -> { public? }
     after_save :rename_file, if: ->{ @db_changes }
     after_save :generate_file, if: ->{ @db_changes }
     after_save :remove_file, if: ->{ @db_changes && @db_changes["state"] && !public? }
@@ -134,12 +133,6 @@ module Cms::Model::Page
   end
 
   private
-    def set_released
-      now = Time.zone.now
-      self.released ||= now
-      self.first_released ||= now
-    end
-
     def fix_extname
       ".html"
     end
