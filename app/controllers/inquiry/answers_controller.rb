@@ -23,7 +23,12 @@ class Inquiry::AnswersController < ApplicationController
         data << headers
         items.each do |item|
           item.attributes = fix_params
-          values = item.data.map{|d| [d.column.name, d.value]}.to_h
+          values = item.data.map do |d|
+            if d.column.present?
+              [ d.column.name, d.value ]
+            end
+          end
+          values = values.compact.to_h
 
           row = []
           row << item.id
