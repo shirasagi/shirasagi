@@ -25,7 +25,7 @@ module Cms::Addon
       after_generate_file { post_sns }
       after_remove_file { delete_sns }
     end
-
+    
     def sns_poster_facebook_options
       definition_state
     end
@@ -82,10 +82,11 @@ module Cms::Addon
 
     def connect_twitter(snskeys)
       Twitter::REST::Client.new do |config|
-        config.consumer_key        = snskeys["consumer_key"]
-        config.consumer_secret     = snskeys["consumer_secret"]
-        config.access_token        = snskeys["access_token"]
-        config.access_token_secret = snskeys["access_token_secret"]
+#        config.consumer_key     = snskeys["consumer_key"]
+        config.consumer_key        = "#{@cur_site.twitter_consumer_key}"
+        config.consumer_secret     = "#{@cur_site.twitter_consumer_secret}"
+        config.access_token        = "#{@cur_site.twitter_access_token}"
+        config.access_token_secret = "#{@cur_site.twitter_access_token_secret}"
       end
     end
 
@@ -135,17 +136,16 @@ module Cms::Addon
         if file_ids.present?
           image_path = files.first.full_url
         end
-        graph = access_token_facebook(snskeys)
+#       graph = access_token_facebook(snskeys)
+        graph = Koala::Facebook::API.new(@cur_site.facebook_access_token)
         # facebokに投稿し、戻り値を取得
         facebook_params = graph.put_wall_post(
-          message,
-          {
-            "name"=> "#{name} - #{site.name}",
-            "link"=> full_url,
-            "picture"=> image_path,
-            "description"=> description
-          }
-        )
+          message, {
+          "name"=> "#{name} - #{site.name}",
+          "link"=> full_url,
+          "picture"=> image_path,
+          "description"=> description
+        })
         facebook_param = facebook_params['id'].to_s
         # 戻り値からUID/PID取得し、DBに保存
         facebook_id_array = facebook_id_separator(facebook_param)
@@ -158,13 +158,13 @@ module Cms::Addon
           if twitter_post_id.present?
             client = connect_twitter(snskeys)
             client.destroy_status(twitter_post_id)
-            self.set(twitter_post_id: nil, twitter_user_id: nil)
+            self.set(twitter_post_id: nil, twitter_user_id: nil) rescue nil
           end
           if facebook_post_id.present?
             graph = access_token_facebook(snskeys)
             # UID_PIDの形式に組み替え、投稿を削除
             graph.delete_object("#{facebook_user_id}_#{facebook_post_id}")
-            self.set(facebook_user_id: nil, facebook_post_id: nil)
+            self.set(facebook_user_id: nil, facebook_post_id: nil) rescue nil
           end
         end
       end
