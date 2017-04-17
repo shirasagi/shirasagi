@@ -16,13 +16,18 @@ class Chorg::ChangesetsController < ApplicationController
     end
 
     def set_item
-      super
+      @item = @model.revision(set_revision).find(params[:id])
       raise "404" unless @item.type == params[:type]
+      @item.attributes = fix_params
+    rescue Mongoid::Errors::DocumentNotFound => e
+      return render_destroy(true) if params[:action] == 'destroy'
+      raise e
     end
 
     def set_revision
       @cur_revision ||= Chorg::Revision.site(@cur_site).where(id: params[:rid]).first
       raise "404" unless @cur_revision
+      @cur_revision
     end
 
     def fix_params
