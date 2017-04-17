@@ -8,4 +8,13 @@ module Article::Part
 
     default_scope ->{ where(route: "article/page") }
   end
+
+  class PageNavi
+    include Cms::Model::Part
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "article/page_navi") }
+  end
 end

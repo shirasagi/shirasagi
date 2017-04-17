@@ -1,6 +1,10 @@
 ja:
   article:
     page: 記事ページ
+    page_navi:
+      next: 次のページ
+      prev: 前のページ
+      back_to_index: 一覧へ戻る
 
   modules:
     article: 記事
@@ -10,6 +14,7 @@ ja:
       article/page: 記事リスト
     parts:
       article/page: 記事リスト
+      article/page_navi: 記事ナビゲーション
 
   cms_role:
     read_other_article_pages: ページの閲覧（全て）

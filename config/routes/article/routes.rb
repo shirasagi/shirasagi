@@ -65,6 +65,7 @@ SS::Application.routes.draw do
 
   part "article" do
     get "page" => "public#index", cell: "parts/page"
+    get "page_navi"  => "public#index", cell: "parts/page_navi"
   end
 
   page "article" do
