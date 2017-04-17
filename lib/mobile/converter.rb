@@ -81,7 +81,7 @@ class Mobile::Converter < String
     self.gsub!(/<img(.*?)\/?>/) do |match|
       src_attr = s_to_attr $1.to_s
       ext = File.extname(src_attr["src"].to_s)
-      href = src_attr["src"]
+      href = src_attr["src"].to_s
       name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
       cls = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
 
