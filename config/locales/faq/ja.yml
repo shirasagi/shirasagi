@@ -29,8 +29,8 @@ ja:
       cms/model/page:
         question: 質問
         answer: 回答
-      faq/part/search:
-        search_node: 検索フォルダー
+      faq/addon/search:
+        search_node_id: 検索フォルダー
 
   cms_role:
     read_other_faq_pages: ページの閲覧（全て）
@@ -48,8 +48,8 @@ ja:
     approve_private_faq_pages: ページの承認（所有）
 
   tooltip:
-    faq/part/search:
-      search_node:
+    faq/addon/search:
+      search_node_id:
         - 検索先のフォルダーを設定します。
         - 未入力の場合は自フォルダーを対象にします。
 
