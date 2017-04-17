@@ -5,6 +5,10 @@ module Cms::PublicFilter::Layout
   include Cms::PublicFilter::OpenGraph
   include Cms::PublicFilter::TwitterCard
 
+  included do
+    helper_method :render_layout_parts
+  end
+
   private
     def filters
       @filters ||= begin
@@ -77,10 +81,12 @@ module Cms::PublicFilter::Layout
       html
     end
 
-    def render_layout_parts(body)
+    def render_layout_parts(html)
+      return html if html.blank?
+
       # TODO: deprecated </ />
       parts = {}
-      body = body.gsub(/(<\/|\{\{) part ".+?" (\/>|\}\})/) do |m|
+      html = html.gsub(/(<\/|\{\{) part ".+?" (\/>|\}\})/) do |m|
         path = m.sub(/(?:<\/|\{\{) part "(.+)?" (?:\/>|\}\})/, '\\1') + ".part.html"
         path = path[0] == "/" ? path.sub(/^\//, "") : @cur_layout.dirname(path)
         parts[path] = nil
@@ -91,7 +97,7 @@ module Cms::PublicFilter::Layout
       criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
       criteria.each { |part| parts[part.filename] = part }
 
-      return body.gsub(/\{\{ part ".+?" \}\}/) do |m|
+      return html.gsub(/\{\{ part ".+?" \}\}/) do |m|
         path = m.sub(/(?:\{\{) part "(.+)?" (?:\}\})/, '\\1')
         part = parts[path]
         part ? render_layout_part(part) : ''
