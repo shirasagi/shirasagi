@@ -13,6 +13,8 @@ module Kana::Convertor
     def kana_html(site, html)
       return html unless @@mecab
 
+      html = html.gsub("\u00A0", " ")
+
       text = html.gsub(/[\r\n\t]/, " ")
       tags = %w(head ruby script style)
       text.gsub!(/<!\[CDATA\[.*?\]\]>/m) {|m| mpad(m) }
@@ -50,7 +52,7 @@ module Kana::Convertor
       end
 
       kana << byte[pl..-1].pack("C*").force_encoding("utf-8")
-      kana.strip
+      kana.scrub('').strip
     end
 
     private
