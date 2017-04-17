@@ -152,8 +152,6 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
 
     it do
       visit kana_url
-
-      puts page.html
       expect(page).to have_css('ruby', text: '大鷺県(だいさぎけん)')
     end
   end
