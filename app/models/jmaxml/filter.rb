@@ -3,7 +3,7 @@ class Jmaxml::Filter
 
   embedded_in :node, class_name: "Rss::Node::WeatherXml", inverse_of: :filter
   field :name, type: String
-  field :state, type: String
+  field :state, type: String, default: 'enabled'
   embeds_ids :triggers, class_name: "Jmaxml::Trigger::Base"
   embeds_ids :actions, class_name: "Jmaxml::Action::Base"
   validates :name, presence: true, length: { maximum: 40 }

@@ -11,8 +11,8 @@ class Jmaxml::Trigger::Base
   attr_accessor :in_type
 
   field :name, type: String
-  field :training_status, type: String
-  field :test_status, type: String
+  field :training_status, type: String, default: 'disabled'
+  field :test_status, type: String, default: 'disabled'
   validates :name, presence: true, length: { maximum: 40 }
   validates :training_status, presence: true, inclusion: { in: %w(enabled disabled), allow_blank: true }
   validates :test_status, presence: true, inclusion: { in: %w(enabled disabled), allow_blank: true }
