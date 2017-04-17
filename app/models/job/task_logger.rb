@@ -23,7 +23,9 @@ class Job::TaskLogger < ::Logger
         logger
       end
 
+      save = @@task_logger.loggable
       @@task_logger.loggable = loggable
+      save
     end
 
     def detach(_)
