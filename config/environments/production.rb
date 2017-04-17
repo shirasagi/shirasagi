@@ -31,13 +31,14 @@ Rails.application.configure do
   # config.force_ssl = true
 
   # Set to :debug to see everything in the log.
-  config.log_level = :warn
+  config.log_level = ENV['PRODUCTION_LOG_LEVEL'] || :warn
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
 
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
+  config.logger = Logger.new("#{Rails.root}/log/production.log", 'daily')
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
