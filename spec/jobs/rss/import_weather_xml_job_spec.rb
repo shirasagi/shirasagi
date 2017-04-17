@@ -13,6 +13,12 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     ActionMailer::Base.deliveries = []
   end
 
+  around do |example|
+    perform_enqueued_jobs do
+      example.run
+    end
+  end
+
   context "when importing weather sample xml" do
     let(:site) { cms_site }
     let(:filepath) { Rails.root.join(*%w(spec fixtures jmaxml weather-sample.xml)) }
@@ -125,8 +131,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
       expect(item.state).to eq 'closed'
 
-      expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
+      expect(Job::Log.count).to eq 2
+      Job::Log.all.each do |log|
         expect(log.logs).to include(include("INFO -- : Started Job"))
         expect(log.logs).to include(include("INFO -- : Completed Job"))
       end
@@ -221,8 +227,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
         expect(item.state).to eq 'closed'
 
-        expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        expect(Job::Log.count).to eq 2
+        Job::Log.all.each do |log|
           expect(log.logs).to include(include("INFO -- : Started Job"))
           expect(log.logs).to include(include("INFO -- : Completed Job"))
         end

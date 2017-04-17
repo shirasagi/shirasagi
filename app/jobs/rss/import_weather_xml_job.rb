@@ -154,7 +154,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         return
       end
 
-      Ezine::Task.deliver ezine_page.id
+      Ezine::DeliverJob.bind(site_id: site, node_id: node, page_id: ezine_page).perform_now
     end
 
     def compare_intensity(lhs, rhs)

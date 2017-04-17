@@ -32,7 +32,7 @@ class Ezine::Page
   #   配信するべきメンバー一覧。
   def members_to_deliver
     return [] if completed
-    emails = Ezine::SentLog.where(page_id: id).map(&:email)
+    emails = Ezine::SentLog.where(page_id: id).pluck(:email)
     parent_node = parent.becomes_with_route
     parent_node.members_to_deliver.where(email: {"$nin" => emails})
   end

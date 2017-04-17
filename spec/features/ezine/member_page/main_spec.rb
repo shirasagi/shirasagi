@@ -269,9 +269,9 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
       let!(:item) { create(:ezine_page, cur_site: site, cur_node: node, cur_user: cms_user, html: html, text: text) }
       let(:email) { "#{unique_id}@example.jp" }
 
-      before do
-        allow(SS::RakeRunner).to receive(:run_async).and_wrap_original do |_, *args|
-          ::Ezine::Task.deliver args[1].sub("page_id=", "")
+      around do |example|
+        perform_enqueued_jobs do
+          example.run
         end
       end
 
