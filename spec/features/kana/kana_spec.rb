@@ -120,4 +120,41 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       end
     end
   end
+
+  context "with U+00A0(nbsp)" do
+    let(:user_dic_body) do
+      body = []
+      body << 'AEON, イオン'
+      body << 'MALL, モール'
+      body << '大鷺県, ダイサギケン'
+      body << '小鷺町, コサギマチ'
+      body << 'SHIRASAGI, シラサギ'
+      body << 'Shirasagi, シラサギ'
+      body << 'shirasagi, シラサギ'
+      body.join("\r\n")
+    end
+    let(:dic) { create :kana_dictionary, body: user_dic_body }
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      Kana::Dictionary.build_dic(site.id, [ dic.id ])
+
+      item.name = "遂に「AEON\u00A0MALL」がシラサギ市にオープン"
+      item.html = "<div><h2>遂に「AEON\u00A0MALL」がシラサギ市にオープン</h2></div>#{item.html}"
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+
+      puts page.html
+      expect(page).to have_css('ruby', text: '大鷺県(だいさぎけん)')
+    end
+  end
 end
