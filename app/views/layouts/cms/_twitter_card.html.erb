@@ -6,10 +6,10 @@
 <% if @cur_site.twitter_username.present? %>
 <meta name="twitter:site" content="@<%= controller.twitter_card("twitter:site").first %>">
 <% end %>
-<% %w(twitter:title twitter:description).each do |key| %>
+<% %w(twitter:url twitter:title twitter:description).each do |key| %>
 <% v = controller.twitter_card(key).first %>
 <% if v.present? %>
-<meta property="<%= key %>" content="<%= v %>" />
+<meta name="<%= key %>" content="<%= v %>" />
 <% end %>
 <% end %>
 <% controller.twitter_card("twitter:image").each do |url| %>
