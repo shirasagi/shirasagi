@@ -9,7 +9,7 @@ module Job::SS::Loggable
 
   def perform_with_job_log
     job_log = create_job_log
-    Job::TaskLogger.attach(job_log)
+    prev_job_log = Job::TaskLogger.attach(job_log)
     ret = nil
     begin
       Rails.logger.info("Started Job #{job_id}")
@@ -32,6 +32,7 @@ module Job::SS::Loggable
     ensure
       Job::TaskLogger.detach(job_log)
       job_log.save
+      Job::TaskLogger.attach(prev_job_log) if prev_job_log.present?
     end
     ret
   end
