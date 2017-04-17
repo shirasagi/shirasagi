@@ -63,10 +63,11 @@ sudo firewall-cmd --reload
 #### Furigana
 
 cd
-wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz \
-  http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz \
-  http://mecab.googlecode.com/files/mecab-ruby-0.996.tar.gz \
-  https://raw.githubusercontent.com/shirasagi/shirasagi/stable/vendor/mecab/mecab-ipadic-2.7.0-20070801.patch
+wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE"
+wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM"
+wget -O mecab-ruby-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7VUNlczBWVDZJbE0"
+wget https://raw.githubusercontent.com/shirasagi/shirasagi/stable/vendor/mecab/mecab-ipadic-2.7.0-20070801.patch
+
 
 cd
 tar xvzf mecab-0.996.tar.gz
