@@ -1,7 +1,7 @@
 <%= jquery do %> SS_AddonTabs.hide(".mod-cms-related_pages"); <% end %>
 
 <dl class="see mod-cms-related_pages">
-  <dt><%= @model.t :related_pages %><%= @model.tt :page_ids %></dt>
+  <dt><%= @model.t :related_page_ids %><%= @model.tt :related_page_ids %></dt>
   <dd>
     <%= f.hidden_field "related_page_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("cms.apis.pages.index"), cms_apis_pages_path, class: "ajax-box" %>
@@ -25,4 +25,7 @@
       </tbody>
     </table>
   </dd>
+
+  <dt><%= @model.t :related_page_sort %><%= @model.tt :related_page_sort %></dt>
+  <dd><%= f.select :related_page_sort, @item.related_page_sort_options, include_blank: true %></dd>
 </dl>

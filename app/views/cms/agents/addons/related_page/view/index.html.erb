@@ -3,8 +3,10 @@
   <header><h2><%= @cur_page.t :related_pages %></h2></header>
   <div class="pages">
     <ul>
-      <% @cur_page.related_pages.each do |item| %>
-      <li><%= link_to item.name, item.url %></li>
+      <% @cur_page.related_pages.order_by(@cur_page.related_page_sort_hash).each do |item| %>
+        <%= content_tag(:li, class: item.categories.pluck(:filename).map { |c| c.tr('/', '-') }.presence) do %>
+          <%= link_to item.name, item.url %>
+        <% end %>
       <% end %>
     </ul>
   </div>
