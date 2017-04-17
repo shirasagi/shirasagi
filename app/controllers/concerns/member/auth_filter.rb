@@ -6,9 +6,9 @@ module Member::AuthFilter
 
     member_id = session[:member]["member_id"]
     if site == false
-      Cms::Member.find member_id rescue nil
+      Cms::Member.and_enabled.find member_id rescue nil
     else
-      Cms::Member.site(site).find member_id rescue nil
+      Cms::Member.site(site).and_enabled.find member_id rescue nil
     end
   end
 
