@@ -125,11 +125,15 @@ module Cms::PublicFilter::Layout
     end
 
     def date_convert(date, format = nil)
+      return "" unless date
+
       if format.nil?
         I18n.l date.to_date
       else
         I18n.l date.to_date, format: format.to_sym
       end
+    rescue
+      ""
     end
 
   public
