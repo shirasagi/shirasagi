@@ -65,6 +65,17 @@ production: &production
     html_request_timeout: 10
     head_request_timeout: 5
 
+  # SNS自動投稿設定
+  sns_poster:
+    # twitter 既定値
+    consumer_key: xxxxxxxxxxxxx
+    consumer_secret: xxxxxxxxxxxxx
+    access_token: xxxxxxxxxxxxx
+    access_token_secret: xxxxxxxxxxxxx
+
+    #facebook 既定値
+    access_token_facebook: xxxxxxxxxxxxx
+
 test:
   <<: *production
 

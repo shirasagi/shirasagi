@@ -320,6 +320,7 @@ ja:
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
+      cms/sns_poster: SNS自動投稿設定
       cms/captcha: 認証
       cms/body_layout_html: HTML
       cms/default_release_plan: 公開予約の既定値
@@ -496,6 +497,15 @@ ja:
       cms/addon/sns_share:
         sns_share_states: 表示
         sns_share_orders: 並び順
+      cms/addon/sns_poster:
+        sns_poster: SNS自動投稿設定
+        facebook_poster: Facebook自動投稿
+        twitter_poster: Twitter自動投稿
+        autodeleter: 非公開時に投稿を削除
+        option_on: 有効
+        option_off: 無効
+        active: 有効
+        expired: 無効
       cms/addon/import/page:
         in_file: ファイル
       cms/addon/import/group:
