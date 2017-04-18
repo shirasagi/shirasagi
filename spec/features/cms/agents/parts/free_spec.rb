@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "cms_agents_parts_free", type: :feature, dbscope: :example do
-  let(:site)   { cms_site }
+  let(:site) { cms_site }
 
   context "public" do
     let(:layout) { create_cms_layout [part] }

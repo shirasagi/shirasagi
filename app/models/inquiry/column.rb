@@ -18,7 +18,7 @@ class Inquiry::Column
   field :name, type: String
   field :html, type: String, default: ""
   field :order, type: Integer, default: 0
-  field :max_upload_file_size, type: Integer, default: 0
+  field :max_upload_file_size, type: Integer, default: 0, overwrite: true
 
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
 

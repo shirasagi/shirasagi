@@ -16,14 +16,14 @@ class Member::Agents::Parts::InvitedGroupController < ApplicationController
     def set_member
       logged_in? redirect: false
       if @cur_member.blank?
-        render text: ''
+        render plain: ''
       end
     end
 
     def set_my_group_node
       @my_group_node = Member::Node::MyGroup.site(@cur_site).and_public.first
       if @my_group_node.blank?
-        render text: ''
+        render plain: ''
       end
     end
 

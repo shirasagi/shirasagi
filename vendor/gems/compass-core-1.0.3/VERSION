@@ -1,0 +1,4 @@
+1.0.3
+
+[PR] deprecation fix: use new SCSS syntax #2088
+https://github.com/Compass/compass/pull/2088

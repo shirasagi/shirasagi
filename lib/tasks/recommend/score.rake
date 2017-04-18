@@ -12,7 +12,7 @@ namespace :recommend do
 
     job = Recommend::DestroySimilarityScoresJob
     job = job.bind(site_id: site.id) if site
-    job.perform_now()
+    job.perform_now
   end
 
   task :destroy_history_logs => :environment do
@@ -20,6 +20,6 @@ namespace :recommend do
 
     job = Recommend::DestroyHistoryLogsJob
     job = job.bind(site_id: site.id) if site
-    job.perform_now()
+    job.perform_now
   end
 end

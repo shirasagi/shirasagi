@@ -41,10 +41,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
       click_on 'システム設定'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to     have_css('h2 a', text: 'システム設定')
-        expect(page).to     have_css('h3 a', text: 'システム情報')
+        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
-        expect(page).to     have_css('h3 a', text: 'グループ')
+        expect(page).to have_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')
         expect(page).to have_no_css('h3 a', text: '権限/ロール')
         expect(page).to have_no_css('h3 a', text: '認証')
@@ -69,12 +69,12 @@ describe "sys_conf", type: :feature, dbscope: :example do
       click_on 'システム設定'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to     have_css('h2 a', text: 'システム設定')
-        expect(page).to     have_css('h3 a', text: 'システム情報')
+        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')
-        expect(page).to     have_css('h3 a', text: '権限/ロール')
+        expect(page).to have_css('h3 a', text: '権限/ロール')
         expect(page).to have_no_css('h3 a', text: '認証')
         expect(page).to have_no_css('h3 a', text: '最大ファイルサイズ')
         expect(page).to have_no_css('h3 a', text: 'サイト複製')
@@ -97,15 +97,15 @@ describe "sys_conf", type: :feature, dbscope: :example do
       click_on 'システム設定'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to     have_css('h2 a', text: 'システム設定')
-        expect(page).to     have_css('h3 a', text: 'システム情報')
-        expect(page).to     have_css('h3 a', text: 'サイト')
+        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h3 a', text: 'システム情報')
+        expect(page).to have_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')
         expect(page).to have_no_css('h3 a', text: '権限/ロール')
         expect(page).to have_no_css('h3 a', text: '認証')
         expect(page).to have_no_css('h3 a', text: '最大ファイルサイズ')
-        expect(page).to     have_css('h3 a', text: 'サイト複製')
+        expect(page).to have_css('h3 a', text: 'サイト複製')
         expect(page).to have_no_css('h3 a', text: 'テスト')
         expect(page).to have_no_css('h3 a', text: '操作履歴')
         expect(page).to have_no_css('h3 a', text: 'ジョブ')
@@ -125,18 +125,18 @@ describe "sys_conf", type: :feature, dbscope: :example do
       click_on 'システム設定'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to     have_css('h2 a', text: 'システム設定')
-        expect(page).to     have_css('h3 a', text: 'システム情報')
+        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
-        expect(page).to     have_css('h3 a', text: 'ユーザー')
+        expect(page).to have_css('h3 a', text: 'ユーザー')
         expect(page).to have_no_css('h3 a', text: '権限/ロール')
-        expect(page).to     have_css('h3 a', text: '認証')
-        expect(page).to     have_css('h3 a', text: '最大ファイルサイズ')
+        expect(page).to have_css('h3 a', text: '認証')
+        expect(page).to have_css('h3 a', text: '最大ファイルサイズ')
         expect(page).to have_no_css('h3 a', text: 'サイト複製')
-        expect(page).to     have_css('h3 a', text: 'テスト')
-        expect(page).to     have_css('h3 a', text: '操作履歴')
-        expect(page).to     have_css('h3 a', text: 'ジョブ')
+        expect(page).to have_css('h3 a', text: 'テスト')
+        expect(page).to have_css('h3 a', text: '操作履歴')
+        expect(page).to have_css('h3 a', text: 'ジョブ')
       end
     end
   end
@@ -152,8 +152,8 @@ describe "sys_conf", type: :feature, dbscope: :example do
       click_on 'システム設定'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to     have_css('h2 a', text: 'システム設定')
-        expect(page).to     have_css('h3 a', text: 'システム情報')
+        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')
