@@ -3,14 +3,15 @@ SS_USER=${2:-"$USER"}
 SS_DIR=/var/www/shirasagi
 
 cat <<EOS | sudo tee -a /etc/yum.repos.d/CentOS-Base.repo
-[mongodb-org-3.0]
+[mongodb-org-3.4]
 name=MongoDB Repository
-baseurl=http://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/3.0/x86_64/
-gpgcheck=0
-enabled=0
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.4/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 EOS
 
-sudo yum install -y --enablerepo=mongodb-org-3.0 mongodb-org
+sudo yum install -y --enablerepo=mongodb-org-3.4 mongodb-org
 sudo systemctl start mongod.service
 sudo systemctl enable mongod.service
 
