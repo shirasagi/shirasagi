@@ -24,7 +24,6 @@ module SS::Model::Notice
 
 included do
     seqid :id
-    field :html, type: String
     field :state, type: String, default: "public"
     field :name, type: String
     field :released, type: DateTime
