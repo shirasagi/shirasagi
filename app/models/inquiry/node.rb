@@ -57,7 +57,7 @@ module Inquiry::Node
           next
         end
 
-        node = Cms::Node.filename(url).first
+        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
 
         cond << { filename: node.filename }

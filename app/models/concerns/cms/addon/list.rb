@@ -71,7 +71,7 @@ module Cms::Addon::List
           next
         end
 
-        node = Cms::Node.filename(url).first
+        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
 
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
