@@ -13,4 +13,10 @@
 
   <dt><%= @model.t :https %></dt>
   <dd><%= @item.label :https %></dd>
+
+  <dt><%= @model.t :mypage_scheme %></dt>
+  <dd><%= @item.label :mypage_scheme %></dd>
+
+  <dt><%= @model.t :mypage_domain %></dt>
+  <dd><%= @item.send :mypage_domain %></dd>
 </dl>

@@ -13,4 +13,10 @@
 
   <dt><%= @model.t :https %><%= @model.tt :https %></dt>
   <dd><%= f.select :https, @item.https_options %></dd>
+
+  <dt><%= @model.t :mypage_scheme %><%= @model.tt :mypage_scheme %></dt>
+  <dd><%= f.select :mypage_scheme, @item.mypage_scheme_options %></dd>
+
+  <dt><%= @model.t :mypage_domain %><%= @model.tt :mypage_domain %></dt>
+  <dd><%= f.text_field :mypage_domain %></dd>
 </dl>
