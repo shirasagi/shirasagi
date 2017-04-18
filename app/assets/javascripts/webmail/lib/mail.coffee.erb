@@ -1,9 +1,9 @@
-class @Webmail_Mail
-  @renderNavi: ->
+class @Webmail_Mail_Navi
+  @render: ->
     $('.webmail-navi-mailboxes .reload').click ->
-      Webmail_Mail.reloadMailbox()
+      Webmail_Mail_Navi.reloadMailbox()
     $('.webmail-navi-quota .reload').click ->
-      Webmail_Mail.reloadQuota()
+      Webmail_Mail_Navi.reloadQuota()
 
   @reloadMailbox: (opts = {})->
     navi = $('.webmail-navi-mailboxes')
@@ -43,7 +43,8 @@ class @Webmail_Mail
         btn.removeClass('disabled')
     return false
 
-  @renderList: ->
+class @Webmail_Mail_List
+  @render: ->
     @renderListStars()
 
     $(".list-head .search").on "click", ->
@@ -57,14 +58,14 @@ class @Webmail_Mail
       url = $(this).data('href')
       menu = $("#webmail-mailboxes-list .dropdown-menu").clone()
       menu.find("a").click ->
-        uids = Webmail_Mail.findCheckedUids()
+        uids = Webmail_Mail_List.findCheckedUids()
         return false if uids.length == 0
         $('.dropdown-menu').removeClass('active')
-        return Webmail_Mail.updateMails(url, ids: uids, dst: $(this).data('name'))
+        return Webmail_Mail_List.updateMails(url, ids: uids, dst: $(this).data('name'))
       $(this).after(menu)
 
     $(".list-head .update-all").on "click", ->
-      uids = Webmail_Mail.findCheckedUids()
+      uids = Webmail_Mail_List.findCheckedUids()
       return false if uids.length == 0
       $('.dropdown-menu').removeClass('active')
 
@@ -77,7 +78,7 @@ class @Webmail_Mail
           authenticity_token: $('meta[name="csrf-token"]').attr('content')
           ids: uids
         success: (data)->
-          Webmail_Mail.renderListFlags(uids, data.action)
+          Webmail_Mail_List.renderListFlags(uids, data.action)
           SS.notice(data.notice)
       return false
 
@@ -110,17 +111,17 @@ class @Webmail_Mail
       return $(this)
 
   @renderListFlags: (uids, action)->
-    items = Webmail_Mail.findListItems(uids)
+    items = Webmail_Mail_List.findListItems(uids)
     switch action
       when 'set_star'
         items.each -> $(this).find('.icon-star').removeClass('off').addClass('on')
       when 'unset_star'
         items.each -> $(this).find('.icon-star').removeClass('on').addClass('off')
       when 'set_seen'
-        #Webmail_Mail.reloadMailbox({ notice: -1 })
+        #Webmail_Mail_Navi.reloadMailbox({ notice: -1 })
         items.each -> $(this).removeClass('unseen').addClass('seen')
       when 'unset_seen'
-        #Webmail_Mail.reloadMailbox({ notice: -1 })
+        #Webmail_Mail_Navi.reloadMailbox({ notice: -1 })
         items.each -> $(this).removeClass('seen').addClass('unseen')
     return false
 
@@ -160,7 +161,8 @@ class @Webmail_Mail
     form.appendTo(document.body).submit()
     return false
 
-  @renderDetail: ->
+class @Webmail_Mail_Detail
+  @render: ->
     body = $('.webmail-mail .body--html')
 
     if body.find('img[data-url]').length
@@ -199,7 +201,8 @@ class @Webmail_Mail
           SS.notice(data.notice)
       return false
 
-  @renderForm: ->
+class @Webmail_Mail_Form
+  @render: ->
     $('.js-autosize').autosize()
 
     $('.cc-bcc-label').click ->
@@ -207,15 +210,15 @@ class @Webmail_Mail
       return false
 
     $('#item_format').change ->
-      Webmail_Mail.renderBodyForm($(this).val())
-    Webmail_Mail.renderBodyForm($('#item_format').val())
+      Webmail_Mail_Form.renderBodyForm($(this).val())
+    Webmail_Mail_Form.renderBodyForm($('#item_format').val())
 
     $('#item_signature').change ->
       return if $(this).val() == ""
       if $('#item_format').val() == "html"
         CKEDITOR.instances['item_html'].insertText($(this).val())
       else
-        Webmail_Mail.insertText($("#item_text"), $(this).val())
+        Webmail_Mail_Form.insertText($("#item_text"), $(this).val())
       $(this).val("")
 
     # Send mail
@@ -249,3 +252,16 @@ class @Webmail_Mail
       np = p + str.length
       field.val(s.substr(0, p) + str + s.substr(p))
       field.get(0).setSelectionRange(np, np)
+
+class @Webmail_Mail_Form_Address
+  @select: (item) ->
+    self = this
+
+    data = item.closest("[data-id]")
+    email = data.data("email")
+
+    field = self.anchorAjaxBox.closest("dl").closest('dd').find("textarea")
+    value = field.val().replace(/^\s+/, '')
+    value += "; " if value != ""
+    value += email
+    field.val(value)

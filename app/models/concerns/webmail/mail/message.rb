@@ -29,6 +29,7 @@ module Webmail::Mail::Message
   def new_reply(ref)
     self.reply_uid = ref.uid
     self.to = ref.from
+    self.to_text = self.to.join('; ')
     set_reply_header(ref)
     set_reply_body(ref)
   end
@@ -37,6 +38,8 @@ module Webmail::Mail::Message
     self.reply_uid = ref.uid
     self.to = (ref.from + ref.to).reject { |c| c.include?(imap.user.email) }
     self.cc = ref.cc
+    self.to_text = self.to.join('; ')
+    self.cc_text = self.cc.join('; ')
     set_reply_header(ref)
     set_reply_body(ref)
   end

@@ -31,7 +31,7 @@
 
   <tbody class="items">
     <% @items.each do |item| %>
-      <tr class="list-item" data-id="<%= item.email_address %>" data-name="<%= item.name %>">
+      <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.name %>" data-email="<%= item.email_address %>">
         <% if @multi %>
         <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
         <% end %>
