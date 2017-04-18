@@ -1,0 +1,9 @@
+ja:
+  tooltip:
+    cms/addon/sns_poster:
+      sns_poster_facebook:
+        - Facebookへの自動投稿の設定を行います。
+      sns_poster_twitter:
+        - Twitterへの自動投稿の設定を行います。
+      sns_poster_delete:
+        - 記事非公開時にSNSへ投稿した内容を削除します。

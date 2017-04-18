@@ -380,10 +380,15 @@ ja:
         facebook_page_url: ページURL
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: 既定の画像URL
+        facebook_access_token: アクセストークン
       ss/addon/twitter_setting:
         twitter_card: カード形式
         twitter_username: ユーザー名
         twitter_default_image_url: 既定の画像URL
+        twitter_consumer_key: コンシューマーキー
+        twitter_consumer_secret: コンシューマーシークレット
+        twitter_access_token: アクセストークン
+        twitter_access_token_secret: アクセストークン
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
@@ -584,6 +589,9 @@ ja:
         - 既定の画像のURL を設定します。
         - ページに画像が含まれていない場合、ここで設定した URL が og:image として使用されます。
         - ページに画像が含まれている場合、ここで設定した URL は使用されません。
+      facebook_access_token:
+        - アクセストークンを設定します。
+        - 設定するとFacebookへの自動投稿が可能になります。
     ss/addon/twitter_setting:
       twitter_card:
         - Twitter のカード形式を選択します。
@@ -595,6 +603,18 @@ ja:
         - 既定の画像のURL を設定します。
         - ページに画像が含まれていない場合、ここで設定した URL が twitter:image として使用されます。
         - ページに画像が含まれている場合、ここで設定した URL は使用されません。
+      twitter_consumer_key:
+        - コンシューマーキー(APIキー, Consumer Key, API Key)を設定します。
+        - Twitterへの自動投稿に必須です。
+      twitter_consumer_secret:
+        - コンシューマーシークレット(APIシークレット, Consumer Secret, API Secret)を設定します。
+        - Twitterへの自動投稿に必須です。
+      twitter_access_token:
+        - アクセストークン(Access Token)を設定します。
+        - Twitterへの自動投稿に必須です。
+      twitter_access_token_secret:
+        - アクセストークンシークレット(Access Token Secret)を設定します。
+        - Twitterへの自動投稿に必須です。
     ss/addon/file_setting:
       file_resizing:
         - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。
