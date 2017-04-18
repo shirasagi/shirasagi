@@ -22,6 +22,7 @@ production: &production
       # どのプールを監視するかを配列で指定します。
       queues:
         - 'default'
+        - 'mailers'
         - 'voice_synthesis'
 
       # プールの監視間隔を秒で指定します。規定値は 5 秒です。
