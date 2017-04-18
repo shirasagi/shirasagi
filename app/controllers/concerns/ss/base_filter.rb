@@ -71,7 +71,7 @@ module SS::BaseFilter
 
       if request.xhr?
         response.headers['ajaxRedirect'] = true
-        return render inline: ''
+        return render plain: ''
       end
 
       ref = request.env["REQUEST_URI"]

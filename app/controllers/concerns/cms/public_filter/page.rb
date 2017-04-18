@@ -48,7 +48,7 @@ module Cms::PublicFilter::Page
       end
 
       if response.content_type == "text/html" && page.layout
-        html = render_to_string inline: render_layout(page.layout), layout: "cms/page"
+        html = render_to_string html: render_layout(page.layout).html_safe, layout: "cms/page"
       else
         html = response.body
       end

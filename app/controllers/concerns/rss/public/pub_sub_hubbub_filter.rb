@@ -38,7 +38,7 @@ module Rss::Public::PubSubHubbubFilter
         expected = request.headers['X-Hub-Signature']
         if expected != actual
           Rails.logger.warn("HMAC signature of the payload is mismatched. Expected: #{expected}, Actual: #{actual}")
-          render text: '', layout: false, content_type: 'text/plain'
+          render plain: '', layout: false, content_type: 'text/plain'
           return
         end
       end
@@ -61,18 +61,18 @@ module Rss::Public::PubSubHubbubFilter
 
     def confirmation
       if @item.valid?
-        render text: @item.challenge, layout: false, content_type: 'text/plain'
+        render plain: @item.challenge, layout: false, content_type: 'text/plain'
       else
-        render text: '', layout: false, content_type: 'text/plain', status: :not_found
+        render plain: '', layout: false, content_type: 'text/plain', status: :not_found
       end
     end
 
     def subscription
       job_model.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(@item.id)
 
-      render text: '', layout: false, content_type: 'text/plain'
+      render plain: '', layout: false, content_type: 'text/plain'
     rescue => e
       Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      render text: '', layout: false, content_type: 'text/plain'
+      render plain: '', layout: false, content_type: 'text/plain'
     end
 end

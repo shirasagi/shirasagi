@@ -37,9 +37,9 @@ class Webmail::AccountSettingsController < ApplicationController
       @imap = Webmail::Imap.set_user(user)
 
       if @imap.login
-        render text: "Login Success."
+        render plain: "Login Success."
       else
-        render text: @imap.error
+        render plain: @imap.error
       end
     end
 end
