@@ -259,6 +259,7 @@ class @Webmail_Mail_Form_Address
 
     data = item.closest("[data-id]")
     email = data.data("email")
+    return if email == ""
 
     field = self.anchorAjaxBox.closest("dl").closest('dd').find("textarea")
     value = field.val().replace(/^\s+/, '')

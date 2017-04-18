@@ -2,7 +2,7 @@
   <dd class="wide">
     <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
     <% @cur_user.root_groups.each do |group| %>
-      <%= link_to group.name + t("ss.apis.users.index"), sns_apis_users_path(group: group), class: "ajax-box" %>
+      <%= link_to group.name + t("ss.apis.users.index"), gws_apis_users_path(site: group), class: "ajax-box" %>
     <% end %>
   </dd>
   <dd class="wide">

@@ -14,7 +14,7 @@ SS_SearchUI.select = Webmail_Mail_Form_Address.select;
       <%= t "mongoid.models.webmail/address" %>
     <% end %>
     <% @cur_user.root_groups.each do |group| %>
-      <%= link_to sns_apis_users_path(group: group), class: "ajax-box" do %>
+      <%= link_to gws_apis_users_path(site: group), class: "ajax-box" do %>
         <%= group.name %><%= t "mongoid.models.ss/user" %>
       <% end %>
     <% end %>
