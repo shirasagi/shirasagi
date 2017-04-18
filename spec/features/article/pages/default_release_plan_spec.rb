@@ -8,7 +8,7 @@ describe "article_pages", dbscope: :example, js: true do
 
     before { login_cms_user }
 
-    context "with site setting" do
+    context "with site setting", fragile: true do
       before do
         site.default_release_plan_state = 'enabled'
         site.default_release_days_after = 3

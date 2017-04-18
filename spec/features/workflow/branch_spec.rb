@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe "workflow_branch", dbscope: :example do
-  subject(:site) { cms_site }
-  subject(:item) { create_once :article_page, filename: "docs/page.html", name: "[TEST] br_page" }
-  subject(:node) { create_once :article_node_page, filename: "docs", name: "article" }
-  subject(:index_path) { article_pages_path site.id, node }
-  subject(:show_path) { article_page_path site.id, node, item }
+  let!(:site) { cms_site }
+  let!(:item) { create_once :article_page, filename: "docs/page.html", name: "[TEST] br_page" }
+  let!(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:index_path) { article_pages_path site.id, node }
+  let(:show_path) { article_page_path site.id, node, item }
 
   context "with auth" do
     before { login_cms_user }
@@ -15,7 +15,7 @@ describe "workflow_branch", dbscope: :example do
       expect(current_path).not_to eq sns_login_path
     end
 
-    context "branch", js: true do
+    context "branch", js: true, fragile: true do
       it "#branch_create" do
         visit show_path
         click_button "差し替えページを作成する"
