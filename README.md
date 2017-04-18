@@ -75,8 +75,8 @@ enabled=0
 # gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 # \curl -sSL https://get.rvm.io | sudo bash -s stable
 # source /etc/profile
-# rvm install 2.3.0
-# rvm use 2.3.0 --default
+# rvm install 2.3.4
+# rvm use 2.3.4 --default
 # gem install bundler
 ```
 
