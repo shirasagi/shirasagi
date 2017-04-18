@@ -1,3 +1,8 @@
+PATH
+  remote: vendor/gems/compass-core-1.0.3
+  specs:
+    compass-core (1.0.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -84,9 +89,6 @@ GEM
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
       sass (>= 3.3.13, < 3.5)
-    compass-core (1.0.3)
-      multi_json (~> 1.0)
-      sass (>= 3.3.0, < 3.5)
     compass-import-once (1.0.5)
       sass (>= 3.2, < 3.5)
     compass-rails (3.0.2)
@@ -510,6 +512,7 @@ DEPENDENCIES
   capybara
   clam_scan
   coffee-rails (~> 4.1.0)
+  compass-core (= 1.0.3)!
   compass-rails
   coveralls
   diffy
@@ -589,4 +592,4 @@ DEPENDENCIES
   zipruby
 
 BUNDLED WITH
-   1.13.7
+   1.14.6
