@@ -117,6 +117,7 @@ ja:
       inclusion: は一覧にありません。
       invalid: は不正な値です。
       invalid_file_type: は不正なファイル形式です。
+      invalid_filename: は半角英数、アンダースコア、ハイフンのみ使用可能です。
       invalid_csv: CSV形式のファイルを選択してください。
       duplicate: の重複が存在します。
       less_than: は%{count}より小さい値にしてください。

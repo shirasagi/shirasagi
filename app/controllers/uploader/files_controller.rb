@@ -48,7 +48,7 @@ class Uploader::FilesController < ApplicationController
 
         if !item.save
           item.errors.each do |n, e|
-            @item.errors.add item.name, e
+            @item.errors.add :base, "#{item.name} - #{@model.t(n)}#{e}"
           end
         end
       end
