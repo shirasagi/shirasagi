@@ -47,7 +47,7 @@ class Webmail::Filter
 
   def mailbox_options
     imap.mailboxes.all.map do |box|
-      pad = '&nbsp;' * 4 * (box.depth)
+      pad = '&nbsp;' * 4 * box.depth
       ["#{pad}#{ERB::Util.html_escape(box.basename)}".html_safe, box.original_name]
     end
   end

@@ -24,7 +24,7 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
           end
         end
 
-        Timecop.travel(1.days.ago) do
+        Timecop.travel(1.day.ago) do
           tokens.each do |token|
             Recommend::History::Log.new(site: site, token: token, path: "/site/page3.html").save!
             Recommend::History::Log.new(site: site, token: token, path: "/site/page4.html").save!
@@ -46,7 +46,7 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
           end
         end
 
-        Timecop.travel(1.days.ago) do
+        Timecop.travel(1.day.ago) do
           tokens.each do |token|
             Recommend::History::Log.new(site: site2, token: token, path: "/site2/page3.html").save!
             Recommend::History::Log.new(site: site2, token: token, path: "/site2/page4.html").save!
@@ -54,7 +54,7 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
         end
 
         perform_enqueued_jobs do
-          described_class.bind(site_id: site.id).perform_later()
+          described_class.bind(site_id: site.id).perform_later
         end
       end
 
@@ -92,7 +92,7 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
           end
         end
 
-        Timecop.travel(1.days.ago) do
+        Timecop.travel(1.day.ago) do
           tokens.each do |token|
             Recommend::History::Log.new(site: site, token: token, path: "/site/page3.html").save!
             Recommend::History::Log.new(site: site, token: token, path: "/site/page4.html").save!
@@ -114,7 +114,7 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
           end
         end
 
-        Timecop.travel(1.days.ago) do
+        Timecop.travel(1.day.ago) do
           tokens.each do |token|
             Recommend::History::Log.new(site: site2, token: token, path: "/site2/page3.html").save!
             Recommend::History::Log.new(site: site2, token: token, path: "/site2/page4.html").save!

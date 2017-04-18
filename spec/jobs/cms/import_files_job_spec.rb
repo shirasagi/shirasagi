@@ -9,7 +9,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
   describe ".perform_later" do
     before do
       perform_enqueued_jobs do
-        described_class.bind(site_id: site).perform_later()
+        described_class.bind(site_id: site).perform_later
       end
     end
 
