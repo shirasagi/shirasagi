@@ -12,11 +12,11 @@ module Sns::Message::MailFilter
         subject = "[#{SS.config.ss.application_name}] "
         subject << I18n.t("sns/message.mail_templates.notification.subject", user: @cur_user.name)
         send_params = {
-          from: "shirasagi@#{request.domain}",
           to: user.email,
           subject: subject,
           body: I18n.t("sns/message.mail_templates.notification.text", text: post.text, url: url)
         }
+
         SS::Mailer.new_message(send_params).deliver_now
       end
     end

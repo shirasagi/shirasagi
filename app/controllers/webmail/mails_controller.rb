@@ -51,6 +51,8 @@ class Webmail::MailsController < ApplicationController
 
   public
     def index
+      @sys_notices = Sys::Notice.and_public.webmail_admin_notice.page(1).per(2)
+
       @mailboxes = @imap.mailboxes.load
       @mailboxes.apply_recent_filters
 
@@ -161,11 +163,6 @@ class Webmail::MailsController < ApplicationController
       render_change :unset_star, redirect: { action: :show }
     end
 
-    def destroy_all
-      @imap.uids_move_trash get_uids
-      render_change :delete, reload: true
-    end
-
     def copy
       @imap.uids_copy get_uids, params[:dst]
       render_change :copy, reload: true
@@ -176,6 +173,16 @@ class Webmail::MailsController < ApplicationController
       render_change :move, reload: true
     end
 
+    def destroy_all
+      @imap.uids_move_trash get_uids
+      render_change :delete, reload: true
+    end
+
+    def empty
+      @imap.uids_move_trash @imap.mails.mailbox(@mailbox).uids
+      render_change :empty, reload: true
+    end
+
     def render_change(action, opts = {})
       @imap.mailboxes.update_status if opts[:reload]
 
@@ -183,7 +190,7 @@ class Webmail::MailsController < ApplicationController
 
       respond_to do |format|
         format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
-        format.json { head :no_content }
+        format.json { render json: { action: params[:action], notice: t("webmail.notice.#{action}") } }
       end
     end
 end

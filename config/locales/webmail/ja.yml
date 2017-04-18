@@ -42,6 +42,7 @@ ja:
         trash: 削除する
         delete: サーバから削除する
     links:
+      back_to_contents: 受信トレイへ戻る
       etc: その他
       download: ダウンロード
       source_view: ソース表示
@@ -60,7 +61,9 @@ ja:
       show_cc_bcc: CC , BCC の表示
       show_image: 画像の表示
       reload_mailboxes: メールサーバと同期する
+      empty_mailbox: 空にする
     confirm:
+      empty_mailbox: フォルダーを空にしてよろしいですか？
       clear_cache: キャッシュを削除してよろしいですか？
       apply_filter: フィルターを適用してよろしいですか？
     notice:
@@ -70,6 +73,7 @@ ja:
       copy: コピーしました。
       move: 移動しました。
       delete: 削除しました。
+      empty: 空にしました。
       set_seen: 既読にしました。
       unset_seen: 未読にしました。
       set_star: スターをつけました。

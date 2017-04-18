@@ -2,9 +2,6 @@
   <!--
   <h2><%= link_to :"sns.profile", sns_cur_user_profile_path %></h2>
   -->
-  <% if SS.config.webmail.disable.blank? %>
-  <h2><%= link_to :"webmail.mail", webmail_mails_path, class: "icon-message" %></h2>
-  <% end %>
   <h2><%= link_to :"sns.message", sns_message_threads_path, class: 'icon-message' %></h2>
   <h2><%= link_to :"sns.file", sns_cur_user_files_path, class: 'icon-conv' %></h2>
   <h2><%= link_to :"sns.account", sns_cur_user_account_path, class: 'icon-conf' %></h2>

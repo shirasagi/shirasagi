@@ -165,9 +165,10 @@ ja:
         all: 全ユーザー
         same_group: 管理グループのみ
         login_view: ログイン画面
-        cms_admin: cms管理画面
-        gw_admin: グループ管理画面
         sys_admin: システム管理画面
+        cms_admin: CMS管理画面
+        gw_admin: グループウェア
+        webmail_admin: ウェブメール
       state:
         enabled: 使用する
         disabled: 使用しない

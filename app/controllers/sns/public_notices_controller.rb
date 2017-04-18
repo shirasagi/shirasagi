@@ -12,4 +12,12 @@ class Sns::PublicNoticesController < ApplicationController
     def set_crumbs
       @crumbs = []
     end
+
+  public
+    def index
+      @items = @model.and_public.
+        and_show_login.
+        search(params[:s]).
+        page(params[:page]).per(50)
+    end
 end

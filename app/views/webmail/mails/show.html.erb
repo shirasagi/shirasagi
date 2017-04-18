@@ -3,15 +3,9 @@
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
     <div class="addon-head">
-      <% if @item.star? %>
-        <%= link_to({ action: :unset_star }, { class: 'update-mail unset-star icon-star on' }) do %>
-          <i class="material-icons">&#xE838;</i>
-        <% end %>
-      <% else %>
-        <%= link_to({ action: :set_star }, { class: 'update-mail set-star icon-star off' }) do %>
-          <i class="material-icons">&#xE838;</i>
-        <% end %>
-      <% end %>
+      <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
+        <i class="material-icons">&#xE838;</i>
+      </span>
       <h2 class="subject">
         <%= @item.display_subject %>
         <!--

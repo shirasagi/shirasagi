@@ -1,62 +1,51 @@
-class @Webmail_Mail
-  @renderNavi: ->
+class @Webmail_Mail_Navi
+  @render: ->
+    $('.webmail-navi-mailboxes .reload').click ->
+      Webmail_Mail_Navi.reloadMailbox()
+    $('.webmail-navi-quota .reload').click ->
+      Webmail_Mail_Navi.reloadQuota()
+
+  @reloadMailbox: (opts = {})->
     navi = $('.webmail-navi-mailboxes')
-    navi.find('.reload').click ->
-      btn = $(this)
-      return false if btn.hasClass('disabled')
-      $.ajax
-        url: btn.attr('href')
-        beforeSend: ->
-          btn.addClass('disabled')
-          navi.find('.unseen').remove()
-        success: (data) ->
-          for i, mailbox of data.mailboxes
-            h = " <span class='unseen count#{mailbox.unseen}'>(#{mailbox.unseen})</span>"
-            navi.find("a[data-name='#{mailbox.name}']").append(h)
-          SS.notice(data.notice) if data.notice
-          if data.inbox.recent > 0
-            location.href = data.inbox.url if location.pathname == data.inbox.url
-          btn.removeClass('disabled')
-      return false
+    btn = navi.find('.reload')
+    return false if btn.hasClass('disabled')
 
-    quota = $('.webmail-navi-quota')
-    quota.find('.reload').click ->
-      btn = $(this)
-      return false if btn.hasClass('disabled')
-      $.ajax
-        url: btn.attr('href')
-        beforeSend: ->
-          btn.addClass('disabled')
-          quota.find('.label').html('--/--')
-          quota.find('.usage').css('width', 0)
-        success: (data) ->
-          quota.find('.label').html(data.label)
-          quota.find('.usage').css('width', data.percentage + '%')
-          btn.removeClass('disabled')
-      return false
+    $.ajax
+      url: btn.attr('href')
+      beforeSend: ->
+        btn.addClass('disabled')
+        navi.find('.unseen').remove()
+      success: (data) ->
+        for i, mailbox of data.mailboxes
+          h = " <span class='unseen count#{mailbox.unseen}'>(#{mailbox.unseen})</span>"
+          navi.find("a[data-name='#{mailbox.name}']").append(h)
+        if data.notice && opts['notice'] != -1
+          SS.notice(data.notice)
+        if data.inbox.recent > 0
+          location.href = data.inbox.url if location.pathname == data.inbox.url
+        btn.removeClass('disabled')
+    return false
 
-  @renderList: ->
-    $(".list-head .move-all, .list-head .copy-all").each ->
-      url = $(this).data('href')
-      menu = $("#webmail-mailboxes-list .dropdown-menu").clone()
-      menu.find("a").click ->
-        checked = $(".list-item input:checkbox:checked").map ->
-          $(this).val()
-        return Webmail_Mail.updateMail(url, ids: checked, dst: $(this).data('name'))
-      $(this).after(menu)
+  @reloadQuota: ->
+    navi = $('.webmail-navi-quota')
+    btn = navi.find('.reload')
+    return false if btn.hasClass('disabled')
 
-    $(".list-head .move-all, .list-head .copy-all").on "click", ->
-      checked = $(".list-item input:checkbox:checked").map ->
-        $(this).val()
-      return false if checked.length == 0
+    $.ajax
+      url: btn.attr('href')
+      beforeSend: ->
+        btn.addClass('disabled')
+        navi.find('.label').html('--/--')
+        navi.find('.usage').css('width', 0)
+      success: (data) ->
+        navi.find('.label').html(data.label)
+        navi.find('.usage').css('width', data.percentage + '%')
+        btn.removeClass('disabled')
+    return false
 
-    $(".list-head .update-all").on "click", ->
-      checked = $(".list-item input:checkbox:checked").map ->
-        $(this).val()
-      return false if checked.length == 0
-
-      url = $(this).data('href')
-      return Webmail_Mail.updateMail(url, ids: checked, redirect: location.href)
+class @Webmail_Mail_List
+  @render: ->
+    @renderListStars()
 
     $(".list-head .search").on "click", ->
       $('.webmail-mail-search').animate({ height: 'toggle' }, 'fast')
@@ -65,31 +54,115 @@ class @Webmail_Mail
       $(".webmail-mail-search input[type=text]").val("")
       $(".webmail-mail-search .search").click()
 
+    $(".list-head .move-all, .list-head .copy-all").each ->
+      url = $(this).data('href')
+      menu = $("#webmail-mailboxes-list .dropdown-menu").clone()
+      menu.find("a").click ->
+        uids = Webmail_Mail_List.findCheckedUids()
+        return false if uids.length == 0
+        $('.dropdown-menu').removeClass('active')
+        return Webmail_Mail_List.updateMails(url, ids: uids, dst: $(this).data('name'))
+      $(this).after(menu)
+
+    $(".list-head .update-all").on "click", ->
+      uids = Webmail_Mail_List.findCheckedUids()
+      return false if uids.length == 0
+      $('.dropdown-menu').removeClass('active')
+
+      $.ajax
+        url: $(this).attr('href')
+        method: 'POST'
+        dataType: 'json'
+        data:
+          _method: 'put'
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+          ids: uids
+        success: (data)->
+          Webmail_Mail_List.renderListFlags(uids, data.action)
+          SS.notice(data.notice)
+      return false
+
+    $(".list-head .delete-all").on "click", ->
+      return false unless confirm('<%= I18n.t("webmail.confirm.empty_mailbox") %>')
+      $('.dropdown-menu').removeClass('active')
+
+      $.ajax
+        url: $(this).attr('href')
+        method: 'POST'
+        dataType: 'json'
+        data:
+          _method: 'delete'
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        success: (data)->
+          $('.webmail-mails .list-item').remove()
+          $('.pagination').remove()
+          SS.notice(data.notice)
+      return false
+
+  @findCheckedUids: ->
+    checked = $('.webmail-mails .list-item input:checkbox:checked').map ->
+      $(this).val()
+    checked.get()
+
+  @findListItems: (uids = [])->
+    items = $('.webmail-mails .list-item').map ->
+      uid = $(this).data('uid')
+      return null if $.inArray(uid + "", uids) == -1
+      return $(this)
+
+  @renderListFlags: (uids, action)->
+    items = Webmail_Mail_List.findListItems(uids)
+    switch action
+      when 'set_star'
+        items.each -> $(this).find('.icon-star').removeClass('off').addClass('on')
+      when 'unset_star'
+        items.each -> $(this).find('.icon-star').removeClass('on').addClass('off')
+      when 'set_seen'
+        #Webmail_Mail_Navi.reloadMailbox({ notice: -1 })
+        items.each -> $(this).removeClass('unseen').addClass('seen')
+      when 'unset_seen'
+        #Webmail_Mail_Navi.reloadMailbox({ notice: -1 })
+        items.each -> $(this).removeClass('seen').addClass('unseen')
+    return false
+
+  @renderListStars: ->
     $(".icon-star a").on "click", ->
-      star = $(this)
-      wrap = star.parent()
+      wrap = $(this).parent()
       if wrap.hasClass('on')
-        url = star.attr('href') + '/unset_star'
-        chk = false
+        url = $(this).attr('href') + '/unset_star'
       else
-        url = star.attr('href') + '/set_star'
-        chk = true
+        url = $(this).attr('href') + '/set_star'
 
       $.ajax
         url: url
         method: 'POST'
+        dataType: 'json'
         data:
           _method: 'put'
-        success: (data, a, b)->
-          if chk
-            wrap.removeClass('off')
-            wrap.addClass('on')
+        success: (data)->
+          if data.action == 'set_star'
+            wrap.removeClass('off').addClass('on')
           else
-            wrap.removeClass('on')
-            wrap.addClass('off')
+            wrap.removeClass('on').addClass('off')
       return false
 
-  @renderDetail: ->
+  @updateMails: (url, opts = {})->
+    token = $('meta[name="csrf-token"]').attr('content')
+    form = $("<form/>", action: url, method: "post")
+    form.append($("<input/>", type: "hidden", name: "_method", value: "put" ))
+    form.append($("<input/>", type: "hidden", name: "authenticity_token", value: token ))
+    if opts['redirect']
+      form.append($("<input/>", type: "hidden", name: "redirect", value: opts['redirect'] ))
+    if opts['dst']
+      form.append($("<input/>", type: "hidden", name: "dst", value: opts['dst'] ))
+    if opts['ids']
+      for id in opts['ids']
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+    form.appendTo(document.body).submit()
+    return false
+
+class @Webmail_Mail_Detail
+  @render: ->
     body = $('.webmail-mail .body--html')
 
     if body.find('img[data-url]').length
@@ -106,30 +179,30 @@ class @Webmail_Mail
           $(this).removeAttr('data-url')
         return false
 
-    $(".update-mail").on "click", ->
-      url = $(this).attr('href')
-      return Webmail_Mail.updateMail(url)
     $(".print-mail").on "click", ->
       $('body').addClass('webmail-print')
       window.print()
       return false
 
-  @updateMail: (url, opts = {})->
-    token = $('meta[name="csrf-token"]').attr('content')
-    form = $("<form/>", action: url, method: "post")
-    form.append($("<input/>", type: "hidden", name: "_method", value: "put" ))
-    form.append($("<input/>", type: "hidden", name: "authenticity_token", value: token ))
-    if opts['redirect']
-      form.append($("<input/>", type: "hidden", name: "redirect", value: opts['redirect'] ))
-    if opts['dst']
-      form.append($("<input/>", type: "hidden", name: "dst", value: opts['dst'] ))
-    if opts['ids']
-      for id in opts['ids']
-        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
-    form.appendTo(document.body).submit()
-    return false
+    $(".update-mail").on "click", ->
+      $('.dropdown-menu').removeClass('active')
+      $.ajax
+        url: $(this).attr('href')
+        method: 'POST'
+        dataType: 'json'
+        data:
+          _method: 'put'
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        success: (data)->
+          if data.action == 'set_star'
+            $('.icon-star').removeClass('off').addClass('on')
+          else if data.action == 'unset_star'
+            $('.icon-star').removeClass('on').addClass('off')
+          SS.notice(data.notice)
+      return false
 
-  @renderForm: ->
+class @Webmail_Mail_Form
+  @render: ->
     $('.js-autosize').autosize()
 
     $('.cc-bcc-label').click ->
@@ -137,15 +210,15 @@ class @Webmail_Mail
       return false
 
     $('#item_format').change ->
-      Webmail_Mail.renderBodyForm($(this).val())
-    Webmail_Mail.renderBodyForm($('#item_format').val())
+      Webmail_Mail_Form.renderBodyForm($(this).val())
+    Webmail_Mail_Form.renderBodyForm($('#item_format').val())
 
     $('#item_signature').change ->
       return if $(this).val() == ""
       if $('#item_format').val() == "html"
         CKEDITOR.instances['item_html'].insertText($(this).val())
       else
-        Webmail_Mail.insertText($("#item_text"), $(this).val())
+        Webmail_Mail_Form.insertText($("#item_text"), $(this).val())
       $(this).val("")
 
     # Send mail
@@ -179,3 +252,17 @@ class @Webmail_Mail
       np = p + str.length
       field.val(s.substr(0, p) + str + s.substr(p))
       field.get(0).setSelectionRange(np, np)
+
+class @Webmail_Mail_Form_Address
+  @select: (item) ->
+    self = this
+
+    data = item.closest("[data-id]")
+    email = data.data("email")
+    return if email == ""
+
+    field = self.anchorAjaxBox.closest("dl").closest('dd').find("textarea")
+    value = field.val().replace(/^\s+/, '')
+    value += "; " if value != ""
+    value += email
+    field.val(value)

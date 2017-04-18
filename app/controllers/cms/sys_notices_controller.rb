@@ -10,4 +10,12 @@ class Cms::SysNoticesController < ApplicationController
     def set_crumbs
       @crumbs << [:"mongoid.models.sys/notice", action: :index]
     end
+
+  public
+    def index
+      @items = @model.and_public.
+        cms_admin_notice.
+        search(params[:s]).
+        page(params[:page]).per(50)
+    end
 end
