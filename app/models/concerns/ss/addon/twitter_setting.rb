@@ -15,7 +15,7 @@ module SS::Addon::TwitterSetting
     permit_params :twitter_consumer_key, :twitter_consumer_secret
     permit_params :twitter_access_token, :twitter_access_token_secret
   end
-
+  
   def twitter_card_options
     %w[none summary summary_large_image].map do |v|
       [I18n.t("views.options.twitter_card.#{v}"), v]
