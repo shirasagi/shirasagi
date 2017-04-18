@@ -25,7 +25,7 @@ module Cms::Addon
       after_generate_file { post_sns }
       after_remove_file { delete_sns }
     end
-    
+
     def sns_poster_facebook_options
       definition_state
     end
