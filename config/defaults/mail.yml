@@ -20,6 +20,7 @@ production: &production
 
 test:
   delivery_method: test
+  default_from: noreply@example.jp
   default_charset: utf-8
 
 development:
