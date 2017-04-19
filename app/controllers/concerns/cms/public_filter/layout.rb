@@ -77,6 +77,18 @@ module Cms::PublicFilter::Layout
 
       html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
       html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
+
+      html.gsub!('#{page_released}', date_convert(ERB::Util.html_escape(@cur_item.released)))
+      html.gsub!('#{page_released.default}', date_convert(ERB::Util.html_escape(@cur_item.released), :default))
+      html.gsub!('#{page_released.iso}', date_convert(ERB::Util.html_escape(@cur_item.released), :iso))
+      html.gsub!('#{page_released.long}', date_convert(ERB::Util.html_escape(@cur_item.released), :long))
+      html.gsub!('#{page_released.short}', date_convert(ERB::Util.html_escape(@cur_item.released), :short))
+      html.gsub!('#{page_updated}', date_convert(ERB::Util.html_escape(@cur_item.updated)))
+      html.gsub!('#{page_updated.default}', date_convert(ERB::Util.html_escape(@cur_item.updated), :default))
+      html.gsub!('#{page_updated.iso}', date_convert(ERB::Util.html_escape(@cur_item.updated), :iso))
+      html.gsub!('#{page_updated.long}', date_convert(ERB::Util.html_escape(@cur_item.updated), :long))
+      html.gsub!('#{page_updated.short}', date_convert(ERB::Util.html_escape(@cur_item.updated), :short))
+
       html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
       html
     end
@@ -110,6 +122,18 @@ module Cms::PublicFilter::Layout
       else
         render_part(part.becomes_with_route)
       end
+    end
+
+    def date_convert(date, format = nil)
+      return "" unless date
+
+      if format.nil?
+        I18n.l date.to_date
+      else
+        I18n.l date.to_date, format: format.to_sym
+      end
+    rescue
+      ""
     end
 
   public

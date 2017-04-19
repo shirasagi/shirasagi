@@ -339,6 +339,7 @@ ja:
       cms/max_file_size_setting: 最大ファイルサイズ設定
       cms/tag_setting: タグ設定
       cms/tag: タグ
+      cms/layout_html: レイアウト
 
   mongoid:
     models:
@@ -1235,6 +1236,49 @@ ja:
         - 選択したページへのリンクが本文の下部に表示されます。
       related_page_sort:
         - 関連記事の並び順を選択します。
+
+    cms/addon/layout_html:
+      html: |-
+        レイアウトのHTMLを記述します。
+        下記のテンプレートが使用可能です。
+
+        {{ yield }}
+        本文の呼び出しが行われます。
+        {{ part "パーツのファイル名（拡張子は除く）" }}
+        パーツの呼び出しが行われます。
+
+        #{page_name}
+        ページやフォルダーに設定しているタイトルが表示されます。
+        #{page_released}
+        ページの公開日時が「2015/4/1」の形式で表示されます。
+        #{page_released.default}
+        ページの公開日時が「2015/4/1」の形式で表示されます。
+        #{page_released.iso}
+        ページの公開日時が「2015-04-01」の形式で表示されます。
+        #{page_released.long}
+        ページの公開日時が「2015年4月1日」の形式で表示されます。
+        #{page_released.short}
+        ページの公開日時が「4/1」の形式で表示されます。
+        #{page_updated}
+        ページの更新日時が「2015/4/1」の形式で表示されます。
+        #{page_updated.default}
+        ページの更新日時が「2015/4/1」の形式で表示されます。
+        #{page_updated.iso}
+        ページの更新日時が「2015-04-01」の形式で表示されます。
+        #{page_updated.long}
+        ページの更新日時が「2015年4月1日」の形式で表示されます。
+        #{page_updated.short}
+        ページの更新日時が「4/1」の形式で表示されます。
+
+        &lt;!-- skip-voice --&gt;&lt;div&gt;読み上げない&lt;/div&gt;&lt;!-- end-skip-voice --&gt;
+        コメントアウトで囲われた個所の読み上げをスキップします。
+
+        &lt;nav class="ss-adobe-reader" style="display: none"&gt;Adobe Reader&lt;/nav&gt;
+        ページ内にPDFファイルがある場合にAdobe Readerのダウンロード案内が表示されます。
+
+        &lt;footer id="ss-pc" style="display: none"&gt;PC表示&lt;/footer&gt;
+        &lt;footer id="ss-mb" style="display: none"&gt;スマートフォン表示&lt;/footer&gt;
+        スマートフォンやタブレットで表示した際にPC、スマートフォン表示を切り替えるボタンを表示します。
 
   all_content:
     page_id: ページID

@@ -1,6 +1,6 @@
 class Cms::Layout
   include Cms::Model::Layout
-  include Cms::Addon::Html
+  include Cms::Addon::LayoutHtml
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
