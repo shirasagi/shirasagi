@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :facebook_auto_post %><%= @model.tt :facebook_auto_post %></dt>
+  <dd>
+    <%=
+      @item.label :facebook_auto_post
+    %>
+  </dd>
+  <dd><a href="<%= @item.facebook_url %>" target="_blank"><%= @item.facebook_url %></a></dd>
+
+  <dt><%= @model.t :twitter_auto_post %><%= @model.tt :twitter_auto_post %></dt>
+  <dd>
+    <%=
+      @item.label :twitter_auto_post
+    %>
+  </dd>
+  <dd><a href="<%= @item.twitter_url %>" target="_blank"><%= @item.twitter_url %></a></dd>
+
+  <dt><%= @model.t :sns_auto_delete %><%= @model.tt :sns_auto_delete %></dt>
+  <dd><%=
+    @item.label :sns_auto_delete
+  %></dd>
+</dl>
