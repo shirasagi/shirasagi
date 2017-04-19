@@ -1,5 +1,7 @@
 # seed entry point
 
+def puts(*) end if Rails.env.test?
+
 seed = ENV['name']
 file = "#{Rails.root}/db/seeds/#{seed}/load.rb"
 
