@@ -123,6 +123,7 @@ class Sns::Message::Thread
     def set_member_ids
       ids = member_ids.map(&:to_i)
       ids << user_id
+      ids << @cur_user.id if @cur_user
       ids = ids.uniq.compact
       self.member_ids = ids
       self.active_member_ids = ids
