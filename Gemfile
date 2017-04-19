@@ -68,6 +68,10 @@ gem 'omniauth-yahoojp'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 
+# SNS
+gem 'koala'
+gem 'twitter', '~> 5.17'
+
 # saml
 gem 'ruby-saml'
 # JWT/JWS
