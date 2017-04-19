@@ -2,13 +2,13 @@
 <div class="article-pages page-navi">
   <ul class="page-navi-control">
     <% if @prev %>
-      <li><a class="prev" href="<%= @prev.url %>"><%= t("article.page_navi.prev") %></a></li>
+      <li class="prev"><a href="<%= @prev.url %>"><%= t("article.page_navi.prev") %></a></li>
     <% end %>
     <% if @center %>
-      <li><a class="return" href="<%= @center.url %>"><%= t("article.page_navi.back_to_index") %></a></li>
+      <li class="return"><a href="<%= @center.url %>"><%= t("article.page_navi.back_to_index") %></a></li>
     <% end %>
     <% if @next %>
-      <li><a class="next" href="<%= @next.url %>"><%= t("article.page_navi.next") %></a></li>
+      <li class="next"><a href="<%= @next.url %>"><%= t("article.page_navi.next") %></a></li>
     <% end %>
   </ul>
 </div>
