@@ -68,6 +68,10 @@ gem 'omniauth-yahoojp'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 
+# SNS
+gem 'koala'
+gem 'twitter', '~> 5.17'
+
 # saml
 gem 'ruby-saml'
 # JWT/JWS
@@ -92,7 +96,7 @@ group :development, :test do
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'coveralls', require: false
-  gem 'rubocop', require: false
+  gem 'rubocop', '0.38.0', require: false
   gem 'poltergeist', require: false
   gem 'guard'
   gem 'guard-rubocop', '~> 1.1.0'
