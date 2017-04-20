@@ -194,12 +194,13 @@ class Cms::PreviewController < ApplicationController
     def rescue_action(e = nil)
       if e.to_s =~ /^\d+$/
         status = e.to_s.to_i
-        return render status: status, file: error_template(status), layout: false
+        file = error_html_file(status)
+        return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
       end
       raise e
     end
 
-    def error_template(status)
+    def error_html_file(status)
       file = "#{Rails.public_path}/#{status}.html"
       Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
     end

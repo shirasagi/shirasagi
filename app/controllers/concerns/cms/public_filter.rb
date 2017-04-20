@@ -128,11 +128,7 @@ module Cms::PublicFilter
       response.headers["Expires"] = 1.day.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
       response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
-      if Fs.mode == :file
-        send_file file, type: Fs.content_type(file), disposition: :inline, x_sendfile: true
-      else
-        send_data Fs.binread(file), type: Fs.content_type(file), disposition: :inline
-      end
+      ss_send_file(file, type: Fs.content_type(file), disposition: :inline)
     end
 
     def send_part(body)
@@ -171,10 +167,11 @@ module Cms::PublicFilter
       self.response = ActionDispatch::Response.new
 
       status = opts[:status].presence || 500
-      render status: status, file: error_template(status), layout: false
+      file = error_html_file(status)
+      ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
 
-    def error_template(status)
+    def error_html_file(status)
       if @cur_site
         file = "#{@cur_site.path}/#{status}.html"
         return file if Fs.exists?(file)
