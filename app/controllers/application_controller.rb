@@ -49,6 +49,15 @@ class ApplicationController < ActionController::Base
     self.response_body = Rack::Chunked::Body.new(enum)
   end
 
+  def ss_send_file(file, opts = {})
+    if Fs.mode == :file
+      opts[:x_sendfile] = true unless opts.key?(:x_sendfile)
+      send_file file, opts
+    else
+      send_data Fs.binread(file), opts
+    end
+  end
+
   private
     def request_host
       request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
