@@ -50,7 +50,7 @@ module Cms::PublicFilter::Layout
       body
     end
 
-    def render_layout(layout)
+    def render_layout_init(layout)
       @cur_layout = layout
       @cur_item   = @cur_page || @cur_node
 
@@ -59,6 +59,10 @@ module Cms::PublicFilter::Layout
 
       @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
       @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
+    end
+
+    def render_layout(layout)
+      render_layout_init(layout)
 
       body = @cur_layout.body.to_s
       body = body.sub(/<body.*?>/) do |m|
@@ -75,6 +79,11 @@ module Cms::PublicFilter::Layout
         response.body = %(#{notice_html}#{response.body})
       end
 
+      render_layout_sub(html, response.body)
+      html
+    end
+
+    def render_layout_sub(html, body)
       html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
       html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
 
@@ -89,8 +98,7 @@ module Cms::PublicFilter::Layout
       html.gsub!('#{page_updated.long}', date_convert(ERB::Util.html_escape(@cur_item.updated), :long))
       html.gsub!('#{page_updated.short}', date_convert(ERB::Util.html_escape(@cur_item.updated), :short))
 
-      html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
-      html
+      html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { body }
     end
 
     def render_layout_parts(html)

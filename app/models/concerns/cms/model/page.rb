@@ -33,7 +33,7 @@ module Cms::Model::Page
   end
 
   def preview_path
-    site.subdir ?  "#{site.subdir}/#{filename}" : filename
+    site.subdir ? "#{site.subdir}/#{filename}" : filename
   end
 
   def generate_file

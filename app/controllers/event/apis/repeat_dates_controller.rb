@@ -1,7 +1,6 @@
 class Event::Apis::RepeatDatesController < ApplicationController
   include Cms::ApiFilter
 
-  public
     def index
       #
     end
