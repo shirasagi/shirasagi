@@ -151,6 +151,7 @@ save_part route: "article/page", filename: "urgency/recent.part.html", name: "�
 save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
 save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
 save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
+save_part route: "event/search", filename: "calendar/search/search.part.html", name: "イベント検索"
 save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナー", mobile_view: "hide", with_category: "enabled"
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
 save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
@@ -339,6 +340,7 @@ save_node route: "category/page", filename: "faq/shisei", name: "市政情報", 
 save_node route: "category/page", filename: "calendar/bunka", name: "文化・芸術", order: 10
 save_node route: "category/page", filename: "calendar/kohen", name: "講演・講座", order: 20
 save_node route: "category/page", filename: "calendar/sports", name: "スポーツ", order: 60
+save_node route: "event/search", filename: "calendar/search", name: "イベント検索", conditions: %w(calendar)
 
 array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 categories = Hash[*array.flatten]

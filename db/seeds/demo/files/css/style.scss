@@ -1029,8 +1029,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 
 // -----------------------------------------------------------------------------
-// category-pages .article-pages cms-pages faq-search
-.category-pages, .article-pages, .cms-pages, .cms-group-pages, .faq-search {
+// category-pages .article-pages cms-pages faq-search calendar-serach
+.category-pages, .article-pages, .cms-pages, .cms-group-pages, .faq-search, .event-pages {
   margin-bottom: $box-margin;
   a {
     @include r-arrow;
@@ -1071,9 +1071,17 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     font-size: $px14;
     font-weight: normal;
     a {
-     padding: 0;
-     background: none;
+      padding: 0;
+      background: none;
     }
+  }
+}
+.page .event-pages {
+  article h2 {
+    margin: 0;
+    padding: 0;
+    background: none;
+    font-size: $px14;
   }
 }
 // -----------------------------------------------------------------------------
@@ -1162,7 +1170,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 .page article, .one article.body,
 .page .related-pages, .page footer.contact,
-#history,
+#history, #similarity,
 .page #feedback,
 .inquiry-html, .inquiry-form,
 .faq-question, .faq .body,
@@ -1301,6 +1309,27 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       float: none;
       display: inline;
       font-weight: normal;
+    }
+  }
+}
+.page-navi {
+  @include clear;
+  margin-top: 2em;
+  text-align: center;
+  li {
+    display: block;
+    width: 33%;
+    float: left;
+    list-style: none;
+    &.return {
+      width: 34%;
+    }
+    a {
+      padding: 0;
+      background: none;
+      @include btn-gry;
+      color: $text;
+      text-decoration: none;
     }
   }
 }
@@ -1577,6 +1606,15 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     }
   }
 }
+#calendar-search {
+  margin-bottom: $box-margin;
+  .title h2 {
+    margin-bottom: 6px;
+    padding: 5px $item-margin;
+    @include grd-blue;
+    color: $t-white;
+  }
+}
 #ss-mb {
   padding: 10px;
   a {
@@ -1590,6 +1628,54 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     color: $text;
     text-align: center;
     text-decoration: none;
+  }
+}
+.body--calendar-search form, #calendar-search form {
+  @include clear;
+  margin-bottom: $box-margin;
+  @include mb {
+    padding: 0 15px;
+  }
+  h2 {
+    clear: both;
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px16;
+    font-weight: bold;
+  }
+  .keyword {
+    input{
+      width: 469px;
+      @include mb { width: auto; }
+    }
+  }
+  .keyword, .category, .service, .location {
+    @include clear;
+    margin-bottom: $item-margin;
+    div {
+      @include float(left);
+      min-width: 177px;
+      min-height: 20px;
+      margin-bottom: 3px;
+      &.three {
+        margin-right: $item-margin;
+      }
+    }
+  }
+  .send {
+    margin-bottom: $box-margin;
+    text-align: center;
+    input {
+      @include btn-org;
+    }
+    a {
+      @include btn-gry;
+      color: $text;
+      text-decoration: none;
+      &:hover { color: text; }
+    }
   }
 }
 // -----------------------------------------------------------------------------
@@ -2315,7 +2401,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   }
 }
 .kanko-info {
- .condition {
+  .condition {
     @include clear;
     @include mb {
       padding: 10px 10px 0;
@@ -2569,7 +2655,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 .member-registration-form,
 .mypage-form, .member-my-group
- {
+{
   .send {
     margin-bottom: 2em;
     padding: 0;
@@ -2826,8 +2912,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     display: none;
   }
 
-// -----------------------------------------------------------------------------
-//  safety online propose attention recent useful relations ranking topics connect add links-life
+  // -----------------------------------------------------------------------------
+  //  safety online propose attention recent useful relations ranking topics connect add links-life
   #safety, #online, #propose, #attention, #recent, #useful, #connect
   #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list, #month {
     margin-bottom: $smart-margin;
@@ -2952,8 +3038,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     }
   }
 
-// -----------------------------------------------------------------------------
-//  footer
+  // -----------------------------------------------------------------------------
+  //  footer
   #foot {
     margin-top: 0;
   }
@@ -3020,8 +3106,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       text-decoration: none;
     }
   }
-// -----------------------------------------------------------------------------
-//  pagetop
+  // -----------------------------------------------------------------------------
+  //  pagetop
   .pagetop {
     right: 20px;
     bottom: 20px;
@@ -3038,13 +3124,13 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       text-indent: -9999px;
     }
   }
-// -----------------------------------------------------------------------------
-//  ss-page-name
+  // -----------------------------------------------------------------------------
+  //  ss-page-name
   #ss-page-name {
     margin: $smart-margin 0 0 0;
   }
-// -----------------------------------------------------------------------------
-//  category-nodes
+  // -----------------------------------------------------------------------------
+  //  category-nodes
   #main .category-nodes, #main .cms-nodes {
     margin: $smart-margin 0 0 0;
     padding: 0 10px;
@@ -3054,8 +3140,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       padding: 5px;
     }
   }
-// -----------------------------------------------------------------------------
-//  category-pages article-pages faq-search
+  // -----------------------------------------------------------------------------
+  //  category-pages article-pages faq-search
   .category-pages, .article-pages, .faq-search {
     margin-bottom: $smart-margin;
     a {
@@ -3098,8 +3184,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       }
     }
   }
-// -----------------------------------------------------------------------------
-//  page sitemap
+  // -----------------------------------------------------------------------------
+  //  page sitemap
   .page article, .one article.body, .related-pages, .page footer.contact {
     padding: 10px 10px 0;
   }
@@ -3112,8 +3198,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   .related-pages article {
     padding: 0;
   }
-// -----------------------------------------------------------------------------
-//  event
+  // -----------------------------------------------------------------------------
+  //  event
   .event-pages-filter {
     padding: 10px 10px 0;
   }
@@ -3153,8 +3239,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       padding: 0;
     }
   }
-// -----------------------------------------------------------------------------
-// inquiry
+  // -----------------------------------------------------------------------------
+  // inquiry
   .inquiry-html {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
@@ -3189,8 +3275,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   .columns, .form-login {
     margin-top: $smart-margin;
   }
-// -----------------------------------------------------------------------------
-// faq
+  // -----------------------------------------------------------------------------
+  // faq
   .faq-question, .faq .body {
     padding: $smart-margin;
     &:before {
@@ -3202,8 +3288,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       width: 200px;
     }
   }
-// -----------------------------------------------------------------------------
-// map
+  // -----------------------------------------------------------------------------
+  // map
   .map {
     .keyword input {
       width: 100%;
@@ -3230,7 +3316,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       }
     }
     .settings {
-        padding: 0 10px;
+      padding: 0 10px;
     }
     .tabs {
       padding: 0 10px;
@@ -3314,8 +3400,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     width: 100% !important;
   }
 
-// -----------------------------------------------------------------------------
-// ezine
+  // -----------------------------------------------------------------------------
+  // ezine
   .ezine-pages {
     @include clear;
     margin: $smart-margin 0 0 0;
@@ -3354,8 +3440,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       text-align: center;
     }
   }
-// -----------------------------------------------------------------------------
-// board
+  // -----------------------------------------------------------------------------
+  // board
   .body--board {
     .menu {
       margin: $smart-margin;
