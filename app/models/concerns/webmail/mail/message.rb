@@ -22,7 +22,7 @@ module Webmail::Mail::Message
   def new_mail
     if sign = Webmail::Signature.default_sign(imap.user)
       self.text = "\n\n#{sign}"
-      self.html = "<p></p>" + sign.to_s.gsub(/\r\n|\n/, '<br />')
+      self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
     end
   end
 
@@ -48,6 +48,7 @@ module Webmail::Mail::Message
     self.forward_uid = ref.uid
     self.subject = "Fw: " + ref.subject.to_s.gsub(/^Fw:\s*/, '')
     set_reply_body(ref)
+    set_ref_files(ref.attachments)
   end
 
   def set_reply_header(ref)
@@ -80,7 +81,7 @@ module Webmail::Mail::Message
 
   def reply_body_html(ref, sign = nil)
     if ref.html.present?
-      bq = ref.sanitize_html
+      bq = ref.sanitize_html(remove_image: true)
     else
       bq = h(ref.text.to_s).gsub(/\r\n|\n/, '<br />')
     end

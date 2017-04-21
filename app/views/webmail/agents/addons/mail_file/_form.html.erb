@@ -1,3 +1,18 @@
+<%= coffee do %>
+$ ->
+  @insertContent = (cont) ->
+    if (typeof tinymce) != "undefined"
+      tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont)
+    else if (typeof CKEDITOR != "undefined")
+      CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont)
+
+  @deleteContent = (id) ->
+    $(".file-view").each ->
+      #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
+      $(this).remove() if id == $(this).find(".file-id").attr("value")
+
+<% end %>
+
 <dl class="see webmail-addon-mail-file">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
@@ -9,9 +24,32 @@
     </span>
 
     <div id="selected-files">
+      <% @item.ref_files.each do |part| %>
+        <div class="file-view">
+          <%= link_to({ action: :parts, section: part.section }, target: part.link_target, class: :thumb) do %>
+            <% if part.image? %>
+              <%= image_tag url_for(action: :parts, section: part.section), alt: part.filename %>
+            <% else %>
+              <% extname = File.extname(part.filename) %>
+              <span class="ext icon-<%= extname %>"><%= extname %></span>
+            <% end %>
+          <% end %>
+
+          <div class="name">
+            <label>
+              <input type="hidden" name="item[ref_file_ids][]" value="ref-<%= part.section %>" class="file-id" />
+              <%= part.filename %>
+            </label><br />
+          </div>
+
+          <div class="action">
+            <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('ref-#{part.section}'); return false;" %>
+          </div>
+        </div>
+      <% end %>
+
       <% @item.files.each do |file| %>
         <div class="file-view">
-
           <%= link_to file.url, class: :thumb, target: "_blank" do %>
             <% if file.image? %>
               <%= image_tag file.thumb_url, alt: file.name %>

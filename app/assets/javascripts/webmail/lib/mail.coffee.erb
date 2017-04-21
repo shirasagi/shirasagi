@@ -171,12 +171,7 @@ class @Webmail_Mail_Detail
       body.before('<a class="show-image" href="#"><%= I18n.t('webmail.links.show_image') %></a>')
       $('.show-image').click ->
         $(this).hide()
-        $("img[data-url]").each ->
-          url = $(this).data('url')
-          url = "#{location.pathname}/#{url}" if url.match(/^parts\//)
-          $(this).attr('src', url)
-          $(this).css('height', 'auto')
-          $(this).removeAttr('data-url')
+        Webmail_Mail_Detail.loadImages()
         return false
 
     $(".print-mail").on "click", ->
@@ -200,6 +195,14 @@ class @Webmail_Mail_Detail
             $('.icon-star').removeClass('on').addClass('off')
           SS.notice(data.notice)
       return false
+
+  @loadImages: ->
+    $("img[data-url]").each ->
+      url = $(this).data('url')
+      url = "#{location.pathname}/#{url}" if url.match(/^parts\//)
+      $(this).attr('src', url)
+      $(this).css('height', 'auto')
+      $(this).removeAttr('data-url')
 
 class @Webmail_Mail_Form
   @render: ->

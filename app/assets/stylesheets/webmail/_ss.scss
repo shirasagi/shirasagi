@@ -344,6 +344,14 @@
     }
   }
 }
+.webmail-addon-mail-file {
+  .action a {
+    display: none;
+  }
+  .action a:last-of-type {
+    display: inline-block;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // filter
