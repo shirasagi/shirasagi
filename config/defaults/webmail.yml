@@ -11,7 +11,7 @@ production: &production
         port: 143
       # auth_type: LOGIN, PLAIN, CRAM-MD5, DIGEST-MD5
       auth_type: LOGIN
-      # user: uid, email
+      # account: uid, email
       account: email
 
   # Mail cache
