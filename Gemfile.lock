@@ -616,7 +616,7 @@ DEPENDENCIES
   therubyracer (~> 0.12)
   timecop
   turbolinks
-  twitter (~> 6.1)
+  twitter
   uglifier (>= 1.3.0)
   unf
   ungarbled
