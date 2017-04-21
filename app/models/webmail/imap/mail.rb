@@ -70,7 +70,7 @@ module Webmail::Imap
     def find(uid, *division)
       uid = uid.to_i
 
-      attr = %w(FAST RFC822.HEADER) # FAST: FLAGS INTERNALDATE RFC822.SIZE
+      attr = %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER) # FAST: FLAGS INTERNALDATE RFC822.SIZE
       attr += %w(BODYSTRUCTURE) if division.include?(:body)
       attr << 'RFC822' if division.include?(:rfc822)
 
@@ -125,7 +125,7 @@ module Webmail::Imap
       end
 
       def imap_all(uids, ref_items)
-        resp = imap.conn.uid_fetch(uids, %w(FAST RFC822.HEADER)) || []
+        resp = imap.conn.uid_fetch(uids, %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER)) || []
         resp.each do |data|
           uid = data.attr['UID']
           uids.delete(uid)
