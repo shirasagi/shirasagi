@@ -3,7 +3,7 @@ module Webmail::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    def sanitize_html
+    def sanitize_html(opts = {})
       html = self.html
       html = html.gsub(/<style.*?<\/style>/im, '')
       html = html.gsub(/<script.*?<\/script>/im, '')
@@ -22,7 +22,9 @@ module Webmail::Addon
         %(#{pre}data-url="#{src}"#{suf})
       end
 
-      ApplicationController.helpers.sanitize_with(html, attributes: %w(data-url))
+      html = ApplicationController.helpers.sanitize_with(html, attributes: %w(data-url))
+      html = html.gsub!(/<img.*?>/im, '') if opts[:remove_image]
+      html
     end
   end
 end
