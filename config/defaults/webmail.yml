@@ -1,6 +1,6 @@
 production: &production
   # Disable Webmail.
-  disable: true
+  disable: false
 
   # Default settings
   clients:
