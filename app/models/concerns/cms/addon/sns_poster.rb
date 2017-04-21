@@ -120,6 +120,8 @@ module Cms::Addon
         # URLを表示するためにスクリーンネームを取得し、DBに保存
         user_screen_id = client.user.screen_name
         self.set(twitter_post_id: twitter_id, twitter_user_id: user_screen_id)
+      rescue => e
+        Rails.logger.fatal("post_to_twitter failed: #{e.backtrace.join("\n  ")}")
       end
 
       def post_to_facebook
@@ -142,6 +144,8 @@ module Cms::Addon
         # 戻り値からUID/PID取得し、DBに保存
         facebook_id_array = facebook_id_separator(facebook_param)
         self.set(facebook_user_id: facebook_id_array[0], facebook_post_id: facebook_id_array[1])
+      rescue => e
+        Rails.logger.fatal("post_to_facebook failed: #{e.backtrace.join("\n  ")}")
       end
 
       def delete_sns
@@ -159,6 +163,8 @@ module Cms::Addon
             self.set(facebook_user_id: nil, facebook_post_id: nil) rescue nil
           end
         end
+      rescue => e
+        Rails.logger.fatal("delete_sns failed: #{e.backtrace.join("\n  ")}")
       end
   end
 end
