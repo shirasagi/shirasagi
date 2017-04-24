@@ -6,9 +6,10 @@ module Cms::Addon
 
     included do
 
-      field :twitter_auto_post,  type: String, default: 'expired'
-      field :facebook_auto_post, type: String, default: 'expired'
-      field :sns_auto_delete,    type: String, default: 'expired'
+      field :twitter_auto_post,  type: String
+      field :facebook_auto_post, type: String
+      field :sns_auto_delete,    type: String
+      field :edit_auto_post,     type: String
       field :twitter_user_id,    type: String
       field :twitter_post_id,    type: String
       field :facebook_user_id,   type: String
@@ -17,6 +18,7 @@ module Cms::Addon
       permit_params :facebook_auto_post,
                     :twitter_auto_post,
                     :sns_auto_delete,
+                    :edit_auto_post,
                     :twitter_post_id,
                     :twitter_user_id,
                     :facebook_user_id,
@@ -28,22 +30,33 @@ module Cms::Addon
 
     def facebook_auto_post_options
       [
-        [I18n.t('views.options.state.active'), 'active'],
-        [I18n.t('views.options.state.expired'), 'expired'],
+        [I18n.t('views.options.sns_poster.none'), 'none'],
+        [I18n.t('views.options.sns_poster.active'), 'active'],
+        [I18n.t('views.options.sns_poster.expired'), 'expired'],
       ]
     end
 
     def twitter_auto_post_options
       [
-        [I18n.t('views.options.state.active'), 'active'],
-        [I18n.t('views.options.state.expired'), 'expired'],
+        [I18n.t('views.options.sns_poster.none'), 'none'],
+        [I18n.t('views.options.sns_poster.active'), 'active'],
+        [I18n.t('views.options.sns_poster.expired'), 'expired'],
       ]
     end
 
     def sns_auto_delete_options
       [
-        [I18n.t('views.options.state.active'), 'active'],
-        [I18n.t('views.options.state.expired'), 'expired'],
+        [I18n.t('views.options.sns_poster.none'), 'none'],
+        [I18n.t('views.options.sns_poster.active'), 'active'],
+        [I18n.t('views.options.sns_poster.expired'), 'expired'],
+      ]
+    end
+
+    def edit_auto_post_options
+      [
+        [I18n.t('views.options.sns_poster.none'), 'none'],
+        [I18n.t('views.options.sns_poster.active'), 'active'],
+        [I18n.t('views.options.sns_poster.expired'), 'expired'],
       ]
     end
 
@@ -83,16 +96,73 @@ module Cms::Addon
       end
     end
 
+    def twitter_token_enabled?
+      @cur_site.twitter_consumer_key.present? && @cur_site.twitter_consumer_secret.present? && \
+      @cur_site.twitter_access_token.present? && @cur_site.twitter_access_token_secret.present?
+    end
+
+    def facebook_token_enabled?
+      @cur_site.facebook_access_token.present?
+    end
+
     private
-      def post_sns
-        # tweet
+      def post_sns_twitter
         if use_twitter_post?
           post_to_twitter
+        elsif twitter_auto_post == "none"
+          if @cur_node.node_twitter_auto_post_enabled?
+            post_to_twitter
+          elsif @cur_node.node_twitter_auto_post == "none"
+            site.site_twitter_auto_post_enabled? ? post_to_twitter : nil
+          end
+        end
+      end
+
+      def post_sns_facebook
+        if use_facebook_post?
+          post_to_facebook
+        elsif facebook_auto_post == "none"
+          if @cur_node.node_twitter_auto_post_enabled?
+            post_to_facebook
+          elsif @cur_node.node_twitter_auto_post == "none"
+            site.site_twitter_auto_post_enabled? ? post_to_facebook : nil
+          end
+        end
+      end
+
+      def sns_auto_delete_enabled?
+        if sns_auto_delete == "active"
+          return "active"
+        elsif sns_auto_delete == "none"
+          if @cur_node.node_sns_auto_delete_enabled?
+            return "active"
+          elsif @cur_node.node_sns_auto_delete == "none"
+            site.site_sns_auto_delete_enabled? ? "active" : nil
+          end
+        end
+      end
+
+      def post_sns_edit
+        if edit_auto_post == "active"
+          return "active"
+        elsif edit_auto_post == "none"
+          if @cur_node.node_edit_auto_post == "active"
+            return "active"
+          elsif @cur_node.node_edit_auto_post == "none"
+            site.site_edit_auto_post_enabled? ? "active" : nil
+          end
+        end
+      end
+
+      def post_sns
+        # tweet
+        if twitter_token_enabled?
+          twitter_post_id.nil? || post_sns_edit ? post_sns_twitter : nil
         end
 
         # facebook
-        if use_facebook_post?
-          post_to_facebook
+        if facebook_token_enabled?
+          facebook_post_id.nil? || post_sns_edit ? post_sns_facebook : nil
         end
       end
 
@@ -126,9 +196,7 @@ module Cms::Addon
 
       def post_to_facebook
         message = message_format(html)
-        if file_ids.present?
-          image_path = files.first.full_url
-        end
+        file_ids.present? ? image_path = files.first.full_url : nil
         access_token = self.site.facebook_access_token
         graph = Koala::Facebook::API.new(access_token)
         # facebokに投稿し、戻り値を取得
@@ -149,7 +217,7 @@ module Cms::Addon
       end
 
       def delete_sns
-        if sns_auto_delete == "active"
+        if sns_auto_delete_enabled?
           if twitter_post_id.present?
             client = connect_twitter
             client.destroy_status(twitter_post_id)

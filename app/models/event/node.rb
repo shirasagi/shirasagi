@@ -8,6 +8,7 @@ module Event::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::NodeAutoPostSetting
     include Category::Addon::Setting
     include Event::Addon::CalendarList
     include Cms::Addon::TagSetting
