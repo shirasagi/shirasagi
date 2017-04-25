@@ -53,5 +53,7 @@ module Member
     Cms::Role.permission :release_private_member_photos
 
     SS::File.model "member/photo", Member::PhotoFile
+    SS::File.model "member/blog_page", Member::File
+    SS::File.model "member/temp_file", Member::File
   end
 end
