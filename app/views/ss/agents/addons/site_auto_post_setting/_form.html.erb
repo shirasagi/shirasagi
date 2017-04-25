@@ -1,0 +1,16 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-site-auto-post-setting");
+<% end %>
+<dl class="see mod-ss-site-auto-post-setting">
+  <dt><%= @model.t :site_facebook_auto_post %><%= @model.tt :site_facebook_auto_post %></dt>
+  <dd><%= f.select :site_facebook_auto_post, @item.site_facebook_auto_post_options %></dd>
+
+  <dt><%= @model.t :site_twitter_auto_post %><%= @model.tt :site_twitter_auto_post %></dt>
+  <dd><%= f.select :site_twitter_auto_post, @item.site_twitter_auto_post_options %></dd>
+
+  <dt><%= @model.t :site_sns_auto_delete %><%= @model.tt :site_sns_auto_delete %></dt>
+  <dd><%= f.select :site_sns_auto_delete, @item.site_sns_auto_delete_options %></dd>
+
+  <dt><%= @model.t :site_edit_auto_post %><%= @model.tt :site_edit_auto_post %></dt>
+  <dd><%= f.select :site_edit_auto_post, @item.site_edit_auto_post_options %></dd>
+</dl>

@@ -116,6 +116,7 @@ ja:
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
+      token_blank: サイト設定のトークンが未設定のため無効です。
     options:
       state:
         show: 表示
@@ -170,6 +171,14 @@ ja:
         none: なし
         summary: サマリー形式
         summary_large_image: 大きな画像形式
+      sns_poster:
+        none: フォルダー設定を使用
+        expired: 無効
+        active: 有効
+      node_auto_post_setting:
+        none: サイト設定を使用
+        expired: 無効
+        active: 有効
       first_released:
         published: 公開済み
         draft: 未公開
@@ -247,6 +256,7 @@ ja:
       ss/kana_setting: かな設定
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
+      ss/site_auto_post_setting: SNS自動投稿設定
 
   mongoid:
     models:
@@ -391,6 +401,11 @@ ja:
         twitter_consumer_secret: コンシューマーシークレット
         twitter_access_token: アクセストークン
         twitter_access_token_secret: トークンシークレット
+      ss/addon/site_auto_post_setting:
+        site_facebook_auto_post: Facebook自動投稿
+        site_twitter_auto_post: Twitter自動投稿
+        site_sns_auto_delete: 非公開時に投稿を削除
+        site_edit_auto_post: 編集時に自動投稿
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
