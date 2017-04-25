@@ -29,12 +29,25 @@ class Webmail::AccountSettingsController < ApplicationController
       # render
     end
 
+    def edit
+      label = t('webmail.default_settings')
+      conf = @cur_user.imap_default_settings
+
+      @defaults = {
+        host: "#{label} / #{conf[:host]}",
+        auth_type: "#{label} / #{conf[:auth_type]}",
+        account: "#{label} / #{conf[:account]}",
+        password: "#{label} / #{conf[:password].to_s.gsub(/./, '*')}"
+      }
+    end
+
     def test_connection
       user = @cur_user.clone
       user.attributes = get_params
       user.valid?
 
       @imap = Webmail::Imap.set_user(user)
+      @imap.conf[:password] ||= @cur_user.decrypted_password
 
       if @imap.login
         render plain: "Login Success."
