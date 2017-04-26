@@ -12,9 +12,12 @@
 <meta name="<%= key %>" content="<%= v %>" />
 <% end %>
 <% end %>
-<% controller.twitter_card("twitter:image").each do |url| %>
-<% next if url.blank? %>
+<% url = controller.twitter_card("twitter:image").first %>
+<% if url.present? %>
 <meta name="twitter:image" content="<%= url %>">
+<% end %>
+<% if !@cur_site.opengraph_enabled? %>
+<meta property="og:url" content="<%= controller.opengraph('og:url').first %>" />
 <% end %>
 
 <% if card == "player" %>

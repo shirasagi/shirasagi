@@ -52,7 +52,7 @@ module Cms::PublicFilter::TwitterCard
     def twitter_image_urls
       urls = extract_image_urls
       if urls.blank?
-        urls << @cur_site.twitter_default_image_url if @cur_site.twitter_default_image_url.present?
+        urls = [ @cur_site.twitter_default_image_url ] if @cur_site.twitter_default_image_url.present?
       end
       urls
     end
@@ -74,21 +74,27 @@ module Cms::PublicFilter::TwitterCard
 
       if html.present?
         # extract image from html
-        regex = /\<\s*?img\s+[^>]*\/?>/i
-        regex.match(html) do |m|
-          next unless m[0] =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
-
-          url = $1
-          url = url[1..-1] if url.start_with?("'", '"')
-          url = url[0..-2] if url.end_with?("'", '"')
-          url = url.strip
-
-          next unless url.start_with?("/")
-
-          urls << "#{@cur_site.full_url}#{url[1..-1]}"
-        end
+        urls += extract_image_urls_from_html(html)
       end
 
       urls
+    end
+
+    def extract_image_urls_from_html(html)
+      regex = /\<\s*?img\s+[^>]*\/?>/i
+      urls = html.scan(regex).map do |m|
+        next nil unless m =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
+
+        url = $1
+        url = url[1..-1] if url.start_with?("'", '"')
+        url = url[0..-2] if url.end_with?("'", '"')
+        url = url.strip
+
+        next nil unless url.start_with?("/")
+
+        "#{@cur_site.full_url}#{url[1..-1]}"
+      end
+
+      urls.compact
     end
 end
