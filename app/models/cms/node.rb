@@ -3,6 +3,7 @@ class Cms::Node
   include Cms::PluginRepository
   include Cms::Addon::NodeSetting
   include Cms::Addon::GroupPermission
+  include Cms::Addon::NodeAutoPostSetting
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -16,6 +17,14 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    SS::Site.each do |s|
+      if s.facebook_access_token.present?
+        include Cms::Addon::NodeAutoPostSetting
+      elsif s.twitter_consumer_key.present? && s.twitter_consumer_secret.present? \
+          && s.twitter_access_token.present? && s.twitter_access_token_secret.present?
+        include Cms::Addon::NodeAutoPostSetting
+      end
+    end
     include Cms::Addon::NodeList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission

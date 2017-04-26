@@ -54,7 +54,7 @@ module Cms::Model::Node
   end
 
   def preview_path
-    site.subdir ?  "#{site.subdir}/#{filename}/" : "#{filename}/"
+    site.subdir ? "#{site.subdir}/#{filename}/" : "#{filename}/"
   end
 
   def parents

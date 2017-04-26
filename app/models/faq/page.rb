@@ -5,7 +5,14 @@ class Faq::Page
   include Workflow::Addon::Branch
   include Workflow::Addon::Approver
   include Cms::Addon::Meta
-  include Cms::Addon::SnsPoster
+  SS::Site.each do |s|
+    if s.facebook_access_token.present?
+      include Cms::Addon::SnsPoster
+    elsif s.twitter_consumer_key.present? && s.twitter_consumer_secret.present? \
+        && s.twitter_access_token.present? && s.twitter_access_token_secret.present?
+      include Cms::Addon::SnsPoster
+    end
+  end
   include Gravatar::Addon::Gravatar
   include Faq::Addon::Question
   include Cms::Addon::Body
