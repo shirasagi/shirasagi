@@ -36,7 +36,9 @@ module SS
           end
 
           ss_file = SS::File.new(model: options.delete(:model) || "ss/temp_file")
+          ss_file.site_id = options[:site].id if options[:site]
           ss_file.user_id = options[:user].id if options[:user]
+          options.delete(:site)
           options.delete(:user)
 
           basename = options.delete(:basename) || "spec"
