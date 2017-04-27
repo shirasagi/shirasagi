@@ -67,7 +67,7 @@ module Webmail::Mail::Parser
   end
 
   def parse_body_structure
-    if body_structure.multipart? #&& body_structure.media_subtype == "MIXED"
+    if body_structure.multipart? #&& body_structure.subtype == "MIXED"
       self.attachments = Webmail::MailPart.list(all_parts).select(&:attachment?)
     else
       self.attachments = []
@@ -93,7 +93,7 @@ module Webmail::Mail::Parser
 
   def find_first_mime_type(mime)
     all_parts.each do |pos, part|
-      next if "#{part.media_type}/#{part.media_subtype}" != mime.upcase
+      next if "#{part.media_type}/#{part.subtype}" != mime.upcase
       next if part.disposition && part.disposition.dsp_type == 'ATTACHMENT'
       return [pos, part]
     end
