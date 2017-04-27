@@ -3,10 +3,10 @@ module SS::Addon::SiteAutoPostSetting
   extend SS::Addon
 
   included do
-    field :site_facebook_auto_post, type: String, default: "expired"
-    field :site_twitter_auto_post, type: String, default: "expired"
-    field :site_sns_auto_delete, type: String, default: "expired"
-    field :site_edit_auto_post, type: String, default: "expired"
+    field :site_facebook_auto_post, type: String
+    field :site_twitter_auto_post, type: String
+    field :site_sns_auto_delete, type: String
+    field :site_edit_auto_post, type: String
     validates :site_facebook_auto_post, inclusion: { in: %w(expired active), allow_blank: true }
     validates :site_twitter_auto_post, inclusion: { in: %w(expired active), allow_blank: true }
     validates :site_sns_auto_delete, inclusion: { in: %w(expired active), allow_blank: true }

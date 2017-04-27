@@ -2,11 +2,9 @@ ja:
   views:
     options:
       sns_poster:
-        none: フォルダー設定を使用
         expired: 無効
         active: 有効
       node_auto_post_setting:
-        none: サイト設定を使用
         expired: 無効
         active: 有効
   tooltip:
