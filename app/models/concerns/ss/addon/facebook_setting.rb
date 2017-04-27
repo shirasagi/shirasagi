@@ -23,4 +23,8 @@ module SS::Addon::FacebookSetting
   def opengraph_enabled?
     opengraph_type.present? && opengraph_type != 'none'
   end
+
+  def facebook_token_enabled?
+    facebook_access_token.present?
+  end
 end

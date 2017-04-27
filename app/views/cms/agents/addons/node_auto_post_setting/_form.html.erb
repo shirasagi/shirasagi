@@ -1,45 +1,23 @@
+<% return "" unless @cur_site.twitter_token_enabled? || @cur_site.facebook_token_enabled? %>
+
 <%= jquery do %>
   SS_AddonTabs.hide(".mod-ss-node-auto-post-setting");
 <% end %>
-<%
-  node_facebook_auto_post = @item.node_facebook_auto_post || @cur_site.site_facebook_auto_post
-  node_twitter_auto_post = @item.node_twitter_auto_post || @cur_site.site_twitter_auto_post
-  node_sns_auto_delete = @item.node_sns_auto_delete || @cur_site.site_sns_auto_delete
-  node_edit_auto_post = @item.node_edit_auto_post || @cur_site.site_edit_auto_post
-  def twitter_token_enabled?
-    @cur_site.twitter_consumer_key.present? && @cur_site.twitter_consumer_secret.present? && \
-    @cur_site.twitter_access_token.present? && @cur_site.twitter_access_token_secret.present?
-  end
-%>
+
 <dl class="see mod-ss-node-auto-post-setting">
-  <% if @cur_site.facebook_access_token.present? %>
+  <% if @cur_site.facebook_token_enabled? %>
   <dt><%= @model.t :node_facebook_auto_post %><%= @model.tt :node_facebook_auto_post %></dt>
-  <dd><%= f.select :node_facebook_auto_post, @item.node_facebook_auto_post_options, :selected => node_facebook_auto_post %></dd>
-  <%
-    else
-      f.select :node_facebook_auto_post, @item.node_facebook_auto_post_options, :selected => node_facebook_auto_post
-    end
-  %>
+  <dd><%= f.select :node_facebook_auto_post, @item.node_facebook_auto_post_options %></dd>
+  <% end %>
 
-  <% if twitter_token_enabled? %>
+  <% if @cur_site.twitter_token_enabled? %>
   <dt><%= @model.t :node_twitter_auto_post %><%= @model.tt :node_twitter_auto_post %></dt>
-  <dd><%= f.select :node_twitter_auto_post, @item.node_twitter_auto_post_options, :selected => node_twitter_auto_post %></dd>
-  <%
-    else
-      f.select :node_twitter_auto_post, @item.node_twitter_auto_post_options, :selected => node_twitter_auto_post
-    end
-  %>
+  <dd><%= f.select :node_twitter_auto_post, @item.node_twitter_auto_post_options %></dd>
+  <% end %>
 
-  <% if @cur_site.facebook_access_token.present? || twitter_token_enabled? %>
   <dt><%= @model.t :node_sns_auto_delete %><%= @model.tt :node_sns_auto_delete %></dt>
-  <dd><%= f.select :node_sns_auto_delete, @item.node_sns_auto_delete_options, :selected => node_sns_auto_delete %></dd>
+  <dd><%= f.select :node_sns_auto_delete, @item.node_sns_auto_delete_options %></dd>
 
   <dt><%= @model.t :node_edit_auto_post %><%= @model.tt :node_edit_auto_post %></dt>
-  <dd><%= f.select :node_edit_auto_post, @item.node_edit_auto_post_options, :selected => node_edit_auto_post %></dd>
-  <%
-    else
-      f.select :node_sns_auto_delete, @item.node_sns_auto_delete_options, :selected => node_sns_auto_delete
-      f.select :node_edit_auto_post, @item.node_edit_auto_post_options, :selected => node_edit_auto_post
-    end
-  %>
+  <dd><%= f.select :node_edit_auto_post, @item.node_edit_auto_post_options %></dd>
 </dl>
