@@ -582,7 +582,7 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ区分", 
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
   html: column_question_html, select_options: [], required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "添付ファイル", order: 70, input_type: "upload_file",
-  html: column_question_html, select_options: [], site_id: @site._id
+  select_options: [], site_id: @site._id
 
 puts "# inquiry public comment"
 save_inquiry_column node_id: inquiry_comment_1.id, name: "性別", order: 0, input_type: "radio_button",
