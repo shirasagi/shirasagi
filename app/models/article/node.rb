@@ -9,14 +9,7 @@ module Article::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    SS::Site.each do |s|
-      if s.facebook_access_token.present?
-        include Cms::Addon::NodeAutoPostSetting
-      elsif s.twitter_consumer_key.present? && s.twitter_consumer_secret.present? \
-          && s.twitter_access_token.present? && s.twitter_access_token_secret.present?
-        include Cms::Addon::NodeAutoPostSetting
-      end
-    end
+    include Cms::Addon::NodeAutoPostSetting
     include Event::Addon::PageList
     include Category::Addon::Setting
     include Cms::Addon::TagSetting
