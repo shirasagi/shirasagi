@@ -18,21 +18,26 @@ module Webmail::UserExtension
     before_validation :set_imap_password, if: ->{ in_imap_password }
   end
 
-  def imap_settings
-    conf = {
-      host: imap_host.presence,
-      options: SS.config.webmail.clients.dig('default', 'options'),
-      auth_type: imap_auth_type.presence,
-      account: imap_account.presence,
-      password: decrypt_imap_password.presence
+  def imap_default_settings
+    yaml = SS.config.webmail.clients['default'] || {}
+    {
+      host: yaml['host'].presence,
+      options: yaml['options'].presence || {},
+      auth_type: yaml['auth_type'].presence,
+      account: send(yaml['account'].presence),
+      password: decrypted_password
     }
+  end
 
-    default = SS.config.webmail.clients['default'] || {}
-    conf[:host] ||= default['host']
-    conf[:options] ||= {}
-    conf[:auth_type] ||= default['auth_type']
-    conf[:account] ||= send default['account']
-    conf[:password] ||= decrypted_password
+  def imap_settings
+    user_conf = {
+      host: imap_host,
+      auth_type: imap_auth_type,
+      account: imap_account,
+      password: decrypt_imap_password
+    }
+    conf = imap_default_settings
+    user_conf.each { |k, v| conf[k] = v if v.present? }
     conf
   end
 

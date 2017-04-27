@@ -86,7 +86,7 @@ module Webmail::Imap
     def find_part(uid, section)
       uid = uid.to_i
 
-      resp = imap.conn.uid_fetch(uid, ['BODYSTRUCTURE', "BODY[#{section}.TEXT]"])
+      resp = imap.conn.uid_fetch(uid, ['BODYSTRUCTURE', "BODY[#{section}]"])
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
 
       item = Webmail::Mail.new
@@ -95,7 +95,7 @@ module Webmail::Imap
       part = item.all_parts[section]
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless part
 
-      Webmail::MailPart.new(part, section, resp[0].attr["BODY[#{section}.TEXT]"])
+      Webmail::MailPart.new(part, section, resp[0].attr["BODY[#{section}]"])
     end
 
     private

@@ -7,6 +7,7 @@ class Webmail::MailsController < ApplicationController
 
   skip_before_action :set_selected_items
   before_action :imap_login
+  before_action :apply_recent_filters, only: [:index]
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
@@ -14,17 +15,6 @@ class Webmail::MailsController < ApplicationController
   private
     def set_crumbs
       @crumbs << [:'webmail.mail', { action: :index } ]
-    end
-
-    def set_mailbox
-      @mailbox = params[:mailbox]
-      @navi_mailboxes = true
-
-      if params[:action] == 'index'
-        @imap.select(@mailbox)
-      else
-        @imap.examine(@mailbox)
-      end
     end
 
     def fix_params
@@ -49,12 +39,25 @@ class Webmail::MailsController < ApplicationController
       ids.map(&:to_i)
     end
 
+    def apply_recent_filters
+      @mailboxes = @imap.mailboxes.load
+      @mailboxes.apply_recent_filters
+    end
+
+    def set_mailbox
+      @navi_mailboxes = true
+      @mailbox = params[:mailbox]
+
+      if params[:action] == 'index' || params[:action] =~ /^(set_|unset_)/
+        @imap.select(@mailbox)
+      else
+        @imap.examine(@mailbox)
+      end
+    end
+
   public
     def index
       @sys_notices = Sys::Notice.and_public.webmail_admin_notice.page(1).per(2)
-
-      @mailboxes = @imap.mailboxes.load
-      @mailboxes.apply_recent_filters
 
       @items = @imap.mails.
         mailbox(@mailbox).

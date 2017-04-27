@@ -24,23 +24,21 @@
   });
 <% end %>
 
-<% default = t('webmail.default_settings') %>
-
 <dl class="see mod-webmail-account">
   <%= f.text_field :imap_account, value: '', id: 'tmp1', style: 'display: none;' %>
   <%= f.text_field :in_imap_password, value: '', id: 'tmp2', style: 'display: none;' %>
 
   <dt><%= @model.t :imap_host %><%= @model.tt :imap_host %></dt>
-  <dd><%= f.text_field :imap_host, placeholder: default %></dd>
+  <dd><%= f.text_field :imap_host, placeholder: @defaults[:host] %></dd>
 
   <dt><%= @model.t :imap_auth_type %><%= @model.tt :imap_auth_type %></dt>
-  <dd><%= f.select :imap_auth_type, @item.imap_auth_type_options, include_blank: default %></dd>
+  <dd><%= f.select :imap_auth_type, @item.imap_auth_type_options, include_blank: @defaults[:auth_type] %></dd>
 
   <dt><%= @model.t :imap_account %><%= @model.tt :imap_account %></dt>
-  <dd><%= f.text_field :imap_account, placeholder: default %></dd>
+  <dd><%= f.text_field :imap_account, placeholder: @defaults[:account] %></dd>
 
   <dt><%= @model.t :in_imap_password %><%= @model.tt :in_imap_password %></dt>
-  <dd><%= f.password_field :in_imap_password, value: @item.decrypt_imap_password, placeholder: default %></dd>
+  <dd><%= f.password_field :in_imap_password, value: @item.decrypt_imap_password, placeholder: @defaults[:password] %></dd>
 
   <dt></dt>
   <dd>
