@@ -129,9 +129,9 @@ class @SS
       $(this).ajaxSubmit $.extend(defaults, params)
       e.preventDefault();
 
-  @renderAjaxBox:() ->
+  @renderAjaxBox:(params = {}) ->
     try
-      $("#main .ajax-box").colorbox()
+      $("#main .ajax-box").colorbox(params)
     catch e
       # console.warn(e)
 

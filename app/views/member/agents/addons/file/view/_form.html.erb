@@ -1,7 +1,7 @@
 <% controller.javascript "/assets/js/jquery.colorbox.js" %>
 <% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
 
-<%= jquery do %>SS.renderAjaxBox();<% end %>
+<%= jquery do %>SS.renderAjaxBox({ fixed: true, width: "90%", height: "90%" });<% end %>
 <%= coffee do %>
 $ ->
   @insertContent = (cont) ->
