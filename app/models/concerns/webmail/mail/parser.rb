@@ -42,8 +42,8 @@ module Webmail::Mail::Parser
       in_reply_to: mail.in_reply_to,
       references: parse_references(mail.references),
       subject: mail.subject,
-      content_type: mail.message_content_type,
-      has_attachment: (mail.message_content_type =='multipart/mixed' ? true : nil)
+      content_type: mail.mime_type,
+      has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil)
     }
   end
 
