@@ -40,18 +40,18 @@ module Cms::Addon::NodeAutoPostSetting
   end
 
   def node_facebook_auto_post_enabled?
-    node_facebook_auto_post.present? && node_facebook_auto_post == 'active'
+    node_facebook_auto_post == 'active'
   end
 
   def node_twitter_auto_post_enabled?
-    node_twitter_auto_post.present? && node_twitter_auto_post == 'active'
+    node_twitter_auto_post == 'active'
   end
 
   def node_sns_auto_delete_enabled?
-    node_sns_auto_delete.present? && node_sns_auto_delete == 'active'
+    node_sns_auto_delete == 'active'
   end
 
   def node_edit_auto_post_enabled?
-    node_edit_auto_post.present? && node_edit_auto_post == 'active'
+    node_edit_auto_post == 'active'
   end
 end

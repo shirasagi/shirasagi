@@ -40,18 +40,18 @@ module SS::Addon::SiteAutoPostSetting
   end
 
   def site_facebook_auto_post_enabled?
-    site_facebook_auto_post.present? && site_facebook_auto_post == 'active'
+    site_facebook_auto_post == 'active'
   end
 
   def site_twitter_auto_post_enabled?
-    site_twitter_auto_post.present? && site_twitter_auto_post == 'active'
+    site_twitter_auto_post == 'active'
   end
 
   def site_sns_auto_delete_enabled?
-    site_sns_auto_delete.present? && site_sns_auto_delete == 'active'
+    site_sns_auto_delete == 'active'
   end
 
   def site_edit_auto_post_enabled?
-    site_edit_auto_post.present? && site_edit_auto_post == 'active'
+    site_edit_auto_post == 'active'
   end
 end
