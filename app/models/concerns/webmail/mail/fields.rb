@@ -28,9 +28,12 @@ module Webmail::Mail::Fields
 
   def display_address(address)
     return nil if address.blank?
-    addr = ::Mail::Address.new(Net::IMAP.encode_utf7(address))
-    return addr.address if addr.display_name.blank?
-    Net::IMAP.decode_utf7(addr.display_name)
+    begin
+      addr = ::Mail::Address.new(Net::IMAP.encode_utf7(address))
+      addr.display_name.blank? ? addr.address : Net::IMAP.decode_utf7(addr.display_name)
+    rescue
+      address
+    end
   end
 
   def attachments?
