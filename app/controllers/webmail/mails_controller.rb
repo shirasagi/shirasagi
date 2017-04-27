@@ -69,6 +69,7 @@ class Webmail::MailsController < ApplicationController
 
     def show
       if @item.unseen?
+        @imap.select(@mailbox)
         @item.set_seen
         @mailboxes = @imap.mailboxes.update_status
       end
