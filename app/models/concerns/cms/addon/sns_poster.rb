@@ -199,7 +199,7 @@ module Cms::Addon
             post_id = posted[:twitter_post_id]
             client.destroy_status(post_id) rescue nil
           end
-          self.set(twitter_post_id: nil, twitter_user_id: nil, twitter_posted: nil) rescue nil
+          self.set(twitter_post_id: nil, twitter_user_id: nil, twitter_posted: []) rescue nil
         end
         if facebook_post_id.present?
           access_token = self.site.facebook_access_token
@@ -210,7 +210,7 @@ module Cms::Addon
             user_id = posted[:facebook_user_id]
             graph.delete_object("#{user_id}_#{post_id}") rescue nil
           end
-          self.set(facebook_user_id: nil, facebook_post_id: nil, facebook_posted: nil) rescue nil
+          self.set(facebook_user_id: nil, facebook_post_id: nil, facebook_posted: []) rescue nil
         end
       end
     rescue => e
