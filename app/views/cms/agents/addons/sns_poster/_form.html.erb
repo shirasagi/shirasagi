@@ -3,10 +3,10 @@
 
 <%= jquery do %> SS_AddonTabs.hide(".mod-cms-sns_poster"); <% end %>
 <%
-  facebook_auto_post = @item.facebook_auto_post.presence || @cur_node.node_facebook_auto_post.presence || @cur_site.site_facebook_auto_post.presence
-  twitter_auto_post = @item.twitter_auto_post.presence || @cur_node.node_twitter_auto_post.presence || @cur_site.site_twitter_auto_post.presence
-  sns_auto_delete = @item.sns_auto_delete.presence || @cur_node.node_sns_auto_delete.presence || @cur_site.site_sns_auto_delete.presence
-  edit_auto_post = @item.edit_auto_post.presence || @cur_node.node_edit_auto_post.presence || @cur_site.site_edit_auto_post.presence
+  facebook_auto_post = @item.facebook_auto_post.presence || @cur_node.try(:node_facebook_auto_post).presence || @cur_site.try(:site_facebook_auto_post).presence
+  twitter_auto_post = @item.twitter_auto_post.presence || @cur_node.try(:node_twitter_auto_post).presence || @cur_site.try(:site_twitter_auto_post).presence
+  sns_auto_delete = @item.sns_auto_delete.presence || @cur_node.try(:node_sns_auto_delete).presence || @cur_site.try(:site_sns_auto_delete).presence
+  edit_auto_post = @item.edit_auto_post.presence || @cur_node.try(:node_edit_auto_post).presence || @cur_site.try(:site_edit_auto_post).presence
 %>
 
 <dl class="see mod-cms-sns_poster">

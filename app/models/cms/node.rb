@@ -30,6 +30,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::NodeAutoPostSetting
     include Event::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
