@@ -1,4 +1,5 @@
 <% return "" unless @cur_site.twitter_token_enabled? || @cur_site.facebook_token_enabled? %>
+<% return "" if @item.try(:branch?)%>
 
 <%= jquery do %> SS_AddonTabs.hide(".mod-cms-sns_poster"); <% end %>
 <%

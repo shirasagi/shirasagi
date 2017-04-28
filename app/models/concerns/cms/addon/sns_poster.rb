@@ -6,16 +6,16 @@ module Cms::Addon
 
     included do
 
-      field :twitter_auto_post,  type: String
-      field :facebook_auto_post, type: String
-      field :sns_auto_delete,    type: String
-      field :edit_auto_post,     type: String
-      field :twitter_user_id,    type: String
-      field :twitter_post_id,    type: String
-      field :facebook_user_id,   type: String
-      field :facebook_post_id,   type: String
-      field :twitter_posted,     type: Array, default: []
-      field :facebook_posted,    type: Array, default: []
+      field :twitter_auto_post,  type: String, metadata: { branch: false }
+      field :facebook_auto_post, type: String, metadata: { branch: false }
+      field :sns_auto_delete,    type: String, metadata: { branch: false }
+      field :edit_auto_post,     type: String, metadata: { branch: false }
+      field :twitter_user_id,    type: String, metadata: { branch: false }
+      field :twitter_post_id,    type: String, metadata: { branch: false }
+      field :facebook_user_id,   type: String, metadata: { branch: false }
+      field :facebook_post_id,   type: String, metadata: { branch: false }
+      field :twitter_posted,     type: Array, default: [], metadata: { branch: false }
+      field :facebook_posted,    type: Array, default: [], metadata: { branch: false }
 
       permit_params :facebook_auto_post,
                     :twitter_auto_post,
@@ -128,6 +128,8 @@ module Cms::Addon
 
     private
     def post_sns
+      return if @posted_sns
+
       # tweet
       if twitter_post_enabled?
         post_to_twitter
@@ -137,6 +139,8 @@ module Cms::Addon
       if facebook_post_enabled?
         post_to_facebook
       end
+
+      @posted_sns = true
     end
 
     def post_to_twitter
@@ -192,8 +196,10 @@ module Cms::Addon
     end
 
     def delete_sns
+      return if @deleted_sns
+
       if sns_auto_delete_enabled?
-        if twitter_post_id.present?
+        if twitter_posted.present?
           client = connect_twitter
           twitter_posted.each do |posted|
             post_id = posted[:twitter_post_id]
@@ -201,7 +207,7 @@ module Cms::Addon
           end
           self.set(twitter_post_id: nil, twitter_user_id: nil, twitter_posted: []) rescue nil
         end
-        if facebook_post_id.present?
+        if facebook_posted.present?
           access_token = self.site.facebook_access_token
           graph = Koala::Facebook::API.new(access_token)
           # UID_PIDの形式に組み替え、投稿を削除
@@ -213,6 +219,8 @@ module Cms::Addon
           self.set(facebook_user_id: nil, facebook_post_id: nil, facebook_posted: []) rescue nil
         end
       end
+
+      @deleted_sns = true
     rescue => e
       Rails.logger.fatal("delete_sns failed: #{e.backtrace.join("\n  ")}")
     end

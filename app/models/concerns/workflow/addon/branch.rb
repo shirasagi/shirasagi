@@ -28,7 +28,10 @@ module Workflow::Addon
     end
 
     def new_clone(attributes = {})
-      attributes = self.attributes.merge(attributes).select{ |k| self.fields.keys.include?(k) }
+      attributes = self.attributes.merge(attributes).select { |k| self.fields.keys.include?(k) }
+      self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
+        attributes.delete(n)
+      end
 
       item = self.class.new(attributes)
       item.id = nil
@@ -96,7 +99,10 @@ module Workflow::Addon
       attributes = Hash[branch.attributes]
       attributes.delete("_id")
       attributes.delete("filename")
-      attributes.select!{ |k| self.fields.keys.include?(k) }
+      attributes.select! { |k| self.fields.keys.include?(k) }
+      self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
+        attributes.delete(n)
+      end
 
       self.attributes = attributes
       self.master_id = nil
@@ -112,6 +118,7 @@ module Workflow::Addon
       master.cur_user = @cur_user
       master.cur_site = @cur_site
       master.merge(self)
+      master.generate_file
     end
 
     private

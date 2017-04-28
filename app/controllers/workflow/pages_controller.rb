@@ -87,9 +87,7 @@ class Workflow::PagesController < ApplicationController
           Workflow::Mailer.approve_mail(args).deliver_now if args[:t_uid]
 
           if @item.try(:branch?) && @item.state == "public"
-            master = @item.master
             @item.delete
-            master.generate_file
           end
         end
 
