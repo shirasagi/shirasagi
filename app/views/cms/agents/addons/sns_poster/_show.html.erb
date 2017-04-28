@@ -4,14 +4,22 @@
   <% if @cur_site.facebook_token_enabled? %>
   <dt><%= @model.t :facebook_auto_post %><%= @model.tt :facebook_auto_post %></dt>
   <dd><%= @item.label :facebook_auto_post %></dd>
-  <dd><a href="<%= @item.facebook_url %>" target="_blank"><%= @item.facebook_url %></a></dd>
-  <% end %>
+  <% @item.facebook_posted.each do |posted| %>
+  <dd><a href="<%= @item.facebook_url(posted[:facebook_post_id], posted[:facebook_user_id]) %>" target="_blank"><%= @item.facebook_url(posted[:facebook_post_id], posted[:facebook_user_id]) %></a></dd>
+  <%
+    end
+  end
+  %>
 
   <% if @cur_site.twitter_token_enabled? %>
   <dt><%= @model.t :twitter_auto_post %><%= @model.tt :twitter_auto_post %></dt>
   <dd><%= @item.label :twitter_auto_post %></dd>
-  <dd><a href="<%= @item.twitter_url %>" target="_blank"><%= @item.twitter_url %></a></dd>
-  <% end %>
+  <% @item.twitter_posted.each do |posted| %>
+  <dd><a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank"><%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %></a></dd>
+  <%
+    end
+  end
+  %>
 
   <dt><%= @model.t :sns_auto_delete %><%= @model.tt :sns_auto_delete %></dt>
   <dd><%= @item.label :sns_auto_delete %></dd>

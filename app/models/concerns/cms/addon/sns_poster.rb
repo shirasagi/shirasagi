@@ -79,6 +79,16 @@ module Cms::Addon
       edit_auto_post == "active"
     end
 
+    def twitter_url(post_id, user_id)
+      "https://twitter.com/#{user_id}/status/#{post_id}" if
+        use_twitter_post? && user_id.present? && post_id.present?
+    end
+
+    def facebook_url(post_id, user_id)
+      "https://www.facebook.com/#{user_id}/posts/#{post_id}" if \
+        use_facebook_post? && user_id.present? && post_id.present?
+    end
+
     def twitter_post_enabled?
       return false unless use_twitter_post?
 
@@ -101,16 +111,6 @@ module Cms::Addon
       else
         true
       end
-    end
-
-    def twitter_url
-      "https://twitter.com/#{twitter_user_id}/status/#{twitter_post_id}" if \
-        use_twitter_post? && twitter_user_id.present? && twitter_post_id.present?
-    end
-
-    def facebook_url
-      "https://www.facebook.com/#{facebook_user_id}/posts/#{facebook_post_id}" if \
-        use_facebook_post? && facebook_user_id.present? && facebook_post_id.present?
     end
 
     def facebook_id_separator(facebook_param)
@@ -163,7 +163,7 @@ module Cms::Addon
       # URLを表示するためにスクリーンネームを取得し、DBに保存
       user_screen_id = client.user.screen_name
       self.set(twitter_post_id: twitter_id, twitter_user_id: user_screen_id)
-      self.add_to_set(twitter_posted: { twitter_post_id: twitter_id, twitter_user_id: user_screen_id })
+      self.add_to_set(twitter_posted: { twitter_post_id: twitter_id.to_s, twitter_user_id: user_screen_id })
     rescue => e
       Rails.logger.fatal("post_to_twitter failed: #{e.backtrace.join("\n  ")}")
     end
@@ -175,12 +175,12 @@ module Cms::Addon
       graph = Koala::Facebook::API.new(access_token)
       # facebokに投稿し、戻り値を取得
       facebook_params = graph.put_wall_post(
-          message, {
+        message, {
           "name"=> "#{name} - #{site.name}",
           "link"=> full_url,
           "picture"=> image_path,
           "description"=> description
-      }
+        }
       )
       facebook_param = facebook_params['id'].to_s
       # 戻り値からUID/PID取得し、DBに保存
@@ -195,15 +195,22 @@ module Cms::Addon
       if sns_auto_delete_enabled?
         if twitter_post_id.present?
           client = connect_twitter
-          client.destroy_status(twitter_post_id)
-          self.set(twitter_post_id: nil, twitter_user_id: nil) rescue nil
+          twitter_posted.each do |posted|
+            post_id = posted[:twitter_post_id]
+            client.destroy_status(post_id) rescue nil
+          end
+          self.set(twitter_post_id: nil, twitter_user_id: nil, twitter_posted: nil) rescue nil
         end
         if facebook_post_id.present?
           access_token = self.site.facebook_access_token
           graph = Koala::Facebook::API.new(access_token)
           # UID_PIDの形式に組み替え、投稿を削除
-          graph.delete_object("#{facebook_user_id}_#{facebook_post_id}")
-          self.set(facebook_user_id: nil, facebook_post_id: nil) rescue nil
+          facebook_posted.each do |posted|
+            post_id = posted[:facebook_post_id]
+            user_id = posted[:facebook_user_id]
+            graph.delete_object("#{user_id}_#{post_id}") rescue nil
+          end
+          self.set(facebook_user_id: nil, facebook_post_id: nil, facebook_posted: nil) rescue nil
         end
       end
     rescue => e

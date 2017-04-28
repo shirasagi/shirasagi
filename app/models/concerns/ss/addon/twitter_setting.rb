@@ -27,6 +27,7 @@ module SS::Addon::TwitterSetting
   end
 
   def twitter_token_enabled?
-    twitter_consumer_key.present? && twitter_consumer_secret.present? && twitter_access_token.present? && twitter_access_token_secret.present?
+    twitter_consumer_key.present? && twitter_consumer_secret.present? &&
+      twitter_access_token.present? && twitter_access_token_secret.present?
   end
 end
