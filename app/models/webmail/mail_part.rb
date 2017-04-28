@@ -16,7 +16,7 @@ class Webmail::MailPart
   end
 
   def content_type
-    "#{part.media_type}/#{part.media_subtype}".downcase
+    "#{part.media_type}/#{part.subtype}".downcase
   end
 
   def attachment?
@@ -64,7 +64,7 @@ class Webmail::MailPart
 
       data = body.decoded
       data = data.encode('UTF-8', charset) if charset
-      data = data.html_safe if part.media_subtype == 'HTML'
+      data = data.html_safe if part.subtype == 'HTML'
       data
     end
   end
