@@ -11,7 +11,7 @@ module SS::Addon::FacebookSetting
     validates :opengraph_type, inclusion: { in: %w(none article), allow_blank: true }
     permit_params :facebook_app_id, :facebook_page_url
     permit_params :opengraph_type, :opengraph_defaul_image_url
-    permit_params :facebook_access_token, type: String
+    permit_params :facebook_access_token
   end
 
   def opengraph_type_options
@@ -22,5 +22,9 @@ module SS::Addon::FacebookSetting
 
   def opengraph_enabled?
     opengraph_type.present? && opengraph_type != 'none'
+  end
+
+  def facebook_token_enabled?
+    facebook_access_token.present?
   end
 end

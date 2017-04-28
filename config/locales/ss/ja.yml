@@ -247,6 +247,7 @@ ja:
       ss/kana_setting: かな設定
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
+      ss/site_auto_post_setting: SNS自動投稿設定
 
   mongoid:
     models:
@@ -391,6 +392,11 @@ ja:
         twitter_consumer_secret: コンシューマーシークレット
         twitter_access_token: アクセストークン
         twitter_access_token_secret: トークンシークレット
+      ss/addon/site_auto_post_setting:
+        site_facebook_auto_post: Facebook自動投稿
+        site_twitter_auto_post: Twitter自動投稿
+        site_sns_auto_delete: 非公開時に投稿を削除
+        site_edit_auto_post: 編集時に自動投稿
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
         file_resizing_width: 幅
@@ -617,6 +623,15 @@ ja:
       twitter_access_token_secret:
         - アクセストークンシークレット(Access Token Secret)を設定します。
         - Twitterへの自動投稿に必須です。
+    ss/addon/site_auto_post_setting:
+      site_facebook_auto_post:
+        - Facebookへの自動投稿の設定を行います。
+      site_twitter_auto_post:
+        - Twitterへの自動投稿の設定を行います。
+      site_sns_auto_delete:
+        - 記事非公開時にSNSへ投稿した内容を削除します。
+      site_edit_auto_post:
+        - 記事編集時の自動投稿の設定を行います。
     ss/addon/file_setting:
       file_resizing:
         - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。

@@ -1,11 +1,27 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-sns_poster"); <% end %>
-<dl class="see mod-cms-sns_poster">
-  <dt><%= @model.t :facebook_auto_post %><%= @model.tt :facebook_auto_post %></dt>
-  <dd><%= f.select :facebook_auto_post, @item.facebook_auto_post_options %></dd>
+<% return "" unless @cur_site.twitter_token_enabled? || @cur_site.facebook_token_enabled? %>
 
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-sns_poster"); <% end %>
+<%
+  facebook_auto_post = @item.facebook_auto_post.presence || @cur_node.node_facebook_auto_post.presence || @cur_site.site_facebook_auto_post.presence
+  twitter_auto_post = @item.twitter_auto_post.presence || @cur_node.node_twitter_auto_post.presence || @cur_site.site_twitter_auto_post.presence
+  sns_auto_delete = @item.sns_auto_delete.presence || @cur_node.node_sns_auto_delete.presence || @cur_site.site_sns_auto_delete.presence
+  edit_auto_post = @item.edit_auto_post.presence || @cur_node.node_edit_auto_post.presence || @cur_site.site_edit_auto_post.presence
+%>
+
+<dl class="see mod-cms-sns_poster">
+  <% if @cur_site.facebook_token_enabled? %>
+  <dt><%= @model.t :facebook_auto_post %><%= @model.tt :facebook_auto_post %></dt>
+  <dd><%= f.select :facebook_auto_post, @item.facebook_auto_post_options, :selected => facebook_auto_post %></dd>
+  <% end %>
+
+  <% if @cur_site.twitter_token_enabled? %>
   <dt><%= @model.t :twitter_auto_post %><%= @model.tt :twitter_auto_post %></dt>
-  <dd><%= f.select :twitter_auto_post, @item.twitter_auto_post_options %></dd>
+  <dd><%=  f.select :twitter_auto_post, @item.twitter_auto_post_options, :selected => twitter_auto_post %></dd>
+  <% end %>
 
   <dt><%= @model.t :sns_auto_delete %><%= @model.tt :sns_auto_delete %></dt>
-  <dd><%= f.select :sns_auto_delete, @item.sns_auto_delete_options %></dd>
+  <dd><%=  f.select :sns_auto_delete, @item.sns_auto_delete_options, :selected => sns_auto_delete %></dd>
+
+  <dt><%= @model.t :edit_auto_post %><%= @model.tt :edit_auto_post %></dt>
+  <dd><%= f.select :edit_auto_post, @item.edit_auto_post_options, :selected => edit_auto_post %></dd>
 </dl>
