@@ -1,0 +1,36 @@
+Return-Path: <admin@example.jp>
+Message-ID: <message_id@localhost>
+From: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+To: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+Subject: =?iso-2022-jp?B?GyRCN29MPhsoQg==?=
+Date: Fri, 28 Apr 2017 16:14:29 +0900
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----=_NextPart_000_01E9_01D2C03F.21678230"
+Content-Transfer-Encoding: 7bit
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_01E9_01D2C03F.21678230
+Content-Type: text/plain;
+	format=flowed;
+	charset="iso-2022-jp";
+	reply-type=original
+Content-Transfer-Encoding: 7bit
+
+本文
+本文
+------=_NextPart_000_01E9_01D2C03F.21678230
+Content-Type: text/plain;
+	format=flowed;
+	name="=?iso-2022-jp?B?GyRCPzckNyQkJUYlLSU5JUgbKEIgGyRCJUklLSVlJWElcyVIGyhCLg==?=
+	=?iso-2022-jp?B?dHh0?=";
+	reply-type=original
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="=?iso-2022-jp?B?GyRCPzckNyQkJUYlLSU5JUgbKEIgGyRCJUklLSVlJWElcyVIGyhCLg==?=
+	=?iso-2022-jp?B?dHh0?="
+
+
+------=_NextPart_000_01E9_01D2C03F.21678230--
+
