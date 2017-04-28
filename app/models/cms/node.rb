@@ -3,6 +3,7 @@ class Cms::Node
   include Cms::PluginRepository
   include Cms::Addon::NodeSetting
   include Cms::Addon::GroupPermission
+  include Cms::Addon::NodeAutoPostSetting
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -16,6 +17,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission

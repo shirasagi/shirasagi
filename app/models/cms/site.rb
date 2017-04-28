@@ -8,6 +8,7 @@ class Cms::Site
   include SS::Addon::KanaSetting
   include SS::Addon::FacebookSetting
   include SS::Addon::TwitterSetting
+  include SS::Addon::SiteAutoPostSetting
   include SS::Addon::FileSetting
   include Opendata::Addon::SiteSetting
 
