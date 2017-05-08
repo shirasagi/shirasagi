@@ -5,5 +5,10 @@
   <dd class="event-name"><%= @item.send :event_name %></dd>
 
   <dt><%= @model.t :event_dates %></dt>
-  <dd class="event-dates"><%= (@item.send :event_dates).gsub(/\n|\r\n/, ", ") %></dd>
+  <% @item.dates_to_terms.each do |event_date| %>
+  <dd class="event-dates">
+    <time datetime="<%= I18n.l event_date[0].to_date, format: :iso %>"><%= I18n.l event_date[0].to_date, format: :long %></time>
+    - <time datetime="<%= I18n.l event_date[1].to_date, format: :iso %>"><%= I18n.l event_date[1].to_date, format: :long %></time>
+  </dd>
+  <% end %>
 </dl>

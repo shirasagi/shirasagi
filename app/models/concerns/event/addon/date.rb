@@ -60,6 +60,30 @@ module Event::Addon
       end
     end
 
+    def dates_to_terms
+      event_dates = self[:event_dates]
+      return "" unless event_dates.present?
+
+      dates = []
+      range = []
+      terms = []
+      event_dates.each do |d|
+        if range.present? && range.last.tomorrow != d
+          dates << range
+          range = []
+        end
+        range << d
+      end
+      dates << range if range.present?
+      dates.each do |range|
+        if range.size != 1
+          range = [range.first, range.last]
+          terms << range
+        end
+      end
+      terms
+    end
+
     private
       def validate_event
         errors.add :event_dates, :blank if event_name.present? && event_dates.blank?
