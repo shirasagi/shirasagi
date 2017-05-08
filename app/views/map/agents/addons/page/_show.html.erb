@@ -5,3 +5,6 @@
 <dl class="see mod-page">
   <div id="map-canvas" style="width: 100%; height: 320px"></div>
 </dl>
+<% @item.map_points.each do |map_point| %>
+<p><%= map_point[:name] %><%= map_point[:loc] %></p>
+<% end %>

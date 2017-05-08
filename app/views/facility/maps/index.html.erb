@@ -15,9 +15,8 @@
   <% if item.try(:tags) %>
     <span class="tags"><%= item.tags.join(",") %></span>
   <% end %>
-  <% Facility::Map.site(@cur_site).and_public.where(filename: /^#{item.filename}\//,
-    depth: item.depth + 1).order_by(order: 1).each do |map| %>
-    <% map.map_points.each do |map_point| %>
+  <% if item.try(:map_points) %>
+    <% item.map_points.each do |map_point| %>
       <span class="map-point"><%= map_point[:name] %><%= map_point[:loc] %></span>
     <% end %>
   <% end %>
