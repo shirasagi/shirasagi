@@ -12,7 +12,7 @@ class Sys::MailLog
   field :date, type: DateTime
   field :mail, type: String
 
-  index({ created_at: 1 }, { expire_after_seconds: 2.weeks })
+  index({ created: 1 }, { expire_after_seconds: 2.weeks })
 
   class << self
     def add_from_event(event)
