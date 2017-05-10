@@ -5,10 +5,5 @@
   <dd class="event-name"><%= @item.send :event_name %></dd>
 
   <dt><%= @model.t :event_dates %></dt>
-  <% @item.dates_to_terms.each do |event_date| %>
-  <dd class="event-dates">
-    <time datetime="<%= I18n.l event_date[0].to_date, format: :iso %>"><%= I18n.l event_date[0].to_date, format: :long %></time>
-    - <time datetime="<%= I18n.l event_date[1].to_date, format: :iso %>"><%= I18n.l event_date[1].to_date, format: :long %></time>
-  </dd>
-  <% end %>
+  <dd class="event-dates"><%= raw @item.dates_to_terms(:long) %></dd>
 </dl>

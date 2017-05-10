@@ -1,11 +1,6 @@
 <header class="released">
   <%= t "event.options.sort.event_dates" if @cur_page.event_dates %>
-  <% @cur_page.dates_to_terms.each do |event_date| %>
-  <div class="event-dates">
-    <time datetime="<%= I18n.l event_date[0].to_date, format: :iso %>"><%= I18n.l event_date[0].to_date, format: :long %></time>
-    - <time datetime="<%= I18n.l event_date[1].to_date, format: :iso %>"><%= I18n.l event_date[1].to_date, format: :long %></time>
-  </div>
-  <% end %>
+  <%= raw @cur_page.dates_to_terms(:long) %>
 </header>
 
 <%= render file: "cms/agents/pages/page/index" %>

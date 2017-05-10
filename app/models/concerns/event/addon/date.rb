@@ -60,13 +60,18 @@ module Event::Addon
       end
     end
 
-    def dates_to_terms
+    def dates_to_terms(format = :default)
+      html = dates_to_html(format)
+      html.gsub!(/<span class="event-dates range">/, ' <span class="event-dates range">')
+    end
+
+    def dates_to_html(format = :default)
       event_dates = self[:event_dates]
       return "" unless event_dates.present?
 
+      html = []
       dates = []
       range = []
-      terms = []
       event_dates.each do |d|
         if range.present? && range.last.tomorrow != d
           dates << range
@@ -76,12 +81,19 @@ module Event::Addon
       end
       dates << range if range.present?
       dates.each do |range|
+        cls = "event-dates"
+
         if range.size != 1
           range = [range.first, range.last]
-          terms << range
+          cls = "event-dates range"
         end
+
+        range = range.map do |d|
+          "<time datetime=\"#{I18n.l d.to_date, format: :iso}\">#{I18n.l d.to_date, format: format.to_sym}</time>"
+        end.join("<span>#{I18n.t "event.date_range_delimiter"}</span>")
+        html << "<span class=\"#{cls}\">#{range}</span>"
       end
-      terms
+      html.join
     end
 
     private
@@ -95,34 +107,7 @@ module Event::Addon
       end
 
       def template_variable_handler_event_dates(name, issuer, format = :default)
-        event_dates = self[:event_dates]
-        return "" unless event_dates.present?
-
-        html = []
-        dates = []
-        range = []
-        event_dates.each do |d|
-          if range.present? && range.last.tomorrow != d
-            dates << range
-            range = []
-          end
-          range << d
-        end
-        dates << range if range.present?
-        dates.each do |range|
-          cls = "event-dates"
-
-          if range.size != 1
-            range = [range.first, range.last]
-            cls = "event-dates range"
-          end
-
-          range = range.map do |d|
-            "<time datetime=\"#{I18n.l d.to_date, format: :iso}\">#{I18n.l d.to_date, format: format.to_sym}</time>"
-          end.join("<span>#{I18n.t "event.date_range_delimiter"}</span>")
-          html << "<span class=\"#{cls}\">#{range}</span>"
-        end
-        html.join
+        dates_to_html(format)
       end
   end
 end
