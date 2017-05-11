@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Webmail::Mail::Parser do
+describe Webmail::Mail::Parser, type: :model, dbscope: :example do
   context "text mail" do
     subject(:item) { webmail_load_mail('text.yml') }
 
