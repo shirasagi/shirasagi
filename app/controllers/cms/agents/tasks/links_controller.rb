@@ -1,6 +1,7 @@
 require "timeout"
 require "open-uri"
 require 'open_uri_redirections'
+require 'resolv-replace'
 require 'nkf'
 
 class Cms::Agents::Tasks::LinksController < ApplicationController
