@@ -60,10 +60,6 @@ module Event::Addon
       end
     end
 
-    def dates_to_terms(format = :default)
-      dates_to_html(format)
-    end
-
     def dates_to_html(format = :default)
       event_dates = self[:event_dates]
       return "" unless event_dates.present?
