@@ -1,4 +1,4 @@
-<% if @cur_page.event_dates %>
+<% if @cur_page.event_dates.present? %>
 <header class="released">
   <%= raw @cur_page.dates_to_terms(:long) %>
 </header>
