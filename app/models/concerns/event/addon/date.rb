@@ -61,8 +61,7 @@ module Event::Addon
     end
 
     def dates_to_terms(format = :default)
-      html = dates_to_html(format)
-      html.gsub!(/<span class="event-dates range">/, ' <span class="event-dates range">')
+      dates_to_html(format)
     end
 
     def dates_to_html(format = :default)

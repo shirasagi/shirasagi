@@ -1,6 +1,7 @@
+<% if @cur_page.event_dates %>
 <header class="released">
-  <%= t "event.options.sort.event_dates" if @cur_page.event_dates %>
   <%= raw @cur_page.dates_to_terms(:long) %>
 </header>
+<% end %>
 
 <%= render file: "cms/agents/pages/page/index" %>
