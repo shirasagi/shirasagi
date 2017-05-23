@@ -1,4 +1,4 @@
-@import "compass/css3";
+@import "compass-mixins/lib/compass";
 
 // -----------------------------------------------------------------------------
 // html5
@@ -12,18 +12,14 @@ header, footer, nav, section, article, figure, aside {
 // mixin
 
 @mixin clear {
-    zoom:1;
-    &:before, &:after {
-        content: "\0020"; 
-        display: block; 
-        height: 0; 
-        overflow: hidden; 
-    }
-    &:after {
-        clear: both;
-    }
-}
-
-@mixin lgrad($position, $value...) {
-  //include background(linear-gradient($position, $value));
+  zoom:1;
+  &:before, &:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+  }
+  &:after {
+    clear: both;
+  }
 }
