@@ -16,8 +16,6 @@ module SS
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
-
-    config.assets.paths << "#{config.root}/vendor/assets/packages"
     config.assets.paths << "#{config.root}/public/assets/css"
     config.assets.paths << "#{config.root}/public/assets/js"
     config.assets.precompile << proc do |path, fn|

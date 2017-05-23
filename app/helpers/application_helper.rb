@@ -66,12 +66,18 @@ module ApplicationHelper
   # @deprecated
   def scss(&block)
     opts = Rails.application.config.sass
-    sass = Sass::Engine.new "@import 'compass/css3';\n" + capture(&block),
-      syntax: :scss,
+    load_paths = opts.load_paths[1..-1] || []
+    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+
+    sass = Sass::Engine.new(
+      "@import 'compass-mixins/lib/compass';\n" + capture(&block),
       cache: false,
-      style: :compressed,
       debug_info: false,
-      load_paths: opts.load_paths[1..-1] + ["#{Gem.loaded_specs['compass'].full_gem_path}/frameworks/compass/stylesheets"]
+      inline_source_maps: false,
+      load_paths: load_paths,
+      style: :compressed,
+      syntax: :scss
+    )
 
     h = []
     h << "<style>"
