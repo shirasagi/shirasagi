@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.2.5.2'
-gem 'sass-rails', '~> 5.0'
+#gem 'sass-rails', '~> 5.0'
+gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'therubyracer', '~> 0.12', platforms: :ruby
@@ -28,8 +29,6 @@ gem 'jquery-turbolinks'
 gem 'js_cookie_rails'
 gem 'jquery-form-rails'
 gem 'kramdown'
-gem 'compass-core', '= 1.0.3', path: 'vendor/gems/compass-core-1.0.3'
-gem 'compass-rails'
 gem 'kaminari'
 gem 'kaminari-mongoid'
 gem 'non-stupid-digest-assets'

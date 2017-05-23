@@ -101,26 +101,28 @@ module Cms::PublicFilter
       css_mtime = Fs.exists?(@file) ? Fs.stat(@file).mtime : 0
       return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
-      css = ""
+      data = Fs.read(@scss)
       begin
         opts = Rails.application.config.sass
-        load_paths = opts.load_paths[1..-1]
+        load_paths = opts.load_paths[1..-1] || []
+        load_paths << "#{Rails.root}/vendor/assets/stylesheets"
         load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
-        sass = Sass::Engine.new Fs.read(@scss), filename: @scss, syntax: :scss, cache: false,
+
+        sass = Sass::Engine.new(
+          data,
+          cache: false,
+          debug_info: false,
+          filename: @scss,
+          inline_source_maps: false,
           load_paths: load_paths,
           style: :compressed,
-          debug_info: false
-        css = sass.render
+          syntax: :scss
+        )
+        Fs.write(@file, sass.render)
       rescue Sass::SyntaxError => e
-        msg  = e.backtrace[0].sub(/.*?\/_\//, "")
-        msg  = "[#{msg}]\\A #{e}".gsub('"', '\\"')
-        css  = "body:before { position: absolute; top: 8px; right: 8px; display: block;"
-        css << " padding: 4px 8px; border: 1px solid #b88; background-color: #fff;"
-        css << " color: #822; font-size: 85%; font-family: tahoma, sans-serif; line-height: 1.6;"
-        css << " white-space: pre; z-index: 9; content: \"#{msg}\"; }"
+        Rails.logger.error(e)
+        Fs.write(@file, data)
       end
-
-      Fs.write @file, css
     end
 
     def x_sendfile(file = @file)

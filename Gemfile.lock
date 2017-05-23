@@ -1,8 +1,3 @@
-PATH
-  remote: vendor/gems/compass-core-1.0.3
-  specs:
-    compass-core (1.0.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -73,7 +68,6 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    chunky_png (1.3.5)
     clam_scan (0.0.2)
     cliver (0.3.2)
     coderay (1.1.1)
@@ -84,19 +78,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
-    compass (1.0.3)
-      chunky_png (~> 1.2)
-      compass-core (~> 1.0.2)
-      compass-import-once (~> 1.0.5)
-      rb-fsevent (>= 0.9.3)
-      rb-inotify (>= 0.9)
-      sass (>= 3.3.13, < 3.5)
-    compass-import-once (1.0.5)
-      sass (>= 3.2, < 3.5)
-    compass-rails (3.0.2)
-      compass (~> 1.0.0)
-      sass-rails (< 5.1)
-      sprockets (< 4.0)
     concurrent-ruby (1.0.1)
     coveralls (0.8.13)
       json (~> 1.8)
@@ -431,12 +412,17 @@ GEM
       sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
     sass (3.4.21)
-    sass-rails (5.0.4)
-      railties (>= 4.0.0, < 5.0)
-      sass (~> 3.1)
-      sprockets (>= 2.8, < 4.0)
-      sprockets-rails (>= 2.0, < 4.0)
-      tilt (>= 1.1, < 3)
+    sassc (1.11.2)
+      bundler
+      ffi (~> 1.9.6)
+      sass (>= 3.3.0)
+    sassc-rails (1.3.0)
+      railties (>= 4.0.0)
+      sass
+      sassc (~> 1.9)
+      sprockets (> 2.11)
+      sprockets-rails
+      tilt
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -545,8 +531,6 @@ DEPENDENCIES
   capybara
   clam_scan
   coffee-rails (~> 4.1.0)
-  compass-core (= 1.0.3)!
-  compass-rails
   coveralls
   diffy
   dotenv-rails
@@ -607,7 +591,7 @@ DEPENDENCIES
   rspec-rails
   rubocop
   ruby-saml
-  sass-rails (~> 5.0)
+  sassc-rails
   sdoc (~> 0.4.0)
   simple_captcha2
   sparql

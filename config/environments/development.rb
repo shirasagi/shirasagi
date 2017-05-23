@@ -23,6 +23,7 @@ Rails.application.configure do
   config.assets.prefix = "/assets-dev"
   #config.assets.raise_runtime_errors = true
   config.sass.debug_info = false
+  config.sass.inline_source_maps = true
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
