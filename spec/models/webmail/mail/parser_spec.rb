@@ -1,16 +1,14 @@
 require 'spec_helper'
 
-describe Webmail::Mail::Parser do
-  let(:item) { Webmail::Mail.new }
-
+describe Webmail::Mail::Parser, type: :model, dbscope: :example do
   context "text mail" do
-    before do
-      item.size = 1024
-      item.header = File.open(Rails.root / 'spec/fixtures/webmail/mail/text.txt').read
-      item.parse_header
-    end
+    subject(:item) { webmail_load_mail('text.yml') }
 
     it do
+      expect(item.seen?).to be_truthy
+      expect(item.unseen?).to be_falsey
+      expect(item.star?).to be_truthy
+      expect(item.draft?).to be_truthy
       expect(item.from).to eq ['"サイト管理者" <admin@example.jp>']
       expect(item.from).to eq item.to
       expect(item.from).to eq item.cc
@@ -24,18 +22,24 @@ describe Webmail::Mail::Parser do
       expect(item.display_to).to eq ['サイト管理者']
       expect(item.display_to).to eq item.display_cc
       expect(item.display_to).to eq item.display_bcc
-      expect(item.attachments?).to eq false
-      expect(item.html?).to eq false
+      expect(item.format).to eq 'text'
+      expect(item.html?).to be_falsey
+      expect(item.text.present?).to be_truthy
+      expect(item.html.present?).to be_falsey
+      expect(item.attachments?).to be_falsey
+      expect(item.attachments.size).to eq 0
+      expect(item.rfc822).to eq 'RFC822'
     end
   end
 
   context "html mail" do
-    before do
-      item.header = File.open(Rails.root / 'spec/fixtures/webmail/mail/html.txt').read
-      item.parse_header
-    end
+    subject(:item) { webmail_load_mail('html.yml') }
 
     it do
+      expect(item.seen?).to be_falsey
+      expect(item.unseen?).to be_truthy
+      expect(item.star?).to be_falsey
+      expect(item.draft?).to be_falsey
       expect(item.from).to eq ['admin@example.jp']
       expect(item.from).to eq item.to
       expect(item.from).to eq item.cc
@@ -45,19 +49,40 @@ describe Webmail::Mail::Parser do
       expect(item.display_to).to eq ['admin@example.jp']
       expect(item.display_to).to eq item.display_cc
       expect(item.display_to).to eq item.display_bcc
-      expect(item.attachments?).to eq false
-      expect(item.html?).to eq false
+      expect(item.format).to eq 'html'
+      expect(item.html?).to be_truthy
+      expect(item.text.present?).to be_truthy
+      expect(item.html.present?).to be_truthy
+      expect(item.sanitize_html.present?).to be_truthy
+      expect(item.sanitize_html.size).to be < item.html.size
     end
   end
 
-  context "text mail with attachments" do
-    before do
-      item.header = File.open(Rails.root / 'spec/fixtures/webmail/mail/file.txt').read
-      item.parse_header
-    end
+  context "attachment mail" do
+    subject(:item) { webmail_load_mail('attach.yml') }
 
     it do
-      expect(item.attachments?).to eq true
+      expect(item.format).to eq 'text'
+      expect(item.html?).to be_falsey
+      expect(item.text.present?).to be_truthy
+      expect(item.html.present?).to be_falsey
+      expect(item.attachments?).to be_truthy
+      expect(item.attachments.size).to eq 1
+    end
+  end
+
+  context "attachment part" do
+    subject(:item) { webmail_load_mail('attach.yml').attachments[0] }
+
+    it do
+      expect(item.content_type).to eq 'image/png'
+      expect(item.attachment?).to be_truthy
+      expect(item.image?).to be_truthy
+      expect(item.link_target).to eq '_blank'
+      expect(item.filename).to eq '1px.png'
+      expect(item.read.size).to be > 0
+      expect(item.decoded.size).to be > 0
+      expect(item.decoded.size).to be < item.read.size
     end
   end
 end

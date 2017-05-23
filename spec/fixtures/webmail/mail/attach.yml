@@ -1,0 +1,44 @@
+UID: 1
+INTERNALDATE: 2017-04-01 15:55:36 +0900
+RFC822: RFC822
+RFC822.SIZE: 1024
+RFC822.HEADER: |
+  Message-ID: <message_id@localhost>
+  From: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+  To: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+  Subject: =?iso-2022-jp?B?GyRCN29MPhsoQg==?=
+  Date: Fri, 28 Apr 2017 16:14:29 +0900
+  MIME-Version: 1.0
+  Content-Type: multipart/mixed;
+    boundary="----=_NextPart_000_00CE_01D2C367.853B27A0"
+BODYSTRUCTURE:
+  media_type: MULTIPART
+  subtype: MIXED
+  param:
+    BOUNDARY: ----=_NextPart_000_00CE_01D2C367.853B27A0
+  parts:
+    - media_type: TEXT
+      subtype: PLAIN
+      encoding: QUOTED-PRINTABLE
+      param:
+        FORMAT: flowed
+        CHARSET: iso-2022-jp
+        REPLY-TYPE: original
+      encoding: 7BIT
+    - media_type: IMAGE
+      subtype: PNG
+      encoding: QUOTED-PRINTABLE
+      param:
+        NAME: 1px.png
+      encoding: BASE64
+      size: 174
+      disposition:
+        dsp_type: ATTACHMENT
+        param:
+          FILENAME: 1px.png
+BODY:
+  1: |
+    message
+    message
+  2: |
+    iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAABGdBTUEAAK/INwWK6QAAABl0RVh0\r\nU29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAOSURBVHjaYvrP8B8gwAAECAIBymgRbwAA\r\nAABJRU5ErkJggg==

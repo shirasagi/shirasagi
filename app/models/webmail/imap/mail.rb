@@ -43,10 +43,14 @@ module Webmail::Imap
       [:since, :before, :sentsince, :sentbefore].each do |key|
         next if params[key].blank?
         @search << key.to_s.upcase
-        @search << Date.parse(params[key]).strftime('%e-%b-%Y')
+        @search << Date.parse(params[key]).strftime('%-d-%b-%Y')
       end
 
       self
+    end
+
+    def condition
+      { mailbox: @mailbox, sort: @sort, page: @page, limit: @limit, search: @search }
     end
 
     def uids
