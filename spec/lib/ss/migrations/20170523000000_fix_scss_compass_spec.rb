@@ -22,6 +22,6 @@ RSpec.describe SS::Migration20170523000000, dbscope: :example do
   subject(:item) { described_class.new }
 
   it do
-    expect(item.new(text1)).to eq text2
+    expect(item.change_text(text1)).to eq text2
   end
 end
