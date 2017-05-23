@@ -76,6 +76,9 @@
   <% if @merged_map.present? %>
     <% @cur_page = @merged_map %>
     <%= render file: "map/agents/addons/page/view/index" %>
+    <% @cur_page.map_points.each do |map_point| %>
+      <p><%= map_point[:name] %><%= map_point[:loc] %></p>
+    <% end %>
   <% end %>
 
   <% if @maps.present? %>
