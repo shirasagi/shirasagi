@@ -26,11 +26,53 @@ class Workflow::PagesController < ApplicationController
         args = { f_uid: @cur_user._id, t_uid: workflow_approver[:user_id],
                  site: @cur_site, page: @item,
                  url: params[:url], comment: params[:workflow_comment] }
-        Workflow::Mailer.request_mail(args).deliver_now
+        Workflow::Mailer.request_mail(args).deliver_now if mail_enabled?(args[:t_uid])
       end
 
       @item.set_workflow_approver_state_to_request
       @item.update
+    end
+
+    def mail_enabled?(target_id)
+      target_user = SS::User.find(target_id) rescue false
+      target_user_email = target_user.email if target_user.present?
+      @cur_user.email.present? && target_user_email.present?
+    end
+
+    def email_blank_ids
+      email_blank_id = []
+      email_blank_id.push(@cur_user._id) if @cur_user.email.blank?
+      if @item.workflow_state == "request"
+        current_level = @item.workflow_current_level
+        current_workflow_approvers = @item.workflow_approvers_at(current_level)
+        current_workflow_approvers.each do |workflow_approver|
+          if @cur_user._id !=workflow_approver[:user_id]
+            approver_user = SS::User.where(id: workflow_approver[:user_id]).first
+            if approver_user
+              approver_user_email = approver_user.email
+              email_blank_id.push(approver_user._id) if approver_user_email.blank?
+            end
+          end
+        end
+      else
+        applicant_user = SS::User.where(id: @item.workflow_user_id).first
+        if applicant_user
+          applicant_user_email = applicant_user.email
+          email_blank_id.push(applicant_user._id) if applicant_user_email.blank?
+        end
+      end
+      email_blank_id
+    end
+
+    def workflow_alert_message
+      ids = email_blank_ids
+      return if ids.blank?
+      message = t("errors.messages.user_email_blank")
+      ids.each do |id|
+        user = SS::User.where(id: id).first
+        message += "\n#{user.name}"
+      end
+      message
     end
 
   public
@@ -45,7 +87,7 @@ class Workflow::PagesController < ApplicationController
 
       if @item.update
         request_approval
-        render json: { workflow_state: @item.workflow_state }
+        render json: { workflow_state: @item.workflow_state, workflow_alert: workflow_alert_message }
       else
         render json: @item.errors.full_messages, status: :unprocessable_entity
       end
@@ -80,18 +122,19 @@ class Workflow::PagesController < ApplicationController
 
         workflow_state = @item.workflow_state
         if workflow_state == @model::WORKFLOW_STATE_APPROVE
+          @item.workflow_state = workflow_state
           # finished workflow
           args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                    site: @cur_site, page: @item,
                    url: params[:url], comment: params[:remand_comment] }
-          Workflow::Mailer.approve_mail(args).deliver_now if args[:t_uid]
+          Workflow::Mailer.approve_mail(args).deliver_now if mail_enabled?(args[:t_uid])
 
           if @item.try(:branch?) && @item.state == "public"
             @item.delete
           end
         end
 
-        render json: { workflow_state: workflow_state }
+        render json: { workflow_state: @item.workflow_state, workflow_alert: workflow_alert_message }
       else
         render json: @item.errors.full_messages, status: :unprocessable_entity
       end
@@ -108,9 +151,9 @@ class Workflow::PagesController < ApplicationController
           args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                    site: @cur_site, page: @item,
                    url: params[:url], comment: params[:remand_comment] }
-          Workflow::Mailer.remand_mail(args).deliver_now if args[:t_uid]
+          Workflow::Mailer.remand_mail(args).deliver_now if mail_enabled?(args[:t_uid])
         end
-        render json: { workflow_state: @item.workflow_state }
+        render json: { workflow_state: @item.workflow_state, workflow_alert: workflow_alert_message }
       else
         render json: @item.errors.full_messages, status: :unprocessable_entity
       end

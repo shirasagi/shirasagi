@@ -26,7 +26,10 @@ $ ->
         workflow_required_counts: required_counts
         remand_comment: $("#remand_comment").prop("value")
         url: "<%= request.url %>"
+        workflow_alert: null
       success: (data) ->
+        if data["workflow_alert"]
+          alert data["workflow_alert"]
         if data["workflow_state"] == "approve" && redirect_location != ""
           location.href = redirect_location
         else
@@ -54,7 +57,6 @@ $ ->
       url: uri
       async: false
       success: (html, status) ->
-        $(html).find("#xxxxxx").html()
         $(".workflow-partial-section").html(html)
       error: (msg, status) ->
         alert(["== Error =="].concat(msg["statusText"]).join("\n"));
