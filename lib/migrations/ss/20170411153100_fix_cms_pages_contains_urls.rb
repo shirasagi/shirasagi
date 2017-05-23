@@ -8,7 +8,7 @@ class SS::Migration20170411153100
 
       item = item.becomes_with_route
       item.set_contains_urls if item.respond_to?(:set_contains_urls)
-      item.set_contains_parts_urls if item.respond_to?(:set_contains_parts_urls)
+      item.set_parts_contains_urls if item.respond_to?(:set_parts_contains_urls)
       begin
         item.set(contains_urls: item.contains_urls)
       rescue => e
