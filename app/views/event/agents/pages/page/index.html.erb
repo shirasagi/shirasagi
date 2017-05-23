@@ -1,5 +1,7 @@
+<% if @cur_page.event_dates.present? %>
 <header class="released">
-  <time datetime="<%= I18n.l @cur_page.date.to_date, format: :iso %>"><%= I18n.l @cur_page.date.to_date, format: :long %></time>
+  <%= raw @cur_page.dates_to_html(:long) %>
 </header>
+<% end %>
 
 <%= render file: "cms/agents/pages/page/index" %>

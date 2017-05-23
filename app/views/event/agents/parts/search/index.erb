@@ -1,7 +1,3 @@
-<%= jquery do %>
-Event_Form.render();
-<% end %>
-
 <%= form_for :item, url: "#{@cur_part.search_url}", method: "get" do %>
   <h2><%= t("event.keyword") %></h2>
   <div><%= text_field_tag :search_keyword, nil, class: "keyword" %></div>
