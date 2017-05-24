@@ -7,13 +7,13 @@ class SS::Migration20170411153100
       next unless item.respond_to?(:contains_urls)
 
       item = item.becomes_with_route
-      item.set_contains_urls if item.respond_to?(:set_contains_urls)
-      item.set_parts_contains_urls if item.respond_to?(:set_parts_contains_urls)
-      begin
-        item.set(contains_urls: item.contains_urls)
-      rescue => e
-        Rails.logger.fatal("ss_file save failed #{id}: #{e.backtrace.join("\n  ")}")
+      if item.respond_to?(:set_contains_urls, true)
+        item.send(:set_contains_urls)
       end
+      if item.respond_to?(:set_parts_contains_urls, true)
+        item.send(:set_parts_contains_urls)
+      end
+      item.set(contains_urls: item.contains_urls)
     end
   end
 end
