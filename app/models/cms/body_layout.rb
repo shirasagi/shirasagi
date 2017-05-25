@@ -1,11 +1,11 @@
 class Cms::BodyLayout
   include Cms::Model::Layout
   include Cms::Addon::BodyLayoutHtml
-  include Cms::Addon::GroupPermission
+  include Cms::SitePermission
   include History::Addon::Backup
 
   store_in collection: "cms_body_layouts"
-  set_permission_name "cms_layouts"
+  set_permission_name "cms_body_layouts", :edit
 
   field :parts, type: SS::Extensions::Words, default: ""
 

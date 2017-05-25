@@ -26,4 +26,9 @@ class Cms::BodyLayoutsController < ApplicationController
         order_by(filename: 1).
         page(params[:page]).per(50)
     end
+
+    def show
+      #raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      render
+    end
 end
