@@ -201,6 +201,26 @@ module SS::Model::User
     restriction == 'api_only'
   end
 
+  def email_enabled?(target = nil)
+    return false if self.email.blank?
+    if target.present?
+      case target
+      when String then target_user = SS::User.find_by(email: target)
+      when Fixnum then target_user = SS::User.find(target) rescue nil
+      when SS::User then target_user = target
+      end
+      return false if target_user.blank?
+      return false if target_user.disabled?
+      target_user_email = target_user.email
+      return false if target_user_email.blank?
+    end
+    true
+  end
+
+  def email_disabled?(target = nil)
+    !email_enabled?(target)
+  end
+
   private
     def dbpasswd_authenticate(in_passwd)
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)

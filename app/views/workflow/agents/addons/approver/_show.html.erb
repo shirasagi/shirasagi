@@ -15,10 +15,15 @@ $ ->
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
     uri[3] = "pages"
+    updatetype = $(this).attr("updatetype")
     redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>"
+    if updatetype == "request"
+      forced_update_option = $("#forced-request").prop("checked")
+    else
+      forced_update_option = $("#forced-update").prop("checked")
     $.ajax
       type: "post"
-      url: uri.join("/")  + "/" + $(this).attr("updatetype") + "_update"
+      url: uri.join("/")  + "/" + updatetype + "_update"
       async: false
       data:
         workflow_comment: $("#workflow_comment").prop("value")
@@ -26,10 +31,11 @@ $ ->
         workflow_required_counts: required_counts
         remand_comment: $("#remand_comment").prop("value")
         url: "<%= request.url %>"
-        workflow_alert: null
+        forced_update_option: forced_update_option
       success: (data) ->
         if data["workflow_alert"]
           alert data["workflow_alert"]
+          return
         if data["workflow_state"] == "approve" && redirect_location != ""
           location.href = redirect_location
         else
@@ -80,6 +86,9 @@ $ ->
                 <%= button_tag t("workflow.button.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
                 <%= button_tag t("workflow.button.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
               </div>
+              <div class="checkbox">
+                <%= check_box_tag 'forced-update', true, @cur_site.forced_update, class: 'forced' %><%= t("errors.messages.forced_update") %>
+              </div>
             </div>
           </div>
         </section>
@@ -115,7 +124,7 @@ $ ->
           <% if @item.workflow_member.present? %>
             <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
           <% elsif @item.workflow_user.present? %>
-            <%= "#{@item.workflow_user.long_name}" %>
+            <%= "#{@item.workflow_user.long_name}(#{@item.workflow_user.email})" %>
           <% else %>
             <%= t("workflow.user_deleted") %>
           <% end %>
@@ -135,7 +144,7 @@ $ ->
             <% user  = SS::User.where(id: workflow_approver[:user_id]).first %>
             <% state = t("workflow.state.#{workflow_approver[:state]}") %>
             <% if user %>
-              <%= "#{workflow_approver[:level]}:#{user.long_name}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+              <%= "#{workflow_approver[:level]}:#{user.long_name}(#{user.email})：#{state}" %><br /><%= workflow_approver[:comment] %><br />
             <% else %>
               <%= "#{workflow_approver[:level]}:#{t("workflow.user_deleted")}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
             <% end %>
