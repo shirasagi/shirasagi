@@ -15,7 +15,7 @@ module Workflow::MemberApprover
 
   def posted_by_options
     %w(admin member).map do |v|
-      [ I18n.t("views.options.posted_by.#{v}"), v ]
+      [ I18n.t("workflow.options.posted_by.#{v}"), v ]
     end
   end
 

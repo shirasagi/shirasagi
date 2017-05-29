@@ -3,7 +3,7 @@
 
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
-      <div class="addon-head"><h2><%= t("ldap.views.confirm.sync") %></h2></div>
+      <div class="addon-head"><h2><%= t("ldap.confirm.sync") %></h2></div>
       <div class="addon-body">
         <%= render file: "_sync" %>
       </div>
@@ -11,7 +11,7 @@
   </div>
 
   <footer class="send">
-    <%= f.submit t("ldap.views.buttons.sync"), class: 'btn-primary sync' %>
+    <%= f.submit t("ldap.buttons.sync"), class: 'btn-primary sync' %>
     <%= f.button t("views.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>

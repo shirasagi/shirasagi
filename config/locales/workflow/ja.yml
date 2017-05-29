@@ -42,6 +42,9 @@ ja:
       required_count:
         all: 全員
         minimum: "%{required_count} 人"
+      posted_by:
+        member: マイページ投稿
+        admin: 管理側投稿
     required_count_label:
       all: 全員の承認が必要
       minimum: "%{required_count} 人の承認が必要"
@@ -49,12 +52,6 @@ ja:
       index: 承認者を選択する
       select: 承認者を設定する
       search: 検索
-
-  views:
-    options:
-      posted_by:
-        member: マイページ投稿
-        admin: 管理側投稿
 
   modules:
     workflow: ワークフロー

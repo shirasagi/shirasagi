@@ -96,10 +96,6 @@ ja:
       board/post: 掲示板
       board/anpi_post: 安否掲示板
 
-  views:
-    notice:
-      posted: 投稿しました。
-
   cms_role:
     read_board_posts: 投稿の閲覧
     edit_board_posts: 投稿の編集

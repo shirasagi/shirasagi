@@ -3,11 +3,10 @@ ja:
     page: フィード
     weather_xml_page: 気象庁防災情報XML
 
-    views:
-      confirm:
-        import: 取り込みますが、よろしいですか？
-      buttons:
-        import: 取込
+    confirm:
+      import: 取り込みますが、よろしいですか？
+    buttons:
+      import: 取込
     messages:
       job_started: |-
         取り込みジョブを開始しました。

@@ -2,11 +2,11 @@
   <%= error_messages_for :item %>
 
 <section class="main-box">
-  <header><h2><%= t("rss.views.confirm.import") %></h2></header>
+  <header><h2><%= t("rss.confirm.import") %></h2></header>
 </section>
 
 <footer class="send">
-  <%= f.submit t("rss.views.buttons.import"), class: :save %>
+  <%= f.submit t("rss.buttons.import"), class: :save %>
   <%= f.button t("views.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>
