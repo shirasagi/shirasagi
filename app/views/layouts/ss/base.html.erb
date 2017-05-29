@@ -23,18 +23,18 @@
 
     <div class="cms">
       <% if @ss_mode == :cms %>
-      <h2><%= link_to :cms, cms_contents_path(@cur_site), class: "current" %></h2>
+      <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
       <% else %>
-      <h2><%= link_to :cms, sns_cms_path %></h2>
+      <h2><%= link_to t('ss.links.cms'), sns_cms_path %></h2>
       <% end %>
     </div>
 
     <% if SS.config.gws.disable.blank? %>
     <div class="gws">
       <% if @ss_mode == :gws %>
-      <h2><%= link_to :gws, gws_portal_path(@cur_site), class: "current" %></h2>
+      <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
       <% else %>
-      <h2><%= link_to :gws, sns_gws_path %></h2>
+      <h2><%= link_to t('ss.links.gws'), sns_gws_path %></h2>
       <% end %>
     </div>
     <% end %>
@@ -75,7 +75,7 @@
             <li><%= link_to *link_params %></li>
           <% end %>
           <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
-          <li><%= link_to :logout, sns_logout_path %></li>
+          <li><%= link_to t('ss.links.logout'), sns_logout_path %></li>
         </ul>
       </div>
     </nav>

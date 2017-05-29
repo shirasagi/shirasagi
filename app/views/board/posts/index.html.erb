@@ -16,27 +16,27 @@ SS_TreeUI.render(".index.topics");
       <% @items.each do |topic| %>
         <tr data-depth="1">
           <nav class="tap-menu">
-            <%= link_to :show, action: :show, id: topic %>
-            <%= link_to :edit, action: :edit, id: topic if topic.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to :reply, action: :new_reply, id: topic if topic.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to :delete, action: :delete, id: topic if topic.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= link_to :view_site, @cur_node.full_url, target: :_blank if @cur_node.public? %>
-            <%= link_to :pc_preview, cms_preview_path(path: @cur_node.preview_path), target: :_blank %>
+            <%= link_to t('ss.links.show'), action: :show, id: topic %>
+            <%= link_to t('ss.links.edit'), action: :edit, id: topic if topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.reply'), action: :new_reply, id: topic if topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.delete'), action: :delete, id: topic if topic.allowed?(:delete, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.view_site'), @cur_node.full_url, target: :_blank if @cur_node.public? %>
+            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: @cur_node.preview_path), target: :_blank %>
           </nav>
           <td class="expandable">
             <%= link_to topic.name, action: :show, id: topic %>
           </td>
           <td><%= topic.updated.strftime("%Y/%m/%d %H:%M") %></td>
-          <td><%= link_to :reply, { action: :new_reply, id: topic }, class: :btn %></td>
+          <td><%= link_to t('ss.links.reply'), { action: :new_reply, id: topic }, class: :btn %></td>
         </tr>
         <% topic.children.order(descendants_updated: -1).each do |comment| %>
           <tr data-depth="2">
             <nav class="tap-menu">
-              <%= link_to :show, action: :show, id: comment %>
-              <%= link_to :edit, action: :edit, id: comment if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-              <%= link_to :delete, action: :delete, id: comment if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
-              <%= link_to :view_site, @cur_node.full_url, target: :_blank if @cur_node.public? %>
-              <%= link_to :pc_preview, cms_preview_path(path: @cur_node.preview_path), target: :_blank %>
+              <%= link_to t('ss.links.show'), action: :show, id: comment %>
+              <%= link_to t('ss.links.edit'), action: :edit, id: comment if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
+              <%= link_to t('ss.links.delete'), action: :delete, id: comment if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
+              <%= link_to t('ss.links.view_site'), @cur_node.full_url, target: :_blank if @cur_node.public? %>
+              <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: @cur_node.preview_path), target: :_blank %>
             </nav>
             <td class="expandable">
               <%= link_to comment.name, action: :show, id: comment %>

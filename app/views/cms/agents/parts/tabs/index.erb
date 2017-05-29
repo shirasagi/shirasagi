@@ -17,7 +17,7 @@ SS_Tabs.render("#cms-tabs-<%= @cur_part.id %>");
       <% end %>
     </div>
     <nav class="feed">
-      <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
+      <%= link_to t('ss.links.more'), tab[:url], class: "more" if tab[:url] %>
       <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
     </nav>
   </article>

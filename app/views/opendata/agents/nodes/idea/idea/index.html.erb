@@ -32,7 +32,7 @@
       <% end %>
     </div>
     <nav class="feed">
-      <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
+      <%= link_to t('ss.links.more'), tab[:url], class: "more" if tab[:url] %>
       <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
     </nav>
   </article>
@@ -48,6 +48,6 @@
   <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
   <%= render file: "opendata/agents/nodes/idea/idea/tags" %>
   <% if @tags.popped? %>
-  <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>
+  <nav><%= link_to t('ss.links.more'), "#{@node_url}tags/", class: "more" %></nav>
   <% end %>
 </article>

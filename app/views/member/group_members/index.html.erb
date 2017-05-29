@@ -6,7 +6,7 @@
       <li class="list-item">
         <div class="info">
           <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
-          <%= link_to :parent_directory, link, class: "up" %>
+          <%= link_to t('ss.links.parent_directory'), link, class: "up" %>
         </div>
       </li>
     <% end %>
@@ -14,9 +14,9 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="tap-menu">
-        <%= link_to :show, action: :show, id: item if @cur_member_group.allowed?(:read, @cur_user, site: @cur_site) %>
-        <%= link_to :edit, action: :edit, id: item if @cur_member_group.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :delete, action: :delete, id: item if @cur_member_group.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.show'), action: :show, id: item if @cur_member_group.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: item if @cur_member_group.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: item if @cur_member_group.allowed?(:delete, @cur_user, site: @cur_site) %>
       </nav>
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>

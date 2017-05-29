@@ -49,9 +49,9 @@ table.rdf_classes__properties {
           <td class="checkbox">
             <input type="checkbox" name="ids[]" value="<%= prop.id %>" />
             <nav class="tap-menu">
-              <%= link_to :show, controller: :props, action: :show, class_id: @item, id: prop %>
-              <%= link_to :edit, controller: :props, action: :edit, class_id: @item, id: prop %>
-              <%= link_to :delete, controller: :props, action: :unlink, class_id: @item, id: prop %>
+              <%= link_to t('ss.links.show'), controller: :props, action: :show, class_id: @item, id: prop %>
+              <%= link_to t('ss.links.edit'), controller: :props, action: :edit, class_id: @item, id: prop %>
+              <%= link_to t('ss.links.delete'), controller: :props, action: :unlink, class_id: @item, id: prop %>
             </nav>
           </td>
           <td class="name"><%= link_to prop.preferred_label, controller: :props, action: :show, vocab_id: @item.vocab, class_id: @item, id: prop %></td>

@@ -1,10 +1,10 @@
 <% @tap_menu = proc do |item| %>
-  <%= link_to :show, action: :show, vocab_id: item.vocab, id: item %>
-  <%= link_to :edit, action: :edit, vocab_id: item.vocab, id: item %>
+  <%= link_to t('ss.links.show'), action: :show, vocab_id: item.vocab, id: item %>
+  <%= link_to t('ss.links.edit'), action: :edit, vocab_id: item.vocab, id: item %>
   <% if @rdf_class.present? %>
-      <%= link_to :delete, action: :unlink, vocab_id: item.vocab, id: item %>
+      <%= link_to t('ss.links.delete'), action: :unlink, vocab_id: item.vocab, id: item %>
   <% else %>
-      <%= link_to :delete, action: :delete, vocab_id: item.vocab, id: item %>
+      <%= link_to t('ss.links.delete'), action: :delete, vocab_id: item.vocab, id: item %>
   <% end %>
 <% end %>
 

@@ -24,9 +24,9 @@ $ ->
 
     <span class="upload-menu-new">
       <% if @cur_node %>
-        <%= link_to :upload, cms_apis_node_temp_files_path, class: "ajax-box btn" %>
+        <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path, class: "ajax-box btn" %>
       <% else %>
-        <%= link_to :upload, cms_apis_temp_files_path, class: "ajax-box btn" %>
+        <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn" %>
       <% end %>
     </span>
     <span class="upload-menu-select">

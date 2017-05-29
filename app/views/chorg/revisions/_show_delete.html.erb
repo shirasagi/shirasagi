@@ -9,9 +9,9 @@
         <td>
           <%= link_to changeset.delete_description, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
           <nav class="tap-menu">
-            <%= link_to :show, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
-            <%= link_to :edit, edit_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
-            <%= link_to :delete, delete_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to t('ss.links.show'), chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to t('ss.links.edit'), edit_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to t('ss.links.delete'), delete_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
           </nav>
         </td>
       </tr>
