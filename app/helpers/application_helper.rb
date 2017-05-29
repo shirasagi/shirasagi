@@ -7,11 +7,6 @@ module ApplicationHelper
     end
   end
 
-  def t(key, opts = {})
-    opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
-    I18n.t key, opts.merge(default: key.to_s.humanize)
-  end
-
   def br(str)
     h(str.to_s).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
   end
