@@ -2,12 +2,12 @@
 <%= error_messages_for :item %>
 
 <section class="main-box">
-  <header><h2><%= t("views.role_setting") %></h2></header>
+  <header><h2><%= t("ss.role_setting") %></h2></header>
 
   <dl class="see">
-    <dt><%= t("views.group_users") %></dt>
+    <dt><%= t("ss.group_users") %></dt>
     <dd><%= @item.users.map(&:name).join(", ") %></dd>
-    <dt><%= t("views.role") %></dt>
+    <dt><%= t("ss.role") %></dt>
     <dd>
       <%= f.hidden_field "cms_role_ids[]", value: "" %>
       <% Cms::Role.site(@cur_site).order_by(name: 1).each do |role| %>

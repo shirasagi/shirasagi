@@ -15,7 +15,7 @@ module Member::MypageHelper
   end
 
   def required_label
-    content_tag('span', t('views.required_field'), class: :required)
+    content_tag('span', t("ss.required_field"), class: :required)
   end
 
   def remarks(key, html_wrap = true, options = {})

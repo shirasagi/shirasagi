@@ -1,33 +1,24 @@
 ja:
-  views:
-    action: アクション
-    addon: アドオン
-    all: すべて
+  ss:
     basic_info: 基本情報
-    meta: メタ情報
     config: 設定
     download: ダウンロード
     file: ファイル
+    group_users: 所属ユーザー
     image: 画像
-    resize_image: 画像リサイズ
     import: インポート
     import_log: インポートログ
     login: ログイン
     logout: ログアウト
     module: モジュール
     regexp: 正規表現
-    upload: アップロード
-    url: URL
+    resize_image: 画像リサイズ
     role: ロール
     role_setting: ロール一括設定
-    group_users: 所属ユーザー
-    multi_select:
-      selectable_head: 選択候補
-      selection_head: 選択済み
     required_field: ※必須入力
     search_result: 検索結果
+    url: URL
 
-  ss:
     views:
       login/login:
         id: ユーザーIDまたはメールアドレス

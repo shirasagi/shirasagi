@@ -11,7 +11,7 @@
 
   <span id="my-notice"></span>
   <%= link_to "#{@cur_member.name}さん", "#{mypage_path}", class: "member", rel: "nofollow" %>
-  <%= link_to t("views.logout"), "#{member_login_path}logout.html", class: "logout", rel: "nofollow" %>
+  <%= link_to t("ss.logout"), "#{member_login_path}logout.html", class: "logout", rel: "nofollow" %>
 <% else %>
-  <%= link_to t("views.login"), "#{mypage_path}", class: "login", rel: "nofollow" %>
+  <%= link_to t("ss.login"), "#{mypage_path}", class: "login", rel: "nofollow" %>
 <% end %>

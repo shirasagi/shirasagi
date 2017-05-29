@@ -27,7 +27,7 @@ $(".file").on("change", function() {
       <dt><%= @model.t :import_date %><%= @model.tt :import_date %></dt>
       <dd><%= f.text_field :import_date, class: "date js-datetime" %></dd>
 
-      <dt><%= t "views.import_log" %></dt>
+      <dt><%= t "ss.import_log" %></dt>
       <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
     </dl>
   </section>

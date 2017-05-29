@@ -19,7 +19,7 @@ SS.ajaxDelete ".user-files .delete"
 
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
-      <%= f.select :resizing, @model.resizing_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %>
+      <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
       <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;" %>
     </div>
 
