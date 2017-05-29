@@ -39,8 +39,6 @@
 //= require map/openlayers/member/photo/form
 //= require webmail/lib/mail
 
-<% environment.context_class.instance_eval { include ApplicationHelper } %>
-
 ##
 #  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 ##
@@ -179,7 +177,7 @@ class @SS
 
   @ajaxDelete:(elem, params = {}) ->
     $(elem).click (e) ->
-      return false if !confirm("<%= t "ss.confirm.delete" %>")
+      return false if !confirm("<%= I18n.t "ss.confirm.delete" %>")
       self = $(this)
       defaults = {
         type: "DELETE",
@@ -209,7 +207,7 @@ class @SS
   @confirmUnloading: ->
     $("input[type=text],textarea,select").change ->
       $(window).on "beforeunload", ->
-        return "<%= t('ss.confirm.unload') %>"
+        return "<%= I18n.t 'ss.confirm.unload' %>"
     $("input[type=submit]").click ->
       $(window).off "beforeunload"
 
