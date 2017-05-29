@@ -27,16 +27,6 @@ ja:
     required_field: ※必須入力
     search_result: 検索結果
 
-    task:
-      started: 開始しました。
-      interrupted: 中断命令を送信しました。
-      confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
-    units:
-      count: 件
-      mega_byte: MB
-      days_after: 日後
-      mobile_size: KB(キロバイト)
-
   ss:
     views:
       login/login:
@@ -237,6 +227,15 @@ ja:
       restriction:
         none: 制限なし
         api_only: API利用のみ
+    tasks:
+      started: 開始しました。
+      interrupted: 中断命令を送信しました。
+      confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
+    units:
+      count: 件
+      mega_byte: MB
+      days_after: 日後
+      mobile_size: KB(キロバイト)
 
   modules:
     addons:

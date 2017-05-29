@@ -21,12 +21,12 @@ module SS::ExecFilter
 
     SS::RakeRunner.run_async *task_command
 
-    redirect_to({ action: :index }, { notice: t("views.task.started") })
+    redirect_to({ action: :index }, { notice: t("ss.tasks.started") })
   end
 
   def stop
     @item.update_attributes interrupt: "stop"
-    redirect_to({ action: :index }, { notice: t("views.task.interrupted") })
+    redirect_to({ action: :index }, { notice: t("ss.tasks.interrupted") })
   end
 
   def reset

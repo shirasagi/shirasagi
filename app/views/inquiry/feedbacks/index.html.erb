@@ -15,7 +15,7 @@
 <% @index_meta = proc do |item| %>
   <span class="filename"><%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="count"><%= item.count %><%= t "views.units.count" %></span>
+  <span class="count"><%= item.count %><%= t "ss.units.count" %></span>
 <% end %>
 
 <%= render file: "cms/crud/index" %>
