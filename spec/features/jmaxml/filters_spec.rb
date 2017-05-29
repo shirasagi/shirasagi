@@ -25,7 +25,7 @@ describe "jmaxml/filters", dbscope: :example do
       #
       visit show_path
       click_on I18n.t('jmaxml.manage_filter')
-      click_on I18n.t('views.links.new')
+      click_on I18n.t('ss.links.new')
 
       within 'form' do
         fill_in 'item[name]', with: name1
@@ -50,7 +50,7 @@ describe "jmaxml/filters", dbscope: :example do
       visit show_path
       click_on I18n.t('jmaxml.manage_filter')
       click_on name1
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within 'form' do
         fill_in 'item[name]', with: name2
@@ -72,7 +72,7 @@ describe "jmaxml/filters", dbscope: :example do
       visit show_path
       click_on I18n.t('jmaxml.manage_filter')
       click_on name2
-      click_on I18n.t('views.links.delete')
+      click_on I18n.t('ss.links.delete')
 
       within 'form' do
         click_on I18n.t('views.buttons.delete')

@@ -72,44 +72,6 @@ ja:
       download: ダウンロードしてよろしいですか？
       set_tag: タグを設定してよろしいですか？
       reset_tag: タグを削除してよろしいですか？
-    links:
-      cms: サイト管理
-      gws: グループ
-      new: 新規作成
-      post: 投稿
-      new_post: 新規投稿
-      show: 詳細を見る
-      edit: 編集する
-      move: 移動する
-      copy: 複製する
-      input: 入力する
-      delete: 削除する
-      import: インポート
-      reply: 返信する
-      back: 戻る
-      back_to_show: 詳細へ戻る
-      back_to_index: 一覧へ戻る
-      parent_directory: 上の階層へ
-      preview: プレビュー
-      pc_preview: PCプレビュー
-      mobile_preview: 携帯プレビュー
-      pc: PC
-      mobile: 携帯
-      view_site: 公開画面を見る
-      open: 開く
-      change: 変更する
-      more: もっと見る
-      select: 選択する
-      delete_all: すべて削除する
-      markdown_help: Markdown ヘルプ
-      split: 分割する
-      integrate: 統合する
-      download: ダウンロード
-      import: インポート
-      resize: リサイズする
-      set_tag: タグ設定
-      reset_tags: タグ解除
-      upload: アップロード
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -207,6 +169,44 @@ ja:
       login/login:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
+    links:
+      cms: サイト管理
+      gws: グループ
+      new: 新規作成
+      post: 投稿
+      new_post: 新規投稿
+      show: 詳細を見る
+      edit: 編集する
+      move: 移動する
+      copy: 複製する
+      input: 入力する
+      delete: 削除する
+      import: インポート
+      reply: 返信する
+      back: 戻る
+      back_to_show: 詳細へ戻る
+      back_to_index: 一覧へ戻る
+      parent_directory: 上の階層へ
+      preview: プレビュー
+      pc_preview: PCプレビュー
+      mobile_preview: 携帯プレビュー
+      pc: PC
+      mobile: 携帯
+      view_site: 公開画面を見る
+      open: 開く
+      change: 変更する
+      more: もっと見る
+      select: 選択する
+      delete_all: すべて削除する
+      markdown_help: Markdown ヘルプ
+      split: 分割する
+      integrate: 統合する
+      download: ダウンロード
+      import: インポート
+      resize: リサイズする
+      set_tag: タグ設定
+      reset_tags: タグ解除
+      upload: アップロード
     apis:
       groups:
         index: グループを選択する

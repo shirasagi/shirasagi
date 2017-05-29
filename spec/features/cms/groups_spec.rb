@@ -101,7 +101,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       visit index_path
 
       click_on group_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[expiration_date]", with: expiration_date.strftime("%Y/%m/%d %H:%M")
       click_on I18n.t("views.buttons.save")
@@ -118,7 +118,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       expect(page).to have_css(".expandable", text: group_name)
 
       click_on group_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[contact_tel]", with: contact_tel
       click_on I18n.t("views.buttons.save")

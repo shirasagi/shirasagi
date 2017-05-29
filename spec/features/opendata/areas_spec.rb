@@ -31,8 +31,8 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
 
       # create
       visit node_nodes_path(site, parent_node)
-      click_on I18n.t('views.links.new')
-      click_on I18n.t('views.links.change')
+      click_on I18n.t('ss.links.new')
+      click_on I18n.t('ss.links.change')
       within 'article.mod-opendata' do
         click_on I18n.t('cms.nodes.opendata/area')
       end
@@ -48,12 +48,12 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
       end
 
       # read
-      click_on I18n.t('views.links.back_to_index')
+      click_on I18n.t('ss.links.back_to_index')
       click_on name
       click_on I18n.t('cms.node_config')
 
       # update
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
       fill_in 'item[keywords]', with: keywords.join(' ')
       click_on I18n.t('views.buttons.save')
       Opendata::Node::Area.first.tap do |node|
@@ -64,7 +64,7 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
 
       # delete
       click_on I18n.t('cms.node_config')
-      click_on I18n.t('views.links.delete')
+      click_on I18n.t('ss.links.delete')
       click_on I18n.t('views.buttons.delete')
       expect(Opendata::Node::Area.count).to eq 0
     end

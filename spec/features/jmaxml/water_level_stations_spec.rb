@@ -17,7 +17,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
       # create
       #
       visit index_path
-      click_on I18n.t('views.links.new')
+      click_on I18n.t('ss.links.new')
 
       within 'form' do
         fill_in 'item[code]', with: code
@@ -39,7 +39,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
       #
       visit index_path
       click_on name
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within 'form' do
         fill_in 'item[region_name]', with: region_name2
@@ -59,7 +59,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
       #
       visit index_path
       click_on name
-      click_on I18n.t('views.links.delete')
+      click_on I18n.t('ss.links.delete')
 
       within 'form' do
         click_on I18n.t('views.buttons.delete')

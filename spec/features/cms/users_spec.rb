@@ -261,7 +261,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(page).to have_css(".list-item .title", text: user_name)
 
       click_on user_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[account_expiration_date]", with: account_expiration_date.strftime("%Y/%m/%d %H:%M")
       click_on I18n.t("views.buttons.save")
@@ -278,7 +278,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(page).to have_css(".list-item .title", text: user_name)
 
       click_on user_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[kana]", with: kana
       click_on I18n.t("views.buttons.save")
@@ -307,7 +307,7 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       click_on user_name
       expect(page).to have_css("#addon-basic dd", text: group1.name)
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[kana]", with: kana
       click_on I18n.t("views.buttons.save")

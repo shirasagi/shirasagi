@@ -50,7 +50,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       #
       # activate opendata integration
       #
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within '#addon-cms-agents-addons-opendata_ref-dataset' do
         find('.addon-head h2').click
@@ -108,7 +108,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         click_on article_page.name
       end
 
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
       click_on I18n.t('views.buttons.publish_save')
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 

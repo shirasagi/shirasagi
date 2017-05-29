@@ -18,7 +18,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
       # create
       #
       visit index_path
-      click_on I18n.t('views.links.new')
+      click_on I18n.t('ss.links.new')
 
       within 'form' do
         select model.model_name.human, from: 'item[in_type]'
@@ -54,7 +54,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
       #
       visit index_path
       click_on name1
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within 'form' do
         fill_in 'item[name]', with: name2
@@ -77,7 +77,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
       #
       visit index_path
       click_on name2
-      click_on I18n.t('views.links.delete')
+      click_on I18n.t('ss.links.delete')
 
       within 'form' do
         click_on I18n.t('views.buttons.delete')
