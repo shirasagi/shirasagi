@@ -2,6 +2,14 @@ module Cms::GeneratorFilter::Rss
   extend ActiveSupport::Concern
 
   private
+    def set_main_path
+      if @cur_site.subdir.present?
+        @cur_main_path = @cur_path.sub(/^\/#{@cur_site.subdir}/, "")
+      else
+        @cur_main_path = @cur_path.dup
+      end
+    end
+
     def generate_node_rss(node, opts = {})
       path = opts[:url] || "#{node.filename}/index.html"
       return if Cms::Page.site(node.site).and_public.filename(path).first
@@ -9,12 +17,7 @@ module Cms::GeneratorFilter::Rss
       @cur_path   = opts[:url] || "#{node.url}rss.xml"
       @cur_site   = node.site
       @csrf_token = false
-
-      if @cur_site.subdir.present?
-        @cur_main_path = @cur_path.sub(/^\/#{@cur_site.subdir}/, "")
-      else
-        @cur_main_path = @cur_path.dup
-      end
+      @cur_main_path = set_main_path
 
       params.merge! opts[:params] if opts[:params]
 

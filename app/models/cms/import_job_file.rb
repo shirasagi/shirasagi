@@ -18,7 +18,6 @@ class Cms::ImportJobFile
   before_validation :set_import_date
   before_save :save_files
 
-  public
     def save_with_import
       if !cur_node
         # save root node
@@ -40,7 +39,7 @@ class Cms::ImportJobFile
       end
 
       if save
-        Cms::ImportFilesJob.bind(site_id: site.id).perform_later()
+        Cms::ImportFilesJob.bind(site_id: site.id).perform_later
         return true
       else
         self.import_date = nil

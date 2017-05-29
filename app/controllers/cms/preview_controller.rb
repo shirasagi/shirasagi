@@ -80,6 +80,14 @@ class Cms::PreviewController < ApplicationController
       filters << :preview
     end
 
+    def get_thumb_size(action, thumb, item, size)
+      if action == "thumb"
+        thumb = item.thumb
+        thumb = item.thumb(size) if size
+        item = thumb if thumb
+      end
+    end
+
     def x_sendfile(file = @file)
       return if file =~ /\.(ht|x)ml$/
       return if file =~ /\.part\.json$/
@@ -101,11 +109,7 @@ class Cms::PreviewController < ApplicationController
           send_thumb @item.read, type: @item.content_type, filename: @item.filename,
             disposition: :inline, width: width, height: height
         else
-          if action == "thumb"
-            thumb = @item.thumb
-            thumb = @item.thumb(size) if size
-            @item = thumb if thumb
-          end
+          get_thumb_size(action, thumb, @item, size)
 
           if @thumb_width && @thumb_height
             send_thumb @item.read, type: @item.content_type, filename: @item.filename,

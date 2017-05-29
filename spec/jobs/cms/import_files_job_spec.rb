@@ -4,7 +4,9 @@ describe Cms::ImportFilesJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:cms_node_import_node, name: "import") }
   let!(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
-  let!(:import_job_file) { create(:cms_import_job_file, site: site, node: node, name: "sample", basename: "sample", in_file: in_file) }
+  let!(:import_job_file) do
+    create(:cms_import_job_file, site: site, node: node, name: "sample", basename: "sample", in_file: in_file)
+  end
 
   describe ".perform_later" do
     before do

@@ -39,13 +39,14 @@ def find_random_page
   Cms::Page.find(-1) unless count > 0
 
   # ref: http://stackoverflow.com/questions/7759250/mongoid-random-document
-  (0..(count - 1)).sort_by { rand }.slice(0, 1).collect! do
-    |i| criteria.skip(i).first
+  (0..(count - 1)).sort_by { rand }.slice(0, 1).collect! do |i|
+    criteria.skip(i).first
   end.first
 end
 
 def find_random_node
-  criteria = Cms::Node.site(@site).where(:route.in =>
+  criteria = Cms::Node.site(@site).where(
+    :route.in =>
     [
      "cms/page", "cms/node", "article/page",
      "category/page", "category/node",
@@ -56,8 +57,8 @@ def find_random_node
   Cms::Page.find(-1) unless count > 0
 
   # ref: http://stackoverflow.com/questions/7759250/mongoid-random-document
-  (0..(count - 1)).sort_by { rand }.slice(0, 1).collect! do
-    |i| criteria.skip(i).first
+  (0..(count - 1)).sort_by { rand }.slice(0, 1).collect! do |i|
+    criteria.skip(i).first
   end.first
 end
 
