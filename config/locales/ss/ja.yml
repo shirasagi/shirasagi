@@ -6,7 +6,6 @@ ja:
     basic_info: 基本情報
     meta: メタ情報
     config: 設定
-    confirm: 確認
     download: ダウンロード
     file: ファイル
     image: 画像
@@ -28,7 +27,7 @@ ja:
     required_field: ※必須入力
     search_result: 検索結果
 
-    button:
+    buttons:
       login: ログイン
       save: 保存
       new: 新規作成
@@ -60,6 +59,8 @@ ja:
       request: 公開申請
       split: 分割
       integrate: 統合
+      upload: アップロード
+      download: ダウンロード
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。

@@ -13,8 +13,8 @@
     <% if @crud_buttons %>
       <% @crud_buttons.call f %>
     <% else %>
-      <%= f.submit t("views.button.new"), class: 'btn-primary save' %>
-      <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+      <%= f.submit t("views.buttons.new"), class: 'btn-primary save' %>
+      <%= f.button t("views.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
     <% end %>
   </footer>
 <% end %>

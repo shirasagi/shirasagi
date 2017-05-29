@@ -66,7 +66,7 @@
   </div>
 
   <footer class="send">
-    <%= f.submit t("views.button.save"), class: :save %>
-    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :column_types)}'; return false;" %>
+    <%= f.submit t("views.buttons.save"), class: :save %>
+    <%= f.button t("views.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :column_types)}'; return false;" %>
   </footer>
 <% end %>

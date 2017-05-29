@@ -68,7 +68,7 @@ describe "job_cms_logs", dbscope: :example do
 
       within "form" do
         select I18n.t("history.save_term.all_delete"), from: "item_save_term"
-        click_button I18n.t("button.delete", scope: "views")
+        click_button I18n.t("views.buttons.delete")
       end
       expect(status_code).to eq 200
       expect(Job::Log.count).to eq 0

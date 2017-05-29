@@ -24,7 +24,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           within "form#item-form" do
             fill_in "item[name]", with: unique_id
             fill_in "item[labels][ja]", with: unique_id
-            click_button I18n.t("views.button.save")
+            click_button I18n.t("views.buttons.save")
           end
           expect(status_code).to eq 200
           expect(current_path).not_to eq new_path
@@ -51,7 +51,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           visit edit_path
           within "form#item-form" do
             fill_in "item[labels][ja]", with: "modify"
-            click_button I18n.t("views.button.save")
+            click_button I18n.t("views.buttons.save")
           end
           expect(current_path).not_to eq sns_login_path
           expect(page).to have_no_css("form#item-form")
@@ -65,7 +65,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
         it do
           visit delete_path
           within "form" do
-            click_button I18n.t("views.button.delete")
+            click_button I18n.t("views.buttons.delete")
           end
           expect(current_path).to eq index_path
         end
@@ -90,7 +90,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           within "form#item-form" do
             fill_in "item[name]", with: unique_id
             fill_in "item[labels][ja]", with: unique_id
-            click_button I18n.t("views.button.save")
+            click_button I18n.t("views.buttons.save")
           end
           expect(status_code).to eq 200
           expect(current_path).not_to eq new_path
@@ -117,7 +117,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           visit edit_path
           within "form#item-form" do
             fill_in "item[labels][ja]", with: "modify"
-            click_button I18n.t("views.button.save")
+            click_button I18n.t("views.buttons.save")
           end
           expect(current_path).not_to eq sns_login_path
           expect(page).to have_no_css("form#item-form")
@@ -131,7 +131,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
         it do
           visit unlink_path
           within "form" do
-            click_button I18n.t("views.button.delete")
+            click_button I18n.t("views.buttons.delete")
           end
           expect(current_path).to eq index_path
           within "ul.list-items" do
@@ -148,7 +148,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
           visit import_path
           within "form#item-form" do
             check "item_ids_#{item.id}"
-            click_button I18n.t("rdf.button.import")
+            click_button I18n.t("rdf.buttons.import")
           end
           expect(current_path).to eq index_path
           within "ul.list-items" do

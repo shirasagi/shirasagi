@@ -6,7 +6,7 @@ ja:
     views:
       confirm:
         import: 取り込みますが、よろしいですか？
-      button:
+      buttons:
         import: 取込
     messages:
       job_started: |-

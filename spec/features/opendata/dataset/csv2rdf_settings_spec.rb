@@ -60,7 +60,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
       expect(current_path).to eq header_size_path
 
       within "form#item-form" do
-        click_button I18n.t("opendata.button.next")
+        click_button I18n.t("opendata.buttons.next")
       end
 
       expect(status_code).to eq 200
@@ -84,7 +84,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
       rdf_class = Rdf::Class.first
       within "form#item-form" do
         choose "item_class_id_#{rdf_class.id}"
-        click_button I18n.t("opendata.button.next")
+        click_button I18n.t("opendata.buttons.next")
       end
 
       expect(status_code).to eq 200
@@ -107,7 +107,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
       expect(current_path).to eq column_types_path
 
       within "form#item-form" do
-        click_button I18n.t("opendata.button.next")
+        click_button I18n.t("opendata.buttons.next")
       end
 
       expect(status_code).to eq 200
@@ -115,7 +115,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
 
       perform_enqueued_jobs do
         within "form#item-form" do
-          click_button I18n.t("opendata.button.build")
+          click_button I18n.t("opendata.buttons.build")
         end
       end
 

@@ -38,7 +38,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       end
       fill_in 'item[name]', with: name
       fill_in 'item[basename]', with: basename
-      click_on I18n.t('views.button.save')
+      click_on I18n.t('views.buttons.save')
 
       expect(Opendata::Node::Category.count).to eq 1
       Opendata::Node::Category.first.tap do |node|
@@ -55,7 +55,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       # update
       click_on I18n.t('views.links.edit')
       fill_in 'item[keywords]', with: keywords.join(' ')
-      click_on I18n.t('views.button.save')
+      click_on I18n.t('views.buttons.save')
       Opendata::Node::Category.first.tap do |node|
         expect(node.name).to eq name
         expect(node.filename).to end_with basename
@@ -65,7 +65,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       # delete
       click_on I18n.t('cms.node_config')
       click_on I18n.t('views.links.delete')
-      click_on I18n.t('views.button.delete')
+      click_on I18n.t('views.buttons.delete')
       expect(Opendata::Node::Category.count).to eq 0
     end
   end

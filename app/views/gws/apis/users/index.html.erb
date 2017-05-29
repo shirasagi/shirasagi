@@ -27,7 +27,7 @@
       <dt><%= t "mongoid.models.gws/user" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit  t("views.button.search"), class: :btn %>
+        <%= f.submit  t("views.buttons.search"), class: :btn %>
       </dd>
     </dl>
   <% end %>

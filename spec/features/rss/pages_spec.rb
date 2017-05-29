@@ -33,7 +33,7 @@ describe "rss_pages", dbscope: :example do
       visit import_path
       expect(status_code).to eq 200
       expect(current_path).to eq import_path
-      click_button I18n.t("rss.views.button.import")
+      click_button I18n.t("rss.views.buttons.import")
     end
 
     context "with item" do

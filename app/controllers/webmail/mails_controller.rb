@@ -130,7 +130,7 @@ class Webmail::MailsController < ApplicationController
       @item = @model.new
       @item.attributes = get_params
 
-      if params[:commit] == I18n.t('views.button.draft_save')
+      if params[:commit] == I18n.t('views.buttons.draft_save')
         notice = nil
         resp = @item.save_draft
       else

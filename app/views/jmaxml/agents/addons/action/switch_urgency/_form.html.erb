@@ -16,7 +16,7 @@
       <% if @item.urgency_layout.present? %>
           <tr data-id="<%= @item.urgency_layout.id %>">
             <td><%= f.hidden_field "urgency_layout_id", value: @item.urgency_layout.id %> <%= @item.urgency_layout.name %></td>
-            <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+            <td style="width: 20%;"><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
       <% end %>
       </tbody>

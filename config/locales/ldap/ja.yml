@@ -4,7 +4,7 @@ ja:
     import: インポート
     result: 同期結果
     views:
-      button:
+      buttons:
         import: インポート
         sync: 同期
       confirm:

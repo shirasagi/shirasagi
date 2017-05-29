@@ -59,7 +59,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_public').trigger('click')
       end
-      click_on I18n.t('views.button.publish_save')
+      click_on I18n.t('views.buttons.publish_save')
 
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
       article_page.reload
@@ -109,7 +109,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       end
 
       click_on I18n.t('views.links.edit')
-      click_on I18n.t('views.button.publish_save')
+      click_on I18n.t('views.buttons.publish_save')
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
       # completely change file ids

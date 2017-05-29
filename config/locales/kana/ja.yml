@@ -10,7 +10,7 @@ ja:
     views:
       links:
         build_kana_dictionary: 辞書反映
-      button:
+      buttons:
         build_kana_dictionary: 反映
       dictionaries/build_confirmation:
         build_header: 辞書を反映してよろしいですか？

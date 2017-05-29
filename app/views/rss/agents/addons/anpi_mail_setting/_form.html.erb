@@ -36,7 +36,7 @@
       <% @item.target_regions.each do |region| %>
         <tr data-id="<%= region.id %>">
           <td><%= f.hidden_field "target_region_ids[]", value: region.id %> <%= region.name %></td>
-          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          <td style="width: 20%;"><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -62,7 +62,7 @@
       <% if @item.my_anpi_post.present? %>
         <tr data-id="<%= @item.my_anpi_post.id %>">
           <td><%= f.hidden_field "my_anpi_post_id", value: @item.my_anpi_post.id %> <%= @item.my_anpi_post.name %></td>
-          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          <td style="width: 20%;"><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -88,7 +88,7 @@
       <% if @item.anpi_mail.present? %>
         <tr data-id="<%= @item.anpi_mail.id %>">
           <td><%= f.hidden_field "anpi_mail_id", value: @item.anpi_mail.id %> <%= @item.anpi_mail.name %></td>
-          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          <td style="width: 20%;"><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>

@@ -1,9 +1,9 @@
 <%= jquery do %>
 <% if @app.allowed?(:release, @cur_user, site: @cur_site) %>
-$(".save").val("<%= t("views.button.closed_save") %>");
+$(".save").val("<%= t("views.buttons.closed_save") %>");
 $("<input />").attr("type", "submit")
   .attr("name", "publish_save")
-  .attr("value", "<%= t("views.button.publish_save") %>")
+  .attr("value", "<%= t("views.buttons.publish_save") %>")
   .attr("class", "publish_save")
   .insertAfter("#item-form input.save");
 <% end %>

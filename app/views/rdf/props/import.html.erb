@@ -5,7 +5,7 @@
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= select_tag "s[vocab]",  options_for_select(@vocab_options, params[:s][:vocab]) %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('views.button.search') %>" />
+    <input type="submit" value="<%= t('views.buttons.search') %>" />
   <% end %>
 </div>
 
@@ -45,7 +45,7 @@ table.rdf-props {
   <%= paginate @items if @items.try(:current_page) %>
 
   <footer class="send">
-    <%= f.submit t("rdf.button.import"), class: :save %>
-    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    <%= f.submit t("rdf.buttons.import"), class: :save %>
+    <%= f.button t("views.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>

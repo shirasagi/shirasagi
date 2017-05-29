@@ -22,7 +22,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
 
       within 'form' do
         select model.model_name.human, from: 'item[in_type]'
-        click_on I18n.t('views.button.new')
+        click_on I18n.t('views.buttons.new')
       end
 
       within 'form' do
@@ -36,7 +36,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
         click_on region.name
       end
       within 'form' do
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('views.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -59,7 +59,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
       within 'form' do
         fill_in 'item[name]', with: name2
         uncheck 'item_sub_type_warning'
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('views.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -80,7 +80,7 @@ describe "jmaxml/trigger/tsunami_infos", dbscope: :example, js: true do
       click_on I18n.t('views.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.button.delete')
+        click_on I18n.t('views.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 

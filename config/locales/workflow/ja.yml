@@ -20,7 +20,7 @@ ja:
       pending: 下位承認待ち
       remand: 差し戻し
       cancelled: 申請キャンセル
-    button:
+    buttons:
       select: 選択
       cancel: 取消
       request: 申請

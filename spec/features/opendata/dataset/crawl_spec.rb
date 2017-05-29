@@ -27,7 +27,7 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
       visit index_path
       check "s_search_updated"
       check "s_search_deleted"
-      click_button I18n.t("views.button.search")
+      click_button I18n.t("views.buttons.search")
       expect(current_path).not_to eq sns_login_path
     end
   end
@@ -46,7 +46,7 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
      it "#index" do
        visit index_path
        check "s_search_updated"
-       click_button I18n.t("views.button.search")
+       click_button I18n.t("views.buttons.search")
        expect(current_path).not_to eq sns_login_path
      end
 
@@ -66,7 +66,7 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
      it "#index" do
        visit index_path
        check "s_search_deleted"
-       click_button I18n.t("views.button.search")
+       click_button I18n.t("views.buttons.search")
        expect(current_path).not_to eq sns_login_path
      end
 

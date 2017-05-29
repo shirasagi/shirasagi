@@ -12,7 +12,7 @@
       <dt><%= t "mongoid.models.webmail/address" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params.dig(:s, :keyword) %>
-        <%= f.submit  t("views.button.search"), class: :btn %>
+        <%= f.submit  t("views.buttons.search"), class: :btn %>
       </dd>
     </dl>
   <% end %>

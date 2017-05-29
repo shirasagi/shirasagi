@@ -9,7 +9,7 @@
 </div>
 
 <footer class="send">
-  <%= f.submit t("views.button.delete"), class: :delete %>
-  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  <%= f.submit t("views.buttons.delete"), class: :delete %>
+  <%= f.button t("views.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>
 <% end %>

@@ -3,7 +3,7 @@
 <div class="mod-map">
   <div class="location-search">
     <%= text_field_tag :keyword, nil, class: "keyword", placeholder: t("map.search") %>
-    <%= button_tag t("views.button.search"), { type: :button, class: "btn" } %>
+    <%= button_tag t("views.buttons.search"), { type: :button, class: "btn" } %>
   </div>
   <div id="map-canvas" style="width: 100%; height: 320px"></div>
   <dl class="marker-setting">
@@ -23,9 +23,9 @@
           <%= text_area_tag "item[map_points][][text]", nil, class: "marker-text", placeholder: @item.t(:marker_text) %>
         </p>
         <p>
-          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker btn" } %>
+          <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker btn" } %>
           <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
-          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker btn" } %>
+          <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker btn" } %>
         </p>
       </dd>
     <% end %>
@@ -41,14 +41,14 @@
           <%= text_area_tag "item[map_points][][text]", point[:text], class: "marker-text", placeholder: @item.t(:marker_text) %>
         </p>
         <p>
-          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
+          <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker" } %>
           <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
-          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
+          <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker" } %>
         </p>
       </dd>
     <% end %>
     <dd>
-      <%= link_to t("map.button.add_marker"), "#", class: "add-marker" %>
+      <%= link_to t("map.buttons.add_marker"), "#", class: "add-marker" %>
     </dd>
   </dl>
 </div>
