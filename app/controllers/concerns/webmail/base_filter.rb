@@ -20,7 +20,7 @@ module Webmail::BaseFilter
     end
 
     def set_crumbs
-      #@crumbs << [:'modules.webmail', webmail_mails_path]
+      #@crumbs << [t("modules.webmail"), webmail_mails_path]
     end
 
     def imap_initialize

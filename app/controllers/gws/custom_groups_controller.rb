@@ -8,7 +8,7 @@ class Gws::CustomGroupsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.gws/custom_group", gws_custom_groups_path]
+      @crumbs << [t("mongoid.models.gws/custom_group"), gws_custom_groups_path]
     end
 
     def pre_params

@@ -8,7 +8,7 @@ class Cms::GroupsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.group", action: :index]
+      @crumbs << [t("cms.group"), action: :index]
     end
 
     def fix_params

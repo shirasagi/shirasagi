@@ -8,7 +8,7 @@ class Cms::MembersController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.member", action: :index]
+      @crumbs << [t("cms.member"), action: :index]
     end
 
     def fix_params

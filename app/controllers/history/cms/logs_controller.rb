@@ -10,7 +10,7 @@ class History::Cms::LogsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"history.log", action: :index]
+      @crumbs << [t("history.log"), action: :index]
     end
 
     def filter_permission

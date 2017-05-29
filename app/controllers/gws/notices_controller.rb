@@ -8,7 +8,7 @@ class Gws::NoticesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.gws/notice", action: :index]
+      @crumbs << [t("mongoid.models.gws/notice"), action: :index]
     end
 
     def fix_params

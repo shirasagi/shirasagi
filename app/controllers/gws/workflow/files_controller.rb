@@ -6,7 +6,7 @@ class Gws::Workflow::FilesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.gws/workflow", action: :index]
+      @crumbs << [t("modules.gws/workflow"), action: :index]
     end
 
     def fix_params

@@ -10,7 +10,7 @@ module Job::LogsFilter
 
   private
     def set_crumbs
-      @crumbs << [:"job.log", action: :index]
+      @crumbs << [t("job.log"), action: :index]
     end
 
     def log_criteria

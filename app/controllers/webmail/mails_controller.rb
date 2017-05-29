@@ -14,7 +14,7 @@ class Webmail::MailsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:'webmail.mail', { action: :index } ]
+      @crumbs << [t("webmail.mail"), { action: :index } ]
     end
 
     def fix_params

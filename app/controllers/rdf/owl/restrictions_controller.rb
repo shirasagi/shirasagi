@@ -31,7 +31,7 @@
 #     def set_crumbs
 #       set_vocab
 #       set_class
-#       @crumbs << [:"rdf.links.vocabs", rdf_vocabs_path]
+#       @crumbs << [t("rdf.links.vocabs"), rdf_vocabs_path]
 #       @crumbs << [@vocab.labels.preferred_value, rdf_vocab_path(id: @vocab)]
 #       @crumbs << [@rdf_class.name, rdf_classes_class_path(vid: @vocab, id: @rdf_class)]
 #     end

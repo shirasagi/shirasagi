@@ -8,7 +8,7 @@ class Sys::MaxFileSizesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sys.max_file_size", sys_max_file_sizes_path]
+      @crumbs << [t("sys.max_file_size"), sys_max_file_sizes_path]
     end
 
   public
