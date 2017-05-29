@@ -11,7 +11,7 @@ class @SS_SearchUI
     tr    = $("<tr />").attr("data-id", id) #attr
     input = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false)
     input = input.val(id).removeClass("hidden-ids")
-    a     = $('<a class="deselect btn" href="#"><%= I18n.t "views.buttons.delete" %></a>').on "click", self.deselect
+    a     = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>').on "click", self.deselect
 
     tr.append($('<td />').append(input).append(name))
     tr.append($('<td />').append(a))

@@ -6,11 +6,11 @@
 <footer class="send">
   <div>
     <% if @route %>
-    	<%= f.submit t("views.buttons.request"), name: :request, class: :save %>
+    	<%= f.submit t("ss.buttons.request"), name: :request, class: :save %>
     <% else %>
-    	<%= f.submit t("views.buttons.publish_save"), name: :publish_save, class: :save %>
+    	<%= f.submit t("ss.buttons.publish_save"), name: :publish_save, class: :save %>
     <% end %>
-  	<%= f.submit t("views.buttons.closed_save"), name: :save, class: :save %>
+  	<%= f.submit t("ss.buttons.closed_save"), name: :save, class: :save %>
   </div>
 </footer>
 

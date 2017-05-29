@@ -10,7 +10,7 @@
       <dt><%= @model.t :name %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit  t("views.buttons.search"), class: :btn %>
+        <%= f.submit  t("ss.buttons.search"), class: :btn %>
       </dd>
     </dl>
   <% end %>

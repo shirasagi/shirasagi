@@ -30,7 +30,7 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
 
       within 'form' do
         select model.model_name.human, from: 'item[in_type]'
-        click_on I18n.t('views.buttons.new')
+        click_on I18n.t('ss.buttons.new')
       end
 
       within 'form' do
@@ -41,7 +41,7 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
         click_on layout2.name
       end
       within 'form' do
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -60,7 +60,7 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
 
       within 'form' do
         fill_in 'item[name]', with: name2
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -78,7 +78,7 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
       click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.buttons.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 

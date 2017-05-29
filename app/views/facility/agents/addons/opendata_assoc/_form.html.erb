@@ -22,7 +22,7 @@
         <% @item.opendata_sites.each do |site| %>
         <tr data-id="<%= site.id %>">
           <td><%= f.hidden_field "opendata_site_ids[]", value: site.id %> <%= site.host %></td>
-          <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>
       </tbody>

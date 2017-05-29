@@ -16,7 +16,7 @@
       <% if @item.publish_to.present? %>
         <tr data-id="<%= @item.publish_to.id %>">
           <td><%= f.hidden_field "publish_to_id", value: @item.publish_to.id %> <%= @item.publish_to.name %></td>
-          <td style="width: 20%;"><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td style="width: 20%;"><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -42,7 +42,7 @@
       <% @item.categories.each do |cate| %>
         <tr data-id="<%= cate.id %>">
           <td><%= f.hidden_field "category_ids[]", value: cate.id %> <%= cate.name %></td>
-          <td style="width: 20%;"><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td style="width: 20%;"><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>

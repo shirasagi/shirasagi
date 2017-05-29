@@ -32,7 +32,7 @@ describe "jmaxml/filters", dbscope: :example do
         select trigger.name, from: 'item_trigger_ids_0'
         select action1.name, from: 'item_action_ids_0'
         select action2.name, from: 'item_action_ids_1'
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -54,7 +54,7 @@ describe "jmaxml/filters", dbscope: :example do
 
       within 'form' do
         fill_in 'item[name]', with: name2
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -75,7 +75,7 @@ describe "jmaxml/filters", dbscope: :example do
       click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.buttons.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 

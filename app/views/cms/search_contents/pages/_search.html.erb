@@ -2,10 +2,10 @@
   <%= render file: "cms/agents/addons/page_search/_form.html.erb", locals: { f: f } %>
 
   <footer class="send">
-    <%= f.submit t("views.buttons.search"), name: "search", class: "search btn-primary" %>
-    <%= link_to t("views.buttons.reset"), "./pages", class: "reset btn-default" %>
+    <%= f.submit t("ss.buttons.search"), name: "search", class: "search btn-primary" %>
+    <%= link_to t("ss.buttons.reset"), "./pages", class: "reset btn-default" %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
-      <%= f.button t("views.buttons.save"), name: "save", class: "save btn-default" %>
+      <%= f.button t("ss.buttons.save"), name: "save", class: "save btn-default" %>
     <% end %>
   </footer>
 <% end %>

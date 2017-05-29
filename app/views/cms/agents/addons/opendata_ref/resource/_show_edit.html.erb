@@ -43,7 +43,7 @@
             <% @item.opendata_resources_datasets(file).each do |dataset| %>
                 <tr data-id="<%= dataset.id %>">
                   <td><%= hidden_field_tag "item[opendata_resources][#{file.id}][dataset_ids][]", dataset.id %> <%= dataset.name %></td>
-                  <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+                  <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
                 </tr>
             <% end %>
             </tbody>
@@ -51,7 +51,7 @@
         </dd>
       </dl>
       <div class="od-resource-file-operation">
-        <input type="button" value="<%= t('views.buttons.save') %>" class="btn od-resource-file-save" data-file-id="<%= file.id %>">
+        <input type="button" value="<%= t('ss.buttons.save') %>" class="btn od-resource-file-save" data-file-id="<%= file.id %>">
         <span class="od-resource-file-save-status"></span>
       </div>
     </div>

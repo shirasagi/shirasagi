@@ -33,7 +33,7 @@ $(".file").on("change", function() {
   </section>
 
   <footer class="send">
-    <%= f.submit t("views.buttons.import"), class: :save %>
-    <%= f.button t("views.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{cms_contents_path}'; return false;" %>
+    <%= f.submit t("ss.buttons.import"), class: :save %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{cms_contents_path}'; return false;" %>
   </footer>
 <% end %>

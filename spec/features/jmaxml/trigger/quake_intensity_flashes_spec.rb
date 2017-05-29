@@ -22,7 +22,7 @@ describe "jmaxml/trigger/quake_intensity_flashes", dbscope: :example, js: true d
 
       within 'form' do
         select model.model_name.human, from: 'item[in_type]'
-        click_on I18n.t('views.buttons.new')
+        click_on I18n.t('ss.buttons.new')
       end
 
       within 'form' do
@@ -34,7 +34,7 @@ describe "jmaxml/trigger/quake_intensity_flashes", dbscope: :example, js: true d
         click_on region.name
       end
       within 'form' do
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -57,7 +57,7 @@ describe "jmaxml/trigger/quake_intensity_flashes", dbscope: :example, js: true d
       within 'form' do
         fill_in 'item[name]', with: name2
         select I18n.t('rss.options.earthquake_intensity.4'), from: 'item[earthquake_intensity]'
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -78,7 +78,7 @@ describe "jmaxml/trigger/quake_intensity_flashes", dbscope: :example, js: true d
       click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.buttons.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 

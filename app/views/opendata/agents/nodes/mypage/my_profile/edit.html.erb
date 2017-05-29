@@ -6,7 +6,7 @@
       <td class="field"><%= @model.t :icon_id %></td>
       <td class="input"><%= f.file_field :in_icon %>
     <% if @item.icon_id %>
-      <div class="in-icon"><label><%= f.check_box :rm_icon %><%= t "views.buttons.delete" %> (<%= @item.icon.filename %>)</label></div>
+      <div class="in-icon"><label><%= f.check_box :rm_icon %><%= t "ss.buttons.delete" %> (<%= @item.icon.filename %>)</label></div>
     <% end %>
       </td>
     </tr>
@@ -31,7 +31,7 @@
 
   <footer class="send">
     <div>
-      <%= submit_tag t("views.buttons.save"), name: :save %>
+      <%= submit_tag t("ss.buttons.save"), name: :save %>
     </div>
   </footer>
 <% end %>

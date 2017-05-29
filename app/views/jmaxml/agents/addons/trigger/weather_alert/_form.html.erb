@@ -27,7 +27,7 @@
       <% @item.target_regions.each do |item| %>
         <tr data-id="<%= item.id %>">
           <td><%= f.hidden_field "target_region_ids[]", value: item.id %> <%= item.name %></td>
-          <td style="width: 20%;"><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td style="width: 20%;"><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>

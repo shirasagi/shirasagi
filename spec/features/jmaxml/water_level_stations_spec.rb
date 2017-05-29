@@ -23,7 +23,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
         fill_in 'item[code]', with: code
         fill_in 'item[name]', with: name
         fill_in 'item[region_name]', with: region_name1
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -43,7 +43,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
 
       within 'form' do
         fill_in 'item[region_name]', with: region_name2
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -62,7 +62,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
       click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.buttons.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 

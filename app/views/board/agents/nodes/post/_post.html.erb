@@ -38,7 +38,7 @@
       <%= link_to t("board.views.reply"), "./#{item.id}/new", class: "reply" %>
     <% end %>
     <% if @cur_node.deletable_post? && item.delete_key.present? %>
-      <%= link_to t("views.buttons.delete"), "./#{item.id}/delete", class: "delete" %>
+      <%= link_to t("ss.buttons.delete"), "./#{item.id}/delete", class: "delete" %>
     <% end %>
   </nav>
   <% if children && item.children.present? %>

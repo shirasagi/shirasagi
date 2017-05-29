@@ -22,7 +22,7 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
           fill_in "item[prefix]", with: "p#{unique_id}"
           fill_in "item[uri]", with: "http://example.jp/rdf/#{unique_id}#"
           fill_in "item[labels][ja]", with: "sample-#{unique_id}"
-          click_button I18n.t("views.buttons.save")
+          click_button I18n.t("ss.buttons.save")
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
@@ -49,7 +49,7 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
         visit edit_path
         within "form#item-form" do
           fill_in "item[labels][ja]", with: "modify"
-          click_button I18n.t("views.buttons.save")
+          click_button I18n.t("ss.buttons.save")
         end
         expect(current_path).not_to eq sns_login_path
         expect(page).to have_no_css("form#item-form")
@@ -63,7 +63,7 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
       it do
         visit delete_path
         within "form" do
-          click_button I18n.t("views.buttons.delete")
+          click_button I18n.t("ss.buttons.delete")
         end
         expect(current_path).to eq index_path
       end

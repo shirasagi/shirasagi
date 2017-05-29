@@ -52,13 +52,13 @@ $ ->
     <dt><%= t("cms.apis.contents.keyword") %><%= tt("search_contents.html.keyword") %></dt>
     <dd>
       <%= text_field_tag :keyword, "", value: @keyword, class: :keyword %>
-      <%= f.submit t("views.buttons.search"), name: "search", class: "search btn" %>
+      <%= f.submit t("ss.buttons.search"), name: "search", class: "search btn" %>
     </dd>
 
     <dt><%= t("cms.apis.contents.replacement") %><%= tt("search_contents.html.replacement") %></dt>
     <dd>
       <%= text_field_tag :replacement, "", value: @replacement, class: :replacement %>
-      <%= f.submit t("views.buttons.replace_all"), name: "replace", class: "replace btn" %>
+      <%= f.submit t("ss.buttons.replace_all"), name: "replace", class: "replace btn" %>
     </dd>
 
     <dt><%= t("cms.apis.contents.option") %><%= tt("search_contents.html.option") %></dt>

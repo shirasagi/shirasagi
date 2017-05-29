@@ -85,7 +85,7 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
     visit "http://#{site.domain}#{delete_path}"
     expect(current_path).to eq delete_path
     within "form" do
-      click_on I18n.t("views.buttons.delete")
+      click_on I18n.t("ss.buttons.delete")
     end
     expect(current_path).to eq app_show_path
   end

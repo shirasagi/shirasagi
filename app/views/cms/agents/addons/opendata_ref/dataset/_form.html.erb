@@ -48,7 +48,7 @@
             <% @item.opendata_datasets.each do |dataset| %>
               <tr data-id="<%= dataset.id %>">
                 <td><%= f.hidden_field "opendata_dataset_ids[]", value: dataset.id %> <%= dataset.name %></td>
-                <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+                <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
               </tr>
             <% end %>
             </tbody>

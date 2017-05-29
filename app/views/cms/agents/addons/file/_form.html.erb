@@ -64,7 +64,7 @@ $ ->
               <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
               <%= link_to t("sns.thumb_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
-            <%= link_to t("views.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>
         </div>
       <% end %>

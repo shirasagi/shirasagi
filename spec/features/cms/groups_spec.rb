@@ -104,7 +104,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.edit")
 
       fill_in "item[expiration_date]", with: expiration_date.strftime("%Y/%m/%d %H:%M")
-      click_on I18n.t("views.buttons.save")
+      click_on I18n.t("ss.buttons.save")
 
       group.reload
       expect(group.expiration_date).to eq expiration_date
@@ -113,7 +113,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       expect(page).to have_no_css(".expandable", text: group_name)
 
       select I18n.t("views.options.state.all"), from: "s[state]"
-      click_on I18n.t('views.buttons.search')
+      click_on I18n.t('ss.buttons.search')
 
       expect(page).to have_css(".expandable", text: group_name)
 
@@ -121,7 +121,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.edit")
 
       fill_in "item[contact_tel]", with: contact_tel
-      click_on I18n.t("views.buttons.save")
+      click_on I18n.t("ss.buttons.save")
 
       group.reload
       expect(group.contact_tel).to eq contact_tel

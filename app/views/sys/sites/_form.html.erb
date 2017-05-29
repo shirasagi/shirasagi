@@ -40,7 +40,7 @@
         <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
             <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
       </tbody>

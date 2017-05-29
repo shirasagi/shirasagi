@@ -28,7 +28,7 @@ describe "jmaxml/forecast_regions", dbscope: :example do
         fill_in 'item[yomi]', with: yomi
         fill_in 'item[short_name]', with: short_name1
         fill_in 'item[short_yomi]', with: short_yomi1
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -51,7 +51,7 @@ describe "jmaxml/forecast_regions", dbscope: :example do
       within 'form' do
         fill_in 'item[short_name]', with: short_name2
         fill_in 'item[short_yomi]', with: short_yomi2
-        click_on I18n.t('views.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 
@@ -72,7 +72,7 @@ describe "jmaxml/forecast_regions", dbscope: :example do
       click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.buttons.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
 

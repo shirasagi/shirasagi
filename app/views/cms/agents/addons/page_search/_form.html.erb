@@ -25,7 +25,7 @@
       <% @item.search_categories.each do |item| %>
         <tr data-id="<%= item.id %>">
           <td><%= hidden_field_tag "#{f.object_name}[search_category_ids][]", item.id %> <%= item.name %></td>
-          <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -51,7 +51,7 @@
       <% @item.search_groups.each do |item| %>
         <tr data-id="<%= item.id %>">
           <td><%= hidden_field_tag "#{f.object_name}[search_group_ids][]", item.id %> <%= item.name %></td>
-          <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -77,7 +77,7 @@
       <% @item.search_users.each do |item| %>
         <tr data-id="<%= item.id %>">
           <td><%= hidden_field_tag "item[search_user_ids][]", item.id %> <%= item.name %></td>
-          <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>
@@ -103,7 +103,7 @@
       <% @item.search_nodes.each do |item| %>
           <tr data-id="<%= item.id %>">
             <td><%= hidden_field_tag "#{f.object_name}[search_node_ids][]", item.id %> <%= item.name %></td>
-            <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
       <% end %>
       </tbody>
@@ -130,7 +130,7 @@
         <% next if route.blank? %>
         <tr data-id="<%= route %>">
           <td><%= hidden_field_tag "#{f.object_name}[search_routes][]", route %> <%= I18n.t("mongoid.models.#{route}") %></td>
-          <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
       </tbody>

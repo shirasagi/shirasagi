@@ -27,40 +27,6 @@ ja:
     required_field: ※必須入力
     search_result: 検索結果
 
-    buttons:
-      login: ログイン
-      save: 保存
-      new: 新規作成
-      draft_save: 下書き保存
-      closed_save: 非公開保存
-      publish_save: 公開保存
-      ignore_alert: 警告を無視する
-      cancel: キャンセル
-      edit: 編集
-      delete: 削除
-      search: 検索
-      replace: 置換
-      replace_all: 全置換
-      reset: リセット
-      clear: クリア
-      send: 送信
-      run: 実行
-      stop: 停止
-      toggle: 折りたたみ表示
-      move: 移動
-      import: 取り込み
-      convert: 変換
-      unlock_and_edit_forcibly: 強制的にロックを解除し編集する
-      random_password: ランダム生成
-      copy: コピー
-      paste: 貼り付け
-      confirm: 確認
-      setting: 設定
-      request: 公開申請
-      split: 分割
-      integrate: 統合
-      upload: アップロード
-      download: ダウンロード
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -77,6 +43,7 @@ ja:
       deleted: 削除しました。
       import: インポートを開始しました。
       sent: 送信しました。
+      posted: 投稿しました。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
@@ -207,6 +174,40 @@ ja:
       set_tag: タグ設定
       reset_tags: タグ解除
       upload: アップロード
+    buttons:
+      login: ログイン
+      save: 保存
+      new: 新規作成
+      draft_save: 下書き保存
+      closed_save: 非公開保存
+      publish_save: 公開保存
+      ignore_alert: 警告を無視する
+      cancel: キャンセル
+      edit: 編集
+      delete: 削除
+      search: 検索
+      replace: 置換
+      replace_all: 全置換
+      reset: リセット
+      clear: クリア
+      send: 送信
+      run: 実行
+      stop: 停止
+      toggle: 折りたたみ表示
+      move: 移動
+      import: 取り込み
+      convert: 変換
+      unlock_and_edit_forcibly: 強制的にロックを解除し編集する
+      random_password: ランダム生成
+      copy: コピー
+      paste: 貼り付け
+      confirm: 確認
+      setting: 設定
+      request: 公開申請
+      split: 分割
+      integrate: 統合
+      upload: アップロード
+      download: ダウンロード
     apis:
       groups:
         index: グループを選択する

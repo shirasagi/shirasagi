@@ -20,7 +20,7 @@
   <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
   <dd>
     <%= f.password_field :in_password, style: "width: 200px" %>
-    <%= button_tag t("views.buttons.random_password"), type: :button, id: "random-password", class: "btn" %>
+    <%= button_tag t("ss.buttons.random_password"), type: :button, id: "random-password", class: "btn" %>
     <span id="random-password-view"></span>
   </dd>
 
@@ -70,7 +70,7 @@
         <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
             <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
       </tbody>
@@ -91,7 +91,7 @@
         <% if @item.gws_main_group_ids[@cur_site.id.to_s] && group = @item.gws_main_group(@cur_site) %>
           <tr data-id="<%= group.id %>">
             <td><%= f.hidden_field "in_gws_main_group_id", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("views.buttons.delete"), "#", class: "deselect btn" %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
       </tbody>
