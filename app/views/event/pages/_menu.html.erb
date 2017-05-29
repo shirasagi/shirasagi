@@ -21,10 +21,10 @@
       <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: :edit %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to(:copy, { action: :copy, id: @item }, class: :copy) rescue nil %>
+      <%= link_to(t('ss.links.copy'), { action: :copy, id: @item }, class: :copy) rescue nil %>
     <% end %>
     <% if @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to(:move, { action: :move, id: @item }, class: :move) rescue nil %>
+      <%= link_to(t('ss.links.move'), { action: :move, id: @item }, class: :move) rescue nil %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>

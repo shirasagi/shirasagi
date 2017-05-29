@@ -19,7 +19,7 @@
             <% unless selected_layout?(item) %>
               <% if @cur_site.mobile_enabled? %>
                 <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: layout_path), target: "_blank" %>
-                <%= link_to(:mobile_preview, cms_mobile_preview_path(path: layout_path), target: :_blank) %>
+                <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: layout_path), target: :_blank) %>
               <% else %>
                 <%= link_to t('ss.links.preview'), cms_preview_path(path: layout_path), target: "_blank" %>
               <% end %>
