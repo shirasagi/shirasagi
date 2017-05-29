@@ -7,9 +7,9 @@ ja:
       no_mecab_dicdir: MeCab 辞書がインストールされていません。
       no_content: 登録データが見つかりません。
       index: かな辞書を作成できません。
+    links:
+      build_kana_dictionary: 辞書反映
     views:
-      links:
-        build_kana_dictionary: 辞書反映
       buttons:
         build_kana_dictionary: 反映
       dictionaries/build_confirmation:

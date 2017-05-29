@@ -15,7 +15,7 @@ class Rdf::VocabsController < ApplicationController
     end
 
     def set_crumbs
-      @crumbs << [:"rdf.vocabs", action: :index]
+      @crumbs << [:"rdf.links.vocabs", action: :index]
     end
 
     def set_extra_crumbs

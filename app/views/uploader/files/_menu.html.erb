@@ -11,7 +11,7 @@
       <% elsif params[:do] =~ /new/ %>
         <%= link_to t('ss.links.back_to_index'), { action: :file, filename: @item.filename } %>
       <% else %>
-        <%= link_to t('ss.links.new_directory'), {action: :file, filename: @item.filename, do: "new_directory" }, class: "icon-node" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('uploader.links.new_directory'), {action: :file, filename: @item.filename, do: "new_directory" }, class: "icon-node" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to t('ss.links.upload'), {action: :file, filename: @item.filename, do: "new_files" }, class: "icon-page" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       <% end %>
     <% elsif params[:action] =~ /create/ %>

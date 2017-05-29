@@ -3,6 +3,9 @@ ja:
     server: サーバー情報
     import: インポート
     result: 同期結果
+    links:
+      ldap: LDAP
+      sync: 同期する
     views:
       buttons:
         import: インポート
@@ -72,9 +75,6 @@ ja:
       index: インポート
     ldap/result:
       index: 同期結果
-    links:
-      ldap: LDAP
-      sync: 同期する
 
   tooltip:
     ldap/addon/group:

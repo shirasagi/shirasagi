@@ -4,7 +4,7 @@
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
     <% if @model.allowed?(:build, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("kana.views.links.build_kana_dictionary"), action: :build_confirmation %>
+      <%= link_to t("kana.links.build_kana_dictionary"), action: :build_confirmation %>
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
