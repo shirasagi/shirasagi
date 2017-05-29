@@ -2,7 +2,7 @@
   <dt><%= @model.t :urgency_layout_id %><%= @model.tt :urgency_layout_id %></dt>
   <dd>
     <%= f.hidden_field "urgency_layout_id", value: "", class: "hidden-ids" %>
-    <%= link_to :"urgency.apis.layouts.index", urgency_apis_layouts_path(single: 1), class: "ajax-box" %>
+    <%= link_to t("urgency.apis.layouts.index"), urgency_apis_layouts_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

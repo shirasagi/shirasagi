@@ -22,7 +22,7 @@
   <dt><%= @model.t :target_regions %><%= @model.tt :target_regions %></dt>
   <dd>
     <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to :"jmaxml.apis.quake_regions.index", jmaxml_apis_quake_regions_path, class: "ajax-box" %>
+    <%= link_to t("jmaxml.apis.quake_regions.index"), jmaxml_apis_quake_regions_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -48,7 +48,7 @@
   <dt><%= @model.t :my_anpi_post %><%= @model.tt :my_anpi_post %></dt>
   <dd>
     <%= f.hidden_field "my_anpi_post_id", value: "", class: "hidden-ids" %>
-    <%= link_to :"cms.apis.nodes.index", cms_apis_nodes_path(single: 1, model: 'Member::Node::MyAnpiPost'), class: "ajax-box" %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1, model: 'Member::Node::MyAnpiPost'), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -74,7 +74,7 @@
   <dt><%= @model.t :anpi_mail %><%= @model.tt :anpi_mail %></dt>
   <dd>
     <%= f.hidden_field "anpi_mail_id", value: "", class: "hidden-ids" %>
-    <%= link_to :"cms.apis.nodes.index", cms_apis_nodes_path(single: 1, model: 'Ezine::Node::MemberPage'), class: "ajax-box" %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1, model: 'Ezine::Node::MemberPage'), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

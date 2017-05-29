@@ -5,7 +5,7 @@
     <% end %>
     <% if @rdf_class.present? %>
       <%= link_to t('ss.links.import'), action: :import %>
-      <%= link_to :"rdf.links.back_to_class", controller: :classes, action: :show, id: @rdf_class %>
+      <%= link_to t("rdf.links.back_to_class"), controller: :classes, action: :show, id: @rdf_class %>
     <% end %>
   <% elsif params[:action] =~ /new|create|import/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
@@ -33,7 +33,7 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
     <% if @rdf_class.present? %>
-      <%= link_to :"rdf.links.back_to_class", controller: :classes, action: :show, id: @rdf_class %>
+      <%= link_to t("rdf.links.back_to_class"), controller: :classes, action: :show, id: @rdf_class %>
     <% end %>
   <% end %>
 </nav>

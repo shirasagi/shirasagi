@@ -2,7 +2,7 @@
   <dt><%= @model.t :target_region_ids %><%= @model.tt :target_region_ids %></dt>
   <dd>
     <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to :"jmaxml.apis.water_level_stations.index", jmaxml_apis_water_level_stations_path, class: "ajax-box" %>
+    <%= link_to t("jmaxml.apis.water_level_stations.index"), jmaxml_apis_water_level_stations_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

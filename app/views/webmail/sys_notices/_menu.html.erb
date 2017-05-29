@@ -1,4 +1,4 @@
 <nav class="nav-menu">
-  <%= link_to :"webmail.links.back_to_contents", webmail_mails_path %>
+  <%= link_to t("webmail.links.back_to_contents"), webmail_mails_path %>
   <%= link_to t('ss.links.back_to_index'), action: :index if params[:action] !~ /index/ %>
 </nav>

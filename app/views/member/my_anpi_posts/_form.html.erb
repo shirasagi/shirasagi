@@ -26,7 +26,7 @@
   <dt><%= @model.t :member_id %><%= @model.tt :member_id %></dt>
   <dd>
     <%= f.hidden_field "member_id", value: "", class: "hidden-ids" %>
-    <%= link_to :"cms.apis.members.index", cms_apis_members_path(single: 1), class: "ajax-box" %>
+    <%= link_to t("cms.apis.members.index"), cms_apis_members_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

@@ -7,7 +7,7 @@
   <dt><%= @model.t :contact_group_id %><%= @model.tt :contact_group_id %></dt>
   <dd>
     <%= f.hidden_field "contact_group_id", value: "", class: "hidden-ids" %>
-    <%= link_to :"contact.search_groups.index", contact_search_groups_path, class: "ajax-box" %>
+    <%= link_to t("contact.search_groups.index"), contact_search_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

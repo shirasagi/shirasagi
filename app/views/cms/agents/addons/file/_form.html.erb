@@ -30,8 +30,8 @@ $ ->
       <% end %>
     </span>
     <span class="upload-menu-select">
-      <%= link_to :"sns.user_file", sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-      <%= link_to :"cms.file", cms_apis_files_path, class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
+      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn" %>
     </span>
 
     <div id="selected-files">
@@ -57,12 +57,12 @@ $ ->
 
           <div class="action">
             <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <%= link_to t("sns.file_attach"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% if file.image? %>
               <% content = image_tag file.url, alt: file.name %>
-              <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.image_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
               <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to :"sns.thumb_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.thumb_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
             <%= link_to t("views.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>

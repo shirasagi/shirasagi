@@ -1,17 +1,17 @@
 <%= node_navi :faq do %>
 
-<h3><%= link_to :"faq.page", faq_pages_path %></h3>
+<h3><%= link_to t("faq.page"), faq_pages_path %></h3>
 
 <ul class="narrow-page">
-  <li><%= link_to :"workflow.page.ready", faq_index_ready_path %></li>
-  <li><%= link_to :"workflow.page.closed", faq_index_closed_path %></li>
+  <li><%= link_to t("workflow.page.ready"), faq_index_ready_path %></li>
+  <li><%= link_to t("workflow.page.closed"), faq_index_closed_path %></li>
 </ul>
 
 <h3><span><%= t "workflow.pages" %></span></h3>
 
 <ul class="narrow-page">
-  <li><%= link_to :"workflow.page.approve", faq_index_approve_path %></li>
-  <li><%= link_to :"workflow.page.request", faq_index_request_path %></li>
+  <li><%= link_to t("workflow.page.approve"), faq_index_approve_path %></li>
+  <li><%= link_to t("workflow.page.request"), faq_index_request_path %></li>
 </ul>
 
 <% end %>

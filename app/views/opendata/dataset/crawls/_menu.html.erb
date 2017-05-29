@@ -15,8 +15,8 @@
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
     <% if @item.class.include?(Cms::Page::Model) %>
-      <%= link_to :"cms.view_page", @item.url, target: "_blank" if @item.public? %>
-      <%= link_to :"cms.preview_page", cms_preview_path(path: @item.preview_path), target: "_blank" %>
+      <%= link_to t("cms.view_page"), @item.url, target: "_blank" if @item.public? %>
+      <%= link_to t("cms.preview_page"), cms_preview_path(path: @item.preview_path), target: "_blank" %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>

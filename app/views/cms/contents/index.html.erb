@@ -43,7 +43,7 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="tap-menu">
-        <%= link_to :"cms.content", contents_path(item) %>
+        <%= link_to t("cms.content"), contents_path(item) %>
         <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank %>
         <% if @cur_site.mobile_enabled? %>
           <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>

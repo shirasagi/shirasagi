@@ -1,7 +1,7 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%# link_to t('ss.links.new'), { action: :new }, class: :new if @model.allowed?(:edit, @cur_user) %>
-    <%# link_to :"sys.links.new_from_discovery", { controller: 'sys/auth/open_id_connects/discovery', action: :new }, class: :new if @model.allowed?(:edit, @cur_user) %>
+    <%# link_to t("sys.links.new_from_discovery"), { controller: 'sys/auth/open_id_connects/discovery', action: :new }, class: :new if @model.allowed?(:edit, @cur_user) %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to t('ss.links.back_to_index'), sys_auth_open_id_connects_path, class: "back-to-index" %>
   <% elsif params[:action] =~ /edit|update|delete/ %>

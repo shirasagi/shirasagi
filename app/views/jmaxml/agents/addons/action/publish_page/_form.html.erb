@@ -2,7 +2,7 @@
   <dt><%= @model.t :publish_to_id %><%= @model.tt :publish_to_id %></dt>
   <dd>
     <%= f.hidden_field "publish_to_id", value: "", class: "hidden-ids" %>
-    <%= link_to :"cms.apis.nodes.index", cms_apis_nodes_path(single: 1), class: "ajax-box" %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -28,7 +28,7 @@
   <dt><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
   <dd>
     <%= f.hidden_field "category_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to :"cms.apis.categories.index", cms_apis_categories_path, class: "ajax-box" %>
+    <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
