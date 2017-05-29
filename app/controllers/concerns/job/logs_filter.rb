@@ -54,7 +54,7 @@ module Job::LogsFilter
       begin
         from = @model.term_to_date params[:item][:save_term]
         unless from
-          redirect_to({ action: :index }, { notice: t("views.notice.canceled") })
+          redirect_to({ action: :index }, { notice: t("ss.notice.canceled") })
           return
         end
 
@@ -99,7 +99,7 @@ module Job::LogsFilter
 
       if result
         respond_to do |format|
-          format.html { redirect_to location, notice: t("views.notice.deleted") }
+          format.html { redirect_to location, notice: t("ss.notice.deleted") }
           format.json { head :no_content }
         end
       else

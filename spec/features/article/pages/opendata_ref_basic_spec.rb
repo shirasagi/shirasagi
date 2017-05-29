@@ -61,7 +61,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       end
       click_on I18n.t('ss.buttons.publish_save')
 
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'public'
       expect(article_page.opendata_dataset_state).to eq 'public'
@@ -107,7 +107,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
       click_on I18n.t('ss.buttons.ignore_alert')
 
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'closed'
       expect(article_page.opendata_dataset_state).to eq 'public'

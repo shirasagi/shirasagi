@@ -134,7 +134,7 @@ class Webmail::MailsController < ApplicationController
         notice = nil
         resp = @item.save_draft
       else
-        notice = t('views.notice.sent')
+        notice = t('ss.notice.sent')
         resp = @item.send_mail
       end
 

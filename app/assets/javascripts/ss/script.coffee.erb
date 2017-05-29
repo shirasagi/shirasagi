@@ -179,7 +179,7 @@ class @SS
 
   @ajaxDelete:(elem, params = {}) ->
     $(elem).click (e) ->
-      return false if !confirm("<%= t "views.confirm.delete" %>")
+      return false if !confirm("<%= t "ss.confirm.delete" %>")
       self = $(this)
       defaults = {
         type: "DELETE",
@@ -209,7 +209,7 @@ class @SS
   @confirmUnloading: ->
     $("input[type=text],textarea,select").change ->
       $(window).on "beforeunload", ->
-        return "<%= t('views.confirm.unload') %>"
+        return "<%= t('ss.confirm.unload') %>"
     $("input[type=submit]").click ->
       $(window).off "beforeunload"
 

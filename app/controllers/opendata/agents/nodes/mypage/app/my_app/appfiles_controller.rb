@@ -107,7 +107,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
       set_status
 
       if @item.save
-        redirect_to "#{@app_url}appfiles/", notice: t("views.notice.saved")
+        redirect_to "#{@app_url}appfiles/", notice: t("ss.notice.saved")
       else
         render action: :new
       end
@@ -122,7 +122,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
       set_status
 
       if @item.update
-        redirect_to "#{@app_url}appfiles/#{@item.id}/", notice: t("views.notice.saved")
+        redirect_to "#{@app_url}appfiles/#{@item.id}/", notice: t("ss.notice.saved")
       else
         render action: :edit
       end
@@ -134,7 +134,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
 
     def destroy
       if @item.destroy
-        redirect_to @app_url, notice: t("views.notice.deleted")
+        redirect_to @app_url, notice: t("ss.notice.deleted")
       else
         render action: :delete
       end

@@ -69,7 +69,7 @@ class Cms::UsersController < ApplicationController
       @item = @model.new get_params
       @item.cur_site = @cur_site
       result = @item.import
-      flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
+      flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
       render_create result, location: { action: :index }, render: { file: :import }
     end
 end

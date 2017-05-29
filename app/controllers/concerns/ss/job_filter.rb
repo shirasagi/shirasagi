@@ -42,6 +42,6 @@ module SS::JobFilter
 
   def reset
     @item.destroy
-    redirect_to({ action: :index }, { notice: t("views.notice.deleted") })
+    redirect_to({ action: :index }, { notice: t("ss.notice.deleted") })
   end
 end

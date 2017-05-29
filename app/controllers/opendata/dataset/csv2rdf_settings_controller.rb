@@ -98,7 +98,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     def render_update(result, opts = {})
       if result
         respond_to do |format|
-          format.html { redirect_to({ action: :column_types }, { notice: t("views.notice.saved") }) }
+          format.html { redirect_to({ action: :column_types }, { notice: t("ss.notice.saved") }) }
           format.json { head :no_content }
         end
       else

@@ -27,26 +27,6 @@ ja:
     required_field: ※必須入力
     search_result: 検索結果
 
-    confirm:
-      delete: 削除してよろしいですか？
-      soft_delete: データの実削除ではなく無効状態として保存されます。
-      convert: 変換してよろしいですか？
-      unload: 入力したデータは保存されません。
-      clone: 複製してよろしいですか？
-      redirect: 下記のページにアクセスしようとしています。
-      import: インポートを開始してよろしいですか？
-      download: ダウンロードしてよろしいですか？
-      set_tag: タグを設定してよろしいですか？
-      reset_tag: タグを削除してよろしいですか？
-    notice:
-      saved: 保存しました。
-      deleted: 削除しました。
-      import: インポートを開始しました。
-      sent: 送信しました。
-      posted: 投稿しました。
-    warning:
-      initial_password: 初期パスワードを変更してください。
-      session_timeout: セッションの有効期限が切れました。
     options:
       state:
         show: 表示
@@ -208,6 +188,26 @@ ja:
       integrate: 統合
       upload: アップロード
       download: ダウンロード
+    confirm:
+      delete: 削除してよろしいですか？
+      soft_delete: データの実削除ではなく無効状態として保存されます。
+      convert: 変換してよろしいですか？
+      unload: 入力したデータは保存されません。
+      clone: 複製してよろしいですか？
+      redirect: 下記のページにアクセスしようとしています。
+      import: インポートを開始してよろしいですか？
+      download: ダウンロードしてよろしいですか？
+      set_tag: タグを設定してよろしいですか？
+      reset_tag: タグを削除してよろしいですか？
+    notice:
+      saved: 保存しました。
+      deleted: 削除しました。
+      import: インポートを開始しました。
+      sent: 送信しました。
+      posted: 投稿しました。
+    warning:
+      initial_password: 初期パスワードを変更してください。
+      session_timeout: セッションの有効期限が切れました。
     apis:
       groups:
         index: グループを選択する

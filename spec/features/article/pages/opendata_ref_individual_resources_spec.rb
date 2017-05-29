@@ -66,7 +66,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           expect(page).to have_css('.ajax-selected td', text: opendata_dataset1.name)
           # click_on I18n.t('ss.buttons.save')
           find('input.od-resource-file-save').trigger('click')
-          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('views.notice.saved'))
+          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
         within "div.od-resource-file[data-file-id='#{file3.id}']" do
@@ -74,7 +74,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           select I18n.t('cms.options.opendata_resource.none'), from: "item[opendata_resources][#{file3.id}][state]"
           # click_on I18n.t('ss.buttons.save')
           find('input.od-resource-file-save').trigger('click')
-          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('views.notice.saved'))
+          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
         #
@@ -93,7 +93,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         end
         click_on I18n.t('ss.buttons.publish_save')
 
-        expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
         article_page.reload
         expect(article_page.state).to eq 'public'
         expect(article_page.opendata_dataset_state).to eq 'public'
@@ -162,7 +162,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
         click_on I18n.t('ss.buttons.ignore_alert')
 
-        expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
         article_page.reload
         expect(article_page.state).to eq 'closed'
         expect(article_page.opendata_dataset_state).to eq 'public'
@@ -210,7 +210,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           # click_on I18n.t('ss.buttons.save')
           find('input.od-resource-file-save').trigger('click')
-          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('views.notice.saved'))
+          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
         within "div.od-resource-file[data-file-id='#{file3.id}']" do
@@ -218,7 +218,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           select I18n.t('cms.options.opendata_resource.none'), from: "item[opendata_resources][#{file3.id}][state]"
           # click_on I18n.t('ss.buttons.save')
           find('input.od-resource-file-save').trigger('click')
-          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('views.notice.saved'))
+          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
         #
@@ -237,7 +237,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         end
         click_on I18n.t('ss.buttons.publish_save')
 
-        expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
         article_page.reload
         expect(article_page.state).to eq 'public'
         expect(article_page.opendata_dataset_state).to eq 'public'
@@ -312,7 +312,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           expect(page).to have_css('.ajax-selected td', text: opendata_dataset2.name)
           # click_on I18n.t('ss.buttons.save')
           find('input.od-resource-file-save').trigger('click')
-          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('views.notice.saved'))
+          expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
         opendata_dataset1.reload

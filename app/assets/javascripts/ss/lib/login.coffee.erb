@@ -22,5 +22,5 @@ class @SS_Login
       complete: (xhr, status)->
         if xhr.readyState == 4 && xhr.status == 403
           clearInterval(SS_Login.intervalID) if SS_Login.intervalID
-          alert('<%= I18n.t("views.warning.session_timeout") %>')
+          alert('<%= I18n.t("ss.warning.session_timeout") %>')
 

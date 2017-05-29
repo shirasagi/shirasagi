@@ -61,7 +61,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       end
       click_on I18n.t('ss.buttons.publish_save')
 
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'public'
       expect(article_page.opendata_dataset_state).to eq 'public'
@@ -110,7 +110,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
 
       click_on I18n.t('ss.links.edit')
       click_on I18n.t('ss.buttons.publish_save')
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       # completely change file ids
       save_file_ids = article_page.file_ids.dup

@@ -32,7 +32,7 @@ describe "article_pages", dbscope: :example, js: true do
       attach_file "item[file]", "spec/fixtures/article/article_import_test_1.csv"
       click_on I18n.t("ss.links.import")
       expect(status_code).to eq(200)
-      #expect(page).to have_content I18n.t("views.notice.saved")
+      #expect(page).to have_content I18n.t("ss.notice.saved")
     end
 
     #scenario "check import data" do
@@ -74,7 +74,7 @@ describe "article_pages", dbscope: :example, js: true do
     #  click_on I18n.t("ss.links.import")
     #  expect(status_code).to eq(200)
     #  expect(current_path).to eq import_path
-    #  expect(page).to have_content I18n.t("views.notice.saved")
+    #  expect(page).to have_content I18n.t("ss.notice.saved")
     #  expect(page).to have_content I18n.t('errors.messages.invalid')
     #
     #  visit index_path

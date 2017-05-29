@@ -25,7 +25,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
         fill_in 'item[region_name]', with: region_name1
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(Jmaxml::WaterLevelStation.count).to eq 1
       Jmaxml::WaterLevelStation.first.tap do |region|
@@ -45,7 +45,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
         fill_in 'item[region_name]', with: region_name2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(Jmaxml::WaterLevelStation.count).to eq 1
       Jmaxml::WaterLevelStation.first.tap do |region|
@@ -64,7 +64,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(Jmaxml::WaterLevelStation.count).to eq 0
     end
