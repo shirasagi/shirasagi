@@ -27,80 +27,6 @@ ja:
     required_field: ※必須入力
     search_result: 検索結果
 
-    options:
-      state:
-        show: 表示
-        hide: 非表示
-        enabled: 有効
-        disabled: 無効
-        public: 公開
-        closed: 非公開
-        closing: 公開終了待ち
-        draft: 下書き
-        ready: 公開待ち
-        active: 有効
-        expired: 無効
-        all: 全て
-        request: 申請
-        approve: 承認
-        pending: 下位承認待ち
-        remand: 差し戻し
-        start: 選択
-        cancel: 取消
-      resizing:
-        320x240: 320x240 (QVGA横)
-        240x320: 240x320 (QVGA縦)
-        640x480: 640x480 (VGA横)
-        480x640: 480x640 (VGA縦)
-        800x600: 800x600 (SVGA横)
-        600x800: 600x800 (SVGA縦)
-        1024x768: 1024x768 (XGA横)
-        768x1024: 768x1024 (XGA縦)
-        1280x720: 1280x720 (HD横)
-        720x1280: 720x1280 (HD縦)
-      text_type:
-        plain: テキスト形式
-        markdown: Markdown形式
-      wareki:
-        seireki: 西暦
-        meiji: 明治
-        taisho: 大正
-        showa: 昭和
-        heisei: 平成
-      map_api:
-        googlemaps: Googleマップ
-        openlayers: OpenLayers
-      kana_format:
-        hiragana: ひらがな
-        katakana: カタカナ
-        romaji: ローマ字
-      opengraph_type:
-        none: なし
-        article: 記事
-      twitter_card:
-        none: なし
-        summary: サマリー形式
-        summary_large_image: 大きな画像形式
-      first_released:
-        published: 公開済み
-        draft: 未公開
-      session_lifetime:
-        5min: 5分
-        15min: 15分
-        30min: 30分
-        60min: 60分
-      restriction:
-        none: 制限なし
-        api_only: API利用のみ
-
-    state:
-      public: 公開中
-      closed: 非公開
-      draft: 下書き
-      ready: 公開待ち
-      request: 申請中
-      approve: 承認
-      remand: 差し戻し
     task:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
@@ -238,6 +164,79 @@ ja:
         name: 平成
         min: 1989/1/8
         max: 2100/1/1
+    state:
+      public: 公開中
+      closed: 非公開
+      draft: 下書き
+      ready: 公開待ち
+      request: 申請中
+      approve: 承認
+      remand: 差し戻し
+    options:
+      state:
+        show: 表示
+        hide: 非表示
+        enabled: 有効
+        disabled: 無効
+        public: 公開
+        closed: 非公開
+        closing: 公開終了待ち
+        draft: 下書き
+        ready: 公開待ち
+        active: 有効
+        expired: 無効
+        all: 全て
+        request: 申請
+        approve: 承認
+        pending: 下位承認待ち
+        remand: 差し戻し
+        start: 選択
+        cancel: 取消
+      resizing:
+        320x240: 320x240 (QVGA横)
+        240x320: 240x320 (QVGA縦)
+        640x480: 640x480 (VGA横)
+        480x640: 480x640 (VGA縦)
+        800x600: 800x600 (SVGA横)
+        600x800: 600x800 (SVGA縦)
+        1024x768: 1024x768 (XGA横)
+        768x1024: 768x1024 (XGA縦)
+        1280x720: 1280x720 (HD横)
+        720x1280: 720x1280 (HD縦)
+      text_type:
+        plain: テキスト形式
+        markdown: Markdown形式
+      wareki:
+        seireki: 西暦
+        meiji: 明治
+        taisho: 大正
+        showa: 昭和
+        heisei: 平成
+      map_api:
+        googlemaps: Googleマップ
+        openlayers: OpenLayers
+      kana_format:
+        hiragana: ひらがな
+        katakana: カタカナ
+        romaji: ローマ字
+      opengraph_type:
+        none: なし
+        article: 記事
+      twitter_card:
+        none: なし
+        summary: サマリー形式
+        summary_large_image: 大きな画像形式
+      first_released:
+        published: 公開済み
+        draft: 未公開
+      session_lifetime:
+        5min: 5分
+        15min: 15分
+        30min: 30分
+        60min: 60分
+      restriction:
+        none: 制限なし
+        api_only: API利用のみ
 
   modules:
     addons:

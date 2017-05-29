@@ -25,13 +25,13 @@ module Cms::Addon
 
     def search_state_options
       %w(public closed ready closing).map do |w|
-        [ I18n.t("views.options.state.#{w}"), w ]
+        [ I18n.t("ss.options.state.#{w}"), w ]
       end
     end
 
     def search_first_released_options
       %w(draft published).map do |w|
-        [ I18n.t("views.options.first_released.#{w}"), w ]
+        [ I18n.t("ss.options.first_released.#{w}"), w ]
       end
     end
 
@@ -43,11 +43,11 @@ module Cms::Addon
 
     def status_options
       [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-        [I18n.t('views.options.state.ready'), 'ready'],
-        [I18n.t('views.options.state.request'), 'request'],
-        [I18n.t('views.options.state.remand'), 'remand'],
+        [I18n.t('ss.options.state.public'), 'public'],
+        [I18n.t('ss.options.state.closed'), 'closed'],
+        [I18n.t('ss.options.state.ready'), 'ready'],
+        [I18n.t('ss.options.state.request'), 'request'],
+        [I18n.t('ss.options.state.remand'), 'remand'],
       ]
     end
 
@@ -100,12 +100,12 @@ module Cms::Addon
       end
 
       def search_state_info
-        "#{Cms::Page.t(:state)}: #{I18n.t :"views.options.state.#{search_state}"}" if search_state.present?
+        "#{Cms::Page.t(:state)}: #{I18n.t :"ss.options.state.#{search_state}"}" if search_state.present?
       end
 
       def search_first_released_info
         if search_first_released.present?
-          "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"views.options.state.#{search_first_released}"}"
+          "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"ss.options.state.#{search_first_released}"}"
         end
       end
 

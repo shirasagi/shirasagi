@@ -61,7 +61,7 @@ module SS::Addon
       end
 
       def mobile_state_options
-        %w(disabled enabled).map { |m| [ I18n.t("views.options.state.#{m}"), m ] }.to_a
+        %w(disabled enabled).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }.to_a
       end
 
   end

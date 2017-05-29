@@ -17,8 +17,8 @@ module Cms::Addon
 
     def sns_share_states_options
       [
-        [I18n.t('views.options.state.show'), 'show'],
-        [I18n.t('views.options.state.hide'), 'hide'],
+        [I18n.t('ss.options.state.show'), 'show'],
+        [I18n.t('ss.options.state.hide'), 'hide'],
       ]
     end
 
@@ -32,7 +32,7 @@ module Cms::Addon
 
     def sns_share_state_label(name)
       value = sns_share_state(name) != 'hide' ? 'show' : 'hide'
-      I18n.t("views.options.state.#{value}")
+      I18n.t("ss.options.state.#{value}")
     end
 
     def sort_sns_share_services

@@ -32,29 +32,29 @@ module Cms::Addon
 
     def facebook_auto_post_options
       [
-          [I18n.t('views.options.state.expired'), 'expired'],
-          [I18n.t('views.options.state.active'), 'active'],
+          [I18n.t('ss.options.state.expired'), 'expired'],
+          [I18n.t('ss.options.state.active'), 'active'],
       ]
     end
 
     def twitter_auto_post_options
       [
-          [I18n.t('views.options.state.expired'), 'expired'],
-          [I18n.t('views.options.state.active'), 'active'],
+          [I18n.t('ss.options.state.expired'), 'expired'],
+          [I18n.t('ss.options.state.active'), 'active'],
       ]
     end
 
     def sns_auto_delete_options
       [
-          [I18n.t('views.options.state.expired'), 'expired'],
-          [I18n.t('views.options.state.active'), 'active'],
+          [I18n.t('ss.options.state.expired'), 'expired'],
+          [I18n.t('ss.options.state.active'), 'active'],
       ]
     end
 
     def edit_auto_post_options
       [
-          [I18n.t('views.options.sns_poster.expired'), 'expired'],
-          [I18n.t('views.options.sns_poster.active'), 'active'],
+          [I18n.t('ss.options.sns_poster.expired'), 'expired'],
+          [I18n.t('ss.options.sns_poster.active'), 'active'],
       ]
     end
 

@@ -45,7 +45,7 @@ module Gws::Addon
     end
 
     def state_options
-      %w(public closed).map { |m| [I18n.t("views.options.state.#{m}"), m] }
+      %w(public closed).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
     end
 
     private

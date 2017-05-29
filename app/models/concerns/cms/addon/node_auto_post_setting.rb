@@ -17,25 +17,25 @@ module Cms::Addon::NodeAutoPostSetting
 
   def node_facebook_auto_post_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
+      [I18n.t("ss.options.node_auto_post_setting.#{v}"), v]
     end
   end
 
   def node_twitter_auto_post_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
+      [I18n.t("ss.options.node_auto_post_setting.#{v}"), v]
     end
   end
 
   def node_sns_auto_delete_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
+      [I18n.t("ss.options.node_auto_post_setting.#{v}"), v]
     end
   end
 
   def node_edit_auto_post_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
+      [I18n.t("ss.options.node_auto_post_setting.#{v}"), v]
     end
   end
 

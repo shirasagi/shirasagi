@@ -13,7 +13,7 @@ module Opendata::Addon::CommonPageSetting
 
   def show_point_options
     %w(show hide).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
 

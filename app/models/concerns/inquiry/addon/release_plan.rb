@@ -33,7 +33,7 @@ module Inquiry::Addon
     def label(name)
       if name == :state
         state = public? ? "public" : "closed"
-        I18n.t("views.options.state.#{state}")
+        I18n.t("ss.options.state.#{state}")
       else
         super(name)
       end

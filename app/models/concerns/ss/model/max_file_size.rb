@@ -58,7 +58,7 @@ module SS::Model::MaxFileSize
   end
 
   def state_options
-    STATES.map { |v| [ I18n.t("views.options.state.#{v}"), v ] }.to_a
+    STATES.map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }.to_a
   end
 
   private

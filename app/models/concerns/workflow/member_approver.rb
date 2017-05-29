@@ -9,7 +9,7 @@ module Workflow::MemberApprover
     [ Workflow::Approver::WORKFLOW_STATE_PUBLIC, Workflow::Approver::WORKFLOW_STATE_CLOSED,
       Workflow::Approver::WORKFLOW_STATE_REQUEST, Workflow::Approver::WORKFLOW_STATE_APPROVE,
       Workflow::Approver::WORKFLOW_STATE_PENDING, Workflow::Approver::WORKFLOW_STATE_REMAND ].map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
 

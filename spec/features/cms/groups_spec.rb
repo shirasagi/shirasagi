@@ -112,7 +112,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
       visit index_path
       expect(page).to have_no_css(".expandable", text: group_name)
 
-      select I18n.t("views.options.state.all"), from: "s[state]"
+      select I18n.t("ss.options.state.all"), from: "s[state]"
       click_on I18n.t('ss.buttons.search')
 
       expect(page).to have_css(".expandable", text: group_name)

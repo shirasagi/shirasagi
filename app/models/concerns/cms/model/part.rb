@@ -23,15 +23,15 @@ module Cms::Model::Part
 
   def mobile_view_options
     [
-      [I18n.t('views.options.state.show'), 'show'],
-      [I18n.t('views.options.state.hide'), 'hide'],
+      [I18n.t('ss.options.state.show'), 'show'],
+      [I18n.t('ss.options.state.hide'), 'hide'],
     ]
   end
 
   def ajax_view_options
     [
-      [I18n.t('views.options.state.enabled'), 'enabled'],
-      [I18n.t('views.options.state.disabled'), 'disabled'],
+      [I18n.t('ss.options.state.enabled'), 'enabled'],
+      [I18n.t('ss.options.state.disabled'), 'disabled'],
     ]
   end
 
