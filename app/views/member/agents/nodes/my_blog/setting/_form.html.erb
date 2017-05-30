@@ -1,11 +1,11 @@
 <dl class="column">
-  <dt><%= @model.t :title %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dt><%= @model.t :title %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.text_field :name %></dd>
 </dl>
 
 <% if @item.new_record? %>
 <dl class="column">
-  <dt><%= @model.t :basename %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dt><%= @model.t :basename %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd>
     <span class="blog-url"><%= @blog_node.full_url%></span>
     <span class="blog-node">

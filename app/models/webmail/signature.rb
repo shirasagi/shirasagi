@@ -27,7 +27,7 @@ class Webmail::Signature
   }
 
   def default_options
-    %w(enabled disabled).map { |m| [I18n.t("views.options.state.#{m}"), m] }
+    %w(enabled disabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
   end
 
   def default?

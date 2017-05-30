@@ -19,8 +19,8 @@ $('#ajax-form').ajaxForm({
 <%= render file: '_form', locals: { f: f } %>
 
 <footer class="send">
-  <%= f.submit t("views.button.save"), class: :save %>
-  <%= link_to action: :index do %><%= f.button t("views.button.cancel"), type: :reset %><% end %>
+  <%= f.submit t("ss.buttons.save"), class: :save %>
+  <%= link_to action: :index do %><%= f.button t("ss.buttons.cancel"), type: :reset %><% end %>
 </footer>
 
 <% end %>

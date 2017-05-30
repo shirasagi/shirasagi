@@ -1,5 +1,5 @@
 <% if params[:action] =~ /index/ %>
   <nav class="nav-menu">
-    <%= link_to(:back_to_index, sns_message_threads_path, class: "back-to-index") %>
+    <%= link_to(t('ss.links.back_to_index'), sns_message_threads_path, class: "back-to-index") %>
   </nav>
 <% end %>

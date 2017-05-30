@@ -8,7 +8,7 @@ class Gws::HistoriesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.gws/history", action: :index]
+      @crumbs << [t("mongoid.models.gws/history"), action: :index]
     end
 
   public

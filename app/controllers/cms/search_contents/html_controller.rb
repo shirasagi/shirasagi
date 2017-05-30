@@ -64,7 +64,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
       "update_layouts" => @layouts.map(&:id).join(","),
       "update_parts" => @parts.map(&:id).join(","),
     }
-    redirect_to location, notice: t("views.notice.saved")
+    redirect_to location, notice: t("ss.notice.saved")
   end
 
   private

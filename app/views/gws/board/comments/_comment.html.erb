@@ -15,7 +15,7 @@ if comment.allowed?(:edit, @cur_user, site: @cur_site)
   else
     link = edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   end
-  menu << link_to(:edit, link, class: "btn")
+  menu << link_to(t('ss.links.edit'), link, class: "btn")
 end
 if comment.allowed?(:delete, @cur_user, site: @cur_site)
   if @category.present?
@@ -23,7 +23,7 @@ if comment.allowed?(:delete, @cur_user, site: @cur_site)
   else
     link = delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   end
-  menu << link_to(:delete, link, class: "btn")
+  menu << link_to(t('ss.links.delete'), link, class: "btn")
 end
 
 %>

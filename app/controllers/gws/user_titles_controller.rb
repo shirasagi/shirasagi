@@ -8,7 +8,7 @@ class Gws::UserTitlesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.ss/user_title", gws_user_titles_path]
+      @crumbs << [t("mongoid.models.ss/user_title"), gws_user_titles_path]
     end
 
     def fix_params

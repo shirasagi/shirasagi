@@ -1,76 +1,28 @@
 ja:
-  views:
-    action: アクション
-    addon: アドオン
-    all: すべて
+  ss:
     basic_info: 基本情報
-    meta: メタ情報
     config: 設定
-    confirm: 確認
     download: ダウンロード
     file: ファイル
+    group_users: 所属ユーザー
     image: 画像
-    resize_image: 画像リサイズ
     import: インポート
     import_log: インポートログ
     login: ログイン
     logout: ログアウト
     module: モジュール
     regexp: 正規表現
-    upload: アップロード
-    url: URL
+    resize_image: 画像リサイズ
     role: ロール
     role_setting: ロール一括設定
-    group_users: 所属ユーザー
-    multi_select:
-      selectable_head: 選択候補
-      selection_head: 選択済み
     required_field: ※必須入力
     search_result: 検索結果
+    url: URL
 
-    button:
-      login: ログイン
-      save: 保存
-      new: 新規作成
-      draft_save: 下書き保存
-      closed_save: 非公開保存
-      publish_save: 公開保存
-      ignore_alert: 警告を無視する
-      cancel: キャンセル
-      edit: 編集
-      delete: 削除
-      search: 検索
-      replace: 置換
-      replace_all: 全置換
-      reset: リセット
-      clear: クリア
-      send: 送信
-      run: 実行
-      stop: 停止
-      toggle: 折りたたみ表示
-      move: 移動
-      import: 取り込み
-      convert: 変換
-      unlock_and_edit_forcibly: 強制的にロックを解除し編集する
-      random_password: ランダム生成
-      copy: コピー
-      paste: 貼り付け
-      confirm: 確認
-      setting: 設定
-      request: 公開申請
-      split: 分割
-      integrate: 統合
-    confirm:
-      delete: 削除してよろしいですか？
-      soft_delete: データの実削除ではなく無効状態として保存されます。
-      convert: 変換してよろしいですか？
-      unload: 入力したデータは保存されません。
-      clone: 複製してよろしいですか？
-      redirect: 下記のページにアクセスしようとしています。
-      import: インポートを開始してよろしいですか？
-      download: ダウンロードしてよろしいですか？
-      set_tag: タグを設定してよろしいですか？
-      reset_tag: タグを削除してよろしいですか？
+    views:
+      login/login:
+        id: ユーザーIDまたはメールアドレス
+        password: パスワード
     links:
       cms: サイト管理
       gws: グループ
@@ -108,14 +60,99 @@ ja:
       resize: リサイズする
       set_tag: タグ設定
       reset_tags: タグ解除
+      upload: アップロード
+    buttons:
+      login: ログイン
+      save: 保存
+      new: 新規作成
+      draft_save: 下書き保存
+      closed_save: 非公開保存
+      publish_save: 公開保存
+      ignore_alert: 警告を無視する
+      cancel: キャンセル
+      edit: 編集
+      delete: 削除
+      search: 検索
+      replace: 置換
+      replace_all: 全置換
+      reset: リセット
+      clear: クリア
+      send: 送信
+      run: 実行
+      stop: 停止
+      toggle: 折りたたみ表示
+      move: 移動
+      import: 取り込み
+      convert: 変換
+      unlock_and_edit_forcibly: 強制的にロックを解除し編集する
+      random_password: ランダム生成
+      copy: コピー
+      paste: 貼り付け
+      confirm: 確認
+      setting: 設定
+      request: 公開申請
+      split: 分割
+      integrate: 統合
+      upload: アップロード
+      download: ダウンロード
+    confirm:
+      delete: 削除してよろしいですか？
+      soft_delete: データの実削除ではなく無効状態として保存されます。
+      convert: 変換してよろしいですか？
+      unload: 入力したデータは保存されません。
+      clone: 複製してよろしいですか？
+      redirect: 下記のページにアクセスしようとしています。
+      import: インポートを開始してよろしいですか？
+      download: ダウンロードしてよろしいですか？
+      set_tag: タグを設定してよろしいですか？
+      reset_tag: タグを削除してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
       import: インポートを開始しました。
       sent: 送信しました。
+      posted: 投稿しました。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
+    apis:
+      groups:
+        index: グループを選択する
+        search: グループを検索
+        select: グループを設定する
+      users:
+        index: ユーザーを選択する
+        search: ユーザーを検索
+        select: ユーザーを設定する
+    wareki:
+      seireki:
+        name: 西暦
+        min: 0001/1/1
+        max: 2100/1/1
+      meiji:
+        name: 明治
+        min: 1868/1/25
+        max: 1912/7/30
+      taisho:
+        name: 大正
+        min: 1912/7/30
+        max: 1926/12/25
+      showa:
+        name: 昭和
+        min: 1926/12/25
+        max: 1989/1/8
+      heisei:
+        name: 平成
+        min: 1989/1/8
+        max: 2100/1/1
+    state:
+      public: 公開中
+      closed: 非公開
+      draft: 下書き
+      ready: 公開待ち
+      request: 申請中
+      approve: 承認
+      remand: 差し戻し
     options:
       state:
         show: 表示
@@ -181,16 +218,7 @@ ja:
       restriction:
         none: 制限なし
         api_only: API利用のみ
-
-    state:
-      public: 公開中
-      closed: 非公開
-      draft: 下書き
-      ready: 公開待ち
-      request: 申請中
-      approve: 承認
-      remand: 差し戻し
-    task:
+    tasks:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
       confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
@@ -199,42 +227,6 @@ ja:
       mega_byte: MB
       days_after: 日後
       mobile_size: KB(キロバイト)
-
-  ss:
-    views:
-      login/login:
-        id: ユーザーIDまたはメールアドレス
-        password: パスワード
-    apis:
-      groups:
-        index: グループを選択する
-        search: グループを検索
-        select: グループを設定する
-      users:
-        index: ユーザーを選択する
-        search: ユーザーを検索
-        select: ユーザーを設定する
-    wareki:
-      seireki:
-        name: 西暦
-        min: 0001/1/1
-        max: 2100/1/1
-      meiji:
-        name: 明治
-        min: 1868/1/25
-        max: 1912/7/30
-      taisho:
-        name: 大正
-        min: 1912/7/30
-        max: 1926/12/25
-      showa:
-        name: 昭和
-        min: 1926/12/25
-        max: 1989/1/8
-      heisei:
-        name: 平成
-        min: 1989/1/8
-        max: 2100/1/1
 
   modules:
     addons:

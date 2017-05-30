@@ -22,7 +22,7 @@ module Opendata::Addon::SiteSetting
 
   def dataset_state_options
     %w(enabled disabled).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
   alias app_state_options dataset_state_options

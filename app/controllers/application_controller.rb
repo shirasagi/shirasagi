@@ -7,11 +7,6 @@ class ApplicationController < ActionController::Base
   #before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
 
-  def t(key, opts = {})
-    opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
-    I18n.t key, opts.merge(default: key.to_s.humanize)
-  end
-
   def new_agent(controller_name)
     agent = SS::Agent.new controller_name
     agent.controller.params  = params

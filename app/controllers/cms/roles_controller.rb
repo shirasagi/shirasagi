@@ -9,7 +9,7 @@ class Cms::RolesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.role", action: :index]
+      @crumbs << [t("cms.role"), action: :index]
     end
 
     def fix_params

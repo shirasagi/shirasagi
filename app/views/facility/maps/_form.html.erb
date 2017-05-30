@@ -7,7 +7,7 @@
 
   <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
   <dd>
-    <%= link_to :input, '#', onclick: '$("#facility-maps-form-dd-input").toggle(); $(this).hide(); return false;' %>
+    <%= link_to t('ss.links.input'), '#', onclick: '$("#facility-maps-form-dd-input").toggle(); $(this).hide(); return false;' %>
     <%= f.text_field :basename, id: "facility-maps-form-dd-input", class: "filename", style: "display: none" %>
   </dd>
 

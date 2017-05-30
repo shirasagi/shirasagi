@@ -7,7 +7,7 @@ class Sys::SiteCopyController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sys.site_copy", sys_site_copy_path]
+      @crumbs << [t("sys.site_copy"), sys_site_copy_path]
     end
 
     def set_item

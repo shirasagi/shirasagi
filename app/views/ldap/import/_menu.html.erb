@@ -1,18 +1,18 @@
 <nav class="nav-menu">
   <% if params[:action] == "index" %>
-    <%= link_to :import, action: :import_confirmation %>
+    <%= link_to t('ss.links.import'), action: :import_confirmation %>
   <% elsif params[:action] =~ /import_confirmation|import/ %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /delete|sync_confirmation|sync|results/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :back_to_show, action: :show, id: @item %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /show/ %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :sync, action: :sync_confirmation, id: @item %>
-      <%= link_to :delete, action: :delete, id: @item %>
+      <%= link_to t('ldap.links.sync'), action: :sync_confirmation, id: @item %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

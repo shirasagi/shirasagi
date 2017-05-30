@@ -26,11 +26,11 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
       # create
       #
       visit index_path
-      click_on I18n.t('views.links.new')
+      click_on I18n.t('ss.links.new')
 
       within 'form' do
         select model.model_name.human, from: 'item[in_type]'
-        click_on I18n.t('views.button.new')
+        click_on I18n.t('ss.buttons.new')
       end
 
       within 'form' do
@@ -41,9 +41,9 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
         click_on layout2.name
       end
       within 'form' do
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(model.count).to eq 1
       model.first.tap do |action|
@@ -56,13 +56,13 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
       #
       visit index_path
       click_on name1
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within 'form' do
         fill_in 'item[name]', with: name2
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(model.count).to eq 1
       model.first.tap do |action|
@@ -75,12 +75,12 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
       #
       visit index_path
       click_on name2
-      click_on I18n.t('views.links.delete')
+      click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.button.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(model.count).to eq 0
     end

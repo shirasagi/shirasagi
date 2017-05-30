@@ -51,7 +51,7 @@ describe "opendata_url_resource", dbscope: :example, http_server: true do
         select  item.name, from: "item_license_id"
         select  I18n.t("opendata.crawl_update.auto"), from: "item_crawl_update"
         fill_in "item[text]", with: "text"
-        click_button I18n.t("views.button.save")
+        click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path

@@ -39,7 +39,7 @@ class Jmaxml::TsunamiRegion
 
   def state_options
     %w(enabled disabled).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
 end

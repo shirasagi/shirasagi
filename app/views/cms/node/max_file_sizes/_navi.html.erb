@@ -2,7 +2,7 @@
   <h2><%= t("cms.max_file_size_setting") %></h2>
 
   <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h3><%= link_to :"cms.node_config", node_conf_path %></h3>
+    <h3><%= link_to t("cms.node_config"), node_conf_path %></h3>
   <% end %>
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <h3><%= link_to t("cms.max_file_size"), node_max_file_sizes_path %></h3>

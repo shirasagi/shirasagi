@@ -10,7 +10,7 @@ module Job::LogsFilter
 
   private
     def set_crumbs
-      @crumbs << [:"job.log", action: :index]
+      @crumbs << [t("job.log"), action: :index]
     end
 
     def log_criteria
@@ -54,7 +54,7 @@ module Job::LogsFilter
       begin
         from = @model.term_to_date params[:item][:save_term]
         unless from
-          redirect_to({ action: :index }, { notice: t("views.notice.canceled") })
+          redirect_to({ action: :index }, { notice: t("ss.notice.canceled") })
           return
         end
 
@@ -82,8 +82,9 @@ module Job::LogsFilter
       CSV.generate do |data|
         data << %w(ClassName Started Closed State Args Logs)
         items.each do |item|
+          class_name = item.class_name.underscore
           data << [
-            t(item.class_name.underscore, scope: "job.models"),
+            t(class_name, scope: "job.models", default: class_name.humanize),
             item.start_label,
             item.closed_label,
             t(item.state, scope: "job.state"),
@@ -99,7 +100,7 @@ module Job::LogsFilter
 
       if result
         respond_to do |format|
-          format.html { redirect_to location, notice: t("views.notice.deleted") }
+          format.html { redirect_to location, notice: t("ss.notice.deleted") }
           format.json { head :no_content }
         end
       else

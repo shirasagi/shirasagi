@@ -32,16 +32,16 @@ module SS::JobFilter
     @item.update_attributes state: "ready"
     job_class.bind(job_bindings).perform_later(job_options)
 
-    redirect_to({ action: :index }, { notice: t("views.task.started") })
+    redirect_to({ action: :index }, { notice: t("ss.tasks.started") })
   end
 
   def stop
     @item.update_attributes interrupt: "stop"
-    redirect_to({ action: :index }, { notice: t("views.task.interrupted") })
+    redirect_to({ action: :index }, { notice: t("ss.tasks.interrupted") })
   end
 
   def reset
     @item.destroy
-    redirect_to({ action: :index }, { notice: t("views.notice.deleted") })
+    redirect_to({ action: :index }, { notice: t("ss.notice.deleted") })
   end
 end

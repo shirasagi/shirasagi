@@ -6,10 +6,10 @@
   <div>
     <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node.parent) %>
       <% if @cur_node.parent %>
-        <%= link_to :parent_directory, { action: :index, cid: @cur_node.parent }, { class: "icon-node-up" } %>
+        <%= link_to t('ss.links.parent_directory'), { action: :index, cid: @cur_node.parent }, { class: "icon-node-up" } %>
      <% else %>
       <% resource = params[:controller].sub(/.*\//, "") %>
-      <%= link_to :parent_directory, send("cms_#{resource}_path"), { class: "icon-node-up" } %>
+      <%= link_to t('ss.links.parent_directory'), send("cms_#{resource}_path"), { class: "icon-node-up" } %>
       <% end %>
     <% end %>
 

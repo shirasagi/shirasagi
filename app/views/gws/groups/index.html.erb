@@ -21,9 +21,9 @@ SS_TreeUI.render(".index.groups");
       <% name    = @search_params ? item.name : item.trailing_name %>
       <tr<%= depth %>>
         <nav class="tap-menu">
-          <%= link_to :show, action: :show, id: item %>
-          <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to :delete, action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.show'), action: :show, id: item %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         </nav>
         <td class="expandable">
           <%= link_to name, { action: :show, id: item}, class: "title" %>

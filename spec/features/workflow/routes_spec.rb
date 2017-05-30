@@ -39,7 +39,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         within "form#item-form" do
           click_on "保存"
         end
-        expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
         expect(Workflow::Route.count).to eq 1
         Workflow::Route.all.first.tap do |route|

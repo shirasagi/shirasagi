@@ -6,7 +6,7 @@ class Webmail::AddressesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:'mongoid.models.webmail/address', { action: :index } ]
+      @crumbs << [t("mongoid.models.webmail/address"), { action: :index } ]
     end
 
     def fix_params

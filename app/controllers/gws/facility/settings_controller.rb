@@ -5,6 +5,6 @@ class Gws::Facility::SettingsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.gws/facility/group_setting", gws_facility_setting_path]
+      @crumbs << [t("mongoid.models.gws/facility/group_setting"), gws_facility_setting_path]
     end
 end

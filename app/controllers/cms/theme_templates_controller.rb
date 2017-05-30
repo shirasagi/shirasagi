@@ -7,7 +7,7 @@ class Cms::ThemeTemplatesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.theme_template", action: :index]
+      @crumbs << [t("cms.theme_template"), action: :index]
     end
 
     def fix_params

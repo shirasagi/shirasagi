@@ -9,7 +9,7 @@ class Sys::RolesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sys.role", sys_roles_path]
+      @crumbs << [t("sys.role"), sys_roles_path]
     end
 
   public

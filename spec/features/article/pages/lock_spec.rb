@@ -32,7 +32,7 @@ describe "article_pages", dbscope: :example do
       expect(status_code).to eq 200
       expect(current_path).to eq lock_path
 
-      click_button I18n.t("views.button.unlock_and_edit_forcibly")
+      click_button I18n.t("ss.buttons.unlock_and_edit_forcibly")
       expect(status_code).to eq 200
       expect(current_path).to eq edit_path
 

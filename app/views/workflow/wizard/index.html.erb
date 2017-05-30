@@ -33,6 +33,6 @@ $ ->
     <% else %>
       <%= select_tag :workflow_route, options_for_select(Workflow::Route.route_options(@cur_user)) %>
     <% end %>
-    <%= link_to t("workflow.button.select"), "#", class: "workflow-route-start cboxElement btn" %>
+    <%= link_to t("workflow.buttons.select"), "#", class: "workflow-route-start cboxElement btn" %>
   </dd>
 </dl>

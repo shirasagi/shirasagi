@@ -3,7 +3,7 @@
     <%= error_messages_for :item, header_message: false %>
     <%= render partial: "new", locals: { f: f, confirm: false } %>
     <footer class="send">
-      <%= f.submit t("member.button.confirm"), name: :submit %>
+      <%= f.submit t("member.buttons.confirm"), name: :submit %>
     </footer>
   </div>
 <% end %>

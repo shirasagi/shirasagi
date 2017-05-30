@@ -14,7 +14,7 @@
 
   <footer class="send">
     <%= f.submit t("chorg.views.run/confirmation.#{params[:type]}.run_button"), class: "btn-primary save" %>
-    <%= f.button t("views.button.cancel"), type: :reset, class: "btn-default",
+    <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default",
       onclick: "location.href='#{url_for(controller: :revisions, action: :show, id: @item.id)}'; return false;" %>
   </footer>
 <% end %>

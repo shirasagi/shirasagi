@@ -18,7 +18,7 @@ module SS::Addon::TwitterSetting
 
   def twitter_card_options
     %w(none summary summary_large_image).map do |v|
-      [I18n.t("views.options.twitter_card.#{v}"), v]
+      [I18n.t("ss.options.twitter_card.#{v}"), v]
     end
   end
 

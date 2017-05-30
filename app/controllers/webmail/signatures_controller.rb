@@ -6,7 +6,7 @@ class Webmail::SignaturesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:'mongoid.models.webmail/signature', { action: :index } ]
+      @crumbs << [t("mongoid.models.webmail/signature"), { action: :index } ]
     end
 
     def fix_params

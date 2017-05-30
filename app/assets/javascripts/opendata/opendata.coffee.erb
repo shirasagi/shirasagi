@@ -1,8 +1,6 @@
 #//= #require jquery.turbolinks
 #//= #require turbolinks
 
-<% environment.context_class.instance_eval { include ApplicationHelper } %>
-
 ##
 #  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 ##
@@ -97,7 +95,7 @@ class @Opendata
 
   @ajaxDelete:(elem, params = {}) ->
     $(elem).click (e) ->
-      return false if !confirm("<%= t "views.confirm.delete" %>")
+      return false if !confirm("<%= I18n.t "ss.confirm.delete" %>")
       self = $(this)
       defaults = {
         type: "DELETE",
@@ -118,7 +116,7 @@ class @Opendata
   @confirmUnloading: ->
     $("input[type=text],textarea,select").change ->
       $(window).on "beforeunload", ->
-        return "<%= t('views.confirm.unload') %>"
+        return "<%= I18n.t 'ss.confirm.unload' %>"
     $("input[type=submit]").click ->
       $(window).off "beforeunload"
 
@@ -155,7 +153,7 @@ class @Opendata_ListUI
       tbody = tr.parent()
       tr.find(".tap-menu a").each ->
         if $(this).attr("href")[-7..-1] == "/delete"
-          tr.find(".tap-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= t 'views.links.delete_all' %></a></nav>")
+          tr.find(".tap-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= I18n.t 'ss.links.delete_all' %></a></nav>")
       tr.find("input[type=checkbox]").each ->
         tr.toggleClass("checked", $(this).prop("checked"))
       tr.find("input[type=checkbox]").change ->

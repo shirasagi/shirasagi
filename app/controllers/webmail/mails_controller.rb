@@ -14,7 +14,7 @@ class Webmail::MailsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:'webmail.mail', { action: :index } ]
+      @crumbs << [t("webmail.mail"), { action: :index } ]
     end
 
     def fix_params
@@ -130,11 +130,11 @@ class Webmail::MailsController < ApplicationController
       @item = @model.new
       @item.attributes = get_params
 
-      if params[:commit] == I18n.t('views.button.draft_save')
+      if params[:commit] == I18n.t('ss.buttons.draft_save')
         notice = nil
         resp = @item.save_draft
       else
-        notice = t('views.notice.sent')
+        notice = t('ss.notice.sent')
         resp = @item.send_mail
       end
 

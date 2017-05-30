@@ -53,7 +53,7 @@ class Opendata::Agents::Nodes::Mypage::MyProfileController < ApplicationControll
           remote_addr: remote_addr,
           user_agent: request.user_agent)
 
-        redirect_to @cur_node.url, notice: t("views.notice.saved")
+        redirect_to @cur_node.url, notice: t("ss.notice.saved")
       else
         render action: :edit
       end

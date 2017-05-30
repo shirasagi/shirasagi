@@ -3,11 +3,8 @@ ja:
     files: ファイル
     new_directory: 新規フォルダー名
     new_files: アップロード
-
-  views:
     links:
       new_directory: 新規フォルダー
-      upload: アップロード
 
   modules:
     uploader: アップローダー

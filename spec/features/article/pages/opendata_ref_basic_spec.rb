@@ -50,7 +50,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       #
       # activate opendata integration
       #
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within '#addon-cms-agents-addons-opendata_ref-dataset' do
         find('.addon-head h2').click
@@ -59,9 +59,9 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_public').trigger('click')
       end
-      click_on I18n.t('views.button.publish_save')
+      click_on I18n.t('ss.buttons.publish_save')
 
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'public'
       expect(article_page.opendata_dataset_state).to eq 'public'
@@ -101,13 +101,13 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       #
       visit article_pages_path(site, article_node)
       click_on article_page.name
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
-      click_on I18n.t('views.button.draft_save')
+      click_on I18n.t('ss.buttons.draft_save')
       expect(page).to have_css('#alertExplanation h2', text: I18n.t('cms.alert'), wait: 60)
-      click_on I18n.t('views.button.ignore_alert')
+      click_on I18n.t('ss.buttons.ignore_alert')
 
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'closed'
       expect(article_page.opendata_dataset_state).to eq 'public'

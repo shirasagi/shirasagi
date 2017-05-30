@@ -7,7 +7,7 @@ class Cms::WordDictionariesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.word_dictionary", action: :index]
+      @crumbs << [t("cms.word_dictionary"), action: :index]
     end
 
     def fix_params

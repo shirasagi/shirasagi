@@ -1,10 +1,10 @@
 <%= node_navi :facility do %>
 
 <% if @cur_node.parent.present? %>
-<h3><%= link_to :"facility.page", facility_page_path(cid: @cur_node.parent.id, id: @cur_node.id) %></h3>
+<h3><%= link_to t("facility.page"), facility_page_path(cid: @cur_node.parent.id, id: @cur_node.id) %></h3>
 <% end %>
 
-<h3><%= link_to :"facility.image", facility_images_path %></h3>
-<h3><%= link_to :"facility.map", facility_maps_path %></h3>
+<h3><%= link_to t("facility.image"), facility_images_path %></h3>
+<h3><%= link_to t("facility.map"), facility_maps_path %></h3>
 
 <% end %>

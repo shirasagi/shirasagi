@@ -2,10 +2,10 @@
   <%= error_messages_for :item %>
 
   <section class="main-box">
-    <header><h2><%= t(:import) %></h2></header>
+    <header><h2><%= t("ss.import") %></h2></header>
 
     <dl class="see">
-      <dt><%= t :file %><%= @model.tt :in_file %></dt>
+      <dt><%= t "ss.file"%><%= @model.tt :in_file %></dt>
       <dd>
         <%= f.file_field :in_file %>
       </dd>
@@ -13,7 +13,7 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t(:import), class: :save %>
-    <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    <%= f.submit t("ss.import"), class: :save %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>

@@ -165,7 +165,7 @@ describe "inquiry_answers", dbscope: :example do
       it do
         visit index_path
         expect(page).to have_css(".list-item a", text: answer.data_summary)
-        click_on I18n.t('views.links.download')
+        click_on I18n.t('ss.links.download')
         expect(status_code).to eq 200
 
         csv_lines = CSV.parse(page.html.encode("UTF-8"))
@@ -199,7 +199,7 @@ describe "inquiry_answers", dbscope: :example do
       it do
         visit index_path
         expect(page).to have_css(".list-item a", text: answer.data_summary)
-        click_on I18n.t('views.links.download')
+        click_on I18n.t('ss.links.download')
         expect(status_code).to eq 200
 
         csv_lines = CSV.parse(page.html.encode("UTF-8"))

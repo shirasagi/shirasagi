@@ -31,7 +31,7 @@ describe "article_pages", dbscope: :example, js: true do
             fill_in "item[description]", with: "sample"
             click_button "公開保存"
           end
-          expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -66,7 +66,7 @@ describe "article_pages", dbscope: :example, js: true do
             click_button "下書き保存"
           end
           click_button "警告を無視する"
-          expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -100,7 +100,7 @@ describe "article_pages", dbscope: :example, js: true do
             fill_in "item[description]", with: "sample"
             click_button "公開保存"
           end
-          expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -141,7 +141,7 @@ describe "article_pages", dbscope: :example, js: true do
             fill_in "item[description]", with: "sample"
             click_button "公開保存"
           end
-          expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first

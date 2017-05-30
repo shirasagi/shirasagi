@@ -2,7 +2,7 @@
   <dt><%= @model.t :name %></dt>
   <dd>
   <%= @item.name %>
-  <%= link_to :"chorg.menus.revisions.execute_results", { controller: :results, action: :index, rid: @item.id }, { class: "btn result" } %>
+  <%= link_to t("chorg.menus.revisions.execute_results"), { controller: :results, action: :index, rid: @item.id }, { class: "btn result" } %>
   </dd>
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>
@@ -10,6 +10,6 @@
   <% end %>
 </dl>
 <footer class="send">
-  <%= link_to :"chorg.menus.revisions.test_execute", { controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::TEST }, { class: "btn-primary" } %>
-  <%= link_to :"chorg.menus.revisions.production_execute", { controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::MAIN }, { class: "btn-primary" } %>
+  <%= link_to t("chorg.menus.revisions.test_execute"), { controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::TEST }, { class: "btn-primary" } %>
+  <%= link_to t("chorg.menus.revisions.production_execute"), { controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::MAIN }, { class: "btn-primary" } %>
 </footer>

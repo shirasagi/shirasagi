@@ -31,7 +31,7 @@
     var deletion = true
 
     if (value) {
-      deletion = confirm("<%= I18n.t("views.confirm.delete") %>");
+      deletion = confirm("<%= I18n.t("ss.confirm.delete") %>");
     }
     if (deletion) {
       if ($(".parent-crumbs").length > 1){
@@ -76,7 +76,7 @@
 
       <dd class="crumb-urls">
         <%= text_field_tag "item[parent_crumb_urls][]", url, class: :parent_crumb_urls %>
-        <%= button_tag t("views.button.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
+        <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
       </dd>
       <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
 
@@ -85,11 +85,11 @@
 
     <dd class="crumb-urls">
       <%= text_field_tag "item[parent_crumb_urls][]", "", class: :parent_crumb_urls %>
-      <%= button_tag t("views.button.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
+      <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
     </dd>
     <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
 
   <% end %>
 
-  <dd><%= button_tag t("cms.button.add_crumb"), { type: :button, class: "add-crumb btn" } %></dd>
+  <dd><%= button_tag t("cms.buttons.add_crumb"), { type: :button, class: "add-crumb btn" } %></dd>
 </dl>

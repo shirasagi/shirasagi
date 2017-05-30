@@ -19,7 +19,7 @@ module Cms::Addon
 
     def default_release_plan_state_options
       %w(disabled enabled).map do |v|
-        [ I18n.t("views.options.state.#{v}"), v ]
+        [ I18n.t("ss.options.state.#{v}"), v ]
       end
     end
 

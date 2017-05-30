@@ -26,7 +26,7 @@ ja:
       search: データセットグループを検索
       select: データセットグループを設定する
       deselect: 削除
-    button:
+    buttons:
       delete_account: アカウント削除
       next: 次へ進む
       build: RDFを作成する
@@ -44,11 +44,11 @@ ja:
         validate_appurl: はアプリのファイルを登録している場合、入力できません。
         validate_appfile: はアプリの公開URLを登録している場合、登録できません。
     crawl_state:
-      same: 　
+      same:
       updated: 更新
       deleted: 削除
     crawl_update:
-      none: 　
+      none:
       auto: 自動
     crawl_update_name:
       none: 手動
