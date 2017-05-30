@@ -87,7 +87,11 @@ $ ->
                 <%= button_tag t("workflow.button.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
               </div>
               <div class="checkbox">
-                <%= check_box_tag 'forced-update', true, @cur_site.forced_update, class: 'forced' %><%= t("errors.messages.forced_update") %>
+                <% if @cur_site.forced_update == "enabled" %>
+                <%= check_box_tag 'forced-request', true, true, class: 'forced' %><%= t("errors.messages.forced_update") %>
+                <% else %>
+                <%= check_box_tag 'forced-request', true, false, class: 'forced' %><%= t("errors.messages.forced_update") %>
+                <% end %>
               </div>
             </div>
           </div>

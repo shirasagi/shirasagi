@@ -7,8 +7,8 @@ module SS::Addon::ApproveSetting
   end
   def forced_update_options
     [
-      [I18n.t("views.options.state.disabled"), nil],
-      [I18n.t("views.options.state.enabled"), true],
+      [I18n.t("views.options.state.enabled"), "enabled"],
+      [I18n.t("views.options.state.disabled"), "disabled"]
     ]
   end
 end
