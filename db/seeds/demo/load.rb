@@ -801,9 +801,9 @@ body_layout = save_body_layouts name: "本文レイアウト",
   html: body_layout_html,
   parts: %W(本文1 本文2 本文3),
   site_id: @site.id
-save_page route: "article/page", filename: "docs/body_layout.html", name: "本文レイアウト",
-  layout_id: layouts["pages"].id, body_layout_id: body_layout.id, body_parts: %W(本文1 本文2 本文3),
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
+#save_page route: "article/page", filename: "docs/body_layout.html", name: "本文レイアウト",
+#  layout_id: layouts["pages"].id, body_layout_id: body_layout.id, body_parts: %W(本文1 本文2 本文3),
+#  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 
 ## -------------------------------------
 puts "# articles"
