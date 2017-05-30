@@ -82,8 +82,9 @@ module Job::LogsFilter
       CSV.generate do |data|
         data << %w(ClassName Started Closed State Args Logs)
         items.each do |item|
+          class_name = item.class_name.underscore
           data << [
-            t(item.class_name.underscore, scope: "job.models"),
+            t(class_name, scope: "job.models", default: class_name.humanize),
             item.start_label,
             item.closed_label,
             t(item.state, scope: "job.state"),
