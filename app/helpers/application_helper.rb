@@ -30,13 +30,6 @@ module ApplicationHelper
     nil
   end
 
-  def link_to(*args)
-    if args[0].class == Symbol
-      args[0] = I18n.t "ss.links.#{args[0]}", default: nil || t(args[0])
-    end
-    super *args
-  end
-
   def url_for(*args)
     url = super
     if SS::MobileSupport.mobile?(request)
