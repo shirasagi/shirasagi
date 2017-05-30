@@ -7,7 +7,7 @@
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t(:basic_info) %></h2></div><% end %>
+    <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div><% end %>
     <div class="addon-body">
       <%= render file: '_form', locals: { f: f } %>
     </div>

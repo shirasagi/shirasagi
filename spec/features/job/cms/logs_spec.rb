@@ -35,7 +35,7 @@ describe "job_cms_logs", dbscope: :example do
       expect(status_code).to eq 200
 
       within "form" do
-        click_button I18n.t(:download, scope: "views")
+        click_button I18n.t("ss.download")
       end
 
       expect(status_code).to eq 200
