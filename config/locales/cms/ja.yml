@@ -1,60 +1,77 @@
 ja:
   cms:
+    add_max_file_size: 最大ファイルサイズを設定する
     alert: 警告
+    all_contents: 全コンテンツ一覧出力
+    body_layout: 本文レイアウト
+    calendar_view: カレンダー表示
+    check_links: リンクチェック実行結果
+    check_links_nodes: フォルダー
+    check_links_pages: ページ
     config: 設定
-    site_config: サイト設定
-    site_info: サイト情報
     content: コンテンツ
+    convert_to_cms_page: 固定ページに変換する
+    editor_template: テンプレート
+    file: 共有ファイル
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
-    import_page: ページ取り込み
-    import_node: フォルダー取り込み
-    import_page_index: 取り込みページ
-    import_node_index: 取り込みフォルダー
-    all_contents: 全コンテンツ一覧出力
-    all_content:
-      description: サイト内の全コンテンツを出力します。
-    import_page: 取り込みページ
     group: グループ
+    import_node: フォルダー取り込み
+    import_node_index: 取り込みフォルダー
+    import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
+    import_page: 取り込みページ
+    import_page_index: 取り込みページ
+    important_notice: 重要なお知らせ
     layout: レイアウト
-    body_layout: 本文レイアウト
     link_check: リンクチェック
-    check_links: リンクチェック実行結果
-    check_links_pages: ページ
-    check_links_nodes: フォルダー
-    source_cleaner: ソースクリーニング
-    word_dictionary: 単語置換辞書
-    preview: プレビュー
+    list_view: リスト表示
+    max_file_size: 最大ファイルサイズ
+    max_file_size_setting: 最大ファイルサイズ設定
     member: メンバー
+    mobile_size_check: 携帯データサイズチェック
     modules: モジュール
     node: フォルダー
     node_config: フォルダー設定
+    notice: お知らせ
     page: 固定ページ
+    page_search: ページ検索
     part: パーツ
-    file: 共有ファイル
+    postal_code: 郵便番号
+    postal_code_normalize_city: 以下に掲載がない場合
+    preview: プレビュー
+    preview_mobile_page: 携帯プレビュー
     preview_page: プレビュー
     preview_pc_page: PCプレビュー
-    preview_mobile_page: 携帯プレビュー
     preview_site: サイトプレビュー
     role: 権限/ロール
     root_menu: メインメニュー
     search_contents: サイト内検索
-    search_contents_pages: ページ検索
+    search_contents_condition: "検索条件: %{condition}"
+    search_contents_count: "%{count} 件の検索結果"
     search_contents_html: HTML検索と置換
+    search_contents_pages: ページ検索
     site: サイト
+    site_config: サイト設定
+    site_info: サイト情報
     site_menu: サイトメニュー
+    source_cleaner: ソースクリーニング
+    source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
-    mobile_size_check: 携帯データサイズチェック
+    theme_template: Theme切り替え
     user: ユーザー
     view_page: 公開画面
     view_site: サイト確認
-    editor_template: テンプレート
-    theme_template: Theme切り替え
-    source_cleaner_template: ソースクリーニング
-    convert_to_cms_page: 固定ページに変換する
-    notice: お知らせ
-    important_notice: 重要なお知らせ
-    page_search: ページ検索
+    word_dictionary: 単語置換辞書
+
+    adobe_reader:
+      remark:
+        - <div>
+        - PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
+        - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
+        - </div>
+        - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
+    all_content:
+      description: サイト内の全コンテンツを出力します。
     roles:
       admin: 管理者
       user: 編集者
@@ -68,24 +85,6 @@ ja:
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
     messages:
       import: インポートを開始しました
-    search_contents_condition: "検索条件: %{condition}"
-    search_contents_count: "%{count} 件の検索結果"
-    postal_code: 郵便番号
-    import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
-    postal_code_normalize_city: 以下に掲載がない場合
-    calendar_view: カレンダー表示
-    list_view: リスト表示
-    max_file_size: 最大ファイルサイズ
-    max_file_size_setting: 最大ファイルサイズ設定
-    add_max_file_size: 最大ファイルサイズを設定する
-
-    adobe_reader:
-      remark:
-        - <div>
-        - PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
-        - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
-        - </div>
-        - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
     apis:
       categories:
         index: カテゴリーを選択する

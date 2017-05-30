@@ -342,13 +342,16 @@ ja:
         current_count: 処理件数
         logs: ログ
       ss/model/file:
+        in_file: ファイル
+        in_files: ファイル
+        image: 画像
+        download: ダウンロード
         model: モデル
         state: 状態
-        in_file: ファイル
         name: ファイル名（表示用）
         filename: ファイル名
         size: ファイルサイズ
-        content_type: Content Type
+        content_type: コンテンツタイプ
         resizing: リサイズ
         geo_location: 緯度・経度
       ss/model/role:
