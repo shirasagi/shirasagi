@@ -22,6 +22,11 @@ describe Sys::SiteCopyJob, dbscope: :example do
       let(:upper_html) { '<div><span>upper</span>' }
       let(:loop_html) { '<article class="#{class}"><header><h2>#{name}</h2></header><p>#{summary}</p></article>' }
       let(:lower_html) { '<span>lower</span></div>' }
+      let(:src_node) { "#{::Rails.root}/spec/fixtures/ss" }
+      let(:file_path1) { '/logo.png' }
+      let(:file_path2) { '/migration' }
+      let(:file_path3) { '/migration/fix_ss_files_url/before.html' }
+      let(:file_path4) { "/#{unique_id}" }
       let!(:node1) do
         create(:cms_node_node, cur_site: site, layout_id: layout.id,
                upper_html: upper_html, loop_html: loop_html, lower_html: lower_html)
@@ -35,6 +40,13 @@ describe Sys::SiteCopyJob, dbscope: :example do
         create(:facility_node_node, cur_site: site, layout_id: layout.id,
                upper_html: upper_html, loop_html: loop_html, lower_html: lower_html,
                opendata_site_ids: [ 5 ], csv_assoc: 'enabled')
+      end
+
+      let!(:node4) do
+        node = create(:uploader_node_file, cur_site: site, layout_id: layout.id)
+        FileUtils.mkdir_p(File.dirname(node.path))
+        FileUtils.cp_r(src_node, node.path)
+        node
       end
 
       before do
@@ -92,6 +104,18 @@ describe Sys::SiteCopyJob, dbscope: :example do
           expect(dest_node.lower_html).to eq node2.lower_html
           expect(dest_node.opendata_site_ids).to eq []
           expect(dest_node.csv_assoc).to be_nil
+        end
+
+        Cms::Node.site(dest_site).find_by(filename: node4.filename).tap do |dest_node|
+          dest_node = dest_node.becomes_with_route
+          expect(dest_node.name).to eq node4.name
+          expect(dest_node.layout_id).to eq dest_layout.id
+          expect(dest_node.user_id).to eq node4.user_id
+          dest_node_path = dest_node.path
+          expect(File.exist?("#{dest_node_path}#{file_path1}")).to be_truthy
+          expect(File.exist?("#{dest_node_path}#{file_path2}")).to be_truthy
+          expect(File.exist?("#{dest_node_path}#{file_path3}")).to be_truthy
+          expect(File.exist?("#{dest_node_path}#{file_path4}")).to be_falsy
         end
       end
     end
