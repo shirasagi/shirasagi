@@ -13,7 +13,7 @@ module Kana::Convertor
     def kana_html(site, html)
       return html unless @@mecab
 
-      html = html.gsub("\u00A0", " ")
+      html = html.tr("\u00A0", " ")
 
       text = html.gsub(/[\r\n\t]/, " ")
       tags = %w(head ruby script style)

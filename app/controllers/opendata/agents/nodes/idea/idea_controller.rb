@@ -46,7 +46,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
       respond_to do |format|
         format.html { render }
         format.rss  { render_rss @cur_node, @items }
-        end
+      end
     end
 
     def rss

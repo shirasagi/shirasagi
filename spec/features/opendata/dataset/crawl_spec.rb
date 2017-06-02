@@ -72,4 +72,4 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
 
    end
 
- end
+end

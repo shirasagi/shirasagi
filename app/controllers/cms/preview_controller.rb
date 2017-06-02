@@ -65,7 +65,7 @@ class Cms::PreviewController < ApplicationController
 
   private
     def set_site
-      @cur_site = request.env["ss.site"] = SS::Site.find params[:site]
+      @cur_site = request.env["ss.site"] = SS::Site.find(params[:site])
       @preview  = true
     end
 
@@ -86,34 +86,33 @@ class Cms::PreviewController < ApplicationController
       super
       return if response.body.present?
 
-      if @cur_path =~ /^\/fs\//
-        fs_path  = SS::Application.routes.recognize_path(@cur_path)
-        id_path  = fs_path[:id_path] || fs_path[:id]
-        action   = fs_path[:action]
-        size     = fs_path[:size]
-        filename = fs_path[:filename]
-        width    = params[:width]
-        height   = params[:height]
+      return unless @cur_path =~ /^\/fs\//
+      fs_path  = SS::Application.routes.recognize_path(@cur_path)
+      id_path  = fs_path[:id_path] || fs_path[:id]
+      action   = fs_path[:action]
+      size     = fs_path[:size]
+      filename = fs_path[:filename]
+      width    = params[:width]
+      height   = params[:height]
 
-        @item = SS::File.find_by(id: id_path.delete("/"), filename: filename) rescue nil
-        raise "404" unless @item
-        if width.present? && height.present?
+      @item = SS::File.find_by(id: id_path.delete("/"), filename: filename) rescue nil
+      raise "404" unless @item
+      if width.present? && height.present?
+        send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+          disposition: :inline, width: width, height: height
+      else
+        if action == "thumb"
+          thumb = @item.thumb
+          thumb = @item.thumb(size) if size
+          @item = thumb if thumb
+        end
+
+        if @thumb_width && @thumb_height
           send_thumb @item.read, type: @item.content_type, filename: @item.filename,
             disposition: :inline, width: width, height: height
         else
-          if action == "thumb"
-            thumb = @item.thumb
-            thumb = @item.thumb(size) if size
-            @item = thumb if thumb
-          end
-
-          if @thumb_width && @thumb_height
-            send_thumb @item.read, type: @item.content_type, filename: @item.filename,
-              disposition: :inline, width: width, height: height
-          else
-            send_file @item.path, type: @item.content_type, filename: @item.filename,
-              disposition: :inline, x_sendfile: true
-          end
+          send_file @item.path, type: @item.content_type, filename: @item.filename,
+            disposition: :inline, x_sendfile: true
         end
       end
       #raise "404" unless Fs.exists?(file)

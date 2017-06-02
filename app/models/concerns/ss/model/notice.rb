@@ -147,7 +147,7 @@ included do
       end
       self.file_ids = ids
     end
-  end
+end
 
   private
     def set_released

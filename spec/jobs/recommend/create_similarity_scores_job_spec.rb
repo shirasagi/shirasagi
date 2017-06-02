@@ -4,7 +4,7 @@ require 'timecop'
 describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:site2) { create :cms_site, name: "another", host: "another", domains: "another.localhost.jp" }
-  let!(:tokens) { 5.times.map { SecureRandom.hex(16) } }
+  let!(:tokens) { Array.new(5) { SecureRandom.hex(16) } }
 
   describe ".perform_later" do
     context "with 7days" do
@@ -141,6 +141,6 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
         expect(Recommend::SimilarityScore.where(path: "/site2/page3.html").first).to be_nil
         expect(Recommend::SimilarityScore.where(path: "/site2/page4.html").first).to be_nil
       end
-    end
+   end
   end
 end
