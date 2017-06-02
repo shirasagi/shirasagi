@@ -113,7 +113,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
           expect(dest_node.user_id).to eq node4.user_id
           dest_node_path = dest_node.path
           expect(File.exist?("#{dest_node_path}#{file_path1}")).to be_truthy
-          expect(File.exist?("#{dest_node_path}#{file_path2}")).to be_truthy
+          expect(Dir.exist?("#{dest_node_path}#{file_path2}")).to be_truthy
           expect(File.exist?("#{dest_node_path}#{file_path3}")).to be_truthy
           expect(File.exist?("#{dest_node_path}#{file_path4}")).to be_falsy
         end
