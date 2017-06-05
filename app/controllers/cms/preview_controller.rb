@@ -73,7 +73,7 @@ class Cms::PreviewController < ApplicationController
       set_site
       @cur_path ||= request_path
       @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
-      @cur_path = "index.html" if @cur_path.blank?
+      @cur_path = "/index.html" if @cur_path.blank?
       @cur_path = URI.decode(@cur_path)
       set_main_path
       @cur_date = params[:preview_date].present? ? params[:preview_date].in_time_zone : Time.zone.now
@@ -124,12 +124,23 @@ class Cms::PreviewController < ApplicationController
 
       body = response.body.force_encoding("utf-8")
       body.gsub!(/(href|src)=".*?"/) do |m|
-        url = m.match(/.*?="(.*?)"/)[1]
-        if url =~ /^\/(assets|assets-dev)\//
-          m
-        elsif url =~ /^\/(?!\/)/
-          m.sub(/="/, "=\"#{preview_url}")
-        else
+        begin
+          url = m.match(/.*?="(.*?)"/)[1]
+          if url =~ /^\/(assets|assets-dev)\//
+            m
+          elsif url =~ /^\/\//
+            m
+          else
+            uri = URI.parse(url)
+            if uri.scheme
+              m
+            else
+              path = @cur_path.sub(/\/[^\/]*$/, "/")
+              path = ::Pathname.new(path).join(uri.path).to_s
+              m.sub(/=".*?"/, "=\"#{preview_url}#{path}\"")
+            end
+          end
+        rescue
           m
         end
       end
