@@ -20,6 +20,7 @@ gem 'mongoid-grid_fs'
 
 # Assets
 gem 'autosize-rails'
+gem 'bootstrap-sass'
 gem 'bxslider-rails'
 gem 'js_cookie_rails'
 gem 'jquery-form-rails'
