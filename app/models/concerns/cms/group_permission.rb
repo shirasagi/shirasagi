@@ -27,7 +27,7 @@ module Cms::GroupPermission
 
     action = permission_action || action
     if new_record?
-      is_owned = node ? node.owned?(user) : false
+      is_owned = node ? node.owned?(user) : true
     else
       is_owned = owned?(user)
     end
