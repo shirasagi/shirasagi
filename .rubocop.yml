@@ -9,6 +9,9 @@ AllCops:
     - vendor/bundle/**/*
     - vendor/gems/**/*
 
+  # Default formatter will be used if no `-f/--format` option is given.
+  DefaultFormatter: fuubar
+
 Rails:
   Enabled: true
 
