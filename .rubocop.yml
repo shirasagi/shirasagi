@@ -19,28 +19,81 @@ Rails:
 Rails/Output:
   Enabled: false
 
-# Configuration parameters: AlignWith, SupportedStyles.
 Lint/DefEndAlignment:
-  Enabled: true
+  AutoCorrect: false
+
+# Indent private/protected/public as deep as method definitions
+Style/AccessModifierIndentation:
+  EnforcedStyle: indent
+  SupportedStyles:
+    - outdent
+    - indent
+  # By default, the indentation width from Layout/IndentationWidth is used
+  # But it can be overridden by setting this parameter
+  IndentationWidth: ~
 
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
+# Checks if usage of `%()` or `%Q()` matches configuration.
 Style/BarePercentLiterals:
-  Enabled: true
+  EnforcedStyle: bare_percent
+  SupportedStyles:
+    - percent_q
+    - bare_percent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/EmptyElse:
+  EnforcedStyle: empty
+  SupportedStyles:
+    - empty
+    - nil
+    - both
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/IndentationConsistency:
+  # The difference between `rails` and `normal` is that the `rails` style
+  # prescribes that in classes and modules the `protected` and `private`
+  # modifier keywords shall be indented the same as public methods and that
+  # protected and private members shall be indented one step more than the
+  # modifiers. Other than that, both styles mean that entities on the same
+  # logical depth shall have the same indentation.
+  EnforcedStyle: rails
+  SupportedStyles:
+    - normal # Offense count: 2500
+    - rails # Offense count: 41
 
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
 Style/PercentLiteralDelimiters:
-  Enabled: true
-
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/PercentQLiterals:
-  Enabled: true
+  # Specify the default preferred delimiter for all types with the 'default' key
+  # Override individual delimiters (even with default specified) by specifying
+  # an individual key
+  PreferredDelimiters:
+    default: ()
+    '%i': '[]'
+    '%I': '[]'
+    '%r': '{}'
 
 # Cop supports --auto-correct.
 Style/SpaceAfterComma:
   Enabled: true
+
+# Cop supports --auto-correct.
+Style/SpaceBeforeFirstArg:
+  # When `true`, allows most uses of extra spacing if the intent is to align
+  # things with the previous or next line, not counting empty lines or comment
+  # lines.
+  AllowForAlignment: true
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/SignalException:
+  EnforcedStyle: only_raise
+  SupportedStyles:
+    - only_raise
+    - only_fail
+    - semantic
 
 # Cop supports --auto-correct.
 Style/TrailingWhitespace:
@@ -49,6 +102,22 @@ Style/TrailingWhitespace:
 # Cop supports --auto-correct.
 Style/UnneededPercentQ:
   Enabled: true
+
+# Cop supports --auto-correct.
+# Configuration parameters: WordRegex.
+Style/WordArray:
+  EnforcedStyle: percent
+  SupportedStyles:
+    # percent style: %w(word1 word2)
+    - percent
+    # bracket style: ['word1', 'word2']
+    - brackets
+  # The `MinSize` option causes the `WordArray` rule to be ignored for arrays
+  # smaller than a certain size.  The rule is only applied to arrays
+  # whose element count is greater than or equal to `MinSize`.
+  MinSize: 0
+  # The regular expression `WordRegex` decides what is considered a word.
+  WordRegex: !ruby/regexp '/\A[\p{Word}\n\t]+\z/'
 
 Lint/RescueException:
   Enabled: false
