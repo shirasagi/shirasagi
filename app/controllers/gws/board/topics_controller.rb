@@ -10,10 +10,10 @@ class Gws::Board::TopicsController < ApplicationController
     def set_crumbs
       set_category
       if @category.present?
-        @crumbs << [:"modules.gws/board", gws_board_topics_path]
+        @crumbs << [t("modules.gws/board"), gws_board_topics_path]
         @crumbs << [@category.name, action: :index]
       else
-        @crumbs << [:"modules.gws/board", action: :index]
+        @crumbs << [t("modules.gws/board"), action: :index]
       end
     end
 

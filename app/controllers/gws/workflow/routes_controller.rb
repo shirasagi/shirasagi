@@ -9,7 +9,7 @@ class Gws::Workflow::RoutesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"workflow.name", action: :index]
+      @crumbs << [t("workflow.name"), action: :index]
     end
 
     def fix_params

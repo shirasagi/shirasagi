@@ -6,7 +6,7 @@ class Gws::PublicLinksController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.gws/link", action: :index]
+      @crumbs << [t("mongoid.models.gws/link"), action: :index]
     end
 
   public

@@ -8,6 +8,6 @@ module Jmaxml::Addon::Action::PublishingOffice
   end
 
   def publishing_office_state_options
-    %w(hide show).map { |v| [ I18n.t("views.options.state.#{v}"), v ] }
+    %w(hide show).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
   end
 end

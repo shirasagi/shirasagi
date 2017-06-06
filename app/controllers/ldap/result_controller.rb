@@ -13,7 +13,7 @@ class Ldap::ResultController < ApplicationController
     end
 
     def set_crumbs
-      @crumbs << [:"ldap.result", action: :index]
+      @crumbs << [t("ldap.result"), action: :index]
     end
 
   public

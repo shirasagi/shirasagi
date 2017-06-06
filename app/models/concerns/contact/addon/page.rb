@@ -16,8 +16,8 @@ module Contact::Addon
 
     def contact_state_options
       [
-        [I18n.t('views.options.state.show'), 'show'],
-        [I18n.t('views.options.state.hide'), 'hide'],
+        [I18n.t('ss.options.state.show'), 'show'],
+        [I18n.t('ss.options.state.hide'), 'hide'],
       ]
     end
 

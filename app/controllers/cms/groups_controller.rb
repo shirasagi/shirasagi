@@ -8,7 +8,7 @@ class Cms::GroupsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.group", action: :index]
+      @crumbs << [t("cms.group"), action: :index]
     end
 
     def fix_params
@@ -80,7 +80,7 @@ class Cms::GroupsController < ApplicationController
       @item = @model.new get_params
       @item.cur_site = @cur_site
       result = @item.import
-      flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
+      flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
       render_create result, location: { action: :index }, render: { file: :import }
     end
 end

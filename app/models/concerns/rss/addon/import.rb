@@ -21,7 +21,7 @@ module Rss::Addon
     end
 
     def page_state_options
-      %w(public closed).map { |value| [I18n.t("views.options.state.#{value}"), value] }
+      %w(public closed).map { |value| [I18n.t("ss.options.state.#{value}"), value] }
     end
   end
 end

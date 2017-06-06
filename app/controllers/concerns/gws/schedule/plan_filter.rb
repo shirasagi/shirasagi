@@ -10,7 +10,7 @@ module Gws::Schedule::PlanFilter
 
   private
     def set_crumbs
-      @crumbs << [:"modules.gws/schedule", gws_schedule_plans_path]
+      @crumbs << [t("modules.gws/schedule"), gws_schedule_plans_path]
     end
 
     def fix_params

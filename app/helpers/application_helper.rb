@@ -7,11 +7,6 @@ module ApplicationHelper
     end
   end
 
-  def t(key, opts = {})
-    opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
-    I18n.t key, opts.merge(default: key.to_s.humanize)
-  end
-
   def br(str)
     h(str.to_s).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
   end
@@ -33,13 +28,6 @@ module ApplicationHelper
     return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
     return :current if current =~ /^#{Regexp.escape(url)}(\/|\?|$)/
     nil
-  end
-
-  def link_to(*args)
-    if args[0].class == Symbol
-      args[0] = I18n.t "views.links.#{args[0]}", default: nil || t(args[0])
-    end
-    super *args
   end
 
   def url_for(*args)

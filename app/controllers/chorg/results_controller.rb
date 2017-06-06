@@ -12,7 +12,7 @@ class Chorg::ResultsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"chorg.revision", controller: :revisions, action: :index]
+      @crumbs << [t("chorg.revision"), controller: :revisions, action: :index]
     end
 
     def filter_permission

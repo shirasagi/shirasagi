@@ -1,25 +1,25 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :new, action: :new %>
+      <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :back_to_show, action: :show, id: @item %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :edit, action: :edit, id: @item %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to(:copy, action: :copy, id: @item) rescue nil %>
+      <%= link_to(t('ss.links.copy'), action: :copy, id: @item) rescue nil %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :delete, action: :delete, id: @item %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

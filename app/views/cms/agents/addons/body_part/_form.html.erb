@@ -17,7 +17,6 @@ switch ("<%= SS.config.cms.html_editor %>"){
 }
 
 var body_parts = <%= raw @item.body_parts.to_json %>;
-var body_latyout_id = $("#item_body_layout_id").val();
 var select_body_layout = function() {
   var site = <%= @cur_site.id %>;
   var id = $(this).val();

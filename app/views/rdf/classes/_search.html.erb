@@ -23,6 +23,6 @@
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.text_field :keyword, style: "width: 250px;" %>
     <%= f.select :category, category_options, include_blank: true %>
-    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
 </div>

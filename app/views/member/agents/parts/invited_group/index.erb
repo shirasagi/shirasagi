@@ -13,9 +13,9 @@
         <tr>
           <td class="item name"><%= link_to item.name, "#{@my_group_node.url}#{item.id}/" %></td>
           <td class="item operation">
-            <%= link_to t("member.button.accept"), "#{@my_group_node.url}#{item.id}/accept" %>
+            <%= link_to t("member.buttons.accept"), "#{@my_group_node.url}#{item.id}/accept" %>
             |
-            <%= link_to t("member.button.reject"), "#{@my_group_node.url}#{item.id}/reject" %>
+            <%= link_to t("member.buttons.reject"), "#{@my_group_node.url}#{item.id}/reject" %>
           </td>
         </tr>
       <% end %>

@@ -21,7 +21,7 @@ module Cms
     Cms::Role.permission :edit_cms_roles
     Cms::Role.permission :edit_cms_members
     Cms::Role.permission :edit_cms_editor_templates
-    #Cms::Role.permission :edit_cms_body_layouts
+    Cms::Role.permission :edit_cms_body_layouts
     Cms::Role.permission :use_cms_tools
     Cms::Role.permission :use_cms_editor_extensions
     Cms::Role.permission :read_other_cms_nodes

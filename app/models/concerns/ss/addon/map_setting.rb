@@ -12,8 +12,8 @@ module SS::Addon
 
     def map_api_options
       [
-        [I18n.t("views.options.map_api.googlemaps"), "googlemaps"],
-        [I18n.t("views.options.map_api.openlayers"), "openlayers"],
+        [I18n.t("ss.options.map_api.googlemaps"), "googlemaps"],
+        [I18n.t("ss.options.map_api.openlayers"), "openlayers"],
       ]
     end
 

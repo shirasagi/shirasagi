@@ -36,9 +36,9 @@ module Cms::Addon::Import
             line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
             line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
             if item.initial_password_warning.present?
-              line << I18n.t('views.options.state.enabled')
+              line << I18n.t('ss.options.state.enabled')
             else
-              line << I18n.t('views.options.state.disabled')
+              line << I18n.t('ss.options.state.disabled')
             end
             line << item.groups.map(&:name).join("\n")
             line << item.ldap_dn
@@ -116,7 +116,7 @@ module Cms::Addon::Import
 
         # initial_password_warning
         initial_password_warning = row[t("initial_password_warning")].to_s.strip
-        if initial_password_warning == I18n.t('views.options.state.enabled')
+        if initial_password_warning == I18n.t('ss.options.state.enabled')
           item.initial_password_warning = 1
         else
           item.initial_password_warning = nil

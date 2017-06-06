@@ -10,10 +10,10 @@ class Gws::Share::FilesController < ApplicationController
     def set_crumbs
       set_category
       if @category.present?
-        @crumbs << [:"mongoid.models.gws/share", gws_share_files_path]
+        @crumbs << [t("mongoid.models.gws/share"), gws_share_files_path]
         @crumbs << [@category.name, action: :index]
       else
-        @crumbs << [:"mongoid.models.gws/share", action: :index]
+        @crumbs << [t("mongoid.models.gws/share"), action: :index]
       end
     end
 

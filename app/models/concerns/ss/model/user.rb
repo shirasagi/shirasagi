@@ -176,8 +176,8 @@ module SS::Model::User
 
   def initial_password_warning_options
     [
-      [I18n.t('views.options.state.disabled'), ''],
-      [I18n.t('views.options.state.enabled'), 1],
+      [I18n.t('ss.options.state.disabled'), ''],
+      [I18n.t('ss.options.state.enabled'), 1],
     ]
   end
 
@@ -187,13 +187,13 @@ module SS::Model::User
 
   def session_lifetime_options
     [5, 15, 30, 60].map do |min|
-      [I18n.t("views.options.session_lifetime.#{min}min"), min * 60]
+      [I18n.t("ss.options.session_lifetime.#{min}min"), min * 60]
     end
   end
 
   def restriction_options
     %w(none api_only).map do |v|
-      [ I18n.t("views.options.restriction.#{v}"), v ]
+      [ I18n.t("ss.options.restriction.#{v}"), v ]
     end
   end
 

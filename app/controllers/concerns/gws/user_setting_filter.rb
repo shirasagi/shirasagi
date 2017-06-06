@@ -14,7 +14,7 @@ module Gws::UserSettingFilter
     end
 
     def set_crumbs
-      #@crumbs << [:"gws.setting", gws_settings_path]
+      #@crumbs << [t("gws.setting"), gws_settings_path]
     end
 
     def fix_params

@@ -55,8 +55,8 @@ end
       <%= paginate classes if classes.try(:current_page) %>
 
       <footer class="send">
-        <%= f.submit t("opendata.button.next"), class: :save %>
-        <%= f.button t("opendata.button.back"), type: :reset, onclick: "location.href='#{prev_url}'; return false;" %>
+        <%= f.submit t("opendata.buttons.next"), class: :save %>
+        <%= f.button t("opendata.buttons.back"), type: :reset, onclick: "location.href='#{prev_url}'; return false;" %>
       </footer>
 
       <%= f.hidden_field "xxxxx", value: "" %>

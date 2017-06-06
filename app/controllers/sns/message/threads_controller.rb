@@ -7,7 +7,7 @@ class Sns::Message::ThreadsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sns.message", sns_message_threads_path]
+      @crumbs << [t("sns.message"), sns_message_threads_path]
     end
 
     def fix_params

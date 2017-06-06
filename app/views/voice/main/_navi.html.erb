@@ -1,7 +1,7 @@
 <nav class="mod-navi">
   <h2><%= t "voice.file" %></h2>
-  <h3><%= link_to :"views.voice/files.index", voice_files_path %></h3>
-  <h3><%= link_to :"views.voice/error_files.index", voice_error_files_path %></h3>
+  <h3><%= link_to t("views.voice/files.index"), voice_files_path %></h3>
+  <h3><%= link_to t("views.voice/error_files.index"), voice_error_files_path %></h3>
 </nav>
 
 <%= render partial: "cms/main/conf_navi" %>

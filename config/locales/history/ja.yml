@@ -20,7 +20,7 @@ ja:
     notice:
       restore: システムのバージョンが異なる場合、正常に動作しなくなる可能性があります。
       restored: 復元しました。
-    button:
+    buttons:
       restore: 復元
 
   modules:

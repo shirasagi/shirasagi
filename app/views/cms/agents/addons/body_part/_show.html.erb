@@ -4,14 +4,14 @@
 <%= jquery do %>
 
 var body_parts = <%= raw @item.body_parts.to_json %>;
-var body_latyout_id = <%= raw @item.body_layout_id.to_json %>;
+var body_layout_id = <%= raw @item.body_layout_id.to_json %>;
 var site = <%= raw @cur_site.id.to_json %>;
 $(".mod-body-part-html").html(SS.loading);
-if (body_latyout_id) {
+if (body_layout_id) {
   $("#addon-cms-agents-addons-body").hide();
   $("#addon-cms-agents-addons-body_part").show();
 
-  url = "/.s" + site + "/cms/body_layouts/" + body_latyout_id + ".json";
+  url = "/.s" + site + "/cms/body_layouts/" + body_layout_id + ".json";
   $.get(url, function(resp){
     $(".mod-body-part-html").html("");
     var body_layout = resp;

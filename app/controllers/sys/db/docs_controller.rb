@@ -8,7 +8,7 @@ class Sys::Db::DocsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sys.db_tool", sys_db_path]
+      @crumbs << [t("sys.db_tool"), sys_db_path]
       @crumbs << [@coll.name, sys_db_docs_path(coll: @coll.name)]
     end
 

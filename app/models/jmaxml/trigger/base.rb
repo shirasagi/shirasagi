@@ -52,13 +52,13 @@ class Jmaxml::Trigger::Base
 
   def training_status_options
     %w(disabled enabled).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
 
   def test_status_options
     %w(disabled enabled).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
 

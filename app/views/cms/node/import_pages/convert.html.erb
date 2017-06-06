@@ -2,13 +2,13 @@
 <%= error_messages_for :item %>
 
 <section class="main-box">
-  <header><h2><%= t("views.confirm.convert") %></h2></header>
+  <header><h2><%= t("ss.confirm.convert") %></h2></header>
 
   <%= f.hidden_field :route, value: "cms/page" %>
 </section>
 
 <footer class="send">
-  <%= f.submit t("views.button.convert"), class: :save %>
-  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  <%= f.submit t("ss.buttons.convert"), class: :save %>
+  <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>
 <% end %>

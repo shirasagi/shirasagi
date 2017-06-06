@@ -10,7 +10,7 @@ class History::Cms::BackupsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"history.backup", action: :show]
+      @crumbs << [t("history.backup"), action: :show]
     end
 
     def set_item

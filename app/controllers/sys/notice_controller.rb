@@ -21,7 +21,7 @@ class Sys::NoticeController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sys.notice", action: :index]
+      @crumbs << [t("sys.notice"), action: :index]
     end
 
     def fix_params

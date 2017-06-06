@@ -67,7 +67,7 @@ ja:
         operation: "参加 | 辞退"
       registered_person: 登録者
       delete: 削除
-    button:
+    buttons:
       register: 登録
       back: 戻る
       confirm: 確認画面へ

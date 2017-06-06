@@ -18,7 +18,7 @@ describe "article_pages", dbscope: :example do
       visit index_path
       expect(status_code).to eq 200
 
-      click_on I18n.t("views.links.download")
+      click_on I18n.t("ss.links.download")
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
       expect(page.response_headers['Content-Disposition']).to match(/filename="article_pages_[\d]+\.csv"$/)
@@ -31,7 +31,7 @@ describe "article_pages", dbscope: :example do
       all(".check")[1].click
       expect(page).to have_checked_field 'ids[]'
 
-      click_on I18n.t("views.links.download")
+      click_on I18n.t("ss.links.download")
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
       expect(page.response_headers['Content-Disposition']).to match(/filename="article_pages_[\d]+\.csv"$/)

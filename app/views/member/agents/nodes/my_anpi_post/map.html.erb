@@ -5,7 +5,7 @@
 <% if @cur_member_groups.present? %>
   <%= form_tag '', class: "search", method: :get, enforce_utf8: false do %>
     <%= select_tag :g, options_from_collection_for_select(@cur_member_groups, :id, :name, selected: @cur_member_group.try(:id)), include_blank: true %>
-    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
 <% end %>
 

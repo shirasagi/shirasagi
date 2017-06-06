@@ -20,7 +20,7 @@ describe "jmaxml/forecast_regions", dbscope: :example do
       # create
       #
       visit index_path
-      click_on I18n.t('views.links.new')
+      click_on I18n.t('ss.links.new')
 
       within 'form' do
         fill_in 'item[code]', with: code
@@ -28,9 +28,9 @@ describe "jmaxml/forecast_regions", dbscope: :example do
         fill_in 'item[yomi]', with: yomi
         fill_in 'item[short_name]', with: short_name1
         fill_in 'item[short_yomi]', with: short_yomi1
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(Jmaxml::ForecastRegion.count).to eq 1
       Jmaxml::ForecastRegion.first.tap do |region|
@@ -46,14 +46,14 @@ describe "jmaxml/forecast_regions", dbscope: :example do
       #
       visit index_path
       click_on name
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within 'form' do
         fill_in 'item[short_name]', with: short_name2
         fill_in 'item[short_yomi]', with: short_yomi2
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(Jmaxml::ForecastRegion.count).to eq 1
       Jmaxml::ForecastRegion.first.tap do |region|
@@ -69,12 +69,12 @@ describe "jmaxml/forecast_regions", dbscope: :example do
       #
       visit index_path
       click_on name
-      click_on I18n.t('views.links.delete')
+      click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.button.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(Jmaxml::ForecastRegion.count).to eq 0
     end

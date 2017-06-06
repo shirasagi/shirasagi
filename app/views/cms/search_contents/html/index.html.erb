@@ -52,24 +52,24 @@ $ ->
     <dt><%= t("cms.apis.contents.keyword") %><%= tt("search_contents.html.keyword") %></dt>
     <dd>
       <%= text_field_tag :keyword, "", value: @keyword, class: :keyword %>
-      <%= f.submit t("views.button.search"), name: "search", class: "search btn" %>
+      <%= f.submit t("ss.buttons.search"), name: "search", class: "search btn" %>
     </dd>
 
     <dt><%= t("cms.apis.contents.replacement") %><%= tt("search_contents.html.replacement") %></dt>
     <dd>
       <%= text_field_tag :replacement, "", value: @replacement, class: :replacement %>
-      <%= f.submit t("views.button.replace_all"), name: "replace", class: "replace btn" %>
+      <%= f.submit t("ss.buttons.replace_all"), name: "replace", class: "replace btn" %>
     </dd>
 
     <dt><%= t("cms.apis.contents.option") %><%= tt("search_contents.html.option") %></dt>
     <dd>
       <label>
         <%= check_box_tag :option, :url, false, id: "option-url", class: :option %>
-        <%= t("views.url") %>
+        <%= t("ss.url") %>
       </label>
       <label>
         <%= check_box_tag :option, :regexp, false, id: "option-regexp", class: :option %>
-        <%= t("views.regexp") %>
+        <%= t("ss.regexp") %>
       </label>
     </dd>
   </dl>

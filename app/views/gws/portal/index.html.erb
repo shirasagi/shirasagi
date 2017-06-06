@@ -13,7 +13,7 @@
     <% end %>
   </ul>
   <% if @sys_notices.next_page %>
-  <div class="more"><%= link_to I18n.t("views.links.more"), gws_sys_notices_path %></div>
+  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_sys_notices_path %></div>
   <% end %>
 </div>
 <% end %>
@@ -35,7 +35,7 @@
     <% end %>
   </ul>
   <% if @notices.next_page %>
-  <div class="more"><%= link_to I18n.t("views.links.more"), gws_public_notices_path %></div>
+  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_public_notices_path %></div>
   <% end %>
 </div>
 <% end %>
@@ -88,7 +88,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
       <% end %>
     </ul>
     <% if @reminders.next_page %>
-    <div class="more"><%= link_to I18n.t("views.links.more"), gws_reminders_path %></div>
+    <div class="more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
     <% end %>
   </div>
 </div>
@@ -121,7 +121,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
       <% end %>
     </ul>
     <% if @boards.next_page %>
-    <div class="more"><%= link_to I18n.t("views.links.more"), gws_board_topics_path %></div>
+    <div class="more"><%= link_to I18n.t("ss.links.more"), gws_board_topics_path %></div>
     <% end %>
   </div>
 </div>

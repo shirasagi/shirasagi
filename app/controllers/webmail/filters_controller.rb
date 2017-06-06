@@ -8,7 +8,7 @@ class Webmail::FiltersController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:'mongoid.models.webmail/filter', { action: :index } ]
+      @crumbs << [t("mongoid.models.webmail/filter"), { action: :index } ]
     end
 
     def fix_params

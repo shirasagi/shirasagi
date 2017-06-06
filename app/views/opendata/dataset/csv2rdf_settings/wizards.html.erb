@@ -9,11 +9,11 @@
 
   <footer class="send">
     <% if next_url? %>
-      <%= f.submit t("opendata.button.next"), class: :save %>
+      <%= f.submit t("opendata.buttons.next"), class: :save %>
     <% else %>
-      <%= f.submit t("opendata.button.build"), class: :save %>
+      <%= f.submit t("opendata.buttons.build"), class: :save %>
     <% end %>
-    <%= f.button t("opendata.button.back"), type: :reset, onclick: "location.href='#{prev_url}'; return false;" %>
+    <%= f.button t("opendata.buttons.back"), type: :reset, onclick: "location.href='#{prev_url}'; return false;" %>
   </footer>
 <% end %>
 

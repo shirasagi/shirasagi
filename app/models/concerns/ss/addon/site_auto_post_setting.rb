@@ -17,25 +17,25 @@ module SS::Addon::SiteAutoPostSetting
 
   def site_facebook_auto_post_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.state.#{v}"), v]
+      [I18n.t("ss.options.state.#{v}"), v]
     end
   end
 
   def site_twitter_auto_post_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.state.#{v}"), v]
+      [I18n.t("ss.options.state.#{v}"), v]
     end
   end
 
   def site_sns_auto_delete_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.state.#{v}"), v]
+      [I18n.t("ss.options.state.#{v}"), v]
     end
   end
 
   def site_edit_auto_post_options
     %w(expired active).map do |v|
-      [I18n.t("views.options.state.#{v}"), v]
+      [I18n.t("ss.options.state.#{v}"), v]
     end
   end
 

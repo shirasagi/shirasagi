@@ -17,7 +17,7 @@
     <dt><%= t "inquiry.total_count" %></dt>
     <dd>
       <%= @cur_node.answers.count %>
-      <%= t "views.units.count" %>
+      <%= t "ss.units.count" %>
     </dd>
   </dl>
   <% @columns.each do |column| %>
@@ -36,7 +36,7 @@
                 <% data[opts] = percentage %>
                 <tr>
                   <th><%= opts %></th>
-                  <td class="count"><%= count %><%= t "views.units.count" %></td>
+                  <td class="count"><%= count %><%= t "ss.units.count" %></td>
                 </tr>
               <% end %>
             </tbody>

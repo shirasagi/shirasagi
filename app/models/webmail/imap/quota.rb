@@ -3,15 +3,16 @@ module Webmail::Imap
     include Webmail::ImapAccessor
 
     def initialize
+      return unless enabled?
       @item = cache_find || Webmail::Quota.new(quota_root_scope)
+    end
+
+    def enabled?
+      SS.config.webmail.disable_quota.blank?
     end
 
     def quota_root_scope
       imap.account_scope.merge(mailbox: 'ROOT')
-    end
-
-    def load
-      reload? ? reload : @item
     end
 
     def reload?
@@ -19,7 +20,14 @@ module Webmail::Imap
       @item.reloaded + SS.config.webmail.cache_quota_expires.hours < Time.zone.now
     end
 
+    def load
+      return nil unless enabled?
+      reload? ? reload : @item
+    end
+
     def reload
+      return nil unless enabled?
+
       if info = imap_find
         @item.quota = info.quota
         @item.usage = info.usage

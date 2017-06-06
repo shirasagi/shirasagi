@@ -8,7 +8,7 @@ class Sns::SysNoticesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.sys/notice", action: :index]
+      @crumbs << [t("mongoid.models.sys/notice"), action: :index]
     end
 
   public

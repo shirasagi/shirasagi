@@ -33,7 +33,7 @@ $ ->
       <% end %>
     </div>
     <nav class="feed">
-      <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
+      <%= link_to t('ss.links.more'), tab[:url], class: "more" if tab[:url] %>
       <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
     </nav>
   </article>
@@ -49,7 +49,7 @@ $ ->
   <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/tags" %>
   <% if @tags.popped? %>
-  <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>
+  <nav><%= link_to t('ss.links.more'), "#{@node_url}tags/", class: "more" %></nav>
   <% end %>
 </article>
 
@@ -57,7 +57,7 @@ $ ->
   <header><h1><%= I18n.t("opendata.labels.format") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/formats" %>
   <% if @formats.popped? %>
-  <nav><%= link_to :more, "#{@node_url}formats/", class: "more" %></nav>
+  <nav><%= link_to t('ss.links.more'), "#{@node_url}formats/", class: "more" %></nav>
   <% end %>
 </article>
 
@@ -65,6 +65,6 @@ $ ->
   <header><h1><%= I18n.t("opendata.labels.license") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/licenses" %>
   <% if @licenses.popped? %>
-  <nav><%= link_to :more, "#{@node_url}licenses/", class: "more" %></nav>
+  <nav><%= link_to t('ss.links.more'), "#{@node_url}licenses/", class: "more" %></nav>
   <% end %>
 </article>

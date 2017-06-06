@@ -1,9 +1,9 @@
 <% @tap_menu = proc do |item| %>
-  <%= link_to :show, opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
-  <%= link_to :edit, edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
-  <%= link_to :delete, delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <%= link_to t('ss.links.show'), opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <%= link_to t('ss.links.edit'), edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <%= link_to t('ss.links.delete'), delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
 
-  <%= link_to :preview, opendata_dataset_url_resource_content_path(dataset_id: item[:id], url_resource_id: item[:urlresourceid]) %>
+  <%= link_to t('ss.links.preview'), opendata_dataset_url_resource_content_path(dataset_id: item[:id], url_resource_id: item[:urlresourceid]) %>
 <% end %>
 
 <% @index_title = proc do |item| %>

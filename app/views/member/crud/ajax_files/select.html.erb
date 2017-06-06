@@ -15,13 +15,13 @@
   </div>
   <div class="action">
     <% content = link_to "#{@item.name} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", @item.url, class: "icon-#{@item.extname}" %>
-    <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+    <%= link_to t("sns.file_attach"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
     <% if @item.image? %>
       <% content = image_tag @item.url, alt: @item.basename %>
-      <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+      <%= link_to t("sns.image_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
       <% content = link_to(@item.url, alt: @item.name, class: "ajax-box", target: "_blank") { image_tag(@item.thumb_url, alt: @item.name) } %>
-      <%= link_to :"sns.thumb_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+      <%= link_to t("sns.thumb_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
     <% end %>
-    <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{@item.id}'); return false;" %>
+    <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{@item.id}'); return false;" %>
   </div>
 </div>

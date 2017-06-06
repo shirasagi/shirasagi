@@ -37,7 +37,7 @@ ja:
       result: 一覧表示
     sidebar:
       click_marker: 地図上で確認
-    button:
+    buttons:
       add_info: 項目を追加する
       del_info: 削除
       del_info_confirm: 項目を削除してよろしいですか？

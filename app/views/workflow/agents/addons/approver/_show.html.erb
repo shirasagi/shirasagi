@@ -70,13 +70,13 @@ $ ->
         <section class="mod-workflow-approve">
           <div class="addon-view">
             <div class="addon-head">
-              <h2><%= t("workflow.button.approve") %>/<%= t("workflow.button.remand") %><%= @model.tt :approve_remand %></h2>
+              <h2><%= t("workflow.buttons.approve") %>/<%= t("workflow.buttons.remand") %><%= @model.tt :approve_remand %></h2>
             </div>
             <div class="addon-body">
               <%= text_area :remand, :comment, value: "" %>
               <div class="buttons">
-                <%= button_tag t("workflow.button.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
-                <%= button_tag t("workflow.button.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
+                <%= button_tag t("workflow.buttons.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
+                <%= button_tag t("workflow.buttons.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
               </div>
             </div>
           </div>

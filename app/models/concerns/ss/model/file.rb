@@ -45,7 +45,7 @@ module SS::Model::File
       [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
-      ].map { |x, y| [I18n.t("views.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
+      ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
     end
 
     def search(params)
@@ -102,7 +102,7 @@ module SS::Model::File
   end
 
   def state_options
-    [[I18n.t('views.options.state.public'), 'public']]
+    [[I18n.t('ss.options.state.public'), 'public']]
   end
 
   def name

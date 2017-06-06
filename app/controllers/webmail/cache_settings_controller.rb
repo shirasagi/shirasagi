@@ -5,7 +5,7 @@ class Webmail::CacheSettingsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"webmail.settings.cache" , { action: :show } ]
+      @crumbs << [t("webmail.settings.cache") , { action: :show } ]
     end
 
   public
