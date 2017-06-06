@@ -6,7 +6,7 @@
 </div>
 
 <footer class="send">
-<%= f.submit t("views.button.delete"), class: "delete btn-primary" %>
-<%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
+<%= f.submit t("ss.buttons.delete"), class: "delete btn-primary" %>
+<%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
 </footer>
 <% end %>

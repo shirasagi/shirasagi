@@ -19,8 +19,8 @@ module Cms::Addon
 
     def high_contrast_mode_options
       [
-        [I18n.t("views.options.state.disabled"), "disabled"],
-        [I18n.t("views.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"],
+        [I18n.t("ss.options.state.enabled"), "enabled"],
       ]
     end
   end

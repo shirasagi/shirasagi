@@ -27,7 +27,7 @@
       <dt><%= t "mongoid.models.gws/user" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit  t("views.button.search"), class: :btn %>
+        <%= f.submit  t("ss.buttons.search"), class: :btn %>
       </dd>
     </dl>
   <% end %>
@@ -62,7 +62,7 @@
 
 <% if @multi %>
 <div class="search-ui-select">
-  <%= button_tag t("views.links.select"), { type: :button, class: "select-items btn" } %>
+  <%= button_tag t("ss.links.select"), { type: :button, class: "select-items btn" } %>
 </div>
 <% end %>
 

@@ -1,7 +1,7 @@
 class @SS_Clipboard
   @renderCopy: ->
     $('.js-clipboard-copy').each ->
-      label = '<%= I18n.t("views.button.copy") %>'
+      label = '<%= I18n.t("ss.buttons.copy") %>'
       text = $(this).text()
       $(this).append("<a href='#' class='clipboard-copy-button' data-text='#{text}'>#{label}</a>")
 

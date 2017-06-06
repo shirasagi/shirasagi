@@ -3,7 +3,7 @@ class Sys::ConfController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sys.info", sys_conf_path]
+      @crumbs << [t("sys.info"), sys_conf_path]
     end
 
   public

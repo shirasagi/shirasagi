@@ -8,7 +8,7 @@
   <dt><%= @model.t :file_id %><%= @model.tt :file_id %></dt>
   <dd><%= f.file_field :in_file %></dd>
   <% if @item.file %>
-  <dd><label><%= f.check_box :rm_file %><%= t "views.button.delete" %> (<%= @item.file.filename %>)</label></dd>
+  <dd><label><%= f.check_box :rm_file %><%= t "ss.buttons.delete" %> (<%= @item.file.filename %>)</label></dd>
   <% end %>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>

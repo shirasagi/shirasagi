@@ -44,14 +44,14 @@ class Ezine::MemberPage::MainController < ApplicationController
     end
 
     def delivery_confirmation
-      @crumbs << [:"ezine.deliver", action: :delivery_confirmation]
+      @crumbs << [t("ezine.deliver"), action: :delivery_confirmation]
 
       set_item
       load_members
     end
 
     def delivery
-      @crumbs << [:"ezine.deliver", action: :delivery_confirmation]
+      @crumbs << [t("ezine.deliver"), action: :delivery_confirmation]
 
       page = Ezine::Page.find(params[:id])
       Ezine::DeliverJob.bind(site_id: @cur_site, node_id: @cur_node, page_id: page).perform_later
@@ -59,14 +59,14 @@ class Ezine::MemberPage::MainController < ApplicationController
     end
 
     def delivery_test_confirmation
-      @crumbs << [:"ezine.deliver_test", action: :delivery_test_confirmation]
+      @crumbs << [t("ezine.deliver_test"), action: :delivery_test_confirmation]
 
       set_item
       load_test_members
     end
 
     def delivery_test
-      @crumbs << [:"ezine.deliver_test", action: :delivery_test_confirmation]
+      @crumbs << [t("ezine.deliver_test"), action: :delivery_test_confirmation]
 
       page = Ezine::Page.find(params[:id])
       page.deliver_to_test_members
@@ -76,7 +76,7 @@ class Ezine::MemberPage::MainController < ApplicationController
     def sent_logs
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 
-      @crumbs << [:"ezine.sent_log", action: :sent_logs]
+      @crumbs << [t("ezine.sent_log"), action: :sent_logs]
 
       set_item
       @items = Ezine::SentLog.where(node_id: params[:cid], page_id: params[:id]).

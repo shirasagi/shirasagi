@@ -25,23 +25,23 @@ describe "article_pages", dbscope: :example, js: true do
       visit index_path
       expect(status_code).to eq(200).or eq(304)
 
-      click_on I18n.t("views.links.import")
+      click_on I18n.t("ss.links.import")
       expect(status_code).to eq(200)
       expect(current_path).to eq import_path
 
       attach_file "item[file]", "spec/fixtures/article/article_import_test_1.csv"
-      click_on I18n.t("views.links.import")
+      click_on I18n.t("ss.links.import")
       expect(status_code).to eq(200)
-      #expect(page).to have_content I18n.t("views.notice.saved")
+      #expect(page).to have_content I18n.t("ss.notice.saved")
     end
 
     #scenario "check import data" do
     #  visit index_path
-    #  click_on I18n.t("views.links.import")
+    #  click_on I18n.t("ss.links.import")
     #  expect(current_path).to eq import_path
     #
     #  attach_file "item_in_file", "spec/fixtures/article/article_import_test_1.csv"
-    #  click_on I18n.t("views.links.import")
+    #  click_on I18n.t("ss.links.import")
     #  expect(status_code).to eq(200)
     #
     #  click_link 'test_1_title'
@@ -66,15 +66,15 @@ describe "article_pages", dbscope: :example, js: true do
     #  visit index_path
     #  expect(status_code).to eq(200).or eq(304)
     #
-    #  click_on I18n.t("views.links.import")
+    #  click_on I18n.t("ss.links.import")
     #  expect(status_code).to eq(200)
     #  expect(current_path).to eq import_path
     #
     #  attach_file "item_in_file", "spec/fixtures/article/article_import_test_2.csv"
-    #  click_on I18n.t("views.links.import")
+    #  click_on I18n.t("ss.links.import")
     #  expect(status_code).to eq(200)
     #  expect(current_path).to eq import_path
-    #  expect(page).to have_content I18n.t("views.notice.saved")
+    #  expect(page).to have_content I18n.t("ss.notice.saved")
     #  expect(page).to have_content I18n.t('errors.messages.invalid')
     #
     #  visit index_path

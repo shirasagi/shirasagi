@@ -19,8 +19,8 @@ SS.ajaxDelete ".user-files .delete"
 
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
-      <%= f.select :resizing, @model.resizing_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %>
-      <%= f.submit t("views.button.save"), class: "save btn", style: "margin-left: 10px;" %>
+      <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;" %>
     </div>
 
   <% end %>
@@ -41,10 +41,10 @@ SS.ajaxDelete ".user-files .delete"
     </div>
     <nav class="menu">
       <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t("views.button.edit"), { action: :edit, id: item }, class: "edit" %>
+        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item }, class: "edit" %>
       <% end %>
       <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-        <%= link_to t("views.button.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
+        <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
       <% end %>
     </nav>
   </article>

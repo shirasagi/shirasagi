@@ -50,7 +50,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       #
       # activate opendata integration
       #
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within '#addon-cms-agents-addons-opendata_ref-dataset' do
         find('.addon-head h2').click
@@ -59,9 +59,9 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_public').trigger('click')
       end
-      click_on I18n.t('views.button.publish_save')
+      click_on I18n.t('ss.buttons.publish_save')
 
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
       expect(article_page.state).to eq 'public'
       expect(article_page.opendata_dataset_state).to eq 'public'
@@ -108,9 +108,9 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         click_on article_page.name
       end
 
-      click_on I18n.t('views.links.edit')
-      click_on I18n.t('views.button.publish_save')
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      click_on I18n.t('ss.links.edit')
+      click_on I18n.t('ss.buttons.publish_save')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       # completely change file ids
       save_file_ids = article_page.file_ids.dup

@@ -11,7 +11,7 @@ ja:
     required_field: 必須項目
     member_page_member: 購読会員
 
-    button:
+    buttons:
       convert_html_to_text: HTML版を変換する
       deliver: 本配信
       deliver_test: テスト配信

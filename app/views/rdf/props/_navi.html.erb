@@ -1,16 +1,16 @@
 <% if @vocab.present? %>
 <nav class="mod-navi">
-  <h2><%= t :"views.links.rdf.vocabs" %></h2>
-  <h3><%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @vocab %></h3>
-  <h3><%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @vocab %></h3>
+  <h2><%= t :"rdf.links.vocabs" %></h2>
+  <h3><%= link_to t("rdf.links.vocab"), controller: :vocabs, action: :show, id: @vocab %></h3>
+  <h3><%= link_to t("rdf.links.classes"), controller: :classes, action: :index, vocab_id: @vocab %></h3>
   <% if @rdf_class.present? %>
-    <h3><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab, class_id: nil %></h3>
+    <h3><%= link_to t("rdf.links.props"), controller: :props, action: :index, vocab_id: @vocab, class_id: nil %></h3>
     <h3><span><%= @rdf_class.name %></span></h3>
     <ul class="narrow-page">
-      <li><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %></li>
+      <li><%= link_to t("rdf.links.props"), controller: :props, action: :index, vocab_id: @vocab %></li>
     </ul>
   <% else %>
-    <h3><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %></h3>
+    <h3><%= link_to t("rdf.links.props"), controller: :props, action: :index, vocab_id: @vocab %></h3>
   <% end %>
 </nav>
 <% end %>

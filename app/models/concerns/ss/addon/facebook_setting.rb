@@ -16,7 +16,7 @@ module SS::Addon::FacebookSetting
 
   def opengraph_type_options
     %w(none article).map do |v|
-      [I18n.t("views.options.opengraph_type.#{v}"), v]
+      [I18n.t("ss.options.opengraph_type.#{v}"), v]
     end
   end
 

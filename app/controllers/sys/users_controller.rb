@@ -8,7 +8,7 @@ class Sys::UsersController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sys.user", sys_users_path]
+      @crumbs << [t("sys.user"), sys_users_path]
     end
 
     def fix_params

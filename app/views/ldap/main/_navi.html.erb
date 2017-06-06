@@ -1,12 +1,12 @@
 <nav class="mod-navi">
-  <h2><%= t "views.links.ldap" %></h2>
+  <h2><%= t "ldap.links.ldap" %></h2>
 
   <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"views.ldap/server.index", ldap_server_path %></h3>
+    <h3><%= link_to t("views.ldap/server.index"), ldap_server_path %></h3>
   <% end %>
   <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"views.ldap/import.index", ldap_import_index_path %></h3>
-    <h3><%= link_to :"views.ldap/result.index", ldap_result_index_path %></h3>
+    <h3><%= link_to t("views.ldap/import.index"), ldap_import_index_path %></h3>
+    <h3><%= link_to t("views.ldap/result.index"), ldap_result_index_path %></h3>
   <% end %>
 </nav>
 

@@ -8,7 +8,7 @@ class Cms::BodyLayoutsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.layout", action: :index]
+      @crumbs << [t("cms.layout"), action: :index]
     end
 
     def fix_params
@@ -25,5 +25,10 @@ class Cms::BodyLayoutsController < ApplicationController
         search(params[:s]).
         order_by(filename: 1).
         page(params[:page]).per(50)
+    end
+
+    def show
+      #raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      render
     end
 end

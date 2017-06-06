@@ -10,7 +10,7 @@ class Cms::NoticesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.notice", action: :index]
+      @crumbs << [t("cms.notice"), action: :index]
     end
 
     def fix_params

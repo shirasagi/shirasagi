@@ -113,7 +113,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
       @item = @dataset.resources.new get_params
       set_status
       if @item.save
-        redirect_to "#{@dataset_url}resources/", notice: t("views.notice.saved")
+        redirect_to "#{@dataset_url}resources/", notice: t("ss.notice.saved")
       else
         render action: :new
       end
@@ -127,7 +127,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
       @item.attributes = get_params
       set_status
       if @item.update
-        redirect_to "#{@dataset_url}resources/#{@item.id}/", notice: t("views.notice.saved")
+        redirect_to "#{@dataset_url}resources/#{@item.id}/", notice: t("ss.notice.saved")
       else
         render action: :edit
       end
@@ -139,7 +139,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
 
     def destroy
       if @item.destroy
-        redirect_to @resource_url, notice: t("views.notice.deleted")
+        redirect_to @resource_url, notice: t("ss.notice.deleted")
       else
         render action: :delete
       end

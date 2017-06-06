@@ -33,11 +33,11 @@ module SS::Reference::UserExpiration
   end
 
   def active_state_name
-    I18n.t "views.options.state.#{active_state}"
+    I18n.t "ss.options.state.#{active_state}"
   end
 
   def search_state_options
-    %w(enabled disabled all).map { |m| [ I18n.t("views.options.state.#{m}"), m ] }
+    %w(enabled disabled all).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }
   end
 
   def disable

@@ -10,7 +10,7 @@
   <dt><%= @model.t :assoc_method %></dt>
   <dd>
     <%= @item.label :assoc_method %>
-    <%= link_to(:'opendata.links.check_for_update', { action: :check_for_update }, class: 'check-for-update') if @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to(:'opendata.links.sync', { action: :sync }, class: [:sync, :btn])  if @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= link_to(t("opendata.links.check_for_update"), { action: :check_for_update }, class: 'check-for-update') if @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= link_to(t("opendata.links.sync"), { action: :sync }, class: [:sync, :btn])  if @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
   </dd>
 </dl>

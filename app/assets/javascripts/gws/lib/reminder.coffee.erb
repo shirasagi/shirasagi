@@ -39,7 +39,7 @@ class @Gws_Reminder
           $('#notice').hide()
         when 'updated'
           item.find('.updated').show()
-          @noticeTimer = SS.notice("<%= I18n.t('views.notice.saved') %>")
+          @noticeTimer = SS.notice("<%= I18n.t('ss.notice.saved') %>")
         else
           item.find('.updated').hide()
 

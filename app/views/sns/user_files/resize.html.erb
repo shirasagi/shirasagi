@@ -6,15 +6,15 @@
       <div class="addon-body">
         <dl class="see">
           <dt><%= @model.t :resizing %><%= @model.tt :resizing %></dt>
-          <dd><%= f.select :resizing, @model.resizing_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %></dd>
+          <dd><%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %></dd>
         </dl>
       </div>
     </div>
   </div>
 
   <footer class="send">
-    <%= f.submit t("views.button.save"), class: 'btn-primary save' %>
-    <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>
 

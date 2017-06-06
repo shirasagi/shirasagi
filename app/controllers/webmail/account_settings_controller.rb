@@ -8,7 +8,7 @@ class Webmail::AccountSettingsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"webmail.settings.account", { action: :show } ]
+      @crumbs << [t("webmail.settings.account"), { action: :show } ]
     end
 
     def fix_params

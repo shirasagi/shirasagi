@@ -5,7 +5,7 @@
     <dd class="wide">
       <%= form_for :item, url: { action: :unlock }, html: { id: "item-form", method: :delete, multipart: true } do |f| %>
         <%= hidden_field_tag "force", "true" %>
-        <button name="button" type="submit" class="release-lock"><%= t("views.button.unlock_and_edit_forcibly") %></button>
+        <button name="button" type="submit" class="release-lock"><%= t("ss.buttons.unlock_and_edit_forcibly") %></button>
       <% end %>
     </dd>
     <% end %>

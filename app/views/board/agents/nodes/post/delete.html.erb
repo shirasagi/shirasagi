@@ -1,6 +1,6 @@
 <%= @cur_node.upper_html.to_s.html_safe %>
 <nav class="menu">
-  <%= link_to :back_to_index, @cur_node.url %>
+  <%= link_to t('ss.links.back_to_index'), @cur_node.url %>
 </nav>
 <%= form_for :item, url: "destroy", html: { method: :delete, multipart: true } do |f| %>
 
@@ -19,8 +19,8 @@
 
   <%= show_simple_captcha(object: :item, code_type: 'numeric', input_html: { required: nil }) %>
   <footer class="send">
-    <%= f.submit t("views.button.delete") %>
-    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+    <%= f.submit t("ss.buttons.delete") %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
   </footer>
 </div>
 

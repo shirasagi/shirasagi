@@ -14,7 +14,7 @@
         <% args = item.args.join(",") rescue nil %>
         <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", action: :show, id: item) %>
           <nav class="tap-menu">
-            <%= link_to :show, action: :show, id: item %>
+            <%= link_to t('ss.links.show'), action: :show, id: item %>
           </nav>
         </td>
         <td class="datetime"><%= item.started ? item.started.strftime("%Y/%m/%d %H:%M") : item.started %></td>

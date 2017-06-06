@@ -158,8 +158,8 @@ class Cms::PreviewController < ApplicationController
       h << '<div id="ss-preview">'
       h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
       if @cur_site.mobile_enabled?
-        h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
-        h << '<input type="button" class="mobile" value="' + t("views.links.mobile") + '">'
+        h << '<input type="button" class="preview" value="' + t("ss.links.pc") + '">'
+        h << '<input type="button" class="mobile" value="' + t("ss.links.mobile") + '">'
       else
         h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
       end

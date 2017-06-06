@@ -4,7 +4,7 @@ class @SS_Color
       sel = $(this)
       sel.minicolors()
       if sel.data('clear')
-        btn = $("<input type='button' class='btn' value='<%= I18n.t('views.button.clear') %>' />").uniqueId()
+        btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.clear') %>' />").uniqueId()
         $(sel).after(btn).after(' ')
         $('#' + btn.attr('id')).click ->
           $(sel).minicolors('value', { color: 'transparent' })

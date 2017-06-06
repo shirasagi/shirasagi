@@ -1,9 +1,9 @@
 <nav class="mod-navi">
   <h2><%= t "cms.search_contents" %></h2>
-  <h3><%= link_to :"cms.search_contents_pages", cms_search_contents_pages_path  %></h3>
+  <h3><%= link_to t("cms.search_contents_pages"), cms_search_contents_pages_path  %></h3>
 
   <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <h3><%= link_to :"cms.search_contents_html", cms_search_contents_html_path %></h3>
+  <h3><%= link_to t("cms.search_contents_html"), cms_search_contents_html_path %></h3>
   <% end %>
 </nav>
 

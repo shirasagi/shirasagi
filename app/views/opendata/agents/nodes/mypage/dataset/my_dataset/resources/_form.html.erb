@@ -30,7 +30,7 @@ licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c|
     <td class="in_tsv field"><%= @model.t :tsv_id %><%= @item.tt :tsv_id %></td>
     <td class="in_tsv input"><%= f.file_field :in_tsv %></td>
     <% if @item.tsv_id %>
-      <td class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></td>
+      <td class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "ss.buttons.delete" %> (<%= @item.tsv.filename %>)</label></td>
     <% end %>
   </tr>
 </table>

@@ -6,8 +6,8 @@
 <footer class="send">
   <div>
     <% name = @route ? "request" : "publish_save" %>
-  	<%= f.submit t("views.button.#{name}"), name: name, class: :save %>
-  	<%= f.submit t("views.button.closed_save"), name: :save, class: :save %>
+  	<%= f.submit t("ss.buttons.#{name}"), name: name, class: :save %>
+  	<%= f.submit t("ss.buttons.closed_save"), name: :save, class: :save %>
   </div>
 </footer>
 

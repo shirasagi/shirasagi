@@ -11,13 +11,13 @@
       <dt><%= @model.t :import_date %><%= @model.tt :import_date %></dt>
       <dd><%= f.text_field :import_date, class: "date js-datetime" %></dd>
 
-      <dt><%= t "views.import_log" %></dt>
+      <dt><%= t "ss.import_log" %></dt>
       <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
     </dl>
   </section>
 
   <footer class="send">
-    <%= f.submit t("views.button.import"), class: :save %>
-    <%= f.button t("views.button.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{contents_path(@cur_node)}'; return false;" %>
+    <%= f.submit t("ss.buttons.import"), class: :save %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{contents_path(@cur_node)}'; return false;" %>
   </footer>
 <% end %>

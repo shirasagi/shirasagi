@@ -17,7 +17,7 @@ class Ldap::ImportController < ApplicationController
     end
 
     def set_crumbs
-      @crumbs << [:"ldap.import", action: :index]
+      @crumbs << [t("ldap.import"), action: :index]
     end
 
   public

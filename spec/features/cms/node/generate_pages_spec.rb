@@ -26,7 +26,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example do
       visit index_path
       expect(status_code).to eq 200
       within "form#task-form" do
-        click_button I18n.t("views.button.run")
+        click_button I18n.t("ss.buttons.run")
       end
       # task should be started within a minute.
       Timeout.timeout(60) do

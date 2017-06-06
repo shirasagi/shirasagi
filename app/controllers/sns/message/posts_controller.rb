@@ -16,7 +16,7 @@ class Sns::Message::PostsController < ApplicationController
 
     def set_crumbs
       set_thread
-      @crumbs << [:"sns.message", sns_message_threads_path]
+      @crumbs << [t("sns.message"), sns_message_threads_path]
       @crumbs << [@thread.name(@cur_user), { action: :index }]
     end
 

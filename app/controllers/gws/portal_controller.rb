@@ -4,7 +4,7 @@ class Gws::PortalController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"gws.portal", gws_portal_path]
+      @crumbs << [t("gws.portal"), gws_portal_path]
     end
 
   public

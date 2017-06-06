@@ -103,7 +103,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
           remote_addr: remote_addr,
           user_agent: request.user_agent)
 
-        redirect_to @cur_node.url, notice: t("views.notice.saved")
+        redirect_to @cur_node.url, notice: t("ss.notice.saved")
       else
         render action: :new
       end
@@ -125,7 +125,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
           remote_addr: remote_addr,
           user_agent: request.user_agent)
 
-        redirect_to "#{@cur_node.url}#{@item.id}/", notice: t("views.notice.saved")
+        redirect_to "#{@cur_node.url}#{@item.id}/", notice: t("ss.notice.saved")
       else
         render action: :edit
       end
@@ -137,7 +137,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
 
     def destroy
       if @item.destroy
-        redirect_to @cur_node.url, notice: t("views.notice.deleted")
+        redirect_to @cur_node.url, notice: t("ss.notice.deleted")
       else
         render action: :delete
       end

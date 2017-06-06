@@ -15,13 +15,13 @@
     <% @results.each do |item| %>
       <li class="list-item">
         <nav class="tap-menu">
-          <%= link_to :"cms.content", item.private_show_path %>
-          <%= link_to :view_site, item.full_url, target: :_blank %>
+          <%= link_to t("cms.content"), item.private_show_path %>
+          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank %>
           <% if @cur_site.mobile_enabled? %>
-            <%= link_to :pc_preview, cms_preview_path(path: item.preview_path), target: :_blank %>
-            <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
+            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
+            <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
           <% else %>
-            <%= link_to :preview, cms_preview_path(path: item.preview_path), target: :_blank %>
+            <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
           <% end %>
         </nav>
         <div class="info">
@@ -36,7 +36,7 @@
               <span class="user"><%= t item.user.name %></span>
             <% end %>
             <span class="state">
-              <%= t("views.state.#{item.status}") %>
+              <%= t("ss.state.#{item.status}") %>
               <%
                 term = []
                 term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.release_date

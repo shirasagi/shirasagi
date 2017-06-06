@@ -13,7 +13,7 @@ ja:
       invalid_location:
         - "正しい座標をカンマ(,)区切りで入力してください。"
         - "例）33.8957612,133.6806607"
-    button:
+    buttons:
       set_marker: マーカーの設置
       add_marker: マーカーを追加する
       clear_marker: 削除

@@ -111,7 +111,7 @@ module SS::CrudFilter
     def render_create(result, opts = {})
       location = opts[:location].presence || crud_redirect_url || { action: :show, id: @item }
       render_opts = opts[:render].presence || { file: :new }
-      notice = opts[:notice].presence || t("views.notice.saved")
+      notice = opts[:notice].presence || t("ss.notice.saved")
 
       if result
         respond_to do |format|
@@ -129,7 +129,7 @@ module SS::CrudFilter
     def render_update(result, opts = {})
       location = opts[:location].presence || crud_redirect_url || { action: :show }
       render_opts = opts[:render].presence || { file: :edit }
-      notice = opts[:notice].presence || t("views.notice.saved")
+      notice = opts[:notice].presence || t("ss.notice.saved")
 
       if result
         respond_to do |format|
@@ -147,7 +147,7 @@ module SS::CrudFilter
     def render_destroy(result, opts = {})
       location = opts[:location].presence || crud_redirect_url || { action: :index }
       render_opts = opts[:render].presence || { file: :delete }
-      notice = opts[:notice].presence || t("views.notice.saved")
+      notice = opts[:notice].presence || t("ss.notice.saved")
 
       if result
         respond_to do |format|
@@ -164,7 +164,7 @@ module SS::CrudFilter
 
     def render_destroy_all(result)
       location = crud_redirect_url || { action: :index }
-      notice = result ? { notice: t("views.notice.deleted") } : {}
+      notice = result ? { notice: t("ss.notice.deleted") } : {}
       errors = @items.map { |item| [item.id, item.errors.full_messages] }
 
       respond_to do |format|

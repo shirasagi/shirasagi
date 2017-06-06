@@ -96,7 +96,7 @@ class Mobile::Converter < String
         end
       elsif ext =~ /^\.(jpeg|jpg|bmp)$/i
         html = name
-        html += %( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("views.image")}]</a>) if href
+        html += %( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("ss.image")}]</a>) if href
         html
       else
         match

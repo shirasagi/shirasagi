@@ -11,6 +11,6 @@ module Jmaxml::Addon::Action::PublishPage
   end
 
   def publish_state_options
-    %w(draft public).map { |v| [ I18n.t("views.options.state.#{v}"), v ] }
+    %w(draft public).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
   end
 end

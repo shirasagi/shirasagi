@@ -5,7 +5,7 @@
 <%= f.hidden_field_tag("group", params[:group]) if params[:group].present? %>
 
 <dl class="colum name">
-  <dt><%= @item.class.t :name %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dt><%= @item.class.t :name %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.text_field :name %><%= remarks :name %></dd>
 </dl>
 
@@ -15,10 +15,10 @@
 </dl>
 
 <dl class="colum password">
-  <dt><%= @item.t :in_password %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dt><%= @item.t :in_password %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.password_field :in_password %><%= remarks :in_password %></dd>
 
-  <dt><%= @item.class.t :in_password_again %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dt><%= @item.class.t :in_password_again %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.password_field :in_password_again %><%= remarks :in_password_again %></dd>
 </dl>
 
@@ -26,7 +26,7 @@
   <dt>
     <%= @item.class.t :kana %>
     <% if @cur_node.kana_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd><%= f.text_field :kana %><%= remarks :kana %></dd>
@@ -36,7 +36,7 @@
   <dt>
     <%= @item.class.t :organization_name %>
     <% if @cur_node.organization_name_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd><%= f.text_field :organization_name %><%= remarks :organization_name %></dd>
@@ -46,7 +46,7 @@
   <dt>
     <%= @item.class.t :job %>
     <% if @cur_node.job_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd><%= f.text_field :job %><%= remarks :job %></dd>
@@ -56,7 +56,7 @@
   <dt>
     <%= @item.class.t :tel %>
     <% if @cur_node.tel_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd><%= f.text_field :tel %><%= remarks :tel %></dd>
@@ -66,12 +66,12 @@
   <dt>
     <%= @item.class.t :postal_code %>
     <% if @cur_node.postal_code_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd>
     <%= f.text_field :postal_code %>
-    <%= f.button t('member.button.address_search'), name: 'postal-code-search', type: :button %>
+    <%= f.button t('member.buttons.address_search'), name: 'postal-code-search', type: :button %>
     <span class="postal-code-search-error"></span>
     <%= remarks :postal_code %>
   </dd>
@@ -81,7 +81,7 @@
   <dt>
     <%= @item.class.t :addr %>
     <% if @cur_node.addr_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd><%= f.text_field :addr %><%= remarks :addr %></dd>
@@ -91,7 +91,7 @@
   <dt>
     <%= @item.class.t :sex %>
     <% if @cur_node.sex_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd>
@@ -108,7 +108,7 @@
   <dt>
     <%= @item.class.t :birthday %>
     <% if @cur_node.birthday_required? %>
-    <span class="required"><%= t('views.required_field') %></span>
+    <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
   </dt>
   <dd>
