@@ -149,3 +149,8 @@ http://localhost:3000/ にアクセスすると登録したデモサイトが表
 DEVELOPMENT_LOG_LEVEL=debug
 ANALYZE_COVERAGE=disabled
 ```
+
+## その他機能の利用方法
+
+- [グループウェアの始め方](http://shirasagi.github.io/start/gws.html)
+- [ウェブメールの始め方](http://shirasagi.github.io/start/webmail.html)
