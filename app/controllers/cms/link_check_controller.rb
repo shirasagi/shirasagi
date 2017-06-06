@@ -31,7 +31,7 @@ class Cms::LinkCheckController < ApplicationController
         progress_proc: ->(size) do
             progress_data_size = size
             raise "200"
-                       end
+        end
       }
 
       begin
