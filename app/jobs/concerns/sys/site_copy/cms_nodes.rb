@@ -7,10 +7,6 @@ module Sys::SiteCopy::CmsNodes
     src_node = src_node.becomes_with_route
     copy_cms_content(:nodes, src_node, copy_cms_node_options)
   rescue => e
-    if e.message.include?('skip')
-      @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーをスキップします。")
-      return
-    end
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーに失敗しました。")
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
@@ -58,6 +54,9 @@ module Sys::SiteCopy::CmsNodes
       copy_inquiry_columns(src_node, dest_node)
     when "ezine/page"
       copy_ezine_columns(src_node, dest_node)
+    when "rss/weather_xml"
+      @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーをスキップします。")
+      return
     end
 
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーしました。")
