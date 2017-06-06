@@ -120,7 +120,7 @@
       <% end %>
 
       <% if @crumbs.size > 0 %>
-      <ol class="breadcrumb" id="crumbs">
+      <ol class="ss-breadcrumb" id="crumbs">
         <% @crumbs.each_with_index do |item, idx| %>
           <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
         <% end %>
