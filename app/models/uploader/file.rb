@@ -184,35 +184,35 @@ class Uploader::File
       Fs.binwrite path, @js
     end
 
-  class << self
-    def t(*args)
-      human_attribute_name *args
-    end
-
-    def file(path)
-      return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
-      Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
-    end
-
-    def find(path)
-      items = []
-      return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
-      return items unless Fs.directory?(path)
-
-      Fs.glob("#{path}/*").each do |f|
-        items << Uploader::File.new(path: f, saved_path: f, is_dir: Fs.directory?(f))
+    class << self
+      def t(*args)
+        human_attribute_name *args
       end
-      items
-    end
 
-    def search(path, params = {})
-      items = find(path)
-      return items if params.blank?
-
-      if params[:keyword].present?
-        items = items.select { |item| item.basename =~ /#{Regexp.escape(params[:keyword])}/i }
+      def file(path)
+        return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+        Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
       end
-      items
+
+      def find(path)
+        items = []
+        return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+        return items unless Fs.directory?(path)
+
+        Fs.glob("#{path}/*").each do |f|
+          items << Uploader::File.new(path: f, saved_path: f, is_dir: Fs.directory?(f))
+        end
+        items
+      end
+
+      def search(path, params = {})
+        items = find(path)
+        return items if params.blank?
+
+        if params[:keyword].present?
+          items = items.select { |item| item.basename =~ /#{Regexp.escape(params[:keyword])}/i }
+        end
+        items
+      end
     end
-  end
 end

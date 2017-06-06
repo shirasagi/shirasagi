@@ -79,7 +79,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
 
   public
     def index
-    @items = @app.appfiles.
+      @items = @app.appfiles.
       order_by(name: 1).
       page(params[:page]).per(50)
 

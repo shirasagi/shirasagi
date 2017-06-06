@@ -51,7 +51,6 @@ class Map::Extensions::Point < Hash
         ret[:zoom_level] = zoom_level if zoom_level.present?
         ret.mongoize
       else object
-        object
       end
     end
 

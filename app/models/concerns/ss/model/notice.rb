@@ -24,7 +24,7 @@ module SS::Model::Notice
     NOTICE_TARGET_SYS_ADMIN
   ].freeze
 
-included do
+  included do
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String
@@ -147,7 +147,7 @@ included do
       end
       self.file_ids = ids
     end
-end
+  end
 
   private
     def set_released

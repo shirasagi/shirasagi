@@ -139,37 +139,37 @@ module SS::Model::Site
         end
       end
 
-    class << self
-      def root
-        "#{Rails.public_path}/sites"
-      end
+      class << self
+        def root
+          "#{Rails.public_path}/sites"
+        end
 
-      def find_by_domain(host, path = nil)
-        sites = SS::Site.in(domains: host).to_a
-        if sites.size <= 1
-          site = sites.first
-        else
-          site = nil
-          host_with_path = ::File.join(host, path.to_s)
-          host_with_path += "/" if host_with_path !~ /\/$/
-          depth = 0
+        def find_by_domain(host, path = nil)
+          sites = SS::Site.in(domains: host).to_a
+          if sites.size <= 1
+            site = sites.first
+          else
+            site = nil
+            host_with_path = ::File.join(host, path.to_s)
+            host_with_path += "/" if host_with_path !~ /\/$/
+            depth = 0
 
-          sites.each do |s|
-            domains = s.domains_with_subdir + s.filtered_domains
-            domains.each do |domain|
-              if host_with_path =~ /^#{domain}\// && "#{domain}/".count("/") > depth
-                site = s
-                depth = "#{domain}/".count("/")
+            sites.each do |s|
+              domains = s.domains_with_subdir + s.filtered_domains
+              domains.each do |domain|
+                if host_with_path =~ /^#{domain}\// && "#{domain}/".count("/") > depth
+                  site = s
+                  depth = "#{domain}/".count("/")
+                end
               end
             end
           end
-        end
 
-        site ||= SS::Site.first if Rails.env.development?
-        site.cur_domain = host if site
-        site
+          site ||= SS::Site.first if Rails.env.development?
+          site.cur_domain = host if site
+          site
+        end
       end
-    end
   end
 
   module ClassMethods

@@ -75,7 +75,7 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
       end
     end
 
-   context "with 3days" do
+    context "with 3days" do
       before do
         # site logs
         Timecop.travel(8.days.ago) do
@@ -141,6 +141,6 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
         expect(Recommend::SimilarityScore.where(path: "/site2/page3.html").first).to be_nil
         expect(Recommend::SimilarityScore.where(path: "/site2/page4.html").first).to be_nil
       end
-   end
+    end
   end
 end

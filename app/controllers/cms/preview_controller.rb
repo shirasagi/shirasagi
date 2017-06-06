@@ -164,7 +164,7 @@ class Cms::PreviewController < ApplicationController
         h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
       end
 
-       h.join("\n")
+      h.join("\n")
     end
 
     def render_form_preview

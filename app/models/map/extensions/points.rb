@@ -19,7 +19,6 @@ class Map::Extensions::Points < Array
         object = object.select { |point| point[:loc].present? }
         self.new(object).mongoize
       else object
-        object
       end
     end
   end

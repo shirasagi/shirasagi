@@ -108,37 +108,37 @@ module Voice::Downloadable
       [ user, pass ]
     end
 
-  module ClassMethods
-    def find_or_create_by_url(url)
-      url = ::URI.parse(url.to_s) unless url.respond_to?(:host)
-      if url.host.blank? || url.path.blank?
-        # path must not be either nil, empty.
-        return nil
-      end
-      url.normalize!
+    module ClassMethods
+      def find_or_create_by_url(url)
+        url = ::URI.parse(url.to_s) unless url.respond_to?(:host)
+        if url.host.blank? || url.path.blank?
+          # path must not be either nil, empty.
+          return nil
+        end
+        url.normalize!
 
-      site = find_site url
-      unless site
-        Rails.logger.debug("site is not found: #{url}")
-        return nil
+        site = find_site url
+        unless site
+          Rails.logger.debug("site is not found: #{url}")
+          return nil
+        end
+
+        voice_file = self.find_or_create_by site_id: site.id, path: url.path
+        if voice_file.url.blank?
+          # remove query string and fragments.
+          voice_file.url = url.to_s.gsub(/\?.+$/, '').gsub(/#.+$/, '')
+          voice_file.save!
+        end
+        voice_file
       end
 
-      voice_file = self.find_or_create_by site_id: site.id, path: url.path
-      if voice_file.url.blank?
-        # remove query string and fragments.
-        voice_file.url = url.to_s.gsub(/\?.+$/, '').gsub(/#.+$/, '')
-        voice_file.save!
-      end
-      voice_file
+      private
+        def find_site(url)
+          host = url.host
+          port = url.port
+          path = url.path
+
+          SS::Site.find_by_domain("#{host}:#{port}", path) || SS::Site.find_by_domain(host.to_s, path)
+        end
     end
-
-    private
-      def find_site(url)
-        host = url.host
-        port = url.port
-        path = url.path
-
-        SS::Site.find_by_domain("#{host}:#{port}", path) || SS::Site.find_by_domain(host.to_s, path)
-      end
-  end
 end

@@ -60,8 +60,8 @@ Style/IndentationConsistency:
   # logical depth shall have the same indentation.
   EnforcedStyle: rails
   SupportedStyles:
-    - normal # Offense count: 2500
-    - rails # Offense count: 41
+    - normal
+    - rails
 
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
