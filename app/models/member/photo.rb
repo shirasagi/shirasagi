@@ -51,37 +51,37 @@ class Member::Photo
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
 
-  class << self
-    def contents_search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
+    class << self
+      def contents_search(params = {})
+        criteria = self.where({})
+        return criteria if params.blank?
 
-      if params[:keyword].present?
-        criteria = criteria.search_text(params[:keyword])
+        if params[:keyword].present?
+          criteria = criteria.search_text(params[:keyword])
+        end
+
+        if params[:contributor].present?
+          member_ids = Cms::Member.search_text(params[:contributor]).map(&:id)
+          criteria = criteria.in(member_id: member_ids)
+        end
+
+        if params[:location_ids].present?
+          criteria = criteria.in(photo_location_ids: params[:location_ids])
+        end
+
+        if params[:category_ids].present?
+          criteria = criteria.in(photo_category_ids: params[:category_ids])
+        end
+
+        criteria
       end
 
-      if params[:contributor].present?
-        member_ids = Cms::Member.search_text(params[:contributor]).map(&:id)
-        criteria = criteria.in(member_id: member_ids)
+      def listable
+        where listable_state: "public"
       end
 
-      if params[:location_ids].present?
-        criteria = criteria.in(photo_location_ids: params[:location_ids])
+      def slideable
+        where slideable_state: "public"
       end
-
-      if params[:category_ids].present?
-        criteria = criteria.in(photo_category_ids: params[:category_ids])
-      end
-
-      criteria
     end
-
-    def listable
-      where listable_state: "public"
-    end
-
-    def slideable
-      where slideable_state: "public"
-    end
-  end
 end

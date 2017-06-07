@@ -76,15 +76,15 @@ class Opendata::Appfile
       app.save(validate: false)
     end
 
-  class << self
-    public
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
+    class << self
+      public
+        def search(params)
+          criteria = self.where({})
+          return criteria if params.blank?
 
-        criteria = criteria.where(filename: /#{params[:keyword]}/) if params[:keyword].present?
+          criteria = criteria.where(filename: /#{params[:keyword]}/) if params[:keyword].present?
 
-        criteria
-      end
-  end
+          criteria
+        end
+    end
 end

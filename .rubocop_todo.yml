@@ -14,11 +14,6 @@ Lint/AmbiguousOperator:
 Lint/AssignmentInCondition:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Lint/BlockAlignment:
-  Enabled: false
-
 # Offense count: 26
 # Cop supports --auto-correct.
 Lint/DeprecatedClassMethods:
@@ -174,11 +169,6 @@ Style/Documentation:
 Style/DotPosition:
   Enabled: false
 
-# Offense count: 5
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyElse:
-  Enabled: false
-
 # Offense count: 457
 # Cop supports --auto-correct.
 Style/EmptyLinesAroundAccessModifier:
@@ -234,12 +224,6 @@ Style/IfUnlessModifier:
   Enabled: false
 
 Style/IndentArray:
-  Enabled: false
-
-# Offense count: 1027
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/IndentationConsistency:
   Enabled: false
 
 # Offense count: 8
@@ -322,17 +306,6 @@ Style/RegexpLiteral:
 
 # Offense count: 88
 Style/RescueModifier:
-  Enabled: false
-
-# Offense count: 182
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/SignalException:
-  Enabled: false
-
-# Offense count: 17
-# Cop supports --auto-correct.
-Style/SpaceBeforeFirstArg:
   Enabled: false
 
 # Offense count: 1
@@ -425,9 +398,3 @@ Style/TrailingCommaInLiteral:
 # Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, IgnoreClassMethods, Whitelist.
 Style/TrivialAccessors:
   Enabled: false
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: WordRegex.
-Style/WordArray:
-  MinSize: 2

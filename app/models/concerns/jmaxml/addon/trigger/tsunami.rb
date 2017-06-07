@@ -1,6 +1,6 @@
 module Jmaxml::Addon::Trigger::Tsunami
   extend ActiveSupport::Concern
-extend SS::Addon
+  extend SS::Addon
 
   included do
     cattr_accessor :control_title

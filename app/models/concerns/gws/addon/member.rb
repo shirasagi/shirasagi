@@ -51,22 +51,22 @@ module Gws::Addon::Member
       errors.add :member_ids, :empty
     end
 
-  module ClassMethods
-    def keep_members_order?
-      class_variable_get(:@@_keep_members_order)
-    end
-
-    def member_include_custom_groups?
-      class_variable_get(:@@_member_include_custom_groups)
-    end
-
-    private
-      def keep_members_order
-        class_variable_set(:@@_keep_members_order, true)
+    module ClassMethods
+      def keep_members_order?
+        class_variable_get(:@@_keep_members_order)
       end
 
-      def member_include_custom_groups
-        class_variable_set(:@@_member_include_custom_groups, true)
+      def member_include_custom_groups?
+        class_variable_get(:@@_member_include_custom_groups)
       end
-  end
+
+      private
+        def keep_members_order
+          class_variable_set(:@@_keep_members_order, true)
+        end
+
+        def member_include_custom_groups
+          class_variable_set(:@@_member_include_custom_groups, true)
+        end
+    end
 end

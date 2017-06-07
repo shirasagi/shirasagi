@@ -38,7 +38,7 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
         Recommend::History::Log.first.tap do |log|
           expect(log.token).not_to be_nil
           expect(log.path).to eq "#{node.url}index.html"
-          expect(log.access_url).to eq "#{node.full_url}"
+          expect(log.access_url).to eq node.full_url.to_s
           expect(log.target_id).to eq node.id.to_s
           expect(log.target_class).to eq node.class.to_s
           expect(log.remote_addr).to eq "127.0.0.1"

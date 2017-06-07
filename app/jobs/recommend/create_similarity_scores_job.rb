@@ -48,7 +48,7 @@ class Recommend::CreateSimilarityScoresJob < Cms::ApplicationJob
     item_and = (prefs[item1].keys & prefs[item2].keys)
     item_or = (prefs[item1].keys | prefs[item2].keys)
 
-    if item_or.size == 0 || item_and.size == 0
+    if item_or.empty? || item_and.empty?
       return 0.0
     else
       return (item_and.size.to_f / item_or.size.to_f)

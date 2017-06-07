@@ -15,13 +15,13 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
   context "with auth seatch updated and deleted" do
     before { login_cms_user }
 
-  subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
-  before do
-    subject.license_id = license.id
-    subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
-    subject.crawl_update = "none"
-    subject.save!
-  end
+    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    before do
+      subject.license_id = license.id
+      subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
+      subject.crawl_update = "none"
+      subject.save!
+    end
 
     it "#index" do
       visit index_path
@@ -32,44 +32,44 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
     end
   end
 
-   context "with auth seatch updated" do
-     before { login_cms_user }
+  context "with auth seatch updated" do
+    before { login_cms_user }
 
-   subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
-   before do
-     subject.license_id = license.id
-     subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
-     subject.crawl_update = "none"
-     subject.save!
-   end
+    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    before do
+      subject.license_id = license.id
+      subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
+      subject.crawl_update = "none"
+      subject.save!
+    end
 
-     it "#index" do
-       visit index_path
-       check "s_search_updated"
-       click_button I18n.t("ss.buttons.search")
-       expect(current_path).not_to eq sns_login_path
-     end
+    it "#index" do
+      visit index_path
+      check "s_search_updated"
+      click_button I18n.t("ss.buttons.search")
+      expect(current_path).not_to eq sns_login_path
+    end
 
-   end
+  end
 
-   context "with auth seatch deleted" do
-     before { login_cms_user }
+  context "with auth seatch deleted" do
+    before { login_cms_user }
 
-   subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
-   before do
-     subject.license_id = license.id
-     subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
-     subject.crawl_update = "none"
-     subject.save!
-   end
+    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    before do
+      subject.license_id = license.id
+      subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
+      subject.crawl_update = "none"
+      subject.save!
+    end
 
-     it "#index" do
-       visit index_path
-       check "s_search_deleted"
-       click_button I18n.t("ss.buttons.search")
-       expect(current_path).not_to eq sns_login_path
-     end
+    it "#index" do
+      visit index_path
+      check "s_search_deleted"
+      click_button I18n.t("ss.buttons.search")
+      expect(current_path).not_to eq sns_login_path
+    end
 
-   end
+  end
 
- end
+end

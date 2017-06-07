@@ -79,7 +79,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
 
   public
     def index
-    @items = @dataset.resources.
+      @items = @dataset.resources.
       order_by(name: 1).
       page(params[:page]).per(50)
 

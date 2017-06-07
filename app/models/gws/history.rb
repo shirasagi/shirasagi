@@ -57,9 +57,9 @@ class Gws::History
       self.updated_field_names = updated_field_names unless self[:updated_field_names]
     end
 
-  class << self
-    def updated?
-      where(mode: 'update').exists?
+    class << self
+      def updated?
+        where(mode: 'update').exists?
+      end
     end
-  end
 end

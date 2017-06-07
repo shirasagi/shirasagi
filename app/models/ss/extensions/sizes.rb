@@ -22,7 +22,6 @@ class SS::Extensions::Sizes < Array
       when Array then
         [Integer(object[0]), Integer(object[1])] rescue []
       else object
-        object
       end
     end
 

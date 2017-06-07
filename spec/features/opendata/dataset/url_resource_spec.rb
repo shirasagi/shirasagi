@@ -25,7 +25,7 @@ describe "opendata_url_resource", dbscope: :example, http_server: true do
       node,
       dataset_id: dataset.id,
       url_resource_id: subject.id
-    end
+  end
 
   subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
   before do

@@ -31,7 +31,7 @@ class Recommend::SimilarityScore
   end
 
   class << self
-    def has_similarity(key)
+    def similarity(key)
       self.and([
         { :score.gt => 0.0 },
         { :key => key },

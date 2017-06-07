@@ -10,11 +10,10 @@ class Cms::ImportFilesJob < Cms::ApplicationJob
           put_log("import in #{item.node.name}(#{item.node.filename})")
           item.import
           item.import_logs.each { |log| put_log(log) }
-          put_log(" ")
         else
           put_log("error not found node (#{item.node_id})")
-          put_log(" ")
         end
+        put_log(" ")
       ensure
         item.destroy
       end

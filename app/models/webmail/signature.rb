@@ -42,10 +42,10 @@ class Webmail::Signature
         update_all(default: 'disabled')
     end
 
-  class << self
-    def default_sign(user)
-      sign = self.user(user).default.first
-      sign ? sign.text.presence : nil
+    class << self
+      def default_sign(user)
+        sign = self.user(user).default.first
+        sign ? sign.text.presence : nil
+      end
     end
-  end
 end

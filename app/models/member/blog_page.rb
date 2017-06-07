@@ -27,15 +27,15 @@ class Member::BlogPage
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
 
-  class << self
-    def search(params = {})
-      criteria = super(params)
-      return criteria if params.blank?
+    class << self
+      def search(params = {})
+        criteria = super(params)
+        return criteria if params.blank?
 
-      if params[:g].present?
-        criteria = criteria.in(genres: params[:g])
+        if params[:g].present?
+          criteria = criteria.in(genres: params[:g])
+        end
+        criteria
       end
-      criteria
     end
-  end
 end

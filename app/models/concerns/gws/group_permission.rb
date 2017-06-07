@@ -86,39 +86,39 @@ module Gws::GroupPermission
       self.custom_groups_hash = custom_groups.map { |m| [m.id, m.name] }.to_h
     end
 
-  module ClassMethods
-    # @param [String] action
-    # @param [Gws::User] user
-    def allow(action, user, opts = {})
-      where(allow_condition(action, user, opts))
-    end
-
-    def allow_condition(action, user, opts = {})
-      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
-      action = permission_action || action
-
-      if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
-        { "$or" => [
-          { user_ids: user.id },
-          { permission_level: { "$lte" => level } },
-        ] }
-      elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        { "$or" => [
-          { user_ids: user.id },
-          { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
-        ] }
-      else
-        { user_ids: user.id }
+    module ClassMethods
+      # @param [String] action
+      # @param [Gws::User] user
+      def allow(action, user, opts = {})
+        where(allow_condition(action, user, opts))
       end
-    end
 
-    def permission_included_custom_groups?
-      class_variable_get(:@@_permission_include_custom_groups)
-    end
+      def allow_condition(action, user, opts = {})
+        site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
+        action = permission_action || action
 
-    private
-      def permission_include_custom_groups
-        class_variable_set(:@@_permission_include_custom_groups, true)
+        if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
+          { "$or" => [
+            { user_ids: user.id },
+            { permission_level: { "$lte" => level } },
+          ] }
+        elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
+          { "$or" => [
+            { user_ids: user.id },
+            { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
+          ] }
+        else
+          { user_ids: user.id }
+        end
       end
-  end
+
+      def permission_included_custom_groups?
+        class_variable_get(:@@_permission_include_custom_groups)
+      end
+
+      private
+        def permission_include_custom_groups
+          class_variable_set(:@@_permission_include_custom_groups, true)
+        end
+    end
 end
