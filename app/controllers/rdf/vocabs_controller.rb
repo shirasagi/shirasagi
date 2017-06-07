@@ -61,7 +61,7 @@ class Rdf::VocabsController < ApplicationController
 
       Rdf::VocabImportJob.bind(site_id: @cur_site).perform_later(@params.prefix, @file.id, @params.owner, @params.order)
       respond_to do |format|
-        format.html { redirect_to({ action: :index }, { notice: t("rdf.notices.start_import_job") }) }
+        format.html { redirect_to({ action: :index }, { notice: t("rdf.notice.start_import_job") }) }
         format.json { render json: @params.to_json, status: :created }
       end
     rescue => e
