@@ -91,6 +91,7 @@ module Gws::Board::Postable
   end
 
   private
+
   # topic(root_post)を設定
   def set_topic_id
     self.topic_id = root_post.id

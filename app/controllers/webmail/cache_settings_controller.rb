@@ -4,11 +4,13 @@ class Webmail::CacheSettingsController < ApplicationController
   menu_view false
 
   private
+
   def set_crumbs
     @crumbs << [t("webmail.settings.cache") , { action: :show } ]
   end
 
   public
+
   def show
     # render
   end

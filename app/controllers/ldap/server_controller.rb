@@ -5,6 +5,7 @@ class Ldap::ServerController < ApplicationController
   before_action :set_exclude_groups
 
   private
+
   def set_crumbs
     @crumbs << [t("ldap.server"), action: :index]
   end
@@ -22,6 +23,7 @@ class Ldap::ServerController < ApplicationController
   end
 
   public
+
   def index
     connection = connect
     if connection.blank?

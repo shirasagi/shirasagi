@@ -7,11 +7,13 @@ class Jmaxml::Trigger::WeatherAlertsController < ApplicationController
   append_view_path 'app/views/jmaxml/trigger/bases'
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
 
   public
+
   def index
     redirect_to jmaxml_trigger_bases_path
   end

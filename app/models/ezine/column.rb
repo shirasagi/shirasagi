@@ -34,6 +34,7 @@ class Ezine::Column
   end
 
   private
+
   def destroy_data
     Ezine::Member.where(:"data.column_id" => id).each do |member|
       member.in_data[id.to_s] = nil

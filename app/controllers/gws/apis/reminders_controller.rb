@@ -5,6 +5,7 @@ class Gws::Apis::RemindersController < ApplicationController
   model Gws::Reminder
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
@@ -27,6 +28,7 @@ class Gws::Apis::RemindersController < ApplicationController
   end
 
   public
+
   def create
     item = find_item || @model.new
     item.attributes = get_params

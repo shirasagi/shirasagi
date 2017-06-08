@@ -22,6 +22,7 @@ module Sys::Addon
     end
 
     private
+
     def template_variable_handler_img_src(name, issuer)
       extract_img_src(html) || default_img_src
     end

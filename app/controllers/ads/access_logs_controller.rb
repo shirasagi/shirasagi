@@ -38,6 +38,7 @@ class Ads::AccessLogsController < ApplicationController
   end
 
   private
+
   def set_year_month
     if s = params[:s]
       @year  = s[:year].presence

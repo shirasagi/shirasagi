@@ -7,6 +7,7 @@ class Member::Agents::Nodes::BlogPageController < ApplicationController
   after_action :render_blog_layout
 
   private
+
   def pages
     @model.site(@cur_site).node(@cur_node).and_public
   end
@@ -24,6 +25,7 @@ class Member::Agents::Nodes::BlogPageController < ApplicationController
   end
 
   public
+
   def index
     @items = pages.
       search(params).

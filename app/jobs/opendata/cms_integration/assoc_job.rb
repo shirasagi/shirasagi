@@ -25,6 +25,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
   end
 
   private
+
   def close_associated_dataset
     Opendata::Dataset.site(self.site).node(@dataset_node).and_resource_associated_page(@cur_page).each do |dataset|
       dataset.resources.and_associated_page(@cur_page).each do |resource|

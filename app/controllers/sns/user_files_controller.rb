@@ -6,6 +6,7 @@ class Sns::UserFilesController < ApplicationController
   model SS::UserFile
 
   private
+
   def set_crumbs
     @crumbs << [t("sns.file"), params.include?(:user) ? sns_user_files_path : sns_cur_user_files_path]
   end
@@ -15,6 +16,7 @@ class Sns::UserFilesController < ApplicationController
   end
 
   public
+
   def index
     cond = (@cur_user.id != @sns_user.id) ? { state: :public } : { }
 

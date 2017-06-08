@@ -150,6 +150,7 @@ module SS::Model::Notice
   end
 
   private
+
   def set_released
     self.released ||= Time.zone.now
   end

@@ -2,6 +2,7 @@ class Jmaxml::WaterLevelStationImportJob < Cms::ApplicationJob
   include SS::ZipFileImport
 
   private
+
   def import_file
     table = ::CSV.table(@cur_file.path, converters: nil, encoding: 'SJIS:UTF-8')
     table.each_with_index do |row, i|

@@ -7,6 +7,7 @@ class Gws::Board::TopicsController < ApplicationController
   before_action :set_category
 
   private
+
   def set_crumbs
     set_category
     if @category.present?
@@ -37,6 +38,7 @@ class Gws::Board::TopicsController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).topic
 

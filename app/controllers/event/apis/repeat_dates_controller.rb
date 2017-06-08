@@ -51,6 +51,7 @@ class Event::Apis::RepeatDatesController < ApplicationController
   end
 
   private
+
   def repeat_dates
     dates = []
     @repeat_start.step(@repeat_end, 1) do |d|

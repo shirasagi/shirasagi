@@ -9,6 +9,7 @@ class Sns::UserProfilesController < ApplicationController
   menu_view nil
 
   private
+
   def set_crumbs
     @crumbs << [t("sns.profile"), params.include?(:user) ? sns_user_profile_path : sns_cur_user_profile_path]
   end
@@ -18,6 +19,7 @@ class Sns::UserProfilesController < ApplicationController
   end
 
   public
+
   def show
     render
   end

@@ -44,6 +44,7 @@ class Job::Task
   end
 
   private
+
   def set_name
     self.name = 'job:model' if self.name.blank?
   end

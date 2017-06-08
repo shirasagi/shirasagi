@@ -159,6 +159,7 @@ module SS::Model::File
   end
 
   private
+
   def set_filename
     self.name         = in_file.original_filename if self[:name].blank?
     self.filename     = in_file.original_filename if filename.blank?

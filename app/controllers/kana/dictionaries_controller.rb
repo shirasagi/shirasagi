@@ -7,6 +7,7 @@ class Kana::DictionariesController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("kana.dictionary"), action: :index]
   end
@@ -27,6 +28,7 @@ class Kana::DictionariesController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site) || @model.allowed?(:read, @cur_user, site: @cur_site)
 

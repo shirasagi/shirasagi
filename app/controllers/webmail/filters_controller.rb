@@ -7,6 +7,7 @@ class Webmail::FiltersController < ApplicationController
   before_action :imap_login, only: [:apply]
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.webmail/filter"), { action: :index } ]
   end
@@ -16,6 +17,7 @@ class Webmail::FiltersController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.
       user(@cur_user).

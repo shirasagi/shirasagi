@@ -26,6 +26,7 @@ class Opendata::Csv2rdfConverter::Job < Cms::ApplicationJob
   end
 
   private
+
   def put_linkdata
     @tmp_file.puts "## リンクデータ ####"
     each_data_row do |row, index|

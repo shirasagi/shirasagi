@@ -127,6 +127,7 @@ module SS::Model::Site
     end
 
     private
+
     def validate_domains
       self.domains = domains.uniq
       self.domains_with_subdir = []

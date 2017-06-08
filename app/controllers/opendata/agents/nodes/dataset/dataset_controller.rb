@@ -11,6 +11,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   skip_before_action :logged_in?
 
   private
+
   def set_dataset
     @dataset_path = Opendata::Dataset.to_dataset_path(@cur_path)
     @dataset = Opendata::Dataset.site(@cur_site).and_public.
@@ -47,6 +48,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   end
 
   public
+
   def pages
     Opendata::Dataset.site(@cur_site).and_public
   end

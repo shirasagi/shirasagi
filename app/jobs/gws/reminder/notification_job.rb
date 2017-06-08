@@ -23,6 +23,7 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
   end
 
   private
+
   def round_down_seconds(time)
     Time.zone.at((time.to_i / 60) * 60)
   end

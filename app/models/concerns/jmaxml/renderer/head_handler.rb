@@ -10,6 +10,7 @@ module Jmaxml::Renderer::HeadHandler
   end
 
   private
+
   def template_variable_handler_head_title(*_)
     head_title
   end

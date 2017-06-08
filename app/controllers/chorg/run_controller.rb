@@ -11,6 +11,7 @@ class Chorg::RunController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("chorg.revision"), controller: :revisions, action: :index]
   end
@@ -42,6 +43,7 @@ class Chorg::RunController < ApplicationController
   end
 
   public
+
   def confirmation
   end
 

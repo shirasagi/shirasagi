@@ -15,6 +15,7 @@ module ActiveJob
         end
 
         private
+
         def check_size_limit(pool)
           max_size = Job::Service::Config.max_size_of(pool)
           return if max_size <= 0

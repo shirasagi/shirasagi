@@ -15,6 +15,7 @@ module Gws::Reference
     end
 
     private
+
     def set_site_id
       self.site_id ||= @cur_site.id
     end

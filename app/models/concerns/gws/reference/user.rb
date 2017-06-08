@@ -36,6 +36,7 @@ module Gws::Reference
     end
 
     private
+
     def set_user_id
       return if user_id.present?
 

@@ -12,6 +12,7 @@ module Ezine::Addon
     end
 
     private
+
     def update_members_subscription
       return unless subscription_requried?
 
@@ -26,6 +27,7 @@ module Ezine::Addon
     end
 
     public
+
     def subscription_constraint_options
       %w(optional required).map { |m| [ I18n.t("inquiry.options.required.#{m}"), m ] }.to_a
     end

@@ -9,6 +9,7 @@ class Cms::SearchContents::PagesController < ApplicationController
   before_action :set_item
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_user: @cur_user }
   end
@@ -49,6 +50,7 @@ class Cms::SearchContents::PagesController < ApplicationController
   end
 
   public
+
   def index
     if params[:save]
       redirect_to new_cms_page_search_path(item: item_attributes)

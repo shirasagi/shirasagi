@@ -26,6 +26,7 @@ class Rss::ImportBase < Cms::ApplicationJob
   end
 
   private
+
   def model
     @model ||= Rss::Page
   end

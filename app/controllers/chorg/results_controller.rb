@@ -11,6 +11,7 @@ class Chorg::ResultsController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("chorg.revision"), controller: :revisions, action: :index]
   end
@@ -25,6 +26,7 @@ class Chorg::ResultsController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).
       in(job_id: @revision.job_ids).

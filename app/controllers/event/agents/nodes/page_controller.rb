@@ -36,6 +36,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   private
+
   def events(date)
     events = Cms::Page.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).

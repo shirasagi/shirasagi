@@ -87,6 +87,7 @@ class Gws::Schedule::PlanSearch
   end
 
   private
+
   def validate_wdays
     self.wdays = wdays.reject(&:blank?).map(&:to_i)
   end

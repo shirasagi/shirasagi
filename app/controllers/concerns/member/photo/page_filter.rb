@@ -3,6 +3,7 @@ module Member::Photo::PageFilter
   include Cms::CrudFilter
 
   private
+
   def render_items(cond)
     if @cur_node
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
@@ -18,6 +19,7 @@ module Member::Photo::PageFilter
   end
 
   public
+
   def index_listable
     cond = { listable_state: "public" }
     render_items(cond)

@@ -7,11 +7,13 @@ class Sys::MaxFileSizesController < ApplicationController
   menu_view "sys/crud/menu"
 
   private
+
   def set_crumbs
     @crumbs << [t("sys.max_file_size"), sys_max_file_sizes_path]
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:edit, @cur_user)
     @items = @model.allow(:edit, @cur_user).

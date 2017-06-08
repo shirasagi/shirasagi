@@ -39,6 +39,7 @@ module SS::Reference
     end
 
     private
+
     # def set_title_ids
     #   #
     # end

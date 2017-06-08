@@ -7,6 +7,7 @@ class Rdf::Builders::SubClassOfHandler < Rdf::Builders::BaseHandler
   end
 
   private
+
   def select_restriction_nodes(objects)
     nodes = objects.select do |object|
       object.node?

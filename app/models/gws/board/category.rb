@@ -21,6 +21,7 @@ class Gws::Board::Category
   end
 
   private
+
   def color_required?
     false
   end

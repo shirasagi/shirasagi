@@ -9,6 +9,7 @@ module Rss::PubSubHubbubFilter
   end
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
@@ -19,6 +20,7 @@ module Rss::PubSubHubbubFilter
   end
 
   public
+
   def subscribe
     unless request.post?
       return

@@ -5,6 +5,7 @@ class Cms::Node::MaxFileSizesController < ApplicationController
   model Cms::MaxFileSize
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node }
   end

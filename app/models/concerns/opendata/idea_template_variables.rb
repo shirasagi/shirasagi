@@ -24,6 +24,7 @@ module Opendata::IdeaTemplateVariables
   end
 
   private
+
   def template_variable_handler_idea_name(name, issuer)
     ERB::Util.html_escape self.name
   end

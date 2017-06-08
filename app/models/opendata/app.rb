@@ -94,6 +94,7 @@ class Opendata::App
   end
 
   private
+
   def validate_filename
     @basename.blank? ? nil : super
   end

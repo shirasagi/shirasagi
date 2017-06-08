@@ -68,6 +68,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   private
+
   def replace_html_with_string(string, replacement)
     @pages = @pages.select do |item|
       update_html_fields(item) { |html| html.gsub(string, replacement) }

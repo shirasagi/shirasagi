@@ -10,6 +10,7 @@ class Opendata::App::AppfilesController < ApplicationController
   before_action :set_app
 
   private
+
   def app
     @app ||= Opendata::App.site(@cur_site).node(@cur_node).find params[:app_id]
   end
@@ -24,6 +25,7 @@ class Opendata::App::AppfilesController < ApplicationController
   end
 
   public
+
   def index
     @items = @app.appfiles.
       search(params[:s]).

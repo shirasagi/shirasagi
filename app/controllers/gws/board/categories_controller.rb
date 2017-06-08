@@ -22,6 +22,7 @@ class Gws::Board::CategoriesController < ApplicationController
   end
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/board/group_setting"), gws_board_setting_path]
     @crumbs << [t("mongoid.models.gws/board/group_setting/category"), gws_board_topics_path]

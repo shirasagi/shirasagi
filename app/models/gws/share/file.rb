@@ -31,6 +31,7 @@ class Gws::Share::File
   end
 
   private
+
   def validate_size
     limit = cur_site.share_max_file_size || 0
     return if limit <= 0

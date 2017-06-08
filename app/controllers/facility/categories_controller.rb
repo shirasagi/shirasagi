@@ -8,6 +8,7 @@ class Facility::CategoriesController < ApplicationController
   navi_view "facility/categories/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end

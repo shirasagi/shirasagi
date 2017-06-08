@@ -135,6 +135,7 @@ module Workflow::Approver
   end
 
   private
+
   def reset_workflow
     self.unset(:workflow_user_id, :workflow_state, :workflow_comment, :workflow_approvers)
   end

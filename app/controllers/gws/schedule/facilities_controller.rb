@@ -6,6 +6,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   before_action :set_category, only: :index
 
   private
+
   def facility_category_criteria
     Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site)
   end
@@ -49,6 +50,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   end
 
   public
+
   def index
     @items = Gws::Facility::Item.site(@cur_site).
       readable(@cur_user, @cur_site).

@@ -7,6 +7,7 @@ class Cms::GroupsController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.group"), action: :index]
   end
@@ -25,6 +26,7 @@ class Cms::GroupsController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

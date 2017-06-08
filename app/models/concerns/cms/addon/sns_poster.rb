@@ -127,6 +127,7 @@ module Cms::Addon
     end
 
     private
+
     def post_sns
       return if @posted_sns
 

@@ -13,6 +13,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
   after_action :deliver_workflow_mail, only: [:create, :update]
 
   protected
+
   def app
     @app ||= Opendata::App.site(@cur_site).find params[:app_id]
   end
@@ -78,6 +79,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
   end
 
   public
+
   def index
     @items = @app.appfiles.
     order_by(name: 1).

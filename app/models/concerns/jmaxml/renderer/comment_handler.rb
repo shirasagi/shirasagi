@@ -9,6 +9,7 @@ module Jmaxml::Renderer::CommentHandler
   end
 
   private
+
   def template_variable_handler_forecast_comment(*_)
     body_comments_forecast_comment
   end

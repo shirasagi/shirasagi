@@ -11,6 +11,7 @@ class Cms::CopyNodesTask
   validate :validate_node_name, if: ->{ target_node_name.present? }
 
   private
+
   def validate_node_name
     parent_node_name = target_node_name.match(/(.*\/)*(.+)/)[1]
     if Cms::Node.where(filename: target_node_name, site_id: self.site_id).exists?

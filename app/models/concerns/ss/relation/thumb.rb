@@ -14,6 +14,7 @@ module SS::Relation::Thumb
 
   module ClassMethods
     private
+
     def thumb_size(size)
       add_thumb_size(:normal, size)
     end
@@ -62,6 +63,7 @@ module SS::Relation::Thumb
   end
 
   private
+
   def save_thumbs
     thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
     thumbs_resizing = self.class.thumbs_resizing

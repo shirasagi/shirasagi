@@ -7,6 +7,7 @@ module Opendata::Api::ResourceSearchFilter
   end
 
   private
+
   def resource_search_check(queries, order_by, offset, limit)
     offset_messages = []
     limit_messages = []
@@ -87,6 +88,7 @@ module Opendata::Api::ResourceSearchFilter
   end
 
   public
+
   def resource_search
     @result_list = []
 

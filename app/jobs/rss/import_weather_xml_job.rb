@@ -7,6 +7,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   end
 
   private
+
   def before_import(file, *args)
     @weather_xml_page = nil
     super

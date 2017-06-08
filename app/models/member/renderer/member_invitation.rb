@@ -11,6 +11,7 @@ class Member::Renderer::MemberInvitation
   template_variable_handler(:registration_url, :template_variable_handler_registration_url)
 
   private
+
   def template_variable_handler_sender_name(*_)
     sender.name
   end

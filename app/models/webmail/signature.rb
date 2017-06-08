@@ -35,6 +35,7 @@ class Webmail::Signature
   end
 
   private
+
   def check_default
     self.class.user(user).
       where(default: 'enabled').

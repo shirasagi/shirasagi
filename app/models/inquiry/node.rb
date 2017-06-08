@@ -27,6 +27,7 @@ module Inquiry::Node
     default_scope ->{ where(route: "inquiry/form") }
 
     private
+
     def set_released
       now = Time.zone.now
       self.released ||= now

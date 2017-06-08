@@ -7,11 +7,13 @@ class Member::BlogLayoutsController < ApplicationController
   navi_view "member/blogs/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

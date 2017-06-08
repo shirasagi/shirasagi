@@ -12,6 +12,7 @@ class Member::Agents::Nodes::MyBlog::SettingController < ApplicationController
   prepend_view_path "app/views/member/agents/nodes/my_blog/setting"
 
   private
+
   def set_item
     @blog_node = Member::Node::Blog.site(@cur_site).first
     @locations = Member::Node::BlogPageLocation.site(@cur_site).order_by(order: 1)

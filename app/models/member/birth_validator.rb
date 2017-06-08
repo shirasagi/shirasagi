@@ -45,6 +45,7 @@ class Member::BirthValidator < ActiveModel::EachValidator
   end
 
   private
+
   def find_by_era(era)
     wareki = I18n.t("ss.wareki")[era.to_sym] rescue nil
     return nil if wareki.blank?

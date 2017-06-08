@@ -6,6 +6,7 @@ class Sys::Auth::OpenIdConnect::JwtValidator < ActiveModel::Validator
   end
 
   private
+
   def validate_jwt_header(item)
     return if item.jwt.nil?
     item.errors.add :base, :jwt_header_alg_blank if item.jwt.alg.blank?

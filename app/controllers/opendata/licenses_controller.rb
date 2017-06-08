@@ -7,11 +7,13 @@ class Opendata::LicensesController < ApplicationController
   navi_view "opendata/main/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).allow(:read, @cur_user).
       search(params[:s]).

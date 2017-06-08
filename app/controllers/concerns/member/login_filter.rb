@@ -11,6 +11,7 @@ module Member::LoginFilter
   end
 
   private
+
   def remote_addr
     request.env["HTTP_X_REAL_IP"] || request.remote_addr
   end

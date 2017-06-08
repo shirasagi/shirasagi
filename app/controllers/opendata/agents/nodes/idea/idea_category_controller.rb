@@ -4,6 +4,7 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
   include Opendata::Idea::IdeaFilter
 
   private
+
   def pages
     @cur_node.cur_subcategory = params[:name]
     @item = @cur_node.related_category
@@ -23,6 +24,7 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
   end
 
   public
+
   def index
     @count          = pages.size
     @node_url       = node_url

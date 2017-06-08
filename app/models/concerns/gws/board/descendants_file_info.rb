@@ -16,6 +16,7 @@ module Gws::Board::DescendantsFileInfo
   end
 
   private
+
   def validate_attached_file_size
     if (limit = (cur_site.board_file_size_per_post || 0)) > 0
       size = files.compact.map(&:size).max || 0

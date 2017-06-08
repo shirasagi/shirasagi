@@ -55,6 +55,7 @@ class Opendata::Appfile
   end
 
   private
+
   def set_filename
     self.filename = in_file.original_filename
     self.format = filename.sub(/.*\./, "").upcase

@@ -6,6 +6,7 @@ class Sys::SiteCopyController < ApplicationController
   menu_view nil
 
   private
+
   def set_crumbs
     @crumbs << [t("sys.site_copy"), sys_site_copy_path]
   end
@@ -15,6 +16,7 @@ class Sys::SiteCopyController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:edit, @cur_user)
 

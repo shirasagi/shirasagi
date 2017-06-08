@@ -6,6 +6,7 @@ class Cms::ThemeTemplatesController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.theme_template"), action: :index]
   end

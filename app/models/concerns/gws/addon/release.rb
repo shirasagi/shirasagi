@@ -49,6 +49,7 @@ module Gws::Addon
     end
 
     private
+
     def validate_release_date
       self.released ||= release_date if respond_to?(:released)
 

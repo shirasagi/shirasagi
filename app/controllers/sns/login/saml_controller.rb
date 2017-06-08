@@ -8,6 +8,7 @@ class Sns::Login::SamlController < ApplicationController
   model Sys::Auth::Saml
 
   private
+
   def set_item
     @item ||= @model.find_by(filename: params[:id])
   end
@@ -33,6 +34,7 @@ class Sns::Login::SamlController < ApplicationController
   end
 
   public
+
   def init
     request = OneLogin::RubySaml::Authrequest.new
     state = session['ss.sso.state'] = SecureRandom.hex(24)

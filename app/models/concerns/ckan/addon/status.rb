@@ -22,6 +22,7 @@ module Ckan::Addon
     end
 
     private
+
     def set_ckan_basicauth_password
       self.ckan_basicauth_password = SS::Crypt.encrypt(in_ckan_basicauth_password)
     end
@@ -54,6 +55,7 @@ module Ckan::Addon
     end
 
     public
+
     def ckan_status_options
       %w(dataset tag group related_item organization).map { |m| [ I18n.t("ckan.options.ckan_status.#{m}"), m ] }.to_a
     end

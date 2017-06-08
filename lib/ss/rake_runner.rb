@@ -14,6 +14,7 @@ class SS::RakeRunner
     end
 
     private
+
     def do_spawn(task, *args)
       Rails.logger.debug "spawn: bundle exec rake #{task} #{args.join(" ")}"
       spawn({}, "bundle", "exec", "rake", task, *args, { in: NULL_DEVICE, out: NULL_DEVICE, err: NULL_DEVICE })

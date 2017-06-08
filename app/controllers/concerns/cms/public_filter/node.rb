@@ -3,6 +3,7 @@ module Cms::PublicFilter::Node
   include Cms::PublicFilter::Layout
 
   private
+
   def init_context
     self.params   = ActionController::Parameters.new
     self.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
@@ -30,6 +31,7 @@ module Cms::PublicFilter::Node
   end
 
   public
+
   def generate_node(node, opts = {})
     path = opts[:url] || "#{node.filename}/index.html"
     return if Cms::Page.site(node.site).and_public.filename(path).first

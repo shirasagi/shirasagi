@@ -53,6 +53,7 @@ module Gws::Addon::Facility::ReservableSetting
   end
 
   private
+
   def set_reservable_groups_hash
     self.reservable_groups_hash = reservable_groups.map { |m| [m.id, m.name] }.to_h
   end

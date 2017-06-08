@@ -43,6 +43,7 @@ class Ldap::SyncJob < Cms::ApplicationJob
   end
 
   private
+
   def sync_ldap_groups(ss_group, ldap_groups)
     ldap_groups.each do |ldap_group|
       sync_ldap_group(ss_group, ldap_group)

@@ -7,6 +7,7 @@ module Job::TasksFilter
   end
 
   private
+
   def set_crumbs
     @crumbs << [t("job.log"), action: :index]
   end
@@ -21,6 +22,7 @@ module Job::TasksFilter
   end
 
   public
+
   def index
     @items = item_criteria.order_by(started: -1, id: -1).page(params[:page]).per(50)
   end

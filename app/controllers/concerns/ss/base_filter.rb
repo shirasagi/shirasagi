@@ -21,6 +21,7 @@ module SS::BaseFilter
 
   module ClassMethods
     private
+
     def model(cls)
       self.model_class = cls if cls
     end
@@ -45,6 +46,7 @@ module SS::BaseFilter
   end
 
   private
+
   def set_model
     @model = self.class.model_class
   end

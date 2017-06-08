@@ -33,6 +33,7 @@ module Cms::PublicFilter::TwitterCard
   end
 
   private
+
   def twitter_description
     if @cur_item
       description ||= @cur_item.html.presence if @cur_item.respond_to?(:html)

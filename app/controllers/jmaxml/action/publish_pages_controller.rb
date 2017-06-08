@@ -7,11 +7,13 @@ class Jmaxml::Action::PublishPagesController < ApplicationController
   append_view_path 'app/views/jmaxml/action/bases'
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
 
   public
+
   def index
     redirect_to jmaxml_action_bases_path
   end

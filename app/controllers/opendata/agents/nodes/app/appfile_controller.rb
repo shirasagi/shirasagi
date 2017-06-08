@@ -6,6 +6,7 @@ class Opendata::Agents::Nodes::App::AppfileController < ApplicationController
   before_action :set_app
 
   private
+
   def set_app
     @app_path = @cur_path.sub(/\/appfile\/.*/, ".html")
 
@@ -17,6 +18,7 @@ class Opendata::Agents::Nodes::App::AppfileController < ApplicationController
   end
 
   public
+
   def index
     redirect_to @app_path
   end

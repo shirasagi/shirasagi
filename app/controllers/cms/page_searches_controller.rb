@@ -6,6 +6,7 @@ class Cms::PageSearchesController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_user: @cur_user }
   end
@@ -19,6 +20,7 @@ class Cms::PageSearchesController < ApplicationController
   end
 
   public
+
   def search
     set_item
   end

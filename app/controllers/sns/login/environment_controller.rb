@@ -9,12 +9,14 @@ class Sns::Login::EnvironmentController < ApplicationController
   model Sys::Auth::Environment
 
   private
+
   def set_item
     @item ||= @model.find_by(filename: params[:id])
     raise "404" if @item.blank?
   end
 
   public
+
   def login
     key = @item.keys.find do |key|
       request.env[key].present?

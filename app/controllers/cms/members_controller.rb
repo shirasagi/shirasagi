@@ -7,6 +7,7 @@ class Cms::MembersController < ApplicationController
   navi_view "cms/cms/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.member"), action: :index]
   end
@@ -16,6 +17,7 @@ class Cms::MembersController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 

@@ -25,6 +25,7 @@ module Inquiry::Addon
     end
 
     private
+
     def validate_reply_mail
       if reply_mail_enabled?
         [:reply_subject, :from_name, :from_email].each do |sym|

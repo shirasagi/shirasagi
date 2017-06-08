@@ -26,6 +26,7 @@ class Jmaxml::Trigger::AshFallForecast < Jmaxml::Trigger::Base
   end
 
   private
+
   def extract_area_codes(site, xmldoc)
     area_codes = []
     REXML::XPath.match(xmldoc, '/Report/Body/VolcanoInfo[@type="降灰予報（対象市町村等）"]/Item').each do |item|

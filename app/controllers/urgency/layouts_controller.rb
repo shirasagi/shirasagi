@@ -14,6 +14,7 @@ class Urgency::LayoutsController < ApplicationController
   navi_view "urgency/main/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
@@ -65,6 +66,7 @@ class Urgency::LayoutsController < ApplicationController
   end
 
   public
+
   def index
   end
 

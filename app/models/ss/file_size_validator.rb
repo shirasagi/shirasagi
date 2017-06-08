@@ -10,6 +10,7 @@ class SS::FileSizeValidator < ActiveModel::Validator
   end
 
   private
+
   def validate_limit(record, file)
     filename = file.original_filename
     ext = filename.sub(/.*\./, "").downcase

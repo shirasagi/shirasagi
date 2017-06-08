@@ -23,6 +23,7 @@ class Jmaxml::Trigger::TornadoAlert < Jmaxml::Trigger::Base
   end
 
   private
+
   def extract_area_codes(site, xmldoc)
     area_codes = []
     REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="竜巻注意情報（市町村等）"]/Item').each do |item|

@@ -9,11 +9,13 @@ class Event::PagesController < ApplicationController
   navi_view "event/main/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
 
   public
+
   def download
     csv = @model.site(@cur_site).node(@cur_node).to_csv.encode("SJIS", invalid: :replace, undef: :replace)
     filename = @model.to_s.tableize.gsub(/\//, "_")

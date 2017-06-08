@@ -7,6 +7,7 @@ class Gws::UserTitlesController < ApplicationController
   navi_view "gws/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.ss/user_title"), gws_user_titles_path]
   end
@@ -16,6 +17,7 @@ class Gws::UserTitlesController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).
       state(params.dig(:s, :state)).

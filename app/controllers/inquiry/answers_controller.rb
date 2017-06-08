@@ -8,6 +8,7 @@ class Inquiry::AnswersController < ApplicationController
   navi_view "inquiry/main/navi"
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node }
   end
@@ -59,6 +60,7 @@ class Inquiry::AnswersController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     @items = @model.site(@cur_site).

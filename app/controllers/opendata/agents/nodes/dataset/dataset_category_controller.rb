@@ -4,6 +4,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
   include Opendata::Dataset::DatasetFilter
 
   private
+
   def pages
     @cur_node.cur_subcategory = params[:name]
     @item = @cur_node.related_category
@@ -23,6 +24,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
   end
 
   public
+
   def index
     @count          = pages.size
     @node_url       = node_url

@@ -17,6 +17,7 @@ module Gws::Addon
     end
 
     private
+
     def save_history_for_save
       return if @db_changes.blank?
 

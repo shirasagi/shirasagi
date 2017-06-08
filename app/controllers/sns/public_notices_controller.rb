@@ -9,11 +9,13 @@ class Sns::PublicNoticesController < ApplicationController
   navi_view nil
 
   private
+
   def set_crumbs
     @crumbs = []
   end
 
   public
+
   def index
     @items = @model.and_public.
       and_show_login.

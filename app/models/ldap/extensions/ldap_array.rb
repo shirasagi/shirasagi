@@ -35,6 +35,7 @@ class Ldap::Extensions::LdapArray < Array
     end
 
     private
+
     def normalize(array)
       array.map do |hash|
         Ldap::Extensions::LdapEntity.demongoize hash

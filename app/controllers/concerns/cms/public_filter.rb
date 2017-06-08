@@ -46,6 +46,7 @@ module Cms::PublicFilter
   end
 
   private
+
   def set_site
     host = request_host
     path = request_path

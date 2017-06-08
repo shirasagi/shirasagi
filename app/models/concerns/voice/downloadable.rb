@@ -47,6 +47,7 @@ module Voice::Downloadable
   end
 
   private
+
   def max_attempts
     @max_attempts ||= SS.config.voice.download['max_attempts']
   end
@@ -133,6 +134,7 @@ module Voice::Downloadable
     end
 
     private
+
     def find_site(url)
       host = url.host
       port = url.port

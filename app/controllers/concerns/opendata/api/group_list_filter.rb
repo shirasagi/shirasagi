@@ -3,6 +3,7 @@ module Opendata::Api::GroupListFilter
   include Opendata::Api
 
   private
+
   def group_list_check(sort)
 
     sort_messages = []
@@ -22,6 +23,7 @@ module Opendata::Api::GroupListFilter
   end
 
   public
+
   def group_list
     help = t("opendata.api.group_list_help")
 

@@ -36,6 +36,7 @@ module SS::ZipFileImport
   end
 
   private
+
   def import_file
     # sub class must override this method
     raise NotImplementedError

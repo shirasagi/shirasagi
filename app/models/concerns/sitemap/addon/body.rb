@@ -136,6 +136,7 @@ module Sitemap::Addon
     end
 
     private
+
     def generate_sitemap_xml
       file = sitemap_xml_path
       data = sitemap_xml

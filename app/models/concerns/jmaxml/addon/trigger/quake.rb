@@ -44,6 +44,7 @@ module Jmaxml::Addon::Trigger::Quake
   end
 
   private
+
   def verify_cancel(page, context, &block)
     event_id = REXML::XPath.first(context.xmldoc, '/Report/Head/EventID/text()').to_s.strip
     return if event_id.blank?

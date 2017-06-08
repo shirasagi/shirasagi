@@ -15,6 +15,7 @@ class Gws::UserTitle
   scope :site, ->(site) { where group_id: site.id }
 
   private
+
   def set_group_id
     self.group_id = cur_site.id
   end

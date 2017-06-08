@@ -11,11 +11,13 @@ class Inquiry::FeedbacksController < ApplicationController
   skip_before_action :set_item
 
   private
+
   def fix_params
     { cur_site: @cur_site, node_id: @cur_node.id }
   end
 
   public
+
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 

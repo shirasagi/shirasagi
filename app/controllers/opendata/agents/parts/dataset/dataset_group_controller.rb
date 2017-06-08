@@ -3,6 +3,7 @@ class Opendata::Agents::Parts::Dataset::DatasetGroupController < ApplicationCont
   helper Opendata::UrlHelper
 
   private
+
   def category
     return nil unless @cur_node = cur_node
     return nil if @cur_node.route != "opendata/dataset_category"
@@ -11,6 +12,7 @@ class Opendata::Agents::Parts::Dataset::DatasetGroupController < ApplicationCont
   end
 
   public
+
   def index
     cond = {}
     cond[:category_ids] = @cate.id if @cate = category

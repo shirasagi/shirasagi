@@ -10,6 +10,7 @@ module SS::CrudFilter
   end
 
   private
+
   def prepend_current_view_path
     prepend_view_path "app/views/#{params[:controller]}"
   end
@@ -65,6 +66,7 @@ module SS::CrudFilter
   end
 
   public
+
   def index
     @items = @model.all.
       order_by(_id: -1).
@@ -108,6 +110,7 @@ module SS::CrudFilter
   end
 
   private
+
   def render_create(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :show, id: @item }
     render_opts = opts[:render].presence || { file: :new }

@@ -4,11 +4,13 @@ class Voice::FilesController < ApplicationController
   include Voice::FilesFilter
 
   private
+
   def set_crumbs
     @crumbs << [t("voice.file"), action: :index]
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

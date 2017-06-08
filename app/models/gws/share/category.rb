@@ -21,6 +21,7 @@ class Gws::Share::Category
   end
 
   private
+
   def color_required?
     false
   end

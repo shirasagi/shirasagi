@@ -11,6 +11,7 @@ class Webmail::Apis::AddressesController < ApplicationController
   before_action :set_inherit_params
 
   private
+
   def set_root_group
     @root_group = @cur_user.groups.active.find params[:group]
   end
@@ -35,6 +36,7 @@ class Webmail::Apis::AddressesController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.
       user(@cur_user).

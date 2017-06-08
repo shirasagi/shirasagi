@@ -32,6 +32,7 @@ module Gws::Schedule::UserSetting
   end
 
   private
+
   def set_schedule_tabs_group_ids
     inc = (in_schedule_tabs_group_ids_all.to_a & in_schedule_tabs_group_ids.to_a).map { |m| m.to_i }
     dec = (in_schedule_tabs_group_ids_all.to_a - in_schedule_tabs_group_ids.to_a).map { |m| m.to_i }

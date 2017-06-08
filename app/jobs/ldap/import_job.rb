@@ -18,6 +18,7 @@ class Ldap::ImportJob < Cms::ApplicationJob
   end
 
   private
+
   def import_groups(parent_dn, groups)
     ldap_array = convert_groups(parent_dn, groups)
     Ldap::Import.create!(

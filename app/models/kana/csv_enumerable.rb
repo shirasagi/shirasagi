@@ -42,6 +42,7 @@ class Kana::CsvEnumerable
   end
 
   private
+
   def setup_enumerable
     @model.body.each_line.with_index(1).lazy
   end

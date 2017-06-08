@@ -12,6 +12,7 @@ module Cms::Addon
     end
 
     private
+
     def set_parts_contains_urls
       return unless self.try(:body_layout)
       return if body_parts.blank?

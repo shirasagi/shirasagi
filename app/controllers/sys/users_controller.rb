@@ -7,6 +7,7 @@ class Sys::UsersController < ApplicationController
   menu_view "sys/crud/menu"
 
   private
+
   def set_crumbs
     @crumbs << [t("sys.user"), sys_users_path]
   end
@@ -16,6 +17,7 @@ class Sys::UsersController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:edit, @cur_user)
     @items = @model.allow(:edit, @cur_user).

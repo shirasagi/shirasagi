@@ -14,6 +14,7 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
   end
 
   private
+
   def set_items(path, urls = nil)
     page = Cms::Page.site(@cur_site).filename(path).first
     urls = [path] if urls.blank?

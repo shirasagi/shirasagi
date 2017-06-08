@@ -9,6 +9,7 @@ class Member::Agents::Parts::InvitedGroupController < ApplicationController
   before_action :set_my_group_node
 
   private
+
   def becomes_with_route
     @cur_part = @cur_part.becomes_with_route
   end
@@ -28,6 +29,7 @@ class Member::Agents::Parts::InvitedGroupController < ApplicationController
   end
 
   public
+
   def index
     @items = Member::Group.site(@cur_site).and_invited(@cur_member).limit(20).order_by(created: 1)
   end

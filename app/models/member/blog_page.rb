@@ -15,6 +15,7 @@ class Member::BlogPage
   default_scope ->{ where(route: "member/blog_page") }
 
   private
+
   def serve_static_file?
     false
   end

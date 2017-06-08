@@ -10,6 +10,7 @@ class Opendata::Dataset::UrlResourcesController < ApplicationController
   before_action :set_dataset
 
   private
+
   def dataset
     @dataset ||= Opendata::Dataset.site(@cur_site).node(@cur_node).find params[:dataset_id]
   end
@@ -24,6 +25,7 @@ class Opendata::Dataset::UrlResourcesController < ApplicationController
   end
 
   public
+
   def index
     @items = @dataset.url_resources.
       search(params[:s]).

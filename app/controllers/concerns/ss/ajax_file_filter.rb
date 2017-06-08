@@ -6,6 +6,7 @@ module SS::AjaxFileFilter
   end
 
   private
+
   def append_view_paths
     append_view_path "app/views/ss/crud/ajax_files"
     super
@@ -33,6 +34,7 @@ module SS::AjaxFileFilter
   end
 
   public
+
   def index
     @items = @model
     @items = @items.site(@cur_site) if @cur_site

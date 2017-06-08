@@ -6,11 +6,13 @@ class Board::Agents::Nodes::AnpiPostController < ApplicationController
   model Board::AnpiPost
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node }
   end
 
   public
+
   def index
     safe_params = params.permit(:keyword)
     return if safe_params.blank? || safe_params[:keyword].blank?

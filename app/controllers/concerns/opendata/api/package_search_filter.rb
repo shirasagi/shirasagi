@@ -3,6 +3,7 @@ module Opendata::Api::PackageSearchFilter
   include Opendata::Api
 
   private
+
   def package_search_check(rows, start)
 
     rows_messages = []
@@ -24,6 +25,7 @@ module Opendata::Api::PackageSearchFilter
   end
 
   public
+
   def package_search
     help = t("opendata.api.package_search_help")
 

@@ -6,6 +6,7 @@ class Gws::Board::Apis::CategoriesController < ApplicationController
   before_action :set_category
 
   private
+
   def set_category
     @categories = Gws::Board::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
 
@@ -19,6 +20,7 @@ class Gws::Board::Apis::CategoriesController < ApplicationController
   end
 
   public
+
   def index
     @multi = params[:single].blank?
 

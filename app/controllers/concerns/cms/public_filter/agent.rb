@@ -2,6 +2,7 @@ module Cms::PublicFilter::Agent
   extend ActiveSupport::Concern
 
   private
+
   def recognize_path(path, env = {})
     env[:method] ||= request.request_method rescue "GET"
     Rails.application.routes.recognize_path(path, env) rescue {}

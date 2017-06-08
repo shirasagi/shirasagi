@@ -33,6 +33,7 @@ module Cms::PublicFilter::OpenGraph
   end
 
   private
+
   def opengraph_image_urls
     urls = extract_image_urls
     if urls.blank?

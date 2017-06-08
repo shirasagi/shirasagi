@@ -9,6 +9,7 @@ module Gws::Schedule::PlanFilter
   end
 
   private
+
   def set_crumbs
     @crumbs << [t("modules.gws/schedule"), gws_schedule_plans_path]
   end
@@ -35,6 +36,7 @@ module Gws::Schedule::PlanFilter
   end
 
   public
+
   def index
     render
   end

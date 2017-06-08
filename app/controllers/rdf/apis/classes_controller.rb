@@ -6,6 +6,7 @@ class Rdf::Apis::ClassesController < ApplicationController
   before_action :set_vocab_id
 
   private
+
   def vocab_options
     vocabs = Rdf::Vocab.site(@cur_site).each.select do |vocab|
       vocab.allowed?(:read, @cur_user, site: @cur_site)
@@ -21,6 +22,7 @@ class Rdf::Apis::ClassesController < ApplicationController
   end
 
   public
+
   def index
     @target = params[:target]
     @vocab_options = vocab_options

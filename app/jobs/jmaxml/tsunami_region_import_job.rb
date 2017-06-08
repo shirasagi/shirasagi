@@ -2,6 +2,7 @@ class Jmaxml::TsunamiRegionImportJob < Cms::ApplicationJob
   include SS::ZipFileImport
 
   private
+
   def import_file
     table = ::CSV.table(@cur_file.path, converters: nil, encoding: 'SJIS:UTF-8')
     table.each do |row|

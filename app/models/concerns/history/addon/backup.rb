@@ -13,6 +13,7 @@ module History::Addon
     end
 
     private
+
     def save_backup
       max_age = History::Backup.max_age
 

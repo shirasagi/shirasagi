@@ -31,6 +31,7 @@ module Cms::Addon::Import
     end
 
     private
+
     def save_import_page(file, import_filename)
       import_html = file.read.force_encoding("utf-8")
       import_html = modify_relative_paths(import_html)

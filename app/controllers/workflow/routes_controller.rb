@@ -7,6 +7,7 @@ class Workflow::RoutesController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("workflow.name"), action: :index]
   end

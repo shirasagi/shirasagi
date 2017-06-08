@@ -9,6 +9,7 @@ class Cms::PageSearchContentsController < ApplicationController
   before_action -> { @list_head_search = true }, only: :show
 
   private
+
   def set_crumbs
     set_item
     @crumbs << [ @item.name, action: :show ]

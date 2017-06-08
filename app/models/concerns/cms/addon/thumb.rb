@@ -15,6 +15,7 @@ module Cms::Addon
     end
 
     private
+
     def validate_thumb
       file = relation_file(:thumb)
       errors.add :thumb_id, :thums_is_not_an_image unless file.image?

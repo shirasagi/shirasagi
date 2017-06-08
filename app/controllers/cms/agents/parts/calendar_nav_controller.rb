@@ -49,6 +49,7 @@ class Cms::Agents::Parts::CalendarNavController < ApplicationController
   end
 
   private
+
   def blog_update(date)
     @condition_hash = {} unless @condition_hash
     Cms::Page.site(@cur_site).and_public(@cur_date).

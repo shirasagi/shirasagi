@@ -4,11 +4,13 @@ class Cms::ContentsController < ApplicationController
   navi_view "cms/main/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.content"), action: :index]
   end
 
   public
+
   def index
     @sys_notices = Sys::Notice.and_public.cms_admin_notice.page(1).per(5)
     @cms_notices = Cms::Notice.site(@cur_site).and_public.target_to(@cur_user).page(1).per(5)

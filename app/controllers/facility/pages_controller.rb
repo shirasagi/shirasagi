@@ -9,6 +9,7 @@ class Facility::PagesController < ApplicationController
   menu_view "facility/page/menu"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
@@ -29,6 +30,7 @@ class Facility::PagesController < ApplicationController
   end
 
   public
+
   def show
     raise "403" unless @item.allowed?(:read, @cur_user)
     action = @cur_node.allowed?(:edit, @cur_user, site: @cur_site) ? "edit_" : ""

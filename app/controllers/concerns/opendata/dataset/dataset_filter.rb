@@ -7,6 +7,7 @@ module Opendata::Dataset::DatasetFilter
   end
 
   private
+
   def set_dataset_with_aggregation
     @cur_node.layout = nil
     @search_path     = view_context.method(:search_datasets_path)
@@ -46,6 +47,7 @@ module Opendata::Dataset::DatasetFilter
   end
 
   public
+
   def index_areas
     @areas = aggregate_areas(100)
     render "opendata/agents/nodes/dataset/dataset/areas", layout: "opendata/dataset_aggregation"

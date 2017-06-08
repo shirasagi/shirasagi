@@ -23,6 +23,7 @@ class Jmaxml::Trigger::LandslideInfo < Jmaxml::Trigger::Base
   end
 
   private
+
   def extract_weather_alert(site, xmldoc)
     area_codes = []
     REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="土砂災害警戒情報"]/Item').each do |item|

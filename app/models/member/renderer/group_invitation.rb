@@ -12,6 +12,7 @@ class Member::Renderer::GroupInvitation
   template_variable_handler(:reject_url, :template_variable_handler_reject_url)
 
   private
+
   def template_variable_handler_sender_name(*_)
     sender.name
   end

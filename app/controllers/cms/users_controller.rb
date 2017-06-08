@@ -8,6 +8,7 @@ class Cms::UsersController < ApplicationController
   menu_view "cms/users/menu"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.user"), action: :index]
   end
@@ -26,6 +27,7 @@ class Cms::UsersController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

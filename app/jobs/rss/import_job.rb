@@ -21,6 +21,7 @@ class Rss::ImportJob < Rss::ImportBase
   end
 
   private
+
   def before_import(*args)
     super
 

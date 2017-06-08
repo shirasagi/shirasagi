@@ -7,6 +7,7 @@ module SS::ExifGeoLocation
   end
 
   private
+
   def extract_geo_location(img_list)
     img = img_list[0]
     exif_lat = img.get_exif_by_entry('GPSLatitude')[0][1]

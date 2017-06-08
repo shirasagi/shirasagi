@@ -92,6 +92,7 @@ class Ezine::Entry
   end
 
   private
+
   def unique_token
     loop do
       t = Digest::SHA1.hexdigest SecureRandom.uuid

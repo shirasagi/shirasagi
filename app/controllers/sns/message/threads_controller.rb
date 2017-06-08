@@ -6,6 +6,7 @@ class Sns::Message::ThreadsController < ApplicationController
   model Sns::Message::Thread
 
   private
+
   def set_crumbs
     @crumbs << [t("sns.message"), sns_message_threads_path]
   end
@@ -23,6 +24,7 @@ class Sns::Message::ThreadsController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.
       allow(:read, @cur_user).

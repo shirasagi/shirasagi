@@ -2,6 +2,7 @@ module Cms::GeneratorFilter::Rss
   extend ActiveSupport::Concern
 
   private
+
   def generate_node_rss(node, opts = {})
     path = opts[:url] || "#{node.filename}/index.html"
     return if Cms::Page.site(node.site).and_public.filename(path).first

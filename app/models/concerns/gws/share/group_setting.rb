@@ -23,6 +23,7 @@ module Gws::Share::GroupSetting
   end
 
   private
+
   def set_share_max_file_size
     return if in_share_max_file_size_mb.blank?
     self.share_max_file_size = Integer(in_share_max_file_size_mb) * 1_024 * 1_024

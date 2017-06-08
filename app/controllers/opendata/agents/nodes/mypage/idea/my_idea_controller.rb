@@ -12,6 +12,7 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
   after_action :deliver_workflow_mail, only: [:create, :update]
 
   protected
+
   def idea_node
     @idea_node ||= Opendata::Node::Idea.site(@cur_site).and_public.first
   end
@@ -73,6 +74,7 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
   end
 
   public
+
   def index
     @items = Opendata::Idea.site(@cur_site).member(@cur_member).
       order_by(updated: -1).

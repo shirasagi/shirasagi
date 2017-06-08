@@ -8,11 +8,13 @@ class Inquiry::ResultsController < ApplicationController
   navi_view "inquiry/main/navi"
 
   private
+
   def fix_params
     { cur_site: @cur_site, node_id: @cur_node.id }
   end
 
   public
+
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 

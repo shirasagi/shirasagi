@@ -5,6 +5,7 @@ class Gws::Workflow::FilesController < ApplicationController
   model Gws::Workflow::File
 
   private
+
   def set_crumbs
     @crumbs << [t("modules.gws/workflow"), action: :index]
   end
@@ -14,6 +15,7 @@ class Gws::Workflow::FilesController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).
       readable(@cur_user, @cur_site).

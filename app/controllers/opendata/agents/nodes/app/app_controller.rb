@@ -11,6 +11,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   skip_before_action :logged_in?
 
   private
+
   def set_app
     @app_path ||= Opendata::App.to_app_path(@cur_path)
     @app ||= Opendata::App.site(@cur_site).and_public.
@@ -42,6 +43,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   end
 
   public
+
   def pages
     Opendata::App.site(@cur_site).and_public
   end

@@ -18,6 +18,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   end
 
   private
+
   def set_params
     safe_params = params.permit(:search_keyword, category_ids: [], event: [ :start_date, :close_date])
     @keyword = safe_params[:search_keyword].presence

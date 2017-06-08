@@ -10,6 +10,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   before_action :set_dataset
 
   private
+
   def dataset
     @dataset ||= Opendata::Dataset.site(@cur_site).node(@cur_node).find params[:dataset_id]
   end
@@ -33,6 +34,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @items = @dataset.resources.

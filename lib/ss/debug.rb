@@ -24,6 +24,7 @@ module SS
       end
 
       private
+
       def indent(lev)
         "  " * lev
       end

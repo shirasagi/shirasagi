@@ -5,6 +5,7 @@ class Workflow::WizardController < ApplicationController
   before_action :set_item, only: [:approver_setting]
 
   private
+
   def set_model
     @model = Cms::Page
   end
@@ -28,6 +29,7 @@ class Workflow::WizardController < ApplicationController
   end
 
   public
+
   def index
     render file: :index, layout: false
   end

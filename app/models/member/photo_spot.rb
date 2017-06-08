@@ -12,6 +12,7 @@ class Member::PhotoSpot
   default_scope ->{ where(route: "member/photo_spot") }
 
   private
+
   def validate_filename
     (@basename && @basename.blank?) ? nil : super
   end

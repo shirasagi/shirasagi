@@ -177,6 +177,7 @@ module Cms::Content
   end
 
   private
+
   def set_filename
     if @cur_node
       self.filename = "#{@cur_node.filename}/#{basename}"

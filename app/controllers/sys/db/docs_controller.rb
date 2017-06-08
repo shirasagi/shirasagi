@@ -7,6 +7,7 @@ class Sys::Db::DocsController < ApplicationController
   menu_view nil
 
   private
+
   def set_crumbs
     @crumbs << [t("sys.db_tool"), sys_db_path]
     @crumbs << [@coll.name, sys_db_docs_path(coll: @coll.name)]
@@ -31,6 +32,7 @@ class Sys::Db::DocsController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
 

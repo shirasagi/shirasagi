@@ -16,6 +16,7 @@ module Gws::Addon::Schedule::Facility
   end
 
   private
+
   def validate_facility_time
     min_time = 5
     if (end_at.to_i - start_at.to_i) < 60 * min_time

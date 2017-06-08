@@ -9,6 +9,7 @@ module Gws::UserSettingFilter
   end
 
   private
+
   def set_item
     @item = @cur_user
   end
@@ -29,6 +30,7 @@ module Gws::UserSettingFilter
   end
 
   public
+
   def show
     render
   end

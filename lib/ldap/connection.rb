@@ -48,6 +48,7 @@ class Ldap::Connection
     end
 
     private
+
     def do_bind(ldap, auth_method, username, password)
       auth_method = auth_method.to_sym
       auth = { method: auth_method.to_sym }

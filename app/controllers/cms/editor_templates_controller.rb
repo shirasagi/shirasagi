@@ -7,6 +7,7 @@ class Cms::EditorTemplatesController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.editor_template"), action: :index]
   end
@@ -16,6 +17,7 @@ class Cms::EditorTemplatesController < ApplicationController
   end
 
   public
+
   def template
     @items = @model.site(@cur_site).search(params[:s])
 

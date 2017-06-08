@@ -31,6 +31,7 @@ class Rss::Renderer::AnpiMail
   end
 
   private
+
   def template_variable_handler_target_time(*_)
     I18n.l(@cur_infos[:target_time], format: :long)
   end

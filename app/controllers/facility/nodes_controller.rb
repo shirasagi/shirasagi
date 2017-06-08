@@ -8,6 +8,7 @@ class Facility::NodesController < ApplicationController
   navi_view "facility/node/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
@@ -17,6 +18,7 @@ class Facility::NodesController < ApplicationController
   end
 
   public
+
   def index
     redirect_to facility_pages_path
     return

@@ -25,6 +25,7 @@ module Workflow::Extensions::Route
       end
 
       private
+
       def normalize(array)
         ret = array.map do |hash|
           normalize_hash hash
@@ -84,6 +85,7 @@ module Workflow::Extensions::Route
       end
 
       private
+
       def normalize(array)
         ret = array.map do |item|
           convert_from_item(item)

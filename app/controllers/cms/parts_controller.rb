@@ -7,6 +7,7 @@ class Cms::PartsController < ApplicationController
   navi_view "cms/main/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.part"), action: :index]
   end
@@ -20,6 +21,7 @@ class Cms::PartsController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

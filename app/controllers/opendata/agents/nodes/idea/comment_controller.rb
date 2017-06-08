@@ -12,6 +12,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   skip_before_action :logged_in?
 
   private
+
   def set_comments
     @idea_path = Opendata::Idea.to_idea_path(@cur_path)
 
@@ -33,6 +34,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   end
 
   public
+
   def index
     @cur_node.layout = nil
   end

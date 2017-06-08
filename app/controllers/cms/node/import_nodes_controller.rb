@@ -7,6 +7,7 @@ class Cms::Node::ImportNodesController < ApplicationController
   navi_view "cms/node/import_pages/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end

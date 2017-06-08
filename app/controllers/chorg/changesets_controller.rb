@@ -9,6 +9,7 @@ class Chorg::ChangesetsController < ApplicationController
   before_action :set_revision
 
   private
+
   def set_crumbs
     set_revision
     @crumbs << [t("chorg.revision"), chorg_revisions_revisions_path]
@@ -40,6 +41,7 @@ class Chorg::ChangesetsController < ApplicationController
   end
 
   public
+
   def index
     redirect_to chorg_revisions_revision_path(id: params[:rid])
   end

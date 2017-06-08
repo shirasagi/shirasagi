@@ -72,6 +72,7 @@ class Webmail::Filter
   end
 
   private
+
   def validate_conditions
     %w(from to subject).each do |key|
       return true if send(key).present?

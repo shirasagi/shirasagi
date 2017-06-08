@@ -66,6 +66,7 @@ module Inquiry::Addon
     end
 
     private
+
     def build_match_stage(params = {})
       match = {}
 

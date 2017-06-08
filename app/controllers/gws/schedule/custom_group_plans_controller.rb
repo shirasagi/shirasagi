@@ -6,6 +6,7 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
   before_action :set_group
 
   private
+
   def set_group
     @group = Gws::CustomGroup.site(@cur_site).find params[:group]
   end
@@ -15,6 +16,7 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
   end
 
   public
+
   def index
     @items = @group.sorted_members
   end

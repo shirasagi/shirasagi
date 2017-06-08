@@ -8,6 +8,7 @@ class Gws::RolesController < ApplicationController
   navi_view "gws/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/role"), action: :index]
   end
@@ -17,6 +18,7 @@ class Gws::RolesController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 

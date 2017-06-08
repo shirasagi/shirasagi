@@ -7,6 +7,7 @@ class Gws::Workflow::PagesController < ApplicationController
   before_action :set_item, only: [:request_update, :approve_update, :remand_update, :branch_create]
 
   private
+
   def set_model
     @model = Gws::Workflow::File
   end
@@ -41,6 +42,7 @@ class Gws::Workflow::PagesController < ApplicationController
   end
 
   public
+
   def request_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
 

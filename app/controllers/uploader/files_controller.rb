@@ -11,6 +11,7 @@ class Uploader::FilesController < ApplicationController
   navi_view "uploader/main/navi"
 
   private
+
   def create_folder
     return if @model.file(@cur_node.path)
     cur_folder = @model.new path: @cur_node.path, is_dir: true
@@ -77,6 +78,7 @@ class Uploader::FilesController < ApplicationController
   end
 
   public
+
   def file
     action = params[:do] || "index"
     raise "404" unless @item

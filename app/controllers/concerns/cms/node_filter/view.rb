@@ -17,6 +17,7 @@ module Cms::NodeFilter::View
   end
 
   private
+
   def set_model
     @model = self.class.model_class
     controller.instance_variable_set :@model, @model

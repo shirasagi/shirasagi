@@ -15,6 +15,7 @@ module Webmail::BaseFilter
   end
 
   private
+
   def set_webmail_mode
     @ss_mode = :webmail
   end

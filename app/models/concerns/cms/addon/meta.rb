@@ -29,6 +29,7 @@ module Cms::Addon
     end
 
     private
+
     def set_keywords
       return if keywords.present?
 

@@ -8,12 +8,14 @@ class Sys::Auth::Samls::MetadataController < ApplicationController
   menu_view "sys/crud/menu"
 
   private
+
   def append_view_paths
     append_view_path "app/views/sys/auth/main/"
     super
   end
 
   public
+
   def show
     redirect_to sys_auth_saml_path
   end

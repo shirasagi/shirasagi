@@ -12,6 +12,7 @@ class Ldap::ImportController < ApplicationController
   undef_method :new, :create, :edit, :update
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
@@ -21,6 +22,7 @@ class Ldap::ImportController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @items = @model.site(@cur_site).order_by(id: -1).page(params[:page]).per(50)

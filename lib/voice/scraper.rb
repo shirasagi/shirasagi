@@ -52,6 +52,7 @@ class Voice::Scraper
   end
 
   private
+
   def extract_body(html)
     if html =~ /<!--[^>]*?\s#{@voice_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{@voice_marks[1]}\s[^>]*?-->/im
       $1

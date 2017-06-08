@@ -6,11 +6,13 @@ class Webmail::SysNoticesController < ApplicationController
   append_view_path 'app/views/sns/public_notices'
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.sys/notice"), action: :index]
   end
 
   public
+
   def index
     @items = @model.and_public.
       webmail_admin_notice.

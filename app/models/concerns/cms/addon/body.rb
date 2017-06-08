@@ -33,6 +33,7 @@ module Cms::Addon
     end
 
     private
+
     def set_contains_urls
       return if html.blank?
       self.contains_urls = html.scan(/(?:href|src)="(.*?)"/).flatten.uniq

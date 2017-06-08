@@ -48,6 +48,7 @@ module Cms::Addon::Import
     end
 
     private
+
     def validate_import
       return errors.add :in_file, :blank if in_file.blank?
 

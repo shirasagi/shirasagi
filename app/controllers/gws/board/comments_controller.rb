@@ -8,6 +8,7 @@ class Gws::Board::CommentsController < ApplicationController
   before_action :set_parent
 
   private
+
   def set_crumbs
     set_category
     if @category.present?
@@ -38,6 +39,7 @@ class Gws::Board::CommentsController < ApplicationController
   end
 
   public
+
   def index
     if @category.present?
       redirect_to gws_board_category_topic_path(id: @topic.id)

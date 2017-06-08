@@ -7,6 +7,7 @@ class Gws::NoticesController < ApplicationController
   navi_view "gws/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/notice"), action: :index]
   end
@@ -16,6 +17,7 @@ class Gws::NoticesController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).

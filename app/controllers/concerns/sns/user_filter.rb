@@ -10,6 +10,7 @@ module Sns::UserFilter
   end
 
   private
+
   def set_sns_user
     if params.include?(:user)
       @sns_user = SS::User.find params[:user]

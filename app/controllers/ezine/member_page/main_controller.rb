@@ -8,6 +8,7 @@ class Ezine::MemberPage::MainController < ApplicationController
   navi_view "ezine/main/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
@@ -39,6 +40,7 @@ class Ezine::MemberPage::MainController < ApplicationController
   end
 
   public
+
   def index
     load_pages
   end

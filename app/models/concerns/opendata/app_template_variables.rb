@@ -22,6 +22,7 @@ module Opendata::AppTemplateVariables
   end
 
   private
+
   def template_variable_handler_app_name(name, issuer)
     ERB::Util.html_escape self.name
   end

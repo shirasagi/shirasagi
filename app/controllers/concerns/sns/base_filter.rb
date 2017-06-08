@@ -8,6 +8,7 @@ module Sns::BaseFilter
   end
 
   private
+
   def set_crumbs
     #
   end

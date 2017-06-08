@@ -120,6 +120,7 @@ class Sns::Message::Thread
   end
 
   private
+
   def set_member_ids
     ids = member_ids.map(&:to_i)
     ids << user_id

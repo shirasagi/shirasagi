@@ -82,6 +82,7 @@ module Sys::Addon
     end
 
     private
+
     def load_discovery_file
       discovery = JSON.parse(in_discovery_file.read)
       self.issuer = discovery['issuer']

@@ -3,6 +3,7 @@ module Opendata::Api::PackageShowFilter
   include Opendata::Api
 
   private
+
   def package_show_check(id)
 
     id_messages = []
@@ -20,6 +21,7 @@ module Opendata::Api::PackageShowFilter
   end
 
   public
+
   def package_show
     help = t("opendata.api.package_show_help")
 

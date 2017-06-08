@@ -45,6 +45,7 @@ class Voice::JapaneseTextReconstructor
   end
 
   private
+
   def chunk_text(text)
     text.split(/[\s　。、]+/)
   end

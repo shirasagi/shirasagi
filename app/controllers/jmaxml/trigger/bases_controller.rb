@@ -6,11 +6,13 @@ class Jmaxml::Trigger::BasesController < ApplicationController
   navi_view "rss/main/navi"
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
 
   public
+
   def show
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

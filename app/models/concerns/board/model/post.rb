@@ -47,6 +47,7 @@ module Board::Model::Post
   end
 
   private
+
   def set_topic_id
     self.topic_id = root_post.id
   end
