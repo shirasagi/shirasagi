@@ -31,6 +31,10 @@ module Opendata::Resource::Model
     dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/content.html"
   end
 
+  def download_url
+    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
+  end
+
   def path
     file ? file.path : nil
   end

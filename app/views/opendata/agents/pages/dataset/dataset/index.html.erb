@@ -148,7 +148,7 @@ categories = [
               </span>
               <% end %>
               <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" if urs.tsv_present? %></div>
-              <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.url, class: "download" %></div>
+              <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download" %></div>
             </div>
           </div>
           <% end %>
