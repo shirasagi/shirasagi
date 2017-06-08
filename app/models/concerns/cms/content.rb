@@ -81,7 +81,9 @@ module Cms::Content
   end
 
   def dirname(basename = nil)
-    dir = filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
+    if filename.present?
+      dir = filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
+    end
     basename ? (dir ? "#{dir}/" : "") + basename : dir
   end
 

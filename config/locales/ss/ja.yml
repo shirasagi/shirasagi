@@ -240,6 +240,7 @@ ja:
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
       ss/site_auto_post_setting: SNS自動投稿設定
+      ss/approve_setting: 承認設定
 
   mongoid:
     models:
@@ -397,6 +398,8 @@ ja:
         file_resizing_width: 幅
         file_resizing_height: 高さ
         file_resizing_label: "%{size}（サイト設定）"
+      ss/addon/approve_setting:
+        forced_update: メールアドレス注意設定
       ss/model/max_file_size:
         name: 名前
         extensions: 拡張子
@@ -632,6 +635,10 @@ ja:
       file_resizing:
         - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。
         - 幅、高さ共に200が最小値になります。
+    ss/addon/approve_setting:
+      forced_update:
+        - メールアドレスが設定されていない場合の承認について設定します。
+        - 設定すると実行時の注意を無視します。
     ss/model/max_file_size:
       name:
         - 設定名を入力します
