@@ -61,7 +61,7 @@ module Fs::GridFs
       file = Fs::UploadedFile.new("grid_fs")
       file.binmode
       file.write(data)
-      #file.content_type = content_type(path)
+      # file.content_type = content_type(path)
 
       if fs = get(path)
         fs.delete

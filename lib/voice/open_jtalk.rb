@@ -32,69 +32,69 @@ class Voice::OpenJtalk
   end
 
   private
-    def synthesize(tmpdir, site_id, text)
-      tmp_source = build_source(tmpdir, site_id, text)
-      tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
+  def synthesize(tmpdir, site_id, text)
+    tmp_source = build_source(tmpdir, site_id, text)
+    tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
 
-      run_openjtalk(tmp_source, tmp_output)
-      tmp_output
-    end
+    run_openjtalk(tmp_source, tmp_output)
+    tmp_output
+  end
 
-    def build_source(tmpdir, site_id, text)
-      tmp_source = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".txt"], nil))
-      File.open(tmp_source, "w", encoding: Encoding::UTF_8) do |source|
-        Voice::MecabParser.new(site_id, text).each do |start_pos, end_pos, hyoki, yomi|
-          yomi = yomi.nil? ? hyoki : yomi
-          source.write yomi.tr("ァ-ン", "ぁ-ん")
-        end
-
-        # output line break
-        source.puts ''
-      end
-      tmp_source
-    end
-
-    def run_openjtalk(input, output)
-      cmd = %("#{@openjtalk_bin}")
-      cmd << %( -m "#{@openjtalk_voice}")
-      cmd << %( -x "#{@openjtalk_dic}")
-      cmd << %( -ow "#{output}")
-      cmd << " #{@openjtalk_opts}" if @openjtalk_opts.present?
-      cmd << %( "#{input}")
-
-      # execute command
-      status = Voice::Command.run_with_logging(cmd, "openjtalk")
-
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless status.exitstatus == 0
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless ::File.exists?(output)
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") if ::File.size(output) == 0
-    end
-
-    def join_wav(tmpdir, sources, output)
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.empty_source") if sources.empty?
-
-      if sources.length == 1
-        source = sources[0]
-        ::FileUtils.copy(source, output)
-        return true
+  def build_source(tmpdir, site_id, text)
+    tmp_source = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".txt"], nil))
+    File.open(tmp_source, "w", encoding: Encoding::UTF_8) do |source|
+      Voice::MecabParser.new(site_id, text).each do |start_pos, end_pos, hyoki, yomi|
+        yomi = yomi.nil? ? hyoki : yomi
+        source.write yomi.tr("ァ-ン", "ぁ-ん")
       end
 
-      # run sox
-      tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
-      source_list = sources.map{|i| %("#{i}")}.join(" ")
-      cmd = %("#{@sox_path}" #{source_list} "#{tmp_output}")
+      # output line break
+      source.puts ''
+    end
+    tmp_source
+  end
 
-      # execute command
-      status = Voice::Command.run_with_logging(cmd, "sox")
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.sox") unless status.exitstatus == 0
+  def run_openjtalk(input, output)
+    cmd = %("#{@openjtalk_bin}")
+    cmd << %( -m "#{@openjtalk_voice}")
+    cmd << %( -x "#{@openjtalk_dic}")
+    cmd << %( -ow "#{output}")
+    cmd << " #{@openjtalk_opts}" if @openjtalk_opts.present?
+    cmd << %( "#{input}")
 
-      ::FileUtils.copy(tmp_output, output)
-      true
+    # execute command
+    status = Voice::Command.run_with_logging(cmd, "openjtalk")
+
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless status.exitstatus == 0
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless ::File.exists?(output)
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") if ::File.size(output) == 0
+  end
+
+  def join_wav(tmpdir, sources, output)
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.empty_source") if sources.empty?
+
+    if sources.length == 1
+      source = sources[0]
+      ::FileUtils.copy(source, output)
+      return true
     end
 
-    def resolve_path(path)
-      path = path.path if path.respond_to?(:path)
-      path = File.join(Rails.root, path) if Pathname.new(path).relative?
-      path
-    end
+    # run sox
+    tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
+    source_list = sources.map{|i| %("#{i}")}.join(" ")
+    cmd = %("#{@sox_path}" #{source_list} "#{tmp_output}")
+
+    # execute command
+    status = Voice::Command.run_with_logging(cmd, "sox")
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.sox") unless status.exitstatus == 0
+
+    ::FileUtils.copy(tmp_output, output)
+    true
+  end
+
+  def resolve_path(path)
+    path = path.path if path.respond_to?(:path)
+    path = File.join(Rails.root, path) if Pathname.new(path).relative?
+    path
+  end
 end

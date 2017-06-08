@@ -47,24 +47,24 @@ module Board::Model::Post
   end
 
   private
-    def set_topic_id
-      self.topic_id = root_post.id
-    end
+  def set_topic_id
+    self.topic_id = root_post.id
+  end
 
-    def set_descendants_updated
-      return unless new_record?
-      self.descendants_updated = updated
-    end
+  def set_descendants_updated
+    return unless new_record?
+    self.descendants_updated = updated
+  end
 
-    def update_topic_descendants_updated
-      return unless topic
-      return unless _id_changed?
-      topic.set descendants_updated: updated
-    end
+  def update_topic_descendants_updated
+    return unless topic
+    return unless _id_changed?
+    topic.set descendants_updated: updated
+  end
 
-    def validate_children
-      if topic.children.size >= 1000
-        errors.add :base, I18n.t('board.errors.too_many_comments')
-      end
+  def validate_children
+    if topic.children.size >= 1000
+      errors.add :base, I18n.t('board.errors.too_many_comments')
     end
+  end
 end

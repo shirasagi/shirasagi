@@ -7,11 +7,11 @@ class Member::MyPhotosController < ApplicationController
   navi_view "cms/node/main/navi"
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
 
-    def redirect_url
-      { action: :index }
-    end
+  def redirect_url
+    { action: :index }
+  end
 end

@@ -68,30 +68,30 @@ module Facility::Node
       end
 
       private
-        def attributes_to_row(item, additional_columns, opts)
-          maps = Facility::Map.site(item.site).where(filename: /^#{item.filename}\//, depth: item.depth + 1)
-          points = maps.map{ |m| m.map_points }.flatten.map{ |m| m[:loc].join(",") }
+      def attributes_to_row(item, additional_columns, opts)
+        maps = Facility::Map.site(item.site).where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+        points = maps.map{ |m| m.map_points }.flatten.map{ |m| m[:loc].join(",") }
 
-          row = []
-          row << item.basename unless opts[:public]
-          row << item.name
-          row << item.layout.try(:name) unless opts[:public]
-          row << item.kana
-          row << item.address
-          row << item.postcode
-          row << item.tel
-          row << item.fax
-          row << item.related_url
-          row << item.categories.map(&:name).join("\n")
-          row << item.locations.map(&:name).join("\n")
-          row << item.services.map(&:name).join("\n")
-          row << points.join("\n")
-          row << item.groups.pluck(:name).join("\n") unless opts[:public]
-          additional_columns.each do |c|
-            row << item.additional_info.map { |i| [i[:field], i[:value]] }.to_h[c]
-          end
-          row
+        row = []
+        row << item.basename unless opts[:public]
+        row << item.name
+        row << item.layout.try(:name) unless opts[:public]
+        row << item.kana
+        row << item.address
+        row << item.postcode
+        row << item.tel
+        row << item.fax
+        row << item.related_url
+        row << item.categories.map(&:name).join("\n")
+        row << item.locations.map(&:name).join("\n")
+        row << item.services.map(&:name).join("\n")
+        row << points.join("\n")
+        row << item.groups.pluck(:name).join("\n") unless opts[:public]
+        additional_columns.each do |c|
+          row << item.additional_info.map { |i| [i[:field], i[:value]] }.to_h[c]
         end
+        row
+      end
     end
   end
 

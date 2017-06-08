@@ -10,19 +10,19 @@ module Jmaxml::Renderer::ControlHandler
   end
 
   private
-    def template_variable_handler_title(*_)
-      control_title
-    end
+  def template_variable_handler_title(*_)
+    control_title
+  end
 
-    def template_variable_handler_status(*_)
-      control_status
-    end
+  def template_variable_handler_status(*_)
+    control_status
+  end
 
-    def template_variable_handler_editorial_office(*_)
-      control_editorial_office
-    end
+  def template_variable_handler_editorial_office(*_)
+    control_editorial_office
+  end
 
-    def template_variable_handler_publishing_office(*_)
-      control_publishing_office
-    end
+  def template_variable_handler_publishing_office(*_)
+    control_publishing_office
+  end
 end

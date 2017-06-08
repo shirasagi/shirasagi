@@ -30,30 +30,30 @@ module Jmaxml::Addon::Trigger::Tsunami
   end
 
   private
-    def extract_tsunami_info(site, xmldoc)
-      area_codes = []
-      REXML::XPath.match(xmldoc, '/Report/Body/Tsunami/Forecast/Item').each do |item|
-        area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
-        region = target_regions.site(site).where(code: area_code).first
-        next if region.blank?
+  def extract_tsunami_info(site, xmldoc)
+    area_codes = []
+    REXML::XPath.match(xmldoc, '/Report/Body/Tsunami/Forecast/Item').each do |item|
+      area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
+      region = target_regions.site(site).where(code: area_code).first
+      next if region.blank?
 
-        kind_code = REXML::XPath.first(item, 'Category/Kind/Code/text()').to_s.strip
-        case kind_code
-        when '52'
-          kind_code = 'special_alert'
-        when '51'
-          kind_code = 'alert'
-        when '62'
-          kind_code = 'warning'
-        when '71'
-          kind_code = 'forecast'
-        else
-          kind_code = ''
-        end
-        next unless sub_types.include?(kind_code)
-
-        area_codes << area_code
+      kind_code = REXML::XPath.first(item, 'Category/Kind/Code/text()').to_s.strip
+      case kind_code
+      when '52'
+        kind_code = 'special_alert'
+      when '51'
+        kind_code = 'alert'
+      when '62'
+        kind_code = 'warning'
+      when '71'
+        kind_code = 'forecast'
+      else
+        kind_code = ''
       end
-      area_codes.sort
+      next unless sub_types.include?(kind_code)
+
+      area_codes << area_code
     end
+    area_codes.sort
+  end
 end

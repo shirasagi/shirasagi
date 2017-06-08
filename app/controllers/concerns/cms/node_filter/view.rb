@@ -17,13 +17,13 @@ module Cms::NodeFilter::View
   end
 
   private
-    def set_model
-      @model = self.class.model_class
-      controller.instance_variable_set :@model, @model
-    end
+  def set_model
+    @model = self.class.model_class
+    controller.instance_variable_set :@model, @model
+  end
 
-    def render_with_pagination(items)
-      raise "404" if params[:page].to_i > 1 && items.empty?
-      render
-    end
+  def render_with_pagination(items)
+    raise "404" if params[:page].to_i > 1 && items.empty?
+    render
+  end
 end

@@ -32,13 +32,13 @@ module Cms::Addon
     end
 
     private
-      def validate_default_close_days_after
-        return if default_release_days_after.blank?
-        return if default_close_days_after.blank?
+    def validate_default_close_days_after
+      return if default_release_days_after.blank?
+      return if default_close_days_after.blank?
 
-        if default_release_days_after >= default_close_days_after
-          errors.add :default_close_days_after, :greater_than, count: t(:default_release_days_after)
-        end
+      if default_release_days_after >= default_close_days_after
+        errors.add :default_close_days_after, :greater_than, count: t(:default_release_days_after)
       end
+    end
   end
 end

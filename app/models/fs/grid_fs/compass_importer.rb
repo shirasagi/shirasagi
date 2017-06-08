@@ -49,14 +49,14 @@ class Fs::GridFs::CompassImporter < Sass::Importers::Base
 
   private
 
-    def find_file(uri)
-      %w(.css .scss).each do |suffix|
-        filename = "#{@root}/_#{uri}#{suffix}"
-        if ::Fs.exists?(filename)
-          return filename
-        end
+  def find_file(uri)
+    %w(.css .scss).each do |suffix|
+      filename = "#{@root}/_#{uri}#{suffix}"
+      if ::Fs.exists?(filename)
+        return filename
       end
-
-      nil
     end
+
+    nil
+  end
 end

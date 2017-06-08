@@ -23,16 +23,16 @@ module Inquiry::Addon
     end
 
     private
-      def validate_reception_date
-        if reception_start_date.present? || reception_close_date.present?
-          if reception_start_date.blank?
-            errors.add :reception_start_date, :empty
-          elsif reception_close_date.blank?
-            errors.add :reception_close_date, :empty
-          elsif reception_start_date > reception_close_date
-            errors.add :reception_close_date, :greater_than, count: t(:reception_start_date)
-          end
+    def validate_reception_date
+      if reception_start_date.present? || reception_close_date.present?
+        if reception_start_date.blank?
+          errors.add :reception_start_date, :empty
+        elsif reception_close_date.blank?
+          errors.add :reception_close_date, :empty
+        elsif reception_start_date > reception_close_date
+          errors.add :reception_close_date, :greater_than, count: t(:reception_start_date)
         end
       end
+    end
   end
 end

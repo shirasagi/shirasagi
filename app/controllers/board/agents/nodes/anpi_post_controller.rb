@@ -6,21 +6,21 @@ class Board::Agents::Nodes::AnpiPostController < ApplicationController
   model Board::AnpiPost
 
   private
-    def fix_params
-      { cur_site: @cur_site, cur_node: @cur_node }
-    end
+  def fix_params
+    { cur_site: @cur_site, cur_node: @cur_node }
+  end
 
   public
-    def index
-      safe_params = params.permit(:keyword)
-      return if safe_params.blank? || safe_params[:keyword].blank?
-      @items = @model.site(@cur_site).
-        search(safe_params).
-        and_public.
-        order_by(updated: -1).
-        page(params[:page]).
-        per(@cur_node.limit)
+  def index
+    safe_params = params.permit(:keyword)
+    return if safe_params.blank? || safe_params[:keyword].blank?
+    @items = @model.site(@cur_site).
+      search(safe_params).
+      and_public.
+      order_by(updated: -1).
+      page(params[:page]).
+      per(@cur_node.limit)
 
-      render_with_pagination(@items)
-    end
+    render_with_pagination(@items)
+  end
 end

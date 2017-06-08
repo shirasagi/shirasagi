@@ -15,19 +15,19 @@ module Cms::Addon
     end
 
     private
-      def validate_thumb
-        file = relation_file(:thumb)
-        errors.add :thumb_id, :thums_is_not_an_image unless file.image?
-      end
+    def validate_thumb
+      file = relation_file(:thumb)
+      errors.add :thumb_id, :thums_is_not_an_image unless file.image?
+    end
 
-      def generate_thumb_public_file
-        return if thumb.blank?
-        thumb.generate_public_file
-      end
+    def generate_thumb_public_file
+      return if thumb.blank?
+      thumb.generate_public_file
+    end
 
-      def remove_thumb_public_file
-        return if thumb.blank?
-        thumb.remove_public_file
-      end
+    def remove_thumb_public_file
+      return if thumb.blank?
+      thumb.remove_public_file
+    end
   end
 end

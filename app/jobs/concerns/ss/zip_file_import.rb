@@ -36,21 +36,21 @@ module SS::ZipFileImport
   end
 
   private
-    def import_file
-      # sub class must override this method
-      raise NotImplementedError
-    end
+  def import_file
+    # sub class must override this method
+    raise NotImplementedError
+  end
 
-    def open_csv_table(opts = {})
-      if Fs.mode == :file
-        table = ::CSV.read(@cur_file.path, opts)
+  def open_csv_table(opts = {})
+    if Fs.mode == :file
+      table = ::CSV.read(@cur_file.path, opts)
+      yield table
+    else
+      Tempfile.create('csv') do |file|
+        ::File.binwrite(file.path, ::Fs.binread(@cur_file.path))
+        table = ::CSV.read(file.path, opts)
         yield table
-      else
-        Tempfile.create('csv') do |file|
-          ::File.binwrite(file.path, ::Fs.binread(@cur_file.path))
-          table = ::CSV.read(file.path, opts)
-          yield table
-        end
       end
     end
+  end
 end

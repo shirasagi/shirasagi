@@ -10,16 +10,16 @@ class Cms::Node::ImportPagesController < ApplicationController
   menu_view "cms/node/import_pages/menu"
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
 
   public
-    def convert
-      set_item
-      return if request.get?
+  def convert
+    set_item
+    return if request.get?
 
-      @item.attributes = get_params
-      render_update @item.update, location: { action: :index }
-    end
+    @item.attributes = get_params
+    render_update @item.update, location: { action: :index }
+  end
 end

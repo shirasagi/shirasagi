@@ -7,23 +7,23 @@ class Cms::PagesController < ApplicationController
   navi_view "cms/main/navi"
 
   private
-    def set_crumbs
-      @crumbs << [t("cms.page"), action: :index]
-    end
+  def set_crumbs
+    @crumbs << [t("cms.page"), action: :index]
+  end
 
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
+  end
 
   public
-    def index
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+  def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-      @items = @model.site(@cur_site).
-        where(route: "cms/page", depth: 1).
-        allow(:read, @cur_user).
-        search(params[:s]).
-        order_by(updated: -1).
-        page(params[:page]).per(50)
-    end
+    @items = @model.site(@cur_site).
+      where(route: "cms/page", depth: 1).
+      allow(:read, @cur_user).
+      search(params[:s]).
+      order_by(updated: -1).
+      page(params[:page]).per(50)
+  end
 end

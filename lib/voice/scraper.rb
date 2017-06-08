@@ -52,15 +52,15 @@ class Voice::Scraper
   end
 
   private
-    def extract_body(html)
-      if html =~ /<!--[^>]*?\s#{@voice_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{@voice_marks[1]}\s[^>]*?-->/im
-        $1
-      elsif html =~ /<\s*body[^>]*>(.*)<\/\s*body\s*>/im
-        $1
-      else
-        html.clone
-      end
+  def extract_body(html)
+    if html =~ /<!--[^>]*?\s#{@voice_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{@voice_marks[1]}\s[^>]*?-->/im
+      $1
+    elsif html =~ /<\s*body[^>]*>(.*)<\/\s*body\s*>/im
+      $1
+    else
+      html.clone
     end
+  end
 
-    DEFAULT_INSTANCE = self.new
+  DEFAULT_INSTANCE = self.new
 end

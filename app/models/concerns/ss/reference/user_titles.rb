@@ -39,29 +39,29 @@ module SS::Reference
     end
 
     private
-      # def set_title_ids
-      #   #
-      # end
+    # def set_title_ids
+    #   #
+    # end
 
-      def set_title_order(key, value)
-        orders = self.title_orders
-        orders = {} if orders.nil?
+    def set_title_order(key, value)
+      orders = self.title_orders
+      orders = {} if orders.nil?
 
-        # hash key must be string
-        key = key.to_s
+      # hash key must be string
+      key = key.to_s
 
-        return if orders[key] == value
+      return if orders[key] == value
 
-        orders[key] = value
+      orders[key] = value
 
-        # overwrite with new hash instance
-        self.title_orders = orders.deep_dup
-      end
+      # overwrite with new hash instance
+      self.title_orders = orders.deep_dup
+    end
 
-      def remove_title_order
-        return if cur_site.blank?
-        return if title_orders.nil?
-        self.title_orders.delete(cur_site.id.to_s)
-      end
+    def remove_title_order
+      return if cur_site.blank?
+      return if title_orders.nil?
+      self.title_orders.delete(cur_site.id.to_s)
+    end
   end
 end

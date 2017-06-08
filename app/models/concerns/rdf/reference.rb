@@ -39,8 +39,8 @@ module Rdf::Reference
     end
 
     private
-      def set_vocab_id
-        self.vocab_id ||= @cur_vocab.id
-      end
+    def set_vocab_id
+      self.vocab_id ||= @cur_vocab.id
+    end
   end
 end

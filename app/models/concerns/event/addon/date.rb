@@ -92,17 +92,17 @@ module Event::Addon
     end
 
     private
-      def validate_event
-        errors.add :event_dates, :blank if event_name.present? && event_dates.blank?
+    def validate_event
+      errors.add :event_dates, :blank if event_name.present? && event_dates.blank?
 
-        if event_dates.present?
-          event_array = Event::Extensions::EventDates.mongoize event_dates
-          errors.add :event_dates, :too_many_event_dates if event_array.size >= 180
-        end
+      if event_dates.present?
+        event_array = Event::Extensions::EventDates.mongoize event_dates
+        errors.add :event_dates, :too_many_event_dates if event_array.size >= 180
       end
+    end
 
-      def template_variable_handler_event_dates(name, issuer, format = :default)
-        dates_to_html(format)
-      end
+    def template_variable_handler_event_dates(name, issuer, format = :default)
+      dates_to_html(format)
+    end
   end
 end

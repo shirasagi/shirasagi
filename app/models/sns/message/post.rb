@@ -27,8 +27,8 @@ class Sns::Message::Post
   }
 
   private
-    def update_thread
-      thread.activate_members if thread.active_member_ids.size == 1
-      thread.post_created(@cur_user)
-    end
+  def update_thread
+    thread.activate_members if thread.active_member_ids.size == 1
+    thread.post_created(@cur_user)
+  end
 end

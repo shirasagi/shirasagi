@@ -4,7 +4,7 @@ class Gws::Schedule::SettingsController < ApplicationController
   include Gws::SettingFilter
 
   private
-    def set_crumbs
-      @crumbs << [t("mongoid.models.gws/schedule/group_setting"), gws_schedule_setting_path]
-    end
+  def set_crumbs
+    @crumbs << [t("mongoid.models.gws/schedule/group_setting"), gws_schedule_setting_path]
+  end
 end

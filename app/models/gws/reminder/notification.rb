@@ -20,18 +20,18 @@ class Gws::Reminder::Notification
   end
 
   private
-    def set_notify_at
-      return if in_notify_before.blank?
-      return if reminder.date.blank?
-      self.in_notify_before = in_notify_before.to_i unless in_notify_before.is_a?(Fixnum)
+  def set_notify_at
+    return if in_notify_before.blank?
+    return if reminder.date.blank?
+    self.in_notify_before = in_notify_before.to_i unless in_notify_before.is_a?(Fixnum)
 
-      if self.in_notify_before < 0
-        # disable notification by setting EPOCH
-        self.notify_at = Time.zone.at(0)
-      else
-        # enable notification
-        self.notify_at = reminder.date - in_notify_before.minutes
-        self.delivered_at = Time.zone.at(0)
-      end
+    if self.in_notify_before < 0
+      # disable notification by setting EPOCH
+      self.notify_at = Time.zone.at(0)
+    else
+      # enable notification
+      self.notify_at = reminder.date - in_notify_before.minutes
+      self.delivered_at = Time.zone.at(0)
     end
+  end
 end

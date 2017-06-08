@@ -26,17 +26,17 @@ class Jmaxml::Trigger::AshFallForecast < Jmaxml::Trigger::Base
   end
 
   private
-    def extract_area_codes(site, xmldoc)
-      area_codes = []
-      REXML::XPath.match(xmldoc, '/Report/Body/VolcanoInfo[@type="降灰予報（対象市町村等）"]/Item').each do |item|
-        REXML::XPath.match(item, 'Areas[@codeType="気象・地震・火山情報／市町村等"]/Area/Code/text()').each do |area_code|
-          area_code = area_code.to_s.strip
-          region = target_regions.site(site).where(code: area_code).first
-          next if region.blank?
+  def extract_area_codes(site, xmldoc)
+    area_codes = []
+    REXML::XPath.match(xmldoc, '/Report/Body/VolcanoInfo[@type="降灰予報（対象市町村等）"]/Item').each do |item|
+      REXML::XPath.match(item, 'Areas[@codeType="気象・地震・火山情報／市町村等"]/Area/Code/text()').each do |area_code|
+        area_code = area_code.to_s.strip
+        region = target_regions.site(site).where(code: area_code).first
+        next if region.blank?
 
-          area_codes << area_code
-        end
+        area_codes << area_code
       end
-      area_codes.sort.uniq
     end
+    area_codes.sort.uniq
+  end
 end

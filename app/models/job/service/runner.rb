@@ -23,49 +23,49 @@ class Job::Service::Runner
 
   private
 
-    def service_loop
-      return execute_loop if Job::Service.config.mode != 'service'
+  def service_loop
+    return execute_loop if Job::Service.config.mode != 'service'
 
-      wait = Job::Service.config.polling.interval || 5
-      until @stop
-        execute_loop
+    wait = Job::Service.config.polling.interval || 5
+    until @stop
+      execute_loop
 
-        @lock.synchronize do
-          break if @stop
-          @condition.wait(@lock, wait)
-        end
+      @lock.synchronize do
+        break if @stop
+        @condition.wait(@lock, wait)
       end
     end
+  end
 
-    def execute_loop
-      until @stop
-        task = dequeue_task
-        break unless task
+  def execute_loop
+    until @stop
+      task = dequeue_task
+      break unless task
 
-        rescue_with(ensure_p: -> { task.destroy }) do
-          task.execute
-        end
+      rescue_with(ensure_p: -> { task.destroy }) do
+        task.execute
       end
+    end
+    nil
+  end
+
+  def dequeue_task
+    Job::Service.config.polling.queues.each do |queue_name|
+      task = Job::Task.dequeue(queue_name)
+      return task if task
+    end
+
+    nil
+  end
+
+  def rescue_with(exception_classes: [Exception], ensure_p: nil)
+    begin
+      yield
+    rescue *exception_classes => e
+      Rails.logger.fatal("Failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       nil
+    ensure
+      ensure_p.call if ensure_p
     end
-
-    def dequeue_task
-      Job::Service.config.polling.queues.each do |queue_name|
-        task = Job::Task.dequeue(queue_name)
-        return task if task
-      end
-
-      nil
-    end
-
-    def rescue_with(exception_classes: [Exception], ensure_p: nil)
-      begin
-        yield
-      rescue *exception_classes => e
-        Rails.logger.fatal("Failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        nil
-      ensure
-        ensure_p.call if ensure_p
-      end
-    end
+  end
 end

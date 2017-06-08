@@ -136,25 +136,25 @@ module Sitemap::Addon
     end
 
     private
-      def generate_sitemap_xml
-        file = sitemap_xml_path
-        data = sitemap_xml
-        return if Fs.exists?(file) && data == Fs.read(file)
-        Fs.write file, data
-      end
+    def generate_sitemap_xml
+      file = sitemap_xml_path
+      data = sitemap_xml
+      return if Fs.exists?(file) && data == Fs.read(file)
+      Fs.write file, data
+    end
 
-      def remove_sitemap_xml
-        file = sitemap_xml_path
-        Fs.rm_rf(file) if Fs.file?(file)
-      end
+    def remove_sitemap_xml
+      file = sitemap_xml_path
+      Fs.rm_rf(file) if Fs.file?(file)
+    end
 
-      def rename_sitemap_xml
-        src = "#{site.path}/#{@db_changes['filename'][0]}"
-        dst = "#{site.path}/#{@db_changes['filename'][1]}"
+    def rename_sitemap_xml
+      src = "#{site.path}/#{@db_changes['filename'][0]}"
+      dst = "#{site.path}/#{@db_changes['filename'][1]}"
 
-        src = src.sub(/\.[^\/]+$/, ".xml")
-        dst = dst.sub(/\.[^\/]+$/, ".xml")
-        Fs.mv src, dst if Fs.exists?(src)
-      end
+      src = src.sub(/\.[^\/]+$/, ".xml")
+      dst = dst.sub(/\.[^\/]+$/, ".xml")
+      Fs.mv src, dst if Fs.exists?(src)
+    end
   end
 end

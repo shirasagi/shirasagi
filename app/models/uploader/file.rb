@@ -124,95 +124,95 @@ class Uploader::File
   end
 
   private
-    def validate_filename
-      if directory?
-        errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
-      elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
-        errors.add :path, :invalid_filename
+  def validate_filename
+    if directory?
+      errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
+    elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+      errors.add :path, :invalid_filename
+    end
+  end
+
+  def validate_exists
+    errors.add :filename, :taken if Fs.exists? path
+  end
+
+  def path_chenged?
+    !saved_path || path != saved_path
+  end
+
+  def validate_scss
+    return if ext != ".scss"
+    return if ::File.basename(@path)[0] == "_"
+
+    opts = Rails.application.config.sass
+    load_paths = opts.load_paths[1..-1] || []
+    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+    load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
+
+    sass = Sass::Engine.new(
+      @binary.force_encoding("utf-8"),
+      cache: false,
+      debug_info: true,
+      filename: @path,
+      inline_source_maps: true,
+      load_paths: load_paths,
+      style: :expanded,
+      syntax: :scss
+    )
+    @css = sass.render
+  rescue Sass::SyntaxError => e
+    msg = e.backtrace[0].sub(/.*?\/_\//, "")
+    msg = "[#{msg}] #{e}"
+    errors.add :scss, msg
+  end
+
+  def validate_coffee
+    return if ext != ".coffee"
+    return if ::File.basename(@path)[0] == "_"
+    @js = CoffeeScript.compile @binary
+  rescue => e
+    errors.add :coffee, e.message
+  end
+
+  def compile_scss
+    path = @saved_path.sub(/(\.css)?\.scss$/, ".css")
+    Fs.binwrite path, @css
+  end
+
+  def compile_coffee
+    path = @saved_path.sub(/(\.js)?\.coffee$/, ".js")
+    Fs.binwrite path, @js
+  end
+
+  class << self
+    def t(*args)
+      human_attribute_name *args
+    end
+
+    def file(path)
+      return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+      Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
+    end
+
+    def find(path)
+      items = []
+      return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+      return items unless Fs.directory?(path)
+
+      Fs.glob("#{path}/*").each do |f|
+        items << Uploader::File.new(path: f, saved_path: f, is_dir: Fs.directory?(f))
       end
+      items
     end
 
-    def validate_exists
-      errors.add :filename, :taken if Fs.exists? path
-    end
+    def search(path, params = {})
+      items = find(path)
+      return items if params.blank?
 
-    def path_chenged?
-      !saved_path || path != saved_path
-    end
-
-    def validate_scss
-      return if ext != ".scss"
-      return if ::File.basename(@path)[0] == "_"
-
-      opts = Rails.application.config.sass
-      load_paths = opts.load_paths[1..-1] || []
-      load_paths << "#{Rails.root}/vendor/assets/stylesheets"
-      load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
-
-      sass = Sass::Engine.new(
-        @binary.force_encoding("utf-8"),
-        cache: false,
-        debug_info: true,
-        filename: @path,
-        inline_source_maps: true,
-        load_paths: load_paths,
-        style: :expanded,
-        syntax: :scss
-      )
-      @css = sass.render
-    rescue Sass::SyntaxError => e
-      msg = e.backtrace[0].sub(/.*?\/_\//, "")
-      msg = "[#{msg}] #{e}"
-      errors.add :scss, msg
-    end
-
-    def validate_coffee
-      return if ext != ".coffee"
-      return if ::File.basename(@path)[0] == "_"
-      @js = CoffeeScript.compile @binary
-    rescue => e
-      errors.add :coffee, e.message
-    end
-
-    def compile_scss
-      path = @saved_path.sub(/(\.css)?\.scss$/, ".css")
-      Fs.binwrite path, @css
-    end
-
-    def compile_coffee
-      path = @saved_path.sub(/(\.js)?\.coffee$/, ".js")
-      Fs.binwrite path, @js
-    end
-
-    class << self
-      def t(*args)
-        human_attribute_name *args
+      if params[:keyword].present?
+        items = items.select { |item| item.basename =~ /#{Regexp.escape(params[:keyword])}/i }
       end
-
-      def file(path)
-        return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
-        Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
-      end
-
-      def find(path)
-        items = []
-        return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
-        return items unless Fs.directory?(path)
-
-        Fs.glob("#{path}/*").each do |f|
-          items << Uploader::File.new(path: f, saved_path: f, is_dir: Fs.directory?(f))
-        end
-        items
-      end
-
-      def search(path, params = {})
-        items = find(path)
-        return items if params.blank?
-
-        if params[:keyword].present?
-          items = items.select { |item| item.basename =~ /#{Regexp.escape(params[:keyword])}/i }
-        end
-        items
-      end
+      items
     end
+  end
 end

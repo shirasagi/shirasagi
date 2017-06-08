@@ -5,21 +5,21 @@ class Cms::CheckLinksController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
-    def job_class
-      Cms::CheckLinksJob
-    end
+  def job_class
+    Cms::CheckLinksJob
+  end
 
-    def job_bindings
-      {
-        site_id: @cur_site.id,
-      }
-    end
+  def job_bindings
+    {
+      site_id: @cur_site.id,
+    }
+  end
 
-    def task_name
-      job_class.task_name
-    end
+  def task_name
+    job_class.task_name
+  end
 
-    def set_item
-      @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil
-    end
+  def set_item
+    @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil
+  end
 end

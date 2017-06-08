@@ -18,24 +18,24 @@
 #     end
 #
 #     private
-#       def start_slave_in_external_process(config)
-#         name = config['name']
-#         num_workers = config["num_workers"]
+#     def start_slave_in_external_process(config)
+#       name = config['name']
+#       num_workers = config["num_workers"]
 #
-#         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env}"
-#         cmd = "#{cmd} config=#{name}" unless name.blank?
-#         threads = []
-#         num_workers.times do
-#           threads << Thread.new do
-#             Thread.pass
-#             Rails.logger.debug("system(#{cmd})")
-#             system(cmd)
-#           end
-#         end
-#
-#         threads.each do |t|
-#           t.join rescue nil
+#       cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env}"
+#       cmd = "#{cmd} config=#{name}" unless name.blank?
+#       threads = []
+#       num_workers.times do
+#         threads << Thread.new do
+#           Thread.pass
+#           Rails.logger.debug("system(#{cmd})")
+#           system(cmd)
 #         end
 #       end
+#
+#       threads.each do |t|
+#         t.join rescue nil
+#       end
+#     end
 #   end
 # end

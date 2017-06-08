@@ -8,31 +8,31 @@ module Gws::SettingFilter
   end
 
   private
-    def set_item
-      @item = @cur_site
-    end
+  def set_item
+    @item = @cur_site
+  end
 
-    def set_crumbs
-      #@crumbs << [t("gws.setting"), gws_settings_path]
-    end
+  def set_crumbs
+    # @crumbs << [t("gws.setting"), gws_settings_path]
+  end
 
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
 
   public
-    def show
-      raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-      super
-    end
+  def show
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    super
+  end
 
-    def edit
-      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-      super
-    end
+  def edit
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    super
+  end
 
-    def update
-      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-      super
-    end
+  def update
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    super
+  end
 end

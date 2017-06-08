@@ -26,19 +26,19 @@ module Cms::Addon::OpendataRef::Dataset
   end
 
   private
-    def invoke_opendata_job(action)
-      return if opendata_dataset_state.blank?
+  def invoke_opendata_job(action)
+    return if opendata_dataset_state.blank?
 
-      parent = self.parent
-      return if parent.blank?
+    parent = self.parent
+    return if parent.blank?
 
-      parent = parent.becomes_with_route
-      opendata_sites = parent.try(:opendata_sites)
-      return if opendata_sites.blank?
+    parent = parent.becomes_with_route
+    opendata_sites = parent.try(:opendata_sites)
+    return if opendata_sites.blank?
 
-      opendata_sites.each do |site|
-        job = Opendata::CmsIntegration::AssocJob.bind(site_id: site)
-        job.perform_later(self.site.id, parent.id, self.id, action.to_s)
-      end
+    opendata_sites.each do |site|
+      job = Opendata::CmsIntegration::AssocJob.bind(site_id: site)
+      job.perform_later(self.site.id, parent.id, self.id, action.to_s)
     end
+  end
 end

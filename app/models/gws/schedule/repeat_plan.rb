@@ -98,153 +98,153 @@ class Gws::Schedule::RepeatPlan
   end
 
   private
-    def validate_plan_date
-      errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end < repeat_start
-      if repeat_type != "yearly" && repeat_end > (repeat_start + 1.year)
-        errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1))
+  def validate_plan_date
+    errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end < repeat_start
+    if repeat_type != "yearly" && repeat_end > (repeat_start + 1.year)
+      errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1))
+    end
+  end
+
+  def validate_plan_dates
+    errors.add :base, I18n.t('gws/schedule.errors.empty_plan_days') if plan_dates.empty?
+  end
+
+  # 基準日から見た次の指定曜日の日付を返す
+  # @param  [Date]    base_date 基準日
+  # @param  [Integer] wday      指定曜日(0-6 : 日-土)
+  # @return [Date]              基準日から見た次の指定曜日の日付（基準日を含む）
+  def get_date_next_specified_wday(base_date, wday)
+    q = (wday - base_date.wday + 7) % 7
+    base_date + q.day
+  end
+
+  # 繰り返し予定を登録する日付の配列を返す（毎月X日）
+  # @return [Array] 繰り返し予定を登録する日付の配列
+  def monthly_dates_by_date
+    dates = []
+    dates << repeat_start
+
+    1.upto(1_024) do |i|
+      date = (interval * i).months.since(repeat_start)
+      break if date > repeat_end
+      dates << date
+    end
+    dates
+  end
+
+  # 繰り返し予定を登録する日付の配列を返す（毎月第X曜日）
+  # @return [Array] 繰り返し予定を登録する日付の配列
+  def monthly_dates_by_week
+    dates = []
+    dates << repeat_start
+
+    week = get_week_number_of_month(repeat_start)
+    wday = repeat_start.wday
+
+    dates.each do |dt|
+      check_month = dt + interval.month
+      check_date = get_date_by_nearest_ordinal_week(check_month.year, check_month.month, week, wday)
+      dates << check_date if check_date <= repeat_end
+    end
+    dates
+  end
+
+  # 指定された日付がその月の第何週かを返す
+  # @param  [Date]    base_date 基準日
+  # @return [Integer]           第何週(1-5)
+  def get_week_number_of_month(base_date)
+    repeat_start = Date.new(base_date.year, base_date.month, 1)
+    week_number = 0
+
+    repeat_start.upto(base_date.to_date).each do |dt|
+      week_number += 1 if dt.wday == base_date.wday
+    end
+
+    week_number
+  end
+
+  # 条件に合致する日付を返す
+  # @param  [Integer] year    年
+  # @param  [Integer] month   月
+  # @param  [Integer] week    第何週
+  # @param  [Integer] wday    曜日
+  # @return [Date]            条件に合致する日付
+  # @return [nil]             条件が不正な場合はnilが返る
+  def get_date_by_ordinal_week(year, month, week, wday)
+    repeat_start = Date.new(year, month, 1)
+    repeat_end = repeat_start.end_of_month
+
+    diff_wday = wday - repeat_start.wday
+    diff_wday += 7 if diff_wday < 0
+
+    repeat_start += diff_wday
+    repeat_start += (week - 1) * 7
+
+    repeat_start <= repeat_end ? repeat_start : nil
+  end
+
+  # 条件に近い日付を返す
+  # @param  [Integer] year    年
+  # @param  [Integer] month   月
+  # @param  [Integer] week    第何週
+  # @param  [Integer] wday    曜日
+  # @return [Date]            条件に合致する日付
+  #                             条件が不正な場合は近い日が返る
+  #                             例えば 4 月に第 5 月曜日が存在しなかった場合、第 4 月曜日を返す。
+  def get_date_by_nearest_ordinal_week(year, month, week, wday)
+    while week > 0
+      ret = get_date_by_ordinal_week(year, month, week, wday)
+      break if ret.present?
+      week -= 1
+    end
+    ret
+  end
+
+  # 繰り返し予定を登録
+  # @param [Plan]  base_plan 繰り返しの基準となる予定ドキュメント
+  # @param [Array] dates     繰り返し予定を登録する日付の配列
+  def save_plans(base_plan, site, user, dates)
+    return if base_plan.edit_range == "one"
+
+    time = [0, 0]
+    diff = 0
+
+    if base_plan.start_at
+      time = [base_plan.start_at.hour, base_plan.start_at.min]
+      diff = base_plan.end_at.to_i - base_plan.start_at.to_i if base_plan.end_at
+    end
+
+    attr = base_plan.attributes.dup
+    attr.delete('_id')
+
+    # Remove
+    base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).each do |plan|
+      next if base_plan.edit_range == "later" && plan.start_at < base_plan.start_at
+
+      plan.skip_gws_history
+      plan.destroy_without_repeat_plan
+    end
+
+    # Add
+    saved = 0
+    dates.each do |date|
+      next if base_plan.edit_range == "later" && date < base_plan.start_at.to_date
+
+      plan = (saved == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new.assign_attributes_safe(attr)
+      plan.cur_site = site
+      plan.cur_user = user
+
+      if plan.allday?
+        plan.start_on = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
+        plan.end_on   = plan.start_on + diff.seconds
+      else
+        plan.start_at = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
+        plan.end_at   = plan.start_at + diff.seconds
       end
+
+      plan.skip_gws_history
+      plan.save
+      saved += 1
     end
-
-    def validate_plan_dates
-      errors.add :base, I18n.t('gws/schedule.errors.empty_plan_days') if plan_dates.empty?
-    end
-
-    # 基準日から見た次の指定曜日の日付を返す
-    # @param  [Date]    base_date 基準日
-    # @param  [Integer] wday      指定曜日(0-6 : 日-土)
-    # @return [Date]              基準日から見た次の指定曜日の日付（基準日を含む）
-    def get_date_next_specified_wday(base_date, wday)
-      q = (wday - base_date.wday + 7) % 7
-      base_date + q.day
-    end
-
-    # 繰り返し予定を登録する日付の配列を返す（毎月X日）
-    # @return [Array] 繰り返し予定を登録する日付の配列
-    def monthly_dates_by_date
-      dates = []
-      dates << repeat_start
-
-      1.upto(1_024) do |i|
-        date = (interval * i).months.since(repeat_start)
-        break if date > repeat_end
-        dates << date
-      end
-      dates
-    end
-
-    # 繰り返し予定を登録する日付の配列を返す（毎月第X曜日）
-    # @return [Array] 繰り返し予定を登録する日付の配列
-    def monthly_dates_by_week
-      dates = []
-      dates << repeat_start
-
-      week = get_week_number_of_month(repeat_start)
-      wday = repeat_start.wday
-
-      dates.each do |dt|
-        check_month = dt + interval.month
-        check_date = get_date_by_nearest_ordinal_week(check_month.year, check_month.month, week, wday)
-        dates << check_date if check_date <= repeat_end
-      end
-      dates
-    end
-
-    # 指定された日付がその月の第何週かを返す
-    # @param  [Date]    base_date 基準日
-    # @return [Integer]           第何週(1-5)
-    def get_week_number_of_month(base_date)
-      repeat_start = Date.new(base_date.year, base_date.month, 1)
-      week_number = 0
-
-      repeat_start.upto(base_date.to_date).each do |dt|
-        week_number += 1 if dt.wday == base_date.wday
-      end
-
-      week_number
-    end
-
-    # 条件に合致する日付を返す
-    # @param  [Integer] year    年
-    # @param  [Integer] month   月
-    # @param  [Integer] week    第何週
-    # @param  [Integer] wday    曜日
-    # @return [Date]            条件に合致する日付
-    # @return [nil]             条件が不正な場合はnilが返る
-    def get_date_by_ordinal_week(year, month, week, wday)
-      repeat_start = Date.new(year, month, 1)
-      repeat_end = repeat_start.end_of_month
-
-      diff_wday = wday - repeat_start.wday
-      diff_wday += 7 if diff_wday < 0
-
-      repeat_start += diff_wday
-      repeat_start += (week - 1) * 7
-
-      repeat_start <= repeat_end ? repeat_start : nil
-    end
-
-    # 条件に近い日付を返す
-    # @param  [Integer] year    年
-    # @param  [Integer] month   月
-    # @param  [Integer] week    第何週
-    # @param  [Integer] wday    曜日
-    # @return [Date]            条件に合致する日付
-    #                             条件が不正な場合は近い日が返る
-    #                             例えば 4 月に第 5 月曜日が存在しなかった場合、第 4 月曜日を返す。
-    def get_date_by_nearest_ordinal_week(year, month, week, wday)
-      while week > 0
-        ret = get_date_by_ordinal_week(year, month, week, wday)
-        break if ret.present?
-        week -= 1
-      end
-      ret
-    end
-
-    # 繰り返し予定を登録
-    # @param [Plan]  base_plan 繰り返しの基準となる予定ドキュメント
-    # @param [Array] dates     繰り返し予定を登録する日付の配列
-    def save_plans(base_plan, site, user, dates)
-      return if base_plan.edit_range == "one"
-
-      time = [0, 0]
-      diff = 0
-
-      if base_plan.start_at
-        time = [base_plan.start_at.hour, base_plan.start_at.min]
-        diff = base_plan.end_at.to_i - base_plan.start_at.to_i if base_plan.end_at
-      end
-
-      attr = base_plan.attributes.dup
-      attr.delete('_id')
-
-      # Remove
-      base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).each do |plan|
-        next if base_plan.edit_range == "later" && plan.start_at < base_plan.start_at
-
-        plan.skip_gws_history
-        plan.destroy_without_repeat_plan
-      end
-
-      # Add
-      saved = 0
-      dates.each do |date|
-        next if base_plan.edit_range == "later" && date < base_plan.start_at.to_date
-
-        plan = (saved == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new.assign_attributes_safe(attr)
-        plan.cur_site = site
-        plan.cur_user = user
-
-        if plan.allday?
-          plan.start_on = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
-          plan.end_on   = plan.start_on + diff.seconds
-        else
-          plan.start_at = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
-          plan.end_at   = plan.start_at + diff.seconds
-        end
-
-        plan.skip_gws_history
-        plan.save
-        saved += 1
-      end
-    end
+  end
 end

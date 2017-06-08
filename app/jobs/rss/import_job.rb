@@ -21,18 +21,18 @@ class Rss::ImportJob < Rss::ImportBase
   end
 
   private
-    def before_import(*args)
-      super
+  def before_import(*args)
+    super
 
-      begin
-        @items = Rss::Wrappers.parse(node.rss_url)
-      rescue => e
-        Rails.logger.info("Rss::Wrappers.parse failer (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        @items = nil
-      end
+    begin
+      @items = Rss::Wrappers.parse(node.rss_url)
+    rescue => e
+      Rails.logger.info("Rss::Wrappers.parse failer (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      @items = nil
     end
+  end
 
-    def after_import
-      super
-    end
+  def after_import
+    super
+  end
 end

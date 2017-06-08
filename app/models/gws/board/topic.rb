@@ -21,11 +21,11 @@ class Gws::Board::Topic
   end
 
   private
-    def set_descendants_updated_with_released
-      if descendants_updated.present?
-        self.descendants_updated = released if descendants_updated < released
-      else
-        self.descendants_updated = released
-      end
+  def set_descendants_updated_with_released
+    if descendants_updated.present?
+      self.descendants_updated = released if descendants_updated < released
+    else
+      self.descendants_updated = released
     end
+  end
 end

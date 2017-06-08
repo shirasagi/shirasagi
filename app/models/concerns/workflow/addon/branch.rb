@@ -122,18 +122,18 @@ module Workflow::Addon
     end
 
     private
-      def serve_static_file?
-        return false if branch?
-        super
-      end
+    def serve_static_file?
+      return false if branch?
+      super
+    end
 
-      def validate_filename
-        super unless new_clone?
-      end
+    def validate_filename
+      super unless new_clone?
+    end
 
-      def seq_clone_filename
-        self.filename ||= ""
-        self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-      end
+    def seq_clone_filename
+      self.filename ||= ""
+      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+    end
   end
 end

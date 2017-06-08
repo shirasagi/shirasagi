@@ -11,23 +11,23 @@ module Jmaxml::Renderer::EarthquakeHandler
   end
 
   private
-    def template_variable_handler_earthquake_origin_time(*_)
-      body_earthquake_origin_time_format
-    end
+  def template_variable_handler_earthquake_origin_time(*_)
+    body_earthquake_origin_time_format
+  end
 
-    def template_variable_handler_earthquake_magnitude(*_)
-      body_earthquake_magnitude
-    end
+  def template_variable_handler_earthquake_magnitude(*_)
+    body_earthquake_magnitude
+  end
 
-    def template_variable_handler_hypocenter_area_name(*_)
-      body_earthquake_hypocenter_area_name
-    end
+  def template_variable_handler_hypocenter_area_name(*_)
+    body_earthquake_hypocenter_area_name
+  end
 
-    def template_variable_handler_hypocenter_coordinate(*_)
-      body_earthquake_hypocenter_area_coordinate
-    end
+  def template_variable_handler_hypocenter_coordinate(*_)
+    body_earthquake_hypocenter_area_coordinate
+  end
 
-    def template_variable_handler_hypocenter_namefrommark(*_)
-      body_earthquake_hypocenter_area_namefrommark
-    end
+  def template_variable_handler_hypocenter_namefrommark(*_)
+    body_earthquake_hypocenter_area_namefrommark
+  end
 end

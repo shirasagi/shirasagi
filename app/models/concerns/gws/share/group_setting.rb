@@ -17,14 +17,14 @@ module Gws::Share::GroupSetting
     # Permission for navigation view
     def allowed?(action, user, opts = {})
       return true if Gws::Share::Category.allowed?(action, user, opts)
-      #super
+      # super
       false
     end
   end
 
   private
-    def set_share_max_file_size
-      return if in_share_max_file_size_mb.blank?
-      self.share_max_file_size = Integer(in_share_max_file_size_mb) * 1_024 * 1_024
-    end
+  def set_share_max_file_size
+    return if in_share_max_file_size_mb.blank?
+    self.share_max_file_size = Integer(in_share_max_file_size_mb) * 1_024 * 1_024
+  end
 end

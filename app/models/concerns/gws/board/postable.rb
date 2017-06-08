@@ -91,29 +91,29 @@ module Gws::Board::Postable
   end
 
   private
-    # topic(root_post)を設定
-    def set_topic_id
-      self.topic_id = root_post.id
-    end
+  # topic(root_post)を設定
+  def set_topic_id
+    self.topic_id = root_post.id
+  end
 
-    # コメントを許可しているか検証
-    def validate_comment
-      return if topic.permit_comment?
-      errors.add :base, I18n.t("gws/board.errors.denied_comment")
-    end
+  # コメントを許可しているか検証
+  def validate_comment
+    return if topic.permit_comment?
+    errors.add :base, I18n.t("gws/board.errors.denied_comment")
+  end
 
-    # 最新レス投稿日時の初期値をトピックのみ設定
-    # 明示的に age るケースが発生するかも
-    def set_descendants_updated
-      #return unless new_record?
-      self.descendants_updated = updated
-    end
+  # 最新レス投稿日時の初期値をトピックのみ設定
+  # 明示的に age るケースが発生するかも
+  def set_descendants_updated
+    #return unless new_record?
+    self.descendants_updated = updated
+  end
 
-    # 最新レス投稿日時、レス更新日時をトピックに設定
-    # 明示的に age るケースが発生するかも
-    def update_topic_descendants_updated
-      return unless topic
-      #return unless _id_changed?
-      topic.set descendants_updated: updated
-    end
+  # 最新レス投稿日時、レス更新日時をトピックに設定
+  # 明示的に age るケースが発生するかも
+  def update_topic_descendants_updated
+    return unless topic
+    #return unless _id_changed?
+    topic.set descendants_updated: updated
+  end
 end

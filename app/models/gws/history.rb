@@ -52,14 +52,14 @@ class Gws::History
   end
 
   private
-    def set_string_data
-      self.model_name = model_name unless self[:model_name]
-      self.updated_field_names = updated_field_names unless self[:updated_field_names]
-    end
+  def set_string_data
+    self.model_name = model_name unless self[:model_name]
+    self.updated_field_names = updated_field_names unless self[:updated_field_names]
+  end
 
-    class << self
-      def updated?
-        where(mode: 'update').exists?
-      end
+  class << self
+    def updated?
+      where(mode: 'update').exists?
     end
+  end
 end

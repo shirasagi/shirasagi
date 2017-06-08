@@ -6,43 +6,43 @@ class Opendata::Agents::Nodes::App::AppfileController < ApplicationController
   before_action :set_app
 
   private
-    def set_app
-      @app_path = @cur_path.sub(/\/appfile\/.*/, ".html")
+  def set_app
+    @app_path = @cur_path.sub(/\/appfile\/.*/, ".html")
 
-      @app = Opendata::App.site(@cur_site).and_public.
-        filename(@app_path).
-        first
+    @app = Opendata::App.site(@cur_site).and_public.
+      filename(@app_path).
+      first
 
-      raise "404" unless @app
-    end
+    raise "404" unless @app
+  end
 
   public
-    def index
-      redirect_to @app_path
-    end
+  def index
+    redirect_to @app_path
+  end
 
-    def download
-      @item = @app.appfiles.find_by id: params[:id], filename: params[:filename].force_encoding("utf-8")
+  def download
+    @item = @app.appfiles.find_by id: params[:id], filename: params[:filename].force_encoding("utf-8")
 
-      send_file @item.file.path, type: @item.content_type, filename: @item.filename,
-        disposition: :attachment, x_sendfile: true
-    end
+    send_file @item.file.path, type: @item.content_type, filename: @item.filename,
+      disposition: :attachment, x_sendfile: true
+  end
 
-    def content
-      @cur_node.layout_id = nil
+  def content
+    @cur_node.layout_id = nil
 
-      @item = @app.appfiles.find_by id: params[:id], format: "CSV"
+    @item = @app.appfiles.find_by id: params[:id], format: "CSV"
 
-      render nothing: true unless @data = @item.parse_csv
-    end
+    render nothing: true unless @data = @item.parse_csv
+  end
 
-    def json
-      @cur_node.layout_id = nil
+  def json
+    @cur_node.layout_id = nil
 
-      @item = @app.appfiles.find_by id: params[:id], format: "JSON"
+    @item = @app.appfiles.find_by id: params[:id], format: "JSON"
 
-      @json = File.read(@item.file.path, :encoding => Encoding::UTF_8)
+    @json = File.read(@item.file.path, :encoding => Encoding::UTF_8)
 
-      render
-    end
+    render
+  end
 end

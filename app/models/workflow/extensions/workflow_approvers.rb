@@ -32,32 +32,32 @@ class Workflow::Extensions::WorkflowApprovers < Array
     end
 
     private
-      def normalize(array)
-        ret = array.map do |hash|
-          if hash.kind_of?(String)
-            convert_from_string(hash)
-          elsif hash.respond_to?(:symbolize_keys)
-            hash.symbolize_keys
-          else
-            nil
-          end
-        end
-        ret.compact!
-        ret.each do |hash|
-          hash[:level] = hash[:level].to_i if hash[:level].present?
-          hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
-          hash[:comment] = "" if hash[:comment].blank?
-        end
-        ret.to_a.uniq
-      end
-
-      def convert_from_string(text)
-        return nil if text.blank?
-        begin
-          Hash[[:level, :user_id, :state, :comment].zip(text.split(",").map(&:strip))]
-        rescue
+    def normalize(array)
+      ret = array.map do |hash|
+        if hash.kind_of?(String)
+          convert_from_string(hash)
+        elsif hash.respond_to?(:symbolize_keys)
+          hash.symbolize_keys
+        else
           nil
         end
       end
+      ret.compact!
+      ret.each do |hash|
+        hash[:level] = hash[:level].to_i if hash[:level].present?
+        hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
+        hash[:comment] = "" if hash[:comment].blank?
+      end
+      ret.to_a.uniq
+    end
+
+    def convert_from_string(text)
+      return nil if text.blank?
+      begin
+        Hash[[:level, :user_id, :state, :comment].zip(text.split(",").map(&:strip))]
+      rescue
+        nil
+      end
+    end
   end
 end

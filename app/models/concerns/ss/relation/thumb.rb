@@ -14,13 +14,13 @@ module SS::Relation::Thumb
 
   module ClassMethods
     private
-      def thumb_size(size)
-        add_thumb_size(:normal, size)
-      end
+    def thumb_size(size)
+      add_thumb_size(:normal, size)
+    end
 
-      def add_thumb_size(name, size)
-        thumbs_resizing[name] = size
-      end
+    def add_thumb_size(name, size)
+      thumbs_resizing[name] = size
+    end
   end
 
   def thumb(key = nil)
@@ -62,35 +62,35 @@ module SS::Relation::Thumb
   end
 
   private
-    def save_thumbs
-      thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
-      thumbs_resizing = self.class.thumbs_resizing
-      thumbs_resizing = thumbs_resizing.symbolize_keys.compact
-      thumbs_resizing = thumbs_resizing.invert.invert #delete duplicate values
+  def save_thumbs
+    thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
+    thumbs_resizing = self.class.thumbs_resizing
+    thumbs_resizing = thumbs_resizing.symbolize_keys.compact
+    thumbs_resizing = thumbs_resizing.invert.invert # delete duplicate values
 
-      thumbs_resizing.each do |name, size|
-        file = thumbs_was.delete(size)
-        if file
-          if state_changed? || filename_changed? || site_id_changed?
-            file.update_attributes(filename: filename, state: state, site_id: site_id)
-          end
-          file.set(image_size_name: name) if name != file.image_size_name
-        else
-          file = SS::ThumbFile.new
-          file.in_file         = uploaded_file
-          file.resizing        = size
-          file.original_id     = id
-          file.state           = state
-          file.filename        = file.in_file.original_filename
-          file.image_size      = size
-          file.image_size_name = name
-          file.user_id         = user_id
-          file.site_id         = site_id if respond_to?(:site_id)
-          file.save
+    thumbs_resizing.each do |name, size|
+      file = thumbs_was.delete(size)
+      if file
+        if state_changed? || filename_changed? || site_id_changed?
+          file.update_attributes(filename: filename, state: state, site_id: site_id)
         end
+        file.set(image_size_name: name) if name != file.image_size_name
+      else
+        file = SS::ThumbFile.new
+        file.in_file         = uploaded_file
+        file.resizing        = size
+        file.original_id     = id
+        file.state           = state
+        file.filename        = file.in_file.original_filename
+        file.image_size      = size
+        file.image_size_name = name
+        file.user_id         = user_id
+        file.site_id         = site_id if respond_to?(:site_id)
+        file.save
       end
-
-      thumbs_was.values.each(&:destroy)
-      reload
     end
+
+    thumbs_was.values.each(&:destroy)
+    reload
+  end
 end

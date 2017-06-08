@@ -30,19 +30,19 @@ module Gws::Facility::GroupSetting
   end
 
   private
-    def validate_facility_hours
-      if facility_min_hour >= facility_max_hour
-        errors.add :facility_max_hour, :greater_than, count: t(:facility_min_hour)
-      end
+  def validate_facility_hours
+    if facility_min_hour >= facility_max_hour
+      errors.add :facility_max_hour, :greater_than, count: t(:facility_min_hour)
     end
+  end
 
-    class << self
-      # Permission for navigation view
-      def allowed?(action, user, opts = {})
-        return true if Gws::Facility::Item.allowed?(action, user, opts)
-        return true if Gws::Facility::Category.allowed?(action, user, opts)
-        #super
-        false
-      end
+  class << self
+    # Permission for navigation view
+    def allowed?(action, user, opts = {})
+      return true if Gws::Facility::Item.allowed?(action, user, opts)
+      return true if Gws::Facility::Category.allowed?(action, user, opts)
+      # super
+      false
     end
+  end
 end

@@ -21,12 +21,12 @@ class Gws::Share::CategoriesController < ApplicationController
   end
 
   private
-    def set_crumbs
-      @crumbs << [t("mongoid.models.gws/share/group_setting"), gws_share_files_path]
-      @crumbs << [t("mongoid.models.gws/share/group_setting/category"), gws_share_files_path]
-    end
+  def set_crumbs
+    @crumbs << [t("mongoid.models.gws/share/group_setting"), gws_share_files_path]
+    @crumbs << [t("mongoid.models.gws/share/group_setting/category"), gws_share_files_path]
+  end
 
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
 end

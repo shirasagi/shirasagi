@@ -24,7 +24,7 @@ class Cms::User
   end
 
   private
-    def validate_groups
-      self.errors.add :group_ids, :blank if groups.blank?
-    end
+  def validate_groups
+    self.errors.add :group_ids, :blank if groups.blank?
+  end
 end

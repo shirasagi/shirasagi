@@ -159,59 +159,59 @@ module SS::Model::File
   end
 
   private
-    def set_filename
-      self.name         = in_file.original_filename if self[:name].blank?
-      self.filename     = in_file.original_filename if filename.blank?
-      self.size         = in_file.size
-      self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
-    end
+  def set_filename
+    self.name         = in_file.original_filename if self[:name].blank?
+    self.filename     = in_file.original_filename if filename.blank?
+    self.size         = in_file.size
+    self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
+  end
 
-    def validate_filename
-      self.filename = SS::FilenameConvertor.convert(filename, id: id)
-    end
+  def validate_filename
+    self.filename = SS::FilenameConvertor.convert(filename, id: id)
+  end
 
-    def save_file
-      errors.add :in_file, :blank if new_record? && in_file.blank?
-      return false if errors.present?
-      return if in_file.blank?
+  def save_file
+    errors.add :in_file, :blank if new_record? && in_file.blank?
+    return false if errors.present?
+    return if in_file.blank?
 
-      if image?
-        list = Magick::ImageList.new
-        list.from_blob(in_file.read)
-        extract_geo_location(list)
-        list.each do |image|
-          case SS.config.env.image_exif_option
-          when "auto_orient"
-            image.auto_orient!
-          when "strip"
-            image.strip!
-          end
-
-          next unless resizing
-          width, height = resizing
-          image.resize_to_fit! width, height if image.columns > width || image.rows > height
+    if image?
+      list = Magick::ImageList.new
+      list.from_blob(in_file.read)
+      extract_geo_location(list)
+      list.each do |image|
+        case SS.config.env.image_exif_option
+        when "auto_orient"
+          image.auto_orient!
+        when "strip"
+          image.strip!
         end
-        binary = list.to_blob
-      else
-        binary = in_file.read
+
+        next unless resizing
+        width, height = resizing
+        image.resize_to_fit! width, height if image.columns > width || image.rows > height
       end
-      in_file.rewind
-
-      dir = ::File.dirname(path)
-      Fs.mkdir_p(dir) unless Fs.exists?(dir)
-      Fs.binwrite(path, binary)
-      self.size = binary.length
+      binary = list.to_blob
+    else
+      binary = in_file.read
     end
+    in_file.rewind
 
-    def remove_file
-      Fs.rm_rf(path)
-      remove_public_file
-    end
+    dir = ::File.dirname(path)
+    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.binwrite(path, binary)
+    self.size = binary.length
+  end
 
-    def rename_file
-      return unless @db_changes["filename"]
-      return unless @db_changes["filename"][0]
+  def remove_file
+    Fs.rm_rf(path)
+    remove_public_file
+  end
 
-      remove_public_file if site
-    end
+  def rename_file
+    return unless @db_changes["filename"]
+    return unless @db_changes["filename"][0]
+
+    remove_public_file if site
+  end
 end

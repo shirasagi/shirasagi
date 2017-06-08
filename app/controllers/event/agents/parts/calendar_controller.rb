@@ -48,12 +48,12 @@ class Event::Agents::Parts::CalendarController < ApplicationController
   end
 
   private
-    def events(date)
-      @condition_hash = {} unless @condition_hash
-      events = Cms::Page.site(@cur_site).and_public(@cur_date).
-        where(@condition_hash).
-        where(:event_dates.in => [date.mongoize]).
-        entries.
-        sort_by{ |page| page.event_dates.size }
-    end
+  def events(date)
+    @condition_hash = {} unless @condition_hash
+    events = Cms::Page.site(@cur_site).and_public(@cur_date).
+      where(@condition_hash).
+      where(:event_dates.in => [date.mongoize]).
+      entries.
+      sort_by{ |page| page.event_dates.size }
+  end
 end

@@ -57,21 +57,21 @@ class Gws::Schedule::Plan
   end
 
   private
-    def validate_color
-      self.color = nil if color =~ /^#ffffff$/i
-    end
+  def validate_color
+    self.color = nil if color =~ /^#ffffff$/i
+  end
 
-    def validate_file_size
-      limit = cur_site.schedule_max_file_size || 0
-      return if limit <= 0
+  def validate_file_size
+    limit = cur_site.schedule_max_file_size || 0
+    return if limit <= 0
 
-      size = files.compact.map(&:size).max || 0
-      if size > limit
-        errors.add(
-          :base,
-          :file_size_exceeds_limit,
-          size: number_to_human_size(size),
-          limit: number_to_human_size(limit))
-      end
+    size = files.compact.map(&:size).max || 0
+    if size > limit
+      errors.add(
+        :base,
+        :file_size_exceeds_limit,
+        size: number_to_human_size(size),
+        limit: number_to_human_size(limit))
     end
+  end
 end

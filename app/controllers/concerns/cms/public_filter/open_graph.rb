@@ -33,11 +33,11 @@ module Cms::PublicFilter::OpenGraph
   end
 
   private
-    def opengraph_image_urls
-      urls = extract_image_urls
-      if urls.blank?
-        urls << @cur_site.opengraph_defaul_image_url if @cur_site.opengraph_defaul_image_url.present?
-      end
-      urls
+  def opengraph_image_urls
+    urls = extract_image_urls
+    if urls.blank?
+      urls << @cur_site.opengraph_defaul_image_url if @cur_site.opengraph_defaul_image_url.present?
     end
+    urls
+  end
 end

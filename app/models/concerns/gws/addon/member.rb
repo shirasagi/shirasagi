@@ -41,32 +41,32 @@ module Gws::Addon::Member
   end
 
   private
-    def validate_member_ids
-      self.member_ids = member_ids.uniq
+  def validate_member_ids
+    self.member_ids = member_ids.uniq
+  end
+
+  def validate_presence_member
+    return true if member_ids.present?
+    return true if self.class.member_include_custom_groups? && member_custom_group_ids.present?
+    errors.add :member_ids, :empty
+  end
+
+  module ClassMethods
+    def keep_members_order?
+      class_variable_get(:@@_keep_members_order)
     end
 
-    def validate_presence_member
-      return true if member_ids.present?
-      return true if self.class.member_include_custom_groups? && member_custom_group_ids.present?
-      errors.add :member_ids, :empty
+    def member_include_custom_groups?
+      class_variable_get(:@@_member_include_custom_groups)
     end
 
-    module ClassMethods
-      def keep_members_order?
-        class_variable_get(:@@_keep_members_order)
-      end
-
-      def member_include_custom_groups?
-        class_variable_get(:@@_member_include_custom_groups)
-      end
-
-      private
-        def keep_members_order
-          class_variable_set(:@@_keep_members_order, true)
-        end
-
-        def member_include_custom_groups
-          class_variable_set(:@@_member_include_custom_groups, true)
-        end
+    private
+    def keep_members_order
+      class_variable_set(:@@_keep_members_order, true)
     end
+
+    def member_include_custom_groups
+      class_variable_set(:@@_member_include_custom_groups, true)
+    end
+  end
 end

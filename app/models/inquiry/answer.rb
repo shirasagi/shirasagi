@@ -129,44 +129,44 @@ class Inquiry::Answer
   end
 
   private
-    def validate_data
-      columns = Inquiry::Column.where(site_id: site_id, node_id: node_id, state: "public").order_by(order: 1)
-      columns.each do |column|
-        column.validate_data(self, data.select { |d| column.id == d.column_id }.shift)
-      end
+  def validate_data
+    columns = Inquiry::Column.where(site_id: site_id, node_id: node_id, state: "public").order_by(order: 1)
+    columns.each do |column|
+      column.validate_data(self, data.select { |d| column.id == d.column_id }.shift)
     end
+  end
 
-    def set_node
-      self.node_id = cur_node.id
-    end
+  def set_node
+    self.node_id = cur_node.id
+  end
 
-    def copy_contents_info
-      source = source_content
-      return if source.blank?
+  def copy_contents_info
+    source = source_content
+    return if source.blank?
 
-      self.source_name = source.name
-    end
+    self.source_name = source.name
+  end
 
-    def update_file_data
-      self.data.each do |data|
-        unless data.values[0].blank?
-          file_id = data.values[0]
-          file = SS::File.find(file_id) rescue nil
-          unless file.nil?
-            file.model = "inquiry/answer"
-            file.update
-          end
+  def update_file_data
+    self.data.each do |data|
+      unless data.values[0].blank?
+        file_id = data.values[0]
+        file = SS::File.find(file_id) rescue nil
+        unless file.nil?
+          file.model = "inquiry/answer"
+          file.update
         end
       end
     end
+  end
 
-    def delete_file_data
-      self.data.each do |data|
-        unless data.values[0].blank?
-          file_id = data.values[0]
-          file = SS::File.find(file_id) rescue nil
-          file.destroy unless file.nil?
-        end
+  def delete_file_data
+    self.data.each do |data|
+      unless data.values[0].blank?
+        file_id = data.values[0]
+        file = SS::File.find(file_id) rescue nil
+        file.destroy unless file.nil?
       end
     end
+  end
 end

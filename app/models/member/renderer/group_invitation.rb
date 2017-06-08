@@ -12,27 +12,27 @@ class Member::Renderer::GroupInvitation
   template_variable_handler(:reject_url, :template_variable_handler_reject_url)
 
   private
-    def template_variable_handler_sender_name(*_)
-      sender.name
-    end
+  def template_variable_handler_sender_name(*_)
+    sender.name
+  end
 
-    def template_variable_handler_sender_email(*_)
-      sender.email
-    end
+  def template_variable_handler_sender_email(*_)
+    sender.email
+  end
 
-    def template_variable_handler_group_name(*_)
-      group.name
-    end
+  def template_variable_handler_group_name(*_)
+    group.name
+  end
 
-    def template_variable_handler_invitation_message(*_)
-      group.invitation_message
-    end
+  def template_variable_handler_invitation_message(*_)
+    group.invitation_message
+  end
 
-    def template_variable_handler_accept_url(*_)
-      "#{node.full_url}#{group.id}/accept"
-    end
+  def template_variable_handler_accept_url(*_)
+    "#{node.full_url}#{group.id}/accept"
+  end
 
-    def template_variable_handler_reject_url(*_)
-      "#{node.full_url}#{group.id}/reject"
-    end
+  def template_variable_handler_reject_url(*_)
+    "#{node.full_url}#{group.id}/reject"
+  end
 end
