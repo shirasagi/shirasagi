@@ -48,20 +48,20 @@ class Ldap::Connection
     end
 
     private
-      def do_bind(ldap, auth_method, username, password)
-        auth_method = auth_method.to_sym
-        auth = { method: auth_method.to_sym }
-        if auth_method != :anonymous
-          auth[:username] = username
-          auth[:password] = decrypt(password)
-        end
-        ldap.bind(auth)
+    def do_bind(ldap, auth_method, username, password)
+      auth_method = auth_method.to_sym
+      auth = { method: auth_method.to_sym }
+      if auth_method != :anonymous
+        auth[:username] = username
+        auth[:password] = decrypt(password)
       end
+      ldap.bind(auth)
+    end
 
-      def decrypt(password)
-        ret = SS::Crypt.decrypt(password)
-        ret.present? ? ret : password
-      end
+    def decrypt(password)
+      ret = SS::Crypt.decrypt(password)
+      ret.present? ? ret : password
+    end
   end
 
   def initialize(ldap, config)

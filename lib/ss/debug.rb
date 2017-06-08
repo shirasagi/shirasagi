@@ -24,25 +24,25 @@ module SS
       end
 
       private
-        def indent(lev)
-          "  " * lev
-        end
+      def indent(lev)
+        "  " * lev
+      end
 
-        def scan_array(data, lev)
-          return "" if data.empty?
-          str = data.each_with_index.map { |v, k| scan_each k, v, lev }.join
-          "\n#{str}#{indent(lev - 1)}"
-        end
+      def scan_array(data, lev)
+        return "" if data.empty?
+        str = data.each_with_index.map { |v, k| scan_each k, v, lev }.join
+        "\n#{str}#{indent(lev - 1)}"
+      end
 
-        def scan_hash(data, lev)
-          return "" if data.empty?
-          str = data.map { |k, v| scan_each k, v, lev }.join
-          "\n#{str}#{indent(lev - 1)}"
-        end
+      def scan_hash(data, lev)
+        return "" if data.empty?
+        str = data.map { |k, v| scan_each k, v, lev }.join
+        "\n#{str}#{indent(lev - 1)}"
+      end
 
-        def scan_each(k, v, lev)
-          "#{indent(lev)}#{k} \t=> #{dump(v, lev + 1)}\n"
-        end
+      def scan_each(k, v, lev)
+        "#{indent(lev)}#{k} \t=> #{dump(v, lev + 1)}\n"
+      end
     end
   end
 end

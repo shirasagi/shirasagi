@@ -33,30 +33,30 @@ module SS::TemplateVariable
   end
 
   private
-    def template_variable_get(name, *args)
-      handler = find_template_variable_handler(name)
-      return unless handler
+  def template_variable_get(name, *args)
+    handler = find_template_variable_handler(name)
+    return unless handler
 
-      handler.call(name, *args)
-    rescue => e
-      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      false
+    handler.call(name, *args)
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    false
+  end
+
+  def find_template_variable_handler(name)
+    name = name.to_sym
+    handler_def = self.class.template_variable_handlers.find { |handler_name, _| handler_name == name }
+    return nil unless handler_def
+
+    case handler = handler_def[1]
+    when ::Symbol, ::String
+      method(handler)
+    when ::Proc
+      myself = self
+      lambda { |name, value| myself.instance_exec(name, value, &handler) }
+    else
+      # we expect a object responding to :call
+      handler
     end
-
-    def find_template_variable_handler(name)
-      name = name.to_sym
-      handler_def = self.class.template_variable_handlers.find { |handler_name, _| handler_name == name }
-      return nil unless handler_def
-
-      case handler = handler_def[1]
-      when ::Symbol, ::String
-        method(handler)
-      when ::Proc
-        myself = self
-        lambda { |name, value| myself.instance_exec(name, value, &handler) }
-      else
-        # we expect a object responding to :call
-        handler
-      end
-    end
+  end
 end

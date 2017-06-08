@@ -110,37 +110,37 @@ class Webmail::Mailbox
   end
 
   private
-    def validate_name
-      self.name = self.name.tr('/', '.')
-      self.name = "INBOX.#{name}" unless self.name =~ /^INBOX\./
-      self.original_name = Net::IMAP.encode_utf7(name)
-      self.delim = '.'
-      self.attr = []
-      self.depth = self.name.split('.').size - 1
-    end
+  def validate_name
+    self.name = self.name.tr('/', '.')
+    self.name = "INBOX.#{name}" unless self.name =~ /^INBOX\./
+    self.original_name = Net::IMAP.encode_utf7(name)
+    self.delim = '.'
+    self.attr = []
+    self.depth = self.name.split('.').size - 1
+  end
 
-    def imap_create
-      imap.conn.create original_name
-    rescue Net::IMAP::NoResponseError => e
-      rescue_imap_error(e)
-    end
+  def imap_create
+    imap.conn.create original_name
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
+  end
 
-    def imap_update
-      imap.conn.rename original_name_was, original_name
-      Webmail::Mail.where(imap.account_scope).where(mailbox: name_was).delete_all
-    rescue Net::IMAP::NoResponseError => e
-      rescue_imap_error(e)
-    end
+  def imap_update
+    imap.conn.rename original_name_was, original_name
+    Webmail::Mail.where(imap.account_scope).where(mailbox: name_was).delete_all
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
+  end
 
-    def imap_delete
-      imap.conn.delete original_name
-      mails.delete_all
-    rescue Net::IMAP::NoResponseError => e
-      rescue_imap_error(e)
-    end
+  def imap_delete
+    imap.conn.delete original_name
+    mails.delete_all
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
+  end
 
-    def rescue_imap_error(e)
-      errors.add :base, e.to_s
-      return false
-    end
+  def rescue_imap_error(e)
+    errors.add :base, e.to_s
+    return false
+  end
 end

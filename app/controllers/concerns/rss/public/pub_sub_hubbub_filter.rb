@@ -16,63 +16,63 @@ module Rss::Public::PubSubHubbubFilter
   end
 
   private
-    def job_model
-      self.class.job_model
-    end
+  def job_model
+    self.class.job_model
+  end
 
-    def set_verification_param
-      @item ||= begin
-        p = params.permit('hub.mode', 'hub.topic', 'hub.challenge', 'hub.lease_seconds')
-        p = Hash[p.to_a.map { |key, value| [key.sub('hub.', ''), value ] }]
-        p[:cur_node] = @cur_node
-        Rss::PubSubHubbub::VerificationParam.new(p)
+  def set_verification_param
+    @item ||= begin
+      p = params.permit('hub.mode', 'hub.topic', 'hub.challenge', 'hub.lease_seconds')
+      p = Hash[p.to_a.map { |key, value| [key.sub('hub.', ''), value ] }]
+      p[:cur_node] = @cur_node
+      Rss::PubSubHubbub::VerificationParam.new(p)
+    end
+  end
+
+  def set_subscription_param
+    body = request.body.read
+    if @cur_node.secret.present?
+      # check digest
+      actual = OpenSSL::HMAC.hexdigest('sha1', @cur_node.secret, body)
+      actual = "sha1=#{actual}"
+      expected = request.headers['X-Hub-Signature']
+      if expected != actual
+        Rails.logger.warn("HMAC signature of the payload is mismatched. Expected: #{expected}, Actual: #{actual}")
+        render plain: '', layout: false, content_type: 'text/plain'
+        return
       end
     end
 
-    def set_subscription_param
-      body = request.body.read
-      if @cur_node.secret.present?
-        # check digest
-        actual = OpenSSL::HMAC.hexdigest('sha1', @cur_node.secret, body)
-        actual = "sha1=#{actual}"
-        expected = request.headers['X-Hub-Signature']
-        if expected != actual
-          Rails.logger.warn("HMAC signature of the payload is mismatched. Expected: #{expected}, Actual: #{actual}")
-          render plain: '', layout: false, content_type: 'text/plain'
-          return
-        end
-      end
-
-      @item = Rss::TempFile.create_from_post(@cur_site, body, request.content_type)
-    end
+    @item = Rss::TempFile.create_from_post(@cur_site, body, request.content_type)
+  end
 
   public
-    def pages
-      @model.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
+  def pages
+    @model.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
+  end
+
+  def index
+    @items = pages.order_by(@cur_node.sort_hash).
+      page(params[:page]).
+      per(@cur_node.limit)
+
+    render_with_pagination @items
+  end
+
+  def confirmation
+    if @item.valid?
+      render plain: @item.challenge, layout: false, content_type: 'text/plain'
+    else
+      render plain: '', layout: false, content_type: 'text/plain', status: :not_found
     end
+  end
 
-    def index
-      @items = pages.order_by(@cur_node.sort_hash).
-        page(params[:page]).
-        per(@cur_node.limit)
+  def subscription
+    job_model.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(@item.id)
 
-      render_with_pagination @items
-    end
-
-    def confirmation
-      if @item.valid?
-        render plain: @item.challenge, layout: false, content_type: 'text/plain'
-      else
-        render plain: '', layout: false, content_type: 'text/plain', status: :not_found
-      end
-    end
-
-    def subscription
-      job_model.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(@item.id)
-
-      render plain: '', layout: false, content_type: 'text/plain'
-    rescue => e
-      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      render plain: '', layout: false, content_type: 'text/plain'
-    end
+    render plain: '', layout: false, content_type: 'text/plain'
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    render plain: '', layout: false, content_type: 'text/plain'
+  end
 end

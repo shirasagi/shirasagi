@@ -55,36 +55,35 @@ class Opendata::Appfile
   end
 
   private
-    def set_filename
-      self.filename = in_file.original_filename
-      self.format = filename.sub(/.*\./, "").upcase
+  def set_filename
+    self.filename = in_file.original_filename
+    self.format = filename.sub(/.*\./, "").upcase
+  end
+
+  def validate_appfile
+    if self.app.appurl.present?
+      errors.clear
+      errors.add :file_id, I18n.t("opendata.errors.messages.validate_appfile")
+      return
     end
+  end
 
-    def validate_appfile
-      if self.app.appurl.present?
-        errors.clear
-        errors.add :file_id, I18n.t("opendata.errors.messages.validate_appfile")
-        return
-      end
+  def save_app
+    self.workflow ||= {}
+    app.cur_site = app.site
+    app.apply_status(status, workflow) if status.present?
+    app.released ||= Time.zone.now
+    app.save(validate: false)
+  end
+
+  class << self
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
+
+      criteria = criteria.where(filename: /#{params[:keyword]}/) if params[:keyword].present?
+
+      criteria
     end
-
-    def save_app
-      self.workflow ||= {}
-      app.cur_site = app.site
-      app.apply_status(status, workflow) if status.present?
-      app.released ||= Time.zone.now
-      app.save(validate: false)
-    end
-
-    class << self
-      public
-        def search(params)
-          criteria = self.where({})
-          return criteria if params.blank?
-
-          criteria = criteria.where(filename: /#{params[:keyword]}/) if params[:keyword].present?
-
-          criteria
-        end
-    end
+  end
 end

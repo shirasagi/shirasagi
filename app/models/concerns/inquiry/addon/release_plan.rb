@@ -40,14 +40,14 @@ module Inquiry::Addon
     end
 
     private
-      def validate_release_date
-        self.released ||= release_date
+    def validate_release_date
+      self.released ||= release_date
 
-        if close_date.present?
-          if release_date.present? && release_date >= close_date
-            errors.add :close_date, :greater_than, count: t(:release_date)
-          end
+      if close_date.present?
+        if release_date.present? && release_date >= close_date
+          errors.add :close_date, :greater_than, count: t(:release_date)
         end
       end
+    end
   end
 end

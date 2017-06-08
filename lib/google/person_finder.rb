@@ -121,13 +121,13 @@ class Google::PersonFinder
   end
 
   private
-    def connection(uri)
-      c = Faraday.new(:url => uri.to_s) do |builder|
-        builder.request :url_encoded
-        builder.response :logger, Rails.logger
-        builder.adapter Faraday.default_adapter
-      end
-      c.headers[:user_agent] += " (Shirasagi/#{SS.version}; PID/#{Process.pid})"
-      c
+  def connection(uri)
+    c = Faraday.new(:url => uri.to_s) do |builder|
+      builder.request :url_encoded
+      builder.response :logger, Rails.logger
+      builder.adapter Faraday.default_adapter
     end
+    c.headers[:user_agent] += " (Shirasagi/#{SS.version}; PID/#{Process.pid})"
+    c
+  end
 end

@@ -64,25 +64,25 @@ module Rdf::Object
   end
 
   private
-    def normalize_name
-      return if name.blank?
-      # name must be NFKC
-      self.name = UNF::Normalizer.normalize(self.name.strip, :nfkc)
-    end
+  def normalize_name
+    return if name.blank?
+    # name must be NFKC
+    self.name = UNF::Normalizer.normalize(self.name.strip, :nfkc)
+  end
 
-    def validate_name
-      return if name.blank?
-      # symbols is not allowed.
-      errors.add :name, :invalid if name =~ /[\x00-,:-@\[-\^`\{-\x7f]/
-    end
+  def validate_name
+    return if name.blank?
+    # symbols is not allowed.
+    errors.add :name, :invalid if name =~ /[\x00-,:-@\[-\^`\{-\x7f]/
+  end
 
   public
-    # view support method
-    def preferred_label
-      "#{vocab.prefix}:#{name}"
-    end
+  # view support method
+  def preferred_label
+    "#{vocab.prefix}:#{name}"
+  end
 
-    def uri
-      "#{vocab.uri}#{name}"
-    end
+  def uri
+    "#{vocab.uri}#{name}"
+  end
 end

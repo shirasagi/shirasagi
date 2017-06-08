@@ -59,44 +59,44 @@ class Chorg::Changeset
   alias delete_description before_unify
 
   private
-    def set_revision_id
-      self.revision_id ||= @cur_revision.id
-    end
+  def set_revision_id
+    self.revision_id ||= @cur_revision.id
+  end
 
-    def set_type
-      self.type ||= @cur_type
-    end
+  def set_type
+    self.type ||= @cur_type
+  end
 
-    def filter_source_blank_ids
-      return if sources.blank?
-      copy = sources.to_a.select { |s| s["id"].present? }
-      self.sources = copy
-    end
+  def filter_source_blank_ids
+    return if sources.blank?
+    copy = sources.to_a.select { |s| s["id"].present? }
+    self.sources = copy
+  end
 
-    def filter_destination_blank_names
-      return if destinations.blank?
-      copy = destinations.to_a.select { |s| s["name"].present? }
-      self.destinations = copy
-    end
+  def filter_destination_blank_names
+    return if destinations.blank?
+    copy = destinations.to_a.select { |s| s["name"].present? }
+    self.destinations = copy
+  end
 
-    def validate_type
-      errors.add :type, :invalid unless TYPES.include?(type)
-    end
+  def validate_type
+    errors.add :type, :invalid unless TYPES.include?(type)
+  end
 
-    def validate_sources
-      return if sources.blank?
-      blanks = sources.select { |s| Cms::Group.where(id: s["id"]).first.blank? }
-      errors.add :sources, :invalid if blanks.present?
-    end
+  def validate_sources
+    return if sources.blank?
+    blanks = sources.select { |s| Cms::Group.where(id: s["id"]).first.blank? }
+    errors.add :sources, :invalid if blanks.present?
+  end
 
-    def validate_destinations
-      return if destinations.blank?
-      errors.add :destinations, :invalid unless destinations.select { |e| e["name"].blank? }.blank?
-    end
+  def validate_destinations
+    return if destinations.blank?
+    errors.add :destinations, :invalid unless destinations.select { |e| e["name"].blank? }.blank?
+  end
 
-    def set_source_names
-      return if sources.blank?
-      copy = sources.to_a.each { |s| s["name"] ||= Cms::Group.where(id: s["id"]).first.name }
-      self.sources = copy
-    end
+  def set_source_names
+    return if sources.blank?
+    copy = sources.to_a.each { |s| s["name"] ||= Cms::Group.where(id: s["id"]).first.name }
+    self.sources = copy
+  end
 end

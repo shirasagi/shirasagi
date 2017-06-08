@@ -54,30 +54,30 @@ class Sys::Auth::OpenIdConnect::TokenRequest
   end
 
   private
-    def validate_state
-      errors.add :state, :mismatch if state != session_state
-    end
+  def validate_state
+    errors.add :state, :mismatch if state != session_state
+  end
 
-    def http_client
-      @http_client ||= begin
-        c = Faraday.new(url: cur_item.token_url) do |builder|
-          builder.request  :url_encoded
-          builder.response :logger, Rails.logger
-          builder.adapter Faraday.default_adapter
-        end
-        c.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-        c
+  def http_client
+    @http_client ||= begin
+      c = Faraday.new(url: cur_item.token_url) do |builder|
+        builder.request  :url_encoded
+        builder.response :logger, Rails.logger
+        builder.adapter Faraday.default_adapter
       end
+      c.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+      c
     end
+  end
 
-    def make_basic_auth
-      user_pass = "#{cur_item.client_id}:#{SS::Crypt.decrypt(cur_item.client_secret)}"
-      base64_user_pass = Base64.strict_encode64(user_pass)
-      "Basic #{base64_user_pass}"
-    end
+  def make_basic_auth
+    user_pass = "#{cur_item.client_id}:#{SS::Crypt.decrypt(cur_item.client_secret)}"
+    base64_user_pass = Base64.strict_encode64(user_pass)
+    "Basic #{base64_user_pass}"
+  end
 
-    def json?(content_type)
-      return false if content_type.blank?
-      content_type.include?('application/json') || content_type.include?('text/json')
-    end
+  def json?(content_type)
+    return false if content_type.blank?
+    content_type.include?('application/json') || content_type.include?('text/json')
+  end
 end

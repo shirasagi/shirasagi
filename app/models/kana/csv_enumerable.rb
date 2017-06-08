@@ -42,37 +42,37 @@ class Kana::CsvEnumerable
   end
 
   private
-    def setup_enumerable
-      @model.body.each_line.with_index(1).lazy
+  def setup_enumerable
+    @model.body.each_line.with_index(1).lazy
+  end
+
+  def preprocess(line)
+    line = line.to_s.gsub(/#.*/, "")
+    line.strip
+  end
+
+  def split_and_normalize(line)
+    word, delim, yomi = line.split(@separator_regex)
+    word ||= ''
+    yomi ||= ''
+    [ word.strip, yomi.strip.tr("ぁ-ん", "ァ-ン") ]
+  end
+
+  def validate_csv_item(line, line_no, word, yomi)
+    if word.blank? || yomi.blank?
+      @model.errors.add :base, :malformed_kana_dictionary, line: line, no: line_no
+      return false
     end
 
-    def preprocess(line)
-      line = line.to_s.gsub(/#.*/, "")
-      line.strip
+    unless katakana?(yomi)
+      @model.errors.add :base, :malformed_kana_dictionary, line: line, no: line_no
+      return false
     end
 
-    def split_and_normalize(line)
-      word, delim, yomi = line.split(@separator_regex)
-      word ||= ''
-      yomi ||= ''
-      [ word.strip, yomi.strip.tr("ぁ-ん", "ァ-ン") ]
-    end
+    true
+  end
 
-    def validate_csv_item(line, line_no, word, yomi)
-      if word.blank? || yomi.blank?
-        @model.errors.add :base, :malformed_kana_dictionary, line: line, no: line_no
-        return false
-      end
-
-      unless katakana?(yomi)
-        @model.errors.add :base, :malformed_kana_dictionary, line: line, no: line_no
-        return false
-      end
-
-      true
-    end
-
-    def katakana?(yomi)
-      KATAKANA_REGEX =~ yomi
-    end
+  def katakana?(yomi)
+    KATAKANA_REGEX =~ yomi
+  end
 end

@@ -15,7 +15,7 @@ module SS::Model::Task
     seqid :id
     belongs_to :site, class_name: "SS::Site"
     field :name, type: String
-    #field :command, type: String
+    # field :command, type: String
     field :state, type: String, default: "stop"
     field :interrupt, type: String
     field :started, type: DateTime
@@ -50,7 +50,7 @@ module SS::Model::Task
         task.log sprintf("# %d sec\n\n", time)
       rescue Interrupt => e
         task.log "-- #{e}"
-        #task.log e.backtrace.join("\n")
+        # task.log e.backtrace.join("\n")
       rescue StandardError => e
         task.log "-- Error"
         task.log e.to_s
@@ -66,7 +66,7 @@ module SS::Model::Task
       save
       interrupt = self.class.find_by(id: id, select: interrupt).interrupt
       raise Interrupt, "interrupted: stop" if interrupt.to_s == "stop"
-      #GC.start
+      # GC.start
     end
     self
   end
@@ -122,7 +122,7 @@ module SS::Model::Task
   end
 
   private
-    def set_site_id
-      self.site_id ||= @cur_site.id
-    end
+  def set_site_id
+    self.site_id ||= @cur_site.id
+  end
 end

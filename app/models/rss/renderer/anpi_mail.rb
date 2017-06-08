@@ -31,23 +31,23 @@ class Rss::Renderer::AnpiMail
   end
 
   private
-    def template_variable_handler_target_time(*_)
-      I18n.l(@cur_infos[:target_time], format: :long)
-    end
+  def template_variable_handler_target_time(*_)
+    I18n.l(@cur_infos[:target_time], format: :long)
+  end
 
-    def template_variable_handler_anpi_post_url(*_)
-      @cur_node.my_anpi_post.full_url
-    end
+  def template_variable_handler_anpi_post_url(*_)
+    @cur_node.my_anpi_post.full_url
+  end
 
-    def template_variable_handler_pref_name(*_)
-      @cur_info[:pref_name]
-    end
+  def template_variable_handler_pref_name(*_)
+    @cur_info[:pref_name]
+  end
 
-    def template_variable_handler_area_name(*_)
-      @cur_info[:area_name]
-    end
+  def template_variable_handler_area_name(*_)
+    @cur_info[:area_name]
+  end
 
-    def template_variable_handler_intensity_label(*_)
-      I18n.t("rss.options.earthquake_intensity.#{@cur_info[:area_max_int]}", default: @cur_info[:area_max_int])
-    end
+  def template_variable_handler_intensity_label(*_)
+    I18n.t("rss.options.earthquake_intensity.#{@cur_info[:area_max_int]}", default: @cur_info[:area_max_int])
+  end
 end

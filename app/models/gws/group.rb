@@ -15,13 +15,13 @@ class Gws::Group
   scope :site, ->(site) { where name: /^#{Regexp.escape(site.name)}(\/|$)/ }
 
   private
-    def validate_parent_name
-      return if cur_site.id == id
+  def validate_parent_name
+    return if cur_site.id == id
 
-      if name !~ /^#{Regexp.escape(cur_site.name)}\//
-        errors.add :name, :not_a_child_group
-      elsif name.scan('/').size > 1
-        errors.add :base, :not_found_parent_group unless self.class.where(name: File.dirname(name)).exists?
-      end
+    if name !~ /^#{Regexp.escape(cur_site.name)}\//
+      errors.add :name, :not_a_child_group
+    elsif name.scan('/').size > 1
+      errors.add :base, :not_found_parent_group unless self.class.where(name: File.dirname(name)).exists?
     end
+  end
 end

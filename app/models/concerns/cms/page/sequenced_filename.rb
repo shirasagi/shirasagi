@@ -7,17 +7,17 @@ module Cms::Page::SequencedFilename
   end
 
   private
-    def validate_filename
-      super unless basename.blank? && @basename.blank?
-    end
+  def validate_filename
+    super unless basename.blank? && @basename.blank?
+  end
 
-    def validate_seq_filename
-      if basename.sub(/\.html$/, '').to_i > current_sequence(:id)
-        errors.add :basename, :invalid
-      end
+  def validate_seq_filename
+    if basename.sub(/\.html$/, '').to_i > current_sequence(:id)
+      errors.add :basename, :invalid
     end
+  end
 
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
+  def seq_filename
+    self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+  end
 end

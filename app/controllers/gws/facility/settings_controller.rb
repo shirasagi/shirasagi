@@ -4,7 +4,7 @@ class Gws::Facility::SettingsController < ApplicationController
   include Gws::SettingFilter
 
   private
-    def set_crumbs
-      @crumbs << [t("mongoid.models.gws/facility/group_setting"), gws_facility_setting_path]
-    end
+  def set_crumbs
+    @crumbs << [t("mongoid.models.gws/facility/group_setting"), gws_facility_setting_path]
+  end
 end

@@ -162,19 +162,19 @@ class Cms::ImportJobFile
   end
 
   private
-    def save_files
-      item = SS::File.new
-      item.in_file = in_file
-      item.site = site
-      item.state = "closed"
-      item.name = name
-      item.model = "cms/import_file"
-      item.save!
+  def save_files
+    item = SS::File.new
+    item.in_file = in_file
+    item.site = site
+    item.state = "closed"
+    item.name = name
+    item.model = "cms/import_file"
+    item.save!
 
-      self.file_ids = [item.id]
-    end
+    self.file_ids = [item.id]
+  end
 
-    def set_import_date
-      self.import_date ||= Time.zone.now
-    end
+  def set_import_date
+    self.import_date ||= Time.zone.now
+  end
 end

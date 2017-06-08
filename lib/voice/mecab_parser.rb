@@ -26,11 +26,11 @@ class Voice::MecabParser
   end
 
   private
-    def create_mecab(userdic)
-      mecab_param = MECAB_OPTIONS.dup
-      mecab_param << %( -u "#{userdic}") if userdic.present?
+  def create_mecab(userdic)
+    mecab_param = MECAB_OPTIONS.dup
+    mecab_param << %( -u "#{userdic}") if userdic.present?
 
-      require "MeCab"
-      MeCab::Tagger.new(mecab_param)
-    end
+    require "MeCab"
+    MeCab::Tagger.new(mecab_param)
+  end
 end

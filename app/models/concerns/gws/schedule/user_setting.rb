@@ -32,17 +32,17 @@ module Gws::Schedule::UserSetting
   end
 
   private
-    def set_schedule_tabs_group_ids
-      inc = (in_schedule_tabs_group_ids_all.to_a & in_schedule_tabs_group_ids.to_a).map { |m| m.to_i }
-      dec = (in_schedule_tabs_group_ids_all.to_a - in_schedule_tabs_group_ids.to_a).map { |m| m.to_i }
-      ids = (schedule_tabs_group_ids.to_a - inc + dec).map { |m| m.to_i }.uniq.compact
-      self.schedule_tabs_group_ids = ids
-    end
+  def set_schedule_tabs_group_ids
+    inc = (in_schedule_tabs_group_ids_all.to_a & in_schedule_tabs_group_ids.to_a).map { |m| m.to_i }
+    dec = (in_schedule_tabs_group_ids_all.to_a - in_schedule_tabs_group_ids.to_a).map { |m| m.to_i }
+    ids = (schedule_tabs_group_ids.to_a - inc + dec).map { |m| m.to_i }.uniq.compact
+    self.schedule_tabs_group_ids = ids
+  end
 
-    def set_schedule_tabs_custom_group_ids
-      inc = (in_schedule_tabs_custom_group_ids_all.to_a & in_schedule_tabs_custom_group_ids.to_a).map { |m| m.to_i }
-      dec = (in_schedule_tabs_custom_group_ids_all.to_a - in_schedule_tabs_custom_group_ids.to_a).map { |m| m.to_i }
-      ids = (schedule_tabs_custom_group_ids.to_a - inc + dec).map { |m| m.to_i }.uniq.compact
-      self.schedule_tabs_custom_group_ids = ids
-    end
+  def set_schedule_tabs_custom_group_ids
+    inc = (in_schedule_tabs_custom_group_ids_all.to_a & in_schedule_tabs_custom_group_ids.to_a).map { |m| m.to_i }
+    dec = (in_schedule_tabs_custom_group_ids_all.to_a - in_schedule_tabs_custom_group_ids.to_a).map { |m| m.to_i }
+    ids = (schedule_tabs_custom_group_ids.to_a - inc + dec).map { |m| m.to_i }.uniq.compact
+    self.schedule_tabs_custom_group_ids = ids
+  end
 end

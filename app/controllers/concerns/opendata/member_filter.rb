@@ -6,7 +6,7 @@ module Opendata::MemberFilter
   end
 
   private
-    def convert_member
-      @cur_member = Opendata::Member.find(@cur_member.id) if @cur_member
-    end
+  def convert_member
+    @cur_member = Opendata::Member.find(@cur_member.id) if @cur_member
+  end
 end

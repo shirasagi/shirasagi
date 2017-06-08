@@ -14,31 +14,31 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
   end
 
   private
-    def set_items(path, urls = nil)
-      page = Cms::Page.site(@cur_site).filename(path).first
-      urls = [path] if urls.blank?
+  def set_items(path, urls = nil)
+    page = Cms::Page.site(@cur_site).filename(path).first
+    urls = [path] if urls.blank?
 
-      urls.each do |url|
-        item = []
-        item << [@cur_part.home_label, @root_node.url]
-        find_node(item, url.sub(/^#{@cur_site.url}/, ""))
+    urls.each do |url|
+      item = []
+      item << [@cur_part.home_label, @root_node.url]
+      find_node(item, url.sub(/^#{@cur_site.url}/, ""))
 
-        item << [@preview_page.name, @preview_page.url] if @preview_page
-        if page
-          last_item = item.last
-          unless last_item[0] == page.name && page.url.end_with?("/index.html")
-            item << [page.name, page.url]
-          end
+      item << [@preview_page.name, @preview_page.url] if @preview_page
+      if page
+        last_item = item.last
+        unless last_item[0] == page.name && page.url.end_with?("/index.html")
+          item << [page.name, page.url]
         end
-
-        @items << item
       end
-    end
 
-    def find_node(item, path)
-      Cms::Node.site(@cur_site).in_path(path).order(depth: -1).reverse_each do |node|
-        next if @cur_node && @cur_node.depth >= node.depth
-        item << [node.name, node.url]
-      end
+      @items << item
     end
+  end
+
+  def find_node(item, path)
+    Cms::Node.site(@cur_site).in_path(path).order(depth: -1).reverse_each do |node|
+      next if @cur_node && @cur_node.depth >= node.depth
+      item << [node.name, node.url]
+    end
+  end
 end

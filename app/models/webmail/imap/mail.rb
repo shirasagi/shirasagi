@@ -103,50 +103,50 @@ module Webmail::Imap
     end
 
     private
-      def mailbox_scope
-        imap.account_scope.merge(mailbox: @mailbox)
-      end
+    def mailbox_scope
+      imap.account_scope.merge(mailbox: @mailbox)
+    end
 
-      def cache_all(uids, ref_items)
-        items = Webmail::Mail.where(mailbox_scope).in(uid: uids)
-        item_uids = items.map(&:uid)
-        flags = []
+    def cache_all(uids, ref_items)
+      items = Webmail::Mail.where(mailbox_scope).in(uid: uids)
+      item_uids = items.map(&:uid)
+      flags = []
 
-        if items.present?
-          resp = imap.conn.uid_fetch(item_uids, ['FLAGS']) || []
-          resp.each do |data|
-            flags[data.attr['UID']] = data.attr['FLAGS'] || []
-          end
-        end
-
-        items.each do |item|
-          next if ref_items[item.uid]
-          item.flags = flags[item.uid]
-          ref_items[item.uid] = item
-        end
-
-        uids - item_uids
-      end
-
-      def imap_all(uids, ref_items)
-        resp = imap.conn.uid_fetch(uids, %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER)) || []
+      if items.present?
+        resp = imap.conn.uid_fetch(item_uids, ['FLAGS']) || []
         resp.each do |data|
-          uid = data.attr['UID']
-          uids.delete(uid)
-
-          item = Webmail::Mail.new(mailbox_scope)
-          ref_items[uid] = item
-
-          begin
-            item.parse(data)
-            item.save if SS.config.webmail.cache_mails
-          rescue => e
-            raise e if Rails.env.development?
-            item.subject = "[Error] #{e}"
-          end
+          flags[data.attr['UID']] = data.attr['FLAGS'] || []
         end
-
-        uids
       end
+
+      items.each do |item|
+        next if ref_items[item.uid]
+        item.flags = flags[item.uid]
+        ref_items[item.uid] = item
+      end
+
+      uids - item_uids
+    end
+
+    def imap_all(uids, ref_items)
+      resp = imap.conn.uid_fetch(uids, %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER)) || []
+      resp.each do |data|
+        uid = data.attr['UID']
+        uids.delete(uid)
+
+        item = Webmail::Mail.new(mailbox_scope)
+        ref_items[uid] = item
+
+        begin
+          item.parse(data)
+          item.save if SS.config.webmail.cache_mails
+        rescue => e
+          raise e if Rails.env.development?
+          item.subject = "[Error] #{e}"
+        end
+      end
+
+      uids
+    end
   end
 end

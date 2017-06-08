@@ -87,44 +87,44 @@ class Gws::Schedule::PlanSearch
   end
 
   private
-    def validate_wdays
-      self.wdays = wdays.reject(&:blank?).map(&:to_i)
-    end
+  def validate_wdays
+    self.wdays = wdays.reject(&:blank?).map(&:to_i)
+  end
 
-    def validate_hours
-      self.max_hour = min_hour + 1 if min_hour > max_hour
-    end
+  def validate_hours
+    self.max_hour = min_hour + 1 if min_hour > max_hour
+  end
 
-    def set_members_condition
-      return if member_ids.blank?
+  def set_members_condition
+    return if member_ids.blank?
 
-      members = Gws::User.site(@cur_site).
-        active.
-        any_in(id: member_ids)
+    members = Gws::User.site(@cur_site).
+      active.
+      any_in(id: member_ids)
 
-      return if members.blank?
-      @condition << { member_ids: { '$in' => members.map(&:id) } }
+    return if members.blank?
+    @condition << { member_ids: { '$in' => members.map(&:id) } }
 
-      set_member_custom_groups_condition
-    end
+    set_member_custom_groups_condition
+  end
 
-    def set_member_custom_groups_condition
-      groups = Gws::CustomGroup.site(@cur_site).
-        any_in(member_ids: member_ids)
+  def set_member_custom_groups_condition
+    groups = Gws::CustomGroup.site(@cur_site).
+      any_in(member_ids: member_ids)
 
-      return if groups.blank?
-      @condition << { member_custom_group_ids: { '$in' => groups.map(&:id) } }
-    end
+    return if groups.blank?
+    @condition << { member_custom_group_ids: { '$in' => groups.map(&:id) } }
+  end
 
-    def set_facilities_condition
-      return if facility_ids.blank?
+  def set_facilities_condition
+    return if facility_ids.blank?
 
-      @facilities = Gws::Facility::Item.site(@cur_site).
-        readable(@cur_user, @cur_site).
-        active.
-        any_in(id: facility_ids)
+    @facilities = Gws::Facility::Item.site(@cur_site).
+      readable(@cur_user, @cur_site).
+      active.
+      any_in(id: facility_ids)
 
-      return if facilities.blank?
-      @condition << { facility_ids: { '$in' => facilities.map(&:id) } }
-    end
+    return if facilities.blank?
+    @condition << { facility_ids: { '$in' => facilities.map(&:id) } }
+  end
 end

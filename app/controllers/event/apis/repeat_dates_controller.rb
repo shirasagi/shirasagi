@@ -51,12 +51,12 @@ class Event::Apis::RepeatDatesController < ApplicationController
   end
 
   private
-    def repeat_dates
-      dates = []
-      @repeat_start.step(@repeat_end, 1) do |d|
-        dates << d if @days.include?(d.day.to_s)
-        dates << d if @wdays.include?(d.wday.to_s)
-      end
-      dates
+  def repeat_dates
+    dates = []
+    @repeat_start.step(@repeat_end, 1) do |d|
+      dates << d if @days.include?(d.day.to_s)
+      dates << d if @wdays.include?(d.wday.to_s)
     end
+    dates
+  end
 end

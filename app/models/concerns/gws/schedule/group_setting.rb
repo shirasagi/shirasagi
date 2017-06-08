@@ -48,8 +48,8 @@ module Gws::Schedule::GroupSetting
   end
 
   private
-    def set_schedule_max_file_size
-      return if in_schedule_max_file_size_mb.blank?
-      self.schedule_max_file_size = Integer(in_schedule_max_file_size_mb) * 1_024 * 1_024
-    end
+  def set_schedule_max_file_size
+    return if in_schedule_max_file_size_mb.blank?
+    self.schedule_max_file_size = Integer(in_schedule_max_file_size_mb) * 1_024 * 1_024
+  end
 end

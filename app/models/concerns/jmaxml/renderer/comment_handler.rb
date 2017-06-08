@@ -9,15 +9,15 @@ module Jmaxml::Renderer::CommentHandler
   end
 
   private
-    def template_variable_handler_forecast_comment(*_)
-      body_comments_forecast_comment
-    end
+  def template_variable_handler_forecast_comment(*_)
+    body_comments_forecast_comment
+  end
 
-    def template_variable_handler_warning_comment(*_)
-      body_comments_warning_comment
-    end
+  def template_variable_handler_warning_comment(*_)
+    body_comments_warning_comment
+  end
 
-    def template_variable_handler_free_form_comment(*_)
-      body_comments_free_form_comment
-    end
+  def template_variable_handler_free_form_comment(*_)
+    body_comments_free_form_comment
+  end
 end

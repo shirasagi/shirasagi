@@ -33,68 +33,68 @@ module Cms::PublicFilter::TwitterCard
   end
 
   private
-    def twitter_description
-      if @cur_item
-        description ||= @cur_item.html.presence if @cur_item.respond_to?(:html)
-        description ||= @cur_item.text.presence if @cur_item.respond_to?(:text)
-        description ||= @cur_item.description.presence if @cur_item.respond_to?(:description)
-        description ||= @cur_item.summary.presence if @cur_item.respond_to?(:summary)
-        description ||= (@cur_item.keywords.presence || []).join(' ').presence if @cur_item.respond_to?(:keywords)
-      end
-      return if description.blank?
+  def twitter_description
+    if @cur_item
+      description ||= @cur_item.html.presence if @cur_item.respond_to?(:html)
+      description ||= @cur_item.text.presence if @cur_item.respond_to?(:text)
+      description ||= @cur_item.description.presence if @cur_item.respond_to?(:description)
+      description ||= @cur_item.summary.presence if @cur_item.respond_to?(:summary)
+      description ||= (@cur_item.keywords.presence || []).join(' ').presence if @cur_item.respond_to?(:keywords)
+    end
+    return if description.blank?
 
-      %w(script style).each do |tag|
-        description = description.gsub(/<#{tag}.+?<\/#{tag}>/mi, '')
+    %w(script style).each do |tag|
+      description = description.gsub(/<#{tag}.+?<\/#{tag}>/mi, '')
+    end
+    ApplicationController.helpers.sanitize(description, tags: []).squish.truncate(200)
+  end
+
+  def twitter_image_urls
+    urls = extract_image_urls
+    if urls.blank?
+      urls = [ @cur_site.twitter_default_image_url ] if @cur_site.twitter_default_image_url.present?
+    end
+    urls
+  end
+
+  def extract_image_urls
+    if @cur_item
+      if @cur_item.respond_to?(:thumb)
+        thumb = @cur_item.thumb
       end
-      ApplicationController.helpers.sanitize(description, tags: []).squish.truncate(200)
+      if @cur_item.respond_to?(:html)
+        html = @cur_item.html.to_s
+      end
     end
 
-    def twitter_image_urls
-      urls = extract_image_urls
-      if urls.blank?
-        urls = [ @cur_site.twitter_default_image_url ] if @cur_site.twitter_default_image_url.present?
-      end
-      urls
+    urls = []
+    if thumb.present?
+      urls << thumb.full_url
     end
 
-    def extract_image_urls
-      if @cur_item
-        if @cur_item.respond_to?(:thumb)
-          thumb = @cur_item.thumb
-        end
-        if @cur_item.respond_to?(:html)
-          html = @cur_item.html.to_s
-        end
-      end
-
-      urls = []
-      if thumb.present?
-        urls << thumb.full_url
-      end
-
-      if html.present?
-        # extract image from html
-        urls += extract_image_urls_from_html(html)
-      end
-
-      urls
+    if html.present?
+      # extract image from html
+      urls += extract_image_urls_from_html(html)
     end
 
-    def extract_image_urls_from_html(html)
-      regex = /\<\s*?img\s+[^>]*\/?>/i
-      urls = html.scan(regex).map do |m|
-        next nil unless m =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
+    urls
+  end
 
-        url = $1
-        url = url[1..-1] if url.start_with?("'", '"')
-        url = url[0..-2] if url.end_with?("'", '"')
-        url = url.strip
+  def extract_image_urls_from_html(html)
+    regex = /\<\s*?img\s+[^>]*\/?>/i
+    urls = html.scan(regex).map do |m|
+      next nil unless m =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
 
-        next nil unless url.start_with?("/")
+      url = $1
+      url = url[1..-1] if url.start_with?("'", '"')
+      url = url[0..-2] if url.end_with?("'", '"')
+      url = url.strip
 
-        "#{@cur_site.full_url}#{url[1..-1]}"
-      end
+      next nil unless url.start_with?("/")
 
-      urls.compact
+      "#{@cur_site.full_url}#{url[1..-1]}"
     end
+
+    urls.compact
+  end
 end

@@ -94,69 +94,68 @@ class Opendata::App
   end
 
   private
-    def validate_filename
-      @basename.blank? ? nil : super
-    end
+  def validate_filename
+    @basename.blank? ? nil : super
+  end
 
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
+  def seq_filename
+    self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+  end
 
-    def validate_appurl
-      if self.appurl.present?
-        if self.appfiles.present?
-          errors.add :appurl, I18n.t("opendata.errors.messages.validate_appurl")
-          return
-        end
+  def validate_appurl
+    if self.appurl.present?
+      if self.appfiles.present?
+        errors.add :appurl, I18n.t("opendata.errors.messages.validate_appurl")
+        return
+      end
+    end
+  end
+
+  class << self
+    def to_app_path(path)
+      suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
+                  /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }
+      if suffix.present?
+        path[0..(path.length - suffix.length - 1)] + '.html'
+      else
+        path.sub(/\/file_text\/.*$/, '.html').sub(/\/file_index\/.*$/, '.html')
       end
     end
 
-    class << self
-      public
-        def to_app_path(path)
-          suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
-                      /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }
-          if suffix.present?
-            path[0..(path.length - suffix.length - 1)] + '.html'
-          else
-            path.sub(/\/file_text\/.*$/, '.html').sub(/\/file_index\/.*$/, '.html')
-          end
-        end
-
-        def sort_options
-          [
-            [I18n.t("opendata.sort_options.released"), "released"],
-            [I18n.t("opendata.sort_options.popular"), "popular"],
-            [I18n.t("opendata.sort_options.attention"), "attention"]
-          ]
-        end
-
-        def sort_hash(sort)
-          case sort
-          when "released"
-            { released: -1, _id: -1 }
-          when "popular"
-            { point: -1, _id: -1 }
-          when "attention"
-            { executed: -1, _id: -1 }
-          else
-            return { released: -1 } if sort.blank?
-            { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
-          end
-        end
-
-        def aggregate_field(name, opts = {})
-          Opendata::Common.get_aggregate_field(self, name, opts)
-        end
-
-        def aggregate_array(name, opts = {})
-          Opendata::Common.get_aggregate_array(self, name, opts)
-        end
-
-        def zip_dir
-          dir = Rails.root.join('tmp', 'opendata')
-          FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
-          dir
-        end
+    def sort_options
+      [
+        [I18n.t("opendata.sort_options.released"), "released"],
+        [I18n.t("opendata.sort_options.popular"), "popular"],
+        [I18n.t("opendata.sort_options.attention"), "attention"]
+      ]
     end
+
+    def sort_hash(sort)
+      case sort
+      when "released"
+        { released: -1, _id: -1 }
+      when "popular"
+        { point: -1, _id: -1 }
+      when "attention"
+        { executed: -1, _id: -1 }
+      else
+        return { released: -1 } if sort.blank?
+        { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
+      end
+    end
+
+    def aggregate_field(name, opts = {})
+      Opendata::Common.get_aggregate_field(self, name, opts)
+    end
+
+    def aggregate_array(name, opts = {})
+      Opendata::Common.get_aggregate_array(self, name, opts)
+    end
+
+    def zip_dir
+      dir = Rails.root.join('tmp', 'opendata')
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+      dir
+    end
+  end
 end

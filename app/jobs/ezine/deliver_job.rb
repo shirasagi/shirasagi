@@ -20,7 +20,7 @@ class Ezine::DeliverJob < Cms::ApplicationJob
   end
 
   private
-    def task_cond
-      { site_id: site_id, page_id: page_id, name: 'ezine:deliver' }
-    end
+  def task_cond
+    { site_id: site_id, page_id: page_id, name: 'ezine:deliver' }
+  end
 end

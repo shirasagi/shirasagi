@@ -62,104 +62,104 @@ module Ckan::Addon::ItemList
   end
 
   private
-    # overwrites super class methods
-    def template_variable_handler_name(name, value)
-      if name == 'url'
-        template_variable_handler_url(name, value)
-      elsif name == 'summary'
-        template_variable_handler_summary(name, value)
-      else
-        value[name].to_s
-      end
+  # overwrites super class methods
+  def template_variable_handler_name(name, value)
+    if name == 'url'
+      template_variable_handler_url(name, value)
+    elsif name == 'summary'
+      template_variable_handler_summary(name, value)
+    else
+      value[name].to_s
     end
+  end
 
-    def template_variable_handler_url(name, value)
-      "#{ckan_item_url}/#{value['name']}"
-    end
+  def template_variable_handler_url(name, value)
+    "#{ckan_item_url}/#{value['name']}"
+  end
 
-    def template_variable_handler_summary(name, value)
-      value['notes']
-    end
+  def template_variable_handler_summary(name, value)
+    value['notes']
+  end
 
-    def template_variable_handler_class(name, value)
-      value['name']
-    end
+  def template_variable_handler_class(name, value)
+    value['name']
+  end
 
-    def template_variable_handler_new(name, value)
-      in_new_days?(Time.zone.parse(value['metadata_modified']).to_date) ? "new" : nil
-    end
+  def template_variable_handler_new(name, value)
+    in_new_days?(Time.zone.parse(value['metadata_modified']).to_date) ? "new" : nil
+  end
 
-    def template_variable_handler_created_date(name, value, format = nil)
-      if format.present?
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone.to_date, format: format.to_sym
-      else
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone.to_date
-      end
+  def template_variable_handler_created_date(name, value, format = nil)
+    if format.present?
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone.to_date, format: format.to_sym
+    else
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone.to_date
     end
+  end
 
-    def template_variable_handler_updated_date(name, value, format = nil)
-      if format.present?
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone.to_date, format: format.to_sym
-      else
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone.to_date
-      end
+  def template_variable_handler_updated_date(name, value, format = nil)
+    if format.present?
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone.to_date, format: format.to_sym
+    else
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone.to_date
     end
+  end
 
-    # overwrites super class methods
-    def template_variable_handler_date(name, value, format = nil)
-      template_variable_handler_updated_date(name, value, format)
-    end
+  # overwrites super class methods
+  def template_variable_handler_date(name, value, format = nil)
+    template_variable_handler_updated_date(name, value, format)
+  end
 
-    def template_variable_handler_created_time(name, value, format = nil)
-      if format.present?
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone, format: format.to_sym
-      else
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone
-      end
+  def template_variable_handler_created_time(name, value, format = nil)
+    if format.present?
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone, format: format.to_sym
+    else
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_created']).in_time_zone
     end
+  end
 
-    def template_variable_handler_updated_time(name, value, format = nil)
-      if format.present?
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone, format: format.to_sym
-      else
-        I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone
-      end
+  def template_variable_handler_updated_time(name, value, format = nil)
+    if format.present?
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone, format: format.to_sym
+    else
+      I18n.l ActiveSupport::TimeZone["UTC"].parse(value['metadata_modified']).in_time_zone
     end
+  end
 
-    # overwrites super class methods
-    def template_variable_handler_time(name, value, format = nil)
-      template_variable_handler_updated_time(name, value, format)
-    end
+  # overwrites super class methods
+  def template_variable_handler_time(name, value, format = nil)
+    template_variable_handler_updated_time(name, value, format)
+  end
 
-    def template_variable_handler_group(name, value)
-      group = value['groups'].first
-      group ? group['display_name'] : ""
-    end
+  def template_variable_handler_group(name, value)
+    group = value['groups'].first
+    group ? group['display_name'] : ""
+  end
 
-    def template_variable_handler_groups(name, value)
-      value['groups'].map { |g| g['display_name'] }.join(", ")
-    end
+  def template_variable_handler_groups(name, value)
+    value['groups'].map { |g| g['display_name'] }.join(", ")
+  end
 
-    def template_variable_handler_organization(name, value)
-      organization = value['organization']
-      organization ? organization['title'] : ""
-    end
+  def template_variable_handler_organization(name, value)
+    organization = value['organization']
+    organization ? organization['title'] : ""
+  end
 
-    def template_variable_handler_add_or_update(name, value)
-      modified = Time.zone.parse(value['metadata_modified']) rescue Time.zone.at(0)
-      created = Time.zone.parse(value['metadata_created']) rescue Time.zone.at(0)
-      if in_new_days?(created.to_date)
-        "add"
-      elsif in_new_days?(modified.to_date)
-        "update"
-      end
+  def template_variable_handler_add_or_update(name, value)
+    modified = Time.zone.parse(value['metadata_modified']) rescue Time.zone.at(0)
+    created = Time.zone.parse(value['metadata_created']) rescue Time.zone.at(0)
+    if in_new_days?(created.to_date)
+      "add"
+    elsif in_new_days?(modified.to_date)
+      "update"
     end
+  end
 
-    def template_variable_handler_add_or_update_text(name, value)
-      label = template_variable_handler_add_or_update(name, value)
-      if label.present?
-        label = I18n.t("ckan.node.page.#{label}")
-      end
-      label
+  def template_variable_handler_add_or_update_text(name, value)
+    label = template_variable_handler_add_or_update(name, value)
+    if label.present?
+      label = I18n.t("ckan.node.page.#{label}")
     end
+    label
+  end
 end

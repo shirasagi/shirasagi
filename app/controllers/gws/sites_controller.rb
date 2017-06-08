@@ -8,24 +8,24 @@ class Gws::SitesController < ApplicationController
   menu_view nil
 
   private
-    def set_crumbs
-      @crumbs << [t("gws.site_info"), action: :show]
-    end
+  def set_crumbs
+    @crumbs << [t("gws.site_info"), action: :show]
+  end
 
-    def set_item
-      @item = Gws::Group.find(@cur_site.id)
-      @item.attributes = fix_params
-    end
+  def set_item
+    @item = Gws::Group.find(@cur_site.id)
+    @item.attributes = fix_params
+  end
 
   public
-    def edit
-      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-      render
-    end
+  def edit
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render
+  end
 
-    def update
-      @item.attributes = get_params
-      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-      render_update @item.update
-    end
+  def update
+    @item.attributes = get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update
+  end
 end

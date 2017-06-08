@@ -35,17 +35,17 @@ class Webmail::Signature
   end
 
   private
-    def check_default
-      self.class.user(user).
-        where(default: 'enabled').
-        where(:id.ne => id).
-        update_all(default: 'disabled')
-    end
+  def check_default
+    self.class.user(user).
+      where(default: 'enabled').
+      where(:id.ne => id).
+      update_all(default: 'disabled')
+  end
 
-    class << self
-      def default_sign(user)
-        sign = self.user(user).default.first
-        sign ? sign.text.presence : nil
-      end
+  class << self
+    def default_sign(user)
+      sign = self.user(user).default.first
+      sign ? sign.text.presence : nil
     end
+  end
 end

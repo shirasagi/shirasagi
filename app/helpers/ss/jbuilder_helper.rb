@@ -41,52 +41,52 @@ module SS::JbuilderHelper
   end
 
   private
-    def file_field?(field_def)
-      metadata = field_def.metadata
-      return false if metadata.blank?
+  def file_field?(field_def)
+    metadata = field_def.metadata
+    return false if metadata.blank?
 
-      file_class?(metadata.try(:class_name))
-    end
+    file_class?(metadata.try(:class_name))
+  end
 
-    def files_field?(field_def)
-      metadata = field_def.metadata
-      return false if metadata.blank?
+  def files_field?(field_def)
+    metadata = field_def.metadata
+    return false if metadata.blank?
 
-      file_class?(metadata.try(:[], :elem_class))
-    end
+    file_class?(metadata.try(:[], :elem_class))
+  end
 
-    def nodes_field?(field_def)
-      metadata = field_def.metadata
-      return false if metadata.blank?
+  def nodes_field?(field_def)
+    metadata = field_def.metadata
+    return false if metadata.blank?
 
-      node_class?(metadata.try(:[], :elem_class))
-    end
+    node_class?(metadata.try(:[], :elem_class))
+  end
 
-    def file_class?(class_name)
-      return false if class_name.blank?
+  def file_class?(class_name)
+    return false if class_name.blank?
 
-      cls = class_name.constantize rescue nil
-      return false if cls.blank?
+    cls = class_name.constantize rescue nil
+    return false if cls.blank?
 
-      cls.ancestors.include?(SS::Model::File)
-    end
+    cls.ancestors.include?(SS::Model::File)
+  end
 
-    def node_class?(class_name)
-      return false if class_name.blank?
+  def node_class?(class_name)
+    return false if class_name.blank?
 
-      cls = class_name.constantize rescue nil
-      return false if cls.blank?
+    cls = class_name.constantize rescue nil
+    return false if cls.blank?
 
-      cls.ancestors.include?(Cms::Model::Node)
-    end
+    cls.ancestors.include?(Cms::Model::Node)
+  end
 
-    def jsonize_file(file)
-      { name: file.name, filename: file.filename, url: file.full_url,
-        content_type: file.content_type, updated: file.updated }
-    end
+  def jsonize_file(file)
+    { name: file.name, filename: file.filename, url: file.full_url,
+      content_type: file.content_type, updated: file.updated }
+  end
 
-    def jsonize_node(node)
-      { name: node.name, filename: node.filename, url: node.full_url,
-        path: node.private_show_path, updated: node.updated }
-    end
+  def jsonize_node(node)
+    { name: node.name, filename: node.filename, url: node.full_url,
+      path: node.private_show_path, updated: node.updated }
+  end
 end

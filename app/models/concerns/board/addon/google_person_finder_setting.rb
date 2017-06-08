@@ -35,20 +35,20 @@ module Board::Addon
     end
 
     private
-      def set_gpf_api_key
-        self.gpf_api_key = SS::Crypt.encrypt(in_gpf_api_key) if in_gpf_api_key.present?
-      end
+    def set_gpf_api_key
+      self.gpf_api_key = SS::Crypt.encrypt(in_gpf_api_key) if in_gpf_api_key.present?
+    end
 
-      def raw_mode
-        accessor.mode.to_s
-      end
+    def raw_mode
+      accessor.mode.to_s
+    end
 
-      def update_mode_cache
-        new_value = {
-          'mode' => raw_mode,
-          'updated' => Time.zone.now
-        }
-        self.update(gpf_mode_cache: new_value)
-      end
+    def update_mode_cache
+      new_value = {
+        'mode' => raw_mode,
+        'updated' => Time.zone.now
+      }
+      self.update(gpf_mode_cache: new_value)
+    end
   end
 end

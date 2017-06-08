@@ -13,8 +13,8 @@ module SS::Reference
     end
 
     private
-      def set_user_id
-        self.user_id ||= @cur_user.id
-      end
+    def set_user_id
+      self.user_id ||= @cur_user.id
+    end
   end
 end

@@ -67,25 +67,25 @@ class Jmaxml::Trigger::Base
   end
 
   private
-    def weather_xml_status_enabled?(status)
-      case status
-      when Jmaxml::Status::NORMAL
-        return true
-      when Jmaxml::Status::TRAINING
-        return training_status == 'enabled'
-      when Jmaxml::Status::TEST
-        return test_status == 'enabled'
-      end
+  def weather_xml_status_enabled?(status)
+    case status
+    when Jmaxml::Status::NORMAL
+      return true
+    when Jmaxml::Status::TRAINING
+      return training_status == 'enabled'
+    when Jmaxml::Status::TEST
+      return test_status == 'enabled'
     end
+  end
 
-    def fresh_xml?(page, context)
-      report_datetime = REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip
-      if report_datetime.present?
-        report_datetime = Time.zone.parse(report_datetime) rescue nil
-      end
-      return if report_datetime.blank?
-
-      diff = Time.zone.now - report_datetime
-      diff.abs <= 1.hour
+  def fresh_xml?(page, context)
+    report_datetime = REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip
+    if report_datetime.present?
+      report_datetime = Time.zone.parse(report_datetime) rescue nil
     end
+    return if report_datetime.blank?
+
+    diff = Time.zone.now - report_datetime
+    diff.abs <= 1.hour
+  end
 end

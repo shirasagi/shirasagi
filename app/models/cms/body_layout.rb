@@ -16,15 +16,15 @@ class Cms::BodyLayout
   permit_params :parts
 
   private
-    def validate_filename
-      self.filename = "/"
-    end
+  def validate_filename
+    self.filename = "/"
+  end
 
-    def set_depth
-      self.depth = 1
-    end
+  def set_depth
+    self.depth = 1
+  end
 
-    def seq_filename
-      self.filename = "#{id}.layout.html"
-    end
+  def seq_filename
+    self.filename = "#{id}.layout.html"
+  end
 end

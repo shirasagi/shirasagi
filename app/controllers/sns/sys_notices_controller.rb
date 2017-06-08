@@ -7,15 +7,15 @@ class Sns::SysNoticesController < ApplicationController
   navi_view "sns/main/navi"
 
   private
-    def set_crumbs
-      @crumbs << [t("mongoid.models.sys/notice"), action: :index]
-    end
+  def set_crumbs
+    @crumbs << [t("mongoid.models.sys/notice"), action: :index]
+  end
 
   public
-    def index
-      @items = @model.and_public.
-        sys_admin_notice.
-        search(params[:s]).
-        page(params[:page]).per(50)
-    end
+  def index
+    @items = @model.and_public.
+      sys_admin_notice.
+      search(params[:s]).
+      page(params[:page]).per(50)
+  end
 end

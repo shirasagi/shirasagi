@@ -5,7 +5,7 @@ module Board::Addon
 
     def allowed?(action, user, opts = {})
       site = opts[:site] || @cur_site
-      #node = opts[:node] || @cur_node
+      # node = opts[:node] || @cur_node
 
       permit = "#{action}_board_posts"
 

@@ -22,10 +22,10 @@ module Voice
     end
 
     private
-      def resolve_path(path)
-        path = path.path if path.class.method_defined?(:path)
-        path = File.join(Rails.root, path) if Pathname.new(path).relative?
-        return path
-      end
+    def resolve_path(path)
+      path = path.path if path.class.method_defined?(:path)
+      path = File.join(Rails.root, path) if Pathname.new(path).relative?
+      return path
+    end
   end
 end

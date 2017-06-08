@@ -27,10 +27,10 @@ module Cms::Addon
     end
 
     private
-      def validate_conditions
-        self.conditions = conditions.map do |m|
-          m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
-        end.compact.uniq
-      end
+    def validate_conditions
+      self.conditions = conditions.map do |m|
+        m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
+      end.compact.uniq
+    end
   end
 end

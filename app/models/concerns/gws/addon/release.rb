@@ -49,16 +49,16 @@ module Gws::Addon
     end
 
     private
-      def validate_release_date
-        self.released ||= release_date if respond_to?(:released)
+    def validate_release_date
+      self.released ||= release_date if respond_to?(:released)
 
-        if close_date.present? && release_date.present? && release_date >= close_date
-          errors.add :close_date, :greater_than, count: t(:release_date)
-        end
+      if close_date.present? && release_date.present? && release_date >= close_date
+        errors.add :close_date, :greater_than, count: t(:release_date)
       end
+    end
 
-      def set_released
-        self.released ||= Time.zone.now
-      end
+    def set_released
+      self.released ||= Time.zone.now
+    end
   end
 end

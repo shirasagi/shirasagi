@@ -156,59 +156,59 @@ module Cms::Model::Node
   end
 
   private
-    def validate_invalid_filename
-      if filename == "fs"
+  def validate_invalid_filename
+    if filename == "fs"
+      errors.add :basename, :invalid
+      return
+    end
+
+    full_url = cur_site ? "#{cur_site.full_url}#{filename}/" : "#{site.full_url}#{filename}/"
+    SS::Site.each do |s|
+      if s.full_url == full_url
         errors.add :basename, :invalid
-        return
-      end
-
-      full_url = cur_site ? "#{cur_site.full_url}#{filename}/" : "#{site.full_url}#{filename}/"
-      SS::Site.each do |s|
-        if s.full_url == full_url
-          errors.add :basename, :invalid
-          break
-        end
+        break
       end
     end
+  end
 
-    def rename_children
-      return unless @db_changes["filename"]
-      return unless @db_changes["filename"][0]
+  def rename_children
+    return unless @db_changes["filename"]
+    return unless @db_changes["filename"][0]
 
-      src = "#{site.path}/#{@db_changes['filename'][0]}"
-      dst = "#{site.path}/#{@db_changes['filename'][1]}"
-      dst_dir = ::File.dirname(dst)
+    src = "#{site.path}/#{@db_changes['filename'][0]}"
+    dst = "#{site.path}/#{@db_changes['filename'][1]}"
+    dst_dir = ::File.dirname(dst)
 
-      Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
-      Fs.mv src, dst if Fs.exists?(src)
+    Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
+    Fs.mv src, dst if Fs.exists?(src)
 
-      src, dst = @db_changes["filename"]
-      %w(nodes pages parts layouts).each do |name|
-        send(name).where(filename: /^#{src}\//).each do |item|
-          dst_filename = item.filename.sub(/^#{src}\//, "#{dst}\/")
-          item.set(
-            filename: dst_filename,
-            depth: dst_filename.scan("/").size + 1
-          )
-        end
+    src, dst = @db_changes["filename"]
+    %w(nodes pages parts layouts).each do |name|
+      send(name).where(filename: /^#{src}\//).each do |item|
+        dst_filename = item.filename.sub(/^#{src}\//, "#{dst}\/")
+        item.set(
+          filename: dst_filename,
+          depth: dst_filename.scan("/").size + 1
+        )
       end
     end
+  end
 
-    def remove_directory
-      Fs.rm_rf path
-    end
+  def remove_directory
+    Fs.rm_rf path
+  end
 
-    def destroy_children
-      %w(nodes pages parts layouts).each do |name|
-        send(name).destroy_all
-      end
+  def destroy_children
+    %w(nodes pages parts layouts).each do |name|
+      send(name).destroy_all
     end
+  end
 
-    def template_variable_handler_pages_count(name, issuer)
-      date = issuer.try(:cur_date) || Time.zone.now
-      Cms::Page.site(issuer.site).
-        and_public(date).
-        or({ filename: /^#{filename}\//, depth: depth + 1 }, { category_ids: id }).
-        count.to_s
-    end
+  def template_variable_handler_pages_count(name, issuer)
+    date = issuer.try(:cur_date) || Time.zone.now
+    Cms::Page.site(issuer.site).
+      and_public(date).
+      or({ filename: /^#{filename}\//, depth: depth + 1 }, { category_ids: id }).
+      count.to_s
+  end
 end

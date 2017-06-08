@@ -9,31 +9,31 @@ module Rss::PubSubHubbubFilter
   end
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
 
-    def convert_cur_node
-      save = @cur_node
-      @cur_node = @cur_node.becomes_with_route rescue save if @cur_node.present?
-    end
+  def convert_cur_node
+    save = @cur_node
+    @cur_node = @cur_node.becomes_with_route rescue save if @cur_node.present?
+  end
 
   public
-    def subscribe
-      unless request.post?
-        return
-      end
-
-      @item.subscribe
-      redirect_to action: :index
+  def subscribe
+    unless request.post?
+      return
     end
 
-    def unsubscribe
-      unless request.delete?
-        return
-      end
+    @item.subscribe
+    redirect_to action: :index
+  end
 
-      @item.unsubscribe
-      redirect_to action: :index
+  def unsubscribe
+    unless request.delete?
+      return
     end
+
+    @item.unsubscribe
+    redirect_to action: :index
+  end
 end

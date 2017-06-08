@@ -29,21 +29,21 @@ module Cms::Addon
     end
 
     private
-      def set_keywords
-        return if keywords.present?
+    def set_keywords
+      return if keywords.present?
 
-        keywords = []
-        keywords << (parent ? parent.name : @cur_site.name)
-        categories.each { |cate| keywords << cate.name }
-        keywords += @cur_site.keywords.to_a
-        self.keywords = keywords.uniq.join(", ")
-      end
+      keywords = []
+      keywords << (parent ? parent.name : @cur_site.name)
+      categories.each { |cate| keywords << cate.name }
+      keywords += @cur_site.keywords.to_a
+      self.keywords = keywords.uniq.join(", ")
+    end
 
-      def set_description
-        return if description.present?
-        return unless respond_to?(:html)
-        self.description = ApplicationController.helpers.
-          sanitize(html.to_s, tags: []).squish.truncate(60)
-      end
+    def set_description
+      return if description.present?
+      return unless respond_to?(:html)
+      self.description = ApplicationController.helpers.
+        sanitize(html.to_s, tags: []).squish.truncate(60)
+    end
   end
 end

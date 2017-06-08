@@ -177,39 +177,39 @@ module Cms::Content
   end
 
   private
-    def set_filename
-      if @cur_node
-        self.filename = "#{@cur_node.filename}/#{basename}"
-      elsif @basename
-        self.filename = basename
-      end
+  def set_filename
+    if @cur_node
+      self.filename = "#{@cur_node.filename}/#{basename}"
+    elsif @basename
+      self.filename = basename
+    end
+  end
+
+  def set_depth
+    self.depth = filename.scan("/").size + 1
+  end
+
+  def set_released
+    now = Time.zone.now
+    self.released ||= now
+    self.first_released ||= now
+  end
+
+  def fix_extname
+    nil
+  end
+
+  def validate_filename
+    if @basename
+      return errors.add :basename, :empty if @basename.blank?
+      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{fix_extname})?$/
+    else
+      return errors.add :filename, :empty if filename.blank?
+      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
     end
 
-    def set_depth
-      self.depth = filename.scan("/").size + 1
-    end
-
-    def set_released
-      now = Time.zone.now
-      self.released ||= now
-      self.first_released ||= now
-    end
-
-    def fix_extname
-      nil
-    end
-
-    def validate_filename
-      if @basename
-        return errors.add :basename, :empty if @basename.blank?
-        errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
-        errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{fix_extname})?$/
-      else
-        return errors.add :filename, :empty if filename.blank?
-        errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
-      end
-
-      self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
-      @basename = filename.sub(/.*\//, "") if @basename
-    end
+    self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
+    @basename = filename.sub(/.*\//, "") if @basename
+  end
 end

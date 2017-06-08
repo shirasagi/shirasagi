@@ -35,21 +35,21 @@ class SS::CsvConverter
   end
 
   private
-    def item_to_csv(item)
-      field_names.map do |h|
-        escape_value(h, item[h])
-      end
+  def item_to_csv(item)
+    field_names.map do |h|
+      escape_value(h, item[h])
     end
+  end
 
-    def escape_value(field_name, value)
-      if value.is_a?(DateTime)
-        value.strftime("%Y/%m/%d %H:%M")
-      else
-        value
-      end
+  def escape_value(field_name, value)
+    if value.is_a?(DateTime)
+      value.strftime("%Y/%m/%d %H:%M")
+    else
+      value
     end
+  end
 
-    def encode_sjis(str)
-      str.encode("SJIS", invalid: :replace, undef: :replace)
-    end
+  def encode_sjis(str)
+    str.encode("SJIS", invalid: :replace, undef: :replace)
+  end
 end

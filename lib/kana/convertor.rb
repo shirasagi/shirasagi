@@ -56,20 +56,20 @@ module Kana::Convertor
     end
 
     private
-      def mpad(str)
-        str.gsub(/[^ -~]/, "   ")
-      end
+    def mpad(str)
+      str.gsub(/[^ -~]/, "   ")
+    end
 
-      def katakana_to_yomi(str, format)
-        case format
-        when "katakana"
-          str
-        when "romaji"
-          require "romaji"
-          Romaji.kana2romaji(str)
-        else #hiragana
-          str.tr("ァ-ン", "ぁ-ん")
-        end
+    def katakana_to_yomi(str, format)
+      case format
+      when "katakana"
+        str
+      when "romaji"
+        require "romaji"
+        Romaji.kana2romaji(str)
+      else # hiragana
+        str.tr("ァ-ン", "ぁ-ん")
       end
+    end
   end
 end

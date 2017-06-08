@@ -207,27 +207,27 @@ module SS::Document
   end
 
   private
-    def set_db_changes
-      @db_changes = changes
-    end
+  def set_db_changes
+    @db_changes = changes
+  end
 
-    def set_updated
-      return true if !changed?
-      self.updated = updated ? Time.zone.now : created
-    end
+  def set_updated
+    return true if !changed?
+    self.updated = updated ? Time.zone.now : created
+  end
 
-    def set_text_index
-      fields = self.class.class_variable_get(:@@_text_index_fields)
-      return if fields.blank?
+  def set_text_index
+    fields = self.class.class_variable_get(:@@_text_index_fields)
+    return if fields.blank?
 
-      texts = []
-      fields.map do |name|
-        text = send(name)
-        next if text.blank?
-        text.gsub!(/<("[^"]*"|'[^']*'|[^'">])*>/, " ") if name =~ /html$/
-        text.gsub!(/\s+/, " ")
-        texts << text
-      end
-      self.text_index = texts.join(" ")
+    texts = []
+    fields.map do |name|
+      text = send(name)
+      next if text.blank?
+      text.gsub!(/<("[^"]*"|'[^']*'|[^'">])*>/, " ") if name =~ /html$/
+      text.gsub!(/\s+/, " ")
+      texts << text
     end
+    self.text_index = texts.join(" ")
+  end
 end

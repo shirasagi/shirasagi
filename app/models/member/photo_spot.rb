@@ -12,11 +12,11 @@ class Member::PhotoSpot
   default_scope ->{ where(route: "member/photo_spot") }
 
   private
-    def validate_filename
-      (@basename && @basename.blank?) ? nil : super
-    end
+  def validate_filename
+    (@basename && @basename.blank?) ? nil : super
+  end
 
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
+  def seq_filename
+    self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+  end
 end

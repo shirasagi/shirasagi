@@ -33,15 +33,15 @@ module SS::Helpers
     end
 
     private
-      def array_value(method)
-        item = @template.instance_variable_get(:"@#{@object_name}")
-        code = method.sub(/\[\]$/, "").gsub(/\[(\D.*?)\]/, '["\\1"]')
+    def array_value(method)
+      item = @template.instance_variable_get(:"@#{@object_name}")
+      code = method.sub(/\[\]$/, "").gsub(/\[(\D.*?)\]/, '["\\1"]')
 
-        if method =~ /\[\]$/
-          value = eval("item.#{code}") || []
-        else
-          value = eval("item.#{code}")
-        end
+      if method =~ /\[\]$/
+        value = eval("item.#{code}") || []
+      else
+        value = eval("item.#{code}")
       end
+    end
   end
 end
