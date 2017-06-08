@@ -55,7 +55,7 @@ module Sys::SiteCopy::CmsNodes
     when "ezine/page"
       copy_ezine_columns(src_node, dest_node)
     when "rss/weather_xml"
-      @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーをスキップします。")
+      @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーをスキップします。")
       return
     end
 
