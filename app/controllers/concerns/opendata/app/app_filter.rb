@@ -6,6 +6,7 @@ module Opendata::App::AppFilter
   end
 
   private
+
   def set_app_with_aggregation
     @cur_node.layout = nil
     @search_path     = view_context.method(:search_apps_path)
@@ -32,6 +33,7 @@ module Opendata::App::AppFilter
   end
 
   public
+
   def index_areas
     @areas = aggregate_areas(100)
     render "opendata/agents/nodes/app/app/areas", layout: "opendata/app_aggregation"

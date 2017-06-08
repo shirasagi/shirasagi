@@ -64,6 +64,7 @@ module Rdf::Object
   end
 
   private
+
   def normalize_name
     return if name.blank?
     # name must be NFKC
@@ -77,6 +78,7 @@ module Rdf::Object
   end
 
   public
+
   # view support method
   def preferred_label
     "#{vocab.prefix}:#{name}"

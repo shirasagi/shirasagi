@@ -68,6 +68,7 @@ module Facility::Node
       end
 
       private
+
       def attributes_to_row(item, additional_columns, opts)
         maps = Facility::Map.site(item.site).where(filename: /^#{item.filename}\//, depth: item.depth + 1)
         points = maps.map{ |m| m.map_points }.flatten.map{ |m| m[:loc].join(",") }

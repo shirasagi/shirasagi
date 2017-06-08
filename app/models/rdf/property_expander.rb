@@ -57,6 +57,7 @@ class Rdf::PropertyExpander
   end
 
   private
+
   def expand_super_class_properties(rdf_class, depth, recuirsive_super_class_check)
     return [] if rdf_class.sub_class.blank?
 

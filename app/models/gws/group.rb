@@ -15,6 +15,7 @@ class Gws::Group
   scope :site, ->(site) { where name: /^#{Regexp.escape(site.name)}(\/|$)/ }
 
   private
+
   def validate_parent_name
     return if cur_site.id == id
 

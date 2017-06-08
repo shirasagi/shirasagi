@@ -55,6 +55,7 @@ module Inquiry::Addon
     end
 
     private
+
     def validate_select_options
       if input_type =~ /(select|radio_button|check_box)/
         errors.add :select_options, :blank if select_options.blank?

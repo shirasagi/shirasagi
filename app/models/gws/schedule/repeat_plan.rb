@@ -98,6 +98,7 @@ class Gws::Schedule::RepeatPlan
   end
 
   private
+
   def validate_plan_date
     errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end < repeat_start
     if repeat_type != "yearly" && repeat_end > (repeat_start + 1.year)

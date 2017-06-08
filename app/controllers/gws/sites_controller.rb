@@ -8,6 +8,7 @@ class Gws::SitesController < ApplicationController
   menu_view nil
 
   private
+
   def set_crumbs
     @crumbs << [t("gws.site_info"), action: :show]
   end
@@ -18,6 +19,7 @@ class Gws::SitesController < ApplicationController
   end
 
   public
+
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render

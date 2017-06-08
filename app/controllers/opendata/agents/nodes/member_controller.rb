@@ -5,6 +5,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   before_action :set_member, except: :index
 
   protected
+
   def set_member
     @member = Opendata::Member.site(@cur_site).where(id: params[:member]).first
     raise "404" unless @member
@@ -13,6 +14,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   end
 
   public
+
   def index
     raise "404"
   end

@@ -33,6 +33,7 @@ module Inquiry::Addon
     end
 
     private
+
     def validate_notify_mail
       if notify_mail_enabled?
         [:notice_email, :from_email].each do |sym|

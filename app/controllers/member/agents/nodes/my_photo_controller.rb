@@ -11,6 +11,7 @@ class Member::Agents::Nodes::MyPhotoController < ApplicationController
   prepend_view_path "app/views/member/agents/nodes/my_photo"
 
   private
+
   def set_photo_node
     @photo_node = Member::Node::Photo.site(@cur_site).first
     @categories = Member::Node::PhotoCategory.site(@cur_site).and_public.order_by(order: 1)
@@ -23,6 +24,7 @@ class Member::Agents::Nodes::MyPhotoController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).member(@cur_member).
       order_by(released: -1).

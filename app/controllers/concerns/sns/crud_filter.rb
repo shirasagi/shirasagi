@@ -7,12 +7,14 @@ module Sns::CrudFilter
   end
 
   private
+
   def append_view_paths
     append_view_path "app/views/sns/crud"
     append_view_path "app/views/ss/crud"
   end
 
   public
+
   def index
     # raise "403" unless @model.allowed?(:read, @cur_user)
 

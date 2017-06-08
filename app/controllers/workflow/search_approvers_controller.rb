@@ -6,6 +6,7 @@ class Workflow::SearchApproversController < ApplicationController
   before_action :set_group
 
   private
+
   def set_group
     if params[:s].present? && params[:s][:group].present?
       @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
@@ -20,6 +21,7 @@ class Workflow::SearchApproversController < ApplicationController
   end
 
   public
+
   def index
     @level = params[:level]
     criteria = @model.site(@cur_site).active.search(params[:s])

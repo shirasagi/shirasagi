@@ -23,6 +23,7 @@ class Cms::LinkCheckController < ApplicationController
   end
 
   private
+
   def check_url(url)
     proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
     progress_data_size = nil

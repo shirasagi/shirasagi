@@ -92,6 +92,7 @@ module Event::Addon
     end
 
     private
+
     def validate_event
       errors.add :event_dates, :blank if event_name.present? && event_dates.blank?
 

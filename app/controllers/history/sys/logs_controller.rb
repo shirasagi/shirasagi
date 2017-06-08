@@ -7,6 +7,7 @@ class History::Sys::LogsController < ApplicationController
   before_action :filter_permission
 
   private
+
   def set_crumbs
     @crumbs << [t("history.log"), action: :index]
   end

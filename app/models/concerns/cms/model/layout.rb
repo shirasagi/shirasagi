@@ -54,6 +54,7 @@ module Cms::Model::Layout
   end
 
   private
+
   def fix_extname
     ".layout.html"
   end

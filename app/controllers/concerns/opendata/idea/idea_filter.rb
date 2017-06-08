@@ -6,6 +6,7 @@ module Opendata::Idea::IdeaFilter
   end
 
   private
+
   def set_idea_with_aggregation
     @cur_node.layout = nil
     @search_path     = view_context.method(:search_ideas_path)
@@ -28,6 +29,7 @@ module Opendata::Idea::IdeaFilter
   end
 
   public
+
   def index_areas
     @areas = aggregate_areas(100)
     render "opendata/agents/nodes/idea/idea/areas", layout: "opendata/idea_aggregation"

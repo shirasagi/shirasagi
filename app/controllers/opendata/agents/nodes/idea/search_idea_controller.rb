@@ -3,6 +3,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
   helper Opendata::UrlHelper
 
   private
+
   def pages
     @model = Opendata::Idea
 
@@ -30,6 +31,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
   end
 
   public
+
   def index
     @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
     @items = pages.page(params[:page]).per(@cur_node.limit || 20)

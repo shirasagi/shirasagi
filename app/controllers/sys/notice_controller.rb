@@ -20,6 +20,7 @@ class Sys::NoticeController < ApplicationController
   end
 
   private
+
   def set_crumbs
     @crumbs << [t("sys.notice"), action: :index]
   end

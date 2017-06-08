@@ -12,6 +12,7 @@ class Facility::Image
   default_scope ->{ where(route: "facility/image") }
 
   private
+
   def serve_static_file?
     false
   end

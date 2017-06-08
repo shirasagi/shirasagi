@@ -2,6 +2,7 @@ module SS::FileFilter
   extend ActiveSupport::Concern
 
   private
+
   def append_view_paths
     append_view_path "app/views/ss/crud/files"
     super
@@ -12,6 +13,7 @@ module SS::FileFilter
   end
 
   public
+
   def create
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)

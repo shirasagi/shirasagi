@@ -41,6 +41,7 @@ module Gws::Addon::Member
   end
 
   private
+
   def validate_member_ids
     self.member_ids = member_ids.uniq
   end
@@ -61,6 +62,7 @@ module Gws::Addon::Member
     end
 
     private
+
     def keep_members_order
       class_variable_set(:@@_keep_members_order, true)
     end

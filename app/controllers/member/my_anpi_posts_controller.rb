@@ -7,6 +7,7 @@ class Member::MyAnpiPostsController < ApplicationController
   navi_view "cms/node/main/navi"
 
   private
+
   def fix_params
     @cur_node = @cur_node.becomes_with_route
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
@@ -17,6 +18,7 @@ class Member::MyAnpiPostsController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).search(params[:s]).
       allow(:read, @cur_user, site: @cur_site).

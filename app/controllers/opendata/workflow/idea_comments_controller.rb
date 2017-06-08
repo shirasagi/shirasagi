@@ -6,6 +6,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
   before_action :set_route, only: [:approver_setting]
 
   private
+
   def set_model
     @model = Opendata::IdeaComment
   end
@@ -66,6 +67,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
   end
 
   public
+
   def request_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
 

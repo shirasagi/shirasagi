@@ -7,11 +7,13 @@ class Jmaxml::WaterLevelStationsController < ApplicationController
   navi_view "rss/main/navi"
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

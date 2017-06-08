@@ -9,6 +9,7 @@ module SS::LayoutFilter
 
   module ClassMethods
     private
+
     def navi_view(file)
       self.navi_view_file = file
     end

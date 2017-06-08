@@ -30,6 +30,7 @@ module Gws::Facility::GroupSetting
   end
 
   private
+
   def validate_facility_hours
     if facility_min_hour >= facility_max_hour
       errors.add :facility_max_hour, :greater_than, count: t(:facility_min_hour)

@@ -5,6 +5,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   append_view_path "app/views/facility/agents/addons/search_result/view"
 
   private
+
   def set_query
     @keyword      = params[:keyword]
     @category_ids = params[:category_ids].select(&:present?).map(&:to_i) rescue []
@@ -79,6 +80,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   end
 
   public
+
   def index
     set_query
     render :index, locals: { search_path: "./map.html" }

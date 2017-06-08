@@ -7,6 +7,7 @@ class Cms::NodesController < ApplicationController
   navi_view "cms/main/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.node"), action: :index]
   end
@@ -24,6 +25,7 @@ class Cms::NodesController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).
       allow(:read, @cur_user).

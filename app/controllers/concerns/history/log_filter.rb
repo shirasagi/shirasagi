@@ -2,6 +2,7 @@ module History::LogFilter
   extend ActiveSupport::Concern
 
   private
+
   def put_history_log
     log = History::Log.new
     log.url          = request.path

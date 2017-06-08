@@ -10,6 +10,7 @@ class Rdf::VocabsController < ApplicationController
   before_action :set_extra_crumbs, only: [:show, :edit, :update, :delete, :destroy]
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
@@ -41,6 +42,7 @@ class Rdf::VocabsController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

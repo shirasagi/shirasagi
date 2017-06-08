@@ -23,6 +23,7 @@ module Cms::TemplateVariable
   end
 
   private
+
   def template_variable_handler_name(name, issuer)
     ERB::Util.html_escape self.send(name)
   end

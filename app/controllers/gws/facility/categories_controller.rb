@@ -7,6 +7,7 @@ class Gws::Facility::CategoriesController < ApplicationController
   navi_view "gws/facility/settings/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/facility/group_setting"), gws_facility_items_path]
     @crumbs << [t("mongoid.models.gws/facility/group_setting/category"), gws_facility_categories_path]

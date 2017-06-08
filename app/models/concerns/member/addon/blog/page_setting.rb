@@ -33,6 +33,7 @@ module Member::Addon::Blog
     end
 
     private
+
     def validate_genres
       lines = SS::Extensions::Lines.new(genres).map(&:strip).select(&:present?).uniq
 

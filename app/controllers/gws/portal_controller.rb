@@ -3,11 +3,13 @@ class Gws::PortalController < ApplicationController
   helper Gws::Schedule::PlanHelper
 
   private
+
   def set_crumbs
     @crumbs << [t("gws.portal"), gws_portal_path]
   end
 
   public
+
   def index
     items_limit = 5
 

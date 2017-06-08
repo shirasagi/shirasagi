@@ -1,5 +1,6 @@
 module SkipMongoidQueryCache
   private
+
   def system_collection?
     return true if cache_skip?
     super

@@ -6,6 +6,7 @@ module SS::AgentFilter
   end
 
   private
+
   def controller
     @controller
   end
@@ -18,6 +19,7 @@ module SS::AgentFilter
   end
 
   public
+
   def stylesheets
     controller.stylesheets
   end

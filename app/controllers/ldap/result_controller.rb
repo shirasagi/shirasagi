@@ -8,6 +8,7 @@ class Ldap::ResultController < ApplicationController
   model Ldap::SyncTask
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
@@ -17,6 +18,7 @@ class Ldap::ResultController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

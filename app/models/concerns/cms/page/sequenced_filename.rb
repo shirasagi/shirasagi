@@ -7,6 +7,7 @@ module Cms::Page::SequencedFilename
   end
 
   private
+
   def validate_filename
     super unless basename.blank? && @basename.blank?
   end

@@ -11,6 +11,7 @@ module Job::SS::TaskFilter
   end
 
   private
+
   def task_cond
     cond = { name: self.class.task_name }
     cond[:site_id] = site_id

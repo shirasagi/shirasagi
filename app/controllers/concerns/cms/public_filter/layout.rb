@@ -10,6 +10,7 @@ module Cms::PublicFilter::Layout
   end
 
   private
+
   def filters
     @filters ||= begin
       request.env["ss.filters"] ||= []
@@ -137,6 +138,7 @@ module Cms::PublicFilter::Layout
   end
 
   public
+
   def mobile_path?
     filters.include?(:mobile)
   end

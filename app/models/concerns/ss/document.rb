@@ -207,6 +207,7 @@ module SS::Document
   end
 
   private
+
   def set_db_changes
     @db_changes = changes
   end

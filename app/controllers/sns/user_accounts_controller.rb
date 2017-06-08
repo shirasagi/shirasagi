@@ -7,6 +7,7 @@ class Sns::UserAccountsController < ApplicationController
   menu_view "ss/crud/resource_menu"
 
   private
+
   def set_crumbs
     @crumbs << [t("sns.account"), params.include?(:user) ? sns_user_account_path : sns_cur_user_account_path]
   end

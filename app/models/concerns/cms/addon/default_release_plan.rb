@@ -32,6 +32,7 @@ module Cms::Addon
     end
 
     private
+
     def validate_default_close_days_after
       return if default_release_days_after.blank?
       return if default_close_days_after.blank?

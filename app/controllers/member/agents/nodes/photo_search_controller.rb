@@ -8,6 +8,7 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
   before_action :set_query
 
   private
+
   def set_query
     @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public
     @categories = Member::Node::PhotoCategory.site(@cur_site).and_public
@@ -30,6 +31,7 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).and_public.
       listable.

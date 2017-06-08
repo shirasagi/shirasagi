@@ -5,6 +5,7 @@ class Webmail::SignaturesController < ApplicationController
   model Webmail::Signature
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.webmail/signature"), { action: :index } ]
   end
@@ -14,6 +15,7 @@ class Webmail::SignaturesController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.
       user(@cur_user).

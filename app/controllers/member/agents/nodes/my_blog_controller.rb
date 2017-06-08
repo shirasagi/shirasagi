@@ -13,6 +13,7 @@ class Member::Agents::Nodes::MyBlogController < ApplicationController
   helper Cms::ListHelper
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_member: @cur_member, cur_node: @blog_page_node }
   end
@@ -26,6 +27,7 @@ class Member::Agents::Nodes::MyBlogController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).member(@cur_member).
       order_by(released: -1).

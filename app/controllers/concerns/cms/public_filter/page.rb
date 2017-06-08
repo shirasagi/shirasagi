@@ -3,6 +3,7 @@ module Cms::PublicFilter::Page
   include Cms::PublicFilter::Layout
 
   private
+
   def find_page(path)
     page = Cms::Page.site(@cur_site).filename(path).first
     return unless page
@@ -23,6 +24,7 @@ module Cms::PublicFilter::Page
   end
 
   public
+
   def generate_page(page)
     @cur_site      = page.site
     @cur_path      = page.url

@@ -32,6 +32,7 @@ class Sys::SiteCopyTask
   end
 
   private
+
   def validate_target_host_domains
     errors.add :target_host_domains, :duplicate if self.class.ne(id: id).any_in(domains: target_host_domains).exists?
   end

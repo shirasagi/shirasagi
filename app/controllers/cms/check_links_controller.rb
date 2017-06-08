@@ -5,6 +5,7 @@ class Cms::CheckLinksController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def job_class
     Cms::CheckLinksJob
   end

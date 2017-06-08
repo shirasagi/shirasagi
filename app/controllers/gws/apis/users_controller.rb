@@ -7,6 +7,7 @@ class Gws::Apis::UsersController < ApplicationController
   before_action :set_custom_group
 
   private
+
   def set_group
     if params[:s].present? && params[:s][:group].present?
       @group = @cur_site.descendants.active.find(params[:s][:group]) rescue nil
@@ -31,6 +32,7 @@ class Gws::Apis::UsersController < ApplicationController
   end
 
   public
+
   def index
     @multi = params[:single].blank?
 

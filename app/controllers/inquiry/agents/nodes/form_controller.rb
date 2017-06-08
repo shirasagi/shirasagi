@@ -9,6 +9,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   before_action :set_answer, only: [:new, :confirm, :create]
 
   private
+
   def protect_csrf?
     false
   end
@@ -56,6 +57,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   public
+
   def new
     #
   end

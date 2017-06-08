@@ -57,6 +57,7 @@ module Gws::Addon::Schedule::Repeat
   end
 
   private
+
   def repeat_plan_fields
     [:repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays]
   end

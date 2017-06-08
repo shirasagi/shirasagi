@@ -57,6 +57,7 @@ class Gws::Schedule::Plan
   end
 
   private
+
   def validate_color
     self.color = nil if color =~ /^#ffffff$/i
   end

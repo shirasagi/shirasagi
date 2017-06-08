@@ -6,6 +6,7 @@ class Cms::WordDictionariesController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.word_dictionary"), action: :index]
   end

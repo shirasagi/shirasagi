@@ -43,6 +43,7 @@ class Member::Photo
   end
 
   private
+
   def validate_filename
     (@basename && @basename.blank?) ? nil : super
   end

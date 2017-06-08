@@ -129,6 +129,7 @@ class Inquiry::Answer
   end
 
   private
+
   def validate_data
     columns = Inquiry::Column.where(site_id: site_id, node_id: node_id, state: "public").order_by(order: 1)
     columns.each do |column|

@@ -3,6 +3,7 @@ module Workflow::PageFilter
   include Cms::CrudFilter
 
   private
+
   def render_items(cond)
     if @cur_node
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
@@ -18,6 +19,7 @@ module Workflow::PageFilter
   end
 
   public
+
   def index_approve
     cond = {
       workflow_state: "request",

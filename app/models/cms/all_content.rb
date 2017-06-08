@@ -16,6 +16,7 @@ class Cms::AllContent
     end
 
     private
+
     def header
       fields = %w(
         page_id node_id route name index_name url category_ids files file_urls use_map

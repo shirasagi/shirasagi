@@ -12,6 +12,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
   end
 
   private
+
   def remove_old_pages
     term = @start_date.advance(years: -1)..@start_date.advance(months: -1)
     term = term.map { |m| sprintf("#{m.year}%02d", m.month) }.uniq

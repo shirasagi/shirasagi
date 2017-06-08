@@ -16,6 +16,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
   end
 
   private
+
   def import_csv_as_resource
     find_or_create_dataset
     return if !@forcibly_updates && @dataset.resources.present?

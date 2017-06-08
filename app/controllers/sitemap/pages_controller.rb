@@ -9,11 +9,13 @@ class Sitemap::PagesController < ApplicationController
   navi_view "sitemap/main/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
 
   public
+
   def export_urls
     @item = @model.new get_params
     @item.site_id = @cur_site.id

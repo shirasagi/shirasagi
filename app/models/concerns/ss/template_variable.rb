@@ -33,6 +33,7 @@ module SS::TemplateVariable
   end
 
   private
+
   def template_variable_get(name, *args)
     handler = find_template_variable_handler(name)
     return unless handler

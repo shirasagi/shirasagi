@@ -7,6 +7,7 @@ class Voice::MainController < ApplicationController
   before_action :lock_voice_file
 
   private
+
   def purge_pending_tasks
     # call #purge_pending_requests with 10% probability
     Voice::SynthesisJob.purge_pending_tasks if Random.rand <= 0.1
@@ -45,6 +46,7 @@ class Voice::MainController < ApplicationController
   end
 
   public
+
   def index
     if @voice_file.latest?
       Voice::File.release_lock @voice_file
@@ -82,6 +84,7 @@ class Voice::MainController < ApplicationController
   end
 
   private
+
   def get_and_normalize_path
     path = params[:path]
     path = ::URI.unescape(path) if path.include?("%3A%2F%2F")

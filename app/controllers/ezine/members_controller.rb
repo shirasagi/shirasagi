@@ -11,6 +11,7 @@ class Ezine::MembersController < ApplicationController
   helper "ezine/form"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, node_id: @cur_node.id }
   end
@@ -52,6 +53,7 @@ class Ezine::MembersController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     @items = @model.site(@cur_site).

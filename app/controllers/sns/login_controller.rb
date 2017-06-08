@@ -10,6 +10,7 @@ class Sns::LoginController < ApplicationController
   navi_view nil
 
   private
+
   def get_params
     params.require(:item).permit(:uid, :email, :password, :encryption_type)
   rescue
@@ -17,6 +18,7 @@ class Sns::LoginController < ApplicationController
   end
 
   public
+
   def login
     @notices = Sys::Notice.and_public.
       and_show_login.

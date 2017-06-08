@@ -8,6 +8,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   before_action :set_params
 
   private
+
   def set_params
     #
   end
@@ -45,6 +46,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   public
+
   # Checks the URLs by task.
   def check
     @task.log "# #{@site.name}"
@@ -106,6 +108,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   private
+
   # Adds the log with valid url
   def add_valid_url(url, ref)
     @results[url] = 1

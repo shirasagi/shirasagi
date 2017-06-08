@@ -103,6 +103,7 @@ module Webmail::Imap
     end
 
     private
+
     def mailbox_scope
       imap.account_scope.merge(mailbox: @mailbox)
     end

@@ -32,6 +32,7 @@ class Workflow::Extensions::WorkflowApprovers < Array
     end
 
     private
+
     def normalize(array)
       ret = array.map do |hash|
         if hash.kind_of?(String)

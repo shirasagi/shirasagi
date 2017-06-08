@@ -4,6 +4,7 @@ class Voice::ErrorFilesController < ApplicationController
   include Voice::FilesFilter
 
   private
+
   def set_crumbs
     @crumbs << [t("voice.error_file"), action: :index]
   end
@@ -22,6 +23,7 @@ class Voice::ErrorFilesController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

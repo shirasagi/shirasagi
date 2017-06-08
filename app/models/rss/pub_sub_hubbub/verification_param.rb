@@ -9,6 +9,7 @@ class Rss::PubSubHubbub::VerificationParam
   validate :validate_challenge
 
   private
+
   def validate_mode
     errors.add :mode, :invalid unless %w(subscribe unsubscribe).include?(mode)
   end

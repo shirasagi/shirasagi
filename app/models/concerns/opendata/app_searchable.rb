@@ -31,6 +31,7 @@ module Opendata::AppSearchable
     end
 
     private
+
     SEARCH_HANDLERS = [
       :search_keyword, :search_name, :search_tag, :search_area_id, :search_category_id,
       :search_license, :search_poster ].freeze

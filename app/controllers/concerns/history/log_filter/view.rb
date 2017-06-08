@@ -37,6 +37,7 @@ module History::LogFilter::View
   end
 
   private
+
   def send_csv(items)
     require "csv"
 

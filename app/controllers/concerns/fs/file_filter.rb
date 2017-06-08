@@ -4,6 +4,7 @@ module Fs::FileFilter
   extend ActiveSupport::Concern
 
   private
+
   def send_thumb(data, opts = {})
     width  = opts.delete(:width).to_i
     height = opts.delete(:height).to_i

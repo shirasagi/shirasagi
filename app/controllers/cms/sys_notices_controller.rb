@@ -7,11 +7,13 @@ class Cms::SysNoticesController < ApplicationController
   navi_view "cms/main/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.sys/notice"), action: :index]
   end
 
   public
+
   def index
     @items = @model.and_public.
       cms_admin_notice.

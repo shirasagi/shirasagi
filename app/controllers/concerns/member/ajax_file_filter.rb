@@ -9,6 +9,7 @@ module Member::AjaxFileFilter
   end
 
   private
+
   def set_member
     @cur_member = Cms::Member.find params[:member]
     @cur_site = @cur_member.site
@@ -32,6 +33,7 @@ module Member::AjaxFileFilter
   end
 
   public
+
   def index
     @items = @model
     # @items = @items.site(@cur_site) if @cur_site
@@ -123,6 +125,7 @@ module Member::AjaxFileFilter
 
   module ClassMethods
     private
+
     def model(cls)
       self.model_class = cls if cls
     end

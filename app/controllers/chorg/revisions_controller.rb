@@ -7,6 +7,7 @@ class Chorg::RevisionsController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("chorg.revision"), action: :index]
   end

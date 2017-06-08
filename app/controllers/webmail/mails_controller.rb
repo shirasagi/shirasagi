@@ -13,6 +13,7 @@ class Webmail::MailsController < ApplicationController
   before_action :set_view_name, only: [:new, :create, :edit, :update]
 
   private
+
   def set_crumbs
     @crumbs << [t("webmail.mail"), { action: :index } ]
   end
@@ -56,6 +57,7 @@ class Webmail::MailsController < ApplicationController
   end
 
   public
+
   def index
     @sys_notices = Sys::Notice.and_public.webmail_admin_notice.page(1).per(2)
 

@@ -43,6 +43,7 @@ module Sys::SiteCopy::SsFiles
   end
 
   private
+
   def pseudo_file(src_file)
     base_file_data = ::File.open(src_file.path, 'rb:ASCII-8BIT')
     base_file_hash = {

@@ -19,6 +19,7 @@ class Cms::Group
   end
 
   private
+
   def validate_sites
     return if cur_site.group_ids.index(id)
 

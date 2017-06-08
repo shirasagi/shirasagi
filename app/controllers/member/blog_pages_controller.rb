@@ -7,6 +7,7 @@ class Member::BlogPagesController < ApplicationController
   before_action :set_blog_page_nodes
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
@@ -17,6 +18,7 @@ class Member::BlogPagesController < ApplicationController
   end
 
   public
+
   def new
     super
     @item.blog_page_location_ids = @cur_node.blog_page_location_ids

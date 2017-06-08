@@ -16,6 +16,7 @@ module Rss::Public::PubSubHubbubFilter
   end
 
   private
+
   def job_model
     self.class.job_model
   end
@@ -47,6 +48,7 @@ module Rss::Public::PubSubHubbubFilter
   end
 
   public
+
   def pages
     @model.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
   end

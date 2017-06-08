@@ -85,6 +85,7 @@ module Member::Addon
     end
 
     private
+
     def normalize_postal_code
       return if postal_code.blank?
       self.postal_code = postal_code.tr('０-９ａ-ｚＡ-Ｚー－～', '0-9a-zA-Z---')

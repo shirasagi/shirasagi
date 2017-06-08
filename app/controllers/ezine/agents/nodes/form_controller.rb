@@ -7,6 +7,7 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
   helper "ezine/form"
 
   private
+
   def set_entry
     @entry = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
     @entry.in_data = params[:item][:in_data] rescue {}
@@ -26,6 +27,7 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
   end
 
   public
+
   def confirm
     raise "403" unless params[:submit].present?
 

@@ -26,6 +26,7 @@ module Cms::Addon::OpendataRef::Dataset
   end
 
   private
+
   def invoke_opendata_job(action)
     return if opendata_dataset_state.blank?
 

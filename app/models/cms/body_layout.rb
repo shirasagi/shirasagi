@@ -16,6 +16,7 @@ class Cms::BodyLayout
   permit_params :parts
 
   private
+
   def validate_filename
     self.filename = "/"
   end

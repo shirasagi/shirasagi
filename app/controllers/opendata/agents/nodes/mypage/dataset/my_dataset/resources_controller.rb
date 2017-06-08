@@ -13,6 +13,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
   after_action :deliver_workflow_mail, only: [:create, :update]
 
   protected
+
   def dataset
     @dataset ||= Opendata::Dataset.site(@cur_site).find params[:dataset_id]
   end
@@ -78,6 +79,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
   end
 
   public
+
   def index
     @items = @dataset.resources.
     order_by(name: 1).

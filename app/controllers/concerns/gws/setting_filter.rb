@@ -8,6 +8,7 @@ module Gws::SettingFilter
   end
 
   private
+
   def set_item
     @item = @cur_site
   end
@@ -21,6 +22,7 @@ module Gws::SettingFilter
   end
 
   public
+
   def show
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     super

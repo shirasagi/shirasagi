@@ -84,6 +84,7 @@ module Gws::Schedule::Planable
   end
 
   private
+
   # API / Mode: month, week, day
   # - 時間予定(複数日)を別の日に移動
   # - 終日予定を時間予定に変更

@@ -25,6 +25,7 @@ module Opendata::DatasetTemplateVariables
   end
 
   private
+
   def template_variable_handler_dataset_name(name, issuer)
     ERB::Util.html_escape self.name
   end

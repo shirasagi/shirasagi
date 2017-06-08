@@ -41,6 +41,7 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
   end
 
   private
+
   def format_of(file)
     case File.extname(file).downcase
     when ".ttl" then

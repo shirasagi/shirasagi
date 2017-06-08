@@ -62,6 +62,7 @@ module SS::Model::MaxFileSize
   end
 
   private
+
   def set_size
     return if in_size_mb.blank?
     self.size = in_size_mb.to_i * 1_024 * 1_024

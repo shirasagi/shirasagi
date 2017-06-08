@@ -33,6 +33,7 @@ module Opendata::DatasetSearchable
     end
 
     private
+
     def search_keyword(params, criteria)
       if params[:keyword].present?
         option = params[:option].presence || 'all_keywords'

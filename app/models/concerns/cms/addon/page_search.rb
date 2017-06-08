@@ -52,6 +52,7 @@ module Cms::Addon
     end
 
     private
+
     def search_name_info
       "#{Cms::Page.t(:name)}: #{search_name}" if search_name.present?
     end
@@ -222,6 +223,7 @@ module Cms::Addon
     end
 
     private
+
     def normalize_search_routes
       return if search_routes.blank?
       self.search_routes = search_routes.dup.select(&:present?)

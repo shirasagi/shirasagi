@@ -7,6 +7,7 @@ class Gws::Facility::ItemsController < ApplicationController
   navi_view "gws/facility/settings/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/facility/group_setting"), gws_facility_items_path]
     @crumbs << [t("mongoid.models.gws/facility/group_setting/item"), gws_facility_items_path]
@@ -17,6 +18,7 @@ class Gws::Facility::ItemsController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).
       state(params.dig(:s, :state)).

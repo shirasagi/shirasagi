@@ -23,6 +23,7 @@ module Inquiry::Addon
     end
 
     private
+
     def validate_reception_date
       if reception_start_date.present? || reception_close_date.present?
         if reception_start_date.blank?

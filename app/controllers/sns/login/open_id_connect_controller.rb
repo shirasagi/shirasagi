@@ -13,6 +13,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   navi_view nil
 
   private
+
   def set_item
     @item ||= @model.find_by(filename: params[:id])
   end

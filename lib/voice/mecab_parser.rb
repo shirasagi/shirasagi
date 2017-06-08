@@ -26,6 +26,7 @@ class Voice::MecabParser
   end
 
   private
+
   def create_mecab(userdic)
     mecab_param = MECAB_OPTIONS.dup
     mecab_param << %( -u "#{userdic}") if userdic.present?

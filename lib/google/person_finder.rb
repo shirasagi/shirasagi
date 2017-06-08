@@ -121,6 +121,7 @@ class Google::PersonFinder
   end
 
   private
+
   def connection(uri)
     c = Faraday.new(:url => uri.to_s) do |builder|
       builder.request :url_encoded

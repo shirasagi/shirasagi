@@ -5,6 +5,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
   skip_before_action :logged_in?, only: [:login, :logout, :callback, :failure]
 
   private
+
   def get_params
     params.require(:item).permit(:email, :password)
   rescue
@@ -28,6 +29,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
   end
 
   public
+
   def login
     @item = Cms::Member.new
     unless request.post?

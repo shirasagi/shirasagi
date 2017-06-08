@@ -10,6 +10,7 @@ module Jmaxml::Renderer::VolcanoHandler
   end
 
   private
+
   def template_variable_handler_volcano_headline(*_)
     volcano_info_content_volcano_headline
   end

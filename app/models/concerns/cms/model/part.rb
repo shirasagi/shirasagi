@@ -63,6 +63,7 @@ module Cms::Model::Part
   end
 
   private
+
   def fix_extname
     ".part.html"
   end

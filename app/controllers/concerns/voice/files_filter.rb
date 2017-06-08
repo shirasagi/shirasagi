@@ -11,6 +11,7 @@ module Voice::FilesFilter
   end
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
@@ -31,6 +32,7 @@ module Voice::FilesFilter
   end
 
   public
+
   def new
     raise "404"
   end
@@ -66,6 +68,7 @@ module Voice::FilesFilter
   end
 
   private
+
   def send_csv(items)
     require "csv"
 

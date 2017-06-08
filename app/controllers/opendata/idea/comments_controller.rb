@@ -26,6 +26,7 @@ class Opendata::Idea::CommentsController < ApplicationController
   end
 
   public
+
   def index
     @items = @comments.search(params[:s]).order_by(:created.desc)
     @items = @items.page(params[:page]).per(50)

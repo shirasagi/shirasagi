@@ -32,6 +32,7 @@ module SS::Permission
     end
 
     private
+
     def set_permission_name(name, fix_action = nil)
       class_variable_set(:@@_permission_name, name)
       class_variable_set(:@@_permission_action, fix_action)

@@ -38,6 +38,7 @@ class SS::TreeList
     end
 
     private
+
     def part_order_array(items, item)
       full_name = ""
       item.name.split('/').map do |part|
@@ -94,6 +95,7 @@ class SS::TreeList
   end
 
   private
+
   def join_part(part_orders)
     ret = []
     pending_part_order = nil

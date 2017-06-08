@@ -10,11 +10,13 @@ class Cms::Node::ImportPagesController < ApplicationController
   menu_view "cms/node/import_pages/menu"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end
 
   public
+
   def convert
     set_item
     return if request.get?

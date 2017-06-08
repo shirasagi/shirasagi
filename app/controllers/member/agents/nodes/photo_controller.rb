@@ -6,11 +6,13 @@ class Member::Agents::Nodes::PhotoController < ApplicationController
   helper Cms::ListHelper
 
   private
+
   def pages
     @model.site(@cur_site).and_public(@cur_date).listable
   end
 
   public
+
   def index
     @items = pages.
       order_by(@cur_node.sort_hash).

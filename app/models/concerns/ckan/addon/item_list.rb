@@ -62,6 +62,7 @@ module Ckan::Addon::ItemList
   end
 
   private
+
   # overwrites super class methods
   def template_variable_handler_name(name, value)
     if name == 'url'

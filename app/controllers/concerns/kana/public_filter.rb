@@ -6,6 +6,7 @@ module Kana::PublicFilter
   end
 
   private
+
   def set_request_path_with_kana
     return if @cur_path !~ /^#{SS.config.kana.location}\//
     @cur_path.sub!(/^#{SS.config.kana.location}\//, "/")

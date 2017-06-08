@@ -83,6 +83,7 @@ module Workflow::Model::Route
   end
 
   private
+
   def validate_approvers_presence
     errors.add :approvers, :blank if approvers.blank?
     approvers.each do |approver|

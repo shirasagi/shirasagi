@@ -8,6 +8,7 @@ module Cms::CrudFilter
   end
 
   private
+
   def append_view_paths
     append_view_path "app/views/cms/crud"
     append_view_path "app/views/ss/crud"
@@ -27,6 +28,7 @@ module Cms::CrudFilter
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items

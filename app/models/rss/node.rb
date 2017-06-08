@@ -20,6 +20,7 @@ module Rss::Node
     after_save :purge_pages, if: ->{ @db_changes && @db_changes["rss_max_docs"] }
 
     private
+
     def purge_pages
       Rss::Page.limit_docs(@cur_site, self, rss_max_docs)
     end
@@ -42,6 +43,7 @@ module Rss::Node
     after_save :purge_pages, if: ->{ @db_changes && @db_changes["rss_max_docs"] }
 
     private
+
     def purge_pages
       Rss::Page.limit_docs(@cur_site, self, rss_max_docs)
     end

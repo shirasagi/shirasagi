@@ -6,6 +6,7 @@ module Cms::ApiFilter::Contents
   ].freeze
 
   private
+
   def search_html_with_string(string)
     cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{Regexp.escape(string)}/ } } }
     search_html_with_condition(cond)

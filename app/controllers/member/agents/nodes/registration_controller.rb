@@ -8,6 +8,7 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
   after_action :try_to_join_group, only: :registration
 
   private
+
   def fix_params
     { cur_site: @cur_site }
   end
@@ -36,6 +37,7 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
   end
 
   public
+
   # 新規登録
   def new
     @item = @model.new

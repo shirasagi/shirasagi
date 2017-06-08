@@ -4,6 +4,7 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   include Gws::Schedule::PlanFilter
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
@@ -18,6 +19,7 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   end
 
   public
+
   def index
     @s = get_params
 

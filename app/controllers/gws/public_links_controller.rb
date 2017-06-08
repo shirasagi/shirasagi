@@ -5,11 +5,13 @@ class Gws::PublicLinksController < ApplicationController
   model Gws::Link
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/link"), action: :index]
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).and_public.
       readable(@cur_user, @cur_site).

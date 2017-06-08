@@ -10,6 +10,7 @@ class Inquiry::NodesController < ApplicationController
   before_action :redirect_with_route, only: :index
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end

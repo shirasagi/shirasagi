@@ -6,6 +6,7 @@ class Inquiry::Agents::Parts::FeedbackController < ApplicationController
   before_action :set_answer
 
   private
+
   def set_parent
     @cur_parent ||= @cur_part.parent
     @cur_parent = @cur_parent.becomes_with_route
@@ -35,6 +36,7 @@ class Inquiry::Agents::Parts::FeedbackController < ApplicationController
   end
 
   public
+
   def index
   end
 end

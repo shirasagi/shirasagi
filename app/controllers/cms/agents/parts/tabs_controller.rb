@@ -44,6 +44,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
   end
 
   private
+
   def call_node_index(node_class)
     cont = new_agent(node_class)
     cont.controller.params = {}

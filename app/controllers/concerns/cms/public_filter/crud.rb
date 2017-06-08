@@ -8,6 +8,7 @@ module Cms::PublicFilter::Crud
   end
 
   private
+
   def set_item
     @item = @model.find params[:id]
     @item.attributes = fix_params
@@ -32,6 +33,7 @@ module Cms::PublicFilter::Crud
   end
 
   public
+
   def index
     @items = @model.all.
       order_by(_id: -1).
@@ -70,6 +72,7 @@ module Cms::PublicFilter::Crud
   end
 
   private
+
   def render_create(result, opts = {})
     location = opts[:location].presence || @cur_node.url
     render_opts = opts[:render].presence || { file: :new }

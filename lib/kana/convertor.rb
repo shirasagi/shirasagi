@@ -56,6 +56,7 @@ module Kana::Convertor
     end
 
     private
+
     def mpad(str)
       str.gsub(/[^ -~]/, "   ")
     end

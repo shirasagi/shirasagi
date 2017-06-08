@@ -8,6 +8,7 @@ class Sns::Message::PostsController < ApplicationController
   before_action :set_thread
 
   private
+
   def set_thread
     @thread ||= Sns::Message::Thread.find params[:thread_id]
     raise '404' unless @thread
@@ -29,6 +30,7 @@ class Sns::Message::PostsController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.
       where(thread_id: @thread.id).

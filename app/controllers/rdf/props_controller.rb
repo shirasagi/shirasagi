@@ -8,6 +8,7 @@ class Rdf::PropsController < ApplicationController
   before_action :set_class
 
   private
+
   def set_class
     class_id = params[:class_id]
     class_id = class_id.to_i if class_id.present? && class_id.respond_to?(:to_i)
@@ -30,6 +31,7 @@ class Rdf::PropsController < ApplicationController
   end
 
   public
+
   def index
     if @rdf_class.present?
       set_vocab

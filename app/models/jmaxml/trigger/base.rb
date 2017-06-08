@@ -67,6 +67,7 @@ class Jmaxml::Trigger::Base
   end
 
   private
+
   def weather_xml_status_enabled?(status)
     case status
     when Jmaxml::Status::NORMAL

@@ -9,6 +9,7 @@ class Category::NodesController < ApplicationController
   navi_view "category/main/navi"
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end

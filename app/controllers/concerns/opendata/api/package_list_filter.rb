@@ -3,6 +3,7 @@ module Opendata::Api::PackageListFilter
   include Opendata::Api
 
   private
+
   def package_list_check(limit, offset)
 
     limit_messages = []
@@ -24,6 +25,7 @@ module Opendata::Api::PackageListFilter
   end
 
   public
+
   def package_list
     help = t("opendata.api.package_list_help")
 

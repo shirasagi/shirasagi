@@ -8,6 +8,7 @@ class Member::GroupMembersController < ApplicationController
   navi_view "member/group_members/navi"
 
   private
+
   def set_crumbs
     set_member_group
     @crumbs << [t("member.group"), member_group_path(id: @cur_member_group)]
@@ -29,6 +30,7 @@ class Member::GroupMembersController < ApplicationController
   end
 
   public
+
   def index
     set_member_group
     raise "403" unless @cur_member_group.allowed?(:read, @cur_user, site: @cur_site)

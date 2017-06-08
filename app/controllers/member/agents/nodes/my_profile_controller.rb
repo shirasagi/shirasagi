@@ -12,6 +12,7 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
   prepend_view_path "app/views/member/agents/nodes/my_profile"
 
   private
+
   def set_item
     @item = @cur_member
   end
@@ -59,6 +60,7 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
   end
 
   public
+
   def index
   end
 

@@ -6,6 +6,7 @@ class Cms::Node::CopyNodesController < ApplicationController
   model Cms::CopyNodesTask
 
   private
+
   def job_class
     Cms::Node::CopyNodesJob
   end
@@ -36,6 +37,7 @@ class Cms::Node::CopyNodesController < ApplicationController
   end
 
   public
+
   def index
     set_item
 

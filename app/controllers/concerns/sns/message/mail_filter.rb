@@ -2,6 +2,7 @@ module Sns::Message::MailFilter
   extend ActiveSupport::Concern
 
   private
+
   def send_notification_mail(post)
     thread = post.thread
     url = sns_message_thread_posts_url(thread_id: thread.id)

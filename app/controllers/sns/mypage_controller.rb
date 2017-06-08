@@ -4,6 +4,7 @@ class Sns::MypageController < ApplicationController
   before_action :notices, only: [:index]
 
   private
+
   def cms_sites
     SS::Site.all.select do |site|
       @cur_user.groups.active.in(name: site.groups.active.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ } ).present?
@@ -19,6 +20,7 @@ class Sns::MypageController < ApplicationController
   end
 
   public
+
   def index
     @cms_sites = cms_sites
     @gws_sites = gws_sites

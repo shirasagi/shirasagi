@@ -7,6 +7,7 @@ class Opendata::Agents::Nodes::Mypage::MypageController < ApplicationController
   before_action :get_member_notice, only: [:show_notice, :confirm_notice]
 
   private
+
   def get_member_notice
     if @cur_member
       @notice ||= Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: @cur_member.id}).first
@@ -14,6 +15,7 @@ class Opendata::Agents::Nodes::Mypage::MypageController < ApplicationController
   end
 
   public
+
   def index
     if view_context.dataset_enabled?
       redirect_to view_context.my_dataset_path

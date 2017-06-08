@@ -12,6 +12,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
   before_action :check_inviting_member, only: [:accept, :reject]
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node, cur_member: @cur_member }
   end
@@ -35,6 +36,7 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).and_member(@cur_member).
       order_by(released: -1).

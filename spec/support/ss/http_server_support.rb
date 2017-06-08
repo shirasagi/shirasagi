@@ -150,6 +150,7 @@ module SS
       end
 
       private
+
       def set_started
         @lock.synchronize do
           @started = true

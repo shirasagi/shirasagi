@@ -5,11 +5,13 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   PER_BATCH = 100
 
   private
+
   def set_params
     #
   end
 
   public
+
   def generate
     @task.log "# #{@site.name}"
 

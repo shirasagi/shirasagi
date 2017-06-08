@@ -6,12 +6,14 @@ class Urgency::Apis::LayoutsController < ApplicationController
   before_action :set_single
 
   private
+
   def set_single
     @single = params[:single].present?
     @multi = !@single
   end
 
   public
+
   def index
     criteria = Urgency::Node::Layout.site(@cur_site)
     node_filenames, default_layout_ids = criteria.pluck(:filename, :urgency_default_layout_id).transpose

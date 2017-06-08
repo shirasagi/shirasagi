@@ -12,6 +12,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
   after_action :deliver_workflow_mail, only: [:create, :update]
 
   protected
+
   def dataset_node
     @dataset_node ||= Opendata::Node::Dataset.site(@cur_site).and_public.first
   end
@@ -73,6 +74,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
   end
 
   public
+
   def index
     @items = Opendata::Dataset.site(@cur_site).member(@cur_member).
       order_by(updated: -1).

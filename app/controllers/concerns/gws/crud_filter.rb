@@ -8,12 +8,14 @@ module Gws::CrudFilter
   end
 
   private
+
   def append_view_paths
     append_view_path "app/views/gws/crud"
     append_view_path "app/views/ss/crud"
   end
 
   public
+
   def index
     # raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 

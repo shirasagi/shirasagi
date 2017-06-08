@@ -122,6 +122,7 @@ module Workflow::Addon
     end
 
     private
+
     def serve_static_file?
       return false if branch?
       super

@@ -92,6 +92,7 @@ module Cms::Addon::OpendataRef::Resource
   end
 
   private
+
   def clone_opendata_resources
     ids = yield
 

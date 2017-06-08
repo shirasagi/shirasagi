@@ -14,6 +14,7 @@ class Member::Agents::Nodes::MyAnpiPostController < ApplicationController
   before_action :check_owner, only: [:edit, :update, :delete, :destroy, :destroy_all]
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node, cur_member: @cur_member }
   end
@@ -109,6 +110,7 @@ class Member::Agents::Nodes::MyAnpiPostController < ApplicationController
   end
 
   public
+
   def index
   end
 

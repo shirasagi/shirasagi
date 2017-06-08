@@ -6,6 +6,7 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   ALLOWED_EXTS = %w(gif png jpg jpeg bmp).freeze
 
   private
+
   def becomes_with_route_node
     @cur_node = @cur_node.becomes_with_route
     @cur_parent = @cur_node.parent.try(:becomes_with_route)
@@ -30,6 +31,7 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   end
 
   public
+
   def index
     box = []
     file_id_name_url.each do |i|

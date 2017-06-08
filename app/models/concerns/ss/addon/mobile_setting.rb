@@ -19,6 +19,7 @@ module SS::Addon
     end
 
     private
+
     def normalize_mobile_location
       return if mobile_location.blank?
       self.mobile_location = "/#{mobile_location}" unless mobile_location.start_with?('/')
@@ -30,6 +31,7 @@ module SS::Addon
     end
 
     public
+
     def mobile_state
       return 'enabled' unless value = self.attributes["mobile_state"]
       value

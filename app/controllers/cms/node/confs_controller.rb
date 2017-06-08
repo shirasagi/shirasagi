@@ -7,6 +7,7 @@ class Cms::Node::ConfsController < ApplicationController
   navi_view "cms/node/main/navi"
 
   private
+
   def set_item
     @item = @cur_node
     @item.attributes = fix_params
@@ -25,6 +26,7 @@ class Cms::Node::ConfsController < ApplicationController
   end
 
   public
+
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user)
     render_destroy @item.destroy, location: redirect_url_on_destroy

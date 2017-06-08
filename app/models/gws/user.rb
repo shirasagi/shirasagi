@@ -59,6 +59,7 @@ class Gws::User
   end
 
   private
+
   def set_title_ids
     title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)
     title_ids << in_title_id.to_i if in_title_id.present?

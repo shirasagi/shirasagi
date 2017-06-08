@@ -8,6 +8,7 @@ class Fs::FilesController < ApplicationController
   rescue_from StandardError, with: :rescue_action
 
   private
+
   def set_item
     id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
     path = params[:filename]
@@ -48,6 +49,7 @@ class Fs::FilesController < ApplicationController
   end
 
   public
+
   def index
     set_last_modified
 

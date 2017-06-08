@@ -8,6 +8,7 @@ module Cms::PageFilter
   end
 
   private
+
   def set_item
     super
     return unless @cur_node
@@ -54,6 +55,7 @@ module Cms::PageFilter
   end
 
   public
+
   def index
     if @cur_node
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)

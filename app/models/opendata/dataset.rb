@@ -78,6 +78,7 @@ class Opendata::Dataset
   end
 
   private
+
   def validate_filename
     @basename.blank? ? nil : super
   end

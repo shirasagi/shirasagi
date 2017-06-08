@@ -41,6 +41,7 @@ module SS::JbuilderHelper
   end
 
   private
+
   def file_field?(field_def)
     metadata = field_def.metadata
     return false if metadata.blank?

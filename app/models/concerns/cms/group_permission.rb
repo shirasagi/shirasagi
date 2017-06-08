@@ -61,6 +61,7 @@ module Cms::GroupPermission
   end
 
   private
+
   def template_variable_handler_group(name, issuer)
     group = self.groups.first
     group ? group.name.split(/\//).pop : ""

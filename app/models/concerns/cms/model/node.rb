@@ -156,6 +156,7 @@ module Cms::Model::Node
   end
 
   private
+
   def validate_invalid_filename
     if filename == "fs"
       errors.add :basename, :invalid

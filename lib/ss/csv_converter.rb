@@ -35,6 +35,7 @@ class SS::CsvConverter
   end
 
   private
+
   def item_to_csv(item)
     field_names.map do |h|
       escape_value(h, item[h])

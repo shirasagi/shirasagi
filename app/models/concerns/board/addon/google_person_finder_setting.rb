@@ -35,6 +35,7 @@ module Board::Addon
     end
 
     private
+
     def set_gpf_api_key
       self.gpf_api_key = SS::Crypt.encrypt(in_gpf_api_key) if in_gpf_api_key.present?
     end

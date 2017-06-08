@@ -3,6 +3,7 @@ module Opendata::Api::GroupShowFilter
   include Opendata::Api
 
   private
+
   def group_show_check(id)
 
     id_messages = []
@@ -20,6 +21,7 @@ module Opendata::Api::GroupShowFilter
   end
 
   public
+
   def group_show
     help = t("opendata.api.group_show_help")
     id = params[:id]

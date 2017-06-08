@@ -23,6 +23,7 @@ class Jmaxml::Trigger::FloodForecast < Jmaxml::Trigger::Base
   end
 
   private
+
   def extract_area_codes(site, xmldoc)
     area_codes = []
     REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="指定河川洪水予報"]/Item/Stations/Station').each do |station|

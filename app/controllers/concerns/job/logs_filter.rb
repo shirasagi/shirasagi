@@ -9,6 +9,7 @@ module Job::LogsFilter
   end
 
   private
+
   def set_crumbs
     @crumbs << [t("job.log"), action: :index]
   end
@@ -23,6 +24,7 @@ module Job::LogsFilter
   end
 
   public
+
   def index
     @items = log_criteria.order_by(updated: -1).page(params[:page]).per(50)
   end
@@ -71,7 +73,9 @@ module Job::LogsFilter
   def delete_term_options
     @model.delete_term_options
   end
+
   private
+
   def send_csv(items)
     csv = build_csv(items)
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "job_logs_#{Time.zone.now.to_i}.csv"

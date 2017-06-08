@@ -89,6 +89,7 @@ module Cms::Addon::List
     end
 
     private
+
     def validate_conditions
       self.conditions = conditions.map do |m|
         m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")

@@ -12,6 +12,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyAppController < ApplicationControl
   after_action :deliver_workflow_mail, only: [:create, :update]
 
   protected
+
   def app_node
     @app_node ||= Opendata::Node::App.site(@cur_site).and_public.first
   end
@@ -73,6 +74,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyAppController < ApplicationControl
   end
 
   public
+
   def index
     @items = Opendata::App.site(@cur_site).member(@cur_member).
       order_by(updated: -1).

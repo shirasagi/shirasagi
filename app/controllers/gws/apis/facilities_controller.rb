@@ -6,6 +6,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
   before_action :set_category
 
   private
+
   def category_criteria
     Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site)
   end
@@ -26,6 +27,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
   end
 
   public
+
   def index
     @multi = params[:single].blank?
 

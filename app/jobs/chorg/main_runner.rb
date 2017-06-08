@@ -1,5 +1,6 @@
 class Chorg::MainRunner < Chorg::Runner
   private
+
     def save_or_collect_errors(entity)
       return true if entity.save
 

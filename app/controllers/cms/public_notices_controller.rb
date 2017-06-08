@@ -7,11 +7,13 @@ class Cms::PublicNoticesController < ApplicationController
   navi_view "cms/main/navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.notice"), action: :index]
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).and_public.
       target_to(@cur_user).

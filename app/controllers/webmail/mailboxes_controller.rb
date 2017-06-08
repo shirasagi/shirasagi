@@ -7,6 +7,7 @@ class Webmail::MailboxesController < ApplicationController
   before_action :imap_login
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.webmail/mailbox"), { action: :index } ]
   end
@@ -28,6 +29,7 @@ class Webmail::MailboxesController < ApplicationController
   end
 
   public
+
   def index
     @items = @imap.mailboxes.load.without_inbox
   end

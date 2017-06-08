@@ -44,6 +44,7 @@ class Gws::Schedule::Holiday
   end
 
   private
+
   def validate_max_date
     # skip validation
   end

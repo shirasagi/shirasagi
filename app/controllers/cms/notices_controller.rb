@@ -9,6 +9,7 @@ class Cms::NoticesController < ApplicationController
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :copy]
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.notice"), action: :index]
   end
@@ -18,6 +19,7 @@ class Cms::NoticesController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

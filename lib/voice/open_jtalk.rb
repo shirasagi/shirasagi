@@ -32,6 +32,7 @@ class Voice::OpenJtalk
   end
 
   private
+
   def synthesize(tmpdir, site_id, text)
     tmp_source = build_source(tmpdir, site_id, text)
     tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))

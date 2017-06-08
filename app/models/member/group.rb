@@ -82,6 +82,7 @@ class Member::Group
   end
 
   private
+
   def set_admin_member
     return if in_admin_member_ids.blank?
 

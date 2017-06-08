@@ -50,6 +50,7 @@ module Job::Worker
     end
 
     private
+
     def get_pool(entity)
       pool = entity['pool'] rescue nil
       pool.present? ? pool : default_pool

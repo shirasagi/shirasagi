@@ -59,6 +59,7 @@ class Voice::File
     end
 
     private
+
     def test_root
       prefix = "voice"
       timestamp = Time.zone.now.strftime("%Y%m%d")
@@ -142,6 +143,7 @@ class Voice::File
   end
 
   private
+
   def set_has_error
     self.has_error = self.error.blank? ? 0 : 1
   end

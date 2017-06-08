@@ -10,6 +10,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
   after_action :generate, only: [:create, :reply, :destroy]
 
   private
+
   def deny
     if @cur_node.deny_ips.present?
       remote_ip = request.env["HTTP_X_REAL_IP"] || request.remote_ip
@@ -45,6 +46,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
   end
 
   public
+
   def index
     model = (@cur_node.mode == "tree") ? @model.topic : @model
     order = (@cur_node.mode == "tree") ? :descendants_updated : :updated

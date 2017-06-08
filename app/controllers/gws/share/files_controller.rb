@@ -7,6 +7,7 @@ class Gws::Share::FilesController < ApplicationController
   before_action :set_category
 
   private
+
   def set_crumbs
     set_category
     if @category.present?
@@ -37,6 +38,7 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   public
+
   def index
     if @category.present?
       params[:s] ||= {}

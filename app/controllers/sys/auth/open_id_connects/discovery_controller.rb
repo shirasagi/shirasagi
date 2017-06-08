@@ -8,12 +8,14 @@ class Sys::Auth::OpenIdConnects::DiscoveryController < ApplicationController
   menu_view "sys/crud/menu"
 
   private
+
   def append_view_paths
     append_view_path "app/views/sys/auth/main/"
     super
   end
 
   public
+
   def show
     redirect_to sys_auth_open_id_connect_path
   end

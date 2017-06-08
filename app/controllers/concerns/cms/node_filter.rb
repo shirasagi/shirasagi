@@ -9,6 +9,7 @@ module Cms::NodeFilter
   end
 
   private
+
   def set_item
     super
     if @cur_node
@@ -28,6 +29,7 @@ module Cms::NodeFilter
   end
 
   public
+
   def index
     @items = @model.site(@cur_site).node(@cur_node).
       allow(:read, @cur_user).

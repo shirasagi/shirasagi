@@ -10,6 +10,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   prepend_view_path "app/views/cms/agents/nodes/archive"
 
   private
+
   def set_range
     ymd = params[:ymd].presence
     case ymd.length
@@ -87,6 +88,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   end
 
   public
+
   def index
     if @cur_node.archive_view == 'calendar' && params[:ymd].length == 6
       set_contents

@@ -59,6 +59,7 @@ class Opendata::UrlResource
   end
 
   private
+
   def do_crawl_none(last_modified)
     if last_modified.present?
       if self.original_updated.blank?

@@ -9,6 +9,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   skip_before_action :logged_in?
 
   private
+
   def set_idea
     @idea_path = Opendata::Idea.to_idea_path(@cur_path)
     @idea = Opendata::Idea.site(@cur_site).and_public.
@@ -19,6 +20,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   end
 
   public
+
   def pages
     Opendata::Idea.site(@cur_site).and_public
   end

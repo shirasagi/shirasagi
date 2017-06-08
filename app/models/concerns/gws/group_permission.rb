@@ -74,6 +74,7 @@ module Gws::GroupPermission
   end
 
   private
+
   def set_groups_hash
     self.groups_hash = groups.map { |m| [m.id, m.name] }.to_h
   end
@@ -117,6 +118,7 @@ module Gws::GroupPermission
     end
 
     private
+
     def permission_include_custom_groups
       class_variable_set(:@@_permission_include_custom_groups, true)
     end

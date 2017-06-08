@@ -5,11 +5,13 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   PER_BATCH = 100
 
   private
+
   def set_attachments
     @attachments = (@attachments == "1")
   end
 
   public
+
   def generate
     @task.log "# #{@site.name}"
 

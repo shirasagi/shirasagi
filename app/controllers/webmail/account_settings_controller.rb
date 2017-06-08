@@ -7,6 +7,7 @@ class Webmail::AccountSettingsController < ApplicationController
   menu_view "ss/crud/resource_menu"
 
   private
+
   def set_crumbs
     @crumbs << [t("webmail.settings.account"), { action: :show } ]
   end
@@ -25,6 +26,7 @@ class Webmail::AccountSettingsController < ApplicationController
   end
 
   public
+
   def show
     # render
   end

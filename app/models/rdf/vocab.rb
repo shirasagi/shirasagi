@@ -92,6 +92,7 @@ class Rdf::Vocab
   end
 
   private
+
   def normalize_uri
     self.uri = self.class.normalize_uri(self.uri)
   end

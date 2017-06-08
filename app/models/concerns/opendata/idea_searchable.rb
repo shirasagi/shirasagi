@@ -30,6 +30,7 @@ module Opendata::IdeaSearchable
     end
 
     private
+
     SEARCH_HANDLERS = [ :search_keyword, :search_tag, :search_area_id, :search_category_id, :search_poster ].freeze
 
     def search_keyword(params, criteria)

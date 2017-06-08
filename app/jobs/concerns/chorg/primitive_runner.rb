@@ -12,6 +12,7 @@ module Chorg::PrimitiveRunner
   end
 
   private
+
   def execute_add(changeset)
     put_log("add #{changeset.add_description}")
     destination = changeset.destinations.first

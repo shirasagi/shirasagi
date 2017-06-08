@@ -60,6 +60,7 @@ class Chorg::Runner < Cms::ApplicationJob
   end
 
   private
+
   def update_all
     return if substituter.empty?
     with_all_entity_updates(@models, substituter) do |entity, updates|

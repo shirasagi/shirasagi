@@ -11,6 +11,7 @@ class Board::PostsController < ApplicationController
   after_action :generate, only: [:create, :reply, :update, :destroy]
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user, topic: @topic, parent: @topic }
   end
@@ -32,6 +33,7 @@ class Board::PostsController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.topic.site(@cur_site).node(@cur_node).
       allow(:read, @cur_user, site: @cur_site).

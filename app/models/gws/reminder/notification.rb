@@ -20,6 +20,7 @@ class Gws::Reminder::Notification
   end
 
   private
+
   def set_notify_at
     return if in_notify_before.blank?
     return if reminder.date.blank?

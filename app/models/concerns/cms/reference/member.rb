@@ -23,6 +23,7 @@ module Cms::Reference
     end
 
     private
+
     def set_member_id
       self.member_id ||= @cur_member.id
     end

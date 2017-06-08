@@ -5,6 +5,7 @@ class Webmail::AddressesController < ApplicationController
   model Webmail::Address
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.webmail/address"), { action: :index } ]
   end
@@ -14,6 +15,7 @@ class Webmail::AddressesController < ApplicationController
   end
 
   public
+
   def index
     @items = @model.
       user(@cur_user).

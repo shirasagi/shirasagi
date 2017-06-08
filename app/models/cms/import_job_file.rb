@@ -162,6 +162,7 @@ class Cms::ImportJobFile
   end
 
   private
+
   def save_files
     item = SS::File.new
     item.in_file = in_file

@@ -7,6 +7,7 @@ class Cms::BodyLayoutsController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("cms.layout"), action: :index]
   end
@@ -16,6 +17,7 @@ class Cms::BodyLayoutsController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

@@ -16,6 +16,7 @@ module SS::Fields::DependantNaming
   end
 
   private
+
   def dependant_scope
     self.class.all
   end

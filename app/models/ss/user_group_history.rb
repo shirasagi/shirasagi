@@ -33,6 +33,7 @@ class SS::UserGroupHistory
   end
 
   private
+
   def set_site_id
     klass = @cur_site.class.to_s
     if klass == 'Gws::Group'

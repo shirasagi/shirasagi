@@ -3,6 +3,7 @@ module Cms::FeedFilter
   extend ActiveSupport::Concern
 
   private
+
   def render_rss(node, items)
     rss = RSS::Maker.make("2.0") do |rss|
       summary = nil

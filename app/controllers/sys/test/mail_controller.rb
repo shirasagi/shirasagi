@@ -5,6 +5,7 @@ class Sys::Test::MailController < ApplicationController
   menu_view "sys/test/menu"
 
   private
+
   def set_crumbs
     @crumbs << ["MAIL Test", sys_test_mail_path]
   end
@@ -14,6 +15,7 @@ class Sys::Test::MailController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
 

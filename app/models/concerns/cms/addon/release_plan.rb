@@ -78,6 +78,7 @@ module Cms::Addon
     end
 
     private
+
     def calc_beginning_of_day(now, days)
       ret = now + days.days
       ret = ret.beginning_of_day

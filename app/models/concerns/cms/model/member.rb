@@ -100,6 +100,7 @@ module Cms::Model::Member
   end
 
   private
+
   def set_site_email
     self.site_email = "#{site_id}_#{email}"
   end

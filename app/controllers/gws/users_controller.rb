@@ -8,6 +8,7 @@ class Gws::UsersController < ApplicationController
   navi_view "gws/main/conf_navi"
 
   private
+
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/user"), gws_users_path]
   end
@@ -25,6 +26,7 @@ class Gws::UsersController < ApplicationController
   end
 
   public
+
   def index
     @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
 

@@ -3,6 +3,7 @@ module Cms::PartFilter
   include Cms::NodeFilter
 
   private
+
   def redirect_url
     nil
   end

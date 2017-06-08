@@ -30,6 +30,7 @@ module Jmaxml::Addon::Trigger::Tsunami
   end
 
   private
+
   def extract_tsunami_info(site, xmldoc)
     area_codes = []
     REXML::XPath.match(xmldoc, '/Report/Body/Tsunami/Forecast/Item').each do |item|

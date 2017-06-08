@@ -35,6 +35,7 @@ module Gws::Addon
     end
 
     private
+
     def save_reminders
       return if reminder_url.blank?
       return if @db_changes.blank?

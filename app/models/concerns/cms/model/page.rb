@@ -133,6 +133,7 @@ module Cms::Model::Page
   end
 
   private
+
   def fix_extname
     ".html"
   end

@@ -23,6 +23,7 @@ class Jmaxml::Trigger::WeatherAlert < Jmaxml::Trigger::Base
   end
 
   private
+
   def extract_weather_alert(site, xmldoc)
     area_codes = []
     REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="気象警報・注意報（市町村等）"]/Item').each do |item|

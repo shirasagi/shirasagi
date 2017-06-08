@@ -6,6 +6,7 @@ module Mobile::PublicFilter
   end
 
   private
+
   def set_request_path_with_mobile
     return if @cur_site.mobile_disabled?
     return if @cur_path !~ /^#{@cur_site.mobile_location}\//

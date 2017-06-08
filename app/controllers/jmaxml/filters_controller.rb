@@ -9,6 +9,7 @@ class Jmaxml::FiltersController < ApplicationController
   navi_view "rss/main/navi"
 
   private
+
   def fix_params
     {}
   end
@@ -42,6 +43,7 @@ class Jmaxml::FiltersController < ApplicationController
   end
 
   public
+
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     set_items

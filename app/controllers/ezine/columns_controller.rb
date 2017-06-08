@@ -7,11 +7,13 @@ class Ezine::ColumnsController < ApplicationController
   navi_view "ezine/main/navi"
 
   private
+
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node }
   end
 
   public
+
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 

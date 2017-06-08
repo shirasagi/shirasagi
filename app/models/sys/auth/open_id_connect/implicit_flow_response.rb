@@ -29,6 +29,7 @@ class Sys::Auth::OpenIdConnect::ImplicitFlowResponse
   end
 
   private
+
   def validate_state
     errors.add :state, :mismatch if state != session_state
   end

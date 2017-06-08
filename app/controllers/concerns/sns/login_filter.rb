@@ -2,6 +2,7 @@ module Sns::LoginFilter
   extend ActiveSupport::Concern
 
   private
+
   def login_success
     if params[:ref].blank?
       redirect_to SS.config.sns.logged_in_page

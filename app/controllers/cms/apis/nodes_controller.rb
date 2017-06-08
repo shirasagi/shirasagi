@@ -7,6 +7,7 @@ class Cms::Apis::NodesController < ApplicationController
   before_action :set_model_from_param
 
   private
+
   def set_single
     @single = params[:single].present?
     @multi = !@single

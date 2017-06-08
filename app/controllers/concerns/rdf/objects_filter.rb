@@ -8,6 +8,7 @@ module Rdf::ObjectsFilter
   end
 
   private
+
   def set_vocab
     return if @vocab.present?
     @vocab = Rdf::Vocab.site(@cur_site).find(params[:vocab_id])
@@ -44,6 +45,7 @@ module Rdf::ObjectsFilter
   end
 
   public
+
   def index
     set_vocab
     raise "403" unless @vocab.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)

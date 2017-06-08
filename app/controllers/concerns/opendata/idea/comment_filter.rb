@@ -2,6 +2,7 @@ module Opendata::Idea::CommentFilter
   extend ActiveSupport::Concern
 
   private
+
   def update_commented_count(member_ids, count)
     member_ids.each do |member_id|
       notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: member_id}).first
@@ -16,6 +17,7 @@ module Opendata::Idea::CommentFilter
   end
 
   public
+
   def update_member_notices(idea)
 
     except_member_ids = []

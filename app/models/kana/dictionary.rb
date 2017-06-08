@@ -97,6 +97,7 @@ class Kana::Dictionary
     end
 
     private
+
     def build_criteria(site_id, item_ids)
       criteria = where(site_id: site_id)
       criteria = criteria.where(:id.in => item_ids) if item_ids.present?

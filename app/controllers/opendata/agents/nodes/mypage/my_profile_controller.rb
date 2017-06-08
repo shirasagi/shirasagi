@@ -9,6 +9,7 @@ class Opendata::Agents::Nodes::Mypage::MyProfileController < ApplicationControll
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
 
   protected
+
   def set_model
     @model = Opendata::Member
   end
@@ -34,6 +35,7 @@ class Opendata::Agents::Nodes::Mypage::MyProfileController < ApplicationControll
   end
 
   public
+
   def show
     render
   end

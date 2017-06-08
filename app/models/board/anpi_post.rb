@@ -17,6 +17,7 @@ class Board::AnpiPost
 
   class << self
     public
+
     def to_csv
       CSV.generate do |data|
         data << %w(name kana tel addr sex age email text member_id public_scope point).map { |k| t k }
@@ -61,6 +62,7 @@ class Board::AnpiPost
   end
 
   private
+
   def copy_basic_attributes
     return if @cur_member.blank?
 
@@ -88,6 +90,7 @@ class Board::AnpiPost
   end
 
   public
+
   def owned?(member)
     self.member_id == member.id
   end

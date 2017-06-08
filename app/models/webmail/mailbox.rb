@@ -110,6 +110,7 @@ class Webmail::Mailbox
   end
 
   private
+
   def validate_name
     self.name = self.name.tr('/', '.')
     self.name = "INBOX.#{name}" unless self.name =~ /^INBOX\./

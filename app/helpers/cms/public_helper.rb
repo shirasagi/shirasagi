@@ -19,6 +19,7 @@ module Cms::PublicHelper
   end
 
   private
+
   def convert_static_url(url)
     path, query = url.split("?")
 

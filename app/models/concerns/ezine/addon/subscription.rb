@@ -10,6 +10,7 @@ module Ezine::Addon
     end
 
     private
+
     def ensure_required_subscription
       required_ids = Ezine::Node::MemberPage.site(site || cur_site).and_subscription_required.pluck(:id)
       return if required_ids.blank?

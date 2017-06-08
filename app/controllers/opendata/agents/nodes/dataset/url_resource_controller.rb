@@ -6,6 +6,7 @@ class Opendata::Agents::Nodes::Dataset::UrlResourceController < ApplicationContr
   before_action :set_dataset
 
   private
+
   def set_dataset
     @dataset_path = @cur_path.sub(/\/url_resource\/.*/, ".html")
 
@@ -17,6 +18,7 @@ class Opendata::Agents::Nodes::Dataset::UrlResourceController < ApplicationContr
   end
 
   public
+
   def index
     redirect_to @dataset_path
   end

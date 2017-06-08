@@ -7,6 +7,7 @@ class Facility::Apis::TempFilesController < ApplicationController
   model Facility::TempFile
 
   private
+
   def fix_params
     { cur_user: @cur_user, state: "public" }
   end

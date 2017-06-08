@@ -15,6 +15,7 @@ module Opendata::Addon::RdfStore::Model
   end
 
   private
+
   def save_rdf_graph
     if format.casecmp("TTL") == 0
       remove_rdf_graph

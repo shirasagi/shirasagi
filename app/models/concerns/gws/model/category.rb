@@ -62,6 +62,7 @@ module Gws::Model::Category
   end
 
   private
+
   def color_required?
     true
   end

@@ -7,6 +7,7 @@ module SS::Fields::Normalizer
   end
 
   private
+
   def normalize_fields
     self.class.fields.each do |name, field_def|
       next if name[0] == '_'

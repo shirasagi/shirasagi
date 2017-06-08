@@ -10,6 +10,7 @@ module Jmaxml::Renderer::ControlHandler
   end
 
   private
+
   def template_variable_handler_title(*_)
     control_title
   end

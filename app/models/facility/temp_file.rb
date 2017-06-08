@@ -7,6 +7,7 @@ class Facility::TempFile
   validate :validate_image, if: ->{ in_file.present? }
 
   private
+
   def validate_image
     errors.add :in_file, :invalid unless image?
   end

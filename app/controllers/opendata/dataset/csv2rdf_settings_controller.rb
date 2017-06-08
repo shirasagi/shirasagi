@@ -16,6 +16,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
   before_action :set_rdf_class
 
   private
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_dataset: @cur_dataset, cur_resource: @cur_resource }
   end
@@ -110,6 +111,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
   end
 
   public
+
   def header_size
     render_with(file: "wizards", action: :rdf_class)
   end

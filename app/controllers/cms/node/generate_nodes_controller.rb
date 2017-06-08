@@ -5,6 +5,7 @@ class Cms::Node::GenerateNodesController < ApplicationController
   navi_view "cms/node/main/navi"
 
   private
+
   def job_class
     Cms::Node::GenerateJob
   end

@@ -16,6 +16,7 @@ module Gws::BaseFilter
   end
 
   private
+
   def set_gws_assets
     SS.config.gws.stylesheets.each { |m| stylesheet(m) }
     SS.config.gws.javascripts.each { |m| javascript(m) }

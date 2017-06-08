@@ -59,6 +59,7 @@ class Chorg::Changeset
   alias delete_description before_unify
 
   private
+
   def set_revision_id
     self.revision_id ||= @cur_revision.id
   end
