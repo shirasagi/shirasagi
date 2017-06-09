@@ -7,6 +7,16 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :download do
+    get :download, :on => :collection
+    post :download, :on => :collection
+  end
+
+  concern :import do
+    get :import, :on => :collection
+    post :import, :on => :collection
+  end
+
   concern :role do
     get "role/edit" => "groups#role_edit", :on => :member
     put "role" => "groups#role_update", :on => :member
@@ -30,6 +40,7 @@ SS::Application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
+    resources :postal_codes, concerns: [:deletion, :download, :import]
 
     namespace "apis" do
       get "groups" => "groups#index"

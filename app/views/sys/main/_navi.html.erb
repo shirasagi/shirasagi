@@ -33,4 +33,7 @@
   <% if SS::User.allowed?(:edit, @cur_user) %>
     <h3><%= link_to t("job.main"), job_sys_main_path %></h3>
   <% end %>
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to t("cms.postal_code"), sys_postal_codes_path %></h3>
+  <% end %>
 </nav>
