@@ -1,6 +1,6 @@
 require 'csv'
 
-class Cms::PostalCode::ImportJob < Cms::PostalCode::ImportBase
+class Sys::PostalCode::ImportJob < Sys::PostalCode::ImportBase
   def import_file
     open_csv_table(headers: false, encoding: 'SJIS:UTF-8') do |table|
       table.each_with_index do |row, i|
@@ -20,7 +20,7 @@ class Cms::PostalCode::ImportJob < Cms::PostalCode::ImportBase
     town = row[6]
     town_kana = row[7]
 
-    item = Cms::PostalCode.where(code: postal_code).first_or_create
+    item = Sys::PostalCode.where(code: postal_code).first_or_create
     item.prefecture = pref
     item.prefecture_kana = pref_kana
     item.prefecture_code = pref_code

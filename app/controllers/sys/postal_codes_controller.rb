@@ -8,7 +8,7 @@ class Sys::PostalCodesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("cms.postal_code"), action: :index]
+    @crumbs << [t("sys.postal_code"), action: :index]
   end
 
   public
@@ -39,9 +39,9 @@ class Sys::PostalCodesController < ApplicationController
     temp_file.save!
 
     if safe_params[:in_official_csv] == '1'
-      job_class = Cms::PostalCode::OfficialCsvImportJob
+      job_class = Sys::PostalCode::OfficialCsvImportJob
     else
-      job_class = Cms::PostalCode::ImportJob
+      job_class = Sys::PostalCode::ImportJob
     end
     job_class.bind(site_id: @cur_site, user_id: @cur_user).perform_later(temp_file.id)
 

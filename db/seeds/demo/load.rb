@@ -1336,4 +1336,4 @@ save_source_cleaner_template name: "style", target_type: "attribute", target_val
 
 ## -------------------------------------
 puts "# postal code"
-Cms::PostalCode::OfficialCsvImportJob.import_from_zip("postal_code/13tokyo.zip")
+Sys::PostalCode::OfficialCsvImportJob.import_from_zip("postal_code/13tokyo.zip")
