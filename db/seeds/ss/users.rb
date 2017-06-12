@@ -1,5 +1,5 @@
 # --------------------------------------
-# Seed
+# Users Seed
 
 def save_group(data)
   if item = SS::Group.where(name: data[:name]).first
@@ -64,3 +64,30 @@ adm.add_to_set group_ids: [g11.id]
 u01.add_to_set group_ids: [g11.id]
 u02.add_to_set group_ids: [g21.id]
 u03.add_to_set group_ids: [g12.id, g22.id]
+
+## -------------------------------------
+# Gws Roles
+
+def save_gws_role(data)
+  if item = Gws::Role.where(name: data[:name]).first
+    puts "exists #{data[:name]}"
+    item.update data
+    return item
+  end
+
+  puts "create #{data[:name]}"
+  item = Gws::Role.new(data)
+  item.save
+  item
+end
+
+puts "# gws roles"
+user_permissions = Gws::Role.permission_names.select {|n| n =~ /_private_/ }
+r01 = save_gws_role name: I18n.t('gws.roles.admin'), site_id: g00.id, permissions: Gws::Role.permission_names, permission_level: 3
+r02 = save_gws_role name: I18n.t('gws.roles.user'), site_id: g00.id, permissions: user_permissions, permission_level: 1
+
+Gws::User.find_by(uid: "sys").add_to_set(gws_role_ids: r01.id)
+Gws::User.find_by(uid: "admin").add_to_set(gws_role_ids: r01.id)
+Gws::User.find_by(uid: "user1").add_to_set(gws_role_ids: r02.id)
+Gws::User.find_by(uid: "user2").add_to_set(gws_role_ids: r02.id)
+Gws::User.find_by(uid: "user3").add_to_set(gws_role_ids: r02.id)
