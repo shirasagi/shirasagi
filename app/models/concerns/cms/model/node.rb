@@ -187,10 +187,7 @@ module Cms::Model::Node
     %w(nodes pages parts layouts).each do |name|
       send(name).where(filename: /^#{src}\//).each do |item|
         dst_filename = item.filename.sub(/^#{src}\//, "#{dst}\/")
-        item.set(
-          filename: dst_filename,
-          depth: dst_filename.scan("/").size + 1
-        )
+        item.set(filename: dst_filename, depth: dst_filename.scan("/").size + 1)
       end
     end
   end

@@ -76,21 +76,44 @@ module Cms::PublicFilter::Layout
       response.body = %(#{notice_html}#{response.body})
     end
 
-    html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
-    html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
-
-    html.gsub!('#{page_released}', date_convert(ERB::Util.html_escape(@cur_item.released)))
-    html.gsub!('#{page_released.default}', date_convert(ERB::Util.html_escape(@cur_item.released), :default))
-    html.gsub!('#{page_released.iso}', date_convert(ERB::Util.html_escape(@cur_item.released), :iso))
-    html.gsub!('#{page_released.long}', date_convert(ERB::Util.html_escape(@cur_item.released), :long))
-    html.gsub!('#{page_released.short}', date_convert(ERB::Util.html_escape(@cur_item.released), :short))
-    html.gsub!('#{page_updated}', date_convert(ERB::Util.html_escape(@cur_item.updated)))
-    html.gsub!('#{page_updated.default}', date_convert(ERB::Util.html_escape(@cur_item.updated), :default))
-    html.gsub!('#{page_updated.iso}', date_convert(ERB::Util.html_escape(@cur_item.updated), :iso))
-    html.gsub!('#{page_updated.long}', date_convert(ERB::Util.html_escape(@cur_item.updated), :long))
-    html.gsub!('#{page_updated.short}', date_convert(ERB::Util.html_escape(@cur_item.updated), :short))
-
+    html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
+    html
+  end
+
+  def render_template_variables(html)
+    html.gsub!('#{page_name}') do
+      ERB::Util.html_escape(@cur_item.name)
+    end
+
+    html.gsub!('#{parent_name}') do
+      ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
+    end
+
+    date = nil
+    html.gsub!(/#\{page_released(|\.default|\.iso|\.long|\.short)\}/) do
+      date ||= ERB::Util.html_escape(@cur_item.released)
+      case $1
+      when '.default' then date_convert(date, :default)
+      when '.iso' then date_convert(date, :iso)
+      when '.long' then date_convert(date, :long)
+      when '.short' then date_convert(date, :short)
+      else date_convert(date)
+      end
+    end
+
+    date = nil
+    html.gsub!(/#\{page_updated(|\.default|\.iso|\.long|\.short)\}/) do
+      date ||= ERB::Util.html_escape(@cur_item.updated)
+      case $1
+      when '.default' then date_convert(date, :default)
+      when '.iso' then date_convert(date, :iso)
+      when '.long' then date_convert(date, :long)
+      when '.short' then date_convert(date, :short)
+      else date_convert(date)
+      end
+    end
+
     html
   end
 

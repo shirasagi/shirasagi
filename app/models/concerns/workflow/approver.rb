@@ -35,15 +35,10 @@ module Workflow::Approver
   end
 
   def status
-    if state == "public" || state == "ready"
-      state
-    elsif workflow_state == "cancelled"
-      state
-    elsif workflow_state.present?
-      workflow_state
-    else
-      state
-    end
+    return state if state == "public" || state == "ready"
+    return state if workflow_state == "cancelled"
+    return workflow_state if workflow_state.present?
+    state
   end
 
   def workflow_user
