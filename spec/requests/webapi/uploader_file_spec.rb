@@ -63,7 +63,8 @@ describe "webapi", dbscope: :example, type: :request do
         it "400" do
           params = {}
           post upload_file_path, params
-          expect(response.status).to eq 400
+          expect(response.status).to eq 422
+          expect(response.body).to include I18n.t('errors.messages.set_filename')
         end
 
         it "422" do
@@ -125,7 +126,8 @@ describe "webapi", dbscope: :example, type: :request do
       it "400" do
         params = {}
         post upload_file_path, params
-        expect(response.status).to eq 400
+        expect(response.status).to eq 422
+        expect(response.body).to include I18n.t('errors.messages.set_filename')
       end
 
       it "404" do
