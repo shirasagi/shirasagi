@@ -1,7 +1,7 @@
 class Uploader::File
   include ActiveModel::Model
 
-  attr_accessor :path, :binary, :site
+  attr_accessor :path, :binary, :site, :state
   attr_reader :saved_path, :is_dir
 
   validates :path, presence: true
@@ -12,10 +12,16 @@ class Uploader::File
   validate :validate_scss
   validate :validate_coffee
 
+  def state_options
+    %w(disabled enabled).map do |w|
+      [ I18n.t("ss.options.state.#{w}"), w ]
+    end
+  end
+
   def save
     return false unless valid?
     begin
-      if saved_path && path != saved_path #persisted AND path chenged
+      if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
         Fs.mv(saved_path, path)
       else
@@ -29,6 +35,11 @@ class Uploader::File
       errors.add :path, ":" + e.message
       return false
     end
+  end
+
+  def overwrite
+    @state = "enabled"
+    save
   end
 
   def destroy
@@ -134,6 +145,7 @@ class Uploader::File
   end
 
   def validate_exists
+    return true if @state == "enabled"
     errors.add :filename, :taken if Fs.exists? path
   end
 

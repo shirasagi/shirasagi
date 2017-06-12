@@ -25,6 +25,7 @@ ja:
         size: ファイルサイズ
         text: 内容
         image: 画像
+        state: 上書き保存
 
   tooltip:
     cms/addon/file:

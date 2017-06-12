@@ -47,7 +47,13 @@ class Uploader::FilesController < ApplicationController
       path = ::File.join(@cur_site.path, @item.filename, file.original_filename)
       item = @model.new(path: path, binary: file.read, site: @cur_site)
 
-      if !item.save
+      if params[:item][:state] != "enabled"
+        if !item.save
+          item.errors.each do |n, e|
+            @item.errors.add :base, "#{item.name} - #{@model.t(n)}#{e}"
+          end
+        end
+      elsif !item.overwrite
         item.errors.each do |n, e|
           @item.errors.add :base, "#{item.name} - #{@model.t(n)}#{e}"
         end
@@ -125,7 +131,12 @@ class Uploader::FilesController < ApplicationController
     elsif @files
       create_files
     else
-      raise "400"
+      @item.errors.add :base, :set_filename
+      if @directory
+        render_create @item.errors.empty?, location: location, render: { file: :new_directory }
+      else
+        render_create @item.errors.empty?, location: location, render: { file: :new_files }
+      end
     end
   end
 

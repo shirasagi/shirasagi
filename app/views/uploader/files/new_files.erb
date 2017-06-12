@@ -5,9 +5,10 @@
 <div class="addon-view">
   <dl class="see">
     <dt><%= t('uploader.new_files')  %></dt>
-    <dd>
-      <%= f.file_field :files, multiple: :multiple %>
-    </dd>
+    <dd><%= f.file_field :files, multiple: :multiple %></dd>
+
+    <dt><%= @model.t :state %></dt>
+    <dd><%= f.select :state, @item.state_options %></dd>
   </dl>
 </div>
 <footer class="send">
