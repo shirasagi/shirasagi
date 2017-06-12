@@ -122,8 +122,8 @@ module Cms::PublicFilter::Layout
 
     # TODO: deprecated </ />
     parts = {}
-    html = html.gsub(/(<\/|\{\{) part ".+?" (\/>|\}\})/) do |m|
-      path = m.sub(/(?:<\/|\{\{) part "(.+)?" (?:\/>|\}\})/, '\\1') + ".part.html"
+    html = html.gsub(/(<\/|\{\{) part "(.*?)" (\/>|\}\})/) do
+      path = "#{$2}.part.html"
       path = path[0] == "/" ? path.sub(/^\//, "") : @cur_layout.dirname(path)
       parts[path] = nil
       "{{ part \"#{path}\" }}"
@@ -133,8 +133,8 @@ module Cms::PublicFilter::Layout
     criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
     criteria.each { |part| parts[part.filename] = part }
 
-    return html.gsub(/\{\{ part ".+?" \}\}/) do |m|
-      path = m.sub(/(?:\{\{) part "(.+)?" (?:\}\})/, '\\1')
+    return html.gsub(/\{\{ part "(.*?)" \}\}/) do
+      path = $1
       part = parts[path]
       part ? render_layout_part(part) : ''
     end
