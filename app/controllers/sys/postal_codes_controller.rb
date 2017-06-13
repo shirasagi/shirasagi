@@ -23,9 +23,9 @@ class Sys::PostalCodesController < ApplicationController
   end
 
   def download
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @model.allowed?(:read, @cur_user)
 
-    csv = @model.allow(:read, @cur_user, site: @cur_site).order(code: 1, id: 1).to_csv
+    csv = @model.allow(:read, @cur_user).order(code: 1, id: 1).to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "postal_code_#{Time.zone.now.to_i}.csv"
   end
 
@@ -43,7 +43,7 @@ class Sys::PostalCodesController < ApplicationController
     else
       job_class = Sys::PostalCode::ImportJob
     end
-    job_class.bind(site_id: @cur_site, user_id: @cur_user).perform_later(temp_file.id)
+    job_class.bind(user_id: @cur_user).perform_later(temp_file.id)
 
     redirect_to({ action: :index }, { notice: I18n.t('cms.messages.import') })
   end
