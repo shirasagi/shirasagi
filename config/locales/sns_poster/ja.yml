@@ -1,12 +1,4 @@
 ja:
-  views:
-    options:
-      sns_poster:
-        expired: 無効
-        active: 有効
-      node_auto_post_setting:
-        expired: 無効
-        active: 有効
   tooltip:
     cms/addon/sns_poster:
       facebook_auto_post:

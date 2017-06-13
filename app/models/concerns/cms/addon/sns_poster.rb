@@ -31,31 +31,19 @@ module Cms::Addon
     end
 
     def facebook_auto_post_options
-      [
-          [I18n.t('ss.options.state.expired'), 'expired'],
-          [I18n.t('ss.options.state.active'), 'active'],
-      ]
+      %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
     end
 
     def twitter_auto_post_options
-      [
-          [I18n.t('ss.options.state.expired'), 'expired'],
-          [I18n.t('ss.options.state.active'), 'active'],
-      ]
+      %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
     end
 
     def sns_auto_delete_options
-      [
-          [I18n.t('ss.options.state.expired'), 'expired'],
-          [I18n.t('ss.options.state.active'), 'active'],
-      ]
+      %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
     end
 
     def edit_auto_post_options
-      [
-          [I18n.t('ss.options.sns_poster.expired'), 'expired'],
-          [I18n.t('ss.options.sns_poster.active'), 'active'],
-      ]
+      %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
     end
 
     def message_format(html)
@@ -91,26 +79,16 @@ module Cms::Addon
 
     def twitter_post_enabled?
       return false unless use_twitter_post?
-
-      if edit_auto_post_enabled?
-        true
-      elsif twitter_posted.present?
-        false
-      else
-        true
-      end
+      return true if edit_auto_post_enabled?
+      return false if twitter_posted.present?
+      true
     end
 
     def facebook_post_enabled?
       return false unless use_facebook_post?
-
-      if edit_auto_post_enabled?
-        true
-      elsif facebook_posted.present?
-        false
-      else
-        true
-      end
+      return true if edit_auto_post_enabled?
+      return false if facebook_posted.present?
+      true
     end
 
     def facebook_id_separator(facebook_param)
@@ -132,14 +110,10 @@ module Cms::Addon
       return if @posted_sns
 
       # tweet
-      if twitter_post_enabled?
-        post_to_twitter
-      end
+      post_to_twitter if twitter_post_enabled?
 
       # facebook
-      if facebook_post_enabled?
-        post_to_facebook
-      end
+      post_to_facebook if facebook_post_enabled?
 
       @posted_sns = true
     end
