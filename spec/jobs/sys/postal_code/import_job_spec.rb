@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sys::PostalCode::ImportJob, type: :job, dbscope: :example do
-  context do
+  context 'When import_from_zip' do
     before do
       described_class.import_from_zip("#{::Rails.root}/spec/fixtures/sys/postal_code.zip")
       @log = Job::Log.first
