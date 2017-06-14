@@ -47,13 +47,7 @@ class Uploader::FilesController < ApplicationController
       path = ::File.join(@cur_site.path, @item.filename, file.original_filename)
       item = @model.new(path: path, binary: file.read, site: @cur_site)
 
-      if params[:item][:state] != "enabled"
-        if !item.save
-          item.errors.each do |n, e|
-            @item.errors.add :base, "#{item.name} - #{@model.t(n)}#{e}"
-          end
-        end
-      elsif !item.overwrite
+      if !item.save
         item.errors.each do |n, e|
           @item.errors.add :base, "#{item.name} - #{@model.t(n)}#{e}"
         end
@@ -88,7 +82,7 @@ class Uploader::FilesController < ApplicationController
   def file
     action = params[:do] || "index"
     raise "404" unless @item
-    raise "404" unless %w(index new_directory new_files show edit delete).index(action)
+    raise "404" unless %w(index new_directory new_files show edit delete check).index(action)
     send action
   end
 
@@ -133,9 +127,9 @@ class Uploader::FilesController < ApplicationController
     else
       @item.errors.add :base, :set_filename
       if @directory
-        render_create @item.errors.empty?, location: location, render: { file: :new_directory }
+        render_create false, location: location, render: { file: :new_directory }
       else
-        render_create @item.errors.empty?, location: location, render: { file: :new_files }
+        render_create false, location: location, render: { file: :new_files }
       end
     end
   end
@@ -155,7 +149,7 @@ class Uploader::FilesController < ApplicationController
 
     file = @files.find(&:present?) rescue nil
     file = @file if @file.present?
-    Fs.binwrite @item.saved_path, file.read if result && file
+    Fs.binwrite @item.saved_path, file.read if result && file && !@text
 
     location = "#{uploader_files_path}/#{@item.filename}?do=edit"
     render_update result, location: location
@@ -178,5 +172,16 @@ class Uploader::FilesController < ApplicationController
       item.destroy
     end
     render_destroy true, location: "#{uploader_files_path}/#{@item.filename}"
+  end
+
+  def check
+    dirname = @cur_node.path.gsub(@item.dirname, @item.filename)
+    item_files = params[:item_files]
+    basename = item_files.split('\\')[-1]
+    if File.exists?("#{dirname}/#{basename}")
+      render json: { message: I18n.t('errors.messages.overwrite') }
+      return
+    end
+    render json: { message: nil }
   end
 end

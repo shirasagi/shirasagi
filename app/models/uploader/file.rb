@@ -1,22 +1,15 @@
 class Uploader::File
   include ActiveModel::Model
 
-  attr_accessor :path, :binary, :site, :state
+  attr_accessor :path, :binary, :site
   attr_reader :saved_path, :is_dir
 
   validates :path, presence: true
   validates :filename, length: { maximum: 2000 }
 
   validate :validate_filename
-  validate :validate_exists, if: :path_chenged?
   validate :validate_scss
   validate :validate_coffee
-
-  def state_options
-    %w(disabled enabled).map do |w|
-      [ I18n.t("ss.options.state.#{w}"), w ]
-    end
-  end
 
   def save
     return false unless valid?
@@ -35,11 +28,6 @@ class Uploader::File
       errors.add :path, ":" + e.message
       return false
     end
-  end
-
-  def overwrite
-    @state = "enabled"
-    save
   end
 
   def destroy
@@ -142,11 +130,6 @@ class Uploader::File
     elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
       errors.add :path, :invalid_filename
     end
-  end
-
-  def validate_exists
-    return true if @state == "enabled"
-    errors.add :filename, :taken if Fs.exists? path
   end
 
   def path_chenged?

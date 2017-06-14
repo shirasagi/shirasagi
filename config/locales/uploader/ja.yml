@@ -6,6 +6,10 @@ ja:
     links:
       new_directory: 新規フォルダー
 
+  errors:
+    messages:
+      overwrite: ファイルは上書き保存されます。
+
   modules:
     uploader: アップローダー
 

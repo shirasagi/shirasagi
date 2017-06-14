@@ -16,6 +16,9 @@
 
       <% if @item.text? %>
       <% begin %>
+      <dt><%= t('uploader.new_files')  %></dt>
+      <dd><%= f.file_field :files, multiple: :multiple %></dd>
+
       <dt class="wide"><%= @model.t :text %></dt>
       <dd class="wide"><%= f.text_area :text, style: "height: 400px;"  %></dd>
       <% rescue => e %>Error (<%= e %>)<% end %>

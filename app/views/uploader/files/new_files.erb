@@ -1,4 +1,5 @@
 <%= jquery do %> SS.confirmUnloading(); <% end %>
+<%= jquery do %> SS.fileCheck(); <% end %>
 
 <%= form_for :item, url: { action: :create, filename: @item.filename }, html: { multipart: true } do |f| %>
 <%= error_messages_for :item %>
@@ -7,8 +8,7 @@
     <dt><%= t('uploader.new_files')  %></dt>
     <dd><%= f.file_field :files, multiple: :multiple %></dd>
 
-    <dt><%= @model.t :state %></dt>
-    <dd><%= f.select :state, @item.state_options %></dd>
+    <dd class="alert-message" style="display: none"></dd>
   </dl>
 </div>
 <footer class="send">

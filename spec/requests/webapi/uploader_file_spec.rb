@@ -87,7 +87,7 @@ describe "webapi", dbscope: :example, type: :request do
           post upload_file_path, correct_upload_file_params
           expect(response.status).to eq 201
           post upload_file_path, correct_upload_file_params
-          expect(response.status).to eq 422
+          expect(response.status).to eq 201
           post upload_file_path, invalid_upload_file_params
           expect(response.status).to eq 422
         end
