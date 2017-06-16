@@ -79,6 +79,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     item.name = value(row, :name)
     item.index_name = value(row, :index_name)
     item.layout = layout
+    item.body_layout_id = value(row, :body_layout_id)
     item.order = value(row, :order)
 
     # meta
@@ -88,6 +89,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
 
     # body
     item.html = value(row, :html)
+    item.body_parts = value(row, :body_part).split("\t")
 
     # category
     category_name_tree = ary_value(row, :categories)

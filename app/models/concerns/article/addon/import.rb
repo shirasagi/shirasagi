@@ -25,9 +25,9 @@ module Article::Addon
     module ClassMethods
       def csv_headers
         %w(
-          filename name index_name layout order
+          filename name index_name layout body_layout_id order
           keywords description summary_html
-          html
+          html body_part
           categories
           event_name event_dates
           related_pages
@@ -48,7 +48,7 @@ module Article::Addon
         end
       end
 
-      def csv_line(item)
+      def csv_line(item) # rubocop:disable Metrics/AbcSize
         line = []
 
         # basic
@@ -56,6 +56,7 @@ module Article::Addon
         line << item.name
         line << item.index_name
         line << Cms::Layout.where(_id: item.layout_id).map(&:name).first
+        line << item.body_layout_id
         line << item.order
 
         # meta
@@ -65,6 +66,7 @@ module Article::Addon
 
         # body
         line << item.html
+        line << item.body_parts.join("\t")
 
         # category
         line << item.category_name_tree.join("\n")

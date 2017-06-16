@@ -391,6 +391,7 @@ ja:
         route: ページ属性
         summary_html: Summary
         html: 本文
+        body_part: 本文パーツ
         files: ファイル
         category_ids: カテゴリー
         categories: カテゴリー
