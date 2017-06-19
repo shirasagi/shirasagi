@@ -48,58 +48,60 @@ module Article::Addon
         end
       end
 
-      def csv_line(item) # rubocop:disable Metrics/AbcSize
+      def csv_line(item)
         line = []
 
-        # basic
-        line << item.basename
-        line << item.name
-        line << item.index_name
-        line << Cms::Layout.where(_id: item.layout_id).map(&:name).first
-        line << item.body_layout_id
-        line << item.order
+        line.push(
+          # basic
+          item.basename,
+          item.name,
+          item.index_name,
+          Cms::Layout.where(_id: item.layout_id).map(&:name).first,
+          item.body_layout_id,
+          item.order,
 
-        # meta
-        line << item.keywords
-        line << item.description
-        line << item.summary_html
+          # meta
+          item.keywords,
+          item.description,
+          item.summary_html,
 
-        # body
-        line << item.html
-        line << item.body_parts.join("\t")
+          # body
+          item.html,
+          item.body_parts.join("\t"),
 
-        # category
-        line << item.category_name_tree.join("\n")
+          # category
+          item.category_name_tree.join("\n"),
 
-        # event
-        line << item.event_name
-        line << item.event_dates
+          # event
+          item.event_name,
+          item.event_dates,
 
-        # related pages
-        line << item.related_pages.pluck(:filename).join("\n")
+          # related pages
+          item.related_pages.pluck(:filename).join("\n"),
 
-        # crumb
-        line << item.parent_crumb_urls
+          # crumb
+          item.parent_crumb_urls,
 
-        # contact
-        line << item.label(:contact_state)
-        line << item.contact_group.try(:name)
-        line << item.contact_charge
-        line << item.contact_tel
-        line << item.contact_fax
-        line << item.contact_email
+          # contact
+          item.label(:contact_state),
+          item.contact_group.try(:name),
+          item.contact_charge,
+          item.contact_tel,
+          item.contact_fax,
+          item.contact_email,
 
-        # released
-        line << item.released.try(:strftime, "%Y/%m/%d %H:%M")
-        line << item.release_date.try(:strftime, "%Y/%m/%d %H:%M")
-        line << item.close_date.try(:strftime, "%Y/%m/%d %H:%M")
+          # released
+          item.released.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.release_date.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.close_date.try(:strftime, "%Y/%m/%d %H:%M"),
 
-        # groups
-        line << item.groups.pluck(:name).join("\n")
-        line << item.permission_level
+          # groups
+          item.groups.pluck(:name).join("\n"),
+          item.permission_level,
 
-        # state
-        line << item.label(:state)
+          # state
+          item.label(:state)
+        )
 
         line
       end
