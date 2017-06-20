@@ -12,7 +12,7 @@ class Cms::Node::ImportController < ApplicationController
 
     @item = @model.new get_params
     render_create @item.save_with_import, location: { action: :import },
-      render: { file: :import }, notice: t("ss.notice.import")
+      render: { file: :import }, notice: t("ss.notice.started_import")
   end
 
   private

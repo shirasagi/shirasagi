@@ -80,8 +80,6 @@ ja:
       check_contains_urls: このページへのリンクを確認する。
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
-    messages:
-      import: インポートを開始しました
     apis:
       categories:
         index: カテゴリーを選択する
