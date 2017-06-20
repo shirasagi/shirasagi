@@ -9,8 +9,8 @@ class @Event_Calendar
         cache: false,
         success: (res, status) ->
           html = "<div>" + res + "</div>"
-          $(".event-calendar").html($(html).find(".calendar-nav"))
-          $(".event-calendar").append($(html).find(".calendar"))
+          $(".event-calendar").html($(html).find(".event-calendar .calendar-nav"))
+          $(".event-calendar").append($(html).find(".event-calendar .calendar"))
           $(".calendar-nav a.paginate").on 'click', ->
             paginate(this)
             return false
