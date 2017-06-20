@@ -45,6 +45,6 @@ class Sys::PostalCodesController < ApplicationController
     end
     job_class.bind(user_id: @cur_user).perform_later(temp_file.id)
 
-    redirect_to({ action: :index }, { notice: I18n.t('sys.messages.import') })
+    redirect_to({ action: :index }, { notice: I18n.t('ss.notice.started_import') })
   end
 end

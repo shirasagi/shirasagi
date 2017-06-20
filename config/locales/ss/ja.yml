@@ -110,6 +110,7 @@ ja:
       saved: 保存しました。
       deleted: 削除しました。
       import: インポートを開始しました。
+      started_import: インポートを開始しました。
       sent: 送信しました。
       posted: 投稿しました。
     warning:

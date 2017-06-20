@@ -67,7 +67,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
       it { expect(response).to redirect_to sys_postal_codes_path }
       it do
         get sys_postal_codes_path
-        expect(response.body).to include I18n.t("cms.messages.import")
+        expect(response.body).to include I18n.t("ss.notice.started_import")
       end
     end
     context 'When item[:in_official_csv] is 1' do
@@ -82,7 +82,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
       it { expect(response).to redirect_to sys_postal_codes_path }
       it do
         get sys_postal_codes_path
-        expect(response.body).to include I18n.t("cms.messages.import")
+        expect(response.body).to include I18n.t("ss.notice.started_import")
       end
     end
   end

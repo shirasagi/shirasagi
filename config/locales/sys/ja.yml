@@ -45,8 +45,6 @@ ja:
     postal_code: 郵便番号
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
-    messages:
-      import: インポートを開始しました
 
   modules:
     sys: システム

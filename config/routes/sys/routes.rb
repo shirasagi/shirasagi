@@ -40,7 +40,7 @@ SS::Application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
-    resources :postal_codes, expect: :update, concerns: [:deletion, :download, :import]
+    resources :postal_codes, concerns: [:deletion, :download, :import]
 
     namespace "apis" do
       get "groups" => "groups#index"
