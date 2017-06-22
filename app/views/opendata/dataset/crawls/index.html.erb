@@ -18,7 +18,7 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= tryb { item[:original_updated].strftime("%Y/%m/%d %H:%M") } %></span>
-  <span class="original-url"><%= item[:original_url] %></span>
+  <span class="original-url"><%= URI.unescape(item[:original_url]).truncate(60) %></span>
   <span class="state"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></span>
   <span class="crawl-update"><%= t "opendata.crawl_update.#{item[:crawl_update]}" %></span>
 <% end %>
