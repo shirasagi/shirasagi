@@ -223,7 +223,7 @@ class @SS
     $('#item_files').change ->
       form = $(this).val()
       unless form
-        $(".alert-message").hide()
+        $(".js-uploader-alert-message").hide()
         return
       uri = location.pathname.split("/")
       $.ajax
@@ -235,10 +235,10 @@ class @SS
           item_files: form
         success: (data) ->
           if data["message"]
-            $(".alert-message").html(data["message"])
-            $(".alert-message").show()
+            $(".js-uploader-alert-message").html(data["message"])
+            $(".js-uploader-alert-message").show()
           else
-            $(".alert-message").hide()
+            $(".js-uploader-alert-message").hide()
         error: (xhr, status) ->
           try
             errors = $.parseJSON(xhr.responseText)

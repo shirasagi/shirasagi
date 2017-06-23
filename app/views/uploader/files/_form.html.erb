@@ -11,7 +11,7 @@
       <dt><%= @model.t :image %></dt>
       <dd><%= f.file_field :files, multiple: :multiple %></dd>
 
-      <dd class="alert-message" style="display: none"></dd>
+      <dd class="js-uploader-alert-message" style="display: none"></dd>
 
       <dd><%= image_tag @item.link %></dd>
       <% end %>
@@ -21,7 +21,7 @@
       <dt><%= t('uploader.new_files')  %></dt>
       <dd><%= f.file_field :files, multiple: :multiple %></dd>
 
-      <dd class="alert-message" style="display: none"></dd>
+      <dd class="js-uploader-alert-message" style="display: none"></dd>
 
       <dt class="wide"><%= @model.t :text %></dt>
       <dd class="wide"><%= f.text_area :text, style: "height: 400px;"  %></dd>
