@@ -175,13 +175,18 @@ class Uploader::FilesController < ApplicationController
   end
 
   def check
-    dirname = @cur_node.path.gsub(@item.dirname, @item.filename)
+    message = ''
     item_files = params[:item_files]
-    basename = item_files.split('\\')[-1]
-    if File.exists?("#{dirname}/#{basename}")
-      render json: { message: I18n.t('errors.messages.overwrite') }
-      return
+    original_filename = item_files.split('\\')[-1]
+    path = ::File.join(@cur_site.path, @item.filename, original_filename)
+    extname = File.extname(original_filename)
+    type = (extname =~ /txt|css|scss|coffee|js|htm|html|php/)
+    if type && @item.image? || !type && @item.text?
+      message += "#{I18n.t('errors.messages.wrong_ext')}\n"
     end
-    render json: { message: nil }
+    if File.exists?(path) && @item.directory?
+      message += "#{I18n.t('errors.messages.overwrite')}\n"
+    end
+    render json: { message: message }
   end
 end
