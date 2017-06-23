@@ -76,10 +76,11 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   def set_page_attributes(row, item)
     # basic
     layout = Cms::Layout.site(site).where(name: value(row, :layout)).first
+    body_layout = Cms::BodyLayout.site(site).where(name: value(row, :body_layout_id)).map(&:_id).first
     item.name = value(row, :name)
     item.index_name = value(row, :index_name)
     item.layout = layout
-    item.body_layout_id = value(row, :body_layout_id)
+    item.body_layout_id = body_layout
     item.order = value(row, :order)
 
     # meta
@@ -89,7 +90,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
 
     # body
     item.html = value(row, :html)
-    item.body_parts = value(row, :body_part).split("\t")
+    item.body_parts = value(row, :body_part).split('&nbsp;').map{|i| i.gsub('& nbsp ;', '&nbsp;')}
 
     # category
     category_name_tree = ary_value(row, :categories)

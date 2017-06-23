@@ -57,7 +57,7 @@ module Article::Addon
           item.name,
           item.index_name,
           Cms::Layout.where(_id: item.layout_id).map(&:name).first,
-          item.body_layout_id,
+          Cms::BodyLayout.where(_id: item.body_layout_id).map(&:name).first,
           item.order,
 
           # meta
@@ -67,7 +67,7 @@ module Article::Addon
 
           # body
           item.html,
-          item.body_parts.join("\t"),
+          item.body_parts.map{|i| i.gsub('&nbsp;', '& nbsp ;')}.join('&nbsp;'),
 
           # category
           item.category_name_tree.join("\n"),
