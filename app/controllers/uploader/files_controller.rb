@@ -149,9 +149,11 @@ class Uploader::FilesController < ApplicationController
 
     file = @files.find(&:present?) rescue nil
     file = @file if @file.present?
-    if file.content_type != @item.content_type
-      @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
-      result = false
+    if file.present?
+      if file.content_type != @item.content_type
+        @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
+        result = false
+      end
     end
     Fs.binwrite @item.saved_path, file.read if result && file
 
