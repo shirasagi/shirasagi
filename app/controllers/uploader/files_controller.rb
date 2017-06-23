@@ -149,7 +149,11 @@ class Uploader::FilesController < ApplicationController
 
     file = @files.find(&:present?) rescue nil
     file = @file if @file.present?
-    Fs.binwrite @item.saved_path, file.read if result && file && !@text
+    if file.content_type != @item.content_type
+      @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
+      result = false
+    end
+    Fs.binwrite @item.saved_path, file.read if result && file
 
     location = "#{uploader_files_path}/#{@item.filename}?do=edit"
     render_update result, location: location
@@ -182,7 +186,7 @@ class Uploader::FilesController < ApplicationController
     extname = File.extname(original_filename)
     type = (extname =~ /txt|css|scss|coffee|js|htm|html|php/)
     if type && @item.image? || !type && @item.text?
-      message += "#{I18n.t('uploader.notice.wrong_ext')}\n"
+      message += "#{I18n.t('uploader.notice.invalid_ext')}\n"
     end
     if File.exists?(path) && @item.directory?
       message += "#{I18n.t('uploader.notice.overwrite')}\n"
