@@ -5,10 +5,9 @@ ja:
     new_files: アップロード
     links:
       new_directory: 新規フォルダー
-
-  errors:
-    messages:
+    notice:
       overwrite: ファイルは上書き保存されます。
+      wrong_ext: 拡張子が異なるため、上書き保存されません。
 
   modules:
     uploader: アップローダー

@@ -182,10 +182,10 @@ class Uploader::FilesController < ApplicationController
     extname = File.extname(original_filename)
     type = (extname =~ /txt|css|scss|coffee|js|htm|html|php/)
     if type && @item.image? || !type && @item.text?
-      message += "#{I18n.t('errors.messages.wrong_ext')}\n"
+      message += "#{I18n.t('uploader.notice.wrong_ext')}\n"
     end
     if File.exists?(path) && @item.directory?
-      message += "#{I18n.t('errors.messages.overwrite')}\n"
+      message += "#{I18n.t('uploader.notice.overwrite')}\n"
     end
     render json: { message: message }
   end
