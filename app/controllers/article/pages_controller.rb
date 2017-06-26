@@ -42,7 +42,7 @@ class Article::PagesController < ApplicationController
 
       # call job
       Article::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
-      flash.now[:notice] = I18n.t("ss.notice.import")
+      flash.now[:notice] = I18n.t("ss.notice.started_import")
     rescue => e
       @item.errors.add :base, e.to_s
     end

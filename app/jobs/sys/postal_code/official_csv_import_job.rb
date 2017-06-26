@@ -1,7 +1,7 @@
 require 'csv'
 require 'nkf'
 
-class Cms::PostalCode::OfficialCsvImportJob < Cms::PostalCode::ImportBase
+class Sys::PostalCode::OfficialCsvImportJob < Sys::PostalCode::ImportBase
   def import_file
     open_csv_table(headers: false, encoding: 'SJIS:UTF-8') do |table|
       table.each_with_index do |row, i|
@@ -21,7 +21,7 @@ class Cms::PostalCode::OfficialCsvImportJob < Cms::PostalCode::ImportBase
     city = row[7]
     town = row[8]
 
-    item = Cms::PostalCode.where(code: postal_code).first_or_create
+    item = Sys::PostalCode.where(code: postal_code).first_or_create
     item.prefecture = pref
     item.prefecture_kana = normalize_pref_kana(pref_kana)
     item.prefecture_code = pref_code
@@ -38,7 +38,7 @@ class Cms::PostalCode::OfficialCsvImportJob < Cms::PostalCode::ImportBase
   end
 
   def normalize_city(city)
-    city = city.sub(I18n.t('cms.postal_code_normalize_city'), "")
+    city = city.sub(I18n.t('sys.postal_code_normalize_city'), "")
     city = city.gsub(/（.+）/, "")
     city
   end

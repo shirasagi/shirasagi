@@ -108,8 +108,6 @@ SS::Application.routes.draw do
       get :search, on: :member
     end
 
-    resources :postal_codes, concerns: [:deletion, :download, :import]
-
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"

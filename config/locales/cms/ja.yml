@@ -18,7 +18,6 @@ ja:
     group: グループ
     import_node: フォルダー取り込み
     import_node_index: 取り込みフォルダー
-    import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
     import_page: 取り込みページ
     import_page_index: 取り込みページ
     important_notice: 重要なお知らせ
@@ -36,8 +35,6 @@ ja:
     page: 固定ページ
     page_search: ページ検索
     part: パーツ
-    postal_code: 郵便番号
-    postal_code_normalize_city: 以下に掲載がない場合
     preview: プレビュー
     preview_mobile_page: 携帯プレビュー
     preview_page: プレビュー
@@ -83,8 +80,6 @@ ja:
       check_contains_urls: このページへのリンクを確認する。
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
-    messages:
-      import: インポートを開始しました
     apis:
       categories:
         index: カテゴリーを選択する
@@ -366,7 +361,6 @@ ja:
       cms/file: 共有ファイル
       cms/notice: お知らせ
       cms/page_search: ページ検索
-      cms/postal_code: 郵便番号
       cms/task: タスク
       cms/import_page: 取り込みページ
       cms/word_dictionary: かな辞書
@@ -636,7 +630,6 @@ ja:
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       replace_word: 使用が好ましくない単語が含まれています。
       replace_word_validation: に使用が好ましくない単語が含まれています。
-      not_found_postal_code: 郵便番号が見つかりません
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -1321,7 +1314,5 @@ ja:
       cms/page/remove_job: ページ削除
       cms/page/update_job: ページ更新
       cms/check_links_job: リンクチェック
-      cms/postal_code/import_job: 郵便番号インポート
-      cms/postal_code/official_csv_import_job: 日本郵便CSVインポート
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み

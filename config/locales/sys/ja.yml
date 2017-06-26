@@ -42,6 +42,9 @@ ja:
         index: サイトを選択する
         search: サイトを検索
         select: サイトを設定する
+    postal_code: 郵便番号
+    postal_code_normalize_city: 以下に掲載がない場合
+    import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
 
   modules:
     sys: システム
@@ -58,6 +61,7 @@ ja:
     edit_sys_groups: グループの管理
     edit_sys_users: ユーザーの管理
     edit_sys_roles: 権限/ロールの管理
+    edit_sys_settings: システム設定の管理
 
   mongoid:
     models:
@@ -66,6 +70,7 @@ ja:
       sys/role: ロール
       sys/site_copy_task: サイト複製タスク
       sys/notice: システムのお知らせ
+      sys/postal_code: 郵便番号
     attributes:
       sys/notice:
         html: 本文
@@ -109,6 +114,10 @@ ja:
         target_host_domains: ドメイン
         source_site_id: 複製するサイト
         copy_contents: 複製する項目
+
+  errors:
+    messages:
+      not_found_postal_code: 郵便番号が見つかりません
 
   tooltip:
     sys/addon/role:
@@ -158,3 +167,5 @@ ja:
   job:
     models:
       sys/site_copy_job: サイト複製
+      sys/postal_code/import_job: 郵便番号インポート
+      sys/postal_code/official_csv_import_job: 日本郵便CSVインポート
