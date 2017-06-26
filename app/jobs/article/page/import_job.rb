@@ -90,7 +90,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
 
     # body
     item.html = value(row, :html)
-    item.body_parts = value(row, :body_part).split('&nbsp;').map{|i| i.gsub('& nbsp ;', '&nbsp;')}
+    item.body_parts = value(row, :body_part).split("\t").map{|i| i.gsub('    ', "\t")}
 
     # category
     category_name_tree = ary_value(row, :categories)

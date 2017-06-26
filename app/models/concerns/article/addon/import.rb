@@ -67,7 +67,7 @@ module Article::Addon
 
           # body
           item.html,
-          item.body_parts.map{|i| i.gsub('&nbsp;', '& nbsp ;')}.join('&nbsp;'),
+          item.body_parts.map{|i| i.gsub("\t", '    ')}.join("\t"),
 
           # category
           item.category_name_tree.join("\n"),
