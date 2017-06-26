@@ -115,7 +115,7 @@ describe "webapi", dbscope: :example, type: :request do
           :item => {
             :filename => "img/replace.png",
             :files => [
-              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/replace.png", nil, true)
+              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/replace.png", "image/png", true)
             ]
           }
         }
