@@ -12,7 +12,10 @@ module Cms::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(id name order ldap_dn contact_tel contact_fax contact_email activation_date expiration_date)
+        %w(
+          id name order ldap_dn contact_tel contact_fax contact_email contact_link_url
+          contact_link_name activation_date expiration_date
+        )
       end
 
       def to_csv
@@ -27,6 +30,8 @@ module Cms::Addon::Import
             line << item.contact_tel
             line << item.contact_fax
             line << item.contact_email
+            line << item.contact_link_url
+            line << item.contact_link_name
             line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
             line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
             data << line
@@ -70,6 +75,8 @@ module Cms::Addon::Import
       contact_tel    = row[t("contact_tel")].to_s.strip
       contact_fax    = row[t("contact_fax")].to_s.strip
       contact_email  = row[t("contact_email")].to_s.strip
+      contact_link_url = row[t("contact_link_url")].to_s.strip
+      contact_link_name = row[t("contact_link_name")].to_s.strip
       activation_date = row[t("activation_date")].to_s.strip
       expiration_date = row[t("expiration_date")].to_s.strip
 
@@ -95,6 +102,8 @@ module Cms::Addon::Import
       item.contact_tel     = contact_tel
       item.contact_fax     = contact_fax
       item.contact_email   = contact_email
+      item.contact_link_url = contact_link_url
+      item.contact_link_name = contact_link_name
       item.activation_date = activation_date
       item.expiration_date = expiration_date
 

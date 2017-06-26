@@ -119,6 +119,8 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     item.contact_tel = value(row, :contact_tel)
     item.contact_fax = value(row, :contact_fax)
     item.contact_email = value(row, :contact_email)
+    item.contact_link_url = value(row, :contact_link_url)
+    item.contact_link_name = value(row, :contact_link_name)
 
     # released
     item.released = value(row, :released)

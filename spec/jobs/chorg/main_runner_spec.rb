@@ -34,6 +34,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(Cms::Group.where(id: group.id).first.contact_email).to eq changeset.destinations.first["contact_email"]
         expect(Cms::Group.where(id: group.id).first.contact_tel).to eq changeset.destinations.first["contact_tel"]
         expect(Cms::Group.where(id: group.id).first.contact_fax).to eq changeset.destinations.first["contact_fax"]
+        expect(Cms::Group.where(id: group.id).first.contact_link_url).to eq changeset.destinations.first["contact_link_url"]
+        expect(Cms::Group.where(id: group.id).first.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
         # ldap_dn is expected not to be changed.
         expect(Cms::Group.where(id: group.id).first.ldap_dn).to eq group.ldap_dn
         # check page
@@ -45,6 +47,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq changeset.destinations.first["contact_email"]
         expect(page.contact_tel).to eq changeset.destinations.first["contact_tel"]
         expect(page.contact_fax).to eq changeset.destinations.first["contact_fax"]
+        expect(page.contact_link_url).to eq changeset.destinations.first["contact_link_url"]
+        expect(page.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
       end
     end
 
@@ -68,6 +72,8 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(Cms::Group.where(id: group.id).first.contact_email).to eq group.contact_email
           expect(Cms::Group.where(id: group.id).first.contact_tel).to eq group.contact_tel
           expect(Cms::Group.where(id: group.id).first.contact_fax).to eq group.contact_fax
+          expect(Cms::Group.where(id: group.id).first.contact_link_url).to eq group.contact_link_url
+          expect(Cms::Group.where(id: group.id).first.contact_link_name).to eq group.contact_link_name
           expect(Cms::Group.where(id: group.id).first.ldap_dn).to eq group.ldap_dn
           # check page
           save_filename = page.filename
@@ -78,6 +84,8 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page.contact_email).to eq group.contact_email
           expect(page.contact_tel).to eq group.contact_tel
           expect(page.contact_fax).to eq group.contact_fax
+          expect(page.contact_link_url).to eq group.contact_link_url
+          expect(page.contact_link_name).to eq group.contact_link_name
         end
       end
     end
@@ -119,6 +127,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq changeset.destinations.first["contact_email"]
         expect(page.contact_tel).to eq changeset.destinations.first["contact_tel"]
         expect(page.contact_fax).to eq changeset.destinations.first["contact_fax"]
+        expect(page.contact_link_url).to eq changeset.destinations.first["contact_link_url"]
+        expect(page.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
       end
     end
   end
@@ -154,6 +164,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq new_group.contact_email
         expect(page.contact_tel).to eq new_group.contact_tel
         expect(page.contact_fax).to eq new_group.contact_fax
+        expect(page.contact_link_url).to eq new_group.contact_link_url
+        expect(page.contact_link_name).to eq new_group.contact_link_name
 
         user1.reload
         expect(user1.group_ids).to eq [new_group.id]
@@ -182,6 +194,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(changeset.destinations[0]["contact_email"]).to eq group1.contact_email
         expect(changeset.destinations[0]["contact_tel"]).to eq group1.contact_tel
         expect(changeset.destinations[0]["contact_fax"]).to eq group1.contact_fax
+        expect(changeset.destinations[0]["contact_link_url"]).to eq group1.contact_link_url
+        expect(changeset.destinations[0]["contact_link_name"]).to eq group1.contact_link_name
         expect(page).not_to be_nil
         expect(page.contact_email).to eq "foobar02@example.jp"
         # execute
@@ -203,6 +217,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq "foobar02@example.jp"
         expect(page.contact_tel).to eq new_group.contact_tel
         expect(page.contact_fax).to eq new_group.contact_fax
+        expect(page.contact_link_url).to eq new_group.contact_link_url
+        expect(page.contact_link_name).to eq new_group.contact_link_name
 
         user1.reload
         expect(user1.group_ids).to eq [new_group.id]
@@ -244,6 +260,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq new_group1.contact_email
         expect(page.contact_tel).to eq new_group1.contact_tel
         expect(page.contact_fax).to eq new_group1.contact_fax
+        expect(page.contact_link_url).to eq new_group1.contact_link_url
+        expect(page.contact_link_name).to eq new_group1.contact_link_name
 
         user.reload
         expect(user.group_ids).to eq [ new_group1.id ]
@@ -283,6 +301,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq new_group1.contact_email
         expect(page.contact_tel).to eq new_group1.contact_tel
         expect(page.contact_fax).to eq new_group1.contact_fax
+        expect(page.contact_link_url).to eq new_group1.contact_link_url
+        expect(page.contact_link_name).to eq new_group1.contact_link_name
 
         user.reload
         expect(user.group_ids).to eq [ new_group1.id ]

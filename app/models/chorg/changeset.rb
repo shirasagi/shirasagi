@@ -14,7 +14,7 @@ class Chorg::Changeset
 
   attr_accessor :cur_revision, :cur_type
 
-  GROUP_ATTRIBUTES = %w(name order contact_tel contact_fax contact_email ldap_dn).freeze
+  GROUP_ATTRIBUTES = %w(name order contact_tel contact_fax contact_email contact_link_url contact_link_name ldap_dn).freeze
 
   seqid :id
   belongs_to :revision, class_name: "Chorg::Revision"

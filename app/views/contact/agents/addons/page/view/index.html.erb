@@ -25,5 +25,12 @@
         <dd><%= mail_to_entity @cur_page.contact_email %></dd>
       </dl>
     <% end %>
+    <% if @cur_page.contact_link_url.present? %>
+      <% link_name = @cur_page.contact_link_name || @cur_page.contact_link_url %>
+      <dl class="link">
+        <dt><%= "#{t("contact.view.link_url")}:" %></dt>
+        <dd><%= link_to link_name, @cur_page.contact_link_url %></dd>
+      </dl>
+    <% end %>
   </footer>
 <% end %>

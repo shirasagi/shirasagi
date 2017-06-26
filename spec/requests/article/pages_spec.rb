@@ -166,6 +166,8 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           contact_tel: 'test1_contact_tel',
           contact_fax: 'test1_contact_fax',
           contact_email: 'test1_contact_email',
+          contact_link_url: 'test1_contact_link_url',
+          contact_link_name: 'test1_contact_link_name',
           released: "2016/7/6 0:0:0",
           release_date: "2016/7/6 1:1:1",
           close_date: "2016/7/6 2:2:2",
@@ -197,6 +199,8 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           expect(body).to include "test1_contact_tel"
           expect(body).to include "test1_contact_fax"
           expect(body).to include "test1_contact_email"
+          expect(body).to include "test1_contact_link_url"
+          expect(body).to include "test1_contact_link_name"
           expect(body).to include "2016/07/06 00:00"
           expect(body).to include "2016/07/06 01:01"
           expect(body).to include "2016/07/06 02:02"

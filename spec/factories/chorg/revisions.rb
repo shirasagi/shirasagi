@@ -12,6 +12,8 @@ FactoryGirl.define do
     contact_email { "#{unique_id}@example.jp" }
     contact_tel "03-4389-8714"
     contact_fax "03-4389-8715"
+    contact_link_url "#{unique_id}@example.jp"
+    contact_link_name unique_id.to_s
     ldap_dn { "ou=group,dc=example,dc=jp" }
   end
 
@@ -29,6 +31,8 @@ FactoryGirl.define do
     contact_email { group.contact_email }
     contact_tel { group.contact_tel }
     contact_fax { group.contact_fax }
+    contact_link_url { group.contact_link_url }
+    contact_link_name { group.contact_link_name }
     state "public"
     order 0
     category_ids [ 83, 88, 128, 129, 135, 136 ]
