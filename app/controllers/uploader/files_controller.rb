@@ -150,9 +150,7 @@ class Uploader::FilesController < ApplicationController
     file = @files.find(&:present?) rescue nil
     file = @file if @file.present?
     if result && file
-      text = (File.extname(file.original_filename) =~ /txt|css|scss|coffee|js|htm|html|php/)
-      image = (file.content_type =~ /^image\//)
-      if text != @item.text? || image != @item.image?
+      if File.extname(file.original_filename) != @item.ext
         @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
         result = false
       else
@@ -186,11 +184,10 @@ class Uploader::FilesController < ApplicationController
   def check
     message = ''
     item_files = params[:item_files]
-    original_filename = item_files.split('\\')[-1]
+    original_filename = item_files.split('\\').last
     path = ::File.join(@cur_site.path, @item.filename, original_filename)
     extname = File.extname(original_filename)
-    type = (extname =~ /txt|css|scss|coffee|js|htm|html|php/)
-    if type && @item.image? || !type && @item.text?
+    if extname != @item.ext
       message += "#{I18n.t('uploader.notice.invalid_ext')}\n"
     end
     if File.exists?(path) && @item.directory?
