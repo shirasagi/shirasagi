@@ -38,7 +38,7 @@ class @Cms_Editor_CKEditor
     CKEDITOR.on 'dialogDefinition', (ev) ->
       name = ev.data.name
       def  = ev.data.definition
-      if name == 'table'
+      if name == 'table' || name == 'tableProperties'
         info = def.getContents('info')
         text = info.get('txtWidth')
         text['default'] = ""
