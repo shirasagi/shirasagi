@@ -76,7 +76,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   def set_page_attributes(row, item)
     # basic
     layout = Cms::Layout.site(site).where(name: value(row, :layout)).first
-    body_layout = Cms::BodyLayout.site(site).where(name: value(row, :body_layout_id)).map(&:_id).first
+    body_layout = Cms::BodyLayout.site(site).where(name: value(row, :body_layout_id)).pluck(:_id).first
     item.name = value(row, :name)
     item.index_name = value(row, :index_name)
     item.layout = layout
