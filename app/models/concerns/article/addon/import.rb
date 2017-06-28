@@ -49,9 +49,7 @@ module Article::Addon
       end
 
       def csv_line(item)
-        line = []
-
-        line.push(
+        [
           # basic
           item.basename,
           item.name,
@@ -101,9 +99,7 @@ module Article::Addon
 
           # state
           item.label(:state)
-        )
-
-        line
+        ]
       end
     end
   end
