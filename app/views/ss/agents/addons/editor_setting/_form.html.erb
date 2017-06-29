@@ -1,0 +1,7 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-approve-setting");
+<% end %>
+<dl class="see mod-ss-editor-setting">
+  <dt><%= @model.t :color_button %><%= @model.tt :color_button %></dt>
+  <dd><%= f.select :color_button, @item.color_button_options, include_blank: true %></dd>
+</dl>
