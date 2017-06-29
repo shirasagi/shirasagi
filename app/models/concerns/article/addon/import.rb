@@ -12,10 +12,10 @@ module Article::Addon
       id_list.each do |id|
         name_list = []
         filename_str = []
-        filename_array = Cms::Node.where(_id: id).map(&:filename).first.split(/\//)
+        filename_array = Cms::Node.where(_id: id).pluck(:filename).first.split(/\//)
         filename_array.each do |filename|
           filename_str << filename
-          name_list << Cms::Node.where(filename: filename_str.join("/")).map(&:name).first
+          name_list << Cms::Node.where(filename: filename_str.join("/")).pluck(:name).first
         end
         ct_list << name_list.join("/")
       end
@@ -54,8 +54,8 @@ module Article::Addon
           item.basename,
           item.name,
           item.index_name,
-          Cms::Layout.where(_id: item.layout_id).map(&:name).first,
-          Cms::BodyLayout.where(_id: item.body_layout_id).map(&:name).first,
+          Cms::Layout.where(_id: item.layout_id).pluck(:name).first,
+          Cms::BodyLayout.where(_id: item.body_layout_id).pluck(:name).first,
           item.order,
 
           # meta
