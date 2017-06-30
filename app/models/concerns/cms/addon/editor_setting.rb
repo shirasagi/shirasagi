@@ -1,4 +1,4 @@
-module SS::Addon::EditorSetting
+module Cms::Addon::EditorSetting
   extend ActiveSupport::Concern
   extend SS::Addon
 

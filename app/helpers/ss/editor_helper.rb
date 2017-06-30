@@ -82,18 +82,7 @@ module SS::EditorHelper
       base_opts.merge!(advanced_options.symbolize_keys)
     end
 
-    if @cur_site.color_button == 'enabled'
-      base_opts[:extraPlugins] ||= ['colorbutton']
-      base_opts[:removePlugins] ||= []
-      base_opts[:removePlugins] -= ['colorbutton']
-    elsif @cur_site.color_button == 'disabled'
-      base_opts[:removePlugins] ||= ['colorbutton']
-    end
-    if @cur_site.editor_css_enabled?
-      base_opts[:contentsCss] = @cur_site.editor_css_path
-    else
-      base_opts.delete(:contentsCss)
-    end
+    base_opts = site_ckeditor_editor_options(base_opts)
 
     opts.reverse_merge!(base_opts)
     opts[:extraPlugins] = opts[:extraPlugins].join(',') if opts[:extraPlugins].is_a?(Array)
@@ -162,5 +151,27 @@ module SS::EditorHelper
   end
 
   def html_editor_markdown(elem, opts = {})
+  end
+
+  def site_ckeditor_editor_options(opts = {})
+    color_button = @cur_node.color_button || @cur_site.color_button
+    editor_css = @cur_node.editor_css || @cur_site.editor_css
+    editor_css_path = @cur_node.editor_css_path || @cur_site.editor_css_path
+
+    if color_button == 'enabled'
+      opts[:extraPlugins] ||= ['colorbutton']
+      opts[:removePlugins] ||= []
+      opts[:removePlugins] -= ['colorbutton']
+    elsif color_button == 'disabled'
+      opts[:removePlugins] ||= ['colorbutton']
+    end
+
+    if editor_css == 'enabled'
+      opts[:contentsCss] = editor_css_path
+    else
+      opts.delete(:contentsCss)
+    end
+
+    opts
   end
 end

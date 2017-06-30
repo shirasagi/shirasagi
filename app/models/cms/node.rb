@@ -2,6 +2,7 @@ class Cms::Node
   include Cms::Model::Node
   include Cms::PluginRepository
   include Cms::Addon::NodeSetting
+  include Cms::Addon::EditorSetting
   include Cms::Addon::GroupPermission
   include Cms::Addon::NodeAutoPostSetting
 
@@ -17,6 +18,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
     include Cms::Addon::Release
@@ -30,6 +32,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Event::Addon::PageList
     include Cms::Addon::Release
