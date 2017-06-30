@@ -81,12 +81,18 @@ module SS::EditorHelper
       advanced_options ||= {}
       base_opts.merge!(advanced_options.symbolize_keys)
     end
+
     if @cur_site.color_button == 'enabled'
       base_opts[:extraPlugins] ||= ['colorbutton']
       base_opts[:removePlugins] ||= []
       base_opts[:removePlugins] -= ['colorbutton']
     elsif @cur_site.color_button == 'disabled'
       base_opts[:removePlugins] ||= ['colorbutton']
+    end
+    if @cur_site.editor_css_enabled?
+      base_opts[:contentsCss] = @cur_site.editor_css_path
+    else
+      base_opts.delete(:contentsCss)
     end
 
     opts.reverse_merge!(base_opts)
