@@ -82,7 +82,7 @@ class Uploader::FilesController < ApplicationController
   def file
     action = params[:do] || "index"
     raise "404" unless @item
-    raise "404" unless %w(index new_directory new_files show edit delete).index(action)
+    raise "404" unless %w(index new_directory new_files show edit delete check).index(action)
     send action
   end
 
@@ -125,7 +125,12 @@ class Uploader::FilesController < ApplicationController
     elsif @files
       create_files
     else
-      raise "400"
+      @item.errors.add :base, :set_filename
+      if @directory
+        render_create false, location: location, render: { file: :new_directory }
+      else
+        render_create false, location: location, render: { file: :new_files }
+      end
     end
   end
 
@@ -144,7 +149,14 @@ class Uploader::FilesController < ApplicationController
 
     file = @files.find(&:present?) rescue nil
     file = @file if @file.present?
-    Fs.binwrite @item.saved_path, file.read if result && file
+    if result && file
+      if File.extname(file.original_filename) != @item.ext
+        @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
+        result = false
+      else
+        Fs.binwrite @item.saved_path, file.read
+      end
+    end
 
     location = "#{uploader_files_path}/#{@item.filename}?do=edit"
     render_update result, location: location
@@ -167,5 +179,20 @@ class Uploader::FilesController < ApplicationController
       item.destroy
     end
     render_destroy true, location: "#{uploader_files_path}/#{@item.filename}"
+  end
+
+  def check
+    message = ''
+    item_files = params[:item_files]
+    original_filename = item_files.split('\\').last
+    path = ::File.join(@cur_site.path, @item.filename, original_filename)
+    extname = File.extname(original_filename)
+    if extname != @item.ext
+      message += "#{I18n.t('uploader.notice.invalid_ext')}\n"
+    end
+    if File.exists?(path) && @item.directory?
+      message += "#{I18n.t('uploader.notice.overwrite')}\n"
+    end
+    render json: { message: message }
   end
 end
