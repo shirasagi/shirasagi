@@ -1005,3 +1005,12 @@ class @Form_Preview
       form.appendTo("body")
       form.submit()
       return false
+
+class @Form_Save_Event
+  @render: ->
+    document.onkeydown = (e) ->
+      if event.ctrlKey || event.metaKey
+        if event.keyCode == 83
+          event.keyCode = 0
+          $("#item-form").submit()
+          return false

@@ -1,6 +1,9 @@
-<%= jquery do %> SS.confirmUnloading(); <% end %>
+<%= jquery do %>
+SS.confirmUnloading();
+Form_Save_Event.render();
+<% end %>
 
-<%= form_for :item, url: { action: :update, filename: @item.filename }, html: { method: :put, multipart: true } do |f| %>
+<%= form_for :item, url: { action: :update, filename: @item.filename }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
 <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_form.html.erb") %>
