@@ -5,6 +5,7 @@ puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 
 @site = SS::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
+link_url = "http://#{@site.domains.first}"
 
 require "#{Rails.root}/db/seeds/cms/users"
 require "#{Rails.root}/db/seeds/cms/workflow"
@@ -528,7 +529,7 @@ save_node route: "facility/page", filename: "institution/shisetsu/library", name
   address: "大鷺県シラサギ市小鷺町1丁目1番地1号",
   tel: "00-0000-0000",
   fax: "00-0000-0000",
-  related_url: "http://demo.ss-proj.org/",
+  related_url: link_url,
   category_ids: facility_categories.values.map(&:id),
   location_ids: facility_locations.values.map(&:id),
   service_ids: facility_services.values.map(&:id)
@@ -785,8 +786,8 @@ contact_group_id = contact_group.id rescue nil
 contact_email = contact_group_id ? "kikakuseisaku@example.jp" : nil
 contact_tel = contact_group_id ? "000-000-0000" : nil
 contact_fax = contact_group_id ? "000-000-0000" : nil
-contact_link_url = contact_group_id ? "http://demo.ss-proj.org/" : nil
-contact_link_name = contact_group_id ? "http://demo.ss-proj.org/" : nil
+contact_link_url = contact_group_id ? link_url : nil
+contact_link_name = contact_group_id ? link_url : nil
 
 def save_body_layouts(data)
   puts data[:name]
@@ -998,7 +999,7 @@ dates = (Time.zone.today..(Time.zone.today + 20)).map { |d| d.mongoize }
 save_page route: "event/page", filename: "calendar/page28.html", name: "住民相談会を開催します。",
   layout_id: layouts["event"].id, category_ids: [categories["calendar/kohen"].id], event_dates: dates,
   schedule: "〇〇年○月〇日", venue: "○○○○○○○○○○", cost: "○○○○○○○○○○",
-  content: "○○○○○○○○○○○○○○○○○○○○", related_url: "http://demo.ss-proj.org/",
+  content: "○○○○○○○○○○○○○○○○○○○○", related_url: link_url,
   group_ids: [g_seisaku.id]
 
 ## -------------------------------------
@@ -1249,7 +1250,7 @@ if user
   file = save_ss_files "ss_files/article/pdf_file.pdf", filename: "file.pdf", model: "board/post", site_id: @site.id
   file.set(state: "public")
   topic3 = save_board_post name: "管理画面から", text: "管理画面からの投稿です。", site_id: @site.id, node_id: node.id,
-    user_id: user.id, poster: "管理者", delete_key: 1234, poster_url: " http://demo.ss-proj.org/", file_ids: [file.id]
+    user_id: user.id, poster: "管理者", delete_key: 1234, poster_url: link_url, file_ids: [file.id]
 end
 
 puts "# anpi"
