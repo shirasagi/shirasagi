@@ -6,7 +6,7 @@ $ ->
   state.prev().remove()
   state.remove()
 
-  <% if @item.try(:public?) %>
+  <% if @item.try(:public?) && @cur_site.close_confirmation_enabled? %>
   $(".save").attr("data-close-confirmation", "<%= @item.state %>")
   <% contains_urls_path = url_for(action: 'contains_urls') rescue nil %>
   <% if contains_urls_path && @contains_urls.present? %>
