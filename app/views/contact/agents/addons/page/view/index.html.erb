@@ -26,10 +26,9 @@
       </dl>
     <% end %>
     <% if @cur_page.contact_link_url.present? %>
-      <% link_name = @cur_page.contact_link_name || @cur_page.contact_link_url %>
       <dl class="link">
         <dt><%= "#{t("contact.view.link_url")}:" %></dt>
-        <dd><%= link_to link_name, @cur_page.contact_link_url %></dd>
+        <dd><%= link_to @cur_page.contact_link, @cur_page.contact_link_url %></dd>
       </dl>
     <% end %>
   </footer>

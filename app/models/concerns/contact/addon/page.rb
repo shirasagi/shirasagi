@@ -33,5 +33,9 @@ module Contact::Addon
        contact_link_name
       ].map(&:present?).any?
     end
+
+    def contact_link
+      contact_link_name || contact_link_url
+    end
   end
 end
