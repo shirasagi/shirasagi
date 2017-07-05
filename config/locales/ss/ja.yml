@@ -62,7 +62,6 @@ ja:
       reset_tags: タグ解除
       upload: アップロード
     buttons:
-      login: ログイン
       save: 保存
       new: 新規作成
       draft_save: 下書き保存
