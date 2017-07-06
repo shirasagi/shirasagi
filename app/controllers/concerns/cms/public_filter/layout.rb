@@ -58,6 +58,12 @@ module Cms::PublicFilter::Layout
     @window_name = @cur_site.name
     @window_name = "#{@cur_item.name} - #{@cur_site.name}" if @cur_item.filename != "index.html"
 
+    if @cur_item.class == Event::Node::Page
+      id = body_id(@cur_main_path)
+      date = id.gsub!("#{body_class(@cur_main_path)}-", '')
+      @window_name = "#{@cur_item.name} - #{date} - #{@cur_site.name}"
+    end
+
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
