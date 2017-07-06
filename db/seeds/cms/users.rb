@@ -24,7 +24,7 @@ def save_role(data)
 end
 
 puts "# roles"
-exclusions = %w(edit_cms_body_layouts)
+exclusions = %w()
 admin_permissions = Cms::Role.permission_names - exclusions
 user_permissions = Cms::Role.permission_names.select {|n| n =~ /_(private|other)_/ } - exclusions
 
