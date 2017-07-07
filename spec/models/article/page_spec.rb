@@ -77,10 +77,12 @@ describe Article::Page, dbscope: :example, tmpdir: true do
   end
 
   context "with facebook OGP" do
-    let(:site)   { cms_site }
-    let(:layout) { create_cms_layout }
+    let(:site0) { cms_site }
+    let(:site) { create(:cms_site_subdir, domains: site0.domains, parent_id: site0.id) }
+    let(:layout) { create_cms_layout([], cur_site: site) }
     let(:user) { cms_user }
     let(:html) { "   <p>あ。&rarr;い</p>\r\n   " }
+    let(:node) { create :article_node_page, cur_site: site }
 
     before do
       site.opengraph_type = 'article'
