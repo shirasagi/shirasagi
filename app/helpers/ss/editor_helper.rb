@@ -163,15 +163,11 @@ module SS::EditorHelper
       opts[:extraPlugins] ||= ['colorbutton']
       opts[:removePlugins] ||= []
       opts[:removePlugins] -= ['colorbutton']
-    elsif color_button == 'disabled'
-      opts[:removePlugins] ||= ['colorbutton']
     end
+    opts[:removePlugins] ||= ['colorbutton'] if color_button == 'disabled'
 
-    if editor_css == 'enabled'
-      opts[:contentsCss] = editor_css_path
-    elsif editor_css == 'disabled'
-      opts.delete(:contentsCss)
-    end
+    opts[:contentsCss] = editor_css_path if editor_css == 'enabled'
+    opts.delete(:contentsCss) if editor_css == 'disabled'
 
     opts
   end
@@ -195,7 +191,8 @@ module SS::EditorHelper
       if opts[:toolbar]
         opts[:toolbar] += ' | forecolor backcolor' unless opts[:toolbar].include?('forecolor backcolor')
       end
-    elsif color_button == 'disabled'
+    end
+    if color_button == 'disabled'
       opts[:plugins] ||= []
       opts[:plugins].delete('textcolor')
       if opts[:toolbar]
@@ -203,11 +200,8 @@ module SS::EditorHelper
       end
     end
 
-    if editor_css == 'enabled'
-      opts[:content_css] = editor_css_path
-    elsif editor_css == 'disabled'
-      opts[:content_css] = false
-    end
+    opts[:content_css] = editor_css_path if editor_css == 'enabled'
+    opts[:content_css] = false if editor_css == 'disabled'
 
     opts
   end
