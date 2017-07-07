@@ -77,7 +77,7 @@ module SS::Model::File
 
   def full_url
     return if site.blank?
-    "#{site.full_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
   def thumb_url
