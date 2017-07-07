@@ -169,7 +169,7 @@ module SS::EditorHelper
 
     if editor_css == 'enabled'
       opts[:contentsCss] = editor_css_path
-    else
+    elsif editor_css == 'disabled'
       opts.delete(:contentsCss)
     end
 
@@ -203,7 +203,11 @@ module SS::EditorHelper
       end
     end
 
-    opts[:content_css] = editor_css_path if editor_css == 'enabled'
+    if editor_css == 'enabled'
+      opts[:content_css] = editor_css_path
+    elsif editor_css == 'disabled'
+      opts[:content_css] = false
+    end
 
     opts
   end
