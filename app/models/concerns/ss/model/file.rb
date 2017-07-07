@@ -67,6 +67,7 @@ module SS::Model::File
   end
 
   def public_path
+    return if site.blank?
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -75,6 +76,7 @@ module SS::Model::File
   end
 
   def full_url
+    return if site.blank?
     "#{site.full_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
