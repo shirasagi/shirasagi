@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SS::File do
+describe SS::File, dbscope: :example do
   describe "empty" do
     subject { described_class.new }
     its(:valid?) { is_expected.to be_falsey }
