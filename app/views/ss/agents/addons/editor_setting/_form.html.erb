@@ -10,4 +10,7 @@
 
   <dt><%= @model.t :editor_css_path %><%= @model.tt :editor_css_path %></dt>
   <dd><%= f.text_field :editor_css_path %></dd>
+
+  <dt><%= @model.t :syntax_check %><%= @model.tt :syntax_check %></dt>
+  <dd><%= f.select :syntax_check, @item.syntax_check_options, include_blank: true %></dd>
 </dl>

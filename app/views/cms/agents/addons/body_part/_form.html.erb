@@ -2,6 +2,7 @@
   editor_opts = html_editor_options(
     advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site)
   )
+  syntax_check = @cur_node ? (@cur_node.syntax_check_enabled? || @cur_site.syntax_check_enabled?) : @cur_site.syntax_check_enabled?
 %>
 <%= jquery do %>
 if ($("#item_body_layout_id").length == 0) {
@@ -85,7 +86,7 @@ $("#item_body_layout_id").trigger("change");
 
 <dl class="see mod-body-part-html">
   <dd class="wide buttons">
-    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
     <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
     <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
   </dd>

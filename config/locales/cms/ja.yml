@@ -456,6 +456,7 @@ ja:
         color_button: 文字色変更ボタン
         editor_css: スタイルシート状態
         editor_css_path: スタイルシートパス
+        syntax_check: アクセシビリティチェック
       cms/addon/release:
         released: 公開日時
       cms/addon/release_plan:
@@ -1185,6 +1186,8 @@ ja:
         - エディタ用スタイルシートの有効無効を設定します。
       editor_css_path:
         - エディタ用スタイルシートのパスを設定します。
+      syntax_check:
+        - アクセシビリティチェックの有効無効を設定します。
 
     cms/addon/source_cleaner:
       target:
