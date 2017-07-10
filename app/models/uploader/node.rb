@@ -14,5 +14,8 @@ module Uploader::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "uploader/file") }
+
+    # upload folder only allows `public`
+    validates :state, presence: true, inclusion: { in: %w(public), allow_blank: true }
   end
 end
