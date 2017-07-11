@@ -2,6 +2,10 @@ SS_HOSTNAME=${1:-"example.jp"}
 SS_USER=${2:-"$USER"}
 SS_DIR=/var/www/shirasagi
 
+PORT_COMPA=8001
+PORT_CHILD=8002
+PORT_OPEND=8003
+
 cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
 [mongodb-org-3.4]
 name=MongoDB Repository
@@ -59,6 +63,9 @@ done
 sudo firewall-cmd --add-port=http/tcp --permanent
 #sudo firewall-cmd --add-port=https/tcp --permanent
 #sudo firewall-cmd --add-port=3000/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
 sudo firewall-cmd --reload
 
 #### Furigana
@@ -233,13 +240,31 @@ cat <<EOF | sudo tee /etc/nginx/conf.d/virtual.conf
 server {
     include conf.d/server/shirasagi.conf;
     server_name ${SS_HOSTNAME};
+    root ${SS_DIR}/public/sites/w/w/w/_/;
+}
+server {
+    listen  ${PORT_COMPA};
+    include conf.d/server/shirasagi.conf;
+    server_name ${SS_HOSTNAME}:${PORT_COMPA};
+    root ${SS_DIR}/public/sites/c/o/m/p/a/n/y/_/;
+}
+server {
+    listen  ${PORT_CHILD};
+    include conf.d/server/shirasagi.conf;
+    server_name ${SS_HOSTNAME}:${PORT_CHILD};
+    root ${SS_DIR}/public/sites/c/h/i/l/d/c/a/r/e/_/;
+}
+server {
+    listen  ${PORT_OPEND};
+    include conf.d/server/shirasagi.conf;
+    server_name ${SS_HOSTNAME}:${PORT_OPEND};
+    root ${SS_DIR}/public/sites/o/p/e/n/d/a/t/a/_/;
 }
 EOF
 
 sudo mkdir /etc/nginx/conf.d/server/
 cat <<EOF | sudo tee /etc/nginx/conf.d/server/shirasagi.conf
 include conf.d/common/drop.conf;
-root ${SS_DIR}/public/sites/w/w/w/_/;
 
 location @app {
     include conf.d/header.conf;
@@ -291,8 +316,16 @@ sudo systemctl start shirasagi-unicorn.service
 cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
-bundle exec rake ss:create_site data="{ name: \"サイト名\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
+bundle exec rake ss:create_site data="{ name: \"自治体サンプルサイト\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
+bundle exec rake ss:create_site data="{ name: \"企業サンプルサイト\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
+bundle exec rake ss:create_site data="{ name: \"子育て支援サンプルサイト\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
+bundle exec rake ss:create_site data="{ name: \"オープンデータサンプルサイト\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
 bundle exec rake db:seed name=demo site=www
+bundle exec rake db:seed name=company site=company
+bundle exec rake db:seed name=childcare site=childcare
+bundle exec rake db:seed name=opendata site=opendata
+bundle exec rake db:seed name=gws
+bundle exec rake db:seed name=webmail
 bundle exec rake cms:generate_nodes
 bundle exec rake cms:generate_pages
 
