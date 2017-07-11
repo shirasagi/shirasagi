@@ -6,6 +6,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
   def index
     @year  = Time.zone.today.year.to_i
     @month = Time.zone.today.month.to_i
+    @window_name = "#{@cur_node.name} - #{@cur_site.name}"
 
     monthly
   end
@@ -13,10 +14,12 @@ class Event::Agents::Nodes::PageController < ApplicationController
   def monthly
     @year  = params[:year].to_i if @year.blank?
     @month = params[:month].to_i if @month.blank?
+    date = Date.new(@year, @month, 1)
+    @window_name = "#{date.strftime("%Y/%m")} - #{@cur_node.name} - #{@cur_site.name}" if @window_name.blank?
 
-    if within_one_year?(Date.new(@year, @month, 1))
+    if within_one_year?(date)
       index_monthly
-    elsif within_one_year?(Date.new(@year, @month, 1).advance(months: 1, days: -1))
+    elsif within_one_year?(date.advance(months: 1, days: -1))
       index_monthly
     else
       raise "404"
@@ -27,8 +30,10 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @year  = params[:year].to_i
     @month = params[:month].to_i
     @day   = params[:day].to_i
+    date = Date.new(@year, @month, @day)
+    @window_name = "#{date.strftime("%Y/%m/%d")} - #{@cur_node.name} - #{@cur_site.name}"
 
-    if within_one_year?(Date.new(@year, @month, @day))
+    if within_one_year?(date)
       index_daily
     else
       raise "404"
