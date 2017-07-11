@@ -23,12 +23,15 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_users
     invoke :export_cms_roles
     invoke :export_cms_layouts
+    invoke :export_cms_body_layouts
     invoke :export_cms_nodes
     invoke :export_cms_parts
     invoke :export_cms_pages
     invoke :export_cms_page_searches
     invoke :export_cms_notices
     invoke :export_cms_editor_templates
+    invoke :export_cms_theme_templates
+    invoke :export_cms_source_cleaner_templates
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
     invoke :export_kana_dictionaries
@@ -127,6 +130,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
     export_documents "cms_layouts", Cms::Layout
   end
 
+  def export_cms_body_layouts
+    export_documents "cms_body_layouts", Cms::BodyLayout
+  end
+
   def export_cms_nodes
     export_documents "cms_nodes", Cms::Node
   end
@@ -150,6 +157,14 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_cms_editor_templates
     export_documents "cms_editor_templates", Cms::EditorTemplate
+  end
+
+  def export_cms_theme_templates
+    export_documents "cms_theme_templates", Cms::ThemeTemplate
+  end
+
+  def export_cms_source_cleaner_templates
+    export_documents "cms_source_cleaner_templates", Cms::SourceCleanerTemplate
   end
 
   def export_cms_page_searches

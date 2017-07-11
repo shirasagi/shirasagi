@@ -2,7 +2,7 @@ module Sys::SiteImport::Opendata
   extend ActiveSupport::Concern
 
   def import_opendata_dataset_groups
-    import_documents "opendata_dataset_groups", Opendata::DatasetGroup do |item|
+    @opendata_dataset_groups_map = import_documents "opendata_dataset_groups", Opendata::DatasetGroup do |item|
       item[:category_ids] = convert_ids(@cms_nodes_map, item[:category_ids])
     end
   end

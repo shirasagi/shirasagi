@@ -32,12 +32,15 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_users_roles
     invoke :import_ss_files
     invoke :import_cms_layouts
+    invoke :import_cms_body_layouts
     invoke :import_cms_nodes
     invoke :import_cms_parts
     invoke :import_cms_pages
     invoke :import_cms_page_searches
     invoke :import_cms_notices
     invoke :import_cms_editor_templates
+    invoke :import_cms_theme_templates
+    invoke :import_cms_source_cleaner_templates
     invoke :import_ezine_columns
     invoke :import_inquiry_columns
     invoke :import_kana_dictionaries
@@ -104,16 +107,22 @@ class Sys::SiteImportJob < SS::ApplicationJob
   def convert_data(data)
     data['site_id'] = @dst_site.id if data.key?('site_id')
     data['user_id'] = @cms_users_map[data['user_id']] if data['user_id'].present?
-    data['group_ids'] = convert_ids(@cms_groups_map, data['group_ids']) if data['group_ids'].present?
     data['node_id'] = @cms_nodes_map[data['node_id']] if data['node_id'].present?
-    data['layout_id'] = @cms_layouts_map[data['layout_id']] if data['layout_id'].present?
+
+    data['group_ids'] = convert_ids(@cms_groups_map, data['group_ids']) if data['group_ids'].present?
+
+    %w(layout_id page_layout_id urgency_default_layout_id).each do |name|
+      data[name] = @cms_layouts_map[data[name]] if data[name].present?
+    end
+
+    data['body_layout_id'] = @cms_body_layouts_map[data['body_layout_id']] if data['body_layout_id'].present?
     data['contact_group_id'] = @cms_groups_map[data['contact_group_id']] if data['contact_group_id'].present?
     data['file_ids'] = convert_ids(@ss_files_map, data['file_ids']) if data['file_ids'].present?
-    data['thumb_id'] = @ss_files_map[data['thumb_id']] if data['thumb_id'].present?
-    data['image_id'] = @ss_files_map[data['image_id']] if data['image_id'].present?
-    data['file_id'] = @ss_files_map[data['file_id']] if data['file_id'].present?
-    data['tsv_id'] = @ss_files_map[data['tsv_id']] if data['tsv_id'].present?
-    data['icon_id'] = @ss_files_map[data['icon_id']] if data['icon_id'].present?
+
+    %w(thumb_id image_id file_id tsv_id icon_id).each do |name|
+      data[name] = @ss_files_map[data[name]] if data[name].present?
+    end
+
     data
   end
 

@@ -5,8 +5,14 @@ module Sys::SiteImport::Contents
     @cms_layouts_map = import_documents "cms_layouts", Cms::Layout, %w(site_id filename)
   end
 
+  def import_cms_body_layouts
+    @cms_body_layouts_map = import_documents "cms_body_layouts", Cms::BodyLayout
+  end
+
   def import_cms_nodes
-    @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename)
+    @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename) do |item|
+      item[:opendata_site_ids] = [] if item[:opendata_site_ids].present?
+    end
   end
 
   def import_cms_parts
@@ -22,8 +28,7 @@ module Sys::SiteImport::Contents
       item[:category_ids] = convert_ids(@cms_nodes_map, item[:category_ids])
       item[:st_category_ids] = convert_ids(@cms_nodes_map, item[:st_category_ids])
       item[:ads_category_ids] = convert_ids(@cms_nodes_map, item[:ads_category_ids])
-      item[:dataset_ids] = convert_ids(@cms_nodes_map, item[:dataset_ids]) # opendata
-      item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids]) # opendata
+      item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids])
     end
   end
 
@@ -42,6 +47,14 @@ module Sys::SiteImport::Contents
 
   def import_cms_editor_templates
     import_documents "cms_editor_templates", Cms::EditorTemplate
+  end
+
+  def import_cms_theme_templates
+    import_documents "cms_theme_templates", Cms::ThemeTemplate, %w(site_id class_name)
+  end
+
+  def import_cms_source_cleaner_templates
+    import_documents "cms_source_cleaner_templates", Cms::SourceCleanerTemplate
   end
 
   def import_ezine_columns
@@ -75,7 +88,16 @@ module Sys::SiteImport::Contents
       next unless item
       def item.generate_file; end
 
+      item[:master_id] = @cms_pages_map[item[:master_id]]
       item[:related_page_ids] = convert_ids(@cms_pages_map, item[:related_page_ids])
+      item[:dataset_group_ids] = convert_ids(@opendata_dataset_groups_map, item[:dataset_group_ids])
+      item[:dataset_ids] = convert_ids(@cms_pages_map, item[:dataset_ids])
+      item[:app_ids] = convert_ids(@cms_pages_map, item[:app_ids])
+      item[:opendata_area_ids] = convert_ids(@cms_nodes_map, item[:opendata_area_ids])
+      item[:opendata_category_ids] = convert_ids(@cms_nodes_map, item[:opendata_category_ids])
+      item[:opendata_dataset_ids] = convert_ids(@cms_pages_map, item[:opendata_dataset_ids])
+      item[:opendata_dataset_group_ids] = convert_ids(@opendata_dataset_groups_map, item[:opendata_dataset_group_ids])
+      item[:opendata_license_ids] = convert_ids(@opendata_licenses_map, item[:opendata_license_ids])
       save_document(item)
     end
   end
