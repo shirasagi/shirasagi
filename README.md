@@ -32,9 +32,13 @@ Platform
 Installation (Auto)
 -------------------
 
+- CentOS7の環境で実行してください。<br />
+- 一般ユーザーで実行する場合は、sudoが利用できることを確認してください。<br />
+- パラメーターの"example.jp"には、ブラウザでアクセスする際のドメイン名または、IPアドレスを指定してください。<br />
+
 ```
 $ su - user-which-executes-shirasagi-server
-$ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | SS_HOSTNAME=example.jp bash -s
+$ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | bash -s example.jp
 ```
 
 Installation (CentOS 7)
