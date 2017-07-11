@@ -22,20 +22,18 @@ module Event::Addon
 
     def condition_hash(opts = {})
       h = super
-      t = Time.zone
-      today = t.today
-      tomorrow = t.tomorrow
+      today = Time.zone.now
       case sort
       when "event_dates"
         { "$and" => [ h, { "event_dates.0" => { "$exists" => true } } ] }
       when "unfinished_event_dates"
         { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today } } } ] }
       when "event_dates_today"
-        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today, "$lte" => today } } } ] }
+        { "$and" => [ h, { "event_dates" => { "$eq" => today } } ] }
       when "event_dates_tomorrow"
-        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => tomorrow, "$lte" => tomorrow } } } ] }
+        { "$and" => [ h, { "event_dates" => { "$eq" => 1.day.since(today) } } ] }
       when "event_dates_week"
-        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today, "$lte" => 1.week.from_now } } } ] }
+        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today, "$lte" => 1.week.since(today) } } } ] }
       else h
       end
     end
