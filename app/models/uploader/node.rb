@@ -22,11 +22,11 @@ module Uploader::Node
 
     private
 
-      def set_default_state_and_released
-        return if self.persisted?
+    def set_default_state_and_released
+      return if self.persisted?
 
-        self.state = 'public'
-        self.released = Time.zone.now
-      end
+      self.state = 'public'
+      self.released = Time.zone.now
+    end
   end
 end
