@@ -151,11 +151,9 @@ module SS::EditorHelper
     return opts if @cur_site.nil?
     if @cur_node
       color_button = @cur_node.color_button || @cur_site.color_button
-      editor_css = @cur_node.editor_css || @cur_site.editor_css
       editor_css_path = @cur_node.editor_css_path || @cur_site.editor_css_path
     else
       color_button = @cur_site.color_button
-      editor_css = @cur_site.editor_css
       editor_css_path = @cur_site.editor_css_path
     end
 
@@ -166,8 +164,8 @@ module SS::EditorHelper
     end
     opts[:removePlugins] ||= ['colorbutton'] if color_button == 'disabled'
 
-    opts[:contentsCss] = editor_css_path if editor_css == 'enabled'
-    opts.delete(:contentsCss) if editor_css == 'disabled'
+    opts[:contentsCss] ||= []
+    opts[:contentsCss] += [editor_css_path] if editor_css_path.present?
 
     opts
   end
@@ -176,11 +174,9 @@ module SS::EditorHelper
     return opts if @cur_site.nil?
     if @cur_node
       color_button = @cur_node.color_button || @cur_site.color_button
-      editor_css = @cur_node.editor_css || @cur_site.editor_css
       editor_css_path = @cur_node.editor_css_path || @cur_site.editor_css_path
     else
       color_button = @cur_site.color_button
-      editor_css = @cur_site.editor_css
       editor_css_path = @cur_site.editor_css_path
     end
 
@@ -200,8 +196,8 @@ module SS::EditorHelper
       end
     end
 
-    opts[:content_css] = editor_css_path if editor_css == 'enabled'
-    opts[:content_css] = false if editor_css == 'disabled'
+    opts[:content_css] ||= []
+    opts[:content_css] += [editor_css_path] if editor_css_path.present?
 
     opts
   end

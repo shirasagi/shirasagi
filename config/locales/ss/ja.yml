@@ -433,7 +433,6 @@ ja:
         save_term: 保存期間
       ss/addon/editor_setting:
         color_button: 文字色変更ボタン
-        editor_css: スタイルシート状態
         editor_css_path: スタイルシートパス
         syntax_check: アクセシビリティチェック
 
@@ -661,8 +660,6 @@ ja:
     ss/addon/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。
-      editor_css:
-        - エディタ用スタイルシートの有効無効を設定します。
       editor_css_path:
         - エディタ用スタイルシートのパスを設定します。
       syntax_check:

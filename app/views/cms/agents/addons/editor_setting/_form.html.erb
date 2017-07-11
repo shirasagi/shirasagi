@@ -5,9 +5,6 @@
   <dt><%= @model.t :color_button %><%= @model.tt :color_button %></dt>
   <dd><%= f.select :color_button, @item.color_button_options, include_blank: true %></dd>
 
-  <dt><%= @model.t :editor_css %><%= @model.tt :editor_css %></dt>
-  <dd><%= f.select :editor_css, @item.editor_css_options, include_blank: true %></dd>
-
   <dt><%= @model.t :editor_css_path %><%= @model.tt :editor_css_path %></dt>
   <dd><%= f.text_field :editor_css_path %></dd>
 
