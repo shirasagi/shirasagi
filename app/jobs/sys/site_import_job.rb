@@ -15,7 +15,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     @task.log("Temporary directory: #{@import_dir}")
     @task.log("Import file: #{@import_zip}")
 
-    extract
+    invoke :extract
 
     init_src_site
     import_cms_groups
