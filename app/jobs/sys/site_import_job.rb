@@ -1,7 +1,8 @@
 class Sys::SiteImportJob < SS::ApplicationJob
   include Job::SS::TaskFilter
-  include Sys::SiteImport::File
+  include Sys::SiteImport::Contents
   include Sys::SiteImport::Opendata
+  include Sys::SiteImport::File
 
   def perform
     @dst_site = Cms::Site.find(@task.target_site_id)
@@ -27,31 +28,36 @@ class Sys::SiteImportJob < SS::ApplicationJob
       return
     end
 
-    import_cms_roles
-    import_cms_user_roles
-    import_ss_files
-    import_cms_layouts
-    import_cms_nodes
-    import_cms_parts
-    import_cms_pages
-    import_cms_page_searches
-    import_documents "cms_notices", Cms::Notice
-    import_documents "cms_editor_templates", Cms::EditorTemplate
-    import_documents "ezine_columns", Ezine::Column
-    import_documents "inquiry_columns", Inquiry::Column
-    import_documents "kana_dictionaries", Kana::Dictionary
-    import_opendata_dataset_groups
-    import_opendata_licenses
-    update_cms_nodes
-    update_cms_pages
-    update_opendata_dataset_resources
-    update_opendata_app_appfiles
+    invoke :import_cms_roles
+    invoke :import_cms_users_roles
+    invoke :import_ss_files
+    invoke :import_cms_layouts
+    invoke :import_cms_nodes
+    invoke :import_cms_parts
+    invoke :import_cms_pages
+    invoke :import_cms_page_searches
+    invoke :import_cms_notices
+    invoke :import_cms_editor_templates
+    invoke :import_ezine_columns
+    invoke :import_inquiry_columns
+    invoke :import_kana_dictionaries
+    invoke :import_opendata_dataset_groups
+    invoke :import_opendata_licenses
+    invoke :update_cms_nodes
+    invoke :update_cms_pages
+    invoke :update_opendata_dataset_resources
+    invoke :update_opendata_app_appfiles
 
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
   end
 
   private
+
+  def invoke(method)
+    @task.log("- " + method.to_s.sub('_', ' '))
+    send(method)
+  end
 
   def extract
     FileUtils.rm_rf(@import_dir)
@@ -168,74 +174,16 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_roles
+    @task.log("- import cms_roles")
     @cms_roles_map = import_documents "cms_roles", Cms::Role, %w(site_id name permissions)
   end
 
-  def import_cms_user_roles
+  def import_cms_users_roles
     @cms_user_roles_map.each do |user_id, role_ids|
       new_user_id  = @cms_users_map[user_id]
       new_role_ids = convert_ids(@cms_roles_map, role_ids)
       user = Cms::User.unscoped.where(id: new_user_id).first
       user.add_to_set(cms_role_ids: new_role_ids) if user
-    end
-  end
-
-  def import_cms_layouts
-    @cms_layouts_map = import_documents "cms_layouts", Cms::Layout, %w(site_id filename)
-  end
-
-  def import_cms_nodes
-    @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename)
-  end
-
-  def import_cms_parts
-    @cms_parts_map = import_documents "cms_parts", Cms::Part, %w(site_id filename)
-  end
-
-  def import_cms_pages
-    @cms_pages_map = import_documents "cms_pages", Cms::Page, %w(site_id filename) do |item|
-      def item.generate_file; end
-
-      item[:lock_owner_id] = nil
-      item[:lock_until] = nil
-      item[:category_ids] = convert_ids(@cms_nodes_map, item[:category_ids])
-      item[:st_category_ids] = convert_ids(@cms_nodes_map, item[:st_category_ids])
-      item[:ads_category_ids] = convert_ids(@cms_nodes_map, item[:ads_category_ids])
-      item[:dataset_ids] = convert_ids(@cms_nodes_map, item[:dataset_ids]) # opendata
-      item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids]) # opendata
-    end
-  end
-
-  def import_cms_page_searches
-    import_documents "cms_page_searches", Cms::PageSearch do |item|
-      item[:search_category_ids] = convert_ids(@cms_nodes_map, item[:search_category_ids])
-      item[:search_node_ids] = convert_ids(@cms_nodes_map, item[:search_node_ids])
-      item[:search_group_ids] = convert_ids(@cms_groups_map, item[:search_group_ids])
-      item[:search_user_ids] = convert_ids(@cms_users_map, item[:search_user_ids])
-    end
-  end
-
-  def update_cms_nodes
-    @cms_nodes_map.each do |old_id, id|
-      item = Cms::Page.unscoped.find(id) rescue nil
-      next unless item
-
-      item[:condition_group_ids] = convert_ids(@cms_groups_map, item[:condition_group_ids])
-      item[:st_category_ids] = convert_ids(@cms_nodes_map, item[:st_category_ids])
-      item[:my_anpi_post] = @cms_nodes_map[item[:my_anpi_post]] if item[:my_anpi_post].present?
-      item[:anpi_mail] = @cms_nodes_map[item[:anpi_mail]] if item[:anpi_mail].present?
-      save_document(item)
-    end
-  end
-
-  def update_cms_pages
-    @cms_pages_map.each do |old_id, id|
-      item = Cms::Page.unscoped.find(id) rescue nil
-      next unless item
-      def item.generate_file; end
-
-      item[:related_page_ids] = convert_ids(@cms_pages_map, item[:related_page_ids])
-      save_document(item)
     end
   end
 end

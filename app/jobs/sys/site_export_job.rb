@@ -17,30 +17,30 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
     @ss_file_ids = []
 
-    export_version
-    export_cms_site
-    export_cms_groups
-    export_cms_users
-    export_cms_roles
-    export_cms_layouts
-    export_cms_nodes
-    export_cms_parts
-    export_cms_pages
-    export_cms_page_searches
-    export_cms_notices
-    export_cms_editor_templates
-    export_ezine_columns
-    export_inquiry_columns
-    export_kana_dictionaries
-    export_opendata_dataset_groups
-    export_opendata_licenses
+    invoke :export_version
+    invoke :export_cms_site
+    invoke :export_cms_groups
+    invoke :export_cms_users
+    invoke :export_cms_roles
+    invoke :export_cms_layouts
+    invoke :export_cms_nodes
+    invoke :export_cms_parts
+    invoke :export_cms_pages
+    invoke :export_cms_page_searches
+    invoke :export_cms_notices
+    invoke :export_cms_editor_templates
+    invoke :export_ezine_columns
+    invoke :export_inquiry_columns
+    invoke :export_kana_dictionaries
+    invoke :export_opendata_dataset_groups
+    invoke :export_opendata_licenses
 
     # files
-    export_cms_files
-    export_ss_files
+    invoke :export_cms_files
+    invoke :export_ss_files
 
     # compress
-    compress
+    invoke :compress
 
     FileUtils.rm_rf(@output_dir)
     @task.log("Completed.")
@@ -55,6 +55,11 @@ class Sys::SiteExportJob < SS::ApplicationJob
     zip.output_dir = @output_dir
     zip.site_dir = @src_site.path
     zip.compress
+  end
+
+  def invoke(method)
+    @task.log("- " + method.to_s.sub('_', ' '))
+    send(method)
   end
 
   def write_json(name, data)
@@ -176,6 +181,8 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_ss_files
+    FileUtils.mkdir_p("#{@output_dir}/files")
+
     json = open_json("ss_files")
     @ss_file_ids.compact.sort.each do |id|
       item = SS::File.unscoped.find(id) rescue nil
