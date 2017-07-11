@@ -11,6 +11,13 @@ module Cms::Model::Part
     field :mobile_view, type: String, default: "show"
     field :ajax_view, type: String, default: "disabled"
     permit_params :mobile_view, :ajax_view
+
+    scope :search_parts, ->(search_parts, node) {
+      if search_parts.blank? || search_parts == 'current_level_parts'
+        return node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+      end
+      return where({})
+    }
   end
 
   def route_options
@@ -33,6 +40,10 @@ module Cms::Model::Part
       [I18n.t('ss.options.state.enabled'), 'enabled'],
       [I18n.t('ss.options.state.disabled'), 'disabled'],
     ]
+  end
+
+  def search_options
+    %w(current_level_parts all_parts).map { |m| [ I18n.t("cms.#{m}"), m ] }
   end
 
   def ajax_html

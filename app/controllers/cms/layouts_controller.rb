@@ -22,8 +22,8 @@ class Cms::LayoutsController < ApplicationController
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
     @items = @model.site(@cur_site).
+      search_layouts(params.dig(:s, :search_layouts), @cur_node).
       allow(:read, @cur_user).
-      where(depth: 1).
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)

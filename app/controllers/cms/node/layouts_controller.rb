@@ -18,7 +18,8 @@ class Cms::Node::LayoutsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    @items = @model.site(@cur_site).node(@cur_node).
+    @items = @model.site(@cur_site).
+      search_layouts(params.dig(:s, :search_layouts), @cur_node).
       allow(:read, @cur_user).
       search(params[:s]).
       order_by(filename: 1).

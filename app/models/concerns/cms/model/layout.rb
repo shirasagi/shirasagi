@@ -16,6 +16,17 @@ module Cms::Model::Layout
     before_save :set_part_paths
     before_save :set_css_paths
     before_save :set_js_paths
+
+    scope :search_layouts, ->(search_layouts, node) {
+      if search_layouts.blank? || search_layouts == 'current_level_layouts'
+        return node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+      end
+      return where({})
+    }
+  end
+
+  def search_options
+    %w(current_level_layouts all_layouts).map { |m| [ I18n.t("cms.#{m}"), m ] }
   end
 
   def head
