@@ -47,12 +47,12 @@ module Cms::PublicFilter::Layout
       end
     end
 
-    if body =~ /\#\{.*?part_.*?name\}/
+    if body =~ /\#\{.*?part_\}/
       body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
       part_parent = part.parent ? part.parent : part
-      body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
+      body.gsub!('#{part_parent.name}', ERB::Util.html_escape(part_parent.name))
       part_parent = part_parent.parent ? part_parent.parent : part_parent
-      body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
+      body.gsub!('#{part_parent.parent.name}', ERB::Util.html_escape(part_parent.name))
     end
 
     @cur_part = nil
