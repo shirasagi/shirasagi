@@ -2,6 +2,14 @@ SS_HOSTNAME=${1:-"example.jp"}
 SS_USER=${2:-"$USER"}
 SS_DIR=/var/www/shirasagi
 
+PORT_COMPA=8001
+PORT_CHILD=8002
+PORT_OPEND=8003
+
+# selinux 
+sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
+sudo setenforce 0
+
 cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
 [mongodb-org-3.4]
 name=MongoDB Repository
@@ -56,9 +64,18 @@ do
   sleep 5s
 done
 
+# change secret
+sed -i "s/dbcae379.*$/`bundle exec rake secret`/" config/secrets.yml
+
+# enable recommendation
+sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml > config/recommend.yml
+
 sudo firewall-cmd --add-port=http/tcp --permanent
 #sudo firewall-cmd --add-port=https/tcp --permanent
 #sudo firewall-cmd --add-port=3000/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
 sudo firewall-cmd --reload
 
 #### Furigana
@@ -233,13 +250,31 @@ cat <<EOF | sudo tee /etc/nginx/conf.d/virtual.conf
 server {
     include conf.d/server/shirasagi.conf;
     server_name ${SS_HOSTNAME};
+    root ${SS_DIR}/public/sites/w/w/w/_/;
+}
+server {
+    listen  ${PORT_COMPA};
+    include conf.d/server/shirasagi.conf;
+    server_name ${SS_HOSTNAME}:${PORT_COMPA};
+    root ${SS_DIR}/public/sites/c/o/m/p/a/n/y/_/;
+}
+server {
+    listen  ${PORT_CHILD};
+    include conf.d/server/shirasagi.conf;
+    server_name ${SS_HOSTNAME}:${PORT_CHILD};
+    root ${SS_DIR}/public/sites/c/h/i/l/d/c/a/r/e/_/;
+}
+server {
+    listen  ${PORT_OPEND};
+    include conf.d/server/shirasagi.conf;
+    server_name ${SS_HOSTNAME}:${PORT_OPEND};
+    root ${SS_DIR}/public/sites/o/p/e/n/d/a/t/a/_/;
 }
 EOF
 
 sudo mkdir /etc/nginx/conf.d/server/
 cat <<EOF | sudo tee /etc/nginx/conf.d/server/shirasagi.conf
 include conf.d/common/drop.conf;
-root ${SS_DIR}/public/sites/w/w/w/_/;
 
 location @app {
     include conf.d/header.conf;
@@ -291,12 +326,41 @@ sudo systemctl start shirasagi-unicorn.service
 cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
-bundle exec rake ss:create_site data="{ name: \"サイト名\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
+bundle exec rake ss:create_site data="{ name: \"自治体サンプルサイト\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
+bundle exec rake ss:create_site data="{ name: \"企業サンプルサイト\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
+bundle exec rake ss:create_site data="{ name: \"子育て支援サンプルサイト\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
+bundle exec rake ss:create_site data="{ name: \"オープンデータサンプルサイト\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
 bundle exec rake db:seed name=demo site=www
+bundle exec rake db:seed name=company site=company
+bundle exec rake db:seed name=childcare site=childcare
+bundle exec rake db:seed name=opendata site=opendata
+bundle exec rake db:seed name=gws
+bundle exec rake db:seed name=webmail
+
+# use openlayers as default map
+echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongo ss > /dev/null
+
 bundle exec rake cms:generate_nodes
 bundle exec rake cms:generate_pages
 
 cat <<EOF | crontab -
 */15 * * * * /bin/bash -l -c 'cd $SS_DIR && ${RVM_HOME}/wrappers/default/bundle exec rake cms:release_pages && ${RVM_HOME}/wrappers/default/bundle exec rake cms:generate_nodes' >/dev/null
 0 * * * * /bin/bash -l -c 'cd $SS_DIR && ${RVM_HOME}/wrappers/default/bundle exec rake cms:generate_pages' >/dev/null
+EOF
+
+# modify ImageMagick policy to work with simple captcha
+# see: https://github.com/diaspora/diaspora/issues/6828
+cd /etc/ImageMagick && cat << EOF | sudo patch
+--- policy.xml.orig     2016-12-08 13:50:47.344009000 +0900
++++ policy.xml  2016-12-08 13:15:22.529009000 +0900
+@@ -67,6 +67,8 @@
+   <policy domain="coder" rights="none" pattern="MVG" />
+   <policy domain="coder" rights="none" pattern="MSL" />
+   <policy domain="coder" rights="none" pattern="TEXT" />
+-  <policy domain="coder" rights="none" pattern="LABEL" />
++  <!-- <policy domain="coder" rights="none" pattern="LABEL" /> -->
+   <policy domain="path" rights="none" pattern="@*" />
++  <policy domain="coder" rights="read | write" pattern="JPEG" />
++  <policy domain="coder" rights="read | write" pattern="PNG" />
+ </policymap>
 EOF
