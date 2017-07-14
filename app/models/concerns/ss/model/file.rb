@@ -168,6 +168,10 @@ module SS::Model::File
   end
 
   def validate_filename
+    if filename =~ /[^\w\-\.]/ && !@cur_site.multibyte_filename_enabled?
+      errors.add :in_file, :invalid_filename
+      return
+    end
     self.filename = SS::FilenameConvertor.convert(filename, id: id)
   end
 
