@@ -80,15 +80,37 @@ RSpec.configure do |config|
     Capybara.app_host = nil
   end
 
-  if system("which phantomjs > /dev/null 2>&1")
+  if system("which chromedriver > /dev/null 2>&1")
+    begin
+      # found chromedriver, register chrome with headless as a Capybara driver.
+      require 'selenium-webdriver'
+      Capybara.register_driver :chrome do |app|
+        opts = { browser: :chrome }
+        if ENV['headless'] != '0'
+          opts[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.chrome(
+            chrome_options: {
+              args: %w(headless disable-gpu window-size=1680,1050)
+            }
+          )
+        end
+        Capybara::Selenium::Driver.new(app, opts)
+      end
+      Capybara.javascript_driver = :chrome
+      Capybara.default_max_wait_time = 15
+      puts '[Capybara] with Google Chrome'
+    rescue LoadError
+      config.filter_run_excluding(js: true)
+    end
+  elsif system("which phantomjs > /dev/null 2>&1")
     begin
       # found phantomjs, register poltergeist as a Capybara driver.
       require 'capybara/poltergeist'
       Capybara.register_driver :poltergeist do |app|
-        Capybara::Poltergeist::Driver.new(app, :inspector => true)
+        Capybara::Poltergeist::Driver.new(app, inspector: true)
       end
       Capybara.javascript_driver = :poltergeist
       Capybara.default_max_wait_time = 15
+      puts '[Capybara] with Poltergeist/PhantomJS'
     rescue LoadError
       config.filter_run_excluding(js: true)
     end
