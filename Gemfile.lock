@@ -68,6 +68,8 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    childprocess (0.7.1)
+      ffi (~> 1.0, >= 1.0.11)
     clam_scan (0.0.2)
     cliver (0.3.2)
     coderay (1.1.1)
@@ -425,6 +427,9 @@ GEM
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
     securecompare (1.0.0)
+    selenium-webdriver (3.4.4)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.0)
     sexp_processor (4.7.0)
     shellany (0.0.1)
     simple_captcha2 (0.4.0)
@@ -588,6 +593,7 @@ DEPENDENCIES
   rubyzip
   sassc-rails
   sdoc (~> 0.4.0)
+  selenium-webdriver
   simple_captcha2
   sparql
   sparql-client
