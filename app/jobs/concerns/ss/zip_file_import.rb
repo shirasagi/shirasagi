@@ -11,15 +11,15 @@ module SS::ZipFileImport
 
   module ClassMethods
     def import_from_zip(file, bindings = {})
-      require 'zipruby'
-      Zip::Archive.open(file) do |ar|
-        ar.each do |f|
+      require 'zip'
+      Zip::File.open(file) do |archive|
+        archive.each do |entry|
           uploaded_file = ::Fs::UploadedFile.new("ss_file")
           begin
             uploaded_file.binmode
-            uploaded_file.write(f.read)
+            uploaded_file.write(entry.get_input_stream.read)
             uploaded_file.rewind
-            uploaded_file.original_filename = f.name
+            uploaded_file.original_filename = entry.name
             uploaded_file.content_type = 'text/csv'
 
             temp_file = SS::TempFile.new

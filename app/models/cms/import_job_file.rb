@@ -112,25 +112,25 @@ class Cms::ImportJobFile
   end
 
   def import_from_zip(file, opts = {})
-    Zip::Archive.open(file.path) do |ar|
-      ar.each do |f|
-        fname = f.name.force_encoding("utf-8").scrub.split(/\//)
+    Zip::File.open(file.path) do |archive|
+      archive.each do |entry|
+        fname = entry.name.force_encoding("utf-8").scrub.split(/\//)
         fname.shift # remove root folder
-        fname = fname.join("\/")
+        fname = fname.join('/')
         next if fname.blank?
 
         import_filename = "#{node.filename}/#{fname}"
         import_filename = import_filename.sub(/\/$/, "")
 
-        if f.directory?
-          if save_import_node(f, import_filename)
+        if entry.directory?
+          if save_import_node(entry.get_input_stream, import_filename)
             @import_logs << "import: #{import_filename}"
           end
         elsif ::File.extname(import_filename) =~ /^\.(html|htm)$/i
-          if save_import_page(f, import_filename)
+          if save_import_page(entry.get_input_stream, import_filename)
             @import_logs << "import: #{import_filename}"
           end
-        elsif upload_import_file(f, import_filename)
+        elsif upload_import_file(entry.get_input_stream, import_filename)
           @import_logs << "import: #{import_filename}"
         end
       end

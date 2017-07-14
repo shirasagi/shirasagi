@@ -219,9 +219,9 @@ describe Opendata::App, dbscope: :example do
 
     def entry_names(zip_filename)
       names = []
-      Zip::Archive.open(zip_filename) do |archives|
-        archives.each do |ar|
-          name = ar.name.encode('utf-8', 'cp932')
+      Zip::File.open(zip_filename) do |archive|
+        archive.each do |entry|
+          name = entry.name.encode('utf-8', 'cp932')
           names << name
         end
       end

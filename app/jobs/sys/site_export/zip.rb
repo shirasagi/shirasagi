@@ -8,7 +8,7 @@ class Sys::SiteExport::Zip
   end
 
   def compress
-    Zip::Archive.open(@path, Zip::CREATE) do |zip|
+    Zip::File.open(@path, Zip::File::CREATE) do |zip|
       add_json(zip)
       add_private_files(zip)
       add_public_files(zip)
@@ -17,7 +17,8 @@ class Sys::SiteExport::Zip
 
   def add_json(zip)
     Dir.glob("#{@output_dir}/*.json").each do |file|
-      zip.add_file(file)
+      name = ::File.basename(file)
+      zip.add(name, file)
     end
   end
 
@@ -26,9 +27,9 @@ class Sys::SiteExport::Zip
     Find.find("#{@output_dir}/files") do |path|
       entry = path.sub(/.*\/(files\/?)/, '\\1')
       if File.directory?(path)
-        zip.add_dir(entry)
+        zip.mkdir(entry)
       else
-        zip.add_file(entry, path)
+        zip.add(entry, path)
       end
     end
   end
@@ -38,9 +39,9 @@ class Sys::SiteExport::Zip
     Find.find(@site_dir) do |path|
       entry = path.sub(/^#{@site_dir}/, 'public')
       if File.directory?(path)
-        zip.add_dir(entry)
+        zip.mkdir(entry)
       else
-        zip.add_file(entry, path)
+        zip.add(entry, path)
       end
     end
   end

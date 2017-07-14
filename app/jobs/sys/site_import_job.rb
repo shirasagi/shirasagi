@@ -66,7 +66,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     FileUtils.rm_rf(@import_dir)
     FileUtils.mkdir_p(@import_dir)
 
-    Zip::Archive.open(@import_zip) do |entries|
+    Zip::File.open(@import_zip) do |entries|
       entries.each do |entry|
         if entry.name.start_with?('public/')
           path = "#{@dst_site.path}/" + entry.name.encode("UTF-8").tr('\\', '/').sub(/^public\//, '')
@@ -77,7 +77,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
         if entry.directory?
           FileUtils.mkdir_p(path)
         else
-          File.binwrite(path, entry.read)
+          File.binwrite(path, entry.get_input_stream.read)
         end
       end
     end
