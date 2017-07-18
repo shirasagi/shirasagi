@@ -326,10 +326,10 @@ sudo systemctl start shirasagi-unicorn.service
 cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
-bundle exec rake ss:create_site data="{ name: \"自治体サンプルサイト\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
-bundle exec rake ss:create_site data="{ name: \"企業サンプルサイト\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
-bundle exec rake ss:create_site data="{ name: \"子育て支援サンプルサイト\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
-bundle exec rake ss:create_site data="{ name: \"オープンデータサンプルサイト\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
+bundle exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
+bundle exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
+bundle exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
+bundle exec rake ss:create_site data="{ name: \"オープンデータサンプル\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
 bundle exec rake db:seed name=demo site=www
 bundle exec rake db:seed name=company site=company
 bundle exec rake db:seed name=childcare site=childcare
