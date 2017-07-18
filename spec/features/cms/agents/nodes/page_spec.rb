@@ -19,7 +19,7 @@ describe "cms_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_selector("article")
     end
 
-    it "#index with kana" do
+    it "#index with kana", mecab: true do
       visit node.url.sub('/', SS.config.kana.location + '/')
       expect(status_code).to eq 200
       expect(page).to have_css(".pages")
