@@ -5,6 +5,7 @@ puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 
 @site = SS::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
+link_url = "http://#{@site.domains.first}"
 
 require "#{Rails.root}/db/seeds/cms/users"
 require "#{Rails.root}/db/seeds/cms/workflow"
@@ -313,6 +314,8 @@ contact_charge = contact_group_id ? "オープンデータ担当" : nil
 contact_email = contact_group_id ? "admin@example.jp" : nil
 contact_tel = contact_group_id ? "000-000-0000" : nil
 contact_fax = contact_group_id ? "000-000-0000" : nil
+contact_link_url = contact_group_id ? link_url : nil
+contact_link_name = contact_group_id ? link_url : nil
 
 save_page route: "cms/page", filename: "index.html", name: "トップページ", layout_id: layouts["portal-top"].id
 save_page route: "cms/page", filename: "tutorial-data.html", name: "データ登録手順", layout_id: layouts["portal-general"].id
@@ -321,17 +324,19 @@ save_page route: "cms/page", filename: "tutorial-idea.html", name: "アイデア
 page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id, \
   map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([34.067022, 134.589982])}]), \
   contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, \
-  contact_tel: contact_tel, contact_fax: contact_fax
+  contact_tel: contact_tel, contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name
 page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。", \
   layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
+  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
+  contact_link_url: contact_link_url, contact_link_name: contact_link_name
 page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。", \
   layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
+  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
+  contact_link_url: contact_link_url, contact_link_name: contact_link_name
 event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", \
   layout_id: layouts["portal-event"].id,
   schedule: "#{7.days.since.strftime("%m").sub(/^0+/, '')}月#{7.days.since.strftime("%d").sub(/^0+/, '')}日", \
-  venue: "シラサギ市図書館", related_url: "http://demo.ss-proj.org/", \
+  venue: "シラサギ市図書館", related_url: link_url, \
   event_dates: 7.upto(18).map { |d| d.days.since.strftime("%Y/%m/%d") }.join("\r\n")
 page0.related_page_ids = [ page2.id, event0.id ]
 page0.save!
@@ -353,17 +358,17 @@ banner5.set(state: "public")
 banner6.set(state: "public")
 
 save_page route: "ads/banner", filename: "ads/page600.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner1.id
+  link_url: link_url, file_id: banner1.id
 save_page route: "ads/banner", filename: "ads/page601.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner2.id
+  link_url: link_url, file_id: banner2.id
 save_page route: "ads/banner", filename: "ads/page602.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner3.id
+  link_url: link_url, file_id: banner3.id
 save_page route: "ads/banner", filename: "ads/page603.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner4.id
+  link_url: link_url, file_id: banner4.id
 save_page route: "ads/banner", filename: "ads/page604.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner5.id
+  link_url: link_url, file_id: banner5.id
 save_page route: "ads/banner", filename: "ads/page605.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner6.id
+  link_url: link_url, file_id: banner6.id
 
 ## -------------------------------------
 puts "# licenses"

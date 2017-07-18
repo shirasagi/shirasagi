@@ -32,7 +32,7 @@ module Faq::Addon::Csv
             event_name event_dates
             related_pages
             parent_crumb
-            contact_state contact_group contact_charge contact_tel contact_fax contact_email
+            contact_state contact_group contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
             released release_date close_date
             groups permission_level
             state
@@ -87,6 +87,8 @@ module Faq::Addon::Csv
         line << item.contact_tel
         line << item.contact_fax
         line << item.contact_email
+        line << item.contact_link_url
+        line << item.contact_link_name
 
         # released
         line << item.released.try(:strftime, "%Y/%m/%d %H:%M")

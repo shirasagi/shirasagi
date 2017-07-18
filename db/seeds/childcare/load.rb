@@ -5,6 +5,7 @@ puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 
 @site = SS::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
+link_url = "http://#{@site.domains.first}"
 
 require "#{Rails.root}/db/seeds/cms/users"
 require "#{Rails.root}/db/seeds/cms/workflow"
@@ -430,7 +431,7 @@ save_node route: "facility/page", filename: "institution/list/shirsagi", name: "
   address: "大鷺県シラサギ市小鷺町1丁目1番地1号",
   tel: "00-0000-0000",
   fax: "00-0000-0000",
-  related_url: "http://demo.ss-proj.org/",
+  related_url: link_url,
   category_ids: facility_categories.map(&:id),
   location_ids: facility_locations.map(&:id),
   service_ids: facility_services.map(&:id)
@@ -530,6 +531,8 @@ contact_group_id = contact_group.id rescue nil
 contact_email = contact_group_id ? "kikakuseisaku@example.jp" : nil
 contact_tel = contact_group_id ? "000-000-0000" : nil
 contact_fax = contact_group_id ? "000-000-0000" : nil
+contact_link_url = contact_group_id ? link_url : nil
+contact_link_name = contact_group_id ? link_url : nil
 
 article1 = save_page route: "article/page", filename: "docs/page1.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id]
@@ -541,14 +544,16 @@ file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model:
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
-  contact_charge: "担当者", contact_email: "admin@example.jp", contact_tel: "000-000-0000", contact_fax: "000-000-0000"
+  contact_charge: "担当者", contact_email: "admin@example.jp", contact_tel: "000-000-0000",
+  contact_fax: "000-000-0000", contact_link_url: link_url, contact_link_name: link_url
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article3.update
 
 file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
 article4 = save_page route: "article/page", filename: "docs/page4.html", name: "子育てサークルにさんかしませんか？",
   layout_id: layouts["docs"].id, category_ids: [categories["topics"].id], file_ids: [file.id],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
+  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name
 article4.html = article4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article4.update
 
@@ -560,7 +565,7 @@ save_page route: "event/page", filename: "event/page1.html", name: "イベント
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
-  content: "イベントを開催します。", related_url: "http://demo.ss-proj.org/"
+  content: "イベントを開催します。", related_url: link_url
 
 save_page route: "event/page", filename: "event/2.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_dates: dates,
@@ -568,7 +573,7 @@ save_page route: "event/page", filename: "event/2.html", name: "イベントタ�
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
-  content: "イベントを開催します。", related_url: "http://demo.ss-proj.org/"
+  content: "イベントを開催します。", related_url: link_url
 
 puts "#faq"
 save_page route: "faq/page", filename: "faq/docs/page1.html", name: "よくある質問のタイトル",
@@ -665,7 +670,8 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
+  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   order: 10
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page1.update
@@ -676,7 +682,8 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
+  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   order: 20
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page2.update
@@ -686,7 +693,8 @@ page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name:
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
+  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   order: 30
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page3.update
@@ -697,7 +705,8 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
+  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   order: 40
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page4.update
@@ -708,7 +717,8 @@ page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", n
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
+  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   order: 50
 page5.html = page5.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page5.update

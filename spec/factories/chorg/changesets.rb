@@ -17,6 +17,8 @@ FactoryGirl.define do
           contact_email: "mb4pjr0czv@example.jp",
           contact_tel: "03-8471-8438",
           contact_fax: "03-8471-8439",
+          contact_link_url: "mb4pjr0czv@example.jp",
+          contact_link_name: "mb4pjr0czv@example.jp",
           ldap_dn: "" }.stringify_keys ]
     end
   end
@@ -34,6 +36,8 @@ FactoryGirl.define do
           contact_email: "",
           contact_tel: "",
           contact_fax: "",
+          contact_link_url: "",
+          contact_link_name: "",
           ldap_dn: "" }.stringify_keys ]
     end
   end
@@ -51,6 +55,8 @@ FactoryGirl.define do
           contact_email: "mb4pjr0czv@example.jp",
           contact_tel: "03-8471-8438",
           contact_fax: "03-8471-8439",
+          contact_link_url: "mb4pjr0czv@example.jp",
+          contact_link_name: "mb4pjr0czv@example.jp",
           ldap_dn: "" }.stringify_keys ]
     end
 
@@ -62,7 +68,9 @@ FactoryGirl.define do
         entity.destinations = [ { name: evaluator.destination.name,
                            contact_email: evaluator.destination.contact_email,
                            contact_tel: evaluator.destination.contact_tel,
-                           contact_fax: evaluator.destination.contact_fax }.stringify_keys ]
+                           contact_fax: evaluator.destination.contact_fax,
+                           contact_link_url: evaluator.destination.contact_link_url,
+                           contact_link_name: evaluator.destination.contact_link_name }.stringify_keys ]
       end
     end
   end
@@ -83,6 +91,8 @@ FactoryGirl.define do
           contact_email: group.contact_email,
           contact_tel: group.contact_tel,
           contact_fax: group.contact_fax,
+          contact_link_url: group.contact_link_url,
+          contact_link_name: group.contact_link_name,
           ldap_dn: group.ldap_dn }.stringify_keys
       end.to_a
     end

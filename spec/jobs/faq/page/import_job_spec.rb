@@ -50,6 +50,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.contact_tel).to eq "電話番号"
         expect(item.contact_fax).to eq "ファックス番号"
         expect(item.contact_email).to eq "メールアドレス"
+        expect(item.contact_link_url).to eq "リンクURL"
+        expect(item.contact_link_name).to eq "リンク名"
         expect(item.released.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/07 19:11"
         expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq nil
         expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq nil
@@ -95,6 +97,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.contact_tel).to eq "電話番号"
         expect(item.contact_fax).to eq "ファックス番号"
         expect(item.contact_email).to eq "メールアドレス"
+        expect(item.contact_link_url).to eq "リンクURL"
+        expect(item.contact_link_name).to eq "リンク名"
         expect(item.released.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/07 19:11"
         expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/01 19:11"
         expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/10/01 19:11"

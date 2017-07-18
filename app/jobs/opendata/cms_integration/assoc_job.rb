@@ -131,6 +131,8 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     attributes[:contact_group_id] = @cur_page.contact_group_id if @cur_page.respond_to?(:contact_group_id)
     attributes[:contact_state] = @cur_page.contact_state if @cur_page.respond_to?(:contact_state)
     attributes[:contact_tel] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
+    attributes[:contact_link_url] = @cur_page.contact_link_url if @cur_page.respond_to?(:contact_link_url)
+    attributes[:contact_link_name] = @cur_page.contact_link_name if @cur_page.respond_to?(:contact_link_name)
 
     dataset = Opendata::Dataset.create(attributes)
     Rails.logger.info("#{dataset.name}: dataset is created")
@@ -152,13 +154,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def create_or_update_resource(dataset, file)
     resources = dataset.resources.and_associated_file(file)
-    if resources.blank?
-      # create new resource
-      create_resource(dataset, file)
-    else
-      # update resource
-      update_resources(dataset, resources, file)
-    end
+    resources.blank? ? create_resource(dataset, file) : update_resources(dataset, resources, file)
   end
 
   def create_resource(dataset, file)

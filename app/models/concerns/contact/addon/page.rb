@@ -9,9 +9,12 @@ module Contact::Addon
       field :contact_tel, type: String
       field :contact_fax, type: String
       field :contact_email, type: String
+      field :contact_link_url, type: String
+      field :contact_link_name, type: String
       belongs_to :contact_group, class_name: "SS::Group"
       permit_params :contact_state, :contact_group_id, :contact_charge
       permit_params :contact_tel, :contact_fax, :contact_email
+      permit_params :contact_link_url, :contact_link_name
     end
 
     def contact_state_options
@@ -25,8 +28,14 @@ module Contact::Addon
       [contact_charge,
        contact_tel,
        contact_fax,
-       contact_email
+       contact_email,
+       contact_link_url,
+       contact_link_name
       ].map(&:present?).any?
+    end
+
+    def contact_link
+      contact_link_name || contact_link_url
     end
   end
 end

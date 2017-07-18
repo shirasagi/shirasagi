@@ -32,7 +32,7 @@ module Article::Addon
           event_name event_dates
           related_pages
           parent_crumb
-          contact_state contact_group contact_charge contact_tel contact_fax contact_email
+          contact_state contact_group contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
           released release_date close_date
           groups permission_level
           state
@@ -87,6 +87,8 @@ module Article::Addon
           item.contact_tel,
           item.contact_fax,
           item.contact_email,
+          item.contact_link_url,
+          item.contact_link_name,
 
           # released
           item.released.try(:strftime, "%Y/%m/%d %H:%M"),

@@ -123,7 +123,8 @@ module Cms::Addon
     include Cms::Addon::PageSearchInfo
 
     KEYWORD_FIELDS = [
-      :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel, :contact_fax, :contact_email
+      :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel,
+      :contact_fax, :contact_email, :contact_link_url, :contact_link_name
     ].freeze
 
     included do

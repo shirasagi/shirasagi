@@ -44,6 +44,8 @@ class Opendata::Idea::CommentsController < ApplicationController
              contact_tel: params[:item][:contact_tel],
              contact_fax: params[:item][:contact_fax],
              contact_email: params[:item][:contact_email],
+             contact_link_url: params[:item][:contact_link_url],
+             contact_link_name: params[:item][:contact_link_name],
              state: params[:item][:state]
            }
     contact_group_id = params[:item][:contact_group_id]

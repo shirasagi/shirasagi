@@ -10,10 +10,14 @@ $ ->
     tel = $(this).parents("tr:first").find(".contact-tel").text()
     fax = $(this).parents("tr:first").find(".contact-fax").text()
     email = $(this).parents("tr:first").find(".contact-email").text()
+    link_url = $(this).parents("tr:first").find(".contact-link-url").text()
+    link_name = $(this).parents("tr:first").find(".contact-link-name").text()
 
     $("#item_contact_tel").val(tel)
     $("#item_contact_fax").val(fax)
     $("#item_contact_email").val(email)
+    $("#item_contact_link_url").val(link)
+    $("#item_contact_link_name").val(link)
 
     e.preventDefault()
     $.colorbox.close()
@@ -34,6 +38,8 @@ $ ->
       <th class="contact-tel"><%= t("contact.tel") %></th>
       <th class="contact-fax"><%= t("contact.fax") %></th>
       <th class="contact-email"><%= t("contact.email") %></th>
+      <th class="contact-link-url"><%= t("contact.link_url") %></th>
+      <th class="contact-link-name"><%= t("contact.link_name") %></th>
     </tr>
   </thead>
   <tbody class="items">
@@ -43,6 +49,8 @@ $ ->
         <td class="contact-tel"><%= item.contact_tel if item.contact_tel.present? %></td>
         <td class="contact-fax"><%= item.contact_fax if item.contact_fax.present? %></td>
         <td class="contact-email"><%= item.contact_email if item.contact_email.present? %></td>
+        <td class="contact-link-url"><%= item.contact_link_url if item.contact_link_url.present? %></td>
+        <td class="contact-link-name"><%= item.contact_link_name if item.contact_link_name.present? %></td>
       </tr>
     <% end %>
   </tbody>

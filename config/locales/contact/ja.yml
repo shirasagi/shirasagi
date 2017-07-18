@@ -5,6 +5,8 @@ ja:
     tel: 電話番号
     fax: ファックス番号
     email: メールアドレス
+    link_url: リンクURL
+    link_name: リンク名
     search_groups:
       index: 連絡先グループを選択する
       search: 連絡先グループを検索
@@ -17,6 +19,8 @@ ja:
       tel: 電話
       fax: Fax
       email: E-Mail
+      link_url: リンクURL
+      link_name: リンク名
 
   modules:
     contact: 連絡先
@@ -34,6 +38,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_link_url: リンクURL
+        contact_link_name: リンク名
       contact/addon/group:
         <<: *cmspage
       contact/addon/page:
@@ -53,6 +59,10 @@ ja:
         - 連絡先に表示する部署のファックス番号を記入します。
       contact_email:
         - 連絡先に表示する部署または担当者のメールアドレスを記入します。
+      contact_link_url:
+        - 連絡先に表示する部署のリンクURLを記入します。
+      contact_link_name:
+        - 連絡先に表示する部署のリンク名を記入します。
     contact/addon/group:
       contact_tel:
         - グループの電話番号を記入します。
@@ -62,4 +72,10 @@ ja:
         - ページ作成時に連絡先として自動で挿入されます。
       contact_email:
         - グループのメールアドレスを記入します。
+        - ページ作成時に連絡先として自動で挿入されます。
+      contact_link_url:
+        - グループのリンクURLを記入します。
+        - ページ作成時に連絡先として自動で挿入されます。
+      contact_link_name:
+        - グループのリンク名を記入します。
         - ページ作成時に連絡先として自動で挿入されます。
