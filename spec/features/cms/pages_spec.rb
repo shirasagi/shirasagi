@@ -219,6 +219,16 @@ describe "cms_pages" do
         click_on I18n.t("cms.mobile_size_check")
         expect(page).to have_selector "form #errorMobileChecker p", text: /携帯電話で表示する場合、ファイルサイズ合計(.+)/i
       end
+
+      it "mobile_state disabled" do
+        site.mobile_state = "disabled"
+        site.save!
+
+        login_cms_user
+        visit new_cms_page_path(site)
+
+        expect(page).not_to have_text(I18n.t("cms.mobile_size_check"))
+      end
     end
   end
 
