@@ -187,7 +187,7 @@ class Uploader::FilesController < ApplicationController
     original_filename = item_files.split('\\').last
     path = ::File.join(@cur_site.path, @item.filename, original_filename)
     extname = File.extname(original_filename)
-    if extname != @item.ext
+    if extname != @item.ext && @item.ext.present?
       message += "#{I18n.t('uploader.notice.invalid_ext')}\n"
     end
     if File.exists?(path) && @item.directory?
