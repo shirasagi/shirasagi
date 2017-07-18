@@ -168,9 +168,13 @@ module SS::Model::File
   end
 
   def validate_filename
-    if filename =~ /[^\w\-\.]/ && !@cur_site.multibyte_filename_enabled?
-      errors.add :in_file, :invalid_filename
-      return
+    begin
+      if filename =~ /[^\w\-\.]/ && !@cur_site.multibyte_filename_enabled?
+        errors.add :in_file, :invalid_filename
+        return
+      end
+    rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
     self.filename = SS::FilenameConvertor.convert(filename, id: id)
   end
