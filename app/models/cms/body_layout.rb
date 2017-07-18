@@ -5,7 +5,7 @@ class Cms::BodyLayout
   include History::Addon::Backup
 
   store_in collection: "cms_body_layouts"
-  set_permission_name "cms_body_layouts", :edit
+  set_permission_name "cms_body_layouts"
 
   field :parts, type: SS::Extensions::Words, default: ""
 

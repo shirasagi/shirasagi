@@ -15,7 +15,7 @@
   <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
 
   <% if @item.respond_to?(:body_parts) && Cms::BodyLayout.site(@cur_site).present? %>
-    <% if Cms::BodyLayout.allowed?(:read, @cur_user, site: @cur_site) %>
+    <% if Cms::BodyLayout.allowed?(:edit, @cur_user, site: @cur_site) %>
       <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
       <dd><%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " " %></dd>
     <% elsif @item.body_layout %>
