@@ -85,18 +85,24 @@ RSpec.configure do |config|
       # found chromedriver, register chrome with headless as a Capybara driver.
       require 'selenium-webdriver'
       Capybara.register_driver :chrome do |app|
-        opts = { browser: :chrome }
+        options = Selenium::WebDriver::Chrome::Options.new
+        options.add_preference('download.prompt_for_download', false)
+        options.add_preference('download.default_directory', SS::DownloadHelpers.path)
+        options.add_argument('window-size=1680,1050')
         if ENV['headless'] != '0'
-          opts[:desired_capabilities] = Selenium::WebDriver::Remote::Capabilities.chrome(
-            chrome_options: {
-              args: %w(headless disable-gpu window-size=1680,1050)
-            }
-          )
+          options.add_argument('headless')
+          options.add_argument('disable-gpu')
         end
-        Capybara::Selenium::Driver.new(app, opts)
+
+        Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
       end
       Capybara.javascript_driver = :chrome
       Capybara.default_max_wait_time = 15
+
+      config.before( :each ) do
+        SS::DownloadHelpers::clear_downloads
+      end
+
       puts '[Capybara] with Google Chrome'
     rescue LoadError
       config.filter_run_excluding(js: true)
