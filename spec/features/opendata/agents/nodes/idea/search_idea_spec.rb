@@ -104,7 +104,6 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       visit index_path
       fill_in "s_keyword", with: "アイデア"
       click_button "検索"
-      expect(status_code).to eq 200
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('h2', text: 'アイデアは見つかりませんでした。')
       end
@@ -114,7 +113,6 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       visit index_path
       fill_in "s_keyword", with: "text3"
       click_button "検索"
-      expect(status_code).to eq 200
 
       page_idea = Opendata::Idea.find_by(text: 'text3')
       within first('.opendata-search-ideas article') do
@@ -132,7 +130,6 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       fill_in "s_keyword", with: "text3 text7"
       select "すべてのキーワードを含む"
       click_button "検索"
-      expect(status_code).to eq 200
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
@@ -149,21 +146,38 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       visit index_path
       select node_category.name
       click_button "検索"
-      expect(status_code).to eq 200
+
+      page_idea = Opendata::Idea.site(site).search(site: site, category_id: node_category.id).order_by(released: -1).first
+      within first('.opendata-search-ideas article') do
+        expect(page).to have_css('time', text: I18n.l(page_idea.date.to_date, format: :long))
+        expect(page).to have_css('h2 a', text: page_idea.name)
+        expect(page).to have_css('h2 .point', text: page_idea.point.to_s)
+        expect(page).to have_css('.categories .category', text: page_idea.categories.first.name)
+        expect(page).to have_css('.categories .area', text: page_idea.areas.first.name)
+        expect(page).to have_css('.categories .tag', text: page_idea.tags.first)
+      end
     end
 
     it "#area_select" do
       visit index_path
       select node_area.name
       click_button "検索"
-      expect(status_code).to eq 200
+
+      page_idea = Opendata::Idea.site(site).search(site: site, area_id: node_area.id).order_by(released: -1).first
+      within first('.opendata-search-ideas article') do
+        expect(page).to have_css('time', text: I18n.l(page_idea.date.to_date, format: :long))
+        expect(page).to have_css('h2 a', text: page_idea.name)
+        expect(page).to have_css('h2 .point', text: page_idea.point.to_s)
+        expect(page).to have_css('.categories .category', text: page_idea.categories.first.name)
+        expect(page).to have_css('.categories .area', text: page_idea.areas.first.name)
+        expect(page).to have_css('.categories .tag', text: page_idea.tags.first)
+      end
     end
 
     it "#tag_input" do
       visit index_path
       fill_in "s_tag", with: "tag5"
       click_button "検索"
-      expect(status_code).to eq 200
 
       page_idea = Opendata::Idea.find_by(tags: 'tag5')
       within first('.opendata-search-ideas article') do
@@ -182,7 +196,6 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       fill_in "s_tag", with: "tag5"
       select "すべてのキーワードを含む"
       click_button "検索"
-      expect(status_code).to eq 200
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do

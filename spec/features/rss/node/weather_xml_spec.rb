@@ -16,7 +16,6 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       click_on '新規作成'

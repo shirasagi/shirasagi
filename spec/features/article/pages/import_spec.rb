@@ -23,16 +23,14 @@ describe "article_pages", dbscope: :example, js: true do
 
     scenario "exec import process" do
       visit index_path
-      expect(status_code).to eq(200).or eq(304)
 
       click_on I18n.t("ss.links.import")
-      expect(status_code).to eq(200)
       expect(current_path).to eq import_path
 
-      attach_file "item[file]", "spec/fixtures/article/article_import_test_1.csv"
+      attach_file "item[file]", "#{Rails.root}/spec/fixtures/article/article_import_test_1.csv"
       click_on I18n.t("ss.links.import")
-      expect(status_code).to eq(200)
-      #expect(page).to have_content I18n.t("ss.notice.saved")
+      page.driver.browser.switch_to.alert.accept rescue nil
+      expect(page).to have_content I18n.t("ss.notice.started_import")
     end
 
     #scenario "check import data" do

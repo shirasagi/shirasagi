@@ -51,7 +51,6 @@ describe "cms_search", dbscope: :example, js: true do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "5 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -67,7 +66,6 @@ describe "cms_search", dbscope: :example, js: true do
           fill_in "item[search_name]", with: "A"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
       end
@@ -79,7 +77,6 @@ describe "cms_search", dbscope: :example, js: true do
           fill_in "item[search_filename]", with: "#{node_filename}/"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
@@ -93,7 +90,6 @@ describe "cms_search", dbscope: :example, js: true do
           fill_in "item[search_keyword]", with: "[TEST]A"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "2 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -106,7 +102,6 @@ describe "cms_search", dbscope: :example, js: true do
           select "公開", from: "item[search_state]"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "2 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -114,7 +109,6 @@ describe "cms_search", dbscope: :example, js: true do
           select "非公開", from: "item[search_state]"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
@@ -128,7 +122,6 @@ describe "cms_search", dbscope: :example, js: true do
           select "公開済み", from: "item[search_first_released]"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "2 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -136,7 +129,6 @@ describe "cms_search", dbscope: :example, js: true do
           select "未公開", from: "item[search_first_released]"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
@@ -150,7 +142,6 @@ describe "cms_search", dbscope: :example, js: true do
           select "公開待ち", from: "item[search_state]"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "0 件の検索結果")
 
         Article::Page.first.tap do |item|
@@ -159,7 +150,6 @@ describe "cms_search", dbscope: :example, js: true do
         end
 
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -204,7 +194,6 @@ describe "cms_search", dbscope: :example, js: true do
             fill_in "item[search_updated_close]", with: ""
             click_button "検索"
           end
-          expect(status_code).to eq 200
           expect(page).to have_css(".search-count", text: "1 件の検索結果")
           expect(page).to have_css("div.info a.title", text: "[TEST]D")
 
@@ -220,7 +209,6 @@ describe "cms_search", dbscope: :example, js: true do
             fill_in "item[search_updated_close]", with: close
             click_button "検索"
           end
-          expect(status_code).to eq 200
           expect(page).to have_css(".search-count", text: "2 件の検索結果")
           expect(page).to have_css("div.info a.title", text: "[TEST]A")
           expect(page).to have_css("div.info a.title", text: "[TEST]D")
@@ -234,7 +222,6 @@ describe "cms_search", dbscope: :example, js: true do
           select "申請したもの", from: "item[search_approver_state]"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "0 件の検索結果")
 
         Article::Page.first.tap do |item|
@@ -248,7 +235,6 @@ describe "cms_search", dbscope: :example, js: true do
         end
 
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -260,7 +246,6 @@ describe "cms_search", dbscope: :example, js: true do
           select "依頼されたもの", from: "item[search_approver_state]"
           click_button "検索"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "0 件の検索結果")
 
         Article::Page.first.tap do |item|
@@ -274,7 +259,6 @@ describe "cms_search", dbscope: :example, js: true do
         end
 
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -284,7 +268,6 @@ describe "cms_search", dbscope: :example, js: true do
         click_on 'カテゴリーを選択する'
         click_on cate_name1
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
       end
@@ -294,7 +277,6 @@ describe "cms_search", dbscope: :example, js: true do
         click_on 'カテゴリーを選択する'
         click_on opendata_cate_name1
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]E")
       end
@@ -304,7 +286,6 @@ describe "cms_search", dbscope: :example, js: true do
         click_on 'グループを選択する'
         click_on cms_group.name
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "5 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -318,7 +299,6 @@ describe "cms_search", dbscope: :example, js: true do
         click_on 'ユーザーを選択する'
         click_on user.name
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
       end
@@ -328,7 +308,6 @@ describe "cms_search", dbscope: :example, js: true do
         click_on 'フォルダーを選択する'
         click_on node_name
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
@@ -340,7 +319,6 @@ describe "cms_search", dbscope: :example, js: true do
         click_on 'ページ属性を選択する'
         click_on '記事/記事ページ'
         click_button "検索"
-        expect(status_code).to eq 200
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -372,7 +350,6 @@ describe "cms_search", dbscope: :example, js: true do
           fill_in "replacement", with: "戸籍"
           click_button "全置換"
         end
-        expect(status_code).to eq 200
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
@@ -409,7 +386,6 @@ describe "cms_search", dbscope: :example, js: true do
           check "option-url"
           click_button "全置換"
         end
-        expect(status_code).to eq 200
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_css(".result table a", text: "[TEST]child")
         expect(page).to have_css(".result table a", text: "[TEST]1")
@@ -447,7 +423,6 @@ describe "cms_search", dbscope: :example, js: true do
           check "option-regexp"
           click_button "全置換"
         end
-        expect(status_code).to eq 200
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1")
@@ -489,7 +464,6 @@ describe "cms_search", dbscope: :example, js: true do
           fill_in "replacement", with: "アンカー"
           click_button "全置換"
         end
-        expect(status_code).to eq 200
         expect(page).to have_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]TOP")
       end
@@ -512,7 +486,6 @@ describe "cms_search", dbscope: :example, js: true do
           check "option-url"
           click_button "全置換"
         end
-        expect(status_code).to eq 200
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_css(".result table a", text: "[TEST]TOP")
       end

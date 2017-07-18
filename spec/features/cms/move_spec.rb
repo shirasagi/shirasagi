@@ -37,7 +37,6 @@ describe "move_cms_pages" do
         click_button "保存"
       end
 
-      expect(status_code).to eq 200
       #expect(current_path).to eq move_page_path
       expect(page).to have_css("form#item-form h2", text: "A/page.html")
 
@@ -54,7 +53,6 @@ describe "move_cms_pages" do
         click_button "保存"
       end
 
-      expect(status_code).to eq 200
       expect(current_path).to eq move_node_path
       expect(page).to have_css("form#item-form h2", text: "D/E")
 
@@ -66,7 +64,6 @@ describe "move_cms_pages" do
         fill_in "destination", with: "D/E/page"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       #expect(current_path).to eq move_page_path
       expect(page).to have_css("form#item-form h2", text: "D/E/page.html")
 
@@ -78,7 +75,6 @@ describe "move_cms_pages" do
         fill_in "destination", with: "A/B/C"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(current_path).to eq move_node_path
       expect(page).to have_css("form#item-form h2", text: "A/B/C")
 

@@ -12,12 +12,10 @@ describe "gws_staff_record_public_duties", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
 
       # show
       click_link item.charge_name
-      expect(status_code).to eq 200
     end
   end
 end

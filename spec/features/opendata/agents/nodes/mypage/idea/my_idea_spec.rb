@@ -98,13 +98,11 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example, js: true do
     it do
       visit index_path
       click_link "新規作成"
-      expect(status_code).to eq 200
 
       fill_in "item_name", with: item_name
       fill_in "item_text", with: item_text
       check category.name
       click_button "公開申請"
-      expect(status_code).to eq 200
 
       expect(page).to have_css("#ss-notice", text: "保存しました。")
 

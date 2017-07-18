@@ -17,12 +17,10 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
   context "public" do
     it "#count" do
       visit node_cms.full_url
-      expect(status_code).to eq 200
       expect(page).to have_css(".ads-banners")
       expect(page).to have_selector(".banners span a", text: item.name)
 
       click_on item.name
-      expect(status_code).to be_in [200, 304]
       expect(page).to have_selector(".banners span a", text: item.name)
 
       # wait for counting accesses by using img tag which is processed asynchronously.
@@ -39,12 +37,10 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
 
     it "#count" do
       visit cms_preview_path(site: site, path: node_cms.url)
-      expect(status_code).to eq 200
       expect(page).to have_css(".ads-banners")
       expect(page).to have_selector(".banners span a", text: item.name)
 
       click_on item.name
-      expect(status_code).to eq 200
       expect(page).to have_selector(".banners span a", text: item.name)
 
       # wait for counting accesses by using img tag which is processed asynchronously.

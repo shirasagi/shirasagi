@@ -34,7 +34,6 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -42,7 +41,6 @@ describe "cms_users", type: :feature, dbscope: :example do
     it "#show" do
       login_cms_user
       visit show_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -53,7 +51,6 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -64,7 +61,6 @@ describe "cms_users", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
     end
   end
@@ -86,7 +82,6 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -94,7 +89,6 @@ describe "cms_users", type: :feature, dbscope: :example do
     it "#show" do
       login_cms_user
       visit show_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -105,7 +99,6 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -116,7 +109,6 @@ describe "cms_users", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
     end
   end

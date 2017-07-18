@@ -32,9 +32,7 @@ describe "gws_users", type: :feature, dbscope: :example do
         fill_in "item[in_password]", with: "pass"
         click_button "保存"
       end
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:group) { gws_user.groups.first }
-  let(:item) { create :gws_schedule_plan }
+  let!(:item) { create :gws_schedule_plan }
   let(:index_path) { gws_schedule_group_plans_path site, group }
   let(:new_path) { new_gws_schedule_group_plan_path site, group }
   let(:show_path) { gws_schedule_group_plan_path site, group, item }
@@ -15,8 +15,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_content(item.name)
     end
 
     it "#new" do
@@ -25,15 +24,12 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name"
         click_button "保存"
       end
-      expect(status_code.to_s).to match(/200|302/)
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: '保存しました。')
     end
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_content(item.name)
     end
 
     it "#edit" do
@@ -42,8 +38,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: '保存しました。')
     end
 
     it "#delete" do
@@ -51,7 +46,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_css('#notice', text: '保存しました。')
     end
   end
 end

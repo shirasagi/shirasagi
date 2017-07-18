@@ -11,7 +11,6 @@ describe "gws_histories", type: :feature, dbscope: :example do
     it "#index" do
       item
       visit path
-      expect(status_code).to eq 200
       expect(page).to have_content(item.name)
     end
   end

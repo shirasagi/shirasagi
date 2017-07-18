@@ -61,7 +61,6 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
       expect(current_path).to eq index_path
 
       click_link "あぷり"
-      expect(status_code).to eq 200
 
       within "table.opendata-app" do
         expect(page).to have_content "あぷり"
@@ -70,7 +69,6 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
       end
 
       click_link "編集"
-      expect(status_code).to eq 200
       within "form#item-form" do
         fill_in "item[name]", with: "あぷり2"
         fill_in "item[text]", with: "こうしん"
@@ -78,7 +76,6 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
         check category.name
         click_on "公開保存"
       end
-      expect(status_code).to eq 200
 
       within "table.opendata-app" do
         expect(page).to have_content "あぷり2"
@@ -88,7 +85,6 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
 
       click_link "削除"
       click_button "削除"
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       within "table.opendata-app" do

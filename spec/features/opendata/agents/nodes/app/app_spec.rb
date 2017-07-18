@@ -76,7 +76,6 @@ describe "opendata_agents_nodes_app", dbscope: :example, js: true do
       click_on app.name
     end
     click_on "一括ダウンロード"
-    expect(status_code).to eq 200
     expect(page.response_headers['Content-Type']).to eq("application/zip")
   end
 
