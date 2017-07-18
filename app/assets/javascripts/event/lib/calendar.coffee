@@ -9,7 +9,7 @@ class @Event_Calendar
         cache: false,
         success: (res, status) ->
           html = "<div>" + res + "</div>"
-          $(".event-calendar").html($(html).find(".event-calendar"))
+          $(".event-calendar").replaceWith($(html).find(".event-calendar"))
           $(".calendar-nav a.paginate").on 'click', ->
             paginate(this)
             return false

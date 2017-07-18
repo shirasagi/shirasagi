@@ -63,7 +63,8 @@ describe "webapi", dbscope: :example, type: :request do
         it "400" do
           params = {}
           post upload_file_path, params
-          expect(response.status).to eq 400
+          expect(response.status).to eq 422
+          expect(response.body).to include I18n.t('errors.messages.set_filename')
         end
 
         it "422" do
@@ -86,7 +87,7 @@ describe "webapi", dbscope: :example, type: :request do
           post upload_file_path, correct_upload_file_params
           expect(response.status).to eq 201
           post upload_file_path, correct_upload_file_params
-          expect(response.status).to eq 422
+          expect(response.status).to eq 201
           post upload_file_path, invalid_upload_file_params
           expect(response.status).to eq 422
         end
@@ -114,18 +115,12 @@ describe "webapi", dbscope: :example, type: :request do
           :item => {
             :filename => "img/replace.png",
             :files => [
-              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/replace.png", nil, true)
+              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/replace.png", "image/png", true)
             ]
           }
         }
         put edit_uploaded_file_path, edit_uploaded_file_params
         expect(response.status).to eq 204
-      end
-
-      it "400" do
-        params = {}
-        post upload_file_path, params
-        expect(response.status).to eq 400
       end
 
       it "404" do
@@ -139,6 +134,13 @@ describe "webapi", dbscope: :example, type: :request do
         }
         put invalid_uploaded_file_path, edit_uploaded_file_params
         expect(response.status).to eq 404
+      end
+
+      it "422" do
+        params = {}
+        post upload_file_path, params
+        expect(response.status).to eq 422
+        expect(response.body).to include I18n.t('errors.messages.set_filename')
       end
     end
 

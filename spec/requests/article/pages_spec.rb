@@ -184,7 +184,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           expect(body).to include "test1_article"
           expect(body).to include "test1_filename.html"
           expect(body).to include "記事レイアウト"
-          expect(body).to include "記事レイアウト,0"
+          expect(body).to include "記事レイアウト,,0"
           expect(body).to include "test1_keywords"
           expect(body).to include "test1_description"
           expect(body).to include "test1_summary_html"

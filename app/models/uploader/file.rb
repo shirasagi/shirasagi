@@ -8,14 +8,13 @@ class Uploader::File
   validates :filename, length: { maximum: 2000 }
 
   validate :validate_filename
-  validate :validate_exists, if: :path_chenged?
   validate :validate_scss
   validate :validate_coffee
 
   def save
     return false unless valid?
     begin
-      if saved_path && path != saved_path #persisted AND path chenged
+      if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
         Fs.mv(saved_path, path)
       else
@@ -131,10 +130,6 @@ class Uploader::File
     elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
       errors.add :path, :invalid_filename
     end
-  end
-
-  def validate_exists
-    errors.add :filename, :taken if Fs.exists? path
   end
 
   def path_chenged?

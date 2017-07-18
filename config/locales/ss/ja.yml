@@ -62,7 +62,6 @@ ja:
       reset_tags: タグ解除
       upload: アップロード
     buttons:
-      login: ログイン
       save: 保存
       new: 新規作成
       draft_save: 下書き保存
@@ -400,6 +399,7 @@ ja:
         file_resizing_label: "%{size}（サイト設定）"
       ss/addon/approve_setting:
         forced_update: メールアドレス注意設定
+        close_confirmation: 非公開保存の警告表示設定
       ss/model/max_file_size:
         name: 名前
         extensions: 拡張子
@@ -639,6 +639,8 @@ ja:
       forced_update:
         - メールアドレスが設定されていない場合の承認について設定します。
         - 設定すると実行時の注意を無視します。
+      close_confirmation:
+        - 下書き保存時の警告表示を設定します。
     ss/model/max_file_size:
       name:
         - 設定名を入力します

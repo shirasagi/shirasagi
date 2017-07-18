@@ -218,3 +218,30 @@ class @SS
       i = Math.floor(Math.random() * chars.length)
       pass += chars.charAt(i)
     return pass
+
+  @fileCheck: ->
+    $('#item_files').change ->
+      form = $(this).val()
+      unless form
+        $(".js-uploader-alert-message").hide()
+        return
+      uri = location.pathname.split("/")
+      $.ajax
+        type: "get"
+        url: uri.join("/")
+        dataType: "json"
+        data:
+          do: "check"
+          item_files: form
+        success: (data) ->
+          if data["message"]
+            $(".js-uploader-alert-message").html(data["message"])
+            $(".js-uploader-alert-message").show()
+          else
+            $(".js-uploader-alert-message").hide()
+        error: (xhr, status) ->
+          try
+            errors = $.parseJSON(xhr.responseText)
+            alert(["== Error =="].concat(errors).join("\n"));
+          catch
+            alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
