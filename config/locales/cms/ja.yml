@@ -301,6 +301,7 @@ ja:
       cms/html: HTML
       cms/body: 本文
       cms/body_part: 本文パーツ
+      cms/editor_setting: エディタ設定
       cms/file: ファイル
       cms/release: 公開設定
       cms/release_plan: 公開予約
@@ -454,6 +455,10 @@ ja:
         keywords: キーワード
         description: 概要
         summary_html: サマリー
+      cms/addon/editor_setting:
+        color_button: 文字色変更ボタン
+        editor_css_path: スタイルシートパス
+        syntax_check: アクセシビリティチェック
       cms/addon/release:
         released: 公開日時
       cms/addon/release_plan:
@@ -1175,6 +1180,14 @@ ja:
       search_sort:
         - 検索結果のページ並び順を選択します。
         - 指定が無い場合、ファイル名での並び順となります。
+
+    cms/addon/editor_setting:
+      color_button:
+        - 文字色変更ボタンの表示を設定します。
+      editor_css_path:
+        - エディタ用スタイルシートのパスを設定します。
+      syntax_check:
+        - アクセシビリティチェックの有効無効を設定します。
 
     cms/addon/source_cleaner:
       target:

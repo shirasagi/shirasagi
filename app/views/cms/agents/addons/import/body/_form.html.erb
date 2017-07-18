@@ -1,4 +1,5 @@
-<%= html_editor ".mod-cms-body .html", removeFormatTags: "", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+<% syntax_check = @cur_node ? (@cur_node.syntax_check_enabled? || @cur_site.syntax_check_enabled?) : @cur_site.syntax_check_enabled? %>
+<%=  html_editor ".mod-cms-body .html", removeFormatTags: "", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 <%= jquery do %>
   Link_Checker.url           = "<%= SS.config.cms.link_check_url %>";
   Link_Checker.rootUrl       = "<%= @cur_site.full_url %>";
@@ -9,7 +10,7 @@
 <dl class="see mod-cms-body">
   <dd class="wide"><%= f.text_area :html, class: "html", style: "height: 400px;" %></dd>
   <dd class="wide">
-  <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+  <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
   <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
   </dd>
 </dl>

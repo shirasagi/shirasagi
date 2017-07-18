@@ -3,7 +3,7 @@
 <dl class="column member-body">
   <dt><%= @model.t :html %>
   <dd>
-    <%= html_editor_ckeditor "#mod-member-body", height: "400px", readonly: true %>
+    <%= html_editor "#mod-member-body", height: "400px", readonly: true %>
     <%= text_area_tag "mod-member-body", @item.html, style: "height: 400px;" %>
   </dd>
 </dl>
