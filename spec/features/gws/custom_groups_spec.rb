@@ -34,9 +34,11 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit "#{path}/#{item.id}/edit"
-      within "form#item-form" do
-        fill_in "item[name]", with: "name"
-        click_button "保存"
+      page.accept_confirm do
+        within "form#item-form" do
+          fill_in "item[name]", with: "name"
+          click_button "保存"
+        end
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end

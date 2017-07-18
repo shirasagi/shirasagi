@@ -345,15 +345,14 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
         expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
-        within "form.index-search" do
-          fill_in "keyword", with: "くらし"
-          fill_in "replacement", with: "戸籍"
-          click_button "全置換"
+        page.accept_confirm do
+          within "form.index-search" do
+            fill_in "keyword", with: "くらし"
+            fill_in "replacement", with: "戸籍"
+            click_button "全置換"
+          end
         end
-        expect(page).to have_no_css(".result table a", text: "[TEST]top")
-        expect(page).to have_css(".result table a", text: "[TEST]child")
-        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
-        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         within "form.index-search" do
           fill_in "keyword", with: "戸籍"
@@ -380,16 +379,15 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_css(".result table a", text: "[TEST]1")
         expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
-        within "form.index-search" do
-          fill_in "keyword", with: "/top/child/"
-          fill_in "replacement", with: "/kurashi/koseki/"
-          check "option-url"
-          click_button "全置換"
+        page.accept_confirm do
+          within "form.index-search" do
+            fill_in "keyword", with: "/top/child/"
+            fill_in "replacement", with: "/kurashi/koseki/"
+            check "option-url"
+            click_button "全置換"
+          end
         end
-        expect(page).to have_no_css(".result table a", text: "[TEST]top")
-        expect(page).to have_css(".result table a", text: "[TEST]child")
-        expect(page).to have_css(".result table a", text: "[TEST]1")
-        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         within "form.index-search" do
           fill_in "keyword", with: "/kurashi/koseki/"
@@ -417,16 +415,15 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_no_css(".result table a", text: "[TEST]1")
         expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
 
-        within "form.index-search" do
-          fill_in "keyword", with: '<p>.+?<\/p>'
-          fill_in "replacement", with: "<s>正規表現</s>"
-          check "option-regexp"
-          click_button "全置換"
+        page.accept_confirm do
+          within "form.index-search" do
+            fill_in "keyword", with: '<p>.+?<\/p>'
+            fill_in "replacement", with: "<s>正規表現</s>"
+            check "option-regexp"
+            click_button "全置換"
+          end
         end
-        expect(page).to have_no_css(".result table a", text: "[TEST]top")
-        expect(page).to have_css(".result table a", text: "[TEST]child")
-        expect(page).to have_no_css(".result table a", text: "[TEST]1")
-        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         within "form.index-search" do
           fill_in "keyword", with: '<s>.+?<\/s>'
@@ -459,13 +456,14 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]TOP")
 
-        within "form.index-search" do
-          fill_in "keyword", with: "anchor"
-          fill_in "replacement", with: "アンカー"
-          click_button "全置換"
+        page.accept_confirm do
+          within "form.index-search" do
+            fill_in "keyword", with: "anchor"
+            fill_in "replacement", with: "アンカー"
+            click_button "全置換"
+          end
         end
-        expect(page).to have_css(".result table a", text: "[TEST]top")
-        expect(page).to have_no_css(".result table a", text: "[TEST]TOP")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       end
 
       it "replace_url with string" do
@@ -480,14 +478,15 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_css(".result table a", text: "[TEST]TOP")
 
-        within "form.index-search" do
-          fill_in "keyword", with: "/TOP/"
-          fill_in "replacement", with: "/kurashi/"
-          check "option-url"
-          click_button "全置換"
+        page.accept_confirm do
+          within "form.index-search" do
+            fill_in "keyword", with: "/TOP/"
+            fill_in "replacement", with: "/kurashi/"
+            check "option-url"
+            click_button "全置換"
+          end
         end
-        expect(page).to have_no_css(".result table a", text: "[TEST]top")
-        expect(page).to have_css(".result table a", text: "[TEST]TOP")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       end
     end
   end
