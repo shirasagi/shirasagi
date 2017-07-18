@@ -14,17 +14,27 @@ module Event::Addon
         [I18n.t('event.options.sort.order'), 'order'],
         [I18n.t('event.options.sort.event_dates'), 'event_dates'],
         [I18n.t('event.options.sort.unfinished_event_dates'), 'unfinished_event_dates'],
+        [I18n.t('event.options.sort.event_dates_today'), 'event_dates_today'],
+        [I18n.t('event.options.sort.event_dates_tomorrow'), 'event_dates_tomorrow'],
+        [I18n.t('event.options.sort.event_dates_week'), 'event_dates_week'],
       ]
     end
 
     def condition_hash(opts = {})
       h = super
-      if sort == "event_dates"
+      today = Time.zone.now
+      case sort
+      when "event_dates"
         { "$and" => [ h, { "event_dates.0" => { "$exists" => true } } ] }
-      elsif sort == "unfinished_event_dates"
-        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => Time.zone.today } } } ] }
-      else
-        h
+      when "unfinished_event_dates"
+        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today } } } ] }
+      when "event_dates_today"
+        { "$and" => [ h, { "event_dates" => { "$eq" => today } } ] }
+      when "event_dates_tomorrow"
+        { "$and" => [ h, { "event_dates" => { "$eq" => 1.day.since(today) } } ] }
+      when "event_dates_week"
+        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today, "$lte" => 1.week.since(today) } } } ] }
+      else h
       end
     end
 
