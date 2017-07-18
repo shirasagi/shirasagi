@@ -38,6 +38,10 @@ ja:
       short: ! '%1m/%1d'
       default_full: ! '%Y/%1m/%1d (%a)'
       iso_full: ! '%Y-%m-%d (%a)'
+      month: ! '%Y/%1m'
+      iso_month: ! '%Y-%m'
+      long_month: ! '%Y年%1m月'
+      short_month: ! '%1m'
     month_names:
     -
     - 1月

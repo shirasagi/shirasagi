@@ -15,7 +15,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @year  = params[:year].to_i if @year.blank?
     @month = params[:month].to_i if @month.blank?
     date = Date.new(@year, @month, 1)
-    @window_name = "#{date.strftime("%Y/%m")} - #{@cur_node.name} - #{@cur_site.name}" if @window_name.blank?
+    @window_name = "#{I18n.l date, format: :long_month} - #{@cur_node.name} - #{@cur_site.name}" if @window_name.blank?
 
     if within_one_year?(date)
       index_monthly
@@ -31,7 +31,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @month = params[:month].to_i
     @day   = params[:day].to_i
     date = Date.new(@year, @month, @day)
-    @window_name = "#{date.strftime("%Y/%m/%d")} - #{@cur_node.name} - #{@cur_site.name}"
+    @window_name = "#{I18n.l date, format: :long} - #{@cur_node.name} - #{@cur_site.name}"
 
     if within_one_year?(date)
       index_daily
