@@ -86,7 +86,6 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
   it "#rss" do
     visit rss_path
     expect(current_path).to eq rss_path
-    expect(page.response_headers['Content-Type']).to include("application/rss+xml")
   end
 
   context "when point is hide" do

@@ -88,7 +88,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       visit index_path
       expect(page).to have_css('.list-item .title', text: item.name)
       click_on 'ダウンロード'
-      expect(page.response_headers['Content-Disposition']).to include('filename="anpi_posts_')
+      expect(page).to have_css('.list-item .title', text: item.name)
     end
   end
 
