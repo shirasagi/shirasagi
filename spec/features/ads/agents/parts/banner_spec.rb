@@ -43,8 +43,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       expect(page).to have_css(".ads-banners")
       expect(page).to have_selector(".banners span a", text: item.name)
 
-      # click_on item.name
-      find(".banners span a", text: item.name).trigger("click")
+      click_on item.name
       expect(status_code).to eq 200
       expect(page).to have_selector(".banners span a", text: item.name)
 
