@@ -1,3 +1,9 @@
+require 'active_support/deprecation/reporting'
+require 'sass/importers'
+require 'sprockets/file_reader'
+require 'sprockets/erb_processor'
+require 'sprockets/processor_utils'
+
 class Fs::GridFs::CompassImporter < Sass::Importers::Base
   attr_reader :root
 
