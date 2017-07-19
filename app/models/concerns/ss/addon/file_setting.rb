@@ -7,10 +7,10 @@ module SS::Addon
       attr_accessor :in_file_resizing_width, :in_file_resizing_height
 
       field :file_resizing, type: Array, default: []
-      field :multibyte_filename, type: String
-      validates :multibyte_filename, inclusion: { in: %w(enabled disabled), allow_blank: true }
+      field :multibyte_filename_state, type: String
+      validates :multibyte_filename_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
       permit_params :in_file_resizing_width, :in_file_resizing_height
-      permit_params :multibyte_filename
+      permit_params :multibyte_filename_state
 
       before_validation :set_file_resizing
     end
@@ -28,12 +28,12 @@ module SS::Addon
       self.file_resizing = [ width, height ]
     end
 
-    def multibyte_filename_options
+    def multibyte_filename_state_options
       %w(enabled disabled).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }.to_a
     end
 
-    def multibyte_filename_enabled?
-      multibyte_filename != 'disabled'
+    def multibyte_filename_state_enabled?
+      multibyte_filename_state != 'disabled'
     end
   end
 end

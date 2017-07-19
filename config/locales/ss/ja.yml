@@ -398,7 +398,7 @@ ja:
         file_resizing_width: 幅
         file_resizing_height: 高さ
         file_resizing_label: "%{size}（サイト設定）"
-        multibyte_filename: 日本語ファイル名
+        multibyte_filename_state: 日本語ファイル名
       ss/addon/approve_setting:
         forced_update: メールアドレス注意設定
       ss/model/max_file_size:
@@ -636,7 +636,7 @@ ja:
       file_resizing:
         - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。
         - 幅、高さ共に200が最小値になります。
-      multibyte_filename:
+      multibyte_filename_state:
         - 日本語ファイルのアップロードを設定できます。
         - 無効にすると日本語ファイルのアップロードを無効化します。
     ss/addon/approve_setting:
