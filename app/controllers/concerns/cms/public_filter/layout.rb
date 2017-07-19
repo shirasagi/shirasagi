@@ -55,8 +55,10 @@ module Cms::PublicFilter::Layout
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
 
-    @window_name = @cur_site.name
-    @window_name = "#{@cur_item.name} - #{@cur_site.name}" if @cur_item.filename != "index.html"
+    if !@window_name
+      @window_name = @cur_site.name
+      @window_name = "#{@cur_item.name} - #{@cur_site.name}" if @cur_item.filename != "index.html"
+    end
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)

@@ -22,6 +22,16 @@ module Cms::PublicFilter::Node
     spec = recognize_agent path
     return unless spec
 
+    if spec[:year].present? && spec[:month].present?
+      if spec[:day].present?
+        date = Date.new(spec[:year].to_i, spec[:month].to_i, spec[:day].to_i)
+        @window_name = "#{node.name} - #{I18n.l date, format: :long} - #{@cur_site.name}"
+      else
+        date = Date.new(spec[:year].to_i, spec[:month].to_i, 1)
+        @window_name = "#{node.name} - #{I18n.l date, format: :long_month} - #{@cur_site.name}"
+      end
+    end
+
     @cur_node = node
     controller = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 

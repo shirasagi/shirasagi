@@ -41,7 +41,6 @@ ja:
       month: ! '%Y/%1m'
       iso_month: ! '%Y-%m'
       long_month: ! '%Y年%1m月'
-      short_month: ! '%1m'
     month_names:
     -
     - 1月
