@@ -4,7 +4,11 @@
     <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <% end %>
   <% if item.try(:filename) %>
+    <% if params.dig(:s, :target) != 'search_descendant_node' %>
+    <span class="filename"><%= File.basename item.filename %></span>
+    <% else %>
     <span class="filename"><%= item.filename %></span>
+    <% end %>
   <% end %>
   <% if item.try(:route) %>
     <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>

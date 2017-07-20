@@ -40,7 +40,7 @@ module Cms::Content
       if !target || target == 'search_cur_node'
         node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
       else
-        node ? where(filename: /^#{node.filename}\//, depth: (node.depth + 1)..Float::INFINITY) : where(depth: 1..Float::INFINITY)
+        node ? where(filename: /^#{node.filename}\//, depth: {'$gte' => node.depth + 1}) : where(depth: {'$gte' => 1})
       end
     }
     scope :and_public, ->(date = nil) {
