@@ -3,8 +3,6 @@ ja:
     add_max_file_size: 最大ファイルサイズを設定する
     alert: 警告
     all_contents: 全コンテンツ一覧出力
-    all_layouts: 全レイアウト一覧出力
-    all_parts: 全パーツ一覧出力
     body_layout: 本文レイアウト
     calendar_view: カレンダー表示
     check_links: リンクチェック実行結果
@@ -13,8 +11,6 @@ ja:
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
-    current_level_layouts: 現在の階層のレイアウト出力一覧
-    current_level_parts: 現在の階層のパーツ出力一覧
     editor_template: テンプレート
     file: 共有ファイル
     generate_node: フォルダー書き出し
@@ -46,11 +42,13 @@ ja:
     preview_site: サイトプレビュー
     role: 権限/ロール
     root_menu: メインメニュー
+    search_cur_node: このフォルダ内を検索
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
+    search_descendant_node: このフォルダ以下を検索
     site: サイト
     site_config: サイト設定
     site_info: サイト情報

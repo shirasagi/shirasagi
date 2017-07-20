@@ -36,8 +36,12 @@ module Cms::Content
     after_validation :set_depth, if: ->{ filename.present? }
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
-    scope :node, ->(node) {
-      node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+    scope :node, ->(node, target = false) {
+      if !target || target == 'search_cur_node'
+        node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+      else
+        node ? where(filename: /^#{node.filename}\//, depth: (node.depth + 1)..Float::INFINITY) : where(depth: 1..Float::INFINITY)
+      end
     }
     scope :and_public, ->(date = nil) {
       if date.nil?
