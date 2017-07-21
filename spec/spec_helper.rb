@@ -19,6 +19,7 @@ require 'rspec/rails'
 #require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'support/ss/capybara_support'
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -80,47 +81,8 @@ RSpec.configure do |config|
     Capybara.app_host = nil
   end
 
-  if system("which chromedriver > /dev/null 2>&1")
-    begin
-      # found chromedriver, register chrome with headless as a Capybara driver.
-      require 'selenium-webdriver'
-      Capybara.register_driver :chrome do |app|
-        options = Selenium::WebDriver::Chrome::Options.new
-        options.add_preference('download.prompt_for_download', false)
-        options.add_preference('download.default_directory', SS::DownloadHelpers.path)
-        options.add_argument('window-size=1680,1050')
-        if ENV['headless'] != '0'
-          options.add_argument('headless')
-          options.add_argument('disable-gpu')
-        end
-
-        Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-      end
-      Capybara.javascript_driver = :chrome
-      Capybara.default_max_wait_time = 15
-
-      config.before( :each ) do
-        SS::DownloadHelpers::clear_downloads
-      end
-
-      puts '[Capybara] with Google Chrome'
-    rescue LoadError
-      config.filter_run_excluding(js: true)
-    end
-  elsif system("which phantomjs > /dev/null 2>&1")
-    begin
-      # found phantomjs, register poltergeist as a Capybara driver.
-      require 'capybara/poltergeist'
-      Capybara.register_driver :poltergeist do |app|
-        Capybara::Poltergeist::Driver.new(app, inspector: true)
-      end
-      Capybara.javascript_driver = :poltergeist
-      Capybara.default_max_wait_time = 15
-      puts '[Capybara] with Poltergeist/PhantomJS'
-    rescue LoadError
-      config.filter_run_excluding(js: true)
-    end
-  else
+  driver = ENV['driver'].presence || 'auto'
+  if !SS::CapybaraSupport.activate_driver(driver, config)
     config.filter_run_excluding(js: true)
   end
 

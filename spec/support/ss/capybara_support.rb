@@ -1,0 +1,75 @@
+module SS::CapybaraSupport
+  module_function
+
+  def chrome_installed?
+    system("which chromedriver > /dev/null 2>&1")
+  end
+
+  def phantomjs_installed?
+    system("which phantomjs > /dev/null 2>&1")
+  end
+
+  def auto_detect_driver
+    return :chrome if chrome_installed?
+    return :poltergeist if phantomjs_installed?
+  end
+
+  def activate_driver(name, config)
+    case name.to_sym
+    when :auto
+      activate_driver(auto_detect_driver, config)
+    when :chrome
+      activate_chrome(config)
+    when :poltergeist, :phantomjs
+      activate_poltergeist(config)
+    else
+      deactivate_driver(config)
+    end
+  rescue LoadError
+    deactivate_driver(config)
+  end
+
+  def activate_chrome(config)
+    require 'selenium-webdriver'
+    Capybara.register_driver :chrome do |app|
+      options = Selenium::WebDriver::Chrome::Options.new
+      options.add_preference('download.prompt_for_download', false)
+      options.add_preference('download.default_directory', SS::DownloadHelpers.path)
+      options.add_argument('window-size=1680,1050')
+      if ENV['headless'] != '0'
+        options.add_argument('headless')
+        options.add_argument('disable-gpu')
+      end
+
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+    end
+    Capybara.javascript_driver = :chrome
+    Capybara.default_max_wait_time = 15
+
+    config.before( :each ) do
+      SS::DownloadHelpers::clear_downloads
+    end
+
+    config.filter_run_excluding(driver: :poltergeist)
+    puts '[Capybara] with Google Chrome'
+    true
+  end
+
+  def activate_poltergeist(config)
+    require 'capybara/poltergeist'
+    Capybara.register_driver :poltergeist do |app|
+      Capybara::Poltergeist::Driver.new(app, inspector: true)
+    end
+    Capybara.javascript_driver = :poltergeist
+    Capybara.default_max_wait_time = 15
+
+    config.filter_run_excluding(driver: :chrome)
+    puts '[Capybara] with Poltergeist/PhantomJS'
+    true
+  end
+
+  def deactivate_driver(config)
+    config.filter_run_excluding(js: true)
+    false
+  end
+end
