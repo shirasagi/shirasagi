@@ -32,7 +32,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
     end
   end
 
-  context "preview" do
+  context "preview", driver: :chrome do
     before { login_cms_user }
 
     it "#count" do
