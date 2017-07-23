@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :year %></dt>
+  <dd><%= @item.send :year %></dd>
+
+  <dt><%= @model.t :start_date %></dt>
+  <dd><%= tryb { @item.start_date.strftime("%Y/%m/%d") } %></dd>
+
+  <dt><%= @model.t :close_date %></dt>
+  <dd><%= tryb { @item.close_date.strftime("%Y/%m/%d") } %></dd>
+</dl>

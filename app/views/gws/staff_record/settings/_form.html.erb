@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= t "gws/staff_record.staff_records" %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t(:staff_records_limit).sub(/.*\//, '') %><%= @model.tt :staff_records_limit %></dt>
+  <dd><%= f.number_field :staff_records_limit %></dd>
+
+  <dt><%= t "gws/staff_record.divide_duties" %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t(:divide_duties_limit).sub(/.*\//, '') %><%= @model.tt :divide_duties_limit %></dt>
+  <dd><%= f.number_field :divide_duties_limit %></dd>
+</dl>

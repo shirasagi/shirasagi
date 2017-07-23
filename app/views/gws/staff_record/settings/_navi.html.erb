@@ -1,0 +1,18 @@
+<nav class="mod-navi">
+  <h2><%= t "mongoid.models.gws/staff_record/group_setting" %></h2>
+
+  <% if @cur_site.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.module_setting'), gws_staff_record_setting_path %></h3>
+  <% end %>
+  <% if Gws::StaffRecord::Year.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/staff_record/year'), gws_staff_record_years_path %></h3>
+  <% end %>
+  <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/staff_record/group'), gws_staff_record_groups_path %></h3>
+  <% end %>
+  <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/staff_record/user'), gws_staff_record_users_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "gws/main/conf_navi" %>
