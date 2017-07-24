@@ -6,7 +6,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
   let!(:part) { create :ads_part_banner, cur_site: site, cur_node: node }
   let!(:item) { create :ads_banner, cur_site: site, cur_node: node }
 
-  let(:layout)   { create_cms_layout [part] }
+  let(:layout)   { create_cms_layout part }
   let(:node_cms) { create :cms_node, layout_id: layout.id }
 
   before do

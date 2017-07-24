@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "cms_agents_parts_calendar_nav", type: :feature, dbscope: :example, js: true do
   let(:site)   { cms_site }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:node) { create :cms_node_archive, cur_site: site, layout_id: layout.id, filename: "node" }
   let(:part)   { create :cms_part_calendar_nav, filename: "node/part" }
 

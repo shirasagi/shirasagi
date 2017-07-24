@@ -4,7 +4,7 @@ describe "recommend_agents_parts_similarity", type: :feature, dbscope: :example 
   let!(:site) { cms_site }
   let!(:site2) { create :cms_site, name: "another", host: "another", domains: "another.localhost.jp" }
 
-  let!(:layout) { create_cms_layout [part] }
+  let!(:layout) { create_cms_layout part }
   let!(:part) { create :recommend_part_similarity, filename: "node/part" }
   let!(:node) { create :cms_node, layout_id: layout.id, filename: "node" }
 
