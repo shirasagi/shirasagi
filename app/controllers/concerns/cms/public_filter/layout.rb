@@ -55,6 +55,8 @@ module Cms::PublicFilter::Layout
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
 
+    @charset = '<meta charset="UTF-8" />'
+
     @window_name = @cur_site.name
     @window_name = "#{@cur_item.name} - #{@cur_site.name}" if @cur_item.filename != "index.html"
 
@@ -62,11 +64,22 @@ module Cms::PublicFilter::Layout
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
     body = @cur_layout.body.to_s
+
     body = body.sub(/<body.*?>/) do |m|
       m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
       m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
       m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
       m
+    end
+
+    body = body.sub(/<meta charset=.*?\/>/) do |m|
+      @charset = m
+      ''
+    end
+
+    body = body.sub(/<title.*?>.*?<\/title>/) do |m|
+      @window_name = m.gsub(/<title>|<\/title>/, '')
+      ''
     end
 
     html = render_layout_parts(body)
