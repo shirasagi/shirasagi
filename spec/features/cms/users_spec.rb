@@ -34,14 +34,13 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do
       login_cms_user
       visit show_path
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_content(item.name)
     end
 
     it "#edit" do
@@ -51,8 +50,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#delete" do
@@ -61,7 +59,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
   end
 
@@ -82,14 +80,13 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do
       login_cms_user
       visit show_path
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_content(item.name)
     end
 
     it "#edit" do
@@ -99,8 +96,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#delete" do
@@ -109,7 +105,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
   end
 
