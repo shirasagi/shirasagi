@@ -2,7 +2,11 @@ module SS::CapybaraSupport
   module_function
 
   def chrome_installed?
-    system("which chromedriver > /dev/null 2>&1")
+    return true if system("which chromedriver > /dev/null 2>&1")
+    return true if ::File.exist?('/usr/lib/chromium-browser/chromedriver')
+    home = ENV['HOME']
+    return true if ::File.exist?("#{home}/chromedriver")
+    false
   end
 
   def phantomjs_installed?
@@ -39,6 +43,14 @@ module SS::CapybaraSupport
       if ENV['headless'] != '0'
         options.add_argument('headless')
         options.add_argument('disable-gpu')
+      end
+
+      if ::File.exist?('/usr/lib/chromium-browser/chromedriver')
+        Selenium::WebDriver::Chrome.driver_path ||= '/usr/lib/chromium-browser/chromedriver'
+      end
+      home = ENV['HOME']
+      if ::File.exist?("#{home}/chromedriver")
+        Selenium::WebDriver::Chrome.driver_path ||= "#{home}/chromedriver"
       end
 
       Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
