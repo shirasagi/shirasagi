@@ -42,13 +42,8 @@ class Map::Extensions::Point < Hash
       when self then
         object.mongoize
       when Hash then
-        loc = object[:loc].presence || object['loc'].presence
-        return self.new.mongoize if loc.blank?
-
-        ret = self[loc: Map::Extensions::Loc.mongoize(loc)]
-        zoom_level = object[:zoom_level].presence || object['zoom_level'].presence
-        zoom_level = Integer(zoom_level) rescue nil if zoom_level.present?
-        ret[:zoom_level] = zoom_level if zoom_level.present?
+        ret = self.new
+        ret.merge!(object) if object["loc"].present?
         ret.mongoize
       else object
       end
