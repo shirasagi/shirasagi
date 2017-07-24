@@ -48,6 +48,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_opendata_licenses
     invoke :update_cms_nodes
     invoke :update_cms_pages
+    invoke :update_ss_files
     invoke :update_opendata_dataset_resources
     invoke :update_opendata_app_appfiles
 
@@ -107,7 +108,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   def convert_data(data)
     data['site_id'] = @dst_site.id if data.key?('site_id')
     data['user_id'] = @cms_users_map[data['user_id']] if data['user_id'].present?
-    data['node_id'] = @cms_nodes_map[data['node_id']] if data['node_id'].present?
+    data['node_id'] = @cms_nodes_map[data['node_id']] if data['node_id'].present? && @cms_nodes_map
 
     data['group_ids'] = convert_ids(@cms_groups_map, data['group_ids']) if data['group_ids'].present?
 
