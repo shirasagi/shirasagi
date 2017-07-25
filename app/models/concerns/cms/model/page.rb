@@ -28,10 +28,6 @@ module Cms::Model::Page
     template_variable_handler(:categories, :template_variable_handler_categories)
   end
 
-  def search_options
-    %w(search_cur_node search_descendant_node).map { |m| [ I18n.t("cms.#{m}"), m ] }
-  end
-
   def date
     released || super
   end

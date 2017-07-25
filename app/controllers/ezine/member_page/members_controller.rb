@@ -1,10 +1,9 @@
 class Ezine::MemberPage::MembersController < ApplicationController
   include Cms::BaseFilter
-  include Cms::PageFilter
+  include Cms::CrudFilter
 
   model Cms::Member
 
-  append_view_path "app/views/cms/pages"
   navi_view "ezine/main/navi"
 
   def index

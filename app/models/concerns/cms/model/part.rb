@@ -35,10 +35,6 @@ module Cms::Model::Part
     ]
   end
 
-  def search_options
-    %w(search_cur_node search_descendant_node).map { |m| [ I18n.t("cms.#{m}"), m ] }
-  end
-
   def ajax_html
     json = url.sub(/\.html$/, ".json")
     %(<a class="ss-part" data-href="#{json}">#{name}</a>)

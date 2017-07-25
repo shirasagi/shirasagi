@@ -18,10 +18,6 @@ module Cms::Model::Layout
     before_save :set_js_paths
   end
 
-  def search_options
-    %w(search_cur_node search_descendant_node).map { |m| [ I18n.t("cms.#{m}"), m ] }
-  end
-
   def head
     return nil if html !~ /<head>/
     tags = []

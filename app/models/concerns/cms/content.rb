@@ -37,10 +37,10 @@ module Cms::Content
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = false) {
-      if !target || target == 'search_cur_node'
+      if !target || target == 'current'
         node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
       else
-        node ? where(filename: /^#{node.filename}\//, depth: {'$gte' => node.depth + 1}) : where(depth: {'$gte' => 1})
+        node ? where(filename: /^#{node.filename}\//) : nil
       end
     }
     scope :and_public, ->(date = nil) {
@@ -178,6 +178,10 @@ module Cms::Content
     return false unless serve_static_file?
     return true if @serve_static_relation_files.nil?
     @serve_static_relation_files == true
+  end
+
+  def node_target_options
+    %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
   end
 
   private
