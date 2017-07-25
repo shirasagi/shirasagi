@@ -18,6 +18,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :extract
 
     init_src_site
+    init_mapping
     import_cms_groups
     import_cms_users
     import_dst_site
@@ -96,6 +97,21 @@ class Sys::SiteImportJob < SS::ApplicationJob
     read_json("cms_site").each { |k, v| @src_site[k] = v }
   end
 
+  def init_mapping
+    @cms_groups_map = {}
+    @cms_users_map = {}
+    @cms_user_roles_map = {}
+    @cms_roles_map = {}
+    @ss_files_map = {}
+    @cms_layouts_map = {}
+    @cms_body_layouts_map = {}
+    @cms_nodes_map = {}
+    @cms_parts_map = {}
+    @cms_pages_map = {}
+    @opendata_dataset_groups_map = {}
+    @opendata_licenses_map = {}
+  end
+
   def import_dst_site
     @dst_site.group_ids = convert_ids(@cms_groups_map, @src_site.group_ids)
     @src_site.attributes.each do |key, val|
@@ -108,7 +124,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   def convert_data(data)
     data['site_id'] = @dst_site.id if data.key?('site_id')
     data['user_id'] = @cms_users_map[data['user_id']] if data['user_id'].present?
-    data['node_id'] = @cms_nodes_map[data['node_id']] if data['node_id'].present? && @cms_nodes_map
+    data['node_id'] = @cms_nodes_map[data['node_id']] if data['node_id'].present?
 
     data['group_ids'] = convert_ids(@cms_groups_map, data['group_ids']) if data['group_ids'].present?
 
