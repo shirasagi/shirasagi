@@ -13,6 +13,9 @@ class Map::Extensions::Points < Array
       when self.class then object.mongoize
       when Array then
         object = object.map do |point|
+          point.deep_stringify_keys
+        end
+        object = object.map do |point|
           point["loc"] = Map::Extensions::Loc.mongoize(point["loc"])
           point
         end

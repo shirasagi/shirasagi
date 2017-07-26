@@ -42,6 +42,7 @@ class Map::Extensions::Point < Hash
       when self then
         object.mongoize
       when Hash then
+        object.deep_stringify_keys!
         ret = self.new
         ret.merge!(object) if object["loc"].present?
         ret.mongoize
