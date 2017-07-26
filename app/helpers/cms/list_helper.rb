@@ -16,6 +16,7 @@ module Cms::ListHelper
           ih << '<article class="item-#{class} #{current}">'
           ih << '  <header>'
           ih << '     <h2><a href="#{url}">#{name}</a></h2>'
+          ih << '     #{category_items}'
           ih << '  </header>'
           ih << '</article>'
           ih = cur_item.render_loop_html(item, html: ih.join("\n"))
@@ -46,6 +47,7 @@ module Cms::ListHelper
           ih << '  <header>'
           ih << '    <time datetime="#{date.iso}">#{date.long}</time>'
           ih << '    <h2><a href="#{url}">#{index_name}</a></h2>'
+          ih << '    #{category_items}'
           ih << '  </header>'
           ih << '</article>'
           ih = cur_item.render_loop_html(item, html: ih.join("\n"))

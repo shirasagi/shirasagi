@@ -15,7 +15,22 @@ module Cms::Addon
       if respond_to? :template_variable_handler
         template_variable_handler :summary, :template_variable_handler_name
         template_variable_handler :description, :template_variable_handler_name
+        template_variable_handler :category_items, :template_variable_handler_name
       end
+    end
+
+    def category_items
+      node_id = self._id
+      html = '<ul>'
+      Cms::Node.where({ filename: /^#{self.filename}\//, route: /^category\// }).each do |node|
+        html << "<li><a href=\"#{node.url}\">#{node.name}</a></li>"
+      end
+      Cms::Page.in({ category_ids: node_id }).each do |page|
+        html << "<li><time datetime=\"#{I18n.l page.date.to_date, format: :iso}\">"
+        html << "#{I18n.l page.date.to_date, format: :long}</time><a href=\"#{page.url}\">#{page.name}</a></li>"
+      end
+      html << '</ul>'
+      html.html_safe
     end
 
     def summary
