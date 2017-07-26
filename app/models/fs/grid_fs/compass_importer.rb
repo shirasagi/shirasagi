@@ -1,3 +1,5 @@
+require 'sass'
+
 class Fs::GridFs::CompassImporter < Sass::Importers::Base
   attr_reader :root
 
