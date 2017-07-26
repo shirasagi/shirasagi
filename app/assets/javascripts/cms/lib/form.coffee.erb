@@ -464,11 +464,14 @@ class @Syntax_Checker
     return ret.html()
 
   @checkDateFormat: (html)->
-    dates = html.match(/[^\d-]\d{4}[ \　\.\-\/]\d{1,2}[ \　\.\-\/]\d{1,2}[^\d-]/g)
-    return unless dates
+    dates = []
+    $(html).find(":not(iframe)").addBack().contents().filter ->
+        return this.nodeType == 3
+      .each ->
+        d = this.textContent.match /\d{4}[\.\-\/]\d{1,2}[\.\-\/]\d{1,2}/g
+        dates.push d if d
 
-    dates = $.map dates, (date)->
-      return date.substr(1,date.length-2)
+    return if $.isEmptyObject(dates)
 
     dates = $.grep dates, (date)->
       return Syntax_Checker.isValidDate(new Date(date))
@@ -484,16 +487,19 @@ class @Syntax_Checker
       Syntax_Checker.pushError(errors)
 
   @correctDateFormat: (html)->
-    html = html.replace /([^\d-])(\d{4})[ \　\.\-\/](\d{1,2})[ \　\.\-\/](\d{1,2})([^\d-])/g, (date,head,y,m,d,tail)->
-      if Syntax_Checker.isValidDate(new Date([y,m,d].join("/")))
-        head +
-        y + "<%= I18n.t("datetime.prompts.year") %>" +
-        m + "<%= I18n.t("datetime.prompts.month") %>" +
-        d + "<%= I18n.t("datetime.prompts.day") %>" +
-        tail
-      else
-        date
-    return $(html).html()
+    ret = $(html)
+    ret.find(":not(iframe)").addBack().contents().filter ->
+        return this.nodeType == 3
+      .each ->
+        text = this.textContent.replace /(\d{4})[\.\-\/](\d{1,2})[\.\-\/](\d{1,2})/g, (date,y,m,d) ->
+          if Syntax_Checker.isValidDate(new Date([y,m,d].join("/")))
+            y + "<%= I18n.t("datetime.prompts.year") %>" +
+            m + "<%= I18n.t("datetime.prompts.month") %>" +
+            d + "<%= I18n.t("datetime.prompts.day") %>"
+          else
+            date
+        this.textContent = text
+    return ret.html()
 
   @checkAdjacentA: (html)->
     $(html).find("a[href]").each ->
