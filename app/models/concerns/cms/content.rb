@@ -40,7 +40,7 @@ module Cms::Content
       if !target || target == 'current'
         node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
       else
-        node ? where(filename: /^#{node.filename}\//) : nil
+        node ? where(filename: /^#{node.filename}\//) : where({})
       end
     }
     scope :and_public, ->(date = nil) {
