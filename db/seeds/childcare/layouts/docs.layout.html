@@ -20,6 +20,9 @@
     <div id="main">
       <section id="yield" class="content-page">
         <header id="page-title"><h1>#{page_name}</h1></header>
+        <header class="released">
+          #{time.page_released.long}
+        </header>
         {{ yield }}
         {{ part "sns" }}
       </section>
