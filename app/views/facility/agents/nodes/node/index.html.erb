@@ -10,9 +10,9 @@
           <caption><%= loc.caption_name %></caption>
           <thead>
             <tr>
-              <th><%= Facility::Node::Page.t :name %></th>
-              <th><%= Facility::Node::Page.t :address %></th>
-              <th><%= Facility::Node::Page.t :tel %></th>
+              <th scope="col"><%= Facility::Node::Page.t :name %></th>
+              <th scope="col"><%= Facility::Node::Page.t :address %></th>
+              <th scope="col"><%= Facility::Node::Page.t :tel %></th>
             </tr>
           </thead>
           <tbody>
@@ -34,9 +34,9 @@
       <caption><%= @cur_node.name %></caption>
       <thead>
         <tr>
-          <th><%= Facility::Node::Page.t :name %></th>
-          <th><%= Facility::Node::Page.t :address %></th>
-          <th><%= Facility::Node::Page.t :tel %></th>
+          <th scope="col"><%= Facility::Node::Page.t :name %></th>
+          <th scope="col"><%= Facility::Node::Page.t :address %></th>
+          <th scope="col"><%= Facility::Node::Page.t :tel %></th>
         </tr>
       </thead>
       <tbody>
