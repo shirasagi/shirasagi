@@ -1,6 +1,7 @@
 <div class="category">
   <%= hidden_field_tag 'category_ids[]', "" %>
   <% @cur_node.st_categories.order_by(order: 1).each do |cate| %>
+    <% next unless cate.public? %>
     <div class="<%= cate.basename %>">
       <%= check_box_tag 'category_ids[]', cate.id, @category_ids.index(cate.id),
         { :id => "q_category_ids_#{cate.id}", :class => "prop"} %>
