@@ -1,6 +1,7 @@
 class Gws::StaffRecord::PublicDutiesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::StaffRecord::PublicYearlyFilter
 
   model Gws::StaffRecord::User
 
@@ -13,10 +14,20 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
   public
 
   def index
-    render
+    @limit = params.dig(:s, :limit).presence || @cur_site.divide_duties_limit
+
+    @items = @cur_year.yearly_users.show_divide_duties.
+      search(params[:s]).
+      page(params[:page]).
+      per(@limit)
   end
 
   def show
-    render
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+
+    @items = @cur_year.yearly_users.show_divide_duties.
+      where(section_code: @item.section_code).
+      where(charge_name: @item.charge_name).
+      all
   end
 end

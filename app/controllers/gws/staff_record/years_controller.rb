@@ -6,11 +6,17 @@ class Gws::StaffRecord::YearsController < ApplicationController
 
   navi_view "gws/staff_record/settings/navi"
 
+  before_action :set_year, if: ->{ @item && !@item.new_record? }
+
   private
 
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/staff_record/group_setting"), gws_staff_record_setting_path]
     @crumbs << [t("mongoid.models.gws/staff_record/year"), gws_staff_record_years_path]
+  end
+
+  def set_year
+    @cur_year = @item
   end
 
   def fix_params

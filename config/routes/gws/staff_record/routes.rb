@@ -8,10 +8,10 @@ SS::Application.routes.draw do
 
   gws "staff_record" do
     resources :public_records, only: [:index, :show]
-    resources :public_duties, only: [:index, :show]
+    resources :public_duties, only: [:index, :show, :edit, :update]
     resource :setting, only: [:show, :edit, :update]
     resources :years, concerns: [:deletion]
-    resources :groups, concerns: [:deletion]
-    resources :users, concerns: [:deletion]
+    resources :groups, path: ':year/groups', concerns: [:deletion]
+    resources :users, path: ':year/users', concerns: [:deletion]
   end
 end

@@ -7,11 +7,16 @@
   <% if Gws::StaffRecord::Year.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/staff_record/year'), gws_staff_record_years_path %></h3>
   <% end %>
-  <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('mongoid.models.gws/staff_record/group'), gws_staff_record_groups_path %></h3>
-  <% end %>
-  <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('mongoid.models.gws/staff_record/user'), gws_staff_record_users_path %></h3>
+
+  <% if @cur_year %>
+    <ul class="narrow-page">
+      <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+        <li><%= link_to t('mongoid.models.gws/staff_record/group'), gws_staff_record_groups_path(year: @cur_year.id) %></li>
+      <% end %>
+      <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
+        <li><%= link_to t('mongoid.models.gws/staff_record/user'), gws_staff_record_users_path(year: @cur_year.id) %></li>
+      <% end %>
+    </ul>
   <% end %>
 </nav>
 

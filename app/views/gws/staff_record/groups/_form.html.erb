@@ -1,6 +1,6 @@
 <dl class="see">
-  <dt><%= @model.t :year %><%= @model.tt :year %></dt>
-  <dd><%= f.select :year, @item.year_options, include_blank: '', selected: Time.zone.today.year %></dd>
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.name %></dd>
 
   <dt><%= @model.t :code %><%= @model.tt :code %></dt>
   <dd><%= f.text_field :code, autofocus: true %></dd>

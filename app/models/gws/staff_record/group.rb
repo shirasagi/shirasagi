@@ -13,8 +13,6 @@ class Gws::StaffRecord::Group
   field :code, type: String
   field :seating_chart_url, type: String
 
-  belongs_to :category, class_name: 'Gws::Facility::Category'
-
   permit_params :name, :code, :seating_chart_url
 
   validates :name, presence: true, uniqueness: { scope: [:site_id, :year] }
@@ -27,9 +25,13 @@ class Gws::StaffRecord::Group
     return criteria if params.blank?
 
     if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :code, :year, :year_name, :seating_chart_url
+      criteria = criteria.keyword_in params[:keyword], :name, :code, :seating_chart_url
     end
-    criteria = criteria.where(year: params[:year]) if params[:year].present?
+    #criteria = criteria.where(year_id: params[:year_id]) if params[:year_id].present?
     criteria
   }
+
+  def name_with_code
+    "[#{code}] #{name}"
+  end
 end

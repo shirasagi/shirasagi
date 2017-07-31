@@ -33,6 +33,7 @@ class Gws::StaffRecord::User
   validates :name, presence: true
   validates :code, presence: true, uniqueness: { scope: [:site_id, :year] }
   validates :multi_section, inclusion: { in: %w(regular plural) }
+  validates :section_code, presence: true
   validates :staff_records_view, inclusion: { in: %w(show hide) }
   validates :divide_duties_view, inclusion: { in: %w(show hide) }
 
@@ -40,11 +41,21 @@ class Gws::StaffRecord::User
 
   default_scope -> { order_by year: -1, order: 1 }
 
+  scope :show_staff_records, -> {
+    where staff_records_view: 'show'
+  }
+  scope :show_divide_duties, -> {
+    where divide_duties_view: 'show'
+  }
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name, :code, :year, :year_name if params[:keyword].present?
+    if params[:keyword].present?
+      criteria = criteria.keyword_in params[:keyword], :name, :code, :kana,
+        :section_name, :title_name, :charge_name, :tel_ext, :divide_duties, :remark
+    end
+    #criteria = criteria.where(year_id: params[:year_id]) if params[:year_id].present?
     criteria
   }
 
@@ -53,7 +64,7 @@ class Gws::StaffRecord::User
   end
 
   def section_code_options
-    Gws::StaffRecord::Group.site(@cur_site || site).
+    Gws::StaffRecord::Group.site(@cur_site || site).where(year_id: year_id).
       map { |c| [c.name, c.code] }
   end
 
@@ -63,6 +74,10 @@ class Gws::StaffRecord::User
 
   def divide_duties_view_options
     staff_records_view_options
+  end
+
+  def name_with_code
+    "[#{code}] #{name}"
   end
 
   private

@@ -5,10 +5,15 @@ ja:
   gws/staff_record:
     staff_records: 電子職員録
     divide_duties: 電子事務分掌表
+    settings:
+      group: 所属設定
+      user: 職員設定
     options:
       multi_section:
         regular: 本務
         plural: 兼務
+    errors:
+      no_data: 公開されている情報はありません。
 
   gws_role:
     read_other_gws_staff_record_years: 年度の閲覧（全て）
@@ -43,11 +48,12 @@ ja:
         staff_records_limit: 電子職員録/表示件数
         divide_duties_limit: 電子事務分掌表/表示件数
       gws/staff_record/yearly:
-        year: 年度
+        year_id: 年度
+        year_code: 年度
         year_name: 年度
       gws/staff_record/year:
+        code: 西暦
         name: 年度名
-        year: 西暦
         start_date: 開始日
         close_date: 終了日
       gws/staff_record/group:
@@ -60,25 +66,26 @@ ja:
         kana: 職員氏名（カナ）
         multi_section: 本務・兼務
         section_code: 所属
-        section_name: 所属名
+        section_name: 所属
         title_name: 役職
         tel_ext: 個人内線
-        charge_name: 担当
+        charge_name: 担当名
         charge_tel: 担当電話
-        charge_address: 担当住所・電話
-        divide_duties: 事務分掌
+        charge_address: 担当住所
+        divide_duties: 分掌事務
         remark: 備考
         staff_records_view: 職員録へ表示
         divide_duties_view: 事務分掌へ表示
+        order: 並び順
 
   tooltip:
     gws/staff_record/year:
       name: 年度名を入力します。（例：平成00年度）
-      year: 西暦を入力します。（例：2017）
+      code: 西暦を入力します。（例：2017）
       start_date: 年度の開始日を入力します。（例：2017/04/01）
       close_date: 年度の終了日を入力します。（例：2018/03/31）
     gws/staff_record/yearly:
-      year: 年度を選択します。
+      year_id: 年度を選択します。
     gws/staff_record/group:
       name: 所属名を入力します
       code: 所属コードを入力します。
@@ -98,3 +105,4 @@ ja:
       remark: 備考を入力します。
       staff_records_view: 職員録へ表示するかしないかを選択します。
       divide_duties_view: 事務分掌へ表示するかしないかを選択します。
+      order: 並び順を入力します。

@@ -1,6 +1,6 @@
 <dl class="see">
-  <dt><%= @model.t :year %><%= @model.tt :year %></dt>
-  <dd><%= f.select :year, @item.year_options, include_blank: '', selected: Time.zone.today.year %></dd>
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.name %></dd>
 
   <dt><%= @model.t :code %><%= @model.tt :code %></dt>
   <dd><%= f.text_field :code, autofocus: true %></dd>
@@ -15,7 +15,7 @@
   <dd><%= f.select :multi_section, @item.multi_section_options %></dd>
 
   <dt><%= @model.t :section_code %><%= @model.tt :section_code %></dt>
-  <dd><%= f.select :section_code, @item.section_code_options %></dd>
+  <dd><%= f.select :section_code, @item.section_code_options, include_blank: '' %></dd>
 
   <dt><%= @model.t :title_name %><%= @model.tt :title_name %></dt>
   <dd><%= f.text_field :title_name %></dd>
@@ -43,4 +43,7 @@
 
   <dt><%= @model.t :divide_duties_view %><%= @model.tt :divide_duties_view %></dt>
   <dd><%= f.select :divide_duties_view, @item.divide_duties_view_options %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
 </dl>

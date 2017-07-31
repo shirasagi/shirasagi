@@ -1,13 +1,17 @@
 <%
 
 @s = OpenStruct.new params[:s]
-year_options = Gws::StaffRecord::Year.site(@cur_site).map { |c| [c.name_with_year, c.year] }
+year_options = Gws::StaffRecord::Year.site(@cur_site).map { |c| [c.name_with_code, c.id] }
 
 %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.select :year, year_options, include_blank: '' %>
+    <%= f.select :year_id, year_options %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+
+    &nbsp;
+    <%= @model.t :limit %>
+    <%= f.select :limit, @cur_site.divide_duties_limit_options, selected: @limit %>
   <% end %>
 </div>
