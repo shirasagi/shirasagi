@@ -23,8 +23,7 @@ module SS::Model::Site
     embeds_ids :groups, class_name: "SS::Group"
     belongs_to :parent, class_name: "SS::Site"
 
-    attr_accessor :cur_domain
-    attr_accessor :window_name
+    attr_accessor :cur_domain, :window_name
 
     permit_params :name, :host, :domains, :subdir, :parent_id, :https, :document_root, group_ids: []
     permit_params :mypage_scheme, :mypage_domain

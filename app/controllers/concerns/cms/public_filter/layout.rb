@@ -54,13 +54,14 @@ module Cms::PublicFilter::Layout
   def render_layout(layout)
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
+    site        = @cur_site
 
-    if @cur_site.window_name.present?
-      @window_name = @cur_site.window_name
+    if site.window_name.present?
+      @window_name = site.window_name
     elsif @cur_item.filename != "index.html"
-      @window_name = "#{@cur_item.name} - #{@cur_site.name}"
+      @window_name = "#{@cur_item.name} - #{site.name}"
     else
-      @window_name = @cur_site.name
+      @window_name = site.name
     end
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
