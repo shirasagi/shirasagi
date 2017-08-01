@@ -4,9 +4,9 @@ module Facility::Addon
     extend SS::Addon
 
     included do
-      field :caption, type: String
+      field :facility_caption, type: String
 
-      permit_params :caption
+      permit_params :facility_caption
     end
 
     def caption_name

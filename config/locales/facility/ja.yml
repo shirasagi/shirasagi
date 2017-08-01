@@ -116,7 +116,7 @@ ja:
         image_thumb_width: 幅
         image_thumb_height: 高さ
       facility/addon/table:
-        caption: キャプション名
+        facility_caption: キャプション
       facility/addon/opendata_assoc:
         opendata_site_ids: オープンデータサイト
         csv_assoc: CSV連携
@@ -185,9 +185,10 @@ ja:
         - 施設検索結果の地図表示時に表示するポインタ画像を設定します。
         - このカテゴリが設定された施設のポインタ画像が変更されます。
     facility/addon/table:
-      caption:
+      facility_caption:
         - 表のキャプションを設定します。
         - 未設定時はタイトルを使用します。
+    facility/addon/focus_setting:
       center_point:
         - 地域の中心座標を設定することで地図検索時にフォーカスすることができます。
       zoom_level:

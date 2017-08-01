@@ -1,7 +1,6 @@
 <div class="service">
   <%= hidden_field_tag 'service_ids[]', "" %>
-  <% @cur_node.st_services.order_by(order: 1).each do |cate| %>
-    <% next unless cate.public? %>
+  <% @cur_node.st_services.and_public(@cur_date).order_by(order: 1).each do |cate| %>
     <div class="<%= cate.basename %>">
       <%= check_box_tag 'service_ids[]', cate.id, @service_ids.index(cate.id),
         { :id => "q_service_ids_#{cate.id}", :class => "prop"} %>

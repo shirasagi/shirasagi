@@ -4,8 +4,7 @@
   <% if locations.present? %>
 
     <% locations.each do |loc| %>
-      <% next unless loc.public? %>
-      <% items = @items.in(location_ids: loc.id).order_by(address: -1) %>
+      <% items = @items.in(location_ids: loc.id).and_public(@cur_date).order_by(address: -1) %>
       <% if items.present? %>
         <table id="<%= loc.basename %>">
           <caption><%= loc.caption_name %></caption>
