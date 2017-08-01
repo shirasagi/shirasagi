@@ -55,8 +55,6 @@ module Cms::PublicFilter::Layout
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
 
-    @charset = '<meta charset="UTF-8" />'
-
     @window_name = @cur_site.name
     @window_name = "#{@cur_item.name} - #{@cur_site.name}" if @cur_item.filename != "index.html"
 
@@ -72,13 +70,12 @@ module Cms::PublicFilter::Layout
       m
     end
 
-    body = body.sub(/<meta charset=.*?\/>?(\r|\n)*/) do |m|
-      @charset = m
+    body = body.sub(/<title>.*?<\/title>(\r|\n)*/) do |m|
+      @window_name = m.gsub(/<title>|<\/title>(\r|\n)*/, '')
       ''
     end
 
-    body = body.sub(/<title.*?>.*?<\/title>(\r|\n)*/) do |m|
-      @window_name = m.gsub(/<title>|<\/title>/, '')
+    body = body.sub(/<meta[^>]*charset=[^>]*\/>/) do |m|
       ''
     end
 
