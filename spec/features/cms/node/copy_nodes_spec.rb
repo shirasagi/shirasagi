@@ -4,7 +4,7 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :cms_node }
 
-  let(:index_path) { node_copy_path site.id, node.id}
+  let(:index_path) { node_copy_path site.id, node.id }
 
   context 'run copy nodes' do
     let(:target_node_name) { unique_id }

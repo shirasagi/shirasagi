@@ -21,7 +21,7 @@ module Cms::FeedFilter
       items.each do |item|
         item = item.becomes_with_route rescue item
         date = nil
-        %w(released updated created).each {|m| date ||= item.send(m) if item.respond_to?(m) }
+        %w(released updated created).each { |m| date ||= item.send(m) if item.respond_to?(m) }
 
         summary = nil
         # %w(summary description).each {|m| summary ||= item.send(m) if item.respond_to?(m) }

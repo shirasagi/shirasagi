@@ -33,7 +33,7 @@ module Cms::BaseFilter
   def set_node
     return unless params[:cid]
     @cur_node = Cms::Node.site(@cur_site).find params[:cid]
-    @cur_node.parents.each {|node| @crumbs << [node.name, view_context.contents_path(node)] }
+    @cur_node.parents.each { |node| @crumbs << [node.name, view_context.contents_path(node)] }
     @crumbs << [@cur_node.name, view_context.contents_path(@cur_node)]
   end
 

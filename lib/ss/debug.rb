@@ -13,7 +13,7 @@ module SS
         end
         return s.join if lev > 1
 
-        ::File.open("#{Rails.root}/log/dump.log", "a") {|f| f.puts s.join.force_encoding("utf-8") }
+        ::File.open("#{Rails.root}/log/dump.log", "a") { |f| f.puts s.join.force_encoding("utf-8") }
       end
 
       def bm(n = 1, &block)

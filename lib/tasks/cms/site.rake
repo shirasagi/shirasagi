@@ -1,7 +1,9 @@
 namespace :cms do
   def mock_task(attr)
     task = OpenStruct.new(attr)
-    def task.log(msg); puts(msg); end
+    def task.log(msg)
+      puts(msg)
+    end
     task
   end
 

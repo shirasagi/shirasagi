@@ -25,7 +25,7 @@ module Ezine::Addon
         next if value.nil?
         if value.kind_of?(Hash)
           values = value.values
-          value  = value.map {|k, v| v}.join("\n")
+          value  = value.map { |k, v| v }.join("\n")
         else
           values = [value.to_s]
           value  = value.to_s

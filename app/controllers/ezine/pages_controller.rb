@@ -29,7 +29,7 @@ class Ezine::PagesController < ApplicationController
 
   def load_members(model)
     @members = model.where(node_id: @cur_node.id).enabled.order_by(updated: -1)
-    @members_email = @members.reduce("") {|a, e| a += e.email + "\n"}
+    @members_email = @members.reduce("") { |a, e| a += e.email + "\n" }
   end
 
   public

@@ -63,13 +63,13 @@ describe Event::Page, dbscope: :example do
 
     context "when dates start_date is balnk" do
       subject { described_class.search(close_date: Time.zone.today.to_s) }
-      it { expect(subject.selector.to_h).to include("event_dates" => {"$lte"=>Time.zone.today.to_s})}
+      it { expect(subject.selector.to_h).to include("event_dates" => {"$lte"=>Time.zone.today.to_s}) }
 
     end
 
     context "when dates close_date is balnk" do
       subject { described_class.search(start_date: Time.zone.today.to_s) }
-      it { expect(subject.selector.to_h).to include("event_dates" => {"$gte"=>Time.zone.today.to_s})}
+      it { expect(subject.selector.to_h).to include("event_dates" => {"$gte"=>Time.zone.today.to_s}) }
     end
   end
 end

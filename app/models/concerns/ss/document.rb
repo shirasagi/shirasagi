@@ -56,7 +56,7 @@ module SS::Document
       end
       return msg if msg.blank? || !html_wrap
       msg = [msg] if msg.class.to_s == "String"
-      list = msg.map {|d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>"}
+      list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
 
       h = []
       h << %(<div class="tooltip">?)
@@ -195,9 +195,9 @@ module SS::Document
     opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
 
     if send(name).blank?
-      opts.each {|m| return m[0] if m[1].blank? }
+      opts.each { |m| return m[0] if m[1].blank? }
     else
-      opts.each {|m| return m[0] if m[1].to_s == send(name).to_s }
+      opts.each { |m| return m[0] if m[1].to_s == send(name).to_s }
     end
     nil
   end

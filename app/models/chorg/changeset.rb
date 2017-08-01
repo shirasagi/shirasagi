@@ -43,12 +43,12 @@ class Chorg::Changeset
 
   def before_unify
     return "" if sources.blank?
-    sources.map {|s| s["name"] }.join(",")
+    sources.map { |s| s["name"] }.join(",")
   end
 
   def after_unify
     return "" if destinations.blank?
-    destinations.map {|s| s["name"] }.join(",")
+    destinations.map { |s| s["name"] }.join(",")
   end
 
   alias add_description after_unify

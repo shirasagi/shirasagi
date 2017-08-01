@@ -157,7 +157,7 @@ describe Google::PersonFinder, dbscope: :example do
 
     def xpath(*paths)
       ns = { 'pfif' => 'http://zesty.ca/pfif/1.4' }
-      path = "/" + paths.map { |p| "pfif:#{p}"}.join("/") + "/text()"
+      path = "/" + paths.map { |p| "pfif:#{p}" }.join("/") + "/text()"
       REXML::XPath.first(subject, path, ns).to_s
     end
 

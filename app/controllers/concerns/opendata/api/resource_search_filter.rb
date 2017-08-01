@@ -107,7 +107,7 @@ module Opendata::Api::ResourceSearchFilter
 
     order = convert_property_name(@order_by)
     if @order_by && order
-      @result_list.sort!{|a, b| a[order.to_sym] <=> b[order.to_sym] }
+      @result_list.sort!{ |a, b| a[order.to_sym] <=> b[order.to_sym] }
     end
 
     if @offset

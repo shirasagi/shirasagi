@@ -29,7 +29,7 @@ module Sys::Model::Auth
 
     item = klass.new
     item.instance_variable_set(:@new_record, nil) unless new_record?
-    instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
+    instance_variables.each { |k| item.instance_variable_set k, instance_variable_get(k) }
     item
   end
 
