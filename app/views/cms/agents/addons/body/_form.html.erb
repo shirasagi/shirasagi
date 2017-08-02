@@ -56,6 +56,7 @@
     <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
     <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? %>
     <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
+    <%= link_to t("cms.apis.pages.index"), cms_apis_related_page_path, class: "ajax-box" %>
     </dd>
   </dl>
 
