@@ -15,7 +15,28 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
     it "#index" do
       visit node.url
       expect(status_code).to eq 200
-      expect(page).to have_css(".event-date")
+      expect(page).to have_css("nav.event-date")
+      expect(page).to have_css("div#event-list")
+    end
+
+    it "#monthly" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.url}%04d%02d.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+    end
+
+    it "#daily" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      day = time.day
+      visit sprintf("#{node.url}%04d%02d%02d.html", year, month, day)
+      expect(status_code).to eq 200
+      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, day), format: :long)))
+      expect(page).to have_css("div#event-list", text: '')
     end
   end
 end
