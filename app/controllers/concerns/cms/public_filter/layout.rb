@@ -4,6 +4,7 @@ module Cms::PublicFilter::Layout
   include Cms::PublicHelper
   include Cms::PublicFilter::OpenGraph
   include Cms::PublicFilter::TwitterCard
+  include Cms::PublicFilter::ConditionalTag
 
   included do
     helper_method :render_layout_parts
@@ -112,6 +113,10 @@ module Cms::PublicFilter::Layout
       when '.short' then date_convert(date, :short)
       else date_convert(date)
       end
+    end
+
+    html.gsub!(conditional_tag_template) do
+      render_conditional_tag(Regexp.last_match)
     end
 
     html
