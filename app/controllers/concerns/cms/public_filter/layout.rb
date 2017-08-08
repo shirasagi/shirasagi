@@ -39,7 +39,16 @@ module Cms::PublicFilter::Layout
     resp = agent.render spec[:action]
     body = resp.body
 
-    if body =~ /\#\{.*?parent_name\}/
+    body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
+
+    if body =~ /\#\{part_parent[^}]*?_name\}/
+      part_parent = part.parent ? part.parent : part
+      body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
+      part_parent = part_parent.parent ? part_parent.parent : part_parent
+      body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
+    end
+
+    if body =~ /\#\{[^}]*?parent_name\}/
       parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
       if parent
         body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
