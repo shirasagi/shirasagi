@@ -17,7 +17,6 @@ describe "cms_preview", type: :feature, dbscope: :example do
     context "pc preview" do
       it do
         visit pc_preview_path
-        expect(page).to have_css('header.released time')
         expect(page).to have_css('article.body')
         expect(page).to have_css('section.categories header')
         expect(page).to have_css('section.categories div ul li')
@@ -27,7 +26,6 @@ describe "cms_preview", type: :feature, dbscope: :example do
     context "mobile preview" do
       it do
         visit mobile_preview_path
-        expect(page).to have_css('div.tag-header span.tag-time')
         expect(page).to have_css('div.tag-article')
         expect(page).to have_css('div.categories div h2')
         expect(page).to have_css('div.categories div.nodes ul li')

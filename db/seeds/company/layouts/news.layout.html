@@ -23,6 +23,9 @@
     </div>
     <div id="main" class="news">
       <header><h1 id="ss-page-name">#{page_name}</h1></header>
+      <header class="released">
+        #{time.page_released.long}
+      </header>
       {{ yield }}
     </div>
   </div>

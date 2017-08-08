@@ -91,27 +91,29 @@ module Cms::PublicFilter::Layout
     end
 
     date = nil
-    html.gsub!(/#\{page_released(|\.default|\.iso|\.long|\.short)\}/) do
-      date ||= ERB::Util.html_escape(@cur_item.released)
-      case $1
-      when '.default' then date_convert(date, :default)
-      when '.iso' then date_convert(date, :iso)
-      when '.long' then date_convert(date, :long)
-      when '.short' then date_convert(date, :short)
-      else date_convert(date)
+    template = %w(
+      #\{
+      (?<time>|time\.)
+      page_
+      (?<item>released|updated)
+      (?<format>|\.default|\.iso|\.long|\.short)
+      (?<datetime>|_datetime)
+      \}
+    ).join
+    html.gsub!(Regexp.compile(template)) do
+      matchdata = Regexp.last_match
+      if matchdata[:item] == 'released'
+        item = @cur_item.released
+      else
+        item = @cur_item.updated
       end
-    end
-
-    date = nil
-    html.gsub!(/#\{page_updated(|\.default|\.iso|\.long|\.short)\}/) do
-      date ||= ERB::Util.html_escape(@cur_item.updated)
-      case $1
-      when '.default' then date_convert(date, :default)
-      when '.iso' then date_convert(date, :iso)
-      when '.long' then date_convert(date, :long)
-      when '.short' then date_convert(date, :short)
-      else date_convert(date)
+      date ||= ERB::Util.html_escape(item)
+      datetime = matchdata[:datetime]
+      convert_date = date_convert(date, matchdata[:format].to_sym, datetime)
+      if matchdata[:time].present?
+        next "<time datetime=\"#{date_convert(date, :iso, datetime)}\">#{convert_date}</time>"
       end
+      convert_date
     end
 
     html
@@ -148,13 +150,19 @@ module Cms::PublicFilter::Layout
     end
   end
 
-  def date_convert(date, format = nil)
+  def date_convert(date, format = nil, datetime = nil)
     return "" unless date
 
-    if format.nil?
-      I18n.l date.to_date
+    if format.present?
+      if datetime.present?
+        I18n.l date.to_datetime, format: format.to_sym
+      else
+        I18n.l date.to_date, format: format.to_sym
+      end
+    elsif datetime.present?
+      I18n.l date.to_datetime
     else
-      I18n.l date.to_date, format: format.to_sym
+      I18n.l date.to_date
     end
   rescue
     ""
