@@ -170,6 +170,9 @@ module SS::Model::File
   end
 
   def validate_filename
+    if site && !site.multibyte_filename_state_enabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+      errors.add :in_file, :invalid_filename
+    end
     self.filename = SS::FilenameConvertor.convert(filename, id: id)
   end
 
