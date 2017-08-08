@@ -30,7 +30,7 @@ sudo yum -y install \
 
 for i in $(seq 1 3)
 do
-  gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+  curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
   if [ $? -eq 0 ]; then
     break
   fi

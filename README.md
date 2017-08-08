@@ -77,7 +77,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 ### Ruby(RVM) のインストール
 
 ```
-# gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+# curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
 # \curl -sSL https://get.rvm.io | sudo bash -s stable
 # source /etc/profile
 # rvm install 2.3.4
