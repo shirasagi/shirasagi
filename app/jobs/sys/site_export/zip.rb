@@ -11,7 +11,7 @@ class Sys::SiteExport::Zip
     Zip::File.open(@path, Zip::File::CREATE) do |zip|
       add_json(zip)
       add_private_files(zip)
-      add_public_files(zip)
+      add_public_files(zip) if FileTest.directory?(@site_dir)
     end
   end
 
