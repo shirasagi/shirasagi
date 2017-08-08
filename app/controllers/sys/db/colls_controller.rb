@@ -23,7 +23,7 @@ class Sys::Db::CollsController < ApplicationController
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
 
     @items = @db.collections
-    @items = @items.select {|m| m.name !~ /^fs\./ }
+    @items = @items.select { |m| m.name !~ /^fs\./ }
   end
 
   def new

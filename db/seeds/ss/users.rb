@@ -82,7 +82,7 @@ def save_gws_role(data)
 end
 
 puts "# gws roles"
-user_permissions = Gws::Role.permission_names.select {|n| n =~ /_private_/ }
+user_permissions = Gws::Role.permission_names.select { |n| n =~ /_private_/ }
 r01 = save_gws_role name: I18n.t('gws.roles.admin'), site_id: g00.id, permissions: Gws::Role.permission_names, permission_level: 3
 r02 = save_gws_role name: I18n.t('gws.roles.user'), site_id: g00.id, permissions: user_permissions, permission_level: 1
 

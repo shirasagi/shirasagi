@@ -47,7 +47,7 @@ module Cms::Addon::List
 
       if opts[:cur_main_path] && conditions.index('#{request_dir}')
         cur_dir = opts[:cur_main_path].sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
-        cond_url = conditions.map {|url| url.sub('#{request_dir}', cur_dir)}
+        cond_url = conditions.map { |url| url.sub('#{request_dir}', cur_dir) }
       else
         if self.is_a?(Cms::Model::Part)
           if parent

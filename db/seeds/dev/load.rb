@@ -37,7 +37,7 @@ save_layout filename: "docs/index.layout.html", name: "記事レイアウト"
 save_layout filename: "product/index.layout.html", name: "製品情報レイアウト"
 save_layout filename: "recruit/index.layout.html", name: "採用情報レイアウト"
 
-array = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/, '\1'), m] }
+array = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*$/, '\1'), m] }
 layouts = Hash[*array.flatten]
 
 ## -------------------------------------

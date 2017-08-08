@@ -31,7 +31,7 @@ module Gws::Addon::Facility::ReservableSetting
 
   def reservable?(user)
     return true if reservable_group_ids.blank? && reservable_member_ids.blank?
-    return true if reservable_group_ids.any? {|m| user.group_ids.include?(m) }
+    return true if reservable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if reservable_member_ids.include?(user.id)
     false
   end

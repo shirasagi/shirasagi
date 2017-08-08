@@ -82,7 +82,7 @@ class Voice::OpenJtalk
 
     # run sox
     tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
-    source_list = sources.map{|i| %("#{i}")}.join(" ")
+    source_list = sources.map{ |i| %("#{i}") }.join(" ")
     cmd = %("#{@sox_path}" #{source_list} "#{tmp_output}")
 
     # execute command

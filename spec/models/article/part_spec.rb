@@ -232,7 +232,7 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     end
 
     context 'a html' do
-      let(:page) { create(:article_page, html: '<h1>Hello,&nbsp;Shirasagi!</h1>')}
+      let(:page) { create(:article_page, html: '<h1>Hello,&nbsp;Shirasagi!</h1>') }
 
       it do
         expect(item.render_loop_html(page, html: '#{html}')).to eq('<h1>Hello,&nbsp;Shirasagi!</h1>')
@@ -250,7 +250,7 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     end
 
     context 'html contains <img>' do
-      let(:page) { create(:article_page, html: '<img src="/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png" alt="Tiger">')}
+      let(:page) { create(:article_page, html: '<img src="/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png" alt="Tiger">') }
 
       it do
         expect(item.render_loop_html(page, html: '#{img.src}')).to eq('/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png')
@@ -258,7 +258,7 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     end
 
     context 'body parts contains <img>' do
-      let(:body_layout) { create(:cms_body_layout)}
+      let(:body_layout) { create(:cms_body_layout) }
       let(:page) do
         create(:article_page, body_layout_id: body_layout.id,
                body_parts: ['<img src="/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png" alt="Tiger">'])

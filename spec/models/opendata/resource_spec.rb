@@ -154,7 +154,7 @@ describe Opendata::Resource, dbscope: :example do
       ::FileUtils.rm_rf tmpdir
     end
 
-    its(:url) { is_expected.to end_with("/#{URI.escape("index - コピー.html")}")}
-    its(:full_url) { is_expected.to end_with("/#{URI.escape("index - コピー.html")}")}
+    its(:url) { is_expected.to end_with("/#{URI.escape("index - コピー.html")}") }
+    its(:full_url) { is_expected.to end_with("/#{URI.escape("index - コピー.html")}") }
   end
 end

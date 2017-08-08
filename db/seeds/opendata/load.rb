@@ -91,7 +91,7 @@ save_layout filename: "portal-event.layout.html", name: "ポータル：イベ�
 save_layout filename: "portal-general.layout.html", name: "ポータル：汎用"
 save_layout filename: "portal-top.layout.html", name: "ポータル：トップ"
 
-array   = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/, '\1'), m] }
+array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*$/, '\1'), m] }
 layouts = Hash[*array.flatten]
 
 ## -------------------------------------

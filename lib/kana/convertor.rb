@@ -17,11 +17,11 @@ module Kana::Convertor
 
       text = html.gsub(/[\r\n\t]/, " ")
       tags = %w(head ruby script style)
-      text.gsub!(/<!\[CDATA\[.*?\]\]>/m) {|m| mpad(m) }
-      text.gsub!(/<!--.*?-->/m) {|m| mpad(m) }
-      tags.each {|t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) {|m| mpad(m) } }
-      text.gsub!(/<.*?>/m) {|m| mpad(m) }
-      text.gsub!(/\\u003c.*?\\u003e/m) {|m| mpad(m) } #<>
+      text.gsub!(/<!\[CDATA\[.*?\]\]>/m) { |m| mpad(m) }
+      text.gsub!(/<!--.*?-->/m) { |m| mpad(m) }
+      tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
+      text.gsub!(/<.*?>/m) { |m| mpad(m) }
+      text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
 
       byte = html.bytes

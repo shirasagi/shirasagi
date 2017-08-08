@@ -78,7 +78,7 @@ module ApplicationHelper
     msg = I18n.t("tooltip.#{key}", default: "")
     return msg if msg.blank? || !html_wrap
     msg = [msg] if msg.class.to_s == "String"
-    list = msg.map {|d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>"}
+    list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
 
     h = []
     h << %(<div class="tooltip">?)

@@ -6,7 +6,7 @@ describe Gws::Role, type: :model, dbscope: :example do
   describe "find" do
     it { expect(model.new.permission_level_options).to eq [%w(1 1), %w(2 2), %w(3 3)] }
     it { expect(model.mod_name(:gws)).to eq I18n.t("modules.gws") }
-    it { expect(model.search(keyword: "unknown_name").first).to eq nil}
+    it { expect(model.search(keyword: "unknown_name").first).to eq nil }
   end
 
   describe "attributes" do

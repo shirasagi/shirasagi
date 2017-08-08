@@ -86,7 +86,7 @@ class Inquiry::Answer
       value, confirm = data
       if value.kind_of?(Hash)
         values = value.values
-        value  = value.map {|k, v| v}.join("\n")
+        value  = value.map { |k, v| v }.join("\n")
       elsif value.kind_of? ActionDispatch::Http::UploadedFile
         ss_file = SS::File.new
         ss_file.in_file = value

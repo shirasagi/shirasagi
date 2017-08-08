@@ -158,8 +158,8 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map(&:name)).to eq expected_names
       expect(users.map(&:email)).to eq expected_emails
       expect(users.map(&:uid)).to eq expected_uids
-      expect(users.map{|u| u.groups.map(&:name)}).to eq expected_groups
-      expect(users.map{|u| u.cms_roles.order_by(name: 1).map(&:name)}).to eq expected_cms_roles
+      expect(users.map{ |u| u.groups.map(&:name) }).to eq expected_groups
+      expect(users.map{ |u| u.cms_roles.order_by(name: 1).map(&:name) }).to eq expected_cms_roles
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
     end
   end
@@ -207,8 +207,8 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map(&:name)).to eq expected_names
       expect(users.map(&:email)).to eq expected_emails
       expect(users.map(&:uid)).to eq expected_uids
-      expect(users.map{|u| u.groups.map(&:name)}).to match_array expected_groups
-      expect(users.map{|u| u.cms_roles.order_by(name: 1).map(&:name)}).to eq expected_cms_roles
+      expect(users.map{ |u| u.groups.map(&:name) }).to match_array expected_groups
+      expect(users.map{ |u| u.cms_roles.order_by(name: 1).map(&:name) }).to eq expected_cms_roles
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
 
       user1 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user1").first
