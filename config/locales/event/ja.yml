@@ -13,6 +13,7 @@ ja:
     filter_all: 全て
     date_range_delimiter: ～
     keyword: 検索キーワード
+    no_event: イベントはありません
     dates:
       setting: 検索期間設定
     category:
