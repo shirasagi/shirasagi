@@ -50,7 +50,7 @@ gem 'rmagick'
 gem 'romaji'
 gem 'simple_captcha2', require: 'simple_captcha'
 gem 'ungarbled'
-gem 'zipruby'
+gem 'rubyzip'
 
 # OAuth
 gem 'omniauth'

@@ -1,5 +1,5 @@
 require 'kconv'
-require 'zipruby'
+require 'zip'
 
 module Cms::Addon::Import
   module Page
@@ -85,21 +85,21 @@ module Cms::Addon::Import
     def import_from_zip(opts = {})
       root_files = (opts[:root_files] == true)
 
-      Zip::Archive.open(in_file.path) do |ar|
-        ar.each do |f|
-          fname = f.name.toutf8.split(/\//)
+      Zip::File.open(in_file.path) do |archive|
+        archive.each do |entry|
+          fname = entry.name.toutf8.split(/\//)
           fname.shift unless root_files
-          fname = fname.join("\/")
+          fname = fname.join('/')
           next if fname.blank?
 
           import_filename = "#{self.filename}/#{fname}"
           import_filename = import_filename.sub(/\/$/, "")
 
-          if f.directory?
-            @imported += 1 if save_import_node(f, import_filename)
+          if entry.directory?
+            @imported += 1 if save_import_node(entry.get_input_stream, import_filename)
           elsif ::File.extname(import_filename) =~ /^\.(html|htm)$/i
-            @imported += 1 if save_import_page(f, import_filename)
-          elsif upload_import_file(f, import_filename)
+            @imported += 1 if save_import_page(entry.get_input_stream, import_filename)
+          elsif upload_import_file(entry.get_input_stream, import_filename)
             @imported += 1
           end
         end

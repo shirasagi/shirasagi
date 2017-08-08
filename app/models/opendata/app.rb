@@ -85,12 +85,16 @@ class Opendata::App
     zip_filename = self.class.zip_dir.join("#{id}.zip").to_s
     File.unlink(zip_filename) if File.exist?(zip_filename)
 
-    Zip::Archive.open(zip_filename, Zip::CREATE) do |ar|
-      appfiles.each do |appfile|
-        ar.add_file(appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_'), appfile.file.path)
+    if appfiles.present?
+      Zip::File.open(zip_filename, Zip::File::CREATE) do |archive|
+        appfiles.each do |appfile|
+          cp932_name = appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_')
+          archive.add(cp932_name, appfile.file.path)
+        end
       end
     end
-    return zip_filename
+
+    zip_filename
   end
 
   private
