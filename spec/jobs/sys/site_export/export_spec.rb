@@ -8,7 +8,9 @@ describe Sys::SiteExportJob, dbscope: :example do
 
   before do
     task = OpenStruct.new(source_site_id: site.id)
-    def task.log(msg); puts(msg); end
+    def task.log(msg)
+      puts(msg)
+    end
     job.task = task
     job.perform
   end
