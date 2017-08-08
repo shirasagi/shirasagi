@@ -26,7 +26,8 @@ module Workflow::Model::Route
 
   module ClassMethods
     def route_options(user)
-      ret = [ [ t("my_group"), "my_group" ] ]
+      ret = []
+      ret = [ [ t("my_group"), "my_group" ] ] unless SS.config.workflow.disable_my_group
       group_ids = user.group_ids.to_a
       criteria.and(:group_ids.in => group_ids).each do |route|
         ret << [ route.name, route.id ]

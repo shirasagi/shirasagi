@@ -13,6 +13,7 @@ ja:
     create_branch: 差し替えページを作成する
     cloned_name_prefix: 複製
     member: ログインメンバー
+    empty_route_options: 承認経路が設定されていません。
     request_cancelled_message: 承認申請は申請者によってキャンセルされました。
     state:
       request: 申請中
