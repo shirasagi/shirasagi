@@ -13,7 +13,9 @@ module Opendata::ListHelper
       h << capture(&block)
     else
       @items.each do |item|
-        if cur_item.loop_html.present?
+        if cur_item.loop_html_id.present?
+          ih = item.render_template(Cms::LoopHtml.find(cur_item.loop_html_id).html, self)
+        elsif cur_item.loop_html.present?
           ih = cur_item.render_loop_html(item)
         else
           ih = []

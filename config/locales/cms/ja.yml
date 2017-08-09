@@ -24,6 +24,7 @@ ja:
     layout: レイアウト
     link_check: リンクチェック
     list_view: リスト表示
+    loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     member: メンバー
@@ -233,6 +234,7 @@ ja:
     edit_cms_roles: 権限/ロールの管理
     edit_cms_members: メンバーの管理
     edit_cms_editor_templates: テンプレートの管理
+    edit_cms_loop_htmls: ループHTMLの管理
     read_cms_body_layouts: 本文レイアウトの閲覧
     edit_cms_body_layouts: 本文レイアウトの編集
     delete_cms_body_layouts: 本文レイアウトの削除
@@ -451,6 +453,10 @@ ja:
         basename: フォルダー名
         in_file: ファイル
         import_date: インポート開始日時
+      cms/loop_html:
+        name: タイトル
+        description: 説明
+        order: 並び順
       cms/addon/meta:
         keywords: キーワード
         description: 概要

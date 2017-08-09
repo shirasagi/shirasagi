@@ -1,7 +1,7 @@
 <%== @cur_node.upper_html unless @cur_node.loop_html %>
 
 <div class="member-blog-pages pages">
-  <% if @cur_node.loop_html.present? %>
+  <% if @cur_node.loop_html.present? || @cur_node.loop_html_id.present? %>
     <%= render_page_list %>
   <% else %>
     <% @items.each do |item| %>

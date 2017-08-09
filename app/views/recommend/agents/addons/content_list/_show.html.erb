@@ -12,6 +12,9 @@
   </dd>
 
   <dt><%= @model.t :loop_html %></dt>
+  <% if @item.send(:loop_html_id).present? %>
+  <dd><%= tryb{@item.loop_html_name} %></dd>
+  <% end %>
   <dd>
     <% if @item.loop_html.present? %>
     <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>

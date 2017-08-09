@@ -10,12 +10,17 @@ module Cms::Addon::List
       field :sort, type: String
       field :limit, type: Integer, default: 20
       field :loop_html, type: String
+      field :loop_html_id, type: Fixnum
       field :upper_html, type: String
       field :lower_html, type: String
       field :new_days, type: Integer, default: 1
-      permit_params :conditions, :sort, :limit, :loop_html, :upper_html, :lower_html, :new_days
+      permit_params :conditions, :sort, :limit, :loop_html, :loop_html_id, :upper_html, :lower_html, :new_days
 
       before_validation :validate_conditions
+    end
+
+    def loop_html_name
+      Cms::LoopHtml.find(loop_html_id).name
     end
 
     def sort_options
