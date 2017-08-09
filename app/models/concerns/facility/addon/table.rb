@@ -10,7 +10,7 @@ module Facility::Addon
     end
 
     def caption_name
-      caption || name
+      facility_caption || name
     end
   end
 end
