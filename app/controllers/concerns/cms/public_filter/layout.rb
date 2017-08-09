@@ -70,12 +70,12 @@ module Cms::PublicFilter::Layout
       m
     end
 
-    body = body.sub(/<title>.*?<\/title>(\r|\n)*/) do |m|
-      @window_name = m.gsub(/<title>|<\/title>(\r|\n)*/, '')
+    body = body.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
+      @window_name = Regexp.last_match(1)
       ''
     end
 
-    body = body.sub(/<meta[^>]*charset=[^>]*\/>/) do |m|
+    body = body.sub(/<meta[^>]*charset=[^>]*>/) do
       ''
     end
 
