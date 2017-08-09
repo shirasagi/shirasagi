@@ -56,13 +56,13 @@ module Cms::PublicFilter::Layout
     @cur_item   = @cur_page || @cur_node
     site        = @cur_site
 
+    @window_name = ''
     if site.window_name.present?
       @window_name = site.window_name
     elsif @cur_item.filename != "index.html"
-      @window_name = "#{@cur_item.name} - #{site.name}"
-    else
-      @window_name = site.name
+      @window_name = "#{@cur_item.name} - "
     end
+    @window_name << site.name
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
