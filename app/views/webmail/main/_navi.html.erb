@@ -35,7 +35,7 @@ end
           href="<%= webmail_mails_path(mailbox: box.original_name) %>"
         <% end %>
       >
-        <%== "<span class='pad'></span>" * (box.depth - 1) %>
+        <%== box.depth > 0 ? "<span class='pad'></span>" * (box.depth - 1) : "" %>
         <i class="material-icons md-18"><%== box.icon %></i>
         <span class="mailbox-name""><%= box.basename %></span>
         <span class="unseen count<%= box.unseen %>">(<%= box.unseen %>)</span>
