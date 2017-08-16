@@ -1,0 +1,49 @@
+<dl class="see">
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.name %></dd>
+
+  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
+  <dd><%= f.text_field :code, autofocus: true %></dd>
+
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>
+  <dd><%= f.text_field :kana %></dd>
+
+  <dt><%= @model.t :multi_section %><%= @model.tt :multi_section %></dt>
+  <dd><%= f.select :multi_section, @item.multi_section_options %></dd>
+
+  <dt><%= @model.t :section_code %><%= @model.tt :section_code %></dt>
+  <dd><%= f.select :section_code, @item.section_code_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :title_name %><%= @model.tt :title_name %></dt>
+  <dd><%= f.text_field :title_name %></dd>
+
+  <dt><%= @model.t :tel_ext %><%= @model.tt :tel_ext %></dt>
+  <dd><%= f.text_field :tel_ext %></dd>
+
+  <dt><%= @model.t :charge_name %><%= @model.tt :charge_name %></dt>
+  <dd><%= f.text_field :charge_name %></dd>
+
+  <dt><%= @model.t :charge_tel %><%= @model.tt :charge_tel %></dt>
+  <dd><%= f.text_field :charge_tel %></dd>
+
+  <dt><%= @model.t :charge_address %><%= @model.tt :charge_address %></dt>
+  <dd><%= f.text_field :charge_address %></dd>
+
+  <dt><%= @model.t :divide_duties %><%= @model.tt :divide_duties %></dt>
+  <dd><%= f.text_area :divide_duties %></dd>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+
+  <dt><%= @model.t :staff_records_view %><%= @model.tt :staff_records_view %></dt>
+  <dd><%= f.select :staff_records_view, @item.staff_records_view_options %></dd>
+
+  <dt><%= @model.t :divide_duties_view %><%= @model.tt :divide_duties_view %></dt>
+  <dd><%= f.select :divide_duties_view, @item.divide_duties_view_options %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>

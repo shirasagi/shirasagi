@@ -1,0 +1,49 @@
+<dl class="see">
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.name %></dd>
+
+  <dt><%= @model.t :code %></dt>
+  <dd><%= @item.send :code %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :kana %></dt>
+  <dd><%= @item.send :kana %></dd>
+
+  <dt><%= @model.t :multi_section %></dt>
+  <dd><%= @item.label :multi_section %></dd>
+
+  <dt><%= @model.t :section_code %></dt>
+  <dd><%= @item.send :section_name %></dd>
+
+  <dt><%= @model.t :title_name %></dt>
+  <dd><%= @item.send :title_name %></dd>
+
+  <dt><%= @model.t :tel_ext %></dt>
+  <dd><%= @item.send :tel_ext %></dd>
+
+  <dt><%= @model.t :charge_name %></dt>
+  <dd><%= @item.send :charge_name %></dd>
+
+  <dt><%= @model.t :charge_tel %></dt>
+  <dd><%= @item.send :charge_tel %></dd>
+
+  <dt><%= @model.t :charge_address %></dt>
+  <dd><%= @item.send :charge_address %></dd>
+
+  <dt><%= @model.t :divide_duties %></dt>
+  <dd><%= br @item.send :divide_duties %></dd>
+
+  <dt><%= @model.t :remark %></dt>
+  <dd><%= br @item.send :remark %></dd>
+
+  <dt><%= @model.t :staff_records_view %></dt>
+  <dd><%= @item.label :staff_records_view %></dd>
+
+  <dt><%= @model.t :divide_duties_view %></dt>
+  <dd><%= @item.label :divide_duties_view %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+</dl>

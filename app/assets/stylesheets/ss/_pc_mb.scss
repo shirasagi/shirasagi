@@ -1349,6 +1349,20 @@ table.index {
     width: 15px;
   }
 }
+table.index.data-table {
+  border-collapse: collapse;
+  th, td {
+    padding: 6px 8px;
+    border: $border-gray5;
+  }
+  th {
+    background: $gray1;
+    color: inherit;
+  }
+  td {
+    background: $white;
+  }
+}
 .sortable-index {
   tr td:first-child {
     cursor: move;
