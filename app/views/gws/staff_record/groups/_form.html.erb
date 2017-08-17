@@ -2,12 +2,12 @@
   <dt><%= @model.t :year_id %></dt>
   <dd><%= @item.year.name %></dd>
 
-  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
-  <dd><%= f.text_field :code, autofocus: true %></dd>
-
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
 
   <dt><%= @model.t :seating_chart_url %><%= @model.tt :seating_chart_url %></dt>
   <dd><%= f.text_field :seating_chart_url %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
 </dl>

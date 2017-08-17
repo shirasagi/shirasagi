@@ -10,28 +10,22 @@ class Gws::StaffRecord::Group
 
   seqid :id
   field :name, type: String
-  field :code, type: String
+  field :order, type: Integer, default: 0
   field :seating_chart_url, type: String
 
-  permit_params :name, :code, :seating_chart_url
+  permit_params :name, :order, :seating_chart_url
 
   validates :name, presence: true, uniqueness: { scope: [:site_id, :year] }
-  validates :code, presence: true, uniqueness: { scope: [:site_id, :year] }
 
-  default_scope -> { order_by year: -1, code: 1 }
+  default_scope -> { order_by order: 1 }
 
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
 
     if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :code, :seating_chart_url
+      criteria = criteria.keyword_in params[:keyword], :name, :seating_chart_url
     end
-    #criteria = criteria.where(year_id: params[:year_id]) if params[:year_id].present?
     criteria
   }
-
-  def name_with_code
-    "[#{code}] #{name}"
-  end
 end

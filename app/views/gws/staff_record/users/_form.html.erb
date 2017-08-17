@@ -14,8 +14,8 @@
   <dt><%= @model.t :multi_section %><%= @model.tt :multi_section %></dt>
   <dd><%= f.select :multi_section, @item.multi_section_options %></dd>
 
-  <dt><%= @model.t :section_code %><%= @model.tt :section_code %></dt>
-  <dd><%= f.select :section_code, @item.section_code_options, include_blank: '' %></dd>
+  <dt><%= @model.t :section_name %><%= @model.tt :section_name %></dt>
+  <dd><%= f.select :section_name, @item.section_name_options, include_blank: '' %></dd>
 
   <dt><%= @model.t :title_name %><%= @model.tt :title_name %></dt>
   <dd><%= f.text_field :title_name %></dd>

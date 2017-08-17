@@ -58,14 +58,13 @@ ja:
         close_date: 終了日
       gws/staff_record/group:
         name: 所属名
-        code: 所属コード
+        order: 並び順
         seating_chart_url: 座席表URL
       gws/staff_record/user:
         name: 職員氏名
         code: 職員番号
         kana: 職員氏名（カナ）
         multi_section: 本務・兼務
-        section_code: 所属
         section_name: 所属
         title_name: 役職
         tel_ext: 個人内線
@@ -95,7 +94,7 @@ ja:
       code: 職員番号を入力します。
       kana: 職員氏名（カナ）を入力します。
       multi_section: 本務・兼務を選択します。
-      section_code: 所属を選択します。
+      section_name: 所属を選択します。
       title_name: 役職を入力します。
       tel_ext: 個人内線を入力します。
       charge_name: 担当を入力します。
