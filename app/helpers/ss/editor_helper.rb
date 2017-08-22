@@ -150,8 +150,8 @@ module SS::EditorHelper
   def site_ckeditor_editor_options(opts = {})
     return opts if @cur_site.nil?
     if @cur_node
-      color_button = @cur_node.color_button || @cur_site.color_button
-      editor_css_path = @cur_node.editor_css_path || @cur_site.editor_css_path
+      color_button = @cur_node.try(:color_button) || @cur_site.color_button
+      editor_css_path = @cur_node.try(:editor_css_path) || @cur_site.editor_css_path
     else
       color_button = @cur_site.color_button
       editor_css_path = @cur_site.editor_css_path
@@ -173,8 +173,8 @@ module SS::EditorHelper
   def site_tinymce_editor_options(opts = {})
     return opts if @cur_site.nil?
     if @cur_node
-      color_button = @cur_node.color_button || @cur_site.color_button
-      editor_css_path = @cur_node.editor_css_path || @cur_site.editor_css_path
+      color_button = @cur_node.try(:color_button) || @cur_site.color_button
+      editor_css_path = @cur_node.try(:editor_css_path) || @cur_site.editor_css_path
     else
       color_button = @cur_site.color_button
       editor_css_path = @cur_site.editor_css_path
