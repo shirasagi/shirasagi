@@ -39,12 +39,12 @@
 
   var map = new Board_Map(canvas, opts);
   $(canvas).on('position:set', function (ev, data) {
-    $("#item_map_zoom_level").val(data.zoom);
-    $("#item_map_center_lng").val(data.position[0]);
-    $("#item_map_center_lat").val(data.position[1]);
+    $("#item_point_zoom_level").val(data.zoom);
+    $("#item_point_loc_lng").val(data.position[0]);
+    $("#item_point_loc_lat").val(data.position[1]);
   }).on('position:unset', function (ev) {
-    $("#item_map_center_lng").val(0);
-    $("#item_map_center_lat").val(0);
+    $("#item_point_loc_lng").val("");
+    $("#item_point_loc_lat").val("");
   });
 
   if (! navigator.geolocation) {
