@@ -44,15 +44,15 @@ class Map::Extensions::Point < Hash
       when self then
         object.mongoize
       when Hash then
-        object.deep_stringify_keys!
-        return self.new.mongoize if object["loc"].blank?
+        h = object.deep_stringify_keys
+        return self.new.mongoize if h["loc"].blank?
 
-        object["loc"] = Map::Extensions::Loc.mongoize(object["loc"])
-        if object["zoom_level"].present?
-          object["zoom_level"] = Integer(object["zoom_level"]) rescue nil
+        h["loc"] = Map::Extensions::Loc.mongoize(h["loc"])
+        if h["zoom_level"].present?
+          h["zoom_level"] = Integer(h["zoom_level"]) rescue nil
         end
         ret = self.new
-        ret.merge!(object)
+        ret.merge!(h)
         ret.mongoize
       else object
       end
