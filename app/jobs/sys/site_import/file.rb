@@ -28,6 +28,16 @@ module Sys::SiteImport::File
     end
   end
 
+  def update_ss_files
+    @ss_files_map.each do |old_id, id|
+      item = SS::File.unscoped.find(id) rescue nil
+      next unless item
+
+      item[:node_id] = @cms_nodes_map[item[:node_id]] if item[:node_id].present?
+      save_document(item)
+    end
+  end
+
   def dummy_ss_file
     file = Fs::UploadedFile.new("ss_export")
     file.original_filename = 'dummy'

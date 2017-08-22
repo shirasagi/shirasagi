@@ -18,6 +18,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :extract
 
     init_src_site
+    init_mapping
     import_cms_groups
     import_cms_users
     import_dst_site
@@ -48,6 +49,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_opendata_licenses
     invoke :update_cms_nodes
     invoke :update_cms_pages
+    invoke :update_ss_files
     invoke :update_opendata_dataset_resources
     invoke :update_opendata_app_appfiles
 
@@ -93,6 +95,21 @@ class Sys::SiteImportJob < SS::ApplicationJob
   def init_src_site
     @src_site = Cms::Site.new
     read_json("cms_site").each { |k, v| @src_site[k] = v }
+  end
+
+  def init_mapping
+    @cms_groups_map = {}
+    @cms_users_map = {}
+    @cms_user_roles_map = {}
+    @cms_roles_map = {}
+    @ss_files_map = {}
+    @cms_layouts_map = {}
+    @cms_body_layouts_map = {}
+    @cms_nodes_map = {}
+    @cms_parts_map = {}
+    @cms_pages_map = {}
+    @opendata_dataset_groups_map = {}
+    @opendata_licenses_map = {}
   end
 
   def import_dst_site

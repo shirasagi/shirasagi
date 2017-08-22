@@ -76,6 +76,11 @@ module Sys::SiteImport::Contents
 
       item[:condition_group_ids] = convert_ids(@cms_groups_map, item[:condition_group_ids])
       item[:st_category_ids] = convert_ids(@cms_nodes_map, item[:st_category_ids])
+      item[:st_location_ids] = convert_ids(@cms_nodes_map, item[:st_location_ids])
+      item[:st_service_ids] = convert_ids(@cms_nodes_map, item[:st_service_ids])
+      item[:category_ids] = convert_ids(@cms_nodes_map, item[:category_ids])
+      item[:location_ids] = convert_ids(@cms_nodes_map, item[:location_ids])
+      item[:service_ids] = convert_ids(@cms_nodes_map, item[:service_ids])
       item[:my_anpi_post] = @cms_nodes_map[item[:my_anpi_post]] if item[:my_anpi_post].present?
       item[:anpi_mail] = @cms_nodes_map[item[:anpi_mail]] if item[:anpi_mail].present?
       save_document(item)

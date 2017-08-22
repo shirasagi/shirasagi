@@ -49,7 +49,7 @@ class Facility::ImportJob < Cms::ApplicationJob
       set_map_attributes(row, map)
       map.site = site
       map.save
-      name += " #{map.map_points.first[:loc]}"
+      name += " #{map.map_points.first.try(:[], "loc")}"
     end
 
     return name

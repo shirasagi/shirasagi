@@ -4,28 +4,28 @@ class Map::Extensions::Point < Hash
     loc = self.loc
     return {} if loc.nil?
 
-    ret = { 'loc' => loc.mongoize }
-    ret['zoom_level'] = self[:zoom_level] if self[:zoom_level].present?
+    ret = { "loc" => loc.mongoize }
+    ret["zoom_level"] = zoom_level if zoom_level.present?
     ret
   end
 
   def loc
-    value = self[:loc]
+    value = self["loc"].presence || self[:loc]
     return nil if value.nil?
 
     unless value.is_a?(Map::Extensions::Loc)
-      self[:loc] = value = Map::Extensions::Loc.demongoize(value)
+      value = Map::Extensions::Loc.demongoize(value)
     end
     value
   end
 
   def zoom_level
-    self[:zoom_level]
+    self["zoom_level"].presence || self[:zoom_level]
   end
 
   def empty?
     return true if super
-    loc.empty?
+    loc.blank?
   end
   alias blank? empty?
 
@@ -33,7 +33,9 @@ class Map::Extensions::Point < Hash
     # convert mongoid native type to its custom type(this class)
     def demongoize(object)
       return self.new if object.nil?
-      self[object.to_h.symbolize_keys]
+      ret = self.new
+      ret.merge!(object.to_h)
+      ret
     end
 
     # convert any possible object to mongoid native type
@@ -42,13 +44,15 @@ class Map::Extensions::Point < Hash
       when self then
         object.mongoize
       when Hash then
-        loc = object[:loc].presence || object['loc'].presence
-        return self.new.mongoize if loc.blank?
+        h = object.deep_stringify_keys
+        return self.new.mongoize if h["loc"].blank?
 
-        ret = self[loc: Map::Extensions::Loc.mongoize(loc)]
-        zoom_level = object[:zoom_level].presence || object['zoom_level'].presence
-        zoom_level = Integer(zoom_level) rescue nil if zoom_level.present?
-        ret[:zoom_level] = zoom_level if zoom_level.present?
+        h["loc"] = Map::Extensions::Loc.mongoize(h["loc"])
+        if h["zoom_level"].present?
+          h["zoom_level"] = Integer(h["zoom_level"]) rescue nil
+        end
+        ret = self.new
+        ret.merge!(h)
         ret.mongoize
       else object
       end

@@ -12,12 +12,16 @@ class Map::Extensions::Points < Array
       case object
       when self.class then object.mongoize
       when Array then
-        object = object.each do |point|
-          point[:loc] = Map::Extensions::Loc.mongoize(point[:loc])
-          point[:zoom_level] = point[:zoom_level].to_i if point[:zoom_level].present?
+        ary = object.dup
+        ary = ary.map do |point|
+          point.deep_stringify_keys
         end
-        object = object.select { |point| point[:loc].present? }
-        self.new(object).mongoize
+        ary = ary.map do |point|
+          point["loc"] = Map::Extensions::Loc.mongoize(point["loc"])
+          point
+        end
+        ary = ary.select { |point| point["loc"].present? }
+        self.new(ary).mongoize
       else object
       end
     end
