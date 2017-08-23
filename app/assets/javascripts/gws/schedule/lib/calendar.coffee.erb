@@ -79,8 +79,9 @@ class @Gws_Schedule_Calendar
       target = $(this)
       Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>")
 
+      popup_url = if event.restUrl then event.restUrl else "#{url}/#{event.id}/popup"
       $.ajax
-        url: "#{url}/#{event.id}/popup"
+        url: popup_url
         success: (data)->
           $('.fc-popup').html(data)
           Gws_Popup.renderPopup(target)

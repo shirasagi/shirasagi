@@ -4,7 +4,8 @@
 
   <%# if Gws::Schedule::Plan.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/schedule'), gws_schedule_plans_path, class: "icon-schedule" %></h2>
-    <h2><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path, class: "icon-facility" %></h2>
+    <h3><%= link_to t('gws/schedule.tabs.todo'), gws_schedule_todos_path %></h3>
+    <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
   <%# end %>
   <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>

@@ -8,9 +8,11 @@ module Gws::Schedule::GroupSetting
     field :schedule_max_month, type: Integer
     field :schedule_max_years, type: Integer
     field :schedule_max_file_size, type: Integer, default: 0
+    field :todo_delete_threshold, type: Integer, default: 3
 
     permit_params :schedule_max_month, :schedule_max_years
     permit_params :schedule_max_file_size, :in_schedule_max_file_size_mb
+    permit_params :todo_delete_threshold
 
     before_validation :set_schedule_max_file_size
 
@@ -36,6 +38,17 @@ module Gws::Schedule::GroupSetting
 
   def schedule_max_years_options
     (0..10).map { |m| ["+#{m}", m] }
+  end
+
+  def todo_delete_threshold_options
+    I18n.t('gws/schedule/group_setting.options.todo_delete_threshold').
+        map.
+        with_index.
+        to_a
+  end
+
+  def todo_delete_threshold_name
+    I18n.t('gws/schedule/group_setting.options.todo_delete_threshold')[todo_delete_threshold]
   end
 
   class << self
