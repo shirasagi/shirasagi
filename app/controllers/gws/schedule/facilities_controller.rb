@@ -49,6 +49,11 @@ class Gws::Schedule::FacilitiesController < ApplicationController
     ids << @facility_category.id
   end
 
+  def set_crumbs
+    @crumbs << [t('modules.gws/schedule'), gws_schedule_plans_path]
+    @crumbs << [t('modules.addons.gws/schedule/facility'), gws_schedule_facilities_path]
+  end
+
   public
 
   def index

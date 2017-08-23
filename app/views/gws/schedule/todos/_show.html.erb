@@ -1,0 +1,17 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :term %></dt>
+  <dd><%= term(@item) %></dd>
+
+  <dt><%= @model.t :color %></dt>
+  <dd>
+    <%= content_tag :span,
+                    @item.name,
+                    style: "background-color: #{@item.color}; color: #{@item.text_color}" %>
+  </dd>
+
+  <dt><%= @model.t :todo_state %></dt>
+  <dd><%= @item.todo_state_name %></dd>
+</dl>
