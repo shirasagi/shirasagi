@@ -36,7 +36,7 @@ $('.popup-attributes .custom-group-name').click(function() {
     </div>
   </div>
 
-  <% if @item.facilities.present? %>
+  <% if @item.try(:facilities) %>
   <div class="popup-attr popup-facilities">
     <div class="popup-label"><%= @item.t :facility_ids %></div>
     <div class="popup-value"><%= @item.facilities.map(&:name).join(', ') %></div>

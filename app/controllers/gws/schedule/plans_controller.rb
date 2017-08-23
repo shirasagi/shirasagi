@@ -3,6 +3,12 @@ class Gws::Schedule::PlansController < ApplicationController
   include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
+  # default search conds
+  before_action -> {
+    params[:s] = {} unless params[:s]
+    params[:s][:with_todo] = '1' unless params.dig(:s, :with_todo)
+  }
+
   def index
     return render if params[:format] != 'json'
 

@@ -1,0 +1,17 @@
+<%= jquery do %>
+    Gws_Schedule_Todo.render();
+<% end %>
+
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <button class="disable-all btn"><%= t 'ss.links.delete' %></button>
+    <button class="finish-all btn"><%= t 'gws/schedule/todo.links.finish' %></button>
+    <button class="revert-all btn"><%= t 'gws/schedule/todo.links.revert' %></button>
+  </div>
+
+  <div class="list-head-search">
+    <%= render file: '_search' %>
+  </div>
+</div>
