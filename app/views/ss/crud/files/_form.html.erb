@@ -12,10 +12,30 @@
     <dt><%= @model.t :filename %><%= @model.tt :filename %></dt>
     <dd><%= f.text_field :filename %></dd>
 
-      <dt><%= @model.t :geo_location %><%= @model.tt :geo_location %></dt>
-      <dd>
-        <%= number_field_tag "#{f.object_name}[geo_location][lat]", @item.geo_location.try(:lat), step: :any %>
-        <%= number_field_tag "#{f.object_name}[geo_location][lng]", @item.geo_location.try(:lng), step: :any %>
-      </dd>
+    <dt><%= @model.t :geo_location %><%= @model.tt :geo_location %></dt>
+    <dd>
+      <%= number_field_tag "#{f.object_name}[geo_location][lat]", @item.geo_location.try(:lat), step: :any %>
+      <%= number_field_tag "#{f.object_name}[geo_location][lng]", @item.geo_location.try(:lng), step: :any %>
+    </dd>
   <% end %>
 </dl>
+
+<% if @item.persisted? && @item.image? %>
+  <div class="ss-image-edit-canvas">
+    <div class="toolbar">
+      <button type="button" class="btn btn-zoom-in" data-func="zoomIn"><i class="material-icons">&#xE8FF;</i></button>
+      <button type="button" class="btn btn-zoom-out" data-func="zoomOut"><i class="material-icons">&#xE900;</i></button>
+      <button type="button" class="btn btn-rotate-left" data-func="rotateRight"><i class="material-icons">&#xE419;</i></button>
+      <button type="button" class="btn btn-rotate-right" data-func="rotateLeft"><i class="material-icons">&#xE41A;</i></button>
+      <!--<button type="button" class="btn btn-crop" data-func="startCrop"><i class="material-icons">&#xE3BE;</i></button>-->
+      <button type="button" class="btn btn-submit-crop" data-func="submit"><i class="material-icons">&#xE876;</i></button>
+      <button type="button" class="btn btn-cancel-crop" data-func="cancel"><i class="material-icons">&#xE5CD;</i></button>
+      <button type="button" class="btn btn-inspect" data-func="inspect">inspect</button>
+    </div>
+    <img src="<%= @item.url %>" class="target">
+  </div>
+
+  <%= jquery do %>
+    var imageEditor = new SS_ImageEditor('.ss-image-edit-canvas');
+  <% end %>
+<% end %>
