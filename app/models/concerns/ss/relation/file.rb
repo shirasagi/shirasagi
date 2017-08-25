@@ -38,6 +38,7 @@ module SS::Relation::File
         file = send(name)
         file.destroy if file
         unset(store) rescue nil
+        send("#{store}=", nil)
       end
 
       define_method("#{name}_file_state") do
