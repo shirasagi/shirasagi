@@ -9,13 +9,14 @@ module SS::Relation::File
 
       belongs_to name, foreign_key: store, class_name: class_name, dependent: :destroy
 
-      attr_accessor "in_#{name}", "rm_#{name}"
+      attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
       permit_params "in_#{name}", "rm_#{name}"
+      permit_params "in_#{name}_resizing" => []
 
-      before_save :"validate_relation_#{name}", if: ->{ send("in_#{name}").present? }
-      before_save :"save_relation_#{name}", if: ->{ send("in_#{name}").present? }
-      before_save :"remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
-      after_save :"update_relation_#{name}_state", if: ->{ send(name).present? }
+      before_save "validate_relation_#{name}", if: ->{ send("in_#{name}").present? }
+      before_save "save_relation_#{name}", if: ->{ send("in_#{name}").present? }
+      before_save "remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
+      after_save "update_relation_#{name}_state", if: ->{ send(name).present? }
 
       define_method("validate_relation_#{name}") do
         file = relation_file(name, opts)
@@ -39,10 +40,15 @@ module SS::Relation::File
         unset(store) rescue nil
       end
 
+      define_method("#{name}_file_state") do
+        opts[:static_state].presence || try(:state).presence || 'public'
+      end
+
       define_method("update_relation_#{name}_state") do
         return unless respond_to?(:state)
         file = send(name)
-        file.update_attributes(state: state) if file.state != state
+        file_state = send("#{name}_file_state")
+        file.update_attributes(state: file_state) if file.state != file_state
       end
 
       define_method("generate_relation_public_#{name}") do
@@ -67,7 +73,8 @@ module SS::Relation::File
     file.model    = self.class.to_s.underscore
     file.site_id  = site_id if respond_to?(:site_id)
     file.user_id  = @cur_user.id if @cur_user
-    file.state    = respond_to?(:state) ? state : "public"
+    file.state    = send("#{name}_file_state")
+    file.resizing = send("in_#{name}_resizing").presence || opts[:resizing]
     file
   end
 end
