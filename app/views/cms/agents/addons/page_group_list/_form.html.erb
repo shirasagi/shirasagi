@@ -1,4 +1,5 @@
 <%= code_editor ".mod-cms-pagegrouplist .html", mode: :html %>
+<%= jquery do %> Cms_Editor_CodeMirror.lock('#item_loop_html_obj_id', '#item_loop_html'); <% end %>
 
 <dl class="see mod-cms-pagegrouplist">
   <dt><%= @model.t :condition_groups %><%= @model.tt :condition_groups %></dt>
@@ -38,7 +39,7 @@
   <dd><%= f.text_area :upper_html, class: :html %></dd>
 
   <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-  <dd><%= f.select :loop_html_id, ancestral_loop_htmls, include_blank: " " %></dd>
+  <dd><%= f.select :loop_html_obj_id, ancestral_loop_htmls, include_blank: t('cms.input_directly') %></dd>
   <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
 
   <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>

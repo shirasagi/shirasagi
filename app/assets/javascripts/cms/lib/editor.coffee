@@ -30,6 +30,20 @@ class @Cms_Editor_CodeMirror
       cm.refresh() if opts["readonly"]
       form.data "editor", cm
 
+  @lock: (selector, target) ->
+    Cms_Editor_CodeMirror.setOption(selector, target)
+    $(document).on 'change', selector, (e) ->
+      Cms_Editor_CodeMirror.setOption(selector, target)
+
+  @setOption: (selector, target) ->
+    cm = $(target).next('.CodeMirror')[0].CodeMirror
+    if $(selector).val() == ''
+      cm.setOption 'mode', 'text/html'
+      cm.setOption 'readOnly', false
+    else
+      cm.setOption 'mode', 'text/plain'
+      cm.setOption 'readOnly', true
+
 class @Cms_Editor_CKEditor
   # Render CKEditor
   @render: (selector, opts = {}) ->

@@ -28,7 +28,7 @@ module Cms::FormHelper
 
   def ancestral_loop_htmls
     items = []
-    Cms::LoopHtml.site(@cur_site).sort(name: 1).each do |item|
+    Cms::LoopHtml.site(@cur_site).sort(order: 1, name: 1).each do |item|
       items << [item.name, item.id]
     end
     items
