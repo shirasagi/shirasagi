@@ -1,6 +1,6 @@
-<%= javascript_tag do %>
-SS_SearchUI.modal();
+<%= jquery do %>
 $(function() {
+  SS_SearchUI.modal();
   insertContent = function(cont) {
     if (typeof tinymce !== "undefined") {
       tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
