@@ -9,7 +9,7 @@ module Facility::Addon
       permit_params :facility_caption
     end
 
-    def caption_name
+    def facility_caption_name
       facility_caption || name
     end
   end
