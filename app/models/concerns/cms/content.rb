@@ -36,8 +36,12 @@ module Cms::Content
     after_validation :set_depth, if: ->{ filename.present? }
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
-    scope :node, ->(node) {
-      node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+    scope :node, ->(node, target = nil) {
+      if target == 'descendant'
+        node ? where(filename: /^#{node.filename}\//) : where({})
+      else #current
+        node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+      end
     }
     scope :and_public, ->(date = nil) {
       if date.nil?
@@ -174,6 +178,10 @@ module Cms::Content
     return false unless serve_static_file?
     return true if @serve_static_relation_files.nil?
     @serve_static_relation_files == true
+  end
+
+  def node_target_options
+    %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
   end
 
   private
