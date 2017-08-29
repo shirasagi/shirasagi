@@ -25,9 +25,8 @@ class Cms::PartsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    @items = @model.site(@cur_site).
+    @items = @model.site(@cur_site).node(@cur_node, params.dig(:s, :target)).
       allow(:read, @cur_user).
-      where(depth: 1).
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)

@@ -18,7 +18,7 @@ class Cms::Node::PagesController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    @items = @model.site(@cur_site).node(@cur_node).
+    @items = @model.site(@cur_site).node(@cur_node, params.dig(:s, :target)).
       where(route: "cms/page").
       allow(:read, @cur_user).
       search(params[:s]).
