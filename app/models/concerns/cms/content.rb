@@ -36,11 +36,11 @@ module Cms::Content
     after_validation :set_depth, if: ->{ filename.present? }
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
-    scope :node, ->(node, target = false) {
-      if !target || target == 'current'
-        node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
-      else
+    scope :node, ->(node, target = nil) {
+      if target == 'descendant'
         node ? where(filename: /^#{node.filename}\//) : where({})
+      else #current
+        node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
       end
     }
     scope :and_public, ->(date = nil) {

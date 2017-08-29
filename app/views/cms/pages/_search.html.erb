@@ -1,8 +1,1 @@
-<% @s = OpenStruct.new params[:s] %>
-<div class="list-head-search">
-  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
-    <%= f.select :target, @model.new.node_target_options if @items.node(@cur_node, 'descendant').first %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-  <% end %>
-</div>
+<%= render partial: 'cms/crud/search_content' %>

@@ -153,7 +153,7 @@ ja:
       parent_crumb:
         blank: カテゴリーから選択する
       node_target:
-        current: このフォルダー内から
+        current: このフォルダーから
         descendant: このフォルダー以下から
       notice_severity:
         normal: ""
