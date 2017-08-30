@@ -44,8 +44,8 @@ module Opendata::ListHelpers::App
       h << capture(&block)
     else
       @items.each do |item|
-        if cur_item.loop_html_obj_id.present?
-          ih = item.render_template(cur_item.loop_html_obj.html, self)
+        if cur_item.loop_setting.present?
+          ih = item.render_template(cur_item.loop_setting.html, self)
         elsif cur_item.loop_html.present?
           ih = cur_item.render_loop_html(item)
         else

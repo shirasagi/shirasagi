@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :cms_loop_html, class: Cms::LoopHtml do
+  factory :cms_loop_setting, class: Cms::LoopSetting do
     transient do
       site nil
     end

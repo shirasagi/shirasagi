@@ -1,11 +1,11 @@
-class Cms::LoopHtml
+class Cms::LoopSetting
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
   include Cms::SitePermission
   include Cms::Addon::Html
 
-  set_permission_name "cms_loop_htmls", :edit
+  set_permission_name "cms_loop_settings", :edit
 
   seqid :id
   field :name, type: String

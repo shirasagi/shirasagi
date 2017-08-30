@@ -14,9 +14,9 @@ module Cms::Addon::List
       field :lower_html, type: String
       field :new_days, type: Integer, default: 1
 
-      belongs_to :loop_html_obj, class_name: 'Cms::LoopHtml'
+      belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
 
-      permit_params :conditions, :sort, :limit, :loop_html, :loop_html_obj_id, :upper_html, :lower_html, :new_days
+      permit_params :conditions, :sort, :limit, :loop_html, :loop_setting_id, :upper_html, :lower_html, :new_days
 
       before_validation :validate_conditions
     end

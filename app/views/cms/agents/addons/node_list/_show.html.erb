@@ -18,8 +18,8 @@
   </dd>
 
   <dt><%= @model.t :loop_html %></dt>
-  <% if @item.send(:loop_html_obj_id).present? %>
-  <dd><%= tryb{@item.loop_html_obj.name} %></dd>
+  <% if @item.send(:loop_setting).present? %>
+  <dd><%= tryb{@item.loop_setting.name} %></dd>
   <% end %>
   <dd>
     <% if @item.loop_html.present? %>

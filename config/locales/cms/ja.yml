@@ -235,7 +235,7 @@ ja:
     edit_cms_roles: 権限/ロールの管理
     edit_cms_members: メンバーの管理
     edit_cms_editor_templates: テンプレートの管理
-    edit_cms_loop_htmls: ループHTMLの管理
+    edit_cms_loop_settings: ループHTMLの管理
     read_cms_body_layouts: 本文レイアウトの閲覧
     edit_cms_body_layouts: 本文レイアウトの編集
     delete_cms_body_layouts: 本文レイアウトの削除
@@ -370,7 +370,7 @@ ja:
       cms/task: タスク
       cms/import_page: 取り込みページ
       cms/word_dictionary: かな辞書
-      cms/loop_html: ループHTML
+      cms/loop_setting: ループHTML
     attributes:
       cms/content:
         released: 公開日時
@@ -455,7 +455,7 @@ ja:
         basename: フォルダー名
         in_file: ファイル
         import_date: インポート開始日時
-      cms/loop_html:
+      cms/loop_setting:
         name: タイトル
         description: 説明
         order: 並び順

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::LoopHtml, dbscope: :example do
+describe Cms::LoopSetting, dbscope: :example do
   describe ".search" do
     context "when nil is given" do
       subject { described_class.search(nil) }
