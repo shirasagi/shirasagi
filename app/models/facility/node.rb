@@ -188,6 +188,7 @@ module Facility::Node
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
     include Facility::Addon::FocusSetting
+    include Facility::Addon::Table
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
