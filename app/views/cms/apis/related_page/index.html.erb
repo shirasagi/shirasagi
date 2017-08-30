@@ -1,26 +1,24 @@
 <%= jquery do %>
-$(function() {
-  SS_SearchUI.modal();
-  insertContent = function(cont) {
-    if (typeof tinymce !== "undefined") {
-      tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
-    } else if (typeof CKEDITOR !== "undefined") {
-      CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
-    }
-  };
-  insertContents = function() {
-    if (!SS.disableClick($(this))) {
-      return false;
-    }
-    $("#ajax-box .items input:checkbox").filter(":checked").each(function() {
-      var item = $(this)
-      var data = item.closest("[data-id]");
-      var text = "<a href='/" + data.find(".filename").text() + "'>" + data.find(".select-item").text() + '</a>'
-      insertContent(text);
-    });
-    return $.colorbox.close();
-  };
-});
+SS_SearchUI.modal();
+insertContent = function(cont) {
+  if (typeof tinymce !== "undefined") {
+    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
+  } else if (typeof CKEDITOR !== "undefined") {
+    CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
+  }
+};
+insertContents = function() {
+  if (!SS.disableClick($(this))) {
+    return false;
+  }
+  $("#ajax-box .items input:checkbox").filter(":checked").each(function() {
+    var item = $(this);
+    var data = item.closest("[data-id]");
+    var text = "<a href='/" + data.find(".filename").text() + "'>" + data.find(".select-item").text() + '</a>';
+    insertContent(text);
+  });
+  return $.colorbox.close();
+};
 <% end %>
 
 <div class="search-ui-form">
