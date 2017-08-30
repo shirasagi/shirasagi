@@ -57,12 +57,26 @@ SS_ImageEditor.prototype = {
     this.cropper.rotate(90);
   },
 
+  normalizeFormat: function(format) {
+    if (format === 'image/jpeg' || format === 'image/png') {
+      return format;
+    }
+
+    if (format === 'image/jpg') {
+      return 'image/jpeg';
+    }
+
+    // this is default of html5 canvas
+    return 'image/png';
+  },
+
   submit: function () {
     if (!this.cropper) {
       return;
     }
 
-    var newImage = this.cropper.getCroppedCanvas().toDataURL('image/jpeg');
+    var format = this.normalizeFormat(this.$el.find('img.target').data('format'));
+    var newImage = this.cropper.getCroppedCanvas().toDataURL(format);
     this.cropper.destroy();
     this.cropper = null;
 
