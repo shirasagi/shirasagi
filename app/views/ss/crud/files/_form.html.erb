@@ -23,14 +23,18 @@
 <% if @item.persisted? && @item.image? %>
   <div class="ss-image-edit-canvas">
     <div class="toolbar">
-      <button type="button" class="btn btn-zoom-in" data-func="zoomIn"><i class="material-icons">&#xE8FF;</i></button>
-      <button type="button" class="btn btn-zoom-out" data-func="zoomOut"><i class="material-icons">&#xE900;</i></button>
-      <button type="button" class="btn btn-rotate-left" data-func="rotateRight"><i class="material-icons">&#xE419;</i></button>
-      <button type="button" class="btn btn-rotate-right" data-func="rotateLeft"><i class="material-icons">&#xE41A;</i></button>
-      <!--<button type="button" class="btn btn-crop" data-func="startCrop"><i class="material-icons">&#xE3BE;</i></button>-->
-      <button type="button" class="btn btn-submit-crop" data-func="submit"><i class="material-icons">&#xE876;</i></button>
-      <button type="button" class="btn btn-cancel-crop" data-func="cancel"><i class="material-icons">&#xE5CD;</i></button>
-      <button type="button" class="btn btn-inspect" data-func="inspect">inspect</button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-zoom-in" data-func="zoomIn"><i class="material-icons">&#xE8FF;</i></button>
+        <button type="button" class="btn btn-zoom-out" data-func="zoomOut"><i class="material-icons">&#xE900;</i></button>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-rotate-left" data-func="rotateRight"><i class="material-icons">&#xE419;</i></button>
+        <button type="button" class="btn btn-rotate-right" data-func="rotateLeft"><i class="material-icons">&#xE41A;</i></button>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-submit-crop" data-func="submit"><i class="material-icons">&#xE876;</i></button>
+        <button type="button" class="btn btn-cancel-crop" data-func="cancel"><i class="material-icons">&#xE5CD;</i></button>
+      </div>
     </div>
     <img src="<%= @item.url %>" class="target" data-format="<%= @item.content_type %>">
     <%= f.hidden_field :in_data_url, value: nil %>
