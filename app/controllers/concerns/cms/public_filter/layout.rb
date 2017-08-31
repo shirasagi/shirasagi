@@ -70,15 +70,6 @@ module Cms::PublicFilter::Layout
       m
     end
 
-    body = body.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
-      @window_name = Regexp.last_match(1)
-      ''
-    end
-
-    body = body.sub(/<meta[^>]*charset=[^>]*>/) do
-      ''
-    end
-
     html = render_layout_parts(body)
 
     if notice
@@ -88,6 +79,14 @@ module Cms::PublicFilter::Layout
 
     html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
+
+    html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
+      @window_name = Regexp.last_match(1)
+      ''
+    end
+
+    html = html.sub(/<meta[^>]*charset=[^>]*>/) { '' }
+
     html
   end
 
