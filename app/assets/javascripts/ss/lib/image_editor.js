@@ -76,12 +76,13 @@ SS_ImageEditor.prototype = {
     }
 
     var format = this.normalizeFormat(this.$el.find('img.target').data('format'));
-    var newImage = this.cropper.getCroppedCanvas().toDataURL(format);
+    var newImageData = this.cropper.getCroppedCanvas().toDataURL(format);
     this.cropper.destroy();
     this.cropper = null;
 
     this.$el.find('.toolbar').hide();
-    this.$el.find('img.target').attr('src', newImage);
+    this.$el.find('img.target').attr('src', newImageData);
+    this.$el.find("input[name='item[in_data_url]']").val(newImageData);
   },
 
   cancel: function () {

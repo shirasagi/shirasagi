@@ -33,6 +33,7 @@
       <button type="button" class="btn btn-inspect" data-func="inspect">inspect</button>
     </div>
     <img src="<%= @item.url %>" class="target" data-format="<%= @item.content_type %>">
+    <%= f.hidden_field :in_data_url, value: nil %>
   </div>
 
   <%= jquery do %>
