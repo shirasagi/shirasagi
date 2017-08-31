@@ -18,6 +18,8 @@ module Cms::Model::Page
 
     embeds_ids :categories, class_name: "Cms::Node"
 
+    attr_accessor :window_name
+
     permit_params category_ids: []
 
     after_save :rename_file, if: ->{ @db_changes }

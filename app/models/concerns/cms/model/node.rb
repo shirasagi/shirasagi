@@ -17,6 +17,8 @@ module Cms::Model::Node
     field :view_route, type: String
     field :shortcut, type: String, default: "hide"
 
+    attr_accessor :window_name
+
     permit_params :view_route, :shortcut
 
     validates :route, presence: true
