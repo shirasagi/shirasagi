@@ -1,8 +1,11 @@
 <table class="index data-table">
   <tr>
-    <th style="width: 12%"><%= @model.t :section_name %></th>
-    <td style="width: 38%"><%= @item.send :section_name %></td>
-    <th style="width: 12%"><%= @model.t :charge_name %></th>
+    <th rowspan="2" style="width: 10%; text-align: center;">
+      <%= link_to t('ss.links.edit'), action: :edit_charge if @item.editable_charge?(@cur_user) %>
+    </th>
+    <th style="width: 10%"><%= @model.t :section_name %></th>
+    <td style="width: 35%"><%= @item.send :section_name %></td>
+    <th style="width: 10%"><%= @model.t :charge_name %></th>
     <td><%= @item.send :charge_name %></td>
   </tr>
   <tr>
@@ -17,15 +20,21 @@
 
 <table class="index data-table">
   <thead>
-    <th><%= @model.t :divide_duties %></th>
-    <th><%= @model.t :title_name %></th>
-    <th><%= @model.t :name %></th>
-    <th><%= @model.t :tel_ext %></th>
+    <th style="width: 10%"></td>
+    <th style="width: 10%">No</td>
+    <th style="width: 18%"><%= @model.t :divide_duties %></th>
+    <th style="width: 15%"><%= @model.t :title_name %></th>
+    <th style="width: 12%"><%= @model.t :name %></th>
+    <th style="width: 10%"><%= @model.t :tel_ext %></th>
     <th><%= @model.t :remark %></th>
   </thead>
   <tbody>
     <% @items.each do |item| %>
     <tr>
+      <th style="text-align: center">
+        <%= link_to t('ss.links.edit'), action: :edit, id: item.id if item.allowed?(:edit, @cur_user) %>
+      </th>
+      <td></td>
       <td><%= br item.send :divide_duties %></td>
       <td><%= item.send :title_name %></td>
       <td><%= item.send :name %></td>

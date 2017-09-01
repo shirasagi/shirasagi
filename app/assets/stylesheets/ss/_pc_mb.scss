@@ -1149,6 +1149,10 @@ footer.send {
   margin-bottom: 15px;
   padding: 12px;
   @include mb { margin: 0 10px 10px; }
+  .title {
+    float: left;
+    font-size: 140%;
+  }
   form {
     float: right;
     @include mb {

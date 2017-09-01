@@ -19,19 +19,19 @@ class Gws::StaffRecord::User
   field :title_name, type: String
   field :tel_ext, type: String
   field :charge_name, type: String
-  field :charge_tel, type: String
   field :charge_address, type: String
+  field :charge_tel, type: String
   field :divide_duties, type: String
   field :remark, type: String
   field :staff_records_view, type: String, default: 'show'
   field :divide_duties_view, type: String, default: 'show'
 
   permit_params :name, :code, :order, :kana, :multi_section, :section_name,
-                :title_name, :tel_ext, :charge_name, :charge_tel, :charge_address,
+                :title_name, :tel_ext, :charge_name, :charge_address, :charge_tel,
                 :divide_duties, :remark, :staff_records_view,  :divide_duties_view
 
   validates :name, presence: true
-  validates :code, presence: true, uniqueness: { scope: [:site_id, :year] }
+  validates :code, presence: true#, uniqueness: { scope: [:site_id, :year] }
   validates :multi_section, inclusion: { in: %w(regular plural) }
   validates :section_name, presence: true
   validates :staff_records_view, inclusion: { in: %w(show hide) }
@@ -51,9 +51,12 @@ class Gws::StaffRecord::User
     criteria = where({})
     return criteria if params.blank?
 
+    criteria = criteria.where(section_name: params[:section_name]) if params[:section_name].present?
+
     if params[:keyword].present?
       criteria = criteria.keyword_in params[:keyword], :name, :code, :kana,
-        :section_name, :title_name, :charge_name, :tel_ext, :divide_duties, :remark
+        :section_name, :title_name, :charge_name, :charge_address, :charge_tel,
+        :tel_ext, :divide_duties, :remark
     end
     criteria
   }
@@ -77,6 +80,17 @@ class Gws::StaffRecord::User
 
   def name_with_code
     "[#{code}] #{name}"
+  end
+
+  def editable_charge?(user)
+    permissions = user.gws_role_permissions
+
+    if permissions["edit_other_gws_staff_record_charges_#{site_id}"].to_i >= permission_level
+      return true
+    elsif permissions["edit_private_gws_staff_record_charges_#{site_id}"].to_i >= permission_level
+      return true if owned?(user)
+    end
+    false
   end
 
   private

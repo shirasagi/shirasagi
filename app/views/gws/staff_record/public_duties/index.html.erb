@@ -1,6 +1,8 @@
 <% if @cur_year %>
 <div class="list-search">
-  <%= @cur_year.name %> <%= t 'gws/staff_record.divide_duties' %>
+  <h2 class="title">
+    <%= @cur_year.name %> <%= t 'gws/staff_record.divide_duties' %>
+  </h2>
   <%= render partial: 'search' %>
 </div>
 <% end %>
@@ -12,26 +14,33 @@
     <table class="index data-table">
       <thead>
         <tr>
-          <th><%= @model.t :section_name %></th>
-          <th><%= @model.t :charge_name %></th>
-          <th><%= @model.t :divide_duties %></th>
-          <th><%= @model.t :title_name %></th>
-          <th><%= @model.t :name %></th>
-          <th><%= @model.t :tel_ext %></th>
+          <th style="width: 5%"><%= @model.t :section_name %></th>
+          <th style="width: 18%"><%= @model.t :charge_name %></th>
+          <th style="width: 18%"><%= @model.t :divide_duties %></th>
+          <th style="width: 12%"><%= @model.t :title_name %></th>
+          <th style="width: 12%"><%= @model.t :name %></th>
+          <th style="width: 10%"><%= @model.t :tel_ext %></th>
           <th><%= @model.t :remark %></th>
         </tr>
       </thead>
       <tbody>
+        <% last_section = nil %>
         <% @items.each do |item| %>
-        <tr>
-          <td><%= item.send :section_name %></td>
-          <td><%= link_to item.charge_name, { action: :show, id: item.id } %></td>
-          <td><%= br item.send :divide_duties %></td>
-          <td><%= item.send :title_name %></td>
-          <td><%= item.send :name %></td>
-          <td><%= item.send :tel_ext %></td>
-          <td><%= item.send :remark %></td>
-        </tr>
+          <% if item.section_name != last_section %>
+            <% last_section = item.section_name  %>
+            <tr>
+              <th colspan="7"><%= item.send :section_name %></th>
+            </tr>
+          <% end %>
+          <tr>
+            <td></td>
+            <td><%= link_to item.charge_name, { action: :show, id: item.id } %></td>
+            <td><%= br item.send :divide_duties %></td>
+            <td><%= item.send :title_name %></td>
+            <td><%= item.send :name %></td>
+            <td><%= item.send :tel_ext %></td>
+            <td><%= item.send :remark %></td>
+          </tr>
         <% end %>
       </tbody>
     </table>

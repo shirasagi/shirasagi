@@ -26,7 +26,7 @@ class Gws::StaffRecord::PublicRecordsController < ApplicationController
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
 
     @items = @cur_year.yearly_users.show_staff_records.
-      where(section_code: @item.section_code).
+      where(section_name: @item.section_name).
       where(charge_name: @item.charge_name).
       all
   end
