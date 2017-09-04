@@ -20,6 +20,9 @@
     <h2><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path, class: "icon-conv" %></h2>
     <h2><%= link_to t('gws/staff_record.divide_duties'), gws_staff_record_public_duties_path, class: "icon-conv" %></h2>
   <% end %>
+  <% if @cur_site.elasticsearch_enabled? %>
+    <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
+  <% end %>
 
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
