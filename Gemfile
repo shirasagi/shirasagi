@@ -78,6 +78,9 @@ gem 'sparql'
 gem 'sparql-client'
 gem 'unf'
 
+# elasticsearch
+gem 'elasticsearch'
+
 group :development, :test do
   gem 'capybara'
   gem 'coveralls', require: false
