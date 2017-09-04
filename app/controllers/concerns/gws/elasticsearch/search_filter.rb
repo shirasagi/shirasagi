@@ -33,7 +33,7 @@ module Gws::Elasticsearch::SearchFilter
     raise '404' unless @cur_site.elasticsearch_enabled?
 
     if @s.keyword.present?
-      @result = Gws::Elasticsearch::Searcher.search(@cur_site, @search_type, @s.keyword)
+      @result = Gws::Elasticsearch::Searcher.search(@cur_site, @cur_user, @search_type, @s.keyword)
     end
 
     render
