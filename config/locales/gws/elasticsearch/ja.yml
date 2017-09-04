@@ -1,0 +1,15 @@
+ja:
+  mongoid:
+    models:
+      gws/elasticsearch/group_setting: 全文検索設定
+    attributes:
+      gws/elasticsearch/group_setting:
+        elasticsearch_state: 全文検索
+        elasticsearch_hosts: 全文検索サーバー
+
+  tooltip:
+    gws/elasticsearch/group_setting:
+      elasticsearch_state:
+        - 全文検索を有効にするか無効にするかを選択します。
+      elasticsearch_hosts:
+        - 全文検索サーバーを入力します。
