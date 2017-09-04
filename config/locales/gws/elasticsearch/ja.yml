@@ -1,4 +1,18 @@
 ja:
+  gws/elasticsearch:
+    tabs:
+      board: 掲示板
+      mail: 電子メール
+      message: 連絡メモ
+      share: 共有ファイル
+
+    format:
+      search_results_count: '%{count} 件の検索結果'
+      search_results_took: '%{count} 秒'
+
+  modules:
+    gws/elasticsearch: 全文検索
+
   mongoid:
     models:
       gws/elasticsearch/group_setting: 全文検索設定

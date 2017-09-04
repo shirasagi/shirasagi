@@ -9,11 +9,8 @@ module Gws::Elasticsearch::GroupSetting
     permit_params :elasticsearch_state, :elasticsearch_hosts
 
     validates :elasticsearch_state, presence: true, inclusion: { in: %w(disabled enabled), allow_blank: true }
+    validates :elasticsearch_hosts, presence: true, if: ->{ elasticsearch_enabled? }
   end
-
-  # def board_new_days
-  #   self[:board_new_days].presence || 7
-  # end
 
   class << self
     # Permission for navigation view
@@ -29,15 +26,7 @@ module Gws::Elasticsearch::GroupSetting
     end
   end
 
-  private
-
-  # def set_board_file_size_per_topic
-  #   return if in_board_file_size_per_topic_mb.blank?
-  #   self.board_file_size_per_topic = Integer(in_board_file_size_per_topic_mb) * 1_024 * 1_024
-  # end
-  #
-  # def set_board_file_size_per_post
-  #   return if in_board_file_size_per_post_mb.blank?
-  #   self.board_file_size_per_post = Integer(in_board_file_size_per_post_mb) * 1_024 * 1_024
-  # end
+  def elasticsearch_enabled?
+    elasticsearch_state == 'enabled'
+  end
 end
