@@ -1,0 +1,25 @@
+<aside class="comment">
+  <header>
+    <h2><%= comment.name %></h2>
+    <nav class="meta">
+      <span class="user"><%= comment.user_long_name %></span>
+      <span class="datetime"><%= comment.created.strftime('%Y/%m/%d %H:%M') %></span>
+    </nav>
+  </header>
+
+  <div class="toggle-body">
+    <div class="body markdown-body"><%= comment.html %></div>
+    <div class="menu">
+      <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.edit'),
+                      edit_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id),
+                      class: 'btn' %>
+      <% end %>
+      <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'),
+                      delete_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id),
+                      class: 'btn' %>
+      <% end %>
+    </div>
+  </div>
+</aside>

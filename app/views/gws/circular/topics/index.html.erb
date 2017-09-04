@@ -1,0 +1,34 @@
+<%= jquery do %>
+    var posting = function(url) {
+      var checked = $(".list-item input:checkbox:checked").map(function(){ return $(this).val(); });
+      if (checked.length == 0) { return false; }
+
+      var token = $('meta[name="csrf-token"]').attr('content');
+      var form = $("<form/>", {action: url, method: "post"} );
+
+      form.append($("<input/>", {name: "authenticity_token", value: token, type: "hidden"} ))
+
+      checked.each(function(_i, id){
+        form.append($("<input/>", {name: "ids[]", value: id, type: "hidden"} ));
+      });
+
+      form.appendTo(document.body).submit();
+    }
+
+    $(".marking-all").click(function(){ posting("<%= marking_all_gws_circular_topics_path %>"); });
+    $(".unmarking-all").click(function(){ posting("<%= unmarking_all_gws_circular_topics_path %>"); });
+    $(".download").click(function(){ posting("<%= download_gws_circular_topics_path %>"); });
+<% end %>
+
+<% @index_meta = proc do |item| %>
+    <span class="id">#<%= item.id %></span>
+    <span class="datetime"><%= item.due_date.strftime('%Y/%m/%d %H:%M') %></span>
+    <span class="gws-share-categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, gws_share_category_files_path(category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+    <% end %>
+    </span>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>
