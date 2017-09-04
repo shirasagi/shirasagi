@@ -1,0 +1,12 @@
+<% render_tab = proc do |path, tab| %>
+  <%= link_to "#{path}?#{ { s: @s.to_h }.to_query }", class: [ tab, request.path.start_with?(path) ? 'current' : nil ] do %>
+    <span class="tab-name"><%= t("gws/elasticsearch.tabs.#{tab}") %></span>
+  <% end %>
+<% end %>
+
+<div class="gws-schedule-tabs">
+  <% render_tab.call(gws_elasticsearch_search_board_path, 'board') %>
+  <% render_tab.call(gws_elasticsearch_search_mail_path, 'mail') %>
+  <% render_tab.call(gws_elasticsearch_search_message_path, 'message') %>
+  <% render_tab.call(gws_elasticsearch_search_share_path, 'share') %>
+</div>

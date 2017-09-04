@@ -1,0 +1,11 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-body">
+      <%= render file: '_search' %>
+    </div>
+  </div>
+
+  <%= render file: '_result' %>
+</div>
