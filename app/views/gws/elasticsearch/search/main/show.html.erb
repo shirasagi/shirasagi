@@ -1,11 +1,11 @@
-<% addons = @item ? @item.class.addons : [] %>
+<%= render partial: 'gws/elasticsearch/search/main/tabs' %>
 
-<div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-body">
-      <%= render file: '_search' %>
-    </div>
+<div class="index">
+  <div class="list-head">
+    <%= render file: '_search' %>
   </div>
 
-  <%= render file: '_result' %>
+  <% if @result.present? %>
+    <%= render file: '_result' %>
+  <% end %>
 </div>
