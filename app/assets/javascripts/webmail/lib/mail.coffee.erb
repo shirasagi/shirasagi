@@ -99,6 +99,8 @@ class @Webmail_Mail_List
           SS.notice(data.notice)
       return false
 
+    @renderMailDrop()
+
   @findCheckedUids: ->
     checked = $('.webmail-mails .list-item input:checkbox:checked').map ->
       $(this).val()
@@ -145,6 +147,30 @@ class @Webmail_Mail_List
           else
             wrap.removeClass('on').addClass('off')
       return false
+
+  @renderMailDrop: ->
+    $('.webmail-mails.list-items li').draggable(
+      revert: "invalid",
+      revertDuration: 50,
+      zIndex: 99,
+      opacity: 0.5,
+      cursor: "pointer"
+      containment: "window"
+      start: (e, ui)->
+        $(".tap-menu").hide()
+    )
+    $(".webmail-navi-mailboxes .mail-droppable").droppable(
+      accept: ".webmail-mails.list-items li",
+      hoverClass: "droppable-hover",
+      tolerance: "pointer",
+      drop: (e, ui)->
+        ele = e.target
+        dst = $(ele).attr("data-name")
+        uids = [ ui.draggable.attr("data-uid") ]
+        url = $(".webmail-mails-head .move-all").attr("data-href")
+        $(ui.draggable).hide()
+        Webmail_Mail_List.updateMails(url, ids: uids, dst: dst )
+    )
 
   @updateMails: (url, opts = {})->
     token = $('meta[name="csrf-token"]').attr('content')

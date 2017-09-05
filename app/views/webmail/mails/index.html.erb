@@ -31,7 +31,7 @@
   <ul class="list-items ss-messages webmail-mails">
     <% @items.each do |item| %>
     <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %>" data-uid="<%= item.uid %>">
-      <nav class="tap-menu">
+      <nav class="tap-menu tap-menu-relative">
         <%= link_to t('ss.links.show'), action: :show, id: item.uid %>
         <%= link_to t('webmail.links.reply'), action: :reply, id: item.uid unless item.draft? %>
         <%= link_to t('webmail.links.reply_all'), action: :reply_all, id: item.uid unless item.draft? %>
