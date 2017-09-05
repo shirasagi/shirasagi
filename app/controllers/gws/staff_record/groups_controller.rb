@@ -32,4 +32,25 @@ class Gws::StaffRecord::GroupsController < ApplicationController
       search(params[:s]).
       page(params[:page]).per(50)
   end
+
+  def download
+    items = @cur_year.yearly_groups.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site)
+
+    @item = @model.new
+    @item.site_id = @cur_site.id
+    @item.export_csv(items)
+
+    send_data @item.export_csv(items), filename: "staff_record_#{@cur_year.code}_groups_#{Time.zone.now.to_i}.csv"
+  end
+
+  def import
+    return if request.get?
+    @item = @model.new get_params
+    @item.site_id = @cur_site.id
+
+    result = @item.import_csv
+    flash.now[:notice] = t("ss.notice.saved") if result
+    render_create result, location: { action: :index }, render: { file: :import }
+  end
 end

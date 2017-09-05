@@ -7,6 +7,7 @@ class Gws::StaffRecord::User
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Gws::Export
 
   seqid :id
   field :name, type: String
@@ -98,5 +99,29 @@ class Gws::StaffRecord::User
   def set_section_order
     item = Gws::StaffRecord::Group.where(site_id: site_id, year: year, name: section_name).first
     self.section_order = item ? item.order : nil
+  end
+
+  def export_fields
+    %w(
+      id name code order kana multi_section section_name title_name tel_ext
+      charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
+    )
+  end
+
+  def export_convert_item(item, line)
+    line[5]  = item.label(:multi_section)
+    line[14] = item.label(:staff_records_view)
+    line[15] = item.label(:divide_duties_view)
+    line
+  end
+
+  def import_convert_data(data)
+    regular = I18n.t("gws/staff_record.options.multi_section.regular")
+    data[:multi_section] = (data[:multi_section] == regular) ? 'regular' : 'plural'
+
+    show = I18n.t("ss.options.state.show")
+    data[:staff_records_view] = (data[:staff_records_view] == show) ? 'show' : 'hide'
+    data[:divide_duties_view] = (data[:divide_duties_view] == show) ? 'show' : 'hide'
+    data
   end
 end

@@ -94,6 +94,9 @@ ja:
       name: 所属名を入力します
       code: 所属コードを入力します。
       seating_chart_url: 座席表URLを入力します。
+      in_file:
+        - CSVファイルを指定しインポートを行います。
+        - idが記述されていない行は新規作成になります。
     gws/staff_record/user:
       name: 職員氏名を入力します
       code: 職員番号を入力します。
@@ -110,3 +113,6 @@ ja:
       staff_records_view: 職員録へ表示するかしないかを選択します。
       divide_duties_view: 事務分掌へ表示するかしないかを選択します。
       order: 並び順を入力します。
+      in_file:
+        - CSVファイルを指定しインポートを行います。
+        - idが記述されていない行は新規作成になります。

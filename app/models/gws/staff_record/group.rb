@@ -7,6 +7,7 @@ class Gws::StaffRecord::Group
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Gws::Export
 
   seqid :id
   field :name, type: String
@@ -28,4 +29,10 @@ class Gws::StaffRecord::Group
     end
     criteria
   }
+
+  private
+
+  def export_fields
+    %w(id name order seating_chart_url)
+  end
 end
