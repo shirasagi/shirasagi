@@ -1,6 +1,7 @@
 ja:
   gws/elasticsearch:
     tabs:
+      all: すべて
       board: 掲示板
       mail: 電子メール
       message: 連絡メモ
