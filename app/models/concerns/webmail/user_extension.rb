@@ -62,7 +62,8 @@ module Webmail::UserExtension
   end
 
   private
-    def set_imap_password
-      self.imap_password = SS::Crypt.encrypt(in_imap_password)
-    end
+
+  def set_imap_password
+    self.imap_password = SS::Crypt.encrypt(in_imap_password)
+  end
 end

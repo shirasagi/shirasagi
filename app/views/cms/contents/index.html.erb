@@ -12,7 +12,7 @@
     <% end %>
   </ul>
   <% if @sys_notices.next_page %>
-  <div class="notices-more"><%= link_to I18n.t("views.links.more"), cms_sys_notices_path %></div>
+  <div class="notices-more"><%= link_to I18n.t("ss.links.more"), cms_sys_notices_path %></div>
   <% end %>
 </div>
 <% end %>
@@ -31,7 +31,7 @@
     <% end %>
   </ul>
   <% if @cms_notices.next_page %>
-  <div class="notices-more"><%= link_to I18n.t("views.links.more"), cms_public_notices_path %></div>
+  <div class="notices-more"><%= link_to I18n.t("ss.links.more"), cms_public_notices_path %></div>
   <% end %>
 </div>
 <% end %>
@@ -43,13 +43,13 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="tap-menu">
-        <%= link_to :"cms.content", contents_path(item) %>
-        <%= link_to :view_site, item.full_url, target: :_blank %>
+        <%= link_to t("cms.content"), contents_path(item) %>
+        <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank %>
         <% if @cur_site.mobile_enabled? %>
-          <%= link_to :pc_preview, cms_preview_path(path: item.preview_path), target: :_blank %>
-          <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
+          <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
+          <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
         <% else %>
-          <%= link_to :preview, cms_preview_path(path: item.preview_path), target: :_blank %>
+          <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
         <% end %>
       </nav>
       <div class="info">
@@ -60,7 +60,7 @@
           <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="filename"><%= File.basename item.filename %></span>
           <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-          <span class="state"><%= t "views.state.#{item.status}" %></span>
+          <span class="state"><%= t "ss.state.#{item.status}" %></span>
         </div>
       </div>
     </li>

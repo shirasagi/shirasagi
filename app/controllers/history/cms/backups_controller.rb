@@ -9,12 +9,13 @@ class History::Cms::BackupsController < ApplicationController
   before_action :set_item
 
   private
-    def set_crumbs
-      @crumbs << [:"history.backup", action: :show]
-    end
 
-    def set_item
-      @item = @model.where("data.site_id" => @cur_site.id).find(params[:id])
-      raise "404" unless @data = @item.get
-    end
+  def set_crumbs
+    @crumbs << [t("history.backup"), action: :show]
+  end
+
+  def set_item
+    @item = @model.where("data.site_id" => @cur_site.id).find(params[:id])
+    raise "404" unless @data = @item.get
+  end
 end

@@ -150,77 +150,78 @@ module SS
       end
 
       private
-        def set_started
-          @lock.synchronize do
-            @started = true
-            @cond.broadcast
+
+      def set_started
+        @lock.synchronize do
+          @started = true
+          @cond.broadcast
+        end
+      end
+
+      def wait
+        @lock.synchronize do
+          unless @started
+            @cond.wait(@lock)
           end
         end
+      end
 
-        def wait
-          @lock.synchronize do
-            unless @started
+      def handle(request, response)
+        handler = self.handler
+        if handler.present?
+          handler.call(request, response)
+          return
+        end
+
+        wait_filter(request, response)
+        default_handler(request, response)
+      end
+
+      def wait_filter(request, response)
+        wait_sec = self.wait_sec
+        return if wait_sec.blank?
+
+        begin
+          wait_sec = wait_sec.to_f if wait_sec.respond_to?(:to_f)
+          Timeout.timeout(wait_sec) do
+            @lock.synchronize do
               @cond.wait(@lock)
             end
           end
+        rescue Timeout::Error
+          # ignore TimeoutError
         end
+      end
 
-        def handle(request, response)
-          handler = self.handler
-          if handler.present?
-            handler.call(request, response)
-            return
-          end
+      def default_handler(request, response)
+        path = map_path(request, response)
+        raise WEBrick::HTTPStatus::NotFound unless ::File.exist?(path)
 
-          wait_filter(request, response)
-          default_handler(request, response)
+        status_code = self.status_code
+        content_type = self.content_type
+        last_modified = self.last_modified || ::File.mtime(path)
+        last_modified = last_modified.httpdate if last_modified.respond_to?(:httpdate)
+        etag = self.etag || make_etag(path)
+
+        ::File.open(path, "rb:ASCII-8BIT") do |file|
+          response.status = status_code if status_code.present?
+          response.content_type = content_type if content_type.present?
+          response["Last-Modified"] = last_modified if last_modified.present?
+          response["ETag"] = etag if etag.present?
+          response.body = file.read
         end
+      end
 
-        def wait_filter(request, response)
-          wait_sec = self.wait_sec
-          return if wait_sec.blank?
+      def map_path(request, response)
+        path = "/#{request.path}".gsub(/\/\/+/, "/")
+        path = self.real_path || path
+        path = "#{doc_root}/#{path}".gsub(/\/\/+/, "/")
+        path
+      end
 
-          begin
-            wait_sec = wait_sec.to_f if wait_sec.respond_to?(:to_f)
-            Timeout.timeout(wait_sec) do
-              @lock.synchronize do
-                @cond.wait(@lock)
-              end
-            end
-          rescue Timeout::Error
-            # ignore TimeoutError
-          end
-        end
-
-        def default_handler(request, response)
-          path = map_path(request, response)
-          raise WEBrick::HTTPStatus::NotFound unless ::File.exist?(path)
-
-          status_code = self.status_code
-          content_type = self.content_type
-          last_modified = self.last_modified || ::File.mtime(path)
-          last_modified = last_modified.httpdate if last_modified.respond_to?(:httpdate)
-          etag = self.etag || make_etag(path)
-
-          ::File.open(path, "rb:ASCII-8BIT") do |file|
-            response.status = status_code if status_code.present?
-            response.content_type = content_type if content_type.present?
-            response["Last-Modified"] = last_modified if last_modified.present?
-            response["ETag"] = etag if etag.present?
-            response.body = file.read
-          end
-        end
-
-        def map_path(request, response)
-          path = "/#{request.path}".gsub(/\/\/+/, "/")
-          path = self.real_path || path
-          path = "#{doc_root}/#{path}".gsub(/\/\/+/, "/")
-          path
-        end
-
-        def make_etag(path)
-          Digest::SHA1.hexdigest(path)
-        end
+      def make_etag(path)
+        Digest::SHA1.hexdigest(path)
+      end
     end
 
     def self.extended(obj)

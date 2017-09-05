@@ -35,39 +35,40 @@ module Gws::Addon
     end
 
     private
-      def save_reminders
-        return if reminder_url.blank?
-        return if @db_changes.blank?
 
-        new_record = @db_changes.key?('_id')
-        removed_user_ids = reminders.map(&:user_id) - reminder_user_ids
+    def save_reminders
+      return if reminder_url.blank?
+      return if @db_changes.blank?
 
-        base_cond = {
-          site_id: site_id,
-          model: reference_model,
-          item_id: id
-        }
-        self_updated_fields = @db_changes.keys.reject { |s| s =~ /_hash$/ }
+      new_record = @db_changes.key?('_id')
+      removed_user_ids = reminders.map(&:user_id) - reminder_user_ids
 
-        ## save reminders
-        reminder_user_ids.each do |user_id|
-          cond = base_cond.merge(user_id: user_id)
-          item = Gws::Reminder.where(cond).first || Gws::Reminder.new(cond)
-          item.name = reference_name
-          item.date = reminder_date
-          item.updated_fields = self_updated_fields unless new_record
-          if @cur_user
-            item.updated_user_id = @cur_user.id
-            item.updated_user_uid = @cur_user.uid
-            item.updated_user_name = @cur_user.name
-            item.updated_date = updated
-          end
-          item.save if item.changed?
+      base_cond = {
+        site_id: site_id,
+        model: reference_model,
+        item_id: id
+      }
+      self_updated_fields = @db_changes.keys.reject { |s| s =~ /_hash$/ }
+
+      ## save reminders
+      reminder_user_ids.each do |user_id|
+        cond = base_cond.merge(user_id: user_id)
+        item = Gws::Reminder.where(cond).first || Gws::Reminder.new(cond)
+        item.name = reference_name
+        item.date = reminder_date
+        item.updated_fields = self_updated_fields unless new_record
+        if @cur_user
+          item.updated_user_id = @cur_user.id
+          item.updated_user_uid = @cur_user.uid
+          item.updated_user_name = @cur_user.name
+          item.updated_date = updated
         end
-
-        ## delete reminders
-        cond = base_cond.merge(:user_id.in => removed_user_ids)
-        Gws::Reminder.where(cond).destroy_all
+        item.save if item.changed?
       end
+
+      ## delete reminders
+      cond = base_cond.merge(:user_id.in => removed_user_ids)
+      Gws::Reminder.where(cond).destroy_all
+    end
   end
 end

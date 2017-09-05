@@ -24,24 +24,23 @@ class Opendata::DatasetGroup
   end
 
   class << self
-    public
-      def and_public
-        where(state: "public")
+    def and_public
+      where(state: "public")
+    end
+
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
+
+      if params[:name].present?
+        words = params[:name].split(/[\s　]+/).uniq.compact.map { |w| /\Q#{Regexp.escape(w)}\E/ }
+        criteria = criteria.all_in name: words
+      end
+      if params[:category_id].present?
+        criteria = criteria.where category_ids: params[:category_id].to_i
       end
 
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
-
-        if params[:name].present?
-          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{Regexp.escape(w)}\E/ }
-          criteria = criteria.all_in name: words
-        end
-        if params[:category_id].present?
-          criteria = criteria.where category_ids: params[:category_id].to_i
-        end
-
-        criteria
-      end
+      criteria
+    end
   end
 end

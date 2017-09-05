@@ -176,8 +176,8 @@ module SS::Model::User
 
   def initial_password_warning_options
     [
-      [I18n.t('views.options.state.disabled'), ''],
-      [I18n.t('views.options.state.enabled'), 1],
+      [I18n.t('ss.options.state.disabled'), ''],
+      [I18n.t('ss.options.state.enabled'), 1],
     ]
   end
 
@@ -187,13 +187,13 @@ module SS::Model::User
 
   def session_lifetime_options
     [5, 15, 30, 60].map do |min|
-      [I18n.t("views.options.session_lifetime.#{min}min"), min * 60]
+      [I18n.t("ss.options.session_lifetime.#{min}min"), min * 60]
     end
   end
 
   def restriction_options
     %w(none api_only).map do |v|
-      [ I18n.t("views.options.restriction.#{v}"), v ]
+      [ I18n.t("ss.options.restriction.#{v}"), v ]
     end
   end
 
@@ -202,50 +202,51 @@ module SS::Model::User
   end
 
   private
-    def dbpasswd_authenticate(in_passwd)
-      return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
-      return false if password.blank?
-      password == SS::Crypt.crypt(in_passwd)
-    end
 
-    def validate_type
-      errors.add :type, :invalid unless type.blank? || type == TYPE_SNS || type == TYPE_LDAP
-    end
+  def dbpasswd_authenticate(in_passwd)
+    return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
+    return false if password.blank?
+    password == SS::Crypt.crypt(in_passwd)
+  end
 
-    def validate_uid
-      return if uid.blank?
-      errors.add :uid, :invalid if uid !~ /^[\w\-]+$/
-    end
+  def validate_type
+    errors.add :type, :invalid unless type.blank? || type == TYPE_SNS || type == TYPE_LDAP
+  end
 
-    def validate_cur_user
-      if id == cur_user.id
-        errors.add :base, :self_user
-        return false
-      else
-        return true
-      end
-    end
+  def validate_uid
+    return if uid.blank?
+    errors.add :uid, :invalid if uid !~ /^[\w\-]+$/
+  end
 
-    def validate_account_expiration_date
-      return if account_start_date.blank? || account_expiration_date.blank?
-      if account_start_date >= account_expiration_date
-        errors.add :account_expiration_date, :greater_than, count: t(:account_start_date)
-      end
+  def validate_cur_user
+    if id == cur_user.id
+      errors.add :base, :self_user
+      return false
+    else
+      return true
     end
+  end
 
-    def validate_initial_password
-      self.initial_password_warning = nil if password_changed?
+  def validate_account_expiration_date
+    return if account_start_date.blank? || account_expiration_date.blank?
+    if account_start_date >= account_expiration_date
+      errors.add :account_expiration_date, :greater_than, count: t(:account_start_date)
     end
+  end
 
-    def save_group_history
-      changes = @db_changes['group_ids']
-      item = SS::UserGroupHistory.new(
-        cur_site: @cur_site,
-        user_id: id,
-        group_ids: group_ids,
-        inc_group_ids: (changes[1].to_a - changes[0].to_a),
-        dec_group_ids: (changes[0].to_a - changes[1].to_a)
-      )
-      item.save
-    end
+  def validate_initial_password
+    self.initial_password_warning = nil if password_changed?
+  end
+
+  def save_group_history
+    changes = @db_changes['group_ids']
+    item = SS::UserGroupHistory.new(
+      cur_site: @cur_site,
+      user_id: id,
+      group_ids: group_ids,
+      inc_group_ids: (changes[1].to_a - changes[0].to_a),
+      dec_group_ids: (changes[0].to_a - changes[1].to_a)
+    )
+    item.save
+  end
 end

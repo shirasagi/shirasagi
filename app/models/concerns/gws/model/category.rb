@@ -62,15 +62,16 @@ module Gws::Model::Category
   end
 
   private
-    def color_required?
-      true
-    end
 
-    def default_color
-      "#4488bb"
-    end
+  def color_required?
+    true
+  end
 
-    def dependant_scope
-      self.class.site(@cur_site || site)
-    end
+  def default_color
+    "#4488bb"
+  end
+
+  def dependant_scope
+    self.class.site(@cur_site || site)
+  end
 end

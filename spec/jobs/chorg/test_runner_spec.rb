@@ -39,6 +39,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.contact_email).to eq group.contact_email
         expect(page.contact_tel).to eq group.contact_tel
         expect(page.contact_fax).to eq group.contact_fax
+        expect(page.contact_link_url).to eq group.contact_link_url
+        expect(page.contact_link_name).to eq group.contact_link_name
       end
     end
   end
@@ -75,6 +77,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.contact_email).to eq group1.contact_email
         expect(page.contact_tel).to eq group1.contact_tel
         expect(page.contact_fax).to eq group1.contact_fax
+        expect(page.contact_link_url).to eq group1.contact_link_url
+        expect(page.contact_link_name).to eq group1.contact_link_name
 
         user1.reload
         expect(user1.group_ids).to eq [group1.id]

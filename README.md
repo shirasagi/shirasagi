@@ -32,9 +32,13 @@ Platform
 Installation (Auto)
 -------------------
 
+- CentOS7の環境で実行してください。<br />
+- 一般ユーザーで実行する場合は、sudoが利用できることを確認してください。<br />
+- パラメーターの"example.jp"には、ブラウザでアクセスする際のドメイン名または、IPアドレスを指定してください。<br />
+
 ```
 $ su - user-which-executes-shirasagi-server
-$ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | SS_HOSTNAME=example.jp bash -s
+$ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | bash -s example.jp
 ```
 
 Installation (CentOS 7)
@@ -73,7 +77,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 ### Ruby(RVM) のインストール
 
 ```
-# gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+# curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
 # \curl -sSL https://get.rvm.io | sudo bash -s stable
 # source /etc/profile
 # rvm install 2.3.4
@@ -149,3 +153,8 @@ http://localhost:3000/ にアクセスすると登録したデモサイトが表
 DEVELOPMENT_LOG_LEVEL=debug
 ANALYZE_COVERAGE=disabled
 ```
+
+## その他機能の利用方法
+
+- [グループウェアの始め方](http://shirasagi.github.io/start/gws.html)
+- [ウェブメールの始め方](http://shirasagi.github.io/start/webmail.html)

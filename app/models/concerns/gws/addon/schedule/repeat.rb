@@ -57,63 +57,64 @@ module Gws::Addon::Schedule::Repeat
   end
 
   private
-    def repeat_plan_fields
-      [:repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays]
+
+  def repeat_plan_fields
+    [:repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays]
+  end
+
+  def validate_repeat_params
+    self.repeat_start = start_at.to_date if repeat_start.blank? && start_at
+  end
+
+  def validate_repeat_plan
+    @repeat_plan = repeat_plan || Gws::Schedule::RepeatPlan.new
+    repeat_plan_fields.each { |name| @repeat_plan.send "#{name}=", send(name) }
+    return if @repeat_plan.valid?
+
+    @repeat_plan.errors.to_hash.each do |key, messages|
+      messages.each { |m| errors.add key, m }
+    end
+  end
+
+  def save_repeat_plan
+    # @extract_repeat_plans = nil
+    return unless @repeat_plan.changed?
+
+    # @extract_repeat_plans = true
+    @repeat_plan.save
+    self.repeat_plan_id = @repeat_plan.id
+  end
+
+  def remove_repeat_plan
+    return if @skip_remove_repeat_plan
+
+    if edit_range == "all" || repeat_type == ''
+      remove_all_repeat_plan
+    elsif edit_range == "later"
+      remove_later_repeat_plan
     end
 
-    def validate_repeat_params
-      self.repeat_start = start_at.to_date if repeat_start.blank? && start_at
+    if repeat_plan && self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).empty?
+      repeat_plan.destroy
+      remove_attribute(:repeat_plan_id)
     end
+  end
 
-    def validate_repeat_plan
-      @repeat_plan = repeat_plan || Gws::Schedule::RepeatPlan.new
-      repeat_plan_fields.each { |name| @repeat_plan.send "#{name}=", send(name) }
-      return if @repeat_plan.valid?
-
-      @repeat_plan.errors.to_hash.each do |key, messages|
-        messages.each { |m| errors.add key, m }
-      end
+  def remove_all_repeat_plan
+    return unless repeat_plan
+    plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
+    plans.each do |plan|
+      plan.skip_gws_history
+      plan.destroy_without_repeat_plan
     end
+  end
 
-    def save_repeat_plan
-      #@extract_repeat_plans = nil
-      return unless @repeat_plan.changed?
-
-      #@extract_repeat_plans = true
-      @repeat_plan.save
-      self.repeat_plan_id = @repeat_plan.id
+  def remove_later_repeat_plan
+    return unless repeat_plan
+    plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at)
+    plans.each do |plan|
+      plan.skip_gws_history
+      plan.destroy_without_repeat_plan
     end
-
-    def remove_repeat_plan
-      return if @skip_remove_repeat_plan
-
-      if edit_range == "all" || repeat_type == ''
-        remove_all_repeat_plan
-      elsif edit_range == "later"
-        remove_later_repeat_plan
-      end
-
-      if repeat_plan && self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).empty?
-        repeat_plan.destroy
-        remove_attribute(:repeat_plan_id)
-      end
-    end
-
-    def remove_all_repeat_plan
-      return unless repeat_plan
-      plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
-      plans.each do |plan|
-        plan.skip_gws_history
-        plan.destroy_without_repeat_plan
-      end
-    end
-
-    def remove_later_repeat_plan
-      return unless repeat_plan
-      plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at)
-      plans.each do |plan|
-        plan.skip_gws_history
-        plan.destroy_without_repeat_plan
-      end
-    end
+  end
 end

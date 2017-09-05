@@ -21,31 +21,32 @@ class Gws::Board::Category
   end
 
   private
-    def color_required?
-      false
-    end
 
-    def default_color
-      nil
-    end
+  def color_required?
+    false
+  end
 
-    def validate_name_depth
-      return if name.blank?
-      errors.add :name, :too_deep, max: 2 if name.count('/') >= 2
-    end
+  def default_color
+    nil
+  end
 
-    def validate_parent_name
-      return if name.blank?
-      return if name.count('/') < 1
+  def validate_name_depth
+    return if name.blank?
+    errors.add :name, :too_deep, max: 2 if name.count('/') >= 2
+  end
 
-      errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
-    end
+  def validate_parent_name
+    return if name.blank?
+    return if name.count('/') < 1
 
-    def validate_children
-      if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
-        errors.add :base, :found_children
-        return false
-      end
-      true
+    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+  end
+
+  def validate_children
+    if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+      errors.add :base, :found_children
+      return false
     end
+    true
+  end
 end

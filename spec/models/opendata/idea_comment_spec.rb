@@ -18,7 +18,7 @@ describe Opendata::IdeaComment, dbscope: :example do
   let!(:group_01) { create_once :ss_group }
   let!(:group_02) { create_once :ss_group }
 
-  let!(:ss_user_01) { create_once :ss_user, group_ids: [group_01.id, group_02.id]}
+  let!(:ss_user_01) { create_once :ss_user, group_ids: [group_01.id, group_02.id] }
 
   context ".get_member_name" do
     subject do

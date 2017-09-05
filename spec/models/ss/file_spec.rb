@@ -1,14 +1,63 @@
 require 'spec_helper'
 
-describe SS::File do
-  describe "empty" do
+describe SS::File, dbscope: :example do
+  context "with empty" do
     subject { described_class.new }
     its(:valid?) { is_expected.to be_falsey }
   end
 
-  describe "factory girl" do
+  context "with valid item" do
     subject { create :ss_file }
     its(:valid?) { is_expected.to be_truthy }
+    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
+    its(:public?) { is_expected.to be_falsey }
+    its(:public_path) { is_expected.to be_nil }
+    its(:full_url) { is_expected.to be_nil }
+    its(:name) { is_expected.to eq 'logo.png' }
+    its(:humanized_name) { is_expected.to eq 'logo (PNG 11.5KB)' }
+    its(:download_filename) { is_expected.to eq 'logo.png' }
+    its(:basename) { is_expected.to eq 'logo.png' }
+    its(:extname) { is_expected.to eq 'png' }
+    its(:image?) { is_expected.to be_truthy }
+  end
+
+  context "with item related to site" do
+    let(:site) { ss_site }
+    subject { create :ss_file, site_id: site.id }
+    its(:valid?) { is_expected.to be_truthy }
+    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
+    its(:public?) { is_expected.to be_falsey }
+    its(:public_path) { is_expected.to eq "#{site.root_path}/fs/#{subject.id}/_/#{subject.filename}" }
+    its(:full_url) { is_expected.to eq "http://#{site.domain}/fs/#{subject.id}/_/#{subject.filename}" }
+    its(:name) { is_expected.to eq 'logo.png' }
+    its(:humanized_name) { is_expected.to eq 'logo (PNG 11.5KB)' }
+    its(:download_filename) { is_expected.to eq 'logo.png' }
+    its(:basename) { is_expected.to eq 'logo.png' }
+    its(:extname) { is_expected.to eq 'png' }
+    its(:image?) { is_expected.to be_truthy }
+  end
+
+  context "with item related to sub-dir site" do
+    let(:site0) { ss_site }
+    let(:site1) { create(:ss_site_subdir, domains: site0.domains, parent_id: site0.id) }
+    subject { create :ss_file, site_id: site1.id }
+    its(:valid?) { is_expected.to be_truthy }
+    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
+    its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
+    its(:public?) { is_expected.to be_falsey }
+    its(:public_path) { is_expected.to eq "#{site0.root_path}/fs/#{subject.id}/_/#{subject.filename}" }
+    its(:full_url) { is_expected.to eq "http://#{site0.domain}/fs/#{subject.id}/_/#{subject.filename}" }
+    its(:name) { is_expected.to eq 'logo.png' }
+    its(:humanized_name) { is_expected.to eq 'logo (PNG 11.5KB)' }
+    its(:download_filename) { is_expected.to eq 'logo.png' }
+    its(:basename) { is_expected.to eq 'logo.png' }
+    its(:extname) { is_expected.to eq 'png' }
+    its(:image?) { is_expected.to be_truthy }
   end
 
   describe "#uploaded_file" do

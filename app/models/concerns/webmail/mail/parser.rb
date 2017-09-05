@@ -112,15 +112,16 @@ module Webmail::Mail::Parser
   end
 
   private
-    def flatten_all_parts(part, pos = [], buf = {})
-      if part.multipart?
-        part.parts.each_with_index do |p, idx|
-          buf = flatten_all_parts(p, pos + [idx + 1], buf)
-        end
-      else
-        pos = [1] if pos.blank?
-        buf[pos.join('.')] = part
+
+  def flatten_all_parts(part, pos = [], buf = {})
+    if part.multipart?
+      part.parts.each_with_index do |p, idx|
+        buf = flatten_all_parts(p, pos + [idx + 1], buf)
       end
-      buf
+    else
+      pos = [1] if pos.blank?
+      buf[pos.join('.')] = part
     end
+    buf
+  end
 end

@@ -14,11 +14,6 @@ Lint/AmbiguousOperator:
 Lint/AssignmentInCondition:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Lint/BlockAlignment:
-  Enabled: false
-
 # Offense count: 26
 # Cop supports --auto-correct.
 Lint/DeprecatedClassMethods:
@@ -75,16 +70,16 @@ Metrics/LineLength:
 # Offense count: 191
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
-  Max: 42
+  Max: 45
 
 # Offense count: 9
 # Configuration parameters: CountComments.
 Metrics/ModuleLength:
-  Max: 166
+  Max: 180
 
 # Offense count: 36
 Metrics/PerceivedComplexity:
-  Max: 14
+  Max: 15
 
 # Offense count: 30
 # Cop supports --auto-correct.
@@ -174,16 +169,6 @@ Style/Documentation:
 Style/DotPosition:
   Enabled: false
 
-# Offense count: 5
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyElse:
-  Enabled: false
-
-# Offense count: 457
-# Cop supports --auto-correct.
-Style/EmptyLinesAroundAccessModifier:
-  Enabled: false
-
 # Offense count: 51
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -234,12 +219,6 @@ Style/IfUnlessModifier:
   Enabled: false
 
 Style/IndentArray:
-  Enabled: false
-
-# Offense count: 1027
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/IndentationConsistency:
   Enabled: false
 
 # Offense count: 8
@@ -324,17 +303,6 @@ Style/RegexpLiteral:
 Style/RescueModifier:
   Enabled: false
 
-# Offense count: 182
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/SignalException:
-  Enabled: false
-
-# Offense count: 17
-# Cop supports --auto-correct.
-Style/SpaceBeforeFirstArg:
-  Enabled: false
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/SpaceAfterColon:
@@ -366,12 +334,6 @@ Style/SpaceBeforeComma:
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/SpaceBeforeComment:
-  Enabled: false
-
-# Offense count: 46
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-Style/SpaceInsideBlockBraces:
   Enabled: false
 
 # Offense count: 346
@@ -425,9 +387,3 @@ Style/TrailingCommaInLiteral:
 # Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, IgnoreClassMethods, Whitelist.
 Style/TrivialAccessors:
   Enabled: false
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: WordRegex.
-Style/WordArray:
-  MinSize: 2

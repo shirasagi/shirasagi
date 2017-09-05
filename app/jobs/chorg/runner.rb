@@ -60,50 +60,51 @@ class Chorg::Runner < Cms::ApplicationJob
   end
 
   private
-    def update_all
-      return if substituter.empty?
-      with_all_entity_updates(@models, substituter) do |entity, updates|
-        next if updates.blank?
 
-        put_log("#{entity.name}(#{entity.url}) has some updates. module=#{entity.class}")
-        with_inc_depth do
-          updates = updates.select { |k, v| v.present? }
-          updates.each do |k, new_value|
-            old_value = entity[k]
-            put_log("property #{k} has these changes:")
-            with_inc_depth do
-              if new_value.is_a?(String)
-                Diffy::Diff.new(old_value, new_value, diff: "-U 3").to_s.each_line do |line|
-                  next if /No newline at end of file/i =~ line
-                  put_log(line.chomp.to_s)
-                end
-              elsif new_value.is_a?(Array)
-                convert_to_group_names(old_value - new_value).each do |name|
-                  put_log("-#{name}")
-                end
-                convert_to_group_names(new_value - old_value).each do |name|
-                  put_log("+#{name}")
-                end
-              else
-                convert_to_group_names([old_value]).each do |name|
-                  put_log("-#{name}")
-                end
-                convert_to_group_names([new_value]).each do |name|
-                  put_log("+#{name}")
-                end
+  def update_all
+    return if substituter.empty?
+    with_all_entity_updates(@models, substituter) do |entity, updates|
+      next if updates.blank?
+
+      put_log("#{entity.name}(#{entity.url}) has some updates. module=#{entity.class}")
+      with_inc_depth do
+        updates = updates.select { |k, v| v.present? }
+        updates.each do |k, new_value|
+          old_value = entity[k]
+          put_log("property #{k} has these changes:")
+          with_inc_depth do
+            if new_value.is_a?(String)
+              Diffy::Diff.new(old_value, new_value, diff: "-U 3").to_s.each_line do |line|
+                next if /No newline at end of file/i =~ line
+                put_log(line.chomp.to_s)
+              end
+            elsif new_value.is_a?(Array)
+              convert_to_group_names(old_value - new_value).each do |name|
+                put_log("-#{name}")
+              end
+              convert_to_group_names(new_value - old_value).each do |name|
+                put_log("+#{name}")
+              end
+            else
+              convert_to_group_names([old_value]).each do |name|
+                put_log("-#{name}")
+              end
+              convert_to_group_names([new_value]).each do |name|
+                put_log("+#{name}")
               end
             end
           end
         end
-        update_attributes(entity, updates)
-        save_or_collect_errors(entity)
       end
+      update_attributes(entity, updates)
+      save_or_collect_errors(entity)
     end
+  end
 
-    def validate_all
-      return if validation_substituter.empty?
-      with_all_entity_updates(@models, validation_substituter) do |entity, deletes|
-        put_log("#{entity.name}(#{entity.url}) has deleted attributes: #{deletes}") if deletes.present?
-      end
+  def validate_all
+    return if validation_substituter.empty?
+    with_all_entity_updates(@models, validation_substituter) do |entity, deletes|
+      put_log("#{entity.name}(#{entity.url}) has deleted attributes: #{deletes}") if deletes.present?
     end
+  end
 end

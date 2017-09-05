@@ -48,7 +48,7 @@ module Member::Addon
     end
 
     def wareki_options
-       I18n.t("views.options.wareki").map { |k, v| [v, k] }
+       I18n.t("ss.options.wareki").map { |k, v| [v, k] }
     end
 
     def parse_in_birth
@@ -85,27 +85,28 @@ module Member::Addon
     end
 
     private
-      def normalize_postal_code
-        return if postal_code.blank?
-        self.postal_code = postal_code.tr('０-９ａ-ｚＡ-Ｚー－～', '0-9a-zA-Z---')
-      end
 
-      def normalize_in_birth
-        return if in_birth.blank?
-        self.in_birth = in_birth.select { |_, value| value.present? }
-      end
+    def normalize_postal_code
+      return if postal_code.blank?
+      self.postal_code = postal_code.tr('０-９ａ-ｚＡ-Ｚー－～', '0-9a-zA-Z---')
+    end
 
-      def set_birthday
-        era = in_birth[:era]
-        year = in_birth[:year].to_i
-        month = in_birth[:month].to_i
-        day = in_birth[:day].to_i
+    def normalize_in_birth
+      return if in_birth.blank?
+      self.in_birth = in_birth.select { |_, value| value.present? }
+    end
 
-        wareki = I18n.t("ss.wareki")[era.to_sym]
-        return nil if wareki.blank?
-        min = Date.parse(wareki[:min])
+    def set_birthday
+      era = in_birth[:era]
+      year = in_birth[:year].to_i
+      month = in_birth[:month].to_i
+      day = in_birth[:day].to_i
 
-        self.birthday = Date.new(min.year + year - 1, month, day)
-      end
+      wareki = I18n.t("ss.wareki")[era.to_sym]
+      return nil if wareki.blank?
+      min = Date.parse(wareki[:min])
+
+      self.birthday = Date.new(min.year + year - 1, month, day)
+    end
   end
 end

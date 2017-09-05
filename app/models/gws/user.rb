@@ -59,26 +59,27 @@ class Gws::User
   end
 
   private
-    def set_title_ids
-      title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)
-      title_ids << in_title_id.to_i if in_title_id.present?
-      self.title_ids = title_ids
-    end
 
-    def set_gws_main_group_id
-      group_ids = gws_main_group_ids
-      group_ids[@cur_site.id.to_s] = in_gws_main_group_id.present? ? in_gws_main_group_id.to_i : nil
-      self.gws_main_group_ids = group_ids.select { |k, v| v.present? }
-    end
+  def set_title_ids
+    title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)
+    title_ids << in_title_id.to_i if in_title_id.present?
+    self.title_ids = title_ids
+  end
 
-    def validate_groups
-      self.errors.add :group_ids, :blank if groups.blank?
-    end
+  def set_gws_main_group_id
+    group_ids = gws_main_group_ids
+    group_ids[@cur_site.id.to_s] = in_gws_main_group_id.present? ? in_gws_main_group_id.to_i : nil
+    self.gws_main_group_ids = group_ids.select { |k, v| v.present? }
+  end
 
-    def validate_gws_main_group
-      group_id = gws_main_group_ids[@cur_site.id.to_s]
-      return true if group_id.blank?
-      return true if group_ids.include?(group_id)
-      errors.add :gws_main_group_ids, :invalid
-    end
+  def validate_groups
+    self.errors.add :group_ids, :blank if groups.blank?
+  end
+
+  def validate_gws_main_group
+    group_id = gws_main_group_ids[@cur_site.id.to_s]
+    return true if group_id.blank?
+    return true if group_ids.include?(group_id)
+    errors.add :gws_main_group_ids, :invalid
+  end
 end

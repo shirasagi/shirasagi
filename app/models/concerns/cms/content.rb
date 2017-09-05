@@ -36,8 +36,12 @@ module Cms::Content
     after_validation :set_depth, if: ->{ filename.present? }
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
-    scope :node, ->(node) {
-      node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+    scope :node, ->(node, target = nil) {
+      if target == 'descendant'
+        node ? where(filename: /^#{node.filename}\//) : where({})
+      else #current
+        node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+      end
     }
     scope :and_public, ->(date = nil) {
       if date.nil?
@@ -81,7 +85,9 @@ module Cms::Content
   end
 
   def dirname(basename = nil)
-    dir = filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
+    if filename.present?
+      dir = filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
+    end
     basename ? (dir ? "#{dir}/" : "") + basename : dir
   end
 
@@ -125,13 +131,13 @@ module Cms::Content
 
   def state_options
     [
-      [I18n.t('views.options.state.public'), 'public'],
-      [I18n.t('views.options.state.closed'), 'closed'],
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
     ]
   end
 
   def state_private_options
-    [[I18n.t('views.options.state.ready'), 'ready']]
+    [[I18n.t('ss.options.state.ready'), 'ready']]
   end
 
   def status
@@ -160,7 +166,7 @@ module Cms::Content
 
     item = klass.new
     item.instance_variable_set(:@new_record, nil) unless new_record?
-    instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
+    instance_variables.each { |k| item.instance_variable_set k, instance_variable_get(k) }
     item
   end
 
@@ -174,40 +180,45 @@ module Cms::Content
     @serve_static_relation_files == true
   end
 
+  def node_target_options
+    %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
+  end
+
   private
-    def set_filename
-      if @cur_node
-        self.filename = "#{@cur_node.filename}/#{basename}"
-      elsif @basename
-        self.filename = basename
-      end
+
+  def set_filename
+    if @cur_node
+      self.filename = "#{@cur_node.filename}/#{basename}"
+    elsif @basename
+      self.filename = basename
+    end
+  end
+
+  def set_depth
+    self.depth = filename.scan("/").size + 1
+  end
+
+  def set_released
+    now = Time.zone.now
+    self.released ||= now
+    self.first_released ||= now
+  end
+
+  def fix_extname
+    nil
+  end
+
+  def validate_filename
+    if @basename
+      return errors.add :basename, :empty if @basename.blank?
+      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{fix_extname})?$/
+    else
+      return errors.add :filename, :empty if filename.blank?
+      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
     end
 
-    def set_depth
-      self.depth = filename.scan("/").size + 1
-    end
-
-    def set_released
-      now = Time.zone.now
-      self.released ||= now
-      self.first_released ||= now
-    end
-
-    def fix_extname
-      nil
-    end
-
-    def validate_filename
-      if @basename
-        return errors.add :basename, :empty if @basename.blank?
-        errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
-        errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{fix_extname})?$/
-      else
-        return errors.add :filename, :empty if filename.blank?
-        errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
-      end
-
-      self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
-      @basename = filename.sub(/.*\//, "") if @basename
-    end
+    self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
+    @basename = filename.sub(/.*\//, "") if @basename
+  end
 end

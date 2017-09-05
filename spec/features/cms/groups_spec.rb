@@ -58,7 +58,12 @@ describe "cms_groups", type: :feature, dbscope: :example do
     before(:each) do
       tel   = "000-000-0000"
       email = "sys@example.jp"
-      g1 = create(:cms_group, name: "A", order: 10, contact_tel: tel, contact_fax: tel, contact_email: email)
+      link_url = "http://demo.ss-proj.org/"
+      link_name = "http://demo.ss-proj.org/"
+      g1 = create(
+        :cms_group, name: "A", order: 10, contact_tel: tel, contact_fax: tel,
+        contact_email: email, contact_link_url: link_url, contact_link_name: link_name
+      )
       cms_site.add_to_set(group_ids: [g1.id])
     end
 
@@ -78,12 +83,16 @@ describe "cms_groups", type: :feature, dbscope: :example do
       expected_contact_tels = %w(1 2 3 4 5 6 7).fill("000-000-0000")
       expected_contact_faxs = %w(1 2 3 4 5 6 7).fill("000-000-0000")
       expected_contact_emails = %w(1 2 3 4 5 6 7).fill("sys@example.jp")
+      expected_contact_link_urls = %w(1 2 3 4 5 6 7).fill("http://demo.ss-proj.org/")
+      expected_contact_link_names = %w(1 2 3 4 5 6 7).fill("http://demo.ss-proj.org/")
 
       expect(groups.map(&:name)).to eq expected_names
       expect(groups.map(&:order)).to eq expected_orders
       expect(groups.map(&:contact_tel)).to eq expected_contact_tels
       expect(groups.map(&:contact_fax)).to eq expected_contact_faxs
       expect(groups.map(&:contact_email)).to eq expected_contact_emails
+      expect(groups.map(&:contact_link_url)).to eq expected_contact_link_urls
+      expect(groups.map(&:contact_link_name)).to eq expected_contact_link_names
     end
   end
 
@@ -101,10 +110,10 @@ describe "cms_groups", type: :feature, dbscope: :example do
       visit index_path
 
       click_on group_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[expiration_date]", with: expiration_date.strftime("%Y/%m/%d %H:%M")
-      click_on I18n.t("views.button.save")
+      click_on I18n.t("ss.buttons.save")
 
       group.reload
       expect(group.expiration_date).to eq expiration_date
@@ -112,16 +121,16 @@ describe "cms_groups", type: :feature, dbscope: :example do
       visit index_path
       expect(page).to have_no_css(".expandable", text: group_name)
 
-      select I18n.t("views.options.state.all"), from: "s[state]"
-      click_on I18n.t('views.button.search')
+      select I18n.t("ss.options.state.all"), from: "s[state]"
+      click_on I18n.t('ss.buttons.search')
 
       expect(page).to have_css(".expandable", text: group_name)
 
       click_on group_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[contact_tel]", with: contact_tel
-      click_on I18n.t("views.button.save")
+      click_on I18n.t("ss.buttons.save")
 
       group.reload
       expect(group.contact_tel).to eq contact_tel

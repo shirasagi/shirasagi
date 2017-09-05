@@ -1,15 +1,15 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to :new, action: :new %>
-    <%= link_to :import, action: :import %>
+    <%= link_to t('ss.links.new'), action: :new %>
+    <%= link_to t('ss.links.import'), action: :import %>
   <% elsif params[:action] =~ /new|create|import/ %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
-    <%= link_to :back_to_show, action: :show, id: @item %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <%= link_to :edit, action: :edit, id: @item %>
-    <%= link_to :delete, action: :delete, id: @item %>
-    <%= link_to :back_to_index, action: :index %>
+    <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
    <% end %>
 </nav>

@@ -15,7 +15,8 @@ class Cms::Apis::TempFilesController < ApplicationController
   end
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site }
-    end
+
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
 end

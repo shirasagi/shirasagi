@@ -9,25 +9,26 @@ class Rss::PubSubHubbub::VerificationParam
   validate :validate_challenge
 
   private
-    def validate_mode
-      errors.add :mode, :invalid unless %w(subscribe unsubscribe).include?(mode)
+
+  def validate_mode
+    errors.add :mode, :invalid unless %w(subscribe unsubscribe).include?(mode)
+  end
+
+  def validate_topic
+    if topic.blank?
+      errors.add :topic, :blank
+      return
     end
 
-    def validate_topic
-      if topic.blank?
-        errors.add :topic, :blank
-        return
-      end
+    return if cur_node.blank?
+    return if cur_node.topic_urls.blank?
 
-      return if cur_node.blank?
-      return if cur_node.topic_urls.blank?
-
-      unless cur_node.topic_urls.include?(topic)
-        errors.add :topic, :inclusion
-      end
+    unless cur_node.topic_urls.include?(topic)
+      errors.add :topic, :inclusion
     end
+  end
 
-    def validate_challenge
-      errors.add :challenge, :blank if mode == 'subscribe' && challenge.blank?
-    end
+  def validate_challenge
+    errors.add :challenge, :blank if mode == 'subscribe' && challenge.blank?
+  end
 end

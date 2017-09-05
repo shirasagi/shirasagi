@@ -26,7 +26,8 @@ module Workflow::Model::Route
 
   module ClassMethods
     def route_options(user)
-      ret = [ [ t("my_group"), "my_group" ] ]
+      ret = []
+      ret = [ [ t("my_group"), "my_group" ] ] unless SS.config.workflow.disable_my_group
       group_ids = user.group_ids.to_a
       criteria.and(:group_ids.in => group_ids).each do |route|
         ret << [ route.name, route.id ]
@@ -83,42 +84,43 @@ module Workflow::Model::Route
   end
 
   private
-    def validate_approvers_presence
-      errors.add :approvers, :blank if approvers.blank?
-      approvers.each do |approver|
-        errors.add :base, :approvers_level_blank if approver[:level].blank?
-        if approver[:user_id].blank?
-          errors.add :base, :approvers_user_id_blank
-        elsif self.class.approver_user_class.where(id: approver[:user_id]).first.blank?
-          errors.add :base, :approvers_user_missing
-        end
+
+  def validate_approvers_presence
+    errors.add :approvers, :blank if approvers.blank?
+    approvers.each do |approver|
+      errors.add :base, :approvers_level_blank if approver[:level].blank?
+      if approver[:user_id].blank?
+        errors.add :base, :approvers_user_id_blank
+      elsif self.class.approver_user_class.where(id: approver[:user_id]).first.blank?
+        errors.add :base, :approvers_user_missing
       end
     end
+  end
 
-    def validate_approvers_consecutiveness
-      # level must start from 1 and level must be consecutive.
-      max_level = levels.max
-      return unless max_level
+  def validate_approvers_consecutiveness
+    # level must start from 1 and level must be consecutive.
+    max_level = levels.max
+    return unless max_level
 
-      1.upto(max_level) do |level|
-        errors.add :base, :approvers_level_missing, level: level unless levels.include?(level)
-      end
+    1.upto(max_level) do |level|
+      errors.add :base, :approvers_level_missing, level: level unless levels.include?(level)
     end
+  end
 
-    def validate_required_counts
-      errors.add :required_counts, :blank if required_counts.blank?
+  def validate_required_counts
+    errors.add :required_counts, :blank if required_counts.blank?
 
-      levels.each do |level|
-        required_count = required_count_at(level)
-        next if required_count == false
+    levels.each do |level|
+      required_count = required_count_at(level)
+      next if required_count == false
 
-        approvers = approvers_at(level).to_a
-        errors.add :required_counts, :required_count_greater_than_approvers, level: level, required_count: required_count \
-          if approvers.length < required_count
-      end
+      approvers = approvers_at(level).to_a
+      errors.add :required_counts, :required_count_greater_than_approvers, level: level, required_count: required_count \
+        if approvers.length < required_count
     end
+  end
 
-    def validate_groups
-      self.errors.add :group_ids, :blank if groups.blank?
-    end
+  def validate_groups
+    self.errors.add :group_ids, :blank if groups.blank?
+  end
 end

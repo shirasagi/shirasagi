@@ -12,7 +12,10 @@ module Cms::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(id name order ldap_dn contact_tel contact_fax contact_email activation_date expiration_date)
+        %w(
+          id name order ldap_dn contact_tel contact_fax contact_email contact_link_url
+          contact_link_name activation_date expiration_date
+        )
       end
 
       def to_csv
@@ -27,6 +30,8 @@ module Cms::Addon::Import
             line << item.contact_tel
             line << item.contact_fax
             line << item.contact_email
+            line << item.contact_link_url
+            line << item.contact_link_name
             line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
             line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
             data << line
@@ -48,69 +53,74 @@ module Cms::Addon::Import
     end
 
     private
-      def validate_import
-        return errors.add :in_file, :blank if in_file.blank?
 
-        fname = in_file.original_filename
-        return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
-        begin
-          CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-          in_file.rewind
-        rescue => e
-          errors.add :in_file, :invalid_file_type
-        end
+    def validate_import
+      return errors.add :in_file, :blank if in_file.blank?
+
+      fname = in_file.original_filename
+      return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
+      begin
+        CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+        in_file.rewind
+      rescue => e
+        errors.add :in_file, :invalid_file_type
       end
+    end
 
-      def update_row(row, index)
-        id             = row[t("id")].to_s.strip
-        name           = row[t("name")].to_s.strip
-        order          = row[t("order")].to_s.strip
-        ldap_dn        = row[t("ldap_dn")].to_s.strip
-        contact_tel    = row[t("contact_tel")].to_s.strip
-        contact_fax    = row[t("contact_fax")].to_s.strip
-        contact_email  = row[t("contact_email")].to_s.strip
-        activation_date = row[t("activation_date")].to_s.strip
-        expiration_date = row[t("expiration_date")].to_s.strip
+    def update_row(row, index)
+      id             = row[t("id")].to_s.strip
+      name           = row[t("name")].to_s.strip
+      order          = row[t("order")].to_s.strip
+      ldap_dn        = row[t("ldap_dn")].to_s.strip
+      contact_tel    = row[t("contact_tel")].to_s.strip
+      contact_fax    = row[t("contact_fax")].to_s.strip
+      contact_email  = row[t("contact_email")].to_s.strip
+      contact_link_url = row[t("contact_link_url")].to_s.strip
+      contact_link_name = row[t("contact_link_name")].to_s.strip
+      activation_date = row[t("activation_date")].to_s.strip
+      expiration_date = row[t("expiration_date")].to_s.strip
 
-        if id.present?
-          item = self.class.unscoped.where(id: id).first
-          if item.blank?
-            self.errors.add :base, :not_found, line_no: index, id: id
-            return nil
-          end
-
-          if name.blank?
-            item.disable
-            @imported += 1
-            return nil
-          end
-        else
-          item = self.class.new
+      if id.present?
+        item = self.class.unscoped.where(id: id).first
+        if item.blank?
+          self.errors.add :base, :not_found, line_no: index, id: id
+          return nil
         end
 
-        item.name            = name
-        item.order           = order
-        item.ldap_dn         = ldap_dn
-        item.contact_tel     = contact_tel
-        item.contact_fax     = contact_fax
-        item.contact_email   = contact_email
-        item.activation_date = activation_date
-        item.expiration_date = expiration_date
-
-        if item.save
+        if name.blank?
+          item.disable
           @imported += 1
-        else
-          set_errors(item, index)
+          return nil
         end
-        item
+      else
+        item = self.class.new
       end
 
-      def set_errors(item, index)
-        error = ""
-        item.errors.each do |n, e|
-          error += "#{item.class.t(n)}#{e} "
-        end
-        self.errors.add :base, "#{index}: #{error}"
+      item.name            = name
+      item.order           = order
+      item.ldap_dn         = ldap_dn
+      item.contact_tel     = contact_tel
+      item.contact_fax     = contact_fax
+      item.contact_email   = contact_email
+      item.contact_link_url = contact_link_url
+      item.contact_link_name = contact_link_name
+      item.activation_date = activation_date
+      item.expiration_date = expiration_date
+
+      if item.save
+        @imported += 1
+      else
+        set_errors(item, index)
       end
+      item
+    end
+
+    def set_errors(item, index)
+      error = ""
+      item.errors.each do |n, e|
+        error += "#{item.class.t(n)}#{e} "
+      end
+      self.errors.add :base, "#{index}: #{error}"
+    end
   end
 end

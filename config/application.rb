@@ -16,12 +16,10 @@ module SS
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
-
-    config.assets.paths << "#{config.root}/vendor/assets/packages"
     config.assets.paths << "#{config.root}/public/assets/css"
     config.assets.paths << "#{config.root}/public/assets/js"
     config.assets.precompile << proc do |path, fn|
-      fn =~ /app\/assets/ && %w(.js .css).include?(::File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/
+      fn =~ /#{Rails.root}\/app/ && %w(.js .css).include?(::File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/
     end
 
     I18n.enforce_available_locales = true

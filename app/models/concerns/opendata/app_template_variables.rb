@@ -22,24 +22,25 @@ module Opendata::AppTemplateVariables
   end
 
   private
-    def template_variable_handler_app_name(name, issuer)
-      ERB::Util.html_escape self.name
-    end
 
-    def template_variable_handler_app_url(name, issuer)
-      ERB::Util.html_escape "#{issuer.url}#{id}/"
-    end
+  def template_variable_handler_app_name(name, issuer)
+    ERB::Util.html_escape self.name
+  end
 
-    def template_variable_handler_app_updated(name, issuer, format = nil)
-      format = I18n.t("opendata.labels.updated") if format.nil?
-      I18n.l updated, format: format
-    end
+  def template_variable_handler_app_url(name, issuer)
+    ERB::Util.html_escape "#{issuer.url}#{id}/"
+  end
 
-    def template_variable_handler_app_state(name, issuer)
-      ERB::Util.html_escape(label(:status))
-    end
+  def template_variable_handler_app_updated(name, issuer, format = nil)
+    format = I18n.t("opendata.labels.updated") if format.nil?
+    I18n.l updated, format: format
+  end
 
-    def template_variable_handler_app_point(name, issuer)
-      ERB::Util.html_escape(point.to_i.to_s)
-    end
+  def template_variable_handler_app_state(name, issuer)
+    ERB::Util.html_escape(label(:status))
+  end
+
+  def template_variable_handler_app_point(name, issuer)
+    ERB::Util.html_escape(point.to_i.to_s)
+  end
 end

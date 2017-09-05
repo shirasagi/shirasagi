@@ -51,35 +51,34 @@ class Opendata::IdeaComment
 
   def state_options
     [
-      [I18n.t('views.options.state.public'), 'public'],
-      [I18n.t('views.options.state.closed'), 'closed'],
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
     ]
   end
 
   class << self
-    public
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
 
-        criteria = criteria.where(text: /#{params[:keyword]}/) if params[:keyword].present?
-        criteria = search_poster(params, criteria)
-      end
+      criteria = criteria.where(text: /#{params[:keyword]}/) if params[:keyword].present?
+      criteria = search_poster(params, criteria)
+    end
 
-      def search_poster(params, criteria)
-        if params[:poster].present?
-          code = {}
-          cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
-          cond = { :workflow_member_id => nil } if params[:poster] == "admin"
-          criteria = criteria.where(cond)
-        end
-        criteria
+    def search_poster(params, criteria)
+      if params[:poster].present?
+        code = {}
+        cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
+        cond = { :workflow_member_id => nil } if params[:poster] == "admin"
+        criteria = criteria.where(cond)
       end
+      criteria
+    end
 
-      def allow(action, user, opts = {})
-        site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
-        ids = Opendata::Idea.where(site_id: site_id).allow(action, user, opts).map(&:id)
-        self.in(idea_id: ids)
-      end
+    def allow(action, user, opts = {})
+      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
+      ids = Opendata::Idea.where(site_id: site_id).allow(action, user, opts).map(&:id)
+      self.in(idea_id: ids)
+    end
   end
 end

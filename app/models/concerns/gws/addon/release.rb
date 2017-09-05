@@ -45,20 +45,21 @@ module Gws::Addon
     end
 
     def state_options
-      %w(public closed).map { |m| [I18n.t("views.options.state.#{m}"), m] }
+      %w(public closed).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
     end
 
     private
-      def validate_release_date
-        self.released ||= release_date if respond_to?(:released)
 
-        if close_date.present? && release_date.present? && release_date >= close_date
-          errors.add :close_date, :greater_than, count: t(:release_date)
-        end
-      end
+    def validate_release_date
+      self.released ||= release_date if respond_to?(:released)
 
-      def set_released
-        self.released ||= Time.zone.now
+      if close_date.present? && release_date.present? && release_date >= close_date
+        errors.add :close_date, :greater_than, count: t(:release_date)
       end
+    end
+
+    def set_released
+      self.released ||= Time.zone.now
+    end
   end
 end

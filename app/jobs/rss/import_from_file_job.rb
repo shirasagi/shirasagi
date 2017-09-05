@@ -2,6 +2,7 @@ require 'rss'
 
 class Rss::ImportFromFileJob < Rss::ImportBase
   private
+
     def before_import(file, *args)
       super
 

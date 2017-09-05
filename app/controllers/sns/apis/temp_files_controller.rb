@@ -7,7 +7,8 @@ class Sns::Apis::TempFilesController < ApplicationController
   model SS::TempFile
 
   private
-    def fix_params
-      { cur_user: @cur_user }
-    end
+
+  def fix_params
+    { cur_user: @cur_user }
+  end
 end

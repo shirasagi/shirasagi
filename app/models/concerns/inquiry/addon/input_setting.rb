@@ -17,7 +17,7 @@ module Inquiry::Addon
       }
       validate :validate_select_options
       validate :validate_input_confirm_options
-      #validate :validate_max_upload_file_size_options
+      # validate :validate_max_upload_file_size_options
     end
 
     def input_type_options
@@ -40,9 +40,9 @@ module Inquiry::Addon
       ]
     end
 
-    #def max_upload_file_size_options
-    #  [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
-    #end
+    # def max_upload_file_size_options
+    #   [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
+    # end
 
     def required?
       required == "required"
@@ -55,22 +55,23 @@ module Inquiry::Addon
     end
 
     private
-      def validate_select_options
-        if input_type =~ /(select|radio_button|check_box)/
-          errors.add :select_options, :blank if select_options.blank?
-        end
-      end
 
-      def validate_input_confirm_options
-        if input_type =~ /(select|radio_button|check_box|text_area|upload_file)/ && input_confirm == 'enabled'
-          errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
-        end
+    def validate_select_options
+      if input_type =~ /(select|radio_button|check_box)/
+        errors.add :select_options, :blank if select_options.blank?
       end
+    end
 
-      #def validate_max_upload_file_size_options
-      #  if input_type =~ /(max_upload_file_size)/
-      #    errors.add :select_options, :blank if select_options.blank?
-      #  end
-      #end
+    def validate_input_confirm_options
+      if input_type =~ /(select|radio_button|check_box|text_area|upload_file)/ && input_confirm == 'enabled'
+        errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
+      end
+    end
+
+    # def validate_max_upload_file_size_options
+    #   if input_type =~ /(max_upload_file_size)/
+    #     errors.add :select_options, :blank if select_options.blank?
+    #   end
+    # end
   end
 end

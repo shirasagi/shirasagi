@@ -46,6 +46,57 @@ production: &production
       - /assets/js/ckeditor/ckeditor.js
       - /assets/js/ckeditor/adapters/jquery.js
 
+  tinymce:
+    options:
+      language: ja
+      plugins:
+        - advlist
+        - autolink
+        - link
+        - image
+        - lists
+        - charmap
+        - print
+        - preview
+        - hr
+        - anchor
+        - pagebreak 
+        - spellchecker
+        - searchreplace
+        - wordcount
+        - visualblocks
+        - visualchars
+        - code
+        - fullscreen
+        - insertdatetime
+        - media
+        - nonbreaking
+        - save
+        - table
+        - contextmenu
+        - directionality
+        - emoticons
+        - template
+        - paste
+        - textcolor
+      toolbar: >-
+        insertfile undo redo
+        | styleselect
+        | bold italic
+        | forecolor backcolor
+        | alignleft aligncenter alignright alignjustify
+        | bullist numlist outdent indent
+        | link image media
+      templates: 'shirasagi'
+    readonly_options:
+      readonly: true
+      plugins:
+      toolbar: false
+      menubar: false
+      templates:
+    public_side_options:
+      templates:
+
   # Link Check Ajax URL
   link_check_url: /.cms/link_check/check.json
 

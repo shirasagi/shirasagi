@@ -25,7 +25,7 @@ describe "cms_agents_parts_crumb", type: :feature, dbscope: :example do
       let(:layout) { create_cms_layout [part] }
       let(:part) { create :cms_part_crumb }
       let(:category_1) { create :category_node_page, layout_id: layout.id, filename: "oshirase" }
-      let(:category_2) { create :category_node_page, layout_id: layout.id, filename: "kurashi"}
+      let(:category_2) { create :category_node_page, layout_id: layout.id, filename: "kurashi" }
       let(:category_3) { create :category_node_page, layout_id: layout.id, filename: "faq" }
       let(:node) { create :cms_node, layout_id: layout.id }
       let(:item) do

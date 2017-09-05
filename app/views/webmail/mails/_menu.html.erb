@@ -1,16 +1,16 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to(:new, { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user) %>
+    <%= link_to(t('ss.links.new'), { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user) %>
   <% elsif params[:action] =~ /new|create/ %>
-    <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
-    <%= link_to(:back_to_show, { action: :show }, class: "back-to-show") %>
-    <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
+    <%= link_to(t('ss.links.back_to_show'), { action: :show }, class: "back-to-show") %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% else %>
     <%= link_to t('webmail.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
     <%= link_to t('webmail.links.reply_all'), { action: :reply_all }, { class: 'reply-all' } unless @item.draft? %>
     <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
-    <%= link_to(:delete, { action: :delete }, class: :delete) %>
+    <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>
 
     <div class="dropdown">
       <a><%= t 'webmail.links.etc' %> <i class="material-icons md-13">&#xE313;</i></a>
@@ -22,10 +22,10 @@
         <li><%= link_to t('webmail.links.unset_star'), { action: :unset_star }, { class: 'update-mail unset-star' } %></li>
         <li><%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %></li>
         <li><%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %></li>
-        <li><%= link_to t('views.download'), { action: :download } %></li>
+        <li><%= link_to t("ss.download"), { action: :download } %></li>
       </ul>
     </div>
 
-    <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% end %>
 </nav>

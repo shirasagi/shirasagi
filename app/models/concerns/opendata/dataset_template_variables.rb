@@ -25,36 +25,37 @@ module Opendata::DatasetTemplateVariables
   end
 
   private
-    def template_variable_handler_dataset_name(name, issuer)
-      ERB::Util.html_escape self.name
-    end
 
-    def template_variable_handler_dataset_url(name, issuer)
-      ERB::Util.html_escape "#{issuer.url}#{id}/"
-    end
+  def template_variable_handler_dataset_name(name, issuer)
+    ERB::Util.html_escape self.name
+  end
 
-    def template_variable_handler_dataset_updated(name, issuer, format = nil)
-      format = I18n.t("opendata.labels.updated") if format.nil?
-      I18n.l updated, format: format
-    end
+  def template_variable_handler_dataset_url(name, issuer)
+    ERB::Util.html_escape "#{issuer.url}#{id}/"
+  end
 
-    def template_variable_handler_dataset_state(name, issuer)
-      ERB::Util.html_escape(label(:status))
-    end
+  def template_variable_handler_dataset_updated(name, issuer, format = nil)
+    format = I18n.t("opendata.labels.updated") if format.nil?
+    I18n.l updated, format: format
+  end
 
-    def template_variable_handler_dataset_point(name, issuer)
-      ERB::Util.html_escape(point.to_i.to_s)
-    end
+  def template_variable_handler_dataset_state(name, issuer)
+    ERB::Util.html_escape(label(:status))
+  end
 
-    def template_variable_handler_dataset_downloaded(name, issuer)
-      ERB::Util.html_escape(downloaded.to_i.to_s)
-    end
+  def template_variable_handler_dataset_point(name, issuer)
+    ERB::Util.html_escape(point.to_i.to_s)
+  end
 
-    def template_variable_handler_dataset_apps_count(name, issuer)
-      ERB::Util.html_escape(apps.size.to_s)
-    end
+  def template_variable_handler_dataset_downloaded(name, issuer)
+    ERB::Util.html_escape(downloaded.to_i.to_s)
+  end
 
-    def template_variable_handler_dataset_ideas_count(name, issuer)
-      ERB::Util.html_escape(ideas.size.to_s)
-    end
+  def template_variable_handler_dataset_apps_count(name, issuer)
+    ERB::Util.html_escape(apps.size.to_s)
+  end
+
+  def template_variable_handler_dataset_ideas_count(name, issuer)
+    ERB::Util.html_escape(ideas.size.to_s)
+  end
 end

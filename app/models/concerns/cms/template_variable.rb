@@ -23,40 +23,41 @@ module Cms::TemplateVariable
   end
 
   private
-    def template_variable_handler_name(name, issuer)
-      ERB::Util.html_escape self.send(name)
-    end
 
-    def template_variable_handler_html(name, issuer)
-      return nil unless respond_to?(:name)
-      self.send(name).present? ? self.send(name).html_safe : nil
-    end
+  def template_variable_handler_name(name, issuer)
+    ERB::Util.html_escape self.send(name)
+  end
 
-    def template_variable_handler_class(name, issuer)
-      self.basename.sub(/\..*/, "").dasherize
-    end
+  def template_variable_handler_html(name, issuer)
+    return nil unless respond_to?(:name)
+    self.send(name).present? ? self.send(name).html_safe : nil
+  end
 
-    def template_variable_handler_new(name, issuer)
-      issuer.respond_to?(:in_new_days?) && issuer.in_new_days?(self.date) ? "new" : nil
-    end
+  def template_variable_handler_class(name, issuer)
+    self.basename.sub(/\..*/, "").dasherize
+  end
 
-    def template_variable_handler_date(name, issuer, format = nil)
-      if format.nil?
-        I18n.l self.date.to_date
-      else
-        I18n.l self.date.to_date, format: format.to_sym
-      end
-    end
+  def template_variable_handler_new(name, issuer)
+    issuer.respond_to?(:in_new_days?) && issuer.in_new_days?(self.date) ? "new" : nil
+  end
 
-    def template_variable_handler_time(name, issuer, format = nil)
-      if format.nil?
-        I18n.l self.date
-      else
-        I18n.l self.date, format: format.to_sym
-      end
+  def template_variable_handler_date(name, issuer, format = nil)
+    if format.nil?
+      I18n.l self.date.to_date
+    else
+      I18n.l self.date.to_date, format: format.to_sym
     end
+  end
 
-    def template_variable_handler_current(name, issuer)
-      false
+  def template_variable_handler_time(name, issuer, format = nil)
+    if format.nil?
+      I18n.l self.date
+    else
+      I18n.l self.date, format: format.to_sym
     end
+  end
+
+  def template_variable_handler_current(name, issuer)
+    false
+  end
 end

@@ -58,20 +58,21 @@ module SS::Model::MaxFileSize
   end
 
   def state_options
-    STATES.map { |v| [ I18n.t("views.options.state.#{v}"), v ] }.to_a
+    STATES.map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }.to_a
   end
 
   private
-    def set_size
-      return if in_size_mb.blank?
-      self.size = in_size_mb.to_i * 1_024 * 1_024
-    end
 
-    def normalize_extensions
-      return if extensions.blank?
-      # normalize extensions
-      # 1. convert to downcase
-      # 2. remove leading period
-      self.extensions = extensions.map(&:downcase).map { |ext| ext.start_with?('.') ? ext[1..-1] : ext }
-    end
+  def set_size
+    return if in_size_mb.blank?
+    self.size = in_size_mb.to_i * 1_024 * 1_024
+  end
+
+  def normalize_extensions
+    return if extensions.blank?
+    # normalize extensions
+    # 1. convert to downcase
+    # 2. remove leading period
+    self.extensions = extensions.map(&:downcase).map { |ext| ext.start_with?('.') ? ext[1..-1] : ext }
+  end
 end

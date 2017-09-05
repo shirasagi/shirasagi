@@ -11,7 +11,8 @@ class Facility::Map
   default_scope ->{ where(route: "facility/map") }
 
   private
-    def serve_static_file?
-      false
-    end
+
+  def serve_static_file?
+    false
+  end
 end

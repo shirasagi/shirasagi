@@ -9,7 +9,8 @@ module Cms::Addon::Tag
   end
 
   private
-    def template_variable_handler_tags(name, issuer)
-      self.tags.join(" ")
-    end
+
+  def template_variable_handler_tags(name, issuer)
+    self.tags.join(" ")
+  end
 end

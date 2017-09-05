@@ -85,78 +85,82 @@ class Opendata::App
     zip_filename = self.class.zip_dir.join("#{id}.zip").to_s
     File.unlink(zip_filename) if File.exist?(zip_filename)
 
-    Zip::Archive.open(zip_filename, Zip::CREATE) do |ar|
-      appfiles.each do |appfile|
-        ar.add_file(appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_'), appfile.file.path)
+    if appfiles.present?
+      Zip::File.open(zip_filename, Zip::File::CREATE) do |archive|
+        appfiles.each do |appfile|
+          cp932_name = appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_')
+          archive.add(cp932_name, appfile.file.path)
+        end
       end
     end
-    return zip_filename
+
+    zip_filename
   end
 
   private
-    def validate_filename
-      @basename.blank? ? nil : super
-    end
 
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
+  def validate_filename
+    @basename.blank? ? nil : super
+  end
 
-    def validate_appurl
-      if self.appurl.present?
-        if self.appfiles.present?
-          errors.add :appurl, I18n.t("opendata.errors.messages.validate_appurl")
-          return
-        end
+  def seq_filename
+    self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+  end
+
+  def validate_appurl
+    if self.appurl.present?
+      if self.appfiles.present?
+        errors.add :appurl, I18n.t("opendata.errors.messages.validate_appurl")
+        return
       end
     end
+  end
 
   class << self
-    public
-      def to_app_path(path)
-        suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
-                    /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }
-        if suffix.present?
-          path[0..(path.length - suffix.length - 1)] + '.html'
-        else
-          path.sub(/\/file_text\/.*$/, '.html').sub(/\/file_index\/.*$/, '.html')
-        end
+    def to_app_path(path)
+      suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
+                  /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }
+      if suffix.present?
+        path[0..(path.length - suffix.length - 1)] + '.html'
+      else
+        path.sub(/\/file_text\/.*$/, '.html').sub(/\/file_index\/.*$/, '.html')
       end
+    end
 
-      def sort_options
-        [
-          [I18n.t("opendata.sort_options.released"), "released"],
-          [I18n.t("opendata.sort_options.popular"), "popular"],
-          [I18n.t("opendata.sort_options.attention"), "attention"]
-        ]
-      end
+    def sort_options
+      [
+        [I18n.t("opendata.sort_options.released"), "released"],
+        [I18n.t("opendata.sort_options.popular"), "popular"],
+        [I18n.t("opendata.sort_options.attention"), "attention"]
+      ]
+    end
 
-      def sort_hash(sort)
-        case sort
-        when "released"
-          { released: -1, _id: -1 }
-        when "popular"
-          { point: -1, _id: -1 }
-        when "attention"
-          { executed: -1, _id: -1 }
-        else
-          return { released: -1 } if sort.blank?
-          { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
-        end
+    def sort_hash(sort)
+      case sort
+      when "released"
+        { released: -1, _id: -1 }
+      when "popular"
+        { point: -1, _id: -1 }
+      when "attention"
+        { executed: -1, _id: -1 }
+      else
+        return { released: -1 } if sort.blank?
+        { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
       end
+    end
 
-      def aggregate_field(name, opts = {})
-        Opendata::Common.get_aggregate_field(self, name, opts)
-      end
+    def aggregate_field(name, opts = {})
+      Opendata::Common.get_aggregate_field(self, name, opts)
+    end
 
-      def aggregate_array(name, opts = {})
-        Opendata::Common.get_aggregate_array(self, name, opts)
-      end
+    def aggregate_array(name, opts = {})
+      Opendata::Common.get_aggregate_array(self, name, opts)
+    end
 
-      def zip_dir
-        dir = Rails.root.join('tmp', 'opendata')
-        FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
-        dir
-      end
+    def zip_dir
+      dir = Rails.root.join('tmp', 'opendata')
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+      dir
+    end
   end
 end

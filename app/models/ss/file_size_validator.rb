@@ -10,16 +10,17 @@ class SS::FileSizeValidator < ActiveModel::Validator
   end
 
   private
-    def validate_limit(record, file)
-      filename = file.original_filename
-      ext = filename.sub(/.*\./, "").downcase
-      limit_size = SS::MaxFileSize.find_size(ext)
 
-      return true if file.size <= limit_size
+  def validate_limit(record, file)
+    filename = file.original_filename
+    ext = filename.sub(/.*\./, "").downcase
+    limit_size = SS::MaxFileSize.find_size(ext)
 
-      record.errors.add :base, :too_large_file, filename: filename,
-        size: number_to_human_size(file.size),
-        limit: number_to_human_size(limit_size)
-      false
-    end
+    return true if file.size <= limit_size
+
+    record.errors.add :base, :too_large_file, filename: filename,
+      size: number_to_human_size(file.size),
+      limit: number_to_human_size(limit_size)
+    false
+  end
 end

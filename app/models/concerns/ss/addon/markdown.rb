@@ -10,7 +10,7 @@ module SS::Addon
     end
 
     def text_type_options
-      [:plain, :markdown].map { |m| [I18n.t("views.options.text_type.#{m}"), m] }
+      [:plain, :markdown].map { |m| [I18n.t("ss.options.text_type.#{m}"), m] }
     end
 
     def html

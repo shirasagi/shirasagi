@@ -61,12 +61,13 @@ module Cms::GroupPermission
   end
 
   private
-    def template_variable_handler_group(name, issuer)
-      group = self.groups.first
-      group ? group.name.split(/\//).pop : ""
-    end
 
-    def template_variable_handler_groups(name, issuer)
-      self.groups.map { |g| g.name.split(/\//).pop }.join(", ")
-    end
+  def template_variable_handler_group(name, issuer)
+    group = self.groups.first
+    group ? group.name.split(/\//).pop : ""
+  end
+
+  def template_variable_handler_groups(name, issuer)
+    self.groups.map { |g| g.name.split(/\//).pop }.join(", ")
+  end
 end

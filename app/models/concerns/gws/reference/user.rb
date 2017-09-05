@@ -36,16 +36,17 @@ module Gws::Reference
     end
 
     private
-      def set_user_id
-        return if user_id.present?
 
-        self.user_id   = @cur_user.id
-        self.user_uid  = @cur_user.uid unless self[:user_uid]
-        self.user_name = @cur_user.name unless self[:user_name]
+    def set_user_id
+      return if user_id.present?
 
-        group = @cur_user.gws_default_group
-        self.user_group_id   = group.id if group
-        self.user_group_name = group.name if group
-      end
+      self.user_id   = @cur_user.id
+      self.user_uid  = @cur_user.uid unless self[:user_uid]
+      self.user_name = @cur_user.name unless self[:user_name]
+
+      group = @cur_user.gws_default_group
+      self.user_group_id   = group.id if group
+      self.user_group_name = group.name if group
+    end
   end
 end

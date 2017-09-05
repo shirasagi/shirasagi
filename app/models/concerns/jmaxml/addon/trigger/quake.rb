@@ -44,67 +44,68 @@ module Jmaxml::Addon::Trigger::Quake
   end
 
   private
-    def verify_cancel(page, context, &block)
-      event_id = REXML::XPath.first(context.xmldoc, '/Report/Head/EventID/text()').to_s.strip
-      return if event_id.blank?
 
-      last_page_criteria = Rss::WeatherXmlPage.site(context.site).node(context.node)
-      last_page_criteria = last_page_criteria.where(event_id: event_id).ne(id: page.id)
-      last_page = last_page_criteria.order_by(id: -1).first
-      return if last_page.blank?
+  def verify_cancel(page, context, &block)
+    event_id = REXML::XPath.first(context.xmldoc, '/Report/Head/EventID/text()').to_s.strip
+    return if event_id.blank?
 
-      xmldoc = REXML::Document.new(last_page.xml)
-      region_eq_infos = extract_earth_quake_info(context.site, xmldoc)
-      return false if region_eq_infos.blank?
+    last_page_criteria = Rss::WeatherXmlPage.site(context.site).node(context.node)
+    last_page_criteria = last_page_criteria.where(event_id: event_id).ne(id: page.id)
+    last_page = last_page_criteria.order_by(id: -1).first
+    return if last_page.blank?
 
-      max_int = region_eq_infos.max_by { |item| item[:area_max_int] }
-      max_int = max_int[:area_max_int] if max_int.present?
-      return false if compare_intensity(max_int, earthquake_intensity) < 0
+    xmldoc = REXML::Document.new(last_page.xml)
+    region_eq_infos = extract_earth_quake_info(context.site, xmldoc)
+    return false if region_eq_infos.blank?
 
-      context[:type] = Jmaxml::Type::EARTH_QUAKE
-      context[:region_eq_infos] = region_eq_infos
-      context[:max_int] = max_int
-      context[:last_page] = last_page
-      context[:last_xmldoc] = xmldoc
+    max_int = region_eq_infos.max_by { |item| item[:area_max_int] }
+    max_int = max_int[:area_max_int] if max_int.present?
+    return false if compare_intensity(max_int, earthquake_intensity) < 0
 
-      return true unless block_given?
+    context[:type] = Jmaxml::Type::EARTH_QUAKE
+    context[:region_eq_infos] = region_eq_infos
+    context[:max_int] = max_int
+    context[:last_page] = last_page
+    context[:last_xmldoc] = xmldoc
 
-      yield
-    end
+    return true unless block_given?
 
-    def extract_earth_quake_info(site, xmldoc)
-      region_eq_infos = []
-      REXML::XPath.match(xmldoc, '/Report/Body/Intensity/Observation/Pref').each do |pref|
-        pref_name = pref.elements['Name'].text
-        pref_code = pref.elements['Code'].text
-        REXML::XPath.match(pref, 'Area').each do |area|
-          area_name = area.elements['Name'].text
-          area_code = area.elements['Code'].text
-          area_max_int = area.elements['MaxInt'].text
+    yield
+  end
 
-          region = target_regions.site(site).where(code: area_code).first
-          next if region.blank?
+  def extract_earth_quake_info(site, xmldoc)
+    region_eq_infos = []
+    REXML::XPath.match(xmldoc, '/Report/Body/Intensity/Observation/Pref').each do |pref|
+      pref_name = pref.elements['Name'].text
+      pref_code = pref.elements['Code'].text
+      REXML::XPath.match(pref, 'Area').each do |area|
+        area_name = area.elements['Name'].text
+        area_code = area.elements['Code'].text
+        area_max_int = area.elements['MaxInt'].text
 
-          region_eq_infos << {
-            pref_name: pref_name,
-            pref_code: pref_code,
-            area_name: area_name,
-            area_code: area_code,
-            area_max_int: area_max_int,
-          }
-        end
+        region = target_regions.site(site).where(code: area_code).first
+        next if region.blank?
+
+        region_eq_infos << {
+          pref_name: pref_name,
+          pref_code: pref_code,
+          area_name: area_name,
+          area_code: area_code,
+          area_max_int: area_max_int,
+        }
       end
-      region_eq_infos
     end
+    region_eq_infos
+  end
 
-    def compare_intensity(lhs, rhs)
-      normalize_intensity(lhs) <=> normalize_intensity(rhs)
-    end
+  def compare_intensity(lhs, rhs)
+    normalize_intensity(lhs) <=> normalize_intensity(rhs)
+  end
 
-    def normalize_intensity(int)
-      ret = int.to_s[0].to_i * 10
-      ret += 1 if int[1] == '-'
-      ret += 9 if int[1] == '+'
-      ret
-    end
+  def normalize_intensity(int)
+    ret = int.to_s[0].to_i * 10
+    ret += 1 if int[1] == '-'
+    ret += 9 if int[1] == '+'
+    ret
+  end
 end

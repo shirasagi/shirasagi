@@ -38,7 +38,7 @@ class Webmail::Filter
   }
 
   def state_options
-    %w(enabled disabled).map { |m| [I18n.t("views.options.state.#{m}"), m] }
+    %w(enabled disabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
   end
 
   def action_options
@@ -72,32 +72,33 @@ class Webmail::Filter
   end
 
   private
-    def validate_conditions
-      %w(from to subject).each do |key|
-        return true if send(key).present?
-      end
-      errors.add :base, I18n.t("webmail.errors.blank_conditions")
+
+  def validate_conditions
+    %w(from to subject).each do |key|
+      return true if send(key).present?
     end
+    errors.add :base, I18n.t("webmail.errors.blank_conditions")
+  end
 
-    def uids_apply(uids, mailbox)
-      count = 0
-      return count if uids.blank?
+  def uids_apply(uids, mailbox)
+    count = 0
+    return count if uids.blank?
 
-      uids.each_slice(APPLY_PER) do |sliced_uids|
-        if action == "copy"
-          imap.uids_copy(sliced_uids, self.mailbox)
-        elsif action == "move"
-          imap.examine(mailbox)
-          imap.uids_move(sliced_uids, self.mailbox)
-        elsif action == "trash"
-          imap.uids_move_trash(sliced_uids)
-        elsif action == "delete"
-          imap.uids_delete(sliced_uids)
-        end
-
-        count += imap.last_response_size
+    uids.each_slice(APPLY_PER) do |sliced_uids|
+      if action == "copy"
+        imap.uids_copy(sliced_uids, self.mailbox)
+      elsif action == "move"
+        imap.examine(mailbox)
+        imap.uids_move(sliced_uids, self.mailbox)
+      elsif action == "trash"
+        imap.uids_move_trash(sliced_uids)
+      elsif action == "delete"
+        imap.uids_delete(sliced_uids)
       end
 
-      count
+      count += imap.last_response_size
     end
+
+    count
+  end
 end

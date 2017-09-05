@@ -44,22 +44,23 @@ class Cms::Agents::Parts::TabsController < ApplicationController
   end
 
   private
-    def call_node_index(node_class)
-      cont = new_agent(node_class)
-      cont.controller.params = {}
 
-      pages = nil
+  def call_node_index(node_class)
+    cont = new_agent(node_class)
+    cont.controller.params = {}
 
-      begin
-        cont.invoke :index
-        pages = cont.instance_variable_get(:@items)
-        pages = nil if pages && !pages.respond_to?(:current_page)
-        pages = nil if pages && !pages.klass.include?(Cms::Model::Page)
-      rescue => e
-        logger.error $ERROR_INFO
-        logger.error $ERROR_INFO.backtrace.join("\n")
-      end
+    pages = nil
 
-      pages
+    begin
+      cont.invoke :index
+      pages = cont.instance_variable_get(:@items)
+      pages = nil if pages && !pages.respond_to?(:current_page)
+      pages = nil if pages && !pages.klass.include?(Cms::Model::Page)
+    rescue => e
+      logger.error $ERROR_INFO
+      logger.error $ERROR_INFO.backtrace.join("\n")
     end
+
+    pages
+  end
 end

@@ -7,36 +7,38 @@ class Webmail::MailboxesController < ApplicationController
   before_action :imap_login
 
   private
-    def set_crumbs
-      @crumbs << [:'mongoid.models.webmail/mailbox', { action: :index } ]
-    end
 
-    def fix_params
-      @imap.account_scope.merge(cur_user: @cur_user, sync: true)
-    end
+  def set_crumbs
+    @crumbs << [t("mongoid.models.webmail/mailbox"), { action: :index } ]
+  end
 
-    def set_destroy_items
-      @items = @model.
-        in(id: params[:ids]).
-        reorder(depth: -1).
-        entries.
-        map(&:sync)
-    end
+  def fix_params
+    @imap.account_scope.merge(cur_user: @cur_user, sync: true)
+  end
 
-    def crud_redirect_url
-      { action: :index }
-    end
+  def set_destroy_items
+    @items = @model.
+      in(id: params[:ids]).
+      reorder(depth: -1).
+      entries.
+      map(&:sync)
+  end
+
+  def crud_redirect_url
+    { action: :index }
+  end
 
   public
-    def index
-      @items = @imap.mailboxes.load.without_inbox
-    end
 
-    def reload
-      @reload_info = @imap.mailboxes.reload_info
-      return unless request.post?
+  def index
+    @items = @imap.mailboxes.load.without_inbox
+  end
 
-      @imap.mailboxes.reload
-      redirect_to url_for(action: :index), notice: t('webmail.notice.reloaded_mailboxes')
-    end
+  def reload
+    @reload_info = @imap.mailboxes.reload_info
+    return unless request.post?
+
+    @imap.mailboxes.reload
+    redirect_to url_for(action: :index), notice: t('webmail.notice.reloaded_mailboxes')
+  end
 end

@@ -25,13 +25,13 @@ module Cms::Addon
 
     def search_state_options
       %w(public closed ready closing).map do |w|
-        [ I18n.t("views.options.state.#{w}"), w ]
+        [ I18n.t("ss.options.state.#{w}"), w ]
       end
     end
 
     def search_first_released_options
       %w(draft published).map do |w|
-        [ I18n.t("views.options.first_released.#{w}"), w ]
+        [ I18n.t("ss.options.first_released.#{w}"), w ]
       end
     end
 
@@ -43,77 +43,78 @@ module Cms::Addon
 
     def status_options
       [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-        [I18n.t('views.options.state.ready'), 'ready'],
-        [I18n.t('views.options.state.request'), 'request'],
-        [I18n.t('views.options.state.remand'), 'remand'],
+        [I18n.t('ss.options.state.public'), 'public'],
+        [I18n.t('ss.options.state.closed'), 'closed'],
+        [I18n.t('ss.options.state.ready'), 'ready'],
+        [I18n.t('ss.options.state.request'), 'request'],
+        [I18n.t('ss.options.state.remand'), 'remand'],
       ]
     end
 
     private
-      def search_name_info
-        "#{Cms::Page.t(:name)}: #{search_name}" if search_name.present?
-      end
 
-      def search_filename_info
-        "#{Cms::Page.t(:filename)}: #{search_filename}" if search_filename.present?
-      end
+    def search_name_info
+      "#{Cms::Page.t(:name)}: #{search_name}" if search_name.present?
+    end
 
-      def search_category_ids_info
-        "#{Cms::Page.t(:category_ids)}: #{search_categories.pluck(:name).join(",")}" if search_category_ids.present?
-      end
+    def search_filename_info
+      "#{Cms::Page.t(:filename)}: #{search_filename}" if search_filename.present?
+    end
 
-      def search_group_ids_info
-        "#{Cms::Page.t(:group_ids)}: #{search_groups.pluck(:name).join(",")}" if search_group_ids.present?
-      end
+    def search_category_ids_info
+      "#{Cms::Page.t(:category_ids)}: #{search_categories.pluck(:name).join(",")}" if search_category_ids.present?
+    end
 
-      def search_node_ids_info
-        "#{I18n.t 'cms.node'}: #{search_nodes.pluck(:name).join(",")}" if search_node_ids.present?
-      end
+    def search_group_ids_info
+      "#{Cms::Page.t(:group_ids)}: #{search_groups.pluck(:name).join(",")}" if search_group_ids.present?
+    end
 
-      def search_routes_info
-        normalize_search_routes
-        if search_routes.present?
-          "#{Cms::Page.t(:route)}: #{search_routes.map { |route| route_name(route) }.join(",")}"
-        end
-      end
+    def search_node_ids_info
+      "#{I18n.t 'cms.node'}: #{search_nodes.pluck(:name).join(",")}" if search_node_ids.present?
+    end
 
-      def route_name(route)
-        "#{I18n.t("modules.#{route.sub(/\/.*/, '')}")}/#{I18n.t("mongoid.models.#{route}")}"
+    def search_routes_info
+      normalize_search_routes
+      if search_routes.present?
+        "#{Cms::Page.t(:route)}: #{search_routes.map { |route| route_name(route) }.join(",")}"
       end
+    end
 
-      def search_released_info
-        if search_released_start.present? || search_released_close.present?
-          start = search_released_start.try(:strftime, "%Y/%m/%d %H:%M")
-          close = search_released_close.try(:strftime, "%Y/%m/%d %H:%M")
-          "#{Cms::Page.t(:released)}: #{start}-#{close}"
-        end
-      end
+    def route_name(route)
+      "#{I18n.t("modules.#{route.sub(/\/.*/, '')}")}/#{I18n.t("mongoid.models.#{route}")}"
+    end
 
-      def search_updated_info
-        if search_updated_start.present? || search_updated_close.present?
-          start = search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")
-          close = search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")
-          "#{Cms::Page.t(:updated)}: #{start}-#{close}"
-        end
+    def search_released_info
+      if search_released_start.present? || search_released_close.present?
+        start = search_released_start.try(:strftime, "%Y/%m/%d %H:%M")
+        close = search_released_close.try(:strftime, "%Y/%m/%d %H:%M")
+        "#{Cms::Page.t(:released)}: #{start}-#{close}"
       end
+    end
 
-      def search_state_info
-        "#{Cms::Page.t(:state)}: #{I18n.t :"views.options.state.#{search_state}"}" if search_state.present?
+    def search_updated_info
+      if search_updated_start.present? || search_updated_close.present?
+        start = search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")
+        close = search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")
+        "#{Cms::Page.t(:updated)}: #{start}-#{close}"
       end
+    end
 
-      def search_first_released_info
-        if search_first_released.present?
-          "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"views.options.state.#{search_first_released}"}"
-        end
-      end
+    def search_state_info
+      "#{Cms::Page.t(:state)}: #{I18n.t :"ss.options.state.#{search_state}"}" if search_state.present?
+    end
 
-      def search_approver_state_info
-        if search_approver_state.present?
-          "#{Cms::Page.t(:workflow_state)}: #{I18n.t :"workflow.page.#{search_approver_state}"}"
-        end
+    def search_first_released_info
+      if search_first_released.present?
+        "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"ss.options.state.#{search_first_released}"}"
       end
+    end
+
+    def search_approver_state_info
+      if search_approver_state.present?
+        "#{Cms::Page.t(:workflow_state)}: #{I18n.t :"workflow.page.#{search_approver_state}"}"
+      end
+    end
   end
 
   module PageSearch
@@ -122,7 +123,8 @@ module Cms::Addon
     include Cms::Addon::PageSearchInfo
 
     KEYWORD_FIELDS = [
-      :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel, :contact_fax, :contact_email
+      :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel,
+      :contact_fax, :contact_email, :contact_link_url, :contact_link_name
     ].freeze
 
     included do
@@ -222,75 +224,76 @@ module Cms::Addon
     end
 
     private
-      def normalize_search_routes
-        return if search_routes.blank?
-        self.search_routes = search_routes.dup.select(&:present?)
+
+    def normalize_search_routes
+      return if search_routes.blank?
+      self.search_routes = search_routes.dup.select(&:present?)
+    end
+
+    def build_search_state_criteria
+      return {} unless search_state.present?
+
+      if search_state == "closing"
+        { "$and" => [ { :state => "public" }, { :close_date.ne => nil } ] }
+      else
+        { state: search_state }
       end
+    end
 
-      def build_search_state_criteria
-        return {} unless search_state.present?
-
-        if search_state == "closing"
-          { "$and" => [ { :state => "public" }, { :close_date.ne => nil } ] }
-        else
-          { state: search_state }
-        end
+    def build_search_keyword_criteria
+      if search_keyword.present?
+        { "$or" => KEYWORD_FIELDS.map { |field| { field => /#{Regexp.escape(search_keyword)}/ } } }
+      else
+        {}
       end
+    end
 
-      def build_search_keyword_criteria
-        if search_keyword.present?
-          { "$or" => KEYWORD_FIELDS.map { |field| { field => /#{Regexp.escape(search_keyword)}/ } } }
-        else
-          {}
-        end
+    def build_search_nodes_criteria
+      if search_node_ids.present?
+        { filename: /^#{search_nodes.map { |node| Regexp.escape("#{node.filename}/") }.join("|")}/ }
+      else
+        {}
       end
+    end
 
-      def build_search_nodes_criteria
-        if search_node_ids.present?
-          { filename: /^#{search_nodes.map { |node| Regexp.escape("#{node.filename}/") }.join("|")}/ }
-        else
-          {}
-        end
-      end
+    def build_search_routes_criteria
+      normalize_search_routes
+      search_routes.present? ? { route: search_routes } : {}
+    end
 
-      def build_search_routes_criteria
-        normalize_search_routes
-        search_routes.present? ? { route: search_routes } : {}
-      end
-
-      def build_search_approver_criteria
-        case search_approver_state
-        when 'request'
-          {
-            workflow_state: "request",
-            workflow_user_id: @cur_user._id,
+    def build_search_approver_criteria
+      case search_approver_state
+      when 'request'
+        {
+          workflow_state: "request",
+          workflow_user_id: @cur_user._id,
+        }
+      when 'approve'
+        {
+          workflow_state: "request",
+          workflow_approvers: {
+            "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" }
           }
-        when 'approve'
-          {
-            workflow_state: "request",
-            workflow_approvers: {
-              "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" }
-            }
-          }
-        when 'remand'
-          {
-            workflow_state: "remand",
-            workflow_user_id: @cur_user._id,
-          }
-        else
-          {}
-        end
+        }
+      when 'remand'
+        {
+          workflow_state: "remand",
+          workflow_user_id: @cur_user._id,
+        }
+      else
+        {}
       end
+    end
 
-      def build_search_first_released_criteria
-        case search_first_released
-        when "draft"
-          { :first_released.exists => false }
-        when "published"
-          { :first_released.exists => true }
-        else
-          {}
-        end
+    def build_search_first_released_criteria
+      case search_first_released
+      when "draft"
+        { :first_released.exists => false }
+      when "published"
+        { :first_released.exists => true }
+      else
+        {}
       end
+    end
   end
 end

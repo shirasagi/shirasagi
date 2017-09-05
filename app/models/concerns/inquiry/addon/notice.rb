@@ -33,12 +33,13 @@ module Inquiry::Addon
     end
 
     private
-      def validate_notify_mail
-        if notify_mail_enabled?
-          [:notice_email, :from_email].each do |sym|
-            errors.add sym, :blank if send(sym).blank?
-          end
+
+    def validate_notify_mail
+      if notify_mail_enabled?
+        [:notice_email, :from_email].each do |sym|
+          errors.add sym, :blank if send(sym).blank?
         end
       end
+    end
   end
 end

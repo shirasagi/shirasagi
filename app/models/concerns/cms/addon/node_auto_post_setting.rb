@@ -16,27 +16,19 @@ module Cms::Addon::NodeAutoPostSetting
   end
 
   def node_facebook_auto_post_options
-    %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
-    end
+    %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
   def node_twitter_auto_post_options
-    %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
-    end
+    %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
   def node_sns_auto_delete_options
-    %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
-    end
+    %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
   def node_edit_auto_post_options
-    %w(expired active).map do |v|
-      [I18n.t("views.options.node_auto_post_setting.#{v}"), v]
-    end
+    %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
   def node_facebook_auto_post_enabled?

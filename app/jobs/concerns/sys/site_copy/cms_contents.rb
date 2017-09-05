@@ -74,6 +74,8 @@ module Sys::SiteCopy::CmsContents
       :member
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
+    elsif ancestors.include?(Jmaxml::QuakeRegion)
+      :jmaxml_quake_region
     else
       raise "unknown reference type: #{klass}"
     end

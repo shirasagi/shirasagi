@@ -15,13 +15,13 @@
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         <nav class="tap-menu">
-          <%= link_to :show, { action: :show, id: item } %>
-          <%= link_to :edit, { action: :edit, id: item } %>
-          <%= link_to :delete, { action: :delete, id: item } %>
+          <%= link_to t('ss.links.show'), { action: :show, id: item } %>
+          <%= link_to t('ss.links.edit'), { action: :edit, id: item } %>
+          <%= link_to t('ss.links.delete'), { action: :delete, id: item } %>
         </nav>
       </td>
       <td><%= link_to item.name, { action: :show, id: item } %></td>
-      <td class="original_url"><%= item.original_url %></td>
+      <td class="original_url"><%= URI.unescape(item.original_url).truncate(60) %></td>
       <% if item.original_updated.present? %>
         <td class="original_updated"><%= item.original_updated.strftime("%Y/%m/%d %H:%M") %></td>
       <% end %>

@@ -6,19 +6,21 @@ class Gws::Schedule::UserPlansController < ApplicationController
   before_action :set_user
 
   private
-    def set_user
-      @user = Gws::User.site(@cur_site).find(params[:user])
-      raise '404' unless @user.active?
-    end
 
-    def pre_params
-      super.merge member_ids: [@user.id]
-    end
+  def set_user
+    @user = Gws::User.site(@cur_site).find(params[:user])
+    raise '404' unless @user.active?
+  end
+
+  def pre_params
+    super.merge member_ids: [@user.id]
+  end
 
   public
-    def events
-      @items = Gws::Schedule::Plan.site(@cur_site).
-        member(@user).
-        search(params[:s])
-    end
+
+  def events
+    @items = Gws::Schedule::Plan.site(@cur_site).
+      member(@user).
+      search(params[:s])
+  end
 end

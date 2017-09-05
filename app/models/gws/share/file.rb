@@ -27,24 +27,25 @@ class Gws::Share::File
   end
 
   def remove_public_file
-    #TODO: fix SS::Model::File
+    # TODO: fix SS::Model::File
   end
 
   private
-    def validate_size
-      limit = cur_site.share_max_file_size || 0
-      return if limit <= 0
 
-      if in_file.present?
-        size = in_file.size
-      elsif in_files.present?
-        size = in_files.map(&:size).max || 0
-      else
-        return
-      end
+  def validate_size
+    limit = cur_site.share_max_file_size || 0
+    return if limit <= 0
 
-      if size > limit
-        errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
-      end
+    if in_file.present?
+      size = in_file.size
+    elsif in_files.present?
+      size = in_files.map(&:size).max || 0
+    else
+      return
     end
+
+    if size > limit
+      errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
+    end
+  end
 end

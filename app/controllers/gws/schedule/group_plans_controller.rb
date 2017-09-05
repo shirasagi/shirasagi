@@ -6,17 +6,19 @@ class Gws::Schedule::GroupPlansController < ApplicationController
   before_action :set_group
 
   private
-    def set_group
-      @group = Gws::Group.site(@cur_site).find params[:group]
-      raise '404' unless @group.active?
-    end
 
-    def redirection_view
-      'timelineDay'
-    end
+  def set_group
+    @group = Gws::Group.site(@cur_site).find params[:group]
+    raise '404' unless @group.active?
+  end
+
+  def redirection_view
+    'timelineDay'
+  end
 
   public
-    def index
-      @items = @group.users.active.order_by_title(@cur_site).compact
-    end
+
+  def index
+    @items = @group.users.active.order_by_title(@cur_site).compact
+  end
 end

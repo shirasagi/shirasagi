@@ -23,18 +23,19 @@ class Jmaxml::Trigger::LandslideInfo < Jmaxml::Trigger::Base
   end
 
   private
-    def extract_weather_alert(site, xmldoc)
-      area_codes = []
-      REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="土砂災害警戒情報"]/Item').each do |item|
-        kind_code = REXML::XPath.first(item, 'Kind/Code/text()').to_s.strip
-        next if kind_code.blank? || kind_code == '0'
 
-        area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
-        region = target_regions.site(site).where(code: area_code).first
-        next if region.blank?
+  def extract_weather_alert(site, xmldoc)
+    area_codes = []
+    REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="土砂災害警戒情報"]/Item').each do |item|
+      kind_code = REXML::XPath.first(item, 'Kind/Code/text()').to_s.strip
+      next if kind_code.blank? || kind_code == '0'
 
-        area_codes << area_code
-      end
-      area_codes.sort
+      area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
+      region = target_regions.site(site).where(code: area_code).first
+      next if region.blank?
+
+      area_codes << area_code
     end
+    area_codes.sort
+  end
 end

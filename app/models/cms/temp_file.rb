@@ -11,7 +11,8 @@ class Cms::TempFile
   # default_scope ->{ where(model: "cms/temp_file") }
 
   private
-    def presence_node_id
-      false
-    end
+
+  def presence_node_id
+    false
+  end
 end

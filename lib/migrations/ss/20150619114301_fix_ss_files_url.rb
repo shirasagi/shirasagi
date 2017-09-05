@@ -4,8 +4,13 @@ class SS::Migration20150619114301
     file_ids.each do |id|
       item = SS::File.find(id) rescue nil
       next unless item
-      unless item.save
-        Rails.logger.fatal("ss_file save failed #{id}: #{item.errors.full_messages}")
+
+      begin
+        unless item.save
+          Rails.logger.fatal("ss_file save failed #{id}: #{item.errors.full_messages}")
+        end
+      rescue => e
+        Rails.logger.debug("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
 

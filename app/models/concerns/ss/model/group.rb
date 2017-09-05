@@ -109,9 +109,10 @@ module SS::Model::Group
   end
 
   private
-    def validate_name
-      if name =~ /\/$/ || name =~ /^\// || name =~ /\/\//
-        errors.add :name, :invalid
-      end
+
+  def validate_name
+    if name =~ /\/$/ || name =~ /^\// || name =~ /\/\//
+      errors.add :name, :invalid
     end
+  end
 end

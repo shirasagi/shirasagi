@@ -54,25 +54,26 @@ module Cms::Model::Layout
   end
 
   private
-    def fix_extname
-      ".layout.html"
-    end
 
-    def set_part_paths
-      return true if html.blank?
+  def fix_extname
+    ".layout.html"
+  end
 
-      paths = html.scan(/<\/ part ".+?" \/>/).map do |m|
-        path = m.sub(/<\/ part "(.+)?" \/>/, '\\1') + ".part.html"
-        path = path[0] == "/" ? path.sub(/^\//, "") : dirname(path)
-      end
-      self.part_paths = paths.uniq
-    end
+  def set_part_paths
+    return true if html.blank?
 
-    def set_css_paths
-      self.css_paths = html.to_s.scan(/<link [^>]*href="([^"]*\.css)" [^>]*\/>/).map {|m| m[0] }.uniq
+    paths = html.scan(/<\/ part ".+?" \/>/).map do |m|
+      path = m.sub(/<\/ part "(.+)?" \/>/, '\\1') + ".part.html"
+      path = path[0] == "/" ? path.sub(/^\//, "") : dirname(path)
     end
+    self.part_paths = paths.uniq
+  end
 
-    def set_js_paths
-      self.js_paths = html.to_s.scan(/<script [^>]*src="([^"]*\.js)"[^>]*>/).map {|m| m[0] }.uniq
-    end
+  def set_css_paths
+    self.css_paths = html.to_s.scan(/<link [^>]*href="([^"]*\.css)" [^>]*\/>/).map { |m| m[0] }.uniq
+  end
+
+  def set_js_paths
+    self.js_paths = html.to_s.scan(/<script [^>]*src="([^"]*\.js)"[^>]*>/).map { |m| m[0] }.uniq
+  end
 end

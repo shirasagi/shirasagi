@@ -2,7 +2,7 @@
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= t :basic_info %></h2></div><% end %>
+    <% if addons.size > 0 %><div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div><% end %>
     <div class="addon-body">
       <%= render file: "_show" %>
     </div>
@@ -11,5 +11,5 @@
 </div>
 
 <footer class="send">
-  <%= link_to t("views.button.search"), { action: :search }, class: 'btn-primary search' %>
+  <%= link_to t("ss.buttons.search"), { action: :search }, class: 'btn-primary search' %>
 </footer>

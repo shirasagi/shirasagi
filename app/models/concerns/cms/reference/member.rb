@@ -23,12 +23,13 @@ module Cms::Reference
     end
 
     private
-      def set_member_id
-        self.member_id ||= @cur_member.id
-      end
 
-      def template_variable_handler_contributor(name, issuer)
-        ERB::Util.html_escape contributor
-      end
+    def set_member_id
+      self.member_id ||= @cur_member.id
+    end
+
+    def template_variable_handler_contributor(name, issuer)
+      ERB::Util.html_escape contributor
+    end
   end
 end

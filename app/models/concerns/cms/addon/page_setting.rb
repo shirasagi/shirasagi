@@ -14,15 +14,15 @@ module Cms::Addon
 
     def auto_keywords_options
       [
-        [I18n.t("views.options.state.enabled"), "enabled"],
-        [I18n.t("views.options.state.disabled"), "disabled"],
+        [I18n.t("ss.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"],
       ]
     end
 
     def auto_description_options
       [
-        [I18n.t("views.options.state.enabled"), "enabled"],
-        [I18n.t("views.options.state.disabled"), "disabled"],
+        [I18n.t("ss.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"],
       ]
     end
 

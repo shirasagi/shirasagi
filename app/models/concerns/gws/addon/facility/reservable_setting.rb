@@ -31,7 +31,7 @@ module Gws::Addon::Facility::ReservableSetting
 
   def reservable?(user)
     return true if reservable_group_ids.blank? && reservable_member_ids.blank?
-    return true if reservable_group_ids.any? {|m| user.group_ids.include?(m) }
+    return true if reservable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if reservable_member_ids.include?(user.id)
     false
   end
@@ -53,11 +53,12 @@ module Gws::Addon::Facility::ReservableSetting
   end
 
   private
-    def set_reservable_groups_hash
-      self.reservable_groups_hash = reservable_groups.map { |m| [m.id, m.name] }.to_h
-    end
 
-    def set_reservable_members_hash
-      self.reservable_members_hash = reservable_members.map { |m| [m.id, m.long_name] }.to_h
-    end
+  def set_reservable_groups_hash
+    self.reservable_groups_hash = reservable_groups.map { |m| [m.id, m.name] }.to_h
+  end
+
+  def set_reservable_members_hash
+    self.reservable_members_hash = reservable_members.map { |m| [m.id, m.long_name] }.to_h
+  end
 end

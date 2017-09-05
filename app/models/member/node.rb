@@ -75,6 +75,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include SS::Addon::EditorSetting
 
     default_scope ->{ where(route: "member/my_blog") }
 

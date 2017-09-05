@@ -8,14 +8,13 @@ class Uploader::File
   validates :filename, length: { maximum: 2000 }
 
   validate :validate_filename
-  validate :validate_exists, if: :path_chenged?
   validate :validate_scss
   validate :validate_coffee
 
   def save
     return false unless valid?
     begin
-      if saved_path && path != saved_path #persisted AND path chenged
+      if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
         Fs.mv(saved_path, path)
       else
@@ -124,55 +123,62 @@ class Uploader::File
   end
 
   private
-    def validate_filename
-      if directory?
-        errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
-      elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
-        errors.add :path, :invalid_filename
-      end
-    end
 
-    def validate_exists
-      errors.add :filename, :taken if Fs.exists? path
+  def validate_filename
+    if directory?
+      errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
+    elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+      errors.add :path, :invalid_filename
     end
+  end
 
-    def path_chenged?
-      !saved_path || path != saved_path
-    end
+  def path_chenged?
+    !saved_path || path != saved_path
+  end
 
-    def validate_scss
-      return if ext != ".scss"
-      return if ::File.basename(@path)[0] == "_"
-      opts = Rails.application.config.sass
-      load_paths = opts.load_paths[1..-1]
-      load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
-      sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
-        syntax: :scss, cache: false, load_paths: load_paths,
-        style: :expanded, debug_info: true
-      @css = sass.render
-    rescue Sass::SyntaxError => e
-      msg = e.backtrace[0].sub(/.*?\/_\//, "")
-      msg = "[#{msg}] #{e}"
-      errors.add :scss, msg
-    end
+  def validate_scss
+    return if ext != ".scss"
+    return if ::File.basename(@path)[0] == "_"
 
-    def validate_coffee
-      return if ext != ".coffee"
-      return if ::File.basename(@path)[0] == "_"
-      @js = CoffeeScript.compile @binary
-    rescue => e
-      errors.add :coffee, e.message
-    end
+    opts = Rails.application.config.sass
+    load_paths = opts.load_paths[1..-1] || []
+    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+    load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
 
-    def compile_scss
-      path = @saved_path.sub(/(\.css)?\.scss$/, ".css")
-      Fs.binwrite path, @css
-    end
+    sass = Sass::Engine.new(
+      @binary.force_encoding("utf-8"),
+      cache: false,
+      debug_info: true,
+      filename: @path,
+      inline_source_maps: true,
+      load_paths: load_paths,
+      style: :expanded,
+      syntax: :scss
+    )
+    @css = sass.render
+  rescue Sass::SyntaxError => e
+    msg = e.backtrace[0].sub(/.*?\/_\//, "")
+    msg = "[#{msg}] #{e}"
+    errors.add :scss, msg
+  end
 
-    def compile_coffee
-      path = @saved_path.sub(/(\.js)?\.coffee$/, ".js")
-      Fs.binwrite path, @js
-    end
+  def validate_coffee
+    return if ext != ".coffee"
+    return if ::File.basename(@path)[0] == "_"
+    @js = CoffeeScript.compile @binary
+  rescue => e
+    errors.add :coffee, e.message
+  end
+
+  def compile_scss
+    path = @saved_path.sub(/(\.css)?\.scss$/, ".css")
+    Fs.binwrite path, @css
+  end
+
+  def compile_coffee
+    path = @saved_path.sub(/(\.js)?\.coffee$/, ".js")
+    Fs.binwrite path, @js
+  end
 
   class << self
     def t(*args)

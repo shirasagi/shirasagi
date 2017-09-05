@@ -6,7 +6,7 @@ class Sys::Apis::GroupsController < ApplicationController
   model Sys::Group
 
   def index
-    @items = @model.
+    @items = @model.state("enabled").
       search(params[:s])
   end
 end

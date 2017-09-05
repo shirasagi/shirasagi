@@ -13,23 +13,24 @@ module History::Addon
     end
 
     private
-      def save_backup
-        max_age = History::Backup.max_age
 
-        # add backup
-        backup = History::Backup.new
-        backup.user_id   = @cur_user.id if @cur_user
-        backup.ref_coll  = collection_name
-        backup.ref_class = self.class.to_s
-        backup.data      = attributes
-        backup.save
+    def save_backup
+      max_age = History::Backup.max_age
 
-        # remove old backups
-        backups.skip(max_age).destroy
-      end
+      # add backup
+      backup = History::Backup.new
+      backup.user_id   = @cur_user.id if @cur_user
+      backup.ref_coll  = collection_name
+      backup.ref_class = self.class.to_s
+      backup.data      = attributes
+      backup.save
 
-      def destroy_backups
-        backups.destroy
-      end
+      # remove old backups
+      backups.skip(max_age).destroy
+    end
+
+    def destroy_backups
+      backups.destroy
+    end
   end
 end

@@ -6,7 +6,7 @@
     <dt><%= t "inquiry.total_count" %></dt>
     <dd>
       <%= @answer_count %>
-      <%= t "views.units.count" %>
+      <%= t "ss.units.count" %>
     </dd>
   </dl>
   <% end %>
@@ -24,7 +24,7 @@
               <td><%= opts %></td>
               <td class="count">
                 <%= @aggregation[{ "column_id" => column.id, "value" => opts }] %>
-                <%= t "views.units.count" %>
+                <%= t "ss.units.count" %>
               </td>
             </tr>
           <% end %>

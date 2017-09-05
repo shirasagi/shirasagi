@@ -23,8 +23,8 @@ class Ezine::Column
 
   def state_options
     [
-      [I18n.t('views.options.state.public'), 'public'],
-      [I18n.t('views.options.state.closed'), 'closed'],
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
     ]
   end
 
@@ -34,16 +34,17 @@ class Ezine::Column
   end
 
   private
-    def destroy_data
-      Ezine::Member.where(:"data.column_id" => id).each do |member|
-        member.in_data[id.to_s] = nil
-        member.set_data
-        member.save validate: false
-      end
-      Ezine::Entry.where(:"data.column_id" => id).each do |entry|
-        member.in_data[id.to_s] = nil
-        member.set_data
-        member.save validate: false
-      end
+
+  def destroy_data
+    Ezine::Member.where(:"data.column_id" => id).each do |member|
+      member.in_data[id.to_s] = nil
+      member.set_data
+      member.save validate: false
     end
+    Ezine::Entry.where(:"data.column_id" => id).each do |entry|
+      member.in_data[id.to_s] = nil
+      member.set_data
+      member.save validate: false
+    end
+  end
 end

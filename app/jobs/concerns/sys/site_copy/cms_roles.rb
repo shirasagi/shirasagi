@@ -21,10 +21,10 @@ module Sys::SiteCopy::CmsRoles
     end
 
     #ユーザへ新規権限付与：OK
-    cms_user_ids = Cms::User.all.pluck(:id)
+    cms_user_ids = Cms::User.unscoped.site(@src_site, state: 'all').pluck(:id)
     cms_user_ids.each do |cms_user_id|
       begin
-        cms_user = Cms::User.find(cms_user_id)
+        cms_user = Cms::User.unscoped.find(cms_user_id)
         Rails.logger.debug("#{cms_user.name}(#{cms_user.id}): ユーザーの権限をコピーします。")
 
         add_role_ids = cms_user.cms_role_ids.map { |role_id| role_dic[role_id] }

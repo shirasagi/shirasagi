@@ -25,31 +25,32 @@ class Opendata::Resource
   end
 
   private
-    def set_filename
-      self.filename = in_file.original_filename
-      self.format = filename.sub(/.*\./, "").upcase if format.blank?
-    end
 
-    def validate_in_file
-      if %(CSV TSV).index(format)
-        errors.add :file_id, :invalid if parse_tsv(in_file).blank?
-      end
-    end
+  def set_filename
+    self.filename = in_file.original_filename
+    self.format = filename.sub(/.*\./, "").upcase if format.blank?
+  end
 
-    def validate_in_tsv
-      errors.add :tsv_id, :invalid if parse_tsv(in_tsv).blank?
+  def validate_in_file
+    if %(CSV TSV).index(format)
+      errors.add :file_id, :invalid if parse_tsv(in_file).blank?
     end
+  end
 
-    def set_format
-      self.format = format.upcase if format.present?
-      self.rm_tsv = "1" if %(CSV TSV).index(format)
-    end
+  def validate_in_tsv
+    errors.add :tsv_id, :invalid if parse_tsv(in_tsv).blank?
+  end
 
-    def save_dataset
-      self.workflow ||= {}
-      dataset.cur_site = dataset.site
-      dataset.apply_status(status, workflow) if status.present?
-      dataset.released ||= Time.zone.now
-      dataset.save(validate: false)
-    end
+  def set_format
+    self.format = format.upcase if format.present?
+    self.rm_tsv = "1" if %(CSV TSV).index(format)
+  end
+
+  def save_dataset
+    self.workflow ||= {}
+    dataset.cur_site = dataset.site
+    dataset.apply_status(status, workflow) if status.present?
+    dataset.released ||= Time.zone.now
+    dataset.save(validate: false)
+  end
 end

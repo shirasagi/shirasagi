@@ -11,9 +11,10 @@ module Jmaxml::Renderer::EarthquakeHandler
   end
 
   private
-    def template_variable_handler_earthquake_origin_time(*_)
-      body_earthquake_origin_time_format
-    end
+
+  def template_variable_handler_earthquake_origin_time(*_)
+    body_earthquake_origin_time_format
+  end
 
   def template_variable_handler_earthquake_magnitude(*_)
     body_earthquake_magnitude

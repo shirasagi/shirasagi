@@ -33,21 +33,22 @@ class SS::UserGroupHistory
   end
 
   private
-    def set_site_id
-      klass = @cur_site.class.to_s
-      if klass == 'Gws::Group'
-        self.gws_site_id = @cur_site.id
-      elsif klass == 'Cms::Site'
-        self.cms_site_id = @cur_site.id
-      end
-    end
 
-    def set_group_names
-      self.group_names     = groups.map(&:name)
-      self.inc_group_names = inc_groups.map(&:name)
-      self.dec_group_names = dec_groups.map(&:name)
-      self.groups_hash     = groups.map { |m| [m.id, m.name] }.to_h
-      self.inc_groups_hash = inc_groups.map { |m| [m.id, m.name] }.to_h
-      self.dec_groups_hash = dec_groups.map { |m| [m.id, m.name] }.to_h
+  def set_site_id
+    klass = @cur_site.class.to_s
+    if klass == 'Gws::Group'
+      self.gws_site_id = @cur_site.id
+    elsif klass == 'Cms::Site'
+      self.cms_site_id = @cur_site.id
     end
+  end
+
+  def set_group_names
+    self.group_names     = groups.map(&:name)
+    self.inc_group_names = inc_groups.map(&:name)
+    self.dec_group_names = dec_groups.map(&:name)
+    self.groups_hash     = groups.map { |m| [m.id, m.name] }.to_h
+    self.inc_groups_hash = inc_groups.map { |m| [m.id, m.name] }.to_h
+    self.dec_groups_hash = dec_groups.map { |m| [m.id, m.name] }.to_h
+  end
 end

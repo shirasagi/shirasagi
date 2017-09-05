@@ -3,31 +3,33 @@ class Gws::PortalController < ApplicationController
   helper Gws::Schedule::PlanHelper
 
   private
-    def set_crumbs
-      @crumbs << [:"gws.portal", gws_portal_path]
-    end
+
+  def set_crumbs
+    @crumbs << [t("gws.portal"), gws_portal_path]
+  end
 
   public
-    def index
-      items_limit = 5
 
-      @links = Gws::Link.site(@cur_site).and_public.
-        readable(@cur_user, @cur_site).to_a
+  def index
+    items_limit = 5
 
-      @notices = Gws::Notice.site(@cur_site).and_public.
-        readable(@cur_user, @cur_site).
-        page(1).per(items_limit)
+    @links = Gws::Link.site(@cur_site).and_public.
+      readable(@cur_user, @cur_site).to_a
 
-      @reminders = Gws::Reminder.site(@cur_site).
-        user(@cur_user).
-        page(1).per(items_limit)
+    @notices = Gws::Notice.site(@cur_site).and_public.
+      readable(@cur_user, @cur_site).
+      page(1).per(items_limit)
 
-      @boards = Gws::Board::Topic.site(@cur_site).topic.
-        and_public.
-        readable(@cur_user, @cur_site).
-        order(descendants_updated: -1).
-        page(1).per(items_limit)
+    @reminders = Gws::Reminder.site(@cur_site).
+      user(@cur_user).
+      page(1).per(items_limit)
 
-      @sys_notices = Sys::Notice.and_public.gw_admin_notice.page(1).per(items_limit)
-    end
+    @boards = Gws::Board::Topic.site(@cur_site).topic.
+      and_public.
+      readable(@cur_user, @cur_site).
+      order(descendants_updated: -1).
+      page(1).per(items_limit)
+
+    @sys_notices = Sys::Notice.and_public.gw_admin_notice.page(1).per(items_limit)
+  end
 end

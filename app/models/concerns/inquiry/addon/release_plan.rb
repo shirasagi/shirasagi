@@ -33,21 +33,22 @@ module Inquiry::Addon
     def label(name)
       if name == :state
         state = public? ? "public" : "closed"
-        I18n.t("views.options.state.#{state}")
+        I18n.t("ss.options.state.#{state}")
       else
         super(name)
       end
     end
 
     private
-      def validate_release_date
-        self.released ||= release_date
 
-        if close_date.present?
-          if release_date.present? && release_date >= close_date
-            errors.add :close_date, :greater_than, count: t(:release_date)
-          end
+    def validate_release_date
+      self.released ||= release_date
+
+      if close_date.present?
+        if release_date.present? && release_date >= close_date
+          errors.add :close_date, :greater_than, count: t(:release_date)
         end
       end
+    end
   end
 end

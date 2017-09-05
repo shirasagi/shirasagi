@@ -28,13 +28,14 @@ module Gws::Board::GroupSetting
   end
 
   private
-    def set_board_file_size_per_topic
-      return if in_board_file_size_per_topic_mb.blank?
-      self.board_file_size_per_topic = Integer(in_board_file_size_per_topic_mb) * 1_024 * 1_024
-    end
 
-    def set_board_file_size_per_post
-      return if in_board_file_size_per_post_mb.blank?
-      self.board_file_size_per_post = Integer(in_board_file_size_per_post_mb) * 1_024 * 1_024
-    end
+  def set_board_file_size_per_topic
+    return if in_board_file_size_per_topic_mb.blank?
+    self.board_file_size_per_topic = Integer(in_board_file_size_per_topic_mb) * 1_024 * 1_024
+  end
+
+  def set_board_file_size_per_post
+    return if in_board_file_size_per_post_mb.blank?
+    self.board_file_size_per_post = Integer(in_board_file_size_per_post_mb) * 1_024 * 1_024
+  end
 end

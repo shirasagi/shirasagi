@@ -7,11 +7,12 @@ class Member::PhotoCategoriesController < ApplicationController
   navi_view "cms/node/main/navi"
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
 
-    def pre_params
-      { route: "member/photo_category" }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
+
+  def pre_params
+    { route: "member/photo_category" }
+  end
 end

@@ -35,15 +35,10 @@ module Workflow::Approver
   end
 
   def status
-    if state == "public" || state == "ready"
-      state
-    elsif workflow_state == "cancelled"
-      state
-    elsif workflow_state.present?
-      workflow_state
-    else
-      state
-    end
+    return state if state == "public" || state == "ready"
+    return state if workflow_state == "cancelled"
+    return workflow_state if workflow_state.present?
+    state
   end
 
   def workflow_user
@@ -135,85 +130,86 @@ module Workflow::Approver
   end
 
   private
-    def reset_workflow
-      self.unset(:workflow_user_id, :workflow_state, :workflow_comment, :workflow_approvers)
+
+  def reset_workflow
+    self.unset(:workflow_user_id, :workflow_state, :workflow_comment, :workflow_approvers)
+  end
+
+  def cancel_request
+    return if state == "public"
+    return if workflow_state != "request"
+    return if @cur_user.nil? || workflow_user.nil?
+    return if @cur_user.id != workflow_user.id
+
+    reset_workflow
+    self.set(workflow_state: WORKFLOW_STATE_CANCELLED)
+  end
+
+  def validate_workflow_approvers_presence
+    errors.add :workflow_approvers, :not_select if workflow_approvers.blank?
+
+    # check whether approver's required field is given.
+    workflow_approvers.each do |workflow_approver|
+      errors.add :workflow_approvers, :level_blank if workflow_approver[:level].blank?
+      errors.add :workflow_approvers, :user_id_blank if workflow_approver[:user_id].blank?
+      errors.add :workflow_approvers, :state_blank if workflow_approver[:state].blank?
     end
+  end
 
-    def cancel_request
-      return if state == "public"
-      return if workflow_state != "request"
-      return if @cur_user.nil? || workflow_user.nil?
-      return if @cur_user.id != workflow_user.id
-
-      reset_workflow
-      self.set(workflow_state: WORKFLOW_STATE_CANCELLED)
+  def validate_workflow_approvers_level_consecutiveness
+    # level must start from 1 and level must be consecutive.
+    check = 1
+    workflow_levels.each do |level|
+      errors.add :base, :approvers_level_missing, level: check unless level == check
+      check = level + 1
     end
+  end
 
-    def validate_workflow_approvers_presence
-      errors.add :workflow_approvers, :not_select if workflow_approvers.blank?
+  def validate_workflow_approvers_role
+    return if errors.present?
 
-      # check whether approver's required field is given.
-      workflow_approvers.each do |workflow_approver|
-        errors.add :workflow_approvers, :level_blank if workflow_approver[:level].blank?
-        errors.add :workflow_approvers, :user_id_blank if workflow_approver[:user_id].blank?
-        errors.add :workflow_approvers, :state_blank if workflow_approver[:state].blank?
-      end
+    # check whether approvers have read permission.
+    users = workflow_approvers.map do |approver|
+      self.class.approver_user_class.where(id: approver[:user_id]).first
     end
-
-    def validate_workflow_approvers_level_consecutiveness
-      # level must start from 1 and level must be consecutive.
-      check = 1
-      workflow_levels.each do |level|
-        errors.add :base, :approvers_level_missing, level: check unless level == check
-        check = level + 1
-      end
+    users = users.select(&:present?)
+    users.each do |user|
+      errors.add :workflow_approvers, :not_read, name: user.name unless allowed?(:read, user, site: cur_site)
+      errors.add :workflow_approvers, :not_approve, name: user.name unless allowed?(:approve, user, site: cur_site)
     end
+  end
 
-    def validate_workflow_approvers_role
-      return if errors.present?
+  def validate_workflow_required_counts
+    errors.add :workflow_required_counts, :not_select if workflow_required_counts.blank?
 
-      # check whether approvers have read permission.
-      users = workflow_approvers.map do |approver|
-        self.class.approver_user_class.where(id: approver[:user_id]).first
-      end
-      users = users.select(&:present?)
-      users.each do |user|
-        errors.add :workflow_approvers, :not_read, name: user.name unless allowed?(:read, user, site: cur_site)
-        errors.add :workflow_approvers, :not_approve, name: user.name unless allowed?(:approve, user, site: cur_site)
-      end
-    end
+    workflow_levels.each do |level|
+      required_count = workflow_required_counts_at(level)
+      next if required_count == false
 
-    def validate_workflow_required_counts
-      errors.add :workflow_required_counts, :not_select if workflow_required_counts.blank?
-
-      workflow_levels.each do |level|
-        required_count = workflow_required_counts_at(level)
-        next if required_count == false
-
-        approvers = workflow_approvers_at(level)
-        errors.add :base, :required_count_greater_than_approvers, level: level, required_count: required_count \
-          if approvers.length < required_count
-      end
-    end
-
-    def complete?(level)
-      required_counts = workflow_required_counts_at(level)
       approvers = workflow_approvers_at(level)
-      required_counts = approvers.length if required_counts == false
-      approved = approvers.count { |approver| approver[:state] == WORKFLOW_STATE_APPROVE }
-      approved >= required_counts
+      errors.add :base, :required_count_greater_than_approvers, level: level, required_count: required_count \
+        if approvers.length < required_count
     end
+  end
 
-    def validate_user(route, users, *actions)
-      actions.each do |action|
-        unable_users = users.reject do |_, user|
-          allowed?(action, user, site: cur_site)
-        end
-        unable_users.each do |level, user|
-          errors.add :base, "route_approver_unable_to_#{action}".to_sym, route: route.name, level: level, user: user.name
-        end
+  def complete?(level)
+    required_counts = workflow_required_counts_at(level)
+    approvers = workflow_approvers_at(level)
+    required_counts = approvers.length if required_counts == false
+    approved = approvers.count { |approver| approver[:state] == WORKFLOW_STATE_APPROVE }
+    approved >= required_counts
+  end
+
+  def validate_user(route, users, *actions)
+    actions.each do |action|
+      unable_users = users.reject do |_, user|
+        allowed?(action, user, site: cur_site)
+      end
+      unable_users.each do |level, user|
+        errors.add :base, "route_approver_unable_to_#{action}".to_sym, route: route.name, level: level, user: user.name
       end
     end
+  end
 
   module ClassMethods
     def search(params)

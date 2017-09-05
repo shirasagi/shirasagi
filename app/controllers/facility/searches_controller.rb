@@ -8,11 +8,12 @@ class Facility::SearchesController < ApplicationController
   navi_view "facility/search/navi"
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
 
-    def pre_params
-      { route: "facility/node" }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
+
+  def pre_params
+    { route: "facility/node" }
+  end
 end

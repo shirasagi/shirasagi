@@ -5,7 +5,7 @@
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t(:basic_info) %></h2></div><% end %>
+    <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div><% end %>
     <div class="addon-body">
       <%= render file: '_form', locals: { f: f } %>
     </div>
@@ -17,8 +17,8 @@
   <% if @crud_buttons %>
     <% @crud_buttons.call f %>
   <% else %>
-    <%= f.submit t("views.button.save"), class: 'btn-primary save' %>
-    <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   <% end %>
 </footer>
 

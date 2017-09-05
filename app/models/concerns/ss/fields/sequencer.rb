@@ -26,10 +26,11 @@ module SS::Fields::Sequencer
   end
 
   private
-    def set_sequence
-      self.class.instance_variable_get(:@_sequenced_fields).each do |name|
-        next if self[name].to_s =~ /^[1-9]\d*$/
-        self[name] = next_sequence(name)
-      end
+
+  def set_sequence
+    self.class.instance_variable_get(:@_sequenced_fields).each do |name|
+      next if self[name].to_s =~ /^[1-9]\d*$/
+      self[name] = next_sequence(name)
     end
+  end
 end

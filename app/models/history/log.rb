@@ -1,7 +1,7 @@
 class History::Log
   include SS::Document
   include SS::Reference::User
-  #include SS::Reference::Site
+  # include SS::Reference::Site
 
   index({ created: -1 })
 
@@ -59,11 +59,11 @@ class History::Log
       when "year"
         Time.zone.now - 1.year
       when "month"
-        #n = Time.zone.now
-        #Time.local n.year, n.month, 1, 0, 0, 0
+        # n = Time.zone.now
+        # Time.local n.year, n.month, 1, 0, 0, 0
         Time.zone.now - 1.month
       when "day"
-        #Time.zone.today.to_time
+        # Time.zone.today.to_time
         Time.zone.now - 1.day
       when "all_delete"
         Time.zone.now

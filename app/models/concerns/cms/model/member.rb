@@ -100,34 +100,35 @@ module Cms::Model::Member
   end
 
   private
-    def set_site_email
-      self.site_email = "#{site_id}_#{email}"
+
+  def set_site_email
+    self.site_email = "#{site_id}_#{email}"
+  end
+
+  def send_verification_mail
+    Member::Mailer.verification_mail(self).deliver_now if self.sends_verification_mail == 'yes'
+  end
+
+  def validate_email_again
+    if email_again.blank?
+      errors.add :email_again, :blank
+      return
     end
 
-    def send_verification_mail
-      Member::Mailer.verification_mail(self).deliver_now if self.sends_verification_mail == 'yes'
+    if email.present? && email != email_again
+      errors.add :email, :mismatch
     end
+  end
 
-    def validate_email_again
-      if email_again.blank?
-        errors.add :email_again, :blank
-        return
-      end
+  def validate_password
+    return if self.in_password.blank?
 
-      if email.present? && email != email_again
-        errors.add :email, :mismatch
-      end
-    end
-
-    def validate_password
-      return if self.in_password.blank?
-
-      errors.add :in_password, :password_short if self.in_password.length < 6
-      errors.add :in_password, :password_alphabet_only if self.in_password =~ /[A-Z]/i && self.in_password !~ /[^A-Z]/i
-      errors.add :in_password, :password_numeric_only if self.in_password =~ /[0-9]/ && self.in_password !~ /[^0-9]/
-      errors.add :in_password, :password_include_email \
-        if self.email.present? && self.in_password =~ /#{Regexp.escape(self.email)}/
-      errors.add :in_password, :password_include_name \
-        if self.name.present? && self.in_password =~ /#{Regexp.escape(self.name)}/
-    end
+    errors.add :in_password, :password_short if self.in_password.length < 6
+    errors.add :in_password, :password_alphabet_only if self.in_password =~ /[A-Z]/i && self.in_password !~ /[^A-Z]/i
+    errors.add :in_password, :password_numeric_only if self.in_password =~ /[0-9]/ && self.in_password !~ /[^0-9]/
+    errors.add :in_password, :password_include_email \
+      if self.email.present? && self.in_password =~ /#{Regexp.escape(self.email)}/
+    errors.add :in_password, :password_include_name \
+      if self.name.present? && self.in_password =~ /#{Regexp.escape(self.name)}/
+  end
 end

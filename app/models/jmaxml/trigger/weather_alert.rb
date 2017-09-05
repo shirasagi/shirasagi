@@ -23,22 +23,23 @@ class Jmaxml::Trigger::WeatherAlert < Jmaxml::Trigger::Base
   end
 
   private
-    def extract_weather_alert(site, xmldoc)
-      area_codes = []
-      REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="気象警報・注意報（市町村等）"]/Item').each do |item|
-        kind_names = REXML::XPath.match(item, 'Kind/Name/text()').map { |n| n.to_s.strip }
-        kind_names = kind_names.select do |kind_name|
-          sub_type = sub_types.first { |t| kind_name.include?(I18n.t("rss.options.weather_alert_sub_type.#{t}")) }
-          sub_type.present?
-        end
-        next if kind_names.blank?
 
-        area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
-        region = target_regions.site(site).where(code: area_code).first
-        next if region.blank?
-
-        area_codes << area_code
+  def extract_weather_alert(site, xmldoc)
+    area_codes = []
+    REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="気象警報・注意報（市町村等）"]/Item').each do |item|
+      kind_names = REXML::XPath.match(item, 'Kind/Name/text()').map { |n| n.to_s.strip }
+      kind_names = kind_names.select do |kind_name|
+        sub_type = sub_types.first { |t| kind_name.include?(I18n.t("rss.options.weather_alert_sub_type.#{t}")) }
+        sub_type.present?
       end
-      area_codes.sort
+      next if kind_names.blank?
+
+      area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
+      region = target_regions.site(site).where(code: area_code).first
+      next if region.blank?
+
+      area_codes << area_code
     end
+    area_codes.sort
+  end
 end

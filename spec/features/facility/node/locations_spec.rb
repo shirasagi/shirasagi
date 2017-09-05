@@ -10,7 +10,7 @@ describe "facility_node_locations", type: :feature, dbscope: :example do
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
   let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
-  let(:expected_addon_titles) { %w(フォルダー設定 フォーカス設定 メタ情報 リスト表示 公開設定 基本情報 権限).sort }
+  let(:expected_addon_titles) { %w(フォルダー設定 表設定 フォーカス設定 メタ情報 リスト表示 公開設定 基本情報 権限).sort }
 
   context "with auth" do
     before { login_cms_user }

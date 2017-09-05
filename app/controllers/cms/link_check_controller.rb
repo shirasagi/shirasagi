@@ -23,26 +23,27 @@ class Cms::LinkCheckController < ApplicationController
   end
 
   private
-    def check_url(url)
-      proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
-      progress_data_size = nil
-      opts = {
-        proxy: proxy,
-        progress_proc: ->(size) do
-            progress_data_size = size
-            raise "200"
-          end
-      }
 
-      begin
-        timeout(2) do
-          open(url, opts) { |f| return f.status[0].to_i }
-        end
-      rescue TimeoutError
-        return 0
-      rescue => e
-        return 200 if progress_data_size
+  def check_url(url)
+    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
+    progress_data_size = nil
+    opts = {
+      proxy: proxy,
+      progress_proc: ->(size) do
+          progress_data_size = size
+          raise "200"
       end
+    }
+
+    begin
+      timeout(2) do
+        open(url, opts) { |f| return f.status[0].to_i }
+      end
+    rescue TimeoutError
       return 0
+    rescue => e
+      return 200 if progress_data_size
     end
+    return 0
+  end
 end

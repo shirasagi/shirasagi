@@ -8,19 +8,21 @@ class Ldap::ResultController < ApplicationController
   model Ldap::SyncTask
 
   private
-    def fix_params
-      { cur_site: @cur_site }
-    end
 
-    def set_crumbs
-      @crumbs << [:"ldap.result", action: :index]
-    end
+  def fix_params
+    { cur_site: @cur_site }
+  end
+
+  def set_crumbs
+    @crumbs << [t("ldap.result"), action: :index]
+  end
 
   public
-    def index
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-      @task = Ldap::SyncTask.site(@cur_site).first_or_create
-      @items = @task.results
-    end
+  def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+    @task = Ldap::SyncTask.site(@cur_site).first_or_create
+    @items = @task.results
+  end
 end

@@ -78,17 +78,18 @@ module Gws::Addon::ReadableSetting
   end
 
   private
-    def set_readable_groups_hash
-      self.readable_groups_hash = readable_groups.map { |m| [m.id, m.name] }.to_h
-    end
 
-    def set_readable_members_hash
-      self.readable_members_hash = readable_members.map { |m| [m.id, m.long_name] }.to_h
-    end
+  def set_readable_groups_hash
+    self.readable_groups_hash = readable_groups.map { |m| [m.id, m.name] }.to_h
+  end
 
-    def set_readable_custom_groups_hash
-      self.readable_custom_groups_hash = readable_custom_groups.map { |m| [m.id, m.name] }.to_h
-    end
+  def set_readable_members_hash
+    self.readable_members_hash = readable_members.map { |m| [m.id, m.long_name] }.to_h
+  end
+
+  def set_readable_custom_groups_hash
+    self.readable_custom_groups_hash = readable_custom_groups.map { |m| [m.id, m.name] }.to_h
+  end
 
   module ClassMethods
     def readable_setting_included_custom_groups?
@@ -96,8 +97,9 @@ module Gws::Addon::ReadableSetting
     end
 
     private
-      def readable_setting_include_custom_groups
-        class_variable_set(:@@_readable_setting_include_custom_groups, true)
-      end
+
+    def readable_setting_include_custom_groups
+      class_variable_set(:@@_readable_setting_include_custom_groups, true)
+    end
   end
 end

@@ -7,8 +7,8 @@ describe 'cms_agents_nodes_photo_album', type: :feature, dbscope: :example, js: 
   let!(:photo_album_node) { create :cms_node_photo_album, cur_site: site, cur_node: node, layout_id: layout.id }
 
   context 'page with allowed files' do
-    let!(:file) { create :cms_file, site_id: site.id , filename: "file.jpg"}
-    let!(:file2) { create :cms_file, site_id: site.id , filename: "file2.png"}
+    let!(:file) { create :cms_file, site_id: site.id , filename: "file.jpg" }
+    let!(:file2) { create :cms_file, site_id: site.id , filename: "file2.png" }
     let!(:article_page) do
       create :article_page,
       cur_site: site,
@@ -25,7 +25,7 @@ describe 'cms_agents_nodes_photo_album', type: :feature, dbscope: :example, js: 
   end
 
   context 'page with disapprove file' do
-    let!(:file) { create :cms_file, site_id: site.id , filename: "file.pdf"}
+    let!(:file) { create :cms_file, site_id: site.id , filename: "file.pdf" }
     let!(:article_page) do
       create :article_page,
       cur_site: site,

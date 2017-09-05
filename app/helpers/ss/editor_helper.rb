@@ -82,6 +82,8 @@ module SS::EditorHelper
       base_opts.merge!(advanced_options.symbolize_keys)
     end
 
+    base_opts = site_ckeditor_editor_options(base_opts)
+
     opts.reverse_merge!(base_opts)
     opts[:extraPlugins] = opts[:extraPlugins].join(',') if opts[:extraPlugins].is_a?(Array)
     opts[:removePlugins] = opts[:removePlugins].join(',') if opts[:removePlugins].is_a?(Array)
@@ -112,32 +114,26 @@ module SS::EditorHelper
   end
 
   def tinymce_editor_options(opts = {})
-    editor_opts = {}
-    #editor_opts[:selector] = elem
-    editor_opts[:language] = "ja"
+    opts = opts.symbolize_keys
 
+    base_opts = SS.config.cms.tinymce['options'].symbolize_keys
     if opts[:readonly]
-      editor_opts[:readonly] = true
-      editor_opts[:plugins]  = []
-      editor_opts[:toolbar]  = false
-      editor_opts[:menubar]  = false
+      readonly_options = SS.config.cms.tinymce['readonly_options'].presence
+      readonly_options ||= {}
+      base_opts.merge!(readonly_options.symbolize_keys)
+    elsif opts[:public_side]
+      public_side_options = SS.config.cms.tinymce['public_side_options'].presence
+      public_side_options ||= {}
+      base_opts.merge!(public_side_options.symbolize_keys)
     else
-      editor_opts[:plugins] = [
-        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-        "save table contextmenu directionality emoticons template paste textcolor"
-      ]
-      editor_opts[:toolbar] = "insertfile undo redo | styleselect | bold italic | forecolor backcolor" \
-        " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"
-
-      if opts[:public_side]
-        #
-      else
-        # editor_opts[:templates] = [ { title: 'Some title 1', description: 'Some desc 1', content: 'My content' } ]
-        editor_opts[:templates] = "#{template_cms_editor_templates_path}.json?_=#{Time.zone.now.to_i}"
-      end
+      base_opts[:templates] = "#{template_cms_editor_templates_path}.json?_=#{Time.zone.now.to_i}"
     end
-    editor_opts
+
+    base_opts = site_tinymce_editor_options(base_opts)
+    base_opts[:plugins] ||= []
+
+    opts.reverse_merge!(base_opts)
+    opts
   end
 
   def html_editor_tinymce(elem, opts = {})
@@ -149,5 +145,60 @@ module SS::EditorHelper
   end
 
   def html_editor_markdown(elem, opts = {})
+  end
+
+  def site_ckeditor_editor_options(opts = {})
+    return opts if @cur_site.nil?
+    if @cur_node
+      color_button = @cur_node.try(:color_button) || @cur_site.color_button
+      editor_css_path = @cur_node.try(:editor_css_path) || @cur_site.editor_css_path
+    else
+      color_button = @cur_site.color_button
+      editor_css_path = @cur_site.editor_css_path
+    end
+
+    if color_button == 'enabled'
+      opts[:extraPlugins] ||= ['colorbutton']
+      opts[:removePlugins] ||= []
+      opts[:removePlugins] -= ['colorbutton']
+    end
+    opts[:removePlugins] ||= ['colorbutton'] if color_button == 'disabled'
+
+    opts[:contentsCss] ||= []
+    opts[:contentsCss] += [editor_css_path] if editor_css_path.present?
+
+    opts
+  end
+
+  def site_tinymce_editor_options(opts = {})
+    return opts if @cur_site.nil?
+    if @cur_node
+      color_button = @cur_node.try(:color_button) || @cur_site.color_button
+      editor_css_path = @cur_node.try(:editor_css_path) || @cur_site.editor_css_path
+    else
+      color_button = @cur_site.color_button
+      editor_css_path = @cur_site.editor_css_path
+    end
+
+    if color_button == 'enabled'
+      opts[:plugins] ||= []
+      opts[:plugins].push('textcolor')
+      opts[:plugins].uniq!
+      if opts[:toolbar]
+        opts[:toolbar] += ' | forecolor backcolor' unless opts[:toolbar].include?('forecolor backcolor')
+      end
+    end
+    if color_button == 'disabled'
+      opts[:plugins] ||= []
+      opts[:plugins].delete('textcolor')
+      if opts[:toolbar]
+        opts[:toolbar].gsub!(' | forecolor backcolor', '')
+      end
+    end
+
+    opts[:content_css] ||= []
+    opts[:content_css] += [editor_css_path] if editor_css_path.present?
+
+    opts
   end
 end

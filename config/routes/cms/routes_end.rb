@@ -108,8 +108,6 @@ SS::Application.routes.draw do
       get :search, on: :member
     end
 
-    resources :postal_codes, concerns: [:deletion, :download, :import]
-
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
@@ -157,7 +155,7 @@ SS::Application.routes.draw do
           get :view, on: :member
           get :thumb, on: :member
           get :download, on: :member
-        end
+          end
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'

@@ -17,18 +17,22 @@ ja:
         vocab: 語彙
         name: 名前
         search: 検索
-    notices:
-      start_import_job: インポート処理を開始しました。処理結果は「ジョブ実行履歴」を参照してください。
-    errors:
-      unable_to_load_graph: RDF が読み取れません。サポートしていないファイルか空のファイルが指定されています。
-      unable_to_load_vocab: 語彙が読み取れません。サポートしていないファイルが指定されています。
-    button:
+    buttons:
       import: インポート
       manage_props: プロパティを管理する
     links:
       back_to_class: クラスへ戻る
+      vocabs: RDF語彙
+      vocab: 語彙情報
+      classes: クラス
+      props: プロパティ
+      import: インポート
     notice:
       imported_props: プロパティをインポートしました。
+      start_import_job: インポート処理を開始しました。処理結果は「ジョブ実行履歴」を参照してください。
+    errors:
+      unable_to_load_graph: RDF が読み取れません。サポートしていないファイルか空のファイルが指定されています。
+      unable_to_load_vocab: 語彙が読み取れません。サポートしていないファイルが指定されています。
 
   modules:
     rdf: RDF語彙
@@ -73,15 +77,6 @@ ja:
       rdf/prop:
         range: 値域
         classes: 定義域
-
-  views:
-    links:
-      rdf:
-        vocabs: RDF語彙
-        vocab: 語彙情報
-        classes: クラス
-        props: プロパティ
-        import: インポート
 
   tooltip:
     rdf/vocab:

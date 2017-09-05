@@ -8,166 +8,168 @@ module Cms::PageFilter
   end
 
   private
-    def set_item
-      super
-      return unless @cur_node
-      return if (@item.filename =~ /^#{@cur_node.filename}\//) && (@item.depth == @cur_node.depth + 1)
-      raise "404"
+
+  def set_item
+    super
+    return unless @cur_node
+    return if (@item.filename =~ /^#{@cur_node.filename}\//) && (@item.depth == @cur_node.depth + 1)
+    raise "404"
+  end
+
+  def pre_params
+    if @cur_node
+      layout_id = @cur_node.page_layout_id || @cur_node.layout_id
+      { layout_id: layout_id }
+    else
+      {}
+    end
+  end
+
+  def set_items
+    @items = @model.site(@cur_site).node(@cur_node)
+      .allow(:read, @cur_user)
+      .order_by(updated: -1)
+  end
+
+  def set_contains_urls_items
+    @contains_urls = []
+    return unless @item.class.include?(Cms::Model::Page)
+
+    cond = []
+    if @item.respond_to?(:url) && @item.respond_to?(:full_url)
+      cond << { contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
     end
 
-    def pre_params
-      if @cur_node
-        layout_id = @cur_node.page_layout_id || @cur_node.layout_id
-        { layout_id: layout_id }
-      else
-        {}
-      end
+    if @item.respond_to?(:files) && @item.files.present?
+      cond << { contains_urls: { '$in' => @item.files.map(&:url) } }
     end
 
-    def set_items
-      @items = @model.site(@cur_site).node(@cur_node)
-        .allow(:read, @cur_user)
-        .order_by(updated: -1)
+    if @item.respond_to?(:related_page_ids)
+      cond << { related_page_ids: { '$in' => [ @item.id ] } }
     end
 
-    def set_contains_urls_items
-      @contains_urls = []
-      return unless @item.class.include?(Cms::Model::Page)
-
-      cond = []
-      if @item.respond_to?(:url) && @item.respond_to?(:full_url)
-        cond << { contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
-      end
-
-      if @item.respond_to?(:files) && @item.files.present?
-        cond << { contains_urls: { '$in' => @item.files.map(&:url) } }
-      end
-
-      if @item.respond_to?(:related_page_ids)
-        cond << { related_page_ids: { '$in' => [ @item.id ] } }
-      end
-
-      if cond.present?
-        @contains_urls = Cms::Page.site(@cur_site).where(:id.ne => @item.id).or(cond).
-          page(params[:page]).per(50)
-      end
+    if cond.present?
+      @contains_urls = Cms::Page.site(@cur_site).where(:id.ne => @item.id).or(cond).
+        page(params[:page]).per(50)
     end
+  end
 
   public
-    def index
-      if @cur_node
-        raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 
-        set_items
-        @items = @items.search(params[:s]).
-          page(params[:page]).per(50)
-      end
+  def index
+    if @cur_node
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+      set_items
+      @items = @items.search(params[:s]).
+        page(params[:page]).per(50)
+    end
+  end
+
+  def create
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user)
+    if @item.state == "public"
+      raise "403" unless @item.allowed?(:release, @cur_user)
+      @item.state = "ready" if @item.try(:release_date).present?
+    end
+    render_create @item.save
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user)
+    if @item.state == "public"
+      raise "403" unless @item.allowed?(:release, @cur_user)
+      @item.state = "ready" if @item.try(:release_date).present?
     end
 
-    def create
-      @item = @model.new get_params
-      raise "403" unless @item.allowed?(:edit, @cur_user)
-      if @item.state == "public"
-        raise "403" unless @item.allowed?(:release, @cur_user)
-        @item.state = "ready" if @item.try(:release_date).present?
-      end
-      render_create @item.save
+    result = @item.update
+    location = nil
+    if result && @item.try(:branch?) && @item.state == "public"
+      location = { action: :index }
+      @item.delete
     end
+    render_update result, location: location
+  end
 
-    def update
-      @item.attributes = get_params
-      @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-      raise "403" unless @item.allowed?(:edit, @cur_user)
-      if @item.state == "public"
-        raise "403" unless @item.allowed?(:release, @cur_user)
-        @item.state = "ready" if @item.try(:release_date).present?
-      end
+  def move
+    @filename   = params[:filename]
+    @source     = params[:source]
+    @link_check = params[:link_check]
+    destination = params[:destination]
+    confirm     = params[:confirm]
 
-      result = @item.update
-      location = nil
-      if result && @item.try(:branch?) && @item.state == "public"
-        location = { action: :index }
-        @item.delete
-      end
-      render_update result, location: location
-    end
+    if request.get?
+      @filename = @item.filename
+    elsif confirm
+      @source = "/#{@item.filename}"
+      @item.validate_destination_filename(destination)
+      @item.filename = destination
+      @link_check = @item.errors.empty?
+    else
+      @source = "/#{@item.filename}"
+      raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
 
-    def move
-      @filename   = params[:filename]
-      @source     = params[:source]
-      @link_check = params[:link_check]
-      destination = params[:destination]
-      confirm     = params[:confirm]
+      node = Cms::Node.site(@cur_site).filename(::File.dirname(destination)).first
 
-      if request.get?
-        @filename = @item.filename
-      elsif confirm
-        @source = "/#{@item.filename}"
-        @item.validate_destination_filename(destination)
-        @item.filename = destination
-        @link_check = @item.errors.empty?
+      if node.blank?
+        location = move_cms_page_path id: @item.id, source: @source, link_check: true
+      elsif @item.route == "cms/page"
+        location = move_node_page_path cid: node.id, id: @item.id, source: @source, link_check: true
       else
-        @source = "/#{@item.filename}"
-        raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
-
-        node = Cms::Node.site(@cur_site).filename(::File.dirname(destination)).first
-
-        if node.blank?
-          location = move_cms_page_path id: @item.id, source: @source, link_check: true
-        elsif @item.route == "cms/page"
-          location = move_node_page_path cid: node.id, id: @item.id, source: @source, link_check: true
-        else
-          location = { cid: node.id, action: :move, source: @source, link_check: true }
-        end
-
-        render_update @item.move(destination), location: location, render: { file: :move }
-      end
-    end
-
-    def copy
-      if request.get?
-        prefix = I18n.t("workflow.cloned_name_prefix")
-        @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
-        return
+        location = { cid: node.id, action: :move, source: @source, link_check: true }
       end
 
-      @item.attributes = get_params
-      @copy = @item.new_clone
-      render_update @copy.save, location: { action: :index }, render: { file: :copy }
+      render_update @item.move(destination), location: location, render: { file: :move }
+    end
+  end
+
+  def copy
+    if request.get?
+      prefix = I18n.t("workflow.cloned_name_prefix")
+      @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
+      return
     end
 
-    def contains_urls
-      raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-      render
-    end
+    @item.attributes = get_params
+    @copy = @item.new_clone
+    render_update @copy.save, location: { action: :index }, render: { file: :copy }
+  end
 
-    def set_tag_all
-      if @cur_node
-        safe_params = params.permit(:tag, ids: [])
-        ids = safe_params[:ids].presence || []
-        tag = safe_params[:tag].presence
-        if tag
-          @model.site(@cur_site).node(@cur_node).in(_id: ids).allow(:edit, @cur_user).each do |item|
-            item.add_to_set(tags: [ tag ])
-          end
+  def contains_urls
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    render
+  end
+
+  def set_tag_all
+    if @cur_node
+      safe_params = params.permit(:tag, ids: [])
+      ids = safe_params[:ids].presence || []
+      tag = safe_params[:tag].presence
+      if tag
+        @model.site(@cur_site).node(@cur_node).in(_id: ids).allow(:edit, @cur_user).each do |item|
+          item.add_to_set(tags: [ tag ])
         end
       end
-
-      render_update true, location: { action: :index }, render: { file: :index }
     end
 
-    def reset_tag_all
-      if @cur_node
-        safe_params = params.permit(:tag, ids: [])
-        ids = safe_params[:ids].presence || []
-        tag = safe_params[:tag].presence
-        if tag
-          @model.site(@cur_site).node(@cur_node).in(_id: ids).allow(:edit, @cur_user).each do |item|
-            item.pull(tags: tag)
-          end
+    render_update true, location: { action: :index }, render: { file: :index }
+  end
+
+  def reset_tag_all
+    if @cur_node
+      safe_params = params.permit(:tag, ids: [])
+      ids = safe_params[:ids].presence || []
+      tag = safe_params[:tag].presence
+      if tag
+        @model.site(@cur_site).node(@cur_node).in(_id: ids).allow(:edit, @cur_user).each do |item|
+          item.pull(tags: tag)
         end
       end
-
-      render_update true, location: { action: :index }, render: { file: :index }
     end
+
+    render_update true, location: { action: :index }, render: { file: :index }
+  end
 end

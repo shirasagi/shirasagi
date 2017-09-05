@@ -1,7 +1,1 @@
-<% if @cur_page.body_layout.blank? %>
-<header class="released">
-  <time datetime="<%= I18n.l @cur_page.date.to_date, format: :iso %>"><%= I18n.l @cur_page.date.to_date, format: :long %></time>
-</header>
-<% end %>
-
 <%= render file: "cms/agents/pages/page/index" %>

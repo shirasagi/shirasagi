@@ -64,144 +64,145 @@ class Cms::PreviewController < ApplicationController
   end
 
   private
-    def set_site
-      @cur_site = request.env["ss.site"] = SS::Site.find params[:site]
-      @preview  = true
-    end
 
-    def set_path_with_preview
-      set_site
-      @cur_path ||= request_path
-      @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
-      @cur_path = "index.html" if @cur_path.blank?
-      @cur_path = URI.decode(@cur_path)
-      set_main_path
-      @cur_date = params[:preview_date].present? ? params[:preview_date].in_time_zone : Time.zone.now
-      filters << :preview
-    end
+  def set_site
+    @cur_site = request.env["ss.site"] = SS::Site.find(params[:site])
+    @preview  = true
+  end
 
-    def x_sendfile(file = @file)
-      return if file =~ /\.(ht|x)ml$/
-      return if file =~ /\.part\.json$/
-      super
-      return if response.body.present?
+  def set_path_with_preview
+    set_site
+    @cur_path ||= request_path
+    @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
+    @cur_path = "index.html" if @cur_path.blank?
+    @cur_path = URI.decode(@cur_path)
+    set_main_path
+    @cur_date = params[:preview_date].present? ? params[:preview_date].in_time_zone : Time.zone.now
+    filters << :preview
+  end
 
-      if @cur_path =~ /^\/fs\//
-        fs_path  = SS::Application.routes.recognize_path(@cur_path)
-        id_path  = fs_path[:id_path] || fs_path[:id]
-        action   = fs_path[:action]
-        size     = fs_path[:size]
-        filename = fs_path[:filename]
-        width    = params[:width]
-        height   = params[:height]
+  def x_sendfile(file = @file)
+    return if file =~ /\.(ht|x)ml$/
+    return if file =~ /\.part\.json$/
+    super
+    return if response.body.present?
+    return fs_sendfile if @cur_path =~ /^\/fs\//
+    return
+  end
 
-        @item = SS::File.find_by(id: id_path.delete("/"), filename: filename) rescue nil
-        raise "404" unless @item
-        if width.present? && height.present?
-          send_thumb @item.read, type: @item.content_type, filename: @item.filename,
-            disposition: :inline, width: width, height: height
-        else
-          if action == "thumb"
-            thumb = @item.thumb
-            thumb = @item.thumb(size) if size
-            @item = thumb if thumb
-          end
+  def fs_sendfile
+    fs_path = SS::Application.routes.recognize_path(@cur_path)
+    id_path = fs_path[:id_path] || fs_path[:id]
 
-          if @thumb_width && @thumb_height
-            send_thumb @item.read, type: @item.content_type, filename: @item.filename,
-              disposition: :inline, width: width, height: height
-          else
-            send_file @item.path, type: @item.content_type, filename: @item.filename,
-              disposition: :inline, x_sendfile: true
-          end
-        end
-      end
-      #raise "404" unless Fs.exists?(file)
-    end
+    width  = params[:width]
+    height = params[:height]
 
-    def render_preview
-      preview_url = cms_preview_path preview_date: params[:preview_date]
+    @item = SS::File.find_by(id: id_path.delete("/"), filename: fs_path[:filename]) rescue nil
+    raise "404" unless @item
 
-      body = response.body.force_encoding("utf-8")
-      body.gsub!(/(href|src)=".*?"/) do |m|
-        url = m.match(/.*?="(.*?)"/)[1]
-        if url =~ /^\/(assets|assets-dev)\//
-          m
-        elsif url =~ /^\/(?!\/)/
-          m.sub(/="/, "=\"#{preview_url}")
-        else
-          m
-        end
+    if width.present? && height.present?
+      send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+        disposition: :inline, width: width, height: height
+    else
+      if fs_path[:action] == "thumb"
+        thumb = @item.thumb
+        thumb = @item.thumb(fs_path[:size]) if fs_path[:size]
+        @item = thumb if thumb
       end
 
-      body.sub!("</body>", preview_template_html + "</body>")
-
-      response.body = body
-    end
-
-    def preview_template_html
-      h = []
-      h << view_context.stylesheet_link_tag("cms/preview")
-      h << view_context.javascript_include_tag("cms/public") if mobile_path?
-      h << view_context.javascript_include_tag("cms/preview")
-      h << '<link href="/assets/css/colorbox/colorbox.css" rel="stylesheet" />'
-      h << '<script src="/assets/js/jquery.colorbox.js"></script>'
-      h << '<script>'
-      h << '$(function(){'
-      h << '  SS_Preview.mobile_path = "' + @cur_site.mobile_location + '";'
-      if @preview_page
-        h << 'SS_Preview.request_path = "' + request.path + '";'
-        h << 'SS_Preview.form_item = ' + @preview_item.to_json + ';'
-      end
-      h << '  SS_Preview.render();'
-      h << '});'
-      h << '</script>'
-      h << '<div id="ss-preview">'
-      h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
-      if @cur_site.mobile_enabled?
-        h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
-        h << '<input type="button" class="mobile" value="' + t("views.links.mobile") + '">'
+      if @thumb_width && @thumb_height
+        send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+          disposition: :inline, width: width, height: height
       else
-        h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
+        send_file @item.path, type: @item.content_type, filename: @item.filename,
+          disposition: :inline, x_sendfile: true
       end
-
-       h.join("\n")
     end
+  end
 
-    def render_form_preview
-      require "uri"
+  def render_preview
+    preview_url = cms_preview_path preview_date: params[:preview_date]
 
-      body = response.body
-      body.gsub!(/(href|src)=".*?"/) do |m|
-        url = m.match(/.*?="(.*?)"/)[1]
-        scheme = ::URI.parse(url).scheme rescue true
-
-        if scheme
-          m
-        elsif url =~ /^\/\/|^#/
-          m
-        else
-          full_url = [ request.protocol, request.host_with_port ]
-          full_url << "/#{@cur_node.filename}" if @cur_node
-          full_url = full_url.join
-          m.sub(url, ::URI.join(full_url, url).to_s)
-        end
+    body = response.body.force_encoding("utf-8")
+    body.gsub!(/(href|src)=".*?"/) do |m|
+      url = m.match(/.*?="(.*?)"/)[1]
+      if url =~ /^\/(assets|assets-dev)\//
+        m
+      elsif url =~ /^\/(?!\/)/
+        m.sub(/="/, "=\"#{preview_url}")
+      else
+        m
       end
-
-      response.body = body
     end
 
-    def rescue_action(e = nil)
-      if e.to_s =~ /^\d+$/
-        status = e.to_s.to_i
-        file = error_html_file(status)
-        return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
+    body.sub!("</body>", preview_template_html + "</body>")
+
+    response.body = body
+  end
+
+  def preview_template_html
+    h = []
+    h << view_context.stylesheet_link_tag("cms/preview")
+    h << view_context.javascript_include_tag("cms/public") if mobile_path?
+    h << view_context.javascript_include_tag("cms/preview")
+    h << '<link href="/assets/css/colorbox/colorbox.css" rel="stylesheet" />'
+    h << '<script src="/assets/js/jquery.colorbox.js"></script>'
+    h << '<script>'
+    h << '$(function(){'
+    h << '  SS_Preview.mobile_path = "' + @cur_site.mobile_location + '";'
+    if @preview_page
+      h << 'SS_Preview.request_path = "' + request.path + '";'
+      h << 'SS_Preview.form_item = ' + @preview_item.to_json + ';'
+    end
+    h << '  SS_Preview.render();'
+    h << '});'
+    h << '</script>'
+    h << '<div id="ss-preview">'
+    h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
+    if @cur_site.mobile_enabled?
+      h << '<input type="button" class="preview" value="' + t("ss.links.pc") + '">'
+      h << '<input type="button" class="mobile" value="' + t("ss.links.mobile") + '">'
+    else
+      h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
+    end
+
+    h.join("\n")
+  end
+
+  def render_form_preview
+    require "uri"
+
+    body = response.body
+    body.gsub!(/(href|src)=".*?"/) do |m|
+      url = m.match(/.*?="(.*?)"/)[1]
+      scheme = ::URI.parse(url).scheme rescue true
+
+      if scheme
+        m
+      elsif url =~ /^\/\/|^#/
+        m
+      else
+        full_url = [ request.protocol, request.host_with_port ]
+        full_url << "/#{@cur_node.filename}" if @cur_node
+        full_url = full_url.join
+        m.sub(url, ::URI.join(full_url, url).to_s)
       end
-      raise e
     end
 
-    def error_html_file(status)
-      file = "#{Rails.public_path}/#{status}.html"
-      Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+    response.body = body
+  end
+
+  def rescue_action(e = nil)
+    if e.to_s =~ /^\d+$/
+      status = e.to_s.to_i
+      file = error_html_file(status)
+      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
+    raise e
+  end
+
+  def error_html_file(status)
+    file = "#{Rails.public_path}/#{status}.html"
+    Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+  end
 end

@@ -6,7 +6,8 @@ class Gws::Board::SettingsController < ApplicationController
   navi_view "gws/board/settings/navi"
 
   private
-    def set_crumbs
-      @crumbs << [:"mongoid.models.gws/board/group_setting", gws_board_setting_path]
-    end
+
+  def set_crumbs
+    @crumbs << [t("mongoid.models.gws/board/group_setting"), gws_board_setting_path]
+  end
 end

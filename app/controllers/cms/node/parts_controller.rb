@@ -8,22 +8,27 @@ class Cms::Node::PartsController < ApplicationController
   navi_view "cms/node/main/navi"
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
 
-    def pre_params
-      { route: "cms/free" }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
+
+  def pre_params
+    { route: "cms/free" }
+  end
 
   public
-    def index
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-      @items = Cms::Part.site(@cur_site).node(@cur_node).
-        allow(:read, @cur_user).
-        search(params[:s]).
-        order_by(filename: 1).
-        page(params[:page]).per(50)
-    end
+  def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+    @node_target_options = @model.new.node_target_options
+
+    @items = Cms::Part.site(@cur_site).
+      node(@cur_node, params.dig(:s, :target)).
+      allow(:read, @cur_user).
+      search(params[:s]).
+      order_by(filename: 1).
+      page(params[:page]).per(50)
+  end
 end

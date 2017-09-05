@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "cms_preview", type: :feature, dbscope: :example do
   let(:site) { cms_site }
+  category_part_node = nil
 
   context "with article page" do
     let(:node) { create :article_node_page, cur_site: site }
@@ -17,7 +18,6 @@ describe "cms_preview", type: :feature, dbscope: :example do
     context "pc preview" do
       it do
         visit pc_preview_path
-        expect(page).to have_css('header.released time')
         expect(page).to have_css('article.body')
         expect(page).to have_css('section.categories header')
         expect(page).to have_css('section.categories div ul li')
@@ -27,7 +27,6 @@ describe "cms_preview", type: :feature, dbscope: :example do
     context "mobile preview" do
       it do
         visit mobile_preview_path
-        expect(page).to have_css('div.tag-header span.tag-time')
         expect(page).to have_css('div.tag-article')
         expect(page).to have_css('div.categories div h2')
         expect(page).to have_css('div.categories div.nodes ul li')
@@ -49,9 +48,9 @@ describe "cms_preview", type: :feature, dbscope: :example do
         :category_part_node,
         cur_site: site,
         cur_node: node_root,
-        upper_html: '<nav id="category-list"><header><h2>カテゴリー一覧</h2></header>',
+        upper_html: '<nav id="category-list"><header><h2>#{parent.parent_name} > #{parent_name}</h2></header>',
         loop_html: '<article class="#{class} #{current}"><header><h3><a href="#{url}">#{name}</a></h3></header></article>',
-        lower_html: '</nav>')
+        lower_html: '<footer>#{part_parent.parent_name} > #{part_parent_name} > #{part_name}</footer></nav>')
 
       layout_html = ''
       layout_html << '<html><body>'
@@ -73,6 +72,8 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes article header h2', count: 2)
         expect(page).to have_css('div.faq-search form')
         expect(page).to have_css('div.category-nodes nav#category-list')
+        expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
+        expect(page).to have_selector('footer', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
       end
     end
 
@@ -82,6 +83,8 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes div.tag-article div h2', count: 2)
         expect(page).to have_css('div.faq-search form')
         expect(page).to have_css('div.category-nodes div#category-list')
+        expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
+        expect(page).to have_selector('div', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
       end
     end
   end

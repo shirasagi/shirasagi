@@ -27,7 +27,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     end
 
     describe "copy nodes under other node" do
-      let(:target_node_name) { "#{other_node.filename}/node_name"}
+      let(:target_node_name) { "#{other_node.filename}/node_name" }
       before do
         perform_enqueued_jobs do
           Cms::Node::CopyNodesJob.bind( {site_id: site.id, node_id: node1.id} )

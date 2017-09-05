@@ -5,5 +5,5 @@
   <dd class="event-name"><%= @item.send :event_name %></dd>
 
   <dt><%= @model.t :event_dates %></dt>
-  <dd class="event-dates"><%= (@item.send :event_dates).gsub(/\n|\r\n/, ", ") %></dd>
+  <dd class="event-dates"><%= raw @item.dates_to_html(:long) %></dd>
 </dl>

@@ -18,38 +18,39 @@ class Ldap::ImportJob < Cms::ApplicationJob
   end
 
   private
-    def import_groups(parent_dn, groups)
-      ldap_array = convert_groups(parent_dn, groups)
-      Ldap::Import.create!(
-        {
-          site_id: @site.id,
-          group_count: @group_count,
-          user_count: @user_count,
-          ldap: ldap_array
-        })
-    end
 
-    def convert_groups(parent_dn, groups)
-      groups.map do |group|
-        convert_group(parent_dn, group)
-      end.flatten
-    end
+  def import_groups(parent_dn, groups)
+    ldap_array = convert_groups(parent_dn, groups)
+    Ldap::Import.create!(
+      {
+        site_id: @site.id,
+        group_count: @group_count,
+        user_count: @user_count,
+        ldap: ldap_array
+      })
+  end
 
-    def convert_group(parent_dn, group)
-      return [] if @exclude_groups.try(:include?, group.name)
+  def convert_groups(parent_dn, groups)
+    groups.map do |group|
+      convert_group(parent_dn, group)
+    end.flatten
+  end
 
-      entity = Ldap::Extensions::LdapEntity.convert_group(group, parent_dn: parent_dn)
-      @group_count += 1
-      ret = [ entity ]
-      ret << convert_groups(entity[:dn], group.groups)
-      ret << convert_users(entity[:dn], group.users)
-      ret
-    end
+  def convert_group(parent_dn, group)
+    return [] if @exclude_groups.try(:include?, group.name)
 
-    def convert_users(parent_dn, users)
-      @user_count += users.length
-      users.map do |user|
-        Ldap::Extensions::LdapEntity.convert_user(user, parent_dn: parent_dn)
-      end
+    entity = Ldap::Extensions::LdapEntity.convert_group(group, parent_dn: parent_dn)
+    @group_count += 1
+    ret = [ entity ]
+    ret << convert_groups(entity[:dn], group.groups)
+    ret << convert_users(entity[:dn], group.users)
+    ret
+  end
+
+  def convert_users(parent_dn, users)
+    @user_count += users.length
+    users.map do |user|
+      Ldap::Extensions::LdapEntity.convert_user(user, parent_dn: parent_dn)
     end
+  end
 end

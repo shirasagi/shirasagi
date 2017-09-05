@@ -66,8 +66,8 @@ class Cms::Notice
 
   def state_options
     [
-      [I18n.t('views.options.state.public'), 'public'],
-      [I18n.t('views.options.state.closed'), 'closed'],
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
     ]
   end
 
@@ -113,7 +113,8 @@ class Cms::Notice
   end
 
   private
-    def set_released
-      self.released ||= Time.zone.now
-    end
+
+  def set_released
+    self.released ||= Time.zone.now
+  end
 end

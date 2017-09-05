@@ -97,45 +97,46 @@ class Kana::Dictionary
     end
 
     private
-      def build_criteria(site_id, item_ids)
-        criteria = where(site_id: site_id)
-        criteria = criteria.where(:id.in => item_ids) if item_ids.present?
-        criteria
-      end
 
-      def make_tmpname(suffix)
-        # blow code come from Tmpname::make_tmpname
-        "mecab#{Time.zone.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
-      end
+    def build_criteria(site_id, item_ids)
+      criteria = where(site_id: site_id)
+      criteria = criteria.where(:id.in => item_ids) if item_ids.present?
+      criteria
+    end
 
-      def build_source(criteria, output_file)
-        count = 0
-        ::File.open(output_file, "w:UTF-8") do |f|
-          each_all_csv(criteria) do |word, yomi|
-            f.puts "#{word},*,*,#{DEFAULT_COST},#{DEFAULT_POS.join(',')},*,*,#{word},#{yomi},#{yomi}"
-            count += 1
-          end
-        end
-        count
-      end
+    def make_tmpname(suffix)
+      # blow code come from Tmpname::make_tmpname
+      "mecab#{Time.zone.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
+    end
 
-      def each_all_csv(criteria)
-        criteria.each do |item|
-          item.enumerate_csv.each do |word, yomi|
-            yield word, yomi
-          end
-          logger.warn("dictionary #{item.name} has #{item.errors.size} error(s).") if item.errors.present?
+    def build_source(criteria, output_file)
+      count = 0
+      ::File.open(output_file, "w:UTF-8") do |f|
+        each_all_csv(criteria) do |word, yomi|
+          f.puts "#{word},*,*,#{DEFAULT_COST},#{DEFAULT_POS.join(',')},*,*,#{word},#{yomi},#{yomi}"
+          count += 1
         end
       end
+      count
+    end
 
-      def run_mecab_indexer(input_file, output_file)
-        mecab_indexer = SS.config.kana.mecab_indexer
-        mecab_dicdir = SS.config.kana.mecab_dicdir
-
-        cmd = "#{mecab_indexer} -d #{mecab_dicdir} -u #{output_file} -f UTF-8 -t UTF-8 #{input_file}"
-        logger.info("system(#{cmd})")
-        system(cmd)
-        raise I18n.t("kana.build_fail.index") if $CHILD_STATUS.exitstatus != 0
+    def each_all_csv(criteria)
+      criteria.each do |item|
+        item.enumerate_csv.each do |word, yomi|
+          yield word, yomi
+        end
+        logger.warn("dictionary #{item.name} has #{item.errors.size} error(s).") if item.errors.present?
       end
+    end
+
+    def run_mecab_indexer(input_file, output_file)
+      mecab_indexer = SS.config.kana.mecab_indexer
+      mecab_dicdir = SS.config.kana.mecab_dicdir
+
+      cmd = "#{mecab_indexer} -d #{mecab_dicdir} -u #{output_file} -f UTF-8 -t UTF-8 #{input_file}"
+      logger.info("system(#{cmd})")
+      system(cmd)
+      raise I18n.t("kana.build_fail.index") if $CHILD_STATUS.exitstatus != 0
+    end
   end
 end

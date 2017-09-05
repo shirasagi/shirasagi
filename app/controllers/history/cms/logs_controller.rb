@@ -9,15 +9,16 @@ class History::Cms::LogsController < ApplicationController
   before_action :filter_permission
 
   private
-    def set_crumbs
-      @crumbs << [:"history.log", action: :index]
-    end
 
-    def filter_permission
-      raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
-    end
+  def set_crumbs
+    @crumbs << [t("history.log"), action: :index]
+  end
 
-    def cond
-      { site_id: @cur_site.id }
-    end
+  def filter_permission
+    raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
+  def cond
+    { site_id: @cur_site.id }
+  end
 end

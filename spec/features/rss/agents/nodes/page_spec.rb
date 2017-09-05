@@ -4,7 +4,7 @@ describe "rss_agents_nodes_page", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :rss_node_page, site: site }
   let(:item) { create(:rss_page, site: site, node: node) }
-  let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/"}
+  let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
   before { item }
 

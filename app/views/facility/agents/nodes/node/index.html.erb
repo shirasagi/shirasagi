@@ -4,15 +4,15 @@
   <% if locations.present? %>
 
     <% locations.each do |loc| %>
-      <% items = @items.in(location_ids: loc.id).order_by(address: -1) %>
+      <% items = @items.in(location_ids: loc.id).and_public(@cur_date).order_by(address: -1) %>
       <% if items.present? %>
         <table id="<%= loc.basename %>">
-          <caption><%= loc.name %></caption>
+          <caption><%= loc.facility_caption_name %></caption>
           <thead>
             <tr>
-              <th><%= Facility::Node::Page.t :name %></th>
-              <th><%= Facility::Node::Page.t :address %></th>
-              <th><%= Facility::Node::Page.t :tel %></th>
+              <th scope="col"><%= Facility::Node::Page.t :name %></th>
+              <th scope="col"><%= Facility::Node::Page.t :address %></th>
+              <th scope="col"><%= Facility::Node::Page.t :tel %></th>
             </tr>
           </thead>
           <tbody>
@@ -34,9 +34,9 @@
       <caption><%= @cur_node.name %></caption>
       <thead>
         <tr>
-          <th><%= Facility::Node::Page.t :name %></th>
-          <th><%= Facility::Node::Page.t :address %></th>
-          <th><%= Facility::Node::Page.t :tel %></th>
+          <th scope="col"><%= Facility::Node::Page.t :name %></th>
+          <th scope="col"><%= Facility::Node::Page.t :address %></th>
+          <th scope="col"><%= Facility::Node::Page.t :tel %></th>
         </tr>
       </thead>
       <tbody>

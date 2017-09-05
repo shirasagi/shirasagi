@@ -31,9 +31,10 @@ class Ads::Banner
   end
 
   private
-    def validate_link_url
-      return if link_url.blank?
 
-      errors.add :link_url, :invalid if link_url == '#'
-    end
+  def validate_link_url
+    return if link_url.blank?
+
+    errors.add :link_url, :invalid if link_url == '#'
+  end
 end

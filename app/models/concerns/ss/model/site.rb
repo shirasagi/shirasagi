@@ -114,8 +114,8 @@ module SS::Model::Site
 
     def https_options
       [
-        [I18n.t("views.options.state.enabled"), "enabled"],
-        [I18n.t("views.options.state.disabled"), "disabled"],
+        [I18n.t("ss.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"],
       ]
     end
 
@@ -127,17 +127,18 @@ module SS::Model::Site
     end
 
     private
-      def validate_domains
-        self.domains = domains.uniq
-        self.domains_with_subdir = []
-        domains.each do |domain|
-          self.domains_with_subdir << (subdir.present? ? "#{domain}/#{subdir}" : domain)
-        end
 
-        if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
-          errors.add :domains_with_subdir, :duplicate
-        end
+    def validate_domains
+      self.domains = domains.uniq
+      self.domains_with_subdir = []
+      domains.each do |domain|
+        self.domains_with_subdir << (subdir.present? ? "#{domain}/#{subdir}" : domain)
       end
+
+      if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
+        errors.add :domains_with_subdir, :duplicate
+      end
+    end
 
     class << self
       def root
@@ -173,18 +174,18 @@ module SS::Model::Site
   end
 
   module ClassMethods
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
 
-        if params[:name].present?
-          criteria = criteria.search_text params[:name]
-        end
-        if params[:keyword].present?
-          criteria = criteria.keyword_in params[:keyword], :host, :name
-        end
-        criteria
+      if params[:name].present?
+        criteria = criteria.search_text params[:name]
       end
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :host, :name
+      end
+      criteria
+    end
   end
 
 end

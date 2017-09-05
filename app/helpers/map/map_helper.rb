@@ -158,7 +158,7 @@ module Map::MapHelper
     h << %(<div class="maker-info" data-id="#{item.id}">)
     h << %(<p class="name">#{item.name}</p>)
     h << %(<p class="address">#{item.address}</p>)
-    h << %(<p class="show">#{link_to :show, item.url}</p>)
+    h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
     h << %(</div>)
 
     h.join("\n")

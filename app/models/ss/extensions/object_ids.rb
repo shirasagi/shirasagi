@@ -13,8 +13,8 @@ class SS::Extensions::ObjectIds < Array
       when self.class then object.mongoize
       when String then []
       when Array
-        ids = object.reject {|m| m.blank? }.uniq.map {|m| m =~ /[a-z]/ ? m.to_s : m.to_i }
-        #ids = object.reject {|m| m.blank? }.uniq.map {|m| BSON::ObjectId.from_string(m) }
+        ids = object.reject { |m| m.blank? }.uniq.map { |m| m =~ /[a-z]/ ? m.to_s : m.to_i }
+        # ids = object.reject {|m| m.blank? }.uniq.map {|m| BSON::ObjectId.from_string(m) }
         self.new(ids).mongoize
       else
         object

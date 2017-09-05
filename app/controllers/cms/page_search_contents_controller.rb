@@ -9,12 +9,13 @@ class Cms::PageSearchContentsController < ApplicationController
   before_action -> { @list_head_search = true }, only: :show
 
   private
-    def set_crumbs
-      set_item
-      @crumbs << [ @item.name, action: :show ]
-    end
 
-    def fix_params
-      { cur_site: @cur_site, cur_user: @cur_user }
-    end
+  def set_crumbs
+    set_item
+    @crumbs << [ @item.name, action: :show ]
+  end
+
+  def fix_params
+    { cur_site: @cur_site, cur_user: @cur_user }
+  end
 end

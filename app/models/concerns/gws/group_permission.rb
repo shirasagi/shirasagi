@@ -74,17 +74,18 @@ module Gws::GroupPermission
   end
 
   private
-    def set_groups_hash
-      self.groups_hash = groups.map { |m| [m.id, m.name] }.to_h
-    end
 
-    def set_users_hash
-      self.users_hash = users.map { |m| [m.id, m.long_name] }.to_h
-    end
+  def set_groups_hash
+    self.groups_hash = groups.map { |m| [m.id, m.name] }.to_h
+  end
 
-    def set_custom_groups_hash
-      self.custom_groups_hash = custom_groups.map { |m| [m.id, m.name] }.to_h
-    end
+  def set_users_hash
+    self.users_hash = users.map { |m| [m.id, m.long_name] }.to_h
+  end
+
+  def set_custom_groups_hash
+    self.custom_groups_hash = custom_groups.map { |m| [m.id, m.name] }.to_h
+  end
 
   module ClassMethods
     # @param [String] action
@@ -117,8 +118,9 @@ module Gws::GroupPermission
     end
 
     private
-      def permission_include_custom_groups
-        class_variable_set(:@@_permission_include_custom_groups, true)
-      end
+
+    def permission_include_custom_groups
+      class_variable_set(:@@_permission_include_custom_groups, true)
+    end
   end
 end

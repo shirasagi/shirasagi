@@ -7,7 +7,7 @@
 
   <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
   <dd>
-    <%= link_to :input, '#', onclick: '$("#article-pages-form-dd-input").toggle(); $(this).hide(); return false;' %>
+    <%= link_to t('ss.links.input'), '#', onclick: '$("#article-pages-form-dd-input").toggle(); $(this).hide(); return false;' %>
     <%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename", style: "display: none" %>
   </dd>
 
@@ -15,8 +15,13 @@
   <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
 
   <% if @item.respond_to?(:body_parts) && Cms::BodyLayout.site(@cur_site).present? %>
-    <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
-    <dd><%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " " %></dd>
+    <% if Cms::BodyLayout.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
+      <dd><%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " " %></dd>
+    <% elsif @item.body_layout %>
+      <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
+      <dd><%= @item.body_layout.name %><%= f.hidden_field :body_layout_id %></dd>
+    <% end %>
   <% end %>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>

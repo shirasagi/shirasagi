@@ -11,15 +11,15 @@ module SS::ZipFileImport
 
   module ClassMethods
     def import_from_zip(file, bindings = {})
-      require 'zipruby'
-      Zip::Archive.open(file) do |ar|
-        ar.each do |f|
+      require 'zip'
+      Zip::File.open(file) do |archive|
+        archive.each do |entry|
           uploaded_file = ::Fs::UploadedFile.new("ss_file")
           begin
             uploaded_file.binmode
-            uploaded_file.write(f.read)
+            uploaded_file.write(entry.get_input_stream.read)
             uploaded_file.rewind
-            uploaded_file.original_filename = f.name
+            uploaded_file.original_filename = entry.name
             uploaded_file.content_type = 'text/csv'
 
             temp_file = SS::TempFile.new
@@ -36,21 +36,22 @@ module SS::ZipFileImport
   end
 
   private
-    def import_file
-      # sub class must override this method
-      raise NotImplementedError
-    end
 
-    def open_csv_table(opts = {})
-      if Fs.mode == :file
-        table = ::CSV.read(@cur_file.path, opts)
+  def import_file
+    # sub class must override this method
+    raise NotImplementedError
+  end
+
+  def open_csv_table(opts = {})
+    if Fs.mode == :file
+      table = ::CSV.read(@cur_file.path, opts)
+      yield table
+    else
+      Tempfile.create('csv') do |file|
+        ::File.binwrite(file.path, ::Fs.binread(@cur_file.path))
+        table = ::CSV.read(file.path, opts)
         yield table
-      else
-        Tempfile.create('csv') do |file|
-          ::File.binwrite(file.path, ::Fs.binread(@cur_file.path))
-          table = ::CSV.read(file.path, opts)
-          yield table
-        end
       end
     end
+  end
 end

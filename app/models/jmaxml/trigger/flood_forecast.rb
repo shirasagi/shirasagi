@@ -23,15 +23,16 @@ class Jmaxml::Trigger::FloodForecast < Jmaxml::Trigger::Base
   end
 
   private
-    def extract_area_codes(site, xmldoc)
-      area_codes = []
-      REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="指定河川洪水予報"]/Item/Stations/Station').each do |station|
-        area_code = REXML::XPath.first(station, 'Code[@type="水位観測所"]/text()').to_s.strip
-        region = target_regions.site(site).where(code: area_code).first
-        next if region.blank?
 
-        area_codes << area_code
-      end
-      area_codes.sort
+  def extract_area_codes(site, xmldoc)
+    area_codes = []
+    REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="指定河川洪水予報"]/Item/Stations/Station').each do |station|
+      area_code = REXML::XPath.first(station, 'Code[@type="水位観測所"]/text()').to_s.strip
+      region = target_regions.site(site).where(code: area_code).first
+      next if region.blank?
+
+      area_codes << area_code
     end
+    area_codes.sort
+  end
 end

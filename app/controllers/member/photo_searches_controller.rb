@@ -7,11 +7,12 @@ class Member::PhotoSearchesController < ApplicationController
   navi_view "cms/node/main/navi"
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
 
-    def pre_params
-      { route: "member/photo_search" }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
+
+  def pre_params
+    { route: "member/photo_search" }
+  end
 end

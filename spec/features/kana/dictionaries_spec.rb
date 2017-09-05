@@ -66,7 +66,7 @@ describe "kana_dictionaries" do
           expect(current_path).to eq build_confirmation_path
 
           within("footer.send") do
-            click_button I18n.t("kana.views.button.build_kana_dictionary")
+            click_button I18n.t("kana.buttons.build_kana_dictionary")
             expect(status_code).to eq 200
             expect(current_path).to eq index_path
           end
@@ -106,7 +106,7 @@ describe "kana_dictionaries" do
           expect(current_path).to eq build_confirmation_path
 
           within("footer.send") do
-            click_button I18n.t("kana.views.button.build_kana_dictionary")
+            click_button I18n.t("kana.buttons.build_kana_dictionary")
             expect(status_code).to eq 400
             expect(current_path).to eq build_path
           end

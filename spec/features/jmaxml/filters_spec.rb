@@ -25,16 +25,16 @@ describe "jmaxml/filters", dbscope: :example do
       #
       visit show_path
       click_on I18n.t('jmaxml.manage_filter')
-      click_on I18n.t('views.links.new')
+      click_on I18n.t('ss.links.new')
 
       within 'form' do
         fill_in 'item[name]', with: name1
         select trigger.name, from: 'item_trigger_ids_0'
         select action1.name, from: 'item_action_ids_0'
         select action2.name, from: 'item_action_ids_1'
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       node.reload
       expect(node.filters.count).to eq 1
@@ -50,13 +50,13 @@ describe "jmaxml/filters", dbscope: :example do
       visit show_path
       click_on I18n.t('jmaxml.manage_filter')
       click_on name1
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
 
       within 'form' do
         fill_in 'item[name]', with: name2
-        click_on I18n.t('views.button.save')
+        click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       node.reload
       expect(node.filters.count).to eq 1
@@ -72,12 +72,12 @@ describe "jmaxml/filters", dbscope: :example do
       visit show_path
       click_on I18n.t('jmaxml.manage_filter')
       click_on name2
-      click_on I18n.t('views.links.delete')
+      click_on I18n.t('ss.links.delete')
 
       within 'form' do
-        click_on I18n.t('views.button.delete')
+        click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       node.reload
       expect(node.filters.count).to eq 0

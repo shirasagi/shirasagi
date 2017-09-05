@@ -40,7 +40,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
   end
 
   context "when pc site is accessed" do
-    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/"}
+    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
     it do
       visit index_url
@@ -124,7 +124,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
   end
 
   context "when mobile site is accessed" do
-    let(:index_url) { ::URI.parse "http://#{site.domain}#{site.mobile_location}/#{node.filename}/"}
+    let(:index_url) { ::URI.parse "http://#{site.domain}#{site.mobile_location}/#{node.filename}/" }
 
     it do
       visit index_url
@@ -191,7 +191,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
   end
 
   context "when input non-email to email field" do
-    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/"}
+    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
     it do
       visit index_url

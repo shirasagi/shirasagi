@@ -158,8 +158,8 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map(&:name)).to eq expected_names
       expect(users.map(&:email)).to eq expected_emails
       expect(users.map(&:uid)).to eq expected_uids
-      expect(users.map{|u| u.groups.map(&:name)}).to eq expected_groups
-      expect(users.map{|u| u.cms_roles.order_by(name: 1).map(&:name)}).to eq expected_cms_roles
+      expect(users.map{ |u| u.groups.map(&:name) }).to eq expected_groups
+      expect(users.map{ |u| u.cms_roles.order_by(name: 1).map(&:name) }).to eq expected_cms_roles
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
     end
   end
@@ -207,8 +207,8 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map(&:name)).to eq expected_names
       expect(users.map(&:email)).to eq expected_emails
       expect(users.map(&:uid)).to eq expected_uids
-      expect(users.map{|u| u.groups.map(&:name)}).to match_array expected_groups
-      expect(users.map{|u| u.cms_roles.order_by(name: 1).map(&:name)}).to eq expected_cms_roles
+      expect(users.map{ |u| u.groups.map(&:name) }).to match_array expected_groups
+      expect(users.map{ |u| u.cms_roles.order_by(name: 1).map(&:name) }).to eq expected_cms_roles
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
 
       user1 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user1").first
@@ -261,10 +261,10 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(page).to have_css(".list-item .title", text: user_name)
 
       click_on user_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[account_expiration_date]", with: account_expiration_date.strftime("%Y/%m/%d %H:%M")
-      click_on I18n.t("views.button.save")
+      click_on I18n.t("ss.buttons.save")
 
       test_user.reload
       expect(test_user.account_expiration_date).to eq account_expiration_date
@@ -272,16 +272,16 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit index_path
       expect(page).to have_no_css(".list-item .title", text: user_name)
 
-      select I18n.t("views.options.state.all"), from: "s[state]"
-      click_on I18n.t('views.button.search')
+      select I18n.t("ss.options.state.all"), from: "s[state]"
+      click_on I18n.t('ss.buttons.search')
 
       expect(page).to have_css(".list-item .title", text: user_name)
 
       click_on user_name
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[kana]", with: kana
-      click_on I18n.t("views.button.save")
+      click_on I18n.t("ss.buttons.save")
 
       test_user.reload
       expect(test_user.kana).to eq kana
@@ -307,10 +307,10 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       click_on user_name
       expect(page).to have_css("#addon-basic dd", text: group1.name)
-      click_on I18n.t("views.links.edit")
+      click_on I18n.t("ss.links.edit")
 
       fill_in "item[kana]", with: kana
-      click_on I18n.t("views.button.save")
+      click_on I18n.t("ss.buttons.save")
 
       test_user.reload
       expect(test_user.kana).to eq kana

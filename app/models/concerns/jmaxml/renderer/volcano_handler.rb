@@ -10,19 +10,20 @@ module Jmaxml::Renderer::VolcanoHandler
   end
 
   private
-    def template_variable_handler_volcano_headline(*_)
-      volcano_info_content_volcano_headline
-    end
 
-    def template_variable_handler_volcano_activity(*_)
-      volcano_info_content_volcano_activity
-    end
+  def template_variable_handler_volcano_headline(*_)
+    volcano_info_content_volcano_headline
+  end
 
-    def template_variable_handler_volcano_prevention(*_)
-      volcano_info_content_volcano_prevention
-    end
+  def template_variable_handler_volcano_activity(*_)
+    volcano_info_content_volcano_activity
+  end
 
-    def template_variable_handler_appendix(*_)
-      volcano_info_content_appendix
-    end
+  def template_variable_handler_volcano_prevention(*_)
+    volcano_info_content_volcano_prevention
+  end
+
+  def template_variable_handler_appendix(*_)
+    volcano_info_content_appendix
+  end
 end

@@ -12,10 +12,10 @@ module Article::Addon
       id_list.each do |id|
         name_list = []
         filename_str = []
-        filename_array = Cms::Node.where(_id: id).map(&:filename).first.split(/\//)
+        filename_array = Cms::Node.where(_id: id).pluck(:filename).first.split(/\//)
         filename_array.each do |filename|
           filename_str << filename
-          name_list << Cms::Node.where(filename: filename_str.join("/")).map(&:name).first
+          name_list << Cms::Node.where(filename: filename_str.join("/")).pluck(:name).first
         end
         ct_list << name_list.join("/")
       end
@@ -25,14 +25,14 @@ module Article::Addon
     module ClassMethods
       def csv_headers
         %w(
-          filename name index_name layout order
+          filename name index_name layout body_layout_id order
           keywords description summary_html
-          html
+          html body_part
           categories
           event_name event_dates
           related_pages
           parent_crumb
-          contact_state contact_group contact_charge contact_tel contact_fax contact_email
+          contact_state contact_group contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
           released release_date close_date
           groups permission_level
           state
@@ -49,57 +49,59 @@ module Article::Addon
       end
 
       def csv_line(item)
-        line = []
+        [
+          # basic
+          item.basename,
+          item.name,
+          item.index_name,
+          Cms::Layout.where(_id: item.layout_id).pluck(:name).first,
+          Cms::BodyLayout.where(_id: item.body_layout_id).pluck(:name).first,
+          item.order,
 
-        # basic
-        line << item.basename
-        line << item.name
-        line << item.index_name
-        line << Cms::Layout.where(_id: item.layout_id).map(&:name).first
-        line << item.order
+          # meta
+          item.keywords,
+          item.description,
+          item.summary_html,
 
-        # meta
-        line << item.keywords
-        line << item.description
-        line << item.summary_html
+          # body
+          item.html,
+          item.body_parts.map{ |body| body.gsub("\t", '    ') }.join("\t"),
 
-        # body
-        line << item.html
+          # category
+          item.category_name_tree.join("\n"),
 
-        # category
-        line << item.category_name_tree.join("\n")
+          # event
+          item.event_name,
+          item.event_dates,
 
-        # event
-        line << item.event_name
-        line << item.event_dates
+          # related pages
+          item.related_pages.pluck(:filename).join("\n"),
 
-        # related pages
-        line << item.related_pages.pluck(:filename).join("\n")
+          # crumb
+          item.parent_crumb_urls,
 
-        # crumb
-        line << item.parent_crumb_urls
+          # contact
+          item.label(:contact_state),
+          item.contact_group.try(:name),
+          item.contact_charge,
+          item.contact_tel,
+          item.contact_fax,
+          item.contact_email,
+          item.contact_link_url,
+          item.contact_link_name,
 
-        # contact
-        line << item.label(:contact_state)
-        line << item.contact_group.try(:name)
-        line << item.contact_charge
-        line << item.contact_tel
-        line << item.contact_fax
-        line << item.contact_email
+          # released
+          item.released.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.release_date.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.close_date.try(:strftime, "%Y/%m/%d %H:%M"),
 
-        # released
-        line << item.released.try(:strftime, "%Y/%m/%d %H:%M")
-        line << item.release_date.try(:strftime, "%Y/%m/%d %H:%M")
-        line << item.close_date.try(:strftime, "%Y/%m/%d %H:%M")
+          # groups
+          item.groups.pluck(:name).join("\n"),
+          item.permission_level,
 
-        # groups
-        line << item.groups.pluck(:name).join("\n")
-        line << item.permission_level
-
-        # state
-        line << item.label(:state)
-
-        line
+          # state
+          item.label(:state)
+        ]
       end
     end
   end

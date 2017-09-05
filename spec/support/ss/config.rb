@@ -13,8 +13,9 @@ module SS::Config
     end
 
     private
-      def build_config(hash)
-        hash.is_a?(OpenStruct) ? hash.freeze : OpenStruct.new(hash).freeze
-      end
+
+    def build_config(hash)
+      hash.is_a?(OpenStruct) ? hash.freeze : OpenStruct.new(hash).freeze
+    end
   end
 end

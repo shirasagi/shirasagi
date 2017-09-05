@@ -13,15 +13,15 @@ module Kana::Convertor
     def kana_html(site, html)
       return html unless @@mecab
 
-      html = html.gsub("\u00A0", " ")
+      html = html.tr("\u00A0", " ")
 
       text = html.gsub(/[\r\n\t]/, " ")
       tags = %w(head ruby script style)
-      text.gsub!(/<!\[CDATA\[.*?\]\]>/m) {|m| mpad(m) }
-      text.gsub!(/<!--.*?-->/m) {|m| mpad(m) }
-      tags.each {|t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) {|m| mpad(m) } }
-      text.gsub!(/<.*?>/m) {|m| mpad(m) }
-      text.gsub!(/\\u003c.*?\\u003e/m) {|m| mpad(m) } #<>
+      text.gsub!(/<!\[CDATA\[.*?\]\]>/m) { |m| mpad(m) }
+      text.gsub!(/<!--.*?-->/m) { |m| mpad(m) }
+      tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
+      text.gsub!(/<.*?>/m) { |m| mpad(m) }
+      text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
 
       byte = html.bytes
@@ -56,20 +56,21 @@ module Kana::Convertor
     end
 
     private
-      def mpad(str)
-        str.gsub(/[^ -~]/, "   ")
-      end
 
-      def katakana_to_yomi(str, format)
-        case format
-        when "katakana"
-          str
-        when "romaji"
-          require "romaji"
-          Romaji.kana2romaji(str)
-        else #hiragana
-          str.tr("ァ-ン", "ぁ-ん")
-        end
+    def mpad(str)
+      str.gsub(/[^ -~]/, "   ")
+    end
+
+    def katakana_to_yomi(str, format)
+      case format
+      when "katakana"
+        str
+      when "romaji"
+        require "romaji"
+        Romaji.kana2romaji(str)
+      else # hiragana
+        str.tr("ァ-ン", "ぁ-ん")
       end
+    end
   end
 end

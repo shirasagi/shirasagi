@@ -92,25 +92,26 @@ class Rdf::Vocab
   end
 
   private
-    def normalize_uri
-      self.uri = self.class.normalize_uri(self.uri)
-    end
 
-    def validate_prefix
-      return if prefix.blank?
-      errors.add :prefix, :reserved_prefix if prefix == "endemic_vocab"
-    end
+  def normalize_uri
+    self.uri = self.class.normalize_uri(self.uri)
+  end
 
-    def validate_uri
-      errors.add :uri, :invalid if /[\/#]$/ !~ self.uri
-    end
+  def validate_prefix
+    return if prefix.blank?
+    errors.add :prefix, :reserved_prefix if prefix == "endemic_vocab"
+  end
 
-    def validate_owner
-      return if owner.blank?
-      errors.add :owner, :invalid unless OWNERS.include?(owner)
-    end
+  def validate_uri
+    errors.add :uri, :invalid if /[\/#]$/ !~ self.uri
+  end
 
-    def validate_labels
-      errors.add :labels, :blank if labels.blank? || labels.preferred_value.blank?
-    end
+  def validate_owner
+    return if owner.blank?
+    errors.add :owner, :invalid unless OWNERS.include?(owner)
+  end
+
+  def validate_labels
+    errors.add :labels, :blank if labels.blank? || labels.preferred_value.blank?
+  end
 end

@@ -3,14 +3,17 @@ ja:
     server: サーバー情報
     import: インポート
     result: 同期結果
+    links:
+      ldap: LDAP
+      sync: 同期する
+    buttons:
+      import: インポート
+      sync: 同期
+    confirm:
+      import: インポートしてよろしいですか？
+      import_description: LDAPサーバから情報をインポートし、中間情報を作成します。
+      sync: 同期してよろしいですか？
     views:
-      button:
-        import: インポート
-        sync: 同期
-      confirm:
-        import: インポートしてよろしいですか？
-        import_description: LDAPサーバから情報をインポートし、中間情報を作成します。
-        sync: 同期してよろしいですか？
       import/sync:
         header: 同期結果
         group: グループ
@@ -72,9 +75,6 @@ ja:
       index: インポート
     ldap/result:
       index: 同期結果
-    links:
-      ldap: LDAP
-      sync: 同期する
 
   tooltip:
     ldap/addon/group:

@@ -4,13 +4,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   skip_before_action :verify_authenticity_token, if: ->{ !protect_csrf? }
 
-  #before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
+  # before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
-
-  def t(key, opts = {})
-    opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
-    I18n.t key, opts.merge(default: key.to_s.humanize)
-  end
 
   def new_agent(controller_name)
     agent = SS::Agent.new controller_name
@@ -59,49 +54,50 @@ class ApplicationController < ActionController::Base
   end
 
   private
-    def request_host
-      request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+
+  def request_host
+    request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+  end
+
+  def request_path
+    request.env["REQUEST_PATH"] || request.path
+  end
+
+  def protect_csrf?
+    SS.config.env.protect_csrf
+  end
+
+  def remote_addr
+    request.env["HTTP_X_REAL_IP"] || request.remote_addr
+  end
+
+  def browser
+    require "browser"
+    Browser.new(request.user_agent, accept_language: request.accept_language)
+  end
+
+  # Accepts the request for Cross-Origin Resource Sharing.
+  # @return boolean
+  def accept_cors_request
+    if request.env["HTTP_ORIGIN"].present?
+      headers["Access-Control-Allow-Origin"] = request.env["HTTP_ORIGIN"]
+      headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+      headers["Access-Control-Allow-Headers"] = "Content-Type, Origin, Accept"
     end
 
-    def request_path
-      request.env["REQUEST_PATH"] || request.path
+    if request.request_method == "OPTIONS"
+      headers["Access-Control-Max-Age"] = "86400"
+      headers["Content-Length"] = "0"
+      headers["Content-Type"] = "text/plain"
+      render plain: ""
     end
+  end
 
-    def protect_csrf?
-      SS.config.env.protect_csrf
+  def set_cache_buster
+    if request.xhr?
+      response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+      response.headers["Pragma"] = "no-cache"
+      response.headers["Expires"] = "-1"
     end
-
-    def remote_addr
-      request.env["HTTP_X_REAL_IP"] || request.remote_addr
-    end
-
-    def browser
-      require "browser"
-      Browser.new(request.user_agent, accept_language: request.accept_language)
-    end
-
-    # Accepts the request for Cross-Origin Resource Sharing.
-    # @return boolean
-    def accept_cors_request
-      if request.env["HTTP_ORIGIN"].present?
-        headers["Access-Control-Allow-Origin"] = request.env["HTTP_ORIGIN"]
-        headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        headers["Access-Control-Allow-Headers"] = "Content-Type, Origin, Accept"
-      end
-
-      if request.request_method == "OPTIONS"
-        headers["Access-Control-Max-Age"] = "86400"
-        headers["Content-Length"] = "0"
-        headers["Content-Type"] = "text/plain"
-        render plain: ""
-      end
-    end
-
-    def set_cache_buster
-      if request.xhr?
-        response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "-1"
-      end
-    end
+  end
 end

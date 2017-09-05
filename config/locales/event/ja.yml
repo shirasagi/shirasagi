@@ -13,6 +13,7 @@ ja:
     filter_all: 全て
     date_range_delimiter: ～
     keyword: 検索キーワード
+    no_event: イベントはありません
     dates:
       setting: 検索期間設定
     category:
@@ -37,6 +38,9 @@ ja:
         order: 指定順
         event_dates: イベント日
         unfinished_event_dates: イベント日（未終了）
+        event_dates_today: イベント日(今日)
+        event_dates_tomorrow: イベント日(明日)
+        event_dates_week: イベント日(一週間以内)
 
     apis:
       repeat_dates:

@@ -59,13 +59,14 @@ class Voice::File
     end
 
     private
-      def test_root
-        prefix = "voice"
-        timestamp = Time.zone.now.strftime("%Y%m%d")
-        tmp = ::File.join(Dir.tmpdir, "#{prefix}-#{timestamp}")
-        ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
-        tmp
-      end
+
+    def test_root
+      prefix = "voice"
+      timestamp = Time.zone.now.strftime("%Y%m%d")
+      tmp = ::File.join(Dir.tmpdir, "#{prefix}-#{timestamp}")
+      ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
+      tmp
+    end
   end
 
   def file
@@ -142,25 +143,26 @@ class Voice::File
   end
 
   private
-    def set_has_error
-      self.has_error = self.error.blank? ? 0 : 1
-    end
 
-    def delete_file
-      file = self.file
-      Fs.rm_rf(file) if exists?
-    end
+  def set_has_error
+    self.has_error = self.error.blank? ? 0 : 1
+  end
 
-    def guard_from_exception(message, klass = Mongoid::Errors::MongoidError)
-      begin
-        yield
-      rescue klass => e
-        Rails.logger.error("#{message}: #{e.class} (#{e.message}):\n  #{e.backtrace.join('\n  ')}")
-      end
-    end
+  def delete_file
+    file = self.file
+    Fs.rm_rf(file) if exists?
+  end
 
-    def fresh?(margin)
-      elapsed = Time.zone.now - Fs.stat(file).mtime
-      elapsed < margin
+  def guard_from_exception(message, klass = Mongoid::Errors::MongoidError)
+    begin
+      yield
+    rescue klass => e
+      Rails.logger.error("#{message}: #{e.class} (#{e.message}):\n  #{e.backtrace.join('\n  ')}")
     end
+  end
+
+  def fresh?(margin)
+    elapsed = Time.zone.now - Fs.stat(file).mtime
+    elapsed < margin
+  end
 end

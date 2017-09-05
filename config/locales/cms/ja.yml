@@ -1,83 +1,64 @@
 ja:
   cms:
+    add_max_file_size: 最大ファイルサイズを設定する
     alert: 警告
+    all_contents: 全コンテンツ一覧出力
+    body_layout: 本文レイアウト
+    calendar_view: カレンダー表示
+    check_links: リンクチェック実行結果
+    check_links_nodes: フォルダー
+    check_links_pages: ページ
     config: 設定
-    site_config: サイト設定
-    site_info: サイト情報
     content: コンテンツ
+    convert_to_cms_page: 固定ページに変換する
+    editor_template: テンプレート
+    file: 共有ファイル
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
-    import_page: ページ取り込み
-    import_node: フォルダー取り込み
-    import_page_index: 取り込みページ
-    import_node_index: 取り込みフォルダー
-    all_contents: 全コンテンツ一覧出力
-    all_content:
-      description: サイト内の全コンテンツを出力します。
-    import_page: 取り込みページ
     group: グループ
+    import_node: フォルダー取り込み
+    import_node_index: 取り込みフォルダー
+    import_page: 取り込みページ
+    import_page_index: 取り込みページ
+    important_notice: 重要なお知らせ
     layout: レイアウト
-    body_layout: 本文レイアウト
     link_check: リンクチェック
-    check_links: リンクチェック実行結果
-    check_links_pages: ページ
-    check_links_nodes: フォルダー
-    source_cleaner: ソースクリーニング
-    word_dictionary: 単語置換辞書
-    preview: プレビュー
+    list_view: リスト表示
+    max_file_size: 最大ファイルサイズ
+    max_file_size_setting: 最大ファイルサイズ設定
     member: メンバー
+    mobile_size_check: 携帯データサイズチェック
     modules: モジュール
     node: フォルダー
     node_config: フォルダー設定
+    notice: お知らせ
     page: 固定ページ
+    page_search: ページ検索
     part: パーツ
-    file: 共有ファイル
+    preview: プレビュー
+    preview_mobile_page: 携帯プレビュー
     preview_page: プレビュー
     preview_pc_page: PCプレビュー
-    preview_mobile_page: 携帯プレビュー
     preview_site: サイトプレビュー
     role: 権限/ロール
     root_menu: メインメニュー
     search_contents: サイト内検索
-    search_contents_pages: ページ検索
+    search_contents_condition: "検索条件: %{condition}"
+    search_contents_count: "%{count} 件の検索結果"
     search_contents_html: HTML検索と置換
+    search_contents_pages: ページ検索
     site: サイト
+    site_config: サイト設定
+    site_info: サイト情報
     site_menu: サイトメニュー
+    source_cleaner: ソースクリーニング
+    source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
-    mobile_size_check: 携帯データサイズチェック
+    theme_template: Theme切り替え
     user: ユーザー
     view_page: 公開画面
     view_site: サイト確認
-    editor_template: テンプレート
-    theme_template: Theme切り替え
-    source_cleaner_template: ソースクリーニング
-    convert_to_cms_page: 固定ページに変換する
-    notice: お知らせ
-    important_notice: 重要なお知らせ
-    page_search: ページ検索
-    roles:
-      admin: 管理者
-      user: 編集者
-    button:
-      add_crumb: パンくずを追加する
-    confirm:
-      delete_item: 項目を削除してよろしいですか？
-      close: 非公開状態で保存しようとしています
-      check_contains_urls: このページへのリンクを確認する。
-      contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
-      contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
-    messages:
-      import: インポートを開始しました
-    search_contents_condition: "検索条件: %{condition}"
-    search_contents_count: "%{count} 件の検索結果"
-    postal_code: 郵便番号
-    import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
-    postal_code_normalize_city: 以下に掲載がない場合
-    calendar_view: カレンダー表示
-    list_view: リスト表示
-    max_file_size: 最大ファイルサイズ
-    max_file_size_setting: 最大ファイルサイズ設定
-    add_max_file_size: 最大ファイルサイズを設定する
+    word_dictionary: 単語置換辞書
 
     adobe_reader:
       remark:
@@ -86,6 +67,19 @@ ja:
         - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
         - </div>
         - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
+    all_content:
+      description: サイト内の全コンテンツを出力します。
+    roles:
+      admin: 管理者
+      user: 編集者
+    buttons:
+      add_crumb: パンくずを追加する
+    confirm:
+      delete_item: 項目を削除してよろしいですか？
+      close: 非公開状態で保存しようとしています
+      check_contains_urls: このページへのリンクを確認する。
+      contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
+      contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -158,6 +152,9 @@ ja:
         order: 指定順
       parent_crumb:
         blank: カテゴリーから選択する
+      node_target:
+        current: このフォルダーから
+        descendant: このフォルダー以下から
       notice_severity:
         normal: ""
         high: 重要なお知らせ
@@ -239,7 +236,9 @@ ja:
     edit_cms_roles: 権限/ロールの管理
     edit_cms_members: メンバーの管理
     edit_cms_editor_templates: テンプレートの管理
-    #edit_cms_body_layouts: 本文レイアウトの管理
+    read_cms_body_layouts: 本文レイアウトの閲覧
+    edit_cms_body_layouts: 本文レイアウトの編集
+    delete_cms_body_layouts: 本文レイアウトの削除
     use_cms_tools: 運用ツールの利用
     use_cms_editor_extensions: エディターの高度な利用
     read_other_cms_nodes: フォルダーの閲覧（全て）
@@ -305,6 +304,7 @@ ja:
       cms/html: HTML
       cms/body: 本文
       cms/body_part: 本文パーツ
+      cms/editor_setting: エディタ設定
       cms/file: ファイル
       cms/release: 公開設定
       cms/release_plan: 公開予約
@@ -367,7 +367,6 @@ ja:
       cms/file: 共有ファイル
       cms/notice: お知らせ
       cms/page_search: ページ検索
-      cms/postal_code: 郵便番号
       cms/task: タスク
       cms/import_page: 取り込みページ
       cms/word_dictionary: かな辞書
@@ -392,6 +391,7 @@ ja:
         route: ページ属性
         summary_html: Summary
         html: 本文
+        body_part: 本文パーツ
         files: ファイル
         category_ids: カテゴリー
         categories: カテゴリー
@@ -458,6 +458,10 @@ ja:
         keywords: キーワード
         description: 概要
         summary_html: サマリー
+      cms/addon/editor_setting:
+        color_button: 文字色変更ボタン
+        editor_css_path: スタイルシートパス
+        syntax_check: アクセシビリティチェック
       cms/addon/release:
         released: 公開日時
       cms/addon/release_plan:
@@ -637,7 +641,6 @@ ja:
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       replace_word: 使用が好ましくない単語が含まれています。
       replace_word_validation: に使用が好ましくない単語が含まれています。
-      not_found_postal_code: 郵便番号が見つかりません
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -1181,6 +1184,14 @@ ja:
         - 検索結果のページ並び順を選択します。
         - 指定が無い場合、ファイル名での並び順となります。
 
+    cms/addon/editor_setting:
+      color_button:
+        - 文字色変更ボタンの表示を設定します。
+      editor_css_path:
+        - エディタ用スタイルシートのパスを設定します。
+      syntax_check:
+        - アクセシビリティチェックの有効無効を設定します。
+
     cms/addon/source_cleaner:
       target:
         - クリーニングの対象を設定します。
@@ -1322,7 +1333,5 @@ ja:
       cms/page/remove_job: ページ削除
       cms/page/update_job: ページ更新
       cms/check_links_job: リンクチェック
-      cms/postal_code/import_job: 郵便番号インポート
-      cms/postal_code/official_csv_import_job: 日本郵便CSVインポート
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み

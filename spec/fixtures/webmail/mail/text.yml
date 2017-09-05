@@ -1,0 +1,37 @@
+UID: 1
+FLAGS:
+  - !ruby/symbol Seen
+  - !ruby/symbol Flagged
+  - !ruby/symbol Draft
+INTERNALDATE: 2017-04-01 15:55:36 +0900
+RFC822: RFC822
+RFC822.SIZE: 1024
+RFC822.HEADER: |
+  Return-Path: <admin@example.jp>
+  Message-ID: <message_id@localhost>
+  In-Reply-To: <in_reply_to@localhost>
+  References: <reference@localhost>
+  Sender: <admin@example.jp>
+  From: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+  To: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+  Cc: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+  Bcc: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+  Reply-to: =?ISO-2022-JP?B?GyRCJTUlJCVINElNfTxUGyhC?= <admin@example.jp>
+  Subject: =?iso-2022-jp?B?GyRCN29MPhsoQg==?=
+  Date: Fri, 28 Apr 2017 16:14:29 +0900
+  MIME-Version: 1.0
+  Content-Type: text/plain;
+    format=flowed;
+    charset="iso-2022-jp";
+    reply-type=original
+  Content-Transfer-Encoding: 7bit
+BODYSTRUCTURE:
+  media_type: TEXT
+  subtype: PLAIN
+  param:
+    CHARSET: iso-2022-jp
+  encoding: 7BIT
+BODY:
+  1: |
+    message
+    message

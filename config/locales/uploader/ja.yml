@@ -3,11 +3,11 @@ ja:
     files: ファイル
     new_directory: 新規フォルダー名
     new_files: アップロード
-
-  views:
     links:
       new_directory: 新規フォルダー
-      upload: アップロード
+    notice:
+      overwrite: ファイルは上書き保存されます。
+      invalid_ext: ファイル拡張子が異なるため、上書き保存されません。
 
   modules:
     uploader: アップローダー
@@ -28,6 +28,7 @@ ja:
         size: ファイルサイズ
         text: 内容
         image: 画像
+        state: 上書き保存
 
   tooltip:
     cms/addon/file:

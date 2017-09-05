@@ -11,7 +11,7 @@
   </div>
 
   <footer class="send">
-    <%= f.submit t("member.button.register"), class: 'btn-danger delete' %>
-    <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= f.submit t("member.buttons.register"), class: 'btn-danger delete' %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>

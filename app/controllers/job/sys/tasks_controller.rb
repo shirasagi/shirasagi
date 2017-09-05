@@ -7,7 +7,8 @@ class Job::Sys::TasksController < ApplicationController
   navi_view "job/sys/main/navi"
 
   private
-    def filter_permission
-      raise "403" unless SS::User.allowed?(:edit, @cur_user)
-    end
+
+  def filter_permission
+    raise "403" unless SS::User.allowed?(:edit, @cur_user)
+  end
 end

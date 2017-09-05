@@ -24,7 +24,7 @@ class Cms::MobileSizeCheckController < ApplicationController
       next unless thumb
       if file.thumb.size > mobile_size
         result[:errors] << I18n.t(
-         "errors.messages.too_bigfile",
+          "errors.messages.too_bigfile",
           filename: file.name,
           filesize: view_context.number_to_human_size(file.thumb.size),
           mobile_size: view_context.number_to_human_size(mobile_size)

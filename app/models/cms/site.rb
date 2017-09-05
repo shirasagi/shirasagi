@@ -10,7 +10,9 @@ class Cms::Site
   include SS::Addon::TwitterSetting
   include SS::Addon::SiteAutoPostSetting
   include SS::Addon::FileSetting
+  include SS::Addon::ApproveSetting
   include Opendata::Addon::SiteSetting
+  include SS::Addon::EditorSetting
 
   set_permission_name "cms_sites", :edit
 end

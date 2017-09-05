@@ -27,6 +27,7 @@ class Webmail::Apis::ImapController < ApplicationController
 
   def quota
     item = @imap.quota.reload
+    return render(json: {}) if item.nil?
 
     resp = {
       label: item.label,

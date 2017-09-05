@@ -153,7 +153,7 @@ class @SS
 
   @ajaxDelete:(elem, params = {}) ->
     $(elem).click (e) ->
-      return false if !confirm("<%= I18n.t "views.confirm.delete" %>")
+      return false if !confirm("<%= I18n.t "ss.confirm.delete" %>")
       self = $(this)
       defaults = {
         type: "DELETE",

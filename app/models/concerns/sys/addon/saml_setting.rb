@@ -40,24 +40,24 @@ module Sys::Addon
 
     private
 
-      def load_metadata
-        idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
-        settings = idp_metadata_parser.parse(in_metadata.read)
-        self.entity_id = settings.idp_entity_id
-        self.name_id_format = settings.name_identifier_format
-        self.sso_url = settings.idp_sso_target_url
-        self.slo_url = settings.idp_slo_target_url
-        self.x509_cert = SS::Crypt.encrypt(Base64.decode64(settings.idp_cert))
-      end
+    def load_metadata
+      idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
+      settings = idp_metadata_parser.parse(in_metadata.read)
+      self.entity_id = settings.idp_entity_id
+      self.name_id_format = settings.name_identifier_format
+      self.sso_url = settings.idp_sso_target_url
+      self.slo_url = settings.idp_slo_target_url
+      self.x509_cert = SS::Crypt.encrypt(Base64.decode64(settings.idp_cert))
+    end
 
-      def set_x509_cert
-        self.x509_cert = SS::Crypt.encrypt(in_x509_cert.read)
-      end
+    def set_x509_cert
+      self.x509_cert = SS::Crypt.encrypt(in_x509_cert.read)
+    end
 
-      def validate_x509_cert
-        fingerprint
-      rescue
-        errors.add :x509_cert, :invalid
-      end
+    def validate_x509_cert
+      fingerprint
+    rescue
+      errors.add :x509_cert, :invalid
+    end
   end
 end

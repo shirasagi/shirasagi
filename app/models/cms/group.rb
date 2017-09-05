@@ -19,10 +19,11 @@ class Cms::Group
   end
 
   private
-    def validate_sites
-      return if cur_site.group_ids.index(id)
 
-      cond = cur_site.groups.map { |group| name =~ /^#{Regexp.escape(group.name)}\// }.compact
-      self.errors.add :name, :not_a_child_group if cond.blank?
-    end
+  def validate_sites
+    return if cur_site.group_ids.index(id)
+
+    cond = cur_site.groups.map { |group| name =~ /^#{Regexp.escape(group.name)}\// }.compact
+    self.errors.add :name, :not_a_child_group if cond.blank?
+  end
 end

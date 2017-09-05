@@ -7,4 +7,6 @@ class SS::Site
   include SS::Addon::TwitterSetting
   include SS::Addon::SiteAutoPostSetting
   include SS::Addon::FileSetting
+  include SS::Addon::ApproveSetting
+  include SS::Addon::EditorSetting
 end

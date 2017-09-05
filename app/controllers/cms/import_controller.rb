@@ -11,11 +11,13 @@ class Cms::ImportController < ApplicationController
     return if request.get?
 
     @item = @model.new get_params
-    render_create @item.save_with_import, location: { action: :import }, render: { file: :import }, notice: t("views.notice.import")
+    render_create @item.save_with_import, location: { action: :import },
+      render: { file: :import }, notice: t("ss.notice.started_import")
   end
 
   private
-    def fix_params
-      { cur_site: @cur_site, cur_user: @cur_user }
-    end
+
+  def fix_params
+    { cur_site: @cur_site, cur_user: @cur_user }
+  end
 end

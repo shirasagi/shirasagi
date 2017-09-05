@@ -25,15 +25,15 @@ class Member::Photo
 
   def listable_state_options
     [
-      [I18n.t('views.options.state.public'), 'public'],
-      [I18n.t('views.options.state.closed'), 'closed'],
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
     ]
   end
 
   def slideable_state_options
     [
-      [I18n.t('views.options.state.public'), 'public'],
-      [I18n.t('views.options.state.closed'), 'closed'],
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
     ]
   end
 
@@ -43,13 +43,14 @@ class Member::Photo
   end
 
   private
-    def validate_filename
-      (@basename && @basename.blank?) ? nil : super
-    end
 
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
+  def validate_filename
+    (@basename && @basename.blank?) ? nil : super
+  end
+
+  def seq_filename
+    self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+  end
 
   class << self
     def contents_search(params = {})

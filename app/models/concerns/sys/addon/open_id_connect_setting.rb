@@ -82,28 +82,29 @@ module Sys::Addon
     end
 
     private
-      def load_discovery_file
-        discovery = JSON.parse(in_discovery_file.read)
-        self.issuer = discovery['issuer']
-        self.auth_url = discovery['authorization_endpoint']
-        self.token_url = discovery['token_endpoint']
-        self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
-        self.scopes = discovery['scopes_supported']
-        self.claims = default_claims - discovery['claims_supported']
-        self.jwks_uri = discovery['jwks_uri']
-      end
 
-      def set_client_secret
-        self.client_secret = SS::Crypt.encrypt(in_client_secret)
-      end
+    def load_discovery_file
+      discovery = JSON.parse(in_discovery_file.read)
+      self.issuer = discovery['issuer']
+      self.auth_url = discovery['authorization_endpoint']
+      self.token_url = discovery['token_endpoint']
+      self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
+      self.scopes = discovery['scopes_supported']
+      self.claims = default_claims - discovery['claims_supported']
+      self.jwks_uri = discovery['jwks_uri']
+    end
 
-      def reset_client_secret
-        self.client_secret = nil
-      end
+    def set_client_secret
+      self.client_secret = SS::Crypt.encrypt(in_client_secret)
+    end
 
-      def json?(content_type)
-        return false if content_type.blank?
-        content_type.include?('application/json') || content_type.include?('text/json')
-      end
+    def reset_client_secret
+      self.client_secret = nil
+    end
+
+    def json?(content_type)
+      return false if content_type.blank?
+      content_type.include?('application/json') || content_type.include?('text/json')
+    end
   end
 end

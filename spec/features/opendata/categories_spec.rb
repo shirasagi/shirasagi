@@ -31,14 +31,14 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # create
       visit node_nodes_path(site, parent_node)
-      click_on I18n.t('views.links.new')
-      click_on I18n.t('views.links.change')
+      click_on I18n.t('ss.links.new')
+      click_on I18n.t('ss.links.change')
       within 'article.mod-opendata' do
         click_on I18n.t('cms.nodes.opendata/category')
       end
       fill_in 'item[name]', with: name
       fill_in 'item[basename]', with: basename
-      click_on I18n.t('views.button.save')
+      click_on I18n.t('ss.buttons.save')
 
       expect(Opendata::Node::Category.count).to eq 1
       Opendata::Node::Category.first.tap do |node|
@@ -48,14 +48,14 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       end
 
       # read
-      click_on I18n.t('views.links.back_to_index')
+      click_on I18n.t('ss.links.back_to_index')
       click_on name
       click_on I18n.t('cms.node_config')
 
       # update
-      click_on I18n.t('views.links.edit')
+      click_on I18n.t('ss.links.edit')
       fill_in 'item[keywords]', with: keywords.join(' ')
-      click_on I18n.t('views.button.save')
+      click_on I18n.t('ss.buttons.save')
       Opendata::Node::Category.first.tap do |node|
         expect(node.name).to eq name
         expect(node.filename).to end_with basename
@@ -64,8 +64,8 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # delete
       click_on I18n.t('cms.node_config')
-      click_on I18n.t('views.links.delete')
-      click_on I18n.t('views.button.delete')
+      click_on I18n.t('ss.links.delete')
+      click_on I18n.t('ss.buttons.delete')
       expect(Opendata::Node::Category.count).to eq 0
     end
   end

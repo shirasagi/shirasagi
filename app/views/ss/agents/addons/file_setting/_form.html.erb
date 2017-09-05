@@ -13,4 +13,7 @@
       <%= f.number_field :in_file_resizing_height, value: @item.file_resizing[1] %>
     </label>
   </dd>
+
+  <dt><%= @model.t :multibyte_filename_state %><%= @model.tt :multibyte_filename_state %></dt>
+  <dd><%= f.select :multibyte_filename_state, @item.multibyte_filename_state_options, include_blank: true %></dd>
 </dl>

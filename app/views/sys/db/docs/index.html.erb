@@ -59,7 +59,7 @@ table.index td.array    { color: #a00; }
     <tbody>
       <% @items.each do |item| %>
       <tr>
-        <td><%= link_to :show, { action: :show, id: item["_id"] } %></td>
+        <td><%= link_to t('ss.links.show'), { action: :show, id: item["_id"] } %></td>
         <% @fields.each do |field| %>
         <td class="<%= v2c(item, field) %>"><%= v2s(item, field) %></td>
         <% end %>

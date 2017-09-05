@@ -92,10 +92,11 @@ class Ezine::Entry
   end
 
   private
-    def unique_token
-      loop do
-        t = Digest::SHA1.hexdigest SecureRandom.uuid
-        return t if Ezine::Entry.where(verification_token: t).first.nil?
-      end
+
+  def unique_token
+    loop do
+      t = Digest::SHA1.hexdigest SecureRandom.uuid
+      return t if Ezine::Entry.where(verification_token: t).first.nil?
     end
+  end
 end

@@ -54,6 +54,9 @@ module Sys::SiteCopy::CmsNodes
       copy_inquiry_columns(src_node, dest_node)
     when "ezine/page"
       copy_ezine_columns(src_node, dest_node)
+    when "rss/weather_xml"
+      @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーをスキップします。")
+      return
     end
 
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーしました。")
@@ -69,12 +72,12 @@ module Sys::SiteCopy::CmsNodes
     ::FileUtils.mkdir_p dest_dir_path
     Dir.entries(src_dir_path).each do |filename|
       next if %w(. ..).include?(filename)
-      next unless File.exist?(src_dir_path + '/' + filename)
-      next if Dir.exist?(src_dir_path + '/' + filename)
+      src_file_path = src_dir_path + '/' + filename
+      next unless File.exist?(src_file_path)
 
-      Rails.logger.debug("#{src_dir_path + '/' + filename}: ファイルをコピーします。")
-      ::FileUtils.cp(src_dir_path + '/' + filename, dest_dir_path)
-      Rails.logger.info("#{src_dir_path + '/' + filename}: ファイルをコピーしました。")
+      Rails.logger.debug("#{src_file_path}: ファイルをコピーします。")
+      ::FileUtils.cp_r(src_file_path, dest_dir_path)
+      Rails.logger.info("#{src_file_path}: ファイルをコピーしました。")
     end
   end
 

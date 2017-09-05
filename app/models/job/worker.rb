@@ -50,22 +50,23 @@ module Job::Worker
     end
 
     private
-      def get_pool(entity)
-        pool = entity['pool'] rescue nil
-        pool.present? ? pool : default_pool
-      end
 
-      def default_pool
-        self.job_options.key?('pool') ? self.job_options['pool'] : 'default'
-      end
+    def get_pool(entity)
+      pool = entity['pool'] rescue nil
+      pool.present? ? pool : default_pool
+    end
 
-      def check_size_limit(pool)
-        max_size = Job::Service::Config.max_size_of(pool)
-        return if max_size <= 0
+    def default_pool
+      self.job_options.key?('pool') ? self.job_options['pool'] : 'default'
+    end
 
-        size = Job::Task.where(pool: pool).count
-        raise Job::SizeLimitExceededError, "size limit exceeded" if size >= max_size
-      end
+    def check_size_limit(pool)
+      max_size = Job::Service::Config.max_size_of(pool)
+      return if max_size <= 0
+
+      size = Job::Task.where(pool: pool).count
+      raise Job::SizeLimitExceededError, "size limit exceeded" if size >= max_size
+    end
   end
 end
 

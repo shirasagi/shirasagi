@@ -15,7 +15,7 @@ module Member::MypageHelper
   end
 
   def required_label
-    content_tag('span', t('views.required_field'), class: :required)
+    content_tag('span', t("ss.required_field"), class: :required)
   end
 
   def remarks(key, html_wrap = true, options = {})
@@ -28,7 +28,7 @@ module Member::MypageHelper
     return msg if msg.blank? || !html_wrap
     msg = [msg].flatten if msg.class != Array
     msg = msg.map { |d| I18n.interpolate(d, options) }
-    list = msg.map {|d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>"}
+    list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
 
     h = []
     h << %(<div class="remarks">)

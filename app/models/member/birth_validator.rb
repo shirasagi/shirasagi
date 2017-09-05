@@ -45,27 +45,28 @@ class Member::BirthValidator < ActiveModel::EachValidator
   end
 
   private
-    def find_by_era(era)
-      wareki = I18n.t("ss.wareki")[era.to_sym] rescue nil
-      return nil if wareki.blank?
-      min = Date.parse(wareki[:min])
-      max = Date.parse(wareki[:max])
 
-      [min, max]
-    end
+  def find_by_era(era)
+    wareki = I18n.t("ss.wareki")[era.to_sym] rescue nil
+    return nil if wareki.blank?
+    min = Date.parse(wareki[:min])
+    max = Date.parse(wareki[:max])
 
-    def include_year_range?(setting, year)
-      min, max = setting
-      1 <= year && (min.year + year - 1) <= max.year
-    end
+    [min, max]
+  end
 
-    def include_month_range?(setting, year, month)
-      min, max = setting
-      1 <= month && month <= 12 && Date.new(min.year + year - 1, month, 1) < max
-    end
+  def include_year_range?(setting, year)
+    min, max = setting
+    1 <= year && (min.year + year - 1) <= max.year
+  end
 
-    def include_day_range?(setting, year, month, day)
-      min, max = setting
-      1 <= day && day <= 31 && Date.new(min.year + year - 1, month, day) < max
-    end
+  def include_month_range?(setting, year, month)
+    min, max = setting
+    1 <= month && month <= 12 && Date.new(min.year + year - 1, month, 1) < max
+  end
+
+  def include_day_range?(setting, year, month, day)
+    min, max = setting
+    1 <= day && day <= 31 && Date.new(min.year + year - 1, month, day) < max
+  end
 end

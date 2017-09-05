@@ -27,7 +27,7 @@ class Webmail::Signature
   }
 
   def default_options
-    %w(enabled disabled).map { |m| [I18n.t("views.options.state.#{m}"), m] }
+    %w(enabled disabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
   end
 
   def default?
@@ -35,12 +35,13 @@ class Webmail::Signature
   end
 
   private
-    def check_default
-      self.class.user(user).
-        where(default: 'enabled').
-        where(:id.ne => id).
-        update_all(default: 'disabled')
-    end
+
+  def check_default
+    self.class.user(user).
+      where(default: 'enabled').
+      where(:id.ne => id).
+      update_all(default: 'disabled')
+  end
 
   class << self
     def default_sign(user)

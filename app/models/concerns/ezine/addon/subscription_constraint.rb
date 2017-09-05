@@ -12,26 +12,28 @@ module Ezine::Addon
     end
 
     private
-      def update_members_subscription
-        return unless subscription_requried?
 
-        Cms::Member.site(site).each do |member|
-          subscription_ids = member.subscription_ids
-          subscription_ids ||= []
-          subscription_ids << self.id
-          subscription_ids = subscription_ids.uniq
-          member.subscription_ids = subscription_ids
-          member.save!
-        end
+    def update_members_subscription
+      return unless subscription_requried?
+
+      Cms::Member.site(site).each do |member|
+        subscription_ids = member.subscription_ids
+        subscription_ids ||= []
+        subscription_ids << self.id
+        subscription_ids = subscription_ids.uniq
+        member.subscription_ids = subscription_ids
+        member.save!
       end
+    end
 
     public
-      def subscription_constraint_options
-        %w(optional required).map { |m| [ I18n.t("inquiry.options.required.#{m}"), m ] }.to_a
-      end
 
-      def subscription_requried?
-        subscription_constraint == 'required'
-      end
+    def subscription_constraint_options
+      %w(optional required).map { |m| [ I18n.t("inquiry.options.required.#{m}"), m ] }.to_a
+    end
+
+    def subscription_requried?
+      subscription_constraint == 'required'
+    end
   end
 end

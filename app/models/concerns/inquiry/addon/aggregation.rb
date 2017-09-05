@@ -66,31 +66,32 @@ module Inquiry::Addon
     end
 
     private
-      def build_match_stage(params = {})
-        match = {}
 
-        match["site_id"] = params[:site].id if params[:site].present?
+    def build_match_stage(params = {})
+      match = {}
 
-        match["node_id"] = params[:node].id if params[:node].present?
+      match["site_id"] = params[:site].id if params[:site].present?
 
-        match["source_url"] = /^#{Regexp.escape(params[:url])}/ if params[:url].present?
-        match["source_url"] ||= { "$exists" => true, "$ne" => nil } if params[:feedback]
+      match["node_id"] = params[:node].id if params[:node].present?
 
-        if params[:year].present?
-          year = params[:year].to_i
-          if params[:month].present?
-            month = params[:month].to_i
-            sdate = Date.new year, month, 1
-            edate = sdate + 1.month
-          else
-            sdate = Date.new year, 1, 1
-            edate = sdate + 1.year
-          end
+      match["source_url"] = /^#{Regexp.escape(params[:url])}/ if params[:url].present?
+      match["source_url"] ||= { "$exists" => true, "$ne" => nil } if params[:feedback]
 
-          match["updated"] = { "$gte" => sdate, "$lt" => edate }
+      if params[:year].present?
+        year = params[:year].to_i
+        if params[:month].present?
+          month = params[:month].to_i
+          sdate = Date.new year, month, 1
+          edate = sdate + 1.month
+        else
+          sdate = Date.new year, 1, 1
+          edate = sdate + 1.year
         end
 
-        match
+        match["updated"] = { "$gte" => sdate, "$lt" => edate }
       end
+
+      match
+    end
   end
 end

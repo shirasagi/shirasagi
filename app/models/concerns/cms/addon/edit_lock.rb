@@ -70,8 +70,9 @@ module Cms::Addon::EditLock
   end
 
   private
-    def validate_lock
-      errors.add :base, :locked, user: lock_owner.long_name if locked? && !lock_owned?
-      errors.blank?
-    end
+
+  def validate_lock
+    errors.add :base, :locked, user: lock_owner.long_name if locked? && !lock_owned?
+    errors.blank?
+  end
 end

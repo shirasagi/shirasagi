@@ -11,9 +11,9 @@ module SS::Addon
 
     def kana_format_options
       [
-        [I18n.t("views.options.kana_format.hiragana"), "hiragana"],
-        [I18n.t("views.options.kana_format.katakana"), "katakana"],
-        [I18n.t("views.options.kana_format.romaji"), "romaji"],
+        [I18n.t("ss.options.kana_format.hiragana"), "hiragana"],
+        [I18n.t("ss.options.kana_format.katakana"), "katakana"],
+        [I18n.t("ss.options.kana_format.romaji"), "romaji"],
       ]
     end
   end

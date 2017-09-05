@@ -1,0 +1,10 @@
+# workflow
+
+production: &production
+  disable_my_group: false
+
+test:
+  <<: *production
+
+development:
+  <<: *production

@@ -9,20 +9,22 @@ class Sns::UserProfilesController < ApplicationController
   menu_view nil
 
   private
-    def set_crumbs
-      @crumbs << [:"sns.profile", params.include?(:user) ? sns_user_profile_path : sns_cur_user_profile_path]
-    end
 
-    def set_item
-      @item = @sns_user
-    end
+  def set_crumbs
+    @crumbs << [t("sns.profile"), params.include?(:user) ? sns_user_profile_path : sns_cur_user_profile_path]
+  end
+
+  def set_item
+    @item = @sns_user
+  end
 
   public
-    def show
-      render
-    end
 
-    #def new, create, edit, update, destroy;
-    #  raise '404'
-    #end
+  def show
+    render
+  end
+
+  # def new, create, edit, update, destroy;
+  #   raise '404'
+  # end
 end

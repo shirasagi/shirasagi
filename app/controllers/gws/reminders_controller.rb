@@ -5,15 +5,17 @@ class Gws::RemindersController < ApplicationController
   model Gws::Reminder
 
   private
-    def set_crumbs
-      @crumbs << [:"mongoid.models.gws/reminder", action: :index]
-    end
+
+  def set_crumbs
+    @crumbs << [t("mongoid.models.gws/reminder"), action: :index]
+  end
 
   public
-    def index
-      @items = @model.site(@cur_site).
-        user(@cur_user).
-        search(params[:s]).
-        page(params[:page]).per(50)
-    end
+
+  def index
+    @items = @model.site(@cur_site).
+      user(@cur_user).
+      search(params[:s]).
+      page(params[:page]).per(50)
+  end
 end

@@ -20,7 +20,7 @@ class Jmaxml::TsunamiRegion
 
   index({ site_id: 1, code: 1 }, { unique: true })
 
-  scope :and_enabled, -> { self.in(state: [nil, 'enabled'])}
+  scope :and_enabled, -> { self.in(state: [nil, 'enabled']) }
 
   class << self
     def search(params = {})
@@ -39,7 +39,7 @@ class Jmaxml::TsunamiRegion
 
   def state_options
     %w(enabled disabled).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
 end

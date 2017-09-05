@@ -25,7 +25,7 @@
         <% if @item.source_site.present? %>
           <tr data-id="<%= @item.source_site_id %>">
             <td><%= f.hidden_field "item_ids[]", value: @item.source_site_id %> <%= @item.source_site.name %></td>
-            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
       </tbody>

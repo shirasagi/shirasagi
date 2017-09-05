@@ -9,6 +9,7 @@ module Faq::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Event::Addon::PageList
     include Category::Addon::Setting

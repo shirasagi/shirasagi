@@ -92,18 +92,19 @@ module Cms::Addon::OpendataRef::Resource
   end
 
   private
-    def clone_opendata_resources
-      ids = yield
 
-      hash = self.opendata_resources
-      return if hash.blank?
+  def clone_opendata_resources
+    ids = yield
 
-      hash = hash.dup
-      hash.keys.map(&:to_i).each do |k|
-        next if ids[k].blank?
-        hash[ids[k].to_s] = hash.delete(k.to_s)
-      end
+    hash = self.opendata_resources
+    return if hash.blank?
 
-      self.opendata_resources = hash
+    hash = hash.dup
+    hash.keys.map(&:to_i).each do |k|
+      next if ids[k].blank?
+      hash[ids[k].to_s] = hash.delete(k.to_s)
     end
+
+    self.opendata_resources = hash
+  end
 end

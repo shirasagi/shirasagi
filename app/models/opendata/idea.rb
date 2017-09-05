@@ -91,47 +91,47 @@ class Opendata::Idea
   end
 
   private
-    def validate_filename
-      @basename.blank? ? nil : super
-    end
 
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
+  def validate_filename
+    @basename.blank? ? nil : super
+  end
+
+  def seq_filename
+    self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+  end
 
   class << self
-    public
-      def to_idea_path(path)
-        suffix = %w(/point.html /point/members.html /comment/show.html /comment/add.html /comment/delete.html
-                    /dataset/show.html /app/show.html).find { |suffix| path.end_with? suffix }
-        return path if suffix.blank?
-        path[0..(path.length - suffix.length - 1)] + '.html'
-      end
+    def to_idea_path(path)
+      suffix = %w(/point.html /point/members.html /comment/show.html /comment/add.html /comment/delete.html
+                  /dataset/show.html /app/show.html).find { |suffix| path.end_with? suffix }
+      return path if suffix.blank?
+      path[0..(path.length - suffix.length - 1)] + '.html'
+    end
 
-      def sort_options
-        [
-          [I18n.t("opendata.sort_options.released"), "released"],
-          [I18n.t("opendata.sort_options.popular"), "popular"],
-          [I18n.t("opendata.sort_options.attention"), "attention"]
-        ]
-      end
+    def sort_options
+      [
+        [I18n.t("opendata.sort_options.released"), "released"],
+        [I18n.t("opendata.sort_options.popular"), "popular"],
+        [I18n.t("opendata.sort_options.attention"), "attention"]
+      ]
+    end
 
-      def sort_hash(sort)
-        case sort
-        when "released"
-          { released: -1, _id: -1 }
-        when "popular"
-          { point: -1, _id: -1 }
-        when "attention"
-          { commented: -1, _id: -1 }
-        else
-          return { released: -1 } if sort.blank?
-          { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
-        end
+    def sort_hash(sort)
+      case sort
+      when "released"
+        { released: -1, _id: -1 }
+      when "popular"
+        { point: -1, _id: -1 }
+      when "attention"
+        { commented: -1, _id: -1 }
+      else
+        return { released: -1 } if sort.blank?
+        { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
       end
+    end
 
-      def aggregate_array(name, opts = {})
-        Opendata::Common.get_aggregate_array(self, name, opts)
-      end
+    def aggregate_array(name, opts = {})
+      Opendata::Common.get_aggregate_array(self, name, opts)
+    end
   end
 end

@@ -6,7 +6,7 @@
 #   egg pack mod-name -v 1.0
 
 require "fileutils"
-require 'zipruby'
+require 'zip'
 
 class Frypan
 
@@ -80,7 +80,7 @@ class Frypan
         return puts "    Module exists: #{dir}/#{mod}" if File.exists?("#{dir}/#{mod}")
       end
 
-      Zip::Archive.open(zip_file) do |ar|
+      Zip::File.open(zip_file) do |ar|
         entry_names = ar.map do |f|
           path = f.name.sub(/^#{name}\//, '')
           if f.directory?
@@ -88,7 +88,7 @@ class Frypan
             FileUtils.mkdir_p(path) if !File.exists?(path)
           else
             puts "    create  #{path}"
-            File.binwrite(path, f.read)
+            File.binwrite(path, f.get_input_stream.read)
           end
         end
       end
@@ -112,17 +112,17 @@ class Frypan
       puts ""
 
       Dir.chdir(root)
-      Zip::Archive.open("#{zip_file}.tmp", Zip::CREATE) do |ar|
+      Zip::File.open("#{zip_file}.tmp", Zip::File::CREATE) do |ar|
         TARGETS.each do |dir|
-          ar.add_dir "#{name}/#{dir}/#{mod}" if File.exists? "#{dir}/#{mod}"
+          ar.mkdir "#{name}/#{dir}/#{mod}" if File.exists? "#{dir}/#{mod}"
           Dir.glob("#{dir}/#{mod}{/**/*,.*}") do |f|
             if File.directory?(f)
               puts "     fetch  #{f}"
-              ar.add_dir "#{name}/#{f}"
+              ar.mkdir "#{name}/#{f}"
               next
             end
             puts "     fetch  #{f}"
-            ar.add_file "#{name}/#{f}", f
+            ar.add "#{name}/#{f}", f
           end
         end
       end

@@ -1,11 +1,11 @@
 class Cms::BodyLayout
   include Cms::Model::Layout
   include Cms::Addon::BodyLayoutHtml
-  include Cms::Addon::GroupPermission
+  include Cms::SitePermission
   include History::Addon::Backup
 
   store_in collection: "cms_body_layouts"
-  set_permission_name "cms_layouts"
+  set_permission_name "cms_body_layouts"
 
   field :parts, type: SS::Extensions::Words, default: ""
 
@@ -16,15 +16,16 @@ class Cms::BodyLayout
   permit_params :parts
 
   private
-    def validate_filename
-      self.filename = "/"
-    end
 
-    def set_depth
-      self.depth = 1
-    end
+  def validate_filename
+    self.filename = "/"
+  end
 
-    def seq_filename
-      self.filename = "#{id}.layout.html"
-    end
+  def set_depth
+    self.depth = 1
+  end
+
+  def seq_filename
+    self.filename = "#{id}.layout.html"
+  end
 end

@@ -39,8 +39,6 @@
 //= require map/openlayers/member/photo/form
 //= require webmail/lib/mail
 
-<% environment.context_class.instance_eval { include ApplicationHelper } %>
-
 ##
 #  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 ##
@@ -179,7 +177,7 @@ class @SS
 
   @ajaxDelete:(elem, params = {}) ->
     $(elem).click (e) ->
-      return false if !confirm("<%= t "views.confirm.delete" %>")
+      return false if !confirm("<%= I18n.t "ss.confirm.delete" %>")
       self = $(this)
       defaults = {
         type: "DELETE",
@@ -209,7 +207,7 @@ class @SS
   @confirmUnloading: ->
     $("input[type=text],textarea,select").change ->
       $(window).on "beforeunload", ->
-        return "<%= t('views.confirm.unload') %>"
+        return "<%= I18n.t 'ss.confirm.unload' %>"
     $("input[type=submit]").click ->
       $(window).off "beforeunload"
 
@@ -220,3 +218,30 @@ class @SS
       i = Math.floor(Math.random() * chars.length)
       pass += chars.charAt(i)
     return pass
+
+  @fileCheck: ->
+    $('#item_files').change ->
+      form = $(this).val()
+      unless form
+        $(".js-uploader-alert-message").hide()
+        return
+      uri = location.pathname.split("/")
+      $.ajax
+        type: "get"
+        url: uri.join("/")
+        dataType: "json"
+        data:
+          do: "check"
+          item_files: form
+        success: (data) ->
+          if data["message"]
+            $(".js-uploader-alert-message").html(data["message"])
+            $(".js-uploader-alert-message").show()
+          else
+            $(".js-uploader-alert-message").hide()
+        error: (xhr, status) ->
+          try
+            errors = $.parseJSON(xhr.responseText)
+            alert(["== Error =="].concat(errors).join("\n"));
+          catch
+            alert(["== Error =="].concat(xhr["statusText"]).join("\n"));

@@ -23,12 +23,13 @@ module Cms::Reference
     end
 
     private
-      def set_node_id
-        self.node_id ||= @cur_node.id
-      end
 
-      def presence_node_id
-        true
-      end
+    def set_node_id
+      self.node_id ||= @cur_node.id
+    end
+
+    def presence_node_id
+      true
+    end
   end
 end

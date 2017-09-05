@@ -45,7 +45,7 @@ module SS::Model::File
       [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
-      ].map { |x, y| [I18n.t("views.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
+      ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
     end
 
     def search(params)
@@ -67,6 +67,7 @@ module SS::Model::File
   end
 
   def public_path
+    return if site.blank?
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -75,7 +76,8 @@ module SS::Model::File
   end
 
   def full_url
-    "#{site.full_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    return if site.blank?
+    "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
   def thumb_url
@@ -92,7 +94,7 @@ module SS::Model::File
 
     item = klass.new
     item.instance_variable_set(:@new_record, nil) unless new_record?
-    instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
+    instance_variables.each { |k| item.instance_variable_set k, instance_variable_get(k) }
     item
   end
 
@@ -102,7 +104,7 @@ module SS::Model::File
   end
 
   def state_options
-    [[I18n.t('views.options.state.public'), 'public']]
+    [[I18n.t('ss.options.state.public'), 'public']]
   end
 
   def name
@@ -159,59 +161,63 @@ module SS::Model::File
   end
 
   private
-    def set_filename
-      self.name         = in_file.original_filename if self[:name].blank?
-      self.filename     = in_file.original_filename if filename.blank?
-      self.size         = in_file.size
-      self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
+
+  def set_filename
+    self.name         = in_file.original_filename if self[:name].blank?
+    self.filename     = in_file.original_filename if filename.blank?
+    self.size         = in_file.size
+    self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
+  end
+
+  def validate_filename
+    if site && !site.multibyte_filename_state_enabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+      errors.add :in_file, :invalid_filename
     end
+    self.filename = SS::FilenameConvertor.convert(filename, id: id)
+  end
 
-    def validate_filename
-      self.filename = SS::FilenameConvertor.convert(filename, id: id)
-    end
+  def save_file
+    errors.add :in_file, :blank if new_record? && in_file.blank?
+    return false if errors.present?
+    return if in_file.blank?
 
-    def save_file
-      errors.add :in_file, :blank if new_record? && in_file.blank?
-      return false if errors.present?
-      return if in_file.blank?
-
-      if image?
-        list = Magick::ImageList.new
-        list.from_blob(in_file.read)
-        extract_geo_location(list)
-        list.each do |image|
-          case SS.config.env.image_exif_option
-          when "auto_orient"
-            image.auto_orient!
-          when "strip"
-            image.strip!
-          end
-
-          next unless resizing
-          width, height = resizing
-          image.resize_to_fit! width, height if image.columns > width || image.rows > height
+    if image?
+      list = Magick::ImageList.new
+      list.from_blob(in_file.read)
+      extract_geo_location(list)
+      list.each do |image|
+        case SS.config.env.image_exif_option
+        when "auto_orient"
+          image.auto_orient!
+        when "strip"
+          image.strip!
         end
-        binary = list.to_blob
-      else
-        binary = in_file.read
+
+        next unless resizing
+        width, height = resizing
+        image.resize_to_fit! width, height if image.columns > width || image.rows > height
       end
-      in_file.rewind
-
-      dir = ::File.dirname(path)
-      Fs.mkdir_p(dir) unless Fs.exists?(dir)
-      Fs.binwrite(path, binary)
-      self.size = binary.length
+      binary = list.to_blob
+    else
+      binary = in_file.read
     end
+    in_file.rewind
 
-    def remove_file
-      Fs.rm_rf(path)
-      remove_public_file
-    end
+    dir = ::File.dirname(path)
+    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.binwrite(path, binary)
+    self.size = binary.length
+  end
 
-    def rename_file
-      return unless @db_changes["filename"]
-      return unless @db_changes["filename"][0]
+  def remove_file
+    Fs.rm_rf(path)
+    remove_public_file
+  end
 
-      remove_public_file if site
-    end
+  def rename_file
+    return unless @db_changes["filename"]
+    return unless @db_changes["filename"][0]
+
+    remove_public_file if site
+  end
 end

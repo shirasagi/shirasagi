@@ -7,7 +7,7 @@
   <dt><%= @model.t :contact_group_id %><%= @model.tt :contact_group_id %></dt>
   <dd>
     <%= f.hidden_field "contact_group_id", value: "", class: "hidden-ids" %>
-    <%= link_to :"contact.search_groups.index", contact_search_groups_path, class: "ajax-box" %>
+    <%= link_to t("contact.search_groups.index"), contact_search_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -21,14 +21,14 @@
         <% if params[:action] =~ /new/ %>
           <tr data-id="<%= @cur_group.id %>">
             <td><%= f.hidden_field "contact_group_id", value: @cur_group.id %> <%= @cur_group.name %></td>
-            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% else %>
           <% group = SS::Group.find_by id: @item.contact_group_id rescue nil %>
           <% if group.present? %>
             <tr data-id="<%= @item.contact_group_id %>">
               <td><%= f.hidden_field "contact_group_id", value: @item.contact_group_id %> <%= group.name %></td>
-              <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
             </tr>
           <% end %>
         <% end %>
@@ -47,4 +47,10 @@
 
   <dt><%= @model.t :contact_email %><%= @model.tt :contact_email %></dt>
   <dd><%= f.text_field :contact_email, value: (params[:action] =~ /new/) ? @cur_group[:contact_email] : @item.contact_email %></dd>
+
+  <dt><%= @model.t :contact_link_url %><%= @model.tt :contact_link_url %></dt>
+  <dd><%= f.text_field :contact_link_url, value: (params[:action] =~ /new/) ? @cur_group[:contact_link_url] : @item.contact_link_url %></dd>
+
+  <dt><%= @model.t :contact_link_name %><%= @model.tt :contact_link_name %></dt>
+  <dd><%= f.text_field :contact_link_name, value: (params[:action] =~ /new/) ? @cur_group[:contact_link_name] : @item.contact_link_name %></dd>
 </dl>

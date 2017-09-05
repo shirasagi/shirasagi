@@ -120,31 +120,32 @@ class Sns::Message::Thread
   end
 
   private
-    def set_member_ids
-      ids = member_ids.map(&:to_i)
-      ids << user_id
-      ids = ids.uniq.compact
-      self.member_ids = ids
-      self.active_member_ids = ids
-    end
 
-    def validate_member_ids
-      errors.add :member_ids, :blank if member_ids.size < 2
-    end
+  def set_member_ids
+    ids = member_ids.map(&:to_i)
+    ids << user_id
+    ids = ids.uniq.compact
+    self.member_ids = ids
+    self.active_member_ids = ids
+  end
 
-    def set_members_type
-      self.members_type = (member_ids.size == 2) ? 'only' : 'many'
-    end
+  def validate_member_ids
+    errors.add :member_ids, :blank if member_ids.size < 2
+  end
 
-    def reset_unseen_member_ids
-      ids = active_member_ids
-      ids.delete(user_id)
-      self.unseen_member_ids = ids
-    end
+  def set_members_type
+    self.members_type = (member_ids.size == 2) ? 'only' : 'many'
+  end
 
-    def update_unseen_member_ids
-      dec_ids = member_ids_was - member_ids
-      return if dec_ids.blank?
-      self.unseen_member_ids = unseen_member_ids.reject { |id| dec_ids.include?(id) }
-    end
+  def reset_unseen_member_ids
+    ids = active_member_ids
+    ids.delete(user_id)
+    self.unseen_member_ids = ids
+  end
+
+  def update_unseen_member_ids
+    dec_ids = member_ids_was - member_ids
+    return if dec_ids.blank?
+    self.unseen_member_ids = unseen_member_ids.reject { |id| dec_ids.include?(id) }
+  end
 end

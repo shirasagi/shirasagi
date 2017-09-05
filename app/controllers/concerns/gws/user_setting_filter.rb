@@ -9,36 +9,38 @@ module Gws::UserSettingFilter
   end
 
   private
-    def set_item
-      @item = @cur_user
-    end
 
-    def set_crumbs
-      #@crumbs << [:"gws.setting", gws_settings_path]
-    end
+  def set_item
+    @item = @cur_user
+  end
 
-    def fix_params
-      {}
-    end
+  def set_crumbs
+    # @crumbs << [t("gws.setting"), gws_settings_path]
+  end
 
-    def permit_fields
-      [ in_schedule_tabs_group_ids: [],
-        in_schedule_tabs_group_ids_all: [],
-        in_schedule_tabs_custom_group_ids: [],
-        in_schedule_tabs_custom_group_ids_all: [] ]
-    end
+  def fix_params
+    {}
+  end
+
+  def permit_fields
+    [ in_schedule_tabs_group_ids: [],
+      in_schedule_tabs_group_ids_all: [],
+      in_schedule_tabs_custom_group_ids: [],
+      in_schedule_tabs_custom_group_ids_all: [] ]
+  end
 
   public
-    def show
-      render
-    end
 
-    def edit
-      render
-    end
+  def show
+    render
+  end
 
-    def update
-      @item.attributes = get_params
-      render_update @item.update
-    end
+  def edit
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    render_update @item.update
+  end
 end

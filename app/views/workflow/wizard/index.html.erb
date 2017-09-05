@@ -25,14 +25,23 @@ $ ->
 
 <% end %>
 
+<% if @ss_mode == :cms %>
+  <% route_options = Workflow::Route.site(@cur_site).route_options(@cur_user) %>
+<% else %>
+  <% route_options = Workflow::Route.route_options(@cur_user) %>
+<% end %>
+<% if route_options.present? %>
 <dl class="see">
   <dt><%= t("workflow.request") %><%= @model.tt :workflow_routes %></dt>
   <dd>
     <% if @ss_mode == :cms %>
-      <%= select_tag :workflow_route, options_for_select(Workflow::Route.site(@cur_site).route_options(@cur_user)) %>
+      <%= select_tag :workflow_route, options_for_select(route_options) %>
     <% else %>
-      <%= select_tag :workflow_route, options_for_select(Workflow::Route.route_options(@cur_user)) %>
+      <%= select_tag :workflow_route, options_for_select(route_options) %>
     <% end %>
-    <%= link_to t("workflow.button.select"), "#", class: "workflow-route-start cboxElement btn" %>
+    <%= link_to t("workflow.buttons.select"), "#", class: "workflow-route-start cboxElement btn" %>
   </dd>
 </dl>
+<% else %>
+<h1><%= t("workflow.empty_route_options") %></h1>
+<% end %>

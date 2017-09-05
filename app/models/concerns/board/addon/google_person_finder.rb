@@ -64,13 +64,14 @@ module Board::Addon
     end
 
     private
-      def post_gpf_after_save
-        return unless in_post_gpf_after_save == 'enable'
-        upload_to_gpf
-        true
-      rescue => e
-        Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        true
-      end
+
+    def post_gpf_after_save
+      return unless in_post_gpf_after_save == 'enable'
+      upload_to_gpf
+      true
+    rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      true
+    end
   end
 end

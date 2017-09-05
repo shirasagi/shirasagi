@@ -12,7 +12,7 @@ module Facility::Addon::OpendataAssoc
 
   def csv_assoc_options
     %w(disabled enabled).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
 
