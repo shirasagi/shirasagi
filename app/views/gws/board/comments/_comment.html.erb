@@ -27,7 +27,7 @@ if comment.allowed?(:delete, @cur_user, site: @cur_site)
 end
 
 %>
-<aside class="comment">
+<aside class="comment" id="post-<%= comment.id %>">
   <header class="<%= 'toggle-head' if recursion %>">
     <h2><%= comment.name %></h2>
     <nav class="meta">
