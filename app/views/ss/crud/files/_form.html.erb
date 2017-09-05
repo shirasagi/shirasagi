@@ -35,6 +35,31 @@
         <button type="button" class="btn btn-submit-crop" data-func="submit"><i class="material-icons">&#xE876;</i></button>
         <button type="button" class="btn btn-cancel-crop" data-func="cancel"><i class="material-icons">&#xE5CD;</i></button>
       </div>
+
+      <div class="btn-group">
+        <div class="input-group">
+          <%= select_tag('size', options_for_select(@model.resizing_options), include_blank: true) %>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <div class="input-group">
+          <label for="ss-image-edit-canvas-inspection-x">X</label>
+          <input name="x" id="ss-image-edit-canvas-inspection-x" type="text" readonly>
+        </div>
+        <div class="input-group">
+          <label for="ss-image-edit-canvas-inspection-y">Y</label>
+          <input name="y" id="ss-image-edit-canvas-inspection-y" type="text" readonly>
+        </div>
+        <div class="input-group">
+          <label for="ss-image-edit-canvas-inspection-width">W</label>
+          <input name="width" id="ss-image-edit-canvas-inspection-width" type="text" readonly>
+        </div>
+        <div class="input-group">
+          <label for="ss-image-edit-canvas-inspection-height">H</label>
+          <input name="height" id="ss-image-edit-canvas-inspection-height" type="text" readonly>
+        </div>
+      </div>
     </div>
     <img src="<%= @item.url %>" class="target" data-format="<%= @item.content_type %>">
     <%= f.hidden_field :in_data_url, value: nil %>
