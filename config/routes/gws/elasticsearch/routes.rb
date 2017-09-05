@@ -9,7 +9,8 @@ SS::Application.routes.draw do
   gws 'elasticsearch' do
     resource :setting, only: [:show, :edit, :update]
     namespace :search do
-      get '/' => redirect { |p, req| "#{req.path}/board" }, as: :main
+      get '/' => redirect { |p, req| "#{req.path}/all" }, as: :main
+      resource :all, only: [:show]
       resource :board, only: [:show]
       resource :mail, only: [:show]
       resource :message, only: [:show]
