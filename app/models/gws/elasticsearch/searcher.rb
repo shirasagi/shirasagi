@@ -23,7 +23,7 @@ class Gws::Elasticsearch::Searcher
   def search
     query = {}
     query[:bool] = {}
-    query[:bool][:must] = { match: { field_name => keyword } }
+    query[:bool][:must] = { query_string: { query: keyword, default_field: field_name, default_operator: 'AND' } }
     query[:bool][:filter] = and_public
     query[:bool][:filter] << and_readable
 
