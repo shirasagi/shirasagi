@@ -99,7 +99,7 @@ class @Webmail_Mail_List
           SS.notice(data.notice)
       return false
 
-    @renderMailDrop()
+    @renderDropEvents()
 
   @findCheckedUids: ->
     checked = $('.webmail-mails .list-item input:checkbox:checked').map ->
@@ -148,8 +148,8 @@ class @Webmail_Mail_List
             wrap.removeClass('on').addClass('off')
       return false
 
-  @renderMailDrop: ->
-    $('.webmail-mails.list-items li').draggable(
+  @renderDropEvents: ->
+    opts = {
       revert: "invalid",
       revertDuration: 50,
       zIndex: 99,
@@ -158,18 +158,27 @@ class @Webmail_Mail_List
       containment: "window"
       start: (e, ui)->
         $(".tap-menu").hide()
-    )
-    $(".webmail-navi-mailboxes .mail-droppable").droppable(
-      accept: ".webmail-mails.list-items li",
+    }
+    $('.webmail-mails.list-items .mail-draggable').draggable(opts)
+    $('.webmail-navi-mailboxes .mailbox-draggable').draggable(opts)
+    $(".webmail-navi-mailboxes .mailbox-droppable").droppable(
+      accept: ".mail-draggable,.mailbox-draggable",
       hoverClass: "droppable-hover",
       tolerance: "pointer",
       drop: (e, ui)->
         ele = e.target
-        dst = $(ele).attr("data-name")
-        uids = [ ui.draggable.attr("data-uid") ]
-        url = $(".webmail-mails-head .move-all").attr("data-href")
-        $(ui.draggable).hide()
-        Webmail_Mail_List.updateMails(url, ids: uids, dst: dst )
+        if ui.draggable.hasClass("mail-draggable")
+          dst = $(ele).attr("data-name")
+          uids = [ ui.draggable.attr("data-uid") ]
+          url = $(".webmail-mails-head .move-all").attr("data-href")
+          $(ui.draggable).hide()
+          Webmail_Mail_List.updateMails(url, ids: uids, dst: dst )
+        else
+          src = ui.draggable.attr("data-name")
+          dst = $(ele).attr("data-name") + "." + ui.draggable.attr("data-basename")
+          url = "/.webmail/mails/INBOX/rename_mailbox"
+          $(ui.draggable).hide()
+          Webmail_Mail_List.updateMailbox(url, src: src, dst: dst)
     )
 
   @updateMails: (url, opts = {})->
@@ -184,6 +193,20 @@ class @Webmail_Mail_List
     if opts['ids']
       for id in opts['ids']
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+    form.appendTo(document.body).submit()
+    return false
+
+  @updateMailbox: (url, opts = {})->
+    token = $('meta[name="csrf-token"]').attr('content')
+    form = $("<form/>", action: url, method: "post")
+    form.append($("<input/>", type: "hidden", name: "_method", value: "put" ))
+    form.append($("<input/>", type: "hidden", name: "authenticity_token", value: token ))
+    if opts['redirect']
+      form.append($("<input/>", type: "hidden", name: "redirect", value: opts['redirect'] ))
+    if opts['src']
+      form.append($("<input/>", type: "hidden", name: "src", value: opts['src'] ))
+    if opts['dst']
+      form.append($("<input/>", type: "hidden", name: "dst", value: opts['dst'] ))
     form.appendTo(document.body).submit()
     return false
 
