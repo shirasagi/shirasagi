@@ -1,19 +1,24 @@
 class Gws::Elasticsearch::Searcher
   include ActiveModel::Model
+  include SS::PermitParams
+
+  DEFAULT_FIELD_NAME = 'text_index'.freeze
 
   attr_accessor :cur_site, :cur_user
   attr_accessor :hosts, :index, :type, :field_name, :keyword
 
-  class << self
-    def search(site, user, type, keyword)
-      searcher = Gws::Elasticsearch::Searcher.new(
-       cur_site: site, cur_user: user,
-        hosts: site.elasticsearch_hosts, index: "g#{site.id}", type: type,
-        field_name: 'text_index', keyword: keyword
-      )
+  permit_params :keyword
 
-      searcher.search
-    end
+  def hosts
+    @hosts ||= cur_site.elasticsearch_hosts
+  end
+
+  def index
+    @index ||= "g#{cur_site.id}"
+  end
+
+  def field_name
+    @field_name ||= DEFAULT_FIELD_NAME
   end
 
   def client
@@ -27,7 +32,7 @@ class Gws::Elasticsearch::Searcher
     query[:bool][:filter] = and_public
     query[:bool][:filter] << and_readable
 
-    client.search(index: index, type: type, body: { query: query})
+    client.search(index: index, type: type, body: { query: query })
   end
 
   private
