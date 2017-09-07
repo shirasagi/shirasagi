@@ -37,6 +37,7 @@ module Gws::Elasticsearch::SearchFilter
     raise '404' unless @cur_site.elasticsearch_enabled?
 
     if @s.keyword.present?
+      @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
       @result = @s.search
     end
 
