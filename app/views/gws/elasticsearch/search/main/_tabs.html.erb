@@ -1,5 +1,11 @@
 <% render_tab = proc do |path, tab| %>
-  <%= link_to "#{path}?#{ { s: @s.to_h }.to_query }", class: [ tab, request.path.start_with?(path) ? 'current' : nil ] do %>
+  <%
+  if @s.keyword.present?
+    params = { s: { keyword: @s.keyword } }
+    params = "?#{params.to_query}"
+  end
+  %>
+  <%= link_to "#{path}#{params}", class: [ tab, request.path.start_with?(path) ? 'current' : nil ] do %>
     <span class="tab-name"><%= t("gws/elasticsearch.tabs.#{tab}") %></span>
   <% end %>
 <% end %>
