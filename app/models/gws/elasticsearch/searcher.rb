@@ -41,7 +41,9 @@ class Gws::Elasticsearch::Searcher
     query[:bool][:filter] = and_public
     query[:bool][:filter] << and_readable
 
-    client.search(index: index, type: type, from: from, size: size, body: { query: query })
+    search_params = { index: index, from: from, size: size, body: { query: query } }
+    search_params[:type] = type if type.present?
+    client.search(search_params)
   end
 
   private
