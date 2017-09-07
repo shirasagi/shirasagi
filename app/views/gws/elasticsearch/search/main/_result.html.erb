@@ -9,7 +9,11 @@
     <li class="list-item">
       <div class="info">
         <% source = hit['_source'] %>
-        <%= link_to source['name'], source['url'], class: 'title' %>
+        <% title = source['name'] %>
+        <% if source.dig('file', 'extname').present? %>
+          <% title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})" %>
+        <% end %>
+        <%= link_to title, source['url'], class: 'title' %>
         <div class="meta">
           <span class="id"><%= hit['_id'] %></span>
           <span class="datetime"><%= I18n.l(Time.zone.parse(source['updated'])) %></span>
