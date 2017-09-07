@@ -42,8 +42,10 @@ end
     <% if comment.files.present? %>
     <div class="files">
       <% comment.files.each do |file| %>
-        <img src="/assets/img/gws/ic-file.png" alt="" />
-        <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+        <span id="file-<%= file.id %>">
+          <img src="/assets/img/gws/ic-file.png" alt="" />
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+        </span>
       <% end %>
     </div>
     <% end %>
