@@ -292,6 +292,26 @@ li.webmail-accounts {
   .address {
     height: auto;
   }
+  .selected-address {
+    @include clear;
+    cursor: pointer;
+    min-height: 12px;
+    span {
+      float: left;
+      background: #f2f2f2;
+      padding: 2px 2px 4px 4px;
+      margin: 0px 4px 4px 0px;
+      border: 1px solid #d0d0d0;
+      border-radius: 3px;
+      max-width: 500px;
+    }
+    .invalid-address {
+      border-bottom: dotted 2px red;
+    }
+    .placeholder {
+      height: 26px;
+    }
+  }
 }
 .cc-bcc-label {
   display: inline-block;

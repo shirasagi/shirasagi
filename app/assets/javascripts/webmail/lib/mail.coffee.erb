@@ -340,11 +340,12 @@ class @Webmail_Mail_Form_Address
     self = this
 
     data = item.closest("[data-id]")
-    email = data.data("email")
-    return if email == ""
+    dl = self.anchorAjaxBox.closest(".webmail-mail-form-address")
+    field = $(dl).find(".autocomplete")
+    label = data.data("email")
+    value = data.data("address")
+    selected = dl.find(".selected-address")
+    return if label == ""
 
-    field = self.anchorAjaxBox.closest("dl").closest('dd').find("textarea")
-    value = field.val().replace(/^\s+/, '')
-    value += "; " if value != ""
-    value += email
-    field.val(value)
+    span = Webmail_Address_Autocomplete.createSelectedElement(field.attr("name"), value, label)
+    selected.append(span)

@@ -1,6 +1,10 @@
+<% h = Webmail::Address.user(@cur_user).to_autocomplete_hash %>
 <%= jquery do %>
-  SS_Form.disableEnterKey('#item_subject');
-  Webmail_Mail_Form.render();
+SS_Form.disableEnterKey('#item_subject');
+Webmail_Mail_Form.render();
+Webmail_Address_Autocomplete.render(
+  ".webmail-mail-form-address", { names: <%== h.keys.to_json %>, labels: <%== h.keys.to_json %>, values: <%== h.to_json %>
+});
 <% end %>
 
 <%= f.hidden_field :reply_uid, id: nil %>
@@ -10,10 +14,9 @@
 
 <dl class="webmail-mail-form-address to">
   <dt><%= @model.t :to %></dt>
-  <dd>
-    <%= f.text_area :to_text, class: "address js-autosize" %>
-    <%= render 'address_form', { f: f, field: :to } %>
-  </dd>
+  <dd><%= text_field_tag "item[to][]", nil, "class" => "address autocomplete" %></dd>
+  <dd><%= render 'address_form', { f: f, field: :to } %></dd>
+  <dd><div class="selected-address"></div></dd>
 </dl>
 
 <% if cc_blank = @item.cc .blank? && @item.cc_text.blank? && @item.bcc.blank? && @item.bcc_text.blank? %>
@@ -22,16 +25,14 @@
 
 <dl class="webmail-mail-form-address cc-bcc cc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :cc %></dt>
-  <dd>
-    <%= f.text_area :cc_text, class: "address js-autosize" %>
-    <%= render 'address_form', { f: f, field: :cc } %>
-  </dd>
+  <dd><%= text_field_tag "item[cc][]", nil, "class" => "address autocomplete" %></dd>
+  <dd><%= render 'address_form', { f: f, field: :cc } %></dd>
+  <dd><div class="selected-address"></div></dd>
 </dl>
 
 <dl class="webmail-mail-form-address cc-bcc bcc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :bcc %></dt>
-  <dd>
-    <%= f.text_area :bcc_text, class: "address js-autosize" %>
-    <%= render 'address_form', { f: f, field: :bcc } %>
-  </dd>
+  <dd><%= text_field_tag "item[bcc][]", nil, "class" => "address autocomplete" %></dd>
+  <dd><%= render 'address_form', { f: f, field: :bcc } %></dd>
+  <dd><div class="selected-address"></div></dd>
 </dl>
