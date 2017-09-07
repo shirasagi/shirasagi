@@ -10,6 +10,6 @@ class Gws::Elasticsearch::Search::SharesController < ApplicationController
   end
 
   def set_search_type
-    @search_type = Gws::Board::Post.collection_name
+    @search_type = 'gws_share_files'
   end
 end
