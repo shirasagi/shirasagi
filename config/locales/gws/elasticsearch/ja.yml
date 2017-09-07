@@ -8,8 +8,7 @@ ja:
       share: 共有ファイル
 
     format:
-      search_results_count: '%{count} 件の検索結果'
-      search_results_took: '%{count} 秒'
+      search_results_count: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
 
   modules:
     gws/elasticsearch: 全文検索

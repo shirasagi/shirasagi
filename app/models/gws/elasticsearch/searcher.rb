@@ -5,7 +5,8 @@ class Gws::Elasticsearch::Searcher
   DEFAULT_FIELD_NAME = 'text_index'.freeze
 
   attr_accessor :cur_site, :cur_user
-  attr_accessor :hosts, :index, :type, :field_name, :keyword
+  attr_accessor :hosts, :index, :type, :field_name
+  attr_accessor :keyword, :from, :size
 
   permit_params :keyword
 
@@ -21,6 +22,14 @@ class Gws::Elasticsearch::Searcher
     @field_name ||= DEFAULT_FIELD_NAME
   end
 
+  def from
+    @from ||= 0
+  end
+
+  def size
+    @size ||= 10
+  end
+
   def client
     @client ||= Elasticsearch::Client.new(hosts: hosts, logger: Rails.logger)
   end
@@ -32,7 +41,7 @@ class Gws::Elasticsearch::Searcher
     query[:bool][:filter] = and_public
     query[:bool][:filter] << and_readable
 
-    client.search(index: index, type: type, body: { query: query })
+    client.search(index: index, type: type, from: from, size: size, body: { query: query })
   end
 
   private
