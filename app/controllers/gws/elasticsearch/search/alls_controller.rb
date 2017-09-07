@@ -10,6 +10,6 @@ class Gws::Elasticsearch::Search::AllsController < ApplicationController
   end
 
   def set_search_type
-    @search_type = Gws::Board::Post.collection_name
+    @search_type = nil
   end
 end
