@@ -1,8 +1,7 @@
 <% return if @result.blank? %>
 
 <div class="list-head">
-  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: @result['hits']['total']) %>
-  (<%= I18n.t('gws/elasticsearch.format.search_results_took', count: @result['took'] / 1000.0) %>)
+  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: @result['hits']['total'], from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
 </div>
 <ul class="list-items">
   <% @result['hits']['hits'].each do |hit| %>
