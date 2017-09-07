@@ -8,7 +8,10 @@ ja:
       share: 共有ファイル
 
     format:
-      search_results_count: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
+      search_results_count:
+        zero: 検索式にマッチする文書はありませんでした。
+        one: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
+        other: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
 
   modules:
     gws/elasticsearch: 全文検索
