@@ -166,6 +166,9 @@ class @Webmail_Mail_List
       hoverClass: "droppable-hover",
       tolerance: "pointer",
       drop: (e, ui)->
+        $(".webmail-navi-mailboxes .mailbox-droppable").on "click.dragging", ()->
+          return false
+
         ele = e.target
         if ui.draggable.hasClass("mail-draggable")
           dst = $(ele).attr("data-name")
@@ -176,7 +179,7 @@ class @Webmail_Mail_List
         else
           src = ui.draggable.attr("data-name")
           dst = $(ele).attr("data-name") + "." + ui.draggable.attr("data-basename")
-          url = "/.webmail/mails/INBOX/rename_mailbox"
+          url = $(".webmail-mails-head .rename-mailbox").attr("data-href")
           $(ui.draggable).hide()
           Webmail_Mail_List.updateMailbox(url, src: src, dst: dst)
     )
