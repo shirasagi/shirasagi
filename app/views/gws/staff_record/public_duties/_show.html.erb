@@ -32,7 +32,7 @@
     <% @items.each do |item| %>
     <tr>
       <th style="text-align: center">
-        <%= link_to t('ss.links.edit'), action: :edit, id: item.id if item.allowed?(:edit, @cur_user) %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: item.id if item.allowed?(:edit, @cur_user, site: @cur_site) %>
       </th>
       <td></td>
       <td><%= br item.send :divide_duties %></td>
