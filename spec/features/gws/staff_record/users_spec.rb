@@ -12,26 +12,25 @@ describe "gws_staff_record_public_users", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
 
       # new/create
       click_link I18n.t('ss.links.new')
       click_button I18n.t('ss.buttons.save')
-      click_link I18n.t('ss.links.back_to_index')
 
       # show
+      click_link I18n.t('ss.links.back_to_index')
       click_link item.name_with_code
-      expect(status_code).to eq 200
 
       # edit/update
       click_link I18n.t('ss.links.edit')
       click_button I18n.t('ss.buttons.save')
-      expect(status_code).to eq 200
 
       # delete/destroy
       click_link I18n.t('ss.links.delete')
       click_button I18n.t('ss.buttons.delete')
+
       expect(status_code).to eq 200
+      expect(current_path).to eq index_path
     end
   end
 end
