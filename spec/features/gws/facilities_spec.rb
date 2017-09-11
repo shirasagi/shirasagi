@@ -2,12 +2,8 @@ require 'spec_helper'
 
 describe "gws_facility_items", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:item) { create :gws_facility_item }
+  let!(:item) { create :gws_facility_item }
   let(:index_path) { gws_facility_items_path site }
-  let(:new_path) { new_gws_facility_item_path site }
-  let(:show_path) { gws_facility_item_path site, item }
-  let(:edit_path) { edit_gws_facility_item_path site, item }
-  let(:delete_path) { delete_gws_facility_item_path site, item }
 
   context "with auth" do
     before { login_gws_user }
@@ -15,42 +11,25 @@ describe "gws_facility_items", type: :feature, dbscope: :example do
     it "#index" do
       visit index_path
       expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-    end
 
-    it "#new" do
-      visit new_path
-      within "form#item-form" do
-        fill_in "item[name]", with: "name"
-        click_button "保存"
-      end
+      # new/create
+      click_link I18n.t('ss.links.new')
+      click_button I18n.t('ss.buttons.save')
+      click_link I18n.t('ss.links.back_to_index')
+
+      # show
+      click_link item.name
       expect(status_code).to eq 200
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
-    end
 
-    it "#show" do
-      visit show_path
+      # edit/update
+      click_link I18n.t('ss.links.edit')
+      click_button I18n.t('ss.buttons.save')
       expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-    end
 
-    it "#edit" do
-      visit edit_path
-      within "form#item-form" do
-        fill_in "item[name]", with: "modify"
-        click_button "保存"
-      end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
-    end
-
-    it "#delete" do
-      visit delete_path
-      within "form" do
-        click_button "削除"
-      end
-      expect(current_path).to eq index_path
+      # delete/destroy
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
+      expect(status_code).to eq 200
     end
   end
 end
