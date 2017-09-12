@@ -4,6 +4,7 @@ module Cms::PublicFilter::Layout
   include Cms::PublicHelper
   include Cms::PublicFilter::OpenGraph
   include Cms::PublicFilter::TwitterCard
+  include Cms::PublicFilter::ConditionalTag
 
   included do
     helper_method :render_layout_parts
@@ -124,6 +125,10 @@ module Cms::PublicFilter::Layout
         next "<time datetime=\"#{date_convert(date, :iso, datetime)}\">#{convert_date}</time>"
       end
       convert_date
+    end
+
+    html.gsub!(conditional_tag_template) do
+      render_conditional_tag(Regexp.last_match)
     end
 
     html
