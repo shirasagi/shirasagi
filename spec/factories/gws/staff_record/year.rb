@@ -5,7 +5,7 @@ FactoryGirl.define do
 
     name { "H29" }
     code { 2017 }
-    start_date { Time.zone.now - 1.years }
-    close_date { Time.zone.now + 1.years }
+    start_date { Time.zone.now - 1.year }
+    close_date { Time.zone.now + 1.year }
   end
 end

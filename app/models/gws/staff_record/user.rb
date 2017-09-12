@@ -29,7 +29,7 @@ class Gws::StaffRecord::User
 
   permit_params :name, :code, :order, :kana, :multi_section, :section_name,
                 :title_name, :tel_ext, :charge_name, :charge_address, :charge_tel,
-                :divide_duties, :remark, :staff_records_view,  :divide_duties_view
+                :divide_duties, :remark, :staff_records_view, :divide_duties_view
 
   validates :name, presence: true
   validates :code, presence: true#, uniqueness: { scope: [:site_id, :year] }
