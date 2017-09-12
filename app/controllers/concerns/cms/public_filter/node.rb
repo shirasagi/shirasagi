@@ -8,6 +8,9 @@ module Cms::PublicFilter::Node
     self.params   = ActionController::Parameters.new
     self.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
     self.response = ActionDispatch::Response.new
+
+    @site.reload if @site.changed?
+    @node.reload if @node.changed?
   end
 
   def find_node(path)
