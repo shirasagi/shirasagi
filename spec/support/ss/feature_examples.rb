@@ -9,7 +9,8 @@ shared_examples "crud flow" do
 
     # show
     click_link I18n.t('ss.links.back_to_index')
-    click_link item.name
+    #click_link item.name
+    visit "#{index_path}/#{item.id}"
 
     # edit/update
     click_link I18n.t('ss.links.edit')
