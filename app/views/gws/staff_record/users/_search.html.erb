@@ -1,0 +1,13 @@
+<%
+
+@s = OpenStruct.new params[:s]
+section_options = @cur_year.yearly_groups.map { |c| [c.name, c.name] }
+
+%>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.select :section_name, section_options, include_blank: t('gws/staff_record.search.section') %>
+    <%= f.text_field :keyword, style: "width: 200px;" %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <% end %>
+</div>
