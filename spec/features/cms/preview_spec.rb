@@ -54,6 +54,8 @@ describe "cms_preview", type: :feature, dbscope: :example do
 
       layout_html = ''
       layout_html << '<html><body>'
+      layout_html << "<title>#{cms_site.name}</title>"
+      layout_html << '<meta charset="shift_jis" />'
       layout_html << "{{ part \"#{faq_part_search.url.sub(/^\//, '').sub(/.part.html$/, '')}\" }}"
       layout_html << '{{ yield }}'
       layout_html << "{{ part \"#{category_part_node.url.sub(/^\//, '').sub(/.part.html$/, '')}\" }}"
@@ -69,6 +71,8 @@ describe "cms_preview", type: :feature, dbscope: :example do
     context "pc preview" do
       it do
         visit pc_preview_path
+        expect(page).to have_selector('title', count: 1)
+        expect(page).to have_css('meta[charset]', count: 1)
         expect(page).to have_css('div.category-nodes article header h2', count: 2)
         expect(page).to have_css('div.faq-search form')
         expect(page).to have_css('div.category-nodes nav#category-list')
@@ -80,6 +84,8 @@ describe "cms_preview", type: :feature, dbscope: :example do
     context "mobile preview" do
       it do
         visit mobile_preview_path
+        expect(page).to have_selector('title', count: 1)
+        expect(page).not_to have_css('meta[charset=shift_jis]')
         expect(page).to have_css('div.category-nodes div.tag-article div h2', count: 2)
         expect(page).to have_css('div.faq-search form')
         expect(page).to have_css('div.category-nodes div#category-list')
