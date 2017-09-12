@@ -137,6 +137,7 @@ SS::Application.routes.draw do
       get "members" => "members#index"
       get "sites" => "sites#index"
       get "users" => "users#index"
+      get "related_page" => "related_page#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member
