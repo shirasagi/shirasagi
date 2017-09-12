@@ -65,4 +65,7 @@
   <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("history.log"), history_cms_logs_path %></h3>
   <% end %>
+  <% if Cms::LoopSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("cms.loop_html"), cms_loop_settings_path %></h3>
+  <% end %>
 </nav>

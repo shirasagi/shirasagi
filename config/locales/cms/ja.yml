@@ -21,9 +21,11 @@ ja:
     import_page: 取り込みページ
     import_page_index: 取り込みページ
     important_notice: 重要なお知らせ
+    input_directly: 直接入力する
     layout: レイアウト
     link_check: リンクチェック
     list_view: リスト表示
+    loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     member: メンバー
@@ -236,6 +238,7 @@ ja:
     edit_cms_roles: 権限/ロールの管理
     edit_cms_members: メンバーの管理
     edit_cms_editor_templates: テンプレートの管理
+    edit_cms_loop_settings: ループHTMLの管理
     read_cms_body_layouts: 本文レイアウトの閲覧
     edit_cms_body_layouts: 本文レイアウトの編集
     delete_cms_body_layouts: 本文レイアウトの削除
@@ -370,6 +373,7 @@ ja:
       cms/task: タスク
       cms/import_page: 取り込みページ
       cms/word_dictionary: かな辞書
+      cms/loop_setting: ループHTML
     attributes:
       cms/content:
         released: 公開日時
@@ -454,6 +458,10 @@ ja:
         basename: フォルダー名
         in_file: ファイル
         import_date: インポート開始日時
+      cms/loop_setting:
+        name: タイトル
+        description: 説明
+        order: 並び順
       cms/addon/meta:
         keywords: キーワード
         description: 概要
@@ -841,6 +849,7 @@ ja:
         - 自動生成されたページの内容の上部に任意の内容のHTMLを記述することが可能です。
       loop_html:
         - 自動生成されたページのリスト表示部分のHTMLを指定することが可能です。
+        - ループHTMLを選択または直接記入することが可能です。
         - |-
           下記のように記述します。
           #{class}　リンク先のファイル名が表示されます。ファイル名に拡張子がある場合、拡張子を除いた部分が表示されます。
@@ -968,6 +977,7 @@ ja:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
+        - ループHTMLを選択または直接記入することが可能です。
         - |-
           下記のように記述します。
           #{class}　リンク先のファイル名が表示されます。ファイル名に拡張子がある場合、拡張子を除いた部分が表示されます。

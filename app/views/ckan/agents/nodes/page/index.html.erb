@@ -1,6 +1,8 @@
 <div class="ckan-pages pages">
 <%= @cur_node.upper_html.html_safe if @cur_node.upper_html.present? %>
-<% if @cur_node.loop_html.present? %>
+<% if @cur_node.loop_setting.present? %>
+  <% loop_html = @cur_node.loop_setting.html %>
+<% elsif @cur_node.loop_html.present? %>
   <% loop_html = @cur_node.loop_html %>
 <% else %>
   <%
