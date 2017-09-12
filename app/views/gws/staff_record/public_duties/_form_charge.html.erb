@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :section_name %></dt>
+  <dd><%= @item.send :section_name %></dd>
+
+  <dt><%= @model.t :charge_name %></dt>
+  <dd><%= @item.send :charge_name %></dd>
+
+  <dt><%= @model.t :charge_address %><%= @model.tt :charge_address %></dt>
+  <dd><%= f.text_area :charge_address %></dd>
+
+  <dt><%= @model.t :charge_tel %><%= @model.tt :charge_tel %></dt>
+  <dd><%= f.text_field :charge_tel %></dd>
+</dl>
