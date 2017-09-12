@@ -12,6 +12,9 @@
   <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_path, class: "icon-workflow" %></h2>
   <% end %>
+
+  <h2><%= link_to '照会・回答', gws_monitor_topics_path, class: 'icon-write' %></h2>
+
   <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
   <% end %>

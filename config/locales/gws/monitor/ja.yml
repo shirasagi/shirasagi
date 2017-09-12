@@ -1,0 +1,38 @@
+ja:
+  gws/monitor:
+
+  modules:
+    gws/monitor: 照会・回答
+
+  gws_role:
+    read_other_gws_monitor_topics: 記事の閲覧（全て）
+    read_private_gws_monitor_topics: 記事の閲覧（所有）
+    edit_other_gws_monitor_topics: 記事の編集（全て）
+    edit_private_gws_monitor_topics: 記事の編集（所有）
+    delete_other_gws_monitor_topics: 記事の削除（全て）
+    delete_private_gws_monitor_topics: 記事の削除（所有）
+
+  mongoid:
+    models:
+      gws/monitor/topic: 照会・回答トピック
+
+    attributes:
+      gws/monitor/topic:
+        name: タイトル
+        due_date: 回覧期限日時
+        admin_setting: 記事管理設定
+        spec_config: 回答表示設定
+        reminder_start_section: リマインダー表示設定
+
+  tooltip:
+    gws/monitor/topic:
+      name:
+        - タイトルを入力します。
+      due_date:
+        - 回答期限日時を選択します。
+      admin_setting:
+        - 記事管理者の範囲を選択します。
+      spec_config:
+        - 回答の表示方法を選択します。
+      reminder_start_section:
+        - リマインダー表示条件を選択します。
