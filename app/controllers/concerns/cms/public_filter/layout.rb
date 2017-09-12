@@ -73,6 +73,7 @@ module Cms::PublicFilter::Layout
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
     body = @cur_layout.body.to_s
+
     body = body.sub(/<body.*?>/) do |m|
       m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
       m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
@@ -89,6 +90,14 @@ module Cms::PublicFilter::Layout
 
     html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
+
+    html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
+      @window_name = Regexp.last_match(1)
+      ''
+    end
+
+    html = html.sub(/<meta[^>]*charset=[^>]*>/) { '' }
+
     html
   end
 
