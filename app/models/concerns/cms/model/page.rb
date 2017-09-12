@@ -14,11 +14,11 @@ module Cms::Model::Page
 
     #text_index :name, :html
 
+    attr_accessor :window_name
+
     field :route, type: String, default: ->{ "cms/page" }
 
     embeds_ids :categories, class_name: "Cms::Node"
-
-    attr_accessor :window_name
 
     permit_params category_ids: []
 

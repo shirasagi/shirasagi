@@ -13,11 +13,11 @@ module Cms::Model::Node
     store_in collection: "cms_nodes"
     set_permission_name "cms_nodes"
 
+    attr_accessor :window_name
+
     field :route, type: String
     field :view_route, type: String
     field :shortcut, type: String, default: "hide"
-
-    attr_accessor :window_name
 
     permit_params :view_route, :shortcut
 
