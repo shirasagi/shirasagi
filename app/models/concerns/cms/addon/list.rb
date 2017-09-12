@@ -13,7 +13,10 @@ module Cms::Addon::List
       field :upper_html, type: String
       field :lower_html, type: String
       field :new_days, type: Integer, default: 1
-      permit_params :conditions, :sort, :limit, :loop_html, :upper_html, :lower_html, :new_days
+
+      belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
+
+      permit_params :conditions, :sort, :limit, :loop_html, :loop_setting_id, :upper_html, :lower_html, :new_days
 
       before_validation :validate_conditions
     end

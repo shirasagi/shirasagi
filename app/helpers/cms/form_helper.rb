@@ -26,6 +26,14 @@ module Cms::FormHelper
     items
   end
 
+  def ancestral_loop_settings
+    items = []
+    Cms::LoopSetting.site(@cur_site).sort(order: 1, name: 1).each do |item|
+      items << [item.name, item.id]
+    end
+    items
+  end
+
   def show_image_info(file)
     return nil unless file
 
