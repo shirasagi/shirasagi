@@ -29,4 +29,9 @@ module Gws::Elasticsearch::GroupSetting
   def elasticsearch_enabled?
     elasticsearch_state == 'enabled'
   end
+
+  def elasticsearch_client
+    return unless elasticsearch_enabled?
+    @elasticsearch_client ||= Elasticsearch::Client.new(hosts: elasticsearch_hosts, logger: Rails.logger)
+  end
 end

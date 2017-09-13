@@ -10,6 +10,10 @@ class Gws::Share::File
   validates :category_ids, presence: true
   validate :validate_size
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::ShareFileJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::ShareFileJob.callback
+
   default_scope ->{ where(model: "share/file") }
 
   class << self
