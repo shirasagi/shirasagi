@@ -16,6 +16,10 @@ class Gws::Board::Topic
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::BoardTopicJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::BoardTopicJob.callback
+
   def updated?
     created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
   end

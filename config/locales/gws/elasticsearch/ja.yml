@@ -30,3 +30,9 @@ ja:
         - 全文検索を有効にするか無効にするかを選択します。
       elasticsearch_hosts:
         - 全文検索サーバーを入力します。
+
+  job:
+    models:
+      gws/elasticsearch/indexer/share_file_job: 共有ファイルインデクサー
+      gws/elasticsearch/indexer/board_topic_job: 掲示板インデクサー
+      gws/elasticsearch/indexer/board_post_job: 掲示板投稿インデクサー
