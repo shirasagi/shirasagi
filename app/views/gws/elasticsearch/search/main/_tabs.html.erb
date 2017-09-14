@@ -11,9 +11,16 @@
 <% end %>
 
 <div class="gws-schedule-tabs">
+  <% if [ Gws::Board::Topic, Gws::Share::File ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
   <% render_tab.call(gws_elasticsearch_search_all_path, 'all') %>
+  <% end %>
+
+  <% if Gws::Board::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
   <% render_tab.call(gws_elasticsearch_search_board_path, 'board') %>
+  <% end %>
   <%# render_tab.call(gws_elasticsearch_search_mail_path, 'mail') %>
   <%# render_tab.call(gws_elasticsearch_search_message_path, 'message') %>
+  <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
   <% render_tab.call(gws_elasticsearch_search_share_path, 'share') %>
+  <% end %>
 </div>
