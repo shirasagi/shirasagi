@@ -1,0 +1,13 @@
+<%= render file: 'gws/crud/_menu' %>
+
+<% if params[:action] =~ /index/ %>
+<nav class="nav-menu">
+  <select>
+    <option>照会・回答</option>
+    <option>+---- 受取済</option>
+    <option>+---- 受取待</option>
+    <option>+---- 回答済</option>
+    <option>+---- 該当なし</option>
+  </select>
+</nav>
+<% end %>
