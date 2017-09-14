@@ -7,7 +7,11 @@ class Cms::AllContentsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        send_data Cms::AllContent.csv(@cur_site).encode("SJIS", invalid: :replace, undef: :replace), filename: "all_contents.csv"
+        filename = 'all_contents.csv'
+        filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+        response.status = 200
+        send_enum Cms::AllContent.enum_csv(@cur_site),
+                  type: 'text/csv; charset=Shift_JIS', filename: filename
       end
     end
   end

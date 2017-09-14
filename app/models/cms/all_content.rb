@@ -1,21 +1,32 @@
 require "csv"
 
 class Cms::AllContent
-  cattr_accessor :site
-
   class << self
     def csv(site, encode: nil)
-      self.site = site
-
       CSV.generate do |data|
         data << header
         (Cms::Page.site(site).all + Cms::Node.site(site).all).each do |content|
+          content.site ||= site
           data << row(content)
         end
       end
     end
 
+    def enum_csv(site)
+      Enumerator.new do |y|
+        y << encode_sjis(header.to_csv)
+        (Cms::Page.site(site).all + Cms::Node.site(site).all).each do |content|
+          content.site ||= site
+          y << encode_sjis(row(content).to_csv)
+        end
+      end
+    end
+
     private
+
+    def encode_sjis(str)
+      str.encode("SJIS", invalid: :replace, undef: :replace)
+    end
 
     def header
       fields = %w(
@@ -26,7 +37,6 @@ class Cms::AllContent
     end
 
     def row(content)
-      content.site ||= site
       page_id    = (content.class == Cms::Page) ? content.id : ""
       node_id    = (content.class == Cms::Node) ? content.id : ""
       files      = content.files.map(&:name).join("\n") rescue ""
