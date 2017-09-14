@@ -5,14 +5,10 @@ class Gws::Elasticsearch::Searcher
   DEFAULT_FIELD_NAME = 'text_index'.freeze
 
   attr_accessor :cur_site, :cur_user
-  attr_accessor :hosts, :index, :type, :field_name
+  attr_accessor :index, :type, :field_name
   attr_accessor :keyword, :from, :size
 
   permit_params :keyword
-
-  def hosts
-    @hosts ||= cur_site.elasticsearch_hosts
-  end
 
   def index
     @index ||= "g#{cur_site.id}"
@@ -31,7 +27,7 @@ class Gws::Elasticsearch::Searcher
   end
 
   def client
-    @client ||= Elasticsearch::Client.new(hosts: hosts, logger: Rails.logger)
+    @client ||= cur_site.elasticsearch_client
   end
 
   def search
