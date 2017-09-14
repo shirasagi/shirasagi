@@ -7,6 +7,10 @@ SS::Application.routes.draw do
   end
 
   gws 'monitor' do
-    resources :topics, concerns: [:deletion]
+    resources :topics, concerns: [:deletion] do
+      post :public_all, on: :collection
+      post :preparation_all, on: :collection
+      post :qNA_all, on: :collection
+    end
   end
 end

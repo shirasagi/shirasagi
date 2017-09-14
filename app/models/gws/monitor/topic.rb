@@ -13,8 +13,9 @@ class Gws::Monitor::Topic
   field :admin_setting, type: String, default: '1'
   field :spec_config, type: String, default: '0'
   field :reminder_start_section, type: String, default: '0'
+  field :state, type: String, default: 'preparation'
 
-  permit_params :name, :due_date, :admin_setting, :spec_config, :reminder_start_section
+  permit_params :name, :due_date, :admin_setting, :spec_config, :reminder_start_section, :state
 
   validates :name, presence: true
 
