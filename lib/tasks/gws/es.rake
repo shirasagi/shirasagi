@@ -126,5 +126,55 @@ namespace :gws do
         job.perform_now(action: 'index', id: file.id.to_s)
       end
     end
+
+    namespace :ingest do
+      task drop: :environment do
+        site = Gws::Group.find_by(name: ENV['site'])
+        if !site.elasticsearch_enabled?
+          puts 'elasticsearch was not enabled'
+          break
+        end
+
+        if site.elasticsearch_client.nil?
+          puts 'elasticsearch was not configured'
+          break
+        end
+
+        puts site.elasticsearch_client.ingest.delete_pipeline(id: 'attachment').to_json
+      end
+
+      task init: :environment do
+        site = Gws::Group.find_by(name: ENV['site'])
+        if !site.elasticsearch_enabled?
+          puts 'elasticsearch was not enabled'
+          break
+        end
+
+        if site.elasticsearch_client.nil?
+          puts 'elasticsearch was not configured'
+          break
+        end
+
+        settings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'ingest_attachment.json'))
+        settings = JSON.parse(settings)
+
+        puts site.elasticsearch_client.ingest.put_pipeline(id: 'attachment', body: settings).to_json
+      end
+
+      task info: :environment do
+        site = Gws::Group.find_by(name: ENV['site'])
+        if !site.elasticsearch_enabled?
+          puts 'elasticsearch was not enabled'
+          break
+        end
+
+        if site.elasticsearch_client.nil?
+          puts 'elasticsearch was not configured'
+          break
+        end
+
+        puts site.elasticsearch_client.ingest.get_pipeline(id: 'attachment').to_json
+      end
+    end
   end
 end
