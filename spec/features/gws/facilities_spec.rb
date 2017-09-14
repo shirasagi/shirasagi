@@ -10,6 +10,7 @@ describe "gws_facility_items", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
+    end
 
     it_behaves_like 'crud flow'
   end
