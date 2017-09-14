@@ -14,7 +14,7 @@ namespace :cms do
   def with_node(job_class, opts = {})
     find_sites(ENV["site"]).each do |site|
       job = job_class.bind(site_id: site)
-      job = job.bind(node_id: ENV["node"]) if ENV["node"]
+      job = job.bind(node_id: Cms::Node.site(site).find_by(filename: ENV["node"]).id) if ENV["node"]
       job.perform_now(opts)
     end
   end
