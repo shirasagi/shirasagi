@@ -52,6 +52,7 @@ class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
       # doc[:state] = post.state
       doc[:state] = 'public'
 
+      doc[:user_name] = item.user.long_name if item.user.present?
       doc[:group_ids] = item.groups.pluck(:id)
       doc[:custom_group_ids] = item.custom_groups.pluck(:id)
       doc[:user_ids] = item.users.pluck(:id)
