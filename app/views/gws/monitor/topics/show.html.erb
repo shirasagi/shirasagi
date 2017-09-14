@@ -1,0 +1,15 @@
+<% addons = @item ? @item.class.addons.select{|addon| addon.klass != SS::Addon::Markdown} : [] %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t @item.name %></h2></div>
+    <div class="addon-body gws-board">
+      <div class="body markdown-body"><%= @item.html %></div>
+      <div class="menu">
+        <%= link_to('受取済にする', '#', class: 'btn primary') %>
+        <%= link_to('回答する', '#', class: 'btn primary') %>
+        </div>
+    </div>
+  </div>
+  <%= render file: '_addons_show', locals: { addons: addons } if addons.size > 0 %>
+</div>
