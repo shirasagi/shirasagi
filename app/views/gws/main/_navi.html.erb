@@ -25,7 +25,7 @@
   <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
     <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
   <% end %>
-  <% if @cur_site.elasticsearch_enabled? %>
+  <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
     <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
   <% end %>
 
