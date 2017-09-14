@@ -14,6 +14,7 @@
       "close_date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
       "released": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
       "state": { "type": "keyword" },
+      "user_name" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
       "group_ids": { "type": "integer" },
       "custom_group_ids": { "type": "integer" },
       "user_ids": { "type": "integer" },
