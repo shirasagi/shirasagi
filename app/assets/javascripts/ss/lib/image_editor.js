@@ -85,14 +85,28 @@ SS_ImageEditor.prototype = {
     if (!this.cropper) {
       return;
     }
+    var saveData = this.cropper.getData(true);
     this.cropper.zoom(0.1);
+
+    var data = this.cropper.getData(true);
+    data.width = saveData.width;
+    data.height = saveData.height;
+
+    this.cropper.setData(data);
   },
 
   zoomOut: function () {
     if (!this.cropper) {
       return;
     }
+    var saveData = this.cropper.getData(true);
     this.cropper.zoom(-0.1);
+
+    var data = this.cropper.getData(true);
+    data.width = saveData.width;
+    data.height = saveData.height;
+
+    this.cropper.setData(data);
   },
 
   rotateLeft: function () {
