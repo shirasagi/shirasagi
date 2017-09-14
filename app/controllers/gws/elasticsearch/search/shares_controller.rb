@@ -3,6 +3,11 @@ class Gws::Elasticsearch::Search::SharesController < ApplicationController
   include Gws::CrudFilter
   include Gws::Elasticsearch::SearchFilter
 
+  def show
+    raise '403' unless Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site)
+    super
+  end
+
   private
 
   def set_crumbs
