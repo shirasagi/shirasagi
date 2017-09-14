@@ -9,8 +9,8 @@ module Mobile::PublicFilter
 
   def set_request_path_with_mobile
     return if @cur_site.mobile_disabled?
-    return if @cur_path !~ /^#{@cur_site.mobile_location}\//
-    @cur_path.sub!(/^#{@cur_site.mobile_location}\//, "/")
+    return if @cur_main_path !~ /^#{@cur_site.mobile_location}\//
+    @cur_main_path.sub!(/^#{@cur_site.mobile_location}\//, "/")
     filters << :mobile
   end
 
