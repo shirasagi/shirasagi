@@ -1,0 +1,34 @@
+class @Gws_Monitor_Topic
+  @render: ->
+    $(".public-all").on "click", ->
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      token = $('meta[name="csrf-token"]').attr('content')
+      form = $("<form/>", action: "topics/public_all", method: "post")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
+
+    $(".preparation-all").on "click", ->
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      token = $('meta[name="csrf-token"]').attr('content')
+      form = $("<form/>", action: "topics/preparation_all", method: "post")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
+
+    $(".qNA-all").on "click", ->
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      token = $('meta[name="csrf-token"]').attr('content')
+      form = $("<form/>", action: "topics/qNA_all", method: "post")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
