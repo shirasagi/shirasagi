@@ -1,0 +1,45 @@
+<%= jquery do %>
+Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%== (params[:calendar] || {}).to_json %>);
+SS_Clipboard.renderCopy();
+<% end %>
+
+<div class="no-print">
+  <%= link_to(I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters)) %>
+</div>
+
+<section class="main-box gws-schedule-box sheet">
+  <header>
+    <h2><%= @group.trailing_name %></h2>
+  </header>
+
+  <div class="calendar" id="calendar-controller"></div>
+
+  <% @items.each_with_index do |item, idx| %>
+    <div class="calendar-multiple-header">
+      <%= link_to item.long_name, gws_schedule_user_plans_path(user: item.id), class: "calendar-name" %>
+      <div class="calendar-attr">
+        <span class="group">
+          <%= tryb { item.gws_main_group(@cur_site).trailing_name } %>
+        </span>
+        <% if title = item.title(@cur_site) %>
+          <span class="user-title"><%= title.name %></span>
+        <% end %>
+        <% if item.email.present? %>
+          <span class="email"><%= mail_to item.email %></span>
+        <% end %>
+        <% if item.tel_label.present? %>
+          <span class="tel"><%= item.tel_label %></span>
+        <% end %>
+      </div>
+    </div>
+    <div class="calendar multiple" id="cal-<%= item.id %>"></div>
+
+    <%= jquery do %>
+    Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
+      tapMenu: <%= item.id == @cur_user.id %>,
+      restUrl: '<%= url_for action: :index %>',
+      eventSources: [{ url: '<%= events_gws_schedule_user_plans_path user: item.id, format: :json %>?<%= search_query %>' }]
+    }, <%== (params[:calendar] || {}).to_json %>);
+    <% end %>
+  <% end %>
+</section>

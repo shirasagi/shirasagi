@@ -55,6 +55,10 @@ module Gws::Schedule::PlanFilter
     @items = []
   end
 
+  def print
+    render layout: 'ss/print'
+  end
+
   def popup
     set_item
 

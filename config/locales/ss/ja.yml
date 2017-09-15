@@ -94,6 +94,7 @@ ja:
       integrate: 統合
       upload: アップロード
       download: ダウンロード
+      print: 印刷
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。

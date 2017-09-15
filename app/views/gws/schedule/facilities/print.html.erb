@@ -1,0 +1,50 @@
+<%= jquery do %>
+  Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
+    defaultView: 'timelineDay',
+    header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+    views: {
+      timelineDay: {
+        minTime: '<%= @cur_site.facility_min_time %>',
+        maxTime: '<%= @cur_site.facility_max_time %>'
+      }
+    }
+  }, <%== (params[:calendar] || {}).to_json %>);
+<% end %>
+
+<div class="no-print">
+  <%= link_to(I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters)) %>
+</div>
+
+<section class="main-box gws-schedule-box sheet">
+  <header>
+    <h2><%= t('gws/schedule.tabs.facility') %></h2>
+  </header>
+
+  <div class="calendar" id="calendar-controller"></div>
+
+  <% @items.each_with_index do |item, idx| %>
+    <div class="calendar-multiple-header">
+      <%= link_to item.name, gws_schedule_facility_plans_path(facility: item.id), class: "calendar-name" %>
+      <% if item.reservable?(@cur_user) %>
+        <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_facility_plan_path(facility: item.id), class: 'add-plan' %>
+      <% end %>
+    </div>
+    <div class="calendar multiple facility" id="cal-<%= item.id %>"></div>
+
+    <%= jquery do %>
+    Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
+      tapMenu: <%= item.reservable?(@cur_user) %>,
+      defaultView: 'timelineDay',
+      header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+      views: {
+        timelineDay: {
+          minTime: '<%= @cur_site.facility_min_time %>',
+          maxTime: '<%= @cur_site.facility_max_time %>'
+        }
+      },
+      restUrl: '<%= gws_schedule_facility_plans_path(facility: item.id) %>',
+      eventSources: [{ url: '<%= events_gws_schedule_facility_plans_path facility: item.id, format: :json %>?<%= search_query %>' }]
+    }, <%== (params[:calendar] || {}).to_json %>);
+    <% end %>
+  <% end %>
+</section>
