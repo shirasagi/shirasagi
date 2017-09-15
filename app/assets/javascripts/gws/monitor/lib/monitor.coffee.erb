@@ -1,5 +1,26 @@
 class @Gws_Monitor_Topic
   @render: ->
+    $(".public").on "click", ->
+      token = $('meta[name="csrf-token"]').attr('content')
+      id = $("#item_id").val()
+      form = $("<form/>", action: "#{id}/public", method: "get")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      form.appendTo(document.body).submit()
+
+    $(".preparation").on "click", ->
+      token = $('meta[name="csrf-token"]').attr('content')
+      id = $("#item_id").val()
+      form = $("<form/>", action: "#{id}/preparation", method: "get")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      form.appendTo(document.body).submit()
+
+    $(".qNA").on "click", ->
+      token = $('meta[name="csrf-token"]').attr('content')
+      id = $("#item_id").val()
+      form = $("<form/>", action: "#{id}/qNA", method: "get")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      form.appendTo(document.body).submit()
+
     $(".public-all").on "click", ->
       checked = $(".list-item input:checkbox:checked").map ->
         $(this).val()
