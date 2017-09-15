@@ -6,6 +6,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
   before_action :set_item, only: [
     :show, :edit, :update, :delete, :destroy,
+    :public, :preparation, :qNA
   ]
 
   before_action :set_selected_items, only: [

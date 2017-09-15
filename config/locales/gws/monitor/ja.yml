@@ -6,6 +6,7 @@ ja:
       preparation: 受取待にする
       qNA: 該当なしにする
       export_csv: CSVに出力する
+      answer: 回答する
     options:
       state:
         public : 受取済
