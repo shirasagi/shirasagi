@@ -4,10 +4,12 @@ production:
   clients:
     default:
       database: ss
+      post_database: ss_post
       hosts:
         - localhost:27017
     public:
       database: ss_public
+      post_database: ss_post_public
       hosts:
         - otherhost:27017
 

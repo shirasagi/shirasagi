@@ -5,6 +5,10 @@ class Inquiry::Answer
 
   attr_accessor :cur_node
 
+  if database = Mongoid::Config.clients.dig(:default, :post_database)
+    store_in database: database
+  end
+
   seqid :id
   field :node_id, type: Integer
   field :remote_addr, type: String
