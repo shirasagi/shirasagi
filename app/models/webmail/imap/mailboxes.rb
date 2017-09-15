@@ -2,7 +2,8 @@ module Webmail::Imap
   class Mailboxes
     include Webmail::ImapAccessor
 
-    def initialize
+    def initialize(imap)
+      @imap = imap
       @list = cache_find
       sort
     end
@@ -79,6 +80,7 @@ module Webmail::Imap
       return 0 if inbox.status.recent == 0
 
       counts = Webmail::Filter.user(imap.user).enabled.map do |filter|
+        filter.imap = imap
         filter.apply 'INBOX', ['NEW']
       end
 
@@ -87,7 +89,7 @@ module Webmail::Imap
     end
 
     def cache_find
-      Webmail::Mailbox.where(imap.account_scope).entries
+      Webmail::Mailbox.where(imap.account_scope).entries.each { |item| item.imap = imap }
     end
 
     def imap_find
@@ -97,6 +99,7 @@ module Webmail::Imap
     def create_mailboxes(list)
       list.map do |ml|
         item = Webmail::Mailbox.new(imap.account_scope)
+        item.imap = imap
         item.parse_mailbox_list(ml)
         item.status
         item.save
@@ -108,6 +111,7 @@ module Webmail::Imap
       names = imap.special_mailboxes - @list.map(&:name)
       names.each do |name|
         item = Webmail::Mailbox.new(imap.account_scope)
+        item.imap = imap
         item.name = name
         item.sync.save || item.sync(false).save
         #status

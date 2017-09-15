@@ -2,7 +2,8 @@ module Webmail::Imap
   class Mail
     include Webmail::ImapAccessor
 
-    def initialize
+    def initialize(imap)
+      @imap = imap
       @mailbox = 'INBOX'
       @search = %w(UNDELETED)
       @sort = %w(REVERSE ARRIVAL)
@@ -82,6 +83,7 @@ module Webmail::Imap
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
 
       item = Webmail::Mail.new
+      item.imap = imap
       item.parse(resp[0])
       item.fetch_body if division.include?(:body)
       item
@@ -94,6 +96,7 @@ module Webmail::Imap
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
 
       item = Webmail::Mail.new
+      item.imap = imap
       item.body_structure = resp[0].attr['BODYSTRUCTURE']
 
       part = item.all_parts[section]
