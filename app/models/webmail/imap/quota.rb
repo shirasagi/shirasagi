@@ -2,7 +2,8 @@ module Webmail::Imap
   class Quota
     include Webmail::ImapAccessor
 
-    def initialize
+    def initialize(imap)
+      @imap = imap
       return unless enabled?
       @item = cache_find || Webmail::Quota.new(quota_root_scope)
     end

@@ -48,7 +48,7 @@ class Webmail::AccountSettingsController < ApplicationController
     user.attributes = get_params
     user.valid?
 
-    @imap = Webmail::Imap.set_user(user)
+    @imap = Webmail::Imap::Base.new(user)
     @imap.conf[:password] ||= @cur_user.decrypted_password
 
     if @imap.login
