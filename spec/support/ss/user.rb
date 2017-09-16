@@ -17,10 +17,11 @@ def ss_site
 end
 
 def login_user(user)
-  visit "#{sns_login_path}?ref=/robots.txt"
+  visit sns_login_path
   within "form" do
     fill_in "item[email]", with: user.email
     fill_in "item[password]", with: "pass"
+    find('input#ref', visible: false).set "/robots.txt"
     click_button "ログイン"
   end
 end
