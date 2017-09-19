@@ -8,6 +8,8 @@
  */
 
 // base
+@import "bootstrap-sprockets";
+@import "bootstrap";
 @import "init";
 @import "lib";
 @import "pc_mb";

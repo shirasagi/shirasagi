@@ -40,11 +40,16 @@ GEM
       public_suffix (~> 2.0, >= 2.0.2)
     arel (6.0.3)
     ast (2.2.0)
+    autoprefixer-rails (7.1.1)
+      execjs
     autosize-rails (1.18.17)
       rails (>= 3.1)
     bindata (2.2.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bootstrap-sass (3.3.7)
+      autoprefixer-rails (>= 5.2.1)
+      sass (>= 3.3.4)
     brakeman (3.2.1)
       erubis (~> 2.6)
       haml (>= 3.0, < 5.0)
@@ -525,6 +530,7 @@ PLATFORMS
 
 DEPENDENCIES
   autosize-rails
+  bootstrap-sass
   brakeman
   browser
   bxslider-rails
