@@ -33,6 +33,7 @@ ja:
       delete_one: 今回のみ
       delete_later: 以降すべて
       delete_all: 一連のスケジュールすべて
+      comment: コメント
     options:
       allday:
         allday: 終日
@@ -94,6 +95,7 @@ ja:
       gws/schedule/facility: 設備予約
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
+      gws/schedule/comments: コメント
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理

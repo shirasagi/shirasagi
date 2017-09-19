@@ -24,6 +24,7 @@ SS::Application.routes.draw do
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     resources :holidays, concerns: :plans
+    resources :comments, path: ':plan_id/comments', only: :create
 
     resources :todos, concerns: :plans do
       get :finish, on: :member
