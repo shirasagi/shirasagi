@@ -5,8 +5,8 @@ class Inquiry::Answer
 
   attr_accessor :cur_node
 
-  if database = Mongoid::Config.clients.dig(:default, :post_database)
-    store_in database: database
+  if client = Mongoid::Config.clients[:default_post]
+    store_in client: :default_post, database: client[:database]
   end
 
   seqid :id
