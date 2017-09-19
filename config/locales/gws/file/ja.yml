@@ -7,6 +7,9 @@ ja:
     delete_other_gws_file_settings: ファイル設定の削除（全て）
     delete_private_gws_file_settings: ファイル設定の削除（所有）
 
+  modules:
+    gws/file: 共有ファイル
+
   mongoid:
     models:
       gws/file/group_setting: ファイル設定
