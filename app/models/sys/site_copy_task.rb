@@ -2,7 +2,7 @@ class Sys::SiteCopyTask
   include SS::Model::Task
   include Sys::Permission
 
-  set_permission_name "sys_sites"
+  set_permission_name "sys_sites", :edit
 
   default_scope ->{ where(name: "sys::site_copy") }
 

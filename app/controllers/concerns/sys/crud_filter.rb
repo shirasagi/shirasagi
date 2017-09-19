@@ -7,13 +7,13 @@ module Sys::CrudFilter
   end
 
   def index
-    @items = @model.allow(:edit, @cur_user).
+    @items = @model.allow(:read, @cur_user).
       order_by(_id: -1).
       page(params[:page]).per(100)
   end
 
   def show
-    raise "403" unless @item.allowed?(:edit, @cur_user)
+    raise "403" unless @item.allowed?(:read, @cur_user)
     render
   end
 
@@ -40,12 +40,12 @@ module Sys::CrudFilter
   end
 
   def delete
-    raise "403" unless @item.allowed?(:edit, @cur_user)
+    raise "403" unless @item.allowed?(:delete, @cur_user)
     render
   end
 
   def destroy
-    raise "403" unless @item.allowed?(:edit, @cur_user)
+    raise "403" unless @item.allowed?(:delete, @cur_user)
     render_destroy @item.destroy
   end
 

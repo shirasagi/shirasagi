@@ -15,8 +15,8 @@ class Sys::SitesController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:edit, @cur_user)
-    @items = @model.allow(:edit, @cur_user).
+    raise "403" unless @model.allowed?(:read, @cur_user)
+    @items = @model.allow(:read, @cur_user).
       order_by(_id: -1)
   end
 
