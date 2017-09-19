@@ -10,6 +10,9 @@
   <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/schedule/group_setting/category'), gws_schedule_categories_path %></h3>
   <% end %>
+  <% if Gws::Schedule::Todo.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('mongoid.models.gws/schedule/group_setting/todo'), gws_schedule_todo_setting_path %></h3>
+  <% end %>
 </nav>
 
 <%= render partial: "gws/main/conf_navi" %>

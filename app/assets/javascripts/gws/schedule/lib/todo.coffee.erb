@@ -1,0 +1,35 @@
+class @Gws_Schedule_Todo
+  @render: ->
+    $(".list-head .finish-all").on "click", ->
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      token = $('meta[name="csrf-token"]').attr('content')
+      form = $("<form/>", action: "todos/finish_all", method: "post")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
+
+    $(".list-head .revert-all").on "click", ->
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      token = $('meta[name="csrf-token"]').attr('content')
+      form = $("<form/>", action: "todos/revert_all", method: "post")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
+
+    $(".list-head .disable-all").on "click", ->
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      token = $('meta[name="csrf-token"]').attr('content')
+      form = $("<form/>", action: "todos/disable_all", method: "post")
+      form.append($("<input/>", name: "_method", value: 'delete', type: "hidden"))
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
