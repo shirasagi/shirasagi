@@ -19,6 +19,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       let(:end_at) { Time.zone.parse(end_at_text) }
       let(:repeat_type) { "daily" }
       let(:repeat_type_label) { I18n.t("gws/schedule.options.repeat_type.#{repeat_type}") }
+      let(:text) { unique_id }
       let(:interval) { 3 }
 
       it do
@@ -32,6 +33,15 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           select repeat_type_label, from: "item[repeat_type]"
           select interval.to_s, from: "item[interval]"
           fill_in "item[repeat_start]", with: repeat_start_text
+          fill_in "item[repeat_end]", with: repeat_end_text
+          fill_in "item[text]", with: text
+
+          # 1 回目の end_at への入力が強制的に 20:00 にされてしまう。
+          # 2 回入力することで、意図した年月日を設定する。
+          fill_in "item[end_at]", with: end_at_text
+
+          # 1 回目の repeat_end への入力が強制的に現在日にされてしまう。
+          # 2 回入力することで、意図した年月日を設定する。
           fill_in "item[repeat_end]", with: repeat_end_text
 
           click_on "保存"
@@ -61,7 +71,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           expect(item.end_at).to eq end_at
           expect(item.allday).to be_nil
           expect(item.repeat_plan_id).not_to be_nil
-          expect(item.text).to be_nil
+          expect(item.text).to eq text
         end
 
         # gws_reminders
@@ -104,6 +114,14 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           select interval.to_s, from: "item[interval]"
           choose "item_repeat_base_#{repeat_base}"
           fill_in "item[repeat_start]", with: repeat_start_text
+          fill_in "item[repeat_end]", with: repeat_end_text
+
+          # 1 回目の end_at への入力が強制的に 20:00 にされてしまう。
+          # 2 回入力することで、意図した年月日を設定する。
+          fill_in "item[end_at]", with: end_at_text
+
+          # 1 回目の repeat_end への入力が強制的に現在日にされてしまう。
+          # 2 回入力することで、意図した年月日を設定する。
           fill_in "item[repeat_end]", with: repeat_end_text
 
           click_on "保存"

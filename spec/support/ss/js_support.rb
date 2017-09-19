@@ -27,8 +27,30 @@ module SS
       end
     end
 
+    def colorbox_opened?
+      opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
+      return true if opacity.nil?
+      opacity.to_f == 0.9
+    end
+
+    def colorbox_closed?
+      opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
+      return true if opacity.nil?
+      opacity.to_f == 0
+    end
+
     def wait_for_cbox
       wait_for_selector("div#ajax-box table.index")
+    end
+
+    def wait_for_cbox_close
+      Timeout.timeout(ajax_timeout) do
+        loop do
+          yield if block_given?
+          break if colorbox_closed?
+          sleep 1
+        end
+      end
     end
 
     def save_full_screenshot(opts = {})

@@ -20,7 +20,6 @@ shared_examples "crud flow" do
     click_link I18n.t('ss.links.delete')
     click_button I18n.t('ss.buttons.delete')
 
-    expect(status_code).to eq 200
     expect(current_path).to eq index_path
   end
 end

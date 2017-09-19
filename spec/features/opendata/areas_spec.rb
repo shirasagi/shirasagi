@@ -15,7 +15,7 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
     it "without auth" do
       login_ss_user
       visit opendata_areas_path(site, node)
-      expect(status_code).to eq 403
+      expect(page).to have_css('h1', text: '403 Forbidden')
     end
   end
 
@@ -54,6 +54,7 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
 
       # update
       click_on I18n.t('ss.links.edit')
+      find('#addon-cms-agents-addons-meta .toggle-head h2').click
       fill_in 'item[keywords]', with: keywords.join(' ')
       click_on I18n.t('ss.buttons.save')
       Opendata::Node::Area.first.tap do |node|

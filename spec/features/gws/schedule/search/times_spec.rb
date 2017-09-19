@@ -9,9 +9,6 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example do
 
     it "#index" do
       visit path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-
       within "form.search" do
         first('input[type=submit]').click
       end

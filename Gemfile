@@ -88,6 +88,7 @@ group :development, :test do
   gem 'guard-rspec', '~> 4.3.1'
   gem 'guard-rubocop', '~> 1.1.0'
   gem 'poltergeist', require: false
+  gem 'selenium-webdriver', require: false
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-byebug'

@@ -4,7 +4,7 @@ describe "recommend_agents_parts_similarity", type: :feature, dbscope: :example 
   let!(:site) { cms_site }
   let!(:site2) { create :cms_site, name: "another", host: "another", domains: "another.localhost.jp" }
 
-  let!(:layout) { create_cms_layout [part] }
+  let!(:layout) { create_cms_layout part }
   let!(:part) { create :recommend_part_similarity, filename: "node/part" }
   let!(:node) { create :cms_node, layout_id: layout.id, filename: "node" }
 
@@ -45,7 +45,6 @@ describe "recommend_agents_parts_similarity", type: :feature, dbscope: :example 
     it "#index" do
       visit item1.url
 
-      expect(status_code).to eq 200
       expect(page).to have_css(".recommend-similarity")
       expect(page).to have_link item2.name
       expect(page).to have_link item3.name
@@ -60,7 +59,6 @@ describe "recommend_agents_parts_similarity", type: :feature, dbscope: :example 
       expect((i1 < i2) && (i2 < i3) && (i3 < i4)).to be_truthy
 
       visit item2.url
-      expect(status_code).to eq 200
       expect(page).to have_css(".recommend-similarity")
       expect(page).to have_link item1.name
       expect(page).to have_link item3.name

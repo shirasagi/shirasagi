@@ -8,8 +8,8 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
 
   context "basic crud" do
     let!(:urgency_node) { create :urgency_node_layout, cur_site: site }
-    let!(:layout1) { create_cms_layout([], cur_node: urgency_node) }
-    let!(:layout2) { create_cms_layout([], cur_node: urgency_node) }
+    let!(:layout1) { create_cms_layout(cur_node: urgency_node) }
+    let!(:layout2) { create_cms_layout(cur_node: urgency_node) }
     let(:model) { Jmaxml::Action::SwitchUrgency }
     let(:name1) { unique_id }
     let(:name2) { unique_id }

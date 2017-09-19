@@ -4,7 +4,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
   let(:site) { cms_site }
   let(:part_html) { '<div id="tool"><nav><span id="ss-kana">ふりがなをつける</span></nav></div>' }
   let(:part) { create :cms_part_free, cur_site: site, filename: "tool", html: part_html }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
   let(:page_html) do
     html = []

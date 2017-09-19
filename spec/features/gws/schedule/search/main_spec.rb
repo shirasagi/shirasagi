@@ -9,15 +9,16 @@ describe "gws_schedule_search", type: :feature, dbscope: :example do
 
     it "#index" do
       visit path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_css('.gws-schedule-search-users h2', text: I18n.t('gws/schedule.search_users'))
+      expect(page).to have_css('.gws-schedule-search-times h2', text: I18n.t('gws/schedule.search_times'))
 
+      fill_in 's[keyword]', with: gws_user.name
       first('.gws-schedule-search-users input[type=submit]').click
-      expect(status_code).to eq 200
+      expect(page).to have_css('#calendar-controller')
 
       visit path
       first('.gws-schedule-search-times input[type=submit]').click
-      expect(status_code).to eq 200
+      expect(page).to have_css('.gws-schedule-search-times-result')
     end
   end
 end

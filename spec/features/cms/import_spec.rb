@@ -9,15 +9,13 @@ describe "cms_import" do
 
     it "#import" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/import/site.zip"
-        wait_for_ajax
         click_button "取り込み"
       end
-      expect(status_code).to eq 200
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))
     end
   end
 end

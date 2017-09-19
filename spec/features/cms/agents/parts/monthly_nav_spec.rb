@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "cms_agents_parts_monthly_nav", type: :feature, dbscope: :example do
   let(:site)   { cms_site }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:node)   { create :cms_node_archive, cur_site: site, layout_id: layout.id, filename: "node" }
   let(:index_url) { "#{node.full_url}#{Time.zone.now.year}#{format('%02d', Time.zone.now.month)}" }
   let(:part) { create :cms_part_monthly_nav, filename: "node/part", periods: 24 }

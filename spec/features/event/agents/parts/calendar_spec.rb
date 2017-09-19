@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
   let(:site)   { cms_site }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:node)   { create :cms_node, layout_id: layout.id, filename: "node" }
   let(:part)   { create :event_part_calendar, filename: "node/part" }
 

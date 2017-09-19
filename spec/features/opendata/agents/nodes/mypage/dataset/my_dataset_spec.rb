@@ -51,7 +51,6 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
     it do
       visit index_url
       expect(current_path).to eq index_url.path
-      expect(status_code).to eq 200
       within "table.opendata-datasets" do
         expect(page).to have_content dataset.name
       end
@@ -61,20 +60,17 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
   it "#new_create_edit_delete" do
     visit index_url
     click_link "新規作成"
-    expect(status_code).to eq 200
 
     fill_in "item_name", with: item_name
     fill_in "item_text", with: item_text
     check category.name
     click_button "公開保存"
-    expect(status_code).to eq 200
 
     within "table.opendata-datasets" do
       expect(page).to have_content item_name
     end
 
     click_link item_name
-    expect(status_code).to eq 200
 
     within "table.opendata-dataset" do
       expect(page).to have_content item_name
@@ -83,13 +79,11 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
     end
 
     click_link "編集"
-    expect(status_code).to eq 200
     within "form#item-form" do
       fill_in "item_name", with: item_name2
     end
 
     click_button "公開保存"
-    expect(status_code).to eq 200
 
     within "table.opendata-dataset" do
       expect(page).to have_content item_name2
@@ -99,7 +93,6 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
 
     click_link "削除"
     click_button "削除"
-    expect(status_code).to eq 200
     expect(current_path).to eq index_url.path
 
     within "table.opendata-datasets" do
@@ -136,13 +129,11 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
     it do
       visit index_url
       click_link "新規作成"
-      expect(status_code).to eq 200
 
       fill_in "item_name", with: item_name
       fill_in "item_text", with: item_text
       check category.name
       click_button "非公開保存"
-      expect(status_code).to eq 200
 
       click_link item_name
       click_link 'リソースを管理する'

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "article_agents_parts_page", type: :feature, dbscope: :example do
   let(:site)   { cms_site }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:node)   { create :cms_node, layout_id: layout.id, filename: "node" }
   let(:part)   { create :article_part_page, filename: "node/part" }
 
@@ -20,7 +20,7 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
       expect(page).to have_selector(".article-pages article")
     end
 
-    it "#kana" do
+    it "#kana", mecab: true do
       visit node.url.sub('/', SS.config.kana.location + '/')
       expect(status_code).to eq 200
       expect(page).to have_css(".article-pages")

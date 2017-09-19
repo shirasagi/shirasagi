@@ -21,6 +21,7 @@ describe "opendata_agents_pages_idea", dbscope: :example, js: true do
   context "without login" do
     it do
       visit index_path
+      wait_for_ajax
       expect(current_path).to eq index_path
 
       expect(page).to have_css("header .id", text: page_idea.id.to_s)
@@ -65,6 +66,7 @@ describe "opendata_agents_pages_idea", dbscope: :example, js: true do
 
     it do
       visit index_path
+      wait_for_ajax
 
       expect(page).to have_css("header .id", text: page_idea.id.to_s)
       expect(page).to have_css("header .name", text: page_idea.name)
@@ -108,6 +110,7 @@ describe "opendata_agents_pages_idea", dbscope: :example, js: true do
 
     it do
       visit index_path
+      wait_for_ajax
 
       expect(page).to have_css("header .id", text: page_idea.id.to_s)
       expect(page).to have_css("header .name", text: page_idea.name)

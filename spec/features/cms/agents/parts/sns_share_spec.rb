@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
   context "public" do
     let(:site)   { cms_site }
-    let(:layout) { create_cms_layout [part] }
+    let(:layout) { create_cms_layout part }
     let(:node)   { create :cms_node, layout_id: layout.id }
     let(:part)   { create :cms_part_sns_share }
 
@@ -28,7 +28,7 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
   context "subsite" do
     let(:site0)   { cms_site }
     let(:site1)   { create(:cms_site_subdir, parent_id: site0.id) }
-    let(:layout) { create_cms_layout [part], site_id: site1.id }
+    let(:layout) { create_cms_layout part, site_id: site1.id }
     let(:node)   { create :cms_node, cur_site: site1, layout_id: layout.id }
     let(:part)   { create :cms_part_sns_share, cur_site: site1 }
 

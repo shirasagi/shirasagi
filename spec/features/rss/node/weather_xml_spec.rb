@@ -16,7 +16,6 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       click_on '新規作成'
@@ -87,15 +86,16 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
         click_on 'フォルダーを選択する'
       end
       expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
-      click_on "close"
+      wait_for_cbox_close { click_on("close") rescue nil }
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
         click_on 'フォルダーを選択する'
       end
+      wait_for_cbox
       expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
-      click_on "close"
+      wait_for_cbox_close { click_on("close") rescue nil }
 
       click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      expect(page).to have_css('#notice', text: '保存しました。')
     end
   end
 end

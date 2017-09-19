@@ -59,13 +59,13 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
           # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
-          find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).trigger('click')
+          find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
         end
         click_on opendata_dataset1.name
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('.ajax-selected td', text: opendata_dataset1.name)
           # click_on I18n.t('ss.buttons.save')
-          find('input.od-resource-file-save').trigger('click')
+          find('input.od-resource-file-save').click
           expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
@@ -73,7 +73,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           select I18n.t('cms.options.opendata_resource.none'), from: "item[opendata_resources][#{file3.id}][state]"
           # click_on I18n.t('ss.buttons.save')
-          find('input.od-resource-file-save').trigger('click')
+          find('input.od-resource-file-save').click
           expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
@@ -89,7 +89,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'
-          find('input#item_opendata_dataset_state_public').trigger('click')
+          find('input#item_opendata_dataset_state_public').click
         end
         click_on I18n.t('ss.buttons.publish_save')
 
@@ -204,12 +204,12 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
           # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
-          find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).trigger('click')
+          find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
         end
         click_on opendata_dataset1.name
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           # click_on I18n.t('ss.buttons.save')
-          find('input.od-resource-file-save').trigger('click')
+          find('input.od-resource-file-save').click
           expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
@@ -217,7 +217,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           select I18n.t('cms.options.opendata_resource.none'), from: "item[opendata_resources][#{file3.id}][state]"
           # click_on I18n.t('ss.buttons.save')
-          find('input.od-resource-file-save').trigger('click')
+          find('input.od-resource-file-save').click
           expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 
@@ -233,7 +233,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'
-          find('input#item_opendata_dataset_state_public').trigger('click')
+          find('input#item_opendata_dataset_state_public').click
         end
         click_on I18n.t('ss.buttons.publish_save')
 
@@ -305,13 +305,13 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
-          find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).trigger('click')
+          find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
         end
         click_on opendata_dataset2.name
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('.ajax-selected td', text: opendata_dataset2.name)
           # click_on I18n.t('ss.buttons.save')
-          find('input.od-resource-file-save').trigger('click')
+          find('input.od-resource-file-save').click
           expect(page).to have_css('.od-resource-file-save-status', text: I18n.t('ss.notice.saved'))
         end
 

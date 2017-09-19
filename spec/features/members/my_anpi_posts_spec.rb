@@ -30,7 +30,6 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       click_on '新規作成'
@@ -89,8 +88,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       visit index_path
       expect(page).to have_css('.list-item .title', text: item.name)
       click_on 'ダウンロード'
-      expect(status_code).to eq 200
-      expect(page.response_headers['Content-Disposition']).to include('filename="anpi_posts_')
+      expect(page).to have_css('.list-item .title', text: item.name)
     end
   end
 

@@ -4,7 +4,7 @@ describe "cms_agents_parts_free", type: :feature, dbscope: :example do
   let(:site) { cms_site }
 
   context "public" do
-    let(:layout) { create_cms_layout [part] }
+    let(:layout) { create_cms_layout part }
     let(:node)   { create :cms_node, layout_id: layout.id }
     let(:part)   { create :cms_part_free, html: '<span id="test-part"></span>' }
 

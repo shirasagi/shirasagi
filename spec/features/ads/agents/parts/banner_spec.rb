@@ -6,7 +6,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
   let!(:part) { create :ads_part_banner, cur_site: site, cur_node: node }
   let!(:item) { create :ads_banner, cur_site: site, cur_node: node }
 
-  let(:layout)   { create_cms_layout [part] }
+  let(:layout)   { create_cms_layout part }
   let(:node_cms) { create :cms_node, layout_id: layout.id }
 
   before do
@@ -17,12 +17,10 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
   context "public" do
     it "#count" do
       visit node_cms.full_url
-      expect(status_code).to eq 200
       expect(page).to have_css(".ads-banners")
       expect(page).to have_selector(".banners span a", text: item.name)
 
       click_on item.name
-      expect(status_code).to be_in [200, 304]
       expect(page).to have_selector(".banners span a", text: item.name)
 
       # wait for counting accesses by using img tag which is processed asynchronously.
@@ -34,18 +32,15 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
     end
   end
 
-  context "preview" do
+  context "preview", driver: :chrome do
     before { login_cms_user }
 
     it "#count" do
       visit cms_preview_path(site: site, path: node_cms.url)
-      expect(status_code).to eq 200
       expect(page).to have_css(".ads-banners")
       expect(page).to have_selector(".banners span a", text: item.name)
 
-      # click_on item.name
-      find(".banners span a", text: item.name).trigger("click")
-      expect(status_code).to eq 200
+      click_on item.name
       expect(page).to have_selector(".banners span a", text: item.name)
 
       # wait for counting accesses by using img tag which is processed asynchronously.

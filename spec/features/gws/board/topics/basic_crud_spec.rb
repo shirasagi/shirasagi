@@ -15,7 +15,6 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -34,7 +33,6 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           fill_in "item[text]", with: "text"
           click_button "保存"
         end
-        expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
         expect(page).to have_no_css("form#item-form")
 
@@ -51,7 +49,6 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 

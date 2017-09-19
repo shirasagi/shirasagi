@@ -14,7 +14,6 @@ describe "gws_staff_record_setting", type: :feature, dbscope: :example do
       click_link I18n.t('ss.links.edit')
       click_button I18n.t('ss.buttons.save')
 
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
     end
   end
