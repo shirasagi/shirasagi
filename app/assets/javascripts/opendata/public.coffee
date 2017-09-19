@@ -1,2 +1,2 @@
-//= require_self
-//= require opendata/lib/point
+#= require_self
+#= require opendata/lib/point

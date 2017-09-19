@@ -23,7 +23,9 @@ module SS::Model::File
 
     belongs_to :site, class_name: "SS::Site"
 
-    permit_params :in_file, :state, :name, :filename, :resizing
+    attr_accessor :in_data_url
+
+    permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
 

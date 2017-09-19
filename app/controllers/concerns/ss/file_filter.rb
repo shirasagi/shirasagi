@@ -25,6 +25,33 @@ module SS::FileFilter
     end
   end
 
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if @item.in_file.blank? && @item.in_data_url.present?
+      media_type, _, data = SS::DataUrl.decode(@item.in_data_url)
+      raise '400' if @item.content_type != media_type
+
+      tmp_file = Fs::UploadedFile.new('ss_file')
+      tmp_file.original_filename = @item.filename
+      tmp_file.content_type = @item.content_type
+      tmp_file.binmode
+      tmp_file.write(data)
+      tmp_file.rewind
+
+      begin
+        @item.in_file = tmp_file
+        render_update @item.update
+      ensure
+        tmp_file.close
+      end
+    else
+      render_update @item.update
+    end
+  end
+
   def view
     set_item
     set_last_modified
