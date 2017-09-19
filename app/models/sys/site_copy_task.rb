@@ -18,7 +18,8 @@ class Sys::SiteCopyTask
   permit_params copy_contents: []
 
   validates :target_host_name, presence: true, length: { maximum: 40 }
-  validates :target_host_host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
+  validates :target_host_host, presence: true, length: { minimum: 3, maximum: 16 }
+  validate :validate_target_host_host, if: ->{ target_host_host.present? }
   validates :target_host_domains, presence: true
   validate :validate_target_host_domains, if: ->{ target_host_domains.present? }
   validates :source_site_id, presence: true
@@ -33,7 +34,13 @@ class Sys::SiteCopyTask
 
   private
 
+  def validate_target_host_host
+    return if target_host_host.blank?
+    errors.add :target_host_host, :duplicate if SS::Site.ne(id: id).where(host: target_host_host).exists?
+  end
+
   def validate_target_host_domains
-    errors.add :target_host_domains, :duplicate if self.class.ne(id: id).any_in(domains: target_host_domains).exists?
+    return if target_host_domains.blank?
+    errors.add :target_host_domains, :duplicate if SS::Site.ne(id: id).any_in(domains: target_host_domains).exists?
   end
 end
