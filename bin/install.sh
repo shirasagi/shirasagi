@@ -45,8 +45,8 @@ else
 fi
 export PATH="$PATH:$RVM_HOME/bin"
 source $RVM_HOME/scripts/rvm
-rvm install 2.3.4
-rvm use 2.3.4 --default
+rvm install 2.4.1
+rvm use 2.4.1 --default
 gem install bundler
 
 git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
