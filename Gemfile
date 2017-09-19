@@ -4,7 +4,7 @@ gem 'rails', '4.2.9'
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
-gem 'therubyracer', '0.12.3', platforms: :ruby
+gem 'therubyracer', '~> 0.12.3', platforms: :ruby
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
@@ -43,7 +43,7 @@ gem 'kramdown'
 gem 'mail-iso-2022-jp'
 gem 'net-ldap'
 gem 'non-stupid-digest-assets'
-gem 'oj', '3.3.5'
+gem 'oj', '~> 3.3.5'
 gem 'open_uri_redirections'
 gem 'rails_autolink'
 gem 'rmagick'
