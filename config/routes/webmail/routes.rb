@@ -14,6 +14,7 @@ SS::Application.routes.draw do
       put :set_star
       put :unset_star
       put :move
+      put :rename_mailbox
       put :copy
       delete :empty
     end

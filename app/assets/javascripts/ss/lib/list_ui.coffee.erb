@@ -12,7 +12,16 @@ class @SS_ListUI
       list.mouseup (e) ->
         return if $(e.target).is('a') || $(e.target).closest('a,label').length
         menu = list.find(".tap-menu")
-        menu.css("left", e.pageX - menu.width() + 5).css("top", e.pageY).show()
+
+        if (menu.hasClass("tap-menu-relative"))
+          offset = $(this).offset()
+          relX = e.pageX - offset.left
+          relY = e.pageY - offset.top
+        else
+          relX = e.pageX
+          relY = e.pageY
+
+        menu.css("left", relX - menu.width() + 5).css("top", relY).show()
       list.mouseleave ->
         $(".tap-menu").hide()
 

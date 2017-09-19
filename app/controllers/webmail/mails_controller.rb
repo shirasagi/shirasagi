@@ -179,6 +179,14 @@ class Webmail::MailsController < ApplicationController
     render_change :move, reload: true
   end
 
+  def rename_mailbox
+    @item = Webmail::Mailbox.where(name: params[:src]).first
+    @item.name = params[:dst]
+    @item.sync = true
+    @item.update
+    render_change :move, reload: true
+  end
+
   def destroy_all
     @imap.uids_move_trash get_uids
     render_change :delete, reload: true
