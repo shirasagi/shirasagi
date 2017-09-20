@@ -1,0 +1,15 @@
+<%= code_editor ".mod-category-categorylist .html", mode: :html %>
+
+<dl class="see mod-category-categorylist">
+  <dt><%= @model.t :category_limit %><%= @model.tt :category_limit %></dt>
+  <dd><%= f.number_field :category_limit %></dd>
+
+  <dt><%= @model.t :category_upper_html %><%= @model.tt :category_upper_html %></dt>
+  <dd><%= f.text_area :category_upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :category_loop_html %><%= @model.tt :category_loop_html %></dt>
+  <dd><%= f.text_area :category_loop_html, class: :html, style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :category_lower_html %><%= @model.tt :category_lower_html %></dt>
+  <dd><%= f.text_area :category_lower_html, class: :html %></dd>
+</dl>

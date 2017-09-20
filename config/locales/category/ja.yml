@@ -9,6 +9,7 @@ ja:
     addons:
       category/category: カテゴリー
       category/setting: カテゴリー
+      category/category_list: カテゴリー内リスト表示
 
   cms:
     nodes:
@@ -29,6 +30,11 @@ ja:
         partial_node: フォルダー
         integration_master_node: 統合元フォルダー
         integration_partial_node: 対象フォルダー
+      category/addon/model/list:
+        category_limit: 表示件数
+        category_loop_html: ループHTML
+        category_upper_html: 上部HTML
+        category_lower_html: 下部HTML
 
   errors:
     messages:
@@ -52,3 +58,45 @@ ja:
       integration_partial_node:
         - 統合対象となるフォルダーを選択します。
         - 統合後は削除されます。
+    category/addon/model/list:
+      category_limit:
+        - リストの表示件数を指定します。
+      category_loop_html:
+        - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
+        - |-
+          下記のように記述します。
+          #{class}　リンク先のファイル名が表示されます。ファイル名に拡張子がある場合、拡張子を除いた部分が表示されます。
+          #{date}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
+          #{date.default}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
+          #{date.iso}　リンク先のページの公開日時が「2015-04-01」の形式で表示されます。
+          #{date.long}　リンク先のページの公開日時が「2015年4月1日」の形式で表示されます。
+          #{date.short}　リンク先のページの公開日時が「4/1」の形式で表示されます。
+          #{time}　リンク先のページの公開日時が「2015/4/1 12:34」の形式で表示されます。
+          #{time.default}　リンク先のページの公開日時が「2015/4/1 12:34」の形式で表示されます。
+          #{time.iso}　リンク先のページの公開日時が「2015-4-1 12:34」の形式で表示されます。
+          #{time.long}　リンク先のページの公開日時が「2015年4月1日 12時34分」の形式で表示されます。
+          #{time.short}　リンク先のページの公開日時が「15/04/01 12:34」の形式で表示されます。
+          #{url}　リンク先ページのURLが表示されます。
+          #{name}　リンク先ページのタイトルが表示されます。
+          #{index_name}　リンク先ページの一覧用タイトルが表示されます。未設定の場合はタイトルが表示されます。
+          #{summary}　リンク先ページのSummaryが表示されます。
+          #{html}　リンク先ページの本文が表示されます。
+          #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
+          #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
+          #{group}　リンク先ページの所有グループが表示されます。
+          #{groups}　リンク先ページの全ての所有グループが表示されます。
+          #{img.src}　リンク先ページ内に画像が存在する場合、リンク先ページの先頭の画像が表示されます。それ以外の場合、既定のパスが表示されます。
+          #{categories}　リンク先ページ内がカテゴリに関連付けられている場合、リンク先ページのカテゴリリストが表示されます。
+          #{pages.count}　リンク先ページ内にページが存在する場合、リンク先ページ内のページ数が表示されます。
+
+          使用例：
+          &lt;article class="#{class}">
+            &lt;header>
+              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
+      category_upper_html:
+        - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
+      category_lower_html:
+        - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
