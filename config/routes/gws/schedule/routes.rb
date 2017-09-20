@@ -25,6 +25,7 @@ SS::Application.routes.draw do
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     resources :holidays, concerns: :plans
     resources :comments, path: ':plan_id/comments', only: :create
+    resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
 
     resources :todos, concerns: :plans do
       get :finish, on: :member

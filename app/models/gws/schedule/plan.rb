@@ -11,6 +11,7 @@ class Gws::Schedule::Plan
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Schedule::Comments
+  include Gws::Addon::Schedule::Attendances
   include Gws::Addon::Member
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::ReadableSetting

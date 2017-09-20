@@ -1,0 +1,48 @@
+<% @attendances = @item.attendances.to_a %>
+<table class="index">
+  <thead>
+  <tr>
+    <th><%= Gws::User.t(:name) %></th>
+    <th><%= @model.t(:attendances) %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @item.sorted_overall_members.each do |member| %>
+    <tr>
+      <td><%= member.long_name %></td>
+      <td>
+        <% if member == @cur_user || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= render file: 'gws/agents/addons/schedule/attendances/_edit_attendance', locals: { member: member } %>
+        <% else %>
+          <%= render file: 'gws/agents/addons/schedule/attendances/_show_attendance', locals: { member: member } %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= jquery do %>
+  $('input.attendance').on('change', function(e) {
+    var $this = $(this);
+    var val = $this.val();
+
+    var $wrap = $this.closest('.attendances');
+    var memberId = $wrap.data('member-id');
+
+    var href = '<%= edit_gws_schedule_attendance_path(plan_id: @item, user_id: ':member_id') %>'.replace(':member_id', memberId);
+    var query = $.param({ item: { attendance_state: val }, redirect_to: '<%= request.fullpath %>' });
+
+    var $a = $('<a/>');
+    $a.attr('href', href + '?' + query);
+    $a.colorbox({
+      maxWidth: "80%",
+      maxHeight: "80%",
+      fixed: true,
+      open: true,
+      onClosed: function() {
+        var initValue = $wrap.data('init-value');
+        $wrap.find('.attendance').val([initValue]);
+      }});
+  });
+<% end %>
