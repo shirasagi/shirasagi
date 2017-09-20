@@ -2,7 +2,7 @@
     <span class="datetime"><%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
 <% end %>
 
-<% @items = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site).search_topics(params[:s]).page(params[:page]).per(50) %>
+<% @items = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site).search_answers(params[:s]).page(params[:page]).per(50) %>
 
 <%= render "gws/monitor/main/tabs" %>
 
