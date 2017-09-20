@@ -26,6 +26,20 @@ class Gws::Monitor::Topic
     criteria
   }
 
+  scope :search_topics, ->(params) {
+    criteria = where("$and" => [ "$or" => [{state: "public"}, {state: "preparation"}] ])
+    return criteria if params.blank?
+    criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
+    criteria
+  }
+
+  scope :search_answers, ->(params) {
+    criteria = where("$and" => [ "$or" => [{state: "qNA"}] ])
+    return criteria if params.blank?
+    criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
+    criteria
+  }
+
   def admin_setting_options
     [
         ['作成者が管理する', '1'],

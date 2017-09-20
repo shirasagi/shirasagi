@@ -1,0 +1,43 @@
+<%= jquery do %>
+    Gws_Monitor_Topic.render();
+
+    switch ("<%= @item[:state] %>"){
+      case "public":
+        $('.public').hide();
+        $('.preparation').show();
+        $('.qNA').show();
+        $('.primary').show();
+      break;
+      case "preparation":
+        $('.public').show();
+        $('.preparation').hide();
+        $('.qNA').hide();
+        $('.primary').hide();
+      break;
+      case "qNA":
+        $('.public').show();
+        $('.preparation').hide();
+        $('.qNA').hide();
+        $('.primary').show();
+      break;
+    }
+<% end %>
+
+<% addons = @item ? @item.class.addons.select{|addon| addon.klass != SS::Addon::Markdown} : [] %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t @item.name %></h2></div>
+    <div class="addon-body gws-board">
+      <div class="body markdown-body"><%= @item.html %></div>
+      <div class="menu">
+        <%= hidden_field_tag "item_id", @item.id %>
+        <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
+        <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
+        <button class="qNA btn"><%= t 'gws/monitor.links.qNA' %></button>
+        <%= link_to(t('gws/monitor.links.answer'), '#', class: 'btn primary') %>
+      </div>
+    </div>
+  </div>
+  <%= render file: '_addons_show', locals: { addons: addons } if addons.size > 0 %>
+</div>
