@@ -121,7 +121,7 @@ class Inquiry::Answer
   end
 
   def source_content
-    self.class.find_content(@cur_site, source_url)
+    self.class.find_content(@cur_site || site, source_url)
   end
 
   def source_full_url
