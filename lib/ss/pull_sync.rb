@@ -3,7 +3,7 @@ class SS::PullSync
     @model = model
     @client_name = model.client_name
     @collection_name = model.collection_name
-    @public_clients = Mongoid::Config.clients.select { |name, client| name =~ /^public_post(_|$)/ }
+    @public_clients = Mongoid::Config.clients.select { |name, client| name =~ /^public(_|$)/ }
   end
 
   def pull_all_and_delete
