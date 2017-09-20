@@ -21,11 +21,11 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
 
     it "#new" do
       visit new_path
-      wait_for_ajax
       within "form#item-form" do
         fill_in "item[name]", with: "name"
         click_button "保存"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: '保存しました。')
     end
 
@@ -37,20 +37,20 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
-      wait_for_ajax
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: '保存しました。')
     end
 
     it "#delete" do
       visit delete_path
-      wait_for_ajax
       within "form" do
         click_button "削除"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: '保存しました。')
     end
   end

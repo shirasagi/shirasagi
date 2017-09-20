@@ -15,6 +15,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
     it "#index" do
       item
       visit index_path
+      wait_for_ajax
       expect(page).to have_content(item.name)
     end
 
@@ -33,6 +34,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name"
         click_button "保存"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: '保存しました。')
     end
 
@@ -47,6 +49,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: '保存しました。')
     end
 
@@ -55,6 +58,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
+      wait_for_ajax
       expect(current_path).to eq index_path
       expect(page).to have_css('#notice', text: '保存しました。')
     end

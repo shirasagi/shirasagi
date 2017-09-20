@@ -11,6 +11,7 @@ describe "gws_schedule_user_settings", type: :feature, dbscope: :example do
 
     it "#show" do
       visit path
+      wait_for_ajax
       expect(page).to have_content(item.name)
     end
 
@@ -20,6 +21,7 @@ describe "gws_schedule_user_settings", type: :feature, dbscope: :example do
         uncheck("tab-g-#{item.id}")
         click_button "保存"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: '保存しました。')
     end
   end
