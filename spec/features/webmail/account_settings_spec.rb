@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "webmail_account_settings", type: :feature, dbscope: :example do
+describe "webmail_account_settings", type: :feature, dbscope: :example, imap: true do
   let(:show_path) { webmail_account_setting_path }
 
   context "with auth", js: true do
