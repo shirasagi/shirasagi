@@ -15,5 +15,23 @@ SS::Application.routes.draw do
       post :preparation_all, on: :collection
       post :qNA_all, on: :collection
     end
+
+    resources :answers, concerns: [:deletion] do
+      get :public, on: :member
+      get :preparation, on: :member
+      get :qNA, on: :member
+      post :public_all, on: :collection
+      post :preparation_all, on: :collection
+      post :qNA_all, on: :collection
+    end
+
+    resources :admins, concerns: [:deletion] do
+      get :public, on: :member
+      get :preparation, on: :member
+      get :qNA, on: :member
+      post :public_all, on: :collection
+      post :preparation_all, on: :collection
+      post :qNA_all, on: :collection
+    end
   end
 end

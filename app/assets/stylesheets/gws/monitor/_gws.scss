@@ -1,0 +1,31 @@
+// gws-monitor
+
+.gws-monitor-tabs {
+  @include clear;
+  margin-top: -1px;
+  a {
+    display: block;
+    float: left;
+    margin: 1px 0 -1px 6px;
+    border: 1px solid $gray4;
+    border-left: 3px solid #bbb;
+    border-radius: 0 4px 0 0;
+    background-color: $gray5;
+    color: #000;
+    .tab-name {
+      display: block;
+      padding: 5px 8px;
+      text-align: center;
+    }
+    &:hover {
+      border-left-color: $orange;
+      background-color: #fff;
+      text-decoration: none;
+    }
+  }
+  a.current {
+    border-bottom-color: #fff;
+    border-left-color: $orange;
+    background-color: #fff;
+  }
+}

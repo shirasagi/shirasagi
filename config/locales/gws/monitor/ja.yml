@@ -1,6 +1,10 @@
 ja:
   gws/monitor:
 
+    tabs:
+      unanswered: 未回答
+      answered: 回答済
+      admin: 管理者
     links:
       public: 受取済みにする
       preparation: 受取待ちにする

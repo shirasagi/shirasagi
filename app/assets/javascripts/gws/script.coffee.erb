@@ -26,5 +26,9 @@ $ ->
     menu = $(this)
     menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
+  $(".gws-monitor-tabs a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+
   Gws_Member.render()
 
