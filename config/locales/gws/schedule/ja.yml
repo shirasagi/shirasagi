@@ -57,6 +57,10 @@ ja:
       schedule_drag_drop_state:
         allow: 許可する
         deny: 許可しない
+      attendance_state:
+        unknown: 未確認
+        attendance: 参加
+        absence: 不参加
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
@@ -96,6 +100,7 @@ ja:
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント
+      gws/schedule/attendances: 出欠確認
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
@@ -127,6 +132,8 @@ ja:
       gws/schedule/group_setting/holiday: 休日設定
       gws/schedule/group_setting/category: 種別設定
       gws/schedule/group_setting/todo: ToDo設定
+      gws/schedule/comment: コメント
+      gws/schedule/attendance: 出欠
     errors:
       models:
         gws/schedule/plan:
@@ -182,6 +189,12 @@ ja:
         name: ToDo
         term: 期限
         todo_state: 状態
+      gws/addon/schedule/attendances:
+        attendance_check_state: 出欠確認
+        attendances: 出欠情報
+      gws/schedule/attendance:
+        in_comment: コメント
+        attendance_state: 出欠
 
   tooltip:
     gws/schedule/planable:
@@ -251,3 +264,7 @@ ja:
         - タスク名を入力します。
       term:
         - タスクの期限日を入力します。
+
+    gws/addon/schedule/attendances:
+      attendance_check_state:
+        - 出欠確認を有効にするかしないかを選択してください。
