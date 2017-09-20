@@ -2,15 +2,17 @@ ja:
   gws/monitor:
 
     links:
-      public: 受取済にする
-      preparation: 受取待にする
+      public: 受取済みにする
+      preparation: 受取待ちにする
       qNA: 該当なしにする
       export_csv: CSVに出力する
       answer: 回答する
     options:
       state:
-        public : 受取済
-        preparation: 受取待
+        closed: 未回答
+        public : 受取済み
+        preparation: 受取待ち
+        answered: 回答済み
         qNA: 該当なし
 
   modules:
