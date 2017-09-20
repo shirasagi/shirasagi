@@ -92,7 +92,7 @@ class Inquiry::Answer
         values = value.values
         value  = value.map { |k, v| v }.join("\n")
       elsif value.kind_of? ActionDispatch::Http::UploadedFile
-        ss_file = SS::File.new
+        ss_file = SS::File.new.with(client: Inquiry::Answer.client_name)
         ss_file.in_file = value
         ss_file.site_id = cur_site.id
         ss_file.state = "closed"
