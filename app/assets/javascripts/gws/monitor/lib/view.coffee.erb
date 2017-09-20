@@ -1,0 +1,8 @@
+class @Gws_Monitor_View
+
+  # Monitor tabs
+  @renderTabs: (selector)->
+    $(selector).find('a').click ->
+      url = $(this).attr('href')
+      $(this).attr('href', url)
+      return true
