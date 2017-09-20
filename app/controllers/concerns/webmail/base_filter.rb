@@ -25,11 +25,11 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    @imap = Webmail::Imap.set_user(@cur_user)
+    @imap = Webmail::Imap::Base.new(@cur_user)
   end
 
   def imap_disconnect
-    Webmail::Imap.disconnect
+    @imap.disconnect if @imap
   end
 
   def imap_login

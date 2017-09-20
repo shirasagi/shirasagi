@@ -1,0 +1,12 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name_with_code, { action: :show, id: item }, class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class=""><%= item.section_name %></span>
+  <span class="order"><%= item.order %></span>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

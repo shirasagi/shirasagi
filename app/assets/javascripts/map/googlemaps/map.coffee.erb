@@ -84,7 +84,7 @@ class @Map
         text = value["text"]
         marker_html = '<div class="marker-info">'
         if name && name != ""
-            marker_html += '<p>' + name + '</p>'
+          marker_html += '<p>' + name + '</p>'
           if text && text != ""
             $.each text.split(/[\r\n]+/), ->
               if this.match(/^https?:\/\//)

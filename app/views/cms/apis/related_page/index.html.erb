@@ -1,0 +1,59 @@
+<%= jquery do %>
+SS_SearchUI.modal();
+insertContent = function(cont) {
+  if (typeof tinymce !== "undefined") {
+    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
+  } else if (typeof CKEDITOR !== "undefined") {
+    CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
+  }
+};
+insertContents = function() {
+  if (!SS.disableClick($(this))) {
+    return false;
+  }
+  $("#ajax-box .items input:checkbox").filter(":checked").each(function() {
+    var item = $(this);
+    var data = item.closest("[data-id]");
+    var text = "<a href='/" + data.find(".filename").text() + "'>" + data.find(".select-item").text() + '</a>';
+    insertContent(text);
+  });
+  return $.colorbox.close();
+};
+<% end %>
+
+<div class="search-ui-form">
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit t("cms.apis.pages.search"), class: :btn %>
+<% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="filename"><%= @model.t :filename %></th>
+      <th class="updated"><%= @model.t :updated %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>" class="list-item">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <% link = "insertContent(\"<a href='#{item.url}'>#{item.name}</a>\");" %>
+        <td class="name"><%= link_to item.name, "#", class: "select-item", onclick: link %></td>
+        <td class="filename"><%= item.filename %></td>
+        <td class="updated"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select">
+  <%= link_to t("cms.apis.pages.select"), "#", class: "btn", onclick: 'insertContents();' %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

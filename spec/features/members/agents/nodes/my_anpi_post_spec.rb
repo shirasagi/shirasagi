@@ -41,7 +41,6 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
       it do
         visit index_url
         expect(current_path).to eq index_url
-        expect(status_code).to eq 200
 
         click_link '新規作成'
 
@@ -56,7 +55,6 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         end
 
         expect(current_path).to eq index_url
-        expect(status_code).to eq 200
 
         within 'table.member-anpi-post' do
           expect(page).to have_css('td.name a', text: cms_member.name)
@@ -100,7 +98,6 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
       it do
         visit index_url
         expect(current_path).to eq index_url
-        expect(status_code).to eq 200
 
         click_link '未登録者安否作成'
 
@@ -111,7 +108,6 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         end
 
         expect(current_path).to eq index_url
-        expect(status_code).to eq 200
 
         within 'table.member-anpi-post' do
           expect(page).to have_css('td.name a', text: name)

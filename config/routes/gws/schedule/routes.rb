@@ -22,6 +22,17 @@ SS::Application.routes.draw do
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     resources :holidays, concerns: :plans
+
+    resources :todos, concerns: :plans do
+      get :finish, on: :member
+      get :revert, on: :member
+      post :finish_all, on: :collection
+      post :revert_all, on: :collection
+      get :disable, on: :member
+      delete :disable_all, on: :collection
+    end
+    resource :todo_setting, only: [:show, :edit, :update]
+
     resources :categories, concerns: :plans
     resource :setting, only: [:show, :edit, :update]
     resource :user_setting, only: [:show, :edit, :update]

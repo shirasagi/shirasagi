@@ -22,8 +22,10 @@ describe "gws_users", type: :feature, dbscope: :example do
     it "#new", js: true do
       visit new_path
       first('.mod-gws-user').click_on "グループを選択する"
-      wait_for_cbox
-      first('a', text: gws_user.groups.first.trailing_name).trigger('click')
+      group = gws_user.groups.first
+      # first('a', text: group.trailing_name).click
+      parent_group = Gws::Group.find_by(name: group.name.split('/')[0..-2].join('/'))
+      first('a', text: parent_group.trailing_name).click
 
       within "form#item-form" do
         name = unique_id
@@ -32,9 +34,7 @@ describe "gws_users", type: :feature, dbscope: :example do
         fill_in "item[in_password]", with: "pass"
         click_button "保存"
       end
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do

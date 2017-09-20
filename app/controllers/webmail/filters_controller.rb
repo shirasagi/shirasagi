@@ -4,7 +4,7 @@ class Webmail::FiltersController < ApplicationController
 
   model Webmail::Filter
 
-  before_action :imap_login, only: [:apply]
+  before_action :imap_login, except: [:index]
 
   private
 
@@ -13,7 +13,7 @@ class Webmail::FiltersController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user }
+    { cur_user: @cur_user, imap: @imap }
   end
 
   public

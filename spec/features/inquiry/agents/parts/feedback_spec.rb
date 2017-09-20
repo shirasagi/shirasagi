@@ -4,7 +4,7 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :inquiry_node_form, cur_site: site }
   let(:part) { create :inquiry_part_feedback, cur_site: site, cur_node: node }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:page1) { create :cms_page, cur_site: site, layout_id: layout.id }
 
   let(:contents_column) { node.columns[0] }

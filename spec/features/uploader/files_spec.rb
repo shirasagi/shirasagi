@@ -147,12 +147,13 @@ describe "uploader_files", dbscope: :example, type: :feature do
       # check one file
 
       find(:css, "input[value='logo.png']").set(true)
-      within "div.list-head-action" do
-        click_button "削除する"
+      page.accept_alert do
+        within "div.list-head-action" do
+          click_button "削除する"
+        end
       end
 
-      page.accept_alert
-
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       within "div.info" do
         expect(page).to have_css("a.file")
       end

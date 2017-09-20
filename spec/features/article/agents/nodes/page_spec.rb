@@ -14,14 +14,12 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
 
     it "#index" do
       visit node.url
-      expect(status_code).to eq 200
       expect(page).to have_css(".article-pages")
       expect(page).to have_selector(".article-pages article")
     end
 
-    it "#index with kana" do
+    it "#index with kana", mecab: true do
       visit node.url.sub('/', SS.config.kana.location + '/')
-      expect(status_code).to eq 200
       expect(page).to have_css(".article-pages")
       expect(page).to have_selector(".article-pages article")
       expect(page).to have_selector("a[href='/node/item.html']")
@@ -29,7 +27,6 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
 
     it "#index with mobile" do
       visit node.url.sub('/', site.mobile_location + '/')
-      expect(status_code).to eq 200
       expect(page).to have_css(".article-pages")
       expect(page).to have_selector(".article-pages .tag-article")
       expect(page).to have_selector("a[href='/mobile/node/item.html']")
@@ -37,7 +34,7 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
 
     it "#rss" do
       visit "#{node.url}rss.xml"
-      expect(status_code).to eq 200
+      expect(page).to have_content(item.full_url)
     end
   end
 
@@ -56,7 +53,6 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
 
     it "#rss" do
       visit "#{node.url}rss.xml"
-      expect(status_code).to eq 200
       expect(page).to have_content("<span class=\"control-chars\"></span>")
     end
   end

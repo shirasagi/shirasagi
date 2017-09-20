@@ -19,7 +19,7 @@ class Webmail::MailsController < ApplicationController
   end
 
   def fix_params
-    @imap.account_scope.merge(cur_user: @cur_user, mailbox: @mailbox)
+    @imap.account_scope.merge(cur_user: @cur_user, mailbox: @mailbox, imap: @imap)
   end
 
   def set_item

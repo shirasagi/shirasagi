@@ -360,6 +360,11 @@ td {
   a.current, a:hover {
     background-color: $gray1;
   }
+  h3 a {
+    display: block;
+    padding: 5px 15px 5px 60px;
+    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+  }
   .icon-node:before {
     background-position: left -32px;
   }
@@ -947,6 +952,18 @@ footer.send {
 .btn-success {
   @include btn-orange;
 }
+.btn-toggle {
+  input[type="checkbox"] {
+    display: none;
+  }
+  span {
+    @include btn;
+  }
+  input[type="checkbox"]:checked + span {
+    @include btn-active;
+  }
+}
+
 .chorg-revisions {
   margin-bottom: 10px;
   .btn {
@@ -1149,6 +1166,10 @@ footer.send {
   margin-bottom: 15px;
   padding: 12px;
   @include mb { margin: 0 10px 10px; }
+  .title {
+    float: left;
+    font-size: 140%;
+  }
   form {
     float: right;
     @include mb {
@@ -1347,6 +1368,20 @@ table.index {
   .padding {
     display: inline-block;
     width: 15px;
+  }
+}
+table.index.data-table {
+  border-collapse: collapse;
+  th, td {
+    padding: 6px 8px;
+    border: $border-gray5;
+  }
+  th {
+    background: $gray1;
+    color: inherit;
+  }
+  td {
+    background: $white;
   }
 }
 .sortable-index {

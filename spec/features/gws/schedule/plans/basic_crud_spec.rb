@@ -13,9 +13,10 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     before { login_gws_user }
 
     it "#index" do
+      item
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
+      expect(page).to have_content(item.name)
     end
 
     it "#events" do
@@ -33,15 +34,12 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name"
         click_button "保存"
       end
-      expect(status_code.to_s).to match(/200|302/)
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_content(item.name)
     end
 
     it "#edit" do
@@ -50,16 +48,16 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#delete" do
+      item
       visit delete_path
       within "form" do
         click_button "削除"
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
   end
 end

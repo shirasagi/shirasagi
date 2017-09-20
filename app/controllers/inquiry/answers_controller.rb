@@ -26,7 +26,7 @@ class Inquiry::AnswersController < ApplicationController
         item.attributes = fix_params
         values = item.data.map do |d|
           if d.column.present?
-            [ d.column.name, d.value ]
+            [ d.column.try(:name), d.value ]
           end
         end
         values = values.compact.to_h

@@ -10,7 +10,6 @@ describe "gws_schedule_groups", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
   end

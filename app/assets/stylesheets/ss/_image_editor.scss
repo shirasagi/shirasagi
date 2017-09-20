@@ -1,0 +1,80 @@
+.ss-image-edit-canvas {
+  position: relative;
+  margin-top: 48px;
+
+  .toolbar {
+    display: block;
+    position: absolute;
+    top: -45px;
+    left: 0px;
+    background: $black3;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 2px;
+    white-space: nowrap;
+    padding: 0 5px;
+    z-index: 100;
+    color: $white;
+
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 20px;
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid $black3;
+    }
+  }
+
+  .btn-group {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    vertical-align: top;
+  }
+
+  .input-group {
+    display: inline-block;
+    margin: 4px 0;
+    padding: 0 2px;
+
+    label {
+      display: inline-block;
+    }
+    input {
+      width: 4em;
+      background: $gray4;
+    }
+  }
+
+  .btn {
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 2px 0 0 0;
+    width: 40px;
+    height: 40px;
+    color: $white;
+  }
+
+  //.btn-group ~ .btn-group {
+  //  &:before {
+  //    content: '';
+  //    position: absolute;
+  //    top: 2px;
+  //    width: 0px;
+  //    height: 35px;
+  //    border-left: 1px solid $gray2;
+  //    border-right: 1px solid $gray1;
+  //  }
+  //}
+  .btn-group ~ .btn-group {
+    border-left: 1px solid $gray2;
+    //border-right: 1px solid $gray1;
+  }
+}

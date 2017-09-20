@@ -21,13 +21,13 @@ describe "sns_message_threads", type: :feature, dbscope: :example do
       visit "#{path}/new"
       first('.sns-message-thread-members .ajax-box').click
       wait_for_cbox
-      first('a', text: user2.long_name).trigger('click')
+      first('a', text: user2.long_name).click
 
       within "form#item-form" do
         fill_in "item[text]", with: "text"
         first('.save').click
       end
-      expect(status_code).to eq 200
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do

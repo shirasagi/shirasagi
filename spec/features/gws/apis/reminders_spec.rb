@@ -12,7 +12,16 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example do
       visit path
       # Capybara::Poltergeist::TimeoutError
       # click_button "登録"
-      expect(status_code).to eq 200
+      within '#addon-gws-agents-addons-reminder div.gws-addon-reminder' do
+        click_on '解除'
+      end
+      expect(page).to have_css('.gws-addon-reminder-label', text: I18n.t("gws.reminder.states.empty"))
+
+      within '#addon-gws-agents-addons-reminder div.gws-addon-reminder' do
+        fill_in 'item_date', with: (Time.zone.now + 2.hours).strftime('%Y/%m/%d %H:%M')
+        click_on '登録'
+      end
+      expect(page).to have_css('.gws-addon-reminder-label', text: I18n.t("gws.reminder.states.entry"))
     end
   end
 end

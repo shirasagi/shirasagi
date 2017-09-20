@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
-  let!(:layout) { create_cms_layout [part] }
+  let!(:layout) { create_cms_layout part }
   let!(:part) { create :recommend_part_history, filename: "node/part" }
   let!(:node) { create :cms_node_node, layout_id: layout.id, filename: "node" }
   let!(:article_page) { create :article_page, layout_id: layout.id, filename: "node/article_page.html" }
@@ -26,7 +26,6 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
 
       it "#index" do
         visit node.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_no_link(node.name, href: node.url)
         expect(page).to have_no_link(article_page.name, href: article_page.url)
@@ -46,7 +45,6 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
         end
 
         visit article_page.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_link(node.name, href: node.url)
         expect(page).to have_no_link(article_page.name, href: article_page.url)
@@ -66,7 +64,6 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
         end
 
         visit cms_page.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_link(node.name, href: node.url)
         expect(page).to have_link(article_page.name, href: article_page.url)
@@ -86,7 +83,6 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
         end
 
         visit part.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_link(node.name, href: node.url)
         expect(page).to have_link(article_page.name, href: article_page.url)
@@ -107,28 +103,24 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
 
       it "#index" do
         visit node.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_no_link(node.name, href: node.url)
         expect(page).to have_no_link(article_page.name, href: article_page.url)
         expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit article_page.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_no_link(node.name, href: node.url)
         expect(page).to have_no_link(article_page.name, href: article_page.url)
         expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit cms_page.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_no_link(node.name, href: node.url)
         expect(page).to have_no_link(article_page.name, href: article_page.url)
         expect(page).to have_no_link(cms_page.name, href: cms_page.url)
 
         visit part.full_url
-        expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
         expect(page).to have_no_link(node.name, href: node.url)
         expect(page).to have_no_link(article_page.name, href: article_page.url)

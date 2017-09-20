@@ -18,7 +18,6 @@ describe 'cms_agents_nodes_photo_album', type: :feature, dbscope: :example, js: 
 
     before { visit photo_album_node.url }
     it "is displayed" do
-      expect(status_code).to eq 200
       expect(page).to have_css('body > div.member-photos > div.photo')
       expect(page).to have_text(article_page.name)
     end
@@ -35,7 +34,6 @@ describe 'cms_agents_nodes_photo_album', type: :feature, dbscope: :example, js: 
 
     before { visit photo_album_node.url }
     it "is not displayed" do
-      expect(status_code).to eq 200
       expect(page).to have_css('body > div.member-photos')
       expect(page).to have_no_css('body > div.member-photos > div.photo')
       expect(page).to have_no_text(article_page.name)

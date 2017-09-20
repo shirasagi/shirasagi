@@ -22,6 +22,7 @@ module Gws::Schedule::PlanHelper
     events  = plans.map { |m| m.calendar_format(@cur_user, @cur_site) }
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
     events += group_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
+    events += calender_todos opts[:holiday][0], opts[:holiday][1] if opts[:with_todo] == '1'
     events
   end
 
@@ -35,5 +36,18 @@ module Gws::Schedule::PlanHelper
     HolidayJapan.between(start_at, end_at).map do |date, name|
       { className: 'fc-holiday', title: "  #{name}", start: date, allDay: true, editable: false, noPopup: true }
     end
+  end
+
+  def calender_todos(start_at, end_at)
+    Gws::Schedule::Todo.
+        site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        active().
+        search(start: start_at, end: end_at).
+        map do |todo|
+          result = todo.calendar_format(@cur_user, @cur_site)
+          result[:restUrl] = popup_gws_schedule_todo_path(id: todo.id, site: @cur_site.id)
+          result
+        end
   end
 end

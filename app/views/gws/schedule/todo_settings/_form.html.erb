@@ -1,0 +1,5 @@
+<dl class="see">
+  <dt><%= @model.t :todo_delete_threshold %><%= @model.tt :todo_delete_threshold %></dt>
+  <dd><%= f.select :todo_delete_threshold,
+                   @item.todo_delete_threshold_options %> <%= t("datetime.prompts.year") %></dd>
+</dl>

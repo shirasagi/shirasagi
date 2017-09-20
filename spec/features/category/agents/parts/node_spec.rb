@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "category_agents_parts_node", type: :feature, dbscope: :example do
   let(:site)   { cms_site }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:node)   { create :cms_node, layout_id: layout.id, filename: "node" }
   let(:part)   { create :category_part_node, filename: "node/part" }
 

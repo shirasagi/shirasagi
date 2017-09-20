@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "key_visual_agents_parts_slide", type: :feature, dbscope: :example do
   let(:site)   { cms_site }
-  let(:layout) { create_cms_layout [part] }
+  let(:layout) { create_cms_layout part }
   let(:node)   { create :cms_node, layout_id: layout.id, filename: "node" }
   let(:part)   { create :key_visual_part_slide, filename: "node/part" }
 

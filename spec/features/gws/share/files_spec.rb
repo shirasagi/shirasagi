@@ -15,7 +15,6 @@ describe "gws_share_files", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -31,7 +30,6 @@ describe "gws_share_files", type: :feature, dbscope: :example do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
       expect(page).to have_css("div.info a.title", text: "logo.png")
@@ -47,7 +45,6 @@ describe "gws_share_files", type: :feature, dbscope: :example do
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 

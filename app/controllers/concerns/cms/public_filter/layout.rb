@@ -4,6 +4,7 @@ module Cms::PublicFilter::Layout
   include Cms::PublicHelper
   include Cms::PublicFilter::OpenGraph
   include Cms::PublicFilter::TwitterCard
+  include Cms::PublicFilter::ConditionalTag
 
   included do
     helper_method :render_layout_parts
@@ -63,14 +64,16 @@ module Cms::PublicFilter::Layout
   def render_layout(layout)
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
+    @cur_item.window_name ||= @cur_item.name
 
     @window_name = @cur_site.name
-    @window_name = "#{@cur_item.name} - #{@cur_site.name}" if @cur_item.filename != "index.html"
+    @window_name = "#{@cur_item.window_name} - #{@cur_site.name}" if @cur_item.filename != 'index.html'
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
     body = @cur_layout.body.to_s
+
     body = body.sub(/<body.*?>/) do |m|
       m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
       m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
@@ -87,6 +90,14 @@ module Cms::PublicFilter::Layout
 
     html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
+
+    html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
+      @window_name = Regexp.last_match(1)
+      ''
+    end
+
+    html = html.sub(/<meta[^>]*charset=[^>]*>/) { '' }
+
     html
   end
 
@@ -123,6 +134,10 @@ module Cms::PublicFilter::Layout
         next "<time datetime=\"#{date_convert(date, :iso, datetime)}\">#{convert_date}</time>"
       end
       convert_date
+    end
+
+    html.gsub!(conditional_tag_template) do
+      render_conditional_tag(Regexp.last_match)
     end
 
     html

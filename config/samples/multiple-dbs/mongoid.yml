@@ -2,15 +2,22 @@
 
 production:
   clients:
-    default:
+    default: # master
       database: ss
       hosts:
         - localhost:27017
-    public:
-      database: ss_public
+    default_post:
+      database: ss_post
+      hosts:
+        - localhost:27018
+    public: # slave
+      database: ss
       hosts:
         - otherhost:27017
-
+    public_post:
+      database: ss_post
+      hosts:
+        - otherhost:27018
 test:
   clients:
     default:
