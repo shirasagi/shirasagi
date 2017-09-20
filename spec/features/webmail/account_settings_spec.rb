@@ -8,7 +8,6 @@ describe "webmail_account_settings", type: :feature, dbscope: :example do
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
 
       click_link I18n.t('ss.links.edit')
       click_button I18n.t('webmail.buttons.test_connection')
