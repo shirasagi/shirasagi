@@ -11,7 +11,7 @@
     <tr>
       <td><%= member.long_name %></td>
       <td>
-        <% if member == @cur_user || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% if member == @cur_user || @item.allowed_for_managers?(:edit, @cur_user, site: @cur_site) %>
           <%= render file: 'gws/agents/addons/schedule/attendances/_edit_attendance', locals: { member: member } %>
         <% else %>
           <%= render file: 'gws/agents/addons/schedule/attendances/_show_attendance', locals: { member: member } %>
