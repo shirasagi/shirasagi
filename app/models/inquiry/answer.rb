@@ -137,6 +137,7 @@ class Inquiry::Answer
   def validate_data
     columns = Inquiry::Column.where(site_id: site_id, node_id: node_id, state: "public").order_by(order: 1)
     columns.each do |column|
+      next if column.input_type == "upload_file" && Mongoid::Config.clients[:default_post]
       column.validate_data(self, data.select { |d| column.id == d.column_id }.shift)
     end
   end

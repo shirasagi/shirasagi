@@ -27,8 +27,12 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def set_columns
+    disable_upload_file = {}
+    disable_upload_file = { :input_type.ne => 'upload_file' } if Mongoid::Config.clients[:default_post]
+
     @columns = Inquiry::Column.site(@cur_site).
       where(node_id: @cur_node.id, state: "public").
+      where(disable_upload_file).
       order_by(order: 1)
   end
 
