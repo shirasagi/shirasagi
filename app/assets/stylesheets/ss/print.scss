@@ -1,17 +1,3 @@
-#page {
-  &:after {
-    display: none;
-  }
-}
-
-#main {
-  float: none;
-  margin: 0;
-  .wrap {
-    margin: 0;
-  }
-}
-
 .sheet {
   width: 210mm;
   height: 296mm; /* 1mm余裕をもたせる */
@@ -23,8 +9,6 @@
 /* プレビュー用のスタイル */
 @media screen {
   #main {
-    float: none;
-    margin: 0;
     .wrap {
       margin: 10px 10px;
     }
