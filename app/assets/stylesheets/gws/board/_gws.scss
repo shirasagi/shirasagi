@@ -13,7 +13,7 @@
 
 // show
 .gws-board {
-  .topic, .comment {
+  .topic, .comment, .subscribed-users {
     @include box;
     margin-bottom: 2px;
     header {
@@ -57,5 +57,22 @@
   }
   .comments {
     padding-left: 20px;
+  }
+
+  .subscribed-users {
+    .index {
+      .name {
+        width: 40em;
+      }
+      time {
+        margin: 0 4px;
+        &:before {
+          content: '('
+        }
+        &:after {
+          content: ')'
+        }
+      }
+    }
   }
 }

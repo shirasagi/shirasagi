@@ -44,6 +44,10 @@
     <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
   </div>
   <% end %>
+
+  <% if @item.subscribed_users.present? %>
+  <%= render partial: 'gws/board/topics/subscribed_users' %>
+  <% end %>
 </div>
 
 <%= jquery do %>

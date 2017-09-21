@@ -11,6 +11,8 @@ ja:
       submit: 投稿
       update: 更新
       delete: 削除
+      browsing_state: 通知先
+      browsed: 閲覧
       list: トピック一覧へ
       confirm: 削除しますか？
       notice:
@@ -37,6 +39,9 @@ ja:
       permit_comment:
         allow: 許可する
         deny: 許可しない
+      browsed_state:
+        read: 既読
+        unread: 未読
     links:
       back_to_thread: 戻る
       comment: 返信する
@@ -91,6 +96,7 @@ ja:
         board_file_size: 添付最大サイズ
         board_file_size_per_topic: 添付最大サイズ/トピック単位
         board_file_size_per_post: 添付最大サイズ/投稿単位
+        board_browsed_delay: 既読にするまでの秒数
       gws/board/category:
         name: カテゴリー名
       gws/addon/board/category:
@@ -111,6 +117,8 @@ ja:
         - トピック単位での添付最大サイズを入力します。
       board_file_size_per_post:
         - 投稿単位での添付最大サイズを入力します。
+      board_browsed_delay:
+        - 掲示板を既読にするまでの秒数を入力します。
     gws/board/category:
       name:
         - カテゴリー名を入力します。
