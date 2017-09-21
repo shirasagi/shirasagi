@@ -30,7 +30,7 @@ ja:
         partial_node: フォルダー
         integration_master_node: 統合元フォルダー
         integration_partial_node: 対象フォルダー
-      category/addon/model/list:
+      category/addon/category_list:
         category_limit: 表示件数
         category_loop_html: ループHTML
         category_upper_html: 上部HTML
@@ -58,7 +58,10 @@ ja:
       integration_partial_node:
         - 統合対象となるフォルダーを選択します。
         - 統合後は削除されます。
-    category/addon/model/list:
+    category/addon/category_list:
+      category_list:
+        - |-
+          #{category_items}を記述時に表示するリストについて設定します。
       category_limit:
         - リストの表示件数を指定します。
       category_loop_html:

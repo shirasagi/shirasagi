@@ -1,6 +1,9 @@
 <%= code_editor ".mod-category-categorylist .html", mode: :html %>
 
 <dl class="see mod-category-categorylist">
+  <dt><%= @model.tt :category_list %></dt>
+  <dd></dd>
+
   <dt><%= @model.t :category_limit %><%= @model.tt :category_limit %></dt>
   <dd><%= f.number_field :category_limit %></dd>
 

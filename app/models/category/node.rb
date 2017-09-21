@@ -32,7 +32,7 @@ module Category::Node
     include History::Addon::Backup
     include Category::Addon::Integration
     include Category::Addon::Split
-    include Category::Addon::Model::List
+    include Category::TemplateVariable
 
     default_scope ->{ where(route: "category/page") }
   end
