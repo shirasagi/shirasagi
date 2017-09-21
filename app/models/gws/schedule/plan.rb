@@ -53,6 +53,10 @@ class Gws::Schedule::Plan
     readable_member_ids == [user.id]
   end
 
+  def attendance_check_plan?
+    attendance_check_enabled?
+  end
+
   alias allowed_for_managers? allowed?
 
   def allowed?(action, user, opts = {})

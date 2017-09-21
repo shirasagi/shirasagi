@@ -18,4 +18,11 @@ module Gws::Addon::Schedule::Attendances
   def attendance_check_enabled?
     attendance_check_state == 'enabled'
   end
+
+  def contains_unknown_attendance?
+    ids = sorted_overall_members.map(&:id)
+    return true if attendances.in(user_id: ids).count != ids.length
+
+    attendances.in(user_id: ids).where(attendance_state: 'unknown').present?
+  end
 end
