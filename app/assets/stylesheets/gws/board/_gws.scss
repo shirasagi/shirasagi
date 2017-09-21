@@ -1,4 +1,12 @@
 // list
+.gws-boards {
+  .unread {
+    background-color: #f9e9e3;
+    &:hover {
+      background: $orange2;
+    }
+  }
+}
 .gws-board-file-count {
   img {
     margin: 0 2px 0 5px;

@@ -12,23 +12,52 @@
   <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/board') %>
 </div>
 
-<% @index_title = proc do |item| %>
-  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-  <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-  <% if item.descendants_files_count.to_i > 0 %>
-    <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
-  <% end %>
-<% end %>
+<div class="index gws-boards">
+  <%= render file: "_list_head" %>
 
-<% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="categories">
-    <% item.categories.compact.each do |category| %>
-      <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id),
+  <ul class="list-items">
+    <% @items.each do |item| %>
+    <%
+      css_classes = %w(list-item)
+      if item.subscribed_users.where(id: @cur_user.id).present?
+        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
+      end
+    %>
+    <li class="<%= css_classes.join(' ') %>">
+      <nav class="tap-menu">
+        <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+        <% if item.try(:image) %>
+          <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+        <% elsif item.try(:image?) %>
+          <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+        <% end %>
+      </nav>
+
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <div class="info">
+        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+        <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+        <% if item.descendants_files_count.to_i > 0 %>
+          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+        <% end %>
+
+        <div class="meta">
+          <span class="id">#<%= item.id %></span>
+          <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="categories">
+            <% item.categories.compact.each do |category| %>
+              <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
+            <% end %>
+          </span>
+        </div>
+      </div>
+    </li>
     <% end %>
-  </span>
-<% end %>
+  </ul>
+</div>
 
-<%= render file: "gws/crud/index" %>
+<%= paginate @items if @items.try(:current_page) %>
