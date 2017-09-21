@@ -53,8 +53,10 @@ class Gws::Schedule::Plan
     readable_member_ids == [user.id]
   end
 
+  alias allowed_for_managers? allowed?
+
   def allowed?(action, user, opts = {})
-    return true if super
+    return true if allowed_for_managers?(action, user, opts)
     member?(user) || custom_group_member?(user) if action =~ /edit|delete/
   end
 
