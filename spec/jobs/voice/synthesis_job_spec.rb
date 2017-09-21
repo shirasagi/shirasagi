@@ -131,7 +131,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         Job::Log.first.tap do |log|
           expect(log.logs).to include(include("INFO -- : Started Job"))
           expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-          expect(log.logs).to include(include("WARN -- : Timeout::Error (execution expired):"))
+          expect(log.logs).to include(include("WARN -- : Net::OpenTimeout (execution expired):"))
           expect(log.logs).to include(include("FATAL -- : Failed Job"))
         end
       end
