@@ -22,6 +22,9 @@
       if item.subscribed_users.where(id: @cur_user.id).present?
         css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
       end
+      if item.severity.present?
+        css_classes << item.severity
+      end
     %>
     <li class="<%= css_classes.join(' ') %>">
       <nav class="tap-menu">

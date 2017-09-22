@@ -42,6 +42,9 @@ ja:
       browsed_state:
         read: 既読
         unread: 未読
+      severity:
+        normal: 通常
+        important: 重要
     links:
       back_to_thread: 戻る
       comment: 返信する
@@ -91,6 +94,7 @@ ja:
         updated: 最終更新日
         mode: 表示形式
         permit_comment: コメント
+        severity: 重要度
       gws/board/group_setting:
         board_new_days: 新着表示期間
         board_file_size: 添付最大サイズ
@@ -110,6 +114,8 @@ ja:
         - 表示形式を選択します。
       permit_comment:
         - コメントを許可するかどうかを選択します。
+      severity:
+        - 重要度を選択します。
     gws/board/group_setting:
       board_new_days:
         - 新着表示期間を入力します。
