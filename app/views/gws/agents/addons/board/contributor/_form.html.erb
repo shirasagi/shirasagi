@@ -1,0 +1,48 @@
+<%
+  checked = proc do |model, id, name|
+    @item.contributor_model == model && @item.contributor_id == id.to_s
+  end
+%>
+
+<% show_radio_button = proc do |model, id, name| %>
+  <label>
+    <%= radio_button_tag('tmp[contributor]', "#{model}:#{id}", checked.call(model, id, name), data: { model: model, id: id.to_s, name: name }) %>
+    <%= name %>
+  </label>
+<% end %>
+
+<dl class="see mod-gws-board-contributor">
+  <dt><%= @model.t(:contributor_name) %><%= @model.tt(:contributor_name) %></dt>
+  <dd>
+    <%= f.hidden_field(:contributor_model) %>
+    <%= f.hidden_field(:contributor_id) %>
+    <%= f.hidden_field(:contributor_name) %>
+
+    <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name) %>
+
+    <% @cur_user.groups.each do |group| %>
+      <% show_radio_button.call('Gws::Group', group.id, group.section_name) %>
+    <% end %>
+
+    <% Gws::CustomGroup.member(@cur_user).each do |group| %>
+      <% show_radio_button.call('Gws::CustomGroup', group.id, group.name) %>
+    <% end %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  $('.mod-gws-board-contributor input[name="tmp[contributor]"]').on('change', function() {
+    var $this = $(this);
+    $('.mod-gws-board-contributor input#item_contributor_model').val($this.data('model'));
+    $('.mod-gws-board-contributor input#item_contributor_id').val($this.data('id'));
+    $('.mod-gws-board-contributor input#item_contributor_name').val($this.data('name'));
+  });
+
+  var cur_val = $('.mod-gws-board-contributor input[name="tmp[contributor]"]:checked').val();
+  if (! cur_val) {
+    $('.mod-gws-board-contributor input[name="tmp[contributor]"]').val(['Gws::User:<%= @cur_user.id %>']);
+    $('.mod-gws-board-contributor input#item_contributor_model').val('Gws::User');
+    $('.mod-gws-board-contributor input#item_contributor_id').val(<%== @cur_user.id.to_s.to_json %>);
+    $('.mod-gws-board-contributor input#item_contributor_name').val(<%== @cur_user.long_name.to_json %>);
+  }
+<% end %>
