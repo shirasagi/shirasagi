@@ -24,7 +24,7 @@ Platform
 --------
 
 - CentOS, Ubuntu
-- Ruby 2.3
+- Ruby 2.4
 - Ruby on Rails 4
 - MongoDB 3
 - Unicorn
