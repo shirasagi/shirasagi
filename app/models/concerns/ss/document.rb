@@ -197,6 +197,15 @@ module SS::Document
     errors.add :base, :invalid_updated if in_updated.to_s != updated.to_s
   end
 
+  def record_timestamps
+    @record_timestamps = true if @record_timestamps.nil?
+    @record_timestamps
+  end
+
+  def record_timestamps=(val)
+    @record_timestamps = val
+  end
+
   private
 
   def set_db_changes
@@ -205,6 +214,7 @@ module SS::Document
 
   def set_updated
     return true if !changed?
+    return true if !record_timestamps
     self.updated = updated ? Time.zone.now : created
   end
 
