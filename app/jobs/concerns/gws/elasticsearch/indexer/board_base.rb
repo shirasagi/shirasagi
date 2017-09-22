@@ -55,7 +55,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:released] = topic.released.try(:iso8601)
       doc[:state] = post.state
 
-      doc[:user_name] = post.user_long_name
+      doc[:user_name] = post.contributor_name.presence || post.user_long_name
       doc[:group_ids] = post.groups.pluck(:id)
       doc[:custom_group_ids] = post.custom_groups.pluck(:id)
       doc[:user_ids] = post.users.pluck(:id)
