@@ -755,3 +755,6 @@ thumb_right.set(state: "public")
 editor_template_html = File.read("editor_templates/clear.html") rescue nil
 save_editor_template name: "回り込み解除", description: "回り込みを解除します",
   html: editor_template_html, order: 30, site_id: @site.id
+
+@site.editor_css_path = '/css/style.css'
+@site.update!
