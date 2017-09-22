@@ -7,4 +7,8 @@ class Gws::Board::Post
   include Gws::Board::DescendantsFileInfo
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
 end

@@ -1,0 +1,37 @@
+<%
+  def has_more?
+    return false if @result.blank?
+    @s.from != 0 || @result['hits']['total'] > @s.size
+  end
+
+  def to_kaminari
+    total_pages = @result['hits']['total'] / @s.size
+    total_pages += 1 if (@result['hits']['total'] % @s.size) != 0
+
+    current_page = @s.from / @s.size + 1
+
+    limit_value = @s.size
+
+    OpenStruct.new(
+      total_pages: total_pages,
+      current_page: current_page,
+      limit_value: limit_value
+    )
+  end
+%>
+
+<%= render partial: 'gws/elasticsearch/search/main/tabs' %>
+
+<div class="index">
+  <div class="list-head">
+    <%= render file: '_search' %>
+  </div>
+
+  <% if @result.present? %>
+    <%= render file: '_result' %>
+  <% end %>
+</div>
+
+<% if has_more? %>
+  <%= paginate to_kaminari %>
+<% end %>

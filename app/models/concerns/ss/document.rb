@@ -2,13 +2,13 @@ module SS::Document
   extend ActiveSupport::Concern
   extend SS::Translation
   include Mongoid::Document
+  include SS::PermitParams
   include SS::Fields::Sequencer
   include SS::Fields::Normalizer
 
   attr_accessor :in_updated
 
   included do
-    class_variable_set(:@@_permit_params, [])
     class_variable_set(:@@_text_index_fields, [])
 
     field :created, type: DateTime, default: -> { Time.zone.now }
@@ -82,15 +82,6 @@ module SS::Document
       field store, type: SS::Extensions::ObjectIds, default: [],
             overwrite: true, metadata: { elem_class: opts[:class_name] }.merge(opts[:metadata] || {})
       define_method(name) { opts[:class_name].constantize.where :_id.in => send(store) }
-    end
-
-    def permitted_fields
-      class_variable_get(:@@_permit_params)
-    end
-
-    def permit_params(*fields)
-      params = class_variable_get(:@@_permit_params)
-      class_variable_set(:@@_permit_params, params + fields)
     end
 
     def addon(path)

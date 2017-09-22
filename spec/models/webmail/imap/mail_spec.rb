@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe Webmail::Imap::Mail, type: :model, dbscope: :example do
-  let!(:cond) { item.condition }
+  let(:user) { create :webmail_user }
+  let(:cond) { item.condition }
 
   context 'default scope' do
-    subject(:item) { Webmail::Imap.mails }
+    let(:item) { Webmail::Imap::Base.new(user).mails }
 
     it do
       expect(cond[:mailbox]).to eq 'INBOX'
@@ -13,14 +14,13 @@ describe Webmail::Imap::Mail, type: :model, dbscope: :example do
       expect(cond[:page]).to eq 1
       expect(cond[:limit]).to eq 50
       expect(item.offset).to eq 0
-      expect(item.imap).to eq Webmail::Imap
-      expect(item.imap).to eq item.class.imap
+      expect(item.imap).to be_a Webmail::Imap::Base
     end
   end
 
   context 'custom scope' do
-    subject(:item) do
-      Webmail::Imap.mails.
+    let(:item) do
+      Webmail::Imap::Base.new(user).mails.
         mailbox('INBOX.test').
         search(from: 'aaa', since: '2017-01-01').
         per(10).page(2)

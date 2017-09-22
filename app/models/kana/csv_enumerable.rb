@@ -15,12 +15,12 @@ class Kana::CsvEnumerable
     e = setup_enumerable
 
     # remove comments
-    e = e.map do |line|
-      preprocess line
+    e = e.map do |line, line_no|
+      [ preprocess(line), line_no ]
     end
 
     # remove blanks
-    e = e.select do |line|
+    e = e.select do |line, line_no|
       line.present?
     end
 

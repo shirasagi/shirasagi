@@ -8,19 +8,22 @@ describe "webmail_cache_settings", type: :feature, dbscope: :example do
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
 
-      find("#item-form1 .save").click
-      page.accept_confirm
+      page.accept_confirm do
+        find("#item-form1 .save").click
+      end
 
-      #find("#item-form2 .save").click
-      #page.accept_confirm
+      #page.accept_confirm do
+      #  find("#item-form2 .save").click
+      #end
 
-      find("#item-form3 .save").click
-      page.accept_confirm
+      page.accept_confirm do
+        find("#item-form3 .save").click
+      end
 
-      #find("#item-form4 .save").click
-      #page.accept_confirm
+      #page.accept_confirm do
+      #  find("#item-form4 .save").click
+      #end
     end
   end
 end

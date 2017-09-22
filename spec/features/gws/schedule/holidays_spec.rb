@@ -11,6 +11,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
     it "#index" do
       item
       visit path
+      wait_for_ajax
       expect(page).to have_content(item.name)
     end
 
@@ -22,6 +23,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
         fill_in "item[end_on]", with: "2016/01/02"
         click_button "保存"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
@@ -36,6 +38,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name2"
         click_button "保存"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
@@ -44,6 +47,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
+      wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
   end

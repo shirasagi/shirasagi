@@ -1,0 +1,38 @@
+ja:
+  gws/elasticsearch:
+    tabs:
+      all: すべて
+      board: 掲示板
+      mail: 電子メール
+      message: 連絡メモ
+      share: 共有ファイル
+
+    format:
+      search_results_count:
+        zero: 検索式にマッチする文書はありませんでした。
+        one: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
+        other: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
+
+  modules:
+    gws/elasticsearch: 全文検索
+
+  mongoid:
+    models:
+      gws/elasticsearch/group_setting: 全文検索設定
+    attributes:
+      gws/elasticsearch/group_setting:
+        elasticsearch_state: 全文検索
+        elasticsearch_hosts: 全文検索サーバー
+
+  tooltip:
+    gws/elasticsearch/group_setting:
+      elasticsearch_state:
+        - 全文検索を有効にするか無効にするかを選択します。
+      elasticsearch_hosts:
+        - 全文検索サーバーを入力します。
+
+  job:
+    models:
+      gws/elasticsearch/indexer/share_file_job: 共有ファイルインデクサー
+      gws/elasticsearch/indexer/board_topic_job: 掲示板インデクサー
+      gws/elasticsearch/indexer/board_post_job: 掲示板投稿インデクサー

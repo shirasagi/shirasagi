@@ -47,6 +47,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           click_on "保存"
         end
 
+        wait_for_ajax
         expect(page).to have_css("aside#notice div", text: "保存しました。")
 
         # gws_schedule_repeat_plans
@@ -127,6 +128,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           click_on "保存"
         end
 
+        wait_for_ajax
         expect(page).to have_css("aside#notice div", text: "保存しました。")
 
         # gws_schedule_repeat_plans

@@ -1,0 +1,27 @@
+<%= code_editor ".mod-category-categorylist .html", mode: :html, readonly: true %>
+
+<dl class="see mod-category-categorylist">
+  <dt><%= @model.t :category_limit %></dt>
+  <dd><%= @item.send :category_limit %></dd>
+
+  <dt><%= @model.t :category_upper_html %></dt>
+  <dd>
+    <% if @item.category_upper_html.present? %>
+    <%= text_area_tag :category_upper_html, @item.category_upper_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :category_loop_html %></dt>
+  <dd>
+    <% if @item.category_loop_html.present? %>
+    <%= text_area_tag :category_loop_html, @item.category_loop_html, class: "html", style: "height: 100px;"  %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :category_lower_html %></dt>
+  <dd>
+    <% if @item.category_lower_html.present? %>
+    <%= text_area_tag :category_lower_html, @item.category_lower_html, class: "html" %>
+    <% end %>
+  </dd>
+</dl>

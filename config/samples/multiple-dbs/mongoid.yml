@@ -1,8 +1,8 @@
 # MongoDB Configuration
 
-production:
+production_master_side:
   clients:
-    default: # master
+    default: # master (writable)
       database: ss
       hosts:
         - localhost:27017
@@ -10,42 +10,19 @@ production:
       database: ss_post
       hosts:
         - localhost:27018
-    public: # slave
-      database: ss
-      hosts:
-        - otherhost:27017
-    public_post:
+    # slave side (public, public_2, public_3,,)
+    public:
       database: ss_post
       hosts:
         - otherhost:27018
-test:
-  clients:
-    default:
-      database: ss_test
-      hosts:
-        - localhost:27017
-      options:
-        read: primary
-        max_retries: 1
-        retry_interval: 0
-    public:
-      database: ss_public_test
-      hosts:
-        - localhost:27017
-      options:
-        read: primary
-        max_retries: 1
-        retry_interval: 0
 
-development:
+production_slave_side:
   clients:
-    default:
+    default: # slave (readonly)
       database: ss
       hosts:
         - localhost:27017
-
-    # Public DB configurations
-    public:
-      database: ss_public
+    default_post: # (writable)
+      database: ss_post
       hosts:
-        - otherhost:27017
+        - localhost:27018

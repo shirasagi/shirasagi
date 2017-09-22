@@ -1,0 +1,4 @@
+<%= form_for :s, url: '', html: { method: :get } do |f| %>
+  <%= f.text_field :keyword, style: 'width: 80%;' %>
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>

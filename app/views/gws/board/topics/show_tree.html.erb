@@ -1,5 +1,5 @@
 <div class="gws-board gws-board-tree">
-  <article class="topic">
+  <article class="topic" id="post-<%= @item.id %>">
     <header>
       <h2>
         <span class="name"><%= @item.name %></span>
@@ -18,6 +18,17 @@
 
     <div class="body markdown-body"><%= @item.html %></div>
 
+    <% if @item.files.present? %>
+      <div class="files">
+        <% @item.files.each do |file| %>
+        <span id="file-<%= file.id %>">
+          <img src="/assets/img/gws/ic-file.png" alt="" />
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+        </span>
+        <% end %>
+      </div>
+    <% end %>
+
     <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
       <%= link_to(t('gws/board.links.comment'), @category.present? ? new_gws_board_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
@@ -32,3 +43,9 @@
   </div>
   <% end %>
 </div>
+
+<%= jquery do %>
+  if (location.hash) {
+    $(location.hash).css('border', '2px solid red');
+  }
+<% end %>
