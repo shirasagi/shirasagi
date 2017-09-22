@@ -67,8 +67,13 @@ class Gws::Board::TopicsController < ApplicationController
   def read
     set_item
     raise '403' unless @item.readable?(@cur_user)
-    @item.set_browsed(@cur_user)
-    result = @item.save
+
+    result = true
+    if !@item.browsed?(@cur_user)
+      @item.set_browsed(@cur_user)
+      @item.record_timestamps = false
+      result = @item.save
+    end
 
     if result
       respond_to do |format|
