@@ -1369,5 +1369,5 @@ save_source_cleaner_template name: "style", target_type: "attribute", target_val
 puts "# postal code"
 Sys::PostalCode::OfficialCsvImportJob.import_from_zip("postal_code/13tokyo.zip")
 
-@site.editor_css_path = '/css/style.css'
+@site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!

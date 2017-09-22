@@ -335,5 +335,5 @@ save_max_file_size name: 'Microsoft Office', extensions: %w(doc docx ppt pptx xl
 save_max_file_size name: 'PDF', extensions: %w(pdf), order: 5, state: 'enabled'
 save_max_file_size name: 'その他', extensions: %w(*), order: 9999, state: 'enabled'
 
-@site.editor_css_path = '/css/style.css'
+@site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!
