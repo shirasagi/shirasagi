@@ -13,7 +13,7 @@ SS::Application.routes.draw do
     get 'all_groups' => 'groups#index'
     get 'facilities' => 'facilities#index'
     get 'facilities/print' => 'facilities#print'
-    get 'search' => 'search/main#index', as: :search
+    get 'search' => redirect { |p, req| "#{req.path}/users" }, as: :search
     get 'search/users' => 'search/users#index', as: :search_users
     get 'search/times' => 'search/times#index', as: :search_times
 

@@ -16,6 +16,8 @@ ja:
       facility: 設備予約
       todo: ToDo
       search: 検索
+      search/users: ユーザー検索
+      search/times: 空き時間検索
     calendar:
       buttonText:
         listMonth: リスト
