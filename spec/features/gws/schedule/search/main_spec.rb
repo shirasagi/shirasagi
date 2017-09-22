@@ -20,7 +20,6 @@ describe "gws_schedule_search", type: :feature, dbscope: :example, js: true do
 
       visit path
       click_on I18n.t('gws/schedule.tabs.search/times')
-      puts page.html
       expect(page).to have_css('.gws-schedule-search h2', text: I18n.t('gws/schedule.search_times'))
       within 'form.search' do
         click_on I18n.t('ss.buttons.search')
