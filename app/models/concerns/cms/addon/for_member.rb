@@ -10,6 +10,7 @@ module Cms::Addon
 
       validates :for_member_state, inclusion: { in: %w(disabled enabled) }
       before_save :check_parents_state
+      after_save :set_children_state
     end
 
     def for_member_state_options
@@ -31,6 +32,13 @@ module Cms::Addon
     def check_parents_state
       p_state = self.parents.any? {|p_node| p_node.try(:for_member_enabled?)}
       self.for_member_state = 'enabled' if p_state
+    end
+
+    def set_children_state
+      return if self.for_member_disabled?
+      self.all_children.each do |c_node|
+        c_node.set(for_member_state: 'enabled')
+      end
     end
   end
 end
