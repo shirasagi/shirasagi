@@ -71,9 +71,11 @@ ja:
       less_than_years: は%{count}年間以内の範囲にしてください。
       less_than_max_date: は%{date}までの日時を入力してください。
       faciliy_time_gte: 予約時間は%{count}分以上の値にしてください。
+      faciliy_time_lte: 予約時間は%{count}分以下の値にしてください。
       invalid_faciliy_reservate_member: '%{name}を予約する権限がありません。'
       double_booking_facility: 設備は既に予約されています。
       over_than_facility_hours: 設備予約は取得可能時間内で登録してください。（%{min}時～%{max}時）
+      unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
   gws/schedule/todo:
     search_todos: ToDoを検索
     links:
