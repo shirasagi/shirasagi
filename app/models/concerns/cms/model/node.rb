@@ -157,6 +157,10 @@ module Cms::Model::Node
     %w(category/node category/page opendata/category).include?(route)
   end
 
+  def remove_directory
+    Fs.rm_rf path
+  end
+
   private
 
   def validate_invalid_filename
@@ -192,10 +196,6 @@ module Cms::Model::Node
         item.set(filename: dst_filename, depth: dst_filename.scan("/").size + 1)
       end
     end
-  end
-
-  def remove_directory
-    Fs.rm_rf path
   end
 
   def destroy_children
