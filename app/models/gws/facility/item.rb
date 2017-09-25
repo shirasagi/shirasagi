@@ -5,6 +5,7 @@ class Gws::Facility::Item
   include Gws::Reference::Site
   include SS::Scope::ActivationDate
   include SS::Addon::Markdown
+  include Gws::Addon::Facility::CustomFields
   include Gws::Addon::Facility::ReservableSetting
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
