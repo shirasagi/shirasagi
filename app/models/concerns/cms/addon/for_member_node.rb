@@ -1,5 +1,5 @@
 module Cms::Addon
-  module ForMember
+  module ForMemberNode
     extend ActiveSupport::Concern
     extend SS::Addon
 

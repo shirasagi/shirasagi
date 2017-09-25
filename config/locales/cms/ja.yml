@@ -345,7 +345,7 @@ ja:
       cms/tag_setting: タグ設定
       cms/tag: タグ
       cms/layout_html: レイアウト
-      cms/for_member: 会員向け設定
+      cms/for_member_node: 会員向け設定
 
   mongoid:
     models:
@@ -608,7 +608,7 @@ ja:
         related_pages: 関連記事
         related_page_ids: 関連記事
         related_page_sort: 並び順
-      cms/addon/for_member:
+      cms/addon/for_member_node:
         for_member_state: ステータス
 
   errors:
@@ -1318,7 +1318,7 @@ ja:
         &lt;footer id="ss-mb" style="display: none"&gt;スマートフォン表示&lt;/footer&gt;
         スマートフォンやタブレットで表示した際にPC、スマートフォン表示を切り替えるボタンを表示します。
 
-    cms/addon/for_member:
+    cms/addon/for_member_node:
       for_member_state:
         - 会員がログインしている時のみ閲覧できるように設定します。
 
