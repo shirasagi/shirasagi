@@ -47,4 +47,8 @@ module Cms::BaseFilter
   def set_crumbs
     #
   end
+
+  def set_tree_navi
+    @tree_navi = cms_apis_node_tree_path(id: (@cur_node || 0), type: @model.to_s.underscore)
+  end
 end
