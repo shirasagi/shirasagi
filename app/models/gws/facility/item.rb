@@ -17,14 +17,21 @@ class Gws::Facility::Item
   field :order, type: Integer, default: 0
   field :activation_date, type: DateTime
   field :expiration_date, type: DateTime
+  field :min_minutes_limit, type: Integer
+  field :max_minutes_limit, type: Integer
+  field :max_days_limit, type: Integer
 
   belongs_to :category, class_name: 'Gws::Facility::Category'
 
   permit_params :name, :order, :category_id, :activation_date, :expiration_date
+  permit_params :min_minutes_limit, :max_minutes_limit, :max_days_limit
 
   validates :name, presence: true
   validates :activation_date, datetime: true
   validates :expiration_date, datetime: true
+  validates :min_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :max_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :max_days_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   default_scope -> { order_by order: 1, name: 1 }
 

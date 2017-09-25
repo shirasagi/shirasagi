@@ -6,7 +6,27 @@
   <dd><%= tryb { @item.category.name } %></dd>
 
   <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :minutes_limit %></dt>
+  <dd>
+    <% if @item.min_minutes_limit %>
+    <%= @item.min_minutes_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>
+    <% end %>
+    <% if @item.min_minutes_limit || @item.max_minutes_limit %>
+    〜
+    <% end %>
+    <% if @item.max_minutes_limit %>
+      <%= @item.max_minutes_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :max_days_limit %></dt>
+  <dd>
+    <% if @item.max_days_limit %>
+    <%= @item.max_days_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.days') %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :activation_date %></dt>
   <dd><%= tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>

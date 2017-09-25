@@ -1,6 +1,9 @@
 ja:
   gws/facility:
     category: カテゴリー
+    prompts:
+      minutes: 分
+      days: 日先まで
 
   gws_role:
     read_other_gws_facility_items: 設備の閲覧（全て）
@@ -35,6 +38,10 @@ ja:
         category_id: カテゴリー
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+        minutes_limit: 時間制限
+        min_minutes_limit: 時間制限（最小）
+        max_minutes_limit: 時間制限（最大）
+        max_days_limit: 予約可能期間
       gws/facility/category:
         name: カテゴリー名
         order: 並び順
@@ -55,6 +62,16 @@ ja:
         - 数字が小さいほど上位に表示されます。
       category_id:
         - カテゴリーを選択します。
+      activation_date:
+        - 有効期間（開始）を入力します。
+        - 有効期間がない場合は空にしておきます。
+      expiration_date:
+        - 有効期間（終了）を入力します。
+        - 有効期間がない場合は空にしておきます。
+      minutes_limit:
+        - 連続して利用することが可能な最大の時間を入力します。
+      max_days_limit:
+        - 何日先まで予約可能かを入力します。
     gws/facility/category:
       name:
         - カテゴリー名を入力します。
