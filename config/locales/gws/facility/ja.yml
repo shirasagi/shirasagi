@@ -61,6 +61,7 @@ ja:
       gws/facility/custom_field:
         name: 名前
         order: 並び順
+        tooltips: ツールチップ
       gws/addon/facility/input_setting:
         input_type: 入力形式
         select_options: 選択肢
@@ -100,6 +101,8 @@ ja:
       order:
         - 質問項目の並び順を指定します。
         - 数字が小さいほど上位に表示されます。
+      tooltips:
+        - ツールチップを入力します。
     gws/addon/facility/input_setting:
       input_type:
         - 回答欄の入力形式を選択します。

@@ -7,6 +7,7 @@ class Gws::Facility::CustomField
 
   field :name, type: String
   field :order, type: Integer, default: 0
+  field :tooltips, type: SS::Extensions::Lines
 
-  permit_params :name, :order
+  permit_params :name, :order, :tooltips
 end
