@@ -9,7 +9,7 @@ class Gws::Facility::CustomFieldsController < ApplicationController
   private
 
   def set_facility
-    @cur_facility ||= Gws::Facility::Item.site(@cur_site).find_by(params[:item_id])
+    @cur_facility ||= Gws::Facility::Item.site(@cur_site).find(params[:item_id])
   end
 
   def set_crumbs
@@ -40,6 +40,17 @@ class Gws::Facility::CustomFieldsController < ApplicationController
     raise '403' unless @cur_facility.allowed?(:read, @cur_user, site: @cur_site)
     @items = @cur_facility.custom_fields.
       page(params[:page]).per(50)
+  end
+
+  def input_form
+    set_facility
+    raise '403' unless @cur_facility.allowed?(:read, @cur_user, site: @cur_site)
+    @items = @cur_facility.custom_fields.order_by(order: 1, id: 1)
+
+    render_opts = {}
+    render_opts[:layout] = false if request.xhr?
+    render_opts[:html] = '' if @items.blank?
+    render(render_opts)
   end
 
   def new

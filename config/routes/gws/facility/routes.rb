@@ -8,7 +8,9 @@ SS::Application.routes.draw do
 
   gws "facility" do
     resources :items, concerns: [:deletion] do
-      resources :custom_fields, concerns: [:deletion]
+      resources :custom_fields, concerns: [:deletion] do
+        get :input_form, on: :collection
+      end
     end
     resources :categories, concerns: [:deletion]
     resource :setting, only: [:show, :edit, :update]

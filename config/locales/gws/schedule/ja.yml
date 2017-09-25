@@ -102,6 +102,7 @@ ja:
     gws/schedule: スケジュール
     addons:
       gws/schedule/facility: 設備予約
+      gws/schedule/facility_custom_field: 設備追加情報
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント

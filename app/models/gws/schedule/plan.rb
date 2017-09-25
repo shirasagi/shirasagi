@@ -14,6 +14,7 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Attendances
   include Gws::Addon::Member
   include Gws::Addon::Schedule::Facility
+  include Gws::Addon::Schedule::FacilityCustomField
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History

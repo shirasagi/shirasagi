@@ -1,0 +1,35 @@
+<div class="custom-fields"></div>
+
+<%= f.hidden_field(:main_facility_id, value: nil) %>
+
+<%= jquery do %>
+  $('#addon-gws-agents-addons-schedule-facility_custom_field').hide();
+  var url = <%== input_form_gws_facility_item_custom_fields_path(item_id: ':item_id', format: :html).to_json %>;
+  var loadCustomInputForm = function(itemId) {
+    $('#addon-gws-agents-addons-schedule-facility_custom_field').show();
+    $('#item_main_facility_id').val('');
+    $('.custom-fields').html(SS.loading);
+
+    $.ajax({
+      url: url.replace(':item_id', itemId),
+      type: "get",
+      data: { object_name: '<%= f.object_name %>[custom_fields]' },
+      success: function(data) {
+        if (data) {
+          $('.custom-fields').html(data);
+          $('#item_main_facility_id').val(itemId);
+        } else {
+          $('.custom-fields').html('');
+          $('#addon-gws-agents-addons-schedule-facility_custom_field').hide();
+        }
+      },
+      error: function(xhr, status, error) {
+        $('.custom-fields').html(error);
+      }
+    });
+  };
+
+  <% if @item.facilities.present? %>
+  loadCustomInputForm(<%== @item.facilities.first.id.to_s.to_json %>);
+  <% end %>
+<% end %>
