@@ -1,35 +1,161 @@
-<div class="custom-fields"></div>
+<%= f.select :main_facility_id, @item.facilities.pluck(:name, :id) %>
 
-<%= f.hidden_field(:main_facility_id, value: nil) %>
+<div class="input-form" style="display: none;"></div>
 
 <%= jquery do %>
-  $('#addon-gws-agents-addons-schedule-facility_custom_field').hide();
-  var url = <%== input_form_gws_facility_item_custom_fields_path(item_id: ':item_id', format: :html).to_json %>;
-  var loadCustomInputForm = function(itemId) {
-    $('#addon-gws-agents-addons-schedule-facility_custom_field').show();
-    $('#item_main_facility_id').val('');
-    $('.custom-fields').html(SS.loading);
+
+  //
+  // Define 3 classes and its constructor
+  //
+  var ContainerElem = function() {
+    this.$container = $('#addon-gws-agents-addons-schedule-facility_custom_field');
+    this.inputForm = null;
+    this.choose = null;
+  }
+
+  var InputForm = function(containerElem) {
+    this.containerElem = containerElem;
+    containerElem.inputForm = this;
+
+    this.url = <%== input_form_gws_facility_item_custom_fields_path(item_id: ':item_id', format: :html).to_json %>;
+    this.$inputForm = containerElem.$container.find('.input-form');
+  }
+
+  var FacilitySelect = function(containerElem) {
+    this.containerElem = containerElem;
+    containerElem.choose = this;
+
+    this.$ajaxTable = $('.gws-schedule-facility .ajax-selected');
+    this.$select = containerElem.$container.find('#item_main_facility_id');
+    this.optionCount = this.$select.find('option').length;
+
+    this.installHandlers();
+    this.changeVisibility();
+  }
+
+  //
+  // Define ContainerElem
+  //
+  ContainerElem.prototype.changeVisibility = function() {
+    if (this.inputForm.isVisible() || this.choose.isVisible()) {
+      this.$container.show();
+    } else {
+      this.$container.hide();
+    }
+  }
+
+
+  //
+  // Define InputForm
+  //
+  InputForm.prototype.load = function(facilityId) {
+    this.activate(SS.loading);
+    var pThis = this;
 
     $.ajax({
-      url: url.replace(':item_id', itemId),
+      url: pThis.url.replace(':item_id', facilityId),
       type: "get",
-      data: { object_name: '<%= f.object_name %>[custom_fields]' },
+      data: { object_name: '<%= f.object_name %>[facility_custom_values]' },
       success: function(data) {
         if (data) {
-          $('.custom-fields').html(data);
-          $('#item_main_facility_id').val(itemId);
+          pThis.activate(data);
         } else {
-          $('.custom-fields').html('');
-          $('#addon-gws-agents-addons-schedule-facility_custom_field').hide();
+          pThis.deactivate();
         }
       },
       error: function(xhr, status, error) {
-        $('.custom-fields').html(error);
+        pThis.activate(error);
       }
     });
-  };
+  }
 
-  <% if @item.facilities.present? %>
-  loadCustomInputForm(<%== @item.facilities.first.id.to_s.to_json %>);
-  <% end %>
+  InputForm.prototype.activate = function(html) {
+    this.$inputForm.html(html);
+    this.$inputForm.show();
+    this.containerElem.changeVisibility();
+  }
+
+  InputForm.prototype.deactivate = function() {
+    this.$inputForm.html('');
+    this.$inputForm.hide();
+    this.containerElem.changeVisibility();
+  }
+
+  InputForm.prototype.isVisible = function() {
+    return this.$inputForm.css('display') !== 'none';
+  }
+
+
+  //
+  // Define FacilitySelect
+  //
+  FacilitySelect.prototype.installHandlers = function() {
+    var pThis = this;
+    this.$ajaxTable.on('change', function() {
+      pThis.reload();
+    });
+
+    this.$select.on('change', function() {
+      var val = pThis.$select.val();
+      if (val) {
+        pThis.containerElem.inputForm.load(val);
+      } else {
+        pThis.containerElem.inputForm.deactivate();
+      }
+    });
+  }
+
+  FacilitySelect.prototype.changeVisibility = function() {
+    if (this.optionCount <= 1) {
+      this.$select.hide();
+    } else {
+      this.$select.show();
+    }
+
+    if (this.containerElem) {
+      this.containerElem.changeVisibility();
+    }
+  }
+
+  FacilitySelect.prototype.isVisible = function() {
+    return this.$select.css('display') !== 'none';
+  }
+
+  FacilitySelect.prototype.reload = function() {
+    var optionCount = 0;
+    var optionHtml = '';
+    this.$ajaxTable.find('tbody tr').each(function() {
+      var $this = $(this);
+      var id = $this.data('id');
+      var name = $this.find('td:first').text();
+
+      optionCount += 1;
+      optionHtml += '<option value="' + id + '">' + name + '</option>';
+    });
+
+    var save = this.$select.val();
+    this.$select.html(optionHtml);
+    this.optionCount = optionCount;
+
+    // restore selection
+    if (save) {
+      this.$select.val(save);
+    }
+
+    if (! this.$select.val()) {
+      this.containerElem.inputForm.deactivate();
+    } else if (!save || save != this.$select.val()) {
+      this.containerElem.inputForm.load(this.$select.val());
+    }
+
+    this.changeVisibility();
+  }
+
+  var containerElem = new ContainerElem();
+  var inputForm = new InputForm(containerElem);
+  var facilitySelect = new FacilitySelect(containerElem);
+
+  if (facilitySelect.$select.val()) {
+    inputForm.load(facilitySelect.$select.val());
+  }
 <% end %>
