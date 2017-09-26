@@ -47,6 +47,10 @@ class Gws::Schedule::Todo
     readable_member_ids == [user.id]
   end
 
+  def attendance_check_plan?
+    false
+  end
+
   def todo_state_name
     self.class.todo_state_names[todo_state.to_sym]
   end

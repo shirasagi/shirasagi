@@ -26,7 +26,7 @@ body {
 #page {
   position: relative;
   min-height: 100%;
-  &:after {
+  &:not(.print-preview):after {
     content: "";
     position: absolute;
     top: 0;
@@ -634,7 +634,7 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 // main
-#main {
+#main:not(.print-preview) {
   float: right;
   width: 100%;
   margin: 0 0 40px -100%;
@@ -642,10 +642,12 @@ td {
     float: none;
     margin: 0 0 100px 0;
   }
-}
-#main .wrap {
-  margin: 0 10px 0 220px;
-  @include mb { margin: 10px 0; }
+  .wrap {
+    margin: 0 10px 0 220px;
+    @include mb {
+      margin: 10px 0;
+    }
+  }
 }
 
 // -------------------------------------------------------------------------------------------------

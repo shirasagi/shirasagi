@@ -1,8 +1,8 @@
-<%
+<div class="operations">
+  <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
+</div>
 
-category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).try(:category_options)
-
-%>
+<% category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options %>
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <label class="btn-toggle">
@@ -12,4 +12,26 @@ category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).try(:cat
   <%= f.select :category_id, category_options, include_blank: " " if category_options.present? %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>
+
+<%= jquery do %>
+$('.gws-schedule-box header .operations .btn-print').on('click', function() {
+  var viewName = $('#calendar').fullCalendar('getView').name
+  if (!viewName) {
+    viewName = $('#calendar-controller').fullCalendar('getView').name
+  }
+
+  var queryString = '';
+  if (viewName) {
+    var queryParams = <%== request.query_parameters.to_json %>;
+    if (! queryParams.calendar) {
+      queryParams.calendar = {};
+    }
+    queryParams.calendar.view = viewName;
+    queryString = '?' + $.param(queryParams);
+  }
+
+  var path = '<%= url_for({ action: :print }) %>' + queryString;
+  location.href = path;
+});
 <% end %>
