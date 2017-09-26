@@ -3,7 +3,6 @@
 <div class="input-form" style="display: none;"></div>
 
 <%= jquery do %>
-
   //
   // Define 3 classes and its constructor
   //
@@ -18,6 +17,7 @@
     containerElem.inputForm = this;
 
     this.url = <%== input_form_gws_facility_item_custom_fields_path(item_id: ':item_id', format: :html).to_json %>;
+    this.initialValues = <%== @item.facility_custom_values.to_json %>;
     this.$inputForm = containerElem.$container.find('.input-form');
   }
 
@@ -59,12 +59,53 @@
       success: function(data) {
         if (data) {
           pThis.activate(data);
+          pThis.setValues();
         } else {
           pThis.deactivate();
         }
       },
       error: function(xhr, status, error) {
         pThis.activate(error);
+      }
+    });
+  }
+
+  InputForm.prototype.setValues = function() {
+    $.each(this.initialValues, function(key, value) {
+      var $control = $('input[name="item[facility_custom_values][' + key + ']"]');
+      if ($control[0]) {
+        if ($control.attr('type') === 'radio') {
+          $control.val([value]);
+        } else if ($control.attr('type') === 'checkbox') {
+          $control.each(function() {
+            if (value.contains(this.value)) {
+              this.checked = true;
+            }
+          });
+        } else {
+          $control.val(value);
+        }
+      }
+
+      $control = $('input[name="item[facility_custom_values][' + key + '][]"]');
+      if ($control[0]) {
+        if ($control.attr('type') === 'checkbox') {
+          $control.each(function() {
+            if ($.inArray(this.value, value) != -1) {
+              this.checked = true;
+            }
+          });
+        }
+      }
+
+      $control = $('select[name="item[facility_custom_values][' + key + ']"]');
+      if ($control[0]) {
+        $control.val(value);
+      }
+
+      $control = $('textarea[name="item[facility_custom_values][' + key + ']"]');
+      if ($control[0]) {
+        $control.val(value);
       }
     });
   }
