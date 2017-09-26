@@ -19,6 +19,7 @@ module Inquiry::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Addon::ForMemberNode
 
     has_many :columns, class_name: "Inquiry::Column"
     has_many :answers, class_name: "Inquiry::Answer"

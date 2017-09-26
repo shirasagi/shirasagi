@@ -18,6 +18,7 @@ module Event::Node
     include Cms::Addon::MaxFileSizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Addon::ForMemberNode
 
     default_scope ->{ where(route: "event/page") }
 

@@ -2,6 +2,7 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
   include Cms::PublicFilter::Node
 
   def generate_inquiry_node(node, opts = {})
+    return unless node.serve_static_file?
     @cur_site      = node.site
     @cur_path      = opts[:url] || node.url
     @cur_main_path = @cur_path.sub(@cur_site.url, "/")

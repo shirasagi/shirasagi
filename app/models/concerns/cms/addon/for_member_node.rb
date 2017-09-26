@@ -28,6 +28,11 @@ module Cms::Addon
       !for_member_enabled?
     end
 
+    def serve_static_file?
+      return false if for_member_enabled?
+      super
+    end
+
     private
 
     def check_parents_state

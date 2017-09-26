@@ -6,6 +6,7 @@ module Cms::GeneratorFilter::Rss
   def generate_node_rss(node, opts = {})
     path = opts[:url] || "#{node.filename}/index.html"
     return if Cms::Page.site(node.site).and_public.filename(path).first
+    return unless node.serve_static_file?
 
     @cur_path   = opts[:url] || "#{node.url}rss.xml"
     @cur_site   = node.site
