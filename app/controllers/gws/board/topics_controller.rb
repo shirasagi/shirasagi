@@ -63,4 +63,28 @@ class Gws::Board::TopicsController < ApplicationController
     raise '403' unless @item.readable?(@cur_user)
     render file: "show_#{@item.mode}"
   end
+
+  def read
+    set_item
+    raise '403' unless @item.readable?(@cur_user)
+
+    result = true
+    if !@item.browsed?(@cur_user)
+      @item.set_browsed(@cur_user)
+      @item.record_timestamps = false
+      result = @item.save
+    end
+
+    if result
+      respond_to do |format|
+        format.html { redirect_to({ action: :show }, { notice: t('ss.notice.saved') }) }
+        format.json { render json: { _id: @item.id, browsed_at: @item.browsed_at(@cur_user) }, content_type: json_content_type }
+      end
+    else
+      respond_to do |format|
+        format.html { render({ file: :edit }) }
+        format.json { render(json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type) }
+      end
+    end
+  end
 end

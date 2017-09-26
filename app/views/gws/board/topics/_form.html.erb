@@ -7,4 +7,7 @@
 
   <dt><%= @model.t :permit_comment %><%= @model.tt :permit_comment %></dt>
   <dd><%= f.select :permit_comment, @item.permit_comment_options %></dd>
+
+  <dt><%= @model.t :severity %><%= @model.tt :severity %></dt>
+  <dd><%= f.select :severity, @item.severity_options, include_blank: true %></dd>
 </dl>

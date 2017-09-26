@@ -11,7 +11,7 @@
         </span>
       </h2>
       <nav class="meta">
-        <span class="user"><%= @item.user_long_name %></span>
+        <span class="user"><%= @item.contributor_name.presence || @item.user_long_name %></span>
         <span class="datetime"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></span>
       </nav>
     </header>
@@ -29,6 +29,14 @@
       </div>
     <% end %>
 
+    <% if @item.severity.present? %>
+    <div class="status">
+      <span class="severity">
+        <label><%= @model.t(:severity) %></label>: <%= @item.label(:severity) %>
+      </span>
+    </div>
+    <% end %>
+
     <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
       <%= link_to(t('gws/board.links.comment'), @category.present? ? new_gws_board_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
@@ -41,6 +49,10 @@
   <div class="comments">
     <%= render partial: 'gws/board/comments/comment', collection: @item.children, locals: { parent: @item, recursion: true } %>
   </div>
+  <% end %>
+
+  <% if @item.subscribed_users.present? %>
+  <%= render partial: 'gws/board/topics/subscribed_users' %>
   <% end %>
 </div>
 

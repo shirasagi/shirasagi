@@ -10,4 +10,7 @@
 
   <dt class="depth-2"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %></dt>
   <dd><%= number_to_human_size(@item.board_file_size_per_post) %></dd>
+
+  <dt><%= @model.t :board_browsed_delay %></dt>
+  <dd><%= @item.board_browsed_delay %> <%= t("datetime.prompts.second") %></dd>
 </dl>
