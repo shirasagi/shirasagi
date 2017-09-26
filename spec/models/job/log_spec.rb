@@ -22,4 +22,16 @@ describe Job::Log, dbscope: :example do
     it { expect(subject.closed_label).to eq subject.closed.strftime("%Y-%m-%d %H:%M") }
     it { expect(subject.joined_jobs).to eq subject.logs.join("\n") }
   end
+
+  context "log file was deleted on job log deletion" do
+    it do
+      job_log = create(:job_log, :job_log_completed, job: job)
+      ::FileUtils.mkdir_p(::File.dirname(job_log.file_path))
+      ::File.write(job_log.file_path, 'hello\n')
+      expect(::File.exists?(job_log.file_path)).to be_truthy
+
+      job_log.destroy
+      expect(::File.exists?(job_log.file_path)).to be_falsey
+    end
+  end
 end

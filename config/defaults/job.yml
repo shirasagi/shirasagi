@@ -37,6 +37,10 @@ production: &production
       # 指定がない場合、無制限にジョブをプールへ登録できます。
       max_size: 100
 
+  # job_logs の保存期間を秒で設定
+  # 0 を設定すると無制限に保存
+  keep_logs: 1209600
+
 test:
   <<: *production
 
