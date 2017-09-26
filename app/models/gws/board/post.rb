@@ -2,6 +2,7 @@
 class Gws::Board::Post
   include Gws::Referenceable
   include Gws::Board::Postable
+  include Gws::Addon::Board::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Board::DescendantsFileInfo

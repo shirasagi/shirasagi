@@ -20,7 +20,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
         job_params = {
           action: 'index', id: item.id.to_s, remove_file_ids: remove_file_ids.map(&:to_s)
         }
-        job = Gws::Elasticsearch::IndexerJob.bind(site_id: site)
+        job = self.bind(site_id: site)
         job.perform_later(job_params)
       end
       ret
@@ -36,7 +36,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
         job_params = {
           action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s)
         }
-        job = Gws::Elasticsearch::IndexerJob.bind(site_id: site)
+        job = self.bind(site_id: site)
         job.perform_later(job_params)
       end
       ret
@@ -55,7 +55,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:released] = topic.released.try(:iso8601)
       doc[:state] = post.state
 
-      doc[:user_name] = post.user_long_name
+      doc[:user_name] = post.contributor_name.presence || post.user_long_name
       doc[:group_ids] = post.groups.pluck(:id)
       doc[:custom_group_ids] = post.custom_groups.pluck(:id)
       doc[:user_ids] = post.users.pluck(:id)

@@ -12,6 +12,7 @@ SS::Application.routes.draw do
         resources :comments, controller: '/gws/board/comments', concerns: [:deletion]
       end
       get :categories, on: :collection
+      post :read, on: :member
     end
 
     # with category

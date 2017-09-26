@@ -18,6 +18,7 @@ module Gws::Board::Postable
     field :mode, type: String, default: 'thread'
     field :permit_comment, type: String, default: 'allow'
     field :descendants_updated, type: DateTime
+    field :severity, type: String
 
     validates :descendants_updated, datetime: true
 
@@ -29,13 +30,14 @@ module Gws::Board::Postable
     has_many :descendants, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :topic,
       order: { created: -1 }
 
-    permit_params :name, :mode, :permit_comment
+    permit_params :name, :mode, :permit_comment, :severity
 
     before_validation :set_topic_id, if: :comment?
 
     validates :name, presence: true, length: { maximum: 80 }
     validates :mode, inclusion: {in: %w(thread tree)}, unless: :comment?
     validates :permit_comment, inclusion: {in: %w(allow deny)}, unless: :comment?
+    validates :severity, inclusion: { in: %w(normal important), allow_blank: true }
 
     validate :validate_comment, if: :comment?
 
@@ -88,6 +90,10 @@ module Gws::Board::Postable
       [I18n.t('gws/board.options.permit_comment.allow'), 'allow'],
       [I18n.t('gws/board.options.permit_comment.deny'), 'deny']
     ]
+  end
+
+  def severity_options
+    %w(normal important).map { |v| [ I18n.t("gws/board.options.severity.#{v}"), v ] }
   end
 
   private
