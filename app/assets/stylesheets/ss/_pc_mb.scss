@@ -740,6 +740,85 @@ td {
     margin-left: 230px;
   }
 }
+@include mb {
+  #menu .nav-menu {
+    margin: 10px 0px;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// main-navi
+
+#main-navi {
+  @include box;
+  float: left;
+  width: 250px;
+  padding: 10px;
+}
+#main-navi + .index {
+  float: right;
+  width: calc(100% - 260px);
+}
+@include mb {
+  #main-navi {
+    float: none;
+    overflow: scroll;
+    width: auto;
+    max-height: 100px;
+    margin: 0 10px 10px;
+  }
+  #main-navi + .index {
+    float: none;
+    width: auto;
+  }
+}
+
+.tree-navi .loading {
+  color: #bbb;
+}
+.tree-navi .tree-item {
+  padding: 2px;
+}
+.tree-navi .tree-item a {
+  color: #333;
+}
+.tree-navi .tree-item a:hover {
+  color: #f25a38;
+}
+.tree-navi .is-parent {
+  font-weight: bold;
+}
+.tree-navi .is-current {
+  background: #f2f2f2;
+  font-weight: bold;
+}
+.tree-navi .item-pad {
+  float: left;
+  width: 20px;
+  min-height: 1px;
+}
+.tree-navi .item-mark {
+  float: left;
+  margin-top: 1px;
+  padding: 0 1px 1px;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  background-color: #fff;
+  line-height: 1;
+  &:hover {
+    border-color: $orange;
+  }
+  .material-icons {
+    font-size: 13px;
+  }
+}
+.tree-navi .item-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 4px;
+  white-space: nowrap;
+}
 
 // -------------------------------------------------------------------------------------------------
 // common view
