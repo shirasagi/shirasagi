@@ -1,4 +1,4 @@
-module Gws::Addon::Schedule::FacilityCustomField
+module Gws::Addon::Schedule::FacilityCustomValues
   extend ActiveSupport::Concern
   extend SS::Addon
 
