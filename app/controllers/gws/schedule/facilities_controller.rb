@@ -3,7 +3,8 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   #include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
-  before_action :set_category, only: :index
+  before_action :set_category, only: [:index, :print]
+  before_action :set_items, only: [:index, :print]
 
   private
 
@@ -54,12 +55,19 @@ class Gws::Schedule::FacilitiesController < ApplicationController
     @crumbs << [t('modules.addons.gws/schedule/facility'), gws_schedule_facilities_path]
   end
 
-  public
-
-  def index
+  def set_items
     @items = Gws::Facility::Item.site(@cur_site).
       readable(@cur_user, @cur_site).
       active
     @items = @items.in(category_id: category_ids)
+  end
+
+  public
+
+  def index
+  end
+
+  def print
+    super
   end
 end

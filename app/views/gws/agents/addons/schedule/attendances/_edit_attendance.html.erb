@@ -1,0 +1,19 @@
+<%
+  attendance = @attendances.find { |attendance| attendance.user_id == member.id }
+  attendance ||= Gws::Schedule::Attendance.new(cur_site: @cur_site, cur_user: member, cur_schedule: @item)
+%>
+
+<%= content_tag('span', class: 'attendances', data: { schedule_id: @item.id.to_s, member_id: member.id, init_value: attendance.attendance_state || '' }) do %>
+  <label>
+    <%= radio_button_tag("item[attendances][#{member.id}][state]", 'unknown', attendance.attendance_state == 'unknown', class: 'attendance') %>
+    <%= I18n.t('gws/schedule.options.attendance_state.unknown') %>
+  </label>
+  <label>
+    <%= radio_button_tag("item[attendances][#{member.id}][state]", 'attendance', attendance.attendance_state == 'attendance', class: 'attendance') %>
+    <%= I18n.t('gws/schedule.options.attendance_state.attendance') %>
+  </label>
+  <label>
+    <%= radio_button_tag("item[attendances][#{member.id}][state]", 'absence', attendance.attendance_state == 'absence', class: 'attendance') %>
+    <%= I18n.t('gws/schedule.options.attendance_state.absence') %>
+  </label>
+<% end %>

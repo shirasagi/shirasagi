@@ -1,0 +1,27 @@
+.sheet {
+  width: 210mm;
+  height: 296mm; /* 1mm余裕をもたせる */
+  border: none;
+  border-radius: unset;
+  page-break-after: always;
+}
+
+/* プレビュー用のスタイル */
+@media screen {
+  #main {
+    .wrap {
+      margin: 10px 10px;
+    }
+  }
+
+  .sheet {
+    background: white;
+    box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+    margin: 5mm;
+  }
+}
+@media print {
+  .no-print {
+    display: none;
+  }
+}

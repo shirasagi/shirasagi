@@ -16,6 +16,8 @@ ja:
       facility: 設備予約
       todo: ToDo
       search: 検索
+      search/users: ユーザー検索
+      search/times: 空き時間検索
     calendar:
       buttonText:
         listMonth: リスト
@@ -33,6 +35,7 @@ ja:
       delete_one: 今回のみ
       delete_later: 以降すべて
       delete_all: 一連のスケジュールすべて
+      comment: コメント
     options:
       allday:
         allday: 終日
@@ -50,6 +53,16 @@ ja:
       repeat_base:
         date: 日付
         wday: 曜日
+      schedule_attachment_state:
+        allow: 許可する
+        deny: 許可しない
+      schedule_drag_drop_state:
+        allow: 許可する
+        deny: 許可しない
+      attendance_state:
+        unknown: 未確認
+        attendance: 参加
+        absence: 不参加
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
@@ -88,6 +101,8 @@ ja:
       gws/schedule/facility: 設備予約
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
+      gws/schedule/comments: コメント
+      gws/schedule/attendances: 出欠確認
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
@@ -119,6 +134,8 @@ ja:
       gws/schedule/group_setting/holiday: 休日設定
       gws/schedule/group_setting/category: 種別設定
       gws/schedule/group_setting/todo: ToDo設定
+      gws/schedule/comment: コメント
+      gws/schedule/attendance: 出欠
     errors:
       models:
         gws/schedule/plan:
@@ -161,6 +178,8 @@ ja:
         schedule_max_month: 期末月
         schedule_max_file_size: 添付最大サイズ
         todo_delete_threshold: 削除対象
+        schedule_attachment_state: ファイル添付
+        schedule_drag_drop_state: ドラッグ＆ドロップ
       gws/schedule/user_setting:
         schedule_tabs: タブ表示
         schedule_tabs_group_ids: タブ表示/グループ
@@ -172,6 +191,12 @@ ja:
         name: ToDo
         term: 期限
         todo_state: 状態
+      gws/addon/schedule/attendances:
+        attendance_check_state: 出欠確認
+        attendances: 出欠情報
+      gws/schedule/attendance:
+        in_comment: コメント
+        attendance_state: 出欠
 
   tooltip:
     gws/schedule/planable:
@@ -219,6 +244,10 @@ ja:
         - 0 は無制限を意味します。
       todo_delete_threshold:
         - ToDoを物理削除するまでの日数を入力します。
+      schedule_attachment_state:
+        - ファイル添付を許可するかどうかを選択します。
+      schedule_drag_drop_state:
+        - ドラッグ＆ドロップを許可するかどうかを選択します。
     gws/schedule/holiday:
       name:
         - タイトルを入力します。
@@ -237,3 +266,7 @@ ja:
         - タスク名を入力します。
       term:
         - タスクの期限日を入力します。
+
+    gws/addon/schedule/attendances:
+      attendance_check_state:
+        - 出欠確認を有効にするかしないかを選択してください。

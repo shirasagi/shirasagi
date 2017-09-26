@@ -1,0 +1,13 @@
+<%= jquery do %>
+  Gws_Schedule_View.renderTabs('.gws-schedule-tabs');
+<% end %>
+
+<div class="gws-schedule-tabs">
+  <%= link_to gws_schedule_search_users_path, class: "users" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.search/users') %></span>
+  <% end %>
+
+  <%= link_to gws_schedule_search_times_path, class: "times" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.search/times') %></span>
+  <% end %>
+</div>
