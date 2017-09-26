@@ -1,14 +1,22 @@
 <dl class="see mod-gws-facility-input-setting">
   <dt><%= @model.t :input_type %></dt>
   <dd><%= @item.label :input_type %></dd>
+
   <dt><%= @model.t :select_options %></dt>
   <dd><%=br @item.select_options.join("\n") %></dd>
+
   <dt><%= @model.t :required %></dt>
   <dd><%= @item.label :required %></dd>
+
+  <dt><%= @model.t :max_length %></dt>
+  <dd><%= @item.max_length %></dd>
+
+  <dt><%= @model.t :place_holder %></dt>
+  <dd><%= @item.place_holder %></dd>
+
   <dt><%= @model.t :additional_attr %></dt>
   <dd><%= @item.additional_attr %></dd>
-  <dt><%= @model.t :input_confirm %></dt>
-  <dd><%= @item.label :input_confirm %></dd>
+
   <dt><%= @model.t :max_upload_file_size %></dt>
-  <dd><%= @item.max_upload_file_size %></dd>
+  <dd><%= @item.max_upload_file_size %><%= I18n.t('ss.units.mega_byte') %></dd>
 </dl>

@@ -1,0 +1,4 @@
+<%= render file: 'app/views/gws/facility/custom_fields/input_forms/_common_label', locals: { item: item } %>
+<dd>
+  <%= file_field_tag("#{params[:object_name].presence || 'item'}[#{item.id}]", item.html_options) %>
+</dd>

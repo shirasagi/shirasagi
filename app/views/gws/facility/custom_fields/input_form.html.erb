@@ -2,20 +2,6 @@
 
 <dl class="see">
   <% @items.each do |item| %>
-  <dt>
-    <%= item.name %>
-    <% if item.tooltips.present? %>
-    <div class="tooltip">?
-      <ul>
-        <% item.tooltips.each do |tooltip| %>
-        <li><%= tooltip %><br></li>
-        <% end %>
-      </ul>
-    </div>
-    <% end %>
-  </dt>
-  <dd>
-    <input type="text" name="<%= params[:object_name].presence || 'item' %>[<%= item.id.to_s %>]" size="30" maxlength="20">
-  </dd>
+    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{item.input_type}", locals: { item: item }) %>
   <% end %>
 </dl>

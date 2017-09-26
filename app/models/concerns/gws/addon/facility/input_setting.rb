@@ -6,17 +6,18 @@ module Gws::Addon::Facility::InputSetting
     field :input_type, type: String, default: "text_field"
     field :select_options, type: SS::Extensions::Lines, default: ""
     field :required, type: String, default: "required"
+    field :max_length, type: Integer
+    field :place_holder, type: String
     field :additional_attr, type: String, default: ""
-    field :input_confirm, type: String, default: ""
     field :max_upload_file_size, type: Integer, default: 0
-    permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm, :max_upload_file_size
+    permit_params :input_type, :required, :max_length, :place_holder, :additional_attr
+    permit_params :select_options, :max_upload_file_size
 
     validates :input_type, presence: true, inclusion: {
       in: %w(text_field text_area email_field radio_button select check_box upload_file)
     }
+    validates :max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validate :validate_select_options
-    validate :validate_input_confirm_options
-    # validate :validate_max_upload_file_size_options
   end
 
   def input_type_options
@@ -32,17 +33,6 @@ module Gws::Addon::Facility::InputSetting
     ]
   end
 
-  def input_confirm_options
-    [
-      [I18n.t('inquiry.options.input_confirm.disabled'), 'disabled'],
-      [I18n.t('inquiry.options.input_confirm.enabled'), 'enabled'],
-    ]
-  end
-
-  # def max_upload_file_size_options
-  #   [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
-  # end
-
   def required?
     required == "required"
   end
@@ -53,6 +43,13 @@ module Gws::Addon::Facility::InputSetting
       compact.to_h
   end
 
+  def html_options
+    options = additional_attr_to_h
+    options['maxlength'] = max_length if max_length.present?
+    options['placeholder'] = place_holder if place_holder.present?
+    options
+  end
+
   private
 
   def validate_select_options
@@ -60,16 +57,4 @@ module Gws::Addon::Facility::InputSetting
       errors.add :select_options, :blank if select_options.blank?
     end
   end
-
-  def validate_input_confirm_options
-    if input_type =~ /(select|radio_button|check_box|text_area|upload_file)/ && input_confirm == 'enabled'
-      errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
-    end
-  end
-
-  # def validate_max_upload_file_size_options
-  #   if input_type =~ /(max_upload_file_size)/
-  #     errors.add :select_options, :blank if select_options.blank?
-  #   end
-  # end
 end

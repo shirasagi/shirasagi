@@ -1,14 +1,22 @@
 <dl class="see mod-gws-facility-input-setting">
   <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
   <dd><%= f.select :input_type, @item.input_type_options %></dd>
+
   <dt><%= @model.t :select_options %><%= @model.tt :select_options %></dt>
   <dd><%= f.text_area :select_options, value: @item.select_options.join("\n"), style: "height: 180px;" %></dd>
+
   <dt><%= @model.t :required %><%= @model.tt :required %></dt>
   <dd><%= f.select :required, @item.required_options %></dd>
+
+  <dt><%= @model.t :max_length %><%= @model.tt :max_length %></dt>
+  <dd><%= f.number_field :max_length %></dd>
+
+  <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
+  <dd><%= f.text_field :place_holder %></dd>
+
   <dt><%= @model.t :additional_attr %><%= @model.tt :additional_attr %></dt>
   <dd><%= f.text_field :additional_attr %></dd>
-  <dt><%= @model.t :input_confirm %><%= @model.tt :input_confirm %></dt>
-  <dd><%= f.select :input_confirm, @item.input_confirm_options %></dd>
+
   <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
-  <dd><%= f.text_field :max_upload_file_size, style: "width: 60px;" %></dd>
+  <dd><%= f.text_field :max_upload_file_size, style: "width: 60px;" %><%= I18n.t('ss.units.mega_byte') %></dd>
 </dl>
