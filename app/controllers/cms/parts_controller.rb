@@ -6,6 +6,8 @@ class Cms::PartsController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  before_action :set_tree_navi, only: [:index]
+
   private
 
   def set_crumbs
