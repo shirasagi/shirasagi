@@ -1,0 +1,20 @@
+<%= jquery do %>
+  <% if !@item.subscription_setting_present? %>
+  SS_AddonTabs.hide(".gws-addon-subscription-setting");
+  <% end %>
+<% end %>
+
+<div class="gws-addon-subscription-setting">
+  <dl class="see">
+    <% if @item.class.subscription_setting_included_custom_groups? %>
+    <dt><%= @model.t :subscribed_custom_group_ids %></dt>
+    <dd><%=tryb { br @item.subscribed_custom_group_names.join("\n") } %></dd>
+    <% end %>
+
+    <dt><%= @model.t :subscribed_group_ids %></dt>
+    <dd><%=br @item.subscribed_group_names.join("\n") %></dd>
+
+    <dt><%= @model.t :subscribed_member_ids %></dt>
+    <dd><%=br @item.subscribed_member_names.join("\n") %></dd>
+  </dl>
+</div>

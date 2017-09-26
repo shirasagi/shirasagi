@@ -13,4 +13,7 @@
 
   <dt class="depth-2"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_post %></dt>
   <dd><%= f.number_field :in_board_file_size_per_post_mb %> <%= t("ss.units.mega_byte") %></dd>
+
+  <dt><%= @model.t :board_browsed_delay %><%= @model.tt :board_browsed_delay %></dt>
+  <dd><%= f.number_field :board_browsed_delay %> <%= t("datetime.prompts.second") %></dd>
 </dl>
