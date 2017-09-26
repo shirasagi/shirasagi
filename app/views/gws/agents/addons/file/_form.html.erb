@@ -1,3 +1,5 @@
+<% return if @file_addon_state == 'hide' %>
+
 <%= coffee do %>
 $ ->
   @insertContent = (cont) ->

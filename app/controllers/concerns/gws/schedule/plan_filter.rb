@@ -6,6 +6,7 @@ module Gws::Schedule::PlanFilter
     menu_view "gws/schedule/main/menu"
     helper Gws::Schedule::PlanHelper
     model Gws::Schedule::Plan
+    before_action :set_file_addon_state
   end
 
   private
@@ -35,6 +36,10 @@ module Gws::Schedule::PlanFilter
     url_for(action: :index) + "?calendar[view]=#{redirection_view}&calendar[date]=#{@item.start_at.to_date}"
   end
 
+  def set_file_addon_state
+    @file_addon_state = 'hide' if @cur_site.schedule_attachment_denied?
+  end
+
   public
 
   def index
@@ -48,6 +53,10 @@ module Gws::Schedule::PlanFilter
 
   def events
     @items = []
+  end
+
+  def print
+    render layout: 'ss/print'
   end
 
   def popup

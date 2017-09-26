@@ -2,7 +2,7 @@
   calendar_options = {
     tapMenu: @user.blank? || @user.id == @cur_user.id,
     restUrl: url_for(action: :index),
-    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }]
+    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
   }
   if @cur_site.schedule_drag_drop_denied?
     calendar_options[:eventStartEditable] = false
@@ -14,19 +14,15 @@
 Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
 <% end %>
 
-<%= render "gws/schedule/main/tabs" %>
+<div class="no-print">
+<%= link_to(I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters)) %>
+</div>
 
-<section class="main-box gws-schedule-box">
+<section class="main-box gws-schedule-box sheet">
   <header>
     <h2>
       <%= (@user || @cur_user).long_name %>
-      <% if @user.blank? || @user.id == @cur_user.id %>
-        <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
-      <% end %>
     </h2>
-    <nav>
-      <%= render file: '_search' %>
-    </nav>
   </header>
   <div id="calendar" class="calendar"></div>
 </section>

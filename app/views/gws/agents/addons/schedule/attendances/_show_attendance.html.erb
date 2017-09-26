@@ -1,0 +1,6 @@
+<%
+  attendance = @attendances.find { |attendance| attendance.user_id == member.id }
+  attendance ||= Gws::Schedule::Attendance.new(cur_site: @cur_site, cur_user: member, cur_schedule: @item)
+%>
+
+<%= attendance.label(:attendance_state) %>

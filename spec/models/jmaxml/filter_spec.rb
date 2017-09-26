@@ -58,7 +58,6 @@ describe Jmaxml::Filter, dbscope: :example do
       expect(page.name).to eq '震度速報'
       expect(page.state).to eq action1.publish_state
       expect(page.category_ids).to eq [ category_node.id ]
-      puts page.html
       expect(page.html).to include('<div class="jmaxml quake">')
       expect(page.html).to include('<time datetime="2011-03-11T14:48:10+09:00">2011年3月11日 14時48分</time>')
       expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
@@ -76,7 +75,6 @@ describe Jmaxml::Filter, dbscope: :example do
       expect(mail.from).to eq [ action2.sender_email ]
       expect(mail.to.first.to_s).to eq user1.email
       expect(mail.subject).to eq '震度速報'
-      puts mail.body.raw_source
       expect(mail.body.raw_source).to include('2011年3月11日 14時48分　気象庁発表')
       expect(mail.body.raw_source).to include('2011年3月11日 14時46分ごろ地震がありました。')
       expect(mail.body.raw_source).to include('岩手県沿岸南部：震度６弱')

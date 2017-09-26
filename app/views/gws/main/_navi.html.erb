@@ -3,9 +3,11 @@
   <h2><%= link_to t('mongoid.models.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
 
   <%# if Gws::Schedule::Plan.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t('modules.gws/schedule'), gws_schedule_plans_path, class: "icon-schedule" %></h2>
+    <h2><%= link_to t('modules.gws/schedule'), gws_schedule_main_path, class: "icon-schedule" %></h2>
+    <h3><%= link_to t('gws/schedule.tabs.personal'), gws_schedule_plans_path %></h3>
     <h3><%= link_to t('gws/schedule.tabs.todo'), gws_schedule_todos_path %></h3>
     <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
+    <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
   <%# end %>
   <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>

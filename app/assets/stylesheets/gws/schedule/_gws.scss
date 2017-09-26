@@ -88,6 +88,10 @@
       float: right;
       margin: -5px 0 -5px 20px;
     }
+    .operations {
+      float: right;
+      margin: -5px 0 -5px 20px;
+    }
     h2 .search {
       margin: -5px 0;
     }
@@ -285,6 +289,25 @@
   border-color: #49c;
   background-color: #bdf;
   color: #000;
+}
+.fc-event-unknown-attendance {
+  .fc-content {
+    &:before {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      -webkit-border-radius: 12px;
+      -moz-border-radius: 12px;
+      border-radius: 12px;
+      content: '未';
+      text-align: center;
+      font-size: 80%;
+      padding: 2px;
+      margin-right: 2px;
+      background-color: $orange;
+      color: $white;
+    }
+  }
 }
 .fc-holiday {
   background: #9d6;
