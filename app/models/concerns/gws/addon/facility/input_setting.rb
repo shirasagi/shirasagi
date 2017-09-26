@@ -9,19 +9,18 @@ module Gws::Addon::Facility::InputSetting
     field :max_length, type: Integer
     field :place_holder, type: String
     field :additional_attr, type: String, default: ""
-    field :max_upload_file_size, type: Integer, default: 0
     permit_params :input_type, :required, :max_length, :place_holder, :additional_attr
-    permit_params :select_options, :max_upload_file_size
+    permit_params :select_options
 
     validates :input_type, presence: true, inclusion: {
-      in: %w(text_field text_area email_field radio_button select check_box upload_file)
+      in: %w(text_field text_area email_field radio_button select check_box)
     }
     validates :max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validate :validate_select_options
   end
 
   def input_type_options
-    %w(text_field text_area email_field radio_button select check_box upload_file).map do |v|
+    %w(text_field text_area email_field radio_button select check_box).map do |v|
       [ I18n.t("inquiry.options.input_type.#{v}"), v ]
     end
   end
@@ -67,9 +66,6 @@ module Gws::Addon::Facility::InputSetting
         if (value - select_options).present?
           record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
         end
-      end
-      if input_type == 'upload_file'
-        Rails.logger.debug('upload_file')
       end
     end
   end
