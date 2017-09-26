@@ -50,6 +50,30 @@ module Gws::Addon::Facility::InputSetting
     options
   end
 
+  def validate_value(record, attribute, hash)
+    value = hash[id.to_s]
+    if required? && value.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+
+    if value.present?
+      if %w(radio_button select).include?(input_type)
+        unless select_options.include?(value)
+          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+        end
+      end
+      if %w(check_box).include?(input_type)
+        value = [ value ].flatten.compact.select(&:present?)
+        if (value - select_options).present?
+          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+        end
+      end
+      if input_type == 'upload_file'
+        Rails.logger.debug('upload_file')
+      end
+    end
+  end
+
   private
 
   def validate_select_options
