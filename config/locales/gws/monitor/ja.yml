@@ -3,7 +3,7 @@ ja:
 
     tabs:
       unanswered: 未回答
-      answered: 回答済
+      answered: 回答済み
       admin: 管理者
     links:
       public: 受取済みにする
