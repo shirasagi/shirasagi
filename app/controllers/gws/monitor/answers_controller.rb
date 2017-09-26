@@ -14,21 +14,14 @@ class Gws::Monitor::AnswersController < ApplicationController
       :preparation_all, :qNA_all
   ]
 
-  private
+  def index
+    # raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+    @items = @model.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        search_answers(params[:s]).
+        page(params[:page]).per(50)
   end
-
-  def set_crumbs
-    @crumbs << [t('modules.gws/monitor'), gws_monitor_topics_path]
-  end
-
-  def pre_params
-    super.keep_if {|key| %i(facility_ids).exclude?(key)}
-  end
-
-  public
 
   def public
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
@@ -62,4 +55,19 @@ class Gws::Monitor::AnswersController < ApplicationController
     @items.update_all(state: 'qNA')
     render_destroy_all(false)
   end
+
+  private
+
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def set_crumbs
+    @crumbs << [t('modules.gws/monitor'), gws_monitor_topics_path]
+  end
+
+  def pre_params
+    super.keep_if {|key| %i(facility_ids).exclude?(key)}
+  end
+
 end
