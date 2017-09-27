@@ -44,6 +44,7 @@ module Inquiry::Node
     include Cms::Addon::NodeList
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Addon::ForMemberNode
 
     default_scope ->{ where(route: "inquiry/node") }
 
