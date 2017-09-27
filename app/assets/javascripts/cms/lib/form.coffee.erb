@@ -83,6 +83,7 @@ class @Syntax_Checker
   @errorCount
   @autoCorrect = false
   @config = {}
+  @enabled = true
 
   @reset: ()->
     @errors = {}
@@ -133,14 +134,15 @@ class @Syntax_Checker
       return true
 
   @validateHtml: (form, submit)->
-    unless Syntax_Checker.check()
+    if Syntax_Checker.enabled
+      unless Syntax_Checker.check()
 
-      for key, errors of Syntax_Checker.errors
-        for error, i in errors
-          if error["correct"] && Syntax_Checker.autoCorrect
-            Form_Alert.add "<%= I18n.t('cms.auto_correct.notice') %>", this, error["msg"]
-          else
-            Form_Alert.add "<%= I18n.t('cms.syntax_check') %>", this, error["msg"]
+        for key, errors of Syntax_Checker.errors
+          for error, i in errors
+            if error["correct"] && Syntax_Checker.autoCorrect
+              Form_Alert.add "<%= I18n.t('cms.auto_correct.notice') %>", this, error["msg"]
+            else
+              Form_Alert.add "<%= I18n.t('cms.syntax_check') %>", this, error["msg"]
 
   @correctAll: (form, submit)->
     html = Cms_Form.getEditorHtml()
