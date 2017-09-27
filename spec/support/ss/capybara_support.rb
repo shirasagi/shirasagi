@@ -19,7 +19,7 @@ module SS::CapybaraSupport
   end
 
   def activate_driver(name, config)
-    case name.to_sym
+    case name.try(:to_sym)
     when :auto
       activate_driver(auto_detect_driver, config)
     when :chrome

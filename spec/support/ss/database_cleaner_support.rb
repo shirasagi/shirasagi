@@ -10,6 +10,7 @@ module SS
       obj.after(dbscope) do
         Rails.logger.debug "clean database at #{inspect}"
         ::Mongoid::Clients.default.database.drop
+        clear_files
       end
 
       obj.class_eval do
