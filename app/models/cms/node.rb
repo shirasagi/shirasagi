@@ -21,6 +21,7 @@ class Cms::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
+    include Cms::Addon::ChildList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -40,6 +41,7 @@ class Cms::Node
     include Cms::Addon::MaxFileSizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::ChildList
 
     default_scope ->{ where(route: "cms/page") }
   end
