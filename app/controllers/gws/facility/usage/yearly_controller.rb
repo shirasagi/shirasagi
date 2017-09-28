@@ -16,4 +16,36 @@ class Gws::Facility::Usage::YearlyController < ApplicationController
       'month' => { '$month' => '$local_start_at' }
     }
   end
+
+  public
+
+  def download
+    filename = "facility_#{@target_time.year}_usage"
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+
+    enum = Enumerator.new do |y|
+      y << encode_sjis([@model.t(:name), '種類', *@months.map { |month| month[0] }].to_csv)
+      aggregate
+      @items.each do |item|
+        terms = []
+        terms << item.name
+        terms << '時間'
+        @months.each do |month|
+          terms << format_usage_hours(item, @target_time.year, month[1])
+        end
+        y << encode_sjis(terms.to_csv)
+
+        terms.clear
+        terms << item.name
+        terms << '回数'
+        @months.each do |month|
+          terms << format_usage_count(item, @target_time.year, month[1])
+        end
+        y << encode_sjis(terms.to_csv)
+      end
+    end
+
+    response.status = 200
+    send_enum enum, type: 'text/csv; charset=Shift_JIS', filename: filename
+  end
 end

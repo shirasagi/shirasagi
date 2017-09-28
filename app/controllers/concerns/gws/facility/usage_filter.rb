@@ -94,11 +94,7 @@ module Gws::Facility::UsageFilter
     raise NotImplementedError
   end
 
-  public
-
-  def index
-    @items = @items.page(params[:page]).per(50)
-
+  def aggregate
     criteria = Gws::Schedule::Plan.site(@cur_site)
     criteria = criteria.in(facility_ids: @items.pluck(:id))
     criteria = criteria.gte(start_at: @target_time).lt(start_at: @target_time + target_range)
@@ -131,5 +127,16 @@ module Gws::Facility::UsageFilter
     }
 
     @aggregation = Gws::Schedule::Plan.collection.aggregate(pipes).to_a.map(&:to_h)
+  end
+
+  def encode_sjis(str)
+    str.encode("SJIS", invalid: :replace, undef: :replace)
+  end
+
+  public
+
+  def index
+    @items = @items.page(params[:page]).per(50)
+    aggregate
   end
 end
