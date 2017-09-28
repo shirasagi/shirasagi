@@ -190,6 +190,7 @@ img {
       clear: both;
       text-align: right;
       padding-bottom: 10px;
+      line-height: 0;
       @include mb {
         width: 100%;
         @include box-sizing(border-box);
@@ -216,6 +217,7 @@ img {
       }
       #search-button {
         padding: 5px 10px;
+        margin: 0;
         border: none;
         background: #333;
         color: $t-white;
@@ -228,6 +230,10 @@ img {
           @include border-radius(0);
           -webkit-appearance: none;
         }
+      }
+      _::-webkit-full-page-media, _:future,
+      #search-button {
+        padding: 7px 10px;
       }
     }
   }
@@ -2019,9 +2025,11 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
         li {
           @include float(left);
           list-style: none;
+          background: url(../img/ic-li.png) no-repeat center left 2px;
           a {
             display: block;
-            margin: 0 6px 6px 0;
+            //margin: 0 6px 6px 0;
+            margin: 6px 6px 6px 0;
             padding: 3px 10px;
             @include border-radius(3px);
             background-color: $hgry;
