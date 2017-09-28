@@ -4,7 +4,7 @@
   <thead>
   <tr>
     <th rowspan="2" colspan="2"><%= @model.t :name %></th>
-    <th colspan="<%= @days.length %>">利用日</th>
+    <th colspan="<%= @days.count %>">利用日</th>
   </tr>
   <tr>
     <% @days.each do |day| %>
