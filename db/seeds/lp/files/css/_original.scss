@@ -1,0 +1,152 @@
+body {
+  margin-top: 70px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.single-data {
+  line-height: 6em;
+  font-size: 1.2em;
+}
+
+.mb-100 {
+  margin-bottom: 100px;
+}
+
+.mb-50 {
+  margin-bottom: 50px;
+}
+
+.bg-gray {
+  background: #CCC;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.navbar-nav > li > a {
+  line-height: 40px;
+  transition: all 1s ease;
+}
+
+.navbar-inverse {
+  background-color: #fff;
+  border-color: #cdcdcd;
+
+  .navbar-nav > li > a {
+    &:hover, &:focus {
+      color: #fff;
+      background-color: #393939;
+    }
+  }
+}
+
+.navbar-toggle {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: #393939;
+}
+
+.jumbotron {
+  border-top: 1px solid #bcbcbc;
+  border-bottom: 1px solid #bcbcbc;
+  background-color: inherit;
+}
+
+#canvas_wrapper {
+  max-width: 100%;
+  min-width: 280px;
+  padding: 4px;
+  border: 1px solid #CCC;
+  margin: auto;
+
+  img {
+    max-width: none;
+  }
+}
+
+#map-canvas {
+  height: 200px;
+  width: 100%;
+}
+
+#join-us {
+  margin-top: 100px;
+}
+
+#page-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  a {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    display: block;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: background-color .5s ease;
+    background: #666 url(../img/pagetop.png) no-repeat center center;
+
+    &:hover {
+      text-decoration: none;
+      background: #F12D77 url(../img/pagetop.png) no-repeat center center;
+    }
+  }
+}
+
+.btn {
+  transition: all .5s ease;
+}
+
+.btn-default:hover {
+  color: #fff;
+  background-color: #F12D77;
+}
+
+table th {
+  background-color: #eceeef;
+}
+
+@media only screen and (min-width: 768px) {
+  #map-canvas {
+    height: 300px;
+  }
+
+  #feature-section .nav-tabs {
+    &.nav-justified {
+      width: auto;
+      font-size: 1em;
+    }
+
+    li a {
+      font-size: 1.5em;
+      padding: 0.5em 0;
+    }
+  }
+}
+
+ /*@media only screen and (min-width:  992px) {
+#map-canvas {
+	height: 400px;
+}
+#feature-section .nav-tabs li a {
+	font-size: 2em;
+	padding: 1em 0;
+}
+}
+@media only screen and (min-width:  1280px) {
+#map-canvas {
+	height: 500px;
+}
+#feature-section .nav-tabs li a {
+	font-size: 2em;
+	padding: 1em 0;
+}
+}
+#myTabContent {
+	padding:20px;
+}*/

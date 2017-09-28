@@ -1,0 +1,15 @@
+<li>
+	<a href="#{url}">
+      <div class="relative">
+      <div class="bg-gray">
+   		<figure class="text-center scale">
+      		<img src="#{img.src}">
+   		</figure>
+        </div>
+      </div>
+      <div>
+       <time class="color-default">#{date.long}</time>
+        <span class="title">#{name}</span>
+      </div>
+	</a>
+</li>
