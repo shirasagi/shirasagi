@@ -214,40 +214,44 @@ contact_link_url = contact_group_id ? link_url : nil
 contact_link_name = contact_group_id ? link_url : nil
 
 puts "# articles"
-file2 = save_ss_files "ss_files/article/img2.jpg", filename: "img2.jpg", model: "article/page"
-page2 = save_page route: "article/page", filename: "docs/page2.html", name: "サンプル1", layout_id: layouts["general"].id,
+file1 = save_ss_files "ss_files/article/img2.jpg", filename: "img2.jpg", model: "article/page"
+page1 = save_page route: "article/page", filename: "docs/page2.html", name: "サンプル1", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   group_ids: [contact_group.id],
-  html: "<p><img alt=\"PC\" src=\"#{file2.url}\" /></p>",
-  map_points: [ { loc: [34.06126, 134.576147] } ]
+  html: "<p><img alt=\"PC\" src=\"#{file1.url}\" /></p>",
+  map_points: [ { loc: [34.06126, 134.576147] } ],
+  file_ids: [file1.id]
 
-file3 = save_ss_files "ss_files/article/img3.jpg", filename: "img3.jpg", model: "article/page"
-page3 = save_page route: "article/page", filename: "docs/page3.html", name: "イベントがありました。", layout_id: layouts["general"].id,
+file2 = save_ss_files "ss_files/article/img3.jpg", filename: "img3.jpg", model: "article/page"
+page2 = save_page route: "article/page", filename: "docs/page3.html", name: "イベントがありました。", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   group_ids: [contact_group.id],
-  html: "<p><img alt=\"森\" src=\"#{file3.url}\" /></p>"
+  html: "<p><img alt=\"森\" src=\"#{file2.url}\" /></p>",
+  file_ids: [file2.id]
 
-file4 = save_ss_files "ss_files/article/img4.jpg", filename: "img4.jpg", model: "article/page"
-page4 = save_page route: "article/page", filename: "docs/page4.html", name: "結果を報告します。", layout_id: layouts["general"].id,
+file3 = save_ss_files "ss_files/article/img4.jpg", filename: "img4.jpg", model: "article/page"
+page3 = save_page route: "article/page", filename: "docs/page4.html", name: "結果を報告します。", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   group_ids: [contact_group.id],
-  html: "<p><img alt=\"森\" src=\"#{file4.url}\" /></p>"
+  html: "<p><img alt=\"森\" src=\"#{file3.url}\" /></p>",
+  file_ids: [file3.id]
 
-file1 = save_ss_files "ss_files/article/img1.jpg", filename: "img1.jpg", model: "article/page"
-page1 = save_page route: "article/page", filename: "docs/page1.html", name: "お知らせが入ります。", layout_id: layouts["general"].id,
+file4 = save_ss_files "ss_files/article/img1.jpg", filename: "img1.jpg", model: "article/page"
+page4 = save_page route: "article/page", filename: "docs/page1.html", name: "お知らせが入ります。", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
-  group_ids: [contact_group.id]
-page1.html += "<p class=\"pull-left\"><img alt=\"ベンチ\" src=\"#{file1.url}\" /></p>"
-page1.html += "<p>本文を入力してください。本文を入力してください。本文を入力してください。本文を入力してください。</p>"
-page1.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
-page1.html += "<p class=\"pull-right\"><img alt=\"ベンチ\" src=\"#{file1.url}\" /></p>"
-page1.html += "<p>本文を入力してください。本文を入力してください。本文を入力してください。本文を入力してください。</p>"
-page1.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
-page1.update
+  group_ids: [contact_group.id],
+  file_ids: [file4.id]
+page4.html += "<p class=\"pull-left\"><img alt=\"ベンチ\" src=\"#{file4.url}\" /></p>"
+page4.html += "<p>本文を入力してください。本文を入力してください。本文を入力してください。本文を入力してください。</p>"
+page4.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
+page4.html += "<p class=\"pull-right\"><img alt=\"ベンチ\" src=\"#{file4.url}\" /></p>"
+page4.html += "<p>本文を入力してください。本文を入力してください。本文を入力してください。本文を入力してください。</p>"
+page4.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
+page4.update
 
 puts "# cms pages"
 top_page = save_page route: "cms/page", filename: "index.html", name: "LPサンプル", layout_id: layouts["top"].id,
@@ -255,18 +259,19 @@ top_page = save_page route: "cms/page", filename: "index.html", name: "LPサン�
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   group_ids: [contact_group.id],
   map_points: [ { loc: [34.061264,134.57611] } ]
-page2.related_page_ids = [top_page.id]
-page2.update
+page1.related_page_ids = [top_page.id]
+page1.update
 
-file1 = save_ss_files "ss_files/article/img1.jpg", filename: "img1.jpg", model: "article/page"
+file5 = save_ss_files "ss_files/article/img1.jpg", filename: "img1_2.jpg", model: "article/page"
 service_page = save_page route: "cms/page", filename: "service1/index.html", name: "サービス1", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
-  group_ids: [contact_group.id]
-service_page.html += "<p class=\"pull-left\"><img alt=\"ベンチ\" src=\"#{file1.url}\" /></p>"
+  group_ids: [contact_group.id],
+  file_ids: [file5.id]
+service_page.html += "<p class=\"pull-left\"><img alt=\"ベンチ\" src=\"#{file5.url}\" /></p>"
 service_page.html += "<p>本文を入力してください。本文を入力してください。本文を入力してください。本文を入力してください。</p>"
 service_page.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
-service_page.html += "<p class=\"pull-right\"><img alt=\"ベンチ\" src=\"#{file1.url}\" /></p>"
+service_page.html += "<p class=\"pull-right\"><img alt=\"ベンチ\" src=\"#{file5.url}\" /></p>"
 service_page.html += "<p>本文を入力してください。本文を入力してください。本文を入力してください。本文を入力してください。</p>"
 service_page.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
 service_page.update
