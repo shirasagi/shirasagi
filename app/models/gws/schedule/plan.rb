@@ -10,6 +10,8 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Repeat
   include SS::Addon::Markdown
   include Gws::Addon::File
+  include Gws::Addon::Schedule::Comments
+  include Gws::Addon::Schedule::Attendances
   include Gws::Addon::Member
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::ReadableSetting
@@ -51,8 +53,14 @@ class Gws::Schedule::Plan
     readable_member_ids == [user.id]
   end
 
+  def attendance_check_plan?
+    attendance_check_enabled?
+  end
+
+  alias allowed_for_managers? allowed?
+
   def allowed?(action, user, opts = {})
-    return true if super
+    return true if allowed_for_managers?(action, user, opts)
     member?(user) || custom_group_member?(user) if action =~ /edit|delete/
   end
 

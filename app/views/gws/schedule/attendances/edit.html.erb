@@ -1,0 +1,28 @@
+<%= form_for :item, url: { action: :update }, html: { id: 'item-form', method: :put, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <dl class="see">
+    <dt><%= Gws::User.t :name %></dt>
+    <dd><%= @item.user_name %></dd>
+
+    <dt><%= @model.t :attendance_state %></dt>
+    <dd>
+      <%= @item.label :attendance_state %>
+      <%= f.hidden_field(:attendance_state) %>
+    </dd>
+
+    <dt><%= @model.t :in_comment %></dt>
+    <dd><%= f.text_field(:in_comment, style: 'width: 40em;') %></dd>
+  </dl>
+
+  <%= hidden_field_tag('redirect_to', params[:redirect_to]) %>
+
+  <footer class="send">
+    <% if @crud_buttons %>
+      <% @crud_buttons.call f %>
+    <% else %>
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+    <% end %>
+  </footer>
+<% end %>

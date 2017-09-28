@@ -35,13 +35,18 @@ module Gws::Schedule::CalendarFormat
     if allday?
       data[:start] = start_at.to_date
       data[:end] = (end_at + 1.day).to_date
-      data[:className] += " fc-event-allday"
+      data[:className] += ' fc-event-allday'
     end
 
     if repeat_plan_id
       data[:title]      = " #{data[:title]}"
-      data[:className] += " fc-event-repeat"
+      data[:className] += ' fc-event-repeat'
     end
+
+    if attendance_check_plan? && contains_unknown_attendance?
+      data[:className] += ' fc-event-unknown-attendance'
+    end
+
     data
   end
 

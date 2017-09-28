@@ -6,9 +6,10 @@ module Gws::Board::GroupSetting
     field :board_new_days, type: Integer
     field :board_file_size_per_topic, type: Integer
     field :board_file_size_per_post, type: Integer
+    field :board_browsed_delay, type: Integer
     attr_accessor :in_board_file_size_per_topic_mb, :in_board_file_size_per_post_mb
 
-    permit_params :board_new_days
+    permit_params :board_new_days, :board_browsed_delay
     permit_params :in_board_file_size_per_topic_mb, :in_board_file_size_per_post_mb
 
     before_validation :set_board_file_size_per_topic
@@ -17,6 +18,10 @@ module Gws::Board::GroupSetting
 
   def board_new_days
     self[:board_new_days].presence || 7
+  end
+
+  def board_browsed_delay
+    self[:board_browsed_delay].presence || 2
   end
 
   class << self

@@ -75,7 +75,6 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           click_button "保存"
         end
 
-        # puts page.html
         expect(page).to have_css("aside.comment h2", text: name)
         expect(page).to have_css("aside.comment .body", text: text)
         expect(page).to have_css("aside.comment h2", text: name2)

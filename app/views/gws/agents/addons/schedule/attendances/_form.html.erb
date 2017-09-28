@@ -1,0 +1,4 @@
+<dl class="see gws-addon-schedule-attendance">
+  <dt><%= @model.t :attendance_check_state %><%= @model.tt :attendance_check_state %></dt>
+  <dd><%= f.select :attendance_check_state, @item.attendance_check_state_options, include_blank: true %></dd>
+</dl>

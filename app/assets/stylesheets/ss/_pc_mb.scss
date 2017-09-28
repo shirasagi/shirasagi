@@ -26,7 +26,7 @@ body {
 #page {
   position: relative;
   min-height: 100%;
-  &:after {
+  &:not(.print-preview):after {
     content: "";
     position: absolute;
     top: 0;
@@ -634,7 +634,7 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 // main
-#main {
+#main:not(.print-preview) {
   float: right;
   width: 100%;
   margin: 0 0 40px -100%;
@@ -642,10 +642,12 @@ td {
     float: none;
     margin: 0 0 100px 0;
   }
-}
-#main .wrap {
-  margin: 0 10px 0 220px;
-  @include mb { margin: 10px 0; }
+  .wrap {
+    margin: 0 10px 0 220px;
+    @include mb {
+      margin: 10px 0;
+    }
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -739,6 +741,85 @@ td {
   .nav-menu {
     margin-left: 230px;
   }
+}
+@include mb {
+  #menu .nav-menu {
+    margin: 10px 0px;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// main-navi
+
+#main-navi {
+  @include box;
+  float: left;
+  width: 250px;
+  padding: 10px;
+}
+#main-navi + .index {
+  float: right;
+  width: calc(100% - 260px);
+}
+@include mb {
+  #main-navi {
+    float: none;
+    overflow: scroll;
+    width: auto;
+    max-height: 100px;
+    margin: 0 10px 10px;
+  }
+  #main-navi + .index {
+    float: none;
+    width: auto;
+  }
+}
+
+.tree-navi .loading {
+  color: #bbb;
+}
+.tree-navi .tree-item {
+  padding: 2px;
+}
+.tree-navi .tree-item a {
+  color: #333;
+}
+.tree-navi .tree-item a:hover {
+  color: #f25a38;
+}
+.tree-navi .is-parent {
+  font-weight: bold;
+}
+.tree-navi .is-current {
+  background: #f2f2f2;
+  font-weight: bold;
+}
+.tree-navi .item-pad {
+  float: left;
+  width: 20px;
+  min-height: 1px;
+}
+.tree-navi .item-mark {
+  float: left;
+  margin-top: 1px;
+  padding: 0 1px 1px;
+  border: 1px solid #d0d0d0;
+  border-radius: 2px;
+  background-color: #fff;
+  line-height: 1;
+  &:hover {
+    border-color: $orange;
+  }
+  .material-icons {
+    font-size: 13px;
+  }
+}
+.tree-navi .item-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 4px;
+  white-space: nowrap;
 }
 
 // -------------------------------------------------------------------------------------------------

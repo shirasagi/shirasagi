@@ -1,4 +1,12 @@
 // list
+.gws-boards {
+  .unread {
+    background-color: #f9e9e3;
+    &:hover {
+      background: $orange2;
+    }
+  }
+}
 .gws-board-file-count {
   img {
     margin: 0 2px 0 5px;
@@ -13,7 +21,7 @@
 
 // show
 .gws-board {
-  .topic, .comment {
+  .topic, .comment, .subscribed-users {
     @include box;
     margin-bottom: 2px;
     header {
@@ -38,6 +46,9 @@
         word-wrap: normal;
       }
     }
+    .status {
+      padding: 15px;
+    }
   }
   .meta {
     .user {
@@ -57,5 +68,22 @@
   }
   .comments {
     padding-left: 20px;
+  }
+
+  .subscribed-users {
+    .index {
+      .name {
+        width: 40em;
+      }
+      time {
+        margin: 0 4px;
+        &:before {
+          content: '('
+        }
+        &:after {
+          content: ')'
+        }
+      }
+    }
   }
 }

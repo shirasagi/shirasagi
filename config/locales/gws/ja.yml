@@ -99,6 +99,7 @@ ja:
       gws/history: 変更履歴
       gws/readable_setting: 閲覧権限
       gws/member: 参加者
+      gws/subscription_setting: 購読
 
   mongoid:
     models:
@@ -188,6 +189,10 @@ ja:
         member_custom_group_ids: 参加カスタムグループ
       gws/group_setting/system:
         sendmail_domains: メール送信許可ドメイン
+      gws/addon/subscription_setting:
+        subscribed_group_ids: 購読グループ
+        subscribed_member_ids: 購読ユーザー
+        subscribed_custom_group_ids: 購読カスタムグループ
 
   tooltip:
     gws/addon/reminder:
@@ -244,6 +249,13 @@ ja:
         - このページを閲覧可能にするグループを選択します。
       readable_member_ids:
         - このページを閲覧可能にするユーザーを選択します。
+    gws/addon/subscription_setting:
+      subscribed_custom_group_ids:
+        - このページを購読するカスタムグループを選択します。
+      subscribed_group_ids:
+        - このページを購読するグループを選択します。
+      subscribed_member_ids:
+        - このページを購読するユーザーを選択します。
 
   job:
     models:

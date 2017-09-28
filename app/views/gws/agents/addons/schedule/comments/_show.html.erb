@@ -1,0 +1,22 @@
+<div class="see mod-gws-schedule-comments">
+  <% if @item.comments.present? %>
+  <ul class="list-items">
+    <% @item.comments.order_by(updated: -1).each do |comment| %>
+    <li class="list-item">
+        <p><%== comment.html %></p>
+        <div class="meta">
+          <span class="datetime"><%= I18n.l(comment.updated) %></span>
+          <span class="group"><%= comment.user_group_name %></span>
+          <span class="user"><%= comment.user_name %></span>
+        </div>
+    </li>
+    <% end %>
+  </ul>
+  <% end %>
+
+  <%= form_tag(gws_schedule_comments_path(plan_id: @item), id: 'comment-form', method: :post) do %>
+    <%= text_field_tag 'item[text]' %>
+    <%= hidden_field_tag('redirect_to', request.fullpath) %>
+    <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
+  <% end %>
+</div>

@@ -7,6 +7,8 @@ class Cms::Node::PagesController < ApplicationController
   prepend_view_path "app/views/cms/pages"
   navi_view "cms/node/main/navi"
 
+  before_action :set_tree_navi, only: [:index]
+
   private
 
   def fix_params

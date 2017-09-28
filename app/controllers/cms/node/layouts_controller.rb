@@ -7,6 +7,8 @@ class Cms::Node::LayoutsController < ApplicationController
   prepend_view_path "app/views/cms/layouts"
   navi_view "cms/node/main/navi"
 
+  before_action :set_tree_navi, only: [:index]
+
   private
 
   def fix_params

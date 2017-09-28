@@ -3,6 +3,7 @@ SS::Application.routes.draw do
 
   concern :plans do
     get :events, on: :collection
+    get :print, on: :collection
     get :popup, on: :member
     get :delete, on: :member
     delete action: :destroy_all, on: :collection
@@ -11,10 +12,12 @@ SS::Application.routes.draw do
   gws "schedule" do
     get 'all_groups' => 'groups#index'
     get 'facilities' => 'facilities#index'
-    get 'search' => 'search/main#index', as: :search
+    get 'facilities/print' => 'facilities#print'
+    get 'search' => redirect { |p, req| "#{req.path}/users" }, as: :search
     get 'search/users' => 'search/users#index', as: :search_users
     get 'search/times' => 'search/times#index', as: :search_times
 
+    get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
     resources :plans, concerns: :plans
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
@@ -22,6 +25,8 @@ SS::Application.routes.draw do
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     resources :holidays, concerns: :plans
+    resources :comments, path: ':plan_id/comments', only: :create
+    resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
 
     resources :todos, concerns: :plans do
       get :finish, on: :member
