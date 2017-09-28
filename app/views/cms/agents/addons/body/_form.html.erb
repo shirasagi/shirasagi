@@ -1,7 +1,8 @@
 <%
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config
   replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
-  syntax_check = @cur_node ? (@cur_node.syntax_check_enabled? || @cur_site.syntax_check_enabled?) : @cur_site.syntax_check_enabled?
+  syntax_check = @cur_node.syntax_check_enabled? if @cur_node
+  syntax_check = @cur_site.syntax_check_enabled? if syntax_check.nil?
 %>
 
 <% if SS.config.cms.html_editor == "markdown" %>

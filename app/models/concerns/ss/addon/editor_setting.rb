@@ -24,6 +24,6 @@ module SS::Addon::EditorSetting
   end
 
   def syntax_check_enabled?
-    syntax_check == 'enabled'
+    syntax_check == 'enabled' || syntax_check.blank?
   end
 end
