@@ -22,6 +22,7 @@ class Gws::Facility::ItemsController < ApplicationController
   def index
     @items = @model.site(@cur_site).
       state(params.dig(:s, :state)).
+      search(params[:s]).
       allow(:read, @cur_user, site: @cur_site).
       page(params[:page]).per(50)
   end

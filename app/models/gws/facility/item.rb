@@ -40,7 +40,13 @@ class Gws::Facility::Item
     criteria = where({})
     return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+    if params[:category].present?
+      criteria = criteria.where(category_id: params[:category])
+    end
+
+    if params[:keyword].present?
+      criteria = criteria.keyword_in params[:keyword], :name, :text
+    end
     criteria
   }
   scope :category_id, ->(category_id) do
