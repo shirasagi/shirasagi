@@ -1,0 +1,39 @@
+<%= render 'gws/facility/usage/main/search' %>
+
+<table class="index">
+  <thead>
+  <tr>
+    <th rowspan="2" colspan="2"><%= @model.t :name %></th>
+    <th colspan="<%= @days.length %>">利用日</th>
+  </tr>
+  <tr>
+    <% @days.each do |day| %>
+    <th><%= day[1] %></th>
+    <% end %>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @items.each do |item| %>
+      <tr>
+        <td rowspan="2"><%= item.name %></td>
+        <td><%= I18n.t('gws/facility.prompts.hours') %></td>
+        <% @days.each do |day| %>
+          <td>
+            <%= format_usage_hours(item, @target_time.year, @target_time.month, day[1]) %>
+          </td>
+        <% end %>
+      </tr>
+      <tr>
+        <td><%= I18n.t('gws/facility.prompts.times') %></td>
+        <% @days.each do |day| %>
+          <td>
+            <%= format_usage_count(item, @target_time.year, @target_time.month, day[1]) %>
+          </td>
+        <% end %>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

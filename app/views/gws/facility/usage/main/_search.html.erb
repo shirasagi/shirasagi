@@ -1,0 +1,37 @@
+<div class="search-form">
+  <%= form_for :s, url: '', html: { class: 'search', method: :get } do |f| %>
+    <span style="margin-right: 10px;">
+      <%= f.select :category, Gws::Facility::Category.site(@cur_site).order_by(order: 1, id: 1).pluck(:name, :id), include_blank: true %>
+      <%= f.select :year, @years %>
+      <%= f.select :month, @months, include_blank: t("ads.yearly") %>
+    </span>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <%= link_to t('ss.buttons.reset'), { action: :index }, class: 'btn' %>
+  <% end %>
+</div>
+
+<%= jquery do %>
+  var $form = $('.search-form form');
+  $form.on('submit', function(e) {
+    var category = $form.find('select[name="s[category]"]').val();
+    var year = $form.find('select[name="s[year]"]').val();
+    var month = $form.find('select[name="s[month]"]').val();
+
+    var query = '';
+    if (category) {
+      query = {}
+      query.s = {}
+      query.s.category = category;
+      query = '?' + $.param(query);
+    }
+
+    if (month) {
+      location.href = '<%= gws_facility_usage_main_path %>/monthly/' + year + ('0' + month).slice(-2) + query;
+    } else {
+      location.href = '<%= gws_facility_usage_main_path %>/yearly/' + year + query;
+    }
+
+    e.preventDefault();
+    return false;
+  });
+<% end %>
