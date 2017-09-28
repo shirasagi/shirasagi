@@ -219,7 +219,7 @@ page1 = save_page route: "article/page", filename: "docs/page2.html", name: "サ
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   group_ids: [contact_group.id],
-  html: "<p><img alt=\"PC\" src=\"#{file1.url}\" /></p>",
+  html: "<p><img alt=\"パソコン\" src=\"#{file1.url}\" /></p>",
   map_points: [ { loc: [34.06126, 134.576147] } ],
   file_ids: [file1.id]
 
@@ -257,6 +257,7 @@ puts "# cms pages"
 top_page = save_page route: "cms/page", filename: "index.html", name: "LPサンプル", layout_id: layouts["top"].id,
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  contact_state: "hide",
   group_ids: [contact_group.id],
   map_points: [ { loc: [34.061264,134.57611] } ]
 page1.related_page_ids = [top_page.id]
