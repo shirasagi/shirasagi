@@ -24,12 +24,12 @@ class Gws::Facility::Usage::YearlyController < ApplicationController
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
 
     enum = Enumerator.new do |y|
-      y << encode_sjis([@model.t(:name), '種類', *@months.map { |month| month[0] }].to_csv)
+      y << encode_sjis([@model.t(:name), I18n.t('gws/facility.usage.type'), *@months.map { |month| month[0] }].to_csv)
       aggregate
       @items.each do |item|
         terms = []
         terms << item.name
-        terms << '時間'
+        terms << I18n.t('gws/facility.usage.hours')
         @months.each do |month|
           terms << format_usage_hours(item, @target_time.year, month[1])
         end
@@ -37,7 +37,7 @@ class Gws::Facility::Usage::YearlyController < ApplicationController
 
         terms.clear
         terms << item.name
-        terms << '回数'
+        terms << I18n.t('gws/facility.usage.times')
         @months.each do |month|
           terms << format_usage_count(item, @target_time.year, month[1])
         end

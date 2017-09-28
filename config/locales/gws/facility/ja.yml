@@ -3,12 +3,16 @@ ja:
     category: カテゴリー
     manage_custom_fields: 追加入力を管理する
     prompts:
-      hours: 時間
       minutes: 分
       days: 日先まで
-      times: 回数
     navi:
       usage: 利用率
+    usage:
+      type: 種類
+      usage_month: 利用月
+      usage_day: 利用日
+      hours: 時間
+      times: 回数
 
   gws_role:
     read_other_gws_facility_items: 設備の閲覧（全て）

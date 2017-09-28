@@ -3,8 +3,9 @@
 <table class="index">
   <thead>
   <tr>
-    <th rowspan="2" colspan="2"><%= @model.t :name %></th>
-    <th colspan="<%= @months.length %>">利用月</th>
+    <th rowspan="2"><%= @model.t :name %></th>
+    <th rowspan="2"><%= I18n.t('gws/facility.usage.type') %></th>
+    <th colspan="<%= @months.length %>"><%= I18n.t('gws/facility.usage.usage_month') %></th>
   </tr>
   <tr>
     <% @months.each do |month| %>
@@ -17,7 +18,7 @@
   <% @items.each do |item| %>
       <tr>
         <td rowspan="2"><%= item.name %></td>
-        <td><%= I18n.t('gws/facility.prompts.hours') %></td>
+        <td><%= I18n.t('gws/facility.usage.hours') %></td>
         <% @months.each do |month| %>
           <td>
             <% usage = format_usage_hours(item, @target_time.year, month[1]) %>
@@ -28,7 +29,7 @@
         <% end %>
       </tr>
       <tr>
-        <td><%= I18n.t('gws/facility.prompts.times') %></td>
+        <td><%= I18n.t('gws/facility.usage.times') %></td>
         <% @months.each do |month| %>
           <td>
             <% usage = format_usage_count(item, @target_time.year, month[1]) %>
