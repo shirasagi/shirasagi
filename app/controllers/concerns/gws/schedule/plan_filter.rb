@@ -1,10 +1,8 @@
 module Gws::Schedule::PlanFilter
   extend ActiveSupport::Concern
+  include Gws::Schedule::CalendarFilter
 
   included do
-    prepend_view_path "app/views/gws/schedule/plans"
-    menu_view "gws/schedule/main/menu"
-    helper Gws::Schedule::PlanHelper
     model Gws::Schedule::Plan
     before_action :set_file_addon_state
   end
@@ -57,16 +55,6 @@ module Gws::Schedule::PlanFilter
 
   def print
     render layout: 'ss/print'
-  end
-
-  def popup
-    set_item
-
-    if @item.readable?(@cur_user)
-      render file: "popup", layout: false
-    else
-      render file: "popup_hidden", layout: false
-    end
   end
 
   def create

@@ -1,7 +1,7 @@
 class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::Schedule::PlanFilter
+  include Gws::Schedule::CalendarFilter
 
   navi_view "gws/schedule/settings/navi"
 
