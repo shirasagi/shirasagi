@@ -24,8 +24,7 @@ module Cms::Addon::EditorSetting
   end
 
   def syntax_check_enabled?
-    return false if Cms::WordDictionary.to_config[:replace_words].blank?
     return nil if syntax_check.blank?
-    syntax_check == 'enabled'
+    syntax_check == 'enabled' ? true : false
   end
 end

@@ -1,6 +1,6 @@
 class Cms::SysNoticesController < ApplicationController
   include Cms::BaseFilter
-  include Cms::CrudFilter
+  include SS::CrudFilter
   include Sns::PublicNoticeFilter
 
   append_view_path 'app/views/sns/public_notices'
