@@ -10,7 +10,7 @@ module Category::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
-    include Category::Addon::CategoryList
+    include Cms::Addon::ChildList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -32,7 +32,7 @@ module Category::Node
     include History::Addon::Backup
     include Category::Addon::Integration
     include Category::Addon::Split
-    include Category::TemplateVariable
+    include Cms::ChildList
 
     default_scope ->{ where(route: "category/page") }
   end

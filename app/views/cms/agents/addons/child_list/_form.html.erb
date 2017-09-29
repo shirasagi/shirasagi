@@ -1,0 +1,18 @@
+<%= code_editor ".mod-cms-child_list .html", mode: :html %>
+
+<dl class="see mod-cms-child_list">
+  <dt><%= @model.tt :child_list %></dt>
+  <dd></dd>
+
+  <dt><%= @model.t :child_limit %><%= @model.tt :child_limit %></dt>
+  <dd><%= f.number_field :child_limit %></dd>
+
+  <dt><%= @model.t :child_upper_html %><%= @model.tt :child_upper_html %></dt>
+  <dd><%= f.text_area :child_upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :child_loop_html %><%= @model.tt :child_loop_html %></dt>
+  <dd><%= f.text_area :child_loop_html, class: :html, style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :child_lower_html %><%= @model.tt :child_lower_html %></dt>
+  <dd><%= f.text_area :child_lower_html, class: :html %></dd>
+</dl>
