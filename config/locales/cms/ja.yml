@@ -1282,7 +1282,8 @@ ja:
         - フォルダー内のページ編集時に「ファイル>アップロード」から添付ファイルをアップする際のサイズ制限を設定可能です。
 
     cms/addon/tag_setting:
-      st_tags:
+
+st_tags:
         - ページに設定可能なタグを設定します。
         - スペースやカンマで区切ることで複数のタグを設定できます。
 
@@ -1340,6 +1341,17 @@ ja:
         &lt;footer id="ss-pc" style="display: none"&gt;PC表示&lt;/footer&gt;
         &lt;footer id="ss-mb" style="display: none"&gt;スマートフォン表示&lt;/footer&gt;
         スマートフォンやタブレットで表示した際にPC、スマートフォン表示を切り替えるボタンを表示します。
+
+        #{if 条件分岐タグA}内容A#{end} 条件分岐タグAがtrueのとき、内容Aを表示します。
+        #{if 条件分岐タグA}内容A#{elsif 条件分岐タグB}内容B#{end} 条件分岐タグAがtrueの場合は内容A、条件分岐タグAがfalseかつ条件分岐タグBがtrueの場合は内容Bを表示します。
+        #{if 条件分岐タグA}内容A#{else}内容B#{end} 条件分岐タグAがtrueの場合は内容A、falseの場合は内容Bを表示します。
+
+        条件分岐タグ:
+        - is_page() ページならばtrue, それ以外はfalseを返します。
+        - is_node() フォルダーならばtrue, それ以外はfalseを返します。
+        - in_node('/docs') ファイル名がdocsから始まるならばtrue, それ以外はfalseを返します。
+        - has_pages() 現在のフォルダーにページがある、または現在のフォルダーのカテゴリーに所属しているならばtrue, それ以外はfalseを返します。
+ 
     cms/addon/child_list:
       child_list:
         - |-
@@ -1385,16 +1397,6 @@ ja:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
       child_lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
-
-        #{if 条件分岐タグA}内容A#{end} 条件分岐タグAがtrueのとき、内容Aを表示します。
-        #{if 条件分岐タグA}内容A#{elsif 条件分岐タグB}内容B#{end} 条件分岐タグAがtrueの場合は内容A、条件分岐タグAがfalseかつ条件分岐タグBがtrueの場合は内容Bを表示します。
-        #{if 条件分岐タグA}内容A#{else}内容B#{end} 条件分岐タグAがtrueの場合は内容A、falseの場合は内容Bを表示します。
-
-        条件分岐タグ:
-        - is_page() ページならばtrue, それ以外はfalseを返します。
-        - is_node() フォルダーならばtrue, それ以外はfalseを返します。
-        - in_node('/docs') ファイル名がdocsから始まるならばtrue, それ以外はfalseを返します。
-        - has_pages() 現在のフォルダーにページがある、または現在のフォルダーのカテゴリーに所属しているならばtrue, それ以外はfalseを返します。
 
   all_content:
     page_id: ページID
