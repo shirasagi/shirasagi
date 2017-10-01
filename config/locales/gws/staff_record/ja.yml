@@ -78,8 +78,8 @@ ja:
         charge_address: 担当住所
         divide_duties: 分掌事務
         remark: 備考
-        staff_records_view: 職員録へ表示
-        divide_duties_view: 事務分掌へ表示
+        staff_records_view: 電子職員録へ表示
+        divide_duties_view: 事務分掌表へ表示
         order: 並び順
 
   tooltip:
@@ -110,8 +110,8 @@ ja:
       charge_address: 担当住所・電話を入力します。
       divide_duties: 事務分掌を入力します。
       remark: 備考を入力します。
-      staff_records_view: 職員録へ表示するかしないかを選択します。
-      divide_duties_view: 事務分掌へ表示するかしないかを選択します。
+      staff_records_view: 電子職員録へ表示するかしないかを選択します。
+      divide_duties_view: 事務分掌表へ表示するかしないかを選択します。
       order: 並び順を入力します。
       in_file:
         - CSVファイルを指定しインポートを行います。

@@ -28,15 +28,17 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
     @limit = params.dig(:s, :limit).presence || @cur_site.divide_duties_limit
 
     @items = @cur_year.yearly_users.show_divide_duties.
+      readable(@cur_user, @cur_site).
       search(params[:s]).
       page(params[:page]).
       per(@limit)
   end
 
   def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @item.readable?(@cur_user)
 
     @items = @cur_year.yearly_users.show_divide_duties.
+      readable(@cur_user, @cur_site).
       where(section_name: @item.section_name).
       where(charge_name: @item.charge_name).
       all
@@ -53,6 +55,7 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 
     result = @cur_year.yearly_users.show_divide_duties.
+      readable(@cur_user, @cur_site).
       where(section_name: @item.section_name).
       where(charge_name: @item.charge_name).
       update_all(get_charge_params)
