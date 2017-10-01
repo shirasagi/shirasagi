@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe "gws_staff_record_public_groups", type: :feature, dbscope: :example do
+describe "gws_personal_address_management_group_addresses", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:year) { create :gws_staff_record_year }
-  let!(:item) { create :gws_staff_record_group, year_id: year.id }
-  let(:index_path) { gws_staff_record_groups_path(site, year) }
+  let(:address_group) { create :webmail_address_group, cur_user: gws_user }
+  let!(:item) { create :webmail_address, address_group_id: address_group.id, cur_user: gws_user }
+  let(:index_path) { gws_personal_address_group_addresses_path(site, address_group) }
 
   context "with auth", js: true do
     before { login_gws_user }

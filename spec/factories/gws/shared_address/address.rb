@@ -1,6 +1,7 @@
 FactoryGirl.define do
-  factory :webmail_address, class: Webmail::Address do
-    cur_user { ss_user }
+  factory :gws_shared_address_address, class: Gws::SharedAddress::Address do
+    cur_site { gws_site }
+    cur_user { gws_user }
 
     name { "name-#{unique_id}" }
     kana { "kana-#{unique_id}" }
