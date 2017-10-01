@@ -22,6 +22,10 @@
     <h2><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path, class: "icon-conv" %></h2>
     <h2><%= link_to t('gws/staff_record.divide_duties'), gws_staff_record_public_duties_path, class: "icon-conv" %></h2>
   <% end %>
+
+  <h2><%= link_to t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-conv" %></h2>
+  <h2><%= link_to t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-conv" %></h2>
+
   <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
     <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
   <% end %>

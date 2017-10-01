@@ -108,11 +108,11 @@ class Gws::StaffRecord::User
     )
   end
 
-  def export_convert_item(item, line)
-    line[5]  = item.label(:multi_section)
-    line[14] = item.label(:staff_records_view)
-    line[15] = item.label(:divide_duties_view)
-    line
+  def export_convert_item(item, data)
+    data[5]  = item.label(:multi_section)
+    data[14] = item.label(:staff_records_view)
+    data[15] = item.label(:divide_duties_view)
+    data
   end
 
   def import_convert_data(data)
@@ -123,5 +123,16 @@ class Gws::StaffRecord::User
     data[:staff_records_view] = (data[:staff_records_view] == show) ? 'show' : 'hide'
     data[:divide_duties_view] = (data[:divide_duties_view] == show) ? 'show' : 'hide'
     data
+  end
+
+  def import_find_item(data)
+    self.class.site(@cur_site).
+      where(year_id: year_id, id: data[:id]).
+      allow(:read, @cur_user, site: @cur_site).
+      first
+  end
+
+  def import_new_item(data)
+    self.class.new(data.merge(year_id: year_id))
   end
 end
