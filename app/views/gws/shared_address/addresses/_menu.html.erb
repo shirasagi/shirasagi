@@ -1,0 +1,13 @@
+<nav class="nav-management-menu">
+  <% if Gws::SharedAddress::Address.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to t("ss.management"), gws_shared_address_management_addresses_path %>
+  <% elsif Gws::SharedAddress::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to t("ss.management"), gws_shared_address_management_groups_path %>
+  <% end %>
+</nav>
+
+<nav class="nav-menu">
+  <% if params[:action] !~ /index/ %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+  <% end %>
+</nav>

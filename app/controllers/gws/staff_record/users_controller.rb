@@ -38,17 +38,13 @@ class Gws::StaffRecord::UsersController < ApplicationController
       allow(:read, @cur_user, site: @cur_site)
 
     @item = @model.new(fix_params)
-    @item.site_id = @cur_site.id
-    @item.export_csv(items)
-
     send_data @item.export_csv(items), filename: "staff_record_#{@cur_year.code}_users_#{Time.zone.now.to_i}.csv"
   end
 
   def import
     return if request.get?
-    @item = @model.new(get_params)
-    @item.site_id = @cur_site.id
 
+    @item = @model.new(get_params)
     result = @item.import_csv
     flash.now[:notice] = t("ss.notice.saved") if result
     render_create result, location: { action: :index }, render: { file: :import }

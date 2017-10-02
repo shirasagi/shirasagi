@@ -35,4 +35,15 @@ class Gws::StaffRecord::Group
   def export_fields
     %w(id name order seating_chart_url)
   end
+
+  def import_find_item(data)
+    self.class.site(@cur_site).
+      where(year_id: year_id, id: data[:id]).
+      allow(:read, @cur_user, site: @cur_site).
+      first
+  end
+
+  def import_new_item(data)
+    self.class.new(data.merge(year_id: year_id))
+  end
 end

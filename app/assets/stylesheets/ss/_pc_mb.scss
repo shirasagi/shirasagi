@@ -522,6 +522,20 @@ td {
   h3:last-child, ul:last-child {
     margin-bottom: 8px;
   }
+  h4 a {
+    display: block;
+    padding: 5px 15px 5px 85px;
+    background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+    color: $black;
+    &.current {
+      background-color: $gray1;
+    }
+    &:hover {
+      background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
+      color: $orange;
+      text-decoration: none;
+    }
+  }
   @include mb {
     h3 {
       a, a:hover, span {
@@ -724,6 +738,7 @@ td {
 // -------------------------------------------------------------------------------------------------
 // menu
 #menu {
+  position: relative;
   .nav-menu, .sns-nav-menu {
     margin: 20px;
     @include mb {
@@ -738,38 +753,78 @@ td {
       &:hover { color: $orange;}
     }
   }
+  .nav-management-menu {
+    position: absolute;
+    top: -60px;
+    right: 20px;
+    a {
+      display: inline-block;
+      position: relative;
+      margin: 10px;
+      padding-left: 20px;
+      color: $black;
+      &:before {
+        position: absolute;
+        top: -3px;
+        left: 0;
+        font-size: 18px;
+        font-family: 'Material Icons';
+        white-space: nowrap;
+        content: 'settings';
+      }
+    }
+  }
   .nav-menu {
     margin-left: 230px;
   }
 }
 @include mb {
-  #menu .nav-menu {
-    margin: 10px 0px;
+  #menu {
+    .nav-menu {
+      margin: 10px 0px;
+    }
+    .nav-management-menu {
+      position: static;
+      text-align: right;
+    }
   }
 }
 
 // -------------------------------------------------------------------------------------------------
 // main-navi
 
-#main-navi {
+#content-navi {
   @include box;
   float: left;
   width: 250px;
   padding: 10px;
+
+  .content-navi-title {
+    margin: -10px -10px 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f2f2f2;
+    font-weight: bold;
+    &:before {
+      margin-right: 6px;
+      padding-left: 3px;
+      background: #f25a38;
+      content: ' ';
+    }
+  }
 }
-#main-navi + .index {
+#content-navi + .index {
   float: right;
   width: calc(100% - 260px);
 }
 @include mb {
-  #main-navi {
+  #content-navi {
     float: none;
     overflow: scroll;
     width: auto;
     max-height: 100px;
     margin: 0 10px 10px;
   }
-  #main-navi + .index {
+  #content-navi + .index {
     float: none;
     width: auto;
   }
@@ -1403,7 +1458,7 @@ table.index {
   tr:nth-child(2n) {
     background: $gray1;
   }
-  tr:hover {
+  tr.current, tr:hover {
     background: #fbe8e2;
   }
   th, td {

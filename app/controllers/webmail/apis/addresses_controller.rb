@@ -4,43 +4,38 @@ class Webmail::Apis::AddressesController < ApplicationController
 
   model Webmail::Address
 
-  #before_action :set_root_group
-  #before_action :set_selected_group
-  #before_action :set_groups
+  before_action :set_group
   before_action :set_multi
   before_action :set_inherit_params
 
   private
 
-  def set_root_group
-    @root_group = @cur_user.groups.active.find params[:group]
-  end
+  def set_group
+    if params[:s].present? && params[:s][:group].present?
+      @address_group = Webmail::AddressGroup.user(@cur_user).find(params[:s][:group]) rescue nil
+    end
 
-  def set_groups
-    groups = @root_group.descendants.active
-    @groups = groups.tree_sort(root_name: @root_group.name)
-  end
-
-  def set_selected_group
-    group_id = params.dig(:s, :group)
-    return @group = @root_group if group_id.blank?
-    @group = @root_group.descendants.active.find(group_id) rescue @root_group
-  end
-
-  def set_inherit_params
-    @inherit_keys = [:single]
+    @groups = Webmail::AddressGroup.user(@cur_user)
   end
 
   def set_multi
     @multi = params[:single].blank?
   end
 
+  def set_inherit_params
+    @inherit_keys = [:single]
+  end
+
   public
 
   def index
+    s_params = params[:s] || {}
+    s_params[:address_group_id] = @address_group.id if @address_group.present?
+
     @items = @model.
       user(@cur_user).
-      search(params[:s]).
+      and_has_email.
+      search(s_params).
       page(params[:page]).
       per(50)
   end

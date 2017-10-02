@@ -1,0 +1,26 @@
+<% if @group_navi %>
+<div id="content-navi">
+  <h2 class="content-navi-title">
+    <%= t("mongoid.models.gws/personal_address/group") %>
+  </h2>
+
+  <table class="index">
+    <thead>
+      <tr>
+        <th><%= @model.t('address_group_id') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="<%= 'current' if @address_group.blank? %>">
+        <td><%= link_to t('ss.all'), gws_personal_address_addresses_path %></td>
+      </tr>
+
+      <% @group_navi.each do |item| %>
+      <tr class="<%= 'current' if @address_group == item %>">
+        <td><%= link_to item.name, gws_personal_address_group_addresses_path(group: item.id) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>
