@@ -31,7 +31,8 @@ class Gws::Monitor::TopicsController < ApplicationController
 
     @items = @model.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
-        search_topics(params[:s]).
+        search(params[:s]).
+        and_topics().
         page(params[:page]).per(50)
   end
 
