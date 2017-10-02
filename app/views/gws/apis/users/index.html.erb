@@ -24,7 +24,7 @@
           { class: "submit-on-change" } %>
       </dd>
 
-      <dt><%= t "mongoid.models.gws/user" %></dt>
+      <dt><%= t "ss.keyword" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
         <%= f.submit  t("ss.buttons.search"), class: :btn %>

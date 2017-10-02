@@ -108,7 +108,8 @@ ja:
       webmail/mail: メール
       webmail/mailbox: フォルダー
       webmail/quota: 容量
-      webmail/address: アドレス帳
+      webmail/address: 個人アドレス帳
+      webmail/address_group: 個人アドレス帳/グループ
       webmail/signature: 署名
       webmail/filter: フィルター
     attributes:
@@ -141,9 +142,10 @@ ja:
       webmail/mailbox:
         name: フォルダー名
       webmail/address:
-        name: 氏名
-        email: メールアドレス
-        memo: メモ
+        address_group_id: グループ名
+      webmail/address_group:
+        name: グループ名
+        order: 並び順
       webmail/signature:
         name: 名称
         text: 本文
@@ -156,3 +158,13 @@ ja:
         subject: 条件/件名
         action: アクション
         mailbox: フォルダー
+
+  tooltip:
+    webmail/address:
+      address_group_id:
+        - グループ名を入力します。
+    webmail/address_group:
+      name:
+        - グループ名を入力します。
+      order:
+        - 並び順を入力します。

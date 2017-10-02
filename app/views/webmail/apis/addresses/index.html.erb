@@ -9,7 +9,14 @@
     <% end %>
 
     <dl class="see">
-      <dt><%= t "mongoid.models.webmail/address" %></dt>
+      <dt><%= @model.t :address_group_id %></dt>
+      <dd>
+        <%= f.select :group, @groups.map {|c| [c.name, c.id]},
+          { selected: params[:s].try(:[], :group), include_blank: true },
+          { class: "submit-on-change" } %>
+      </dd>
+
+      <dt><%= t "ss.keyword" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params.dig(:s, :keyword) %>
         <%= f.submit  t("ss.buttons.search"), class: :btn %>
@@ -28,7 +35,6 @@
       <th><%= @model.t :email %></th>
     </tr>
   </thead>
-
   <tbody class="items">
     <% @items.each do |item| %>
       <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.name %>" data-email="<%= item.email_address %>" data-address="<%= item.email %>">

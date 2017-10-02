@@ -7,6 +7,12 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :export do
+    get :download, on: :collection
+    get :import, on: :collection
+    post :import, on: :collection
+  end
+
   concern :mail do
     collection do
       put :set_seen
@@ -52,7 +58,8 @@ SS::Application.routes.draw do
     resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
       account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
     resources :mailboxes, path: 'account-:account/mailboxes', account: /\d+/, concerns: [:deletion, :mailbox]
-    resources :addresses, path: 'account-:account/addresses', account: /\d+/, concerns: [:deletion]
+    resources :addresses, path: 'account-:account/addresses', account: /\d+/, concerns: [:deletion, :export]
+    resources :address_groups, concerns: [:deletion]
     resources :signatures, path: 'account-:account/signatures', account: /\d+/, concerns: [:deletion]
     resources :filters, path: 'account-:account/filters', concerns: [:deletion, :filter]
     resource :cache_setting, path: 'account-:account/cache_setting', only: [:show, :update]
@@ -60,6 +67,11 @@ SS::Application.routes.draw do
       post :test_connection, :on => :member
     end
     resources :sys_notices, only: [:index, :show]
+
+    # with group
+    scope(path: "address_group-:group", as: "group") do
+      resources :addresses, concerns: [:deletion, :export]
+    end
 
     namespace "apis" do
       get "account-:account/recent" => "imap#recent", account: /\d+/, as: :recent

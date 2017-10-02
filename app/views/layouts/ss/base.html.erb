@@ -143,10 +143,10 @@
       <% end %>
 
       <div class="wrap">
-        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_main_navi.html.erb") %>
-        <div id="main-navi"><%= render partial: 'main_navi' %></div>
+        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
+        <%= render partial: 'content_navi' %>
         <% elsif @tree_navi %>
-        <div id="main-navi"><%= render file: '_tree_navi' %></div>
+        <div id="content-navi"><%= render file: '_tree_navi' %></div>
         <% end %>
 
         <%= yield %>

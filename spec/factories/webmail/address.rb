@@ -3,6 +3,7 @@ FactoryGirl.define do
     cur_user { ss_user }
 
     name { "name-#{unique_id}" }
-    email { "#{unique_id}@example.jp" }
+    kana { "kana-#{unique_id}" }
+    email { "email-#{unique_id}@example.jp" }
   end
 end

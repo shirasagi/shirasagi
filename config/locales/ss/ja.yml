@@ -2,6 +2,7 @@ ja:
   ss:
     basic_info: 基本情報
     config: 設定
+    management: 管理
     download: ダウンロード
     file: ファイル
     group_users: 所属ユーザー
@@ -18,6 +19,8 @@ ja:
     required_field: ※必須入力
     search_result: 検索結果
     url: URL
+    all: すべて
+    keyword: キーワード
 
     views:
       login/login:
@@ -369,6 +372,14 @@ ja:
         name: ロール名
         permission_level: 権限レベル
         permissions: 権限設定
+      ss/model/address:
+        name: 氏名
+        kana: カナ
+        company: 会社
+        title: 役職
+        tel: 電話番号
+        email: メールアドレス
+        memo: メモ
       ss/addon/body:
         html: 本文
       ss/addon/markdown:
@@ -589,6 +600,28 @@ ja:
         - 空欄の場合は既定のCSS
         - /css/mobile.css
         - が設定されます。
+    ss/model/address:
+      name:
+        - 氏名を入力します。
+      kana:
+        - カナを入力します。
+      company:
+        - 会社を入力します。
+      title:
+        - 役職を入力します。
+      tel:
+        - 電話番号を入力します。
+      email:
+        - メールアドレスを入力します。
+      memo:
+        - メモを入力します。
+      address_group_id:
+        - グループ名を入力します。
+    gws/shared_address/group:
+      name:
+        - グループ名を入力します。
+      order:
+        - 並び順を入力します。
     ss/addon/map_setting:
       map_api:
         - サイトで使用する地図APIを選択します。

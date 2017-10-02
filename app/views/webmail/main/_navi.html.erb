@@ -63,6 +63,7 @@ end
   <h2><%= t("ss.config") %></h2>
   <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
   <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
+  <h4><%= link_to t('mongoid.models.webmail/address_group').sub(/.*\//, ''), webmail_address_groups_path %></h4>
   <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
   <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
   <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
