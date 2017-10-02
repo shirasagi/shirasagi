@@ -31,7 +31,8 @@ class Gws::Monitor::AnswersController < ApplicationController
 
     @items = @model.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
-        search_answers(params[:s]).
+        search(params[:s]).
+        and_answers().
         page(params[:page]).per(50)
   end
 
