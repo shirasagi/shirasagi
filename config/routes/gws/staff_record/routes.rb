@@ -14,6 +14,7 @@ SS::Application.routes.draw do
 
   gws "staff_record" do
     resources :public_records, only: [:index, :show]
+    resources :public_user_histories, only: [:index], path: 'public_user_histories/:user'
     resources :public_duties, only: [:index, :show, :edit, :update] do
       get :edit_charge, on: :member
       put :update_charge, on: :member

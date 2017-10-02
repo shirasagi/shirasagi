@@ -33,7 +33,7 @@
           <td></td>
           <td><%= link_to item.charge_name, { action: :show, id: item.id } %></td>
           <td><%= item.send :title_name %></td>
-          <td><%= item.send :name %></td>
+          <td><%= link_to item.name, gws_staff_record_public_user_histories_path(user: item.id) %></td>
           <td><%= item.send :kana %></td>
           <td><%= item.send :tel_ext %></td>
           <td><%= item.send :remark %></td>
