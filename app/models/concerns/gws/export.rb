@@ -1,5 +1,6 @@
 module Gws::Export
   extend ActiveSupport::Concern
+  extend SS::Translation
 
   included do
     attr_accessor :in_file
@@ -84,28 +85,40 @@ module Gws::Export
     data = import_convert_data(data)
 
     if data[:id].present?
-      item = self.class.where(site_id: site_id, year_id: year_id, id: data[:id]).first
+      item = import_find_item(data)
+
       if item.blank?
         item = self.class.new
         item.errors.add :base, "Could not find ##{data[:id]}"
         return item
       end
-      if @cur_user && !item.allowed?(:edit, @cur_user, site: site)
+      if !item.allowed?(:edit, @cur_user, site: @cur_site)
         item.errors.add :base, I18n.t('errors.messages.auth_error')
         return item
       end
+
+      item.attributes = data
     else
-      item = self.class.new(site_id: site_id, year_id: year_id)
-      item.user_ids = [@cur_user.id] if @cur_user
+      data.delete(:id)
+      item = import_new_item(data)
+      item.user_ids = [@cur_user.id] if item.respond_to?(:user_ids)
     end
 
-    item.attributes = data
-    item.cur_user = @cur_user if @cur_user
+    item.cur_user = @cur_user
+    item.cur_site = @cur_site if @cur_site
     item.save
     item
   end
 
   def import_convert_data(data)
     data
+  end
+
+  def import_find_item(data)
+    self.class.site(@cur_site).allow(:read, @cur_user, site: @cur_site).where(id: data[:id]).first
+  end
+
+  def import_new_item(data)
+    self.class.new(data)
   end
 end

@@ -1,0 +1,26 @@
+ja:
+  gws/personal_address:
+
+  modules:
+    gws/personal_address: 個人アドレス帳
+
+  mongoid:
+    models:
+      gws/personal_address/address: アドレス
+      gws/personal_address/group: グループ
+    attributes:
+      gws/personal_address/address:
+        address_group_id: グループ名
+      gws/personal_address/group:
+        name: グループ名
+        order: 並び順
+
+  tooltip:
+    gws/personal_address/address:
+      address_group_id:
+        - グループ名を入力します。
+    gws/personal_address/group:
+      name:
+        - グループ名を入力します。
+      order:
+        - 並び順を入力します。

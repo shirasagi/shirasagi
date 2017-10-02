@@ -29,7 +29,9 @@
           <% if @index_meta %>
             <% @index_meta.call item %>
           <% else %>
-            <span class="id">#<%= item.id %></span>
+            <% if item.class.fields['_id'].type != BSON::ObjectId %>
+              <span class="id">#<%= item.id %></span>
+            <% end %>
             <% if item.try(:updated) %>
               <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
             <% end %>
