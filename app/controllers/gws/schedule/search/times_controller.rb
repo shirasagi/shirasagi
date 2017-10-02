@@ -1,7 +1,7 @@
 class Gws::Schedule::Search::TimesController < ApplicationController
   include Gws::BaseFilter
-  #include Gws::CrudFilter
-  include Gws::Schedule::PlanFilter
+
+  model Gws::Schedule::PlanSearch
 
   private
 
