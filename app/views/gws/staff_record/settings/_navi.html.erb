@@ -16,6 +16,9 @@
       <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
         <li><%= link_to t('mongoid.models.gws/staff_record/user'), gws_staff_record_users_path(year: @cur_year.id) %></li>
       <% end %>
+      <% if Gws::StaffRecord::Seating.allowed?(:read, @cur_user, site: @cur_site) %>
+        <li><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_seatings_path(year: @cur_year.id) %></li>
+      <% end %>
     </ul>
   <% end %>
 </nav>
