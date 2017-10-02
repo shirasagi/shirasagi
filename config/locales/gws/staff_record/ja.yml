@@ -5,6 +5,7 @@ ja:
   gws/staff_record:
     staff_records: 電子職員録
     divide_duties: 電子事務分掌表
+    user_histories: 異動履歴
     search:
       section: 所属選択
     options:
