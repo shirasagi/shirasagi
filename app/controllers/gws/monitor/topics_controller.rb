@@ -14,6 +14,18 @@ class Gws::Monitor::TopicsController < ApplicationController
       :preparation_all, :qNA_all
   ]
 
+  private
+
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def set_crumbs
+    @crumbs << [t('modules.gws/monitor'), gws_monitor_topics_path]
+  end
+
+  public
+
   def index
     # raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
@@ -55,19 +67,4 @@ class Gws::Monitor::TopicsController < ApplicationController
     @items.update_all(state: 'qNA')
     render_destroy_all(false)
   end
-
-  private
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
-  def set_crumbs
-    @crumbs << [t('modules.gws/monitor'), gws_monitor_topics_path]
-  end
-
-  def pre_params
-    super.keep_if {|key| %i(facility_ids).exclude?(key)}
-  end
-
 end

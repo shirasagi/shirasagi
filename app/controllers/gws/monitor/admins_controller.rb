@@ -24,11 +24,16 @@ class Gws::Monitor::AdminsController < ApplicationController
     @crumbs << [t('modules.gws/monitor'), gws_monitor_topics_path]
   end
 
-  def pre_params
-    super.keep_if {|key| %i(facility_ids).exclude?(key)}
-  end
-
   public
+
+  def index
+    # raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
+    @items = @model.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        search_admins(params[:s]).
+        page(params[:page]).per(50)
+  end
 
   def public
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
