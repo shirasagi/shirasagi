@@ -88,8 +88,6 @@ staff_record_years = [
     tel_ext: '0000', charge_address: @site.name, charge_tel: '0000-00-0000')
 end
 
-exit
-
 ## -------------------------------------
 puts "# notice"
 
