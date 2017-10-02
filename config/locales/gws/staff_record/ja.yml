@@ -5,9 +5,6 @@ ja:
   gws/staff_record:
     staff_records: 電子職員録
     divide_duties: 電子事務分掌表
-    settings:
-      group: 所属設定
-      user: 職員設定
     search:
       section: 所属選択
     options:
@@ -39,6 +36,13 @@ ja:
     delete_other_gws_staff_record_users: 職員の削除（全て）
     delete_private_gws_staff_record_users: 職員の削除（所有）
 
+    read_other_gws_staff_record_seatings: 座席表の閲覧（全て）
+    read_private_gws_staff_record_seatings: 座席表の閲覧（所有）
+    edit_other_gws_staff_record_seatings: 座席表の編集（全て）
+    edit_private_gws_staff_record_seatings: 座席表の編集（所有）
+    delete_other_gws_staff_record_seatings: 座席表の削除（全て）
+    delete_private_gws_staff_record_seatings: 座席表の削除（所有）
+
     edit_other_gws_staff_record_charges: 担当の編集（全て）
     edit_private_gws_staff_record_charges: 担当の編集（所有）
 
@@ -48,6 +52,7 @@ ja:
       gws/staff_record/year: 年度
       gws/staff_record/group: 所属
       gws/staff_record/user: 職員
+      gws/staff_record/seating: 座席表
     attributes:
       gws/staff_record/group_setting:
         staff_records_limit: 電子職員録/表示件数
@@ -81,6 +86,11 @@ ja:
         staff_records_view: 職員録へ表示
         divide_duties_view: 事務分掌へ表示
         order: 並び順
+      gws/staff_record/seating:
+        name: タイトル
+        order: 並び順
+        url: 座席表URL
+        remark: 備考
 
   tooltip:
     gws/staff_record/year:
@@ -91,14 +101,15 @@ ja:
     gws/staff_record/yearly:
       year_id: 年度を選択します。
     gws/staff_record/group:
-      name: 所属名を入力します
+      name: 所属名を入力します。
       code: 所属コードを入力します。
       seating_chart_url: 座席表URLを入力します。
+      order: 並び順を入力します。
       in_file:
         - CSVファイルを指定しインポートを行います。
         - idが記述されていない行は新規作成になります。
     gws/staff_record/user:
-      name: 職員氏名を入力します
+      name: 職員氏名を入力します。
       code: 職員番号を入力します。
       kana: 職員氏名（カナ）を入力します。
       multi_section: 本務・兼務を選択します。
@@ -113,6 +124,14 @@ ja:
       staff_records_view: 職員録へ表示するかしないかを選択します。
       divide_duties_view: 事務分掌へ表示するかしないかを選択します。
       order: 並び順を入力します。
+      in_file:
+        - CSVファイルを指定しインポートを行います。
+        - idが記述されていない行は新規作成になります。
+    gws/staff_record/seating:
+      name: タイトルを入力します。
+      url: 座席表URLを入力します。
+      order: 並び順を入力します。
+      remark: 備考を入力します。
       in_file:
         - CSVファイルを指定しインポートを行います。
         - idが記述されていない行は新規作成になります。

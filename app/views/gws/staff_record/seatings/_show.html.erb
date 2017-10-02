@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.name %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :url %></dt>
+  <dd><%= @item.send :url %></dd>
+
+  <dt><%= @model.t :remark %></dt>
+  <dd><%= br @item.send :remark %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+</dl>
