@@ -35,14 +35,14 @@ class Gws::Schedule::RepeatPlan
   validate :validate_plan_dates, if: -> { errors.empty? }
 
   def extract_plans(plan, site, user)
-    save_plans plan, site, user, plan_dates
+    save_plans(plan, site, user, plan_dates)
   end
 
   def plan_dates
     Gws::Schedule::DateEnumerator.new(
       repeat_type: repeat_type, repeat_start: repeat_start, repeat_end: repeat_end,
       interval: interval, wdays: wdays, repeat_base: repeat_base
-    ).to_a
+    )
   end
 
   private

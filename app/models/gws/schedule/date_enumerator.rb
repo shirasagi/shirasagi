@@ -33,6 +33,10 @@ class Gws::Schedule::DateEnumerator
     end
   end
 
+  def empty?
+    first.nil?
+  end
+
   class << self
     # 指定された日付がその月の第何週かを返す
     # @param  [Date]    base_date 基準日
