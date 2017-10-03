@@ -30,7 +30,7 @@
 </nav>
 <%# if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
 <nav class="mod-navi">
-  <h2>電子職員録</h2>
+  <h2><%= I18n.t('gws/staff_record.staff_records') %></h2>
   <h3><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path, class: "icon-conv" %></h3>
   <h3><%= link_to t('gws/staff_record.divide_duties'), gws_staff_record_public_duties_path, class: "icon-conv" %></h3>
   <h3><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_public_seatings_path, class: "icon-conv" %></h3>
