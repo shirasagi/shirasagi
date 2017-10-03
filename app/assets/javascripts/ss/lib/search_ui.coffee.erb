@@ -16,6 +16,7 @@ class @SS_SearchUI
     tr.append($('<td />').append(input).append(name))
     tr.append($('<td />').append(a))
     self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr)
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change")
 
   @selectItems: ->
     self = this
@@ -29,6 +30,7 @@ class @SS_SearchUI
     $(this).parents("tr:first").remove()
     if table.find("tbody tr").size() == 0
       table.hide()
+    table.trigger("change")
     e.preventDefault()
 
   @toggleSelectButton: ()->

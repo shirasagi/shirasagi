@@ -8,6 +8,16 @@
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
+  <dt><%= @model.t :minutes_limit %><%= @model.tt :minutes_limit %></dt>
+  <dd>
+    <%= f.number_field :min_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
+    〜
+    <%= f.number_field :max_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
+  </dd>
+
+  <dt><%= @model.t :max_days_limit %><%= @model.tt :max_days_limit %></dt>
+  <dd><%= f.number_field :max_days_limit %><%= I18n.t('gws/facility.prompts.days') %></dd>
+
   <dt><%= @model.t :activation_date %><%= @model.tt :activation_date %></dt>
   <dd><%= f.text_field :activation_date, class: 'datetime js-datetime', value: tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 

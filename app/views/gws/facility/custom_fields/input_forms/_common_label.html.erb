@@ -1,0 +1,12 @@
+<dt>
+  <%= item.name %>
+  <% if item.tooltips.present? %>
+  <div class="tooltip">?
+    <ul>
+      <% item.tooltips.each do |tooltip| %>
+        <li><%= tooltip %><br></li>
+      <% end %>
+    </ul>
+  </div>
+  <% end %>
+</dt>

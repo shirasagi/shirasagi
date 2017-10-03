@@ -1,0 +1,54 @@
+<section class="main-box gws-schedule-box gws-schedule-search">
+  <% if @items.present? %>
+  <div class="gws-schedule-search-times-result">
+    <% @items.each do |date, hours| %>
+
+      <% if @time_search.facilities.blank? %>
+      <% next if hours[0].blank? %>
+      <div class="date <%= date.strftime('%a').downcase %>">
+        <p class="label"><%= l date, format: :full %></p>
+
+        <% @time_search.hours.each do |hour| %>
+          <% wrap_classes = %w(hour-wrap) %>
+          <% wrap_classes << 'active' if @hour_range.include?(hour) %>
+          <% css_classes = %w(hour) %>
+          <% css_classes << (hours[0].index(hour) ? 'free' : 'exist') %>
+          <span class="<%= wrap_classes.join(' ') %>">
+            <span class="<%= css_classes.join(' ') %>"><%= hour %></span>
+          </span>
+        <% end %>
+      </div>
+      <% end %>
+
+      <% @time_search.facilities.each do |facility| %>
+      <% next if hours[1][facility.id].blank? %>
+      <div class="date <%= date.strftime('%a').downcase %>">
+        <p class="label"><%= l date, format: :full %></p>
+        <p class="facility"><%= facility.name %></p>
+        <% overall_exist = nil %>
+        <% @time_search.hours.each do |hour| %>
+          <% wrap_classes = %w(hour-wrap) %>
+          <% wrap_classes << 'active' if @hour_range.include?(hour) %>
+          <% css_classes = %w(hour) %>
+          <% css_classes << (hours[1][facility.id].include?(hour) ? 'free' : 'exist') %>
+          <span class="<%= wrap_classes.join(' ') %>">
+            <span class="<%= css_classes.join(' ') %>"><%= hour %></span>
+          </span>
+          <% overall_exist = 'exist' if css_classes.include?('exist') && wrap_classes.include?('active') %>
+        <% end %>
+        <% if overall_exist == 'exist' %>
+          <p class="reservation exist"><%= I18n.t('gws/schedule.facility_reservation.exist') %></p>
+        <% else %>
+          <p class="reservation free"><%= I18n.t('gws/schedule.facility_reservation.free') %></p>
+        <% end %>
+      </div>
+      <% end %>
+    <% end %>
+  </div>
+  <% end %>
+</section>
+
+<footer class="send">
+  <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
+  <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
+</footer>

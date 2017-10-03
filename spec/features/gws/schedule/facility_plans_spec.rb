@@ -34,17 +34,16 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[start_at]", with: "2016/01/01 00:00"
-        fill_in "item[end_at]", with: "2016/01/01 00:00"
-        click_button "保存"
+        fill_in "item[start_at]", with: "2016/04/01 12:00"
+        fill_in "item[end_at]", with: "2016/04/01 13:00"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(page).to have_css("form#item-form")
 
-      within "form#item-form" do
-        fill_in "item[start_at]", with: "2016/01/01 10:00"
-        fill_in "item[end_at]", with: "2016/01/01 10:10"
-        click_button "保存"
+      within '#cboxLoadedContent .send' do
+        click_on I18n.t('ss.buttons.confirm')
       end
+
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end

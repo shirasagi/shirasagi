@@ -18,12 +18,14 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
         <p class="label"><%= l date, format: :full %></p>
 
         <% @time_search.hours.each do |hour| %>
+          <span class="hour-wrap">
           <% if hours[0].index(hour) %>
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
             <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
           <% else %>
             <span class="hour exist"><%= hour %></span>
           <% end %>
+          </span>
         <% end %>
       </div>
       <% end %>
@@ -34,6 +36,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
         <p class="label"><%= l date, format: :full %></p>
         <p class="facility"><%= facility.name %></p>
         <% @time_search.hours.each do |hour| %>
+          <span class="hour-wrap">
           <% if hours[1][facility.id].index(hour) %>
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
             <% link_params[:facility_ids] = [facility.id] %>
@@ -41,6 +44,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
           <% else %>
             <span class="hour exist"><%= hour %></span>
           <% end %>
+          </span>
         <% end %>
       </div>
       <% end %>

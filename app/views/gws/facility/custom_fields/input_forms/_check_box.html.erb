@@ -1,0 +1,9 @@
+<%= render file: 'app/views/gws/facility/custom_fields/input_forms/_common_label', locals: { item: item } %>
+<dd>
+  <% item.select_options.each do |val| %>
+    <label>
+      <%= check_box_tag("#{params[:object_name].presence || 'item'}[#{item.id}][]", val, false, item.html_options) %>
+      <%= val %>
+    </label>
+  <% end %>
+</dd>

@@ -1,0 +1,7 @@
+<% return if @items.blank? %>
+
+<dl class="see">
+  <% @items.each do |item| %>
+    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{item.input_type}", locals: { item: item }) %>
+  <% end %>
+</dl>

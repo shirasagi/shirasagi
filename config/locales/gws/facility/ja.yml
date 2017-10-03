@@ -1,6 +1,18 @@
 ja:
   gws/facility:
     category: カテゴリー
+    manage_custom_fields: 追加入力を管理する
+    prompts:
+      minutes: 分
+      days: 日先まで
+    navi:
+      usage: 利用率
+    usage:
+      type: 種類
+      usage_month: 利用月
+      usage_day: 利用日
+      hours: 時間
+      times: 回数
 
   gws_role:
     read_other_gws_facility_items: 設備の閲覧（全て）
@@ -20,11 +32,14 @@ ja:
     gws/facility: 設備管理
     addons:
       gws/facility/reservable_setting: 予約権限
+      gws/facility/custom_fields: 追加入力
+      gws/facility/input_setting: 入力設定
 
   mongoid:
     models:
       gws/facility/item: 設備
       gws/facility/category: 設備カテゴリー
+      gws/facility/custom_field: 追加入力
       gws/facility/group_setting: 設備管理
       gws/facility/group_setting/item: 設備
       gws/facility/group_setting/category: カテゴリー
@@ -35,6 +50,10 @@ ja:
         category_id: カテゴリー
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+        minutes_limit: 時間制限
+        min_minutes_limit: 時間制限（最小）
+        max_minutes_limit: 時間制限（最大）
+        max_days_limit: 予約可能期間
       gws/facility/category:
         name: カテゴリー名
         order: 並び順
@@ -45,6 +64,21 @@ ja:
       gws/addon/facility/reservable_setting:
         reservable_group_ids: 予約可能グループ
         reservable_member_ids: 予約可能ユーザー
+      gws/addon/facility/custom_fields:
+        custom_fields: 追加入力
+      gws/facility/custom_field:
+        name: 名前
+        order: 並び順
+        tooltips: ツールチップ
+      gws/addon/facility/input_setting:
+        input_type: 入力形式
+        select_options: 選択肢
+        required: 必須入力
+        max_length: 最大文字数
+        place_holder: 初期表示
+        additional_attr: 追加属性
+        input_confirm: 入力確認
+        max_upload_file_size: 最大ファイルサイズ設定
 
   tooltip:
     gws/facility/item:
@@ -55,9 +89,46 @@ ja:
         - 数字が小さいほど上位に表示されます。
       category_id:
         - カテゴリーを選択します。
+      activation_date:
+        - 有効期間（開始）を入力します。
+        - 有効期間がない場合は空にしておきます。
+      expiration_date:
+        - 有効期間（終了）を入力します。
+        - 有効期間がない場合は空にしておきます。
+      minutes_limit:
+        - 連続して利用することが可能な最大の時間を入力します。
+      max_days_limit:
+        - 何日先まで予約可能かを入力します。
     gws/facility/category:
       name:
         - カテゴリー名を入力します。
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
+    gws/facility/custom_field:
+      name:
+        - 項目の名称を入力します。
+      order:
+        - 質問項目の並び順を指定します。
+        - 数字が小さいほど上位に表示されます。
+      tooltips:
+        - ツールチップを入力します。
+    gws/addon/facility/input_setting:
+      input_type:
+        - 回答欄の入力形式を選択します。
+      select_options:
+        - 入力形式で「ラジオボタン選択」「プルダウン選択」「チェックボックス選択」を選択した場合の回答の選択肢を入力します。
+        - 改行で複数の選択肢を入力します。
+      required:
+        - 項目の入力が必須か任意かを選択します。
+      max_length:
+        - 項目の最大文字数を入力します。
+        - 無制限にするには空白にします。
+      place_holder:
+        - 初期表示テキストを入力します。
+      additional_attr:
+        - 出力される入力形式のHTMLに属性を追加することが可能です。
+      input_confirm:
+        - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
+      max_upload_file_size:
+        - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。

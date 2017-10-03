@@ -1,8 +1,10 @@
 <% @s = OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
+    <%= f.select :category, Gws::Facility::Category.site(@cur_site).order_by(order: 1, id: 1).pluck(:name, :id), include_blank: true %>
+    <%= f.text_field :keyword, style: "width: 200px;" %>
     <%= f.select :state, @model.new.search_state_options %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <%= link_to t('ss.buttons.reset'), { action: :index }, class: :btn, style: 'font-weight: normal;' %>
   <% end %>
 </div>
