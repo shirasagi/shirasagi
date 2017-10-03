@@ -18,9 +18,25 @@ module Gws::Addon::Schedule::Facility
   private
 
   def validate_facility_time
-    min_time = 5
-    if (end_at.to_i - start_at.to_i) < 60 * min_time
-      errors.add :base, I18n.t("gws/schedule.errors.faciliy_time_gte", count: min_time)
+    duration = end_at.to_i - start_at.to_i
+    min_minutes_limit = facilities.pluck(:min_minutes_limit).compact.max
+    if min_minutes_limit && duration < 60 * min_minutes_limit
+      errors.add :base, I18n.t("gws/schedule.errors.faciliy_time_gte", count: min_minutes_limit)
+    end
+
+    max_minutes_limit = facilities.pluck(:max_minutes_limit).compact.min
+    if max_minutes_limit
+      if allday?
+        errors.add :base, I18n.t("gws/schedule.errors.unable_to_reserve_all_days", count: max_minutes_limit)
+      elsif duration > 60 * max_minutes_limit
+        errors.add :base, I18n.t("gws/schedule.errors.faciliy_time_lte", count: max_minutes_limit)
+      end
+    end
+
+    now = Time.zone.now
+    max_days_limit = facilities.pluck(:max_days_limit).compact.min
+    if max_days_limit && end_at > now + max_days_limit.days
+      errors.add :base, I18n.t("gws/schedule.errors.faciliy_day_lte", count: max_days_limit)
     end
   end
 
@@ -40,11 +56,6 @@ module Gws::Addon::Schedule::Facility
       where(:end_at.gt => start_at, :start_at.lt => end_at).
       any_in(facility_ids: facility_ids)
     return if plans.blank?
-
-    facilities = []
-    plans.each { |plan| facilities += (plan.facilities & self.facilities) }
-
-    name = facilities.uniq.map(&:name).join(', ')
 
     errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')
     plans.each do |plan|

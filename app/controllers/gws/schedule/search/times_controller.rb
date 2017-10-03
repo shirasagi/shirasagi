@@ -1,7 +1,7 @@
 class Gws::Schedule::Search::TimesController < ApplicationController
   include Gws::BaseFilter
-  #include Gws::CrudFilter
-  include Gws::Schedule::PlanFilter
+
+  model Gws::Schedule::PlanSearch
 
   private
 
@@ -16,7 +16,7 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   end
 
   def pre_params
-    {}
+    { min_hour: @cur_site.facility_min_hour || 8, max_hour: @cur_site.facility_max_hour || 22 }
   end
 
   def get_params

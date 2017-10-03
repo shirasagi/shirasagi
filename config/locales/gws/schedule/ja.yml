@@ -66,14 +66,21 @@ ja:
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
+    facility_reservation:
+      index: 予約状況の確認
+      free: 予約可能
+      exist: 予約不可
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
       less_than_max_date: は%{date}までの日時を入力してください。
       faciliy_time_gte: 予約時間は%{count}分以上の値にしてください。
+      faciliy_time_lte: 予約時間は%{count}分以下の値にしてください。
       invalid_faciliy_reservate_member: '%{name}を予約する権限がありません。'
       double_booking_facility: 設備は既に予約されています。
       over_than_facility_hours: 設備予約は取得可能時間内で登録してください。（%{min}時～%{max}時）
+      unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
+      faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
   gws/schedule/todo:
     search_todos: ToDoを検索
     links:
@@ -99,6 +106,7 @@ ja:
     gws/schedule: スケジュール
     addons:
       gws/schedule/facility: 設備予約
+      gws/schedule/facility_custom_values: 設備追加情報
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント
@@ -197,6 +205,9 @@ ja:
       gws/schedule/attendance:
         in_comment: コメント
         attendance_state: 出欠
+      gws/schedule/facility_custom_values:
+        main_facility_id: 主設備
+        facility_custom_values: 設備追加情報
 
   tooltip:
     gws/schedule/planable:

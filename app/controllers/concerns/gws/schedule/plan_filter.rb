@@ -1,10 +1,8 @@
 module Gws::Schedule::PlanFilter
   extend ActiveSupport::Concern
+  include Gws::Schedule::CalendarFilter
 
   included do
-    prepend_view_path "app/views/gws/schedule/plans"
-    menu_view "gws/schedule/main/menu"
-    helper Gws::Schedule::PlanHelper
     model Gws::Schedule::Plan
     before_action :set_file_addon_state
   end
@@ -59,18 +57,9 @@ module Gws::Schedule::PlanFilter
     render layout: 'ss/print'
   end
 
-  def popup
-    set_item
-
-    if @item.readable?(@cur_user)
-      render file: "popup", layout: false
-    else
-      render file: "popup_hidden", layout: false
-    end
-  end
-
   def create
     @item = @model.new get_params
+    @item.set_facility_custom_values(params)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_create @item.save, location: redirection_url
@@ -78,6 +67,7 @@ module Gws::Schedule::PlanFilter
 
   def update
     @item.attributes = get_params
+    @item.set_facility_custom_values(params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 

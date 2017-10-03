@@ -8,15 +8,25 @@ class Gws::Schedule::PlanSearch
   field :wdays, type: Array, default: []
   field :min_hour, type: Integer, default: 8
   field :max_hour, type: Integer, default: 22
+  field :repeat_type, type: String
+  field :interval, type: Integer
+  field :repeat_base, type: String, default: 'date'
 
   embeds_ids :members, class_name: "Gws::User"
   embeds_ids :facilities, class_name: "Gws::Facility::Item"
 
   permit_params :start_on, :end_on, :min_hour, :max_hour
   permit_params wdays: [], member_ids: [], facility_ids: []
+  permit_params :repeat_type, :interval, :repeat_base
 
   before_validation :validate_wdays
   before_validation :validate_hours
+
+  validates :repeat_type, inclusion: { in: %w(daily weekly monthly yearly), allow_blank: true }
+  validates :interval, presence: true, if: -> { repeat_type.present? }
+  validates :interval, inclusion: { in: 1..10 }, if: -> { interval.present? }
+  validates :repeat_base, inclusion: { in: %w(date wday), allow_blank: true }
+  validates :repeat_base, presence: true, if: -> { repeat_type == 'monthly' }
 
   def hours
     (min_hour..(max_hour - 1)).to_a
@@ -55,9 +65,7 @@ class Gws::Schedule::PlanSearch
     end
 
     free_times = []
-    (start_on..end_on).each do |date|
-      next if wdays.present? && !wdays.include?(date.wday)
-
+    enum_dates.each do |date|
       ymd = date.strftime('%Y-%m-%d')
       hours = []
       f_hours = {}
@@ -127,5 +135,14 @@ class Gws::Schedule::PlanSearch
 
     return if facilities.blank?
     @condition << { facility_ids: { '$in' => facilities.map(&:id) } }
+  end
+
+  def enum_dates
+    Gws::Schedule::DateEnumerator.new(
+      repeat_type: repeat_type.presence || (wdays.present? ? 'weekly' : 'daily'),
+      repeat_start: start_on, repeat_end: end_on,
+      interval: interval || 1,
+      wdays: wdays, repeat_base: repeat_base
+    )
   end
 end

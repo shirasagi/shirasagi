@@ -5,8 +5,9 @@
 <dl class="see gws-schedule-facility">
   <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
   <dd>
-    <%= f.hidden_field "facility_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("gws.apis.facilities.index"), gws_apis_facilities_path, class: "ajax-box" %>
+    <%= f.hidden_field('facility_ids[]', value: '', class: 'hidden-ids') %>
+    <%= link_to(t('gws.apis.facilities.index'), gws_apis_facilities_path, class: 'ajax-box') %>
+    <%= button_tag(I18n.t('gws/schedule.facility_reservation.index'), type: 'button', class: %w(btn btn-confirm-facility-reservation), style: 'display: none;') %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -22,3 +23,189 @@
     </table>
   </dd>
 </dl>
+
+<%= jquery do %>
+  var confirm = <%== @item.persisted?.to_json %>;
+
+  var requiredParams = function() {
+    var repeatType = $('select[name="item[repeat_type]"]').val();
+
+    var startOn;
+    if (repeatType) {
+      startOn = $('input[name="item[repeat_start]"]').val();
+    } else {
+      startOn = $('input[name="item[start_at]"]').val();
+    }
+    if (! startOn) {
+      return;
+    }
+
+    var endOn;
+    if (repeatType) {
+      endOn = $('input[name="item[repeat_end]"]').val();
+    } else {
+      endOn = $('input[name="item[end_at]"]').val();
+    }
+    if (! endOn) {
+      return;
+    }
+
+    facility_ids = [];
+    $('.gws-schedule-facility table.ajax-selected tbody tr').each(function() {
+      facility_ids.push($(this).data('id'));
+    });
+    if (facility_ids.length == 0) {
+      return;
+    }
+
+    if (! repeatType) {
+      repeatType = 'daily';
+    }
+
+    return {
+      repeat_type: repeatType,
+      start_on: startOn,
+      end_on: endOn,
+      facility_ids: facility_ids
+    };
+  }
+
+  var optionalParams = function() {
+    var params = {};
+    var val;
+
+    val = $('select[name="item[interval]"').val();
+    if (val) {
+      params.interval = val;
+    }
+
+    var wdays = []
+    $('input[name="item[wdays][]"]:checked').each(function() {
+      wdays.push($(this).val());
+    });
+    if (wdays.length > 0) {
+      params.wdays = wdays;
+    }
+
+    val = $('input[name="item[repeat_base]"]:checked').val();
+    if (val) {
+      params.repeat_base = val;
+    }
+
+    return params;
+  }
+
+  var proceed = function() {
+    $.colorbox.close();
+    confirm = true;
+    $('form#item-form').submit();
+  }
+
+  var cancel = function() {
+    $.colorbox.close();
+    confirm = false;
+  }
+
+  var confirmFacilityReservation = function() {
+    var s = requiredParams();
+    if ($.isEmptyObject(s)) {
+      return false;
+    }
+    $.extend(s, optionalParams());
+
+    var allday = $('input[type=checkbox][name="item[allday]"]').prop('checked');
+    var minHour = '';
+    var maxHour = '';
+    if (! allday) {
+      try {
+        var startAt = new Date($('input[name="item[start_at]"]').val());
+        var endAt = new Date($('input[name="item[end_at]"]').val());
+        minHour = startAt.getHours();
+        maxHour = endAt.getHours() + (endAt.getMinutes() > 0 ? 1 : 0);
+      } catch (e) {
+        return false;
+      }
+    }
+
+    var d = {};
+    if (minHour) {
+      d.min_hour = minHour;
+    }
+    if (maxHour) {
+      d.max_hour = maxHour;
+    }
+
+    var query = $.param({ s: s, d: d });
+    var href = <%== gws_schedule_search_reservations_path.to_json %> + "?" + query;
+    var $confirmationLink = $('<a/>').attr('href', href);
+    $confirmationLink.colorbox({
+      maxWidth: "80%",
+      maxHeight: "80%",
+      fixed: true,
+      open: true,
+      onComplete: function() {
+        $('#cboxLoadedContent .send .confirm').on('click', function(e) {
+          proceed();
+          e.preventDefault();
+          return false;
+        });
+        $('#cboxLoadedContent .send .cancel').on('click', function(e) {
+          cancel();
+          e.preventDefault();
+          return false;
+        });
+      }
+    });
+
+    return true;
+  }
+
+  var changeVisibility = function() {
+    var s = requiredParams();
+    if ($.isEmptyObject(s)) {
+      $('.btn-confirm-facility-reservation').hide();
+    } else {
+      $('.btn-confirm-facility-reservation').show();
+    }
+  }
+
+  $('.btn-confirm-facility-reservation').on('click', function (e) {
+    confirmFacilityReservation();
+    e.preventDefault();
+    return false;
+  });
+
+  $('form#item-form').on('submit', function(e) {
+    if (confirm) {
+      return true;
+    }
+
+    ret = confirmFacilityReservation();
+    if (ret) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  $('select[name="item[repeat_type]"]').on('change', function() {
+    confirm = false;
+    changeVisibility();
+  })
+
+  $('input[name="item[repeat_start]"]').on('change', function() {
+    confirm = false;
+    changeVisibility();
+  });
+
+  $('input[name="item[repeat_end]"]').on('change', function() {
+    confirm = false;
+    changeVisibility();
+  });
+
+  $('.gws-schedule-facility .ajax-selected').on('change', function() {
+    confirm = false;
+    changeVisibility();
+  });
+
+  changeVisibility();
+<% end %>
