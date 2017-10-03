@@ -139,7 +139,7 @@ class Gws::Schedule::PlanSearch
 
   def enum_dates
     Gws::Schedule::DateEnumerator.new(
-      repeat_type: repeat_type.presence || wdays.present? ? 'weekly' : 'daily',
+      repeat_type: repeat_type.presence || (wdays.present? ? 'weekly' : 'daily'),
       repeat_start: start_on, repeat_end: end_on,
       interval: interval || 1,
       wdays: wdays, repeat_base: repeat_base

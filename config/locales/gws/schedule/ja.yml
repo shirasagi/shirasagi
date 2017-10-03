@@ -66,6 +66,10 @@ ja:
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
+    facility_reservation:
+      index: 予約状況の確認
+      free: 予約可能
+      exist: 予約不可
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。

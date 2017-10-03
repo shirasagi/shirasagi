@@ -16,6 +16,7 @@ SS::Application.routes.draw do
     get 'search' => redirect { |p, req| "#{req.path}/users" }, as: :search
     get 'search/users' => 'search/users#index', as: :search_users
     get 'search/times' => 'search/times#index', as: :search_times
+    get 'search/reservations' => 'search/reservations#index', as: :search_reservations
 
     get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
     resources :plans, concerns: :plans
