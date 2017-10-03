@@ -57,11 +57,6 @@ module Gws::Addon::Schedule::Facility
       any_in(facility_ids: facility_ids)
     return if plans.blank?
 
-    facilities = []
-    plans.each { |plan| facilities += (plan.facilities & self.facilities) }
-
-    name = facilities.uniq.map(&:name).join(', ')
-
     errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')
     plans.each do |plan|
       msg = Gws::Schedule::PlansController.helpers.term(plan)
