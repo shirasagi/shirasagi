@@ -30,6 +30,12 @@ class Gws::Circular::Topic
            inverse_of: :parent,
            order: { created: -1 }
 
+  has_many :descendants,
+           class_name: 'Gws::Circular::Post',
+           dependent: :destroy,
+           inverse_of: :topic,
+           order: { created: -1 }
+
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
