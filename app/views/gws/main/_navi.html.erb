@@ -18,11 +18,6 @@
   <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
   <% end %>
-  <%# if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path, class: "icon-conv" %></h2>
-    <h3><%= link_to t('gws/staff_record.divide_duties'), gws_staff_record_public_duties_path, class: "icon-conv" %></h3>
-    <h3><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_public_seatings_path, class: "icon-conv" %></h3>
-  <%# end %>
 
   <h2><%= link_to t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-conv" %></h2>
   <h2><%= link_to t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-conv" %></h2>
@@ -33,11 +28,12 @@
 
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
-<% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
+<%# if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
 <nav class="mod-navi">
   <h2>電子職員録</h2>
   <h3><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path, class: "icon-conv" %></h3>
   <h3><%= link_to t('gws/staff_record.divide_duties'), gws_staff_record_public_duties_path, class: "icon-conv" %></h3>
+  <h3><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_public_seatings_path, class: "icon-conv" %></h3>
 </nav>
-<% end %>
+<%# end %>
 <%= render partial: 'gws/main/links' %>
