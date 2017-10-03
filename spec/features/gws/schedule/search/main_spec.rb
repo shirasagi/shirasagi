@@ -9,7 +9,9 @@ describe "gws_schedule_search", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit path
-      click_on I18n.t('gws/schedule.tabs.search/users')
+      within '.gws-schedule-tabs' do
+        click_on I18n.t('gws/schedule.tabs.search/users')
+      end
       expect(page).to have_css('.gws-schedule-search h2', text: I18n.t('gws/schedule.search_users'))
 
       within 'form.search' do
@@ -19,7 +21,9 @@ describe "gws_schedule_search", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('#calendar-controller')
 
       visit path
-      click_on I18n.t('gws/schedule.tabs.search/times')
+      within '.gws-schedule-tabs' do
+        click_on I18n.t('gws/schedule.tabs.search/times')
+      end
       expect(page).to have_css('.gws-schedule-search h2', text: I18n.t('gws/schedule.search_times'))
       within 'form.search' do
         click_on I18n.t('ss.buttons.search')
