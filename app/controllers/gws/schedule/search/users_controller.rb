@@ -3,6 +3,16 @@ class Gws::Schedule::Search::UsersController < ApplicationController
   #include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
+  private
+
+  def set_crumbs
+    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [t('gws/schedule.tabs.search'), gws_schedule_search_path]
+    @crumbs << [t('gws/schedule.tabs.search/users'), gws_schedule_search_users_path]
+  end
+
+  public
+
   def index
     @items = []
     return if params.dig(:s, :keyword).blank?

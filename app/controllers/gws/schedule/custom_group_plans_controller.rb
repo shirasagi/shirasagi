@@ -8,7 +8,13 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
   private
 
   def set_group
-    @group = Gws::CustomGroup.site(@cur_site).find params[:group]
+    @group ||= Gws::CustomGroup.site(@cur_site).find params[:group]
+  end
+
+  def set_crumbs
+    set_group
+    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [@group.name, action: :index]
   end
 
   def redirection_view
