@@ -1,0 +1,19 @@
+.gws-facility-usage {
+  table.index {
+    width: auto;
+
+    th, td {
+      padding: 4px;
+    }
+  }
+  .name {
+    min-width: 14.5em;
+  }
+  .kind {
+    min-width: 3.5em;
+  }
+  .day, .month {
+    min-width: 3.5em;
+    text-align: center;
+  }
+}

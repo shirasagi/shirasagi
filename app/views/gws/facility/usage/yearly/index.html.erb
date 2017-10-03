@@ -1,46 +1,48 @@
-<%= render 'gws/facility/usage/main/search' %>
+<div class="gws-facility-usage gws-facility-usage-monthly">
+  <%= render 'gws/facility/usage/main/search' %>
 
-<table class="index">
-  <thead>
-  <tr>
-    <th rowspan="2"><%= @model.t :name %></th>
-    <th rowspan="2"><%= I18n.t('gws/facility.usage.type') %></th>
-    <th colspan="<%= @months.length %>"><%= I18n.t('gws/facility.usage.usage_month') %></th>
-  </tr>
-  <tr>
-    <% @months.each do |month| %>
-    <th><%= month[1] %></th>
+  <table class="index">
+    <thead>
+    <tr>
+      <th rowspan="2" class="name"><%= @model.t :name %></th>
+      <th rowspan="2" class="kind"><%= I18n.t('gws/facility.usage.type') %></th>
+      <th colspan="<%= @months.length %>" class="months"><%= I18n.t('gws/facility.usage.usage_month') %></th>
+    </tr>
+    <tr>
+      <% @months.each do |month| %>
+      <th class="month"><%= month[1] %></th>
+      <% end %>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @items.each do |item| %>
+        <tr>
+          <td rowspan="2" class="name"><%= item.name %></td>
+          <td class="kind"><%= I18n.t('gws/facility.usage.hours') %></td>
+          <% @months.each do |month| %>
+            <td class="month">
+              <% usage = format_usage_hours(item, @target_time.year, month[1]) %>
+              <% if usage %>
+              <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s]) %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+        <tr>
+          <td class="kind"><%= I18n.t('gws/facility.usage.times') %></td>
+          <% @months.each do |month| %>
+            <td class="month">
+              <% usage = format_usage_count(item, @target_time.year, month[1]) %>
+              <% if usage %>
+              <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s]) %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
     <% end %>
-  </tr>
-  </thead>
+    </tbody>
+  </table>
 
-  <tbody>
-  <% @items.each do |item| %>
-      <tr>
-        <td rowspan="2"><%= item.name %></td>
-        <td><%= I18n.t('gws/facility.usage.hours') %></td>
-        <% @months.each do |month| %>
-          <td>
-            <% usage = format_usage_hours(item, @target_time.year, month[1]) %>
-            <% if usage %>
-            <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s]) %>
-            <% end %>
-          </td>
-        <% end %>
-      </tr>
-      <tr>
-        <td><%= I18n.t('gws/facility.usage.times') %></td>
-        <% @months.each do |month| %>
-          <td>
-            <% usage = format_usage_count(item, @target_time.year, month[1]) %>
-            <% if usage %>
-                <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s]) %>
-            <% end %>
-          </td>
-        <% end %>
-      </tr>
-  <% end %>
-  </tbody>
-</table>
-
-<%= paginate @items if @items.try(:current_page) %>
+  <%= paginate @items if @items.try(:current_page) %>
+</div>
