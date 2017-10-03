@@ -5,6 +5,12 @@ class Gws::Schedule::Search::TimesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [t('gws/schedule.tabs.search'), gws_schedule_search_path]
+    @crumbs << [t('gws/schedule.tabs.search/times'), gws_schedule_search_times_path]
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end

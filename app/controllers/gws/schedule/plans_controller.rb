@@ -9,6 +9,15 @@ class Gws::Schedule::PlansController < ApplicationController
     params[:s][:with_todo] = '1' unless params.dig(:s, :with_todo)
   }
 
+  private
+
+  def set_crumbs
+    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [t('gws/schedule.tabs.personal'), gws_schedule_plans_path]
+  end
+
+  public
+
   def index
     return render if params[:format] != 'json'
 

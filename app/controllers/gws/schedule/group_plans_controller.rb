@@ -9,8 +9,14 @@ class Gws::Schedule::GroupPlansController < ApplicationController
   private
 
   def set_group
-    @group = Gws::Group.site(@cur_site).find params[:group]
+    @group ||= Gws::Group.site(@cur_site).find params[:group]
     raise '404' unless @group.active?
+  end
+
+  def set_crumbs
+    set_group
+    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [@group.trailing_name, action: :index]
   end
 
   def set_items
