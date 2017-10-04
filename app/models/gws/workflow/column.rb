@@ -12,6 +12,14 @@ class Gws::Workflow::Column
   permit_params :name, :order, :tooltips
 
   class << self
+    def search(params)
+      criteria = all
+      return criteria if params.blank?
+
+      criteria = criteria.keyword_in(params[:keyword], :name) if params[:keyword].present?
+      criteria
+    end
+
     def to_permitted_fields(prefix)
       params = criteria.map do |item|
         if item.input_type == 'check_box'
