@@ -56,6 +56,9 @@ module Gws::Qna::Postable
         category_ids = Gws::Qna::Category.site(params[:site]).and_name_prefix(params[:category]).pluck(:id)
         criteria = criteria.in(category_ids: category_ids)
       end
+      if params[:question_state].present?
+        criteria = criteria.where(question_state: params[:question_state].to_s)
+      end
       criteria
     }
   end

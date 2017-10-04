@@ -45,10 +45,18 @@ ja:
       severity:
         normal: 通常
         important: 重要
+      question_state:
+        open: 回答待ち
+        resolved: 解決済み
     links:
       back_to_thread: 戻る
       comment: 返信する
       categories: カテゴリー
+      resolve: 解決済みにする
+      unresolve: 未解決に戻す
+    confirm:
+      resolve: 解決済みにしてよろしいですか？
+      unresolve: 未解決に戻してよろしいですか？
     errors:
       denied_comment: コメントの投稿は許可されていません。
 
@@ -98,6 +106,7 @@ ja:
         severity: 重要度
       gws/qna/topic:
         name: 質問タイトル
+        question_state: 回答状況
       gws/qna/post:
         name: 回答タイトル
       gws/qna/group_setting:
