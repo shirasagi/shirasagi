@@ -10,6 +10,7 @@ SS::Application.routes.draw do
 
   namespace "gws", path: ".g:site/gws" do
     get "default_groups/:default_group" => "default_groups#update", as: :default_group
+    get "question_management" => "question_management#index"
     resource  :site
     resources :groups, concerns: [:deletion]
     resources :custom_groups, concerns: [:deletion]

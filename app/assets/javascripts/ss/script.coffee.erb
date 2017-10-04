@@ -67,12 +67,9 @@ $ ->
 
   # navi
   path = location.pathname + "/"
-  crumbs = $('#crumbs a').map((i, v)-> return $(v).attr('href')).slice(1).toArray()
   $("#navi .main-navi a, #navi .mod-navi a").each ->
     menu = $(this)
-    href = menu.attr('href')
-    if path.match(new RegExp('^' + href + '(\/|$)')) || crumbs.indexOf(href) != -1
-      menu.addClass("current")
+    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
   # dropdown
   $(".dropdown").click (e) ->
