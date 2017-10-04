@@ -1,10 +1,9 @@
-class Gws::Workflow::RoutesController < ApplicationController
+class Gws::Workflow::FormsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Workflow::Route
+  model Gws::Workflow::Form
 
-  prepend_view_path 'app/views/workflow/routes'
   navi_view 'gws/workflow/settings/navi'
 
   private
@@ -16,10 +15,5 @@ class Gws::Workflow::RoutesController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
-  def set_item
-    super
-    raise "403" unless @model.site(@cur_site).include?(@item)
   end
 end
