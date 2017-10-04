@@ -3,21 +3,42 @@ module Gws::Addon::CustomField
   extend SS::Addon
 
   included do
+    class_variable_set(:@@_input_type_include_upload_file, nil)
+
     field :tooltips, type: SS::Extensions::Lines
-    field :input_type, type: String, default: "text_field"
-    field :select_options, type: SS::Extensions::Lines, default: ""
-    field :required, type: String, default: "required"
+    field :input_type, type: String, default: 'text_field'
+    field :select_options, type: SS::Extensions::Lines, default: ''
+    field :required, type: String, default: 'required'
     field :max_length, type: Integer
     field :place_holder, type: String
-    field :additional_attr, type: String, default: ""
+    field :additional_attr, type: String, default: ''
+    field :max_upload_file_size, type: Integer
 
-    permit_params :tooltips, :input_type, :required, :max_length, :place_holder, :additional_attr
-    permit_params :select_options
+    attr_accessor :in_max_upload_file_size_mb
+
+    permit_params :tooltips, :input_type, :select_options, :required, :max_length, :place_holder
+    permit_params :additional_attr, :in_max_upload_file_size_mb
+
+    after_initialize do
+      if self.max_upload_file_size
+        self.in_max_upload_file_size_mb = self.max_upload_file_size / (1_024 * 1_024)
+      end
+    end
+
+    before_validation do
+      if self.in_max_upload_file_size_mb.present?
+        self.max_upload_file_size = Integer(self.in_max_upload_file_size_mb) * 1_024 * 1_024
+      else
+        self.max_upload_file_size = nil
+      end
+    end
 
     validates :input_type, presence: true, inclusion: {
-      in: %w(text_field text_area email_field radio_button select check_box)
+      in: %w(text_field text_area email_field radio_button select check_box upload_file)
     }
+    validates :required, inclusion: { in: %w(required optional), allow_blank: true }
     validates :max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+    validates :max_upload_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validate :validate_select_options
   end
 
@@ -42,12 +63,28 @@ module Gws::Addon::CustomField
         end
       end
     end
+
+    def input_type_include_upload_file?
+      class_variable_get(:@@_input_type_include_upload_file)
+    end
+
+    private
+
+    def input_type_include_upload_file
+      class_variable_set(:@@_input_type_include_upload_file, true)
+    end
   end
 
   def input_type_options
-    %w(text_field text_area email_field radio_button select check_box).map do |v|
+    ret = %w(text_field text_area email_field radio_button select check_box).map do |v|
       [ I18n.t("inquiry.options.input_type.#{v}"), v ]
     end
+
+    if self.class.input_type_include_upload_file?
+      ret << [ I18n.t('inquiry.options.input_type.upload_file'), 'upload_file' ]
+    end
+
+    ret
   end
 
   def required_options
@@ -58,7 +95,7 @@ module Gws::Addon::CustomField
   end
 
   def required?
-    required == "required"
+    required == 'required'
   end
 
   def additional_attr_to_h
