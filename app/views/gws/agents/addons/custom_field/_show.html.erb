@@ -19,4 +19,9 @@
 
   <dt><%= @model.t :additional_attr %></dt>
   <dd><%= @item.additional_attr %></dd>
+
+  <% if @model.input_type_include_upload_file? %>
+    <dt><%= @model.t :max_upload_file_size %></dt>
+    <dd><%= number_to_human_size(@item.max_upload_file_size) %></dd>
+  <% end %>
 </dl>

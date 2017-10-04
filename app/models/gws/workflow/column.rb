@@ -5,6 +5,8 @@ class Gws::Workflow::Column
   include Gws::Reference::Site
   include Gws::Reference::Workflow::Form
 
+  input_type_include_upload_file
+
   field :name, type: String
   field :order, type: Integer, default: 0
 

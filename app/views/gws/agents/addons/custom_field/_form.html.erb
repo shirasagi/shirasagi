@@ -19,4 +19,9 @@
 
   <dt><%= @model.t :additional_attr %><%= @model.tt :additional_attr %></dt>
   <dd><%= f.text_field :additional_attr %></dd>
+
+  <% if @model.input_type_include_upload_file? %>
+    <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
+    <dd><%= f.number_field :in_max_upload_file_size_mb %> <%= t('ss.units.mega_byte') %></dd>
+  <% end %>
 </dl>
