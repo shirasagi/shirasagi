@@ -1,4 +1,7 @@
-<dl class="see mod-gws-facility-input-setting">
+<dl class="see mod-gws-custom_field">
+  <dt><%= @model.t :tooltips %></dt>
+  <dd><%= br @item.tooltips.join("\n") %></dd>
+
   <dt><%= @model.t :input_type %></dt>
   <dd><%= @item.label :input_type %></dd>
 

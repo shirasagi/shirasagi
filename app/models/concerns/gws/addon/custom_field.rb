@@ -1,15 +1,17 @@
-module Gws::Addon::Facility::InputSetting
+module Gws::Addon::CustomField
   extend ActiveSupport::Concern
   extend SS::Addon
 
   included do
+    field :tooltips, type: SS::Extensions::Lines
     field :input_type, type: String, default: "text_field"
     field :select_options, type: SS::Extensions::Lines, default: ""
     field :required, type: String, default: "required"
     field :max_length, type: Integer
     field :place_holder, type: String
     field :additional_attr, type: String, default: ""
-    permit_params :input_type, :required, :max_length, :place_holder, :additional_attr
+
+    permit_params :tooltips, :input_type, :required, :max_length, :place_holder, :additional_attr
     permit_params :select_options
 
     validates :input_type, presence: true, inclusion: {
@@ -17,6 +19,29 @@ module Gws::Addon::Facility::InputSetting
     }
     validates :max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validate :validate_select_options
+  end
+
+  module ClassMethods
+    def to_permitted_fields(prefix)
+      params = criteria.map do |item|
+        if item.input_type == 'check_box'
+          { item.id.to_s => [] }
+        else
+          item.id.to_s
+        end
+      end
+
+      { prefix => params }
+    end
+
+    def to_validator(options)
+      criteria = self.criteria.dup
+      ActiveModel::BlockValidator.new(options.dup) do |record, attribute, value|
+        criteria.each do |item|
+          item.validate_value(record, attribute, value)
+        end
+      end
+    end
   end
 
   def input_type_options

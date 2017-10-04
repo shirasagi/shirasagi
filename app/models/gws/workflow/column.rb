@@ -1,44 +1,28 @@
 class Gws::Workflow::Column
   include SS::Document
+  include Gws::Addon::CustomField
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Reference::Workflow::Form
-  include Gws::Addon::Facility::InputSetting
 
   field :name, type: String
   field :order, type: Integer, default: 0
-  field :tooltips, type: SS::Extensions::Lines
 
-  permit_params :name, :order, :tooltips
+  permit_params :name, :order
+
+  validates :name, presence: true, length: { maximum: 80 }
+  validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
 
   class << self
     def search(params)
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.keyword_in(params[:keyword], :name) if params[:keyword].present?
+      if params[:keyword].present?
+        criteria = criteria.keyword_in(params[:keyword], :name)
+      end
+
       criteria
-    end
-
-    def to_permitted_fields(prefix)
-      params = criteria.map do |item|
-        if item.input_type == 'check_box'
-          { item.id.to_s => [] }
-        else
-          item.id.to_s
-        end
-      end
-
-      { prefix => params }
-    end
-
-    def to_validator(options)
-      criteria = self.criteria.dup
-      ActiveModel::BlockValidator.new(options.dup) do |record, attribute, value|
-        criteria.each do |item|
-          item.validate_value(record, attribute, value)
-        end
-      end
     end
   end
 end

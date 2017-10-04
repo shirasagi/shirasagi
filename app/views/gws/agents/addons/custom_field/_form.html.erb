@@ -1,4 +1,7 @@
-<dl class="see mod-gws-facility-input-setting">
+<dl class="see mod-gws-custom_field">
+  <dt><%= @model.t :tooltips %><%= @model.tt :tooltips %></dt>
+  <dd><%= f.text_area :tooltips %></dd>
+
   <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
   <dd><%= f.select :input_type, @item.input_type_options %></dd>
 
