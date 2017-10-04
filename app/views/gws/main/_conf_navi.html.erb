@@ -18,7 +18,7 @@
     <h3><%= link_to t('mongoid.models.gws/role'), gws_roles_path %></h3>
   <% end %>
   <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('workflow.name'), gws_workflow_routes_path %></h3>
+    <h3><%= link_to t('workflow.name'), gws_workflow_setting_path %></h3>
   <% end %>
   <% if Gws::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/notice'), gws_notices_path %></h3>
