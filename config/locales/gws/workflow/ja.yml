@@ -21,10 +21,18 @@ ja:
     approve_other_gws_workflow_files: 申請の承認（全て）
     approve_private_gws_workflow_files: 申請の承認（所有）
 
+    read_other_gws_workflow_forms: 申請フォームの閲覧（全て）
+    read_private_gws_workflow_forms: 申請フォームの閲覧（所有）
+    edit_other_gws_workflow_forms: 申請フォームの編集（全て）
+    edit_private_gws_workflow_forms: 申請フォームの編集（所有）
+    delete_other_gws_workflow_forms: 申請フォームの削除（全て）
+    delete_private_gws_workflow_forms: 申請フォームの削除（所有）
+
   mongoid:
     models:
-      gws/workflow/route: ワークフロー経路
-      gws/workflow/file: ワークフロー
+      gws/workflow/route: 承認ルート
+      gws/workflow/file: 申請書
+      gws/workflow/form: 申請フォーム
       gws/workflow/category: ワークフロー種類
     attributes:
       gws/workflow/file:

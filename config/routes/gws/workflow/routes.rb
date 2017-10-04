@@ -10,9 +10,11 @@ SS::Application.routes.draw do
   end
 
   gws "workflow" do
+    get '/' => redirect { |p, req| "#{req.path}/routes" }, as: :setting
     resources :pages, concerns: :deletion
     resources :routes, concerns: :deletion
     resources :files, concerns: :deletion
+    resources :forms, concerns: :deletion
     get "/search_approvers" => "search_approvers#index"
     match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]
     match "/wizard/:id" => "wizard#index", via: [:get, :post]
