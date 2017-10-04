@@ -609,7 +609,7 @@ ja:
         related_page_ids: 関連記事
         related_page_sort: 並び順
       cms/addon/for_member_node:
-        for_member_state: ステータス
+        for_member_state: 会員向け
 
   errors:
     messages:
