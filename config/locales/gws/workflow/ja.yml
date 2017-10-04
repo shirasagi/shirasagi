@@ -50,7 +50,6 @@ ja:
       gws/workflow/column:
         name: 項目名
         order: 並び順
-        tooltips: ツールチップ
 
   tooltip:
     gws/workflow/file:
@@ -68,5 +67,3 @@ ja:
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
-      tooltips:
-        - ツールチップを入力します。
