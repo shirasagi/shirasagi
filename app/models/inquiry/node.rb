@@ -16,10 +16,10 @@ module Inquiry::Node
     include Inquiry::Addon::ReleasePlan
     include Inquiry::Addon::ReceptionPlan
     include Inquiry::Addon::Aggregation
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include Cms::Addon::ForMemberNode
 
     has_many :columns, class_name: "Inquiry::Column"
     has_many :answers, class_name: "Inquiry::Answer"
@@ -39,12 +39,12 @@ module Inquiry::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include Cms::Addon::ForMemberNode
 
     default_scope ->{ where(route: "inquiry/node") }
 

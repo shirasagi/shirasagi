@@ -14,13 +14,13 @@ module Article::Node
     include Event::Addon::PageList
     include Category::Addon::Setting
     include Cms::Addon::TagSetting
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::OpendataRef::Site
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include Cms::Addon::ForMemberNode
 
     default_scope ->{ where(route: "article/page") }
   end

@@ -22,10 +22,10 @@ class Cms::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include Cms::Addon::ForMemberNode
 
     default_scope ->{ where(route: "cms/node") }
   end

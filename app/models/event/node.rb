@@ -13,12 +13,12 @@ module Event::Node
     include Category::Addon::Setting
     include Event::Addon::CalendarList
     include Cms::Addon::TagSetting
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include Cms::Addon::ForMemberNode
 
     default_scope ->{ where(route: "event/page") }
 
