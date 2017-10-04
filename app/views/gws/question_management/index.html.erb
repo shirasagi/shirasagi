@@ -1,0 +1,77 @@
+<div class="index gws-boards">
+  <ul class="list-items">
+    <li class="list-head"><%= link_to t("modules.gws/faq"), gws_faq_topics_path %></li>
+
+    <% @faq_items.each do |item| %>
+    <%
+      css_classes = %w(list-item)
+      if item.subscribed_users.where(id: @cur_user.id).present?
+        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
+      end
+      if item.severity.present?
+        css_classes << item.severity
+      end
+    %>
+    <li class="<%= css_classes.join(' ') %>">
+      <div class="info">
+        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+        <%= link_to item.name, gws_faq_topic_path(id: item), class: "title" %>
+        <% if item.descendants_files_count.to_i > 0 %>
+          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+        <% end %>
+
+        <div class="meta">
+          <span class="id">#<%= item.id %></span>
+          <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+          <span class="categories">
+            <% item.categories.compact.each do |category| %>
+              <%= link_to category.trailing_name, gws_faq_category_topics_path(category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+            <% end %>
+          </span>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="index gws-boards">
+  <ul class="list-items">
+    <li class="list-head"><%= link_to t("modules.gws/qna"), gws_qna_topics_path %></li>
+
+    <% @qna_items.each do |item| %>
+    <%
+      css_classes = %w(list-item)
+      if item.subscribed_users.where(id: @cur_user.id).present?
+        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
+      end
+      if item.severity.present?
+        css_classes << item.severity
+      end
+    %>
+    <li class="<%= css_classes.join(' ') %>">
+      <div class="info">
+        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+        <%= link_to item.name, gws_qna_topic_path(id: item), class: "title" %>
+        <% if item.descendants_files_count.to_i > 0 %>
+          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+        <% end %>
+
+        <div class="meta">
+          <span class="id">#<%= item.id %></span>
+          <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+          <span class="categories">
+            <% item.categories.compact.each do |category| %>
+              <%= link_to category.trailing_name, gws_qna_category_topics_path(category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+            <% end %>
+          </span>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
