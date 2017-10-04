@@ -1,8 +1,12 @@
 ja:
   gws/workflow:
+    columns:
+      index: 入力設定を管理する
 
   modules:
     gws/workflow: ワークフロー
+    addons:
+      gws/workflow/column_setting: 入力設定
 
   gws_role:
     read_other_gws_workflow_routes: 承認ルートの閲覧（全て）
@@ -34,11 +38,26 @@ ja:
       gws/workflow/file: 申請書
       gws/workflow/form: 申請フォーム
       gws/workflow/category: ワークフロー種類
+      gws/workflow/column: 入力項目
     attributes:
       gws/workflow/file:
         name: タイトル
+      gws/workflow/form:
+        name: タイトル
+        order: 並び順
+      gws/addon/workflow/column_setting:
+        columns: 入力設定
+      gws/workflow/column:
+        name: 項目名
+        order: 並び順
 
   tooltip:
     gws/workflow/file:
       name:
         - タイトルを入力します。
+    gws/workflow/form:
+      name:
+        - タイトルを入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。

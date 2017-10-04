@@ -14,7 +14,9 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion
     resources :routes, concerns: :deletion
     resources :files, concerns: :deletion
-    resources :forms, concerns: :deletion
+    resources :forms, concerns: :deletion do
+      resources :columns, concerns: :deletion
+    end
     get "/search_approvers" => "search_approvers#index"
     match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]
     match "/wizard/:id" => "wizard#index", via: [:get, :post]

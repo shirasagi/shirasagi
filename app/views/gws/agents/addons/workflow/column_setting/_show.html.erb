@@ -1,0 +1,25 @@
+<dl class="see mod-gws-facility-custom_fields">
+  <dd class="wide"><%= link_to(I18n.t('gws/workflow.columns.index'), gws_workflow_form_columns_path(form_id: @item), class: :btn) %></dd>
+  <% if @item.columns.present? %>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Workflow::Column.t(:name) %></th>
+        <th class="input_type"><%= Gws::Workflow::Column.t(:input_type) %></th>
+        <th class="datetime"><%= Gws::Workflow::Column.t(:updated) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.columns.order_by(order: 1, id: 1).each do |column| %>
+      <tr>
+        <td class="name"><%= column.name %></td>
+        <td class="input_type"><%= column.label(:input_type) %></td>
+        <td class="datetime"><%= tryb { I18n.l(column.updated) } %></td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
+</dl>
