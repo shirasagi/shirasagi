@@ -28,8 +28,11 @@ module SS::CrudFilter
   end
 
   def set_item
-    @item = @model.find params[:id]
-    @item.attributes = fix_params
+    @item ||= begin
+      item = @model.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e

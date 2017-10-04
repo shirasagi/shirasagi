@@ -43,7 +43,7 @@ module Gws::Addon::CustomField
   end
 
   module ClassMethods
-    def to_permitted_fields(prefix)
+    def to_permitted_fields
       params = criteria.map do |item|
         if item.input_type == 'check_box'
           { item.id.to_s => [] }
@@ -52,7 +52,7 @@ module Gws::Addon::CustomField
         end
       end
 
-      { prefix => params }
+      params
     end
 
     def to_validator(options)
@@ -66,6 +66,36 @@ module Gws::Addon::CustomField
 
     def input_type_include_upload_file?
       class_variable_get(:@@_input_type_include_upload_file)
+    end
+
+    def to_mongo(input_type, value)
+      return value unless value
+
+      case input_type
+      when 'text_field', 'text_area', 'email_field', 'radio_button', 'select'
+        String.mongoize(value)
+      when 'check_box'
+        value.map { |v| String.mongoize(v) }
+      when 'upload_file'
+        Integer.mongoize(value)
+      else
+        value
+      end
+    end
+
+    def from_mongo(input_type, value)
+      return value unless value
+
+      case input_type
+      when 'text_field', 'text_area', 'email_field', 'radio_button', 'select'
+        String.demongoize(value)
+      when 'check_box'
+        value.map { |v| String.demongoize(v) }
+      when 'upload_file'
+        Integer.demongoize(value)
+      else
+        value
+      end
     end
 
     private
@@ -112,24 +142,7 @@ module Gws::Addon::CustomField
   end
 
   def validate_value(record, attribute, hash)
-    value = hash[id.to_s]
-    if required? && value.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
-    end
-
-    if value.present?
-      if %w(radio_button select).include?(input_type)
-        unless select_options.include?(value)
-          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
-        end
-      end
-      if %w(check_box).include?(input_type)
-        value = [ value ].flatten.compact.select(&:present?)
-        if (value - select_options).present?
-          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
-        end
-      end
-    end
+    raise NotImplementedError
   end
 
   private

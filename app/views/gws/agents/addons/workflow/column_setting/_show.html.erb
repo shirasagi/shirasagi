@@ -7,6 +7,7 @@
       <tr>
         <th class="name"><%= Gws::Workflow::Column.t(:name) %></th>
         <th class="input_type"><%= Gws::Workflow::Column.t(:input_type) %></th>
+        <th class="required"><%= Gws::Workflow::Column.t(:required) %></th>
         <th class="datetime"><%= Gws::Workflow::Column.t(:updated) %></th>
       </tr>
       </thead>
@@ -15,6 +16,7 @@
       <tr>
         <td class="name"><%= column.name %></td>
         <td class="input_type"><%= column.label(:input_type) %></td>
+        <td class="required"><%= column.label(:required) %></td>
         <td class="datetime"><%= tryb { I18n.l(column.updated) } %></td>
       </tr>
       <% end %>

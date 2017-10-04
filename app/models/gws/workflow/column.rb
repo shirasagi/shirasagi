@@ -27,4 +27,25 @@ class Gws::Workflow::Column
       criteria
     end
   end
+
+  def validate_value(record, attribute, hash)
+    value = record.read_custom_value(self)
+    if required? && value.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+
+    if value.present?
+      if %w(radio_button select).include?(input_type)
+        unless select_options.include?(value)
+          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+        end
+      end
+      if %w(check_box).include?(input_type)
+        value = [ value ].flatten.compact.select(&:present?)
+        if (value - select_options).present?
+          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+        end
+      end
+    end
+  end
 end

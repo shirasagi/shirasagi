@@ -1,4 +1,5 @@
+<% value ||= nil %>
 <%= render file: 'app/views/gws/facility/custom_fields/input_forms/_common_label', locals: { item: item } %>
 <dd>
-  <%= email_field_tag("#{object_name}[#{item.id}]", nil, item.html_options) %>
+  <%= email_field_tag("#{object_name}[#{item.id}]", value, item.html_options) %>
 </dd>

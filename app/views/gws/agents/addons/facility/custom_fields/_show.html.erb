@@ -7,6 +7,7 @@
       <tr>
         <th class="name"><%= Gws::Facility::CustomField.t(:name) %></th>
         <th class="input_type"><%= Gws::Facility::CustomField.t(:input_type) %></th>
+        <th class="required"><%= Gws::Facility::CustomField.t(:required) %></th>
         <th class="datetime"><%= Gws::Facility::CustomField.t(:updated) %></th>
       </tr>
       </thead>
@@ -15,6 +16,7 @@
       <tr>
         <td class="name"><%= custom_field.name %></td>
         <td class="input_type"><%= custom_field.label(:input_type) %></td>
+        <td class="required"><%= custom_field.label(:required) %></td>
         <td class="datetime"><%= tryb { I18n.l(custom_field.updated) } %></td>
       </tr>
       <% end %>
