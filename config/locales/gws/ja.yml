@@ -7,6 +7,7 @@ ja:
     module_setting: 全体設定
     user_setting: ポータル設定
     organization_addresses: 組織アドレス帳
+    question_management: 質問管理
     roles:
       admin: 管理者
       user: 一般ユーザー

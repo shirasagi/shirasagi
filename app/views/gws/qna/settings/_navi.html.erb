@@ -1,0 +1,12 @@
+<nav class="mod-navi">
+  <h2><%= t "mongoid.models.gws/qna/group_setting" %></h2>
+
+  <% if @cur_site.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.module_setting'), gws_qna_setting_path %></h3>
+  <% end %>
+  <% if Gws::Qna::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/qna/group_setting/category'), gws_qna_categories_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "gws/main/conf_navi" %>
