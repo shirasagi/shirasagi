@@ -2,7 +2,7 @@
 <dd>
   <% item.select_options.each do |val| %>
     <label>
-      <%= check_box_tag("#{params[:object_name].presence || 'item'}[#{item.id}][]", val, false, item.html_options) %>
+      <%= check_box_tag("#{object_name}[#{item.id}][]", val, false, item.html_options) %>
       <%= val %>
     </label>
   <% end %>

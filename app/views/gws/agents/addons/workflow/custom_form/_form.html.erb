@@ -1,0 +1,14 @@
+<% return if @cur_form.blank? && (@item.cur_form || @item.form).blank? %>
+<% @cur_form ||= (@item.cur_form || @item.form) %>
+
+<dl class="see mod-gws-workflow-custom_form">
+  <% @cur_form.columns.each do |item| %>
+    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{item.input_type}", locals: { item: item, object_name: 'custom' }) %>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-ss-agents-addons-markdown').hide();
+  $('#addon-gws-agents-addons-file').hide();
+  $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+<% end %>

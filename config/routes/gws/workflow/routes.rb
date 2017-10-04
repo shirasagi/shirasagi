@@ -14,6 +14,7 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion
     resources :routes, concerns: :deletion
     resources :files, concerns: :deletion
+    resources :files, path: ':form_id/files', only: [:new, :create], as: 'form_files'
     resources :forms, concerns: :deletion do
       resources :columns, concerns: :deletion
     end

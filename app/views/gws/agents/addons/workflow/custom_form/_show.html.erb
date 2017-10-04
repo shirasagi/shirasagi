@@ -1,0 +1,8 @@
+<% return if (@item.cur_form || @item.form).blank? %>
+
+<dl class="see mod-gws-workflow-custom_form">
+<% (@item.cur_form || @item.form).columns.each do |column| %>
+  <dt><%= column.name %></dt>
+  <dd></dd>
+<% end %>
+</dl>
