@@ -7,7 +7,7 @@ ja:
     gws/workflow: ワークフロー
     addons:
       gws/workflow/column_setting: 入力設定
-      gws/workflow/custom_form: 申請書
+      gws/workflow/custom_form: 入力内容
 
   gws_role:
     read_other_gws_workflow_routes: 承認ルートの閲覧（全て）

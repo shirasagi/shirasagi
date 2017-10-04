@@ -2,8 +2,8 @@
 <% @cur_form ||= (@item.cur_form || @item.form) %>
 
 <dl class="see mod-gws-workflow-custom_form">
-  <% @cur_form.columns.each do |item| %>
-    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{item.input_type}", locals: { item: item, object_name: 'custom' }) %>
+  <% @cur_form.columns.each do |column| %>
+    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{column.input_type}", locals: { item: column, object_name: 'custom', value: @item.read_custom_value(column) }) %>
   <% end %>
 </dl>
 

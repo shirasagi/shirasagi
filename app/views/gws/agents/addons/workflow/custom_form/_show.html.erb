@@ -1,8 +1,8 @@
-<% return if (@item.cur_form || @item.form).blank? %>
+<% return if @item.custom_values.blank? %>
 
 <dl class="see mod-gws-workflow-custom_form">
-<% (@item.cur_form || @item.form).columns.each do |column| %>
-  <dt><%= column.name %></dt>
-  <dd></dd>
+<% @item.custom_values.each do |key, val| %>
+  <dt><%= val['name'] %></dt>
+  <dd><%= br [ Gws::Workflow::Column.from_mongo(val['input_type'], val['value']) ].flatten.join(', ') %></dd>
 <% end %>
 </dl>

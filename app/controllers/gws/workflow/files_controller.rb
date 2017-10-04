@@ -23,6 +23,11 @@ class Gws::Workflow::FilesController < ApplicationController
     @cur_form ||= @forms.find(params[:form_id])
   end
 
+  def set_item
+    super
+    @cur_form ||= @item.form if @item.present?
+  end
+
   def fix_params
     set_cur_form
     params = { cur_user: @cur_user, cur_site: @cur_site, state: 'closed' }
@@ -42,5 +47,26 @@ class Gws::Workflow::FilesController < ApplicationController
   def show
     raise "403" unless @item.readable?(@cur_user)
     render
+  end
+
+  def create
+    @item = @model.new get_params
+    if @cur_form.present? && params[:custom].present?
+      custom_values = params.require(:custom).permit(@cur_form.columns.to_permitted_fields)
+      @item.custom_values = @model.build_custom_values(@cur_form, custom_values)
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    if @cur_form.present? && params[:custom].present?
+      custom_values = params.require(:custom).permit(@cur_form.columns.to_permitted_fields)
+      @item.custom_values = @model.build_custom_values(@cur_form, custom_values)
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.save
   end
 end
