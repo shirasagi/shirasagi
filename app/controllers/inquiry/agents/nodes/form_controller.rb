@@ -28,8 +28,12 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def set_columns
+    disable_upload_file = {}
+    disable_upload_file = { :input_type.ne => 'upload_file' } if Mongoid::Config.clients[:default_post]
+
     @columns = Inquiry::Column.site(@cur_site).
       where(node_id: @cur_node.id, state: "public").
+      where(disable_upload_file).
       order_by(order: 1)
   end
 
@@ -41,7 +45,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       if column.input_type == "upload_file" &&
           !param.blank? &&
           !param.kind_of?(ActionDispatch::Http::UploadedFile)
-        param = SS::File.find(param)
+        param = SS::File.with(client: Inquiry::Answer.client_name).find(param)
       end
       @items << [column, param]
       @data[column.id] = [param]

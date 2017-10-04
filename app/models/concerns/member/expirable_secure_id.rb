@@ -6,7 +6,7 @@ module Member::ExpirableSecureId
 
   def secure_id
     salt = Rails.application.secrets.secret_key_base
-    cipher = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
+    cipher = OpenSSL::Cipher.new("AES-256-CBC")
     cipher.encrypt
     cipher.pkcs5_keyivgen(salt, nil)
     secret = cipher.update("#{id},#{Time.zone.now.to_i}") + cipher.final
@@ -18,7 +18,7 @@ module Member::ExpirableSecureId
       return nil if secure_id.blank?
 
       salt = Rails.application.secrets.secret_key_base
-      cipher = OpenSSL::Cipher::Cipher.new("AES-256-CBC")
+      cipher = OpenSSL::Cipher.new("AES-256-CBC")
       begin
         cipher.decrypt
         cipher.pkcs5_keyivgen(salt, nil)

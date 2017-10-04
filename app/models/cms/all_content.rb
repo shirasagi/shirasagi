@@ -1,17 +1,5 @@
-require "csv"
-
 class Cms::AllContent
   class << self
-    def csv(site, encode: nil)
-      CSV.generate do |data|
-        data << header
-        (Cms::Page.site(site).all + Cms::Node.site(site).all).each do |content|
-          content.site ||= site
-          data << row(content)
-        end
-      end
-    end
-
     def enum_csv(site)
       Enumerator.new do |y|
         y << encode_sjis(header.to_csv)

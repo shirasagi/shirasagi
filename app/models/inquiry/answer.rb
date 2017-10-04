@@ -92,7 +92,7 @@ class Inquiry::Answer
         values = value.values
         value  = value.map { |k, v| v }.join("\n")
       elsif value.kind_of? ActionDispatch::Http::UploadedFile
-        ss_file = SS::File.new
+        ss_file = SS::File.new.with(client: Inquiry::Answer.client_name)
         ss_file.in_file = value
         ss_file.site_id = cur_site.id
         ss_file.state = "closed"
@@ -121,7 +121,7 @@ class Inquiry::Answer
   end
 
   def source_content
-    self.class.find_content(@cur_site, source_url)
+    self.class.find_content(@cur_site || site, source_url)
   end
 
   def source_full_url
@@ -137,6 +137,7 @@ class Inquiry::Answer
   def validate_data
     columns = Inquiry::Column.where(site_id: site_id, node_id: node_id, state: "public").order_by(order: 1)
     columns.each do |column|
+      next if column.input_type == "upload_file" && Mongoid::Config.clients[:default_post]
       column.validate_data(self, data.select { |d| column.id == d.column_id }.shift)
     end
   end

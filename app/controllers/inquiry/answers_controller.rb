@@ -54,7 +54,7 @@ class Inquiry::AnswersController < ApplicationController
     File.open(filepath, 'rb') do |of|
       filedata = of.read
     end
-    unless filedata.blank?
+    if filedata.present? || !filedata.nil?
       send_data(filedata, :filename => file.name)
     end
   end
@@ -97,7 +97,7 @@ class Inquiry::AnswersController < ApplicationController
   def download_afile
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     if params[:id]
-      file = ::SS::File.find(params[:fid].to_i) rescue nil
+      file = ::SS::File.with(client: Inquiry::Answer.client_name).find(params[:fid].to_i) rescue nil
       unless file.blank?
         send_afile file
       end

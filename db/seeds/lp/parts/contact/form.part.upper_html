@@ -1,0 +1,6 @@
+<div class="container-fluid">
+  <div id="contact" class="page-header"><h2 class="h1 text-center">お問い合わせ</h2></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+        <div class="panel-body">

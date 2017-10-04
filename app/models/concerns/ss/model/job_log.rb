@@ -32,6 +32,8 @@ module SS::Model::JobLog
     validates :pool, presence: true
     validates :class_name, presence: true
 
+    after_destroy :destroy_files
+
     scope :term, ->(from) { where(:created.lt => from) }
   end
 
@@ -59,6 +61,19 @@ module SS::Model::JobLog
     logs.blank? ? '' : logs.join("\n")
   end
 
+  def file_path
+    raise if new_record?
+    @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
+  end
+
+  def logs
+    if ::Fs.mode == :file && ::File.exists?(file_path)
+      return ::File.readlines(file_path) rescue []
+    end
+
+    self[:logs]
+  end
+
   module ClassMethods
     def term_to_date(name)
       case name.to_s
@@ -75,6 +90,15 @@ module SS::Model::JobLog
       else
         raise "malformed term: #{name}"
       end
+    end
+  end
+
+  private
+
+  def destroy_files
+    if ::Fs.mode == :file && ::File.exists?(file_path)
+      dirname = ::File.dirname(file_path)
+      ::FileUtils.rm_rf(dirname)
     end
   end
 end

@@ -11,6 +11,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
+      wait_for_ajax
       expect(page).to have_content(item.name)
     end
   end

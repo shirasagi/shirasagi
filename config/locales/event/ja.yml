@@ -175,6 +175,7 @@ ja:
           #{event_dates.iso_full} イベント日が「2015-4-1 (水)」の形式で表示されます。
           #{event_dates.long} イベント日が「2015年4月1日」の形式で表示されます。
           #{event_dates.full} イベント日が「2015年4月1日 (水)」の形式で表示されます。
+          #{tags} リンク先ページのタグが表示されます。
 
           使用例：
           &lt;article class="#{class}">

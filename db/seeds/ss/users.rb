@@ -1,3 +1,6 @@
+
+site_name = defined?($site_name) ? $site_name : 'シラサギ市'
+
 # --------------------------------------
 # Users Seed
 
@@ -15,13 +18,13 @@ def save_group(data)
 end
 
 puts "# groups"
-g00 = save_group name: "シラサギ市", order: 10
-g10 = save_group name: "シラサギ市/企画政策部", order: 20
-g11 = save_group name: "シラサギ市/企画政策部/政策課", order: 30
-g12 = save_group name: "シラサギ市/企画政策部/広報課", order: 40
-g20 = save_group name: "シラサギ市/危機管理部", order: 50
-g21 = save_group name: "シラサギ市/危機管理部/管理課", order: 60
-g22 = save_group name: "シラサギ市/危機管理部/防災課", order: 70
+g00 = save_group name: site_name, order: 10
+g10 = save_group name: "#{site_name}/企画政策部", order: 20
+g11 = save_group name: "#{site_name}/企画政策部/政策課", order: 30
+g12 = save_group name: "#{site_name}/企画政策部/広報課", order: 40
+g20 = save_group name: "#{site_name}/危機管理部", order: 50
+g21 = save_group name: "#{site_name}/危機管理部/管理課", order: 60
+g22 = save_group name: "#{site_name}/危機管理部/防災課", order: 70
 
 def save_role(data)
   if item = Sys::Role.where(name: data[:name]).first
@@ -53,11 +56,11 @@ def save_user(data)
 end
 
 puts "# users"
-sys = save_user name: "システム管理者", uid: "sys", email: "sys@example.jp", in_password: "pass", group_ids: [g11.id]
-adm = save_user name: "サイト管理者", uid: "admin", email: "admin@example.jp", in_password: "pass", group_ids: [g11.id]
-u01 = save_user name: "一般ユーザー1", uid: "user1", email: "user1@example.jp", in_password: "pass", group_ids: [g11.id]
-u02 = save_user name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass", group_ids: [g21.id]
-u03 = save_user name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass", group_ids: [g12.id, g22.id]
+sys = save_user name: "システム管理者", uid: "sys", email: "sys@example.jp", in_password: "pass"
+adm = save_user name: "サイト管理者", uid: "admin", email: "admin@example.jp", in_password: "pass"
+u01 = save_user name: "一般ユーザー1", uid: "user1", email: "user1@example.jp", in_password: "pass"
+u02 = save_user name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass"
+u03 = save_user name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass"
 
 sys.add_to_set group_ids: [g11.id], sys_role_ids: [r01.id]
 adm.add_to_set group_ids: [g11.id]
@@ -69,7 +72,7 @@ u03.add_to_set group_ids: [g12.id, g22.id]
 # Gws Roles
 
 def save_gws_role(data)
-  if item = Gws::Role.where(name: data[:name]).first
+  if item = Gws::Role.where(site_id: data[:site_id], name: data[:name]).first
     puts "exists #{data[:name]}"
     item.update data
     return item

@@ -12,7 +12,7 @@ module SS::Crypt
 
     def encrypt(str, opts = {})
       opts = { pass: @@salt, salt: nil, type: "AES-256-CBC" }.merge(opts)
-      cipher = OpenSSL::Cipher::Cipher.new opts[:type]
+      cipher = OpenSSL::Cipher.new opts[:type]
       cipher.encrypt
       cipher.pkcs5_keyivgen opts[:pass], opts[:salt]
       Base64.strict_encode64(cipher.update(str) + cipher.final) rescue nil
@@ -20,7 +20,7 @@ module SS::Crypt
 
     def decrypt(str, opts = {})
       opts = { pass: @@salt, salt: nil, type: "AES-256-CBC" }.merge(opts)
-      cipher = OpenSSL::Cipher::Cipher.new opts[:type]
+      cipher = OpenSSL::Cipher.new opts[:type]
       cipher.decrypt
       cipher.pkcs5_keyivgen opts[:pass], opts[:salt]
       cipher.update(Base64.decode64(str)) + cipher.final rescue nil

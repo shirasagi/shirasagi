@@ -19,6 +19,7 @@ ja:
     from: から
     confirm_input: "%{name}確認用"
     confirm_input_description: "もう一度、同じ%{name}を入力してください。"
+    cannot_use: "（使用不可）"
 
     options:
       state:
@@ -222,3 +223,4 @@ ja:
     messages:
       invalid_input_type_for_input_confirm: "は、入力形式に「%{input_type}」が選択されている場合、「する」にできません。"
       input_confirm_not_match: "が一致しません。"
+      cannot_use_upload_file: "（ファイル投稿）は使用できません。"

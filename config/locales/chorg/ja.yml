@@ -33,6 +33,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_link_url: リンクURL
+        contact_link_name: リンク名
         ldap_dn: DN
       move_changesets:
         before_move: 移動元
@@ -109,6 +111,10 @@ ja:
             - 新設するグループのファックス番号を入力します。
           contact_email:
             - 新設するグループのメールアドレスを入力します。
+          contact_link_url:
+            - 新設するグループのリンクURLを入力します。
+          contact_link_name:
+            - 新設するグループのリンク名を入力します。
           ldap_dn:
             - LDAPを利用している場合は新設するグループの識別子(DN)を入力します。
         delete_changesets:
@@ -126,6 +132,10 @@ ja:
             - 分割後のグループのファックス番号を入力します。
           contact_email:
             - 分割後のグループのメールアドレスを入力します。
+          contact_link_url:
+            - 分割後のグループのリンクURLを入力します。
+          contact_link_name:
+            - 分割後のグループのリンク名を入力します。
           ldap_dn:
             - LDAPを利用している場合は分割後のグループの識別子(DN)を入力します。
           before_name:
@@ -142,6 +152,10 @@ ja:
             - 移動先グループのファックス番号を入力します。
           contact_email:
             - 移動先グループのメールアドレスを入力します。
+          contact_link_url:
+            - 移動先グループのリンクURLを入力します。
+          contact_link_name:
+            - 移動先グループのリンク名を入力します。
           ldap_dn:
             - LDAPを利用している場合は移動先グループの識別子(DN)を入力します。
           before_name:
@@ -158,6 +172,10 @@ ja:
             - 統合先グループのファックス番号を入力します。
           contact_email:
             - 統合先グループのメールアドレスを入力します。
+          contact_link_url:
+            - 統合先グループのリンクURLを入力します。
+          contact_link_name:
+            - 統合先グループのリンク名を入力します。
           ldap_dn:
             - LDAPを利用している場合は統合先グループの識別子(DN)を入力します。
           before_name:
