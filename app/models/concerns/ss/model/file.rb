@@ -79,6 +79,14 @@ module SS::Model::File
     "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
+  def download_url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/download/#{filename}"
+  end
+
+  def view_url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/view/#{filename}"
+  end
+
   def full_url
     return if site.blank?
     "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
@@ -133,6 +141,10 @@ module SS::Model::File
 
   def image?
     filename =~ /\.(bmp|gif|jpe?g|png)$/i
+  end
+
+  def viewable?
+    image?
   end
 
   def resizing
