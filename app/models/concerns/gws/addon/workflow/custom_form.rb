@@ -10,6 +10,7 @@ module Gws::Addon::Workflow::CustomForm
     validate :validate_custom_values
     before_save :before_save_custom_values
     after_save :after_save_custom_values
+    after_destroy :after_destroy_custom_values
   end
 
   module ClassMethods
@@ -153,5 +154,22 @@ module Gws::Addon::Workflow::CustomForm
   end
 
   def after_save_custom_values
+  end
+
+  def after_destroy_custom_values
+    return if custom_values.blank?
+
+    self.cur_form.columns.where(input_type: 'upload_file').each do |column|
+      hash = custom_values[column.id.to_s]
+      next if hash.blank?
+
+      file_id = hash['value']
+      next if file_id.blank?
+
+      file = Gws::File.site(site).find(file_id) rescue nil
+      next if file.blank?
+
+      file.destroy
+    end
   end
 end
