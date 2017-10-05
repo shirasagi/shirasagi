@@ -41,6 +41,12 @@ class Gws::Schedule::Todo
     criteria
   }
 
+  def calendar_format(user, site)
+    result = super
+    result[:className] = [result[:className], 'fc-event-todo'].flatten
+    result
+  end
+
   def private_plan?(user)
     return false if readable_custom_group_ids.present?
     return false if readable_group_ids.present?
