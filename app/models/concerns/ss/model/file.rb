@@ -69,7 +69,7 @@ module SS::Model::File
   end
 
   def public_path
-    return if site.blank?
+    return if site.blank? || !site.respond_to?(:root_path)
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -86,7 +86,7 @@ module SS::Model::File
   end
 
   def full_url
-    return if site.blank?
+    return if site.blank? || !site.respond_to?(:full_root_url)
     "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -171,7 +171,7 @@ module SS::Model::File
   end
 
   def remove_public_file
-    Fs.rm_rf(public_path) if site #TODO: modify the trriger
+    Fs.rm_rf(public_path) if public_path
   end
 
   private
@@ -183,8 +183,13 @@ module SS::Model::File
     self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
   end
 
+  def multibyte_filename_state_enabled?
+    return if site.blank? || !site.respond_to?(:multibyte_filename_state_enabled?)
+    site.multibyte_filename_state_enabled?
+  end
+
   def validate_filename
-    if site && !site.multibyte_filename_state_enabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_state_enabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
       errors.add :in_file, :invalid_filename
     end
     self.filename = SS::FilenameConvertor.convert(filename, id: id)
