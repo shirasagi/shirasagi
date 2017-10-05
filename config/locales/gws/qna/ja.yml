@@ -64,7 +64,6 @@ ja:
     gws/qna: Ｑ＆Ａ
     addons:
       gws/qna/category: カテゴリー
-      gws/qna/contributor: 投稿者
 
   gws_role:
     read_other_gws_qna_posts: 投稿の閲覧（全て）
@@ -119,8 +118,6 @@ ja:
         name: カテゴリー名
       gws/addon/qna/category:
         category_ids: カテゴリー
-      gws/addon/qna/contributor:
-        contributor_name: 投稿者名
 
   tooltip:
     gws/qna/postable:
@@ -144,6 +141,3 @@ ja:
     gws/qna/category:
       name:
         - カテゴリー名を入力します。
-    gws/addon/qna/contributor:
-      contributor_name:
-        - 投稿者名を選択します。

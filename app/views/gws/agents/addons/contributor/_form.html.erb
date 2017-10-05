@@ -5,7 +5,7 @@
 %>
 
 <% show_radio_button = proc do |model, id, name| %>
-  <label>
+  <label style="margin-right: 5px">
     <%= radio_button_tag('tmp[contributor]', "#{model}:#{id}", checked.call(model, id, name), data: { model: model, id: id.to_s, name: name }) %>
     <%= name %>
   </label>

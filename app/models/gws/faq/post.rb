@@ -2,7 +2,7 @@
 class Gws::Faq::Post
   include Gws::Referenceable
   include Gws::Faq::Postable
-  include Gws::Addon::Faq::Contributor
+  include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Faq::DescendantsFileInfo
