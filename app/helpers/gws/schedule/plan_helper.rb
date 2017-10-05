@@ -46,7 +46,7 @@ module Gws::Schedule::PlanHelper
         search(start: start_at, end: end_at).
         map do |todo|
           result = todo.calendar_format(@cur_user, @cur_site)
-          result[:restUrl] = popup_gws_schedule_todo_path(id: todo.id, site: @cur_site.id)
+          result[:restUrl] = gws_schedule_todos_path(site: @cur_site.id)
           result
         end
   end
