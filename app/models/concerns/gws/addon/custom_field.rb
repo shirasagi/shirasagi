@@ -13,11 +13,13 @@ module Gws::Addon::CustomField
     field :place_holder, type: String
     field :additional_attr, type: String, default: ''
     field :max_upload_file_size, type: Integer
+    field :resizing_width, type: Integer
+    field :resizing_height, type: Integer
 
     attr_accessor :in_max_upload_file_size_mb
 
     permit_params :tooltips, :input_type, :select_options, :required, :max_length, :place_holder
-    permit_params :additional_attr, :in_max_upload_file_size_mb
+    permit_params :additional_attr, :in_max_upload_file_size_mb, :resizing_width, :resizing_height
 
     after_initialize do
       if self.max_upload_file_size
@@ -39,6 +41,8 @@ module Gws::Addon::CustomField
     validates :required, inclusion: { in: %w(required optional), allow_blank: true }
     validates :max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validates :max_upload_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+    validates :resizing_width, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+    validates :resizing_height, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validate :validate_select_options
   end
 
@@ -143,6 +147,12 @@ module Gws::Addon::CustomField
 
   def validate_value(record, attribute, hash)
     raise NotImplementedError
+  end
+
+  def resizing
+    if resizing_width.present? && resizing_height.present?
+      [ resizing_width, resizing_height ]
+    end
   end
 
   private

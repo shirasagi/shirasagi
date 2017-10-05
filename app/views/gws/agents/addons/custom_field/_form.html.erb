@@ -23,5 +23,8 @@
   <% if @model.input_type_include_upload_file? %>
     <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
     <dd><%= f.number_field :in_max_upload_file_size_mb %> <%= t('ss.units.mega_byte') %></dd>
+
+    <dt><%= @model.t :resizing %><%= @model.tt :resizing %></dt>
+    <dd><%= f.number_field :resizing_width %> x <%= f.number_field :resizing_height %></dd>
   <% end %>
 </dl>
