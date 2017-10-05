@@ -23,5 +23,13 @@
   <% if @model.input_type_include_upload_file? %>
     <dt><%= @model.t :max_upload_file_size %></dt>
     <dd><%= number_to_human_size(@item.max_upload_file_size) %></dd>
+    <dt><%= @model.t :resizing %></dt>
+    <dd>
+      <%= number_to_human_size(@item.resizing_width) %>
+      <% if @item.resizing_width.present? || @item.resizing_height.present? %>
+      x
+      <% end %>
+      <%= number_to_human_size(@item.resizing_height) %>
+    </dd>
   <% end %>
 </dl>

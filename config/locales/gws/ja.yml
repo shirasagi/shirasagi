@@ -211,6 +211,9 @@ ja:
         additional_attr: 追加属性
         input_confirm: 入力確認
         max_upload_file_size: 最大ファイルサイズ設定
+        resizing: 画像リサイズ
+        resizing_width: 画像リサイズ（幅）
+        resizing_height: 画像リサイズ（高さ）
 
   tooltip:
     gws/addon/reminder:
@@ -299,6 +302,9 @@ ja:
         - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
       max_upload_file_size:
         - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
+      resizing:
+        - 画像がアップロードされた場合、指定したサイズ内に収まるように画像をリサイズします。
+
 
   job:
     models:
