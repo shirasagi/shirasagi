@@ -37,7 +37,7 @@ end
       >
         <%== box.depth > 0 ? "<span class='pad'></span>" * (box.depth - 1) : "" %>
         <i class="material-icons md-18"><%== box.icon %></i>
-        <span class="mailbox-name""><%= box.basename %></span>
+        <span class="mailbox-name"><%= box.basename %></span>
         <span class="unseen count<%= box.unseen %>">(<%= box.unseen %>)</span>
       </a>
     <% end %>
@@ -81,5 +81,5 @@ end
     <div class="label"><%= @quota.label %></div>
     <div class="usage" style="width: <%= @quota.percentage %>%"></div>
   </div>
-</div>
+</nav>
 <% end %>
