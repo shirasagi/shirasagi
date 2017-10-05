@@ -1,30 +1,30 @@
-<% file = Gws::File.find(val['value']) rescue nil %>
-<% return if file.blank? %>
-
 <dt><%= val['name'] %></dt>
 <dd></dd>
 
-<% if file.image? %>
-  <% img = Magick::ImageList.new(file.path) %>
-  <dt class="depth-2"><%= Gws::File.t :image %></dt>
-  <dd>
-    <div class="img"><%= image_tag(file.thumb_url, alt: "") %></div>
-    <div class="properties"><span class="width"><%= img.columns %></span> x <span class="height"><%= img.rows %></span></div>
-  </dd>
-<% end %>
-
-<dt class="depth-2"><%= Gws::File.t :name %></dt>
-<dd><%= file.name %></dd>
-
-<dt class="depth-2"><%= Gws::File.t :download %></dt>
-<dd>
-  <%= link_to(t('ss.links.download'), file.download_url, { class: %w(btn download) }) %>
-  <% if file.viewable? %>
-  <%= link_to(t('ss.links.preview'), file.view_url, { class: %w(btn preview) }) %>
+<% file = Gws::File.find(val['value']) rescue nil %>
+<% if file.present? %>
+  <% if file.image? %>
+    <% img = Magick::ImageList.new(file.path) %>
+    <dt class="depth-2"><%= Gws::File.t :image %></dt>
+    <dd>
+      <div class="img"><%= image_tag(file.thumb_url, alt: "") %></div>
+      <div class="properties"><span class="width"><%= img.columns %></span> x <span class="height"><%= img.rows %></span></div>
+    </dd>
   <% end %>
-</dd>
 
-<%= jquery do %>
-  var rootElement = $('#addon-gws-agents-addons-workflow-custom_form');
-  rootElement.find('a.preview').colorbox({ fixed: true, width: "90%", height: "90%" });
+  <dt class="depth-2"><%= Gws::File.t :name %></dt>
+  <dd><%= file.name %></dd>
+
+  <dt class="depth-2"><%= Gws::File.t :download %></dt>
+  <dd>
+    <%= link_to(t('ss.links.download'), file.download_url, { class: %w(btn download) }) %>
+    <% if file.viewable? %>
+    <%= link_to(t('ss.links.preview'), file.view_url, { class: %w(btn preview) }) %>
+    <% end %>
+  </dd>
+
+  <%= jquery do %>
+    var rootElement = $('#addon-gws-agents-addons-workflow-custom_form');
+    rootElement.find('a.preview').colorbox({ fixed: true, width: "90%", height: "90%" });
+  <% end %>
 <% end %>
