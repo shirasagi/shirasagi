@@ -87,4 +87,20 @@ class Gws::Qna::TopicsController < ApplicationController
       end
     end
   end
+
+  def resolve
+    set_item
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @item.update_attributes(question_state: 'resolved')
+    redirect_to action: :show
+  end
+
+  def unresolve
+    set_item
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @item.update_attributes(question_state: 'open')
+    redirect_to action: :show
+  end
 end

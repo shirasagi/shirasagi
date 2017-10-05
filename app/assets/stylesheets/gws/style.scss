@@ -78,6 +78,14 @@
 a.gws-category-label:hover {
   //opacity: 0.85;
 }
+.gws-category-label-open {
+  background-color: #05c;
+  color: #fff;
+}
+.gws-category-label-resolved {
+  background-color: #083;
+  color: #fff;
+}
 .gws-category-tree, .gws-category-tree-view {
   ul.depth0 {
     margin-top: 10px;

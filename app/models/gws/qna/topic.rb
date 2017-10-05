@@ -2,7 +2,7 @@
 class Gws::Qna::Topic
   include Gws::Referenceable
   include Gws::Qna::Postable
-  include Gws::Addon::Qna::Contributor
+  include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Qna::DescendantsFileInfo
@@ -15,6 +15,11 @@ class Gws::Qna::Topic
 
   readable_setting_include_custom_groups
 
+  field :question_state, type: String, default: 'open'
+
+  permit_params :question_state
+
+  validates :question_state, inclusion: { in: %w(open resolved) }
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
@@ -24,11 +29,11 @@ class Gws::Qna::Topic
 
   scope :custom_order, ->(key) {
     if key.start_with?('created_')
-      where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
+      all.order_by(created: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('updated_')
-      where({}).order_by(descendants_updated: key.end_with?('_asc') ? 1 : -1)
+      all.order_by(descendants_updated: key.end_with?('_asc') ? 1 : -1)
     else
-      where({})
+      all
     end
   }
 
@@ -54,6 +59,14 @@ class Gws::Qna::Topic
 
   def sort_options
     %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+  end
+
+  def resolved?
+    question_state == 'resolved'
+  end
+
+  def question_state_options
+    %w(open resolved).map { |k| [I18n.t("gws/qna.options.question_state.#{k}"), k] }
   end
 
   private
