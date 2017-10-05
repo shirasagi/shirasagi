@@ -22,7 +22,7 @@ module Gws::Schedule::PlanHelper
     events  = plans.map { |m| m.calendar_format(@cur_user, @cur_site) }
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
     events += group_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
-    events += calender_todos opts[:holiday][0], opts[:holiday][1] if opts[:with_todo] == '1'
+    events += calender_todos opts[:holiday][0], opts[:holiday][1]
     events
   end
 

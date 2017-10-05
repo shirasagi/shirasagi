@@ -6,8 +6,4 @@ if params[:s][:start].present? || params[:s][:end].present?
   opts[:holiday] = [params[:s][:start].to_date, params[:s][:end].to_date]
 end
 
-if params[:s][:with_todo].present?
-  opts[:with_todo] = params[:s][:with_todo]
-end
-
 %><%== calendar_format(@items, opts).to_json %>
