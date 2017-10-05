@@ -48,11 +48,15 @@ module Gws::Addon::CustomField
 
   module ClassMethods
     def to_permitted_fields
-      params = criteria.map do |item|
+      params = []
+
+      criteria.each do |item|
         if item.input_type == 'check_box'
-          { item.id.to_s => [] }
+          params << { item.id.to_s => [] }
+        elsif item.input_type == 'upload_file'
+          params << { item.id.to_s => %w(value file rm) }
         else
-          item.id.to_s
+          params << item.id.to_s
         end
       end
 
@@ -82,7 +86,7 @@ module Gws::Addon::CustomField
         value.map { |v| String.mongoize(v) }
       when 'upload_file'
         case value
-        when ActionDispatch::Http::UploadedFile
+        when ActionDispatch::Http::UploadedFile, Hash
           value
         else
           Integer.mongoize(value)
@@ -102,7 +106,7 @@ module Gws::Addon::CustomField
         value.map { |v| String.demongoize(v) }
       when 'upload_file'
         case value
-        when ActionDispatch::Http::UploadedFile
+        when ActionDispatch::Http::UploadedFile, Hash
           value
         else
           Integer.demongoize(value)
