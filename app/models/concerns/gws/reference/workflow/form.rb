@@ -12,6 +12,10 @@ module Gws::Reference::Workflow::Form
     scope :form, ->(form) { where(form_id: form.id) }
   end
 
+  def cur_form
+    @cur_form ||= self.form
+  end
+
   private
 
   def set_form_id
