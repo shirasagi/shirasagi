@@ -1,0 +1,23 @@
+<% file = Gws::File.find(val['value']) rescue nil %>
+<% return if file.blank? %>
+
+<dt><%= val['name'] %></dt>
+<dd></dd>
+
+<% if file.image? %>
+  <% img = Magick::ImageList.new(file.path) %>
+  <dt class="depth-2"><%= Gws::File.t :image %></dt>
+  <dd>
+    <div class="img"><%= link_to image_tag(file.thumb_url, alt: ""), file.url %></div>
+    <div class="properties"><span class="width"><%= img.columns %></span> x <span class="height"><%= img.rows %></span></div>
+  </dd>
+<% end %>
+
+<dt class="depth-2"><%= Gws::File.t :name %></dt>
+<dd><%= file.name %></dd>
+
+<dt class="depth-2"><%= Gws::File.t :download %></dt>
+<dd>
+  <%= link_to(t('ss.links.download'), file.url, { class: 'btn' }) %>
+  <%= link_to(t('ss.links.preview'), file.url, { class: 'btn' }) %>
+</dd>

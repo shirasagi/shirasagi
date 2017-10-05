@@ -81,7 +81,12 @@ module Gws::Addon::CustomField
       when 'check_box'
         value.map { |v| String.mongoize(v) }
       when 'upload_file'
-        Integer.mongoize(value)
+        case value
+        when ActionDispatch::Http::UploadedFile
+          value
+        else
+          Integer.mongoize(value)
+        end
       else
         value
       end
@@ -96,7 +101,12 @@ module Gws::Addon::CustomField
       when 'check_box'
         value.map { |v| String.demongoize(v) }
       when 'upload_file'
-        Integer.demongoize(value)
+        case value
+        when ActionDispatch::Http::UploadedFile
+          value
+        else
+          Integer.demongoize(value)
+        end
       else
         value
       end
