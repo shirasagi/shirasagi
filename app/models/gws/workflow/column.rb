@@ -40,10 +40,19 @@ class Gws::Workflow::Column
           record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
         end
       end
-      if %w(check_box).include?(input_type)
+      if input_type == 'check_box'
         value = [ value ].flatten.compact.select(&:present?)
         if (value - select_options).present?
           record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+        end
+      end
+      if input_type == 'upload_file' && value.is_a?(ActionDispatch::Http::UploadedFile)
+        if value.size > max_upload_file_size
+          record.errors.add :base, "#{name}#{I18n.t(
+            'errors.messages.too_large_file',
+            filename: value.original_filename,
+            size: ApplicationController.helpers.number_to_human_size(value.size),
+            limit: ApplicationController.helpers.number_to_human_size(max_upload_file_size))}"
         end
       end
     end
