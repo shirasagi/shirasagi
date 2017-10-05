@@ -1,4 +1,4 @@
-module Gws::Addon::Qna::Contributor
+module Gws::Addon::Contributor
   extend ActiveSupport::Concern
   extend SS::Addon
 

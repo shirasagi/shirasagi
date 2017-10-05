@@ -102,6 +102,7 @@ ja:
       gws/readable_setting: 閲覧権限
       gws/member: 参加者
       gws/subscription_setting: 購読
+      gws/contributor: 投稿者
 
   mongoid:
     models:
@@ -197,6 +198,8 @@ ja:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー
         subscribed_custom_group_ids: 購読カスタムグループ
+      gws/addon/contributor:
+        contributor_name: 投稿者名
 
   tooltip:
     gws/addon/reminder:
@@ -260,6 +263,9 @@ ja:
         - このページを購読するグループを選択します。
       subscribed_member_ids:
         - このページを購読するユーザーを選択します。
+    gws/addon/contributor:
+      contributor_name:
+        - 投稿者名を選択します。
 
   job:
     models:

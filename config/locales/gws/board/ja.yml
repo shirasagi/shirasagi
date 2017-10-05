@@ -56,7 +56,6 @@ ja:
     gws/board: 掲示板
     addons:
       gws/board/category: カテゴリー
-      gws/board/contributor: 投稿者
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -106,8 +105,6 @@ ja:
         name: カテゴリー名
       gws/addon/board/category:
         category_ids: カテゴリー
-      gws/addon/board/contributor:
-        contributor_name: 投稿者名
 
   tooltip:
     gws/board/postable:
@@ -131,6 +128,3 @@ ja:
     gws/board/category:
       name:
         - カテゴリー名を入力します。
-    gws/addon/board/contributor:
-      contributor_name:
-        - 投稿者名を選択します。
