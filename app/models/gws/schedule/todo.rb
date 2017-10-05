@@ -1,6 +1,5 @@
 class Gws::Schedule::Todo
   include SS::Document
-  include SS::Scope::ActivationDate
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
@@ -17,10 +16,11 @@ class Gws::Schedule::Todo
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
-  field :activation_date, type: DateTime
-  field :expiration_date, type: DateTime
+  field :deleted, type: DateTime
 
-  permit_params :color, :todo_state, :activation_date, :expiration_date
+  permit_params :color, :todo_state, :deleted
+
+  validates :deleted, datetime: true
 
   def finished?
     todo_state == 'finished'
@@ -41,6 +41,18 @@ class Gws::Schedule::Todo
     criteria
   }
 
+  scope :active, ->(date = Time.zone.now) {
+    where('$and' => [
+        { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
+    ])
+  }
+
+  scope :expired, ->(date = Time.zone.now) {
+    where('$or' => [
+        { :deleted.exists => true , :deleted.lt => date }
+    ])
+  }
+
   def calendar_format(user, site)
     result = super
     result[:className] = [result[:className], 'fc-event-todo'].flatten
@@ -59,6 +71,17 @@ class Gws::Schedule::Todo
 
   def todo_state_name
     self.class.todo_state_names[todo_state.to_sym]
+  end
+
+  def active?
+    now = Time.zone.now
+    return false if deleted.present? && deleted < now
+    true
+  end
+
+  def disable
+    now = Time.zone.now
+    update_attributes(deleted: now) if deleted.blank? || deleted > now
   end
 
   class << self
