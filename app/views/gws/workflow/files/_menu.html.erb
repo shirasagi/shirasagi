@@ -1,9 +1,10 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), action: :new %>
-      <% @forms.each do |form| %>
-        <%= link_to form.name, new_gws_workflow_form_file_path(form_id: form) %>
+      <%= dropdown_link(t('ss.links.new'), { action: :new }, { split: true }) do %>
+        <% @forms.each do |form| %>
+          <%= link_to(form.name, new_gws_workflow_form_file_path(form_id: form), class: 'dropdown-item') %>
+        <% end %>
       <% end %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>

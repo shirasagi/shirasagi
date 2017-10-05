@@ -747,10 +747,22 @@ td {
     }
     a {
       display: inline-block;
-      margin-right: 16px;
       @include arrow;
       color: $black;
       &:hover { color: $orange;}
+    }
+    a:not(.no-margin) {
+      margin-right: 16px;
+    }
+    .dropdown-toggle-split {
+      font-size: 80%;
+      margin-left: 4px;
+      margin-right: 16px;
+      border: transparent 1px solid;
+      &:hover {
+        color: $orange;
+        border: $orange 1px solid;
+      }
     }
   }
   .nav-management-menu {

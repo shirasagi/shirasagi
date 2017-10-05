@@ -72,12 +72,13 @@ $ ->
     menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
   # dropdown
-  $(".dropdown").click (e) ->
-    $(".dropdown").not($(e.target).closest('.dropdown').get(0)).each ->
+  $(".dropdown-toggle").click (e) ->
+    $dropdown = $(e.target).closest('.dropdown')
+    $(".dropdown").not($dropdown.get(0)).each ->
       $(this).removeClass('active')
       $(this).find('.dropdown-menu').removeClass('active')
-    $(this).toggleClass('active')
-    $(this).find('.dropdown-menu').toggleClass('active')
+    $dropdown.toggleClass('active')
+    $dropdown.find('.dropdown-menu').toggleClass('active')
     e.stopPropagation()
   $(document).click (e) ->
     $(".dropdown").removeClass('active')
