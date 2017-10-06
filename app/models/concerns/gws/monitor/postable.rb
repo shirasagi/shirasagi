@@ -58,6 +58,17 @@ module Gws::Monitor::Postable
       end
       criteria
     }
+    scope :and_topics, ->() {
+      where("$and": ["$or": [ {state: "public"}, {state: "preparation"} ] ])
+    }
+
+    scope :and_answers, ->() {
+      where("$and": ["$or": [ {state: "qNA"} ] ])
+    }
+
+    scope :and_admins, ->() {
+      where("$and": ["$or": [{state: "public"}, {state: "preparation"}, {state: "qNA"} ] ])
+    }
   end
 
   # Returns the topic.

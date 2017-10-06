@@ -18,25 +18,6 @@ class Gws::Monitor::Topic
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-    criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
-    criteria
-  }
-
-  scope :and_topics, ->() {
-    where("$and": ["$or": [ {state: "public"}, {state: "preparation"} ] ])
-  }
-
-  scope :and_answers, ->() {
-    where("$and": ["$or": [ {state: "qNA"} ] ])
-  }
-
-  scope :and_admins, ->() {
-    where("$and": ["$or": [{state: "public"}, {state: "preparation"}, {state: "qNA"} ] ])
-  }
-
   scope :custom_order, ->(key) {
     if key.start_with?('created_')
       where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
