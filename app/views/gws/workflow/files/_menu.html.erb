@@ -15,6 +15,7 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
+    <%= link_to t('ss.links.print'), action: :print %>
     <% if @item.editable?(@cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>

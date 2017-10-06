@@ -128,4 +128,9 @@ class Gws::Workflow::FilesController < ApplicationController
     render_opts = { render: { file: :request_cancel }, notice: t('workflow.notice.request_cancelled') }
     render_update @item.save, render_opts
   end
+
+  def print
+    set_item
+    render layout: 'ss/print'
+  end
 end

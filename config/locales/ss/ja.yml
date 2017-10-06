@@ -65,6 +65,7 @@ ja:
       reset_tags: タグ解除
       upload: アップロード
       decode: デコードする
+      print: 印刷する
     buttons:
       save: 保存
       new: 新規作成
