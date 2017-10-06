@@ -1,21 +1,11 @@
-<%= jquery do %>
-    $("input.date").datetimepicker()
-<% end %>
-
 <dl class="see">
   <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>
 
-  <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
-  <dd><%= f.text_field :due_date, class: 'date', value: tryb { @item.due_date.strftime('%Y/%m/%d') } %></dd>
+  <dt><%= @model.t :mode %><%= @model.tt :mode %></dt>
+  <dd><%= f.select :mode, @item.mode_options %></dd>
 
-  <dt><%= @model.t :admin_setting %><%= @model.tt :admin_setting %></dt>
-  <dd><%= f.select :admin_setting, @item.admin_setting_options %></dd>
-
-  <dt><%= @model.t :spec_config %><%= @model.tt :spec_config %></dt>
-  <dd><%= f.select :spec_config, @item.spec_config_options %></dd>
-
-  <dt><%= @model.t :reminder_start_section%><%= @model.tt :reminder_start_section %></dt>
-  <dd><%= f.select :reminder_start_section, @item.reminder_start_section_options %></dd>
-
+  <%= f.hidden_field :permit_comment, value: 'allow' %>
+  <%= f.hidden_field :severity %>
 </dl>
+

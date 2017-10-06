@@ -1,0 +1,64 @@
+<%
+
+menu = []
+if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
+  if @category.present?
+    link = new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+  else
+    link = new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+  end
+  menu << link_to(t('gws/monitor.links.comment'), link, class: "btn primary")
+end
+if comment.allowed?(:edit, @cur_user, site: @cur_site)
+  if @category.present?
+    link = edit_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  else
+    link = edit_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  end
+  menu << link_to(t('ss.links.edit'), link, class: "btn")
+end
+if comment.allowed?(:delete, @cur_user, site: @cur_site)
+  if @category.present?
+    link = delete_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  else
+    link = delete_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  end
+  menu << link_to(t('ss.links.delete'), link, class: "btn")
+end
+
+%>
+<aside class="comment" id="post-<%= comment.id %>">
+  <header class="<%= 'toggle-head' if recursion %>">
+    <h2><%= comment.name %></h2>
+    <nav class="meta">
+      <span class="user"><%= comment.contributor_name.presence || comment.user_long_name %></span>
+      <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
+    </nav>
+  </header>
+
+  <div class="toggle-body <%= 'hide' if recursion %>">
+    <div class="body markdown-body"><%= comment.html %></div>
+
+    <% if comment.files.present? %>
+    <div class="files">
+      <% comment.files.each do |file| %>
+        <span id="file-<%= file.id %>">
+          <img src="/assets/img/gws/ic-file.png" alt="" />
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+        </span>
+      <% end %>
+    </div>
+    <% end %>
+
+    <% if menu.present? %>
+    <div class="menu"><%= safe_join(menu) %></div>
+    <% end %>
+  </div>
+</aside>
+
+<% if comment.children.present? %>
+<div class="comments">
+  <%= render partial: 'gws/monitor/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
+</div>
+<% end %>
+
