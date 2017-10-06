@@ -345,6 +345,7 @@ ja:
       cms/tag_setting: タグ設定
       cms/tag: タグ
       cms/layout_html: レイアウト
+      cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
 
   mongoid:
@@ -608,6 +609,8 @@ ja:
         related_pages: 関連記事
         related_page_ids: 関連記事
         related_page_sort: 並び順
+      cms/addon/for_member_node:
+        for_member_state: 会員向け
       cms/addon/child_list:
         child_limit: 表示件数
         child_loop_html: ループHTML
@@ -1396,6 +1399,9 @@ ja:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
       child_lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
+    cms/addon/for_member_node:
+      for_member_state:
+        - 会員がログインしている時のみ閲覧できるように設定します。
 
   all_content:
     page_id: ページID

@@ -16,6 +16,7 @@ module Inquiry::Node
     include Inquiry::Addon::ReleasePlan
     include Inquiry::Addon::ReceptionPlan
     include Inquiry::Addon::Aggregation
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -38,6 +39,7 @@ module Inquiry::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList

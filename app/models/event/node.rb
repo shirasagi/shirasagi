@@ -13,6 +13,7 @@ module Event::Node
     include Category::Addon::Setting
     include Event::Addon::CalendarList
     include Cms::Addon::TagSetting
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting

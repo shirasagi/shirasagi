@@ -1,5 +1,6 @@
 class Event::Agents::Nodes::PageController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::ForMemberFilter::Node
   include Event::EventHelper
   helper Event::EventHelper
 

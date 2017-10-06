@@ -1,5 +1,6 @@
 class Inquiry::Agents::Nodes::NodeController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::ForMemberFilter::Node
 
   def index
     @items = Inquiry::Node::Form.site(@cur_site).and_public.

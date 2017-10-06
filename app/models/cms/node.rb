@@ -5,6 +5,7 @@ class Cms::Node
   include Cms::Addon::EditorSetting
   include Cms::Addon::GroupPermission
   include Cms::Addon::NodeAutoPostSetting
+  include Cms::Addon::ForMemberNode
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -22,6 +23,7 @@ class Cms::Node
     include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
     include Cms::Addon::ChildList
+    include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
