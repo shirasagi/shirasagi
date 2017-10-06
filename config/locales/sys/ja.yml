@@ -62,6 +62,7 @@ ja:
     edit_sys_users: ユーザーの管理
     edit_sys_roles: 権限/ロールの管理
     edit_sys_settings: システム設定の管理
+    edit_sys_mail_logs: メールログの管理
 
   mongoid:
     models:
@@ -71,7 +72,7 @@ ja:
       sys/site_copy_task: サイト複製タスク
       sys/notice: システムのお知らせ
       sys/postal_code: 郵便番号
-      sys/mail_log: メール
+      sys/mail_log: メールログ
     attributes:
       sys/notice:
         html: 本文

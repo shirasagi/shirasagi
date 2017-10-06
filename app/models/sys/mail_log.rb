@@ -1,6 +1,9 @@
 class Sys::MailLog
   extend SS::Translation
   include SS::Document
+  include Sys::Permission
+
+  set_permission_name 'sys_mail_logs', :edit
 
   seqid :id
   field :mailer, type: String
