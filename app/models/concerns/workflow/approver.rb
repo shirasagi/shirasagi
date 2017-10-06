@@ -129,6 +129,10 @@ module Workflow::Approver
     errors.empty?
   end
 
+  def workflow_requested?
+    workflow_state == WORKFLOW_STATE_REQUEST
+  end
+
   private
 
   def reset_workflow

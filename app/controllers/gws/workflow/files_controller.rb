@@ -45,8 +45,13 @@ class Gws::Workflow::FilesController < ApplicationController
   end
 
   def show
-    raise "403" unless @item.readable?(@cur_user)
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
     render
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise '403' unless @item.editable?(@cur_user, site: @cur_site)
   end
 
   def create
@@ -56,8 +61,19 @@ class Gws::Workflow::FilesController < ApplicationController
       new_custom_values = @model.build_custom_values(@cur_form, custom)
       @item.custom_values = @item.custom_values.to_h.deep_merge(new_custom_values)
     end
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.editable?(@cur_user, site: @cur_site)
     render_create @item.save
+  end
+
+  def edit
+    raise '403' unless @item.editable?(@cur_user, site: @cur_site)
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+    render
   end
 
   def update
@@ -68,7 +84,32 @@ class Gws::Workflow::FilesController < ApplicationController
       new_custom_values = @model.build_custom_values(@cur_form, custom)
       @item.custom_values = @item.custom_values.to_h.deep_merge(new_custom_values)
     end
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.editable?(@cur_user, site: @cur_site)
     render_update @item.save
+  end
+
+  def delete
+    raise '403' unless @item.destroyable?(@cur_user, site: @cur_site)
+    render
+  end
+
+  def destroy
+    raise '403' unless @item.destroyable?(@cur_user, site: @cur_site)
+    render_destroy @item.destroy
+  end
+
+  def destroy_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.destroyable?(@cur_user, site: @cur_site)
+        next if item.destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
   end
 end
