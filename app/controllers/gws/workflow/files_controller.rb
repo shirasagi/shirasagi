@@ -112,4 +112,20 @@ class Gws::Workflow::FilesController < ApplicationController
     end
     render_destroy_all(entries.size != @items.size)
   end
+
+  def request_cancel
+    set_item
+    raise '403' unless @item.allowed?(:edit, @cur_user)
+
+    return if request.get?
+
+    @item.workflow_user_id = nil
+    @item.workflow_state = nil
+    @item.workflow_comment = nil
+    @item.workflow_approvers = nil
+    @item.workflow_required_counts = nil
+
+    render_opts = { render: { file: :request_cancel }, notice: t('workflow.notice.request_cancelled') }
+    render_update @item.save, render_opts
+  end
 end

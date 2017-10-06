@@ -72,7 +72,7 @@ $ ->
 <div class="mod-workflow">
 
   <% if @item.state == "closed" %>
-    <% if @item.allowed?(:approve, @cur_user, site: @cur_site, grants_none_to_owner: true) && @item.workflow_state == "request" %>
+    <% if @item.allowed?(:approve, @cur_user, site: @cur_site) && @item.workflow_state == "request" %>
       <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
         <section class="mod-workflow-approve">
@@ -100,7 +100,7 @@ $ ->
       <% end %>
     <% end %>
 
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true) && @item.workflow_member.blank? %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @item.workflow_member.blank? %>
       <% if @item.try(:cloned_name?) %>
         <section class="mod-workflow-request">
           <h1><%= t("errors.messages.invalid_approve_name") %></h1>
@@ -136,7 +136,12 @@ $ ->
         </dd>
 
         <dt><%= @model.t :workflow_state %></dt>
-        <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
+        <dd>
+          <%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %>
+          <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to(t('workflow.buttons.cancel'), { action: :request_cancel }, class: :btn) rescue nil %>
+          <% end %>
+        </dd>
 
         <% if @item.workflow_comment.present? %>
           <dt><%= @model.t :workflow_comment %></dt>

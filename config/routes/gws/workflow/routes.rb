@@ -4,16 +4,20 @@ SS::Application.routes.draw do
   concern :deletion do
     get :delete, on: :member
     delete action: :destroy_all, on: :collection
+  end
+
+  concern :workflow do
     post :request_update, on: :member
     post :approve_update, on: :member
     post :remand_update, on: :member
+    match :request_cancel, on: :member, via: [:get, :post]
   end
 
   gws "workflow" do
     get '/' => redirect { |p, req| "#{req.path}/routes" }, as: :setting
-    resources :pages, concerns: :deletion
+    resources :pages, concerns: [:deletion, :workflow]
     resources :routes, concerns: :deletion
-    resources :files, concerns: :deletion
+    resources :files, concerns: [:deletion, :workflow]
     resources :files, path: ':form_id/files', only: [:new, :create], as: 'form_files'
     resources :forms, concerns: :deletion do
       resources :columns, concerns: :deletion

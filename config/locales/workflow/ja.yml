@@ -53,6 +53,10 @@ ja:
       index: 承認者を選択する
       select: 承認者を設定する
       search: 検索
+    confirm:
+      request_cancel: 申請を取り消してもよろしいですか？
+    notice:
+      request_cancelled: 申請を取り消しました。
 
   modules:
     workflow: ワークフロー
