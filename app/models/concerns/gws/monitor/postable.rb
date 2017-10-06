@@ -19,6 +19,11 @@ module Gws::Monitor::Postable
     field :permit_comment, type: String, default: 'allow'
     field :descendants_updated, type: DateTime
     field :severity, type: String
+    field :due_date, type: DateTime
+    field :admin_setting, type: String, default: '1'
+    field :spec_config, type: String, default: '0'
+    field :reminder_start_section, type: String, default: '0'
+    field :state_of_the_answer, type: String, default: 'preparation'
 
     validates :descendants_updated, datetime: true
 
@@ -30,7 +35,7 @@ module Gws::Monitor::Postable
     has_many :descendants, class_name: "Gws::Monitor::Post", dependent: :destroy, inverse_of: :topic,
       order: { created: -1 }
 
-    permit_params :name, :mode, :permit_comment, :severity
+    permit_params :name, :mode, :permit_comment, :severity, :due_date, :admin_setting, :spec_config, :reminder_start_section, :state_of_the_answer
 
     before_validation :set_topic_id, if: :comment?
 
@@ -59,15 +64,13 @@ module Gws::Monitor::Postable
       criteria
     }
     scope :and_topics, ->() {
-      where("$and": ["$or": [ {state: "public"}, {state: "preparation"} ] ])
+      where("$and": ["$or": [ {state_of_the_answer: "public"}, {state_of_the_answer: "preparation"} ] ])
     }
-
     scope :and_answers, ->() {
-      where("$and": ["$or": [ {state: "qNA"} ] ])
+      where("$and": ["$or": [ {state_of_the_answer: "qNA"} ] ])
     }
-
     scope :and_admins, ->() {
-      where("$and": ["$or": [{state: "public"}, {state: "preparation"}, {state: "qNA"} ] ])
+      where("$and": ["$or": [{state_of_the_answer: "public"}, {state_of_the_answer: "preparation"}, {state_of_the_answer: "qNA"} ] ])
     }
   end
 

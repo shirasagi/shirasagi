@@ -1,7 +1,3 @@
-<%= jquery do %>
-    $("input.date").datetimepicker()
-<% end %>
-
 <dl class="see">
   <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>
@@ -18,4 +14,10 @@
   <dt><%= @model.t :reminder_start_section%><%= @model.tt :reminder_start_section %></dt>
   <dd><%= f.select :reminder_start_section, @item.reminder_start_section_options %></dd>
 
+  <dt><%= @model.t :mode %><%= @model.tt :mode %></dt>
+  <dd><%= f.select :mode, @item.mode_options %></dd>
+
+  <%= f.hidden_field :permit_comment, value: 'allow' %>
+  <%= f.hidden_field :severity %>
 </dl>
+

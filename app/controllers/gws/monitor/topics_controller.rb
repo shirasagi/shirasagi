@@ -66,6 +66,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
+        and_topics().
         page(params[:page]).per(50)
   end
 
@@ -100,34 +101,34 @@ class Gws::Monitor::TopicsController < ApplicationController
 
   def public
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state: 'public')
+    render_update @item.update(state_of_the_answer: 'public')
   end
 
   def preparation
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state: 'preparation')
+    render_update @item.update(state_of_the_answer: 'preparation')
   end
 
   def qNA
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state: 'qNA')
+    render_update @item.update(state_of_the_answer: 'qNA')
   end
 
   def public_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state: 'public')
+    @items.update_all(state_of_the_answer: 'public')
     render_destroy_all(false)
   end
 
   def preparation_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state: 'preparation')
+    @items.update_all(state_of_the_answer: 'preparation')
     render_destroy_all(false)
   end
 
   def qNA_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state: 'qNA')
+    @items.update_all(state_of_the_answer: 'qNA')
     render_destroy_all(false)
   end
 end

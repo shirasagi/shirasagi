@@ -14,58 +14,122 @@ class Gws::Monitor::AnswersController < ApplicationController
       :preparation_all, :qNA_all
   ]
 
+  before_action :set_category
+
   private
+
+  def set_crumbs
+    set_category
+    if @category.present?
+      @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
+      @crumbs << [@category.name, action: :index]
+    else
+      @crumbs << [t("modules.gws/monitor"), action: :index]
+    end
+  end
+
+  def set_category
+    @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    if category_id = params[:category].presence
+      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
+    end
+  end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def set_crumbs
-    @crumbs << [t('modules.gws/monitor'), gws_monitor_topics_path]
+  def pre_params
+    p = super
+    if @category.present?
+      p[:category_ids] = [ @category.id ]
+    end
+    p
   end
 
   public
 
   def index
-    # raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+    @items = @model.site(@cur_site).topic
 
-    @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
+    if params[:s] && params[:s][:state] == "closed"
+      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
+    else
+      @items = @items.and_public.readable(@cur_user, @cur_site)
+    end
+
+    if @category.present?
+      params[:s] ||= {}
+      params[:s][:site] = @cur_site
+      params[:s][:category] = @category.name
+    end
+
+    @items = @items.search(params[:s]).
+        custom_order(params.dig(:s, :sort) || 'updated_desc').
         and_answers().
         page(params[:page]).per(50)
   end
 
+  def show
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    render file: "show_#{@item.mode}"
+  end
+
+  def read
+    set_item
+    raise '403' unless @item.readable?(@cur_user)
+
+    result = true
+    if !@item.browsed?(@cur_user)
+      @item.set_browsed(@cur_user)
+      @item.record_timestamps = false
+      result = @item.save
+    end
+
+    if result
+      respond_to do |format|
+        format.html { redirect_to({ action: :show }, { notice: t('ss.notice.saved') }) }
+        format.json { render json: { _id: @item.id, browsed_at: @item.browsed_at(@cur_user) }, content_type: json_content_type }
+      end
+    else
+      respond_to do |format|
+        format.html { render({ file: :edit }) }
+        format.json { render(json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type) }
+      end
+    end
+  end
+
   def public
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state: 'public')
+    render_update @item.update(state_of_the_answer: 'public')
   end
 
   def preparation
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state: 'preparation')
+    render_update @item.update(state_of_the_answer: 'preparation')
   end
 
   def qNA
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state: 'qNA')
+    render_update @item.update(state_of_the_answer: 'qNA')
   end
 
   def public_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state: 'public')
+    @items.update_all(state_of_the_answer: 'public')
     render_destroy_all(false)
   end
 
   def preparation_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state: 'preparation')
+    @items.update_all(state_of_the_answer: 'preparation')
     render_destroy_all(false)
   end
 
   def qNA_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state: 'qNA')
+    @items.update_all(state_of_the_answer: 'qNA')
     render_destroy_all(false)
   end
 end
+

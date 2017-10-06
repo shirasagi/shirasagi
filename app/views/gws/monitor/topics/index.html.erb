@@ -12,6 +12,8 @@
   <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/monitor') %>
 </div>
 
+<%= render "gws/monitor/main/tabs" %>
+
 <div class="index gws-boards">
   <%= render file: "_list_head" %>
 
