@@ -1,48 +1,64 @@
 <%= jquery do %>
-  $('#imap-test').click(function() {
+  $('.mod-webmail-account .imap-test').click(function() {
+    var dl = $(this).closest('.mod-webmail-account');
+    var imap_host = dl.find('.imap_host').val();
+    var imap_auth_type = dl.find('.imap_auth_type').val();
+    var imap_account = dl.find('.imap_account').val();
+    var in_imap_password = dl.find('.in_imap_password').val();
+
     $.ajax({
       url: '<%= url_for action: :test_connection %>',
       method: 'POST',
       data: {
         item: {
-          imap_host: $('#item_imap_host').val(),
-          imap_auth_type: $('#item_imap_auth_type').val(),
-          imap_account: $('#item_imap_account').val(),
-          in_imap_password: $('#item_in_imap_password').val(),
+          imap_host: imap_host,
+          imap_auth_type: imap_auth_type,
+          imap_account: imap_account,
+          in_imap_password: in_imap_password,
         }
       },
       beforeSend: function(data) {
-        $('#imap-test-resp').html('Connecting ...');
+        dl.find('.imap-test-resp').html('Connecting ...');
       },
       success: function(data) {
-        $('#imap-test-resp').html(data);
+        dl.find('.imap-test-resp').html(data);
       },
       error: function(data) {
-        $('#imap-test-resp').html('Error');
+        dl.find('.imap-test-resp').html('Error');
       },
     });
   });
 <% end %>
 
 <dl class="see mod-webmail-account">
-  <%= f.text_field :imap_account, value: '', id: 'tmp1', style: 'display: none;' %>
-  <%= f.text_field :in_imap_password, value: '', id: 'tmp2', style: 'display: none;' %>
-
   <dt><%= @model.t :imap_host %><%= @model.tt :imap_host %></dt>
-  <dd><%= f.text_field :imap_host, placeholder: @defaults[:host] %></dd>
+  <dd><%= text_field_tag "item[imap_settings][][imap_host]", setting.imap_host, placeholder: @defaults[:host], class: :imap_host %></dd>
 
   <dt><%= @model.t :imap_auth_type %><%= @model.tt :imap_auth_type %></dt>
-  <dd><%= f.select :imap_auth_type, @item.imap_auth_type_options, include_blank: @defaults[:auth_type] %></dd>
+  <dd><%= select_tag "item[imap_settings][][imap_auth_type]", options_for_select(@item.imap_auth_type_options, setting.imap_auth_type), include_blank: @defaults[:auth_type], class: :auth_type %></dd>
 
   <dt><%= @model.t :imap_account %><%= @model.tt :imap_account %></dt>
-  <dd><%= f.text_field :imap_account, placeholder: @defaults[:account] %></dd>
+  <dd><%= text_field_tag "item[imap_settings][][imap_account]", setting.imap_account, placeholder: @defaults[:account], class: :imap_account %></dd>
 
   <dt><%= @model.t :in_imap_password %><%= @model.tt :in_imap_password %></dt>
-  <dd><%= f.password_field :in_imap_password, value: @item.decrypt_imap_password, placeholder: @defaults[:password] %></dd>
+  <dd><%= password_field_tag "item[imap_settings][][in_imap_password]", setting.decrypt_imap_password, placeholder: @defaults[:password], class: :in_imap_password %></dd>
+
+  <dt><%= @model.t :imap_sent_box %><%= @model.tt :imap_sent_box %></dt>
+  <dd><%= text_field_tag "item[imap_settings][][imap_sent_box]", setting.imap_sent_box %></dd>
+
+  <dt><%= @model.t :imap_draft_box %><%= @model.tt :imap_draft_box %></dt>
+  <dd><%= text_field_tag "item[imap_settings][][imap_draft_box]", setting.imap_draft_box %></dd>
+
+  <dt><%= @model.t :imap_trash_box %><%= @model.tt :imap_trash_box %></dt>
+  <dd><%= text_field_tag "item[imap_settings][][imap_trash_box]", setting.imap_trash_box %></dd>
+
+  <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
+  <dd><%= check_box_tag "item[imap_settings][][default]", 1, default_index, class: "default-index" %></dd>
 
   <dt></dt>
   <dd>
-    <%= button_tag t('webmail.buttons.test_connection'), id: 'imap-test', type: :button %>
-    <span id="imap-test-resp" style="margin-left: 10px;"></span>
+    <%= button_tag t('webmail.buttons.test_connection'), class: 'imap-test', type: :button %>
+    <span class="imap-test-resp" style="margin-left: 10px; margin-right: 10px;"></span>
+    <%= button_tag "削除", class: 'delete-imap-setting', type: :button %>
   </dd>
 </dl>

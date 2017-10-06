@@ -6,6 +6,8 @@ class Webmail::AccountSettingsController < ApplicationController
 
   menu_view "ss/crud/resource_menu"
 
+  skip_before_action :imap_initialize
+
   private
 
   def set_crumbs
@@ -17,8 +19,16 @@ class Webmail::AccountSettingsController < ApplicationController
   end
 
   def permit_fields
-    [ :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
-      :imap_sent_box, :imap_draft_box, :imap_trash_box ]
+    [
+      :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+      :imap_sent_box, :imap_draft_box, :imap_trash_box,
+      {
+        imap_settings: [
+          :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+          :imap_sent_box, :imap_draft_box, :imap_trash_box, :default
+        ]
+      },
+    ]
   end
 
   def set_item
@@ -44,11 +54,12 @@ class Webmail::AccountSettingsController < ApplicationController
   end
 
   def test_connection
-    user = @cur_user.clone
-    user.attributes = get_params
-    user.valid?
+    setting = Webmail::ImapSetting.new
+    setting.merge!(get_params.symbolize_keys)
+    setting.set_imap_password
+    setting.valid?
 
-    @imap = Webmail::Imap::Base.new(user)
+    @imap = Webmail::Imap::Base.new(@cur_user, setting)
     @imap.conf[:password] ||= @cur_user.decrypted_password
 
     if @imap.login

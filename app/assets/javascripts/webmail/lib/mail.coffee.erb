@@ -4,6 +4,8 @@ class @Webmail_Mail_Navi
       Webmail_Mail_Navi.reloadMailbox()
     $('.webmail-navi-quota .reload').click ->
       Webmail_Mail_Navi.reloadQuota()
+    $(".webmail-select-account").on "change", ()->
+      location.href = $(this).val()
 
   @reloadMailbox: (opts = {})->
     navi = $('.webmail-navi-mailboxes')

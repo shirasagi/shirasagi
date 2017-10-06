@@ -14,6 +14,7 @@ ja:
     default_settings: 既定の設定
     create_mailbox_for_reload: 作成されるフォルダー
     delete_mailbox_for_reload: 削除されるフォルダー
+    account_setting: アカウント設定
     box:
       inbox: 受信トレイ
       sent: 送信済み
@@ -35,6 +36,7 @@ ja:
       clear_cache: キャッシュ削除
       clear_cache_all: キャッシュ全削除
       sync: 同期
+      add_account: アカウントを追加する
     options:
       action:
         copy: コピーする
@@ -62,6 +64,7 @@ ja:
       show_image: 画像の表示
       reload_mailboxes: メールサーバと同期する
       empty_mailbox: 空にする
+      select_account: アカウント切り替え
     confirm:
       empty_mailbox: フォルダーを空にしてよろしいですか？
       clear_cache: キャッシュを削除してよろしいですか？
@@ -110,6 +113,7 @@ ja:
         imap_sent_box: 送信済みフォルダー
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
+        imap_default_index: 既定のアカウント
       webmail/mail:
         size: サイズ
         date: 日付

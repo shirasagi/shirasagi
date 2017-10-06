@@ -42,9 +42,9 @@
     <% if SS.config.webmail.disable.blank? %>
     <div class="webmail">
       <% if @ss_mode == :webmail %>
-      <h2><%= link_to t('webmail.mail'), webmail_mails_path, class: "current" %></h2>
+      <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
       <% else %>
-      <h2><%= link_to t('webmail.mail'), webmail_mails_path %></h2>
+      <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %></h2>
       <% end %>
     </div>
     <% end %>
@@ -123,6 +123,15 @@
       <ol class="breadcrumb" id="crumbs">
         <% @crumbs.each_with_index do |item, idx| %>
           <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+        <% end %>
+
+        <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
+          <li class="webmail-accounts">
+            <span><% t('webmail.links.select_account') %></span>
+            <%= select_tag :select_account,
+              options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
+            %>
+          </li>
         <% end %>
       </ol>
       <% end %>
