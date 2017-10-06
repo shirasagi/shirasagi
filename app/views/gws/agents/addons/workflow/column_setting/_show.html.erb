@@ -1,5 +1,8 @@
 <dl class="see mod-gws-facility-custom_fields">
-  <dd class="wide"><%= link_to(I18n.t('gws/workflow.columns.index'), gws_workflow_form_columns_path(form_id: @item), class: :btn) %></dd>
+  <dd class="wide">
+    <%= link_to(I18n.t('gws/workflow.columns.index'), gws_workflow_form_columns_path(form_id: @item), class: :btn) %>
+    <%= link_to(I18n.t('ss.links.preview'), new_gws_workflow_form_file_path(form_id: @item, format: :html), class: %w(btn preview)) %>
+  </dd>
   <% if @item.columns.present? %>
   <dd class="wide">
     <table class="index">
@@ -25,3 +28,31 @@
   </dd>
   <% end %>
 </dl>
+
+
+<%= jquery do %>
+  var $rootElement = $('#addon-gws-agents-addons-workflow-column_setting');
+  $rootElement.find('.preview').colorbox({
+    fixed: true,
+    width: "90%",
+    height: "90%",
+    onComplete: function() {
+      var $content = $('#cboxLoadedContent');
+      $content.find('footer.send').hide();
+      $content.find('form').on('submit', function(e) {
+        e.preventDefault();
+        return false;
+      });
+      $content.find('.toggle-body').each(function() {
+        var $this = $(this);
+        if ($this.css('display') == 'none') {
+          $this.show();
+        }
+      });
+      $content.find('.ajax-box').on('click', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    }
+  });
+<% end %>
