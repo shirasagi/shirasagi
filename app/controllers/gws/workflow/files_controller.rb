@@ -52,6 +52,9 @@ class Gws::Workflow::FilesController < ApplicationController
   def new
     @item = @model.new pre_params.merge(fix_params)
     raise '403' unless @item.editable?(@cur_user, site: @cur_site)
+    render_opts = { file: :new }
+    render_opts[:layout] = false if request.xhr?
+    render render_opts
   end
 
   def create
