@@ -45,6 +45,9 @@ class Gws::Workflow::PagesController < ApplicationController
 
   def request_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
+    if @item.workflow_state?
+      raise "403" unless @item.allowed?(:reroute, @cur_user, grants_none_to_owner: true)
+    end
 
     @item.workflow_user_id = @cur_user._id
     @item.workflow_state   = "request"
