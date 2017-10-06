@@ -1,13 +1,24 @@
-<%= render file: 'gws/crud/_menu' %>
-
-<% if params[:action] =~ /index/ %>
 <nav class="nav-menu">
-  <select>
-    <option>照会・回答</option>
-    <option>+---- 受取済</option>
-    <option>+---- 受取待</option>
-    <option>+---- 回答済</option>
-    <option>+---- 該当なし</option>
-  </select>
+  <% if params[:action] =~ /index/ %>
+    <%#= link_to t("gws/monitor.links.categories"), categories_gws_monitor_topics_path %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.new'), action: :new %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|categories/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
 </nav>
-<% end %>
+
