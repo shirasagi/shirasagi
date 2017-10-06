@@ -1,23 +1,22 @@
+# "Post" class for BBS. It represents "topic" models.
 class Gws::Monitor::Topic
-  include SS::Document
   include Gws::Referenceable
-  include Gws::Reference::User
-  include Gws::Reference::Site
+  include Gws::Monitor::Postable
+  include Gws::Addon::Monitor::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
-  include Gws::Addon::Member
+  include Gws::Monitor::DescendantsFileInfo
+  include Gws::Addon::Monitor::Category
+  include Gws::Addon::Release
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
+  include Gws::Monitor::BrowsingState
 
-  field :name, type: String
-  field :due_date, type: DateTime
-  field :admin_setting, type: String, default: '1'
-  field :spec_config, type: String, default: '0'
-  field :reminder_start_section, type: String, default: '0'
-  field :state, type: String, default: 'preparation'
+  readable_setting_include_custom_groups
 
-  permit_params :name, :due_date, :admin_setting, :spec_config, :reminder_start_section, :state
-
-  validates :name, presence: true
+  validates :category_ids, presence: true
+  after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -38,6 +37,15 @@ class Gws::Monitor::Topic
     where("$and": ["$or": [{state: "public"}, {state: "preparation"}, {state: "qNA"} ] ])
   }
 
+  scope :custom_order, ->(key) {
+    if key.start_with?('created_')
+      where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('updated_')
+      where({}).order_by(descendants_updated: key.end_with?('_asc') ? 1 : -1)
+    else
+      where({})
+    end
+  }
 
   def admin_setting_options
     [
@@ -71,11 +79,38 @@ class Gws::Monitor::Topic
     ]
   end
 
-  class << self
-    def sort_options
-      [
-          ['更新日順', 'sort1'],
-      ]
+  def updated?
+    created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
+  end
+
+  def subscribed_users
+    return Gws::User.none if new_record?
+    return Gws::User.none if categories.blank?
+
+    conds = []
+    conds << { id: { '$in' => categories.pluck(:subscribed_member_ids).flatten } }
+    conds << { group_ids: { '$in' => categories.pluck(:subscribed_group_ids).flatten } }
+
+    if Gws::Monitor::Category.subscription_setting_included_custom_groups?
+      custom_gropus = Gws::CustomGroup.in(id: categories.pluck(:subscribed_custom_group_ids))
+      conds << { id: { '$in' => custom_gropus.pluck(:member_ids).flatten } }
+    end
+
+    Gws::User.where('$and' => [ { '$or' => conds } ])
+  end
+
+  def sort_options
+    %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+  end
+
+  private
+
+  def set_descendants_updated_with_released
+    if descendants_updated.present?
+      self.descendants_updated = released if descendants_updated < released
+    else
+      self.descendants_updated = released
     end
   end
 end
+

@@ -1,28 +1,91 @@
 ja:
   gws/monitor:
-
-    tabs:
-      unanswered: 未回答
-      answered: 回答済み
-      admin: 管理者
-    links:
-      public: 受取済みにする
-      preparation: 受取待ちにする
-      qNA: 該当なしにする
-      export_csv: CSVに出力する
-      answer: 回答する
+    user: ユーザー
+    #descendants_num: コメント数
+    #descendants_updated: 更新日時
+    no_authority: 権限がありません
+    topic:
+      comment: コメント
+      new: 新規作成
+      edit: 編集
+      submit: 投稿
+      update: 更新
+      delete: 削除
+      browsing_state: 通知先
+      browsed: 閲覧
+      list: トピック一覧へ
+      confirm: 削除しますか？
+      notice:
+        create: トピックを作成しました。
+        update: トピックを更新しました。
+        delete: トピックを削除しました。
+    comment:
+      comment: コメントする
+      created: 投稿日
+      updated: 最終更新日
+      submit: 投稿
+      update: 更新
+      edit: 編集
+      delete: 削除
+      confirm: 削除しますか？
+      notice:
+        create: コメントを投稿しました。
+        update: コメントを更新しました。
+        delete: コメントを削除しました。
     options:
+      mode:
+        thread: スレッド
+        tree: ツリー
+      permit_comment:
+        allow: 許可する
+        deny: 許可しない
+      browsed_state:
+        read: 既読
+        unread: 未読
+      severity:
+        normal: 通常
+        important: 重要
       state:
         closed: 未回答
         public : 受取済み
         preparation: 受取待ち
         answered: 回答済み
         qNA: 該当なし
+    links:
+      back_to_thread: 戻る
+      comment: 返信する
+      categories: カテゴリー
+      public: 受取済みにする
+      preparation: 受取待ちにする
+      qNA: 該当なしにする
+      export_csv: CSVに出力する
+      answer: 回答する
+    errors:
+      denied_comment: コメントの投稿は許可されていません。
+    tabs:
+      unanswered: 未回答
+      answered: 回答済み
+      admin: 管理者
 
   modules:
     gws/monitor: 照会・回答
+    addons:
+      gws/monitor/category: カテゴリー
+      gws/monitor/contributor: 投稿者
 
   gws_role:
+    read_other_gws_monitor_posts: 投稿の閲覧（全て）
+    read_private_gws_monitor_posts: 投稿の閲覧（所有）
+    edit_other_gws_monitor_posts: 投稿の編集（全て）
+    edit_private_gws_monitor_posts: 投稿の編集（所有）
+    delete_other_gws_monitor_posts: 投稿の削除（全て）
+    delete_private_gws_monitor_posts: 投稿の削除（所有）
+    read_other_gws_monitor_categories: カテゴリーの閲覧（全て）
+    read_private_gws_monitor_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_monitor_categories: カテゴリーの編集（全て）
+    edit_private_gws_monitor_categories: カテゴリーの編集（所有）
+    delete_other_gws_monitor_categories: カテゴリーの削除（全て）
+    delete_private_gws_monitor_categories: カテゴリーの削除（所有）
     read_other_gws_monitor_topics: 記事の閲覧（全て）
     read_private_gws_monitor_topics: 記事の閲覧（所有）
     edit_other_gws_monitor_topics: 記事の編集（全て）
@@ -33,8 +96,43 @@ ja:
   mongoid:
     models:
       gws/monitor/topic: 照会・回答トピック
-
+      gws/monitor/post: 照会・回答投稿
+      gws/monitor/category: 照会・回答カテゴリー
+      gws/monitor/group_setting: 照会・回答設定
+      gws/monitor/group_setting/category: カテゴリー
+    errors:
+      models:
+        gws/monitor/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
+        gws/monitor/postable:
+          file_size_exceeds_post_limit: 添付ファイルのサイズ（%{size}）が投稿の最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_topic_limit: 添付ファイルの合計サイズ（%{size}）がトピックの最大サイズ（%{limit}）を超えました。
     attributes:
+      gws/monitor/postable:
+        name: タイトル
+        created: 投稿日
+        updated: 最終更新日
+        mode: 表示形式
+        permit_comment: コメント
+        severity: 重要度
+      gws/monitor/topic:
+        name: 質問タイトル
+      gws/monitor/post:
+        name: 回答タイトル
+      gws/monitor/group_setting:
+        monitor_new_days: 新着表示期間
+        monitor_file_size: 添付最大サイズ
+        monitor_file_size_per_topic: 添付最大サイズ/トピック単位
+        monitor_file_size_per_post: 添付最大サイズ/投稿単位
+        monitor_browsed_delay: 既読にするまでの秒数
+      gws/monitor/category:
+        name: カテゴリー名
+      gws/addon/monitor/category:
+        category_ids: カテゴリー
+      gws/addon/monitor/contributor:
+        contributor_name: 投稿者名
       gws/monitor/topic:
         name: タイトル
         due_date: 回覧期限日時
@@ -43,14 +141,39 @@ ja:
         reminder_start_section: リマインダー表示設定
 
   tooltip:
-    gws/monitor/topic:
-      name:
-        - タイトルを入力します。
-      due_date:
-        - 回答期限日時を選択します。
-      admin_setting:
-        - 記事管理者の範囲を選択します。
-      spec_config:
-        - 回答の表示方法を選択します。
-      reminder_start_section:
-        - リマインダー表示条件を選択します。
+      gws/monitor/postable:
+        name:
+          - タイトルを入力します。
+        mode:
+          - 表示形式を選択します。
+        permit_comment:
+          - コメントを許可するかどうかを選択します。
+        severity:
+          - 重要度を選択します。
+      gws/monitor/group_setting:
+        monitor_new_days:
+          - 新着表示期間を入力します。
+        monitor_file_size_per_topic:
+          - トピック単位での添付最大サイズを入力します。
+        monitor_file_size_per_post:
+          - 投稿単位での添付最大サイズを入力します。
+        monitor_browsed_delay:
+          - 照会・回答を既読にするまでの秒数を入力します。
+      gws/monitor/category:
+        name:
+          - カテゴリー名を入力します。
+      gws/addon/monitor/contributor:
+        contributor_name:
+          - 投稿者名を選択します。
+      gws/monitor/topic:
+        name:
+          - タイトルを入力します。
+        due_date:
+          - 回答期限日時を選択します。
+        admin_setting:
+          - 記事管理者の範囲を選択します。
+        spec_config:
+          - 回答の表示方法を選択します。
+        reminder_start_section:
+          - リマインダー表示条件を選択します。
+
