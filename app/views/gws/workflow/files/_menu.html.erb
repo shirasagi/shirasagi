@@ -15,10 +15,10 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @item.editable?(@cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+    <% if @item.destroyable?(@cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

@@ -52,4 +52,12 @@ class Gws::Workflow::File
       state
     end
   end
+
+  def editable?(user, opts)
+    allowed?(:edit, user, opts) && !workflow_requested?
+  end
+
+  def destroyable?(user, opts)
+    allowed?(:delete, user, opts) && !workflow_requested?
+  end
 end
