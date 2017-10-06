@@ -25,6 +25,8 @@ ja:
     delete_private_gws_workflow_files: 申請の削除（所有）
     approve_other_gws_workflow_files: 申請の承認（全て）
     approve_private_gws_workflow_files: 申請の承認（所有）
+    reroute_other_gws_workflow_files: 申請の経路変更（全て）
+    reroute_private_gws_workflow_files: 申請の経路変更（所有）
 
     read_other_gws_workflow_forms: 申請フォームの閲覧（全て）
     read_private_gws_workflow_forms: 申請フォームの閲覧（所有）

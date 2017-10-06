@@ -42,6 +42,8 @@ module Opendata
     Cms::Role.permission :approve_other_opendata_datasets
     Cms::Role.permission :approve_private_opendata_datasets
     Cms::Role.permission :approve_member_opendata_datasets
+    Cms::Role.permission :reroute_other_opendata_datasets
+    Cms::Role.permission :reroute_private_opendata_datasets
 
     Cms::Role.permission :read_other_opendata_apps
     Cms::Role.permission :read_private_opendata_apps
@@ -58,6 +60,8 @@ module Opendata
     Cms::Role.permission :approve_other_opendata_apps
     Cms::Role.permission :approve_private_opendata_apps
     Cms::Role.permission :approve_member_opendata_apps
+    Cms::Role.permission :reroute_other_opendata_apps
+    Cms::Role.permission :reroute_private_opendata_apps
 
     Cms::Role.permission :read_other_opendata_ideas
     Cms::Role.permission :read_private_opendata_ideas
@@ -74,5 +78,7 @@ module Opendata
     Cms::Role.permission :approve_other_opendata_ideas
     Cms::Role.permission :approve_private_opendata_ideas
     Cms::Role.permission :approve_member_opendata_ideas
+    Cms::Role.permission :reroute_other_opendata_ideas
+    Cms::Role.permission :reroute_private_opendata_ideas
   end
 end

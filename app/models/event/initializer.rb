@@ -15,6 +15,8 @@ module Event
     Cms::Role.permission :release_private_event_pages
     Cms::Role.permission :approve_other_event_pages
     Cms::Role.permission :approve_private_event_pages
+    Cms::Role.permission :reroute_other_event_pages
+    Cms::Role.permission :reroute_private_event_pages
     Cms::Role.permission :move_private_event_pages
     Cms::Role.permission :move_other_event_pages
   end
