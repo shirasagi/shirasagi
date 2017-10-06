@@ -50,10 +50,10 @@ class Sys::MailLog
 
     private
 
-      def from_mail_address(addr)
-        return addr if addr.blank?
-        return addr if !addr.is_a?(Array)
-        addr.join(',')
-      end
+    def from_mail_address(addr)
+      return addr if addr.blank?
+      return addr if !addr.is_a?(Array)
+      addr.join(',')
+    end
   end
 end

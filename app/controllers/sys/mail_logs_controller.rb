@@ -51,7 +51,8 @@ class Sys::MailLogsController < ApplicationController
   end
 
   private
-    def set_crumbs
-      @crumbs << [ @model.model_name.human, action: :index ]
-    end
+
+  def set_crumbs
+    @crumbs << [ @model.model_name.human, action: :index ]
+  end
 end
