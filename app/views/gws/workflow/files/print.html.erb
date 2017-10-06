@@ -5,8 +5,14 @@ addons = addons.select do |addon|
 end
 %>
 
-<div class="no-print">
+<div class="no-print" style="position: relative; width: 220mm;">
   <%= link_to(I18n.t('ss.links.back'), { action: :show }) %>
+  <span id="fontsize" style="position: absolute; right: 8px;">
+    文字サイズ
+    <span id="ss-small">小さく</span>
+    <span id="ss-medium">標準</span>
+    <span id="ss-large">大きく</span>
+  </span>
 </div>
 
 <div class="addon-views sheet">
@@ -18,3 +24,7 @@ end
   </div>
   <%= render file: '_addons_show', locals: { addons: addons, css_classes: %w(print) } if addons.size > 0 %>
 </div>
+
+<%= jquery do %>
+  SS_Font.render();
+<% end %>
