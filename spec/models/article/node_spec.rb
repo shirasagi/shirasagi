@@ -15,4 +15,22 @@ describe Article::Node::Page, type: :model, dbscope: :example do
       expect(item.invalid?).to be_truthy
     end
   end
+
+  context 'for member' do
+    let!(:page) { create(:article_page, cur_site: cms_site, cur_node: item) }
+
+    it do
+      Cms::Node::GenerateJob.bind(site_id: cms_site).perform_now
+      expect(File.exist?("#{item.path}/index.html")).to be_truthy
+      expect(File.exist?("#{item.path}/rss.xml")).to be_truthy
+      expect(File.exist?(page.path)).to be_truthy
+
+      item.for_member_state = 'enabled'
+      item.save!
+
+      expect(File.exist?("#{item.path}/index.html")).to be_falsey
+      expect(File.exist?("#{item.path}/rss.xml")).to be_falsey
+      expect(File.exist?(page.path)).to be_falsey
+    end
+  end
 end
