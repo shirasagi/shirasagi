@@ -50,12 +50,22 @@ class Gws::Monitor::TopicsController < ApplicationController
   public
 
   def index
-    # raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+    @items = @model.site(@cur_site).topic
 
-    @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
-        and_topics().
+    if params[:s] && params[:s][:state] == "closed"
+      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
+    else
+      @items = @items.and_public.readable(@cur_user, @cur_site)
+    end
+
+    if @category.present?
+      params[:s] ||= {}
+      params[:s][:site] = @cur_site
+      params[:s][:category] = @category.name
+    end
+
+    @items = @items.search(params[:s]).
+        custom_order(params.dig(:s, :sort) || 'updated_desc').
         page(params[:page]).per(50)
   end
 
