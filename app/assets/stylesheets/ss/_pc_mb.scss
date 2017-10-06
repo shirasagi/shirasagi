@@ -905,7 +905,9 @@ td {
   &:hover { background: $orange2; }
 }
 .addon-view, .search-pages, .index-search, .search-form {
-  @include box;
+  &:not(.print) {
+    @include box;
+  }
   @include mb {
     margin: 0 10px 10px;
   }
@@ -952,6 +954,9 @@ td {
 }
 .addon-body {
   @include box-body;
+  &.print {
+    border-top: $border-black2;
+  }
 }
 dl.see {
   margin: 5px 0px;

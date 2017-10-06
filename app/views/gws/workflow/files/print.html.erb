@@ -1,0 +1,20 @@
+<% addons = @item ? @item.class.addons : [] %>
+<%
+addons = addons.select do |addon|
+  [SS::Addon::Markdown, Gws::Addon::File, Gws::Addon::Workflow::CustomForm].include?(addon.klass)
+end
+%>
+
+<div class="no-print">
+  <%= link_to(I18n.t('ss.links.back'), { action: :show }) %>
+</div>
+
+<div class="addon-views sheet">
+  <div class="addon-view print" id="addon-basic">
+    <% if addons.size > 0 %><div class="addon-head print"><h2><%= t('ss.basic_info') %></h2></div><% end %>
+    <div class="addon-body print">
+      <%= render file: '_show' %>
+    </div>
+  </div>
+  <%= render file: '_addons_show', locals: { addons: addons, css_classes: %w(print) } if addons.size > 0 %>
+</div>
