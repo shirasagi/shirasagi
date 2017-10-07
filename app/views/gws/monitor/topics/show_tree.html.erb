@@ -1,3 +1,28 @@
+<%= jquery do %>
+    Gws_Monitor_Topic.render();
+
+    switch ("<%= @item[:state_of_the_answer] %>"){
+    case "public":
+    $('.public').hide();
+    $('.preparation').show();
+    $('.qNA').show();
+    $('.primary').show();
+    break;
+    case "preparation":
+    $('.public').show();
+    $('.preparation').hide();
+    $('.qNA').hide();
+    $('.primary').hide();
+    break;
+    case "qNA":
+    $('.public').show();
+    $('.preparation').hide();
+    $('.qNA').hide();
+    $('.primary').show();
+    break;
+    }
+<% end %>
+
 <div class="gws-board gws-board-tree">
   <article class="topic" id="post-<%= @item.id %>">
     <header>
@@ -39,6 +64,10 @@
 
     <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
+      <%= hidden_field_tag "item_id", @item.id %>
+      <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
+      <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
+      <button class="qNA btn"><%= t 'gws/monitor.links.qNA' %></button>
       <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
         class: "btn primary") %>
     </div>
