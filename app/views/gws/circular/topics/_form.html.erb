@@ -12,5 +12,5 @@
                        value: tryb { @item.due_date.strftime('%Y/%m/%d') } %></dd>
 
   <dt><%= @model.t :mark_type %><%= @model.tt :mark_type %></dt>
-  <dd><%= f.select :mark_type, @model.mark_type_options %></dd>
+  <dd><%= f.select :mark_type, @item.mark_type_options %></dd>
 </dl>
