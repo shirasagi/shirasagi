@@ -2,7 +2,7 @@
 
 <%= jquery do %>
     $("#mark").change(function(){
-      var url = this.checked ? '<%= gws_circular_apis_marking_path(id: @item.id) %>' : '<%= gws_circular_apis_unmarking_path(id: @item.id) %>';
+      var url = this.checked ? '<%= gws_circular_apis_mark_path(id: @item.id) %>' : '<%= gws_circular_apis_unmark_path(id: @item.id) %>';
       $.ajax({ url: url, dataType: 'json' });
     });
     Gws_Topic.render(document.getElementById("mark"));

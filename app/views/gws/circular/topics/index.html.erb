@@ -15,8 +15,8 @@
       form.appendTo(document.body).submit();
     }
 
-    $(".marking-all").click(function(){ posting("<%= marking_all_gws_circular_topics_path %>"); });
-    $(".unmarking-all").click(function(){ posting("<%= unmarking_all_gws_circular_topics_path %>"); });
+    $(".mark-all").click(function(){ posting("<%= mark_all_gws_circular_topics_path %>"); });
+    $(".unmark-all").click(function(){ posting("<%= unmark_all_gws_circular_topics_path %>"); });
     $(".download").click(function(){ posting("<%= download_gws_circular_topics_path %>"); });
 <% end %>
 

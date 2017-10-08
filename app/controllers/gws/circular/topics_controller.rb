@@ -5,7 +5,7 @@ class Gws::Circular::TopicsController < ApplicationController
 
   before_action :set_selected_items, only: [
     :destroy_all, :disable_all,
-    :marking_all, :unmarking_all, :download
+    :mark_all, :unmark_all, :download
   ]
 
   private
@@ -27,13 +27,13 @@ class Gws::Circular::TopicsController < ApplicationController
     super
   end
 
-  def marking_all
+  def mark_all
     #TODO: dirty
     @items.each{ |item| item.marked_by(@cur_user).save if item.markable?(@cur_user) }
     render_destroy_all(false)
   end
 
-  def unmarking_all
+  def unmark_all
     #TODO: dirty
     @items.each{ |item| item.unmarked_by(@cur_user).save if item.unmarkable?(@cur_user) }
     render_destroy_all(false)

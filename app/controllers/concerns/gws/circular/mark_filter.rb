@@ -4,19 +4,18 @@ module Gws::Circular::MarkFilter
   included do
     before_action :set_item, only: [
         :show, :edit, :update, :delete, :destroy,
-        :marking, :unmarking
+        :mark, :unmark
     ]
 
     model Gws::Circular::Topic
   end
 
-
-  def marking
+  def mark
     raise '403' unless @item.markable?(@cur_user)
     render_update @item.marked_by(@cur_user).update
   end
 
-  def unmarking
+  def unmark
     raise '403' unless @item.unmarkable?(@cur_user)
     render_update @item.unmarked_by(@cur_user).update
   end
