@@ -24,7 +24,8 @@ class Gws::Circular::TopicsController < ApplicationController
     if @item.mark_type != 'normal'
       @item.marked_by(@cur_user).save if @item.markable?(@cur_user)
     end
-    super
+    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    render
   end
 
   def mark_all
