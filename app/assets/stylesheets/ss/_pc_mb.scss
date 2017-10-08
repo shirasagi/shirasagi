@@ -1088,17 +1088,6 @@ footer.send {
 .btn-success {
   @include btn-orange;
 }
-.btn-toggle {
-  input[type="checkbox"] {
-    display: none;
-  }
-  span {
-    @include btn;
-  }
-  input[type="checkbox"]:checked + span {
-    @include btn-active;
-  }
-}
 
 // -------------------------------------------------------------------------------------------------
 // addon

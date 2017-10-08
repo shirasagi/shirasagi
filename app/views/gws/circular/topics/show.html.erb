@@ -2,19 +2,10 @@
 
 <%= jquery do %>
     $("#mark").change(function(){
-      var url = this.checked ?
-        '<%= gws_circular_apis_marking_path(id: @item.id) %>' : '<%= gws_circular_apis_unmarking_path(id: @item.id) %>';
-      $.ajax({
-        url: url,
-        dataType: 'json',
-        success: function(res){
-          //TODO: not implemented
-        },
-        error: function(res){
-          //TODO: not implemented
-        }
-      });
-    })
+      var url = this.checked ? '<%= gws_circular_apis_marking_path(id: @item.id) %>' : '<%= gws_circular_apis_unmarking_path(id: @item.id) %>';
+      $.ajax({ url: url, dataType: 'json' });
+    });
+    Gws_Topic.render(document.getElementById("mark"));
 <% end %>
 
 <div class="gws-board gws-board-thread">
@@ -61,9 +52,9 @@
       <% end %>
 
       <% if @item.member?(@cur_user) %>
-          <label class="btn-toggle marking">
-            <%= check_box_tag :mark, nil, @item.unmarkable?(@cur_user) %>
-            <span></span>
+          <label class="btn">
+            <%= check_box_tag :mark, nil, @item.unmarkable?(@cur_user), class: 'hide' %>
+            <span>既読にする</span>
           </label>
       <% end %>
     </div>
