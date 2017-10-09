@@ -6,12 +6,12 @@ class Gws::Monitor::AnswersController < ApplicationController
 
   before_action :set_item, only: [
     :show, :edit, :update, :delete, :destroy,
-    :public, :preparation, :qNA, :answered
+    :public, :preparation, :question_not_applicable, :answered
   ]
 
   before_action :set_selected_items, only: [
       :destroy_all, :public_all,
-      :preparation_all, :qNA_all
+      :preparation_all, :question_not_applicable_all
   ]
 
   before_action :set_category
@@ -109,7 +109,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     render_update @item.update(state_of_the_answer: 'preparation')
   end
 
-  def qNA
+  def question_not_applicable
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update(state_of_the_answer: 'qNA')
   end
@@ -131,7 +131,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     render_destroy_all(false)
   end
 
-  def qNA_all
+  def question_not_applicable_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
     @items.update_all(state_of_the_answer: 'qNA')
     render_destroy_all(false)

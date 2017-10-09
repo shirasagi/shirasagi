@@ -3,28 +3,28 @@ class @Gws_Monitor_Topic
     $(".public").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/public", method: "get")
+      form = $("<form/>", action: "#{id}/public", method: "post")
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".preparation").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/preparation", method: "get")
+      form = $("<form/>", action: "#{id}/preparation", method: "post")
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".qNA").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/qNA", method: "get")
+      form = $("<form/>", action: "#{id}/question_not_applicable", method: "post")
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".answered").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/answered", method: "get")
+      form = $("<form/>", action: "#{id}/answered", method: "post")
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
