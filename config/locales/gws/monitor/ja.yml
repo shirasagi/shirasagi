@@ -53,13 +53,13 @@ ja:
         qNA: 該当なし
     links:
       back_to_thread: 戻る
-      comment: 返信する
+      comment: 回答する
       categories: カテゴリー
       public: 受取済みにする
       preparation: 受取待ちにする
       qNA: 該当なしにする
+      answered: 回答済みにする
       export_csv: CSVに出力する
-      answer: 回答する
     errors:
       denied_comment: コメントの投稿は許可されていません。
     tabs:

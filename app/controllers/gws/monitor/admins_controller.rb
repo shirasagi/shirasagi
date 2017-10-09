@@ -6,7 +6,7 @@ class Gws::Monitor::AdminsController < ApplicationController
 
   before_action :set_item, only: [
     :show, :edit, :update, :delete, :destroy,
-    :public, :preparation, :qNA
+    :public, :preparation, :qNA, :answered
   ]
 
   before_action :set_selected_items, only: [
@@ -112,6 +112,11 @@ class Gws::Monitor::AdminsController < ApplicationController
   def qNA
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update(state_of_the_answer: 'qNA')
+  end
+
+  def answered
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update(state_of_the_answer: 'answered')
   end
 
   def public_all

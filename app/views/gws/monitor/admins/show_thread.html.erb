@@ -6,19 +6,29 @@
     $('.public').hide();
     $('.preparation').show();
     $('.qNA').show();
+    $('.answered').show();
     $('.primary').show();
+    break;
+    case "answered":
+    $('.public').show();
+    $('.preparation').show();
+    $('.qNA').show();
+    $('.answered').hide();
+    $('.primary').hide();
     break;
     case "preparation":
     $('.public').show();
     $('.preparation').hide();
     $('.qNA').hide();
+    $('.answered').hide();
     $('.primary').hide();
     break;
     case "qNA":
     $('.public').show();
     $('.preparation').hide();
     $('.qNA').hide();
-    $('.primary').show();
+    $('.answered').hide();
+    $('.primary').hide();
     break;
     }
 <% end %>
@@ -70,6 +80,7 @@
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
       <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
       <button class="qNA btn"><%= t 'gws/monitor.links.qNA' %></button>
+      <button class="answered btn"><%= t 'gws/monitor.links.answered' %></button>
       <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
         class: "btn primary") %>
     </div>
