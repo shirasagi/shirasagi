@@ -17,6 +17,7 @@ SS::Application.routes.draw do
       get :public, on: :member
       get :preparation, on: :member
       get :qNA, on: :member
+      get :answered, on: :member
       post :public_all, on: :collection
       post :preparation_all, on: :collection
       post :qNA_all, on: :collection
@@ -26,6 +27,7 @@ SS::Application.routes.draw do
       get :public, on: :member
       get :preparation, on: :member
       get :qNA, on: :member
+      get :answered, on: :member
       post :public_all, on: :collection
       post :preparation_all, on: :collection
       post :qNA_all, on: :collection
@@ -35,6 +37,7 @@ SS::Application.routes.draw do
       get :public, on: :member
       get :preparation, on: :member
       get :qNA, on: :member
+      get :answered, on: :member
       post :public_all, on: :collection
       post :preparation_all, on: :collection
       post :qNA_all, on: :collection
