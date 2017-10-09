@@ -3,10 +3,7 @@ class Gws::Circular::TopicsController < ApplicationController
   include Gws::CrudFilter
   include Gws::Circular::MarkFilter
 
-  before_action :set_selected_items, only: [
-    :destroy_all, :disable_all,
-    :mark_all, :unmark_all, :download
-  ]
+  before_action :set_selected_items, only: [:destroy_all, :disable_all, :mark_all, :unmark_all, :download]
 
   private
 

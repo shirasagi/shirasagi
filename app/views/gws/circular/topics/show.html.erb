@@ -15,10 +15,7 @@
         <span class="name"><%= @item.name %></span>
         <span class="categories">
           <% @item.categories.each do |category| %>
-            <%= link_to category.trailing_name,
-                        gws_board_category_topics_path(category: category.id),
-                        class: 'gws-category-label',
-                        style: category_label_css(category) %>
+            <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id), class: 'gws-category-label', style: category_label_css(category) %>
           <% end %>
         </span>
       </h2>
@@ -36,19 +33,14 @@
         <div class="files">
           <% @item.files.each do |file| %>
               <img src="/assets/img/gws/ic-file.png" alt=""/>
-              <%= link_to file.humanized_name,
-                          file.url,
-                          class: "icon-#{file.extname}",
-                          target: '_blank' %>
+              <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
           <% end %>
         </div>
     <% end %>
 
     <div class="menu">
       <% if @item.permit_comment?(user: @cur_user, site: @cur_site) %>
-          <%= link_to t('gws/board.links.comment'),
-                      new_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-                      class: 'btn' %>
+          <%= link_to t('gws/board.links.comment'), new_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: 'btn' %>
       <% end %>
 
       <% if @item.member?(@cur_user) %>
@@ -62,9 +54,7 @@
 
   <% if @item.children.present? %>
       <div class="comments">
-        <%= render partial: 'gws/circular/comments/comment',
-                   collection: @item.descendants,
-                   locals: {parent: @item} %>
+        <%= render partial: 'gws/circular/comments/comment', collection: @item.descendants, locals: {parent: @item} %>
       </div>
   <% end %>
 

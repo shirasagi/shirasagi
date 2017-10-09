@@ -24,17 +24,8 @@ class Gws::Circular::Topic
 
   validates :due_date, presence: true
 
-  has_many :children,
-           class_name: 'Gws::Circular::Post',
-           dependent: :destroy,
-           inverse_of: :parent,
-           order: { created: -1 }
-
-  has_many :descendants,
-           class_name: 'Gws::Circular::Post',
-           dependent: :destroy,
-           inverse_of: :topic,
-           order: { created: -1 }
+  has_many :children, class_name: 'Gws::Circular::Post', dependent: :destroy, inverse_of: :parent, order: { created: -1 }
+  has_many :descendants, class_name: 'Gws::Circular::Post', dependent: :destroy, inverse_of: :topic, order: { created: -1 }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -59,7 +50,7 @@ class Gws::Circular::Topic
   #
   def permit_comment?(*args)
     opts = {
-        user: user,
+      user: user,
         site: site
     }.merge(args.extract_options!)
 
@@ -80,7 +71,7 @@ class Gws::Circular::Topic
   def unmarkable?(u=user)
     member?(u) && mark_user_ids.include?(u.id)
   end
-  alias_method :marked?, :unmarkable?
+  alias marked? unmarkable?
 
   def unmarked_by(u=user)
     attributes[:mark_user_ids].delete(u.id) if unmarkable?(u)
@@ -96,16 +87,8 @@ class Gws::Circular::Topic
 
   def sort_items
     [
-        {
-            key: :updated,
-            order: -1,
-            name: I18n.t('mongoid.attributes.ss/document.updated')
-        },
-        {
-            key: :created,
-            order: -1,
-            name: I18n.t('mongoid.attributes.ss/document.created')
-        }
+        { key: :updated, order: -1, name: I18n.t('mongoid.attributes.ss/document.updated')},
+        { key: :created, order: -1, name: I18n.t('mongoid.attributes.ss/document.created')}
     ]
   end
 
