@@ -89,8 +89,8 @@ class Gws::Circular::Topic
 
   def mark_type_options
     [
-        ['通常閲覧', 'normal'],
-        ['簡易閲覧', 'simple']
+        [I18n.t('gws/circular.options.mark_type.normal'), 'normal'],
+        [I18n.t('gws/circular.options.mark_type.simple'), 'simple']
     ]
   end
 
@@ -123,7 +123,7 @@ class Gws::Circular::Topic
   class << self
     def to_csv
       CSV.generate do |data|
-        data << %w(回覧id タイトル 返信id 状態 返信者名 返信欄 返信日時)
+        data << I18n.t('gws/circular.csv')
         each do |item|
           item.members.each do |member|
             post = item.children.where(user_id: member.id).first

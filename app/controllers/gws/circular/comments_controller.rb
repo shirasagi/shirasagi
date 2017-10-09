@@ -27,7 +27,7 @@ class Gws::Circular::CommentsController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << ['回覧板', gws_circular_topics_path]
+    @crumbs << [I18n.t('modules.gws/circular'), gws_circular_topics_path]
   end
 
   public

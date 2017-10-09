@@ -1,5 +1,29 @@
 ja:
   gws/circular:
+    topic:
+      unmarked: 未読
+      marked: 既読
+      unmark: 未読にする
+      mark: 既読にする
+      download: CSVに出力する
+      member: 参加者
+      type: 区分
+      mark_at: 確認日時
+      update_at: 変更日時
+      user: ユーザー
+      replay: 返信内容
+    csv:
+      - 回覧id
+      - タイトル
+      - 返信id
+      - 状態
+      - 返信者名
+      - 返信欄
+      - 返信日時
+    options:
+      mark_type:
+        normal: 通常閲覧
+        simple: 簡易閲覧
 
   modules:
     gws/circular: 回覧板

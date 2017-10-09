@@ -54,7 +54,7 @@
       <% if @item.member?(@cur_user) %>
           <label class="btn">
             <%= check_box_tag :mark, nil, @item.unmarkable?(@cur_user), class: 'hide' %>
-            <span>既読にする</span>
+            <span><%= t('gws/circular.topic.mark') %></span>
           </label>
       <% end %>
     </div>
@@ -70,24 +70,24 @@
 
   <article class="topic">
     <header>
-      <h2><span class="name">参加者</span></h2>
+      <h2><span class="name"><%= t('gws/circular.topic.member') %></span></h2>
     </header>
     <div class="body">
       <table class="index">
         <thead>
         <tr>
-          <th>区分</th>
-          <th>確認日時</th>
-          <th>変更日時</th>
-          <th>ユーザー</th>
-          <th>返信内容</th>
+          <th><%= t('gws/circular.topic.type') %></th>
+          <th><%= t('gws/circular.topic.mark_at') %></th>
+          <th><%= t('gws/circular.topic.update_at') %></th>
+          <th><%= t('gws/circular.topic.user') %></th>
+          <th><%= t('gws/circular.topic.replay') %></th>
         </tr>
         </thead>
         <tbody class="items">
           <% @item.members.each_with_index do |member, i| %>
             <% post = @item.children.where(user_id: member.id).first %>
             <tr data-id="<%= i %>">
-              <td><%= @item.marked?(member) ? '既読' : '未読' %></td>
+              <td><%= @item.marked?(member) ? t('gws/circular.topic.marked') :  t('gws/circular.topic.unmarked') %></td>
               <td><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
               <td><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
               <td><%= member.name %></td>
