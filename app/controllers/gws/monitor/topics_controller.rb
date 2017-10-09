@@ -66,7 +66,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_topics().
+        and_topics.
         page(params[:page]).per(50)
   end
 
