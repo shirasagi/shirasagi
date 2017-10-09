@@ -14,33 +14,33 @@ SS::Application.routes.draw do
       get :categories, on: :collection
       post :read, on: :member
 
-      get :public, on: :member
-      get :preparation, on: :member
-      get :qNA, on: :member
-      get :answered, on: :member
+      post :public, on: :member
+      post :preparation, on: :member
+      post :question_not_applicable, on: :member
+      post :answered, on: :member
       post :public_all, on: :collection
       post :preparation_all, on: :collection
-      post :qNA_all, on: :collection
+      post :question_not_applicable_all, on: :collection
     end
 
     resources :answers, concerns: [:deletion] do
-      get :public, on: :member
-      get :preparation, on: :member
-      get :qNA, on: :member
-      get :answered, on: :member
+      post :public, on: :member
+      post :preparation, on: :member
+      post :question_not_applicable, on: :member
+      post :answered, on: :member
       post :public_all, on: :collection
       post :preparation_all, on: :collection
-      post :qNA_all, on: :collection
+      post :question_not_applicable_all, on: :collection
     end
 
     resources :admins, concerns: [:deletion] do
-      get :public, on: :member
-      get :preparation, on: :member
-      get :qNA, on: :member
-      get :answered, on: :member
+      post :public, on: :member
+      post :preparation, on: :member
+      post :question_not_applicable, on: :member
+      post :answered, on: :member
       post :public_all, on: :collection
       post :preparation_all, on: :collection
-      post :qNA_all, on: :collection
+      post :question_not_applicable_all, on: :collection
     end
 
     # with category
