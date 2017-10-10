@@ -5,7 +5,6 @@ class Sys::MailLog
 
   set_permission_name 'sys_mail_logs', :edit
 
-  seqid :id
   field :mailer, type: String
   field :subject, type: String
   field :to, type: String
