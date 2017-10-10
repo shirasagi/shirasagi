@@ -219,11 +219,11 @@ ja:
         30min: 30分
         60min: 60分
       sort:
-        created_asc: 作成日時(昇順)
-        created_desc: 作成日時(降順)
-        updated_asc: 更新日時(昇順)
-        updated_desc: 更新日時(降順)
-        order_asc: 指定値(昇順)
+        created_asc:  作成日時(日付順)
+        created_desc: 作成日時(新着順)
+        updated_asc:  更新日時(日付順)
+        updated_desc: 更新日時(新着順)
+        order_asc:  指定値(昇順)
         order_desc: 指定値(降順)
       restriction:
         none: 制限なし
