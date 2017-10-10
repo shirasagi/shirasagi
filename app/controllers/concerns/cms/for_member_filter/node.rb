@@ -1,6 +1,6 @@
 module Cms::ForMemberFilter::Node
   extend ActiveSupport::Concern
-  include Member::LoginFilter
+  include ::Member::LoginFilter
 
 
   included do
