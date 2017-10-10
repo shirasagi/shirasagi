@@ -757,20 +757,14 @@ td {
     position: absolute;
     top: -60px;
     right: 20px;
+    line-height: 39px;
     a {
       display: inline-block;
       position: relative;
-      margin: 10px;
-      padding-left: 20px;
+      padding: 0 10px;
       color: $black;
-      &:before {
-        position: absolute;
-        top: -3px;
-        left: 0;
-        font-size: 18px;
-        font-family: 'Material Icons';
-        white-space: nowrap;
-        content: 'settings';
+      .material-icons {
+        margin-right:4px;
       }
     }
   }
