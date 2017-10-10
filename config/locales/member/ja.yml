@@ -136,6 +136,7 @@ ja:
       member/additional_attributes: 追加情報
       member/group_invitation_setting: グループ招待メール設定
       member/member_invitation_setting: 会員招待メール
+      member/login_link: ログイン
 
   cms:
     nodes:
@@ -295,6 +296,8 @@ ja:
         member_invitation_template: メールテンプレート
         member_invitation_signature: 署名
         member_joins_to_invited_group: 招待グループへの参加
+      member/addon/login_link:
+        login_link_url: ログインURL
 
   cms_role:
     read_other_member_blogs: メンバーブログの閲覧（全て）
@@ -539,6 +542,14 @@ ja:
       member_joins_to_invited_group:
         - 会員登録完了時に招待されたグループへ自動的に参加するかどうかを指定します。
         - 「自動」を指定すると、会員登録完了後、自動的にグループへも参加します。
+
+    member/addon/login_link:
+      login_link_url:
+        - ログインURLを設定します。
+        -
+        - 未設定の場合、次の順にログイン URL を検索し最初に見つかった URL を使用します。
+        - 1) 親フォルダーのリダイレクトURL
+        - 2) メンバー/マイページフォルダーの URL
 
   remarks:
     cms/model/member:

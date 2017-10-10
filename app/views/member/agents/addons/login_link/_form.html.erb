@@ -1,0 +1,6 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-member-login-link"); <% end %>
+
+<dl class="see mod-member-login-link">
+  <dt><%= @model.t :login_link_url %><%= @model.tt :login_link_url %></dt>
+  <dd><%= f.text_field :login_link_url %></dd>
+</dl>

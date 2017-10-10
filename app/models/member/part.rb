@@ -1,6 +1,7 @@
 module Member::Part
   class Login
     include Cms::Model::Part
+    include Member::Addon::LoginLink
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
