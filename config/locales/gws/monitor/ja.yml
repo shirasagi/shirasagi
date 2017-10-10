@@ -65,7 +65,7 @@ ja:
     tabs:
       unanswered: 未回答
       answered: 回答済み
-      admin: 管理者
+      admin: 作成した設問
 
   modules:
     gws/monitor: 照会・回答
