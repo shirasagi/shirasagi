@@ -7,4 +7,7 @@
 
   <%= f.hidden_field :permit_comment, value: 'allow' %>
   <%= f.hidden_field :severity %>
+
+  <dt><%= @model.t :question_state %><%= @model.tt :question_state %></dt>
+  <dd><%= f.select :question_state, @item.question_state_options %></dd>
 </dl>

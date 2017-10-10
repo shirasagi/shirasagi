@@ -56,7 +56,6 @@ ja:
     gws/faq: よくある質問
     addons:
       gws/faq/category: カテゴリー
-      gws/faq/contributor: 投稿者
 
   gws_role:
     read_other_gws_faq_posts: 投稿の閲覧（全て）
@@ -110,8 +109,6 @@ ja:
         name: カテゴリー名
       gws/addon/faq/category:
         category_ids: カテゴリー
-      gws/addon/faq/contributor:
-        contributor_name: 投稿者名
 
   tooltip:
     gws/faq/postable:
@@ -135,6 +132,3 @@ ja:
     gws/faq/category:
       name:
         - カテゴリー名を入力します。
-    gws/addon/faq/contributor:
-      contributor_name:
-        - 投稿者名を選択します。

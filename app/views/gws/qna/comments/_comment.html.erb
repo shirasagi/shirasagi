@@ -25,6 +25,9 @@ if comment.allowed?(:delete, @cur_user, site: @cur_site)
   end
   menu << link_to(t('ss.links.delete'), link, class: "btn")
 end
+if @item.resolved?
+  menu = []
+end
 
 %>
 <aside class="comment" id="post-<%= comment.id %>">

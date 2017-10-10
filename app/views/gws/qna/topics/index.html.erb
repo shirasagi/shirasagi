@@ -56,6 +56,9 @@
               <%= link_to category.trailing_name, gws_qna_category_topics_path(category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
+            <span class="<%= "gws-category-label gws-category-label-#{item.question_state}" %>">
+              <%= item.label(:question_state) %>
+            </span>
           </span>
         </div>
       </div>

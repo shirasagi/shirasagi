@@ -8,6 +8,9 @@
             <%= link_to category.trailing_name, gws_qna_category_topics_path(category: category.id),
                         class: "gws-category-label", style: category_label_css(category) %>
           <% end %>
+          <span class="<%= "gws-category-label gws-category-label-#{@item.question_state}" %>">
+            <%= @item.label(:question_state) %>
+          </span>
         </span>
       </h2>
       <nav class="meta">
@@ -39,7 +42,7 @@
     </div>
     <% end %>
 
-    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if !@item.resolved? && @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
       <%= link_to(t('gws/qna.links.comment'), @category.present? ? new_gws_qna_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
         class: "btn primary") %>

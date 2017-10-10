@@ -13,6 +13,8 @@ SS::Application.routes.draw do
       end
       get :categories, on: :collection
       post :read, on: :member
+      post :resolve, on: :member
+      post :unresolve, on: :member
     end
 
     # with category

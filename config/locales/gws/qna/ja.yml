@@ -45,10 +45,18 @@ ja:
       severity:
         normal: 通常
         important: 重要
+      question_state:
+        open: 回答待ち
+        resolved: 解決済み
     links:
       back_to_thread: 戻る
       comment: 返信する
       categories: カテゴリー
+      resolve: 解決済みにする
+      unresolve: 未解決に戻す
+    confirm:
+      resolve: 解決済みにしてよろしいですか？
+      unresolve: 未解決に戻してよろしいですか？
     errors:
       denied_comment: コメントの投稿は許可されていません。
 
@@ -56,7 +64,6 @@ ja:
     gws/qna: Ｑ＆Ａ
     addons:
       gws/qna/category: カテゴリー
-      gws/qna/contributor: 投稿者
 
   gws_role:
     read_other_gws_qna_posts: 投稿の閲覧（全て）
@@ -98,6 +105,7 @@ ja:
         severity: 重要度
       gws/qna/topic:
         name: 質問タイトル
+        question_state: 回答状況
       gws/qna/post:
         name: 回答タイトル
       gws/qna/group_setting:
@@ -110,8 +118,6 @@ ja:
         name: カテゴリー名
       gws/addon/qna/category:
         category_ids: カテゴリー
-      gws/addon/qna/contributor:
-        contributor_name: 投稿者名
 
   tooltip:
     gws/qna/postable:
@@ -135,6 +141,3 @@ ja:
     gws/qna/category:
       name:
         - カテゴリー名を入力します。
-    gws/addon/qna/contributor:
-      contributor_name:
-        - 投稿者名を選択します。

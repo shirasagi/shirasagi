@@ -2,7 +2,7 @@
 class Gws::Qna::Post
   include Gws::Referenceable
   include Gws::Qna::Postable
-  include Gws::Addon::Qna::Contributor
+  include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Qna::DescendantsFileInfo
