@@ -1,8 +1,12 @@
 <nav class="nav-management-menu">
   <% if Gws::SharedAddress::Address.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to t("ss.management"), gws_shared_address_management_addresses_path %>
+    <%= link_to gws_shared_address_management_addresses_path do %>
+      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
+    <% end %>
   <% elsif Gws::SharedAddress::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to t("ss.management"), gws_shared_address_management_groups_path %>
+    <%= link_to gws_shared_address_management_groups_path do %>
+      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
+    <% end %>
   <% end %>
 </nav>
 
