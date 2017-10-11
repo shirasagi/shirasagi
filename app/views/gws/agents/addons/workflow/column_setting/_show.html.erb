@@ -1,7 +1,7 @@
 <dl class="see mod-gws-facility-custom_fields">
   <dd class="wide">
     <%= link_to(I18n.t('gws/workflow.columns.index'), gws_workflow_form_columns_path(form_id: @item), class: :btn) %>
-    <%= link_to(I18n.t('ss.links.preview'), new_gws_workflow_form_file_path(form_id: @item, format: :html), class: %w(btn preview)) %>
+    <%= link_to(I18n.t('ss.links.preview'), new_gws_workflow_form_file_path(state: 'preview', form_id: @item, format: :html), class: %w(btn preview)) %>
   </dd>
   <% if @item.columns.present? %>
   <dd class="wide">

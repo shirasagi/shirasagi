@@ -25,6 +25,8 @@ SS::Application.routes.draw do
       resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end
     resources :forms, concerns: :deletion do
+      match :publish, on: :member, via: [:get, :post]
+      match :depublish, on: :member, via: [:get, :post]
       resources :columns, concerns: :deletion
     end
     get "/search_approvers" => "search_approvers#index"

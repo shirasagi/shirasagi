@@ -15,7 +15,15 @@ class Gws::Workflow::FilesController < ApplicationController
   end
 
   def set_forms
-    @forms ||= Gws::Workflow::Form.site(@cur_site).readable(@cur_user, @cur_site).order_by(order: 1, id: 1)
+    @forms ||= begin
+      criteria = Gws::Workflow::Form.site(@cur_site)
+      if params[:state] != 'preview'
+        criteria = criteria.and_public
+      end
+      criteria = criteria.readable(@cur_user, @cur_site)
+      criteria = criteria.order_by(order: 1, id: 1)
+      criteria
+    end
   end
 
   def set_cur_form
