@@ -71,13 +71,14 @@ module Gws::Addon::Workflow::CustomForm
       hash = custom_values[column.id.to_s]
       next if hash.blank?
 
-      uploaded_file = hash['file']
-      next if uploaded_file.blank?
+      uploaded_files = hash['file']
+      next if uploaded_files.blank?
 
-      file = build_file(column, uploaded_file)
-      next if file.valid?
-
-      errors[:base] += file.errors.full_messages
+      uploaded_files.each do |uploaded_file|
+        file = build_file(column, uploaded_file)
+        next if file.valid?
+        errors[:base] += file.errors.full_messages
+      end
     end
   end
 
@@ -88,35 +89,20 @@ module Gws::Addon::Workflow::CustomForm
       hash = custom_values[column.id.to_s]
       next if hash.blank?
 
-      do_destroy = false
+      rm_file_ids = hash['rm']
+      next if rm_file_ids.blank?
 
-      rm_flag = hash['rm']
-      do_destroy = true if rm_flag == '1'
+      rm_file_ids.select(&:present?).each do |rm_file_id|
+        rm_file_id = Integer(rm_file_id) rescue nil
+        next unless rm_file_id
 
-      uploaded_file = hash['file']
-      do_destroy = true if uploaded_file.present?
-
-      next unless do_destroy
-
-      file_id = hash['value']
-      if file_id.blank?
-        hash.delete('rm')
-        hash.delete('value')
-        custom_values[column.id.to_s] = hash
-        next
+        file = Gws::File.site(site).find(rm_file_id) rescue nil
+        file.destroy if file
+        hash['value'].delete(rm_file_id) rescue nil
       end
 
-      file = Gws::File.site(site).find(file_id) rescue nil
-      if file.blank?
-        hash.delete('rm')
-        hash.delete('value')
-        custom_values[column.id.to_s] = hash
-        next
-      end
-
-      file.destroy
       hash.delete('rm')
-      hash.delete('value')
+      hash.delete('value') if hash['value'].blank?
       custom_values[column.id.to_s] = hash
     end
   end
@@ -128,17 +114,20 @@ module Gws::Addon::Workflow::CustomForm
       hash = custom_values[column.id.to_s]
       next if hash.blank?
 
-      uploaded_file = hash['file']
-      next if uploaded_file.blank?
+      uploaded_files = hash['file']
+      next if uploaded_files.blank?
 
-      file = build_file(column, uploaded_file)
-      next if file.invalid?
+      uploaded_files.each do |uploaded_file|
+        file = build_file(column, uploaded_file)
+        next if file.invalid?
 
-      file.save!
+        file.save!
 
-      hash['value'] = file.id
+        hash['value'] ||= []
+        hash['value'] << file.id
+      end
+
       hash.delete('file')
-
       custom_values[column.id.to_s] = hash
     end
   end
@@ -163,13 +152,15 @@ module Gws::Addon::Workflow::CustomForm
       hash = custom_values[column.id.to_s]
       next if hash.blank?
 
-      file_id = hash['value']
-      next if file_id.blank?
+      file_ids = hash['value']
+      next if file_ids.blank?
 
-      file = Gws::File.site(site).find(file_id) rescue nil
-      next if file.blank?
+      file_ids.each do |file_id|
+        file = Gws::File.site(site).find(file_id) rescue nil
+        next if file.blank?
 
-      file.destroy
+        file.destroy
+      end
     end
   end
 end

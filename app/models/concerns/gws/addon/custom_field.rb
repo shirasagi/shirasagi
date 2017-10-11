@@ -12,14 +12,16 @@ module Gws::Addon::CustomField
     field :max_length, type: Integer
     field :place_holder, type: String
     field :additional_attr, type: String, default: ''
+    field :upload_file_count, type: Integer, default: 1
     field :max_upload_file_size, type: Integer
     field :resizing_width, type: Integer
     field :resizing_height, type: Integer
 
     attr_accessor :in_max_upload_file_size_mb
 
-    permit_params :tooltips, :input_type, :select_options, :required, :max_length, :place_holder
-    permit_params :additional_attr, :in_max_upload_file_size_mb, :resizing_width, :resizing_height
+    permit_params :input_type, :tooltips, :required
+    permit_params :max_length, :place_holder, :additional_attr, :select_options
+    permit_params :upload_file_count, :in_max_upload_file_size_mb, :resizing_width, :resizing_height
 
     after_initialize do
       if self.max_upload_file_size
@@ -54,7 +56,7 @@ module Gws::Addon::CustomField
         if item.input_type == 'check_box'
           params << { item.id.to_s => [] }
         elsif item.input_type == 'upload_file'
-          params << { item.id.to_s => %w(value file rm) }
+          params << { item.id.to_s => [ 'value', 'file' => [], 'rm' => [] ] }
         else
           params << item.id.to_s
         end
@@ -86,10 +88,10 @@ module Gws::Addon::CustomField
         value.map { |v| String.mongoize(v) }
       when 'upload_file'
         case value
-        when ActionDispatch::Http::UploadedFile, Hash
-          value
+        when Array
+          value.map { |v| to_mongo_upload_file(input_type, v) }
         else
-          Integer.mongoize(value)
+          to_mongo_upload_file(input_type, value)
         end
       else
         value
@@ -106,10 +108,10 @@ module Gws::Addon::CustomField
         value.map { |v| String.demongoize(v) }
       when 'upload_file'
         case value
-        when ActionDispatch::Http::UploadedFile, Hash
-          value
+        when Array
+          value.map { |v| from_mongo_upload_file(input_type, v) }
         else
-          Integer.demongoize(value)
+          from_mongo_upload_file(input_type, value)
         end
       else
         value
@@ -120,6 +122,24 @@ module Gws::Addon::CustomField
 
     def input_type_include_upload_file
       class_variable_set(:@@_input_type_include_upload_file, true)
+    end
+
+    def to_mongo_upload_file(input_type, value)
+      case value
+      when ActionDispatch::Http::UploadedFile, Hash
+        value
+      else
+        Integer.mongoize(value)
+      end
+    end
+
+    def from_mongo_upload_file(input_type, value)
+      case value
+      when ActionDispatch::Http::UploadedFile, Hash
+        value
+      else
+        Integer.demongoize(value)
+      end
     end
   end
 

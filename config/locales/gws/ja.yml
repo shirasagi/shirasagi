@@ -210,6 +210,7 @@ ja:
         place_holder: 初期表示
         additional_attr: 追加属性
         input_confirm: 入力確認
+        upload_file_count: アップロードファイル数
         max_upload_file_size: 最大ファイルサイズ設定
         resizing: 画像リサイズ
         resizing_width: 画像リサイズ（幅）
@@ -300,8 +301,10 @@ ja:
         - 出力される入力形式のHTMLに属性を追加することが可能です。
       input_confirm:
         - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
+      upload_file_count:
+        - アップロードできるファイル数を選択します。
       max_upload_file_size:
-        - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
+        - アップロードできるファイルサイズを入力します。1ファイルあたりのサイズをMB(メガバイト)単位で入力します。
       resizing:
         - 画像がアップロードされた場合、指定したサイズ内に収まるように画像をリサイズします。
 

@@ -34,8 +34,12 @@
 
   <% if @model.input_type_include_upload_file? %>
     <% allowed_input_type(%w(upload_file)) do %>
+      <dt><%= @model.t :upload_file_count %></dt>
+      <dd><%= number_to_human(@item.upload_file_count) %></dd>
+
       <dt><%= @model.t :max_upload_file_size %></dt>
       <dd><%= number_to_human_size(@item.max_upload_file_size) %></dd>
+
       <dt><%= @model.t :resizing %></dt>
       <dd>
         <%= number_to_human_size(@item.resizing_width) %>

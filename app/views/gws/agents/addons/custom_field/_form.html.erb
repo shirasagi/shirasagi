@@ -41,6 +41,9 @@
 
   <% if @model.input_type_include_upload_file? %>
     <% allowed_input_type(%w(upload_file)) do %>
+      <dt><%= @model.t :upload_file_count %><%= @model.tt :upload_file_count %></dt>
+      <dd><%= f.select :upload_file_count, 1.upto(5).map { |v| [ v, v ] } %></dd>
+
       <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
       <dd><%= f.number_field :in_max_upload_file_size_mb %> <%= t('ss.units.mega_byte') %></dd>
 
