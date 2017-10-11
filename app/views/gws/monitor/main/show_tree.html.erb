@@ -2,34 +2,34 @@
     Gws_Monitor_Topic.render();
 
     switch ("<%= @item[:state_of_the_answer] %>"){
-    case "public":
-    $('.public').hide();
-    $('.preparation').show();
-    $('.qNA').show();
-    $('.answered').show();
-    $('.primary').show();
-    break;
-    case "answered":
-    $('.public').show();
-    $('.preparation').show();
-    $('.qNA').show();
-    $('.answered').hide();
-    $('.primary').hide();
-    break;
-    case "preparation":
-    $('.public').show();
-    $('.preparation').hide();
-    $('.qNA').hide();
-    $('.answered').hide();
-    $('.primary').hide();
-    break;
-    case "qNA":
-    $('.public').show();
-    $('.preparation').hide();
-    $('.qNA').hide();
-    $('.answered').hide();
-    $('.primary').hide();
-    break;
+      case "public":
+        $('.public').hide();
+        $('.preparation').show();
+        $('.qNA').show();
+        $('.answered').show();
+        $('.primary').show();
+        break;
+      case "answered":
+        $('.public').show();
+        $('.preparation').show();
+        $('.qNA').show();
+        $('.answered').hide();
+        $('.primary').hide();
+        break;
+      case "preparation":
+        $('.public').show();
+        $('.preparation').hide();
+        $('.qNA').hide();
+        $('.answered').hide();
+        $('.primary').hide();
+        break;
+      case "qNA":
+        $('.public').show();
+        $('.preparation').hide();
+        $('.qNA').hide();
+        $('.answered').hide();
+        $('.primary').hide();
+        break;
     }
 <% end %>
 

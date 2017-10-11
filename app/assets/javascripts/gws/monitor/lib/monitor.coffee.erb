@@ -3,28 +3,28 @@ class @Gws_Monitor_Topic
     $(".public").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/public", method: "post")
+      form = $("<form/>", action: "#{id}/public", method: "post", data: {confirm: "受取済みにしますか？"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".preparation").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/preparation", method: "post")
+      form = $("<form/>", action: "#{id}/preparation", method: "post", data: {confirm: "受取待ちにしますか？"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".qNA").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/question_not_applicable", method: "post")
+      form = $("<form/>", action: "#{id}/question_not_applicable", method: "post", data: {confirm: "該当なしにしますか？"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".answered").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/answered", method: "post")
+      form = $("<form/>", action: "#{id}/answered", method: "post", data: {confirm: "回答済みにしますか？"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
@@ -33,7 +33,7 @@ class @Gws_Monitor_Topic
         $(this).val()
       return false if checked.length == 0
       token = $('meta[name="csrf-token"]').attr('content')
-      form = $("<form/>", action: "topics/public_all", method: "post")
+      form = $("<form/>", action: "topics/public_all", method: "post", data: {confirm: "チェックした項目を受取済みにしますか？"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       for id in checked
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
@@ -44,7 +44,7 @@ class @Gws_Monitor_Topic
         $(this).val()
       return false if checked.length == 0
       token = $('meta[name="csrf-token"]').attr('content')
-      form = $("<form/>", action: "topics/preparation_all", method: "post")
+      form = $("<form/>", action: "topics/preparation_all", method: "post", data: {confirm: "チェックした項目を受取待ちにしますか？"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       for id in checked
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
@@ -55,7 +55,7 @@ class @Gws_Monitor_Topic
         $(this).val()
       return false if checked.length == 0
       token = $('meta[name="csrf-token"]').attr('content')
-      form = $("<form/>", action: "topics/qNA_all", method: "post")
+      form = $("<form/>", action: "topics/qNA_all", method: "post", data: {confirm: "チェックした項目を該当なしにしますか？"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       for id in checked
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
