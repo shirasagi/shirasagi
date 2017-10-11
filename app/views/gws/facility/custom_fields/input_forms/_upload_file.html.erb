@@ -1,11 +1,15 @@
-<% value ||= nil %>
-<% file = Gws::File.find(value) rescue nil %>
+<% value ||= [] %>
+<% max_length = value.length > item.upload_file_count ? value.length : item.upload_file_count %>
 <%= render file: 'app/views/gws/facility/custom_fields/input_forms/_common_label', locals: { item: item } %>
-<dd>
-  <%= file_field_tag("#{object_name}[#{item.id}][file]", item.html_options) %>
-</dd>
-<% if file.present? %>
-<dd>
-  <label><%= check_box_tag("#{object_name}[#{item.id}][rm]", 1, false) %> <%= t "ss.buttons.delete" %> (<%= file.filename %>)</label>
-</dd>
+<% max_length.times.each do |index| %>
+  <% file_id = value[index] %>
+  <% file = Gws::File.find(file_id) rescue nil %>
+  <dd>
+    <%= file_field_tag("#{object_name}[#{item.id}][file][]", item.html_options) %>
+  </dd>
+  <% if file.present? %>
+  <dd>
+    <label><%= check_box_tag("#{object_name}[#{item.id}][rm][]", file_id, false) %> <%= t "ss.buttons.delete" %> (<%= file.filename %>)</label>
+  </dd>
+  <% end %>
 <% end %>

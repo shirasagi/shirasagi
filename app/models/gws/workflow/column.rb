@@ -29,31 +29,87 @@ class Gws::Workflow::Column
   end
 
   def validate_value(record, attribute, hash)
-    value = record.read_custom_value(self)
+    # value = record.read_custom_value(self)
+    item = hash[id.to_s]
+    input_type = item['input_type']
+
+    return unless %w(text_field text_area email_field radio_button select check_box upload_file).include?(input_type)
+
+    send("validate_#{input_type}_value", item)
+  end
+
+  private
+
+  def validate_text_field_value(item)
+    value = item['value']
+
+    if required? && value.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+  end
+  alias validate_text_area_value validate_text_field_value
+  alias validate_email_field_value validate_text_field_value
+
+  def validate_radio_button_value(item)
+    value = item['value']
+
     if required? && value.blank?
       record.errors.add(:base, name + I18n.t('errors.messages.blank'))
     end
 
-    if value.present?
-      if %w(radio_button select).include?(input_type)
-        unless select_options.include?(value)
-          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
-        end
-      end
-      if input_type == 'check_box'
-        value = [ value ].flatten.compact.select(&:present?)
-        if (value - select_options).present?
-          record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
-        end
-      end
-      if input_type == 'upload_file' && value.is_a?(ActionDispatch::Http::UploadedFile)
-        if value.size > max_upload_file_size
-          record.errors.add :base, "#{name}#{I18n.t(
-            'errors.messages.too_large_file',
-            filename: value.original_filename,
-            size: ApplicationController.helpers.number_to_human_size(value.size),
-            limit: ApplicationController.helpers.number_to_human_size(max_upload_file_size))}"
-        end
+    return if value.blank?
+
+    unless select_options.include?(value)
+      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+    end
+  end
+  alias validate_select_value validate_radio_button_value
+
+  def validate_check_box_value(item)
+    values = item['value']
+    values = [ values ].flatten.compact.select(&:present?)
+
+    if required? && values.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+
+    return if values.blank?
+
+    diff = values - select_options
+    if diff.present?
+      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: diff.join(', ')))
+    end
+  end
+
+  def validate_upload_file_value(item)
+    files = item['file']
+    files = [ files ].flatten.compact.select(&:present?)
+    if required? && files.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+
+    return if files.blank?
+
+    if files.count > upload_file_count
+      message = I18n.t(
+        'errors.messages.file_count',
+        size: ApplicationController.helpers.number_to_human(files.count),
+        limit: ApplicationController.helpers.number_to_human(upload_file_count)
+      )
+      record.errors.add(:base, "#{name}#{message}")
+    end
+
+    files.each do |file|
+      next unless file.is_a?(ActionDispatch::Http::UploadedFile)
+
+      if file.size > max_upload_file_size
+        message = I18n.t(
+          'errors.messages.too_large_file',
+          filename: file.original_filename,
+          size: ApplicationController.helpers.number_to_human_size(file.size),
+          limit: ApplicationController.helpers.number_to_human_size(max_upload_file_size)
+        )
+        record.errors.add(:base, "#{name}#{message}")
       end
     end
   end
