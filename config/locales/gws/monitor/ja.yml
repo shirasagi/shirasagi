@@ -63,8 +63,8 @@ ja:
     errors:
       denied_comment: コメントの投稿は許可されていません。
     tabs:
-      unanswered: 未回答
-      answered: 回答済み
+      unanswer: 未回答
+      answer: 回答済み
       admin: 作成した設問
 
   modules:
