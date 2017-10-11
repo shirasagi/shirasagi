@@ -24,6 +24,9 @@
   <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_path, class: "icon-workflow" %></h2>
   <% end %>
+
+  <h2><%= link_to '回覧板', gws_circular_topics_path, class: 'icon-write' %></h2>
+
   <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
   <% end %>
@@ -34,6 +37,12 @@
   <h2><%= link_to t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-conv" %></h2>
 
   <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File, Gws::Faq::Topic, Gws::Qna::Topic ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
+    <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
+  <% end %>
+  <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
+    <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
+  <% end %>
+  <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
     <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
   <% end %>
 
