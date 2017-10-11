@@ -26,13 +26,39 @@ class Gws::Workflow::File
   default_scope -> {
     order_by updated: -1
   }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
-    criteria
-  }
+  class << self
+    def search(params)
+      criteria = all
+      return criteria if params.blank?
+
+      criteria = criteria.search_keyword(params)
+      criteria = criteria.search_state(params)
+      criteria
+    end
+
+    def search_keyword(params)
+      return all if params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :text)
+    end
+
+    def search_state(params)
+      return all if params[:state].blank? || params[:cur_user].blank?
+
+      cur_user = params[:cur_user]
+      case params[:state]
+      when 'approve'
+        all.where(
+          workflow_state: 'request',
+          workflow_approvers: { '$elemMatch' => { 'user_id' => cur_user.id, 'state' => "request" } }
+        )
+      when 'request'
+        all.where(workflow_user_id: cur_user.id)
+      else
+        all
+      end
+    end
+  end
 
   def reminder_user_ids
     ids = [@cur_user.id, user_id]
@@ -59,5 +85,13 @@ class Gws::Workflow::File
 
   def destroyable?(user, opts)
     allowed?(:delete, user, opts) && !workflow_requested?
+  end
+
+  # override Gws::Addon::Reminder#reminder_url
+  def reminder_url(*args)
+    ret = super
+    options = ret.extract_options!
+    options[:state] = 'all'
+    [ *ret, options ]
   end
 end

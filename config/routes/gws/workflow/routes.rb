@@ -17,8 +17,11 @@ SS::Application.routes.draw do
     get '/' => redirect { |p, req| "#{req.path}/routes" }, as: :setting
     resources :pages, concerns: [:deletion, :workflow]
     resources :routes, concerns: :deletion
-    resources :files, concerns: [:deletion, :workflow] do
-      get :print, on: :member
+    scope :files do
+      get '/' => redirect { |p, req| "#{req.path}/all" }, as: :files_main
+      resources :files, path: ':state', concerns: [:deletion, :workflow] do
+        get :print, on: :member
+      end
     end
     resources :files, path: ':form_id/files', only: [:new, :create], as: 'form_files'
     resources :forms, concerns: :deletion do

@@ -5,6 +5,8 @@ $ ->
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
     uri[3] = "wizard"
+    if uri.length > 5
+      uri.splice(4, 1)
     uri = uri.join("/")  + "/approver_setting"
     route_id = $("#workflow_route").val()
     $.ajax
