@@ -14,8 +14,7 @@ class Webmail::Mail
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
-  attr_accessor :flags, :text, :html, :attachments, :format,
-                :reply_uid, :forward_uid, :signature,
+  attr_accessor :flags, :attachments, :reply_uid, :forward_uid, :signature,
                 :to_text, :cc_text, :bcc_text
 
   field :host, type: String
@@ -39,6 +38,11 @@ class Webmail::Mail
   field :content_type, type: String
   field :subject, type: String
   field :has_attachment, type: Boolean
+
+  ## body
+  field :format, type: String
+  field :text, type: String
+  field :html, type: String
 
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
                 :subject, :text, :html, :format,
