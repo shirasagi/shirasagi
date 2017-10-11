@@ -22,8 +22,8 @@ SS::Application.routes.draw do
       resources :files, path: ':state', concerns: [:deletion, :workflow] do
         get :print, on: :member
       end
+      resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end
-    resources :files, path: ':form_id/files', only: [:new, :create], as: 'form_files'
     resources :forms, concerns: :deletion do
       resources :columns, concerns: :deletion
     end

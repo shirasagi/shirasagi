@@ -24,8 +24,14 @@ class Gws::Workflow::Form
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.keyword_in(params[:keyword], :name) if params[:keyword].present?
+      criteria = criteria.search_keyword(params)
       criteria
+    end
+
+    def search_keyword(params)
+      return all if params[:keyword].blank?
+
+      all.keyword_in(params[:keyword], :name)
     end
   end
 end

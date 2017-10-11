@@ -19,7 +19,7 @@ class Gws::Workflow::FilesController < ApplicationController
   end
 
   def set_cur_form
-    return if params[:form_id].blank?
+    return if params[:form_id].blank? || params[:form_id] == 'default'
     set_forms
     @cur_form ||= @forms.find(params[:form_id])
   end
@@ -57,11 +57,22 @@ class Gws::Workflow::FilesController < ApplicationController
   end
 
   def new
+    if params[:form_id].blank?
+      form_select
+      return
+    end
+
     @item = @model.new pre_params.merge(fix_params)
     raise '403' unless @item.editable?(@cur_user, site: @cur_site)
     render_opts = { file: :new }
     render_opts[:layout] = false if request.xhr?
     render render_opts
+  end
+
+  def form_select
+    set_forms
+    @forms = @forms.search(params[:s]).page(params[:page]).per(50)
+    render file: 'form_select'
   end
 
   def create

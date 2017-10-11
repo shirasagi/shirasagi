@@ -2,6 +2,9 @@ ja:
   gws/workflow:
     columns:
       index: 入力設定を管理する
+    forms:
+      default: 標準申請書
+      more: もっと見る
     options:
       file_state:
         all: すべて
