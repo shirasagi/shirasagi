@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :mailer %></dt>
+  <dd><%= @item.mailer %></dd>
+
+  <dt><%= @model.t :subject %></dt>
+  <dd><%= @item.subject %><%= f.hidden_field :subject %></dd>
+
+  <dt><%= @model.t :from %></dt>
+  <dd><%= @item.from %></dd>
+
+  <dt><%= @model.t :to %></dt>
+  <dd><%= @item.to %></dd>
+
+  <dt><%= @model.t :cc %></dt>
+  <dd><%= @item.cc %></dd>
+
+  <dt><%= @model.t :bcc %></dt>
+  <dd><%= @item.bcc %></dd>
+
+  <dt><%= @model.t :mail %></dt>
+  <dd><%= f.text_area :mail, readonly: true, style: "height: 400px" %></dd>
+</dl>

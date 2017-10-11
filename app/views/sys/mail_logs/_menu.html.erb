@@ -1,0 +1,12 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%# link_to :download, action: :download if SS::User.allowed?(:read, @cur_user) %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to(t('ss.links.back_to_show'), { action: :show, id: @item }, class: 'back-to-show') if Sys::MailLog.allowed?(:read, @cur_user) %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: 'back-to-index') %>
+  <% else %>
+    <%= link_to(t('ss.links.decode'), { action: :decode, id: @item }, class: :decode) if Sys::MailLog.allowed?(:edit, @cur_user) %>
+    <%= link_to(t('ss.links.delete'), { action: :delete, id: @item }, class: :delete) if Sys::MailLog.allowed?(:delete, @cur_user) %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: 'back-to-index') %>
+  <% end %>
+</nav>
