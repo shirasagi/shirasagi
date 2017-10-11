@@ -1,7 +1,11 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), action: :new %>
+      <%= dropdown_link(t('ss.links.new')) do %>
+        <% Gws::Workflow::Column.new.input_type_options.each do |v, k| %>
+          <%= link_to(v, new_gws_workflow_form_columns_input_type_path(form_id: @cur_form, input_type: k), class: 'dropdown-item') %>
+        <% end %>
+      <% end %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

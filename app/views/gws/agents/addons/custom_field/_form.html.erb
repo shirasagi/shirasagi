@@ -1,30 +1,51 @@
+<%
+  def allowed_input_type(*input_types, &block)
+    input_types.flatten!
+    input_types.compact!
+    if @item.input_type.blank? || input_types.include?(@item.input_type)
+      return yield
+    end
+  end
+%>
+
 <dl class="see mod-gws-custom_field">
+  <% if @item.input_type.blank? %>
+    <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
+    <dd><%= f.select :input_type, @item.input_type_options %></dd>
+  <% else %>
+    <dt><%= @model.t :input_type %></dt>
+    <dd><%= @item.label :input_type %></dd>
+  <% end %>
+
   <dt><%= @model.t :tooltips %><%= @model.tt :tooltips %></dt>
   <dd><%= f.text_area :tooltips %></dd>
-
-  <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
-  <dd><%= f.select :input_type, @item.input_type_options %></dd>
-
-  <dt><%= @model.t :select_options %><%= @model.tt :select_options %></dt>
-  <dd><%= f.text_area :select_options, value: @item.select_options.join("\n"), style: "height: 180px;" %></dd>
 
   <dt><%= @model.t :required %><%= @model.tt :required %></dt>
   <dd><%= f.select :required, @item.required_options %></dd>
 
-  <dt><%= @model.t :max_length %><%= @model.tt :max_length %></dt>
-  <dd><%= f.number_field :max_length %></dd>
+  <% allowed_input_type(%w(text_field text_area email_field)) do %>
+    <dt><%= @model.t :max_length %><%= @model.tt :max_length %></dt>
+    <dd><%= f.number_field :max_length %></dd>
 
-  <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
-  <dd><%= f.text_field :place_holder %></dd>
+    <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
+    <dd><%= f.text_field :place_holder %></dd>
 
-  <dt><%= @model.t :additional_attr %><%= @model.tt :additional_attr %></dt>
-  <dd><%= f.text_field :additional_attr %></dd>
+    <dt><%= @model.t :additional_attr %><%= @model.tt :additional_attr %></dt>
+    <dd><%= f.text_field :additional_attr %></dd>
+  <% end %>
+
+  <% allowed_input_type(%w(radio_button select check_box)) do %>
+    <dt><%= @model.t :select_options %><%= @model.tt :select_options %></dt>
+    <dd><%= f.text_area :select_options, value: @item.select_options.join("\n"), style: "height: 180px;" %></dd>
+  <% end %>
 
   <% if @model.input_type_include_upload_file? %>
-    <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
-    <dd><%= f.number_field :in_max_upload_file_size_mb %> <%= t('ss.units.mega_byte') %></dd>
+    <% allowed_input_type(%w(upload_file)) do %>
+      <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
+      <dd><%= f.number_field :in_max_upload_file_size_mb %> <%= t('ss.units.mega_byte') %></dd>
 
-    <dt><%= @model.t :resizing %><%= @model.tt :resizing %></dt>
-    <dd><%= f.number_field :resizing_width %> x <%= f.number_field :resizing_height %></dd>
+      <dt><%= @model.t :resizing %><%= @model.tt :resizing %></dt>
+      <dd><%= f.number_field :resizing_width %> x <%= f.number_field :resizing_height %></dd>
+    <% end %>
   <% end %>
 </dl>

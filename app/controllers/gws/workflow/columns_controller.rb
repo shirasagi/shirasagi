@@ -61,12 +61,14 @@ class Gws::Workflow::ColumnsController < ApplicationController
   def new
     raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
     @item = @model.new pre_params.merge(fix_params)
+    @item.input_type = params[:input_type]
   end
 
   def create
     raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item = @model.new get_params
+    @item.input_type = params[:input_type]
     render_create @item.save
   end
 
