@@ -15,6 +15,8 @@ $ ->
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
     uri[3] = "pages"
+    if uri.length > 5
+      uri.splice(4, 1)
     updatetype = $(this).attr("updatetype")
     redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>"
     if updatetype == "request"
@@ -58,6 +60,8 @@ $ ->
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
     uri[3] = "wizard"
+    if uri.length > 5
+      uri.splice(4, 1)
     uri = uri.join("/")
     $.ajax
       type: "get"

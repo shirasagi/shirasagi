@@ -6,6 +6,7 @@ class Gws::Workflow::FilesController < ApplicationController
 
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
+  before_action :set_search_params
 
   private
 
@@ -35,12 +36,18 @@ class Gws::Workflow::FilesController < ApplicationController
     params
   end
 
+  def set_search_params
+    @s = OpenStruct.new params[:s]
+    @s.state = params[:state] if params[:state]
+    @s.cur_user = @cur_user
+  end
+
   public
 
   def index
     @items = @model.site(@cur_site).
       readable(@cur_user, @cur_site).
-      search(params[:s]).
+      search(@s).
       page(params[:page]).per(50)
   end
 

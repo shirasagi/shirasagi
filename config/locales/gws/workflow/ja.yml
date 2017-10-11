@@ -2,6 +2,11 @@ ja:
   gws/workflow:
     columns:
       index: 入力設定を管理する
+    options:
+      file_state:
+        all: すべて
+        approve: 承認依頼されたもの
+        request: 承認申請したもの
 
   modules:
     gws/workflow: ワークフロー
