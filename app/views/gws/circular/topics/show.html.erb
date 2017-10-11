@@ -1,0 +1,93 @@
+<% addons = @item.class.addons.select { |addon| [SS::Addon::Markdown, Gws::Addon::Member].exclude?(addon.klass) } %>
+
+<%= jquery do %>
+    $("#mark").change(function(){
+      var url = this.checked ? '<%= gws_circular_apis_mark_path(id: @item.id) %>' : '<%= gws_circular_apis_unmark_path(id: @item.id) %>';
+      $.ajax({ url: url, dataType: 'json' });
+    });
+    Gws_Topic.render(document.getElementById("mark"));
+<% end %>
+
+<div class="gws-board gws-board-thread">
+  <article class="topic">
+    <header>
+      <h2>
+        <span class="name"><%= @item.name %></span>
+        <span class="categories">
+          <% @item.categories.each do |category| %>
+            <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id), class: 'gws-category-label', style: category_label_css(category) %>
+          <% end %>
+        </span>
+      </h2>
+      <nav class="meta">
+        <span class="user"><%= @item.user_long_name %></span>
+        <span class="datetime"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+      </nav>
+    </header>
+
+    <div class="body markdown-body">
+      <%= @item.html %>
+    </div>
+
+    <% if @item.files.present? %>
+        <div class="files">
+          <% @item.files.each do |file| %>
+              <img src="/assets/img/gws/ic-file.png" alt=""/>
+              <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+          <% end %>
+        </div>
+    <% end %>
+
+    <div class="menu">
+      <% if @item.permit_comment?(user: @cur_user, site: @cur_site) %>
+          <%= link_to t('gws/board.links.comment'), new_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: 'btn' %>
+      <% end %>
+
+      <% if @item.member?(@cur_user) %>
+          <label class="btn">
+            <%= check_box_tag :mark, nil, @item.unmarkable?(@cur_user), class: 'hide' %>
+            <span><%= t('gws/circular.topic.mark') %></span>
+          </label>
+      <% end %>
+    </div>
+  </article>
+
+  <% if @item.children.present? %>
+      <div class="comments">
+        <%= render partial: 'gws/circular/comments/comment', collection: @item.descendants, locals: {parent: @item} %>
+      </div>
+  <% end %>
+
+  <article class="topic">
+    <header>
+      <h2><span class="name"><%= t('gws/circular.topic.member') %></span></h2>
+    </header>
+    <div class="body">
+      <table class="index">
+        <thead>
+        <tr>
+          <th><%= t('gws/circular.topic.type') %></th>
+          <th><%= t('gws/circular.topic.mark_at') %></th>
+          <th><%= t('gws/circular.topic.update_at') %></th>
+          <th><%= t('gws/circular.topic.user') %></th>
+          <th><%= t('gws/circular.topic.replay') %></th>
+        </tr>
+        </thead>
+        <tbody class="items">
+          <% @item.members.each_with_index do |member, i| %>
+            <% post = @item.children.where(user_id: member.id).first %>
+            <tr data-id="<%= i %>">
+              <td><%= @item.marked?(member) ? t('gws/circular.topic.marked') :  t('gws/circular.topic.unmarked') %></td>
+              <td><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
+              <td><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
+              <td><%= member.name %></td>
+              <td><%= post ? post.try(:text) : '' %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <%= render file: '_addons_show', locals: { addons: addons } if addons.size > 0 %>
+</div>

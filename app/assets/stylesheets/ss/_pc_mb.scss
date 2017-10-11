@@ -1082,27 +1082,6 @@ footer.send {
 .btn-success {
   @include btn-orange;
 }
-.btn-toggle {
-  input[type="checkbox"] {
-    display: none;
-  }
-  span {
-    @include btn;
-  }
-  input[type="checkbox"]:checked + span {
-    @include btn-active;
-  }
-}
-
-.chorg-revisions {
-  margin-bottom: 10px;
-  .btn {
-    margin-bottom: 10px;
-  }
-  .result {
-    float: right;
-  }
-}
 
 // -------------------------------------------------------------------------------------------------
 // addon
