@@ -122,15 +122,17 @@ module ApplicationHelper
     end
 
     html_options[:class] = [ html_options[:class].presence ].flatten.compact
-    html_options[:class] << 'no-margin'
 
     split = options.delete(:split)
+    if split
+      html_options[:class] << 'no-margin'
+    else
+      html_options[:class] << 'dropdown-toggle'
+    end
     content_tag(:div, class: 'dropdown') do
-      output_buffer << link_to(name, url_options, html_options)
+      output_buffer << link_to(name, split ? url_options : '#', html_options)
       if split
-        output_buffer << content_tag(:span, class: %w(dropdown-toggle dropdown-toggle-split)) do
-          '<i class="material-icons">&#xE313;</i>'.html_safe
-        end
+        output_buffer << tag(:span, class: %w(dropdown-toggle dropdown-toggle-split))
       end
       output_buffer << content_tag(:div, class: 'dropdown-menu') do
         inner
