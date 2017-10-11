@@ -6,7 +6,7 @@ module Gws::Addon::CustomField
     class_variable_set(:@@_input_type_include_upload_file, nil)
 
     field :tooltips, type: SS::Extensions::Lines
-    field :input_type, type: String, default: 'text_field'
+    field :input_type, type: String
     field :select_options, type: SS::Extensions::Lines, default: ''
     field :required, type: String, default: 'required'
     field :max_length, type: Integer
