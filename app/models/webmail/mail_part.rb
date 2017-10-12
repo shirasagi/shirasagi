@@ -63,7 +63,7 @@ class Webmail::MailPart
       body.encoding = part.encoding
 
       data = body.decoded
-      data = data.encode('UTF-8', charset) if charset
+      data = data.encode('UTF-8', charset, invalid: :replace, undef: :replace) if charset
       data = data.html_safe if part.subtype == 'HTML'
       data
     end

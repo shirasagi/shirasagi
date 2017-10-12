@@ -14,7 +14,7 @@ class Webmail::FiltersController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user, imap: @imap, host: @imap_setting.imap_host, account: @imap_setting.imap_account }
+    @imap.account_scope.merge(cur_user: @cur_user, imap: @imap)
   end
 
   public

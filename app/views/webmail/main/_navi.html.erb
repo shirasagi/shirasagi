@@ -19,7 +19,7 @@ end
   <% end if @mailboxes  %>
 
   <h2>
-    <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), 'data-name' => 'INBOX' do %>
+    <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), 'data-name' => 'INBOX', 'class' => 'mail-droppable mailbox-droppable' do %>
       <i class="material-icons">&#xE0E1;</i> <%= t('webmail.box.inbox') %>
       <% if @mailboxes && inbox = @mailboxes.inbox %>
         <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
@@ -30,7 +30,7 @@ end
   <% if @mailboxes %>
   <div class="mailboxes">
     <% @mailboxes.without_inbox.each do |box| %>
-      <a class="<%= box.css_class %>" data-name="<%= box.original_name %>"
+      <a class="<%= box.css_class %> mailbox-droppable" data-name="<%= box.original_name %>" data-basename="<%= box.original_name.sub(/.*\./, '') %>"
         <% if !box.noselect? %>
           href="<%= webmail_mails_path(mailbox: box.original_name) %>"
         <% end %>
