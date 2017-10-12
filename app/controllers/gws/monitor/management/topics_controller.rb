@@ -5,7 +5,7 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   model Gws::Monitor::Topic
 
   before_action :set_item, only: [
-      :show, :edit, :update, :delete, :destroy
+      :show, :edit, :update, :delete, :destroy, :download
   ]
 
   before_action :set_category
@@ -68,4 +68,11 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     render file: "/gws/monitor/main/show_#{@item.mode}"
   end
 
+  def download
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    csv = @item.to_csv.
+        encode('SJIS', invalid: :replace, undef: :replace)
+
+    send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
+  end
 end
