@@ -1,5 +1,9 @@
 ja:
   gws/circular:
+    confirm:
+      mark_all: 選択した項目を全て既読にしますか？
+      unmark_all: 選択した項目を全て未読に戻しますか？
+      download: 選択した項目を全てCSVに出力しますか？
     topic:
       unmarked: 未読
       marked: 既読
