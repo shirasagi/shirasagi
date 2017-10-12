@@ -9,7 +9,7 @@ module Gws::File::GroupSetting
   end
 
   def multibyte_filename_state_options
-    %w(enabled disabled).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }.to_a
+    %w(enabled disabled).map { |m| [ I18n.t("ss.options.multibyte_filename_state.#{m}"), m ] }.to_a
   end
 
   def multibyte_filename_disabled?
