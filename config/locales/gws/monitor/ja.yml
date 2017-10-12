@@ -66,6 +66,8 @@ ja:
       unanswer: 未回答
       answer: 回答済み
       admin: 作成した設問
+      article_management: 回答管理
+      trash: 削除済み
 
   modules:
     gws/monitor: 照会・回答
