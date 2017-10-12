@@ -1,77 +1,12 @@
-<%= coffee do %>
-$ ->
-  $(document).on "click", ".update-item", (e) ->
-    approvers = []
-    $(".workflow-multi-select").each (e) ->
-      approvers = approvers.concat($(this).val())
-    $("input[name='workflow_approvers']").each (e) ->
-      approvers.push($(this).prop("value"))
-    if approvers.length == 0 && $(this).attr("type") == "request"
-      alert "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>"
-      return
-    required_counts = []
-    $("input[name='workflow_required_counts']").each (e) ->
-      required_counts.push($(this).prop("value"))
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "pages"
-    if uri.length > 5
-      uri.splice(4, 1)
-    updatetype = $(this).attr("updatetype")
-    redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>"
-    if updatetype == "request"
-      forced_update_option = $("#forced-request").prop("checked")
-    else
-      forced_update_option = $("#forced-update").prop("checked")
-    $.ajax
-      type: "post"
-      url: uri.join("/")  + "/" + updatetype + "_update"
-      async: false
-      data:
-        workflow_comment: $("#workflow_comment").prop("value")
-        workflow_pull_up: $("#workflow_pull_up").prop("value") 
-        workflow_approvers: approvers
-        workflow_required_counts: required_counts
-        remand_comment: $("#remand_comment").prop("value")
-        url: "<%= request.url %>"
-        forced_update_option: forced_update_option
-      success: (data) ->
-        if data["workflow_alert"]
-          alert data["workflow_alert"]
-          return
-        if data["workflow_state"] == "approve" && redirect_location != ""
-          location.href = redirect_location
-        else
-          location.reload()
-      error: (xhr, status) ->
-        try
-          errors = $.parseJSON(xhr.responseText)
-          alert(["== Error =="].concat(errors).join("\n"));
-        catch
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+<%= jquery do %>
+  var options = {};
+  options.request_url = "<%= request.url %>";
+  options.workflow_node = "workflow" + "<%= @cur_node? @cur_node.id : "" %>";
+  options.redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>";
+  options.errors = {};
+  options.errors.not_select = "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>";
 
-  $(".mod-workflow-approve").insertBefore("#addon-basic")
-
-  $(".mod-workflow .toggle-label").on "click", (e) ->
-    $(".mod-workflow .request-setting").slideToggle()
-    return false
-
-  $(".workflow-partial-section").each ->
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "wizard"
-    if uri.length > 5
-      uri.splice(4, 1)
-    uri = uri.join("/")
-    $.ajax
-      type: "get"
-      url: uri
-      async: false
-      success: (html, status) ->
-        $(".workflow-partial-section").html(html)
-      error: (msg, status) ->
-        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
-
+  var workflow = new SS_Workflow('.mod-workflow', options);
 <% end %>
 
 <div class="mod-workflow">

@@ -1,32 +1,3 @@
-<%= coffee do %>
-$ ->
-
-  $(".workflow-route-start").on "click", (e) ->
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "wizard"
-    if uri.length > 5
-      uri.splice(4, 1)
-    uri = uri.join("/")  + "/approver_setting"
-    route_id = $("#workflow_route").val()
-    $.ajax
-      type: "post"
-      url: uri
-      async: false
-      data:
-        route_id: route_id
-      success: (html, status) ->
-        $(".workflow-partial-section").html(html)
-      error: (xhr, status) ->
-        try
-          errors = $.parseJSON(xhr.responseText)
-          alert(errors.join("\n"));
-        catch
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
-    e.preventDefault()
-
-<% end %>
-
 <% if @ss_mode == :cms %>
   <% route_options = Workflow::Route.site(@cur_site).route_options(@cur_user) %>
 <% else %>
