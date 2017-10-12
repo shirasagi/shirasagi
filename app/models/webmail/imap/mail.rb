@@ -133,16 +133,18 @@ module Webmail::Imap
     end
 
     def imap_all(uids, ref_items)
-      resp = imap.conn.uid_fetch(uids, %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER)) || []
+      resp = imap.conn.uid_fetch(uids, %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER BODYSTRUCTURE)) || []
       resp.each do |data|
         uid = data.attr['UID']
         uids.delete(uid)
 
         item = Webmail::Mail.new(mailbox_scope)
+        item.imap = imap
         ref_items[uid] = item
 
         begin
           item.parse(data)
+          item.fetch_body
           item.save if SS.config.webmail.cache_mails
         rescue => e
           raise e if Rails.env.development?
