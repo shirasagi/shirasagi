@@ -1,35 +1,13 @@
-<%= coffee do %>
-$ ->
-
-  $(".workflow-route-cacnel").on "click", (e) ->
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "wizard"
-    if uri.length > 5
-      uri.splice(4, 1)
-    uri = uri.join("/")
-    $.ajax
-      type: "get"
-      url: uri
-      async: false
-      success: (html, status) ->
-        $(".workflow-partial-section").html(html)
-      error: (xhr, status) ->
-        try
-          errors = $.parseJSON(xhr.responseText)
-          alert(["== Error =="].concat(errors).join("\n"));
-        catch
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
-    e.preventDefault()
-
-  $(".workflow-multi-select").multiSelect
-    selectionHeader: "<div class='selectionHeader'><%= t "workflow.request_to" %></div>"
+<%= jquery do %>
+  $(".workflow-multi-select").multiSelect({
+    selectionHeader: "<div class='selectionHeader'><%= t "workflow.request_to" %></div>",
     selectableHeader: "<div class='selectableHeader'><%= t "workflow.selectable_users" %></div>"
+  });
 
-  $(".ms-container").each ->
-    $(this).find(".selectableHeader").css("background-color", "#f0f3f3")
-    $(this).find(".selectionHeader").css("background-color", "#f0f3f3")
-
+  $(".ms-container").each(function() {
+    $(this).find(".selectableHeader").css("background-color", "#f0f3f3");
+    $(this).find(".selectionHeader").css("background-color", "#f0f3f3");
+  });
 <% end %>
 
 <%

@@ -5,34 +5,11 @@ group_class = user_class.group_class
 users = user_class.where(:group_ids.in => group_class.site(@cur_site).pluck(:id), :_id.ne => @cur_user._id)
 
 %>
-<%= coffee do %>
-$ ->
-
-  $(".workflow-route-cacnel").on "click", (e) ->
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "wizard"
-    if uri.length > 5
-      uri.splice(4, 1)
-    uri = uri.join("/")
-    $.ajax
-      type: "get"
-      url: uri
-      async: false
-      success: (html, status) ->
-        $(".workflow-partial-section").html(html)
-      error: (xhr, status) ->
-        try
-          errors = $.parseJSON(xhr.responseText)
-          alert(["== Error =="].concat(errors).join("\n"));
-        catch
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
-    e.preventDefault()
-
-  $(".workflow-multi-select").multiSelect
-    selectableHeader: "<div class='ms-selectable-head'><%= t "workflow.selectable_users" %></div>"
+<%= jquery do %>
+  $(".workflow-multi-select").multiSelect({
+    selectableHeader: "<div class='ms-selectable-head'><%= t "workflow.selectable_users" %></div>",
     selectionHeader: "<div class='ms-selection-head'><%= t "workflow.request_to" %></div>"
-
+  });
 <% end %>
 
 <dl class="see request-setting">
