@@ -43,6 +43,10 @@ SS::Application.routes.draw do
       post :question_not_applicable_all, on: :collection
     end
 
+    namespace "management" do
+      resources :topics, concerns: [:deletion]
+    end
+
     # with category
     scope(path: ":category", as: "category") do
       resources :topics, concerns: [:deletion] do
