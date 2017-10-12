@@ -47,6 +47,10 @@ class Gws::Schedule::Todo
     ])
   }
 
+  scope :deleted, -> {
+    where(:deleted.exists => true)
+  }
+
   scope :expired, ->(date = Time.zone.now) {
     where('$or' => [
         { :deleted.exists => true , :deleted.lt => date }
@@ -82,6 +86,10 @@ class Gws::Schedule::Todo
   def disable
     now = Time.zone.now
     update_attributes(deleted: now) if deleted.blank? || deleted > now
+  end
+
+  def active
+    update_attributes(deleted: nil)
   end
 
   class << self

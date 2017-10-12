@@ -1,0 +1,15 @@
+<%= jquery do %>
+    Gws_Schedule_Todo.render();
+<% end %>
+
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <button class="active-all btn">削除を取り消す</button>
+  </div>
+
+  <div class="list-head-search">
+    <%= render file: '_search' %>
+  </div>
+</div>
