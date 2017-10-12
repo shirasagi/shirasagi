@@ -39,11 +39,4 @@ class Gws::Circular::CommentsController < ApplicationController
   def show
     redirect_to gws_circular_topic_path(id: @topic.id)
   end
-
-  def update
-    @item.attributes = get_params
-    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.valid? && @item.topic.save && @item.save
-  end
 end

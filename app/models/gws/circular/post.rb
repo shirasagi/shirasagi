@@ -8,5 +8,5 @@ class Gws::Circular::Post
 
   belongs_to :topic, class_name: 'Gws::Circular::Topic', inverse_of: :descendants
   belongs_to :parent, class_name: 'Gws::Circular::Topic', inverse_of: :children
-  before_validation ->{ topic.mark_by(user) }, if: -> { topic.mark_type == 'normal' && topic.markable?(user) }
+  before_validation ->{ topic.mark_by(user).update }, if: -> { topic.markable?(user) }
 end
