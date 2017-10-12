@@ -6,12 +6,12 @@ class Gws::Monitor::AdminsController < ApplicationController
 
   before_action :set_item, only: [
     :show, :edit, :update, :delete, :destroy,
-    :public, :preparation, :question_not_applicable, :answered
+    :public, :preparation, :question_not_applicable, :answered, :disable
   ]
 
   before_action :set_selected_items, only: [
       :destroy_all, :public_all,
-      :preparation_all, :question_not_applicable_all
+      :preparation_all, :question_not_applicable_all, :disable_all
   ]
 
   before_action :set_category
@@ -117,6 +117,11 @@ class Gws::Monitor::AdminsController < ApplicationController
   def answered
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update(state_of_the_answer: 'answered')
+  end
+
+  def disable
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render_destroy @item.disable
   end
 
   def public_all

@@ -15,6 +15,10 @@ class Gws::Monitor::Topic
 
   readable_setting_include_custom_groups
 
+  field :deleted, type: DateTime
+  validates :deleted, datetime: true
+  permit_params :deleted
+
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
@@ -27,6 +31,17 @@ class Gws::Monitor::Topic
       where({})
     end
   }
+
+  def active?
+    now = Time.zone.now
+    return false if deleted.present? && deleted < now
+    true
+  end
+
+  def disable
+    now = Time.zone.now
+    update_attributes(deleted: now) if deleted.blank? || deleted > now
+  end
 
   def admin_setting_options
     [
