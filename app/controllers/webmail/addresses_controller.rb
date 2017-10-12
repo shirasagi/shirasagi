@@ -13,6 +13,7 @@ class Webmail::AddressesController < ApplicationController
     set_address_group
     @crumbs << [t("mongoid.models.webmail/address"), webmail_addresses_path]
     @crumbs << [@address_group.name, action: :index] if @address_group
+    @webmail_other_account_path = :webmail_addresses_path
   end
 
   def fix_params

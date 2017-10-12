@@ -1,20 +1,89 @@
+<% setting = Webmail::ImapSetting.new %>
+<%= jquery do %>
+  $(".add-imap-setting").click(function() {
+    var setting = $(".imap-setting:last").clone(true);
+
+    clearSetting(setting);
+    $(".imap-setting:last").after(setting);
+    setDataIds();
+    toggleImapButton();
+  });
+
+  $(".delete-imap-setting").click(function() {
+    var setting = $(this).closest(".imap-setting");
+    var value = false;
+    setting.find("input").each(function() {
+      if ($(this).val()) {
+        value = true;
+      };
+    });
+    if (!value || confirm('<%= t("ss.confirm.delete") %>')) {
+      ($(".imap-setting").length > 1) ? setting.remove() : clearSetting(setting);
+      setDataIds();
+      toggleImapButton();
+    }
+  });
+
+  var setDataIds = function() {
+    $(".imap-setting").each(function(i, ele) {
+      var data_id = i + 1;
+      var header = $(ele).find(".addon-head h2").text().replace(/\d+$/, data_id);
+
+      $(ele).attr("data-id", data_id);
+      $(ele).find(".addon-head h2").text(header);
+    });
+  }
+
+  var toggleImapButton = function() {
+    if ($(".imap-setting").length >= <%= SS.config.webmail.imap_account_limit %>) {
+      $(".add-imap-setting").parent("div").hide();
+    }
+    else {
+      $(".add-imap-setting").parent("div").show();
+    }
+  }
+
+  var clearSetting = function(ele) {
+    ele.find("input").val("");
+    ele.find('input[type="checkbox"]').prop("checked", false);
+    ele.find('[name="item[imap_settings][][imap_sent_box]"]').val("<%= setting.imap_sent_box %>");
+    ele.find('[name="item[imap_settings][][imap_draft_box]"]').val("<%= setting.imap_draft_box %>");
+    ele.find('[name="item[imap_settings][][imap_trash_box]"]').val("<%= setting.imap_trash_box %>");
+  }
+
+  $(".default-index").click(function() {
+    $(".default-index").not(this).prop("checked", false);
+  });
+<% end %>
+
 <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
 <%= error_messages_for :item %>
 
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div>
-    <div class="addon-body">
-      <%= render file: '_form', locals: { f: f } %>
+  <% number = 1 %>
+  <% @item.imap_settings.each_with_index do |setting, i| %>
+    <div class="addon-view imap-setting" data-id="<%= number %>">
+      <div class="addon-head"><h2><%= "#{t('webmail.account_setting')}#{number}" %></h2></div>
+      <div class="addon-body">
+        <%= render file: '_form', locals: { f: f, number: number, setting: setting, default_index: (@cur_user.imap_default_index == i) } %>
+      </div>
     </div>
-  </div>
-  <div class="addon-view" id="addon-mailbox">
-    <div class="addon-head toggle-head"><h2><%= t('webmail.settings.special_mailbox') %></h2></div>
-    <div class="addon-body toggle-body">
-      <%= render file: '_form_mailbox', locals: { f: f } %>
+    <% number += 1 %>
+  <% end %>
+
+  <% if number <= SS.config.webmail.imap_account_limit %>
+    <div class="addon-view imap-setting" data-id="<%= number %>">
+      <div class="addon-head"><h2><%= "#{t('webmail.account_setting')}#{number}" %></h2></div>
+      <div class="addon-body">
+        <%= render file: '_form', locals: { f: f, number: number, setting: Webmail::ImapSetting.new, default_index: @item.imap_settings.blank? } %>
+      </div>
     </div>
+  <% end %>
+
+  <div class="addon-view" style="background: transparent; border: transparent;">
+    <%= button_tag t('webmail.buttons.add_account'), class: 'add-imap-setting', type: :button %>
   </div>
 </div>
 

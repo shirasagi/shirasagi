@@ -1,21 +1,19 @@
 module Webmail::UserExtension
   extend ActiveSupport::Concern
 
-  attr_accessor :in_imap_password
-
   included do
-    field :imap_host, type: String
-    field :imap_auth_type, type: String
-    field :imap_account, type: String
-    field :imap_password, type: String
-    field :imap_sent_box, type: String
-    field :imap_draft_box, type: String
-    field :imap_trash_box, type: String
+    field :imap_default_index, type: Integer, default: 0
+    field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
+    permit_params :default_imap_index, imap_settings: [
+      :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+      :imap_sent_box, :imap_draft_box, :imap_trash_box, :default
+    ]
 
-    permit_params :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
-                  :imap_sent_box, :imap_draft_box, :imap_trash_box
+    before_validation :set_imap_settings
+  end
 
-    before_validation :set_imap_password, if: ->{ in_imap_password }
+  def imap_auth_type_options
+    %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5).map { |c| [c, c] }
   end
 
   def imap_default_settings
@@ -29,41 +27,17 @@ module Webmail::UserExtension
     }
   end
 
-  def imap_settings
-    user_conf = {
-      host: imap_host,
-      auth_type: imap_auth_type,
-      account: imap_account,
-      password: decrypt_imap_password
-    }
-    conf = imap_default_settings
-    user_conf.each { |k, v| conf[k] = v if v.present? }
-    conf
-  end
-
-  def imap_auth_type_options
-    %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5).map { |c| [c, c] }
-  end
-
-  def imap_sent_box
-    self[:imap_sent_box].presence || "INBOX.Sent"
-  end
-
-  def imap_draft_box
-    self[:imap_draft_box].presence || "INBOX.Draft"
-  end
-
-  def imap_trash_box
-    self[:imap_trash_box].presence || "INBOX.Trash"
-  end
-
-  def decrypt_imap_password
-    SS::Crypt.decrypt(imap_password)
-  end
-
   private
 
-  def set_imap_password
-    self.imap_password = SS::Crypt.encrypt(in_imap_password)
+  def set_imap_settings
+    self.imap_settings = self.imap_settings.select(&:valid?)
+    self.imap_settings = self.imap_settings.map.with_index do |setting, i|
+      if setting[:default]
+        self.imap_default_index = i
+        setting.delete(:default)
+      end
+      setting.set_imap_password
+      setting
+    end
   end
 end

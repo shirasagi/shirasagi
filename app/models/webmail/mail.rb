@@ -53,8 +53,8 @@ class Webmail::Mail
 
   default_scope -> { order_by internal_date: -1 }
 
-  scope :imap_user, ->(user) {
-    conf = user.imap_settings
+  scope :imap_setting, ->(setting) {
+    conf = setting.imap_settings
     where host: conf[:host], account: conf[:account]
   }
 

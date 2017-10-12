@@ -16,6 +16,7 @@ class Webmail::MailsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("webmail.mail"), { action: :index } ]
+    @webmail_other_account_path = :webmail_mails_path
   end
 
   def fix_params

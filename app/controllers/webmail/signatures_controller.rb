@@ -8,6 +8,7 @@ class Webmail::SignaturesController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("mongoid.models.webmail/signature"), { action: :index } ]
+    @webmail_other_account_path = :webmail_signatures_path
   end
 
   def fix_params

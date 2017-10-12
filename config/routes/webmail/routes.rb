@@ -52,14 +52,14 @@ SS::Application.routes.draw do
   namespace "webmail", path: ".webmail" do
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }, as: :cur_user
 
-    resources :mails, concerns: [:deletion, :mail], path: 'mails/:mailbox',
-      mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
-    resources :mailboxes, concerns: [:deletion, :mailbox]
-    resources :addresses, concerns: [:deletion, :export]
+    resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
+      account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
+    resources :mailboxes, path: 'account-:account/mailboxes', account: /\d+/, concerns: [:deletion, :mailbox]
+    resources :addresses, path: 'account-:account/addresses', account: /\d+/, concerns: [:deletion]
     resources :address_groups, concerns: [:deletion]
-    resources :signatures, concerns: [:deletion]
-    resources :filters, concerns: [:deletion, :filter]
-    resource :cache_setting, only: [:show, :update]
+    resources :signatures, path: 'account-:account/signatures', account: /\d+/, concerns: [:deletion]
+    resources :filters, path: 'account-:account/filters', concerns: [:deletion, :filter]
+    resource :cache_setting, path: 'account-:account/cache_setting', only: [:show, :update]
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, :on => :member
     end
@@ -71,8 +71,8 @@ SS::Application.routes.draw do
     end
 
     namespace "apis" do
-      get "recent" => "imap#recent"
-      get "quota" => "imap#quota"
+      get "account-:account/recent" => "imap#recent", account: /\d+/, as: :recent
+      get "account-:account/quota" => "imap#quota", account: /\d+/, as: :quota
       get "addresses" => "addresses#index"
     end
   end

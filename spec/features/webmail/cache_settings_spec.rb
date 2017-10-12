@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "webmail_cache_settings", type: :feature, dbscope: :example do
-  let(:show_path) { webmail_cache_setting_path }
+  let(:show_path) { webmail_cache_setting_path(account: 0) }
 
   context "with auth", js: true do
     before { login_ss_user }

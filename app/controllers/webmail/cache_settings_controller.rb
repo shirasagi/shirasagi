@@ -7,6 +7,7 @@ class Webmail::CacheSettingsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("webmail.settings.cache") , { action: :show } ]
+    @webmail_other_account_path = :webmail_cache_setting_path
   end
 
   public
@@ -27,7 +28,7 @@ class Webmail::CacheSettingsController < ApplicationController
     if params[:target] == 'all'
       Webmail::Mail.delete_all
     else
-      Webmail::Mail.imap_user(@cur_user).delete_all
+      Webmail::Mail.imap_setting(@imap_setting).delete_all
     end
     render_destroy
   end
@@ -36,7 +37,7 @@ class Webmail::CacheSettingsController < ApplicationController
     if params[:target] == 'all'
       Webmail::Mailbox.delete_all
     else
-      Webmail::Mailbox.imap_user(@cur_user).delete_all
+      Webmail::Mailbox.imap_setting(@imap_setting).delete_all
     end
     render_destroy
   end

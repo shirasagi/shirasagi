@@ -4,10 +4,16 @@ module Webmail::Imap
     include Webmail::Imap::UidsCommand
 
     attr_accessor :user, :conf, :conn, :error
+    attr_reader :sent_box, :draft_box, :trash_box
 
-    def initialize(user)
+    def initialize(user, setting)
       self.user  = user
-      self.conf  = user.imap_settings
+      self.conf  = setting.imap_settings(user.imap_default_settings)
+
+      @sent_box  = setting.imap_sent_box
+      @draft_box = setting.imap_draft_box
+      @trash_box = setting.imap_trash_box
+
       self
     end
 
@@ -16,7 +22,7 @@ module Webmail::Imap
         self.conn = Net::IMAP.new conf[:host], conf[:options]
         conn.authenticate conf[:auth_type], conf[:account], conf[:password]
         return true
-      rescue SocketError, Net::IMAP::NoResponseError => e
+      rescue SocketError, Net::IMAP::NoResponseError, Errno::ECONNREFUSED => e
         self.error = e.to_s
       end
       false
@@ -52,18 +58,6 @@ module Webmail::Imap
 
     def special_mailboxes
       [sent_box, draft_box, trash_box]
-    end
-
-    def sent_box
-      user.imap_sent_box
-    end
-
-    def draft_box
-      user.imap_draft_box
-    end
-
-    def trash_box
-      user.imap_trash_box
     end
 
     def sent_box?(name)
