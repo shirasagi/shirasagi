@@ -47,6 +47,16 @@ ja:
         '10': 10分前
         '30': 30分前
         '60': 1時間前
+      input_type:
+        text_field: テキストボックス
+        text_area: テキストエリア
+        email_field: メールアドレス
+        date_field: 日付
+        radio_button: ラジオボタン選択
+        select: プルダウン選択
+        check_box: チェックボックス選択
+        upload_file: ファイル投稿
+
     links:
       back_to_portal: ポータルへ戻る
       restore_reminder: 元に戻す

@@ -2,6 +2,8 @@ module Gws::Addon::CustomField
   extend ActiveSupport::Concern
   extend SS::Addon
 
+  WELL_KNOWN_INPUT_TYPES = %w(text_field text_area email_field date_field radio_button select check_box upload_file).freeze
+
   included do
     class_variable_set(:@@_input_type_include_upload_file, nil)
 
@@ -37,9 +39,7 @@ module Gws::Addon::CustomField
       end
     end
 
-    validates :input_type, presence: true, inclusion: {
-      in: %w(text_field text_area email_field radio_button select check_box upload_file)
-    }
+    validates :input_type, presence: true, inclusion: { in: WELL_KNOWN_INPUT_TYPES, allow_blank: true }
     validates :required, inclusion: { in: %w(required optional), allow_blank: true }
     validates :max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validates :max_upload_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
@@ -82,7 +82,7 @@ module Gws::Addon::CustomField
       return value unless value
 
       case input_type
-      when 'text_field', 'text_area', 'email_field', 'radio_button', 'select'
+      when 'text_field', 'text_area', 'email_field', 'date_field', 'radio_button', 'select'
         String.mongoize(value)
       when 'check_box'
         value.map { |v| String.mongoize(v) }
@@ -102,7 +102,7 @@ module Gws::Addon::CustomField
       return value unless value
 
       case input_type
-      when 'text_field', 'text_area', 'email_field', 'radio_button', 'select'
+      when 'text_field', 'text_area', 'email_field', 'date_field', 'radio_button', 'select'
         String.demongoize(value)
       when 'check_box'
         value.map { |v| String.demongoize(v) }
@@ -144,8 +144,8 @@ module Gws::Addon::CustomField
   end
 
   def input_type_options
-    ret = %w(text_field text_area email_field radio_button select check_box).map do |v|
-      [ I18n.t("inquiry.options.input_type.#{v}"), v ]
+    ret = %w(text_field text_area email_field date_field radio_button select check_box).map do |v|
+      [ I18n.t("gws.options.input_type.#{v}"), v ]
     end
 
     if self.class.input_type_include_upload_file?
@@ -176,6 +176,11 @@ module Gws::Addon::CustomField
     options = additional_attr_to_h
     options['maxlength'] = max_length if max_length.present?
     options['placeholder'] = place_holder if place_holder.present?
+    if input_type == 'date_field'
+      options['class'] = [ options['class'] ].flatten.compact
+      options['class'] << 'date'
+      options['class'] << 'js-date'
+    end
     options
   end
 
