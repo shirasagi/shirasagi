@@ -163,12 +163,8 @@ class @Webmail_Mail_List
           $('.webmail-mails.list-items .mail-draggable').find('[type="checkbox"]').prop('checked', false)
           $(this).find('[type="checkbox"]').prop('checked', true)
 
-        cln = $(this).clone()
-        cln.find('[type="checkbox"]').prop('checked', true)
-        cln.removeClass("mail-draggable")
         ul = $('<ul></ul>')
-        ul.append(cln)
-        $('.webmail-mails.list-items .mail-draggable').not(this).each ->
+        $('.webmail-mails.list-items .mail-draggable').each ->
           input = $(this).find('[type="checkbox"]')
           if input.prop('checked') && $(ul).find("li").length < 4
             cln = $(this).clone()
