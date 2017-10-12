@@ -19,13 +19,21 @@ module Gws::Addon::Workflow::CustomForm
       form.columns.each do |column|
         column_id = column.id.to_s
         value = Gws::Workflow::Column.to_mongo(column.input_type, hash[column_id])
-        if value.is_a?(Hash)
-          values << [ column_id, { 'input_type' => column.input_type, 'name' => column.name }.merge(value) ]
-        else
-          values << [ column_id, { 'input_type' => column.input_type, 'name' => column.name, 'value' => value } ]
-        end
+        values << [ column_id, serialize_value(column, value) ]
       end
       Hash[values]
+    end
+
+    private
+
+    def serialize_value(column, value)
+      ret = { 'input_type' => column.input_type, 'order' => column.order, 'name' => column.name }
+      if value.is_a?(Hash)
+        ret.merge(value)
+      else
+        ret['value'] = value
+      end
+      ret
     end
   end
 
