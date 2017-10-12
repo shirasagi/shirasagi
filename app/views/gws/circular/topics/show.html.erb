@@ -1,13 +1,5 @@
 <% addons = @item.class.addons.select { |addon| [SS::Addon::Markdown, Gws::Addon::Member].exclude?(addon.klass) } %>
 
-<%= jquery do %>
-    $("#mark").change(function(){
-      var url = this.checked ? '<%= gws_circular_apis_mark_path(id: @item.id) %>' : '<%= gws_circular_apis_unmark_path(id: @item.id) %>';
-      $.ajax({ url: url, dataType: 'json' });
-    });
-    Gws_Topic.render(document.getElementById("mark"));
-<% end %>
-
 <div class="gws-board gws-board-thread">
   <article class="topic">
     <header>
@@ -44,10 +36,7 @@
       <% end %>
 
       <% if @item.member?(@cur_user) %>
-          <label class="btn">
-            <%= check_box_tag :mark, nil, @item.unmarkable?(@cur_user), class: 'hide' %>
-            <span><%= t('gws/circular.topic.mark') %></span>
-          </label>
+          <%= link_to @item.mark_action_label, toggle_gws_circular_topic_path, class: "btn #{ 'gws-btn-pushed' if @item.marked? }" %>
       <% end %>
     </div>
   </article>

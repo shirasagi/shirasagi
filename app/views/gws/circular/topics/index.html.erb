@@ -1,16 +1,16 @@
 <%= jquery do %>
     $(".mark-all").click(function(){
-      var form = Gws_Topic.buildForm("<%= mark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.mark_all') %>");
+      var form = Gws_Circular_Topic.buildForm("<%= mark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.mark_all') %>");
       form.appendTo(document.body).submit();
     });
 
     $(".unmark-all").click(function(){
-      var form = Gws_Topic.buildForm("<%= unmark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.unmark_all') %>");
+      var form = Gws_Circular_Topic.buildForm("<%= unmark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.unmark_all') %>");
       form.appendTo(document.body).submit();
     });
 
     $(".download").click(function(){
-      var form = Gws_Topic.buildForm("<%= download_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.download') %>");
+      var form = Gws_Circular_Topic.buildForm("<%= download_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.download') %>");
       form.appendTo(document.body).submit();
     });
 <% end %>
