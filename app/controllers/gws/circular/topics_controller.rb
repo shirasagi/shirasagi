@@ -36,7 +36,7 @@ class Gws::Circular::TopicsController < ApplicationController
   end
 
   def download
-    raise '403' unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    raise '403' if @items.empty?
 
     csv = @items.
         order(updated: -1).
