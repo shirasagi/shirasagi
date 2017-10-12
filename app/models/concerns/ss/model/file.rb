@@ -33,9 +33,10 @@ module SS::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validate :validate_filename
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
-    before_save :validate_filename
+    before_save :mangle_filename
     before_save :rename_file, if: ->{ @db_changes.present? }
     before_save :save_file
     before_destroy :remove_file
@@ -189,15 +190,19 @@ module SS::Model::File
     self.filename = self.filename.unicode_normalize(:nfkc) if self.filename.present?
   end
 
-  def multibyte_filename_state_enabled?
-    return if site.blank? || !site.respond_to?(:multibyte_filename_state_enabled?)
-    site.multibyte_filename_state_enabled?
+  def multibyte_filename_disabled?
+    return if site.blank? || !site.respond_to?(:multibyte_filename_disabled?)
+    site.multibyte_filename_disabled?
   end
 
   def validate_filename
-    if multibyte_filename_state_enabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
       errors.add :in_file, :invalid_filename
     end
+  end
+
+  def mangle_filename
+    set_sequence
     self.filename = SS::FilenameConvertor.convert(filename, id: id)
   end
 
