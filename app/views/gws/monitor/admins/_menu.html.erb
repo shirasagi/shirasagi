@@ -1,3 +1,9 @@
+<nav class="nav-management-menu">
+  <% if Gws::Monitor::Topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t("ss.management"), gws_monitor_management_topics_path %>
+  <% end %>
+</nav>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%#= link_to t("gws/monitor.links.categories"), categories_gws_monitor_topics_path %>
