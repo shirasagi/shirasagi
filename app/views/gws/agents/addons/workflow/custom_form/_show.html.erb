@@ -1,7 +1,7 @@
 <% return if @item.custom_values.blank? %>
 
 <dl class="see mod-gws-workflow-custom_form">
-<% @item.custom_values.each do |key, val| %>
+<% @item.custom_values.sort_by { |key, val| val['order'] }.each do |key, val| %>
   <% input_type = val['input_type'] %>
   <% if input_type == 'upload_file' %>
     <%= render partial: 'gws/agents/addons/workflow/custom_form/show_file', locals: { val: val } %>
