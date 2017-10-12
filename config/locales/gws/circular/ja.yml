@@ -50,7 +50,7 @@ ja:
       gws/circular/topic:
         name: タイトル
         due_date: 閲覧期限日時
-        ignored: 既読にする形式
+        mark_type: 既読にする形式
 
   tooltip:
     gws/circular/topic:
@@ -58,5 +58,5 @@ ja:
         - タイトルを入力します。
       due_date:
         - 閲覧期限日時を選択します。
-      ignored:
+      mark_type:
         - 既読にする形式を選択します。
