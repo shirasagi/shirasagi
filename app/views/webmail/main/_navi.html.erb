@@ -14,12 +14,12 @@ end
 <% end %>
 
 <nav class="main-navi main-navi-md webmail-navi webmail-navi-mailboxes">
-  <%= link_to webmail_apis_recent_path, class: "reload" do %>
+  <%= link_to webmail_apis_recent_path(account: params[:account] || @cur_user.imap_default_index), class: "reload" do %>
     <i class="material-icons md-dark">&#xE5D5;</i>
   <% end if @mailboxes  %>
 
   <h2>
-    <%= link_to webmail_mails_path, 'data-name' => 'INBOX' do %>
+    <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), 'data-name' => 'INBOX' do %>
       <i class="material-icons">&#xE0E1;</i> <%= t('webmail.box.inbox') %>
       <% if @mailboxes && inbox = @mailboxes.inbox %>
         <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
@@ -61,12 +61,12 @@ end
 
 <nav class="mod-navi">
   <h2><%= t("ss.config") %></h2>
-  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
+  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
   <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
-  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
 </nav>
 
 <% if @quota %>

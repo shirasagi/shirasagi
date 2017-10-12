@@ -26,6 +26,9 @@ production: &production
   # Quota cache expires (Hours)
   cache_quota_expires: 24
 
+  # Upper limit of user's imap account
+  imap_account_limit: 5
+
 test:
   <<: *production
   disable: false

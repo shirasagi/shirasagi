@@ -25,7 +25,9 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    @imap = Webmail::Imap::Base.new(@cur_user)
+    @imap_setting = @cur_user.imap_settings[params[:account].to_i]
+    @imap_setting ||= Webmail::ImapSetting.new
+    @imap = Webmail::Imap::Base.new(@cur_user, @imap_setting)
   end
 
   def imap_disconnect

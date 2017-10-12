@@ -32,8 +32,8 @@ class Webmail::Mailbox
 
   default_scope -> { order_by order: 1, downcase_name: 1 }
 
-  scope :imap_user, ->(user) {
-    conf = user.imap_settings
+  scope :imap_setting, ->(setting) {
+    conf = setting.imap_settings
     where host: conf[:host], account: conf[:account]
   }
 

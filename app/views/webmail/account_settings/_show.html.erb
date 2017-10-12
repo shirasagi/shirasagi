@@ -2,14 +2,26 @@
 
 <dl class="see">
   <dt><%= @model.t :imap_host %></dt>
-  <dd><%= @item.send(:imap_host).presence || default %></dd>
+  <dd><%= setting.imap_host || default %></dd>
 
   <dt><%= @model.t :imap_auth_type %></dt>
-  <dd><%= @item.label(:imap_auth_type).presence || default %></dd>
+  <dd><%= setting.imap_auth_type.presence || default %></dd>
 
   <dt><%= @model.t :imap_account %></dt>
-  <dd><%= @item.send(:imap_account).presence || default %></dd>
+  <dd><%= setting.imap_account || default %></dd>
 
   <dt><%= @model.t :imap_password %></dt>
-  <dd><%= ('*' * @item.decrypt_imap_password.to_s.size).presence || default %></dd>
+  <dd><%= ('*' * setting.decrypt_imap_password.to_s.size).presence || default %></dd>
+
+  <dt><%= @model.t :imap_sent_box %></dt>
+  <dd><%= setting.imap_sent_box %></dd>
+
+  <dt><%= @model.t :imap_draft_box %></dt>
+  <dd><%= setting.imap_draft_box %></dd>
+
+  <dt><%= @model.t :imap_account %></dt>
+  <dd><%= setting.imap_trash_box %></dd>
+
+  <dt><%= @model.t :imap_default_index %></dt>
+  <dd><%= check_box_tag "", 1, default_index, class: "default-index", disabled: true %></dd>
 </dl>
