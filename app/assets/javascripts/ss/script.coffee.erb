@@ -89,18 +89,6 @@ $ ->
     $(".dropdown").removeClass('active')
     $(".dropdown-menu").removeClass('active')
 
-  # datetimepicker
-  $.datetimepicker.setLocale('ja');
-  if ($.support.opacity)
-    $(".js-date").datetimepicker
-      timepicker: false
-      format:'Y/m/d'
-      closeOnDateSelect: true
-      scrollInput: false
-    $(".js-datetime").datetimepicker
-      roundTime: 'ceil'
-      step: 30
-
   SS_ListUI.render("table.index")
   SS_Mobile.render()
   SS_AddonTabs.render()
@@ -137,6 +125,8 @@ class @SS
       return true if elem.hasClass("cboxElement")
       if !elem.attr("target") && !elem.data("target")
         elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+
+    @renderDateTimePicker()
 
   @renderNotInBox: ->
     SS_Login.render()
@@ -254,3 +244,16 @@ class @SS
             alert(["== Error =="].concat(errors).join("\n"));
           catch
             alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+
+  # datetimepicker
+  @renderDateTimePicker: ->
+    $.datetimepicker.setLocale('ja');
+    if ($.support.opacity)
+      $(".js-date").datetimepicker
+        timepicker: false
+        format:'Y/m/d'
+        closeOnDateSelect: true
+        scrollInput: false
+      $(".js-datetime").datetimepicker
+        roundTime: 'ceil'
+        step: 30

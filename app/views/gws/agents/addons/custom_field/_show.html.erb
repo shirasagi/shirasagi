@@ -19,7 +19,9 @@
   <% allowed_input_type(%w(text_field text_area email_field)) do %>
     <dt><%= @model.t :max_length %></dt>
     <dd><%= @item.max_length %></dd>
+  <% end %>
 
+  <% allowed_input_type(%w(text_field text_area email_field date_field)) do %>
     <dt><%= @model.t :place_holder %></dt>
     <dd><%= @item.place_holder %></dd>
 

@@ -33,7 +33,7 @@ class Gws::Workflow::Column
     item = hash[id.to_s]
     input_type = item['input_type']
 
-    return unless %w(text_field text_area email_field radio_button select check_box upload_file).include?(input_type)
+    return unless WELL_KNOWN_INPUT_TYPES.include?(input_type)
 
     send("validate_#{input_type}_value", item)
   end
@@ -49,6 +49,7 @@ class Gws::Workflow::Column
   end
   alias validate_text_area_value validate_text_field_value
   alias validate_email_field_value validate_text_field_value
+  alias validate_date_field_value validate_text_field_value
 
   def validate_radio_button_value(item)
     value = item['value']

@@ -26,7 +26,9 @@
   <% allowed_input_type(%w(text_field text_area email_field)) do %>
     <dt><%= @model.t :max_length %><%= @model.tt :max_length %></dt>
     <dd><%= f.number_field :max_length %></dd>
+  <% end %>
 
+  <% allowed_input_type(%w(text_field text_area email_field date_field)) do %>
     <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
     <dd><%= f.text_field :place_holder %></dd>
 

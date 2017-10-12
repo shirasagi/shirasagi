@@ -36,16 +36,7 @@ $ ->
   $(".ss-part").each ->
     SS.renderPart $(this)
 
-  $.datetimepicker.setLocale('ja');
-  if ($.support.opacity)
-    $(".js-date").datetimepicker
-      timepicker: false
-      format:'Y/m/d'
-      closeOnDateSelect: true
-      scrollInput: false
-    $(".js-datetime").datetimepicker
-      roundTime: 'ceil'
-      step: 30
+  SS.renderDateTimePicker()
 
 class @SS
   @head = ""
@@ -171,6 +162,18 @@ class @SS
       $.ajax $.extend(defaults, params)
       e.preventDefault();
       return false
+
+  @renderDateTimePicker: ->
+    $.datetimepicker.setLocale('ja');
+    if ($.support.opacity)
+      $(".js-date").datetimepicker
+        timepicker: false
+        format:'Y/m/d'
+        closeOnDateSelect: true
+        scrollInput: false
+      $(".js-datetime").datetimepicker
+        roundTime: 'ceil'
+        step: 30
 
 class @SS_Kana
   @dir = "<%= SS.config.kana.location %>"
