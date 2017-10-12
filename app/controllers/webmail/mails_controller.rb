@@ -183,6 +183,7 @@ class Webmail::MailsController < ApplicationController
   def rename_mailbox
     @item = Webmail::Mailbox.where(name: params[:src]).first
     @item.name = params[:dst]
+    @item.imap = @imap
     @item.sync = true
     @item.update
     render_change :move, reload: true
