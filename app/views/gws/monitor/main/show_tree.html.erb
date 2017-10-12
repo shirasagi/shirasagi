@@ -94,6 +94,17 @@
   <% if @item.subscribed_users.present? %>
   <%= render partial: 'gws/monitor/topics/subscribed_users' %>
   <% end %>
+
+  <% if controller_path == "gws/monitor/management/topics" %>
+  <article class="topic">
+    <header>
+      <h2><%= t('gws/monitor.topic.export_csv') %></h2>
+    </header>
+    <div class="menu">
+      <%= link_to(t('gws/monitor.links.export_csv'), download_gws_monitor_management_topic_path, class: 'btn export_csv') %>
+    </div>
+  </article>
+  <% end %>
 </div>
 
 <%= jquery do %>
