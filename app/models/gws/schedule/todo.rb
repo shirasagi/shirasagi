@@ -75,7 +75,7 @@ class Gws::Schedule::Todo
   end
 
   def todo_state_name
-    self.class.todo_state_names[todo_state.to_sym]
+    todo_state_names[todo_state.to_sym]
   end
 
   def active?
@@ -93,13 +93,11 @@ class Gws::Schedule::Todo
     update_attributes(deleted: nil)
   end
 
-  class << self
-    def todo_state_names
-      @@_todo_state_names ||= I18n.t('gws/schedule/todo.options.todo_state')
-    end
+  def todo_state_names
+    I18n.t('gws/schedule/todo.options.todo_state')
+  end
 
-    def todo_state_options
-      @@_todo_state_options ||= todo_state_names.map(&:reverse)
-    end
+  def todo_state_options
+    todo_state_names.map(&:reverse)
   end
 end
