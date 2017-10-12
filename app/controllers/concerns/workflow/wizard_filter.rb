@@ -34,12 +34,13 @@ module Workflow::WizardFilter
     @item.workflow_approvers = workflow_approvers
     @item.save!
 
-    if workflow_approver[:state] == 'request'
+    if workflow_approver[:state] == 'request' && validate_domain(new_user_id)
       args = {
         f_uid: @item.workflow_user_id, t_uid: new_user_id, site: @cur_site, page: @item,
         url: params[:url], comment: @item.workflow_comment
       }
-      Workflow::Mailer.request_mail(args).deliver_now if validate_domain(new_user_id)
+
+      Workflow::Mailer.request_mail(args).deliver_now
     end
 
     render json: { id: @item.id }, status: :ok
