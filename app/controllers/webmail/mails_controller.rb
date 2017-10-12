@@ -1,3 +1,4 @@
+require "net/imap"
 class Webmail::MailsController < ApplicationController
   include Webmail::BaseFilter
   include Sns::CrudFilter
@@ -181,8 +182,8 @@ class Webmail::MailsController < ApplicationController
   end
 
   def rename_mailbox
-    @item = Webmail::Mailbox.where(name: params[:src]).first
-    @item.name = params[:dst]
+    @item = Webmail::Mailbox.where(original_name: params[:src]).first
+    @item.name = Net::IMAP.decode_utf7(params[:dst])
     @item.imap = @imap
     @item.sync = true
     @item.update
