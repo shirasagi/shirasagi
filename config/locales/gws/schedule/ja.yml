@@ -105,6 +105,11 @@ ja:
         - 2年6ヶ月
         - 3年
         - 3年6ヶ月
+  gws/schedule/todo_management:
+    links:
+      active: 削除を取り消す
+    confirm:
+      active_all: 選択した項目の削除を取り消しますか？
 
   modules:
     gws/schedule: スケジュール
