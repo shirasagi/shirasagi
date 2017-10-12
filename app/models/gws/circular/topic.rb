@@ -63,7 +63,7 @@ class Gws::Circular::Topic
     member?(u) && mark_user_ids.exclude?(u.id)
   end
 
-  def marked_by(u=user)
+  def mark_by(u=user)
     self.mark_user_ids = mark_user_ids << u.id if markable?(u)
     self
   end
@@ -73,9 +73,17 @@ class Gws::Circular::Topic
   end
   alias marked? unmarkable?
 
-  def unmarked_by(u=user)
+  def unmark_by(u=user)
     attributes[:mark_user_ids].delete(u.id) if unmarkable?(u)
     self
+  end
+
+  def toggle_by(u=user)
+    marked?(u) ? unmark_by(u) : mark_by(u)
+  end
+
+  def mark_action_label
+    marked? ? I18n.t('gws/circular.topic.unmark') : I18n.t('gws/circular.topic.mark')
   end
 
   def mark_type_options

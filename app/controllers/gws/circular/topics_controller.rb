@@ -18,22 +18,20 @@ class Gws::Circular::TopicsController < ApplicationController
   public
 
   def show
-    if @item.mark_type != 'normal'
-      @item.marked_by(@cur_user).save if @item.markable?(@cur_user)
+    if @item.mark_type == 'simple' && @item.markable?(@cur_user)
+      @item.mark_by(@cur_user).save
     end
     raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render
   end
 
   def mark_all
-    #TODO: dirty
-    @items.each{ |item| item.marked_by(@cur_user).save if item.markable?(@cur_user) }
+    @items.each{ |item| item.mark_by(@cur_user).save if item.markable?(@cur_user) }
     render_destroy_all(false)
   end
 
   def unmark_all
-    #TODO: dirty
-    @items.each{ |item| item.unmarked_by(@cur_user).save if item.unmarkable?(@cur_user) }
+    @items.each{ |item| item.unmark_by(@cur_user).save if item.unmarkable?(@cur_user) }
     render_destroy_all(false)
   end
 
