@@ -66,6 +66,7 @@ ja:
         name: タイトル
         order: 並び順
         state: 公開状態
+        memo: 備考
       gws/addon/workflow/column_setting:
         columns: 入力設定
       gws/workflow/column:
@@ -84,6 +85,9 @@ ja:
         - 数字が小さいほど上位に表示されます。
       state:
         - 申請フォームを公開するかどうかを選択します。
+      memo:
+        - 備考を入力します。
+        - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
     gws/workflow/column:
       name:
         - 項目を入力します。

@@ -14,8 +14,9 @@ class Gws::Workflow::Form
   field :name, type: String
   field :order, type: Integer
   field :state, type: String, default: 'closed'
+  field :memo, type: String
 
-  permit_params :name, :order
+  permit_params :name, :order, :memo
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
