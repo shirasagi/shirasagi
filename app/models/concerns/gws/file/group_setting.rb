@@ -12,8 +12,12 @@ module Gws::File::GroupSetting
     %w(enabled disabled).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }.to_a
   end
 
-  def multibyte_filename_state_enabled?
-    multibyte_filename_state != 'disabled'
+  def multibyte_filename_disabled?
+    multibyte_filename_state == 'disabled'
+  end
+
+  def multibyte_filename_enabled?
+    !multibyte_filename_disabled?
   end
 
   class << self
