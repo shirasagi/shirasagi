@@ -101,6 +101,8 @@ class @Webmail_Mail_List
           SS.notice(data.notice)
       return false
 
+    @renderDropEvents()
+
   @findCheckedUids: ->
     checked = $('.webmail-mails .list-item input:checkbox:checked').map ->
       $(this).val()
@@ -148,6 +150,67 @@ class @Webmail_Mail_List
             wrap.removeClass('on').addClass('off')
       return false
 
+  @renderDropEvents: ->
+    $('.webmail-mails.list-items .mail-draggable').draggable(
+      revert: "invalid",
+      revertDuration: 50,
+      zIndex: 110,
+      opacity: 0.5,
+      cursor: "pointer"
+      helper: ()->
+        $(".tap-menu").hide()
+        unless $(this).find('[type="checkbox"]').prop('checked')
+          $('.webmail-mails.list-items .mail-draggable').find('[type="checkbox"]').prop('checked', false)
+          $(this).find('[type="checkbox"]').prop('checked', true)
+
+        ul = $('<ul></ul>')
+        $('.webmail-mails.list-items .mail-draggable').each ->
+          input = $(this).find('[type="checkbox"]')
+          if input.prop('checked') && $(ul).find("li").length < 4
+            cln = $(this).clone()
+            cln.find('[type="checkbox"]').prop('checked', true)
+            cln.removeClass("mail-draggable")
+            ul.append(cln)
+        ul
+    )
+    $('.webmail-navi-mailboxes .mailbox-draggable').draggable(
+      revert: "invalid",
+      revertDuration: 50,
+      zIndex: 110,
+      opacity: 0.5,
+      cursor: "pointer"
+      start: (e, ui)->
+        $(".tap-menu").hide()
+    )
+    $(".webmail-navi-mailboxes .mailbox-droppable").droppable(
+      accept: ".mail-draggable,.mailbox-draggable",
+      hoverClass: "droppable-hover",
+      tolerance: "pointer",
+      drop: (e, ui)->
+        $(".webmail-navi-mailboxes .mailbox-droppable").on "click.dragging", ()->
+          return false
+
+        ele = e.target
+        if ui.draggable.hasClass("mail-draggable")
+          dst = $(ele).attr("data-name")
+          uids = []
+          $('.webmail-mails.list-items .mail-draggable').each ->
+            input = $(this).find('[type="checkbox"]')
+            if input.prop('checked')
+              uids.push($(this).attr("data-uid"))
+              $(this).hide()
+
+          url = $(".webmail-mails-head .move-all").attr("data-href")
+
+          Webmail_Mail_List.updateMails(url, ids: uids, dst: dst)
+        else
+          src = ui.draggable.attr("data-name")
+          dst = $(ele).attr("data-name") + "." + ui.draggable.attr("data-basename")
+          url = $(".webmail-mails-head .rename-mailbox").attr("data-href")
+          $(ui.draggable).hide()
+          Webmail_Mail_List.updateMailbox(url, src: src, dst: dst)
+    )
+
   @updateMails: (url, opts = {})->
     token = $('meta[name="csrf-token"]').attr('content')
     form = $("<form/>", action: url, method: "post")
@@ -160,6 +223,20 @@ class @Webmail_Mail_List
     if opts['ids']
       for id in opts['ids']
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+    form.appendTo(document.body).submit()
+    return false
+
+  @updateMailbox: (url, opts = {})->
+    token = $('meta[name="csrf-token"]').attr('content')
+    form = $("<form/>", action: url, method: "post")
+    form.append($("<input/>", type: "hidden", name: "_method", value: "put" ))
+    form.append($("<input/>", type: "hidden", name: "authenticity_token", value: token ))
+    if opts['redirect']
+      form.append($("<input/>", type: "hidden", name: "redirect", value: opts['redirect'] ))
+    if opts['src']
+      form.append($("<input/>", type: "hidden", name: "src", value: opts['src'] ))
+    if opts['dst']
+      form.append($("<input/>", type: "hidden", name: "dst", value: opts['dst'] ))
     form.appendTo(document.body).submit()
     return false
 

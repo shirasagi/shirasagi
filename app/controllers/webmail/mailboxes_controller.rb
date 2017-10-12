@@ -14,7 +14,7 @@ class Webmail::MailboxesController < ApplicationController
   end
 
   def fix_params
-    @imap.account_scope.merge(cur_user: @cur_user, sync: true)
+    @imap.account_scope.merge(cur_user: @cur_user, imap: @imap, sync: true)
   end
 
   def set_destroy_items

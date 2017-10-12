@@ -11,7 +11,7 @@ module Webmail::BaseFilter
     before_action :imap_initialize
     # before_action :imap_login
     after_action :imap_disconnect
-    rescue_from Net::IMAP::NoResponseError, with: :rescue_impa_no_response_error
+    rescue_from Net::IMAP::NoResponseError, with: :rescue_imap_no_response_error
   end
 
   private
