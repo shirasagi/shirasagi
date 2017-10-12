@@ -64,7 +64,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
 
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_answers.
+        and_admins.
         page(params[:page]).per(50)
   end
 

@@ -41,6 +41,8 @@ SS::Application.routes.draw do
       post :public_all, on: :collection
       post :preparation_all, on: :collection
       post :question_not_applicable_all, on: :collection
+      get :disable, on: :member
+      delete :disable_all, on: :collection
     end
 
     namespace "management" do
