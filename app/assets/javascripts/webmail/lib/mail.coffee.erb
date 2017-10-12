@@ -205,7 +205,7 @@ class @Webmail_Mail_List
               $(this).hide()
 
           url = $(".webmail-mails-head .move-all").attr("data-href")
-          console.log(uids)
+
           Webmail_Mail_List.updateMails(url, ids: uids, dst: dst)
         else
           src = ui.draggable.attr("data-name")
