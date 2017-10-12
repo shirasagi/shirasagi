@@ -32,6 +32,8 @@ SS::Application.routes.draw do
     end
     get "/search_approvers" => "search_approvers#index"
     match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]
+    get "/wizard/:id/reroute" => "wizard#reroute"
+    post "/wizard/:id/reroute" => "wizard#do_reroute"
     match "/wizard/:id" => "wizard#index", via: [:get, :post]
   end
 end

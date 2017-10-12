@@ -40,6 +40,16 @@ SS_Workflow = function (el, options) {
     e.preventDefault();
     return false;
   });
+
+  $(document).on("click", el + " .workflow-reroute", function (e) {
+    var $this = $(this);
+    var level = $this.data('level');
+    var userId = $this.data('user-id');
+
+    pThis.reroute(level, userId);
+    e.preventDefault();
+    return false;
+  });
 };
 
 SS_Workflow.prototype = {
@@ -165,5 +175,123 @@ SS_Workflow.prototype = {
         }
       }
     });
+  },
+  reroute: function(level, userId) {
+    var uri = this.composeWorkflowUrl('wizard');
+    uri += "/reroute";
+    var param = $.param({ level: level, user_id: userId });
+    uri += "?" + param;
+
+    var pThis = this;
+    $('<a/>').attr('href', uri).colorbox({
+      fixed: true,
+      width: "90%",
+      height: "90%",
+      open: true,
+      onCleanup: function() {
+        var selectedUserId = $('#cboxLoadedContent input[name=selected_user_id]').val();
+        if (! selectedUserId) {
+          return;
+        }
+
+        var uri = pThis.composeWorkflowUrl('wizard');
+        uri += "/reroute";
+        var data = {
+          level: level, user_id: userId, new_user_id: selectedUserId, url: pThis.options.request_url
+        };
+
+        $.ajax({
+          type: 'POST',
+          url: uri,
+          data: data,
+          success: function(html, status) {
+            location.reload();
+          },
+          error: function(xhr, status) {
+            try {
+              var errors = $.parseJSON(xhr.responseText);
+              alert(errors.join("\n"));
+            } catch (ex) {
+              alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+            }
+          }
+        });
+      }
+    });
+  }
+};
+
+SS_WorkflowRerouteBox = function (el, options) {
+  this.$el = $(el);
+  this.options = options;
+
+  var pThis = this;
+
+  this.$el.find('form.search').on("submit", function(e) {
+    $(this).ajaxSubmit({
+      url: $(this).attr("action"),
+      success: function (data) {
+        pThis.$el.closest("#cboxLoadedContent").html(data);
+      },
+      error: function (data, status) {
+        alert("== Error ==");
+      }
+    });
+
+    e.preventDefault();
+  });
+
+  this.$el.find('.pagination a').on("click", function(e) {
+    var url = $(this).attr("href");
+    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, xhr) {
+      if (status === 'error') {
+        alert("== Error ==");
+      }
+    });
+
+    e.preventDefault();
+    return false;
+  });
+
+  this.$el.find('.select-single-item').on("click", function(e) {
+    var $this = $(this);
+    if (! SS.disableClick($this)) {
+      return false;
+    }
+
+    pThis.selectItem($this);
+
+    e.preventDefault();
+    $.colorbox.close();
+  });
+};
+
+SS_WorkflowRerouteBox.prototype = {
+  selectItem: function($this) {
+    var listItem = $this.closest('.list-item');
+    var id = listItem.data('id');
+    var name = listItem.data('name');
+    var email = listItem.data('email');
+
+    var source_name = this.$el.data('name');
+    var source_email = this.$el.data('email');
+
+    if (source_name) {
+      if (source_email) {
+        source_name += '(' + source_email + ')'
+      }
+    }
+
+    var message = '';
+    if (source_name) {
+      message += source_name;
+      message += 'を';
+    }
+    message += name + '(' + email + ')' + 'に変更します。よろしいですか？';
+    if(! confirm(message)) {
+      return;
+    }
+
+    this.$el.find('input[name=selected_user_id]').val(id);
   }
 };
