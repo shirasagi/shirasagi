@@ -28,6 +28,7 @@ module SS::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
+    before_validation :normalize_filename
 
     validates :model, presence: true
     validates :state, presence: true
@@ -169,6 +170,11 @@ module SS::Model::File
     self.filename     = in_file.original_filename if filename.blank?
     self.size         = in_file.size
     self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
+  end
+
+  def normalize_filename
+    self.name     = self.name.unicode_normalize(:nfkc) if self.name.present?
+    self.filename = self.filename.unicode_normalize(:nfkc) if self.filename.present?
   end
 
   def validate_filename
