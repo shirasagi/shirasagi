@@ -21,13 +21,13 @@
   </ul>
 <% else %>
   <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
-  <h3><%= link_to item.name, opendata_datasets_path(@cur_site.host, item), class: "icon-node" %></h3>
+  <h3><%= link_to item.name, opendata_datasets_path(@cur_site, item), class: "icon-node" %></h3>
   <% end %>
   <% Opendata::Node::App.site(@cur_site).each do |item| %>
-  <h3><%= link_to item.name, opendata_apps_path(@cur_site.host, item), class: "icon-node" %></h3>
+  <h3><%= link_to item.name, opendata_apps_path(@cur_site, item), class: "icon-node" %></h3>
   <% end %>
   <% Opendata::Node::Idea.site(@cur_site).each do |item| %>
-  <h3><%= link_to item.name, opendata_ideas_path(@cur_site.host, item), class: "icon-node" %></h3>
+  <h3><%= link_to item.name, opendata_ideas_path(@cur_site, item), class: "icon-node" %></h3>
   <% end %>
 <% end %>
 

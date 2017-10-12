@@ -13,7 +13,7 @@ class Rss::ImportJob < Rss::ImportBase
 
     def register_job(site, node, user = nil)
       if node.try(:rss_refresh_method) == Rss::Node::Page::RSS_REFRESH_METHOD_AUTO
-        bind(site_id: site.host, node_id: node.id, user_id: user.present? ? user.id : nil).perform_later
+        bind(site_id: site.id, node_id: node.id, user_id: user.present? ? user.id : nil).perform_later
       else
         Rails.logger.info("node `#{node.filename}` is prohibited to update")
       end
