@@ -1,9 +1,9 @@
 <%= jquery do %>
-  $('.gws-category-navi-menu #category_id').change(function() {
+    $('.gws-category-navi-menu #category_id').change(function() {
     var cid = $(this).val();
     if (cid) location.href = '<%= gws_monitor_category_topics_path(category: 'ID') %>'.replace('ID', cid);
     else location.href = '<%= gws_monitor_topics_path %>';
-  });
+    });
 <% end %>
 
 <div class="gws-category-navi-menu">
