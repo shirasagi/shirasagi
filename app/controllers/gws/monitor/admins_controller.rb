@@ -66,7 +66,6 @@ class Gws::Monitor::AdminsController < ApplicationController
 
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_admins.
         page(params[:page]).per(50)
   end
 

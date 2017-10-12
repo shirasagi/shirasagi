@@ -47,7 +47,10 @@ SS::Application.routes.draw do
 
     namespace "management" do
       resources :topics, concerns: [:deletion]
-      resources :trashes, concerns: [:deletion]
+      resources :trashes, concerns: [:deletion] do
+        get :active, on: :member
+        post :active_all, on: :collection
+      end
     end
 
     # with category
