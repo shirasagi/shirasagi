@@ -1,8 +1,8 @@
 <% return if @item.main_facility.blank? %>
 
 <dl class="see mod-gws-schedule-facility_custom_values">
-  <% @item.main_facility.custom_fields.each do |custom_field| %>
+  <% @item.main_facility.custom_fields.order_by(order: 1, created: 1).each do |custom_field| %>
   <dt><%= custom_field.name %></dt>
-  <dd><%= br [ @item.facility_custom_values[custom_field.id.to_s].presence ].compact.join(', ') %></dd>
+  <dd><%= tryb { br [ @item.facility_custom_values[custom_field.id.to_s]['value'].presence ].compact.join(', ') } %></dd>
   <% end %>
 </dl>

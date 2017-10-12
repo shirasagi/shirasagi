@@ -13,30 +13,6 @@ module Gws::Addon::Workflow::CustomForm
     after_destroy :after_destroy_custom_values
   end
 
-  module ClassMethods
-    def build_custom_values(form, hash)
-      values = []
-      form.columns.each do |column|
-        column_id = column.id.to_s
-        value = Gws::Workflow::Column.to_mongo(column.input_type, hash[column_id])
-        values << [ column_id, serialize_value(column, value) ]
-      end
-      Hash[values]
-    end
-
-    private
-
-    def serialize_value(column, value)
-      ret = { 'input_type' => column.input_type, 'order' => column.order, 'name' => column.name }
-      if value.is_a?(Hash)
-        ret.merge(value)
-      else
-        ret['value'] = value
-      end
-      ret
-    end
-  end
-
   def read_custom_value(column)
     return if custom_values.blank?
 
@@ -61,7 +37,7 @@ module Gws::Addon::Workflow::CustomForm
 
   def validate_custom_values
     return if form.blank?
-    validator = form.columns.to_validator(attributes: [:custom_values])
+    validator = form.to_validator(attributes: [:custom_values])
     validator.validate(self)
   end
 

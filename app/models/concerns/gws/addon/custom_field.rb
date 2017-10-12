@@ -65,6 +65,16 @@ module Gws::Addon::CustomField
       params
     end
 
+    def build_custom_values(hash)
+      values = []
+      all.each do |item|
+        item_id = item.id.to_s
+        value = to_mongo(item.input_type, hash[item_id])
+        values << [ item_id, item.serialize_value(value) ]
+      end
+      Hash[values]
+    end
+
     def to_validator(options)
       criteria = self.criteria.dup
       ActiveModel::BlockValidator.new(options.dup) do |record, attribute, value|
@@ -184,8 +194,23 @@ module Gws::Addon::CustomField
     options
   end
 
-  def validate_value(record, attribute, hash)
-    raise NotImplementedError
+  def serialize_value(value)
+    ret = { 'input_type' => self.input_type, 'order' => self.order, 'name' => self.name }
+    if value.is_a?(Hash)
+      ret.merge!(value)
+    else
+      ret['value'] = value
+    end
+    ret
+  end
+
+  def validate_value(record, attribute, value)
+    hash = value[id.to_s]
+    input_type = hash['input_type']
+
+    return unless WELL_KNOWN_INPUT_TYPES.include?(input_type)
+
+    send("validate_#{input_type}_value", record, hash)
   end
 
   def resizing
@@ -199,6 +224,81 @@ module Gws::Addon::CustomField
   def validate_select_options
     if input_type =~ /(select|radio_button|check_box)/
       errors.add :select_options, :blank if select_options.blank?
+    end
+  end
+
+  def validate_text_field_value(record, hash)
+    value = hash['value']
+
+    if required? && value.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+  end
+  alias validate_text_area_value validate_text_field_value
+  alias validate_email_field_value validate_text_field_value
+  alias validate_date_field_value validate_text_field_value
+
+  def validate_radio_button_value(record, hash)
+    value = hash['value']
+
+    if required? && value.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+
+    return if value.blank?
+
+    unless select_options.include?(value)
+      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+    end
+  end
+  alias validate_select_value validate_radio_button_value
+
+  def validate_check_box_value(record, hash)
+    values = hash['value']
+    values = [ values ].flatten.compact.select(&:present?)
+
+    if required? && values.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+
+    return if values.blank?
+
+    diff = values - select_options
+    if diff.present?
+      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: diff.join(', ')))
+    end
+  end
+
+  def validate_upload_file_value(record, hash)
+    files = hash['file']
+    files = [ files ].flatten.compact.select(&:present?)
+    if required? && files.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+    end
+
+    return if files.blank?
+
+    if files.count > upload_file_count
+      message = I18n.t(
+        'errors.messages.file_count',
+        size: ApplicationController.helpers.number_to_human(files.count),
+        limit: ApplicationController.helpers.number_to_human(upload_file_count)
+      )
+      record.errors.add(:base, "#{name}#{message}")
+    end
+
+    files.each do |file|
+      next unless file.is_a?(ActionDispatch::Http::UploadedFile)
+
+      if file.size > max_upload_file_size
+        message = I18n.t(
+          'errors.messages.too_large_file',
+          filename: file.original_filename,
+          size: ApplicationController.helpers.number_to_human_size(file.size),
+          limit: ApplicationController.helpers.number_to_human_size(max_upload_file_size)
+        )
+        record.errors.add(:base, "#{name}#{message}")
+      end
     end
   end
 end
