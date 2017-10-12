@@ -1,0 +1,39 @@
+<%= jquery do %>
+  var workflowRerouteBox = new SS_WorkflowRerouteBox('div#workflow-reroute-box');
+<% end %>
+
+<div id="workflow-reroute-box" data-id="<%= @cur_user.try(:id) %>" data-name="<%= @cur_user.try(:long_name) %>" data-email="<%= @cur_user.try(:email) %>">
+  <div class="search-ui-form">
+    <%= form_for :s, url: { action: :reroute }, html: { method: 'GET', class: :search } do |f| %>
+      <%= hidden_field_tag :level, params[:level] %>
+      <%= hidden_field_tag :user_id, params[:user_id] %>
+      <%= hidden_field_tag :page, params[:page] %>
+
+      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+      <%= f.submit  t("ss.buttons.search"), class: :btn %>
+    <% end %>
+  </div>
+
+  <table class="index">
+    <thead class="list-head">
+    <tr>
+      <th class="name"><%= @model.t :name %></th>
+      <th><%= @model.t :group_ids %></th>
+      <th><%= @model.t :title_ids %></th>
+    </tr>
+    </thead>
+    <tbody class="items">
+    <% @items.each do |item| %>
+      <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.long_name %>" data-email="<%= item.email %>">
+        <td><%= link_to "#{item.long_name}(#{item.email})", '#', class: 'select-single-item' %></td>
+        <td><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></td>
+        <td><%= tryb { item.title(@cur_site).name } %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+
+  <%= hidden_field_tag :selected_user_id, nil %>
+</div>
