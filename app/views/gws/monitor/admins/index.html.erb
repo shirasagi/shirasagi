@@ -21,6 +21,13 @@
     <% @items.each do |item| %>
     <% next unless item.active? %>
     <%
+      if item.admin_setting == "1" &&  @cur_user.id == item.user_id
+      elsif item.admin_setting == "2" &&  @cur_group.id == item.user_group_id
+      else
+        next
+      end
+    %>
+    <%
       css_classes = %w(list-item)
       if item.subscribed_users.where(id: @cur_user.id).present?
         css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')

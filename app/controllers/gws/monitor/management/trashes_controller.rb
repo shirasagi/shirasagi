@@ -64,7 +64,6 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
 
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_admins.
         page(params[:page]).per(50)
   end
 
@@ -73,5 +72,24 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     render file: "/gws/monitor/main/show_#{@item.mode}"
   end
 
-end
+  def active
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_destroy @item.active
+  end
 
+  def active_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        next if item.active
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
+end

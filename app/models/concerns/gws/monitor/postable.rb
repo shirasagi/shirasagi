@@ -72,10 +72,7 @@ module Gws::Monitor::Postable
       where("$and" =>
            ["$or" => [ {state_of_the_answer: "qNA"}, {state_of_the_answer: "answered"} ] ])
     }
-    scope :and_admins, ->() {
-      where("$and" =>
-           ["$or" => [{state_of_the_answer: "public"}, {state_of_the_answer: "preparation"}, {state_of_the_answer: "qNA"} ] ])
-    }
+
   end
 
   # Returns the topic.
