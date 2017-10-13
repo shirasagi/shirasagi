@@ -1,0 +1,62 @@
+ja:
+  gws/circular:
+    topic:
+      unmarked: 未読
+      marked: 既読
+      unmark: 未読にする
+      mark: 既読にする
+      download: CSVに出力する
+      member: 参加者
+      type: 区分
+      mark_at: 確認日時
+      update_at: 変更日時
+      user: ユーザー
+      replay: 返信内容
+    csv:
+      - 回覧id
+      - タイトル
+      - 返信id
+      - 状態
+      - 返信者名
+      - 返信欄
+      - 返信日時
+    options:
+      mark_type:
+        normal: 通常閲覧
+        simple: 簡易閲覧
+
+  modules:
+    gws/circular: 回覧板
+
+  gws_role:
+    read_other_gws_circular_topics: 回覧板の閲覧（全て）
+    read_private_gws_circular_topics: 回覧板の閲覧（所有）
+    edit_other_gws_circular_topics: 回覧板の編集（全て）
+    edit_private_gws_circular_topics: 回覧板の編集（所有）
+    delete_other_gws_circular_topics: 回覧板の削除（全て）
+    delete_private_gws_circular_topics: 回覧板の削除（所有）
+    read_other_gws_circular_posts: 回覧板コメントの閲覧（全て）
+    read_private_gws_circular_posts: 回覧板コメントの閲覧（所有）
+    edit_other_gws_circular_posts: 回覧板コメントの編集（全て）
+    edit_private_gws_circular_posts: 回覧板コメントの編集（所有）
+    delete_other_gws_circular_posts: 回覧板コメントの削除（全て）
+    delete_private_gws_circular_posts: 回覧板コメントの削除（所有）
+
+  mongoid:
+    models:
+      gws/circular/topic: 回覧板トピック
+
+    attributes:
+      gws/circular/topic:
+        name: タイトル
+        due_date: 閲覧期限日時
+        ignored: 既読にする形式
+
+  tooltip:
+    gws/circular/topic:
+      name:
+        - タイトルを入力します。
+      due_date:
+        - 閲覧期限日時を選択します。
+      ignored:
+        - 既読にする形式を選択します。
