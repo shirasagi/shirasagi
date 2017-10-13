@@ -233,6 +233,14 @@ module Gws::Addon::CustomField
     if required? && value.blank?
       record.errors.add(:base, name + I18n.t('errors.messages.blank'))
     end
+
+    return if value.blank?
+
+    if max_length.present? && max_length > 0
+      if value.length > max_length
+        record.errors.add(:base, name + I18n.t('errors.messages.less_than_or_equal_to', count: max_length))
+      end
+    end
   end
   alias validate_text_area_value validate_text_field_value
   alias validate_email_field_value validate_text_field_value
