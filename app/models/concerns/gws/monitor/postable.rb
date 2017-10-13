@@ -74,7 +74,35 @@ module Gws::Monitor::Postable
       where("$and" =>
            ["$or" => [ {state_of_the_answer: "question_not_applicable"}, {state_of_the_answer: "answered"} ] ])
     }
+    # Allow readable settings and readable permissions.
+    scope :readable, ->(user, site, opts = {}) {
+      cond = [
+          { "group_ids.0" => { "$exists" => false },
+            "user_ids.0" => { "$exists" => false },
+            "custom_group_ids.0" => { "$exists" => false } },
+          { :group_ids.in => user.group_ids },
+          { user_ids: user.id },
+      ]
+      if readable_setting_included_custom_groups?
+        cond << { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      end
 
+      cond << allow_condition(:read, user, site: site) if opts[:include_role]
+      where("$and" => [{ "$or" => cond }])
+    }
+    scope :remind, ->() {
+      where("$where" => "function() {
+       var sect = parseInt(this.reminder_start_section);
+       if (sect == -999) return false;
+       if (sect > 0) {
+         dd = this.due_date;
+       } else {
+         dd = this.created;
+       }
+       dt = new Date(dd.getFullYear(), dd.getMonth(), dd.getDate() - sect);
+       return (dt <= ISODate('#{Time.zone.today}'));
+     }")
+    }
   end
 
   # Returns the topic.
@@ -149,4 +177,15 @@ module Gws::Monitor::Postable
     self.state_of_the_answers_hash = groups.map { |m| [m.id, "preparation"] }.to_h
   end
 
+  module ClassMethods
+    def readable_setting_included_custom_groups?
+      class_variable_get(:@@_readable_setting_include_custom_groups)
+    end
+
+    private
+
+    def readable_setting_include_custom_groups
+      class_variable_set(:@@_readable_setting_include_custom_groups, true)
+    end
+  end
 end
