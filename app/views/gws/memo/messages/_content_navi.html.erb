@@ -11,7 +11,7 @@
       <% @group_navi.each do |item| %>
       <tr class="<%= 'current' if @address_group == item %>">
         <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
-          <%= link_to item.name, item.path %>
+          <%= link_to item.name, '#' %>
           <% if item.unseen? %>
               <span>(<%= item.unseen_count %>)</span>
           <% end %>
