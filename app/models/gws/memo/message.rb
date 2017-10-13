@@ -35,7 +35,15 @@ class Gws::Memo::Message
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
-    criteria = criteria.keyword_in params[:keyword], :subject, :text, :html if params[:keyword].present?
+
+    if params[:subject].present?
+      criteria = criteria.keyword_in params[:subject], :subject
+    end
+
+    params.values_at(:text, :html).reject(&:blank?).each do |value|
+      criteria = criteria.keyword_in value, :text, :html
+    end
+
     criteria
   }
 
