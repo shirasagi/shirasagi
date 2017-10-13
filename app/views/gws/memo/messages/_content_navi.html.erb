@@ -1,0 +1,24 @@
+<% if @group_navi %>
+<div id="content-navi">
+  <h2 class="content-navi-title">フォルダ</h2>
+  <table class="index gws-memo-folder">
+    <thead>
+      <tr>
+        <th>フォルダ名</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @group_navi.each do |item| %>
+      <tr class="<%= 'current' if @address_group == item %>">
+        <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
+          <%= link_to item.name, item.path %>
+          <% if item.unseen? %>
+              <span>(<%= item.unseen_count %>)</span>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>
