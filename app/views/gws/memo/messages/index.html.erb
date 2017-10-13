@@ -1,8 +1,7 @@
-<%= jquery do %>
-    Gws_Memo_Message.render();
-<% end %>
-
 <div class="index">
+  <%= jquery do %>
+      Gws_Memo_Message.render();
+  <% end %>
   <%= render file: '_list_head' %>
   <ul class="list-items ss-messages webmail-mails">
     <% @items.each do |item| %>
@@ -31,5 +30,4 @@
     <% end %>
   </ul>
 </div>
-
 <%= paginate @items if @items.try(:current_page) %>
