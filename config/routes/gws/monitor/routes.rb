@@ -46,7 +46,9 @@ SS::Application.routes.draw do
     end
 
     namespace "management" do
-      resources :topics, concerns: [:deletion]
+      resources :topics, concerns: [:deletion] do
+        get :download, on: :member
+      end
       resources :trashes, concerns: [:deletion] do
         get :active, on: :member
         post :active_all, on: :collection
