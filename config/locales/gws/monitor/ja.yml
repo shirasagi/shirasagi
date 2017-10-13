@@ -137,7 +137,7 @@ ja:
         contributor_name: 投稿者名
       gws/monitor/topic:
         name: タイトル
-        due_date: 回覧期限日時
+        due_date: 回答期限日時
         admin_setting: 記事管理設定
         spec_config: 回答表示設定
         reminder_start_section: リマインダー表示設定
