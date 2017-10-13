@@ -29,6 +29,9 @@ production: &production
   # Upper limit of user's imap account
   imap_account_limit: 5
 
+  # Store mail cache as static file
+  store_files: false
+
 test:
   <<: *production
   disable: false

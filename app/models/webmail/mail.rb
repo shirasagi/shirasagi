@@ -50,6 +50,7 @@ class Webmail::Mail
   validates :mailbox, presence: true
   validates :uid, presence: true
   validates :internal_date, presence: true
+  before_destroy :destroy_file
 
   default_scope -> { order_by internal_date: -1 }
 
@@ -105,5 +106,25 @@ class Webmail::Mail
     replied_mail.set_answered if replied_mail
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     true
+  end
+
+  def path
+    separated_id = Array.new(3, id).compact.map.with_index { |v, i| v.to_s.slice(0, i + 1) }.join("/")
+    "#{Rails.root}/private/files/webmail_files/#{separated_id}/_/#{id}"
+  end
+
+  def save_file
+    return if rfc822.blank?
+    dir = ::File.dirname(path)
+    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.binwrite(path, rfc822)
+  end
+
+  def read_file
+    self.rfc822 = Fs.exists?(path) ? Fs.binread(path) : nil
+  end
+
+  def destroy_file
+    Fs.rm_rf(path) if Fs.exists?(path)
   end
 end

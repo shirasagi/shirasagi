@@ -128,14 +128,14 @@ class Webmail::Mailbox
 
   def imap_update
     imap.conn.rename original_name_was, original_name
-    Webmail::Mail.where(imap.account_scope).where(mailbox: name_was).delete_all
+    Webmail::Mail.where(imap.account_scope).where(mailbox: name_was).destroy_all
   rescue Net::IMAP::NoResponseError => e
     rescue_imap_error(e)
   end
 
   def imap_delete
     imap.conn.delete original_name
-    mails.delete_all
+    mails.destroy_all
   rescue Net::IMAP::NoResponseError => e
     rescue_imap_error(e)
   end

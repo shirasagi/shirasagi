@@ -41,7 +41,7 @@ module Webmail::Imap::UidsCommand
     conn.expunge
     @last_response_size = resp ? resp.size : 0
 
-    Webmail::Mail.where(account_scope).where(mailbox: mailbox, :uid.in => uids).delete_all
+    Webmail::Mail.where(account_scope).where(mailbox: mailbox, :uid.in => uids).destroy_all
     resp
   end
 
