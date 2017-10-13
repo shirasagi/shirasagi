@@ -20,7 +20,7 @@ class Gws::Monitor::Topic
   validates :deleted, datetime: true
   permit_params :deleted
 
-  validates :category_ids, presence: true
+  #validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
   scope :custom_order, ->(key) {
