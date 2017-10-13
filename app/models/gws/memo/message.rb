@@ -4,10 +4,6 @@ class Gws::Memo::Message
   include Gws::Reference::User
   include Gws::Reference::Site
   include SS::FreePermission
-  #include Webmail::Mail::Fields
-  include Webmail::Mail::Parser
-  # include Webmail::Mail::Updater
-  include Webmail::Mail::Message
   include Webmail::Addon::MailBody
   include Gws::Addon::File
 
@@ -19,6 +15,9 @@ class Gws::Memo::Message
   field :format, type: String
   field :size, type: Integer, default: 0
   field :state, type: String, default: 'public'
+
+  field :seen_hash, type: Hash, default: {}
+  field :star_hash, type: Hash, default: {}
 
   field :from, type: Hash, default: {}
   embeds_ids :from_users, class_name: 'Gws::User' # => from_user_ids
@@ -69,8 +68,14 @@ class Gws::Memo::Message
     to_users.map(&:long_name)
   end
 
-  def star?
-    false
+  def unseen?(user=:nil)
+    return false if user == :nil
+    seen_hash.exclude?(user.id.to_s)
+  end
+
+  def star?(user=:nil)
+    return false if user == :nil
+    star_hash.include?(user.id.to_s)
   end
 
   def display_size
@@ -84,6 +89,30 @@ class Gws::Memo::Message
 
   def signature_options
     [nil, nil]
+  end
+
+  def set_seen(user)
+    self.seen_hash[user.id.to_s] = Time.zone.now
+    self
+  end
+
+  def unset_seen(user)
+    self.seen_hash.delete(user.id.to_s)
+    self
+  end
+
+  def set_star(user)
+    self.star_hash[user.id.to_s] = Time.zone.now
+    self
+  end
+
+  def unset_star(user)
+    self.star_hash.delete(user.id.to_s)
+    self
+  end
+
+  def toggle_star(user)
+    star?(user) ? unset_star(user) : set_star(user)
   end
 
   private

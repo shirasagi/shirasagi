@@ -1,14 +1,17 @@
-<%= jquery do %>
-<% end %>
-
 <div class="index">
-  <%= render file: 'webmail/mails/_list_head' %>
+  <%= render file: '_list_head' %>
   <ul class="list-items ss-messages webmail-mails">
     <% @items.each do |item| %>
-    <li class="list-item">
+    <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
       <label class="check">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
       </label>
+
+      <div class="icon icon-star <%= item.star?(@cur_user) ? 'on' : 'off' %>">
+        <%= link_to action: :toggle_star, id: item.id do %>
+            <i class="material-icons md-18">&#xE838;</i>
+        <% end %>
+      </div>
 
       <div class="icon icon-attachment">
         <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
