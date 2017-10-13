@@ -99,6 +99,23 @@ class Gws::Monitor::Topic
     %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
   end
 
+  def to_csv
+    CSV.generate do |data|
+      data << %w(照会・回答id タイトル 状態 回答者名 回答欄 回答日時)
+
+      children.each do |item|
+        data << [
+            self.id,
+            self.name,
+            I18n.t("gws/monitor.options.state.#{item.state_of_the_answer}"),
+            item.user_name,
+            item.text,
+            item.updated.strftime("%Y-%m-%d %H:%M")
+        ]
+      end
+    end
+  end
+
   private
 
   def set_descendants_updated_with_released

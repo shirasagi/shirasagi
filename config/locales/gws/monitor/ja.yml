@@ -14,6 +14,7 @@ ja:
       browsing_state: 通知先
       browsed: 閲覧
       list: トピック一覧へ
+      export_csv: CSV出力
       confirm: 削除しますか？
       notice:
         create: トピックを作成しました。
