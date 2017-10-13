@@ -37,5 +37,6 @@ SS::Application.routes.draw do
       end
     end
     resources :comments, path: ':message_id/comments', only: :create
+    resources :folders, concerns: :deletion
   end
 end

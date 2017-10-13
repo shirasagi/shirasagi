@@ -11,22 +11,12 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_crumbs
     apply_recent_filters
-    @crumbs << ['連絡メモ', { action: :index } ]
+    @crumbs << ['連絡メモ', gws_memo_messages_path ]
   end
 
-  MemoGroup = Struct.new(:name, :path, :unseen?, :unseen_count)
-
   def set_group_navi
-    @group_navi ||= []
-    @group_navi << MemoGroup.new('受信トレイ', 'INBOX', false, 0)
-    @group_navi << MemoGroup.new('ゴミ箱', 'INBOX.Trash', false, 0)
-    @group_navi << MemoGroup.new('送信済み', 'INBOX.Sent', false, 0)
-    @group_navi << MemoGroup.new('フォルダA', BSON::ObjectId.new.to_s, false, 0)
-    @group_navi << MemoGroup.new('フォルダB', BSON::ObjectId.new.to_s, false, 0)
-    @group_navi << MemoGroup.new('フォルダC', BSON::ObjectId.new.to_s, true, 3)
-    @group_navi << MemoGroup.new('フォルダD', BSON::ObjectId.new.to_s, false, 0)
-    @group_navi << MemoGroup.new('フォルダE', BSON::ObjectId.new.to_s, false, 0)
-    @group_navi << MemoGroup.new('フォルダF', BSON::ObjectId.new.to_s, false, 0)
+    @group_navi = Gws::Memo::Folder.staticItems +
+        Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
   end
 
   def fix_params
