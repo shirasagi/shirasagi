@@ -6,6 +6,7 @@ class Gws::Memo::Message
   include SS::FreePermission
   include Webmail::Addon::MailBody
   include Gws::Addon::File
+  include Gws::Addon::Memo::Comments
 
   attr_accessor :signature, :attachments, :field
 

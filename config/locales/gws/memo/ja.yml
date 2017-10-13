@@ -1,0 +1,5 @@
+ja:
+  modules:
+    gws/memo: 連絡メモ
+    addons:
+      gws/memo/comments: コメント

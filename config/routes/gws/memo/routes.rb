@@ -36,5 +36,6 @@ SS::Application.routes.draw do
         get :forward
       end
     end
+    resources :comments, path: ':message_id/comments', only: :create
   end
 end
