@@ -96,6 +96,10 @@ ja:
       admin: 作成した設問
       article_management: 回答管理
       trash: 削除済み
+    management:
+      links:
+        back_to_topic: 戻る
+        active: 削除を取り消す
 
   modules:
     gws/monitor: 照会・回答
