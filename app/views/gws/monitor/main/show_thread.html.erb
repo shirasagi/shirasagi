@@ -93,8 +93,8 @@
   </div>
   <% end %>
 
-  <% if @item.subscribed_users.present? %>
-  <%= render partial: 'gws/monitor/topics/subscribed_users' %>
+  <% if @item.subscribed_groups.present? %>
+  <%= render partial: 'gws/monitor/topics/subscribed_groups' %>
   <% end %>
 
   <% if controller_path == "gws/monitor/management/topics" %>
