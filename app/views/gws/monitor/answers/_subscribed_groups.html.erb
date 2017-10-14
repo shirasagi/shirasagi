@@ -8,17 +8,17 @@
       <table class="index">
         <thead>
         <tr>
-          <th class="name"><%= Gws::User.t :name %></th>
+          <th class="name"><%= Gws::Group.t :name %></th>
           <th class="browsed"><%= I18n.t('gws/monitor.topic.browsed') %></th>
         </tr>
         </thead>
         <tbody>
-        <% subscribed_users = @item.subscribed_users.to_a %>
-        <% subscribed_users.each do |user| %>
-          <tr data-user-id="<%= user.id %>">
-            <td class="name"><%= user.long_name %></td>
+        <% subscribed_groups = @item.subscribed_groups.to_a %>
+        <% subscribed_groups.each do |group| %>
+          <tr data-user-id="<%= group.id %>">
+            <td class="name"><%= group.long_name %></td>
             <td class="browsed">
-              <% @item.browsed_at(user).tap do |browsed_at| %>
+              <% @item.browsed_at(group).tap do |browsed_at| %>
               <span class="browsed">
               <% if browsed_at %>
                 <%= I18n.t('gws/monitor.options.browsed_state.read') %>
@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<% if subscribed_users.include?(@cur_user) && !@item.browsed?(@cur_user) %>
+<% if subscribed_groups.include?(@cur_site) && !@item.browsed?(@cur_user) %>
   <%= jquery do %>
     var formatDate = function(browsedAt) {
       var disp = 'YYYY/MM/DD hh:mm';
@@ -67,4 +67,3 @@
     }, <%= @cur_site.monitor_browsed_delay * 1_000 %>);
   <% end %>
 <% end %>
-
