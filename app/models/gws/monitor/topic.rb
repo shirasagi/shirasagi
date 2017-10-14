@@ -88,20 +88,22 @@ class Gws::Monitor::Topic
     created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
   end
 
-  def subscribed_users
-    return Gws::User.none if new_record?
-    return Gws::User.none if categories.blank?
+  def subscribed_groups
+    return Gws::Group.none if new_record?
+    return Gws::Group.none if group_ids.blank? && user_ids.blank? && custom_group_ids.blank?
 
     conds = []
-    conds << { id: { '$in' => categories.pluck(:subscribed_member_ids).flatten } }
-    conds << { group_ids: { '$in' => categories.pluck(:subscribed_group_ids).flatten } }
+    # conds << { id: { '$in' => Gws::Monitor::Post.pluck(:user_ids).flatten } }
+    # conds << { group_ids: { '$in' => Gws::Monitor::Post.pluck(:group_ids).flatten } }
+    conds << { id: { '$in' => Gws::Monitor::Post.pluck(:group_ids).flatten } }
 
     if Gws::Monitor::Category.subscription_setting_included_custom_groups?
-      custom_gropus = Gws::CustomGroup.in(id: categories.pluck(:subscribed_custom_group_ids))
+      custom_gropus = Gws::CustomGroup.in(id: Gws::Monitor::Post.pluck(:custom_group_ids))
       conds << { id: { '$in' => custom_gropus.pluck(:member_ids).flatten } }
     end
 
-    Gws::User.where('$and' => [ { '$or' => conds } ])
+    Gws::Group.where('$and' => [ { '$or' => conds } ])
+    # Gws::User.where('$and' => [ { '$or' => conds } ])
   end
 
   def sort_options
