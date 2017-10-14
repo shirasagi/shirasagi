@@ -34,14 +34,12 @@ class Gws::Monitor::Topic
   }
 
   def active?
-    now = Time.zone.now
-    return false if deleted.present? && deleted < now
-    true
+    return true unless deleted.present? && deleted < Time.zone.now
+    false
   end
 
   def disable
-    now = Time.zone.now
-    update_attributes(deleted: now) if deleted.blank? || deleted > now
+    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end
 
   def admin_setting_options
