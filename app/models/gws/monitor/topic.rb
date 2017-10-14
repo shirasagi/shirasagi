@@ -33,6 +33,12 @@ class Gws::Monitor::Topic
     end
   }
 
+  def topic_admin?(userid, groupid)
+    return true if self.admin_setting == "1" &&  userid == self.user_id
+    return true if self.admin_setting == "2" &&  groupid == self.user_group_id
+    false
+  end
+
   def active?
     return true unless deleted.present? && deleted < Time.zone.now
     false
