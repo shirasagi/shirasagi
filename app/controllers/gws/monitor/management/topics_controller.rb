@@ -65,7 +65,7 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
 
   def show
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-    render file: "/gws/monitor/main/show_#{@item.mode}"
+    render file: "/gws/monitor/management/main/show_#{@item.mode}"
   end
 
   def download
