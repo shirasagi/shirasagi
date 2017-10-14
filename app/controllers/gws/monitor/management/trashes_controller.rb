@@ -5,7 +5,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   model Gws::Monitor::Topic
 
   before_action :set_item, only: [
-    :show, :edit, :update, :delete, :destroy
+    :show, :edit, :update, :delete, :destroy, :active
   ]
 
   before_action :set_selected_items, only: [
@@ -69,7 +69,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
 
   def show
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-    render file: "/gws/monitor/main/show_#{@item.mode}"
+    render file: "/gws/monitor/management/main/show_#{@item.mode}"
   end
 
   def active

@@ -44,6 +44,10 @@ class Gws::Monitor::Topic
     false
   end
 
+  def active
+    update_attributes(deleted: nil)
+  end
+
   def disable
     update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end
