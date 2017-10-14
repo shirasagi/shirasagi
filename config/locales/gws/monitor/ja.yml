@@ -33,7 +33,34 @@ ja:
         create: コメントを投稿しました。
         update: コメントを更新しました。
         delete: コメントを削除しました。
+    csv:
+      - 照会・回答id
+      - タイトル
+      - 状態
+      - 回答者名
+      - 回答欄
+      - 回答日時
     options:
+      admin_setting:
+        user: 作成者が管理する
+        section: 所属で管理する
+      spec_config:
+        my_group: 回答者のみ表示する
+        other_groups: 他の回答者名を表示する
+        other_groups_and_contents: 他の回答者名と内容を表示する
+      reminder_start_section:
+        post: 配信直後から表示する
+        post_one_day_after: 配信日から1日後に表示
+        post_two_days_after: 配信日から2日後に表示
+        post_three_days_after: 配信日から3日後に表示
+        post_four_days_after: 配信日から4日後に表示
+        post_five_days_after: 配信日から5日後に表示
+        due_date_one_day_ago: 回答期限日の1日前から表示
+        due_date_two_days_ago: 回答期限日の2日前から表示
+        due_date_three_days_ago: 回答期限日の3日前から表示
+        due_date_four_days_ago: 回答期限日の4日前から表示
+        due_date_five_days_ago: 回答期限日の5日前から表示
+        hide: 表示しない
       mode:
         thread: スレッド
         tree: ツリー

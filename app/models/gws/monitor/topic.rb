@@ -50,33 +50,33 @@ class Gws::Monitor::Topic
 
   def admin_setting_options
     [
-        %w(作成者が管理する 1),
-        %w(所属で管理する 0)
+        [I18n.t('gws/monitor.options.admin_setting.user'), '1'],
+        [I18n.t('gws/monitor.options.admin_setting.section'), '0']
     ]
   end
 
   def spec_config_options
     [
-        %w(回答者のみ表示する 0),
-        %w(他の回答者名を表示する 3),
-        %w(他の回答者名と内容を表示する 5)
+        [I18n.t('gws/monitor.options.spec_config.my_group'), '0'],
+        [I18n.t('gws/monitor.options.spec_config.other_groups'), '3'],
+        [I18n.t('gws/monitor.options.spec_config.other_groups_and_contents'), '5']
     ]
   end
 
   def reminder_start_section_options
     [
-        %w(配信直後から表示する 0),
-        %w(配信日から1日後に表示 -1),
-        %w(配信日から2日後に表示 -2),
-        %w(配信日から3日後に表示 -3),
-        %w(配信日から4日後に表示 -4),
-        %w(配信日から5日後に表示 -5),
-        %w(回答期限日の1日前から表示 1),
-        %w(回答期限日の2日前から表示 2),
-        %w(回答期限日の3日前から表示 3),
-        %w(回答期限日の4日前から表示 4),
-        %w(回答期限日の5日前から表示 5),
-        %w(表示しない -999)
+        [I18n.t('gws/monitor.options.reminder_start_section.post'), '0'],
+        [I18n.t('gws/monitor.options.reminder_start_section.post_one_day_after'), '-1'],
+        [I18n.t('gws/monitor.options.reminder_start_section.post_two_days_after'), '-2'],
+        [I18n.t('gws/monitor.options.reminder_start_section.post_three_days_after'), '-3'],
+        [I18n.t('gws/monitor.options.reminder_start_section.post_four_days_after'), '-4'],
+        [I18n.t('gws/monitor.options.reminder_start_section.post_five_days_after'), '-5'],
+        [I18n.t('gws/monitor.options.reminder_start_section.due_date_one_day_ago'), '1'],
+        [I18n.t('gws/monitor.options.reminder_start_section.due_date_two_days_ago'), '2'],
+        [I18n.t('gws/monitor.options.reminder_start_section.due_date_three_days_ago'), '3'],
+        [I18n.t('gws/monitor.options.reminder_start_section.due_date_four_days_ago'), '4'],
+        [I18n.t('gws/monitor.options.reminder_start_section.due_date_five_days_ago'), '5'],
+        [I18n.t('gws/monitor.options.reminder_start_section.hide'), '-999']
     ]
   end
 
@@ -106,7 +106,7 @@ class Gws::Monitor::Topic
 
   def to_csv
     CSV.generate do |data|
-      data << %w(照会・回答id タイトル 状態 回答者名 回答欄 回答日時)
+      data << I18n.t('gws/monitor.csv')
 
       children.each do |item|
         data << [
