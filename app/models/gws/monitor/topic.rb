@@ -33,15 +33,19 @@ class Gws::Monitor::Topic
     end
   }
 
+  def topic_admin?(userid, groupid)
+    return true if self.admin_setting == "1" &&  userid == self.user_id
+    return true if self.admin_setting == "2" &&  groupid == self.user_group_id
+    false
+  end
+
   def active?
-    now = Time.zone.now
-    return false if deleted.present? && deleted < now
-    true
+    return true unless deleted.present? && deleted < Time.zone.now
+    false
   end
 
   def disable
-    now = Time.zone.now
-    update_attributes(deleted: now) if deleted.blank? || deleted > now
+    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end
 
   def admin_setting_options
