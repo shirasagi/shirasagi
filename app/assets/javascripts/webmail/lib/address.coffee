@@ -57,5 +57,8 @@ class @Webmail_Address_Autocomplete
         selected = $(this).closest(".webmail-mail-form-address").find(".selected-address")
         name = $(ui.item).closest(".webmail-mail-form-address").find(".autocomplete").attr("name")
         $(ui.item).find("input").attr("name", name)
-
     ).disableSelection()
+
+    $(selector).find(".selected-address .deselect").each ->
+      $(this).on "click", ->
+        $(this).closest("span").remove()

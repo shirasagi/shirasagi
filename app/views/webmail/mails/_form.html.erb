@@ -16,7 +16,17 @@ Webmail_Address_Autocomplete.render(
   <dt><%= @model.t :to %></dt>
   <dd><%= text_field_tag "item[to][]", nil, "class" => "address autocomplete" %></dd>
   <dd><%= render 'address_form', { f: f, field: :to } %></dd>
-  <dd><div class="selected-address"></div></dd>
+  <dd>
+    <div class="selected-address">
+      <% @item.to.each do |address| %>
+        <span>
+          <%= address.gsub("\"", "") %>
+          <i class="material-icons md-18 md-inactive deselect">close</i>
+          <input type="hidden" name="item[to][]" value="<%= address.gsub("\"", "") %>">
+        </span>
+      <% end %>
+    </div>
+  </dd>
 </dl>
 
 <% if cc_blank = @item.cc .blank? && @item.cc_text.blank? && @item.bcc.blank? && @item.bcc_text.blank? %>
@@ -27,12 +37,32 @@ Webmail_Address_Autocomplete.render(
   <dt><%= @model.t :cc %></dt>
   <dd><%= text_field_tag "item[cc][]", nil, "class" => "address autocomplete" %></dd>
   <dd><%= render 'address_form', { f: f, field: :cc } %></dd>
-  <dd><div class="selected-address"></div></dd>
+  <dd>
+    <div class="selected-address">
+      <% @item.cc.each do |address| %>
+        <span>
+          <%= address.gsub("\"", "") %>
+          <i class="material-icons md-18 md-inactive deselect">close</i>
+          <input type="hidden" name="item[to][]" value="<%= address.gsub("\"", "") %>">
+        </span>
+      <% end %>
+    </div>
+  </dd>
 </dl>
 
 <dl class="webmail-mail-form-address cc-bcc bcc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :bcc %></dt>
   <dd><%= text_field_tag "item[bcc][]", nil, "class" => "address autocomplete" %></dd>
   <dd><%= render 'address_form', { f: f, field: :bcc } %></dd>
-  <dd><div class="selected-address"></div></dd>
+  <dd>
+    <div class="selected-address">
+      <% @item.bcc.each do |address| %>
+        <span>
+          <%= address.gsub("\"", "") %>
+          <i class="material-icons md-18 md-inactive deselect">close</i>
+          <input type="hidden" name="item[to][]" value="<%= address.gsub("\"", "") %>">
+        </span>
+      <% end %>
+    </div>
+  </dd>
 </dl>
