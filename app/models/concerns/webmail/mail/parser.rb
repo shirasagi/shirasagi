@@ -133,8 +133,14 @@ module Webmail::Mail::Parser
         self.attachments << Webmail::StoredMailPart.new(part, i)
       end
     else
-      self.format = 'text'
-      self.text = msg.decoded
+      if msg.mime_type == 'text/plain'
+        self.format = 'text'
+        self.text = msg.decoded
+      end
+      if msg.mime_type == 'text/html'
+        self.format = 'html'
+        self.html = msg.decoded
+      end
     end
   end
 
