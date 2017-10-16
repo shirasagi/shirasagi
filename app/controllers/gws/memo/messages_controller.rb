@@ -15,7 +15,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_group_navi
-    @group_navi = Gws::Memo::Folder.staticItems +
+    @group_navi = Gws::Memo::Folder.static_items +
         Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
   end
 
