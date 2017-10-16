@@ -3,63 +3,53 @@ class @Gws_Monitor_Topic
     $(".public").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/public", method: "post", data: {confirm: "受取済みにしますか？"})
+      form = $("<form/>", action: "#{id}/public", method: "post", data: {confirm: "<%= I18n.t('gws/monitor.links.confirm.public') %>"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".preparation").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/preparation", method: "post", data: {confirm: "受取待ちにしますか？"})
+      form = $("<form/>", action: "#{id}/preparation", method: "post", data: {confirm: "<%= I18n.t('gws/monitor.links.confirm.preparation') %>"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".qNA").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/question_not_applicable", method: "post", data: {confirm: "該当なしにしますか？"})
+      form = $("<form/>", action: "#{id}/question_not_applicable", method: "post", data: {confirm: "<%= I18n.t('gws/monitor.links.confirm.qNA') %>"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".answered").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
       id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/answered", method: "post", data: {confirm: "回答済みにしますか？"})
+      form = $("<form/>", action: "#{id}/answered", method: "post", data: {confirm: "<%= I18n.t('gws/monitor.links.confirm.answer') %>"})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".public-all").on "click", ->
-      checked = $(".list-item input:checkbox:checked").map ->
-        $(this).val()
-      return false if checked.length == 0
-      token = $('meta[name="csrf-token"]').attr('content')
-      form = $("<form/>", action: "topics/public_all", method: "post", data: {confirm: "チェックした項目を受取済みにしますか？"})
-      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
-      for id in checked
-        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form = Gws_Monitor_Topic.buildForm("topics/public_all", "<%= I18n.t('gws/monitor.links.confirm.public_all') %>")
       form.appendTo(document.body).submit()
 
     $(".preparation-all").on "click", ->
-      checked = $(".list-item input:checkbox:checked").map ->
-        $(this).val()
-      return false if checked.length == 0
-      token = $('meta[name="csrf-token"]').attr('content')
-      form = $("<form/>", action: "topics/preparation_all", method: "post", data: {confirm: "チェックした項目を受取待ちにしますか？"})
-      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
-      for id in checked
-        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form = Gws_Monitor_Topic.buildForm("topics/preparation_all", "<%= I18n.t('gws/monitor.links.confirm.preparation_all') %>")
       form.appendTo(document.body).submit()
 
     $(".qNA-all").on "click", ->
-      checked = $(".list-item input:checkbox:checked").map ->
-        $(this).val()
-      return false if checked.length == 0
-      token = $('meta[name="csrf-token"]').attr('content')
-      form = $("<form/>", action: "topics/question_not_applicable_all", method: "post", data: {confirm: "チェックした項目を該当なしにしますか？"})
-      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
-      for id in checked
-        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form = Gws_Monitor_Topic.buildForm("topics/question_not_applicable_all", "<%= I18n.t('gws/monitor.links.confirm.qNA_all') %>")
       form.appendTo(document.body).submit()
+
+  @buildForm: (action, confirm)->
+    checked = $(".list-item input:checkbox:checked").map ->
+      $(this).val()
+    return false if checked.length == 0
+    token = $('meta[name="csrf-token"]').attr('content')
+    form = $("<form/>", action: action, method: "post", data: {confirm: confirm})
+    form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+    for id in checked
+      form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+    form
 
   @renderForm: (opts = {})->
     $("input.date").datetimepicker
