@@ -2,6 +2,7 @@
   <%= jquery do %>
     Gws_Memo_Message.render();
 
+    <% if params[:folder] != 'INBOX.Sent' %>
     $(".list-item").draggable({
       zIndex: 100,
       opacity: 0.75,
@@ -18,8 +19,9 @@
         return helper_handle;
       }
     });
+    <% end %>
 
-    $(".folder").droppable({
+    $(".droppable").droppable({
       tolerance: "pointer",
       drop: function(e, obj){
         var folder = $(this).find("td a.title");
