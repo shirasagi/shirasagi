@@ -38,11 +38,11 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def pre_params
-    p = super
+    current_category_id = super
     if @category.present?
-      p[:category_ids] = [ @category.id ]
+      current_category_id[:category_ids] = [ @category.id ]
     end
-    p
+    current_category_id
   end
 
   public
