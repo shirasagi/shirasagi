@@ -20,6 +20,11 @@ production: &production
   # Mail cache
   cache_mails: true
 
+  # Store mail cache as static file
+  store_mails: true
+
+  store_files: false
+
   # Quota cache
   cache_quota: true
 
@@ -28,9 +33,6 @@ production: &production
 
   # Upper limit of user's imap account
   imap_account_limit: 5
-
-  # Store mail cache as static file
-  store_files: false
 
 test:
   <<: *production
