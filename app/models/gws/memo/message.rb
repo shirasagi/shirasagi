@@ -11,6 +11,8 @@ class Gws::Memo::Message
   attr_accessor :signature, :attachments, :field
 
   field :subject, type: String
+  alias_method :name, :subject
+
   field :text, type: String
   field :html, type: String
   field :format, type: String
