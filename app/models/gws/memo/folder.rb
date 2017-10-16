@@ -2,7 +2,7 @@ class Gws::Memo::Folder
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::SitePermission
+  include Gws::Addon::GroupPermission
 
   set_permission_name 'gws_memo_messages'
 
@@ -30,6 +30,10 @@ class Gws::Memo::Folder
   end
 
   class << self
+    def allow_condition(action, user, opts = {})
+        { user_ids: user.id }
+    end
+
     def staticItems
       [
           self.new(name: '受信トレイ', path: 'INBOX'),

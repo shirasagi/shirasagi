@@ -20,19 +20,11 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site, from: {@cur_user.id.to_s => 'INBOX.Sent'}  }
+    { cur_user: @cur_user, cur_site: @cur_site }
   end
 
   def apply_recent_filters
-    return 0 # if inbox.status.recent == 0
-    #
-    # counts = Webmail::Filter.user(imap.user).enabled.map do |filter|
-    #   filter.imap = imap
-    #   filter.apply 'INBOX', ['NEW']
-    # end
-    #
-    # update_status
-    # counts.inject(:+) || 0
+    return 0
   end
 
   def index
@@ -42,6 +34,13 @@ class Gws::Memo::MessagesController < ApplicationController
         where("#{direction}.#{@cur_user.id}": params[:folder]).
         search(params[:s]).
         page(params[:page]).per(50)
+  end
+
+  def create
+    create_fix_params = { from:{@cur_user.id.to_s => 'INBOX.Sent'} }
+    @item = @model.new create_fix_params.merge(get_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
   end
 
   def show

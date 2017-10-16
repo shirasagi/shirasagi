@@ -3,10 +3,10 @@ class Gws::Memo::Message
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::SitePermission
   include Webmail::Addon::MailBody
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
+  include Gws::Addon::GroupPermission
 
   attr_accessor :signature, :attachments, :field
 
@@ -140,5 +140,4 @@ class Gws::Memo::Message
   def set_to_user_ids
     to.keys.each {|id_s| self.to_user_ids = self.to_user_ids << id_s.to_i }
   end
-
 end
