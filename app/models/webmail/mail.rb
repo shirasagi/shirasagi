@@ -50,7 +50,6 @@ class Webmail::Mail
   validates :mailbox, presence: true
   validates :uid, presence: true
   validates :internal_date, presence: true
-  before_destroy :destroy_rfc822
 
   default_scope -> { order_by internal_date: -1 }
 
