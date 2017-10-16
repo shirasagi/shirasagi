@@ -15,8 +15,6 @@ class Gws::Memo::CommentsController < ApplicationController
 
   def create
     @item = @model.new get_params
-    # raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    # render_create @item.save
     result = @item.save
     if result
       respond_to do |format|
