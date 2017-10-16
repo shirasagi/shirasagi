@@ -12,7 +12,8 @@
     </thead>
     <tbody>
       <% @group_navi.each do |item| %>
-      <tr class="folder <%= 'current' if @address_group == item %>">
+      <% droppable = ['INBOX.Sent', params[:folder]].exclude?(item.path) %>
+      <tr class="<%= 'droppable' if droppable %> <%= 'current' if item.path == params[:folder] %>">
         <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
           <%= link_to item.name, gws_memo_messages_path(folder: item.path), {class: 'field title', 'data-path': item.path } %>
           <span>(<%= item.messages(@cur_user.id).count %>)</span>

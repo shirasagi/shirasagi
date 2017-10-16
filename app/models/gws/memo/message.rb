@@ -3,7 +3,7 @@ class Gws::Memo::Message
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include SS::FreePermission
+  include Gws::SitePermission
   include Webmail::Addon::MailBody
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments

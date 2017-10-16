@@ -2,7 +2,9 @@ class Gws::Memo::Folder
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include SS::FreePermission
+  include Gws::SitePermission
+
+  set_permission_name 'gws_memo_messages'
 
   seqid :id
   field :name, type: String
@@ -15,8 +17,12 @@ class Gws::Memo::Folder
 
   default_scope ->{ order_by order: 1 }
 
+  def direction
+    (path == 'INBOX.Sent') ? 'from' : 'to'
+  end
+
   def messages(uid=user_id)
-    Gws::Memo::Message.where("to.#{uid}": path)
+    Gws::Memo::Message.where("#{direction}.#{uid}": path)
   end
 
   def unseen?
