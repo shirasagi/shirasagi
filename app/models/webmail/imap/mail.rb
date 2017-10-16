@@ -125,7 +125,7 @@ module Webmail::Imap
       item.imap = imap
       item.parse(resp[0])
       item.save
-      item.save_file
+      item.save_rfc822
       item
     end
 
@@ -144,7 +144,7 @@ module Webmail::Imap
         item.imap = imap
         item.parse(resp[0])
         item.save
-        item.save_file
+        item.save_rfc822
       end
 
       item.attachments.select { |attachment| attachment.section == section }.first

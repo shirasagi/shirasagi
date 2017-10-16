@@ -113,7 +113,7 @@ module Webmail::Mail::Parser
   end
 
   def parse_rfc822_body
-    read_file if rfc822.blank?
+    read_rfc822 if rfc822.blank?
     return if rfc822.blank?
 
     msg = Mail::Message.new(rfc822)

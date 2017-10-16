@@ -50,7 +50,7 @@ class Webmail::Mail
   validates :mailbox, presence: true
   validates :uid, presence: true
   validates :internal_date, presence: true
-  before_destroy :destroy_file
+  before_destroy :destroy_rfc822
 
   default_scope -> { order_by internal_date: -1 }
 
@@ -108,23 +108,23 @@ class Webmail::Mail
     true
   end
 
-  def path
+  def rfc822_file_path
     separated_id = Array.new(3, id).compact.map.with_index { |v, i| v.to_s.slice(0, i + 1) }.join("/")
     "#{Rails.root}/private/files/webmail_files/#{separated_id}/_/#{id}"
   end
 
-  def save_file
+  def save_rfc822
     return if rfc822.blank?
-    dir = ::File.dirname(path)
+    dir = ::File.dirname(rfc822_file_path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
-    Fs.binwrite(path, rfc822)
+    Fs.binwrite(rfc822_file_path, rfc822)
   end
 
-  def read_file
-    self.rfc822 = Fs.exists?(path) ? Fs.binread(path) : nil
+  def read_rfc822
+    self.rfc822 = Fs.exists?(rfc822_file_path) ? Fs.binread(rfc822_file_path) : nil
   end
 
-  def destroy_file
-    Fs.rm_rf(path) if Fs.exists?(path)
+  def destroy_rfc822
+    Fs.rm_rf(rfc822_file_path) if Fs.exists?(rfc822_file_path)
   end
 end
