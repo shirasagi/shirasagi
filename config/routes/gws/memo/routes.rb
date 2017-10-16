@@ -7,7 +7,8 @@ SS::Application.routes.draw do
   end
 
   gws 'memo' do
-    resources :messages, concerns: :deletion do
+    resources :messages, concerns: :deletion, path: 'messages/:folder',
+              folder: /[^\/]+/, defaults: { folder: 'INBOX' } do
       collection do
         # put :set_seen
         # put :set_star
@@ -15,6 +16,7 @@ SS::Application.routes.draw do
         post :unset_seen_all
         post :set_star_all
         post :unset_star_all
+        post :move_all
         put :move
         put :copy
         delete :empty

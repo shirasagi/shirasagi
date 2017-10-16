@@ -6,7 +6,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :apply_recent_filters, only: [:index]
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :toggle_star]
-  before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all, :set_star_all, :unset_star_all]
+  before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all, :set_star_all, :unset_star_all, :move_all]
   before_action :set_group_navi, only: [:index]
 
   def set_crumbs
@@ -35,10 +35,23 @@ class Gws::Memo::MessagesController < ApplicationController
     # counts.inject(:+) || 0
   end
 
+  def index
+    @items = @model.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        where("to.#{@cur_user.id}": params[:folder]).
+        search(params[:s]).
+        page(params[:page]).per(50)
+  end
+
   def show
     raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
     @item.set_seen(@cur_user).update
     render
+  end
+
+  def move_all
+    @items.each{ |item| item.move(@cur_user, params[:path]).update }
+    render_destroy_all(false)
   end
 
   def set_seen_all
