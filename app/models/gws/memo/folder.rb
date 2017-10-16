@@ -34,7 +34,7 @@ class Gws::Memo::Folder
         { user_ids: user.id }
     end
 
-    def staticItems
+    def static_items
       [
           self.new(name: '受信トレイ', path: 'INBOX'),
           self.new(name: 'ゴミ箱', path: 'INBOX.Trash'),
