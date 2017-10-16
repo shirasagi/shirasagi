@@ -70,7 +70,7 @@ module Gws::Monitor::Postable
     }
     scope :and_answers, ->() {
       where("$and" =>
-           ["$or" => [ {state_of_the_answer: "qNA"}, {state_of_the_answer: "answered"} ] ])
+           ["$or" => [ {state_of_the_answer: "question_not_applicable"}, {state_of_the_answer: "answered"} ] ])
     }
 
   end

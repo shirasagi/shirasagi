@@ -110,7 +110,7 @@ class Gws::Monitor::AdminsController < ApplicationController
 
   def question_not_applicable
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state_of_the_answer: 'qNA')
+    render_update @item.update(state_of_the_answer: 'question_not_applicable')
   end
 
   def answered
@@ -137,7 +137,7 @@ class Gws::Monitor::AdminsController < ApplicationController
 
   def question_not_applicable_all
     raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state_of_the_answer: 'qNA')
+    @items.update_all(state_of_the_answer: 'question_not_applicable')
     render_destroy_all(false)
   end
 end

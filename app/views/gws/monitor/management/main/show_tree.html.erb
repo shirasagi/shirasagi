@@ -5,28 +5,28 @@
       case "public":
         $('.public').hide();
         $('.preparation').show();
-        $('.qNA').show();
+        $('.question_not_applicable').show();
         $('.answered').show();
         $('.primary').show();
         break;
       case "answered":
         $('.public').show();
         $('.preparation').show();
-        $('.qNA').show();
+        $('.question_not_applicable').show();
         $('.answered').hide();
         $('.primary').hide();
         break;
       case "preparation":
         $('.public').show();
         $('.preparation').hide();
-        $('.qNA').hide();
+        $('.question_not_applicable').hide();
         $('.answered').hide();
         $('.primary').hide();
         break;
-      case "qNA":
+      case "question_not_applicable":
         $('.public').show();
         $('.preparation').hide();
-        $('.qNA').hide();
+        $('.question_not_applicable').hide();
         $('.answered').hide();
         $('.primary').hide();
         break;
@@ -77,7 +77,7 @@
       <%= hidden_field_tag "item_id", @item.id %>
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
       <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
-      <button class="qNA btn"><%= t 'gws/monitor.links.qNA' %></button>
+      <button class="question_not_applicable btn"><%= t 'gws/monitor.links.question_not_applicable' %></button>
       <button class="answered btn"><%= t 'gws/monitor.links.answered' %></button>
       <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
         class: "btn primary") %>
