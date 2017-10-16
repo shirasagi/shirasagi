@@ -1,4 +1,7 @@
 <% if @group_navi %>
+<%= jquery do %>
+
+<% end %>
 <div id="content-navi">
   <h2 class="content-navi-title">フォルダ</h2>
   <table class="index gws-memo-folder">
@@ -9,12 +12,10 @@
     </thead>
     <tbody>
       <% @group_navi.each do |item| %>
-      <tr class="<%= 'current' if @address_group == item %>">
+      <tr class="folder <%= 'current' if @address_group == item %>">
         <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
-          <%= link_to item.name, '#' %>
-          <% if item.unseen? %>
-              <span>(<%= item.unseen_count %>)</span>
-          <% end %>
+          <%= link_to item.name, gws_memo_messages_path(folder: item.path), {class: 'field title', 'data-path': item.path } %>
+          <span>(<%= item.messages(@cur_user.id).count %>)</span>
         </td>
       </tr>
       <% end %>

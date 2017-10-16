@@ -124,6 +124,11 @@ class Gws::Memo::Message
     star?(user) ? unset_star(user) : set_star(user)
   end
 
+  def move(user, path)
+    self.to[user.id.to_s] = path
+    self
+  end
+
   private
 
   def set_from_user_ids

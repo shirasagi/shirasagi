@@ -9,11 +9,15 @@ class Gws::Memo::Folder
   field :path, type: String
   field :order, type: Integer, default: 0
 
-  permit_params :name, :order
+  permit_params :name, :order, :path
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
 
   default_scope ->{ order_by order: 1 }
+
+  def messages(uid=user_id)
+    Gws::Memo::Message.where("to.#{uid}": path)
+  end
 
   def unseen?
     false
