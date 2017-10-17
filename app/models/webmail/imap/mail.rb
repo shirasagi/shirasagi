@@ -140,7 +140,8 @@ module Webmail::Imap
         attr = %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER RFC822) # FAST: FLAGS INTERNALDATE RFC822.SIZE
         resp = imap.conn.uid_fetch(uid, attr)
         raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
-        item = Webmail::Mail.new
+
+        item = Webmail::Mail.new(mailbox_scope)
         item.imap = imap
         item.parse(resp[0])
         item.save
