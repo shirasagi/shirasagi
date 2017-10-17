@@ -29,7 +29,7 @@ SS::Application.routes.draw do
 
     resources :admins, concerns: [:deletion, :state_change] do
       get :disable, on: :member
-      delete :disable_all, on: :collection
+      post :disable_all, on: :collection
     end
 
     namespace "management" do
