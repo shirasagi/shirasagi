@@ -5,7 +5,7 @@
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete/ %>
+  <% elsif params[:action] =~ /delete/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
@@ -13,9 +13,6 @@
   <% elsif params[:action] =~ /import/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
-    <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
