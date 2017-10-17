@@ -10,7 +10,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
-    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
       expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
@@ -24,7 +24,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
-    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
       expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
@@ -38,7 +38,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
-    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
       expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
@@ -80,7 +80,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url, rss_max_docs: 3 }
     let(:user) { cms_user }
-    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
       expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(3)
@@ -93,7 +93,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
-    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
       described_class.bind(bindings).perform_now
