@@ -747,10 +747,35 @@ td {
     }
     a {
       display: inline-block;
-      margin-right: 16px;
       @include arrow;
       color: $black;
       &:hover { color: $orange;}
+    }
+    a:not(.no-margin) {
+      margin-right: 16px;
+    }
+    .dropdown-toggle {
+      &:after {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: .255em;
+        vertical-align: .255em;
+        content: '';
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-left: .3em solid transparent;
+      }
+    }
+    .dropdown-toggle-split {
+      font-size: 80%;
+      margin-left: 4px;
+      margin-right: 16px;
+      border: transparent 1px solid;
+      &:hover {
+        color: $orange;
+        border: $orange 1px solid;
+      }
     }
   }
   .nav-management-menu {
@@ -893,7 +918,9 @@ td {
   &:hover { background: $orange2; }
 }
 .addon-view, .search-pages, .index-search, .search-form {
-  @include box;
+  &:not(.print) {
+    @include box;
+  }
   @include mb {
     margin: 0 10px 10px;
   }
@@ -940,6 +967,9 @@ td {
 }
 .addon-body {
   @include box-body;
+  &.print {
+    border-top: $border-black2;
+  }
 }
 dl.see {
   margin: 5px 0px;

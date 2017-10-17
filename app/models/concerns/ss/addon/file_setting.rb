@@ -29,11 +29,15 @@ module SS::Addon
     end
 
     def multibyte_filename_state_options
-      %w(enabled disabled).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }.to_a
+      %w(enabled disabled).map { |m| [ I18n.t("ss.options.multibyte_filename_state.#{m}"), m ] }.to_a
     end
 
-    def multibyte_filename_state_enabled?
-      multibyte_filename_state != 'disabled'
+    def multibyte_filename_disabled?
+      multibyte_filename_state == 'disabled'
+    end
+
+    def multibyte_filename_enabled?
+      !multibyte_filename_disabled?
     end
   end
 end

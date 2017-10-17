@@ -28,13 +28,15 @@ module SS::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
+    before_validation :normalize_filename
 
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validate :validate_filename
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
-    before_save :validate_filename
+    before_save :mangle_filename
     before_save :rename_file, if: ->{ @db_changes.present? }
     before_save :save_file
     before_destroy :remove_file
@@ -69,7 +71,7 @@ module SS::Model::File
   end
 
   def public_path
-    return if site.blank?
+    return if site.blank? || !site.respond_to?(:root_path)
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -77,8 +79,16 @@ module SS::Model::File
     "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
+  def download_url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/download/#{filename}"
+  end
+
+  def view_url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/view/#{filename}"
+  end
+
   def full_url
-    return if site.blank?
+    return if site.blank? || !site.respond_to?(:full_root_url)
     "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -133,6 +143,10 @@ module SS::Model::File
     filename =~ /\.(bmp|gif|jpe?g|png)$/i
   end
 
+  def viewable?
+    image?
+  end
+
   def resizing
     (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
   end
@@ -159,7 +173,7 @@ module SS::Model::File
   end
 
   def remove_public_file
-    Fs.rm_rf(public_path) if site #TODO: modify the trriger
+    Fs.rm_rf(public_path) if public_path
   end
 
   private
@@ -171,10 +185,24 @@ module SS::Model::File
     self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
   end
 
+  def normalize_filename
+    self.name     = self.name.unicode_normalize(:nfkc) if self.name.present?
+    self.filename = self.filename.unicode_normalize(:nfkc) if self.filename.present?
+  end
+
+  def multibyte_filename_disabled?
+    return if site.blank? || !site.respond_to?(:multibyte_filename_disabled?)
+    site.multibyte_filename_disabled?
+  end
+
   def validate_filename
-    if site && !site.multibyte_filename_state_enabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
       errors.add :in_file, :invalid_filename
     end
+  end
+
+  def mangle_filename
+    set_sequence
     self.filename = SS::FilenameConvertor.convert(filename, id: id)
   end
 

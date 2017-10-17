@@ -4,6 +4,7 @@
   border: none;
   border-radius: unset;
   page-break-after: always;
+  background: white;
 }
 
 /* プレビュー用のスタイル */
@@ -15,7 +16,6 @@
   }
 
   .sheet {
-    background: white;
     box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
     margin: 5mm;
   }

@@ -31,7 +31,7 @@ class Gws::Workflow::PagesController < ApplicationController
     current_level = @item.workflow_current_level
     current_workflow_approvers = @item.workflow_approvers_at(current_level)
     current_workflow_approvers.each do |workflow_approver|
-      args = { f_uid: @cur_user._id, t_uid: workflow_approver[:user_id],
+      args = { f_uid: @item.workflow_user_id, t_uid: workflow_approver[:user_id],
                site: @cur_site, page: @item,
                url: params[:url], comment: params[:workflow_comment] }
       Workflow::Mailer.request_mail(args).deliver_now if validate_domain(args[:t_uid])
@@ -45,6 +45,9 @@ class Gws::Workflow::PagesController < ApplicationController
 
   def request_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
+    if @item.workflow_state?
+      raise "403" unless @item.allowed?(:reroute, @cur_user, grants_none_to_owner: true)
+    end
 
     @item.workflow_user_id = @cur_user._id
     @item.workflow_state   = "request"
