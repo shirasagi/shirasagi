@@ -1082,6 +1082,15 @@ footer.send {
 .btn-success {
   @include btn-orange;
 }
+.chorg-revisions {
+  margin-bottom: 10px;
+  .btn {
+    margin-bottom: 10px;
+  }
+  .result {
+    float: right;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // addon

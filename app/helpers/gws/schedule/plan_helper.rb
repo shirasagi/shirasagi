@@ -22,7 +22,7 @@ module Gws::Schedule::PlanHelper
     events  = plans.map { |m| m.calendar_format(@cur_user, @cur_site) }
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
     events += group_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
-    events += calender_todos opts[:holiday][0], opts[:holiday][1] if opts[:with_todo] == '1'
+    events += calender_todos opts[:holiday][0], opts[:holiday][1]
     events
   end
 
@@ -46,7 +46,7 @@ module Gws::Schedule::PlanHelper
         search(start: start_at, end: end_at).
         map do |todo|
           result = todo.calendar_format(@cur_user, @cur_site)
-          result[:restUrl] = popup_gws_schedule_todo_path(id: todo.id, site: @cur_site.id)
+          result[:restUrl] = gws_schedule_todos_path(site: @cur_site.id)
           result
         end
   end
