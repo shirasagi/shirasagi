@@ -10,6 +10,7 @@ SS::Application.routes.draw do
     resources :topics, concerns: [:deletion] do
       get :mark, on: :member
       get :unmark, on: :member
+      get :toggle, on: :member
       post :mark_all, on: :collection
       post :unmark_all, on: :collection
       post :download, on: :collection
@@ -23,6 +24,7 @@ SS::Application.routes.draw do
     namespace 'apis' do
       get 'mark' => 'topics#mark'
       get 'unmark' => 'topics#unmark'
+      get 'toggle' => 'topics#toggle'
     end
   end
 end

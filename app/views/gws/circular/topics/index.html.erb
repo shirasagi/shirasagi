@@ -1,23 +1,18 @@
 <%= jquery do %>
-    var posting = function(url) {
-      var checked = $(".list-item input:checkbox:checked").map(function(){ return $(this).val(); });
-      if (checked.length == 0) { return false; }
-
-      var token = $('meta[name="csrf-token"]').attr('content');
-      var form = $("<form/>", {action: url, method: "post"} );
-
-      form.append($("<input/>", {name: "authenticity_token", value: token, type: "hidden"} ))
-
-      checked.each(function(_i, id){
-        form.append($("<input/>", {name: "ids[]", value: id, type: "hidden"} ));
-      });
-
+    $(".mark-all").click(function(){
+      var form = Gws_Circular_Topic.buildForm("<%= mark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.mark_all') %>");
       form.appendTo(document.body).submit();
-    }
+    });
 
-    $(".mark-all").click(function(){ posting("<%= mark_all_gws_circular_topics_path %>"); });
-    $(".unmark-all").click(function(){ posting("<%= unmark_all_gws_circular_topics_path %>"); });
-    $(".download").click(function(){ posting("<%= download_gws_circular_topics_path %>"); });
+    $(".unmark-all").click(function(){
+      var form = Gws_Circular_Topic.buildForm("<%= unmark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.unmark_all') %>");
+      form.appendTo(document.body).submit();
+    });
+
+    $(".download").click(function(){
+      var form = Gws_Circular_Topic.buildForm("<%= download_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.download') %>");
+      form.appendTo(document.body).submit();
+    });
 <% end %>
 
 <% @index_meta = proc do |item| %>
