@@ -28,10 +28,8 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def index
-    direction = (params[:folder] == 'INBOX.Sent') ? 'from' : 'to'
     @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        where("#{direction}.#{@cur_user.id}": params[:folder]).
+        allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
         search(params[:s]).
         page(params[:page]).per(50)
   end
