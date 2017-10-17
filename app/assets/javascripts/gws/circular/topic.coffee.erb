@@ -1,3 +1,6 @@
+#= require jquery-ui/draggable
+#= require jquery-ui/droppable
+
 class @Gws_Circular_Topic
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->
@@ -9,3 +12,17 @@ class @Gws_Circular_Topic
     for id in checked
       form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
     form
+
+class @Gws_Topic
+  @render: (target)->
+    $(target).change ->
+      Gws_Topic.renderMark(target)
+    @renderMark(target)
+
+  @renderMark: (target)->
+    if target.checked
+      $(target.parentElement).removeClass("fc-state-active")
+      $(target.nextElementSibling).text("既読にする")
+    else
+      $(target.parentElement).addClass("fc-state-active")
+      $(target.nextElementSibling).text("未読に戻す")
