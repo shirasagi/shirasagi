@@ -1,0 +1,67 @@
+<%= jquery do %>
+    $(".set-seen-all").click(function(){
+      var form = Gws_Memo_Message.buildForm("<%= set_seen_all_gws_memo_messages_path %>", "既読にしますか?");
+      form.appendTo(document.body).submit();
+    });
+
+    $(".unset-seen-all").click(function(){
+      var form = Gws_Memo_Message.buildForm("<%= unset_seen_all_gws_memo_messages_path %>", "未読にしますか?");
+      form.appendTo(document.body).submit();
+    });
+
+    $(".set-star-all").click(function(){
+      var form = Gws_Memo_Message.buildForm("<%= set_star_all_gws_memo_messages_path %>", "スターをつけますか?");
+      form.appendTo(document.body).submit();
+    });
+
+    $(".unset-star-all").click(function(){
+      var form = Gws_Memo_Message.buildForm("<%= unset_star_all_gws_memo_messages_path %>", "スターをはずしますか?");
+      form.appendTo(document.body).submit();
+    });
+
+    $(".move-menu li a").click(function(){
+      var path = $(this).attr("data-path");
+      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path %>", "移動しますか?");
+      form.append($("<input/>", {name: "path", value: path, type: "hidden"} ));
+      form.appendTo(document.body).submit();
+    });
+<% end %>
+
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action webmail-mails-head">
+    <% if params[:folder] != 'INBOX.Sent' %>
+        <div class="dropdown">
+          <button class="btn move-all" data-href="<%= url_for action: :move %>">
+            <%= t :"webmail.links.move" %> <i class="material-icons md-13">&#xE313;</i>
+          </button>
+          <ul class="dropdown-menu webmail-dropdown-menu move-menu">
+            <% @group_navi.select{|g| ['INBOX.Sent', params[:folder]].exclude?(g.path) }.each do |item| %>
+                <li><a href="#" data-path="<%= item.path.to_s %>"><%= item.name %></a></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+    <button class="btn destroy-all">
+      <%= t :"ss.links.delete" %>
+    </button>
+    <div class="dropdown">
+      <button class="btn">
+        <%= t :"webmail.links.etc" %> <i class="material-icons md-13">&#xE313;</i>
+      </button>
+      <ul class="dropdown-menu webmail-dropdown-menu">
+        <li><a class="set-seen-all" href="#"><%= t :"webmail.links.set_seen" %></a></li>
+        <li><a class="unset-seen-all" href="#"><%= t :"webmail.links.unset_seen" %></a></li>
+        <li><a class="set-star-all" href="#"><%= t :"webmail.links.set_star" %></a></li>
+        <li><a class="unset-star-all" href="#"><%= t :"webmail.links.unset_star" %></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="list-head-search">
+    <input type="button" value="<%= t 'ss.buttons.search' %>" class="btn search" />
+  </div>
+</div>
+
+<%= render file: '_search' %>
