@@ -25,7 +25,11 @@ class Webmail::MailsController < ApplicationController
   end
 
   def set_item
-    @item = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :body
+    else
+      @item = @imap.mails.find params[:id], :body
+    end
     @item.attributes = fix_params
   end
 
@@ -80,24 +84,42 @@ class Webmail::MailsController < ApplicationController
   end
 
   def header_view
-    @item = @imap.mails.find params[:id]
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id]
+    else
+      @item = @imap.mails.find params[:id]
+    end
+
     render plain: @item.header, layout: false
   end
 
   def source_view
-    @item = @imap.mails.find params[:id], :rfc822
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :rfc822
+    else
+      @item = @imap.mails.find params[:id], :rfc822
+    end
+
     render plain: @item.rfc822, layout: false
   end
 
   def download
-    @item = @imap.mails.find params[:id], :rfc822
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :rfc822
+    else
+      @item = @imap.mails.find params[:id], :rfc822
+    end
 
     send_data @item.rfc822, filename: "#{@item.subject}.eml",
               content_type: 'message/rfc822', disposition: :attachment
   end
 
   def parts
-    part = @imap.mails.find_part params[:id], params[:section]
+    if SS.config.webmail.store_mails
+      part = @imap.mails.find_part_and_store params[:id], params[:section]
+    else
+      part = @imap.mails.find_part params[:id], params[:section]
+    end
     disposition = part.image? ? :inline : :attachment
 
     send_data part.decoded, filename: part.filename,
@@ -110,21 +132,36 @@ class Webmail::MailsController < ApplicationController
   end
 
   def reply
-    @ref  = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply(@ref)
     render :new
   end
 
   def reply_all
-    @ref  = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply_all(@ref)
     render :new
   end
 
   def forward
-    @ref  = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
     @item = @model.new pre_params.merge(fix_params)
     @item.new_forward(@ref)
     render :new
