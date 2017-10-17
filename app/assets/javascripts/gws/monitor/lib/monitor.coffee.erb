@@ -40,6 +40,10 @@ class @Gws_Monitor_Topic
       form = Gws_Monitor_Topic.buildForm("topics/question_not_applicable_all", "<%= I18n.t('gws/monitor.links.confirm.question_not_applicable_all') %>")
       form.appendTo(document.body).submit()
 
+    $(".disable-all").on "click", ->
+      form = Gws_Monitor_Topic.buildForm("admins/disable_all", "<%= I18n.t('gws/monitor.links.confirm.disable_all') %>")
+      form.appendTo(document.body).submit()
+
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->
       $(this).val()
