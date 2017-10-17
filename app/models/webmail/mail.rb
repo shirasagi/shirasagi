@@ -106,4 +106,24 @@ class Webmail::Mail
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     true
   end
+
+  def rfc822_path
+    separated_id = [4, 6, 22].map { |i| id.to_s.slice(i, 2) }.join("/")
+    "#{Rails.root}/private/files/webmail_files/#{separated_id}/_/#{id}"
+  end
+
+  def save_rfc822
+    return if rfc822.blank?
+    dir = ::File.dirname(rfc822_path)
+    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.binwrite(rfc822_path, rfc822)
+  end
+
+  def read_rfc822
+    self.rfc822 = Fs.exists?(rfc822_path) ? Fs.binread(rfc822_path) : nil
+  end
+
+  def destroy_rfc822
+    Fs.rm_rf(rfc822_path) if Fs.exists?(rfc822_path)
+  end
 end

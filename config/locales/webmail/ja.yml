@@ -64,7 +64,7 @@ ja:
       show_image: 画像の表示
       reload_mailboxes: メールサーバと同期する
       empty_mailbox: 空にする
-      select_account: アカウント切り替え
+      select_account: アカウント
     confirm:
       empty_mailbox: フォルダーを空にしてよろしいですか？
       clear_cache: キャッシュを削除してよろしいですか？
