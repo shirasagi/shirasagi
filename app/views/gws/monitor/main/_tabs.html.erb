@@ -1,0 +1,15 @@
+<%= jquery do %>
+Gws_Monitor_View.renderTabs('.gws-monitor-tabs');
+<% end %>
+
+<div class="gws-monitor-tabs">
+  <%= link_to gws_monitor_topics_path, class: "unanswer" do %>
+    <span class="tab-name"><%= t('gws/monitor.tabs.unanswer') %></span>
+  <% end %>
+  <%= link_to gws_monitor_answers_path, class: "answer" do %>
+    <span class="tab-name"><%= t('gws/monitor.tabs.answer') %></span>
+  <% end %>
+  <%= link_to gws_monitor_admins_path, class: "admin" do %>
+    <span class="tab-name"><%= t('gws/monitor.tabs.admin') %></span>
+  <% end %>
+</div>
