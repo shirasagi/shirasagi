@@ -1,7 +1,16 @@
 <% return if @items.blank? %>
 
+<% object_name = params[:object_name].presence || 'item' %>
+<% has_date_field = false %>
 <dl class="see">
   <% @items.each do |item| %>
-    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{item.input_type}", locals: { item: item }) %>
+    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{item.input_type}", locals: { item: item, object_name: object_name }) %>
+    <% if item.input_type == 'date_field' %><% has_date_field = true %><% end %>
   <% end %>
 </dl>
+
+<% if has_date_field %>
+  <%= jquery do %>
+    SS.renderDateTimePicker();
+  <% end %>
+<% end %>

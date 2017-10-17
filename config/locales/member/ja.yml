@@ -310,6 +310,8 @@ ja:
     release_private_member_blogs: メンバーブログの公開（所有）
     approve_other_member_blogs: メンバーブログの承認（全て）
     approve_private_member_blogs: メンバーブログの承認（所有）
+    reroute_other_member_blogs: メンバーブログの承認経路変更（全て）
+    reroute_private_member_blogs: メンバーブログの承認経路変更（所有）
     read_other_member_photos: メンバーフォトの閲覧（全て）
     read_private_member_photos: メンバーフォトの閲覧（所有）
     edit_other_member_photos: メンバーフォトの編集（全て）
@@ -318,8 +320,6 @@ ja:
     delete_private_member_photos: メンバーフォトの削除（所有）
     release_other_member_photos: メンバーフォトの公開（全て）
     release_private_member_photos: メンバーフォトの公開（所有）
-    approve_other_member_photos: メンバーフォトの承認（全て）
-    approve_private_member_photos: メンバーフォトの承認（所有）
 
   views:
     registration:

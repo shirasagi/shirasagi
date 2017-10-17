@@ -1,10 +1,11 @@
+<% css_classes ||= [] %>
 <% addons.each do |addon| %>
   <% buf = nil %>
   <% buf = render file: addon.show_file if addon.show_file %>
   <% next if buf.blank? %>
-  <div class="addon-view" id="addon-<%= addon.id %>">
-    <div class="addon-head toggle-head"><h2><%= addon.name %></h2></div>
-    <div class="addon-body toggle-body">
+  <div class="addon-view <%= css_classes.join(' ') %>" id="addon-<%= addon.id %>">
+    <div class="addon-head toggle-head <%= css_classes.join(' ') %>"><h2><%= addon.name %></h2></div>
+    <div class="addon-body toggle-body <%= css_classes.join(' ') %>">
       <%= buf %>
     </div>
   </div>

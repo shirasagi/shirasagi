@@ -35,7 +35,7 @@ module Gws::GroupPermission
   # @param [String] action
   # @param [Gws::User] user
   def allowed?(action, user, opts = {})
-    return true if !new_record? && user_ids.to_a.include?(user.id)
+    return true if (!opts[:grants_none_to_owner]) && persisted? && user_ids.to_a.include?(user.id)
 
     site    = opts[:site] || @cur_site
     action  = permission_action || action

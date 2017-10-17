@@ -65,6 +65,7 @@ ja:
       reset_tags: タグ解除
       upload: アップロード
       decode: デコードする
+      print: 印刷する
     buttons:
       save: 保存
       new: 新規作成
@@ -100,6 +101,8 @@ ja:
       download: ダウンロード
       add: 追加
       print: 印刷
+      select_all: 全て選択
+      deselect_all: 全て解除
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。

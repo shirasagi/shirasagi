@@ -112,4 +112,31 @@ module ApplicationHelper
     content_tag(:a, name || email_address, html_options, &block)
   end
 
+  def dropdown_link(name = nil, url_options = nil, options = nil, html_options = nil, &block)
+    options ||= {}
+    html_options ||= {}
+
+    inner = capture(&block) if block_given?
+    if inner.blank?
+      return link_to(name, url_options, html_options)
+    end
+
+    html_options[:class] = [ html_options[:class].presence ].flatten.compact
+
+    split = options.delete(:split)
+    if split
+      html_options[:class] << 'no-margin'
+    else
+      html_options[:class] << 'dropdown-toggle'
+    end
+    content_tag(:div, class: 'dropdown') do
+      output_buffer << link_to(name, split ? url_options : '#', html_options)
+      if split
+        output_buffer << tag(:span, class: %w(dropdown-toggle dropdown-toggle-split))
+      end
+      output_buffer << content_tag(:div, class: 'dropdown-menu') do
+        inner
+      end
+    end
+  end
 end

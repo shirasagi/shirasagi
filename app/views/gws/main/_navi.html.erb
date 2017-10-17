@@ -22,7 +22,9 @@
     <% end %>
   <% end %>
   <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_path, class: "icon-workflow" %></h2>
+    <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
+    <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
+    <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>
   <% end %>
 
   <h2><%= link_to '回覧板', gws_circular_topics_path, class: 'icon-write' %></h2>
