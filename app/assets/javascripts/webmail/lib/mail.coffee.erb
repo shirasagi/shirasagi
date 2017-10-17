@@ -347,5 +347,5 @@ class @Webmail_Mail_Form_Address
     selected = dl.find(".selected-address")
     return if label == ""
 
-    span = Webmail_Address_Autocomplete.createSelectedElement(field.attr("name"), value, label)
+    span = Webmail_Address_Autocomplete.createSelectedElement(field.attr("data-name"), value, label)
     selected.append(span)

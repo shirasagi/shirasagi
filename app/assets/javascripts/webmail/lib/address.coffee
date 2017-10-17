@@ -11,7 +11,7 @@ class @Webmail_Address_Autocomplete
     span.append(input)
     span
 
-  # https://stackoverflow.com/questions/46155/how-to-validate-email-address-in-javascript
+  # ref: https://stackoverflow.com/questions/46155/how-to-validate-email-address-in-javascript
   @validateEmail: (email) ->
     re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     re.test(email)
@@ -43,7 +43,7 @@ class @Webmail_Address_Autocomplete
       selected = $(this).closest(".webmail-mail-form-address").find(".selected-address")
       return false unless label
 
-      span = Webmail_Address_Autocomplete.createSelectedElement($(this).attr("name"), value, label)
+      span = Webmail_Address_Autocomplete.createSelectedElement($(this).attr("data-name"), value, label)
       selected.append(span)
       $(this).val("")
       return false
@@ -55,7 +55,7 @@ class @Webmail_Address_Autocomplete
       cursor: "pointer"
       receive: (e, ui)->
         selected = $(this).closest(".webmail-mail-form-address").find(".selected-address")
-        name = $(ui.item).closest(".webmail-mail-form-address").find(".autocomplete").attr("name")
+        name = $(ui.item).closest(".webmail-mail-form-address").find(".autocomplete").attr("data-name")
         $(ui.item).find("input").attr("name", name)
     ).disableSelection()
 

@@ -3,8 +3,8 @@
 SS_Form.disableEnterKey('#item_subject');
 Webmail_Mail_Form.render();
 Webmail_Address_Autocomplete.render(
-  ".webmail-mail-form-address", { names: <%== h.keys.to_json %>, labels: <%== h.keys.to_json %>, values: <%== h.to_json %>
-});
+  ".webmail-mail-form-address", { names: <%== h.keys.to_json %>, labels: <%== h.keys.to_json %>, values: <%== h.to_json %> }
+);
 <% end %>
 
 <%= f.hidden_field :reply_uid, id: nil %>
@@ -14,15 +14,15 @@ Webmail_Address_Autocomplete.render(
 
 <dl class="webmail-mail-form-address to">
   <dt><%= @model.t :to %></dt>
-  <dd><%= text_field_tag "item[to][]", nil, "class" => "address autocomplete" %></dd>
+  <dd><%= text_field_tag "to", nil, "class" => "address autocomplete", "data-name" => "item[to][]" %></dd>
   <dd><%= render 'address_form', { f: f, field: :to } %></dd>
   <dd>
     <div class="selected-address">
       <% @item.to.each do |address| %>
         <span>
-          <%= address.gsub("\"", "") %>
+          <%= address %>
           <i class="material-icons md-18 md-inactive deselect">close</i>
-          <input type="hidden" name="item[to][]" value="<%= address.gsub("\"", "") %>">
+          <input type="hidden" name="item[to][]" value="<%= address %>">
         </span>
       <% end %>
     </div>
@@ -35,15 +35,15 @@ Webmail_Address_Autocomplete.render(
 
 <dl class="webmail-mail-form-address cc-bcc cc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :cc %></dt>
-  <dd><%= text_field_tag "item[cc][]", nil, "class" => "address autocomplete" %></dd>
+  <dd><%= text_field_tag "cc", nil, "class" => "address autocomplete", "data-name" => "item[cc][]" %></dd>
   <dd><%= render 'address_form', { f: f, field: :cc } %></dd>
   <dd>
     <div class="selected-address">
       <% @item.cc.each do |address| %>
         <span>
-          <%= address.gsub("\"", "") %>
+          <%= address %>
           <i class="material-icons md-18 md-inactive deselect">close</i>
-          <input type="hidden" name="item[to][]" value="<%= address.gsub("\"", "") %>">
+          <input type="hidden" name="item[to][]" value="<%= address %>">
         </span>
       <% end %>
     </div>
@@ -52,17 +52,9 @@ Webmail_Address_Autocomplete.render(
 
 <dl class="webmail-mail-form-address cc-bcc bcc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :bcc %></dt>
-  <dd><%= text_field_tag "item[bcc][]", nil, "class" => "address autocomplete" %></dd>
+  <dd><%= text_field_tag "bcc", nil, "class" => "address autocomplete", "data-name" => "item[bcc][]" %></dd>
   <dd><%= render 'address_form', { f: f, field: :bcc } %></dd>
   <dd>
-    <div class="selected-address">
-      <% @item.bcc.each do |address| %>
-        <span>
-          <%= address.gsub("\"", "") %>
-          <i class="material-icons md-18 md-inactive deselect">close</i>
-          <input type="hidden" name="item[to][]" value="<%= address.gsub("\"", "") %>">
-        </span>
-      <% end %>
-    </div>
+    <div class="selected-address"></div>
   </dd>
 </dl>
