@@ -140,4 +140,20 @@ class Gws::Memo::Message
   def set_to_user_ids
     to.keys.each {|id_s| self.to_user_ids = self.to_user_ids << id_s.to_i }
   end
+
+  def owned?(user)
+    return true if (self.group_ids & user.group_ids).present?
+    return true if user_ids.to_a.include?(user.id)
+    return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    return true if self.to_user_ids.include?(user.id)
+    false
+  end
+
+  class << self
+    def allow_condition(action, user, opts = {})
+      folder = opts[:folder]
+      direction = (folder == 'INBOX.Sent') ? 'from' : 'to'
+      { "#{direction}.#{user.id}": folder }
+    end
+  end
 end
