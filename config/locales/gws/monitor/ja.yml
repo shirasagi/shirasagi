@@ -144,6 +144,7 @@ ja:
       gws/monitor/category: 照会・回答カテゴリー
       gws/monitor/group_setting: 照会・回答設定
       gws/monitor/group_setting/category: カテゴリー
+      gws/monitor/management: 管理
     errors:
       models:
         gws/monitor/category:

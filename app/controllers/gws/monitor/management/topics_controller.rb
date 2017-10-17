@@ -16,9 +16,11 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     set_category
     if @category.present?
       @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
+      @crumbs << [t("mongoid.models.gws/monitor/management"), gws_monitor_management_topics_path]
       @crumbs << [@category.name, action: :index]
     else
-      @crumbs << [t("modules.gws/monitor"), action: :index]
+      @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
+      @crumbs << [t("mongoid.models.gws/monitor/management"), gws_monitor_management_topics_path]
     end
   end
 
