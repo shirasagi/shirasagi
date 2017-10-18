@@ -24,7 +24,7 @@ users = user_class.where(:group_ids.in => group_class.site(@cur_site).pluck(:id)
       <% users.each do |user| %>
         <% next unless @item.allowed?(:approve, user, site: @cur_site) %>
         <% next unless user.enabled? %>
-        <option value="1,<%= user._id %>,pending," <%= 'selected="selected"' if userids.index(user._id) %>>
+        <option value="1,<%= user.id %>,,pending," <%= 'selected="selected"' if userids.index(user._id) %>>
           <%= "#{user.long_name}(#{user.email})" %></option>
       <% end %>
     </select>
