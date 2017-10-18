@@ -2,9 +2,11 @@
 
   $('.gws-category-navi-menu #category_id').change(function() {
     var cid = $(this).val();
-    if (cid) location.href = '<%= gws_monitor_category_topics_path(category: 'ID') %>'.replace('ID', cid);
-    else location.href = '<%= gws_monitor_topics_path %>';
+    if (cid) location.href = '<%= gws_monitor_category_answers_path(category: 'ID') %>'.replace('ID', cid);
+    else location.href = '<%= gws_monitor_answers_path %>';
   });
+
+  $(".gws-monitor-tabs .answer").addClass("current");
 
 <% end %>
 
@@ -56,7 +58,7 @@
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
-              <%= link_to category.trailing_name, gws_monitor_category_topics_path(category: category.id),
+              <%= link_to category.trailing_name, gws_monitor_category_answers_path(category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>

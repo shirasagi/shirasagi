@@ -44,11 +44,28 @@ SS::Application.routes.draw do
 
     # with category
     scope(path: ":category", as: "category") do
-      resources :topics, concerns: [:deletion] do
+      resources :topics, concerns: [:deletion, :state_change] do
         namespace :parent, path: ":parent_id", parent_id: /\d+/ do
           resources :comments, controller: '/gws/monitor/comments', concerns: [:deletion]
         end
         get :categories, on: :collection
+      end
+
+      resources :answers, concerns: [:deletion, :state_change]
+
+      resources :admins, concerns: [:deletion, :state_change] do
+        get :disable, on: :member
+        post :disable_all, on: :collection
+      end
+
+      namespace "management" do
+        resources :topics, concerns: [:deletion] do
+          get :download, on: :member
+        end
+        resources :trashes, concerns: [:deletion] do
+          get :active, on: :member
+          post :active_all, on: :collection
+        end
       end
     end
 
