@@ -1,7 +1,7 @@
 <%= jquery do %>
     Gws_Monitor_Topic.render();
 
-    switch ("<%= @item[:state_of_the_answer] %>"){
+    switch ("<%= @item[:state_of_the_answers_hash]["#{@cur_group.id}"] %>"){
       case "public":
         $('.public').hide();
         $('.preparation').show();
