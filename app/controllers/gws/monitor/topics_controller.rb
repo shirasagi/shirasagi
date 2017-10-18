@@ -101,7 +101,9 @@ class Gws::Monitor::TopicsController < ApplicationController
 
   def public
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state_of_the_answer: 'public')
+    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "public")
+    @item.save
+    render_update@item.update
   end
 
   def preparation
