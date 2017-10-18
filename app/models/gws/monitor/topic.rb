@@ -98,8 +98,6 @@ class Gws::Monitor::Topic
     return Gws::Group.none if group_ids.blank? && user_ids.blank? && custom_group_ids.blank?
 
     conds = []
-    # conds << { id: { '$in' => Gws::Monitor::Post.pluck(:user_ids).flatten } }
-    # conds << { group_ids: { '$in' => Gws::Monitor::Post.pluck(:group_ids).flatten } }
     conds << { id: { '$in' => Gws::Monitor::Post.pluck(:group_ids).flatten } }
 
     if Gws::Monitor::Category.subscription_setting_included_custom_groups?
@@ -108,7 +106,6 @@ class Gws::Monitor::Topic
     end
 
     Gws::Group.where('$and' => [ { '$or' => conds } ])
-    # Gws::User.where('$and' => [ { '$or' => conds } ])
   end
 
   def sort_options
