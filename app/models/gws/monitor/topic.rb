@@ -52,8 +52,9 @@ class Gws::Monitor::Topic
     update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end
 
-  def state_name
-    I18n.t("gws/monitor.options.state.#{state_of_the_answer}")
+  def state_name(groupid)
+    return I18n.t("gws/monitor.options.state.no_state") if state_of_the_answers_hash["#{groupid}"].blank?
+    I18n.t("gws/monitor.options.state." + state_of_the_answers_hash["#{groupid}"])
   end
 
   def admin_setting_options

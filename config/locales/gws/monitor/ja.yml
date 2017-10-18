@@ -75,10 +75,11 @@ ja:
         important: 重要
       state:
         closed: 未回答
-        public : 受取済み
+        public: 受取済み
         preparation: 受取待ち
         answered: 回答済み
         question_not_applicable: 該当なし
+        no_state: 状態無し
     links:
       back_to_thread: 戻る
       comment: 回答する

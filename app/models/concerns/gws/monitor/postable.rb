@@ -37,10 +37,10 @@ module Gws::Monitor::Postable
       order: { created: -1 }
 
     permit_params :name, :mode, :permit_comment, :severity, :due_date, :admin_setting,
-                  :spec_config, :reminder_start_section, :state_of_the_answer
+                  :spec_config, :reminder_start_section, :state_of_the_answer, :state_of_the_answers_hash
 
     before_validation :set_topic_id, if: :comment?
-    before_validation :state_of_the_answers_hash
+    before_validation :set_state_of_the_answers_hash
 
     validates :name, presence: true, length: { maximum: 80 }
     validates :mode, inclusion: {in: %w(thread tree)}, unless: :comment?
@@ -113,10 +113,6 @@ module Gws::Monitor::Postable
     %w(normal important).map { |v| [ I18n.t("gws/monitor.options.severity.#{v}"), v ] }
   end
 
-  def state_of_the_answers_hash
-    self[:state_of_the_answers_hash].presence || groups.map { |m| [m.id, "preparation"] }.to_h
-  end
-
   private
 
   # topic(root_post)を設定
@@ -145,8 +141,8 @@ module Gws::Monitor::Postable
     topic.set descendants_updated: updated
   end
 
-  def state_of_the_answers_hash
-    self.state_of_the_answers_hash = groups.map { |m| [m.id, "preparation"] }.to_h
+  def set_state_of_the_answers_hash
+    self.state_of_the_answers_hash = groups.map { |g| [g.id, "preparation"] }.to_h if @attributes["_id"] == 0
   end
 
 end
