@@ -87,6 +87,7 @@ ja:
       preparation: 受取待ちにする
       question_not_applicable: 該当なしにする
       disable_all: 削除する
+      active_all: 削除を取り消す
       answered: 回答済みにする
       export_csv: CSVに出力する
       confirm:
@@ -98,6 +99,7 @@ ja:
         preparation_all: チェックした項目を受取待ちにしますか？
         question_not_applicable_all: チェックした項目を該当なしにしますか？
         disable_all: チェックした項目を削除しますか？
+        active_all: 選択した項目の削除を取り消しますか？
 
     errors:
       denied_comment: コメントの投稿は許可されていません。
