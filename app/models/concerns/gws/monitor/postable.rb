@@ -24,6 +24,7 @@ module Gws::Monitor::Postable
     field :spec_config, type: String, default: '0'
     field :reminder_start_section, type: String, default: '0'
     field :state_of_the_answer, type: String, default: 'preparation'
+    field :state_of_the_answers_hash, type: Hash, default: {}
 
     validates :descendants_updated, datetime: true
 
@@ -39,6 +40,7 @@ module Gws::Monitor::Postable
                   :spec_config, :reminder_start_section, :state_of_the_answer
 
     before_validation :set_topic_id, if: :comment?
+    before_validation :state_of_the_answers_hash
 
     validates :name, presence: true, length: { maximum: 80 }
     validates :mode, inclusion: {in: %w(thread tree)}, unless: :comment?
@@ -111,6 +113,10 @@ module Gws::Monitor::Postable
     %w(normal important).map { |v| [ I18n.t("gws/monitor.options.severity.#{v}"), v ] }
   end
 
+  def state_of_the_answers_hash
+    self[:state_of_the_answers_hash].presence || groups.map { |m| [m.id, "preparation"] }.to_h
+  end
+
   private
 
   # topic(root_post)を設定
@@ -138,5 +144,9 @@ module Gws::Monitor::Postable
     #return unless _id_changed?
     topic.set descendants_updated: updated
   end
-end
 
+  def state_of_the_answers_hash
+    self.state_of_the_answers_hash = groups.map { |m| [m.id, "preparation"] }.to_h
+  end
+
+end
