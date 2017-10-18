@@ -15,7 +15,7 @@ end
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("ss.apis.groups.index"), groups_path, class: "ajax-box" %>
+    <%= link_to t("ss.apis.groups.index"), groups_path, class: "ajax-box groups" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -41,17 +41,18 @@ end
 <h1 class="workflow-level-header workflow-level-<%= level %>"><%= @model.t :level, level: level %></h1>
 <dl class="see workflow-approvers workflow-level-<%= level %>">
   <dt><%= @model.t :required_counts %><%= @model.tt :required_counts %></dt>
-  <dd><%= select_tag "item[required_counts][]", options_for_select(@item.required_count_options, @item.required_count_at(level)) %></dd>
+  <dd><%= select_tag "item[required_counts][]", options_for_select(@item.required_count_options, @item.required_count_at(level)), id: nil %></dd>
   <dt><%= @model.t :approvers %><%= @model.tt :approvers %></dt>
   <dd>
-    <%= f.hidden_field "approvers[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("workflow.search_approvers.index"), approvers_path(level: level), class: "ajax-box" %>
+    <%= f.hidden_field("approvers[]", value: "", class: "hidden-ids", id: nil) %>
+    <%= link_to t("workflow.search_approvers.index"), approvers_path(level: level), class: "ajax-box approvers" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
       <thead>
         <tr>
           <th class="name"><%= @model.t :name %></th>
+          <th><%= t('ss.buttons.edit') %></th>
           <th></th>
         </tr>
       </thead>
@@ -60,15 +61,12 @@ end
           <% if user.present? %>
             <tr data-id="<%= "#{level},#{user.id}" %>">
               <td>
-                <%= f.hidden_field "approvers[]", value: "#{level},#{user.id}" %>
+                <%= hidden_field_tag("#{f.object_name}[approvers][][level]", level, id: nil) %>
+                <%= hidden_field_tag("#{f.object_name}[approvers][][user_id]", user.id, id: nil) %>
                 <%= user.long_name %>
               </td>
-              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-            </tr>
-          <% else %>
-            <tr>
               <td>
-                <%= t("workflow.user_deleted") %>
+                <%= check_box_tag("#{f.object_name}[approvers][][editable]", 1, @item.approver_user_editable?(level, user), id: nil) %>
               </td>
               <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
             </tr>
@@ -78,4 +76,40 @@ end
     </table>
   </dd>
 </dl>
+<% end %>
+
+<%= jquery do %>
+  var approverSelector = function($item) {
+    var $dl = SS_SearchUI.anchorAjaxBox.closest("dl");
+    var level = $dl.data('level');
+
+    var data = $item.closest("[data-id]");
+    var levelAndId = data.data("id").split(',');
+    var level = levelAndId[0];
+    var id = levelAndId[1];
+    var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
+
+    // var $input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
+    // $input.val(id).removeClass("hidden-ids");
+
+    var $level = $('<input type="hidden" name="item[approvers][][level]">');
+    $level.val(level);
+
+    var $userId = $('<input type="hidden" name="item[approvers][][user_id]">');
+    $userId.val(id);
+
+    var $a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
+    $a.on("click", SS_SearchUI.deselect);
+
+    var $tr = $("<tr />").attr("data-id", levelAndId.join(','));
+    $tr.append($('<td />').append($level).append($userId).append(name));
+    $tr.append($('<td />').append('<input type="checkbox" name="item[approvers][][editable]" value="1">'));
+    $tr.append($('<td />').append($a));
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend($tr);
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  $('a.ajax-box.approvers').data('on-select', function($item) {
+    approverSelector($item);
+  });
 <% end %>
