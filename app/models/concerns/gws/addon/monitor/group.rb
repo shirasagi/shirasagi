@@ -21,14 +21,14 @@ module Gws::Addon::Monitor::Group
 
   def sorted_groups
     return groups.order_by_title(site || cur_site) unless self.class.keep_groups_order?
-    return @sorted_members if @sorted_members
+    return @sorted_groups if @sorted_groups
 
     hash = groups.map { |g| [g.id, g] }.to_h
     @sorted_groups = group_ids.map { |id| hash[id] }.compact
   end
 
   def sorted_overall_groups
-    group_ids += self.member_ids
+    group_ids += self.group_ids
     group_ids.compact!
     group_ids.uniq!
 
