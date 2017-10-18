@@ -21,7 +21,7 @@ class Gws::Monitor::AdminsController < ApplicationController
   def set_crumbs
     set_category
     if @category.present?
-      @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
+      @crumbs << [t("modules.gws/monitor"), gws_monitor_admins_path]
       @crumbs << [@category.name, action: :index]
     else
       @crumbs << [t("modules.gws/monitor"), action: :index]
