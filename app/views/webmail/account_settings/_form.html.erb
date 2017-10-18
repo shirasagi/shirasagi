@@ -52,6 +52,9 @@
   <dt><%= @model.t :imap_trash_box %><%= @model.tt :imap_trash_box %></dt>
   <dd><%= text_field_tag "item[imap_settings][][imap_trash_box]", setting.imap_trash_box %></dd>
 
+  <dt><%= @model.t :threshold_mb %><%= @model.tt :threshold_mb %></dt>
+  <dd><%= number_field_tag "item[imap_settings][][threshold_mb]", setting.threshold_mb, min: 0 %> <%= t "ss.units.mega_byte" %></dd>
+
   <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
   <dd><%= check_box_tag "item[imap_settings][][default]", 1, default_index, class: "default-index" %></dd>
 

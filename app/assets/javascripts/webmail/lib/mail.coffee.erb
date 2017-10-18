@@ -31,6 +31,7 @@ class @Webmail_Mail_Navi
   @reloadQuota: ->
     navi = $('.webmail-navi-quota')
     btn = navi.find('.reload')
+    al = $(".webmail-quota-alert")
     return false if btn.hasClass('disabled')
 
     $.ajax
@@ -43,6 +44,13 @@ class @Webmail_Mail_Navi
         navi.find('.label').html(data.label)
         navi.find('.usage').css('width', data.percentage + '%')
         btn.removeClass('disabled')
+        if data.over_threshold
+          navi.find('.usage').addClass("over-threshold")
+          al.text(data.threshold_label)
+          al.show()
+        else
+          navi.find('.usage').removeClass("over-threshold")
+          al.hide()
     return false
 
 class @Webmail_Mail_List
