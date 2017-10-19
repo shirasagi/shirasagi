@@ -61,6 +61,15 @@ class Gws::Monitor::Topic
     article_state == 'closed'
   end
 
+  def unanswered?(groupid)
+    if closed?
+      case state_of_the_answers_hash["#{groupid}"]
+      when "public", "preparation", nil
+        I18n.t("gws/monitor.options.state.closed")
+      end
+    end
+  end
+
   def article_state_name
     I18n.t("gws/monitor.options.article_state." + article_state)
   end
@@ -129,14 +138,16 @@ class Gws::Monitor::Topic
     CSV.generate do |data|
       data << I18n.t('gws/monitor.csv')
 
-      children.each do |item|
+      subscribed_groups.each do |group|
+        post = children.where(group_ids: group.id).first
         data << [
-            self.id,
-            self.name,
-            I18n.t("gws/monitor.options.state.#{item.state_of_the_answer}"),
-            item.user_name,
-            item.text,
-            item.updated.strftime("%Y-%m-%d %H:%M")
+            id,
+            name,
+            unanswered?(group.id) ? unanswered?(group.id) : state_name(group.id),
+            group.name,
+            post.try(:contributor_name),
+            post.try(:text),
+            post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
         ]
       end
     end
