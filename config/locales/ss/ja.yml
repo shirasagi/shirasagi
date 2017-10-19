@@ -176,6 +176,8 @@ ja:
         remand: 差し戻し
         start: 選択
         cancel: 取消
+        allow: 許可する
+        deny: 許可しない
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)

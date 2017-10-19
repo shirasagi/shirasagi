@@ -1450,10 +1450,10 @@ table.index {
   border: $border-gray5;
   background: $white;
   tr:nth-child(2n) {
-    background: $gray1;
+    background: #f8f8f8;
   }
   tr.current, tr:hover {
-    background: #fbe8e2;
+    background: $gray1;
   }
   th, td {
     padding: 6px 18px;
@@ -1529,6 +1529,10 @@ table.index.data-table {
       border-right: 1px dotted #aaa;
       content: '';
     }
+  }
+  tr .sortable-head {
+    width: 10px;
+    padding-right: 0px;
   }
   .ui-sortable-helper {
     @include box-shadow(0px 1px 3px #888);
