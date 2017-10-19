@@ -27,8 +27,7 @@ SS::Application.routes.draw do
     resources :forms, concerns: :deletion do
       match :publish, on: :member, via: [:get, :post]
       match :depublish, on: :member, via: [:get, :post]
-      resources :columns, concerns: :deletion, except: [:new, :create]
-      resources :columns, path: 'columns/:input_type', only: [:new, :create], as: 'columns_input_type'
+      resources :columns, concerns: :deletion
     end
     get "/search_approvers" => "search_approvers#index"
     match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]

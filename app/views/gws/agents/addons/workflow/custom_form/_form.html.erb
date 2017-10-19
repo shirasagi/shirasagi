@@ -3,7 +3,7 @@
 
 <dl class="see mod-gws-workflow-custom_form">
   <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
-    <%= render(file: "app/views/gws/facility/custom_fields/input_forms/_#{column.input_type}", locals: { item: column, object_name: 'custom', value: @item.read_custom_value(column) }) %>
+    <%= render(file: column.column_form_path, locals: { column: column, object_name: 'custom', value: @item.read_column_value(column) }) %>
   <% end %>
 </dl>
 
