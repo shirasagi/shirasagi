@@ -1,5 +1,0 @@
-<% value ||= nil %>
-<%= render file: 'app/views/gws/facility/custom_fields/input_forms/_common_label', locals: { item: item } %>
-<dd>
-  <%= select_tag("#{object_name}[#{item.id}]", options_for_select(item.select_options, selected: value), item.html_options.merge(include_blank: item.place_holder.presence || true)) %>
-</dd>
