@@ -7,7 +7,9 @@ SS::Application.routes.draw do
   end
 
   gws "facility" do
-    resources :columns, path: 'items/:form_id/columns', concerns: [:deletion]
+    resources :columns, path: 'items/:form_id/columns', concerns: [:deletion] do
+      get :input_form, on: :collection
+    end
     resources :items, concerns: [:deletion]
     namespace :usage do
       get '/' => 'main#index', as: :main
