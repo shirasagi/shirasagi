@@ -78,7 +78,7 @@ module Gws::Monitor::Postable
            ["$or" => [ {state_of_the_answer: "question_not_applicable"}, {state_of_the_answer: "answered"} ] ])
     }
     # Allow readable settings and readable permissions.
-    scope :and_readable, ->(user, site, opts = {}) {
+    scope :readable, ->(user, site, opts = {}) {
       cond = [
           { "group_ids.0" => { "$exists" => false },
             "user_ids.0" => { "$exists" => false },
