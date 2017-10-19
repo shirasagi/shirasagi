@@ -34,6 +34,15 @@ class Gws::Column::Base
       end
       criteria
     end
+
+    def build_column_values(hash)
+      hash.map do |key, value|
+        column = all.find(key) rescue nil
+        next nil if column.blank?
+
+        column.serialize_value(value)
+      end
+    end
   end
 
   def required_options
