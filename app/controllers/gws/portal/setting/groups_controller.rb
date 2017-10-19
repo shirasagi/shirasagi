@@ -24,7 +24,7 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
     @search_params = params[:s]
     @search_params = @search_params.except(:state).delete_if { |k, v| v.blank? } if @search_params

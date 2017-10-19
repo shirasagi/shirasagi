@@ -84,6 +84,7 @@ module Gws::Portal::PortletModel
 
     def default_portlet(key)
       item = self.new(portlet_model: key)
+      item.name = I18n.t("gws/portal.portlets.#{key}.name")
       item.grid_data = item.default_grid_data
       item
     end
