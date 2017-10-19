@@ -1,3 +1,18 @@
+<%= jquery do %>
+$(function() {
+  $('.close-topic').click(function() {
+    if (!confirm($(this).data('confirm'))) return false;
+      var token = $('meta[name="csrf-token"]').attr('content');
+      var form = $('<form/>').
+      attr('method', 'POST').
+      attr('action', $(this).attr('href')).
+      append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" })).
+      appendTo("body").
+      submit();
+    return false;
+  });
+});
+<% end %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
@@ -13,6 +28,13 @@
   <% elsif params[:action] =~ /import/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
+    <% if @item.closed? %>
+      <%= link_to t('gws/monitor.links.open'), {action: :open, id: @item },
+        class: 'close-topic', 'data-confirm' => t('gws/monitor.links.confirm.open')  %>
+    <% else %>
+      <%= link_to t('gws/monitor.links.closed'), {action: :close, id: @item },
+        class: 'close-topic', 'data-confirm' => t('gws/monitor.links.confirm.close')  %>
+    <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
