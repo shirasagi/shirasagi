@@ -74,7 +74,7 @@
     </div>
     <% end %>
 
-    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && !@item.closed? %>
     <div class="menu">
       <%= hidden_field_tag "item_id", @item.id %>
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>

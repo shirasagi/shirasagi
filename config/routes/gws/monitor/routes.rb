@@ -35,6 +35,8 @@ SS::Application.routes.draw do
     namespace "management" do
       resources :topics, concerns: [:deletion] do
         get :download, on: :member
+        post :close, on: :member
+        post :open, on: :member
       end
       resources :trashes, concerns: [:deletion] do
         get :active, on: :member
@@ -61,6 +63,8 @@ SS::Application.routes.draw do
       namespace "management" do
         resources :topics, concerns: [:deletion] do
           get :download, on: :member
+          post :close, on: :member
+          post :open, on: :member
         end
         resources :trashes, concerns: [:deletion] do
           get :active, on: :member
