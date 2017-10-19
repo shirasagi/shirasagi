@@ -61,6 +61,10 @@ class Gws::Monitor::Topic
     article_state == 'closed'
   end
 
+  def article_state_name
+    I18n.t("gws/monitor.options.article_state." + article_state)
+  end
+
   def state_name(groupid)
     return I18n.t("gws/monitor.options.state.no_state") if state_of_the_answers_hash["#{groupid}"].blank?
     I18n.t("gws/monitor.options.state." + state_of_the_answers_hash["#{groupid}"])
