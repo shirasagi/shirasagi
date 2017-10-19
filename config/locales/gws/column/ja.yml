@@ -1,0 +1,95 @@
+ja:
+  gws/column:
+    options:
+      column_input_type:
+        text: テキスト
+        email: メールアドレス
+        date: 日付
+        tel: 電話番号
+        url: URL
+        search: 検索テキスト
+
+  gws:
+    columns:
+      gws/text_field: 一行入力
+      gws/date_field: 日付入力
+      gws/url_field: URL入力
+      gws/text_area: 複数行入力
+      gws/select: ドロップダウン
+      gws/radio_button: ラジオボタン
+      gws/check_box: チェックボックス
+      gws/file_upload: ファイルアップロード
+
+  modules:
+    addons:
+      gws/column/text_like: 制約条件
+      gws/column/select_like: 選択
+
+  mongoid:
+    models:
+      gws/column/base: 入力項目
+      gws/column/text_field: 一行入力
+      gws/column/date_field: 日付入力
+      gws/column/url_field: URL入力
+      gws/column/text_area: 複数行入力
+      gws/column/select: ドロップダウン
+      gws/column/radio_button: ラジオボタン
+      gws/column/check_box: チェックボックス
+      gws/column/file_upload: ファイルアップロード
+    attributes:
+      gws/column/base:
+        route: 属性
+        name: 名前
+        order: 並び順
+        required: 必須入力
+        tooltips: ツールチップ
+      gws/column/text_field:
+        input_type: 種類
+      gws/column/date_field:
+        place_holder: プレースホルダー
+      gws/column/select:
+        place_holder: プレースホルダー
+      gws/addon/column/text_like:
+        max_length: 最大長
+        place_holder: プレースホルダー
+        additional_attr: 追加属性
+      gws/addon/column/select_like:
+        select_options: 選択肢
+
+  tooltip:
+    gws/column/base:
+      name:
+        - 入力項目名を入力します。
+      required:
+        - 項目の入力が必須か任意かを選択します。
+      order:
+        - 表示順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      tooltips:
+        - 項目のツールチップを入力します。
+
+    gws/column/text_field:
+      input_type:
+        - 種類を選択します。
+        - 一部の種類は、最近のブラウザでしかサポートされていません。
+
+    gws/column/date_field:
+      place_holder:
+        - プレースホルダーを入力します。
+
+    gws/column/select:
+      place_holder:
+        - プレースホルダーを入力します。
+
+    gws/addon/column/text_like:
+      max_length:
+        - 入力文字数の最大長を入力します。
+      place_holder:
+        - プレースホルダーを入力します。
+      additional_attr:
+        - 出力される入力形式のHTMLに属性を追加することが可能です。
+
+    gws/addon/column/select_like:
+      select_options:
+        - 回答の選択肢を入力します。
+        - テキストを改行で区切ることで複数の選択肢を入力することができます。

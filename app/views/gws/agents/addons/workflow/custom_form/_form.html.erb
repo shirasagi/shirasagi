@@ -11,4 +11,30 @@
   $('#addon-ss-agents-addons-markdown').hide();
   $('#addon-gws-agents-addons-file').hide();
   $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+
+  var columnId;
+
+  $('a.btn-file-upload').on('click', function(e) {
+    columnId = $(this).data('column-id');
+  });
+
+  $('a.btn-file-upload').data('on-success', function(html) {
+    // console.log('on success: ' + columnId);
+    $.colorbox.close();
+
+    console.log(html);
+
+    if (! columnId) {
+      return;
+    }
+
+    var fileId = $(html).data('file-id');
+    var humanizedName = $(html).data('humanized-name');
+    if (! fileId || ! humanizedName) {
+      return;
+    }
+
+    $('input[name="custom[' + columnId + ']"]').val(fileId);
+    $('span.humanized-name.column-' + columnId).text(humanizedName);
+  });
 <% end %>

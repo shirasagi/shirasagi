@@ -1,0 +1,20 @@
+<% value ||= nil %>
+<% file = value.try(:file) %>
+<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column, show: true } %>
+<dd>
+  <% if file.present? %>
+  <div class="fileview" style="display: table">
+    <span class="icon" style="display: table-cell; vertical-align: middle; padding: 4px">
+      <% if file.image? %>
+      <%= image_tag(file.thumb_url, alt: file.name, style: 'max-width: 40px; max-height: 40px') %>
+      <% else %>
+      <i class="material-icons">&#xE24D;</i><br>
+      <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+      <% end %>
+    </span>
+    <span class="filename" style="display: table-cell; vertical-align: middle; padding: 4px">
+      <%= link_to(file.humanized_name, file.url, file.image? ? {} : { download: true }) %>
+    </span>
+  </div>
+  <% end %>
+</dd>
