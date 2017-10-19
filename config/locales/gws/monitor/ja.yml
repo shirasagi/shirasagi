@@ -90,12 +90,16 @@ ja:
       disable_all: 削除する
       active_all: 削除を取り消す
       answered: 回答済みにする
+      closed: 締め切る
+      open: 締め切り解除
       export_csv: CSVに出力する
       confirm:
         public: 受取済みにしますか？
         preparation: 受取待ちにしますか？
         question_not_applicable: 該当なしにしますか？
         answer: 回答済みにしますか？
+        close: 回答を締め切りますか？
+        open: 締め切りを解除してよろしいですか？
         public_all: チェックした項目を受取済みにしますか？
         preparation_all: チェックした項目を受取待ちにしますか？
         question_not_applicable_all: チェックした項目を該当なしにしますか？
