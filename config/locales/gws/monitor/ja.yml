@@ -80,6 +80,9 @@ ja:
         answered: 回答済み
         question_not_applicable: 該当なし
         no_state: 状態無し
+      article_state:
+        open: 配信済み
+        closed: 締め切り
     links:
       back_to_thread: 戻る
       comment: 回答する
