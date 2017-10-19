@@ -1,0 +1,4 @@
+<dl class="see mod-gws-column-file_upload">
+  <dt><%= @model.t :upload_file_count %><%= @model.tt :upload_file_count %></dt>
+  <dd><%= f.select :upload_file_count, 1.upto(5).map { |v| [ v, v ] } %></dd>
+</dl>

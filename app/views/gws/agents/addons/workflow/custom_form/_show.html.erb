@@ -1,13 +1,13 @@
 <% return if @item.column_values.blank? %>
 
 <dl class="see mod-gws-workflow-custom_form">
-<% @item.column_values.order_by(order: 1, name: 1).each do |val| %>
-  <% column = val.column %>
+<% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+  <% column = value.column %>
   <% if column.present? && column.column_show_path.present? %>
     <%= render file: column.column_show_path, locals: { column: column, value: value } %>
   <% else %>
-    <dt><%= val.name %></dt>
-    <dd><%= val.value %></dd>
+    <dt><%= value.name %></dt>
+    <dd><%= value.value %></dd>
   <% end %>
 <% end %>
 </dl>

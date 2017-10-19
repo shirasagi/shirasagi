@@ -17,20 +17,20 @@
     columnId = $(this).data('column-id');
   });
 
-  $('a.btn-file-upload').data('on-success', function(html) {
+  $('a.btn-file-upload').data('on-select', function($item) {
     $.colorbox.close();
-
     if (! columnId) {
       return;
     }
 
-    var fileId = $(html).data('file-id');
-    var humanizedName = $(html).data('humanized-name');
+    var fileId = $item.data('id');
+    var humanizedName = $item.data('humanized-name');
     if (! fileId || ! humanizedName) {
       return;
     }
 
-    $('input[name="<%= object_name %>[' + columnId + ']"]').val(fileId);
-    $('span.humanized-name.column-' + columnId).text(humanizedName);
+    var $element = $.colorbox.element();
+    $element.siblings('input[name="<%= object_name %>[' + columnId + ']"]').val(fileId);
+    $element.siblings('span.humanized-name.column-' + columnId).text(humanizedName);
   });
 <% end %>

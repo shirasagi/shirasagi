@@ -49,6 +49,8 @@ ja:
         place_holder: プレースホルダー
       gws/column/select:
         place_holder: プレースホルダー
+      gws/column/file_upload:
+        upload_file_count: アップロードファイル数
       gws/addon/column/text_like:
         max_length: 最大長
         place_holder: プレースホルダー
@@ -80,6 +82,10 @@ ja:
     gws/column/select:
       place_holder:
         - プレースホルダーを入力します。
+
+    gws/column/file_upload:
+      upload_file_count:
+        - アップロードできるファイル数を選択します。
 
     gws/addon/column/text_like:
       max_length:
