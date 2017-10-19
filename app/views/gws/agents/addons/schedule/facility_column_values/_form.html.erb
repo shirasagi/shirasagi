@@ -7,7 +7,7 @@
   // Define 3 classes and its constructor
   //
   var ContainerElem = function() {
-    this.$container = $('#addon-gws-agents-addons-schedule-facility_custom_values');
+    this.$container = $('#addon-gws-agents-addons-schedule-facility_column_values');
     this.inputForm = null;
     this.choose = null;
   }
@@ -16,9 +16,9 @@
     this.containerElem = containerElem;
     containerElem.inputForm = this;
 
-    this.url = <%== input_form_gws_facility_item_custom_fields_path(item_id: ':item_id', format: :html).to_json %>;
-    <% if @item.facility_custom_values.present? %>
-    this.initialValues = <%== Hash[@item.facility_custom_values.map { |key, val| [ key, val['value'] ] }].to_json %>;
+    this.url = <%== input_form_gws_facility_columns_path(form_id: ':form_id', format: :html).to_json %>;
+    <% if @item.facility_column_values.present? %>
+    this.initialValues = <%== Hash[@item.facility_column_values.map { |val| [ val.column_id.to_s, val.value ] }].to_json %>;
     <% else %>
     this.initialValues = {};
     <% end %>
@@ -57,9 +57,9 @@
     var pThis = this;
 
     $.ajax({
-      url: pThis.url.replace(':item_id', facilityId),
+      url: pThis.url.replace(':form_id', facilityId),
       type: "get",
-      data: { object_name: '<%= f.object_name %>[facility_custom_values]' },
+      data: { object_name: '<%= f.object_name %>[facility_column_values]' },
       success: function(data) {
         if (data) {
           pThis.activate(data);
@@ -76,7 +76,7 @@
 
   InputForm.prototype.setValues = function() {
     $.each(this.initialValues, function(key, value) {
-      var $control = $('input[name="item[facility_custom_values][' + key + ']"]');
+      var $control = $('input[name="item[facility_column_values][' + key + ']"]');
       if ($control[0]) {
         if ($control.attr('type') === 'radio') {
           $control.val([value]);
@@ -91,7 +91,7 @@
         }
       }
 
-      $control = $('input[name="item[facility_custom_values][' + key + '][]"]');
+      $control = $('input[name="item[facility_column_values][' + key + '][]"]');
       if ($control[0]) {
         if ($control.attr('type') === 'checkbox') {
           $control.each(function() {
@@ -102,12 +102,12 @@
         }
       }
 
-      $control = $('select[name="item[facility_custom_values][' + key + ']"]');
+      $control = $('select[name="item[facility_column_values][' + key + ']"]');
       if ($control[0]) {
         $control.val(value);
       }
 
-      $control = $('textarea[name="item[facility_custom_values][' + key + ']"]');
+      $control = $('textarea[name="item[facility_column_values][' + key + ']"]');
       if ($control[0]) {
         $control.val(value);
       }
