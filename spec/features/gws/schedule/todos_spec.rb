@@ -33,7 +33,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
     visit gws_schedule_todos_path gws_site
     find('.list-head label.check input').set(true)
     find('.finish-all').click
-    wait_for_ajax
+    # wait_for_ajax
   end
 
   it "#revert_all" do
@@ -41,7 +41,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
     visit gws_schedule_todos_path gws_site
     find('.list-head label.check input').set(true)
     find('.revert-all').click
-    wait_for_ajax
+    # wait_for_ajax
   end
 
   it "#disable_all" do
