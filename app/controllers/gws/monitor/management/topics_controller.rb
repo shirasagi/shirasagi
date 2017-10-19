@@ -5,7 +5,8 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   model Gws::Monitor::Topic
 
   before_action :set_item, only: [
-      :show, :edit, :update, :delete, :destroy, :download
+      :show, :edit, :update, :delete, :destroy,
+      :close, :open, :download
   ]
 
   before_action :set_category
@@ -68,6 +69,16 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   def show
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render file: "/gws/monitor/management/main/show_#{@item.mode}"
+  end
+
+  def close
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update(article_state: 'closed')
+  end
+
+  def open
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update(article_state: 'open')
   end
 
   def download

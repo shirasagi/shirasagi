@@ -16,9 +16,14 @@ class Gws::Monitor::Topic
 
   readable_setting_include_custom_groups
 
+  field :article_state, type: String, default: 'open'
   field :deleted, type: DateTime
+
   validates :deleted, datetime: true
+  validates :article_state, inclusion: { in: %w(open closed) }
+
   permit_params :deleted
+  permit_params :article_state
 
   #validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
@@ -50,6 +55,10 @@ class Gws::Monitor::Topic
 
   def disable
     update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+  end
+
+  def closed?
+    article_state == 'closed'
   end
 
   def state_name(groupid)
