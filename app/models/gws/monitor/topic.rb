@@ -117,15 +117,9 @@ class Gws::Monitor::Topic
 
   def subscribed_groups
     return Gws::Group.none if new_record?
-    return Gws::Group.none if group_ids.blank? && user_ids.blank? && custom_group_ids.blank?
+    return Gws::Group.none if group_ids.blank?
 
-    conds = []
-    conds << { id: { '$in' => Gws::Monitor::Post.pluck(:group_ids).flatten } }
-
-    if Gws::Monitor::Category.subscription_setting_included_custom_groups?
-      custom_gropus = Gws::CustomGroup.in(id: Gws::Monitor::Post.pluck(:custom_group_ids))
-      conds << { id: { '$in' => custom_gropus.pluck(:member_ids).flatten } }
-    end
+    conds = [{ id: { '$in' => group_ids.flatten } }]
 
     Gws::Group.where('$and' => [ { '$or' => conds } ])
   end
