@@ -49,6 +49,22 @@ module Gws::GroupPermission
     false
   end
 
+  def strict_allowed?(action, user, opts = {})
+    return true if !new_record? && user_ids.to_a.include?(user.id)
+
+    site    = opts[:site] || @cur_site
+    action  = permission_action || action
+
+    permits = ["#{action}_other_#{self.class.permission_name}"]
+    permits << "#{action}_private_#{self.class.permission_name}" if owned?(user)
+
+    permits.each do |permit|
+      return true if user.gws_role_permissions["#{permit}_#{site.id}"].to_i > 0
+    end
+
+    false
+  end
+
   def groups_hash
     self[:groups_hash].presence || groups.map { |m| [m.id, m.name] }.to_h
   end

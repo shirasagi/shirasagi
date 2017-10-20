@@ -27,6 +27,13 @@
     <h3><%= link_to t('mongoid.models.gws/link'), gws_links_path %></h3>
   <% end %>
 
+  <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path %></h3>
+  <% end %>
+  <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path %></h3>
+  <% end %>
+
   <% Gws::GroupSetting.plugins.each do |mod, url_lazy| %>
     <% if mod.allowed?(:read, @cur_user, site: @cur_site) %>
       <h3><%= link_to mod.human_name, instance_exec(&url_lazy) %></h3>
