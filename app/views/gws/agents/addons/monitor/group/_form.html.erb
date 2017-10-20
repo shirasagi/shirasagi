@@ -11,7 +11,7 @@
       <table class="index ajax-selected">
         <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
-        <% @item.groups.each do |group| %>
+        <% @item.subscribed_groups.each do |group| %>
             <tr data-id="<%= group.id %>">
               <td><%= f.hidden_field "attend_group_ids[]", value: group.id %> <%= group.name %></td>
               <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
