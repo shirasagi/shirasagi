@@ -98,7 +98,7 @@ ja:
       public: 受取済みにする
       preparation: 受取待ちにする
       question_not_applicable: 該当なしにする
-      disable_all: 削除する
+      disable_all: 削除済みに移動する
       active_all: 削除を取り消す
       answered: 回答済みにする
       closed: 締め切る
@@ -114,7 +114,7 @@ ja:
         public_all: チェックした項目を受取済みにしますか？
         preparation_all: チェックした項目を受取待ちにしますか？
         question_not_applicable_all: チェックした項目を該当なしにしますか？
-        disable_all: チェックした項目を削除しますか？
+        disable_all: チェックした項目を削除済みに移動しますか？
         active_all: 選択した項目の削除を取り消しますか？
 
     errors:
