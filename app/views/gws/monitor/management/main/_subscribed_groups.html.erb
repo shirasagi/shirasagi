@@ -20,7 +20,7 @@
         <tbody>
         <% subscribed_groups = @item.subscribed_groups.to_a %>
         <% subscribed_groups.each do |group| %>
-            <% post = @item.children.where(group_ids: group.id).last %>
+            <% post = @item.children.where(user_group_id: group.id).last %>
             <td class="state"><%= @item.state_name(group.id) %></td>
             <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
             <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
