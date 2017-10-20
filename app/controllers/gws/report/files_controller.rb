@@ -71,13 +71,14 @@ class Gws::Report::FilesController < ApplicationController
 
   public
 
-  # def index
-  #   @items = @model.site(@cur_site).
-  #     readable(@cur_user, @cur_site).
-  #     search(@s).
-  #     page(params[:page]).per(50)
-  # end
-  #
+  def index
+    @items = @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site).
+      search(params[:s]).
+      order_by(updated: -1, id: -1).
+      page(params[:page]).per(50)
+  end
+
   # def show
   #   raise '403' unless @item.readable?(@cur_user, site: @cur_site)
   #   render
