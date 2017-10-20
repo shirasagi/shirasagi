@@ -1,4 +1,4 @@
-<% addons = @item ? @item.class.addons : [] %>
+<% addons = @item.class.addons.select { |addon| [Gws::Addon::Monitor::Group, Gws::Addon::GroupPermission, Gws::Addon::Monitor::Category].exclude?(addon.klass) } %>
 
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
 <%= error_messages_for :item %>
