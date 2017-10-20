@@ -7,6 +7,7 @@ module Gws::Monitor::GroupSetting
     field :monitor_file_size_per_topic, type: Integer
     field :monitor_file_size_per_post, type: Integer
     field :monitor_browsed_delay, type: Integer
+    field :monitor_delete_threshold, type: Integer, default: 8
     attr_accessor :in_monitor_file_size_per_topic_mb, :in_monitor_file_size_per_post_mb
 
     permit_params :monitor_new_days, :monitor_browsed_delay
@@ -22,6 +23,17 @@ module Gws::Monitor::GroupSetting
 
   def monitor_browsed_delay
     self[:monitor_browsed_delay].presence || 2
+  end
+
+  def monitor_delete_threshold_options
+    I18n.t('gws/monitor/group_setting.options.monitor_delete_threshold').
+        map.
+        with_index.
+        to_a
+  end
+
+  def monitor_delete_threshold_name
+    I18n.t('gws/monitor/group_setting.options.monitor_delete_threshold')[monitor_delete_threshold]
   end
 
   class << self
