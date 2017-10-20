@@ -42,7 +42,6 @@
             <% end %>
           </nav>
 
-          <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
           <div class="info">
             <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
             <%= link_to item.name, { action: :show, id: item }, class: "title" %>
