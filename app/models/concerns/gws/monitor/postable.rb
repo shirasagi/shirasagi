@@ -5,6 +5,7 @@ module Gws::Monitor::Postable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::GroupPermission
+  include Gws::Addon::Monitor::Group
 
   included do
     store_in collection: "gws_monitor_posts"
@@ -173,7 +174,7 @@ module Gws::Monitor::Postable
   end
 
   def set_state_of_the_answers_hash
-    self.state_of_the_answers_hash = groups.map { |g| [g.id, "preparation"] }.to_h if @attributes["_id"] == 0
+    self.state_of_the_answers_hash = @attributes["attend_group_ids"].map{|g| [g, "preparation"] }.to_h if @attributes["_id"] == 0
   end
 
   module ClassMethods
