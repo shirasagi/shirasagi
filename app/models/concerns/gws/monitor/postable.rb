@@ -24,7 +24,6 @@ module Gws::Monitor::Postable
     field :admin_setting, type: String, default: '1'
     field :spec_config, type: String, default: '0'
     field :reminder_start_section, type: String, default: '0'
-    field :state_of_the_answer, type: String, default: 'preparation'
     field :state_of_the_answers_hash, type: Hash, default: {}
 
     validates :descendants_updated, datetime: true
@@ -38,7 +37,7 @@ module Gws::Monitor::Postable
       order: { created: -1 }
 
     permit_params :name, :mode, :permit_comment, :severity, :due_date, :admin_setting,
-                  :spec_config, :reminder_start_section, :state_of_the_answer, :state_of_the_answers_hash
+                  :spec_config, :reminder_start_section, :state_of_the_answers_hash
 
     before_validation :set_topic_id, if: :comment?
     before_validation :set_state_of_the_answers_hash
@@ -70,13 +69,11 @@ module Gws::Monitor::Postable
       end
       criteria
     }
-    scope :and_topics, ->() {
-      where("$and" =>
-           ["$or" => [ {state_of_the_answer: "public"}, {state_of_the_answer: "preparation"} ] ])
+    scope :and_topics, ->(groupid) {
+      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]} ])
     }
-    scope :and_answers, ->() {
-      where("$and" =>
-           ["$or" => [ {state_of_the_answer: "question_not_applicable"}, {state_of_the_answer: "answered"} ] ])
+    scope :and_answers, ->(groupid) {
+      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]} ])
     }
     # Allow readable settings and readable permissions.
     scope :and_readable, ->(user, site, opts = {}) {
