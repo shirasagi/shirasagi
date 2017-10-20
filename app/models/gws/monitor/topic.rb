@@ -127,6 +127,10 @@ class Gws::Monitor::Topic
     %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
   end
 
+  def comment(groupid)
+    children.where(user_group_id: groupid)
+  end
+
   def answer_count
     answered = state_of_the_answers_hash.select{|k, v| v.match(/answered|question_not_applicable/)}.count
     return "(#{answered}/#{subscribed_groups.count})"
