@@ -9,21 +9,14 @@
         <%= link_to title, new_gws_report_form_file_path(form_id: form), class: 'title' %>
 
         <div class="meta">
-          <% if form.class.fields['_id'].type != BSON::ObjectId %>
-            <span class="id">#<%= form.id %></span>
-          <% end %>
-          <% if form.try(:updated) %>
-            <span class="datetime"><%= I18n.l(form.updated) %></span>
-          <% end %>
-          <% if form.try(:filename) %>
-            <span class="filename"><%= ::File.basename(form.filename) %></span>
-          <% end %>
-          <% if form.try(:status) %>
-            <span class="state"><%= t("ss.state.#{form.status}") %></span>
-          <% end %>
-          <% if form.try(:order) %>
-            <span class="order"><%= form.order %></span>
-          <% end %>
+          <span class="datetime"><%= I18n.l(form.updated) %></span>
+          <span class="state"><%= form.label(:state) %></span>
+          <span class="order"><%= form.order %></span>
+          <span class="categories">
+            <% form.categories.compact.each do |category| %>
+              <%= link_to category.trailing_name, { s: { category_ids: [ category.id ] } }, class: 'gws-category-label', style: category_label_css(category) %>
+            <% end %>
+          </span>
         </div>
       </div>
     </li>

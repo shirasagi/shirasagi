@@ -4,6 +4,7 @@ ja:
     addons:
       gws/report/column_setting: 入力設定
       gws/report/custom_form: 入力内容
+      gws/report/category: カテゴリー
 
   gws_role:
     read_other_gws_report_files:  レポートの閲覧（全て）
@@ -48,6 +49,8 @@ ja:
         name: カテゴリー名
       gws/addon/report/column_setting:
         columns: 入力設定
+      gws/addon/report/category:
+        category_ids: カテゴリー
 
   tooltip:
     gws/report/file:

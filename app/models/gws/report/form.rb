@@ -4,6 +4,7 @@ class Gws::Report::Form
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::Report::ColumnSetting
+  include Gws::Addon::Report::Category
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
@@ -32,6 +33,7 @@ class Gws::Report::Form
       return criteria if params.blank?
 
       criteria = criteria.search_keyword(params)
+      criteria = criteria.search_categories(params)
       criteria
     end
 
@@ -39,6 +41,14 @@ class Gws::Report::Form
       return all if params[:keyword].blank?
 
       all.keyword_in(params[:keyword], :name)
+    end
+
+    def search_categories(params)
+      category_ids = [ params[:category_ids].presence ].flatten.compact.select(&:present?)
+      return all if category_ids.blank?
+
+      category_ids = category_ids.map(&:to_i)
+      all.in(category_ids: category_ids)
     end
   end
 
