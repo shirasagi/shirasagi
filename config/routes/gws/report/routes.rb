@@ -24,5 +24,9 @@ SS::Application.routes.draw do
       end
       resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end
+
+    namespace 'apis' do
+      get 'categories' => 'categories#index'
+    end
   end
 end
