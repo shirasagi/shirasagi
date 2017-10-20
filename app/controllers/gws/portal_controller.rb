@@ -32,7 +32,7 @@ class Gws::PortalController < ApplicationController
 
     @monitor = Gws::Monitor::Post.site(@cur_site).topic.
         remind.
-        readable(@cur_user, @cur_site).
+        and_readable(@cur_user, @cur_site).
         order(descendants_updated: -1).
         page(1).per(items_limit)
 
