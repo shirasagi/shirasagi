@@ -35,6 +35,10 @@ class Webmail::ImapSetting < Hash
     self[:imap_trash_box].presence || "INBOX.Trash"
   end
 
+  def threshold_mb
+    self[:threshold_mb]
+  end
+
   def valid?
     imap_host.present? && imap_account.present?
   end
@@ -50,7 +54,8 @@ class Webmail::ImapSetting < Hash
       host: imap_host,
       auth_type: imap_auth_type,
       account: imap_account,
-      password: decrypt_imap_password
+      password: decrypt_imap_password,
+      threshold_mb: threshold_mb
     }
     user_conf.each { |k, v| default_conf[k] = v if v.present? }
     default_conf

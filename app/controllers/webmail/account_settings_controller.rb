@@ -25,7 +25,8 @@ class Webmail::AccountSettingsController < ApplicationController
       {
         imap_settings: [
           :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
-          :imap_sent_box, :imap_draft_box, :imap_trash_box, :default
+          :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
+          :default
         ]
       },
     ]
