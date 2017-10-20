@@ -79,7 +79,7 @@ module Gws::Monitor::Postable
                 [
                   {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]},
                   {"$and" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
-                               {article_state: 'close'}]}
+                               {article_state: 'closed'}]}
                 ]
               ])
     }
