@@ -7,7 +7,6 @@ class Gws::Monitor::Topic
   include Gws::Addon::File
   include Gws::Monitor::DescendantsFileInfo
   include Gws::Addon::Monitor::Category
-  include Gws::Addon::Monitor::Group
   include Gws::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
@@ -117,9 +116,9 @@ class Gws::Monitor::Topic
 
   def subscribed_groups
     return Gws::Group.none if new_record?
-    return Gws::Group.none if group_ids.blank?
+    return Gws::Group.none if attend_group_ids.blank?
 
-    conds = [{ id: { '$in' => group_ids.flatten } }]
+    conds = [{ id: { '$in' => attend_group_ids.flatten } }]
 
     Gws::Group.where('$and' => [ { '$or' => conds } ])
   end
