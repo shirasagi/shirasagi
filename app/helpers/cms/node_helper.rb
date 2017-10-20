@@ -37,7 +37,7 @@ module Cms::NodeHelper
     end
 
     h = []
-    h << %(<div class="dropdown">).html_safe
+    h << %(<div class="dropdown dropdown-toggle">).html_safe
     h << capture(&block) if block_given?
     h << %(<ul class="dropdown-menu">#{safe_join(mods)}</ul>).html_safe
     h << %(</div>).html_safe

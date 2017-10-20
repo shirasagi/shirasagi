@@ -1,0 +1,11 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if Sys::MailLog.allowed?(:read, @cur_user) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item  if Sys::MailLog.allowed?(:delete, @cur_user) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <% title = item.subject %>
+  <%= link_to title, { action: :show, id: item }, class: 'title' %>
+<% end %>
+
+<%= render file: 'ss/crud/index' %>

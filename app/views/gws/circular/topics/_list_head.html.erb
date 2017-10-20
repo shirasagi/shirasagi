@@ -1,0 +1,15 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <button class="btn unmark-all"><%= t('gws/circular.topic.unmark') %></button>
+        <button class="btn mark-all"><%= t('gws/circular.topic.mark') %></button>
+    <% end %>
+    <button class="btn download"><%= t('gws/circular.topic.download') %></button>
+  </div>
+
+  <div class="list-head-search">
+    <%= render file: '_search' %>
+  </div>
+</div>

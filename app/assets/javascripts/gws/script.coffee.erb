@@ -16,6 +16,10 @@
 #= require gws/schedule/lib/plan
 #= require gws/schedule/lib/repeat_plan
 #= require gws/schedule/lib/todo
+#= require gws/circular/topic
+#= require gws/memo/message
+#= require gws/monitor/lib/monitor
+#= require gws/monitor/lib/view
 #= require gws/portal/lib/portal
 #= require gws/portal/lib/portlet/link
 
@@ -26,6 +30,10 @@ $ ->
   # tabs
   path = location.pathname + "/"
   $(".gws-schedule-tabs a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+
+  $(".gws-monitor-tabs a").each ->
     menu = $(this)
     menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 

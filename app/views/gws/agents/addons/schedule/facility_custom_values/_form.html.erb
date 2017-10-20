@@ -17,7 +17,11 @@
     containerElem.inputForm = this;
 
     this.url = <%== input_form_gws_facility_item_custom_fields_path(item_id: ':item_id', format: :html).to_json %>;
-    this.initialValues = <%== @item.facility_custom_values.to_json %>;
+    <% if @item.facility_custom_values.present? %>
+    this.initialValues = <%== Hash[@item.facility_custom_values.map { |key, val| [ key, val['value'] ] }].to_json %>;
+    <% else %>
+    this.initialValues = {};
+    <% end %>
     this.$inputForm = containerElem.$container.find('.input-form');
   }
 

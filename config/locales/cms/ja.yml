@@ -265,6 +265,8 @@ ja:
     release_private_cms_pages: 固定ページの公開（所有）
     approve_other_cms_pages: 固定ページの承認（全て）
     approve_private_cms_pages: 固定ページの承認（所有）
+    reroute_other_cms_pages: 固定ページの承認経路変更（全て）
+    reroute_private_cms_pages: 固定ページの承認経路変更（所有）
     read_other_cms_parts: パーツの閲覧（全て）
     read_private_cms_parts: パーツの閲覧（所有）
     edit_other_cms_parts: パーツの編集（全て）

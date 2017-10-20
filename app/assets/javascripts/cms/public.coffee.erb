@@ -4,6 +4,7 @@
 #= require jquery.form
 #= require jquery.datetimepicker
 #= require_self
+#= require ss/lib/font
 #= require ss/lib/module
 #= require ss/lib/mobile
 #= require cms/lib/editor
@@ -35,16 +36,7 @@ $ ->
   $(".ss-part").each ->
     SS.renderPart $(this)
 
-  $.datetimepicker.setLocale('ja');
-  if ($.support.opacity)
-    $(".js-date").datetimepicker
-      timepicker: false
-      format:'Y/m/d'
-      closeOnDateSelect: true
-      scrollInput: false
-    $(".js-datetime").datetimepicker
-      roundTime: 'ceil'
-      step: 30
+  SS.renderDateTimePicker()
 
 class @SS
   @head = ""
@@ -171,6 +163,18 @@ class @SS
       e.preventDefault();
       return false
 
+  @renderDateTimePicker: ->
+    $.datetimepicker.setLocale('ja');
+    if ($.support.opacity)
+      $(".js-date").datetimepicker
+        timepicker: false
+        format:'Y/m/d'
+        closeOnDateSelect: true
+        scrollInput: false
+      $(".js-datetime").datetimepicker
+        roundTime: 'ceil'
+        step: 30
+
 class @SS_Kana
   @dir = "<%= SS.config.kana.location %>"
 
@@ -248,33 +252,6 @@ class @SS_Theme
     $('head link.ss-theme.' + cls).prop("disabled", false)
     $("body").attr("data-ss-theme", "")
     $("body").attr("data-ss-theme", cls)
-
-class @SS_Font
-  @size = null # %
-
-  @render: ->
-    @size = parseInt(Cookies.get("ss-font")) || 100
-    @set(@size) if @size != 100
-
-    vr = $("#ss-medium")
-    vr.html '<a href="#" onclick="return SS_Font.set(100)">' + vr.text() + '</a>'
-    vr = $("#ss-small")
-    vr.html '<a href="#" onclick="return SS_Font.set(false)">' + vr.text() + '</a>'
-    vr = $("#ss-large")
-    vr.html '<a href="#" onclick="return SS_Font.set(true)">' + vr.text() + '</a>'
-
-  @set: (size) ->
-    if size == true
-      size = @size + 20
-      return false if size > 200
-    else if size == false
-      size = @size - 20
-      return false if size < 60
-
-    @size = size
-    $("body").css "font-size", size + "%"
-    Cookies.set("ss-font", size, { expires: 7, path: '/' })
-    return false
 
 class @SS_AdobeReader
   @render: ->

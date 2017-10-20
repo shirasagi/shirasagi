@@ -17,10 +17,10 @@ SS::Application.routes.draw do
   content "workflow" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: :deletion
-    get "/wizard/:id/approver_setting" => "wizard#approver_setting"
-    post "/wizard/:id/approver_setting" => "wizard#approver_setting"
-    get "/wizard/:id" => "wizard#index"
-    post "/wizard/:id" => "wizard#index"
+    match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]
+    get "/wizard/:id/reroute" => "wizard#reroute"
+    post "/wizard/:id/reroute" => "wizard#do_reroute"
+    match "/wizard/:id" => "wizard#index", via: [:get, :post]
   end
 
   namespace "workflow", path: ".s:site/workflow" do
@@ -28,10 +28,10 @@ SS::Application.routes.draw do
     resources :pages, concerns: [:deletion, :branch]
     get "/search_approvers" => "search_approvers#index"
     resources :routes, concerns: :deletion
-    get "/wizard/:id/approver_setting" => "wizard#approver_setting"
-    post "/wizard/:id/approver_setting" => "wizard#approver_setting"
-    get "/wizard/:id" => "wizard#index"
-    post "/wizard/:id" => "wizard#index"
+    match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]
+    get "/wizard/:id/reroute" => "wizard#reroute"
+    post "/wizard/:id/reroute" => "wizard#do_reroute"
+    match "/wizard/:id" => "wizard#index", via: [:get, :post]
   end
 
 end

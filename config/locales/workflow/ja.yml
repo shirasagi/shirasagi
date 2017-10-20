@@ -53,6 +53,10 @@ ja:
       index: 承認者を選択する
       select: 承認者を設定する
       search: 検索
+    confirm:
+      request_cancel: 申請を取り消してもよろしいですか？
+    notice:
+      request_cancelled: 申請を取り消しました。
 
   modules:
     workflow: ワークフロー
@@ -109,6 +113,7 @@ ja:
       invalid_approve_name: "複製後のタイトルを変更し承認申請を行ってください。"
       user_email_blank: "以下のユーザーがメールアドレスを設定していないため、実行されませんでした。実行するには「メールアドレスが未設定でも実行する。」を選択してください。"
       forced_update: "メールアドレスが未設定でも実行する。"
+      no_approvers: 承認者がみつかりません。
 
   tooltip:
     workflow/addon/approver:

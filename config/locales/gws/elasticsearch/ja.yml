@@ -8,6 +8,7 @@ ja:
       share: 共有ファイル
       faq: よくある質問
       qna: Ｑ＆Ａ
+      monitor: 照会・回答
 
     format:
       search_results_count:
@@ -38,3 +39,4 @@ ja:
       gws/elasticsearch/indexer/share_file_job: 共有ファイルインデクサー
       gws/elasticsearch/indexer/board_topic_job: 掲示板インデクサー
       gws/elasticsearch/indexer/board_post_job: 掲示板投稿インデクサー
+
