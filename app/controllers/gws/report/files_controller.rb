@@ -6,6 +6,7 @@ class Gws::Report::FilesController < ApplicationController
 
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
+  before_action :set_cur_plan, only: %i[new create]
   before_action :set_search_params
 
   private
@@ -32,9 +33,27 @@ class Gws::Report::FilesController < ApplicationController
     @cur_form ||= @forms.find(params[:form_id])
   end
 
+  def set_cur_plan
+    return if params[:plan_id].blank?
+    @cur_plan ||= Gws::Schedule::Plan.site(@cur_site).find(params[:plan_id])
+  end
+
   def set_item
     super
     @cur_form ||= @item.form if @item.present?
+  end
+
+  def pre_params
+    ret = super
+
+    set_cur_plan
+    if @cur_plan
+      ret[:schedule_ids] = [ @cur_plan.id.to_s ]
+      ret[:member_ids] = @cur_plan.member_ids
+      ret[:member_custom_group_ids] = @cur_plan.member_custom_group_ids
+    end
+
+    ret
   end
 
   def fix_params

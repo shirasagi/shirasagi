@@ -4,15 +4,14 @@ class Gws::Report::File
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::Reminder
-  # include ::Workflow::Addon::Approver
-  # include SS::Addon::Markdown
-  # include Gws::Addon::File
   include Gws::Addon::Report::CustomForm
+  include Gws::Addon::Member
+  include Gws::Addon::Schedules
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
-  # cattr_reader(:approver_user_class) { Gws::User }
+  member_ids_optional
 
   seqid :id
   field :state, type: String, default: "closed"
@@ -61,33 +60,6 @@ class Gws::Report::File
       [ I18n.t("ss.options.state.#{v}"), v ]
     end
   end
-
-  # def reminder_user_ids
-  #   ids = [@cur_user.id, user_id]
-  #   ids << workflow_user_id
-  #   ids += workflow_approvers.map { |m| m[:user_id] }
-  #   ids.uniq.compact
-  # end
-
-  # def status
-  #   if state == "approve"
-  #     state
-  #   elsif workflow_state.present?
-  #     workflow_state
-  #   elsif state == "closed"
-  #     'draft'
-  #   else
-  #     state
-  #   end
-  # end
-
-  # def editable?(user, opts)
-  #   allowed?(:edit, user, opts) && !workflow_requested?
-  # end
-  #
-  # def destroyable?(user, opts)
-  #   allowed?(:delete, user, opts) && !workflow_requested?
-  # end
 
   # override Gws::Addon::Reminder#reminder_url
   def reminder_url(*args)

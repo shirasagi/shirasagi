@@ -1,2 +1,46 @@
 <% return if params[:action] =~ /index/ %>
-<%= render partial: "gws/crud/menu" %>
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.new'), action: :new %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
+      <% form_limit = 50 %>
+      <%
+        forms = Gws::Report::Form.site(@cur_site)
+        forms = forms.readable(@cur_user, @cur_site)
+        forms = forms.order_by(order: 1, created: 1)
+      %>
+      <% if forms.present? %>
+        <%= dropdown_link(t('gws/schedule.links.create_report')) do %>
+          <% forms.limit(form_limit).each do |form| %>
+            <%= link_to(new_gws_report_form_file_path(state: 'all', form_id: form, plan_id: @item.id), class: 'dropdown-item') do %>
+              <%= form.name %>
+              <% if form.categories.present? %>
+                <span class="categories">
+                  <% form.categories.compact.each do |category| %>
+                    <%= content_tag :span, category.trailing_name, class: 'gws-category-label', style: category_label_css(category) %>
+                  <% end %>
+                </span>
+              <% end %>
+            <% end %>
+          <% end %>
+          <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path(state: 'all', plan_id: @item.id), class: 'dropdown-item more-forms') %>
+        <% end %>
+      <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>

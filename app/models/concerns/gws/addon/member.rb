@@ -5,6 +5,7 @@ module Gws::Addon::Member
   included do
     class_variable_set(:@@_keep_members_order, nil)
     class_variable_set(:@@_member_include_custom_groups, nil)
+    class_variable_set(:@@_member_ids_required, true)
 
     embeds_ids :members, class_name: "Gws::User"
     embeds_ids :member_custom_groups, class_name: "Gws::CustomGroup"
@@ -62,6 +63,7 @@ module Gws::Addon::Member
   end
 
   def validate_presence_member
+    return true unless self.class.member_ids_required?
     return true if member_ids.present?
     return true if self.class.member_include_custom_groups? && member_custom_group_ids.present?
     errors.add :member_ids, :empty
@@ -76,6 +78,10 @@ module Gws::Addon::Member
       class_variable_get(:@@_member_include_custom_groups)
     end
 
+    def member_ids_required?
+      class_variable_get(:@@_member_ids_required)
+    end
+
     private
 
     def keep_members_order
@@ -84,6 +90,10 @@ module Gws::Addon::Member
 
     def member_include_custom_groups
       class_variable_set(:@@_member_include_custom_groups, true)
+    end
+
+    def member_ids_optional
+      class_variable_set(:@@_member_ids_required, false)
     end
   end
 end

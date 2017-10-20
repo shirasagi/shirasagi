@@ -1,0 +1,7 @@
+<%= render 'gws/agents/addons/schedules/show' %>
+
+<% if @item.new_record? && @item.schedule_ids.present? %>
+  <% @item.schedule_ids.each do |schedule_id| %>
+    <%= f.hidden_field('schedule_ids[]', value: schedule_id, id: nil) %>
+  <% end %>
+<% end %>

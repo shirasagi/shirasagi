@@ -113,6 +113,7 @@ ja:
       gws/member: 参加者
       gws/subscription_setting: 購読
       gws/contributor: 投稿者
+      gws/schedules: スケジュール
 
   mongoid:
     models:
@@ -212,6 +213,8 @@ ja:
         subscribed_custom_group_ids: 購読カスタムグループ
       gws/addon/contributor:
         contributor_name: 投稿者名
+      gws/addon/schedules:
+        schedule_ids: スケジュール
 
   tooltip:
     gws/addon/reminder:
@@ -284,6 +287,9 @@ ja:
     gws/addon/contributor:
       contributor_name:
         - 投稿者名を選択します。
+    gws/addon/schedules:
+      schedule_ids:
+        - スケジュールを選択します。
 
   job:
     models:

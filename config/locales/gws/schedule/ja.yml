@@ -31,6 +31,7 @@ ja:
       show_month: 月表示
       show_week: 週表示
       show_day: 日表示
+      create_report: レポートを作成する
     buttons:
       delete_one: 今回のみ
       delete_later: 以降すべて
@@ -121,6 +122,7 @@ ja:
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント
       gws/schedule/attendances: 出欠確認
+      gws/schedule/reports: レポート
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
