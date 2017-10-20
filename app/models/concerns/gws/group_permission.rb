@@ -35,7 +35,11 @@ module Gws::GroupPermission
   # @param [String] action
   # @param [Gws::User] user
   def allowed?(action, user, opts = {})
-    return true if !new_record? && user_ids.to_a.include?(user.id)
+    return true if !new_record? && (user_ids.to_a.include?(user.id) || (group_ids.to_a & user.group_ids).present? ||
+        (self['readable_member_ids'] &&  self.readable_member_ids.to_a.include?(user.id)) ||
+        (self['readable_group_ids'] &&  (self.readable_group_ids.to_a & user.group_ids).present?) ||
+        (self['attend_group_ids'] && (self.attend_group_ids.to_a & user.group_ids).present?)
+    )
 
     site    = opts[:site] || @cur_site
     action  = permission_action || action
