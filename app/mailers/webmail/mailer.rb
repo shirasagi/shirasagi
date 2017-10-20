@@ -17,5 +17,15 @@ class Webmail::Mailer < ActionMailer::Base
         format.text
       end
     end
+
+    if item.in_request_dsn == "1"
+      from = Webmail::Converter.extract_address(mail.from.first)
+      mail.smtp_envelope_to = (mail.to.to_a + mail.cc.to_a + mail.bcc.to_a).map do |addr|
+        to = Webmail::Converter.extract_address(addr)
+        "<#{to}> NOTIFY=SUCCESS,FAILURE ORCPT=rfc822;#{from}"
+      end
+    end
+
+    mail
   end
 end

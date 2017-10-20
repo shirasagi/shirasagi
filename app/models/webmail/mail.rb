@@ -16,7 +16,8 @@ class Webmail::Mail
 
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
-                :to_text, :cc_text, :bcc_text
+                :to_text, :cc_text, :bcc_text,
+                :in_request_mdn, :in_request_dsn
 
   field :host, type: String
   field :account, type: String
@@ -43,6 +44,7 @@ class Webmail::Mail
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
                 :subject, :text, :html, :format,
                 :to_text, :cc_text, :bcc_text,
+                :in_request_mdn, :in_request_dsn,
                 to: [], cc: [], bcc: [], reply_to: []
 
   validates :host, presence: true, uniqueness: { scope: [:account, :mailbox, :uid] }

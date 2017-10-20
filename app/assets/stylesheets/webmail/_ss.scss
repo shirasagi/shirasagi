@@ -329,6 +329,7 @@ li.webmail-accounts {
   color: #888;
 }
 .webmail-addon-mail-body {
+  @include clear;
   .subject {
     float: left;
     width: calc(100% - 300px);
@@ -351,6 +352,10 @@ li.webmail-accounts {
   .body-content {
     clear: both;
     margin-top: 15px;
+  }
+  .header-options {
+    margin-top: 10px;
+    float: right;
   }
 }
 // form-addresses

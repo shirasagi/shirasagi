@@ -13,4 +13,9 @@
     <%= html_editor ".webmail-addon-mail-body .html", advanced: true, templates: false %>
     <%= f.text_area :html, class: "html", style: "height: 400px;" %>
   </div>
+
+  <div class="header-options">
+    <lable for="in-request-mdn"><%= f.check_box :in_request_mdn, :id => "in-request-mdn" %>開封確認メッセージを要求する</lable><br>
+    <lable for="in-request-dsn"><%= f.check_box :in_request_dsn, :id => "in-request-dsn" %>配信確認メッセージを要求する</lable>
+  </div>
 </div>

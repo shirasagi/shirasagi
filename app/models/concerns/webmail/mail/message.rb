@@ -12,6 +12,10 @@ module Webmail::Mail::Message
     headers[:in_reply_to] = "<#{in_reply_to}>" if in_reply_to.present?
     headers[:references] = references.to_a.map { |m| "<#{m}>" } if references.present?
 
+    if in_request_mdn == "1"
+      headers[:"Disposition-Notification-To"] = Webmail::Converter.extract_address(headers[:from])
+    end
+
     headers.select { |k, v| v.present? }
   end
 
