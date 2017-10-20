@@ -19,6 +19,7 @@ ja:
       group: グループ
       user: 回答者
       contents: 回答内容
+      answer_state: 回答状況
       file: 添付
       list: トピック一覧へ
       export_csv: CSV出力
