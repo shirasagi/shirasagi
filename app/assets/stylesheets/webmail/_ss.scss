@@ -130,6 +130,16 @@ li.webmail-accounts {
     background-color: #6d6;
     @include background(linear-gradient(top, #dfd, #4b4));
   }
+  .usage.over-threshold {
+    background-color: #ff0f0f;
+    @include background(linear-gradient(top, #ffcccc, #ff0f0f));
+  }
+}
+.webmail-quota-alert {
+  margin-left: 230px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #ff0f0f;
 }
 
 // -------------------------------------------------------------------------------------------------

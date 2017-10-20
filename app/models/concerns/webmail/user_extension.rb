@@ -6,7 +6,8 @@ module Webmail::UserExtension
     field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
     permit_params :default_imap_index, imap_settings: [
       :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
-      :imap_sent_box, :imap_draft_box, :imap_trash_box, :default
+      :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
+      :default
     ]
 
     before_validation :set_imap_settings
@@ -36,6 +37,7 @@ module Webmail::UserExtension
         self.imap_default_index = i
         setting.delete(:default)
       end
+      setting[:threshold_mb] = (setting.threshold_mb.to_i > 0) ? setting.threshold_mb : nil
       setting.set_imap_password
       setting
     end

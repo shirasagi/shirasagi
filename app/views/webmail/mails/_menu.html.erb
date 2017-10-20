@@ -29,3 +29,9 @@
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% end %>
 </nav>
+
+<% if @quota && @quota.quota? %>
+  <div class="webmail-quota-alert" <%== @quota.over_threshold? ? '' : 'style="display: none;"' %>>
+    <%= @quota.threshold_label %>
+  </div>
+<% end %>

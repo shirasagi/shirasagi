@@ -80,7 +80,7 @@ end
 
   <div class="quota">
     <div class="label"><%= @quota.label %></div>
-    <div class="usage" style="width: <%= @quota.percentage %>%"></div>
+    <div class="usage <%= @quota.over_threshold? ? 'over-threshold' : '' %>" style="width: <%= @quota.percentage %>%"></div>
   </div>
 </nav>
 <% end %>

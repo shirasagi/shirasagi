@@ -22,6 +22,11 @@
   <dt><%= @model.t :imap_account %></dt>
   <dd><%= setting.imap_trash_box %></dd>
 
+  <% if setting.threshold_mb %>
+  <dt><%= @model.t :threshold_mb %></dt>
+  <dd><%= setting.threshold_mb %><%= t "ss.units.mega_byte" %></dd>
+  <% end %>
+
   <dt><%= @model.t :imap_default_index %></dt>
   <dd><%= check_box_tag "", 1, default_index, class: "default-index", disabled: true %></dd>
 </dl>
