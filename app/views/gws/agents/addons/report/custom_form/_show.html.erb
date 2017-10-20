@@ -1,0 +1,19 @@
+<% return if @item.column_values.blank? %>
+
+<dl class="see mod-gws-report-custom_form">
+<% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+  <% column = value.column %>
+  <% if column.present? && column.column_show_path.present? %>
+    <%= render file: column.column_show_path, locals: { column: column, value: value } %>
+  <% else %>
+    <dt><%= value.name %></dt>
+    <dd><%= value.value %></dd>
+  <% end %>
+<% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-ss-agents-addons-markdown').hide();
+  $('#addon-gws-agents-addons-file').hide();
+  $('#addon-gws-agents-addons-report-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+<% end %>

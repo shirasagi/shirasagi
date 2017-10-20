@@ -8,10 +8,19 @@ SS::Application.routes.draw do
 
   gws 'report' do
     get '/' => redirect { |p, req| "#{req.path}/forms" }, as: :setting
+
     resources :forms, concerns: :deletion do
       match :publish, on: :member, via: [:get, :post]
       match :depublish, on: :member, via: [:get, :post]
       resources :columns, concerns: :deletion
+    end
+
+    scope :files do
+      get '/' => redirect { |p, req| "#{req.path}/all" }, as: :files_main
+      resources :files, path: ':state', concerns: [:deletion] do
+        get :print, on: :member
+      end
+      resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end
   end
 end

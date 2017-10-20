@@ -3,8 +3,15 @@ ja:
     gws/report: レポート
     addons:
       gws/report/column_setting: 入力設定
+      gws/report/custom_form: 入力内容
 
   gws_role:
+    read_other_gws_report_files:  レポートの閲覧（全て）
+    read_private_gws_report_files:  レポートの閲覧（所有）
+    edit_other_gws_report_files:  レポートの編集（全て）
+    edit_private_gws_report_files:  レポートの編集（所有）
+    delete_other_gws_report_files:  レポートの削除（全て）
+    delete_private_gws_report_files:  レポートの削除（所有）
     read_other_gws_report_forms:  テンプレートの閲覧（全て）
     read_private_gws_report_forms:  テンプレートの閲覧（所有）
     edit_other_gws_report_forms:  テンプレートの編集（全て）
@@ -15,7 +22,10 @@ ja:
   mongoid:
     models:
       gws/report/form: テンプレート
+      gws/report/file: レポート
     attributes:
+      gws/report/file:
+        name: タイトル
       gws/report/form:
         name: タイトル
         order: 並び順
@@ -25,6 +35,10 @@ ja:
         columns: 入力設定
 
   tooltip:
+    gws/report/file:
+      name:
+        - タイトルを入力します。
+
     gws/report/form:
       name:
         - タイトルを入力します。

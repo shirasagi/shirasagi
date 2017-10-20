@@ -28,6 +28,9 @@
       <h3><%= link_to t('modules.gws/qna'), gws_qna_topics_path %></h3>
     <% end %>
   <% end %>
+  <% if Gws::Report::File.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t('modules.gws/report'), gws_report_files_main_path, class: "icon-workflow" %></h2>
+  <% end %>
   <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
     <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
