@@ -1,0 +1,20 @@
+<div class="gws-portal-portlet-links">
+  <div class="index">
+    <div class="list-head"><%= @portlet.name %></div>
+    <ul class="list-items">
+      <% (@portlet.links || []).each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <% if item[:name].present? && item[:url].present? %>
+            <%= link_to item[:name], item[:url] %>
+          <% elsif item[:name].present? %>
+            <%= item[:name] %>
+          <% else %>
+            <%= link_to item[:url], item[:url] %>
+          <% end %>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

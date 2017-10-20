@@ -1,0 +1,23 @@
+<%= jquery do %>
+  var portal = new Gws_Portal(".gws-portlets");
+  portal.setSerializeEvent('.gws-portlets-serialize');
+  portal.setResetEvent('.gws-portlets-reset');
+  portal.addItems(<%== @items.to_json %>);
+<% end %>
+
+<div class="gridster gws-portlets gws-portlets-layouts">
+  <ul class="portlets"></ul>
+
+  <% @items.each do |item| %>
+  <div class="portlet-html" data-id="<%= item.id %>">
+    <% @portlet = item %>
+    <%= render file: item.portlet_view_file %>
+  </div>
+  <% end %>
+</div>
+
+<% if @items.blank? %>
+<div class="main-box">
+  <%= t('gws/portal.messages.no_portlets') %>
+</div>
+<% end %>
