@@ -38,8 +38,8 @@ class Gws::Monitor::Topic
   }
 
   def topic_admin?(userid, groupid)
-    return true if self.admin_setting == "1" &&  userid == self.user_id
-    return true if self.admin_setting == "0" &&  groupid == self.user_group_id
+    return true if self.admin_setting == "1" &&  (userid == self.user_id || self.user_ids.include?(userid))
+    return true if self.admin_setting == "0" &&  (groupid == self.user_group_id || self.group_ids.include?(groupid))
     false
   end
 

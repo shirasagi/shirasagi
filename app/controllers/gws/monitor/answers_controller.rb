@@ -55,7 +55,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     if params[:s] && params[:s][:state] == "closed"
       @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
     else
-      @items = @items.and_public.readable(@cur_user, @cur_site)
+      @items = @items.and_public.and_readable(@cur_user, @cur_site)
     end
 
     if @category.present?

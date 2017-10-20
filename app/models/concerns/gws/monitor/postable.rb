@@ -79,19 +79,43 @@ module Gws::Monitor::Postable
            ["$or" => [ {state_of_the_answer: "question_not_applicable"}, {state_of_the_answer: "answered"} ] ])
     }
     # Allow readable settings and readable permissions.
-    scope :readable, ->(user, site, opts = {}) {
+    scope :and_readable, ->(user, site, opts = {}) {
       cond = [
-          { "group_ids.0" => { "$exists" => false },
+          { "readable_group_ids.0" => { "$exists" => false },
+            "readable_member_ids.0" => { "$exists" => false },
+            "readable_custom_group_ids.0" => { "$exists" => false },
+            "group_ids.0" => { "$exists" => false },
             "user_ids.0" => { "$exists" => false },
-            "custom_group_ids.0" => { "$exists" => false } },
-          { :group_ids.in => user.group_ids },
-          { user_ids: user.id },
+            "attend_group_ids.0" => { "$exists" => false } },
+          { :readable_group_ids.in => user.group_ids },
+          { readable_member_ids: user.id },
+          { "$and" => [ {admin_setting: '0'}, { :group_ids.in => user.group_ids }] },
+          { "$and" => [ {admin_setting: '0'}, { group_id: user.group_ids }] },
+          { "$and" => [ {admin_setting: '1'}, { user_ids: user.id }] },
+          { "$and" => [ {admin_setting: '1'}, { user_id: user.id }] },
+          { :attend_group_ids.in => user.group_ids },
       ]
       if readable_setting_included_custom_groups?
-        cond << { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+        cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
       end
 
       cond << allow_condition(:read, user, site: site) if opts[:include_role]
+      where("$and" => [{ "$or" => cond }])
+    }
+    scope :owner, ->(user, site, opts = {}) {
+      cond = [
+          { "group_ids.0" => { "$exists" => false },
+            "user_ids.0" => { "$exists" => false } },
+          { "$and" => [ {admin_setting: '1'}, { :group_ids.in => user.group_ids }] },
+          { "$and" => [ {admin_setting: '0'}, { user_ids: user.id }] },
+      ]
+      where("$and" => [{ "$or" => cond }])
+    }
+    scope :attend, ->(user, site, opts = {}) {
+      cond = [
+          { "attend_group_ids.0" => { "$exists" => false } },
+          { :attend_group_ids.in => user.group_ids },
+      ]
       where("$and" => [{ "$or" => cond }])
     }
     scope :remind, ->() {
