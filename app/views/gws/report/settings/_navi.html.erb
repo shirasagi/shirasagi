@@ -4,6 +4,9 @@
   <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to(Gws::Report::Form.model_name.human, gws_report_forms_path) %></h3>
   <% end %>
+  <% if Gws::Report::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(Gws::Report::Category.model_name.human, gws_report_categories_path) %></h3>
+  <% end %>
 </nav>
 
 <%= render(partial: 'gws/main/conf_navi') %>

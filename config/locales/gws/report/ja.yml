@@ -18,11 +18,24 @@ ja:
     edit_private_gws_report_forms:  テンプレートの編集（所有）
     delete_other_gws_report_forms:  テンプレートの削除（全て）
     delete_private_gws_report_forms:  テンプレートの削除（所有）
+    read_other_gws_report_categories:  カテゴリーの閲覧（全て）
+    read_private_gws_report_categories:  カテゴリーの閲覧（所有）
+    edit_other_gws_report_categories:  カテゴリーの編集（全て）
+    edit_private_gws_report_categories:  カテゴリーの編集（所有）
+    delete_other_gws_report_categories:  カテゴリーの削除（全て）
+    delete_private_gws_report_categories:  カテゴリーの削除（所有）
 
   mongoid:
     models:
       gws/report/form: テンプレート
       gws/report/file: レポート
+      gws/report/category: カテゴリー
+    errors:
+      models:
+        gws/report/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
     attributes:
       gws/report/file:
         name: タイトル
@@ -31,6 +44,8 @@ ja:
         order: 並び順
         state: 公開状態
         memo: 備考
+      gws/report/category:
+        name: カテゴリー名
       gws/addon/report/column_setting:
         columns: 入力設定
 
@@ -50,3 +65,7 @@ ja:
       memo:
         - 備考を入力します。
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
+
+    gws/report/category:
+      name:
+        - カテゴリー名を入力します。

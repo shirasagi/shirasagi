@@ -15,6 +15,8 @@ SS::Application.routes.draw do
       resources :columns, concerns: :deletion
     end
 
+    resources :categories, concerns: [:deletion]
+
     scope :files do
       get '/' => redirect { |p, req| "#{req.path}/all" }, as: :files_main
       resources :files, path: ':state', concerns: [:deletion] do
