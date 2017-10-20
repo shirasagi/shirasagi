@@ -70,10 +70,18 @@ module Gws::Monitor::Postable
       criteria
     }
     scope :and_topics, ->(groupid) {
-      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]} ])
+      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+                         {article_state: 'open'}])
     }
     scope :and_answers, ->(groupid) {
-      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]} ])
+      where("$and" =>
+              [ "$or" =>
+                [
+                  {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]},
+                  {"$and" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+                               {article_state: 'close'}]}
+                ]
+              ])
     }
     # Allow readable settings and readable permissions.
     scope :and_readable, ->(user, site, opts = {}) {
