@@ -23,6 +23,7 @@ ja:
       file: 添付
       list: トピック一覧へ
       export_csv: CSV出力
+      file_download: ファイルの一括ダウンロード
       confirm: 削除しますか？
       notice:
         create: トピックを作成しました。
@@ -105,6 +106,7 @@ ja:
       closed: 締め切る
       open: 締め切り解除
       export_csv: CSVに出力する
+      file_download: ダウンロード
       confirm:
         public: 受取済みにしますか？
         preparation: 受取待ちにしますか？
