@@ -64,7 +64,7 @@
     </div>
     <% end %>
 
-    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && @item.comment(@cur_group.id).blank && !@item.closed? && ( !@item.readable_group_ids.include?(@cur_group.id) && @item.attend_group_ids.include?(@cur_group.id) ) %>
+    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && @item.comment(@cur_group.id).blank? && !@item.closed? && ( !@item.readable_group_ids.include?(@cur_group.id) && @item.attend_group_ids.include?(@cur_group.id) ) %>
     <div class="menu">
       <%= hidden_field_tag "item_id", @item.id %>
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
