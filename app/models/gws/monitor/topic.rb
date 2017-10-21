@@ -155,6 +155,24 @@ class Gws::Monitor::Topic
     end
   end
 
+  def to_zip(file_ids)
+    puts file_ids
+
+    subscribed_groups.each do |group|
+      post = children.where(group_ids: group.id).first
+      puts "hoge"
+      data << [
+          id,
+          name,
+          unanswered?(group.id) ? unanswered?(group.id) : state_name(group.id),
+          group.name,
+          post.try(:contributor_name),
+          post.try(:text),
+          post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
+      ]
+    end
+  end
+
   private
 
   def set_descendants_updated_with_released
