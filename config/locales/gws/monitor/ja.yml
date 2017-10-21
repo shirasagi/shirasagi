@@ -92,6 +92,7 @@ ja:
       article_state:
         open: 配信済み
         closed: 締め切り
+
   gws/monitor/group_setting:
     options:
       monitor_delete_threshold:
@@ -104,6 +105,7 @@ ja:
         - 15ヶ月
         - 18ヶ月
         - 24ヶ月
+
     links:
       back_to_thread: 戻る
       comment: 回答する
