@@ -37,7 +37,7 @@ SS::Application.routes.draw do
         get :download, on: :member
         post :close, on: :member
         post :open, on: :member
-        get :file_download, on: :collection
+        get :file_download, on: :member
       end
       resources :trashes, concerns: [:deletion] do
         get :active, on: :member
@@ -66,7 +66,7 @@ SS::Application.routes.draw do
           get :download, on: :member
           post :close, on: :member
           post :open, on: :member
-          get :file_download, on: :collection
+          get :file_download, on: :member
         end
         resources :trashes, concerns: [:deletion] do
           get :active, on: :member
