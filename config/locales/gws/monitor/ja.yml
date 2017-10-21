@@ -92,20 +92,6 @@ ja:
       article_state:
         open: 配信済み
         closed: 締め切り
-
-  gws/monitor/group_setting:
-    options:
-      monitor_delete_threshold:
-        - 1日
-        - 1ヶ月
-        - 3ヶ月
-        - 6ヶ月
-        - 9ヶ月
-        - 12ヶ月
-        - 15ヶ月
-        - 18ヶ月
-        - 24ヶ月
-
     links:
       back_to_thread: 戻る
       comment: 回答する
@@ -131,7 +117,6 @@ ja:
         question_not_applicable_all: チェックした項目を該当なしにしますか？
         disable_all: チェックした項目を削除済みに移動しますか？
         active_all: 選択した項目の削除を取り消しますか？
-
     errors:
       denied_comment: コメントの投稿は許可されていません。
     tabs:
@@ -262,4 +247,17 @@ ja:
           - 回答の表示方法を選択します。
         reminder_start_section:
           - リマインダー表示条件を選択します。
+
+  gws/monitor/group_setting:
+    options:
+      monitor_delete_threshold:
+        - 1日
+        - 1ヶ月
+        - 3ヶ月
+        - 6ヶ月
+        - 9ヶ月
+        - 12ヶ月
+        - 15ヶ月
+        - 18ヶ月
+        - 24ヶ月
 
