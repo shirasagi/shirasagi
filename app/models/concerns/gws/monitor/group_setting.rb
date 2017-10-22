@@ -12,6 +12,7 @@ module Gws::Monitor::GroupSetting
 
     permit_params :monitor_new_days, :monitor_browsed_delay
     permit_params :in_monitor_file_size_per_topic_mb, :in_monitor_file_size_per_post_mb
+    permit_params :monitor_delete_threshold
 
     before_validation :set_monitor_file_size_per_topic
     before_validation :set_monitor_file_size_per_post
