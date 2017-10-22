@@ -6,7 +6,7 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
 
   before_action :set_item, only: [
       :show, :edit, :update, :delete, :destroy,
-      :close, :open, :download
+      :close, :open, :download, :file_download
   ]
 
   before_action :set_category
@@ -87,5 +87,47 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
         encode('SJIS', invalid: :replace, undef: :replace)
 
     send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
+  end
+
+  def file_download
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @download_file_group_ssfile_ids = []
+    @item.subscribed_groups.each do |group|
+      @download_file_group_ssfile_ids << [File.basename(@item.comment(group.id)[0].user_group_name), @item.comment(group.id)[0].file_ids] if @item.comment(group.id).present?
+    end
+
+    download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h
+
+    @group_ssfile = []
+    download_file_group_ssfile_ids_hash.each do |group_fileids|
+      group_fileids[1].each do |fileids|
+        @group_ssfile.push([group_fileids[0], SS::File.find_by(id: fileids)])
+      end
+    end
+
+    download_root_dir = "/tmp/shirasagi_download"
+    download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
+
+    Dir.glob("#{download_root_dir}" + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
+      FileUtils.rm_rf(tmp_dir) if File.exists?(tmp_dir)
+    end
+
+    FileUtils.mkdir_p(download_dir) unless FileTest.exist?(download_dir)
+
+    @group_ssfile.each do |groupssfile|
+      FileUtils.copy("#{groupssfile[1].path}", "#{download_dir}" + "/" + groupssfile[0] + "_" + "#{groupssfile[1].name}")
+    end
+
+    zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
+
+    Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
+      Dir.glob("#{download_dir}/*").each do |downloadfile|
+        zip_file.add(NKF::nkf('-sx --cp932',File.basename(downloadfile)), downloadfile)
+      end
+    end
+
+    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
+
   end
 end

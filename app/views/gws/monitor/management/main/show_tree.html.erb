@@ -57,6 +57,14 @@
       <%= link_to(t('gws/monitor.links.export_csv'), download_gws_monitor_management_topic_path, class: 'btn export_csv') %>
     </div>
   </article>
+  <article class="topic">
+    <header>
+      <h2><%= t('gws/monitor.topic.file_download') %></h2>
+    </header>
+    <div class="menu">
+      <%= link_to(t('gws/monitor.links.file_download'), file_download_gws_monitor_management_topic_path, class: 'btn file_download') %>
+    </div>
+  </article>
   <% end %>
 </div>
 
