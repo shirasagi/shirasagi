@@ -116,7 +116,7 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     FileUtils.mkdir_p(download_dir) unless FileTest.exist?(download_dir)
 
     @group_ssfile.each do |groupssfile|
-      FileUtils.copy("#{groupssfile[1].path}", "#{download_dir}" + "/" + groupssfile[0] + "_" + "#{groupssfile[1].name}")
+      FileUtils.copy("#{groupssfile[1].path}", "#{download_dir}" + "/" + groupssfile[0] + "_" + "#{groupssfile[1].name}") if File.exist?(groupssfile[1].path)
     end
 
     zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
