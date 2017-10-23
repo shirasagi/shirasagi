@@ -9,7 +9,6 @@
         <th><%= Gws::Schedule::Plan.t(:name) %></th>
         <th><%= Gws::Schedule::Plan.t(:start_at) %></th>
         <th><%= Gws::Schedule::Plan.t(:end_at) %></th>
-        <th><%= Gws::Schedule::Plan.t(:updated) %></th>
       </tr>
       </thead>
       <tbody>
@@ -18,7 +17,6 @@
         <td><%= link_to(schedule.name, gws_schedule_plan_path(id: schedule)) %></td>
         <td><%= tryb { I18n.l(schedule.start_at) } %></td>
         <td><%= tryb { I18n.l(schedule.end_at) } %></td>
-        <td><%= tryb { I18n.l(schedule.updated) } %></td>
       </tr>
       <% end %>
       </tbody>
