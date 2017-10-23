@@ -96,3 +96,7 @@ ja:
     gws/report/category:
       name:
         - カテゴリー名を入力します。
+
+  job:
+    models:
+      gws/report/notification_job: レポート通知

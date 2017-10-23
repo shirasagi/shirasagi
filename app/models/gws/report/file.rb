@@ -21,6 +21,7 @@ class Gws::Report::File
 
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :name, presence: true, length: { maximum: 80 }
+  after_save :send_notification_mail
 
   scope :and_public, -> { where(state: 'public') }
   scope :and_closed, -> { where(state: 'closed') }
@@ -78,5 +79,39 @@ class Gws::Report::File
     options = ret.extract_options!
     options[:state] = 'all'
     [ *ret, options ]
+  end
+
+  private
+
+  def send_notification_mail
+    added_member_ids = removed_member_ids = []
+
+    if state == 'public'
+      cur_member_ids = sorted_overall_members.pluck(:id)
+      prev_member_ids = sorted_overall_members_was.pluck(:id)
+
+      if state_was == 'closed'
+        # just published
+        added_member_ids = cur_member_ids
+        removed_member_ids = []
+      else
+        added_member_ids = cur_member_ids - prev_member_ids
+        removed_member_ids = prev_member_ids - cur_member_ids
+      end
+    end
+
+    if state == 'closed' && state_was == 'public'
+      # just depublished
+      cur_member_ids = sorted_overall_members.pluck(:id)
+      prev_member_ids = sorted_overall_members_was.pluck(:id)
+
+      added_member_ids = []
+      removed_member_ids = (cur_member_ids + prev_member_ids).uniq
+    end
+
+    return if added_member_ids.blank? && removed_member_ids.blank?
+
+    job = Gws::Report::NotificationJob.bind(site_id: @cur_site || site)
+    job.perform_now(id.to_s, added_member_ids, removed_member_ids)
   end
 end

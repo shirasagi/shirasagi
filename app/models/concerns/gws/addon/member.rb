@@ -56,6 +56,21 @@ module Gws::Addon::Member
     @sorted_members = member_ids.map { |id| hash[id] }.compact
   end
 
+  def sorted_overall_members_was
+    member_ids = Gws::CustomGroup.site(site || cur_site).in(id: member_custom_group_ids_was).pluck(:member_ids).flatten
+    member_ids += self.member_ids_was
+    member_ids.compact!
+    member_ids.uniq!
+
+    members = Gws::User.in(id: member_ids)
+
+    return members.order_by_title(site || cur_site) unless self.class.keep_members_order?
+    return @sorted_members if @sorted_members
+
+    hash = members.map { |m| [m.id, m] }.to_h
+    @sorted_members = member_ids.map { |id| hash[id] }.compact
+  end
+
   private
 
   def validate_member_ids
