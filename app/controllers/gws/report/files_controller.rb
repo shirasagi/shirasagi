@@ -61,7 +61,7 @@ class Gws::Report::FilesController < ApplicationController
 
   def fix_params
     set_cur_form
-    params = { cur_user: @cur_user, cur_site: @cur_site, state: 'closed' }
+    params = { cur_user: @cur_user, cur_site: @cur_site }
     params[:cur_form] = @cur_form if @cur_form
     params
   end
@@ -169,5 +169,31 @@ class Gws::Report::FilesController < ApplicationController
   def print
     set_item
     render layout: 'ss/print'
+  end
+
+  def publish
+    set_item
+    if @item.public?
+      redirect_to({ action: :show }, { notice: t('gws/report.notice.published') })
+      return
+    end
+    return if request.get?
+
+    @item.state = 'public'
+    render_opts = { render: { file: :publish }, notice: t('gws/report.notice.published') }
+    render_update @item.save, render_opts
+  end
+
+  def depublish
+    set_item
+    if @item.closed?
+      redirect_to({ action: :show }, { notice: t('gws/report.notice.depublished') })
+      return
+    end
+    return if request.get?
+
+    @item.state = 'closed'
+    render_opts = { render: { file: :depublish }, notice: t('gws/report.notice.depublished') }
+    render_update @item.save, render_opts
   end
 end

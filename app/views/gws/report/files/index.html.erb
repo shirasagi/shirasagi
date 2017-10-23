@@ -15,8 +15,9 @@
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="state"><%= item.label(:state) %></span>
   <% if item.form.present? %>
-  <span class="form"><%= item.form.name %></span>
+  <span class="form"><%= t('gws/report.labels.form') %>: <%= item.form.name %></span>
   <% end %>
+  <span class="user"><%= t('gws/report.labels.user') %>: <%= item.user_name %></span>
 <% end %>
 
 <%= render file: 'gws/crud/index' %>

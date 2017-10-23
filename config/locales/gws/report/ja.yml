@@ -1,14 +1,27 @@
 ja:
   gws/report:
+    links:
+      publish: 送信する
+      depublish: 送信を取り消す
+    confirm:
+      publish: 送信してよろしいですか？
+      depublish: 送信を取り消してよろしいですか？
+    notice:
+      published: 送信しました。
+      depublished: 送信を取り消しました。
     options:
       file_state:
         inbox: 受信一覧
         sent: 送信一覧
+        public: 送信済み
         closed: 下書き
         all: すべて
     apis:
       files:
         index: レポートを選択する
+    labels:
+      user: 作成者
+      form: 帳票
 
   modules:
     gws/report: レポート

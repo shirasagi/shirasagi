@@ -14,10 +14,10 @@ class Gws::Report::File
   member_ids_optional
 
   seqid :id
-  field :state, type: String, default: "closed"
+  field :state, type: String, default: 'closed'
   field :name, type: String
 
-  permit_params :state, :name
+  permit_params :name
 
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :name, presence: true, length: { maximum: 80 }
@@ -65,8 +65,16 @@ class Gws::Report::File
 
   def state_options
     %w(public closed).map do |v|
-      [ I18n.t("ss.options.state.#{v}"), v ]
+      [ I18n.t("gws/report.options.file_state.#{v}"), v ]
     end
+  end
+
+  def public?
+    state == 'public'
+  end
+
+  def closed?
+    !public?
   end
 
   # override Gws::Addon::Reminder#reminder_url
