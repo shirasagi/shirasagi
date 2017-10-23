@@ -1,6 +1,9 @@
 # cms
 
 production: &production
+  # Disable CMS.
+  disable: false
+
   # StyleSheets on gws pages.
   stylesheets: []
 
@@ -60,7 +63,7 @@ production: &production
         - preview
         - hr
         - anchor
-        - pagebreak 
+        - pagebreak
         - spellchecker
         - searchreplace
         - wordcount

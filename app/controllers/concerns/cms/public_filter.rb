@@ -5,6 +5,7 @@ module Cms::PublicFilter
 
   included do
     rescue_from StandardError, with: :rescue_action
+    before_action :validate_cms
     before_action :set_site
     before_action :set_request_path
     #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
@@ -46,6 +47,10 @@ module Cms::PublicFilter
   end
 
   private
+
+  def validate_cms
+    raise '404' if SS.config.cms.disable.present?
+  end
 
   def set_site
     host = request_host
