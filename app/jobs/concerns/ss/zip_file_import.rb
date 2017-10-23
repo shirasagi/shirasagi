@@ -12,6 +12,7 @@ module SS::ZipFileImport
   module ClassMethods
     def import_from_zip(file, bindings = {})
       require 'zip'
+      require 'nkf'
       Zip::File.open(file) do |archive|
         archive.each do |entry|
           uploaded_file = ::Fs::UploadedFile.new("ss_file")
@@ -19,7 +20,7 @@ module SS::ZipFileImport
             uploaded_file.binmode
             uploaded_file.write(entry.get_input_stream.read)
             uploaded_file.rewind
-            uploaded_file.original_filename = entry.name
+            uploaded_file.original_filename = NKF.nkf('-w', entry.name)
             uploaded_file.content_type = 'text/csv'
 
             temp_file = SS::TempFile.new

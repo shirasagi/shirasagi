@@ -1,0 +1,26 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= dropdown_link(t('ss.links.new')) do %>
+        <% Gws::Workflow::Column.new.input_type_options.each do |v, k| %>
+          <%= link_to(v, new_gws_workflow_form_columns_input_type_path(form_id: @cur_form, input_type: k), class: 'dropdown-item') %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <% if @cur_form.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @cur_form.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>

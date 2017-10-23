@@ -1,0 +1,40 @@
+<dt><%= val['name'] %></dt>
+<dd>
+  <% file_ids = val['value'] %>
+  <% if file_ids.present? %>
+    <table class="index">
+      <tbody>
+      <% file_ids.each do |file_id| %>
+        <% file = Gws::File.find(file_id) rescue nil %>
+        <% next if file.blank? %>
+        <tr>
+          <td class="icon" style="padding: 4px; width: 48px; height: 48px;">
+            <% if file.image? %>
+              <%= image_tag(file.thumb_url, alt: file.name, class: 'icon', style: 'max-width: 40px; max-height: 40px; vertical-align: middle;') %>
+            <% else %>
+              <span class="ext icon icon-<%= file.extname %>" style="display: inline-block; width: 40px; height: 40px; text-align: center">
+                <i class="material-icons">attachment</i><br/>
+                <%= file.extname %>
+              </span>
+            <% end %>
+          </td>
+          <td class="filename"><%= file.humanized_name %></td>
+          <td class="operation">
+            <%= link_to(t('ss.links.download'), file.download_url, { class: %w(btn download) }) %>
+            <% if file.viewable? %>
+              <%= link_to(t('ss.links.preview'), file.view_url, { class: %w(btn preview) }) %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</dd>
+
+<% if file_ids.present? %>
+  <%= jquery do %>
+    var rootElement = $('#addon-gws-agents-addons-workflow-custom_form');
+    rootElement.find('a.preview').colorbox({ fixed: true, width: "90%", height: "90%" });
+  <% end %>
+<% end %>

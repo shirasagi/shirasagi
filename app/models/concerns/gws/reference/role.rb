@@ -38,6 +38,10 @@ module Gws::Reference
       @gws_role_permissions
     end
 
+    def clear_gws_role_permissions
+      @gws_role_permissions = nil
+    end
+
     # @return [Integer] ???
     def gws_role_level(site)
       3

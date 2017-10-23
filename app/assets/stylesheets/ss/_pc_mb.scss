@@ -747,10 +747,35 @@ td {
     }
     a {
       display: inline-block;
-      margin-right: 16px;
       @include arrow;
       color: $black;
       &:hover { color: $orange;}
+    }
+    a:not(.no-margin) {
+      margin-right: 16px;
+    }
+    .dropdown-toggle {
+      &:after {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: .255em;
+        vertical-align: .255em;
+        content: '';
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-left: .3em solid transparent;
+      }
+    }
+    .dropdown-toggle-split {
+      font-size: 80%;
+      margin-left: 4px;
+      margin-right: 16px;
+      border: transparent 1px solid;
+      &:hover {
+        color: $orange;
+        border: $orange 1px solid;
+      }
     }
   }
   .nav-management-menu {
@@ -893,7 +918,9 @@ td {
   &:hover { background: $orange2; }
 }
 .addon-view, .search-pages, .index-search, .search-form {
-  @include box;
+  &:not(.print) {
+    @include box;
+  }
   @include mb {
     margin: 0 10px 10px;
   }
@@ -940,6 +967,9 @@ td {
 }
 .addon-body {
   @include box-body;
+  &.print {
+    border-top: $border-black2;
+  }
 }
 dl.see {
   margin: 5px 0px;
@@ -1081,6 +1111,15 @@ footer.send {
 }
 .btn-success {
   @include btn-orange;
+}
+.chorg-revisions {
+  margin-bottom: 10px;
+  .btn {
+    margin-bottom: 10px;
+  }
+  .result {
+    float: right;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1429,10 +1468,10 @@ table.index {
   border: $border-gray5;
   background: $white;
   tr:nth-child(2n) {
-    background: $gray1;
+    background: #f8f8f8;
   }
   tr.current, tr:hover {
-    background: #fbe8e2;
+    background: $gray1;
   }
   th, td {
     padding: 6px 18px;
@@ -1508,6 +1547,10 @@ table.index.data-table {
       border-right: 1px dotted #aaa;
       content: '';
     }
+  }
+  tr .sortable-head {
+    width: 10px;
+    padding-right: 0px;
   }
   .ui-sortable-helper {
     @include box-shadow(0px 1px 3px #888);

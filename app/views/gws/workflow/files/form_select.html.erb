@@ -1,0 +1,34 @@
+<div class="index">
+  <%= render file: '_form_list_head' %>
+
+  <ul class="list-items">
+    <% @forms.each do |form| %>
+    <li class="list-item">
+      <div class="info">
+        <% title = form.try(:name) || form.try(:title) || form.try(:filename) || "##{form.id}" %>
+        <%= link_to title, new_gws_workflow_form_file_path(form_id: form), class: 'title' %>
+
+        <div class="meta">
+          <% if form.class.fields['_id'].type != BSON::ObjectId %>
+            <span class="id">#<%= form.id %></span>
+          <% end %>
+          <% if form.try(:updated) %>
+            <span class="datetime"><%= I18n.l(form.updated) %></span>
+          <% end %>
+          <% if form.try(:filename) %>
+            <span class="filename"><%= ::File.basename(form.filename) %></span>
+          <% end %>
+          <% if form.try(:status) %>
+            <span class="state"><%= t("ss.state.#{form.status}") %></span>
+          <% end %>
+          <% if form.try(:order) %>
+            <span class="order"><%= form.order %></span>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @forms if @forms.try(:current_page) %>

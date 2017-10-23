@@ -1,6 +1,5 @@
 class Gws::Schedule::Todo
   include SS::Document
-  include SS::Scope::ActivationDate
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
@@ -17,10 +16,11 @@ class Gws::Schedule::Todo
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
-  field :activation_date, type: DateTime
-  field :expiration_date, type: DateTime
+  field :deleted, type: DateTime
 
-  permit_params :color, :todo_state, :activation_date, :expiration_date
+  permit_params :color, :todo_state, :deleted
+
+  validates :deleted, datetime: true
 
   def finished?
     todo_state == 'finished'
@@ -41,6 +41,29 @@ class Gws::Schedule::Todo
     criteria
   }
 
+  scope :active, ->(date = Time.zone.now) {
+    where('$and' => [
+        { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
+    ])
+  }
+
+  scope :deleted, -> {
+    where(:deleted.exists => true)
+  }
+
+  scope :expired, ->(date = Time.zone.now) {
+    where('$or' => [
+        { :deleted.exists => true , :deleted.lt => date }
+    ])
+  }
+
+  def calendar_format(user, site)
+    result = super
+    result[:title] = I18n.t('gws/schedule/todo.finish_mark') + name if finished?
+    result[:className] = [result[:className], 'fc-event-todo'].flatten
+    result
+  end
+
   def private_plan?(user)
     return false if readable_custom_group_ids.present?
     return false if readable_group_ids.present?
@@ -52,16 +75,29 @@ class Gws::Schedule::Todo
   end
 
   def todo_state_name
-    self.class.todo_state_names[todo_state.to_sym]
+    todo_state_names[todo_state.to_sym]
   end
 
-  class << self
-    def todo_state_names
-      @@_todo_state_names ||= I18n.t('gws/schedule/todo.options.todo_state')
-    end
+  def active?
+    now = Time.zone.now
+    return false if deleted.present? && deleted < now
+    true
+  end
 
-    def todo_state_options
-      @@_todo_state_options ||= todo_state_names.map(&:reverse)
-    end
+  def disable
+    now = Time.zone.now
+    update_attributes(deleted: now) if deleted.blank? || deleted > now
+  end
+
+  def active
+    update_attributes(deleted: nil)
+  end
+
+  def todo_state_names
+    I18n.t('gws/schedule/todo.options.todo_state')
+  end
+
+  def todo_state_options
+    todo_state_names.map(&:reverse)
   end
 end

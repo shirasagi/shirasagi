@@ -35,9 +35,14 @@ SS::Application.routes.draw do
       post :finish_all, on: :collection
       post :revert_all, on: :collection
       get :disable, on: :member
-      delete :disable_all, on: :collection
+      post :disable_all, on: :collection
     end
     resource :todo_setting, only: [:show, :edit, :update]
+    resources :todo_management do
+      get :delete, on: :member
+      get :active, on: :member
+      post :active_all, on: :collection
+    end
 
     resources :categories, concerns: :plans
     resource :setting, only: [:show, :edit, :update]

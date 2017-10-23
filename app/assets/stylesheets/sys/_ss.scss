@@ -1,12 +1,19 @@
 .role-permissions {
   .module {
     margin-bottom: 20px;
+    position: relative;
   }
   .module-name {
     margin-bottom: 10px;
     padding: 8px 0;
     border-bottom: $border-gray5;
     font-size: 120%;
+  }
+  .buttons {
+    font-size: 80%;
+    position: absolute;
+    top: 4px;
+    right: 8px;
   }
   .permissions {
   }
