@@ -71,7 +71,7 @@ module SS::Model::File
   end
 
   def public_path
-    return if site.blank?
+    return if site.blank? || !site.respond_to?(:root_path)
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -79,8 +79,16 @@ module SS::Model::File
     "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
+  def download_url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/download/#{filename}"
+  end
+
+  def view_url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/view/#{filename}"
+  end
+
   def full_url
-    return if site.blank?
+    return if site.blank? || !site.respond_to?(:full_root_url)
     "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -135,6 +143,10 @@ module SS::Model::File
     filename =~ /\.(bmp|gif|jpe?g|png)$/i
   end
 
+  def viewable?
+    image?
+  end
+
   def resizing
     (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
   end
@@ -161,7 +173,7 @@ module SS::Model::File
   end
 
   def remove_public_file
-    Fs.rm_rf(public_path) if site #TODO: modify the trriger
+    Fs.rm_rf(public_path) if public_path
   end
 
   private

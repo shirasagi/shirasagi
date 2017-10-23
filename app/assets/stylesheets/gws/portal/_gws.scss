@@ -1,0 +1,61 @@
+// Portal
+
+// portlets
+.gws-portlets {
+  //margin: -10px;
+  .portlet-item {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+.gws-portlets-static {
+  //
+}
+.gws-portlets-layouts {
+  .portlet-item {
+    box-shadow: 0px 1px 5px #ccc;
+    background-color: rgba(0,0,0,.01);
+    background-image: url(/assets/img/gws/bg-plan.png);
+    cursor: move;
+    &:hover {
+      background-color: rgba(0,0,0,.05);
+    }
+  }
+  .portlet-item.dragging {
+    box-shadow: 0px 1px 10px #bbb;
+  }
+  .preview-holder {
+    border: 1px solid #aaa;
+  }
+  .gs-resize-handle-both {
+    height: 12px;
+    bottom: 0;
+  }
+}
+
+// management portlets
+.mod-gws-portal-portlet-link-table {
+  td {
+    padding: 6px;
+  }
+  input[type=text] {
+    width: 100%;
+  }
+}
+
+//
+.portal-notice, .portal-reminder, .portal-board {
+  .list-items .info a:visited {
+    color: #b53 !important;
+  }
+  .more {
+    padding: 0 10px 10px;
+    text-align: right;
+  }
+}
+.portal-notice {
+  .datetime {
+    margin-left: 5px;
+    color: #888;
+  }
+}

@@ -11,17 +11,18 @@ module Gws::Addon::Schedule::FacilityCustomValues
 
   def set_facility_custom_values(params)
     return if main_facility.blank?
-    permit_fields = main_facility.custom_fields.to_permitted_fields('facility_custom_values')
-    safe_params = params.require(:item).permit(permit_fields)
+    permit_fields = main_facility.custom_fields.to_permitted_fields
+    safe_params = params.require(:item).permit('facility_custom_values' => permit_fields)
     return if safe_params.blank?
-    self.facility_custom_values = safe_params['facility_custom_values']
+    new_custom_values = main_facility.build_custom_values(safe_params['facility_custom_values'])
+    self.facility_custom_values = self.facility_custom_values.to_h.deep_merge(new_custom_values)
   end
 
   private
 
   def validate_facility_custom_values
     return if main_facility.blank?
-    validator = main_facility.custom_fields.to_validator(attributes: [:facility_custom_values])
+    validator = main_facility.to_validator(attributes: [:facility_custom_values])
     validator.validate(self)
   end
 end

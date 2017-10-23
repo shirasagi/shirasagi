@@ -14,6 +14,7 @@ class SS::ThumbFile
   validates :image_size_name, presence: true
 
   def public_path
+    return if site.blank? || !site.respond_to?(:root_path)
     "#{site.root_path}/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
   end
 

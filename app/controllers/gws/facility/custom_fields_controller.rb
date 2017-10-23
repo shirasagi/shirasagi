@@ -33,6 +33,15 @@ class Gws::Facility::CustomFieldsController < ApplicationController
     raise e
   end
 
+  def set_selected_items
+    set_facility
+    ids = params[:ids]
+    raise '400' unless ids
+    ids = ids.split(",") if ids.kind_of?(String)
+    @items = @cur_facility.custom_fields.in(id: ids)
+    raise '400' unless @items.present?
+  end
+
   public
 
   def index

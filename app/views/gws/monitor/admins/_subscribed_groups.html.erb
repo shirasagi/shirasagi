@@ -1,0 +1,69 @@
+<div class="subscribed-users">
+  <header>
+    <h2><%= I18n.t('gws/monitor.topic.browsing_state') %></h2>
+  </header>
+
+  <div class="toggle-body">
+    <div class="body">
+      <table class="index">
+        <thead>
+        <tr>
+          <th class="name"><%= Gws::Group.t :name %></th>
+          <th class="browsed"><%= I18n.t('gws/monitor.topic.browsed') %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% subscribed_groups = @item.subscribed_groups.to_a %>
+        <% subscribed_groups.each do |group| %>
+          <tr data-user-id="<%= group.id %>">
+            <td class="name"><%= group.name %></td>
+            <td class="browsed">
+              <% @item.browsed_at(group).tap do |browsed_at| %>
+              <span class="browsed">
+              <% if browsed_at %>
+                <%= I18n.t('gws/monitor.options.browsed_state.read') %>
+                <time datetime="<%= browsed_at.iso8601 %>"><%= I18n.l(browsed_at) %></time>
+              <% else %>
+                <%= I18n.t('gws/monitor.options.browsed_state.unread') %>
+              <% end %>
+              </span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% if subscribed_groups.include?(@cur_site) && !@item.browsed?(@cur_user) %>
+  <%= jquery do %>
+    var formatDate = function(browsedAt) {
+      var disp = 'YYYY/MM/DD hh:mm';
+
+      disp = disp.replace('YYYY', browsedAt.getFullYear());
+      disp = disp.replace('MM', (browsedAt.getMonth() + 1).toString(10));
+      disp = disp.replace('DD', browsedAt.getDate().toString(10));
+      disp = disp.replace('hh', ('0' + browsedAt.getHours()).slice(-2));
+      disp = disp.replace('mm', ('0' + browsedAt.getMinutes()).slice(-2));
+
+      return disp;
+    };
+
+    setTimeout(function() {
+      $.ajax({
+        type: 'POST',
+        url: '<%= read_gws_monitor_topic_path %>',
+        dataType: 'json',
+        success: function(data) {
+          var browsedAt = formatDate(new Date(data.browsed_at));
+          $('tr[data-user-id=<%= @cur_user.id %>] span.browsed').html('<%= I18n.t('gws/monitor.options.browsed_state.read') %><time>' + browsedAt + '</time>');
+        },
+        error: function(req, status, error) {
+          $('tr[data-user-id=<%= @cur_user.id %>] span.browsed').html(error);
+        }
+      });
+    }, <%= @cur_site.monitor_browsed_delay * 1_000 %>);
+  <% end %>
+<% end %>

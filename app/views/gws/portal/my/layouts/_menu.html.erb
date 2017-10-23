@@ -1,0 +1,10 @@
+<% if @portal.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <nav class="nav-menu">
+    <button class="btn gws-portlets-serialize" data-href="<%= url_for(action: :update, format: :json) %>">
+      <%= t('gws/portal.buttons.save_layouts') %>
+    </button>
+    <button class="btn gws-portlets-reset">
+      <%= t('ss.buttons.reset') %>
+    </button>
+  </nav>
+<% end %>

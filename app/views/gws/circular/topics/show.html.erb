@@ -1,13 +1,5 @@
 <% addons = @item.class.addons.select { |addon| [SS::Addon::Markdown, Gws::Addon::Member].exclude?(addon.klass) } %>
 
-<%= jquery do %>
-    $("#mark").change(function(){
-      var url = this.checked ? '<%= gws_circular_apis_mark_path(id: @item.id) %>' : '<%= gws_circular_apis_unmark_path(id: @item.id) %>';
-      $.ajax({ url: url, dataType: 'json' });
-    });
-    Gws_Topic.render(document.getElementById("mark"));
-<% end %>
-
 <div class="gws-board gws-board-thread">
   <article class="topic">
     <header>
@@ -39,15 +31,12 @@
     <% end %>
 
     <div class="menu">
-      <% if @item.permit_comment?(user: @cur_user, site: @cur_site) %>
+      <% if @item.permit_comment?(user: @cur_user, site: @cur_site) && !@item.commented?(@cur_user) %>
           <%= link_to t('gws/board.links.comment'), new_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: 'btn' %>
       <% end %>
 
-      <% if @item.member?(@cur_user) %>
-          <label class="btn">
-            <%= check_box_tag :mark, nil, @item.unmarkable?(@cur_user), class: 'hide' %>
-            <span><%= t('gws/circular.topic.mark') %></span>
-          </label>
+      <% if @item.allowed?(:edit,@cur_user, site: @cur_site) && @item.member?(@cur_user) %>
+          <%= link_to @item.mark_action_label, toggle_gws_circular_topic_path, class: "btn #{ 'gws-btn-pushed' if @item.marked? }" %>
       <% end %>
     </div>
   </article>
@@ -78,7 +67,7 @@
             <% post = @item.children.where(user_id: member.id).first %>
             <tr data-id="<%= i %>">
               <td><%= @item.marked?(member) ? t('gws/circular.topic.marked') :  t('gws/circular.topic.unmarked') %></td>
-              <td><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
+              <td><%= tryb{@item.mark_at(member).strftime('%Y/%m/%d %H:%M')} %></td>
               <td><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
               <td><%= member.name %></td>
               <td><%= post ? post.try(:text) : '' %></td>

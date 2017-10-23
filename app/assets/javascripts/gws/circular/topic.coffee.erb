@@ -1,3 +1,18 @@
+#= require jquery-ui/draggable
+#= require jquery-ui/droppable
+
+class @Gws_Circular_Topic
+  @buildForm: (action, confirm)->
+    checked = $(".list-item input:checkbox:checked").map ->
+      $(this).val()
+    return false if checked.length == 0
+    token = $('meta[name="csrf-token"]').attr('content')
+    form = $("<form/>", action: action, method: "post", data: {confirm: confirm})
+    form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
+    for id in checked
+      form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+    form
+
 class @Gws_Topic
   @render: (target)->
     $(target).change ->
@@ -11,4 +26,3 @@ class @Gws_Topic
     else
       $(target.parentElement).addClass("fc-state-active")
       $(target.nextElementSibling).text("未読に戻す")
-
