@@ -1,0 +1,30 @@
+<% report_ids = [] %>
+<dl class="see mod-gws-schedule-reports">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <%= f.hidden_field 'in_report_ids[]', value: '', class: 'hidden-ids' %>
+    <%= link_to t('gws/report.apis.files.index'), gws_report_apis_files_path, class: 'ajax-box' %>
+  </dd>
+  <dd class="wide">
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Report::File.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.reports.readable(@cur_user, site: @cur_site).order_by(updated: 1).each do |report| %>
+        <% report_ids << report.id %>
+        <tr data-id="<%= report.id %>">
+          <td>
+            <%= f.hidden_field 'in_report_ids[]', value: report.id %>
+            <%= report.name %>
+          </td>
+          <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<%= f.hidden_field 'in_initial_report_ids[]', value: '' %>
+<% report_ids.each do |report_id| %>
+<%= f.hidden_field 'in_initial_report_ids[]', value: report_id %>
+<% end %>
