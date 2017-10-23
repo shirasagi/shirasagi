@@ -1,15 +1,15 @@
 <% return unless @group_navi %>
 
 <div id="content-navi">
-  <h2 class="content-navi-title">フォルダ</h2>
+  <h2 class="content-navi-title"><%= t('gws/memo/message.folder') %></h2>
   <table class="index gws-memo-folder">
     <thead>
-      <tr>
-        <th>フォルダ名</th>
-      </tr>
+    <tr>
+      <th><%= t('gws/memo/message.folder_name') %></th>
+    </tr>
     </thead>
     <tbody>
-      <% @group_navi.each do |item| %>
+    <% @group_navi.each do |item| %>
       <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.path) %>
       <tr class="<%= 'droppable' if droppable %> <%= 'current' if item.path == params[:folder] %>">
         <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
@@ -17,7 +17,7 @@
           <span>(<%= item.messages(@cur_user.id).count %>)</span>
         </td>
       </tr>
-      <% end %>
+    <% end %>
     </tbody>
   </table>
 </div>

@@ -22,7 +22,7 @@ class Gws::Memo::Folder
   end
 
   def messages(uid=user_id)
-    Gws::Memo::Message.where("#{direction}.#{uid}": path)
+    Gws::Memo::Message.where("#{direction}.#{uid}" => path)
   end
 
   def unseen?
@@ -36,10 +36,10 @@ class Gws::Memo::Folder
 
     def static_items
       [
-          self.new(name: '受信トレイ', path: 'INBOX'),
-          self.new(name: 'ゴミ箱', path: 'INBOX.Trash'),
-          self.new(name: '下書き', path: 'INBOX.Draft'),
-          self.new(name: '送信済みトレイ', path: 'INBOX.Sent'),
+          self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX'),
+          self.new(name: I18n.t('gws/memo/folder.inbox_trash'), path: 'INBOX.Trash'),
+          self.new(name: I18n.t('gws/memo/folder.inbox_draft'), path: 'INBOX.Draft'),
+          self.new(name: I18n.t('gws/memo/folder.inbox_sent'), path: 'INBOX.Sent'),
       ]
     end
 

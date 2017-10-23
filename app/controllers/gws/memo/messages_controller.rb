@@ -6,12 +6,13 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :apply_recent_filters, only: [:index]
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :toggle_star]
-  before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all, :set_star_all, :unset_star_all, :move_all]
+  before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all,
+                                            :set_star_all, :unset_star_all, :move_all]
   before_action :set_group_navi, only: [:index]
 
   def set_crumbs
     apply_recent_filters
-    @crumbs << ['連絡メモ', gws_memo_messages_path ]
+    @crumbs << [t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
   end
 
   def set_group_navi
@@ -38,16 +39,20 @@ class Gws::Memo::MessagesController < ApplicationController
     (params[:commit] == I18n.t('ss.buttons.draft_save')) ? 'INBOX.Draft' : 'INBOX.Sent'
   end
 
+  def from
+    {from: { @cur_user.id.to_s => from_folder }}
+  end
+
   def create
-    @item = @model.new ({from:{ @cur_user.id.to_s => from_folder }}).merge(get_params)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    @item = @model.new from.merge(get_params)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_create @item.save
   end
 
   def update
-    @item.attributes = ({from:{ @cur_user.id.to_s => from_folder }}).merge(get_params)
+    @item.attributes = from.merge(get_params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
 

@@ -1,5 +1,30 @@
 ja:
+  gws/memo/message:
+    folder: フォルダー
+    folder_name: フォルダー名
+    confirm:
+      set_seen_all: 既読にしますか?
+      unset_seen_all: 未読にしますか?
+      set_star_all: スターをつけますか?
+      unset_star_all: スターをはずしますか?
+      move: 移動しますか?
+  gws/memo/folder:
+    inbox: 受信トレイ
+    inbox_trash: ゴミ箱
+    inbox_draft: 下書き
+    inbox_sent: 送信済みトレイ
   modules:
     gws/memo: 連絡メモ
     addons:
       gws/memo/comments: コメント
+  mongoid:
+    models:
+      gws/memo/message: 連絡メモ
+      gws/memo/folder: 管理
+    attributes:
+      gws/memo/folder:
+        name: フォルダー名
+        path: パス
+      gws/memo/comment:
+        name: タイトル
+      gws/memo/message:
