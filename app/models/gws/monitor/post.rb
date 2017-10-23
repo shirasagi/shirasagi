@@ -8,6 +8,9 @@ class Gws::Monitor::Post
   include Gws::Monitor::DescendantsFileInfo
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Gws::Addon::Monitor::Category
+
+  readable_setting_include_custom_groups
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MonitorPostJob.callback
