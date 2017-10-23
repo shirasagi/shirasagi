@@ -141,7 +141,7 @@ class Gws::Monitor::Topic
       data << I18n.t('gws/monitor.csv')
 
       subscribed_groups.each do |group|
-        post = children.where(group_ids: group.id).first
+        post = comment(group.id).first
         data << [
             id,
             name,
