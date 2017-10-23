@@ -16,3 +16,4 @@ class Gws::Monitor::DeleteJob < Gws::ApplicationJob
     Rails.logger.info "#{threshold}以前の照会・回答を#{count}件削除しました。"
   end
 end
+
