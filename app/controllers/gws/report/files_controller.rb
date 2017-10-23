@@ -41,9 +41,32 @@ class Gws::Report::FilesController < ApplicationController
     @cur_plan ||= Gws::Schedule::Plan.site(@cur_site).find(params[:plan_id])
   end
 
+  def set_search_params
+    @s ||= begin
+      s = OpenStruct.new params[:s]
+      s.state = params[:state] if params[:state]
+      s.cur_site = @cur_site
+      s.cur_user = @cur_user
+      s
+    end
+  end
+
+  def set_items
+    set_search_params
+    @items ||= @model.site(@cur_site).search(@s)
+  end
+
   def set_item
-    super
+    set_items
+    @item ||= begin
+      item = @items.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
     @cur_form ||= @item.form if @item.present?
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
   end
 
   def pre_params
@@ -66,19 +89,11 @@ class Gws::Report::FilesController < ApplicationController
     params
   end
 
-  def set_search_params
-    @s = OpenStruct.new params[:s]
-    @s.state = params[:state] if params[:state]
-    @s.cur_site = @cur_site
-    @s.cur_user = @cur_user
-  end
-
   public
 
   def index
-    @items = @model.site(@cur_site).
-      readable(@cur_user, site: @cur_site).
-      search(@s).
+    set_items
+    @items = @items.
       order_by(updated: -1, id: -1).
       page(params[:page]).per(50)
   end
@@ -181,6 +196,7 @@ class Gws::Report::FilesController < ApplicationController
 
     @item.state = 'public'
     render_opts = { render: { file: :publish }, notice: t('gws/report.notice.published') }
+    render_opts[:location] = gws_report_file_path(state: 'sent', id: @item)
     render_update @item.save, render_opts
   end
 
@@ -194,6 +210,7 @@ class Gws::Report::FilesController < ApplicationController
 
     @item.state = 'closed'
     render_opts = { render: { file: :depublish }, notice: t('gws/report.notice.depublished') }
+    render_opts[:location] = gws_report_file_path(state: 'closed', id: @item)
     render_update @item.save, render_opts
   end
 end

@@ -47,18 +47,13 @@ class Gws::Report::File
       cur_user = params[:cur_user]
       case params[:state]
       when 'inbox'
-        conds = [{ member_ids: cur_user.id }]
-        custom_group_ids = Gws::CustomGroup.site(cur_site).member(cur_user).pluck(:id)
-        if custom_group_ids.present?
-          conds << { :member_custom_group_ids.in => custom_group_ids }
-        end
-        all.and_public.where('$and' => [{ '$or' => conds }])
+        all.and_public.member(cur_user)
       when 'sent'
-        all.and_public.where(user_id: cur_user.id)
+        all.and_public.user(cur_user)
       when 'closed'
-        all.and_closed.where(user_id: cur_user.id)
+        all.and_closed.user(cur_user)
       else
-        all.readable(cur_user, site: cur_site)
+        all.and_public.readable(cur_user, site: cur_site)
       end
     end
   end
