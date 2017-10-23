@@ -27,6 +27,7 @@ SS::Application.routes.draw do
 
     namespace 'apis' do
       get 'categories' => 'categories#index'
+      get 'files' => 'files#index'
     end
   end
 end

@@ -1,4 +1,9 @@
 ja:
+  gws/report:
+    apis:
+      files:
+        index: レポートを選択する
+
   modules:
     gws/report: レポート
     addons:
