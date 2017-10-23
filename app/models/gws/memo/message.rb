@@ -11,7 +11,7 @@ class Gws::Memo::Message
   attr_accessor :signature, :attachments, :field
 
   field :subject, type: String
-  alias_method :name, :subject
+  alias name subject
 
   field :text, type: String
   field :html, type: String
@@ -65,7 +65,7 @@ class Gws::Memo::Message
   def sender
     from_users.map(&:long_name)
   end
-  alias_method :display_sender, :sender
+  alias display_sender sender
 
   def display_subject
     subject.presence || 'No title'
@@ -135,16 +135,6 @@ class Gws::Memo::Message
     from.values.include?('INBOX.Draft')
   end
 
-  private
-
-  def set_from_user_ids
-    from.keys.each {|id_s| self.from_user_ids = self.from_user_ids << id_s.to_i }
-  end
-
-  def set_to_user_ids
-    to.keys.each {|id_s| self.to_user_ids = self.to_user_ids << id_s.to_i }
-  end
-
   def owned?(user)
     return true if (self.group_ids & user.group_ids).present?
     return true if user_ids.to_a.include?(user.id)
@@ -153,11 +143,21 @@ class Gws::Memo::Message
     false
   end
 
+  private
+
+  def set_from_user_ids
+    from.keys.each { |id_s| self.from_user_ids = self.from_user_ids << id_s.to_i }
+  end
+
+  def set_to_user_ids
+    to.keys.each { |id_s| self.to_user_ids = self.to_user_ids << id_s.to_i }
+  end
+
   class << self
     def allow_condition(action, user, opts = {})
       folder = opts[:folder]
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-      { "#{direction}.#{user.id}": folder }
+      { "#{direction}.#{user.id}" => folder }
     end
   end
 end

@@ -1,26 +1,26 @@
 <nav class="nav-management-menu">
   <%= link_to gws_memo_folders_path do %>
-      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
+    <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
   <% end %>
 </nav>
 
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.new'), action: :new %>
-      <% end %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.new'), action: :new %>
+    <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>
-      <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
-      <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
-      <% end %>
-      <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-      <% if @item.from_user_ids.include?(@cur_user.id) %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
-      <% end %>
-      <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <% if @item.from_user_ids.include?(@cur_user.id) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>
