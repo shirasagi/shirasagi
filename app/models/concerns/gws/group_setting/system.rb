@@ -1,6 +1,7 @@
 module Gws::GroupSetting::System
   extend ActiveSupport::Concern
   extend Gws::GroupSetting
+  include SS::Model::MailSetting
 
   included do
     field :sendmail_domains, type: SS::Extensions::Words

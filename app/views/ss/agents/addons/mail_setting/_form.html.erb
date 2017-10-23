@@ -1,4 +1,7 @@
-<dl class="see">
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-mail-setting");
+<% end %>
+<dl class="see mod-ss-mail-setting">
   <dt><%= @model.t :sender_name %><%= @model.tt :sender_name %></dt>
   <dd><%= f.text_field :sender_name %></dd>
 
@@ -7,7 +10,4 @@
 
   <dt><%= @model.t :mail_signature %><%= @model.tt :mail_signature %></dt>
   <dd><%= f.text_area :mail_signature %></dd>
-
-  <dt><%= @model.t :sendmail_domains %><%= @model.tt :sendmail_domains %></dt>
-  <dd><%= f.text_field :sendmail_domains %></dd>
 </dl>

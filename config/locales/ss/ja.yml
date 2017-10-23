@@ -261,6 +261,7 @@ ja:
       ss/site_auto_post_setting: SNS自動投稿設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
+      ss/mail_setting: メール設定
 
   mongoid:
     models:
@@ -464,6 +465,10 @@ ja:
         color_button: 文字色変更ボタン
         editor_css_path: スタイルシートパス
         syntax_check: アクセシビリティチェック
+      ss/model/mail_setting:
+        sender_name: 差出人名
+        sender_email: 差出人メールアドレス
+        mail_signature: 署名
 
   tooltip:
     ss/model/user:
@@ -722,3 +727,12 @@ ja:
         - エディタ用スタイルシートのパスを設定します。
       syntax_check:
         - アクセシビリティチェックの有効無効を設定します。
+
+    ss/model/mail_setting:
+      sender_name:
+        - システムから送信されるメールの既定の差出人名を入力します。
+      sender_email:
+        - システムから送信されるメールの既定の差出人メールアドレスを入力します。
+        - "未入力の場合、システム設定のメールアドレス（例: noreply@example.jp）が使用されます。"
+      mail_signature:
+        - システムから送信されるメールの既定の署名を入力します。
