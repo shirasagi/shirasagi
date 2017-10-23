@@ -343,6 +343,7 @@ ja:
         order: 表示順
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+        domains: ドメイン
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト

@@ -17,7 +17,8 @@ module SS::Model::Group
     field :order, type: Integer
     field :activation_date, type: DateTime
     field :expiration_date, type: DateTime
-    permit_params :name, :order, :activation_date, :expiration_date
+    field :domains, type: SS::Extensions::Words
+    permit_params :name, :order, :activation_date, :expiration_date, :domains
 
     default_scope -> { order_by(order: 1, name: 1) }
 
@@ -26,6 +27,9 @@ module SS::Model::Group
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
     validate :validate_name
+    validate :validate_domains, if: ->{ domains.present? }
+
+    after_save :reload_nginx, if: ->{ domains_changed? }
 
     scope :in_group, ->(group) {
       where(name: /^#{group.name}(\/|$)/)
@@ -114,5 +118,17 @@ module SS::Model::Group
     if name =~ /\/$/ || name =~ /^\// || name =~ /\/\//
       errors.add :name, :invalid
     end
+  end
+
+  def validate_domains
+    self.domains = domains.uniq
+
+    if self.class.ne(id: id).any_in(domains: domains).exists?
+      errors.add :domains, :duplicate
+    end
+  end
+
+  def reload_nginx
+    SS::Nginx::Configuration.write.reload_server
   end
 end

@@ -31,6 +31,7 @@ module SS::Model::Site
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
 
     validate :validate_domains, if: ->{ domains.present? }
+    after_save :reload_nginx, if: ->{ domains_changed? }
 
     def domain
       cur_domain ? cur_domain : domains[0]
@@ -138,6 +139,10 @@ module SS::Model::Site
       if self.class.ne(id: id).any_in(domains_with_subdir: domains_with_subdir).exists?
         errors.add :domains_with_subdir, :duplicate
       end
+    end
+
+    def reload_nginx
+      SS::Nginx::Configuration.write.reload_server
     end
 
     class << self

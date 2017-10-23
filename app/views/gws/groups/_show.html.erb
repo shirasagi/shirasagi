@@ -14,4 +14,9 @@
   <dt><%= @model.t :expiration_date %></dt>
   <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
   <% end %>
+
+  <% if @item.domains.present? %>
+  <dt><%= @model.t :domains %></dt>
+  <dd><%= @item.send :domains %></dd>
+  <% end %>
 </dl>
