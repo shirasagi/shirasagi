@@ -12,6 +12,7 @@ class Gws::Circular::Topic
   include Gws::Addon::History
   include Gws::Addon::Board::Category
 
+  # override
   store_in collection: 'gws_circular_topics'
   set_permission_name 'gws_circular_topics'
 
@@ -83,8 +84,8 @@ class Gws::Circular::Topic
     mark_hash[u.id.to_s]
   end
 
-  def mark_action_label
-    marked? ? I18n.t('gws/circular.topic.unmark') : I18n.t('gws/circular.topic.mark')
+  def mark_action_label(u=user)
+    marked?(u) ? I18n.t('gws/circular.topic.unmark') : I18n.t('gws/circular.topic.mark')
   end
 
   def mark_type_options
@@ -122,9 +123,33 @@ class Gws::Circular::Topic
   end
 
   class << self
-    def allow(action, user, opts = {})
-      result = super(action, user, opts)
-      result.exists? ? result : member(user)
+    # def allow(action, user, opts = {})
+    #   result = super(action, user, opts)
+    #   result.exists? ? result : member(user)
+    # end
+
+    def allow_condition(action, user, opts = {})
+      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
+      action = permission_action || action
+
+      if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
+        { "$or" => [
+          { user_ids: user.id },
+          { member_ids: user.id },
+          { permission_level: { "$lte" => level } },
+        ] }
+      elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
+        { "$or" => [
+          { user_ids: user.id },
+          { member_ids: user.id },
+          { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
+        ] }
+      else
+        { "$or" => [
+          { user_ids: user.id },
+          { member_ids: user.id }
+        ] }
+      end
     end
 
     def to_csv
