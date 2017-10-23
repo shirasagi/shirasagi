@@ -18,7 +18,7 @@ class Gws::Memo::Folder
   default_scope ->{ order_by order: 1 }
 
   def direction
-    (path == 'INBOX.Sent') ? 'from' : 'to'
+    %w(INBOX.Sent INBOX.Draft).include?(path) ? 'from' : 'to'
   end
 
   def messages(uid=user_id)
@@ -38,7 +38,8 @@ class Gws::Memo::Folder
       [
           self.new(name: '受信トレイ', path: 'INBOX'),
           self.new(name: 'ゴミ箱', path: 'INBOX.Trash'),
-          self.new(name: '送信済み', path: 'INBOX.Sent')
+          self.new(name: '下書き', path: 'INBOX.Draft'),
+          self.new(name: '送信済みトレイ', path: 'INBOX.Sent'),
       ]
     end
 

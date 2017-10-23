@@ -54,7 +54,7 @@ class Gws::Memo::Message
     obj.split(';').each do |val|
       addr = val.strip.match(/<(.+?)>$/)[1]
       next unless user = Gws::User.where(email: addr).first
-      self.to[user.id.to_s] = 'INBOX'
+      self.to[user.id.to_s] = draft? ? nil : 'INBOX'
     end
   end
 
@@ -131,6 +131,10 @@ class Gws::Memo::Message
     self
   end
 
+  def draft?
+    from.values.include?('INBOX.Draft')
+  end
+
   private
 
   def set_from_user_ids
@@ -152,7 +156,7 @@ class Gws::Memo::Message
   class << self
     def allow_condition(action, user, opts = {})
       folder = opts[:folder]
-      direction = (folder == 'INBOX.Sent') ? 'from' : 'to'
+      direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
       { "#{direction}.#{user.id}": folder }
     end
   end

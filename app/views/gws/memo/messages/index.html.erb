@@ -2,7 +2,7 @@
   <%= jquery do %>
     Gws_Memo_Message.render();
 
-    <% if params[:folder] != 'INBOX.Sent' %>
+    <% if %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
     $(".list-item").draggable({
       zIndex: 100,
       opacity: 0.75,
