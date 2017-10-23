@@ -1,5 +1,7 @@
 class @Gws_Memo_Message
   @render: ->
+    $("#addon-gws-agents-addons-group_permission").hide();
+
     $(".list-head .search").on "click", ->
       $('.webmail-mail-search').animate({ height: 'toggle' }, 'fast')
 

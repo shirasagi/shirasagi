@@ -1,7 +1,5 @@
-<% if @group_navi %>
-<%= jquery do %>
+<% return unless @group_navi %>
 
-<% end %>
 <div id="content-navi">
   <h2 class="content-navi-title">フォルダ</h2>
   <table class="index gws-memo-folder">
@@ -12,7 +10,7 @@
     </thead>
     <tbody>
       <% @group_navi.each do |item| %>
-      <% droppable = ['INBOX.Sent', params[:folder]].exclude?(item.path) %>
+      <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.path) %>
       <tr class="<%= 'droppable' if droppable %> <%= 'current' if item.path == params[:folder] %>">
         <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
           <%= link_to item.name, gws_memo_messages_path(folder: item.path), {class: 'field title', 'data-path': item.path } %>
@@ -23,4 +21,3 @@
     </tbody>
   </table>
 </div>
-<% end %>

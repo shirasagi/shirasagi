@@ -1,5 +1,9 @@
 <% addons = @item ? @item.class.addons : [] %>
 
+<%= jquery do %>
+    Gws_Memo_Message.render();
+<% end %>
+
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
     <div class="addon-head">

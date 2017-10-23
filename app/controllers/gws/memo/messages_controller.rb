@@ -34,11 +34,21 @@ class Gws::Memo::MessagesController < ApplicationController
         page(params[:page]).per(50)
   end
 
+  def from_folder
+    (params[:commit] == I18n.t('ss.buttons.draft_save')) ? 'INBOX.Draft' : 'INBOX.Sent'
+  end
+
   def create
-    create_fix_params = { from:{@cur_user.id.to_s => 'INBOX.Sent'} }
-    @item = @model.new create_fix_params.merge(get_params)
+    @item = @model.new ({from:{ @cur_user.id.to_s => from_folder }}).merge(get_params)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_create @item.save
+  end
+
+  def update
+    @item.attributes = ({from:{ @cur_user.id.to_s => from_folder }}).merge(get_params)
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update
   end
 
   def show
