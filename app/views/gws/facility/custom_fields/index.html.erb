@@ -4,4 +4,24 @@
   <%= link_to(t('ss.links.delete'), action: :delete, id: item) if @cur_facility.allowed?(:delete, @cur_user, site: @cur_site) %>
 <% end %>
 
+<% @index_meta = proc do |item| %>
+  <% if item.class.fields['_id'].type != BSON::ObjectId %>
+    <span class="id">#<%= item.id %></span>
+  <% end %>
+  <% if item.try(:updated) %>
+    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% end %>
+  <% if item.try(:filename) %>
+    <span class="filename"><%= File.basename item.filename %></span>
+  <% end %>
+  <% if item.try(:status) %>
+    <span class="state"><%= t "ss.state.#{item.status}" %></span>
+  <% end %>
+  <% if item.try(:order) %>
+    <span class="order"><%= item.order %></span>
+  <% end %>
+  <span class="input-type"><%= item.label :input_type %></span>
+  <span class="required"><%= item.label :required %></span>
+<% end %>
+
 <%= render file: 'app/views/gws/crud/index' %>

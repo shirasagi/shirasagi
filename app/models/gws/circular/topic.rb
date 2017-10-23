@@ -18,9 +18,9 @@ class Gws::Circular::Topic
   field :due_date, type: DateTime
   field :mark_type, type: String, default: 'normal'
 
-  embeds_ids :mark_users, class_name: 'Gws::User'
+  field :mark_hash, type: Hash, default: {}
 
-  permit_params :due_date, :mark_type, mark_user_ids: []
+  permit_params :due_date, :mark_type
 
   validates :due_date, presence: true
 
@@ -43,39 +43,48 @@ class Gws::Circular::Topic
   }
 
   # 回覧板へのコメントを許可しているか？
-  #
   # ・コメントを編集する権限を持っている
-  # ・コメントを一度もしていない
   # ・ユーザーもしくはメンバーに含まれる
-  #
   def permit_comment?(*args)
-    opts = {
-      user: user,
-        site: site
-    }.merge(args.extract_options!)
+    opts = {user: user, site: site}.merge(args.extract_options!)
 
-    return false unless Gws::Circular::Post.allowed?(:edit, opts[:user], site: opts[:site])
-    return false if children.where(user_ids: opts[:user].id).exists?
-    user_ids.include?(opts[:user].id) || member?(opts[:user])
+    Gws::Circular::Post.allowed?(:edit, opts[:user], site: opts[:site]) &&
+        (user_ids.include?(opts[:user].id) || member?(opts[:user]))
+  end
+
+  def commented?(u=user)
+    children.where(user_ids: u.id).exists?
   end
 
   def markable?(u=user)
-    member?(u) && mark_user_ids.exclude?(u.id)
+    member?(u) && mark_hash.exclude?(u.id.to_s)
   end
 
-  def marked_by(u=user)
-    self.mark_user_ids = mark_user_ids << u.id if markable?(u)
+  def mark_by(u=user)
+    self.mark_hash[u.id.to_s] = Time.zone.now if markable?(u)
     self
   end
 
   def unmarkable?(u=user)
-    member?(u) && mark_user_ids.include?(u.id)
+    member?(u) && mark_hash.include?(u.id.to_s)
   end
   alias marked? unmarkable?
 
-  def unmarked_by(u=user)
-    attributes[:mark_user_ids].delete(u.id) if unmarkable?(u)
+  def unmark_by(u=user)
+    self.mark_hash.delete(u.id.to_s) if unmarkable?(u)
     self
+  end
+
+  def toggle_by(u=user)
+    marked?(u) ? unmark_by(u) : mark_by(u)
+  end
+
+  def mark_at(u)
+    mark_hash[u.id.to_s]
+  end
+
+  def mark_action_label
+    marked? ? I18n.t('gws/circular.topic.unmark') : I18n.t('gws/circular.topic.mark')
   end
 
   def mark_type_options
@@ -103,7 +112,21 @@ class Gws::Circular::Topic
     sort_items.map.with_index { |item, i| [item[:name], i] }
   end
 
+  def custom_group_member?(user)
+    custom_groups.where(member_ids: user.id).exists?
+  end
+
+  def allowed?(action, user, opts = {})
+    return true if super(action, user, opts)
+    member?(user) || custom_group_member?(user) if action =~ /read/
+  end
+
   class << self
+    def allow(action, user, opts = {})
+      result = super(action, user, opts)
+      result.exists? ? result : member(user)
+    end
+
     def to_csv
       CSV.generate do |data|
         data << I18n.t('gws/circular.csv')

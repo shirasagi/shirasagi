@@ -1,0 +1,227 @@
+ja:
+  gws/monitor:
+    user: ユーザー
+    #descendants_num: コメント数
+    #descendants_updated: 更新日時
+    no_authority: 権限がありません
+    topic:
+      comment: コメント
+      new: 新規作成
+      edit: 編集
+      submit: 投稿
+      update: 更新
+      delete: 削除
+      browsing_state: 通知先
+      browsed: 閲覧
+      list: トピック一覧へ
+      export_csv: CSV出力
+      confirm: 削除しますか？
+      notice:
+        create: トピックを作成しました。
+        update: トピックを更新しました。
+        delete: トピックを削除しました。
+    comment:
+      comment: コメントする
+      created: 投稿日
+      updated: 最終更新日
+      submit: 投稿
+      update: 更新
+      edit: 編集
+      delete: 削除
+      confirm: 削除しますか？
+      notice:
+        create: コメントを投稿しました。
+        update: コメントを更新しました。
+        delete: コメントを削除しました。
+    csv:
+      - 照会・回答id
+      - タイトル
+      - 状態
+      - 回答者名
+      - 回答欄
+      - 回答日時
+    options:
+      admin_setting:
+        user: 作成者が管理する
+        section: 所属で管理する
+      spec_config:
+        my_group: 回答者のみ表示する
+        other_groups: 他の回答者名を表示する
+        other_groups_and_contents: 他の回答者名と内容を表示する
+      reminder_start_section:
+        post: 配信直後から表示する
+        post_one_day_after: 配信日から1日後に表示
+        post_two_days_after: 配信日から2日後に表示
+        post_three_days_after: 配信日から3日後に表示
+        post_four_days_after: 配信日から4日後に表示
+        post_five_days_after: 配信日から5日後に表示
+        due_date_one_day_ago: 回答期限日の1日前から表示
+        due_date_two_days_ago: 回答期限日の2日前から表示
+        due_date_three_days_ago: 回答期限日の3日前から表示
+        due_date_four_days_ago: 回答期限日の4日前から表示
+        due_date_five_days_ago: 回答期限日の5日前から表示
+        hide: 表示しない
+      mode:
+        thread: スレッド
+        tree: ツリー
+      permit_comment:
+        allow: 許可する
+        deny: 許可しない
+      browsed_state:
+        read: 既読
+        unread: 未読
+      severity:
+        normal: 通常
+        important: 重要
+      state:
+        closed: 未回答
+        public : 受取済み
+        preparation: 受取待ち
+        answered: 回答済み
+        question_not_applicable: 該当なし
+    links:
+      back_to_thread: 戻る
+      comment: 回答する
+      categories: カテゴリー
+      public: 受取済みにする
+      preparation: 受取待ちにする
+      question_not_applicable: 該当なしにする
+      answered: 回答済みにする
+      export_csv: CSVに出力する
+      confirm:
+        public: 受取済みにしますか？
+        preparation: 受取待ちにしますか？
+        question_not_applicable: 該当なしにしますか？
+        answer: 回答済みにしますか？
+        public_all: チェックした項目を受取済みにしますか？
+        preparation_all: チェックした項目を受取待ちにしますか？
+        question_not_applicable_all: チェックした項目を該当なしにしますか？
+
+    errors:
+      denied_comment: コメントの投稿は許可されていません。
+    tabs:
+      unanswer: 未回答
+      answer: 回答済み
+      admin: 作成した設問
+      article_management: 回答管理
+      trash: 削除済み
+    management:
+      links:
+        back_to_topic: 戻る
+        active: 削除を取り消す
+
+  modules:
+    gws/monitor: 照会・回答
+    addons:
+      gws/monitor/category: カテゴリー
+      gws/monitor/contributor: 投稿者
+      gws/monitor/group: 参加グループ
+
+  gws_role:
+    read_other_gws_monitor_posts: 投稿の閲覧（全て）
+    read_private_gws_monitor_posts: 投稿の閲覧（所有）
+    edit_other_gws_monitor_posts: 投稿の編集（全て）
+    edit_private_gws_monitor_posts: 投稿の編集（所有）
+    delete_other_gws_monitor_posts: 投稿の削除（全て）
+    delete_private_gws_monitor_posts: 投稿の削除（所有）
+    read_other_gws_monitor_categories: カテゴリーの閲覧（全て）
+    read_private_gws_monitor_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_monitor_categories: カテゴリーの編集（全て）
+    edit_private_gws_monitor_categories: カテゴリーの編集（所有）
+    delete_other_gws_monitor_categories: カテゴリーの削除（全て）
+    delete_private_gws_monitor_categories: カテゴリーの削除（所有）
+    read_other_gws_monitor_topics: 記事の閲覧（全て）
+    read_private_gws_monitor_topics: 記事の閲覧（所有）
+    edit_other_gws_monitor_topics: 記事の編集（全て）
+    edit_private_gws_monitor_topics: 記事の編集（所有）
+    delete_other_gws_monitor_topics: 記事の削除（全て）
+    delete_private_gws_monitor_topics: 記事の削除（所有）
+
+  mongoid:
+    models:
+      gws/monitor/topic: 照会・回答トピック
+      gws/monitor/post: 照会・回答投稿
+      gws/monitor/category: 照会・回答カテゴリー
+      gws/monitor/group_setting: 照会・回答設定
+      gws/monitor/group_setting/category: カテゴリー
+      gws/monitor/management: 管理
+    errors:
+      models:
+        gws/monitor/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
+        gws/monitor/postable:
+          file_size_exceeds_post_limit: 添付ファイルのサイズ（%{size}）が投稿の最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_topic_limit: 添付ファイルの合計サイズ（%{size}）がトピックの最大サイズ（%{limit}）を超えました。
+    attributes:
+      gws/monitor/postable:
+        name: タイトル
+        created: 投稿日
+        updated: 最終更新日
+        mode: 表示形式
+        permit_comment: コメント
+        severity: 重要度
+      gws/monitor/topic:
+        name: 質問タイトル
+      gws/monitor/post:
+        name: 回答タイトル
+      gws/monitor/group_setting:
+        monitor_new_days: 新着表示期間
+        monitor_file_size: 添付最大サイズ
+        monitor_file_size_per_topic: 添付最大サイズ/トピック単位
+        monitor_file_size_per_post: 添付最大サイズ/投稿単位
+        monitor_browsed_delay: 既読にするまでの秒数
+      gws/monitor/category:
+        name: カテゴリー名
+      gws/addon/monitor/category:
+        category_ids: カテゴリー
+      gws/addon/monitor/contributor:
+        contributor_name: 投稿者名
+      gws/monitor/topic:
+        name: タイトル
+        due_date: 回答期限日時
+        admin_setting: 記事管理設定
+        spec_config: 回答表示設定
+        reminder_start_section: リマインダー表示設定
+
+  tooltip:
+      gws/monitor/postable:
+        name:
+          - タイトルを入力します。
+        mode:
+          - 表示形式を選択します。
+        permit_comment:
+          - コメントを許可するかどうかを選択します。
+        severity:
+          - 重要度を選択します。
+      gws/monitor/group_setting:
+        monitor_new_days:
+          - 新着表示期間を入力します。
+        monitor_file_size_per_topic:
+          - トピック単位での添付最大サイズを入力します。
+        monitor_file_size_per_post:
+          - 投稿単位での添付最大サイズを入力します。
+        monitor_browsed_delay:
+          - 照会・回答を既読にするまでの秒数を入力します。
+      gws/monitor/category:
+        name:
+          - カテゴリー名を入力します。
+      gws/addon/monitor/contributor:
+        contributor_name:
+          - 投稿者名を選択します。
+      gws/addon/monitor/group:
+        group_name:
+          - 参加するグループを選択します。
+      gws/monitor/topic:
+        name:
+          - タイトルを入力します。
+        due_date:
+          - 回答期限日時を選択します。
+        admin_setting:
+          - 記事管理者の範囲を選択します。
+        spec_config:
+          - 回答の表示方法を選択します。
+        reminder_start_section:
+          - リマインダー表示条件を選択します。
+

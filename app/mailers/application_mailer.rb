@@ -3,7 +3,7 @@ class ApplicationMailer
     def set(option)
       if option == :load_settings
         conf = SS.config.mail
-        ActionMailer::Base.delivery_method = conf['delivery_method']
+        ActionMailer::Base.delivery_method = conf['delivery_method'].to_sym
         ActionMailer::Base.default from: conf['default_from'], charset: conf['default_charset']
         if conf['delivery_method'] == 'smtp'
           set_smtp conf
@@ -20,7 +20,7 @@ class ApplicationMailer
         domain: conf['domain'],
         user_name: conf['user_name'],
         password: conf['password'],
-        authentication: conf['authentication'],
+        authentication: conf['authentication'].try(:to_sym),
         enable_starttls_auto: true
       }
     end

@@ -1,0 +1,95 @@
+ja:
+  modules:
+    gws/portal: ポータル
+    addons:
+      gws/portal/portlet/free: 自由形式
+      gws/portal/portlet/link: リンク集
+
+  gws/portal:
+    my_portal: Myポータル
+    user_portal: 個人ポータル
+    group_portal: 部課ポータル
+    root_portal: 全庁ポータル
+    tabs:
+      user_portal: 個人
+      root_portal: 全庁
+    portlets:
+      header:
+        name: ポートレット種別
+        text: 説明
+      schedule:
+        name: スケジュール
+        text: 今週のスケジュールを表示します。
+      reminder:
+        name: リマインダー
+        text: リマインダーを表示します。
+      board:
+        name: 掲示板
+        text: 新着の投稿を表示します。
+      free:
+        name: 自由形式
+        text: 表示内容を自由に記述します。
+      links:
+        name: リンク集
+        text: リンク集を作成します。
+    links:
+      manage_portlets: ポートレットの管理
+      arrange_portlets: ポートレットの配置
+      settings: 設定
+    buttons:
+      save_layouts: 配置を保存する
+      add_item: 新しい要素を追加
+    messages:
+      no_portlets: ポートレットを作成してください。
+
+  gws_role:
+    read_private_gws_portal_my_settings: Myポータル設定の閲覧（所有）
+    edit_private_gws_portal_my_settings: Myポータル設定の編集（所有）
+    delete_private_gws_portal_my_settings: Myポータル設定の削除（所有）
+    read_other_gws_portal_user_settings: 個人ポータル設定の閲覧（全て）
+    read_private_gws_portal_user_settings: 個人ポータル設定の閲覧（所有）
+    edit_other_gws_portal_user_settings: 個人ポータル設定の編集（全て）
+    edit_private_gws_portal_user_settings: 個人ポータル設定の編集（所有）
+    delete_other_gws_portal_user_settings: 個人ポータル設定の削除（全て）
+    delete_private_gws_portal_user_settings: 個人ポータル設定の削除（所有）
+    read_other_gws_portal_group_settings: 部課ポータル設定の閲覧（全て）
+    read_private_gws_portal_group_settings: 部課ポータル設定の閲覧（所有）
+    edit_other_gws_portal_group_settings: 部課ポータル設定の編集（全て）
+    edit_private_gws_portal_group_settings: 部課ポータル設定の編集（所有）
+    delete_other_gws_portal_group_settings: 部課ポータル設定の削除（全て）
+    delete_private_gws_portal_group_settings: 部課ポータル設定の削除（所有）
+    read_other_gws_portal_root_settings: 全庁ポータル設定の閲覧（全て）
+    read_private_gws_portal_root_settings: 全庁ポータル設定の閲覧（所有）
+    edit_other_gws_portal_root_settings: 全庁ポータル設定の編集（全て）
+    edit_private_gws_portal_root_settings: 全庁ポータル設定の編集（所有）
+    delete_other_gws_portal_root_settings: 全庁ポータル設定の削除（全て）
+    delete_private_gws_portal_root_settings: 全庁ポータル設定の削除（所有）
+
+  mongoid:
+    models:
+      gws/portal/setting: ポータル設定
+    attributes:
+      gws/portal/my_setting:
+        name: ポータル名
+        portal_user_id: ポータルユーザー
+      gws/portal/user_setting:
+        name: ポータル名
+        portal_user_id: ポータルユーザー
+      gws/portal/group_setting:
+        name: ポータル名
+        portal_group_id: ポータルグループ
+      gws/portal/portlet_model:
+        name: ポートレット名
+        portlet_model: ポートレット種別
+      gws/addon/portal/portlet/free:
+        html: 内容
+      gws/addon/portal/portlet/link:
+        links/name: 表示名
+        links/url: URL
+
+  tooltip:
+    gws/portal/my_setting:
+    gws/portal/user_setting:
+    gws/portal/group_setting:
+    gws/portal/portlet_model:
+      name: ポートレット名を入力します。

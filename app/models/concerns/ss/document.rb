@@ -181,6 +181,10 @@ module SS::Document
     self.class.tt key, html_wrap
   end
 
+  def addons
+    self.class.addons
+  end
+
   def label(name)
     opts  = send("#{name}_options")
     opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
