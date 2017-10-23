@@ -13,18 +13,41 @@ ja:
     inbox_trash: ゴミ箱
     inbox_draft: 下書き
     inbox_sent: 送信済みトレイ
+  gws/memo/filter:
+    options:
+      action:
+        move: 移動する
+        trash: ゴミ箱に移す
+    errors:
+      blank_conditions: 条件を入力してください。
+      blank_apply_mailbox: 適用するフォルダーを選択してください。
   modules:
     gws/memo: 連絡メモ
     addons:
       gws/memo/comments: コメント
+  gws_role:
+    read_other_gws_memo_messages: 連絡メモの閲覧（全て）
+    read_private_gws_memo_messages: 連絡メモの閲覧（所有）
+    edit_other_gws_memo_messages: 連絡メモの編集（全て）
+    edit_private_gws_memo_messages: 連絡メモの編集（所有）
+    delete_other_gws_memo_messages: 連絡メモの削除（全て）
+    delete_private_gws_memo_messages: 連絡メモの削除（所有）
   mongoid:
     models:
       gws/memo/message: 連絡メモ
       gws/memo/folder: 管理
     attributes:
+      gws/memo/message:
+      gws/memo/comment:
+        name: タイトル
       gws/memo/folder:
         name: フォルダー名
         path: パス
-      gws/memo/comment:
-        name: タイトル
-      gws/memo/message:
+      gws/memo/filter:
+        name: フィルター名
+        from: 条件/差出人
+        subject: 条件/件名
+        action: アクション
+        folder: フォルダー
+        state: 状態
+        order: 並び順
