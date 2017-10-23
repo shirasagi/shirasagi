@@ -1,5 +1,11 @@
 <nav class="main-navi">
-  <h2><%= link_to t('gws.portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
+  <h2><%= link_to t('gws/portal.my_portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
+  <h3><%= link_to t('gws/portal.tabs.user_portal'), gws_portal_user_path(user: @cur_user) %></h3>
+  <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+    <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
+  <% end %>
+  <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
+
   <h2><%= link_to t('mongoid.models.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
 
   <%# if Gws::Schedule::Plan.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -9,6 +15,7 @@
     <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
     <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
   <%# end %>
+  <h2><%= link_to '連絡メモ', gws_memo_messages_path, class: "icon-conv" %></h2>
   <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>
   <% end %>
@@ -22,17 +29,18 @@
     <% end %>
   <% end %>
   <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_path, class: "icon-workflow" %></h2>
+    <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
+    <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
+    <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>
   <% end %>
 
   <h2><%= link_to '回覧板', gws_circular_topics_path, class: 'icon-write' %></h2>
 
+  <% if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t('modules.gws/monitor'), gws_monitor_topics_path %></h2>
+  <% end %>
   <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
-  <% end %>
-  <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path, class: "icon-conv" %></h2>
-    <h2><%= link_to t('gws/staff_record.divide_duties'), gws_staff_record_public_duties_path, class: "icon-conv" %></h2>
   <% end %>
   <% if Gws::SharedAddress::Address.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-conv" %></h2>
@@ -40,11 +48,18 @@
 
   <h2><%= link_to t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-conv" %></h2>
 
-  <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File, Gws::Faq::Topic, Gws::Qna::Topic ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
+  <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File, Gws::Faq::Topic, Gws::Qna::Topic, Gws::Monitor::Topic ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
     <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
   <% end %>
 
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
-
+<%# if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
+<nav class="mod-navi">
+  <h2><%= I18n.t('gws/staff_record.staff_records') %></h2>
+  <h3><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path, class: "icon-conv" %></h3>
+  <h3><%= link_to t('gws/staff_record.divide_duties'), gws_staff_record_public_duties_path, class: "icon-conv" %></h3>
+  <h3><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_public_seatings_path, class: "icon-conv" %></h3>
+</nav>
+<%# end %>
 <%= render partial: 'gws/main/links' %>

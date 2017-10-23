@@ -29,6 +29,15 @@
 #menu .nav-menu .dropdown {
   display: inline;
   .dropdown-menu {
+    left: -4px;
+    min-width: 200px;
+    max-height:300px;
+    overflow: scroll;
+    margin: 0;
+    padding: 4px;
+    border: $border-gray4;
+    background: $white;
+
     a {
       display: block;
       padding: 5px 10px;

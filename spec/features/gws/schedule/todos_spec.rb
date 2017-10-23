@@ -32,7 +32,9 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
     item
     visit gws_schedule_todos_path gws_site
     find('.list-head label.check input').set(true)
-    find('.finish-all').click
+    page.accept_confirm do
+      find('.finish-all').click
+    end
     wait_for_ajax
   end
 
@@ -40,7 +42,9 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
     item
     visit gws_schedule_todos_path gws_site
     find('.list-head label.check input').set(true)
-    find('.revert-all').click
+    page.accept_confirm do
+      find('.revert-all').click
+    end
     wait_for_ajax
   end
 
@@ -48,7 +52,9 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
     item
     visit gws_schedule_todos_path gws_site
     find('.list-head label.check input').set(true)
-    find('.disable-all').click
+    page.accept_confirm do
+      find('.disable-all').click
+    end
     wait_for_ajax
   end
 

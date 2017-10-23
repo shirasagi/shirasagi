@@ -1,79 +1,18 @@
-<%= coffee do %>
-$ ->
-  $(document).on "click", ".update-item", (e) ->
-    approvers = []
-    $(".workflow-multi-select").each (e) ->
-      approvers = approvers.concat($(this).val())
-    $("input[name='workflow_approvers']").each (e) ->
-      approvers.push($(this).prop("value"))
-    if approvers.length == 0 && $(this).attr("type") == "request"
-      alert "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>"
-      return
-    required_counts = []
-    $("input[name='workflow_required_counts']").each (e) ->
-      required_counts.push($(this).prop("value"))
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "pages"
-    updatetype = $(this).attr("updatetype")
-    redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>"
-    if updatetype == "request"
-      forced_update_option = $("#forced-request").prop("checked")
-    else
-      forced_update_option = $("#forced-update").prop("checked")
-    $.ajax
-      type: "post"
-      url: uri.join("/")  + "/" + updatetype + "_update"
-      async: false
-      data:
-        workflow_comment: $("#workflow_comment").prop("value")
-        workflow_pull_up: $("#workflow_pull_up").prop("value") 
-        workflow_approvers: approvers
-        workflow_required_counts: required_counts
-        remand_comment: $("#remand_comment").prop("value")
-        url: "<%= request.url %>"
-        forced_update_option: forced_update_option
-      success: (data) ->
-        if data["workflow_alert"]
-          alert data["workflow_alert"]
-          return
-        if data["workflow_state"] == "approve" && redirect_location != ""
-          location.href = redirect_location
-        else
-          location.reload()
-      error: (xhr, status) ->
-        try
-          errors = $.parseJSON(xhr.responseText)
-          alert(["== Error =="].concat(errors).join("\n"));
-        catch
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+<%= jquery do %>
+  var options = {};
+  options.request_url = "<%= request.url %>";
+  options.workflow_node = "workflow" + "<%= @cur_node? @cur_node.id : "" %>";
+  options.redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>";
+  options.errors = {};
+  options.errors.not_select = "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>";
 
-  $(".mod-workflow-approve").insertBefore("#addon-basic")
-
-  $(".mod-workflow .toggle-label").on "click", (e) ->
-    $(".mod-workflow .request-setting").slideToggle()
-    return false
-
-  $(".workflow-partial-section").each ->
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "wizard"
-    uri = uri.join("/")
-    $.ajax
-      type: "get"
-      url: uri
-      async: false
-      success: (html, status) ->
-        $(".workflow-partial-section").html(html)
-      error: (msg, status) ->
-        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
-
+  var workflow = new SS_Workflow('.mod-workflow', options);
 <% end %>
 
 <div class="mod-workflow">
 
   <% if @item.state == "closed" %>
-    <% if @item.allowed?(:approve, @cur_user) && @item.workflow_state == "request" %>
+    <% if @item.allowed?(:approve, @cur_user, site: @cur_site) && @item.workflow_state == "request" %>
       <% @item.workflow_pull_up_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || @item.approve_disabled?(workflow_approver[:state]) %>
         <section class="mod-workflow-approve">
@@ -92,12 +31,14 @@ $ ->
                 <%= button_tag t("workflow.buttons.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
               </div>
               <div class="checkbox">
-                <% force = @cur_site.forced_update rescue nil %>
-                <% if force == "enabled" %>
-                <%= check_box_tag 'forced-update', true, true, class: 'forced' %><%= t("errors.messages.forced_update") %>
-                <% else %>
-                <%= check_box_tag 'forced-update', true, false, class: 'forced' %><%= t("errors.messages.forced_update") %>
-                <% end %>
+                <label>
+                  <% force = @cur_site.forced_update rescue nil %>
+                  <% if force == "enabled" %>
+                  <%= check_box_tag 'forced-update', true, true, class: 'forced' %><%= t("errors.messages.forced_update") %>
+                  <% else %>
+                  <%= check_box_tag 'forced-update', true, false, class: 'forced' %><%= t("errors.messages.forced_update") %>
+                  <% end %>
+                </label>
               </div>
             </div>
           </div>
@@ -105,12 +46,12 @@ $ ->
       <% end %>
     <% end %>
 
-    <% if @item.allowed?(:edit, @cur_user) && @item.workflow_member.blank? %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @item.workflow_member.blank? %>
       <% if @item.try(:cloned_name?) %>
         <section class="mod-workflow-request">
           <h1><%= t("errors.messages.invalid_approve_name") %></h1>
         </section>
-      <% else %>
+      <% elsif !@item.workflow_requested? %>
         <section class="mod-workflow-request">
           <div class="see request-setting workflow-partial-section"></div>
         </section>
@@ -141,7 +82,12 @@ $ ->
         </dd>
 
         <dt><%= @model.t :workflow_state %></dt>
-        <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
+        <dd>
+          <%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %>
+          <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @item.workflow_requested? %>
+          <%= link_to(t('workflow.buttons.cancel'), { action: :request_cancel }, class: :btn) rescue nil %>
+          <% end %>
+        </dd>
 
         <% if @item.workflow_comment.present? %>
           <dt><%= @model.t :workflow_comment %></dt>
@@ -155,15 +101,48 @@ $ ->
 
         <dt><%= @model.t :workflow_approvers %></dt>
         <dd>
-          <% @item.workflow_approvers.each do |workflow_approver| %>
-            <% user  = SS::User.where(id: workflow_approver[:user_id]).first %>
-            <% state = t("workflow.state.#{workflow_approver[:state]}") %>
-            <% if user %>
-              <%= "#{workflow_approver[:level]}:#{user.long_name}(#{user.email})：#{state}" %><br /><%= workflow_approver[:comment] %><br />
-            <% else %>
-              <%= "#{workflow_approver[:level]}:#{t("workflow.user_deleted")}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+          <% if @item.workflow_approvers.present? %>
+          <table class="index">
+            <tbody>
+            <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
+              <% workflow_approvers.each_with_index do |workflow_approver, index| %>
+              <% user_id = workflow_approver[:user_id] %>
+              <% user = SS::User.where(id: user_id).first %>
+              <% state = workflow_approver[:state] %>
+              <tr>
+                <% if index == 0 %>
+                <td rowspan="<%= workflow_approvers.count %>">
+                  <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+                </td>
+                <td rowspan="<%= workflow_approvers.count %>">
+                  <% required_count = @item.workflow_required_counts[level - 1] %>
+                  <% if required_count %>
+                    <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
+                  <% else %>
+                    <%= t('workflow.required_count_label.all') %>
+                  <% end %>
+                </td>
+                <% end %>
+                <td>
+                <% if user %>
+                  <%= "#{user.long_name}(#{user.email})" %>
+                <% else %>
+                  <%= t("workflow.user_deleted") %>
+                <% end %>
+                <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
+                  <%= link_to('#', class: 'workflow-reroute', data: { level: level, user_id: user_id }) do %>
+                    <i class="material-icons" style="font-size: inherit">&#xE254;</i>
+                  <% end %>
+                <% end %>
+                </td>
+                <td><%= t("workflow.state.#{state}") %></td>
+                <td><%= workflow_approver[:comment] %></td>
+              </tr>
+              <% end %>
             <% end %>
-          <% end if @item.workflow_approvers.present? %>
+            </tbody>
+          </table>
+          <% end %>
         </dd>
 
       <% end %>

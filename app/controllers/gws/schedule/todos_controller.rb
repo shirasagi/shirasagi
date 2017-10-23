@@ -37,6 +37,21 @@ class Gws::Schedule::TodosController < ApplicationController
         page(params[:page]).per(50)
   end
 
+  def create
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    render_create @item.save, location: redirection_url
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    render_update @item.update, location: redirection_url
+  end
+
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.disable

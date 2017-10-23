@@ -6,8 +6,13 @@ class Workflow::Mailer < ActionMailer::Base
     @page      = args[:page]
     @url       = args[:url]
     @comment   = args[:comment]
+    @site      = args[:site]
 
-    mail from: @from_user.email, to: @to_user.email
+    from_email = format_email(@from_user) || default_sender(@site)
+    to_email = format_email(@to_user)
+    return nil if from_email.blank? || to_email.blank?
+
+    mail from: from_email, to: to_email
   end
 
   def approve_mail(args)
@@ -17,7 +22,11 @@ class Workflow::Mailer < ActionMailer::Base
     @page      = args[:page]
     @url       = args[:url]
 
-    mail from: @from_user.email, to: @to_user.email
+    from_email = format_email(@from_user) || default_sender(@site)
+    to_email = format_email(@to_user)
+    return nil if from_email.blank? || to_email.blank?
+
+    mail from: from_email, to: to_email
   end
 
   def remand_mail(args)
@@ -28,6 +37,25 @@ class Workflow::Mailer < ActionMailer::Base
     @url       = args[:url]
     @comment   = args[:comment]
 
-    mail from: @from_user.email, to: @to_user.email
+    from_email = format_email(@from_user) || default_sender(@site)
+    to_email = format_email(@to_user)
+    return nil if from_email.blank? || to_email.blank?
+
+    mail from: from_email, to: to_email
+  end
+
+  private
+
+  def format_email(user)
+    return nil if user.blank? || user.email.blank?
+
+    if user.name.present?
+      "#{user.name} <#{user.email}>"
+    else
+      user.email
+    end
+  end
+
+  def default_sender(site)
   end
 end

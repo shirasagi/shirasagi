@@ -18,7 +18,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true do
         group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
     end
     let(:item) { create :gws_workflow_file }
-    let(:show_path) { gws_workflow_file_path site, item }
+    let(:show_path) { gws_workflow_file_path(site, item, state: 'all') }
     let(:workflow_comment) { unique_id }
     let(:remand_comment1) { unique_id }
     let(:remand_comment2) { unique_id }

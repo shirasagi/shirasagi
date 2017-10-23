@@ -1,4 +1,4 @@
-module Gws::File
+class Gws::File
   class Initializer
     Gws::GroupSetting.plugin Gws::File::GroupSetting, ->{ gws_file_setting_path }
 

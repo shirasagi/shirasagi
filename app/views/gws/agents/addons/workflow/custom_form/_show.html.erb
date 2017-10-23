@@ -1,0 +1,19 @@
+<% return if @item.custom_values.blank? %>
+
+<dl class="see mod-gws-workflow-custom_form">
+<% @item.custom_values.sort_by { |key, val| val['order'] }.each do |key, val| %>
+  <% input_type = val['input_type'] %>
+  <% if input_type == 'upload_file' %>
+    <%= render partial: 'gws/agents/addons/workflow/custom_form/show_file', locals: { val: val } %>
+  <% else %>
+    <dt><%= val['name'] %></dt>
+    <dd><%= br [ Gws::Workflow::Column.from_mongo(val['input_type'], val['value']) ].flatten.join(', ') %></dd>
+  <% end %>
+<% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-ss-agents-addons-markdown').hide();
+  $('#addon-gws-agents-addons-file').hide();
+  $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+<% end %>

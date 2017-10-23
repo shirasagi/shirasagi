@@ -65,6 +65,7 @@ ja:
       reset_tags: タグ解除
       upload: アップロード
       decode: デコードする
+      print: 印刷する
     buttons:
       save: 保存
       new: 新規作成
@@ -100,6 +101,8 @@ ja:
       download: ダウンロード
       add: 追加
       print: 印刷
+      select_all: 全て選択
+      deselect_all: 全て解除
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -179,6 +182,8 @@ ja:
         remand: 差し戻し
         start: 選択
         cancel: 取消
+        allow: 許可する
+        deny: 許可しない
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)
