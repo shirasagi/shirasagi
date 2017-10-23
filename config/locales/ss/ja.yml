@@ -467,7 +467,7 @@ ja:
         args: パラメータ
         logs: ログ
         save_term: 保存期間
-      ss/addon/editor_setting:
+      ss/model/editor_setting:
         color_button: 文字色変更ボタン
         editor_css_path: スタイルシートパス
         syntax_check: アクセシビリティチェック
@@ -726,7 +726,7 @@ ja:
         - 並び順を設定します
       state:
         - 制限の有効/無効を設定します
-    ss/addon/editor_setting:
+    ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。
       editor_css_path:
