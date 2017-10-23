@@ -1,9 +1,12 @@
 <%= jquery do %>
   $('.gws-category-navi-menu #category_id').change(function() {
     var cid = $(this).val();
-    if (cid) location.href = '<%= gws_monitor_category_topics_path(category: 'ID') %>'.replace('ID', cid);
-    else location.href = '<%= gws_monitor_topics_path %>';
+    if (cid) location.href = '<%= gws_monitor_category_management_topics_path(category: 'ID') %>'.replace('ID', cid);
+    else location.href = '<%= gws_monitor_management_topics_path %>';
   });
+
+  $(".gws-monitor-tabs .article_management").addClass("current");
+
 <% end %>
 
 <div class="gws-category-navi-menu">
@@ -18,6 +21,7 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <% next unless item.active? %>
+    <% next unless item.topic_admin?(@cur_user.id, @cur_group.id) %>
         <%
           css_classes = %w(list-item)
           if item.subscribed_groups.where(id: @cur_user.id).present?
@@ -39,7 +43,6 @@
             <% end %>
           </nav>
 
-          <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
           <div class="info">
             <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
             <%= link_to item.name, { action: :show, id: item }, class: "title" %>
@@ -50,13 +53,15 @@
             <div class="meta">
               <span class="id">#<%= item.id %></span>
               <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+              <span class="article_state"><%= item.article_state_name %></span>
               <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
               <span class="categories">
-            <% item.categories.compact.each do |category| %>
-              <%= link_to category.trailing_name, gws_monitor_category_topics_path(category: category.id),
-                          class: "gws-category-label", style: category_label_css(category) %>
-            <% end %>
-          </span>
+              <% item.categories.compact.each do |category| %>
+                <%= link_to category.trailing_name, gws_monitor_category_management_topics_path(category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+              <% end %>
+              </span>
+              <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count %></span>
             </div>
           </div>
         </li>

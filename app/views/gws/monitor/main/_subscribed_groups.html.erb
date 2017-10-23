@@ -1,0 +1,68 @@
+<article class="topic">
+  <header>
+    <h2><%= I18n.t('gws/monitor.topic.browsing_state') %></h2>
+  </header>
+
+  <div class="toggle-body">
+    <div class="body">
+      <table class="index">
+        <thead>
+        <tr>
+          <th class="state"><%= I18n.t('gws/monitor.topic.type') %></th>
+          <th class="mark_at"><%= I18n.t('gws/monitor.topic.mark_at') %></th>
+          <th class="udpate_at"><%= I18n.t('gws/monitor.topic.update_at') %></th>
+          <th class="group"><%= I18n.t('gws/monitor.topic.group') %></th>
+          <th class="user"><%= I18n.t('gws/monitor.topic.user') %></th>
+          <th class="contents"><%= I18n.t('gws/monitor.topic.contents') %></th>
+          <th class="file"><%= I18n.t('gws/monitor.topic.file') %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if params[:controller] =~ /admin/ %>
+            <% subscribed_groups = @item.subscribed_groups.to_a %>
+            <% subscribed_groups.each do |group| %>
+                <% post = @item.children.where(user_group_id: group.id).last %>
+                <td class="state"><%= @item.state_name(group.id) %></td>
+                <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
+                <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
+                <td class="group"><%= group.name %></td>
+                <td class="user"><%= post ? post.try(:contributor_name) : '' %></td>
+                <td class="contents"><%= post ? post.try(:text) : '' %></td>
+                <td class="file">
+                  <% if post && post.file_ids.present? %>
+                      <img src="/assets/img/gws/ic-file.png" alt="" /><%= post.file_ids.count %>
+                  <% else %>
+                      <%=  '' %>
+                  <% end %>
+                </td>
+                </tr>
+            <% end %>
+        <% else %>
+            <% if @item.spec_config == '0' %>
+                <% subscribed_groups = @item.subscribed_groups.where(id: @cur_group.id) %>
+            <% else %>
+                <% subscribed_groups = @item.subscribed_groups.to_a %>
+            <% end %>
+            <% subscribed_groups.each do |group| %>
+                <% post = @item.children.where(user_group_id: group.id).last %>
+                <td class="state"><%= @item.state_name(group.id) %></td>
+                <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
+                <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
+                <td class="group"><%= group.name %></td>
+                <td class="user"><%= post ? post.try(:contributor_name) : '' %></td>
+                <td class="contents"><%= post && @item.spec_config != "3" ? post.try(:text) : '' %></td>
+                <td class="file">
+                  <% if post && post.file_ids.present? && @item.spec_config != "3" %>
+                      <img src="/assets/img/gws/ic-file.png" alt="" /><%= post.file_ids.count %>
+                  <% else %>
+                      <%=  '' %>
+                  <% end %>
+                </td>
+                </tr>
+            <% end %>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</article>
