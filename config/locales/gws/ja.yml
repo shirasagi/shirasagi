@@ -205,6 +205,8 @@ ja:
         member_custom_group_ids: 参加カスタムグループ
       gws/group_setting/system:
         sendmail_domains: メール送信許可ドメイン
+        canonical_scheme: グループウェアスキーム
+        canonical_domain: グループウェアドメイン
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー
@@ -271,6 +273,12 @@ ja:
     gws/group_setting/system:
       sendmail_domains:
         - メール送信許可ドメインを入力します。
+      canonical_scheme:
+        - グループウェアスキームを選択します。
+        - システムからメールを送信する際、メールに記載される URL がここで設定したスキームになります。
+      canonical_domain:
+        - グループウェアドメインを入力します。
+        - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
     gws/addon/group_permission:
       custom_group_ids:
         - このページを編集可能にするカスタムグループを選択します。
