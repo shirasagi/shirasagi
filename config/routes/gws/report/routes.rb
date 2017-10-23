@@ -18,7 +18,7 @@ SS::Application.routes.draw do
     resources :categories, concerns: [:deletion]
 
     scope :files do
-      get '/' => redirect { |p, req| "#{req.path}/all" }, as: :files_main
+      get '/' => redirect { |p, req| "#{req.path}/inbox" }, as: :files_main
       resources :files, path: ':state', concerns: [:deletion] do
         get :print, on: :member
       end

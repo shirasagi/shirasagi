@@ -1,5 +1,11 @@
 ja:
   gws/report:
+    options:
+      file_state:
+        inbox: 受信一覧
+        sent: 送信一覧
+        closed: 下書き
+        all: すべて
     apis:
       files:
         index: レポートを選択する

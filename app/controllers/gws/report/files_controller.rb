@@ -12,7 +12,10 @@ class Gws::Report::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("modules.gws/report"), action: :index]
+    @crumbs << [t('modules.gws/report'), action: :index]
+    if params[:state].present?
+      @crumbs << [t("gws/report.options.file_state.#{params[:state]}"), gws_report_files_path(state: params[:state])]
+    end
   end
 
   def set_forms
@@ -66,6 +69,7 @@ class Gws::Report::FilesController < ApplicationController
   def set_search_params
     @s = OpenStruct.new params[:s]
     @s.state = params[:state] if params[:state]
+    @s.cur_site = @cur_site
     @s.cur_user = @cur_user
   end
 
@@ -73,16 +77,16 @@ class Gws::Report::FilesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).
-      search(params[:s]).
+      readable(@cur_user, site: @cur_site).
+      search(@s).
       order_by(updated: -1, id: -1).
       page(params[:page]).per(50)
   end
 
-  # def show
-  #   raise '403' unless @item.readable?(@cur_user, site: @cur_site)
-  #   render
-  # end
+  def show
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+    render
+  end
 
   def new
     if params[:form_id].blank?

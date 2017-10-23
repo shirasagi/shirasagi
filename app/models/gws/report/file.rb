@@ -22,6 +22,9 @@ class Gws::Report::File
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :name, presence: true, length: { maximum: 80 }
 
+  scope :and_public, -> { where(state: 'public') }
+  scope :and_closed, -> { where(state: 'closed') }
+
   class << self
     def search(params)
       criteria = all
@@ -38,19 +41,24 @@ class Gws::Report::File
     end
 
     def search_state(params)
-      return all if params[:state].blank? || params[:cur_user].blank?
+      return all if params[:state].blank? || params[:cur_site].blank? || params[:cur_user].blank?
 
+      cur_site = params[:cur_site]
       cur_user = params[:cur_user]
       case params[:state]
-        when 'approve'
-          all.where(
-            workflow_state: 'request',
-            workflow_approvers: { '$elemMatch' => { 'user_id' => cur_user.id, 'state' => "request" } }
-          )
-        when 'request'
-          all.where(workflow_user_id: cur_user.id)
-        else
-          all
+      when 'inbox'
+        conds = [{ member_ids: cur_user.id }]
+        custom_group_ids = Gws::CustomGroup.site(cur_site).member(cur_user).pluck(:id)
+        if custom_group_ids.present?
+          conds << { :member_custom_group_ids.in => custom_group_ids }
+        end
+        all.and_public.where('$and' => [{ '$or' => conds }])
+      when 'sent'
+        all.and_public.where(user_id: cur_user.id)
+      when 'closed'
+        all.and_closed.where(user_id: cur_user.id)
+      else
+        all.readable(cur_user, site: cur_site)
       end
     end
   end
