@@ -43,6 +43,8 @@ ja:
         order: 並び順
         required: 必須入力
         tooltips: ツールチップ
+        prefix_label: 前ラベル
+        postfix_label: 後ラベル
       gws/column/text_field:
         input_type: 種類
       gws/column/date_field:
@@ -69,6 +71,10 @@ ja:
         - 数字が小さいほど上位に表示されます。
       tooltips:
         - 項目のツールチップを入力します。
+      prefix_label:
+        - 入力項目の前に表示するラベルを入力します。
+      postfix_label:
+        - 入力項目の後に表示するラベルを入力します。
 
     gws/column/text_field:
       input_type:

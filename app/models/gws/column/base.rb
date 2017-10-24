@@ -11,8 +11,10 @@ class Gws::Column::Base
   field :order, type: Integer
   field :required, type: String, default: 'required'
   field :tooltips, type: SS::Extensions::Lines
+  field :prefix_label, type: String
+  field :postfix_label, type: String
 
-  permit_params :name, :order, :required, :tooltips
+  permit_params :name, :order, :required, :tooltips, :prefix_label, :postfix_label
 
   before_validation :set_form_id, if: ->{ @cur_form }
 
@@ -20,6 +22,8 @@ class Gws::Column::Base
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :required, inclusion: { in: %w(required optional), allow_blank: true }
+  validates :prefix_label, length: { maximum: 80 }
+  validates :postfix_label, length: { maximum: 80 }
 
   class << self
     def search(params = {})

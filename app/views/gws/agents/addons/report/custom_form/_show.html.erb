@@ -7,7 +7,11 @@
     <%= render file: column.column_show_path, locals: { column: column, value: value } %>
   <% else %>
     <dt><%= value.name %></dt>
-    <dd><%= value.value %></dd>
+    <dd>
+      <%= column.try(:prefix_label) %>
+      <%= value.value %>
+      <%= column.try(:postfix_label) %>
+    </dd>
   <% end %>
 <% end %>
 </dl>
