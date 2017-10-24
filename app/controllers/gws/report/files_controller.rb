@@ -99,7 +99,7 @@ class Gws::Report::FilesController < ApplicationController
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site) || @item.member?(@cur_user)
     render
   end
 
