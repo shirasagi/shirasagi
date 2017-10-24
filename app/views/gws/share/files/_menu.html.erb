@@ -1,3 +1,11 @@
+<nav class="nav-management-menu">
+  <% if Gws::Share::File.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to gws_share_folders_path do %>
+        <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
+    <% end %>
+  <% end %>
+</nav>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%#= link_to t("gws/share.links.categories"), categories_gws_share_files_path %>
