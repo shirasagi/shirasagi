@@ -10,6 +10,6 @@ module Webmail::MailHelper
   end
 
   def account_options(path_helper)
-    @cur_user.imap_settings.map.with_index { |setting, i| [ setting.imap_account, send(path_helper, i) ] }
+    @cur_user.imap_settings.map.with_index { |setting, i| [ setting.address, send(path_helper, i) ] }
   end
 end

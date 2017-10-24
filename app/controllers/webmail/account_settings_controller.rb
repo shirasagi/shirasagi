@@ -24,7 +24,7 @@ class Webmail::AccountSettingsController < ApplicationController
       :imap_sent_box, :imap_draft_box, :imap_trash_box,
       {
         imap_settings: [
-          :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+          :address, :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
           :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
           :default
         ]
@@ -47,6 +47,7 @@ class Webmail::AccountSettingsController < ApplicationController
     conf = @cur_user.imap_default_settings
 
     @defaults = {
+      address: @cur_user.email,
       host: "#{label} / #{conf[:host]}",
       auth_type: "#{label} / #{conf[:auth_type]}",
       account: "#{label} / #{conf[:account]}",

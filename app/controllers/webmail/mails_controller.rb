@@ -208,6 +208,24 @@ class Webmail::MailsController < ApplicationController
     render_change :unset_star, redirect: { action: :show }
   end
 
+  def send_mdn
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :rfc822
+    else
+      @item = @imap.mails.find params[:id], :rfc822
+    end
+    @item.imap = @imap
+    @item.send_mdn
+    @imap.uids_set_mdn_sent get_uids
+
+    render_change :send_mdn, redirect: { action: :show }
+  end
+
+  def ignore_mdn
+    @imap.uids_set_mdn_sent get_uids
+    render_change :ignore_mdn, redirect: { action: :show }
+  end
+
   def copy
     @imap.uids_copy get_uids, params[:dst]
     render_change :copy, reload: true

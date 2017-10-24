@@ -16,7 +16,8 @@ class Webmail::Mail
 
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
-                :to_text, :cc_text, :bcc_text
+                :to_text, :cc_text, :bcc_text,
+                :in_request_mdn, :in_request_dsn
 
   field :host, type: String
   field :account, type: String
@@ -39,10 +40,12 @@ class Webmail::Mail
   field :content_type, type: String
   field :subject, type: String
   field :has_attachment, type: Boolean
+  field :disposition_notification_to, type: Array, default: []
 
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
                 :subject, :text, :html, :format,
                 :to_text, :cc_text, :bcc_text,
+                :in_request_mdn, :in_request_dsn,
                 to: [], cc: [], bcc: [], reply_to: []
 
   validates :host, presence: true, uniqueness: { scope: [:account, :mailbox, :uid] }
@@ -104,6 +107,26 @@ class Webmail::Mail
     msg = msg.deliver_now.to_s
     replied_mail.set_answered if replied_mail
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
+    true
+  end
+
+  def requested_mdn?
+    return false if flags.include?(:"$MDNSent")
+    return false if disposition_notification_to.blank?
+
+    to.each do |mdn_to|
+      mdn_to = Webmail::Converter.extract_address(mdn_to)
+      return true if mdn_to == imap.address
+    end
+    return false
+  end
+
+  def send_mdn
+    return false unless requested_mdn?
+
+    msg = Webmail::Mailer.mdn_message(self)
+    return false unless validate_message(msg)
+    msg.deliver_now
     true
   end
 

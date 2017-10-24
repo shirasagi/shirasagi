@@ -31,6 +31,9 @@
 <% end %>
 
 <dl class="see mod-webmail-account">
+  <dt><%= @model.t :address %><%= @model.tt :address %></dt>
+  <dd><%= text_field_tag "item[imap_settings][][address]", setting.address, placeholder: @defaults[:address], class: :address %></dd>
+
   <dt><%= @model.t :imap_host %><%= @model.tt :imap_host %></dt>
   <dd><%= text_field_tag "item[imap_settings][][imap_host]", setting.imap_host, placeholder: @defaults[:host], class: :imap_host %></dd>
 
