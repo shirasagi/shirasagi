@@ -113,6 +113,7 @@ ja:
       webmail/filter: フィルター
     attributes:
       ss/model/user:
+        address: メールアドレス
         imap_host: IMAP/ホスト
         imap_auth_type: IMAP/認証方式
         imap_account: IMAP/ユーザー名

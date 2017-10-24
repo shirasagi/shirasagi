@@ -118,10 +118,11 @@ class Webmail::Mail
 
   def requested_mdn?
     return false if flags.include?(:"$MDNSent")
+    return false if disposition_notification_to.blank?
 
-    disposition_notification_to.each do |mdn_to|
+    to.each do |mdn_to|
       mdn_to = Webmail::Converter.extract_address(mdn_to)
-      return true if mdn_to == imap.user.email
+      return true if mdn_to == imap.address
     end
     return false
   end

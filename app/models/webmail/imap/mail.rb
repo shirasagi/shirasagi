@@ -152,7 +152,7 @@ module Webmail::Imap
     end
 
     def update_flags(action, uids)
-      resp = @imap.send("uids_#{action}", uids)
+      resp = imap.send("uids_#{action}", uids)
       resp = resp.map do |data|
         [ data.attr['UID'], data]
       end.to_h

@@ -6,7 +6,7 @@ module Webmail::Mail::Message
       to: merge_address_field(to, to_text),
       cc: merge_address_field(cc, cc_text),
       bcc: merge_address_field(bcc, bcc_text),
-      from: imap.user.email_address,
+      from: imap.email_address,
       subject: subject
     }
     headers[:in_reply_to] = "<#{in_reply_to}>" if in_reply_to.present?

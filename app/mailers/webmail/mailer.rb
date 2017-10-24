@@ -35,7 +35,7 @@ class Webmail::Mailer < ActionMailer::Base
 
     msg = mail(
       to: item.disposition_notification_to,
-      from: item.from.first,
+      from: item.imap.email_address,
       body: ''
     )
     msg.content_type = 'multipart/report; report-type=disposition-notification'

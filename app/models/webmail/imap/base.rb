@@ -3,18 +3,23 @@ module Webmail::Imap
   class Base
     include Webmail::Imap::UidsCommand
 
-    attr_accessor :user, :conf, :conn, :error
+    attr_accessor :user, :conf, :conn, :error, :address
     attr_reader :sent_box, :draft_box, :trash_box
 
     def initialize(user, setting)
       self.user  = user
       self.conf  = setting.imap_settings(user.imap_default_settings)
 
-      @sent_box  = setting.imap_sent_box
-      @draft_box = setting.imap_draft_box
-      @trash_box = setting.imap_trash_box
+      @address   = conf[:address]
+      @sent_box  = conf[:imap_sent_box]
+      @draft_box = conf[:imap_draft_box]
+      @trash_box = conf[:imap_trash_box]
 
       self
+    end
+
+    def email_address
+      %(#{user.name} <#{address}>)
     end
 
     def login
