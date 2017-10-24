@@ -25,8 +25,8 @@ class Job::Log
       log
     end
 
-    def create_from_active_job(job)
-      self.create(
+    def create_from_active_job!(job)
+      self.create!(
         site_id: job.try(:site_id),
         user_id: job.try(:user_id),
         job_id: job.job_id,

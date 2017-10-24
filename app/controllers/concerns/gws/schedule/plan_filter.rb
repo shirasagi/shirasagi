@@ -59,7 +59,7 @@ module Gws::Schedule::PlanFilter
 
   def create
     @item = @model.new get_params
-    @item.set_facility_custom_values(params)
+    @item.set_facility_column_values(params)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_create @item.save, location: redirection_url
@@ -67,7 +67,7 @@ module Gws::Schedule::PlanFilter
 
   def update
     @item.attributes = get_params
-    @item.set_facility_custom_values(params)
+    @item.set_facility_column_values(params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 

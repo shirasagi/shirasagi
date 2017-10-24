@@ -8,7 +8,7 @@ module Job::SS::Loggable
   private
 
   def perform_with_job_log
-    job_log = create_job_log
+    job_log = create_job_log!
     prev_job_log = Job::TaskLogger.attach(job_log)
     ret = nil
     begin
@@ -37,8 +37,8 @@ module Job::SS::Loggable
     ret
   end
 
-  def create_job_log
-    Job::Log.create_from_active_job(self)
+  def create_job_log!
+    Job::Log.create_from_active_job!(self)
   end
 
   def system_error?(e)

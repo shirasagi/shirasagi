@@ -8,17 +8,17 @@
     <table class="index">
       <thead>
       <tr>
-        <th class="name"><%= Gws::Workflow::Column.t(:name) %></th>
-        <th class="input_type"><%= Gws::Workflow::Column.t(:input_type) %></th>
-        <th class="required"><%= Gws::Workflow::Column.t(:required) %></th>
-        <th class="datetime"><%= Gws::Workflow::Column.t(:updated) %></th>
+        <th class="name"><%= Gws::Column::Base.t(:name) %></th>
+        <th class="input_type"><%= Gws::Column::Base.model_name.human %></th>
+        <th class="required"><%= Gws::Column::Base.t(:required) %></th>
+        <th class="datetime"><%= Gws::Column::Base.t(:updated) %></th>
       </tr>
       </thead>
       <tbody>
       <% @item.columns.order_by(order: 1, id: 1).each do |column| %>
       <tr>
         <td class="name"><%= column.name %></td>
-        <td class="input_type"><%= column.label(:input_type) %></td>
+        <td class="input_type"><%= column.class.model_name.human %></td>
         <td class="required"><%= column.label(:required) %></td>
         <td class="datetime"><%= tryb { I18n.l(column.updated) } %></td>
       </tr>

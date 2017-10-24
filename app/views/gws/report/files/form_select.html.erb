@@ -1,0 +1,27 @@
+<div class="index">
+  <%= render file: '_form_list_head' %>
+
+  <ul class="list-items">
+    <% @forms.each do |form| %>
+    <li class="list-item">
+      <div class="info">
+        <% title = form.try(:name) || form.try(:title) || form.try(:filename) || "##{form.id}" %>
+        <%= link_to title, new_gws_report_form_file_path(form_id: form), class: 'title' %>
+
+        <div class="meta">
+          <span class="datetime"><%= I18n.l(form.updated) %></span>
+          <span class="state"><%= form.label(:state) %></span>
+          <span class="order"><%= form.order %></span>
+          <span class="categories">
+            <% form.categories.compact.each do |category| %>
+              <%= link_to category.trailing_name, { s: { category_ids: [ category.id ] } }, class: 'gws-category-label', style: category_label_css(category) %>
+            <% end %>
+          </span>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @forms if @forms.try(:current_page) %>

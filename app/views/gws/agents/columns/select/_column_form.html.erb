@@ -1,0 +1,7 @@
+<% value ||= nil %>
+<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
+<dd>
+  <%= column.prefix_label %>
+  <%= select_tag("#{object_name}[#{column.id}]", options_for_select(column.select_options, selected: value.try(:value)), column.form_options.merge(include_blank: column.place_holder.presence || true)) %>
+  <%= column.postfix_label %>
+</dd>
