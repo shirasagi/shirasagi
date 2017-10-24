@@ -8,14 +8,16 @@ describe Workflow::Addon::Approver do
 
   describe "#workflow_approvers" do
     context "when csv is given" do
-      subject { model.new({ workflow_approvers: [ "", "1,2,pending,", "2,1,pending," ] }) }
+      subject { model.new({ workflow_approvers: [ "", "1,2,,pending,", "2,1,1,pending," ] }) }
       it { expect(subject.workflow_approvers.size).to eq 2 }
       it { expect(subject.workflow_approvers[0][:level]).to eq 1 }
       it { expect(subject.workflow_approvers[0][:user_id]).to eq 2 }
+      it { expect(subject.workflow_approvers[0][:editable]).to eq '' }
       it { expect(subject.workflow_approvers[0][:state]).to eq "pending" }
       it { expect(subject.workflow_approvers[0][:comment]).to eq "" }
       it { expect(subject.workflow_approvers[1][:level]).to eq 2 }
       it { expect(subject.workflow_approvers[1][:user_id]).to eq 1 }
+      it { expect(subject.workflow_approvers[1][:editable]).to eq 1 }
       it { expect(subject.workflow_approvers[1][:state]).to eq "pending" }
       it { expect(subject.workflow_approvers[1][:comment]).to eq "" }
     end
@@ -24,16 +26,18 @@ describe Workflow::Addon::Approver do
       subject do
         model.new({ workflow_approvers: [
           nil,
-          { level: 1, user_id: 2, state: "pending", comment: "" },
-          { level: 2, user_id: 1, state: "pending", comment: "" } ] })
+          { level: 1, user_id: 2, editable: '', state: "pending", comment: "" },
+          { level: 2, user_id: 1, editable: 1, state: "pending", comment: "" } ] })
       end
       it { expect(subject.workflow_approvers.size).to eq 2 }
       it { expect(subject.workflow_approvers[0][:level]).to eq 1 }
       it { expect(subject.workflow_approvers[0][:user_id]).to eq 2 }
+      it { expect(subject.workflow_approvers[0][:editable]).to eq '' }
       it { expect(subject.workflow_approvers[0][:state]).to eq "pending" }
       it { expect(subject.workflow_approvers[0][:comment]).to eq "" }
       it { expect(subject.workflow_approvers[1][:level]).to eq 2 }
       it { expect(subject.workflow_approvers[1][:user_id]).to eq 1 }
+      it { expect(subject.workflow_approvers[1][:editable]).to eq 1 }
       it { expect(subject.workflow_approvers[1][:state]).to eq "pending" }
       it { expect(subject.workflow_approvers[1][:comment]).to eq "" }
     end
@@ -119,7 +123,7 @@ describe Workflow::Addon::Approver do
       context "when there is 2 approvers at level 1, 1 approvers at level 2" do
         context "when non of approvers is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,request,", "1,2,request,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,request,", "1,2,,request,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 1 }
@@ -128,7 +132,7 @@ describe Workflow::Addon::Approver do
 
         context "when user 1 at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,approve,", "1,2,request,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,approve,", "1,2,,request,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 1 }
@@ -137,7 +141,7 @@ describe Workflow::Addon::Approver do
 
         context "when user 2 at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,pending,", "1,2,approve,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,pending,", "1,2,,approve,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 1 }
@@ -146,7 +150,7 @@ describe Workflow::Addon::Approver do
 
         context "when all users at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,approve,", "1,2,approve,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,approve,", "1,2,,approve,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 2 }
@@ -155,7 +159,7 @@ describe Workflow::Addon::Approver do
 
         context "when all users at all levels is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,approve,", "1,2,approve,", "2,3,approve," ],
+            model.new({ workflow_approvers: [ "1,1,,approve,", "1,2,,approve,", "2,3,1,approve," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to be_nil }
@@ -169,7 +173,7 @@ describe Workflow::Addon::Approver do
       context "when there is 2 approvers at level 1, 1 approvers at level 2" do
         context "when non of approvers is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,request,", "1,2,request,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,request,", "1,2,,request,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 1 }
@@ -178,7 +182,7 @@ describe Workflow::Addon::Approver do
 
         context "when user 1 at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,approve,", "1,2,request,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,approve,", "1,2,,request,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 2 }
@@ -187,7 +191,7 @@ describe Workflow::Addon::Approver do
 
         context "when user 2 at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,pending,", "1,2,approve,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,pending,", "1,2,,approve,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 2 }
@@ -196,7 +200,7 @@ describe Workflow::Addon::Approver do
 
         context "when all users at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,approve,", "1,2,approve,", "2,3,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,approve,", "1,2,,approve,", "2,3,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 2 }
@@ -205,7 +209,7 @@ describe Workflow::Addon::Approver do
 
         context "when user 2 at level 1 is approved, user 3 at level 2 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,pending,", "1,2,approve,", "2,3,approve," ],
+            model.new({ workflow_approvers: [ "1,1,,pending,", "1,2,,approve,", "2,3,1,approve," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to be_nil }
@@ -219,7 +223,7 @@ describe Workflow::Addon::Approver do
       context "when there is 3 approvers at level 1, 1 approvers at level 2" do
         context "when none of approvers is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,request,", "1,2,request,", "1,3,request,", "2,4,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,request,", "1,2,,request,", "1,3,,request,", "2,4,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 1 }
@@ -227,7 +231,7 @@ describe Workflow::Addon::Approver do
 
         context "when 1 user at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,approve,", "1,2,request,", "1,3,request,", "2,4,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,approve,", "1,2,,request,", "1,3,,request,", "2,4,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 1 }
@@ -235,7 +239,7 @@ describe Workflow::Addon::Approver do
 
         context "when 2 users at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,request,", "1,2,approve,", "1,3,approve,", "2,4,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,request,", "1,2,,approve,", "1,3,,approve,", "2,4,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 2 }
@@ -243,7 +247,7 @@ describe Workflow::Addon::Approver do
 
         context "when all users at level 1 is approved" do
           subject do
-            model.new({ workflow_approvers: [ "1,1,approve,", "1,2,approve,", "1,3,approve,", "2,4,pending," ],
+            model.new({ workflow_approvers: [ "1,1,,approve,", "1,2,,approve,", "1,3,,approve,", "2,4,1,pending," ],
                         workflow_required_counts: required_counts})
           end
           it { expect(subject.workflow_current_level).to eq 2 }
@@ -254,7 +258,7 @@ describe Workflow::Addon::Approver do
 
   describe "#set_workflow_approver_state_to_request" do
     subject do
-      model.new({ workflow_approvers: [ "1,1,pending,", "1,2,pending,", "1,3,pending,", "2,4,pending," ],
+      model.new({ workflow_approvers: [ "1,1,,pending,", "1,2,,pending,", "1,3,,pending,", "2,4,1,pending," ],
                   workflow_required_counts: [ false, false ]})
     end
     it do
@@ -269,7 +273,7 @@ describe Workflow::Addon::Approver do
   describe "#update_current_workflow_approver_state" do
     context "when user 1 at current level is updated" do
       subject do
-        model.new({ workflow_approvers: [ "1,1,pending,", "1,2,pending,", "1,3,pending,", "2,4,pending," ],
+        model.new({ workflow_approvers: [ "1,1,,pending,", "1,2,,pending,", "1,3,,pending,", "2,4,1,pending," ],
                     workflow_required_counts: [ false, false ]})
       end
       it do
@@ -283,7 +287,7 @@ describe Workflow::Addon::Approver do
 
     context "when user 4 at non-current level is updated" do
       subject do
-        model.new({ workflow_approvers: [ "1,1,pending,", "1,2,pending,", "1,3,pending,", "2,4,pending," ],
+        model.new({ workflow_approvers: [ "1,1,,pending,", "1,2,,pending,", "1,3,,pending,", "2,4,1,pending," ],
                     workflow_required_counts: [ false, false ]})
       end
       it do
