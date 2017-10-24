@@ -54,7 +54,9 @@ class Gws::Report::File
       when 'closed'
         all.and_closed.user(cur_user)
       else
-        all.and_public.readable(cur_user, site: cur_site)
+        member_selector = unscoped.member(cur_user)
+        readable_selector = unscoped.readable(cur_user, site: cur_site).selector
+        all.and_public.ne(user_id: cur_user.id).where('$and' => [{ '$or' => [ member_selector, readable_selector ] }])
       end
     end
   end
