@@ -9,7 +9,7 @@ module Webmail::Mail::Parser
     self.attributes = {
       uid: data.attr["UID"],
       internal_date: data.attr['INTERNALDATE'],
-      flags: data.attr['FLAGS'] || [],
+      flags: data.attr['FLAGS'].map(&:to_sym) || [],
       size: data.attr['RFC822.SIZE'],
     }
 

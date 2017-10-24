@@ -14,7 +14,7 @@ class Webmail::Mail
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
-  attr_accessor :text, :html, :attachments, :format,
+  attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
                 :to_text, :cc_text, :bcc_text,
                 :in_request_mdn, :in_request_dsn
@@ -25,7 +25,6 @@ class Webmail::Mail
   field :uid, type: Integer
   field :internal_date, type: DateTime
   field :size, type: Integer
-  field :flags, type: Array, default: []
 
   ## header
   field :message_id, type: String
@@ -54,7 +53,6 @@ class Webmail::Mail
   validates :mailbox, presence: true
   validates :uid, presence: true
   validates :internal_date, presence: true
-  validate :symbolize_flags
 
   default_scope -> { order_by internal_date: -1 }
 
@@ -110,10 +108,6 @@ class Webmail::Mail
     replied_mail.set_answered if replied_mail
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     true
-  end
-
-  def symbolize_flags
-    self.flags = flags.map(&:to_sym)
   end
 
   def requested_mdn?

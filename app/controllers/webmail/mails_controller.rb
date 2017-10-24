@@ -189,62 +189,40 @@ class Webmail::MailsController < ApplicationController
   end
 
   def set_seen
-    if SS.config.webmail.store_mails
-      @imap.mails.update_flags :set_seen, get_uids
-    else
-      @imap.uids_set_seen get_uids
-    end
+    @imap.uids_set_seen get_uids
     render_change :set_seen, reload: true
   end
 
   def unset_seen
-    if SS.config.webmail.store_mails
-      @imap.mails.update_flags :unset_seen, get_uids
-    else
-      @imap.uids_unset_seen get_uids
-    end
+    @imap.uids_unset_seen get_uids
     render_change :unset_seen, reload: true
   end
 
   def set_star
-    if SS.config.webmail.store_mails
-      @imap.mails.update_flags :set_star, get_uids
-    else
-      @imap.uids_set_star get_uids
-    end
+    @imap.uids_set_star get_uids
     render_change :set_star, redirect: { action: :show }
   end
 
   def unset_star
-    if SS.config.webmail.store_mails
-      @imap.mails.update_flags :unset_star, get_uids
-    else
-      @imap.uids_unset_star get_uids
-    end
+    @imap.uids_unset_star get_uids
     render_change :unset_star, redirect: { action: :show }
   end
 
   def send_mdn
     if SS.config.webmail.store_mails
       @item = @imap.mails.find_and_store params[:id], :rfc822
-      @item.imap = @imap
-      @item.send_mdn
-      @imap.mails.update_flags :set_mdn_sent, get_uids
     else
       @item = @imap.mails.find params[:id], :rfc822
-      @item.send_mdn
-      @imap.uids_set_mdn_sent get_uids
     end
+    @item.imap = @imap
+    @item.send_mdn
+    @imap.uids_set_mdn_sent get_uids
 
     render_change :send_mdn, redirect: { action: :show }
   end
 
   def ignore_mdn
-    if SS.config.webmail.store_mails
-      @imap.mails.update_flags :set_mdn_sent, get_uids
-    else
-      @imap.uids_set_mdn_sent get_uids
-    end
+    @imap.uids_set_mdn_sent get_uids
     render_change :ignore_mdn, redirect: { action: :show }
   end
 

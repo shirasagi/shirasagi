@@ -59,7 +59,7 @@ class Webmail::Mailer < ActionMailer::Base
     part3 = Mail::Part.new
     part3.content_type = 'text/rfc822-headers; name=MDNPart3.txt'
     part3.content_disposition = 'inline'
-    part3.body = item.read_rfc822
+    part3.body = item.rfc822
 
     # add part
     msg.add_part part1
