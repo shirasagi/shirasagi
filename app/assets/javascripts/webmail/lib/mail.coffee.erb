@@ -283,6 +283,22 @@ class @Webmail_Mail_Detail
           SS.notice(data.notice)
       return false
 
+    $(".send-mdn,.ignore-mdn").on "click", ->
+      return false if $(this).hasClass('disabled')
+
+      $.ajax
+        url: $(this).attr("href")
+        method: 'POST'
+        dataType: 'json'
+        data:
+          _method: 'put'
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        beforeSend: ->
+          $(".send-mdn,.ignore-mdn").addClass('disabled')
+        success: (data) ->
+          SS.notice(data.notice)
+          $(".request-mdn-notice").remove()
+
   @loadImages: ->
     $("img[data-url]").each ->
       url = $(this).data('url')

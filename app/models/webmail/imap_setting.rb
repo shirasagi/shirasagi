@@ -1,4 +1,8 @@
 class Webmail::ImapSetting < Hash
+  def address
+    self[:address]
+  end
+
   def imap_host
     self[:imap_host]
   end
@@ -40,7 +44,7 @@ class Webmail::ImapSetting < Hash
   end
 
   def valid?
-    imap_host.present? && imap_account.present?
+    address.present? && imap_host.present? && imap_account.present?
   end
 
   def set_imap_password
@@ -51,11 +55,15 @@ class Webmail::ImapSetting < Hash
 
   def imap_settings(default_conf = {})
     user_conf = {
+      address: address,
       host: imap_host,
       auth_type: imap_auth_type,
       account: imap_account,
       password: decrypt_imap_password,
-      threshold_mb: threshold_mb
+      threshold_mb: threshold_mb,
+      imap_sent_box: imap_sent_box,
+      imap_trash_box: imap_trash_box,
+      imap_trash_box: imap_trash_box
     }
     user_conf.each { |k, v| default_conf[k] = v if v.present? }
     default_conf

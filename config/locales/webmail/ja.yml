@@ -37,12 +37,16 @@ ja:
       clear_cache_all: キャッシュ全削除
       sync: 同期
       add_account: アカウントを追加する
+      send_mdn: 開封確認を送付する
+      ignore_mdn: 要求を無視する
     options:
       action:
         copy: コピーする
         move: 移動する
         trash: 削除する
         delete: サーバから削除する
+        request_mdn: 開封確認メッセージを要求する
+        request_dsn: 配信確認メッセージを要求する
     links:
       back_to_contents: 受信トレイへ戻る
       etc: その他
@@ -81,6 +85,9 @@ ja:
       unset_seen: 未読にしました。
       set_star: スターをつけました。
       unset_star: スターをはずしました。
+      requested_mdn: メッセージ送信者は開封確認を要求しています。
+      send_mdn: 開封確認メールを送信しました。
+      ignore_mdn: 開封確認を無視しました。
       reloaded_mailboxes: 同期しました。
       over_threshold: "メールボックスの容量が残り %{size} です。"
       multiple:
@@ -106,6 +113,7 @@ ja:
       webmail/filter: フィルター
     attributes:
       ss/model/user:
+        address: メールアドレス
         imap_host: IMAP/ホスト
         imap_auth_type: IMAP/認証方式
         imap_account: IMAP/ユーザー名

@@ -1,6 +1,6 @@
 class @Webmail_Address_Autocomplete
   @createSelectedElement: (name, email, label) ->
-    icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i></button>")
+    icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>")
     icon.on "click", ->
       $(this).closest("span").remove()
     input = $("<input type=\"hidden\" name=\"#{name}\" value=\"#{email}\">")

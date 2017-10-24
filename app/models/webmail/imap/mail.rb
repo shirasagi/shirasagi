@@ -109,23 +109,23 @@ module Webmail::Imap
       uid = uid.to_i
 
       attr = %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER) # FAST: FLAGS INTERNALDATE RFC822.SIZE
-      attr << 'RFC822' if division.include?(:body) || division.include?(:rfc822)
-
       item = Webmail::Mail.where(mailbox_scope.merge(uid: uid)).first
-      if item
-        item.parse_rfc822_body
-        return item if item.rfc822
-        return item if !attr.include?('RFC822')
+      item ||= Webmail::Mail.new(mailbox_scope)
+      item.parse_rfc822_body
+
+      if item.rfc822
+        # use cache
+      else
+        attr << 'RFC822' if division.include?(:body) || division.include?(:rfc822)
       end
 
       resp = imap.conn.uid_fetch(uid, attr)
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
 
-      item ||= Webmail::Mail.new(mailbox_scope)
       item.imap = imap
       item.parse(resp[0])
       item.save
-      item.save_rfc822
+      item.save_rfc822 if attr.include?('RFC822')
       item
     end
 
@@ -133,20 +133,23 @@ module Webmail::Imap
       uid = uid.to_i
       section = section.to_i
 
+      attr = %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER) # FAST: FLAGS INTERNALDATE RFC822.SIZE
       item = Webmail::Mail.where(mailbox_scope.merge(uid: uid)).first
-      item.parse_rfc822_body if item
+      item ||= Webmail::Mail.new(mailbox_scope)
+      item.parse_rfc822_body
 
-      if item.nil? || item.attachments.blank?
-        attr = %w(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER RFC822) # FAST: FLAGS INTERNALDATE RFC822.SIZE
-        resp = imap.conn.uid_fetch(uid, attr)
-        raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
-
-        item = Webmail::Mail.new(mailbox_scope)
-        item.imap = imap
-        item.parse(resp[0])
-        item.save
-        item.save_rfc822
+      if item.attachments.present?
+        # use cache
+      else
+        attr << 'RFC822'
       end
+
+      resp = imap.conn.uid_fetch(uid, attr)
+      raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
+      item.imap = imap
+      item.parse(resp[0])
+      item.save
+      item.save_rfc822 if attr.include?('RFC822')
 
       item.attachments.select { |attachment| attachment.section == section }.first
     end

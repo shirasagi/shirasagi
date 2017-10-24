@@ -6,11 +6,15 @@ module Webmail::Mail::Message
       to: merge_address_field(to, to_text),
       cc: merge_address_field(cc, cc_text),
       bcc: merge_address_field(bcc, bcc_text),
-      from: imap.user.email_address,
+      from: imap.email_address,
       subject: subject
     }
     headers[:in_reply_to] = "<#{in_reply_to}>" if in_reply_to.present?
     headers[:references] = references.to_a.map { |m| "<#{m}>" } if references.present?
+
+    if in_request_mdn == "1"
+      headers[:"Disposition-Notification-To"] = Webmail::Converter.extract_address(headers[:from])
+    end
 
     headers.select { |k, v| v.present? }
   end

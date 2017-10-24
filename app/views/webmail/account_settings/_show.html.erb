@@ -1,6 +1,9 @@
 <% default = t('webmail.default_settings') %>
 
 <dl class="see">
+  <dt><%= @model.t :address %></dt>
+  <dd><%= setting.address || @cur_user.email %></dd>
+
   <dt><%= @model.t :imap_host %></dt>
   <dd><%= setting.imap_host || default %></dd>
 
