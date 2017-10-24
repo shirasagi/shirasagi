@@ -31,12 +31,12 @@
     <% end %>
 
     <div class="menu">
-      <% if @item.permit_comment?(user: @cur_user, site: @cur_site) && !@item.commented?(@cur_user) %>
+      <% if @item.member?(@cur_user) && !@item.commented?(@cur_user) %>
           <%= link_to t('gws/board.links.comment'), new_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: 'btn' %>
       <% end %>
 
-      <% if @item.allowed?(:edit,@cur_user, site: @cur_site) && @item.member?(@cur_user) %>
-          <%= link_to @item.mark_action_label, toggle_gws_circular_topic_path, class: "btn #{ 'gws-btn-pushed' if @item.marked? }" %>
+      <% if @item.member?(@cur_user) %>
+          <%= link_to @item.mark_action_label(@cur_user), toggle_gws_circular_topic_path, class: "btn #{ 'gws-btn-pushed' if @item.marked?(@cur_user) }" %>
       <% end %>
     </div>
   </article>
