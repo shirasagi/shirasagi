@@ -130,7 +130,9 @@ class Gws::Report::FilesController < ApplicationController
       new_column_values = @cur_form.build_column_values(custom)
       @item.update_column_values(new_column_values)
     end
-    render_create @item.save
+
+    render_opts = { location: { action: :show, state: @item.state, id: @item } }
+    render_create(@item.save, render_opts)
   end
 
   def update
