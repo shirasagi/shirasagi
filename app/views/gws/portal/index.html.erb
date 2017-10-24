@@ -1,0 +1,162 @@
+<% if @sys_notices.present? %>
+<div class="index portal-notice">
+  <div class="list-head"><%= t "sys.notice" %></div>
+  <ul class="list-items">
+    <% @sys_notices.each do |item| %>
+    <li class="list-item">
+      <div class="meta">
+        <%= link_to item.name, gws_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+
+      </div>
+    </li>
+    <% end %>
+  </ul>
+  <% if @sys_notices.next_page %>
+  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_sys_notices_path %></div>
+  <% end %>
+</div>
+<% end %>
+<% if @notices.present? %>
+<div class="index portal-notice">
+  <div class="list-head"><%= t "mongoid.models.gws/notice" %></div>
+  <ul class="list-items">
+    <% @notices.each do |item| %>
+    <li class="list-item">
+      <div class="meta">
+        <%= link_to item.name, gws_public_notice_path(id: item), class: "title notice-severity-#{item.severity}" %>
+        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+        <% if item.updated_after_released? %>
+          <span class="label"><%= t('gws.history.mode.update') %></span>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        <% end %>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+  <% if @notices.next_page %>
+  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_public_notices_path %></div>
+  <% end %>
+</div>
+<% end %>
+
+<%= jquery do %>
+$(".gws-schedule-tabs .personal").addClass("current");
+
+Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
+Gws_Schedule_Multiple_Calendar.render('#calendar', {
+  tapMenu: true,
+  defaultView: 'basicWeek',
+  restUrl: '<%= gws_schedule_plans_path %>',
+  eventSources: [{ url: '<%= events_gws_schedule_plans_path(format: :json) %>' }]
+});
+<% end %>
+
+<%= render partial: "gws/schedule/main/tabs" %>
+<section class="main-box gws-schedule-box">
+  <div class="calendar" id="calendar-controller"></div>
+  <div class="calendar-multiple-header">
+    <%= link_to @cur_user.long_name, gws_schedule_plans_path, class: "calendar-name" %>
+    <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_plan_path, class: 'add-plan' %>
+  </div>
+  <div class="calendar multiple" id="calendar"></div>
+</section>
+
+<div class="portal-box portal-reminder">
+  <div class="index">
+    <div class="list-head"><%= t('gws/schedule.reminder') %></div>
+    <ul class="list-items">
+      <% @reminders.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
+          <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
+        </div>
+        <div class="meta">
+          <% if item.date.present? %>
+            <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
+          <% end %>
+          <span class="label"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <% if item.updated_user_name.present? %>
+            <span class="user"><%= item.updated_user_name %></span>
+          <% end %>
+          <% if item.updated_date.present? %>
+            <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
+          <% end %>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+    <% if @reminders.next_page %>
+    <div class="more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
+    <% end %>
+  </div>
+</div>
+
+<% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
+<div class="portal-box portal-board">
+  <div class="index">
+    <div class="list-head"><%= t('modules.gws/board') %></div>
+    <ul class="list-items">
+      <% @boards.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+          <%= link_to item.name, gws_board_topic_path(id: item), class: 'title' %>
+          <% if item.descendants_files_count.to_i > 0 %>
+            <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+          <% end %>
+        </div>
+        <div class="meta">
+          <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <span>
+            <% item.categories.compact.each do |category| %>
+              <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id),
+                          class: "gws-category-label", style: category_label_css(category) %>
+            <% end %>
+          </span>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+    <% if @boards.next_page %>
+    <div class="more"><%= link_to I18n.t("ss.links.more"), gws_board_topics_path %></div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+<% if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
+    <div class="portal-box portal-monitor">
+      <div class="index">
+        <div class="list-head"><%= t('modules.gws/monitor') %></div>
+        <ul class="list-items">
+          <% @monitor.each do |item| %>
+              <li class="list-item">
+                <div class="info">
+                  <% if item.new_flag? %><span class="gws-monitor-flag-new"></span><% end %>
+                  <%= link_to item.name, gws_monitor_topic_path(id: item), class: 'title' %>
+                  <% if item.descendants_files_count.to_i > 0 %>
+                      <span class="gws-monitor-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+                  <% end %>
+                </div>
+                <div class="meta">
+                  <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+                  <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+                  <span>
+            <% item.categories.compact.each do |category| %>
+              <%= link_to category.trailing_name, gws_monitor_category_topics_path(category: category.id),
+                          class: "gws-category-label", style: category_label_css(category) %>
+            <% end %>
+          </span>
+                </div>
+              </li>
+          <% end %>
+        </ul>
+        <% if @monitor.next_page %>
+            <div class="more"><%= link_to I18n.t("ss.links.more"), gws_monitor_topics_path %></div>
+        <% end %>
+      </div>
+    </div>
+<% end %>

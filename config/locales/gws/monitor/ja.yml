@@ -13,8 +13,17 @@ ja:
       delete: 削除
       browsing_state: 通知先
       browsed: 閲覧
+      type: 状態
+      mark_at: 確認日時
+      update_at: 変更日時
+      group: グループ
+      user: 回答者
+      contents: 回答内容
+      answer_state: 回答状況
+      file: 添付
       list: トピック一覧へ
       export_csv: CSV出力
+      file_download: ファイルの一括ダウンロード
       confirm: 削除しますか？
       notice:
         create: トピックを作成しました。
@@ -37,6 +46,7 @@ ja:
       - 照会・回答id
       - タイトル
       - 状態
+      - 所属名
       - 回答者名
       - 回答欄
       - 回答日時
@@ -75,10 +85,14 @@ ja:
         important: 重要
       state:
         closed: 未回答
-        public : 受取済み
+        public: 受取済み
         preparation: 受取待ち
         answered: 回答済み
         question_not_applicable: 該当なし
+        no_state: 状態無し
+      article_state:
+        open: 配信済み
+        closed: 締め切り
     links:
       back_to_thread: 戻る
       comment: 回答する
@@ -86,17 +100,25 @@ ja:
       public: 受取済みにする
       preparation: 受取待ちにする
       question_not_applicable: 該当なしにする
+      disable_all: 削除済みに移動する
+      active_all: 削除を取り消す
       answered: 回答済みにする
+      closed: 締め切る
+      open: 締め切り解除
       export_csv: CSVに出力する
+      file_download: ダウンロード
       confirm:
         public: 受取済みにしますか？
         preparation: 受取待ちにしますか？
         question_not_applicable: 該当なしにしますか？
         answer: 回答済みにしますか？
+        close: 回答を締め切りますか？
+        open: 締め切りを解除してよろしいですか？
         public_all: チェックした項目を受取済みにしますか？
         preparation_all: チェックした項目を受取待ちにしますか？
         question_not_applicable_all: チェックした項目を該当なしにしますか？
-
+        disable_all: チェックした項目を削除済みに移動しますか？
+        active_all: 選択した項目の削除を取り消しますか？
     errors:
       denied_comment: コメントの投稿は許可されていません。
     tabs:
@@ -172,6 +194,7 @@ ja:
         monitor_file_size_per_topic: 添付最大サイズ/トピック単位
         monitor_file_size_per_post: 添付最大サイズ/投稿単位
         monitor_browsed_delay: 既読にするまでの秒数
+        monitor_delete_threshold: 削除対象
       gws/monitor/category:
         name: カテゴリー名
       gws/addon/monitor/category:
@@ -204,6 +227,8 @@ ja:
           - 投稿単位での添付最大サイズを入力します。
         monitor_browsed_delay:
           - 照会・回答を既読にするまでの秒数を入力します。
+        monitor_delete_threshold:
+          - 照会・回答を完全に削除するまでの期限を入力します。基準は「削除済み」に移動した日です。
       gws/monitor/category:
         name:
           - カテゴリー名を入力します。
@@ -224,4 +249,17 @@ ja:
           - 回答の表示方法を選択します。
         reminder_start_section:
           - リマインダー表示条件を選択します。
+
+  gws/monitor/group_setting:
+    options:
+      monitor_delete_threshold:
+        - 1日
+        - 1ヶ月
+        - 3ヶ月
+        - 6ヶ月
+        - 9ヶ月
+        - 12ヶ月
+        - 15ヶ月
+        - 18ヶ月
+        - 24ヶ月
 
