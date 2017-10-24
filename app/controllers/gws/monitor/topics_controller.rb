@@ -55,7 +55,7 @@ class Gws::Monitor::TopicsController < ApplicationController
     if params[:s] && params[:s][:state] == "closed"
       @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
     else
-      @items = @items.and_public.readable(@cur_user, @cur_site)
+      @items = @items.and_public.and_readable(@cur_user, @cur_site)
     end
 
     if @category.present?
@@ -66,7 +66,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_topics.
+        and_topics(@cur_group.id).
         page(params[:page]).per(50)
   end
 
@@ -101,40 +101,78 @@ class Gws::Monitor::TopicsController < ApplicationController
 
   def public
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state_of_the_answer: 'public')
+    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "public")
+    @item.save
+    render_update@item.update
   end
 
   def preparation
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state_of_the_answer: 'preparation')
+    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "preparation")
+    @item.save
+    render_update@item.update
   end
 
   def question_not_applicable
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state_of_the_answer: 'question_not_applicable')
+    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "question_not_applicable")
+    @item.save
+    render_update@item.update
   end
 
   def answered
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(state_of_the_answer: 'answered')
+    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "answered")
+    @item.save
+    render_update@item.update
   end
 
   def public_all
-    raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state_of_the_answer: 'public')
-    render_destroy_all(false)
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "public")
+        item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
   end
 
   def preparation_all
-    raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state_of_the_answer: 'preparation')
-    render_destroy_all(false)
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "preparation")
+        item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
   end
 
   def question_not_applicable_all
-    raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(state_of_the_answer: 'question_not_applicable')
-    render_destroy_all(false)
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "question_not_applicable")
+        item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
   end
 end
 
