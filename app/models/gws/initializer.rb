@@ -4,6 +4,7 @@ module Gws
 
     Gws::Column.plugin 'gws/text_field'
     Gws::Column.plugin 'gws/date_field'
+    Gws::Column.plugin 'gws/number_field'
     Gws::Column.plugin 'gws/url_field'
     Gws::Column.plugin 'gws/text_area'
     Gws::Column.plugin 'gws/select'

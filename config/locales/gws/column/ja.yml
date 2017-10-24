@@ -8,11 +8,16 @@ ja:
         tel: 電話番号
         url: URL
         search: 検索テキスト
+      minus_type:
+        normal: "-"
+        filled_triangle: "▲"
+        triangle: "△"
 
   gws:
     columns:
       gws/text_field: 一行入力
       gws/date_field: 日付入力
+      gws/number_field: 数値入力
       gws/url_field: URL入力
       gws/text_area: 複数行入力
       gws/select: ドロップダウン
@@ -30,6 +35,7 @@ ja:
       gws/column/base: 入力項目
       gws/column/text_field: 一行入力
       gws/column/date_field: 日付入力
+      gws/column/number_field: 数値入力
       gws/column/url_field: URL入力
       gws/column/text_area: 複数行入力
       gws/column/select: ドロップダウン
@@ -51,6 +57,12 @@ ja:
         input_type: 種類
       gws/column/file_upload:
         upload_file_count: アップロードファイル数
+      gws/column/number_field:
+        min_decimal: 最小値
+        max_decimal: 最大値
+        initial_decimal: 初期値
+        scale: 小数点以下の桁数
+        minus_type: 負数の表示方法
       gws/addon/column/text_like:
         max_length: 最大長
         additional_attr: 追加属性
@@ -79,6 +91,18 @@ ja:
       input_type:
         - 種類を選択します。
         - 一部の種類は、最近のブラウザでしかサポートされていません。
+
+    gws/column/number_field:
+      min_decimal:
+        - 最小値を入力します。
+      max_decimal:
+        - 最大値を入力します。
+      initial_decimal:
+        - 初期値を入力します。
+      scale:
+        - 小数点以下の桁数を入力します。
+      minus_type:
+        - 負数の表示方法を選択します。
 
     gws/column/file_upload:
       upload_file_count:
