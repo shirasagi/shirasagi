@@ -17,6 +17,9 @@
   <% if Gws::Role.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/role'), gws_roles_path %></h3>
   <% end %>
+  <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('modules.gws/report'), gws_report_setting_path %></h3>
+  <% end %>
   <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('workflow.name'), gws_workflow_setting_path %></h3>
   <% end %>

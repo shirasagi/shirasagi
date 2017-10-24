@@ -182,6 +182,8 @@ ja:
         cancel: 取消
         allow: 許可する
         deny: 許可しない
+        required: 必須
+        optional: 任意
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)

@@ -1,15 +1,33 @@
-<%= coffee do %>
+<%= jquery do %>
 
-SS.ajaxForm "form.user-file",
-  success: ->
-    $("#cboxLoadedContent").load "<%= url_for(action: :index) %>"
+SS.ajaxForm("form.user-file", {
+  success: function() {
+    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>");
+  }
+});
 
-SS.ajax ".user-files .select",
-  success: (data) ->
-    $("#selected-files").append data
-    $.colorbox.close()
+var onSelect;
+var $element = $.colorbox.element();
+if ($element) {
+  onSelect = $element.data('on-select');
+}
 
-SS.ajaxDelete ".user-files .delete"
+if (onSelect) {
+  $(".user-files .select").on('click', function(e) {
+    onSelect($(this));
+    e.preventDefault();
+    return false;
+  });
+} else {
+  SS.ajax(".user-files .select", {
+    success: function(data) {
+      $("#selected-files").append(data);
+      $.colorbox.close();
+    }
+  });
+}
+
+SS.ajaxDelete(".user-files .delete");
 
 <% end %>
 
@@ -29,7 +47,7 @@ SS.ajaxDelete ".user-files .delete"
 <div class="index user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>">
-    <a class="thumb select" href="<%= url_for action: :select, id: item %>">
+    <a class="thumb select" href="<%= url_for action: :select, id: item %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
       <% else %>
