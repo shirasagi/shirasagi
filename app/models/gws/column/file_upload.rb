@@ -1,7 +1,8 @@
 class Gws::Column::FileUpload < Gws::Column::Base
 
+  field :place_holder, type: String
   field :upload_file_count, type: Integer, default: 1
-  permit_params :upload_file_count
+  permit_params :place_holder, :upload_file_count
 
   def serialize_value(file_ids)
     Gws::Column::Value::FileUpload.new(

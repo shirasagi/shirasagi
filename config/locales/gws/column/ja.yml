@@ -45,17 +45,14 @@ ja:
         tooltips: ツールチップ
         prefix_label: 前ラベル
         postfix_label: 後ラベル
+        # common attributes
+        place_holder: プレースホルダー
       gws/column/text_field:
         input_type: 種類
-      gws/column/date_field:
-        place_holder: プレースホルダー
-      gws/column/select:
-        place_holder: プレースホルダー
       gws/column/file_upload:
         upload_file_count: アップロードファイル数
       gws/addon/column/text_like:
         max_length: 最大長
-        place_holder: プレースホルダー
         additional_attr: 追加属性
       gws/addon/column/select_like:
         select_options: 選択肢
@@ -75,19 +72,13 @@ ja:
         - 入力項目の前に表示するラベルを入力します。
       postfix_label:
         - 入力項目の後に表示するラベルを入力します。
+      place_holder:
+        - プレースホルダーを入力します。
 
     gws/column/text_field:
       input_type:
         - 種類を選択します。
         - 一部の種類は、最近のブラウザでしかサポートされていません。
-
-    gws/column/date_field:
-      place_holder:
-        - プレースホルダーを入力します。
-
-    gws/column/select:
-      place_holder:
-        - プレースホルダーを入力します。
 
     gws/column/file_upload:
       upload_file_count:
@@ -96,8 +87,6 @@ ja:
     gws/addon/column/text_like:
       max_length:
         - 入力文字数の最大長を入力します。
-      place_holder:
-        - プレースホルダーを入力します。
       additional_attr:
         - 出力される入力形式のHTMLに属性を追加することが可能です。
 
