@@ -14,7 +14,7 @@ class Webmail::Mail
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
-  attr_accessor :flags, :text, :html, :attachments, :format,
+  attr_accessor :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
                 :to_text, :cc_text, :bcc_text,
                 :in_request_mdn, :in_request_dsn
@@ -25,6 +25,7 @@ class Webmail::Mail
   field :uid, type: Integer
   field :internal_date, type: DateTime
   field :size, type: Integer
+  field :flags, type: Array, default: []
 
   ## header
   field :message_id, type: String
@@ -40,6 +41,7 @@ class Webmail::Mail
   field :content_type, type: String
   field :subject, type: String
   field :has_attachment, type: Boolean
+  field :disposition_notification_to, type: Array, default: []
 
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
                 :subject, :text, :html, :format,
@@ -52,6 +54,7 @@ class Webmail::Mail
   validates :mailbox, presence: true
   validates :uid, presence: true
   validates :internal_date, presence: true
+  validate :symbolize_flags
 
   default_scope -> { order_by internal_date: -1 }
 
@@ -106,6 +109,29 @@ class Webmail::Mail
     msg = msg.deliver_now.to_s
     replied_mail.set_answered if replied_mail
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
+    true
+  end
+
+  def symbolize_flags
+    self.flags = flags.map(&:to_sym)
+  end
+
+  def requested_mdn?
+    return false if flags.include?(:"$MDNSent")
+
+    disposition_notification_to.each do |mdn_to|
+      mdn_to = Webmail::Converter.extract_address(mdn_to)
+      return true if mdn_to == imap.user.email
+    end
+    return false
+  end
+
+  def send_mdn
+    return false unless requested_mdn?
+
+    msg = Webmail::Mailer.mdn_message(self)
+    return false unless validate_message(msg)
+    msg.deliver_now
     true
   end
 

@@ -37,6 +37,14 @@ module Webmail::Mail::Updater
     imap.conn.uid_store uid, '-FLAGS', [:Flagged]
   end
 
+  def uids_set_mdn_sent(uids)
+    imap.conn.uid_store uid, '+FLAGS', ['$MDNSent']
+  end
+
+  def uids_unset_mdn_sent(uids)
+    imap.conn.uid_store uid, '-FLAGS', ['$MDNSent']
+  end
+
   def set_answered
     imap.conn.uid_store uid, '+FLAGS', [:Answered]
   end

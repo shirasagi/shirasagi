@@ -44,7 +44,8 @@ module Webmail::Mail::Parser
       references: parse_references(mail.references),
       subject: mail.subject,
       content_type: mail.mime_type,
-      has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil)
+      has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil),
+      disposition_notification_to: parse_address_field(mail[:disposition_notification_to])
     }
   end
 

@@ -28,4 +28,44 @@ class Webmail::Mailer < ActionMailer::Base
 
     mail
   end
+
+  def mdn_message(item)
+    require "nkf"
+    @item = item
+
+    msg = mail(
+      to: item.disposition_notification_to,
+      from: item.from.first,
+      body: ''
+    )
+    msg.content_type = 'multipart/report; report-type=disposition-notification'
+
+    # part1
+    part1 = Mail::Part.new
+    part1.content_type = 'text/plain; iso-2022-jp'
+    part1.body = NKF.nkf '-j', render_to_string
+
+    # part2
+    part2 = Mail::Part.new
+    part2.content_type = 'message/disposition-notification; name=MDNPart2.txt'
+    part2.content_disposition = 'inline'
+
+    body = []
+    body << "Final-Recipient: rfc822; #{item.from.first}\r\n"
+    body << "Disposition: manual-action/MDN-sent-manually; displayed\r\n"
+    part2.body = body.join
+
+    # part3
+    part3 = Mail::Part.new
+    part3.content_type = 'text/rfc822-headers; name=MDNPart3.txt'
+    part3.content_disposition = 'inline'
+    part3.body = item.read_rfc822
+
+    # add part
+    msg.add_part part1
+    msg.add_part part2
+    msg.add_part part3 if part3.body
+
+    msg
+  end
 end

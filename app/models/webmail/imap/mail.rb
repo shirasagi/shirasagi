@@ -151,6 +151,19 @@ module Webmail::Imap
       item.attachments.select { |attachment| attachment.section == section }.first
     end
 
+    def update_flags(action, uids)
+      resp = @imap.send("uids_#{action}", uids)
+      resp = resp.map do |data|
+        [ data.attr['UID'], data]
+      end.to_h
+      Webmail::Mail.where(mailbox_scope).in(uid: uids).each do |item|
+        data = resp[item.uid]
+        next unless data
+        item.flags = data.attr['FLAGS'] || []
+        item.update
+      end
+    end
+
     private
 
     def mailbox_scope

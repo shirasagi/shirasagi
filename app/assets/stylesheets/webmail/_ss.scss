@@ -248,6 +248,15 @@ li.webmail-accounts {
       }
     }
   }
+  .request-mdn-notice {
+    @include clear;
+    padding: 5px 15px;
+    border-bottom: 1px solid #969696;
+    background-color: #cecece;
+    .action {
+      float: right;
+    }
+  }
   .show-image {
     display: block;
     margin: -5px 0 10px;
