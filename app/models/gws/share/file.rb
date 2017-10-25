@@ -5,7 +5,7 @@ class Gws::Share::File
   include Gws::Addon::Share::Category
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
-  include Gws::Addon::History
+  include Gws::Addon::Share::History
 
   validates :category_ids, presence: true
   validate :validate_size
