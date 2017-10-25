@@ -20,6 +20,7 @@ class Gws::Elasticsearch::Search::AllsController < ApplicationController
       search_type = []
       search_type << Gws::Board::Post.collection_name if Gws::Board::Topic.allowed?(:read, @cur_user, site: @cur_site)
       search_type << Gws::Faq::Post.collection_name if Gws::Faq::Topic.allowed?(:read, @cur_user, site: @cur_site)
+      search_type << Gws::Qna::Post.collection_name if Gws::Qna::Topic.allowed?(:read, @cur_user, site: @cur_site)
       search_type << 'gws_share_files' if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site)
       search_type
     end

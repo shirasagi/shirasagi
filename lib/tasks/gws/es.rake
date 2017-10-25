@@ -79,6 +79,8 @@ namespace :gws do
       end
 
       Rake::Task['gws:es:feed_all_boards'].execute
+      Rake::Task['gws:es:feed_all_faqs'].execute
+      Rake::Task['gws:es:feed_all_qnas'].execute
       Rake::Task['gws:es:feed_all_files'].execute
     end
 
@@ -127,6 +129,31 @@ namespace :gws do
         topic.descendants.each do |post|
           puts "-- #{post.name}"
           job = Gws::Elasticsearch::Indexer::FaqPostJob.bind(site_id: site)
+          job.perform_now(action: 'index', id: post.id.to_s)
+        end
+      end
+    end
+
+    task feed_all_qnas: :environment do
+      site = Gws::Group.find_by(name: ENV['site'])
+      if !site.elasticsearch_enabled?
+        puts 'elasticsearch was not enabled'
+        break
+      end
+
+      if site.elasticsearch_client.nil?
+        puts 'elasticsearch was not configured'
+        break
+      end
+
+      puts 'gws/qna/topic and gws/qna/post'
+      Gws::Qna::Topic.site(site).topic.each do |topic|
+        puts "- #{topic.name}"
+        job = Gws::Elasticsearch::Indexer::QnaTopicJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: topic.id.to_s)
+        topic.descendants.each do |post|
+          puts "-- #{post.name}"
+          job = Gws::Elasticsearch::Indexer::QnaPostJob.bind(site_id: site)
           job.perform_now(action: 'index', id: post.id.to_s)
         end
       end
