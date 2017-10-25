@@ -235,8 +235,17 @@ module Gws::Model::File
 
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
-    Fs.binwrite(path, binary)
-    self.size = binary.length
+
+    if File.exist?(path)
+      history_file_count = Dir.glob(dir + "/#{id}*_history[1-9]*").count
+      FileUtils.mv(path, path + "_history#{history_file_count + 1}")
+      Fs.binwrite(path, binary)
+      self.size = binary.length
+    else
+      Fs.binwrite(path, binary)
+      self.size = binary.length
+    end
+
   end
 
   def remove_file
