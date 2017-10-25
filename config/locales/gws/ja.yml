@@ -109,6 +109,7 @@ ja:
       gws/release: 公開設定
       gws/reminder: リマインダー設定
       gws/history: 変更履歴
+      gws/share/history: 変更履歴
       gws/readable_setting: 閲覧権限
       gws/member: 参加者
       gws/subscription_setting: 購読
