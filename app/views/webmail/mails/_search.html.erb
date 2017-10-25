@@ -23,6 +23,11 @@
         <%= f.text_field :since, class: "date js-date" %>
         - <%= f.text_field :before, class: "date js-date" %>
       </dd>
+      <dt><%= @model.t :flags %></dt>
+      <dd>
+        <label><%= f.check_box_tag "s[unseen]", "1", (params.dig(:s, :unseen) == "1") %><%= @model.t :unseen %></label>
+        <label><%= f.check_box_tag "s[flagged]", "1", (params.dig(:s, :flagged) == "1") %><%= @model.t :flagged %></label>
+      </dd>
 
       <dt></dt>
       <dd>
