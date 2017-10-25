@@ -2,8 +2,13 @@ module Webmail::MailHelper
   def searched_label(params)
     return nil if params.blank?
 
+    single_keys = %w(unseen flagged)
     h = params.map do |key, val|
-      val.present? ? "#{Webmail::Mail.t(key)}: #{val}" : nil
+      if single_keys.include?(key)
+        Webmail::Mail.t(key)
+      else
+        val.present? ? "#{Webmail::Mail.t(key)}: #{val}" : nil
+      end
     end.compact
 
     h.present? ? h.join(', ') : nil

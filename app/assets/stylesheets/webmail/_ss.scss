@@ -160,6 +160,10 @@ li.webmail-accounts {
   margin: 0 10px;
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
+  label {
+   width: auto !important;
+   padding: 0px 15px 0px 15px !important;
+  }
 }
 
 @media print {
