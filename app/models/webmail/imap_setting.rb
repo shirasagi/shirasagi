@@ -62,7 +62,7 @@ class Webmail::ImapSetting < Hash
       password: decrypt_imap_password,
       threshold_mb: threshold_mb,
       imap_sent_box: imap_sent_box,
-      imap_trash_box: imap_trash_box,
+      imap_draft_box: imap_draft_box,
       imap_trash_box: imap_trash_box
     }
     user_conf.each { |k, v| default_conf[k] = v if v.present? }
