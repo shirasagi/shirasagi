@@ -140,6 +140,19 @@ ja:
         order: 並び順
         bg_color: 背景色
         text_color: 文字色
+      gws/model/file:
+        in_file: ファイル
+        in_files: ファイル
+        image: 画像
+        download: ダウンロード
+        model: モデル
+        state: 状態
+        name: ファイル名（表示用）
+        filename: ファイル名
+        size: ファイルサイズ
+        content_type: コンテンツタイプ
+        resizing: リサイズ
+        geo_location: 緯度・経度
       gws/user:
         gws_main_group_ids: グループ（主）
         gws_default_group_ids: グループ（既定）
@@ -244,6 +257,15 @@ ja:
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
+    gws/model/file:
+      in_file:
+        - ファイルを選択します。
+      name:
+        - ファイル名（表示用）を入力します。
+      filename:
+        - ファイル名を入力します。
+      geo_location:
+        - 緯度・経度を10進で入力します。
     gws/user:
       gws_main_group_ids:
         - ユーザーの所属する主なグループを選択します。
