@@ -5,6 +5,7 @@ class Gws::Elasticsearch::Setting::Monitor
 
   def search_types
     search_types = []
+    search_types << Gws::Monitor::Post.collection_name if Gws::Monitor::Topic.allowed?(:read, @cur_user, site: @cur_site)
     search_types
   end
 end
