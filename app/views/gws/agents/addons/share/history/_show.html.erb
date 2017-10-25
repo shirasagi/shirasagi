@@ -8,6 +8,9 @@
         <th style="width: 140px"><%= Gws::History.t :created %></th>
         <th><%= Gws::History.t :user_name %></th>
         <th><%= Gws::History.t :user_tel %></th>
+        <th>ファイル名</th>
+        <th>サイズ</th>
+        <th>添付</th>
         <th><%= Gws::History.t :updated_fields %></th>
       </tr>
     </thead>
@@ -18,6 +21,9 @@
         <td><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></td>
         <td><%= item.user_long_name %></td>
         <td><%= item.user_tel %></td>
+        <td><%= item.uploadfile_filename %></td>
+        <td><%= item.uploadfile_size %></td>
+        <td><%= link_to item.uploadfile_filename, item.uploadfile_path, class: "icon-txt", target: '_blank' %></td>
         <td>
           <% if (names = item.updated_field_names).present? %>
           <%= truncate names.join(', '), length: 30 %>
