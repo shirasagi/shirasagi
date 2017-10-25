@@ -52,14 +52,14 @@ class Gws::Elasticsearch::Searcher
     query1[:bool] = {}
     query1[:bool][:should] = []
     query1[:bool][:should] << { range: { release_date: { 'lte' => Time.zone.now.iso8601 } } }
-    query1[:bool][:should] << { bool: { must_not: { exists: { 'field': 'release_date' } } } }
+    query1[:bool][:should] << { bool: { must_not: { exists: { 'field' => 'release_date' } } } }
     query1[:bool][:minimum_should_match] = 1
 
     query2 = {}
     query2[:bool] = {}
     query2[:bool][:should] = []
     query2[:bool][:should] << { range: { close_date: { 'gt' => Time.zone.now.iso8601 } } }
-    query2[:bool][:should] << { bool: { must_not: { exists: { 'field': 'close_date' } } } }
+    query2[:bool][:should] << { bool: { must_not: { exists: { 'field' => 'close_date' } } } }
     query2[:bool][:minimum_should_match] = 1
 
     [ query0, query1, query2 ]
@@ -69,9 +69,9 @@ class Gws::Elasticsearch::Searcher
     query1 = {}
     query1[:bool] = {}
     query1[:bool][:must] = []
-    query1[:bool][:must] << { bool: { must_not: { exists: { 'field': 'readable_group_ids' } } } }
-    query1[:bool][:must] << { bool: { must_not: { exists: { 'field': 'readable_member_ids' } } } }
-    query1[:bool][:must] << { bool: { must_not: { exists: { 'field': 'readable_custom_group_ids' } } } }
+    query1[:bool][:must] << { bool: { must_not: { exists: { 'field' => 'readable_group_ids' } } } }
+    query1[:bool][:must] << { bool: { must_not: { exists: { 'field' => 'readable_member_ids' } } } }
+    query1[:bool][:must] << { bool: { must_not: { exists: { 'field' => 'readable_custom_group_ids' } } } }
 
     query2 = {}
     query2[:bool] = {}
