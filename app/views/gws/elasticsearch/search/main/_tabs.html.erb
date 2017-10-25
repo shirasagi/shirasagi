@@ -1,35 +1,18 @@
-<% render_tab = proc do |path, tab| %>
-  <%
-  if @s.keyword.present?
-    params = { s: { keyword: @s.keyword } }
-    params = "?#{params.to_query}"
-  end
-  %>
-  <%= link_to "#{path}#{params}", class: [ tab, request.path.start_with?(path) ? 'current' : nil ] do %>
-    <span class="tab-name"><%= t("gws/elasticsearch.tabs.#{tab}") %></span>
-  <% end %>
-<% end %>
+<%
+if @s.keyword.present?
+  params = { s: { keyword: @s.keyword } }
+  params = "?#{params.to_query}"
+end
+%>
 
 <div class="gws-schedule-tabs">
-  <% if [ Gws::Board::Topic, Gws::Share::File, Gws::Faq::Topic, Gws::Qna::Topic, Gws::Monitor::Topic ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
-  <% render_tab.call(gws_elasticsearch_search_all_path, 'all') %>
-  <% end %>
-
-  <% if Gws::Board::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_board_path, 'board') %>
-  <% end %>
-  <% if Gws::Faq::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_faq_path, 'faq') %>
-  <% end %>
-  <% if Gws::Qna::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_qna_path, 'qna') %>
-  <% end %>
-  <% if Gws::Monitor::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_monitor_path, 'monitor') %>
-  <% end %>
-  <%# render_tab.call(gws_elasticsearch_search_mail_path, 'mail') %>
-  <%# render_tab.call(gws_elasticsearch_search_message_path, 'message') %>
-  <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_share_path, 'share') %>
+  <% @model::WELL_KNOWN_TYPES.each do |type| %>
+    <% setting = "Gws::Elasticsearch::Setting::#{type.classify}".constantize.new(cur_site: @cur_site, cur_user: @cur_user) %>
+    <% if setting.search_types.present? %>
+      <% path = gws_elasticsearch_search_search_path(type: type) %>
+      <%= link_to "#{path}#{params}", class: [ type, request.path.start_with?(path) ? 'current' : nil ] do %>
+        <span class="tab-name"><%= t("gws/elasticsearch.tabs.#{type}") %></span>
+      <% end %>
+    <% end %>
   <% end %>
 </div>
