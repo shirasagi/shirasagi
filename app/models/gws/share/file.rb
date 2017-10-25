@@ -1,5 +1,5 @@
 class Gws::Share::File
-  include SS::Model::File
+  include Gws::Model::File
   include Gws::Referenceable
   include Gws::Reference::Site
   include Gws::Addon::Share::Category
