@@ -1,24 +1,22 @@
-<div class="gws-addon-readable-setting">
-  <dl class="see gws-addon-readable-setting-group">
-    <dt><%= t("modules.addons.gws/monitor/group") %></dt>
-    <dd>
-      <%= f.hidden_field "attend_group_ids[]", value: "", class: "hidden-ids" %>
-      <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
-      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
-      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-        <% @item.subscribed_groups.each do |group| %>
-            <tr data-id="<%= group.id %>">
-              <td><%= f.hidden_field "attend_group_ids[]", value: group.id %> <%= group.name %></td>
-              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-            </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </dd>
-  </dl>
-</div>
+<dl class="see gws-addon-monitor-group">
+  <dt><%= t("modules.addons.gws/monitor/group") %></dt>
+  <dd>
+    <%= f.hidden_field "attend_group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
+    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
+    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.subscribed_groups.each do |group| %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "attend_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
