@@ -27,6 +27,7 @@ ja:
   mongoid:
     models:
       gws/share/file: 共有ファイル
+      gws/share/folder: フォルダー
       gws/share/category: 共有ファイルカテゴリー
       gws/share/group_setting: 共有ファイル設定
       gws/share/group_setting/category: カテゴリー
@@ -44,8 +45,16 @@ ja:
         category_ids: カテゴリー
       gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
+      gws/share/folder:
+        name: フォルダー名
+        order: 並び順
 
   tooltip:
     gws/share/category:
       name:
         - カテゴリー名を入力します。
+    gws/share/folder:
+      name:
+        - フォルダー名を入力します。
+      order:
+        - 並び順を入力します。
