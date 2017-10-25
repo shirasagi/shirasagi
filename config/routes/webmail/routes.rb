@@ -69,7 +69,7 @@ SS::Application.routes.draw do
     resources :sys_notices, only: [:index, :show]
 
     # with group
-    scope(path: "address_group-:group", as: "group") do
+    scope(path: "account-:account/address_group-:group", as: "group") do
       resources :addresses, concerns: [:deletion, :export]
     end
 
