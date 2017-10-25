@@ -9,6 +9,7 @@ ja:
       faq: よくある質問
       qna: Ｑ＆Ａ
       monitor: 照会・回答
+      circular: 回覧板
 
     format:
       search_results_count:
@@ -39,4 +40,11 @@ ja:
       gws/elasticsearch/indexer/share_file_job: 共有ファイルインデクサー
       gws/elasticsearch/indexer/board_topic_job: 掲示板インデクサー
       gws/elasticsearch/indexer/board_post_job: 掲示板投稿インデクサー
-
+      gws/elasticsearch/indexer/faq_topic_job: FAQインデクサー
+      gws/elasticsearch/indexer/faq_post_job: FAQインデクサー
+      gws/elasticsearch/indexer/qna_topic_job: Ｑ＆Ａインデクサー
+      gws/elasticsearch/indexer/qna_post_job: Ｑ＆Ａインデクサー
+      gws/elasticsearch/indexer/circular_topic_job: 回覧板インデクサー
+      gws/elasticsearch/indexer/circular_post_job: 回覧板インデクサー
+      gws/elasticsearch/indexer/monitor_topic_job: 照会・回答インデクサー
+      gws/elasticsearch/indexer/monitor_post_job: 照会・回答インデクサー

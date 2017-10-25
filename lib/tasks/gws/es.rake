@@ -30,6 +30,37 @@ namespace :gws do
       puts site.elasticsearch_client.info.to_json
     end
 
+    task list_indexes: :environment do
+      site = Gws::Group.find_by(name: ENV['site'])
+      if !site.elasticsearch_enabled?
+        puts 'elasticsearch was not enabled'
+        break
+      end
+
+      if site.elasticsearch_client.nil?
+        puts 'elasticsearch was not configured'
+        break
+      end
+
+      puts site.elasticsearch_client.cat.indices
+    end
+
+    task list_types: :environment do
+      site = Gws::Group.find_by(name: ENV['site'])
+      if !site.elasticsearch_enabled?
+        puts 'elasticsearch was not enabled'
+        break
+      end
+
+      if site.elasticsearch_client.nil?
+        puts 'elasticsearch was not configured'
+        break
+      end
+
+      index_name = "g#{site.id}"
+      puts site.elasticsearch_client.indices.get(index: index_name)[index_name]['mappings'].keys
+    end
+
     task drop: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
       if !site.elasticsearch_enabled?
@@ -81,6 +112,7 @@ namespace :gws do
       Rake::Task['gws:es:feed_all_boards'].execute
       Rake::Task['gws:es:feed_all_faqs'].execute
       Rake::Task['gws:es:feed_all_qnas'].execute
+      Rake::Task['gws:es:feed_all_circulars'].execute
       Rake::Task['gws:es:feed_all_monitors'].execute
       Rake::Task['gws:es:feed_all_files'].execute
     end
@@ -155,6 +187,31 @@ namespace :gws do
         topic.descendants.each do |post|
           puts "-- #{post.name}"
           job = Gws::Elasticsearch::Indexer::QnaPostJob.bind(site_id: site)
+          job.perform_now(action: 'index', id: post.id.to_s)
+        end
+      end
+    end
+
+    task feed_all_circulars: :environment do
+      site = Gws::Group.find_by(name: ENV['site'])
+      if !site.elasticsearch_enabled?
+        puts 'elasticsearch was not enabled'
+        break
+      end
+
+      if site.elasticsearch_client.nil?
+        puts 'elasticsearch was not configured'
+        break
+      end
+
+      puts 'gws/circular/topic and gws/circular/post'
+      Gws::Circular::Topic.site(site).topic.each do |topic|
+        puts "- #{topic.name}"
+        job = Gws::Elasticsearch::Indexer::CircularTopicJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: topic.id.to_s)
+        topic.descendants.each do |post|
+          puts "-- #{post.name}"
+          job = Gws::Elasticsearch::Indexer::CircularPostJob.bind(site_id: site)
           job.perform_now(action: 'index', id: post.id.to_s)
         end
       end
