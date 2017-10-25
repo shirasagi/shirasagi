@@ -2,6 +2,7 @@ ja:
   gws/share:
     file: 共有ファイル
     category: 共有ファイルカテゴリー
+    all: 全てのファイル
     links:
       categories: カテゴリー
 
@@ -45,6 +46,8 @@ ja:
         category_ids: カテゴリー
       gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
+      gws/share/file:
+        folder_id: フォルダー名
       gws/share/folder:
         name: フォルダー名
         order: 並び順

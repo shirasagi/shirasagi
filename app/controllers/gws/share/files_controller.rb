@@ -5,6 +5,8 @@ class Gws::Share::FilesController < ApplicationController
 
   model Gws::Share::File
   before_action :set_category
+  before_action :set_folder
+  before_action :set_folder_navi, only: [:index]
 
   private
 
@@ -23,6 +25,16 @@ class Gws::Share::FilesController < ApplicationController
     if category_id = params[:category].presence
       @category ||= Gws::Share::Category.site(@cur_site).where(id: category_id).first
     end
+  end
+
+  def set_folder
+    return if params[:group].blank?
+    @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:group])
+  end
+
+  def set_folder_navi
+    @folder_navi = Gws::Share::Folder.site(@cur_site).
+        readable(@cur_user, @cur_site)
   end
 
   def fix_params
