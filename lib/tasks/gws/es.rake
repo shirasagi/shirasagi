@@ -107,6 +107,31 @@ namespace :gws do
       end
     end
 
+    task feed_all_faqs: :environment do
+      site = Gws::Group.find_by(name: ENV['site'])
+      if !site.elasticsearch_enabled?
+        puts 'elasticsearch was not enabled'
+        break
+      end
+
+      if site.elasticsearch_client.nil?
+        puts 'elasticsearch was not configured'
+        break
+      end
+
+      puts 'gws/faq/topic and gws/faq/post'
+      Gws::Faq::Topic.site(site).topic.each do |topic|
+        puts "- #{topic.name}"
+        job = Gws::Elasticsearch::Indexer::FaqTopicJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: topic.id.to_s)
+        topic.descendants.each do |post|
+          puts "-- #{post.name}"
+          job = Gws::Elasticsearch::Indexer::FaqPostJob.bind(site_id: site)
+          job.perform_now(action: 'index', id: post.id.to_s)
+        end
+      end
+    end
+
     task feed_all_files: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
       if !site.elasticsearch_enabled?

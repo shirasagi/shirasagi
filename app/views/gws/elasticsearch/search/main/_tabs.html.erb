@@ -19,13 +19,13 @@
   <% render_tab.call(gws_elasticsearch_search_board_path, 'board') %>
   <% end %>
   <% if Gws::Faq::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_board_path, 'faq') %>
+  <% render_tab.call(gws_elasticsearch_search_faq_path, 'faq') %>
   <% end %>
   <% if Gws::Qna::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_board_path, 'qna') %>
+  <% render_tab.call(gws_elasticsearch_search_qna_path, 'qna') %>
   <% end %>
   <% if Gws::Monitor::Topic.allowed?(:read, @cur_user, site: @cur_site) %>
-  <% render_tab.call(gws_elasticsearch_search_board_path, 'monitor') %>
+  <% render_tab.call(gws_elasticsearch_search_monitor_path, 'monitor') %>
   <% end %>
   <%# render_tab.call(gws_elasticsearch_search_mail_path, 'mail') %>
   <%# render_tab.call(gws_elasticsearch_search_message_path, 'message') %>
