@@ -77,7 +77,7 @@
             <li><%= link_to *link_params %></li>
           <% end %>
           <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
-          <li><%= link_to t('ss.logout'), sns_logout_path %></li>
+          <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
         </ul>
       </div>
     </nav>

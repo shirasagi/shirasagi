@@ -11,6 +11,7 @@ module SS::Model::Group
   included do
     store_in collection: "ss_groups"
     index({ name: 1 }, { unique: true })
+    index({ domains: 1 }, { unique: true, sparse: true })
 
     seqid :id
     field :name, type: String
@@ -23,13 +24,12 @@ module SS::Model::Group
     default_scope -> { order_by(order: 1, name: 1) }
 
     validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
+    validates :domains, domain: true
     validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
     validate :validate_name
     validate :validate_domains, if: ->{ domains.present? }
-
-    after_save :reload_nginx, if: ->{ domains_changed? }
 
     scope :in_group, ->(group) {
       where(name: /^#{group.name}(\/|$)/)
@@ -112,6 +112,10 @@ module SS::Model::Group
     end
   end
 
+  def domain_editable?
+    !new_record? && !name_was.to_s.include?('/')
+  end
+
   private
 
   def validate_name
@@ -121,14 +125,13 @@ module SS::Model::Group
   end
 
   def validate_domains
-    self.domains = domains.uniq
+    self.domains = domains.uniq.reject(&:blank?)
+    return if self.domains.blank?
 
-    if self.class.ne(id: id).any_in(domains: domains).exists?
+    if name.include?('/')
+      errors.add :domains, I18n.t('gws.errors.allowed_domains_only_root')
+    elsif self.class.ne(id: id).any_in(domains: self.domains).exists?
       errors.add :domains, :duplicate
     end
-  end
-
-  def reload_nginx
-    SS::Nginx::Configuration.write.reload_server
   end
 end

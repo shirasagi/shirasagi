@@ -39,7 +39,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
   end
 
   def items_hash(items)
-    items.map do |item|
+    items = items.map do |item|
       {
         name: item.name,
         filename: item.filename,
@@ -49,7 +49,8 @@ class Cms::Apis::NodeTreeController < ApplicationController
         is_current: (@item.present? && item.id == @item.id),
         is_parent: (@item.present? && @item.filename.start_with?("#{item.filename}\/"))
       }
-    end.compact.uniq.sort{ |a, b| a[:filename] <=> b[:filename] }
+    end
+    items.compact.uniq.sort{ |a, b| a[:filename] <=> b[:filename] }
   end
 
   def item_url(item)

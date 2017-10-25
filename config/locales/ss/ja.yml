@@ -26,6 +26,7 @@ ja:
       login/login:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
+        organization_uid: 職員番号またはメールアドレス
     links:
       cms: サイト管理
       gws: グループ
@@ -332,6 +333,9 @@ ja:
         session_lifetime: セッション寿命
         restriction: 利用制限
         remark: 備考
+        organization_id: 所属組織
+        organization_uid: 職員番号
+        switch_user_id: 切り替えユーザー
       ss/model/user_title:
         name: 役職名
         order: 並び順
@@ -507,6 +511,14 @@ ja:
         - 空欄の場合は、システムの既定値が用いられます。
       remark:
         - 備考を入力します。
+      organization_id: 所属する組織を選択します。
+      organization_uid:
+        - 職員番号を入力します。
+        - グループ専用ログイン画面で使用します。
+      switch_user_id:
+        - 切り替えユーザーを選択します。
+        - ログイン後にユーザーが切り替わります。
+        - 共通アカウントを利用する場合などに使用します。
     ss/model/group:
       name:
         - グループの名称を入力します。

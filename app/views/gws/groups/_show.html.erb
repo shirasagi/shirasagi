@@ -2,6 +2,11 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
+  <% if @item.domains.present? %>
+  <dt><%= @model.t :domains %></dt>
+  <dd><%= @item.send :domains %></dd>
+  <% end %>
+
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
 
@@ -13,10 +18,5 @@
   <% if @item.expiration_date.present? %>
   <dt><%= @model.t :expiration_date %></dt>
   <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
-  <% end %>
-
-  <% if @item.domains.present? %>
-  <dt><%= @model.t :domains %></dt>
-  <dd><%= @item.send :domains %></dd>
   <% end %>
 </dl>
