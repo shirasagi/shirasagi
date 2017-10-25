@@ -23,8 +23,8 @@ class Gws::Share::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/share/group_setting"), gws_share_files_path]
-    @crumbs << [t("mongoid.models.gws/share/group_setting/category"), gws_share_files_path]
+    @crumbs << [t("mongoid.models.gws/share/group_setting"), gws_share_setting_path]
+    @crumbs << [t("mongoid.models.gws/share/group_setting/category"), gws_share_categories_path]
   end
 
   def fix_params
