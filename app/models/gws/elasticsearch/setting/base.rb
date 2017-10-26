@@ -6,8 +6,16 @@ module Gws::Elasticsearch::Setting::Base
     attr_accessor :cur_site, :cur_user
   end
 
+  def type
+    self.class.name.underscore.sub(/^.*\//, '')
+  end
+
   def allowed?(method)
     model.allowed?(method, cur_user, site: cur_site)
+  end
+
+  def translate_category(es_type, cate_name)
+    nil
   end
 
   def search_types
@@ -104,6 +112,10 @@ module Gws::Elasticsearch::Setting::Base
   end
 
   private
+
+  def url_helpers
+    Rails.application.routes.url_helpers
+  end
 
   def and_public
     query0 = { term: { 'state' => 'public' } }
