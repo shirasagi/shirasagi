@@ -14,7 +14,7 @@ class Gws::Share::Folder
   field :name, type: String
   field :order, type: Integer, default: 0
 
-  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }
+  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy
 
   permit_params :name, :order
 
