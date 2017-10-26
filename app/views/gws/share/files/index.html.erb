@@ -5,8 +5,13 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
 
   $(".gws-category-navi-menu #category_id").change(function() {
     var cid = $(this).val();
-    if (cid) location.href = '<%= gws_share_category_files_path(category: 'ID') %>'.replace('ID', cid);
-    else location.href = '<%= gws_share_files_path %>';
+    <% if @folder -%>
+      if (cid) location.href = '<%= gws_share_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_folder_files_path(folder: @folder.id) %>';
+    <% else -%>
+      if (cid) location.href = '<%= gws_share_files_path(category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_files_path %>';
+    <% end -%>
   });
 
 <% end %>
@@ -22,7 +27,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="gws-share-categories">
   <% item.categories.compact.each do |category| %>
-    <%= link_to category.trailing_name, gws_share_category_files_path(category: category.id),
+    <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id,category: category.id),
                 class: "gws-category-label", style: category_label_css(category) %>
   <% end %>
   </span>
