@@ -1,6 +1,11 @@
 <%= jquery do %>
-    $(".clipboard-copy-button").attr("data-text", location.origin + "<%= download_gws_share_file_path %>");
+  <% if @folder -%>
+    $(".clipboard-copy-button").attr("data-text", location.origin + "<%= gws_share_folder_file_path %>");
     SS_Clipboard.renderCopy();
+  <% else -%>
+    $(".clipboard-copy-button").attr("data-text", location.origin + "<%= gws_share_file_path %>");
+    SS_Clipboard.renderCopy();
+  <% end -%>
 <% end %>
 
 <dl class="see">
