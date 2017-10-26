@@ -1,22 +1,26 @@
+<%= jquery do %>
+    Gws_Memo_Filter.render();
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :from %></dt>
-  <dd><%= @item.send :from %></dd>
+  <dd><%= @item.from %></dd>
 
   <dt><%= @model.t :subject %></dt>
-  <dd><%= @item.send :subject %></dd>
+  <dd><%= @item.subject %></dd>
 
   <dt><%= @model.t :action %></dt>
-  <dd><%= @item.send :action %></dd>
+  <dd><%= @item.action_name %></dd>
 
   <dt><%= @model.t :folder %></dt>
-  <dd><%= @item.send :folder %></dd>
+  <dd><%= tryb { @item.folder.name } %></dd>
 
   <dt><%= @model.t :state %></dt>
-  <dd><%= @item.send :state %></dd>
+  <dd><%= @item.state_name %></dd>
 
   <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
+  <dd><%= @item.order %></dd>
 </dl>

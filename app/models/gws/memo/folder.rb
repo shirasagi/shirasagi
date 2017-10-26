@@ -11,6 +11,8 @@ class Gws::Memo::Folder
   field :path, type: String
   field :order, type: Integer, default: 0
 
+  has_many :filters, class_name: 'Gws::Memo::Filter'
+
   permit_params :name, :order, :path
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
@@ -22,11 +24,15 @@ class Gws::Memo::Folder
   end
 
   def messages(uid=user_id)
-    Gws::Memo::Message.where("#{direction}.#{uid}" => path)
+    Gws::Memo::Message.where("#{direction}.#{uid}" => folder_path)
   end
 
   def unseen?
     false
+  end
+
+  def folder_path
+    id == 0 ? path : id.to_s
   end
 
   class << self
