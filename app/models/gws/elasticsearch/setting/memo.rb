@@ -1,11 +1,6 @@
 class Gws::Elasticsearch::Setting::Memo
   include ActiveModel::Model
+  include Gws::Elasticsearch::Setting::Base
 
-  attr_accessor :cur_site, :cur_user
-
-  def search_types
-    search_types = []
-    search_types << Gws::Memo::Message.collection_name if Gws::Memo::Message.allowed?(:read, @cur_user, site: @cur_site)
-    search_types
-  end
+  self.model = Gws::Memo::Message
 end

@@ -1,11 +1,12 @@
 class Gws::Elasticsearch::Setting::Share
   include ActiveModel::Model
+  include Gws::Elasticsearch::Setting::Base
 
-  attr_accessor :cur_site, :cur_user
+  self.model = Gws::Share::File
 
   def search_types
     search_types = []
-    search_types << 'gws_share_files' if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site)
+    search_types << 'gws_share_files' if allowed?(:read)
     search_types
   end
 end

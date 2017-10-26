@@ -7,7 +7,6 @@ module Gws::Elasticsearch::SearchFilter
     model Gws::Elasticsearch::Searcher
     before_action :set_type
     before_action :set_setting
-    before_action :set_search_type
     before_action :set_item
   end
 
@@ -37,12 +36,8 @@ module Gws::Elasticsearch::SearchFilter
     end
   end
 
-  def set_search_type
-    @search_type ||= @setting.search_types
-  end
-
   def fix_params
-    { cur_site: @cur_site, cur_user: @cur_user, type: @search_type }
+    { setting: @setting }
   end
 
   def get_params
@@ -61,7 +56,7 @@ module Gws::Elasticsearch::SearchFilter
 
   def show
     raise '404' unless @cur_site.elasticsearch_enabled?
-    raise '403' if @search_type.blank?
+    raise '403' if @setting.search_types.blank?
 
     if @s.keyword.present?
       @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?

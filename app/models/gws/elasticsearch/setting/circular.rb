@@ -1,7 +1,8 @@
 class Gws::Elasticsearch::Setting::Circular
   include ActiveModel::Model
+  include Gws::Elasticsearch::Setting::Base
 
-  attr_accessor :cur_site, :cur_user
+  self.model = Gws::Circular::Topic
 
   def search_types
     search_types = []
