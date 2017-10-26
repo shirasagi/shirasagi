@@ -10,29 +10,24 @@ class Gws::Memo::MessagesController < ApplicationController
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_group_navi, only: [:index]
 
+  private
+
   def set_crumbs
     apply_recent_filters
     @crumbs << [t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
-  end
-
-  def set_group_navi
-    @group_navi = Gws::Memo::Folder.static_items +
-        Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def apply_recent_filters
-    return 0
+  def set_group_navi
+    @group_navi = Gws::Memo::Folder.static_items(@cur_user) +
+      Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
   end
 
-  def index
-    @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
-        search(params[:s]).
-        page(params[:page]).per(50)
+  def apply_recent_filters
+    return 0
   end
 
   def from_folder
@@ -41,6 +36,15 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def from
     {from: { @cur_user.id.to_s => from_folder }}
+  end
+
+  public
+
+  def index
+    @items = @model.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
+        search(params[:s]).
+        page(params[:page]).per(50)
   end
 
   def create

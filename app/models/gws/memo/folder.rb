@@ -19,20 +19,22 @@ class Gws::Memo::Folder
 
   default_scope ->{ order_by order: 1 }
 
-  def direction
-    %w(INBOX.Sent INBOX.Draft).include?(path) ? 'from' : 'to'
+  after_destroy -> { messages.each{ |message| message.move(user, 'INBOX.Trash').update } }
+
+  def folder_path
+    id == 0 ? path : id.to_s
   end
 
-  def messages(uid=user_id)
-    Gws::Memo::Message.where("#{direction}.#{uid}" => folder_path)
+  def direction
+    %w(INBOX.Sent INBOX.Draft).include?(folder_path) ? 'from' : 'to'
+  end
+
+  def messages
+    Gws::Memo::Message.where("#{direction}.#{user_id}" => folder_path)
   end
 
   def unseen?
     false
-  end
-
-  def folder_path
-    id == 0 ? path : id.to_s
   end
 
   class << self
@@ -40,12 +42,12 @@ class Gws::Memo::Folder
         { user_ids: user.id }
     end
 
-    def static_items
+    def static_items(user)
       [
-          self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX'),
-          self.new(name: I18n.t('gws/memo/folder.inbox_trash'), path: 'INBOX.Trash'),
-          self.new(name: I18n.t('gws/memo/folder.inbox_draft'), path: 'INBOX.Draft'),
-          self.new(name: I18n.t('gws/memo/folder.inbox_sent'), path: 'INBOX.Sent'),
+          self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX', user_id: user.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_trash'), path: 'INBOX.Trash', user_id: user.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_draft'), path: 'INBOX.Draft', user_id: user.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_sent'), path: 'INBOX.Sent', user_id: user.id),
       ]
     end
 
