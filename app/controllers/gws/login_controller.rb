@@ -51,7 +51,7 @@ class Gws::LoginController < ApplicationController
 
     @item = SS::User.organization_authenticate(@cur_org, email_or_uid, password) rescue false
     @item = nil if @item && !@item.enabled?
-    @item = @item.try_switch_user(@cur_org) if @item
+    @item = @item.try_switch_user || @item if @item
 
     render_login @item, email_or_uid, session: true, password: password, logout_path: gws_logout_path(site: @cur_org)
   end

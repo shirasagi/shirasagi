@@ -226,8 +226,8 @@ module SS::Model::User
   end
 
   def try_switch_user(site = nil)
-    return self unless switch_user
-    return self unless switch_user.enabled?
+    return nil unless switch_user
+    return nil unless switch_user.enabled?
     switch_user
   end
 
