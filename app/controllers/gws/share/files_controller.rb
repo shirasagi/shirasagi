@@ -28,8 +28,8 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def set_folder
-    return if params[:group].blank?
-    @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:group])
+    return if params[:folder].blank?
+    @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
   end
 
   def set_folder_navi
@@ -52,10 +52,11 @@ class Gws::Share::FilesController < ApplicationController
   public
 
   def index
-    if @category.present?
+    if @category.present? || @folder.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
-      params[:s][:category] = @category.name
+      params[:s][:category] = @category.name if @category.present?
+      params[:s][:folder] = @folder.id if @folder.present?
     end
 
     @items = @model.site(@cur_site).

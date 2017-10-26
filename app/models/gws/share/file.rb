@@ -32,6 +32,10 @@ class Gws::Share::File
         criteria = criteria.in(category_ids: category_ids)
       end
 
+      if params[:folder].present?
+        criteria = criteria.in(folder_id: params[:folder])
+      end
+
       criteria
     end
   end
