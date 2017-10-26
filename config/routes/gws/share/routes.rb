@@ -25,6 +25,7 @@ SS::Application.routes.draw do
     end
 
     resource :setting, only: [:show, :edit, :update]
+    resources :categories, concerns: [:deletion]
 
     namespace "apis" do
       get "folders" => "folders#index"
