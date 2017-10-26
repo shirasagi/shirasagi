@@ -112,6 +112,10 @@ module SS::Model::Group
     end
   end
 
+  def domain
+    domains[0]
+  end
+
   def domain_editable?
     !new_record? && !name_was.to_s.include?('/')
   end

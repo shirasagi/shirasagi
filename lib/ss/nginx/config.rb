@@ -1,5 +1,6 @@
 class SS::Nginx::Config
-  attr_reader :virtual_conf, :partial_conf, :written
+  attr_accessor :virtual_conf, :partial_conf
+  attr_reader :written
 
   def initialize
     @virtual_conf = "#{Rails.root}/config/nginx.conf"
@@ -9,13 +10,10 @@ class SS::Nginx::Config
   end
 
   def write
-    conf = {}
-    conf = cms_conf(conf) if SS.config.cms.disable.blank?
-    conf = gws_conf(conf) if SS.config.gws.disable.blank?
-    data = conf.values.join("\n") + "\n"
+    data = nginx_conf
 
     if @data != data
-      ::File.write(@virtual_conf, data)
+      ::File.write(virtual_conf, data)
       @written = true
     end
     self
@@ -33,6 +31,13 @@ class SS::Nginx::Config
     self
   end
 
+  def nginx_conf
+    conf = {}
+    conf = cms_conf(conf) if SS.config.cms.disable.blank?
+    conf = gws_conf(conf) if SS.config.gws.disable.blank?
+    conf.values.join("\n") + "\n"
+  end
+
   def cms_conf(conf = {})
     SS::Site.all.each do |site|
       site.domains.each do |domain|
@@ -40,8 +45,8 @@ class SS::Nginx::Config
         domain_name, port = domain.split(':')
         data = []
         data << "server {"
-        data << "  include #{@partial_conf};"
-        data << "  server_name #{domain};"
+        data << "  include #{partial_conf};"
+        data << "  server_name #{domain_name};"
         data << "  listen #{port};" if port
         data << "  root #{site.root_path};"
         data << "}"
@@ -58,7 +63,7 @@ class SS::Nginx::Config
         domain_name, port = domain.split(':')
         data = []
         data << "server {"
-        data << "  include #{@partial_conf};"
+        data << "  include #{partial_conf};"
         data << "  listen #{port};" if port
         data << "  server_name #{domain_name};"
         data << "  root #{Rails.root}/public;"
