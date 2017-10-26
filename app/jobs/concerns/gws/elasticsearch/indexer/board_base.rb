@@ -40,7 +40,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
 
     def convert_to_doc(cur_site, topic, post)
       doc = {}
-      doc[:url] = url_helpers.gws_board_topic_path(site: cur_site, id: topic, anchor: "post-#{post.id}")
+      doc[:url] = path(site: cur_site, id: topic, anchor: "post-#{post.id}")
       doc[:name] = post.name
       doc[:mode] = post.mode
       doc[:text] = post.text
@@ -69,7 +69,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
 
     def convert_file_to_doc(cur_site, topic, post, file)
       doc = {}
-      doc[:url] = url_helpers.gws_board_topic_path(site: cur_site, id: topic, anchor: "file-#{file.id}")
+      doc[:url] = path(site: cur_site, id: topic, anchor: "file-#{file.id}")
       doc[:name] = file.name
       doc[:categories] = topic.categories.pluck(:name)
       doc[:data] = Base64.strict_encode64(::File.binread(file.path))
@@ -94,6 +94,10 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:created] = file.created.try(:iso8601)
 
       [ "file-#{file.id}", doc ]
+    end
+
+    def path(*args)
+      raise NotImplementedError
     end
   end
 end

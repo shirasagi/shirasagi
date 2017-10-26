@@ -3,6 +3,12 @@ class Gws::Elasticsearch::Indexer::CircularPostJob < Gws::ApplicationJob
 
   self.model = Gws::Circular::Post
 
+  class << self
+    def path(*args)
+      url_helpers.gws_circular_topic_path(*args)
+    end
+  end
+
   def enum_es_docs
     topic = Gws::Circular::Topic.find(item.topic_id)
 
