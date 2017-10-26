@@ -26,10 +26,9 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def apply_filters
-    # .unfiltered.
     @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
-      each{ |message| message.apply_filters(@cur_user).update }
+      unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
   end
 
   def from_folder
