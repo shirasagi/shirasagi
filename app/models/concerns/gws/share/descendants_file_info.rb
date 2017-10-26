@@ -24,14 +24,25 @@ module Gws::Share::DescendantsFileInfo
   private
 
   def validate_attached_file_size
-    if (limit = (cur_site.share_max_file_size || 0)) > 0
+    if (limit = (self.share_max_file_size || 0)) > 0
       size = files.compact.map(&:size).max || 0
       if size > limit
         errors.add(
           :base,
-          :file_size_exceeds_post_limit,
+          :file_size_exceeds_folder_limit,
           size: number_to_human_size(size),
           limit: number_to_human_size(limit))
+      end
+    end
+
+    if (limit = (cur_site.share_max_file_size || 0)) > 0
+      size = files.compact.map(&:size).inject(:+) || 0
+      if size > limit
+        errors.add(
+            :base,
+            :file_size_exceeds_file_limit,
+            size: number_to_human_size(size),
+            limit: number_to_human_size(limit))
       end
     end
   end
