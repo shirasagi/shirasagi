@@ -14,7 +14,10 @@ SS::Application.routes.draw do
   end
 
   gws "share" do
-    resources :files, concerns: [:deletion, :export]
+    resources :files, concerns: [:deletion, :export] do
+      get :download_history, on: :member
+    end
+
     resources :folders, concerns: [:deletion, :export]
 
     # with folder

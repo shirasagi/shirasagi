@@ -14,9 +14,9 @@ class Gws::Share::History
   field :updated_field_names, type: Array
   field :uploadfile_name, type: String
   field :uploadfile_filename, type: String
+  field :uploadfile_srcname, type: String
   field :uploadfile_size, type: Integer
   field :uploadfile_content_type, type: String
-  field :uploadfile_path, type: String
 
   validates :name, presence: true
   validates :mode, presence: true
