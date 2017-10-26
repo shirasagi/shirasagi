@@ -21,4 +21,19 @@ class Gws::Elasticsearch::Setting::All
     end
     search_types.compact.uniq
   end
+
+  def translate_type(es_type)
+    es_type = es_type.to_sym
+    type = Gws::Elasticsearch::Searcher::WELL_KNOWN_TYPES.find do |type|
+      next if type == 'all'
+      setting = "Gws::Elasticsearch::Setting::#{type.classify}".constantize.new(cur_site: cur_site, cur_user: cur_user)
+      setting.search_types.include?(es_type)
+    end
+
+    if type.present?
+      I18n.t("gws/elasticsearch.tabs.#{type}")
+    else
+      es_type
+    end
+  end
 end

@@ -2,7 +2,7 @@ module Gws::Elasticsearch::SearchFilter
   extend ActiveSupport::Concern
 
   included do
-    prepend_view_path 'app/views/gws/elasticsearch/search/main'
+    append_view_path 'app/views/gws/elasticsearch/search/main'
     menu_view nil
     model Gws::Elasticsearch::Searcher
     before_action :set_type
@@ -57,6 +57,8 @@ module Gws::Elasticsearch::SearchFilter
   def show
     raise '404' unless @cur_site.elasticsearch_enabled?
     raise '403' if @setting.search_types.blank?
+
+    prepend_view_path "app/views/gws/elasticsearch/search/#{@cur_type}"
 
     if @s.keyword.present?
       @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
