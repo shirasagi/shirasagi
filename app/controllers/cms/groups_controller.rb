@@ -6,6 +6,8 @@ class Cms::GroupsController < ApplicationController
 
   navi_view "cms/main/conf_navi"
 
+  after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
+
   private
 
   def set_crumbs
@@ -23,6 +25,10 @@ class Cms::GroupsController < ApplicationController
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def reload_nginx
+    SS::Nginx::Config.new.write.reload_server
   end
 
   public

@@ -66,6 +66,8 @@ ja:
     confirm:
       readable_setting:
         empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
+    errors:
+      allowed_domains_only_root: はルートグループにのみ設定できます。
 
   date:
     formats:
