@@ -6,7 +6,7 @@ class Gws::Elasticsearch::Setting::Share
 
   def search_types
     search_types = []
-    search_types << 'gws_share_files' if allowed?(:read)
+    search_types << :gws_share_files if allowed?(:read)
     search_types
   end
 end
