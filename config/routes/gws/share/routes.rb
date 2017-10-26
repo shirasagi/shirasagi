@@ -10,7 +10,6 @@ SS::Application.routes.draw do
     get :view, on: :member
     get :thumb, on: :member
     get :download, on: :member
-    get :categories, on: :collection
   end
 
   gws "share" do
@@ -25,17 +24,11 @@ SS::Application.routes.draw do
       resources :files, concerns: [:deletion, :export]
     end
 
-    # with category
-    scope(path: ":category", as: "category") do
-      resources :files, concerns: [:deletion, :export]
-    end
-
     resource :setting, only: [:show, :edit, :update]
-    resources :categories, concerns: [:deletion]
 
-    # namespace "apis" do
-    #   get "folders" => "folders#index"
-    # end
+    namespace "apis" do
+      get "folders" => "folders#index"
+    end
 
     namespace "apis" do
       get "categories" => "categories#index"

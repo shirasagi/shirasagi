@@ -2,6 +2,9 @@
   <% if params[:action] =~ /new|create/ %>
     <dt><%= @model.t :in_files %><%= @model.tt :in_files %></dt>
     <dd><%= f.file_field :in_files, multiple: :multiple %></dd>
+
+    <dt><%= @model.t :folder %><%= @model.tt :folder %></dt>
+    <dd><%= f.select :folder_id, @item.folder_options, include_blank: @model.t(:folder) %></dd>
   <% else %>
     <dt><%= @model.t :in_file %><%= @model.tt :in_file %></dt>
     <dd><%= f.file_field :in_file %></dd>
