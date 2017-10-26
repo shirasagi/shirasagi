@@ -1,35 +1,9 @@
 class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
   include Gws::Elasticsearch::Indexer::Base
 
-  def index(options)
-    @id = options[:id]
-
-    es_client = site.elasticsearch_client
-    return unless es_client
-
-    enum_es_docs.each do |id, doc|
-      es_client.index(index: index_name, type: index_type, id: id, body: doc, pipeline: 'attachment')
-    end
-  end
-
-  def delete(options)
-    @id = options[:id]
-
-    es_client = site.elasticsearch_client
-    return unless es_client
-
-    es_client.delete(index: index_name, type: index_type, id: "file-#{@id}")
-  end
+  self.model = Gws::Share::File
 
   private
-
-  def item
-    @item ||= Gws::Share::File.find(@id)
-  end
-
-  def index_name
-    @index ||= "g#{site.id}"
-  end
 
   def index_type
     'gws_share_files'

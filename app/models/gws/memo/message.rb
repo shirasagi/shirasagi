@@ -35,6 +35,10 @@ class Gws::Memo::Message
   before_validation :set_from_user_ids
   before_validation :set_to_user_ids
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?

@@ -10,6 +10,7 @@ ja:
       qna: Ｑ＆Ａ
       monitor: 照会・回答
       circular: 回覧板
+      memo: 連絡メモ
 
     format:
       search_results_count:
@@ -48,3 +49,4 @@ ja:
       gws/elasticsearch/indexer/circular_post_job: 回覧板インデクサー
       gws/elasticsearch/indexer/monitor_topic_job: 照会・回答インデクサー
       gws/elasticsearch/indexer/monitor_post_job: 照会・回答インデクサー
+      gws/elasticsearch/indexer/memo_message_job: 連絡メモインデクサー
