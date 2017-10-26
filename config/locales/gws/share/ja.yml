@@ -47,6 +47,7 @@ ja:
       gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
       gws/share/file:
+        folder: フォルダー
         folder_id: フォルダー名
       gws/share/folder:
         name: フォルダー名
@@ -56,6 +57,8 @@ ja:
     gws/share/category:
       name:
         - カテゴリー名を入力します。
+    gws/share/file:
+      folder: フォルダー名を選択します。
     gws/share/folder:
       name:
         - フォルダー名を入力します。
