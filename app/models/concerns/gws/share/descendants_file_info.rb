@@ -7,10 +7,18 @@ module Gws::Share::DescendantsFileInfo
     field :descendants_total_file_size, type: Integer
 
     validate :validate_attached_file_size
-    after_save_files :set_file_info, if: -> { file_ids.blank? }
+    after_save_files :set_file_info
 
-    after_save :update_folder_descendants_file_info, if: -> { file_ids.present? }
-    after_destroy_files :update_folder_descendants_file_info, if: -> { file_ids.present? }
+    after_save :update_folder_descendants_file_info
+    after_destroy_files :update_folder_descendants_file_info
+  end
+
+  def total_file_size
+    files.compact.map(&:size).inject(:+) || 0
+  end
+
+  def files_count
+    files.compact.length || 0
   end
 
   private
