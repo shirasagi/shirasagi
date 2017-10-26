@@ -3,8 +3,8 @@ class Gws::Share::Folder
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::ReadableSetting
-#TODO:include Gws::Addon::GroupPermission
-  include SS::UserPermission
+  include Gws::Addon::GroupPermission
+  #include SS::UserPermission
   include Gws::Addon::File
   include Gws::Share::DescendantsFileInfo
 
