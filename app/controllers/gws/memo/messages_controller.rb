@@ -54,6 +54,12 @@ class Gws::Memo::MessagesController < ApplicationController
     render_create @item.save
   end
 
+  def forward
+    forward_params = params.permit(:subject, :text, :html, :format)
+    @item = @model.new pre_params.merge(fix_params).merge(forward_params)
+    render :new
+  end
+
   def update
     @item.attributes = from.merge(get_params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
