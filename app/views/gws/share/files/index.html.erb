@@ -5,8 +5,13 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
 
   $(".gws-category-navi-menu #category_id").change(function() {
     var cid = $(this).val();
-    if (cid) location.href = '<%= gws_share_files_path(category: 'ID') %>'.replace('ID', cid);
-    else location.href = '<%= gws_share_files_path %>';
+    <% if @folder -%>
+      if (cid) location.href = '<%= gws_share_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_folder_files_path(folder: @folder.id) %>';
+    <% else -%>
+      if (cid) location.href = '<%= gws_share_files_path(category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_files_path %>';
+    <% end -%>
   });
 
 <% end %>
