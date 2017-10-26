@@ -13,15 +13,16 @@ class Gws::Memo::Filter
   field :from, type: String
   field :subject, type: String
   field :action, type: String
-  field :folder, type: String
   field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
+
+  belongs_to :folder, class_name: 'Gws::Memo::Folder'
 
   permit_params :name, :from, :subject, :action, :folder, :state, :order
 
   validates :name, presence: true
   validates :action, presence: true
-  validates :folder, presence: true, if: ->{ action =~ /copy|move/ }
+  validates :folder, presence: true, if: ->{ action != 'trash' }
 
   validate :validate_conditions
 
@@ -46,10 +47,17 @@ class Gws::Memo::Filter
   end
 
   def folder_options(user, site)
-    (Gws::Memo::Folder.static_items.select{ |item| item.path == 'INBOX.Trash' } +
-      Gws::Memo::Folder.site(site).allow(:read, user, site: site)).map do |folder|
-      [ERB::Util.html_escape(folder.name).html_safe, folder.path]
+    Gws::Memo::Folder.site(site).allow(:read, user, site: site).map do |folder|
+      [ERB::Util.html_escape(folder.name).html_safe, folder.id]
     end
+  end
+
+  def state_name
+    I18n.t(state, scope: 'ss.options.state')
+  end
+
+  def action_name
+    I18n.t(action, scope: 'gws/memo/filter.options.action')
   end
 
   private

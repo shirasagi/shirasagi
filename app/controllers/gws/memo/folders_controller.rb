@@ -13,7 +13,4 @@ class Gws::Memo::FoldersController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def pre_params
-    { path: BSON::ObjectId.new.to_s }
-  end
 end
