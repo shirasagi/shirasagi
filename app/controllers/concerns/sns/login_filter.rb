@@ -3,9 +3,13 @@ module Sns::LoginFilter
 
   private
 
+  def default_logged_in_path
+    SS.config.sns.logged_in_page
+  end
+
   def login_success
     if params[:ref].blank?
-      redirect_to SS.config.sns.logged_in_page
+      redirect_to default_logged_in_path
     elsif params[:ref] =~ /^\//
       redirect_to params[:ref]
     else
@@ -19,6 +23,7 @@ module Sns::LoginFilter
     if user
       opts[:session] ||= true
       set_user user, opts
+
       respond_to do |format|
         format.html { login_success }
         format.json { head :no_content }
@@ -28,7 +33,7 @@ module Sns::LoginFilter
       @item.email = email_or_uid if email_or_uid.present?
       respond_to do |format|
         flash[:alert] = alert
-        format.html { redirect_to SS.config.sns.logged_in_page }
+        format.html { render }
         format.json { render json: alert, status: :unprocessable_entity }
       end
     end

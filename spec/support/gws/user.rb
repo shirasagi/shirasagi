@@ -11,7 +11,8 @@ def create_gws_users
   sys = Gws::User.create name: "gws-sys", uid: "sys", email: "sys@example.jp", in_password: "pass",
     group_ids: [g11.id], gws_role_ids: [role.id]
   adm = Gws::User.create name: "gw-admin", uid: "admin", email: "admin@example.jp", in_password: "pass",
-    group_ids: [g11.id], gws_role_ids: [role.id]
+    group_ids: [g11.id], gws_role_ids: [role.id],
+    organization_id: g00.id, organization_uid: "org-admin"
 end
 
 def gws_site

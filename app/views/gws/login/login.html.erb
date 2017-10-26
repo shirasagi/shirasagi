@@ -1,0 +1,55 @@
+<%= jquery do %>
+  $('input.alnum').on({
+    focus: function() { $(this).attr('type', 'tel').css('width', '100%'); },
+    blur: function() { $(this).attr('type', 'text'); },
+    keypress: function(ev) { if (ev.which == 13) { $('#item_password').focus(); return false; } }
+  });
+<% end %>
+
+<section class="main-box login-box">
+  <header>
+    <h2><%= t("ss.login") %></h2>
+    <div class="version">ver. <%= tryb{SS.version} %></div>
+  </header>
+
+  <%= form_tag action: params[:action] do |f| %>
+    <% if flash[:alert] %>
+    <div class="error-message"><%= flash[:alert] %></div>
+    <% end %>
+
+    <%= error_messages_for :item %>
+    <%= hidden_field_tag :ref, params[:ref] %>
+
+    <div class="form-group">
+      <label><%== t("ss.views.login/login.organization_uid") %></label>
+      <%= text_field :item, :email, class: "alnum", autofocus: true %>
+    </div>
+
+    <div class="form-group">
+      <label><%= t("ss.views.login/login.password") %></label>
+      <%= password_field :item, :password %>
+    </div>
+
+    <footer class="send">
+      <%= submit_tag t("ss.login"), class: "btn-primary" %>
+    </footer>
+  <% end %>
+</section>
+
+<% if @notices.present? %>
+<div class="main-box login-notice">
+  <header>
+    <h2><%= t('sys.notice') %></h2>
+  </header>
+  <ul class="list-items">
+  <% @notices.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, gws_public_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </li>
+  <% end %>
+  </ul>
+</div>
+<% end %>

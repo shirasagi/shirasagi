@@ -7,6 +7,7 @@ module Gws::BaseFilter
 
     helper Gws::LayoutHelper
 
+    before_action :validate_gws
     before_action :set_gws_assets
     before_action :set_current_site
     before_action :set_current_group
@@ -16,6 +17,10 @@ module Gws::BaseFilter
   end
 
   private
+
+  def validate_gws
+    raise '404' if SS.config.gws.disable.present?
+  end
 
   def set_gws_assets
     SS.config.gws.stylesheets.each { |m| stylesheet(m) }

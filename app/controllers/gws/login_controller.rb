@@ -1,8 +1,9 @@
-class Sns::LoginController < ApplicationController
+class Gws::LoginController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
   protect_from_forgery except: :remote_login
+  before_action :set_organitzaion
   skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
   skip_before_action :logged_in?, only: [:login, :remote_login, :status]
 
@@ -10,6 +11,16 @@ class Sns::LoginController < ApplicationController
   navi_view nil
 
   private
+
+  def set_organitzaion
+    @cur_org = SS::Group.where(domains: request_host).first
+    @cur_org ||= SS::Group.where(id: params[:site].to_s).first
+    raise '404' unless @cur_org
+  end
+
+  def default_logged_in_path
+    gws_portal_path(site: @cur_org)
+  end
 
   def get_params
     params.require(:item).permit(:uid, :email, :password, :encryption_type)
@@ -38,11 +49,11 @@ class Sns::LoginController < ApplicationController
       password = SS::Crypt.decrypt(password, type: encryption_type) rescue nil
     end
 
-    @item = SS::User.authenticate(email_or_uid, password) rescue false
+    @item = SS::User.organization_authenticate(@cur_org, email_or_uid, password) rescue false
     @item = nil if @item && !@item.enabled?
     @item = @item.try_switch_user || @item if @item
 
-    render_login @item, email_or_uid, session: true, password: password
+    render_login @item, email_or_uid, session: true, password: password, logout_path: gws_logout_path(site: @cur_org)
   end
 
   def remote_login
@@ -65,7 +76,7 @@ class Sns::LoginController < ApplicationController
     # discard all session info
     reset_session
     respond_to do |format|
-      format.html { redirect_to sns_login_path }
+      format.html { redirect_to gws_login_path }
       format.json { head :no_content }
     end
   end
