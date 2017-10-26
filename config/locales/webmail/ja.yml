@@ -143,6 +143,7 @@ ja:
         name: フォルダー名
       webmail/address:
         address_group_id: グループ名
+        import_format: インポート形式
       webmail/address_group:
         name: グループ名
         order: 並び順

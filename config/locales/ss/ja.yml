@@ -387,8 +387,21 @@ ja:
         kana: カナ
         company: 会社
         title: 役職
-        tel: 電話番号
+        tel: 携帯電話番号
         email: メールアドレス
+        home_postal_code: 郵便番号（自宅）
+        home_prefecture: 都道府県（自宅）
+        home_city: 市区町村（自宅）
+        home_street_address: 番地（自宅）
+        home_tel: 電話番号（自宅）
+        home_fax: ファックス番号（自宅）
+        office_postal_code: 郵便番号（勤務先）
+        office_prefecture: 都道府県（勤務先）
+        office_city: 市区町村（勤務先）
+        office_street_address: 番地（勤務先）
+        office_tel: 電話番号（勤務先）
+        office_fax: ファックス番号（勤務先）
+        personal_webpage: WEBページ
         memo: メモ
       ss/addon/body:
         html: 本文
@@ -624,9 +637,35 @@ ja:
       title:
         - 役職を入力します。
       tel:
-        - 電話番号を入力します。
+        - 携帯電話番号を入力します。
       email:
         - メールアドレスを入力します。
+      home_postal_code:
+        - 郵便番号（自宅）を入力します。
+      home_prefecture:
+        - 都道府県（自宅）を入力します。
+      home_city:
+        - 市区町村（自宅）を入力します。
+      home_street_address:
+        - 番地（自宅）を入力します。
+      home_tel:
+        - 電話番号（自宅）を入力します。
+      home_fax:
+        - ファックス番号（自宅）を入力します。
+      office_postal_code:
+        - 郵便番号（勤務先）を入力します。
+      office_prefecture:
+        - 都道府県（勤務先）を入力します。
+      office_city:
+        - 市区町村（勤務先）を入力します。
+      office_street_address:
+        - 番地（勤務先）を入力します。
+      office_tel:
+        - 電話番号（勤務先）を入力します。
+      office_fax:
+        - ファックス番号（勤務先）を入力します。
+      personal_webpage:
+        - WEBページを入力します。
       memo:
         - メモを入力します。
       address_group_id:
