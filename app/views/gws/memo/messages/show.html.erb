@@ -17,7 +17,7 @@
           <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
         </span>
       </h2>
-      <div class="from"><%= @item.sender.join('; ') %></div>
+      <div class="from"><%= @item.display_sender.join('; ') %></div>
       <div class="date"><%= tryb {@item.updated.strftime('%Y/%m/%d %H:%M')} %></div>
     </div>
 

@@ -19,8 +19,8 @@ class Gws::Memo::Message
   field :size, type: Integer, default: 0
   field :state, type: String, default: 'public'
 
-  field :seen_hash, type: Hash, default: {}
-  field :star_hash, type: Hash, default: {}
+  field :seen, type: Hash, default: {}
+  field :star, type: Hash, default: {}
   field :filtered, type: Hash, default: {}
 
   field :from, type: Hash, default: {}
@@ -31,7 +31,7 @@ class Gws::Memo::Message
 
   permit_params :subject, :text, :html, :format, :to_text
 
-  default_scope -> { order_by internal_date: -1 }
+  default_scope -> { order_by updated: -1 }
 
   before_validation :set_from_user_ids
   before_validation :set_to_user_ids
@@ -85,12 +85,12 @@ class Gws::Memo::Message
 
   def unseen?(user=:nil)
     return false if user == :nil
-    seen_hash.exclude?(user.id.to_s)
+    seen.exclude?(user.id.to_s)
   end
 
   def star?(user=:nil)
     return false if user == :nil
-    star_hash.include?(user.id.to_s)
+    star.include?(user.id.to_s)
   end
 
   def display_size
@@ -107,22 +107,22 @@ class Gws::Memo::Message
   end
 
   def set_seen(user)
-    self.seen_hash[user.id.to_s] = Time.zone.now
+    self.seen[user.id.to_s] = Time.zone.now
     self
   end
 
   def unset_seen(user)
-    self.seen_hash.delete(user.id.to_s)
+    self.seen.delete(user.id.to_s)
     self
   end
 
   def set_star(user)
-    self.star_hash[user.id.to_s] = Time.zone.now
+    self.star[user.id.to_s] = Time.zone.now
     self
   end
 
   def unset_star(user)
-    self.star_hash.delete(user.id.to_s)
+    self.star.delete(user.id.to_s)
     self
   end
 
