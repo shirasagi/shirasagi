@@ -7,12 +7,10 @@ module Gws::Share::DescendantsFileInfo
     field :descendants_total_file_size, type: Integer
 
     validate :validate_attached_file_size
-#TODO:topic_id
-    # before_save :set_file_info, if: -> { topic_id.blank? }
     after_save_files :set_file_info, if: -> { file_ids.blank? }
 
-    after_save :update_topic_descendants_file_info, if: -> { file_ids.present? }
-    after_destroy_files :update_topic_descendants_file_info, if: -> { file_ids.present? }
+    after_save :update_folder_descendants_file_info, if: -> { file_ids.present? }
+    after_destroy_files :update_folder_descendants_file_info, if: -> { file_ids.present? }
   end
 
   private
@@ -30,23 +28,23 @@ module Gws::Share::DescendantsFileInfo
     end
   end
 
-  def topic_file_info(topic)
-    sizes = topic.files.compact.map(&:size) || []
+  def folder_file_info(folder)
+    sizes = folder.files.compact.map(&:size) || []
     sizes.compact!
 
     [ sizes.length, sizes.inject(:+) || 0 ]
   end
 
   def set_file_info
-    files_count, total_file_size = topic_file_info(self)
+    files_count, total_file_size = folder_file_info(self)
     self.descendants_files_count = files_count
     self.descendants_total_file_size = total_file_size
   end
 
-  def update_topic_descendants_file_info
-    return unless topic
-    files_count, total_file_size = topic_file_info(topic)
-    topic.set(
+  def update_folder_descendants_file_info
+#    return unless files
+    files_count, total_file_size = folder_file_info(self)
+    self.set(
       descendants_files_count: files_count,
       descendants_total_file_size: total_file_size
     )
