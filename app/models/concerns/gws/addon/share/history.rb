@@ -40,7 +40,7 @@ module Gws::Addon::Share
       return unless site_id
 
       server_dir = File.dirname(path)
-      download_url_dir = ::File.dirname(public_path)
+      download_url_dir = File.dirname(download_url)
       history_file_count = Dir.glob(server_dir + "/#{id}*_history[1-9]*").count
       uploadfile_path = download_url_dir + "_history#{history_file_count + 1}"
 
