@@ -37,10 +37,12 @@ class SS::Nginx::Config
     SS::Site.all.each do |site|
       site.domains.each do |domain|
         next if conf[domain]
+        domain_name, port = domain.split(':')
         data = []
         data << "server {"
         data << "  include #{@partial_conf};"
         data << "  server_name #{domain};"
+        data << "  listen #{port};" if port
         data << "  root #{site.root_path};"
         data << "}"
         conf[domain] = data.join("\n")
@@ -53,10 +55,12 @@ class SS::Nginx::Config
     SS::Group.where(:domains.exists => true).each do |group|
       group.domains.each do |domain|
         next if conf[domain]
+        domain_name, port = domain.split(':')
         data = []
         data << "server {"
         data << "  include #{@partial_conf};"
-        data << "  server_name #{domain};"
+        data << "  listen #{port};" if port
+        data << "  server_name #{domain_name};"
         data << "  root #{Rails.root}/public;"
         data << "}"
         conf[domain] = data.join("\n")
