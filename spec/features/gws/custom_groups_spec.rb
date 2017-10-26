@@ -24,7 +24,6 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name"
         click_button "保存"
       end
-      expect(page).to have_no_css("form#item-form")
     end
 
     it "#show" do
