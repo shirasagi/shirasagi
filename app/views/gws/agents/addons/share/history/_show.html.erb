@@ -23,7 +23,7 @@
         <td><%= item.user_tel %></td>
         <td><%= item.uploadfile_filename %></td>
         <td><%= item.uploadfile_size %></td>
-        <td><%= link_to item.uploadfile_filename, item.uploadfile_path, class: "icon-txt", target: '_blank' %></td>
+        <td><%= link_to t('ss.links.download'), download_history_gws_share_file_path(history_id: item._id), { class: "btn" } %></td>
         <td>
           <% if (names = item.updated_field_names).present? %>
           <%= truncate names.join(', '), length: 30 %>

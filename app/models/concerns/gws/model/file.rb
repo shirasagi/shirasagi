@@ -237,19 +237,23 @@ module Gws::Model::File
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
     if File.exist?(path)
-      history_file_count = Dir.glob(dir + "/#{id}*_history[1-9]*").count
-      FileUtils.mv(path, path + "_history#{history_file_count + 1}")
+      history_file_count = Dir.glob(dir + "/#{id}*_history[0-9]*").count
       Fs.binwrite(path, binary)
       self.size = binary.length
+      sleep(1)
+      FileUtils.cp(path, path + "_history#{history_file_count}")
     else
       Fs.binwrite(path, binary)
       self.size = binary.length
+      sleep(1)
+      FileUtils.cp(path, path + "_history0")
     end
 
   end
 
   def remove_file
     Fs.rm_rf(path)
+    Dir.glob(path + "_history[0-9]*").each {|file| Fs.rm_rf(file) } if Dir.glob(path + "_history[0-9]*").count > 0
     remove_public_file
   end
 
