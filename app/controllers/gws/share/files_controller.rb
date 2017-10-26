@@ -56,4 +56,27 @@ class Gws::Share::FilesController < ApplicationController
     raise "403" unless @item.readable?(@cur_user)
     render
   end
+
+  def download_history
+    set_item
+    set_last_modified
+
+    if params[:history_id].present?
+      history_item = Gws::Share::History.where(item_id: @item.id, _id: params[:history_id]).first
+      server_dir = File.dirname(@item.path)
+      uploadfile_path = server_dir + "/#{@item.id}_#{history_item.uploadfile_srcname}"
+    end
+
+    if Fs.mode == :file && Fs.file?(uploadfile_path)
+      send_file uploadfile_path, type: history_item.uploadfile_content_type, filename: history_item.uploadfile_name,
+                disposition: :attachment, x_sendfile: true
+    elsif Fs.mode == :file && Fs.file?(@item.path)
+      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
+                disposition: :attachment, x_sendfile: true
+    else
+      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
+                disposition: :attachment
+    end
+  end
+
 end

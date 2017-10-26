@@ -39,10 +39,8 @@ module Gws::Addon::Share
       site_id ||= self.site_id rescue nil
       return unless site_id
 
-      server_dir = File.dirname(path)
-      download_url_dir = File.dirname(download_url)
-      history_file_count = Dir.glob(server_dir + "/#{id}*_history[1-9]*").count
-      uploadfile_path = download_url_dir + "_history#{history_file_count + 1}"
+      history_file_count = Dir.glob(self.path + "*_history[0-9]*").count
+      srcname = "history" + "#{history_file_count - 1}"
 
       item = Gws::Share::History.new(
         cur_user: @cur_user,
@@ -51,9 +49,9 @@ module Gws::Addon::Share
         model: reference_model,
         uploadfile_name: name,
         uploadfile_filename: filename,
+        uploadfile_srcname: srcname,
         uploadfile_size: size,
         uploadfile_content_type: content_type,
-        uploadfile_path: uploadfile_path,
         item_id: id
       )
       item.attributes = overwrite_params
