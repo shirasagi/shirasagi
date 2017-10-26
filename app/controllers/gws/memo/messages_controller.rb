@@ -4,7 +4,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   model Gws::Memo::Message
 
-  before_action :apply_recent_filters, only: [:index]
+  before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :toggle_star]
   before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
@@ -13,7 +13,6 @@ class Gws::Memo::MessagesController < ApplicationController
   private
 
   def set_crumbs
-    apply_recent_filters
     @crumbs << [t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
   end
 
@@ -26,8 +25,11 @@ class Gws::Memo::MessagesController < ApplicationController
       Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
   end
 
-  def apply_recent_filters
-    return 0
+  def apply_filters
+    # .unfiltered.
+    @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
+      each{ |message| message.apply_filters(@cur_user).update }
   end
 
   def from_folder

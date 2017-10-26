@@ -38,12 +38,23 @@ class Gws::Memo::Filter
     criteria
   }
 
+  private
+
+  def validate_conditions
+    %w(from subject).each do |key|
+      return true if send(key).present?
+    end
+    errors.add :base, I18n.t('gws/memo/filter.errors.blank_conditions')
+  end
+
+  public
+
   def state_options
-    %w(enabled disabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
+    %w(enabled disabled).map { |m| [I18n.t(m, scope: 'ss.options.state'), m] }
   end
 
   def action_options
-    %w(move trash).map { |m| [I18n.t("gws/memo/filter.options.action.#{m}"), m] }
+    %w(move trash).map { |m| [I18n.t(m, scope: 'gws/memo/filter.options.action'), m] }
   end
 
   def folder_options(user, site)
@@ -60,12 +71,14 @@ class Gws::Memo::Filter
     I18n.t(action, scope: 'gws/memo/filter.options.action')
   end
 
-  private
-
-  def validate_conditions
-    %w(from subject).each do |key|
-      return true if send(key).present?
-    end
-    errors.add :base, I18n.t('gws/memo/filter.errors.blank_conditions')
+  def match?(message)
+    return true if (from && message.display_sender.include?(from))
+    return true if (subject && message.display_subject.include?(subject))
+    return false
   end
+
+  def path
+    (action == 'trash') ? 'INBOX.Trash' : folder.id.to_s
+  end
+
 end

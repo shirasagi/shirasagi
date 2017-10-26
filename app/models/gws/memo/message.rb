@@ -21,6 +21,7 @@ class Gws::Memo::Message
 
   field :seen_hash, type: Hash, default: {}
   field :star_hash, type: Hash, default: {}
+  field :filtered, type: Hash, default: {}
 
   field :from, type: Hash, default: {}
   embeds_ids :from_users, class_name: 'Gws::User' # => from_user_ids
@@ -50,6 +51,8 @@ class Gws::Memo::Message
     criteria
   }
 
+  scope :unfiltered, -> { where({}) }
+
   def to_text=(obj)
     obj.split(';').each do |val|
       addr = val.strip.match(/<(.+?)>$/)[1]
@@ -62,10 +65,9 @@ class Gws::Memo::Message
     to_users.map(&:email_address).join('; ')
   end
 
-  def sender
+  def display_sender
     from_users.map(&:long_name)
   end
-  alias display_sender sender
 
   def display_subject
     subject.presence || 'No title'
@@ -141,6 +143,15 @@ class Gws::Memo::Message
     return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
     return true if self.to_user_ids.include?(user.id)
     false
+  end
+
+  def apply_filters(user)
+    matched_filter = Gws::Memo::Filter.site(site).
+      allow(:read, user, site: site).enabled.detect{ |f| f.match?(self) }
+
+    self.to[user.id.to_s] = matched_filter.path if matched_filter
+    self.filtered[user.id.to_s] = Time.zone.now
+    self
   end
 
   private
