@@ -1,3 +1,8 @@
+<%= jquery do %>
+    $(".clipboard-copy-button").attr("data-text", location.origin + "<%= download_gws_share_file_path %>");
+    SS_Clipboard.renderCopy();
+<% end %>
+
 <dl class="see">
   <% if @item.image? %>
   <dt><%= @model.t :image %></dt>
@@ -12,4 +17,7 @@
 
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
+
+  <dt><%= @model.t :url_copy %></dt>
+  <dd><span class="btn clipboard-copy-button"><%= I18n.t('gws/share.url_copy') %></span></dd>
 </dl>
