@@ -376,6 +376,10 @@ ja:
       cms/import_page: 取り込みページ
       cms/word_dictionary: かな辞書
       cms/loop_setting: ループHTML
+    errors:
+      models:
+        cms/model/node:
+          routed_folders_under_uploader: アップローダー下に属性付きフォルダーは作成できません。アップローダーに切り替え、新規フォルダーよりフォルダーを作成してください。
     attributes:
       cms/content:
         released: 公開日時

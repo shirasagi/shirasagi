@@ -55,4 +55,25 @@ describe Uploader::Node::File, type: :model, dbscope: :example do
       expect(::File.exist?(uploader_subdir_file)).to be_truthy
     end
   end
+
+  context 'creating routed folders under uploader' do
+    let(:uploader) { create(:uploader_node_file, state: 'public') }
+
+    context 'creating cms/node/node, this causes some errors' do
+      let(:expected_error) { I18n.t('mongoid.errors.models.cms/model/node.routed_folders_under_uploader') }
+
+      it do
+        folder = build(:cms_node_node, cur_node: uploader)
+        expect(folder.valid?).to be_falsey
+        expect(folder.errors[:base]).to include(expected_error)
+      end
+    end
+
+    context 'creating uploader/node/file, this is ok' do
+      it do
+        folder = build(:uploader_node_file, cur_node: uploader)
+        expect(folder.valid?).to be_truthy
+      end
+    end
+  end
 end

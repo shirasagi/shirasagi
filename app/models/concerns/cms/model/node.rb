@@ -23,6 +23,7 @@ module Cms::Model::Node
 
     validates :route, presence: true
     validate :validate_invalid_filename
+    validate :validate_ancestors
 
     after_save :rename_children, if: ->{ @db_changes }
     after_save :remove_files_recursively, if: ->{ @db_changes && @db_changes["state"] && !public? }
@@ -180,6 +181,19 @@ module Cms::Model::Node
         errors.add :basename, :invalid
         break
       end
+    end
+  end
+
+  def validate_ancestors
+    return if route.start_with?('uploader/')
+
+    p = parent
+    while p
+      if p.route.start_with?('uploader/')
+        errors.add(:base, :routed_folders_under_uploader)
+        break
+      end
+      p = p.parent
     end
   end
 
