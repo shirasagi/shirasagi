@@ -7,7 +7,13 @@ class Gws::Share::File
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  field :folder_id, type: Integer
+  permit_params :folder_id
+
+  belongs_to :folder, class_name: "Gws::Share::Folder"
+
   validates :category_ids, presence: true
+  validates :folder_id, presence: true
   validate :validate_size
 
   # indexing to elasticsearch via companion object
@@ -32,6 +38,12 @@ class Gws::Share::File
 
   def remove_public_file
     # TODO: fix SS::Model::File
+  end
+
+  def folder_options
+    Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).map do |item|
+      [item.name, item.id]
+    end
   end
 
   private

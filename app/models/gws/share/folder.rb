@@ -14,6 +14,8 @@ class Gws::Share::Folder
   field :name, type: String
   field :order, type: Integer, default: 0
 
+  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }
+
   permit_params :name, :order
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
