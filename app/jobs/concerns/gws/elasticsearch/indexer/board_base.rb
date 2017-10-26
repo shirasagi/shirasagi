@@ -85,6 +85,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:group_ids] = post.groups.pluck(:id)
       doc[:custom_group_ids] = post.custom_groups.pluck(:id)
       doc[:user_ids] = post.users.pluck(:id)
+      doc[:permission_level] = post.permission_level
 
       doc[:readable_group_ids] = topic.readable_groups.pluck(:id)
       doc[:readable_custom_group_ids] = topic.readable_custom_groups.pluck(:id)
