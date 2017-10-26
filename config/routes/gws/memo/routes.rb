@@ -16,6 +16,7 @@ SS::Application.routes.draw do
         post :unset_star_all
         post :move_all
         put :move
+        post :forward
       end
       member do
         get :toggle_star
