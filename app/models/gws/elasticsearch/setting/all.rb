@@ -1,5 +1,6 @@
 class Gws::Elasticsearch::Setting::All
   include ActiveModel::Model
+  include Gws::Elasticsearch::Setting::Base
 
   attr_accessor :cur_site, :cur_user
 
@@ -10,6 +11,10 @@ class Gws::Elasticsearch::Setting::All
     #   setting.allowed?(method)
     # end
     false
+  end
+
+  def manageable_filter
+    {}
   end
 
   def search_types
