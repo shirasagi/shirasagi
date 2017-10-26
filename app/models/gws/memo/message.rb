@@ -51,7 +51,9 @@ class Gws::Memo::Message
     criteria
   }
 
-  scope :unfiltered, -> { where({}) }
+  scope :unfiltered, ->(user) {
+    where(:"filtered.#{user.id}".exists => false)
+  }
 
   def to_text=(obj)
     obj.split(';').each do |val|
