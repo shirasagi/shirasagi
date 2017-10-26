@@ -12,8 +12,13 @@ SS::Application.routes.draw do
     get :download, on: :member
   end
 
+  concern :lock do
+    get :lock, :on => :member
+    delete :lock, action: :unlock, :on => :member
+  end
+
   gws "share" do
-    resources :files, concerns: [:deletion, :export] do
+    resources :files, concerns: [:deletion, :export, :lock] do
       get :download_history, on: :member
     end
 
