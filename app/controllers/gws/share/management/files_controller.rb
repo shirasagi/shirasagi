@@ -1,11 +1,11 @@
-class Gws::Share::FilesController < ApplicationController
+class Gws::Share::Management::FilesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::FileFilter
 
   model Gws::Share::File
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :unlock, :disable]
-  before_action :set_selected_items, only: [:disable_all]
+  before_action :set_item, only: [:show, :active, :delete]
+  before_action :set_selected_items, only: [:destroy_all, :active_all]
   before_action :set_category
   before_action :set_folder
   before_action :set_folder_navi, only: [:index]
@@ -16,9 +16,11 @@ class Gws::Share::FilesController < ApplicationController
     set_folder
     if @folder.present?
       @crumbs << [t("mongoid.models.gws/share"), gws_share_files_path]
+      @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
       @crumbs << [@folder.name, action: :index]
     else
-      @crumbs << [t("mongoid.models.gws/share"), action: :index]
+      @crumbs << [t("mongoid.models.gws/share"), gws_share_files_path]
+      @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
     end
   end
 
@@ -63,24 +65,13 @@ class Gws::Share::FilesController < ApplicationController
 
     @items = @model.site(@cur_site).
       readable(@cur_user, @cur_site).
-      active.
+      deleted.
       search(params[:s]).
       page(params[:page]).per(50)
   end
 
   def show
     raise "403" unless @item.readable?(@cur_user)
-    render
-  end
-
-  def edit
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.is_a?(Gws::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
-    end
     render
   end
 
@@ -106,56 +97,24 @@ class Gws::Share::FilesController < ApplicationController
     end
   end
 
-  def lock
-    if @item.acquire_lock(force: params[:force].present?)
-      render
-    else
-      respond_to do |format|
-        format.html { render }
-        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
-      end
-    end
+  def active
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_destroy @item.active
   end
 
-  def unlock
-    unless @item.locked?
-      respond_to do |format|
-        format.html { redirect_to(action: :edit) }
-        format.json { head :no_content }
-      end
-      return
-    end
+  def active_all
+    entries = @items.entries
+    @items = []
 
-    raise "403" if !@item.lock_owned? && !@item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node)
-
-    unless @item.locked?
-      respond_to do |format|
-        format.html { redirect_to(action: :edit) }
-        format.json { head :no_content }
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        next if item.active
+      else
+        item.errors.add :base, :auth_error
       end
-      return
+      @items << item
     end
-
-    if @item.release_lock(force: params[:force].present?)
-      respond_to do |format|
-        format.html { redirect_to(action: :edit) }
-        format.json { head :no_content }
-      end
-    else
-      respond_to do |format|
-        format.html { render file: :show }
-        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
-      end
-    end
+    render_destroy_all(entries.size != @items.size)
   end
 
-  def delete
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render
-  end
-
-  def disable
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.disable
-  end
 end
