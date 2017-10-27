@@ -54,7 +54,21 @@ class Gws::Share::File
   private
 
   def validate_size
-    limit = cur_site.share_max_file_size || 0
+    if @cur_site && folder
+      if (limit = (folder.share_max_file_size || 0)) > 0
+        size = folder.files.compact.map(&:size).max || 0
+        if size > limit
+          errors.add(
+              :base,
+              :file_size_exceeds_folder_limit,
+              size: number_to_human_size(size),
+              limit: number_to_human_size(limit))
+        end
+      end
+    else
+      @cur_site = Gws::Group.find(site_id) unless @cur_site
+    end
+    limit = @cur_site.share_max_file_size || 0
     return if limit <= 0
 
     if in_file.present?

@@ -7,21 +7,29 @@ module Gws::Share::DescendantsFileInfo
     field :descendants_total_file_size, type: Integer
 
     validate :validate_attached_file_size
-    after_save_files :set_file_info, if: -> { file_ids.blank? }
+    after_save_files :set_file_info
 
-    after_save :update_folder_descendants_file_info, if: -> { file_ids.present? }
-    after_destroy_files :update_folder_descendants_file_info, if: -> { file_ids.present? }
+    after_save :update_folder_descendants_file_info
+    after_destroy_files :update_folder_descendants_file_info
+  end
+
+  def total_file_size
+    files.compact.map(&:size).inject(:+) || 0
+  end
+
+  def files_count
+    files.compact.length || 0
   end
 
   private
 
   def validate_attached_file_size
-    if (limit = (cur_site.share_max_file_size || 0)) > 0
+    if (limit = (self.share_max_file_size || 0)) > 0
       size = files.compact.map(&:size).max || 0
       if size > limit
         errors.add(
           :base,
-          :file_size_exceeds_post_limit,
+          :file_size_exceeds_folder_limit,
           size: number_to_human_size(size),
           limit: number_to_human_size(limit))
       end

@@ -13,12 +13,18 @@ class Gws::Share::Folder
   seqid :id
   field :name, type: String
   field :order, type: Integer, default: 0
+  field :state, type: String, default: "closed"
+  field :share_max_file_size, type: Integer, default: 0
+  attr_accessor :in_share_max_file_size_mb
 
-  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy
+  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
 
-  permit_params :name, :order
+  permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb
+
+  before_validation :set_share_max_file_size
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
+  validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   default_scope ->{ order_by order: 1 }
 
@@ -30,5 +36,12 @@ class Gws::Share::Folder
       criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
       criteria
     end
+  end
+
+  private
+
+  def set_share_max_file_size
+    return if in_share_max_file_size_mb.blank?
+    self.share_max_file_size = Integer(in_share_max_file_size_mb) * 1_024 * 1_024
   end
 end
