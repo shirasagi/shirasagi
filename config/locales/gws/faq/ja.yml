@@ -75,7 +75,7 @@ ja:
 
   mongoid:
     models:
-      gws/faq/topic: よくある質問トピック
+      gws/faq/topic: よくある質問/トピック
       gws/faq/post: よくある質問/投稿
       gws/faq/category: よくある質問/カテゴリー
     errors:
