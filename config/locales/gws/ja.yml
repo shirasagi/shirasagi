@@ -66,6 +66,8 @@ ja:
     confirm:
       readable_setting:
         empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
+    errors:
+      allowed_domains_only_root: はルートグループにのみ設定できます。
 
   date:
     formats:
@@ -113,7 +115,7 @@ ja:
       gws/member: 参加者
       gws/subscription_setting: 購読
       gws/contributor: 投稿者
-      gws/custom_field: 入力項目
+      gws/schedules: スケジュール
 
   mongoid:
     models:
@@ -205,26 +207,16 @@ ja:
         member_custom_group_ids: 参加カスタムグループ
       gws/group_setting/system:
         sendmail_domains: メール送信許可ドメイン
+        canonical_scheme: グループウェアスキーム
+        canonical_domain: グループウェアドメイン
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー
         subscribed_custom_group_ids: 購読カスタムグループ
       gws/addon/contributor:
         contributor_name: 投稿者名
-      gws/addon/custom_field:
-        tooltips: ツールチップ
-        input_type: 入力形式
-        select_options: 選択肢
-        required: 必須入力
-        max_length: 最大文字数
-        place_holder: 初期表示
-        additional_attr: 追加属性
-        input_confirm: 入力確認
-        upload_file_count: アップロードファイル数
-        max_upload_file_size: 最大ファイルサイズ設定
-        resizing: 画像リサイズ
-        resizing_width: 画像リサイズ（幅）
-        resizing_height: 画像リサイズ（高さ）
+      gws/addon/schedules:
+        schedule_ids: スケジュール
 
   tooltip:
     gws/addon/reminder:
@@ -271,6 +263,12 @@ ja:
     gws/group_setting/system:
       sendmail_domains:
         - メール送信許可ドメインを入力します。
+      canonical_scheme:
+        - グループウェアスキームを選択します。
+        - システムからメールを送信する際、メールに記載される URL がここで設定したスキームになります。
+      canonical_domain:
+        - グループウェアドメインを入力します。
+        - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
     gws/addon/group_permission:
       custom_group_ids:
         - このページを編集可能にするカスタムグループを選択します。
@@ -291,33 +289,9 @@ ja:
     gws/addon/contributor:
       contributor_name:
         - 投稿者名を選択します。
-
-    gws/addon/custom_field:
-      tooltips:
-        - ツールチップを入力します。
-      input_type:
-        - 回答欄の入力形式を選択します。
-      select_options:
-        - 入力形式で「ラジオボタン選択」「プルダウン選択」「チェックボックス選択」を選択した場合の回答の選択肢を入力します。
-        - 改行で複数の選択肢を入力します。
-      required:
-        - 項目の入力が必須か任意かを選択します。
-      max_length:
-        - 項目の最大文字数を入力します。
-        - 無制限にするには空白にします。
-      place_holder:
-        - 初期表示テキストを入力します。
-      additional_attr:
-        - 出力される入力形式のHTMLに属性を追加することが可能です。
-      input_confirm:
-        - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
-      upload_file_count:
-        - アップロードできるファイル数を選択します。
-      max_upload_file_size:
-        - アップロードできるファイルサイズを入力します。1ファイルあたりのサイズをMB(メガバイト)単位で入力します。
-      resizing:
-        - 画像がアップロードされた場合、指定したサイズ内に収まるように画像をリサイズします。
-
+    gws/addon/schedules:
+      schedule_ids:
+        - スケジュールを選択します。
 
   job:
     models:

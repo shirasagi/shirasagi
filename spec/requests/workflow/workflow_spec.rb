@@ -34,7 +34,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
   context "When POST request without email" do
     before do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
-      workflow_approvers.push("1,#{user2._id},pending,")
+      workflow_approvers.push("1,#{user2._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
       post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
            workflow_comment: "WorkflowComment#{unique_id}",
@@ -55,7 +55,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
   context "When POST request forced without email" do
     before do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
-      workflow_approvers.push("1,#{user2._id},pending,")
+      workflow_approvers.push("1,#{user2._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
       post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
            workflow_comment: "WorkflowComment#{unique_id}",
@@ -77,7 +77,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
   context "When POST approve after request" do
     before do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
-      workflow_approvers.push("1,#{user1._id},pending,")
+      workflow_approvers.push("1,#{user1._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
       post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
            workflow_comment: "WorkflowComment#{unique_id}",
@@ -105,7 +105,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
   context "When POST remand after request" do
     before do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
-      workflow_approvers.push("1,#{user1._id},pending,")
+      workflow_approvers.push("1,#{user1._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
       post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
            workflow_comment: "WorkflowComment#{unique_id}",

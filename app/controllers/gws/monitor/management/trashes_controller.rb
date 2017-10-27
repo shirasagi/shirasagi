@@ -9,7 +9,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   ]
 
   before_action :set_selected_items, only: [
-      :destroy_all
+      :destroy_all, :active_all
   ]
 
   before_action :set_category

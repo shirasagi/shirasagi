@@ -120,12 +120,7 @@ class @SS
     box.find("a[href^=http]").each ->
       $(this).addClass("external")
 
-    # ajax to (color)box
-    box.find(".ajax-box").each ->
-      elem = $(this)
-      return true if elem.hasClass("cboxElement")
-      if !elem.attr("target") && !elem.data("target")
-        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+    @renderAjaxBox()
 
     @renderDateTimePicker()
 
@@ -245,6 +240,14 @@ class @SS
             alert(["== Error =="].concat(errors).join("\n"));
           catch
             alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+
+  # ajax to (color)box
+  @renderAjaxBox: (box = $(document)) ->
+    box.find(".ajax-box").each ->
+      elem = $(this)
+      return true if elem.hasClass("cboxElement")
+      if !elem.attr("target") && !elem.data("target")
+        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
 
   # datetimepicker
   @renderDateTimePicker: ->

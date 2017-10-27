@@ -1,4 +1,9 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
+
+  <% if @item.domains.present? %>
+  <dt><%= @model.t :domains %></dt>
+  <dd><%= @item.send :domains %></dd>
+  <% end %>
 </dl>

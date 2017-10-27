@@ -12,6 +12,11 @@ SS_Clipboard.renderCopy();
   <dt><%= @model.t :uid %></dt>
   <dd><%= @item.uid %></dd>
 
+  <% if @item.organization_uid.present? %>
+  <dt><%= @model.t :organization_uid %></dt>
+  <dd><%= @item.send :organization_uid %></dd>
+  <% end %>
+
   <dt><%= @model.t :email %></dt>
   <dd><span class="email js-clipboard-copy"><%= mail_to @item.email %></span></dd>
 
@@ -52,6 +57,11 @@ SS_Clipboard.renderCopy();
   <dd><%= @item.label :restriction %></dd>
   <% end %>
 
+  <% if @item.organization.present? %>
+  <dt><%= @model.t :organization_id %></dt>
+  <dd><%= @item.organization.name %></dd>
+  <% end %>
+
   <% main_group = @item.gws_main_group(@cur_site) %>
 
   <dt><%= @model.t :group_ids %></dt>
@@ -67,6 +77,11 @@ SS_Clipboard.renderCopy();
 
   <dt><%= @model.t :gws_main_group_ids %></dt>
   <dd><%= tryb { main_group.name } %></dd>
+
+  <% if @item.switch_user.present? %>
+  <dt><%= @model.t :switch_user_id %></dt>
+  <dd><%=br @item.switch_user.long_name %></dd>
+  <% end %>
 
   <% if @item.remark.present? %>
   <dt><%= @model.t :remark %></dt>

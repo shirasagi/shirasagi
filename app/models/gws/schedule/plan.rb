@@ -10,11 +10,12 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Repeat
   include SS::Addon::Markdown
   include Gws::Addon::File
+  include Gws::Addon::Schedule::Reports
   include Gws::Addon::Schedule::Comments
   include Gws::Addon::Schedule::Attendances
   include Gws::Addon::Member
   include Gws::Addon::Schedule::Facility
-  include Gws::Addon::Schedule::FacilityCustomValues
+  include Gws::Addon::Schedule::FacilityColumnValues
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History

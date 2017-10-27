@@ -10,13 +10,6 @@
   });
 <% end %>
 
-<%
-  userids = []
-  @item.workflow_approvers.each do |workflow_approver|
-    userids << "#{workflow_approver[:level]},#{workflow_approver[:user_id]}"
-  end if @item.workflow_approvers.present?
-%>
-
 <dl class="see request-setting">
   <dt><%= t("workflow.route") %></dt>
   <dd><%= @route.name %></dd>
@@ -40,10 +33,9 @@
         emails = users.map(&:email)
       %>
       <% users.each do |user| %>
-        <%= hidden_field_tag "workflow_approvers", "#{level},#{user._id},pending," %>
+        <%= hidden_field_tag "workflow_approvers", "#{level},#{user.id},#{@route.approver_user_editable?(level, user) ? '1' : ''},pending," %>
       <% end %>
-      <%= br names.join("\n") %>
-      <%= br "(#{emails.join("\n")})" %>
+      <%= br names.zip(emails).join("\n") %>
     </dd>
   </dl>
 <% end %>

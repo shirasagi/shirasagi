@@ -18,6 +18,7 @@ module Gws::Monitor::DescendantsFileInfo
   private
 
   def validate_attached_file_size
+    return if cur_site.nil?
     if (limit = (cur_site.monitor_file_size_per_post || 0)) > 0
       size = files.compact.map(&:size).max || 0
       if size > limit

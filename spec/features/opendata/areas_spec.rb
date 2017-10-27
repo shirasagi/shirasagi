@@ -10,7 +10,6 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
     it "without login" do
       visit opendata_areas_path(site, node)
       expect(current_path).to eq sns_login_path
-      expect(page).to have_content('403')
     end
 
     it "without auth" do

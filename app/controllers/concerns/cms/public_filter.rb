@@ -52,10 +52,16 @@ module Cms::PublicFilter
     path = request_path
 
     @cur_site ||= begin
-      site = SS::Site.find_by_domain host, path
+      site = SS::Site.find_by_domain(host, path)
       request.env["ss.site"] = site
     end
-    raise "404" if !@cur_site
+    return if @cur_site
+
+    if path =='/' && group = SS::Group.where(domains: host).first
+      return redirect_to "//#{host}" + gws_login_path(site: group)
+    end
+
+    raise "404"
   end
 
   def set_request_path

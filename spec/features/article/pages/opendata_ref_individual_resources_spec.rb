@@ -16,7 +16,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
   let(:file2) { tmp_ss_file(contents: '0123456789', user: cms_user) }
   let(:file3) { tmp_ss_file(contents: '0123456789', user: cms_user) }
 
-  let(:od_site) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}@example.jp" }
+  let(:od_site) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp" }
   let!(:dataset_node) { create :opendata_node_dataset, cur_site: od_site }
   let!(:category_node) { create :opendata_node_category, cur_site: od_site }
   let!(:search_dataset) { create :opendata_node_search_dataset, cur_site: od_site }

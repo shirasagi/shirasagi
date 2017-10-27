@@ -10,6 +10,7 @@ class Cms::Site
   include SS::Addon::TwitterSetting
   include SS::Addon::SiteAutoPostSetting
   include SS::Addon::FileSetting
+  include SS::Addon::MailSetting
   include SS::Addon::ApproveSetting
   include Opendata::Addon::SiteSetting
   include SS::Addon::EditorSetting

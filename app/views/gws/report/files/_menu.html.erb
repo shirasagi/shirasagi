@@ -1,0 +1,45 @@
+<% form_limit = 50 %>
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% if @forms.present? %>
+        <%= dropdown_link(t('ss.links.new')) do %>
+          <% @forms.limit(form_limit).each do |form| %>
+            <%= link_to(new_gws_report_form_file_path(form_id: form), class: 'dropdown-item') do %>
+              <%= form.name %>
+              <% if form.categories.present? %>
+              <span class="categories">
+                <% form.categories.compact.each do |category| %>
+                  <%= content_tag :span, category.trailing_name, class: 'gws-category-label', style: category_label_css(category) %>
+                <% end %>
+              </span>
+              <% end %>
+            <% end %>
+          <% end %>
+          <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path, class: 'dropdown-item more-forms') %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move|publish|depublish/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <%= link_to t('ss.links.print'), action: :print %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% if @item.public? %>
+        <%= link_to t('gws/report.links.depublish'), action: :depublish, id: @item %>
+      <% else %>
+        <%= link_to t('gws/report.links.publish'), action: :publish, id: @item %>
+      <% end %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>
