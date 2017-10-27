@@ -25,7 +25,6 @@ SS::Application.routes.draw do
       end
     end
 
-    resource :setting, only: [:show, :edit, :update]
     resources :categories, concerns: [:deletion]
 
     namespace "apis" do
