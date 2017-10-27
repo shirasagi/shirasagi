@@ -13,10 +13,11 @@ class Gws::Share::Folder
   seqid :id
   field :name, type: String
   field :order, type: Integer, default: 0
+  field :state, type: String, default: "closed"
   field :share_max_file_size, type: Integer, default: 0
   attr_accessor :in_share_max_file_size_mb
 
-  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy
+  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
 
   permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb
 

@@ -34,17 +34,6 @@ module Gws::Share::DescendantsFileInfo
           limit: number_to_human_size(limit))
       end
     end
-
-    if (limit = (cur_site.share_max_file_size || 0)) > 0
-      size = files.compact.map(&:size).inject(:+) || 0
-      if size > limit
-        errors.add(
-            :base,
-            :file_size_exceeds_file_limit,
-            size: number_to_human_size(size),
-            limit: number_to_human_size(limit))
-      end
-    end
   end
 
   def folder_file_info(folder)
