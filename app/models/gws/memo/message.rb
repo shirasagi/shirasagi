@@ -29,9 +29,11 @@ class Gws::Memo::Message
   field :to, type: Hash, default: {}
   embeds_ids :to_users, class_name: 'Gws::User' # => to_user_ids
 
+  field :send_date, type: DateTime
+
   permit_params :subject, :text, :html, :format, :to_text
 
-  default_scope -> { order_by updated: -1 }
+  default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
 
   before_validation :set_from_user_ids
   before_validation :set_to_user_ids

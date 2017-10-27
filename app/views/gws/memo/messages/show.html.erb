@@ -18,7 +18,7 @@
         </span>
       </h2>
       <div class="from"><%= @item.display_sender.join('; ') %></div>
-      <div class="date"><%= tryb {@item.updated.strftime('%Y/%m/%d %H:%M')} %></div>
+      <div class="date"><%= @item.send_date ? @item.send_date.strftime('%Y/%m/%d %H:%M') : I18n.t('gws/memo/folder.inbox_draft') %></div>
     </div>
 
     <% if @item.to.present? %>
