@@ -45,9 +45,12 @@ ja:
       models:
         gws/share/file:
           file_size_exceeds_limit: ファイルサイズ（%{size}）が最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_folder_limit: ファイルサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
         gws/share/category:
           too_deep: は%{max}階層以下にしてください。
           not_found_parent: 親カテゴリーが存在しません。
+        gws/share/folder:
+          file_size_exceeds_folder_limit: ファイルサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
     attributes:
       gws/share/category:
         name: カテゴリー名
@@ -62,6 +65,7 @@ ja:
       gws/share/folder:
         name: フォルダー名
         order: 並び順
+        share_max_file_size: 最大ファイルサイズ
 
   tooltip:
     gws/share/category:
@@ -75,3 +79,5 @@ ja:
         - フォルダー名を入力します。
       order:
         - 並び順を入力します。
+      share_max_file_size:
+        - 最大ファイルサイズを入力します。
