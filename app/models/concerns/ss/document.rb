@@ -181,8 +181,12 @@ module SS::Document
     self.class.tt key, html_wrap
   end
 
-  def addons
-    self.class.addons
+  def addons(addon_type = nil)
+    if addon_type
+      self.class.addons.select { |m| m.type == addon_type }
+    else
+      self.class.addons.select { |m| m.type.nil? }
+    end
   end
 
   def label(name)

@@ -2,7 +2,7 @@ class Gws::Qna::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/qna/settings/navi"
+  navi_view "gws/main/conf_navi"
 
   model Gws::Qna::Category
 
@@ -24,8 +24,7 @@ class Gws::Qna::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/qna/group_setting"), gws_qna_setting_path]
-    @crumbs << [t("mongoid.models.gws/qna/group_setting/category"), gws_qna_topics_path]
+    @crumbs << [t('mongoid.models.gws/qna/category'), gws_qna_categories_path]
   end
 
   def fix_params

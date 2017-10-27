@@ -1,13 +1,16 @@
-module Gws::Faq::GroupSetting
+module Gws::Addon::Faq::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
+    attr_accessor :in_faq_file_size_per_topic_mb, :in_faq_file_size_per_post_mb
+
     field :faq_new_days, type: Integer
     field :faq_file_size_per_topic, type: Integer
     field :faq_file_size_per_post, type: Integer
     field :faq_browsed_delay, type: Integer
-    attr_accessor :in_faq_file_size_per_topic_mb, :in_faq_file_size_per_post_mb
 
     permit_params :faq_new_days, :faq_browsed_delay
     permit_params :in_faq_file_size_per_topic_mb, :in_faq_file_size_per_post_mb
