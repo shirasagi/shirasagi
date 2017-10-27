@@ -1,6 +1,8 @@
-module Gws::Facility::GroupSetting
+module Gws::Addon::Facility::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
     field :facility_min_hour, type: Integer, default: 8

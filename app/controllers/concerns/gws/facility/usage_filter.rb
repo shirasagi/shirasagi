@@ -4,7 +4,7 @@ module Gws::Facility::UsageFilter
   included do
     model Gws::Facility::Item
 
-    navi_view 'gws/facility/settings/navi'
+    navi_view "gws/main/conf_navi"
     menu_view 'gws/facility/usage/main/menu'
 
     helper_method :format_usage_count, :format_usage_hours
@@ -15,7 +15,6 @@ module Gws::Facility::UsageFilter
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/facility/group_setting'), gws_facility_items_path]
     @crumbs << [t('gws/facility.navi.usage'), { action: :index }]
   end
 
