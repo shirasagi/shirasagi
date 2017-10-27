@@ -25,8 +25,8 @@
       </dd>
       <dt><%= @model.t :flags %></dt>
       <dd>
-        <label><%= f.check_box_tag "s[unseen]", "1", (params.dig(:s, :unseen) == "1") %><%= @model.t :unseen %></label>
-        <label><%= f.check_box_tag "s[flagged]", "1", (params.dig(:s, :flagged) == "1") %><%= @model.t :flagged %></label>
+        <label class="flag"><%= f.check_box_tag "s[unseen]", "1", (params.dig(:s, :unseen) == "1") %><%= @model.t :unseen %></label>
+        <label class="flag"><%= f.check_box_tag "s[flagged]", "1", (params.dig(:s, :flagged) == "1") %><%= @model.t :flagged %></label>
       </dd>
 
       <dt></dt>
