@@ -21,6 +21,10 @@ describe "sns_login", type: :feature, dbscope: :example do
       end
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
+      expect(find('#head .logout')[:href]).to eq sns_logout_path
+
+      find('#head .logout').click
+      expect(current_path).to eq sns_login_path
     end
   end
 

@@ -1,0 +1,30 @@
+<% addons = @item ? @item.class.addons : [] %>
+<%
+addons = addons.select do |addon|
+  [SS::Addon::Markdown, Gws::Addon::File, Gws::Addon::Report::CustomForm].include?(addon.klass)
+end
+%>
+
+<div class="no-print" style="position: relative; width: 220mm;">
+  <%= link_to(I18n.t('ss.links.back'), { action: :show }) %>
+  <span id="fontsize" style="position: absolute; right: 8px;">
+    文字サイズ
+    <span id="ss-small">小さく</span>
+    <span id="ss-medium">標準</span>
+    <span id="ss-large">大きく</span>
+  </span>
+</div>
+
+<div class="addon-views sheet">
+  <div class="addon-view print" id="addon-basic">
+    <% if addons.size > 0 %><div class="addon-head print"><h2><%= t('ss.basic_info') %></h2></div><% end %>
+    <div class="addon-body print">
+      <%= render file: '_show' %>
+    </div>
+  </div>
+  <%= render file: '_addons_show', locals: { addons: addons, css_classes: %w(print) } if addons.size > 0 %>
+</div>
+
+<%= jquery do %>
+  SS_Font.render();
+<% end %>

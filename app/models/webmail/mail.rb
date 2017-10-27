@@ -16,7 +16,8 @@ class Webmail::Mail
 
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
-                :to_text, :cc_text, :bcc_text
+                :to_text, :cc_text, :bcc_text,
+                :in_request_mdn, :in_request_dsn
 
   field :host, type: String
   field :account, type: String
@@ -39,10 +40,12 @@ class Webmail::Mail
   field :content_type, type: String
   field :subject, type: String
   field :has_attachment, type: Boolean
+  field :disposition_notification_to, type: Array, default: []
 
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
                 :subject, :text, :html, :format,
                 :to_text, :cc_text, :bcc_text,
+                :in_request_mdn, :in_request_dsn,
                 to: [], cc: [], bcc: [], reply_to: []
 
   validates :host, presence: true, uniqueness: { scope: [:account, :mailbox, :uid] }
@@ -53,8 +56,8 @@ class Webmail::Mail
 
   default_scope -> { order_by internal_date: -1 }
 
-  scope :imap_user, ->(user) {
-    conf = user.imap_settings
+  scope :imap_setting, ->(setting) {
+    conf = setting.imap_settings
     where host: conf[:host], account: conf[:account]
   }
 
@@ -105,5 +108,45 @@ class Webmail::Mail
     replied_mail.set_answered if replied_mail
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     true
+  end
+
+  def requested_mdn?
+    return false if flags.include?(:"$MDNSent")
+    return false if disposition_notification_to.blank?
+
+    to.each do |mdn_to|
+      mdn_to = Webmail::Converter.extract_address(mdn_to)
+      return true if mdn_to == imap.address
+    end
+    return false
+  end
+
+  def send_mdn
+    return false unless requested_mdn?
+
+    msg = Webmail::Mailer.mdn_message(self)
+    return false unless validate_message(msg)
+    msg.deliver_now
+    true
+  end
+
+  def rfc822_path
+    separated_id = [4, 6, 22].map { |i| id.to_s.slice(i, 2) }.join("/")
+    "#{Rails.root}/private/files/webmail_files/#{separated_id}/_/#{id}"
+  end
+
+  def save_rfc822
+    return if rfc822.blank?
+    dir = ::File.dirname(rfc822_path)
+    Fs.mkdir_p(dir) unless Fs.exists?(dir)
+    Fs.binwrite(rfc822_path, rfc822)
+  end
+
+  def read_rfc822
+    self.rfc822 = Fs.exists?(rfc822_path) ? Fs.binread(rfc822_path) : nil
+  end
+
+  def destroy_rfc822
+    Fs.rm_rf(rfc822_path) if Fs.exists?(rfc822_path)
   end
 end

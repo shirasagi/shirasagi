@@ -8,6 +8,10 @@ class Webmail::Filter
   # 一括処理件数
   APPLY_PER = 100
 
+  field :host, type: String
+  field :account, type: String
+  field :mailbox, type: String
+
   field :name, type: String
   field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
@@ -15,9 +19,8 @@ class Webmail::Filter
   field :to, type: String
   field :subject, type: String
   field :action, type: String
-  field :mailbox, type: String
 
-  permit_params :name, :state, :order, :from, :to, :subject, :action, :mailbox
+  permit_params :host, :account, :mailbox, :name, :state, :order, :from, :to, :subject, :action
 
   validates :name, presence: true
   validates :action, presence: true
@@ -26,6 +29,11 @@ class Webmail::Filter
   validate :validate_conditions
 
   default_scope -> { order_by order: 1 }
+
+  scope :imap_setting, ->(setting) {
+    conf = setting.imap_settings
+    where host: conf[:host], account: conf[:account]
+  }
 
   scope :enabled, -> { where state: 'enabled' }
 

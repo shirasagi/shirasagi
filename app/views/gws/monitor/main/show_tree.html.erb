@@ -1,33 +1,25 @@
 <%= jquery do %>
     Gws_Monitor_Topic.render();
 
-    switch ("<%= @item[:state_of_the_answer] %>"){
+    switch ("<%= @item[:state_of_the_answers_hash]["#{@cur_group.id}"] %>"){
       case "public":
         $('.public').hide();
         $('.preparation').show();
-        $('.question_not_applicable').show();
-        $('.answered').show();
         $('.primary').show();
         break;
       case "answered":
         $('.public').show();
         $('.preparation').show();
-        $('.question_not_applicable').show();
-        $('.answered').hide();
         $('.primary').hide();
         break;
       case "preparation":
         $('.public').show();
         $('.preparation').hide();
-        $('.question_not_applicable').hide();
-        $('.answered').hide();
         $('.primary').hide();
         break;
       case "question_not_applicable":
         $('.public').show();
         $('.preparation').hide();
-        $('.question_not_applicable').hide();
-        $('.answered').hide();
         $('.primary').hide();
         break;
     }
@@ -72,13 +64,11 @@
     </div>
     <% end %>
 
-    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && @item.comment(@cur_group.id).blank? && !@item.closed? && ( !@item.readable_group_ids.include?(@cur_group.id) && @item.attend_group_ids.include?(@cur_group.id) ) %>
     <div class="menu">
       <%= hidden_field_tag "item_id", @item.id %>
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
       <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
-      <button class="question_not_applicable btn"><%= t 'gws/monitor.links.question_not_applicable' %></button>
-      <button class="answered btn"><%= t 'gws/monitor.links.answered' %></button>
       <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
         class: "btn primary") %>
     </div>
@@ -92,7 +82,7 @@
   <% end %>
 
   <% if @item.subscribed_groups.present? %>
-  <%= render partial: 'gws/monitor/topics/subscribed_groups' %>
+  <%= render partial: 'gws/monitor/main/subscribed_groups' %>
   <% end %>
 
   <% if controller_path == "gws/monitor/management/topics" %>

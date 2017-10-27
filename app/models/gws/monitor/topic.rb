@@ -7,7 +7,6 @@ class Gws::Monitor::Topic
   include Gws::Addon::File
   include Gws::Monitor::DescendantsFileInfo
   include Gws::Addon::Monitor::Category
-  include Gws::Addon::Monitor::Group
   include Gws::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
@@ -16,9 +15,14 @@ class Gws::Monitor::Topic
 
   readable_setting_include_custom_groups
 
+  field :article_state, type: String, default: 'open'
   field :deleted, type: DateTime
+
   validates :deleted, datetime: true
+  validates :article_state, inclusion: { in: %w(open closed) }
+
   permit_params :deleted
+  permit_params :article_state
 
   #validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
@@ -34,8 +38,8 @@ class Gws::Monitor::Topic
   }
 
   def topic_admin?(userid, groupid)
-    return true if self.admin_setting == "1" &&  userid == self.user_id
-    return true if self.admin_setting == "2" &&  groupid == self.user_group_id
+    return true if self.admin_setting == "1" &&  (userid == self.user_id || self.user_ids.include?(userid))
+    return true if self.admin_setting == "0" &&  (groupid == self.user_group_id || self.group_ids.include?(groupid))
     false
   end
 
@@ -50,6 +54,28 @@ class Gws::Monitor::Topic
 
   def disable
     update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+  end
+
+  def closed?
+    article_state == 'closed'
+  end
+
+  def unanswered?(groupid)
+    if closed?
+      case state_of_the_answers_hash["#{groupid}"]
+      when "public", "preparation", nil
+        I18n.t("gws/monitor.options.state.closed")
+      end
+    end
+  end
+
+  def article_state_name
+    I18n.t("gws/monitor.options.article_state." + article_state)
+  end
+
+  def state_name(groupid)
+    return I18n.t("gws/monitor.options.state.no_state") if state_of_the_answers_hash["#{groupid}"].blank?
+    I18n.t("gws/monitor.options.state." + state_of_the_answers_hash["#{groupid}"])
   end
 
   def admin_setting_options
@@ -90,38 +116,40 @@ class Gws::Monitor::Topic
 
   def subscribed_groups
     return Gws::Group.none if new_record?
-    return Gws::Group.none if group_ids.blank? && user_ids.blank? && custom_group_ids.blank?
+    return Gws::Group.none if attend_group_ids.blank?
 
-    conds = []
-    # conds << { id: { '$in' => Gws::Monitor::Post.pluck(:user_ids).flatten } }
-    # conds << { group_ids: { '$in' => Gws::Monitor::Post.pluck(:group_ids).flatten } }
-    conds << { id: { '$in' => Gws::Monitor::Post.pluck(:group_ids).flatten } }
-
-    if Gws::Monitor::Category.subscription_setting_included_custom_groups?
-      custom_gropus = Gws::CustomGroup.in(id: Gws::Monitor::Post.pluck(:custom_group_ids))
-      conds << { id: { '$in' => custom_gropus.pluck(:member_ids).flatten } }
-    end
+    conds = [{ id: { '$in' => attend_group_ids.flatten } }]
 
     Gws::Group.where('$and' => [ { '$or' => conds } ])
-    # Gws::User.where('$and' => [ { '$or' => conds } ])
   end
 
   def sort_options
     %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
   end
 
+  def comment(groupid)
+    children.where(user_group_id: groupid)
+  end
+
+  def answer_count
+    answered = state_of_the_answers_hash.select{|k, v| v.match(/answered|question_not_applicable/)}.count
+    return "(#{answered}/#{subscribed_groups.count})"
+  end
+
   def to_csv
     CSV.generate do |data|
       data << I18n.t('gws/monitor.csv')
 
-      children.each do |item|
+      subscribed_groups.each do |group|
+        post = comment(group.id).first
         data << [
-            self.id,
-            self.name,
-            I18n.t("gws/monitor.options.state.#{item.state_of_the_answer}"),
-            item.user_name,
-            item.text,
-            item.updated.strftime("%Y-%m-%d %H:%M")
+            id,
+            name,
+            unanswered?(group.id) ? unanswered?(group.id) : state_name(group.id),
+            group.name,
+            post.try(:contributor_name),
+            post.try(:text),
+            post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
         ]
       end
     end

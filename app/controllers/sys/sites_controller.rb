@@ -6,10 +6,16 @@ class Sys::SitesController < ApplicationController
 
   menu_view "sys/crud/menu"
 
+  after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
+
   private
 
   def set_crumbs
     @crumbs << [t("sys.site"), sys_sites_path]
+  end
+
+  def reload_nginx
+    SS::Nginx::Config.new.write.reload_server
   end
 
   public

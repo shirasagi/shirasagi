@@ -33,7 +33,9 @@ class Webmail::Apis::ImapController < ApplicationController
       label: item.label,
       quota: item.quota,
       usage: item.usage,
-      percentage: item.percentage
+      percentage: item.percentage,
+      over_threshold: item.over_threshold?,
+      threshold_label: item.threshold_label
     }
 
     render json: resp.to_json

@@ -55,5 +55,28 @@ class Gws::Monitor::CommentsController < ApplicationController
       redirect_to gws_monitor_topic_path(id: @topic.id)
     end
   end
+
+  def create
+    @item = @model.new get_params
+    if params[:commit] == I18n.t("gws/monitor.links.comment")
+      @item.parent.state_of_the_answers_hash["#{@cur_group.id}"] = "answered"
+    else
+      @item.parent.state_of_the_answers_hash["#{@cur_group.id}"] = "question_not_applicable"
+    end
+    @item.parent.save
+    render_create @item.save
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    if params[:commit] == I18n.t("gws/monitor.links.comment")
+      @item.parent.state_of_the_answers_hash["#{@cur_group.id}"] = "answered"
+    else
+      @item.parent.state_of_the_answers_hash["#{@cur_group.id}"] = "question_not_applicable"
+    end
+    @item.parent.save
+    render_update @item.update
+  end
 end
 

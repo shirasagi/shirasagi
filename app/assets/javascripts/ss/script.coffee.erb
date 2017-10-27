@@ -1,6 +1,9 @@
 #= require jquery
 #= require jquery_ujs
 #= require jquery-ui/sortable
+#= require jquery-ui/draggable
+#= require jquery-ui/droppable
+#= require jquery-ui/autocomplete
 #= require js.cookie
 #= require jquery.form
 #= require jquery.datetimepicker
@@ -42,6 +45,7 @@
 #= require map/openlayers/facility/search
 #= require map/openlayers/member/photo/form
 #= require webmail/lib/mail
+#= require webmail/lib/address
 #= require cropperjs/cropper.min.js
 
 ##
@@ -116,12 +120,7 @@ class @SS
     box.find("a[href^=http]").each ->
       $(this).addClass("external")
 
-    # ajax to (color)box
-    box.find(".ajax-box").each ->
-      elem = $(this)
-      return true if elem.hasClass("cboxElement")
-      if !elem.attr("target") && !elem.data("target")
-        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+    @renderAjaxBox()
 
     @renderDateTimePicker()
 
@@ -241,6 +240,14 @@ class @SS
             alert(["== Error =="].concat(errors).join("\n"));
           catch
             alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+
+  # ajax to (color)box
+  @renderAjaxBox: (box = $(document)) ->
+    box.find(".ajax-box").each ->
+      elem = $(this)
+      return true if elem.hasClass("cboxElement")
+      if !elem.attr("target") && !elem.data("target")
+        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
 
   # datetimepicker
   @renderDateTimePicker: ->

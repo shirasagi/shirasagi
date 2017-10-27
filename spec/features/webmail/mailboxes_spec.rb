@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true do
   let(:user) { create :webmail_user }
   let(:item_title) { "rspec-#{unique_id}" }
-  let(:index_path) { webmail_mailboxes_path }
+  let(:index_path) { webmail_mailboxes_path(account: 0) }
 
   context "with auth" do
     before { login_user(user) }

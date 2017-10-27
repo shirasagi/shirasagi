@@ -80,7 +80,12 @@ class Gws::Workflow::File
   end
 
   def editable?(user, opts)
-    allowed?(:edit, user, opts) && !workflow_requested?
+    editable = allowed?(:edit, user, opts) && !workflow_requested?
+    return editable if editable
+
+    if workflow_requested?
+      workflow_approver_editable?(user)
+    end
   end
 
   def destroyable?(user, opts)

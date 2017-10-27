@@ -14,6 +14,7 @@ module SS::BaseFilter
     before_action :set_ss_assets
     before_action :logged_in?
     before_action :check_api_user
+    before_action :set_logout_path_by_session
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
     rescue_from RuntimeError, with: :rescue_action
     layout "ss/base"
@@ -76,24 +77,31 @@ module SS::BaseFilter
       return render plain: ''
     end
 
+    login_path = sns_login_path
+    if group = SS::Group.where(domains: request_host).first
+      login_path = gws_login_path(site: group)
+    end
+
     ref = request.env["REQUEST_URI"]
-    ref = (ref == sns_mypage_path) ? "" : "?ref=" + CGI.escape(ref.to_s)
+    ref = (ref == login_path) ? "" : "?ref=" + CGI.escape(ref.to_s)
+
     respond_to do |format|
-      format.html { redirect_to "#{sns_login_path}#{ref}" }
+      format.html { redirect_to "#{login_path}#{ref}" }
       format.json { render json: :error, status: :unauthorized }
     end
   end
 
-  def set_user(user, opt = {})
-    if opt[:session]
+  def set_user(user, opts = {})
+    if opts[:session]
       session[:user] = {
         "user_id" => user.id,
         "remote_addr" => remote_addr,
         "user_agent" => request.user_agent,
         "last_logged_in" => Time.zone.now.to_i }
-      session[:user]["password"] = SS::Crypt.encrypt(opt[:password]) if opt[:password].present?
+      session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
-    redirect_to sns_mypage_path if opt[:redirect]
+    session[:logout_path] = opts[:logout_path]
+    redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = user
   end
 
@@ -104,6 +112,10 @@ module SS::BaseFilter
 
     # api user only allowd .json
     raise "403"
+  end
+
+  def set_logout_path_by_session
+    @logout_path = session[:logout_path].presence
   end
 
   def rescue_action(e)

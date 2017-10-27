@@ -13,7 +13,7 @@ module Workflow::Model::Route
     embeds_ids :groups, class_name: "SS::Group"
     field :approvers, type: Workflow::Extensions::Route::Approvers
     field :required_counts, type: Workflow::Extensions::Route::RequiredCounts
-    permit_params :name, group_ids: [], approvers: [], required_counts: []
+    permit_params :name, group_ids: [], approvers: [ :level, :user_id, :editable ], required_counts: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validate :validate_approvers_presence
@@ -59,6 +59,14 @@ module Workflow::Model::Route
 
   def approver_users_at(level)
     approvers_at(level).map { |h| self.class.approver_user_class.where(id: h[:user_id]).first }
+  end
+
+  def approver_user_editable?(level, user)
+    h = approvers_at(level).find { |h| user.id == h[:user_id] }
+    return if h.blank?
+    editable = h[:editable]
+    return if editable.blank?
+    editable.to_i > 0
   end
 
   def required_count_at(level)

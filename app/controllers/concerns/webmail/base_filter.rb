@@ -11,7 +11,7 @@ module Webmail::BaseFilter
     before_action :imap_initialize
     # before_action :imap_login
     after_action :imap_disconnect
-    rescue_from Net::IMAP::NoResponseError, with: :rescue_impa_no_response_error
+    rescue_from Net::IMAP::NoResponseError, with: :rescue_imap_no_response_error
   end
 
   private
@@ -25,7 +25,9 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    @imap = Webmail::Imap::Base.new(@cur_user)
+    @imap_setting = @cur_user.imap_settings[params[:account].to_i]
+    @imap_setting ||= Webmail::ImapSetting.new
+    @imap = Webmail::Imap::Base.new(@cur_user, @imap_setting)
   end
 
   def imap_disconnect

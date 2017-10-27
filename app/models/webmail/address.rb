@@ -54,4 +54,10 @@ class Webmail::Address
   def import_find_item(data)
     self.class.user(@cur_user).where(id: data[:id]).first
   end
+
+  class << self
+    def to_autocomplete_hash
+      criteria.all.map { |item| [item.email_address, item.email] }.to_h.select { |k, v| k.present? && v.present? }
+    end
+  end
 end

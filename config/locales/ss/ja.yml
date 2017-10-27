@@ -26,6 +26,7 @@ ja:
       login/login:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
+        organization_uid: 職員番号またはメールアドレス
     links:
       cms: サイト管理
       gws: グループ
@@ -182,6 +183,8 @@ ja:
         cancel: 取消
         allow: 許可する
         deny: 許可しない
+        required: 必須
+        optional: 任意
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)
@@ -261,6 +264,7 @@ ja:
       ss/site_auto_post_setting: SNS自動投稿設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
+      ss/mail_setting: メール設定
 
   mongoid:
     models:
@@ -332,6 +336,9 @@ ja:
         session_lifetime: セッション寿命
         restriction: 利用制限
         remark: 備考
+        organization_id: 所属組織
+        organization_uid: 職員番号
+        switch_user_id: 切り替えユーザー
       ss/model/user_title:
         name: 役職名
         order: 並び順
@@ -343,6 +350,7 @@ ja:
         order: 表示順
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+        domains: ドメイン
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -460,10 +468,14 @@ ja:
         args: パラメータ
         logs: ログ
         save_term: 保存期間
-      ss/addon/editor_setting:
+      ss/model/editor_setting:
         color_button: 文字色変更ボタン
         editor_css_path: スタイルシートパス
         syntax_check: アクセシビリティチェック
+      ss/model/mail_setting:
+        sender_name: 差出人名
+        sender_email: 差出人メールアドレス
+        mail_signature: 署名
 
   tooltip:
     ss/model/user:
@@ -506,6 +518,14 @@ ja:
         - 空欄の場合は、システムの既定値が用いられます。
       remark:
         - 備考を入力します。
+      organization_id: 所属する組織を選択します。
+      organization_uid:
+        - 職員番号を入力します。
+        - グループ専用ログイン画面で使用します。
+      switch_user_id:
+        - 切り替えユーザーを選択します。
+        - ログイン後にユーザーが切り替わります。
+        - 共通アカウントを利用する場合などに使用します。
     ss/model/group:
       name:
         - グループの名称を入力します。
@@ -715,10 +735,19 @@ ja:
         - 並び順を設定します
       state:
         - 制限の有効/無効を設定します
-    ss/addon/editor_setting:
+    ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。
       editor_css_path:
         - エディタ用スタイルシートのパスを設定します。
       syntax_check:
         - アクセシビリティチェックの有効無効を設定します。
+
+    ss/model/mail_setting:
+      sender_name:
+        - システムから送信されるメールの既定の差出人名を入力します。
+      sender_email:
+        - システムから送信されるメールの既定の差出人メールアドレスを入力します。
+        - "未入力の場合、システム設定のメールアドレス（例: noreply@example.jp）が使用されます。"
+      mail_signature:
+        - システムから送信されるメールの既定の署名を入力します。

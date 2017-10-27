@@ -21,6 +21,16 @@ module Webmail::Imap::UidsCommand
     conn.uid_store uids, '-FLAGS', [:Flagged]
   end
 
+  def uids_set_mdn_sent(uids)
+    return nil if uids.blank?
+    conn.uid_store uids, '+FLAGS', ['$MDNSent']
+  end
+
+  def uids_unset_mdn_sent(uids)
+    return nil if uids.blank?
+    conn.uid_store uids, '-FLAGS', ['$MDNSent']
+  end
+
   # @return [Net::IMAP::ResponseCode]
   #   <ResponseCode data="453719372 63,62 70:71">
   def uids_copy(uids, dst_mailbox)
@@ -41,7 +51,9 @@ module Webmail::Imap::UidsCommand
     conn.expunge
     @last_response_size = resp ? resp.size : 0
 
-    Webmail::Mail.where(account_scope).where(mailbox: mailbox, :uid.in => uids).delete_all
+    items = Webmail::Mail.where(account_scope).where(mailbox: mailbox, :uid.in => uids)
+    items.each(&:destroy_rfc822)
+    items.delete_all
     resp
   end
 

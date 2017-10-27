@@ -1,21 +1,36 @@
+<%= jquery do %>
+$(function() {
+  $('.close-topic').click(function() {
+    if (!confirm($(this).data('confirm'))) return false;
+      var token = $('meta[name="csrf-token"]').attr('content');
+      var form = $('<form/>').
+      attr('method', 'POST').
+      attr('action', $(this).attr('href')).
+      append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" })).
+      appendTo("body").
+      submit();
+    return false;
+  });
+});
+<% end %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to I18n.t('gws/monitor.management.links.back_to_topic'), gws_monitor_topics_path %>
     <% end %>
-  <% elsif params[:action] =~ /new|create/ %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /delete/ %>
-    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+  <% elsif params[:action] !~ /edit/ %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /import/ %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <% if @item.closed? %>
+      <%= link_to t('gws/monitor.links.open'), {action: :open, id: @item },
+        class: 'close-topic', 'data-confirm' => t('gws/monitor.links.confirm.open')  %>
+    <% else %>
+      <%= link_to t('gws/monitor.links.closed'), {action: :close, id: @item },
+        class: 'close-topic', 'data-confirm' => t('gws/monitor.links.confirm.close')  %>
+    <% end %>
+      <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
-    <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>
