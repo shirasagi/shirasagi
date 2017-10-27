@@ -50,6 +50,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def create
     @item = @model.new from.merge(get_params)
+    @item.send_date = Time.zone.now if params['commit'] == '送信'
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_create @item.save
   end
@@ -63,6 +64,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def update
     @item.attributes = from.merge(get_params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    @item.send_date = Time.zone.now if params['commit'] == '送信'
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
