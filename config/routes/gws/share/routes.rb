@@ -20,6 +20,8 @@ SS::Application.routes.draw do
   gws "share" do
     resources :files, concerns: [:deletion, :export, :lock] do
       get :download_history, on: :member
+      get :disable, on: :member
+      post :disable_all, on: :collection
     end
 
     resources :folders, concerns: [:deletion, :export]
@@ -40,5 +42,15 @@ SS::Application.routes.draw do
       get "categories" => "categories#index"
     end
 
+    namespace "management" do
+      resources :files, concerns: [:deletion, :export] do
+        get :active, on: :member
+        post :active_all, on: :collection
+      end
+      scope(path: "folder-:folder", as: "folder") do
+        resources :files, concerns: [:deletion, :export]
+      end
+      resources :categories, concerns: [:deletion]
+    end
   end
 end

@@ -7,6 +7,13 @@ ja:
     links:
       categories: カテゴリー
       folder: フォルダー管理
+      disable: 削除済みに移動する
+      active: 削除を取り消す
+      confirm:
+        disable: 削除済みにしてよろしいですか？
+        active: 削除を取り消してよろしいですか？
+        disable_all: チェックした項目を削除済みに移動しますか？
+        active_all: 選択した項目の削除を取り消しますか？
 
   modules:
     gws/share: 共有ファイル
@@ -41,6 +48,7 @@ ja:
       gws/share/category: 共有ファイルカテゴリー
       gws/share/group_setting: 共有ファイル設定
       gws/share/group_setting/category: カテゴリー
+      gws/share/management: 管理
     errors:
       models:
         gws/share/file:
