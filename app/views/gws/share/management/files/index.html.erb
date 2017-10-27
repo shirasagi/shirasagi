@@ -17,7 +17,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
 <% end %>
 
 <div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options, include_blank: t('modules.gws/share') %>
+  <%= select_tag :category_id, options, include_blank: t('modules.gws/share') if @categories.to_options.present? %>
 </div>
 
 <%= render partial: "folder_navi" %>
