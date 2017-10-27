@@ -77,6 +77,10 @@ class Gws::Memo::Message
     subject.presence || 'No title'
   end
 
+  def display_send_date
+    send_date ? send_date.strftime('%Y/%m/%d %H:%M') : I18n.t('gws/memo/folder.inbox_draft')
+  end
+
   def attachments?
     files.present?
   end
