@@ -4,6 +4,7 @@ class Gws::Share::FilesController < ApplicationController
   include Gws::FileFilter
 
   model Gws::Share::File
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock]
   before_action :set_category
   before_action :set_folder
   before_action :set_folder_navi, only: [:index]
@@ -70,6 +71,17 @@ class Gws::Share::FilesController < ApplicationController
     render
   end
 
+  def edit
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    if @item.is_a?(Gws::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+    render
+  end
+
   def download_history
     set_item
     set_last_modified
@@ -89,6 +101,49 @@ class Gws::Share::FilesController < ApplicationController
     else
       send_data @item.read, type: @item.content_type, filename: @item.download_filename,
                 disposition: :attachment
+    end
+  end
+
+  def lock
+    if @item.acquire_lock(force: params[:force].present?)
+      render
+    else
+      respond_to do |format|
+        format.html { render }
+        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
+      end
+    end
+  end
+
+  def unlock
+    unless @item.locked?
+      respond_to do |format|
+        format.html { redirect_to(action: :edit) }
+        format.json { head :no_content }
+      end
+      return
+    end
+
+    raise "403" if !@item.lock_owned? && !@item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node)
+
+    unless @item.locked?
+      respond_to do |format|
+        format.html { redirect_to(action: :edit) }
+        format.json { head :no_content }
+      end
+      return
+    end
+
+    if @item.release_lock(force: params[:force].present?)
+      respond_to do |format|
+        format.html { redirect_to(action: :edit) }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { render file: :show }
+        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
+      end
     end
   end
 
