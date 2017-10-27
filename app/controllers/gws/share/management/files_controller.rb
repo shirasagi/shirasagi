@@ -4,7 +4,7 @@ class Gws::Share::Management::FilesController < ApplicationController
   include Gws::FileFilter
 
   model Gws::Share::File
-  before_action :set_item, only: [:show, :active, :delete]
+  before_action :set_item, only: [:show, :active, :delete, :recover, :destroy]
   before_action :set_selected_items, only: [:destroy_all, :active_all]
   before_action :set_category
   before_action :set_folder
@@ -72,6 +72,11 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def show
     raise "403" unless @item.readable?(@cur_user)
+    render
+  end
+
+  def recover
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render
   end
 
