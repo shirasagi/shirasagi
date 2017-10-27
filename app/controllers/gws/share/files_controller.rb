@@ -45,6 +45,8 @@ class Gws::Share::FilesController < ApplicationController
 
   def pre_params
     p = super
+    p[:readable_member_ids] = [@cur_user.id]
+    @skip_default_group = true
     if @category.present?
       p[:category_ids] = [ @category.id ]
     end
