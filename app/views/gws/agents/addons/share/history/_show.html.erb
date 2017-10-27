@@ -21,7 +21,7 @@
         <td><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></td>
         <td><%= item.user_long_name %></td>
         <td><%= item.user_tel %></td>
-        <td><%= item.uploadfile_filename %></td>
+        <td><%= item.uploadfile_name %></td>
         <td><%= item.uploadfile_size %></td>
         <td><%= link_to t('ss.links.download'), download_history_gws_share_file_path(history_id: item._id), { class: "btn" } %></td>
         <td>
