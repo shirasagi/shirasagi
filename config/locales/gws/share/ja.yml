@@ -6,6 +6,7 @@ ja:
     url_copy: クリップボードにコピー
     links:
       categories: カテゴリー
+      folder: フォルダー管理
 
   modules:
     gws/share: 共有ファイル
