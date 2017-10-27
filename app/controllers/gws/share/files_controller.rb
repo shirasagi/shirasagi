@@ -67,6 +67,7 @@ class Gws::Share::FilesController < ApplicationController
       readable(@cur_user, @cur_site).
       active.
       search(params[:s]).
+      custom_order(params.dig(:s, :sort) || 'updated_asc').
       page(params[:page]).per(50)
   end
 
@@ -151,13 +152,9 @@ class Gws::Share::FilesController < ApplicationController
     end
   end
 
-  def delete
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render
-  end
-
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.disable
   end
+
 end

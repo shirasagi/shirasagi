@@ -35,6 +35,16 @@ class Gws::Share::File
     where(:deleted.exists => true)
   }
 
+  scope :custom_order, ->(key) {
+    if key.start_with?('created_')
+      where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('updated_')
+      where({}).order_by(descendants_updated: key.end_with?('_asc') ? 1 : -1)
+    else
+      where({})
+    end
+  }
+
   class << self
     def search(params)
       criteria = super
@@ -76,6 +86,9 @@ class Gws::Share::File
     update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end
 
+  def sort_options
+    %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+  end
 
   private
 
