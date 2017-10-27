@@ -4,7 +4,7 @@ class Gws::Share::Management::FilesController < ApplicationController
   include Gws::FileFilter
 
   model Gws::Share::File
-  before_action :set_item, only: [:show, :active]
+  before_action :set_item, only: [:show, :active, :delete]
   before_action :set_selected_items, only: [:destroy_all, :active_all]
   before_action :set_category
   before_action :set_folder
