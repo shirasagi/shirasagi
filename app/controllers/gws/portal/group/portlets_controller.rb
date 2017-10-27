@@ -2,6 +2,7 @@ class Gws::Portal::Group::PortletsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Portal::PortalFilter
+  include Gws::Portal::PortletFilter
 
   model Gws::Portal::GroupPortlet
 
@@ -19,20 +20,5 @@ class Gws::Portal::Group::PortletsController < ApplicationController
       @crumbs << [t("gws/portal.group_portal"), gws_portal_group_path]
     end
     @crumbs << [t("gws/portal.links.manage_portlets"), action: :index]
-  end
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site, setting_id: @portal.try(:id) }
-  end
-
-  public
-
-  def index
-    @items = @portal.portlets.
-      search(params[:s])
-  end
-
-  def new
-    new_portlet
   end
 end

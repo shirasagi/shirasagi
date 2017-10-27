@@ -54,7 +54,7 @@ module Gws::Portal::PortletModel
     PORTLET_MODELS[portlet_model.to_sym].slice(:size_x, :size_y)
   end
 
-  def addons
+  def portlet_addons
     addons = PORTLET_MODELS[portlet_model.to_sym][:addons] || []
     self.class.addons.select do |addon|
       addons.include?(addon.klass)
