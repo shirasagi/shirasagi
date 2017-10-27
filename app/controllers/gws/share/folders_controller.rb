@@ -15,6 +15,13 @@ class Gws::Share::FoldersController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def pre_params
+    p = super
+    p[:readable_member_ids] = [@cur_user.id]
+    @skip_default_group = true
+    p
+  end
+
   public
 
   def index
