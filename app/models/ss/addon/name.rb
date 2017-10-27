@@ -2,10 +2,15 @@ class SS::Addon::Name
   def initialize(mod, params = {})
     @klass = mod
     @name  = mod.to_s.underscore.sub("addon/", "")
+    @type  = params[:type]
   end
 
   def klass
     @klass
+  end
+
+  def type
+    @type
   end
 
   def name
