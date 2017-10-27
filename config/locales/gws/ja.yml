@@ -1,6 +1,7 @@
 ja:
   gws:
     group: グループ
+    category: カテゴリー
     portal: ポータル
     site_config: 設定
     site_info: グループ情報
