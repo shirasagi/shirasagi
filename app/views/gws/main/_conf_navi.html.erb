@@ -55,14 +55,14 @@
 <nav class="mod-navi">
   <h2><%= t('modules.gws/faq') %></h2>
   <% if Gws::Faq::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/faq.category'), gws_faq_categories_path %></h3>
+    <h3><%= link_to t('gws.category'), gws_faq_categories_path %></h3>
   <% end %>
 </nav>
 
 <nav class="mod-navi">
   <h2><%= t('modules.gws/qna') %></h2>
   <% if Gws::Qna::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/qna.category'), gws_qna_categories_path %></h3>
+    <h3><%= link_to t('gws.category'), gws_qna_categories_path %></h3>
   <% end %>
 </nav>
 
