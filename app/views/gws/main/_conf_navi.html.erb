@@ -51,3 +51,10 @@
     <h3><%= link_to t('mongoid.models.gws/job/log'), gws_job_logs_path %></h3>
   <% end %>
 </nav>
+
+<nav class="mod-navi" data-module="gws/faq">
+  <h2><%= t('modules.gws/faq') %></h2>
+  <% if Gws::Faq::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/faq.category'), gws_faq_categories_path %></h3>
+  <% end %>
+</nav>

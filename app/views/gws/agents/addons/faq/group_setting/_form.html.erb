@@ -1,7 +1,9 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-faq-group-setting"); <% end %>
+
 <% @item.in_faq_file_size_per_topic_mb ||= @item.faq_file_size_per_topic / (1_024 * 1_024) if @item.faq_file_size_per_topic %>
 <% @item.in_faq_file_size_per_post_mb ||= @item.faq_file_size_per_post / (1_024 * 1_024) if @item.faq_file_size_per_post %>
 
-<dl class="see">
+<dl class="see addon-gws-faq-group-setting">
   <dt><%= @model.t :faq_new_days %><%= @model.tt :faq_new_days %></dt>
   <dd><%= f.number_field :faq_new_days %> <%= t("datetime.prompts.day") %></dd>
 
