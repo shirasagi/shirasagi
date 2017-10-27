@@ -5,7 +5,9 @@ class Gws::SitesController < ApplicationController
   model Gws::Group
 
   navi_view "gws/main/conf_navi"
-  menu_view nil
+  menu_view 'gws/crud/resource_menu'
+
+  before_action :set_addons, only: %w(show new create edit update)
 
   private
 
@@ -16,6 +18,10 @@ class Gws::SitesController < ApplicationController
   def set_item
     @item = Gws::Group.find(@cur_site.id)
     @item.attributes = fix_params
+  end
+
+  def set_addons
+    @addons = @item.addons(:organization)
   end
 
   public

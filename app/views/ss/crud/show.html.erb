@@ -1,4 +1,4 @@
-<% addons = @item ? @item.addons : [] %>
+<% addons = @addons || @item.try(:addons) || [] %>
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">

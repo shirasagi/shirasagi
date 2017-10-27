@@ -1,4 +1,6 @@
-<dl class="see">
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-faq-group-setting"); <% end %>
+
+<dl class="see addon-gws-faq-group-setting">
   <dt><%= @model.t :faq_new_days %></dt>
   <dd><%= @item.send :faq_new_days %> <%= t("datetime.prompts.day") %></dd>
 

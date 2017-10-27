@@ -1,5 +1,6 @@
 ja:
   gws/faq:
+    category: カテゴリー
     user: ユーザー
     #descendants_num: コメント数
     #descendants_updated: 更新日時
@@ -55,6 +56,7 @@ ja:
   modules:
     gws/faq: よくある質問
     addons:
+      gws/faq/group_setting: よくある質問
       gws/faq/category: カテゴリー
 
   gws_role:
@@ -73,11 +75,9 @@ ja:
 
   mongoid:
     models:
-      gws/faq/topic: よくある質問トピック
-      gws/faq/post: よくある質問投稿
-      gws/faq/category: よくある質問カテゴリー
-      gws/faq/group_setting: よくある質問設定
-      gws/faq/group_setting/category: カテゴリー
+      gws/faq/topic: よくある質問/トピック
+      gws/faq/post: よくある質問/投稿
+      gws/faq/category: よくある質問/カテゴリー
     errors:
       models:
         gws/faq/category:
@@ -99,7 +99,7 @@ ja:
         name: 質問タイトル
       gws/faq/post:
         name: 回答タイトル
-      gws/faq/group_setting:
+      gws/addon/faq/group_setting:
         faq_new_days: 新着表示期間
         faq_file_size: 添付最大サイズ
         faq_file_size_per_topic: 添付最大サイズ/トピック単位
@@ -120,7 +120,7 @@ ja:
         - コメントを許可するかどうかを選択します。
       severity:
         - 重要度を選択します。
-    gws/faq/group_setting:
+    gws/addon/faq/group_setting:
       faq_new_days:
         - 新着表示期間を入力します。
       faq_file_size_per_topic:

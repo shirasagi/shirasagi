@@ -1,13 +1,16 @@
-module Gws::Qna::GroupSetting
+module Gws::Addon::Qna::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
+    attr_accessor :in_qna_file_size_per_topic_mb, :in_qna_file_size_per_post_mb
+
     field :qna_new_days, type: Integer
     field :qna_file_size_per_topic, type: Integer
     field :qna_file_size_per_post, type: Integer
     field :qna_browsed_delay, type: Integer
-    attr_accessor :in_qna_file_size_per_topic_mb, :in_qna_file_size_per_post_mb
 
     permit_params :qna_new_days, :qna_browsed_delay
     permit_params :in_qna_file_size_per_topic_mb, :in_qna_file_size_per_post_mb

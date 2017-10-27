@@ -2,6 +2,8 @@ class Gws::Group
   include SS::Model::Group
   include Gws::Referenceable
   include Gws::SitePermission
+  include Gws::Addon::Faq::GroupSetting
+  include Gws::Addon::Qna::GroupSetting
   include Gws::Addon::History
 
   set_permission_name "gws_groups", :edit

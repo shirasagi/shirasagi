@@ -1,7 +1,9 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-qna-group-setting"); <% end %>
+
 <% @item.in_qna_file_size_per_topic_mb ||= @item.qna_file_size_per_topic / (1_024 * 1_024) if @item.qna_file_size_per_topic %>
 <% @item.in_qna_file_size_per_post_mb ||= @item.qna_file_size_per_post / (1_024 * 1_024) if @item.qna_file_size_per_post %>
 
-<dl class="see">
+<dl class="see addon-gws-qna-group-setting">
   <dt><%= @model.t :qna_new_days %><%= @model.tt :qna_new_days %></dt>
   <dd><%= f.number_field :qna_new_days %> <%= t("datetime.prompts.day") %></dd>
 
