@@ -115,6 +115,7 @@ ja:
       gws/subscription_setting: 購読
       gws/contributor: 投稿者
       gws/custom_field: 入力項目
+      gws/edit_lock: 排他制御
 
   mongoid:
     models:
@@ -248,6 +249,9 @@ ja:
         resizing: 画像リサイズ
         resizing_width: 画像リサイズ（幅）
         resizing_height: 画像リサイズ（高さ）
+      gws/addon/edit_lock:
+        lock_owner: 所有者
+        lock_until: 期限
 
   tooltip:
     gws/addon/reminder:

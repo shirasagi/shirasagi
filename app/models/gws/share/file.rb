@@ -2,6 +2,7 @@ class Gws::Share::File
   include Gws::Model::File
   include Gws::Referenceable
   include Gws::Reference::Site
+  include Gws::Addon::EditLock
   include Gws::Addon::Share::Category
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
