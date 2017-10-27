@@ -86,9 +86,9 @@ class Gws::Workflow::FilesController < ApplicationController
   def create
     @item = @model.new get_params
     if @cur_form.present? && params[:custom].present?
-      custom = params.require(:custom).permit(@cur_form.columns.to_permitted_fields)
-      new_custom_values = @cur_form.build_custom_values(custom)
-      @item.custom_values = @item.custom_values.to_h.deep_merge(new_custom_values)
+      custom = params.require(:custom)
+      new_column_values = @cur_form.build_column_values(custom)
+      @item.update_column_values(new_column_values)
     end
     raise '403' unless @item.editable?(@cur_user, site: @cur_site)
     render_create @item.save
@@ -109,9 +109,9 @@ class Gws::Workflow::FilesController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if @cur_form.present? && params[:custom].present?
-      custom = params.require(:custom).permit(@cur_form.columns.to_permitted_fields)
-      new_custom_values = @cur_form.build_custom_values(custom)
-      @item.custom_values = @item.custom_values.to_h.deep_merge(new_custom_values)
+      custom = params.require(:custom)
+      new_column_values = @cur_form.build_column_values(custom)
+      @item.update_column_values(new_column_values)
     end
     raise '403' unless @item.editable?(@cur_user, site: @cur_site)
     render_update @item.save

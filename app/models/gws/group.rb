@@ -3,7 +3,6 @@ class Gws::Group
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::History
-  include SS::Addon::EditorSetting
 
   set_permission_name "gws_groups", :edit
 

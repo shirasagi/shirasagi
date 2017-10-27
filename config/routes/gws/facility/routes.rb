@@ -7,11 +7,10 @@ SS::Application.routes.draw do
   end
 
   gws "facility" do
-    resources :items, concerns: [:deletion] do
-      resources :custom_fields, concerns: [:deletion] do
-        get :input_form, on: :collection
-      end
+    resources :columns, path: 'items/:form_id/columns', concerns: [:deletion] do
+      get :input_form, on: :collection
     end
+    resources :items, concerns: [:deletion]
     namespace :usage do
       get '/' => 'main#index', as: :main
       resources :yearly, only: [:index], path: 'yearly/:yyyy', yyyy: %r{\d{4}} do

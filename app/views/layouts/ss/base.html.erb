@@ -21,6 +21,7 @@
   <div class="wrap">
     <h1 class="application-name"><%= link_to SS.config.ss.application_name, sns_mypage_path %></h1>
 
+    <% if SS.config.cms.disable.blank? %>
     <div class="cms">
       <% if @ss_mode == :cms %>
       <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
@@ -28,6 +29,7 @@
       <h2><%= link_to t('ss.links.cms'), sns_cms_path %></h2>
       <% end %>
     </div>
+    <% end %>
 
     <% if SS.config.gws.disable.blank? %>
     <div class="gws">
@@ -75,7 +77,7 @@
             <li><%= link_to *link_params %></li>
           <% end %>
           <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
-          <li><%= link_to t('ss.logout'), sns_logout_path %></li>
+          <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
         </ul>
       </div>
     </nav>

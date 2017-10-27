@@ -244,6 +244,7 @@ page4 = save_page route: "article/page", filename: "docs/page1.html", name: "お
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   group_ids: [contact_group.id],
   file_ids: [file4.id]
+
 page4.html += "<p class=\"pull-left\"><img alt=\"ベンチ\" src=\"#{file4.url}\" /></p>"
 page4.html += "<p>本文を入力してください。本文を入力してください。本文を入力してください。本文を入力してください。</p>"
 page4.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
@@ -258,7 +259,7 @@ top_page = save_page route: "cms/page", filename: "index.html", name: "LPサン�
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   contact_state: "hide",
   group_ids: [contact_group.id],
-  map_points: [ { loc: [34.061264,134.57611] } ]
+  map_points: [ { loc: [34.061264, 134.57611] } ]
 page1.related_page_ids = [top_page.id]
 page1.update
 

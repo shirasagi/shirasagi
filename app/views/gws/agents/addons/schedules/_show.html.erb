@@ -1,0 +1,25 @@
+<% return if @item.schedules.blank? %>
+
+<dl class="see mod-gws-schedules">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th><%= Gws::Schedule::Plan.t(:name) %></th>
+        <th><%= Gws::Schedule::Plan.t(:start_at) %></th>
+        <th><%= Gws::Schedule::Plan.t(:end_at) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.schedules.readable(@cur_user, site: @cur_site).each do |schedule| %>
+      <tr>
+        <td><%= link_to(schedule.name, gws_schedule_plan_path(id: schedule)) %></td>
+        <td><%= tryb { I18n.l(schedule.start_at) } %></td>
+        <td><%= tryb { I18n.l(schedule.end_at) } %></td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

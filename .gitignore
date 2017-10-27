@@ -8,6 +8,7 @@
 /config/after_initializers
 /config/environments
 /config/unicorn.rb
+/config/nginx.conf
 /coverage
 /file
 /log

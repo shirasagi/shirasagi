@@ -21,8 +21,8 @@ class @Gws_Topic
 
   @renderMark: (target)->
     if target.checked
-      $(target.parentElement).removeClass("fc-state-active")
+      $(target.parentElement).removeClass("gws-btn-pushed")
       $(target.nextElementSibling).text("既読にする")
     else
-      $(target.parentElement).addClass("fc-state-active")
+      $(target.parentElement).addClass("gws-btn-pushed")
       $(target.nextElementSibling).text("未読に戻す")

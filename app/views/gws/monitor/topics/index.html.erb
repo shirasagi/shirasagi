@@ -6,6 +6,8 @@
     else location.href = '<%= gws_monitor_topics_path %>';
   });
 
+  $(".gws-monitor-tabs .unanswer").addClass("current");
+
 <% end %>
 
 <div class="gws-category-navi-menu">
@@ -32,7 +34,6 @@
     <li class="<%= css_classes.join(' ') %>">
       <nav class="tap-menu">
         <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-        <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
 
         <% if item.try(:image) %>
           <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
@@ -52,6 +53,13 @@
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="article_state">
+            <% if item.closed? %>
+              <%= item.article_state_name %>
+            <% else %>
+              <%= item.state_name(@cur_group.id) %>
+            <% end %>
+          </span>
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
@@ -59,6 +67,7 @@
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>
+          <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count %></span>
         </div>
       </div>
     </li>

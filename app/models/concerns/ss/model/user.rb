@@ -19,6 +19,7 @@ module SS::Model::User
     store_in collection: "ss_users"
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
+    index({ organization_uid: 1, organization_id: 1 }, { unique: true, sparse: true })
 
     # Create indexes each site_ids.
     # > db.ss_users.ensureIndex({ "title_orders.1": -1, uid: 1 });
@@ -41,6 +42,7 @@ module SS::Model::User
     field :account_start_date, type: DateTime
     field :account_expiration_date, type: DateTime
     field :remark, type: String
+    field :organization_uid, type: String
 
     # 初期パスワード警告 / nil: 無効, 1: 有効
     field :initial_password_warning, type: Integer
@@ -51,12 +53,16 @@ module SS::Model::User
     # 利用制限
     field :restriction, type: String
 
+    belongs_to :organization, class_name: "SS::Group"
+    belongs_to :switch_user, class_name: "SS::User"
+
     embeds_ids :groups, class_name: "SS::Group"
 
     permit_params :name, :kana, :uid, :email, :password, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
     permit_params :in_password
     permit_params :account_start_date, :account_expiration_date, :initial_password_warning, :session_lifetime
     permit_params :restriction
+    permit_params :organization_id, :organization_uid, :switch_user_id
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
 
@@ -71,6 +77,8 @@ module SS::Model::User
     validates :last_loggedin, datetime: true
     validates :account_start_date, datetime: true
     validates :account_expiration_date, datetime: true
+    validates :organization_id, presence: true, if: ->{ organization_uid.present? }
+    validates :organization_uid, uniqueness: { scope: :organization_id }, if: ->{ organization_uid.present? }
     validate :validate_type
     validate :validate_uid
     validate :validate_account_expiration_date
@@ -113,6 +121,16 @@ module SS::Model::User
       auth_methods.each do |method|
         return user if user.send(method, password)
       end
+      nil
+    end
+
+    def organization_authenticate(organization, id, password)
+      user = self.where(
+        organization_id: organization.id,
+        '$or' => [{ email: id }, { organization_uid: id }]
+      ).first
+
+      return user if user.send(:dbpasswd_authenticate, password)
       nil
     end
 
@@ -199,6 +217,18 @@ module SS::Model::User
 
   def restricted_api_only?
     restriction == 'api_only'
+  end
+
+  def organization_id_options(site = nil)
+    list = [organization]
+    list << site if site.is_a?(Gws::Group)
+    list.compact.uniq(&:id).map { |c| [c.name, c.id] }
+  end
+
+  def try_switch_user(site = nil)
+    return nil unless switch_user
+    return nil unless switch_user.enabled?
+    switch_user
   end
 
   private

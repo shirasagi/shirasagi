@@ -2,6 +2,11 @@
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>
 
+  <% if @item.domain_editable? %>
+  <dt><%= @model.t :domains %><%= @model.tt :domains %></dt>
+  <dd><%= f.text_field :domains %></dd>
+  <% end %>
+
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 

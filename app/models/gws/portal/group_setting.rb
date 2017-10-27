@@ -7,6 +7,8 @@ class Gws::Portal::GroupSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  index({ portal_group_id: 1 }, { unique: true })
+
   field :name, type: String
   belongs_to :portal_group, class_name: 'Gws::Group', inverse_of: :portal_group_setting
   has_many :portlets, class_name: 'Gws::Portal::GroupPortlet', dependent: :destroy
