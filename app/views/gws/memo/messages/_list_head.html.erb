@@ -29,32 +29,34 @@
 
 <div class="list-head">
   <label class="check"><input type="checkbox"/></label>
+  <div class="list-head-action">
 
-  <div class="list-head-action webmail-mails-head">
     <% if %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
-      <div class="dropdown">
-        <button class="btn move-all" data-href="<%= url_for action: :move %>">
-          <%= t :"webmail.links.move" %> <i class="material-icons md-13">&#xE313;</i>
+      <div class="dropdown dropdown-toggle gws-memo-dropdown">
+        <button class="btn">
+          <%= t 'gws/memo/message.links.move' %> <i class="material-icons md-13">&#xE313;</i>
         </button>
-        <ul class="dropdown-menu webmail-dropdown-menu move-menu">
-          <% @group_navi.select {|g| %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(g.path)}.each do |item| %>
+        <ul class="dropdown-menu">
+          <% @group_navi.select { |g| %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(g.path) }.each do |item| %>
               <li><a href="#" data-path="<%= item.path.to_s %>"><%= item.name %></a></li>
           <% end %>
         </ul>
       </div>
     <% end %>
+
     <button class="btn destroy-all">
-      <%= t :"ss.links.delete" %>
+      <%= t 'ss.links.delete' %>
     </button>
-    <div class="dropdown">
+
+    <div class="dropdown dropdown-toggle gws-memo-dropdown">
       <button class="btn">
-        <%= t :"webmail.links.etc" %> <i class="material-icons md-13">&#xE313;</i>
+        <%= t 'gws/memo/message.links.etc' %> <i class="material-icons md-13">&#xE313;</i>
       </button>
-      <ul class="dropdown-menu webmail-dropdown-menu">
-        <li><a class="set-seen-all" href="#"><%= t :"webmail.links.set_seen" %></a></li>
-        <li><a class="unset-seen-all" href="#"><%= t :"webmail.links.unset_seen" %></a></li>
-        <li><a class="set-star-all" href="#"><%= t :"webmail.links.set_star" %></a></li>
-        <li><a class="unset-star-all" href="#"><%= t :"webmail.links.unset_star" %></a></li>
+      <ul class="dropdown-menu">
+        <li><a class="set-seen-all" href="#"><%= t 'gws/memo/message.links.set_seen' %></a></li>
+        <li><a class="unset-seen-all" href="#"><%= t 'gws/memo/message.links.unset_seen' %></a></li>
+        <li><a class="set-star-all" href="#"><%= t 'gws/memo/message.links.set_star' %></a></li>
+        <li><a class="unset-star-all" href="#"><%= t 'gws/memo/message.links.unset_star' %></a></li>
       </ul>
     </div>
   </div>

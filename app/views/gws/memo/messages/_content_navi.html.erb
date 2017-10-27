@@ -13,7 +13,9 @@
       <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.folder_path) %>
       <tr class="<%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
         <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
-          <%= link_to item.name, gws_memo_messages_path(folder: item.folder_path ), {class: 'field title', 'data-path': item.folder_path } %>
+          <%= link_to item.name,
+                      gws_memo_messages_path(folder: item.folder_path ),
+                      {class: 'field title', 'data-path': item.folder_path } %>
           <span>(<%= item.messages.count %>)</span>
         </td>
       </tr>
