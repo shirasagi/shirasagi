@@ -4,7 +4,7 @@ class Gws::Share::FilesController < ApplicationController
   include Gws::FileFilter
 
   model Gws::Share::File
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :unlock]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :unlock, :disable]
   before_action :set_selected_items, only: [:disable_all]
   before_action :set_category
   before_action :set_folder
@@ -152,5 +152,10 @@ class Gws::Share::FilesController < ApplicationController
   def delete
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render
+  end
+
+  def disable
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render_destroy @item.disable
   end
 end
