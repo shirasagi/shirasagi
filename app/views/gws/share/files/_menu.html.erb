@@ -12,6 +12,9 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
+    <% if Gws::Share::File.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/share.links.folder'),gws_share_folders_path %>
+    <% end %>
   <% elsif params[:action] =~ /new|create|lock|categories/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
