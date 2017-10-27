@@ -1,7 +1,5 @@
 module Gws
   class Initializer
-    Gws::GroupSetting.plugin Gws::GroupSetting::System, ->{ gws_system_setting_path }
-
     Gws::Column.plugin 'gws/text_field'
     Gws::Column.plugin 'gws/date_field'
     Gws::Column.plugin 'gws/number_field'

@@ -2,15 +2,14 @@ class Gws::Schedule::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/schedule/settings/navi"
+  navi_view "gws/main/conf_navi"
 
   model Gws::Schedule::Category
 
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/schedule/group_setting"), gws_schedule_setting_path]
-    @crumbs << [t("mongoid.models.gws/schedule/group_setting/category"), gws_schedule_plans_path]
+    @crumbs << [t("mongoid.models.gws/schedule/category"), gws_schedule_plans_path]
   end
 
   def fix_params
