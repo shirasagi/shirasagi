@@ -1,3 +1,4 @@
+require "net/imap"
 class Webmail::MailsController < ApplicationController
   include Webmail::BaseFilter
   include Sns::CrudFilter
@@ -16,6 +17,7 @@ class Webmail::MailsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("webmail.mail"), { action: :index } ]
+    @webmail_other_account_path = :webmail_mails_path
   end
 
   def fix_params
@@ -23,7 +25,11 @@ class Webmail::MailsController < ApplicationController
   end
 
   def set_item
-    @item = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :body
+    else
+      @item = @imap.mails.find params[:id], :body
+    end
     @item.attributes = fix_params
   end
 
@@ -78,24 +84,42 @@ class Webmail::MailsController < ApplicationController
   end
 
   def header_view
-    @item = @imap.mails.find params[:id]
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id]
+    else
+      @item = @imap.mails.find params[:id]
+    end
+
     render plain: @item.header, layout: false
   end
 
   def source_view
-    @item = @imap.mails.find params[:id], :rfc822
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :rfc822
+    else
+      @item = @imap.mails.find params[:id], :rfc822
+    end
+
     render plain: @item.rfc822, layout: false
   end
 
   def download
-    @item = @imap.mails.find params[:id], :rfc822
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :rfc822
+    else
+      @item = @imap.mails.find params[:id], :rfc822
+    end
 
     send_data @item.rfc822, filename: "#{@item.subject}.eml",
               content_type: 'message/rfc822', disposition: :attachment
   end
 
   def parts
-    part = @imap.mails.find_part params[:id], params[:section]
+    if SS.config.webmail.store_mails
+      part = @imap.mails.find_part_and_store params[:id], params[:section]
+    else
+      part = @imap.mails.find_part params[:id], params[:section]
+    end
     disposition = part.image? ? :inline : :attachment
 
     send_data part.decoded, filename: part.filename,
@@ -108,21 +132,36 @@ class Webmail::MailsController < ApplicationController
   end
 
   def reply
-    @ref  = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply(@ref)
     render :new
   end
 
   def reply_all
-    @ref  = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply_all(@ref)
     render :new
   end
 
   def forward
-    @ref  = @imap.mails.find params[:id], :body
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
     @item = @model.new pre_params.merge(fix_params)
     @item.new_forward(@ref)
     render :new
@@ -169,6 +208,24 @@ class Webmail::MailsController < ApplicationController
     render_change :unset_star, redirect: { action: :show }
   end
 
+  def send_mdn
+    if SS.config.webmail.store_mails
+      @item = @imap.mails.find_and_store params[:id], :rfc822
+    else
+      @item = @imap.mails.find params[:id], :rfc822
+    end
+    @item.imap = @imap
+    @item.send_mdn
+    @imap.uids_set_mdn_sent get_uids
+
+    render_change :send_mdn, redirect: { action: :show }
+  end
+
+  def ignore_mdn
+    @imap.uids_set_mdn_sent get_uids
+    render_change :ignore_mdn, redirect: { action: :show }
+  end
+
   def copy
     @imap.uids_copy get_uids, params[:dst]
     render_change :copy, reload: true
@@ -176,6 +233,15 @@ class Webmail::MailsController < ApplicationController
 
   def move
     @imap.uids_move get_uids, params[:dst]
+    render_change :move, reload: true
+  end
+
+  def rename_mailbox
+    @item = Webmail::Mailbox.where(original_name: params[:src]).first
+    @item.name = Net::IMAP.decode_utf7(params[:dst])
+    @item.imap = @imap
+    @item.sync = true
+    @item.update
     render_change :move, reload: true
   end
 

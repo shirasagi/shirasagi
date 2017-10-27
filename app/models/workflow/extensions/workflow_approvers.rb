@@ -47,6 +47,7 @@ class Workflow::Extensions::WorkflowApprovers < Array
       ret.each do |hash|
         hash[:level] = hash[:level].to_i if hash[:level].present?
         hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
+        hash[:editable] = hash[:editable].to_i if hash[:editable].present?
         hash[:comment] = "" if hash[:comment].blank?
       end
       ret.to_a.uniq
@@ -55,7 +56,7 @@ class Workflow::Extensions::WorkflowApprovers < Array
     def convert_from_string(text)
       return nil if text.blank?
       begin
-        Hash[[:level, :user_id, :state, :comment].zip(text.split(",").map(&:strip))]
+        Hash[[:level, :user_id, :editable, :state, :comment].zip(text.split(",").map(&:strip))]
       rescue
         nil
       end

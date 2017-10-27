@@ -6,11 +6,15 @@ module Webmail::Mail::Message
       to: merge_address_field(to, to_text),
       cc: merge_address_field(cc, cc_text),
       bcc: merge_address_field(bcc, bcc_text),
-      from: imap.user.email_address,
+      from: imap.email_address,
       subject: subject
     }
     headers[:in_reply_to] = "<#{in_reply_to}>" if in_reply_to.present?
     headers[:references] = references.to_a.map { |m| "<#{m}>" } if references.present?
+
+    if in_request_mdn == "1"
+      headers[:"Disposition-Notification-To"] = Webmail::Converter.extract_address(headers[:from])
+    end
 
     headers.select { |k, v| v.present? }
   end
@@ -28,7 +32,7 @@ module Webmail::Mail::Message
 
   def new_reply(ref)
     self.reply_uid = ref.uid
-    self.to = ref.from
+    self.to = ref.from.map { |adr| adr.gsub("\"", "") }
     self.to_text = self.to.join('; ')
     set_reply_header(ref)
     set_reply_body(ref)
@@ -36,8 +40,8 @@ module Webmail::Mail::Message
 
   def new_reply_all(ref)
     self.reply_uid = ref.uid
-    self.to = (ref.from + ref.to).reject { |c| c.include?(imap.user.email) }
-    self.cc = ref.cc
+    self.to = (ref.from + ref.to).reject { |c| c.include?(imap.user.email) }.map { |adr| adr.gsub("\"", "") }
+    self.cc = ref.cc.map { |adr| adr.gsub("\"", "") }
     self.to_text = self.to.join('; ')
     self.cc_text = self.cc.join('; ')
     set_reply_header(ref)

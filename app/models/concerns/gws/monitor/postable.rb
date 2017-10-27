@@ -5,6 +5,7 @@ module Gws::Monitor::Postable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::GroupPermission
+  include Gws::Addon::Monitor::Group
 
   included do
     store_in collection: "gws_monitor_posts"
@@ -23,7 +24,7 @@ module Gws::Monitor::Postable
     field :admin_setting, type: String, default: '1'
     field :spec_config, type: String, default: '0'
     field :reminder_start_section, type: String, default: '0'
-    field :state_of_the_answer, type: String, default: 'preparation'
+    field :state_of_the_answers_hash, type: Hash, default: {}
 
     validates :descendants_updated, datetime: true
 
@@ -36,9 +37,10 @@ module Gws::Monitor::Postable
       order: { created: -1 }
 
     permit_params :name, :mode, :permit_comment, :severity, :due_date, :admin_setting,
-                  :spec_config, :reminder_start_section, :state_of_the_answer
+                  :spec_config, :reminder_start_section, :state_of_the_answers_hash
 
     before_validation :set_topic_id, if: :comment?
+    before_validation :set_state_of_the_answers_hash
 
     validates :name, presence: true, length: { maximum: 80 }
     validates :mode, inclusion: {in: %w(thread tree)}, unless: :comment?
@@ -62,17 +64,78 @@ module Gws::Monitor::Postable
         category_ids = Gws::Monitor::Category.site(params[:site]).and_name_prefix(params[:category]).pluck(:id)
         criteria = criteria.in(category_ids: category_ids)
       end
+      if params[:question_state].present?
+        criteria = criteria.where(question_state: params[:question_state].to_s)
+      end
       criteria
     }
-    scope :and_topics, ->() {
-      where("$and" =>
-           ["$or" => [ {state_of_the_answer: "public"}, {state_of_the_answer: "preparation"} ] ])
+    scope :and_topics, ->(groupid) {
+      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+                         {article_state: 'open'}])
     }
-    scope :and_answers, ->() {
+    scope :and_answers, ->(groupid) {
       where("$and" =>
-           ["$or" => [ {state_of_the_answer: "question_not_applicable"}, {state_of_the_answer: "answered"} ] ])
+              [ "$or" =>
+                [
+                  {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]},
+                  {"$and" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+                               {article_state: 'closed'}]}
+                ]
+              ])
     }
+    # Allow readable settings and readable permissions.
+    scope :and_readable, ->(user, site, opts = {}) {
+      cond = [
+          { "readable_group_ids.0" => { "$exists" => false },
+            "readable_member_ids.0" => { "$exists" => false },
+            "readable_custom_group_ids.0" => { "$exists" => false },
+            "group_ids.0" => { "$exists" => false },
+            "user_ids.0" => { "$exists" => false },
+            "attend_group_ids.0" => { "$exists" => false } },
+          { :readable_group_ids.in => user.group_ids },
+          { readable_member_ids: user.id },
+          { "$and" => [ {admin_setting: '0'}, { :group_ids.in => user.group_ids }] },
+          { "$and" => [ {admin_setting: '0'}, { group_id: user.group_ids }] },
+          { "$and" => [ {admin_setting: '1'}, { user_ids: user.id }] },
+          { "$and" => [ {admin_setting: '1'}, { user_id: user.id }] },
+          { :attend_group_ids.in => user.group_ids },
+      ]
+      if readable_setting_included_custom_groups?
+        cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      end
 
+      cond << allow_condition(:read, user, site: site) if opts[:include_role]
+      where("$and" => [{ "$or" => cond }])
+    }
+    scope :owner, ->(user, site, opts = {}) {
+      cond = [
+          { "group_ids.0" => { "$exists" => false },
+            "user_ids.0" => { "$exists" => false } },
+          { "$and" => [ {admin_setting: '1'}, { :group_ids.in => user.group_ids }] },
+          { "$and" => [ {admin_setting: '0'}, { user_ids: user.id }] },
+      ]
+      where("$and" => [{ "$or" => cond }])
+    }
+    scope :attend, ->(user, site, opts = {}) {
+      cond = [
+          { "attend_group_ids.0" => { "$exists" => false } },
+          { :attend_group_ids.in => user.group_ids },
+      ]
+      where("$and" => [{ "$or" => cond }])
+    }
+    scope :remind, ->() {
+      where("$where" => "function() {
+       var sect = parseInt(this.reminder_start_section);
+       if (sect == -999) return false;
+       if (sect > 0) {
+         dd = this.due_date;
+       } else {
+         dd = this.created;
+       }
+       dt = new Date(dd.getFullYear(), dd.getMonth(), dd.getDate() - sect);
+       return (dt <= ISODate('#{Time.zone.today}'));
+     }")
+    }
   end
 
   # Returns the topic.
@@ -138,5 +201,28 @@ module Gws::Monitor::Postable
     #return unless _id_changed?
     topic.set descendants_updated: updated
   end
-end
 
+  def set_state_of_the_answers_hash
+    attend_group_ids_string = []
+    @attributes["attend_group_ids"].each {|s| attend_group_ids_string << "#{s}"}
+    self.state_of_the_answers_hash = attend_group_ids_string.map do |g|
+      if @attributes["state_of_the_answers_hash"][g]
+        [g, @attributes["state_of_the_answers_hash"][g]]
+      else
+        [g, "preparation"]
+      end
+    end.to_h
+  end
+
+  module ClassMethods
+    def readable_setting_included_custom_groups?
+      class_variable_get(:@@_readable_setting_include_custom_groups)
+    end
+
+    private
+
+    def readable_setting_include_custom_groups
+      class_variable_set(:@@_readable_setting_include_custom_groups, true)
+    end
+  end
+end

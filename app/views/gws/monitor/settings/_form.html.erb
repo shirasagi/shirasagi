@@ -16,5 +16,8 @@
 
   <dt><%= @model.t :monitor_browsed_delay %><%= @model.tt :monitor_browsed_delay %></dt>
   <dd><%= f.number_field :monitor_browsed_delay %> <%= t("datetime.prompts.second") %></dd>
+
+  <dt><%= @model.t :monitor_delete_threshold %><%= @model.tt :monitor_delete_threshold %></dt>
+  <dd><%= f.select :monitor_delete_threshold, @item.monitor_delete_threshold_options %></dd>
 </dl>
 

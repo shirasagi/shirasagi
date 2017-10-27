@@ -1,0 +1,36 @@
+<% return if @items.blank? %>
+
+<% object_name = params[:object_name].presence || 'item' %>
+<dl class="see">
+  <% @items.each do |item| %>
+    <%= render(file: item.column_form_path, locals: { column: item, object_name: object_name }) %>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  SS.renderAjaxBox();
+  SS.renderDateTimePicker();
+
+  var columnId;
+
+  $('a.btn-file-upload').on('click', function(e) {
+    columnId = $(this).data('column-id');
+  });
+
+  $('a.btn-file-upload').data('on-select', function($item) {
+    $.colorbox.close();
+    if (! columnId) {
+      return;
+    }
+
+    var fileId = $item.data('id');
+    var humanizedName = $item.data('humanized-name');
+    if (! fileId || ! humanizedName) {
+      return;
+    }
+
+    var $element = $.colorbox.element();
+    $element.siblings('input[name="<%= object_name %>[' + columnId + ']"]').val(fileId);
+    $element.siblings('span.humanized-name.column-' + columnId).text(humanizedName);
+  });
+<% end %>

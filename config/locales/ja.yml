@@ -136,6 +136,7 @@ ja:
       wrong_length: は%{count}文字で入力してください。
       other_than: "は%{count}以外の値にしてください。"
       email: は有効な電子メールアドレスを入力してください。
+      domain: は有効なドメインを入力してください。
       invalid_updated: 他のユーザーによって更新されています。編集をやり直してください。
       too_large_file: "%{filename}(%{size}) のサイズが大きすぎます（制限値: %{limit}）。"
       file_count: "ファイル数（%{size}）が多すぎます（制限値: %{limit}）。"

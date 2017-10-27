@@ -1,0 +1,13 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-mail-setting");
+<% end %>
+<dl class="see mod-ss-mail-setting">
+  <dt><%= @model.t :sender_name %><%= @model.tt :sender_name %></dt>
+  <dd><%= f.text_field :sender_name %></dd>
+
+  <dt><%= @model.t :sender_email %><%= @model.tt :sender_email %></dt>
+  <dd><%= f.text_field :sender_email %></dd>
+
+  <dt><%= @model.t :mail_signature %><%= @model.tt :mail_signature %></dt>
+  <dd><%= f.text_area :mail_signature %></dd>
+</dl>

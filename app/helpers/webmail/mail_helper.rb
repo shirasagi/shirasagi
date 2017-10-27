@@ -8,4 +8,8 @@ module Webmail::MailHelper
 
     h.present? ? h.join(', ') : nil
   end
+
+  def account_options(path_helper)
+    @cur_user.imap_settings.map.with_index { |setting, i| [ setting.address, send(path_helper, i) ] }
+  end
 end

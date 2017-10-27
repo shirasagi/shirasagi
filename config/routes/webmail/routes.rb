@@ -20,6 +20,7 @@ SS::Application.routes.draw do
       put :set_star
       put :unset_star
       put :move
+      put :rename_mailbox
       put :copy
       delete :empty
     end
@@ -37,6 +38,8 @@ SS::Application.routes.draw do
       get :reply
       get :reply_all
       get :forward
+      put :send_mdn
+      put :ignore_mdn
     end
   end
 
@@ -52,27 +55,27 @@ SS::Application.routes.draw do
   namespace "webmail", path: ".webmail" do
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }, as: :cur_user
 
-    resources :mails, concerns: [:deletion, :mail], path: 'mails/:mailbox',
-      mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
-    resources :mailboxes, concerns: [:deletion, :mailbox]
-    resources :addresses, concerns: [:deletion, :export]
-    resources :address_groups, concerns: [:deletion]
-    resources :signatures, concerns: [:deletion]
-    resources :filters, concerns: [:deletion, :filter]
-    resource :cache_setting, only: [:show, :update]
+    resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
+      account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
+    resources :mailboxes, path: 'account-:account/mailboxes', account: /\d+/, concerns: [:deletion, :mailbox]
+    resources :addresses, path: 'account-:account/addresses', account: /\d+/, concerns: [:deletion, :export]
+    resources :address_groups, path: 'account-:account/addresses_groups', account: /\d+/, concerns: [:deletion]
+    resources :signatures, path: 'account-:account/signatures', account: /\d+/, concerns: [:deletion]
+    resources :filters, path: 'account-:account/filters', concerns: [:deletion, :filter]
+    resource :cache_setting, path: 'account-:account/cache_setting', only: [:show, :update]
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, :on => :member
     end
     resources :sys_notices, only: [:index, :show]
 
     # with group
-    scope(path: "address_group-:group", as: "group") do
+    scope(path: "account-:account/address_group-:group", as: "group") do
       resources :addresses, concerns: [:deletion, :export]
     end
 
     namespace "apis" do
-      get "recent" => "imap#recent"
-      get "quota" => "imap#quota"
+      get "account-:account/recent" => "imap#recent", account: /\d+/, as: :recent
+      get "account-:account/quota" => "imap#quota", account: /\d+/, as: :quota
       get "addresses" => "addresses#index"
     end
   end

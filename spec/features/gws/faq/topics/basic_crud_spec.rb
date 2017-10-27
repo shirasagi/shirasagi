@@ -34,7 +34,6 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
           click_button "保存"
         end
         expect(current_path).not_to eq new_path
-        expect(page).to have_no_css("form#item-form")
 
         item = Gws::Faq::Topic.site(site).first
         expect(item.name).to eq "name"
@@ -64,7 +63,6 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
     end
 
     it "#delete" do

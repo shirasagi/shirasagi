@@ -21,7 +21,7 @@
 </div>
 <% end %>
 
-<% if @cms_sites.size > 0 %>
+<% if @cms_sites.size > 0 && SS.config.cms.disable.blank? %>
 <div class="mypage-box">
   <div class="index mypage-sites">
     <div class="list-head"><%= t "cms.site" %></div>

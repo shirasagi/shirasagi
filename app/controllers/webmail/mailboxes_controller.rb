@@ -10,10 +10,11 @@ class Webmail::MailboxesController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("mongoid.models.webmail/mailbox"), { action: :index } ]
+    @webmail_other_account_path = :webmail_mailboxes_path
   end
 
   def fix_params
-    @imap.account_scope.merge(cur_user: @cur_user, sync: true)
+    @imap.account_scope.merge(cur_user: @cur_user, imap: @imap, sync: true)
   end
 
   def set_destroy_items

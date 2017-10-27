@@ -8,7 +8,7 @@
   </dd>
   <dd>
     <table class="index ajax-selected">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <thead><tr><th class="name"><%= Gws::Faq::Category.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
         <% @item.categories.each do |item| %>
         <tr data-id="<%= item.id %>">

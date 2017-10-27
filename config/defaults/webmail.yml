@@ -20,11 +20,17 @@ production: &production
   # Mail cache
   cache_mails: true
 
+  # Store mail cache as static file
+  store_mails: true
+
   # Quota cache
   cache_quota: true
 
   # Quota cache expires (Hours)
   cache_quota_expires: 24
+
+  # Upper limit of user's imap account
+  imap_account_limit: 5
 
 test:
   <<: *production

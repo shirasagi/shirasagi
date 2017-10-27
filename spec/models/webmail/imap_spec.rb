@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe Webmail::Imap, type: :model, dbscope: :example do
   let(:user) { create :webmail_user }
-  subject(:imap) { Webmail::Imap::Base.new(user) }
+  let(:setting) { user.imap_settings.first }
+  subject(:imap) { Webmail::Imap::Base.new(user, setting) }
 
   it do
     expect(imap.special_mailboxes.is_a?(Array)).to be_truthy
-    expect(imap.sent_box).to eq user.imap_sent_box
-    expect(imap.draft_box).to eq user.imap_draft_box
-    expect(imap.trash_box).to eq user.imap_trash_box
+    expect(imap.sent_box).to eq setting.imap_sent_box
+    expect(imap.draft_box).to eq setting.imap_draft_box
+    expect(imap.trash_box).to eq setting.imap_trash_box
     expect(imap.sent_box?(imap.sent_box.to_s)).to be_truthy
     expect(imap.sent_box?("#{imap.sent_box}.a")).to be_truthy
     expect(imap.sent_box?("#{imap.sent_box}xx.a")).to be_falsey

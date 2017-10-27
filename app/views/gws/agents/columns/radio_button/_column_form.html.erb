@@ -1,0 +1,10 @@
+<% value ||= nil %>
+<%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
+<dd>
+  <% column.select_options.each do |val| %>
+    <label>
+      <%= radio_button_tag("#{object_name}[#{column.id}]", val, value.try(:value) == val, column.form_options) %>
+      <%= val %>
+    </label>
+  <% end %>
+</dd>
