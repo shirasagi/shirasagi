@@ -1,5 +1,6 @@
 ja:
   gws/qna:
+    category: カテゴリー
     user: ユーザー
     #descendants_num: コメント数
     #descendants_updated: 更新日時
@@ -63,6 +64,7 @@ ja:
   modules:
     gws/qna: Ｑ＆Ａ
     addons:
+      gws/qna/group_setting: Ｑ＆Ａ
       gws/qna/category: カテゴリー
 
   gws_role:
@@ -81,11 +83,9 @@ ja:
 
   mongoid:
     models:
-      gws/qna/topic: Ｑ＆Ａトピック
-      gws/qna/post: Ｑ＆Ａ投稿
-      gws/qna/category: Ｑ＆Ａカテゴリー
-      gws/qna/group_setting: Ｑ＆Ａ設定
-      gws/qna/group_setting/category: カテゴリー
+      gws/qna/topic: Ｑ＆Ａ/トピック
+      gws/qna/post: Ｑ＆Ａ/投稿
+      gws/qna/category: Ｑ＆Ａ/カテゴリー
     errors:
       models:
         gws/qna/category:
@@ -108,7 +108,7 @@ ja:
         question_state: 回答状況
       gws/qna/post:
         name: 回答タイトル
-      gws/qna/group_setting:
+      gws/addon/qna/group_setting:
         qna_new_days: 新着表示期間
         qna_file_size: 添付最大サイズ
         qna_file_size_per_topic: 添付最大サイズ/トピック単位
@@ -129,7 +129,7 @@ ja:
         - コメントを許可するかどうかを選択します。
       severity:
         - 重要度を選択します。
-    gws/qna/group_setting:
+    gws/addon/qna/group_setting:
       qna_new_days:
         - 新着表示期間を入力します。
       qna_file_size_per_topic:
