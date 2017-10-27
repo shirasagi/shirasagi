@@ -13,6 +13,14 @@ module Webmail::Address::WebmailExport
     )
   end
 
+  def webmail_import_required_fields
+    names = []
+    names << export_field_names[webmail_export_fields.index("id")]
+    names << export_field_names[webmail_export_fields.index("name")]
+    names << export_field_names[webmail_export_fields.index("email")]
+    names
+  end
+
   def webmail_export_convert_item(item, data)
     i = webmail_export_fields.index("address_group_id")
     data[i] = item.address_group.name if item.address_group

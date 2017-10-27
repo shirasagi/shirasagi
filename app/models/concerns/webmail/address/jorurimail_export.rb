@@ -12,6 +12,13 @@ module Webmail::Address::JorurimailExport
     SS.config.webmail_address_export.export_fields["jorurimail"].values
   end
 
+  def jorurimail_import_required_fields
+    names = []
+    names << jorurimail_export_field_names[jorurimail_export_fields.index("name")]
+    names << jorurimail_export_field_names[jorurimail_export_fields.index("email")]
+    names
+  end
+
   def jorurimail_import_convert_data(data)
     data
   end

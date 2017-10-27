@@ -11,6 +11,30 @@ module Webmail::AddressExport
     permit_params :import_format
   end
 
+  def validate_import_file
+    super
+    return false unless errors.empty?
+
+    headers = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').headers
+    in_file.rewind
+
+    case import_format
+    when "jorurimail"
+      required = jorurimail_import_required_fields - headers
+    when "outlook"
+      required = outlook_import_required_fields - headers
+    else
+      required = webmail_import_required_fields - headers
+    end
+
+    if required.size > 0
+      self.errors.add :in_file, :invalid_file_type
+      false
+    else
+      true
+    end
+  end
+
   def import_format_options
     SS.config.webmail_address_export.import_format.map { |k, v| [k, v] }
   end
