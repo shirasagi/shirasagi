@@ -24,7 +24,9 @@ SS::Application.routes.draw do
       post :disable_all, on: :collection
     end
 
-    resources :folders, concerns: [:deletion, :export]
+    resources :folders, concerns: [:deletion, :export] do
+      get :download_folder, on: :member
+    end
 
     # with folder
     scope(path: "folder-:folder", as: "folder") do

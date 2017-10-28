@@ -4,11 +4,13 @@ ja:
     category: 共有ファイルカテゴリー
     all: 全てのファイル
     url_copy: クリップボードにコピー
+    folder_download: フォルダー内のファイル一括ダウンロード
     links:
       categories: カテゴリー
       folder: フォルダー管理
       disable: 削除済みに移動する
       active: 削除を取り消す
+      file_download: ダウンロード
       confirm:
         disable: 削除済みにしてよろしいですか？
         active: 削除を取り消してよろしいですか？
