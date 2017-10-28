@@ -89,7 +89,7 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
   end
 
-  def download_folder
+  def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     @download_file_group_ssfile_ids = []
