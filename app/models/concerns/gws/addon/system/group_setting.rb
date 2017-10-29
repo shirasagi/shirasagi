@@ -1,8 +1,10 @@
-module Gws::GroupSetting::System
+module Gws::Addon::System::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
   include SS::Model::EditorSetting
   include SS::Model::MailSetting
+
+  set_addon_type :organization
 
   included do
     field :sendmail_domains, type: SS::Extensions::Words

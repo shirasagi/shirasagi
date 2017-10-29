@@ -1,9 +1,8 @@
-<%
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-schedule-group-setting"); <% end %>
 
-@item.in_schedule_max_file_size_mb = @item.schedule_max_file_size.to_i / (1_024 * 1_024)
+<% @item.in_schedule_max_file_size_mb = @item.schedule_max_file_size.to_i / (1_024 * 1_024) %>
 
-%>
-<dl class="see">
+<dl class="see addon-gws-schedule-group-setting">
   <dt><%= @model.t :schedule_max_date %><%= @model.tt :schedule_max_date %></dt>
   <dd></dd>
 
@@ -21,4 +20,7 @@
 
   <dt><%= @model.t :schedule_drag_drop_state %><%= @model.tt :schedule_drag_drop_state %></dt>
   <dd><%= f.select :schedule_drag_drop_state, @item.schedule_drag_drop_state_options %></dd>
+
+  <dt><%= @model.t :todo_delete_threshold %><%= @model.tt :todo_delete_threshold %></dt>
+  <dd><%= f.select :todo_delete_threshold, @item.todo_delete_threshold_options %></dd>
 </dl>
