@@ -3,6 +3,7 @@ class Gws::Group
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::Schedule::GroupSetting
+  include Gws::Addon::Facility::GroupSetting
   include Gws::Addon::Board::GroupSetting
   include Gws::Addon::Faq::GroupSetting
   include Gws::Addon::Qna::GroupSetting

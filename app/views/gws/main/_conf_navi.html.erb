@@ -30,13 +30,6 @@
     <h3><%= link_to t('mongoid.models.gws/link'), gws_links_path %></h3>
   <% end %>
 
-  <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path %></h3>
-  <% end %>
-  <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path %></h3>
-  <% end %>
-
   <% Gws::GroupSetting.plugins.each do |mod, url_lazy| %>
     <% if mod.allowed?(:read, @cur_user, site: @cur_site) %>
       <h3><%= link_to mod.human_name, instance_exec(&url_lazy) %></h3>
@@ -59,6 +52,27 @@
   <% end %>
   <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/schedule.navi.category'), gws_schedule_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/portal') %></h2>
+  <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path %></h3>
+  <% end %>
+  <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/facility') %></h2>
+  <% if Gws::Facility::Item.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/facility.navi.item'), gws_facility_items_path %></h3>
+    <h3><%= link_to t('gws/facility.navi.usage'), gws_facility_usage_main_path %></h3>
+  <% end %>
+  <% if Gws::Facility::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_facility_categories_path %></h3>
   <% end %>
 </nav>
 
