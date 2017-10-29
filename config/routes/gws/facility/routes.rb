@@ -21,6 +21,5 @@ SS::Application.routes.draw do
       end
     end
     resources :categories, concerns: [:deletion]
-    resource :setting, only: [:show, :edit, :update]
   end
 end
