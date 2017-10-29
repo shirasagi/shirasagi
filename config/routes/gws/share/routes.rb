@@ -22,6 +22,7 @@ SS::Application.routes.draw do
       get :download_history, on: :member
       get :disable, on: :member
       post :disable_all, on: :collection
+      post :download_all, on: :collection
     end
 
     resources :folders, concerns: [:deletion, :export] do
