@@ -33,6 +33,7 @@ SS::Application.routes.draw do
     scope(path: "folder-:folder", as: "folder") do
       resources :files, concerns: [:deletion, :export] do
         post :download_all, on: :collection
+        post :disable_all, on: :collection
       end
     end
 
@@ -54,7 +55,9 @@ SS::Application.routes.draw do
         post :active_all, on: :collection
       end
       scope(path: "folder-:folder", as: "folder") do
-        resources :files, concerns: [:deletion, :export]
+        resources :files, concerns: [:deletion, :export] do
+          post :active_all, on: :collection
+        end
       end
       resources :categories, concerns: [:deletion]
     end
