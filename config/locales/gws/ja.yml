@@ -117,6 +117,7 @@ ja:
       gws/subscription_setting: 購読
       gws/contributor: 投稿者
       gws/schedules: スケジュール
+      gws/system/group_setting: システム設定
 
   mongoid:
     models:
@@ -131,8 +132,6 @@ ja:
       gws/share: 共有ファイル
       gws/reminder: リマインダー
       gws/history: 操作履歴
-      gws/group_setting: システム設定
-      gws/group_setting/system: システム設定
       gws/user_setting: ユーザー設定
     attributes:
       gws/model/category:
@@ -206,7 +205,7 @@ ja:
       gws/addon/member:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
-      gws/group_setting/system:
+      gws/addon/system/group_setting:
         sendmail_domains: メール送信許可ドメイン
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
@@ -261,7 +260,7 @@ ja:
     gws/link:
       name:
         - タイトルを入力します。
-    gws/group_setting/system:
+    gws/addon/system/group_setting:
       sendmail_domains:
         - メール送信許可ドメインを入力します。
       canonical_scheme:
