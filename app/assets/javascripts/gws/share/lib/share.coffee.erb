@@ -8,6 +8,10 @@ class @Gws_Share_File
       form = Gws_Share_File.buildForm("files/active_all", "<%= I18n.t('gws/share.links.confirm.active_all') %>")
       form.appendTo(document.body).submit()
 
+    $(".list-head .download-all").on "click", ->
+      form = Gws_Share_File.buildForm("files/download_all", "<%= I18n.t('gws/share.links.confirm.download_all') %>")
+      form.appendTo(document.body).submit()
+
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->
       $(this).val()
