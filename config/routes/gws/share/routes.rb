@@ -31,7 +31,9 @@ SS::Application.routes.draw do
 
     # with folder
     scope(path: "folder-:folder", as: "folder") do
-      resources :files, concerns: [:deletion, :export]
+      resources :files, concerns: [:deletion, :export] do
+        post :download_all, on: :collection
+      end
     end
 
     resource :setting, only: [:show, :edit, :update]
