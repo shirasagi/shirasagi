@@ -1,6 +1,7 @@
 <%
   @share = Gws::Share::File.site(@cur_site).
       readable(@cur_user, @cur_site).
+      active.
       order(updated: -1).
       page(1).per(5)
 %>
