@@ -4,16 +4,19 @@ ja:
     category: 共有ファイルカテゴリー
     all: 全てのファイル
     url_copy: クリップボードにコピー
+    folder_download: フォルダー内のファイル一括ダウンロード
     links:
       categories: カテゴリー
       folder: フォルダー管理
       disable: 削除済みに移動する
       active: 削除を取り消す
+      file_download: ダウンロード
       confirm:
         disable: 削除済みにしてよろしいですか？
         active: 削除を取り消してよろしいですか？
         disable_all: チェックした項目を削除済みに移動しますか？
         active_all: 選択した項目の削除を取り消しますか？
+        download_all: 選択した項目をダウンロードしますか？
 
   modules:
     gws/share: 共有ファイル
