@@ -122,4 +122,43 @@ class Gws::Share::Management::FilesController < ApplicationController
     render_destroy_all(entries.size != @items.size)
   end
 
+  def render_destroy_all(result)
+    location = crud_redirect_url || { action: :index }
+    if params[:action] == "active_all"
+      notice = result ? { notice: t("gws/share.notice.active") } : {}
+    else
+      notice = result ? { notice: t("ss.notice.deleted") } : {}
+    end
+
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
+  end
+
+  def render_destroy(result, opts = {})
+    location = opts[:location].presence || crud_redirect_url || { action: :index }
+    render_opts = opts[:render].presence || { file: :delete }
+    if params[:action] == "active"
+      notice = opts[:notice].presence || t("gws/share.notice.active")
+    elsif params[:action] == "destroy"
+      notice = opts[:notice].presence || t("ss.notice.deleted")
+    else
+      notice = opts[:notice].presence || t("ss.notice.saved")
+    end
+
+    if result
+      respond_to do |format|
+        format.html { redirect_to location, notice: notice }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { render render_opts }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
+      end
+    end
+  end
 end
