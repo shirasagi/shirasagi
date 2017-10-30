@@ -39,7 +39,7 @@ class Gws::Share::File
     if key.start_with?('created_')
       where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('updated_')
-      where({}).order_by(descendants_updated: key.end_with?('_asc') ? 1 : -1)
+      where({}).order_by(updated: key.end_with?('_asc') ? 1 : -1)
     else
       where({})
     end
