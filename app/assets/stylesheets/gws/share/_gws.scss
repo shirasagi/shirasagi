@@ -1,0 +1,28 @@
+// gws-share
+
+.gws-share {
+  .topic {
+    @include box;
+    margin-bottom: 2px;
+    header {
+      @include box-head;
+      .name {
+        margin-right: 4px;
+      }
+    }
+    .body {
+      @include box-body;
+    }
+
+    .status {
+      padding: 15px;
+    }
+  }
+  .menu {
+    padding: 0 5px 10px;
+    text-align: right;
+    a {
+      margin: 0 4px;
+    }
+  }
+}
