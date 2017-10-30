@@ -59,7 +59,7 @@ module Gws::Share::DescendantsFileInfo
     self.set(
       descendants_files_count: files_count,
       descendants_total_file_size: total_file_size
-    )
+    ) if Gws::Share::Folder.where(_id: self._id).compact.present?
   end
 end
 
