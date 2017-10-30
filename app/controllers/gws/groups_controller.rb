@@ -6,6 +6,8 @@ class Gws::GroupsController < ApplicationController
 
   navi_view "gws/main/conf_navi"
 
+  after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
+
   private
 
   def set_crumbs
@@ -19,6 +21,10 @@ class Gws::GroupsController < ApplicationController
   def set_item
     super
     raise "403" unless Gws::Group.site(@cur_site).include?(@item)
+  end
+
+  def reload_nginx
+    SS::Nginx::Config.new.write.reload_server
   end
 
   public

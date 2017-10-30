@@ -4,7 +4,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
   context "basic crud", js: true do
     let(:site) { gws_site }
     let(:user) { gws_user }
-    let(:index_path) { gws_workflow_files_path site }
+    let(:index_path) { gws_workflow_files_path(site, state: 'all') }
     let!(:file) { tmp_ss_file(contents: '0123456789', user: user) }
     let(:item_name) { unique_id }
     let(:item_text) { unique_id }

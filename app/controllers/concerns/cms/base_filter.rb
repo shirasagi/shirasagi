@@ -9,6 +9,7 @@ module Cms::BaseFilter
     helper Cms::FormHelper
     helper Cms::PathHelper
     helper Map::MapHelper
+    before_action :validate_cms
     before_action :set_cms_assets
     before_action :set_site
     before_action :set_node
@@ -17,6 +18,10 @@ module Cms::BaseFilter
   end
 
   private
+
+  def validate_cms
+    raise '404' if SS.config.cms.disable.present?
+  end
 
   def set_cms_assets
     SS.config.cms.stylesheets.each { |m| stylesheet(m) } if SS.config.cms.stylesheets.present?

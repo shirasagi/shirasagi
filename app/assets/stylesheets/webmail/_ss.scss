@@ -36,6 +36,9 @@
     }
   }
 }
+#menu .nav-menu .webmail-dropdown:after {
+  content: none !important;
+}
 li.webmail-accounts {
   float: right;
   margin-top: 5px;

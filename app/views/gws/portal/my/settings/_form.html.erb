@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd>
+    <%= tryb { @item.portal_user.long_name } %>
+    <%= tryb { @item.portal_group.name } %>
+  </dd>
+</dl>

@@ -1,0 +1,33 @@
+<%= jquery do %>
+SS_Clipboard.renderCopy();
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <% setting = item.find_or_new_portal_user_setting(cur_user: @cur_user, cur_site: @cur_site) %>
+  <% if setting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <%= link_to item.name, gws_portal_user_path(user: item), class: "title" %>
+  <% else %>
+    <span class="title"><%= item.name %></span>
+  <% end %>
+<% end %>
+
+<% @tap_menu = proc do |item| %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.uid.presence || item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="group"><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></span>
+
+  <% if title = item.title(@cur_site) %>
+    <span class="user-title"><%= title.name %></span>
+  <% end %>
+  <% if item.email.present? %>
+    <span class="email js-clipboard-copy"><%= mail_to item.email %></span>
+  <% end %>
+  <% if item.tel_label.present? %>
+    <span class="tel"><%= item.tel_label %></span>
+  <% end %>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

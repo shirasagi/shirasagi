@@ -1,0 +1,23 @@
+<% return if (reports = @item.reports).blank? %>
+
+<dl class="see mod-gws-schedule-reports">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th><%= Gws::Report::File.t(:name) %></th>
+        <th><%= Gws::Report::File.t(:updated) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% reports.readable(@cur_user, site: @cur_site).order_by(updated: 1).each do |report| %>
+        <tr>
+          <td><%= link_to(report.name, gws_report_file_path(state: 'all', id: report)) %></td>
+          <td><%= I18n.l(report.updated) %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

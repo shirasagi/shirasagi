@@ -1,7 +1,7 @@
 class @SS_SearchUI
   @anchorAjaxBox
 
-  @select: (item) ->
+  @defaultSelector: (item) ->
     self = this
 
     data = item.closest("[data-id]")
@@ -17,6 +17,13 @@ class @SS_SearchUI
     tr.append($('<td />').append(a))
     self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr)
     self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change")
+
+  @select = (item) ->
+    selector = $.colorbox.element().data('on-select')
+    if selector
+      selector(item)
+    else
+      @defaultSelector(item)
 
   @selectItems: ->
     self = this

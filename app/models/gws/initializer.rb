@@ -2,6 +2,16 @@ module Gws
   class Initializer
     Gws::GroupSetting.plugin Gws::GroupSetting::System, ->{ gws_system_setting_path }
 
+    Gws::Column.plugin 'gws/text_field'
+    Gws::Column.plugin 'gws/date_field'
+    Gws::Column.plugin 'gws/number_field'
+    Gws::Column.plugin 'gws/url_field'
+    Gws::Column.plugin 'gws/text_area'
+    Gws::Column.plugin 'gws/select'
+    Gws::Column.plugin 'gws/radio_button'
+    Gws::Column.plugin 'gws/check_box'
+    Gws::Column.plugin 'gws/file_upload'
+
     Gws::Role.permission :edit_gws_groups
     Gws::Role.permission :edit_gws_users
     Gws::Role.permission :edit_gws_user_titles
@@ -30,6 +40,7 @@ module Gws
     Gws::Role.permission :delete_other_gws_links
     Gws::Role.permission :delete_private_gws_links
 
+    SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File
   end
 end

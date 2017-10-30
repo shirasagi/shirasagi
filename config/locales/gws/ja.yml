@@ -47,6 +47,16 @@ ja:
         '10': 10分前
         '30': 30分前
         '60': 1時間前
+      input_type:
+        text_field: テキストボックス
+        text_area: テキストエリア
+        email_field: メールアドレス
+        date_field: 日付
+        radio_button: ラジオボタン選択
+        select: プルダウン選択
+        check_box: チェックボックス選択
+        upload_file: ファイル投稿
+
     links:
       back_to_portal: ポータルへ戻る
       restore_reminder: 元に戻す
@@ -56,6 +66,8 @@ ja:
     confirm:
       readable_setting:
         empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
+    errors:
+      allowed_domains_only_root: はルートグループにのみ設定できます。
 
   date:
     formats:
@@ -103,6 +115,7 @@ ja:
       gws/member: 参加者
       gws/subscription_setting: 購読
       gws/contributor: 投稿者
+      gws/schedules: スケジュール
 
   mongoid:
     models:
@@ -194,12 +207,16 @@ ja:
         member_custom_group_ids: 参加カスタムグループ
       gws/group_setting/system:
         sendmail_domains: メール送信許可ドメイン
+        canonical_scheme: グループウェアスキーム
+        canonical_domain: グループウェアドメイン
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー
         subscribed_custom_group_ids: 購読カスタムグループ
       gws/addon/contributor:
         contributor_name: 投稿者名
+      gws/addon/schedules:
+        schedule_ids: スケジュール
 
   tooltip:
     gws/addon/reminder:
@@ -246,6 +263,12 @@ ja:
     gws/group_setting/system:
       sendmail_domains:
         - メール送信許可ドメインを入力します。
+      canonical_scheme:
+        - グループウェアスキームを選択します。
+        - システムからメールを送信する際、メールに記載される URL がここで設定したスキームになります。
+      canonical_domain:
+        - グループウェアドメインを入力します。
+        - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
     gws/addon/group_permission:
       custom_group_ids:
         - このページを編集可能にするカスタムグループを選択します。
@@ -266,6 +289,9 @@ ja:
     gws/addon/contributor:
       contributor_name:
         - 投稿者名を選択します。
+    gws/addon/schedules:
+      schedule_ids:
+        - スケジュールを選択します。
 
   job:
     models:

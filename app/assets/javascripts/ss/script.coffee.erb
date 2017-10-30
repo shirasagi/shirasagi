@@ -14,6 +14,7 @@
 #= require marked
 #= require_self
 #= require ss/lib/form
+#= require ss/lib/font
 #= require ss/lib/module
 #= require ss/lib/login
 #= require ss/lib/addon_tabs
@@ -28,6 +29,7 @@
 #= require ss/lib/dropdown
 #= require ss/lib/clipboard
 #= require ss/lib/color
+#= require ss/lib/workflow
 #= require sns/lib/message
 #= require cms/lib/editor
 #= require cms/lib/form
@@ -76,28 +78,17 @@ $ ->
     menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
   # dropdown
-  $(".dropdown").click (e) ->
-    $(".dropdown").not($(e.target).closest('.dropdown').get(0)).each ->
+  $(".dropdown-toggle").click (e) ->
+    $dropdown = $(e.target).closest('.dropdown')
+    $(".dropdown").not($dropdown.get(0)).each ->
       $(this).removeClass('active')
       $(this).find('.dropdown-menu').removeClass('active')
-    $(this).toggleClass('active')
-    $(this).find('.dropdown-menu').toggleClass('active')
+    $dropdown.toggleClass('active')
+    $dropdown.find('.dropdown-menu').toggleClass('active')
     e.stopPropagation()
   $(document).click (e) ->
     $(".dropdown").removeClass('active')
     $(".dropdown-menu").removeClass('active')
-
-  # datetimepicker
-  $.datetimepicker.setLocale('ja');
-  if ($.support.opacity)
-    $(".js-date").datetimepicker
-      timepicker: false
-      format:'Y/m/d'
-      closeOnDateSelect: true
-      scrollInput: false
-    $(".js-datetime").datetimepicker
-      roundTime: 'ceil'
-      step: 30
 
   SS_ListUI.render("table.index")
   SS_Mobile.render()
@@ -129,12 +120,9 @@ class @SS
     box.find("a[href^=http]").each ->
       $(this).addClass("external")
 
-    # ajax to (color)box
-    box.find(".ajax-box").each ->
-      elem = $(this)
-      return true if elem.hasClass("cboxElement")
-      if !elem.attr("target") && !elem.data("target")
-        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+    @renderAjaxBox()
+
+    @renderDateTimePicker()
 
   @renderNotInBox: ->
     SS_Login.render()
@@ -252,3 +240,24 @@ class @SS
             alert(["== Error =="].concat(errors).join("\n"));
           catch
             alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+
+  # ajax to (color)box
+  @renderAjaxBox: (box = $(document)) ->
+    box.find(".ajax-box").each ->
+      elem = $(this)
+      return true if elem.hasClass("cboxElement")
+      if !elem.attr("target") && !elem.data("target")
+        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+
+  # datetimepicker
+  @renderDateTimePicker: ->
+    $.datetimepicker.setLocale('ja');
+    if ($.support.opacity)
+      $(".js-date").datetimepicker
+        timepicker: false
+        format:'Y/m/d'
+        closeOnDateSelect: true
+        scrollInput: false
+      $(".js-datetime").datetimepicker
+        roundTime: 'ceil'
+        step: 30

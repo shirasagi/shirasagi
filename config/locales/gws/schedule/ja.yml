@@ -31,6 +31,7 @@ ja:
       show_month: 月表示
       show_week: 週表示
       show_day: 日表示
+      create_report: レポートを作成する
     buttons:
       delete_one: 今回のみ
       delete_later: 以降すべて
@@ -82,6 +83,11 @@ ja:
       unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
   gws/schedule/todo:
+    finish_mark: "[完] "
+    confirm:
+      finish_all: 選択した項目を全て完了にしますか？
+      revert_all: 選択した項目を全て未完了に戻しますか？
+      disable_all: 選択した項目を全て削除しますか？
     search_todos: ToDoを検索
     links:
       finish: 完了する
@@ -101,16 +107,22 @@ ja:
         - 2年6ヶ月
         - 3年
         - 3年6ヶ月
+  gws/schedule/todo_management:
+    links:
+      active: 削除を取り消す
+    confirm:
+      active_all: 選択した項目の削除を取り消しますか？
 
   modules:
     gws/schedule: スケジュール
     addons:
       gws/schedule/facility: 設備予約
-      gws/schedule/facility_custom_values: 設備追加情報
+      gws/schedule/facility_column_values: 設備追加情報
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント
       gws/schedule/attendances: 出欠確認
+      gws/schedule/reports: レポート
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
@@ -185,7 +197,7 @@ ja:
         schedule_max_years: 年数
         schedule_max_month: 期末月
         schedule_max_file_size: 添付最大サイズ
-        todo_delete_threshold: 削除対象
+        todo_delete_threshold: 復旧可能期間
         schedule_attachment_state: ファイル添付
         schedule_drag_drop_state: ドラッグ＆ドロップ
       gws/schedule/user_setting:
@@ -205,9 +217,9 @@ ja:
       gws/schedule/attendance:
         in_comment: コメント
         attendance_state: 出欠
-      gws/schedule/facility_custom_values:
+      gws/schedule/facility_column_values:
         main_facility_id: 主設備
-        facility_custom_values: 設備追加情報
+        facility_column_values: 設備追加情報
 
   tooltip:
     gws/schedule/planable:
@@ -254,7 +266,7 @@ ja:
         - 添付ファイルの最大サイズを入力します。
         - 0 は無制限を意味します。
       todo_delete_threshold:
-        - ToDoを物理削除するまでの日数を入力します。
+        - ToDoを復旧することができる期間を入力します。
       schedule_attachment_state:
         - ファイル添付を許可するかどうかを選択します。
       schedule_drag_drop_state:

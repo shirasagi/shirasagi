@@ -6,7 +6,7 @@ describe Opendata::Facility::AssocJob, dbscope: :example, js: true do
   let(:facility_node_node) { create :facility_node_node, cur_site: site, cur_node: facility_node_search }
   let!(:facility_node_page) { create :facility_node_page, cur_site: site, cur_node: facility_node_node }
 
-  let(:od_site) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}@example.jp" }
+  let(:od_site) { create :cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp" }
   let!(:dataset_node) { create :opendata_node_dataset, cur_site: od_site }
   let!(:category_node) { create :opendata_node_category, cur_site: od_site }
 

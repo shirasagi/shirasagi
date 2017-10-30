@@ -14,6 +14,9 @@
   <dt><%= @model.t :uid %><%= @model.tt :uid %></dt>
   <dd><%= f.text_field :uid %></dd>
 
+  <dt><%= @model.t :organization_uid %><%= @model.tt :organization_uid %></dt>
+  <dd><%= f.text_field :organization_uid %></dd>
+
   <dt><%= @model.t :email %><%= @model.tt :email %></dt>
   <dd><%= f.email_field :email %></dd>
 
@@ -55,6 +58,9 @@
   <dt><%= @model.t :restriction %><%= @model.tt :restriction %></dt>
   <dd><%= f.select :restriction, @item.restriction_options %></dd>
 
+  <dt><%= @model.t :organization_id %><%= @model.tt :organization_id %></dt>
+  <dd><%= f.select :organization_id, @item.organization_id_options %></dd>
+
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
@@ -78,4 +84,9 @@
       </tbody>
     </table>
   </dd>
+</dl>
+
+<dl class="see mod-gws-user-remark">
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
 </dl>

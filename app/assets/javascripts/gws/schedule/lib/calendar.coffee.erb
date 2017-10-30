@@ -79,9 +79,9 @@ class @Gws_Schedule_Calendar
       target = $(this)
       Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>")
 
-      popup_url = if event.restUrl then event.restUrl else "#{url}/#{event.id}/popup"
+      popup_url = if event.restUrl then event.restUrl else url
       $.ajax
-        url: popup_url
+        url: "#{popup_url}/#{event.id}/popup"
         success: (data)->
           $('.fc-popup').html(data)
           Gws_Popup.renderPopup(target)
@@ -89,9 +89,10 @@ class @Gws_Schedule_Calendar
     eventDrop: (event, delta, revertFunc, jsEvent, ui, view) ->
       end = null
       end = event.end.format() if event.end
+      drop_url = if event.restUrl then event.restUrl else url
       $.ajax
         type: 'PUT'
-        url: "#{url}/" + event.id + ".json"
+        url: "#{drop_url}/" + event.id + ".json"
         data: { item: { api: 'drop', api_start: event.start.format(), api_end: end } }
         success: (data, dataType) ->
           viewId = view.el.closest('.calendar').attr('id')

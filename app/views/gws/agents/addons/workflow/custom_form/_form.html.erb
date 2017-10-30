@@ -1,0 +1,39 @@
+<% return if @cur_form.blank? && (@item.cur_form || @item.form).blank? %>
+<% @cur_form ||= (@item.cur_form || @item.form) %>
+
+<dl class="see mod-gws-workflow-custom_form">
+  <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
+    <%= render(file: column.column_form_path, locals: { column: column, object_name: 'custom', value: @item.read_column_value(column) }) %>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-ss-agents-addons-markdown').hide();
+  $('#addon-gws-agents-addons-file').hide();
+  $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+
+  $('a.btn-file-upload').data('on-select', function($item) {
+    $.colorbox.close();
+
+    var fileId = $item.data('id');
+    var humanizedName = $item.data('humanized-name');
+    if (! fileId || ! humanizedName) {
+      return;
+    }
+
+    var $element = $.colorbox.element();
+    $element.siblings('input.file-id').val(fileId);
+    $element.siblings('span.humanized-name').text(humanizedName);
+    $element.siblings('.btn-file-delete').show();
+  });
+
+  $('a.btn-file-delete').on('click', function(e) {
+    var $this = $(this);
+    $this.siblings('input.file-id').val('');
+    $this.siblings('span.humanized-name').text('');
+    $this.hide();
+
+    e.preventDefault();
+    return false;
+  });
+<% end %>

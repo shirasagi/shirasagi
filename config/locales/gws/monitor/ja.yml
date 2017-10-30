@@ -228,7 +228,7 @@ ja:
         monitor_browsed_delay:
           - 照会・回答を既読にするまでの秒数を入力します。
         monitor_delete_threshold:
-          - 照会・回答を物理削除するまでの期限を入力します。
+          - 照会・回答を完全に削除するまでの期限を入力します。基準は「削除済み」に移動した日です。
       gws/monitor/category:
         name:
           - カテゴリー名を入力します。

@@ -6,10 +6,16 @@ class Sys::GroupsController < ApplicationController
 
   menu_view "sys/crud/menu"
 
+  after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
+
   private
 
   def set_crumbs
     @crumbs << [t("sys.group"), sys_groups_path]
+  end
+
+  def reload_nginx
+    SS::Nginx::Config.new.write.reload_server
   end
 
   public

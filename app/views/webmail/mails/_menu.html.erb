@@ -12,7 +12,7 @@
     <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
     <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>
 
-    <div class="dropdown">
+    <div class="dropdown webmail-dropdown dropdown-toggle">
       <a><%= t 'webmail.links.etc' %> <i class="material-icons md-13">&#xE313;</i></a>
       <ul class="dropdown-menu webmail-dropdown-menu">
         <li><%= link_to t('webmail.links.print'), '#', class: 'print-mail' %></li>
