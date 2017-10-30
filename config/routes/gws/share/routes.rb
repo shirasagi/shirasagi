@@ -22,13 +22,19 @@ SS::Application.routes.draw do
       get :download_history, on: :member
       get :disable, on: :member
       post :disable_all, on: :collection
+      post :download_all, on: :collection
     end
 
-    resources :folders, concerns: [:deletion, :export]
+    resources :folders, concerns: [:deletion, :export] do
+      get :download_folder, on: :member
+    end
 
     # with folder
     scope(path: "folder-:folder", as: "folder") do
-      resources :files, concerns: [:deletion, :export]
+      resources :files, concerns: [:deletion, :export] do
+        post :download_all, on: :collection
+        post :disable_all, on: :collection
+      end
     end
 
     resource :setting, only: [:show, :edit, :update]
@@ -49,7 +55,9 @@ SS::Application.routes.draw do
         post :active_all, on: :collection
       end
       scope(path: "folder-:folder", as: "folder") do
-        resources :files, concerns: [:deletion, :export]
+        resources :files, concerns: [:deletion, :export] do
+          post :active_all, on: :collection
+        end
       end
       resources :categories, concerns: [:deletion]
     end
