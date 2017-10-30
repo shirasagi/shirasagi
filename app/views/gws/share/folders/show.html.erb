@@ -8,15 +8,17 @@
     </div>
   </div>
   <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+</div>
 
-  <% if controller_path == "gws/share/folders" %>
-    <div class="addon-view " id="addon-gws-download_folder">
-      <div class="addon-head toggle-head">
-          <h2><%= t('gws/share.folder_download') %></h2>
-      </div>
-      <div class="addon-body toggle-body">
+<% if controller_path == "gws/share/folders" %>
+  <div class="gws-share file-download">
+    <article class="topic">
+      <header>
+        <h2><%= t('gws/share.folder_download') %></h2>
+      </header>
+      <div class="menu">
         <%= link_to(t('gws/share.links.file_download'), download_folder_gws_share_folder_path, class: 'btn file_download') %>
       </div>
-    </div>
-  <% end %>
-</div>
+    </article>
+  </div>
+<% end %>
