@@ -12,13 +12,13 @@
     </thead>
     <tbody>
       <tr class="<%= 'current' if @folder.blank? %>">
-        <td><%= link_to t('gws/share.all'), gws_share_management_files_path %>(<%= Gws::Share::File.site(@cur_site).allow(:read, @cur_user, site: @cur_site).count -%>)</td>
+        <td><%= link_to t('gws/share.all'), gws_share_management_files_path %>(<%= Gws::Share::File.site(@cur_site).allow(:read, @cur_user, site: @cur_site).deleted.count -%>)</td>
       </tr>
 
       <% @folder_navi.each do |item| %>
       <tr class="<%= 'current' if @folder == item %>">
         <% item.send :update_folder_descendants_file_info %>
-        <td><%= link_to item.name, gws_share_management_folder_files_path(folder: item.id) %>(<%= item.descendants_files_count -%>)</td>
+        <td><%= link_to item.name, gws_share_management_folder_files_path(folder: item.id) %>(<%= item.deleted_files_count -%>)</td>
       </tr>
       <% end %>
     </tbody>
