@@ -67,7 +67,10 @@ class Gws::Share::FilesController < ApplicationController
       readable(@cur_user, @cur_site).
       active.
       search(params[:s]).
+      custom_order(params.dig(:s, :sort) || 'updated_asc').
       page(params[:page]).per(50)
+
+    @items.options[:sort].delete("_id")
   end
 
   def show
@@ -149,11 +152,6 @@ class Gws::Share::FilesController < ApplicationController
         format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
       end
     end
-  end
-
-  def delete
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render
   end
 
   def disable
