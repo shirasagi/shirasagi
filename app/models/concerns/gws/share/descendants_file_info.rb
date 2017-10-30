@@ -21,6 +21,10 @@ module Gws::Share::DescendantsFileInfo
     files.active.compact.length || 0
   end
 
+  def deleted_files_count
+    files.deleted.compact.length || 0
+  end
+
   private
 
   def validate_attached_file_size
