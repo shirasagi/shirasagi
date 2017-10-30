@@ -18,7 +18,7 @@ module Gws::Share::DescendantsFileInfo
   end
 
   def files_count
-    files.compact.length || 0
+    files.active.compact.length || 0
   end
 
   private
