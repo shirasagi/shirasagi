@@ -1,0 +1,36 @@
+<%= jquery do %> SS_AddonTabs.hide(".gws-addon-history"); <% end %>
+
+<div class="gws-addon-history">
+  <table class="index">
+    <thead>
+      <tr>
+        <th style="width: 80px"><%= Gws::Share::History.t :mode %></th>
+        <th style="width: 140px"><%= Gws::Share::History.t :created %></th>
+        <th><%= Gws::Share::History.t :user_name %></th>
+        <th><%= Gws::Share::History.t :user_tel %></th>
+        <th><%= Gws::Share::History.t :uploadfile_name %></th>
+        <th><%= Gws::Share::History.t :uploadfile_size %></th>
+        <th><%= Gws::Share::History.t :upload %></th>
+        <th><%= Gws::Share::History.t :updated_fields %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @item.histories.each do |item| %>
+      <tr>
+        <td><%= item.mode_name %></td>
+        <td><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></td>
+        <td><%= item.user_long_name %></td>
+        <td><%= item.user_tel %></td>
+        <td><%= item.uploadfile_name %></td>
+        <td><%= item.uploadfile_size %></td>
+        <td><%= link_to t('ss.links.download'), download_history_gws_share_file_path(history_id: item._id), { class: "btn" } %></td>
+        <td>
+          <% if (names = item.updated_field_names).present? %>
+          <%= truncate names.join(', '), length: 30 %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

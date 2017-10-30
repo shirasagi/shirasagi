@@ -10,6 +10,8 @@ module Gws::Portal::PortletModel
     schedule: { size_x: 4, size_y: 2 },
     reminder: { size_x: 2, size_y: 3 },
     board:    { size_x: 2, size_y: 3 },
+    monitor:    { size_x: 2, size_y: 3 },
+    share:    { size_x: 2, size_y: 3 },
   }.freeze
 
   included do

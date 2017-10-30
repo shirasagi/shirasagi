@@ -22,7 +22,7 @@ class Gws::Portal::MySetting
   end
 
   def default_portlets
-    %w(schedule reminder board).map { |key| Gws::Portal::MyPortlet.default_portlet(key) }
+    %w(schedule reminder board monitor share).map { |key| Gws::Portal::MyPortlet.default_portlet(key) }
   end
 
   def readable_portlets(user, site)
