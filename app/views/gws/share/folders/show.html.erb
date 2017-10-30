@@ -17,7 +17,7 @@
         <h2><%= t('gws/share.folder_download') %></h2>
       </header>
       <div class="menu">
-        <%= link_to(t('gws/share.links.file_download'), download_folder_gws_share_folder_path, class: 'btn file_download') %>
+        <%= link_to(t('gws/share.links.file_download'), download_folder_gws_share_folder_path, class: 'btn file_download') if SS::File.where(folder_id: @item._id).present? %>
       </div>
     </article>
   </div>
