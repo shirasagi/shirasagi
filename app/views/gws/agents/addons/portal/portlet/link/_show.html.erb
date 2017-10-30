@@ -1,0 +1,17 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th style="width: 40%;"><%= @item.t('links/name') %></th>
+      <th><%= @item.t('links/url') %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% (@item.links || []).each do |item| %>
+    <tr>
+      <td><%= item[:name] %></td>
+      <td><%= item[:url] %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

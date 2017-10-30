@@ -36,6 +36,14 @@
     }
   }
 }
+#menu .nav-menu .webmail-dropdown:after {
+  content: none !important;
+}
+li.webmail-accounts {
+  float: right;
+  margin-top: 5px;
+  margin-right: 10px;
+}
 
 // -------------------------------------------------------------------------------------------------
 // navi
@@ -88,6 +96,9 @@
       color: rgba(0,0,0,.5);
     }
   }
+  .droppable-hover {
+    color: red;
+  }
 }
 .webmail-navi-quota {
   position: relative;
@@ -113,6 +124,16 @@
     background-color: #6d6;
     @include background(linear-gradient(top, #dfd, #4b4));
   }
+  .usage.over-threshold {
+    background-color: #ff0f0f;
+    @include background(linear-gradient(top, #ffcccc, #ff0f0f));
+  }
+}
+.webmail-quota-alert {
+  margin-left: 230px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #ff0f0f;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -230,6 +251,15 @@
       }
     }
   }
+  .request-mdn-notice {
+    @include clear;
+    padding: 5px 15px;
+    border-bottom: 1px solid #969696;
+    background-color: #cecece;
+    .action {
+      float: right;
+    }
+  }
   .show-image {
     display: block;
     margin: -5px 0 10px;
@@ -284,6 +314,26 @@
   .address {
     height: auto;
   }
+  .selected-address {
+    @include clear;
+    cursor: pointer;
+    min-height: 12px;
+    span {
+      float: left;
+      background: #f2f2f2;
+      padding: 2px 2px 4px 4px;
+      margin: 0px 4px 4px 0px;
+      border: 1px solid #d0d0d0;
+      border-radius: 3px;
+      max-width: 500px;
+    }
+    .invalid-address {
+      border-bottom: dotted 2px red;
+    }
+    .placeholder {
+      height: 26px;
+    }
+  }
 }
 .cc-bcc-label {
   display: inline-block;
@@ -291,6 +341,7 @@
   color: #888;
 }
 .webmail-addon-mail-body {
+  @include clear;
   .subject {
     float: left;
     width: calc(100% - 300px);
@@ -313,6 +364,10 @@
   .body-content {
     clear: both;
     margin-top: 15px;
+  }
+  .header-options {
+    margin-top: 10px;
+    float: right;
   }
 }
 // form-addresses

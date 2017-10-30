@@ -29,6 +29,7 @@ module SS::Model::Site
     permit_params :mypage_scheme, :mypage_domain
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
+    validates :domains, domain: true
 
     validate :validate_domains, if: ->{ domains.present? }
 
@@ -166,7 +167,7 @@ module SS::Model::Site
           end
         end
 
-        site ||= SS::Site.first if Rails.env.development?
+        #site ||= SS::Site.first if Rails.env.development?
         site.cur_domain = host if site
         site
       end

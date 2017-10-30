@@ -1,14 +1,22 @@
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div>
-    <div class="addon-body">
-      <%= render file: "_show" %>
+  <% number = 1 %>
+  <% @item.imap_settings.each_with_index do |setting, i| %>
+    <div class="addon-view imap-setting" data-id="<%= number %>">
+      <div class="addon-head"><h2><%= "#{t('webmail.account_setting')}#{number}" %></h2></div>
+      <div class="addon-body">
+        <%= render file: '_show', locals: { number: number, setting: setting, default_index: (@cur_user.imap_default_index == i) } %>
+      </div>
     </div>
-  </div>
-  <div class="addon-view" id="addon-mailbox">
-    <div class="addon-head toggle-head"><h2><%= t('webmail.settings.special_mailbox') %></h2></div>
-    <div class="addon-body toggle-body">
-      <%= render file: '_show_mailbox' %>
+    <% number += 1 %>
+  <% end %>
+
+  <% if @item.imap_settings.blank? %>
+    <% setting = Webmail::ImapSetting.new %>
+    <div class="addon-view imap-setting" data-id="<%= number %>">
+      <div class="addon-head"><h2><%= "#{t('webmail.account_setting')}#{number}" %></h2></div>
+      <div class="addon-body">
+        <%= render file: '_show', locals: { number: number, setting: setting, default_index: true } %>
+      </div>
     </div>
-  </div>
+  <% end %>
 </div>

@@ -32,8 +32,8 @@ class Webmail::Mailbox
 
   default_scope -> { order_by order: 1, downcase_name: 1 }
 
-  scope :imap_user, ->(user) {
-    conf = user.imap_settings
+  scope :imap_setting, ->(setting) {
+    conf = setting.imap_settings
     where host: conf[:host], account: conf[:account]
   }
 
@@ -128,14 +128,18 @@ class Webmail::Mailbox
 
   def imap_update
     imap.conn.rename original_name_was, original_name
-    Webmail::Mail.where(imap.account_scope).where(mailbox: name_was).delete_all
+    items = Webmail::Mail.where(imap.account_scope).where(mailbox: name_was)
+    items.each(&:destroy_rfc822)
+    items.delete_all
   rescue Net::IMAP::NoResponseError => e
     rescue_imap_error(e)
   end
 
   def imap_delete
     imap.conn.delete original_name
-    mails.delete_all
+    items = mails
+    items.each(&:destroy_rfc822)
+    items.delete_all
   rescue Net::IMAP::NoResponseError => e
     rescue_imap_error(e)
   end

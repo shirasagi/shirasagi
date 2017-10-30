@@ -12,12 +12,12 @@
     </thead>
     <tbody>
       <tr class="<%= 'current' if @address_group.blank? %>">
-        <td><%= link_to t('ss.all'), webmail_addresses_path %></td>
+        <td><%= link_to t('ss.all'), webmail_addresses_path(account: params[:account] || @cur_user.imap_default_index) %></td>
       </tr>
 
       <% @group_navi.each do |item| %>
       <tr class="<%= 'current' if @address_group == item %>">
-        <td><%= link_to item.name, webmail_group_addresses_path(group: item.id) %></td>
+        <td><%= link_to item.name, webmail_group_addresses_path(group: item.id, account: (params[:account] || @cur_user.imap_default_index)) %></td>
       </tr>
       <% end %>
     </tbody>

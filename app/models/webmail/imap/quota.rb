@@ -6,6 +6,7 @@ module Webmail::Imap
       @imap = imap
       return unless enabled?
       @item = cache_find || Webmail::Quota.new(quota_root_scope)
+      @item.threshold_mb = @imap.conf[:threshold_mb]
     end
 
     def enabled?

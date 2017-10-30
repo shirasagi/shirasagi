@@ -1,5 +1,11 @@
 <nav class="main-navi">
-  <h2><%= link_to t('gws.portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
+  <h2><%= link_to t('gws/portal.my_portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
+  <h3><%= link_to t('gws/portal.tabs.user_portal'), gws_portal_user_path(user: @cur_user) %></h3>
+  <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+    <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
+  <% end %>
+  <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
+
   <h2><%= link_to t('mongoid.models.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
 
   <%# if Gws::Schedule::Plan.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -9,6 +15,7 @@
     <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
     <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
   <%# end %>
+  <h2><%= link_to '連絡メモ', gws_memo_messages_path, class: "icon-conv" %></h2>
   <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>
   <% end %>
@@ -21,8 +28,17 @@
       <h3><%= link_to t('modules.gws/qna'), gws_qna_topics_path %></h3>
     <% end %>
   <% end %>
+  <% if Gws::Report::File.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t('modules.gws/report'), gws_report_files_main_path, class: "icon-workflow" %></h2>
+    <h3><%= link_to t('gws/report.options.file_state.inbox'), gws_report_files_path(state: 'inbox') %></h3>
+    <h3><%= link_to t('gws/report.options.file_state.sent'), gws_report_files_path(state: 'sent') %></h3>
+    <h3><%= link_to t('gws/report.options.file_state.closed'), gws_report_files_path(state: 'closed') %></h3>
+    <h3><%= link_to t('gws/report.options.file_state.all'), gws_report_files_path(state: 'all') %></h3>
+  <% end %>
   <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_path, class: "icon-workflow" %></h2>
+    <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
+    <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
+    <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>
   <% end %>
 
   <h2><%= link_to '回覧板', gws_circular_topics_path, class: 'icon-write' %></h2>

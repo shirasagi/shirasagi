@@ -203,7 +203,15 @@ module Gws::Monitor::Postable
   end
 
   def set_state_of_the_answers_hash
-    self.state_of_the_answers_hash = @attributes["attend_group_ids"].map{|g| [g, "preparation"] }.to_h if @attributes["_id"] == 0
+    attend_group_ids_string = []
+    @attributes["attend_group_ids"].each {|s| attend_group_ids_string << "#{s}"}
+    self.state_of_the_answers_hash = attend_group_ids_string.map do |g|
+      if @attributes["state_of_the_answers_hash"][g]
+        [g, @attributes["state_of_the_answers_hash"][g]]
+      else
+        [g, "preparation"]
+      end
+    end.to_h
   end
 
   module ClassMethods

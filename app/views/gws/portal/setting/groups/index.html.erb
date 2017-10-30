@@ -1,0 +1,38 @@
+<%= jquery do %>
+SS_TreeUI.render(".index.groups");
+<% end %>
+
+<div class="list-search">
+  <%= render file: "_search" %>
+</div>
+
+<div class="main-box">
+  <table class="index groups">
+    <thead>
+      <tr>
+        <th><%= @model.t :name %></th>
+        <th class="datetime"><%= @model.t :updated %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @items.each do |item| %>
+      <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
+      <% name    = @search_params ? item.name : item.trailing_name %>
+      <tr<%= depth %>>
+        <td class="expandable">
+          <% setting = item.find_or_new_portal_group_setting(cur_user: @cur_user, cur_site: @cur_site) %>
+          <% if setting.allowed?(:read, @cur_user, site: @cur_site) %>
+            <%= link_to name, gws_portal_group_path(group: item), class: "title" %>
+          <% else %>
+            <span class="title"><%= name %></span>
+          <% end %>
+        </td>
+        <td><%= item.updated.strftime("%Y/%m/%d") %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

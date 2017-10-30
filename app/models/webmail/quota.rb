@@ -9,6 +9,7 @@ class Webmail::Quota
   field :quota, type: Integer, default: 0
   field :usage, type: Integer, default: 0
   field :reloaded, type: DateTime
+  field :threshold_mb, type: Integer
 
   validates :host, presence: true, uniqueness: { scope: [:account, :mailbox] }
   validates :account, presence: true
@@ -29,9 +30,25 @@ class Webmail::Quota
     usage * 1024
   end
 
+  def usable_bytes
+    quota_bytes - usage_bytes
+  end
+
+  def over_threshold?
+    return false unless threshold_mb
+    usage_mb = (usage_bytes.to_f / 1024 / 1024).round
+    usage_mb >= threshold_mb
+  end
+
   def label
     h = ApplicationController.helpers
     "#{h.number_to_human_size(usage_bytes)}/#{h.number_to_human_size(quota_bytes)}"
+  end
+
+  def threshold_label
+    return "" unless over_threshold?
+    h = ApplicationController.helpers
+    h.t("webmail.notice.over_threshold", size: h.number_to_human_size(usable_bytes))
   end
 
   def percentage

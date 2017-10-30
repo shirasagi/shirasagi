@@ -1,0 +1,58 @@
+<dl class="see mod-gws-facility-custom_fields">
+  <dd class="wide">
+    <%= link_to(I18n.t('gws/workflow.columns.index'), gws_workflow_form_columns_path(form_id: @item), class: :btn) %>
+    <%= link_to(I18n.t('ss.links.preview'), new_gws_workflow_form_file_path(state: 'preview', form_id: @item, format: :html), class: %w(btn preview)) %>
+  </dd>
+  <% if @item.columns.present? %>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Column::Base.t(:name) %></th>
+        <th class="input_type"><%= Gws::Column::Base.model_name.human %></th>
+        <th class="required"><%= Gws::Column::Base.t(:required) %></th>
+        <th class="datetime"><%= Gws::Column::Base.t(:updated) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.columns.order_by(order: 1, id: 1).each do |column| %>
+      <tr>
+        <td class="name"><%= column.name %></td>
+        <td class="input_type"><%= column.class.model_name.human %></td>
+        <td class="required"><%= column.label(:required) %></td>
+        <td class="datetime"><%= tryb { I18n.l(column.updated) } %></td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
+</dl>
+
+
+<%= jquery do %>
+  var $rootElement = $('#addon-gws-agents-addons-workflow-column_setting');
+  $rootElement.find('.preview').colorbox({
+    fixed: true,
+    width: "90%",
+    height: "90%",
+    onComplete: function() {
+      var $content = $('#cboxLoadedContent');
+      $content.find('footer.send').hide();
+      $content.find('form').on('submit', function(e) {
+        e.preventDefault();
+        return false;
+      });
+      $content.find('.toggle-body').each(function() {
+        var $this = $(this);
+        if ($this.css('display') == 'none') {
+          $this.show();
+        }
+      });
+      $content.find('.ajax-box').on('click', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    }
+  });
+<% end %>

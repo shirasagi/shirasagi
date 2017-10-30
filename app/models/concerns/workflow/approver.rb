@@ -129,6 +129,19 @@ module Workflow::Approver
     errors.empty?
   end
 
+  def workflow_requested?
+    workflow_state == WORKFLOW_STATE_REQUEST
+  end
+
+  def workflow_approver_editable?(user)
+    approvers = workflow_approvers.select do |h|
+      h[:state] == WORKFLOW_STATE_REQUEST && h[:user_id] == user.id && h[:editable].present?
+    end
+    max_editable_approvers = approvers.max_by { |h| h[:editable].to_i }
+    return if max_editable_approvers.blank?
+    max_editable_approvers[:editable].to_i > 0
+  end
+
   private
 
   def reset_workflow

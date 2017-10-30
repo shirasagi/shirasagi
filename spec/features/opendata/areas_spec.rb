@@ -49,7 +49,9 @@ describe "opendata_areas", type: :feature, dbscope: :example, js: true do
 
       # read
       click_on I18n.t('ss.links.back_to_index')
-      click_on name
+      within '.list-items' do
+        click_on name
+      end
       click_on I18n.t('cms.node_config')
 
       # update

@@ -9,12 +9,13 @@ module Webmail::Mail::Parser
     self.attributes = {
       uid: data.attr["UID"],
       internal_date: data.attr['INTERNALDATE'],
-      flags: data.attr['FLAGS'] || [],
+      flags: data.attr['FLAGS'].map(&:to_sym) || [],
       size: data.attr['RFC822.SIZE'],
     }
 
     if data.attr['RFC822']
       self.rfc822 = data.attr['RFC822']
+      parse_rfc822_body
     end
 
     if data.attr['RFC822.HEADER']
@@ -43,7 +44,8 @@ module Webmail::Mail::Parser
       references: parse_references(mail.references),
       subject: mail.subject,
       content_type: mail.mime_type,
-      has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil)
+      has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil),
+      disposition_notification_to: parse_address_field(mail[:disposition_notification_to])
     }
   end
 
@@ -109,6 +111,38 @@ module Webmail::Mail::Parser
     resp = imap.conn.uid_fetch(uid, attr)
     self.text = Webmail::MailPart.decode resp[0].attr["BODY[#{text_part_no}]"], text_part
     self.html = Webmail::MailPart.decode resp[0].attr["BODY[#{html_part_no}]"], html_part
+  end
+
+  def parse_rfc822_body
+    read_rfc822 if rfc822.blank?
+    return if rfc822.blank?
+
+    msg = Mail::Message.new(rfc822)
+    if msg.multipart?
+      if part = msg.find_first_mime_type('text/plain')
+        self.format = 'text'
+        self.text = part.decoded
+      end
+      if part = msg.find_first_mime_type('text/html')
+        self.format = 'html'
+        self.html = part.decoded
+      end
+
+      self.attachments = []
+      msg.all_parts.each_with_index do |part, i|
+        next unless part.attachment?
+        self.attachments << Webmail::StoredMailPart.new(part, i)
+      end
+    else
+      if msg.mime_type == 'text/plain'
+        self.format = 'text'
+        self.text = msg.decoded
+      end
+      if msg.mime_type == 'text/html'
+        self.format = 'html'
+        self.html = msg.decoded
+      end
+    end
   end
 
   private

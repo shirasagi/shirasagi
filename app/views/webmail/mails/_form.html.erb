@@ -1,6 +1,10 @@
+<% h = Webmail::Address.user(@cur_user).to_autocomplete_hash %>
 <%= jquery do %>
-  SS_Form.disableEnterKey('#item_subject');
-  Webmail_Mail_Form.render();
+SS_Form.disableEnterKey('#item_subject');
+Webmail_Mail_Form.render();
+Webmail_Address_Autocomplete.render(
+  ".webmail-mail-form-address", { names: <%== h.keys.to_json %>, labels: <%== h.keys.to_json %>, values: <%== h.to_json %> }
+);
 <% end %>
 
 <%= f.hidden_field :reply_uid, id: nil %>
@@ -10,9 +14,18 @@
 
 <dl class="webmail-mail-form-address to">
   <dt><%= @model.t :to %></dt>
+  <dd><%= text_field_tag "to", nil, "class" => "address autocomplete", "data-name" => "item[to][]" %></dd>
+  <dd><%= render 'address_form', { f: f, field: :to } %></dd>
   <dd>
-    <%= f.text_area :to_text, class: "address js-autosize" %>
-    <%= render 'address_form', { f: f, field: :to } %>
+    <div class="selected-address">
+      <% @item.to.each do |address| %>
+        <span>
+          <%= address %>
+          <i class="material-icons md-18 md-inactive deselect">close</i>
+          <input type="hidden" name="item[to][]" value="<%= address %>">
+        </span>
+      <% end %>
+    </div>
   </dd>
 </dl>
 
@@ -22,16 +35,26 @@
 
 <dl class="webmail-mail-form-address cc-bcc cc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :cc %></dt>
+  <dd><%= text_field_tag "cc", nil, "class" => "address autocomplete", "data-name" => "item[cc][]" %></dd>
+  <dd><%= render 'address_form', { f: f, field: :cc } %></dd>
   <dd>
-    <%= f.text_area :cc_text, class: "address js-autosize" %>
-    <%= render 'address_form', { f: f, field: :cc } %>
+    <div class="selected-address">
+      <% @item.cc.each do |address| %>
+        <span>
+          <%= address %>
+          <i class="material-icons md-18 md-inactive deselect">close</i>
+          <input type="hidden" name="item[to][]" value="<%= address %>">
+        </span>
+      <% end %>
+    </div>
   </dd>
 </dl>
 
 <dl class="webmail-mail-form-address cc-bcc bcc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :bcc %></dt>
+  <dd><%= text_field_tag "bcc", nil, "class" => "address autocomplete", "data-name" => "item[bcc][]" %></dd>
+  <dd><%= render 'address_form', { f: f, field: :bcc } %></dd>
   <dd>
-    <%= f.text_area :bcc_text, class: "address js-autosize" %>
-    <%= render 'address_form', { f: f, field: :bcc } %>
+    <div class="selected-address"></div>
   </dd>
 </dl>

@@ -1,5 +1,5 @@
 
-site_name = defined?($site_name) ? $site_name : 'シラサギ市'
+site_name = SS::Db::Seed.site_name || 'シラサギ市'
 
 # --------------------------------------
 # Users Seed

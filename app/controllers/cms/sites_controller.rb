@@ -7,6 +7,8 @@ class Cms::SitesController < ApplicationController
   navi_view "cms/main/conf_navi"
   menu_view "cms/crud/resource_menu"
 
+  after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
+
   private
 
   def set_crumbs
@@ -16,6 +18,10 @@ class Cms::SitesController < ApplicationController
   def set_item
     @item = Cms::Site.find(@cur_site.id)
     @item.attributes = fix_params
+  end
+
+  def reload_nginx
+    SS::Nginx::Config.new.write.reload_server
   end
 
   public

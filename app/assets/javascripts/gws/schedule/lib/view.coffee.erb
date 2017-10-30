@@ -41,7 +41,7 @@ class @Gws_Schedule_View
         "<button type='button' class='xdsoft_prev' />" +
         "<button type='button' class='xdsoft_next' />" +
         "</div></div>"
-    $('.gws-schedule-box .calendar:first').before(h)
+    $('#menu').before(h)
 
     for i in [0..3]
       date.add(1, 'months') if i > 0

@@ -48,18 +48,22 @@ class Fs::FilesController < ApplicationController
     Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
   end
 
-  public
-
-  def index
+  def send_item(disposition = :inline)
     set_last_modified
 
     if Fs.mode == :file && Fs.file?(@item.path)
       send_file @item.path, type: @item.content_type, filename: @item.filename,
-        disposition: :inline, x_sendfile: true
+                disposition: disposition, x_sendfile: true
     else
       send_data @item.read, type: @item.content_type, filename: @item.filename,
-        disposition: :inline
+                disposition: disposition
     end
+  end
+
+  public
+
+  def index
+    send_item
   end
 
   def thumb
@@ -83,4 +87,10 @@ class Fs::FilesController < ApplicationController
   rescue => e
     raise "500"
   end
+
+  def download
+    send_item(DEFAULT_SEND_FILE_DISPOSITION)
+  end
+
+  alias view index
 end
