@@ -132,7 +132,7 @@ module Webmail::Mail::Parser
       self.attachments = []
       msg.all_parts.each_with_index do |part, i|
         next unless part.attachment?
-        self.attachments << Webmail::StoredMailPart.new(part, i)
+        self.attachments << Webmail::StoredMailPart.new(part, i + 1)
       end
     else
       if msg.mime_type == 'text/plain'
