@@ -1,12 +1,11 @@
 <% @s = OpenStruct.new params[:s] %>
-<div class="webmail-mail-search">
-  <%= form_for :s, url: "", html: { method: :get } do |f| %>
+<div class="gws-memo-search">
+  <%= form_for :s, url: '', html: { method: :get } do |f| %>
     <dl class="see">
       <dt><%= @model.t :subject %></dt>
-      <dd><%= f.text_field :subject, style: "width: 300px;" %></dd>
-      <dt><%= t :"webmail.message" %></dt>
-      <dd><%= f.text_field :text, style: "width: 300px;" %></dd>
-
+      <dd><%= f.text_field :subject %></dd>
+      <dt><%= t 'gws/memo/message.message' %></dt>
+      <dd><%= f.text_field :text %></dd>
       <dt></dt>
       <dd>
         <input type="submit" value="<%= t 'ss.buttons.search' %>" class="btn search" />

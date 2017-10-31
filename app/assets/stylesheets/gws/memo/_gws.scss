@@ -1,6 +1,150 @@
+.gws-memo {
+  .addon-head {
+    padding: 1px 15px 15px;
+    .icon-star {
+      float: right;
+      margin: 12px 0 0;
+      &.on    .material-icons { color: #f70; }
+      &.off   .material-icons { color: #ddd; }
+      &:hover .material-icons { opacity: 0.8; }
+    }
+    .subject {
+      display: block;
+      margin: 12px 0;
+      font-size: 130%;
+      line-height: 1.4;
+    }
+    .from {
+      float: left;
+    }
+    .date {
+      text-align: right;
+    }
+  }
+  .addresses {
+    padding: 5px 15px;
+    border-top: 1px solid #e4e4e4;
+    background-color: #fafafa;
+    .address {
+      padding: 3px 0;
+      .label {
+        float: left;
+        color: #888;
+      }
+      .value {
+        padding: 0 0 0 45px;
+      }
+    }
+  }
+  .show-image {
+    display: block;
+    margin: -5px 0 10px;
+    padding: 8px;
+    border: 1px solid #fd8;
+    background-color: rgba(255,255,0,.2);
+    background-color: #ffc;
+    text-decoration: none;
+    text-align: center;
+    &:hover {
+      border-color: #fb8;
+      background-color: rgba(255,255,0,.35);
+      background-color: #ffa;
+    }
+  }
+  .addon-body {
+    min-height: 200px;
+    border-top: 1px solid #e4e4e4;
+    .body--html img[data-url] {
+      height: none;
+    }
+  }
+  .attachments {
+    padding: 15px 15px 5px;
+    border-top: 1px solid #e4e4e4;
+    .file {
+      display: inline-block;
+      margin: 0 10px 10px 0;
+    }
+  }
+}
+
+.gws-memos {
+  .list-item {
+    padding: 5px 8px;
+  }
+  .info {
+    @include truncate;
+    .field {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: text-top;
+    }
+    .from, .to {
+      width: 150px;
+      padding-right: 5px;
+    }
+    .title {
+      width: calc(100% - 330px);
+      widht: -webkit-calc(100% - 330px);
+      padding-right: 5px;
+      font-size: 100%;
+    }
+    .datetime {
+      width: 110px;
+      font-weight: normal;
+    }
+    .size {
+      width: 50px;
+      font-weight: normal;
+      text-align: right;
+    }
+  }
+}
+
 .gws-memo-folder {
   .unseen {
     font-weight: bold;
     color: #f25a38;
   }
+}
+
+.gws-memo-search {
+  display: none;
+  margin: 0 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+
+  input[type="text"] {
+    width: 300px;
+  }
+}
+
+.gws-memo-dropdown {
+display: inline;
+font-weight: normal;
+.dropdown-menu {
+  left: 0;
+  margin: 0;
+  padding: 5px 0;
+  border: 1px solid #ccc;
+  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+  background: #fff;
+  text-align: left;
+  a {
+    @include truncate;
+    padding: 5px 10px;
+    color: $black;
+  }
+  a:hover {
+    background-color: $gray1;
+    color: $orange;
+    text-decoration: none;
+  }
+  .pad {
+    display: inline-block;
+    width: 10px;
+  }
+}
 }
