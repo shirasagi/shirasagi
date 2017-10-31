@@ -62,6 +62,7 @@ class @Webmail_Mail_List
 
     $(".webmail-mail-search .reset").on "click", ->
       $(".webmail-mail-search input[type=text]").val("")
+      $(".webmail-mail-search input[type=checkbox]").prop('checked', false)
       $(".webmail-mail-search .search").click()
 
     $(".list-head .move-all, .list-head .copy-all").each ->
