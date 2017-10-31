@@ -95,8 +95,14 @@ class Webmail::Mail
   end
 
   def save_draft
-    msg = Webmail::Mailer.new_message(self)
-    imap.conn.append(imap.draft_box, msg.to_s, [:Draft], Time.zone.now)
+    msg = Webmail::Mailer.new_message(self).to_s
+
+    imap.select('INBOX')
+    imap.conn.append(imap.draft_box, msg, [:Draft, :Seen], Time.zone.now)
+    if draft?
+      imap.select(imap.draft_box)
+      imap.uids_delete([uid])
+    end
     true
   end
 
@@ -106,7 +112,13 @@ class Webmail::Mail
 
     msg = msg.deliver_now.to_s
     replied_mail.set_answered if replied_mail
-    imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
+
+    imap.select('INBOX')
+    imap.conn.append(imap.sent_box, msg, [:Seen], Time.zone.now)
+    if draft?
+      imap.select(imap.draft_box)
+      imap.uids_delete([uid])
+    end
     true
   end
 
