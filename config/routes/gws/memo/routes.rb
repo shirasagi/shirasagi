@@ -16,6 +16,7 @@ SS::Application.routes.draw do
         post :unset_star_all
         post :move_all
         put :move
+        post :forward
       end
       member do
         get :toggle_star
@@ -25,5 +26,6 @@ SS::Application.routes.draw do
     end
     resources :comments, path: ':message_id/comments', only: :create
     resources :folders, concerns: :deletion
+    resources :filters, concerns: :deletion
   end
 end

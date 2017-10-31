@@ -1,47 +1,15 @@
 <div class="index">
-  <%= jquery do %>
-    Gws_Memo_Message.render();
-
-    <% if params[:folder] != 'INBOX.Sent' %>
-    $(".list-item").draggable({
-      zIndex: 100,
-      opacity: 0.75,
-      cursorAt: {top: 16, left: 5},
-      helper: function(){
-        var checkbox = $(this).find("label.check input[name='ids[]']");
-        if (!checkbox.prop("checked")){ checkbox.prop("checked", true) };
-
-        var checked = $(".list-item input:checkbox:checked");
-
-        var helper_handle = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
-        helper_handle.html(checked.length + "件の連絡メモを選択");
-
-        return helper_handle;
-      }
-    });
-    <% end %>
-
-    $(".droppable").droppable({
-      tolerance: "pointer",
-      drop: function(e, obj){
-        var folder = $(this).find("td a.title");
-        var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path %>", folder.text() + "に移動しますか?");
-        form.append($("<input/>", {name: "path", value: folder.attr("data-path"), type: "hidden"} ));
-        form.appendTo(document.body).submit();
-      }
-    });
-  <% end %>
   <%= render file: '_list_head' %>
-  <ul class="list-items ss-messages webmail-mails">
+  <ul class="list-items ss-messages gws-memos">
     <% @items.each do |item| %>
     <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
       <label class="check">
-        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <%= check_box_tag 'ids[]', item.id %>
       </label>
 
       <div class="icon icon-star <%= item.star?(@cur_user) ? 'on' : 'off' %>">
         <%= link_to action: :toggle_star, id: item.id do %>
-            <i class="material-icons md-18">&#xE838;</i>
+          <i class="material-icons md-18">&#xE838;</i>
         <% end %>
       </div>
 
@@ -52,11 +20,44 @@
       <div class="info">
         <span class="field from"><%= item.display_sender.join(';') %></span>
         <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title' %>
-        <span class="field datetime"><%= tryb { item.updated.strftime('%Y/%m/%d %H:%M') } %></span>
+        <span class="field datetime"><%= item.display_send_date %></span>
         <span class="field size"><%= item.display_size %></span>
       </div>
     </li>
     <% end %>
   </ul>
 </div>
+
 <%= paginate @items if @items.try(:current_page) %>
+
+<%= jquery do %>
+  Gws_Memo_Message.render();
+
+  <% if %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
+    $(".list-item").draggable({
+    zIndex: 100,
+    opacity: 0.75,
+    cursorAt: {top: 16, left: 5},
+    helper: function(){
+    var checkbox = $(this).find("label.check input[name='ids[]']");
+    if (!checkbox.prop("checked")){ checkbox.prop("checked", true) };
+
+    var checked = $(".list-item input:checkbox:checked");
+    var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
+    helper.html(checked.length + "件の連絡メモを選択");
+
+    return helper;
+    }
+    });
+  <% end %>
+
+  $(".droppable").droppable({
+    tolerance: "pointer",
+    drop: function(e, obj){
+      var folder = $(this).find("td a.title");
+      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path %>", folder.text() + "に移動しますか?");
+      form.append($("<input/>", {name: "path", value: folder.attr("data-path"), type: "hidden"} ));
+      form.appendTo(document.body).submit();
+    }
+  });
+<% end %>
