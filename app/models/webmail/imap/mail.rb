@@ -47,6 +47,11 @@ module Webmail::Imap
         @search << Date.parse(params[key]).strftime('%-d-%b-%Y')
       end
 
+      [:flagged, :unflagged, :seen, :unseen].each do |key|
+        next if params[key].blank?
+        @search << key.to_s.upcase
+      end
+
       self
     end
 
