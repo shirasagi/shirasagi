@@ -1,12 +1,12 @@
-class Gws::Memo::FoldersController < ApplicationController
+class Gws::Memo::FiltersController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Memo::Folder
+  model Gws::Memo::Filter
 
   def set_crumbs
     @crumbs << [t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
-    @crumbs << [t('mongoid.models.gws/memo/folder'), gws_memo_folders_path ]
+    @crumbs << [t('mongoid.models.gws/memo/folder'), gws_memo_filters_path ]
   end
 
   def fix_params
