@@ -7,7 +7,7 @@ class Gws::Monitor::Topic
   include Gws::Addon::File
   include Gws::Monitor::DescendantsFileInfo
   include Gws::Addon::Monitor::Category
-  include Gws::Addon::Release
+  include Gws::Addon::Monitor::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
