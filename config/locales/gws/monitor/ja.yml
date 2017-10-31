@@ -138,6 +138,7 @@ ja:
       gws/monitor/category: カテゴリー
       gws/monitor/contributor: 投稿者
       gws/monitor/group: 参加グループ
+      gws/monitor/release: 公開設定
 
   gws_role:
     read_other_gws_monitor_posts: 投稿の閲覧（全て）
@@ -207,6 +208,10 @@ ja:
         admin_setting: 記事管理設定
         spec_config: 回答表示設定
         reminder_start_section: リマインダー表示設定
+      gws/addon/monitor/release:
+        released: 公開日時
+        release_date: 公開開始日時(予約)
+        close_date: 公開終了日時(予約)
 
   tooltip:
       gws/monitor/postable:
