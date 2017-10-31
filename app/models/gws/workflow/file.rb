@@ -23,6 +23,10 @@ class Gws::Workflow::File
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::WorkflowFileJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::WorkflowFileJob.callback
+
   default_scope -> {
     order_by updated: -1
   }

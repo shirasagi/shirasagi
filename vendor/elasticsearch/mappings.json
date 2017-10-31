@@ -16,6 +16,7 @@
       "state": { "type": "keyword" },
       "user_name" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
       "group_ids": { "type": "integer" },
+      "permission_level": { "type": "integer" },
       "custom_group_ids": { "type": "integer" },
       "user_ids": { "type": "integer" },
       "readable_group_ids": { "type": "integer" },

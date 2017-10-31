@@ -1,6 +1,7 @@
 class @SS_Tooltips
   @render: (ttips)->
     $(document).on "click", ttips, (ev) ->
+      ev.preventDefault()
       ttips = $(ttips)
       ttips.find("ul").hide()
       cur = $(this)
