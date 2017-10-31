@@ -6,11 +6,11 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
   $(".gws-category-navi-menu #category_id").change(function() {
     var cid = $(this).val();
     <% if @folder -%>
-      if (cid) location.href = '<%= gws_share_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_folder_files_path(folder: @folder.id) %>';
+      if (cid) location.href = '<%= gws_share_management_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_management_folder_files_path(folder: @folder.id) %>';
     <% else -%>
-      if (cid) location.href = '<%= gws_share_files_path(category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_files_path %>';
+      if (cid) location.href = '<%= gws_share_management_files_path(category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_management_files_path %>';
     <% end -%>
   });
 
@@ -28,10 +28,10 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
   <span class="gws-share-categories">
   <% item.categories.compact.each do |category| %>
     <% if params[:folder].present? %>
-      <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id,category: category.id),
+      <%= link_to category.trailing_name, gws_share_management_folder_files_path(folder: item.folder_id,category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
     <% else %>
-      <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
+      <%= link_to category.trailing_name, gws_share_management_files_path(category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
     <% end %>
   <% end %>
@@ -46,11 +46,12 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
     <li class="list-item">
       <nav class="tap-menu">
         <% if @tap_menu %>
-        <% @tap_menu.call item %>
+          <% @tap_menu.call item %>
         <% else %>
           <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
           <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('gws/share.links.disable'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t('gws/share.links.active'), action: :recover, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
           <% if item.try(:image) %>
             <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
