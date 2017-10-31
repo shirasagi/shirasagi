@@ -26,6 +26,12 @@ ja:
       board:
         name: 掲示板
         text: 新着の投稿を表示します。
+      monitor:
+        name: 照会・回答
+        text: 新着の照会・回答を表示します。
+      share:
+        name: 共有ファイル
+        text: 新着の共有ファイルを表示します。
       free:
         name: 自由形式
         text: 表示内容を自由に記述します。

@@ -18,12 +18,7 @@
 <% @index_meta = proc do |item| %>
     <span class="id">#<%= item.id %></span>
     <span class="datetime"><%= item.due_date.strftime('%Y/%m/%d %H:%M') %></span>
-    <span class="gws-share-categories">
-    <% item.categories.compact.each do |category| %>
-      <%= link_to category.trailing_name, gws_share_category_files_path(category: category.id),
-                  class: "gws-category-label", style: category_label_css(category) %>
-    <% end %>
-    </span>
+    <span class="gws-share-categories"></span>
 <% end %>
 
 <%= render file: 'gws/crud/index' %>
