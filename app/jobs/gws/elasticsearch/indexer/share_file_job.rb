@@ -12,11 +12,7 @@ class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
   def enum_es_docs
     Enumerator.new do |y|
       doc = {}
-      if item.folder.present?
-        doc[:url] = url_helpers.gws_share_folder_file_path(site: self.site, folder: item.folder, id: item)
-      else
-        doc[:url] = url_helpers.gws_share_file_path(site: self.site, id: item)
-      end
+      doc[:url] = item_path
       doc[:name] = item.name
       doc[:categories] = item.categories.pluck(:name)
       doc[:data] = Base64.strict_encode64(::File.binread(item.path))
@@ -44,6 +40,14 @@ class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
       doc[:created] = item.created.try(:iso8601)
 
       y << [ "file-#{item.id}", doc ]
+    end
+  end
+
+  def item_path
+    if item.folder.present?
+      url_helpers.gws_share_folder_file_path(site: self.site, folder: item.folder, id: item)
+    else
+      url_helpers.gws_share_file_path(site: self.site, id: item)
     end
   end
 end
