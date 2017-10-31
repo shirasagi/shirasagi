@@ -75,6 +75,17 @@ class Gws::Monitor::AnswersController < ApplicationController
     render file: "/gws/monitor/main/show_#{@item.mode}"
   end
 
+  def create
+    @item = @model.new get_params
+    if @item.admin_setting == "0"
+      @item.attributes["user_ids"] = []
+    elsif @item.admin_setting == "1"
+      @item.attributes["group_ids"] = []
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
+  end
+
   def read
     set_item
     raise '403' unless @item.readable?(@cur_user)
