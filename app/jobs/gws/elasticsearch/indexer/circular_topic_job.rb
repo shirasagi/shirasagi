@@ -1,11 +1,11 @@
-class Gws::Elasticsearch::Indexer::MonitorTopicJob < Gws::ApplicationJob
+class Gws::Elasticsearch::Indexer::CircularTopicJob < Gws::ApplicationJob
   include Gws::Elasticsearch::Indexer::BoardBase
 
-  self.model = Gws::Monitor::Topic
+  self.model = Gws::Circular::Topic
 
   class << self
     def path(*args)
-      url_helpers.gws_monitor_topic_path(*args)
+      url_helpers.gws_circular_topic_path(*args)
     end
   end
 

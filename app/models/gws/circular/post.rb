@@ -11,6 +11,10 @@ class Gws::Circular::Post
   belongs_to :parent, class_name: 'Gws::Circular::Topic', inverse_of: :children
   before_validation ->{ topic.mark_by(user).update }, if: -> { topic.markable?(user) }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
+
   def allowed?(action, user, opts = {})
     self.topic.try(:member?, user) || super
   end
