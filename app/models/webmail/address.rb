@@ -28,7 +28,7 @@ class Webmail::Address
 
   class << self
     def to_autocomplete_hash
-      criteria.all.map { |item| [item.email_address, item.email] }.to_h.select { |k, v| k.present? && v.present? }
+      criteria.where(:name.exists => true, :email.exists => true).map { |item| [item.email_address, item.email] }.to_h
     end
   end
 end

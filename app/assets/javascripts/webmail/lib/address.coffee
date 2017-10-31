@@ -3,7 +3,7 @@ class @Webmail_Address_Autocomplete
     icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>")
     icon.on "click", ->
       $(this).closest("span").remove()
-    input = $("<input type=\"hidden\" name=\"#{name}\" value=\"#{email}\">")
+    input = $("<input type=\"hidden\" name=\"#{name}\" value=\"#{label}\">")
     span = $("<span></span>").text(label)
     unless Webmail_Address_Autocomplete.validateEmail(email)
       span.addClass("invalid-address")
