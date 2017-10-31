@@ -40,6 +40,7 @@ SS::Application.routes.draw do
         get :file_download, on: :member
       end
       resources :trashes, concerns: [:deletion] do
+        get :recover, on: :member
         get :active, on: :member
         post :active_all, on: :collection
       end

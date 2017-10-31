@@ -33,6 +33,8 @@
         <li class="<%= css_classes.join(' ') %>">
           <nav class="tap-menu">
             <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+            <%= link_to t('gws/monitor.management.links.active'), action: :recover, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
             <% if item.try(:image) %>
                 <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
