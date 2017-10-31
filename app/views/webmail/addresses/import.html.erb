@@ -10,6 +10,18 @@
       <%= f.hidden_field "item[in_file]", value: "" %>
       <%= f.file_field :in_file %>
     </dd>
+
+    <% @item.import_format ||= @item.import_format_options.dig(0,0) %>
+    <% if @item.import_format_options.size > 1 %>
+      <dt><%= @model.t :import_format %></dt>
+      <dd>
+        <% @item.import_format_options.each do |k, v| %>
+        <label style="padding-right: 10px;"><%= f.radio_button :import_format, k %><%= v %></label>
+        <% end %>
+      </dd>
+    <% else %>
+      <%= f.hidden_field :import_format, values: @item.import_format %>
+    <% end %>
   </dl>
 </section>
 
