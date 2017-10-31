@@ -15,6 +15,6 @@ class Gws::Elasticsearch::Setting::Share
     cate = @categories.find { |cate| cate.name == cate_name }
     return if cate.blank?
 
-    [ cate, url_helpers.gws_share_category_files_path(site: cur_site, category: cate) ]
+    [ cate, url_helpers.gws_share_files_path(site: cur_site, category: cate) ]
   end
 end
