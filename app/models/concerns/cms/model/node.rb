@@ -23,10 +23,11 @@ module Cms::Model::Node
 
     validates :route, presence: true
     validate :validate_invalid_filename
+    validate :validate_ancestors
 
     after_save :rename_children, if: ->{ @db_changes }
-    after_save :remove_directory, if: ->{ @db_changes && @db_changes["state"] && !public? }
-    after_destroy :remove_directory
+    after_save :remove_files_recursively, if: ->{ @db_changes && @db_changes["state"] && !public? }
+    after_destroy :remove_all
     after_destroy :destroy_children
 
     scope :root, ->{ where depth: 1 }
@@ -157,7 +158,12 @@ module Cms::Model::Node
     %w(category/node category/page opendata/category).include?(route)
   end
 
-  def remove_directory
+  def remove_files_recursively
+    remove_owned_files
+    remove_children_recursively
+  end
+
+  def remove_all
     Fs.rm_rf path
   end
 
@@ -175,6 +181,19 @@ module Cms::Model::Node
         errors.add :basename, :invalid
         break
       end
+    end
+  end
+
+  def validate_ancestors
+    return if route.start_with?('uploader/')
+
+    p = parent
+    while p
+      if p.route.start_with?('uploader/')
+        errors.add(:base, :routed_folders_under_uploader)
+        break
+      end
+      p = p.parent
     end
   end
 
@@ -210,5 +229,24 @@ module Cms::Model::Node
       and_public(date).
       or({ filename: /^#{filename}\//, depth: depth + 1 }, { category_ids: id }).
       count.to_s
+  end
+
+  def remove_owned_files
+    return if !Dir.exist?(path)
+
+    Dir.foreach(path) do |name|
+      next if name == '.' || name == '..'
+
+      fullname = "#{path}/#{name}"
+      next if File::ftype(fullname) != 'file'
+      File.delete(fullname)
+    end
+  end
+
+  def remove_children_recursively
+    children.each do |child_node|
+      child_node = child_node.becomes_with_route
+      child_node.remove_files_recursively
+    end
   end
 end

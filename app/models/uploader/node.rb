@@ -20,6 +20,10 @@ module Uploader::Node
     # upload folder only allows `public`
     validates :state, presence: true, inclusion: { in: %w(public), allow_blank: true }
 
+    def remove_files_recursively
+      remove_children_recursively
+    end
+
     private
 
     def set_default_state_and_released
