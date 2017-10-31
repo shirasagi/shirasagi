@@ -5,11 +5,7 @@
     <header>
       <h2>
         <span class="name"><%= @item.name %></span>
-        <span class="categories">
-          <% @item.categories.each do |category| %>
-            <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id), class: 'gws-category-label', style: category_label_css(category) %>
-          <% end %>
-        </span>
+        <span class="categories"></span>
       </h2>
       <nav class="meta">
         <span class="user"><%= @item.user_long_name %></span>
