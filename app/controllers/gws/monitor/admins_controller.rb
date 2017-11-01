@@ -137,7 +137,18 @@ class Gws::Monitor::AdminsController < ApplicationController
 
   def disable
     raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
-    render_destroy @item.disable
+    render_destroy @item.disable, {notice: t('gws/monitor.notice.disable')}
+  end
+
+  def render_destroy_all(result)
+    location = crud_redirect_url || { action: :index }
+    notice = result ? { notice: t("gws/monitor.notice.disable") } : {}
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
   end
 
   def public_all
