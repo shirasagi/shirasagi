@@ -73,12 +73,13 @@ module Gws::Monitor::Postable
     #   where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
     #                      {article_state: 'open'}])
     # }
-    scope :and_topics, ->(userid, groupid) {
+    scope :and_topics, ->(userid, groupid, custom_group_ids) {
       where("$and" =>
               [ "$or" =>
                 [
                   { :readable_group_ids.in => [groupid] },
                   { readable_member_ids: userid },
+                  { :readable_custom_group_ids.in => custom_group_ids },
                   { "attend_group_ids.0" => { "$exists" => false } },
                   {"$or" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
                              {article_state: 'open'}]
