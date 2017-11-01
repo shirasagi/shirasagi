@@ -17,7 +17,7 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.from_user_ids.include?(@cur_user.id) %>
+    <% if @item.user == @cur_user %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>

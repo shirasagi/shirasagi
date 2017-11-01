@@ -47,6 +47,7 @@ ja:
     attributes:
       gws/memo/message:
         subject: 件名
+        member_ids: To
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:
