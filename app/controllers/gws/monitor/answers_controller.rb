@@ -52,11 +52,7 @@ class Gws::Monitor::AnswersController < ApplicationController
   def index
     @items = @model.site(@cur_site).topic
 
-    if params[:s] && params[:s][:state] == "closed"
-      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
-    else
-      @items = @items.and_public.and_readable(@cur_user, @cur_site)
-    end
+    @items = @items.and_public.and_readable(@cur_user, @cur_site)
 
     if @category.present?
       params[:s] ||= {}
@@ -71,7 +67,7 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def show
-    raise "403" unless @item.readable?(@cur_user, @cur_site)
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render file: "/gws/monitor/main/show_#{@item.mode}"
   end
 

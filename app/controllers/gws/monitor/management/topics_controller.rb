@@ -49,12 +49,6 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   def index
     @items = @model.site(@cur_site).topic
 
-    if params[:s] && params[:s][:state] == "closed"
-      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
-    else
-      @items = @items.and_public.readable(@cur_user, @cur_site)
-    end
-
     if @category.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
