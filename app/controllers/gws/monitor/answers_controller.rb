@@ -67,7 +67,7 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @item.readable?(@cur_user, @cur_site)
     render file: "/gws/monitor/main/show_#{@item.mode}"
   end
 
