@@ -121,6 +121,7 @@ ja:
       gws/edit_lock: 排他制御
       gws/schedules: スケジュール
       gws/system/group_setting: システム設定
+      gws/system/menu_setting: メニュー設定
 
   mongoid:
     models:
@@ -234,6 +235,22 @@ ja:
         sendmail_domains: メール送信許可ドメイン
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
+      gws/addon/system/menu_setting:
+        menu_portal_state: ポータルの表示
+        menu_schedule_state: スケジュールの表示
+        menu_reminder_state: リマインダーの表示
+        menu_memo_state: 連絡メモの表示
+        menu_board_state: 掲示板の表示
+        menu_question_state: 質問管理の表示
+        menu_workflow_state: ワークフローの表示
+        menu_report_state: レポートの表示
+        menu_circular_state: 回覧板の表示
+        menu_monitor_state: 照会・回答の表示
+        menu_share_state: 共有ファイルの表示
+        menu_shared_address_state: 共有アドレス帳の表示
+        menu_personal_address_state: 個人アドレス帳の表示
+        menu_staff_record_state: 電子職員録の表示
+        menu_links_state: リンク集の表示
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー
