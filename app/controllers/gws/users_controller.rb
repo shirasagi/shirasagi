@@ -5,7 +5,8 @@ class Gws::UsersController < ApplicationController
   model Gws::User
 
   prepend_view_path "app/views/sys/users"
-  navi_view "gws/main/conf_navi"
+  # navi_view "gws/main/conf_navi"
+  navi_view 'gws/user_conf/navi'
 
   private
 

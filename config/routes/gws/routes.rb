@@ -42,6 +42,9 @@ SS::Application.routes.draw do
     resources :reminders, only: [:index, :destroy], concerns: [:deletion]
     resources :histories, only: [:index]
     resource :user_setting, only: [:show, :edit, :update]
+    resource :user_form, concerns: [:deletion] do
+      resources :user_form_columns, concerns: :deletion, path: '/columns'
+    end
 
     namespace "apis" do
       get "groups" => "groups#index"
