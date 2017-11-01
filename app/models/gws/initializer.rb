@@ -14,6 +14,7 @@ module Gws
     Gws::Role.permission :edit_gws_users
     Gws::Role.permission :edit_gws_user_titles
     Gws::Role.permission :edit_gws_roles
+    Gws::Role.permission :edit_gws_user_forms
     Gws::Role.permission :read_gws_histories
     Gws::Role.permission :read_gws_job_logs
 
