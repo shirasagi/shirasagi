@@ -69,9 +69,23 @@ module Gws::Monitor::Postable
       end
       criteria
     }
-    scope :and_topics, ->(groupid) {
-      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
-                         {article_state: 'open'}])
+    # scope :and_topics, ->(groupid) {
+    #   where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+    #                      {article_state: 'open'}])
+    # }
+    scope :and_topics, ->(userid, groupid) {
+      where("$and" =>
+              [ "$or" =>
+                [
+                  { :readable_group_ids.in => [groupid] },
+                  { readable_member_ids: userid },
+                  { "attend_group_ids.0" => { "$exists" => false } },
+                  {"$or" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+                             {article_state: 'open'}]
+                  }
+                ]
+              ]
+            )
     }
     scope :and_answers, ->(groupid) {
       where("$and" =>
