@@ -60,14 +60,19 @@ class Gws::Monitor::TopicsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
+    custom_group_ids = []
+    Gws::CustomGroup.site(@cur_site).each do |custom_group|
+      custom_group_ids.push(custom_group._id) if custom_group.member_ids.include?(@cur_user.id)
+    end
+
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_topics(@cur_group.id).
+        and_topics(@cur_user.id, @cur_group.id, custom_group_ids).
         page(params[:page]).per(50)
   end
 
   def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @item.readable?(@cur_user, @cur_site)
     render file: "/gws/monitor/main/show_#{@item.mode}"
   end
 
