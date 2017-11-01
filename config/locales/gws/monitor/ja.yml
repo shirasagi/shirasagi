@@ -117,6 +117,8 @@ ja:
         public_all: チェックした項目を受取済みにしますか？
         preparation_all: チェックした項目を受取待ちにしますか？
         question_not_applicable_all: チェックした項目を該当なしにしますか？
+        disable: 削除済みに移動しますか？
+        active: 削除を取り消しますか？
         disable_all: チェックした項目を削除済みに移動しますか？
         active_all: 選択した項目の削除を取り消しますか？
     errors:
@@ -131,6 +133,9 @@ ja:
       links:
         back_to_topic: 戻る
         active: 削除を取り消す
+    notice:
+      disable: 削除済みに移動しました
+      active: 削除を取り消しました
 
   modules:
     gws/monitor: 照会・回答
