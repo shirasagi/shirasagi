@@ -86,6 +86,23 @@ class Gws::Monitor::AnswersController < ApplicationController
     render_create @item.save
   end
 
+  def render_create(result, opts = {})
+    render_opts = opts[:render].presence || { file: :new }
+    notice = opts[:notice].presence || t("ss.notice.saved")
+
+    if result
+      respond_to do |format|
+        format.html { redirect_to controller: 'gws/monitor/admins', action: 'show', id: @item._id, notice: notice }
+        format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
+      end
+    else
+      respond_to do |format|
+        format.html { render render_opts }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+      end
+    end
+  end
+
   def read
     set_item
     raise '403' unless @item.readable?(@cur_user)
