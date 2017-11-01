@@ -8,7 +8,8 @@ class Gws::Memo::Message
   include Gws::Addon::Memo::Comments
   include Gws::Addon::GroupPermission
 
-  attr_accessor :signature, :attachments, :field
+  attr_accessor :signature, :attachments, :field,
+                :in_request_mdn, :in_request_dsn
 
   field :subject, type: String
   alias name subject
