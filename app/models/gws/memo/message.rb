@@ -3,6 +3,7 @@ class Gws::Memo::Message
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Addon::Member
   include Webmail::Addon::MailBody
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
@@ -19,25 +20,18 @@ class Gws::Memo::Message
   field :format, type: String
   field :size, type: Integer, default: 0
   field :state, type: String, default: 'public'
-
   field :seen, type: Hash, default: {}
   field :star, type: Hash, default: {}
   field :filtered, type: Hash, default: {}
-
   field :from, type: Hash, default: {}
-  embeds_ids :from_users, class_name: 'Gws::User' # => from_user_ids
-
   field :to, type: Hash, default: {}
-  embeds_ids :to_users, class_name: 'Gws::User' # => to_user_ids
-
   field :send_date, type: DateTime
 
-  permit_params :subject, :text, :html, :format, :to_text
+  permit_params :subject, :text, :html, :format
 
   default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
 
-  before_validation :set_from_user_ids
-  before_validation :set_to_user_ids
+  before_validation :set_to
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
@@ -62,22 +56,6 @@ class Gws::Memo::Message
     where(:"filtered.#{user.id}".exists => false)
   }
 
-  def to_text=(obj)
-    obj.split(';').each do |val|
-      addr = val.strip.match(/<(.+?)>$/)[1]
-      next unless user = Gws::User.where(email: addr).first
-      self.to[user.id.to_s] = draft? ? nil : 'INBOX'
-    end
-  end
-
-  def to_text
-    to_users.map(&:email_address).join('; ')
-  end
-
-  def display_sender
-    from_users.map(&:long_name)
-  end
-
   def display_subject
     subject.presence || 'No title'
   end
@@ -91,7 +69,7 @@ class Gws::Memo::Message
   end
 
   def display_to
-    to_users.map(&:long_name)
+    members.map(&:long_name)
   end
 
   def unseen?(user=:nil)
@@ -154,7 +132,7 @@ class Gws::Memo::Message
     return true if (self.group_ids & user.group_ids).present?
     return true if user_ids.to_a.include?(user.id)
     return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
-    return true if self.to_user_ids.include?(user.id)
+    return true if self.member_ids.include?(user.id)
     false
   end
 
@@ -169,12 +147,8 @@ class Gws::Memo::Message
 
   private
 
-  def set_from_user_ids
-    from.keys.each { |id_s| self.from_user_ids = self.from_user_ids << id_s.to_i }
-  end
-
-  def set_to_user_ids
-    to.keys.each { |id_s| self.to_user_ids = self.to_user_ids << id_s.to_i }
+  def set_to
+    self.member_ids.each { |id| self.to[id.to_s] = draft? ? nil : 'INBOX' }
   end
 
   class << self
