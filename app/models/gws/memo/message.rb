@@ -3,11 +3,11 @@ class Gws::Memo::Message
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::SitePermission
   include Gws::Addon::Member
   include Webmail::Addon::MailBody
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
-  include Gws::Addon::GroupPermission
 
   attr_accessor :signature, :attachments, :field,
                 :in_request_mdn, :in_request_dsn
@@ -148,14 +148,16 @@ class Gws::Memo::Message
   private
 
   def set_to
-    self.member_ids.each { |id| self.to[id.to_s] = draft? ? nil : 'INBOX' }
+    (member_ids.map(&:to_s) - to.keys).each { |id| self.to[id.to_s] = draft? ? nil : 'INBOX' }
   end
 
   class << self
-    def allow_condition(action, user, opts = {})
+    def allow(action, user, opts = {})
       folder = opts[:folder]
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-      { "#{direction}.#{user.id}" => folder }
+
+      super(action, user, opts).
+        where("#{direction}.#{user.id}" => folder)
     end
   end
 end
