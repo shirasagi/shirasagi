@@ -3,7 +3,6 @@
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.select :sort, @model.new.sort_options %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
-    <%= f.select :state, @model.new.state_options %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
 </div>
