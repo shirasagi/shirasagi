@@ -61,4 +61,18 @@ class Gws::UsersController < ApplicationController
   def destroy_all
     disable_all
   end
+
+  def download
+    csv = @model.unscoped.site(@cur_site).order_by_title(@cur_site).to_csv(site: @cur_site)
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_users_#{Time.zone.now.to_i}.csv"
+  end
+
+  def import
+    return if request.get?
+    @item = @model.new get_params
+    @item.cur_site = @cur_site
+    result = @item.import
+    flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
+    render_create result, location: { action: :index }, render: { file: :import }
+  end
 end

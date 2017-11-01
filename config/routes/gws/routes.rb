@@ -6,6 +6,15 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :download do
+    get :download, :on => :collection
+  end
+
+  concern :import do
+    get :import, :on => :collection
+    post :import, :on => :collection
+  end
+
   get ".g:site/", to: "gws/portal/my/portal#show", as: :gws_portal
 
   namespace "gws", path: ".g:site" do
@@ -21,7 +30,7 @@ SS::Application.routes.draw do
     resource  :site
     resources :groups, concerns: [:deletion]
     resources :custom_groups, concerns: [:deletion]
-    resources :users, concerns: [:deletion]
+    resources :users, concerns: [:deletion, :download, :import]
     resources :user_titles, concerns: [:deletion]
     resources :roles, concerns: [:deletion]
     resources :notices, concerns: [:deletion]

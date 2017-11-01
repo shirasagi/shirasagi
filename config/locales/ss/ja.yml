@@ -327,6 +327,8 @@ ja:
         groups: グループ
         cms_roles: CMSロール
         cms_role_ids: CMSロール
+        gws_roles: GWSロール
+        gws_role_ids: GWSロール
         type: ユーザータイプ
         sns: SNSユーザー
         ldap: LDAPユーザー
