@@ -212,6 +212,8 @@ ja:
         released: 公開日時
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
+      gws/addon/monitor/group:
+        attend_group_ids: 参加グループ
 
   tooltip:
       gws/monitor/postable:
