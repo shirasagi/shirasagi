@@ -4,13 +4,12 @@ class Gws::Facility::ItemsController < ApplicationController
 
   model Gws::Facility::Item
 
-  navi_view "gws/facility/settings/navi"
+  navi_view "gws/main/conf_navi"
 
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/facility/group_setting"), gws_facility_items_path]
-    @crumbs << [t("mongoid.models.gws/facility/group_setting/item"), gws_facility_items_path]
+    @crumbs << [t('gws/facility.navi.item'), gws_facility_items_path]
   end
 
   def fix_params

@@ -9,9 +9,10 @@ module Webmail::Mail::Parser
     self.attributes = {
       uid: data.attr["UID"],
       internal_date: data.attr['INTERNALDATE'],
-      flags: data.attr['FLAGS'].map(&:to_sym) || [],
+      flags: data.attr['FLAGS'] || [],
       size: data.attr['RFC822.SIZE'],
     }
+    self.flags = flags.map(&:to_sym)
 
     if data.attr['RFC822']
       self.rfc822 = data.attr['RFC822']
@@ -131,7 +132,7 @@ module Webmail::Mail::Parser
       self.attachments = []
       msg.all_parts.each_with_index do |part, i|
         next unless part.attachment?
-        self.attachments << Webmail::StoredMailPart.new(part, i)
+        self.attachments << Webmail::StoredMailPart.new(part, i + 1)
       end
     else
       if msg.mime_type == 'text/plain'

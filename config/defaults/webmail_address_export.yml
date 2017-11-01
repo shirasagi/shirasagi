@@ -1,0 +1,60 @@
+production: &production
+  # address import format options
+  import_format:
+    webmail: 既定
+    #outlook: Outlook
+    #jorurimail: JoruriMail
+
+  export_fields:
+    jorurimail:
+      name: 表示名
+      company: 会社名
+      title: 役職
+      tel: 携帯電話
+      email: 電子メール アドレス
+      home_postal_code: 自宅の郵便番号
+      home_prefecture: 自宅の都道府県
+      home_city: 自宅の市区町村
+      home_street_address: 自宅の番地
+      home_tel: '自宅電話番号 :'
+      home_fax: 自宅ファックス
+      office_postal_code: 勤務先の郵便番号
+      office_prefecture: 勤務先の都道府県
+      office_city: 勤務先の市区町村
+      office_street_address: 勤務先の番地
+      office_tel: 勤務先電話番号
+      office_fax: 勤務先ファックス
+      personal_webpage: 個人 Web ページ
+      memo: メモ
+    outlook:
+      family_name: 姓
+      middle_name: ミドル ネーム
+      given_name: 名
+      family_kana: 姓フリガナ
+      given_kana: 名前フリガナ
+      company: 会社名
+      title: 役職
+      tel: 携帯電話
+      email: 電子メール アドレス
+      memo: メモ
+      home_postal_code: 郵便番号 (自宅)
+      home_prefecture: 都道府県 (自宅)
+      home_city: 市町村 (自宅)
+      home_street_address: 番地 (自宅)
+      home_tel: 自宅電話
+      home_fax: 自宅 FAX
+      office_postal_code: 郵便番号 (会社)
+      office_prefecture: 都道府県 (会社)
+      office_city: 市町村 (会社)
+      office_street_address: 番地 (会社)
+      office_tel: 会社電話
+      office_fax: 会社 FAX
+      personal_webpage: Web ページ
+
+test:
+  <<: *production
+  disable: false
+
+development:
+  <<: *production
+  disable: false

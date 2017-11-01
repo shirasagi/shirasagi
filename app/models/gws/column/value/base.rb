@@ -24,4 +24,8 @@ class Gws::Column::Value::Base
     self.order = new_value.order
     self.value = new_value.value
   end
+
+  def to_es
+    value
+  end
 end

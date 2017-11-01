@@ -5,25 +5,95 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
 
   $(".gws-category-navi-menu #category_id").change(function() {
     var cid = $(this).val();
-    if (cid) location.href = '<%= gws_share_category_files_path(category: 'ID') %>'.replace('ID', cid);
-    else location.href = '<%= gws_share_files_path %>';
+    <% if @folder -%>
+      if (cid) location.href = '<%= gws_share_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_folder_files_path(folder: @folder.id) %>';
+    <% else -%>
+      if (cid) location.href = '<%= gws_share_files_path(category: 'ID') %>'.replace('ID', cid);
+      else location.href = '<%= gws_share_files_path %>';
+    <% end -%>
   });
 
 <% end %>
 
 <div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options, include_blank: t('modules.gws/share') %>
+  <%= select_tag :category_id, options, include_blank: t('modules.gws/share') if @categories.to_options.present? %>
 </div>
+
+<%= render partial: "folder_navi" %>
 
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="gws-share-categories">
   <% item.categories.compact.each do |category| %>
-    <%= link_to category.trailing_name, gws_share_category_files_path(category: category.id),
-                class: "gws-category-label", style: category_label_css(category) %>
+    <% if params[:folder].present? %>
+      <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id,category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+    <% else %>
+      <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+    <% end %>
   <% end %>
   </span>
 <% end %>
 
-<%= render file: "gws/crud/index" %>
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+    <li class="list-item">
+      <nav class="tap-menu">
+        <% if @tap_menu %>
+        <% @tap_menu.call item %>
+        <% else %>
+          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('gws/share.links.disable'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+          <% if item.try(:image) %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+          <% elsif item.try(:image?) %>
+            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+          <% end %>
+        <% end %>
+      </nav>
+
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <div class="info">
+        <% if @index_title %>
+          <% @index_title.call item %>
+        <% else %>
+          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+          <%= link_to title, { action: :show, id: item }, class: "title" %>
+        <% end %>
+
+        <div class="meta">
+          <% if @index_meta %>
+            <% @index_meta.call item %>
+          <% else %>
+            <% if item.class.fields['_id'].type != BSON::ObjectId %>
+              <span class="id">#<%= item.id %></span>
+            <% end %>
+            <% if item.try(:updated) %>
+              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <% end %>
+            <% if item.try(:filename) %>
+              <span class="filename"><%= File.basename item.filename %></span>
+            <% end %>
+            <% if item.try(:status) %>
+              <span class="state"><%= t "ss.state.#{item.status}" %></span>
+            <% end %>
+            <% if item.try(:order) %>
+              <span class="order"><%= item.order %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

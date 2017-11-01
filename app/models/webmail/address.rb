@@ -2,7 +2,7 @@ class Webmail::Address
   include SS::Model::Address
   include SS::Reference::User
   include SS::UserPermission
-  include Gws::Export
+  include Webmail::AddressExport
 
   store_in collection: :webmail_addresses
 
@@ -24,40 +24,15 @@ class Webmail::Address
 
       criteria
     end
+
+    def to_autocomplete_hash
+      criteria.where(:name.exists => true, :email.exists => true).map { |item| [item.email_address, item.email] }.to_h
+    end
   end
 
   def address_group_options
     Webmail::AddressGroup.user(@cur_user).map do |item|
       [item.name, item.id]
-    end
-  end
-
-  private
-
-  def export_fields
-    %w(id name kana company title tel email memo address_group_id)
-  end
-
-  def export_convert_item(item, data)
-    data[8] = item.address_group.name if item.address_group
-    data
-  end
-
-  def import_convert_data(data)
-    if data[:address_group_id].present?
-      group = Webmail::AddressGroup.user(@cur_user).where(name: data[:address_group_id]).first
-      data[:address_group_id] = group ? group.id : nil
-    end
-    data
-  end
-
-  def import_find_item(data)
-    self.class.user(@cur_user).where(id: data[:id]).first
-  end
-
-  class << self
-    def to_autocomplete_hash
-      criteria.all.map { |item| [item.email_address, item.email] }.to_h.select { |k, v| k.present? && v.present? }
     end
   end
 end

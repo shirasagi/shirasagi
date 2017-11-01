@@ -11,7 +11,7 @@ class Gws::Memo::Message
   attr_accessor :signature, :attachments, :field
 
   field :subject, type: String
-  alias_method :name, :subject
+  alias name subject
 
   field :text, type: String
   field :html, type: String
@@ -19,8 +19,9 @@ class Gws::Memo::Message
   field :size, type: Integer, default: 0
   field :state, type: String, default: 'public'
 
-  field :seen_hash, type: Hash, default: {}
-  field :star_hash, type: Hash, default: {}
+  field :seen, type: Hash, default: {}
+  field :star, type: Hash, default: {}
+  field :filtered, type: Hash, default: {}
 
   field :from, type: Hash, default: {}
   embeds_ids :from_users, class_name: 'Gws::User' # => from_user_ids
@@ -28,12 +29,18 @@ class Gws::Memo::Message
   field :to, type: Hash, default: {}
   embeds_ids :to_users, class_name: 'Gws::User' # => to_user_ids
 
+  field :send_date, type: DateTime
+
   permit_params :subject, :text, :html, :format, :to_text
 
-  default_scope -> { order_by internal_date: -1 }
+  default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
 
   before_validation :set_from_user_ids
   before_validation :set_to_user_ids
+
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 
   scope :search, ->(params) {
     criteria = where({})
@@ -50,11 +57,15 @@ class Gws::Memo::Message
     criteria
   }
 
+  scope :unfiltered, ->(user) {
+    where(:"filtered.#{user.id}".exists => false)
+  }
+
   def to_text=(obj)
     obj.split(';').each do |val|
       addr = val.strip.match(/<(.+?)>$/)[1]
       next unless user = Gws::User.where(email: addr).first
-      self.to[user.id.to_s] = 'INBOX'
+      self.to[user.id.to_s] = draft? ? nil : 'INBOX'
     end
   end
 
@@ -62,13 +73,16 @@ class Gws::Memo::Message
     to_users.map(&:email_address).join('; ')
   end
 
-  def sender
+  def display_sender
     from_users.map(&:long_name)
   end
-  alias_method :display_sender, :sender
 
   def display_subject
     subject.presence || 'No title'
+  end
+
+  def display_send_date
+    send_date ? send_date.strftime('%Y/%m/%d %H:%M') : I18n.t('gws/memo/folder.inbox_draft')
   end
 
   def attachments?
@@ -81,12 +95,12 @@ class Gws::Memo::Message
 
   def unseen?(user=:nil)
     return false if user == :nil
-    seen_hash.exclude?(user.id.to_s)
+    seen.exclude?(user.id.to_s)
   end
 
   def star?(user=:nil)
     return false if user == :nil
-    star_hash.include?(user.id.to_s)
+    star.include?(user.id.to_s)
   end
 
   def display_size
@@ -103,22 +117,22 @@ class Gws::Memo::Message
   end
 
   def set_seen(user)
-    self.seen_hash[user.id.to_s] = Time.zone.now
+    self.seen[user.id.to_s] = Time.zone.now
     self
   end
 
   def unset_seen(user)
-    self.seen_hash.delete(user.id.to_s)
+    self.seen.delete(user.id.to_s)
     self
   end
 
   def set_star(user)
-    self.star_hash[user.id.to_s] = Time.zone.now
+    self.star[user.id.to_s] = Time.zone.now
     self
   end
 
   def unset_star(user)
-    self.star_hash.delete(user.id.to_s)
+    self.star.delete(user.id.to_s)
     self
   end
 
@@ -131,14 +145,8 @@ class Gws::Memo::Message
     self
   end
 
-  private
-
-  def set_from_user_ids
-    from.keys.each {|id_s| self.from_user_ids = self.from_user_ids << id_s.to_i }
-  end
-
-  def set_to_user_ids
-    to.keys.each {|id_s| self.to_user_ids = self.to_user_ids << id_s.to_i }
+  def draft?
+    from.values.include?('INBOX.Draft')
   end
 
   def owned?(user)
@@ -149,11 +157,30 @@ class Gws::Memo::Message
     false
   end
 
+  def apply_filters(user)
+    matched_filter = Gws::Memo::Filter.site(site).
+      allow(:read, user, site: site).enabled.detect{ |f| f.match?(self) }
+
+    self.to[user.id.to_s] = matched_filter.path if matched_filter
+    self.filtered[user.id.to_s] = Time.zone.now
+    self
+  end
+
+  private
+
+  def set_from_user_ids
+    from.keys.each { |id_s| self.from_user_ids = self.from_user_ids << id_s.to_i }
+  end
+
+  def set_to_user_ids
+    to.keys.each { |id_s| self.to_user_ids = self.to_user_ids << id_s.to_i }
+  end
+
   class << self
     def allow_condition(action, user, opts = {})
       folder = opts[:folder]
-      direction = (folder == 'INBOX.Sent') ? 'from' : 'to'
-      { "#{direction}.#{user.id}": folder }
+      direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
+      { "#{direction}.#{user.id}" => folder }
     end
   end
 end

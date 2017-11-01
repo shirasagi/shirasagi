@@ -3,6 +3,12 @@ class Gws::Elasticsearch::Indexer::QnaPostJob < Gws::ApplicationJob
 
   self.model = Gws::Qna::Post
 
+  class << self
+    def path(*args)
+      url_helpers.gws_qna_topic_path(*args)
+    end
+  end
+
   def enum_es_docs
     topic = Gws::Qna::Topic.find(item.topic_id)
 

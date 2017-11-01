@@ -37,7 +37,6 @@ SS::Application.routes.draw do
       get :disable, on: :member
       post :disable_all, on: :collection
     end
-    resource :todo_setting, only: [:show, :edit, :update]
     resources :todo_management do
       get :delete, on: :member
       get :active, on: :member
@@ -45,7 +44,6 @@ SS::Application.routes.draw do
     end
 
     resources :categories, concerns: :plans
-    resource :setting, only: [:show, :edit, :update]
     resource :user_setting, only: [:show, :edit, :update]
   end
 end

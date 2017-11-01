@@ -3,6 +3,12 @@ class Gws::Elasticsearch::Indexer::FaqPostJob < Gws::ApplicationJob
 
   self.model = Gws::Faq::Post
 
+  class << self
+    def path(*args)
+      url_helpers.gws_faq_topic_path(*args)
+    end
+  end
+
   def enum_es_docs
     topic = Gws::Faq::Topic.find(item.topic_id)
 

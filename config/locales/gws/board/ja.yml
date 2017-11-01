@@ -55,6 +55,7 @@ ja:
   modules:
     gws/board: 掲示板
     addons:
+      gws/board/group_setting: 掲示板
       gws/board/category: カテゴリー
 
   gws_role:
@@ -73,11 +74,9 @@ ja:
 
   mongoid:
     models:
-      gws/board/topic: 掲示板トピック
-      gws/board/post: 掲示板投稿
-      gws/board/category: 掲示板カテゴリー
-      gws/board/group_setting: 掲示板設定
-      gws/board/group_setting/category: カテゴリー
+      gws/board/topic: 掲示板/トピック
+      gws/board/post: 掲示板/投稿
+      gws/board/category: 掲示板/カテゴリー
     errors:
       models:
         gws/board/category:
@@ -95,7 +94,7 @@ ja:
         mode: 表示形式
         permit_comment: コメント
         severity: 重要度
-      gws/board/group_setting:
+      gws/addon/board/group_setting:
         board_new_days: 新着表示期間
         board_file_size: 添付最大サイズ
         board_file_size_per_topic: 添付最大サイズ/トピック単位
@@ -116,7 +115,7 @@ ja:
         - コメントを許可するかどうかを選択します。
       severity:
         - 重要度を選択します。
-    gws/board/group_setting:
+    gws/addon/board/group_setting:
       board_new_days:
         - 新着表示期間を入力します。
       board_file_size_per_topic:

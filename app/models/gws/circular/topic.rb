@@ -28,6 +28,10 @@ class Gws::Circular::Topic
   has_many :children, class_name: 'Gws::Circular::Post', dependent: :destroy, inverse_of: :parent, order: { created: -1 }
   has_many :descendants, class_name: 'Gws::Circular::Post', dependent: :destroy, inverse_of: :topic, order: { created: -1 }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::CircularTopicJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::CircularTopicJob.callback
+
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?

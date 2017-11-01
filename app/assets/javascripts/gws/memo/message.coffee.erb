@@ -1,11 +1,16 @@
 class @Gws_Memo_Message
   @render: ->
-    $(".list-head .search").on "click", ->
-      $('.webmail-mail-search').animate({ height: 'toggle' }, 'fast')
+    $("#addon-gws-agents-addons-group_permission").hide();
 
-    $(".webmail-mail-search .reset").on "click", ->
-      $(".webmail-mail-search input[type=text]").val("")
-      $(".webmail-mail-search .search").click()
+    $(".list-head .search").on "click", ->
+      $('.gws-memo-search').animate({ height: 'toggle' }, 'fast')
+
+    $(".gws-memo-search .reset").on "click", ->
+      $(".gws-memo-search input[type=text]").val("")
+      $(".gws-memo-search .search").click()
+
+
+
 
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->

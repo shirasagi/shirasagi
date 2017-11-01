@@ -21,6 +21,10 @@ class Gws::Monitor::Topic
   validates :deleted, datetime: true
   validates :article_state, inclusion: { in: %w(open closed) }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::MonitorTopicJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::MonitorTopicJob.callback
+
   permit_params :deleted
   permit_params :article_state
 

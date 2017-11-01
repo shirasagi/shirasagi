@@ -1,0 +1,28 @@
+<%= jquery do %>
+  <% if @folder -%>
+    $(".clipboard-copy-button").attr("data-text", location.origin + "<%= gws_share_folder_file_path %>");
+    SS_Clipboard.renderCopy();
+  <% else -%>
+    $(".clipboard-copy-button").attr("data-text", location.origin + "<%= gws_share_file_path %>");
+    SS_Clipboard.renderCopy();
+  <% end -%>
+<% end %>
+
+<dl class="see">
+  <% if @item.image? %>
+  <dt><%= @model.t :image %></dt>
+  <dd><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank" } %></dd>
+  <% end %>
+
+  <dt><%= @model.t :filename %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :folder %></dt>
+  <dd><%= tryb { @item.folder.name } %></dd>
+
+  <dt><%= @model.t :download %></dt>
+  <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
+
+  <dt><%= @model.t :url_copy %></dt>
+  <dd><span class="btn clipboard-copy-button"><%= I18n.t('gws/share.url_copy') %></span></dd>
+</dl>

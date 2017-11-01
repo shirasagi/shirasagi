@@ -54,9 +54,10 @@ class Webmail::AddressesController < ApplicationController
   end
 
   def import
+    @item = @model.new
     return if request.get?
 
-    @item = @model.new(get_params)
+    @item.attributes = get_params
     result = @item.import_csv
     flash.now[:notice] = t("ss.notice.saved") if result
     render_create result, location: { action: :index }, render: { file: :import }

@@ -1,0 +1,30 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-group-setting"); <% end %>
+
+<dl class="see addon-gws-system-group-setting">
+  <dt><%= @model.t :sender_name %></dt>
+  <dd><%= @item.sender_name %></dd>
+
+  <dt><%= @model.t :sender_email %></dt>
+  <dd><%= @item.sender_email %></dd>
+
+  <dt><%= @model.t :mail_signature %></dt>
+  <dd><%= br @item.mail_signature %></dd>
+
+  <dt><%= @model.t :sendmail_domains %></dt>
+  <dd><%= @item.sendmail_domains.join(', ') %></dd>
+
+  <dt><%= @model.t :canonical_scheme %></dt>
+  <dd><%= @item.canonical_scheme %></dd>
+
+  <dt><%= @model.t :canonical_domain %></dt>
+  <dd><%= @item.canonical_domain %></dd>
+
+  <dt><%= @model.t :color_button %></dt>
+  <dd><%= @item.label :color_button %></dd>
+
+  <dt><%= @model.t :editor_css_path %></dt>
+  <dd><%= @item.editor_css_path %></dd>
+
+  <dt><%= @model.t :syntax_check %></dt>
+  <dd><%= @item.label :syntax_check %></dd>
+</dl>
