@@ -1,7 +1,9 @@
-<% addons = @item ? @item.class.addons : [] %>
+<%= jquery do %>
+  Gws_Memo_Message.render();
+<% end %>
 
 <div class="addon-views">
-  <div class="addon-view webmail-mail" id="addon-basic">
+  <div class="addon-view gws-memo" id="addon-basic">
     <div class="addon-head">
       <span class="icon-star <%= @item.star?(@cur_user) ? 'on' : 'off' %>">
         <i class="material-icons">&#xE838;</i>
@@ -13,35 +15,40 @@
           <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
         </span>
       </h2>
-      <div class="from"><%= @item.sender.join('; ') %></div>
-      <div class="date"><%= tryb {@item.updated.strftime('%Y/%m/%d %H:%M')} %></div>
+      <div class="from"><%= @item.display_sender.join('; ') %></div>
+      <div class="date"><%= @item.display_send_date %></div>
     </div>
 
     <% if @item.to.present? %>
-        <div class="addresses">
-          <div class="address">
-            <div class="label"><%= @model.t :to %></div>
-            <div class="value"><%= @item.display_to.join('; ') %></div>
-          </div>
+      <div class="addresses">
+        <div class="address">
+          <div class="label"><%= @model.t :to %></div>
+          <div class="value"><%= @item.display_to.join('; ') %></div>
         </div>
+      </div>
     <% end %>
 
     <% if @item.attachments.present? %>
-        <div class="attachments" id="mail-attachments">
-          <% @item.attachments.each do |part| %>
-              <div class="file">
-                <%= link_to({action: :parts, section: part.section}, target: part.link_target) do %>
-                    <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
-                    <%= part.filename %>
-                <% end %>
-              </div>
-          <% end %>
-        </div>
+      <div class="attachments">
+        <% @item.attachments.each do |part| %>
+          <div class="file">
+            <%= link_to({action: :parts, section: part.section}, target: part.link_target) do %>
+              <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
+              <%= part.filename %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     <% end %>
 
     <div class="addon-body">
-      <%= render file: 'webmail/mails/_show' %>
+      <% if @item.html? %>
+        <div class="body body--html"><%= @item.sanitize_html %></div>
+      <% else %>
+        <div class="body body--text"><%= br @item.text %></div>
+      <% end %>
     </div>
   </div>
-  <%= render file: "_addons_show", locals: {addons: addons} if addons.size > 0 %>
+
+  <%= render file: '_addons_show', locals: {addons: @item.class.addons} %>
 </div>

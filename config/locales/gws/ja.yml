@@ -1,6 +1,7 @@
 ja:
   gws:
     group: グループ
+    category: カテゴリー
     portal: ポータル
     site_config: 設定
     site_info: グループ情報
@@ -111,11 +112,15 @@ ja:
       gws/release: 公開設定
       gws/reminder: リマインダー設定
       gws/history: 変更履歴
+      gws/share/history: 変更履歴
       gws/readable_setting: 閲覧権限
       gws/member: 参加者
       gws/subscription_setting: 購読
       gws/contributor: 投稿者
+      gws/custom_field: 入力項目
+      gws/edit_lock: 排他制御
       gws/schedules: スケジュール
+      gws/system/group_setting: システム設定
 
   mongoid:
     models:
@@ -130,8 +135,6 @@ ja:
       gws/share: 共有ファイル
       gws/reminder: リマインダー
       gws/history: 操作履歴
-      gws/group_setting: システム設定
-      gws/group_setting/system: システム設定
       gws/user_setting: ユーザー設定
     attributes:
       gws/model/category:
@@ -142,6 +145,19 @@ ja:
         order: 並び順
         bg_color: 背景色
         text_color: 文字色
+      gws/model/file:
+        in_file: ファイル
+        in_files: ファイル
+        image: 画像
+        download: ダウンロード
+        model: モデル
+        state: 状態
+        name: ファイル名（表示用）
+        filename: ファイル名
+        size: ファイルサイズ
+        content_type: コンテンツタイプ
+        resizing: リサイズ
+        geo_location: 緯度・経度
       gws/user:
         gws_main_group_ids: グループ（主）
         gws_default_group_ids: グループ（既定）
@@ -168,6 +184,15 @@ ja:
         user_name: ユーザー
         user_tel: 電話番号
         updated_fields: 変更内容
+      gws/share/history:
+        created: 変更日時
+        mode: 区分
+        user_name: ユーザー
+        user_tel: 電話番号
+        updated_fields: 変更内容
+        uploadfile_name: ファイル名
+        uploadfile_size: サイズ
+        upload: 添付
       gws/reference/user:
         user_id: 作成者
         user_uid: 作成者
@@ -205,7 +230,7 @@ ja:
       gws/addon/member:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
-      gws/group_setting/system:
+      gws/addon/system/group_setting:
         sendmail_domains: メール送信許可ドメイン
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
@@ -215,6 +240,23 @@ ja:
         subscribed_custom_group_ids: 購読カスタムグループ
       gws/addon/contributor:
         contributor_name: 投稿者名
+      gws/addon/custom_field:
+        tooltips: ツールチップ
+        input_type: 入力形式
+        select_options: 選択肢
+        required: 必須入力
+        max_length: 最大文字数
+        place_holder: 初期表示
+        additional_attr: 追加属性
+        input_confirm: 入力確認
+        upload_file_count: アップロードファイル数
+        max_upload_file_size: 最大ファイルサイズ設定
+        resizing: 画像リサイズ
+        resizing_width: 画像リサイズ（幅）
+        resizing_height: 画像リサイズ（高さ）
+      gws/addon/edit_lock:
+        lock_owner: 所有者
+        lock_until: 期限
       gws/addon/schedules:
         schedule_ids: スケジュール
 
@@ -236,6 +278,15 @@ ja:
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
+    gws/model/file:
+      in_file:
+        - ファイルを選択します。
+      name:
+        - ファイル名（表示用）を入力します。
+      filename:
+        - ファイル名を入力します。
+      geo_location:
+        - 緯度・経度を10進で入力します。
     gws/user:
       gws_main_group_ids:
         - ユーザーの所属する主なグループを選択します。
@@ -260,7 +311,7 @@ ja:
     gws/link:
       name:
         - タイトルを入力します。
-    gws/group_setting/system:
+    gws/addon/system/group_setting:
       sendmail_domains:
         - メール送信許可ドメインを入力します。
       canonical_scheme:

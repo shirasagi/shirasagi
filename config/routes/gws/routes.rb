@@ -31,7 +31,6 @@ SS::Application.routes.draw do
     resources :public_links, only: [:index, :show]
     resources :reminders, only: [:index, :destroy], concerns: [:deletion]
     resources :histories, only: [:index]
-    resource :system_setting, only: [:show, :edit, :update]
     resource :user_setting, only: [:show, :edit, :update]
 
     namespace "apis" do

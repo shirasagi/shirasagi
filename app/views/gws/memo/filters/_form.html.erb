@@ -1,0 +1,26 @@
+<%= jquery do %>
+    Gws_Memo_Filter.render();
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :from %></dt>
+  <dd><%= f.text_field :from %></dd>
+
+  <dt><%= @model.t :subject %></dt>
+  <dd><%= f.text_field :subject %></dd>
+
+  <dt><%= @model.t :action %></dt>
+  <dd><%= f.select :action, @item.action_options %></dd>
+
+  <dt><%= @model.t :folder %></dt>
+  <dd><%= f.select :folder, @item.folder_options(@cur_user, @cur_site), selected: @item.folder_id, include_blank: true %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>

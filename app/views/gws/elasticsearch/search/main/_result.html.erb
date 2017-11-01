@@ -14,12 +14,22 @@
         <% end %>
         <%= link_to title, source['url'], class: 'title' %>
         <div class="meta">
+          <% if @show_type %>
+            <span class="type"><%= @setting.translate_type(hit['_type']) %></span>
+          <% end %>
           <span class="id"><%= hit['_id'] %></span>
           <span class="datetime"><%= I18n.l(Time.zone.parse(source['updated'])) %></span>
           <% if source['categories'].present? %>
           <span class="categories">
-            <% source['categories'].each do |category| %>
-              <%= link_to category, gws_board_category_topics_path(category: category), class: 'gws-category-label' %>
+            <% source['categories'].each do |es_category| %>
+              <% category, category_path = @setting.translate_category(hit['_type'], es_category) %>
+              <% next unless category %>
+              <%= link_to(
+                    category.trailing_name,
+                    category_path,
+                    class: 'gws-category-label',
+                    style: category_label_css(category)
+                  ) %>
             <% end %>
           </span>
           <% end %>

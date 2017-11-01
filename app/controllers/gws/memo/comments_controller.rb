@@ -23,7 +23,7 @@ class Gws::Memo::CommentsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to params[:redirect_to], notice: @item.errors.full_messages.join("\n") }
+        format.html { redirect_to params[:redirect_to], notice: @item.errors.full_messages.join('\n') }
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
       end
     end

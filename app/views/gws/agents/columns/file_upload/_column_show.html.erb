@@ -4,7 +4,7 @@
 <dd>
   <% if files.present? %>
     <% files.each do |file| %>
-    <div class="fileview" style="display: table">
+    <div id="file-<%= file.id %>" class="fileview" style="display: table">
       <span class="icon" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px; width: 48px">
         <% if file.image? %>
         <%= image_tag(file.thumb_url, alt: file.name, style: 'max-width: 40px; max-height: 40px') %>

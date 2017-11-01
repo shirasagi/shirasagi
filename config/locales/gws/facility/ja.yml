@@ -6,6 +6,7 @@ ja:
       minutes: 分
       days: 日先まで
     navi:
+      item: 設備
       usage: 利用率
     usage:
       type: 種類
@@ -31,17 +32,15 @@ ja:
   modules:
     gws/facility: 設備管理
     addons:
+      gws/facility/group_setting: 設備管理
       gws/facility/reservable_setting: 予約権限
       gws/facility/column_setting: 追加入力
 
   mongoid:
     models:
-      gws/facility/item: 設備
-      gws/facility/category: 設備カテゴリー
-      gws/facility/custom_field: 追加入力
-      gws/facility/group_setting: 設備管理
-      gws/facility/group_setting/item: 設備
-      gws/facility/group_setting/category: カテゴリー
+      gws/facility/item: 設備管理/設備
+      gws/facility/category: 設備管理/カテゴリー
+      gws/facility/custom_field: 設備管理/追加入力
     attributes:
       gws/facility/item:
         name: 設備名
@@ -56,7 +55,7 @@ ja:
       gws/facility/category:
         name: カテゴリー名
         order: 並び順
-      gws/facility/group_setting:
+      gws/addon/facility/group_setting:
         facility_hours: 取得可能時間
         facility_min_hour: 取得可能時間（開始）
         facility_max_hour: 取得可能時間（終了）

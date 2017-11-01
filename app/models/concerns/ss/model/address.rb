@@ -10,9 +10,28 @@ module SS::Model::Address
     field :title, type: String
     field :tel, type: String
     field :email, type: String
+
+    field :home_postal_code, type: String
+    field :home_prefecture, type: String
+    field :home_city, type: String
+    field :home_street_address, type: String
+    field :home_tel, type: String
+    field :home_fax, type: String
+
+    field :office_postal_code, type: String
+    field :office_prefecture, type: String
+    field :office_city, type: String
+    field :office_street_address, type: String
+    field :office_tel, type: String
+    field :office_fax, type: String
+
+    field :personal_webpage, type: String
     field :memo, type: String
 
-    permit_params :name, :kana, :company, :title, :tel, :email, :memo
+    permit_params :name, :kana, :company, :title, :tel, :email,
+                  :home_postal_code, :home_prefecture, :home_city, :home_street_address, :home_tel, :home_fax,
+                  :office_postal_code, :office_prefecture, :office_city, :office_street_address, :office_tel, :office_fax,
+                  :personal_webpage, :memo
 
     validates :name, presence: true
     validates :email, email: true

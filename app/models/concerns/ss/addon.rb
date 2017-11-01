@@ -4,6 +4,10 @@ module SS::Addon
   end
 
   def addon_name
-    SS::Addon::Name.new(self)
+    SS::Addon::Name.new(self, type: @addon_type)
+  end
+
+  def set_addon_type(addon_type)
+    @addon_type = addon_type
   end
 end
