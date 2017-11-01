@@ -8,6 +8,8 @@ module Gws::Addon::Monitor::Group
     permit_params attend_group_ids: []
     before_validation :validate_attend_group_ids, if: -> { attend_group_ids.present? }
 
+    validate :validate_presence_attend_group
+
     scope :group, ->(group) {
       cond = [{ group_ids: group.id }]
       self.and([{ '$or' => cond }])
@@ -47,7 +49,7 @@ module Gws::Addon::Monitor::Group
     self.attend_group_ids = attend_group_ids.uniq
   end
 
-  def validate_presence_group
+  def validate_presence_attend_group
     return true if attend_group_ids.present?
     errors.add :attend_group_ids, :empty
   end
