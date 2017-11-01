@@ -60,9 +60,14 @@ class Gws::Monitor::TopicsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
+    custom_group_ids = []
+    Gws::CustomGroup.site(@cur_site).each do |i|
+      custom_group_ids.push(i._id) if i.member_ids.include?(@cur_user.id)
+    end
+
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_topics(@cur_user.id, @cur_group.id).
+        and_topics(@cur_user.id, @cur_group.id, custom_group_ids).
         page(params[:page]).per(50)
   end
 
