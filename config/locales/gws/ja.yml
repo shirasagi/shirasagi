@@ -57,6 +57,9 @@ ja:
         select: プルダウン選択
         check_box: チェックボックス選択
         upload_file: ファイル投稿
+      user_form_state:
+        closed: 使用しない
+        public: 使用する
 
     links:
       back_to_portal: ポータルへ戻る
@@ -83,7 +86,7 @@ ja:
     edit_gws_users: ユーザの管理
     edit_gws_user_titles: 役職の管理
     edit_gws_roles: 権限/ロールの管理
-    edit_gws_user_forms: ユーザ情報の管理
+    edit_gws_user_forms: ユーザ拡張情報の管理
     read_gws_histories: 操作履歴の閲覧
     read_other_gws_custom_groups: カスタムグループの閲覧（全て）
     read_private_gws_custom_groups: カスタムグループの閲覧（所有）
@@ -138,7 +141,7 @@ ja:
       gws/reminder: リマインダー
       gws/history: 操作履歴
       gws/user_setting: ユーザー設定
-      gws/user_form: ユーザー情報
+      gws/user_form: ユーザー拡張情報
     attributes:
       gws/model/category:
         model: モデル
@@ -281,6 +284,7 @@ ja:
       gws/addon/import/user:
         in_file: ファイル
       gws/user_form:
+        state: 使用
         memo: メモ
 
   tooltip:
@@ -371,6 +375,8 @@ ja:
         - CSVファイルを指定しユーザーのインポートを行います。
         - idが記述されていない行は新規作成になります。
     gws/user_form:
+      state:
+        - ユーザー拡張情報を使用するかしないかを選択します。
       memo:
         - 備考を入力します。
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。

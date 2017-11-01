@@ -7,14 +7,21 @@ class Gws::UserForm
 
   set_permission_name 'gws_user_forms', :edit
 
+  field :state, type: String, default: 'closed'
   field :memo, type: String
   has_many :columns, class_name: 'Gws::Column::Base', dependent: :destroy, inverse_of: :form, as: :form
 
-  permit_params :memo
+  permit_params :state, :memo
+
+  validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
 
   delegate :build_column_values, to: :columns
 
   def reference_name
     self.class.model_name.human
+  end
+
+  def state_options
+    %w(closed public).map { |m| [I18n.t("gws.options.user_form_state.#{m}"), m] }
   end
 end
