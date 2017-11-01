@@ -65,6 +65,15 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     render file: "/gws/monitor/management/main/show_#{@item.mode}"
   end
 
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    diff_attend_group_readable_group = (@item.attend_group_ids - @item.readable_group_ids).uniq
+    @item.attributes["readable_group_ids"] = @item.attributes["readable_group_ids"] + diff_attend_group_readable_group if diff_attend_group_readable_group.size > 0
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update
+  end
+
   def close
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update(article_state: 'closed')
