@@ -61,8 +61,8 @@ class Gws::Monitor::TopicsController < ApplicationController
     end
 
     custom_group_ids = []
-    Gws::CustomGroup.site(@cur_site).each do |i|
-      custom_group_ids.push(i._id) if i.member_ids.include?(@cur_user.id)
+    Gws::CustomGroup.site(@cur_site).each do |custom_group|
+      custom_group_ids.push(custom_group._id) if custom_group.member_ids.include?(@cur_user.id)
     end
 
     @items = @items.search(params[:s]).
