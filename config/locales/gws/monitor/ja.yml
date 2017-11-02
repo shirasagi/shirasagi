@@ -137,6 +137,8 @@ ja:
         back_to_topic: 戻る
         active: 削除を取り消す
     notice:
+      close: 回答を締め切りました
+      open: 締め切りを解除しました
       disable: 削除済みに移動しました
       active: 削除を取り消しました
 
