@@ -17,11 +17,13 @@ class Gws::Circular::Post
 
   field :name, type: String
   field :due_date, type: DateTime
+  field :deleted, type: DateTime
 
-  permit_params :name, :due_date
+  permit_params :name, :due_date, :deleted
 
   validates :name, presence: true
   validates :due_date, presence: true
+  validates :deleted, datetime: true
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
@@ -41,6 +43,35 @@ class Gws::Circular::Post
 
     criteria
   }
+
+  scope :without_deleted, ->(date = Time.zone.now) {
+    where('$and' => [
+      { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
+    ])
+  }
+
+  scope :deleted, -> {
+    where(:deleted.exists => true)
+  }
+
+  scope :expired, ->(date = Time.zone.now) {
+    where('$or' => [
+      { :deleted.exists => true , :deleted.lt => date }
+    ])
+  }
+
+  def active?
+    return true unless deleted.present? && deleted < Time.zone.now
+    false
+  end
+
+  def active
+    update_attributes(deleted: nil)
+  end
+
+  def disable
+    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+  end
 
   def sort_items
     [

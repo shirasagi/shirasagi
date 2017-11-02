@@ -30,6 +30,8 @@ ja:
       see_type:
         normal: 通常閲覧
         simple: 簡易閲覧
+    notice:
+      disable: 削除済みに移動しました
   modules:
     gws/circular: 回覧板
     addons:

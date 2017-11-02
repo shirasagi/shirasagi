@@ -3,6 +3,7 @@ SS::Application.routes.draw do
 
   concern :posts do
     get :delete, on: :member
+    get :disable, on: :member
     delete action: :destroy_all, on: :collection
     post :download, on: :collection
     get :set_seen, on: :member

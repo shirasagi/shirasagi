@@ -4,7 +4,7 @@ class Gws::Circular::PostsController < ApplicationController
 
   model Gws::Circular::Post
 
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :set_seen, :unset_seen, :toggle_seen]
+  before_action :set_item, only: [:show, :edit, :update, :disable, :delete, :destroy, :set_seen, :unset_seen, :toggle_seen]
   before_action :set_selected_items, only: [:destroy_all, :disable_all, :set_seen_all, :unset_seen_all, :download]
   before_action :set_category
 
@@ -25,6 +25,19 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   public
+
+  def index
+    @items = @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site).
+      without_deleted.
+      search(params[:s]).
+      page(params[:page]).per(50)
+  end
+
+  def disable
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render_destroy @item.disable, {notice: t('gws/circular.notice.disable')}
+  end
 
   def show
     if @item.see_type == 'simple' && @item.unseen?(@cur_user)
