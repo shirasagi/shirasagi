@@ -43,6 +43,7 @@ ja:
     models:
       gws/memo/message: 連絡メモ
       gws/memo/folder: 管理
+      gws/memo/signature: 署名
     attributes:
       gws/memo/message:
         subject: 件名
@@ -61,3 +62,7 @@ ja:
         folder: フォルダー
         state: 状態
         order: 並び順
+      gws/memo/signature:
+        name: 名称
+        text: 本文
+        default: 既定の署名
