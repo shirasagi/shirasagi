@@ -1,4 +1,9 @@
 <%= jquery do %>
+  $(".trash-all").click(function(){
+    var form = Gws_Memo_Message.buildForm("<%= trash_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.trash_all') %>");
+    form.appendTo(document.body).submit();
+  });
+
   $(".set-seen-all").click(function(){
     var form = Gws_Memo_Message.buildForm("<%= set_seen_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.set_seen_all') %>");
     form.appendTo(document.body).submit();
@@ -44,9 +49,14 @@
       </div>
     <% end %>
 
-    <button class="btn destroy-all">
-      <%= t 'ss.links.delete' %>
-    </button>
+    <% case params[:folder] %>
+    <% when 'INBOX.Sent', 'INBOX.Draft' %>
+      <button class="btn destroy-all"><%= t 'ss.links.delete' %></button>
+    <% when 'INBOX.Trash' %>
+    <% # nop %>
+    <% else %>
+      <button class="btn trash-all"><%= t 'gws/memo/message.links.trash' %></button>
+    <% end %>
 
     <div class="dropdown dropdown-toggle gws-memo-dropdown">
       <button class="btn">

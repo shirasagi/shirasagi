@@ -10,7 +10,9 @@ ja:
       unset_seen: 未読にする
       set_star: スターをつける
       unset_star: スターをはずす
+      trash: ゴミ箱に移す
     confirm:
+      trash_all: ゴミ箱に移しますか?
       set_seen_all: 既読にしますか?
       unset_seen_all: 未読にしますか?
       set_star_all: スターをつけますか?

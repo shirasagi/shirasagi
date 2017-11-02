@@ -10,6 +10,7 @@ SS::Application.routes.draw do
     resources :messages, concerns: :deletion, path: 'messages/:folder',
               folder: /[^\/]+/, defaults: { folder: 'INBOX' } do
       collection do
+        post :trash_all
         post :set_seen_all
         post :unset_seen_all
         post :set_star_all
@@ -19,6 +20,7 @@ SS::Application.routes.draw do
         post :forward
       end
       member do
+        get :trash
         get :toggle_star
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/

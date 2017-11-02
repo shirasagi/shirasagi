@@ -19,7 +19,14 @@
   <% else %>
     <% if @item.user == @cur_user %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
-      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+      <% case params[:folder] %>
+      <% when 'INBOX.Sent', 'INBOX.Draft' %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+      <% when 'INBOX.Trash' %>
+        <% # nop %>
+      <% else %>
+        <%= link_to 'ゴミ箱に移す', action: :trash, id: @item %>
+      <% end %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
