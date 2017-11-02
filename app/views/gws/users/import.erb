@@ -5,7 +5,7 @@
   <header><h2><%= t("ss.import") %></h2></header>
 
   <dl class="see">
-    <dt><%= @model.t :in_file %><%= @model.tt :in_file %></dt>
+    <dt><%= t "ss.file"%><%= @model.tt :in_file %></dt>
     <dd>
       <%= f.hidden_field "item[in_file]", value: "" %>
       <%= f.file_field :in_file %>
@@ -16,5 +16,6 @@
 
 <footer class="send">
   <%= f.submit t("ss.import"), class: :save %>
+  <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>
