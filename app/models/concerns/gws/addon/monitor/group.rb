@@ -8,7 +8,7 @@ module Gws::Addon::Monitor::Group
     permit_params attend_group_ids: []
     before_validation :validate_attend_group_ids, if: -> { attend_group_ids.present? }
 
-    validate :validate_presence_attend_group
+    validate :validate_presence_attend_group, if: -> { topic.nil? }
 
     scope :group, ->(group) {
       cond = [{ group_ids: group.id }]
