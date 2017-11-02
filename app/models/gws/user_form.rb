@@ -24,4 +24,12 @@ class Gws::UserForm
   def state_options
     %w(closed public).map { |m| [I18n.t("gws.options.user_form_state.#{m}"), m] }
   end
+
+  def state_public?
+    state == 'public'
+  end
+
+  def state_closed?
+    !state_public?
+  end
 end

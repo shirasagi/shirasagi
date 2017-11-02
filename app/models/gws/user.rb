@@ -2,6 +2,7 @@ class Gws::User
   include SS::Model::User
   include Gws::Referenceable
   include Gws::SitePermission
+  include Gws::Addon::User::CustomForm
   include Gws::Addon::Role
   include Gws::Addon::Import::User
   include SS::Addon::UserGroupHistory
