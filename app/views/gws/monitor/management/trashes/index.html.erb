@@ -63,7 +63,7 @@
                 <% end %>
               </span>
               <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count %></span>
-              <span class="state"><%= item.closed? ? t('ss.options.state.public') : t('ss.options.state.closed') %></span>
+              <span class="state"><%= item.state == 'public' ? t('ss.options.state.public') : t('ss.options.state.closed') %></span>
             </div>
           </div>
         </li>
