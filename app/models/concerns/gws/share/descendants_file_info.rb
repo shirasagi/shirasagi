@@ -21,8 +21,12 @@ module Gws::Share::DescendantsFileInfo
     files.active.compact.length || 0
   end
 
-  def deleted_files_count
-    files.deleted.compact.length || 0
+  def readable_active_files_count(user, site)
+    files.readable(user, site).active.count
+  end
+
+  def readable_deleted_files_count(user, site)
+    files.readable(user, site).deleted.count
   end
 
   private
