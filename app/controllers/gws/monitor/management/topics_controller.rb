@@ -76,12 +76,12 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
 
   def close
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(article_state: 'closed')
+    render_update @item.update(article_state: 'closed'), {notice: t('gws/monitor.notice.close')}
   end
 
   def open
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(article_state: 'open')
+    render_update @item.update(article_state: 'open'), {notice: t('gws/monitor.notice.open')}
   end
 
   def download
