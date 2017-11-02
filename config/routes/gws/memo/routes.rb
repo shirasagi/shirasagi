@@ -29,5 +29,6 @@ SS::Application.routes.draw do
     resources :comments, path: ':message_id/comments', only: :create
     resources :folders, concerns: :deletion
     resources :filters, concerns: :deletion
+    resources :signatures, concerns: :deletion
   end
 end
