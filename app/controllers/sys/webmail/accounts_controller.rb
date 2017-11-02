@@ -32,9 +32,9 @@ module Sys::Webmail
       end
 
       def download
-        raise "403" unless @model.allowed?(:read, @cur_user)
+        raise "403" unless @model.allowed?(:edit, @cur_user)
 
-        items = @model.all.allow(:read, @cur_user)
+        items = @model.all.allow(:edit, @cur_user)
         @item = @model.new
         send_data @item.export_csv(items), filename: "webmail_accounts_#{Time.zone.now.to_i}.csv"
       end
