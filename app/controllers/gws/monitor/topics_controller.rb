@@ -51,7 +51,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).topic
-    #@items = @items.and_public.and_readable(@cur_user, @cur_site)
+    @items = @items.and_public.and_readable(@cur_user, @cur_site)
 
     if @category.present?
       params[:s] ||= {}
