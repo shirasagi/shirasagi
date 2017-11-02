@@ -68,7 +68,7 @@ class Gws::Share::FilesController < ApplicationController
       readable(@cur_user, @cur_site).
       active.
       search(params[:s]).
-      custom_order(params.dig(:s, :sort) || 'updated_asc').
+      custom_order(params.dig(:s, :sort) || 'created_desc').
       page(params[:page]).per(50)
 
     @items.options[:sort].delete("_id")
