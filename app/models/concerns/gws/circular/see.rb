@@ -36,7 +36,7 @@ module Gws::Circular::See
 
   def see_action_label(u=user)
     key = seen?(u) ? 'unset_seen' : 'set_seen'
-    I18n.t(key, scope: 'gws/circular.topic')
+    I18n.t(key, scope: 'gws/circular.post')
   end
 
   def see_type_options
