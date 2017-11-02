@@ -15,7 +15,7 @@
     <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
     <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
   <%# end %>
-  <h2><%= link_to '連絡メモ', gws_memo_messages_path, class: "icon-conv" %></h2>
+  <h2><%= link_to t('modules.gws/memo'), gws_memo_messages_path, class: "icon-conv" %></h2>
   <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>
   <% end %>
@@ -41,7 +41,7 @@
     <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>
   <% end %>
 
-  <h2><%= link_to '回覧板', gws_circular_posts_path, class: 'icon-write' %></h2>
+  <h2><%= link_to t('modules.gws/circular'), gws_circular_posts_path, class: 'icon-write' %></h2>
 
   <% if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/monitor'), gws_monitor_topics_path %></h2>
