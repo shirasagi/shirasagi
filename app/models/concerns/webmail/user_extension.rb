@@ -42,5 +42,6 @@ module Webmail::UserExtension
       setting.set_imap_password
       setting
     end
+    self.imap_default_index = 0 if imap_settings[imap_default_index].nil?
   end
 end
