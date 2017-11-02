@@ -16,6 +16,9 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
       click_link I18n.t('ss.links.download')
       #expect(page.response_headers['Content-Type']).to eq 'text/csv'
 
+      visit "#{index_path}/download_template"
+      expect(status_code).to eq 200
+
       visit index_path
       click_link I18n.t('ss.links.import')
       click_button I18n.t('ss.import')
