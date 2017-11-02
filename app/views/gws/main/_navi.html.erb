@@ -43,9 +43,9 @@
 
   <h2><%= link_to '回覧板', gws_circular_topics_path, class: 'icon-write' %></h2>
 
-  <% if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%# if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/monitor'), gws_monitor_topics_path %></h2>
-  <% end %>
+  <%# end %>
   <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
   <% end %>
