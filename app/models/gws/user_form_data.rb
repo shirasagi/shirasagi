@@ -8,7 +8,10 @@ class Gws::UserFormData
   belongs_to :form, class_name: 'Gws::UserForm'
   embeds_many :column_values, class_name: 'Gws::Column::Value::Base', cascade_callbacks: true
 
+  index({ site_id: 1, user_id: 1 }, { unique: true })
+
   before_validation :set_form_id, if: ->{ @cur_form }
+  validates :user_id, presence: true, uniqueness: { scope: :site_id }
   validate :validate_column_values
 
   scope :form, ->(form) { where(form_id: form.id) }
