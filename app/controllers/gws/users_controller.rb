@@ -67,6 +67,11 @@ class Gws::UsersController < ApplicationController
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_users_#{Time.zone.now.to_i}.csv"
   end
 
+  def download_template
+    csv = @model.unscoped.where(:_id.exists => false).to_csv(site: @cur_site)
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_users_template.csv"
+  end
+
   def import
     return if request.get?
     @item = @model.new get_params

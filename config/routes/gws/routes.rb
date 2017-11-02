@@ -8,6 +8,7 @@ SS::Application.routes.draw do
 
   concern :download do
     get :download, :on => :collection
+    get :download_template, :on => :collection
   end
 
   concern :import do

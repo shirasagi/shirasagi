@@ -259,6 +259,8 @@ ja:
         lock_until: 期限
       gws/addon/schedules:
         schedule_ids: スケジュール
+      gws/addon/import/user:
+        in_file: ファイル
 
   tooltip:
     gws/addon/reminder:
@@ -343,6 +345,10 @@ ja:
     gws/addon/schedules:
       schedule_ids:
         - スケジュールを選択します。
+    gws/addon/import/user:
+      in_file:
+        - CSVファイルを指定しユーザーのインポートを行います。
+        - idが記述されていない行は新規作成になります。
 
   job:
     models:
