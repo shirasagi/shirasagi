@@ -2,7 +2,9 @@ ja:
   gws/circular:
     admin: 管理
     setting: 回覧板設定
+    active: 削除を取り消す
     confirm:
+      active_all: 選択した項目の削除を取り消しますか？
       set_seen_all: 選択した項目を全て既読にしますか？
       unset_seen_all: 選択した項目を全て未読に戻しますか？
       download: 選択した項目を全てCSVに出力しますか？
@@ -32,6 +34,7 @@ ja:
         simple: 簡易閲覧
     notice:
       disable: 削除済みに移動しました
+      active: 削除を取り消しました
   modules:
     gws/circular: 回覧板
     addons:
@@ -52,6 +55,7 @@ ja:
     models:
       gws/circular/post: 回覧板
       gws/circular/category: カテゴリー
+      gws/circular/trashes: 削除済み
     attributes:
       gws/circular/post:
         name: タイトル

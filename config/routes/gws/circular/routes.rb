@@ -19,6 +19,10 @@ SS::Application.routes.draw do
 
   gws 'circular' do
     resources :posts, concerns: [:posts]
+    resources :trashes, concerns: [:posts] do
+      get :active, on: :member
+      post :active_all, on: :collection
+    end
 
     scope(path: ':category', as: 'category') do
       resources :posts, concerns: [:posts]
