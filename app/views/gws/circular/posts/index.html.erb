@@ -18,7 +18,24 @@
 <% @index_meta = proc do |item| %>
     <span class="id">#<%= item.id %></span>
     <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
-    <span class="gws-share-categories"></span>
+    <span class="gws-share-categories">
+      <% item.categories.compact.each do |category| %>
+        <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+                    class: 'gws-category-label', style: category_label_css(category) %>
+      <% end %>
+    </span>
 <% end %>
+
+<%= jquery do %>
+  $('.gws-category-navi-menu #category_id').change(function() {
+    var cid = $(this).val();
+    if (cid) location.href = '<%= gws_circular_category_posts_path(category: 'ID') %>'.replace('ID', cid);
+    else location.href = '<%= gws_circular_posts_path %>';
+  });
+<% end %>
+
+<div class="gws-category-navi-menu">
+  <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/circular') if  @categories.to_options.present? %>
+</div>
 
 <%= render file: 'gws/crud/index' %>

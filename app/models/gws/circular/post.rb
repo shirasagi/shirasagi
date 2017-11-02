@@ -11,7 +11,7 @@ class Gws::Circular::Post
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
-  include Gws::Addon::Board::Category
+  include Gws::Addon::Circular::Category
 
   seqid :id
 
