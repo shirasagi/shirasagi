@@ -9,7 +9,6 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
 
   describe "#call" do
     let(:site) { cms_site }
-    let(:host) { site.host }
     let(:user) { nil }
     let!(:node_sparql) { create(:opendata_node_sparql) }
     let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
@@ -22,7 +21,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
     let(:content_type) { "application/vnd.ms-excel" }
     let(:vocab) { create(:rdf_vocab, site: site) }
     let(:rdf_class) { create(:rdf_class, vocab: vocab) }
-    subject { described_class.bind(site_id: host, user_id: user, node_id: node) }
+    subject { described_class.bind(site_id: site, user_id: user, node_id: node) }
 
     before do
       resource.in_file = upload_file(csv_file, content_type)
