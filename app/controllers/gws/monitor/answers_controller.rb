@@ -83,24 +83,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     @item.attributes["readable_group_ids"] = (@item.attend_group_ids + @item.readable_group_ids).uniq
 
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_create @item.save
-  end
-
-  def render_create(result, opts = {})
-    render_opts = opts[:render].presence || { file: :new }
-    notice = opts[:notice].presence || t("ss.notice.saved")
-
-    if result
-      respond_to do |format|
-        format.html { redirect_to controller: 'gws/monitor/admins', action: 'show', id: @item._id, notice: notice }
-        format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
-      end
-    else
-      respond_to do |format|
-        format.html { render render_opts }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
-      end
-    end
+    render_create @item.save, {location: {controller: 'admins', action: 'show', id: @item._id}}
   end
 
   def read
