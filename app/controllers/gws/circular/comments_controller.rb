@@ -9,34 +9,41 @@ class Gws::Circular::CommentsController < ApplicationController
   private
 
   def fix_params
-    {
-        cur_user: @cur_user,
-        cur_site: @cur_site,
-        topic_id: params[:topic_id],
-        parent_id: params[:parent_id],
-        user_ids: [@cur_user.id]
-    }
+    { user_id: @cur_user.id, site_id: @cur_site.id, parent: @parent }
   end
 
   def pre_params
-    { name: "Re: #{@topic.name}" }
-  end
-
-  def set_parent
-    @topic = Gws::Circular::Topic.find params[:topic_id]
+    { name: "Re: #{@parent.name}" }
   end
 
   def set_crumbs
     @crumbs << [I18n.t('modules.gws/circular'), gws_circular_topics_path]
   end
 
+  def set_parent
+    @parent ||= @model::PARENT_CLASS.find(params[:topic_id])
+    @parent ? @parent : (raise '404')
+  end
+
+  def crud_redirect_url
+    gws_circular_topic_path(id: @parent.id)
+  end
+
+  def set_item
+    set_parent
+    @item = @parent.comments[params[:id].to_i]
+    @item.parent = @parent
+    @item
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
   public
 
   def index
-    redirect_to gws_circular_topic_path(id: @topic.id)
+    redirect_to gws_circular_topic_path(id: @parent.id)
   end
+  alias_method :show, :index
 
-  def show
-    redirect_to gws_circular_topic_path(id: @topic.id)
-  end
 end
