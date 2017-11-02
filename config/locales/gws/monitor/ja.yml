@@ -77,6 +77,9 @@ ja:
       permit_comment:
         allow: 許可する
         deny: 許可しない
+      answerable_article:
+        answerable: 回答可能
+        readable: 閲覧可能
       browsed_state:
         read: 既読
         unread: 未読
