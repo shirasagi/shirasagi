@@ -130,7 +130,7 @@ class Gws::Circular::Post
         data << I18n.t('gws/circular.csv')
         each do |item|
           item.members.each do |member|
-            post = item.children.where(user_id: member.id).first
+            post = item.comments.find {|c| c.user_id == member.id }
             data << [
                 item.id,
                 item.name,
