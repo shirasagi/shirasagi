@@ -17,7 +17,6 @@ describe "gws_personal_address_addresses", type: :feature, dbscope: :example do
       #expect(page.response_headers['Content-Type']).to eq 'text/csv'
 
       visit "#{index_path}/download_template"
-      expect(status_code).to eq 200
 
       visit index_path
       click_link I18n.t('ss.links.import')
