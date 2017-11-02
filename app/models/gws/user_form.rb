@@ -13,6 +13,9 @@ class Gws::UserForm
 
   permit_params :state, :memo
 
+  index({ site_id: 1 }, { unique: true })
+
+  validates :site_id, presence: true, uniqueness: true
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
 
   delegate :build_column_values, to: :columns
