@@ -1,0 +1,18 @@
+<%
+  cur_form = Gws::UserForm.site(@cur_site).order_by(id: 1, created: 1).first
+  return if cur_form.blank? || cur_form.state_closed?
+
+  cur_data = Gws::UserFormData.site(@cur_site).form(cur_form).user(@item).order_by(id: 1, created: 1).first
+  return if cur_data.blank?
+%>
+<dl class="see mod-gws-user-custom_form">
+  <% cur_data.column_values.order_by(order: 1, name: 1).each do |value| %>
+    <% column = value.column %>
+    <% if column.present? && column.column_show_path.present? %>
+      <%= render file: column.column_show_path, locals: { column: column, value: value } %>
+    <% else %>
+      <dt><%= value.name %></dt>
+      <dd><%= value.value %></dd>
+    <% end %>
+  <% end %>
+</dl>

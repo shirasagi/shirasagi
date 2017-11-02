@@ -126,6 +126,7 @@ ja:
       gws/schedules: スケジュール
       gws/system/group_setting: システム設定
       gws/system/menu_setting: メニュー設定
+      gws/user/custom_form: 拡張情報
 
   mongoid:
     models:
@@ -142,6 +143,7 @@ ja:
       gws/history: 操作履歴
       gws/user_setting: ユーザー設定
       gws/user_form: ユーザー拡張情報
+      gws/user_form_data: ユーザー拡張データ
     attributes:
       gws/model/category:
         model: モデル
@@ -286,6 +288,9 @@ ja:
       gws/user_form:
         state: 使用
         memo: メモ
+      gws/user_form_data:
+        form_id: ユーザー拡張情報
+        column_values: 拡張情報値
 
   tooltip:
     gws/addon/reminder:
