@@ -55,15 +55,36 @@ class Gws::Share::FoldersController < ApplicationController
       end
     end
 
-    zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
+    @zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
 
-    Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
+    Zip::File.open(@zipfile, Zip::File::CREATE) do |zip_file|
       Dir.glob("#{download_dir}/*").each do |downloadfile|
         zip_file.add(NKF::nkf('-sx --cp932',File.basename(downloadfile)), downloadfile)
       end
     end
 
-    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
+    send_file(@zipfile, type: 'application/zip', filename: File.basename(@zipfile), disposition: 'attachment')
+
+    file_body = Class.new do
+      attr_reader :to_path
+
+      def initialize(path)
+        @to_path = path
+      end
+
+      def each
+        File.open(to_path, 'rb') do |file|
+          while chunk = file.read(16384)
+            yield chunk
+          end
+        end
+      end
+
+      def close
+        FileUtils.rm_rf File.dirname(@to_path)
+      end
+    end
+    self.response_body = file_body.new(@zipfile)
 
   end
 
