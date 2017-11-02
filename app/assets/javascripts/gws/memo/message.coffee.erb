@@ -1,22 +1,21 @@
 class @Gws_Memo_Message
   @render: ->
-    $("#addon-gws-agents-addons-group_permission").hide();
+    $("#addon-gws-agents-addons-group_permission").hide()
+    $(".addon-body .header-options").hide()
+    $("#addon-basic").hide()
 
     $(".list-head .search").on "click", ->
-      $('.gws-memo-search').animate({ height: 'toggle' }, 'fast')
+      $(".gws-memo-search").animate({ height: "toggle" }, "fast")
 
     $(".gws-memo-search .reset").on "click", ->
       $(".gws-memo-search input[type=text]").val("")
       $(".gws-memo-search .search").click()
 
-
-
-
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->
       $(this).val()
     return false if checked.length == 0
-    token = $('meta[name="csrf-token"]').attr('content')
+    token = $('meta[name="csrf-token"]').attr("content")
     form = $("<form/>", action: action, method: "post", data: {confirm: confirm})
     form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
     for id in checked

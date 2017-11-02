@@ -1,12 +1,5 @@
 <%= jquery do %>
   SS_Form.disableEnterKey('#item_subject');
+  Gws_Memo_Message.render();
   Webmail_Mail_Form.render();
 <% end %>
-
-<dl class="webmail-mail-form-address to">
-  <dt><%= @model.t :to %></dt>
-  <dd>
-    <%= f.text_area :to_text, readonly: true, class: 'address js-autosize' %>
-    <%= render 'webmail/mails/address_form', { f: f, field: :to } %>
-  </dd>
-</dl>

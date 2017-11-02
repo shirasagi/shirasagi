@@ -50,6 +50,10 @@ class Gws::PersonalAddress::AddressesController < ApplicationController
     send_data @item.export_csv(items), filename: "personal_addresses_#{Time.zone.now.to_i}.csv"
   end
 
+  def download_template
+    send_data @model.new.export_csv([]), filename: "personal_addresses_template.csv"
+  end
+
   def import
     return if request.get?
 

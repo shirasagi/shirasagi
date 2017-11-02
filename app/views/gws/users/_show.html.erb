@@ -30,7 +30,7 @@ SS_Clipboard.renderCopy();
   <dd><%= tryb { @item.title.name } %></dd>
 
   <dt><%= @model.t :type %></dt>
-  <dd><%= @item.send :type %></dd>
+  <dd><%= @item.label :type %></dd>
 
   <% if @item.account_start_date.present? %>
   <dt><%= @model.t :account_start_date %></dt>

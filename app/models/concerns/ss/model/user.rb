@@ -181,6 +181,10 @@ module SS::Model::User
     str
   end
 
+  def type_options
+    self.class.type_options
+  end
+
   def enabled?
     now = Time.zone.now
     return false if account_start_date.present? && account_start_date > now
