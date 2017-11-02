@@ -8,6 +8,7 @@ SS::Application.routes.draw do
 
   concern :export do
     get :download, on: :collection
+    get :download_template, on: :collection
     get :import, on: :collection
     post :import, on: :collection
   end
@@ -20,7 +21,7 @@ SS::Application.routes.draw do
     end
 
     namespace "management" do
-      resources :groups, concerns: [:deletion, :export]
+      resources :groups, concerns: [:deletion]
       resources :addresses, concerns: [:deletion, :export]
 
       scope(path: "group-:group", as: "group") do

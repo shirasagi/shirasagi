@@ -60,7 +60,7 @@ ja:
       split: 分割する
       integrate: 統合する
       download: ダウンロード
-      import: インポート
+      download_template: 雛形をダウンロード
       resize: リサイズする
       set_tag: タグ設定
       reset_tags: タグ解除
@@ -327,6 +327,8 @@ ja:
         groups: グループ
         cms_roles: CMSロール
         cms_role_ids: CMSロール
+        gws_roles: GWSロール
+        gws_role_ids: GWSロール
         type: ユーザータイプ
         sns: SNSユーザー
         ldap: LDAPユーザー
