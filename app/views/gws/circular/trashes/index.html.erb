@@ -1,0 +1,20 @@
+<%= jquery do %>
+  $(".active-all").click(function(){
+    var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
+    form.appendTo(document.body).submit();
+  });
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+  <span class="gws-share-categories">
+    <span class="gws-category-label" style="background-color: gray; color: #ffffff;">削除済み</span>
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+                  class: 'gws-category-label', style: category_label_css(category) %>
+    <% end %>
+    </span>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>
