@@ -4,7 +4,7 @@ ja:
       set_seen_all: 選択した項目を全て既読にしますか？
       unset_seen_all: 選択した項目を全て未読に戻しますか？
       download: 選択した項目を全てCSVに出力しますか？
-    topic:
+    post:
       seen: 既読
       unseen: 未読
       set_seen: 既読にする
@@ -31,30 +31,30 @@ ja:
   modules:
     gws/circular: 回覧板
   gws_role:
-    read_other_gws_circular_topics: 回覧板の閲覧（全て）
-    read_private_gws_circular_topics: 回覧板の閲覧（所有）
-    edit_other_gws_circular_topics: 回覧板の編集（全て）
-    edit_private_gws_circular_topics: 回覧板の編集（所有）
-    delete_other_gws_circular_topics: 回覧板の削除（全て）
-    delete_private_gws_circular_topics: 回覧板の削除（所有）
+    read_other_gws_circular_posts: 回覧板の閲覧（全て）
+    read_private_gws_circular_posts: 回覧板の閲覧（所有）
+    edit_other_gws_circular_posts: 回覧板の編集（全て）
+    edit_private_gws_circular_posts: 回覧板の編集（所有）
+    delete_other_gws_circular_posts: 回覧板の削除（全て）
+    delete_private_gws_circular_posts: 回覧板の削除（所有）
   activemodel:
     attributes:
-      gws/circular/post:
+      gws/circular/comment:
         name: タイトル
         text: コメント
   mongoid:
     models:
-      gws/circular/topic: 回覧板トピック
+      gws/circular/post: 回覧板トピック
     attributes:
-      gws/circular/topic:
+      gws/circular/post:
         name: タイトル
         due_date: 閲覧期限日時
         see_type: 既読にする形式
   tooltip:
-    gws/circular/post:
+    gws/circular/comment:
       name: タイトルです
       text: コメントです
-    gws/circular/topic:
+    gws/circular/post:
       name:
         - タイトルを入力します。
       due_date:

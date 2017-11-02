@@ -2,7 +2,7 @@ SS::Application.routes.draw do
   Gws::Circular::Initializer
 
   gws 'circular' do
-    resources :topics do
+    resources :posts do
       get :delete, on: :member
       delete action: :destroy_all, on: :collection
       post :download, on: :collection

@@ -2,7 +2,7 @@ class Gws::Circular::CommentsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Circular::Post
+  model Gws::Circular::Comment
 
   before_action :set_parent
 
@@ -17,16 +17,16 @@ class Gws::Circular::CommentsController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [I18n.t('modules.gws/circular'), gws_circular_topics_path]
+    @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
   end
 
   def set_parent
-    @parent ||= @model::PARENT_CLASS.find(params[:topic_id])
+    @parent ||= @model::PARENT_CLASS.find(params[:post_id])
     @parent ? @parent : (raise '404')
   end
 
   def crud_redirect_url
-    gws_circular_topic_path(id: @parent.id)
+    gws_circular_post_path(id: @parent.id)
   end
 
   def set_item
@@ -42,7 +42,7 @@ class Gws::Circular::CommentsController < ApplicationController
   public
 
   def index
-    redirect_to gws_circular_topic_path(id: @parent.id)
+    redirect_to gws_circular_post_path(id: @parent.id)
   end
   alias_method :show, :index
 

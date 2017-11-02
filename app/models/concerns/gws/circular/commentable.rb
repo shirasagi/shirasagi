@@ -39,7 +39,7 @@ module Gws::Circular::Commentable
   def comments
     attributes[:_comments].map.with_index do |comment, idx|
       comment[:id] = idx
-      Gws::Circular::Post.new comment
+      Gws::Circular::Comment.new comment
     end
   end
 
