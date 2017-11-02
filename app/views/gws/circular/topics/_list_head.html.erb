@@ -3,8 +3,8 @@
 
   <div class="list-head-action">
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <button class="btn unmark-all"><%= t('gws/circular.topic.unmark') %></button>
-        <button class="btn mark-all"><%= t('gws/circular.topic.mark') %></button>
+        <button class="btn unset-seen-all"><%= t('gws/circular.topic.unset_seen') %></button>
+        <button class="btn set-seen-all"><%= t('gws/circular.topic.set_seen') %></button>
     <% end %>
     <button class="btn download"><%= t('gws/circular.topic.download') %></button>
   </div>

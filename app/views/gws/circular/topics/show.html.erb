@@ -28,20 +28,41 @@
 
     <div class="menu">
       <% if @item.member?(@cur_user) && !@item.commented?(@cur_user) %>
-          <%= link_to t('gws/board.links.comment'), new_gws_circular_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: 'btn' %>
+          <%= link_to t('gws/board.links.comment'), new_gws_circular_topic_comment_path(topic_id: @item.id), class: 'btn' %>
       <% end %>
 
       <% if @item.member?(@cur_user) %>
-          <%= link_to @item.mark_action_label(@cur_user), toggle_gws_circular_topic_path, class: "btn #{ 'gws-btn-pushed' if @item.marked?(@cur_user) }" %>
+          <%= link_to @item.see_action_label(@cur_user),
+                      toggle_seen_gws_circular_topic_path, class: "btn #{'gws-btn-pushed' if @item.seen?(@cur_user)}" %>
       <% end %>
     </div>
   </article>
 
-  <% if @item.children.present? %>
-      <div class="comments">
-        <%= render partial: 'gws/circular/comments/comment', collection: @item.descendants, locals: {parent: @item} %>
-      </div>
-  <% end %>
+  <div class="comments">
+    <% @item.comments.each_with_index do |comment, i| %>
+      <aside class="comment">
+        <header>
+          <h2><%= comment.name %></h2>
+          <nav class="meta">
+            <span class="user"><%= comment.user.long_name %></span>
+            <span class="datetime"><%= comment.created.strftime('%Y/%m/%d %H:%M') %></span>
+          </nav>
+        </header>
+
+        <div class="toggle-body">
+          <div class="body"><pre><%= comment.text %></pre></div>
+          <div class="menu">
+            <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+              <%= link_to t('ss.links.edit'), edit_gws_circular_topic_comment_path(topic_id: @item.id, id: comment.id), class: 'btn' %>
+            <% end %>
+            <% if @model.allowed?(:delete, @cur_user, site: @cur_site) %>
+              <%= link_to t('ss.links.delete'), delete_gws_circular_topic_comment_path(topic_id: @item.id, id: comment.id), class: 'btn' %>
+            <% end %>
+          </div>
+        </div>
+      </aside>
+    <% end %>
+  </div>
 
   <article class="topic">
     <header>
@@ -52,21 +73,21 @@
         <thead>
         <tr>
           <th><%= t('gws/circular.topic.type') %></th>
-          <th><%= t('gws/circular.topic.mark_at') %></th>
+          <th><%= t('gws/circular.topic.seen_at') %></th>
           <th><%= t('gws/circular.topic.update_at') %></th>
           <th><%= t('gws/circular.topic.user') %></th>
           <th><%= t('gws/circular.topic.replay') %></th>
         </tr>
         </thead>
         <tbody class="items">
-          <% @item.members.each_with_index do |member, i| %>
-            <% post = @item.children.where(user_id: member.id).first %>
-            <tr data-id="<%= i %>">
-              <td><%= @item.marked?(member) ? t('gws/circular.topic.marked') :  t('gws/circular.topic.unmarked') %></td>
-              <td><%= tryb{@item.mark_at(member).strftime('%Y/%m/%d %H:%M')} %></td>
-              <td><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
+          <% @item.members.each do |member| %>
+            <% post = @item.comments.find {|c| c.user_id == member.id } %>
+            <tr>
+              <td><%= @item.seen?(member) ? t('gws/circular.topic.seen') :  t('gws/circular.topic.unseen') %></td>
+              <td><%= tryb { @item.seen_at(member).strftime('%Y/%m/%d %H:%M') } %></td>
+              <td><%= post ? post.updated.strftime('%Y/%m/%d %H:%M') : '' %></td>
               <td><%= member.name %></td>
-              <td><%= post ? post.try(:text) : '' %></td>
+              <td><%= post ? post.text : '' %></td>
             </tr>
           <% end %>
         </tbody>

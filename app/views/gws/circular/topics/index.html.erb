@@ -1,11 +1,11 @@
 <%= jquery do %>
-    $(".mark-all").click(function(){
-      var form = Gws_Circular_Topic.buildForm("<%= mark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.mark_all') %>");
+    $(".set-seen-all").click(function(){
+      var form = Gws_Circular_Topic.buildForm("<%= set_seen_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
       form.appendTo(document.body).submit();
     });
 
-    $(".unmark-all").click(function(){
-      var form = Gws_Circular_Topic.buildForm("<%= unmark_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.unmark_all') %>");
+    $(".unset-seen-all").click(function(){
+      var form = Gws_Circular_Topic.buildForm("<%= set_seen_all_gws_circular_topics_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
       form.appendTo(document.body).submit();
     });
 
@@ -17,7 +17,7 @@
 
 <% @index_meta = proc do |item| %>
     <span class="id">#<%= item.id %></span>
-    <span class="datetime"><%= item.due_date.strftime('%Y/%m/%d %H:%M') %></span>
+    <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
     <span class="gws-share-categories"></span>
 <% end %>
 
