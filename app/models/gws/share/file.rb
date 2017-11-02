@@ -124,4 +124,5 @@ class Gws::Share::File
       errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
     end
   end
+
 end
