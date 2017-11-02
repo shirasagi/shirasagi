@@ -51,8 +51,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).topic
-
-    @items = @items.and_public.and_readable(@cur_user, @cur_site)
+    #@items = @items.and_public.and_readable(@cur_user, @cur_site)
 
     if @category.present?
       params[:s] ||= {}
@@ -67,7 +66,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_topics(@cur_user.id, @cur_group.id, custom_group_ids).
+        and_topics(@cur_user.id, @cur_group.id, custom_group_ids, params.dig(:s, :answerble_article) || 'answerble').
         page(params[:page]).per(50)
   end
 

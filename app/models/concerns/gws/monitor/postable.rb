@@ -69,34 +69,40 @@ module Gws::Monitor::Postable
       end
       criteria
     }
-    # scope :and_topics, ->(groupid) {
-    #   where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
-    #                      {article_state: 'open'}])
-    # }
-    scope :and_topics, ->(userid, groupid, custom_group_ids) {
-      where("$and" =>
-              [ "$or" =>
-                [
-                  { :readable_group_ids.in => [groupid] },
-                  { readable_member_ids: userid },
-                  { :readable_custom_group_ids.in => custom_group_ids },
-                  { "attend_group_ids.0" => { "$exists" => false } },
-                  {"$or" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
-                             {article_state: 'open'}]
-                  }
+    scope :and_topics, ->(userid, groupid, custom_group_ids, key) {
+      if key.start_with?('answerble')
+        where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+                          {article_state: 'open'}
+                        ]
+             )
+      elsif key.start_with?('readable')
+        where("$and" =>
+                [ "$or" =>
+                  [
+                    { :readable_group_ids.in => [groupid] },
+                    { readable_member_ids: userid },
+                    { :readable_custom_group_ids.in => custom_group_ids },
+                    { "attend_group_ids.0" => { "$exists" => false } },
+                    {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]}
+                  ]
                 ]
-              ]
-            )
+              )
+      end
     }
-    scope :and_answers, ->(groupid) {
-      where("$and" =>
-              [ "$or" =>
-                [
-                  {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]},
-                  {"$and" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
-                               {article_state: 'closed'}]}
-                ]
-              ])
+
+    scope :and_answers, ->(groupid, key) {
+      if key.start_with?('answerble')
+        where("$and" => [
+                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]},
+                          {article_state: 'open'}
+                        ]
+              )
+      elsif key.start_with?('readable')
+        where("$and" => [
+                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]}
+                        ]
+             )
+      end
     }
     # Allow readable settings and readable permissions.
     scope :and_readable, ->(user, site, opts = {}) {
@@ -182,6 +188,13 @@ module Gws::Monitor::Postable
     [
       [I18n.t('gws/monitor.options.permit_comment.allow'), 'allow'],
       [I18n.t('gws/monitor.options.permit_comment.deny'), 'deny']
+    ]
+  end
+
+  def answerable_article_options
+    [
+        [I18n.t('gws/monitor.options.answerable_article.answerable'), 'answerble'],
+        [I18n.t('gws/monitor.options.answerable_article.readable'), 'readable']
     ]
   end
 
