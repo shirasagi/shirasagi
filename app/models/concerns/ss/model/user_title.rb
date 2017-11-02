@@ -18,13 +18,13 @@ module SS::Model::UserTitle
 
     permit_params :name, :order, :activation_date, :expiration_date
 
-    validates :name, presence: true, length: { maximum: 40 }
+    validates :name, presence: true, uniqueness: { scope: :group_id }, length: { maximum: 40 }
     validates :order, presence: true
     validates :group_id, presence: true
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
 
-    index({ group_id: 1, order: 1})
+    index({ group_id: 1, order: 1 })
 
     scope :search, ->(params) {
       criteria = where({})
