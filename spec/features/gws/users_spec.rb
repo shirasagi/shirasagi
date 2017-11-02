@@ -62,5 +62,25 @@ describe "gws_users", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
     end
+
+    it "#download" do
+      visit index_path
+      click_link I18n.t('ss.links.download')
+      expect(status_code).to eq 200
+
+      visit "#{index_path}/download_template"
+      expect(status_code).to eq 200
+    end
+
+    it "#import" do
+      visit index_path
+      click_link I18n.t('ss.links.import')
+      within "form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/user/gws_users.csv"
+        click_button "インポート"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+    end
   end
 end
