@@ -37,7 +37,7 @@ module Gws::Addon
           end
           ids << file.id
         end
-        self.file_ids = ids
+        self.attributes["file_ids"] = ids
 
         del_ids = file_ids_was.to_a - ids
         del_ids.each do |id|
