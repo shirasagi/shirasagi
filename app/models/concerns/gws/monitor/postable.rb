@@ -70,7 +70,7 @@ module Gws::Monitor::Postable
     }
     scope :and_topics, ->(userid, groupid, custom_group_ids, key) {
       if key.start_with?('answerble')
-        where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
+        where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)},
                           {article_state: 'open'}
                         ]
              )
@@ -82,46 +82,26 @@ module Gws::Monitor::Postable
                     { readable_member_ids: userid },
                     { :readable_custom_group_ids.in => custom_group_ids },
                     { "attend_group_ids.0" => { "$exists" => false } },
-                    {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]}
+                    {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)}
                   ]
                 ]
-              )
+             )
       end
     }
 
     scope :and_answers, ->(groupid, key) {
       if key.start_with?('answerble')
         where("$and" => [
-                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]},
+                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(question_not_applicable answered)},
                           {article_state: 'open'}
                         ]
-              )
+             )
       elsif key.start_with?('readable')
         where("$and" => [
-                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]}
+                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(question_not_applicable answered)}
                         ]
              )
       end
-    }
-    # Allow readable settings and readable permissions.
-    scope :and_readable, ->(user, site, opts = {}) {
-      cond = [
-          { "readable_group_ids.0" => { "$exists" => false },
-            "readable_member_ids.0" => { "$exists" => false },
-            "readable_custom_group_ids.0" => { "$exists" => false },
-            "group_ids.0" => { "$exists" => false },
-            "user_ids.0" => { "$exists" => false },
-            "attend_group_ids.0" => { "$exists" => false } },
-          { :readable_group_ids.in => user.group_ids },
-          { readable_member_ids: user.id },
-          { :attend_group_ids.in => user.group_ids },
-      ]
-      if readable_setting_included_custom_groups?
-        cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      end
-
-      cond << allow_condition(:read, user, site: site) if opts[:include_role]
-      where("$and" => [{ "$or" => cond }])
     }
     scope :owner, ->(user, site, opts = {}) {
       cond = [
@@ -227,7 +207,7 @@ module Gws::Monitor::Postable
 
   def set_state_of_the_answers_hash
     attend_group_ids_string = []
-    @attributes["attend_group_ids"].each {|s| attend_group_ids_string << "#{s}"}
+    @attributes["attend_group_ids"].each { |s| attend_group_ids_string << s.to_s }
     self.state_of_the_answers_hash = attend_group_ids_string.map do |g|
       if @attributes["state_of_the_answers_hash"][g]
         [g, @attributes["state_of_the_answers_hash"][g]]

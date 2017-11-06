@@ -69,7 +69,10 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     diff_attend_group_readable_group = (@item.attend_group_ids - @item.readable_group_ids).uniq
-    @item.attributes["readable_group_ids"] = @item.attributes["readable_group_ids"] + diff_attend_group_readable_group if diff_attend_group_readable_group.size > 0
+    if diff_attend_group_readable_group.present?
+      @item.attributes["readable_group_ids"] = @item.attributes["readable_group_ids"] + diff_attend_group_readable_group
+    end
+
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
@@ -94,14 +97,15 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
 
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
     @download_file_group_ssfile_ids = []
     @item.subscribed_groups.each do |group|
-      @download_file_group_ssfile_ids << [File.basename(@item.comment(group.id)[0].user_group_name), @item.comment(group.id)[0].file_ids] if @item.comment(group.id).present?
+      if @item.comment(group.id).present?
+        download_file_ids = @item.comment(group.id)[0]
+        @download_file_group_ssfile_ids << [File.basename(download_file_ids.user_group_name), download_file_ids.file_ids]
+      end
     end
 
     download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h
-
     @group_ssfile = []
     download_file_group_ssfile_ids_hash.each do |group_fileids|
       group_fileids[1].each do |fileids|
@@ -110,48 +114,29 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     end
 
     download_root_dir = "/tmp/shirasagi_download"
-    download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
+    download_dir = download_root_dir + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
 
-    Dir.glob("#{download_root_dir}" + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
+    Dir.glob(download_root_dir + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
       FileUtils.rm_rf(tmp_dir) if File.exists?(tmp_dir)
     end
 
     FileUtils.mkdir_p(download_dir) unless FileTest.exist?(download_dir)
 
     @group_ssfile.each do |groupssfile|
-      FileUtils.copy("#{groupssfile[1].path}", "#{download_dir}" + "/" + groupssfile[0] + "_" + "#{groupssfile[1].name}") if File.exist?(groupssfile[1].path)
+      if File.exist?(groupssfile[1].path)
+        FileUtils.copy(groupssfile[1].path, download_dir + "/" + groupssfile[0] + "_" + groupssfile[1].name)
+      end
     end
 
-    @zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
-
+    @zipfile = download_dir + "/" + Time.zone.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
     Zip::File.open(@zipfile, Zip::File::CREATE) do |zip_file|
       Dir.glob("#{download_dir}/*").each do |downloadfile|
-        zip_file.add(NKF::nkf('-sx --cp932',File.basename(downloadfile)), downloadfile)
+        zip_file.add(NKF::nkf('-sx --cp932', File.basename(downloadfile)), downloadfile)
       end
     end
-
     send_file(@zipfile, type: 'application/zip', filename: File.basename(@zipfile), disposition: 'attachment')
 
-    file_body = Class.new do
-      attr_reader :to_path
-
-      def initialize(path)
-        @to_path = path
-      end
-
-      def each
-        File.open(to_path, 'rb') do |file|
-          while chunk = file.read(16384)
-            yield chunk
-          end
-        end
-      end
-
-      def close
-        FileUtils.rm_rf File.dirname(@to_path)
-      end
-    end
-    self.response_body = file_body.new(@zipfile)
+    @item.delete_temporary_files(@zipfile, self.response_body)
 
   end
 end
