@@ -1,5 +1,6 @@
 <%= jquery do %>
   Gws_Memo_Message.render();
+  $("#addon-gws-agents-addons-member").hide();
 <% end %>
 
 <div class="addon-views">
@@ -22,7 +23,7 @@
     <% if @item.to.present? %>
       <div class="addresses">
         <div class="address">
-          <div class="label"><%= @model.t :to %></div>
+          <div class="label"><%= @model.t :member_ids %></div>
           <div class="value"><%= @item.display_to.join('; ') %></div>
         </div>
       </div>
