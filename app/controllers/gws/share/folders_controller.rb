@@ -7,7 +7,7 @@ class Gws::Share::FoldersController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("modules.gws/share"), gws_share_files_path]
+    @crumbs << [@cur_site.menu_share_label || t("modules.gws/share"), gws_share_files_path]
     @crumbs << [t("mongoid.models.gws/share/folder"), gws_share_folders_path]
   end
 

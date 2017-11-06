@@ -7,7 +7,7 @@ class Gws::RemindersController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/reminder"), action: :index]
+    @crumbs << [@cur_site.menu_reminder_label || t("mongoid.models.gws/reminder"), action: :index]
   end
 
   public
