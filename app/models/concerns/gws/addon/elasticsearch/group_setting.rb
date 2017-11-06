@@ -1,6 +1,8 @@
-module Gws::Elasticsearch::GroupSetting
+module Gws::Addon::Elasticsearch::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
     field :elasticsearch_state, type: String, default: 'disabled'
