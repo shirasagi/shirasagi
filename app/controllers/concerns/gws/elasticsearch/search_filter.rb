@@ -55,7 +55,7 @@ module Gws::Elasticsearch::SearchFilter
   public
 
   def show
-    raise '404' unless @cur_site.elasticsearch_enabled?
+    raise '404' unless @cur_site.menu_elasticsearch_visible?
     raise '403' if @setting.search_types.blank?
 
     prepend_view_path "app/views/gws/elasticsearch/search/#{@cur_type}"
