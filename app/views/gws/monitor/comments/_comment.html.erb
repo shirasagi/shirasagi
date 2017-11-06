@@ -9,7 +9,7 @@ if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site:
   end
   menu << link_to(t('gws/monitor.links.comment'), link, class: "btn primary")
 end
-if comment.allowed?(:edit, @cur_user, site: @cur_site)
+if comment.user_group_id == @cur_group.id && @item.attend_group_ids.include?(@cur_group.id)
   if @category.present?
     link = edit_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   else
@@ -17,7 +17,7 @@ if comment.allowed?(:edit, @cur_user, site: @cur_site)
   end
   menu << link_to(t('ss.links.edit'), link, class: "btn")
 end
-if comment.allowed?(:delete, @cur_user, site: @cur_site)
+if comment.user_group_id == @cur_group.id && @item.attend_group_ids.include?(@cur_group.id)
   if @category.present?
     link = delete_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   else
