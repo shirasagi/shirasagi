@@ -42,8 +42,8 @@ class Gws::Monitor::Topic
   }
 
   def topic_admin?(userid, groupid)
-    return true if self.admin_setting == "1" &&  (userid == self.user_id || self.user_ids.include?(userid))
-    return true if self.admin_setting == "0" &&  (groupid == self.user_group_id || self.group_ids.include?(groupid))
+    return true if userid == self.user_id || self.user_ids.include?(userid)
+    return true if groupid == self.user_group_id || self.group_ids.include?(groupid)
     false
   end
 
@@ -80,13 +80,6 @@ class Gws::Monitor::Topic
   def state_name(groupid)
     return I18n.t("gws/monitor.options.state.no_state") if state_of_the_answers_hash["#{groupid}"].blank?
     I18n.t("gws/monitor.options.state." + state_of_the_answers_hash["#{groupid}"])
-  end
-
-  def admin_setting_options
-    [
-        [I18n.t('gws/monitor.options.admin_setting.user'), '1'],
-        [I18n.t('gws/monitor.options.admin_setting.section'), '0']
-    ]
   end
 
   def spec_config_options
