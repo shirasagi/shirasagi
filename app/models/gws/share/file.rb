@@ -16,7 +16,7 @@ class Gws::Share::File
 
   #validates :category_ids, presence: true
   validates :folder_id, presence: true
-  validate :validate_size
+  validate :validate_size, if: ->{ in_file.present? }
   validates :deleted, datetime: true
 
   # indexing to elasticsearch via companion object
@@ -94,22 +94,39 @@ class Gws::Share::File
 
   def validate_size
     return if cur_site.nil?
+
+    @folder_max_size = 0
+    folder.files.each do |file|
+      @folder_max_size = @folder_max_size + (file.size || 0)
+    end
+
+    @file_max_size = folder.files.max_by {|file| file.size || 0}.size || 0
+
     if @cur_site && folder
-      if (limit = (folder.share_max_file_size || 0)) > 0
-        size = folder.files.compact.map(&:size).max || 0
-        if size > limit
+      if (folder_limit = (folder.share_max_folder_size || 0)) > 0
+        size = @folder_max_size
+        if size > folder_limit
           errors.add(
               :base,
               :file_size_exceeds_folder_limit,
               size: number_to_human_size(size),
-              limit: number_to_human_size(limit))
+              limit: number_to_human_size(folder_limit))
         end
       end
-    else
-      @cur_site = Gws::Group.find(site_id) unless @cur_site
+      if (limit = (folder.share_max_file_size || 0)) > 0
+        size = @file_max_size
+        if size > limit
+          errors.add(
+              :base,
+              :file_size_exceeds_limit,
+              size: number_to_human_size(size),
+              limit: number_to_human_size(limit))
+        end
+      else
+        @cur_site = Gws::Group.find(site_id) unless @cur_site
+      end
     end
     limit = @cur_site.share_max_file_size || 0
-
     return if limit <= 0
 
     if in_file.present?
@@ -124,4 +141,5 @@ class Gws::Share::File
       errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
     end
   end
+
 end
