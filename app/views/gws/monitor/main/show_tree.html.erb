@@ -10,7 +10,7 @@
       case "answered":
         $('.public').show();
         $('.preparation').show();
-        $('.primary').hide();
+        $('.primary').show();
         break;
       case "preparation":
         $('.public').show();
@@ -20,7 +20,7 @@
       case "question_not_applicable":
         $('.public').show();
         $('.preparation').hide();
-        $('.primary').hide();
+        $('.primary').show();
         break;
     }
 <% end %>
@@ -64,13 +64,18 @@
     </div>
     <% end %>
 
-    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && @item.comment(@cur_group.id).blank? && !@item.closed? && @item.attend_group_ids.include?(@cur_group.id) %>
+    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && !@item.closed? && @item.attend_group_ids.include?(@cur_group.id) %>
     <div class="menu">
       <%= hidden_field_tag "item_id", @item.id %>
+      <% if @item.comment(@cur_group.id).blank? %>
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
       <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
       <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
         class: "btn primary") %>
+      <% else %>
+          <%= link_to(t('gws/monitor.links.reply'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
+        class: "btn primary") %>
+      <% end %>
     </div>
     <% end %>
   </article>
