@@ -6,7 +6,6 @@ module Gws::Monitor::Postable
   include Gws::Reference::Site
   include Gws::GroupPermission
   include Gws::Addon::Monitor::Group
-  #include Gws::Addon::ReadableSetting
 
   included do
     store_in collection: "gws_monitor_posts"
