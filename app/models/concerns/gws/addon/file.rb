@@ -34,7 +34,7 @@ module Gws::Addon
             next
           else
             if file.model == "share/file"
-              file.update_attributes(site_id: site_id, model: "share/file", state: state)
+              file.update_attributes(site_id: site_id, state: state)
             else
               file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
             end

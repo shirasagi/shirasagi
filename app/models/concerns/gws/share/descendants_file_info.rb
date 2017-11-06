@@ -32,6 +32,7 @@ module Gws::Share::DescendantsFileInfo
   private
 
   def validate_attached_file_size
+    return if self.attributes["controller"] == "gws/share/folders"
     if (limit = (self.share_max_file_size || 0)) > 0
       size = files.compact.map(&:size).max || 0
       if size > limit
