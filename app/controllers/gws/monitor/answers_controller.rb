@@ -51,7 +51,7 @@ class Gws::Monitor::AnswersController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).topic
-    @items = @items.and_public.and_readable(@cur_user, @cur_site)
+    @items = @items.and_public
 
     if @category.present?
       params[:s] ||= {}
@@ -105,28 +105,28 @@ class Gws::Monitor::AnswersController < ApplicationController
 
   def public
     raise '403' unless @item.readable?(@cur_user, @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "public")
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
     @item.save
     render_update@item.update
   end
 
   def preparation
     raise '403' unless @item.readable?(@cur_user, @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "preparation")
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
     @item.save
     render_update@item.update
   end
 
   def question_not_applicable
     raise '403' unless @item.readable?(@cur_user, @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "question_not_applicable")
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
     @item.save
     render_update@item.update
   end
 
   def answered
     raise '403' unless @item.readable?(@cur_user, @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "answered")
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "answered")
     @item.save
     render_update@item.update
   end
@@ -137,7 +137,7 @@ class Gws::Monitor::AnswersController < ApplicationController
 
     entries.each do |item|
       if item.readable?(@cur_user, @cur_site)
-        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "public")
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
         item.save
       else
         item.errors.add :base, :auth_error
@@ -153,7 +153,7 @@ class Gws::Monitor::AnswersController < ApplicationController
 
     entries.each do |item|
       if item.readable?(@cur_user, @cur_site)
-        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "preparation")
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
         item.save
       else
         item.errors.add :base, :auth_error
@@ -169,7 +169,7 @@ class Gws::Monitor::AnswersController < ApplicationController
 
     entries.each do |item|
       if item.readable?(@cur_user, @cur_site)
-        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "question_not_applicable")
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
         item.save
       else
         item.errors.add :base, :auth_error
