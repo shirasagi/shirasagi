@@ -21,7 +21,6 @@ module Gws::Monitor::Postable
     field :descendants_updated, type: DateTime
     field :severity, type: String
     field :due_date, type: DateTime
-    field :admin_setting, type: String, default: '1'
     field :spec_config, type: String, default: '0'
     field :reminder_start_section, type: String, default: '0'
     field :state_of_the_answers_hash, type: Hash, default: {}
@@ -36,7 +35,7 @@ module Gws::Monitor::Postable
     has_many :descendants, class_name: "Gws::Monitor::Post", dependent: :destroy, inverse_of: :topic,
       order: { created: -1 }
 
-    permit_params :name, :mode, :permit_comment, :severity, :due_date, :admin_setting,
+    permit_params :name, :mode, :permit_comment, :severity, :due_date,
                   :spec_config, :reminder_start_section, :state_of_the_answers_hash
 
     before_validation :set_topic_id, if: :comment?
@@ -115,10 +114,6 @@ module Gws::Monitor::Postable
             "attend_group_ids.0" => { "$exists" => false } },
           { :readable_group_ids.in => user.group_ids },
           { readable_member_ids: user.id },
-          { "$and" => [ {admin_setting: '0'}, { :group_ids.in => user.group_ids }] },
-          { "$and" => [ {admin_setting: '0'}, { group_id: user.group_ids }] },
-          { "$and" => [ {admin_setting: '1'}, { user_ids: user.id }] },
-          { "$and" => [ {admin_setting: '1'}, { user_id: user.id }] },
           { :attend_group_ids.in => user.group_ids },
       ]
       if readable_setting_included_custom_groups?
@@ -132,8 +127,8 @@ module Gws::Monitor::Postable
       cond = [
           { "group_ids.0" => { "$exists" => false },
             "user_ids.0" => { "$exists" => false } },
-          { "$and" => [ {admin_setting: '1'}, { :group_ids.in => user.group_ids }] },
-          { "$and" => [ {admin_setting: '0'}, { user_ids: user.id }] },
+          { "$and" => [ { :group_ids.in => user.group_ids }] },
+          { "$and" => [ { user_ids: user.id }] },
       ]
       where("$and" => [{ "$or" => cond }])
     }

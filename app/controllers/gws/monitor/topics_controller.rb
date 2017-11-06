@@ -78,12 +78,6 @@ class Gws::Monitor::TopicsController < ApplicationController
   def create
     @item = @model.new get_params
 
-    if @item.admin_setting == "0"
-      @item.attributes["user_ids"] = []
-    elsif @item.admin_setting == "1"
-      @item.attributes["group_ids"] = []
-    end
-
     @item.attributes["readable_group_ids"] = (@item.attend_group_ids + @item.readable_group_ids).uniq
 
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)

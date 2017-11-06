@@ -51,9 +51,6 @@ ja:
       - 回答欄
       - 回答日時
     options:
-      admin_setting:
-        user: 作成者が管理する
-        section: 所属で管理する
       spec_config:
         my_group: 回答者のみ表示する
         other_groups: 他の回答者名を表示する
