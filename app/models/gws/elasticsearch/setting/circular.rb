@@ -4,6 +4,10 @@ class Gws::Elasticsearch::Setting::Circular
 
   self.model = Gws::Circular::Post
 
+  def menu_label
+    @cur_site.menu_circular_label || I18n.t('modules.gws/circular')
+  end
+
   def search_types
     search_types = []
     if Gws::Circular::Post.allowed?(:read, @cur_user, site: @cur_site)

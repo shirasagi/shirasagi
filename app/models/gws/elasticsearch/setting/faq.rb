@@ -4,6 +4,10 @@ class Gws::Elasticsearch::Setting::Faq
 
   self.model = Gws::Faq::Topic
 
+  def menu_label
+    I18n.t('modules.gws/faq')
+  end
+
   def translate_category(es_type, cate_name)
     @categories ||= Gws::Faq::Category.site(cur_site).to_a
     cate = @categories.find { |cate| cate.name == cate_name }

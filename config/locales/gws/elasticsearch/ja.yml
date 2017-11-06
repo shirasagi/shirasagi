@@ -2,16 +2,6 @@ ja:
   gws/elasticsearch:
     tabs:
       all: すべて
-      board: 掲示板
-      mail: 電子メール
-      message: 連絡メモ
-      share: 共有ファイル
-      faq: よくある質問
-      qna: Ｑ＆Ａ
-      monitor: 照会・回答
-      circular: 回覧板
-      memo: 連絡メモ
-      workflow: ワークフロー
 
     format:
       search_results_count:

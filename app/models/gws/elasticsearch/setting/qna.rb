@@ -4,6 +4,10 @@ class Gws::Elasticsearch::Setting::Qna
 
   self.model = Gws::Qna::Topic
 
+  def menu_label
+    I18n.t('modules.gws/qna')
+  end
+
   def translate_category(es_type, cate_name)
     @categories ||= Gws::Qna::Category.site(cur_site).to_a
     cate = @categories.find { |cate| cate.name == cate_name }

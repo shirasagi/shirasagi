@@ -4,6 +4,10 @@ class Gws::Elasticsearch::Setting::Workflow
 
   self.model = Gws::Workflow::File
 
+  def menu_label
+    @cur_site.menu_workflow_label || I18n.t('modules.gws/workflow')
+  end
+
   def search_types
     search_types = []
     search_types << Gws::Workflow::File.collection_name if allowed?(:read)
