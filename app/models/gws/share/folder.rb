@@ -15,13 +15,16 @@ class Gws::Share::Folder
   field :order, type: Integer, default: 0
   field :state, type: String, default: "closed"
   field :share_max_file_size, type: Integer, default: 0
+  field :share_max_folder_size, type: Integer, default: 0
   attr_accessor :in_share_max_file_size_mb
+  attr_accessor :in_share_max_folder_size_mb
 
   has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
 
-  permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb
+  permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb, :share_max_folder_size, :in_share_max_folder_size_mb
 
   before_validation :set_share_max_file_size
+  before_validation :set_share_max_folder_size
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
@@ -43,5 +46,10 @@ class Gws::Share::Folder
   def set_share_max_file_size
     return if in_share_max_file_size_mb.blank?
     self.share_max_file_size = Integer(in_share_max_file_size_mb) * 1_024 * 1_024
+  end
+
+  def set_share_max_folder_size
+    return if in_share_max_folder_size_mb.blank?
+    self.share_max_folder_size = Integer(in_share_max_folder_size_mb) * 1_024 * 1_024
   end
 end

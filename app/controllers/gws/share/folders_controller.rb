@@ -31,6 +31,14 @@ class Gws::Share::FoldersController < ApplicationController
       page(params[:page]).per(50)
   end
 
+  def update
+    @item.attributes = get_params
+    @item.attributes["controller"] = params["controller"]
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update, { controller: params["controller"] }
+  end
+
   def download_folder
     ss_file_items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
 
