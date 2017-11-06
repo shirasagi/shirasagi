@@ -9,7 +9,7 @@ module Gws::Addon::Elasticsearch::GroupSetting
 
     permit_params :elasticsearch_hosts
 
-    validates :elasticsearch_hosts, presence: true, if: ->{ elasticsearch_enabled? }
+    validates :elasticsearch_hosts, presence: true, if: ->{ menu_elasticsearch_visible? }
   end
 
   class << self
@@ -26,7 +26,7 @@ module Gws::Addon::Elasticsearch::GroupSetting
   end
 
   def elasticsearch_client
-    return unless elasticsearch_enabled?
+    return unless menu_elasticsearch_visible?
     @elasticsearch_client ||= Elasticsearch::Client.new(hosts: elasticsearch_hosts, logger: Rails.logger)
   end
 end

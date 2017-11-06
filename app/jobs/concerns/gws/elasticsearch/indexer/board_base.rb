@@ -12,7 +12,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
       after_file_ids = [ item.file_ids ].flatten.compact
       remove_file_ids = before_file_ids - after_file_ids
 
-      if site.elasticsearch_enabled?
+      if site.menu_elasticsearch_visible?
         job_params = {
           action: 'index', id: item.id.to_s, remove_file_ids: remove_file_ids.map(&:to_s)
         }
@@ -28,7 +28,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
       file_ids = [ item.file_ids ].flatten.compact
 
       ret = yield
-      if site.elasticsearch_enabled?
+      if site.menu_elasticsearch_visible?
         job_params = {
           action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s)
         }
