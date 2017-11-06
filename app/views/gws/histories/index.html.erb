@@ -17,6 +17,14 @@
             <span class="label"><%= @model.t :updated_fields %></span>
             <%= names.join(', ') %>
           <% end %>
+          <% if item.session_id %>
+          <span class="label"><%= @model.t :session_id %></span>
+          <span class="session-id"><%= item.session_id %></span>
+          <% end %>
+          <% if item.request_id %>
+          <span class="label"><%= @model.t :request_id %></span>
+          <span class="session-id"><%= item.request_id %></span>
+          <% end %>
         </div>
       </div>
     </li>

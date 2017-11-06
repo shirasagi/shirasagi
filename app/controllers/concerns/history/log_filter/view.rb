@@ -42,7 +42,7 @@ module History::LogFilter::View
     require "csv"
 
     csv = CSV.generate do |data|
-      data << %w(Date User Target Action URL)
+      data << %w(Date User Target Action URL SessionID RequestID)
       items.each do |item|
         line = []
         line << item.created.strftime("%Y-%m-%d %H:%M")
@@ -50,6 +50,8 @@ module History::LogFilter::View
         line << item.target_label
         line << item.action
         line << item.url
+        line << item.session_id
+        line << item.request_id
         data << line
       end
     end

@@ -42,6 +42,8 @@ module Gws::Addon
       item = Gws::History.new(
         cur_user: @cur_user,
         site_id: site_id,
+        session_id: Rails.application.current_session_id,
+        request_id: Rails.application.current_request_id,
         name: reference_name,
         model: reference_model,
         item_id: id

@@ -187,6 +187,8 @@ ja:
         updated_user_name: 更新者
         updated_date: 更新日
       gws/history:
+        session_id: セッションID
+        request_id: リクエストID
         created: 変更日時
         mode: 区分
         user_name: ユーザー
