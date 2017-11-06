@@ -1,7 +1,6 @@
-<dl class="see">
-  <dt><%= @model.t :elasticsearch_state %></dt>
-  <dd><%= @item.label :elasticsearch_state %></dd>
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-elasticsearch-group-setting"); <% end %>
 
+<dl class="see addon-gws-elasticsearch-group-setting">
   <dt><%= @model.t :elasticsearch_hosts %></dt>
   <dd><%= @item.elasticsearch_hosts %></dd>
 </dl>

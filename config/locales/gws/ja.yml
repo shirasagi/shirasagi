@@ -258,6 +258,7 @@ ja:
         menu_personal_address_state: 個人アドレス帳の表示
         menu_staff_record_state: 電子職員録の表示
         menu_links_state: リンク集の表示
+        menu_elasticsearch_state: 全文検索の表示
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー

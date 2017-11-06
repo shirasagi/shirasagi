@@ -5,12 +5,10 @@ module Gws::Addon::Elasticsearch::GroupSetting
   set_addon_type :organization
 
   included do
-    field :elasticsearch_state, type: String, default: 'disabled'
     field :elasticsearch_hosts, type: SS::Extensions::Words
 
-    permit_params :elasticsearch_state, :elasticsearch_hosts
+    permit_params :elasticsearch_hosts
 
-    validates :elasticsearch_state, presence: true, inclusion: { in: %w(disabled enabled), allow_blank: true }
     validates :elasticsearch_hosts, presence: true, if: ->{ elasticsearch_enabled? }
   end
 
@@ -22,14 +20,9 @@ module Gws::Addon::Elasticsearch::GroupSetting
     end
   end
 
-  def elasticsearch_state_options
-    %w(disabled enabled).map do |v|
-      [ I18n.t("ss.options.state.#{v}"), v ]
-    end
-  end
-
   def elasticsearch_enabled?
-    elasticsearch_state == 'enabled'
+    Rails.logger.warn('[DEPRECATION] `elasticsearch_enabled?` is deprecated.  Please use `menu_elasticsearch_visible?` instead.')
+    menu_elasticsearch_visible?
   end
 
   def elasticsearch_client

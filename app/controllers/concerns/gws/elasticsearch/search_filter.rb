@@ -25,7 +25,7 @@ module Gws::Elasticsearch::SearchFilter
 
   def set_crumbs
     set_type
-    @crumbs << [t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path]
+    @crumbs << [@cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path]
     @crumbs << [t("gws/elasticsearch.tabs.#{@cur_type}"), gws_elasticsearch_search_search_path]
   end
 
