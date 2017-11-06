@@ -9,6 +9,7 @@ class Gws::Monitor::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Addon::Monitor::Category
+  include Gws::Addon::ReadableSetting
 
   readable_setting_include_custom_groups
 
