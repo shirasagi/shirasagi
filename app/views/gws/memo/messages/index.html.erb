@@ -18,7 +18,7 @@
       </div>
 
       <div class="info">
-        <span class="field from"><%= item.display_sender.join(';') %></span>
+        <span class="field from"><%= item.user.long_name %></span>
         <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title' %>
         <span class="field datetime"><%= item.display_send_date %></span>
         <span class="field size"><%= item.display_size %></span>

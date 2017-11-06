@@ -5,8 +5,8 @@ class Gws::Memo::MessagesController < ApplicationController
   model Gws::Memo::Message
 
   before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :toggle_star]
-  before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all,
+  before_action :set_item, only: [:show, :edit, :update, :trash, :delete, :destroy, :toggle_star]
+  before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_group_navi, only: [:index]
 
@@ -73,6 +73,15 @@ class Gws::Memo::MessagesController < ApplicationController
     raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
     @item.set_seen(@cur_user).update
     render
+  end
+
+  def trash
+    render_destroy @item.move(@cur_user, 'INBOX.Trash').update
+  end
+
+  def trash_all
+    @items.each{ |item| item.move(@cur_user, 'INBOX.Trash').update }
+    render_destroy_all(false)
   end
 
   def move_all
