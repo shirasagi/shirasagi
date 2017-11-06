@@ -1,5 +1,6 @@
 <%= jquery do %>
   Gws_Memo_Message.render();
+  $("#addon-gws-agents-addons-member").hide();
 <% end %>
 
 <div class="addon-views">
@@ -15,14 +16,14 @@
           <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
         </span>
       </h2>
-      <div class="from"><%= @item.display_sender.join('; ') %></div>
+      <div class="from"><%= @item.user.long_name %></div>
       <div class="date"><%= @item.display_send_date %></div>
     </div>
 
     <% if @item.to.present? %>
       <div class="addresses">
         <div class="address">
-          <div class="label"><%= @model.t :to %></div>
+          <div class="label"><%= @model.t :member_ids %></div>
           <div class="value"><%= @item.display_to.join('; ') %></div>
         </div>
       </div>
