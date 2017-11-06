@@ -21,7 +21,7 @@
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>
-    <h2><%= link_to '連絡メモ', gws_memo_messages_path, class: "icon-conv" %></h2>
+    <h2><%= link_to t('modules.gws/memo'), gws_memo_messages_path, class: "icon-conv" %></h2>
   <% end %>
 
   <% if @cur_site.menu_board_visible? %>
@@ -61,7 +61,7 @@
   <% end %>
 
   <% if @cur_site.menu_circular_visible? %>
-    <h2><%= link_to '回覧板', gws_circular_topics_path, class: 'icon-write' %></h2>
+    <h2><%= link_to t('modules.gws/circular'), gws_circular_posts_path, class: 'icon-write' %></h2>
   <% end %>
 
   <% if @cur_site.menu_monitor_visible? %>
