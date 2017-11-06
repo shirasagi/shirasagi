@@ -67,6 +67,11 @@ class Gws::Monitor::CommentsController < ApplicationController
     render_create @item.save
   end
 
+  def edit
+    raise "403" unless @item.readable?(@cur_user, site: @cur_site)
+    render
+  end
+
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
@@ -77,6 +82,16 @@ class Gws::Monitor::CommentsController < ApplicationController
     end
     @item.parent.save
     render_update @item.update
+  end
+
+  def delete
+    raise "403" unless @item.readable?(@cur_user, site: @cur_site)
+    render
+  end
+
+  def destroy
+    raise "403" unless @item.readable?(@cur_user, site: @cur_site)
+    render_destroy @item.destroy
   end
 end
 
