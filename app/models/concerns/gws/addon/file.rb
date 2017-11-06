@@ -33,7 +33,11 @@ module Gws::Addon
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
           else
-            file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
+            if file.model == "share/file"
+              file.update_attributes(site_id: site_id, model: "share/file", state: state)
+            else
+              file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
+            end
           end
           ids << file.id
         end
