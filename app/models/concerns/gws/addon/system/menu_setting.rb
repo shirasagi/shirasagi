@@ -6,20 +6,49 @@ module Gws::Addon::System::MenuSetting
 
   included do
     field :menu_portal_state, type: String, default: 'show'
+    field :menu_portal_label, type: String, localize: true
+
     field :menu_reminder_state, type: String, default: 'show'
+    field :menu_reminder_label, type: String, localize: true
+
     field :menu_schedule_state, type: String, default: 'show'
+    field :menu_schedule_label, type: String, localize: true
+
     field :menu_memo_state, type: String, default: 'show'
+    field :menu_memo_label, type: String, localize: true
+
     field :menu_board_state, type: String, default: 'show'
+    field :menu_board_label, type: String, localize: true
+
     field :menu_question_state, type: String, default: 'show'
+    field :menu_question_label, type: String, localize: true
+
     field :menu_workflow_state, type: String, default: 'show'
+    field :menu_workflow_label, type: String, localize: true
+
     field :menu_report_state, type: String, default: 'show'
+    field :menu_report_label, type: String, localize: true
+
     field :menu_circular_state, type: String, default: 'show'
+    field :menu_circular_label, type: String, localize: true
+
     field :menu_monitor_state, type: String, default: 'show'
+    field :menu_monitor_label, type: String, localize: true
+
     field :menu_share_state, type: String, default: 'show'
+    field :menu_share_label, type: String, localize: true
+
     field :menu_shared_address_state, type: String, default: 'show'
+    field :menu_shared_address_label, type: String, localize: true
+
     field :menu_personal_address_state, type: String, default: 'show'
+    field :menu_personal_address_label, type: String, localize: true
+
     field :menu_staff_record_state, type: String, default: 'show'
+    field :menu_staff_record_label, type: String, localize: true
+
     field :menu_links_state, type: String, default: 'show'
+    field :menu_links_label, type: String, localize: true
 
     permit_params :menu_portal_state,
       :menu_reminder_state,
@@ -36,6 +65,21 @@ module Gws::Addon::System::MenuSetting
       :menu_personal_address_state,
       :menu_staff_record_state,
       :menu_links_state
+    permit_params :menu_portal_label,
+      :menu_reminder_label,
+      :menu_schedule_label,
+      :menu_memo_label,
+      :menu_board_label,
+      :menu_question_label,
+      :menu_report_label,
+      :menu_workflow_label,
+      :menu_circular_label,
+      :menu_monitor_label,
+      :menu_share_label,
+      :menu_shared_address_label,
+      :menu_personal_address_label,
+      :menu_staff_record_label,
+      :menu_links_label
   end
 
   def menu_state_options
@@ -114,7 +158,7 @@ module Gws::Addon::System::MenuSetting
     menu_staff_record_state == 'show'
   end
 
-  def menu_links_state_visible?
+  def menu_links_visible?
     menu_links_state == 'show'
   end
 end

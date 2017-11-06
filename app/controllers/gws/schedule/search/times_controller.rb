@@ -6,7 +6,7 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
     @crumbs << [t('gws/schedule.tabs.search'), gws_schedule_search_path]
     @crumbs << [t('gws/schedule.tabs.search/times'), gws_schedule_search_times_path]
   end
