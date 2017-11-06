@@ -96,6 +96,7 @@ ja:
     links:
       back_to_thread: 戻る
       comment: 回答する
+      reply: 返信する
       categories: カテゴリー
       public: 受取済みにする
       preparation: 受取待ちにする
