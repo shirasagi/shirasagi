@@ -1,9 +1,6 @@
 <%= jquery do %>
   <% unless controller.action_name == 'edit' -%>
     $('.gws-addon-readable-setting-member').hide();
-    $('.mod-gws-owner_permission-users').hide();
-    $('.mod-gws-owner_permission-groups').hide();
-    $('.mod-gws-owner_permission-level').hide();
   <% end -%>
     Gws_Monitor_Topic.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
 <% end %>
