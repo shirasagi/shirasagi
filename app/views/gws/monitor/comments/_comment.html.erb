@@ -1,13 +1,13 @@
 <%
 
 menu = []
-if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
+if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site) && ( @item.group_ids.include?(@cur_group.id) || @item.user_ids.include?(@cur_user.id))
   if @category.present?
     link = new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
   else
     link = new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
   end
-  menu << link_to(t('gws/monitor.links.comment'), link, class: "btn primary")
+  menu << link_to(t('gws/monitor.links.reply'), link, class: "btn primary")
 end
 if comment.user_group_id == @cur_group.id && @item.attend_group_ids.include?(@cur_group.id)
   if @category.present?
