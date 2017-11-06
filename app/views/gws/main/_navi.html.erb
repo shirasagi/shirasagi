@@ -86,8 +86,10 @@
     <h2><%= link_to @cur_site.menu_personal_address_label || t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-conv" %></h2>
   <% end %>
 
-  <% if @cur_site.elasticsearch_enabled? && [ Gws::Board::Topic, Gws::Share::File, Gws::Faq::Topic, Gws::Qna::Topic, Gws::Monitor::Topic ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
-    <h2><%= link_to t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
+  <% if @cur_site.menu_elasticsearch_visible? %>
+    <% if [ Gws::Board::Topic, Gws::Share::File, Gws::Faq::Topic, Gws::Qna::Topic, Gws::Monitor::Topic ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
+      <h2><%= link_to @cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
+    <% end %>
   <% end %>
 
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
