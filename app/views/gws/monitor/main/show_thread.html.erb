@@ -88,8 +88,8 @@
   </div>
   <% end %>
 
-  <% if @item.subscribed_groups.present? %>
-  <%= render partial: 'gws/monitor/main/subscribed_groups' %>
+  <% if @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != '0'%>
+    <%= render partial: 'gws/monitor/main/subscribed_groups' %>
   <% end %>
 
   <% if controller_path == "gws/monitor/management/topics" %>
