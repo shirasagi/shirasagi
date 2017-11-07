@@ -7,14 +7,10 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
-  concern :download do
-    get :download, :on => :collection
-    post :download, :on => :collection
-  end
-
-  concern :import do
-    get :import, :on => :collection
-    post :import, :on => :collection
+  concern :export do
+    get :download, on: :collection
+    get :import, on: :collection
+    post :import, on: :collection
   end
 
   concern :role do
@@ -40,10 +36,14 @@ SS::Application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
-    resources :postal_codes, concerns: [:deletion, :download, :import]
+    resources :postal_codes, concerns: [:deletion, :export]
     resources :mail_logs, concerns: :deletion, only: [ :index, :show, :delete, :destroy ] do
       get :decode, on: :member
       put :decode, on: :member, action: :commit_decode
+    end
+
+    namespace "webmail" do
+      resources :accounts, only: [:index], concerns: [:export]
     end
 
     namespace "apis" do
