@@ -60,18 +60,6 @@ class Gws::History
       all.keyword_in(params[:keyword], :session_id, :request_id, :name, :model_name, :user_name, :user_group_name)
     end
 
-    def write!(severity, context, cur_user, cur_site, attributes)
-      item = new(
-        cur_user: cur_user,
-        cur_site: cur_site,
-        session_id: Rails.application.current_session_id,
-        request_id: Rails.application.current_request_id,
-        severity: severity
-      )
-      item.attributes = attributes
-      item.save!(context: context.to_sym)
-    end
-
     def error!(context, cur_user, cur_site, attributes)
       write!(:error, context, cur_user, cur_site, attributes)
     end
@@ -86,6 +74,63 @@ class Gws::History
 
     def notice!(context, cur_user, cur_site, attributes)
       write!(:notice, context, cur_user, cur_site, attributes)
+    end
+
+    private
+
+    def write!(severity, context, cur_user, cur_site, attributes)
+      item = new(
+        cur_user: cur_user,
+        cur_site: cur_site,
+        session_id: Rails.application.current_session_id,
+        request_id: Rails.application.current_request_id,
+        severity: severity
+      )
+      item.attributes = attributes
+
+      mod = detect_module(context, item)
+      if allowed_severity = cur_site.allowed_log_severity_for(mod)
+        if severity_to_num(severity) >= severity_to_num(allowed_severity)
+          item.save!(context: context.to_sym)
+        end
+      end
+    end
+
+    def detect_module(context, item)
+      case context.to_sym
+      when :model
+        base_mod = item.model
+      when :controller
+        base_mod = item.controller
+      when :job
+        base_mod = item.job
+      end
+      return if base_mod.blank?
+
+      available_modules = I18n.t('modules').keys
+
+      parts = base_mod.split('/')
+      (parts.length - 1).downto(1) do |i|
+        mod = parts[0..i].join('/').to_sym
+        return mod if available_modules.include?(mod)
+      end
+
+      parts.first
+    end
+
+    def severity_to_num(severity)
+      case severity.to_sym
+      when :notice
+        10
+      when :info
+        20
+      when :warn
+        30
+      when :error
+        30
+      else
+        0
+      end
     end
   end
 
