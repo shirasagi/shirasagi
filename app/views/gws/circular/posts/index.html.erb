@@ -16,14 +16,20 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-    <span class="id">#<%= item.id %></span>
-    <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
-    <span class="gws-share-categories">
-      <% item.categories.compact.each do |category| %>
-        <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
-                    class: 'gws-category-label', style: category_label_css(category) %>
-      <% end %>
-    </span>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+  <span class="seen">
+    <% if item.member?(@cur_user) %>
+      <%= item.seen?(@cur_user) ? t('gws/circular.post.seen') :  t('gws/circular.post.unseen') %>
+    <% end %>
+  </span>
+  <span><%= item.readable_names.join(', ') %></span>
+  <span class="gws-share-categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+                  class: 'gws-category-label', style: category_label_css(category) %>
+    <% end %>
+  </span>
 <% end %>
 
 <%= jquery do %>
