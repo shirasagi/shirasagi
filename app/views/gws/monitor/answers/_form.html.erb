@@ -1,5 +1,4 @@
 <%= jquery do %>
-    $('.gws-addon-readable-setting-member').hide();
     Gws_Monitor_Topic.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
 <% end %>
 
