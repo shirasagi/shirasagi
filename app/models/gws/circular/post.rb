@@ -26,8 +26,8 @@ class Gws::Circular::Post
   validates :due_date, presence: true
   validates :deleted, datetime: true
 
-  alias_method :reminder_date, :due_date
-  alias_method :reminder_user_ids, :member_ids
+  alias reminder_date due_date
+  alias reminder_user_ids member_ids
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
@@ -142,7 +142,7 @@ class Gws::Circular::Post
                 item.id,
                 item.name,
                 comment.id,
-                item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') :  I18n.t('gws/circular.post.unseen') ,
+                item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen') ,
                 comment.user.long_name,
                 comment.text,
                 comment.updated
