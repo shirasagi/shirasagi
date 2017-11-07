@@ -27,6 +27,11 @@ ja:
         create: 作成者
         update: 更新者
         delete: 削除者
+      severity:
+        error: エラー
+        warn: 警告
+        info: 重要情報
+        notice: 一般情報
     member_log:
       copy_users: 件のユーザーをコピーしました。
       paste_users: 件のユーザーを追加しました。

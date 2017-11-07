@@ -7,11 +7,28 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <span class="title"><%= "#{item.model_name} / #{item.name}" %></span>
+        <% if item.model.present? %>
+        <% title = "#{item.model_name} / #{item.name}" %>
+        <% elsif item.controller.present? %>
+        <% title = "#{item.controller_name}##{item.action}" %>
+        <% elsif item.job.present? %>
+        <% title = "#{item.job_name}" %>
+        <% end %>
+        <% next if title.blank? %>
+        <span class="title"><%= title %></span>
+        <% if item.message %>
+        <p class="message"><%= br item.message %></p>
+        <% end %>
 
         <div class="meta">
+          <span class="label"><%= t("gws.history.severity.#{item.severity}") %></span>
           <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+          <% if item.model.present? %>
           <span class="label"><%= item.mode_name %></span>
+          <% end %>
+          <% if item.controller.present? %>
+          <span class="label"><%= item.path %></span>
+          <% end %>
           <span><%= item.user_long_name %></span>
           <% if (names = item.updated_field_names).present? %>
             <span class="label"><%= @model.t :updated_fields %></span>

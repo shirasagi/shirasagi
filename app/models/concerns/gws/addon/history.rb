@@ -35,21 +35,18 @@ module Gws::Addon
     def save_history(overwrite_params = {})
       return if @skip_gws_history
 
-      site_id = @cur_site.try(:id)
-      site_id ||= self.site_id rescue nil
-      return unless site_id
+      site = @cur_site
+      site ||= self.site rescue nil
+      return unless site
 
-      item = Gws::History.new(
-        cur_user: @cur_user,
-        site_id: site_id,
-        session_id: Rails.application.current_session_id,
-        request_id: Rails.application.current_request_id,
-        name: reference_name,
-        model: reference_model,
-        item_id: id
-      )
-      item.attributes = overwrite_params
-      item.save
+      Gws::History.info!(
+        :model, @cur_user, site,
+        overwrite_params.reverse_merge(
+          name: reference_name,
+          model: reference_model,
+          item_id: id
+        )
+      ) rescue nil
     end
   end
 end
