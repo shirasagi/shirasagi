@@ -88,34 +88,11 @@ class Gws::History
       )
       item.attributes = attributes
 
-      mod = detect_module(context, item)
-      if allowed_severity = cur_site.allowed_log_severity_for(mod)
+      if allowed_severity = cur_site.allowed_log_severity_for(item.module_key)
         if severity_to_num(severity) >= severity_to_num(allowed_severity)
           item.save!(context: context.to_sym)
         end
       end
-    end
-
-    def detect_module(context, item)
-      case context.to_sym
-      when :model
-        base_mod = item.model
-      when :controller
-        base_mod = item.controller
-      when :job
-        base_mod = item.job
-      end
-      return if base_mod.blank?
-
-      available_modules = I18n.t('modules').keys
-
-      parts = base_mod.split('/')
-      (parts.length - 1).downto(1) do |i|
-        mod = parts[0..i].join('/').to_sym
-        return mod if available_modules.include?(mod)
-      end
-
-      parts.first
     end
 
     def severity_to_num(severity)
@@ -127,7 +104,9 @@ class Gws::History
       when :warn
         30
       when :error
-        30
+        40
+      when :none
+        999
       else
         0
       end
@@ -154,6 +133,24 @@ class Gws::History
 
   def item
     @item ||= model.camelize.constantize.where(id: item_id).first
+  end
+
+  def module_key
+    base_mod = model
+    base_mod ||= controller
+    base_mod ||= job
+
+    return if base_mod.blank?
+
+    available_modules = I18n.t('modules').keys
+
+    parts = base_mod.split('/')
+    (parts.length - 1).downto(1) do |i|
+      mod = parts[0..i].join('/')
+      return mod if available_modules.include?(mod.to_sym)
+    end
+
+    parts.first
   end
 
   def updated_field_names
