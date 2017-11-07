@@ -75,16 +75,26 @@ module Gws::Monitor::Postable
                         ]
              )
       elsif key.start_with?('readable')
-        where("$and" =>
-                [ "$or" =>
-                  [
-                    { :readable_group_ids.in => [groupid] },
-                    { readable_member_ids: userid },
-                    { :readable_custom_group_ids.in => custom_group_ids },
-                    { "attend_group_ids.0" => { "$exists" => false } },
-                    {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)}
-                  ]
-                ]
+        where("$or" =>
+               [
+                 {"$and" =>
+                   [
+                     {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)},
+                   ]
+                 },
+                 {"$and" =>
+                   [
+                     { attend_group_ids: { "$not": { "$in": [groupid]} } },
+                     {"$or" =>
+                       [
+                         { :readable_group_ids.in => [groupid] },
+                         { readable_member_ids: userid },
+                         { :readable_custom_group_ids.in => custom_group_ids }
+                       ]
+                     }
+                   ]
+                 }
+               ]
              )
       end
     }
