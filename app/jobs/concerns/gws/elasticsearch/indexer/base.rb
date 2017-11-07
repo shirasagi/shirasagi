@@ -40,11 +40,6 @@ module Gws::Elasticsearch::Indexer::Base
     action = options.delete(:action)
 
     self.send(action, options)
-  rescue => e
-    Gws::History.warn!(
-      :job, user, site,
-      job: self.class.name.underscore, action: 'perform', message: "#{e.class} (#{e.message})"
-    )
   end
 
   private
