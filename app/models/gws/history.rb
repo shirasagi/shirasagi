@@ -4,6 +4,10 @@ class Gws::History
   include Gws::Reference::Site
   include Gws::SitePermission
 
+  if client = Mongoid::Config.clients[:gws_history]
+    store_in client: :gws_history, database: client[:database]
+  end
+
   seqid :id
   field :session_id, type: String
   field :request_id, type: String
