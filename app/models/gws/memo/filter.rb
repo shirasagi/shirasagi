@@ -2,7 +2,7 @@ class Gws::Memo::Filter
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::GroupPermission
+  include Gws::SitePermission
 
   set_permission_name 'gws_memo_messages'
 
