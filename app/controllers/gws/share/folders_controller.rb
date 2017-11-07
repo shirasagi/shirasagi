@@ -42,7 +42,7 @@ class Gws::Share::FoldersController < ApplicationController
   def download_folder
     ss_file_items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
 
-    download_root_dir = "/tmp/shirasagi_download"
+    download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
     download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
 
     Dir.glob("#{download_root_dir}" + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
