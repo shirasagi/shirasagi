@@ -174,19 +174,17 @@ class Gws::Share::FilesController < ApplicationController
     @items.each {|item| filenames.push(item.name)}
     filename_duplicate_flag = filenames.size == filenames.uniq.size ? 0 : 1
 
-    @items.each do |item|
-      if  filename_duplicate_flag == 0
-        FileUtils.copy("#{item.path}", "#{download_dir}" + "/" + "#{item.name}") if File.exist?(item.path)
-      elsif filename_duplicate_flag == 1
-        FileUtils.copy("#{item.path}", "#{download_dir}" + "/" + item._id.to_s + "_" + "#{item.name}") if File.exist?(item.path)
-      end
-    end
-
     @zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
 
     Zip::File.open(@zipfile, Zip::File::CREATE) do |zip_file|
-      Dir.glob("#{download_dir}/*").each do |downloadfile|
-        zip_file.add(NKF::nkf('-sx --cp932',File.basename(downloadfile)), downloadfile)
+      @items.each do |item|
+        Dir.glob("#{item.path}").each do |downloadfile|
+          if filename_duplicate_flag == 0
+            zip_file.add(NKF::nkf('-sx --cp932', item.name), downloadfile)
+          elsif filename_duplicate_flag == 1
+            zip_file.add(NKF::nkf('-sx --cp932',item._id.to_s + "_" + item.name), downloadfile)
+          end
+        end
       end
     end
 
