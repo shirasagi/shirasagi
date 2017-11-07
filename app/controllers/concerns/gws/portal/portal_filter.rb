@@ -48,15 +48,6 @@ module Gws::Portal::PortalFilter
     render
   end
 
-  def new_portlet
-    @item = @model.new pre_params.merge(fix_params)
-    @item.portlet_model = params[:portlet_model]
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
-    @item.name = @item.label(:portlet_model)
-    render file: 'gws/portal/common/new_portlet' unless @item.portlet_model_enabled?
-  end
-
   def show_layout
     @items = @portal.portlets
     render file: 'gws/portal/common/show_layout'
