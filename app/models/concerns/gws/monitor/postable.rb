@@ -78,21 +78,13 @@ module Gws::Monitor::Postable
         where("$or" =>
                [
                  {"$and" =>
-                   [
-                     {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)},
-                   ]
+                   [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)}, ]
                  },
                  {"$and" =>
-                   [
-                     { attend_group_ids: { "$not": { "$in": [groupid]} } },
+                   [ { attend_group_ids: { "$not" => { "$in" => [groupid] } } },
                      {"$or" =>
-                       [
-                         { :readable_group_ids.in => [groupid] },
-                         { readable_member_ids: userid },
-                         { :readable_custom_group_ids.in => custom_group_ids }
-                       ]
-                     }
-                   ]
+                       [ { :readable_group_ids.in => [groupid] }, { readable_member_ids: userid },
+                         { :readable_custom_group_ids.in => custom_group_ids } ] } ]
                  }
                ]
              )
