@@ -8,6 +8,8 @@ class Gws::History
     store_in client: :gws_history, database: client[:database]
   end
 
+  CSV_HEADER = %i(id session_id request_id severity name mode model controller job item_id path action message created).freeze
+
   seqid :id
   field :session_id, type: String
   field :request_id, type: String
@@ -51,6 +53,10 @@ class Gws::History
   }
 
   class << self
+    def csv_header
+      CSV_HEADER.map { |k| t(k) }
+    end
+
     def search(params)
       criteria = all
       return criteria if params.blank?
@@ -161,6 +167,18 @@ class Gws::History
     return self[:updated_field_names] if self[:updated_field_names]
     return [] if updated_fields.blank?
     updated_fields.map { |m| item ? item.t(m, default: '').presence : nil }.compact.uniq
+  end
+
+  def to_csv
+    terms = []
+    CSV_HEADER.each do |k|
+      if k == :created
+        terms << I18n.l(created)
+      else
+        terms << send(k)
+      end
+    end
+    terms.to_csv
   end
 
   private
