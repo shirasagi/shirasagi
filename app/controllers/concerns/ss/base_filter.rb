@@ -136,13 +136,6 @@ module SS::BaseFilter
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
 
-    if !e.is_a?(Mongoid::Errors::DocumentNotFound)
-      Gws::History.error!(
-        :controller, @cur_user, @cur_site,
-        path: request.path, controller: self.class.name.underscore, action: action_name, message: "#{e.class} (#{e.message})"
-      )
-    end
-
     raise e
   end
 

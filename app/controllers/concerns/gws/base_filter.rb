@@ -72,6 +72,31 @@ module Gws::BaseFilter
     session[:gws] = gws_session
   end
 
+  # override SS::BaseFilter#rescue_action
+  def rescue_action(e)
+    if e.to_s =~ /^\d+$/
+      status = e.to_s.to_i
+    else
+      status = ActionDispatch::ExceptionWrapper.status_code_for_exception(e.class.name)
+    end
+
+    if status >= 500
+      history_method = :error!
+    elsif status >= 400
+      history_method = :warn!
+    end
+
+    if history_method
+      Gws::History.send(
+        history_method, :controller, @cur_user, @cur_site,
+        path: request.path, controller: self.class.name.underscore, action: action_name,
+        message: "#{e.class} (#{e.message})"
+      ) rescue nil
+    end
+
+    super
+  end
+
   def set_crumbs
     #
   end
