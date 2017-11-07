@@ -15,11 +15,13 @@ class Gws::Circular::Comment
   end
 
   def attributes
-    self.class.permitted_fields.
-      reduce({}){ |ret, attr_name| ret[attr_name] = send attr_name; ret }
+    self.class.permitted_fields.each_with_object({}) do |attr_name, ret|
+      ret[attr_name] = self.send(attr_name)
+      ret
+    end
   end
 
-  def attributes= (args)
+  def attributes=(args)
     self.class.permitted_fields.each do |f|
       self.send("#{f}=", args[f]) if args.include?(f)
     end

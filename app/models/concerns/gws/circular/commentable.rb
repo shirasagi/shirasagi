@@ -16,7 +16,7 @@ module Gws::Circular::Commentable
   end
 
   def commented?(u=user)
-    comments.find {|c| c.user_id == u.id }
+    comments.find { |c| c.user_id == u.id }
   end
 
   def add_comment(comment_hash)
