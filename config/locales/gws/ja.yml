@@ -32,6 +32,8 @@ ja:
         warn: 警告
         info: 重要情報
         notice: 一般情報
+        none: 出力しない
+      system_default_severity: システム既定
     member_log:
       copy_users: 件のユーザーをコピーしました。
       paste_users: 件のユーザーを追加しました。
@@ -131,6 +133,7 @@ ja:
       gws/schedules: スケジュール
       gws/system/group_setting: システム設定
       gws/system/menu_setting: メニュー設定
+      gws/system/log_setting: ログ設定
       gws/user/custom_form: 拡張情報
 
   mongoid:
@@ -266,6 +269,25 @@ ja:
         menu_staff_record_state: 電子職員録の表示
         menu_links_state: リンク集の表示
         menu_elasticsearch_state: 全文検索の表示
+      gws/addon/system/log_setting:
+        log_main_severity: 標準機能のログ
+        log_board_severity: 掲示板のログ
+        log_circular_severity: 回覧板のログ
+        log_elasticsearch_severity: 全文検索のログ
+        log_facility_severity: 設備管理のログ
+        log_faq_severity: よくある質問のログ
+        log_file_severity: 共有ファイルのログ
+        log_memo_severity: 連絡メモのログ
+        log_monitor_severity: 照会・回答のログ
+        log_personal_address_severity: 個人アドレス帳のログ
+        log_portal_severity: ポータルのログ
+        log_qna_severity: Ｑ＆Ａのログ
+        log_report_severity: レポートのログ
+        log_schedule_severity: スケジュールのログ
+        log_share_severity: 共有ファイルのログ
+        log_shared_address_severity: 共有アドレス帳のログ
+        log_staff_record_severity: 電子職員録のログ
+        log_workflow_severity: ワークフローのログ
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー
