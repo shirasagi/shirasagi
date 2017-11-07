@@ -3,9 +3,15 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to I18n.t('gws/monitor.management.links.back_to_topic'), gws_monitor_topics_path %>
     <% end %>
+  <% elsif params[:action] =~ /delete|recover/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to I18n.t('gws/monitor.management.links.active'), action: :active, id: @item %>
+      <%= link_to I18n.t('ss.links.delete'), action: :delete, id: @item %>
+      <%= link_to I18n.t('gws/monitor.management.links.active'), action: :recover, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>

@@ -3,7 +3,7 @@
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.select :sort, @model.new.sort_options %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
-    <%= f.select :state, @model.new.state_options %>
+    <%= f.select :answerble_article, @model.new.answerable_article_options %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
 </div>

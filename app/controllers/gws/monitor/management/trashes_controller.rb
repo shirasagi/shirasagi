@@ -5,7 +5,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   model Gws::Monitor::Topic
 
   before_action :set_item, only: [
-    :show, :edit, :update, :delete, :destroy, :active
+    :show, :edit, :update, :delete, :destroy, :active, :recover
   ]
 
   before_action :set_selected_items, only: [
@@ -52,12 +52,6 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   def index
     @items = @model.site(@cur_site).topic
 
-    if params[:s] && params[:s][:state] == "closed"
-      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
-    else
-      @items = @items.and_public.readable(@cur_user, @cur_site)
-    end
-
     if @category.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
@@ -74,9 +68,18 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     render file: "/gws/monitor/management/main/show_#{@item.mode}"
   end
 
+  def destroy
+    render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
+  end
+
+  def recover
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render
+  end
+
   def active
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_destroy @item.active
+    render_destroy @item.active, {notice: t('gws/monitor.notice.active')}
   end
 
   def active_all
@@ -91,7 +94,17 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
       end
       @items << item
     end
-    render_destroy_all(entries.size != @items.size)
+    render_active_all(entries.size != @items.size)
   end
 
+  def render_active_all(result)
+    location = crud_redirect_url || { action: :index }
+    notice = result ? { notice: t("gws/monitor.notice.active") } : {}
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
+  end
 end
