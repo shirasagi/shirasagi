@@ -100,6 +100,10 @@ class Gws::Circular::Post
     member?(user) || custom_group_member?(user) if action =~ /read/
   end
 
+  def readable_names
+    users.map(&:long_name) + readable_member_names + readable_group_names
+  end
+
   class << self
     def allow_condition(action, user, opts = {})
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
