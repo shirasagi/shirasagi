@@ -11,7 +11,7 @@ ja:
       submit: 投稿
       update: 更新
       delete: 削除
-      browsing_state: 通知先
+      browsing_state: 参加グループ
       browsed: 閲覧
       type: 状態
       mark_at: 確認日時
@@ -51,9 +51,6 @@ ja:
       - 回答欄
       - 回答日時
     options:
-      admin_setting:
-        user: 作成者が管理する
-        section: 所属で管理する
       spec_config:
         my_group: 回答者のみ表示する
         other_groups: 他の回答者名を表示する
@@ -77,6 +74,9 @@ ja:
       permit_comment:
         allow: 許可する
         deny: 許可しない
+      answerable_article:
+        answerable: 回答可能
+        readable: 閲覧可能
       browsed_state:
         read: 既読
         unread: 未読
@@ -96,6 +96,7 @@ ja:
     links:
       back_to_thread: 戻る
       comment: 回答する
+      reply: 返信する
       categories: カテゴリー
       public: 受取済みにする
       preparation: 受取待ちにする
@@ -117,6 +118,8 @@ ja:
         public_all: チェックした項目を受取済みにしますか？
         preparation_all: チェックした項目を受取待ちにしますか？
         question_not_applicable_all: チェックした項目を該当なしにしますか？
+        disable: 削除済みに移動しますか？
+        active: 削除を取り消しますか？
         disable_all: チェックした項目を削除済みに移動しますか？
         active_all: 選択した項目の削除を取り消しますか？
     errors:
@@ -131,6 +134,11 @@ ja:
       links:
         back_to_topic: 戻る
         active: 削除を取り消す
+    notice:
+      close: 回答を締め切りました
+      open: 締め切りを解除しました
+      disable: 削除済みに移動しました
+      active: 削除を取り消しました
 
   modules:
     gws/monitor: 照会・回答
@@ -138,6 +146,7 @@ ja:
       gws/monitor/category: カテゴリー
       gws/monitor/contributor: 投稿者
       gws/monitor/group: 参加グループ
+      gws/monitor/release: 公開設定
 
   gws_role:
     read_other_gws_monitor_posts: 投稿の閲覧（全て）
@@ -207,6 +216,12 @@ ja:
         admin_setting: 記事管理設定
         spec_config: 回答表示設定
         reminder_start_section: リマインダー表示設定
+      gws/addon/monitor/release:
+        released: 公開日時
+        release_date: 公開開始日時(予約)
+        close_date: 公開終了日時(予約)
+      gws/addon/monitor/group:
+        attend_group_ids: 参加グループ
 
   tooltip:
       gws/monitor/postable:

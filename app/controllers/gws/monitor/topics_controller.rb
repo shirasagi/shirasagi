@@ -51,12 +51,7 @@ class Gws::Monitor::TopicsController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).topic
-
-    if params[:s] && params[:s][:state] == "closed"
-      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
-    else
-      @items = @items.and_public.and_readable(@cur_user, @cur_site)
-    end
+    @items = @items.and_public
 
     if @category.present?
       params[:s] ||= {}
@@ -64,15 +59,29 @@ class Gws::Monitor::TopicsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
+    custom_group_ids = []
+    Gws::CustomGroup.site(@cur_site).each do |custom_group|
+      custom_group_ids.push(custom_group._id) if custom_group.member_ids.include?(@cur_user.id)
+    end
+
     @items = @items.search(params[:s]).
         custom_order(params.dig(:s, :sort) || 'updated_desc').
-        and_topics(@cur_group.id).
+        and_topics(@cur_user.id, @cur_group.id, custom_group_ids, params.dig(:s, :answerble_article) || 'answerble').
         page(params[:page]).per(50)
   end
 
   def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @item.readable?(@cur_user, @cur_site)
     render file: "/gws/monitor/main/show_#{@item.mode}"
+  end
+
+  def create
+    @item = @model.new get_params
+
+    @item.attributes["readable_group_ids"] = (@item.attend_group_ids + @item.readable_group_ids).uniq
+
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save, {location: {controller: 'admins', action: 'show', id: @item._id}}
   end
 
   def read
@@ -100,29 +109,29 @@ class Gws::Monitor::TopicsController < ApplicationController
   end
 
   def public
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "public")
+    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
     @item.save
     render_update@item.update
   end
 
   def preparation
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "preparation")
+    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
     @item.save
     render_update@item.update
   end
 
   def question_not_applicable
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "question_not_applicable")
+    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
     @item.save
     render_update@item.update
   end
 
   def answered
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    @item.state_of_the_answers_hash.update("#{@cur_group.id}" => "answered")
+    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "answered")
     @item.save
     render_update@item.update
   end
@@ -132,8 +141,8 @@ class Gws::Monitor::TopicsController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
-        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "public")
+      if item.readable?(@cur_user, @cur_site)
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
         item.save
       else
         item.errors.add :base, :auth_error
@@ -148,8 +157,8 @@ class Gws::Monitor::TopicsController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
-        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "preparation")
+      if item.readable?(@cur_user, @cur_site)
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
         item.save
       else
         item.errors.add :base, :auth_error
@@ -164,8 +173,8 @@ class Gws::Monitor::TopicsController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
-        item.state_of_the_answers_hash.update("#{@cur_group.id}" => "question_not_applicable")
+      if item.readable?(@cur_user, @cur_site)
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
         item.save
       else
         item.errors.add :base, :auth_error

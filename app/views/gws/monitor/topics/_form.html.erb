@@ -1,17 +1,10 @@
 <%= jquery do %>
-    $('.gws-addon-readable-setting-member').hide();
-    $('.mod-gws-owner_permission-users').hide();
-    $('.mod-gws-owner_permission-groups').hide();
-    $('.mod-gws-owner_permission-level').hide();
     Gws_Monitor_Topic.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
 <% end %>
 
 <dl class="see">
   <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>
-
-  <dt><%= @model.t :admin_setting %><%= @model.tt :admin_setting %></dt>
-  <dd><%= f.select :admin_setting, @item.admin_setting_options %></dd>
 
   <dt><%= @model.t :spec_config %><%= @model.tt :spec_config %></dt>
   <dd><%= f.select :spec_config, @item.spec_config_options %></dd>
