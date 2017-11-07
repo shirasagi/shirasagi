@@ -7,11 +7,15 @@ class Gws::ApplicationJob < ::ApplicationJob
     begin
       block.call
     rescue => e
-      Gws::History.error!(
-        :job, user, site,
-        job: self.class.name.underscore, action: 'perform', message: "#{e.class} (#{e.message})"
-      ) rescue nil
+      puts_history(:error, "#{e.class} (#{e.message})")
       raise e
     end
+  end
+
+  def puts_history(severity, message)
+    Gws::History.write!(
+      severity.to_sym, :job, user, site,
+      job: self.class.name.underscore, action: 'perform', message: message
+    ) rescue nil
   end
 end

@@ -76,8 +76,6 @@ class Gws::History
       write!(:notice, context, cur_user, cur_site, attributes)
     end
 
-    private
-
     def write!(severity, context, cur_user, cur_site, attributes)
       item = new(
         cur_user: cur_user,
@@ -94,6 +92,8 @@ class Gws::History
         end
       end
     end
+
+    private
 
     def severity_to_num(severity)
       case severity.to_sym

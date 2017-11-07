@@ -14,6 +14,7 @@ class Gws::Monitor::DeleteJob < Gws::ApplicationJob
     count = Gws::Monitor::Post.where(:deleted.lt => threshold).destroy_all if threshold
 
     Rails.logger.info "#{threshold}以前の照会・回答を#{count}件削除しました。"
+    puts_history(:info, "#{threshold}以前の照会・回答を#{count}件削除しました。")
   end
 end
 

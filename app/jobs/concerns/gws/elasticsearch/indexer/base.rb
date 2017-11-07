@@ -114,5 +114,6 @@ module Gws::Elasticsearch::Indexer::Base
     yield
   rescue klass => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    puts_history(:warn, "#{e.class} (#{e.message})")
   end
 end
