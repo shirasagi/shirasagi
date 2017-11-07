@@ -15,7 +15,7 @@
         <% title = "#{item.job_name}" %>
         <% end %>
         <% next if title.blank? %>
-        <span class="title"><%= title %></span>
+        <span class="title">[<%= t("modules.#{item.module_key}") %>] <%= title %></span>
         <% if item.message %>
         <p class="message"><%= br item.message %></p>
         <% end %>
