@@ -12,6 +12,7 @@ class Gws::Circular::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Addon::Circular::Category
+  include Gws::Addon::Reminder
 
   seqid :id
 
@@ -24,6 +25,9 @@ class Gws::Circular::Post
   validates :name, presence: true
   validates :due_date, presence: true
   validates :deleted, datetime: true
+
+  alias_method :reminder_date, :due_date
+  alias_method :reminder_user_ids, :member_ids
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
