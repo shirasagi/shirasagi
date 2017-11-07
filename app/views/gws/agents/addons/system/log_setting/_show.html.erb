@@ -1,0 +1,30 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-log-setting"); <% end %>
+
+<% render_log_setting = proc do |type| %>
+  <dl class="see addon-gws-system-log-setting">
+    <dt>
+      <%= @model.t("log_#{type}_severity") %>
+    </dt>
+    <dd>
+      <%= @item.label("log_#{type}_severity") %>
+    </dd>
+  </dl>
+<% end %>
+
+<% render_log_setting.call(:main) %>
+<% render_log_setting.call(:board) %>
+<% render_log_setting.call(:circular) %>
+<% render_log_setting.call(:elasticsearch) %>
+<% render_log_setting.call(:facility) %>
+<% render_log_setting.call(:faq) %>
+<% render_log_setting.call(:memo) %>
+<% render_log_setting.call(:monitor) %>
+<% render_log_setting.call(:personal_address) %>
+<% render_log_setting.call(:portal) %>
+<% render_log_setting.call(:qna) %>
+<% render_log_setting.call(:report) %>
+<% render_log_setting.call(:schedule) %>
+<% render_log_setting.call(:share) %>
+<% render_log_setting.call(:shared_address) %>
+<% render_log_setting.call(:staff_record) %>
+<% render_log_setting.call(:workflow) %>
