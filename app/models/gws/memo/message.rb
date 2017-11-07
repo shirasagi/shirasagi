@@ -9,7 +9,7 @@ class Gws::Memo::Message
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
 
-  attr_accessor :signature, :attachments, :field
+  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user
   attr_accessor :in_request_mdn, :in_request_dsn
 
   field :subject, type: String
@@ -92,7 +92,9 @@ class Gws::Memo::Message
   end
 
   def signature_options
-    [nil, nil]
+    Gws::Memo::Signature.site(cur_site).allow(:read, cur_user, site: cur_site).map do |c|
+      [c.name, c.text]
+    end
   end
 
   def set_seen(user)

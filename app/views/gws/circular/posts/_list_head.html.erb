@@ -1,0 +1,15 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <button class="btn unset-seen-all"><%= t('gws/circular.post.unset_seen') %></button>
+        <button class="btn set-seen-all"><%= t('gws/circular.post.set_seen') %></button>
+    <% end %>
+    <button class="btn download"><%= t('gws/circular.post.download') %></button>
+  </div>
+
+  <div class="list-head-search">
+    <%= render file: '_search' %>
+  </div>
+</div>
