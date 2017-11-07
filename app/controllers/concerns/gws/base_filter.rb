@@ -10,6 +10,7 @@ module Gws::BaseFilter
     before_action :validate_gws
     before_action :set_gws_assets
     before_action :set_current_site
+    before_action :set_gws_logged_in, if: ->{ @cur_user }
     before_action :save_controller_access_history, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
     before_action :set_account_menu, if: ->{ @cur_user }
@@ -53,7 +54,22 @@ module Gws::BaseFilter
     Gws::History.notice!(
       :controller, @cur_user, @cur_site,
       path: request.path, controller: self.class.name.underscore, action: action_name, message: 'accessed'
-    )
+    ) rescue nil
+  end
+
+  def set_gws_logged_in
+    gws_session = session[:gws]
+    gws_session ||= {}
+    gws_session['last_logged_in'] ||= begin
+      Gws::History.info!(
+        :controller, @cur_user, @cur_site,
+        path: request.path, controller: self.class.name.underscore, action: action_name, message: 'logged in'
+      ) rescue nil
+
+      Time.zone.now.to_i
+    end
+
+    session[:gws] = gws_session
   end
 
   def set_crumbs
