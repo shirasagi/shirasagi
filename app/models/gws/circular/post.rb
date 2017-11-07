@@ -133,16 +133,15 @@ class Gws::Circular::Post
       CSV.generate do |data|
         data << I18n.t('gws/circular.csv')
         each do |item|
-          item.members.each do |member|
-            post = item.comments.find {|c| c.user_id == member.id }
+          item.comments.each do |comment|
             data << [
                 item.id,
                 item.name,
-                post.try(:id),
-                item.seen?(member),
-                member.name,
-                post.try(:text),
-                post.try(:updated)
+                comment.id,
+                item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') :  I18n.t('gws/circular.post.unseen') ,
+                comment.user.long_name,
+                comment.text,
+                comment.updated
             ]
           end
         end

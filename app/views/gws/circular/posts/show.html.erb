@@ -27,7 +27,7 @@
     <% end %>
 
     <div class="menu">
-      <% if @item.member?(@cur_user) && !@item.commented?(@cur_user) %>
+      <% if @item.member?(@cur_user) %>
           <%= link_to t('gws/board.links.comment'), new_gws_circular_post_comment_path(post_id: @item.id), class: 'btn' %>
       <% end %>
 
