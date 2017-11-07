@@ -124,6 +124,7 @@ ja:
         bcc: Bcc
         cc: Cc
         mail: 内容
+        error: エラー
 
   errors:
     messages:

@@ -2,6 +2,11 @@
   <dt><%= @model.t :mailer %></dt>
   <dd><%= @item.mailer %></dd>
 
+  <% if @item.error.present? %>
+  <dt><%= @model.t :error %></dt>
+  <dd><%= br @item.error %></dd>
+  <% end %>
+
   <dt><%= @model.t :subject %></dt>
   <dd><%= @item.subject %></dd>
 
