@@ -10,7 +10,9 @@ ja:
       unset_seen: 未読にする
       set_star: スターをつける
       unset_star: スターをはずす
+      trash: ゴミ箱に移す
     confirm:
+      trash_all: ゴミ箱に移しますか?
       set_seen_all: 既読にしますか?
       unset_seen_all: 未読にしますか?
       set_star_all: スターをつけますか?
@@ -41,10 +43,12 @@ ja:
     models:
       gws/memo/message: 連絡メモ
       gws/memo/folder: 管理
+      gws/memo/signature: 署名
     attributes:
       gws/memo/message:
         subject: 件名
-        member_ids: To
+        member_ids: 宛先
+        body: 本文
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:
@@ -58,3 +62,7 @@ ja:
         folder: フォルダー
         state: 状態
         order: 並び順
+      gws/memo/signature:
+        name: 名称
+        text: 本文
+        default: 既定の署名
