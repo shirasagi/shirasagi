@@ -10,6 +10,7 @@ module Gws::BaseFilter
     before_action :validate_gws
     before_action :set_gws_assets
     before_action :set_current_site
+    before_action :save_controller_access_history, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
     before_action :set_account_menu, if: ->{ @cur_user }
     before_action :set_crumbs
@@ -46,6 +47,13 @@ module Gws::BaseFilter
       @account_menu << [group.section_name, gws_default_group_path(default_group: group)]
     end
     @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
+  end
+
+  def save_controller_access_history
+    Gws::History.notice!(
+      :controller, @cur_user, @cur_site,
+      path: request.path, controller: self.class.name.underscore, action: action_name, message: 'accessed'
+    )
   end
 
   def set_crumbs
