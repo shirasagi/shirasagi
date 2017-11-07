@@ -1,47 +1,71 @@
 <%= jquery do %>
-    $(".set-seen-all").click(function(){
-      var form = Gws_Circular_Post.buildForm("<%= set_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
-      form.appendTo(document.body).submit();
-    });
+  $(".set-seen-all").click(function(){
+    var form = Gws_Circular_Post.buildForm("<%= set_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
+    form.appendTo(document.body).submit();
+  });
 
-    $(".unset-seen-all").click(function(){
-      var form = Gws_Circular_Post.buildForm("<%= unset_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
-      form.appendTo(document.body).submit();
-    });
+  $(".unset-seen-all").click(function(){
+    var form = Gws_Circular_Post.buildForm("<%= unset_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
+    form.appendTo(document.body).submit();
+  });
 
-    $(".download").click(function(){
-      var form = Gws_Circular_Post.buildForm("<%= download_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.download') %>");
-      form.appendTo(document.body).submit();
-    });
-<% end %>
+  $(".download").click(function(){
+    var form = Gws_Circular_Post.buildForm("<%= download_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.download') %>");
+    form.appendTo(document.body).submit();
+  });
 
-<% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
-  <span class="seen">
-    <% if item.member?(@cur_user) %>
-      <%= item.seen?(@cur_user) ? t('gws/circular.post.seen') :  t('gws/circular.post.unseen') %>
-    <% end %>
-  </span>
-  <span><%= item.readable_names.join(', ') %></span>
-  <span class="gws-share-categories">
-    <% item.categories.compact.each do |category| %>
-      <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
-                  class: 'gws-category-label', style: category_label_css(category) %>
-    <% end %>
-  </span>
-<% end %>
-
-<%= jquery do %>
   $('.gws-category-navi-menu #category_id').change(function() {
     var cid = $(this).val();
-    if (cid) location.href = '<%= gws_circular_category_posts_path(category: 'ID') %>'.replace('ID', cid);
-    else location.href = '<%= gws_circular_posts_path %>';
+    if (cid)
+      location.href = '<%= gws_circular_category_posts_path(category: 'ID') %>'.replace('ID', cid);
+    else
+      location.href = '<%= gws_circular_posts_path %>';
   });
 <% end %>
 
 <div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/circular') if  @categories.to_options.present? %>
+  <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/circular') if @categories.to_options.present? %>
 </div>
 
-<%= render file: 'gws/crud/index' %>
+<div class="index gws-boards">
+  <%= render file: '_list_head' %>
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <li class="list-item <%= 'unread' if (item.member?(@cur_user) && item.unseen?(@cur_user)) %>">
+        <nav class="tap-menu">
+          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+          <% if item.try(:image) %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, {class: "thumb", target: "_blank"} %>
+          <% elsif item.try(:image?) %>
+            <%= link_to image_tag(item.thumb_url), item.url, {class: "thumb", target: "_blank"} %>
+          <% end %>
+        </nav>
+
+        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
+        <div class="info">
+          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+          <%= link_to title, {action: :show, id: item}, class: "title" %>
+
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= tryb {item.due_date.strftime('%Y/%m/%d %H:%M')} %></span>
+            <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member?(@cur_user) %></span>
+            <span><%= item.readable_names.join(', ') %></span>
+            <span class="gws-share-categories">
+              <% item.categories.compact.each do |category| %>
+                <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+                            class: 'gws-category-label', style: category_label_css(category) %>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
+
