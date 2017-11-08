@@ -120,6 +120,6 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     @item.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
     @item.create_zip(zipfile, @group_ssfile)
     send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
-    self.response_body = @item.delete_temporary_directory(zipfile).close
+    self.response_body = @item.delete_temporary_directory(zipfile)
   end
 end
