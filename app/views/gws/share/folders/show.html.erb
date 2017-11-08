@@ -10,14 +10,14 @@
   <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
 </div>
 
-<% if controller_path == "gws/share/folders" %>
+<% if SS::File.where(folder_id: @item._id, deleted: nil).present? %>
   <div class="gws-share file-download">
     <article class="topic">
       <header>
         <h2><%= t('gws/share.folder_download') %></h2>
       </header>
       <div class="menu">
-        <%= link_to(t('gws/share.links.file_download'), download_folder_gws_share_folder_path, class: 'btn file_download') if SS::File.where(folder_id: @item._id).present? %>
+        <%= link_to(t('gws/share.links.file_download'), download_folder_gws_share_folder_path, class: 'btn file_download')  %>
       </div>
     </article>
   </div>

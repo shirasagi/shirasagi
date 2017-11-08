@@ -16,7 +16,7 @@ class Gws::Share::File
 
   #validates :category_ids, presence: true
   validates :folder_id, presence: true
-  validate :validate_size
+  validate :validate_size, if: ->{ in_file.present? }
   validates :deleted, datetime: true
 
   # indexing to elasticsearch via companion object
@@ -61,6 +61,51 @@ class Gws::Share::File
 
       criteria
     end
+
+    def create_temporary_directory(userid, root_temp_dir, temp_dir)
+      Dir.glob(root_temp_dir + "/" + "#{userid}_*").each do |tmp|
+        FileUtils.rm_rf(tmp) if File.exists?(tmp)
+      end
+
+      FileUtils.mkdir_p(temp_dir) unless FileTest.exist?(temp_dir)
+    end
+
+    def create_zip(zipfile, items, filename_duplicate_flag)
+      Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
+        items.each do |item|
+          if File.exist?(item.path)
+            if filename_duplicate_flag == 0
+              zip_file.add(NKF::nkf('-sx --cp932', item.name), item.path)
+            elsif filename_duplicate_flag == 1
+              zip_file.add(NKF::nkf('-sx --cp932',item._id.to_s + "_" + item.name), item.path)
+            end
+          end
+        end
+      end
+    end
+
+    def delete_temporary_directory(zipfile)
+      file_body = Class.new do
+        attr_reader :to_path
+
+        def initialize(path)
+          @to_path = path
+        end
+
+        def each
+          File.open(to_path, 'rb') do |file|
+            while chunk = file.read(163_84)
+              yield chunk
+            end
+          end
+        end
+
+        def close
+          FileUtils.rm_rf File.dirname(@to_path)
+        end
+      end
+      return file_body.new(zipfile)
+    end
   end
 
   def remove_public_file
@@ -94,22 +139,39 @@ class Gws::Share::File
 
   def validate_size
     return if cur_site.nil?
+
+    @folder_max_size = 0
+    folder.files.each do |file|
+      @folder_max_size = @folder_max_size + (file.size || 0)
+    end
+
+    @file_max_size = folder.files.max_by {|file| file.size || 0}.size || 0
+
     if @cur_site && folder
-      if (limit = (folder.share_max_file_size || 0)) > 0
-        size = folder.files.compact.map(&:size).max || 0
-        if size > limit
+      if (folder_limit = (folder.share_max_folder_size || 0)) > 0
+        size = @folder_max_size
+        if size > folder_limit
           errors.add(
               :base,
               :file_size_exceeds_folder_limit,
               size: number_to_human_size(size),
-              limit: number_to_human_size(limit))
+              limit: number_to_human_size(folder_limit))
         end
       end
-    else
-      @cur_site = Gws::Group.find(site_id) unless @cur_site
+      if (limit = (folder.share_max_file_size || 0)) > 0
+        size = @file_max_size
+        if size > limit
+          errors.add(
+              :base,
+              :file_size_exceeds_limit,
+              size: number_to_human_size(size),
+              limit: number_to_human_size(limit))
+        end
+      else
+        @cur_site = Gws::Group.find(site_id) unless @cur_site
+      end
     end
     limit = @cur_site.share_max_file_size || 0
-
     return if limit <= 0
 
     if in_file.present?
@@ -124,4 +186,5 @@ class Gws::Share::File
       errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
     end
   end
+
 end

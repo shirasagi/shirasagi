@@ -21,13 +21,18 @@ module Gws::Share::DescendantsFileInfo
     files.active.compact.length || 0
   end
 
-  def deleted_files_count
-    files.deleted.compact.length || 0
+  def readable_active_files_count(user, site)
+    files.readable(user, site).active.count
+  end
+
+  def readable_deleted_files_count(user, site)
+    files.readable(user, site).deleted.count
   end
 
   private
 
   def validate_attached_file_size
+    return if self.attributes["controller"] == "gws/share/folders"
     if (limit = (self.share_max_file_size || 0)) > 0
       size = files.compact.map(&:size).max || 0
       if size > limit
