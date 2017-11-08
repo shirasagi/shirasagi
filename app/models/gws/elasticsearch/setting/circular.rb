@@ -10,6 +10,8 @@ class Gws::Elasticsearch::Setting::Circular
 
   def search_types
     search_types = []
+    return search_types unless cur_site.menu_circular_visible?
+
     if Gws::Circular::Post.allowed?(:read, @cur_user, site: @cur_site)
       search_types << Gws::Circular::Post.collection_name
     end

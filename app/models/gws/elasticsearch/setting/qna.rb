@@ -8,6 +8,11 @@ class Gws::Elasticsearch::Setting::Qna
     I18n.t('modules.gws/qna')
   end
 
+  def search_types
+    return [] unless cur_site.menu_question_visible?
+    super
+  end
+
   def translate_category(es_type, cate_name)
     @categories ||= Gws::Qna::Category.site(cur_site).to_a
     cate = @categories.find { |cate| cate.name == cate_name }

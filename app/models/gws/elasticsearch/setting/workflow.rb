@@ -10,6 +10,8 @@ class Gws::Elasticsearch::Setting::Workflow
 
   def search_types
     search_types = []
+    return search_types unless cur_site.menu_workflow_visible?
+
     search_types << Gws::Workflow::File.collection_name if allowed?(:read)
     search_types
   end
