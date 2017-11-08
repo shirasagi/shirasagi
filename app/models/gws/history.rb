@@ -101,6 +101,8 @@ class Gws::History
           item.save!(context: context.to_sym)
         end
       end
+
+      try_invoke_archive(cur_user, cur_site)
     end
 
     private
@@ -120,6 +122,13 @@ class Gws::History
       else
         0
       end
+    end
+
+    def try_invoke_archive(cur_user, cur_site)
+      return if rand <= 0.8
+      return if !Gws::HistoryArchiveJob.histories_to_archive?(cur_site)
+
+      Gws::HistoryArchiveJob.bind(site_id: cur_site, user_id: cur_user).perform_later
     end
   end
 
