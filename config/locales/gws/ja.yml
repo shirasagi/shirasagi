@@ -198,11 +198,22 @@ ja:
       gws/history:
         session_id: セッションID
         request_id: リクエストID
-        created: 変更日時
+        severity: 重要度
+        name: 名称
         mode: 区分
+        model: モデル
+        controller: コントローラー
+        job: ジョブ
+        model_name: モデル名
+        job_name: ジョブ名
+        item_id: 項目ID
+        path: URL
+        action: アクション
+        message: メッセージ
+        updated_fields: 変更内容
         user_name: ユーザー
         user_tel: 電話番号
-        updated_fields: 変更内容
+        created: 変更日時
       gws/share/history:
         created: 変更日時
         mode: 区分
