@@ -1,0 +1,33 @@
+<%= jquery do %>
+Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
+Gws_Schedule_Plan.renderAlldayForm();
+
+$("#item_end_at, #item_end_on").change(function(){
+  Gws_Schedule_Plan.transferEnd2Start();
+});
+<% end %>
+
+<dl class="see gws-schedule-plan">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
+
+  <dt><%= @model.t :term %><%= @model.tt :term %></dt>
+  <dd>
+    <div class="datetimes-field">
+      <%= f.hidden_field :start_at, class: "datetime start", value: tryb { @item.start_at.strftime("%Y/%m/%d %H:%M") } %>
+      <%= f.text_field :end_at, class: "datetime end", value: tryb { @item.end_at.strftime("%Y/%m/%d %H:%M") } %>
+    </div>
+    <div class="dates-field">
+      <%= f.hidden_field :start_on, class: "date start", value: tryb { @item.start_on.strftime("%Y/%m/%d") } %>
+      <%= f.text_field :end_on, class: "date end", value: tryb { @item.end_on.strftime("%Y/%m/%d") } %>
+    </div>
+  </dd>
+  <dd>
+    <div class="date-options">
+      <label for="item_allday"><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
+    </div>
+  </dd>
+
+  <dt><%= @model.t :color %><%= @model.tt :color %></dt>
+  <dd><%= f.text_field :color, class: "js-color", "data-clear": 1 %></dd>
+</dl>

@@ -1,0 +1,64 @@
+// gws-discussion
+
+.gws-discussion {
+  .addon-body .no {
+    margin-bottom: 10px;
+  }
+  .addon-body .markdown-body {
+    margin-bottom: 10px;
+  }
+  .addon-body .updated {
+    padding: 0 7px;
+  }
+  .files {
+    margin: 10px;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: #f2f2f2;
+    img {
+      max-width: 100%;
+      height: auto;
+      border-style: none;
+      line-height: 0;
+    }
+    a {
+      display: inline-block;
+      margin-right: 8px;
+      line-height: 1.5;
+      word-break: normal;
+      word-wrap: normal;
+    }
+    .deselect {
+      cursor: pointer;
+    }
+  }
+  .discussion-contributor {
+    padding-top: 10px;
+  }
+  .comment-files {
+    padding-top: 10px;
+  }
+  .menu {
+    padding-top: 10px;
+  }
+  .contributor {
+    padding: 0 7px;
+    margin-bottom: 10px;
+  }
+}
+.gws-discussion-thread {
+  float: left;
+  width: calc(100% - 350px);
+  min-height: 400px;
+}
+.gws-discussion-topic {
+  font-size: 180%;
+  font-weight: bold;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+.gws-discussion-navi {
+  float: right;
+  margin-left: 10px;
+  width: 340px;
+}

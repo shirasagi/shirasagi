@@ -1,0 +1,6 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-discussion-group-setting"); <% end %>
+
+<dl class="see addon-gws-discussion-group-setting">
+  <dt><%= @model.t :discussion_new_days %></dt>
+  <dd><%= @item.send :discussion_new_days %> <%= t("datetime.prompts.day") %></dd>
+</dl>

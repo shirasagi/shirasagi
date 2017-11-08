@@ -5,6 +5,7 @@ class Gws::Group
   include Gws::Addon::Schedule::GroupSetting
   include Gws::Addon::Facility::GroupSetting
   include Gws::Addon::Board::GroupSetting
+  include Gws::Addon::Discussion::GroupSetting
   include Gws::Addon::Faq::GroupSetting
   include Gws::Addon::Qna::GroupSetting
   include Gws::Addon::Elasticsearch::GroupSetting

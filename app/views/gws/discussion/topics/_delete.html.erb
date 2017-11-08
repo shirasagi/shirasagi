@@ -1,0 +1,17 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd>
+    <div class="contributor">
+      <%= @item.contributor_name %>
+    </div>
+    <div class="markdown-body">
+      <%= @item.html %>
+    </div>
+    <div class="datetime updated">
+      <%= @item.updated.strftime("%Y/%m/%d %H:%M") %>
+    </div>
+  </dd>
+</dl>

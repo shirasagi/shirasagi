@@ -9,6 +9,7 @@ class Gws::Schedule::Todo
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Schedule::Repeat
   include Gws::Addon::Reminder
+  include Gws::Addon::Discussion::Todo
   include SS::Addon::Markdown
   include Gws::Addon::Member
   include Gws::Addon::ReadableSetting

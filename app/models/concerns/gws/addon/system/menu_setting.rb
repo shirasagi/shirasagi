@@ -53,6 +53,9 @@ module Gws::Addon::System::MenuSetting
     field :menu_elasticsearch_state, type: String, default: 'hide'
     field :menu_elasticsearch_label, type: String, localize: true
 
+    field :menu_discussion_forum_state, type: String, default: 'hide'
+    field :menu_discussion_forum_label, type: String, localize: true
+
     permit_params :menu_portal_state,
       :menu_reminder_state,
       :menu_schedule_state,
@@ -68,7 +71,8 @@ module Gws::Addon::System::MenuSetting
       :menu_personal_address_state,
       :menu_staff_record_state,
       :menu_links_state,
-      :menu_elasticsearch_state
+      :menu_elasticsearch_stat,
+      :menu_discussion_forum_state
     permit_params :menu_portal_label,
       :menu_reminder_label,
       :menu_schedule_label,
@@ -84,7 +88,8 @@ module Gws::Addon::System::MenuSetting
       :menu_personal_address_label,
       :menu_staff_record_label,
       :menu_links_label,
-      :menu_elasticsearch_label
+      :menu_elasticsearch_label,
+      :menu_discussion_forum_label
   end
 
   def menu_state_options
@@ -107,6 +112,7 @@ module Gws::Addon::System::MenuSetting
   alias menu_staff_record_state_options menu_state_options
   alias menu_links_state_options menu_state_options
   alias menu_elasticsearch_state_options menu_state_options
+  alias menu_discussion_forum_state_options menu_state_options
 
   def menu_portal_visible?
     menu_portal_state == 'show'
@@ -170,5 +176,9 @@ module Gws::Addon::System::MenuSetting
 
   def menu_elasticsearch_visible?
     menu_elasticsearch_state == 'show'
+  end
+
+  def menu_discussion_forum_visible?
+    menu_discussion_forum_state == 'show'
   end
 end

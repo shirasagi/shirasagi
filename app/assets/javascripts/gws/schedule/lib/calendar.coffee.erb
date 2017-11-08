@@ -7,6 +7,8 @@ class @Gws_Schedule_Calendar
     $.extend true, params, @editableParams(opts) if opts['restUrl']
     $.extend true, params, @tapMenuParams(opts) if opts['restUrl']
     $.extend true, params, opts
+    console.log(params)
+    console.log(opts)
     $(selector).fullCalendar(params)
     @renderInitialize(selector, init)
 

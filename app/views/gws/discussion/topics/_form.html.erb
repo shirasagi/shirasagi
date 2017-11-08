@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt class="required"><%= @model.t :name %></dt>
+  <dd>
+    <% if @item.depth.to_i >= 3 %>
+      <%= @item.name %>
+    <% else %>
+      <%= f.text_field :name %>
+    <% end %>
+  </dd>
+</dl>

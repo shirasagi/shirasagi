@@ -300,6 +300,7 @@ ja:
         menu_staff_record_state: 電子職員録の表示
         menu_links_state: リンク集の表示
         menu_elasticsearch_state: 全文検索の表示
+        menu_discussion_forum_state: 電子会議室
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数
         log_main_severity: 標準機能のログ
