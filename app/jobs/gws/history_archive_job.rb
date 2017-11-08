@@ -70,9 +70,12 @@ class Gws::HistoryArchiveJob < Gws::ApplicationJob
   end
 
   def put_histories
-    @histories.order_by(created: 1).each do |history|
-      file = to_archive_file(history)
-      append_file(file, history)
+    all_ids = @histories.order_by(created: 1).pluck(:id)
+    all_ids.each_slice(100) do |ids|
+      Gws::History.in(id: ids).order_by(created: 1).to_a.each do |history|
+        file = to_archive_file(history)
+        append_file(file, history)
+      end
     end
     @last_open_file_handle.close if @last_open_file_handle
 
