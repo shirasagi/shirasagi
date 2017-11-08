@@ -1,5 +1,26 @@
+<%
+  now = Time.zone.now
+  sy = (now - 90.days).year
+  ey = now.year
+  @years = (sy..ey).to_a.reverse.map { |y| ["#{y}#{t('datetime.prompts.year')}", y.to_s] }
+  @months = (1..12).to_a.map { |m| ["#{m}#{t('datetime.prompts.month')}", '%02d' % m] }
+
+  origin = Time.zone.parse("#{@s.year}/#{@s.month}/01")
+  next_month = origin + 1.month
+  prev_month = origin - 1.month
+%>
 <div class="index">
   <div class="list-head">
+    <div class="list-head-action">
+      <%= link_to(t('event.next_month'), { year: next_month.year, month: '%02d' % next_month.month }, class: :btn, style: 'font-weight: normal;') %>
+      <span style="margin: 0 8px">
+        <%= select_tag('year', options_for_select(@years, @s.year), include_blank: true) %>
+        <%= select_tag('month', options_for_select(@months, @s.month), include_blank: true) %>
+        <%= button_tag(t('ss.buttons.move'), name: 'move-year-month', type: 'button', class: 'btn') %>
+      </span>
+      <%= link_to(t('event.prev_month'), { year: prev_month.year, month: '%02d' % prev_month.month }, class: :btn, style: 'font-weight: normal;') %>
+    </div>
+
     <%= render file: "_search" %>
   </div>
 
@@ -50,3 +71,18 @@
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+
+<%= jquery do %>
+  $('.list-head button[name=move-year-month]').on('click', function() {
+    var year = $('.list-head select[name=year]').val();
+    var month = $('.list-head select[name=month]').val();
+    if (! year || !month) {
+      return;
+    }
+
+    var url = '<%= gws_monthly_histories_path(year: ':year', month: ':month') %>';
+    url = url.replace(':year', year).replace(':month', month);
+
+    location.href = url;
+  });
+<% end %>
