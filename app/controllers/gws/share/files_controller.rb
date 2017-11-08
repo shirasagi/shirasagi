@@ -161,7 +161,7 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def download_all
-    download_root_dir = "/tmp/shirasagi_download"
+    download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
     download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
 
     Dir.glob("#{download_root_dir}" + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
