@@ -152,7 +152,15 @@ class Gws::Monitor::Topic
     end
   end
 
-  def delete_temporary_files(zipfile, response_body)
+  def create_temporary_directory(userid, root_temp_dir, temp_dir)
+    Dir.glob(root_temp_dir + "/" + "#{userid}_*").each do |tmp|
+      FileUtils.rm_rf(tmp) if File.exists?(tmp)
+    end
+
+    FileUtils.mkdir_p(temp_dir) unless FileTest.exist?(temp_dir)
+  end
+
+  def delete_temporary_directory(zipfile)
     file_body = Class.new do
       attr_reader :to_path
 
@@ -172,7 +180,17 @@ class Gws::Monitor::Topic
         FileUtils.rm_rf File.dirname(@to_path)
       end
     end
-    response_body = file_body.new(zipfile)
+    return file_body.new(zipfile)
+  end
+
+  def create_zip(zipfile, group_items)
+    Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
+      group_items.each do |groupssfile|
+        if File.exist?(groupssfile[1].path)
+          zip_file.add(NKF::nkf('-sx --cp932', groupssfile[0] + "_" + groupssfile[1].name), groupssfile[1].path)
+        end
+      end
+    end
   end
 
   private
