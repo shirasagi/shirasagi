@@ -61,6 +61,51 @@ class Gws::Share::File
 
       criteria
     end
+
+    def create_temporary_directory(userid, root_temp_dir, temp_dir)
+      Dir.glob(root_temp_dir + "/" + "#{userid}_*").each do |tmp|
+        FileUtils.rm_rf(tmp) if File.exists?(tmp)
+      end
+
+      FileUtils.mkdir_p(temp_dir) unless FileTest.exist?(temp_dir)
+    end
+
+    def create_zip(zipfile, items, filename_duplicate_flag)
+      Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
+        items.each do |item|
+          if File.exist?(item.path)
+            if filename_duplicate_flag == 0
+              zip_file.add(NKF::nkf('-sx --cp932', item.name), item.path)
+            elsif filename_duplicate_flag == 1
+              zip_file.add(NKF::nkf('-sx --cp932',item._id.to_s + "_" + item.name), item.path)
+            end
+          end
+        end
+      end
+    end
+
+    def delete_temporary_directory(zipfile)
+      file_body = Class.new do
+        attr_reader :to_path
+
+        def initialize(path)
+          @to_path = path
+        end
+
+        def each
+          File.open(to_path, 'rb') do |file|
+            while chunk = file.read(163_84)
+              yield chunk
+            end
+          end
+        end
+
+        def close
+          FileUtils.rm_rf File.dirname(@to_path)
+        end
+      end
+      return file_body.new(zipfile)
+    end
   end
 
   def remove_public_file
