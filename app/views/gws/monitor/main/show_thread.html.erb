@@ -88,7 +88,7 @@
   </div>
   <% end %>
 
-  <% if @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != '0'%>
+  <% if params[:controller] =~ /admin/ || @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != '0'%>
     <%= render partial: 'gws/monitor/main/subscribed_groups' %>
   <% end %>
 
