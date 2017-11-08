@@ -113,30 +113,13 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
       end
     end
 
-    download_root_dir = "/tmp/shirasagi_download"
+    download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
     download_dir = download_root_dir + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
+    zipfile = download_dir + "/" + Time.zone.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
 
-    Dir.glob(download_root_dir + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
-      FileUtils.rm_rf(tmp_dir) if File.exists?(tmp_dir)
-    end
-
-    FileUtils.mkdir_p(download_dir) unless FileTest.exist?(download_dir)
-
-    @group_ssfile.each do |groupssfile|
-      if File.exist?(groupssfile[1].path)
-        FileUtils.copy(groupssfile[1].path, download_dir + "/" + groupssfile[0] + "_" + groupssfile[1].name)
-      end
-    end
-
-    @zipfile = download_dir + "/" + Time.zone.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
-    Zip::File.open(@zipfile, Zip::File::CREATE) do |zip_file|
-      Dir.glob("#{download_dir}/*").each do |downloadfile|
-        zip_file.add(NKF::nkf('-sx --cp932', File.basename(downloadfile)), downloadfile)
-      end
-    end
-    send_file(@zipfile, type: 'application/zip', filename: File.basename(@zipfile), disposition: 'attachment')
-
-    @item.delete_temporary_files(@zipfile, self.response_body)
-
+    @item.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
+    @item.create_zip(zipfile, @group_ssfile)
+    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
+    self.response_body = @item.delete_temporary_directory(zipfile)
   end
 end
