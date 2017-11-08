@@ -1,18 +1,22 @@
 ja:
   gws/circular:
+    admin: 管理
+    setting: 回覧板設定
+    active: 削除を取り消す
     confirm:
-      mark_all: 選択した項目を全て既読にしますか？
-      unmark_all: 選択した項目を全て未読に戻しますか？
+      active_all: 選択した項目の削除を取り消しますか？
+      set_seen_all: 選択した項目を全て既読にしますか？
+      unset_seen_all: 選択した項目を全て未読に戻しますか？
       download: 選択した項目を全てCSVに出力しますか？
-    topic:
-      unmarked: 未読
-      marked: 既読
-      unmark: 未読にする
-      mark: 既読にする
+    post:
+      seen: 既読
+      unseen: 未読
+      set_seen: 既読にする
+      unset_seen: 未読にする
+      seen_at: 既読日時
       download: CSVに出力する
       member: 参加者
       type: 区分
-      mark_at: 確認日時
       update_at: 変更日時
       user: ユーザー
       replay: 返信内容
@@ -25,36 +29,48 @@ ja:
       - 返信欄
       - 返信日時
     options:
-      mark_type:
+      see_type:
         normal: 通常閲覧
         simple: 簡易閲覧
-
+    notice:
+      disable: 削除済みに移動しました
+      active: 削除を取り消しました
   modules:
     gws/circular: 回覧板
-
+    addons:
+      gws/circular/category: カテゴリー
   gws_role:
-    read_other_gws_circular_topics: 回覧板の閲覧（全て）
-    read_private_gws_circular_topics: 回覧板の閲覧（所有）
-    edit_other_gws_circular_topics: 回覧板の編集（全て）
-    edit_private_gws_circular_topics: 回覧板の編集（所有）
-    delete_other_gws_circular_topics: 回覧板の削除（全て）
-    delete_private_gws_circular_topics: 回覧板の削除（所有）
-
+    read_other_gws_circular_posts: 回覧板の閲覧（全て）
+    read_private_gws_circular_posts: 回覧板の閲覧（所有）
+    edit_other_gws_circular_posts: 回覧板の編集（全て）
+    edit_private_gws_circular_posts: 回覧板の編集（所有）
+    delete_other_gws_circular_posts: 回覧板の削除（全て）
+    delete_private_gws_circular_posts: 回覧板の削除（所有）
+  activemodel:
+    attributes:
+      gws/circular/comment:
+        name: タイトル
+        text: コメント
   mongoid:
     models:
-      gws/circular/topic: 回覧板トピック
-
+      gws/circular/post: 回覧板
+      gws/circular/category: カテゴリー
+      gws/circular/trashes: 削除済み
     attributes:
-      gws/circular/topic:
+      gws/circular/post:
         name: タイトル
         due_date: 閲覧期限日時
-        mark_type: 既読にする形式
-
+        see_type: 既読にする形式
+      gws/addon/circular/category:
+        category_ids: カテゴリー
   tooltip:
-    gws/circular/topic:
+    gws/circular/comment:
+      name: タイトルです
+      text: コメントです
+    gws/circular/post:
       name:
         - タイトルを入力します。
       due_date:
         - 閲覧期限日時を選択します。
-      mark_type:
+      see_type:
         - 既読にする形式を選択します。

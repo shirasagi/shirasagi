@@ -3,6 +3,7 @@ class Gws::User
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::Role
+  include Gws::Addon::Import::User
   include SS::Addon::UserGroupHistory
   include Gws::Addon::History
 
