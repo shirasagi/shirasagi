@@ -7,4 +7,9 @@ class Gws::Elasticsearch::Setting::Memo
   def menu_label
     @cur_site.menu_memo_label || I18n.t('modules.gws/memo')
   end
+
+  def search_types
+    return [] unless cur_site.menu_memo_visible?
+    super
+  end
 end
