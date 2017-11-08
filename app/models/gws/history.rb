@@ -62,12 +62,27 @@ class Gws::History
       return criteria if params.blank?
 
       criteria = criteria.search_keyword(params)
+      criteria = criteria.search_year_month(params)
       criteria
     end
 
     def search_keyword(params)
       return all if params[:keyword].blank?
       all.keyword_in(params[:keyword], :session_id, :request_id, :name, :model_name, :user_name, :user_group_name)
+    end
+
+    def search_year_month(params)
+      return all if params[:year].blank?
+
+      if params[:month].present?
+        started_at = Time.zone.parse("#{params[:year]}/#{params[:month]}/01")
+        end_at = started_at.end_of_month
+      else
+        started_at = Time.zone.parse("#{params[:year]}/01/01")
+        end_at = started_at.end_of_year
+      end
+
+      all.gte(created: started_at).lte(created: end_at)
     end
 
     def error!(context, cur_user, cur_site, attributes)
