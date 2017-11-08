@@ -88,25 +88,25 @@ module Gws::Addon::System::MenuSetting
   end
 
   def menu_state_options
-    %w(show hide).map { |k| [I18n.t("ss.options.state.#{k}"), k]}
+    %w(show hide).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
   end
 
-  alias :menu_portal_state_options :menu_state_options
-  alias :menu_reminder_state_options :menu_state_options
-  alias :menu_schedule_state_options :menu_state_options
-  alias :menu_memo_state_options :menu_state_options
-  alias :menu_board_state_options :menu_state_options
-  alias :menu_question_state_options :menu_state_options
-  alias :menu_report_state_options :menu_state_options
-  alias :menu_workflow_state_options :menu_state_options
-  alias :menu_circular_state_options :menu_state_options
-  alias :menu_monitor_state_options :menu_state_options
-  alias :menu_share_state_options :menu_state_options
-  alias :menu_shared_address_state_options :menu_state_options
-  alias :menu_personal_address_state_options :menu_state_options
-  alias :menu_staff_record_state_options :menu_state_options
-  alias :menu_links_state_options :menu_state_options
-  alias :menu_elasticsearch_state_options :menu_state_options
+  alias menu_portal_state_options menu_state_options
+  alias menu_reminder_state_options menu_state_options
+  alias menu_schedule_state_options menu_state_options
+  alias menu_memo_state_options menu_state_options
+  alias menu_board_state_options menu_state_options
+  alias menu_question_state_options menu_state_options
+  alias menu_report_state_options menu_state_options
+  alias menu_workflow_state_options menu_state_options
+  alias menu_circular_state_options menu_state_options
+  alias menu_monitor_state_options menu_state_options
+  alias menu_share_state_options menu_state_options
+  alias menu_shared_address_state_options menu_state_options
+  alias menu_personal_address_state_options menu_state_options
+  alias menu_staff_record_state_options menu_state_options
+  alias menu_links_state_options menu_state_options
+  alias menu_elasticsearch_state_options menu_state_options
 
   def menu_portal_visible?
     menu_portal_state == 'show'
