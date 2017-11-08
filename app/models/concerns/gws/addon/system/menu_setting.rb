@@ -50,7 +50,7 @@ module Gws::Addon::System::MenuSetting
     field :menu_links_state, type: String, default: 'show'
     field :menu_links_label, type: String, localize: true
 
-    field :menu_elasticsearch_state, type: String, default: 'show'
+    field :menu_elasticsearch_state, type: String, default: 'hide'
     field :menu_elasticsearch_label, type: String, localize: true
 
     permit_params :menu_portal_state,
