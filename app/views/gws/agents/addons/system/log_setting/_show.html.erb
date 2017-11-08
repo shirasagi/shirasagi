@@ -11,6 +11,16 @@
   </dl>
 <% end %>
 
+<dl class="see addon-gws-system-log-setting">
+  <dt><%= @model.t(:log_save_days) %></dt>
+  <dd>
+    <% if @item.log_save_days %>
+    <%= @item.log_save_days %>
+    <%= t('datetime.prompts.day') %>
+    <% end %>
+  </dd>
+</dl>
+
 <% render_log_setting.call(:main) %>
 <% render_log_setting.call(:board) %>
 <% render_log_setting.call(:circular) %>

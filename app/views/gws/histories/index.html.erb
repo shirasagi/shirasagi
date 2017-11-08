@@ -1,6 +1,6 @@
 <%
   now = Time.zone.now
-  sy = (now - 90.days).year
+  sy = (now - @cur_site.effective_log_save_days.days).year
   ey = now.year
   @years = (sy..ey).to_a.reverse.map { |y| ["#{y}#{t('datetime.prompts.year')}", y.to_s] }
   @months = (1..12).to_a.map { |m| ["#{m}#{t('datetime.prompts.month')}", '%02d' % m] }

@@ -1,17 +1,18 @@
 class Gws::HistoryArchiveJob < Gws::ApplicationJob
   class << self
-    def threshold_day(now = Time.zone.now, save_term = 90.days)
+    def threshold_day(now, save_term)
       now = now.beginning_of_day
       threshold = now - save_term
       threshold - threshold.wday.days
     end
 
-    def select_histories_to_archive(site, now = Time.zone.now, save_term = 90.days)
+    def select_histories_to_archive(site, now = Time.zone.now)
+      save_term = site.effective_log_save_days.days
       Gws::History.site(site).lt(created: threshold_day(now, save_term))
     end
 
-    def histories_to_archive?(site)
-      select_histories_to_archive(site).present?
+    def histories_to_archive?(site, now = Time.zone.now)
+      select_histories_to_archive(site, now).present?
     end
 
     def week_of_year(time)
