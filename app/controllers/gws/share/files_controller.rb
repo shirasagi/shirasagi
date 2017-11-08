@@ -171,7 +171,7 @@ class Gws::Share::FilesController < ApplicationController
 
     @model.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
     @model.create_zip(zipfile, @items, filename_duplicate_flag)
-    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
+    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment', x_sendfile: true)
     self.response_body = @model.delete_temporary_directory(zipfile)
   end
 
