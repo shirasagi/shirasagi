@@ -163,54 +163,16 @@ class Gws::Share::FilesController < ApplicationController
   def download_all
     download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
     download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
-
-    Dir.glob("#{download_root_dir}" + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
-      FileUtils.rm_rf(tmp_dir) if File.exists?(tmp_dir)
-    end
-
-    FileUtils.mkdir_p(download_dir) unless FileTest.exist?(download_dir)
+    zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
 
     filenames = []
     @items.each {|item| filenames.push(item.name)}
     filename_duplicate_flag = filenames.size == filenames.uniq.size ? 0 : 1
 
-    @zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
-
-    Zip::File.open(@zipfile, Zip::File::CREATE) do |zip_file|
-      @items.each do |item|
-        Dir.glob("#{item.path}").each do |downloadfile|
-          if filename_duplicate_flag == 0
-            zip_file.add(NKF::nkf('-sx --cp932', item.name), downloadfile)
-          elsif filename_duplicate_flag == 1
-            zip_file.add(NKF::nkf('-sx --cp932',item._id.to_s + "_" + item.name), downloadfile)
-          end
-        end
-      end
-    end
-
-    send_file(@zipfile, type: 'application/zip', filename: File.basename(@zipfile), disposition: 'attachment')
-
-    file_body = Class.new do
-      attr_reader :to_path
-
-      def initialize(path)
-        @to_path = path
-      end
-
-      def each
-        File.open(to_path, 'rb') do |file|
-          while chunk = file.read(16384)
-            yield chunk
-          end
-        end
-      end
-
-      def close
-        FileUtils.rm_rf File.dirname(@to_path)
-      end
-    end
-    self.response_body = file_body.new(@zipfile)
-
+    @model.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
+    @model.create_zip(zipfile, @items, filename_duplicate_flag)
+    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
+    self.response_body = @model.delete_temporary_directory(zipfile)
   end
 
   def render_destroy_all(result)
