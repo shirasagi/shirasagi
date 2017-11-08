@@ -9,6 +9,13 @@
   </dl>
 <% end %>
 
+<dl class="see addon-gws-system-log-setting">
+  <dt><%= @model.t(:log_save_days) %><%= @model.tt(:log_save_days) %></dt>
+  <dd>
+    <%= f.select :log_save_days, @item.log_save_days_options, include_blank: t('gws.history.system_default_save_days') %>
+  </dd>
+</dl>
+
 <% render_log_setting.call(:main) %>
 <% render_log_setting.call(:board) %>
 <% render_log_setting.call(:circular) %>

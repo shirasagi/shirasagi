@@ -13,6 +13,10 @@ production: &production
   # JavaScripts on gws pages.
   javascripts: ["gws/script"]
 
+  history:
+    save_days: 90
+    severity: info
+
 test:
   <<: *production
   disable: false

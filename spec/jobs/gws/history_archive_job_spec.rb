@@ -40,15 +40,16 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
 
   describe '#perform' do
     let(:now) { Time.zone.parse('2017-11-07T12:00:00+09:00') }
+    let(:threshold_day) { Gws::HistoryArchiveJob.threshold_day(now, site.effective_log_save_days.days) }
 
     before do
-      Timecop.freeze(Gws::HistoryArchiveJob.threshold_day(now) - 1.second) do
+      Timecop.freeze(threshold_day - 1.second) do
         create(:gws_history_model, cur_site: site)
       end
-      Timecop.freeze(Gws::HistoryArchiveJob.threshold_day(now)) do
+      Timecop.freeze(threshold_day) do
         create(:gws_history_model, cur_site: site)
       end
-      Timecop.freeze(Gws::HistoryArchiveJob.threshold_day(now) + 1.second) do
+      Timecop.freeze(threshold_day + 1.second) do
         create(:gws_history_model, cur_site: site)
       end
     end

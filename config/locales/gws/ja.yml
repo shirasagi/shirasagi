@@ -33,6 +33,7 @@ ja:
         info: 重要情報
         notice: 一般情報
         none: 出力しない
+      system_default_save_days: システム既定
       system_default_severity: システム既定
     member_log:
       copy_users: 件のユーザーをコピーしました。
@@ -283,6 +284,7 @@ ja:
         menu_links_state: リンク集の表示
         menu_elasticsearch_state: 全文検索の表示
       gws/addon/system/log_setting:
+        log_save_days: ログ保持日数
         log_main_severity: 標準機能のログ
         log_board_severity: 掲示板のログ
         log_circular_severity: 回覧板のログ
