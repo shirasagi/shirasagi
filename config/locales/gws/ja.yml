@@ -149,6 +149,7 @@ ja:
       gws/share: 共有ファイル
       gws/reminder: リマインダー
       gws/history: 操作履歴
+      gws/history_archive_file: アーカイブ
       gws/user_setting: ユーザー設定
       gws/user_form: ユーザー拡張情報
       gws/user_form_data: ユーザー拡張データ

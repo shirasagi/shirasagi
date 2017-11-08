@@ -4,7 +4,8 @@ class Gws::HistoriesController < ApplicationController
 
   model Gws::History
 
-  navi_view "gws/main/conf_navi"
+  # navi_view "gws/main/conf_navi"
+  navi_view 'gws/histories/navi'
 
   private
 
