@@ -33,7 +33,7 @@ class Gws::UserCsv::Exporter
     if site
       cur_form = form || Gws::UserForm.find_for_site(site)
       if cur_form && cur_form.state_public?
-        cur_form.columns.each do |column|
+        cur_form.columns.order_by(order: 1, created: 1).each do |column|
           headers << "A:#{column.name}"
         end
       end
@@ -104,7 +104,7 @@ class Gws::UserCsv::Exporter
     return terms if !form || form.state_closed?
 
     form_data = Gws::UserFormData.site(site).user(item).form(form).order_by(id: 1, created: 1).first
-    form.columns.each do |column|
+    form.columns.order_by(order: 1, created: 1).each do |column|
       column_value = form_data.column_values.where(column_id: column.id).first rescue nil
       terms << column_value.try(:value)
     end
