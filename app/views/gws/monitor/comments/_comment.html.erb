@@ -28,6 +28,7 @@ end
 
 menu = [] if params[:controller].match(/management/) || @item.closed?
 %>
+<% if comment.spec_config_condition(params[:controller], @cur_user, @cur_group) %>
 <aside class="comment" id="post-<%= comment.id %>">
   <header class="<%= 'toggle-head' if recursion %>">
     <h2><%= comment.name %></h2>
@@ -56,6 +57,7 @@ menu = [] if params[:controller].match(/management/) || @item.closed?
     <% end %>
   </div>
 </aside>
+    <% end %>
 
 <% if comment.children.present? %>
 <div class="comments">
