@@ -4,9 +4,10 @@ FactoryGirl.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    #attend_group_ids { [gws_user.id] }
-    attend_group_ids { [unique_id] }
+    text { "text-#{unique_id}" }
 
-    #todo_state 'unfinished'
+    trait :attend_group_ids do
+      attend_group_ids [1]
+    end
   end
 end
