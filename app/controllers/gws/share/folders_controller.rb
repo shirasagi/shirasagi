@@ -43,18 +43,16 @@ class Gws::Share::FoldersController < ApplicationController
     raise "403" unless @model.allowed?(:download, @cur_user, site: @cur_site)
     ss_file_items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
 
-    download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
-    download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
-    zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
-
     filenames = []
     ss_file_items.each {|item| filenames.push(item.name)}
     filename_duplicate_flag = filenames.size == filenames.uniq.size ? 0 : 1
 
-    @model.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
-    @model.create_zip(zipfile, ss_file_items, filename_duplicate_flag)
-    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment', x_sendfile: true)
-    self.response_body = @model.delete_temporary_directory(zipfile)
+    zipfile = Gws::Share::Folder.where(id: params[:id]).first.name + ".zip"
+    folder_updated_time = Gws::Share::Folder.where(id: params[:id]).first.updated
+
+    @model.create_download_directory(File.dirname(@model.zip_path(params[:id])))
+    @model.create_zip(@model.zip_path(params[:id]), ss_file_items, filename_duplicate_flag, folder_updated_time)
+    send_file(@model.zip_path(params[:id]), type: 'application/zip', filename: zipfile, disposition: 'attachment')
   end
 
 end

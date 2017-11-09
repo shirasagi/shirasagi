@@ -40,15 +40,24 @@ class Gws::Share::Folder
       criteria
     end
 
-    def create_temporary_directory(userid, root_temp_dir, temp_dir)
-      Dir.glob(root_temp_dir + "/" + "#{userid}_*").each do |tmp|
-        FileUtils.rm_rf(tmp) if File.exists?(tmp)
-      end
-
-      FileUtils.mkdir_p(temp_dir) unless FileTest.exist?(temp_dir)
+    def download_root_path
+      "#{Rails.root}/private/files/gws_share_files/"
     end
 
-    def create_zip(zipfile, items, filename_duplicate_flag)
+    def zip_path(folder_id)
+      self.download_root_path + folder_id.to_s.split(//).join("/") + "/_/#{folder_id}"
+    end
+
+    def create_download_directory(download_dir)
+      FileUtils.mkdir_p(download_dir) unless Dir.exist?(download_dir)
+    end
+
+    def create_zip(zipfile, items, filename_duplicate_flag, folder_updated_time)
+      if File.exist?(zipfile)
+        return if folder_updated_time < File.stat(zipfile).mtime
+        File.unlink(zipfile) if folder_updated_time > File.stat(zipfile).mtime
+      end
+
       Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
         items.each do |item|
           if File.exist?(item.path)
@@ -60,29 +69,6 @@ class Gws::Share::Folder
           end
         end
       end
-    end
-
-    def delete_temporary_directory(zipfile)
-      file_body = Class.new do
-        attr_reader :to_path
-
-        def initialize(path)
-          @to_path = path
-        end
-
-        def each
-          File.open(to_path, 'rb') do |file|
-            while chunk = file.read(163_84)
-              yield chunk
-            end
-          end
-        end
-
-        def close
-          FileUtils.rm_rf File.dirname(@to_path)
-        end
-      end
-      return file_body.new(zipfile)
     end
   end
 
