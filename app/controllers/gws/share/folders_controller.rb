@@ -40,6 +40,7 @@ class Gws::Share::FoldersController < ApplicationController
   end
 
   def download_folder
+    raise "403" unless @model.allowed?(:download, @cur_user, site: @cur_site)
     ss_file_items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
 
     download_root_dir = "#{Rails.root}/tmp/shirasagi_download"

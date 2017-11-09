@@ -46,6 +46,8 @@ ja:
     edit_private_gws_share_folders: フォルダーの編集（所有）
     delete_other_gws_share_folders: フォルダーの削除（全て）
     delete_private_gws_share_folders: フォルダーの削除（所有）
+    download_other_gws_share_folders: フォルダー内のファイル一括ダウンロード（全て）
+    download_private_gws_share_folders: フォルダー内のファイル一括ダウンロード（所有）
 
   mongoid:
     models:
