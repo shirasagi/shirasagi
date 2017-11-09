@@ -8,7 +8,12 @@
       <dt><%= @model.t :name %></dt>
       <dd><%= @item.name %></dd>
       <dt><%= t("chorg.views.run/confirmation.run_options") %></dt>
-      <dd><%= f.check_box(:add_newly_created_group_to_site) %> <%= @model.t :add_newly_created_group_to_site %></dd>
+      <dd>
+        <label for="<%= f.object_name %>_add_newly_created_group_to_site">
+          <%= f.check_box(:add_newly_created_group_to_site) %>
+          <%= @model.t :add_newly_created_group_to_site %>
+        </label>
+      </dd>
     </dl>
   </section>
 
