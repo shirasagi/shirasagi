@@ -18,6 +18,8 @@ module Gws::Addon::Import
           organization_id groups gws_main_group_ids switch_user_id remark
           ldap_dn gws_roles
         )
+        headers.map! { |k| t k }
+
         site = opts[:site]
         if site
           cur_form = Gws::UserForm.find_for_site(site)
@@ -31,59 +33,86 @@ module Gws::Addon::Import
         headers
       end
 
-      def to_csv(opts = {})
+      def enum_csv(opts = {})
+        criteria = self.criteria.dup
+
         site = opts[:site]
         if site
           cur_form = Gws::UserForm.find_for_site(site)
         end
 
-        CSV.generate do |data|
-          data << csv_headers(opts).map { |k| t k }
-          all.each do |item|
-            roles = item.gws_roles
-            roles = roles.site(site) if site
-            title = item.title(site)
-            main_group = item.gws_main_group_ids.present? ? item.gws_main_group(site) : nil
-            switch_user = item.switch_user
-            line = []
-            line << item.id
-            line << item.name
-            line << item.kana
-            line << item.uid
-            line << item.organization_uid
-            line << item.email
-            line << nil
-            line << item.tel
-            line << item.tel_ext
-            line << (title ? title.name : nil)
-            line << item.label(:type)
-            line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
-            line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
-            if item.initial_password_warning.present?
-              line << I18n.t('ss.options.state.enabled')
-            else
-              line << I18n.t('ss.options.state.disabled')
-            end
-            line << item.session_lifetime
-            line << (item.organization ? item.organization.name : nil)
-            line << item.groups.map(&:name).join("\n")
-            line << (main_group ? main_group.name : nil)
-            line << (switch_user ? "#{switch_user.id},#{switch_user.name}" : nil)
-            line << item.remark
-            line << item.ldap_dn
-            line << roles.map(&:name).join("\n")
+        Enumerator.new do |y|
+          y << encode_sjis(csv_headers(opts).to_csv)
 
-            if cur_form && cur_form.state_public?
-              cur_form_data = Gws::UserFormData.site(site).user(item).form(cur_form).order_by(id: 1, created: 1).first
-              cur_form.columns.each do |column|
-                column_value = cur_form_data.column_values.where(column_id: column.id).first rescue nil
-                line << column_value.try(:value)
-              end
-            end
-
-            data << line
+          criteria.each do |item|
+            terms = item_to_terms(item, site: site, form: cur_form)
+            y << encode_sjis(terms.to_csv)
           end
         end
+      end
+
+      def to_csv(opts = {})
+        enum_csv(copts).to_a.to_csv
+      end
+
+      private
+
+      def item_to_terms(item, opts)
+        site = opts[:site]
+
+        main_group = item.gws_main_group_ids.present? ? item.gws_main_group(site) : nil
+        switch_user = item.switch_user
+        terms = []
+        terms << item.id
+        terms << item.name
+        terms << item.kana
+        terms << item.uid
+        terms << item.organization_uid
+        terms << item.email
+        terms << nil
+        terms << item.tel
+        terms << item.tel_ext
+        terms << item.title(site).try(:name)
+        terms << item.label(:type)
+        terms << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
+        terms << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
+        terms << I18n.t("ss.options.state.#{item.initial_password_warning.present? ? 'enabled' : 'disabled'}")
+        terms << item.session_lifetime
+        terms << (item.organization ? item.organization.name : nil)
+        terms << item.groups.map(&:name).join("\n")
+        terms << main_group.try(:name)
+        terms << (switch_user ? "#{switch_user.id},#{switch_user.name}" : nil)
+        terms << item.remark
+        terms << item.ldap_dn
+        terms << item_roles(item, site).map(&:name).join("\n")
+
+        terms += item_column_values(item, site, opts[:form])
+
+        terms
+      end
+
+      def item_roles(item, site)
+        roles = item.gws_roles
+        roles = roles.site(site) if site
+        roles
+      end
+
+      def item_column_values(item, site, cur_form)
+        terms = []
+
+        return terms if !cur_form || cur_form.state_closed?
+
+        cur_form_data = Gws::UserFormData.site(site).user(item).form(cur_form).order_by(id: 1, created: 1).first
+        cur_form.columns.each do |column|
+          column_value = cur_form_data.column_values.where(column_id: column.id).first rescue nil
+          terms << column_value.try(:value)
+        end
+
+        terms
+      end
+
+      def encode_sjis(str)
+        str.encode("SJIS", invalid: :replace, undef: :replace)
       end
     end
 
@@ -153,7 +182,7 @@ module Gws::Addon::Import
 
       # type
       value = row[t("type")].to_s.strip
-      type = item.type_options.find { |v,k| v == value }
+      type = item.type_options.find { |v, k| v == value }
       item.type = type[1] if type
 
       # initial_password_warning
