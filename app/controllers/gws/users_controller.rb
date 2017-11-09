@@ -132,8 +132,10 @@ class Gws::UsersController < ApplicationController
   end
 
   def download
-    csv = @model.unscoped.site(@cur_site).order_by_title(@cur_site).to_csv(site: @cur_site)
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_users_#{Time.zone.now.to_i}.csv"
+    @items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
+    filename = "gws_users_#{Time.zone.now.to_i}.csv"
+    response.status = 200
+    send_enum(@items.enum_csv(site: @cur_site), type: 'text/csv; charset=Shift_JIS', filename: filename)
   end
 
   def download_template
