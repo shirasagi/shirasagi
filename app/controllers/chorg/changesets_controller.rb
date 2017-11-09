@@ -13,7 +13,7 @@ class Chorg::ChangesetsController < ApplicationController
   def set_crumbs
     set_revision
     @crumbs << [t("chorg.revision"), chorg_revisions_revisions_path]
-    @crumbs << [@cur_revision.name, edit_chorg_revisions_revision_path(id: @cur_revision.id)]
+    @crumbs << [@cur_revision.name, chorg_revisions_revision_path(id: @cur_revision.id)]
   end
 
   def set_item
