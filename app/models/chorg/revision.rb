@@ -4,4 +4,6 @@ class Chorg::Revision
   include Cms::SitePermission
 
   set_permission_name 'chorg_revisions', :edit
+
+  has_many :changesets, class_name: 'Chorg::Changeset', dependent: :destroy
 end

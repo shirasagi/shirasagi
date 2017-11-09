@@ -7,6 +7,12 @@ SS::Application.routes.draw do
   end
 
   gws 'chorg' do
-    resources :revisions, concerns: [:deletion]
+    resources :revisions, concerns: [:deletion] do
+      # resources :results, only: [:index, :show]
+    end
+    resources :changesets, path: 'revision:rid/:type/changesets', concerns: [:deletion]
+    resources :results, path: 'revision:rid/results', only: [:index, :show]
+    get 'revision:rid/:type/run' => 'run#confirmation'
+    post 'revision:rid/:type/run' => 'run#run'
   end
 end

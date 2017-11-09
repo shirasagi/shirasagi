@@ -6,7 +6,7 @@
   </dd>
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>
-    <%= render partial: "#{params[:action]}_#{type}", locals: { type: type, changesets: changesets } %>
+    <%= render file: "_#{params[:action]}_#{type}", locals: { type: type, changesets: changesets } %>
   <% end %>
 </dl>
 <footer class="send">

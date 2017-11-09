@@ -87,10 +87,10 @@ ja:
       chorg/changeset: 変更内容
       chorg/revision: リビジョン
     attributes:
-      chorg/revision:
+      chorg/model/revision:
         name: 名前
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
-      chorg/changeset:
+      chorg/model/changeset:
         type: 種別
 
   tooltip:

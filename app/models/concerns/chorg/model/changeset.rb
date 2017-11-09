@@ -16,7 +16,6 @@ module Chorg::Model::Changeset
     attr_accessor :cur_revision, :cur_type
 
     seqid :id
-    belongs_to :revision, class_name: 'Chorg::Revision'
     field :type, type: String
     field :sources, type: Array
     field :destinations, type: Array
