@@ -4,8 +4,8 @@ FactoryGirl.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    #text { "text-#{unique_id}" }
-    attend_group_ids { [gws_user.id] }
+    #attend_group_ids { [gws_user.id] }
+    attend_group_ids { [unique_id] }
 
     #todo_state 'unfinished'
   end
