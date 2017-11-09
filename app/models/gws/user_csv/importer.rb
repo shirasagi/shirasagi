@@ -5,6 +5,8 @@ class Gws::UserCsv::Importer
   attr_accessor :cur_site
   attr_accessor :imported
 
+  validates :in_file, presence: true
+  validates :cur_site, presence: true
   validate :validate_import
 
   def import
@@ -57,14 +59,13 @@ class Gws::UserCsv::Importer
   end
 
   def row_value(key)
-    row[Gws::User.t(key)].to_s.strip
+    v = row[Gws::User.t(key)].presence
+    return v if v.blank?
+    v.strip.presence
   end
 
   def build_item
     id = row_value('id')
-    # email = row_value('email')
-    # uid = row_value('uid')
-
     if id.present?
       item = Gws::User.unscoped.where(id: id).first
       if item.blank?
@@ -83,57 +84,81 @@ class Gws::UserCsv::Importer
       item[k] = row_value(k)
     end
 
-    # password
+    %i[
+      set_password set_title set_type set_initial_password_warning set_organization_id set_group_ids
+      set_main_group_ids set_switch_user_id set_gws_roles
+    ].each do |m|
+      send(m, item)
+    end
+
+    item
+  end
+
+  def set_password(item)
     password = row_value('password')
     item.in_password = password if password.present?
+  end
 
-    # title
-    value = row_value("title_ids")
-    title = Gws::UserTitle.site(site).where(name: value).first
+  def set_title(item)
+    value = row_value('title_ids')
+    title = Gws::UserTitle.site(cur_site).where(name: value).first if value.present?
     item.in_title_id = title ? title.id : ''
+  end
 
-    # type
-    value = row[t("type")].to_s.strip
-    type = item.type_options.find { |v, k| v == value }
-    item.type = type[1] if type
+  def set_type(item)
+    value = row_value('type')
+    type = item.type_options.find { |v, k| v == value } if value.present?
+    item.type = type ? type[1] : ''
+  end
 
-    # initial_password_warning
-    initial_password_warning = row[t("initial_password_warning")].to_s.strip
+  def set_initial_password_warning(item)
+    initial_password_warning = row_value('initial_password_warning')
     if initial_password_warning == I18n.t('ss.options.state.enabled')
       item.initial_password_warning = 1
     else
       item.initial_password_warning = nil
     end
-
-    # organization_id
-    value = row[t("organization_id")].to_s.strip
-    group = SS::Group.where(name: value).first
-    item.organization_id = group ? group.id : nil
-
-    # groups
-    groups = row[t("groups")].to_s.strip.split(/\n/)
-    item.group_ids = SS::Group.in(name: groups).map(&:id)
-
-    # main_group_ids
-    value = row[t("gws_main_group_ids")].to_s.strip
-    group = SS::Group.where(name: value).first
-    item.in_gws_main_group_id = group ? group.id : ''
-
-    # switch_user_id
-    value = row[t("switch_user_id")].to_s.strip.split(',', 2)
-    user = SS::User.where(id: value[0], name: value[1]).first
-    item.switch_user_id = user ? user.id : nil
-
-    # gws_roles
-    gws_roles = row[t("gws_roles")].to_s.strip.split(/\n/)
-    add_gws_roles(item, gws_roles)
-
-    item
   end
 
-  def add_gws_roles(item, gws_roles)
-    site_role_ids = Gws::Role.site(@cur_site).map(&:id)
-    add_role_ids = Gws::Role.site(@cur_site).in(name: gws_roles).map(&:id)
+  def set_organization_id(item)
+    value = row_value('organization_id')
+    group = SS::Group.where(name: value).first if value.present?
+    item.organization_id = group ? group.id : nil
+  end
+
+  def set_group_ids(item)
+    value = row_value('groups')
+    if value.present?
+      groups = SS::Group.in(name: value.split(/\n/))
+    else
+      groups = SS::Group.none
+    end
+    item.group_ids = groups.pluck(:id)
+  end
+
+  def set_main_group_ids(item)
+    value = row_value('gws_main_group_ids')
+    group = SS::Group.where(name: value).first if value.present?
+    item.in_gws_main_group_id = group ? group.id : ''
+  end
+
+  def set_switch_user_id(item)
+    value = row_value('switch_user_id')
+    if value.present?
+      value = value.split(',', 2)
+      user = SS::User.where(id: value[0], name: value[1]).first
+    end
+    item.switch_user_id = user ? user.id : nil
+  end
+
+  def set_gws_roles(item)
+    value = row_value('gws_roles')
+    if value.present?
+      add_role_ids = Gws::Role.site(cur_site).in(name: value.split(/\n/)).pluck(:id)
+    else
+      add_role_ids = []
+    end
+    site_role_ids = Gws::Role.site(cur_site).pluck(:id)
     item.gws_role_ids = item.gws_role_ids - site_role_ids + add_role_ids
   end
 
