@@ -166,8 +166,8 @@ class Gws::Monitor::Topic
 
   def create_zip(zipfile, group_items)
     if File.exist?(zipfile)
-      return if self.updated.to_time < File.stat(zipfile).mtime
-      File.unlink(zipfile) if self.updated.to_time > File.stat(zipfile).mtime
+      return if self.updated < File.stat(zipfile).mtime
+      File.unlink(zipfile) if self.updated > File.stat(zipfile).mtime
     end
 
     Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
