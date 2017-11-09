@@ -155,11 +155,10 @@ module Gws::Monitor::Postable
   end
 
   def spec_config_condition(controller, cur_user, cur_group)
-    unless controller.match(/admin|management/)
-      if topic.spec_config == '0'
-        return false unless user_group_id == cur_group.id || topic.group_ids.include?(user_group_id) || topic.user_ids.include?(user_id)
-        return false if (topic.group_ids.include?(user_group_id) || topic.user_ids.include?(user_id)) && parent.user_group_id != cur_group.id
-      end
+    unless controller.match(/admin|management/) || topic.spec_config == '5'
+      admin_comment_check = topic.group_ids.include?(user_group_id) || topic.user_ids.include?(user_id)
+      return false unless user_group_id == cur_group.id || admin_comment_check
+      return false if admin_comment_check && parent.user_group_id != cur_group.id
     end
     return true
   end
