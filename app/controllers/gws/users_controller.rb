@@ -135,7 +135,10 @@ class Gws::UsersController < ApplicationController
     @items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
     filename = "gws_users_#{Time.zone.now.to_i}.csv"
     response.status = 200
-    send_enum(@items.enum_csv(site: @cur_site), type: 'text/csv; charset=Shift_JIS', filename: filename)
+    send_enum(
+      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site),
+      type: 'text/csv; charset=Shift_JIS', filename: filename
+    )
   end
 
   def download_template
@@ -145,9 +148,11 @@ class Gws::UsersController < ApplicationController
 
   def import
     return if request.get?
-    @item = @model.new get_params
+    @item = Gws::UserCsv::Importer.new get_params
     @item.cur_site = @cur_site
-    result = @item.import
+    if @item.valid?
+      result = @item.import
+    end
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
     render_create result, location: { action: :index }, render: { file: :import }
   end
