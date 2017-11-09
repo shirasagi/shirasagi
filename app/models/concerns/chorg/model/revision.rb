@@ -11,8 +11,6 @@ module Chorg::Model::Revision
     field :name, type: String
     field :job_ids, type: Array
 
-    has_many :changesets, class_name: 'Chorg::Changeset', dependent: :destroy
-
     permit_params :name, :changesets, :add_newly_created_group_to_site
 
     validates :name, presence: true, length: { maximum: 80 }, uniqueness: { scope: :site_id }
