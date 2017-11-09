@@ -31,6 +31,7 @@ class Gws::Column::Value::NumberField < Gws::Column::Value::Base
     self.minus_type = new_value.minus_type
     self.scale = new_value.scale
     self.decimal = new_value.decimal
+    self.text_index = new_value.decimal.to_s
   end
 
   def value

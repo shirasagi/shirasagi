@@ -149,7 +149,9 @@ module SS::Model::User
 
       cur_site = params[:cur_site]
       if self.name == 'Gws::User' && cur_site
-        user_ids = Gws::UserFormData.site(cur_site).keyword_in(params[:keyword], 'column_values.value').pluck(:user_id)
+        criteria = Gws::UserFormData.site(cur_site)
+        criteria = criteria.keyword_in(params[:keyword], 'column_values.text_index')
+        user_ids = criteria.pluck(:user_id)
       end
 
       if user_ids.blank?

@@ -27,7 +27,7 @@ class Gws::Column::TextField < Gws::Column::Base
   def serialize_value(value)
     Gws::Column::Value::TextField.new(
       column_id: self.id, name: self.name, order: self.order,
-      value: value
+      value: value, text_index: value
     )
   end
 end
