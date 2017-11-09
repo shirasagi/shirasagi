@@ -29,35 +29,35 @@ end
 menu = [] if params[:controller].match(/management/) || @item.closed?
 %>
 <% if comment.spec_config_condition(params[:controller], @cur_user, @cur_group) %>
-<aside class="comment" id="post-<%= comment.id %>">
-  <header class="<%= 'toggle-head' if recursion %>">
-    <h2><%= comment.name %></h2>
-    <nav class="meta">
-      <span class="user"><%= comment.contributor_name.presence || comment.user_long_name %></span>
-      <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
-    </nav>
-  </header>
+  <aside class="comment" id="post-<%= comment.id %>">
+    <header class="<%= 'toggle-head' if recursion %>">
+      <h2><%= comment.name %></h2>
+      <nav class="meta">
+        <span class="user"><%= comment.contributor_name.presence || comment.user_long_name %></span>
+        <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
+      </nav>
+    </header>
 
-  <div class="toggle-body <%= 'hide' if recursion %>">
-    <div class="body markdown-body"><%= comment.html %></div>
+    <div class="toggle-body <%= 'hide' if recursion %>">
+      <div class="body markdown-body"><%= comment.html %></div>
 
-    <% if comment.files.present? %>
-    <div class="files">
-      <% comment.files.each do |file| %>
-        <span id="file-<%= file.id %>">
-          <img src="/assets/img/gws/ic-file.png" alt="" />
-          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
-        </span>
+      <% if comment.files.present? %>
+      <div class="files">
+        <% comment.files.each do |file| %>
+          <span id="file-<%= file.id %>">
+            <img src="/assets/img/gws/ic-file.png" alt="" />
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+          </span>
+        <% end %>
+      </div>
+      <% end %>
+
+      <% if menu.present? %>
+      <div class="menu"><%= safe_join(menu) %></div>
       <% end %>
     </div>
-    <% end %>
-
-    <% if menu.present? %>
-    <div class="menu"><%= safe_join(menu) %></div>
-    <% end %>
-  </div>
-</aside>
-    <% end %>
+  </aside>
+<% end %>
 
 <% if comment.children.present? %>
 <div class="comments">
