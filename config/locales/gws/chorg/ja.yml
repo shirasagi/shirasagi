@@ -9,3 +9,8 @@ ja:
     models:
       gws/chorg/revision: 変更内容
       gws/chorg/chageset: リビジョン
+
+  job:
+    models:
+      gws/chorg/test_runner: 組織変更/テスト実行
+      gws/chorg/main_runner: 組織変更/本番実行
