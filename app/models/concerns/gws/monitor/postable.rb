@@ -154,6 +154,16 @@ module Gws::Monitor::Postable
     descendants_updated > Time.zone.now - site.monitor_new_days.day
   end
 
+  def spec_config_condition(controller, cur_user, cur_group)
+    unless controller.match(/admin|management/)
+      if topic.spec_config == '0'
+        return false unless user_group_id == cur_group.id || topic.group_ids.include?(user_group_id) || topic.user_ids.include?(user_id)
+        return false if (topic.group_ids.include?(user_group_id) || topic.user_ids.include?(user_id)) && parent.user_group_id != cur_group.id
+      end
+    end
+    return true
+  end
+
   def mode_options
     [
       [I18n.t('gws/monitor.options.mode.thread'), 'thread'],
