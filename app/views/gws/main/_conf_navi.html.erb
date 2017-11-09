@@ -36,6 +36,10 @@
     <% end %>
   <% end %>
 
+  <% if Gws::Chorg::Revision.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('modules.gws/chorg'), gws_chorg_revisions_path %></h3>
+  <% end %>
+
   <% if Gws::History.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/history'), gws_histories_path %></h3>
   <% end %>

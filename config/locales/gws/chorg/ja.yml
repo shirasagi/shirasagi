@@ -1,0 +1,11 @@
+ja:
+  modules:
+    gws/chorg: 組織変更
+
+  gws_role:
+    edit_gws_chorg_revisions: 組織変更の管理
+
+  mongoid:
+    models:
+      gws/chorg/revision: 変更内容
+      gws/chorg/chageset: リビジョン
