@@ -161,18 +161,16 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def download_all
-    download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
-    download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
-    zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
+    zipfile = Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
+    tmp_dir_name = SecureRandom.hex(4).to_s
 
     filenames = []
     @items.each {|item| filenames.push(item.name)}
     filename_duplicate_flag = filenames.size == filenames.uniq.size ? 0 : 1
 
-    @model.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
-    @model.create_zip(zipfile, @items, filename_duplicate_flag)
-    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
-    self.response_body = @model.delete_temporary_directory(zipfile)
+    @model.create_download_directory(@cur_user.id, @model.download_root_path, @model.zip_path(@cur_user.id, tmp_dir_name))
+    @model.create_zip(@model.zip_path(@cur_user.id, tmp_dir_name), @items, filename_duplicate_flag)
+    send_file(@model.zip_path(@cur_user.id, tmp_dir_name), type: 'application/zip', filename: zipfile, disposition: 'attachment')
   end
 
   def render_destroy_all(result)
