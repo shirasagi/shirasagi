@@ -20,6 +20,12 @@ class Gws::UserForm
 
   delegate :build_column_values, to: :columns
 
+  class << self
+    def find_for_site(site)
+      site(site).order_by(id: 1, created: 1).first
+    end
+  end
+
   def reference_name
     self.class.model_name.human
   end
