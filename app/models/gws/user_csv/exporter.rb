@@ -5,7 +5,19 @@ class Gws::UserCsv::Exporter
   attr_accessor :form
   attr_accessor :criteria
 
+  PREFIX = 'A:'.freeze
+
   class << self
+    def csv_basic_headers
+      headers = %w(
+      id name kana uid organization_uid email password tel tel_ext title_ids type
+      account_start_date account_expiration_date initial_password_warning session_lifetime
+      organization_id groups gws_main_group_ids switch_user_id remark
+      ldap_dn gws_roles
+    )
+      headers.map! { |k| Gws::User.t(k) }
+    end
+
     def csv_headers(opts = {})
       new(opts).csv_headers
     end
@@ -21,25 +33,20 @@ class Gws::UserCsv::Exporter
     end
   end
 
-  def csv_headers
-    headers = %w(
-      id name kana uid organization_uid email password tel tel_ext title_ids type
-      account_start_date account_expiration_date initial_password_warning session_lifetime
-      organization_id groups gws_main_group_ids switch_user_id remark
-      ldap_dn gws_roles
-    )
-    headers.map! { |k| Gws::User.t(k) }
+  def csv_extend_headers
+    return [] if !site
 
-    if site
-      cur_form = form || Gws::UserForm.find_for_site(site)
-      if cur_form && cur_form.state_public?
-        cur_form.columns.order_by(order: 1, created: 1).each do |column|
-          headers << "A:#{column.name}"
-        end
-      end
+    cur_form = form || Gws::UserForm.find_for_site(site)
+    return [] if !cur_form
+    return [] if cur_form.state_closed?
+
+    cur_form.columns.order_by(order: 1, created: 1).map do |column|
+      "#{PREFIX}#{column.name}"
     end
+  end
 
-    headers
+  def csv_headers
+    self.class.csv_basic_headers + csv_extend_headers
   end
 
   def enum_csv

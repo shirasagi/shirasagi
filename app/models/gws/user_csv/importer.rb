@@ -20,11 +20,15 @@ class Gws::UserCsv::Importer
       @row = row
 
       item = build_item
-
       save_item(item)
+      save_form_data(item)
     end
 
     errors.empty?
+  ensure
+    @table = nil
+    @row_index = nil
+    @row = nil
   end
 
   private
@@ -48,7 +52,8 @@ class Gws::UserCsv::Importer
       return
     end
 
-    if @table.headers != self.class.csv_headers.map { |k| t(k) }
+    diff = Gws::UserCsv::Exporter.csv_basic_headers - @table.headers
+    if diff.present?
       errors.add :in_file, :invalid_file_type
     end
     in_file.rewind
@@ -59,7 +64,7 @@ class Gws::UserCsv::Importer
   end
 
   def row_value(key)
-    v = row[Gws::User.t(key)].presence
+    v = @row[Gws::User.t(key)].presence
     return v if v.blank?
     v.strip.presence
   end
@@ -174,5 +179,26 @@ class Gws::UserCsv::Importer
     item.errors.full_messages.each do |error|
       errors.add(:base, "#{@row_index}: #{error}")
     end
+  end
+
+  def save_form_data(item)
+    return if item.new_record?
+
+    @form ||= Gws::UserForm.find_for_site(cur_site)
+    return if @form.blank?
+    return if @form.state_closed?
+
+    form_data = Gws::UserFormData.site(cur_site).user(item).form(@form).order_by(id: 1, created: 1).first_or_create
+    form_data.cur_site = cur_site
+    form_data.cur_form = @form
+    form_data.cur_user = item
+
+    new_column_values = @form.columns.map do |column|
+      value = @row["#{Gws::UserCsv::Exporter::PREFIX}#{column.name}"].presence
+      column.serialize_value(value)
+    end
+
+    form_data.update_column_values(new_column_values)
+    form_data.save
   end
 end
