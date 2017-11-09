@@ -7,6 +7,7 @@ SS::Application.routes.draw do
   end
 
   gws 'chorg' do
+    get '/' => redirect { |p, req| "#{req.path}/revisions" }, as: :main
     resources :revisions, concerns: [:deletion] do
       # resources :results, only: [:index, :show]
     end
