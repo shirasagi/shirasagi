@@ -101,13 +101,14 @@ class Gws::HistoryArchiveJob < Gws::ApplicationJob
 
       @last_open_file = file
       @last_open_file_handle = open(file, 'a')
+      @last_open_file_handle.binmode
 
       if ::File.size(file) == 0
-        @last_open_file_handle.puts Gws::History.csv_header.to_csv
+        @last_open_file_handle.write(Gws::History.csv_header.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
       end
     end
 
-    @last_open_file_handle.puts history.to_csv
+    @last_open_file_handle.write(history.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
   end
 
   def create_archives
