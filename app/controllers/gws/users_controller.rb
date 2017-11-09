@@ -62,11 +62,14 @@ class Gws::UsersController < ApplicationController
   def index
     @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
 
+    @s = OpenStruct.new(params[:s])
+    @s.cur_site = @cur_site
+
     @items = @model.site(@cur_site).
       state(params.dig(:s, :state)).
       allow(:read, @cur_user, site: @cur_site).
       in(group_ids: group_ids).
-      search(params[:s]).
+      search(@s).
       order_by_title(@cur_site).
       page(params[:page]).per(50)
   end
