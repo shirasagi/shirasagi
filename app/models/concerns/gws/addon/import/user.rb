@@ -11,23 +11,39 @@ module Gws::Addon::Import
     end
 
     module ClassMethods
-      def csv_headers
-        %w(
+      def csv_headers(opts = {})
+        headers = %w(
           id name kana uid organization_uid email password tel tel_ext title_ids type
           account_start_date account_expiration_date initial_password_warning session_lifetime
           organization_id groups gws_main_group_ids switch_user_id remark
           ldap_dn gws_roles
         )
+        site = opts[:site]
+        if site
+          cur_form = Gws::UserForm.find_for_site(site)
+          if cur_form && cur_form.state_public?
+            cur_form.columns.each do |column|
+              headers << "A:#{column.name}"
+            end
+          end
+        end
+
+        headers
       end
 
       def to_csv(opts = {})
+        site = opts[:site]
+        if site
+          cur_form = Gws::UserForm.find_for_site(site)
+        end
+
         CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
+          data << csv_headers(opts).map { |k| t k }
+          all.each do |item|
             roles = item.gws_roles
-            roles = roles.site(opts[:site]) if opts[:site]
-            title = item.title(opts[:site])
-            main_group = item.gws_main_group_ids.present? ? item.gws_main_group(opts[:site]) : nil
+            roles = roles.site(site) if site
+            title = item.title(site)
+            main_group = item.gws_main_group_ids.present? ? item.gws_main_group(site) : nil
             switch_user = item.switch_user
             line = []
             line << item.id
@@ -56,6 +72,15 @@ module Gws::Addon::Import
             line << item.remark
             line << item.ldap_dn
             line << roles.map(&:name).join("\n")
+
+            if cur_form && cur_form.state_public?
+              cur_form_data = Gws::UserFormData.site(site).user(item).form(cur_form).order_by(id: 1, created: 1).first
+              cur_form.columns.each do |column|
+                column_value = cur_form_data.column_values.where(column_id: column.id).first rescue nil
+                line << column_value.try(:value)
+              end
+            end
+
             data << line
           end
         end

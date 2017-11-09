@@ -29,7 +29,7 @@ class Gws::UsersController < ApplicationController
   def build_form_data
     return if params[:custom].blank?
 
-    cur_form = Gws::UserForm.site(@cur_site).order_by(id: 1, created: 1).first
+    cur_form = Gws::UserForm.find_for_site(@cur_site)
     return if cur_form.blank? || cur_form.state_closed?
 
     custom = params.require(:custom)
