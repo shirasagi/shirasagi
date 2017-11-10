@@ -7,12 +7,14 @@ class Job::Task
 
   field :pool, type: String
   field :class_name, type: String
+  field :app_type, type: String
   field :args, type: Array
   field :priority, type: Integer, default: -> { Time.zone.now.to_i }
   field :at, type: Integer, default: -> { Time.zone.now.to_i }
   field :active_job, type: Hash
 
   belongs_to :site, class_name: "SS::Site"
+  belongs_to :group, class_name: "SS::Group"
 
   before_validation :set_name
 
