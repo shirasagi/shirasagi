@@ -5,8 +5,8 @@
     <header><h2><%= t("chorg.views.run/confirmation.#{params[:type]}.header") %></h2></header>
 
     <dl class="see mod-chorg-run-confirmation">
-      <dt><%= @model.t :name %></dt>
-      <dd><%= @item.name %></dd>
+      <dt><%= @revision.class.t :name %></dt>
+      <dd><%= @revision.name %></dd>
       <dt><%= t("chorg.views.run/confirmation.run_options") %></dt>
       <dd>
         <label for="<%= f.object_name %>_add_newly_created_group_to_site">
@@ -14,12 +14,20 @@
           <%= @model.t :add_newly_created_group_to_site %>
         </label>
       </dd>
+      <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
+      <dd><%= f.text_field :reservation, class: 'datetime js-datetime' %></dd>
     </dl>
   </section>
 
   <footer class="send">
     <%= f.submit t("chorg.views.run/confirmation.#{params[:type]}.run_button"), class: "btn-primary save" %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default",
-      onclick: "location.href='#{url_for(controller: :revisions, action: :show, id: @item.id)}'; return false;" %>
+      onclick: "location.href='#{url_for(controller: :revisions, action: :show, id: @revision)}'; return false;" %>
   </footer>
+<% end %>
+
+<%= jquery do %>
+  $('input[name="item[reservation]"]').datetimepicker({
+    minDate: '+1970/01/02'
+  });
 <% end %>

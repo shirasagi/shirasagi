@@ -5,13 +5,11 @@ module Chorg::Model::Revision
   include Voice::Lockable
 
   included do
-    attr_accessor :add_newly_created_group_to_site
-
     seqid :id
     field :name, type: String
     field :job_ids, type: Array
 
-    permit_params :name, :changesets, :add_newly_created_group_to_site
+    permit_params :name, :changesets
 
     validates :name, presence: true, length: { maximum: 80 }, uniqueness: { scope: :site_id }
 
