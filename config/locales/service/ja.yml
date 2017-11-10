@@ -1,0 +1,47 @@
+ja:
+  service:
+    menu:
+      my_account: アカウント情報
+      accounts: アカウント一覧
+    buttons:
+      reload: 更新
+    errors:
+      invalid_login: ログインできませんでした。
+    messages:
+      disabled_app: "[%{name}]このアプリケーションは利用が停止されています。"
+      over_quota: 使用容量が制限を超過しています。
+
+  modules:
+    service: サービス設定
+    addons:
+      service/quota: 使用容量
+
+  mongoid:
+    models:
+      service/account: アカウント
+    attributes:
+      service/account:
+        account: アカウントID
+        in_account: アカウントID
+        password: パスワード
+        in_password: パスワード
+        name: アカウント名
+        roles: ロール
+        account_start_date: 有効期限（開始）
+        account_expiration_date: 有効期限（終了）
+        remark: 備考
+        cms_use: CMSの利用
+        gws_use: グループウェアの利用
+        webmail_use: ウェブメールの利用
+        cms_quota: CMS容量制限
+        gws_quota: グループウェア容量制限
+        webmail_quota: ウェブメール容量制限
+        in_cms_quota_mb: CMS容量制限
+        in_gws_quota_mb: グループウェア容量制限
+        in_webmail_quota_mb: ウェブメール容量制限
+        base_quota_used: 標準機能使用容量
+        cms_quota_used: CMS使用容量
+        gws_quota_used: グループウェア使用容量
+        webmail_quota_used: ウェブメール使用容量
+        organization_ids: 組織
+        site_ids: サイト
