@@ -12,6 +12,14 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
       expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+
+      # check for job was succeeded
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).to be_nil
     end
   end
@@ -30,6 +38,14 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page).not_to be_nil
         # check for not changed
         expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         expect(Cms::Group.where(id: group.id).first).not_to be_nil
         expect(Cms::Group.where(id: group.id).first.name).to eq changeset.sources.first["name"]
 
@@ -66,6 +82,14 @@ describe Chorg::TestRunner, dbscope: :example do
 
         # check for not changed
         expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         expect(Cms::Group.where(id: group1.id).first).not_to be_nil
         expect(Cms::Group.where(id: group1.id).first.name).to eq group1.name
         expect(Cms::Group.where(id: group2.id).first).not_to be_nil
@@ -98,6 +122,14 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
       # change group.
       expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+
+      # check for job was succeeded
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       # check for not changed
       expect(Cms::Group.where(id: group.id).first).not_to be_nil
     end
