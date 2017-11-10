@@ -50,26 +50,28 @@ module Gws::BaseFilter
     @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
   end
 
-  def save_controller_access_history
-    Gws::History.notice!(
-      :controller, @cur_user, @cur_site,
-      path: request.path, controller: self.class.name.underscore, action: action_name, message: 'accessed'
-    ) rescue nil
-  end
-
   def set_gws_logged_in
     gws_session = session[:gws]
     gws_session ||= {}
-    gws_session['last_logged_in'] ||= begin
+    gws_session[@cur_site.id.to_s] ||= {}
+    gws_session[@cur_site.id.to_s]['last_logged_in'] ||= begin
       Gws::History.info!(
         :controller, @cur_user, @cur_site,
-        path: request.path, controller: self.class.name.underscore, action: action_name, message: 'logged in'
+        path: request.path, controller: self.class.name.underscore, action: action_name,
+        model: Gws::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
       ) rescue nil
 
       Time.zone.now.to_i
     end
 
     session[:gws] = gws_session
+  end
+
+  def save_controller_access_history
+    Gws::History.notice!(
+      :controller, @cur_user, @cur_site,
+      path: request.path, controller: self.class.name.underscore, action: action_name
+    ) rescue nil
   end
 
   # override SS::BaseFilter#rescue_action

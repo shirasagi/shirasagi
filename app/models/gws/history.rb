@@ -38,12 +38,10 @@ class Gws::History
     validation.validates :controller, presence: true
     validation.validates :path, presence: true
     validation.validates :action, presence: true
-    validation.validates :message, presence: true
   end
   with_options on: :job do |validation|
     validation.validates :job, presence: true
     validation.validates :action, presence: true
-    validation.validates :message, presence: true
   end
 
   before_save :set_string_data
