@@ -215,7 +215,8 @@ ja:
         path: URL
         action: アクション
         message: メッセージ
-        updated_fields: 変更内容
+        updated_fields: 変更箇所
+        updated_field_names: 変更箇所
         user_name: ユーザー
         user_tel: 電話番号
         created: 変更日時
