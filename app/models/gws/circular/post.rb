@@ -118,6 +118,29 @@ class Gws::Circular::Post
   end
 
   class << self
+    def owner(action, user, opts = {})
+      where(owner_condition(action, user, opts))
+    end
+
+    def owner_condition(action, user, opts = {})
+      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
+      action = permission_action || action
+
+      if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
+        { "$or" => [
+          { user_ids: user.id },
+          { permission_level: { "$lte" => level } },
+        ] }
+      elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
+        { "$or" => [
+          { user_ids: user.id },
+          { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
+        ] }
+      else
+        { user_ids: user.id }
+      end
+    end
+
     def allow_condition(action, user, opts = {})
       site_id = opts[:site] ? opts[:site].id : criteria.selector['site_id']
       action = permission_action || action

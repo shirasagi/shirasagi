@@ -22,7 +22,7 @@ class Gws::Circular::TrashesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).
+      owner(:read, @cur_user, site: @cur_site).
       deleted.
       search(params[:s]).
       page(params[:page]).per(50)
