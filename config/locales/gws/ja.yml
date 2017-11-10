@@ -442,3 +442,4 @@ ja:
   job:
     models:
       gws/reminder/notification_job: リマインダー通知
+      gws/history_archive_job: 操作履歴アーカイブ作成
