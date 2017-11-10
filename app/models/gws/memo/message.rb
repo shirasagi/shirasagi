@@ -166,5 +166,12 @@ class Gws::Memo::Message
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
       where("#{direction}.#{user.id}" => folder)
     end
+
+    def unseens(user, site)
+      self.site(site).where('$and' => [
+        { "to.#{user.id}".to_sym.exists => true },
+        { "seen.#{user.id}".to_sym.exists => false }
+      ])
+    end
   end
 end
