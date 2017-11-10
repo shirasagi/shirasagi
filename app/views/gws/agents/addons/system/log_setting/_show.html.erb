@@ -6,7 +6,7 @@
       <%= @model.t("log_#{type}_severity") %>
     </dt>
     <dd>
-      <%= @item.label("log_#{type}_severity") %>
+      <%= @item.label("log_#{type}_severity").presence || t('gws.history.system_default_save_days') %>
     </dd>
   </dl>
 <% end %>
@@ -17,6 +17,8 @@
     <% if @item.log_save_days %>
     <%= @item.log_save_days %>
     <%= t('datetime.prompts.day') %>
+    <% else %>
+    <%= t('gws.history.system_default_save_days') %>
     <% end %>
   </dd>
 </dl>
