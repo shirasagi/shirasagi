@@ -11,6 +11,14 @@ describe Chorg::MainRunner, dbscope: :example do
     it do
       expect(changeset).not_to be_nil
       expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+
+      # check for job was succeeded
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).not_to be_nil
     end
   end
@@ -29,6 +37,14 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         expect(Cms::Group.where(name: group.name).first).to be_nil
         expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
         expect(Cms::Group.where(id: group.id).first.contact_email).to eq changeset.destinations.first["contact_email"]
@@ -66,6 +82,14 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page).not_to be_nil
           # execute
           expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+
+          # check for job was succeeded
+          expect(Job::Log.count).to eq 1
+          Job::Log.first.tap do |log|
+            expect(log.logs).to include(include('INFO -- : Started Job'))
+            expect(log.logs).to include(include('INFO -- : Completed Job'))
+          end
+
           expect(Cms::Group.where(name: group.name).first).to be_nil
           expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
           # these attributes are expected not to be changed.
@@ -116,6 +140,14 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         expect(Cms::Group.where(name: group.name).first).to be_nil
         expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
         # check page
@@ -151,6 +183,14 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         expect(Cms::Group.where(id: group1.id).first).to be_nil
         expect(Cms::Group.where(name: group1.name).first).to be_nil
         expect(Cms::Group.where(id: group2.id).first).to be_nil
@@ -200,6 +240,14 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq "foobar02@example.jp"
         # execute
         expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         # group1 shoud be exist because group1 is destination_group.
         expect(Cms::Group.where(id: group1.id).first).not_to be_nil
         expect(Cms::Group.where(name: group1.name).first).not_to be_nil
@@ -247,6 +295,14 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         expect { described_class.bind(site_id: site, user_id: user).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         expect(Cms::Group.where(id: group0.id).first).to be_nil
         expect(Cms::Group.where(name: group0.name).first).to be_nil
         new_group1 = Cms::Group.where(name: changeset.destinations[0]["name"]).first
@@ -285,6 +341,14 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         expect { described_class.bind(site_id: site, user_id: user).perform_now(revision.name, 1) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         expect(Cms::Group.where(id: group1.id).first).not_to be_nil
         expect(Cms::Group.where(name: group1.name).first).not_to be_nil
         # expect(Cms::Group.where(id: group2.id).first).not_to be_nil
@@ -320,6 +384,14 @@ describe Chorg::MainRunner, dbscope: :example do
       expect(changeset).not_to be_nil
       # execute
       expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+
+      # check for job was succeeded
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       expect(Cms::Group.where(id: group.id).first).to be_nil
     end
   end
