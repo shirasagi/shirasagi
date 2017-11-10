@@ -5,7 +5,7 @@ class Gws::Circular::TrashesController < ApplicationController
   model Gws::Circular::Post
 
   before_action :set_item, only: [:show, :delete, :destroy, :active, :recover]
-  before_action :set_selected_items, only: [:active_all]
+  before_action :set_selected_items, only: [:active_all, :destroy_all]
 
   private
 
