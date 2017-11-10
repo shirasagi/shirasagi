@@ -24,13 +24,28 @@ class Gws::HistoriesController < ApplicationController
     @s.ymd = params[:ymd]
   end
 
+  def set_items
+    @items = @model.site(@cur_site).search(@s)
+  end
+
   public
 
   def index
     raise '403' unless Gws::History.allowed?(:read, @cur_user, site: @cur_site)
 
-    @items = @model.site(@cur_site).
-      search(@s).
-      page(params[:page]).per(50)
+    set_items
+    @items = @items.page(params[:page]).per(50)
+  end
+
+  def download
+    raise '403' unless Gws::History.allowed?(:read, @cur_user, site: @cur_site)
+
+    set_items
+    return if request.get?
+
+    filename = 'gws_histories'
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+    response.status = 200
+    send_enum @items.enum_csv(@cur_site), type: 'text/csv; charset=Shift_JIS', filename: filename
   end
 end
