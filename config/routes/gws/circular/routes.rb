@@ -2,8 +2,8 @@ SS::Application.routes.draw do
   Gws::Circular::Initializer
 
   concern :posts do
-    get :delete, on: :member
     get :disable, on: :member
+    get :delete, on: :member
     delete action: :destroy_all, on: :collection
     post :download, on: :collection
     get :set_seen, on: :member
@@ -20,6 +20,7 @@ SS::Application.routes.draw do
   gws 'circular' do
     resources :posts, concerns: [:posts]
     resources :trashes, concerns: [:posts] do
+      get :recover, on: :member
       get :active, on: :member
       post :active_all, on: :collection
     end
