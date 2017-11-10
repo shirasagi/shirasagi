@@ -439,6 +439,13 @@ ja:
         - 備考を入力します。
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
 
+  activemodel:
+    models:
+      gws/user_csv/importer: ユーザCSVインポート
+    attributes:
+      gws/user_csv/importer:
+        in_file: ファイル
+
   job:
     models:
       gws/reminder/notification_job: リマインダー通知
