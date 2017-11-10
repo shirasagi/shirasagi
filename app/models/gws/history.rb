@@ -15,7 +15,7 @@ class Gws::History
   field :request_id, type: String
   field :severity, type: String, default: 'error'
   field :name, type: String
-  field :mode, type: String, default: 'create'
+  field :mode, type: String
   field :model, type: String
   field :controller, type: String
   field :job, type: String
