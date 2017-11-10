@@ -148,6 +148,7 @@ ja:
       not_exist: は存在しません。
       not_found_parent_nodes: に親フォルダー「%{name}」がありません。
       root_node_save_error: ルートフォルダーを作成できませんでした。
+      imap_setting_validation_error: "[アカウント%{no}] 必須項目が入力されていません。"
     template:
       body: 次の項目を確認してください。
       header:
