@@ -38,7 +38,7 @@ SS::Application.routes.draw do
     resources :public_links, only: [:index, :show]
     resources :reminders, only: [:index, :destroy], concerns: [:deletion]
     resources :histories, only: [:index]
-    resources :histories, only: [:index], path: 'histories/:year/:month', as: :monthly_histories
+    resources :histories, only: [:index], path: 'histories/:ymd', as: :daily_histories
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
     resource :user_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do

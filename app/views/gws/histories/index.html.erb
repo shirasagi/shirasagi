@@ -1,24 +1,20 @@
 <%
   now = Time.zone.now
-  sy = (now - @cur_site.effective_log_save_days.days).year
-  ey = now.year
-  @years = (sy..ey).to_a.reverse.map { |y| ["#{y}#{t('datetime.prompts.year')}", y.to_s] }
-  @months = (1..12).to_a.map { |m| ["#{m}#{t('datetime.prompts.month')}", '%02d' % m] }
-
-  origin = Time.zone.parse("#{@s.year}/#{@s.month}/01")
-  next_month = origin + 1.month
-  prev_month = origin - 1.month
+  ymd = params[:ymd]
+  origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+  next_day = origin + 1.day
+  prev_day = origin - 1.day
 %>
 <div class="index">
   <div class="list-head">
     <div class="list-head-action">
-      <%= link_to(t('event.next_month'), { year: next_month.year, month: '%02d' % next_month.month }, class: :btn, style: 'font-weight: normal;') %>
+      <% if now >= next_day %>
+      <%= link_to(t('event.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+      <% end %>
       <span style="margin: 0 8px">
-        <%= select_tag('year', options_for_select(@years, @s.year), include_blank: true) %>
-        <%= select_tag('month', options_for_select(@months, @s.month), include_blank: true) %>
-        <%= button_tag(t('ss.buttons.move'), name: 'move-year-month', type: 'button', class: 'btn') %>
+        <%= text_field_tag :ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date' %>
       </span>
-      <%= link_to(t('event.prev_month'), { year: prev_month.year, month: '%02d' % prev_month.month }, class: :btn, style: 'font-weight: normal;') %>
+      <%= link_to(t('event.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
     </div>
 
     <%= render file: "_search" %>
@@ -73,16 +69,18 @@
 <%= paginate @items if @items.try(:current_page) %>
 
 <%= jquery do %>
-  $('.list-head button[name=move-year-month]').on('click', function() {
-    var year = $('.list-head select[name=year]').val();
-    var month = $('.list-head select[name=month]').val();
-    if (! year || !month) {
-      return;
+  $('.list-head input[name=ymd]').datetimepicker({
+    minDate: '<%= (now - @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d') %>',
+    maxDate: 0,
+    onChangeDateTime: function(dp, $input) {
+      console.log($input.val());
+      var ymd = $input.val();
+      ymd = ymd.replace(/\//g, '');
+
+      var url = '<%= gws_daily_histories_path(ymd: ':ymd') %>';
+      url = url.replace(':ymd', ymd);
+
+      location.href = url;
     }
-
-    var url = '<%= gws_monthly_histories_path(year: ':year', month: ':month') %>';
-    url = url.replace(':year', year).replace(':month', month);
-
-    location.href = url;
   });
 <% end %>
