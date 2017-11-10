@@ -157,7 +157,7 @@ class Gws::Memo::Message
   private
 
   def set_to
-    (member_ids.map(&:to_s) - to.keys).each { |id| self.to[id.to_s] = draft? ? nil : 'INBOX' }
+    member_ids.map(&:to_s).each { |id| self.to[id.to_s] = draft? ? nil : 'INBOX' }
   end
 
   class << self
