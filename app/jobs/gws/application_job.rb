@@ -3,6 +3,12 @@ class Gws::ApplicationJob < ::ApplicationJob
   include Job::Gws::Binding::Base
   include Job::Gws::Loggable
 
+  class << self
+    def ss_app_type
+      :gws
+    end
+  end
+
   around_perform do |job, block|
     begin
       block.call
