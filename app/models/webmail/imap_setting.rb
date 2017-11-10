@@ -1,4 +1,6 @@
 class Webmail::ImapSetting < Hash
+  include ActiveModel::Model
+
   def address
     self[:address]
   end
@@ -44,7 +46,10 @@ class Webmail::ImapSetting < Hash
   end
 
   def valid?
-    address.present? && imap_host.present? && imap_account.present?
+    errors.add :address, :blank if address.blank?
+    errors.add :imap_host, :blank if imap_host.blank?
+    errors.add :imap_account, :blank if imap_account.blank?
+    errors.empty?
   end
 
   def set_imap_password
@@ -67,5 +72,19 @@ class Webmail::ImapSetting < Hash
     }
     user_conf.each { |k, v| default_conf[k] = v if v.present? }
     default_conf
+  end
+
+  def t(name, opts = {})
+    self.class.t name, opts
+  end
+
+  def tt(key, html_wrap = true)
+    self.class.tt key, html_wrap
+  end
+
+  class << self
+    def t(*args)
+      human_attribute_name *args
+    end
   end
 end

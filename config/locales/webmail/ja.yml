@@ -125,6 +125,8 @@ ja:
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
         imap_default_index: 既定のアカウント
+      webmail/user:
+        in_file: ファイル
       webmail/mail:
         size: サイズ
         date: 日付
