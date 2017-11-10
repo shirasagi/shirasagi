@@ -8,10 +8,10 @@ class Gws::History
     store_in client: :gws_history, database: client[:database]
   end
 
-  CSV_HEADER = %i(
+  CSV_HEADER = %i[
     id session_id request_id severity name mode model controller job item_id
     path action updated_field_names message created
-  ).freeze
+  ].freeze
 
   seqid :id
   field :session_id, type: String
