@@ -46,6 +46,7 @@ ja:
       gws/memo/signature: 署名
     attributes:
       gws/memo/message:
+        name: 件名
         subject: 件名
         member_ids: 宛先
         body: 本文
