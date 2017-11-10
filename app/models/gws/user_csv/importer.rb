@@ -1,13 +1,24 @@
 class Gws::UserCsv::Importer
   include ActiveModel::Model
+  include SS::PermitParams
+  # import `t` and `tt`
+  extend SS::Document::ClassMethods
 
   attr_accessor :in_file
   attr_accessor :cur_site
-  attr_accessor :imported
+  attr_accessor :cur_user
+  attr_reader :imported
+
+  permit_params :in_file
 
   validates :in_file, presence: true
   validates :cur_site, presence: true
   validate :validate_import
+
+  def initialize(*args, &block)
+    super
+    @imported = 0
+  end
 
   def import
     return if invalid?
@@ -81,6 +92,7 @@ class Gws::UserCsv::Importer
       item = Gws::User.new
     end
     item.cur_site = cur_site
+    item.cur_user = cur_user
 
     %w(
       name kana uid organization_uid email tel tel_ext

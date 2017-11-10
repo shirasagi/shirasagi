@@ -14,6 +14,14 @@ class Gws::UsersController < ApplicationController
     @crumbs << [t("mongoid.models.gws/user"), gws_users_path]
   end
 
+  def set_model
+    if params[:action] == 'import'
+      @model = Gws::UserCsv::Importer
+    else
+      super
+    end
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
@@ -106,7 +114,7 @@ class Gws::UsersController < ApplicationController
 
     result = @item.valid?
     form_data = save_form_data
-    if form_data.invalid?
+    if form_data && form_data.invalid?
       @item.errors[:base] += form_data.errors.full_messages
       result = false
     end
@@ -142,14 +150,18 @@ class Gws::UsersController < ApplicationController
   end
 
   def download_template
-    csv = @model.unscoped.where(:_id.exists => false).to_csv(site: @cur_site)
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_users_template.csv"
+    @items = @model.none
+    filename = 'gws_users_template.csv'
+    response.status = 200
+    send_enum(
+      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site),
+      type: 'text/csv; charset=Shift_JIS', filename: filename
+    )
   end
 
   def import
     return if request.get?
     @item = Gws::UserCsv::Importer.new get_params
-    @item.cur_site = @cur_site
     if @item.valid?
       result = @item.import
     end
