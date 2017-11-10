@@ -4,7 +4,7 @@ class Gws::Circular::TrashesController < ApplicationController
 
   model Gws::Circular::Post
 
-  before_action :set_item, only: [:show, :active]
+  before_action :set_item, only: [:show, :active, :recover]
   before_action :set_selected_items, only: [:active_all]
 
   private
@@ -26,6 +26,11 @@ class Gws::Circular::TrashesController < ApplicationController
       deleted.
       search(params[:s]).
       page(params[:page]).per(50)
+  end
+
+  def recover
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render
   end
 
   def active
