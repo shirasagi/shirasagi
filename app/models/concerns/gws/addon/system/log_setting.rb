@@ -10,7 +10,7 @@ module Gws::Addon::System::LogSetting
 
     mods = %w(
       main board circular elasticsearch facility faq memo monitor personal_address portal qna
-      report schedule share shared_address staff_record workflow
+      report schedule share shared_address staff_record workflow chorg
     )
     mods.each do |type|
       field "log_#{type}_severity", type: String
