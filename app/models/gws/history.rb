@@ -55,6 +55,16 @@ class Gws::History
       CSV_HEADER.map { |k| t(k) }
     end
 
+    def enum_csv(opts = {})
+      criteria = self.criteria.dup
+      Enumerator.new do |y|
+        y << encode_sjis(csv_header.to_csv)
+        criteria.each do |item|
+          y << encode_sjis(item.to_csv)
+        end
+      end
+    end
+
     def search(params)
       criteria = all
       return criteria if params.blank?
@@ -119,6 +129,10 @@ class Gws::History
     end
 
     private
+
+    def encode_sjis(str)
+      str.encode("SJIS", invalid: :replace, undef: :replace)
+    end
 
     def severity_to_num(severity)
       case severity.to_sym
