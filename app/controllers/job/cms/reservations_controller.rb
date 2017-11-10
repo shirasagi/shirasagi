@@ -1,10 +1,10 @@
-class Job::Cms::TasksController < ApplicationController
+class Job::Cms::ReservationsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Job::TasksFilter
 
-  model Cms::Task
-  navi_view "job/cms/main/navi"
+  model Job::Task
+  navi_view 'job/cms/main/navi'
 
   private
 
@@ -13,6 +13,6 @@ class Job::Cms::TasksController < ApplicationController
   end
 
   def item_criteria
-    @model.site(@cur_site).exists(at: false)
+    @model.site(@cur_site).exists(at: true).order_by(at: 1, created: 1)
   end
 end
