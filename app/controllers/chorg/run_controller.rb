@@ -17,14 +17,6 @@ class Chorg::RunController < ApplicationController
     @crumbs << [t("chorg.revision"), controller: :revisions, action: :index]
   end
 
-  # def prepend_current_view_path
-  #   prepend_view_path "app/views/#{params[:controller]}"
-  # end
-  #
-  # def append_view_paths
-  #   append_view_path "app/views/ss/crud"
-  # end
-
   def set_revision
     @revision = Chorg::Revision.find params[:rid]
   end
@@ -32,20 +24,6 @@ class Chorg::RunController < ApplicationController
   def set_item
     @item = @model.new
   end
-
-  # def fix_params
-  #   { cur_site: @cur_site }
-  # end
-
-  # def add_job_id(array, id)
-  #   if array.blank?
-  #     [id]
-  #   else
-  #     copy = Array.new(array)
-  #     copy << id
-  #     copy
-  #   end
-  # end
 
   public
 
@@ -70,9 +48,14 @@ class Chorg::RunController < ApplicationController
 
     if @item.errors.blank?
       respond_to do |format|
+        if @item.reservation
+          notice = t('chorg.messages.job_reserved')
+        else
+          notice = t('chorg.messages.job_started')
+        end
         format.html do
           redirect_to({ controller: :revisions, action: :show, id: @revision },
-                      { notice: t("chorg.messages.job_started") })
+                      { notice: notice })
         end
         format.json { head :no_content }
       end

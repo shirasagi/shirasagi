@@ -69,6 +69,7 @@ ja:
         execute_results: 実行結果を閲覧する
     messages:
       job_started: 組織変更処理を開始しました。
+      job_reserved: 組織変更処理を予約しました。
       test_run: テスト実行
 
   modules:
