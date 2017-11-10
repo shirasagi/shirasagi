@@ -138,14 +138,14 @@ class Gws::Monitor::Topic
 
   def answer_count_admin
     answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
-    return "(#{answered}/#{subscribed_groups.count})"
+    return "(#{answered}/#{attend_group_ids.count})"
   end
 
   def answer_count(cur_group)
     if attend_group_ids.include?(cur_group.id)
       if spec_config != '0'
         answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
-        return "(#{answered}/#{subscribed_groups.count})"
+        return "(#{answered}/#{attend_group_ids.count})"
       else
         answered = state_of_the_answers_hash[cur_group.id.to_s].match(/answered|question_not_applicable/)
         return "(#{answered ? 1 : 0}/1)"
