@@ -34,6 +34,10 @@ ja:
         info: 重要情報
         notice: 一般情報
         none: 出力しない
+      days:
+        next_day: 翌日
+        prev_day: 前日
+        today: 今日
       system_default_save_days: システム既定
       system_default_severity: システム既定
     member_log:
