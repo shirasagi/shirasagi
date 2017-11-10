@@ -173,8 +173,17 @@ class Gws::Memo::Message
     def unseens(user, site)
       self.site(site).where('$and' => [
         { "to.#{user.id}".to_sym.exists => true },
-        { "seen.#{user.id}".to_sym.exists => false }
-      ])
+        { "seen.#{user.id}".to_sym.exists => false },
+        { "$where" => "function(){
+  var self = this;
+  var result = false;
+
+  Object.keys(this.from).forEach(function(key){
+    if (self.from[key] !== 'INBOX.Draft') { result = true; }
+  })
+
+  return result;
+}"}])
     end
   end
 end
