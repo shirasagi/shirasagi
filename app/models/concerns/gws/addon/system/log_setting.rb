@@ -30,7 +30,19 @@ module Gws::Addon::System::LogSetting
   end
 
   def log_severity_options
-    %w(none error warn info notice).map { |k| [I18n.t("gws.history.severity.#{k}"), k] }
+    options = %w(none error warn info).map { |k| [I18n.t("gws.history.severity.#{k}"), k] }
+    if SS.config.gws.history['severity_notice'] == 'enabled'
+      options << [I18n.t('gws.history.severity.notice'), 'notice']
+    end
+    options
+  end
+
+  def log_severity__private_options
+    if SS.config.gws.history['severity_notice'] != 'enabled'
+      [[I18n.t('gws.history.severity.notice'), 'notice']]
+    else
+      []
+    end
   end
 
   def allowed_log_severity_for(mod)
