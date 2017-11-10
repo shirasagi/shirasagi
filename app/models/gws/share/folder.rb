@@ -21,7 +21,8 @@ class Gws::Share::Folder
 
   has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
 
-  permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb, :share_max_folder_size, :in_share_max_folder_size_mb
+  permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb,
+                :share_max_folder_size, :in_share_max_folder_size_mb
 
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
@@ -64,7 +65,7 @@ class Gws::Share::Folder
             if filename_duplicate_flag == 0
               zip_file.add(NKF::nkf('-sx --cp932', item.name), item.path)
             elsif filename_duplicate_flag == 1
-              zip_file.add(NKF::nkf('-sx --cp932',item._id.to_s + "_" + item.name), item.path)
+              zip_file.add(NKF::nkf('-sx --cp932', item._id.to_s + "_" + item.name), item.path)
             end
           end
         end
