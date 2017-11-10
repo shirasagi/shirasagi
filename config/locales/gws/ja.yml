@@ -206,7 +206,9 @@ ja:
         model: モデル
         controller: コントローラー
         job: ジョブ
+        mode_name: 区分名
         model_name: モデル名
+        controller_name: コントローラー名
         job_name: ジョブ名
         item_id: 項目ID
         path: URL

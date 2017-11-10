@@ -23,27 +23,34 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <li class="list-item">
-      <div class="info">
-        <% if item.model.present? %>
+      <% if item.model.present? %>
         <% title = "#{item.model_name} / #{item.name}" %>
-        <% elsif item.controller.present? %>
+      <% elsif item.controller.present? %>
         <% title = "#{item.controller_name}##{item.action}" %>
-        <% elsif item.job.present? %>
+      <% elsif item.job.present? %>
         <% title = "#{item.job_name}" %>
-        <% end %>
-        <% next if title.blank? %>
-        <span class="title">[<%= t("modules.#{item.module_key}") %>] <%= title %></span>
+      <% end %>
+      <% next if title.blank? %>
+
+      <nav class="tap-menu">
+        <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+      </nav>
+
+      <div class="info">
+        <span class="title">
+          <%= link_to("[#{t("modules.#{item.module_key}")}] #{title}", { action: :show, id: item }) %>
+        </span>
         <% if item.message %>
-        <p class="message"><%= br item.message %></p>
+        <p class="message"><%= item.message.truncate(120) %></p>
         <% end %>
 
         <div class="meta">
           <span class="label"><%= t("gws.history.severity.#{item.severity}") %></span>
           <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
-          <% if item.model.present? %>
+          <% if item.mode.present? %>
           <span class="label"><%= item.mode_name %></span>
           <% end %>
-          <% if item.controller.present? %>
+          <% if item.path.present? %>
           <span class="label"><%= item.path %></span>
           <% end %>
           <span><%= item.user_long_name %></span>
@@ -51,13 +58,13 @@
             <span class="label"><%= @model.t :updated_fields %></span>
             <%= names.join(', ') %>
           <% end %>
-          <% if item.session_id %>
+          <% if item.session_id.present? %>
           <span class="label"><%= @model.t :session_id %></span>
           <span class="session-id"><%= item.session_id %></span>
           <% end %>
-          <% if item.request_id %>
+          <% if item.request_id.present? %>
           <span class="label"><%= @model.t :request_id %></span>
-          <span class="session-id"><%= item.request_id %></span>
+          <span class="request-id"><%= item.request_id %></span>
           <% end %>
         </div>
       </div>
