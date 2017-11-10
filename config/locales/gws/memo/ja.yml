@@ -36,9 +36,9 @@ ja:
     addons:
       gws/memo/comments: コメント
   gws_role:
-    read_gws_memo_messages: 連絡メモの閲覧（所有）
-    edit_gws_memo_messages: 連絡メモの編集（所有）
-    delete_gws_memo_messages: 連絡メモの削除（所有）
+    read_gws_memo_messages: 連絡メモの閲覧
+    edit_gws_memo_messages: 連絡メモの編集
+    delete_gws_memo_messages: 連絡メモの削除
   mongoid:
     models:
       gws/memo/message: 連絡メモ
