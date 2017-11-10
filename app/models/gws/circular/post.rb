@@ -103,34 +103,42 @@ class Gws::Circular::Post
     custom_groups.where(member_ids: user.id).exists?
   end
 
+  def user?(user)
+    self.user.id == user.id
+  end
+
   def allowed?(action, user, opts = {})
     return true if super(action, user, opts)
-    member?(user) || custom_group_member?(user) if action =~ /read/
+    return true if action =~ /read/ && readable_group_ids.blank? && readable_member_ids.blank? && readable_custom_group_ids.blank?
+    return true if action =~ /read/ && readable_group_ids.any? { |m| user.group_ids.include?(m) }
+    return true if action =~ /read/ && readable_member_ids.include?(user.id)
+    return true if action =~ /read/ && readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    return user?(user) || member?(user) || custom_group_member?(user) if action =~ /read/
+    false
   end
 
   class << self
     def allow_condition(action, user, opts = {})
-      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
+      site_id = opts[:site] ? opts[:site].id : criteria.selector['site_id']
       action = permission_action || action
+      conds = [
+        { user_ids: user.id },
+        { member_ids: user.id },
+        { readable_member_ids: user.id },
+        { :readable_group_ids.in => user.group_ids }
+      ]
+
+      if readable_setting_included_custom_groups?
+        conds << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      end
 
       if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
-        { "$or" => [
-          { user_ids: user.id },
-          { member_ids: user.id },
-          { permission_level: { "$lte" => level } },
-        ] }
+        conds << { permission_level: { '$lte' => level } }
       elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        { "$or" => [
-          { user_ids: user.id },
-          { member_ids: user.id },
-          { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
-        ] }
-      else
-        { "$or" => [
-          { user_ids: user.id },
-          { member_ids: user.id }
-        ] }
+        conds << { :group_ids.in => user.group_ids, '$or' => [{ permission_level: { '$lte' => level } }] }
       end
+
+      { '$or' => conds }
     end
 
     def to_csv
