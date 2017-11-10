@@ -44,7 +44,7 @@ class Gws::Share::FoldersController < ApplicationController
     ss_file_items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
 
     filenames = []
-    ss_file_items.each {|item| filenames.push(item.name)}
+    ss_file_items.each { |item| filenames.push(item.name) }
     filename_duplicate_flag = filenames.size == filenames.uniq.size ? 0 : 1
 
     zipfile = Gws::Share::Folder.where(id: params[:id]).first.name + ".zip"
@@ -52,7 +52,11 @@ class Gws::Share::FoldersController < ApplicationController
 
     @model.create_download_directory(File.dirname(@model.zip_path(params[:id])))
     @model.create_zip(@model.zip_path(params[:id]), ss_file_items, filename_duplicate_flag, folder_updated_time)
-    send_file(@model.zip_path(params[:id]), type: 'application/zip', filename: zipfile, disposition: 'attachment')
+    send_file(@model.zip_path(params[:id]),
+              type: 'application/zip',
+              filename: zipfile,
+              disposition: 'attachment',
+              x_sendfile: true)
   end
 
 end
