@@ -161,16 +161,20 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def download_all
-    zipfile = Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
+    zipfile = Time.zone.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
     tmp_dir_name = SecureRandom.hex(4).to_s
 
     filenames = []
-    @items.each {|item| filenames.push(item.name)}
+    @items.each { |item| filenames.push(item.name) }
     filename_duplicate_flag = filenames.size == filenames.uniq.size ? 0 : 1
 
     @model.create_download_directory(@cur_user.id, @model.download_root_path, @model.zip_path(@cur_user.id, tmp_dir_name))
     @model.create_zip(@model.zip_path(@cur_user.id, tmp_dir_name), @items, filename_duplicate_flag)
-    send_file(@model.zip_path(@cur_user.id, tmp_dir_name), type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
+    send_file(@model.zip_path(@cur_user.id, tmp_dir_name),
+              type: 'application/zip',
+              filename: zipfile,
+              disposition: 'attachment',
+              x_sendfile: true)
   end
 
   def render_destroy_all(result)
