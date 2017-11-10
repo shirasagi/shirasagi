@@ -42,16 +42,14 @@ module Chorg::MongoidSupport
   end
 
   def find_or_create_group(attributes)
-    group = Cms::Group.where(name: attributes["name"]).first
-    group ||= Cms::Group.create
+    group = self.class.group_class.where(name: attributes["name"]).first
+    group ||= self.class.group_class.create
     update_attributes(group, attributes)
   end
 
-  GROUP_CLASSES = [ SS::Group, Cms::Group, Sys::Group ].freeze
-
   def group_field?(_, v)
     type = v.options[:type]
-    if GROUP_CLASSES.include?(type)
+    if self.class.group_classes.include?(type)
       return true
     end
 
@@ -63,7 +61,7 @@ module Chorg::MongoidSupport
       v = v.constantize if v.present?
       v
     end.compact
-    classes.select { |v| GROUP_CLASSES.include?(v) }.present?
+    classes.select { |v| self.class.group_classes.include?(v) }.present?
   end
 
   def build_exclude_fields(defs)
@@ -110,7 +108,7 @@ module Chorg::MongoidSupport
 
   def delete_groups(group_ids)
     group_ids.each do |id|
-      group = Cms::Group.where(id: id).first
+      group = self.class.group_class.where(id: id).first
       if group.present?
         if delete_entity(group)
           put_log("deleted group: #{group.name}")
@@ -123,6 +121,7 @@ module Chorg::MongoidSupport
   end
 
   def add_group_to_site(group)
+    return if self.class.ss_mode != :cms
     return unless adds_group_to_site
     return if group.id == 0
     return if cur_site.group_ids.include?(group.id)
@@ -138,6 +137,7 @@ module Chorg::MongoidSupport
   end
 
   def remove_group_from_site(group)
+    return if self.class.ss_mode != :cms
     return unless cur_site.group_ids.include?(group.id)
 
     copy = Array.new(cur_site.group_ids)
@@ -155,7 +155,7 @@ module Chorg::MongoidSupport
       if group_id == 0
         I18n.t("chorg.messages.test_run")
       else
-        group = Cms::Group.where(id: group_id).first
+        group = self.class.group_class.where(id: group_id).first
         group.present? ? group.name : nil
       end
     end.compact

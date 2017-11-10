@@ -31,7 +31,7 @@ module Chorg::PrimitiveRunner
     source = changeset.sources.first
     destination = changeset.destinations.first
 
-    group = Cms::Group.where(id: source["id"]).first
+    group = self.class.group_class.where(id: source["id"]).first
     if group.blank?
       put_warn("group not found: #{source["name"]}(#{source["id"]})")
       return
@@ -63,7 +63,7 @@ module Chorg::PrimitiveRunner
     add_group_to_site(destination_group)
 
     source_groups = changeset.sources.map do |source|
-      Cms::Group.where(id: source["id"]).first
+      self.class.group_class.where(id: source["id"]).first
     end
     source_groups = source_groups.compact
     source_groups.each do |source_group|
@@ -77,7 +77,7 @@ module Chorg::PrimitiveRunner
   def execute_division(changeset)
     put_log("division #{changeset.before_division} to #{changeset.after_division}")
     source = changeset.sources.first
-    source_group = Cms::Group.where(id: source["id"]).first
+    source_group = self.class.group_class.where(id: source["id"]).first
     if source_group.blank?
       put_warn("group not found: #{source["name"]}")
       return
@@ -119,7 +119,7 @@ module Chorg::PrimitiveRunner
 
   def execute_delete(changeset)
     source_groups = changeset.sources.map do |source|
-      Cms::Group.where(id: source["id"]).first
+      self.class.group_class.where(id: source["id"]).first
     end
     source_groups.compact.each do |source_group|
       empty_attributes = {}
