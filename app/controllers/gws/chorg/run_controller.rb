@@ -4,13 +4,13 @@ class Gws::Chorg::RunController < ApplicationController
 
   before_action :prepend_current_view_path
   before_action :append_view_paths
+  before_action :set_revision
   before_action :set_item
 
-  model Gws::Chorg::Revision
+  model Gws::Chorg::RunParams
 
   navi_view 'gws/main/conf_navi'
   menu_view 'chorg/run/menu'
-  append_view_path 'app/views/chorg/run'
 
   private
 
@@ -18,22 +18,12 @@ class Gws::Chorg::RunController < ApplicationController
     @crumbs << [t('modules.gws/chorg'), controller: :revisions, action: :index]
   end
 
+  def set_revision
+    @revision = Gws::Chorg::Revision.find params[:rid]
+  end
+
   def set_item
-    @item = @model.find params[:rid]
-  end
-
-  def fix_params
-    { cur_site: @cur_site }
-  end
-
-  def add_job_id(array, id)
-    if array.blank?
-      [id]
-    else
-      copy = Array.new(array)
-      copy << id
-      copy
-    end
+    @item = @model.new
   end
 
   public
@@ -42,22 +32,31 @@ class Gws::Chorg::RunController < ApplicationController
   end
 
   def run
-    begin
-      add_group_to_site = params[:item][:add_newly_created_group_to_site].to_i
-      job_class = Gws::Chorg::Runner.job_class params[:type]
-      @job = job_class.bind(site_id: @cur_site, user_id: @cur_user).
-        perform_later(@item.name, add_group_to_site)
-      @item.job_ids = add_job_id(@item.job_ids, @job.job_id)
-    rescue => e
-      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      @item.errors.add :base, e.to_s
+    @item.attributes = get_params
+    if @item.valid?
+      begin
+        job_class = Gws::Chorg::Runner.job_class params[:type]
+        job_class = job_class.bind(site_id: @cur_site, user_id: @cur_user)
+        job_class = job_class.set(wait_until: @item.reservation) if @item.reservation
+
+        @job = job_class.perform_later(@revision.name, false)
+        @revision.add_to_set(job_ids: @job.job_id)
+      rescue => e
+        Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        @item.errors.add(:base, e.to_s)
+      end
     end
 
-    if @item.errors.empty? && @item.save
+    if @item.errors.blank?
       respond_to do |format|
         format.html do
-          redirect_to({ controller: :revisions, action: :show, id: @item.id },
-                      { notice: t("chorg.messages.job_started") })
+          if @item.reservation
+            notice = t('chorg.messages.job_reserved')
+          else
+            notice = t('chorg.messages.job_started')
+          end
+          redirect_to({ controller: :revisions, action: :show, id: @revision },
+                      { notice: notice })
         end
         format.json { head :no_content }
       end

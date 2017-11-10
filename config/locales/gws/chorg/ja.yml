@@ -9,6 +9,15 @@ ja:
     models:
       gws/chorg/revision: 変更内容
       gws/chorg/chageset: リビジョン
+      gws/chorg/run_params: 組織変更実行オプション
+    attributes:
+      gws/chorg/run_params:
+        reservation: 予約実行
+
+  tooltip:
+    gws/chorg/run_params:
+      reservation:
+        - 実行する時間を予約できます。
 
   job:
     models:

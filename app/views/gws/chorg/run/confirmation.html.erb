@@ -1,0 +1,26 @@
+<%= form_for :item, url: { action: :run }, html: {id: "item-form", method: :post, multipart: true, autocomplete: :off} do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box mod-chorg-run-confirmation">
+    <header><h2><%= t("chorg.views.run/confirmation.#{params[:type]}.header") %></h2></header>
+
+    <dl class="see mod-chorg-run-confirmation">
+      <dt><%= @revision.class.t :name %></dt>
+      <dd><%= @revision.name %></dd>
+      <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
+      <dd><%= f.text_field :reservation, class: 'datetime js-datetime' %></dd>
+    </dl>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("chorg.views.run/confirmation.#{params[:type]}.run_button"), class: "btn-primary save" %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default",
+      onclick: "location.href='#{url_for(controller: :revisions, action: :show, id: @revision)}'; return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  $('input[name="item[reservation]"]').datetimepicker({
+    minDate: '+1970/01/02'
+  });
+<% end %>
