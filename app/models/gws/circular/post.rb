@@ -45,6 +45,10 @@ class Gws::Circular::Post
       criteria = criteria.keyword_in params[:keyword], :name, :text
     end
 
+    if params[:category_id].present?
+      criteria = criteria.in(category_ids: params[:category_id])
+    end
+
     criteria
   }
 
@@ -102,10 +106,6 @@ class Gws::Circular::Post
   def allowed?(action, user, opts = {})
     return true if super(action, user, opts)
     member?(user) || custom_group_member?(user) if action =~ /read/
-  end
-
-  def readable_names
-    users.map(&:long_name) + readable_member_names + readable_group_names
   end
 
   class << self

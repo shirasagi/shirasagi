@@ -27,6 +27,12 @@ class Gws::Circular::PostsController < ApplicationController
   public
 
   def index
+    if @category.present?
+      params[:s] ||= {}
+      params[:s][:site] = @cur_site
+      params[:s][:category_id] = @category.id
+    end
+
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       without_deleted.

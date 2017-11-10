@@ -8,6 +8,7 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+  <span><%= item.user_long_name %></span>
   <span class="gws-share-categories">
     <span class="gws-category-label" style="background-color: gray; color: #ffffff;">削除済み</span>
     <% item.categories.compact.each do |category| %>
