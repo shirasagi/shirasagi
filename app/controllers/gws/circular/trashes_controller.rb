@@ -4,9 +4,8 @@ class Gws::Circular::TrashesController < ApplicationController
 
   model Gws::Circular::Post
 
-  before_action :set_item, only: [:show, :edit, :update, :active, :delete, :destroy, :set_seen, :unset_seen, :toggle_seen]
-  before_action :set_selected_items, only: [:active_all, :destroy_all, :disable_all, :set_seen_all, :unset_seen_all, :download]
-  before_action :set_category
+  before_action :set_item, only: [:show, :active]
+  before_action :set_selected_items, only: [:active_all]
 
   private
 
@@ -17,12 +16,6 @@ class Gws::Circular::TrashesController < ApplicationController
   def set_crumbs
     @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
     @crumbs << [t('gws/circular.admin'), '#' ]
-  end
-
-  def set_category
-    cond = Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site)
-    @categories = cond.tree_sort
-    @category = cond.where(id: params[:category]).first if params[:category]
   end
 
   public
