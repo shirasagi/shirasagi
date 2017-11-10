@@ -68,11 +68,13 @@ module Gws::BaseFilter
   end
 
   def save_controller_access_history
-    if request.format == 'text/html'
-      Gws::History.notice!(
-        :controller, @cur_user, @cur_site,
-        path: request.path, controller: self.class.name.underscore, action: action_name
-      ) rescue nil
+    if SS.config.gws.history['severity_notice'] == 'enabled'
+      if request.format == 'text/html'
+        Gws::History.notice!(
+          :controller, @cur_user, @cur_site,
+          path: request.path, controller: self.class.name.underscore, action: action_name
+        ) rescue nil
+      end
     end
   end
 

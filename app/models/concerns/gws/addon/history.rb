@@ -20,6 +20,7 @@ module Gws::Addon
     private
 
     def save_history_for_find
+      return if SS.config.gws.history['severity_notice'] != 'enabled'
       return if @skip_gws_history
 
       site = @cur_site

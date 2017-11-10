@@ -94,7 +94,9 @@ class Gws::History
     end
 
     def notice!(context, cur_user, cur_site, attributes)
-      write!(:notice, context, cur_user, cur_site, attributes)
+      if SS.config.gws.history['severity_notice'] == 'enabled'
+        write!(:notice, context, cur_user, cur_site, attributes)
+      end
     end
 
     def write!(severity, context, cur_user, cur_site, attributes)

@@ -16,6 +16,7 @@ production: &production
   history:
     save_days: 90
     severity: info
+    severity_notice: disabled
 
 test:
   <<: *production
