@@ -147,6 +147,13 @@ class Gws::Memo::Message
     self
   end
 
+  def allowed?(action, user, opts = {})
+    action = permission_action || action
+    return self.class.allow(action, user, opts).exists? if action == :read
+    return super(action, user, opts) unless self.user
+    return super(action, user, opts) && (self.user.id == user.id)
+  end
+
   private
 
   def set_to
@@ -157,9 +164,7 @@ class Gws::Memo::Message
     def allow(action, user, opts = {})
       folder = opts[:folder]
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-
-      super(action, user, opts).
-        where("#{direction}.#{user.id}" => folder)
+      where("#{direction}.#{user.id}" => folder)
     end
   end
 end
