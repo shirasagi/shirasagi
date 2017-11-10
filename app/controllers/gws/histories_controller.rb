@@ -4,10 +4,9 @@ class Gws::HistoriesController < ApplicationController
 
   model Gws::History
 
-  # navi_view "gws/main/conf_navi"
   navi_view 'gws/histories/navi'
 
-  before_action :set_year_month
+  before_action :set_ymd
 
   private
 
@@ -15,16 +14,14 @@ class Gws::HistoriesController < ApplicationController
     @crumbs << [t("mongoid.models.gws/history"), action: :index]
   end
 
-  def set_year_month
-    if params[:year].blank?
-      now = Time.zone.now
-      redirect_to gws_monthly_histories_path(year: now.year, month: now.month)
+  def set_ymd
+    if params[:ymd].blank?
+      redirect_to gws_daily_histories_path(ymd: Time.zone.now.strftime('%Y%m%d'))
       return
     end
 
     @s = OpenStruct.new(params[:s])
-    @s.year = params[:year]
-    @s.month = params[:month]
+    @s.ymd = params[:ymd]
   end
 
   public
