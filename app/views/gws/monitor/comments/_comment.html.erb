@@ -1,7 +1,7 @@
 <%
 
 menu = []
-if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site) && ( @item.group_ids.include?(@cur_group.id) || @item.user_ids.include?(@cur_user.id))
+if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site) && comment.user_group_id != @cur_group.id
   if @category.present?
     link = new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
   else
@@ -28,7 +28,7 @@ end
 
 menu = [] if params[:controller].match(/management/) || @item.closed?
 %>
-<% if comment.spec_config_condition(params[:controller], @cur_user, @cur_group) %>
+<% if comment.spec_config_condition(@cur_user, @cur_group) %>
   <aside class="comment" id="post-<%= comment.id %>">
     <header class="<%= 'toggle-head' if recursion %>">
       <h2><%= comment.name %></h2>
