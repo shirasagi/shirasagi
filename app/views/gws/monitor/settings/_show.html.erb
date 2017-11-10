@@ -11,9 +11,6 @@
   <dt class="depth-2"><%= @model.t(:monitor_file_size_per_post).sub(/.*\//, '') %></dt>
   <dd><%= number_to_human_size(@item.monitor_file_size_per_post) %></dd>
 
-  <dt><%= @model.t :monitor_browsed_delay %></dt>
-  <dd><%= @item.monitor_browsed_delay %> <%= t("datetime.prompts.second") %></dd>
-
   <dt><%= @model.t :monitor_delete_threshold %></dt>
   <dd><%= @item.monitor_delete_threshold_name %></dd>
 </dl>

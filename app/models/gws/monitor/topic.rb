@@ -7,7 +7,7 @@ class Gws::Monitor::Topic
   include Gws::Addon::File
   include Gws::Monitor::DescendantsFileInfo
   include Gws::Addon::Monitor::Category
-  include Gws::Addon::Release
+  include Gws::Addon::Monitor::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
@@ -42,8 +42,8 @@ class Gws::Monitor::Topic
   }
 
   def topic_admin?(userid, groupid)
-    return true if self.admin_setting == "1" &&  (userid == self.user_id || self.user_ids.include?(userid))
-    return true if self.admin_setting == "0" &&  (groupid == self.user_group_id || self.group_ids.include?(groupid))
+    return true if userid == self.user_id || self.user_ids.include?(userid)
+    return true if groupid == self.user_group_id || self.group_ids.include?(groupid)
     false
   end
 
@@ -66,7 +66,7 @@ class Gws::Monitor::Topic
 
   def unanswered?(groupid)
     if closed?
-      case state_of_the_answers_hash["#{groupid}"]
+      case state_of_the_answers_hash[groupid.to_s]
       when "public", "preparation", nil
         I18n.t("gws/monitor.options.state.closed")
       end
@@ -78,15 +78,8 @@ class Gws::Monitor::Topic
   end
 
   def state_name(groupid)
-    return I18n.t("gws/monitor.options.state.no_state") if state_of_the_answers_hash["#{groupid}"].blank?
-    I18n.t("gws/monitor.options.state." + state_of_the_answers_hash["#{groupid}"])
-  end
-
-  def admin_setting_options
-    [
-        [I18n.t('gws/monitor.options.admin_setting.user'), '1'],
-        [I18n.t('gws/monitor.options.admin_setting.section'), '0']
-    ]
+    return I18n.t("gws/monitor.options.state.no_state") if state_of_the_answers_hash[groupid.to_s].blank?
+    I18n.t("gws/monitor.options.state." + state_of_the_answers_hash[groupid.to_s])
   end
 
   def spec_config_options
@@ -136,7 +129,7 @@ class Gws::Monitor::Topic
   end
 
   def answer_count
-    answered = state_of_the_answers_hash.select{|k, v| v.match(/answered|question_not_applicable/)}.count
+    answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
     return "(#{answered}/#{subscribed_groups.count})"
   end
 
@@ -155,6 +148,47 @@ class Gws::Monitor::Topic
             post.try(:text),
             post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
         ]
+      end
+    end
+  end
+
+  def create_temporary_directory(userid, root_temp_dir, temp_dir)
+    Dir.glob(root_temp_dir + "/" + "#{userid}_*").each do |tmp|
+      FileUtils.rm_rf(tmp) if File.exists?(tmp)
+    end
+
+    FileUtils.mkdir_p(temp_dir) unless FileTest.exist?(temp_dir)
+  end
+
+  def delete_temporary_directory(zipfile)
+    file_body = Class.new do
+      attr_reader :to_path
+
+      def initialize(path)
+        @to_path = path
+      end
+
+      def each
+        File.open(to_path, 'rb') do |file|
+          while chunk = file.read(163_84)
+            yield chunk
+          end
+        end
+      end
+
+      def close
+        FileUtils.rm_rf File.dirname(@to_path)
+      end
+    end
+    return file_body.new(zipfile)
+  end
+
+  def create_zip(zipfile, group_items)
+    Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
+      group_items.each do |groupssfile|
+        if File.exist?(groupssfile[1].path)
+          zip_file.add(NKF::nkf('-sx --cp932', groupssfile[0] + "_" + groupssfile[1].name), groupssfile[1].path)
+        end
       end
     end
   end

@@ -1,0 +1,7 @@
+<nav class="nav-menu">
+  <div>
+    <% if params[:action] =~ /import/ %>
+      <%= link_to t('ss.links.download'), action: :download %>
+    <% end %>
+  </div>
+</nav>
