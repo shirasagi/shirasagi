@@ -81,4 +81,9 @@ class Gws::Memo::Filter
     (action == 'trash') ? 'INBOX.Trash' : folder.id.to_s
   end
 
+  class << self
+    def allow(action, user, opts = {})
+      super(action, user, opts).where(user_id: user.id)
+    end
+  end
 end
