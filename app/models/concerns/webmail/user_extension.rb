@@ -38,9 +38,10 @@ module Webmail::UserExtension
         self.imap_default_index = i
         setting.delete(:default)
       end
-      setting[:threshold_mb] = (setting.threshold_mb.to_i > 0) ? setting.threshold_mb : nil
+      setting[:threshold_mb] = (setting.threshold_mb.to_i > 0) ? setting.threshold_mb.to_i : nil
       setting.set_imap_password
       setting
     end
+    self.imap_default_index = 0 if imap_settings[imap_default_index].nil?
   end
 end

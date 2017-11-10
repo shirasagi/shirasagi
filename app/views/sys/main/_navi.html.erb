@@ -24,7 +24,10 @@
     <h3><%= link_to t("sys.max_file_size"), sys_max_file_sizes_path %></h3>
   <% end %>
   <% if Sys::Site.allowed?(:edit, @cur_user) %>
-      <h3><%= link_to t("sys.site_copy"), sys_site_copy_path %></h3>
+    <h3><%= link_to t("sys.site_copy"), sys_site_copy_path %></h3>
+  <% end %>
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to t("sys.webmail_account"), import_sys_webmail_accounts_path %></h3>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>
     <h3><%= link_to t("sys.test"), sys_test_path %></h3>
