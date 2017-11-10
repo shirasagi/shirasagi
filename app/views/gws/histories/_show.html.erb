@@ -16,10 +16,14 @@
   <% if @item.model.present? %>
     <dt><%= @model.t(:model_name) %></dt>
     <dd><%= "#{@item.model_name} / #{@item.name}" %></dd>
-  <% elsif @item.controller.present? %>
+  <% end %>
+
+  <% if @item.controller.present? %>
     <dt><%= @model.t(:controller_name) %></dt>
     <dd><%= "#{@item.controller_name}##{@item.action}" %></dd>
-  <% elsif @item.job.present? %>
+  <% end %>
+
+  <% if @item.job.present? %>
     <dt><%= @model.t(:job_name) %></dt>
     <dd><%= "#{@item.job_name}" %></dd>
   <% end %>
