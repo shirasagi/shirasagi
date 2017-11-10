@@ -1,10 +1,9 @@
-class Gws::Job::LogsController < ApplicationController
+class Gws::Job::ReservationsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include ::Job::LogsFilter
+  include ::Job::TasksFilter
 
-  model Gws::Job::Log
-
+  model ::Job::Task
   navi_view 'gws/job/main/conf_navi'
 
   private
@@ -13,7 +12,7 @@ class Gws::Job::LogsController < ApplicationController
     raise "403" unless Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site)
   end
 
-  def log_criteria
-    @model.site(@cur_site)
+  def item_criteria
+    @model.group(@cur_site).exists(at: true).order_by(at: 1, created: 1)
   end
 end
