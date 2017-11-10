@@ -8,13 +8,15 @@
 <div class="index">
   <div class="list-head">
     <div class="list-head-action">
-      <% if now >= next_day %>
-      <%= link_to(t('event.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+      <% if now.to_date != origin.to_date %>
+      <%= link_to(t('gws.history.days.today'), { ymd: now.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal; margin-right: 12px;') %>
       <% end %>
-      <span style="margin: 0 8px">
-        <%= text_field_tag :ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date' %>
-      </span>
-      <%= link_to(t('event.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+
+      <% if now >= next_day %>
+      <%= link_to(t('gws.history.days.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+      <% end %>
+      <%= text_field_tag :ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date' %>
+      <%= link_to(t('gws.history.days.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
     </div>
 
     <%= render file: "_search" %>
