@@ -68,10 +68,12 @@ module Gws::BaseFilter
   end
 
   def save_controller_access_history
-    Gws::History.notice!(
-      :controller, @cur_user, @cur_site,
-      path: request.path, controller: self.class.name.underscore, action: action_name
-    ) rescue nil
+    if request.format == 'text/html'
+      Gws::History.notice!(
+        :controller, @cur_user, @cur_site,
+        path: request.path, controller: self.class.name.underscore, action: action_name
+      ) rescue nil
+    end
   end
 
   # override SS::BaseFilter#rescue_action
