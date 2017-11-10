@@ -11,6 +11,7 @@ Webmail_Address_Autocomplete.render(
 <%= f.hidden_field :forward_uid, id: nil %>
 <%= f.hidden_field :references, id: nil %>
 <%= f.hidden_field :in_reply_to, id: nil %>
+<%= f.hidden_field :ref_file_uid, value: (@item.forward_uid || @item.uid), id: nil %>
 
 <dl class="webmail-mail-form-address to">
   <dt><%= @model.t :to %></dt>

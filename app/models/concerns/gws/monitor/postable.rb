@@ -21,7 +21,6 @@ module Gws::Monitor::Postable
     field :descendants_updated, type: DateTime
     field :severity, type: String
     field :due_date, type: DateTime
-    field :admin_setting, type: String, default: '1'
     field :spec_config, type: String, default: '0'
     field :reminder_start_section, type: String, default: '0'
     field :state_of_the_answers_hash, type: Hash, default: {}
@@ -36,7 +35,7 @@ module Gws::Monitor::Postable
     has_many :descendants, class_name: "Gws::Monitor::Post", dependent: :destroy, inverse_of: :topic,
       order: { created: -1 }
 
-    permit_params :name, :mode, :permit_comment, :severity, :due_date, :admin_setting,
+    permit_params :name, :mode, :permit_comment, :severity, :due_date,
                   :spec_config, :reminder_start_section, :state_of_the_answers_hash
 
     before_validation :set_topic_id, if: :comment?
@@ -69,50 +68,49 @@ module Gws::Monitor::Postable
       end
       criteria
     }
-    scope :and_topics, ->(groupid) {
-      where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
-                         {article_state: 'open'}])
-    }
-    scope :and_answers, ->(groupid) {
-      where("$and" =>
-              [ "$or" =>
-                [
-                  {"state_of_the_answers_hash.#{groupid}".to_sym.in => ["question_not_applicable","answered"]},
-                  {"$and" => [{"state_of_the_answers_hash.#{groupid}".to_sym.in => ["public","preparation"]},
-                               {article_state: 'closed'}]}
-                ]
-              ])
-    }
-    # Allow readable settings and readable permissions.
-    scope :and_readable, ->(user, site, opts = {}) {
-      cond = [
-          { "readable_group_ids.0" => { "$exists" => false },
-            "readable_member_ids.0" => { "$exists" => false },
-            "readable_custom_group_ids.0" => { "$exists" => false },
-            "group_ids.0" => { "$exists" => false },
-            "user_ids.0" => { "$exists" => false },
-            "attend_group_ids.0" => { "$exists" => false } },
-          { :readable_group_ids.in => user.group_ids },
-          { readable_member_ids: user.id },
-          { "$and" => [ {admin_setting: '0'}, { :group_ids.in => user.group_ids }] },
-          { "$and" => [ {admin_setting: '0'}, { group_id: user.group_ids }] },
-          { "$and" => [ {admin_setting: '1'}, { user_ids: user.id }] },
-          { "$and" => [ {admin_setting: '1'}, { user_id: user.id }] },
-          { :attend_group_ids.in => user.group_ids },
-      ]
-      if readable_setting_included_custom_groups?
-        cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+    scope :and_topics, ->(userid, groupid, custom_group_ids, key) {
+      if key.start_with?('answerble')
+        where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)},
+                          {article_state: 'open'}
+                        ]
+             )
+      elsif key.start_with?('readable')
+        where("$or" =>
+               [
+                 {"$and" =>
+                   [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)}, ]
+                 },
+                 {"$and" =>
+                   [ { attend_group_ids: { "$not" => { "$in" => [groupid] } } },
+                     {"$or" =>
+                       [ { :readable_group_ids.in => [groupid] }, { readable_member_ids: userid },
+                         { :readable_custom_group_ids.in => custom_group_ids } ] } ]
+                 }
+               ]
+             )
       end
+    }
 
-      cond << allow_condition(:read, user, site: site) if opts[:include_role]
-      where("$and" => [{ "$or" => cond }])
+    scope :and_answers, ->(groupid, key) {
+      if key.start_with?('answerble')
+        where("$and" => [
+                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(question_not_applicable answered)},
+                          {article_state: 'open'}
+                        ]
+             )
+      elsif key.start_with?('readable')
+        where("$and" => [
+                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(question_not_applicable answered)}
+                        ]
+             )
+      end
     }
     scope :owner, ->(user, site, opts = {}) {
       cond = [
           { "group_ids.0" => { "$exists" => false },
             "user_ids.0" => { "$exists" => false } },
-          { "$and" => [ {admin_setting: '1'}, { :group_ids.in => user.group_ids }] },
-          { "$and" => [ {admin_setting: '0'}, { user_ids: user.id }] },
+          { "$and" => [ { :group_ids.in => user.group_ids }] },
+          { "$and" => [ { user_ids: user.id }] },
       ]
       where("$and" => [{ "$or" => cond }])
     }
@@ -170,6 +168,13 @@ module Gws::Monitor::Postable
     ]
   end
 
+  def answerable_article_options
+    [
+        [I18n.t('gws/monitor.options.answerable_article.answerable'), 'answerble'],
+        [I18n.t('gws/monitor.options.answerable_article.readable'), 'readable']
+    ]
+  end
+
   def severity_options
     %w(normal important).map { |v| [ I18n.t("gws/monitor.options.severity.#{v}"), v ] }
   end
@@ -204,7 +209,7 @@ module Gws::Monitor::Postable
 
   def set_state_of_the_answers_hash
     attend_group_ids_string = []
-    @attributes["attend_group_ids"].each {|s| attend_group_ids_string << "#{s}"}
+    @attributes["attend_group_ids"].each { |s| attend_group_ids_string << s.to_s }
     self.state_of_the_answers_hash = attend_group_ids_string.map do |g|
       if @attributes["state_of_the_answers_hash"][g]
         [g, @attributes["state_of_the_answers_hash"][g]]

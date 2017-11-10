@@ -83,6 +83,26 @@ class Webmail::MailsController < ApplicationController
     end
   end
 
+  def edit
+    raise "404" unless @item.draft?
+    @item.set_ref_files(@item.attachments)
+  end
+
+  def update
+    @item.attributes = get_params
+
+    if params[:commit] == I18n.t('ss.buttons.draft_save')
+      notice = nil
+      resp = @item.save_draft
+    else
+      notice = t('ss.notice.sent')
+      resp = @item.send_mail
+    end
+
+    @item.destroy_files
+    render_create resp, notice: notice
+  end
+
   def header_view
     if SS.config.webmail.store_mails
       @item = @imap.mails.find_and_store params[:id]

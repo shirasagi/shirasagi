@@ -49,12 +49,6 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   def index
     @items = @model.site(@cur_site).topic
 
-    if params[:s] && params[:s][:state] == "closed"
-      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
-    else
-      @items = @items.and_public.readable(@cur_user, @cur_site)
-    end
-
     if @category.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
@@ -71,14 +65,26 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     render file: "/gws/monitor/management/main/show_#{@item.mode}"
   end
 
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    diff_attend_group_readable_group = (@item.attend_group_ids - @item.readable_group_ids).uniq
+    if diff_attend_group_readable_group.present?
+      @item.attributes["readable_group_ids"] = @item.attributes["readable_group_ids"] + diff_attend_group_readable_group
+    end
+
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update
+  end
+
   def close
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(article_state: 'closed')
+    render_update @item.update(article_state: 'closed'), {notice: t('gws/monitor.notice.close')}
   end
 
   def open
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(article_state: 'open')
+    render_update @item.update(article_state: 'open'), {notice: t('gws/monitor.notice.open')}
   end
 
   def download
@@ -91,14 +97,15 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
 
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
     @download_file_group_ssfile_ids = []
     @item.subscribed_groups.each do |group|
-      @download_file_group_ssfile_ids << [File.basename(@item.comment(group.id)[0].user_group_name), @item.comment(group.id)[0].file_ids] if @item.comment(group.id).present?
+      if @item.comment(group.id).present?
+        download_file_ids = @item.comment(group.id)[0]
+        @download_file_group_ssfile_ids << [File.basename(download_file_ids.user_group_name), download_file_ids.file_ids]
+      end
     end
 
     download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h
-
     @group_ssfile = []
     download_file_group_ssfile_ids_hash.each do |group_fileids|
       group_fileids[1].each do |fileids|
@@ -106,28 +113,13 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
       end
     end
 
-    download_root_dir = "/tmp/shirasagi_download"
-    download_dir = "#{download_root_dir}" + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
+    download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
+    download_dir = download_root_dir + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
+    zipfile = download_dir + "/" + Time.zone.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
 
-    Dir.glob("#{download_root_dir}" + "/" + "#{@cur_user.id}_*").each do |tmp_dir|
-      FileUtils.rm_rf(tmp_dir) if File.exists?(tmp_dir)
-    end
-
-    FileUtils.mkdir_p(download_dir) unless FileTest.exist?(download_dir)
-
-    @group_ssfile.each do |groupssfile|
-      FileUtils.copy("#{groupssfile[1].path}", "#{download_dir}" + "/" + groupssfile[0] + "_" + "#{groupssfile[1].name}") if File.exist?(groupssfile[1].path)
-    end
-
-    zipfile = download_dir + "/" + Time.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
-
-    Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
-      Dir.glob("#{download_dir}/*").each do |downloadfile|
-        zip_file.add(NKF::nkf('-sx --cp932',File.basename(downloadfile)), downloadfile)
-      end
-    end
-
+    @item.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
+    @item.create_zip(zipfile, @group_ssfile)
     send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
-
+    self.response_body = @item.delete_temporary_directory(zipfile)
   end
 end
