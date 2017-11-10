@@ -71,9 +71,7 @@ module Gws::Monitor::Postable
     scope :and_topics, ->(userid, groupid, custom_group_ids, key) {
       if key.start_with?('answerble')
         where("$and" => [ {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(public preparation)},
-                          {article_state: 'open'}
-                        ]
-             )
+                          {article_state: 'open'} ] )
       elsif key.start_with?('readable')
         where("$or" =>
                [
@@ -85,9 +83,7 @@ module Gws::Monitor::Postable
                      {"$or" =>
                        [ { :readable_group_ids.in => [groupid] }, { readable_member_ids: userid },
                          { :readable_custom_group_ids.in => custom_group_ids } ] } ]
-                 }
-               ]
-             )
+                 } ] )
       end
     }
 
@@ -95,14 +91,10 @@ module Gws::Monitor::Postable
       if key.start_with?('answerble')
         where("$and" => [
                           {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(question_not_applicable answered)},
-                          {article_state: 'open'}
-                        ]
-             )
+                          {article_state: 'open'} ] )
       elsif key.start_with?('readable')
         where("$and" => [
-                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(question_not_applicable answered)}
-                        ]
-             )
+                          {"state_of_the_answers_hash.#{groupid}".to_sym.in => %w(question_not_applicable answered)} ] )
       end
     }
     scope :owner, ->(user, site, opts = {}) {
