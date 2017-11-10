@@ -8,7 +8,10 @@ class Gws::History
     store_in client: :gws_history, database: client[:database]
   end
 
-  CSV_HEADER = %i(id session_id request_id severity name mode model controller job item_id path action message created).freeze
+  CSV_HEADER = %i(
+    id session_id request_id severity name mode model controller job item_id
+    path action updated_field_names message created
+  ).freeze
 
   seqid :id
   field :session_id, type: String
@@ -202,7 +205,7 @@ class Gws::History
   def updated_field_names
     return self[:updated_field_names] if self[:updated_field_names]
     return [] if updated_fields.blank?
-    updated_fields.map { |m| item ? item.t(m, default: '').presence : nil }.compact.uniq
+    updated_fields.map { |m| item ? item.t(m, default: m).presence : nil }.compact.uniq
   end
 
   def to_csv
@@ -210,6 +213,9 @@ class Gws::History
     CSV_HEADER.each do |k|
       if k == :created
         terms << I18n.l(created)
+      elsif k == :updated_field_names
+        names = updated_field_names
+        terms << names.join(',')
       else
         terms << send(k)
       end
