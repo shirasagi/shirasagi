@@ -1,12 +1,13 @@
 class Chorg::RunController < ApplicationController
   include Cms::BaseFilter
-  # include Cms::CrudFilter
+  include Cms::CrudFilter
 
   before_action :prepend_current_view_path
   before_action :append_view_paths
+  before_action :set_revision
   before_action :set_item
 
-  model Chorg::Revision
+  model Chorg::RunParams
 
   navi_view "cms/main/conf_navi"
 
@@ -16,31 +17,35 @@ class Chorg::RunController < ApplicationController
     @crumbs << [t("chorg.revision"), controller: :revisions, action: :index]
   end
 
-  def prepend_current_view_path
-    prepend_view_path "app/views/#{params[:controller]}"
-  end
+  # def prepend_current_view_path
+  #   prepend_view_path "app/views/#{params[:controller]}"
+  # end
+  #
+  # def append_view_paths
+  #   append_view_path "app/views/ss/crud"
+  # end
 
-  def append_view_paths
-    append_view_path "app/views/ss/crud"
+  def set_revision
+    @revision = Chorg::Revision.find params[:rid]
   end
 
   def set_item
-    @item = @model.find params[:rid]
+    @item = @model.new
   end
 
-  def fix_params
-    { cur_site: @cur_site }
-  end
+  # def fix_params
+  #   { cur_site: @cur_site }
+  # end
 
-  def add_job_id(array, id)
-    if array.blank?
-      [id]
-    else
-      copy = Array.new(array)
-      copy << id
-      copy
-    end
-  end
+  # def add_job_id(array, id)
+  #   if array.blank?
+  #     [id]
+  #   else
+  #     copy = Array.new(array)
+  #     copy << id
+  #     copy
+  #   end
+  # end
 
   public
 
@@ -48,21 +53,25 @@ class Chorg::RunController < ApplicationController
   end
 
   def run
-    begin
-      add_group_to_site = params[:item][:add_newly_created_group_to_site].to_i
-      job_class = Chorg::Runner.job_class params[:type]
-      @job = job_class.bind(site_id: @cur_site, user_id: @cur_user).
-        perform_later(@item.name, add_group_to_site)
-      @item.job_ids = add_job_id(@item.job_ids, @job.job_id)
-    rescue => e
-      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      @item.errors.add :base, e.to_s
+    @item.attributes = get_params
+    if @item.valid?
+      begin
+        job_class = Chorg::Runner.job_class params[:type]
+        job_class = job_class.bind(site_id: @cur_site, user_id: @cur_user)
+        job_class = job_class.set(wait_until: @item.reservation) if @item.reservation
+
+        @job = job_class.perform_later(@revision.name, @item.add_newly_created_group_to_site)
+        @revision.add_to_set(job_ids: @job.job_id)
+      rescue => e
+        Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        @item.errors.add(:base, e.to_s)
+      end
     end
 
-    if @item.errors.empty? && @item.save
+    if @item.errors.blank?
       respond_to do |format|
         format.html do
-          redirect_to({ controller: :revisions, action: :show, id: @item.id },
+          redirect_to({ controller: :revisions, action: :show, id: @revision },
                       { notice: t("chorg.messages.job_started") })
         end
         format.json { head :no_content }
