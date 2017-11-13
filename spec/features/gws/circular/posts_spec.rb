@@ -62,14 +62,14 @@ describe "gws_circular_posts", type: :feature, dbscope: :example do
 
     it "#show only readable_member_ids" do
       item3
-      visit "/.g#{site._id}/circular/posts/#{item.id}"
+      visit "/.g#{site._id}/circular/posts/#{item3.id}"
       wait_for_ajax
       expect(page).to have_content(item3.name)
     end
 
     it "#show only readable_group_ids" do
       item4
-      visit "/.g#{site._id}/circular/posts/#{item.id}"
+      visit "/.g#{site._id}/circular/posts/#{item4.id}"
       wait_for_ajax
       expect(page).to have_content(item4.name)
     end
