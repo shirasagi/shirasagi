@@ -11,6 +11,10 @@ FactoryGirl.define do
       member_ids { [gws_user.id] }
     end
 
+    trait :due_date do
+      due_date Time.zone.tomorrow
+    end
+
     trait :gws_circular_posts do
       member_ids { [gws_user.id] }
       due_date Time.zone.tomorrow
