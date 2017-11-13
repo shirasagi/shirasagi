@@ -1,0 +1,9 @@
+<nav class="main-navi">
+  <h2><%= link_to t("service.menu.my_account"), service_my_accounts_path %></h2>
+</nav>
+
+<% if @cur_user.admin? %>
+<nav class="main-navi">
+  <h2><%= link_to t("service.menu.accounts"), service_accounts_path, class: 'icon-conf' %></h2>
+</nav>
+<% end %>
