@@ -15,7 +15,7 @@
       <% if now >= next_day %>
       <%= link_to(t('gws.history.days.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
       <% end %>
-      <%= text_field_tag :ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date' %>
+      <%= text_field_tag(:ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: (now - @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d'), max_date: 0}) %>
       <%= link_to(t('gws.history.days.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
     </div>
 
@@ -79,8 +79,6 @@
 
 <%= jquery do %>
   $('.list-head input[name=ymd]').datetimepicker({
-    minDate: '<%= (now - @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d') %>',
-    maxDate: 0,
     onChangeDateTime: function(dp, $input) {
       console.log($input.val());
       var ymd = $input.val();
