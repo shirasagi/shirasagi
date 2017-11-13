@@ -154,19 +154,6 @@ class Gws::Monitor::Topic
     return "(0/0)"
   end
 
-  def answer_count(cur_group)
-    if attend_group_ids.include?(cur_group.id)
-      if spec_config != '0'
-        answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
-        return "(#{answered}/#{subscribed_groups.count})"
-      else
-        answered = state_of_the_answers_hash[cur_group.id.to_s].match(/answered|question_not_applicable/)
-        return "(#{answered ? 1 : 0}/1)"
-      end
-    end
-    return "(0/0)"
-  end
-
   def to_csv
     CSV.generate do |data|
       data << I18n.t('gws/monitor.csv')
