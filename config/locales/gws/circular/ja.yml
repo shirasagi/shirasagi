@@ -14,6 +14,7 @@ ja:
       download: 選択した項目を全てCSVに出力しますか？
     post:
       disable: 削除する
+      disabled: 削除済み
       seen: 既読
       unseen: 未読
       set_seen: 既読にする
