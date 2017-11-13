@@ -38,4 +38,5 @@ ja:
     attributes:
       job/task:
         node_id: フォルダー
-        at: 実行日時
+        group_id: グループ
+        at: 実行予約日時
