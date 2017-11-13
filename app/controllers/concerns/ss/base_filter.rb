@@ -58,6 +58,10 @@ module SS::BaseFilter
     stylesheet("/assets/css/colorbox/colorbox.css")
   end
 
+  def login_path_by_cookie
+    cookies[:login_path] || sns_login_path
+  end
+
   def logged_in?
     if @cur_user
       set_last_logged_in
@@ -77,16 +81,16 @@ module SS::BaseFilter
       return render plain: ''
     end
 
-    login_path = sns_login_path
-    if group = SS::Group.where(domains: request_host).first
-      login_path = gws_login_path(site: group)
-    end
-
-    ref = request.env["REQUEST_URI"]
-    ref = (ref == login_path) ? "" : "?ref=" + CGI.escape(ref.to_s)
-
     respond_to do |format|
-      format.html { redirect_to "#{login_path}#{ref}" }
+      format.html do
+        login_path = login_path_by_cookie
+        ref = request.env["REQUEST_URI"]
+        if ref == login_path || params[:action] == "login"
+          redirect_to login_path
+        else
+          redirect_to "#{login_path}?ref=" + CGI.escape(ref.to_s)
+        end
+      end
       format.json { render json: :error, status: :unauthorized }
     end
   end
@@ -100,9 +104,16 @@ module SS::BaseFilter
         "last_logged_in" => Time.zone.now.to_i }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
+    cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = user
+  end
+
+  def unset_user(opt = {})
+    session[:user] = nil
+    redirect_to login_path_by_cookie if opt[:redirect]
+    @cur_user = nil
   end
 
   def check_api_user

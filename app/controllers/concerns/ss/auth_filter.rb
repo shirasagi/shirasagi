@@ -33,10 +33,4 @@ module SS::AuthFilter
   def set_last_logged_in(timestamp = Time.zone.now.to_i)
     session[:user]["last_logged_in"] = timestamp if session[:user]
   end
-
-  def unset_user(opt = {})
-    session[:user] = nil
-    redirect_to sns_login_path if opt[:redirect]
-    @cur_user = nil
-  end
 end

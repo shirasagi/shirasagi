@@ -1,17 +1,17 @@
 require 'spec_helper'
 
-describe "gws_login", type: :feature, dbscope: :example do
-  let(:site) { gws_site }
-  let(:user) { gws_user }
-  let(:login_path) { gws_login_path(site: site) }
-  let(:logout_path) { gws_logout_path(site: site) }
-  let(:main_path) { gws_portal_path(site: site) }
+describe "cms_login", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:user) { cms_user }
+  let(:login_path) { cms_login_path(site: site) }
+  let(:logout_path) { cms_logout_path(site: site) }
+  let(:main_path) { cms_contents_path(site: site) }
 
   context "invalid login" do
     it "with uid" do
       visit login_path
       within "form" do
-        fill_in "item[email]", with: user.uid
+        fill_in "item[email]", with: "wrong"
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
@@ -33,7 +33,7 @@ describe "gws_login", type: :feature, dbscope: :example do
     it "with organization_uid" do
       visit login_path
       within "form" do
-        fill_in "item[email]", with: user.organization_uid
+        fill_in "item[email]", with: user.uid
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end

@@ -1,13 +1,14 @@
-class Sns::LoginController < ApplicationController
-  include Sns::BaseFilter
+class Cms::LoginController < ApplicationController
+  include Cms::BaseFilter
   include Sns::LoginFilter
 
   skip_before_action :logged_in?, only: [:login, :remote_login, :status]
 
-  layout "ss/login"
-  navi_view nil
-
   private
+
+  def default_logged_in_path
+    cms_contents_path(site: @cur_site)
+  end
 
   def get_params
     params.require(:item).permit(:uid, :email, :password, :encryption_type)
@@ -37,21 +38,6 @@ class Sns::LoginController < ApplicationController
     @item = nil if @item && !@item.enabled?
     @item = @item.try_switch_user || @item if @item
 
-    render_login @item, email_or_uid, session: true, password: password
-  end
-
-  def remote_login
-    raise "404" unless SS::config.sns.remote_login
-
-    login
-    render :login if response.body.blank?
-  end
-
-  def status
-    if @cur_user = get_user_by_session
-      render plain: 'OK'
-    else
-      raise '403'
-    end
+    render_login @item, email_or_uid, session: true, password: password, logout_path: cms_logout_path(site: @cur_site)
   end
 end
