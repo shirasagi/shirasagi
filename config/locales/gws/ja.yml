@@ -158,8 +158,8 @@ ja:
       gws/history: 操作履歴
       gws/history_archive_file: アーカイブ
       gws/user_setting: ユーザー設定
-      gws/user_form: ユーザー拡張情報
-      gws/user_form_data: ユーザー拡張データ
+      gws/user_form: 拡張情報
+      gws/user_form_data: 拡張データ
     attributes:
       gws/model/category:
         model: モデル
@@ -343,8 +343,8 @@ ja:
         state: 使用
         memo: メモ
       gws/user_form_data:
-        form_id: ユーザー拡張情報
-        column_values: 拡張情報値
+        form_id: 拡張情報
+        column_values: 拡張データ
 
   tooltip:
     gws/addon/reminder:
