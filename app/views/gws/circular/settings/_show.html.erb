@@ -2,9 +2,6 @@
   <dt><%= @model.t :circular_default_due_date %></dt>
   <dd><%= @item.circular_default_due_date %> <%= t('datetime.prompts.day') %></dd>
 
-  <dt><%= @model.t :circular_max_member %></dt>
-  <dd><%= @item.circular_max_member %> <%= t('gws/circular/group_setting.max_member_unit') if @item.circular_max_member %></dd>
-
   <dt><%= @model.t :circular_filesize_limit %></dt>
   <dd><%= @item.circular_filesize_limit %> <%= t('ss.units.mega_byte') if @item.circular_filesize_limit %></dd>
 
