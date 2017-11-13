@@ -10,8 +10,6 @@ module Chorg::Model::Changeset
   TYPE_DELETE = 'delete'.freeze
   TYPES = [TYPE_ADD, TYPE_MOVE, TYPE_UNIFY, TYPE_DIVISION, TYPE_DELETE].freeze
 
-  GROUP_ATTRIBUTES = %w(name order contact_tel contact_fax contact_email contact_link_url contact_link_name ldap_dn).freeze
-
   included do
     attr_accessor :cur_revision, :cur_type
 
@@ -22,7 +20,7 @@ module Chorg::Model::Changeset
     permit_params :cur_revision, :cur_type
     permit_params :type, :sources, :destinations
     permit_params(sources: %w(id name))
-    permit_params(destinations: GROUP_ATTRIBUTES)
+    permit_params(destinations: self::GROUP_ATTRIBUTES)
 
     validates :revision_id, presence: true
     validates :type, presence: true

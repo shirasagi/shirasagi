@@ -36,7 +36,7 @@ class Gws::Chorg::ChangesetsController < ApplicationController
   end
 
   def append_view_paths
-    append_view_path "app/views/chorg/changesets/#{params[:type]}"
+    append_view_path "app/views/gws/chorg/changesets/#{params[:type]}"
     super
   end
 
