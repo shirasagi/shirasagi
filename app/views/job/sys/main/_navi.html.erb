@@ -4,6 +4,7 @@
   <% if SS::User.allowed?(:edit, @cur_user) %>
     <h3><%= link_to t("job.log"), job_sys_logs_path %></h3>
     <h3><%= link_to t("job.task"), job_sys_tasks_path %></h3>
+    <h3><%= link_to t("job.reservation"), job_sys_reservations_path %></h3>
   <% end %>
 </nav>
 
