@@ -102,6 +102,7 @@ class Gws::HistoryArchiveJob < Gws::ApplicationJob
       @last_open_file = file
       @last_open_file_handle = open(file, 'a')
       @last_open_file_handle.binmode
+      @last_open_file_handle.sync = true
 
       if ::File.size(file) == 0
         @last_open_file_handle.write(Gws::History.csv_header.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
