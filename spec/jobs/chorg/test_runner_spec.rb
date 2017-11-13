@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Chorg::TestRunner, dbscope: :example do
   let(:root_group) { create(:revision_root_group) }
   let(:site) { create(:cms_site, group_ids: [root_group.id]) }
+  let(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
 
   context "with add" do
     let(:revision) { create(:revision, site_id: site.id) }
@@ -11,7 +12,8 @@ describe Chorg::TestRunner, dbscope: :example do
     it do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
-      expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+      job = described_class.bind(site_id: site, task_id: task)
+      expect { job.perform_now(revision.name, 1) }.not_to raise_error
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -21,6 +23,12 @@ describe Chorg::TestRunner, dbscope: :example do
       end
 
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).to be_nil
+
+      task.reload
+      expect(task.state).to eq 'stop'
+      expect(task.entity_logs.count).to eq 1
+      expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+      expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
     end
   end
 
@@ -37,7 +45,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # check for not changed
-        expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { job.perform_now(revision.name, 1) }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -57,6 +66,16 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.contact_fax).to eq group.contact_fax
         expect(page.contact_link_url).to eq group.contact_link_url
         expect(page.contact_link_name).to eq group.contact_link_name
+
+        task.reload
+        expect(task.state).to eq 'stop'
+        expect(task.entity_logs.count).to eq 2
+        expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[0]['id']).to eq group.id.to_s
+        expect(task.entity_logs[0]['changes']).to include('name')
+        expect(task.entity_logs[1]['model']).to eq 'Article::Page'
+        expect(task.entity_logs[1]['id']).to eq '1'
+        expect(task.entity_logs[1]['changes']).to include('contact_tel', 'contact_fax', 'contact_email')
       end
     end
   end
@@ -81,7 +100,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page).not_to be_nil
 
         # check for not changed
-        expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
+        job = described_class.bind(site_id: site, task_id: task, user_id: user1)
+        expect { job.perform_now(revision.name, 1) }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -108,6 +128,21 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(user1.group_ids).to eq [group1.id]
         user2.reload
         expect(user2.group_ids).to eq [group2.id]
+
+        task.reload
+        expect(task.state).to eq 'stop'
+        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[0]['creates']).to include('name', 'contact_email')
+        expect(task.entity_logs[1]['model']).to eq 'Article::Page'
+        expect(task.entity_logs[1]['id']).to eq '1'
+        expect(task.entity_logs[1]['changes']).to include('contact_tel', 'contact_fax', 'contact_email')
+        expect(task.entity_logs[2]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[2]['id']).to eq group1.id.to_s
+        expect(task.entity_logs[2]['deletes']).to include('name', 'contact_email')
+        expect(task.entity_logs[3]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[3]['id']).to eq group2.id.to_s
+        expect(task.entity_logs[3]['deletes']).to include('name', 'contact_email')
       end
     end
   end
@@ -121,7 +156,8 @@ describe Chorg::TestRunner, dbscope: :example do
       # ensure create models
       expect(changeset).not_to be_nil
       # change group.
-      expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
+      job = described_class.bind(site_id: site, task_id: task)
+      expect { job.perform_now(revision.name, 1) }.not_to raise_error
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -132,6 +168,13 @@ describe Chorg::TestRunner, dbscope: :example do
 
       # check for not changed
       expect(Cms::Group.where(id: group.id).first).not_to be_nil
+
+      task.reload
+      expect(task.state).to eq 'stop'
+      expect(task.entity_logs.count).to eq 1
+      expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+      expect(task.entity_logs[0]['id']).to eq group.id.to_s
+      expect(task.entity_logs[0]['deletes']).to include('name', 'contact_email')
     end
   end
 end
