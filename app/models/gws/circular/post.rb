@@ -1,4 +1,5 @@
 class Gws::Circular::Post
+  include ActiveSupport::NumberHelper
   include SS::Document
   include Gws::Referenceable
   include Gws::Reference::User
@@ -26,6 +27,8 @@ class Gws::Circular::Post
   validates :name, presence: true
   validates :due_date, presence: true
   validates :deleted, datetime: true
+  validate :validate_member_length
+  validate :validate_attached_file_size
 
   alias reminder_date due_date
   alias reminder_user_ids member_ids
@@ -102,6 +105,35 @@ class Gws::Circular::Post
     return true if action =~ /read/ && readable?(user)
     return user?(user) || member?(user) || custom_group_member?(user) if action =~ /read/
     false
+  end
+
+  def state
+    'public'
+  end
+
+  def state_changed?
+    false
+  end
+
+  def validate_member_length
+    return if site.circular_max_member.blank?
+    return if site.circular_max_member <= 0
+
+    if self.sorted_overall_members.count > site.circular_max_member
+      errors.add(:base, :member_length, max: site.circular_max_member)
+    end
+  end
+
+  def validate_attached_file_size
+    return if site.circular_filesize_limit.blank?
+    return if site.circular_filesize_limit <= 0
+
+    limit = cur_site.circular_filesize_limit * 1024 * 1024
+    size = files.compact.map(&:size).sum
+
+    if size > limit
+      errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
+    end
   end
 
   class << self

@@ -37,6 +37,8 @@ SS::Application.routes.draw do
       delete action: :destroy_all, on: :collection
     end
 
+    resource :setting, only: [:show, :edit, :update]
+
     namespace 'apis' do
       get 'categories' => 'categories#index'
     end

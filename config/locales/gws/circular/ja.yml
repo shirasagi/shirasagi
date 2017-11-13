@@ -41,6 +41,17 @@ ja:
     notice:
       disable: 削除済みに移動しました
       active: 削除を取り消しました
+  gws/circular/group_setting:
+    max_member_unit: 人
+    options:
+      circular_delete_threshold:
+        - 6ヶ月
+        - 1年
+        - 1年6ヶ月
+        - 2年
+        - 2年6ヶ月
+        - 3年
+        - 3年6ヶ月
   modules:
     gws/circular: 回覧板
     addons:
@@ -62,11 +73,22 @@ ja:
       gws/circular/post: 回覧板
       gws/circular/category: カテゴリー
       gws/circular/trashes: 削除済み
+      gws/circular/group_setting: 回覧板設定
+    errors:
+      models:
+        gws/circular/post:
+          member_length: 参加者は%{max}人以下にしてください。
+          file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
     attributes:
       gws/circular/post:
         name: タイトル
         due_date: 回覧期限日時
         see_type: 既読にする形式
+      gws/circular/group_setting:
+        circular_default_due_date: 回覧期限日初期値
+        circular_max_member: 回覧人数制限
+        circular_filesize_limit: 添付サイズ制限
+        circular_delete_threshold: 回覧復旧可能期間
       gws/addon/circular/category:
         category_ids: カテゴリー
   tooltip:
@@ -82,3 +104,19 @@ ja:
         - 既読にする形式を選択します。
         - 通常回覧：ボタンを押下した時に既読にする
         - 簡易回覧：詳細を開いた時に自動的に既読にする
+    gws/circular/group_setting:
+      circular_default_due_date:
+        - 回覧期限日時の初期値を、今日から数えて何日後かで入力します。
+        - 初期値は 7日 後です。
+      circular_max_member:
+        - 参加者の人数の上限を入力します。
+        - 未指定である場合、制限されません。
+        - 初期値は 未指定 です。
+      circular_filesize_limit:
+        - 回覧に添付されるファイルの合計容量の上限を入力します。
+        - 未指定である場合、制限されません。
+        - 初期値は 未指定 です。
+      circular_delete_threshold:
+        - 回覧を保持する期間を入力します。
+        - 作成日からこの期間が経過すると自動で物理削除されます。
+        - 初期値は 2年 です。
