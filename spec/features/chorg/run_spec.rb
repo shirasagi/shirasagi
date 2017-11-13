@@ -46,16 +46,20 @@ describe "chorg_run", dbscope: :example do
       expect(current_path).to eq revision_show_path
       revision.reload
       expect(revision.job_ids.length).to eq 1
-      # # job should be started within 1.minute
-      # Timeout.timeout(60) do
-      #   loop do
-      #     count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
-      #     break if count > 0
-      #     sleep 0.1
-      #   end
-      # end
-      log = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).first
-      expect(log).not_to be_nil
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
+      expect(Chorg::Task.count).to eq 1
+      Chorg::Task.first.tap do |task|
+        expect(task.state).to eq 'stop'
+        expect(task.entity_logs.count).to eq 1
+        expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
+      end
     end
   end
 
@@ -93,16 +97,23 @@ describe "chorg_run", dbscope: :example do
       expect(current_path).to eq revision_show_path
       revision.reload
       expect(revision.job_ids.length).to eq 1
-      # # job should be started within 1.minute
-      # Timeout.timeout(60) do
-      #   loop do
-      #     count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
-      #     break if count > 0
-      #     sleep 0.1
-      #   end
-      # end
-      log = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).first
-      expect(log).not_to be_nil
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
+      expect(Chorg::Task.count).to eq 1
+      Chorg::Task.first.tap do |task|
+        expect(task.state).to eq 'stop'
+        expect(task.entity_logs.count).to eq 2
+        expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
+        expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
+        expect(task.entity_logs[1]['id']).to eq site.id.to_s
+        expect(task.entity_logs[1]['changes']).to include('group_ids')
+      end
     end
   end
 end
