@@ -24,14 +24,14 @@ class Gws::Schedule::TodosController < ApplicationController
   end
 
   def pre_params
-    super.keep_if {|key| %i(facility_ids).exclude?(key)}
+    super.keep_if { |key| %i[facility_ids].exclude?(key) }
   end
 
   public
 
   def index
     @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).active().
+      allow(:read, @cur_user, site: @cur_site).active.
       search(params[:s]).page(params[:page]).per(50)
   end
 
