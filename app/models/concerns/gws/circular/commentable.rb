@@ -39,6 +39,8 @@ module Gws::Circular::Commentable
   def comments
     attributes[:_comments].map.with_index do |comment, idx|
       comment[:id] = idx
+      comment[:created] = comment[:created].localtime
+      comment[:updated] = comment[:updated].localtime
       Gws::Circular::Comment.new comment
     end
   end
