@@ -35,6 +35,7 @@ describe "gws_monitor_answers", type: :feature, dbscope: :example do
     it "#new" do
       visit new_path
       wait_for_ajax
+      expect(page).to have_content('基本情報')
     end
   end
 end
