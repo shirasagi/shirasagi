@@ -177,7 +177,7 @@ class Gws::Monitor::Topic
     FileUtils.mkdir_p(download_dir) unless Dir.exist?(download_dir)
   end
 
-  def create_zip(zipfile, group_items)
+  def create_zip(zipfile, group_items, owner_items)
     if File.exist?(zipfile)
       return if self.updated < File.stat(zipfile).mtime
       File.unlink(zipfile) if self.updated > File.stat(zipfile).mtime
@@ -187,6 +187,12 @@ class Gws::Monitor::Topic
       group_items.each do |groupssfile|
         if File.exist?(groupssfile[1].path)
           zip_file.add(NKF::nkf('-sx --cp932', groupssfile[0] + "_" + groupssfile[1].name), groupssfile[1].path)
+        end
+      end
+
+      owner_items.each do |ownerssfile|
+        if File.exist?(ownerssfile[1].path)
+          zip_file.add(NKF::nkf('-sx --cp932', "own" + ownerssfile[0] + "_" + ownerssfile[1].name), ownerssfile[1].path)
         end
       end
     end
