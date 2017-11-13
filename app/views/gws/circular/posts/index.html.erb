@@ -11,6 +11,7 @@
 
   $(".disable-all").click(function(){
     var form = Gws_Circular_Post.buildForm("", "<%= I18n.t('gws/circular.confirm.disable') %>");
+    form.append($("<input/>", {name: "_method", value: "delete", type: "hidden"}) );
     form.appendTo(document.body).submit();
   });
 
