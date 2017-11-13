@@ -118,7 +118,7 @@ class Gws::Circular::Post
     return if site.circular_filesize_limit.blank?
     return if site.circular_filesize_limit <= 0
 
-    limit = cur_site.circular_filesize_limit * 1024 * 1024
+    limit = site.circular_filesize_limit * 1024 * 1024
     size = files.compact.map(&:size).sum
 
     if size > limit
