@@ -54,7 +54,15 @@ module SS::Relation::File
 
       define_method("generate_relation_public_#{name}") do
         file = send(name)
-        file.generate_public_file if file
+        return unless file
+        file.generate_public_file
+
+        dir = ::File.dirname(file.public_path)
+        Dir.glob("#{dir}/*").each do |f|
+          next if ::File.directory?(f)
+          next if ::File.basename(f) == file.basename
+          ::FileUtils.rm(f)
+        end
       end
 
       define_method("remove_relation_public_#{name}") do

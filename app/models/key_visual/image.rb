@@ -17,9 +17,8 @@ class KeyVisual::Image
 
   permit_params :link_url
 
-  default_scope ->{ where(route: "key_visual/image") }
+  after_generate_file :generate_relation_public_file, if: ->{ public? }
+  after_remove_file :remove_relation_public_file
 
-  def serve_static_file?
-    false
-  end
+  default_scope ->{ where(route: "key_visual/image") }
 end
