@@ -7,65 +7,48 @@
 <% end %>
 
 <section class="main-box login-box">
+  <header>
+    <h2><%= t("ss.login") %></h2>
+    <div class="version">ver. <%= tryb{SS.version} %></div>
+  </header>
 
-<header>
-  <h2><%= t("ss.login") %></h2>
-  <div class="version">ver. <%= tryb{SS.version} %></div>
-</header>
+  <%= form_tag action: params[:action] do |f| %>
+    <% if flash[:alert] %>
+    <div class="error-message"><%= flash[:alert] %></div>
+    <% end %>
 
-<%= form_tag action: params[:action] do |f| %>
-  <% if flash[:alert] %>
-  <div class="error-message"><%= flash[:alert] %></div>
+    <%= error_messages_for :item %>
+    <%= hidden_field_tag :ref, params[:ref] %>
+
+    <div class="form-group">
+      <label><%== t("ss.views.login/login.id") %></label>
+      <%= text_field :item, :email, class: "alnum", autofocus: true %>
+    </div>
+
+    <div class="form-group">
+      <label><%= t("ss.views.login/login.password") %></label>
+      <%= password_field :item, :password %>
+    </div>
+
+    <footer class="send">
+      <%= submit_tag t("ss.login"), class: "btn-primary" %>
+    </footer>
   <% end %>
 
-  <%= error_messages_for :item %>
-  <%= hidden_field_tag :ref, params[:ref] %>
-
-  <div class="form-group">
-    <label><%== t("ss.views.login/login.id") %></label>
-    <%= text_field :item, :email, class: "alnum", autofocus: true %>
-  </div>
-
-  <div class="form-group">
-    <label><%= t("ss.views.login/login.password") %></label>
-    <%= password_field :item, :password %>
-  </div>
-
-  <footer class="send">
-    <%= submit_tag t("ss.login"), class: "btn-primary" %>
-  </footer>
-<% end %>
-
-<% sso = Sys::Auth::Base.where(state: "enabled").order_by(order: 1).to_a %>
-<% if sso.present? %>
-  <ul class="sso">
-    <% sso.each do |sso| %>
-    <% sso = sso.becomes_with_model %>
-    <li class="<%= sso.filename %>">
-      <%= link_to(sso.url(params.slice(:ref)), class: "btn-default") do %>
-        <h2 class="name"><%= sso.name %></h2>
-        <p class="text"><%= br sso.text %></p>
+  <% sso = Sys::Auth::Base.where(state: "enabled").order_by(order: 1).to_a %>
+  <% if sso.present? %>
+    <ul class="sso">
+      <% sso.each do |sso| %>
+      <% sso = sso.becomes_with_model %>
+      <li class="<%= sso.filename %>">
+        <%= link_to(sso.url(params.slice(:ref)), class: "btn-default") do %>
+          <h2 class="name"><%= sso.name %></h2>
+          <p class="text"><%= br sso.text %></p>
+        <% end %>
+      </li>
       <% end %>
-    </li>
-    <% end %>
-  </ul>
-<% end %>
+    </ul>
+  <% end %>
 </section>
 
-<% if @notices.present? %>
-<div class="main-box login-notice">
-  <header>
-    <h2><%= t('sys.notice') %></h2>
-  </header>
-  <ul class="list-items">
-  <% @notices.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to item.name, sns_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
-      </div>
-    </li>
-  <% end %>
-  </ul>
-</div>
-<% end %>
+<%= render file: '_notices' %>
