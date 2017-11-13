@@ -17,8 +17,12 @@
   <% if @crud_buttons %>
     <% @crud_buttons.call f %>
   <% else %>
-    <%= f.submit t("gws/monitor.links.comment"), class: 'btn-primary answer' %>
-    <%= f.submit t("gws/monitor.links.question_not_applicable"), class: 'btn-primary question_not_applicable' %>
+    <% if @item.topic.id == @item.parent.id %>
+      <%= f.submit t("gws/monitor.links.comment"), class: 'btn-primary answer' %>
+      <%= f.submit t("gws/monitor.links.question_not_applicable"), class: 'btn-primary question_not_applicable' %>
+    <% else %>
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <% end %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   <% end %>
 </footer>
