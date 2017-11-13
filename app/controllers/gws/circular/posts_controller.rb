@@ -14,6 +14,10 @@ class Gws::Circular::PostsController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def pre_params
+    { due_date: Time.zone.now + @cur_site.circular_default_due_date.day }
+  end
+
   def set_crumbs
     @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
   end
