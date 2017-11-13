@@ -4,6 +4,7 @@ class Gws::Circular::Post
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Circular::See
+  include Gws::Circular::Sort
   include Gws::Circular::Commentable
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -79,24 +80,6 @@ class Gws::Circular::Post
 
   def disable
     update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
-  end
-
-  def sort_items
-    [
-        { key: :updated, order: -1, name: I18n.t('mongoid.attributes.ss/document.updated')},
-        { key: :created, order: -1, name: I18n.t('mongoid.attributes.ss/document.created')}
-    ]
-  end
-
-  def sort_hash(num=0)
-    result = {}
-    item = sort_items[num]
-    result[item[:key]] = item[:order]
-    result
-  end
-
-  def sort_options
-    sort_items.map.with_index { |item, i| [item[:name], i] }
   end
 
   def custom_group_member?(user)
