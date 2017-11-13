@@ -15,10 +15,9 @@ FactoryGirl.define do
       due_date Time.zone.tomorrow
     end
 
-    trait :gws_monitor_topics do
-      attend_group_ids { gws_user.group_ids }
-      readable_group_ids { gws_user.group_ids }
-      state "public"
+    trait :gws_circular_posts do
+      member_ids { [gws_user.id] }
+      due_date Time.zone.tomorrow
     end
     #
     # trait :gws_monitor_topics_item2 do
