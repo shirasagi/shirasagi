@@ -44,7 +44,7 @@ module Gws::Schedule::PlanHelper
     Gws::Schedule::Todo.
         site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
-        active().
+        readable(@cur_user, @cur_site).active().
         search(start: start_at, end: end_at).
         map do |todo|
           result = todo.calendar_format(@cur_user, @cur_site)
