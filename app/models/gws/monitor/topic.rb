@@ -30,6 +30,7 @@ class Gws::Monitor::Topic
 
   #validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
+  after_destroy :remove_zip
 
   scope :custom_order, ->(key) {
     if key.start_with?('created_')
@@ -198,6 +199,10 @@ class Gws::Monitor::Topic
     end
   end
 
+  def remove_zip
+    Fs.rm_rf self.zip_path if File.exist?(self.zip_path)
+  end
+
   private
 
   def set_descendants_updated_with_released
@@ -208,4 +213,3 @@ class Gws::Monitor::Topic
     end
   end
 end
-
