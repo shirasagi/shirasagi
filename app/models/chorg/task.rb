@@ -2,6 +2,9 @@ class Chorg::Task
   include SS::Model::Task
 
   field :entity_logs, type: Array
+  belongs_to :revision, class_name: 'Chorg::Revision'
+
+  scope :and_revision, ->(revision) { where(revision_id: revision.id) }
 
   def init_entity_logs
     self.unset(:entity_logs)
