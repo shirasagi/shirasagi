@@ -27,6 +27,7 @@ describe "gws_monitor_management_topics", type: :feature, dbscope: :example do
       item
       visit "/.g#{site._id}/monitor/management/topics/#{item.id}/edit"
       wait_for_ajax
+      expect(page).to have_content('基本情報')
     end
 
     it "#show" do
