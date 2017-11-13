@@ -20,11 +20,8 @@ class Gws::Schedule::TodoManagementController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        readable(@cur_user, @cur_site).deleted().
-        search(params[:s]).
-        order_by(deleted: -1).
-        page(params[:page]).per(50)
+      allow(:read, @cur_user, site: @cur_site).deleted().
+      search(params[:s]).order_by(deleted: -1).page(params[:page]).per(50)
   end
 
   def active
