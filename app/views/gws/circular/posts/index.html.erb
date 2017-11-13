@@ -9,6 +9,11 @@
     form.appendTo(document.body).submit();
   });
 
+  $(".disable-all").click(function(){
+    var form = Gws_Circular_Post.buildForm("", "<%= I18n.t('gws/circular.confirm.disable') %>");
+    form.appendTo(document.body).submit();
+  });
+
   $(".download").click(function(){
     var form = Gws_Circular_Post.buildForm("<%= download_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.download') %>");
     form.appendTo(document.body).submit();

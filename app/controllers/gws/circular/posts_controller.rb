@@ -24,6 +24,17 @@ class Gws::Circular::PostsController < ApplicationController
     @category = cond.where(id: params[:category]).first if params[:category]
   end
 
+  def render_destroy_all(result)
+    location = crud_redirect_url || { action: :index }
+    notice = result ? { notice: t('gws/circular.notice.disable') } : {}
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
+  end
+
   public
 
   def index

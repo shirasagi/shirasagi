@@ -18,7 +18,10 @@ SS::Application.routes.draw do
   end
 
   gws 'circular' do
-    resources :posts, concerns: [:posts]
+    resources :posts, concerns: [:posts] do
+      post action: :disable_all, on: :collection
+    end
+
     resources :trashes, concerns: [:posts] do
       get :recover, on: :member
       get :active, on: :member
