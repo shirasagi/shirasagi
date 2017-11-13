@@ -8,7 +8,7 @@ module Webmail::BaseFilter
     navi_view "webmail/main/navi"
     before_action :set_webmail_mode
     before_action :imap_disconnect
-    before_action :imap_initialize
+    before_action :imap_initialize, if: ->{ @cur_user }
     # before_action :imap_login
     after_action :imap_disconnect
     rescue_from Net::IMAP::NoResponseError, with: :rescue_imap_no_response_error

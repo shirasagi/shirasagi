@@ -36,20 +36,4 @@
   <% end %>
 </section>
 
-<% if @notices.present? %>
-<div class="main-box login-notice">
-  <header>
-    <h2><%= t('sys.notice') %></h2>
-  </header>
-  <ul class="list-items">
-  <% @notices.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to item.name, gws_public_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
-      </div>
-    </li>
-  <% end %>
-  </ul>
-</div>
-<% end %>
+<%= render file: '_notices' %>

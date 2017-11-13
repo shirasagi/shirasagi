@@ -13,7 +13,7 @@ module Cms::BaseFilter
     before_action :set_cms_assets
     before_action :set_site
     before_action :set_node
-    before_action :set_group
+    before_action :set_group, if: ->{ @cur_user }
     before_action :set_crumbs
   end
 

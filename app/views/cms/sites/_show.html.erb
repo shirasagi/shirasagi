@@ -19,4 +19,7 @@
 
   <dt><%= @model.t :mypage_domain %></dt>
   <dd><%= @item.send :mypage_domain %></dd>
+
+  <dt><%= t("ss.login_url") %></dt>
+  <dd><%= link_to cms_login_url, cms_login_url %></dd>
 </dl>
