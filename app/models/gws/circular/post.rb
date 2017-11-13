@@ -90,12 +90,16 @@ class Gws::Circular::Post
     self.user.id == user.id
   end
 
+  def readable?(user, opts = {})
+    readable_group_ids.blank? && readable_member_ids.blank? && readable_custom_group_ids.blank? ||
+      readable_group_ids.any? { |m| user.group_ids.include?(m) } ||
+      readable_member_ids.include?(user.id) ||
+      readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+  end
+
   def allowed?(action, user, opts = {})
     return true if super(action, user, opts)
-    return true if action =~ /read/ && readable_group_ids.blank? && readable_member_ids.blank? && readable_custom_group_ids.blank?
-    return true if action =~ /read/ && readable_group_ids.any? { |m| user.group_ids.include?(m) }
-    return true if action =~ /read/ && readable_member_ids.include?(user.id)
-    return true if action =~ /read/ && readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    return true if action =~ /read/ && readable?(user)
     return user?(user) || member?(user) || custom_group_member?(user) if action =~ /read/
     false
   end
