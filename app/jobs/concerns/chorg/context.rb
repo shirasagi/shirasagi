@@ -26,6 +26,8 @@ module Chorg::Context
     @substituter = self.class.substituter_class.new
     @validation_substituter = self.class.substituter_class.new
     @delete_group_ids = []
+
+    task.init_entity_logs
   end
 
   def inc_counter(method, type)
