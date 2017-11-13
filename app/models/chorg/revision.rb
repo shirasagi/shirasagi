@@ -6,4 +6,5 @@ class Chorg::Revision
   set_permission_name 'chorg_revisions', :edit
 
   has_many :changesets, class_name: 'Chorg::Changeset', dependent: :destroy
+  has_many :tasks, class_name: 'Chorg::Task', dependent: :destroy
 end
