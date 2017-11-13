@@ -27,7 +27,6 @@ class Gws::Circular::Post
   validates :name, presence: true
   validates :due_date, presence: true
   validates :deleted, datetime: true
-  validate :validate_member_length
   validate :validate_attached_file_size
 
   alias reminder_date due_date
@@ -113,15 +112,6 @@ class Gws::Circular::Post
 
   def state_changed?
     false
-  end
-
-  def validate_member_length
-    return if site.circular_max_member.blank?
-    return if site.circular_max_member <= 0
-
-    if self.sorted_overall_members.count > site.circular_max_member
-      errors.add(:base, :member_length, max: site.circular_max_member)
-    end
   end
 
   def validate_attached_file_size
