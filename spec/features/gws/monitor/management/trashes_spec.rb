@@ -31,10 +31,5 @@ describe "gws_monitor_management_trashes", type: :feature, dbscope: :example do
       wait_for_ajax
       expect(page).to have_content(item3.name)
     end
-
-    it "#new" do
-      visit new_path
-      wait_for_ajax
-    end
   end
 end
