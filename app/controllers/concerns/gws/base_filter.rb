@@ -10,8 +10,8 @@ module Gws::BaseFilter
     before_action :validate_gws
     before_action :set_gws_assets
     before_action :set_current_site
-    before_action :set_current_group
-    before_action :set_account_menu
+    before_action :set_current_group, if: ->{ @cur_user }
+    before_action :set_account_menu, if: ->{ @cur_user }
     before_action :set_crumbs
     navi_view "gws/main/navi"
   end
@@ -30,7 +30,7 @@ module Gws::BaseFilter
   def set_current_site
     @ss_mode = :gws
     @cur_site = Gws::Group.find params[:site]
-    @cur_user.cur_site = @cur_site
+    @cur_user.cur_site = @cur_site if @cur_user
     @crumbs << [@cur_site.name, gws_portal_path]
   end
 

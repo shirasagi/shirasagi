@@ -14,6 +14,10 @@ class Gws::Circular::PostsController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def pre_params
+    { due_date: Time.zone.now + @cur_site.circular_default_due_date.day }
+  end
+
   def set_crumbs
     @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
   end
@@ -24,9 +28,26 @@ class Gws::Circular::PostsController < ApplicationController
     @category = cond.where(id: params[:category]).first if params[:category]
   end
 
+  def render_destroy_all(result)
+    location = crud_redirect_url || { action: :index }
+    notice = result ? { notice: t('gws/circular.notice.disable') } : {}
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
+  end
+
   public
 
   def index
+    if @category.present?
+      params[:s] ||= {}
+      params[:s][:site] = @cur_site
+      params[:s][:category_id] = @category.id
+    end
+
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       without_deleted.

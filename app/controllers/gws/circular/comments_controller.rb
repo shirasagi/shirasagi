@@ -44,6 +44,6 @@ class Gws::Circular::CommentsController < ApplicationController
   def index
     redirect_to gws_circular_post_path(id: @parent.id)
   end
-  alias_method :show, :index
+  alias show index
 
 end
