@@ -111,11 +111,18 @@ ja:
         - 3年
         - 3年6ヶ月
   gws/schedule/todo_management:
+    management: 管理
+    active: 削除を取り消す
+    deleted: 削除日時
+    notice:
+      disable: 削除済みに移動しました
+      active: 削除を取り消しました
     links:
       active: 削除を取り消す
     confirm:
+      active: 削除を取り消しますか？
+      disable: 削除済みに移動しますか？
       active_all: 選択した項目の削除を取り消しますか？
-
   modules:
     gws/schedule: スケジュール
     addons:
