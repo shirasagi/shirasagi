@@ -9,8 +9,8 @@ if defined?(MongoidStore::Session)
     # set TTL index
     index({ updated_at: 1 }, { expire_after_seconds: 1.hour })
 
-    if client = Mongoid::Config.clients[:default_post]
-      store_in client: :default_post, database: client[:database]
+    if Mongoid::Config.clients[:default_post]
+      store_in client: :default_post
     end
   end
 end

@@ -28,7 +28,7 @@ class Rss::ImportBase < Cms::ApplicationJob
   private
 
   def model
-    @model ||= Rss::Page
+    @model ||= Rss::Page.with_repl_master
   end
 
   def set_model(model)

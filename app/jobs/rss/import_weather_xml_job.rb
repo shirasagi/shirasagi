@@ -12,7 +12,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     @weather_xml_page = nil
     super
 
-    @cur_file = Rss::TempFile.where(site_id: site.id, id: file).first
+    @cur_file = Rss::TempFile.with_repl_master.where(site_id: site.id, id: file).first
     return unless @cur_file
 
     @items = Rss::Wrappers.parse(@cur_file)
@@ -26,7 +26,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def gc_rss_tempfile
     return if rand(100) >= 20
-    Rss::TempFile.lt(updated: 2.weeks.ago).destroy_all
+    Rss::TempFile.with_repl_master.lt(updated: 2.weeks.ago).destroy_all
   end
 
   def import_rss_item(*args)

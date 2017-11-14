@@ -45,5 +45,4 @@ class Sns::MypageController < ApplicationController
       redirect_to sns_mypage_path
     end
   end
-
 end

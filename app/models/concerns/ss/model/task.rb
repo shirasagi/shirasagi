@@ -9,6 +9,7 @@ module SS::Model::Task
 
   included do
     store_in collection: "ss_tasks"
+    store_in_repl_master
 
     attr_accessor :cur_site
 
