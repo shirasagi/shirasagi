@@ -47,6 +47,14 @@ class Gws::Monitor::Topic
     false
   end
 
+  def download_root_path
+    "#{Rails.root}/private/files/gws_monitors/"
+  end
+
+  def zip_path
+    self.download_root_path + id.to_s.split(//).join("/") + "/_/#{id}"
+  end
+
   def active?
     return true unless deleted.present? && deleted < Time.zone.now
     false
@@ -128,9 +136,22 @@ class Gws::Monitor::Topic
     children.where(user_group_id: groupid)
   end
 
-  def answer_count
+  def answer_count_admin
     answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
-    return "(#{answered}/#{subscribed_groups.count})"
+    return "(#{answered}/#{attend_group_ids.count})"
+  end
+
+  def answer_count(cur_group)
+    if attend_group_ids.include?(cur_group.id)
+      if spec_config != '0'
+        answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
+        return "(#{answered}/#{attend_group_ids.count})"
+      else
+        answered = state_of_the_answers_hash[cur_group.id.to_s].match(/answered|question_not_applicable/)
+        return "(#{answered ? 1 : 0}/1)"
+      end
+    end
+    return "(0/0)"
   end
 
   def to_csv
@@ -138,7 +159,7 @@ class Gws::Monitor::Topic
       data << I18n.t('gws/monitor.csv')
 
       subscribed_groups.each do |group|
-        post = comment(group.id).first
+        post = comment(group.id).last
         data << [
             id,
             name,
@@ -152,38 +173,16 @@ class Gws::Monitor::Topic
     end
   end
 
-  def create_temporary_directory(userid, root_temp_dir, temp_dir)
-    Dir.glob(root_temp_dir + "/" + "#{userid}_*").each do |tmp|
-      FileUtils.rm_rf(tmp) if File.exists?(tmp)
-    end
-
-    FileUtils.mkdir_p(temp_dir) unless FileTest.exist?(temp_dir)
-  end
-
-  def delete_temporary_directory(zipfile)
-    file_body = Class.new do
-      attr_reader :to_path
-
-      def initialize(path)
-        @to_path = path
-      end
-
-      def each
-        File.open(to_path, 'rb') do |file|
-          while chunk = file.read(163_84)
-            yield chunk
-          end
-        end
-      end
-
-      def close
-        FileUtils.rm_rf File.dirname(@to_path)
-      end
-    end
-    return file_body.new(zipfile)
+  def create_download_directory(download_dir)
+    FileUtils.mkdir_p(download_dir) unless Dir.exist?(download_dir)
   end
 
   def create_zip(zipfile, group_items)
+    if File.exist?(zipfile)
+      return if self.updated < File.stat(zipfile).mtime
+      File.unlink(zipfile) if self.updated > File.stat(zipfile).mtime
+    end
+
     Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
       group_items.each do |groupssfile|
         if File.exist?(groupssfile[1].path)

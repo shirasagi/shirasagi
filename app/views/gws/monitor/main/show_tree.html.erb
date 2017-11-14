@@ -89,17 +89,6 @@
   <% if params[:controller] =~ /admin/ || @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != '0'%>
     <%= render partial: 'gws/monitor/main/subscribed_groups' %>
   <% end %>
-
-  <% if controller_path == "gws/monitor/management/topics" %>
-  <article class="topic">
-    <header>
-      <h2><%= t('gws/monitor.topic.export_csv') %></h2>
-    </header>
-    <div class="menu">
-      <%= link_to(t('gws/monitor.links.export_csv'), download_gws_monitor_management_topic_path, class: 'btn export_csv') %>
-    </div>
-  </article>
-  <% end %>
 </div>
 
 <%= jquery do %>

@@ -40,7 +40,7 @@ module Gws::Circular::See
   end
 
   def see_type_options
-    %w(normal simple).map{|key| [I18n.t(key, scope: 'gws/circular.options.see_type'), key]}
+    %w(normal simple).map{ |key| [I18n.t(key, scope: 'gws/circular.options.see_type'), key] }
   end
 
 end

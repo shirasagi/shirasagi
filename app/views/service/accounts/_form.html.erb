@@ -1,0 +1,59 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%#= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :account %><%= @model.tt :account %></dt>
+  <dd><%= f.text_field :account %></dd>
+
+  <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
+  <dd><%= f.password_field :in_password, style: "width: 200px" %></dd>
+
+  <dt><%= @model.t :account_start_date %><%= @model.tt :account_start_date %></dt>
+  <dd><%= f.text_field :account_start_date, class: "datetime js-datetime", value: tryb { @item.account_start_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :account_expiration_date %><%= @model.tt :account_expiration_date %></dt>
+  <dd><%= f.text_field :account_expiration_date, class: "datetime js-datetime", value: tryb { @item.account_expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :organization_ids %><%= @model.tt :organization_ids %></dt>
+  <dd>
+    <%= f.hidden_field "organization_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.organizations.index"), service_apis_organizations_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= t("ss.apis.organizations.label") %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% @item.organizations.each do |group| %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "organization_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :cms_use %><%= @model.tt :cms_use %></dt>
+  <dd><%= f.select :cms_use, @item.cms_use_options %></dd>
+
+  <dt><%= @model.t :gws_use %><%= @model.tt :gws_use %></dt>
+  <dd><%= f.select :gws_use, @item.gws_use_options %></dd>
+
+  <dt><%= @model.t :webmail_use %><%= @model.tt :webmail_use %></dt>
+  <dd><%= f.select :webmail_use, @item.webmail_use_options %></dd>
+
+  <dt><%= @model.t :in_cms_quota_mb %><%= @model.tt :in_cms_quota_mb %></dt>
+  <dd><%= f.number_field :in_cms_quota_mb %> MB</dd>
+
+  <dt><%= @model.t :in_gws_quota_mb %><%= @model.tt :in_gws_quota_mb %></dt>
+  <dd><%= f.number_field :in_gws_quota_mb %> MB</dd>
+
+  <dt><%= @model.t :in_webmail_quota_mb %><%= @model.tt :in_webmail_quota_mb %></dt>
+  <dd><%= f.number_field :in_webmail_quota_mb %> MB</dd>
+
+  <dt><%= @model.t :roles %><%= @model.tt :roles %></dt>
+  <dd><%= f.text_field :roles %></dd>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>

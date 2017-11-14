@@ -1,0 +1,10 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.account %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+
+  <% if item.roles.present? %>
+    <span><%= item.roles %></span>
+  <% end %>
+<% end %>
+
+<%= render file: "ss/crud/index" %>

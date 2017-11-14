@@ -1,0 +1,11 @@
+production: &production
+  # Quota limitations
+  cms_limitation: false
+  gws_limitation: false
+  webmail_limitation: false
+
+test:
+  <<: *production
+
+development:
+  <<: *production

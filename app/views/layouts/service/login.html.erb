@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
+<title><%= SS.config.ss.application_name %></title>
+<%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+<%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
+<!--[if lt IE 9]>
+<script src="/assets/js/html5.js"></script>
+<script src="/assets/js/selectivizr-min.js"></script>
+<![endif]-->
+<%= csrf_meta_tags %>
+</head>
+<body>
+
+<div id="page-login">
+
+<header id="head">
+  <div class="wrap">
+    <h1 class="application-name"><%= link_to SS.config.ss.application_name, service_main_path %></h1>
+  </div>
+<!-- /#head --></header>
+
+<aside id="notice">
+  <div class="wrap"><%= notice %></div>
+</aside>
+
+<% if notice %>
+<script> SS.notice('<%= notice %>'); </script>
+<% end %>
+
+<article id="main">
+  <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+    <div id="menu"><%= render partial: "menu" %></div>
+  <% elsif controller.menu_view_file %>
+    <div id="menu"><%= render partial: controller.menu_view_file %></div>
+  <% end %>
+
+  <div class="wrap">
+  <%= yield %>
+  </div>
+</article>
+
+<footer id="foot">
+  <div id="ss-pc" style="display: none">PC View</div>
+  <div id="ss-mb" style="display: none">Mobile View</div>
+<!-- /#foot --></footer>
+
+</div>
+
+</body>
+</html>
