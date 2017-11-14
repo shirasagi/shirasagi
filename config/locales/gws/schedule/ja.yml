@@ -87,12 +87,16 @@ ja:
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
   gws/schedule/todo:
     finish_mark: "[完] "
+    notice:
+      disable: 削除済みに移動しました
     confirm:
+      disable: 削除済みに移動しますか？
       finish_all: 選択した項目を全て完了にしますか？
       revert_all: 選択した項目を全て未完了に戻しますか？
-      disable_all: 選択した項目を全て削除しますか？
+      disable_all: 削除済みに移動しますか？
     search_todos: ToDoを検索
     links:
+      disable: 削除済みに移動する
       finish: 完了する
       revert: 未完了に戻す
     options:

@@ -15,7 +15,7 @@ module Gws::Schedule::TodoHelper
 
     else
         result << -> { link_to t('ss.links.edit'), action: :edit, id: item } if item.allowed?(:edit, user, site: site)
-        result << -> { link_to t('ss.links.delete'), action: :disable, id: item } if item.allowed?(:delete, user, site: site)
+        result << -> { link_to t('ss.links.delete'), action: :delete, id: item } if item.allowed?(:delete, user, site: site)
 
         if item.allowed?(:edit, user, site: site) && !item.finished?
           result << -> { link_to t('gws/schedule/todo.links.finish'), action: :finish, id: item }
