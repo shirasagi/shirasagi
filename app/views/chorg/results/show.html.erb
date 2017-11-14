@@ -1,0 +1,22 @@
+<% addons = @addons || @item.try(:addons) || [] %>
+
+<div class="cms-tabs">
+  <% path = url_for(controller: :run, action: :confirmation) %>
+  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+    <span class="tab-name">実行</span>
+  <% end %>
+  <% path = url_for(controller: :results, action: :show) %>
+  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+    <span class="tab-name">結果</span>
+  <% end %>
+</div>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <% if addons.size > 0 %><div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div><% end %>
+    <div class="addon-body">
+      <%= render file: "_show" %>
+    </div>
+  </div>
+  <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+</div>
