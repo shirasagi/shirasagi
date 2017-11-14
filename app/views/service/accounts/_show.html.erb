@@ -1,0 +1,43 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :account %></dt>
+  <dd><%= @item.send :account %></dd>
+
+  <dt><%= @model.t :account_start_date %></dt>
+  <dd><%= tryb{@item.account_start_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+
+  <dt><%= @model.t :account_expiration_date %></dt>
+  <dd><%= tryb{@item.account_expiration_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+
+  <dt><%= @model.t :organization_ids %><%= @model.tt :organization_ids %></dt>
+  <dd><%= br @item.organizations.map { |m| m.name }.join("\n") %></dd>
+
+  <dt><%= @model.t :site_ids %><%= @model.tt :site_ids %></dt>
+  <dd><%= br @item.sites.map { |m| m.name }.join("\n") %></dd>
+
+  <dt><%= @model.t :cms_use %></dt>
+  <dd><%= @item.label :cms_use %></dd>
+
+  <dt><%= @model.t :gws_use %></dt>
+  <dd><%= @item.label :gws_use %></dd>
+
+  <dt><%= @model.t :webmail_use %></dt>
+  <dd><%= @item.label :webmail_use %></dd>
+
+  <dt><%= @model.t :cms_quota %></dt>
+  <dd><%= number_to_human_size(@item.cms_quota) || '-' %></dd>
+
+  <dt><%= @model.t :gws_quota %></dt>
+  <dd><%= number_to_human_size(@item.gws_quota) || '-' %></dd>
+
+  <dt><%= @model.t :webmail_quota %></dt>
+  <dd><%= number_to_human_size(@item.webmail_quota) || '-' %></dd>
+
+  <dt><%= @model.t :roles %></dt>
+  <dd><%= @item.send :roles %></dd>
+
+  <dt><%= @model.t :remark %></dt>
+  <dd><%=br @item.send :remark %></dd>
+</dl>

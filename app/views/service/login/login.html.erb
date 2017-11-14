@@ -1,0 +1,36 @@
+<%= jquery do %>
+  $('input.alnum').on({
+    focus: function() { $(this).attr('type', 'tel').css('width', '100%'); },
+    blur: function() { $(this).attr('type', 'text'); },
+    keypress: function(ev) { if (ev.which == 13) { $('#item_password').focus(); return false; } }
+  });
+<% end %>
+
+<section class="main-box login-box">
+  <header>
+    <h2><%= t("modules.service") %></h2>
+    <div class="version">ver. <%= tryb{ SS.version } %></div>
+  </header>
+
+  <%= form_tag action: params[:action] do |f| %>
+    <% if flash[:alert] %>
+    <div class="error-message"><%= flash[:alert] %></div>
+    <% end %>
+
+    <%= error_messages_for :item %>
+
+    <div class="form-group">
+      <label><%= @model.t :account %></label>
+      <%= text_field :item, :account, class: "alnum", autofocus: true %>
+    </div>
+
+    <div class="form-group">
+      <label><%== @model.t :password %></label>
+      <%= password_field :item, :password %>
+    </div>
+
+    <footer class="send">
+      <%= submit_tag t("ss.login"), class: "btn-primary" %>
+    </footer>
+  <% end %>
+</section>

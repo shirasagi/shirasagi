@@ -113,13 +113,10 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
       end
     end
 
-    download_root_dir = "#{Rails.root}/tmp/shirasagi_download"
-    download_dir = download_root_dir + "/" + "#{@cur_user.id}_#{SecureRandom.hex(4)}"
-    zipfile = download_dir + "/" + Time.zone.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
+    zipfile = @item.name + ".zip"
 
-    @item.create_temporary_directory(@cur_user.id, download_root_dir, download_dir)
-    @item.create_zip(zipfile, @group_ssfile)
-    send_file(zipfile, type: 'application/zip', filename: File.basename(zipfile), disposition: 'attachment')
-    self.response_body = @item.delete_temporary_directory(zipfile)
+    @item.create_download_directory(File.dirname(@item.zip_path))
+    @item.create_zip(@item.zip_path, @group_ssfile)
+    send_file(@item.zip_path, type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
   end
 end

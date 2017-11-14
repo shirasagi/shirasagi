@@ -12,8 +12,9 @@ module Cms::BaseFilter
     before_action :validate_cms
     before_action :set_cms_assets
     before_action :set_site
+    before_action :validate_service, if: ->{ SS.config.service.cms_limitation.present? }
     before_action :set_node
-    before_action :set_group
+    before_action :set_group, if: ->{ @cur_user }
     before_action :set_crumbs
   end
 
@@ -33,6 +34,14 @@ module Cms::BaseFilter
     @cur_site = Cms::Site.find id: params[:site]
     request.env["ss.site"] = @cur_site
     @crumbs << [@cur_site.name, cms_contents_path]
+  end
+
+  def validate_service
+    return unless @account = Service::Account.any_in(organization_ids: @cur_site.group_ids).first
+    return if @account.cms_enabled?
+    msg = [I18n.t("service.messages.disabled_app", name: @cur_site.name)]
+    msg << I18n.t("service.messages.over_quota") if @account.cms_quota_over?
+    render html: msg.join("<br />").html_safe
   end
 
   def set_node
