@@ -7,8 +7,9 @@ module Webmail::BaseFilter
     helper Webmail::MailHelper
     navi_view "webmail/main/navi"
     before_action :set_webmail_mode
+    before_action :validate_service, if: ->{ SS.config.service.webmail_limitation.present? }
     before_action :imap_disconnect
-    before_action :imap_initialize
+    before_action :imap_initialize, if: ->{ @cur_user }
     # before_action :imap_login
     after_action :imap_disconnect
     rescue_from Net::IMAP::NoResponseError, with: :rescue_imap_no_response_error
@@ -18,6 +19,15 @@ module Webmail::BaseFilter
 
   def set_webmail_mode
     @ss_mode = :webmail
+  end
+
+  def validate_service
+    return unless @cur_org = @cur_user.organization
+    return unless @account = Service::Account.where(organization_ids: @cur_org.id).first
+    return if @account.webmail_enabled?
+    msg = [I18n.t("service.messages.disabled_app", name: I18n.t("modules.webmail"))]
+    msg << I18n.t("service.messages.over_quota") if @account.webmail_quota_over?
+    render html: msg.join("<br />").html_safe
   end
 
   def set_crumbs

@@ -19,6 +19,7 @@ ja:
     required_field: ※必須入力
     search_result: 検索結果
     url: URL
+    login_url: ログインURL
     all: すべて
     keyword: キーワード
 
@@ -132,6 +133,11 @@ ja:
         index: ユーザーを選択する
         search: ユーザーを検索
         select: ユーザーを設定する
+      organizations:
+        index: 組織を選択する
+        search: 組織を検索
+        select: 組織を設定する
+        label: 組織名
     wareki:
       seireki:
         name: 西暦

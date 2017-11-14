@@ -34,6 +34,9 @@ module SS::Model::Group
     scope :in_group, ->(group) {
       where(name: /^#{group.name}(\/|$)/)
     }
+    scope :organizations, ->{
+      where(:name.not => /\//)
+    }
   end
 
   module ClassMethods
