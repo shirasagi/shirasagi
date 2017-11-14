@@ -3,7 +3,18 @@ module Chorg::Runner::Test
 
   private
 
+  def next_pseudo_id
+    @next_id ||= (SS::Sequence.max(:value) || 0) + 1
+    ret = @next_id
+    @next_id += 1
+    ret
+  end
+
   def save_or_collect_errors(entity)
+    if entity.new_record?
+      entity.id = next_pseudo_id
+    end
+
     if entity.valid?
       task.store_entity_changes(entity)
       true
