@@ -16,13 +16,10 @@ SS::Application.routes.draw do
     post :import, :on => :collection
   end
 
-  get ".g:site/", to: "gws/portal/my/portal#show", as: :gws_portal
-
   namespace "gws", path: ".g:site" do
+    get "/", to: "portal/my/portal#show", as: :portal
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login"  => "login#login", as: :login, via: [:get, :post]
-    match "remote_login" => "login#remote_login", as: :remote_login, via: [:get, :post]
-    resources :public_sys_notices, only: [:index, :show]
   end
 
   namespace "gws", path: ".g:site/gws" do

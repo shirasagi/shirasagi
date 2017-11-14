@@ -5,11 +5,17 @@
   });
 <% end %>
 
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+  <span><%= item.user_long_name %></span>
   <span class="gws-share-categories">
-    <span class="gws-category-label" style="background-color: gray; color: #ffffff;">削除済み</span>
+    <span class="gws-category-label" style="background-color: gray; color: #ffffff;">"<%= t('gws/circular.post.disabled') %></span>
     <% item.categories.compact.each do |category| %>
       <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
                   class: 'gws-category-label', style: category_label_css(category) %>

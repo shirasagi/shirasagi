@@ -2,8 +2,6 @@ class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  protect_from_forgery except: :remote_login
-  skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
   skip_before_action :logged_in?, only: [:login, :remote_login, :status]
 
   layout "ss/login"
@@ -20,20 +18,17 @@ class Sns::LoginController < ApplicationController
   public
 
   def login
-    @notices = Sys::Notice.and_public.
-      and_show_login.
-      limit(5)
-
     if !request.post?
       # retrieve parameters from get parameter. this is bookmark support.
       @item = SS::User.new email: params[:email]
-      return
+      return render(file: :login)
     end
 
     safe_params     = get_params
     email_or_uid    = safe_params[:email].presence || safe_params[:uid]
     password        = safe_params[:password]
     encryption_type = safe_params[:encryption_type]
+
     if encryption_type.present?
       password = SS::Crypt.decrypt(password, type: encryption_type) rescue nil
     end
@@ -57,16 +52,6 @@ class Sns::LoginController < ApplicationController
       render plain: 'OK'
     else
       raise '403'
-    end
-  end
-
-  def logout
-    put_history_log
-    # discard all session info
-    reset_session
-    respond_to do |format|
-      format.html { redirect_to sns_login_path }
-      format.json { head :no_content }
     end
   end
 end

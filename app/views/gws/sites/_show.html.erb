@@ -6,4 +6,12 @@
   <dt><%= @model.t :domains %></dt>
   <dd><%= @item.send :domains %></dd>
   <% end %>
+
+  <dt><%= t("ss.login_url") %></dt>
+  <dd>
+    <% @item.domains.each do |domain| %>
+      <%= link_to gws_login_url(domain: domain), gws_login_url(domain: domain) %><br />
+    <% end %>
+    <%= link_to gws_login_url, gws_login_url %><br />
+  </dd>
 </dl>
