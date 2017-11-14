@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'timecop'
 
 describe Gws::Circular::DeleteJob, dbscope: :example do
-  let(:site) {gws_site}
-  let(:user) {gws_user}
-  let(:started) {Time.zone.now}
+  let(:site) { gws_site }
+  let(:user) { gws_user }
+  let(:started) { Time.zone.now }
 
   describe '.perform_later' do
     before do
