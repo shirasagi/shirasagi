@@ -69,6 +69,7 @@ ja:
         execute_results: 実行結果を閲覧する
     messages:
       job_started: 組織変更処理を開始しました。
+      job_reserved: 組織変更処理を予約しました。
       test_run: テスト実行
 
   modules:
@@ -86,17 +87,27 @@ ja:
     models:
       chorg/changeset: 変更内容
       chorg/revision: リビジョン
+      chorg/run_params: 組織変更実行オプション
+    errors:
+      models:
+        chorg/run_params:
+          job_mode_is_not_service: ジョブサービスの実行モードがserviceではないため、予約実行できません。システム管理者にお問い合わせください。
     attributes:
-      chorg/revision:
+      chorg/model/revision:
         name: 名前
-        add_newly_created_group_to_site: 新規作成グループをサイトに追加
-      chorg/changeset:
+      chorg/model/changeset:
         type: 種別
+      chorg/run_params:
+        add_newly_created_group_to_site: 新規作成グループをサイトに追加
+        reservation: 予約実行
 
   tooltip:
     chorg/revision:
       name:
         - 組織変更の名称を入力します。
+    chorg/run_params:
+      reservation:
+        - 実行する時間を予約できます。
     chorg:
       views:
         add_changesets:

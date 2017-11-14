@@ -1,0 +1,73 @@
+<% def render_creates(creates) %>
+  <% return if creates.blank? %>
+  <% creates.sort_by { |k, v| k }.each do |k, v| %>
+    <tr>
+      <th><%= k %></th>
+      <td colspan="2"><%= v %></td>
+    </tr>
+  <% end %>
+<% end %>
+
+<% def render_changes(changes) %>
+  <% return if changes.blank? %>
+  <% changes.sort_by { |k, v| k }.each do |k, v| %>
+    <tr>
+      <th><%= k %></th>
+      <td><%= v[0] %></td>
+      <td><%= v[1] %></td>
+    </tr>
+  <% end %>
+<% end %>
+
+<% alias render_deletes render_creates %>
+
+<div class="index">
+  <ul class="list-items">
+    <% @items.each_with_index do |item, index| %>
+    <% item = @item_decorator.call(item) if @item_decorator %>
+    <li class="list-item">
+      <label class="check"></label>
+      <div class="info">
+        <% title = item['model'] %>
+        <% title = t("mongoid.models.#{title.underscore}", default: title) %>
+        <%= link_to title, "#detail-#{index}", class: 'title' %>
+
+        <div class="meta">
+          <% if item['creates'] %>
+            <span class="operation">作成</span>
+          <% elsif item['changes'] %>
+            <span class="operation">変更</span>
+          <% elsif item['deletes'] %>
+            <span class="operation">削除</span>
+          <% end %>
+          <% if item['id'] %>
+          <span class="id">#<%= item['id'] %></span>
+          <% end %>
+        </div>
+      </div>
+      <div style="display: none;">
+        <div id="detail-<%= index %>">
+          <table class="see index history-backup">
+            <tbody>
+            <% render_creates(item['creates']) %>
+            <% render_changes(item['changes']) %>
+            <% render_deletes(item['deletes']) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
+
+<%= jquery do %>
+  $('.list-items .list-item a.title').colorbox({
+    inline: true,
+    fixed: true,
+    width: '90%',
+    height: '90%'
+  });
+<% end %>

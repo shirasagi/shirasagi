@@ -20,6 +20,7 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
       end
     end
     Rails.logger.info("#{send_count} 通のメールを送りました")
+    puts_history(:info, "#{send_count} 通のメールを送りました")
   end
 
   private

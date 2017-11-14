@@ -1,6 +1,11 @@
 class ApplicationJob < ActiveJob::Base
   include Job::SS::Core
 
+  class << self
+    def ss_app_type
+    end
+  end
+
   after_perform :purge_old_job_logs
 
   private

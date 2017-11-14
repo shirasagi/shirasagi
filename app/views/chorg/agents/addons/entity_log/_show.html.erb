@@ -1,0 +1,40 @@
+<% return if @item.entity_logs.blank? %>
+
+<dl class="see mod-chorg-entity_log">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th>名前</th>
+        <th>ID</th>
+        <th>変更</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.entity_logs.take(5).each do |entity_log| %>
+      <tr>
+        <td><%= t("mongoid.models.#{entity_log['model'].underscore}", default: entity_log['model']) %></td>
+        <td><%= entity_log['id'] %></td>
+        <td>
+          <% if entity_log['creates'] %>
+              作成
+          <% elsif entity_log['changes'] %>
+              変更
+          <% elsif entity_log['deletes'] %>
+              削除
+          <% end %>
+        </td>
+        <td>
+          <%= button_tag('詳細', type: 'button', class: 'btn') %>
+        </td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <dd class="wide">
+    <%= link_to 'もっと見る', { controller: :entity_logs, action: :index }, class: 'btn' %>
+  </dd>
+</dl>

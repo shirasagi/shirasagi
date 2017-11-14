@@ -11,7 +11,7 @@ class Gws::Workflow::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("modules.gws/workflow"), action: :index]
+    @crumbs << [@cur_site.menu_workflow_label || t("modules.gws/workflow"), action: :index]
   end
 
   def set_forms

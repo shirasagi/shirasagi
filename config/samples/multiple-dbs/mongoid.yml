@@ -24,3 +24,9 @@ production:
       database: ss_post
       hosts:
         - other:27018
+
+    # ss_gws_historyへのDB書き込みを別のホスト/データベースへ切り離す設定
+    gws_history:
+      database: ss_gws_history
+      hosts:
+        - otherhost:27018

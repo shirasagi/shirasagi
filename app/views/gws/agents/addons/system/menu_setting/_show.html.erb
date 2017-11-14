@@ -1,76 +1,31 @@
 <%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-menu-setting"); <% end %>
 
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_portal_state %></dt>
-  <dd><%= @item.label :menu_portal_state %></dd>
-</dl>
+<% render_menu_setting = proc do |type, fallback_label| %>
+  <dl class="see addon-gws-system-menu-setting">
+    <dt><%= @model.t("menu_#{type}_state") %></dt>
+    <dd>
+      <% if @item.send("menu_#{type}_visible?") %>
+        <%= @item.send("menu_#{type}_label") || fallback_label || t("modules.gws/#{type}") %>
+      <% else %>
+        <%= @item.label("menu_#{type}_state") %>
+      <% end %>
+    </dd>
+  </dl>
+<% end %>
 
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_reminder_state %></dt>
-  <dd><%= @item.label :menu_reminder_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_schedule_state %></dt>
-  <dd><%= @item.label :menu_schedule_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_memo_state %></dt>
-  <dd><%= @item.label :menu_memo_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_board_state %></dt>
-  <dd><%= @item.label :menu_board_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_question_state %></dt>
-  <dd><%= @item.label :menu_question_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_report_state %></dt>
-  <dd><%= @item.label :menu_report_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_workflow_state %></dt>
-  <dd><%= @item.label :menu_workflow_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_circular_state %></dt>
-  <dd><%= @item.label :menu_circular_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_monitor_state %></dt>
-  <dd><%= @item.label :menu_monitor_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_share_state %></dt>
-  <dd><%= @item.label :menu_share_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_shared_address_state %></dt>
-  <dd><%= @item.label :menu_shared_address_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_personal_address_state %></dt>
-  <dd><%= @item.label :menu_personal_address_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_staff_record_state %></dt>
-  <dd><%= @item.label :menu_staff_record_state %></dd>
-</dl>
-
-<dl class="see addon-gws-system-menu-setting">
-  <dt><%= @model.t :menu_links_state %></dt>
-  <dd><%= @item.label :menu_links_state %></dd>
-</dl>
+<% render_menu_setting.call(:portal, t('gws/portal.my_portal')) %>
+<% render_menu_setting.call(:reminder, t('mongoid.models.gws/reminder')) %>
+<% render_menu_setting.call(:schedule) %>
+<% render_menu_setting.call(:memo) %>
+<% render_menu_setting.call(:board) %>
+<% render_menu_setting.call(:question, t('gws.question_management')) %>
+<% render_menu_setting.call(:report) %>
+<% render_menu_setting.call(:workflow) %>
+<% render_menu_setting.call(:circular) %>
+<% render_menu_setting.call(:monitor) %>
+<% render_menu_setting.call(:share) %>
+<% render_menu_setting.call(:shared_address) %>
+<% render_menu_setting.call(:personal_address) %>
+<% render_menu_setting.call(:staff_record, t('gws/staff_record.staff_records')) %>
+<% render_menu_setting.call(:links, t('mongoid.models.gws/link')) %>
+<% render_menu_setting.call(:elasticsearch) %>

@@ -19,6 +19,7 @@ class Gws::Column::Value::DateField < Gws::Column::Value::Base
     # self.html_tag = new_value.html_tag
     # self.html_additional_attr = new_value.html_additional_attr
     self.date = new_value.date
+    self.text_index = new_value.value
   end
 
   # def html_additional_attr_to_h

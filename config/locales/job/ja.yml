@@ -3,6 +3,7 @@ ja:
     main: ジョブ
     log: 実行履歴
     task: タスク
+    reservation: 実行予約
     save_term:
       day: １日
       month: １ヶ月
@@ -33,3 +34,9 @@ ja:
   mongoid:
     models:
       job/log: ジョブ実行履歴
+      job/task: タスク
+    attributes:
+      job/task:
+        node_id: フォルダー
+        group_id: グループ
+        at: 実行予約日時
