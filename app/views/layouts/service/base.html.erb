@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
+<title><%= SS.config.ss.application_name %></title>
+<%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+<%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
+<!--[if lt IE 9]>
+<script src="/assets/js/html5.js"></script>
+<script src="/assets/js/selectivizr-min.js"></script>
+<![endif]-->
+<%= csrf_meta_tags %>
+</head>
+<body>
+
+<div id="page">
+
+<header id="head">
+  <div class="wrap">
+    <h1 class="application-name"><%= link_to SS.config.ss.application_name, service_main_path %></h1>
+
+    <% if Rails.env.development? %>
+    <div class="env dev">&lt;Development&gt;</div>
+    <% end %>
+
+    <% if @cur_user %>
+    <nav class="user">
+      <div class="dropdown dropdown-toggle">
+        <h2>
+          <%= @cur_user.name %>
+        </h2>
+        <ul class="dropdown-menu">
+          <li><%#= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
+          <li><%= link_to t('ss.logout'), service_logout_path, class: 'logout' %></li>
+        </ul>
+      </div>
+    </nav>
+    <% end %>
+  </div>
+<!-- /#head --></header>
+
+<aside id="notice">
+  <div class="wrap"><%= notice %></div>
+</aside>
+
+<% if notice %>
+<script> SS.notice('<%= notice %>'); </script>
+<% end %>
+
+<div id="wrap">
+  <div class="wrap">
+    <div id="navi">
+      <div class="wrap">
+        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+        <%= render partial: "navi" %>
+        <% elsif controller.navi_view_file %>
+        <%= render partial: controller.navi_view_file %>
+        <% end %>
+      </div>
+    </div>
+
+    <article id="main">
+      <% if @crumbs.size > 0 %>
+      <ol class="breadcrumb" id="crumbs">
+        <% @crumbs.each_with_index do |item, idx| %>
+          <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+        <% end %>
+      </ol>
+      <% end %>
+
+      <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+      <div id="menu"><%= render partial: "menu" %></div>
+      <% elsif controller.menu_view_file %>
+      <div id="menu"><%= render partial: controller.menu_view_file %></div>
+      <% end %>
+
+      <div class="wrap">
+        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
+        <%= render partial: 'content_navi' %>
+        <% elsif @tree_navi %>
+        <div id="content-navi"><%= render file: '_tree_navi' %></div>
+        <% end %>
+
+        <%= yield %>
+      </div>
+    <!-- /#main --></article>
+
+  <!-- /.wrap --></div>
+<!-- /#wrap --></div>
+
+<footer id="foot">
+  <div id="ss-pc" style="display: none">PC View</div>
+  <div id="ss-mb" style="display: none">Mobile View</div>
+<!-- /#foot --></footer>
+
+<!-- /#page --></div>
+
+</body>
+</html>

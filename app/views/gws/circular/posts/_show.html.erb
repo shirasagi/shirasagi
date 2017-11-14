@@ -1,13 +1,10 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.name %></dd>
-
   <dt><%= @model.t :due_date %></dt>
-  <dd><%= @item.due_date %></dd>
+  <dd><%= tryb { @item.due_date.strftime('%Y/%m/%d %H:%M') } %></dd>
 
-  <dt><%= @model.t :ignored %></dt>
-  <dd><%= @item.ignored %></dd>
+  <dt><%= @model.t :see_type %></dt>
+  <dd><%= t(@item.see_type, scope: 'gws/circular.options.see_type') %></dd>
 
   <dt><%= @model.t :text %></dt>
-  <dd><%= @item.text %></dd>
+  <dd class="markdown-body"><%= @item.html %></dd>
 </dl>
