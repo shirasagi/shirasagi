@@ -1,0 +1,31 @@
+<%= jquery do %>
+  (new Service_Quota('.service-addon-quota')).render();
+<% end %>
+
+<div class="service-addon-quota">
+  <dl class="see">
+    <dt><%= @model.t :base_quota_used %></dt>
+    <dd>
+      <span class="base-quota-used"><%= number_to_human_size(@item.base_quota_used) || '-' %></span>
+    </dd>
+    <dt><%= @model.t :cms_quota_used %></dt>
+    <dd>
+      <span class="cms-quota-used"><%= number_to_human_size(@item.cms_quota_used) || '-' %></span>
+      <%= "!!" if @item.cms_quota_over? %>
+    </dd>
+    <dt><%= @model.t :gws_quota_used %></dt>
+    <dd>
+      <span class="gws-quota-used"><%= number_to_human_size(@item.gws_quota_used) || '-' %></span>
+      <%= "!!" if @item.gws_quota_over? %>
+    </dd>
+    <dt><%= @model.t :webmail_quota_used %></dt>
+    <dd>
+      <span class="webmail-quota-used"><%= number_to_human_size(@item.webmail_quota_used) || '-' %></span>
+      <%= "!!" if @item.webmail_quota_over? %>
+    </dd>
+  </dl>
+
+  <button type="button" class="btn reload-quota" data-href="<%= service_apis_reload_quota_path(id: @item) %>">
+    <%= t('service.buttons.reload') %>
+  </button
+</div>
