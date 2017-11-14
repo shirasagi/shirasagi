@@ -68,7 +68,7 @@ class Webmail::Filter
   def search_keys
     keys = []
     %w(from to subject).each do |key|
-      keys += [key.upcase, send(key)] if send(key).present?
+      keys += [key.upcase, send(key).dup.force_encoding('ASCII-8BIT')] if send(key).present?
     end
     keys
   end
