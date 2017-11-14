@@ -30,6 +30,7 @@ class Gws::Monitor::Topic
 
   #validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
+  after_destroy :remove_zip
 
   scope :custom_order, ->(key) {
     if key.start_with?('created_')
@@ -177,7 +178,7 @@ class Gws::Monitor::Topic
     FileUtils.mkdir_p(download_dir) unless Dir.exist?(download_dir)
   end
 
-  def create_zip(zipfile, group_items)
+  def create_zip(zipfile, group_items, owner_items)
     if File.exist?(zipfile)
       return if self.updated < File.stat(zipfile).mtime
       File.unlink(zipfile) if self.updated > File.stat(zipfile).mtime
@@ -189,7 +190,17 @@ class Gws::Monitor::Topic
           zip_file.add(NKF::nkf('-sx --cp932', groupssfile[0] + "_" + groupssfile[1].name), groupssfile[1].path)
         end
       end
+
+      owner_items.each do |ownerssfile|
+        if File.exist?(ownerssfile[1].path)
+          zip_file.add(NKF::nkf('-sx --cp932', "own" + ownerssfile[0] + "_" + ownerssfile[1].name), ownerssfile[1].path)
+        end
+      end
     end
+  end
+
+  def remove_zip
+    Fs.rm_rf self.zip_path if File.exist?(self.zip_path)
   end
 
   private
@@ -202,4 +213,3 @@ class Gws::Monitor::Topic
     end
   end
 end
-

@@ -4,7 +4,6 @@ namespace :gws do
 
     task :deletion => :environment do
       opts = {}
-      site = Gws::Group.find_by(name: ENV['site'])
       gws_sites.each do |site|
         Rails.logger.info "#{site.name}の照会・回答削除開始。"
         Gws::Monitor::DeleteJob.bind(site_id:site.id).perform_now(opts)
