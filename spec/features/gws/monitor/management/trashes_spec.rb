@@ -44,14 +44,14 @@ describe "gws_monitor_management_trashes", type: :feature, dbscope: :example do
     end
 
     it "#delete" do
-      FileTest.exist?(item.zip_path).should be_truthy
+      expect(FileTest.exist?(item.zip_path)).to be_truthy
       visit delete_path
       within "form" do
         click_button "削除"
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: '削除しました。')
-      FileTest.exist?(item.zip_path).should be_falsey
+      expect(FileTest.exist?(item.zip_path)).to be_falsey
     end
   end
 end
