@@ -4,6 +4,9 @@ production: &production
   # Disable CMS.
   disable: false
 
+  # Disable navigation
+  disable_navi: false
+
   # StyleSheets on gws pages.
   stylesheets: []
 

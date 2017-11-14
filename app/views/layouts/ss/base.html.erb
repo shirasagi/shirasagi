@@ -21,7 +21,7 @@
   <div class="wrap">
     <h1 class="application-name"><%= link_to SS.config.ss.application_name, sns_mypage_path %></h1>
 
-    <% if SS.config.cms.disable.blank? %>
+    <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
     <div class="cms">
       <% if @ss_mode == :cms %>
       <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
@@ -31,7 +31,7 @@
     </div>
     <% end %>
 
-    <% if SS.config.gws.disable.blank? %>
+    <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
     <div class="gws">
       <% if @ss_mode == :gws %>
       <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
@@ -41,7 +41,7 @@
     </div>
     <% end %>
 
-    <% if SS.config.webmail.disable.blank? %>
+    <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
     <div class="webmail">
       <% if @ss_mode == :webmail %>
       <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
