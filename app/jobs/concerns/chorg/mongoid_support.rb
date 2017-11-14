@@ -36,6 +36,7 @@ module Chorg::MongoidSupport
         entity.try(:cur_site=, @cur_site)
         entity.try(:cur_user=, @cur_user) if @cur_user.present?
         entity.try(:allow_other_user_files)
+        entity.move_changes
         yield entity
       end
     end
