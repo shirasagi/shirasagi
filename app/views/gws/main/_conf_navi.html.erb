@@ -23,9 +23,6 @@
   <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('workflow.name'), gws_workflow_setting_path %></h3>
   <% end %>
-  <% if Gws::Circular::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('modules.gws/circular'), gws_circular_categories_path %></h3>
-  <% end %>
   <% if Gws::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/notice'), gws_notices_path %></h3>
   <% end %>
