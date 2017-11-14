@@ -1,3 +1,4 @@
 <nav class="sns-nav-menu">
-  <%= link_to t('ss.links.back'), sns_login_path %>
+  <% path = params[:login_path].presence || sns_login_path %>
+  <%= link_to t('ss.links.back'), path %>
 </nav>

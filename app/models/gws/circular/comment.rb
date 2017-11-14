@@ -5,19 +5,23 @@ class Gws::Circular::Comment
 
   PARENT_CLASS = Gws::Circular::Post
 
-  attr_accessor :name, :text, :user_id, :site_id, :created, :updated, :parent, :id, :in_updated
+  attr_accessor :name, :text, :user_id, :site_id, :created, :updated,
+                :parent, :id, :in_updated, :cur_user, :cur_site
   permit_params :name, :text, :user_id, :site_id, :created, :updated
 
   def allowed?(action, user, opts = {})
-    PARENT_CLASS.allowed?(action, user, opts)
+    return user_id == user.id if user_id
+    parent.allowed?(:read, user, opts)
   end
 
   def attributes
-    self.class.permitted_fields.
-      reduce({}){ |ret, attr_name| ret[attr_name] = send attr_name; ret }
+    self.class.permitted_fields.each_with_object({}) do |attr_name, ret|
+      ret[attr_name] = self.send(attr_name)
+      ret
+    end
   end
 
-  def attributes= (args)
+  def attributes=(args)
     self.class.permitted_fields.each do |f|
       self.send("#{f}=", args[f]) if args.include?(f)
     end
@@ -26,11 +30,13 @@ class Gws::Circular::Comment
   def save
     self.updated = Time.zone.now
     self.created = self.updated unless self.created
+    parent.set_seen(user) if parent.unseen?(user)
     parent.add_comment(attributes).update
   end
 
   def update
     self.updated = Time.zone.now
+    parent.set_seen(user) if parent.unseen?(user)
     parent.update_comment(id, attributes).update
   end
 
@@ -41,9 +47,5 @@ class Gws::Circular::Comment
   def user
     @user ||= Gws::User.find(user_id)
   end
-
-  # indexing to elasticsearch via companion object
-  # around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
-  # around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
 
 end
