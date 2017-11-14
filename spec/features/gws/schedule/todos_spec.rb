@@ -5,11 +5,6 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
 
   before { login_gws_user }
 
-  it "#popup" do
-    visit popup_gws_schedule_todo_path gws_site, item
-    expect(page).to have_content(item.name)
-  end
-
   it "#finish" do
     visit finish_gws_schedule_todo_path gws_site, item
     wait_for_ajax
@@ -70,12 +65,10 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
 
   it "#new" do
     visit new_gws_schedule_todo_path gws_site
-    wait_for_ajax
   end
 
   it "#edit" do
     visit edit_gws_schedule_todo_path gws_site, item
-    wait_for_ajax
   end
 
   it "#show" do
