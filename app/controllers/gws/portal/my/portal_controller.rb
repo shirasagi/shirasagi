@@ -7,7 +7,7 @@ class Gws::Portal::My::PortalController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("gws/portal.my_portal"), gws_portal_path]
+    @crumbs << [@cur_site.menu_portal_label || t("gws/portal.my_portal"), gws_portal_path]
   end
 
   public

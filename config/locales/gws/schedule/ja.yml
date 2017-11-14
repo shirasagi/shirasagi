@@ -193,6 +193,8 @@ ja:
       gws/addon/schedule/facility:
         facility_ids: 設備予約
       gws/addon/schedule/group_setting:
+        schedule_state: 機能利用
+        schedule_menu_label: メニュー名称
         schedule_max_date: 入力可能期間
         schedule_max_years: 年数
         schedule_max_month: 期末月
@@ -258,6 +260,11 @@ ja:
       facility_ids:
         - 使用する設備を選択します。
     gws/addon/schedule/group_setting:
+      schedule_state:
+        - 機能を利用するかしないかを選択します。
+      schedule_menu_label:
+        - メニュー名称を入力します。
+        - 既定値は「スケジュール」です。
       schedule_max_years:
         - 年数を入力します。
       schedule_max_month:

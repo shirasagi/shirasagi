@@ -1,0 +1,10 @@
+<nav class="mod-navi">
+  <h2><%= t('mongoid.models.gws/history') %></h2>
+
+  <% if Gws::History.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/history'), gws_histories_path %></h3>
+    <h3><%= link_to t('mongoid.models.gws/history_archive_file'), gws_history_archives_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/conf_navi' %>

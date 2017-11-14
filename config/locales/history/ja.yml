@@ -33,6 +33,8 @@ ja:
       history/log: 操作履歴
     attributes:
       history/log:
+        session_id: セッションID
+        request_id: リクエストID
         created: 操作日時
         save_term: 保存期間
       history/backup:

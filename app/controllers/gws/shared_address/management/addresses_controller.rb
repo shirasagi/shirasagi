@@ -11,7 +11,7 @@ class Gws::SharedAddress::Management::AddressesController < ApplicationControlle
 
   def set_crumbs
     set_address_group
-    @crumbs << [t("modules.gws/shared_address"), gws_shared_address_addresses_path]
+    @crumbs << [@cur_site.menu_shared_address_label || t("modules.gws/shared_address"), gws_shared_address_addresses_path]
     @crumbs << [t("mongoid.models.gws/shared_address/address"), gws_shared_address_management_addresses_path]
     @crumbs << [@address_group.name, action: :index] if @address_group
   end

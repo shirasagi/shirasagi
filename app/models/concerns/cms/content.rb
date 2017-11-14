@@ -167,6 +167,8 @@ module Cms::Content
     item = klass.new
     item.instance_variable_set(:@new_record, nil) unless new_record?
     instance_variables.each { |k| item.instance_variable_set k, instance_variable_get(k) }
+    # clear changes
+    item.move_changes
     item
   end
 

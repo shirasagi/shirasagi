@@ -1,0 +1,25 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to t(item.class_name.underscore, scope: 'job.models'), { action: :show, id: item }, class: 'title' %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <% if item.site.present? %>
+    <span class="label"><%= @model.t(:site_id) %></span>
+    <span class="site"><%= tryb { item.site.name } %></span>
+  <% end %>
+  <% if item.group.present? %>
+    <span class="label"><%= @model.t(:group_id) %></span>
+    <span class="group"><%= tryb { item.group.name } %></span>
+  <% end %>
+  <span class="state"><%= item.state %></span>
+  <span class="label"><%= @model.t(:at) %></span>
+  <span class="at"><%= tryb { Time.zone.at(item.at).strftime('%Y/%m/%d %H:%M') } %></span>
+<% end %>
+
+<%= render file: 'ss/crud/index' %>

@@ -2,9 +2,9 @@ module Gws::Reference::Workflow::Form
   extend ActiveSupport::Concern
   extend SS::Translation
 
-  attr_accessor :cur_form
-
   included do
+    attr_accessor :cur_form
+
     belongs_to :form, class_name: 'Gws::Workflow::Form'
 
     before_validation :set_form_id, if: ->{ @cur_form }

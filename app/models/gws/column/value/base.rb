@@ -6,6 +6,7 @@ class Gws::Column::Value::Base
   belongs_to :column, class_name: 'Gws::Column::Base'
   field :name, type: String
   field :order, type: Integer
+  field :text_index, type: String
 
   def to_html
     ApplicationController.helpers.sanitize(self.value)
@@ -23,6 +24,7 @@ class Gws::Column::Value::Base
     self.name = new_value.name
     self.order = new_value.order
     self.value = new_value.value
+    self.text_index = new_value.value
   end
 
   def to_es

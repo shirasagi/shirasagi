@@ -9,4 +9,9 @@ FactoryGirl.define do
 
   factory :gws_role, class: Gws::Role, traits: [:gws_role] do
   end
+
+  factory :gws_role_admin, class: Gws::Role, traits: [:gws_role] do
+    permissions { Gws::Role.permission_names }
+    permission_level 3
+  end
 end
