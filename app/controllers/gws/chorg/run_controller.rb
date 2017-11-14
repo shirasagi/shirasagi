@@ -5,6 +5,7 @@ class Gws::Chorg::RunController < ApplicationController
   before_action :prepend_current_view_path
   before_action :append_view_paths
   before_action :set_revision
+  before_action :set_task
   before_action :set_item
 
   model Gws::Chorg::RunParams
@@ -22,6 +23,20 @@ class Gws::Chorg::RunController < ApplicationController
     @revision = Gws::Chorg::Revision.find params[:rid]
   end
 
+  def set_task
+    @task ||= begin
+      criteria = Gws::Chorg::Task.site(@cur_site)
+      criteria = criteria.and_revision(@revision)
+      criteria = criteria.where(name: "gws:chorg:#{params[:type]}_task")
+      criteria.first_or_create
+    end
+
+    if @task.running?
+      redirect_to({ controller: :revisions, action: :index }, { notice: '実行中または実行準備中です。' })
+      return
+    end
+  end
+
   def set_item
     @item = @model.new
   end
@@ -36,7 +51,7 @@ class Gws::Chorg::RunController < ApplicationController
     if @item.valid?
       begin
         job_class = Gws::Chorg::Runner.job_class params[:type]
-        job_class = job_class.bind(site_id: @cur_site, user_id: @cur_user)
+        job_class = job_class.bind(site_id: @cur_site, user_id: @cur_user, task_id: @task)
         job_class = job_class.set(wait_until: @item.reservation) if @item.reservation
 
         @job = job_class.perform_later(@revision.name, false)
