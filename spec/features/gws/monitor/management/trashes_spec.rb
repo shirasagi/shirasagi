@@ -40,7 +40,7 @@ describe "gws_monitor_management_trashes", type: :feature, dbscope: :example do
     before do
       item
       item.create_download_directory(File.dirname(item.zip_path))
-      File.open(item.zip_path, "w").close()
+      File.open(item.zip_path, "w").close
     end
 
     it "#delete" do
