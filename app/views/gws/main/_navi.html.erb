@@ -3,6 +3,7 @@
     <h2><%= link_to t('gws/portal.my_portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
     <h3><%= link_to t('gws/portal.tabs.user_portal'), gws_portal_user_path(user: @cur_user) %></h3>
     <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+      <% next if group.id == @cur_site.id %>
       <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
     <% end %>
     <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
