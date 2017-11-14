@@ -1,9 +1,6 @@
 <dl class="see chorg-revisions">
   <dt><%= @model.t :name %></dt>
-  <dd>
-  <%= @item.name %>
-  <%= link_to t("chorg.menus.revisions.execute_results"), { controller: :results, action: :index, rid: @item.id }, { class: "btn result" } %>
-  </dd>
+  <dd><%= @item.name %></dd>
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>
     <%= render file: "_#{params[:action]}_#{type}", locals: { type: type, changesets: changesets } %>

@@ -8,12 +8,14 @@ SS::Application.routes.draw do
 
   gws 'chorg' do
     get '/' => redirect { |p, req| "#{req.path}/revisions" }, as: :main
-    resources :revisions, concerns: [:deletion] do
-      # resources :results, only: [:index, :show]
+    resources :revisions, concerns: [:deletion]
+    resources :changesets, path: 'revisions/:rid/:type/changesets', concerns: [:deletion]
+    resource :result, path: 'revisions/:rid/:type/results', only: [:show] do
+      post :interrupt, on: :member
+      post :reset, on: :member
     end
-    resources :changesets, path: 'revision:rid/:type/changesets', concerns: [:deletion]
-    resources :results, path: 'revision:rid/results', only: [:index, :show]
-    get 'revision:rid/:type/run' => 'run#confirmation'
-    post 'revision:rid/:type/run' => 'run#run'
+    resources :entity_logs, path: 'revisions/:rid/:type/entity_logs', only: [:index, :show]
+    get 'revisions/:rid/:type/run' => 'run#confirmation'
+    post 'revisions/:rid/:type/run' => 'run#run'
   end
 end

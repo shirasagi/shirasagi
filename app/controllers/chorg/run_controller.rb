@@ -5,6 +5,7 @@ class Chorg::RunController < ApplicationController
   before_action :prepend_current_view_path
   before_action :append_view_paths
   before_action :set_revision
+  before_action :set_crumbs
   before_action :set_task
   before_action :set_item
 
@@ -15,17 +16,19 @@ class Chorg::RunController < ApplicationController
   private
 
   def set_crumbs
+    set_revision
     @crumbs << [t("chorg.revision"), controller: :revisions, action: :index]
+    @crumbs << [@cur_revision.name, chorg_revision_path(id: @cur_revision.id)]
   end
 
   def set_revision
-    @revision = Chorg::Revision.find params[:rid]
+    @cur_revision = Chorg::Revision.find params[:rid]
   end
 
   def set_task
     @task ||= begin
       criteria = Chorg::Task.site(@cur_site)
-      criteria = criteria.and_revision(@revision)
+      criteria = criteria.and_revision(@cur_revision)
       criteria = criteria.where(name: "chorg:#{params[:type]}_task")
       criteria.first_or_create
     end
@@ -53,8 +56,8 @@ class Chorg::RunController < ApplicationController
         job_class = job_class.bind(site_id: @cur_site, user_id: @cur_user, task_id: @task)
         job_class = job_class.set(wait_until: @item.reservation) if @item.reservation
 
-        @job = job_class.perform_later(@revision.name, @item.add_newly_created_group_to_site)
-        @revision.add_to_set(job_ids: @job.job_id)
+        @job = job_class.perform_later(@cur_revision.name, @item.add_newly_created_group_to_site)
+        @cur_revision.add_to_set(job_ids: @job.job_id)
       rescue => e
         Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
         @item.errors.add(:base, e.to_s)
@@ -69,7 +72,7 @@ class Chorg::RunController < ApplicationController
           notice = t('chorg.messages.job_started')
         end
         format.html do
-          redirect_to({ controller: :revisions, action: :show, id: @revision },
+          redirect_to({ controller: :revisions, action: :show, id: @cur_revision },
                       { notice: notice })
         end
         format.json { head :no_content }

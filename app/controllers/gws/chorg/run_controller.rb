@@ -17,6 +17,7 @@ class Gws::Chorg::RunController < ApplicationController
 
   def set_crumbs
     @crumbs << [t('modules.gws/chorg'), controller: :revisions, action: :index]
+    @crumbs << [t("chorg.views.run/confirmation.#{params[:type]}.run_button"), action: :confirmation]
   end
 
   def set_revision

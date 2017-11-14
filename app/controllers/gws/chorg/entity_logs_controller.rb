@@ -1,17 +1,17 @@
-class Gws::Chorg::ResultsController < ApplicationController
+class Gws::Chorg::EntityLogsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
   before_action :filter_permission
   before_action :set_revision
   before_action :set_crumbs
-  before_action :set_item
+  before_action :set_task
 
   model Gws::Chorg::Task
 
   navi_view 'gws/main/conf_navi'
-  menu_view 'chorg/results/menu'
-  append_view_path 'app/views/chorg/results'
+  menu_view 'chorg/entity_logs/menu'
+  append_view_path 'app/views/chorg/entity_logs'
 
   private
 
@@ -29,32 +29,22 @@ class Gws::Chorg::ResultsController < ApplicationController
     raise "403" unless @cur_revision.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
   end
 
-  def set_item
+  def set_task
     criteria = Gws::Chorg::Task.site(@cur_site)
     criteria = criteria.and_revision(@cur_revision)
     criteria = criteria.where(name: "gws:chorg:#{params[:type]}_task")
-    @item = criteria.order_by(created: -1).first_or_create
+    @cur_task = criteria.order_by(created: -1).first_or_create
   end
 
   public
 
+  def index
+    @items = @cur_task.entity_logs
+    @items ||= []
+    @items = Kaminari.paginate_array(@items).page(params[:page]).per(50)
+  end
+
   def show
     render
-  end
-
-  def interrupt
-    @item.update_attributes interrupt: 'stop'
-    respond_to do |format|
-      format.html { redirect_to({ action: :show }, { notice: t('ss.tasks.interrupted') }) }
-      format.json { head :no_content }
-    end
-  end
-
-  def reset
-    @item.destroy
-    respond_to do |format|
-      format.html { redirect_to({ action: :show }, { notice: t('ss.notice.deleted') }) }
-      format.json { head :no_content }
-    end
   end
 end
