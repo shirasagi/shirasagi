@@ -19,6 +19,18 @@ module Mongoid
         client = Mongoid::Config.clients[:repl_master]
         client ? self.with(client: :repl_master, database: client[:database]) : self
       end
+
+      def mongo_client_options
+        options = persistence_options
+        return { client: options[:client], database: options[:database] } if options
+        { client: Job::Log.storage_options[:client], database: self.database_name }
+      end
+    end
+
+    def mongo_client_options
+      options = persistence_options
+      return { client: options[:client], database: options[:database] } if options
+      { client: Job::Log.storage_options[:client], database: self.class.database_name }
     end
 
     def with_repl_master

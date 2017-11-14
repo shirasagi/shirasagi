@@ -2,9 +2,10 @@ class History::Backup
   include SS::Document
   include SS::Reference::User
 
-  cattr_reader(:max_age) { 20 }
-
+  store_in_repl_master
   index({ ref_coll: 1, "data._id" => 1, created: -1 })
+
+  cattr_reader(:max_age) { 20 }
 
   field :version, type: String, default: SS.version
   field :ref_coll, type: String

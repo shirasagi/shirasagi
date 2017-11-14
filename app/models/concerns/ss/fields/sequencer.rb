@@ -13,12 +13,6 @@ module SS::Fields::Sequencer
     end
   end
 
-  def mongo_client_options
-    options = persistence_options
-    return options if options
-    { client: Job::Log.storage_options[:client], database: self.class.database_name}
-  end
-
   def current_sequence(name)
     storage =
     SS::Sequence.current_sequence collection_name, name, with: mongo_client_options
