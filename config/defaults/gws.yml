@@ -4,6 +4,9 @@ production: &production
   # Disable GWS.
   disable: false
 
+  # Disable navigation
+  disable_navi: false
+
   # StyleSheets on gws pages.
   stylesheets: ["gws/style"]
 
