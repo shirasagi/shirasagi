@@ -6,7 +6,7 @@ describe Cms::AllContent, type: :model, dbscope: :example do
     let(:csv) { described_class.enum_csv(site) }
 
     describe "header line" do
-      let(:header) { csv.to_a[0].encode('UTF-8').split(",")  }
+      let(:header) { csv.to_a[0].encode('UTF-8').split(",") }
       it { expect(header[0]).to eq(I18n.t("all_content.page_id")) }
       it { expect(header[1]).to eq(I18n.t("all_content.node_id")) }
       it { expect(header[15]).to eq(I18n.t("all_content.updated")) }

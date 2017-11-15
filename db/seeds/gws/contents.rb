@@ -1,6 +1,6 @@
 ## -------------------------------------
 
-@site = Gws::Group.where(name: $site_name).first
+@site = Gws::Group.where(name: ENV['group']).first
 
 @users = [
   Gws::User.find_by(uid: "admin"),
@@ -42,7 +42,7 @@ def create_staff_record_user(data)
   item
 end
 
-staff_record_years = [
+[
   create_staff_record_year(name: "平成27年度", code: 2015, start_date: '2015/4/1', close_date: '2016/3/31'),
   create_staff_record_year(name: "平成28年度", code: 2016, start_date: '2016/4/1', close_date: '2017/3/31'),
   create_staff_record_year(name: "平成29年度", code: 2017, start_date: '2017/4/1', close_date: '2018/3/31')

@@ -25,24 +25,14 @@ class Webmail::CacheSettingsController < ApplicationController
   end
 
   def clear_cache_mail
-    if params[:target] == 'all'
-      items = Webmail::Mail.all
-      items.each(&:destroy_rfc822)
-      items.delete_all
-    else
-      items = Webmail::Mail.imap_setting(@imap_setting)
-      items.each(&:destroy_rfc822)
-      items.delete_all
-    end
+    items = params[:target] == 'all' ? Webmail::Mail.all : Webmail::Mail.imap_setting(@imap_setting)
+    items.each(&:destroy_rfc822)
+    items.delete_all
     render_destroy
   end
 
   def clear_cache_mailbox
-    if params[:target] == 'all'
-      Webmail::Mailbox.delete_all
-    else
-      Webmail::Mailbox.imap_setting(@imap_setting).delete_all
-    end
+    params[:target] == 'all' ? Webmail::Mailbox.delete_all : Webmail::Mailbox.imap_setting(@imap_setting).delete_all
     render_destroy
   end
 

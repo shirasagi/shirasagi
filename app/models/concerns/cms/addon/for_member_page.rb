@@ -4,7 +4,7 @@ module Cms::Addon
     extend SS::Addon
 
     def for_member_enabled?
-      !!parent.try(:for_member_enabled?)
+      parent.try(:for_member_enabled?)
     end
 
     def for_member_disabled?

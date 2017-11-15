@@ -22,9 +22,7 @@ module SS::Relation::File
         file = relation_file(name, opts)
         return true if file.valid?
 
-        file.errors.full_messages.each do |msg|
-          errors.add :base, msg
-        end
+        file.errors.full_messages.each { |msg| errors.add :base, msg }
         false
       end
 

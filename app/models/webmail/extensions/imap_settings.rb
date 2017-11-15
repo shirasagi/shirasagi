@@ -5,28 +5,22 @@ class Webmail::Extensions::ImapSettings < Array
 
   class << self
     def demongoize(object)
-      object = object.to_a.map do |h|
-        Webmail::ImapSetting.new.replace(h.symbolize_keys)
-      end
+      object = object.to_a.map { |h| Webmail::ImapSetting.new.replace(h.symbolize_keys) }
       self.new(object)
     end
 
     def mongoize(object)
       case object
-        when self.class
-          object.mongoize
-        when Array
-          self.new(object).mongoize
-        else
-        object
+      when self.class then object.mongoize
+      when Array then self.new(object).mongoize
+      else object
       end
     end
 
     def evolve(object)
       case object
       when self.class then object.mongoize
-      else
-        object
+      else object
       end
     end
   end

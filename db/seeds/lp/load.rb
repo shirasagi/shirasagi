@@ -258,7 +258,7 @@ top_page = save_page route: "cms/page", filename: "index.html", name: "LPサン�
   contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
   contact_state: "hide",
   group_ids: [contact_group.id],
-  map_points: [ { loc: [34.061264,134.57611] } ]
+  map_points: [ { loc: [34.061264, 134.57611] } ]
 page1.related_page_ids = [top_page.id]
 page1.update
 

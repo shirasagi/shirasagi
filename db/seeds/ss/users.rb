@@ -1,5 +1,5 @@
 
-site_name = defined?($site_name) ? $site_name : 'シラサギ市'
+site_name = defined?(ENV['group']) ? ENV['group'] : 'シラサギ市'
 
 # --------------------------------------
 # Users Seed

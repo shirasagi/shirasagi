@@ -102,13 +102,9 @@ module Cms::PublicFilter::Layout
   end
 
   def render_template_variables(html)
-    html.gsub!('#{page_name}') do
-      ERB::Util.html_escape(@cur_item.name)
-    end
+    html.gsub!('#{page_name}') { ERB::Util.html_escape(@cur_item.name) }
 
-    html.gsub!('#{parent_name}') do
-      ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
-    end
+    html.gsub!('#{parent_name}') { ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "") }
 
     date = nil
     template = %w(
@@ -122,23 +118,15 @@ module Cms::PublicFilter::Layout
     ).join
     html.gsub!(Regexp.compile(template)) do
       matchdata = Regexp.last_match
-      if matchdata[:item] == 'released'
-        item = @cur_item.released
-      else
-        item = @cur_item.updated
-      end
+      item = matchdata[:item] == 'released' ? @cur_item.released : @cur_item.updated
       date ||= ERB::Util.html_escape(item)
       datetime = matchdata[:datetime]
       convert_date = date_convert(date, matchdata[:format].to_sym, datetime)
-      if matchdata[:time].present?
-        next "<time datetime=\"#{date_convert(date, :iso, datetime)}\">#{convert_date}</time>"
-      end
+      next "<time datetime=\"#{date_convert(date, :iso, datetime)}\">#{convert_date}</time>" if matchdata[:time].present?
       convert_date
     end
 
-    html.gsub!(conditional_tag_template) do
-      render_conditional_tag(Regexp.last_match)
-    end
+    html.gsub!(conditional_tag_template) { render_conditional_tag(Regexp.last_match) }
 
     html
   end
@@ -178,11 +166,7 @@ module Cms::PublicFilter::Layout
     return "" unless date
 
     if format.present?
-      if datetime.present?
-        I18n.l date.to_datetime, format: format.to_sym
-      else
-        I18n.l date.to_date, format: format.to_sym
-      end
+      datetime.present? ? I18n.l(date.to_datetime, format: format.to_sym) : I18n.l(date.to_date, format: format.to_sym)
     elsif datetime.present?
       I18n.l date.to_datetime
     else
