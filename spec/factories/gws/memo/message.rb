@@ -9,6 +9,8 @@ FactoryGirl.define do
     format { 'text' }
 
     from { { gws_user.id.to_s => 'INBOX.Sent' } }
-    member_ids { [gws_user.id] } # => before_validation :set_to
+    member_ids { [gws_user.id] }
+
+    send_date { Time.zone.now }
   end
 end
