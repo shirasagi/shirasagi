@@ -7,5 +7,7 @@ class Gws::Portal::RootPortlet
   include SS::FreePermission
   include Gws::Addon::History
 
+  store_in collection: :gws_portal_group_portlets
+
   belongs_to :setting, class_name: 'Gws::Portal::RootSetting'
 end
