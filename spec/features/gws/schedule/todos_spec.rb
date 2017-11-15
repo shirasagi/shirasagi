@@ -5,11 +5,6 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
 
   before { login_gws_user }
 
-  it "#popup" do
-    visit popup_gws_schedule_todo_path gws_site, item
-    expect(page).to have_content(item.name)
-  end
-
   it "#finish" do
     visit finish_gws_schedule_todo_path gws_site, item
     wait_for_ajax
@@ -36,6 +31,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
       find('.finish-all').click
     end
     wait_for_ajax
+    expect(status_code).to eq 200
   end
 
   it "#revert_all" do
@@ -46,6 +42,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
       find('.revert-all').click
     end
     wait_for_ajax
+    expect(status_code).to eq 200
   end
 
   it "#disable_all" do
@@ -56,6 +53,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
       find('.disable-all').click
     end
     wait_for_ajax
+    expect(status_code).to eq 200
   end
 
   it "#index" do
@@ -70,18 +68,19 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
 
   it "#new" do
     visit new_gws_schedule_todo_path gws_site
-    wait_for_ajax
+    expect(status_code).to eq 200
   end
 
   it "#edit" do
     visit edit_gws_schedule_todo_path gws_site, item
-    wait_for_ajax
+    expect(status_code).to eq 200
   end
 
   it "#show" do
     visit gws_schedule_todo_path gws_site, item
     wait_for_ajax
     expect(page).to have_content(item.name)
+    expect(status_code).to eq 200
   end
 
   # it "#update" do
