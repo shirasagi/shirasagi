@@ -33,6 +33,7 @@ module Chorg::MongoidSupport
     models.each do |model|
       model.each do |entity|
         entity = entity.try(:becomes_with_route) || entity
+        entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
         entity.try(:cur_user=, @cur_user) if @cur_user.present?
         entity.try(:allow_other_user_files)
