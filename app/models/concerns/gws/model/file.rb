@@ -104,10 +104,7 @@ module Gws::Model::File
     klass = SS::File.find_model_class(model)
     return self unless klass
 
-    item = klass.new
-    item.instance_variable_set(:@new_record, nil) unless new_record?
-    instance_variables.each { |k| item.instance_variable_set k, instance_variable_get(k) }
-    item
+    becomes_with(klass)
   end
 
   def previewable?(opts = {})
