@@ -4,6 +4,8 @@ describe "gws_share_folders", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:item) { create :gws_share_folder }
   let(:index_path) { gws_share_folders_path site, gws_user }
+  let(:edit_path) { edit_gws_share_folder_path site, item }
+  let(:show_path) { gws_share_folder_path site, item }
   let(:delete_path) { delete_gws_share_folder_path site, item }
 
   context "with auth", js: true do
@@ -18,14 +20,14 @@ describe "gws_share_folders", type: :feature, dbscope: :example do
 
     it "#edit" do
       item
-      visit "/.g#{site._id}/share/folders/#{item.id}/edit"
+      visit edit_path
       wait_for_ajax
-      expect(page).to have_content('基本情報')
+      expect(page).to have_content(item.name)
     end
 
     it "#show" do
       item
-      visit "/.g#{site._id}/share/folders/#{item.id}"
+      visit show_path
       wait_for_ajax
       expect(page).to have_content(item.name)
     end
