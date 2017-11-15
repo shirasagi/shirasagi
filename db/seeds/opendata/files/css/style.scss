@@ -543,17 +543,17 @@ textarea {
       float: left;
       width: 20%;
     }
-   h2 {
-     float: left;
-     width: 80%;
-   }
-   .point {
-     margin-left: 7px;
-     padding: 3px 5px 0 35px;
-     border: $border-gray2;
-     @include border-radius(3px);
-     background: url(../img/ic-like.png) no-repeat 5px center;
-   }
+    h2 {
+      float: left;
+      width: 80%;
+    }
+    .point {
+      margin-left: 7px;
+      padding: 3px 5px 0 35px;
+      border: $border-gray2;
+      @include border-radius(3px);
+      background: url(../img/ic-like.png) no-repeat 5px center;
+    }
   }
 }
 // -----------------------------------------------------------------------------
@@ -743,7 +743,7 @@ textarea {
   }
   .text, div.idea {
     float: left;
-    width: 803px;
+    width: 780px;
     margin-bottom: $box-margin;
     h2 {
       font-size: $px18;
@@ -771,7 +771,7 @@ textarea {
       @include midashi-dataset;
       border-bottom: none;
     }
-    .resource, .appfile {
+    .resource, .url-resource, .appfile {
       @include clear;
       padding: 12px;
       border-bottom: $border-gray2;
@@ -780,47 +780,53 @@ textarea {
         div {
           padding: 7px 0 7px 35px;
         }
-        .format-csv {
+        div[class^="name format-"] {
+          background: url(../img/file-default.gif) no-repeat left center;
+        }
+        div.format-csv {
           background: url(../img/file-csv.png) no-repeat left center;
         }
-        .format-xlsx, .format-xls {
+        div.format-xlsx, div.format-xls {
           background: url(../img/file-xls.png) no-repeat left center;
         }
-        .format-doc, .format-docx {
+        div.format-doc, div.format-docx {
           background: url(../img/file-word.png) no-repeat left center;
         }
-        .format-txt {
+        div.format-txt {
           background: url(../img/file-txt.png) no-repeat left center;
         }
-        .format-rdf {
+        div.format-rdf {
           background: url(../img/file-rdf.png) no-repeat left center;
         }
-        .format-xml {
+        div.format-xml {
           background: url(../img/file-txt.png) no-repeat left center;
         }
-        .format-zip {
+        div.format-zip {
           background: url(../img/file-zip.png) no-repeat left center;
         }
-        .format-html {
+        div.format-html {
           background: url(../img/file-html.png) no-repeat left center;
         }
-        .format-ppt, .format-pptx {
+        div.format-ppt, div.format-pptx {
           background: url(../img/file-ppt.png) no-repeat left center;
         }
-        .format-kml {
+        div.format-kml {
           background: url(../img/file-kml.png) no-repeat left center;
         }
-        .format-jpg {
+        div.format-jpg {
           background: url(../img/file-jpg.png) no-repeat left center;
         }
-        .format-gif {
+        div.format-gif {
           background: url(../img/file-gif.png) no-repeat left center;
         }
-        .format-png {
+        div.format-png {
           background: url(../img/file-png.png) no-repeat left center;
         }
-        .format-bmp {
+        div.format-bmp {
           background: url(../img/file-bmp.png) no-repeat left center;
+        }
+        div.format-pdf {
+          background: url(../img/file-pdf.gif) no-repeat left center;
         }
       }
       .icons {
@@ -1207,7 +1213,7 @@ textarea {
     margin: 0 0 $box-margin 234px;
   }
   #answer_captcha {
-   width: 10%;
+    width: 10%;
   }
 }
 :root .inquiry-form .send input,
