@@ -31,7 +31,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
       find('.finish-all').click
     end
     wait_for_ajax
-    expect(status_code).to eq 200
+    expect(page).to have_content(item.name)
   end
 
   it "#revert_all" do
@@ -42,7 +42,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
       find('.revert-all').click
     end
     wait_for_ajax
-    expect(status_code).to eq 200
+    expect(page).to have_content(item.name)
   end
 
   it "#disable_all" do
@@ -53,7 +53,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
       find('.disable-all').click
     end
     wait_for_ajax
-    expect(status_code).to eq 200
+    expect(page).to have_no_content(item.name)
   end
 
   it "#index" do
@@ -68,19 +68,20 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
 
   it "#new" do
     visit new_gws_schedule_todo_path gws_site
-    expect(status_code).to eq 200
+    wait_for_ajax
+    expect(page).to have_content('基本情報')
   end
 
   it "#edit" do
     visit edit_gws_schedule_todo_path gws_site, item
-    expect(status_code).to eq 200
+    wait_for_ajax
+    expect(page).to have_content('基本情報')
   end
 
   it "#show" do
     visit gws_schedule_todo_path gws_site, item
     wait_for_ajax
     expect(page).to have_content(item.name)
-    expect(status_code).to eq 200
   end
 
   # it "#update" do
