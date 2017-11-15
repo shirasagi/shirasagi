@@ -50,7 +50,7 @@ module Chorg::Runner::Base
     with_all_entity_updates(@models, substituter) do |entity, updates|
       next if updates.blank?
 
-      put_log("#{entity.name}(#{entity.url}) has some updates. module=#{entity.class}")
+      put_log("#{entity_title(entity)} has some updates. module=#{entity.class}")
       with_inc_depth do
         updates = updates.select { |k, v| v.present? }
         updates.each do |k, new_value|
@@ -83,6 +83,19 @@ module Chorg::Runner::Base
       update_attributes(entity, updates)
       save_or_collect_errors(entity)
     end
+  end
+
+  def entity_title(entity)
+    title = ''
+    if entity.respond_to?(:name)
+      title << entity.name
+    end
+    if entity.respond_to?(:url)
+      title << '('
+      title << entity.url
+      title << ')'
+    end
+    title
   end
 
   def validate_all
