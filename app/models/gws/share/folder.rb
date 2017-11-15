@@ -75,10 +75,6 @@ class Gws::Share::Folder
     end
   end
 
-  def remove_zip
-    Fs.rm_rf self.zip_path(id) if File.exist?(self.zip_path(id))
-  end
-
   private
 
   def set_share_max_file_size

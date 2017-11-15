@@ -22,7 +22,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example do
       item
       visit edit_path
       wait_for_ajax
-      expect(page).to have_content(item.name)
+      expect(page).to have_content('基本情報')
     end
 
     it "#show" do
