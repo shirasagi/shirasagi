@@ -47,16 +47,13 @@ describe "gws_share_files", type: :feature, dbscope: :example do
     end
 
     it "#edit" do
-      item
       visit edit_path
-      # within "form#item-form" do
-      #   fill_in "item[filename]", with: "modify"
-      #   click_button "保存"
-      # end
-      # expect(current_path).not_to eq sns_login_path
-      # expect(page).to have_no_css("form#item-form")
-      # expect(page).to have_css("div.info a.title", text: "logo.png")
-      # expect(page).to have_css("div.info div.meta a.gws-category-label", text: category.name)
+      within "form#item-form" do
+        fill_in "item[filename]", with: "modify"
+        click_button "保存"
+      end
+      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_no_css("form#item-form")
     end
 
     it "#delete" do
