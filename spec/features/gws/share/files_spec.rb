@@ -63,5 +63,30 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       end
       expect(current_path).to eq index_path
     end
+
+    context "#download_all with auth", js: true do
+      before { login_gws_user }
+
+      after do
+        tmp2 = SecureRandom.hex(4).to_s
+        item.class.create_download_directory(gws_user._id, item.class.download_root_path, item.class.zip_path(gws_user._id, tmp2))
+        File.open(item.class.zip_path(gws_user._id, tmp2), "w").close
+        expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_falsey
+        expect(FileTest.exist?(item.class.zip_path(gws_user._id, tmp2))).to be_truthy
+      end
+
+      it "#download_all" do
+        item
+        visit index_path
+        find('.list-head label.check input').set(true)
+        page.accept_confirm do
+          find('.download-all').click
+        end
+        wait_for_ajax
+        @created_zip_tmp_dir = Dir.entries(item.class.download_root_path).select{|elem| elem.include?(gws_user._id.to_s + "_")}.first.split("_").last
+        expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_truthy
+      end
+
+    end
   end
 end
