@@ -23,7 +23,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Group.where(name: changeset.destinations.first['name']).first).not_to be_nil
+      expect(Gws::Group.where(name: changeset.destinations.first['name']).first.active?).to be_truthy
     end
   end
 
@@ -233,15 +233,14 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
           expect(log.logs).to include(include('INFO -- : Completed Job'))
         end
 
-        expect(Gws::Group.where(id: group1.id).first).not_to be_nil
-        expect(Gws::Group.where(name: group1.name).first).not_to be_nil
-        # expect(Gws::Group.where(id: group2.id).first).not_to be_nil
-        expect(Gws::Group.where(name: group2.name).first).not_to be_nil
+        expect(Gws::Group.where(id: group1.id).first.active?).to be_truthy
+        expect(Gws::Group.where(name: group1.name).first.active?).to be_truthy
+        expect(Gws::Group.where(name: group2.name).first.active?).to be_truthy
 
         new_group1 = Gws::Group.where(name: changeset.destinations[0]['name']).first
-        expect(new_group1).not_to be_nil
+        expect(new_group1.active?).to be_truthy
         new_group2 = Gws::Group.where(name: changeset.destinations[1]['name']).first
-        expect(new_group2).not_to be_nil
+        expect(new_group2.active?).to be_truthy
 
         user.reload
         expect(user.group_ids).to eq [ new_group1.id ]
