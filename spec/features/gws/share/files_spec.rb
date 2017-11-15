@@ -31,21 +31,19 @@ describe "gws_share_files", type: :feature, dbscope: :example do
         click_button "保存"
       end
       expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
-      expect(page).to have_css("div.info a.title", text: "logo.png")
-      expect(page).to have_css("div.info div.meta a.gws-category-label", text: category.name)
+      expect(page).to have_css("form#item-form")
+      expect(page).to have_css("input#item_in_files")
+    end
 
-      item = Gws::Share::File.site(site).first
+    it "#show" do
+      item
+      visit show_path
+      expect(current_path).not_to eq sns_login_path
       expect(item.name).to eq "logo.png"
       expect(item.filename).to eq "logo.png"
       expect(item.state).to eq "closed"
       expect(item.content_type).to eq "image/png"
       expect(item.category_ids).to eq [category.id]
-    end
-
-    it "#show" do
-      visit show_path
-      expect(current_path).not_to eq sns_login_path
     end
 
     it "#edit" do
