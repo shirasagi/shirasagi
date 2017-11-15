@@ -6,15 +6,8 @@ class Gws::Schedule::TodosController < ApplicationController
   model Gws::Schedule::Todo
   helper Gws::Schedule::TodoHelper
 
-  before_action :set_item, only: [
-      :show, :edit, :update, :delete, :destroy,
-      :disable, :finish, :revert
-  ]
-
-  before_action :set_selected_items, only: [
-      :destroy_all, :disable_all,
-      :finish_all, :revert_all
-  ]
+  before_action :set_item, only: [ :show, :edit, :update, :delete, :destroy, :disable, :finish, :revert ]
+  before_action :set_selected_items, only: [ :destroy_all, :disable_all, :finish_all, :revert_all ]
 
   private
 
@@ -24,22 +17,31 @@ class Gws::Schedule::TodosController < ApplicationController
   end
 
   def pre_params
-    super.keep_if {|key| %i(facility_ids).exclude?(key)}
+    super.keep_if { |key| %i[facility_ids].exclude?(key) }
+  end
+
+  def render_destroy_all(result)
+    location = crud_redirect_url || { action: :index }
+    notice = result ? { notice: t('gws/schedule/todo.notice.disable') } : {}
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
   end
 
   public
 
   def index
     @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        active().
-        search(params[:s]).
-        page(params[:page]).per(50)
+      allow(:read, @cur_user, site: @cur_site).active.
+      search(params[:s]).page(params[:page]).per(50)
   end
 
   def create
     @item = @model.new get_params
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_create @item.save, location: redirection_url
   end
@@ -47,14 +49,14 @@ class Gws::Schedule::TodosController < ApplicationController
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_update @item.update, location: redirection_url
   end
 
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.disable
+    render_destroy @item.disable, {notice: t('gws/schedule/todo.notice.disable')}
   end
 
   def finish
