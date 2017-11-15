@@ -7,6 +7,7 @@ FactoryGirl.define do
     in_password 'pass'
 
     setting = Webmail::ImapSetting.new
+    setting[:name] = 'user_name'
     setting[:address] = conf['email'] || 'webmail@example.jp'
     setting[:imap_host] = conf['host'] || 'localhost'
     setting[:imap_account] = conf['account'] || 'email'

@@ -4,8 +4,6 @@ class Webmail::LoginFailedController < ApplicationController
 
   model SS::User
 
-  #menu_view "ss/crud/resource_menu"
-
   def index
     #
   end
