@@ -22,7 +22,11 @@ module Chorg::Runner::Main
 
   def delete_entity(entity)
     task.store_entity_deletes(entity)
-    entity.delete
+    if user_like?(entity) || group_like?(entity)
+      entity.disable
+    else
+      entity.delete
+    end
   end
 
   def move_users_group(from_id, to_id)
@@ -38,5 +42,15 @@ module Chorg::Runner::Main
         put_log("moved user's group name=#{user.name}, from=#{old_names}, to=#{new_names}")
       end
     end
+  end
+
+  private
+
+  def user_like?(entity)
+    entity.class.ancestors.include?(SS::Model::User)
+  end
+
+  def group_like?(entity)
+    entity.class.ancestors.include?(SS::Model::Group)
   end
 end
