@@ -68,11 +68,13 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       before { login_gws_user }
 
       after do
-        tmp2 = SecureRandom.hex(4).to_s
-        item.class.create_download_directory(gws_user._id, item.class.download_root_path, item.class.zip_path(gws_user._id, tmp2))
-        File.open(item.class.zip_path(gws_user._id, tmp2), "w").close
+        temporary = SecureRandom.hex(4).to_s
+        item.class.create_download_directory(gws_user._id,
+                                             item.class.download_root_path,
+                                             item.class.zip_path(gws_user._id, temporary))
+        File.open(item.class.zip_path(gws_user._id, temporary), "w").close
         expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_falsey
-        expect(FileTest.exist?(item.class.zip_path(gws_user._id, tmp2))).to be_truthy
+        expect(FileTest.exist?(item.class.zip_path(gws_user._id, temporary))).to be_truthy
       end
 
       it "#download_all" do
@@ -83,7 +85,8 @@ describe "gws_share_files", type: :feature, dbscope: :example do
           find('.download-all').click
         end
         wait_for_ajax
-        @created_zip_tmp_dir = Dir.entries(item.class.download_root_path).select{|elem| elem.include?(gws_user._id.to_s + "_")}.first.split("_").last
+        @created_zip_tmp_dir = Dir.entries(item.class.download_root_path)
+                                   .find{ |elem| elem.include?(gws_user._id.to_s + "_") }.split("_").last
         expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_truthy
       end
 
