@@ -90,4 +90,8 @@ class Gws::Share::Folder
     return if in_share_max_folder_size_mb.blank?
     self.share_max_folder_size = Integer(in_share_max_folder_size_mb) * 1_024 * 1_024
   end
+
+  def remove_zip
+    Fs.rm_rf self.class.zip_path(id) if File.exist?(self.class.zip_path(id))
+  end
 end
