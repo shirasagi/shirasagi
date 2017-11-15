@@ -113,9 +113,11 @@ module Chorg::MongoidSupport
       group = self.class.group_class.where(id: id).first
       if group.present?
         if delete_entity(group)
-          put_log("deleted group: #{group.name}")
+          # put_log("deleted group: #{group.name}")
+          task.log("  #{group.name}")
         else
-          put_log("failed to delete group: #{group.name}")
+          # put_log("failed to delete group: #{group.name}")
+          task.log("  #{group.name}: 削除失敗")
         end
         remove_group_from_site(group)
       end
