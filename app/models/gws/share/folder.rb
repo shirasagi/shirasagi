@@ -30,6 +30,8 @@ class Gws::Share::Folder
   validates :name, presence: true, uniqueness: { scope: :site_id }
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
+  after_destroy :remove_zip
+
   default_scope ->{ order_by order: 1 }
 
   class << self
@@ -71,6 +73,10 @@ class Gws::Share::Folder
         end
       end
     end
+  end
+
+  def remove_zip
+    Fs.rm_rf self.zip_path(id) if File.exist?(self.zip_path(id))
   end
 
   private
