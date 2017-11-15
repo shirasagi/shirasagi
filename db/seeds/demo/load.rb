@@ -176,14 +176,14 @@ puts "# nodes"
 
 def save_node(data)
   puts data[:name]
-  cond = { site_id: @site._id, filename: data[:filename] }
+  cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
   upper_html ||= File.read("nodes/" + data[:filename] + ".upper_html") rescue nil
   loop_html  ||= File.read("nodes/" + data[:filename] + ".loop_html") rescue nil
   lower_html ||= File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html ||= File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
