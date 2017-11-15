@@ -130,7 +130,6 @@ module Service::Quota
       Gws::Portal::GroupSetting.any_in(site_id: org_ids),
       Gws::Portal::MyPortlet.any_in(site_id: org_ids),
       Gws::Portal::MySetting.any_in(site_id: org_ids),
-      Gws::Portal::RootPortlet.any_in(site_id: org_ids),
       Gws::Portal::RootSetting.any_in(site_id: org_ids),
       Gws::Portal::UserPortlet.any_in(site_id: org_ids),
       Gws::Portal::UserSetting.any_in(site_id: org_ids),
