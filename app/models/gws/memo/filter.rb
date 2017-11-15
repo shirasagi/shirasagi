@@ -72,8 +72,8 @@ class Gws::Memo::Filter
   end
 
   def match?(message)
-    return true if (from && message.user.long_name.include?(from))
-    return true if (subject && message.display_subject.include?(subject))
+    return true if from && message.user.long_name.include?(from)
+    return true if subject && message.display_subject.include?(subject)
     return false
   end
 
