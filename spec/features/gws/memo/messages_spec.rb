@@ -11,43 +11,50 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
     it '#index' do
       visit gws_memo_messages_path(site)
       wait_for_ajax
-      expect(status_code).to eq 200
+      expect(page).to have_content('受信トレイ')
     end
 
     it '#new' do
       visit new_gws_memo_message_path(site)
       wait_for_ajax
-      expect(status_code).to eq 200
+      expect(page).to have_content('参加者')
     end
 
     it '#show' do
       visit gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      expect(page).to have_content(memo.name)
     end
 
     it '#edit' do
       visit edit_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      wait_for_ajax
+      expect(page).to have_content('参加者')
     end
 
     it '#trash' do
       visit trash_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      expect(page).to have_content('ゴミ箱 (1)')
     end
 
     it '#toggle_star' do
       visit toggle_star_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      expect(page).to have_content(memo.name)
     end
 
     it '#trash_all' do
       post trash_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id]
-      expect(status_code).to eq 200
+      wait_for_ajax
+      expect(page).to have_content('ゴミ箱 (1)')
     end
 
     it '#set_seen_all' do
-      post set_seen_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id]
-      expect(status_code).to eq 200
+      visit gws_memo_messages_path(site)
+      find('.list-head label.check input').set(true)
+      page.accept_confirm do
+        click_button "その他"
+        find('.set_seen_all').click
+      end
+      wait_for_ajax
     end
 
     it '#unset_seen_all' do
