@@ -165,7 +165,7 @@ class Gws::Memo::Message
 
   class << self
     def allow(action, user, opts = {})
-      folder = opts[:folder]
+      folder = opts[:folder] ? opts[:folder] : 'INBOX'
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
       where("#{direction}.#{user.id}" => folder)
     end
