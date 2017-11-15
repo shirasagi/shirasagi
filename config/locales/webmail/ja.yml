@@ -114,6 +114,7 @@ ja:
       webmail/filter: フィルター
     attributes:
       ss/model/user:
+        imap_setting_name: アカウント名
         address: メールアドレス
         imap_host: IMAP/ホスト
         imap_auth_type: IMAP/認証方式
@@ -163,6 +164,11 @@ ja:
         subject: 条件/件名
         action: アクション
         mailbox: フォルダー
+
+  activemodel:
+    attributes:
+      webmail/imap_setting:
+        name: アカウント名
 
   tooltip:
     webmail/address:

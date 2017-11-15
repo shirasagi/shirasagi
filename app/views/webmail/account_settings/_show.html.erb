@@ -1,17 +1,20 @@
 <% default = t('webmail.default_settings') %>
 
 <dl class="see">
+  <dt><%= @model.t :imap_setting_name %></dt>
+  <dd><%= setting.name %></dd>
+
   <dt><%= @model.t :address %></dt>
   <dd><%= setting.address || @cur_user.email %></dd>
 
   <dt><%= @model.t :imap_host %></dt>
-  <dd><%= setting.imap_host || default %></dd>
+  <dd><%= setting.imap_host.presence || default %></dd>
 
   <dt><%= @model.t :imap_auth_type %></dt>
   <dd><%= setting.imap_auth_type.presence || default %></dd>
 
   <dt><%= @model.t :imap_account %></dt>
-  <dd><%= setting.imap_account || default %></dd>
+  <dd><%= setting.imap_account.presence || default %></dd>
 
   <dt><%= @model.t :imap_password %></dt>
   <dd><%= ('*' * setting.decrypt_imap_password.to_s.size).presence || default %></dd>
