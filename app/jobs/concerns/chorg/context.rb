@@ -30,6 +30,10 @@ module Chorg::Context
     task.init_entity_logs
   end
 
+  def finalize_context
+    task.finalize_entity_logs
+  end
+
   def inc_counter(method, type)
     @results[method.to_s][type.to_s] += 1
   end
