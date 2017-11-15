@@ -40,6 +40,8 @@ module Chorg::Runner::Base
           put_log("#{key}: success=#{results[key]["success"]}, failed=#{results[key]["failed"]}")
         end
       end
+
+      finalize_context
     end
   end
 

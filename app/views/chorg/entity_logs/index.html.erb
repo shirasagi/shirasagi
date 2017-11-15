@@ -34,11 +34,11 @@
 
         <div class="meta">
           <% if item['creates'] %>
-            <span class="operation">作成</span>
+            <span class="operation"><%= t('chorg.views.chorg/entity_log.options.operation.creates') %></span>
           <% elsif item['changes'] %>
-            <span class="operation">変更</span>
+            <span class="operation"><%= t('chorg.views.chorg/entity_log.options.operation.changes') %></span>
           <% elsif item['deletes'] %>
-            <span class="operation">削除</span>
+            <span class="operation"><%= t('chorg.views.chorg/entity_log.options.operation.deletes') %></span>
           <% end %>
           <% if item['id'] %>
           <span class="id">#<%= item['id'] %></span>
@@ -54,6 +54,11 @@
             <% render_deletes(item['deletes']) %>
             </tbody>
           </table>
+          <footer class="send">
+            <button name="button" type="button" class="btn-default" onclick="$.colorbox.close();">
+              <%= t('chorg.views.chorg/entity_log.close') %>
+            </button>
+          </footer>
         </div>
       </div>
     </li>
