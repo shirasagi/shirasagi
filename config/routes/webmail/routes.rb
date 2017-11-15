@@ -66,6 +66,7 @@ SS::Application.routes.draw do
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, :on => :member
     end
+    get :login_failed, to: "login_failed#index", path: 'account-:account/login_failed', account: /\d+/
     resources :sys_notices, only: [:index, :show]
 
     # with group

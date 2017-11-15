@@ -26,7 +26,14 @@ module Webmail::BaseFilter
 
   def imap_initialize
     @imap_setting = @cur_user.imap_settings[params[:account].to_i]
-    @imap_setting ||= Webmail::ImapSetting.new
+
+    if @imap_setting
+      @redirect_path = webmail_login_failed_path
+    else
+      @redirect_path = webmail_account_setting_path
+      @imap_setting = Webmail::ImapSetting.new
+    end
+
     @imap = Webmail::Imap::Base.new(@cur_user, @imap_setting)
   end
 
@@ -36,7 +43,7 @@ module Webmail::BaseFilter
 
   def imap_login
     return if @imap.login
-    redirect_to webmail_account_setting_path
+    redirect_to @redirect_path
   end
 
   def rescue_imap_no_response_error(e)

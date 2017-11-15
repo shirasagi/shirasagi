@@ -90,6 +90,7 @@ ja:
       ignore_mdn: 開封確認を無視しました。
       reloaded_mailboxes: 同期しました。
       over_threshold: "メールボックスの容量が残り %{size} です。"
+      imap_login_failed: "IMAP ログインに失敗しました。%{account_settings} を確認してください。"
       multiple:
         copy: "%{count} 件のメールをコピーしました。"
         move: "%{count} 件のメールを移動しました。"

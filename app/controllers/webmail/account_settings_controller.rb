@@ -75,4 +75,8 @@ class Webmail::AccountSettingsController < ApplicationController
       render plain: @imap.error
     end
   end
+
+  def login_failed
+    #
+  end
 end

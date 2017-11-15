@@ -1,0 +1,28 @@
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-body">
+      <%== I18n.t("webmail.notice.imap_login_failed", account_settings: link_to(t("webmail.account_setting"), webmail_account_setting_path)) %>
+    </div>
+  </div>
+
+  <div class="addon-view">
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @model.t :imap_setting_name %></dt>
+        <dd><%= @imap_setting.name %></dd>
+
+        <dt><%= @model.t :address %></dt>
+        <dd><%= @imap.address %></dd>
+
+        <dt><%= @model.t :imap_host %></dt>
+        <dd><%= @imap.conf[:host] %></dd>
+
+        <dt><%= @model.t :imap_auth_type %></dt>
+        <dd><%= @imap.conf[:auth_type] %></dd>
+
+        <dt><%= @model.t :imap_account %></dt>
+        <dd><%= @imap.conf[:account] %></dd>
+      </dl>
+    </div>
+  </div>
+</div>
