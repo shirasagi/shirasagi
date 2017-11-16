@@ -43,6 +43,6 @@ class Chorg::ChangesetsController < ApplicationController
   public
 
   def index
-    redirect_to chorg_revisions_revision_path(id: params[:rid])
+    redirect_to chorg_revision_path(id: params[:rid])
   end
 end

@@ -23,7 +23,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Group.where(name: changeset.destinations.first['name']).first).not_to be_nil
+      expect(Gws::Group.where(name: changeset.destinations.first['name']).first.active?).to be_truthy
     end
   end
 
@@ -107,12 +107,12 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
           expect(log.logs).to include(include('INFO -- : Completed Job'))
         end
 
-        expect(Gws::Group.where(id: group1.id).first).to be_nil
-        expect(Gws::Group.where(name: group1.name).first).to be_nil
-        expect(Gws::Group.where(id: group2.id).first).to be_nil
-        expect(Gws::Group.where(name: group2.name).first).to be_nil
+        expect(Gws::Group.where(id: group1.id).first.active?).to be_falsey
+        expect(Gws::Group.where(name: group1.name).first.active?).to be_falsey
+        expect(Gws::Group.where(id: group2.id).first.active?).to be_falsey
+        expect(Gws::Group.where(name: group2.name).first.active?).to be_falsey
         new_group = Gws::Group.where(name: changeset.destinations.first['name']).first
-        expect(new_group).not_to be_nil
+        expect(new_group.active?).to be_truthy
 
         user1.reload
         expect(user1.group_ids).to eq [new_group.id]
@@ -150,12 +150,13 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         end
 
         # group1 shoud be exist because group1 is destination_group.
-        expect(Gws::Group.where(id: group1.id).first).not_to be_nil
-        expect(Gws::Group.where(name: group1.name).first).not_to be_nil
+        expect(Gws::Group.where(id: group1.id).first.active?).to be_truthy
+        expect(Gws::Group.where(name: group1.name).first.active?).to be_truthy
         # group2 shoudn't be exist because group2 is not destination_group.
-        expect(Gws::Group.where(id: group2.id).first).to be_nil
-        expect(Gws::Group.where(name: group2.name).first).to be_nil
+        expect(Gws::Group.where(id: group2.id).first.active?).to be_falsey
+        expect(Gws::Group.where(name: group2.name).first.active?).to be_falsey
         new_group = Gws::Group.where(name: changeset.destinations.first['name']).first
+        expect(new_group.active?).to be_truthy
         expect(new_group.id).to eq group1.id
         expect(new_group.name).to eq group1.name
 
@@ -195,12 +196,12 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
           expect(log.logs).to include(include('INFO -- : Completed Job'))
         end
 
-        expect(Gws::Group.where(id: group0.id).first).to be_nil
-        expect(Gws::Group.where(name: group0.name).first).to be_nil
+        expect(Gws::Group.where(id: group0.id).first.active?).to be_falsey
+        expect(Gws::Group.where(name: group0.name).first.active?).to be_falsey
         new_group1 = Gws::Group.where(name: changeset.destinations[0]['name']).first
-        expect(new_group1).not_to be_nil
+        expect(new_group1.active?).to be_truthy
         new_group2 = Gws::Group.where(name: changeset.destinations[1]['name']).first
-        expect(new_group2).not_to be_nil
+        expect(new_group2.active?).to be_truthy
 
         user.reload
         expect(user.group_ids).to eq [ new_group1.id ]
@@ -232,15 +233,14 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
           expect(log.logs).to include(include('INFO -- : Completed Job'))
         end
 
-        expect(Gws::Group.where(id: group1.id).first).not_to be_nil
-        expect(Gws::Group.where(name: group1.name).first).not_to be_nil
-        # expect(Gws::Group.where(id: group2.id).first).not_to be_nil
-        expect(Gws::Group.where(name: group2.name).first).not_to be_nil
+        expect(Gws::Group.where(id: group1.id).first.active?).to be_truthy
+        expect(Gws::Group.where(name: group1.name).first.active?).to be_truthy
+        expect(Gws::Group.where(name: group2.name).first.active?).to be_truthy
 
         new_group1 = Gws::Group.where(name: changeset.destinations[0]['name']).first
-        expect(new_group1).not_to be_nil
+        expect(new_group1.active?).to be_truthy
         new_group2 = Gws::Group.where(name: changeset.destinations[1]['name']).first
-        expect(new_group2).not_to be_nil
+        expect(new_group2.active?).to be_truthy
 
         user.reload
         expect(user.group_ids).to eq [ new_group1.id ]
@@ -268,7 +268,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Group.where(id: group.id).first).to be_nil
+      expect(Gws::Group.where(id: group.id).first.active?).to be_falsey
     end
   end
 end

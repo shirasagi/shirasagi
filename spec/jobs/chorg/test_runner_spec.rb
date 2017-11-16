@@ -26,9 +26,12 @@ describe Chorg::TestRunner, dbscope: :example do
 
       task.reload
       expect(task.state).to eq 'stop'
-      expect(task.entity_logs.count).to eq 1
+      expect(task.entity_logs.count).to eq 2
       expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
       expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
+      expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
+      expect(task.entity_logs[1]['id']).to eq site.id.to_s
+      expect(task.entity_logs[1]['changes']).to include('group_ids')
     end
   end
 
@@ -131,18 +134,21 @@ describe Chorg::TestRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'stop'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 5
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['creates']).to include('name', 'contact_email')
-        expect(task.entity_logs[1]['model']).to eq 'Article::Page'
-        expect(task.entity_logs[1]['id']).to eq '1'
-        expect(task.entity_logs[1]['changes']).to include('contact_tel', 'contact_fax', 'contact_email')
-        expect(task.entity_logs[2]['model']).to eq 'Cms::Group'
-        expect(task.entity_logs[2]['id']).to eq group1.id.to_s
-        expect(task.entity_logs[2]['deletes']).to include('name', 'contact_email')
+        expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
+        expect(task.entity_logs[1]['id']).to eq site.id.to_s
+        expect(task.entity_logs[1]['changes']).to include('group_ids')
+        expect(task.entity_logs[2]['model']).to eq 'Article::Page'
+        expect(task.entity_logs[2]['id']).to eq '1'
+        expect(task.entity_logs[2]['changes']).to include('contact_tel', 'contact_fax', 'contact_email')
         expect(task.entity_logs[3]['model']).to eq 'Cms::Group'
-        expect(task.entity_logs[3]['id']).to eq group2.id.to_s
+        expect(task.entity_logs[3]['id']).to eq group1.id.to_s
         expect(task.entity_logs[3]['deletes']).to include('name', 'contact_email')
+        expect(task.entity_logs[4]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[4]['id']).to eq group2.id.to_s
+        expect(task.entity_logs[4]['deletes']).to include('name', 'contact_email')
       end
     end
   end

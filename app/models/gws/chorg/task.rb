@@ -1,6 +1,6 @@
 class Gws::Chorg::Task
   include SS::Model::Task
-  include Gws::Addon::Chorg::EntityLog
+  include Chorg::Addon::EntityLog
 
   belongs_to :group, class_name: 'Gws::Group'
   belongs_to :revision, class_name: 'Gws::Chorg::Revision'

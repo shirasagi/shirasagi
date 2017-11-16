@@ -57,6 +57,18 @@ ja:
       delete_changesets:
         select_group: 廃止グループを選択する
         <<: *group_props
+      chorg/entity_log:
+        name: 名前
+        id: ID
+        operation: 変更
+        options:
+          operation:
+            creates: 新規作成
+            changes: 更新
+            deletes: 削除
+        detail: 詳細
+        more: もっと見る
+        close: 閉じる
     menus:
       revisions:
         add: 新設を追加する
@@ -74,6 +86,8 @@ ja:
 
   modules:
     chorg: 組織変更
+    addons:
+      chorg/entity_log: 変更履歴
 
   cms_role:
     edit_chorg_revisions: 組織変更の管理
