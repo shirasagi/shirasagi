@@ -4,7 +4,7 @@ describe "chorg_run", dbscope: :example do
   let(:site) { cms_site }
   let(:revision) { create(:revision, site_id: site.id) }
   let(:changeset) { create(:add_changeset, revision_id: revision.id) }
-  let(:revision_show_path) { chorg_revisions_revision_path site.id, revision.id }
+  let(:revision_show_path) { chorg_revision_path site.id, revision.id }
 
   around do |example|
     perform_enqueued_jobs do
@@ -56,9 +56,12 @@ describe "chorg_run", dbscope: :example do
       expect(Chorg::Task.count).to eq 1
       Chorg::Task.first.tap do |task|
         expect(task.state).to eq 'stop'
-        expect(task.entity_logs.count).to eq 1
+        expect(task.entity_logs.count).to eq 2
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['creates']).to include({ 'name' => changeset.destinations.first["name"] })
+        expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
+        expect(task.entity_logs[1]['id']).to eq site.id.to_s
+        expect(task.entity_logs[1]['changes']).to include('group_ids')
       end
     end
   end
