@@ -10,8 +10,8 @@ SS::Application.routes.draw do
     resources :logs, only: [:index, :show] do
       get :batch_destroy, on: :collection
       post :batch_destroy, on: :collection
-      get :download, on: :collection
-      post :download, on: :collection
+      match :download_all, on: :collection, via: %i[get post]
+      get :download, on: :member
     end
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
