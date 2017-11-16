@@ -20,11 +20,6 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
       expect(page).to have_content('参加者')
     end
 
-    it '#show' do
-      visit gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(page).to have_content(memo.name)
-    end
-
     it '#edit' do
       visit edit_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
       wait_for_ajax
