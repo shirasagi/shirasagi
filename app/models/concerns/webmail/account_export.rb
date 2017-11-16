@@ -134,7 +134,7 @@ module Webmail::AccountExport
 
     begin
       headers = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').headers
-      errors.add :in_file, :invalid_file_type if (export_field_names - headers).size > 0
+      errors.add :in_file, :invalid_file_type if (export_field_names - headers).present?
       in_file.rewind
     rescue => e
       errors.add :in_file, :invalid_file_type
