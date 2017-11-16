@@ -14,18 +14,22 @@
   .portlet-html {
     height: 100%;
   }
-  .portlet-title {
-    margin: -15px -10px 15px;
-    padding: 8px 10px;
-    border-bottom: $border-gray1;
-    background: #fcfcfc;
-    font-weight: bold;
-  }
   .portlet-html .main-box {
     overflow-x: hidden;
     overflow-y: auto;
     height: 100%;
     margin: 0;
+  }
+  .portlet-html .portlet--closed {
+    background: #eee;
+    background-image: url(/assets/img/gws/bg-plan.png);
+  }
+  .portlet-title {
+    margin: -15px -10px 15px;
+    padding: 8px 10px;
+    border-bottom: $border-gray1;
+    background: rgba(0,0,0,.02);
+    font-weight: bold;
   }
   .portlet-model-schedule .main-box.with-tabs {
     height: calc(100% - 30px);

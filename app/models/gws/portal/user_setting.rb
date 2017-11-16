@@ -3,7 +3,7 @@ class Gws::Portal::UserSetting
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  #include Gws::Addon::ReadableSetting
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
@@ -25,15 +25,9 @@ class Gws::Portal::UserSetting
     %w(schedule reminder board monitor share).map { |key| Gws::Portal::UserPortlet.default_portlet(key) }
   end
 
-  def readable_portlets(user, site)
-    return default_portlets unless self.allowed?(:read, user, site: site)
-    return default_portlets unless portlets.present?
-    portlets
-  end
-
   private
 
   def set_name
-    self.name = portal_user.long_name
+    self.name = portal_user.long_name if self.name.blank?
   end
 end

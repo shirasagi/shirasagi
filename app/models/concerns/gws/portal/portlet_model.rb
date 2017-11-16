@@ -57,9 +57,15 @@ module Gws::Portal::PortletModel
   end
 
   def portlet_addons
-    addons = PORTLET_MODELS[portlet_model.to_sym][:addons] || []
+    portlets = PORTLET_MODELS[portlet_model.to_sym][:addons] || []
     self.class.addons.select do |addon|
-      addons.include?(addon.klass)
+      if addon.type.nil?
+        true
+      elsif portlets.include?(addon.klass)
+        true
+      else
+        false
+      end
     end
   end
 

@@ -3,11 +3,11 @@ SS_Clipboard.renderCopy();
 <% end %>
 
 <% @index_title = proc do |item| %>
-  <% setting = item.find_or_new_portal_user_setting(cur_user: @cur_user, cur_site: @cur_site) %>
-  <% if setting.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% setting = item.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
+  <% if setting.readable?(@cur_user, site: @cur_site, strict: true) %>
     <%= link_to item.name, gws_portal_user_path(user: item), class: "title" %>
   <% else %>
-    <span class="title"><%= item.name %></span>
+    <span class="title title--disabled"><%= item.name %></span>
   <% end %>
 <% end %>
 

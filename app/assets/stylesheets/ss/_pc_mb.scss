@@ -1430,6 +1430,9 @@ div.index {
     font-size: $px15;
     @include mb { font-size: $px14; }
   }
+  .title--disabled {
+    color: #888;
+  }
   .info {
     display: inline-block;
   }
