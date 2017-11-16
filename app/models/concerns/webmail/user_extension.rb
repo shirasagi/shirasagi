@@ -24,7 +24,7 @@ module Webmail::UserExtension
       host: yaml['host'].presence,
       options: yaml['options'].presence || {},
       auth_type: yaml['auth_type'].presence,
-      account: send(yaml['account'].presence),
+      account: send(yaml['account'].presence).to_s,
       password: decrypted_password
     }
   end
