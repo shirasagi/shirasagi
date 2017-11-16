@@ -16,7 +16,7 @@
           <%= link_to item.name,
                       gws_memo_messages_path(folder: item.folder_path ),
                       {class: 'field title', 'data-path': item.folder_path } %>
-          <span>(<%= item.messages.count %>)</span>
+          <span>(<%= item.messages.site(@cur_site).count %>)</span>
         </td>
       </tr>
     <% end %>
