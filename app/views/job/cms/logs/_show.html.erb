@@ -1,3 +1,15 @@
+<%
+  def head_file(path, n)
+    open(path) do |f|
+      text = ''
+      n.times do
+        line = f.gets || break
+        text << line
+      end
+      text
+    end
+  end
+%>
 <dl class="see">
   <dt><%= @model.t :job_id %></dt>
   <dd><%= @item.job_id %></dd>
@@ -18,5 +30,13 @@
   <dd><%= @item.args %></dd>
 
   <dt><%= @model.t :logs %></dt>
+  <% if ::File.exists?(@item.file_path) %>
+  <dd>
+    <%= text_area_tag :logs, head_file(@item.file_path, 1000), readonly: true, style: "height: 400px" %>
+    <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
+  </dd>
+  <% else %>
   <dd><%= text_area_tag :logs, @item.logs.blank? ? "" : safe_join(@item.logs, "\n"), readonly: true, style: "height: 400px" %></dd>
+  <% end %>
+  </dd>
 </dl>
