@@ -156,7 +156,7 @@ module Webmail::Imap
       item.save
       item.save_rfc822 if attr.include?('RFC822')
 
-      item.attachments.select { |attachment| attachment.section == section }.first
+      item.attachments.find { |attachment| attachment.section == section }
     end
 
     private
