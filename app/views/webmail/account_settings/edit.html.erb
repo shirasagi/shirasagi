@@ -49,6 +49,7 @@
     ele.find('[name="item[imap_settings][][imap_sent_box]"]').val("<%= setting.imap_sent_box %>");
     ele.find('[name="item[imap_settings][][imap_draft_box]"]').val("<%= setting.imap_draft_box %>");
     ele.find('[name="item[imap_settings][][imap_trash_box]"]').val("<%= setting.imap_trash_box %>");
+    ele.find('.imap-test-resp').text("");
   }
 
   $(".default-index").click(function() {
