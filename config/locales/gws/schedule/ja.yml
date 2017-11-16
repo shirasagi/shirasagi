@@ -87,12 +87,16 @@ ja:
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
   gws/schedule/todo:
     finish_mark: "[完] "
+    notice:
+      disable: 削除済みに移動しました
     confirm:
+      disable: 削除済みに移動しますか？
       finish_all: 選択した項目を全て完了にしますか？
       revert_all: 選択した項目を全て未完了に戻しますか？
-      disable_all: 選択した項目を全て削除しますか？
+      disable_all: 削除済みに移動しますか？
     search_todos: ToDoを検索
     links:
+      disable: 削除済みに移動する
       finish: 完了する
       revert: 未完了に戻す
     options:
@@ -111,11 +115,18 @@ ja:
         - 3年
         - 3年6ヶ月
   gws/schedule/todo_management:
+    management: 管理
+    active: 削除を取り消す
+    deleted: 削除日時
+    notice:
+      disable: 削除済みに移動しました
+      active: 削除を取り消しました
     links:
       active: 削除を取り消す
     confirm:
+      active: 削除を取り消しますか？
+      disable: 削除済みに移動しますか？
       active_all: 選択した項目の削除を取り消しますか？
-
   modules:
     gws/schedule: スケジュール
     addons:
@@ -193,6 +204,8 @@ ja:
       gws/addon/schedule/facility:
         facility_ids: 設備予約
       gws/addon/schedule/group_setting:
+        schedule_state: 機能利用
+        schedule_menu_label: メニュー名称
         schedule_max_date: 入力可能期間
         schedule_max_years: 年数
         schedule_max_month: 期末月
@@ -258,6 +271,11 @@ ja:
       facility_ids:
         - 使用する設備を選択します。
     gws/addon/schedule/group_setting:
+      schedule_state:
+        - 機能を利用するかしないかを選択します。
+      schedule_menu_label:
+        - メニュー名称を入力します。
+        - 既定値は「スケジュール」です。
       schedule_max_years:
         - 年数を入力します。
       schedule_max_month:

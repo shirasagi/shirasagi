@@ -8,16 +8,35 @@ module Webmail::AccountExport
   end
 
   def export_csv(items)
-    fields = export_fields
-
     csv = CSV.generate do |data|
       data << export_field_names
       items.each do |item|
-        line = fields.map { |k| attribute_with_export_field(item, k) }
+        item.imap_settings.each_with_index do |setting, i|
+          line = []
+          line << item.id
+          line << item.uid
+          line << item.organization_uid
+          line << i + 1
+          account_fields.each { |k| line << setting.send(k) }
+          data << line
+        end
+      end
+    end
+    csv.encode("SJIS", invalid: :replace, undef: :replace)
+  end
+
+  def export_template_csv(items)
+    csv = CSV.generate do |data|
+      data << export_field_names
+      items.each do |item|
+        line = []
+        line << item.id
+        line << item.uid
+        line << item.organization_uid
+        line << 1
         data << line
       end
     end
-
     csv.encode("SJIS", invalid: :replace, undef: :replace)
   end
 
@@ -25,72 +44,86 @@ module Webmail::AccountExport
     validate_import_file
     return false unless errors.empty?
 
-    field_keys = export_fields
-    field_vals = export_field_names
-
-    rows = []
-    CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').each do |row|
-      data = {}
-      row.each do |k, v|
-        idx = field_vals.index(k)
-        data[field_keys[idx]] = v if idx
-      end
-      rows << data
+    CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').each_with_index do |row, index|
+      update_row(row, index)
     end
-
-    import_array(rows)
+    errors.empty?
   end
 
-  def import_array(rows)
-    rows.each_with_index do |data, no|
-      next if data.blank?
-      item = import_data(data.with_indifferent_access)
-      errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
+  def update_row(row, index)
+    id = row[t("id")].to_s.strip
+    item = self.class.allow(:read, @cur_user).where(id: id).first
+
+    if item.blank?
+      item = self.class.new
+      errors.add :base, "#{index + 1}: Could not find ##{data[:id]}"
+      return item
     end
-    return errors.empty?
+
+    if !item.allowed?(:edit, @cur_user)
+      errors.add :base, "#{index + 1}: #{I18n.t('errors.messages.auth_error')}"
+      return item
+    end
+
+    account_index    = row[t("account_index")].to_s.strip.to_i - 1
+    name             = row[Webmail::ImapSetting.t("name")].to_s.strip
+    address          = row[Webmail::ImapSetting.t("address")].to_s.strip
+    imap_host        = row[Webmail::ImapSetting.t("imap_host")].to_s.strip
+    imap_auth_type   = row[Webmail::ImapSetting.t("imap_auth_type")].to_s.strip
+    imap_account     = row[Webmail::ImapSetting.t("imap_account")].to_s.strip
+    in_imap_password = row[Webmail::ImapSetting.t("in_imap_password")].to_s.strip
+    threshold_mb     = row[Webmail::ImapSetting.t("threshold_mb")].to_s.strip
+    imap_sent_box    = row[Webmail::ImapSetting.t("imap_sent_box")].to_s.strip
+    imap_draft_box   = row[Webmail::ImapSetting.t("imap_draft_box")].to_s.strip
+    imap_trash_box   = row[Webmail::ImapSetting.t("imap_trash_box")].to_s.strip
+
+    old_password = item.imap_settings[account_index].imap_password rescue nil
+
+    setting = Webmail::ImapSetting.new.replace(
+      name: name,
+      address: address,
+      imap_host: imap_host,
+      imap_auth_type: imap_auth_type,
+      imap_account: imap_account,
+      in_imap_password: in_imap_password,
+      imap_password: old_password,
+      threshold_mb: threshold_mb,
+      imap_sent_box: imap_sent_box,
+      imap_draft_box: imap_draft_box,
+      imap_trash_box: imap_trash_box
+    )
+
+    if account_index >= 0 && setting.valid?
+      imap_settings = item.imap_settings.to_a
+      imap_settings[account_index] = setting
+      imap_settings = imap_settings.compact
+      item.imap_settings = imap_settings
+
+      item.cur_user = @cur_user
+      item.cur_site = @cur_site if @cur_site
+      item.save
+    else
+      errors.add :base, "#{index + 1}: #{I18n.t("errors.messages.imap_setting_validation_error")}"
+    end
+
+    item
   end
 
   private
 
   def account_fields
     %w(
-      address imap_host imap_auth_type imap_account in_imap_password
+      name address imap_host imap_auth_type imap_account in_imap_password
       threshold_mb imap_sent_box imap_draft_box imap_trash_box
     )
   end
 
   def export_fields
-    fields = []
-    fields << "id"
-    SS.config.webmail.imap_account_limit.times do |i|
-      account_fields.each do |v|
-        fields << "imap_settings.#{i}.#{v}"
-      end
-    end
-    fields
+    %w(id uid organization_uid account_index) + account_fields
   end
 
   def export_field_names
-    fields = []
-    fields << "id"
-    SS.config.webmail.imap_account_limit.times do |i|
-      account_fields.each do |v|
-        v = v.sub(/^[^\.]+\./, "")
-        fields << "#{t(v)}#{i + 1}"
-      end
-    end
-    fields
-  end
-
-  def attribute_with_export_field(item, field)
-    if field =~ /^imap_settings\./
-      s, i, at = field.split(/\./)
-      i = i.to_i
-      setting = item.send(s)[i]
-      setting.send(at) rescue nil
-    else
-      item.send(field)
-    end
+    %w(id uid organization_uid account_index).map { |k| t(k) } + account_fields.map { |k| Webmail::ImapSetting.t(k) }
   end
 
   def validate_import_file
@@ -100,75 +133,11 @@ module Webmail::AccountExport
     return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
 
     begin
-      CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+      headers = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').headers
+      errors.add :in_file, :invalid_file_type if (export_field_names - headers).present?
       in_file.rewind
     rescue => e
       errors.add :in_file, :invalid_file_type
     end
-  end
-
-  def import_data(data)
-    data = import_convert_data(data)
-    item = import_find_item(data) if data[:id].present?
-
-    if item.blank?
-      item = self.class.new
-      item.errors.add :base, "Could not find ##{data[:id]}"
-      return item
-    end
-
-    if !item.allowed?(:edit, @cur_user)
-      item.errors.add :base, I18n.t('errors.messages.auth_error')
-      return item
-    end
-
-    imap_settings = item.imap_settings
-    imap_setting_errors = []
-    data[:imap_settings].each_with_index do |setting, i|
-      next unless setting
-
-      if setting.valid?
-        old_password = imap_settings[i].imap_password rescue nil
-        setting[:imap_password] = old_password if old_password
-
-        imap_settings[i] = setting
-      else
-        imap_setting_errors << [:base, I18n.t("errors.messages.imap_setting_validation_error", no: i + 1)]
-      end
-    end
-    item.imap_settings = imap_settings
-
-    item.cur_user = @cur_user
-    item.cur_site = @cur_site if @cur_site
-    item.save
-
-    imap_setting_errors.each { |e| item.errors.add(*e) }
-
-    item
-  end
-
-  def import_convert_data(data)
-    h = {}
-    imap_settings = []
-    data.each do |k, v|
-      if k =~ /^imap_settings\./
-        s, i, at = k.split(/\./)
-        i = i.to_i
-
-        if v.present?
-          imap_settings[i] ||= Webmail::ImapSetting.new
-          imap_settings[i][at.to_sym] = v
-        end
-      else
-        h[k] = v
-      end
-    end
-    h[:id] = data[:id]
-    h[:imap_settings] = imap_settings
-    h
-  end
-
-  def import_find_item(data)
-    self.class.allow(:read, @cur_user).where(id: data[:id]).first
   end
 end

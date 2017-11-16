@@ -1,1 +1,59 @@
-<%= render partial: "job/cms/logs/show" %>
+<div id="task-form">
+  <dl class="info">
+    <dt><%= @item.t :state %></dt>
+    <dd class="state">
+      <%= @item.state %>
+      <% if @item.state != 'stop' %>
+        <%= button_tag t("ss.buttons.stop"), name: 'interrupt', type: 'button', class: 'btn' %>
+        <%= button_tag t("ss.buttons.reset"), name: 'reset', type: 'reset', class: 'btn' %>
+      <% end %>
+    </dd>
+
+    <dt><%= @item.t :current_count %></dt>
+    <dd class="count"><%= @item.current_count %> / <%= @item.total_count %></dd>
+
+    <dt><%= @item.t :started %></dt>
+    <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+
+    <dt><%= @item.t :closed %></dt>
+    <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+  </dl>
+
+  <div class="logs">
+    <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
+  </div>
+</div>
+
+<% if @item.state != 'stop' %>
+  <%= jquery do %>
+    $('button[name=interrupt]').on('click', function() {
+      $.ajax({
+        type: 'POST',
+        url: '<%= url_for(action: :interrupt) %>',
+        success: function() {
+          alert('<%= t('ss.tasks.interrupted') %>');
+        },
+        error: function(xhr, status, error) {
+          alert(["== Error =="].concat(xhr.responseJSON).join("<br>"));
+        }
+      });
+    });
+
+    $('button[name=reset]').on('click', function() {
+      if (! confirm('<%= t('ss.tasks.confirm_reset') %>')) {
+        return;
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: '<%= url_for(action: :reset) %>',
+        success: function() {
+          location.reload();
+        },
+        error: function(xhr, status, error) {
+          alert(["== Error =="].concat(xhr.responseJSON).join("<br>"));
+        }
+      });
+    });
+  <% end %>
+<% end %>

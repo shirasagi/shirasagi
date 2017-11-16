@@ -40,7 +40,7 @@ module Gws::Addon::Share
       return unless site_id
 
       history_file_count = Dir.glob(self.path + "*_history[0-9]*").count
-      srcname = "history" + "#{history_file_count - 1}"
+      srcname = "history" + (history_file_count - 1).to_s
 
       item = Gws::Share::History.new(
         cur_user: @cur_user,

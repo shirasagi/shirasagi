@@ -19,7 +19,7 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
+    @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_posts_path]
   end
 
   def set_category

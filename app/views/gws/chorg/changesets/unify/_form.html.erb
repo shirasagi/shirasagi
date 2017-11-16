@@ -1,0 +1,38 @@
+<dl class="see after_move">
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.after_unify" %></dt>
+  <dd></dd>
+  <% @model::GROUP_ATTRIBUTES.each do |k| %>
+    <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %><%= tt "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
+    <dd><%= f.text_field "destinations[][#{k}]", value: @item.destinations.try(:first).try(:send, :[], k) %></dd>
+  <% end %>
+</dl>
+
+<dl class="see before_move">
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.before_unify" %></dt>
+  <dd></dd>
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %><%= tt "chorg.views.#{params[:type]}_changesets.before_name" %></dt>
+  <dd>
+    <%= f.hidden_field "sources[][id]", value: "", class: "hidden-ids" %>
+    <%= link_to t("chorg.views.#{params[:type]}_changesets.select_group"), gws_apis_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name" style="width: 90%;"><%= Cms::Group.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.sources.present? %>
+        <% @item.sources.each do |source| %>
+          <tr data-id="<%= source["id"] %>">
+            <td><%= f.hidden_field "sources[][id]", value: source["id"] %> <%= source["name"] %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

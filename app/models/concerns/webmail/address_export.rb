@@ -27,7 +27,7 @@ module Webmail::AddressExport
       required = webmail_import_required_fields - headers
     end
 
-    if required.size > 0
+    if required.present?
       self.errors.add :in_file, :invalid_file_type
       false
     else

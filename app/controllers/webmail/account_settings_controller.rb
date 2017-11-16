@@ -7,6 +7,7 @@ class Webmail::AccountSettingsController < ApplicationController
   menu_view "ss/crud/resource_menu"
 
   skip_before_action :imap_initialize
+  before_action :set_default_settings
 
   private
 
@@ -24,7 +25,7 @@ class Webmail::AccountSettingsController < ApplicationController
       :imap_sent_box, :imap_draft_box, :imap_trash_box,
       {
         imap_settings: [
-          :address, :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+          :name, :address, :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
           :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
           :default
         ]
@@ -36,6 +37,19 @@ class Webmail::AccountSettingsController < ApplicationController
     @item = @cur_user
   end
 
+  def set_default_settings
+    label = t('webmail.default_settings')
+    conf = @cur_user.imap_default_settings
+
+    @defaults = {
+      address: conf[:address],
+      host: "#{label} / #{conf[:host]}",
+      auth_type: "#{label} / #{conf[:auth_type]}",
+      account: "#{label} / #{conf[:account]}",
+      password: "#{label} / #{conf[:password].to_s.gsub(/./, '*')}"
+    }
+  end
+
   public
 
   def show
@@ -43,16 +57,7 @@ class Webmail::AccountSettingsController < ApplicationController
   end
 
   def edit
-    label = t('webmail.default_settings')
-    conf = @cur_user.imap_default_settings
-
-    @defaults = {
-      address: @cur_user.email,
-      host: "#{label} / #{conf[:host]}",
-      auth_type: "#{label} / #{conf[:auth_type]}",
-      account: "#{label} / #{conf[:account]}",
-      password: "#{label} / #{conf[:password].to_s.gsub(/./, '*')}"
-    }
+    #
   end
 
   def test_connection

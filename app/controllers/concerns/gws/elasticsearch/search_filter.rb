@@ -25,8 +25,9 @@ module Gws::Elasticsearch::SearchFilter
 
   def set_crumbs
     set_type
-    @crumbs << [t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path]
-    @crumbs << [t("gws/elasticsearch.tabs.#{@cur_type}"), gws_elasticsearch_search_search_path]
+    set_setting
+    @crumbs << [@cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path]
+    @crumbs << [@setting.menu_label, gws_elasticsearch_search_search_path]
   end
 
   def set_setting
@@ -55,7 +56,7 @@ module Gws::Elasticsearch::SearchFilter
   public
 
   def show
-    raise '404' unless @cur_site.elasticsearch_enabled?
+    raise '404' unless @cur_site.menu_elasticsearch_visible?
     raise '403' if @setting.search_types.blank?
 
     prepend_view_path "app/views/gws/elasticsearch/search/#{@cur_type}"

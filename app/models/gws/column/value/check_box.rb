@@ -20,6 +20,7 @@ class Gws::Column::Value::CheckBox < Gws::Column::Value::Base
     self.name = new_value.name
     self.order = new_value.order
     self.values = new_value.values.dup
+    self.text_index = new_value.value
   end
 
   def value

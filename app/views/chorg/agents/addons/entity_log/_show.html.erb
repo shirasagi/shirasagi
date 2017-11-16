@@ -1,0 +1,88 @@
+<% return if @item.entity_logs.blank? %>
+
+<% def render_creates(creates) %>
+  <% return if creates.blank? %>
+  <% creates.sort_by { |k, v| k }.each do |k, v| %>
+    <tr>
+      <th><%= k %></th>
+      <td colspan="2"><%= v %></td>
+    </tr>
+  <% end %>
+<% end %>
+
+<% def render_changes(changes) %>
+  <% return if changes.blank? %>
+  <% changes.sort_by { |k, v| k }.each do |k, v| %>
+    <tr>
+      <th><%= k %></th>
+      <td><%= v[0] %></td>
+      <td><%= v[1] %></td>
+    </tr>
+  <% end %>
+<% end %>
+
+<% alias render_deletes render_creates %>
+
+<dl class="see mod-chorg-entity_log">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th><%= t('chorg.views.chorg/entity_log.name') %></th>
+        <th><%= t('chorg.views.chorg/entity_log.id') %></th>
+        <th><%= t('chorg.views.chorg/entity_log.operation') %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.entity_logs.take(5).each_with_index do |entity_log, index| %>
+      <tr>
+        <td><%= t("mongoid.models.#{entity_log['model'].underscore}", default: entity_log['model']) %></td>
+        <td><%= entity_log['id'] %></td>
+        <td>
+          <% if entity_log['creates'] %>
+            <%= t('chorg.views.chorg/entity_log.options.operation.creates') %>
+          <% elsif entity_log['changes'] %>
+            <%= t('chorg.views.chorg/entity_log.options.operation.changes') %>
+          <% elsif entity_log['deletes'] %>
+            <%= t('chorg.views.chorg/entity_log.options.operation.deletes') %>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to t('chorg.views.chorg/entity_log.detail'), "#detail-#{index}", class: %w(btn detail) %>
+          <div style="display: none;">
+            <div id="detail-<%= index %>">
+              <table class="see index history-backup">
+                <tbody>
+                <% render_creates(entity_log['creates']) %>
+                <% render_changes(entity_log['changes']) %>
+                <% render_deletes(entity_log['deletes']) %>
+                </tbody>
+              </table>
+              <footer class="send">
+                <button name="button" type="button" class="btn-default" onclick="$.colorbox.close();">
+                  <%= t('chorg.views.chorg/entity_log.close') %>
+                </button>
+              </footer>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <dd class="wide">
+    <%= link_to t('chorg.views.chorg/entity_log.more'), { controller: :entity_logs, action: :index }, class: 'btn' %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  $('.mod-chorg-entity_log a.detail').colorbox({
+    inline: true,
+    fixed: true,
+    width: '90%',
+    height: '90%'
+  });
+<% end %>

@@ -8,7 +8,7 @@ class DomainValidator < ActiveModel::EachValidator
       #next if val.match(/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?$/ix)
       next if val.match(/^([\w\-]+\.)*[\w\-]+(:[0-9]{1,5})?$/ix)
       record.errors.add(attribute, options[:message] || :domain)
-      return
+      break
     end
   end
 end

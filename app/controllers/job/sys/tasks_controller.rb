@@ -11,4 +11,8 @@ class Job::Sys::TasksController < ApplicationController
   def filter_permission
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
   end
+
+  def item_criteria
+    @model.all.exists(at: false)
+  end
 end

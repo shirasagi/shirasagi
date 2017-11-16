@@ -13,11 +13,11 @@ class Webmail::Extensions::ImapSettings < Array
 
     def mongoize(object)
       case object
-        when self.class
-          object.mongoize
-        when Array
-          self.new(object).mongoize
-        else
+      when self.class
+        object.mongoize
+      when Array
+        self.new(object).mongoize
+      else
         object
       end
     end

@@ -1,6 +1,6 @@
 <dt class="chorg-revisions-<%= type %>"><%= t :"chorg.views.revisions/#{params[:action]}.#{type}" %></dt>
 <dd class="chorg-revisions-<%= type %>">
-  <%= link_to t("chorg.menus.revisions.division"), new_chorg_changesets_changeset_path(rid: @item, type: "division"), class: :btn %>
+  <%= link_to t("chorg.menus.revisions.division"), { controller: :changesets, action: :new, rid: @item, type: "division" }, class: :btn %>
   <table class="index">
     <thead>
       <tr>
@@ -12,11 +12,11 @@
     <% changesets.each do |changeset| %>
       <tr class="list-item">
         <td>
-          <%= link_to changeset.after_division, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+          <%= link_to changeset.after_division, { controller: :changesets, action: :show, rid: @item, type: changeset.type, id: changeset } %>
           <nav class="tap-menu">
-            <%= link_to t('ss.links.show'), chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
-            <%= link_to t('ss.links.edit'), edit_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
-            <%= link_to t('ss.links.delete'), delete_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to t('ss.links.show'), { controller: :changesets, action: :show, rid: @item, type: changeset.type, id: changeset } %>
+            <%= link_to t('ss.links.edit'), { controller: :changesets, action: :edit, rid: @item, type: changeset.type, id: changeset } %>
+            <%= link_to t('ss.links.delete'), { controller: :changesets, action: :delete, rid: @item, type: changeset.type, id: changeset } %>
           </nav>
         </td>
         <td>

@@ -1,11 +1,17 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item %>
+  <%= link_to t('gws/schedule/todo_management.links.active'),
+              recover_gws_schedule_todo_management_path(id: item) %>
+<% end %>
+
 <% @index_title = proc do |item| %>
     <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-    <%= link_to title, { action: :show, id: item }, class: "title" %>
+    <%= link_to title, { action: :show, id: item }, class: 'title' %>
 <% end %>
 
 <% @index_meta = proc do |item| %>
     <span class="datetime"><%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
-    <span>削除日時</span>
+    <span><%= t('gws/schedule/todo_management.deleted') %></span>
     <span><%= item.deleted.strftime('%Y/%m/%d %H:%M') %></span>
 <% end %>
 

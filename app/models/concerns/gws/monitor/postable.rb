@@ -117,11 +117,7 @@ module Gws::Monitor::Postable
       where("$where" => "function() {
        var sect = parseInt(this.reminder_start_section);
        if (sect == -999) return false;
-       if (sect > 0) {
-         dd = this.due_date;
-       } else {
-         dd = this.created;
-       }
+       dd = (sect > 0) ? this.due_date : this.created;
        dt = new Date(dd.getFullYear(), dd.getMonth(), dd.getDate() - sect);
        return (dt <= ISODate('#{Time.zone.today}'));
      }")
@@ -181,6 +177,14 @@ module Gws::Monitor::Postable
 
   def severity_options
     %w(normal important).map { |v| [ I18n.t("gws/monitor.options.severity.#{v}"), v ] }
+  end
+
+  def becomes_with_topic
+    if topic_id.present?
+      return self
+    end
+
+    becomes_with(Gws::Monitor::Topic)
   end
 
   private

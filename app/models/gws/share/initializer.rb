@@ -23,5 +23,8 @@ module Gws::Share
     Gws::Role.permission :edit_private_gws_share_folders, module_name: 'gws/share'
     Gws::Role.permission :delete_other_gws_share_folders, module_name: 'gws/share'
     Gws::Role.permission :delete_private_gws_share_folders, module_name: 'gws/share'
+
+    Gws::Role.permission :download_other_gws_share_folders, module_name: 'gws/share'
+    Gws::Role.permission :download_private_gws_share_folders, module_name: 'gws/share'
   end
 end

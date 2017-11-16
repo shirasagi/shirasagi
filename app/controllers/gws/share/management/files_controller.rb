@@ -15,11 +15,11 @@ class Gws::Share::Management::FilesController < ApplicationController
   def set_crumbs
     set_folder
     if @folder.present?
-      @crumbs << [t("mongoid.models.gws/share"), gws_share_files_path]
+      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
       @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
       @crumbs << [@folder.name, action: :index]
     else
-      @crumbs << [t("mongoid.models.gws/share"), gws_share_files_path]
+      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
       @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
     end
   end

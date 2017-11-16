@@ -32,8 +32,9 @@ namespace :service do
     Service::Account.each do |item|
       puts item.name
       item.reload_quota_used.save
-      puts "=> { base: #{item.base_quota_used}, cms: #{item.cms_quota_used} " +
-        "gws: #{item.gws_quota_used}, webmail: #{item.webmail_quota_used} }"
+      msg = "=> { base: #{item.base_quota_used}, cms: #{item.cms_quota_used} "
+      msg << "gws: #{item.gws_quota_used}, webmail: #{item.webmail_quota_used} }"
+      puts msg
     end
   end
 end

@@ -120,8 +120,8 @@ module Webmail::Imap
 
       if item.rfc822
         # use cache
-      else
-        attr << 'RFC822' if division.include?(:body) || division.include?(:rfc822)
+      elsif division.include?(:body) || division.include?(:rfc822)
+        attr << 'RFC822'
       end
 
       resp = imap.conn.uid_fetch(uid, attr)
@@ -156,7 +156,7 @@ module Webmail::Imap
       item.save
       item.save_rfc822 if attr.include?('RFC822')
 
-      item.attachments.select { |attachment| attachment.section == section }.first
+      item.attachments.find { |attachment| attachment.section == section }
     end
 
     private
