@@ -17,6 +17,14 @@ describe Article::Page, dbscope: :example, tmpdir: true do
     it { expect(item.private_show_path).to eq show_path }
   end
 
+  describe "becomes_with_route" do
+    subject(:item) { create :article_page, cur_node: node }
+    it do
+      page = Cms::Page.find(item.id).becomes_with_route
+      expect(page.changed?).to be_falsey
+    end
+  end
+
   describe "validation" do
     it "basename" do
       item = build(:article_page_basename_invalid)

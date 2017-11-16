@@ -4,8 +4,14 @@ class Gws::Elasticsearch::Setting::Share
 
   self.model = Gws::Share::File
 
+  def menu_label
+    @cur_site.menu_share_label || I18n.t('modules.gws/share')
+  end
+
   def search_types
     search_types = []
+    return search_types unless cur_site.menu_share_visible?
+
     search_types << :gws_share_files if allowed?(:read)
     search_types
   end

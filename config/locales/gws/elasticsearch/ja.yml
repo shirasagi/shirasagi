@@ -2,16 +2,6 @@ ja:
   gws/elasticsearch:
     tabs:
       all: すべて
-      board: 掲示板
-      mail: 電子メール
-      message: 連絡メモ
-      share: 共有ファイル
-      faq: よくある質問
-      qna: Ｑ＆Ａ
-      monitor: 照会・回答
-      circular: 回覧板
-      memo: 連絡メモ
-      workflow: ワークフロー
 
     format:
       search_results_count:
@@ -21,17 +11,17 @@ ja:
 
   modules:
     gws/elasticsearch: 全文検索
+    addons:
+      gws/elasticsearch/group_setting: 全文検索
 
   mongoid:
-    models:
-      gws/elasticsearch/group_setting: 全文検索設定
     attributes:
-      gws/elasticsearch/group_setting:
+      gws/addon/elasticsearch/group_setting:
         elasticsearch_state: 全文検索
         elasticsearch_hosts: 全文検索サーバー
 
   tooltip:
-    gws/elasticsearch/group_setting:
+    gws/addon/elasticsearch/group_setting:
       elasticsearch_state:
         - 全文検索を有効にするか無効にするかを選択します。
       elasticsearch_hosts:

@@ -46,6 +46,8 @@ ja:
     edit_private_gws_share_folders: フォルダーの編集（所有）
     delete_other_gws_share_folders: フォルダーの削除（全て）
     delete_private_gws_share_folders: フォルダーの削除（所有）
+    download_other_gws_share_folders: フォルダー内のファイル一括ダウンロード（全て）
+    download_private_gws_share_folders: フォルダー内のファイル一括ダウンロード（所有）
 
   mongoid:
     models:
@@ -58,13 +60,14 @@ ja:
     errors:
       models:
         gws/share/file:
-          file_size_exceeds_limit: ファイルサイズ（%{size}）が最大サイズ（%{limit}）を超えました。
-          file_size_exceeds_folder_limit: ファイルサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_limit: ファイルサイズ（%{size}）が最大ファイルサイズ（%{limit}）を超えました。
+          file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
         gws/share/category:
           too_deep: は%{max}階層以下にしてください。
           not_found_parent: 親カテゴリーが存在しません。
         gws/share/folder:
-          file_size_exceeds_folder_limit: ファイルサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_limit: ファイルサイズ（%{size}）が最大ファイルサイズ（%{limit}）を超えました。
+          file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
     attributes:
       gws/share/category:
         name: カテゴリー名
@@ -72,6 +75,7 @@ ja:
         category_ids: カテゴリー
       gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
+        share_max_folder_size: 最大フォルダーサイズ
       gws/share/file:
         folder: フォルダー
         folder_id: フォルダー名
@@ -80,6 +84,7 @@ ja:
         name: フォルダー名
         order: 並び順
         share_max_file_size: 最大ファイルサイズ
+        share_max_folder_size: 最大フォルダーサイズ
 
   tooltip:
     gws/share/category:
@@ -95,3 +100,5 @@ ja:
         - 並び順を入力します。
       share_max_file_size:
         - 最大ファイルサイズを入力します。
+      share_max_folder_size:
+        - 最大フォルダーサイズを入力します。

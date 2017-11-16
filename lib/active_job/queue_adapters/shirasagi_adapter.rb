@@ -28,12 +28,17 @@ module ActiveJob
           task = Job::Task.new(
             name: job.job_id,
             class_name: job.class.name,
+            app_type: job.class.ss_app_type,
             pool: job.queue_name,
             args: job.arguments,
             active_job: job.serialize)
           task.at = timestamp.to_i if timestamp
           if site_id = job.try(:site_id)
-            task.site_id = site_id
+            if job.class.ss_app_type.to_sym == :gws
+              task.group_id = site_id
+            else
+              task.site_id = site_id
+            end
           end
           if user_id = job.try(:user_id)
             task.user_id = user_id

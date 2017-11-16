@@ -69,8 +69,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
-      expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+      expect(item.workflow_approvers[0]).to \
+        eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
+      expect(item.workflow_approvers[1]).to \
+        eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       #
       # user2: 申請を承認する
@@ -90,8 +92,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.workflow_state).to eq 'approve'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
-      expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2})
+      expect(item.workflow_approvers[0]).to \
+        eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
+      expect(item.workflow_approvers[1]).to \
+        eq({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2})
     end
   end
 end

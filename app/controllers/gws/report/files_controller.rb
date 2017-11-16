@@ -12,7 +12,7 @@ class Gws::Report::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/report'), action: :index]
+    @crumbs << [@cur_site.menu_report_label || t('modules.gws/report'), action: :index]
     if params[:state].present?
       @crumbs << [t("gws/report.options.file_state.#{params[:state]}"), gws_report_files_path(state: params[:state])]
     end

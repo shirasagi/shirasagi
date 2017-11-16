@@ -4,34 +4,34 @@
       order(descendants_updated: -1).
       page(1).per(5)
 %>
-<div class="portal-monitor">
-  <div class="index">
-    <div class="list-head"><%= @portlet.name %></div>
-    <ul class="list-items">
-      <% @monitor.each do |item| %>
-          <li class="list-item">
-            <div class="info">
-              <% if item.new_flag? %><span class="gws-monitor-flag-new"></span><% end %>
-              <%= link_to item.name, gws_monitor_topic_path(id: item), class: 'title' %>
-              <% if item.descendants_files_count.to_i > 0 %>
-                  <span class="gws-monitor-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
-              <% end %>
-            </div>
-            <div class="meta">
-              <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-              <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
-              <span>
-            <% item.categories.compact.each do |category| %>
-              <%= link_to category.trailing_name, gws_monitor_category_topics_path(category: category.id),
-                          class: "gws-category-label", style: category_label_css(category) %>
+<div class="main-box">
+  <div class="portlet-title"><%= @portlet.name %></div>
+
+  <ul class="list-items">
+    <% @monitor.each do |item| %>
+        <li class="list-item">
+          <div class="info">
+            <% if item.new_flag? %><span class="gws-monitor-flag-new"></span><% end %>
+            <%= link_to item.name, gws_monitor_topic_path(id: item), class: 'title' %>
+            <% if item.descendants_files_count.to_i > 0 %>
+                <span class="gws-monitor-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
             <% end %>
-          </span>
-            </div>
-          </li>
-      <% end %>
-    </ul>
-    <% if @monitor.next_page %>
-        <div class="more"><%= link_to I18n.t("ss.links.more"), gws_monitor_topics_path %></div>
+          </div>
+          <div class="meta">
+            <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+            <span>
+          <% item.categories.compact.each do |category| %>
+            <%= link_to category.trailing_name, gws_monitor_category_topics_path(category: category.id),
+                        class: "gws-category-label", style: category_label_css(category) %>
+          <% end %>
+        </span>
+          </div>
+        </li>
     <% end %>
-  </div>
+  </ul>
+
+  <% if @monitor.next_page %>
+  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_monitor_topics_path %></div>
+  <% end %>
 </div>

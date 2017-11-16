@@ -135,19 +135,41 @@ module SS::Model::User
     end
 
     def search(params)
-      criteria = self.where({})
+      criteria = all
       return criteria if params.blank?
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:title_ids].present?
-        criteria = criteria.where title_ids: params[:title_ids].to_i
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :kana, :uid, :email
-      end
+      criteria = criteria.search_name(params)
+      criteria = criteria.search_title_ids(params)
+      criteria = criteria.search_keyword(params)
       criteria
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+
+      cur_site = params[:cur_site]
+      if self.name == 'Gws::User' && cur_site
+        criteria = Gws::UserFormData.site(cur_site)
+        criteria = criteria.keyword_in(params[:keyword], 'column_values.text_index')
+        user_ids = criteria.pluck(:user_id)
+      end
+
+      if user_ids.blank?
+        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email)
+      end
+
+      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email).selector
+      all.where('$or' => [ selector, { :id.in => user_ids } ])
+    end
+
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.search_text(params[:name])
+    end
+
+    def search_title_ids(params)
+      return all if params.blank? || params[:title_ids].blank?
+      all.where(title_ids: params[:title_ids].to_i)
     end
 
     def type_options

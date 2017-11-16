@@ -1,0 +1,53 @@
+<dl class="see">
+  <dt><%= @model.t(:session_id) %></dt>
+  <dd><%= @item.session_id %></dd>
+
+  <dt><%= @model.t(:request_id) %></dt>
+  <dd><%= @item.request_id %></dd>
+
+  <dt><%= @model.t(:severity) %></dt>
+  <dd><%= t("gws.history.severity.#{@item.severity}") %></dd>
+
+  <% if @item.user_long_name %>
+  <dt><%= @model.t(:user_id) %></dt>
+  <dd><%= @item.user_long_name %></dd>
+  <% end %>
+
+  <% if @item.model.present? %>
+    <dt><%= @model.t(:model_name) %></dt>
+    <dd><%= "#{@item.model_name} / #{@item.name}" %></dd>
+  <% end %>
+
+  <% if @item.controller.present? %>
+    <dt><%= @model.t(:controller_name) %></dt>
+    <dd><%= "#{@item.controller_name}##{@item.action}" %></dd>
+  <% end %>
+
+  <% if @item.job.present? %>
+    <dt><%= @model.t(:job_name) %></dt>
+    <dd><%= "#{@item.job_name}" %></dd>
+  <% end %>
+
+  <% if @item.mode.present? %>
+    <dt><%= @model.t(:mode) %></dt>
+    <dd><%= @item.mode_name || @item.mode %></dd>
+  <% end %>
+
+  <% if @item.path.present? %>
+    <dt><%= @model.t(:path) %></dt>
+    <dd><%= @item.path %></dd>
+  <% end %>
+
+  <% if (names = @item.updated_field_names).present? %>
+    <dt><%= @model.t(:updated_fields) %></dt>
+    <dd><%= names.join(', ') %></dd>
+  <% end %>
+
+  <% if @item.message %>
+    <dt><%= @model.t(:message) %></dt>
+    <dd><%= br @item.message %></dd>
+  <% end %>
+
+  <dt><%= @model.t(:created) %></dt>
+  <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+</dl>

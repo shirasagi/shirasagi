@@ -32,12 +32,14 @@ module Gws::Addon
             file.update_attributes(state: state) if state_changed?
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
+          elsif file.model == "share/file"
+            file.update_attributes(site_id: site_id, state: state)
           else
             file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
           end
           ids << file.id
         end
-        self.file_ids = ids
+        self.attributes["file_ids"] = ids
 
         del_ids = file_ids_was.to_a - ids
         del_ids.each do |id|

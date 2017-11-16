@@ -4,6 +4,7 @@
   <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("job.log"), job_cms_logs_path %></h3>
     <h3><%= link_to t("job.task"), job_cms_tasks_path %></h3>
+    <h3><%= link_to t("job.reservation"), job_cms_reservations_path %></h3>
   <% end %>
 </nav>
 

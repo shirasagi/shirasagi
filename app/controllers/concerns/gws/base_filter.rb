@@ -10,6 +10,8 @@ module Gws::BaseFilter
     before_action :validate_gws
     before_action :set_gws_assets
     before_action :set_current_site
+    before_action :set_gws_logged_in, if: ->{ @cur_user }
+    before_action :save_controller_access_history, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
     before_action :set_account_menu, if: ->{ @cur_user }
     before_action :set_crumbs
@@ -46,6 +48,59 @@ module Gws::BaseFilter
       @account_menu << [group.section_name, gws_default_group_path(default_group: group)]
     end
     @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
+  end
+
+  def set_gws_logged_in
+    gws_session = session[:gws]
+    gws_session ||= {}
+    gws_session[@cur_site.id.to_s] ||= {}
+    gws_session[@cur_site.id.to_s]['last_logged_in'] ||= begin
+      Gws::History.info!(
+        :controller, @cur_user, @cur_site,
+        path: request.path, controller: self.class.name.underscore, action: action_name,
+        model: Gws::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
+      ) rescue nil
+
+      Time.zone.now.to_i
+    end
+
+    session[:gws] = gws_session
+  end
+
+  def save_controller_access_history
+    if SS.config.gws.history['severity_notice'] == 'enabled'
+      if request.format == 'text/html'
+        Gws::History.notice!(
+          :controller, @cur_user, @cur_site,
+          path: request.path, controller: self.class.name.underscore, action: action_name
+        ) rescue nil
+      end
+    end
+  end
+
+  # override SS::BaseFilter#rescue_action
+  def rescue_action(e)
+    if e.to_s =~ /^\d+$/
+      status = e.to_s.to_i
+    else
+      status = ActionDispatch::ExceptionWrapper.status_code_for_exception(e.class.name)
+    end
+
+    if status >= 500
+      history_method = :error!
+    elsif status >= 400
+      history_method = :warn!
+    end
+
+    if history_method
+      Gws::History.send(
+        history_method, :controller, @cur_user, @cur_site,
+        path: request.path, controller: self.class.name.underscore, action: action_name,
+        message: "#{e.class} (#{e.message})"
+      ) rescue nil
+    end
+
+    super
   end
 
   def set_crumbs

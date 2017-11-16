@@ -15,6 +15,11 @@ production_master_side:
       database: ss_post
       hosts:
         - otherhost:27018
+    # offload write-access to separated host and database
+    gws_history:
+      database: ss_gws_history
+      hosts:
+        - otherhost:27018
 
 production_slave_side:
   clients:

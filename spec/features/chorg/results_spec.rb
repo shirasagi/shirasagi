@@ -1,59 +1,92 @@
 require 'spec_helper'
 
-describe "chorg_results", dbscope: :example do
-  let(:site) { cms_site }
-  let(:revision) { create(:revision, site_id: site.id) }
-  let(:index_path) { chorg_results_results_path site.id, revision.id }
+describe 'chorg_results', dbscope: :example do
+  let!(:site) { cms_site }
+  let!(:revision) { create(:revision, site_id: site.id) }
+  let!(:changeset) { create(:add_changeset, revision_id: revision.id) }
+  let(:show_path) { chorg_result_path site.id, revision.id, type }
 
-  describe "#index" do
-    context "no items" do
-      it do
-        login_cms_user
-        visit index_path
-        expect(status_code).to eq 200
-        expect(current_path).to eq index_path
-        expect(page).to have_no_selector("table.index tbody tr")
+  before { login_cms_user }
+
+  context 'test' do
+    let(:type) { 'test' }
+
+    describe '#show' do
+      context 'no items' do
+        it do
+          visit show_path
+          expect(status_code).to eq 200
+          expect(current_path).to eq show_path
+          expect(page).to have_selector('dd.started', text: '')
+          expect(page).to have_selector('dd.closed', text: '')
+        end
       end
-    end
 
-    context "with item" do
-      let(:job) { create(:job_model, cur_site: site) }
-      let(:job_log) { create(:job_log, :job_log_running, job: job) }
-      let(:revision) { create(:revision, site_id: site.id, job_ids: [job.id]) }
-      let(:index_path) { chorg_results_results_path site.id, revision.id }
+      context 'with item' do
+        let(:now) { Time.zone.now }
 
-      it do
-        # ensure that entities has existed.
-        expect(job).not_to be_nil
-        expect(job_log).not_to be_nil
-        expect(revision).not_to be_nil
+        before do
+          Timecop.freeze(now) do
+            visit chorg_run_confirmation_path(site.id, revision.id, type)
 
-        login_cms_user
-        visit index_path
-        expect(status_code).to eq 200
-        expect(current_path).to eq index_path
-        expect(page).to have_selector("table.index tbody tr")
+            perform_enqueued_jobs do
+              within 'form#item-form' do
+                click_button I18n.t("chorg.views.run/confirmation.#{type}.run_button")
+              end
+            end
+          end
+        end
+
+        it do
+          visit show_path
+          expect(status_code).to eq 200
+          expect(current_path).to eq show_path
+          expect(page).to have_selector('dd.started', text: now.strftime('%Y/%m/%d %H:%M:%S'))
+          expect(page).to have_selector('dd.closed', text: now.strftime('%Y/%m/%d %H:%M:%S'))
+          expect(page).to have_selector('dl.mod-chorg-entity_log')
+        end
       end
     end
   end
 
-  describe "#show" do
-    let(:job) { create(:job_model, cur_site: site) }
-    let(:job_log) { create(:job_log, :job_log_running, job: job) }
-    let(:revision) { create(:revision, site_id: site.id, job_ids: [job.id]) }
-    let(:show_path) { chorg_results_result_path site.id, revision.id, job_log.id }
+  context 'main' do
+    let(:type) { 'main' }
 
-    it do
-      # ensure that entities has existed.
-      expect(job).not_to be_nil
-      expect(job_log).not_to be_nil
-      expect(revision).not_to be_nil
+    describe '#show' do
+      context 'no items' do
+        it do
+          visit show_path
+          expect(status_code).to eq 200
+          expect(current_path).to eq show_path
+          expect(page).to have_selector('dd.started', text: '')
+          expect(page).to have_selector('dd.closed', text: '')
+        end
+      end
 
-      login_cms_user
-      visit show_path
-      expect(status_code).to eq 200
-      expect(current_path).to eq show_path
-      expect(page).to have_selector("div.addon-view dl.see")
+      context 'with item' do
+        let(:now) { Time.zone.now }
+
+        before do
+          Timecop.freeze(now) do
+            visit chorg_run_confirmation_path(site.id, revision.id, type)
+
+            perform_enqueued_jobs do
+              within 'form#item-form' do
+                click_button I18n.t("chorg.views.run/confirmation.#{type}.run_button")
+              end
+            end
+          end
+        end
+
+        it do
+          visit show_path
+          expect(status_code).to eq 200
+          expect(current_path).to eq show_path
+          expect(page).to have_selector('dd.started', text: now.strftime('%Y/%m/%d %H:%M:%S'))
+          expect(page).to have_selector('dd.closed', text: now.strftime('%Y/%m/%d %H:%M:%S'))
+          expect(page).to have_selector('dl.mod-chorg-entity_log')
+        end
+      end
     end
   end
 end
