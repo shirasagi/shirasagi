@@ -48,6 +48,12 @@ class Gws::Memo::MessagesController < ApplicationController
         page(params[:page]).per(50)
   end
 
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    @item.new_memo
+  end
+
   def create
     @item = @model.new from.merge(get_params)
     @item.send_date = Time.zone.now if params['commit'] == '送信'
