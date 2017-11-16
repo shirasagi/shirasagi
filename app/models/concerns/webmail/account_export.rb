@@ -79,7 +79,7 @@ module Webmail::AccountExport
 
     old_password = item.imap_settings[account_index].imap_password rescue nil
 
-    setting = Webmail::ImapSetting.new.replace({
+    setting = Webmail::ImapSetting.new.replace(
       name: name,
       address: address,
       imap_host: imap_host,
@@ -91,7 +91,7 @@ module Webmail::AccountExport
       imap_sent_box: imap_sent_box,
       imap_draft_box: imap_draft_box,
       imap_trash_box: imap_trash_box
-    })
+    )
 
     if account_index >= 0 && setting.valid?
       imap_settings = item.imap_settings.to_a
