@@ -16,7 +16,7 @@ SS::Application.routes.draw do
       post :reset, on: :member
     end
     resources :entity_logs, path: 'revisions/:rid/:type/entity_logs', only: [:index, :show]
-    get 'revisions/:rid/:type/run' => 'run#confirmation'
-    post 'revisions/:rid/:type/run' => 'run#run'
+    get 'revisions/:rid/:type/run' => 'run#confirmation', as: :run_confirmation
+    post 'revisions/:rid/:type/run' => 'run#run', as: :run
   end
 end
