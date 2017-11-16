@@ -14,4 +14,16 @@
     <span class="at"><%= tryb { Time.zone.at(item.at).strftime('%Y/%m/%d %H:%M') } %></span>
 <% end %>
 
+<% if Rails.application.config.active_job.queue_adapter.to_s != 'shirasagi' %>
+<div id="errorExplanation" class="errorExplanation">
+  <h2><%= t('job.queue_adapter_errors.header') %></h2>
+  <p><%= t('job.queue_adapter_errors.body') %></p>
+  <ul>
+    <% t('job.queue_adapter_errors.adapter_is_not_shirasagi').each do |msg| %>
+    <li><%= msg %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
 <%= render file: 'gws/crud/index' %>

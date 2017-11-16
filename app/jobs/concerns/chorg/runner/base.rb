@@ -31,15 +31,20 @@ module Chorg::Runner::Base
       put_log("==validate_all==")
       with_inc_depth { validate_all }
 
-      put_log("==delete_groups==")
+      # put_log("==delete_groups==")
+      task.log("==削除==")
       with_inc_depth { delete_groups(delete_group_ids) }
 
-      put_log("==results==")
+      # put_log("==results==")
+      task.log("==結果==")
       with_inc_depth do
         results.keys.each do |key|
-          put_log("#{key}: success=#{results[key]["success"]}, failed=#{results[key]["failed"]}")
+          # put_log("#{key}: success=#{results[key]["success"]}, failed=#{results[key]["failed"]}")
+          task.log("  [#{I18n.t("chorg.views.revisions/edit.#{key}")}] 成功: #{results[key]["success"]}, 失敗: #{results[key]["failed"]}")
         end
       end
+
+      finalize_context
     end
   end
 
@@ -50,7 +55,7 @@ module Chorg::Runner::Base
     with_all_entity_updates(@models, substituter) do |entity, updates|
       next if updates.blank?
 
-      put_log("#{entity.name}(#{entity.url}) has some updates. module=#{entity.class}")
+      put_log("#{entity_title(entity)} has some updates. module=#{entity.class}")
       with_inc_depth do
         updates = updates.select { |k, v| v.present? }
         updates.each do |k, new_value|
@@ -83,6 +88,19 @@ module Chorg::Runner::Base
       update_attributes(entity, updates)
       save_or_collect_errors(entity)
     end
+  end
+
+  def entity_title(entity)
+    title = ''
+    if entity.respond_to?(:name)
+      title << entity.name
+    end
+    if entity.respond_to?(:url)
+      title << '('
+      title << entity.url
+      title << ')'
+    end
+    title
   end
 
   def validate_all

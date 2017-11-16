@@ -6,7 +6,8 @@ module Chorg::PrimitiveRunner
 
   def run_primitive_chorg
     Chorg::Model::Changeset::TYPES.each do |type|
-      put_log("==#{type}==")
+      # put_log("==#{type}==")
+      task.log("==#{I18n.t("chorg.views.revisions/edit.#{type}")}==")
       with_inc_depth { @item.send("#{type}_changesets").each(&method("execute_#{type}")) }
     end
   end
@@ -15,6 +16,7 @@ module Chorg::PrimitiveRunner
 
   def execute_add(changeset)
     put_log("add #{changeset.add_description}")
+    task.log("  #{changeset.add_description}")
     destination = changeset.destinations.first
     group = find_or_create_group(destination)
     if save_or_collect_errors(group)
@@ -28,6 +30,7 @@ module Chorg::PrimitiveRunner
 
   def execute_move(changeset)
     put_log("move #{changeset.before_move} to #{changeset.after_move}")
+    task.log("  #{changeset.before_move} から #{changeset.after_move} へ")
     source = changeset.sources.first
     destination = changeset.destinations.first
 
@@ -50,6 +53,7 @@ module Chorg::PrimitiveRunner
 
   def execute_unify(changeset)
     put_log("unify #{changeset.before_unify} to #{changeset.after_unify}")
+    task.log("  #{changeset.before_unify} から #{changeset.after_unify} へ")
     destination = changeset.destinations.first
     destination_group = find_or_create_group(destination)
     unless save_or_collect_errors(destination_group)
@@ -76,6 +80,7 @@ module Chorg::PrimitiveRunner
 
   def execute_division(changeset)
     put_log("division #{changeset.before_division} to #{changeset.after_division}")
+    task.log("  #{changeset.before_division} から #{changeset.after_division} へ")
     source = changeset.sources.first
     source_group = self.class.group_class.where(id: source["id"]).first
     if source_group.blank?

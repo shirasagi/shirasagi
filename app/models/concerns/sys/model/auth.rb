@@ -27,10 +27,7 @@ module Sys::Model::Auth
     klass = name.camelize.constantize rescue nil
     return self unless klass
 
-    item = klass.new
-    item.instance_variable_set(:@new_record, nil) unless new_record?
-    instance_variables.each { |k| item.instance_variable_set k, instance_variable_get(k) }
-    item
+    becomes_with(klass)
   end
 
   def state_options

@@ -33,6 +33,7 @@ module Chorg::MongoidSupport
     models.each do |model|
       model.each do |entity|
         entity = entity.try(:becomes_with_route) || entity
+        entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
         entity.try(:cur_user=, @cur_user) if @cur_user.present?
         entity.try(:allow_other_user_files)
@@ -112,9 +113,11 @@ module Chorg::MongoidSupport
       group = self.class.group_class.where(id: id).first
       if group.present?
         if delete_entity(group)
-          put_log("deleted group: #{group.name}")
+          # put_log("deleted group: #{group.name}")
+          task.log("  #{group.name}")
         else
-          put_log("failed to delete group: #{group.name}")
+          # put_log("failed to delete group: #{group.name}")
+          task.log("  #{group.name}: 削除失敗")
         end
         remove_group_from_site(group)
       end
