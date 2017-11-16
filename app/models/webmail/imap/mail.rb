@@ -120,8 +120,8 @@ module Webmail::Imap
 
       if item.rfc822
         # use cache
-      else
-        attr << 'RFC822' if division.include?(:body) || division.include?(:rfc822)
+      elsif division.include?(:body) || division.include?(:rfc822)
+        attr << 'RFC822'
       end
 
       resp = imap.conn.uid_fetch(uid, attr)
