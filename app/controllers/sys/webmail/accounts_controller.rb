@@ -6,37 +6,47 @@ module Sys::Webmail
     model Webmail::User
 
     private
-      def set_crumbs
-        @crumbs << [t("sys.webmail_account"), import_sys_webmail_accounts_path]
-      end
 
-      def fix_params
-        { cur_user: @cur_user }
-      end
+    def set_crumbs
+      @crumbs << [t("sys.webmail_account"), import_sys_webmail_accounts_path]
+    end
+
+    def fix_params
+      { cur_user: @cur_user }
+    end
 
     public
-      def index
-        raise "404"
-      end
 
-      def import
-        raise "403" unless @model.allowed?(:edit, @cur_user)
+    def index
+      raise "404"
+    end
 
-        @item = @model.new
-        return if request.get?
+    def import
+      raise "403" unless @model.allowed?(:edit, @cur_user)
 
-        @item.attributes = get_params
-        result = @item.import_csv
-        flash.now[:notice] = t("ss.notice.saved") if result
-        render_create result, location: { action: :import }, render: { file: :import }
-      end
+      @item = @model.new
+      return if request.get?
 
-      def download
-        raise "403" unless @model.allowed?(:edit, @cur_user)
+      @item.attributes = get_params
+      result = @item.import_csv
+      flash.now[:notice] = t("ss.notice.saved") if result
+      render_create result, location: { action: :import }, render: { file: :import }
+    end
 
-        items = @model.all.allow(:edit, @cur_user)
-        @item = @model.new
-        send_data @item.export_csv(items), filename: "webmail_accounts_#{Time.zone.now.to_i}.csv"
-      end
+    def download
+      raise "403" unless @model.allowed?(:edit, @cur_user)
+
+      items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
+      @item = @model.new
+      send_data @item.export_csv(items), filename: "webmail_accounts_#{Time.zone.now.to_i}.csv"
+    end
+
+    def download_template
+      raise "403" unless @model.allowed?(:edit, @cur_user)
+
+      items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
+      @item = @model.new
+      send_data @item.export_template_csv(items), filename: "webmail_accounts_template.csv"
+    end
   end
 end

@@ -4,7 +4,9 @@ module History::LogFilter
   private
 
   def put_history_log
-    log = History::Log.new
+    log              = History::Log.new
+    log.session_id   = request.session.id
+    log.request_id   = request.uuid
     log.url          = request.path
     log.controller   = params[:controller]
     log.action       = params[:action]

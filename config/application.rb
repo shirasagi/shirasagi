@@ -43,6 +43,35 @@ module SS
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
     config.middleware.use Mongoid::QueryCache::Middleware
+
+    attr_reader :current_env
+
+    def call(*args, &block)
+      @current_env = args.first
+      super
+    ensure
+      @current_env = nil
+      @current_request = nil
+    end
+
+    def current_request
+      return if @current_env.nil?
+      @current_request ||= ActionDispatch::Request.new(@current_env)
+    end
+
+    def current_session_id
+      return unless @current_env
+
+      session = @current_env[Rack::Session::Abstract::ENV_SESSION_KEY]
+      return unless session
+
+      session.id
+    end
+
+    def current_request_id
+      return unless @current_env
+      @current_env['action_dispatch.request_id'] || @env['HTTP_X_REQUEST_ID']
+    end
   end
 
   def self.config

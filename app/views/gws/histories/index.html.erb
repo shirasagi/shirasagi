@@ -1,21 +1,72 @@
+<%
+  now = Time.zone.now
+  ymd = params[:ymd]
+  origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+  next_day = origin + 1.day
+  prev_day = origin - 1.day
+%>
 <div class="index">
   <div class="list-head">
+    <div class="list-head-action">
+      <% if now.to_date != origin.to_date %>
+      <%= link_to(t('gws.history.days.today'), { ymd: now.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal; margin-right: 12px;') %>
+      <% end %>
+
+      <% if now >= next_day %>
+      <%= link_to(t('gws.history.days.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+      <% end %>
+      <%= text_field_tag(:ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: Gws::HistoryArchiveJob.threshold_day(now, @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d'), max_date: 0}) %>
+      <%= link_to(t('gws.history.days.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+    </div>
+
     <%= render file: "_search" %>
   </div>
 
   <ul class="list-items">
     <% @items.each do |item| %>
     <li class="list-item">
+      <% if item.model.present? %>
+        <% title = "#{item.model_name} / #{item.name}" %>
+      <% elsif item.controller.present? %>
+        <% title = "#{item.controller_name}##{item.action}" %>
+      <% elsif item.job.present? %>
+        <% title = "#{item.job_name}" %>
+      <% end %>
+      <% next if title.blank? %>
+
+      <nav class="tap-menu">
+        <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+      </nav>
+
       <div class="info">
-        <span class="title"><%= "#{item.model_name} / #{item.name}" %></span>
+        <span class="title">
+          <%= link_to("[#{t("modules.#{item.module_key}")}] #{title}", { action: :show, id: item }) %>
+        </span>
+        <% if item.message %>
+        <p class="message"><%= item.message.truncate(120) %></p>
+        <% end %>
 
         <div class="meta">
+          <span class="label"><%= t("gws.history.severity.#{item.severity}") %></span>
           <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+          <% if item.mode.present? %>
           <span class="label"><%= item.mode_name %></span>
+          <% end %>
+          <% if item.path.present? %>
+          <span class="label"><%= item.path %></span>
+          <% end %>
           <span><%= item.user_long_name %></span>
           <% if (names = item.updated_field_names).present? %>
             <span class="label"><%= @model.t :updated_fields %></span>
             <%= names.join(', ') %>
+          <% end %>
+          <% if item.session_id.present? %>
+          <span class="label"><%= @model.t :session_id %></span>
+          <span class="session-id"><%= item.session_id %></span>
+          <% end %>
+          <% if item.request_id.present? %>
+          <span class="label"><%= @model.t :request_id %></span>
+          <span class="request-id"><%= item.request_id %></span>
           <% end %>
         </div>
       </div>
@@ -25,3 +76,18 @@
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+
+<%= jquery do %>
+  $('.list-head input[name=ymd]').datetimepicker({
+    onChangeDateTime: function(dp, $input) {
+      console.log($input.val());
+      var ymd = $input.val();
+      ymd = ymd.replace(/\//g, '');
+
+      var url = '<%= gws_daily_histories_path(ymd: ':ymd') %>';
+      url = url.replace(':ymd', ymd);
+
+      location.href = url;
+    }
+  });
+<% end %>

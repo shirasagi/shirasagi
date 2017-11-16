@@ -18,11 +18,11 @@ describe Gws::Schedule::TodoHelper, type: :helper do
       end
 
       it "new create lock" do
-        %w(new create lock).each {|act| expect(helper.menu_items(act).count).to eq 1 }
+        %w(new create lock).each { |act| expect(helper.menu_items(act).count).to eq 1 }
       end
 
       it "edit update delete move" do
-        %w(edit update delete move).each {|act| expect(helper.menu_items(act).count).to eq 2 }
+        %w(edit update delete move).each { |act| expect(helper.menu_items(act).count).to eq 2 }
       end
 
       it "other" do

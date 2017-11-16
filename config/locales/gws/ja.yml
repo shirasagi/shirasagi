@@ -23,10 +23,23 @@ ja:
         create: 登録
         update: 変更
         delete: 削除
+        login: ログイン
       user:
         create: 作成者
         update: 更新者
         delete: 削除者
+      severity:
+        error: エラー
+        warn: 警告
+        info: 重要情報
+        notice: 一般情報
+        none: 出力しない
+      days:
+        next_day: 翌日
+        prev_day: 前日
+        today: 今日
+      system_default_save_days: システム既定
+      system_default_severity: システム既定
     member_log:
       copy_users: 件のユーザーをコピーしました。
       paste_users: 件のユーザーを追加しました。
@@ -57,6 +70,9 @@ ja:
         select: プルダウン選択
         check_box: チェックボックス選択
         upload_file: ファイル投稿
+      user_form_state:
+        closed: 使用しない
+        public: 使用する
 
     links:
       back_to_portal: ポータルへ戻る
@@ -83,7 +99,9 @@ ja:
     edit_gws_users: ユーザの管理
     edit_gws_user_titles: 役職の管理
     edit_gws_roles: 権限/ロールの管理
+    edit_gws_user_forms: ユーザ拡張情報の管理
     read_gws_histories: 操作履歴の閲覧
+    delete_gws_histories: 操作履歴の削除
     read_other_gws_custom_groups: カスタムグループの閲覧（全て）
     read_private_gws_custom_groups: カスタムグループの閲覧（所有）
     edit_other_gws_custom_groups: カスタムグループの編集（全て）
@@ -122,6 +140,8 @@ ja:
       gws/schedules: スケジュール
       gws/system/group_setting: システム設定
       gws/system/menu_setting: メニュー設定
+      gws/system/log_setting: ログ設定
+      gws/user/custom_form: 拡張情報
 
   mongoid:
     models:
@@ -136,7 +156,10 @@ ja:
       gws/share: 共有ファイル
       gws/reminder: リマインダー
       gws/history: 操作履歴
+      gws/history_archive_file: アーカイブ
       gws/user_setting: ユーザー設定
+      gws/user_form: 拡張情報
+      gws/user_form_data: 拡張データ
     attributes:
       gws/model/category:
         model: モデル
@@ -180,11 +203,27 @@ ja:
         updated_user_name: 更新者
         updated_date: 更新日
       gws/history:
-        created: 変更日時
+        session_id: セッションID
+        request_id: リクエストID
+        severity: 重要度
+        name: 名称
         mode: 区分
+        model: モデル
+        controller: コントローラー
+        job: ジョブ
+        mode_name: 区分名
+        model_name: モデル名
+        controller_name: コントローラー名
+        job_name: ジョブ名
+        item_id: 項目ID
+        path: URL
+        action: アクション
+        message: メッセージ
+        updated_fields: 変更箇所
+        updated_field_names: 変更箇所
         user_name: ユーザー
         user_tel: 電話番号
-        updated_fields: 変更内容
+        created: 変更日時
       gws/share/history:
         created: 変更日時
         mode: 区分
@@ -251,6 +290,28 @@ ja:
         menu_personal_address_state: 個人アドレス帳の表示
         menu_staff_record_state: 電子職員録の表示
         menu_links_state: リンク集の表示
+        menu_elasticsearch_state: 全文検索の表示
+      gws/addon/system/log_setting:
+        log_save_days: ログ保持日数
+        log_main_severity: 標準機能のログ
+        log_board_severity: 掲示板のログ
+        log_circular_severity: 回覧板のログ
+        log_elasticsearch_severity: 全文検索のログ
+        log_facility_severity: 設備管理のログ
+        log_faq_severity: よくある質問のログ
+        log_file_severity: 共有ファイルのログ
+        log_memo_severity: 連絡メモのログ
+        log_monitor_severity: 照会・回答のログ
+        log_personal_address_severity: 個人アドレス帳のログ
+        log_portal_severity: ポータルのログ
+        log_qna_severity: Ｑ＆Ａのログ
+        log_report_severity: レポートのログ
+        log_schedule_severity: スケジュールのログ
+        log_share_severity: 共有ファイルのログ
+        log_shared_address_severity: 共有アドレス帳のログ
+        log_staff_record_severity: 電子職員録のログ
+        log_workflow_severity: ワークフローのログ
+        log_chorg_severity: 組織変更のログ
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー
@@ -278,6 +339,12 @@ ja:
         schedule_ids: スケジュール
       gws/addon/import/user:
         in_file: ファイル
+      gws/user_form:
+        state: 使用
+        memo: メモ
+      gws/user_form_data:
+        form_id: 拡張情報
+        column_values: 拡張データ
 
   tooltip:
     gws/addon/reminder:
@@ -366,7 +433,21 @@ ja:
       in_file:
         - CSVファイルを指定しユーザーのインポートを行います。
         - idが記述されていない行は新規作成になります。
+    gws/user_form:
+      state:
+        - ユーザー拡張情報を使用するかしないかを選択します。
+      memo:
+        - 備考を入力します。
+        - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
+
+  activemodel:
+    models:
+      gws/user_csv/importer: ユーザCSVインポート
+    attributes:
+      gws/user_csv/importer:
+        in_file: ファイル
 
   job:
     models:
       gws/reminder/notification_job: リマインダー通知
+      gws/history_archive_job: 操作履歴アーカイブ作成

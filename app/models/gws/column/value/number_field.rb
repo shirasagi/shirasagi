@@ -6,11 +6,11 @@ class Gws::Column::Value::NumberField < Gws::Column::Value::Base
   def validate_value(record, attribute)
     return if column.blank?
 
-    if column.required? && value.blank?
+    if column.required? && decimal.blank?
       record.errors.add(:base, name + I18n.t('errors.messages.blank'))
     end
 
-    return if value.blank?
+    return if decimal.blank?
 
     if column.min_decimal.present?
       if decimal < column.min_decimal
@@ -31,26 +31,27 @@ class Gws::Column::Value::NumberField < Gws::Column::Value::Base
     self.minus_type = new_value.minus_type
     self.scale = new_value.scale
     self.decimal = new_value.decimal
+    self.text_index = new_value.decimal.to_s
   end
 
   def value
+    return if decimal.blank?
+
     if scale.blank?
       str = decimal.to_s(:delimited)
+    elsif scale == 0
+      str = decimal.round(0).to_s(:delimited).sub(/\.\d*$/, '')
     else
-      if scale == 0
-        str = decimal.round(0).to_s(:delimited).sub(/\.\d*$/, '')
-      else
-        integral_part = decimal.fix
-        fraction_part = decimal.frac
+      integral_part = decimal.fix
+      fraction_part = decimal.frac
 
-        fraction_part = fraction_part.round(scale)
-        fraction_part = fraction_part.to_s.sub(/^-?\d*\./, '')
-        fraction_part = fraction_part.ljust(scale, '0')
+      fraction_part = fraction_part.round(scale)
+      fraction_part = fraction_part.to_s.sub(/^-?\d*\./, '')
+      fraction_part = fraction_part.ljust(scale, '0')
 
-        str = integral_part.to_s(:delimited).sub(/\.\d*$/, '')
-        str << '.'
-        str << fraction_part
-      end
+      str = integral_part.to_s(:delimited).sub(/\.\d*$/, '')
+      str << '.'
+      str << fraction_part
     end
 
     case minus_type

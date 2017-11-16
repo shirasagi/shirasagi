@@ -43,7 +43,9 @@ SS::Application.routes.draw do
     end
 
     namespace "webmail" do
-      resources :accounts, only: [:index], concerns: [:export]
+      resources :accounts, only: [:index], concerns: [:export] do
+        get :download_template, :on => :collection
+      end
     end
 
     namespace "apis" do

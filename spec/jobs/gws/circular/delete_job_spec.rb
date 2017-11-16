@@ -1,161 +1,40 @@
 require 'spec_helper'
+require 'timecop'
 
-describe Gws::Monitor::DeleteJob, dbscope: :example do
+describe Gws::Circular::DeleteJob, dbscope: :example do
   let(:site) { gws_site }
-  let(:group) { create(:ss_group) }
   let(:user) { gws_user }
-  let(:item) { create(:gws_circular_post, :member_ids, :due_date) }
+  let(:started) { Time.zone.now }
 
-  # let(:item) { create :gws_circular_post, cur_site: site }
-  # let(:site) { create(:ss_site) }
-  # let(:group) { create(:ss_group) }
-  # let(:user) { create(:ss_user) }
-
-  describe ".perform_later" do
-    context "with no bindings and no parameters" do
-
-      before do
-        perform_enqueued_jobs { described_class.perform_later }
-      end
-
-      it do
-        expect(performed_jobs.size).to eq 1
-        expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+  describe '.perform_later' do
+    before do
+      1.upto(12*3) do |i|
+        Timecop.travel(started.ago(i.month)) do
+          create(:gws_circular_post, :member_ids, :due_date)
+        end
       end
     end
 
-    context "with site" do
+    context 'default removed two years ago' do
       before do
-        perform_enqueued_jobs { described_class.bind(site_id: site).perform_later }
+        described_class.bind(site_id: site.id).perform_now
       end
 
       it do
-        expect(performed_jobs.size).to eq 1
-        expect(Job::Log.count).to eq 1
-        log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("Hello, #{site.domain}!"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(Gws::Circular::Post.count).to eq 23
       end
     end
 
-    # context "with group" do
-    #   before do
-    #     perform_enqueued_jobs { described_class.bind(group_id: group).perform_later }
-    #   end
-    #
-    #   it do
-    #     expect(performed_jobs.size).to eq 1
-    #     expect(Job::Log.count).to eq 1
-    #     log = Job::Log.first
-    #     expect(log.logs).to include(include("INFO -- : Started Job"))
-    #     expect(log.logs).to include(include("Hello, #{group.name}!"))
-    #     expect(log.logs).to include(include("INFO -- : Completed Job"))
-    #   end
-    # end
-    #
-    # context "with user" do
-    #   before do
-    #     perform_enqueued_jobs { described_class.bind(user_id: user).perform_later }
-    #   end
-    #
-    #   it do
-    #     expect(performed_jobs.size).to eq 1
-    #     expect(Job::Log.count).to eq 1
-    #     log = Job::Log.first
-    #     expect(log.logs).to include(include("INFO -- : Started Job"))
-    #     expect(log.logs).to include(include("Hello, #{user.name}!"))
-    #     expect(log.logs).to include(include("INFO -- : Completed Job"))
-    #   end
-    # end
-    #
-    # context "with parameters" do
-    #   before do
-    #     perform_enqueued_jobs { described_class.perform_later("world") }
-    #   end
-    #
-    #   it do
-    #     expect(performed_jobs.size).to eq 1
-    #     expect(Job::Log.count).to eq 1
-    #     log = Job::Log.first
-    #     expect(log.logs).to include(include("INFO -- : Started Job"))
-    #     expect(log.logs).to include(include("Hello, world!"))
-    #     expect(log.logs).to include(include("INFO -- : Completed Job"))
-    #   end
-    # end
+    context 'delete one year ago' do
+      before do
+        site.circular_delete_threshold = 1
+        site.save!
+        described_class.bind(site_id: site.id).perform_now
+      end
+
+      it do
+        expect(Gws::Circular::Post.count).to eq 11
+      end
+    end
   end
-
-  # describe ".perform_now" do
-  #   context "with no bindings and no parameters" do
-  #     before do
-  #       described_class.perform_now
-  #     end
-  #
-  #     it do
-  #       expect(Job::Log.count).to eq 1
-  #       log = Job::Log.first
-  #       expect(log.logs).to include(include("INFO -- : Started Job"))
-  #       expect(log.logs).to include(include("INFO -- : Completed Job"))
-  #     end
-  #   end
-  #
-  #   context "with site" do
-  #     before do
-  #       described_class.bind(site_id: site).perform_now
-  #     end
-  #
-  #     it do
-  #       expect(Job::Log.count).to eq 1
-  #       log = Job::Log.first
-  #       expect(log.logs).to include(include("INFO -- : Started Job"))
-  #       expect(log.logs).to include(include("Hello, #{site.domain}!"))
-  #       expect(log.logs).to include(include("INFO -- : Completed Job"))
-  #     end
-  #   end
-  #
-  #   # context "with group" do
-  #   #   before do
-  #   #     described_class.bind(group_id: group).perform_now
-  #   #   end
-  #   #
-  #   #   it do
-  #   #     expect(Job::Log.count).to eq 1
-  #   #     log = Job::Log.first
-  #   #     expect(log.logs).to include(include("INFO -- : Started Job"))
-  #   #     expect(log.logs).to include(include("Hello, #{group.name}!"))
-  #   #     expect(log.logs).to include(include("INFO -- : Completed Job"))
-  #   #   end
-  #   # end
-  #   #
-  #   # context "with user" do
-  #   #   before do
-  #   #     described_class.bind(user_id: user).perform_now
-  #   #   end
-  #   #
-  #   #   it do
-  #   #     expect(Job::Log.count).to eq 1
-  #   #     log = Job::Log.first
-  #   #     expect(log.logs).to include(include("INFO -- : Started Job"))
-  #   #     expect(log.logs).to include(include("Hello, #{user.name}!"))
-  #   #     expect(log.logs).to include(include("INFO -- : Completed Job"))
-  #   #   end
-  #   # end
-  #   #
-  #   # context "with parameters" do
-  #   #   before do
-  #   #     described_class.perform_now("world")
-  #   #   end
-  #   #
-  #   #   it do
-  #   #     expect(Job::Log.count).to eq 1
-  #   #     log = Job::Log.first
-  #   #     expect(log.logs).to include(include("INFO -- : Started Job"))
-  #   #     expect(log.logs).to include(include("Hello, world!"))
-  #   #     expect(log.logs).to include(include("INFO -- : Completed Job"))
-  #   #   end
-  #   # end
-  # end
 end

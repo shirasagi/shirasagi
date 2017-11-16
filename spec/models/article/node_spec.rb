@@ -16,6 +16,13 @@ describe Article::Node::Page, type: :model, dbscope: :example do
     end
   end
 
+  describe "becomes_with_route" do
+    it do
+      node = Cms::Node.find(item.id).becomes_with_route
+      expect(node.changed?).to be_falsey
+    end
+  end
+
   context 'for member' do
     let!(:page) { create(:article_page, cur_site: cms_site, cur_node: item) }
 

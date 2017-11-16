@@ -113,10 +113,15 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
       end
     end
 
+    @owner_ssfile = []
+    @item.file_ids.each do |fileids|
+      @owner_ssfile.push([ File.basename(@cur_group.name), SS::File.find_by(id: fileids)])
+    end
+
     zipfile = @item.name + ".zip"
 
     @item.create_download_directory(File.dirname(@item.zip_path))
-    @item.create_zip(@item.zip_path, @group_ssfile)
+    @item.create_zip(@item.zip_path, @group_ssfile, @owner_ssfile)
     send_file(@item.zip_path, type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
   end
 end

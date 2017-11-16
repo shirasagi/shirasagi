@@ -100,4 +100,39 @@ class Gws::Schedule::Todo
   def todo_state_options
     todo_state_names.map(&:reverse)
   end
+
+  def allowed?(action, user, opts = {})
+    return true if (action == :read) && owned?(user)
+    super(action, user, opts)
+  end
+
+  def owned?(user)
+    return true if member?(user)
+    return true if (self.group_ids & user.group_ids).present?
+    return true if user_ids.to_a.include?(user.id)
+    return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    false
+  end
+
+  class << self
+    def allow_condition(action, user, opts = {})
+      cond = [
+        # { :readable_group_ids.in => user.group_ids.to_a },
+        # { readable_member_ids: user.id },
+        { user_ids: user.id },
+        { member_ids: user.id }
+      ]
+
+      if member_include_custom_groups?
+        cond << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      end
+
+      # if readable_setting_included_custom_groups?
+      #   cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      # end
+
+      {'$or' => cond }
+    end
+  end
 end
+

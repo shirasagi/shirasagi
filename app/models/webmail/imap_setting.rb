@@ -1,6 +1,10 @@
 class Webmail::ImapSetting < Hash
   include ActiveModel::Model
 
+  def name
+    self[:name]
+  end
+
   def address
     self[:address]
   end
@@ -46,9 +50,7 @@ class Webmail::ImapSetting < Hash
   end
 
   def valid?
-    errors.add :address, :blank if address.blank?
-    errors.add :imap_host, :blank if imap_host.blank?
-    errors.add :imap_account, :blank if imap_account.blank?
+    errors.add :name, :blank if name.blank?
     errors.empty?
   end
 
