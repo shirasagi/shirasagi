@@ -781,15 +781,19 @@ td {
   .nav-management-menu {
     position: absolute;
     top: -60px;
-    right: 20px;
+    right: 0;
     line-height: 39px;
     a {
       display: inline-block;
       position: relative;
-      padding: 0 10px;
+      padding: 0 20px;
       color: $black;
+      text-decoration: none;
       .material-icons {
         margin-right:4px;
+      }
+      &:hover {
+        background-color: #ccc;
       }
     }
   }
