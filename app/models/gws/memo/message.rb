@@ -161,6 +161,10 @@ class Gws::Memo::Message
     end
   end
 
+  def html?
+    format == 'html' ? true : false
+  end
+
   private
 
   def set_to
