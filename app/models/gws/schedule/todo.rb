@@ -117,11 +117,8 @@ class Gws::Schedule::Todo
   class << self
     def allow_condition(action, user, opts = {})
       cond = [
-        { 'readable_group_ids.0' => { '$exists' => false },
-          'readable_member_ids.0' => { '$exists' => false },
-          'readable_custom_group_ids.0' => { '$exists' => false } },
-        { :readable_group_ids.in => user.group_ids },
-        { readable_member_ids: user.id },
+        # { :readable_group_ids.in => user.group_ids.to_a },
+        # { readable_member_ids: user.id },
         { user_ids: user.id },
         { member_ids: user.id }
       ]
@@ -130,11 +127,12 @@ class Gws::Schedule::Todo
         cond << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
       end
 
-      if readable_setting_included_custom_groups?
-        cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      end
+      # if readable_setting_included_custom_groups?
+      #   cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      # end
 
       {'$or' => cond }
     end
   end
 end
+

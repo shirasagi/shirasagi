@@ -24,7 +24,7 @@ module Gws::Schedule::PlanHelper
 
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1]
     events += group_holidays opts[:holiday][0], opts[:holiday][1]
-    events += calender_todos opts[:holiday][0], opts[:holiday][1]
+    events += calender_todos(opts[:holiday][0], opts[:holiday][1])
     events
   end
 
@@ -41,14 +41,16 @@ module Gws::Schedule::PlanHelper
   end
 
   def calender_todos(start_at, end_at)
-    result = Gws::Schedule::Todo.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).active().
+    site = params[:site] ? Gws::Group.find(params[:site]) : @cur_site
+    user = params[:user] ? Gws::User.find(params[:user]) : @cur_user
+    result = Gws::Schedule::Todo.site(site).
+      allow(:read, user, site: site).active().
       search(start: start_at, end: end_at).
       map do |todo|
-        result = todo.calendar_format(@cur_user, @cur_site)
-        result[:restUrl] = gws_schedule_todos_path(site: @cur_site.id)
+        result = todo.calendar_format(user, site)
+        result[:restUrl] = gws_schedule_todos_path(site: site.id)
         result
-    end
+      end
     result
   end
 end
