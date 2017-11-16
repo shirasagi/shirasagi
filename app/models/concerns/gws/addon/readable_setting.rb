@@ -51,9 +51,9 @@ module Gws::Addon::ReadableSetting
     return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
 
     if opts[:strict]
-      return allowed?(:read, user, site: opts[:cur_site] || site, strict: true)
+      return allowed?(:read, user, site: opts[:site] || site, strict: true)
     else
-      return allowed?(:read, user, site: opts[:cur_site] || site) # valid role
+      return allowed?(:read, user, site: opts[:site] || site) # valid role
     end
   end
 
