@@ -18,6 +18,12 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
     end
 
+    it "#download_template" do
+      visit import_path
+      click_link I18n.t('ss.links.download_template')
+      expect(status_code).to eq 200
+    end
+
     it "#import" do
       visit import_path
       within "form" do
@@ -29,6 +35,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
 
       user = SS::User.find(1)
       sys_account = user.imap_settings[0]
+      expect(sys_account.name).to eq "sys"
       expect(sys_account.address).to eq "sys@example.jp"
       expect(sys_account.imap_host).to eq "example.jp"
       expect(sys_account.imap_auth_type).to eq "CRAM-MD5"
@@ -39,6 +46,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
       expect(sys_account.decrypt_imap_password).to eq "pass"
 
       admin_account = user.imap_settings[1]
+      expect(admin_account.name).to eq "admin"
       expect(admin_account.address).to eq "admin@example.jp"
       expect(admin_account.imap_host).to eq "example.jp"
       expect(admin_account.imap_auth_type).to eq "PLAIN"
@@ -49,9 +57,10 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
       expect(admin_account.decrypt_imap_password).to eq "pass"
 
       user_account = user.imap_settings[2]
+      expect(user_account.name).to eq "user1"
       expect(user_account.address).to eq "user1@example.jp"
       expect(user_account.imap_host).to eq "example.jp"
-      expect(user_account.imap_auth_type).to eq nil
+      expect(user_account.imap_auth_type).to eq ""
       expect(user_account.threshold_mb).to eq 345
       expect(user_account.imap_sent_box).to eq "INBOX.Sent"
       expect(user_account.imap_draft_box).to eq "INBOX.Draft"
@@ -78,9 +87,10 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
 
       user = SS::User.find(1)
       sys_account = user.imap_settings[0]
+      expect(sys_account.name).to eq "edit"
       expect(sys_account.address).to eq "edit@example.jp"
       expect(sys_account.imap_host).to eq "example.jp"
-      expect(sys_account.imap_auth_type).to eq nil
+      expect(sys_account.imap_auth_type).to eq ""
       expect(sys_account.threshold_mb).to eq 123
       expect(sys_account.imap_sent_box).to eq "INBOX.Sent"
       expect(sys_account.imap_draft_box).to eq "INBOX.Draft"
@@ -88,6 +98,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
       expect(sys_account.decrypt_imap_password).to eq "pass"
 
       admin_account = user.imap_settings[1]
+      expect(admin_account.name).to eq "admin"
       expect(admin_account.address).to eq "admin@example.jp"
       expect(admin_account.imap_host).to eq "example.jp"
       expect(admin_account.imap_auth_type).to eq "PLAIN"
@@ -98,9 +109,10 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
       expect(admin_account.decrypt_imap_password).to eq "pass"
 
       user_account = user.imap_settings[2]
+      expect(user_account.name).to eq "user1"
       expect(user_account.address).to eq "user1@example.jp"
       expect(user_account.imap_host).to eq "example.jp"
-      expect(user_account.imap_auth_type).to eq nil
+      expect(user_account.imap_auth_type).to eq ""
       expect(user_account.threshold_mb).to eq 345
       expect(user_account.imap_sent_box).to eq "INBOX.Sent"
       expect(user_account.imap_draft_box).to eq "INBOX.Draft"

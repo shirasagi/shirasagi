@@ -73,7 +73,7 @@
     <% number += 1 %>
   <% end %>
 
-  <% if number <= SS.config.webmail.imap_account_limit %>
+  <% if @item.imap_settings.blank? %>
     <div class="addon-view imap-setting" data-id="<%= number %>">
       <div class="addon-head"><h2><%= "#{t('webmail.account_setting')}#{number}" %></h2></div>
       <div class="addon-body">
