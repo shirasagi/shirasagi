@@ -5,6 +5,7 @@ FactoryGirl.define do
     name 'user_name'
     email conf['email'] || 'webmail@example.jp'
     in_password 'pass'
+    group_ids { [ ss_group.id ] }
 
     setting = Webmail::ImapSetting.new
     setting[:name] = 'user_name'
