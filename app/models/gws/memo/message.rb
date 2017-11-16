@@ -154,6 +154,13 @@ class Gws::Memo::Message
     return super(action, user, opts) && (self.user.id == user.id)
   end
 
+  def new_memo
+    if sign = Gws::Memo::Signature.default_sign(@cur_user)
+      self.text = "\n\n#{sign}"
+      self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
+    end
+  end
+
   private
 
   def set_to
@@ -185,5 +192,9 @@ class Gws::Memo::Message
   return result;
 }"}])
     end
+  end
+
+  def h(str)
+    ERB::Util.h(str)
   end
 end
