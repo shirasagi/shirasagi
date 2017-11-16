@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :node_id %></dt>
+  <dd><%= tryb { @item.node.filename } %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= t(@item.class_name.underscore, scope: 'job.models') %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><span class="state"><%= @item.state %></span></dd>
+
+  <dt><%= @model.t :at %></dt>
+  <dd><%= tryb { Time.zone.at(@item.at).strftime('%Y/%m/%d %H:%M') } %></dd>
+</dl>

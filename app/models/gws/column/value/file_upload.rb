@@ -39,6 +39,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
     self.name = new_value.name
     self.order = new_value.order
     self.file_ids = new_value.file_ids
+    self.text_index = new_value.value
   end
 
   def value

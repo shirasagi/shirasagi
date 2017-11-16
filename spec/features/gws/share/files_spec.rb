@@ -31,21 +31,19 @@ describe "gws_share_files", type: :feature, dbscope: :example do
         click_button "保存"
       end
       expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
-      expect(page).to have_css("div.info a.title", text: "logo.png")
-      expect(page).to have_css("div.info div.meta a.gws-category-label", text: category.name)
+      expect(page).to have_css("form#item-form")
+      expect(page).to have_css("input#item_in_files")
+    end
 
-      item = Gws::Share::File.site(site).first
+    it "#show" do
+      item
+      visit show_path
+      expect(current_path).not_to eq sns_login_path
       expect(item.name).to eq "logo.png"
       expect(item.filename).to eq "logo.png"
       expect(item.state).to eq "closed"
       expect(item.content_type).to eq "image/png"
       expect(item.category_ids).to eq [category.id]
-    end
-
-    it "#show" do
-      visit show_path
-      expect(current_path).not_to eq sns_login_path
     end
 
     it "#edit" do
@@ -64,6 +62,34 @@ describe "gws_share_files", type: :feature, dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    context "#download_all with auth", js: true do
+      before { login_gws_user }
+
+      after do
+        temporary = SecureRandom.hex(4).to_s
+        item.class.create_download_directory(gws_user._id,
+                                             item.class.download_root_path,
+                                             item.class.zip_path(gws_user._id, temporary))
+        File.open(item.class.zip_path(gws_user._id, temporary), "w").close
+        expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_falsey
+        expect(FileTest.exist?(item.class.zip_path(gws_user._id, temporary))).to be_truthy
+      end
+
+      it "#download_all" do
+        item
+        visit index_path
+        find('.list-head label.check input').set(true)
+        page.accept_confirm do
+          find('.download-all').click
+        end
+        wait_for_ajax
+        @created_zip_tmp_dir = Dir.entries(item.class.download_root_path)
+                                   .find{ |elem| elem.include?(gws_user._id.to_s + "_") }.split("_").last
+        expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_truthy
+      end
+
     end
   end
 end

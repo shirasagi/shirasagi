@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "webmail_login", type: :feature, dbscope: :example do
+describe "webmail_login", type: :feature, dbscope: :example, imap: true do
   let(:user) { create :webmail_user }
   let(:login_path) { webmail_login_path }
   let(:logout_path) { webmail_logout_path }

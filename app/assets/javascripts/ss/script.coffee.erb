@@ -254,11 +254,21 @@ class @SS
   @renderDateTimePicker: ->
     $.datetimepicker.setLocale('ja');
     if ($.support.opacity)
-      $(".js-date").datetimepicker
-        timepicker: false
-        format:'Y/m/d'
-        closeOnDateSelect: true
-        scrollInput: false
-      $(".js-datetime").datetimepicker
-        roundTime: 'ceil'
-        step: 30
+      $.each $(".js-date"), ->
+        opts =
+          timepicker: false
+          format:'Y/m/d'
+          closeOnDateSelect: true
+          scrollInput: false
+        data = $(this).data()
+        opts.minDate = data.minDate if data.minDate != null
+        opts.maxDate = data.maxDate if data.maxDate != null
+        $(this).datetimepicker opts
+      $.each $(".js-datetime"), ->
+        opts =
+          roundTime: 'ceil'
+          step: 30
+        data = $(this).data()
+        opts.minDate = data.minDate if data.minDate != null
+        opts.maxDate = data.maxDate if data.maxDate != null
+        $(this).datetimepicker opts

@@ -96,6 +96,14 @@ module Gws::Board::Postable
     %w(normal important).map { |v| [ I18n.t("gws/board.options.severity.#{v}"), v ] }
   end
 
+  def becomes_with_topic
+    if topic_id.present?
+      return self
+    end
+
+    becomes_with(Gws::Board::Topic)
+  end
+
   private
 
   # topic(root_post)を設定

@@ -1,0 +1,23 @@
+<%
+  ymd = params[:ymd]
+  origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+%>
+
+<%= form_for :item, url: { action: :download }, html: { method: :post } do |f| %>
+    <%= error_messages_for :item %>
+
+    <section class="main-box">
+      <header><h2><%= t 'ss.confirm.download' %></h2></header>
+
+      <dl class="see">
+        <dt><%= Gws::History.model_name.human %></dt>
+        <dd><%= I18n.l(origin.to_date, format: :long) %></dd>
+        <dd><%= @items.count.to_s(:delimited) %> <%= t('ss.units.count') %></dd>
+      </dl>
+    </section>
+
+    <footer class="send">
+      <%= f.submit t("ss.download"), class: :save %>
+      <%= f.button t("ss.buttons.cancel"), type: :reset, class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    </footer>
+<% end %>

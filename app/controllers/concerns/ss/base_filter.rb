@@ -16,7 +16,7 @@ module SS::BaseFilter
     before_action :check_api_user
     before_action :set_logout_path_by_session
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
-    rescue_from RuntimeError, with: :rescue_action
+    rescue_from StandardError, with: :rescue_action
     layout "ss/base"
   end
 
@@ -135,6 +135,7 @@ module SS::BaseFilter
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
+
     raise e
   end
 

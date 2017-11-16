@@ -5,7 +5,7 @@ class Gws::Job::LogsController < ApplicationController
 
   model Gws::Job::Log
 
-  navi_view "gws/main/conf_navi"
+  navi_view 'gws/job/main/conf_navi'
 
   private
 

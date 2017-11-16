@@ -32,7 +32,7 @@ class Gws::Column::NumberField < Gws::Column::Base
   def serialize_value(value)
     Gws::Column::Value::NumberField.new(
       column_id: self.id, name: self.name, order: self.order, scale: self.scale, minus_type: self.minus_type,
-      decimal: value
+      decimal: value, text_index: value.to_s
     )
   end
 end

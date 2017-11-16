@@ -15,7 +15,7 @@ ja:
     role: 権限/ロール
     max_file_size: 最大ファイルサイズ
     site_copy: サイト複製
-    webmail_account: ウェブメールアカウント
+    webmail_account: メールアカウント
     site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
     site_copy/started_job: サイト複製を開始しました。
     site_copy/task_status: 実行状況
@@ -124,6 +124,7 @@ ja:
         bcc: Bcc
         cc: Cc
         mail: 内容
+        error: エラー
 
   errors:
     messages:

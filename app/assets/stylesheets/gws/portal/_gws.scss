@@ -4,8 +4,27 @@
 .gws-portlets {
   //margin: -10px;
   .portlet-item {
+  }
+  .portlet-html {
+    height: 100%;
+  }
+  .portlet-title {
+    margin: -15px -10px 15px;
+    padding: 10px;
+    border-bottom: $border-gray1;
+    font-weight: bold;
+  }
+  .portlet-html .main-box {
     overflow-x: hidden;
     overflow-y: auto;
+    height: 100%;
+    margin: 0;
+  }
+  .portlet-model-schedule .main-box.with-tabs {
+    height: calc(100% - 30px);
+  }
+  .list-items {
+    margin: -10px -5px;
   }
 }
 .gws-portlets-static {

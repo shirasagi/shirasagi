@@ -1,5 +1,7 @@
 <nav class="nav-menu">
   <% if params[:action] == 'show' && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/schedule/todo_management.links.active'), active_gws_schedule_todo_management_path  %>
+      <%= link_to t('gws/schedule/todo_management.links.active'),
+                  recover_gws_schedule_todo_management_path  %>
   <% end %>
+  <%= link_to t('ss.links.back_to_index'), action: :index %>
 </nav>

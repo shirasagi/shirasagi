@@ -43,7 +43,7 @@ Gws_Portal.prototype.addItem = function(item) {
   if (html.length) {
     var height = html.height();
     html.prependTo(li);
-    this.autoResizeItem(li, height);
+    //this.autoResizeItem(li, height);
   }
 };
 

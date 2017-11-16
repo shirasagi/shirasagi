@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+
+  <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
+  <dd><%= f.text_area :memo %></dd>
+</dl>

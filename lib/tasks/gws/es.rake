@@ -2,7 +2,7 @@ namespace :gws do
   namespace :es do
     task ping: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -17,7 +17,7 @@ namespace :gws do
 
     task info: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -32,7 +32,7 @@ namespace :gws do
 
     task list_indexes: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -47,7 +47,7 @@ namespace :gws do
 
     task list_types: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -63,7 +63,7 @@ namespace :gws do
 
     task drop: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -78,7 +78,7 @@ namespace :gws do
 
     task create_indexes: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -99,7 +99,7 @@ namespace :gws do
 
     task feed_all: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -121,7 +121,7 @@ namespace :gws do
 
     task feed_all_memos: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -141,7 +141,7 @@ namespace :gws do
 
     task feed_all_boards: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -166,7 +166,7 @@ namespace :gws do
 
     task feed_all_faqs: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -191,7 +191,7 @@ namespace :gws do
 
     task feed_all_qnas: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -216,7 +216,7 @@ namespace :gws do
 
     task feed_all_circulars: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -241,7 +241,7 @@ namespace :gws do
 
     task feed_all_monitors: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -266,7 +266,7 @@ namespace :gws do
 
     task feed_all_workflows: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -286,7 +286,7 @@ namespace :gws do
 
     task feed_all_files: :environment do
       site = Gws::Group.find_by(name: ENV['site'])
-      if !site.elasticsearch_enabled?
+      if !site.menu_elasticsearch_visible?
         puts 'elasticsearch was not enabled'
         break
       end
@@ -307,7 +307,7 @@ namespace :gws do
     namespace :ingest do
       task drop: :environment do
         site = Gws::Group.find_by(name: ENV['site'])
-        if !site.elasticsearch_enabled?
+        if !site.menu_elasticsearch_visible?
           puts 'elasticsearch was not enabled'
           break
         end
@@ -322,7 +322,7 @@ namespace :gws do
 
       task init: :environment do
         site = Gws::Group.find_by(name: ENV['site'])
-        if !site.elasticsearch_enabled?
+        if !site.menu_elasticsearch_visible?
           puts 'elasticsearch was not enabled'
           break
         end
@@ -340,7 +340,7 @@ namespace :gws do
 
       task info: :environment do
         site = Gws::Group.find_by(name: ENV['site'])
-        if !site.elasticsearch_enabled?
+        if !site.menu_elasticsearch_visible?
           puts 'elasticsearch was not enabled'
           break
         end

@@ -13,6 +13,6 @@ class Job::Cms::TasksController < ApplicationController
   end
 
   def item_criteria
-    @model.site(@cur_site)
+    @model.site(@cur_site).exists(at: false)
   end
 end

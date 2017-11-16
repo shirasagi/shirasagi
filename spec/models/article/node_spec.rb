@@ -15,4 +15,11 @@ describe Article::Node::Page, type: :model, dbscope: :example do
       expect(item.invalid?).to be_truthy
     end
   end
+
+  describe "becomes_with_route" do
+    it do
+      node = Cms::Node.find(item.id).becomes_with_route
+      expect(node.changed?).to be_falsey
+    end
+  end
 end

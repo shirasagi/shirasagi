@@ -4,10 +4,15 @@ module Gws::Schedule::PlanFilter
 
   included do
     model Gws::Schedule::Plan
+    before_action :check_schedule_visible
     before_action :set_file_addon_state
   end
 
   private
+
+  def check_schedule_visible
+    raise '404' unless @cur_site.menu_schedule_visible?
+  end
 
   def set_crumbs
     @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
