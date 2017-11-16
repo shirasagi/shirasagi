@@ -41,7 +41,7 @@
   <dd><%= text_field_tag "item[imap_settings][][imap_host]", setting.imap_host, placeholder: @defaults[:host], class: :imap_host %></dd>
 
   <dt><%= @model.t :imap_auth_type %><%= @model.tt :imap_auth_type %></dt>
-  <dd><%= select_tag "item[imap_settings][][imap_auth_type]", options_for_select(@item.imap_auth_type_options, setting.imap_auth_type), include_blank: @defaults[:auth_type], class: :auth_type %></dd>
+  <dd><%= select_tag "item[imap_settings][][imap_auth_type]", options_for_select(@item.imap_auth_type_options, setting.imap_auth_type), include_blank: @defaults[:auth_type], class: :imap_auth_type %></dd>
 
   <dt><%= @model.t :imap_account %><%= @model.tt :imap_account %></dt>
   <dd><%= text_field_tag "item[imap_settings][][imap_account]", setting.imap_account, placeholder: @defaults[:account], class: :imap_account %></dd>
