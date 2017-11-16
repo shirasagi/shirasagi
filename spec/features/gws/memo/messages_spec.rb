@@ -11,63 +11,101 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
     it '#index' do
       visit gws_memo_messages_path(site)
       wait_for_ajax
-      expect(status_code).to eq 200
+      expect(page).to have_content('受信トレイ')
     end
 
     it '#new' do
       visit new_gws_memo_message_path(site)
       wait_for_ajax
-      expect(status_code).to eq 200
+      expect(page).to have_content('参加者')
     end
 
     it '#show' do
       visit gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      expect(page).to have_content(memo.name)
     end
 
     it '#edit' do
       visit edit_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      wait_for_ajax
+      expect(page).to have_content('参加者')
     end
 
     it '#trash' do
       visit trash_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      expect(page).to have_content('ゴミ箱 (1)')
     end
 
     it '#toggle_star' do
       visit toggle_star_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(status_code).to eq 200
+      expect(page).to have_content(memo.name)
     end
 
     it '#trash_all' do
-      post trash_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id]
-      expect(status_code).to eq 200
+      visit gws_memo_messages_path(site)
+      find('.list-head label.check input').set(true)
+      page.accept_confirm do
+        find('.trash-all').click
+      end
+      wait_for_ajax
+      expect(page).to have_content('ゴミ箱 (1)')
     end
 
-    it '#set_seen_all' do
-      post set_seen_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id]
-      expect(status_code).to eq 200
+    it '#set_seen_all and #unset_seen_all' do
+      visit gws_memo_messages_path(site)
+      find('.list-head label.check input').set(true)
+      page.accept_confirm do
+        click_button "その他"
+        find('.set-seen-all').click
+      end
+      wait_for_ajax
+      expect(page).to have_css(".list-item.seen")
+      expect(page).to have_no_css(".list-item.unseen")
+
+      find('.list-head label.check input').set(true)
+      page.accept_confirm do
+        click_button "その他"
+        find('.unset-seen-all').click
+      end
+      wait_for_ajax
+      expect(page).to have_css(".list-item.unseen")
+      expect(page).to have_no_css(".list-item.seen")
     end
 
-    it '#unset_seen_all' do
-      post unset_seen_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id]
-      expect(status_code).to eq 200
-    end
+    it '#set_star_all and #unset_star_all' do
+      visit gws_memo_messages_path(site)
+      find('.list-head label.check input').set(true)
+      page.accept_confirm do
+        click_button "その他"
+        find('.set-star-all').click
+      end
+      wait_for_ajax
+      expect(page).to have_css(".icon.icon-star.on")
+      expect(page).to have_no_css(".icon.icon-star.off")
 
-    it '#set_star_all' do
-      post set_star_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id]
-      expect(status_code).to eq 200
-    end
-
-    it '#unset_star_all' do
-      post unset_star_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id]
-      expect(status_code).to eq 200
+      find('.list-head label.check input').set(true)
+      page.accept_confirm do
+        click_button "その他"
+        find('.unset-star-all').click
+      end
+      wait_for_ajax
+      expect(page).to have_css(".icon.icon-star.off")
+      expect(page).to have_no_css(".icon.icon-star.on")
     end
 
     it '#move_all' do
-      post move_all_gws_memo_messages_path(site: site, folder: 'INBOX'), ids: [memo.id], path: 'INBOX.Trash'
-      expect(status_code).to eq 200
+      visit gws_memo_messages_path(site)
+      wait_for_ajax
+      expect(page).to have_content('受信トレイ (1)')
+      expect(page).to have_content('ゴミ箱 (0)')
+      find('.list-head label.check input').set(true)
+      page.accept_confirm do
+        click_button "移動する"
+        find('.move-menu li a').click
+      end
+      wait_for_ajax
+      expect(page).to have_content('受信トレイ (0)')
+      expect(page).to have_content('ゴミ箱 (1)')
     end
   end
 end
