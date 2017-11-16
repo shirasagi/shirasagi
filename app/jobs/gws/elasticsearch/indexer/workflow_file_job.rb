@@ -19,17 +19,12 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     doc[:url] = url_helpers.gws_workflow_file_path(site: site, state: 'all', id: item)
     doc[:name] = item.name
     doc[:mode] = item.form.present? ? 'form' : 'standard'
-    if item.form.present?
-      doc[:text] = collect_form_text
-    else
-      doc[:text] = item.text
-    end
-    doc[:categories] = item.categories.pluck(:name) if item.respond_to?(:categories)
+    doc[:text] = item_text
+    doc[:categories] = item_categories
 
-    doc[:release_date] = item.release_date.try(:iso8601) if item.respond_to?(:release_date)
-    doc[:close_date] = item.close_date.try(:iso8601) if item.respond_to?(:close_date)
-    doc[:released] = item.released.try(:iso8601) if item.respond_to?(:released)
-    doc[:released] ||= item.updated.try(:iso8601)
+    doc[:release_date] = item_release_date
+    doc[:close_date] = item_close_date
+    doc[:released] = item_released
     doc[:state] = item.state
 
     doc[:user_name] = item.user_long_name
@@ -58,10 +53,9 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     doc[:file][:extname] = file.extname.upcase
     doc[:file][:size] = file.size
 
-    doc[:release_date] = item.release_date.try(:iso8601) if item.respond_to?(:release_date)
-    doc[:close_date] = item.close_date.try(:iso8601) if item.respond_to?(:close_date)
-    doc[:released] = item.released.try(:iso8601) if item.respond_to?(:released)
-    doc[:released] ||= item.updated.try(:iso8601)
+    doc[:release_date] = item_release_date
+    doc[:close_date] = item_close_date
+    doc[:released] = item_released
     doc[:state] = item.state
 
     doc[:group_ids] = item.groups.pluck(:id)
@@ -79,12 +73,38 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     [ "file-#{file.id}", doc ]
   end
 
+  def item_text
+    if item.form.present?
+      collect_form_text
+    else
+      item.text
+    end
+  end
+
   def collect_form_text
     texts = []
     item.column_values.each do |column_value|
       texts << column_value.to_es
     end
     texts.compact
+  end
+
+  def item_categories
+    item.categories.pluck(:name) if item.respond_to?(:categories)
+  end
+
+  def item_release_date
+    item.release_date.try(:iso8601) if item.respond_to?(:release_date)
+  end
+
+  def item_close_date
+    item.close_date.try(:iso8601) if item.respond_to?(:close_date)
+  end
+
+  def item_released
+    ret = item.released.try(:iso8601) if item.respond_to?(:released)
+    ret ||= item.updated.try(:iso8601)
+    ret
   end
 
   def item_files
