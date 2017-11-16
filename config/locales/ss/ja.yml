@@ -265,6 +265,8 @@ ja:
           not_found: "%{line_no} 行目: Id %{id} のグループは存在しません。"
         ss/model/user:
           not_found: "%{line_no} 行目: Id %{id} のユーザーは存在しません。"
+        ss/model/role:
+          not_found: "%{line_no} 行目: Id %{id} のユーザーは存在しません。"
     attributes:
       ss/document:
         id: id
