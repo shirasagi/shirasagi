@@ -79,8 +79,6 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     [ "file-#{file.id}", doc ]
   end
 
-  private
-
   def collect_form_text
     texts = []
     item.column_values.each do |column_value|
