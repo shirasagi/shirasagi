@@ -29,6 +29,19 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
   <dt><%= @model.t :required %><%= @model.tt :required %></dt>
   <dd><%= f.select :required, @item.required_options %></dd>
 
+  <% form_select = @item.node.columns.where(input_type: 'form_select').first if @item.node.present? %>
+  <% if form_select.present? %>
+  <dt><%= @model.t :required_in_select_form %><%= @model.tt :required_in_select_form %></dt>
+  <dd>
+    <% form_select.select_options.each do |option| %>
+      <% if @item.required_in_select_form.present? %>
+        <% checked = @item.required_in_select_form.include?(option) ? 'checked: true' : nil %>
+      <% end %>
+      <label><%= check_box_tag 'item[required_in_select_form][]', option, checked %> <%= option %> </label>
+    <% end %>
+  </dd>
+  <% end %>
+
   <dt><%= @model.t :additional_attr %><%= @model.tt :additional_attr %></dt>
   <dd><%= f.text_field :additional_attr %></dd>
 

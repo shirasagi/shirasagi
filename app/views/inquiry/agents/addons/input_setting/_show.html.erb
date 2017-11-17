@@ -8,6 +8,11 @@
   <dt><%= @model.t :required %></dt>
   <dd><%= @item.label :required %></dd>
 
+  <% if @item.send(:required_in_select_form) %>
+  <dt><%= @model.t :required_in_select_form %></dt>
+  <dd><%= @item.send(:required_in_select_form).join(", ") %></dd>
+  <% end %>
+
   <dt><%= @model.t :additional_attr %></dt>
   <dd><%= @item.send :additional_attr %></dd>
 

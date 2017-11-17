@@ -7,25 +7,28 @@ module Inquiry::Addon
       field :input_type, type: String, default: "text_field"
       field :select_options, type: SS::Extensions::Lines, default: ""
       field :required, type: String, default: "required"
+      field :required_in_select_form, type: Array
       field :additional_attr, type: String, default: ""
       field :input_confirm, type: String, default: ""
       field :max_upload_file_size, type: Integer, default: 0
       field :transfers, type: Array
-      permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm, :max_upload_file_size
-      permit_params transfer: [:keyword, :email]
+      permit_params :input_type, :required, :additional_attr
+      permit_params :select_options, :input_confirm, :max_upload_file_size
+      permit_params required_in_select_form: []
 
       validates :input_type, presence: true, inclusion: {
-        in: %w(text_field text_area email_field radio_button select check_box upload_file)
+        in: %w(text_field text_area email_field radio_button select check_box upload_file form_select)
       }
       validate :validate_input_type_upload_file
       validate :validate_select_options
       validate :validate_input_confirm_options
       # validate :validate_max_upload_file_size_options
       validate :validate_transfers
+      validate :validate_form_select
     end
 
     def input_type_options
-      %w(text_field text_area email_field radio_button select check_box upload_file).map do |v|
+      %w(text_field text_area email_field radio_button select check_box upload_file form_select).map do |v|
         label = I18n.t("inquiry.options.input_type.#{v}")
         label += I18n.t("inquiry.cannot_use") if v == "upload_file" && Mongoid::Config.clients[:default_post]
         [ label, v ]
@@ -38,6 +41,7 @@ module Inquiry::Addon
         [I18n.t('inquiry.options.required.optional'), 'optional'],
       ]
     end
+    alias required_in_reply_options required_options
 
     def input_confirm_options
       [
@@ -50,7 +54,8 @@ module Inquiry::Addon
     #   [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
     # end
 
-    def required?
+    def required?(in_reply)
+      return true if in_reply && required_in_select_form && required_in_select_form.include?(in_reply)
       required == "required"
     end
 
@@ -63,7 +68,7 @@ module Inquiry::Addon
     private
 
     def validate_select_options
-      if input_type =~ /(select|radio_button|check_box)/
+      if input_type =~ /(select|radio_button|check_box|form_select)/
         errors.add :select_options, :blank if select_options.blank?
       end
     end
@@ -91,6 +96,14 @@ module Inquiry::Addon
       transfers.each do |transfer|
         return errors.add :base, :blank_keyword if transfer[:keyword].blank? && transfer[:email].present?
         return errors.add :base, :blank_email if transfer[:keyword].present? && transfer[:email].blank?
+      end
+    end
+
+    def validate_form_select
+      return if input_type != 'form_select'
+      column = node.columns.where(input_type: 'form_select').first
+      if column.present? && column != self
+        errors.add :input_type, :exist_form_select, input_type: label(:input_type)
       end
     end
   end
