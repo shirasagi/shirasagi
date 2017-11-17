@@ -147,19 +147,58 @@ class Gws::Memo::Message
     self
   end
 
+  def allowed?(action, user, opts = {})
+    action = permission_action || action
+    return self.class.allow(action, user, opts).exists? if action == :read
+    return super(action, user, opts) unless self.user
+    return super(action, user, opts) && (self.user.id == user.id)
+  end
+
+  def new_memo
+    if sign = Gws::Memo::Signature.default_sign(@cur_user)
+      self.text = "\n\n#{sign}"
+      self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
+    end
+  end
+
+  def html?
+    format == 'html' ? true : false
+  end
+
   private
 
   def set_to
-    (member_ids.map(&:to_s) - to.keys).each { |id| self.to[id.to_s] = draft? ? nil : 'INBOX' }
+    member_ids.map(&:to_s).each do |id|
+      next unless self.to[id.to_s].blank?
+      self.to[id.to_s] = draft? ? nil : 'INBOX'
+    end
   end
 
   class << self
     def allow(action, user, opts = {})
       folder = opts[:folder]
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-
-      super(action, user, opts).
-        where("#{direction}.#{user.id}" => folder)
+      where("#{direction}.#{user.id}" => folder)
     end
+
+    def unseens(user, site)
+      self.site(site).where('$and' => [
+        { "to.#{user.id}".to_sym.exists => true },
+        { "seen.#{user.id}".to_sym.exists => false },
+        { "$where" => "function(){
+  var self = this;
+  var result = false;
+
+  Object.keys(this.from).forEach(function(key){
+    if (self.from[key] !== 'INBOX.Draft') { result = true; }
+  })
+
+  return result;
+}"}])
+    end
+  end
+
+  def h(str)
+    ERB::Util.h(str)
   end
 end
