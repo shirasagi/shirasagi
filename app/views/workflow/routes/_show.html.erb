@@ -1,6 +1,10 @@
 <dl class="see workflow-basic">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :pull_up %></dt>
+  <dd><%= @item.label :pull_up %></dd>
+
   <dt><%= @model.t :group_ids %></dt>
   <dd><%= br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
 </dl>

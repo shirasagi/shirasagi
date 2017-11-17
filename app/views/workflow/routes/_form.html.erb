@@ -12,6 +12,10 @@ end
 <dl class="see workflow-basic">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>
+
+  <dt><%= @model.t :pull_up %><%= @model.tt :pull_up %></dt>
+  <dd><%= f.select :pull_up, @item.pull_up_options, include_blank: " " %></dd>
+
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>

@@ -27,6 +27,7 @@ $ ->
       async: false
       data:
         workflow_comment: $("#workflow_comment").prop("value")
+        workflow_pull_up: $("#workflow_pull_up").prop("value") 
         workflow_approvers: approvers
         workflow_required_counts: required_counts
         remand_comment: $("#remand_comment").prop("value")
@@ -73,8 +74,8 @@ $ ->
 
   <% if @item.state == "closed" %>
     <% if @item.allowed?(:approve, @cur_user) && @item.workflow_state == "request" %>
-      <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
-        <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
+      <% @item.workflow_pull_up_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
+        <% next if @cur_user._id != workflow_approver[:user_id] || @item.approve_disabled?(workflow_approver[:state]) %>
         <section class="mod-workflow-approve">
           <div class="addon-view">
             <div class="addon-head">
@@ -83,7 +84,11 @@ $ ->
             <div class="addon-body">
               <%= text_area :remand, :comment, value: "" %>
               <div class="buttons">
+                <% if workflow_approver[:state] == 'request' %> 
                 <%= button_tag t("workflow.buttons.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
+                <% elsif workflow_approver[:state] == 'pending' %>
+                <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :approve, class: "update-item btn-primary" } %>
+                <% end %>
                 <%= button_tag t("workflow.buttons.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
               </div>
               <div class="checkbox">
@@ -141,6 +146,11 @@ $ ->
         <% if @item.workflow_comment.present? %>
           <dt><%= @model.t :workflow_comment %></dt>
           <dd><%= @item.workflow_comment %></dd>
+        <% end %>
+
+        <% if @item.workflow_pull_up.present? %>
+          <dt><%= @model.t :workflow_pull_up %></dt>
+          <dd><%= @item.label :workflow_pull_up %></dd>
         <% end %>
 
         <dt><%= @model.t :workflow_approvers %></dt>

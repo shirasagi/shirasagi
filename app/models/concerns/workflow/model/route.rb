@@ -10,10 +10,11 @@ module Workflow::Model::Route
 
     seqid :id
     field :name, type: String
+    field :pull_up, type: String
     embeds_ids :groups, class_name: "SS::Group"
     field :approvers, type: Workflow::Extensions::Route::Approvers
     field :required_counts, type: Workflow::Extensions::Route::RequiredCounts
-    permit_params :name, group_ids: [], approvers: [], required_counts: []
+    permit_params :name, :pull_up, group_ids: [], approvers: [], required_counts: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validate :validate_approvers_presence
@@ -47,6 +48,10 @@ module Workflow::Model::Route
       end
       criteria
     end
+  end
+
+  def pull_up_options
+    %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
   def levels

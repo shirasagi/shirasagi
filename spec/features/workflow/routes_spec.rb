@@ -22,6 +22,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
+          select "無効", from: "item[pull_up]"
         end
 
         click_on "グループを選択する"
@@ -44,6 +45,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         expect(Workflow::Route.count).to eq 1
         Workflow::Route.all.first.tap do |route|
           expect(route.name).to eq "sample"
+          expect(route.pull_up).to eq 'disabled'
           expect(route.group_ids).to eq [ group.id ]
           expect(route.approvers).to include({ level: 1, user_id: user.id })
           expect(route.required_counts).to eq [false, false, false, false, false]
