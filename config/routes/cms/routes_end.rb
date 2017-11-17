@@ -121,6 +121,7 @@ SS::Application.routes.draw do
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
+    match "search_contents/files" => "search_contents/files#index", via: [:get, :post]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
 
     resources :check_links_pages, only: [:show, :index]

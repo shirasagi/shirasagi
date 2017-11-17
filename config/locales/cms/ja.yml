@@ -49,6 +49,7 @@ ja:
     search_contents_count: "%{count} 件の検索結果"
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
+    search_contents_files: ファイル一覧
     site: サイト
     site_config: サイト設定
     site_info: サイト情報
@@ -748,6 +749,10 @@ ja:
         option:
           - "検索時に検索文字の形式を設定します。\n未設定時は通常のテキスト検索となります。"
           - "URL選択時は \'=\"検索文字\' でテキスト検索を行います"
+      files:
+        keyword:
+          - 検索を行う文字列を入力します。
+          - 検索文字をファイル名に含むファイルを検索します。
     cms/addon/archive_view_switcher:
       archive_view:
         - 月次表示の場合、リスト表示またはカレンダー表示が選択できます。
