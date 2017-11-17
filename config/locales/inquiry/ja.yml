@@ -39,6 +39,7 @@ ja:
         select: プルダウン選択
         check_box: チェックボックス選択
         upload_file: ファイル投稿
+        form_select: フォーム選択
       input_confirm:
         disabled: しない
         enabled: する
@@ -108,6 +109,7 @@ ja:
         input_type: 入力形式
         select_options: 選択肢
         required: 必須入力
+        required_in_select_form: フォーム別必須入力
         additional_attr: 追加属性
         input_confirm: 入力確認
         max_upload_file_size: 最大ファイルサイズ設定
@@ -183,16 +185,20 @@ ja:
       input_type:
         - 回答欄の入力形式を選択します。
       select_options:
-        - 入力形式で「ラジオボタン選択」「プルダウン選択」「チェックボックス選択」を選択した場合の回答の選択肢を入力します。
+        - 入力形式で「ラジオボタン選択」「プルダウン選択」「チェックボックス選択」「フォーム選択」を選択した場合の回答の選択肢を入力します。
         - 改行で複数の選択肢を入力します。
       required:
         - 項目の入力が必須か任意かを選択します。
+      required_in_select_form: 
+        - フォーム別の項目の入力が必須か任意かを選択します。 
+        - チェックしたフォームの場合必須入力、チェックしないフォームの場合任意入力になります。
+        - 「フォーム別必須入力」を設定する場合「必須入力」は「任意」にしておく必要があります。
       additional_attr:
         - 出力される入力形式のHTMLに属性を追加することが可能です。
       input_confirm:
         - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
       max_upload_file_size:
-              - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
+        - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
     inquiry/addon/release_plan:
       release_date:
         - 公開を開始する日時を指定します。
@@ -224,3 +230,4 @@ ja:
       invalid_input_type_for_input_confirm: "は、入力形式に「%{input_type}」が選択されている場合、「する」にできません。"
       input_confirm_not_match: "が一致しません。"
       cannot_use_upload_file: "（ファイル投稿）は使用できません。"
+      exist_form_select: 「%{input_type}」の項目はすでに存在しています。

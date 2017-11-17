@@ -1,14 +1,24 @@
 <dl class="see mod-inquiry-input-setting">
   <dt><%= @model.t :input_type %></dt>
   <dd><%= @item.label :input_type %></dd>
+
   <dt><%= @model.t :select_options %></dt>
   <dd><%=br @item.send(:select_options).join("\n") %></dd>
+
   <dt><%= @model.t :required %></dt>
   <dd><%= @item.label :required %></dd>
+
+  <% if @item.send(:required_in_select_form) %>
+  <dt><%= @model.t :required_in_select_form %></dt>
+  <dd><%= @item.send(:required_in_select_form).join(", ") %></dd>
+  <% end %>
+
   <dt><%= @model.t :additional_attr %></dt>
   <dd><%= @item.send :additional_attr %></dd>
+
   <dt><%= @model.t :input_confirm %></dt>
   <dd><%= @item.label :input_confirm %></dd>
+
   <dt><%= @model.t :max_upload_file_size %></dt>
   <dd><%= @item.send :max_upload_file_size %></dd>
 </dl>
