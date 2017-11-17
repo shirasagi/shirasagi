@@ -7,9 +7,17 @@ $ ->
       CKEDITOR.instances.item_html.insertHtml(cont)
 
   @deleteContent = (id) ->
+    if (typeof tinymce) != "undefined"
+      data = tinymce.get(Cms_Form.editorId).getContent()
+    else if (typeof CKEDITOR != "undefined")
+      data = CKEDITOR.instances[Cms_Form.editorId].getData()
+    file = 'fs/' + id.split('').join('/') + '/_/'
     $(".file-view").each ->
-      #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
-      $(this).remove() if id == $(this).find(".file-id").attr("value")
+      if id == $(this).find(".file-id").attr("value")
+        if data.includes(file)
+          unless confirm('<%= I18n.t('ss.confirm.in_use') %>')
+            return
+        $(this).remove()
 
 <% end %>
 
