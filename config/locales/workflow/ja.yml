@@ -76,6 +76,7 @@ ja:
         workflow_comment: 申請コメント
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
+        approved: 承認日時
         comment: 差し戻しコメント
         approver_comment: 承認者コメント
       workflow/model/route:

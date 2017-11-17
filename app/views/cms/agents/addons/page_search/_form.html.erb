@@ -1,3 +1,23 @@
+<%= javascript_tag do %>
+$(function() {
+  $(".search-date select").each(function() {
+    return hideDateForm($(this));
+  });
+  return $(document).on("change", ".search-date select", function(e) {
+    return hideDateForm($(this));
+  });
+});
+
+this.hideDateForm = function(self) {
+  return self.parent("dd").nextUntil("dt").each(function() {
+    if ($(this).hasClass(self.val())) {
+      return $(this).removeClass("hide");
+    } else {
+      return $(this).addClass("hide");
+    }
+  });
+};
+<% end %>
 <dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_name %><%= @model.tt :search_name %></dt>
   <dd><%= f.text_field :search_name, class: "search-name" %></dd>
@@ -138,18 +158,31 @@
   </dd>
 
   <dt><%= @model.t :search_released %><%= @model.tt :search_released %></dt>
-  <dd>
+  <dd class="search-date"><%= f.select :search_released_condition, @item.search_date_options %></dd>
+  <dd class="absolute">
     <%= f.text_field :search_released_start, class: "datetime js-datetime search-released-start" %>
     <%= "-" %>
     <%= f.text_field :search_released_close, class: "datetime js-datetime search-released-close" %>
   </dd>
+  <dd class="relative"><%= f.number_field :search_released_after %><%= I18n.t('ss.units.days_progress') %></dd>
 
   <dt><%= @model.t :search_updated %><%= @model.tt :search_updated %></dt>
-  <dd>
+  <dd class="search-date"><%= f.select :search_updated_condition, @item.search_date_options %></dd>
+  <dd class="absolute">
     <%= f.text_field :search_updated_start, class: "datetime js-datetime search-updated-start" %>
     <%= "-" %>
     <%= f.text_field :search_updated_close, class: "datetime js-datetime search-updated-close" %>
   </dd>
+  <dd class="relative"><%= f.number_field :search_updated_after %><%= I18n.t('ss.units.days_progress') %></dd>
+
+  <dt><%= @model.t :search_approved %><%= @model.tt :search_approved %></dt>
+  <dd class="search-date"><%= f.select :search_approved_condition, @item.search_date_options %></dd>
+  <dd class="absolute">
+    <%= f.text_field :search_approved_start, class: "datetime js-datetime search-approved-start" %>
+    <%= "-" %>
+    <%= f.text_field :search_approved_close, class: "datetime js-datetime search-approved-close" %>
+  </dd>
+  <dd class="relative"><%= f.number_field :search_approved_after %><%= I18n.t('ss.units.days_progress') %></dd>
 
   <dt><%= @model.t :search_state %><%= @model.tt :search_state %></dt>
   <dd><%= f.select :search_state, @item.search_state_options, include_blank: true %></dd>

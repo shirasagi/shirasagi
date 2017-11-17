@@ -84,6 +84,7 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
+    @item.approved = nil
     @item.workflow_user_id = @cur_user._id
     @item.workflow_state   = "request"
     @item.workflow_comment = params[:workflow_comment]
@@ -112,6 +113,7 @@ class Workflow::PagesController < ApplicationController
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
 
     if @item.finish_workflow?
+      @item.approved = Time.zone.now
       @item.workflow_state = @model::WORKFLOW_STATE_APPROVE
       @item.state = "public"
 

@@ -151,6 +151,7 @@ ja:
         created: 作成日時
         updated_1: 更新日時
         released_1: 公開日時
+        approved_1: 承認日時
         order: 指定順
       parent_crumb:
         blank: カテゴリーから選択する
@@ -192,6 +193,9 @@ ja:
         none: リソースとして登録しない
         same: 記事と同じデータセット内
         existance: 既存のデータセット内
+      search_date:
+        absolute: 日付範囲
+        relative: 経過日
 
     sns_share:
       fb_like: Facebook いいね！
@@ -562,6 +566,9 @@ ja:
         search_updated: 更新日時
         search_updated_start: 更新日時（開始）
         search_updated_close: 更新日時（終了）
+        search_approved: 承認日時
+        search_approved_start: 承認日時（開始）
+        search_approved_close: 承認日時（終了）
         search_state: ステータス
         search_first_released: 公開ステータス
         search_approver_state: 承認ステータス
@@ -1217,6 +1224,8 @@ ja:
         - 検索したい公開日時の範囲を入力します。
       search_updated:
         - 検索したい更新日時の範囲を入力します。
+      search_approved:
+        - 検索したい承認日時の範囲を入力します。
       search_state:
         - 検索したいページのステータスを選択します。
       search_first_released:
