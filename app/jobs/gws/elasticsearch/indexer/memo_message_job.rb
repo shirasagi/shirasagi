@@ -3,7 +3,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   self.model = Gws::Memo::Message
 
-  REDIRECT = '.redirect'.freeze
+  REDIRECT = 'REDIRECT'.freeze
 
   private
 
