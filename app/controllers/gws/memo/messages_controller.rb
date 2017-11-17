@@ -97,7 +97,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def show
-    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
     @item.set_seen(@cur_user).update
     render
   end
