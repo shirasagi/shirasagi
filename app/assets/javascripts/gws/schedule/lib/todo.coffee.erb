@@ -1,15 +1,15 @@
 class @Gws_Schedule_Todo
   @render: ->
+    $(".list-head .disable-all").on "click", ->
+      form = Gws_Schedule_Todo.buildForm("todos/disable_all", "<%= I18n.t('gws/schedule/todo.confirm.disable_all') %>")
+      form.appendTo(document.body).submit()
+
     $(".list-head .finish-all").on "click", ->
       form = Gws_Schedule_Todo.buildForm("todos/finish_all", "<%= I18n.t('gws/schedule/todo.confirm.finish_all') %>")
       form.appendTo(document.body).submit()
 
     $(".list-head .revert-all").on "click", ->
       form = Gws_Schedule_Todo.buildForm("todos/revert_all", "<%= I18n.t('gws/schedule/todo.confirm.revert_all') %>")
-      form.appendTo(document.body).submit()
-
-    $(".list-head .disable-all").on "click", ->
-      form = Gws_Schedule_Todo.buildForm("todos/disable_all", "<%= I18n.t('gws/schedule/todo.confirm.disable_all') %>")
       form.appendTo(document.body).submit()
 
     $(".list-head .active-all").on "click", ->

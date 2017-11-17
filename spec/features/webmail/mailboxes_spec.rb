@@ -10,7 +10,7 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true do
 
     it "#index", js: true do
       visit index_path
-      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
 
       # new
       click_link I18n.t('ss.links.new')
@@ -37,7 +37,6 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true do
       click_link I18n.t('webmail.links.reload_mailboxes')
       click_button I18n.t('webmail.buttons.sync')
 
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
     end
   end

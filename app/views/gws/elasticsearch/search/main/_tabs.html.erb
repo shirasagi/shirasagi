@@ -11,7 +11,7 @@ end
     <% if setting.search_types.present? %>
       <% path = gws_elasticsearch_search_search_path(type: type) %>
       <%= link_to "#{path}#{params}", class: [ type, request.path.start_with?(path) ? 'current' : nil ] do %>
-        <span class="tab-name"><%= t("gws/elasticsearch.tabs.#{type}") %></span>
+        <span class="tab-name"><%= setting.menu_label %></span>
       <% end %>
     <% end %>
   <% end %>

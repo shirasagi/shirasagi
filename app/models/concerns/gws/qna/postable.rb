@@ -99,6 +99,14 @@ module Gws::Qna::Postable
     %w(normal important).map { |v| [ I18n.t("gws/qna.options.severity.#{v}"), v ] }
   end
 
+  def becomes_with_topic
+    if topic_id.present?
+      return self
+    end
+
+    becomes_with(Gws::Qna::Topic)
+  end
+
   private
 
   # topic(root_post)を設定

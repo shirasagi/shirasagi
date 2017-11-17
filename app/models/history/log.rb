@@ -7,6 +7,8 @@ class History::Log
 
   attr_accessor :save_term
 
+  field :session_id, type: String
+  field :request_id, type: String
   field :url, type: String
   field :controller, type: String
   field :action, type: String

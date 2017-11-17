@@ -13,7 +13,7 @@ class Gws::Memo::MessagesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
+    @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
   end
 
   def fix_params
@@ -46,6 +46,12 @@ class Gws::Memo::MessagesController < ApplicationController
         allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
         search(params[:s]).
         page(params[:page]).per(50)
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    @item.new_memo
   end
 
   def create

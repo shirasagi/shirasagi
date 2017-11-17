@@ -1,4 +1,10 @@
 ja:
+  gws/job:
+    reservation: 実行予約
+
+  modules:
+    gws/job: ジョブ
+
   gws_role:
     read_gws_job_logs: ジョブ実行履歴の閲覧
 

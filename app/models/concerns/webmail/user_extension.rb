@@ -10,7 +10,7 @@ module Webmail::UserExtension
       :default
     ]
 
-    before_validation :set_imap_settings
+    validate :validate_imap_settings
   end
 
   def imap_auth_type_options
@@ -24,15 +24,14 @@ module Webmail::UserExtension
       host: yaml['host'].presence,
       options: yaml['options'].presence || {},
       auth_type: yaml['auth_type'].presence,
-      account: send(yaml['account'].presence),
+      account: send(yaml['account'].presence).to_s,
       password: decrypted_password
     }
   end
 
   private
 
-  def set_imap_settings
-    self.imap_settings = self.imap_settings.select(&:valid?)
+  def validate_imap_settings
     self.imap_settings = self.imap_settings.map.with_index do |setting, i|
       if setting[:default]
         self.imap_default_index = i
@@ -43,5 +42,11 @@ module Webmail::UserExtension
       setting
     end
     self.imap_default_index = 0 if imap_settings[imap_default_index].nil?
+    self.imap_settings.each_with_index do |setting, i|
+      setting.valid?
+      if setting.errors.present?
+        self.errors.add :base, "#{I18n.t("webmail.account_setting")}#{i + 1}: #{setting.errors.full_messages.join(", ")}"
+      end
+    end
   end
 end

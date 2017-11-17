@@ -63,8 +63,10 @@
         <%= t 'gws/memo/message.links.etc' %> <i class="material-icons md-13">&#xE313;</i>
       </button>
       <ul class="dropdown-menu">
-        <li><a class="set-seen-all" href="#"><%= t 'gws/memo/message.links.set_seen' %></a></li>
-        <li><a class="unset-seen-all" href="#"><%= t 'gws/memo/message.links.unset_seen' %></a></li>
+        <% if params[:folder] != 'INBOX.Draft' %>
+          <li><a class="set-seen-all" href="#"><%= t 'gws/memo/message.links.set_seen' %></a></li>
+          <li><a class="unset-seen-all" href="#"><%= t 'gws/memo/message.links.unset_seen' %></a></li>
+        <% end %>
         <li><a class="set-star-all" href="#"><%= t 'gws/memo/message.links.set_star' %></a></li>
         <li><a class="unset-star-all" href="#"><%= t 'gws/memo/message.links.unset_star' %></a></li>
       </ul>

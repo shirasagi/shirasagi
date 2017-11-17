@@ -3,6 +3,8 @@ module Gws::Addon::Portal::Portlet
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    set_addon_type :portlet
+
     included do
       field :links, type: Array, default: []
       permit_params links: [:name, :url]
