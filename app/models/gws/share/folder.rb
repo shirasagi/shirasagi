@@ -62,12 +62,15 @@ class Gws::Share::Folder
       end
 
       Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
-        items.each do |item|
+        items.each_with_index do |item, idx|
+          def item.download_filename
+            name =~ /\./ ? name : name.sub(/\..*/, '') + '.' + extname
+          end
           if File.exist?(item.path)
             if filename_duplicate_flag == 0
-              zip_file.add(NKF::nkf('-sx --cp932', item.name), item.path)
+              zip_file.add(NKF::nkf('-sx --cp932', item.download_filename), item.path)
             elsif filename_duplicate_flag == 1
-              zip_file.add(NKF::nkf('-sx --cp932', item._id.to_s + "_" + item.name), item.path)
+              zip_file.add(NKF::nkf('-sx --cp932', item._id.to_s + "_" + item.download_filename), item.path)
             end
           end
         end
