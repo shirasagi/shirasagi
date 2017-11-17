@@ -11,7 +11,12 @@ class Gws::Portal::User::PortalController < ApplicationController
 
   def set_crumbs
     set_portal_setting
-    @crumbs << [t("gws/portal.user_portal"), gws_portal_user_path(user: @portal_user)]
+    if @portal_user == @cur_user
+      @crumbs << [t("modules.gws/portal"), gws_portal_user_path(user: @portal_user)]
+    else
+      @crumbs << [t("gws/portal.user_portal"), gws_portal_setting_users_path]
+      @crumbs << [@portal_user.name, gws_portal_user_path(user: @portal_user)]
+    end
   end
 
   def fix_params

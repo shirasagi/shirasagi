@@ -17,6 +17,7 @@ module Gws::Portal::PortalFilter
     elsif params[:user].present?
       @portal_user = Gws::User.find(params[:user])
       @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+      raise '403' if @portal_user != @cur_user && !@portal.readable?(@cur_user, site: @cur_site, strict: true)
     else
       @portal_user = @cur_user
       @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)

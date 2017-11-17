@@ -9,6 +9,7 @@ module Gws::Portal::GroupExtension
   def find_portal_setting(params = {})
     portal_setting || Gws::Portal::GroupSetting.new({
       portal_group_id: id,
+      readable_group_ids: [id],
       group_ids: [id]
     }.merge(params))
   end

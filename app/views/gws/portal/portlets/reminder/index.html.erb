@@ -1,6 +1,7 @@
 <%
   @reminders = Gws::Reminder.site(@cur_site).
-    user(@cur_user).
+    user(@portal_user).
+    where(@portlet.reminder_condition).
     page(1).per(5)
 %>
 <div class="main-box">
@@ -25,11 +26,16 @@
           <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
         <% end %>
       </div>
+      <% if @portal_user == @cur_user %>
+      <div class="more-menu">
+        <a class="more-menu-btn"><i class="material-icons md-dark">&#xE5D4;</i></a>
+      </div>
+      <% end %>
     </li>
     <% end %>
   </ul>
 
-  <% if @reminders.next_page %>
-  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
+  <% if @reminders.next_page && @portal_user == @cur_user %>
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
   <% end %>
 </div>

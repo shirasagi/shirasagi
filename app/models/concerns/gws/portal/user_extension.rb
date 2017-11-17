@@ -9,6 +9,7 @@ module Gws::Portal::UserExtension
   def find_portal_setting(params = {})
     portal_setting || Gws::Portal::UserSetting.new({
       portal_user_id: id,
+      readable_member_ids: [id],
       user_ids: [id]
     }.merge(params))
   end

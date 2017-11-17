@@ -40,7 +40,18 @@
       color: #b53 !important;
     }
   }
-  .more {
+  .list-item {
+    position: relative;
+    .info {
+      margin-right: 10px;
+    }
+    .more-menu {
+      position: absolute;
+      top: 15px;
+      right: 2px;
+    }
+  }
+  .list-more {
     margin: 10px 0 0;
     padding: 10px 0 0;
     border-top: $border-gray1;;

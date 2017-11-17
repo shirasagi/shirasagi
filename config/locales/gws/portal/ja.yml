@@ -3,7 +3,8 @@ ja:
     gws/portal: ポータル
     addons:
       gws/portal/portlet/free: 自由形式
-      gws/portal/portlet/link: リンク集
+      gws/portal/portlet/link: リンク設定
+      gws/portal/portlet/reminder: リマインダー設定
 
   gws/portal:
     user_portal: 個人ポータル
@@ -44,6 +45,10 @@ ja:
     buttons:
       save_layouts: 配置を保存する
       add_item: 新しい要素を追加
+    options:
+      reminder_filter:
+        all: すべて表示
+        future: 未来日のみ
     messages:
       no_portlets: ポートレットを作成してください。
       closed_portlet: このポートレットは閲覧できません。
@@ -80,6 +85,8 @@ ja:
       gws/addon/portal/portlet/link:
         links/name: 表示名
         links/url: URL
+      gws/addon/portal/portlet/reminder:
+        reminder_filter: 表示範囲
 
   tooltip:
     gws/portal/user_setting:

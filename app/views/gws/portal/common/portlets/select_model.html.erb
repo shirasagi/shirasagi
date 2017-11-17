@@ -7,9 +7,9 @@
       </tr>
     </thead>
     <tbody>
-      <% @item.portlet_models.each do |item| %>
+      <% @portal.portlet_models.each do |item| %>
       <tr>
-        <td><%= link_to item[:name], "?portlet_model=#{item[:key]}" %></td>
+        <td><%= link_to item[:name], "?portlet_model=#{item[:type]}" %></td>
         <td><%= item[:text] %></td>
       </tr>
       <% end %>

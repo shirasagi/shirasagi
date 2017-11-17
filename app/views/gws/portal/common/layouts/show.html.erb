@@ -11,7 +11,7 @@
   <% @items.each do |item| %>
   <div class="portlet-html portlet-model-<%= item.portlet_model %>" data-id="<%= item.id %>">
     <% @portlet = item %>
-    <%= render file: item.portlet_view_file %>
+    <%= render file: item.view_file %>
   </div>
   <% end %>
 </div>
