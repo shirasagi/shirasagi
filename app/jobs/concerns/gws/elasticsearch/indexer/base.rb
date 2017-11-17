@@ -12,7 +12,7 @@ module Gws::Elasticsearch::Indexer::Base
 
     def around_save(item)
       ret = yield
-      if item.site.elasticsearch_enabled?
+      if item.site.menu_elasticsearch_visible?
         job = self.bind(site_id: item.site)
         job.perform_later(action: 'index', id: item.id.to_s)
       end
@@ -23,7 +23,7 @@ module Gws::Elasticsearch::Indexer::Base
       site = item.site
       id = item.id
       ret = yield
-      if item.site.elasticsearch_enabled?
+      if item.site.menu_elasticsearch_visible?
         job = self.bind(site_id: site)
         job.perform_later(action: 'delete', id: id.to_s)
       end
@@ -114,5 +114,6 @@ module Gws::Elasticsearch::Indexer::Base
     yield
   rescue klass => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    puts_history(:warn, "#{e.class} (#{e.message})")
   end
 end

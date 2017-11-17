@@ -51,7 +51,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
     @crumbs << [t('modules.addons.gws/schedule/facility'), gws_schedule_facilities_path]
   end
 

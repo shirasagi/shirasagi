@@ -6,20 +6,52 @@ module Gws::Addon::System::MenuSetting
 
   included do
     field :menu_portal_state, type: String, default: 'show'
+    field :menu_portal_label, type: String, localize: true
+
     field :menu_reminder_state, type: String, default: 'show'
+    field :menu_reminder_label, type: String, localize: true
+
     field :menu_schedule_state, type: String, default: 'show'
+    field :menu_schedule_label, type: String, localize: true
+
     field :menu_memo_state, type: String, default: 'show'
+    field :menu_memo_label, type: String, localize: true
+
     field :menu_board_state, type: String, default: 'show'
+    field :menu_board_label, type: String, localize: true
+
     field :menu_question_state, type: String, default: 'show'
+    field :menu_question_label, type: String, localize: true
+
     field :menu_workflow_state, type: String, default: 'show'
+    field :menu_workflow_label, type: String, localize: true
+
     field :menu_report_state, type: String, default: 'show'
+    field :menu_report_label, type: String, localize: true
+
     field :menu_circular_state, type: String, default: 'show'
+    field :menu_circular_label, type: String, localize: true
+
     field :menu_monitor_state, type: String, default: 'show'
+    field :menu_monitor_label, type: String, localize: true
+
     field :menu_share_state, type: String, default: 'show'
+    field :menu_share_label, type: String, localize: true
+
     field :menu_shared_address_state, type: String, default: 'show'
+    field :menu_shared_address_label, type: String, localize: true
+
     field :menu_personal_address_state, type: String, default: 'show'
+    field :menu_personal_address_label, type: String, localize: true
+
     field :menu_staff_record_state, type: String, default: 'show'
+    field :menu_staff_record_label, type: String, localize: true
+
     field :menu_links_state, type: String, default: 'show'
+    field :menu_links_label, type: String, localize: true
+
+    field :menu_elasticsearch_state, type: String, default: 'hide'
+    field :menu_elasticsearch_label, type: String, localize: true
 
     permit_params :menu_portal_state,
       :menu_reminder_state,
@@ -35,28 +67,46 @@ module Gws::Addon::System::MenuSetting
       :menu_shared_address_state,
       :menu_personal_address_state,
       :menu_staff_record_state,
-      :menu_links_state
+      :menu_links_state,
+      :menu_elasticsearch_state
+    permit_params :menu_portal_label,
+      :menu_reminder_label,
+      :menu_schedule_label,
+      :menu_memo_label,
+      :menu_board_label,
+      :menu_question_label,
+      :menu_report_label,
+      :menu_workflow_label,
+      :menu_circular_label,
+      :menu_monitor_label,
+      :menu_share_label,
+      :menu_shared_address_label,
+      :menu_personal_address_label,
+      :menu_staff_record_label,
+      :menu_links_label,
+      :menu_elasticsearch_label
   end
 
   def menu_state_options
-    %w(show hide).map { |k| [I18n.t("ss.options.state.#{k}"), k]}
+    %w(show hide).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
   end
 
-  alias :menu_portal_state_options :menu_state_options
-  alias :menu_reminder_state_options :menu_state_options
-  alias :menu_schedule_state_options :menu_state_options
-  alias :menu_memo_state_options :menu_state_options
-  alias :menu_board_state_options :menu_state_options
-  alias :menu_question_state_options :menu_state_options
-  alias :menu_report_state_options :menu_state_options
-  alias :menu_workflow_state_options :menu_state_options
-  alias :menu_circular_state_options :menu_state_options
-  alias :menu_monitor_state_options :menu_state_options
-  alias :menu_share_state_options :menu_state_options
-  alias :menu_shared_address_state_options :menu_state_options
-  alias :menu_personal_address_state_options :menu_state_options
-  alias :menu_staff_record_state_options :menu_state_options
-  alias :menu_links_state_options :menu_state_options
+  alias menu_portal_state_options menu_state_options
+  alias menu_reminder_state_options menu_state_options
+  alias menu_schedule_state_options menu_state_options
+  alias menu_memo_state_options menu_state_options
+  alias menu_board_state_options menu_state_options
+  alias menu_question_state_options menu_state_options
+  alias menu_report_state_options menu_state_options
+  alias menu_workflow_state_options menu_state_options
+  alias menu_circular_state_options menu_state_options
+  alias menu_monitor_state_options menu_state_options
+  alias menu_share_state_options menu_state_options
+  alias menu_shared_address_state_options menu_state_options
+  alias menu_personal_address_state_options menu_state_options
+  alias menu_staff_record_state_options menu_state_options
+  alias menu_links_state_options menu_state_options
+  alias menu_elasticsearch_state_options menu_state_options
 
   def menu_portal_visible?
     menu_portal_state == 'show'
@@ -114,7 +164,11 @@ module Gws::Addon::System::MenuSetting
     menu_staff_record_state == 'show'
   end
 
-  def menu_links_state_visible?
+  def menu_links_visible?
     menu_links_state == 'show'
+  end
+
+  def menu_elasticsearch_visible?
+    menu_elasticsearch_state == 'show'
   end
 end

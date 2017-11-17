@@ -1,0 +1,5 @@
+<% @index_title = proc do |item| %>
+  <%= link_to(item.humanized_name, { action: :show, id: item }, class: 'title') %>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>

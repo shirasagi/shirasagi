@@ -39,6 +39,7 @@ SS::Application.routes.draw do
     end
     resources :todo_management do
       get :delete, on: :member
+      get :recover, on: :member
       get :active, on: :member
       post :active_all, on: :collection
     end

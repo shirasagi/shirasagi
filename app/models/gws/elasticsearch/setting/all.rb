@@ -13,6 +13,10 @@ class Gws::Elasticsearch::Setting::All
     false
   end
 
+  def menu_label
+    I18n.t('gws/elasticsearch.tabs.all')
+  end
+
   def manageable_filter
     {}
   end

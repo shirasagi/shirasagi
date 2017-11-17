@@ -2,6 +2,9 @@ production: &production
   # Disable Webmail.
   disable: false
 
+  # Disable navigation
+  disable_navi: false
+
   # Disable quota
   disable_quota: false
 

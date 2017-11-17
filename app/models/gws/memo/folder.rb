@@ -39,8 +39,7 @@ class Gws::Memo::Folder
 
   class << self
     def allow(action, user, opts = {})
-      super(action, user, opts).
-        where(user_id: user.id)
+      super(action, user, opts).where(user_id: user.id)
     end
 
     def static_items(user)

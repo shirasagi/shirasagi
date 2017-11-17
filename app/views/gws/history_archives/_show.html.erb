@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :filename %></dt>
+  <dd>
+    <%= @item.filename %>
+    <%= link_to(t('ss.links.download'), @item.url, class: :btn, download: @item.filename) %>
+  </dd>
+
+  <dt><%= @model.t :size %></dt>
+  <dd><%= number_to_human_size(@item.size) %></dd>
+</dl>

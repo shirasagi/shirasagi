@@ -1,5 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
+    <%= link_to(t('ss.links.download'), request.query_parameters.merge({ action: :download })) %>
   <% else %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>

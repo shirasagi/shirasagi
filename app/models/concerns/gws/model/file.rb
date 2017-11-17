@@ -104,10 +104,7 @@ module Gws::Model::File
     klass = SS::File.find_model_class(model)
     return self unless klass
 
-    item = klass.new
-    item.instance_variable_set(:@new_record, nil) unless new_record?
-    instance_variables.each { |k| item.instance_variable_set k, instance_variable_get(k) }
-    item
+    becomes_with(klass)
   end
 
   def previewable?(opts = {})
@@ -253,7 +250,7 @@ module Gws::Model::File
 
   def remove_file
     Fs.rm_rf(path)
-    Dir.glob(path + "_history[0-9]*").each {|file| Fs.rm_rf(file) } if Dir.glob(path + "_history[0-9]*").count > 0
+    Dir.glob(path + "_history[0-9]*").each { |file| Fs.rm_rf(file) } if Dir.glob(path + "_history[0-9]*").count > 0
     remove_public_file
   end
 

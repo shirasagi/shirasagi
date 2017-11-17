@@ -4,6 +4,7 @@ module Gws::Addon
     extend SS::Addon
 
     included do
+      after_find :save_history_for_find
       after_save :save_history_for_save
       after_destroy :save_history_for_destroy
     end
@@ -17,6 +18,22 @@ module Gws::Addon
     end
 
     private
+
+    def save_history_for_find
+      return if SS.config.gws.history['severity_notice'] != 'enabled'
+      return if @skip_gws_history
+
+      site = @cur_site
+      site ||= self.site rescue nil
+      return unless site
+
+      Gws::History.notice!(
+        :model, @cur_user, site,
+        name: reference_name,
+        model: reference_model,
+        item_id: id
+      ) rescue nil
+    end
 
     def save_history_for_save
       return if @db_changes.blank?
@@ -35,19 +52,18 @@ module Gws::Addon
     def save_history(overwrite_params = {})
       return if @skip_gws_history
 
-      site_id = @cur_site.try(:id)
-      site_id ||= self.site_id rescue nil
-      return unless site_id
+      site = @cur_site
+      site ||= self.site rescue nil
+      return unless site
 
-      item = Gws::History.new(
-        cur_user: @cur_user,
-        site_id: site_id,
-        name: reference_name,
-        model: reference_model,
-        item_id: id
-      )
-      item.attributes = overwrite_params
-      item.save
+      Gws::History.info!(
+        :model, @cur_user, site,
+        overwrite_params.reverse_merge(
+          name: reference_name,
+          model: reference_model,
+          item_id: id
+        )
+      ) rescue nil
     end
   end
 end
