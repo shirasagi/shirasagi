@@ -40,6 +40,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   def set_answer
     @items = []
     @data = {}
+    @to = [@cur_node.notice_email]
     @columns.each do |column|
       param = params[:item].try(:[], column.id.to_s)
       if column.input_type == "upload_file" &&
@@ -49,11 +50,17 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
       @items << [column, param]
       @data[column.id] = [param]
+      if (column.input_type == 'text_field' || column.input_type == 'text_area') && column.transfers.present? && param.present?
+        column.transfers.each do |transfer|
+          @to.push(transfer[:email]) if param.include?(transfer[:keyword])
+        end
+      end
       if column.input_confirm == "enabled"
         @items.last << params[:item].try(:[], "#{column.id}_confirm")
         @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")
       end
     end
+    @to = @to.uniq.compact.sort
     @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
     @answer.remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip
     @answer.user_agent = request.user_agent
@@ -90,7 +97,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     @answer.save
     if @cur_node.notify_mail_enabled?
-      Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer).deliver_now
+      @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
     end
     if @cur_node.reply_mail_enabled?
       # `try` method doesn't work as you think because mail is an instance of Delegator.

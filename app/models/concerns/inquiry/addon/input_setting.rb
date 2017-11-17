@@ -10,7 +10,9 @@ module Inquiry::Addon
       field :additional_attr, type: String, default: ""
       field :input_confirm, type: String, default: ""
       field :max_upload_file_size, type: Integer, default: 0
+      field :transfers, type: Array
       permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm, :max_upload_file_size
+      permit_params transfer: [:keyword, :email]
 
       validates :input_type, presence: true, inclusion: {
         in: %w(text_field text_area email_field radio_button select check_box upload_file)
@@ -19,6 +21,7 @@ module Inquiry::Addon
       validate :validate_select_options
       validate :validate_input_confirm_options
       # validate :validate_max_upload_file_size_options
+      validate :validate_transfers
     end
 
     def input_type_options
@@ -81,6 +84,14 @@ module Inquiry::Addon
        if input_type == "upload_file" && Mongoid::Config.clients[:default_post]
          errors.add :input_type, :cannot_use_upload_file
        end
+    end
+
+    def validate_transfers
+      return if transfers.blank?
+      transfers.each do |transfer|
+        return errors.add :base, :blank_keyword if transfer[:keyword].blank? && transfer[:email].present?
+        return errors.add :base, :blank_email if transfer[:keyword].present? && transfer[:email].blank?
+      end
     end
   end
 end

@@ -111,6 +111,7 @@ ja:
         additional_attr: 追加属性
         input_confirm: 入力確認
         max_upload_file_size: 最大ファイルサイズ設定
+        transfers: キーワード
 
       inquiry/answer:
         remote_addr: IPアドレス
@@ -192,7 +193,9 @@ ja:
       input_confirm:
         - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
       max_upload_file_size:
-              - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
+        - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
+      transfers: 
+        - 入力形式で「テキストボックス」「テキストエリア」を選択した場合の回答に特定キーワードが含まれた場合、転送するアドレスを入力します。 
     inquiry/addon/release_plan:
       release_date:
         - 公開を開始する日時を指定します。
@@ -224,3 +227,5 @@ ja:
       invalid_input_type_for_input_confirm: "は、入力形式に「%{input_type}」が選択されている場合、「する」にできません。"
       input_confirm_not_match: "が一致しません。"
       cannot_use_upload_file: "（ファイル投稿）は使用できません。"
+      blank_keyword: "通知メールアドレスに転送するキーワードを入力してください。"
+      blank_email: "キーワードが含まれる場合の通知メールアドレスを入力してください。"
