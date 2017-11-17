@@ -22,7 +22,7 @@ class Workflow::PagesController < ApplicationController
 
   def request_approval
     current_level = @item.workflow_current_level
-    current_workflow_approvers = @item.workflow_approvers_at(current_level)
+    current_workflow_approvers = @item.workflow_pull_up_approvers_at(current_level)
     current_workflow_approvers.each do |workflow_approver|
       args = { f_uid: @cur_user._id, t_uid: workflow_approver[:user_id],
                site: @cur_site, page: @item,
@@ -87,6 +87,7 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_user_id = @cur_user._id
     @item.workflow_state   = "request"
     @item.workflow_comment = params[:workflow_comment]
+    @item.workflow_pull_up = params[:workflow_pull_up].present? ? params[:workflow_pull_up] : 'disabled' 
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
 
@@ -109,6 +110,7 @@ class Workflow::PagesController < ApplicationController
     end
 
     save_level = @item.workflow_current_level
+    @item.skip_approve
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
 
     if @item.finish_workflow?
@@ -158,6 +160,8 @@ class Workflow::PagesController < ApplicationController
         return
       end
     end
+
+    @item.skip_approve
 
     @item.workflow_state = @model::WORKFLOW_STATE_REMAND
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])

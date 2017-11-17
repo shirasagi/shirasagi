@@ -40,6 +40,8 @@ $ ->
 <dl class="see request-setting">
   <dt><%= t("workflow.route") %></dt>
   <dd><%= @route.name %></dd>
+  <dt><%= @model.t :workflow_pull_up %></dt>
+  <dd><%= @item.label :workflow_pull_up %><%= hidden_field :workflow, :pull_up, value: @route.pull_up %></dd>
   <dt><%= @model.t :workflow_comment %><%= @model.tt :workflow_comment %></dt>
   <dd><%= text_area :workflow, :comment, value: @item.workflow_comment %></dd>
 </dl>

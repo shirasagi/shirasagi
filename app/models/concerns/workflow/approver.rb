@@ -17,10 +17,11 @@ module Workflow::Approver
     field :workflow_user_id, type: Integer
     field :workflow_state, type: String
     field :workflow_comment, type: String
+    field :workflow_pull_up, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
 
-    permit_params :workflow_user_id, :workflow_state, :workflow_comment
+    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
     permit_params :workflow_reset, :workflow_cancel_request
@@ -67,6 +68,15 @@ module Workflow::Approver
     end
   end
 
+  def workflow_pull_up_approvers_at(level)
+    return [] if level.nil?
+    self.workflow_approvers.select do |workflow_approver|
+      next workflow_approver[:level] >= level if self.workflow_pull_up == 'enabled'
+      next workflow_approver[:level] == level unless self.workflow_pull_up == 'enabled'
+      false
+    end
+  end
+
   def workflow_required_counts_at(level)
     self.workflow_required_counts[level - 1] || false
   end
@@ -87,7 +97,7 @@ module Workflow::Approver
     true
   end
 
-  def update_current_workflow_approver_state(user, state, comment)
+  def update_current_workflow_approver_state(user, state, comment = nil)
     level = workflow_current_level
     return false if level.nil?
 
@@ -99,7 +109,7 @@ module Workflow::Approver
     # do loop even though targets length is always 1
     targets.each do |workflow_approver|
       workflow_approver[:state] = state
-      workflow_approver[:comment] = comment.gsub(/\n|\r\n/, " ")
+      workflow_approver[:comment] = comment.gsub(/\n|\r\n/, " ") if comment.present?
     end
 
     # Be careful, partial update is meaningless. We must update entirely.
@@ -127,6 +137,23 @@ module Workflow::Approver
 
     validate_user(route, users, :read, :approve)
     errors.empty?
+  end
+
+  def approve_disabled?(state)
+    return false if self.workflow_pull_up == 'enabled' && state == WORKFLOW_STATE_PENDING
+    return false if state == WORKFLOW_STATE_REQUEST
+    true
+  end
+
+  def skip_approve
+    current_approver = workflow_approvers.select { |approver| approver[:user_id] == @cur_user._id }
+    workflow_approvers.each do |approver|
+      if approver[:level] < current_approver[0][:level]
+        update_current_workflow_approver_state(approver[:user_id], WORKFLOW_STATE_APPROVE)
+      elsif approver[:level] == current_approver[0][:level]
+        update_current_workflow_approver_state(approver[:user_id], WORKFLOW_STATE_REQUEST)
+      end
+    end
   end
 
   private
@@ -209,6 +236,10 @@ module Workflow::Approver
         errors.add :base, "route_approver_unable_to_#{action}".to_sym, route: route.name, level: level, user: user.name
       end
     end
+  end
+
+  def workflow_pull_up_options
+    %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
   module ClassMethods
