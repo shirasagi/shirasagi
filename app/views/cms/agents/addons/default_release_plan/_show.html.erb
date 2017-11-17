@@ -15,4 +15,11 @@
     <%= @item.default_close_days_after %> <%= t("ss.units.days_after") %>
     <% end %>
   </dd>
+
+  <dt><%= @model.t :close_days_before %></dt>
+  <dd>
+    <% if @item.close_days_before %>
+    <%= @item.close_days_before %> <%= t("ss.units.days_before") %>
+    <% end %>
+  </dd>
 </dl>

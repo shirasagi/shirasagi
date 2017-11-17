@@ -35,6 +35,16 @@ module Workflow::PageFilter
     render_items(cond)
   end
 
+  def index_wait_close
+    days = @cur_node.becomes_with_route.try(:close_days_before) || @cur_site.close_days_before || SS.config.cms.close_days_before
+    days ||= 0
+    cond = {
+      state: 'public',
+      :close_date.lt => Time.zone.now + days.days
+    }
+    render_items(cond)
+  end
+
   def index_ready
     cond = { state: "ready" }
     render_items(cond)
