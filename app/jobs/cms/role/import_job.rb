@@ -6,7 +6,7 @@ class Cms::Role::ImportJob < Cms::ApplicationJob
   end
 
   def perform(ss_file_id)
-    file = ::SS::File.find(ss_file_id) rescue nil
+    file = ::SS::File.find(ss_file_id)
 
     put_log("import start " + ::File.basename(file.name))
     import_csv(file)
