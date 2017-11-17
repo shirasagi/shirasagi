@@ -11,6 +11,12 @@ SS.ajax ".user-files .select",
 
 SS.ajaxDelete ".user-files .delete"
 
+resizing = $('#file-resizing').val() 
+label = $('#file-resizing').attr('data-label') 
+if resizing 
+  option = $('<option>').val(resizing).text(label).prop('selected', true) 
+  $('select.image-size').append option 
+
 <% end %>
 
 <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
