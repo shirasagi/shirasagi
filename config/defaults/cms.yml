@@ -117,6 +117,7 @@ production: &production
     head_request_timeout: 5
 
   close_days_before: 7
+  max_term_form: 10
 
 test:
   <<: *production

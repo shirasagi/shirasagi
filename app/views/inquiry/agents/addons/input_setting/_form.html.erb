@@ -1,14 +1,76 @@
+<% max_term_form = SS.config.cms.max_term_form.to_i %>
+<%= jquery do %>
+$(document).on("click", ".mod-inquiry-input-setting dd.setting-keywords button.add", function(e) {
+  if ($(".mod-inquiry-input-setting tr.keywords").length < <%= (max_term_form > 0) ? max_term_form : 1 %>) {
+    var cln;
+    cln = $(".mod-inquiry-input-setting tr.keywords:last").clone(false).insertAfter($(".mod-inquiry-input-setting tr.keywords:last"));
+    cln.find(".keyword").val('');
+    cln.find(".email").val('');
+    return;
+  }
+});
+$(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", function(e) {
+  tr = $(this).parent("td").parent("tr")
+  tr.find(".keyword").val('');
+  tr.find(".email").val('');
+  if ($(".mod-inquiry-input-setting tr.keywords").length > 1) {
+    tr.remove();
+  }
+  return;
+});
+<% end %>
 <dl class="see mod-inquiry-input-setting">
   <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
   <dd><%= f.select :input_type, @item.input_type_options %></dd>
+
   <dt><%= @model.t :select_options %><%= @model.tt :select_options %></dt>
   <dd><%= f.text_area :select_options, value: @item.select_options.join("\n"), style: "height: 180px;" %></dd>
+
   <dt><%= @model.t :required %><%= @model.tt :required %></dt>
   <dd><%= f.select :required, @item.required_options %></dd>
+
   <dt><%= @model.t :additional_attr %><%= @model.tt :additional_attr %></dt>
   <dd><%= f.text_field :additional_attr %></dd>
+
   <dt><%= @model.t :input_confirm %><%= @model.tt :input_confirm %></dt>
   <dd><%= f.select :input_confirm, @item.input_confirm_options %></dd>
+
   <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
   <dd><%= f.text_field :max_upload_file_size, style: "width: 60px;" %></dd>
+
+  <dt><%= @model.t :transfers %><%= @model.tt :transfers %></dt>
+  <dd>
+    <table class="index">
+      <thead>
+        <tr>
+          <th class="keyword"><%= @model.t(:transfers) %></th>
+          <th class="email"><%= @cur_user.t(:email) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @item.try(:transfers) %>
+        <%   @item.transfers.each do |transfer| %>
+        <tr class="keywords">
+          <td><%= text_field_tag "item[transfers][][keyword]", transfer[:keyword], { id: nil, class: "keyword" } %></td>
+          <td>
+            <%= email_field_tag "item[transfers][][email]", transfer[:email], { id: nil, class: "email" } %>
+            <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
+          </td>
+        </tr>
+        <%   end %>
+        <% else %>
+        <tr class="keywords">
+          <td><%= text_field_tag "item[transfers][][keyword]", nil, { id: nil, class: "keyword" } %></td>
+          <td>
+            <%= email_field_tag "item[transfers][][email]", nil, { id: nil, class: "email" } %>
+            <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <dd class="setting-keywords">
+    <%= button_tag t("ss.buttons.add"), { type: :button, class: "add btn" } %>
+  </dd>
 </dl>
