@@ -7,5 +7,8 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
       <%= f.button t("ss.buttons.save"), name: "save", class: "save btn-default" %>
     <% end %>
+    <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
+      <%= f.button t("ss.buttons.download"), name: "download", class: "download btn-primary" %>
+    <% end %>
   </footer>
 <% end %>

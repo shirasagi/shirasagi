@@ -79,6 +79,7 @@ ja:
         workflow_pull_up: 引き上げ承認 
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
+        approved: 承認日時
         comment: 差し戻しコメント
         approver_comment: 承認者コメント
       workflow/model/route:

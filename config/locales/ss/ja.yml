@@ -231,6 +231,7 @@ ja:
       mega_byte: MB
       days_after: 日後
       days_before: 日前
+      days_progress: 日経過
       mobile_size: KB(キロバイト)
 
   modules:

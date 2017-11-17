@@ -33,7 +33,7 @@
             <span class="filename"><%= item.filename %></span>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
             <% if item.user %>
-              <span class="user"><%= t item.user.name %></span>
+              <span class="user"><%= item.user.name %></span>
             <% end %>
             <span class="state">
               <%= t("ss.state.#{item.status}") %>

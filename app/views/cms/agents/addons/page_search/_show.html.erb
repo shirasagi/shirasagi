@@ -25,19 +25,46 @@
 
   <dt><%= @model.t :search_released %></dt>
   <dd>
-    <% if @item.search_released_start || @item.search_released_close %>
-      <%= @item.search_released_start %>
-      -
-      <%= @item.search_released_close %>
+    <% if @item.search_released_condition == 'absolute' %>
+      <% if @item.search_released_start || @item.search_released_close %>
+        <%= @item.search_released_start %>
+        -
+        <%= @item.search_released_close %>
+      <% end %>
+    <% elsif @item.search_released_condition == 'relative' %>
+      <% if @item.search_released_after %>
+        <%= @item.search_released_after %><%= I18n.t('ss.units.days_progress') %>
+      <% end %>
     <% end %>
   </dd>
 
   <dt><%= @model.t :search_updated %></dt>
   <dd>
-    <% if @item.search_updated_start || @item.search_updated_close %>
-      <%= @item.search_updated_start %>
-      -
-      <%= @item.search_updated_close %>
+    <% if @item.search_updated_condition == 'absolute' %>
+      <% if @item.search_updated_start || @item.search_updated_close %>
+        <%= @item.search_updated_start %>
+        -
+        <%= @item.search_updated_close %>
+      <% end %>
+    <% elsif @item.search_updated_condition == 'relative' %>
+      <% if @item.search_updated_after %>
+        <%= @item.search_updated_after %><%= I18n.t('ss.units.days_progress') %>
+      <% end %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :search_approved %></dt>
+  <dd>
+    <% if @item.search_approved_condition == 'absolute' %>
+      <% if @item.search_approved_start || @item.search_approved_close %>
+        <%= @item.search_approved_start %>
+        -
+        <%= @item.search_approved_close %>
+      <% end %>
+    <% elsif @item.search_approved_condition == 'relative' %>
+      <% if @item.search_approved_after %>
+        <%= @item.search_approved_after %><%= I18n.t('ss.units.days_progress') %>
+      <% end %>
     <% end %>
   </dd>
 
