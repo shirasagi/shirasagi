@@ -15,4 +15,7 @@
 
   <dt><%= @model.t :default_close_days_after %><%= @model.tt :default_close_days_after %></dt>
   <dd><%= f.number_field :default_close_days_after %> <%= t("ss.units.days_after") %></dd>
+
+  <dt><%= @model.t :close_days_before %><%= @model.tt :close_days_before %></dt>
+  <dd><%= f.number_field :close_days_before %> <%= t("ss.units.days_before") %></dd>
 </dl>

@@ -36,6 +36,7 @@ ja:
     page:
       ready: 公開待ち
       closed: 非公開
+      wait_close: 公開終了間近
       approve: 依頼されたもの
       request: 申請したもの
       remand: 差し戻されたもの

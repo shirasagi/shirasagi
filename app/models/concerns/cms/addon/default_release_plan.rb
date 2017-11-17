@@ -7,8 +7,9 @@ module Cms::Addon
       field :default_release_plan_state, type: String, default: 'disabled'
       field :default_release_days_after, type: Integer
       field :default_close_days_after, type: Integer
+      field :close_days_before, type: Integer
 
-      permit_params :default_release_plan_state, :default_release_days_after, :default_close_days_after
+      permit_params :default_release_plan_state, :default_release_days_after, :default_close_days_after, :close_days_before
 
       validates :default_release_days_after, numericality: { only_integer: true, greater_than_or_equal_to: 0 },
                 if: ->{ default_release_plan_enabled? }

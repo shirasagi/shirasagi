@@ -56,6 +56,7 @@ SS::Application.routes.draw do
     get "index_request" => "pages#index_request"
     get "index_ready" => "pages#index_ready"
     get "index_closed" => "pages#index_closed"
+    get 'index_wait_close' => 'pages#index_wait_close'
   end
 
   node "article" do

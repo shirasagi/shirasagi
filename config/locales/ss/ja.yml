@@ -228,6 +228,7 @@ ja:
       count: 件
       mega_byte: MB
       days_after: 日後
+      days_before: 日前
       mobile_size: KB(キロバイト)
 
   modules:

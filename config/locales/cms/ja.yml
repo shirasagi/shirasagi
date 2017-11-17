@@ -542,6 +542,7 @@ ja:
         default_release_plan_state: 公開予約の既定値
         default_release_days_after: 公開開始日
         default_close_days_after: 公開終了日
+        close_days_before: 公開終了間近の表示日
       cms/page_search:
         name: 名前
         order: 並び順
@@ -1183,6 +1184,9 @@ ja:
       default_close_days_after:
         - 公開終了日を設定します。
         - 「1000 日後」を設定した場合、当日日付＋1,000日後の0時0分に公開開始日時が設定されます。
+      close_days_before:
+        - 公開終了間近の表示日を設定します。
+        - 「7 日前」を設定した場合、当日日付から7日前に公開表示間近一覧に表示されるように設定されます。
 
     cms/page_search:
       name:
