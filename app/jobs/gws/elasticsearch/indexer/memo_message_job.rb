@@ -3,7 +3,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   self.model = Gws::Memo::Message
 
-  SPECIAL_REDIRECT_MARK = '.redirect'.freeze
+  REDIRECT = '.redirect'.freeze
 
   private
 
@@ -18,7 +18,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   def convert_to_doc
     doc = {}
-    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: SPECIAL_REDIRECT_MARK, id: item)
+    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: REDIRECT, id: item, anchor: "message-#{item.id}")
     doc[:name] = item.subject
     doc[:mode] = item.format
     doc[:text] = item_text
@@ -47,7 +47,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   def convert_file_to_doc(file)
     doc = {}
-    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: SPECIAL_REDIRECT_MARK, id: item, anchor: "file-#{file.id}")
+    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: REDIRECT, id: item, anchor: "file-#{file.id}")
     doc[:name] = file.name
     # doc[:categories] = item.categories.pluck(:name)
     doc[:data] = Base64.strict_encode64(::File.binread(file.path))
