@@ -53,9 +53,34 @@ class History::Log
       model = controller.singularize
       label = I18n.t :"mongoid.models.#{model}", default: model
     end
+    label
   end
 
   class << self
+    def create_controller_log!(request, response, options)
+      return if request.get?
+      return if response.code !~ /^3/
+
+      log              = new
+      log.session_id   = request.session.id
+      log.request_id   = request.uuid
+      log.url          = request.path
+      log.controller   = options[:controller]
+      log.action       = options[:action]
+      log.cur_user     = options[:cur_user]
+      log.user_id      = options[:cur_user].id if options[:cur_user]
+      log.site_id      = options[:cur_site].id if options[:cur_site]
+
+      options[:item].tap do |item|
+        if item && item.try(:new_record?)
+          log.target_id    = item.id
+          log.target_class = item.class
+        end
+      end
+
+      log.save!
+    end
+
     def term_to_date(name)
       case name.to_s
       when "year"
