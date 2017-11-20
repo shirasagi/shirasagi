@@ -47,6 +47,7 @@ class Gws::Workflow::FilesController < ApplicationController
   def set_search_params
     @s = OpenStruct.new params[:s]
     @s.state = params[:state] if params[:state]
+    @s.cur_site = @cur_site
     @s.cur_user = @cur_user
   end
 
@@ -54,7 +55,6 @@ class Gws::Workflow::FilesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-      readable(@cur_user, @cur_site).
       search(@s).
       page(params[:page]).per(50)
   end
@@ -148,6 +148,7 @@ class Gws::Workflow::FilesController < ApplicationController
 
     return if request.get?
 
+    @item.state = 'closed'
     @item.workflow_user_id = nil
     @item.workflow_state = nil
     @item.workflow_comment = nil
