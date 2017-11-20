@@ -115,6 +115,7 @@ namespace :gws do
       Rake::Task['gws:es:feed_all_qnas'].execute
       Rake::Task['gws:es:feed_all_circulars'].execute
       Rake::Task['gws:es:feed_all_monitors'].execute
+      Rake::Task['gws:es:feed_all_reports'].execute
       Rake::Task['gws:es:feed_all_workflows'].execute
       Rake::Task['gws:es:feed_all_files'].execute
     end
@@ -266,6 +267,26 @@ namespace :gws do
           job = Gws::Elasticsearch::Indexer::MonitorPostJob.bind(site_id: site)
           job.perform_now(action: 'index', id: post.id.to_s)
         end
+      end
+    end
+
+    task feed_all_reports: :environment do
+      site = Gws::Group.find_by(name: ENV['site'])
+      if !site.menu_elasticsearch_visible?
+        puts 'elasticsearch was not enabled'
+        break
+      end
+
+      if site.elasticsearch_client.nil?
+        puts 'elasticsearch was not configured'
+        break
+      end
+
+      puts 'gws/report/file'
+      Gws::Report::File.site(site).each do |file|
+        puts "- #{file.name}"
+        job = Gws::Elasticsearch::Indexer::ReportFileJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: file.id.to_s)
       end
     end
 

@@ -26,6 +26,10 @@ class Gws::Report::File
   scope :and_public, -> { where(state: 'public') }
   scope :and_closed, -> { where(state: 'closed') }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::ReportFileJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::ReportFileJob.callback
+
   class << self
     def search(params)
       criteria = all
@@ -57,6 +61,11 @@ class Gws::Report::File
         member_selector = unscoped.member(cur_user).selector
         readable_selector = unscoped.readable(cur_user, site: cur_site).selector
         all.and_public.ne(user_id: cur_user.id).where('$and' => [{ '$or' => [ member_selector, readable_selector ] }])
+      when 'redirect'
+        member_selector = unscoped.member(cur_user).selector
+        readable_selector = unscoped.readable(cur_user, site: cur_site).selector
+        allow_selector = unscoped.allow(:read, cur_user, site: cur_site).selector
+        all.where('$and' => [{ '$or' => [ member_selector, readable_selector, allow_selector ] }])
       else
         none
       end
