@@ -46,6 +46,6 @@ class Gws::HistoriesController < ApplicationController
     filename = 'gws_histories'
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
     response.status = 200
-    send_enum @items.enum_csv(@cur_site), type: 'text/csv; charset=Shift_JIS', filename: filename
+    send_enum Gws::HistoryCsv.enum_csv(@cur_site, @items), type: 'text/csv; charset=Shift_JIS', filename: filename
   end
 end
