@@ -55,7 +55,7 @@
     tolerance: "pointer",
     drop: function(e, obj){
       var folder = $(this).find("td a.title");
-      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path %>", folder.text() + "に移動しますか?");
+      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path(folder: params[:folder]) %>", folder.text() + "に移動しますか?");
       form.append($("<input/>", {name: "path", value: folder.attr("data-path"), type: "hidden"} ));
       form.appendTo(document.body).submit();
     }
