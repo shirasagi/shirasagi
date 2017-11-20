@@ -3,7 +3,47 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
 
   self.model = Gws::Workflow::File
 
+  class << self
+    def collect_file_ids_was_for_save(item)
+      if item.form.blank?
+        return super
+      end
+
+      file_ids = []
+      item.column_values.each do |column_value|
+        next unless column_value.respond_to?(:file_ids_was)
+
+        file_ids += Array(column_value.file_ids_was)
+      end
+      file_ids.flatten!
+      file_ids.compact!
+      file_ids.uniq!
+      file_ids
+    end
+
+    def collect_file_ids_for_save(item)
+      if item.form.blank?
+        return super
+      end
+
+      file_ids = []
+      item.column_values.each do |column_value|
+        next unless column_value.respond_to?(:file_ids)
+
+        file_ids += Array(column_value.file_ids)
+      end
+      file_ids.flatten!
+      file_ids.compact!
+      file_ids.uniq!
+      file_ids
+    end
+  end
+
   private
+
+  def index_item_id
+    "workflow-#{@id}"
+  end
 
   def enum_es_docs
     Enumerator.new do |y|
@@ -116,20 +156,6 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
   end
 
   def item_files
-    if item.form.present?
-      collect_form_files
-    else
-      item.files
-    end
-  end
-
-  def collect_form_files
-    file_ids = []
-    item.column_values.each do |column_value|
-      next unless column_value.respond_to?(:file_ids)
-
-      file_ids += Array(column_value.file_ids)
-    end
-    SS::File.in(id: file_ids.flatten.compact)
+    SS::File.in(id: self.class.collect_file_ids_for_save(item))
   end
 end
