@@ -2,7 +2,7 @@
   <% if @item.comments.present? %>
   <ul class="list-items">
     <% @item.comments.order_by(updated: -1).each do |comment| %>
-    <li class="list-item">
+    <li class="list-item" id="comment-<%= comment.id %>">
         <p><%== comment.html %></p>
         <div class="meta">
           <span class="datetime"><%= I18n.l(comment.updated) %></span>

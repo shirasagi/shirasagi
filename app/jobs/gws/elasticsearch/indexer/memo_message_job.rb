@@ -1,9 +1,8 @@
 class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
   include Gws::Elasticsearch::Indexer::Base
+  include Gws::Elasticsearch::Indexer::MemoBase
 
   self.model = Gws::Memo::Message
-
-  REDIRECT = 'REDIRECT'.freeze
 
   private
 
