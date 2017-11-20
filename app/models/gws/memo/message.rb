@@ -172,9 +172,12 @@ class Gws::Memo::Message
 
   def allowed?(action, user, opts = {})
     action = permission_action || action
-    return self.class.allow(action, user, opts).exists? if action == :read
-    return super(action, user, opts) unless self.user
-    return super(action, user, opts) && (self.user.id == user.id)
+    args = opts.merge(id: self.id)
+    if action == :read
+      return self.class.allow(action, user, args).exists?
+    end
+    return super(action, user, args) unless self.user
+    return super(action, user, args) && (self.user.id == user.id)
   end
 
   def new_memo
@@ -185,14 +188,20 @@ class Gws::Memo::Message
   end
 
   def html?
-    format == 'html' ? true : false
+    format == 'html'
   end
 
   class << self
     def allow(action, user, opts = {})
       folder = opts[:folder]
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-      where("#{direction}.#{user.id}" => folder)
+      result = where("#{direction}.#{user.id}" => folder)
+
+      if opts[:id]
+        result = result.where('_id' => opts[:id])
+      end
+
+      result
     end
 
     def unseens(user, site)
