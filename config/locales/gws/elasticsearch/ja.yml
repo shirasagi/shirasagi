@@ -46,4 +46,5 @@ ja:
       gws/elasticsearch/indexer/monitor_topic_job: 照会・回答インデクサー
       gws/elasticsearch/indexer/monitor_post_job: 照会・回答インデクサー
       gws/elasticsearch/indexer/memo_message_job: 連絡メモインデクサー
+      gws/elasticsearch/indexer/memo_comment_job: 連絡メモコメントインデクサー
       gws/elasticsearch/indexer/workflow_file_job: ワークフローインデクサー

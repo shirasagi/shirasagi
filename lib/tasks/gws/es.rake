@@ -131,11 +131,16 @@ namespace :gws do
         break
       end
 
-      puts 'gws/memo/message'
+      puts 'gws/memo/message and gws/memo/comment'
       Gws::Memo::Message.site(site).each do |message|
         puts "- #{message.subject}"
         job = Gws::Elasticsearch::Indexer::MemoMessageJob.bind(site_id: site)
         job.perform_now(action: 'index', id: message.id.to_s)
+        message.comments.each do |comment|
+          puts "-- #{comment.text.try(:truncate, 40)}"
+          job = Gws::Elasticsearch::Indexer::MemoCommentJob.bind(site_id: site)
+          job.perform_now(action: 'index', id: comment.id.to_s)
+        end
       end
     end
 
