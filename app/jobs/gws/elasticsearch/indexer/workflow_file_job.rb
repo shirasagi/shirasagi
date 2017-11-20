@@ -25,7 +25,7 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     doc[:release_date] = item_release_date
     doc[:close_date] = item_close_date
     doc[:released] = item_released
-    doc[:state] = item.state
+    doc[:state] = item_state
 
     doc[:user_name] = item.user_long_name
     doc[:group_ids] = item.groups.pluck(:id)
@@ -78,6 +78,14 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
       collect_form_text
     else
       item.text
+    end
+  end
+
+  def item_state
+    if item.state == 'approve'
+      'public'
+    else
+      item.state
     end
   end
 
