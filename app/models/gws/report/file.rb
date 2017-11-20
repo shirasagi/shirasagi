@@ -50,9 +50,9 @@ class Gws::Report::File
       when 'inbox'
         all.and_public.member(cur_user)
       when 'sent'
-        all.and_public.user(cur_user)
+        all.and_public.allow(:read, cur_user, site: cur_site)
       when 'closed'
-        all.and_closed.user(cur_user)
+        all.and_closed.allow(:read, cur_user, site: cur_site)
       when 'all'
         member_selector = unscoped.member(cur_user).selector
         readable_selector = unscoped.readable(cur_user, site: cur_site).selector
