@@ -23,6 +23,9 @@ ja:
     inbox_trash: ゴミ箱
     inbox_draft: 下書き
     inbox_sent: 送信済みトレイ
+    errors:
+      included_memo: 連絡メモが入っているフォルダーは削除できません。
+      used_folder: フィルターが使用中のフォルダーは削除できません。
   gws/memo/filter:
     options:
       action:
