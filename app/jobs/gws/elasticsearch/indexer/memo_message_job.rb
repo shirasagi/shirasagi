@@ -6,6 +6,10 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   private
 
+  def index_item_id
+    "message-#{@id}"
+  end
+
   def enum_es_docs
     Enumerator.new do |y|
       y << convert_to_doc
