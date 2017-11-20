@@ -10,7 +10,7 @@ class Gws::Memo::Message
   include Gws::Addon::Memo::Comments
 
   attr_accessor :signature, :attachments, :field, :cur_site, :cur_user
-  attr_accessor :in_request_mdn, :in_request_dsn
+  attr_accessor :in_request_mdn, :in_request_dsn, :state
 
   field :subject, type: String
   alias name subject
@@ -19,7 +19,6 @@ class Gws::Memo::Message
   field :html, type: String
   field :format, type: String
   field :size, type: Integer, default: 0
-  field :state, type: String, default: 'public'
   field :seen, type: Hash, default: {}
   field :star, type: Hash, default: {}
   field :filtered, type: Hash, default: {}
@@ -31,7 +30,7 @@ class Gws::Memo::Message
 
   default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
 
-  before_validation :set_to
+  before_validation :set_to, :set_size
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
@@ -56,6 +55,21 @@ class Gws::Memo::Message
     where(:"filtered.#{user.id}".exists => false)
   }
 
+  private
+
+  def set_to
+    member_ids.map(&:to_s).each do |id|
+      next unless self.to[id.to_s].blank?
+      self.to[id.to_s] = draft? ? nil : 'INBOX'
+    end
+  end
+
+  def set_size
+    self.size = self.files.pluck(:size).inject(:+)
+  end
+
+  public
+
   def display_subject
     subject.presence || 'No title'
   end
@@ -66,6 +80,10 @@ class Gws::Memo::Message
 
   def attachments?
     files.present?
+  end
+
+  def state_changed?
+    false
   end
 
   def display_to
@@ -83,8 +101,13 @@ class Gws::Memo::Message
   end
 
   def display_size
-    size = (self.size < 1024) ? 1024 : self.size
-    ActiveSupport::NumberHelper.number_to_human_size(size, precision: 0)
+    result = 1024
+
+    if self.size && (self.size > result)
+      result = self.size
+    end
+
+    ActiveSupport::NumberHelper.number_to_human_size(result, precision: 0)
   end
 
   def format_options
@@ -163,15 +186,6 @@ class Gws::Memo::Message
 
   def html?
     format == 'html' ? true : false
-  end
-
-  private
-
-  def set_to
-    member_ids.map(&:to_s).each do |id|
-      next unless self.to[id.to_s].blank?
-      self.to[id.to_s] = draft? ? nil : 'INBOX'
-    end
   end
 
   class << self
