@@ -15,7 +15,7 @@ class Gws::Workflow::File
   cattr_reader(:approver_user_class) { Gws::User }
 
   seqid :id
-  field :state, type: String, default: "closed"
+  field :state, type: String, default: 'closed'
   field :name, type: String
 
   permit_params :state, :name
@@ -47,19 +47,28 @@ class Gws::Workflow::File
     end
 
     def search_state(params)
-      return all if params[:state].blank? || params[:cur_user].blank?
+      return all if params[:state].blank?
 
+      cur_site = params[:cur_site]
       cur_user = params[:cur_user]
+      base_criteria = begin
+        allow_selector = unscoped.allow(:read, cur_user, site: cur_site).selector
+        readable_selector = unscoped.in(state: %w(approve public)).readable(cur_user, cur_site).selector
+        all.where('$and' => [{ '$or' => [ allow_selector, readable_selector ] }])
+      end
+
       case params[:state]
+      when 'all'
+        base_criteria
       when 'approve'
-        all.where(
+        base_criteria.where(
           workflow_state: 'request',
-          workflow_approvers: { '$elemMatch' => { 'user_id' => cur_user.id, 'state' => "request" } }
+          workflow_approvers: { '$elemMatch' => { 'user_id' => cur_user.id, 'state' => 'request' } }
         )
       when 'request'
-        all.where(workflow_user_id: cur_user.id)
+        base_criteria.where(workflow_user_id: cur_user.id)
       else
-        all
+        none
       end
     end
   end
@@ -72,11 +81,11 @@ class Gws::Workflow::File
   end
 
   def status
-    if state == "approve"
+    if state == 'approve'
       state
     elsif workflow_state.present?
       workflow_state
-    elsif state == "closed"
+    elsif state == 'closed'
       'draft'
     else
       state
