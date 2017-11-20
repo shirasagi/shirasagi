@@ -1,51 +1,19 @@
 class Gws::Circular::Comment
-  include ActiveModel::Model
-  include SS::PermitParams
-  extend SS::Document::ClassMethods
+  include SS::Document
+  include Gws::Referenceable
+  include Gws::Reference::User
+  include Gws::Reference::Site
+  include Gws::Addon::GroupPermission
 
-  PARENT_CLASS = Gws::Circular::Post
+  seqid :id
+  field :name, type: String
+  field :text, type: String
 
-  attr_accessor :name, :text, :user_id, :site_id, :created, :updated,
-                :parent, :id, :in_updated, :cur_user, :cur_site
-  permit_params :name, :text, :user_id, :site_id, :created, :updated
+  permit_params :name, :text
 
-  def allowed?(action, user, opts = {})
-    return user_id == user.id if user_id
-    parent.allowed?(:read, user, opts)
-  end
+  belongs_to :post, class_name: 'Gws::Circular::Post', inverse_of: :comments
+  validates :post_id, presence: true
 
-  def attributes
-    self.class.permitted_fields.each_with_object({}) do |attr_name, ret|
-      ret[attr_name] = self.send(attr_name)
-      ret
-    end
-  end
-
-  def attributes=(args)
-    self.class.permitted_fields.each do |f|
-      self.send("#{f}=", args[f]) if args.include?(f)
-    end
-  end
-
-  def save
-    self.updated = Time.zone.now
-    self.created = self.updated unless self.created
-    parent.set_seen(user) if parent.unseen?(user)
-    parent.add_comment(attributes).update
-  end
-
-  def update
-    self.updated = Time.zone.now
-    parent.set_seen(user) if parent.unseen?(user)
-    parent.update_comment(id, attributes).update
-  end
-
-  def destroy
-    parent.delete_comment(id).update
-  end
-
-  def user
-    @user ||= Gws::User.find(user_id)
-  end
-
+  before_save -> {
+  }
 end
