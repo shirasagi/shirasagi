@@ -10,6 +10,10 @@ class Gws::Elasticsearch::Indexer::MemoCommentJob < Gws::ApplicationJob
     @index_type ||= Gws::Memo::Message.collection_name
   end
 
+  def index_item_id
+    "comment-#{@id}"
+  end
+
   def enum_es_docs
     Enumerator.new do |y|
       y << convert_to_doc
