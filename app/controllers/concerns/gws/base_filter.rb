@@ -5,16 +5,18 @@ module Gws::BaseFilter
   included do
     cattr_accessor(:user_class) { Gws::User }
 
+    self.log_class = Gws::History
+
     helper Gws::LayoutHelper
 
     before_action :validate_gws
     before_action :set_gws_assets
     before_action :set_current_site
     before_action :set_gws_logged_in, if: ->{ @cur_user }
-    before_action :save_controller_access_history, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
     before_action :set_account_menu, if: ->{ @cur_user }
     before_action :set_crumbs
+    after_action :put_history_log, if: ->{ @cur_user }
     navi_view "gws/main/navi"
   end
 
@@ -65,17 +67,6 @@ module Gws::BaseFilter
     end
 
     session[:gws] = gws_session
-  end
-
-  def save_controller_access_history
-    if SS.config.gws.history['severity_notice'] == 'enabled'
-      if request.format == 'text/html'
-        Gws::History.notice!(
-          :controller, @cur_user, @cur_site,
-          path: request.path, controller: self.class.name.underscore, action: action_name
-        ) rescue nil
-      end
-    end
   end
 
   # override SS::BaseFilter#rescue_action

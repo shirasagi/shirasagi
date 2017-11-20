@@ -131,6 +131,22 @@ class Gws::History
       try_invoke_archive(cur_user, cur_site)
     end
 
+    def create_controller_log!(request, response, options)
+      return if request.format != 'text/html'
+
+      if !request.get? && response.code =~ /^3/
+        severity = 'info'
+      else
+        return if SS.config.gws.history['severity_notice'] != 'enabled'
+        severity = 'notice'
+      end
+
+      write!(
+        severity, :controller, options[:cur_user], options[:cur_site],
+        path: request.path, controller: options[:controller], action: options[:action]
+      )
+    end
+
     private
 
     def encode_sjis(str)
