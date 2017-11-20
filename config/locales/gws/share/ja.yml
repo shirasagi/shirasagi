@@ -77,6 +77,7 @@ ja:
         share_max_file_size: 最大ファイルサイズ
         share_max_folder_size: 最大フォルダーサイズ
       gws/share/file:
+        file_size: ファイルサイズ
         folder: フォルダー
         folder_id: フォルダー名
         url_copy: URLのコピー
