@@ -12,11 +12,11 @@ module Gws::Elasticsearch::Indexer::Base
 
     def around_save(item)
       site = item.site
-      before_file_ids = [ item.try(:file_ids_was) ].flatten.compact
+      before_file_ids = collect_file_ids_was_for_save(item)
 
       ret = yield
       if site.menu_elasticsearch_visible?
-        after_file_ids = [ item.try(:file_ids) ].flatten.compact
+        after_file_ids = collect_file_ids_for_save(item)
         remove_file_ids = before_file_ids - after_file_ids
 
         job = self.bind(site_id: site)
@@ -30,7 +30,7 @@ module Gws::Elasticsearch::Indexer::Base
     def around_destroy(item)
       site = item.site
       id = item.id
-      file_ids = [ item.try(:file_ids) ].flatten.compact
+      file_ids = collect_file_ids_for_destroy(item)
 
       ret = yield
       if item.site.menu_elasticsearch_visible?
@@ -38,6 +38,20 @@ module Gws::Elasticsearch::Indexer::Base
         job.perform_later(action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s))
       end
       ret
+    end
+
+    def collect_file_ids_was_for_save(item)
+      return [] if !item.respond_to?(:file_ids_was)
+      [ item.file_ids_was ].flatten.compact
+    end
+
+    def collect_file_ids_for_save(item)
+      return [] if !item.respond_to?(:file_ids)
+      [ item.file_ids ].flatten.compact
+    end
+
+    def collect_file_ids_for_destroy(item)
+      collect_file_ids_was_for_save(item)
     end
 
     def url_helpers
