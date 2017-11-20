@@ -8,11 +8,6 @@ class Gws::History
     store_in client: :gws_history, database: client[:database]
   end
 
-  CSV_HEADER = %i[
-    id session_id request_id severity name mode model controller job item_id
-    path action updated_field_names message created
-  ].freeze
-
   seqid :id
   field :session_id, type: String
   field :request_id, type: String
@@ -54,20 +49,6 @@ class Gws::History
   }
 
   class << self
-    def csv_header
-      CSV_HEADER.map { |k| t(k) }
-    end
-
-    def enum_csv(opts = {})
-      criteria = self.criteria.dup
-      Enumerator.new do |y|
-        y << encode_sjis(csv_header.to_csv)
-        criteria.each do |item|
-          y << encode_sjis(item.to_csv)
-        end
-      end
-    end
-
     def search(params)
       criteria = all
       return criteria if params.blank?
@@ -149,9 +130,9 @@ class Gws::History
 
     private
 
-    def encode_sjis(str)
-      str.encode("SJIS", invalid: :replace, undef: :replace)
-    end
+    # def encode_sjis(str)
+    #   str.encode("SJIS", invalid: :replace, undef: :replace)
+    # end
 
     def severity_to_num(severity)
       case severity.to_sym
@@ -222,21 +203,6 @@ class Gws::History
     return self[:updated_field_names] if self[:updated_field_names]
     return [] if updated_fields.blank?
     updated_fields.map { |m| item ? item.t(m, default: m).presence : nil }.compact.uniq
-  end
-
-  def to_csv
-    terms = []
-    CSV_HEADER.each do |k|
-      if k == :created
-        terms << I18n.l(created)
-      elsif k == :updated_field_names
-        names = updated_field_names
-        terms << names.join(',')
-      else
-        terms << send(k)
-      end
-    end
-    terms.to_csv
   end
 
   private
