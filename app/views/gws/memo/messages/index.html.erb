@@ -35,19 +35,19 @@
 
   <% if %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
     $(".list-item").draggable({
-    zIndex: 100,
-    opacity: 0.75,
-    cursorAt: {top: 16, left: 5},
-    helper: function(){
-    var checkbox = $(this).find("label.check input[name='ids[]']");
-    if (!checkbox.prop("checked")){ checkbox.prop("checked", true) };
+      zIndex: 100,
+      opacity: 0.75,
+      cursorAt: {top: 16, left: 5},
+      helper: function(){
+        var checkbox = $(this).find("label.check input[name='ids[]']");
+        if (!checkbox.prop("checked")){ checkbox.prop("checked", true) };
 
-    var checked = $(".list-item input:checkbox:checked");
-    var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
-    helper.html(checked.length + "件の連絡メモを選択");
+        var checked = $(".list-item input:checkbox:checked");
+        var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
+        helper.html(checked.length + "件の連絡メモを選択");
 
-    return helper;
-    }
+        return helper;
+      }
     });
   <% end %>
 

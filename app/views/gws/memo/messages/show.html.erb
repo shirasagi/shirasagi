@@ -7,7 +7,9 @@
   <div class="addon-view gws-memo" id="addon-basic">
     <div class="addon-head">
       <span class="icon-star <%= @item.star?(@cur_user) ? 'on' : 'off' %>">
-        <i class="material-icons">&#xE838;</i>
+        <%= link_to action: :toggle_star, id: @item.id, location: :show do %>
+          <i class="material-icons md-18">&#xE838;</i>
+        <% end %>
       </span>
 
       <h2 class="subject">

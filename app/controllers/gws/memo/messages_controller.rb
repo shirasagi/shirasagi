@@ -106,7 +106,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def toggle_star
-    render_destroy @item.toggle_star(@cur_user).update
+    render_destroy @item.toggle_star(@cur_user).update, location: { action: params[:location] }
   end
 
   def set_star_all
