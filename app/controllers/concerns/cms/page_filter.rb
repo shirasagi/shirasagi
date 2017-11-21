@@ -69,6 +69,10 @@ module Cms::PageFilter
   def create
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user)
+    if params.dig(:item, :column_values).present? && @item.form.present?
+      new_column_values = @item.build_column_values(params.dig(:item, :column_values))
+      @item.update_column_values(new_column_values)
+    end
     if @item.state == "public"
       raise "403" unless @item.allowed?(:release, @cur_user)
       @item.state = "ready" if @item.try(:release_date).present?
@@ -80,6 +84,10 @@ module Cms::PageFilter
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user)
+    if params.dig(:item, :column_values).present? && @item.form.present?
+      new_column_values = @item.build_column_values(params.dig(:item, :column_values))
+      @item.update_column_values(new_column_values)
+    end
     if @item.state == "public"
       raise "403" unless @item.allowed?(:release, @cur_user)
       @item.state = "ready" if @item.try(:release_date).present?

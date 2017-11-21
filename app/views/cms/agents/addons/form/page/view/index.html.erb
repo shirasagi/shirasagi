@@ -1,0 +1,16 @@
+<% return "" if @cur_page.form.blank? %>
+
+<%
+html = @cur_page.form.html.to_s
+html.gsub!(/\{\{(.+)\}\}/) do
+  name_or_id = $1.strip
+  column_value = @cur_page.column_values.
+    where('$or' => [ { id: name_or_id }, { name: name_or_id } ]).
+    order_by(order: 1, created: 1).
+    first
+  if column_value
+    column_value.to_html
+  end
+end
+%>
+<%== html %>
