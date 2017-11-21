@@ -50,6 +50,10 @@ ja:
       gws/memo/folder: 管理
       gws/memo/signature: 署名
       gws/memo/group_setting: 連絡メモ設定
+    errors:
+      models:
+        gws/memo/message:
+          file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
     attributes:
       gws/memo/message:
         name: 件名
