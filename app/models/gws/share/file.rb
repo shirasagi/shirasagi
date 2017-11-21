@@ -148,8 +148,6 @@ class Gws::Share::File
                      size: number_to_human_size(size),
                      limit: number_to_human_size(limit))
         end
-      else
-        @cur_site = Gws::Group.find(site_id) unless @cur_site
       end
     end
     setting_validate_size if @cur_site.share_max_file_size > folder.share_max_file_size
