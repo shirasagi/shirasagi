@@ -154,7 +154,7 @@ class Gws::Share::File
         @cur_site = Gws::Group.find(site_id) unless @cur_site
       end
     end
-    setting_validate_size
+    setting_validate_size if @cur_site.share_max_file_size > folder.share_max_file_size
   end
 
   def setting_validate_size
