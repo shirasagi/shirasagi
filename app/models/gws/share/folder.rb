@@ -32,7 +32,7 @@ class Gws::Share::Folder
 
   validate :validate_parent_name
 
-  before_destroy :validate_children
+  before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
 
   default_scope ->{ order_by order: 1 }
@@ -107,6 +107,14 @@ class Gws::Share::Folder
   def validate_children
     if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
       errors.add :base, :found_children
+      return false
+    end
+    true
+  end
+
+  def validate_files
+    if files.present?
+      errors.add :base, :found_files
       return false
     end
     true
