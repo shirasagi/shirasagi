@@ -44,13 +44,13 @@
   <% end %>
 
   <% if @cur_site.menu_report_visible? %>
-    <% if Gws::Report::File.allowed?(:read, @cur_user, site: @cur_site) %>
+    <%# if Gws::Report::File.allowed?(:read, @cur_user, site: @cur_site) %>
       <h2><%= link_to @cur_site.menu_report_label || t('modules.gws/report'), gws_report_files_main_path, class: "icon-workflow" %></h2>
       <h3><%= link_to t('gws/report.options.file_state.inbox'), gws_report_files_path(state: 'inbox') %></h3>
       <h3><%= link_to t('gws/report.options.file_state.sent'), gws_report_files_path(state: 'sent') %></h3>
       <h3><%= link_to t('gws/report.options.file_state.closed'), gws_report_files_path(state: 'closed') %></h3>
-      <h3><%= link_to t('gws/report.options.file_state.all'), gws_report_files_path(state: 'all') %></h3>
-    <% end %>
+      <h3><%= link_to t('gws/report.options.file_state.readable'), gws_report_files_path(state: 'readable') %></h3>
+    <%# end %>
   <% end %>
 
   <% if @cur_site.menu_workflow_visible? %>
@@ -88,9 +88,7 @@
   <% end %>
 
   <% if @cur_site.menu_elasticsearch_visible? %>
-    <% if [ Gws::Board::Topic, Gws::Share::File, Gws::Faq::Topic, Gws::Qna::Topic, Gws::Monitor::Topic ].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
-      <h2><%= link_to @cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
-    <% end %>
+    <h2><%= link_to @cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
   <% end %>
 
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>

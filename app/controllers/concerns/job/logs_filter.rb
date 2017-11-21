@@ -34,6 +34,13 @@ module Job::LogsFilter
   end
 
   def download
+    set_item
+    raise '404' if !::File.exists?(@item.file_path)
+    send_file @item.file_path, type: 'text/plain', filename: "#{@item.id}.log",
+              disposition: :attachment, x_sendfile: true
+  end
+
+  def download_all
     @item = @model.new
     # show condition input form if request is get.
     return if request.get?
