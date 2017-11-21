@@ -14,13 +14,21 @@ module Gws::Portal::PortalFilter
     if params[:group].present?
       @portal_group = Gws::Group.find(params[:group])
       @portal = @portal_group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
-    elsif params[:user].present?
+      @portal.portal_type = (@portal_group.id == @cur_site.id) ? :root_portal : :group_portal
+      return
+    end
+
+    if params[:user].present?
       @portal_user = Gws::User.find(params[:user])
-      @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
-      raise '403' if @portal_user != @cur_user && !@portal.readable?(@cur_user, site: @cur_site, strict: true)
     else
       @portal_user = @cur_user
-      @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+    end
+
+    @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+    @portal.portal_type = (@portal_user.id == @cur_user.id) ? :my_portal : :user_portal
+
+    if @portal.user_portal?
+      raise '403' if !@portal.readable?(@cur_user, site: @cur_site, strict: true)
     end
   end
 

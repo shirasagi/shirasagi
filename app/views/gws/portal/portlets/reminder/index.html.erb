@@ -36,7 +36,7 @@
           <% end %>
         </div>
       </div>
-      <% if @portal_user == @cur_user %>
+      <% if @portal.my_portal? %>
       <div class="links dropdown dropdown-toggle">
         <a class="more-btn">
           <i class="material-icons md-dark">&#xE5D4;</i>
@@ -50,7 +50,7 @@
     <% end %>
   </ul>
 
-  <% if @reminders.next_page && @portal_user == @cur_user %>
+  <% if @reminders.next_page && @portal.my_portal? %>
   <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
   <% end %>
 </div>

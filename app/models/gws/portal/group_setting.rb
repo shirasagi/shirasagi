@@ -3,6 +3,7 @@ class Gws::Portal::GroupSetting
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Portal::PortalModel
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
@@ -17,10 +18,6 @@ class Gws::Portal::GroupSetting
   validates :portal_group_id, presence: true, uniqueness: { scope: :site_id }
 
   before_validation :set_name, if: ->{ portal_group.present? }
-
-  def portal_type
-    :group
-  end
 
   def portlet_models
     %w(free links schedule board monitor share).map do

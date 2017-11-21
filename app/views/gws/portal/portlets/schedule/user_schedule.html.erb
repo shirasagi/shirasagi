@@ -3,22 +3,22 @@ $(".gws-schedule-tabs .personal").addClass("current");
 
 Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
 Gws_Schedule_Multiple_Calendar.render('#calendar', {
-  tapMenu: <%= (@portal_user == @cur_user).to_s %>,
+  tapMenu: <%= (@portal.my_portal?).to_s %>,
   defaultView: 'basicWeek',
   restUrl: '<%= gws_schedule_user_plans_path(user: @portal_user) %>',
   eventSources: [{ url: '<%= events_gws_schedule_user_plans_path(user: @portal_user, format: :json) %>' }]
 });
 <% end %>
 
-<% if @portal_user == @cur_user %>
+<% if @portal.my_portal? %>
   <%= render partial: "gws/schedule/main/tabs" %>
 <% end %>
 
-<div class="main-box gws-schedule-box <%= "with-tabs" if @portal_user == @cur_user %>">
+<div class="main-box gws-schedule-box <%= "with-tabs" if @portal.my_portal? %>">
   <div class="calendar" id="calendar-controller"></div>
   <div class="calendar-multiple-header">
     <%= link_to @portal_user.long_name, gws_schedule_user_plans_path(user: @portal_user), class: "calendar-name" %>
-    <% if @portal_user == @cur_user %>
+    <% if @portal.my_portal? %>
       <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: @portal_user), { class: 'add-plan' } %>
     <% end %>
   </div>
