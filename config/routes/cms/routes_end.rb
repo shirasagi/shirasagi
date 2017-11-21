@@ -145,6 +145,7 @@ SS::Application.routes.draw do
       get "users" => "users#index"
       get "related_page" => "related_page#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
+      get "forms" => "forms#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member
