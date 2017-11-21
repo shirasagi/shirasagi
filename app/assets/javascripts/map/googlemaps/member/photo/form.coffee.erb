@@ -18,7 +18,7 @@ class @Member_Photo_Form
 
   @attachMessage: (id) ->
     google.maps.event.addListener Googlemaps_Map.markers[id], 'click', (event) ->
-      if(Map.openedInfo)
+      if(Googlemaps_Map.openedInfo)
         Googlemaps_Map.openedInfo.close()
       $('dd[data-id = "' + id + '"]').each ->
         name = $(this).find(".marker-name").val()
@@ -35,7 +35,7 @@ class @Member_Photo_Form
                 marker_html += '<p>' + this + '</p>'
 
           Googlemaps_Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
-          Googlemaps_Map.openedInfo.open(Map.markers[id].getMap(), Googlemaps_Map.markers[id])
+          Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id])
         return false
       return
     return
