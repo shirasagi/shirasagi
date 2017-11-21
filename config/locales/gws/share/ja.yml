@@ -34,6 +34,7 @@ ja:
     edit_private_gws_share_files: ファイルの編集（所有）
     delete_other_gws_share_files: ファイルの削除（全て）
     delete_private_gws_share_files: ファイルの削除（所有）
+    write_other_gws_share_files: ファイルのアップロード（所有）
     read_other_gws_share_categories: カテゴリーの閲覧（全て）
     read_private_gws_share_categories: カテゴリーの閲覧（所有）
     edit_other_gws_share_categories: カテゴリーの編集（全て）
