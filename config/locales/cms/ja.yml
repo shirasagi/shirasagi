@@ -192,6 +192,13 @@ ja:
         none: リソースとして登録しない
         same: 記事と同じデータセット内
         existance: 既存のデータセット内
+      column_input_type:
+        text: テキスト
+        email: メールアドレス
+        date: 日付
+        tel: 電話番号
+        url: URL
+        search: 検索テキスト
 
     sns_share:
       fb_like: Facebook いいね！
@@ -230,6 +237,15 @@ ja:
       cms/sns_share: SNSシェアボタン
       cms/calendar_nav: アーカイブナビ(カレンダー)
       cms/monthly_nav: アーカイブナビ（月次）
+    columns:
+      cms/text_field: 一行入力
+      cms/date_field: 日付入力
+      cms/url_field: URL入力
+      cms/text_area: 複数行入力
+      cms/select: ドロップダウン
+      cms/radio_button: ラジオボタン
+      cms/check_box: チェックボックス
+      cms/file_upload: ファイルアップロード
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -297,6 +313,12 @@ ja:
     edit_private_cms_page_searches: ページ検索の編集（所有）
     delete_other_cms_page_searches: ページ検索の削除（全て）
     delete_private_cms_page_searches: ページ検索の削除（所有）
+    read_private_cms_forms: 定型フォームの閲覧（所有）
+    read_other_cms_forms: 定型フォームの閲覧（全て）
+    edit_private_cms_forms: 定型フォームの管理（所有）
+    edit_other_cms_forms: 定型フォームの管理（全て）
+    delete_private_cms_forms: 定型フォームの削除（所有）
+    delete_other_cms_forms: 定型フォームの削除（全て）
 
   modules:
     cms: 標準機能
@@ -348,6 +370,10 @@ ja:
       cms/tag: タグ
       cms/layout_html: レイアウト
       cms/child_list: 子リスト表示
+      cms/form/node: 定型フォーム
+      cms/form/page: 定型フォーム
+      cms/column/text_like: 制約条件
+      cms/column/select_like: 選択
 
   mongoid:
     models:
@@ -377,6 +403,16 @@ ja:
       cms/import_page: 取り込みページ
       cms/word_dictionary: かな辞書
       cms/loop_setting: ループHTML
+      cms/form: 定型フォーム
+      cms/column/base: 入力項目
+      cms/column/text_field: 一行入力
+      cms/column/date_field: 日付入力
+      cms/column/url_field: URL入力
+      cms/column/text_area: 複数行入力
+      cms/column/select: ドロップダウン
+      cms/column/radio_button: ラジオボタン
+      cms/column/check_box: チェックボックス
+      cms/column/file_upload: ファイルアップロード
     attributes:
       cms/content:
         released: 公開日時
@@ -409,6 +445,7 @@ ja:
         ajax_view: 動的表示
       cms/layout:
         name: レイアウト名
+      cms/addon/layout_html:
         html: HTML
       cms/body_layout:
         name: 本文レイアウト名
@@ -615,6 +652,40 @@ ja:
         child_loop_html: ループHTML
         child_upper_html: 上部HTML
         child_lower_html: 下部HTML
+      cms/form:
+        name: 名前
+        order: 並び順
+        column_ids: 入力項目
+      cms/addon/form/node:
+        st_form_ids: 定型フォーム設定
+      cms/addon/form/page:
+        form_id: 定型フォーム
+      cms/column/base:
+        route: 属性
+        name: 名前
+        order: 並び順
+        required: 必須入力
+        tooltips: ツールチップ
+      cms/column/text_field:
+        input_type: 種類
+      cms/column/date_field:
+        place_holder: プレースホルダー
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+      cms/column/url_field:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+      cms/column/select:
+        place_holder: プレースホルダー
+      cms/addon/column/text_like:
+        max_length: 最大長
+        place_holder: プレースホルダー
+        additional_attr: 追加属性
+      cms/addon/column/select_like:
+        select_options: 選択肢
+      cms/column/file_upload:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
 
   errors:
     messages:
@@ -1398,6 +1469,85 @@ ja:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
       child_lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
+
+    cms/form:
+      name:
+        - テンプレート名を入力します。
+        - 日本語での入力が可能です。
+      column_ids:
+        - 定型フォームのコラムを設定します。
+      html: |-
+        定型フォームのHTMLを設定します。
+        {{ 項目名 }}のように記述することで該当する項目の入力値を表示します。
+
+        使用例：
+          &lt;dl>
+            &lt;dt>項目&lt;/dt>
+            &lt;dd>{{ 項目名1 }}&lt;/dd>
+            &lt;dt>項目&lt;/dt>
+            &lt;dd>{{項目名2}}&lt;/dd>
+          &lt;/dl>
+
+    cms/addon/form/node:
+      st_form_ids:
+        - フォルダー下で使用する定型フォームを設定します。
+        - 設定されていない場合は定型フォームは使用されません。
+
+    cms/addon/form/page:
+      form_id:
+        - 定型フォームを設定します。
+    cms/column/base:
+      name:
+        - 入力項目名を入力します。
+      required:
+        - 項目の入力が必須か任意かを選択します。
+      order:
+        - 表示順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      tooltips:
+        - 項目のツールチップを入力します。
+
+    cms/column/text_field:
+      input_type:
+        - 種類を選択します。
+        - 一部の種類は、最近のブラウザでしかサポートされていません。
+
+    cms/column/date_field:
+      place_holder:
+        - プレースホルダーを入力します。
+      html_tag:
+        - 公開側のHTMLタグを選択します。
+      html_additional_attr:
+        - 公開側のHTMLタグの追加属性を指定します。
+
+    cms/column/url_field:
+      html_tag:
+        - 公開側のHTMLタグを選択します。
+      html_additional_attr:
+        - 公開側のHTMLタグの追加属性を指定します。
+
+    cms/column/select:
+      place_holder:
+        - プレースホルダーを入力します。
+
+    cms/column/file_upload:
+      html_tag:
+        - 公開側のHTMLタグを選択します。
+      html_additional_attr:
+        - 公開側のHTMLタグの追加属性を指定します。
+
+    cms/addon/column/text_like:
+      max_length:
+        - 入力文字数の最大長を入力します。
+      place_holder:
+        - プレースホルダーを入力します。
+      additional_attr:
+        - 出力される入力形式のHTMLに属性を追加することが可能です。
+
+    cms/addon/column/select_like:
+      select_options:
+        - 回答の選択肢を入力します。
+        - テキストを改行で区切ることで複数の選択肢を入力することができます。
 
   all_content:
     page_id: ページID

@@ -89,6 +89,10 @@ SS::Application.routes.draw do
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
+    resources :forms, concerns: [:deletion] do
+      resources :columns, concerns: [:deletion], except: [:new, :create]
+      resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
+    end
     resources :notices, concerns: :deletion do
       get :copy, :on => :member
       put :copy, :on => :member
