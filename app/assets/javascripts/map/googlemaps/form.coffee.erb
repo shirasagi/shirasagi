@@ -48,7 +48,7 @@ class @Map_Form
                 marker_html += '<p>' + this + '</p>'
 
           Googlemaps_Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
-          Googlemaps_Map.openedInfo.open(Map.markers[id].getMap(), Googlemaps_Map.markers[id])
+          Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id])
         return false
       return
     return
