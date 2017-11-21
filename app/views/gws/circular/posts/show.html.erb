@@ -32,7 +32,7 @@
 
         <% if @item.member?(@cur_user) %>
           <%= link_to @item.see_action_label(@cur_user),
-                      toggle_seen_gws_circular_post_path, class: "btn #{'gws-btn-pushed' if @item.seen?(@cur_user)}" %>
+                      toggle_seen_gws_circular_post_path, method: :post, class: "btn #{'gws-btn-pushed' if @item.seen?(@cur_user)}" %>
         <% end %>
       </div>
     </div>
