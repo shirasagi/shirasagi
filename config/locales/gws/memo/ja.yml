@@ -1,4 +1,6 @@
 ja:
+  gws/memo:
+    setting: 連絡メモ設定
   gws/memo/message:
     folder: フォルダー
     folder_name: フォルダー名
@@ -47,6 +49,7 @@ ja:
       gws/memo/message: 連絡メモ
       gws/memo/folder: 管理
       gws/memo/signature: 署名
+      gws/memo/group_setting: 連絡メモ設定
     attributes:
       gws/memo/message:
         name: 件名
@@ -70,6 +73,8 @@ ja:
         name: 名称
         text: 本文
         default: 既定の署名
+      gws/memo/group_setting:
+        memo_filesize_limit: 添付サイズ制限
   tooltip:
     gws/memo/message:
       member_ids:
@@ -108,3 +113,8 @@ ja:
         - 連絡メモを新規作成した際に自動で入力される署名を選択します。
         - 有効：この署名を自動で入力します
         - 無効：この署名を自動で入力しません
+    gws/memo/group_setting:
+      memo_filesize_limit:
+        - 連絡メモに添付されるファイルの合計容量の上限を入力します。
+        - 未指定である場合、制限されません。
+        - 初期値は 未指定 です。
