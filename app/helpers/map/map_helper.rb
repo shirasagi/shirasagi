@@ -41,8 +41,8 @@ module Map::MapHelper
       include_googlemaps_api(opts)
 
       s = []
-      s << 'Map.load("' + selector + '");'
-      s << 'Map.setMarkers(' + markers.to_json + ');' if markers.present?
+      s << 'Googlemaps_Map.load("' + selector + '");'
+      s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
 
     jquery { s.join("\n").html_safe }
@@ -74,13 +74,13 @@ module Map::MapHelper
 
       s = []
       s << 'SS_AddonTabs.hide(".mod-map");'
-      s << 'Map.center = ' + center.to_json + ';' if center.present?
+      s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'Map_Form.maxPointForm = ' + max_point_form.to_json + ';' if max_point_form.present?
-      s << 'Map.setForm(Map_Form);'
-      s << 'Map.load("' + selector + '");'
-      s << 'Map.renderMarkers();'
-      s << 'Map.renderEvents();'
-      s << 'SS_AddonTabs.head(".mod-map").click(function() { Map.resize(); });'
+      s << 'Googlemaps_Map.setForm(Map_Form);'
+      s << 'Googlemaps_Map.load("' + selector + '");'
+      s << 'Googlemaps_Map.renderMarkers();'
+      s << 'Googlemaps_Map.renderEvents();'
+      s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'
     end
 
     jquery { s.join("\n").html_safe }
@@ -107,7 +107,7 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
 
-      s << 'Map.center = ' + center.to_json + ';' if center.present?
+      s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'var opts = {'
       s << '  markers: ' + markers.to_json + ',' if markers.present?
       s << '};'
@@ -141,11 +141,11 @@ module Map::MapHelper
       include_googlemaps_api(opts)
       controller.javascript "/assets/js/exif-js.js"
 
-      s << 'Map.center = ' + center.to_json + ';' if center.present?
-      s << 'Map.setForm(Member_Photo_Form);'
-      s << 'Map.load("' + selector + '");'
-      s << 'Map.renderMarkers();'
-      s << 'Map.renderEvents();'
+      s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
+      s << 'Googlemaps_Map.setForm(Member_Photo_Form);'
+      s << 'Googlemaps_Map.load("' + selector + '");'
+      s << 'Googlemaps_Map.renderMarkers();'
+      s << 'Googlemaps_Map.renderEvents();'
       s << 'Member_Photo_Form.setExifLatLng("#item_in_image");'
     end
 
