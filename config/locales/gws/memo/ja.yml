@@ -11,6 +11,7 @@ ja:
       set_star: スターをつける
       unset_star: スターをはずす
       trash: ゴミ箱に移す
+      reply: 返信する
     confirm:
       trash_all: ゴミ箱に移しますか?
       set_seen_all: 既読にしますか?

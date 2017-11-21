@@ -54,6 +54,16 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.new_memo
   end
 
+  def reply
+    @item = @model.new pre_params.merge(fix_params)
+    item_reply = @model.site(@cur_site).search_replay(params[:id]).first
+    @item.member_ids = item_reply.from.keys.map(&:to_i)
+    @item.subject = "Re: #{item_reply.subject}"
+
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    @item.new_memo
+  end
+
   def create
     @item = @model.new from.merge(get_params)
     @item.send_date = Time.zone.now if params['commit'] == '送信'
