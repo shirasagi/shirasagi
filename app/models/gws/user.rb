@@ -47,7 +47,7 @@ class Gws::User
     if gws_default_group_ids.present? && group_id = gws_default_group_ids[@cur_site.id.to_s]
       @gws_default_group = groups.in_group(@cur_site).where(id: group_id).first
     end
-    @gws_default_group ||= groups.in_group(@cur_site).first
+    @gws_default_group ||= gws_main_group(@cur_site)
   end
 
   def gws_main_group(site = nil)
