@@ -15,13 +15,22 @@ FactoryGirl.define do
     order 20
   end
 
+  factory :inquiry_column_transfers, class: Inquiry::Column do
+    name "要件"
+    input_type "text_field"
+    required "optional"
+    html "<p>要件を入力してください。</p>"
+    transfers [{ keyword: 'キーワード', email: 'transfers@example.jp' }]
+    order 30
+  end
+
   factory :inquiry_column_email, class: Inquiry::Column do
     name "メールアドレス"
     input_type "email_field"
     required "required"
     input_confirm "enabled"
     html "<p>半角 英数字記号で入力してください。<br />\nお問い合わせへの返信に利用させていただきます。</p>"
-    order 30
+    order 40
   end
 
   factory :inquiry_column_radio, class: Inquiry::Column do
@@ -30,7 +39,7 @@ FactoryGirl.define do
     required "optional"
     html "<p>性別を選択して ください。</p>"
     select_options %w(男性 女性)
-    order 40
+    order 50
   end
 
   factory :inquiry_column_select, class: Inquiry::Column do
@@ -39,7 +48,7 @@ FactoryGirl.define do
     required "optional"
     html "<p>年齢を選択してください。</p>"
     select_options %w(10代 20代 30代 40代 50代 60代 70代 80代)
-    order 50
+    order 60
   end
 
   factory :inquiry_column_check, class: Inquiry::Column do
@@ -48,7 +57,7 @@ FactoryGirl.define do
     required "optional"
     html "<p>お問い合わせ内容の区分を選択してください。</p>"
     select_options %w(市政について ご意見・ご要望 申請について その他)
-    order 60
+    order 70
   end
 
   factory :inquiry_column_radio_contents, class: Inquiry::Column do
@@ -83,6 +92,6 @@ FactoryGirl.define do
     required "optional"
     html ""
     max_upload_file_size 2
-    order 70
+    order 80
   end
 end

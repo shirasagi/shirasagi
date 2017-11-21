@@ -1,14 +1,42 @@
 <dl class="see mod-inquiry-input-setting">
   <dt><%= @model.t :input_type %></dt>
   <dd><%= @item.label :input_type %></dd>
+
   <dt><%= @model.t :select_options %></dt>
   <dd><%=br @item.send(:select_options).join("\n") %></dd>
+
   <dt><%= @model.t :required %></dt>
   <dd><%= @item.label :required %></dd>
+
   <dt><%= @model.t :additional_attr %></dt>
   <dd><%= @item.send :additional_attr %></dd>
+
   <dt><%= @model.t :input_confirm %></dt>
   <dd><%= @item.label :input_confirm %></dd>
+
   <dt><%= @model.t :max_upload_file_size %></dt>
   <dd><%= @item.send :max_upload_file_size %></dd>
+
+  <% transfer = @item.transfers.try(:first) %>
+  <% if transfer.present? && (transfer[:keyword].present? || transfer[:email].present?) %>
+  <dt><%= @model.t :transfers %></dt>
+  <dd>
+    <table class="index">
+      <thead>
+        <tr>
+          <th class="keyword"><%= @model.t(:transfers) %></th>
+          <th class="email"><%= @cur_user.t(:email) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.transfers.each do |transfer| %>
+        <tr class="keywords">
+          <td><%= transfer[:keyword] %></td>
+          <td><%= transfer[:email] %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
 </dl>

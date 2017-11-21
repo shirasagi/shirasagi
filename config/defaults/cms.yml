@@ -116,6 +116,8 @@ production: &production
     html_request_timeout: 10
     head_request_timeout: 5
 
+  max_term_form: 10
+
 test:
   <<: *production
 
