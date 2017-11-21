@@ -6,8 +6,8 @@ ja:
     format:
       search_results_count:
         zero: 検索式にマッチする文書はありませんでした。
-        one: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
-        other: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{count} 秒)'
+        one: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{took} 秒)'
+        other: '%{count} 件中 %{from} 件目から %{to} 件目の検索結果 (%{took} 秒)'
 
   modules:
     gws/elasticsearch: 全文検索
@@ -29,8 +29,31 @@ ja:
     gws/elasticsearch:
       tabs:
         all:
-          - 「すべて」では公開されている文書を検索することができます。非公開の文書を検索するには、個別のタブを開き、検索してください。
-          - "'*:*' を検索すると全文書を検索することができます。"
+          - "検索キーワードを入力し、検索ボタンをクリックしてください。文書を検索することができます。"
+          - "検索キーワードは、半角スペースで区切ることで複数個入力することができます。"
+          - "　"
+          - "他の便利な使い方："
+          - "OR 検索をするにはキーワードを OR で区切って入力します。必ず OR の前後に半角スペースを入力するようにしてください。"
+          - "　例: 議事録または報告書を含む文書を検索する"
+          - "　　議事録 OR 報告書"
+          - "　"
+          - "作成者で検索するには user_name: の後にスペースを空けずにユーザー名を入力します。"
+          - "　例: シラサギ太郎が作成した文書を検索する"
+          - "　　user_name:シラサギ太郎"
+          - "　"
+          - "作成日で検索するには created: の後にスペースを空けずに日付を入力します。"
+          - "　例: 2017年11月21日に作成した文書を検索する"
+          - "　　created:2017-11-20"
+          - "　"
+          - "作成日の範囲検索を実行するには、次の例を参考に入力します。"
+          - "　例: 2017年10月1日から2017年10月31日に作成した文書を検索する"
+          - "　　created:[2017-10-01 TO 2017-10-31]"
+          - "　"
+          - "作成日ではなく更新日で検索するには created を updated に変更します。"
+          - "　"
+          - "全文書を検索するには *:* を入力します。"
+          - "　"
+          - "「すべて」では公開されている文書を検索することができます。非公開の文書を検索するには、個別のタブを開き、検索してください。"
 
   job:
     models:
@@ -46,4 +69,6 @@ ja:
       gws/elasticsearch/indexer/monitor_topic_job: 照会・回答インデクサー
       gws/elasticsearch/indexer/monitor_post_job: 照会・回答インデクサー
       gws/elasticsearch/indexer/memo_message_job: 連絡メモインデクサー
+      gws/elasticsearch/indexer/memo_comment_job: 連絡メモコメントインデクサー
+      gws/elasticsearch/indexer/report_file_job: レポートインデクサー
       gws/elasticsearch/indexer/workflow_file_job: ワークフローインデクサー

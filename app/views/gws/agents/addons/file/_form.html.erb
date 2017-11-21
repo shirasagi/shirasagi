@@ -28,7 +28,7 @@ $ ->
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view">
+        <div id="file-<%= file.id %>" class="file-view">
 
           <%= link_to file.url, class: :thumb, target: "_blank" do %>
             <% if file.image? %>

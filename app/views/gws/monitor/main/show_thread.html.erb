@@ -94,8 +94,6 @@
 </div>
 
 <%= jquery do %>
-  if (location.hash) {
-    $(location.hash).css('border', '2px solid red');
-  }
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
 <% end %>
-
