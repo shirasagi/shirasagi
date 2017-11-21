@@ -59,6 +59,10 @@ class Gws::Memo::Message
     where("seen.#{user_id}" => { '$exists' => false })
   }
 
+  scope :search_replay, ->(replay_id) {
+    where("$and" => [{ "_id" => replay_id }])
+  }
+
   scope :unfiltered, ->(user) {
     where(:"filtered.#{user.id}".exists => false)
   }
