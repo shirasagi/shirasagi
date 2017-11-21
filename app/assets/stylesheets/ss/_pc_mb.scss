@@ -1386,15 +1386,6 @@ div.index {
   @include box;
   position: static;
   @include mb { margin: 0 10px 10px; }
-  label {
-    float: left;
-    width: 50px;
-    margin-left: -15px;
-    padding: 0px 3px 2px 13px;
-  }
-  .list-head label {
-    padding: 10px 4px 4px 19px;
-  }
 }
 #ajax-box {
   div.index {
@@ -1408,10 +1399,15 @@ div.index {
 .list-head {
   @include clear;
   margin: 0px 0px 10px;
-  padding: 10px 12px;
+  padding: 10px 18px;
   border-bottom: $border-gray1;
   font-weight: bold;
   @include mb { padding: 10px 20px; }
+  .check {
+    float: left;
+    width: 32px;
+    margin: 8px 0 0 -5px;
+  }
 }
 .list-head-action {
   float: left;
@@ -1436,6 +1432,7 @@ div.index {
   }
 }
 .list-item {
+  -js-display: flex;
   display: flex;
   align-items: center;
   padding: 8px 8px;
@@ -1457,6 +1454,13 @@ div.index {
       background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
     }
   }
+  .check {
+    float: left;
+    margin: 0 10px 0 -5px;
+  }
+  .info {
+    flex-grow: 10;
+  }
   .title {
     color: $orange;
     font-size: $px15;
@@ -1464,9 +1468,6 @@ div.index {
   }
   .title--disabled {
     color: #888;
-  }
-  .info {
-    margin-right: auto;
   }
   .meta {
     span {
@@ -1496,6 +1497,7 @@ div.index {
   }
   .links {
     white-space: nowrap;
+    word-wrap: normal;
     .btn {
       margin-top: 4px;
     }

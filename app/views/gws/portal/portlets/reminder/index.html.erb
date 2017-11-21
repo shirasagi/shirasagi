@@ -37,13 +37,15 @@
         </div>
       </div>
       <% if @portal.my_portal? %>
-      <div class="links dropdown dropdown-toggle">
-        <a class="more-btn">
-          <i class="material-icons md-dark">&#xE5D4;</i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
-          <li><a class="dropdown-menu-item gws-reminder-unset delete" href="#"><%= t('gws.buttons.unset') %></a></li>
-        </ul>
+      <div class="links">
+        <div class="dropdown dropdown-toggle">
+          <a class="more-btn">
+            <i class="material-icons md-dark">&#xE5D4;</i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
+            <li><a class="dropdown-menu-item gws-reminder-unset delete" href="#"><%= t('gws.buttons.unset') %></a></li>
+          </ul>
+        </div>
       </div>
       <% end %>
     </li>
