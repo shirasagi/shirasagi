@@ -98,9 +98,7 @@ class Gws::Share::File
   end
 
   def folder_options
-    Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).map do |item|
-      [item.name, item.id]
-    end
+    Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).pluck(:name, :id)
   end
 
   def active?
