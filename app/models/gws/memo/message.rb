@@ -51,6 +51,14 @@ class Gws::Memo::Message
     criteria
   }
 
+  scope :folder, ->(folder) {
+    where("#{folder.direction}.#{folder.user_id}" => folder.folder_path)
+  }
+
+  scope :unseen, ->(user_id) {
+    where("seen.#{user_id}" => { '$exists' => false })
+  }
+
   scope :unfiltered, ->(user) {
     where(:"filtered.#{user.id}".exists => false)
   }

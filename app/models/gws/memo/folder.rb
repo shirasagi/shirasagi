@@ -36,11 +36,15 @@ class Gws::Memo::Folder
   end
 
   def messages
-    Gws::Memo::Message.where("#{direction}.#{user_id}" => folder_path)
+    Gws::Memo::Message.folder(self)
+  end
+
+  def unseens
+    messages.unseen(self.user_id)
   end
 
   def unseen?
-    false
+    unseens.count > 0
   end
 
   class << self
