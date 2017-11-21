@@ -1,5 +1,5 @@
 
-site_name = defined?(ENV['group']) ? ENV['group'] : 'シラサギ市'
+site_name = SS::Db::Seed.site_name || 'シラサギ市'
 
 # --------------------------------------
 # Users Seed

@@ -2,7 +2,7 @@ class Webmail::StoredMailPart
   attr_accessor :section
   attr_accessor :part
 
-  delegate 'attachment?'.to_sym, :filename, :read, :decoded, to: :part
+  delegate :attachment?, :filename, :read, :decoded, to: :part
 
   def initialize(part, section = nil)
     self.section = section

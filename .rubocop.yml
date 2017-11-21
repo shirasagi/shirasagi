@@ -22,6 +22,14 @@ Rails/Output:
 Lint/DefEndAlignment:
   AutoCorrect: false
 
+Metrics/ClassLength:
+  Enabled: true
+  Max: 500
+
+Metrics/ModuleLength:
+  Enabled: true
+  Max: 500
+
 # Indent private/protected/public as deep as method definitions
 Style/AccessModifierIndentation:
   EnforcedStyle: indent

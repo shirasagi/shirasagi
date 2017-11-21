@@ -1,6 +1,6 @@
 ## -------------------------------------
 
-@site = Gws::Group.where(name: ENV['group']).first
+@site = Gws::Group.where(name: SS::Db::Seed.site_name).first
 
 @users = [
   Gws::User.find_by(uid: "admin"),

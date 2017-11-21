@@ -169,7 +169,9 @@ module Cms::Model::Node
     return errors.add :basename, :invalid if filename == "fs"
 
     full_url = cur_site ? "#{cur_site.full_url}#{filename}/" : "#{site.full_url}#{filename}/"
-    SS::Site.each { |s| break errors.add :basename, :invalid if s.full_url == full_url }
+    SS::Site.each do |s|
+      break errors.add :basename, :invalid if s.full_url == full_url
+    end
   end
 
   def validate_ancestors

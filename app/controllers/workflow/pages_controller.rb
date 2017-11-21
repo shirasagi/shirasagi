@@ -100,11 +100,7 @@ class Workflow::PagesController < ApplicationController
 
     if @item.finish_workflow?
       @item.workflow_state = @model::WORKFLOW_STATE_APPROVE
-      @item.state = "public"
-
-      if @item.respond_to?(:release_date)
-        @item.release_date ? @item.state = "ready" : @item.release_date = nil
-      end
+      @item.state = @item.try(:release_date) ? 'ready' : 'public'
     end
 
     if @item.update
