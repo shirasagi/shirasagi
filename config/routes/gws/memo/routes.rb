@@ -24,6 +24,7 @@ SS::Application.routes.draw do
         get :toggle_star
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
+        get :reply
       end
     end
     resources :comments, path: ':message_id/comments', only: :create
