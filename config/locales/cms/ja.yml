@@ -199,10 +199,7 @@ ja:
       column_input_type:
         text: テキスト
         email: メールアドレス
-        date: 日付
         tel: 電話番号
-        url: URL
-        search: 検索テキスト
 
     sns_share:
       fb_like: Facebook いいね！

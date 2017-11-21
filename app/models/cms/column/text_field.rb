@@ -14,13 +14,7 @@ class Cms::Column::TextField < Cms::Column::Base
 
   def form_options
     options = super
-    if input_type == 'date'
-      options['class'] = [ options['class'] ].flatten.compact
-      options['class'] << 'date'
-      options['class'] << 'js-date'
-    elsif input_type.present?
-      options['type'] = input_type
-    end
+    options['type'] = input_type
     options
   end
 

@@ -4,23 +4,17 @@ class Gws::Column::TextField < Gws::Column::Base
   field :input_type, type: String
   permit_params :input_type
 
-  validates :input_type, presence: true, inclusion: { in: %w(text email search tel url), allow_blank: true }
+  validates :input_type, presence: true, inclusion: { in: %w(text email tel), allow_blank: true }
 
   def input_type_options
-    %w(text email search tel url).map do |v|
+    %w(text email tel).map do |v|
       [ I18n.t("gws/column.options.column_input_type.#{v}"), v ]
     end
   end
 
   def form_options
     options = super
-    if input_type == 'date'
-      options['class'] = [ options['class'] ].flatten.compact
-      options['class'] << 'date'
-      options['class'] << 'js-date'
-    elsif input_type.present?
-      options['type'] = input_type
-    end
+    options['type'] = input_type
     options
   end
 
