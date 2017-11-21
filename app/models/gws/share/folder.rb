@@ -30,6 +30,9 @@ class Gws::Share::Folder
   validates :name, presence: true, uniqueness: { scope: :site_id }
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
+  validate :validate_parent_name
+
+  before_destroy :validate_children
   after_destroy :remove_zip
 
   default_scope ->{ order_by order: 1 }
@@ -92,5 +95,20 @@ class Gws::Share::Folder
 
   def remove_zip
     Fs.rm_rf self.class.zip_path(id) if File.exist?(self.class.zip_path(id))
+  end
+
+  def validate_parent_name
+    return if name.blank?
+    return if name.count('/') < 1
+
+    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+  end
+
+  def validate_children
+    if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+      errors.add :base, :found_children
+      return false
+    end
+    true
   end
 end
