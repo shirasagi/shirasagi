@@ -10,7 +10,7 @@
 
   <% @items.each do |item| %>
     <% @portlet = item %>
-    <div class="portlet-html portlet-model-<%= item.portlet_model %>" data-id="<%= item.id %>">
+    <div class="portlet-html <%= item.portlet_id_class %> <%= item.portlet_model_class %>" data-id="<%= item.id %>">
       <% if item.readable?(@cur_user, site: @cur_site) %>
         <%= render file: item.view_file %>
       <% else %>

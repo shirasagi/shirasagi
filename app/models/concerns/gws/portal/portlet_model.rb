@@ -53,6 +53,14 @@ module Gws::Portal::PortletModel
     "gws/portal/portlets/#{portlet_model}/index.html.erb"
   end
 
+  def portlet_id_class
+    "portlet-id-#{id}"
+  end
+
+  def portlet_model_class
+    "portlet-model-#{portlet_model}"
+  end
+
   private
 
   def set_default_grid_data
