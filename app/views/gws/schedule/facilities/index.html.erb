@@ -22,10 +22,18 @@
   <div class="calendar" id="calendar-controller"></div>
 
   <% @items.each_with_index do |item, idx| %>
-    <div class="calendar-multiple-header">
+    <div class="calendar-multiple-header" id="cal-<%= item.id %>-header">
       <%= link_to item.name, gws_schedule_facility_plans_path(facility: item.id), class: "calendar-name" %>
+
       <% if item.reservable?(@cur_user) %>
         <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_facility_plan_path(facility: item.id), class: 'add-plan' %>
+      <% end %>
+
+      <% if item.text.present? %>
+      <span class="calendar-attr calendar-text">
+        <a class="calendar-text-link" href="#"><%= item.t :html %></a>
+        <div class="calendar-text-popup" style="display: none;"><%= br item.text %></div>
+      </span>
       <% end %>
     </div>
     <div class="calendar multiple facility" id="cal-<%= item.id %>"></div>

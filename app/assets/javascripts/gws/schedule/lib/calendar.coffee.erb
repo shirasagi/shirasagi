@@ -15,6 +15,13 @@ class @Gws_Schedule_Calendar
     $(selector).fullCalendar('gotoDate', init['date']) if init['date']
     Gws_Schedule_View.renderSideCalendars(selector)
 
+    $("#{selector}-header .calendar-text").each ->
+      wrap = $(this)
+      data = $(this).find('.calendar-text-popup').prop('outerHTML');
+      wrap.find('.calendar-text-link').click ->
+        Gws_Popup.render($(this), $(data).show())
+        return false
+
   @defaultParams: (opts) ->
     buttonText:
       listMonth: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>"
