@@ -3,12 +3,13 @@ module Gws::Portal::PortletModel
   extend SS::Translation
   include Gws::Addon::Portal::Portlet::Free
   include Gws::Addon::Portal::Portlet::Link
+  include Gws::Addon::Portal::Portlet::Schedule
   include Gws::Addon::Portal::Portlet::Reminder
 
   PORTLETS = {
     free:     { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
     links:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Link] },
-    schedule: { size_x: 4, size_y: 2 },
+    schedule: { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Schedule] },
     reminder: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Reminder] },
     board:    { size_x: 2, size_y: 3 },
     monitor:  { size_x: 2, size_y: 3 },
