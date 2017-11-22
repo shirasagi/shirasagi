@@ -7,6 +7,8 @@ SS::Application.routes.draw do
   end
 
   gws 'memo' do
+    get '/' => redirect { |p, req| "#{req.path}/messages/INBOX" }, as: :main
+
     resources :messages, concerns: :deletion, path: 'messages/:folder',
               folder: /[^\/]+/, defaults: { folder: 'INBOX' } do
       collection do
