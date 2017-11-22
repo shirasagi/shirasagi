@@ -16,7 +16,7 @@
       <% if @item.required_in_select_form.present? %>
         <% checked = @item.required_in_select_form.include?(option) ? 'checked: true' : nil %>
       <% end %>
-      <%= check_box_tag 'item[required_in_select_form][]', option, checked %><%= option %>
+      <label><%= check_box_tag 'item[required_in_select_form][]', option, checked %> <%= option %> </label>
     <% end %>
   </dd>
   <% end %>
