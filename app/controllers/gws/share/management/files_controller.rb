@@ -17,7 +17,15 @@ class Gws::Share::Management::FilesController < ApplicationController
     if @folder.present?
       @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
       @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
-      @crumbs << [@folder.name, action: :index]
+      folder_hierarchy_count = @folder.name.split("/").count - 1
+      0.upto(folder_hierarchy_count) do |i|
+        folder_name = @folder.name.split("/")[i]
+        item_name = @folder.name.split("/")[0, i+1].join("/")
+        item_id = Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id
+        item_path = gws_share_folder_files_path(folder: item_id)
+        @crumbs << [folder_name, item_path]
+      end
+
     else
       @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
       @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
