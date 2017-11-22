@@ -7,4 +7,6 @@ class Gws::Schedule::Comment
   include Gws::Addon::GroupPermission
 
   set_permission_name 'gws_schedule_plans'
+
+  validates :text, presence: true
 end
