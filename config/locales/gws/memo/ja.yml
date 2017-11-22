@@ -42,7 +42,8 @@ ja:
   mongoid:
     models:
       gws/memo/message: 連絡メモ
-      gws/memo/folder: 管理
+      gws/memo/folder: フォルダー
+      gws/memo/filter: フィルター
       gws/memo/signature: 署名
     attributes:
       gws/memo/message:
