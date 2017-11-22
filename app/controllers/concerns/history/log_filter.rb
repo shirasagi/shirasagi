@@ -1,25 +1,18 @@
 module History::LogFilter
   extend ActiveSupport::Concern
 
+  included do
+    cattr_accessor(:log_class, instance_accessor: false) { History::Log }
+    after_action :put_history_log
+  end
+
   private
 
   def put_history_log
-    log              = History::Log.new
-    log.session_id   = request.session.id
-    log.request_id   = request.uuid
-    log.url          = request.path
-    log.controller   = params[:controller]
-    log.action       = params[:action]
-    log.user_id      = @cur_user.id if @cur_user
-    log.site_id      = @cur_site.id if @cur_site
-
-    if @item && @item.respond_to?(:new_record?)
-      if !@item.new_record?
-        log.target_id    = @item.id
-        log.target_class = @item.class
-      end
-    end
-
-    log.save
+    self.class.log_class.create_controller_log!(
+      request, response,
+      controller: params[:controller], action: params[:action],
+      cur_site: @cur_site, cur_user: @cur_user, item: @item
+    ) rescue nil
   end
 end

@@ -1,9 +1,14 @@
 class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
   include Gws::Elasticsearch::Indexer::Base
+  include Gws::Elasticsearch::Indexer::MemoBase
 
   self.model = Gws::Memo::Message
 
   private
+
+  def index_item_id
+    "message-#{@id}"
+  end
 
   def enum_es_docs
     Enumerator.new do |y|
@@ -16,14 +21,10 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   def convert_to_doc
     doc = {}
-    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: '$redirect', id: item)
+    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: REDIRECT, id: item, anchor: "message-#{item.id}")
     doc[:name] = item.subject
     doc[:mode] = item.format
-    if item.format == 'html'
-      doc[:text] = ApplicationController.helpers.sanitize(item.html.presence || '', tags: [])
-    else
-      doc[:text] = item.text
-    end
+    doc[:text] = item_text
     # doc[:categories] = item.categories.pluck(:name)
 
     # doc[:release_date] =
@@ -34,12 +35,12 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
     doc[:user_name] = item.user_long_name
     # doc[:group_ids] = item.groups.pluck(:id)
     # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
-    doc[:user_ids] = item.users.pluck(:id)
+    doc[:user_ids] = [ item.user_id ]
     # doc[:permission_level] = item.permission_level
 
     # doc[:readable_group_ids] =
     # doc[:readable_custom_group_ids] =
-    doc[:readable_member_ids] = item.to_users.pluck(:id)
+    doc[:readable_member_ids] = item.members.pluck(:id)
 
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
@@ -49,7 +50,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   def convert_file_to_doc(file)
     doc = {}
-    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: '$redirect', id: item, anchor: "file-#{file.id}")
+    doc[:url] = url_helpers.gws_memo_message_path(site: site, folder: REDIRECT, id: item, anchor: "file-#{file.id}")
     doc[:name] = file.name
     # doc[:categories] = item.categories.pluck(:name)
     doc[:data] = Base64.strict_encode64(::File.binread(file.path))
@@ -64,16 +65,24 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
     # doc[:group_ids] = item.groups.pluck(:id)
     # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
-    doc[:user_ids] = item.users.pluck(:id)
+    doc[:user_ids] = [ item.user_id ]
     # doc[:permission_level] = item.permission_level
 
     # doc[:readable_group_ids] =
     # doc[:readable_custom_group_ids] =
-    doc[:readable_member_ids] = item.to_users.pluck(:id)
+    doc[:readable_member_ids] = item.members.pluck(:id)
 
     doc[:updated] = file.updated.try(:iso8601)
     doc[:created] = file.created.try(:iso8601)
 
     [ "file-#{file.id}", doc ]
+  end
+
+  def item_text
+    if item.format == 'html'
+      ApplicationController.helpers.sanitize(item.html.presence || '', tags: [])
+    else
+      item.text
+    end
   end
 end

@@ -19,6 +19,9 @@ ja:
     notice:
       published: 公開しました。
       depublished: 非公開にしました。
+    labels:
+      user: 作成者
+      form: 帳票
 
   modules:
     gws/workflow: ワークフロー
