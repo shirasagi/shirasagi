@@ -38,6 +38,7 @@ class Gws::Circular::Post
   around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
 
+  scope :topic, ->{ exists post_id: false }
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
