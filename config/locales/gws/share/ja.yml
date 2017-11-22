@@ -71,7 +71,7 @@ ja:
           file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
-          found_files: ファイルが存在します。
+          found_files: フォルダー内、または削除済みのフォルダー内にファイルが存在しています。
     attributes:
       gws/share/category:
         name: カテゴリー名
