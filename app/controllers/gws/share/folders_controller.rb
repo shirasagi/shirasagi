@@ -39,6 +39,21 @@ class Gws::Share::FoldersController < ApplicationController
     render_update @item.update, { controller: params["controller"] }
   end
 
+  def create
+    @item = @model.new get_params
+    parent_folder = @model.where(name: File.dirname(@item.name)).first
+
+    if parent_folder.present?
+      @item.readable_group_ids = (@item.readable_group_ids + parent_folder.readable_group_ids).uniq
+      @item.readable_member_ids = (@item.readable_member_ids + parent_folder.readable_member_ids).uniq
+      @item.group_ids = (@item.group_ids + parent_folder.group_ids).uniq
+      @item.user_ids = (@item.user_ids + parent_folder.user_ids).uniq
+    end
+
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
+  end
+
   def download_folder
     raise "403" unless @model.allowed?(:download, @cur_user, site: @cur_site)
     ss_file_items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
