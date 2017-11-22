@@ -14,6 +14,10 @@ class Gws::Memo::Comment
   before_validation :set_message_id, if: ->{ @cur_message }
   scope :message, ->(message) { where( message_id: message.id ) }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::MemoCommentJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::MemoCommentJob.callback
+
   def set_message_id
     self.message_id ||= @cur_message.id
   end

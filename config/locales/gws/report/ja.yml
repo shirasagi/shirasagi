@@ -15,7 +15,8 @@ ja:
         sent: 送信一覧
         public: 送信済み
         closed: 下書き
-        all: すべて
+        readable: 閲覧一覧
+        redirect: リダイレクト
     apis:
       files:
         index: レポートを選択する

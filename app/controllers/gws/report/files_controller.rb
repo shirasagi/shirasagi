@@ -8,6 +8,7 @@ class Gws::Report::FilesController < ApplicationController
   before_action :set_cur_form, only: %i[new create]
   before_action :set_cur_plan, only: %i[new create]
   before_action :set_search_params
+  before_action :redirect_to_appropriate_state, only: %i[show]
 
   private
 
@@ -87,6 +88,25 @@ class Gws::Report::FilesController < ApplicationController
     params = { cur_user: @cur_user, cur_site: @cur_site }
     params[:cur_form] = @cur_form if @cur_form
     params
+  end
+
+  def redirect_to_appropriate_state
+    return if params[:state] != 'redirect'
+
+    if @item.user_ids.include?(@cur_user.id) || (@item.group_ids & @cur_user.group_ids).present?
+      if @item.public?
+        state = 'sent'
+      else
+        state = 'closed'
+      end
+    elsif @item.member_ids.include?(@cur_user.id)
+      state = 'inbox'
+    else
+      state = 'readable'
+    end
+
+    raise '404' if state.blank?
+    redirect_to(state: state)
   end
 
   public

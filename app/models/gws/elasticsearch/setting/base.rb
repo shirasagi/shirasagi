@@ -49,12 +49,22 @@ module Gws::Elasticsearch::Setting::Base
       query4[:bool][:must] << { terms: { readable_custom_group_ids: custom_group_ids } }
     end
 
+    query5 = {}
+    query5[:bool] = {}
+    query5[:bool][:must] = { term: { member_ids: cur_user.id } }
+
+    if custom_group_ids.present?
+      query6 = {}
+      query6[:bool] = {}
+      query6[:bool][:must] = []
+      query6[:bool][:must] << { terms: { member_custom_group_ids: custom_group_ids } }
+    end
+
     query0 = {}
     query0[:bool] = {}
-    query0[:bool][:should] = [ query1, query2, query3 ]
-    if query4.present?
-      query0[:bool][:should] << query4
-    end
+    query0[:bool][:should] = [ query1, query2, query3, query5 ]
+    query0[:bool][:should] << query4 if query4.present?
+    query0[:bool][:should] << query6 if query6.present?
     query0[:bool][:minimum_should_match] = 1
 
     query0

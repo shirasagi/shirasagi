@@ -32,7 +32,7 @@ class Gws::Elasticsearch::Setting::All
   def translate_type(es_type)
     setting = find_setting(es_type)
     if setting.present?
-      I18n.t("gws/elasticsearch.tabs.#{setting.type}")
+      setting.menu_label
     else
       es_type
     end
