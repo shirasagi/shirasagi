@@ -42,8 +42,13 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def set_folder_navi
-    @folder_navi = Gws::Share::Folder.site(@cur_site).
+    if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
+      @folder_navi = Gws::Share::Folder.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site)
+    elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
+      @folder_navi = Gws::Share::Folder.site(@cur_site).
+        readable(@cur_user, site: @cur_site)
+    end
   end
 
   def fix_params
