@@ -3,14 +3,16 @@
   <ul class="list-items">
     <% @item.comments.order_by(updated: -1).each do |comment| %>
     <li class="list-item">
-      <p><%== comment.html %></p>
-      <div class="meta">
-        <span class="datetime"><%= I18n.l(comment.updated) %></span>
-        <span class="group"><%= comment.user_group_name %></span>
-        <span class="user"><%= comment.user_name %></span>
+      <div class="info">
+        <p class="title"><%== comment.html %></p>
+        <div class="meta">
+          <span class="datetime"><%= I18n.l(comment.updated) %></span>
+          <span class="group"><%= comment.user_group_name %></span>
+          <span class="user"><%= comment.user_name %></span>
+        </div>
       </div>
       <% if comment.user_id == @cur_user.id || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <div class="operations">
+      <div class="links">
         <%= link_to(t('ss.buttons.edit'), edit_gws_schedule_comment_path(plan_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn') %>
         <%= link_to(t('ss.buttons.delete'), delete_gws_schedule_comment_path(plan_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn') %>
       </div>
