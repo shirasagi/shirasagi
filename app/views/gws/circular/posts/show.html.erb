@@ -81,7 +81,7 @@
         </thead>
         <tbody class="items">
           <% @item.members.each do |member| %>
-            <% first_comment = @item.comments.find { |c| c.user_id == member.id } %>
+            <% first_comment = @item.comments.find_by(user_id: member.id) %>
             <% last_comment = @item.comments.
               select { |c| c.user_id == member.id }.
               sort {|a,b| a.updated <=> b.updated }.last %>
