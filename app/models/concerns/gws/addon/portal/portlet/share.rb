@@ -12,7 +12,7 @@ module Gws::Addon::Portal::Portlet
       permit_params :limit, :share_folder_id, share_category_ids: []
     end
 
-    def find_items(portal, cur_user)
+    def find_share_items(portal, cur_user)
       search = { site: portal.site }
 
       if cate = share_categories.first

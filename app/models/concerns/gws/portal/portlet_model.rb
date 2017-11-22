@@ -5,15 +5,17 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Link
   include Gws::Addon::Portal::Portlet::Schedule
   include Gws::Addon::Portal::Portlet::Reminder
+  include Gws::Addon::Portal::Portlet::Board
+  include Gws::Addon::Portal::Portlet::Monitor
   include Gws::Addon::Portal::Portlet::Share
 
   PORTLETS = {
     free:     { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
     links:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Link] },
-    schedule: { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Schedule] },
     reminder: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Reminder] },
-    board:    { size_x: 2, size_y: 3 },
-    monitor:  { size_x: 2, size_y: 3 },
+    schedule: { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Schedule] },
+    board:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Board] },
+    monitor:  { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Monitor] },
     share:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Share] },
   }.freeze
 
