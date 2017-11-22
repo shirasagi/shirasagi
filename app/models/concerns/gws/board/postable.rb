@@ -22,7 +22,7 @@ module Gws::Board::Postable
 
     validates :descendants_updated, datetime: true
 
-    belongs_to :topic, class_name: "Gws::Board::Post", inverse_of: :descendants
+    belongs_to :topic, class_name: "Gws::Board::Topic", inverse_of: :descendants
     belongs_to :parent, class_name: "Gws::Board::Post", inverse_of: :children
 
     has_many :children, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :parent,
