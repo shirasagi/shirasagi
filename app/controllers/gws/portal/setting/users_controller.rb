@@ -34,7 +34,6 @@ class Gws::Portal::Setting::UsersController < ApplicationController
 
     @items = @model.site(@cur_site).
       state(params.dig(:s, :state)).
-      allow(:read, @cur_user, site: @cur_site).
       in(group_ids: group_ids).
       search(params[:s]).
       order_by_title(@cur_site).

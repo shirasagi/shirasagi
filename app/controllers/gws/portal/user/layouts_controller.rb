@@ -6,7 +6,7 @@ class Gws::Portal::User::LayoutsController < ApplicationController
   model Gws::Portal::UserSetting
 
   navi_view 'gws/portal/user/navi'
-  menu_view 'gws/crud/resource_menu'
+  menu_view 'gws/portal/common/layouts/menu'
 
   before_action :set_portal_setting
   before_action :save_portal_setting

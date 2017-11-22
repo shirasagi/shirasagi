@@ -4,10 +4,9 @@
   <ul class="list-items">
     <% @sys_notices.each do |item| %>
     <li class="list-item">
-      <div class="meta">
+      <div class="info">
         <%= link_to item.name, gws_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
         <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
-
       </div>
     </li>
     <% end %>
@@ -24,7 +23,7 @@
   <ul class="list-items">
     <% @notices.each do |item| %>
     <li class="list-item">
-      <div class="meta">
+      <div class="info">
         <%= link_to item.name, gws_public_notice_path(id: item), class: "title notice-severity-#{item.severity}" %>
         <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
         <% if item.updated_after_released? %>
@@ -40,5 +39,3 @@
   <% end %>
 </div>
 <% end %>
-
-<%= render file: "gws/portal/common/show_portal" %>

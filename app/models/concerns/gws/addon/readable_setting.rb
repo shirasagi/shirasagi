@@ -45,12 +45,16 @@ module Gws::Addon::ReadableSetting
   end
 
   def readable?(user, opts = {})
-    return true if readable_group_ids.blank? && readable_member_ids.blank? && readable_custom_group_ids.blank?
+    return true unless readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
     return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
-    return true if allowed?(:read, user, site: opts[:cur_site] || site) # valid role
-    false
+
+    if opts[:strict]
+      return allowed?(:read, user, site: opts[:site] || site, strict: true)
+    else
+      return allowed?(:read, user, site: opts[:site] || site) # valid role
+    end
   end
 
   def readable_groups_hash

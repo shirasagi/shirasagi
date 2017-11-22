@@ -2,7 +2,7 @@ module Gws::Portal::PortletFilter
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_addons, only: %w(show new create edit update)
+    before_action :set_portlet_addons
   end
 
   private
@@ -11,8 +11,14 @@ module Gws::Portal::PortletFilter
     { cur_user: @cur_user, cur_site: @cur_site, setting_id: @portal.try(:id) }
   end
 
-  def set_addons
-    @addons = @item.portlet_addons if @item
+  def pre_params
+    { group_ids: @portal.group_ids, user_ids: @portal.user_ids }
+  end
+
+  def set_portlet_addons
+    portlet_model = params[:portlet_model].presence
+    portlet_model = @item.portlet_model if @item
+    @addons = @model.portlet_addons(portlet_model) if portlet_model
   end
 
   def new_portlet
@@ -21,8 +27,7 @@ module Gws::Portal::PortletFilter
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item.name = @item.label(:portlet_model)
-    @addons = @item.portlet_addons if @item.portlet_model
-    render file: 'gws/portal/common/new_portlet' unless @item.portlet_model_enabled?
+    render file: 'gws/portal/common/portlets/select_model' unless @item.portlet_model_enabled?
   end
 
   public

@@ -1,7 +1,6 @@
 <nav class="main-navi">
   <% if @cur_site.menu_portal_visible? %>
-    <h2><%= link_to @cur_site.menu_portal_label || t('gws/portal.my_portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
-    <h3><%= link_to t('gws/portal.tabs.user_portal'), gws_portal_user_path(user: @cur_user) %></h3>
+    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
     <% @cur_user.groups.in_group(@cur_site).each do |group| %>
       <% next if group.id == @cur_site.id %>
       <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>

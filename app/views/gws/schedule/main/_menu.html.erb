@@ -1,4 +1,12 @@
 <% return if params[:action] =~ /index/ %>
+
+<%= jquery do %>
+  var state = "calendar[date]=<%= params.dig(:calendar, :date) %>&calendar[view]=<%= params.dig(:calendar, :view) %>"
+  $('.nav-menu a').each(function() {
+    $(this).attr('href', $(this).attr('href') + "?" + state);
+  });
+<% end %>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>

@@ -1,4 +1,4 @@
-<% if @portal.portal_type == :group %>
+<% if @portal.group_portal? || @portal.root_portal? %>
   <%= render file: 'gws/portal/portlets/schedule/group_schedule' %>
 <% else %>
   <%= render file: 'gws/portal/portlets/schedule/user_schedule' %>
