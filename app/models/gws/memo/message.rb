@@ -1,4 +1,5 @@
 class Gws::Memo::Message
+  include ActiveSupport::NumberHelper
   include SS::Document
   include Gws::Referenceable
   include Gws::Reference::User
@@ -31,6 +32,8 @@ class Gws::Memo::Message
   default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
 
   before_validation :set_to, :set_size
+
+  validate :validate_attached_file_size
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
@@ -201,6 +204,18 @@ class Gws::Memo::Message
 
   def html?
     format == 'html'
+  end
+
+  def validate_attached_file_size
+    return if site.memo_filesize_limit.blank?
+    return if site.memo_filesize_limit <= 0
+
+    limit = site.memo_filesize_limit * 1024 * 1024
+    size = files.compact.map(&:size).sum
+
+    if size > limit
+      errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
+    end
   end
 
   class << self
