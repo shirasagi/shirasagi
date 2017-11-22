@@ -37,6 +37,14 @@ class Gws::Share::Folder
 
   default_scope ->{ order_by order: 1 }
 
+  scope :sub_folder, ->(key, folder) {
+    if key.start_with?('root_folder')
+      where("$and" => [ {name: /^(?!.*\/).*$/} ] )
+    else
+      where("$and" => [ {name: /#{folder}\/(?!.*\/).*$/} ] )
+    end
+  }
+
   class << self
     def search(params)
       criteria = where({})
