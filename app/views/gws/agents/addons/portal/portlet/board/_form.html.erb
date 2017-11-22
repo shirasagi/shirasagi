@@ -1,5 +1,5 @@
 <dl class="see">
-  <dt><%= @model.t :board_category_ids %></dt>
+  <dt><%= @model.t :board_category_ids %><%= @model.tt :board_category_ids %></dt>
   <dd>
     <%= f.hidden_field "board_category_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("gws.apis.categories.index"), gws_board_apis_categories_path(single: true), class: "ajax-box" %>
@@ -8,9 +8,9 @@
     <table class="index ajax-selected">
       <thead><tr><th class="name"><%= Gws::Board::Category.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
-        <% @item.board_categories.each do |item| %>
-        <tr data-id="<%= item.id %>">
-          <td><%= f.hidden_field "board_category_ids[]", value: item.id %> <%= item.name %></td>
+        <% @item.board_categories.each do |cate| %>
+        <tr data-id="<%= cate.id %>">
+          <td><%= f.hidden_field "board_category_ids[]", value: cate.id %> <%= cate.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>
@@ -18,6 +18,6 @@
     </table>
   </dd>
 
-  <dt><%= @item.t :limit %> </dt>
+  <dt><%= @item.t :limit %><%= @item.tt :limit %></dt>
   <dd><%= f.number_field :limit %></dd>
 </dl>
