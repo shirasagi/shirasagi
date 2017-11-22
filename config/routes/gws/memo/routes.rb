@@ -31,5 +31,6 @@ SS::Application.routes.draw do
     resources :folders, concerns: :deletion
     resources :filters, concerns: :deletion
     resources :signatures, concerns: :deletion
+    resource :setting, only: [:show, :edit, :update]
   end
 end
