@@ -17,10 +17,6 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
     @crumbs << [@group.name, action: :index]
   end
 
-  def redirection_view
-    'timelineDay'
-  end
-
   public
 
   def index

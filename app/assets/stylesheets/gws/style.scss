@@ -108,11 +108,8 @@ a.gws-category-label:hover {
 // Popup (tooltip)
 .gws-popup {
   position: absolute;
-  //border: 1px solid #bbb;
-  //width: 340px;
   width: 400px;
-  //height: 250px;
-  padding: 5px;
+  padding: 10px;
   border-radius: 4px;
   @include box-shadow(0 1px 6px #666);
   background-color: #fff;

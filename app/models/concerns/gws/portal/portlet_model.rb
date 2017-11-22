@@ -3,14 +3,15 @@ module Gws::Portal::PortletModel
   extend SS::Translation
   include Gws::Addon::Portal::Portlet::Free
   include Gws::Addon::Portal::Portlet::Link
+  include Gws::Addon::Portal::Portlet::Reminder
 
-  PORTLET_MODELS = {
+  PORTLETS = {
     free:     { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
     links:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Link] },
     schedule: { size_x: 4, size_y: 2 },
-    reminder: { size_x: 2, size_y: 3 },
+    reminder: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Reminder] },
     board:    { size_x: 2, size_y: 3 },
-    monitor:    { size_x: 2, size_y: 3 },
+    monitor:  { size_x: 2, size_y: 3 },
     share:    { size_x: 2, size_y: 3 },
   }.freeze
 
@@ -19,12 +20,10 @@ module Gws::Portal::PortletModel
     field :portlet_model, type: String
     field :grid_data, type: Hash
 
-    #belongs_to :setting, class_name: 'Gws::Portal::***Setting'
-
     permit_params :name, :portlet_model
 
     validates :name, presence: true
-    validates :portlet_model, inclusion: { in: PORTLET_MODELS.keys.map(&:to_s) }
+    validates :portlet_model, inclusion: { in: PORTLETS.keys.map(&:to_s) }
     validates :setting_id, presence: true
 
     after_validation :set_default_grid_data, if: ->{ grid_data.blank? }
@@ -34,37 +33,32 @@ module Gws::Portal::PortletModel
     }
   end
 
-  def portlet_models
-    PORTLET_MODELS.keys.map do |key|
-      {
-        key: key,
-        name: I18n.t("gws/portal.portlets.#{key}.name"),
-        text: I18n.t("gws/portal.portlets.#{key}.text"),
-      }
-    end
-  end
-
   def portlet_model_options
-    PORTLET_MODELS.keys.map { |k| [I18n.t("gws/portal.portlets.#{k}.name"), k] }
+    PORTLETS.keys.map { |k| [I18n.t("gws/portal.portlets.#{k}.name"), k] }
   end
 
   def portlet_model_enabled?
-    portlet_model.present? && PORTLET_MODELS.key?(portlet_model.to_sym)
-  end
-
-  def default_grid_data
-    PORTLET_MODELS[portlet_model.to_sym].slice(:size_x, :size_y)
+    portlet_model.present? && PORTLETS.key?(portlet_model.to_sym)
   end
 
   def portlet_addons
-    addons = PORTLET_MODELS[portlet_model.to_sym][:addons] || []
-    self.class.addons.select do |addon|
-      addons.include?(addon.klass)
-    end
+    self.class.portlet_addons(portlet_model)
   end
 
-  def portlet_view_file
+  def default_grid_data
+    PORTLETS[portlet_model.to_sym].slice(:size_x, :size_y)
+  end
+
+  def view_file
     "gws/portal/portlets/#{portlet_model}/index.html.erb"
+  end
+
+  def portlet_id_class
+    "portlet-id-#{id}"
+  end
+
+  def portlet_model_class
+    "portlet-model-#{portlet_model}"
   end
 
   private
@@ -84,11 +78,26 @@ module Gws::Portal::PortletModel
       criteria
     end
 
-    def default_portlet(key)
-      item = self.new(portlet_model: key)
-      item.name = I18n.t("gws/portal.portlets.#{key}.name")
+    def portlet_model(type)
+      {
+        type: type,
+        name: I18n.t("gws/portal.portlets.#{type}.name"),
+        text: I18n.t("gws/portal.portlets.#{type}.text"),
+      }
+    end
+
+    def default_portlet(type)
+      item = self.new(portlet_model: type)
+      item.name = I18n.t("gws/portal.portlets.#{type}.name")
       item.grid_data = item.default_grid_data
       item
+    end
+
+    def portlet_addons(type)
+      portlets = PORTLETS[type.to_sym][:addons] || []
+      self.addons.select do |addon|
+        addon.type.nil? || portlets.include?(addon.klass)
+      end
     end
   end
 end

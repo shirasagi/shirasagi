@@ -6,6 +6,7 @@ class Gws::Portal::User::PortletsController < ApplicationController
 
   model Gws::Portal::UserPortlet
 
+  prepend_view_path 'app/views/gws/portal/common/portlets'
   navi_view 'gws/portal/user/navi'
 
   before_action :set_portal_setting

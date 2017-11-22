@@ -32,7 +32,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def redirection_view
-    'agendaDay'
+    params.dig(:calendar, :view).presence || 'month'
   end
 
   def redirection_url

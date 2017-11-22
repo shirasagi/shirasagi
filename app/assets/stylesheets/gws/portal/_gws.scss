@@ -1,18 +1,18 @@
 // Portal
 
+.portal-notice {
+  .datetime {
+    margin-left: 5px;
+    color: #888;
+  }
+}
 // portlets
 .gws-portlets {
-  //margin: -10px;
+  margin: -10px;
   .portlet-item {
   }
   .portlet-html {
     height: 100%;
-  }
-  .portlet-title {
-    margin: -15px -10px 15px;
-    padding: 10px;
-    border-bottom: $border-gray1;
-    font-weight: bold;
   }
   .portlet-html .main-box {
     overflow-x: hidden;
@@ -20,11 +20,32 @@
     height: 100%;
     margin: 0;
   }
+  .portlet-html .portlet--closed {
+    background: #eee;
+    background-image: url(/assets/img/gws/bg-plan.png);
+  }
+  .portlet-title {
+    margin: -15px -10px 15px;
+    padding: 8px 10px;
+    border-bottom: $border-gray1;
+    background: rgba(0,0,0,.02);
+    font-weight: bold;
+  }
   .portlet-model-schedule .main-box.with-tabs {
     height: calc(100% - 30px);
   }
   .list-items {
     margin: -10px -5px;
+    .info a:visited {
+      color: #b53 !important;
+    }
+  }
+  .list-item:last-child {
+    border-bottom: 1px solid #f2f2f2;
+  }
+  .list-more {
+    margin: 20px 0 0;
+    text-align: right;
   }
 }
 .gws-portlets-static {
@@ -32,7 +53,6 @@
 }
 .gws-portlets-layouts {
   .portlet-item {
-    box-shadow: 0px 1px 5px #ccc;
     background-color: rgba(0,0,0,.01);
     background-image: url(/assets/img/gws/bg-plan.png);
     cursor: move;
@@ -44,7 +64,8 @@
     box-shadow: 0px 1px 10px #bbb;
   }
   .preview-holder {
-    border: 1px solid #aaa;
+    background-color: rgba(0,0,0,.3);
+    background-image: url(/assets/img/gws/bg-plan.png);
   }
   .gs-resize-handle-both {
     height: 12px;
@@ -59,22 +80,5 @@
   }
   input[type=text] {
     width: 100%;
-  }
-}
-
-//
-.portal-notice, .portal-reminder, .portal-board {
-  .list-items .info a:visited {
-    color: #b53 !important;
-  }
-  .more {
-    padding: 0 10px 10px;
-    text-align: right;
-  }
-}
-.portal-notice {
-  .datetime {
-    margin-left: 5px;
-    color: #888;
   }
 }

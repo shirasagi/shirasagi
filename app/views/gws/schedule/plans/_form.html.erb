@@ -3,6 +3,8 @@
   Gws_Schedule_Plan.renderAlldayForm();
 <% end %>
 
+<%= hidden_field_tag 'calendar[view]', params.dig(:calendar, :view) %>
+
 <dl class="see gws-schedule-plan">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>

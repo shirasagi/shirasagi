@@ -12,36 +12,38 @@ module Gws::Portal::PortalFilter
     return if @portal
 
     if params[:group].present?
-      if @cur_site.id.to_s == params[:group]
-        @portal_group = @cur_site
-        @portal = @cur_site.find_or_new_portal_root_setting(cur_user: @cur_user, cur_site: @cur_site)
-      else
-        @portal_group = Gws::Group.find(params[:group])
-        @portal = @portal_group.find_or_new_portal_group_setting(cur_user: @cur_user, cur_site: @cur_site)
-      end
-    elsif params[:user].present?
-      @portal_user = Gws::User.find(params[:user])
-      @portal = @portal_user.find_or_new_portal_user_setting(cur_user: @cur_user, cur_site: @cur_site)
-    else
-      @portal_user = @cur_user
-      @portal = @cur_user.find_or_new_portal_my_setting(cur_user: @cur_user, cur_site: @cur_site)
+      @portal_group = Gws::Group.find(params[:group])
+      @portal = @portal_group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+      @portal.portal_type = (@portal_group.id == @cur_site.id) ? :root_portal : :group_portal
+      return
     end
 
-    #raise '403' unless @portal.strict_allowed?(:read, @cur_user, site: @cur_site)
+    if params[:user].present?
+      @portal_user = Gws::User.find(params[:user])
+    else
+      @portal_user = @cur_user
+    end
+
+    @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+    @portal.portal_type = (@portal_user.id == @cur_user.id) ? :my_portal : :user_portal
+
+    if @portal.user_portal?
+      raise '403' if !@portal.readable?(@cur_user, site: @cur_site, strict: true)
+    end
   end
 
   def save_portal_setting
     return unless @portal.new_record?
 
-    raise '403' unless @portal.strict_allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
     raise '403' unless @portal.save
   end
 
   public
 
   def show_portal
-    @items = @portal.readable_portlets(@cur_user, @cur_site)
-    render file: "gws/portal/common/show_portal"
+    @items = @portal.portlets.presence || @portal.default_portlets
+    render file: "gws/portal/common/portal/show"
   end
 
   def show_setting
@@ -50,7 +52,7 @@ module Gws::Portal::PortalFilter
 
   def show_layout
     @items = @portal.portlets
-    render file: 'gws/portal/common/show_layout'
+    render file: 'gws/portal/common/layouts/show'
   end
 
   def update_layout

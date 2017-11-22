@@ -16,6 +16,11 @@ class Gws::Schedule::UserPlansController < ApplicationController
     super.merge member_ids: [@user.id]
   end
 
+  def redirection_view
+    return 'month' if params.dig(:calendar, :view) == 'timelineDay'
+    super
+  end
+
   public
 
   def events
