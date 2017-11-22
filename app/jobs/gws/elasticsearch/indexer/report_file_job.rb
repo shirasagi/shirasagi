@@ -1,14 +1,12 @@
-class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
+class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
   include Gws::Elasticsearch::Indexer::Base
 
-  self.model = Gws::Workflow::File
+  REDIRECT = 'redirect'.freeze
+
+  self.model = Gws::Report::File
 
   class << self
     def collect_file_ids_was_for_save(item)
-      if item.form.blank?
-        return super
-      end
-
       file_ids = []
       item.column_values.each do |column_value|
         next unless column_value.respond_to?(:file_ids_was)
@@ -22,10 +20,6 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     end
 
     def collect_file_ids_for_save(item)
-      if item.form.blank?
-        return super
-      end
-
       file_ids = []
       item.column_values.each do |column_value|
         next unless column_value.respond_to?(:file_ids)
@@ -42,7 +36,7 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
   private
 
   def index_item_id
-    "workflow-#{@id}"
+    "report-#{@id}"
   end
 
   def enum_es_docs
@@ -56,22 +50,25 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
 
   def convert_to_doc
     doc = {}
-    doc[:url] = url_helpers.gws_workflow_file_path(site: site, state: 'all', id: item)
+    doc[:url] = url_helpers.gws_report_file_path(site: site, state: REDIRECT, id: item)
     doc[:name] = item.name
-    doc[:mode] = item.form.present? ? 'form' : 'standard'
+    doc[:mode] = 'form'
     doc[:text] = item_text
     doc[:categories] = item_categories
 
     doc[:release_date] = item_release_date
     doc[:close_date] = item_close_date
     doc[:released] = item_released
-    doc[:state] = item_state
+    doc[:state] = item.state
 
     doc[:user_name] = item.user_long_name
     doc[:group_ids] = item.groups.pluck(:id)
     doc[:custom_group_ids] = item.custom_groups.pluck(:id)
     doc[:user_ids] = item.users.pluck(:id)
     doc[:permission_level] = item.permission_level
+
+    doc[:member_ids] = item.members.pluck(:id)
+    doc[:member_custom_group_ids] = item.member_custom_groups.pluck(:id)
 
     doc[:readable_group_ids] = item.readable_groups.pluck(:id)
     doc[:readable_custom_group_ids] = item.readable_custom_groups.pluck(:id)
@@ -80,12 +77,12 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
 
-    [ "workflow-#{item.id}", doc ]
+    [ "report-#{item.id}", doc ]
   end
 
   def convert_file_to_doc(file)
     doc = {}
-    doc[:url] = url_helpers.gws_workflow_file_path(site: site, state: 'all', id: item, anchor: "file-#{file.id}")
+    doc[:url] = url_helpers.gws_report_file_path(site: site, state: REDIRECT, id: item, anchor: "file-#{file.id}")
     doc[:name] = file.name
     # doc[:categories] = item.categories.pluck(:name)
     doc[:data] = Base64.strict_encode64(::File.binread(file.path))
@@ -103,6 +100,9 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
     doc[:user_ids] = item.users.pluck(:id)
     doc[:permission_level] = item.permission_level
 
+    doc[:member_ids] = item.members.pluck(:id)
+    doc[:member_custom_group_ids] = item.member_custom_groups.pluck(:id)
+
     doc[:readable_group_ids] = item.readable_groups.pluck(:id)
     doc[:readable_custom_group_ids] = item.readable_custom_groups.pluck(:id)
     doc[:readable_member_ids] = item.readable_members.pluck(:id)
@@ -114,22 +114,6 @@ class Gws::Elasticsearch::Indexer::WorkflowFileJob < Gws::ApplicationJob
   end
 
   def item_text
-    if item.form.present?
-      collect_form_text
-    else
-      item.text
-    end
-  end
-
-  def item_state
-    if item.state == 'approve'
-      'public'
-    else
-      item.state
-    end
-  end
-
-  def collect_form_text
     texts = []
     item.column_values.each do |column_value|
       texts << column_value.to_es

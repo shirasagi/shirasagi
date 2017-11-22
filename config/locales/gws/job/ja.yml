@@ -10,4 +10,4 @@ ja:
 
   mongoid:
     models:
-      gws/job/log: ジョブ実行履歴
+      gws/job/log: 実行履歴

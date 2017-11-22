@@ -116,8 +116,8 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
           expect(log.logs).to include(include('INFO -- : Completed Job'))
         end
 
-        expect(Gws::HistoryArchiveFile.site(site).count).to eq 2
-        Gws::HistoryArchiveFile.site(site).order_by(id: 1).first.tap do |archive_file|
+        expect(Gws::HistoryArchiveFile.site(site).reorder(filename: 1, id: 1).count).to eq 2
+        Gws::HistoryArchiveFile.site(site).reorder(filename: 1, id: 1).first.tap do |archive_file|
           expect(archive_file.model).to eq 'gws/history_archive_file'
           expect(archive_file.state).to eq 'closed'
           expect(archive_file.name).to eq '2015年12月27日〜2015年12月31日'
@@ -125,7 +125,7 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
           expect(archive_file.size).to be > 0
           expect(archive_file.content_type).to eq 'application/zip'
         end
-        Gws::HistoryArchiveFile.site(site).order_by(id: 1).last.tap do |archive_file|
+        Gws::HistoryArchiveFile.site(site).reorder(filename: 1, id: 1).last.tap do |archive_file|
           expect(archive_file.model).to eq 'gws/history_archive_file'
           expect(archive_file.state).to eq 'closed'
           expect(archive_file.name).to eq '2016年1月1日〜2016年1月2日'

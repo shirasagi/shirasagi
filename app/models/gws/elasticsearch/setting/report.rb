@@ -1,11 +1,11 @@
-class Gws::Elasticsearch::Setting::Memo
+class Gws::Elasticsearch::Setting::Report
   include ActiveModel::Model
   include Gws::Elasticsearch::Setting::Base
 
-  self.model = Gws::Memo::Message
+  self.model = Gws::Report::File
 
   def menu_label
-    @cur_site.menu_memo_label || I18n.t('modules.gws/memo')
+    @cur_site.menu_report_label || I18n.t('modules.gws/report')
   end
 
   def search_types
