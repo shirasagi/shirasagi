@@ -49,6 +49,7 @@ class Gws::Circular::PostsController < ApplicationController
     end
 
     @items = @model.site(@cur_site).
+      topic.
       allow(:read, @cur_user, site: @cur_site).
       without_deleted.
       search(params[:s]).
