@@ -38,7 +38,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def set_folder_navi
     @folder_navi = Gws::Share::Folder.site(@cur_site).
-        readable(@cur_user, @cur_site)
+        allow(:read, @cur_user, site: @cur_site)
   end
 
   def fix_params
