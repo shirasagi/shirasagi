@@ -22,7 +22,7 @@
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>
-    <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_messages_path, class: "icon-conv" %></h2>
+    <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_main_path, class: "icon-conv" %></h2>
   <% end %>
 
   <% if @cur_site.menu_board_visible? %>
