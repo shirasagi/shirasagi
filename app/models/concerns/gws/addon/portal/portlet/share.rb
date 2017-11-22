@@ -11,6 +11,10 @@ module Gws::Addon::Portal::Portlet
       permit_params :share_folder_id, share_category_ids: []
     end
 
+    def share_folder_options
+      Gws::Share::File.new(cur_user: @cur_user, cur_site: @cur_site).folder_options
+    end
+
     def find_share_items(portal, user)
       search = { site: portal.site }
 
@@ -28,10 +32,6 @@ module Gws::Addon::Portal::Portlet
         order(updated: -1).
         page(1).
         per(limit)
-    end
-
-    def share_folder_options
-      Gws::Share::File.new(cur_user: @cur_user, cur_site: @cur_site).folder_options
     end
   end
 end

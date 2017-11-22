@@ -57,6 +57,7 @@
     background-image: url(/assets/img/gws/bg-plan.png);
     cursor: move;
     &:hover {
+      box-shadow: 0px 1px 5px #bbb;
       background-color: rgba(0,0,0,.05);
     }
   }
@@ -70,6 +71,9 @@
   .gs-resize-handle-both {
     height: 12px;
     bottom: 0;
+  }
+  .portlet-html .main-box {
+    overflow-y: hidden;
   }
 }
 

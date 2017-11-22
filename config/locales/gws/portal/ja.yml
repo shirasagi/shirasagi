@@ -13,6 +13,7 @@ ja:
       gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
       gws/portal/portlet/report: レポート設定
+      gws/portal/portlet/workflow: ワークフロー設定
 
   gws/portal:
     user_portal: 個人ポータル
@@ -58,6 +59,9 @@ ja:
       report:
         name: レポート
         text: 新着のレポートを表示します。
+      workflow:
+        name: ワークフロー
+        text: 新着のワークフローを表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -124,6 +128,8 @@ ja:
       gws/addon/portal/portlet/share:
         share_category_ids: カテゴリー
         share_folder_id: フォルダー
+      gws/addon/portal/portlet/workflow:
+        workflow_state: 表示範囲
 
   tooltip:
     gws/portal/user_setting:
