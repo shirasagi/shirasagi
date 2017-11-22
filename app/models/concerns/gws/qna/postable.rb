@@ -22,7 +22,7 @@ module Gws::Qna::Postable
 
     validates :descendants_updated, datetime: true
 
-    belongs_to :topic, class_name: "Gws::Qna::Post", inverse_of: :descendants
+    belongs_to :topic, class_name: "Gws::Qna::Topic", inverse_of: :descendants
     belongs_to :parent, class_name: "Gws::Qna::Post", inverse_of: :children
 
     has_many :children, class_name: "Gws::Qna::Post", dependent: :destroy, inverse_of: :parent,
