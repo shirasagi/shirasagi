@@ -95,9 +95,12 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
     </li>
     <% end %>
   </ul>
+</div>
 
-  サブフォルダー
-
+<div class="index">
+  <div class="header">
+    <%= t('gws/share.folder') %>
+  </div>
   <ul class="list-items">
     <% @sub_folders.each do |item| %>
     <li class="list-item">
