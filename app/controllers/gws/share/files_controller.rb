@@ -78,8 +78,7 @@ class Gws::Share::FilesController < ApplicationController
 
     @items = @model.site(@cur_site).
       readable(@cur_user, @cur_site).
-      active.
-      search(params[:s]).
+      active.search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'created_desc').
       page(params[:page]).per(50)
 
@@ -87,9 +86,7 @@ class Gws::Share::FilesController < ApplicationController
 
     folder_name = Gws::Share::Folder.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
-        where(id: params[:folder].to_i).
-        pluck(:name).
-        first
+        where(id: params[:folder].to_i).pluck(:name).first
 
     @sub_folders = Gws::Share::Folder.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
