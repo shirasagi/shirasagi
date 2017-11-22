@@ -117,6 +117,7 @@ ja:
       gws/addon/portal/portlet/schedule:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/board:
+        board_severity: 重要度
         board_category_ids: カテゴリー
       gws/addon/portal/portlet/faq:
         faq_category_ids: カテゴリー
