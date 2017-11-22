@@ -20,11 +20,7 @@ class Cms::SearchContents::FilesController < ApplicationController
   public
 
   def index
-    file_ids = []
-    Cms::Page.each do |page|
-      page.file_ids.each { |file_id| file_ids.push file_id }
-    end
-    file_ids = file_ids.uniq.compact.sort
+    file_ids = Cms::Page.site(@cur_site).pluck(:file_ids).flatten.uniq.compact.sort
     @items = @model.where(site_id: @cur_site).
       search(params[:s]).
       in(id: file_ids).
