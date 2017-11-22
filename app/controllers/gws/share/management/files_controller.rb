@@ -76,6 +76,16 @@ class Gws::Share::Management::FilesController < ApplicationController
       deleted.
       search(params[:s]).
       page(params[:page]).per(50)
+
+    folder_name = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        where(id: params[:folder].to_i).
+        pluck(:name).
+        first
+
+    @sub_folders = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
