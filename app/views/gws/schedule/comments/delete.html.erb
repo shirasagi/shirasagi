@@ -1,0 +1,19 @@
+<%= form_for :item, url: { action: :destroy }, html: { method: :delete, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<%= hidden_field_tag('redirect_to', params[:redirect_to], id: nil) %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t("ss.confirm.delete") %></h2></div>
+    <div class="addon-body">
+      <%= render file: '_delete' %>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
+  <%= link_to(t("ss.buttons.cancel"), params[:redirect_to], class: 'btn-default') %>
+</footer>
+<% end %>

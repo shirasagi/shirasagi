@@ -12,14 +12,15 @@ class Gws::Schedule::CommentsController < ApplicationController
 
   def fix_params
     set_cur_schedule
-    { cur_site: @cur_site, cur_user: @cur_user, cur_schedule: @cur_schedule, text_type: 'plain' }
+    { cur_site: @cur_site, cur_user: @cur_user, cur_schedule: @cur_schedule }
   end
 
   public
 
   def create
     @item = @model.new get_params
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    @item.text_type ||= 'plain'
+    raise "403" unless @cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
     # render_create @item.save
     result = @item.save
     if result
@@ -33,5 +34,33 @@ class Gws::Schedule::CommentsController < ApplicationController
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
       end
     end
+  end
+
+  def edit
+    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update(@item.update, location: params[:redirect_to])
+  end
+
+  def delete
+    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    render
+  end
+
+  def destroy
+    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    render_destroy(@item.destroy, location: params[:redirect_to])
   end
 end
