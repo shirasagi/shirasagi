@@ -6,13 +6,12 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :limit, type: Integer, default: 5
       belongs_to :share_folder, class_name: "Gws::Share::Folder"
       embeds_ids :share_categories, class_name: "Gws::Share::Category"
-      permit_params :limit, :share_folder_id, share_category_ids: []
+      permit_params :share_folder_id, share_category_ids: []
     end
 
-    def find_share_items(portal, cur_user)
+    def find_share_items(portal, user)
       search = { site: portal.site }
 
       if cate = share_categories.first
@@ -23,7 +22,7 @@ module Gws::Addon::Portal::Portlet
       end
 
       Gws::Share::File.site(portal.site).
-        readable(cur_user, portal.site).
+        readable(user, portal.site).
         active.
         search(search).
         order(updated: -1).
@@ -32,8 +31,7 @@ module Gws::Addon::Portal::Portlet
     end
 
     def share_folder_options
-      item = Gws::Share::File.new(cur_user: @cur_user, cur_site: @cur_site)
-      item.folder_options
+      Gws::Share::File.new(cur_user: @cur_user, cur_site: @cur_site).folder_options
     end
   end
 end

@@ -23,8 +23,9 @@ module Gws::Portal::PortletModel
     field :name, type: String
     field :portlet_model, type: String
     field :grid_data, type: Hash
+    field :limit, type: Integer, default: 5
 
-    permit_params :name, :portlet_model
+    permit_params :name, :portlet_model, :limit
 
     validates :name, presence: true
     validates :portlet_model, inclusion: { in: PORTLETS.keys.map(&:to_s) }

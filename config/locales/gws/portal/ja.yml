@@ -7,6 +7,7 @@ ja:
       gws/portal/portlet/reminder: リマインダー設定
       gws/portal/portlet/schedule: スケジュール設定
       gws/portal/portlet/board: 掲示板設定
+      gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
 
   gws/portal:
@@ -95,6 +96,9 @@ ja:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/board:
         board_category_ids: カテゴリー
+      gws/addon/portal/portlet/monitor:
+        monitor_category_ids: カテゴリー
+        monitor_answerable_article: 表示範囲
       gws/addon/portal/portlet/share:
         share_category_ids: カテゴリー
         share_folder_id: フォルダー

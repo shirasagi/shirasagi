@@ -1,4 +1,7 @@
 <dl class="see">
   <dt><%= @item.t :reminder_filter %> </dt>
   <dd><%= @item.label :reminder_filter %></dd>
+
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.send :limit %></dd>
 </dl>

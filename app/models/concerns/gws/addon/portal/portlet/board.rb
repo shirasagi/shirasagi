@@ -6,12 +6,11 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :limit, type: Integer, default: 5
       embeds_ids :board_categories, class_name: "Gws::Board::Category"
-      permit_params :limit, board_category_ids: []
+      permit_params board_category_ids: []
     end
 
-    def find_board_items(portal, cur_user)
+    def find_board_items(portal, user)
       search = { site: portal.site }
 
       if cate = board_categories.first
@@ -21,7 +20,7 @@ module Gws::Addon::Portal::Portlet
       Gws::Board::Topic.site(portal.site).
         topic.
         and_public.
-        readable(cur_user, portal.site).
+        readable(user, portal.site).
         search(search).
         order(descendants_updated: -1).
         page(1).
