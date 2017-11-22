@@ -27,8 +27,12 @@ SS::Application.routes.draw do
       end
     end
     resources :comments, path: ':message_id/comments', only: :create
-    resources :folders, concerns: :deletion
-    resources :filters, concerns: :deletion
-    resources :signatures, concerns: :deletion
+
+    scope '/management' do
+      get '/' => redirect { |p, req| "#{req.path}/folders" }, as: :management_main
+      resources :folders, concerns: :deletion
+      resources :filters, concerns: :deletion
+      resources :signatures, concerns: :deletion
+    end
   end
 end
