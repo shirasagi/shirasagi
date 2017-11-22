@@ -5,6 +5,7 @@ ja:
     all: 全てのファイル
     url_copy: クリップボードにコピー
     folder: フォルダー一覧
+    child_folder: 子フォルダー
     folder_download: フォルダー内のファイル一括ダウンロード
     links:
       categories: カテゴリー
