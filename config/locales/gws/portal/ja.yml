@@ -7,6 +7,7 @@ ja:
       gws/portal/portlet/reminder: リマインダー設定
       gws/portal/portlet/schedule: スケジュール設定
       gws/portal/portlet/board: 掲示板設定
+      gws/portal/portlet/circular: 掲示板設定
       gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
 
@@ -21,27 +22,30 @@ ja:
       header:
         name: ポートレット種別
         text: 説明
-      schedule:
-        name: スケジュール
-        text: 今週のスケジュールを表示します。
-      reminder:
-        name: リマインダー
-        text: リマインダーを表示します。
-      board:
-        name: 掲示板
-        text: 新着の投稿を表示します。
-      monitor:
-        name: 照会・回答
-        text: 新着の照会・回答を表示します。
-      share:
-        name: 共有ファイル
-        text: 新着の共有ファイルを表示します。
       free:
         name: 自由形式
         text: 表示内容を自由に記述します。
       links:
         name: リンク集
         text: リンク集を作成します。
+      reminder:
+        name: リマインダー
+        text: リマインダーを表示します。
+      schedule:
+        name: スケジュール
+        text: 今週のスケジュールを表示します。
+      board:
+        name: 掲示板
+        text: 新着の投稿を表示します。
+      circular:
+        name: 回覧板
+        text: 新着の回覧板を表示します。
+      monitor:
+        name: 照会・回答
+        text: 新着の照会・回答を表示します。
+      share:
+        name: 共有ファイル
+        text: 新着の共有ファイルを表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -96,6 +100,8 @@ ja:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/board:
         board_category_ids: カテゴリー
+      gws/addon/portal/portlet/circular:
+        circular_category_ids: カテゴリー
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: カテゴリー
         monitor_answerable_article: 表示範囲
