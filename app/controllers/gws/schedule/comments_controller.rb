@@ -15,6 +15,18 @@ class Gws::Schedule::CommentsController < ApplicationController
     { cur_site: @cur_site, cur_user: @cur_user, cur_schedule: @cur_schedule }
   end
 
+  def set_item
+    set_cur_schedule
+    @item ||= begin
+      item = @cur_schedule.comments.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
   public
 
   def create
@@ -37,7 +49,7 @@ class Gws::Schedule::CommentsController < ApplicationController
   end
 
   def edit
-    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if @item.user_id != @cur_user.id && !@cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     if @item.is_a?(Cms::Addon::EditLock)
       unless @item.acquire_lock
         redirect_to action: :lock
@@ -50,17 +62,17 @@ class Gws::Schedule::CommentsController < ApplicationController
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if @item.user_id != @cur_user.id && !@cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     render_update(@item.update, location: params[:redirect_to])
   end
 
   def delete
-    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if @item.user_id != @cur_user.id && !@cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     render
   end
 
   def destroy
-    raise '403' if @item.user_id != @cur_userlid && !@cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if @item.user_id != @cur_user.id && !@cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     render_destroy(@item.destroy, location: params[:redirect_to])
   end
 end
