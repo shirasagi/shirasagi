@@ -20,6 +20,8 @@ class Gws::Schedule::AttendancesController < ApplicationController
     end
 
     raise '404' unless @target_user
+
+    @target_user.cur_site = @cur_site
   end
 
   def fix_params
@@ -42,6 +44,18 @@ class Gws::Schedule::AttendancesController < ApplicationController
     raise e
   end
 
+  def post_comment
+    return if params[:comment].blank?
+
+    safe_params = params.require(:comment).permit(Gws::Schedule::Comment.permitted_fields)
+    return if safe_params[:text].blank?
+
+    safe_params.reverse_merge!(
+      cur_site: @cur_site, cur_user: @target_user, cur_schedule: @cur_schedule, text_type: 'plain'
+    )
+    Gws::Schedule::Comment.create(safe_params)
+  end
+
   public
 
   def edit
@@ -58,6 +72,11 @@ class Gws::Schedule::AttendancesController < ApplicationController
     render_opts = {
       location: params[:redirect_to]
     }
-    render_update @item.save, render_opts
+
+    result = @item.save
+    if result
+      post_comment
+    end
+    render_update result, render_opts
   end
 end
