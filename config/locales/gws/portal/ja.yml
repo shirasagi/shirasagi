@@ -7,6 +7,8 @@ ja:
       gws/portal/portlet/reminder: リマインダー設定
       gws/portal/portlet/schedule: スケジュール設定
       gws/portal/portlet/board: 掲示板設定
+      gws/portal/portlet/faq: よくある質問設定
+      gws/portal/portlet/qna: Ｑ＆Ａ設定
       gws/portal/portlet/circular: 掲示板設定
       gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
@@ -37,9 +39,15 @@ ja:
       board:
         name: 掲示板
         text: 新着の投稿を表示します。
+      faq:
+        name: よくある質問
+        text: 新着の投稿を表示します。
+      qna:
+        name: Ｑ＆Ａ
+        text: 新着の投稿を表示します。
       circular:
         name: 回覧板
-        text: 新着の回覧板を表示します。
+        text: 新着の回覧を表示します。
       monitor:
         name: 照会・回答
         text: 新着の照会・回答を表示します。
@@ -100,6 +108,10 @@ ja:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/board:
         board_category_ids: カテゴリー
+      gws/addon/portal/portlet/faq:
+        faq_category_ids: カテゴリー
+      gws/addon/portal/portlet/qna:
+        qna_category_ids: カテゴリー
       gws/addon/portal/portlet/circular:
         circular_category_ids: カテゴリー
       gws/addon/portal/portlet/monitor:

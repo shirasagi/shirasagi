@@ -6,6 +6,8 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Schedule
   include Gws::Addon::Portal::Portlet::Reminder
   include Gws::Addon::Portal::Portlet::Board
+  include Gws::Addon::Portal::Portlet::Faq
+  include Gws::Addon::Portal::Portlet::Qna
   include Gws::Addon::Portal::Portlet::Circular
   include Gws::Addon::Portal::Portlet::Monitor
   include Gws::Addon::Portal::Portlet::Share
@@ -16,6 +18,8 @@ module Gws::Portal::PortletModel
     reminder: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Reminder] },
     schedule: { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Schedule] },
     board:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Board] },
+    faq:      { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Faq] },
+    qna:      { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Qna] },
     circular: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Circular] },
     monitor:  { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Monitor] },
     share:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Share] },

@@ -29,16 +29,3 @@
     background-color: #fff;
   }
 }
-
-.gws-monitor-file-count {
-  img {
-    margin: 0 2px 0 5px;
-  }
-}
-
-.gws-monitor-flag-new {
-  margin-right: 8px;
-  color: #d00;
-  font-weight: bold;
-  &:after { content: "New!"; }
-}

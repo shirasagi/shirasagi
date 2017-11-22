@@ -14,7 +14,6 @@ module Gws::Addon::Portal::Portlet
       search = { site: portal.site }
 
       if cate = circular_categories.first
-        #search[:category] = cate.name
         search[:category_id] = cate.id
       end
 
