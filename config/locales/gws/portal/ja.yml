@@ -4,6 +4,7 @@ ja:
     addons:
       gws/portal/portlet/free: 自由形式
       gws/portal/portlet/link: リンク設定
+      gws/portal/portlet/schedule: スケジュール設定
       gws/portal/portlet/reminder: リマインダー設定
 
   gws/portal:
@@ -85,6 +86,8 @@ ja:
       gws/addon/portal/portlet/link:
         links/name: 表示名
         links/url: URL
+      gws/addon/portal/portlet/schedule:
+        schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/reminder:
         reminder_filter: 表示範囲
 
