@@ -6,6 +6,7 @@ ja:
       gws/portal/portlet/link: リンク設定
       gws/portal/portlet/schedule: スケジュール設定
       gws/portal/portlet/reminder: リマインダー設定
+      gws/portal/portlet/share: 共有ファイル設定
 
   gws/portal:
     user_portal: 個人ポータル
@@ -81,6 +82,7 @@ ja:
       gws/portal/portlet_model:
         name: ポートレット名
         portlet_model: ポートレット種別
+        limit: 表示件数
       gws/addon/portal/portlet/free:
         html: 内容
       gws/addon/portal/portlet/link:
@@ -90,6 +92,9 @@ ja:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/reminder:
         reminder_filter: 表示範囲
+      gws/addon/portal/portlet/share:
+        share_category_ids: カテゴリー
+        share_folder_id: フォルダー
 
   tooltip:
     gws/portal/user_setting:

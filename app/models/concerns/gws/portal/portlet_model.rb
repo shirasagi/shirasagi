@@ -5,6 +5,7 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Link
   include Gws::Addon::Portal::Portlet::Schedule
   include Gws::Addon::Portal::Portlet::Reminder
+  include Gws::Addon::Portal::Portlet::Share
 
   PORTLETS = {
     free:     { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
@@ -13,7 +14,7 @@ module Gws::Portal::PortletModel
     reminder: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Reminder] },
     board:    { size_x: 2, size_y: 3 },
     monitor:  { size_x: 2, size_y: 3 },
-    share:    { size_x: 2, size_y: 3 },
+    share:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Share] },
   }.freeze
 
   included do

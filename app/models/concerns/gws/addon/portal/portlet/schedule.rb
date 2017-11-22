@@ -12,11 +12,11 @@ module Gws::Addon::Portal::Portlet
 
     def resolve_schedule_members(portal)
       if schedule_members.present?
-        schedule_members.active.order_by_title(site).compact
+        schedule_members.active.order_by_title(portal.site).compact
       elsif portal.my_portal? || portal.user_portal?
         [portal.portal_user]
       else
-        portal.portal_group.users.active.order_by_title(site).compact
+        portal.portal_group.users.active.order_by_title(portal.site).compact
       end
     end
   end
