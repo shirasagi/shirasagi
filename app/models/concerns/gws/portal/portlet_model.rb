@@ -11,6 +11,7 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Circular
   include Gws::Addon::Portal::Portlet::Monitor
   include Gws::Addon::Portal::Portlet::Share
+  include Gws::Addon::Portal::Portlet::Report
 
   PORTLETS = {
     free:     { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
@@ -23,6 +24,7 @@ module Gws::Portal::PortletModel
     circular: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Circular] },
     monitor:  { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Monitor] },
     share:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Share] },
+    report:   { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Report] },
   }.freeze
 
   included do

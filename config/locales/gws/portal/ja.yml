@@ -12,6 +12,7 @@ ja:
       gws/portal/portlet/circular: 掲示板設定
       gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
+      gws/portal/portlet/report: レポート設定
 
   gws/portal:
     user_portal: 個人ポータル
@@ -54,6 +55,9 @@ ja:
       share:
         name: 共有ファイル
         text: 新着の共有ファイルを表示します。
+      report:
+        name: レポート
+        text: 新着のレポートを表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
