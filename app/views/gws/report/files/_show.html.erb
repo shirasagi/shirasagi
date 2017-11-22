@@ -2,3 +2,8 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 </dl>
+
+<%= jquery do %>
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>

@@ -3,41 +3,6 @@ module Gws::Elasticsearch::Indexer::BoardBase
   include Gws::Elasticsearch::Indexer::Base
 
   module ClassMethods
-    def around_save(item)
-      site = item.site
-      before_file_ids = [ item.file_ids_was ].flatten.compact
-
-      ret = yield
-
-      after_file_ids = [ item.file_ids ].flatten.compact
-      remove_file_ids = before_file_ids - after_file_ids
-
-      if site.menu_elasticsearch_visible?
-        job_params = {
-          action: 'index', id: item.id.to_s, remove_file_ids: remove_file_ids.map(&:to_s)
-        }
-        job = self.bind(site_id: site)
-        job.perform_later(job_params)
-      end
-      ret
-    end
-
-    def around_destroy(item)
-      site = item.site
-      id = item.id
-      file_ids = [ item.file_ids ].flatten.compact
-
-      ret = yield
-      if site.menu_elasticsearch_visible?
-        job_params = {
-          action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s)
-        }
-        job = self.bind(site_id: site)
-        job.perform_later(job_params)
-      end
-      ret
-    end
-
     def convert_to_doc(cur_site, topic, post)
       doc = {}
       doc[:url] = path(site: cur_site, id: topic, anchor: "post-#{post.id}")

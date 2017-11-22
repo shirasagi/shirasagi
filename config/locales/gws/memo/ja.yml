@@ -32,17 +32,18 @@ ja:
       blank_conditions: 条件を入力してください。
       blank_apply_mailbox: 適用するフォルダーを選択してください。
   modules:
-    gws/memo: 連絡メモ
+    gws/memo: メッセージ
     addons:
       gws/memo/comments: コメント
   gws_role:
-    read_gws_memo_messages: 連絡メモの閲覧
-    edit_gws_memo_messages: 連絡メモの編集
-    delete_gws_memo_messages: 連絡メモの削除
+    read_gws_memo_messages: メッセージの閲覧
+    edit_gws_memo_messages: メッセージの編集
+    delete_gws_memo_messages: メッセージの削除
   mongoid:
     models:
-      gws/memo/message: 連絡メモ
-      gws/memo/folder: 管理
+      gws/memo/message: メッセージ
+      gws/memo/folder: フォルダー
+      gws/memo/filter: フィルター
       gws/memo/signature: 署名
     attributes:
       gws/memo/message:

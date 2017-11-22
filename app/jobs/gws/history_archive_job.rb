@@ -71,6 +71,8 @@ class Gws::HistoryArchiveJob < Gws::ApplicationJob
   end
 
   def put_histories
+    @csv_generator = Gws::HistoryCsv.new(cur_site: site)
+
     all_ids = @histories.order_by(created: 1).pluck(:id)
     all_ids.each_slice(100) do |ids|
       Gws::History.in(id: ids).order_by(created: 1).to_a.each do |history|
@@ -105,11 +107,11 @@ class Gws::HistoryArchiveJob < Gws::ApplicationJob
       @last_open_file_handle.sync = true
 
       if ::File.size(file) == 0
-        @last_open_file_handle.write(Gws::History.csv_header.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
+        @last_open_file_handle.write(@csv_generator.csv_headers.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
       end
     end
 
-    @last_open_file_handle.write(history.to_csv.encode('SJIS', invalid: :replace, undef: :replace))
+    @last_open_file_handle.write(@csv_generator.to_csv(history).encode('SJIS', invalid: :replace, undef: :replace))
   end
 
   def create_archives
