@@ -5,6 +5,9 @@ class Gws::Circular::Comment
   include Gws::Reference::Site
   include Gws::Addon::GroupPermission
 
+  store_in collection: "gws_circular_posts"
+  set_permission_name "gws_circular_posts"
+
   seqid :id
   field :name, type: String
   field :text, type: String
