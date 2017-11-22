@@ -4,6 +4,7 @@ ja:
     category: 共有ファイルカテゴリー
     all: 全てのファイル
     url_copy: クリップボードにコピー
+    folder: フォルダー一覧
     folder_download: フォルダー内のファイル一括ダウンロード
     links:
       categories: カテゴリー
@@ -101,6 +102,7 @@ ja:
     gws/share/folder:
       name:
         - フォルダー名を入力します。
+        - 親フォルダー名にスラッシュ区切りでサブフォルダーを作成することができます。
       order:
         - 並び順を入力します。
       share_max_file_size:
