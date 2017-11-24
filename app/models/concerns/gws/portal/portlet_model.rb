@@ -5,23 +5,37 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Link
   include Gws::Addon::Portal::Portlet::Schedule
   include Gws::Addon::Portal::Portlet::Reminder
+  include Gws::Addon::Portal::Portlet::Board
+  include Gws::Addon::Portal::Portlet::Faq
+  include Gws::Addon::Portal::Portlet::Qna
+  include Gws::Addon::Portal::Portlet::Circular
+  include Gws::Addon::Portal::Portlet::Monitor
+  include Gws::Addon::Portal::Portlet::Share
+  include Gws::Addon::Portal::Portlet::Report
+  include Gws::Addon::Portal::Portlet::Workflow
 
   PORTLETS = {
     free:     { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
     links:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Link] },
-    schedule: { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Schedule] },
     reminder: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Reminder] },
-    board:    { size_x: 2, size_y: 3 },
-    monitor:  { size_x: 2, size_y: 3 },
-    share:    { size_x: 2, size_y: 3 },
+    schedule: { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Schedule] },
+    board:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Board] },
+    faq:      { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Faq] },
+    qna:      { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Qna] },
+    circular: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Circular] },
+    monitor:  { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Monitor] },
+    share:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Share] },
+    report:   { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Report] },
+    workflow: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Workflow] },
   }.freeze
 
   included do
     field :name, type: String
     field :portlet_model, type: String
     field :grid_data, type: Hash
+    field :limit, type: Integer, default: 5
 
-    permit_params :name, :portlet_model
+    permit_params :name, :portlet_model, :limit
 
     validates :name, presence: true
     validates :portlet_model, inclusion: { in: PORTLETS.keys.map(&:to_s) }

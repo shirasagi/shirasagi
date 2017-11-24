@@ -10,7 +10,7 @@ SS_Clipboard.renderCopy();
 <div class="main-box gws-schedule-box <%= "with-tabs" if @portal.my_portal? %>">
   <div class="calendar" id="calendar-controller"></div>
 
-  <% @portlet.resolve_schedule_members(@portal).each_with_index do |item, idx| %>
+  <% @portlet.find_schedule_members(@portal).each_with_index do |item, idx| %>
     <div class="calendar-multiple-header">
       <%= link_to item.long_name, gws_schedule_user_plans_path(user: item.id), class: "calendar-name" %>
       <% if item.id == @cur_user.id %>
