@@ -10,6 +10,12 @@
 
   <% @items.each do |item| %>
   <div class="portlet-html portlet-model-<%= item.portlet_model %>" data-id="<%= item.id %>">
+    <% if @portal_user.present? %>
+      <%= link_to t('ss.links.edit'), gws_portal_user_portlet_path(id: item), class: 'edit-portlet' %>
+    <% else %>
+      <%= link_to t('ss.links.edit'), gws_portal_group_portlet_path(id: item), class: 'edit-portlet' %>
+    <% end %>
+
     <% @portlet = item %>
     <%= render file: item.view_file %>
   </div>

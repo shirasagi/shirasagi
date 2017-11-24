@@ -65,7 +65,8 @@ ja:
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
-      settings: 設定
+      settings: ポータルの設定
+      edit_portlet: ポートレットを編集する
     buttons:
       save_layouts: 配置を保存する
       add_item: 新しい要素を追加
@@ -102,6 +103,7 @@ ja:
         name: ポータル名
         portal_group_id: ポータルグループ
       gws/portal/portlet_model:
+        setting_id: ポータルID
         name: ポートレット名
         portlet_model: ポートレット種別
         limit: 表示件数
