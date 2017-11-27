@@ -30,9 +30,6 @@ SS::Application.routes.draw do
       end
     end
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
-    resources :folders, concerns: :deletion
-    resources :filters, concerns: :deletion
-    resources :signatures, concerns: :deletion
     resource :setting, only: [:show, :edit, :update]
 
     scope '/management' do
