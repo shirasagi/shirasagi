@@ -29,7 +29,7 @@ SS::Application.routes.draw do
         get :reply
       end
     end
-    resources :comments, path: ':message_id/comments', only: :create
+    resources :comments, path: ':message_id/comments', only: [:create, :destroy]
     resources :folders, concerns: :deletion
     resources :filters, concerns: :deletion
     resources :signatures, concerns: :deletion
