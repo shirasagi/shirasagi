@@ -26,9 +26,14 @@ SS::Application.routes.draw do
         get :toggle_star
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
+        get :reply
       end
     end
-    resources :comments, path: ':message_id/comments', only: :create
+    resources :comments, path: ':message_id/comments', only: [:create, :destroy]
+    resources :folders, concerns: :deletion
+    resources :filters, concerns: :deletion
+    resources :signatures, concerns: :deletion
+    resource :setting, only: [:show, :edit, :update]
 
     scope '/management' do
       get '/' => redirect { |p, req| "#{req.path}/folders" }, as: :management_main

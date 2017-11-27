@@ -278,7 +278,7 @@ ja:
         menu_portal_state: ポータルの表示
         menu_schedule_state: スケジュールの表示
         menu_reminder_state: リマインダーの表示
-        menu_memo_state: 連絡メモの表示
+        menu_memo_state: メッセージの表示
         menu_board_state: 掲示板の表示
         menu_question_state: 質問管理の表示
         menu_workflow_state: ワークフローの表示
@@ -300,7 +300,7 @@ ja:
         log_facility_severity: 設備管理のログ
         log_faq_severity: よくある質問のログ
         log_file_severity: 共有ファイルのログ
-        log_memo_severity: 連絡メモのログ
+        log_memo_severity: メッセージのログ
         log_monitor_severity: 照会・回答のログ
         log_personal_address_severity: 個人アドレス帳のログ
         log_portal_severity: ポータルのログ
