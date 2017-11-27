@@ -1,7 +1,3 @@
-<%
-  @item.in_share_max_file_size_mb = @item.share_max_file_size.to_i / (1_024 * 1_024)
-  @item.in_share_max_folder_size_mb = @item.share_max_folder_size.to_i / (1_024 * 1_024)
-%>
 <%= jquery do %>
     $('#addon-gws-agents-addons-file').hide();
 <% end %>
@@ -12,10 +8,4 @@
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
-
-  <dt><%= @model.t :share_max_file_size %><%= @model.tt :share_max_file_size %></dt>
-  <dd><%= f.number_field :in_share_max_file_size_mb %> <%= t("ss.units.mega_byte") %></dd>
-
-  <dt><%= @model.t :share_max_folder_size %><%= @model.tt :share_max_folder_size %></dt>
-  <dd><%= f.number_field :in_share_max_folder_size_mb %> <%= t("ss.units.mega_byte") %></dd>
 </dl>
