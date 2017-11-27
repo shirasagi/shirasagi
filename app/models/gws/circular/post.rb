@@ -75,8 +75,7 @@ class Gws::Circular::Post
   }
 
   def active?
-    return true unless deleted.present? && deleted < Time.zone.now
-    false
+    deleted.blank? || deleted > Time.zone.now
   end
 
   def active
@@ -84,7 +83,7 @@ class Gws::Circular::Post
   end
 
   def disable
-    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+    update_attributes(deleted: Time.zone.now) if active?
   end
 
   def custom_group_member?(user)
