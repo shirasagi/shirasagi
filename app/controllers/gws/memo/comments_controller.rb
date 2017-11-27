@@ -4,6 +4,8 @@ class Gws::Memo::CommentsController < ApplicationController
 
   model Gws::Memo::Comment
 
+  before_action :set_item, only: [:destroy]
+
   def set_cur_message
     @cur_message ||= Gws::Memo::Message.find(params[:message_id])
   end
