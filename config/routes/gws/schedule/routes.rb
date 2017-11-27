@@ -9,6 +9,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :deletion do
+    get :delete, :on => :member
+    delete action: :destroy_all, on: :collection
+  end
+
   gws "schedule" do
     get 'all_groups' => 'groups#index'
     get 'facilities' => 'facilities#index'
@@ -26,7 +31,7 @@ SS::Application.routes.draw do
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     resources :holidays, concerns: :plans
-    resources :comments, path: ':plan_id/comments', only: :create
+    resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
 
     resources :todos, concerns: :plans do
