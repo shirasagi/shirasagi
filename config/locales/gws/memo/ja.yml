@@ -1,10 +1,12 @@
 ja:
   gws/memo:
-    setting: 連絡メモ設定
+    setting: メッセージ設定
   gws/memo/message:
     folder: フォルダー
     folder_name: フォルダー名
     message: メッセージ
+    select_check: 件のメッセージを選択
+    commit_params_check: 送信
     links:
       move: 移動する
       etc: その他
@@ -21,13 +23,14 @@ ja:
       set_star_all: スターをつけますか?
       unset_star_all: スターをはずしますか?
       move: 移動しますか?
+      move_drop: に移動しますか?
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱
     inbox_draft: 下書き
     inbox_sent: 送信済みトレイ
     errors:
-      included_memo: 連絡メモが入っているフォルダーは削除できません。
+      included_memo: メッセージが入っているフォルダーは削除できません。
       used_folder: フィルターが使用中のフォルダーは削除できません。
   gws/memo/filter:
     options:
@@ -51,7 +54,7 @@ ja:
       gws/memo/folder: フォルダー
       gws/memo/filter: フィルター
       gws/memo/signature: 署名
-      gws/memo/group_setting: 連絡メモ設定
+      gws/memo/group_setting: メッセージ設定
     errors:
       models:
         gws/memo/message:
@@ -84,13 +87,13 @@ ja:
   tooltip:
     gws/memo/message:
       member_ids:
-        - 連絡メモの宛先を選択します。
+        - メッセージの宛先を選択します。
     gws/memo/folder:
       name: フォルダーの名称を入力します。
     gws/memo/filter:
       name:
         - フィルターの名前を入力します。
-        - 作成したフィルターは連絡メモの受信時に各条件が1度のみ評価されます。
+        - 作成したフィルターはメッセージの受信時に各条件が1度のみ評価されます。
       from:
         - フィルターの条件となる差出人名を入力します。
         - 差出人名は中間一致で評価されます。
@@ -98,9 +101,9 @@ ja:
         - フィルターの条件となる件名を入力します。
         - 件名は中間一致で評価されます。
       action:
-        - 条件に合致した連絡メモに対して行う操作を選択します。
-        - 移動する：指定したフォルダーに連絡メモを移動します
-        - ゴミ箱に移す：ゴミ箱に連絡メモを移動します
+        - 条件に合致したメッセージに対して行う操作を選択します。
+        - 移動する：指定したフォルダーにメッセージを移動します
+        - ゴミ箱に移す：ゴミ箱にメッセージを移動します
       folder:
         - 移動するアクションで送り先となるフォルダーを指定します。
       state:
@@ -116,11 +119,11 @@ ja:
       text:
         - 署名の本文を入力します。
       default:
-        - 連絡メモを新規作成した際に自動で入力される署名を選択します。
+        - メッセージを新規作成した際に自動で入力される署名を選択します。
         - 有効：この署名を自動で入力します
         - 無効：この署名を自動で入力しません
     gws/memo/group_setting:
       memo_filesize_limit:
-        - 連絡メモに添付されるファイルの合計容量の上限を入力します。
+        - メッセージに添付されるファイルの合計容量の上限を入力します。
         - 未指定である場合、制限されません。
         - 初期値は 未指定 です。
