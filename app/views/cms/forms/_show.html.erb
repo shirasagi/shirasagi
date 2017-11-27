@@ -1,0 +1,39 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :column_ids %></dt>
+  <dd><%= link_to('入力項目を管理する', cms_form_columns_path(form_id: @item), class: :btn) %></dd>
+  <dd>
+    <% if @item.columns.present? %>
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="order"><%= Cms::Column::Base.t :order %></th>
+        <th class="name"><%= Cms::Column::Base.t :name %></th>
+        <th class="name"><%= Cms::Column::Base.t :route %></th>
+        <th class="required"><%= Cms::Column::Base.t :required %></th>
+        <th class="datetime"><%= Cms::Column::Base.t :updated %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.columns.order_by(order: 1).each do |column| %>
+        <tr data-id="<%= column.id %>">
+          <td><%= column.order %></td>
+          <td><%= column.name %> </td>
+          <td><%= column.class.model_name.human %> </td>
+          <td><%= column.label :required %></td>
+          <td><%= I18n.l(column.updated) %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <% end %>
+  </dd>
+</dl>

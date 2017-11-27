@@ -17,9 +17,9 @@ class @Member_Photo_Form
     return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
 
   @attachMessage: (id) ->
-    google.maps.event.addListener Map.markers[id], 'click', (event) ->
-      if(Map.openedInfo)
-        Map.openedInfo.close()
+    google.maps.event.addListener Googlemaps_Map.markers[id], 'click', (event) ->
+      if(Googlemaps_Map.openedInfo)
+        Googlemaps_Map.openedInfo.close()
       $('dd[data-id = "' + id + '"]').each ->
         name = $(this).find(".marker-name").val()
         text = $(this).find(".marker-text").val()
@@ -34,8 +34,8 @@ class @Member_Photo_Form
               else
                 marker_html += '<p>' + this + '</p>'
 
-          Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
-          Map.openedInfo.open(Map.markers[id].getMap(), Map.markers[id])
+          Googlemaps_Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
+          Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id])
         return false
       return
     return
@@ -44,12 +44,12 @@ class @Member_Photo_Form
     dataId = 0
     if ele.val() != ""
       if confirm(Member_Photo_Form.deleteMessage)
-        if Map.markers[dataId]
-          Map.markers[dataId].setMap(null)
+        if Googlemaps_Map.markers[dataId]
+          Googlemaps_Map.markers[dataId].setMap(null)
           ele.val("")
     else
-      if Map.markers[dataId]
-        Map.markers[dataId].setMap(null)
+      if Googlemaps_Map.markers[dataId]
+        Googlemaps_Map.markers[dataId].setMap(null)
     return
 
   @createMarker: (ele)->
@@ -57,10 +57,10 @@ class @Member_Photo_Form
       ele.val($(".mod-map .clicked").val())
       dataId = 0
 
-      Map.markers[dataId].setMap(null) if Map.markers[dataId]
-      Map.markers[dataId] = new google.maps.Marker(
+      Googlemaps_Map.markers[dataId].setMap(null) if Googlemaps_Map.markers[dataId]
+      Googlemaps_Map.markers[dataId] = new google.maps.Marker(
         position: Member_Photo_Form.getMapLoc($(".mod-map .marker-loc")),
-        map: Map.map
+        map: Googlemaps_Map.map
       )
       Member_Photo_Form.attachMessage(dataId)
     return
@@ -68,10 +68,10 @@ class @Member_Photo_Form
   @renderMarkers: ()->
     markerBounds = new google.maps.LatLngBounds()
 
-    if Map.markers
-      for m in Map.markers
+    if Googlemaps_Map.markers
+      for m in Googlemaps_Map.markers
         m.setMap(null)
-    Map.markers = []
+    Googlemaps_Map.markers = []
     Member_Photo_Form.dataID = 0
 
     $(".mod-map .marker").each ->
@@ -79,23 +79,23 @@ class @Member_Photo_Form
 
       if $(this).find(".marker-loc").val() != ""
         loc = Member_Photo_Form.getMapLoc($(this).find(".marker-loc"))
-        Map.markers[Member_Photo_Form.dataID] = new google.maps.Marker(
+        Googlemaps_Map.markers[Member_Photo_Form.dataID] = new google.maps.Marker(
           position: loc,
-          map: Map.map
+          map: Googlemaps_Map.map
         )
         Member_Photo_Form.attachMessage(Member_Photo_Form.dataID)
         markerBounds.extend(loc)
       Member_Photo_Form.dataID += 1
 
-    if Map.markers.length > 0
-      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', ( event ) ->
+    if Googlemaps_Map.markers.length > 0
+      zoomChangeBoundsListener = google.maps.event.addListener Googlemaps_Map.map, 'bounds_changed', ( event ) ->
         if this.getZoom() > 13 && this.initialZoom == true
           this.setZoom(13)
           this.initialZoom = false
         google.maps.event.removeListener(zoomChangeBoundsListener)
 
-      Map.map.initialZoom = true
-      Map.map.fitBounds(markerBounds)
+      Googlemaps_Map.map.initialZoom = true
+      Googlemaps_Map.map.fitBounds(markerBounds)
     return
 
   @setExifLatLng: (selector)->
@@ -116,10 +116,10 @@ class @Member_Photo_Form
         lon = (lon[0] + (lon[1] / 60) + (lon[2] / 3600)) * lonRef
         $(".mod-map .clicked").val([lat, lon].join())
         Member_Photo_Form.createMarker($(".mod-map .marker-loc"))
-        Map.map.setCenter(new google.maps.LatLng(lat, lon))
+        Googlemaps_Map.map.setCenter(new google.maps.LatLng(lat, lon))
 
   @renderEvents: ()->
-    google.maps.event.addListener Map.map, 'click', (event) ->
+    google.maps.event.addListener Googlemaps_Map.map, 'click', (event) ->
       Member_Photo_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng())
       Member_Photo_Form.createMarker($(".mod-map .marker-loc"))
 
