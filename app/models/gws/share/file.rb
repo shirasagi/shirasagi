@@ -56,7 +56,7 @@ class Gws::Share::File
       end
 
       if params[:folder].present?
-        criteria = criteria.in(folder_id: params[:folder])
+        criteria = criteria.where(folder_id: params[:folder])
       end
 
       criteria
