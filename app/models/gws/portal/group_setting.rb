@@ -26,7 +26,7 @@ class Gws::Portal::GroupSetting
   end
 
   def default_portlets
-    %w(schedule board monitor).map do |key|
+    %w(schedule monitor board faq qna).map do |key|
       Gws::Portal::GroupPortlet.default_portlet(key)
     end
   end

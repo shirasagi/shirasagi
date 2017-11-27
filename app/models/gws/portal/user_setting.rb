@@ -26,7 +26,7 @@ class Gws::Portal::UserSetting
   end
 
   def default_portlets
-    %w(schedule reminder board monitor share).map do |key|
+    %w(schedule reminder monitor circular board faq qna).map do |key|
       Gws::Portal::UserPortlet.default_portlet(key)
     end
   end
