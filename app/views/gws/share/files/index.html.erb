@@ -98,6 +98,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
 
 <%= paginate @items if @items.try(:current_page) %>
 
+<% if @sub_folders.present? %>
 <div class="index">
   <div class="header">
     <%= t('gws/share.child_folder') %>
@@ -106,9 +107,10 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
     <% @sub_folders.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to (File.basename item.name), gws_share_folder_files_path(folder: item.id), class: "title" %>
+        <%= link_to item.trailing_name, gws_share_folder_files_path(folder: item), class: "title" %>
       </div>
     </li>
     <% end %>
   </ul>
 </div>
+<% end %>
