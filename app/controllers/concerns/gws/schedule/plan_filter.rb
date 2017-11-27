@@ -59,6 +59,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def print
+    @portrait = 'horizontal'
     render layout: 'ss/print'
   end
 

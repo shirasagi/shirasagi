@@ -47,6 +47,8 @@ class @Gws_Schedule_Calendar
         $(this).find('.fc-widget-content').eq(0).prepend('<span class="fc-loading"><%= I18n.t('gws/schedule.loading') %></span>')
       else
         $(this).find('.fc-loading').remove()
+    eventAfterAllRender: (view) ->
+      Gws_Schedule_Calendar.changePrintPreviewPortrait(view)
 
   @tapMenuParams: (opts) ->
     url = opts['restUrl']
@@ -134,3 +136,12 @@ class @Gws_Schedule_Calendar
         error: (xhr, status, error) ->
           alert xhr.responseJSON.join("\n")
           revertFunc()
+
+  @changePrintPreviewPortrait: (view) ->
+    if $('body').hasClass('print-preview')
+      if view.type == 'agendaDay' || view.type == 'listMonth'
+        $('body').removeClass('horizontal')
+        $('body').addClass('vertical')
+      else
+        $('body').removeClass('vertical')
+        $('body').addClass('horizontal')
