@@ -72,6 +72,13 @@
     height: 12px;
     bottom: 0;
   }
+  .portlet-html .edit-portlet {
+    display: block;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 0;
+  }
   .portlet-html .main-box {
     overflow-y: hidden;
   }
