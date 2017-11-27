@@ -31,8 +31,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
         click_button "保存"
       end
       expect(current_path).not_to eq new_path
-      expect(page).to have_css("form#item-form")
-      expect(page).to have_css("input#item_in_files")
+      expect(page).to have_content("フォルダー")
     end
 
     it "#show" do
