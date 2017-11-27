@@ -1,17 +1,27 @@
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
+<%
+  path_prefix = nil
+  if controller.filters.include?(:preview)
+    path_prefix = cms_preview_path(preview_date: params[:preview_date])
+  end
+
+  if path_prefix.present? && path_prefix.end_with?('/')
+    path_prefix = path_prefix[0..-2]
+  end
+%>
 <%= javascript_include_tag "opendata/public" %>
 <%= coffee do %>
 $ ->
   <% if @cur_node.show_point? %>
   # show point
-  Opendata_Point.render("<%= @cur_page.point_url %>");
+  Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
   <% end %>
 
   <% if @tab_display == "tab_html" %>
   # show executed
   $.ajax
-    url: "<%= @cur_page.executed_show_url %>"
+    url: "<%= path_prefix %><%= @cur_page.executed_show_url %>"
     data: { tab_display: "<%= @tab_display %>" }
     type: "GET"
     success: (data)->
@@ -21,7 +31,7 @@ $ ->
   <% if idea_enabled? %>
   # show ideas
   $.ajax
-    url: "<%= @cur_page.app_ideas_url %>"
+    url: "<%= path_prefix %><%= @cur_page.app_ideas_url %>"
     success: (data)->
       $(".app-ideas").html data
   <% end %>
@@ -129,7 +139,7 @@ var tab_display = "<%= @tab_display %>";
 function PlayApp() {
   if (tab_display == "tab_html") {
     $(".frmPlay").attr("src", "");
-    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= "#{@cur_page.file_index_url}#{@app_html.filename}" %><% end %>");
+    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= path_prefix %><%= "#{@cur_page.file_index_url}#{@app_html.filename}" %><% end %>");
   }
 }
 function ChangeTab(tabname, current) {

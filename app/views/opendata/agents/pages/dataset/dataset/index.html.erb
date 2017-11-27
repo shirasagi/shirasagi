@@ -1,26 +1,35 @@
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
+<%
+  path_prefix = nil
+  if controller.filters.include?(:preview)
+    path_prefix = cms_preview_path(preview_date: params[:preview_date])
+  end
+
+  if path_prefix.present? && path_prefix.end_with?('/')
+    path_prefix = path_prefix[0..-2]
+  end
+%>
 <%= javascript_include_tag "opendata/public" %>
 <%= coffee do %>
 $ ->
-
   # Tabs
   SS_Tabs.render("#dataset-tabs-<%= @cur_node.id %>");
 
   <% if @cur_node.show_point? %>
   # show point
-  Opendata_Point.render("<%= @cur_page.point_url %>");
+  Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
   <% end %>
 
   # show apps
   $.ajax
-    url: "<%= @cur_page.dataset_apps_url %>"
+    url: "<%= path_prefix %><%= @cur_page.dataset_apps_url %>"
     success: (data)->
       $(".dataset-apps").html data
 
   # show ideas
   $.ajax
-    url: "<%= @cur_page.dataset_ideas_url %>"
+    url: "<%= path_prefix %><%= @cur_page.dataset_ideas_url %>"
     success: (data)->
       $(".dataset-ideas").html data
 

@@ -1,3 +1,6 @@
+<%
+  return if controller.filters.include?(:preview)
+%>
 <% if @app.present? %>
 <%= coffee do %>
 $ ->
@@ -5,7 +8,7 @@ $ ->
   add = <%= @add %>
   if add == true
     $.ajax
-      url: "<%= @app.executed_add_url %>"
+      url: "<%= path_prefix %><%= @app.executed_add_url %>"
       data: { authenticity_token: "<%= form_authenticity_token %>" }
       type: "POST"
       success: (data)->

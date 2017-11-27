@@ -1,5 +1,15 @@
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
+<%
+  path_prefix = nil
+  if controller.filters.include?(:preview)
+    path_prefix = cms_preview_path(preview_date: params[:preview_date])
+  end
+
+  if path_prefix.present? && path_prefix.end_with?('/')
+    path_prefix = path_prefix[0..-2]
+  end
+%>
 <%= javascript_include_tag "opendata/public" %>
 <%= coffee do %>
 $ ->
@@ -11,19 +21,19 @@ $ ->
 
   <% if @cur_node.show_point? %>
   # show point
-  Opendata_Point.render("<%= @cur_page.point_url %>");
+  Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
   <% end %>
 
   # show comment
   $.ajax
-    url: "<%= @cur_page.comment_url %>"
+    url: "<%= path_prefix %><%= @cur_page.comment_url %>"
     success: (data)->
       $("#idea-comments").html data
 
   <% if dataset_enabled? %>
   # show related_dataset
   $.ajax
-    url: "<%= @cur_page.related_dataset_url %>"
+    url: "<%= path_prefix %><%= @cur_page.related_dataset_url %>"
     success: (data)->
       $("#related_dataset").html data
   <% end %>
@@ -31,7 +41,7 @@ $ ->
   <% if app_enabled? %>
   # show related_app
   $.ajax
-    url: "<%= @cur_page.related_app_url %>"
+    url: "<%= path_prefix %><%= @cur_page.related_app_url %>"
     success: (data)->
       $("#related_app").html data
   <% end %>
