@@ -19,6 +19,7 @@ module Workflow::Approver
     field :workflow_comment, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
+    field :approved, type: DateTime
 
     permit_params :workflow_user_id, :workflow_state, :workflow_comment
     permit_params workflow_approvers: []
@@ -26,6 +27,7 @@ module Workflow::Approver
     permit_params :workflow_reset, :workflow_cancel_request
 
     before_validation :reset_workflow, if: -> { workflow_reset }
+    validates :approved, datetime: true
     validate :validate_workflow_approvers_presence, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_level_consecutiveness, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_role, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
