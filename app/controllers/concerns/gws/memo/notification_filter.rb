@@ -16,7 +16,7 @@ module Gws::Memo::NotificationFilter
 
     Gws::Memo::Notifier.deliver!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-      from_user: @cur_user, to_users: users, item: @item
+      to_users: users, item: @item
     )
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

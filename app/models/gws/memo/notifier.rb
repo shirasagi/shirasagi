@@ -1,7 +1,7 @@
 class Gws::Memo::Notifier
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_group, :cur_user, :from_user, :to_users, :item
+  attr_accessor :cur_site, :cur_group, :cur_user, :to_users, :item
 
   class << self
     def deliver!(opts)
@@ -19,7 +19,7 @@ class Gws::Memo::Notifier
     message = Gws::Memo::Message.new
     message.cur_site = cur_site
     message.cur_user = cur_user
-    message.member_ids = to_users.pluck(:id) - [ from_user.id ]
+    message.member_ids = to_users.pluck(:id) - [ cur_user.id ]
     message.from = { from_user.id.to_s => 'INBOX.Sent' }
     message.send_date = Time.zone.now
 
@@ -36,6 +36,14 @@ class Gws::Memo::Notifier
   end
 
   private
+
+  def from_user
+    @from_user ||= begin
+      user = cur_site.sender_user
+      user ||= cur_user
+      user
+    end
+  end
 
   def i18n_key
     @i18n_key ||= item.class.model_name.i18n_key
