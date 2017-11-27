@@ -52,10 +52,10 @@
         <div class="toggle-body">
           <div class="body"><pre><%= comment.text %></pre></div>
           <div class="menu">
-            <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <% if @item.allowed?(:edit, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id %>
               <%= link_to t('ss.links.edit'), edit_gws_circular_post_comment_path(post_id: @item.id, id: comment.id), class: 'btn' %>
             <% end %>
-            <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
+            <% if @item.allowed?(:delete, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id  %>
               <%= link_to t('ss.links.delete'), delete_gws_circular_post_comment_path(post_id: @item.id, id: comment.id), class: 'btn' %>
             <% end %>
           </div>
