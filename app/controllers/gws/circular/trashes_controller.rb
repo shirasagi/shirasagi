@@ -6,6 +6,7 @@ class Gws::Circular::TrashesController < ApplicationController
 
   before_action :set_item, only: [:show, :delete, :destroy, :active, :recover]
   before_action :set_selected_items, only: [:active_all, :destroy_all]
+  before_action :set_category
 
   private
 
@@ -18,9 +19,22 @@ class Gws::Circular::TrashesController < ApplicationController
     @crumbs << [t('gws/circular.admin'), gws_circular_trashes_path ]
   end
 
+  def set_category
+    @categories = Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    if category_id = params[:category].presence
+      @category ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
+    end
+  end
+
   public
 
   def index
+    if @category.present?
+      params[:s] ||= {}
+      params[:s][:site] = @cur_site
+      params[:s][:category_id] = @category.id
+    end
+
     @items = @model.site(@cur_site).
       owner(:read, @cur_user, site: @cur_site).
       deleted.
