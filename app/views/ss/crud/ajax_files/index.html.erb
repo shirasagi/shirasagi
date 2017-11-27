@@ -13,12 +13,14 @@ if ($element) {
 }
 
 if (onSelect) {
+  console.log('custom select');
   $(".user-files .select").on('click', function(e) {
     onSelect($(this));
     e.preventDefault();
     return false;
   });
 } else {
+  console.log('no select func');
   SS.ajax(".user-files .select", {
     success: function(data) {
       $("#selected-files").append(data);

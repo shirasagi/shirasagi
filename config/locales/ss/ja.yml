@@ -105,6 +105,7 @@ ja:
       print: 印刷
       select_all: 全て選択
       deselect_all: 全て解除
+      change: 変更
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
