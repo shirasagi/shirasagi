@@ -16,7 +16,14 @@ class Gws::Share::FilesController < ApplicationController
     set_folder
     if @folder.present?
       @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-      @crumbs << [@folder.name, action: :index]
+      folder_hierarchy_count = @folder.name.split("/").count - 1
+      0.upto(folder_hierarchy_count) do |i|
+        folder_name = @folder.name.split("/")[i]
+        item_name = @folder.name.split("/")[0, i+1].join("/")
+        item_id = Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id
+        item_path = gws_share_folder_files_path(folder: item_id)
+        @crumbs << [folder_name, item_path]
+      end
     else
       @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), action: :index]
     end
@@ -35,8 +42,13 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def set_folder_navi
-    @folder_navi = Gws::Share::Folder.site(@cur_site).
-        readable(@cur_user, @cur_site)
+    if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
+      @folder_navi = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site)
+    elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
+      @folder_navi = Gws::Share::Folder.site(@cur_site).
+        readable(@cur_user, site: @cur_site)
+    end
   end
 
   def fix_params
@@ -66,12 +78,19 @@ class Gws::Share::FilesController < ApplicationController
 
     @items = @model.site(@cur_site).
       readable(@cur_user, @cur_site).
-      active.
-      search(params[:s]).
+      active.search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'created_desc').
       page(params[:page]).per(50)
 
     @items.options[:sort].delete("_id")
+
+    folder_name = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        where(id: params[:folder].to_i).pluck(:name).first
+
+    @sub_folders = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
