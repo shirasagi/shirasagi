@@ -45,12 +45,16 @@ class Gws::Circular::CommentsController < ApplicationController
   def create
     @item = @model.new get_params
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.post.member?(@cur_user)
+    @post.cur_user = @cur_user
+    @post.cur_site = @cur_site
     render_create @item.save && @post.set_seen(@cur_user).save
   end
 
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    @post.cur_user = @cur_user
+    @post.cur_site = @cur_site
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update && @post.set_seen(@cur_user).save
   end
