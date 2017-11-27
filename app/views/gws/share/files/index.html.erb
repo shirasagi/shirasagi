@@ -96,6 +96,8 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
   </ul>
 </div>
 
+<%= paginate @items if @items.try(:current_page) %>
+
 <div class="index">
   <div class="header">
     <%= t('gws/share.child_folder') %>
@@ -110,5 +112,3 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
     <% end %>
   </ul>
 </div>
-
-<%= paginate @items if @items.try(:current_page) %>
