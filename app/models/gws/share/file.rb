@@ -37,11 +37,11 @@ class Gws::Share::File
 
   scope :custom_order, ->(key) {
     if key.start_with?('created_')
-      where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
+      all.reorder(created: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('updated_')
-      where({}).order_by(updated: key.end_with?('_asc') ? 1 : -1)
+      all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
     else
-      where({})
+      all
     end
   }
 

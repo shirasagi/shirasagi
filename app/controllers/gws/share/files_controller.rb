@@ -82,8 +82,6 @@ class Gws::Share::FilesController < ApplicationController
       custom_order(params.dig(:s, :sort) || 'created_desc').
       page(params[:page]).per(50)
 
-    @items.options[:sort].delete("_id")
-
     folder_name = Gws::Share::Folder.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
         where(id: params[:folder].to_i).pluck(:name).first
