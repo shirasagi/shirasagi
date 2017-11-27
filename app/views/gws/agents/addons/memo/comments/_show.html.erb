@@ -8,6 +8,11 @@
           <span class="datetime"><%= I18n.l(comment.updated) %></span>
           <span class="group"><%= comment.user_group_name %></span>
           <span class="user"><%= comment.user_name %></span>
+          <% if comment.user_id == @cur_user.id %>
+            <%= form_tag(gws_memo_comment_path(message_id: @item), method: :destroy) do %>
+              <%= submit_tag  t('ss.links.delete') %>
+            <% end %>
+          <% end %>
         </div>
     </li>
     <% end %>
