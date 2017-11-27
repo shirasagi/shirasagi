@@ -65,6 +65,7 @@ ja:
         gws/share/file:
           file_size_exceeds_limit: ファイルサイズ（%{size}）が最大ファイルサイズ（%{limit}）を超えました。
           file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_capacity: 削除済みファイルを含むファイルサイズ（%{size}）が総容量（%{limit}）を超えました。
         gws/share/category:
           too_deep: は%{max}階層以下にしてください。
           not_found_parent: 親カテゴリーが存在しません。
@@ -81,7 +82,7 @@ ja:
         category_ids: カテゴリー
       gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
-        share_max_folder_size: 最大フォルダーサイズ
+        share_files_capacity: 総容量制限
       gws/share/file:
         file_size: ファイルサイズ
         folder: フォルダー
@@ -110,3 +111,8 @@ ja:
         - 最大ファイルサイズを入力します。
       share_max_folder_size:
         - 最大フォルダーサイズを入力します。
+    gws/share/group_setting:
+      share_max_file_size:
+        - 最大ファイルサイズを入力します。
+      share_files_capacity:
+        - 総容量を入力します。
