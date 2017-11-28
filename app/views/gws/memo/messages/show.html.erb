@@ -10,7 +10,7 @@
   <div class="addon-view gws-memo" id="message-<%= @item.id %>">
     <div class="addon-head">
       <span class="icon-star <%= @item.star?(@cur_user) ? 'on' : 'off' %>">
-        <%= link_to action: :toggle_star, id: @item.id, location: :show do %>
+        <%= link_to options={action: :toggle_star, id: @item.id, location: :show}, method: :post do %>
           <i class="material-icons md-18">&#xE838;</i>
         <% end %>
       </span>
