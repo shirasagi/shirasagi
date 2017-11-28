@@ -35,6 +35,7 @@ class Gws::Share::FoldersController < ApplicationController
     @item.attributes = get_params
     @item.attributes["controller"] = params["controller"]
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    @item.attributes["action"] = params[:action]
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update, { controller: params["controller"] }
   end
