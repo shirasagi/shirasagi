@@ -31,7 +31,7 @@ class Gws::Share::Folder
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   validate :validate_parent_name
-  validate :validate_rename_children, if: ->{ self.attributes[:action] == "update" }
+  validate :validate_rename_children, :validate_rename_parent, if: ->{ self.attributes[:action] == "update" }
 
   before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
@@ -115,6 +115,14 @@ class Gws::Share::Folder
 
   def validate_rename_children
     if self.attributes["before_folder_name"].include?("/") && !self.name.include?("/")
+      errors.add :base, :not_move_to_parent
+      return false
+    end
+    true
+  end
+
+  def validate_rename_parent
+    if !self.attributes["before_folder_name"].include?("/") && self.attributes["before_folder_name"] != self.name
       errors.add :base, :not_rename_parent
       return false
     end
