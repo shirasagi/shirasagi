@@ -33,7 +33,6 @@ class Gws::Memo::CommentsController < ApplicationController
 
   def destroy
     result = @item.destroy
-    params[:redirect_to] = gws_memo_message_path(id: params[:message_id])
     if result
       respond_to do |format|
         format.html { redirect_to params[:redirect_to], notice: t('ss.notice.deleted') }
