@@ -30,7 +30,9 @@ var ListMonthView = FC.ListMonthView = FC.BasicView.extend({
       var time = $('<div class="td time"></div>').text(event.startTimeLabel);
       if (event.allDay) time.text(event.allDayLabel);
 
-      $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
+      tr = $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
+      if (event.className.indexOf('fc-event-todo') != -1)
+        tr.addClass('fc-event-todo')
       table.appendTo(view);
     }
 
