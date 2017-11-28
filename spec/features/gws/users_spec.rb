@@ -15,7 +15,6 @@ describe "gws_users", type: :feature, dbscope: :example do
 
     it "#index", js: true do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       #new"
