@@ -83,8 +83,12 @@ ja:
     attributes:
       gws/circular/post:
         name: タイトル
+        created: 投稿日
+        updated: 最終更新日
         due_date: 回覧期限日時
         see_type: 既読にする形式
+        deleted: 削除日時
+        seen: 既読
       gws/circular/group_setting:
         circular_default_due_date: 回覧期限日初期値
         circular_max_member: 回覧人数制限
