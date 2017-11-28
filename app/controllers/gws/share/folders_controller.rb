@@ -32,6 +32,8 @@ class Gws::Share::FoldersController < ApplicationController
   end
 
   def update
+    @item.attributes["before_folder_name"] = @item.name
+
     @item.attributes = get_params
     @item.attributes["controller"] = params["controller"]
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
