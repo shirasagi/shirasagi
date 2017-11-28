@@ -41,14 +41,12 @@ module Gws::Schedule::PlanHelper
   end
 
   def calender_todos(start_at, end_at)
-    site = params[:site] ? Gws::Group.find(params[:site]) : @cur_site
-    user = params[:user] ? Gws::User.find(params[:user]) : @cur_user
-    result = Gws::Schedule::Todo.site(site).
-      allow(:read, user, site: site).active.
+    result = Gws::Schedule::Todo.site(@cur_user).
+      allow(:read, @cur_user, site: @cur_user).active.
       search(start: start_at, end: end_at).
       map do |todo|
-        result = todo.calendar_format(user, site)
-        result[:restUrl] = gws_schedule_todos_path(site: site.id)
+        result = todo.calendar_format(@cur_user, @cur_user)
+        result[:restUrl] = gws_schedule_todos_path
         result
       end
     result

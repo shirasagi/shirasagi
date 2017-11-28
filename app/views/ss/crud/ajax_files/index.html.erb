@@ -1,8 +1,22 @@
 <%= jquery do %>
 
 SS.ajaxForm("form.user-file", {
-  success: function() {
-    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>");
+  success: function(data) {
+    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>", function() {
+      if (!Array.isArray(data) || data.length == 0) return;
+
+      $.each(data, function(index, file) {
+        var url = $(".user-files .select[data-id='" + file._id + "']").attr('href');
+        if (!url) return true;
+        $.ajax({
+          url: url,
+          success: function(data) {
+            $("#selected-files").append(data);
+          }
+        });
+      });
+      $.colorbox.close();
+    });
   }
 });
 
@@ -13,14 +27,12 @@ if ($element) {
 }
 
 if (onSelect) {
-  console.log('custom select');
   $(".user-files .select").on('click', function(e) {
     onSelect($(this));
     e.preventDefault();
     return false;
   });
 } else {
-  console.log('no select func');
   SS.ajax(".user-files .select", {
     success: function(data) {
       $("#selected-files").append(data);
