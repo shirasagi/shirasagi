@@ -54,6 +54,18 @@ class Gws::Share::FoldersController < ApplicationController
     render_create @item.save
   end
 
+  def show
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    if @item.name.include?("/")
+      parent_share_max_file_size = @model.where(name: @item.name.split("/").first).first.share_max_file_size
+      parent_share_max_folder_size = @model.where(name: @item.name.split("/").first).first.share_max_folder_size
+
+      @item.share_max_file_size = parent_share_max_file_size
+      @item.share_max_folder_size = parent_share_max_folder_size
+    end
+    render
+  end
+
   def download_folder
     raise "403" unless @model.allowed?(:download, @cur_user, site: @cur_site)
     ss_file_items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
