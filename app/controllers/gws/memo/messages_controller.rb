@@ -93,7 +93,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def forward
-    forward_params = params.permit(:subject, :text, :html, :format)
+    forward_params = params.require(:item).permit(:subject, :text, :html, :format)
     @item = @model.new pre_params.merge(fix_params).merge(forward_params)
     render :new
   end

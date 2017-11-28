@@ -16,12 +16,12 @@
       <%= form_for :forward_form,
                    url: forward_gws_memo_messages_path(site: @cur_user.root_groups.first),
                    html: { class: 'hide', id: 'forward-form' } do |f| %>
-        <%= hidden_field_tag :subject, @item.subject %>
-        <%= hidden_field_tag :text, @item.text %>
-        <%= hidden_field_tag :html, @item.html %>
-        <%= hidden_field_tag :format, @item.format %>
+        <%= hidden_field_tag "item[subject]", @item.subject %>
+        <%= hidden_field_tag "item[text]", @item.text %>
+        <%= hidden_field_tag "item[html]", @item.html %>
+        <%= hidden_field_tag "item[format]", @item.format %>
       <% end %>
-      <%= link_to '連絡メモに転送する', '#', { class: 'forward-memo', onclick: '$("#forward-form").submit();' }  %>
+      <%= link_to '連絡メモに転送する', '#', { class: 'forward-memo', onclick: '$("#forward-form").submit(); return false;' }  %>
     <% end %>
     <%= link_to(t('ss.links.delete'), { action: :delete }, class:  :delete) %>
 
