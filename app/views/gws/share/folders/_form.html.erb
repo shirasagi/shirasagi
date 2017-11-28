@@ -14,7 +14,7 @@
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
-<% if params[:action] == "new" || !(params[:action] == "edit" && @item.name.include?("/")) %>
+<% if params[:action] == "new" || !(params[:action] =~ /edit|update/ && @item.name.include?("/")) %>
   <dt><%= @model.t :share_max_file_size %><%= @model.tt :share_max_file_size %></dt>
   <dd><%= f.number_field :in_share_max_file_size_mb %> <%= t("ss.units.mega_byte") %></dd>
 
