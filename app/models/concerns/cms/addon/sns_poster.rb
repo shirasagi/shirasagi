@@ -153,18 +153,10 @@ module Cms::Addon
 
     def post_to_facebook
       message = message_format(html)
-      file_ids.present? ? image_path = files.first.full_url : nil
       access_token = self.site.facebook_access_token
       graph = Koala::Facebook::API.new(access_token)
       # facebokに投稿し、戻り値を取得
-      facebook_params = graph.put_wall_post(
-        message, {
-          "name"=> "#{name} - #{site.name}",
-          "link"=> full_url,
-          "picture"=> image_path,
-          "description"=> description
-        }
-      )
+      facebook_params = graph.put_wall_post(message, { "link"=> full_url })
       facebook_param = facebook_params['id'].to_s
       # 戻り値からUID/PID取得し、DBに保存
       facebook_id_array = facebook_id_separator(facebook_param)
