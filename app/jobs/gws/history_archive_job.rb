@@ -1,4 +1,8 @@
 class Gws::HistoryArchiveJob < Gws::ApplicationJob
+  include Job::Gws::TaskFilter
+
+  self.task_name = 'gws:history_archive'
+
   class << self
     def threshold_day(now, save_term)
       now = now.beginning_of_day
