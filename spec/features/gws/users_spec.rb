@@ -34,7 +34,6 @@ describe "gws_users", type: :feature, dbscope: :example do
 
       #show
       visit show_path
-      expect(status_code).to eq 200
       expect(current_path).to eq show_path
 
       #edit
@@ -43,7 +42,6 @@ describe "gws_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(current_path).to eq show_path
       expect(page).to have_no_css("form#item-form")
 
@@ -52,16 +50,13 @@ describe "gws_users", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       #download
       visit index_path
       click_link I18n.t('ss.links.download')
-      expect(status_code).to eq 200
 
       visit "#{index_path}/download_template"
-      expect(status_code).to eq 200
 
       #import
       visit index_path
@@ -70,7 +65,6 @@ describe "gws_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/user/gws_users.csv"
         click_button "インポート"
       end
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
     end
   end
