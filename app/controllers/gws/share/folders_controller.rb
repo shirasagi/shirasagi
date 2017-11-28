@@ -41,7 +41,7 @@ class Gws::Share::FoldersController < ApplicationController
 
   def create
     @item = @model.new get_params
-    parent_folder = @model.where(name: File.dirname(@item.name)).first
+    parent_folder = @model.where(site_id: @cur_site.id, name: File.dirname(@item.name)).first
 
     if parent_folder.present?
       @item.readable_group_ids = (@item.readable_group_ids + parent_folder.readable_group_ids).uniq
