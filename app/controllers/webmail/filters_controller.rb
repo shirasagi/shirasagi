@@ -22,7 +22,7 @@ class Webmail::FiltersController < ApplicationController
   def index
     @items = @model.
       user(@cur_user).
-      imap_setting(@imap_setting).
+      imap_setting(@cur_user, @imap_setting).
       search(params[:s]).
       page(params[:page]).
       per(50)
