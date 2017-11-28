@@ -145,6 +145,7 @@ module Cms::Addon
       user_screen_id = client.user.screen_name
       self.set(twitter_post_id: twitter_id, twitter_user_id: user_screen_id)
       self.add_to_set(twitter_posted: { twitter_post_id: twitter_id.to_s, twitter_user_id: user_screen_id })
+      self.unset(:twitter_post_error)
     rescue => e
       Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.set(twitter_post_error: "#{e.class} (#{e.message})")
@@ -169,6 +170,7 @@ module Cms::Addon
       facebook_id_array = facebook_id_separator(facebook_param)
       self.set(facebook_user_id: facebook_id_array[0], facebook_post_id: facebook_id_array[1])
       self.add_to_set(facebook_posted: { facebook_user_id: facebook_id_array[0], facebook_post_id: facebook_id_array[1] })
+      self.unset(:facebook_post_error)
     rescue => e
       Rails.logger.fatal("post_to_facebook failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.set(facebook_post_error: "#{e.class} (#{e.message})")
@@ -178,30 +180,42 @@ module Cms::Addon
       return if @deleted_sns
 
       if sns_auto_delete_enabled?
-        if twitter_posted.present?
-          client = connect_twitter
-          twitter_posted.each do |posted|
-            post_id = posted[:twitter_post_id]
-            client.destroy_status(post_id) rescue nil
-          end
-          self.set(twitter_post_id: nil, twitter_user_id: nil, twitter_posted: []) rescue nil
-        end
-        if facebook_posted.present?
-          access_token = self.site.facebook_access_token
-          graph = Koala::Facebook::API.new(access_token)
-          # UID_PIDの形式に組み替え、投稿を削除
-          facebook_posted.each do |posted|
-            post_id = posted[:facebook_post_id]
-            user_id = posted[:facebook_user_id]
-            graph.delete_object("#{user_id}_#{post_id}") rescue nil
-          end
-          self.set(facebook_user_id: nil, facebook_post_id: nil, facebook_posted: []) rescue nil
-        end
+        delete_sns_from_twitter
+        delete_sns_from_facebook
       end
 
       @deleted_sns = true
+    end
+
+    def delete_sns_from_twitter
+      return if twitter_posted.blank?
+
+      client = connect_twitter
+      twitter_posted.each do |posted|
+        post_id = posted[:twitter_post_id]
+        client.destroy_status(post_id) rescue nil
+      end
+      self.unset(:twitter_post_id, :twitter_user_id, :twitter_posted, :twitter_post_error) rescue nil
     rescue => e
-      Rails.logger.fatal("delete_sns failed: #{e.backtrace.join("\n  ")}")
+      Rails.logger.fatal("delete_sns_from_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      self.set(twitter_post_error: "#{e.class} (#{e.message})")
+    end
+
+    def delete_sns_from_facebook
+      return if facebook_posted.blank?
+
+      access_token = self.site.facebook_access_token
+      graph = Koala::Facebook::API.new(access_token)
+      # UID_PIDの形式に組み替え、投稿を削除
+      facebook_posted.each do |posted|
+        post_id = posted[:facebook_post_id]
+        user_id = posted[:facebook_user_id]
+        graph.delete_object("#{user_id}_#{post_id}") rescue nil
+      end
+      self.unset(:facebook_user_id, :facebook_post_id, :facebook_posted, :facebook_post_error) rescue nil
+    rescue => e
+      Rails.logger.fatal("delete_sns_from_facebook failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      self.set(facebook_post_error: "#{e.class} (#{e.message})")
     end
   end
 end
