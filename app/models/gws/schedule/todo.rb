@@ -26,21 +26,6 @@ class Gws::Schedule::Todo
     todo_state == 'finished'
   end
 
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :text
-    end
-
-    if params[:todo_state].present?
-      criteria = criteria.where todo_state: params[:todo_state]
-    end
-
-    criteria
-  }
-
   scope :active, ->(date = Time.zone.now) {
     where('$and' => [
         { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
@@ -115,6 +100,36 @@ class Gws::Schedule::Todo
   end
 
   class << self
+    def search(params)
+      criteria = all.search_keyword(params)
+      criteria = criteria.search_todo_state(params)
+      criteria = criteria.search_start_end(params)
+      criteria
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :text)
+    end
+
+    def search_todo_state(params)
+      return all if params.blank? || params[:todo_state].blank?
+      all.where(todo_state: params[:todo_state])
+    end
+
+    def search_start_end(params)
+      return all if params.blank?
+
+      criteria = all
+      if params[:start].present?
+        criteria = criteria.gte(end_at: params[:start])
+      end
+      if params[:end].present?
+        criteria = criteria.lte(start_at: params[:end])
+      end
+      criteria
+    end
+
     def allow_condition(action, user, opts = {})
       cond = [
         # { :readable_group_ids.in => user.group_ids.to_a },
