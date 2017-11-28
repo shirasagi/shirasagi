@@ -77,6 +77,7 @@ ja:
           found_files: フォルダー内、または削除済みのフォルダー内にファイルが存在しています。
           not_move_to_parent: 最上位フォルダーに変更することはできません。
           not_rename_parent: 最上位のフォルダー名を変更することはできません。
+          not_move_to_under_other_parent: 最上位のフォルダーをまたいでフォルダーを移動することはできません。
     attributes:
       gws/share/category:
         name: カテゴリー名
