@@ -23,9 +23,10 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   def set_category
-    cond = Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site)
-    @categories = cond.tree_sort
-    @category = cond.where(id: params[:category]).first if params[:category]
+    @categories = Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    if category_id = params[:category].presence
+      @category ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
+    end
   end
 
   def render_destroy_all(result)
