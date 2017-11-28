@@ -86,7 +86,6 @@ class Gws::Share::FilesController < ApplicationController
     @items.options[:sort].delete("_id")
 
     folder_name = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
         where(id: params[:folder].to_i).pluck(:name).first
 
     @sub_folders = Gws::Share::Folder.site(@cur_site).
