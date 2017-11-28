@@ -124,17 +124,18 @@ class Gws::Share::File
     return if cur_site.nil?
 
     @folder_max_size = 0
-    if folder
-      folder.files.each do |file|
-        @folder_max_size += (file.size || 0)
-      end
-      @file_max_size = folder.files.max_by { |file| file.size || 0 }.size || 0
+
+    folder.files.each do |file|
+      @folder_max_size += (file.size || 0)
+    end
+    @file_max_size = folder.files.max_by { |file| file.size || 0 }.size || 0
+
+    if folder.name.include?("/")
+      folder_share_max_folder_size = Gws::Share::Folder.where(name: folder.name.split("/").first).first.share_max_folder_size
+      folder_share_max_file_size = Gws::Share::Folder.where(name: folder.name.split("/").first).first.share_max_file_size
+    else
       folder_share_max_folder_size = folder.share_max_folder_size
       folder_share_max_file_size = folder.share_max_file_size
-    else
-      @file_max_size = 0
-      folder_share_max_folder_size = 0
-      folder_share_max_file_size = 0
     end
 
     if @cur_site
