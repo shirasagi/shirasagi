@@ -1161,6 +1161,10 @@ footer.send {
   .upload-menu-select {
     float: right;
   }
+  .upload-menu-notice {
+    margin: 0 2px;
+    color: #b30;
+  }
   #selected-files {
     margin-top: 30px;
     @include clear;

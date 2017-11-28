@@ -63,7 +63,9 @@
 
   <dt><%= @model.t :organization_id %><%= @model.tt :organization_id %></dt>
   <dd><%= f.select :organization_id, @item.organization_id_options(@cur_site) %></dd>
+</dl>
 
+<dl class="see mod-gws-user-groups">
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
@@ -105,26 +107,26 @@
   </dd>
 </dl>
 
-  <dl class="see mod-gws-user-switch-user">
-    <dt><%= @model.t :switch_user_id %><%= @model.tt :switch_user_id %></dt>
-    <dd>
-      <%= f.hidden_field "switch_user_id", value: "", class: "hidden-ids" %>
-      <%= link_to t("ss.apis.users.index"), gws_apis_users_path(single: true), class: "ajax-box" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-          <% if user = @item.switch_user %>
-          <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "switch_user_id", value: user.id %> <%= user.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </dd>
-  </dl>
+<dl class="see mod-gws-user-switch-user">
+  <dt><%= @model.t :switch_user_id %><%= @model.tt :switch_user_id %></dt>
+  <dd>
+    <%= f.hidden_field "switch_user_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path(single: true), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% if user = @item.switch_user %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "switch_user_id", value: user.id %> <%= user.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
 
 <dl class="see mod-gws-user-remark">
   <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>

@@ -122,6 +122,7 @@ ja:
       started_import: インポートを開始しました。
       sent: 送信しました。
       posted: 投稿しました。
+      multibyte_filename_disabled: ※日本語ファイル名は使用できません。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
