@@ -12,4 +12,8 @@ class Gws::Board::Post
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
+
+  def subscribed_users
+    topic.subscribed_users
+  end
 end

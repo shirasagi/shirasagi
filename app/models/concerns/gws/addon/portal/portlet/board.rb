@@ -6,13 +6,21 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
+      field :board_severity, type: String
       embeds_ids :board_categories, class_name: "Gws::Board::Category"
-      permit_params board_category_ids: []
+      permit_params :board_severity, board_category_ids: []
+    end
+
+    def board_severity_options
+      %w(normal important).map { |v| [ I18n.t("gws/board.options.severity.#{v}"), v ] }
     end
 
     def find_board_items(portal, user)
       search = { site: portal.site }
 
+      if board_severity.present?
+        search[:severity] = board_severity
+      end
       if cate = board_categories.first
         search[:category] = cate.name
       end

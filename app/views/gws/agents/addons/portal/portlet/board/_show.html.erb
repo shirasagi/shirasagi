@@ -1,4 +1,7 @@
 <dl class="see">
+  <dt><%= @item.t :board_severity %></dt>
+  <dd><%= @item.label(:board_severity) %></dd>
+
   <dt><%= @model.t :board_category_ids %></dt>
   <dd>
     <% @item.board_categories.each do |category| %>
@@ -8,5 +11,5 @@
   </dd>
 
   <dt><%= @model.t :limit %></dt>
-  <dd><%= @item.send :limit %></dd>
+  <dd><%= @item.limit %></dd>
 </dl>
