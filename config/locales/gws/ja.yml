@@ -271,6 +271,7 @@ ja:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
       gws/addon/system/group_setting:
+        sender_user_id: 差出ユーザー
         sendmail_domains: メール送信許可ドメイン
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
@@ -398,6 +399,9 @@ ja:
       name:
         - タイトルを入力します。
     gws/addon/system/group_setting:
+      sender_user_id:
+        - 差出ユーザーを選択します。
+        - 掲示板の新着投稿通知などの差出人として使用されます。
       sendmail_domains:
         - メール送信許可ドメインを入力します。
       canonical_scheme:
