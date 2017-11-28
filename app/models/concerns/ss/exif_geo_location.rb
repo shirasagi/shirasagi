@@ -26,5 +26,7 @@ module SS::ExifGeoLocation
     longitude *= -1 if exif_lng_ref == 'W'
 
     self.geo_location = [ latitude, longitude ]
+  rescue ZeroDivisionError => e
+    return
   end
 end
