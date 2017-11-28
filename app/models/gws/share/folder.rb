@@ -12,6 +12,7 @@ class Gws::Share::Folder
 
   seqid :id
   field :name, type: String
+  field :depth, type: Integer
   field :order, type: Integer, default: 0
   field :state, type: String, default: "closed"
   field :share_max_file_size, type: Integer, default: 0
@@ -24,10 +25,12 @@ class Gws::Share::Folder
   permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb,
                 :share_max_folder_size, :in_share_max_folder_size_mb
 
+  before_validation :set_depth
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
+  validates :depth, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   validate :validate_parent_name
@@ -89,7 +92,23 @@ class Gws::Share::Folder
     end
   end
 
+  def trailing_name
+    @trailing_name ||= name.split("/")[depth..-1].join("/")
+  end
+
+  def parents
+    @parents ||= begin
+      paths = Cms::Node.split_path(name.sub(/^\//, ''))
+      paths.pop
+      self.class.all.in(name: paths)
+    end
+  end
+
   private
+
+  def set_depth
+    self.depth = name.count('/')
+  end
 
   def set_share_max_file_size
     return if in_share_max_file_size_mb.blank?
