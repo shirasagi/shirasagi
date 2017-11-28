@@ -158,24 +158,30 @@ class Gws::Share::File
         end
       end
     end
-    setting_validate_size if @cur_site.share_max_file_size > folder_share_max_file_size ||
-        @cur_site.share_files_capacity > folder_share_max_folder_size
+    setting_validate_size if @cur_site.share_max_file_size > folder_share_max_file_size
+    setting_validate_capacity if folder_share_max_folder_size.to_i == 0
   end
 
   def setting_validate_size
     limit = @cur_site.share_max_file_size || 0
-    capacity = @cur_site.share_files_capacity || 0
-    return if limit <= 0 && capacity <= 0
+    return if limit <= 0
 
     if in_file.present?
       size = in_file.size
     elsif in_files.present?
       size = in_files.map(&:size).max || 0
+    else
+      return
     end
 
     if size > limit
       errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
     end
+  end
+
+  def setting_validate_capacity
+    capacity = @cur_site.share_files_capacity || 0
+    return if capacity <= 0
 
     total = Gws::Share::File.site(@cur_site).not_in(id: id).map(&:size).inject(:+) || 0
     total += in_file.size if in_file.present?
@@ -184,5 +190,4 @@ class Gws::Share::File
       errors.add(:base, :file_size_exceeds_capacity, size: number_to_human_size(total), limit: number_to_human_size(capacity))
     end
   end
-
 end
