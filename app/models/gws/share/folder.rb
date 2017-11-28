@@ -24,11 +24,11 @@ class Gws::Share::Folder
   permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb,
                 :share_max_folder_size, :in_share_max_folder_size_mb
 
-  #before_validation :set_share_max_file_size
-  #before_validation :set_share_max_folder_size
+  before_validation :set_share_max_file_size
+  before_validation :set_share_max_folder_size
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
-  #validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   validate :validate_parent_name
 

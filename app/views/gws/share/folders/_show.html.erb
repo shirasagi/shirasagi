@@ -4,4 +4,10 @@
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
+
+  <dt><%= @model.t :share_max_file_size %></dt>
+  <dd><%= number_to_human_size(@item.share_max_file_size) %></dd>
+
+  <dt><%= @model.t :share_max_folder_size %></dt>
+  <dd><%= number_to_human_size(@item.share_max_folder_size) %></dd>
 </dl>
