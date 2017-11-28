@@ -8,7 +8,7 @@
       </label>
 
       <div class="icon icon-star <%= item.star?(@cur_user) ? 'on' : 'off' %>">
-        <%= link_to action: :toggle_star, id: item.id do %>
+        <%= link_to options={action: :toggle_star, id: item.id}, method: :post do %>
           <i class="material-icons md-18">&#xE838;</i>
         <% end %>
       </div>
