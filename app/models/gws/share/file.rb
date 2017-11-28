@@ -15,7 +15,7 @@ class Gws::Share::File
   belongs_to :folder, class_name: "Gws::Share::Folder"
 
   #validates :category_ids, presence: true
-  #validates :folder_id, presence: true
+  validates :folder_id, presence: true
   validate :validate_size, if: ->{ in_file.present? }
   validates :deleted, datetime: true
 
