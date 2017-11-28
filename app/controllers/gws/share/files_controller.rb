@@ -14,25 +14,19 @@ class Gws::Share::FilesController < ApplicationController
 
   def set_crumbs
     set_folder
+    @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-      folder_hierarchy_count = @folder.name.split("/").count - 1
-      0.upto(folder_hierarchy_count) do |i|
-        folder_name = @folder.name.split("/")[i]
-        item_name = @folder.name.split("/")[0, i+1].join("/")
-        item_id = Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id
-        item_path = gws_share_folder_files_path(folder: item_id)
-        @crumbs << [folder_name, item_path]
+      @folder.parents.order_by(depth: 1).each do |parent_folder|
+        @crumbs << [parent_folder.trailing_name, gws_share_folder_files_path(folder: parent_folder)]
       end
-    else
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), action: :index]
+      @crumbs << [@folder.trailing_name, gws_share_folder_files_path(folder: @folder.id)]
     end
   end
 
   def set_category
     @categories = Gws::Share::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
     if category_id = params[:category].presence
-      @category ||= Gws::Share::Category.site(@cur_site).where(id: category_id).first
+      @category ||= Gws::Share::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
     end
   end
 
@@ -81,8 +75,6 @@ class Gws::Share::FilesController < ApplicationController
       active.search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'created_desc').
       page(params[:page]).per(50)
-
-    @items.options[:sort].delete("_id")
 
     folder_name = Gws::Share::Folder.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
