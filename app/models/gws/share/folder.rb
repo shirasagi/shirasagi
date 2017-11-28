@@ -114,8 +114,11 @@ class Gws::Share::Folder
   end
 
   def validate_rename_children
-    return if self.name.include?("/")
-    errors.add :base, :not_rename_parent
+    if self.attributes["before_folder_name"].include?("/") && !self.name.include?("/")
+      errors.add :base, :not_rename_parent
+      return false
+    end
+    true
   end
 
   def validate_children
