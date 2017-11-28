@@ -69,6 +69,7 @@ class Gws::Share::FilesController < ApplicationController
   public
 
   def index
+    set_folder
     if @category.present? || @folder.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
