@@ -238,6 +238,15 @@
 .fc-view-container {
   background-color: #fff;
 }
+.print-preview {
+  .fc-unthemed {
+    th, td {
+      border-color: black;
+      border-style: solid;
+      //border-width: 2px;
+    }
+  }
+}
 
 // days
 .fc-day-header.fc-sun {
