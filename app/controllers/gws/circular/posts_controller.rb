@@ -19,7 +19,13 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_posts_path]
+    set_category
+    if @category.present?
+      @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_posts_path]
+      @crumbs << [@category.name, action: :index]
+    else
+      @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), action: :index]
+    end
   end
 
   def set_category
