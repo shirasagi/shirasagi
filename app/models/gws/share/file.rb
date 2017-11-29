@@ -129,46 +129,62 @@ class Gws::Share::File
 
     @folder_max_size = 0
 
-    parent_folder = folder.name.split("/").first
-    parent_and_child_folders = Gws::Share::Folder.where(name: /^#{parent_folder}\/.*/).site(@cur_site)
+    parent_folder_name = folder.name.split("/").first
+    parent_folder = Gws::Share::Folder.where(name: parent_folder_name).site(@cur_site).first
+    child_folders = Gws::Share::Folder.where(name: /^#{parent_folder_name}\/.*/).site(@cur_site)
 
-    parent_and_child_folders.each do |parent_and_child_folder|
-      parent_and_child_folder.files.each do |file|
+    child_folders.each do |child_folder|
+      child_folder.files.each do |file|
         @folder_max_size += (file.size || 0)
       end
-    end
+    end if child_folders.present?
+
+    parent_folder.files.each do |file|
+      @folder_max_size += (file.size || 0)
+    end if parent_folder.present?
+
     @file_max_size = folder.files.max_by { |file| file.size || 0 }.size || 0
 
     if folder.name.include?("/")
-      folder_share_max_folder_size = Gws::Share::Folder.where(name: folder.name.split("/").first).site(@cur_site).first.share_max_folder_size
-      folder_share_max_file_size = Gws::Share::Folder.where(name: folder.name.split("/").first).site(@cur_site).first.share_max_file_size
+      folder_share_max_folder_size = Gws::Share::Folder.where(name: folder.name.split("/").first)
+                                         .site(@cur_site).first.share_max_folder_size
+      folder_share_max_file_size = Gws::Share::Folder.where(name: folder.name.split("/").first)
+                                       .site(@cur_site).first.share_max_file_size
     else
       folder_share_max_folder_size = folder.share_max_folder_size
       folder_share_max_file_size = folder.share_max_file_size
     end
 
     if @cur_site
-      if (folder_limit = (folder_share_max_folder_size || 0)) > 0
-        size = @folder_max_size
-        if size > folder_limit
-          errors.add(:base,
-                     :file_size_exceeds_folder_limit,
-                     size: number_to_human_size(size),
-                     limit: number_to_human_size(folder_limit))
-        end
-      end
-      if (limit = (folder_share_max_file_size || 0)) > 0
-        size = @file_max_size
-        if size > limit
-          errors.add(:base,
-                     :file_size_exceeds_limit,
-                     size: number_to_human_size(size),
-                     limit: number_to_human_size(limit))
-        end
-      end
+      validate_folder_limit(folder_share_max_folder_size)
+      validate_file_limit(folder_share_max_file_size)
     end
     setting_validate_size if @cur_site.share_max_file_size > folder_share_max_file_size
     setting_validate_capacity if folder_share_max_folder_size.to_i == 0
+  end
+
+  def validate_folder_limit(folder_share_max_folder_size)
+    if (folder_limit = (folder_share_max_folder_size || 0)) > 0
+      size = @folder_max_size
+      if size > folder_limit
+        errors.add(:base,
+                   :file_size_exceeds_folder_limit,
+                   size: number_to_human_size(size),
+                   limit: number_to_human_size(folder_limit))
+      end
+    end
+  end
+
+  def validate_file_limit(folder_share_max_file_size)
+    if (limit = (folder_share_max_file_size || 0)) > 0
+      size = @file_max_size
+      if size > limit
+        errors.add(:base,
+                   :file_size_exceeds_limit,
+                   size: number_to_human_size(size),
+                   limit: number_to_human_size(limit))
+      end
+    end
   end
 
   def setting_validate_size

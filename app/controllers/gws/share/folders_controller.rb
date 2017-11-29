@@ -60,9 +60,10 @@ class Gws::Share::FoldersController < ApplicationController
   def show
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     if @item.name.include?("/")
-      parent_share_max_file_size = @model.where(site_id: @cur_site.id, name: @item.name.split("/").first).first.share_max_file_size
-      parent_share_max_folder_size = @model.where(site_id: @cur_site.id, name: @item.name.split("/").first).first.share_max_folder_size
-
+      parent_share_max_file_size = @model.where(site_id: @cur_site.id, name: @item.name.split("/").first)
+                                         .first.share_max_file_size
+      parent_share_max_folder_size = @model.where(site_id: @cur_site.id, name: @item.name.split("/").first)
+                                         .first.share_max_folder_size
       @item.share_max_file_size = parent_share_max_file_size
       @item.share_max_folder_size = parent_share_max_folder_size
     end
