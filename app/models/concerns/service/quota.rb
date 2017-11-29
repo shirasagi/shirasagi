@@ -132,7 +132,6 @@ module Service::Quota
       Gws::Portal::UserSetting.any_in(site_id: org_ids),
       Gws::Qna::Post.any_in(site_id: org_ids),
       Gws::Report::Form.any_in(site_id: org_ids),
-      Gws::Schedule::Attendance.any_in(site_id: org_ids),
       Gws::Schedule::Comment.any_in(site_id: org_ids),
       Gws::Schedule::Holiday.any_in(site_id: org_ids),
       Gws::Schedule::Plan.any_in(site_id: org_ids),

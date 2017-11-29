@@ -28,7 +28,7 @@ class Gws::Schedule::AttendancesController < ApplicationController
     set_cur_schedule
     set_target_user
 
-    ret = { cur_site: @cur_site, cur_user: @target_user, cur_schedule: @cur_schedule }
+    ret = { cur_user: @target_user }
     ret[:attendance_state] = params.dig(:item, :attendance_state) if params[:item].present?
     ret
   end

@@ -1,12 +1,8 @@
 class Gws::Schedule::Attendance
   include SS::Document
   include Gws::Reference::User
-  include Gws::Reference::Site
-  include Gws::Reference::Schedule
-  include Gws::Addon::GroupPermission
 
-  set_permission_name 'gws_schedule_plans'
-
+  embedded_in :schedule, inverse_of: :attendances
   field :attendance_state, type: String
 
   validates :attendance_state, presence: true, inclusion: { in: %w(unknown attendance absence), allow_blank: true }

@@ -4,9 +4,11 @@ module Gws::Addon::Schedule::Attendances
 
   included do
     field :attendance_check_state, type: String
-    has_many :attendances, class_name: 'Gws::Schedule::Attendance', dependent: :destroy
+    embeds_many :attendances, class_name: 'Gws::Schedule::Attendance', cascade_callbacks: :true
     validates :attendance_check_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
     permit_params :attendance_check_state
+
+    scope :no_absence, ->(user){ self.not(attendances: { '$elemMatch' => { user_id: user.id, attendance_state: 'absence' }}) }
   end
 
   def attendance_check_state_options
