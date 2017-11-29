@@ -25,6 +25,7 @@ ja:
       buttonText:
         listMonth: リスト
         withTodo: ToDo表示
+        withAbsence: 欠席表示
       titleFormat:
         month: YYYY年 M月
         week: (YYYY年 M月 D日（ddd）)

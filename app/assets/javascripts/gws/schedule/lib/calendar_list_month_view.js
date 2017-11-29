@@ -62,8 +62,13 @@
         eventCount++;
 
         var tr = $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
-        if (event.className.indexOf('fc-event-todo') !== -1)
+        if (event.className.indexOf('fc-event-todo') !== -1) {
           tr.addClass('fc-event-todo');
+        }
+        if (event.className.indexOf('fc-event-user-attendance-absence') !== -1) {
+          tr.addClass('fc-event-user-attendance-absence');
+          tr.css('display', 'none');
+        }
       }
       table.appendTo(view);
       updateNoPlanVisibility();
