@@ -86,7 +86,7 @@ ja:
         category_ids: カテゴリー
       gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
-        share_files_capacity: 総容量制限
+        share_files_capacity: フォルダー容量制限
       gws/share/file:
         file_size: ファイルサイズ
         folder: フォルダー
@@ -96,7 +96,7 @@ ja:
         name: フォルダー名
         order: 並び順
         share_max_file_size: 最大ファイルサイズ
-        share_max_folder_size: 最大フォルダーサイズ
+        share_max_folder_size: フォルダー容量制限
 
   tooltip:
     gws/share/category:
@@ -115,7 +115,7 @@ ja:
         - 最大ファイルサイズを入力します。
         - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
       share_max_folder_size:
-        - 最大フォルダーサイズを入力します。
+        - フォルダーの容量制限を入力します。
         - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
     gws/share/group_setting:
       share_max_file_size:
