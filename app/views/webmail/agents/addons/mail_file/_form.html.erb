@@ -26,9 +26,9 @@ $ ->
     <div id="selected-files">
       <% @item.ref_files.each do |part| %>
         <div class="file-view">
-          <%= link_to({ action: :parts, section: part.section }, target: part.link_target, class: :thumb) do %>
+          <%= link_to(parts_webmail_mail_path(section: part.section), target: part.link_target, class: :thumb) do %>
             <% if part.image? %>
-              <%= image_tag url_for(action: :parts, section: part.section), alt: part.filename %>
+              <%= image_tag parts_webmail_mail_path(section: part.section), alt: part.filename %>
             <% else %>
               <% extname = File.extname(part.filename) %>
               <span class="ext icon-<%= extname %>"><%= extname %></span>
