@@ -327,3 +327,8 @@ ja:
         「%{name}」にコメントがありました。
 
         %{text}
+
+    gws/schedule/attendance:
+      subject: "[更新通知][スケジュール] %{name}"
+      text: |
+        「%{name}」の出欠確認に回答がありました。

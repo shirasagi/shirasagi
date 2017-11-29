@@ -15,4 +15,6 @@ class Gws::Schedule::Attendance
       [ I18n.t("gws/schedule.options.attendance_state.#{v}"), v ]
     end
   end
+
+  delegate :subscribed_users, to: :_parent
 end

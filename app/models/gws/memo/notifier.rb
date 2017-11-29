@@ -37,6 +37,10 @@ class Gws::Memo::Notifier
 
   private
 
+  def item_title
+    item.try(:topic).try(:name) || item.try(:schedule).try(:name) || item.try(:_parent).try(:name) || item.try(:name)
+  end
+
   def from_user
     @from_user ||= begin
       user = cur_site.sender_user
@@ -50,12 +54,10 @@ class Gws::Memo::Notifier
   end
 
   def set_subject(mesasge)
-    name = item.try(:topic).try(:name) || item.try(:schedule).try(:name) || item.try(:name)
-    mesasge.subject = I18n.t("gws_notification.#{i18n_key}.subject", name: name, default: nil)
+    mesasge.subject = I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: nil)
   end
 
   def set_body(mesasge)
-    name = item.try(:topic).try(:name) || item.try(:schedule).try(:name) || item.try(:name)
     text = item.try(:text)
     text ||= begin
       html = item.try(:html).presence
@@ -63,7 +65,7 @@ class Gws::Memo::Notifier
     end
     text = text.truncate(60) if text
 
-    body = I18n.t("gws_notification.#{i18n_key}.text", name: name, text: text, default: nil)
+    body = I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: text, default: nil)
     if body
       mesasge.format = 'text'
       mesasge.text = body

@@ -1,6 +1,7 @@
 class Gws::Schedule::AttendancesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Memo::NotificationFilter
 
   model Gws::Schedule::Attendance
 
