@@ -94,7 +94,10 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def show
-    raise "403" unless @item.readable?(@cur_user)
+    raise "404" unless @item.readable?(@cur_user)
+    if params[:folder].present?
+      raise "404" unless @item.folder_id.to_s == params[:folder]
+    end
     render
   end
 
