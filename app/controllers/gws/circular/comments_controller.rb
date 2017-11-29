@@ -4,9 +4,16 @@ class Gws::Circular::CommentsController < ApplicationController
 
   model Gws::Circular::Comment
 
+  before_action :set_category
   before_action :set_post
 
   private
+
+  def set_category
+    if params[:category].present?
+      @category ||= Gws::Circular::Category.site(@cur_site).where(id: params[:category]).first
+    end
+  end
 
   def fix_params
     set_post
@@ -18,7 +25,13 @@ class Gws::Circular::CommentsController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
+    set_category
+    if @category.present?
+      @crumbs << [t("modules.gws/circular"), gws_circular_posts_path]
+      @crumbs << [@category.name, gws_circular_category_posts_path]
+    else
+      @crumbs << [t("modules.gws/circular"), gws_circular_posts_path]
+    end
   end
 
   def set_post
@@ -33,7 +46,11 @@ class Gws::Circular::CommentsController < ApplicationController
   public
 
   def index
-    redirect_to gws_circular_post_path(id: @post.id)
+    if @category.present?
+      redirect_to gws_circular_category_post_path(id: @post.id)
+    else
+      redirect_to gws_circular_post_path(id: @post.id)
+    end
   end
   alias show index
 
@@ -47,7 +64,8 @@ class Gws::Circular::CommentsController < ApplicationController
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.post.member?(@cur_user)
     @post.cur_user = @cur_user
     @post.cur_site = @cur_site
-    render_create @item.save && @post.set_seen(@cur_user).save
+    location = { action: :show, id: @item, category: @category.id } if @category
+    render_create @item.save && @post.set_seen(@cur_user).save, { location: location }
   end
 
   def update
@@ -56,7 +74,12 @@ class Gws::Circular::CommentsController < ApplicationController
     @post.cur_user = @cur_user
     @post.cur_site = @cur_site
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update && @post.set_seen(@cur_user).save
+    location = { action: :show, category: @category.id } if @category
+    render_update @item.update && @post.set_seen(@cur_user).save, { location: location }
   end
 
+  def destroy
+    location = { action: :index, category: @category.id } if @category
+    render_destroy @item.destroy, { location: location, notice: t("ss.notice.deleted") }
+  end
 end

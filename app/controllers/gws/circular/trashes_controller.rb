@@ -15,8 +15,15 @@ class Gws::Circular::TrashesController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
-    @crumbs << [t('gws/circular.admin'), gws_circular_trashes_path ]
+    set_category
+    if @category.present?
+      @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
+      @crumbs << [t('gws/circular.admin'), gws_circular_trashes_path ]
+      @crumbs << [@category.name, action: :index]
+    else
+      @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
+      @crumbs << [t('gws/circular.admin'), gws_circular_trashes_path ]
+    end
   end
 
   def set_category
