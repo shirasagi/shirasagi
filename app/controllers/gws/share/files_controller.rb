@@ -101,6 +101,34 @@ class Gws::Share::FilesController < ApplicationController
     render
   end
 
+  def update
+    before_folder_id = @item.folder_id
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if @item.in_file.blank? && @item.in_data_url.present?
+      media_type, _, data = SS::DataUrl.decode(@item.in_data_url)
+      raise '400' if @item.content_type != media_type
+
+      tmp_file = Fs::UploadedFile.new('ss_file')
+      tmp_file.original_filename = @item.filename
+      tmp_file.content_type = @item.content_type
+      tmp_file.binmode
+      tmp_file.write(data)
+      tmp_file.rewind
+
+      begin
+        @item.in_file = tmp_file
+        render_update @item.update
+      ensure
+        tmp_file.close
+      end
+    else
+      render_update @item.update, { before_folder_id: before_folder_id}
+    end
+  end
+
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     if @item.is_a?(Gws::Addon::EditLock)
@@ -197,6 +225,29 @@ class Gws::Share::FilesController < ApplicationController
               filename: zipfile,
               disposition: 'attachment',
               x_sendfile: true)
+  end
+
+  def render_update(result, opts = {})
+    if params[:action] == "update" && opts[:before_folder_id] != @item.folder_id
+      location = { action: :show,  folder: @item.folder_id}
+    else
+      location = opts[:location].presence || crud_redirect_url || { action: :show }
+    end
+
+    render_opts = opts[:render].presence || { file: :edit }
+    notice = opts[:notice].presence || t("ss.notice.saved")
+
+    if result
+      respond_to do |format|
+        format.html { redirect_to location, notice: notice }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { render render_opts }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+      end
+    end
   end
 
   def render_destroy_all(result)
