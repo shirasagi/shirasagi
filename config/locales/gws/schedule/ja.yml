@@ -311,3 +311,18 @@ ja:
     gws/addon/schedule/attendances:
       attendance_check_state:
         - 出欠確認を有効にするかしないかを選択してください。
+
+  gws_notification:
+    gws/schedule/plan:
+      subject: "[更新通知][スケジュール] %{name}"
+      text: |
+        「%{name}」が作成または更新されました。
+
+        %{text}
+
+    gws/schedule/comment:
+      subject: "[更新通知][スケジュール] %{name}"
+      text: |
+        「%{name}」にコメントがありました。
+
+        %{text}

@@ -1,6 +1,7 @@
 class Gws::Schedule::CommentsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Memo::NotificationFilter
 
   model Gws::Schedule::Comment
 

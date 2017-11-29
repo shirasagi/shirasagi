@@ -50,12 +50,12 @@ class Gws::Memo::Notifier
   end
 
   def set_subject(mesasge)
-    name = item.try(:topic).try(:name) || item.try(:name)
+    name = item.try(:topic).try(:name) || item.try(:schedule).try(:name) || item.try(:name)
     mesasge.subject = I18n.t("gws_notification.#{i18n_key}.subject", name: name, default: nil)
   end
 
   def set_body(mesasge)
-    name = item.try(:topic).try(:name) || item.try(:name)
+    name = item.try(:topic).try(:name) || item.try(:schedule).try(:name) || item.try(:name)
     text = item.try(:text)
     text ||= begin
       html = item.try(:html).presence
