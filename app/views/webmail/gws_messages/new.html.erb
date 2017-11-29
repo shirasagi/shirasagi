@@ -1,0 +1,11 @@
+<%= jquery do %>
+  Gws_Memo_Message.render();
+  $("#addon-basic").hide();
+<% end %>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t('ss.buttons.send'), class: 'btn-primary save js-send' %>
+  <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{webmail_mail_path}'; return false;" %>
+<% end %>
+
+<%= render file: 'ss/crud/new' %>

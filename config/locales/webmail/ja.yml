@@ -69,6 +69,7 @@ ja:
       reload_mailboxes: メールサーバと同期する
       empty_mailbox: 空にする
       select_account: アカウント
+      forward_gws_message: 連絡メモに転送する
     confirm:
       empty_mailbox: フォルダーを空にしてよろしいですか？
       clear_cache: キャッシュを削除してよろしいですか？
