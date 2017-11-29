@@ -15,7 +15,7 @@ class Gws::Memo::Folder
 
   permit_params :name, :order, :path
 
-  validates :name, presence: true, uniqueness: { scope: :site_id }
+  validates :name, presence: true, uniqueness: { scope: [:site_id, :user_id] }
 
   default_scope ->{ order_by order: 1 }
 
