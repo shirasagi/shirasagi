@@ -82,9 +82,14 @@ class Gws::Share::FilesController < ApplicationController
     folder_name = Gws::Share::Folder.site(@cur_site).
         where(id: params[:folder].to_i).pluck(:name).first
 
-    @sub_folders = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        sub_folder(params[:folder] || 'root_folder', folder_name)
+
+    if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
+      @sub_folders = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).
+          sub_folder(params[:folder] || 'root_folder', folder_name)
+    elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
+      @sub_folders = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site).
+          sub_folder(params[:folder] || 'root_folder', folder_name)
+    end
   end
 
   def show
