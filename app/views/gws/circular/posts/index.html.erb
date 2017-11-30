@@ -1,11 +1,19 @@
 <%= jquery do %>
   $(".set-seen-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("<%= set_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
+    <% if @category %>
+      var form = Gws_Circular_Post.buildForm("<%= set_seen_all_gws_circular_category_posts_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
+    <% else %>
+      var form = Gws_Circular_Post.buildForm("<%= set_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
+    <% end %>
     form.appendTo(document.body).submit();
   });
 
   $(".unset-seen-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("<%= unset_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
+    <% if @category %>
+      var form = Gws_Circular_Post.buildForm("<%= unset_seen_all_gws_circular_category_posts_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
+    <% else %>
+      var form = Gws_Circular_Post.buildForm("<%= unset_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
+    <% end %>
     form.appendTo(document.body).submit();
   });
 
