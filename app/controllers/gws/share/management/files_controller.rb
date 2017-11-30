@@ -84,6 +84,7 @@ class Gws::Share::Management::FilesController < ApplicationController
         first
 
     @sub_folders = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
         sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
