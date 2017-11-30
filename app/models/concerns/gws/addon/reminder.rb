@@ -3,10 +3,10 @@ module Gws::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    attr_accessor :reminder_url
+    attr_accessor :reminder_url, :in_reminder_state, :in_reminder_date
 
     included do
-      permit_params :reminder_url
+      permit_params :reminder_url, :in_reminder_state, :in_reminder_date
 
       after_save :save_reminders
       after_destroy ->{ reminders.destroy }
@@ -17,12 +17,26 @@ module Gws::Addon
       @reminders ||= Gws::Reminder.where(model: reference_model, item_id: id)
     end
 
-    def reminder(user)
+    def reminder(user = @cur_user)
       @reminder ||= reminders.user(user).first
     end
 
+    def in_reminder_state
+      return @in_reminder_state if @in_reminder_state
+      return 'enabled' if new_record?
+      reminder ? 'enabled' : 'disabled'
+    end
+
+    def in_reminder_date
+      if @in_reminder_date
+        date = DateTime.parse(@in_reminder_date) rescue nil
+      end
+      date ||= reminder ? reminder.date : (reminder_date || Time.zone.now + 7.day)
+      date
+    end
+
     def reminder_date
-      try :start_at
+      try(:start_at)
     end
 
     def reminder_url
@@ -31,7 +45,7 @@ module Gws::Addon
     end
 
     def reminder_user_ids
-      [@cur_user.try(:id), user_id]
+      [@cur_user.try(:id), user_id].compact
     end
 
     private
@@ -42,6 +56,7 @@ module Gws::Addon
 
       new_record = @db_changes.key?('_id')
       removed_user_ids = reminders.map(&:user_id) - reminder_user_ids
+      removed_user_ids << @cur_user.id if @cur_user && @in_reminder_state == 'disabled'
 
       base_cond = {
         site_id: site_id,
@@ -52,10 +67,12 @@ module Gws::Addon
 
       ## save reminders
       reminder_user_ids.each do |user_id|
+        next if removed_user_ids.include?(user_id)
+
         cond = base_cond.merge(user_id: user_id)
         item = Gws::Reminder.where(cond).first || Gws::Reminder.new(cond)
         item.name = reference_name
-        item.date = reminder_date
+        item.date = @in_reminder_date || reminder_date
         item.updated_fields = self_updated_fields unless new_record
         if @cur_user
           item.updated_user_id = @cur_user.id
