@@ -36,7 +36,7 @@ class Gws::Memo::Folder
   end
 
   def messages
-    Gws::Memo::Message.folder(self)
+    Gws::Memo::Message.site(self.site).folder(self)
   end
 
   def unseens
