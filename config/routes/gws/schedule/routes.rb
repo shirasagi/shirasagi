@@ -5,6 +5,7 @@ SS::Application.routes.draw do
     get :events, on: :collection
     get :print, on: :collection
     get :popup, on: :member
+    get :copy, on: :member
     get :delete, on: :member
     delete action: :destroy_all, on: :collection
   end

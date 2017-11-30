@@ -6,7 +6,7 @@ module Gws::Schedule::TodoHelper
     when /index/
         result << -> { link_to t('ss.links.new'), action: :new } if model.allowed?(:edit, user, site: site)
 
-    when /new|create|lock/
+    when /new|create|lock|copy/
         result << -> { link_to t('ss.links.back_to_index'), action: :index }
 
     when /edit|update|delete|move/
@@ -15,6 +15,7 @@ module Gws::Schedule::TodoHelper
 
     else
         result << -> { link_to t('ss.links.edit'), action: :edit, id: item } if item.allowed?(:edit, user, site: site)
+        result << -> { link_to t('ss.links.copy'), action: :copy, id: item } if item.allowed?(:edit, user, site: site)
         result << -> { link_to t('ss.links.delete'), action: :delete, id: item } if item.allowed?(:delete, user, site: site)
 
         if item.allowed?(:edit, user, site: site) && !item.finished?
