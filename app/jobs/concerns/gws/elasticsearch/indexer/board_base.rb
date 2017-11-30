@@ -62,9 +62,5 @@ module Gws::Elasticsearch::Indexer::BoardBase
 
       [ "file-#{file.id}", doc ]
     end
-
-    def path(*args)
-      raise NotImplementedError
-    end
   end
 end
