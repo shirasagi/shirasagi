@@ -14,6 +14,7 @@ class Gws::Memo::MessagesController < ApplicationController
   private
 
   def set_crumbs
+    set_folder
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
   end
 
@@ -21,11 +22,17 @@ class Gws::Memo::MessagesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def set_folder
+    @folder = Gws::Memo::Folder.static_items(@cur_user) +
+        Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+  end
+
   def set_group_navi
     @group_navi = Gws::Memo::Folder.static_items(@cur_user) +
       Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
     @group_navi.each {|folder| folder.site = @cur_site}
   end
+
 
   def apply_filters
     @model.site(@cur_site).
