@@ -38,8 +38,8 @@
       <% end %>
 
       <% if @item.member?(@cur_user) %>
-        <%= link_to @item.see_action_label(@cur_user),
-                    toggle_seen_gws_circular_post_path, method: :post, class: "btn #{'gws-btn-pushed' if @item.seen?(@cur_user)}" %>
+        <%= link_to @item.see_action_label(@cur_user), @category.present? ? toggle_seen_gws_circular_category_post_path : toggle_seen_gws_circular_post_path,
+                    method: :post, class: "btn #{'gws-btn-pushed' if @item.seen?(@cur_user)}" %>
       <% end %>
     </div>
   </article>

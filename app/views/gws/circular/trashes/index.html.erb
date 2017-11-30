@@ -1,6 +1,10 @@
 <%= jquery do %>
   $(".active-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
+    <% if @category %>
+      var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_category_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
+    <% else %>
+      var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
+    <% end %>
     form.appendTo(document.body).submit();
   });
 
