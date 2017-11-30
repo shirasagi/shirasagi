@@ -7,20 +7,21 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc = {}
       doc[:url] = path(site: cur_site, id: topic, anchor: "post-#{post.id}")
       doc[:name] = post.name
-      doc[:mode] = post.mode
+      doc[:mode] = post.try(:mode)
       doc[:text] = post.text
       doc[:categories] = topic.categories.pluck(:name)
 
       doc[:release_date] = topic.release_date.try(:iso8601) if topic.respond_to?(:release_date)
       doc[:close_date] = topic.close_date.try(:iso8601) if topic.respond_to?(:close_date)
       doc[:released] = topic.released.try(:iso8601) if topic.respond_to?(:released)
-      doc[:state] = post.state
+      doc[:state] = post.try(:state) || 'public'
 
       doc[:user_name] = post.contributor_name.presence if topic.respond_to?(:contributor_name)
       doc[:user_name] ||= post.user_long_name
       doc[:group_ids] = post.groups.pluck(:id)
       doc[:custom_group_ids] = post.custom_groups.pluck(:id)
       doc[:user_ids] = post.users.pluck(:id)
+      doc[:permission_level] = post.permission_level
 
       doc[:readable_group_ids] = topic.readable_groups.pluck(:id)
       doc[:readable_custom_group_ids] = topic.readable_custom_groups.pluck(:id)
@@ -42,10 +43,10 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:file][:extname] = file.extname.upcase
       doc[:file][:size] = file.size
 
-      doc[:release_date] = topic.release_date.try(:iso8601)
-      doc[:close_date] = topic.close_date.try(:iso8601)
-      doc[:released] = topic.released.try(:iso8601)
-      doc[:state] = post.state
+      doc[:release_date] = topic.release_date.try(:iso8601) if topic.respond_to?(:release_date)
+      doc[:close_date] = topic.close_date.try(:iso8601) if topic.respond_to?(:close_date)
+      doc[:released] = topic.released.try(:iso8601) if topic.respond_to?(:released)
+      doc[:state] = post.try(:state) || 'public'
 
       doc[:group_ids] = post.groups.pluck(:id)
       doc[:custom_group_ids] = post.custom_groups.pluck(:id)
