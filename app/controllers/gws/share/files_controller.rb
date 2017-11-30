@@ -95,6 +95,11 @@ class Gws::Share::FilesController < ApplicationController
     render
   end
 
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:write, @cur_user, site: @cur_site) && @folder.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
   def update
     before_folder_id = @item.folder_id
     @item.attributes = get_params
