@@ -85,4 +85,10 @@ module Gws::Schedule::PlanFilter
     @item.edit_range = params.dig(:item, :edit_range)
     render_destroy @item.destroy
   end
+
+  def copy
+    set_item
+    @item = @item.new_clone
+    render file: :new
+  end
 end
