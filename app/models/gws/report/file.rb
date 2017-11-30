@@ -42,30 +42,34 @@ class Gws::Report::File
 
     def search_keyword(params)
       return all if params[:keyword].blank?
-      all.keyword_in(params[:keyword], :name, :text)
+      all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
     def search_state(params)
       return all if params[:state].blank? || params[:cur_site].blank? || params[:cur_user].blank?
 
+      # サブクエリ構築時に `unscoped` を用いているが、`unscoped` を呼び出すと現在の検索条件が消失してしまう。
+      # それを防ぐため、前もって現在の検索条件を複製しておく。
+      base_criteria = all.dup
+
       cur_site = params[:cur_site]
       cur_user = params[:cur_user]
       case params[:state]
       when 'inbox'
-        all.and_public.member(cur_user)
+        base_criteria.and_public.member(cur_user)
       when 'sent'
-        all.and_public.allow(:read, cur_user, site: cur_site)
+        base_criteria.and_public.allow(:read, cur_user, site: cur_site)
       when 'closed'
-        all.and_closed.allow(:read, cur_user, site: cur_site)
+        base_criteria.and_closed.allow(:read, cur_user, site: cur_site)
       when 'readable'
         member_selector = unscoped.member(cur_user).selector
         readable_selector = unscoped.readable(cur_user, site: cur_site).selector
-        all.and_public.ne(user_id: cur_user.id).where('$and' => [{ '$or' => [ member_selector, readable_selector ] }])
+        base_criteria.and_public.ne(user_id: cur_user.id).where('$and' => [{ '$or' => [ member_selector, readable_selector ] }])
       when 'redirect'
         member_selector = unscoped.member(cur_user).selector
         readable_selector = unscoped.readable(cur_user, site: cur_site).selector
         allow_selector = unscoped.allow(:read, cur_user, site: cur_site).selector
-        all.where('$and' => [{ '$or' => [ member_selector, readable_selector, allow_selector ] }])
+        base_criteria.where('$and' => [{ '$or' => [ member_selector, readable_selector, allow_selector ] }])
       else
         none
       end
