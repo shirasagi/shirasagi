@@ -5,6 +5,7 @@ class Gws::Schedule::Plan
   include Gws::Reference::Site
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
+  include Gws::Schedule::Cloneable
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
   include Gws::Addon::Schedule::Repeat
