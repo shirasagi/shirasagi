@@ -155,3 +155,11 @@ a.gws-category-label:hover {
   background: $white;
   white-space: nowrap;
 }
+
+// Readable Setting
+.gws-addon-readable-setting-select {
+  display: none;
+  margin: 15px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}

@@ -73,6 +73,10 @@ ja:
       user_form_state:
         closed: 使用しない
         public: 使用する
+      readable_setting_range:
+        public: 公開（誰でも閲覧可）
+        select: 所属内（参加者および選択範囲）
+        private: 非公開（参加者のみ）
 
     links:
       back_to_portal: ポータルへ戻る
