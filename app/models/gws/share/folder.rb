@@ -1,5 +1,6 @@
 class Gws::Share::Folder
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::ReadableSetting
@@ -7,6 +8,7 @@ class Gws::Share::Folder
   #include SS::UserPermission
   include Gws::Addon::File
   include Gws::Share::DescendantsFileInfo
+  include Gws::Addon::History
 
   store_in collection: :gws_share_folders
 
