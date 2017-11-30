@@ -158,8 +158,11 @@ module SS::Model::User
         return all.keyword_in(params[:keyword], :name, :kana, :uid, :email)
       end
 
+      # before using `unscope`, we must duplicate current criteria because current contexts are all gone in `unscope`
+      base_criteria = all.dup
+
       selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email).selector
-      all.where('$or' => [ selector, { :id.in => user_ids } ])
+      base_criteria.where('$or' => [ selector, { :id.in => user_ids } ])
     end
 
     def search_name(params)
