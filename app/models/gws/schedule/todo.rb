@@ -59,10 +59,6 @@ class Gws::Schedule::Todo
     false
   end
 
-  def todo_state_name
-    todo_state_names[todo_state.to_sym]
-  end
-
   def active?
     now = Time.zone.now
     return false if deleted.present? && deleted < now
@@ -78,12 +74,8 @@ class Gws::Schedule::Todo
     update_attributes(deleted: nil)
   end
 
-  def todo_state_names
-    I18n.t('gws/schedule/todo.options.todo_state')
-  end
-
   def todo_state_options
-    todo_state_names.map(&:reverse)
+    %w(finished unfinished).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
 
   def allowed?(action, user, opts = {})
