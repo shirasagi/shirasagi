@@ -14,11 +14,18 @@ class Gws::Memo::MessagesController < ApplicationController
   private
 
   def set_crumbs
+    set_cur_folder
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
+    @crumbs << [@cur_folder.name, gws_memo_messages_path(folder: params[:folder]) ] if @cur_folder.folder_path != 'INBOX'
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def set_cur_folder
+    dir = Gws::Memo::Folder.static_items(@cur_user).find{ |dir| dir.folder_path == params[:folder] }
+    @cur_folder = dir ? dir : Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).find_by(_id: params[:folder])
   end
 
   def set_group_navi
@@ -26,6 +33,7 @@ class Gws::Memo::MessagesController < ApplicationController
       Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
     @group_navi.each {|folder| folder.site = @cur_site}
   end
+
 
   def apply_filters
     @model.site(@cur_site).
