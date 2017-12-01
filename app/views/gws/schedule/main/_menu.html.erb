@@ -3,7 +3,17 @@
 <%= jquery do %>
   var state = "calendar[date]=<%= params.dig(:calendar, :date) %>&calendar[view]=<%= params.dig(:calendar, :view) %>"
   $('.nav-menu a').each(function() {
-    $(this).attr('href', $(this).attr('href') + "?" + state);
+    if ($(this).hasClass('no-calendar-state')) {
+      return;
+    }
+
+    var href = $(this).attr('href');
+    if (href.indexOf('?') >= 0) {
+      href += "&" + state;
+    } else {
+      href += "?" + state;
+    }
+    $(this).attr('href', href);
   });
 <% end %>
 
@@ -26,29 +36,29 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
-      <% form_limit = 50 %>
-      <%
-        forms = Gws::Report::Form.site(@cur_site)
-        forms = forms.readable(@cur_user, @cur_site)
-        forms = forms.order_by(order: 1, created: 1)
-      %>
-      <% if forms.present? %>
-        <%= dropdown_link(t('gws/schedule.links.create_report')) do %>
-          <% forms.limit(form_limit).each do |form| %>
-            <%= link_to(new_gws_report_form_file_path(state: 'all', form_id: form, plan_id: @item.id), class: 'dropdown-item') do %>
-              <%= form.name %>
-              <% if form.categories.present? %>
-                <span class="categories">
-                  <% form.categories.compact.each do |category| %>
-                    <%= content_tag :span, category.trailing_name, class: 'gws-category-label', style: category_label_css(category) %>
-                  <% end %>
-                </span>
-              <% end %>
+    <% form_limit = 50 %>
+    <%
+      forms = Gws::Report::Form.site(@cur_site)
+      forms = forms.readable(@cur_user, @cur_site)
+      forms = forms.order_by(order: 1, created: 1)
+    %>
+    <% if forms.present? %>
+      <%= dropdown_link(t('gws/schedule.links.create_report')) do %>
+        <% forms.limit(form_limit).each do |form| %>
+          <%= link_to(new_gws_report_form_file_path(state: 'inbox', form_id: form, plan_id: @item.id), class: %w(dropdown-item no-calendar-state)) do %>
+            <%= form.name %>
+            <% if form.categories.present? %>
+              <span class="categories">
+                <% form.categories.compact.each do |category| %>
+                  <%= content_tag :span, category.trailing_name, class: 'gws-category-label', style: category_label_css(category) %>
+                <% end %>
+              </span>
             <% end %>
           <% end %>
-          <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path(state: 'all', plan_id: @item.id), class: 'dropdown-item more-forms') %>
         <% end %>
+        <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path(state: 'inbox', plan_id: @item.id), class: %w(dropdown-item no-calendar-state more-forms)) %>
       <% end %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>
