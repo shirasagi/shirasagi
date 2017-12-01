@@ -65,6 +65,7 @@ class Gws::Schedule::Plan
   def allowed?(action, user, opts = {})
     return true if allowed_for_managers?(action, user, opts)
     member?(user) || custom_group_member?(user) if action =~ /edit|delete/
+    false
   end
 
   private
