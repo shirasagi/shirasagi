@@ -13,9 +13,9 @@ module Gws::Addon::Portal::Portlet
     def find_schedule_members(portal)
       if schedule_members.present?
         schedule_members.active.order_by_title(portal.site).compact
-      elsif portal.portal_user.present?
+      elsif portal.try(:portal_user).present?
         [portal.portal_user]
-      elsif portal.portal_group.present?
+      elsif portal.try(:portal_group).present?
         portal.portal_group.users.active.order_by_title(portal.site).compact
       else
         []
