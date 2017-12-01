@@ -84,6 +84,7 @@ ja:
       gws/memo/folder:
         name: フォルダー名
         path: パス
+        order: 並び順
       gws/memo/filter:
         name: フィルター名
         from: 条件/差出人
@@ -105,6 +106,9 @@ ja:
         - メッセージの宛先を選択します。
     gws/memo/folder:
       name: フォルダーの名称を入力します。
+      order:
+        - フォルダーの並び順を数字で入力します。
+        - 番号の小さい順にフォルダーが表示されます。
     gws/memo/filter:
       name:
         - フィルターの名前を入力します。
