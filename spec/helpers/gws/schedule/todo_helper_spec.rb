@@ -26,7 +26,7 @@ describe Gws::Schedule::TodoHelper, type: :helper do
       end
 
       it "other" do
-        expect(helper.menu_items('other').count).to eq 4
+        expect(helper.menu_items('other').count).to eq 5
       end
     end
   end
