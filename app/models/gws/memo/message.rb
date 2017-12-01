@@ -16,7 +16,7 @@ class Gws::Memo::Message
   field :subject, type: String
   alias name subject
 
-  field :text, type: String
+  field :text, type: String, default: ''
   field :html, type: String
   field :format, type: String
   field :size, type: Integer, default: 0

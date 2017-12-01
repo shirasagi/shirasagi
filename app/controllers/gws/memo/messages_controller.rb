@@ -96,6 +96,8 @@ class Gws::Memo::MessagesController < ApplicationController
 
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
     @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
   end
 
   def create
