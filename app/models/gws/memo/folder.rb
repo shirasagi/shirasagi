@@ -3,6 +3,7 @@ class Gws::Memo::Folder
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::SitePermission
+  include SS::Fields::DependantNaming
 
   set_permission_name 'gws_memo_messages'
 
@@ -80,17 +81,21 @@ class Gws::Memo::Folder
   end
 
   def children
-    self.class.site(site).user(user).children(name)
+    dependant_scope.children(name)
   end
 
   def ancestor_or_self
-    self.class.site(site).user(user).where(:name.in => ancestor_or_self_names)
+    dependant_scope.where(:name.in => ancestor_or_self_names)
   end
 
   def ancestor_or_self_names
     name.split('/').each_with_object([]) do |name, ret|
       ret << (ret.last ? "#{ret.last}/#{name}" : name)
     end
+  end
+
+  def dependant_scope
+    self.class.site(site).user(user)
   end
 
   class << self
