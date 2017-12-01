@@ -3,6 +3,7 @@ ja:
     setting: メッセージ設定
   gws/memo/message:
     folder: フォルダー
+    child_folder: 子フォルダー
     folder_name: フォルダー名
     message: メッセージ
     select_check: 件のメッセージを選択
@@ -29,9 +30,6 @@ ja:
     inbox_trash: ゴミ箱
     inbox_draft: 下書き
     inbox_sent: 送信済みトレイ
-    errors:
-      included_memo: メッセージが入っているフォルダーは削除できません。
-      used_folder: フィルターが使用中のフォルダーは削除できません。
   gws/memo/filter:
     options:
       action:
@@ -62,6 +60,8 @@ ja:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
         gws/memo/folder:
+          included_memo: メッセージが入っているフォルダーは削除できません。
+          used_folder: フィルターが使用中のフォルダーは削除できません。
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
     attributes:

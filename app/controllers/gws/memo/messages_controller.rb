@@ -10,6 +10,7 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_group_navi, only: [:index]
+  before_action :set_cur_folder, only: [:index]
 
   private
 
@@ -24,16 +25,15 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_cur_folder
-    dir = Gws::Memo::Folder.static_items(@cur_user).find{ |dir| dir.folder_path == params[:folder] }
+    dir = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
     @cur_folder = dir ? dir : Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).find_by(_id: params[:folder])
   end
 
   def set_group_navi
-    @group_navi = Gws::Memo::Folder.static_items(@cur_user) +
+    @group_navi = Gws::Memo::Folder.static_items(@cur_user, @cur_site) +
       Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
     @group_navi.each {|folder| folder.site = @cur_site}
   end
-
 
   def apply_filters
     @model.site(@cur_site).

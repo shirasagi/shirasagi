@@ -20,29 +20,44 @@ class Gws::Memo::Folder
 
   default_scope ->{ order_by order: 1 }
 
-  before_destroy :validate_destroy, :validate_children
+  scope :children, ->(name) do
+    if name == I18n.t('gws/memo/folder.inbox')
+      where('$and' => [ {name: /^(?!.*\/).*$/} ] )
+    else
+      where('$and' => [ {name: /#{name}\/(?!.*\/).*$/} ] )
+    end
+  end
+
+  scope :descendent, ->(name) { where( name: /^#{Regexp.escape(name)}\// ) }
+
+  before_destroy :validate_destroy
 
   private
 
   def validate_parent_name
-    return if name.blank?
     return if name.count('/') < 1
 
-    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    unless self.class.site(site).user(user).where(name: parent_name).exists?
+      errors.add :base, :not_found_parent
+    end
   end
 
   def validate_destroy
-    errors.add :base, I18n.t('gws/memo/folder.errors.included_memo') if messages.count > 0
-    errors.add :base, I18n.t('gws/memo/folder.errors.used_folder') if filters.count > 0
-    errors.empty?
-  end
-
-  def validate_children
-    errors.add :base, :found_children if self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+    errors.add :base, :included_memo if messages.count > 0
+    errors.add :base, :used_folder if filters.count > 0
+    errors.add :base, :found_children if children.exists?
     errors.empty?
   end
 
   public
+
+  def parent_name
+    File.dirname(name)
+  end
+
+  def current_name
+    File.basename(name)
+  end
 
   def folder_path
     id == 0 ? path : id.to_s
@@ -64,17 +79,21 @@ class Gws::Memo::Folder
     unseens.count > 0
   end
 
+  def children
+    self.class.site(site).user(user).children(name)
+  end
+
   class << self
     def allow(action, user, opts = {})
       super(action, user, opts).where(user_id: user.id)
     end
 
-    def static_items(user)
+    def static_items(user, site)
       [
-          self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX', user_id: user.id),
-          self.new(name: I18n.t('gws/memo/folder.inbox_trash'), path: 'INBOX.Trash', user_id: user.id),
-          self.new(name: I18n.t('gws/memo/folder.inbox_draft'), path: 'INBOX.Draft', user_id: user.id),
-          self.new(name: I18n.t('gws/memo/folder.inbox_sent'), path: 'INBOX.Sent', user_id: user.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX', user_id: user.id, site_id: site.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_trash'), path: 'INBOX.Trash', user_id: user.id, site_id: site.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_draft'), path: 'INBOX.Draft', user_id: user.id, site_id: site.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_sent'), path: 'INBOX.Sent', user_id: user.id, site_id: site.id),
       ]
     end
 
