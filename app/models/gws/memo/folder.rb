@@ -16,16 +16,33 @@ class Gws::Memo::Folder
   permit_params :name, :order, :path
 
   validates :name, presence: true, uniqueness: { scope: [:site_id, :user_id] }
+  validate :validate_parent_name
 
   default_scope ->{ order_by order: 1 }
 
-  before_destroy :validate_destroy
+  before_destroy :validate_destroy, :validate_children
+
+  private
+
+  def validate_parent_name
+    return if name.blank?
+    return if name.count('/') < 1
+
+    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+  end
 
   def validate_destroy
     errors.add :base, I18n.t('gws/memo/folder.errors.included_memo') if messages.count > 0
     errors.add :base, I18n.t('gws/memo/folder.errors.used_folder') if filters.count > 0
     errors.empty?
   end
+
+  def validate_children
+    errors.add :base, :found_children if self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+    errors.empty?
+  end
+
+  public
 
   def folder_path
     id == 0 ? path : id.to_s

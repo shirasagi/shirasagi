@@ -61,6 +61,9 @@ ja:
       models:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+        gws/memo/folder:
+          not_found_parent: 親フォルダーが存在しません。
+          found_children: 子フォルダーが存在します。
     attributes:
       gws/memo/message:
         name: 件名
