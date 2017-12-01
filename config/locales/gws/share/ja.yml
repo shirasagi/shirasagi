@@ -79,8 +79,6 @@ ja:
           not_move_to_parent: 最上位フォルダーに変更することはできません。
           not_rename_parent: 最上位のフォルダー名を変更することはできません。
           not_move_to_under_other_parent: 最上位のフォルダーをまたいでフォルダーを移動することはできません。
-          not_create_same_folder: フォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
-          not_move_to_same_name_folder: 移動先にフォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
     attributes:
       gws/share/category:
         name: カテゴリー名
