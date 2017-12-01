@@ -8,7 +8,7 @@
     <table class="index ajax-selected">
       <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
-        <% @item.schedule_members.each do |user| %>
+        <% @item.find_schedule_members(@portal).each do |user| %>
         <tr data-id="<%= user.id %>">
           <td><%= f.hidden_field "schedule_member_ids[]", value: user.id %> <%= user.long_name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>

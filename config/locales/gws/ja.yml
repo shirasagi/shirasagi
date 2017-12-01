@@ -76,6 +76,10 @@ ja:
       user_form_state:
         closed: 使用しない
         public: 使用する
+      readable_setting_range:
+        public: 全公開
+        select: 選択範囲
+        private: 非公開
 
     links:
       back_to_portal: ポータルへ戻る
@@ -267,6 +271,7 @@ ja:
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
       gws/addon/readable_setting:
+        readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
         readable_member_ids: 閲覧ユーザー
         readable_custom_group_ids: 閲覧カスタムグループ
@@ -417,6 +422,10 @@ ja:
       custom_group_ids:
         - このページを編集可能にするカスタムグループを選択します。
     gws/addon/readable_setting:
+      readable_setting_range:
+        - <b>全公開</b> - 誰でも閲覧できます。
+        - <b>選択範囲</b> - 選択した対象のみ閲覧できます。
+        - <b>非公開</b> - 作成者のみ閲覧できます。
       readable_custom_group_ids:
         - このページを閲覧可能にするカスタムグループを選択します。
       readable_group_ids:
