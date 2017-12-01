@@ -56,6 +56,9 @@ ja:
     options:
       severity:
         high: 重要なお知らせ
+      reminder_state:
+        enable: 登録する
+        disable: 登録しない
       reminder/notification:
         '-1': 通知しない
         '10': 10分前

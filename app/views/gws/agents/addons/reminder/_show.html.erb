@@ -2,26 +2,20 @@
   //$(".addon-views").prepend($(".gws-addon-reminder").closest(".addon-view"));
   Gws_Reminder.renderAddon({ url: "<%= gws_apis_reminders_path %>" });
 <% end %>
-<%
 
-reminder = @item.reminder(@cur_user)
-reminder.update_attributes(read_at: Time.zone.now) if reminder
-date = reminder ? reminder.date : @item.reminder_date
-date ||= Time.zone.now + 7.day unless reminder
-
-%>
-<div class="gws-addon-reminder">
-  <%= hidden_field_tag "item_name", @item.reference_name %>
-  <%= hidden_field_tag "item_model", @item.reference_model %>
-  <%= hidden_field_tag "item_id", @item.id %>
-
-  <span class="gws-addon-reminder">
+<dl class="see gws-addon-reminder">
+  <dt>
+    <%= hidden_field_tag "item_name", @item.reference_name %>
+    <%= hidden_field_tag "item_model", @item.reference_model %>
+    <%= hidden_field_tag "item_id", @item.id %>
     <span class="gws-addon-reminder-label">
-      <%= reminder ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
+      <%= @item.reminder ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
     </span>
     <%= @model.tt :reminder_date %>
-  </span>
-  <%= text_field_tag "item_date", tryb { date.strftime("%Y/%m/%d %H:%M") }, class: "datetime js-datetime" %>
-  <%= button_tag t("gws.buttons.register"), id: "gws-addon-reminder-set", class: :btn %>
-  <%= button_tag t("gws.buttons.unset"), id: "gws-addon-reminder-unset", class: :btn %>
-</div>
+  </dt>
+  <dd>
+    <%= text_field_tag "item_date", tryb { @item.in_reminder_date.strftime("%Y/%m/%d %H:%M") }, class: "datetime js-datetime" %>
+    <%= button_tag t("gws.buttons.register"), id: "gws-addon-reminder-set", class: :btn %>
+    <%= button_tag t("gws.buttons.unset"), id: "gws-addon-reminder-unset", class: :btn %>
+  </dd>
+</dl>
