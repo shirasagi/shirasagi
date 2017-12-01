@@ -9,6 +9,7 @@ class Gws::Share::Folder
   include Gws::Addon::File
   include Gws::Share::DescendantsFileInfo
   include Gws::Addon::History
+  include SS::Fields::DependantNaming
 
   store_in collection: :gws_share_folders
 
@@ -33,10 +34,8 @@ class Gws::Share::Folder
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   validate :validate_parent_name
-  validate :validate_rename_children, :validate_rename_parent,
+  validate :validate_rename_children,
            :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
-
-  validate :validate_folder_name, if: ->{ self.attributes["action"] =~ /create|update/ }
 
   before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
@@ -111,6 +110,10 @@ class Gws::Share::Folder
     Fs.rm_rf self.class.zip_path(id) if File.exist?(self.class.zip_path(id))
   end
 
+  def dependant_scope
+    self.class.site(@cur_site || site)
+  end
+
   def validate_parent_name
     return if name.blank?
     return if name.count('/') < 1
@@ -130,16 +133,9 @@ class Gws::Share::Folder
     true
   end
 
-  def validate_rename_parent
-    if !self.attributes["before_folder_name"].include?("/") && self.attributes["before_folder_name"] != self.name
-      errors.add :base, :not_rename_parent
-      return false
-    end
-    true
-  end
-
   def validate_children_move_to_other_parent
-    if self.attributes["before_folder_name"].split("/").first != self.name.split("/").first
+    if self.attributes["before_folder_name"].include?("/") &&
+        self.attributes["before_folder_name"].split("/").first != self.name.split("/").first
       errors.add :base, :not_move_to_under_other_parent
       return false
     end
