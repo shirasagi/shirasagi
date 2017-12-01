@@ -47,7 +47,7 @@ class Gws::Share::Folder
     if key.start_with?('root_folder')
       where("$and" => [ {name: /^(?!.*\/).*$/} ] )
     else
-      where("$and" => [ {name: /#{folder}\/(?!.*\/).*$/} ] )
+      where("$and" => [ {name: /^#{folder}\/(?!.*\/).*$/} ] )
     end
   }
 
