@@ -204,6 +204,7 @@ ja:
         monitor_file_size_per_post: 添付最大サイズ/投稿単位
         monitor_browsed_delay: 既読にするまでの秒数
         monitor_delete_threshold: 削除対象
+        default_reminder_start_section: リマインダー表示設定
       gws/monitor/category:
         name: カテゴリー名
       gws/addon/monitor/category:
@@ -244,6 +245,8 @@ ja:
           - 照会・回答を既読にするまでの秒数を入力します。
         monitor_delete_threshold:
           - 照会・回答を完全に削除するまでの期限を入力します。基準は「削除済み」に移動した日です。
+        default_reminder_start_section:
+          - リマインダー表示条件の既定値を選択します。
       gws/monitor/category:
         name:
           - カテゴリー名を入力します。
