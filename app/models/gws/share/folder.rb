@@ -29,6 +29,7 @@ class Gws::Share::Folder
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 
+  validates :name, presence: true
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   validate :validate_parent_name
@@ -114,7 +115,11 @@ class Gws::Share::Folder
     return if name.blank?
     return if name.count('/') < 1
 
-    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    if name.split('/')[name.count('/')].blank?
+      errors.add :name, :blank
+    else
+      errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    end
   end
 
   def validate_rename_children
