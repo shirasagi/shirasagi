@@ -38,6 +38,15 @@ ja:
     errors:
       blank_conditions: 条件を入力してください。
       blank_apply_mailbox: 適用するフォルダーを選択してください。
+  gws/memo/group_setting:
+    options:
+      reminder:
+        - 表示しない
+        - 送信された当日のみ表示する
+        - 送信後２日間のみ表示する
+        - 送信後３日間のみ表示する
+        - 送信後４日間のみ表示する
+        - 送信後５日間のみ表示する
   modules:
     gws/memo: メッセージ
     addons:
@@ -89,6 +98,7 @@ ja:
         default: 既定の署名
       gws/memo/group_setting:
         memo_filesize_limit: 添付サイズ制限
+        memo_reminder: リマインダー表示設定
   tooltip:
     gws/memo/message:
       member_ids:
@@ -132,3 +142,7 @@ ja:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
         - 未指定である場合、制限されません。
         - 初期値は 未指定 です。
+      memo_reminder:
+        - メッセージを送信したあと各受信者のリマインダーに表示する日数を選択します。
+        - メッセージが下書きの時はリマインダーはまだ登録されません。
+        - メッセージが送信された時にリマインダーが登録されます。

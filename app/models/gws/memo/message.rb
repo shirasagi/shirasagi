@@ -9,6 +9,8 @@ class Gws::Memo::Message
   include Webmail::Addon::MailBody
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
+  include Gws::Addon::Reminder
+  alias reminder_user_ids member_ids
 
   attr_accessor :signature, :attachments, :field, :cur_site, :cur_user
   attr_accessor :in_request_mdn, :in_request_dsn, :state
@@ -38,6 +40,8 @@ class Gws::Memo::Message
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+
+  after_save :save_reminders, if: ->{ !draft? }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -216,6 +220,12 @@ class Gws::Memo::Message
     if size > limit
       errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
     end
+  end
+
+  def reminder_date
+    return if site.memo_reminder == 0
+    result = Time.zone.now.beginning_of_day + (site.memo_reminder - 1).day
+    result.end_of_day
   end
 
   class << self
