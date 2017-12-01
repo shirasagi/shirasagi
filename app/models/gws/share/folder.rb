@@ -161,17 +161,4 @@ class Gws::Share::Folder
     end
     true
   end
-
-  def validate_folder_name
-    if self.id == 0
-      errors.add :base, :not_create_same_folder if self.class.site(site).where(name: self.name).first
-    end
-
-    if self.id != 0
-      if self.class.site(site).where(name: self.name).present? && self.class.site(site).where(id: self.id).first.name != self.name
-        errors.add :base, :not_move_to_same_name_folder
-      end
-    end
-    true
-  end
 end
