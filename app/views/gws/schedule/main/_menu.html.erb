@@ -38,7 +38,7 @@
     <% end %>
     <% form_limit = 50 %>
     <%
-      forms = Gws::Report::Form.site(@cur_site)
+      forms = Gws::Report::Form.site(@cur_site).and_public
       forms = forms.readable(@cur_user, @cur_site)
       forms = forms.order_by(order: 1, created: 1)
     %>
