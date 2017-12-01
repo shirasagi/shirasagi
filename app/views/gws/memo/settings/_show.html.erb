@@ -1,4 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :memo_filesize_limit %></dt>
   <dd><%= @item.memo_filesize_limit %> <%= t('ss.units.mega_byte') if @item.memo_filesize_limit %></dd>
+
+  <dt><%= @model.t :memo_reminder %>	</dt>
+  <dd><%= @item.memo_reminder_name %></dd>
 </dl>
