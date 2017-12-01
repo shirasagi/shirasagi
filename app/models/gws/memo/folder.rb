@@ -83,6 +83,16 @@ class Gws::Memo::Folder
     self.class.site(site).user(user).children(name)
   end
 
+  def ancestor_or_self
+    self.class.site(site).user(user).where(:name.in => ancestor_or_self_names)
+  end
+
+  def ancestor_or_self_names
+    name.split('/').each_with_object([]) do |name, ret|
+      ret << (ret.last ? "#{ret.last}/#{name}" : name)
+    end
+  end
+
   class << self
     def allow(action, user, opts = {})
       super(action, user, opts).where(user_id: user.id)
