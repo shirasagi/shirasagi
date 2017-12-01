@@ -21,6 +21,7 @@ SS::Application.routes.draw do
       get '/' => redirect { |p, req| "#{req.path}/all" }, as: :files_main
       resources :files, path: ':state', concerns: [:deletion, :workflow] do
         get :print, on: :member
+        match :copy, on: :member, via: %i[get post]
       end
       resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end

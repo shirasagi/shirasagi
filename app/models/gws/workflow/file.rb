@@ -23,6 +23,8 @@ class Gws::Workflow::File
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
+  after_clone_files :rewrite_file_ref
+
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::WorkflowFileJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::WorkflowFileJob.callback
@@ -124,5 +126,22 @@ class Gws::Workflow::File
     options = ret.extract_options!
     options[:state] = 'all'
     [ *ret, options ]
+  end
+
+  private
+
+  def rewrite_file_ref
+    text = self.text
+
+    in_clone_file.each do |old_id, new_id|
+      old_file = SS::File.find(old_id) rescue nil
+      new_file = SS::File.find(new_id) rescue nil
+      next if old_file.blank? || new_file.blank?
+
+      text.gsub!("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
+      text.gsub!("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
+    end
+
+    self.text = text
   end
 end
