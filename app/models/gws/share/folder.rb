@@ -114,7 +114,11 @@ class Gws::Share::Folder
     return if name.blank?
     return if name.count('/') < 1
 
-    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    if name.split('/')[name.count('/')].blank?
+      errors.add :name, :blank
+    else
+      errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    end
   end
 
   def validate_rename_children
