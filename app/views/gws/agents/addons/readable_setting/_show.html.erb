@@ -9,7 +9,10 @@
 %>
 
 <div class="gws-addon-readable-setting">
-  <%= @item.label :readable_setting_range %>
+  <dl class="see">
+    <dt><%= @model.t :readable_setting_range %></dt>
+    <dd><%= @item.readable_setting_range_label %></dd>
+  </dl>
 
   <div class="gws-addon-readable-setting-select" style="display: <%= select_disp %>">
     <dl class="see">
