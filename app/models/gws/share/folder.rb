@@ -29,6 +29,7 @@ class Gws::Share::Folder
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 
+  validates :name, presence: true
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   validate :validate_parent_name
