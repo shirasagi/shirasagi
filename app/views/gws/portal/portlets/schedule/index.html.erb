@@ -1,5 +1,51 @@
-<% if @portal.portal_type == :group %>
-  <%= render file: 'gws/portal/portlets/schedule/group_schedule' %>
-<% else %>
-  <%= render file: 'gws/portal/portlets/schedule/user_schedule' %>
+<%= jquery do %>
+Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%== (params[:calendar] || {}).to_json %>);
+SS_Clipboard.renderCopy();
 <% end %>
+
+<% if @portal.my_portal? %>
+  <%= render partial: "gws/schedule/main/tabs" %>
+<% end %>
+
+<div class="main-box gws-schedule-box <%= "with-tabs" if @portal.my_portal? %>">
+  <div class="calendar" id="calendar-controller"></div>
+
+  <% @portlet.find_schedule_members(@portal).each_with_index do |item, idx| %>
+    <div class="calendar-multiple-header">
+      <%= link_to item.long_name, gws_schedule_user_plans_path(user: item.id), class: "calendar-name" %>
+      <% if item.id == @cur_user.id %>
+        <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: item.id), class: 'add-plan' %>
+      <% end %>
+      <div class="calendar-attr">
+        <span class="group">
+          <%= tryb { item.gws_main_group(@cur_site).trailing_name } %>
+        </span>
+        <% if title = item.title(@cur_site) %>
+          <span class="user-title"><%= title.name %></span>
+        <% end %>
+        <% if item.email.present? %>
+          <span class="email js-clipboard-copy"><%= mail_to item.email %></span>
+        <% end %>
+        <% if item.tel_label.present? %>
+          <span class="tel"><%= item.tel_label %></span>
+        <% end %>
+      </div>
+    </div>
+    <div class="calendar multiple" id="cal-<%= item.id %>"></div>
+
+    <%
+      calendar_options = {
+        tapMenu: item.id == @cur_user.id,
+        restUrl: gws_schedule_user_plans_path(user: item.id),
+        eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: item.id, format: :json)}?#{search_query}" }]
+      }
+      if @cur_site.schedule_drag_drop_denied?
+        calendar_options[:eventStartEditable] = false
+      end
+      init_options = params[:calendar] || {}
+    %>
+    <%= jquery do %>
+      Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+    <% end %>
+  <% end %>
+</div>

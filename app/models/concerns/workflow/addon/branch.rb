@@ -4,6 +4,10 @@ module Workflow::Addon
     extend SS::Addon
 
     included do
+      attr_accessor :in_branch
+
+      define_model_callbacks :merge_branch
+
       field :master_id, type: Integer
 
       belongs_to :master, foreign_key: "master_id", class_name: self.to_s
@@ -95,18 +99,29 @@ module Workflow::Addon
       end
     end
 
+    # backwards compatibility
     def merge(branch)
-      attributes = Hash[branch.attributes]
-      attributes.delete("_id")
-      attributes.delete("filename")
-      attributes.select! { |k| self.fields.keys.include?(k) }
-      self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
-        attributes.delete(n)
-      end
+      Rails.logger.warn('DEPRECATION WARNING: merge is deprecated and will be removed in future version (user merge_branch instead).')
+      self.in_branch = branch
+      self.merge_branch
+    end
 
-      self.attributes = attributes
-      self.master_id = nil
-      self.allow_other_user_files if respond_to?(:allow_other_user_files)
+    def merge_branch
+      return unless in_branch
+
+      run_callbacks(:merge_branch) do
+        attributes = Hash[branch.attributes]
+        attributes.delete("_id")
+        attributes.delete("filename")
+        attributes.select! { |k| self.fields.keys.include?(k) }
+        self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
+          attributes.delete(n)
+        end
+
+        self.attributes = attributes
+        self.master_id = nil
+        self.allow_other_user_files if respond_to?(:allow_other_user_files)
+      end
       self.save
     end
 
@@ -117,7 +132,8 @@ module Workflow::Addon
       master = self.master
       master.cur_user = @cur_user
       master.cur_site = @cur_site
-      master.merge(self)
+      master.in_branch = self
+      master.merge_branch
       master.generate_file
     end
 

@@ -12,18 +12,9 @@
     <%= link_to t('webmail.links.reply_all'), { action: :reply_all }, { class: 'reply-all' } unless @item.draft? %>
     <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
     <% if SS.config.gws.disable.blank? && !@item.draft? %>
-      <% @forward_form = OpenStruct.new params[:s] %>
-      <%= form_for :forward_form,
-                   url: forward_gws_memo_messages_path(site: @cur_user.root_groups.first),
-                   html: { class: 'hide', id: 'forward-form' } do |f| %>
-        <%= hidden_field_tag :subject, @item.subject %>
-        <%= hidden_field_tag :text, @item.text %>
-        <%= hidden_field_tag :html, @item.html %>
-        <%= hidden_field_tag :format, @item.format %>
-      <% end %>
-      <%= link_to '連絡メモに転送する', '#', { class: 'forward-memo', onclick: '$("#forward-form").submit();' }  %>
+      <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: @cur_user.root_groups.first.id) %>
     <% end %>
-    <%= link_to(t('ss.links.delete'), { action: :delete }, class:  :delete) %>
+    <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>
 
     <div class="dropdown webmail-dropdown dropdown-toggle">
       <a><%= t 'webmail.links.etc' %> <i class="material-icons md-13">&#xE313;</i></a>

@@ -15,7 +15,7 @@
   <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
   <span><%= item.user_long_name %></span>
   <span class="gws-share-categories">
-    <span class="gws-category-label" style="background-color: gray; color: #ffffff;">"<%= t('gws/circular.post.disabled') %></span>
+    <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/circular.post.disabled') %></span>
     <% item.categories.compact.each do |category| %>
       <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
                   class: 'gws-category-label', style: category_label_css(category) %>

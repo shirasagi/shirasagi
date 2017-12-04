@@ -10,12 +10,6 @@ describe "gws_portal_permissions", type: :feature, dbscope: :example do
     it "visible portals" do
       visit gws_portal_path(site: site)
       expect(page).to have_content(user.name)
-      visit gws_portal_my_layouts_path(site: site)
-      expect(page).to have_content(user.name)
-      visit gws_portal_my_portlets_path(site: site)
-      expect(page).to have_content(user.name)
-      visit gws_portal_my_settings_path(site: site)
-      expect(page).to have_content(user.name)
 
       visit gws_portal_user_path(site: site, user: user)
       expect(page).to have_content(user.name)
@@ -52,12 +46,6 @@ describe "gws_portal_permissions", type: :feature, dbscope: :example do
 
       visit gws_portal_path(site: site)
       expect(page).to have_content(I18n.t('gws/portal.portlets.board.name'))
-      visit gws_portal_my_layouts_path(site: site)
-      expect(page).not_to have_content(user.name)
-      visit gws_portal_my_portlets_path(site: site)
-      expect(page).not_to have_content(user.name)
-      visit gws_portal_my_settings_path(site: site)
-      expect(page).not_to have_content(user.name)
 
       visit gws_portal_user_path(site: site, user: user)
       expect(page).to have_content(I18n.t('gws/portal.portlets.board.name'))

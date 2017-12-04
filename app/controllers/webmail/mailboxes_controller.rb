@@ -42,4 +42,20 @@ class Webmail::MailboxesController < ApplicationController
     @imap.mailboxes.reload
     redirect_to url_for(action: :index), notice: t('webmail.notice.reloaded_mailboxes')
   end
+
+  def destroy_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user)
+        item.attributes = fix_params
+        next if item.destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
 end

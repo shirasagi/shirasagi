@@ -1,4 +1,4 @@
-class @Map
+class @Googlemaps_Map
   @map        = null
   @form       = null
   @center     = [36.204824, 138.252924]
@@ -7,14 +7,14 @@ class @Map
   @resized    = null
 
   @attachMessage: (id) ->
-    google.maps.event.addListener Map.markers[id]["marker"], 'click', (event) ->
-      if(Map.openedInfo)
-        Map.openedInfo.close()
-      if Map.markers[id]["window"]
-        Map.markers[id]["window"].open(Map.markers[id]["marker"].getMap(), Map.markers[id]["marker"])
-      Map.openedInfo = Map.markers[id]["window"]
-    google.maps.event.addListener Map.markers[id]["window"], 'closeclick', (event) ->
-      Map.openedInfo = null
+    google.maps.event.addListener Googlemaps_Map.markers[id]["marker"], 'click', (event) ->
+      if(Googlemaps_Map.openedInfo)
+        Googlemaps_Map.openedInfo.close()
+      if Googlemaps_Map.markers[id]["window"]
+        Googlemaps_Map.markers[id]["window"].open(Googlemaps_Map.markers[id]["marker"].getMap(), Googlemaps_Map.markers[id]["marker"])
+      Googlemaps_Map.openedInfo = Googlemaps_Map.markers[id]["window"]
+    google.maps.event.addListener Googlemaps_Map.markers[id]["window"], 'closeclick', (event) ->
+      Googlemaps_Map.openedInfo = null
 
   @setForm: (form) ->
     @form = form
@@ -55,30 +55,30 @@ class @Map
     @form.renderEvents() if @form
 
   @setMarkers: (markers) ->
-    Map.markers = markers
+    Googlemaps_Map.markers = markers
     markerBounds = new google.maps.LatLngBounds()
 
-    $.each Map.markers, (id, value) ->
+    $.each Googlemaps_Map.markers, (id, value) ->
       if value["image"]
-        Map.markers[id]["marker"] = new google.maps.Marker(
+        Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(
           position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
           icon: value["image"],
-          map: Map.map
+          map: Googlemaps_Map.map
         )
       else
-        Map.markers[id]["marker"] = new google.maps.Marker(
+        Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(
           position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
-          map: Map.map
+          map: Googlemaps_Map.map
         )
 
       markerBounds.extend(new google.maps.LatLng(value["loc"][0],value["loc"][1]))
 
       if value["html"]
         marker_html = value["html"]
-        Map.markers[id]["window"] = new google.maps.InfoWindow(
+        Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow(
           content: marker_html
         )
-        Map.attachMessage(id)
+        Googlemaps_Map.attachMessage(id)
       else if value["name"] || value["text"]
         name = value["name"]
         text = value["text"]
@@ -93,21 +93,21 @@ class @Map
                 marker_html += '<p>' + this + '</p>'
 
         marker_html += '</div>'
-        Map.markers[id]["window"] = new google.maps.InfoWindow(
+        Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow(
           content: marker_html
         )
-        Map.attachMessage(id)
+        Googlemaps_Map.attachMessage(id)
       else
         #
       return
 
-    unless $.isEmptyObject(Map.markers)
-      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', (event) ->
+    unless $.isEmptyObject(Googlemaps_Map.markers)
+      zoomChangeBoundsListener = google.maps.event.addListener Googlemaps_Map.map, 'bounds_changed', (event) ->
         if this.getZoom() > 13 && this.initialZoom == true
           this.setZoom(13)
           this.initialZoom = false
         google.maps.event.removeListener(zoomChangeBoundsListener)
 
-      Map.map.initialZoom = true
-      Map.map.fitBounds(markerBounds)
+      Googlemaps_Map.map.initialZoom = true
+      Googlemaps_Map.map.fitBounds(markerBounds)
     return

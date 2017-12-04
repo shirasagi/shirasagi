@@ -1,0 +1,27 @@
+<% if @item.respond_to?(:form) && ancestral_forms.present? %>
+  <%
+    if params[:form_id].present?
+      form = ancestral_forms.find(params[:form_id]) rescue nil
+      if form.present?
+        @item.form_id = form.id
+      end
+    elsif params.key?(:form_id)
+      @item.form_id = nil
+    end
+
+    cur_form = @item.form
+  %>
+  <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
+  <dd>
+    <%= f.select(:form_id, options_from_collection_for_select(ancestral_forms, :id, :name, selected: cur_form.try(:id)), include_blank: true) %>
+    <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+
+    <%= jquery do %>
+      var templateForm = new Cms_TemplateForm({
+        url: <%== request.path.to_json %>,
+        params: <%== request.query_parameters.to_json %>
+      });
+      templateForm.render();
+    <% end %>
+  </dd>
+<% end %>

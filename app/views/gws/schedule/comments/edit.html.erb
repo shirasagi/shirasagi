@@ -1,0 +1,24 @@
+<% addons = @addons || @item.try(:addons) || [] %>
+
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+
+<%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+<%= hidden_field_tag('redirect_to', params[:redirect_to], id: nil) %>
+
+<div class="addon-views">
+  <%= render file: '_addons_form', locals: { f: f, addons: addons } if addons.size > 0 %>
+</div>
+
+<footer class="send">
+  <% if @crud_buttons %>
+    <% @crud_buttons.call f %>
+  <% else %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= link_to(t("ss.buttons.cancel"), params[:redirect_to], class: 'btn-default') %>
+  <% end %>
+</footer>
+
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

@@ -1,4 +1,4 @@
-<% if @portal.allowed?(:edit, @cur_user, site: @cur_site) %>
+<% if @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true) %>
 <nav class="mod-navi">
   <h2><%= link_to @portal.portal_user.name, gws_portal_user_path %></a></h2>
   <h2><%= t("ss.management") %></h2>

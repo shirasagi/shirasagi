@@ -28,7 +28,7 @@ class Webmail::CacheSettingsController < ApplicationController
     if params[:target] == 'all'
       items = Webmail::Mail.all
     else
-      items = Webmail::Mail.imap_setting(@imap_setting)
+      items = Webmail::Mail.imap_setting(@cur_user, @imap_setting)
     end
     items.each(&:destroy_rfc822)
     items.delete_all
@@ -39,7 +39,7 @@ class Webmail::CacheSettingsController < ApplicationController
     if params[:target] == 'all'
       Webmail::Mailbox.delete_all
     else
-      Webmail::Mailbox.imap_setting(@imap_setting).delete_all
+      Webmail::Mailbox.imap_setting(@cur_user, @imap_setting).delete_all
     end
     render_destroy
   end

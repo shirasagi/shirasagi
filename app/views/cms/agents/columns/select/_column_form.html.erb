@@ -1,0 +1,5 @@
+<% value ||= nil %>
+<%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
+<dd>
+  <%= select_tag("#{object_name}[#{column.id}]", options_for_select(column.select_options, selected: value.try(:value)), column.form_options.merge(include_blank: column.place_holder.presence || true)) %>
+</dd>

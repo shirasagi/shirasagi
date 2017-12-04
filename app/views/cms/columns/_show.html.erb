@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :route %></dt>
+  <dd><%= @item.class.model_name.human %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :required %></dt>
+  <dd><%= @item.label :required %></dd>
+
+  <dt><%= @model.t :tooltips %></dt>
+  <dd><%= br @item.tooltips %></dd>
+</dl>

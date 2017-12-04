@@ -1,10 +1,18 @@
 <% return if params[:action] =~ /index/ %>
+
+<%= jquery do %>
+  var state = "calendar[date]=<%= params.dig(:calendar, :date) %>&calendar[view]=<%= params.dig(:calendar, :view) %>"
+  $('.nav-menu a').each(function() {
+    $(this).attr('href', $(this).attr('href') + "?" + state);
+  });
+<% end %>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+  <% elsif params[:action] =~ /new|create|lock|copy/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -14,6 +22,9 @@
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.copy'), { action: :copy, id: @item } %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>

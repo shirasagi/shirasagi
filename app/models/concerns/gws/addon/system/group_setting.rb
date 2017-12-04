@@ -7,10 +7,12 @@ module Gws::Addon::System::GroupSetting
   set_addon_type :organization
 
   included do
+    belongs_to :sender_user, class_name: 'Gws::User'
     field :sendmail_domains, type: SS::Extensions::Words
     field :canonical_scheme, type: String, default: 'http'
     field :canonical_domain, type: String
 
+    permit_params :sender_user_id
     permit_params :sendmail_domains, allow_email_domains: []
     permit_params :canonical_scheme, :canonical_domain
   end

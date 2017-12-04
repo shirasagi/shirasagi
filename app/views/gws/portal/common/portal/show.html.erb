@@ -1,0 +1,21 @@
+<%= jquery do %>
+  var portal = new Gws_Portal(".gws-portlets", { readonly: true });
+  portal.addItems(<%== @items.to_json %>);
+<% end %>
+
+<%= render file: "gws/portal/common/portal/_notices" if @portal.my_portal? %>
+
+<div class="gridster gws-portlets gws-portlets-static">
+  <ul class="portlets"></ul>
+
+  <% @items.each do |item| %>
+    <% @portlet = item %>
+    <div class="portlet-html <%= item.portlet_id_class %> <%= item.portlet_model_class %>" data-id="<%= item.id %>">
+      <% if item.readable?(@cur_user, site: @cur_site) %>
+        <%= render file: item.view_file %>
+      <% else %>
+        <%= render file: 'gws/portal/portlets/private/index' %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -26,7 +26,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="gws-share-categories">
-  <% item.categories.compact.each do |category| %>
+  <% item.categories.readable(@cur_user, @cur_site).compact.each do |category| %>
     <% if params[:folder].present? %>
       <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id,category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
@@ -66,7 +66,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
           <% @index_title.call item %>
         <% else %>
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, { action: :show, id: item }, class: "title" %>
+          <%= link_to item.humanized_name, { action: :show, id: item }, class: "title" %>
         <% end %>
 
         <div class="meta">
@@ -97,3 +97,20 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+
+<% if @sub_folders.present? %>
+<div class="index">
+  <div class="header">
+    <%= t('gws/share.child_folder') %>
+  </div>
+  <ul class="list-items">
+    <% @sub_folders.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.trailing_name, gws_share_folder_files_path(folder: item), class: "title" %>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+<% end %>

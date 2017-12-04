@@ -92,14 +92,14 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
       visit gws_memo_messages_path(site)
       wait_for_ajax
       expect(page).to have_content('受信トレイ (1)')
-      expect(page).to have_content('ゴミ箱 (0)')
+      expect(page).to have_content('ゴミ箱')
       find('.list-head label.check input').set(true)
       page.accept_confirm do
         click_button "移動する"
         find('.move-menu li a').click
       end
       wait_for_ajax
-      expect(page).to have_content('受信トレイ (0)')
+      expect(page).to have_content('受信トレイ')
       expect(page).to have_content('ゴミ箱 (1)')
     end
   end
