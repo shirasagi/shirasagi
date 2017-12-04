@@ -32,12 +32,17 @@ class @Gws_Schedule_Calendar
         click: (e) ->
           $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'))
           $(this).toggleClass("fc-state-active")
+      withAbsence:
+        text: "<%= I18n.t('gws/schedule.calendar.buttonText.withAbsence') %>"
+        click: (e) ->
+          $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'))
+          $(this).toggleClass("fc-state-active")
     contentHeight: 'auto'
     displayEventEnd:
       basicWeek: true
     endParam: 's[end]'
     fixedWeekCount: false
-    header: { left: 'today prev next title', right: 'withTodo month basicWeek agendaDay listMonth' },
+    header: { left: 'today prev next title', right: 'withAbsence withTodo month basicWeek agendaDay listMonth' },
     lang: 'ja'
     nextDayThreshold: '00:00:00' # 複数日表示の閾値
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'

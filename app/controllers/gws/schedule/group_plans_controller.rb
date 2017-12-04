@@ -2,6 +2,7 @@ class Gws::Schedule::GroupPlansController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
+  include Gws::Memo::NotificationFilter
 
   before_action :set_group
   before_action :set_items
