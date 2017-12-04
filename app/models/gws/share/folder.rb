@@ -32,7 +32,8 @@ class Gws::Share::Folder
 
   validates :name, presence: true, length: {maximum: 80}
   validates :order, numericality: {less_than_or_equal_to: 999999}
-  validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**3, allow_blank: true }
+  validates :share_max_folder_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**4, allow_blank: true }
 
   validate :validate_parent_name
   validate :validate_rename_children, :validate_rename_parent,
