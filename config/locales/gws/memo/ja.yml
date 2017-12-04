@@ -3,6 +3,7 @@ ja:
     setting: メッセージ設定
   gws/memo/message:
     folder: フォルダー
+    child_folder: 子フォルダー
     folder_name: フォルダー名
     message: メッセージ
     select_check: 件のメッセージを選択
@@ -29,9 +30,6 @@ ja:
     inbox_trash: ゴミ箱
     inbox_draft: 下書き
     inbox_sent: 送信済みトレイ
-    errors:
-      included_memo: メッセージが入っているフォルダーは削除できません。
-      used_folder: フィルターが使用中のフォルダーは削除できません。
   gws/memo/filter:
     options:
       action:
@@ -40,10 +38,21 @@ ja:
     errors:
       blank_conditions: 条件を入力してください。
       blank_apply_mailbox: 適用するフォルダーを選択してください。
+  gws/memo/group_setting:
+    options:
+      reminder:
+        - 表示しない
+        - 送信された当日のみ表示する
+        - 送信後２日間のみ表示する
+        - 送信後３日間のみ表示する
+        - 送信後４日間のみ表示する
+        - 送信後５日間のみ表示する
   modules:
     gws/memo: メッセージ
     addons:
       gws/memo/comments: コメント
+    errors:
+      other_user_comment_deletion: 他ユーザのコメントは削除できません。
   gws_role:
     read_gws_memo_messages: メッセージの閲覧
     edit_gws_memo_messages: メッセージの編集
@@ -59,6 +68,11 @@ ja:
       models:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+        gws/memo/folder:
+          included_memo: メッセージが入っているフォルダーは削除できません。
+          used_folder: フィルターが使用中のフォルダーは削除できません。
+          not_found_parent: 親フォルダーが存在しません。
+          found_children: 子フォルダーが存在します。
     attributes:
       gws/memo/message:
         name: 件名
@@ -70,6 +84,7 @@ ja:
       gws/memo/folder:
         name: フォルダー名
         path: パス
+        order: 並び順
       gws/memo/filter:
         name: フィルター名
         from: 条件/差出人
@@ -84,12 +99,16 @@ ja:
         default: 既定の署名
       gws/memo/group_setting:
         memo_filesize_limit: 添付サイズ制限
+        memo_reminder: リマインダー表示設定
   tooltip:
     gws/memo/message:
       member_ids:
         - メッセージの宛先を選択します。
     gws/memo/folder:
       name: フォルダーの名称を入力します。
+      order:
+        - フォルダーの並び順を数字で入力します。
+        - 番号の小さい順にフォルダーが表示されます。
     gws/memo/filter:
       name:
         - フィルターの名前を入力します。
@@ -127,3 +146,7 @@ ja:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
         - 未指定である場合、制限されません。
         - 初期値は 未指定 です。
+      memo_reminder:
+        - メッセージを送信したあと各受信者のリマインダーに表示する日数を選択します。
+        - メッセージが下書きの時はリマインダーはまだ登録されません。
+        - メッセージが送信された時にリマインダーが登録されます。
