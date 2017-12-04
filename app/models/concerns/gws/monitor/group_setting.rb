@@ -8,7 +8,7 @@ module Gws::Monitor::GroupSetting
     field :monitor_file_size_per_post, type: Integer
     field :monitor_browsed_delay, type: Integer
     field :monitor_delete_threshold, type: Integer, default: 8
-    field :default_reminder_start_section, type: String, default: '0'
+    field :default_reminder_start_section, type: String
     attr_accessor :in_monitor_file_size_per_topic_mb, :in_monitor_file_size_per_post_mb
 
     permit_params :monitor_new_days, :monitor_browsed_delay
@@ -47,7 +47,8 @@ module Gws::Monitor::GroupSetting
   end
 
   def default_reminder_start_section_options
-    Gws::Monitor::Topic.new.reminder_start_section_options
+    options =Gws::Monitor::Topic.new.reminder_start_section_options
+    options.insert(0, [nil,nil])
   end
 
   def default_reminder_start_section_name
