@@ -30,6 +30,11 @@ SS::Application.routes.draw do
 
     scope(path: ':category', as: 'category') do
       resources :posts, concerns: [:posts]
+      resources :trashes, concerns: [:posts] do
+        get :recover, on: :member
+        get :active, on: :member
+        post :active_all, on: :collection
+      end
     end
 
     resources :categories do
