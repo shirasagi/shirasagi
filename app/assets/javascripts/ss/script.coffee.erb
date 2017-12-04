@@ -78,7 +78,7 @@ $ ->
   path = location.pathname + "/"
   $("#navi .main-navi a, #navi .mod-navi a").each ->
     menu = $(this)
-    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+    menu.parent().addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
   # dropdown
   $(".dropdown-toggle").click (e) ->
