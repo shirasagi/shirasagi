@@ -386,9 +386,18 @@ td {
   h2 a:hover:before {
     background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
   }
-  a.current, a:hover {
+  h2.current {
     background-color: $gray1;
   }
+  h2:hover {
+    background-color: $gray1;
+  }
+  h3 {
+    display: none;
+  }
+  .current + .child-menu h3 {
+    display: block;
+  } 
   h3 a {
     display: block;
     padding: 5px 15px 5px 60px;
@@ -484,6 +493,48 @@ td {
   .icon-message:hover:before {
     background-position: -32px -480px;
   }
+  .icon-memo:before {
+    background-position: left -480px;
+  }
+  .icon-memo:hover:before {
+    background-position: -32px -480px;
+  }
+  .icon-report:before {
+    background-position: left -512px;
+  }
+  .icon-report:hover:before {
+    background-position: -32px -512px;
+  }
+  .icon-question:before {
+    background-position: left -640px;
+  }
+  .icon-question:hover:before {
+    background-position: -32px -640px;
+  }
+  .icon-circular:before {
+    background-position: left -544px;
+  }
+  .icon-circular:hover:before {
+    background-position: -32px -544px;
+  }
+  .icon-monitor:before {
+    background-position: left -672px;
+  }
+  .icon-monitor:hover:before {
+    background-position: -32px -672px;
+  }
+  .icon-share:before {
+    background-position: left -576px;
+  }
+  .icon-share:hover:before {
+    background-position: -32px -576px;
+  }
+  .icon-address:before {
+    background-position: left -608px;
+  }
+  .icon-address:hover:before {
+    background-position: -32px -608px;
+  }
   @include mb {
     @include clear;
     h2 {
@@ -529,7 +580,7 @@ td {
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
     color: $black;
-    &.current {
+    @at-root h3.current a {
       background-color: $gray1;
     }
     &:hover {
@@ -556,7 +607,7 @@ td {
     padding: 5px 15px 5px 85px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
     color: $black;
-    &.current {
+    @at-root h4.current a {
       background-color: $gray1;
     }
     &:hover {
