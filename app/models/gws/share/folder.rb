@@ -34,8 +34,10 @@ class Gws::Share::Folder
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   validate :validate_parent_name
-  validate :validate_rename_children,
+  validate :validate_rename_children, :validate_rename_parent,
            :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
+
+  validate :validate_folder_name, if: ->{ self.attributes["action"] =~ /create|update/ }
 
   before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
@@ -133,6 +135,14 @@ class Gws::Share::Folder
     true
   end
 
+  def validate_rename_parent
+    if !self.attributes["before_folder_name"].include?("/") && self.attributes["before_folder_name"] != self.name
+      errors.add :base, :not_rename_parent
+      return false
+    end
+    true
+  end
+
   def validate_children_move_to_other_parent
     if self.attributes["before_folder_name"].include?("/") &&
         self.attributes["before_folder_name"].split("/").first != self.name.split("/").first
@@ -154,6 +164,19 @@ class Gws::Share::Folder
     if files.present?
       errors.add :base, :found_files
       return false
+    end
+    true
+  end
+
+  def validate_folder_name
+    if self.id == 0
+      errors.add :base, :not_create_same_folder if self.class.site(site).where(name: self.name).first
+    end
+
+    if self.id != 0
+      if self.class.site(site).where(name: self.name).present? && self.class.site(site).where(id: self.id).first.name != self.name
+        errors.add :base, :not_move_to_same_name_folder
+      end
     end
     true
   end
