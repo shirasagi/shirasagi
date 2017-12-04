@@ -68,12 +68,6 @@ class Gws::Circular::Post
     where(:deleted.exists => true)
   }
 
-  scope :expired, ->(date = Time.zone.now) {
-    where('$or' => [
-      { :deleted.exists => true , :deleted.lt => date }
-    ])
-  }
-
   def active?
     deleted.blank? || deleted > Time.zone.now
   end
