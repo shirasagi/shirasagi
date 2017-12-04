@@ -9,5 +9,5 @@
   <dd><%= content_tag :span, @item.name, style: "background-color: #{@item.color}; color: #{@item.text_color}" %></dd>
 
   <dt><%= @model.t :todo_state %></dt>
-  <dd><%= @item.todo_state_name %></dd>
+  <dd><%= @item.label(:todo_state) %></dd>
 </dl>

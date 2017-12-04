@@ -36,8 +36,8 @@ SS::Application.routes.draw do
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
 
     resources :todos, concerns: :plans do
-      get :finish, on: :member
-      get :revert, on: :member
+      match :finish, on: :member, via: %i[get post]
+      match :revert, on: :member, via: %i[get post]
       post :finish_all, on: :collection
       post :revert_all, on: :collection
       get :disable, on: :member

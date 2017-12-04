@@ -6,4 +6,6 @@ class Gws::Schedule::Comment
   include SS::Addon::Markdown
 
   validates :text, presence: true
+
+  delegate :subscribed_users, to: :schedule
 end
