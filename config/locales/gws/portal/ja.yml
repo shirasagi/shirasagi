@@ -3,10 +3,19 @@ ja:
     gws/portal: ポータル
     addons:
       gws/portal/portlet/free: 自由形式
-      gws/portal/portlet/link: リンク集
+      gws/portal/portlet/link: リンク設定
+      gws/portal/portlet/reminder: リマインダー設定
+      gws/portal/portlet/schedule: スケジュール設定
+      gws/portal/portlet/board: 掲示板設定
+      gws/portal/portlet/faq: よくある質問設定
+      gws/portal/portlet/qna: Ｑ＆Ａ設定
+      gws/portal/portlet/circular: 掲示板設定
+      gws/portal/portlet/monitor: 照会・回答設定
+      gws/portal/portlet/share: 共有ファイル設定
+      gws/portal/portlet/report: レポート設定
+      gws/portal/portlet/workflow: ワークフロー設定
 
   gws/portal:
-    my_portal: Myポータル
     user_portal: 個人ポータル
     group_portal: 部課ポータル
     root_portal: 全庁ポータル
@@ -17,41 +26,59 @@ ja:
       header:
         name: ポートレット種別
         text: 説明
-      schedule:
-        name: スケジュール
-        text: 今週のスケジュールを表示します。
-      reminder:
-        name: リマインダー
-        text: リマインダーを表示します。
-      board:
-        name: 掲示板
-        text: 新着の投稿を表示します。
-      monitor:
-        name: 照会・回答
-        text: 新着の照会・回答を表示します。
-      share:
-        name: 共有ファイル
-        text: 新着の共有ファイルを表示します。
       free:
         name: 自由形式
         text: 表示内容を自由に記述します。
       links:
         name: リンク集
         text: リンク集を作成します。
+      reminder:
+        name: リマインダー
+        text: リマインダーを表示します。
+      schedule:
+        name: スケジュール
+        text: 今週のスケジュールを表示します。
+      board:
+        name: 掲示板
+        text: 新着の投稿を表示します。
+      faq:
+        name: よくある質問
+        text: 新着の投稿を表示します。
+      qna:
+        name: Ｑ＆Ａ
+        text: 新着の投稿を表示します。
+      circular:
+        name: 回覧板
+        text: 新着の回覧を表示します。
+      monitor:
+        name: 照会・回答
+        text: 新着の照会・回答を表示します。
+      share:
+        name: 共有ファイル
+        text: 新着の共有ファイルを表示します。
+      report:
+        name: レポート
+        text: 新着のレポートを表示します。
+      workflow:
+        name: ワークフロー
+        text: 新着のワークフローを表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
-      settings: 設定
+      settings: ポータルの設定
+      edit_portlet: ポートレットを編集する
     buttons:
       save_layouts: 配置を保存する
       add_item: 新しい要素を追加
+    options:
+      reminder_filter:
+        all: すべて表示
+        future: 未来日のみ
     messages:
       no_portlets: ポートレットを作成してください。
+      closed_portlet: このポートレットは閲覧できません。
 
   gws_role:
-    read_private_gws_portal_my_settings: Myポータル設定の閲覧（所有）
-    edit_private_gws_portal_my_settings: Myポータル設定の編集（所有）
-    delete_private_gws_portal_my_settings: Myポータル設定の削除（所有）
     read_other_gws_portal_user_settings: 個人ポータル設定の閲覧（全て）
     read_private_gws_portal_user_settings: 個人ポータル設定の閲覧（所有）
     edit_other_gws_portal_user_settings: 個人ポータル設定の編集（全て）
@@ -64,20 +91,11 @@ ja:
     edit_private_gws_portal_group_settings: 部課ポータル設定の編集（所有）
     delete_other_gws_portal_group_settings: 部課ポータル設定の削除（全て）
     delete_private_gws_portal_group_settings: 部課ポータル設定の削除（所有）
-    read_other_gws_portal_root_settings: 全庁ポータル設定の閲覧（全て）
-    read_private_gws_portal_root_settings: 全庁ポータル設定の閲覧（所有）
-    edit_other_gws_portal_root_settings: 全庁ポータル設定の編集（全て）
-    edit_private_gws_portal_root_settings: 全庁ポータル設定の編集（所有）
-    delete_other_gws_portal_root_settings: 全庁ポータル設定の削除（全て）
-    delete_private_gws_portal_root_settings: 全庁ポータル設定の削除（所有）
 
   mongoid:
     models:
       gws/portal/setting: ポータル設定
     attributes:
-      gws/portal/my_setting:
-        name: ポータル名
-        portal_user_id: ポータルユーザー
       gws/portal/user_setting:
         name: ポータル名
         portal_user_id: ポータルユーザー
@@ -85,16 +103,38 @@ ja:
         name: ポータル名
         portal_group_id: ポータルグループ
       gws/portal/portlet_model:
+        setting_id: ポータルID
         name: ポートレット名
         portlet_model: ポートレット種別
+        limit: 表示件数
       gws/addon/portal/portlet/free:
         html: 内容
       gws/addon/portal/portlet/link:
         links/name: 表示名
         links/url: URL
+      gws/addon/portal/portlet/reminder:
+        reminder_filter: 表示範囲
+      gws/addon/portal/portlet/schedule:
+        schedule_member_ids: 表示ユーザー
+      gws/addon/portal/portlet/board:
+        board_severity: 重要度
+        board_category_ids: カテゴリー
+      gws/addon/portal/portlet/faq:
+        faq_category_ids: カテゴリー
+      gws/addon/portal/portlet/qna:
+        qna_category_ids: カテゴリー
+      gws/addon/portal/portlet/circular:
+        circular_category_ids: カテゴリー
+      gws/addon/portal/portlet/monitor:
+        monitor_category_ids: カテゴリー
+        monitor_answerable_article: 表示範囲
+      gws/addon/portal/portlet/share:
+        share_category_ids: カテゴリー
+        share_folder_id: フォルダー
+      gws/addon/portal/portlet/workflow:
+        workflow_state: 表示範囲
 
   tooltip:
-    gws/portal/my_setting:
     gws/portal/user_setting:
     gws/portal/group_setting:
     gws/portal/portlet_model:

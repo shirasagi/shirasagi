@@ -4,8 +4,11 @@ class Gws::Portal::GroupPortlet
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Portal::PortletModel
-  include SS::FreePermission
+  include Gws::Addon::ReadableSetting
+  include Gws::Addon::GroupPermission
   include Gws::Addon::History
+
+  set_permission_name "gws_portal_group_settings"
 
   belongs_to :setting, class_name: 'Gws::Portal::GroupSetting'
 end

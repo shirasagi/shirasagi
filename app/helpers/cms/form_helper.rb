@@ -34,6 +34,13 @@ module Cms::FormHelper
     items
   end
 
+  def ancestral_forms
+    st_forms = @cur_node.becomes_with_route.st_forms rescue nil
+    st_forms ||= Cms::Form.none
+    st_forms = st_forms.and_public.allow(:read, @cur_user, site: @cur_site).order_by(update: 1)
+    st_forms
+  end
+
   def show_image_info(file)
     return nil unless file
 

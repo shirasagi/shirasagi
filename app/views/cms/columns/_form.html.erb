@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :required %><%= @model.tt :required %></dt>
+  <dd><%= f.select :required, @item.required_options %></dd>
+
+  <dt><%= @model.t :tooltips %><%= @model.tt :tooltips %></dt>
+  <dd><%= f.text_area :tooltips %></dd>
+</dl>

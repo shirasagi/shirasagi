@@ -1,0 +1,44 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= dropdown_link(t('ss.links.new')) do %>
+        <% column_type_options.each_with_index do |mod_def, index| %>
+          <% if index > 0 %>
+            <hr>
+          <% end %>
+          <h3 class="dropdown-item"><%= mod_def[1][:name] %></h3>
+          <% mod_def[1][:items].each do |name, type| %>
+            <%= link_to(name, new_cms_form_columns_type_path(form_id: @cur_form, type: type), class: 'dropdown-item') %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% if @cur_form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.download'), { action: :download }) rescue nil %>
+    <% end %>
+    <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.import'), { action: :import }) rescue nil %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|download|import/ %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% elsif params[:action] =~ /edit|update|delete|move|contains_urls/ %>
+    <% if @cur_form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.back_to_show'), { action: :show, id: @item }, class: "back-to-show" %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% else %>
+    <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: :edit %>
+    <% end %>
+    <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.copy'), { action: :copy, id: @item }, class: :copy) rescue nil %>
+    <% end %>
+    <% if @cur_form.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.move'), { action: :move, id: @item }, class: :move) rescue nil %>
+    <% end %>
+    <% if @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% end %>
+</nav>

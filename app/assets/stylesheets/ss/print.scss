@@ -1,10 +1,22 @@
 .sheet {
-  width: 210mm;
-  height: 296mm; /* 1mm余裕をもたせる */
   border: none;
   border-radius: unset;
   page-break-after: always;
   background: white;
+}
+
+.vertical {
+  .sheet {
+    width: 210mm;
+    height: 296mm; /* 1mm余裕をもたせる */
+  }
+}
+
+.horizontal {
+  .sheet {
+    width: 297mm;
+    height: 200mm;
+  }
 }
 
 /* プレビュー用のスタイル */
@@ -21,6 +33,9 @@
   }
 }
 @media print {
+  body {
+    background: white;
+  }
   .no-print {
     display: none;
   }

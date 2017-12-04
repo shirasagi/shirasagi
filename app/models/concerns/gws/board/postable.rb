@@ -22,7 +22,7 @@ module Gws::Board::Postable
 
     validates :descendants_updated, datetime: true
 
-    belongs_to :topic, class_name: "Gws::Board::Post", inverse_of: :descendants
+    belongs_to :topic, class_name: "Gws::Board::Topic", inverse_of: :descendants
     belongs_to :parent, class_name: "Gws::Board::Post", inverse_of: :children
 
     has_many :children, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :parent,
@@ -52,6 +52,9 @@ module Gws::Board::Postable
 
       criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
 
+      if params[:severity].present?
+        criteria = criteria.where(severity: params[:severity])
+      end
       if params[:category].present?
         category_ids = Gws::Board::Category.site(params[:site]).and_name_prefix(params[:category]).pluck(:id)
         criteria = criteria.in(category_ids: category_ids)

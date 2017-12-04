@@ -1,34 +1,30 @@
 <%
-  @share = Gws::Share::File.site(@cur_site).
-      readable(@cur_user, @cur_site).
-      active.
-      order(updated: -1).
-      page(1).per(5)
+  items = @portlet.find_share_items(@portal, @cur_user)
 %>
 <div class="main-box">
   <div class="portlet-title"><%= @portlet.name %></div>
 
   <ul class="list-items">
-    <% @share.each do |item| %>
-        <li class="list-item">
-          <div class="info">
-            <%= link_to item.name, gws_share_file_path(id: item.id), class: 'title' %>
-          </div>
+    <% items.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, gws_share_file_path(id: item.id), class: 'title' %>
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
             <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
             <span>
-          <% item.categories.compact.each do |category| %>
-            <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
-                        class: "gws-category-label", style: category_label_css(category) %>
-          <% end %>
-        </span>
+              <% item.categories.compact.each do |category| %>
+                <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
+                            class: "gws-category-label", style: category_label_css(category) %>
+              <% end %>
+            </span>
           </div>
-        </li>
+        </div>
+      </li>
     <% end %>
   </ul>
 
-  <% if @share.next_page %>
-  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_share_files_path %></div>
+  <% if items.next_page %>
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_share_files_path %></div>
   <% end %>
 </div>

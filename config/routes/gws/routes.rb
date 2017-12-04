@@ -17,7 +17,7 @@ SS::Application.routes.draw do
   end
 
   namespace "gws", path: ".g:site" do
-    get "/", to: "portal/my/portal#show", as: :portal
+    get "/", to: "portal/user/portal#show", as: :portal
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login"  => "login#login", as: :login, via: [:get, :post]
   end

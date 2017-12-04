@@ -4,7 +4,6 @@ class Gws::Schedule::Comment
   include Gws::Reference::Site
   include Gws::Reference::Schedule
   include SS::Addon::Markdown
-  include Gws::Addon::GroupPermission
 
-  set_permission_name 'gws_schedule_plans'
+  validates :text, presence: true
 end

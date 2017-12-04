@@ -22,6 +22,7 @@ class Cms::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
+    include Cms::Addon::Form::Node
     include Cms::Addon::ChildList
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
@@ -38,6 +39,7 @@ class Cms::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Event::Addon::PageList
+    include Cms::Addon::Form::Node
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting

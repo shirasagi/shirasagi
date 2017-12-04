@@ -42,16 +42,21 @@ module Gws::Addon
         self.attributes["file_ids"] = ids
 
         del_ids = file_ids_was.to_a - ids
-        del_ids.each do |id|
-          file = SS::File.where(id: id).first
-          file.destroy if file
+
+        files = SS::File.where(:id.in => del_ids)
+        files.each do |file|
+          # Only unused file
+          file.destroy unless self.class.where(:id.ne => id, file_ids: file.id).exists?
         end
       end
     end
 
     def destroy_files
       run_callbacks(:destroy_files) do
-        files.destroy_all
+        files.each do |file|
+          # Only unused file
+          file.destroy unless self.class.where(:id.ne => id, file_ids: file.id).exists?
+        end
       end
     end
   end

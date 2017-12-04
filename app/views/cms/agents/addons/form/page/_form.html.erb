@@ -1,0 +1,47 @@
+<%
+cur_form = @item.form
+
+def find_column_value(column)
+  @item.column_values.where(column_id: column.id).first
+end
+%>
+
+<% if cur_form.present? %>
+<dl class="see mod-cms-form-page column-values">
+  <% cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
+    <% value = find_column_value(column) %>
+    <%= render file: column.column_form_path, locals: { f: f, object_name: "#{f.object_name}[column_values]", column: column, value: value } %>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-cms-agents-addons-form-page .addon-head h2').text(<%== cur_form.name.to_json %>);
+
+  $('a.btn-file-upload').data('on-select', function($item) {
+    $.colorbox.close();
+
+    var fileId = $item.data('id');
+    var humanizedName = $item.data('humanized-name');
+    if (! fileId || ! humanizedName) {
+      return;
+    }
+
+    //$('input[name="item[column_values][' + columnId + ']"]').val(fileId);
+    //$('span.humanized-name.column-' + columnId).text(humanizedName);
+    var $element = $.colorbox.element();
+    $element.siblings('input.file-id').val(fileId);
+    $element.siblings('span.humanized-name').text(humanizedName);
+    $element.siblings('.btn-file-delete').show();
+  });
+
+  $('a.btn-file-delete').on('click', function(e) {
+    var $this = $(this);
+    $this.siblings('input.file-id').val('');
+    $this.siblings('span.humanized-name').text('');
+    $this.hide();
+
+    e.preventDefault();
+    return false;
+  });
+<% end %>
+<% end %>
