@@ -14,6 +14,14 @@ module Cms
     Cms::Part.plugin "cms/sns_share"
     Cms::Part.plugin "cms/calendar_nav"
     Cms::Part.plugin "cms/monthly_nav"
+    Cms::Column.plugin 'cms/text_field'
+    Cms::Column.plugin 'cms/date_field'
+    Cms::Column.plugin 'cms/url_field'
+    Cms::Column.plugin 'cms/text_area'
+    Cms::Column.plugin 'cms/select'
+    Cms::Column.plugin 'cms/radio_button'
+    Cms::Column.plugin 'cms/check_box'
+    Cms::Column.plugin 'cms/file_upload'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups
@@ -34,6 +42,7 @@ module Cms
     Cms::Role.permission :read_other_cms_files
     Cms::Role.permission :read_other_cms_notices
     Cms::Role.permission :read_other_cms_page_searches
+    Cms::Role.permission :read_other_cms_forms
     Cms::Role.permission :read_private_cms_nodes
     Cms::Role.permission :read_private_cms_pages
     Cms::Role.permission :read_private_cms_parts
@@ -41,6 +50,7 @@ module Cms
     Cms::Role.permission :read_private_cms_files
     Cms::Role.permission :read_private_cms_notices
     Cms::Role.permission :read_private_cms_page_searches
+    Cms::Role.permission :read_private_cms_forms
     Cms::Role.permission :edit_other_cms_nodes
     Cms::Role.permission :edit_other_cms_pages
     Cms::Role.permission :edit_other_cms_parts
@@ -48,6 +58,7 @@ module Cms
     Cms::Role.permission :edit_other_cms_files
     Cms::Role.permission :edit_other_cms_notices
     Cms::Role.permission :edit_other_cms_page_searches
+    Cms::Role.permission :edit_other_cms_forms
     Cms::Role.permission :edit_private_cms_nodes
     Cms::Role.permission :edit_private_cms_pages
     Cms::Role.permission :edit_private_cms_parts
@@ -55,6 +66,7 @@ module Cms
     Cms::Role.permission :edit_private_cms_files
     Cms::Role.permission :edit_private_cms_notices
     Cms::Role.permission :edit_private_cms_page_searches
+    Cms::Role.permission :edit_private_cms_forms
     Cms::Role.permission :delete_other_cms_nodes
     Cms::Role.permission :delete_other_cms_pages
     Cms::Role.permission :delete_other_cms_parts
@@ -62,6 +74,7 @@ module Cms
     Cms::Role.permission :delete_other_cms_files
     Cms::Role.permission :delete_other_cms_notices
     Cms::Role.permission :delete_other_cms_page_searches
+    Cms::Role.permission :delete_other_cms_forms
     Cms::Role.permission :delete_private_cms_nodes
     Cms::Role.permission :delete_private_cms_pages
     Cms::Role.permission :delete_private_cms_parts
@@ -69,6 +82,7 @@ module Cms
     Cms::Role.permission :delete_private_cms_files
     Cms::Role.permission :delete_private_cms_notices
     Cms::Role.permission :delete_private_cms_page_searches
+    Cms::Role.permission :delete_private_cms_forms
     Cms::Role.permission :release_other_cms_pages
     Cms::Role.permission :release_private_cms_pages
     Cms::Role.permission :approve_other_cms_pages

@@ -1,7 +1,7 @@
 module SS
   module MobileSupport
     def mobile?(request)
-      filters = request.env["ss.filters"]
+      filters = request.env["ss.filters"] rescue nil
       return false if filters.blank?
       filters.include?(:mobile)
     end

@@ -31,8 +31,7 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
     @search_params = @search_params.presence
 
     @items = @model.site(@cur_site).
-      state(params.dig(:s, :state)).
-      allow(:read, @cur_user, site: @cur_site)
+      state(params.dig(:s, :state))
 
     if @search_params
       @items = @items.search(@search_params).page(params[:page]).per(50)

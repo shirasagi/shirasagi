@@ -7,12 +7,6 @@ SS::Application.routes.draw do
   end
 
   gws "portal" do
-    namespace :my, path: 'my' do
-      resources :portlets, concerns: [:deletion]
-      resource :settings, concerns: [:deletion], only: [:show, :edit, :update]
-      resource :layouts, concerns: [:deletion], only: [:show, :update]
-    end
-
     namespace :user, path: 'u-:user' do
       get '/' => 'portal#show'
       resources :portlets, concerns: [:deletion]

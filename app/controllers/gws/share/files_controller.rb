@@ -14,18 +14,19 @@ class Gws::Share::FilesController < ApplicationController
 
   def set_crumbs
     set_folder
+    @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-      @crumbs << [@folder.name, action: :index]
-    else
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), action: :index]
+      @folder.parents.order_by(depth: 1).each do |parent_folder|
+        @crumbs << [parent_folder.trailing_name, gws_share_folder_files_path(folder: parent_folder)]
+      end
+      @crumbs << [@folder.trailing_name, gws_share_folder_files_path(folder: @folder.id)]
     end
   end
 
   def set_category
     @categories = Gws::Share::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
     if category_id = params[:category].presence
-      @category ||= Gws::Share::Category.site(@cur_site).where(id: category_id).first
+      @category ||= Gws::Share::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
     end
   end
 
@@ -35,8 +36,13 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def set_folder_navi
-    @folder_navi = Gws::Share::Folder.site(@cur_site).
-        readable(@cur_user, @cur_site)
+    if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
+      @folder_navi = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site)
+    elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
+      @folder_navi = Gws::Share::Folder.site(@cur_site).
+        readable(@cur_user, site: @cur_site)
+    end
   end
 
   def fix_params
@@ -66,12 +72,17 @@ class Gws::Share::FilesController < ApplicationController
 
     @items = @model.site(@cur_site).
       readable(@cur_user, @cur_site).
-      active.
-      search(params[:s]).
+      active.search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'created_desc').
       page(params[:page]).per(50)
 
-    @items.options[:sort].delete("_id")
+    folder_name = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        where(id: params[:folder].to_i).pluck(:name).first
+
+    @sub_folders = Gws::Share::Folder.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show

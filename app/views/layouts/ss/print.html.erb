@@ -14,7 +14,7 @@
   <![endif]-->
   <%= csrf_meta_tags %>
 </head>
-<body class="print-preview">
+<body class="print-preview <%= @portrait.presence || 'vertical' %>">
   <div id="page" class="print-preview">
     <div id="wrap" class="print-preview">
       <div class="wrap">

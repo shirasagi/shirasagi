@@ -12,6 +12,7 @@ module Article::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Event::Addon::PageList
+    include Cms::Addon::Form::Node
     include Category::Addon::Setting
     include Cms::Addon::TagSetting
     include Cms::Addon::OpendataRef::Site

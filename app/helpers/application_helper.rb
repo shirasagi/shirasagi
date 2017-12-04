@@ -134,7 +134,7 @@ module ApplicationHelper
       if split
         output_buffer << tag(:span, class: %w(dropdown-toggle dropdown-toggle-split))
       end
-      output_buffer << content_tag(:div, class: %w(dropdown-menu gws-dropdown-menu)) do
+      output_buffer << content_tag(:div, class: %w(dropdown-menu gws-dropdown-menu cms-dropdown-menu)) do
         inner
       end
     end

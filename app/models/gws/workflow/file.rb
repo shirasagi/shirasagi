@@ -92,6 +92,12 @@ class Gws::Workflow::File
     end
   end
 
+  def workflow_state_options
+    %w(all approve request).map do |v|
+      [I18n.t("gws/workflow.options.file_state.#{v}"), v]
+    end
+  end
+
   def editable?(user, opts)
     editable = allowed?(:edit, user, opts) && !workflow_requested?
     return editable if editable

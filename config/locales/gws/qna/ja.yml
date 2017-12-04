@@ -80,6 +80,20 @@ ja:
     delete_other_gws_qna_categories: カテゴリーの削除（全て）
     delete_private_gws_qna_categories: カテゴリーの削除（所有）
 
+  gws_notification:
+    gws/qna/topic:
+      subject: "[更新通知][Ｑ＆Ａ] %{name}"
+      text: |
+        「%{name}」が作成または更新されました。
+
+        %{text}
+    gws/qna/post:
+      subject: "[更新通知][Ｑ＆Ａ] %{name}"
+      text: |
+        「%{name}」に投稿がありました。
+
+        %{text}
+
   mongoid:
     models:
       gws/qna/topic: Ｑ＆Ａ/トピック

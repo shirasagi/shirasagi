@@ -1,7 +1,7 @@
 <%
 
 model = Gws::Schedule::RepeatPlan
-@item.sync_repeat_plan if params[:action] =~ /(new|edit)/
+@item.sync_repeat_plan if params[:action] =~ /(new|edit|copy)/
 
 %>
 <%= jquery do %>

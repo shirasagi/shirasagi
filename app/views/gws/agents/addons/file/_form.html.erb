@@ -21,6 +21,9 @@ $ ->
     <span class="upload-menu-new">
       <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
     </span>
+    <span class="upload-menu-notice">
+      <%= t('ss.notice.multibyte_filename_disabled') %>
+    </span>
     <span class="upload-menu-select">
       <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
       <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn" %>

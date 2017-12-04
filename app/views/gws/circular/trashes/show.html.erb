@@ -62,13 +62,16 @@
         </thead>
         <tbody class="items">
           <% @item.members.each do |member| %>
-            <% post = @item.comments.find {|c| c.user_id == member.id } %>
+            <% first_comment = @item.comments.where(user_id: member.id).first %>
+            <% last_comment = @item.comments.
+              select { |c| c.user_id == member.id }.
+              sort {|a,b| a.updated <=> b.updated }.last %>
             <tr>
               <td><%= @item.seen?(member) ? t('gws/circular.post.seen') :  t('gws/circular.post.unseen') %></td>
               <td><%= tryb { @item.seen_at(member).strftime('%Y/%m/%d %H:%M') } %></td>
-              <td><%= post ? post.updated.strftime('%Y/%m/%d %H:%M') : '' %></td>
+              <td><%= tryb { last_comment.updated.strftime('%Y/%m/%d %H:%M') } %></td>
               <td><%= member.name %></td>
-              <td><%= post ? post.text : '' %></td>
+              <td><%= tryb { first_comment.text } %></td>
             </tr>
           <% end %>
         </tbody>

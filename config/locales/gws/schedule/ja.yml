@@ -24,6 +24,7 @@ ja:
     calendar:
       buttonText:
         listMonth: リスト
+        withTodo: ToDo表示
       titleFormat:
         month: YYYY年 M月
         week: (YYYY年 M月 D日（ddd）)
@@ -228,7 +229,6 @@ ja:
         attendance_check_state: 出欠確認
         attendances: 出欠情報
       gws/schedule/attendance:
-        in_comment: コメント
         attendance_state: 出欠
       gws/schedule/facility_column_values:
         main_facility_id: 主設備

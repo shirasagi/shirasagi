@@ -12,6 +12,7 @@ class Gws::Share::Folder
 
   seqid :id
   field :name, type: String
+  field :depth, type: Integer
   field :order, type: Integer, default: 0
   field :state, type: String, default: "closed"
   field :share_max_file_size, type: Integer, default: 0
@@ -24,15 +25,28 @@ class Gws::Share::Folder
   permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb,
                 :share_max_folder_size, :in_share_max_folder_size_mb
 
+  before_validation :set_depth
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 
   validates :name, presence: true, uniqueness: { scope: :site_id }
+  validates :depth, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
+  validate :validate_parent_name
+
+  before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
 
   default_scope ->{ order_by order: 1 }
+
+  scope :sub_folder, ->(key, folder) {
+    if key.start_with?('root_folder')
+      where("$and" => [ {name: /^(?!.*\/).*$/} ] )
+    else
+      where("$and" => [ {name: /#{folder}\/(?!.*\/).*$/} ] )
+    end
+  }
 
   class << self
     def search(params)
@@ -62,12 +76,15 @@ class Gws::Share::Folder
       end
 
       Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
-        items.each do |item|
+        items.each_with_index do |item, idx|
+          def item.download_filename
+            name =~ /\./ ? name : name.sub(/\..*/, '') + '.' + extname
+          end
           if File.exist?(item.path)
             if filename_duplicate_flag == 0
-              zip_file.add(NKF::nkf('-sx --cp932', item.name), item.path)
+              zip_file.add(NKF::nkf('-sx --cp932', item.download_filename), item.path)
             elsif filename_duplicate_flag == 1
-              zip_file.add(NKF::nkf('-sx --cp932', item._id.to_s + "_" + item.name), item.path)
+              zip_file.add(NKF::nkf('-sx --cp932', item._id.to_s + "_" + item.download_filename), item.path)
             end
           end
         end
@@ -75,7 +92,23 @@ class Gws::Share::Folder
     end
   end
 
+  def trailing_name
+    @trailing_name ||= name.split("/")[depth..-1].join("/")
+  end
+
+  def parents
+    @parents ||= begin
+      paths = Cms::Node.split_path(name.sub(/^\//, ''))
+      paths.pop
+      self.class.all.in(name: paths)
+    end
+  end
+
   private
+
+  def set_depth
+    self.depth = name.count('/')
+  end
 
   def set_share_max_file_size
     return if in_share_max_file_size_mb.blank?
@@ -89,5 +122,28 @@ class Gws::Share::Folder
 
   def remove_zip
     Fs.rm_rf self.class.zip_path(id) if File.exist?(self.class.zip_path(id))
+  end
+
+  def validate_parent_name
+    return if name.blank?
+    return if name.count('/') < 1
+
+    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+  end
+
+  def validate_children
+    if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+      errors.add :base, :found_children
+      return false
+    end
+    true
+  end
+
+  def validate_files
+    if files.present?
+      errors.add :base, :found_files
+      return false
+    end
+    true
   end
 end

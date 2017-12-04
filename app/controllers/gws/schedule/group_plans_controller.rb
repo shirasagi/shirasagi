@@ -23,10 +23,6 @@ class Gws::Schedule::GroupPlansController < ApplicationController
     @items = @group.users.active.order_by_title(@cur_site).compact
   end
 
-  def redirection_view
-    'timelineDay'
-  end
-
   public
 
   def index

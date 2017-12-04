@@ -32,7 +32,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def redirection_view
-    'agendaDay'
+    params.dig(:calendar, :view).presence || 'month'
   end
 
   def redirection_url
@@ -59,6 +59,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def print
+    @portrait = 'horizontal'
     render layout: 'ss/print'
   end
 
@@ -83,5 +84,11 @@ module Gws::Schedule::PlanFilter
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     @item.edit_range = params.dig(:item, :edit_range)
     render_destroy @item.destroy
+  end
+
+  def copy
+    set_item
+    @item = @item.new_clone
+    render file: :new
   end
 end

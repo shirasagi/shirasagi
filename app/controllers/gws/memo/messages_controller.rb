@@ -71,19 +71,29 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    @item.new_memo
+  end
+
+  def reply
+    @item = @model.new pre_params.merge(fix_params)
+    item_reply = @model.site(@cur_site).search_replay(params[:id]).first
+    @item.member_ids = item_reply.from.keys.map(&:to_i)
+    @item.subject = "Re: #{item_reply.subject}"
+
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
     @item.new_memo
   end
 
   def create
     @item = @model.new from.merge(get_params)
-    @item.send_date = Time.zone.now if params['commit'] == '送信'
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_create @item.save
+    @item.send_date = Time.zone.now if params['commit'] == t('gws/memo/message.commit_params_check')
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
   end
 
   def forward
-    forward_params = params.permit(:subject, :text, :html, :format)
+    forward_params = params.require(:item).permit(:subject, :text, :html, :format)
     @item = @model.new pre_params.merge(fix_params).merge(forward_params)
     render :new
   end
@@ -91,9 +101,9 @@ class Gws::Memo::MessagesController < ApplicationController
   def update
     @item.attributes = from.merge(get_params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    @item.send_date = Time.zone.now if params['commit'] == '送信'
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update
+    @item.send_date = Time.zone.now if params['commit'] == t('gws/memo/message.commit_params_check')
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    render_update @item.update, location: { action: :show, id: @item, folder: from_folder }
   end
 
   def show
@@ -103,40 +113,60 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def trash
+    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
     render_destroy @item.move(@cur_user, 'INBOX.Trash').update
   end
 
   def trash_all
-    @items.each{ |item| item.move(@cur_user, 'INBOX.Trash').update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.move(@cur_user, 'INBOX.Trash').update
+    end
     render_destroy_all(false)
   end
 
   def move_all
-    @items.each{ |item| item.move(@cur_user, params[:path]).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.move(@cur_user, params[:path]).update
+    end
     render_destroy_all(false)
   end
 
   def set_seen_all
-    @items.each{ |item| item.set_seen(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.set_seen(@cur_user).update
+    end
     render_destroy_all(false)
   end
 
   def unset_seen_all
-    @items.each{ |item| item.unset_seen(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.unset_seen(@cur_user).update
+    end
     render_destroy_all(false)
   end
 
   def toggle_star
-    render_destroy @item.toggle_star(@cur_user).update
+    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+    render_destroy @item.toggle_star(@cur_user).update, location: { action: params[:location] }
   end
 
   def set_star_all
-    @items.each{ |item| item.set_star(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.set_star(@cur_user).update
+    end
     render_destroy_all(false)
   end
 
   def unset_star_all
-    @items.each{ |item| item.unset_star(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.unset_star(@cur_user).update
+    end
     render_destroy_all(false)
   end
 end

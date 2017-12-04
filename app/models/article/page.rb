@@ -10,6 +10,7 @@ class Article::Page
   include Cms::Addon::Body
   include Cms::Addon::BodyPart
   include Cms::Addon::File
+  include Cms::Addon::Form::Page
   include Category::Addon::Category
   include Cms::Addon::ParentCrumb
   include Event::Addon::Date

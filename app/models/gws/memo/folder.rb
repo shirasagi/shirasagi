@@ -19,7 +19,13 @@ class Gws::Memo::Folder
 
   default_scope ->{ order_by order: 1 }
 
-  after_destroy -> { messages.each{ |message| message.move(user, 'INBOX.Trash').update } }
+  before_destroy :validate_destroy
+
+  def validate_destroy
+    errors.add :base, I18n.t('gws/memo/folder.errors.included_memo') if messages.count > 0
+    errors.add :base, I18n.t('gws/memo/folder.errors.used_folder') if filters.count > 0
+    errors.empty?
+  end
 
   def folder_path
     id == 0 ? path : id.to_s
@@ -30,11 +36,15 @@ class Gws::Memo::Folder
   end
 
   def messages
-    Gws::Memo::Message.where("#{direction}.#{user_id}" => folder_path)
+    Gws::Memo::Message.folder(self)
+  end
+
+  def unseens
+    messages.unseen(self.user_id)
   end
 
   def unseen?
-    false
+    unseens.count > 0
   end
 
   class << self

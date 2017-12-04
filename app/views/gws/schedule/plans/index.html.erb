@@ -11,25 +11,7 @@
   init_options = params[:calendar] || {}
 %>
 <%= jquery do %>
-    var calendar_options = {
-      tapMenu: <%= @user.blank? || @user.id == @cur_user.id %>,
-      restUrl: "<%= url_for(action: :index) %>",
-      eventSources: [{ url: "<%= "#{url_for(action: :events, format: :json)}?#{search_query}" %>" }],
-      eventStartEditable: <%= !@cur_site.schedule_drag_drop_denied? %>,
-      header: { right: "withTodo month basicWeek agendaDay listMonth" },
-      customButtons: {
-        withTodo: {
-          text: "ToDo表示",
-          click: function(e){
-            $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
-            $(this).toggleClass("fc-state-active");
-          }
-        }
-      }
-    }
-
-    Gws_Schedule_Calendar.render('#calendar', calendar_options, <%== init_options.to_json %>);
-    $('.fc-withTodo-button').click();
+Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
 <% end %>
 
 <%= render "gws/schedule/main/tabs" %>

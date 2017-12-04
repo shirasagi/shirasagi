@@ -9,7 +9,7 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+  <% elsif params[:action] =~ /new|create|lock|reply|forward/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -17,6 +17,7 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
+    <%= link_to t('gws/memo/message.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
     <%= link_to(t('ss.links.edit'), action: :edit, id: @item) if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to(t('ss.links.delete'), action: :delete, id: @item) if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
     <% if %w(INBOX.Trash INBOX.Draft INBOX.Sent).exclude?(params[:folder]) %>
