@@ -38,5 +38,9 @@ SS::Application.routes.draw do
       end
       resources :todos, concerns: [:plans, :todos, :copy]
     end
+
+    namespace "apis" do
+      get 'unseen/:id' => "unseen#index", id: /\d+/, as: :unseen
+    end
   end
 end

@@ -1,6 +1,13 @@
 ja:
   gws/discussion:
     admin: 管理
+    options:
+      discussion_unseen_interval:
+        none: 確認しない
+        5min: ５分
+        1min: １分
+        30sec: ３０秒
+        10sec: １０秒
   modules:
     gws/discussion: 電子会議室
     addons:
@@ -36,6 +43,7 @@ ja:
         readable_custom_group_ids: 閲覧カスタムグループ
       gws/addon/discussion/group_setting:
         discussion_new_days: 新着表示期間
+        discussion_unseen_interval: 新着確認の間隔
 
   gws_role:
     read_other_gws_discussion_forums: 電子会議室の閲覧（全て）
@@ -49,3 +57,5 @@ ja:
     gws/addon/discussion/group_setting:
       discussion_new_days:
         - 新着表示期間を入力します。
+      discussion_unseen_interval:
+        - 新着確認の間隔を設定します。

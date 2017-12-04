@@ -3,4 +3,7 @@
 <dl class="see addon-gws-discussion-group-setting">
   <dt><%= @model.t :discussion_new_days %><%= @model.tt :discussion_new_days %></dt>
   <dd><%= f.number_field :discussion_new_days, min: 0 %> <%= t("datetime.prompts.day") %></dd>
+
+  <dt><%= @model.t :discussion_unseen_interval %><%= @model.tt :discussion_unseen_interval %></dt>
+  <dd><%= f.select :discussion_unseen_interval, @item.discussion_unseen_interval_options %></dd>
 </dl>

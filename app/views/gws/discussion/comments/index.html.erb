@@ -1,3 +1,17 @@
+<% if @cur_site.discussion_unseen_interval.present? %>
+<%= jquery do %>
+Gws_Discussion_Unseen.renderUnseen(
+  "<%= gws_discussion_apis_unseen_path(id: @topic.id) %>",
+  <%= @cur_site.discussion_unseen_interval %>,
+  <%= @topic.descendants_updated.to_i %>
+);
+<% end %>
+<% end %>
+
+<p class="gws-discussion-unseen" style="display: none; padding-bottom: 10px;">
+  <%= link_to "※新着投稿があります。クリックすることで再描画します。", { action: :index } %>
+</p>
+
 <div class="gws-discussion">
   <%= form_for :item, url: { action: :reply, id: @topic.id }, html: { method: :put, multipart: true, autocomplete: :off } do |f| %>
     <%= render partial: 'thread', locals: { f: f, topic: @topic, limit: 0 } %>
