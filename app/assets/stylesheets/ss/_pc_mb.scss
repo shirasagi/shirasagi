@@ -290,6 +290,57 @@ td {
       }
     }
   }
+  .sp-menu-button {
+    display: none;
+    @include mb {
+      display: block;
+      float: right;
+      line-height: 1;
+      a {
+        position: relative;
+        display: block;
+        width: 40px;
+        height: 40px;
+        background: $white;
+      }
+      span {
+        display: block;
+        width: 24px;
+        height: 3px;
+        position: absolute;
+        left: 8px;
+        background: $black;
+        transition: all 0.4s;
+        -webkit-transition: all 0.4s;
+        -moz-transition: all 0.4s;
+      }
+      span:first-child {
+        top: 10px;
+      }
+      span:nth-child(2) {
+        margin-top: -1px;
+        top: 50%;
+      }
+      span:last-child {
+        bottom: 10px;
+      }
+      .active span:first-child {
+        -webkit-transform: translateY(8px) rotate(45deg);
+        -moz-transform: translateY(8px) rotate(45deg);
+        -ms-transform: translateY(8px) rotate(45deg);
+        transform: translateY(8px) rotate(45deg);
+      }
+      .active span:nth-child(2) {
+          opacity: 0;
+      }
+      .active span:last-child {
+        -webkit-transform: translateY(-8px) rotate(-45deg);
+        -moz-transform: translateY(-8px) rotate(-45deg);
+        -ms-transform: translateY(-8px) rotate(-45deg);
+        transform: translateY(-8px) rotate(-45deg);
+      }
+    }
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -307,6 +358,7 @@ td {
   z-index: 1;
   background: $white;
   @include mb {
+    display: none;
     float: none;
     width: 100%;
     border: none;
@@ -355,7 +407,6 @@ td {
 // main-navi
 @mixin navi-icon {
   padding: 10px 10px 10px 50px;
-  @include mb { padding: 10px 10px 10px 35px; }
 }
 .main-navi {
   border-bottom: $border-gray5;
@@ -377,10 +428,6 @@ td {
       position: relative;
       color: $orange;
       text-decoration: none;
-    }
-    @include mb {
-      border-bottom: $border-gray5;
-      background-position: 0 center !important;
     }
   }
   h2 a:hover:before {
@@ -534,23 +581,6 @@ td {
   }
   .icon-address:hover:before {
     background-position: -32px -608px;
-  }
-  @include mb {
-    @include clear;
-    h2 {
-      float: left;
-      width: 33%;
-      &:nth-child(3n) {
-        width: 34%;
-      }
-      a{
-        border-right: $border-gray4;
-        overflow: hidden;
-        font-size: $px12;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
   }
 }
 .main-navi-md {
