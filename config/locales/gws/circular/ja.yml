@@ -72,9 +72,10 @@ ja:
   mongoid:
     models:
       gws/circular/post: 回覧板
-      gws/circular/category: カテゴリー
+      gws/circular/category: 回覧板カテゴリー
       gws/circular/trashes: 削除済み
       gws/circular/group_setting: 回覧板設定
+      gws/circular/group_setting/category: カテゴリー
     errors:
       models:
         gws/circular/post:
