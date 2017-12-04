@@ -163,4 +163,46 @@ class Gws::Workflow::FilesController < ApplicationController
     set_item
     render layout: 'ss/print'
   end
+
+  def copy
+    set_item
+    raise '403' unless @item.allowed?(:edit, @cur_user)
+
+    if request.get?
+      @item.name = "[#{I18n.t('workflow.cloned_name_prefix')}] #{@item.name}".truncate(80)
+      return
+    end
+
+    @new_item = @item.clone
+    @new_item.attributes = get_params
+    @new_item.in_clone_file = true
+    @new_item.workflow_user_id = nil
+    @new_item.workflow_state = nil
+    @new_item.workflow_comment = nil
+    @new_item.workflow_approvers = nil
+    @new_item.workflow_required_counts = nil
+    @new_item.user_id = nil
+    @new_item.user_uid = nil
+    @new_item.user_name = nil
+    @new_item.user_group_id = nil
+    @new_item.user_group_name = nil
+    @new_item.state = 'closed'
+    @new_item.column_values.each do |column_value|
+      if column_value.is_a?(Gws::Column::Value::FileUpload)
+        column_value.in_clone_file = true
+      end
+    end
+
+    result = @new_item.save
+    if !result
+      @item.errors[:base] += @new_item.errors.full_messages
+    end
+
+    render_opts = {}
+    render_opts[:render] = { file: :copy }
+    if result
+      render_opts[:location] = gws_workflow_file_path(state: 'all', id: @new_item)
+    end
+    render_update result, render_opts
+  end
 end

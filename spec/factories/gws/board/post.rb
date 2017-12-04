@@ -6,10 +6,6 @@ FactoryGirl.define do
     name { "name-#{unique_id}" }
     text { "text-#{unique_id}" }
 
-    factory :gws_board_topic do
-      parent nil
-    end
-
     factory :gws_board_comment do
       association :parent, factory: :gws_board_topic
     end
