@@ -199,4 +199,42 @@ class Gws::Report::FilesController < ApplicationController
     render_opts[:location] = gws_report_file_path(state: 'closed', id: @item)
     render_update @item.save, render_opts
   end
+
+  def copy
+    set_item
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    if request.get?
+      @item.name = "[#{I18n.t('workflow.cloned_name_prefix')}] #{@item.name}".truncate(80)
+      return
+    end
+
+    @new_item = @item.clone
+    @new_item.attributes = get_params
+    @new_item.schedule_ids = nil
+    @new_item.member_ids = nil
+    @new_item.member_custom_group_ids = nil
+    @new_item.user_id = nil
+    @new_item.user_uid = nil
+    @new_item.user_name = nil
+    @new_item.user_group_id = nil
+    @new_item.user_group_name = nil
+    @new_item.state = 'closed'
+    @new_item.column_values.each do |column_value|
+      if column_value.is_a?(Gws::Column::Value::FileUpload)
+        column_value.in_clone_file = true
+      end
+    end
+
+    result = @new_item.save
+    if !result
+      @item.errors[:base] += @new_item.errors.full_messages
+    end
+
+    render_opts = {}
+    render_opts[:render] = { file: :copy }
+    if result
+      render_opts[:location] = gws_report_file_path(state: 'closed', id: @new_item)
+    end
+    render_update result, render_opts
+  end
 end

@@ -17,6 +17,7 @@ class Gws::Circular::Comment
   belongs_to :post, class_name: 'Gws::Circular::Post', inverse_of: :comments
   validates :post_id, presence: true
 
-  before_save -> {
-  }
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::CircularCommentJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::CircularCommentJob.callback
 end

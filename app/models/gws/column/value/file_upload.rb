@@ -1,7 +1,10 @@
 class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
   embeds_ids :files, class_name: 'SS::File'
 
+  attr_accessor :in_clone_file
+
   before_save :before_save_files
+  before_save :before_save_clone, if: ->{ in_clone_file }
   after_destroy :delete_files
 
   def validate_value(record, attribute)
@@ -64,6 +67,23 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
       file.model = 'gws/column_value'
       file.save!
     end
+  end
+
+  def before_save_clone
+    ids = {}
+    files.each do |f|
+      attributes = Hash[f.attributes]
+      attributes.slice!(*f.fields.keys)
+
+      file = SS::File.new(attributes)
+      file.id = nil
+      file.in_file = f.uploaded_file
+      file.user_id = @cur_user.id if @cur_user
+
+      file.save validate: false
+      ids[f.id] = file.id
+    end
+    self.file_ids = ids.values
   end
 
   def delete_files

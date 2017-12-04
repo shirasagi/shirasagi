@@ -58,7 +58,7 @@ module Gws::Addon::Member
 
   def sorted_overall_members_was
     member_ids = Gws::CustomGroup.site(site || cur_site).in(id: member_custom_group_ids_was).pluck(:member_ids).flatten
-    member_ids += self.member_ids_was
+    member_ids += self.member_ids_was.to_a
     member_ids.compact!
     member_ids.uniq!
 
