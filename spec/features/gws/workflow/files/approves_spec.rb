@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true do
-  context "approve file", js: true do
+describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true, js: true do
+  context "approve file" do
     let(:site) { gws_site }
     let(:admin) { gws_user }
     let(:sys) { Gws::User.find_by uid: 'sys' }
@@ -51,6 +51,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
       expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
+      expect(Sys::MailLog.count).to eq 2
+      expect(Gws::Memo::Message.count).to eq 2
+
       #
       # user1: 申請を承認する
       #
@@ -74,6 +77,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.workflow_approvers[1]).to \
         eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
+      expect(Sys::MailLog.count).to eq 2
+      expect(Gws::Memo::Message.count).to eq 2
+
       #
       # user2: 申請を承認する
       #
@@ -96,6 +102,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true do
         eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
       expect(item.workflow_approvers[1]).to \
         eq({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2})
+
+      expect(Sys::MailLog.count).to eq 3
+      expect(Gws::Memo::Message.count).to eq 3
     end
   end
 end

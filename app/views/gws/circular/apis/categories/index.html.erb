@@ -5,7 +5,7 @@
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= t("gws.apis.categories.parent_id") %></dt>
-      <dd><%= select_tag("s[category]", options_for_select(@categories.to_options(depth: 0), @category.try(:id)), include_blank: true) %></dd>
+      <dd><%= select_tag("s[category]", options_for_select(@categories.to_options(depth: 0), @category.try(:id)), include_blank: t("mongoid.models.gws/circular/category")) %></dd>
 
       <dt><%= @model.t :name %></dt>
       <dd>

@@ -15,8 +15,8 @@ module Gws::Circular::See
     !unseen?(user)
   end
 
-  def unseen?(user=:nil)
-    return false if user == :nil
+  def unseen?(user=nil)
+    return false if user.nil?
     seen.exclude?(user.id.to_s)
   end
 

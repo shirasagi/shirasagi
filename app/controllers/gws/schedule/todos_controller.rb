@@ -61,11 +61,13 @@ class Gws::Schedule::TodosController < ApplicationController
 
   def finish
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    return if request.get?
     render_update @item.update(todo_state: 'finished')
   end
 
   def revert
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    return if request.get?
     render_update @item.update(todo_state: 'unfinished')
   end
 

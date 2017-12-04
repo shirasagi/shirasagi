@@ -9,7 +9,7 @@ module Gws::Schedule::TodoHelper
     when /new|create|lock|copy/
         result << -> { link_to t('ss.links.back_to_index'), action: :index }
 
-    when /edit|update|delete|move/
+    when /edit|update|delete|move|finish|revert/
         result << -> { link_to t('ss.links.back_to_show'), action: :show, id: item } if item.allowed?(:read, user, site: site)
         result << -> { link_to t('ss.links.back_to_index'), action: :index }
 
