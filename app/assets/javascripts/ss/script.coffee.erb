@@ -80,6 +80,12 @@ $ ->
     menu = $(this)
     menu.parent().addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
+  # navi
+  $('.sp-menu-button a').click (e) ->
+    $('#navi').slideToggle()
+    $(this).toggleClass("active")
+    return false
+
   # dropdown
   $(".dropdown-toggle").click (e) ->
     $dropdown = $(e.target).closest('.dropdown')
