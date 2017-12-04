@@ -7,8 +7,7 @@ class Gws::Circular::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/circular'), gws_circular_posts_path]
-    @crumbs << [t('gws/circular.admin'), gws_circular_categories_path ]
+    @crumbs << [t('gws/circular.setting'), gws_circular_setting_path]
   end
 
   def fix_params

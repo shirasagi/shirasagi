@@ -61,11 +61,11 @@
 
 <nav class="mod-navi">
   <h2><%= t('modules.gws/portal') %></h2>
-  <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path %></h3>
-  <% end %>
   <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path %></h3>
+  <% end %>
+  <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path %></h3>
   <% end %>
 </nav>
 

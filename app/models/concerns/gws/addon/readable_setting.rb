@@ -5,6 +5,7 @@ module Gws::Addon::ReadableSetting
   included do
     class_variable_set(:@@_readable_setting_include_custom_groups, nil)
 
+    field :readable_setting_range, type: String, default: 'select'
     field :readable_groups_hash, type: Hash
     field :readable_members_hash, type: Hash
     field :readable_custom_groups_hash, type: Hash
@@ -13,15 +14,17 @@ module Gws::Addon::ReadableSetting
     embeds_ids :readable_members, class_name: "Gws::User"
     embeds_ids :readable_custom_groups, class_name: "Gws::CustomGroup"
 
+    permit_params :readable_setting_range
     permit_params readable_group_ids: [], readable_member_ids: [], readable_custom_group_ids: []
 
+    before_validation :apply_readable_setting_range, if: ->{ readable_setting_range }
     before_validation :set_readable_groups_hash
     before_validation :set_readable_members_hash
     before_validation :set_readable_custom_groups_hash
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, site, opts = {}) {
-      cond = [
+      or_cond = [
         { "readable_group_ids.0" => { "$exists" => false },
           "readable_member_ids.0" => { "$exists" => false },
           "readable_custom_group_ids.0" => { "$exists" => false } },
@@ -29,11 +32,11 @@ module Gws::Addon::ReadableSetting
         { readable_member_ids: user.id },
       ]
       if readable_setting_included_custom_groups?
-        cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+        or_cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
       end
 
-      cond << allow_condition(:read, user, site: site) if opts[:include_role]
-      where("$and" => [{ "$or" => cond }])
+      or_cond << allow_condition(:read, user, site: site) if opts[:include_role]
+      where("$and" => [{ "$or" => or_cond }])
     }
   end
 
@@ -45,12 +48,16 @@ module Gws::Addon::ReadableSetting
   end
 
   def readable?(user, opts = {})
-    return true if readable_group_ids.blank? && readable_member_ids.blank? && readable_custom_group_ids.blank?
+    return true unless readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
     return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
-    return true if allowed?(:read, user, site: opts[:cur_site] || site) # valid role
-    false
+
+    if opts[:strict]
+      return allowed?(:read, user, site: opts[:site] || site, strict: true)
+    else
+      return allowed?(:read, user, site: opts[:site] || site) # valid role
+    end
   end
 
   def readable_groups_hash
@@ -77,7 +84,29 @@ module Gws::Addon::ReadableSetting
     readable_custom_groups_hash.values
   end
 
+  def readable_setting_range_options
+    %w(public select private).map { |v| [I18n.t("gws.options.readable_setting_range.#{v}"), v] }
+  end
+
+  def readable_setting_range_label
+    val = readable_setting_range
+    val = 'public' unless readable_setting_present?
+    I18n.t("gws.options.readable_setting_range.#{val}")
+  end
+
   private
+
+  def apply_readable_setting_range
+    if readable_setting_range == 'public'
+      self.readable_group_ids = []
+      self.readable_member_ids = []
+      self.readable_custom_group_ids = []
+    elsif readable_setting_range == 'private'
+      self.readable_group_ids = []
+      self.readable_member_ids = [@cur_user.id].compact
+      self.readable_custom_group_ids = []
+    end
+  end
 
   def set_readable_groups_hash
     self.readable_groups_hash = readable_groups.map { |m| [m.id, m.name] }.to_h

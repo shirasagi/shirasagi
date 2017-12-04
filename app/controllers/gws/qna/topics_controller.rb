@@ -1,6 +1,7 @@
 class Gws::Qna::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Memo::NotificationFilter
 
   model Gws::Qna::Topic
 

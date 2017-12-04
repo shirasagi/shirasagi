@@ -1,0 +1,5 @@
+<% value ||= nil %>
+<%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
+<dd>
+  <%= text_area_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
+</dd>

@@ -35,19 +35,19 @@
 
   <% if %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
     $(".list-item").draggable({
-    zIndex: 100,
-    opacity: 0.75,
-    cursorAt: {top: 16, left: 5},
-    helper: function(){
-    var checkbox = $(this).find("label.check input[name='ids[]']");
-    if (!checkbox.prop("checked")){ checkbox.prop("checked", true) };
+      zIndex: 100,
+      opacity: 0.75,
+      cursorAt: {top: 16, left: 5},
+      helper: function(){
+        var checkbox = $(this).find("label.check input[name='ids[]']");
+        if (!checkbox.prop("checked")){ checkbox.prop("checked", true) };
 
-    var checked = $(".list-item input:checkbox:checked");
-    var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
-    helper.html(checked.length + "件の連絡メモを選択");
+        var checked = $(".list-item input:checkbox:checked");
+        var helper = $('<div style="background-color: lightgreen; padding: 2px 10px;"></div>');
+        helper.html(checked.length + "<%= t('gws/memo/message.select_check') %>");
 
-    return helper;
-    }
+        return helper;
+      }
     });
   <% end %>
 
@@ -55,7 +55,7 @@
     tolerance: "pointer",
     drop: function(e, obj){
       var folder = $(this).find("td a.title");
-      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path %>", folder.text() + "に移動しますか?");
+      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path(folder: params[:folder]) %>", folder.text() + "<%= t('gws/memo/message.confirm.move_drop') %>");
       form.append($("<input/>", {name: "path", value: folder.attr("data-path"), type: "hidden"} ));
       form.appendTo(document.body).submit();
     }
