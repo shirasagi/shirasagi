@@ -232,15 +232,15 @@ namespace :gws do
         break
       end
 
-      puts 'gws/circular/topic and gws/circular/post'
-      Gws::Circular::Topic.site(site).topic.each do |topic|
-        puts "- #{topic.name}"
-        job = Gws::Elasticsearch::Indexer::CircularTopicJob.bind(site_id: site)
-        job.perform_now(action: 'index', id: topic.id.to_s)
-        topic.descendants.each do |post|
-          puts "-- #{post.name}"
-          job = Gws::Elasticsearch::Indexer::CircularPostJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: post.id.to_s)
+      puts 'gws/circular/post and gws/circular/comment'
+      Gws::Circular::Post.site(site).topic.each do |post|
+        puts "- #{post.name}"
+        job = Gws::Elasticsearch::Indexer::CircularPostJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: post.id.to_s)
+        post.comments.each do |comment|
+          puts "-- #{comment.name}"
+          job = Gws::Elasticsearch::Indexer::CircularCommentJob.bind(site_id: site)
+          job.perform_now(action: 'index', id: comment.id.to_s)
         end
       end
     end
