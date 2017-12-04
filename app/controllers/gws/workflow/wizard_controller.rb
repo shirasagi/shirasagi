@@ -38,6 +38,12 @@ class Gws::Workflow::WizardController < ApplicationController
   end
 
   def approver_setting
+    @item.workflow_user_id = nil
+    @item.workflow_state = nil
+    @item.workflow_comment = nil
+    @item.workflow_approvers = nil
+    @item.workflow_required_counts = nil
+
     if @route.present?
       if @item.apply_workflow?(@route)
         render file: "approver_setting_multi", layout: false
