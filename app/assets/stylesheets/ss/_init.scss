@@ -106,6 +106,10 @@ $border-white: 1px solid $white;
     float: right;
     margin: 12px;
     color: $gray3;
+    @include mb {
+      @include clear;
+      float: none;
+    }
   }
   @include mb {
     margin-bottom: 10px;
@@ -140,6 +144,7 @@ $border-white: 1px solid $white;
   line-height: 1.4;
   color: $black;
   font-size: $px12;
+  vertical-align: middle;
   cursor: pointer;
   &:hover {
     background: #ebecec;
