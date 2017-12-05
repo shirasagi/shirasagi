@@ -24,6 +24,8 @@ class Gws::Schedule::Todo
 
   validates :deleted, datetime: true
 
+  after_save ->{ reminders.destroy if deleted.present?  }
+
   def finished?
     todo_state == 'finished'
   end
