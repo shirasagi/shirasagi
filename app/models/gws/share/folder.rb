@@ -1,5 +1,6 @@
 class Gws::Share::Folder
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::ReadableSetting
@@ -7,6 +8,8 @@ class Gws::Share::Folder
   #include SS::UserPermission
   include Gws::Addon::File
   include Gws::Share::DescendantsFileInfo
+  include Gws::Addon::History
+  include SS::Fields::DependantNaming
 
   store_in collection: :gws_share_folders
 
@@ -29,11 +32,16 @@ class Gws::Share::Folder
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 
-  validates :name, presence: true, uniqueness: { scope: :site_id }
-  validates :depth, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
-  validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :name, presence: true, length: {maximum: 80}
+  validates :order, numericality: {less_than_or_equal_to: 999999}
+  validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**3, allow_blank: true }
+  validates :share_max_folder_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**4, allow_blank: true }
 
   validate :validate_parent_name
+  validate :validate_rename_children, :validate_rename_parent,
+           :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
+
+  validate :validate_folder_name, if: ->{ self.attributes["action"] =~ /create|update/ }
 
   before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
@@ -44,7 +52,7 @@ class Gws::Share::Folder
     if key.start_with?('root_folder')
       where("$and" => [ {name: /^(?!.*\/).*$/} ] )
     else
-      where("$and" => [ {name: /#{folder}\/(?!.*\/).*$/} ] )
+      where("$and" => [ {name: /^#{folder}\/(?!.*\/).*$/} ] )
     end
   }
 
@@ -124,11 +132,44 @@ class Gws::Share::Folder
     Fs.rm_rf self.class.zip_path(id) if File.exist?(self.class.zip_path(id))
   end
 
+  def dependant_scope
+    self.class.site(@cur_site || site)
+  end
+
   def validate_parent_name
     return if name.blank?
     return if name.count('/') < 1
 
-    errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    if name.split('/')[name.count('/')].blank?
+      errors.add :name, :blank
+    else
+      errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    end
+  end
+
+  def validate_rename_children
+    if self.attributes["before_folder_name"].include?("/") && !self.name.include?("/")
+      errors.add :base, :not_move_to_parent
+      return false
+    end
+    true
+  end
+
+  def validate_rename_parent
+    if !self.attributes["before_folder_name"].include?("/") && self.attributes["before_folder_name"] != self.name
+      errors.add :base, :not_rename_parent
+      return false
+    end
+    true
+  end
+
+  def validate_children_move_to_other_parent
+    if self.attributes["before_folder_name"].include?("/") &&
+        self.attributes["before_folder_name"].split("/").first != self.name.split("/").first
+      errors.add :base, :not_move_to_under_other_parent
+      return false
+    end
+    true
   end
 
   def validate_children
@@ -143,6 +184,19 @@ class Gws::Share::Folder
     if files.present?
       errors.add :base, :found_files
       return false
+    end
+    true
+  end
+
+  def validate_folder_name
+    if self.id == 0
+      errors.add :base, :not_create_same_folder if self.class.site(site).where(name: self.name).first
+    end
+
+    if self.id != 0
+      if self.class.site(site).where(name: self.name).present? && self.class.site(site).where(id: self.id).first.name != self.name
+        errors.add :base, :not_move_to_same_name_folder
+      end
     end
     true
   end
