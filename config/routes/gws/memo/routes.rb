@@ -23,7 +23,7 @@ SS::Application.routes.draw do
       end
       member do
         get :trash
-        get :toggle_star
+        post :toggle_star
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply
