@@ -860,6 +860,9 @@ td {
       @include arrow;
       color: $black;
       &:hover { color: $orange;}
+      @include mb {
+        margin-bottom: 16px;
+      }
     }
     a:not(.no-margin) {
       margin-right: 16px;
@@ -1107,6 +1110,14 @@ dl.see {
     }
     input, select {
       margin: -5px 0;
+      @include mb  {
+        &[type="text"] ~ .btn, &[type="text"] ~ label {
+          margin-top: 10px;
+        }
+        &[type="text"] ~ label {
+          display: inline-block;
+        }
+      }
     }
   }
   > dt ~ dt { margin-top: 15px; }
@@ -1508,6 +1519,11 @@ div.index {
 .list-head-search {
   float: right;
   @include mb {
+    clear: both;
+    float: none;
+    .index-search {
+      margin: 0;
+    }
     input[type="text"] { width: 70% !important; }
     input[type="submit"] { width: 20% !important; }
   }
@@ -1521,14 +1537,17 @@ div.index {
     align-items: center;
     padding: 8px 8px;
     border-bottom: $border-gray1;
-    @include mb { padding: 8px 10px; }
+    @include mb {
+      display: block;
+      padding: 8px 10px;
+    }
     &:last-child {
       border: none;
     }
     .checked, &:hover {
       background: $orange2;
     }
-    label + .info {
+    label + .info, .info + .links {
       @include mb { margin-left: 26px; }
     }
     .up {
@@ -1711,7 +1730,9 @@ table.index.data-table {
 select, input, textarea, button {
   font-size: 100%;
   font-family: $font-base;
-  @include mb {
+}
+@include mb {
+  input[type="submit"] {
     -webkit-appearance: none;
   }
 }
@@ -1719,9 +1740,6 @@ select, input, textarea, button {
   @include btn;
   &.add-date {
     @include btn-orange;
-  }
-  @include mb {
-    margin-top: 10px;
   }
 }
 select {
@@ -1784,6 +1802,11 @@ form .CodeMirror {
 }
 // minicolors
 .minicolors-theme-default {
+  @include mb {
+    &.minicolors {
+      display: block;
+    }
+  }
   .minicolors-input {
     height: inherit;
   }
