@@ -1,0 +1,56 @@
+class @SS_Addon_TempFile
+  @select = null
+  @userId = null
+
+  @selectUrl: (id)->
+    return "/.u#{@userId}/apis/temp_files/#{id}/select"
+
+  @uploadUrl: ()->
+    return "/.u#{@userId}/apis/temp_files.json"
+
+  @renderDrop: (selector, userId)->
+    @userId = userId
+
+    if !@select
+      @select = (files)->
+        for file in files
+          id = file["_id"]
+          url = SS_Addon_TempFile.selectUrl(id)
+          $.ajax
+            url: url,
+            success: (data) ->
+              $("#selected-files").append(data)
+
+    da = $(selector)
+    da.on 'dragenter', (e) ->
+      da.addClass('file-dragenter')
+      return false
+    da.on 'dragleave', (e) ->
+      da.removeClass('file-dragenter')
+      return false
+    da.on 'dragover', (e) ->
+      da.addClass('file-dragenter')
+      return false
+    da.on 'drop', (e) ->
+      token = $('meta[name="csrf-token"]').attr('content')
+      formData = new FormData()
+      formData.append('authenticity_token', token)
+
+      files = e.originalEvent.dataTransfer.files
+      for file in files
+        formData.append('item[in_files][]', file)
+      request = new XMLHttpRequest()
+      #request.upload.addEventListener 'progress', (e) ->
+      #  return false
+      request.onload = (e) ->
+        if request.readyState == XMLHttpRequest.DONE
+          if request.status == 200 || request.status == 201
+            da.removeClass('file-dragenter')
+            files = JSON.parse(request.response)
+            SS_Addon_TempFile.select(files)
+          else
+            alert(["== Error =="].concat(request.responseJSON).join("\n"))
+
+      request.open("POST", SS_Addon_TempFile.uploadUrl())
+      request.send(formData)
+      return false
