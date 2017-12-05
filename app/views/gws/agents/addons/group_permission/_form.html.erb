@@ -14,7 +14,7 @@
         <tbody>
         <% @item.custom_groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "custom_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "custom_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
@@ -38,14 +38,14 @@
         <tbody>
           <% if params[:action] =~ /new/ && !@skip_default_group %>
           <tr data-id="<%= @cur_group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: @cur_group.id %> <%= @cur_group.name %></td>
+            <td><%= f.hidden_field "group_ids[]", value: @cur_group.id, id: nil %> <%= @cur_group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
 
           <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
@@ -68,14 +68,14 @@
         <tbody>
           <% if params[:action] =~ /new/ && @item.user_ids.blank? %>
           <tr data-id="<%= @cur_user.id %>">
-            <td><%= f.hidden_field "user_ids[]", value: @cur_user.id %> <%= @cur_user.long_name %></td>
+            <td><%= f.hidden_field "user_ids[]", value: @cur_user.id, id: nil %> <%= @cur_user.long_name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
 
           <% @item.users.order_by_title(@cur_site).each do |user| %>
           <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "user_ids[]", value: user.id %> <%= user.long_name %></td>
+            <td><%= f.hidden_field "user_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>

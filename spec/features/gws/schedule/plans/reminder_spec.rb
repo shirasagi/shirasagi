@@ -14,21 +14,21 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       #
       visit show_path
       expect(Gws::Reminder.count).to eq 1
-      within "div.gws-addon-reminder" do
+      within ".gws-addon-reminder" do
         expect(page).to have_css(".gws-addon-reminder-label", text: I18n.t("gws.reminder.states.entry"))
       end
 
       #
       # リマインダーを解除
       #
-      within "div.gws-addon-reminder" do
+      within ".gws-addon-reminder" do
         click_button "解除"
       end
 
       # 解除できたか確認
       # リマインダーは非同期で解除される。
       # capybara は element が存在しない場合、しばらく待機するので、以下の確認は解除を待機する意味もある
-      within "div.gws-addon-reminder" do
+      within ".gws-addon-reminder" do
         expect(page).to have_css(".gws-addon-reminder-label", text: I18n.t("gws.reminder.states.empty"))
       end
 
@@ -38,14 +38,14 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       #
       # リマインダーをもう一度登録する
       #
-      within "div.gws-addon-reminder" do
+      within ".gws-addon-reminder" do
         click_button "登録"
       end
 
       # 登録できたか確認
       # リマインダーは非同期で登録される。
       # capybara は element が存在しない場合、しばらく待機するので、以下の確認は登録を待機する意味もある
-      within "div.gws-addon-reminder" do
+      within ".gws-addon-reminder" do
         expect(page).to have_css(".gws-addon-reminder-label", text: I18n.t("gws.reminder.states.entry"))
       end
 

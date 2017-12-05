@@ -19,7 +19,7 @@
         <tbody>
           <% @item.reservable_groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "reservable_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "reservable_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
@@ -42,7 +42,7 @@
         <tbody>
           <% @item.reservable_members.each do |user| %>
           <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "reservable_member_ids[]", value: user.id %> <%= user.name %></td>
+            <td><%= f.hidden_field "reservable_member_ids[]", value: user.id, id: nil %> <%= user.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
