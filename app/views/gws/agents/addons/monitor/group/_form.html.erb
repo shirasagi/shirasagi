@@ -15,14 +15,14 @@
       <% if @item.state == 'closed' || @item.id == 0 %>
         <% @item.subscribed_groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "attend_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "attend_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
       <% else %>
         <% @item.subscribed_groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "attend_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "attend_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn", style: "display: none" %></td>
           </tr>
         <% end %>

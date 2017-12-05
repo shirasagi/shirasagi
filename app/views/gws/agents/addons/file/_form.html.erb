@@ -15,52 +15,50 @@ $ ->
 
 <% end %>
 
-<dl class="see gws-addon-file">
-  <dd class="wide">
-    <%= f.hidden_field "file_ids[]", value: "" %>
-    <span class="upload-menu-new">
-      <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-    </span>
-    <span class="upload-menu-notice">
-      <%= t('ss.notice.multibyte_filename_disabled') %>
-    </span>
-    <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-      <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn" %>
-    </span>
+<div class="see gws-addon-file">
+  <%= f.hidden_field "file_ids[]", value: "" %>
+  <span class="upload-menu-new">
+    <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+  </span>
+  <span class="upload-menu-notice">
+    <%= t('ss.notice.multibyte_filename_disabled') %>
+  </span>
+  <span class="upload-menu-select">
+    <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
+    <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn" %>
+  </span>
 
-    <div id="selected-files">
-      <% @item.files.each do |file| %>
-        <div id="file-<%= file.id %>" class="file-view">
+  <div id="selected-files">
+    <% @item.files.each do |file| %>
+      <div id="file-<%= file.id %>" class="file-view">
 
-          <%= link_to file.url, class: :thumb, target: "_blank" do %>
-            <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.name %>
-            <% else %>
-              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-            <% end %>
+        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+          <% if file.image? %>
+            <%= image_tag file.thumb_url, alt: file.name %>
+          <% else %>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
           <% end %>
+        <% end %>
 
-          <div class="name">
-            <label>
-              <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
-              <%= file.name %>
-            </label><br />
-          </div>
-
-          <div class="action">
-            <!--
-            <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% if file.image? %>
-              <% content = image_tag file.url, alt: "#{file.name}" %>
-              <%= link_to t("sns.image_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% end %>
-            -->
-            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
-          </div>
+        <div class="name">
+          <label>
+            <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
+            <%= file.name %>
+          </label><br />
         </div>
-      <% end %>
-    </div>
-  </dd>
-</dl>
+
+        <div class="action">
+          <!--
+          <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
+          <%= link_to t("sns.file_attach"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+          <% if file.image? %>
+            <% content = image_tag file.url, alt: "#{file.name}" %>
+            <%= link_to t("sns.image_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+          <% end %>
+          -->
+          <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
