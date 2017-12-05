@@ -32,7 +32,7 @@ class Gws::Memo::CommentsController < ApplicationController
   end
 
   def destroy
-    result = @item.destroy
+    result = @item.user.id == @cur_user.id ? @item.destroy : false
     if result
       respond_to do |format|
         format.html { redirect_to params[:redirect_to], notice: t('ss.notice.deleted') }
@@ -40,8 +40,8 @@ class Gws::Memo::CommentsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to params[:redirect_to], notice: @item.errors.full_messages.join('\n') }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
+        format.html { redirect_to params[:redirect_to], notice: t('modules.errors.other_user_comment_deletion') }
+        format.json { render json: t('modules.errors.other_user_comment_deletion'), status: :unprocessable_entity }
       end
     end
   end

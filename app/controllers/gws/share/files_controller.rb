@@ -16,8 +16,12 @@ class Gws::Share::FilesController < ApplicationController
     set_folder
     @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @folder.parents.order_by(depth: 1).each do |parent_folder|
-        @crumbs << [parent_folder.trailing_name, gws_share_folder_files_path(folder: parent_folder)]
+      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
+      folder_hierarchy_count = @folder.name.split("/").count - 1
+      0.upto(folder_hierarchy_count) do |i|
+        item_name = @folder.name.split("/")[0, i+1].join("/")
+        item_path = gws_share_folder_files_path(folder: Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id)
+        @crumbs << [@folder.name.split("/")[i], item_path]
       end
       @crumbs << [@folder.trailing_name, gws_share_folder_files_path(folder: @folder.id)]
     end
@@ -37,11 +41,9 @@ class Gws::Share::FilesController < ApplicationController
 
   def set_folder_navi
     if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
-      @folder_navi = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site)
+      @folder_navi = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
     elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
-      @folder_navi = Gws::Share::Folder.site(@cur_site).
-        readable(@cur_user, site: @cur_site)
+      @folder_navi = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site)
     end
   end
 
@@ -54,15 +56,14 @@ class Gws::Share::FilesController < ApplicationController
     p[:readable_member_ids] = [@cur_user.id]
     p[:folder_id] = params[:folder] if params[:folder]
     @skip_default_group = true
-    if @category.present?
-      p[:category_ids] = [ @category.id ]
-    end
+    p[:category_ids] = [ @category.id ] if @category.present?
     p
   end
 
   public
 
   def index
+    set_folder
     if @category.present? || @folder.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
@@ -77,17 +78,58 @@ class Gws::Share::FilesController < ApplicationController
       page(params[:page]).per(50)
 
     folder_name = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
         where(id: params[:folder].to_i).pluck(:name).first
 
-    @sub_folders = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        sub_folder(params[:folder] || 'root_folder', folder_name)
+
+    if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
+      @sub_folders = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).
+          sub_folder(params[:folder] || 'root_folder', folder_name)
+    elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
+      @sub_folders = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site).
+          sub_folder(params[:folder] || 'root_folder', folder_name)
+    end
   end
 
   def show
-    raise "403" unless @item.readable?(@cur_user)
+    raise "404" unless @item.readable?(@cur_user)
+    if params[:folder].present?
+      raise "404" unless @item.folder_id.to_s == params[:folder]
+    end
     render
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:write, @cur_user, site: @cur_site) && @folder.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
+  def update
+    before_folder_id = @item.folder_id
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if @item.in_file.blank? && @item.in_data_url.present?
+      media_type, _, data = SS::DataUrl.decode(@item.in_data_url)
+      raise '400' if @item.content_type != media_type
+
+      tmp_file = Fs::UploadedFile.new('ss_file')
+      tmp_file.original_filename = @item.filename
+      tmp_file.content_type = @item.content_type
+      tmp_file.binmode
+      tmp_file.write(data)
+      tmp_file.rewind
+
+      begin
+        @item.in_file = tmp_file
+        render_update @item.update
+      ensure
+        tmp_file.close
+      end
+    else
+      location = { action: :show, folder: @item.folder_id } if params[:action] == "update" && before_folder_id != @item.folder_id
+      render_update @item.update, { location: location }
+    end
   end
 
   def edit
@@ -168,7 +210,8 @@ class Gws::Share::FilesController < ApplicationController
 
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.disable
+    notice = t("gws/share.notice.disable")
+    render_destroy @item.disable, {notice: notice}
   end
 
   def download_all
@@ -181,11 +224,8 @@ class Gws::Share::FilesController < ApplicationController
 
     @model.create_download_directory(@cur_user.id, @model.download_root_path, @model.zip_path(@cur_user.id, tmp_dir_name))
     @model.create_zip(@model.zip_path(@cur_user.id, tmp_dir_name), @items, filename_duplicate_flag)
-    send_file(@model.zip_path(@cur_user.id, tmp_dir_name),
-              type: 'application/zip',
-              filename: zipfile,
-              disposition: 'attachment',
-              x_sendfile: true)
+    send_file(@model.zip_path(@cur_user.id, tmp_dir_name), type: 'application/zip',
+              filename: zipfile, disposition: 'attachment', x_sendfile: true)
   end
 
   def render_destroy_all(result)
@@ -201,28 +241,6 @@ class Gws::Share::FilesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to location, notice }
       format.json { head json: errors }
-    end
-  end
-
-  def render_destroy(result, opts = {})
-    location = opts[:location].presence || crud_redirect_url || { action: :index }
-    render_opts = opts[:render].presence || { file: :delete }
-    if params[:action] == "disable"
-      notice = opts[:notice].presence || t("gws/share.notice.disable")
-    else
-      notice = opts[:notice].presence || t("ss.notice.saved")
-    end
-
-    if result
-      respond_to do |format|
-        format.html { redirect_to location, notice: notice }
-        format.json { head :no_content }
-      end
-    else
-      respond_to do |format|
-        format.html { render render_opts }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
-      end
     end
   end
 end
