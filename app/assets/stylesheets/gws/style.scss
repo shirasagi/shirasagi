@@ -41,6 +41,9 @@
 // Category
 .gws-category-navi-menu {
   margin: -5px 0 10px 0;
+  @include mb {
+    padding: 0 10px;
+  }
 }
 .gws-category-label {
   padding: 1px 5px;

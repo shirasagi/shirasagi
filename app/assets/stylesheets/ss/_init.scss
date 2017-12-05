@@ -112,7 +112,6 @@ $border-white: 1px solid $white;
     }
   }
   @include mb {
-    margin-bottom: 10px;
     h2 {
       font-size: $px14;
     }
@@ -240,4 +239,7 @@ $border-white: 1px solid $white;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @include mb {
+    white-space: normal;
+  }
 }

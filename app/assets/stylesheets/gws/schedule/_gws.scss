@@ -111,6 +111,9 @@
 .gws-schedule-search {
   .send {
     padding-top: 0;
+    @include mb {
+      margin-top: 10px;
+    }
   }
 }
 .gws-schedule-search-field {
@@ -190,6 +193,14 @@
     color: $orange;
   }
 }
+#addon-gws-agents-addons-schedule-comments {
+  .list-items {
+    margin: 10px 0;
+    .list-item {
+      padding: 0;
+    }
+  }
+}
 
 // Form
 .gws-schedule-plan .dates-field {
@@ -223,9 +234,6 @@
     margin: 10px 0 !important;
   }
 }
-.fc-view {
-  //z-index: 100;
-}
 .fc-view table {
   box-sizing: border-box;
 }
@@ -258,7 +266,6 @@
     th, td {
       border-color: black;
       border-style: solid;
-      //border-width: 2px;
     }
   }
 }
@@ -568,6 +575,7 @@
   }
 }
 .calendar-multiple-header {
+  @include clear;
   padding: 5px 8px;
   border: 1px solid #ddd;
   border-width: 0 1px;
