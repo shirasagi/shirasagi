@@ -9,6 +9,7 @@ class Gws::Schedule::Todo
   include Gws::Addon::Schedule::Repeat
   include Gws::Addon::Reminder
   include SS::Addon::Markdown
+  include Gws::Addon::File
   include Gws::Addon::Member
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
