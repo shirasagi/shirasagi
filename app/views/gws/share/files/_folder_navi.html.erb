@@ -21,7 +21,6 @@
 
       <% @folder_navi.each do |item| %>
       <tr class="<%= 'current' if @folder == item %>">
-        <% item.send :update_folder_descendants_file_info %>
         <td><%= link_to item.name, gws_share_folder_files_path(folder: item.id) %>
           <% if false %>
           <span class= "share_file_count">(<%= item.readable_active_files_count(@cur_user, @cur_site) -%>)</span>
