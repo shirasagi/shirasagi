@@ -51,8 +51,6 @@ ja:
     gws/memo: メッセージ
     addons:
       gws/memo/comments: コメント
-    errors:
-      other_user_comment_deletion: 他ユーザのコメントは削除できません。
   gws_role:
     read_gws_memo_messages: メッセージの閲覧
     edit_gws_memo_messages: メッセージの編集
