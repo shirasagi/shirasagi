@@ -34,7 +34,7 @@ class Gws::Schedule::Todo
       criteria = criteria.keyword_in params[:keyword], :name, :text
     end
 
-    if params[:todo_state].present?
+    if params[:todo_state].present? && params[:todo_state] != 'both'
       criteria = criteria.where todo_state: params[:todo_state]
     end
 
