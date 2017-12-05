@@ -1,16 +1,35 @@
 <%= jquery do %>
 
-SS.ajaxForm("form.user-file", {
-  success: function() {
-    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>");
-  }
-});
-
 var onSelect;
 var $element = $.colorbox.element();
 if ($element) {
   onSelect = $element.data('on-select');
 }
+
+SS.ajaxForm("form.user-file", {
+  success: function(data) {
+    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>", function() {
+      if (!Array.isArray(data) || data.length == 0) return;
+
+      $.each(data, function(index, file) {
+        var item = $(".user-files .select[data-id='" + file._id + "']");
+        var url = item.attr('href');
+        if (!url) return true;
+        if (onSelect) {
+          onSelect(item);
+        } else {
+          $.ajax({
+            url: url,
+            success: function(data) {
+              $("#selected-files").append(data);
+            }
+          });
+        }
+      });
+      $.colorbox.close();
+    });
+  }
+});
 
 if (onSelect) {
   $(".user-files .select").on('click', function(e) {

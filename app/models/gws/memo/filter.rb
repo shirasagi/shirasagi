@@ -72,9 +72,18 @@ class Gws::Memo::Filter
   end
 
   def match?(message)
-    return true if from && message.user.long_name.include?(from)
-    return true if subject && message.display_subject.include?(subject)
-    return false
+    if from
+      from_users = message.from.keys.map { |uid| Gws::User.find(uid) }
+      from_users.each do |from_user|
+        return true if from_user.long_name.include?(from)
+      end
+    end
+
+    if subject && message.display_subject.include?(subject)
+      return true
+    end
+
+    false
   end
 
   def path

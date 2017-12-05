@@ -1,9 +1,25 @@
 <%= jquery do %>
   $(".active-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
+    <% if @category %>
+      var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_category_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
+    <% else %>
+      var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
+    <% end %>
     form.appendTo(document.body).submit();
   });
+
+  $('.gws-category-navi-menu #category_id').change(function() {
+    var cid = $(this).val();
+    if (cid)
+      location.href = '<%= gws_circular_category_trashes_path(category: 'ID') %>'.replace('ID', cid);
+    else
+      location.href = '<%= gws_circular_trashes_path %>';
+  });
 <% end %>
+
+<div class="gws-category-navi-menu">
+  <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/circular') if @categories.to_options.present? %>
+</div>
 
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -15,9 +31,9 @@
   <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
   <span><%= item.user_long_name %></span>
   <span class="gws-share-categories">
-    <span class="gws-category-label" style="background-color: gray; color: #ffffff;">"<%= t('gws/circular.post.disabled') %></span>
+    <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/circular.post.disabled') %></span>
     <% item.categories.compact.each do |category| %>
-      <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+      <%= link_to category.trailing_name, gws_circular_category_trashes_path(category: category.id),
                   class: 'gws-category-label', style: category_label_css(category) %>
     <% end %>
     </span>

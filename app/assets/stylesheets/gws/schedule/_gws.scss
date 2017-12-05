@@ -87,10 +87,21 @@
     .search {
       float: right;
       margin: -5px 0 -5px 20px;
+      @include mb {
+        float: none;
+        margin: 0;
+        input[type="text"] {
+          width: auto !important;
+        }
+      }
     }
     .operations {
       float: right;
       margin: -5px 0 -5px 20px;
+      @include mb {
+        margin: 0;
+        .btn-print { display: none; }
+      }
     }
     h2 .search {
       margin: -5px 0;
@@ -100,6 +111,9 @@
 .gws-schedule-search {
   .send {
     padding-top: 0;
+    @include mb {
+      margin-top: 10px;
+    }
   }
 }
 .gws-schedule-search-field {
@@ -179,6 +193,14 @@
     color: $orange;
   }
 }
+#addon-gws-agents-addons-schedule-comments {
+  .list-items {
+    margin: 10px 0;
+    .list-item {
+      padding: 0;
+    }
+  }
+}
 
 // Form
 .gws-schedule-plan .dates-field {
@@ -207,9 +229,10 @@
     color: $orange;
     border-color: $orange;
   }
-}
-.fc-view {
-  //z-index: 100;
+  @include mb {
+    clear: both;
+    margin: 10px 0 !important;
+  }
 }
 .fc-view table {
   box-sizing: border-box;
@@ -237,6 +260,22 @@
 }
 .fc-view-container {
   background-color: #fff;
+}
+.print-preview {
+  .fc-unthemed {
+    th, td {
+      border-color: black;
+      border-style: solid;
+    }
+  }
+}
+@include mb {
+  .fc-right {
+    margin: 0 0 10px 0;
+    .fc-button {
+      margin: 5px 5px 5px 0;
+    }
+  }
 }
 
 // days
@@ -330,6 +369,9 @@
       color: $white;
     }
   }
+}
+.fc-event-user-attendance-absence {
+  display: none;
 }
 .fc-holiday {
   background: #9d6;
@@ -444,7 +486,6 @@
   overflow: auto;
   height: 100%;
   min-height: 30px;
-  padding: 5px;
   background: $white;
   color: $black;
   font-weight: normal;
@@ -534,6 +575,7 @@
   }
 }
 .calendar-multiple-header {
+  @include clear;
   padding: 5px 8px;
   border: 1px solid #ddd;
   border-width: 0 1px;

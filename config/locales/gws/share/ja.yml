@@ -4,6 +4,8 @@ ja:
     category: 共有ファイルカテゴリー
     all: 全てのファイル
     url_copy: クリップボードにコピー
+    folder: フォルダー一覧
+    child_folder: 子フォルダー
     folder_download: フォルダー内のファイル一括ダウンロード
     links:
       categories: カテゴリー
@@ -34,6 +36,8 @@ ja:
     edit_private_gws_share_files: ファイルの編集（所有）
     delete_other_gws_share_files: ファイルの削除（全て）
     delete_private_gws_share_files: ファイルの削除（所有）
+    write_other_gws_share_files: ファイルのアップロード（全て）
+    write_private_gws_share_files: ファイルのアップロード（所有）
     read_other_gws_share_categories: カテゴリーの閲覧（全て）
     read_private_gws_share_categories: カテゴリーの閲覧（所有）
     edit_other_gws_share_categories: カテゴリーの編集（全て）
@@ -61,13 +65,22 @@ ja:
       models:
         gws/share/file:
           file_size_exceeds_limit: ファイルサイズ（%{size}）が最大ファイルサイズ（%{limit}）を超えました。
-          file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダー総容量制限（%{limit}）を超えました。
+          file_size_exceeds_capacity: 削除済みファイルを含むファイルサイズ（%{size}）が総容量（%{limit}）を超えました。
         gws/share/category:
           too_deep: は%{max}階層以下にしてください。
           not_found_parent: 親カテゴリーが存在しません。
         gws/share/folder:
           file_size_exceeds_limit: ファイルサイズ（%{size}）が最大ファイルサイズ（%{limit}）を超えました。
           file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
+          not_found_parent: 親フォルダーが存在しません。
+          found_children: 子フォルダーが存在します。
+          found_files: フォルダー内、または削除済みのフォルダー内にファイルが存在しています。
+          not_move_to_parent: 最上位フォルダーに変更することはできません。
+          not_rename_parent: 最上位のフォルダー名を変更することはできません。
+          not_move_to_under_other_parent: 最上位のフォルダーをまたいでフォルダーを移動することはできません。
+          not_create_same_folder: フォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
+          not_move_to_same_name_folder: 移動先にフォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
     attributes:
       gws/share/category:
         name: カテゴリー名
@@ -75,8 +88,9 @@ ja:
         category_ids: カテゴリー
       gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
-        share_max_folder_size: 最大フォルダーサイズ
+        share_files_capacity: 総容量制限
       gws/share/file:
+        file_size: ファイルサイズ
         folder: フォルダー
         folder_id: フォルダー名
         url_copy: URLのコピー
@@ -84,7 +98,7 @@ ja:
         name: フォルダー名
         order: 並び順
         share_max_file_size: 最大ファイルサイズ
-        share_max_folder_size: 最大フォルダーサイズ
+        share_max_folder_size: 総容量制限
 
   tooltip:
     gws/share/category:
@@ -96,9 +110,17 @@ ja:
     gws/share/folder:
       name:
         - フォルダー名を入力します。
+        - 親フォルダー名にスラッシュ区切りでサブフォルダーを作成することができます。
       order:
         - 並び順を入力します。
       share_max_file_size:
         - 最大ファイルサイズを入力します。
+        - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
       share_max_folder_size:
-        - 最大フォルダーサイズを入力します。
+        - フォルダーの総容量制限を入力します。
+        - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
+    gws/share/group_setting:
+      share_max_file_size:
+        - 最大ファイルサイズを入力します。
+      share_files_capacity:
+        - 総容量を入力します。

@@ -5,6 +5,7 @@ class Gws::Schedule::Plan
   include Gws::Reference::Site
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
+  include Gws::Schedule::Cloneable
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
   include Gws::Addon::Schedule::Repeat
@@ -64,6 +65,16 @@ class Gws::Schedule::Plan
   def allowed?(action, user, opts = {})
     return true if allowed_for_managers?(action, user, opts)
     member?(user) || custom_group_member?(user) if action =~ /edit|delete/
+    false
+  end
+
+  def subscribed_users
+    return Gws::User.none if new_record?
+
+    ids = member_ids
+    ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
+    ids.uniq!
+    Gws::User.in(id: ids)
   end
 
   private

@@ -4,14 +4,15 @@ module Gws::Addon
     extend SS::Addon
 
     included do
+      attr_accessor :in_clone_file
       embeds_ids :files, class_name: "SS::File"
       permit_params file_ids: []
 
-      #before_save :clone_files, if: ->{ try(:new_clone?) }
+      before_save :clone_files, if: ->{ in_clone_file }
       before_save :save_files
       after_destroy :destroy_files
 
-      define_model_callbacks :save_files, :destroy_files
+      define_model_callbacks :save_files, :clone_files, :destroy_files
     end
 
     def allow_other_user_files
@@ -42,16 +43,41 @@ module Gws::Addon
         self.attributes["file_ids"] = ids
 
         del_ids = file_ids_was.to_a - ids
-        del_ids.each do |id|
-          file = SS::File.where(id: id).first
-          file.destroy if file
+
+        files = SS::File.where(:id.in => del_ids)
+        files.each do |file|
+          # Only unused file
+          file.destroy unless self.class.where(:id.ne => id, file_ids: file.id).exists?
         end
+      end
+    end
+
+    def clone_files
+      run_callbacks(:clone_files) do
+        ids = {}
+        files.each do |f|
+          attributes = Hash[f.attributes]
+          attributes.slice!(*f.fields.keys)
+
+          file = SS::File.new(attributes)
+          file.id = nil
+          file.in_file = f.uploaded_file
+          file.user_id = @cur_user.id if @cur_user
+
+          file.save validate: false
+          ids[f.id] = file.id
+        end
+        self.file_ids = ids.values
+        self.in_clone_file = ids
       end
     end
 
     def destroy_files
       run_callbacks(:destroy_files) do
-        files.destroy_all
+        files.each do |file|
+          # Only unused file
+          file.destroy unless self.class.where(:id.ne => id, file_ids: file.id).exists?
+        end
       end
     end
   end

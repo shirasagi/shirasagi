@@ -1,8 +1,13 @@
 ja:
+  gws/memo:
+    setting: メッセージ設定
   gws/memo/message:
     folder: フォルダー
+    child_folder: 子フォルダー
     folder_name: フォルダー名
     message: メッセージ
+    select_check: 件のメッセージを選択
+    commit_params_check: 送信
     links:
       move: 移動する
       etc: その他
@@ -11,6 +16,7 @@ ja:
       set_star: スターをつける
       unset_star: スターをはずす
       trash: ゴミ箱に移す
+      reply: 返信する
     confirm:
       trash_all: ゴミ箱に移しますか?
       set_seen_all: 既読にしますか?
@@ -18,6 +24,7 @@ ja:
       set_star_all: スターをつけますか?
       unset_star_all: スターをはずしますか?
       move: 移動しますか?
+      move_drop: に移動しますか?
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱
@@ -31,6 +38,15 @@ ja:
     errors:
       blank_conditions: 条件を入力してください。
       blank_apply_mailbox: 適用するフォルダーを選択してください。
+  gws/memo/group_setting:
+    options:
+      reminder:
+        - 表示しない
+        - 送信された当日のみ表示する
+        - 送信後２日間のみ表示する
+        - 送信後３日間のみ表示する
+        - 送信後４日間のみ表示する
+        - 送信後５日間のみ表示する
   modules:
     gws/memo: メッセージ
     addons:
@@ -45,6 +61,16 @@ ja:
       gws/memo/folder: フォルダー
       gws/memo/filter: フィルター
       gws/memo/signature: 署名
+      gws/memo/group_setting: メッセージ設定
+    errors:
+      models:
+        gws/memo/message:
+          file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+        gws/memo/folder:
+          included_memo: メッセージが入っているフォルダーは削除できません。
+          used_folder: フィルターが使用中のフォルダーは削除できません。
+          not_found_parent: 親フォルダーが存在しません。
+          found_children: 子フォルダーが存在します。
     attributes:
       gws/memo/message:
         name: 件名
@@ -56,6 +82,7 @@ ja:
       gws/memo/folder:
         name: フォルダー名
         path: パス
+        order: 並び順
       gws/memo/filter:
         name: フィルター名
         from: 条件/差出人
@@ -68,3 +95,56 @@ ja:
         name: 名称
         text: 本文
         default: 既定の署名
+      gws/memo/group_setting:
+        memo_filesize_limit: 添付サイズ制限
+        memo_reminder: リマインダー表示設定
+  tooltip:
+    gws/memo/message:
+      member_ids:
+        - メッセージの宛先を選択します。
+    gws/memo/folder:
+      name: フォルダーの名称を入力します。
+      order:
+        - フォルダーの並び順を数字で入力します。
+        - 番号の小さい順にフォルダーが表示されます。
+    gws/memo/filter:
+      name:
+        - フィルターの名前を入力します。
+        - 作成したフィルターはメッセージの受信時に各条件が1度のみ評価されます。
+      from:
+        - フィルターの条件となる差出人名を入力します。
+        - 差出人名は中間一致で評価されます。
+      subject:
+        - フィルターの条件となる件名を入力します。
+        - 件名は中間一致で評価されます。
+      action:
+        - 条件に合致したメッセージに対して行う操作を選択します。
+        - 移動する：指定したフォルダーにメッセージを移動します
+        - ゴミ箱に移す：ゴミ箱にメッセージを移動します
+      folder:
+        - 移動するアクションで送り先となるフォルダーを指定します。
+      state:
+        - フィルターの状態を選択します。
+        - 有効：このフィルターを有効化します
+        - 無効：このフィルターを無効化します
+      order:
+        - フィルターの評価順を数字で入力します。
+        - 番号の小さい順でフィルターの評価が行われます。
+    gws/memo/signature:
+      name:
+        - 署名の一覧に表示される名称を入力します。
+      text:
+        - 署名の本文を入力します。
+      default:
+        - メッセージを新規作成した際に自動で入力される署名を選択します。
+        - 有効：この署名を自動で入力します
+        - 無効：この署名を自動で入力しません
+    gws/memo/group_setting:
+      memo_filesize_limit:
+        - メッセージに添付されるファイルの合計容量の上限を入力します。
+        - 未指定である場合、制限されません。
+        - 初期値は 未指定 です。
+      memo_reminder:
+        - メッセージを送信したあと各受信者のリマインダーに表示する日数を選択します。
+        - メッセージが下書きの時はリマインダーはまだ登録されません。
+        - メッセージが送信された時にリマインダーが登録されます。

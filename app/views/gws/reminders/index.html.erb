@@ -42,7 +42,7 @@
         <% if item.date.present? %>
         <%= select_tag :notification, options_for_select(item.notification_options, tryb { item.notifications.first.notify_before }), class: :notification %>
         <% end %>
-        <input type="button" class="btn delete" value="削除" />
+        <input type="button" class="btn delete" value="<%= t('gws.buttons.unset') %>" />
       </div>
     </li>
     <% end %>

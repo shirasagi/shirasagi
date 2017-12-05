@@ -7,6 +7,9 @@
   <dt><%= @model.t :sender_email %></dt>
   <dd><%= @item.sender_email %></dd>
 
+  <dt><%= @model.t :sender_user_id %></dt>
+  <dd><%= @item.sender_user.try(:long_name) %></dd>
+
   <dt><%= @model.t :mail_signature %></dt>
   <dd><%= br @item.mail_signature %></dd>
 

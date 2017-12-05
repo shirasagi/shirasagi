@@ -10,20 +10,33 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_group_navi, only: [:index]
+  before_action :set_cur_folder, only: [:index]
 
   private
 
   def set_crumbs
+    set_cur_folder
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
+    if @cur_folder.folder_path != 'INBOX'
+      @cur_folder.ancestor_or_self.each do |folder|
+        @crumbs << [folder.current_name, gws_memo_messages_path(folder: folder.folder_path)]
+      end
+    end
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def set_cur_folder
+    dir = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
+    @cur_folder = dir ? dir : Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).find_by(_id: params[:folder])
+  end
+
   def set_group_navi
-    @group_navi = Gws::Memo::Folder.static_items(@cur_user) +
+    @group_navi = Gws::Memo::Folder.static_items(@cur_user, @cur_site) +
       Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    @group_navi.each {|folder| folder.site = @cur_site}
   end
 
   def apply_filters
@@ -71,19 +84,31 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
     @item.new_memo
+  end
+
+  def reply
+    @item = @model.new pre_params.merge(fix_params)
+    item_reply = @model.site(@cur_site).search_replay(params[:id]).first
+    @item.member_ids = item_reply.from.keys.map(&:to_i)
+    @item.subject = "Re: #{item_reply.subject}"
+
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
   end
 
   def create
     @item = @model.new from.merge(get_params)
-    @item.send_date = Time.zone.now if params['commit'] == '送信'
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_create @item.save
+    @item.send_date = Time.zone.now if params['commit'] == t('gws/memo/message.commit_params_check')
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
   end
 
   def forward
-    forward_params = params.permit(:subject, :text, :html, :format)
+    forward_params = params.require(:item).permit(:subject, :text, :html, :format)
     @item = @model.new pre_params.merge(fix_params).merge(forward_params)
     render :new
   end
@@ -91,52 +116,72 @@ class Gws::Memo::MessagesController < ApplicationController
   def update
     @item.attributes = from.merge(get_params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    @item.send_date = Time.zone.now if params['commit'] == '送信'
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update
+    @item.send_date = Time.zone.now if params['commit'] == t('gws/memo/message.commit_params_check')
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    render_update @item.update, location: { action: :show, id: @item, folder: from_folder }
   end
 
   def show
-    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+    raise '404' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
     @item.set_seen(@cur_user).update
     render
   end
 
   def trash
+    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
     render_destroy @item.move(@cur_user, 'INBOX.Trash').update
   end
 
   def trash_all
-    @items.each{ |item| item.move(@cur_user, 'INBOX.Trash').update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.move(@cur_user, 'INBOX.Trash').update
+    end
     render_destroy_all(false)
   end
 
   def move_all
-    @items.each{ |item| item.move(@cur_user, params[:path]).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.move(@cur_user, params[:path]).update
+    end
     render_destroy_all(false)
   end
 
   def set_seen_all
-    @items.each{ |item| item.set_seen(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.set_seen(@cur_user).update
+    end
     render_destroy_all(false)
   end
 
   def unset_seen_all
-    @items.each{ |item| item.unset_seen(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.unset_seen(@cur_user).update
+    end
     render_destroy_all(false)
   end
 
   def toggle_star
-    render_destroy @item.toggle_star(@cur_user).update
+    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+    render_destroy @item.toggle_star(@cur_user).update, location: { action: params[:location] }
   end
 
   def set_star_all
-    @items.each{ |item| item.set_star(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.set_star(@cur_user).update
+    end
     render_destroy_all(false)
   end
 
   def unset_star_all
-    @items.each{ |item| item.unset_star(@cur_user).update }
+    @items.each do |item|
+      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      item.unset_star(@cur_user).update
+    end
     render_destroy_all(false)
   end
 end

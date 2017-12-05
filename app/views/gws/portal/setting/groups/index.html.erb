@@ -21,11 +21,11 @@ SS_TreeUI.render(".index.groups");
       <% name    = @search_params ? item.name : item.trailing_name %>
       <tr<%= depth %>>
         <td class="expandable">
-          <% setting = item.find_or_new_portal_group_setting(cur_user: @cur_user, cur_site: @cur_site) %>
-          <% if setting.allowed?(:read, @cur_user, site: @cur_site) %>
+          <% portal = item.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
+          <% if portal.readable?(@cur_user, site: @cur_site, strict: true) %>
             <%= link_to name, gws_portal_group_path(group: item), class: "title" %>
           <% else %>
-            <span class="title"><%= name %></span>
+            <span class="title title--disabled"><%= name %></span>
           <% end %>
         </td>
         <td><%= item.updated.strftime("%Y/%m/%d") %></td>

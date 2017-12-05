@@ -1,32 +1,32 @@
 <%= jquery do %>
   $(".trash-all").click(function(){
-    var form = Gws_Memo_Message.buildForm("<%= trash_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.trash_all') %>");
+    var form = Gws_Memo_Message.buildForm("<%= trash_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.trash_all') %>");
     form.appendTo(document.body).submit();
   });
 
   $(".set-seen-all").click(function(){
-    var form = Gws_Memo_Message.buildForm("<%= set_seen_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.set_seen_all') %>");
+    var form = Gws_Memo_Message.buildForm("<%= set_seen_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.set_seen_all') %>");
     form.appendTo(document.body).submit();
   });
 
   $(".unset-seen-all").click(function(){
-    var form = Gws_Memo_Message.buildForm("<%= unset_seen_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.unset_seen_all') %>");
+    var form = Gws_Memo_Message.buildForm("<%= unset_seen_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.unset_seen_all') %>");
     form.appendTo(document.body).submit();
   });
 
   $(".set-star-all").click(function(){
-    var form = Gws_Memo_Message.buildForm("<%= set_star_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.set_star_all') %>");
+    var form = Gws_Memo_Message.buildForm("<%= set_star_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.set_star_all') %>");
     form.appendTo(document.body).submit();
   });
 
   $(".unset-star-all").click(function(){
-    var form = Gws_Memo_Message.buildForm("<%= unset_star_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.unset_star_all') %>");
+    var form = Gws_Memo_Message.buildForm("<%= unset_star_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.unset_star_all') %>");
     form.appendTo(document.body).submit();
   });
 
   $(".move-menu li a").click(function(){
     var path = $(this).attr("data-path");
-    var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path %>", "<%= t('gws/memo/message.confirm.move') %>");
+    var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.move') %>");
     form.append($("<input/>", {name: "path", value: path, type: "hidden"} ));
     form.appendTo(document.body).submit();
   });

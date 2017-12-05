@@ -1,4 +1,6 @@
-<dl class="see">
+<%= jquery do %> //SS_AddonTabs.hide(".mod-gws-circular-category"); <% end %>
+
+<dl class="see mod-gws-circular-category gws-category-tree">
   <dt><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
   <dd>
     <%= f.hidden_field 'category_ids[]', value: '', class: 'hidden-ids' %>
@@ -11,7 +13,7 @@
       <tbody>
         <% @item.categories.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= f.hidden_field 'category_ids[]', value: item.id %> <%= item.name %></td>
+          <td><%= f.hidden_field 'category_ids[]', value: item.id, id: nil %> <%= item.name %></td>
           <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
         </tr>
         <% end %>

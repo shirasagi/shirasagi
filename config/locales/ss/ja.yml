@@ -105,6 +105,7 @@ ja:
       print: 印刷
       select_all: 全て選択
       deselect_all: 全て解除
+      change: 変更
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -123,6 +124,7 @@ ja:
       started_import: インポートを開始しました。
       sent: 送信しました。
       posted: 投稿しました。
+      multibyte_filename_disabled: ※日本語ファイル名は使用できません。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。

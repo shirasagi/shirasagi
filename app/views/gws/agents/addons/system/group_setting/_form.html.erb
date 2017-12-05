@@ -7,6 +7,27 @@
   <dt><%= @model.t :sender_email %><%= @model.tt :sender_email %></dt>
   <dd><%= f.text_field :sender_email %></dd>
 
+  <dt><%= @model.t :sender_user_id %><%= @model.tt :sender_user_id %></dt>
+  <dd>
+    <%= f.hidden_field 'sender_user_id', value: '', class: 'hidden-ids' %>
+    <%= link_to t('ss.apis.users.index'), gws_apis_users_path(single: true), class: 'ajax-box' %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.sender_user.tap do |item| %>
+        <% if item %>
+        <tr data-id="<%= item.id %>">
+          <td><%= f.hidden_field 'sender_user_id', value: item.id, id: nil %> <%= item.name %></td>
+          <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
+        </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+
   <dt><%= @model.t :mail_signature %><%= @model.tt :mail_signature %></dt>
   <dd><%= f.text_area :mail_signature %></dd>
 

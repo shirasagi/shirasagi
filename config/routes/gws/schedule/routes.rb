@@ -5,7 +5,13 @@ SS::Application.routes.draw do
     get :events, on: :collection
     get :print, on: :collection
     get :popup, on: :member
+    get :copy, on: :member
     get :delete, on: :member
+    delete action: :destroy_all, on: :collection
+  end
+
+  concern :deletion do
+    get :delete, :on => :member
     delete action: :destroy_all, on: :collection
   end
 
@@ -26,12 +32,12 @@ SS::Application.routes.draw do
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     resources :holidays, concerns: :plans
-    resources :comments, path: ':plan_id/comments', only: :create
+    resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
 
     resources :todos, concerns: :plans do
-      get :finish, on: :member
-      get :revert, on: :member
+      match :finish, on: :member, via: %i[get post]
+      match :revert, on: :member, via: %i[get post]
       post :finish_all, on: :collection
       post :revert_all, on: :collection
       get :disable, on: :member

@@ -30,6 +30,8 @@ class @Gws_Reminder
       $.ajax(ajax_params)
 
   @renderList: (opts = {})->
+    el = $(opts['el'] || document)
+
     @noticeTimer = null
     showInformation = (item, state) ->
       switch state
@@ -43,10 +45,10 @@ class @Gws_Reminder
         else
           item.find('.updated').hide()
 
-    $('.list-item').each ->
-      $(this).find('.links').append('<a class="restore" href="#" style="display: none;"><%= I18n.t('gws.links.restore_reminder') %></a>')
+    el.find('.list-item').each ->
+      $(this).find('.links').prepend('<a class="restore" href="#" style="display: none;"><%= I18n.t('gws.links.restore_reminder') %></a>')
 
-    $('.list-item .delete').click ->
+    el.find('.list-item .delete').click ->
       item = $(this).closest('.list-item')
       $.ajax
         url: opts['url']
@@ -59,14 +61,16 @@ class @Gws_Reminder
             name: item.data('name')
             date: item.data('date')
         success: (data)->
-          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').hide()
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .updated, .more-btn').hide()
+          item.find('.dropdown-menu').removeClass('active')
           item.find('.restore').show()
           item.find('.notification').hide()
           return false
         error: (data)->
           alert('Error')
+      return false
 
-    $('.list-item .restore').click ->
+    el.find('.list-item .restore').click ->
       item = $(this).closest('.list-item')
       $.ajax
         url: opts['url']
@@ -78,7 +82,7 @@ class @Gws_Reminder
             name: item.data('name')
             date: item.data('date')
         success: (data)->
-          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').show()
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .more-btn').show()
           item.find('.restore').hide()
           if item.find('.notification')[0]
             item.find('.notification')[0].selectedIndex = 0
@@ -86,8 +90,9 @@ class @Gws_Reminder
           return false
         error: (data)->
           alert('Error')
+      return false
 
-    $('.list-item .notification').change ->
+    el.find('.list-item .notification').change ->
       item = $(this).closest('.list-item')
       idx = this.selectedIndex
       value = this.options[idx].value

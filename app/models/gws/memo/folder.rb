@@ -3,6 +3,7 @@ class Gws::Memo::Folder
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::SitePermission
+  include SS::Fields::DependantNaming
 
   set_permission_name 'gws_memo_messages'
 
@@ -15,11 +16,49 @@ class Gws::Memo::Folder
 
   permit_params :name, :order, :path
 
-  validates :name, presence: true, uniqueness: { scope: :site_id }
+  validates :name, presence: true, uniqueness: { scope: [:site_id, :user_id] }
+  validate :validate_parent_name
 
   default_scope ->{ order_by order: 1 }
 
-  after_destroy -> { messages.each{ |message| message.move(user, 'INBOX.Trash').update } }
+  scope :children, ->(name) do
+    if name == I18n.t('gws/memo/folder.inbox')
+      where('$and' => [ {name: /^(?!.*\/).*$/} ] )
+    else
+      where('$and' => [ {name: /#{name}\/(?!.*\/).*$/} ] )
+    end
+  end
+
+  scope :descendent, ->(name) { where( name: /^#{Regexp.escape(name)}\// ) }
+
+  before_destroy :validate_destroy
+
+  private
+
+  def validate_parent_name
+    return if name.count('/') < 1
+
+    unless self.class.site(site).user(user).where(name: parent_name).exists?
+      errors.add :base, :not_found_parent
+    end
+  end
+
+  def validate_destroy
+    errors.add :base, :included_memo if messages.count > 0
+    errors.add :base, :used_folder if filters.count > 0
+    errors.add :base, :found_children if children.exists?
+    errors.empty?
+  end
+
+  public
+
+  def parent_name
+    File.dirname(name)
+  end
+
+  def current_name
+    File.basename(name)
+  end
 
   def folder_path
     id == 0 ? path : id.to_s
@@ -30,11 +69,33 @@ class Gws::Memo::Folder
   end
 
   def messages
-    Gws::Memo::Message.where("#{direction}.#{user_id}" => folder_path)
+    Gws::Memo::Message.site(self.site).folder(self)
+  end
+
+  def unseens
+    messages.unseen(self.user_id)
   end
 
   def unseen?
-    false
+    unseens.count > 0
+  end
+
+  def children
+    dependant_scope.children(name)
+  end
+
+  def ancestor_or_self
+    dependant_scope.where(:name.in => ancestor_or_self_names)
+  end
+
+  def ancestor_or_self_names
+    name.split('/').each_with_object([]) do |name, ret|
+      ret << (ret.last ? "#{ret.last}/#{name}" : name)
+    end
+  end
+
+  def dependant_scope
+    self.class.site(site).user(user)
   end
 
   class << self
@@ -42,12 +103,12 @@ class Gws::Memo::Folder
       super(action, user, opts).where(user_id: user.id)
     end
 
-    def static_items(user)
+    def static_items(user, site)
       [
-          self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX', user_id: user.id),
-          self.new(name: I18n.t('gws/memo/folder.inbox_trash'), path: 'INBOX.Trash', user_id: user.id),
-          self.new(name: I18n.t('gws/memo/folder.inbox_draft'), path: 'INBOX.Draft', user_id: user.id),
-          self.new(name: I18n.t('gws/memo/folder.inbox_sent'), path: 'INBOX.Sent', user_id: user.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX', user_id: user.id, site_id: site.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_trash'), path: 'INBOX.Trash', user_id: user.id, site_id: site.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_draft'), path: 'INBOX.Draft', user_id: user.id, site_id: site.id),
+          self.new(name: I18n.t('gws/memo/folder.inbox_sent'), path: 'INBOX.Sent', user_id: user.id, site_id: site.id),
       ]
     end
 

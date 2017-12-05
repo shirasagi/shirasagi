@@ -26,3 +26,24 @@
     }
   }
 }
+#content-navi ~ .index {
+  float: right;
+  width: calc(100% - 260px);
+  @include mb {
+    float: none;
+    width: calc(100% - 20px);
+    margin: 0 10px 10px;
+  }
+  .header {
+    margin: 0px 0px 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f2f2f2;
+    font-weight: bold;
+    &:before {
+      margin-right: 6px;
+      padding-left: 3px;
+      background: #f25a38;
+      content: ' ';
+    }
+  }
+}

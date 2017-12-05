@@ -73,26 +73,16 @@ module Gws::Addon::Schedule::Facility
     return if allday?
     site = @cur_site || self.site
 
-    over = false
-    time = start_at
-    while time <= end_at
-      if time.hour < site.facility_min_hour
-        over = :min
-        break
-      elsif time.hour > site.facility_max_hour
-        over = :max
-        break
-      elsif time.hour == site.facility_max_hour && end_at.min + end_at.sec > 0
-        over = :max
-        break
-      end
-      time += 1.hour
-    end
+    min_hour = site.facility_min_hour
+    max_hour = site.facility_max_hour
 
-    if over
+    min = "#{min_hour}0000".to_i
+    max = "#{max_hour}0000".to_i
+
+    if start_at.strftime('%H%M%S').to_i < min || max < end_at.strftime('%H%M%S').to_i
       min = site.facility_min_hour
       max = site.facility_max_hour
-      errors.add :base, I18n.t('gws/schedule.errors.over_than_facility_hours', min: min, max: max)
+      errors.add :base, I18n.t('gws/schedule.errors.over_than_facility_hours', min: min_hour, max: max_hour)
     end
   end
 end

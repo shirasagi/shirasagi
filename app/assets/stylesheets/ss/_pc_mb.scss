@@ -103,6 +103,35 @@ td {
     display: block;
   }
 }
+.dropdown-menu--top-right {
+  bottom: -10px;
+  right: 0;
+}
+.dropdown-menu--white {
+  padding: 5px 0;
+  box-shadow: 1px 3px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #d0d0d0;
+  background-color: #fff;
+}
+.dropdown-menu--white li {
+  border-bottom: 1px solid #eee;
+  &:hover {
+    background: #f2f2f2;
+  }
+}
+.dropdown-menu--white li:last-child {
+  border: none;
+}
+.dropdown-menu-item {
+  display: block;
+  padding: 8px 12px;
+  color: #000;
+  white-space: nowrap;
+  &:hover {
+    color: #f25a38;
+  }
+}
+
 
 // -------------------------------------------------------------------------------------------------
 // head
@@ -261,6 +290,57 @@ td {
       }
     }
   }
+  .sp-menu-button {
+    display: none;
+    @include mb {
+      display: block;
+      float: right;
+      line-height: 1;
+      a {
+        position: relative;
+        display: block;
+        width: 40px;
+        height: 40px;
+        background: $white;
+      }
+      span {
+        display: block;
+        width: 24px;
+        height: 3px;
+        position: absolute;
+        left: 8px;
+        background: $black;
+        transition: all 0.4s;
+        -webkit-transition: all 0.4s;
+        -moz-transition: all 0.4s;
+      }
+      span:first-child {
+        top: 10px;
+      }
+      span:nth-child(2) {
+        margin-top: -1px;
+        top: 50%;
+      }
+      span:last-child {
+        bottom: 10px;
+      }
+      .active span:first-child {
+        -webkit-transform: translateY(8px) rotate(45deg);
+        -moz-transform: translateY(8px) rotate(45deg);
+        -ms-transform: translateY(8px) rotate(45deg);
+        transform: translateY(8px) rotate(45deg);
+      }
+      .active span:nth-child(2) {
+          opacity: 0;
+      }
+      .active span:last-child {
+        -webkit-transform: translateY(-8px) rotate(-45deg);
+        -moz-transform: translateY(-8px) rotate(-45deg);
+        -ms-transform: translateY(-8px) rotate(-45deg);
+        transform: translateY(-8px) rotate(-45deg);
+      }
+    }
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -278,6 +358,7 @@ td {
   z-index: 1;
   background: $white;
   @include mb {
+    display: none;
     float: none;
     width: 100%;
     border: none;
@@ -326,7 +407,6 @@ td {
 // main-navi
 @mixin navi-icon {
   padding: 10px 10px 10px 50px;
-  @include mb { padding: 10px 10px 10px 35px; }
 }
 .main-navi {
   border-bottom: $border-gray5;
@@ -349,17 +429,22 @@ td {
       color: $orange;
       text-decoration: none;
     }
-    @include mb {
-      border-bottom: $border-gray5;
-      background-position: 0 center !important;
-    }
   }
   h2 a:hover:before {
     background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
   }
-  a.current, a:hover {
+  h2.current {
     background-color: $gray1;
   }
+  h2:hover {
+    background-color: $gray1;
+  }
+  h3 {
+    display: none;
+  }
+  .current + .child-menu h3 {
+    display: block;
+  } 
   h3 a {
     display: block;
     padding: 5px 15px 5px 60px;
@@ -455,22 +540,47 @@ td {
   .icon-message:hover:before {
     background-position: -32px -480px;
   }
-  @include mb {
-    @include clear;
-    h2 {
-      float: left;
-      width: 33%;
-      &:nth-child(3n) {
-        width: 34%;
-      }
-      a{
-        border-right: $border-gray4;
-        overflow: hidden;
-        font-size: $px12;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
+  .icon-memo:before {
+    background-position: left -480px;
+  }
+  .icon-memo:hover:before {
+    background-position: -32px -480px;
+  }
+  .icon-report:before {
+    background-position: left -512px;
+  }
+  .icon-report:hover:before {
+    background-position: -32px -512px;
+  }
+  .icon-question:before {
+    background-position: left -640px;
+  }
+  .icon-question:hover:before {
+    background-position: -32px -640px;
+  }
+  .icon-circular:before {
+    background-position: left -544px;
+  }
+  .icon-circular:hover:before {
+    background-position: -32px -544px;
+  }
+  .icon-monitor:before {
+    background-position: left -672px;
+  }
+  .icon-monitor:hover:before {
+    background-position: -32px -672px;
+  }
+  .icon-share:before {
+    background-position: left -576px;
+  }
+  .icon-share:hover:before {
+    background-position: -32px -576px;
+  }
+  .icon-address:before {
+    background-position: left -608px;
+  }
+  .icon-address:hover:before {
+    background-position: -32px -608px;
   }
 }
 .main-navi-md {
@@ -500,7 +610,7 @@ td {
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
     color: $black;
-    &.current {
+    @at-root h3.current a {
       background-color: $gray1;
     }
     &:hover {
@@ -527,7 +637,7 @@ td {
     padding: 5px 15px 5px 85px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
     color: $black;
-    &.current {
+    @at-root h4.current a {
       background-color: $gray1;
     }
     &:hover {
@@ -750,6 +860,9 @@ td {
       @include arrow;
       color: $black;
       &:hover { color: $orange;}
+      @include mb {
+        margin-bottom: 16px;
+      }
     }
     a:not(.no-margin) {
       margin-right: 16px;
@@ -781,15 +894,19 @@ td {
   .nav-management-menu {
     position: absolute;
     top: -60px;
-    right: 20px;
+    right: 0;
     line-height: 39px;
     a {
       display: inline-block;
       position: relative;
-      padding: 0 10px;
+      padding: 0 20px;
       color: $black;
+      text-decoration: none;
       .material-icons {
         margin-right:4px;
+      }
+      &:hover {
+        background-color: #ccc;
       }
     }
   }
@@ -840,7 +957,7 @@ td {
     float: none;
     overflow: scroll;
     width: auto;
-    max-height: 100px;
+    max-height: 200px;
     margin: 0 10px 10px;
   }
   #content-navi + .index {
@@ -993,6 +1110,24 @@ dl.see {
     }
     input, select {
       margin: -5px 0;
+      @include mb  {
+        &[type="text"] ~ .btn, &[type="text"] ~ label, & ~ select {
+          margin-top: 10px;
+        }
+        &[type="text"] ~ label {
+          display: inline-block;
+        }
+      }
+    }
+    label {
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    @include mb {
+      .prefix, .postfix {
+        display: block;
+        margin: 5px 0;
+      }
     }
   }
   > dt ~ dt { margin-top: 15px; }
@@ -1056,6 +1191,10 @@ dl.mod-cms-parent_crumbs {
     font-weight: normal;
     text-align: left;
     cursor: auto;
+    @include mb {
+      left: -70px;
+      width: 25em;
+    }
     &:before {
       content: "";
       position: absolute;
@@ -1066,6 +1205,9 @@ dl.mod-cms-parent_crumbs {
       border-left: 12px solid transparent;
       border-right: 12px solid transparent;
       border-top: 12px solid $gray4;
+      @include mb {
+        left: 65px;
+      }
     }
     &:after {
       content: "";
@@ -1077,6 +1219,9 @@ dl.mod-cms-parent_crumbs {
       border-left: 12px solid transparent;
       border-right: 12px solid transparent;
       border-top: 12px solid $white;
+      @include mb {
+        left: 65px;
+      }
     }
   }
 }
@@ -1127,6 +1272,10 @@ footer.send {
 #addon-cms-agents-addons-file .see, .addon-view .see {
   .upload-menu-select {
     float: right;
+  }
+  .upload-menu-notice {
+    margin: 0 2px;
+    color: #b30;
   }
   #selected-files {
     margin-top: 30px;
@@ -1344,6 +1493,7 @@ footer.send {
     display: block;
     padding: 5px 15px;
     line-height: 1.8;
+    white-space: nowrap;
     &:hover { background: $gray1; }
   }
 }
@@ -1352,32 +1502,24 @@ div.index {
   @include box;
   position: static;
   @include mb { margin: 0 10px 10px; }
-  label {
-    float: left;
-    width: 50px;
-    margin-left: -15px;
-    padding: 0px 3px 2px 13px;
-  }
-  .list-head label {
-    padding: 10px 4px 4px 19px;
-  }
 }
 #ajax-box {
   div.index {
     border: none;
   }
 }
-.list-items {
-  margin: 10px;
-  padding: 0;
-}
 .list-head {
   @include clear;
   margin: 0px 0px 10px;
-  padding: 10px 12px;
+  padding: 10px 18px;
   border-bottom: $border-gray1;
   font-weight: bold;
   @include mb { padding: 10px 20px; }
+  .check {
+    float: left;
+    width: 32px;
+    margin: 8px 0 0 -5px;
+  }
 }
 .list-head-action {
   float: left;
@@ -1397,70 +1539,92 @@ div.index {
 .list-head-search {
   float: right;
   @include mb {
+    clear: both;
+    float: none;
+    .index-search {
+      margin: 0;
+    }
+    * { margin-bottom: 5px; }
     input[type="text"] { width: 70% !important; }
     input[type="submit"] { width: 20% !important; }
   }
 }
-.list-item {
-  padding: 8px 8px;
-  border-bottom: $border-gray1;
-  @include mb { padding: 8px 10px; }
-  &:last-child {
-    border: none;
-  }
-  .checked, &:hover {
-    background: $orange2;
-  }
-  label + .info {
-    @include mb { margin-left: 26px; }
-  }
-  .up {
-    padding: 4px 0 4px 25px;
-    background: url(/assets/img/ic-arrow16up-off.png) no-repeat left center;
-    &:hover {
-      background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
+.list-items {
+  margin: 10px;
+  padding: 0;
+  .list-item {
+    -js-display: flex;
+    display: flex;
+    align-items: center;
+    padding: 8px 8px;
+    border-bottom: $border-gray1;
+    @include mb {
+      display: block;
+      padding: 8px 10px;
     }
-  }
-  .title {
-    color: $orange;
-    font-size: $px15;
-    @include mb { font-size: $px14; }
-  }
-  .info {
-    display: inline-block;
-  }
-  .meta {
-    span {
-      display: inline-block;
-      margin-right: 10px;
-      //font-size: $px12;
+    &:last-child {
+      border: none;
     }
-    .label {
-      margin-right: 0;
-      color: #844;
-      &:before { content: '['; }
-      &:after { content: ']'; }
+    .checked, &:hover {
+      background: $orange2;
     }
-    .id {
-      color: #444;
+    label + .info, .info + .links {
+      @include mb { margin-left: 26px; }
     }
-    .datetime {
-      color: #777;
-    }
-    .filename {
-      color: #080;
-    }
-    .order {
-      color: #888;
-      &:before {
-        content: '\25b9';
+    .up {
+      padding: 4px 0 4px 25px;
+      background: url(/assets/img/ic-arrow16up-off.png) no-repeat left center;
+      &:hover {
+        background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
       }
     }
-  }
-  .links {
-    float: right;
-    .btn {
-      margin-top: 4px;
+    .check {
+      float: left;
+      margin: 0 10px 0 -5px;
+    }
+    .info {
+      flex-grow: 10;
+    }
+    .title {
+      color: $orange;
+      font-size: $px15;
+      @include mb { font-size: $px14; }
+    }
+    .title--disabled {
+      color: #888;
+    }
+    .meta {
+      span {
+        margin-right: 8px;
+      }
+      .label {
+        margin-right: 0;
+        color: #844;
+        &:before { content: '['; }
+        &:after { content: ']'; }
+      }
+      .id {
+        color: #444;
+      }
+      .datetime {
+        color: #777;
+      }
+      .filename {
+        color: #080;
+      }
+      .order {
+        color: #888;
+        &:before {
+          content: '\25b9';
+        }
+      }
+    }
+    .links {
+      white-space: nowrap;
+      word-wrap: normal;
+      .btn {
+        margin-top: 4px;
+      }
     }
   }
 }
@@ -1495,6 +1659,7 @@ table.index {
       padding: 5px 0;
       border: none;
       background: none;
+      @include mb { width: auto !important; }
       &:after {
         content: "/";
       }
@@ -1587,17 +1752,19 @@ table.index.data-table {
 select, input, textarea, button {
   font-size: 100%;
   font-family: $font-base;
-  @include mb {
+}
+@include mb {
+  input[type="submit"] {
     -webkit-appearance: none;
+  }
+  label > input {
+    vertical-align: middle;
   }
 }
 #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
   @include btn;
   &.add-date {
     @include btn-orange;
-  }
-  @include mb {
-    margin-top: 10px;
   }
 }
 select {
@@ -1634,14 +1801,28 @@ input.filename {
 input.datetime {
   width: 12em;
   text-align: center;
+  @include mb {
+    text-align: left;
+  }
 }
 input.date {
   width: 9em;
   text-align: center;
+  @include mb {
+    text-align: left;
+  }
 }
 input.time {
   width: 9em;
   text-align: center;
+  @include mb {
+    text-align: left;
+  }
+}
+@include mb {
+  input[type="file"] {
+    margin-bottom: 5px;
+  }
 }
 textarea {
   @include input;
@@ -1660,11 +1841,22 @@ form .CodeMirror {
 }
 // minicolors
 .minicolors-theme-default {
+  @include mb {
+    &.minicolors {
+      display: block;
+    }
+  }
   .minicolors-input {
     height: inherit;
   }
   .minicolors-swatch {
     top: 2px;
+  }
+}
+//multislelct
+@include mb {
+  .ms-container {
+    width: auto;
   }
 }
 

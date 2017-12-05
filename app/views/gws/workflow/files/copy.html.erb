@@ -1,0 +1,17 @@
+<%= form_for :item, url: { action: :copy }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t('ss.confirm.clone') %></h2></div>
+    <div class="addon-body">
+      <%= render file: '_copy', locals: { f: f } %>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t('ss.buttons.save'), class: 'btn-primary' %>
+  <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+<% end %>

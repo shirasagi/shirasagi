@@ -92,3 +92,16 @@
     background-color: #fff;
   }
 }
+
+// Dropdown
+.cms-dropdown-menu {
+  left: -4px;
+  max-height:300px;
+  overflow-y: scroll;
+  margin: 0;
+  padding: 4px;
+  border: $border-gray4;
+  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+  background: $white;
+  white-space: nowrap;
+}

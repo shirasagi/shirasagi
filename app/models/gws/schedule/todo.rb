@@ -5,6 +5,7 @@ class Gws::Schedule::Todo
   include Gws::Reference::Site
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
+  include Gws::Schedule::Cloneable
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Schedule::Repeat
   include Gws::Addon::Reminder
@@ -26,21 +27,6 @@ class Gws::Schedule::Todo
     todo_state == 'finished'
   end
 
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :text
-    end
-
-    if params[:todo_state].present?
-      criteria = criteria.where todo_state: params[:todo_state]
-    end
-
-    criteria
-  }
-
   scope :active, ->(date = Time.zone.now) {
     where('$and' => [
         { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
@@ -56,6 +42,10 @@ class Gws::Schedule::Todo
         { :deleted.exists => true , :deleted.lt => date }
     ])
   }
+
+  def reminder_user_ids
+    member_ids
+  end
 
   def calendar_format(user, site)
     result = super
@@ -74,10 +64,6 @@ class Gws::Schedule::Todo
     false
   end
 
-  def todo_state_name
-    todo_state_names[todo_state.to_sym]
-  end
-
   def active?
     now = Time.zone.now
     return false if deleted.present? && deleted < now
@@ -93,12 +79,8 @@ class Gws::Schedule::Todo
     update_attributes(deleted: nil)
   end
 
-  def todo_state_names
-    I18n.t('gws/schedule/todo.options.todo_state')
-  end
-
   def todo_state_options
-    todo_state_names.map(&:reverse)
+    %w(finished unfinished).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
 
   def allowed?(action, user, opts = {})
@@ -115,6 +97,36 @@ class Gws::Schedule::Todo
   end
 
   class << self
+    def search(params)
+      criteria = all.search_keyword(params)
+      criteria = criteria.search_todo_state(params)
+      criteria = criteria.search_start_end(params)
+      criteria
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :text)
+    end
+
+    def search_todo_state(params)
+      return all if params.blank? || params[:todo_state].blank?
+      all.where(todo_state: params[:todo_state])
+    end
+
+    def search_start_end(params)
+      return all if params.blank?
+
+      criteria = all
+      if params[:start].present?
+        criteria = criteria.gte(end_at: params[:start])
+      end
+      if params[:end].present?
+        criteria = criteria.lte(start_at: params[:end])
+      end
+      criteria
+    end
+
     def allow_condition(action, user, opts = {})
       cond = [
         # { :readable_group_ids.in => user.group_ids.to_a },

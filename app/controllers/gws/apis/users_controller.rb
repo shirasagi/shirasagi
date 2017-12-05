@@ -11,11 +11,13 @@ class Gws::Apis::UsersController < ApplicationController
   def set_group
     if params[:s].present? && params[:s][:group].present?
       @group = @cur_site.descendants.active.find(params[:s][:group]) rescue nil
-      @group ||= @cur_site
-    else
+    elsif SS.config.gws.apis.dig('users', 'default_group') == 'user_group'
       @group = @cur_user.groups.active.in_group(@cur_site).first
+    else
+      @group = @cur_site
     end
 
+    @group ||= @cur_site
     @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
   end
 

@@ -1,12 +1,13 @@
 <nav class="main-navi">
   <% if @cur_site.menu_portal_visible? %>
-    <h2><%= link_to @cur_site.menu_portal_label || t('gws/portal.my_portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
-    <h3><%= link_to t('gws/portal.tabs.user_portal'), gws_portal_user_path(user: @cur_user) %></h3>
-    <% @cur_user.groups.in_group(@cur_site).each do |group| %>
-      <% next if group.id == @cur_site.id %>
-      <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
-    <% end %>
-    <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
+    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
+    <div class="child-menu">
+      <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+        <% next if group.id == @cur_site.id %>
+        <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
+      <% end %>
+      <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
+    </div>
   <% end %>
 
   <% if @cur_site.menu_reminder_visible? %>
@@ -15,14 +16,16 @@
 
   <% if @cur_site.menu_schedule_visible? %>
     <h2><%= link_to @cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path, class: "icon-schedule" %></h2>
-    <h3><%= link_to t('gws/schedule.tabs.personal'), gws_schedule_plans_path %></h3>
-    <h3><%= link_to t('gws/schedule.tabs.todo'), gws_schedule_todos_path %></h3>
-    <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
-    <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
+    <div class="child-menu">
+      <h3><%= link_to t('gws/schedule.tabs.personal'), gws_schedule_plans_path %></h3>
+      <h3><%= link_to t('gws/schedule.tabs.todo'), gws_schedule_todos_path %></h3>
+      <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
+      <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
+    </div>
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>
-    <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_main_path, class: "icon-conv" %></h2>
+    <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_main_path, class: "icon-memo" %></h2>
   <% end %>
 
   <% if @cur_site.menu_board_visible? %>
@@ -33,62 +36,68 @@
 
   <% if @cur_site.menu_question_visible? %>
     <% if [Gws::Faq::Post, Gws::Qna::Post].find { |model| model.allowed?(:read, @cur_user, site: @cur_site) } %>
-      <h2><%= link_to @cur_site.menu_question_label || t('gws.question_management'), gws_question_management_path, class: "icon-board" %></h2>
-      <% if Gws::Faq::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-        <h3><%= link_to t('modules.gws/faq'), gws_faq_topics_path %></h3>
-      <% end %>
-      <% if Gws::Qna::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-        <h3><%= link_to t('modules.gws/qna'), gws_qna_topics_path %></h3>
-      <% end %>
+      <h2><%= link_to @cur_site.menu_question_label || t('gws.question_management'), gws_question_management_path, class: "icon-question" %></h2>
+      <div class="child-menu">
+        <% if Gws::Faq::Post.allowed?(:read, @cur_user, site: @cur_site) %>
+          <h3><%= link_to t('modules.gws/faq'), gws_faq_topics_path %></h3>
+        <% end %>
+        <% if Gws::Qna::Post.allowed?(:read, @cur_user, site: @cur_site) %>
+          <h3><%= link_to t('modules.gws/qna'), gws_qna_topics_path %></h3>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
 
   <% if @cur_site.menu_report_visible? %>
     <%# if Gws::Report::File.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_report_label || t('modules.gws/report'), gws_report_files_main_path, class: "icon-workflow" %></h2>
-      <h3><%= link_to t('gws/report.options.file_state.inbox'), gws_report_files_path(state: 'inbox') %></h3>
-      <h3><%= link_to t('gws/report.options.file_state.sent'), gws_report_files_path(state: 'sent') %></h3>
-      <h3><%= link_to t('gws/report.options.file_state.closed'), gws_report_files_path(state: 'closed') %></h3>
-      <h3><%= link_to t('gws/report.options.file_state.readable'), gws_report_files_path(state: 'readable') %></h3>
+      <h2><%= link_to @cur_site.menu_report_label || t('modules.gws/report'), gws_report_files_main_path, class: "icon-report" %></h2>
+      <div class="child-menu">
+        <h3><%= link_to t('gws/report.options.file_state.inbox'), gws_report_files_path(state: 'inbox') %></h3>
+        <h3><%= link_to t('gws/report.options.file_state.sent'), gws_report_files_path(state: 'sent') %></h3>
+        <h3><%= link_to t('gws/report.options.file_state.closed'), gws_report_files_path(state: 'closed') %></h3>
+        <h3><%= link_to t('gws/report.options.file_state.readable'), gws_report_files_path(state: 'readable') %></h3>
+      </div>
     <%# end %>
   <% end %>
 
   <% if @cur_site.menu_workflow_visible? %>
     <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
       <h2><%= link_to @cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
-      <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
-      <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>
+      <div class="child-menu">
+        <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
+        <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>
+      </div>
     <% end %>
   <% end %>
 
   <% if @cur_site.menu_circular_visible? %>
-    <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_posts_path, class: 'icon-write' %></h2>
+    <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_posts_path, class: 'icon-circular' %></h2>
   <% end %>
 
   <% if @cur_site.menu_monitor_visible? %>
     <% if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_monitor_label || t('modules.gws/monitor'), gws_monitor_topics_path %></h2>
+      <h2><%= link_to @cur_site.menu_monitor_label || t('modules.gws/monitor'), gws_monitor_topics_path, class: 'icon-monitor' %></h2>
     <% end %>
   <% end %>
 
   <% if @cur_site.menu_share_visible? %>
     <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_share_label || t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
+      <h2><%= link_to @cur_site.menu_share_label || t('modules.gws/share'), gws_share_files_path, class: "icon-share" %></h2>
     <% end %>
   <% end %>
 
   <% if @cur_site.menu_shared_address_visible? %>
     <% if Gws::SharedAddress::Address.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_shared_address_label || t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-conv" %></h2>
+      <h2><%= link_to @cur_site.menu_shared_address_label || t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-address" %></h2>
     <% end %>
   <% end %>
 
   <% if @cur_site.menu_personal_address_visible? %>
-    <h2><%= link_to @cur_site.menu_personal_address_label || t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-conv" %></h2>
+    <h2><%= link_to @cur_site.menu_personal_address_label || t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-address" %></h2>
   <% end %>
 
   <% if @cur_site.menu_elasticsearch_visible? %>
-    <h2><%= link_to @cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-conv" %></h2>
+    <h2><%= link_to @cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-search" %></h2>
   <% end %>
 
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>

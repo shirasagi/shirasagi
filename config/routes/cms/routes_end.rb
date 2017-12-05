@@ -87,6 +87,10 @@ SS::Application.routes.draw do
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
+    resources :forms, concerns: [:deletion] do
+      resources :columns, concerns: [:deletion], except: [:new, :create]
+      resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
+    end
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy]
     resources :sys_notices, only: [:index, :show]
@@ -134,6 +138,7 @@ SS::Application.routes.draw do
       get "users" => "users#index"
       get "related_page" => "related_page#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
+      get "forms" => "forms#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member
