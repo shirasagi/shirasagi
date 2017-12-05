@@ -203,6 +203,9 @@ li.webmail-accounts {
       widht: -webkit-calc(100% - 330px);
       padding-right: 5px;
       font-size: 100%;
+      @include mb {
+        width: 100%;
+      }
     }
     .datetime {
       width: 110px;
