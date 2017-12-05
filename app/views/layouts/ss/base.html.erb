@@ -29,35 +29,37 @@
       </a>
     </div>
 
-    <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
-    <div class="cms">
-      <% if @ss_mode == :cms %>
-      <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
-      <% else %>
-      <h2><%= link_to t('ss.links.cms'), sns_cms_path %></h2>
+    <div class="application-menu">
+      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
+      <div class="cms">
+        <% if @ss_mode == :cms %>
+        <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
+        <% else %>
+        <h2><%= link_to t('ss.links.cms'), sns_cms_path %></h2>
+        <% end %>
+      </div>
       <% end %>
-    </div>
-    <% end %>
 
-    <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
-    <div class="gws">
-      <% if @ss_mode == :gws %>
-      <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
-      <% else %>
-      <h2><%= link_to t('ss.links.gws'), sns_gws_path %></h2>
+      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
+      <div class="gws">
+        <% if @ss_mode == :gws %>
+        <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
+        <% else %>
+        <h2><%= link_to t('ss.links.gws'), sns_gws_path %></h2>
+        <% end %>
+      </div>
       <% end %>
-    </div>
-    <% end %>
 
-    <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
-    <div class="webmail">
-      <% if @ss_mode == :webmail %>
-      <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
-      <% else %>
-      <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %></h2>
+      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
+      <div class="webmail">
+        <% if @ss_mode == :webmail %>
+        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
+        <% else %>
+        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %></h2>
+        <% end %>
+      </div>
       <% end %>
     </div>
-    <% end %>
 
     <% if Rails.env.development? %>
     <div class="env dev">&lt;Development&gt;</div>
