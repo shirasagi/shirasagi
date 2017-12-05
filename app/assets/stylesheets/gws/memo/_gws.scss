@@ -67,6 +67,14 @@
     }
   }
 }
+@include mb {
+  .mod-gws-schedule-comments .list-items .list-item .info + .links {
+    margin-left: 0;
+  }
+  #comment-form .btn {
+    margin-top: 5px;
+  }
+}
 
 .gws-memos {
   .list-item {
@@ -90,6 +98,9 @@
       widht: -webkit-calc(100% - 330px);
       padding-right: 5px;
       font-size: 100%;
+      @include mb {
+        width: auto;
+      }
     }
     .datetime {
       width: 110px;

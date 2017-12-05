@@ -1,7 +1,7 @@
 <% value ||= OpenStruct.new(decimal: column.initial_decimal) %>
 <%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <%= column.prefix_label %>
+  <span class="prefix"><%= column.prefix_label %></span>
   <%= number_field_tag("#{object_name}[#{column.id}]", value.try(:decimal), column.form_options) %>
-  <%= column.postfix_label %>
+  <span class="postfix"><%= column.postfix_label %></span>
 </dd>

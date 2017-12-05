@@ -9,7 +9,21 @@
 // portlets
 .gws-portlets {
   margin: -10px;
-  .portlet-item {
+  @include mb {
+    margin: 0;
+    .portlets {
+      @include clear;
+      width: 100%;
+      height: auto !important;
+      margin: 0 0 60px;
+      padding: 0;
+    }
+    .portlet-item {
+      position: static;
+      width: 100%;
+      margin-bottom: 10px !important;
+      height: auto;
+    }
   }
   .portlet-html {
     height: 100%;
@@ -73,12 +87,12 @@
     bottom: 0;
   }
   .portlet-html .edit-portlet {
+    @include btn;
     display: block;
     position: absolute;
     z-index: 1;
-    top: 0;
-    right: 4px;
-    padding: 0;
+    top: 4px;
+    right: 10px;
   }
   .portlet-html .main-box {
     overflow-y: hidden;
