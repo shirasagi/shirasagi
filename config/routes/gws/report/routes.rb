@@ -23,6 +23,7 @@ SS::Application.routes.draw do
         get :print, on: :member
         match :publish, on: :member, via: [:get, :post]
         match :depublish, on: :member, via: [:get, :post]
+        match :copy, on: :member, via: [:get, :post]
       end
       resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end

@@ -49,7 +49,6 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
           <% @tap_menu.call item %>
         <% else %>
           <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
           <%= link_to t('gws/share.links.active'), action: :recover, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
@@ -91,6 +90,21 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
             <% end %>
           <% end %>
         </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="index">
+  <div class="header">
+    <%= t('gws/share.child_folder') %>
+  </div>
+  <ul class="list-items">
+    <% @sub_folders.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to (File.basename item.name), gws_share_folder_files_path(folder: item.id), class: "title" %>
       </div>
     </li>
     <% end %>

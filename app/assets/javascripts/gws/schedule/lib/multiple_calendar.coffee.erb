@@ -14,7 +14,7 @@ class @Gws_Schedule_Multiple_Calendar
 
   @defaultParams: (opts) ->
     defaultView: 'basicWeek'
-    header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+    header: { left: 'today prev next title', right: 'withAbsence withTodo basicWeek timelineDay' },
     slotDuration: '01:00'
     slotLabelFormat: 'H'
     views:
@@ -28,7 +28,7 @@ class @Gws_Schedule_Multiple_Calendar
         maxTime: '22:00'
 
   @controllerParams: (opts)->
-    header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+    header: { left: 'today prev next title', right: 'withAbsence withTodo basicWeek timelineDay' },
     eventSources: []
     eventAfterAllRender: (view)->
       if view.name == 'basicWeek'

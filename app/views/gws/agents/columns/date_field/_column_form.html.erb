@@ -1,7 +1,7 @@
 <% value ||= nil %>
 <%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <%= column.prefix_label %>
+  <span class="prefix"><%= column.prefix_label %></span>
   <%= text_field_tag("#{object_name}[#{column.id}]", tryb { value.try(:date).strftime('%Y/%m/%d') }, column.form_options) %>
-  <%= column.postfix_label %>
+  <span class="postfix"><%= column.postfix_label %></span>
 </dd>

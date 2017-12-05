@@ -6,7 +6,7 @@ class Gws::Circular::Post
   include Gws::Reference::Site
   include Gws::Circular::See
   include Gws::Circular::Sort
-  include Gws::Circular::Commentable
+  # include Gws::Circular::Commentable
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Member
@@ -32,10 +32,13 @@ class Gws::Circular::Post
   alias reminder_date due_date
   alias reminder_user_ids member_ids
 
+  has_many :comments, class_name: 'Gws::Circular::Comment', dependent: :destroy, inverse_of: :post, order: { created: 1 }
+
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
 
+  scope :topic, ->{ exists post_id: false }
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
@@ -65,15 +68,8 @@ class Gws::Circular::Post
     where(:deleted.exists => true)
   }
 
-  scope :expired, ->(date = Time.zone.now) {
-    where('$or' => [
-      { :deleted.exists => true , :deleted.lt => date }
-    ])
-  }
-
   def active?
-    return true unless deleted.present? && deleted < Time.zone.now
-    false
+    deleted.blank? || deleted > Time.zone.now
   end
 
   def active
@@ -81,7 +77,7 @@ class Gws::Circular::Post
   end
 
   def disable
-    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+    update_attributes(deleted: Time.zone.now) if active?
   end
 
   def custom_group_member?(user)

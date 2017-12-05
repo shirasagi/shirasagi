@@ -30,9 +30,9 @@ class @Map_Form
       return false
 
   @attachMessage: (id) ->
-    google.maps.event.addListener Map.markers[id], 'click', (event) ->
-      if(Map.openedInfo)
-        Map.openedInfo.close()
+    google.maps.event.addListener Googlemaps_Map.markers[id], 'click', (event) ->
+      if(Googlemaps_Map.openedInfo)
+        Googlemaps_Map.openedInfo.close()
       $('dd[data-id = "' + id + '"]').each ->
         name = $(this).find(".marker-name").val()
         text = $(this).find(".marker-text").val()
@@ -47,8 +47,8 @@ class @Map_Form
               else
                 marker_html += '<p>' + this + '</p>'
 
-          Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
-          Map.openedInfo.open(Map.markers[id].getMap(), Map.markers[id])
+          Googlemaps_Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
+          Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id])
         return false
       return
     return
@@ -60,9 +60,9 @@ class @Map_Form
       (results, status) ->
         if(status==google.maps.GeocoderStatus.OK)
           result = results[0]
-          Map.map.setCenter(result.geometry.location)
+          Googlemaps_Map.map.setCenter(result.geometry.location)
           if (result.geometry.viewport)
-            Map.map.fitBounds(result.geometry.viewport)
+            Googlemaps_Map.map.fitBounds(result.geometry.viewport)
         else
           alert("<%= I18n.t('map.alert.invalid_center') %>")
         return
@@ -98,14 +98,14 @@ class @Map_Form
   @clearPointForm: (ele)->
     if ele.find(".marker-loc").val() != ""
       if confirm(Map_Form.deleteMessage)
-        if Map.markers[parseInt(ele.attr("data-id"))]
-          Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
+        if Googlemaps_Map.markers[parseInt(ele.attr("data-id"))]
+          Googlemaps_Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
         ele.find("input,textarea").val("")
         if $(".mod-map dd.marker").length > 1
           ele.remove()
     else
-      if Map.markers[parseInt(ele.attr("data-id"))]
-        Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
+      if Googlemaps_Map.markers[parseInt(ele.attr("data-id"))]
+        Googlemaps_Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
       ele.find("input,textarea").val("")
       if $(".mod-map dd.marker").length > 1
         ele.remove()
@@ -128,11 +128,11 @@ class @Map_Form
     ele.find(".marker-loc-input").val(loc)
     dataId = parseInt(ele.attr("data-id"))
 
-    if Map.markers[dataId]
-      Map.markers[dataId].setMap(null)
-    Map.markers[dataId] = new google.maps.Marker(
+    if Googlemaps_Map.markers[dataId]
+      Googlemaps_Map.markers[dataId].setMap(null)
+    Googlemaps_Map.markers[dataId] = new google.maps.Marker(
       position: Map_Form.getMapLoc(ele.find(".marker-loc")),
-      map: Map.map
+      map: Googlemaps_Map.map
     )
     Map_Form.attachMessage(dataId)
     if Map_Form.clickMarker
@@ -142,10 +142,10 @@ class @Map_Form
   @renderMarkers: ()->
     markerBounds = new google.maps.LatLngBounds()
 
-    if Map.markers
-      for m in Map.markers
+    if Googlemaps_Map.markers
+      for m in Googlemaps_Map.markers
         m.setMap(null)
-    Map.markers = []
+    Googlemaps_Map.markers = []
     Map_Form.dataID = 0
 
     $(".mod-map dd.marker").each ->
@@ -153,27 +153,27 @@ class @Map_Form
 
       if $(this).find(".marker-loc").val() != ""
         loc = Map_Form.getMapLoc($(this).find(".marker-loc"))
-        Map.markers[Map_Form.dataID] = new google.maps.Marker(
+        Googlemaps_Map.markers[Map_Form.dataID] = new google.maps.Marker(
           position: loc,
-          map: Map.map
+          map: Googlemaps_Map.map
         )
         Map_Form.attachMessage(Map_Form.dataID)
         markerBounds.extend(loc)
       Map_Form.dataID += 1
 
-    if Map.markers.length > 0
-      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', ( event ) ->
+    if Googlemaps_Map.markers.length > 0
+      zoomChangeBoundsListener = google.maps.event.addListener Googlemaps_Map.map, 'bounds_changed', ( event ) ->
         if this.getZoom() > 13 && this.initialZoom == true
           this.setZoom(13)
           this.initialZoom = false
         google.maps.event.removeListener(zoomChangeBoundsListener)
 
-      Map.map.initialZoom = true
-      Map.map.fitBounds(markerBounds)
+      Googlemaps_Map.map.initialZoom = true
+      Googlemaps_Map.map.fitBounds(markerBounds)
     return
 
   @renderEvents: ()->
-    google.maps.event.addListener Map.map, 'click', (event) ->
+    google.maps.event.addListener Googlemaps_Map.map, 'click', (event) ->
       Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng())
       if Map_Form.clickMarker != null
         Map_Form.clickMarker.setMap(null)
@@ -181,7 +181,7 @@ class @Map_Form
       Map_Form.clickMarker = new google.maps.Marker(
         position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
         icon: Map_Form.clickIcon,
-        map: Map.map,
+        map: Googlemaps_Map.map,
       )
 
     $(".mod-map .add-marker").on 'click', (e) ->

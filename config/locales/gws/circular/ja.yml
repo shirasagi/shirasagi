@@ -63,17 +63,19 @@ ja:
     edit_private_gws_circular_posts: 回覧板の編集（所有）
     delete_other_gws_circular_posts: 回覧板の削除（全て）
     delete_private_gws_circular_posts: 回覧板の削除（所有）
-  activemodel:
-    attributes:
-      gws/circular/comment:
-        name: タイトル
-        text: コメント
+    read_other_gws_circular_categories: カテゴリーの閲覧（全て）
+    read_private_gws_circular_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_circular_categories: カテゴリーの編集（全て）
+    edit_private_gws_circular_categories: カテゴリーの編集（所有）
+    delete_other_gws_circular_categories: カテゴリーの削除（全て）
+    delete_private_gws_circular_categories: カテゴリーの削除（所有）
   mongoid:
     models:
       gws/circular/post: 回覧板
-      gws/circular/category: カテゴリー
+      gws/circular/category: 回覧板カテゴリー
       gws/circular/trashes: 削除済み
       gws/circular/group_setting: 回覧板設定
+      gws/circular/group_setting/category: カテゴリー
     errors:
       models:
         gws/circular/post:
@@ -82,8 +84,12 @@ ja:
     attributes:
       gws/circular/post:
         name: タイトル
+        created: 投稿日
+        updated: 最終更新日
         due_date: 回覧期限日時
         see_type: 既読にする形式
+        deleted: 削除日時
+        seen: 既読
       gws/circular/group_setting:
         circular_default_due_date: 回覧期限日初期値
         circular_max_member: 回覧人数制限
@@ -91,6 +97,9 @@ ja:
         circular_delete_threshold: 回覧復旧可能期間
       gws/addon/circular/category:
         category_ids: カテゴリー
+      gws/circular/comment:
+        name: タイトル
+        text: コメント
   tooltip:
     gws/circular/comment:
       name: タイトルです

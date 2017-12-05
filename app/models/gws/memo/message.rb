@@ -1,5 +1,7 @@
 class Gws::Memo::Message
+  include ActiveSupport::NumberHelper
   include SS::Document
+  include Gws::Model::Memo::Message
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
@@ -8,18 +10,19 @@ class Gws::Memo::Message
   include Webmail::Addon::MailBody
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
+  include Gws::Addon::Reminder
+  alias reminder_user_ids member_ids
 
   attr_accessor :signature, :attachments, :field, :cur_site, :cur_user
-  attr_accessor :in_request_mdn, :in_request_dsn
+  attr_accessor :in_request_mdn, :in_request_dsn, :state
 
   field :subject, type: String
   alias name subject
 
-  field :text, type: String
+  field :text, type: String, default: ''
   field :html, type: String
   field :format, type: String
   field :size, type: Integer, default: 0
-  field :state, type: String, default: 'public'
   field :seen, type: Hash, default: {}
   field :star, type: Hash, default: {}
   field :filtered, type: Hash, default: {}
@@ -31,11 +34,15 @@ class Gws::Memo::Message
 
   default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
 
-  before_validation :set_to
+  before_validation :set_to, :set_size
+
+  validate :validate_attached_file_size
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+
+  after_save :save_reminders, if: ->{ !draft? }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -52,9 +59,36 @@ class Gws::Memo::Message
     criteria
   }
 
+  scope :folder, ->(folder) {
+    where("#{folder.direction}.#{folder.user_id}" => folder.folder_path)
+  }
+
+  scope :unseen, ->(user_id) {
+    where("seen.#{user_id}" => { '$exists' => false })
+  }
+
+  scope :search_replay, ->(replay_id) {
+    where("$and" => [{ "_id" => replay_id }])
+  }
+
   scope :unfiltered, ->(user) {
     where(:"filtered.#{user.id}".exists => false)
   }
+
+  private
+
+  def set_to
+    member_ids.map(&:to_s).each do |id|
+      next unless self.to[id.to_s].blank?
+      self.to[id.to_s] = draft? ? nil : 'INBOX'
+    end
+  end
+
+  def set_size
+    self.size = self.files.pluck(:size).inject(:+)
+  end
+
+  public
 
   def display_subject
     subject.presence || 'No title'
@@ -68,12 +102,16 @@ class Gws::Memo::Message
     files.present?
   end
 
+  def state_changed?
+    false
+  end
+
   def display_to
     members.map(&:long_name)
   end
 
-  def unseen?(user=:nil)
-    return false if user == :nil
+  def unseen?(user=nil)
+    return false if user.nil?
     seen.exclude?(user.id.to_s)
   end
 
@@ -83,8 +121,13 @@ class Gws::Memo::Message
   end
 
   def display_size
-    size = (self.size < 1024) ? 1024 : self.size
-    ActiveSupport::NumberHelper.number_to_human_size(size, precision: 0)
+    result = 1024
+
+    if self.size && (self.size > result)
+      result = self.size
+    end
+
+    ActiveSupport::NumberHelper.number_to_human_size(result, precision: 0)
   end
 
   def format_options
@@ -149,9 +192,12 @@ class Gws::Memo::Message
 
   def allowed?(action, user, opts = {})
     action = permission_action || action
-    return self.class.allow(action, user, opts).exists? if action == :read
-    return super(action, user, opts) unless self.user
-    return super(action, user, opts) && (self.user.id == user.id)
+    args = opts.merge(id: self.id)
+    if action == :read
+      return self.class.allow(action, user, args).exists?
+    end
+    return super(action, user, args) unless self.user
+    return super(action, user, args) && (self.user.id == user.id)
   end
 
   def new_memo
@@ -162,23 +208,38 @@ class Gws::Memo::Message
   end
 
   def html?
-    format == 'html' ? true : false
+    format == 'html'
   end
 
-  private
+  def validate_attached_file_size
+    return if site.memo_filesize_limit.blank?
+    return if site.memo_filesize_limit <= 0
 
-  def set_to
-    member_ids.map(&:to_s).each do |id|
-      next unless self.to[id.to_s].blank?
-      self.to[id.to_s] = draft? ? nil : 'INBOX'
+    limit = site.memo_filesize_limit * 1024 * 1024
+    size = files.compact.map(&:size).sum
+
+    if size > limit
+      errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
     end
+  end
+
+  def reminder_date
+    return if site.memo_reminder == 0
+    result = Time.zone.now.beginning_of_day + (site.memo_reminder - 1).day
+    result.end_of_day
   end
 
   class << self
     def allow(action, user, opts = {})
       folder = opts[:folder]
       direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-      where("#{direction}.#{user.id}" => folder)
+      result = where("#{direction}.#{user.id}" => folder)
+
+      if opts[:id]
+        result = result.where('_id' => opts[:id])
+      end
+
+      result
     end
 
     def unseens(user, site)

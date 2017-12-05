@@ -1,6 +1,6 @@
 <%
-  attendance = @attendances.find { |attendance| attendance.user_id == member.id }
-  attendance ||= Gws::Schedule::Attendance.new(cur_site: @cur_site, cur_user: member, cur_schedule: @item)
+  attendance = @item.attendances.where(user_id: member.id).order_by(created: 1).first
+  attendance ||= @item.attendances.build(cur_user: member)
 %>
 
 <%= attendance.label(:attendance_state) %>

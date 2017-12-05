@@ -23,12 +23,14 @@ SS::Application.routes.draw do
       end
       member do
         get :trash
-        get :toggle_star
+        post :toggle_star
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
+        get :reply
       end
     end
-    resources :comments, path: ':message_id/comments', only: :create
+    resources :comments, path: ':message_id/comments', only: [:create, :destroy]
+    resource :setting, only: [:show, :edit, :update]
 
     scope '/management' do
       get '/' => redirect { |p, req| "#{req.path}/folders" }, as: :management_main

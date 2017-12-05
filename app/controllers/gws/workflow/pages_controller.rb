@@ -35,6 +35,12 @@ class Gws::Workflow::PagesController < ApplicationController
                site: @cur_site, page: @item,
                url: params[:url], comment: params[:workflow_comment] }
       Workflow::Mailer.request_mail(args).deliver_now if validate_domain(args[:t_uid])
+
+      Gws::Memo::Notifier.deliver_workflow_request!(
+        cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+        to_users: Gws::User.where(id: workflow_approver[:user_id]), item: @item,
+        url: params[:url], comment: params[:workflow_comment]
+      ) rescue nil
     end
 
     @item.set_workflow_approver_state_to_request
@@ -45,7 +51,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
   def request_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
-    if @item.workflow_state?
+    if @item.workflow_requested?
       raise "403" unless @item.allowed?(:reroute, @cur_user, grants_none_to_owner: true)
     end
 
@@ -88,6 +94,11 @@ class Gws::Workflow::PagesController < ApplicationController
                  site: @cur_site, page: @item,
                  url: params[:url], comment: params[:remand_comment] }
         Workflow::Mailer.approve_mail(args).deliver_now if validate_domain(args[:t_uid])
+        Gws::Memo::Notifier.deliver_workflow_approve!(
+          cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+          to_users: Gws::User.where(id: @item.workflow_user_id), item: @item,
+          url: params[:url], comment: params[:remand_comment]
+        ) rescue nil
 
         if @item.try(:branch?) && @item.state == "public"
           @item.delete
@@ -112,6 +123,11 @@ class Gws::Workflow::PagesController < ApplicationController
                  site: @cur_site, page: @item,
                  url: params[:url], comment: params[:remand_comment] }
         Workflow::Mailer.remand_mail(args).deliver_now if validate_domain(args[:t_uid])
+        Gws::Memo::Notifier.deliver_workflow_remand!(
+          cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+          to_users: Gws::User.where(id: @item.workflow_user_id), item: @item,
+          url: params[:url], comment: params[:remand_comment]
+        ) rescue nil
       end
       render json: { workflow_state: @item.workflow_state }
     else

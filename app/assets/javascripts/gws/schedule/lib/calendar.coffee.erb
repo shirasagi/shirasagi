@@ -15,16 +15,34 @@ class @Gws_Schedule_Calendar
     $(selector).fullCalendar('gotoDate', init['date']) if init['date']
     Gws_Schedule_View.renderSideCalendars(selector)
 
+    $("#{selector}-header .calendar-text").each ->
+      wrap = $(this)
+      data = $(this).find('.calendar-text-popup').prop('outerHTML');
+      wrap.find('.calendar-text-link').click ->
+        Gws_Popup.render($(this), $(data).show())
+        return false
+
   @defaultParams: (opts) ->
     buttonText:
       listMonth: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>"
     columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
+    customButtons:
+      withTodo:
+        text: "<%= I18n.t('gws/schedule.calendar.buttonText.withTodo') %>"
+        click: (e) ->
+          $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'))
+          $(this).toggleClass("fc-state-active")
+      withAbsence:
+        text: "<%= I18n.t('gws/schedule.calendar.buttonText.withAbsence') %>"
+        click: (e) ->
+          $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'))
+          $(this).toggleClass("fc-state-active")
     contentHeight: 'auto'
     displayEventEnd:
       basicWeek: true
     endParam: 's[end]'
     fixedWeekCount: false
-    header: { left: 'today prev next title', right: 'month basicWeek agendaDay listMonth' },
+    header: { left: 'today prev next title', right: 'withAbsence withTodo month basicWeek agendaDay listMonth' },
     lang: 'ja'
     nextDayThreshold: '00:00:00' # 複数日表示の閾値
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
@@ -40,24 +58,38 @@ class @Gws_Schedule_Calendar
         $(this).find('.fc-widget-content').eq(0).prepend('<span class="fc-loading"><%= I18n.t('gws/schedule.loading') %></span>')
       else
         $(this).find('.fc-loading').remove()
+    eventAfterAllRender: (view) ->
+      Gws_Schedule_Calendar.changePrintPreviewPortrait(view)
+    viewRender: (view, element) ->
+      $('.fc-withTodo-button').addClass('fc-state-active')
 
   @tapMenuParams: (opts) ->
     url = opts['restUrl']
 
     dayClick: (date, event, view) ->
+      links = ''
+
       if opts['tapMenu']
-        now = new Date
+        now   = new Date
         start = "#{date.format()}T#{now.getHours()}:00:00"
-        links  = "<a href='#{url}/new?start=#{start}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
-        #if opts['defaultView'] != 'basicWeek'
-        #  if view.name != 'month'
-        #    links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
-        #  if view.name != 'basicWeek'
-        #    links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>'
-        #  if view.name != 'agendaDay'
-        #    links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>'
+        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}"
+        links = "<a href='#{url}/new?start=#{start}&#{state}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
+
+      if $('#calendar-controller').length == 0
+        if view.name != 'month'
+          links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
+        if view.name != 'basicWeek'
+          links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>'
+        if view.name != 'agendaDay'
+          links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>'
+
+      if links
         $("body").append('<div class="tap-menu">' + links + '</div>')
-        $(".tap-menu").show().css("left", event.pageX - 5).css("top", event.pageY - 5).show()
+
+        if event.pageX + $(".tap-menu").width() > $(window).width()
+          $(".tap-menu").css("top", event.pageY - 5).css("right", 5).show()
+        else
+          $(".tap-menu").css("top", event.pageY - 5).css("left", event.pageX - 5).show()
 
         $(".tap-menu a").click ->
           if $(this).data('view')
@@ -66,6 +98,7 @@ class @Gws_Schedule_Calendar
             cal.gotoDate(date);
             $(".tap-menu").remove()
             return false
+
         $(".tap-menu").mouseleave ->
           $(".tap-menu").remove()
 
@@ -80,10 +113,14 @@ class @Gws_Schedule_Calendar
       Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>")
 
       popup_url = if event.restUrl then event.restUrl else url
+      state = "calendar[date]=#{event.start.format('YYYY-MM-DD')}&calendar[view]=#{view.name}"
+
       $.ajax
         url: "#{popup_url}/#{event.id}/popup"
         success: (data)->
           $('.fc-popup').html(data)
+          $('.fc-popup').find('a').each ->
+            $(this).attr('href', $(this).attr('href') + "?#{state}")
           Gws_Popup.renderPopup(target)
 
     eventDrop: (event, delta, revertFunc, jsEvent, ui, view) ->
@@ -100,6 +137,7 @@ class @Gws_Schedule_Calendar
         error: (xhr, status, error) ->
           alert xhr.responseJSON.join("\n")
           revertFunc()
+
     eventResize: (event, delta, revertFunc) ->
       $.ajax
         type: 'PUT'
@@ -111,3 +149,12 @@ class @Gws_Schedule_Calendar
         error: (xhr, status, error) ->
           alert xhr.responseJSON.join("\n")
           revertFunc()
+
+  @changePrintPreviewPortrait: (view) ->
+    if $('body').hasClass('print-preview')
+      if view.type == 'agendaDay' || view.type == 'listMonth'
+        $('body').removeClass('horizontal')
+        $('body').addClass('vertical')
+      else
+        $('body').removeClass('vertical')
+        $('body').addClass('horizontal')

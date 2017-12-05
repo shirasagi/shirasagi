@@ -52,6 +52,7 @@ ja:
         min_minutes_limit: 時間制限（最小）
         max_minutes_limit: 時間制限（最大）
         max_days_limit: 予約可能期間
+        html: 設備概要
       gws/facility/category:
         name: カテゴリー名
         order: 並び順

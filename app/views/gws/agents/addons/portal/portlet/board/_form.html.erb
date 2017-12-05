@@ -1,0 +1,26 @@
+<dl class="see">
+  <dt><%= @model.t :board_severity %><%= @model.tt :board_severity %></dt>
+  <dd><%= f.select :board_severity, @item.board_severity_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :board_category_ids %><%= @model.tt :board_category_ids %></dt>
+  <dd>
+    <%= f.hidden_field "board_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws.apis.categories.index"), gws_board_apis_categories_path(single: true), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Board::Category.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% @item.board_categories.each do |cate| %>
+        <tr data-id="<%= cate.id %>">
+          <td><%= f.hidden_field "board_category_ids[]", value: cate.id, id: nil %> <%= cate.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @item.t :limit %><%= @item.tt :limit %></dt>
+  <dd><%= f.number_field :limit %></dd>
+</dl>

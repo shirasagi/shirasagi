@@ -12,7 +12,7 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
       gws_site.facility_min_hour = 22
     end
 
-    describe 'valid hours' do
+    context 'valid hours' do
       it do
         item.start_at = '2016/1/1 08:00'
         item.end_at   = '2016/1/1 08:30'
@@ -29,10 +29,18 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
         item.start_at = '2016/1/1 08:00'
         item.end_at   = '2016/1/1 22:00'
         expect(item).to be_valid
+
+        item.start_at = '2016/1/1 08:00'
+        item.end_at   = '2016/1/4 22:00'
+        expect(item).to be_valid
+
+        item.start_at = '2016/1/1 09:00'
+        item.end_at   = '2016/1/4 21:00'
+        expect(item).to be_valid
       end
     end
 
-    describe 'invalid hours' do
+    context 'invalid hours' do
       it do
         item.start_at = '2016/1/1 00:00'
         item.end_at   = '2016/1/1 01:00'
@@ -68,6 +76,18 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
 
         item.start_at = '2016/1/1 6:00'
         item.end_at   = '2016/1/1 22:00'
+        expect(item).not_to be_valid
+
+        item.start_at = '2016/1/1 7:00'
+        item.end_at   = '2016/1/4 22:00'
+        expect(item).not_to be_valid
+
+        item.start_at = '2016/1/1 8:00'
+        item.end_at   = '2016/1/4 23:00'
+        expect(item).not_to be_valid
+
+        item.start_at = '2016/1/1 7:00'
+        item.end_at   = '2016/1/4 23:00'
         expect(item).not_to be_valid
       end
     end

@@ -2,6 +2,7 @@ class Gws::Schedule::GroupPlansController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
+  include Gws::Memo::NotificationFilter
 
   before_action :set_group
   before_action :set_items
@@ -21,10 +22,6 @@ class Gws::Schedule::GroupPlansController < ApplicationController
 
   def set_items
     @items = @group.users.active.order_by_title(@cur_site).compact
-  end
-
-  def redirection_view
-    'timelineDay'
   end
 
   public

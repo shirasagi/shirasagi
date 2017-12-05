@@ -11,8 +11,8 @@
       <%= f.hidden_field(:attendance_state) %>
     </dd>
 
-    <dt><%= @model.t :in_comment %></dt>
-    <dd><%= f.text_field(:in_comment, style: 'width: 40em;') %></dd>
+    <dt><%= Gws::Schedule::Comment.t :text %></dt>
+    <dd><%= text_field_tag('comment[text]', nil, style: 'width: 40em;') %></dd>
   </dl>
 
   <%= hidden_field_tag('redirect_to', params[:redirect_to]) %>

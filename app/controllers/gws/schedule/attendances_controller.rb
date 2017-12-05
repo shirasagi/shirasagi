@@ -1,6 +1,7 @@
 class Gws::Schedule::AttendancesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Memo::NotificationFilter
 
   model Gws::Schedule::Attendance
 
@@ -20,13 +21,15 @@ class Gws::Schedule::AttendancesController < ApplicationController
     end
 
     raise '404' unless @target_user
+
+    @target_user.cur_site = @cur_site
   end
 
   def fix_params
     set_cur_schedule
     set_target_user
 
-    ret = { cur_site: @cur_site, cur_user: @target_user, cur_schedule: @cur_schedule }
+    ret = { cur_user: @target_user }
     ret[:attendance_state] = params.dig(:item, :attendance_state) if params[:item].present?
     ret
   end
@@ -40,6 +43,18 @@ class Gws::Schedule::AttendancesController < ApplicationController
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def post_comment
+    return if params[:comment].blank?
+
+    safe_params = params.require(:comment).permit(Gws::Schedule::Comment.permitted_fields)
+    return if safe_params[:text].blank?
+
+    safe_params.reverse_merge!(
+      cur_site: @cur_site, cur_user: @target_user, cur_schedule: @cur_schedule, text_type: 'plain'
+    )
+    Gws::Schedule::Comment.create(safe_params)
   end
 
   public
@@ -58,6 +73,11 @@ class Gws::Schedule::AttendancesController < ApplicationController
     render_opts = {
       location: params[:redirect_to]
     }
-    render_update @item.save, render_opts
+
+    result = @item.save
+    if result
+      post_comment
+    end
+    render_update result, render_opts
   end
 end

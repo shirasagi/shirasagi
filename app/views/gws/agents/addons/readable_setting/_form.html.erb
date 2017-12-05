@@ -1,76 +1,100 @@
+<%
+
+  if params[:action] =~ /new/
+    @item.readable_setting_range = 'select'
+    @item.readable_group_ids = [@cur_group.id]
+  end
+
+%>
 <%= jquery do %>
   <% if !@item.readable_setting_present? %>
   SS_AddonTabs.hide(".gws-addon-readable-setting");
   <% end %>
+
+  (new Gws_ReadableSetting('.gws-addon-readable-setting')).render();
 <% end %>
 
 <div class="gws-addon-readable-setting">
-  <% if @item.class.readable_setting_included_custom_groups? %>
-  <dl class="see gws-addon-readable-setting-custom-group">
-    <dt><%= @model.t :readable_custom_group_ids %><%= @model.tt :readable_custom_group_ids %></dt>
+  <dl class="see buttons">
+    <dt><%= @model.t :readable_setting_range %><%= @model.tt :readable_setting_range %></dt>
     <dd>
-      <%= f.hidden_field "readable_custom_group_ids[]", value: "", class: "hidden-ids" %>
-      <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "btn ajax-box" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-        <% @item.readable_custom_groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "readable_custom_group_ids[]", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </dd>
-  </dl>
-  <% end %>
-
-  <dl class="see gws-addon-readable-setting-group">
-    <dt><%= @model.t :readable_group_ids %><%= @model.tt :readable_group_ids %></dt>
-    <dd>
-      <%= f.hidden_field "readable_group_ids[]", value: "", class: "hidden-ids" %>
-      <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "btn ajax-box" %>
-      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
-      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-          <% @item.readable_groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "readable_group_ids[]", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <% @item.readable_setting_range_options.each do |label, value| %>
+      <label class="mr-2">
+        <%= f.radio_button :readable_setting_range, value, class: "btn-#{value}" %>
+        <%= label %>
+      </label>
+      <% end %>
     </dd>
   </dl>
 
-  <dl class="see gws-addon-readable-setting-member">
-    <dt><%= @model.t :readable_member_ids %><%= @model.tt :readable_member_ids %></dt>
-    <dd>
-      <%= f.hidden_field "readable_member_ids[]", value: "", class: "hidden-ids" %>
-      <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
-      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
-      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-          <% @item.readable_members.each do |user| %>
-          <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "readable_member_ids[]", value: user.id %> <%= user.long_name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </dd>
-  </dl>
+  <div class="gws-addon-readable-setting-select">
+    <% if @item.class.readable_setting_included_custom_groups? %>
+    <dl class="see gws-addon-readable-setting-custom-group">
+      <dt><%= @model.t :readable_custom_group_ids %><%= @model.tt :readable_custom_group_ids %></dt>
+      <dd>
+        <%= f.hidden_field "readable_custom_group_ids[]", value: "", class: "hidden-ids" %>
+        <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "btn ajax-box" %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.readable_custom_groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "readable_custom_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+    <% end %>
+
+    <dl class="see gws-addon-readable-setting-group">
+      <dt><%= @model.t :readable_group_ids %><%= @model.tt :readable_group_ids %></dt>
+      <dd>
+        <%= f.hidden_field "readable_group_ids[]", value: "", class: "hidden-ids" %>
+        <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "btn ajax-box" %>
+        <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
+        <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.readable_groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "readable_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+
+    <dl class="see gws-addon-readable-setting-member">
+      <dt><%= @model.t :readable_member_ids %><%= @model.tt :readable_member_ids %></dt>
+      <dd>
+        <%= f.hidden_field "readable_member_ids[]", value: "", class: "hidden-ids" %>
+        <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
+        <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
+        <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.readable_members.each do |user| %>
+            <tr data-id="<%= user.id %>">
+              <td><%= f.hidden_field "readable_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+  </div>
 </div>

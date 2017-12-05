@@ -1,7 +1,7 @@
 <% if @folder_navi %>
 <div id="content-navi">
   <h2 class="content-navi-title">
-    <%= t("mongoid.models.gws/share/folder") %>
+    <%= t("gws/share.folder") %>
   </h2>
 
   <table class="index">
@@ -19,7 +19,6 @@
 
       <% @folder_navi.each do |item| %>
       <tr class="<%= 'current' if @folder == item %>">
-        <% item.send :update_folder_descendants_file_info %>
         <td><%= link_to item.name, gws_share_management_folder_files_path(folder: item.id) %>
           <span class= "share_file_count">(<%= item.readable_deleted_files_count(@cur_user, @cur_site) -%>)</span>
         </td>

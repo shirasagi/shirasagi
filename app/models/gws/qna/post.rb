@@ -12,4 +12,8 @@ class Gws::Qna::Post
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::QnaPostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::QnaPostJob.callback
+
+  def subscribed_users
+    topic.subscribed_users
+  end
 end

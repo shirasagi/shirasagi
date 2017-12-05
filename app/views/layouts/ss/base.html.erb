@@ -21,6 +21,14 @@
   <div class="wrap">
     <h1 class="application-name"><%= link_to SS.config.ss.application_name, sns_mypage_path %></h1>
 
+    <div class="sp-menu-button">
+      <a href="#" class="">
+        <span></span>
+        <span></span>
+        <span></span>
+      </a>
+    </div>
+
     <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
     <div class="cms">
       <% if @ss_mode == :cms %>

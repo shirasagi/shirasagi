@@ -1,6 +1,7 @@
 class Gws::Board::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Memo::NotificationFilter
 
   model Gws::Board::Topic
 

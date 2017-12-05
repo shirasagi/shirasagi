@@ -22,7 +22,7 @@
     <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|move|publish|depublish/ %>
+  <% elsif params[:action] =~ /edit|update|delete|move|publish|depublish|copy/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
@@ -36,6 +36,7 @@
         <%= link_to t('gws/report.links.publish'), action: :publish, id: @item %>
       <% end %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+      <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>

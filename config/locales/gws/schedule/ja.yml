@@ -24,6 +24,8 @@ ja:
     calendar:
       buttonText:
         listMonth: リスト
+        withTodo: ToDo表示
+        withAbsence: 欠席表示
       titleFormat:
         month: YYYY年 M月
         week: (YYYY年 M月 D日（ddd）)
@@ -87,9 +89,14 @@ ja:
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
   gws/schedule/todo:
     finish_mark: "[完] "
+    buttons:
+      finish: 完了する
+      revert: 未完了に戻す
     notice:
       disable: 削除済みに移動しました
     confirm:
+      finish: 完了にしてよろしいですか？
+      revert: 未完了に戻してよろしいですか？
       disable: 削除済みに移動しますか？
       finish_all: 選択した項目を全て完了にしますか？
       revert_all: 選択した項目を全て未完了に戻しますか？
@@ -228,7 +235,6 @@ ja:
         attendance_check_state: 出欠確認
         attendances: 出欠情報
       gws/schedule/attendance:
-        in_comment: コメント
         attendance_state: 出欠
       gws/schedule/facility_column_values:
         main_facility_id: 主設備
@@ -311,3 +317,23 @@ ja:
     gws/addon/schedule/attendances:
       attendance_check_state:
         - 出欠確認を有効にするかしないかを選択してください。
+
+  gws_notification:
+    gws/schedule/plan:
+      subject: "[更新通知][スケジュール] %{name}"
+      text: |
+        「%{name}」が作成または更新されました。
+
+        %{text}
+
+    gws/schedule/comment:
+      subject: "[更新通知][スケジュール] %{name}"
+      text: |
+        「%{name}」にコメントがありました。
+
+        %{text}
+
+    gws/schedule/attendance:
+      subject: "[更新通知][スケジュール] %{name}"
+      text: |
+        「%{name}」の出欠確認に回答がありました。

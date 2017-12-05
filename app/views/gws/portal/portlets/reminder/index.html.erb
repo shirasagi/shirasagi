@@ -1,35 +1,55 @@
 <%
-  @reminders = Gws::Reminder.site(@cur_site).
-    user(@cur_user).
-    page(1).per(5)
+  items = @portlet.find_reminder_items(@portal, @cur_user)
 %>
+<%= jquery do %>
+  Gws_Reminder.renderList({ url: "<%= gws_apis_reminders_path %>", el: ".<%= @portlet.portlet_id_class %>" });
+<% end %>
+
 <div class="main-box">
   <div class="portlet-title"><%= @portlet.name %></div>
 
   <ul class="list-items">
-    <% @reminders.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
-        <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
-      </div>
-      <div class="meta">
-        <% if item.date.present? %>
-          <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
+    <% items.each do |item| %>
+      <li class="list-item"
+        data-id="<%= item.item_id %>"
+        data-name="<%= item.name %>"
+        data-model="<%= item.model %>"
+        data-date="<%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %>">
+
+        <div class="info">
+          <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
+          <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
+
+          <div class="meta">
+            <% if item.date.present? %>
+              <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
+            <% end %>
+            <span class="label"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+            <% if item.updated_user_name.present? %>
+              <span class="user"><%= item.updated_user_name %></span>
+            <% end %>
+            <% if item.updated_date.present? %>
+              <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
+            <% end %>
+          </div>
+        </div>
+        <% if @portal.my_portal? %>
+        <div class="links">
+          <div class="dropdown dropdown-toggle">
+            <a class="more-btn">
+              <i class="material-icons md-dark">&#xE5D4;</i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
+              <li><a class="dropdown-menu-item gws-reminder-unset delete" href="#"><%= t('gws.buttons.unset') %></a></li>
+            </ul>
+          </div>
+        </div>
         <% end %>
-        <span class="label"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
-        <% if item.updated_user_name.present? %>
-          <span class="user"><%= item.updated_user_name %></span>
-        <% end %>
-        <% if item.updated_date.present? %>
-          <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
-        <% end %>
-      </div>
-    </li>
+      </li>
     <% end %>
   </ul>
 
-  <% if @reminders.next_page %>
-  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
+  <% if items.next_page && @portal.my_portal? %>
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
   <% end %>
 </div>

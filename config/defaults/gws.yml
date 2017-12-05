@@ -18,6 +18,11 @@ production: &production
     severity: info
     severity_notice: disabled
 
+  apis:
+    users:
+      # 初期表示グループ / user_group, root_group
+      default_group: user_group
+
   chorg:
     models:
       - "Gws::Board::Category"
@@ -38,10 +43,8 @@ production: &production
       - "Gws::Monitor::Category"
       - "Gws::Monitor::Post"
       - "Gws::Notice"
+      - "Gws::Portal::GroupPortlet"
       - "Gws::Portal::GroupSetting"
-      - "Gws::Portal::MyPortlet"
-      - "Gws::Portal::MySetting"
-      - "Gws::Portal::RootSetting"
       - "Gws::Portal::UserPortlet"
       - "Gws::Portal::UserSetting"
       - "Gws::Qna::Category"

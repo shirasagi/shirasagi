@@ -3,10 +3,6 @@ module Gws::Portal
     Gws::Group.include Gws::Portal::GroupExtension
     Gws::User.include Gws::Portal::UserExtension
 
-    Gws::Role.permission :read_private_gws_portal_my_settings, module_name: 'gws/portal'
-    Gws::Role.permission :edit_private_gws_portal_my_settings, module_name: 'gws/portal'
-    Gws::Role.permission :delete_private_gws_portal_my_settings, module_name: 'gws/portal'
-
     Gws::Role.permission :read_other_gws_portal_user_settings, module_name: 'gws/portal'
     Gws::Role.permission :read_private_gws_portal_user_settings, module_name: 'gws/portal'
     Gws::Role.permission :edit_other_gws_portal_user_settings, module_name: 'gws/portal'
@@ -20,12 +16,5 @@ module Gws::Portal
     Gws::Role.permission :edit_private_gws_portal_group_settings, module_name: 'gws/portal'
     Gws::Role.permission :delete_other_gws_portal_group_settings, module_name: 'gws/portal'
     Gws::Role.permission :delete_private_gws_portal_group_settings, module_name: 'gws/portal'
-
-    Gws::Role.permission :read_other_gws_portal_root_settings, module_name: 'gws/portal'
-    Gws::Role.permission :read_private_gws_portal_root_settings, module_name: 'gws/portal'
-    Gws::Role.permission :edit_other_gws_portal_root_settings, module_name: 'gws/portal'
-    Gws::Role.permission :edit_private_gws_portal_root_settings, module_name: 'gws/portal'
-    Gws::Role.permission :delete_other_gws_portal_root_settings, module_name: 'gws/portal'
-    Gws::Role.permission :delete_private_gws_portal_root_settings, module_name: 'gws/portal'
   end
 end

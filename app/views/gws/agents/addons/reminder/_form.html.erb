@@ -1,0 +1,12 @@
+<dl class="see gws-addon-reminder">
+  <dt>
+    <%= @model.t :reminder_date %><%= @model.tt :reminder_date %>
+  </dt>
+  <dd>
+    <%= f.text_field :in_reminder_date, value: tryb { @item.in_reminder_date.strftime("%Y/%m/%d %H:%M") }, class: "datetime js-datetime" %>
+    <label style="margin-left: 10px; vertical-align: middle;">
+      <%= f.check_box :in_reminder_state, {}, 'disabled', 'enabled' %>
+      <%= t 'gws.options.reminder_state.disable' %>
+    </label>
+  </dd>
+</dl>

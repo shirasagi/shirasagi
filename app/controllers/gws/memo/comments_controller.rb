@@ -4,6 +4,10 @@ class Gws::Memo::CommentsController < ApplicationController
 
   model Gws::Memo::Comment
 
+  before_action :set_item, only: [:destroy]
+
+  private
+
   def set_cur_message
     @cur_message ||= Gws::Memo::Message.find(params[:message_id])
   end
@@ -12,6 +16,20 @@ class Gws::Memo::CommentsController < ApplicationController
     set_cur_message
     { cur_site: @cur_site, cur_user: @cur_user, cur_message: @cur_message, text_type: 'plain' }
   end
+
+  def set_item
+    set_cur_message
+    @item ||= begin
+      item = @model.message(@cur_message).find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
+  public
 
   def create
     @item = @model.new get_params
@@ -25,6 +43,22 @@ class Gws::Memo::CommentsController < ApplicationController
       respond_to do |format|
         format.html { redirect_to params[:redirect_to], notice: @item.errors.full_messages.join('\n') }
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+      end
+    end
+  end
+
+  def destroy
+    raise '404' if @item.user.id != @cur_user.id
+
+    if @item.destroy
+      respond_to do |format|
+        format.html { redirect_to params[:redirect_to], notice: t('ss.notice.deleted') }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to params[:redirect_to], notice: @item.errors.full_messages.join('\n') }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
