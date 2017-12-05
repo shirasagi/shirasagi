@@ -156,7 +156,7 @@ td {
   .cms, .gws, .sns, .webmail {
     @include clear;
     float: left;
-    @include mb { display: none; }
+    @include mb { float: none; }
     h2 {
       float: left;
       a {
@@ -185,6 +185,10 @@ td {
   .cms h2 a {
     padding: 15px 20px 15px 55px;
     background: url(/assets/img/ic-cms-off.png) no-repeat 20px center;
+    @include mb {
+      padding: 5px 10px 5px 40px;
+      background-position: 10px center;
+    }
     &.current, &:hover {
       background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
     }
@@ -192,6 +196,10 @@ td {
   .gws h2 a {
     padding: 15px 20px 15px 70px;
     background: url(/assets/img/ic-gws-off.png) no-repeat 20px center;
+    @include mb {
+      padding: 5px 10px 5px 55px;
+      background-position: 10px center;
+    }
     &.current, &:hover {
       background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
     }
@@ -199,6 +207,10 @@ td {
   .sns h2 a {
     padding: 15px 20px 15px 60px;
     background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
+    @include mb {
+      padding: 5px 10px 5px 45px;
+      background-position: 10px center;
+    }
     &.current, &:hover {
       background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
     }
@@ -206,8 +218,20 @@ td {
   .webmail h2 a {
     padding: 15px 20px 15px 60px;
     background: url(/assets/img/ic-mail-off.png) no-repeat 20px center;
+    @include mb {
+      padding: 5px 10px 5px 45px;
+      background-position: 10px center;
+    }
     &.current, &:hover {
       background: $white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
+    }
+  }
+  @include mb {
+    .application-menu {
+      -js-display: flex;
+      @include display-flex;
+      @include justify-content(center);
+      clear: both;
     }
   }
   .env {
@@ -1594,8 +1618,8 @@ div.index {
     form {
       -js-display: flex;
       @include display-flex;
-      @include align-items(center);
       @include flex-wrap(wrap);
+      @include align-items(center);
       @include justify-content(center);
     }
     input[type="text"] {
