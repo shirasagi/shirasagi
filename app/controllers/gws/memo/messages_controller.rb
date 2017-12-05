@@ -10,20 +10,33 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_group_navi, only: [:index]
+  before_action :set_cur_folder, only: [:index]
 
   private
 
   def set_crumbs
+    set_cur_folder
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
+    if @cur_folder.folder_path != 'INBOX'
+      @cur_folder.ancestor_or_self.each do |folder|
+        @crumbs << [folder.current_name, gws_memo_messages_path(folder: folder.folder_path)]
+      end
+    end
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def set_cur_folder
+    dir = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
+    @cur_folder = dir ? dir : Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).find_by(_id: params[:folder])
+  end
+
   def set_group_navi
-    @group_navi = Gws::Memo::Folder.static_items(@cur_user) +
+    @group_navi = Gws::Memo::Folder.static_items(@cur_user, @cur_site) +
       Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    @group_navi.each {|folder| folder.site = @cur_site}
   end
 
   def apply_filters
@@ -83,6 +96,8 @@ class Gws::Memo::MessagesController < ApplicationController
 
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
     @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
   end
 
   def create
@@ -107,7 +122,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def show
-    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+    raise '404' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
     @item.set_seen(@cur_user).update
     render
   end
