@@ -1,9 +1,9 @@
 <dl class="see">
   <dt><%= @model.t :circular_default_due_date %><%= @model.tt :circular_default_due_date %></dt>
-  <dd><%= f.number_field :circular_default_due_date %> <%= t('datetime.prompts.day') %></dd>
+  <dd class="short"><%= f.number_field :circular_default_due_date %> <span class="postfix"><%= t('datetime.prompts.day') %></span></dd>
 
   <dt><%= @model.t :circular_filesize_limit %><%= @model.tt :circular_filesize_limit %></dt>
-  <dd><%= f.number_field :circular_filesize_limit %> <%= t('ss.units.mega_byte') %></dd>
+  <dd class="short"><%= f.number_field :circular_filesize_limit %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
 
   <dt><%= @model.t :circular_delete_threshold %><%= @model.tt :circular_delete_threshold %></dt>
   <dd><%= f.select :circular_delete_threshold, @item.circular_delete_threshold_options %></dd>

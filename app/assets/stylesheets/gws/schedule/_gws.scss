@@ -41,15 +41,20 @@
 .gws-schedule-tabs {
   @include clear;
   margin-top: -1px;
+  padding: 0 10px;
   a {
     display: block;
     float: left;
-    margin: 1px 0 -1px 6px;
+    margin: 1px 6px -1px 0;
     border: 1px solid $gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
     background-color: $gray5;
     color: #000;
+    @include mb {
+      margin: 1px 6px 6px 0;
+      border-radius: 4px;
+    }
     .tab-name {
       display: block;
       padding: 5px 8px;
@@ -65,6 +70,9 @@
     border-bottom-color: #fff;
     border-left-color: $orange;
     background-color: #fff;
+    @include mb {
+      border-bottom-color: #bbb;
+    }
   }
 }
 .gws-schedule-box {

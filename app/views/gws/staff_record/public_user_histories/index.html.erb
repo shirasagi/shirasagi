@@ -8,33 +8,35 @@
 <% end %>
 
 <div class="main-box">
-  <table class="index data-table">
-    <thead>
-      <tr>
-        <th style="width: 12%"><%= @model.t :year_id %></th>
-        <th style="width: 25%"><%= @model.t :section_name %></th>
-        <th style="width: 18%"><%= @model.t :charge_name %></th>
-        <th style="width: 15%"><%= @model.t :title_name %></th>
-        <th><%= @model.t :remark %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @items.each_with_index do |item, idx| %>
-        <% if idx == 0 %>
+  <div class="wrap-table">
+    <table class="index data-table">
+      <thead>
         <tr>
-          <th colspan="7"><%= item.send :name %></th>
+          <th style="width: 12%"><%= @model.t :year_id %></th>
+          <th style="width: 25%"><%= @model.t :section_name %></th>
+          <th style="width: 18%"><%= @model.t :charge_name %></th>
+          <th style="width: 15%"><%= @model.t :title_name %></th>
+          <th><%= @model.t :remark %></th>
         </tr>
+      </thead>
+      <tbody>
+        <% @items.each_with_index do |item, idx| %>
+          <% if idx == 0 %>
+          <tr>
+            <th colspan="7"><%= item.send :name %></th>
+          </tr>
+          <% end %>
+          <tr>
+            <td><%= tryb { item.year.name } %></td>
+            <td><%= item.send :section_name %></td>
+            <td><%= item.send :charge_name %></td>
+            <td><%= item.send :title_name %></td>
+            <td><%= item.send :remark %></td>
+          </tr>
         <% end %>
-        <tr>
-          <td><%= tryb { item.year.name } %></td>
-          <td><%= item.send :section_name %></td>
-          <td><%= item.send :charge_name %></td>
-          <td><%= item.send :title_name %></td>
-          <td><%= item.send :remark %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

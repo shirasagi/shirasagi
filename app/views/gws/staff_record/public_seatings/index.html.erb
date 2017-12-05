@@ -8,26 +8,28 @@
 <% end %>
 
 <div class="main-box">
-  <table class="index data-table">
-    <thead>
-      <tr>
-        <th style="width: 40%"><%= @model.t :name %></th>
-        <th><%= @model.t :remark %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @items.each do |item| %>
+  <div class="wrap-table">
+    <table class="index data-table">
+      <thead>
         <tr>
-          <td><%= link_to item.name, item.url %></td>
-          <td><%= item.send :remark %></td>
+          <th style="width: 40%"><%= @model.t :name %></th>
+          <th><%= @model.t :remark %></th>
         </tr>
-      <% end %>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <td><%= link_to item.name, item.url %></td>
+            <td><%= item.send :remark %></td>
+          </tr>
+        <% end %>
 
-      <% if @items.blank? %>
-        <tr><td colspan="10"><%= I18n.t('gws/staff_record.errors.no_data') %></td></tr>
-      <% end %>
-    </tbody>
-  </table>
+        <% if @items.blank? %>
+          <tr><td colspan="10"><%= I18n.t('gws/staff_record.errors.no_data') %></td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
