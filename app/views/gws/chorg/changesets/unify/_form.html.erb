@@ -27,7 +27,7 @@
       <% if @item.sources.present? %>
         <% @item.sources.each do |source| %>
           <tr data-id="<%= source["id"] %>">
-            <td><%= f.hidden_field "sources[][id]", value: source["id"] %> <%= source["name"] %></td>
+            <td><%= f.hidden_field "sources[][id]", value: source["id"], id: nil %> <%= source["name"] %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>

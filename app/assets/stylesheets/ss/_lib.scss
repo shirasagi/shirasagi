@@ -35,15 +35,17 @@
 // -------------------------------------------------------------------------------------------------
 // spacing
 
-.mx-1 { margin-left: 5px; margin-right: 5px; }
-.my-1 { margin-top: 5px; margin-bottom: 5px; }
-.mt-1 { margin-top: 5px; }
-.mb-1 { margin-bottom: 5px; }
-.ml-1 { margin-left: 5px; }
-.mr-1 { margin-right: 5px; }
-.mx-2 { margin-left: 10px; margin-right: 10px; }
-.my-2 { margin-top: 10px; margin-bottom: 10px; }
-.mt-2 { margin-top: 10px; }
-.mb-2 { margin-bottom: 10px; }
-.ml-2 { margin-left: 10px; }
-.mr-2 { margin-right: 10px; }
+.mx-auto, .ml-auto { margin-left: auto; }
+.mx-auto, .mr-auto { margin-right: auto; }
+.mx-0, .ml-0 { margin-left: 0; }
+.mx-0, .mr-0 { margin-right: 0; }
+.my-0, .mt-0 { margin-top: 0; }
+.my-0, .mb-0 { margin-bottom: 0; }
+.mx-1, .ml-1 { margin-left: 5px; }
+.mx-1, .mr-1 { margin-right: 5px; }
+.my-1, .mt-1 { margin-top: 5px; }
+.my-1, .mb-1 { margin-bottom: 5px; }
+.mx-2, .ml-2 { margin-left: 10px; }
+.mx-2, .mr-2 { margin-right: 10px; }
+.my-2, .mt-2 { margin-top: 10px; }
+.my-2, .mb-2 { margin-bottom: 10px; }
