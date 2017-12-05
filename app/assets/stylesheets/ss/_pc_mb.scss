@@ -359,6 +359,7 @@ td {
   background: $white;
   @include mb {
     display: none;
+    z-index: 200;
     float: none;
     width: 100%;
     border: none;
@@ -1023,6 +1024,7 @@ td {
 .main-box  {
   @include box;
   padding: 15px 10px;
+  @include mb { margin: 0 10px 10px; }
   header {
     @include box-head;
     margin: -15px -10px 15px;
@@ -1069,6 +1071,7 @@ td {
 .search-contents-pages,
 .search-contents-form,
 .search-form {
+  @include clear;
   padding: 10px;
 }
 .list-head-search .index-search,
@@ -1119,6 +1122,14 @@ dl.see {
         }
       }
     }
+    @include mb {
+      select + input[type="text"] {
+        width: 60% !important;
+      }
+      input + button {
+        margin-top: 10px;
+      }
+    }
     label {
       display: inline-block;
       margin-right: 1rem;
@@ -1156,8 +1167,23 @@ dl.see {
       margin-right: 5px;
     }
   }
+  > dd.short {
+    @include mb {
+      -js-display: flex;
+      @include display-flex;
+      .postfix { margin-left: 5px; }
+    }
+  }
+  .cke_chrome {
+    @include box-shadow(none);
+  }
   > dt.depth-2 {
     padding-left: 20px;
+    @include mb {
+      & + dd {
+        padding-left: 20px;
+      }
+    }
   }
 }
 dl.mod-cms-parent_crumbs {
@@ -1193,7 +1219,7 @@ dl.mod-cms-parent_crumbs {
     cursor: auto;
     @include mb {
       left: -70px;
-      width: 25em;
+      width: 20em;
     }
     &:before {
       content: "";
@@ -1472,9 +1498,6 @@ footer.send {
     float: right;
     @include mb {
       float: none;
-      #s_keyword {
-        margin-bottom: 10px;
-      }
     }
   }
 }
@@ -1525,8 +1548,13 @@ div.index {
   float: left;
   margin-top: 3px;
   @include mb {
+    float: none;
     margin-bottom: 10px;
-    button { margin: 0; }
+    * { margin-bottom: 5px; }
+    input[type="text"] { width: 70% !important; }
+    input[type="submit"] { width: auto !important; }
+    button { margin: 0 0 5px; }
+    span { display: inline-block; }
   }
 }
 .list-head-action-tag {
@@ -1543,10 +1571,40 @@ div.index {
     float: none;
     .index-search {
       margin: 0;
+      @include mb {
+        -js-display: flex;
+        @include display-flex;
+        @include flex-wrap(wrap);
+        @include align-items(center);
+      }
     }
-    * { margin-bottom: 5px; }
+    * { margin: 0 5px 5px 0; }
     input[type="text"] { width: 70% !important; }
-    input[type="submit"] { width: 20% !important; }
+    input[type="submit"] { width: auto !important; }
+  }
+  .limit {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 0 1em;
+    text-align: right;
+  }
+}
+.list-head-search-full {
+  @include mb {
+    form {
+      -js-display: flex;
+      @include display-flex;
+      @include align-items(center);
+      @include flex-wrap(wrap);
+      @include justify-content(center);
+    }
+    input[type="text"] {
+      width: 80%!important;
+      margin-right: 5px;
+    }
+    .tooltip {
+      margin-top: 5px;
+    }
   }
 }
 .list-items {
@@ -1625,6 +1683,20 @@ div.index {
       .btn {
         margin-top: 4px;
       }
+    }
+  }
+}
+.wrap-table {
+  overflow: scroll;
+  @include mb {
+    table.index th, table.index td {
+      display: table-cell;
+    }
+    table.index thead th {
+      border-bottom: $border-gray5;
+    }
+    table.index thead th:after {
+      display: none;
     }
   }
 }
