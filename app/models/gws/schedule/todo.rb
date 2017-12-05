@@ -27,6 +27,21 @@ class Gws::Schedule::Todo
     todo_state == 'finished'
   end
 
+  scope :search, ->(params) {
+    criteria = where({})
+    return criteria if params.blank?
+
+    if params[:keyword].present?
+      criteria = criteria.keyword_in params[:keyword], :name, :text
+    end
+
+    if params[:todo_state].present? && params[:todo_state] != 'both'
+      criteria = criteria.where todo_state: params[:todo_state]
+    end
+
+    criteria
+  }
+
   scope :active, ->(date = Time.zone.now) {
     where('$and' => [
         { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
