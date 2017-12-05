@@ -87,10 +87,21 @@
     .search {
       float: right;
       margin: -5px 0 -5px 20px;
+      @include mb {
+        float: none;
+        margin: 0;
+        input[type="text"] {
+          width: auto !important;
+        }
+      }
     }
     .operations {
       float: right;
       margin: -5px 0 -5px 20px;
+      @include mb {
+        margin: 0;
+        .btn-print { display: none; }
+      }
     }
     h2 .search {
       margin: -5px 0;
@@ -207,6 +218,10 @@
     color: $orange;
     border-color: $orange;
   }
+  @include mb {
+    clear: both;
+    margin: 10px 0 !important;
+  }
 }
 .fc-view {
   //z-index: 100;
@@ -244,6 +259,14 @@
       border-color: black;
       border-style: solid;
       //border-width: 2px;
+    }
+  }
+}
+@include mb {
+  .fc-right {
+    margin: 0 0 10px 0;
+    .fc-button {
+      margin: 5px 5px 5px 0;
     }
   }
 }
