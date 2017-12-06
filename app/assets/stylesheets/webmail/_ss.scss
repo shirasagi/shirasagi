@@ -74,7 +74,10 @@ li.webmail-accounts {
     a {
       display: inline-block;
       width: 100%;
-      padding: 5px 0 5px 16px;
+      overflow: hidden;
+      padding: 5px 5px 5px 16px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     a:last-child {
       margin-bottom: 8px;
@@ -94,6 +97,9 @@ li.webmail-accounts {
     }
     .mailbox--noselect .material-icons {
       color: rgba(0,0,0,.5);
+    }
+    a:not(.depth-1) {
+     // display: none;
     }
   }
   .droppable-hover {
@@ -238,6 +244,10 @@ li.webmail-accounts {
     }
     .from {
       float: left;
+      @include mb {
+        float: none;
+        margin-bottom: 10px;
+      }
     }
     .date {
       text-align: right;
