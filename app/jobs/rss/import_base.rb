@@ -2,6 +2,7 @@ require 'rss'
 
 class Rss::ImportBase < Cms::ApplicationJob
 
+  queue_as :external
   attr_reader :errors
 
   def perform(*args)

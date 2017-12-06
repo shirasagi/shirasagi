@@ -1,6 +1,8 @@
 class Cms::CheckLinksJob < Cms::ApplicationJob
   include Job::Cms::GeneratorFilter
 
+  queue_as :external
+
   self.task_name = "cms:check_links"
   self.controller = Cms::Agents::Tasks::LinksController
   self.action = :check
