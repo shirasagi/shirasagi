@@ -10,6 +10,7 @@ module SS::Model::JobLog
 
   included do
     store_in collection: "job_logs"
+    store_in_repl_master
 
     index({ updated: -1 })
 

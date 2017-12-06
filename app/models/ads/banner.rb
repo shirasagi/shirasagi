@@ -20,6 +20,9 @@ class Ads::Banner
 
   permit_params :link_url
 
+  after_generate_file :generate_relation_public_file, if: ->{ public? }
+  after_remove_file :remove_relation_public_file
+
   default_scope ->{ where(route: "ads/banner") }
 
   def url

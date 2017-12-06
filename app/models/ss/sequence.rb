@@ -1,34 +1,32 @@
 class SS::Sequence
   include Mongoid::Document
 
-  if client = Mongoid::Config.clients[:default_post]
-    store_in client: :default_post, database: client[:database]
-  end
-
   field :id, type: String
   field :value, type: Integer
 
   class << self
-    def current_sequence(coll, name)
+    def current_sequence(coll, name, options)
       sid = "#{coll}_#{name}"
-      doc = where(_id: sid).first
+      doc = self.with(options[:with] || {}).where(_id: sid).first
       doc ? doc.value : 0
     end
 
-    def next_sequence(coll, name)
+    def next_sequence(coll, name, options)
+      model = self.with(options[:with] || {})
+
       sid = "#{coll}_#{name}"
-      doc = where(_id: sid).find_one_and_update({"$inc" => { value: 1 }}, return_document: :after, upsert: false)
+      doc = model.where(_id: sid).find_one_and_update({"$inc" => { value: 1 }}, return_document: :after, upsert: false)
       return doc.value if doc
 
       key = (name == :id) ? :_id : name
-      doc = collection.database[coll].find.sort(key => -1).first
+      doc = model.mongo_client[coll].find.sort(key => -1).first
       val = doc ? doc[key].to_i + 1 : 1
-      self.new(_id: sid, value: val).save ? val : nil
+      model.new(_id: sid, value: val).save ? val : nil
     end
 
-    def unset_sequence(coll, name)
+    def unset_sequence(coll, name, options)
       sid = "#{coll}_#{name}"
-      SS::Sequence.destroy_all(_id: sid)
+      self.with(options[:with] || {}).destroy_all(_id: sid)
     end
   end
 end

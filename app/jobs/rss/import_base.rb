@@ -2,6 +2,7 @@ require 'rss'
 
 class Rss::ImportBase < Cms::ApplicationJob
 
+  queue_as :external
   attr_reader :errors
 
   def perform(*args)
@@ -28,7 +29,7 @@ class Rss::ImportBase < Cms::ApplicationJob
   private
 
   def model
-    @model ||= Rss::Page
+    @model ||= Rss::Page.with_repl_master
   end
 
   def set_model(model)

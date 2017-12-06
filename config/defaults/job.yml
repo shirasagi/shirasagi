@@ -24,6 +24,7 @@ production: &production
         - 'default'
         - 'mailers'
         - 'voice_synthesis'
+        - 'external'
 
       # プールの監視間隔を秒で指定します。規定値は 5 秒です。
       # この設定は、mode が service の場合のみ有効です。

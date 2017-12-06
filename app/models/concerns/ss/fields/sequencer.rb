@@ -14,15 +14,15 @@ module SS::Fields::Sequencer
   end
 
   def current_sequence(name)
-    SS::Sequence.current_sequence collection_name, name
+    SS::Sequence.current_sequence collection_name, name, with: mongo_client_options
   end
 
   def next_sequence(name)
-    SS::Sequence.next_sequence collection_name, name
+    SS::Sequence.next_sequence collection_name, name, with: mongo_client_options
   end
 
   def unset_sequence(name)
-    SS::Sequence.unset_sequence collection_name, name
+    SS::Sequence.unset_sequence collection_name, name, with: mongo_client_options
   end
 
   private

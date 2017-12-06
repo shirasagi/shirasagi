@@ -19,7 +19,7 @@ module Rss::Addon::Page
         if count > max
           limit = count - max
           criteria.order(released: 1, _id: 1).limit(limit).each do |item|
-            item.destroy
+            item.with(mongo_client_options).destroy
             yield item if block_given?
           end
         end

@@ -1,28 +1,26 @@
 # MongoDB Configuration
 
-production_master_side:
+production:
   clients:
-    default: # master (writable)
+    default:
       database: ss
       hosts:
         - localhost:27017
+
+    # Slave / 投稿用
     default_post:
       database: ss_post
       hosts:
         - localhost:27018
-    # slave side (public, public_2, public_3,,)
+
+    # Slave / ログ用
+    repl_master:
+      database: ss
+      hosts:
+        - other:27017
+
+    # Master / 投稿用
     public:
       database: ss_post
       hosts:
-        - otherhost:27018
-
-production_slave_side:
-  clients:
-    default: # slave (readonly)
-      database: ss
-      hosts:
-        - localhost:27017
-    default_post: # (writable)
-      database: ss_post
-      hosts:
-        - localhost:27018
+        - other:27018

@@ -15,18 +15,18 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   def unset_errors_in_contents
     Cms::Page.site(@site).has_check_links_errors.each do |content|
-      content.unset(:check_links_errors_updated, :check_links_errors)
+      content.with_repl_master.unset(:check_links_errors_updated, :check_links_errors)
     end
 
     Cms::Node.site(@site).has_check_links_errors.each do |content|
-      content.unset(:check_links_errors_updated, :check_links_errors)
+      content.with_repl_master.unset(:check_links_errors_updated, :check_links_errors)
     end
   end
 
   def set_errors_in_contents(ref, urls)
     content = find_content_from_ref(ref)
     if content
-      content.set(check_links_errors_updated: @task.started, check_links_errors: urls)
+      content.with_repl_master.set(check_links_errors_updated: @task.started, check_links_errors: urls)
     end
   end
 
