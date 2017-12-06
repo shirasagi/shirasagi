@@ -191,6 +191,9 @@ td {
     }
     &.current, &:hover {
       background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
+      @include mb {
+        background-position: 10px center;
+      }
     }
   }
   .gws h2 a {
@@ -202,6 +205,9 @@ td {
     }
     &.current, &:hover {
       background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
+      @include mb {
+        background-position: 10px center;
+      }
     }
   }
   .sns h2 a {
@@ -213,6 +219,9 @@ td {
     }
     &.current, &:hover {
       background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
+      @include mb {
+        background-position: 10px center;
+      }
     }
   }
   .webmail h2 a {
@@ -224,6 +233,9 @@ td {
     }
     &.current, &:hover {
       background: $white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
+      @include mb {
+        background-position: 10px center;
+      }
     }
   }
   @include mb {
