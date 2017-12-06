@@ -76,7 +76,7 @@
 
       <dd class="crumb-urls">
         <%= text_field_tag "item[parent_crumb_urls][]", url, class: :parent_crumb_urls %>
-        <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
+        <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn" } %>
       </dd>
       <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
 
@@ -85,7 +85,7 @@
 
     <dd class="crumb-urls">
       <%= text_field_tag "item[parent_crumb_urls][]", "", class: :parent_crumb_urls %>
-      <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
+      <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn" } %>
     </dd>
     <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
 
