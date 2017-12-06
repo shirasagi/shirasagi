@@ -17,10 +17,10 @@ production:
     repl_master:
       database: ss
       hosts:
-        - otherhost:27017
+        - other:27017
 
     # Master / 投稿用
     public:
       database: ss_post
       hosts:
-        - otherhost:27018
+        - other:27018
