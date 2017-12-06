@@ -32,10 +32,10 @@ class Gws::StaffRecord::User
                 :divide_duties, :remark, :staff_records_view, :divide_duties_view
 
   validates :name, presence: true
-  validates :code, presence: true#, uniqueness: { scope: [:site_id, :year] }
+  validates :code, presence: true, unless: ->{ %i[copy_situation].include?(validation_context) }
   validates :multi_section, inclusion: { in: %w(regular plural) }
   validates :section_name, presence: true
-  validates :charge_name, presence: true
+  validates :charge_name, presence: true, unless: ->{ %i[copy_situation].include?(validation_context) }
   validates :staff_records_view, inclusion: { in: %w(show hide) }
   validates :divide_duties_view, inclusion: { in: %w(show hide) }
 
