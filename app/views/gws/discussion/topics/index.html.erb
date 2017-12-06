@@ -94,16 +94,17 @@ Gws_Discussion_Unseen.renderUnseen(
   </div>
 </div>
 
-<!--
 <div class="gws-discussion-navi">
   <div class="addon-view">
     <div class="addon-head"><h2><%= "参加者一覧" %></h2></div>
     <div class="addon-body">
       <dl class="see">
         <dd class="wide">
+          <% @forum.discussion_members.each do |member| %>
+            <p><%= member.long_name %></p>
+          <% end %>
         </dd>
       </dl>
     </div>
   </div>
 </div>
--->

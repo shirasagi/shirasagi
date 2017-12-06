@@ -34,16 +34,17 @@ class @SS_Addon_TempFile
         da.addClass('file-dragenter')
         return false
       da.on 'drop', (e) ->
-        if SS_Addon_TempFile.dropEventTriggered
-          return false
-
-        SS_Addon_TempFile.dropEventTriggered = true
         dropArea = e.target
         token = $('meta[name="csrf-token"]').attr('content')
         formData = new FormData()
         formData.append('authenticity_token', token)
-
         files = e.originalEvent.dataTransfer.files
+        return false if files.length == 0
+
+        if SS_Addon_TempFile.dropEventTriggered
+          return false
+        SS_Addon_TempFile.dropEventTriggered = true
+
         for file in files
           formData.append('item[in_files][]', file)
         request = new XMLHttpRequest()

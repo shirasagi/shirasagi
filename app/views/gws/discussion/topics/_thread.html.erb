@@ -12,7 +12,10 @@ var appendSelectedFile = function(selected, fileId, humanizedName) {
   a.attr("href", "/.u" + <%= @cur_user.id %> + "/apis/temp_files/" + fileId + "/view");
   input.attr("value", fileId);
   icon.on("click", function(e) {
-  $(this).parent("span").remove();
+    $(this).parent("span").remove();
+    if ($(selected).find("[data-file-id]").length <= 0) {
+      $(selected).hide();
+    }
     return false;
   });
 
@@ -29,16 +32,7 @@ $('a.ajax-box').data('on-select', function($item) {
   var fileId = $item.data('id');
   var humanizedName = $item.data('humanized-name');
   appendSelectedFile(selected, fileId, humanizedName);
-  if ($(selected).find("[data-file-id]").length <= 0) {
-    $(selected).hide();
-  }
   return $.colorbox.close();
-});
-$('a.ajax-box').data('on-upload', function(index, file) {
-  var selected = $.colorbox.element().closest(".comment-files").find(".selected-files");
-  var fileId = file["_id"];
-  var humanizedName = file["name"];
-  appendSelectedFile(selected, fileId, humanizedName);
 });
 SS_Addon_TempFile.select = function(files, dropArea) {
   $(files).each(function(i, file) {
@@ -59,10 +53,15 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
   <div class="addon-body">
     <dl class="see">
       <dd class="wide">
-        <div class="contributor">
-          <span class="no"><%= "1." %></span>
-          <%= topic.contributor_name %>
-        </div>
+        <header>
+          <div class="contributor">
+            <span class="no"><%= "1." %></span>
+            <%= topic.contributor_name %>
+          </div>
+          <div class="datetime updated">
+            <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
+          </div>
+        </header>
         <div class="markdown-body">
           <%= topic.html %>
         </div>
@@ -76,9 +75,6 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
           <% end %>
         </div>
         <% end %>
-        <div class="datetime updated">
-          <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
-        </div>
       </dd>
     </dl>
   </div>
@@ -99,10 +95,15 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
     <div class="addon-body">
       <dl class="see">
         <dd class="wide">
-          <div class="contributor">
-            <span class="no"><%= "#{offset + i + 2}." %></span>
-            <%= comment.contributor_name %>
-          </div>
+          <header>
+            <div class="contributor">
+              <span class="no"><%= "#{offset + i + 2}." %></span>
+              <%= comment.contributor_name %>
+            </div>
+            <div class="datetime updated">
+              <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
+            </div>
+          </header>
           <div class="markdown-body">
             <%= comment.html %>
           </div>
@@ -116,9 +117,6 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
             <% end %>
           </div>
           <% end %>
-          <div class="datetime updated">
-            <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
-          </div>
           <div class="menu">
             <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
               <%= link_to "編集する", edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
@@ -133,7 +131,7 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
   <% end %>
 
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <div class="addon-body">
+  <div class="addon-body replay">
     <% if @comment && @comment.parent_id == topic.id %>
       <%= error_messages_for :comment %>
     <% end %>

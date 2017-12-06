@@ -8,13 +8,10 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete/ %>
-    <%= link_to "スレッド一覧へ戻る", action: :index %>
-    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
-    <% end %>
+  <% elsif params[:action] =~ /edit|update|delete|copy/ %>
+    <%= link_to t('ss.links.back_to_index'), gws_discussion_forum_topic_comments_path(topic_id: @item.id) %>
   <% else %>
-    <%= link_to "スレッド一覧へ戻る", action: :index %>
+    <%= link_to t('ss.links.back_to_index'), gws_discussion_forum_topic_comments_path(topic_id: @item.id) %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>

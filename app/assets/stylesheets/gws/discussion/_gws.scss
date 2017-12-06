@@ -1,8 +1,23 @@
 // gws-discussion
 
 .gws-discussion {
+  .addon-body {
+    @include clear;
+  }
   .addon-body .no {
     margin-bottom: 10px;
+  }
+  .addon-body header {
+    @include clear;
+    .contributor {
+      float: left;
+      font-weight: bold;
+      margin-bottom: 10px;
+      padding: 0 7px;
+    }
+    .datetime {
+      float: right;
+    }
   }
   .addon-body .markdown-body {
     margin-bottom: 10px;
@@ -15,20 +30,20 @@
     padding: 15px;
     border-radius: 4px;
     background-color: #f2f2f2;
-    img {
-      max-width: 100%;
-      height: auto;
-      border-style: none;
-      line-height: 0;
-    }
-    a {
-      display: inline-block;
-      line-height: 1.5;
-      word-break: normal;
-      word-wrap: normal;
-    }
-    i {
+    span {
       margin-right: 8px;
+      img {
+        max-width: 100%;
+        height: auto;
+        border-style: none;
+        line-height: 0;
+      }
+      a {
+        display: inline-block;
+        line-height: 1.5;
+        word-break: normal;
+        word-wrap: normal;
+      }
     }
     .deselect {
       cursor: pointer;
@@ -46,11 +61,12 @@
     }
   }
   .menu {
+    float: right;
     padding-top: 10px;
   }
-  .contributor {
-    padding: 0 7px;
-    margin-bottom: 10px;
+  .addon-body.replay .menu .btn {
+    background: #f2d150;
+    background-image: -webkit-linear-gradient(top, #f2d150, #f2a950);
   }
 }
 .gws-discussion-thread {

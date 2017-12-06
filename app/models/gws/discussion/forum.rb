@@ -41,6 +41,36 @@ class Gws::Discussion::Forum
     created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
   end
 
+  def discussion_members
+    ids = user_ids
+    groups.each do |g|
+      ids += g.users.pluck(:id)
+    end
+
+    ids += readable_member_ids
+    readable_groups.each do |g|
+      ids += g.users.pluck(:id)
+    end
+
+    readable_custom_groups.each do |custom_group|
+      ids += custom_group.readable_member_ids
+    end
+
+    Gws::User.in(id: ids.uniq)
+  end
+
+  def currect_readable?
+    discussion_members.each do |u|
+      p [u.id, u.name, readable?(u)]
+    end
+
+    p "---"
+
+    Gws::User.nin(id: discussion_members.pluck(:id)).each do |u|
+      p [u.id, u.name, readable?(u)]
+    end
+  end
+
   # indexing to elasticsearch via companion object
   # around_save ::Gws::Elasticsearch::Indexer::BoardTopicJob.callback
   # around_destroy ::Gws::Elasticsearch::Indexer::BoardTopicJob.callback

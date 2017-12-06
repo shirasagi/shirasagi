@@ -7,6 +7,9 @@
     <% if @topic.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to "スレッドを複製する", copy_gws_discussion_forum_topic_path(forum_id: @forum.id, id: @topic.id) %>
     <% end %>
+    <% if @topic.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to "スレッドを削除する", delete_gws_discussion_forum_topic_path(forum_id: @forum.id, id: @topic.id) %>
+    <% end %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% else %>
