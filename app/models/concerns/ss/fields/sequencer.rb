@@ -14,7 +14,6 @@ module SS::Fields::Sequencer
   end
 
   def current_sequence(name)
-    storage =
     SS::Sequence.current_sequence collection_name, name, with: mongo_client_options
   end
 

@@ -22,15 +22,15 @@ module Mongoid
 
       def mongo_client_options
         options = persistence_options
-        return { client: options[:client], database: options[:database] } if options
-        { client: Job::Log.storage_options[:client], database: self.database_name }
+        return { client: options[:client], database: options[:database] }.compact if options
+        { client: self.storage_options[:client], database: self.database_name }.compact
       end
     end
 
     def mongo_client_options
       options = persistence_options
-      return { client: options[:client], database: options[:database] } if options
-      { client: Job::Log.storage_options[:client], database: self.class.database_name }
+      return { client: options[:client], database: options[:database] }.compact if options
+      { client: self.class.storage_options[:client], database: self.class.database_name }.compact
     end
 
     def with_repl_master
