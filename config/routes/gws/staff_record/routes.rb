@@ -21,7 +21,9 @@ SS::Application.routes.draw do
     end
     resources :public_seatings, only: [:index]
 
-    resources :years, concerns: [:deletion]
+    resources :years, concerns: [:deletion] do
+      match :copy_situation, on: :member, via: [:get, :post]
+    end
     resources :groups, path: ':year/groups', concerns: [:deletion, :export]
     resources :users, path: ':year/users', concerns: [:deletion, :export]
     resources :seatings, path: ':year/seatings', concerns: [:deletion, :export]

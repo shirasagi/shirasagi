@@ -8,6 +8,12 @@ ja:
     staff_records: 電子職員録
     divide_duties: 電子事務分掌表
     user_histories: 異動履歴
+    links:
+      copy_situation: 現況から所属と職員を作成する
+    confirm:
+      copy_situation: 現況から所属と職員を作成してよろしいですか？
+    notice:
+      copy_situation_started: 現況から所属と職員の作成処理を開始しました。
     search:
       section: 所属選択
     options:
@@ -137,3 +143,7 @@ ja:
       in_file:
         - CSVファイルを指定しインポートを行います。
         - idが記述されていない行は新規作成になります。
+
+  job:
+    models:
+      gws/staff_record/copy_situation_job: 電子職員録現況コピージョブ
