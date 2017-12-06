@@ -11,8 +11,8 @@
   <dd><%= f.select :default_release_plan_state, @item.default_release_plan_state_options %></dd>
 
   <dt><%= @model.t :default_release_days_after %><%= @model.tt :default_release_days_after %></dt>
-  <dd><%= f.number_field :default_release_days_after %> <%= t("ss.units.days_after") %></dd>
+  <dd class="short"><%= f.number_field :default_release_days_after %> <span class="postfix"><%= t("ss.units.days_after") %></span></dd>
 
   <dt><%= @model.t :default_close_days_after %><%= @model.tt :default_close_days_after %></dt>
-  <dd><%= f.number_field :default_close_days_after %> <%= t("ss.units.days_after") %></dd>
+  <dd class="short"><%= f.number_field :default_close_days_after %> <span class="postfix"><%= t("ss.units.days_after") %></span></dd>
 </dl>
