@@ -11,7 +11,7 @@
     padding: 0 7px;
   }
   .files {
-    margin: 10px;
+    margin: 5px;
     padding: 15px;
     border-radius: 4px;
     background-color: #f2f2f2;
@@ -23,10 +23,12 @@
     }
     a {
       display: inline-block;
-      margin-right: 8px;
       line-height: 1.5;
       word-break: normal;
       word-wrap: normal;
+    }
+    i {
+      margin-right: 8px;
     }
     .deselect {
       cursor: pointer;
@@ -36,7 +38,12 @@
     padding-top: 10px;
   }
   .comment-files {
+    margin-top: 5px;
     padding-top: 10px;
+    padding-bottom: 10px;
+    .upload-menu-new {
+      margin-left: 5px;
+    }
   }
   .menu {
     padding-top: 10px;
