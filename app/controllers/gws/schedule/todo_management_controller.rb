@@ -16,6 +16,10 @@ class Gws::Schedule::TodoManagementController < ApplicationController
     @crumbs << [t('gws/schedule/todo_management.management'), gws_schedule_todo_management_index_path]
   end
 
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
   public
 
   def index
