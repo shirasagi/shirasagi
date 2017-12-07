@@ -37,6 +37,7 @@ class Gws::Discussion::Forum
   def discussion_members
     ids = user_ids
     groups.each do |g|
+      g = Gws::Group.find(g.id)
       ids += g.users.pluck(:id)
     end
 

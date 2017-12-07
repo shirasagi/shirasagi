@@ -33,7 +33,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def set_items
-    @items = @forum.children.reorder(created: 1).
+    @items = @forum.children.reorder(order: 1, created: 1).
       page(params[:page]).per(5)
 
     @todos = Gws::Schedule::Todo.
@@ -57,7 +57,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def all
-    @items = @forum.children.reorder(created: 1).
+    @items = @forum.children.reorder(order: 1, created: 1).
       search(params[:s]).
       page(params[:page]).per(50)
   end

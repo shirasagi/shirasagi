@@ -18,6 +18,7 @@ module Gws::Discussion::Postable
     field :depth, type: Integer
     field :descendants_updated, type: DateTime
     field :main_topic, type: String, default: "disabled"
+    field :order, type: Integer, default: 0
 
     belongs_to :forum, class_name: "Gws::Discussion::Post", inverse_of: :forum_descendants
     belongs_to :topic, class_name: "Gws::Discussion::Post", inverse_of: :descendants
@@ -30,7 +31,7 @@ module Gws::Discussion::Postable
     has_many :children, class_name: "Gws::Discussion::Post", dependent: :destroy, inverse_of: :parent,
       order: { created: -1 }
 
-    permit_params :name
+    permit_params :name, :order
 
     before_validation :set_depth
 
@@ -82,6 +83,7 @@ module Gws::Discussion::Postable
     post.created = post.updated = Time.zone.now
     post.released = nil
     post.descendants_updated = nil
+    post.order = nil
 
     post.state = "closed" if post.depth == 1
     post.parent = new_parent if new_parent
