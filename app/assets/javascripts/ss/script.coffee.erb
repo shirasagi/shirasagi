@@ -79,6 +79,7 @@ $ ->
   $("#navi .main-navi a, #navi .mod-navi a").each ->
     menu = $(this)
     menu.parent().addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+  $('#navi .main-navi h3.current').parent().prev('h2').addClass('current')
 
   # navi
   $('.sp-menu-button a').click (e) ->
