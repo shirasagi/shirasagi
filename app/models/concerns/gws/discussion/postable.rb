@@ -10,7 +10,7 @@ module Gws::Discussion::Postable
     store_in collection: "gws_discussion_posts"
     set_permission_name "gws_discussion_forums"
 
-    attr_accessor :cur_site
+    attr_accessor :cur_site, :skip_descendants_updated
 
     seqid :id
     field :state, type: String, default: 'public'
@@ -37,9 +37,9 @@ module Gws::Discussion::Postable
 
     validates :name, presence: true, length: { maximum: 80 }
 
-    before_save :set_descendants_updated
-    after_save :update_topic_descendants_updated, if: -> { topic_id.present? }
-    after_save :update_forum_descendants_updated, if: -> { forum_id.present? }
+    before_save :set_descendants_updated, if: -> { !skip_descendants_updated }
+    after_save :update_topic_descendants_updated, if: -> { topic_id.present? && !skip_descendants_updated }
+    after_save :update_forum_descendants_updated, if: -> { forum_id.present? && !skip_descendants_updated }
 
     scope :topic, ->{ exists parent_id: false }
     scope :topic_comments, ->(topic) { where topic_id: topic.id }
@@ -83,7 +83,6 @@ module Gws::Discussion::Postable
     post.created = post.updated = Time.zone.now
     post.released = nil
     post.descendants_updated = nil
-    post.order = nil
 
     post.state = "closed" if post.depth == 1
     post.parent = new_parent if new_parent
@@ -102,6 +101,7 @@ module Gws::Discussion::Postable
       end
       post.file_ids = file_ids
     end
+    post.skip_descendants_updated = true
     post.save!
 
     children.each { |c| c.save_clone(post) }

@@ -1,6 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to "電子会議室一覧へ戻る", gws_discussion_forums_path %>
+    <!-- <%= link_to "電子会議室一覧へ戻る", gws_discussion_forums_path %> -->
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to "スレッドを新規作成", action: :new %>
     <% end %>
