@@ -51,6 +51,8 @@ module Chorg::Runner::Base
       end
 
       finalize_context
+
+      import_user_csv
     end
   end
 
