@@ -28,6 +28,8 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
       permission_level: @cur_year.permission_level
     )
     sr_group.save!(context: :copy_situation)
+
+    Rails.logger.info("#{sr_group.name}: 所属を作成しました。")
   end
 
   def copy_users
@@ -52,5 +54,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
       permission_level: @cur_year.permission_level
     )
     sr_user.save!(context: :copy_situation)
+
+    Rails.logger.info("#{sr_user.name_with_code}: 職員を作成しました。")
   end
 end
