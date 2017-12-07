@@ -60,12 +60,12 @@ module Gws::Addon::Schedule::Repeat
   def todo_action_without_repeat_plan(action)
     @skip_todo_action_repeat_plan = true
     case action
-      when 'disable'
-        disable
-      when 'finish'
-        update(todo_state: 'finished')
-      when 'revert'
-        update(todo_state: 'unfinished')
+    when 'disable'
+      disable
+    when 'finish'
+      update(todo_state: 'finished')
+    when 'revert'
+      update(todo_state: 'unfinished')
     end
   end
 
