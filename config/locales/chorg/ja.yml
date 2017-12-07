@@ -109,6 +109,7 @@ ja:
     attributes:
       chorg/model/revision:
         name: 名前
+        user_csv_file_id: ユーザーCSVファイル
       chorg/model/changeset:
         type: 種別
       chorg/run_params:
@@ -116,9 +117,14 @@ ja:
         reservation: 予約実行
 
   tooltip:
-    chorg/revision:
+    chorg/model/revision:
       name:
         - 組織変更の名称を入力します。
+      user_csv_file_id:
+        - 組織変更実行後にユーザーの異動を行うためのユーザーCSVファイルを選択します。
+        - ユーザーCSVには異動後のグループ名や役職を設定してください。
+        -
+        - ファイルを選択しない場合、組織変更実行後にユーザーは異動しませんので手動でユーザーを異動させてください。
     chorg/run_params:
       reservation:
         - 実行する時間を予約できます。
