@@ -10,4 +10,8 @@ class Gws::Discussion::Base
   include Gws::Addon::History
 
   readable_setting_include_custom_groups
+
+  # indexing to elasticsearch via companion object
+  # around_save ::Gws::Elasticsearch::Indexer::DiscussionBaseJob.callback
+  # around_destroy ::Gws::Elasticsearch::Indexer::DiscussionBaseJob.callback
 end

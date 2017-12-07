@@ -10,8 +10,4 @@ class Gws::Discussion::Post
   include Gws::Addon::History
 
   validates :text, presence: true
-
-  # indexing to elasticsearch via companion object
-  # around_save ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
-  # around_destroy ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
 end

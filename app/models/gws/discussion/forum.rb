@@ -30,10 +30,6 @@ class Gws::Discussion::Forum
     main_topic.save!
   end
 
-  def updated?
-    created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
-  end
-
   def discussion_members
     ids = user_ids
     groups.each do |g|
@@ -65,7 +61,7 @@ class Gws::Discussion::Forum
     end
   end
 
-  # indexing to elasticsearch via companion object
-  # around_save ::Gws::Elasticsearch::Indexer::BoardTopicJob.callback
-  # around_destroy ::Gws::Elasticsearch::Indexer::BoardTopicJob.callback
+  #def updated?
+  #  created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
+  #end
 end

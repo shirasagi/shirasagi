@@ -53,7 +53,7 @@ module Gws::Addon::System::MenuSetting
     field :menu_elasticsearch_state, type: String, default: 'hide'
     field :menu_elasticsearch_label, type: String, localize: true
 
-    field :menu_discussion_state, type: String, default: 'hide'
+    field :menu_discussion_state, type: String, default: 'show'
     field :menu_discussion_label, type: String, localize: true
 
     permit_params :menu_portal_state,
@@ -71,7 +71,7 @@ module Gws::Addon::System::MenuSetting
       :menu_personal_address_state,
       :menu_staff_record_state,
       :menu_links_state,
-      :menu_elasticsearch_stat,
+      :menu_elasticsearch_state,
       :menu_discussion_state
     permit_params :menu_portal_label,
       :menu_reminder_label,
