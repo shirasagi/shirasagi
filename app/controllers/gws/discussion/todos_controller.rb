@@ -40,6 +40,18 @@ class Gws::Discussion::TodosController < ApplicationController
     @items = []
   end
 
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+
+    @default_readable_setting = Proc.new do
+      @item.readable_setting_range = @forum.readable_setting_range
+      @item.readable_group_ids = @forum.readable_group_ids
+      @item.readable_member_ids = @forum.readable_member_ids
+    end
+
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
   def print
     @items = Gws::Schedule::Todo.
         site(@cur_site).

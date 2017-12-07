@@ -9,10 +9,7 @@ class Gws::Discussion::Forum
   include Gws::Addon::Discussion::GroupPermission
   include Gws::Addon::History
 
-  readable_setting_include_custom_groups
-
-  #after_save :save_descendants_setting
-  #validates :text, presence: true
+  #readable_setting_include_custom_groups
 
   def save_main_topic
     main_topic = Gws::Discussion::Topic.new
@@ -23,10 +20,6 @@ class Gws::Discussion::Forum
     main_topic.name = "メインスレッド"
     main_topic.text= "#{name}のメインスレッドです。"
     main_topic.text_type = "text"
-
-    #main_topic.contributor_model = contributor_model
-    #main_topic.contributor_id = contributor_id
-    #main_topic.contributor_name = contributor_name
 
     main_topic.user_ids = user_ids
     main_topic.custom_group_ids = custom_group_ids
