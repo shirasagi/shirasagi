@@ -1,3 +1,29 @@
+<%= javascript_tag do %>
+$(function() {
+  $('dd.form-select').each(function() {
+    return changeForm($(this));
+  });
+  $(document).on('change', 'dd.form-select', function(e) {
+    return changeForm($(this));
+  });
+});
+
+this.changeForm = function(self) {
+  self.find('input').each(function(i) {
+    if ($(this).prop('checked') || <%= confirm %>) {
+      var value = $(this).val();
+      $("dl").each(function() {
+        $(this).find('span.required').remove();
+        var span;
+        if ($(this).hasClass(value) && $(this).children('span').text() === '') {
+          span = $("<span>").attr('class', 'required').text('<%= t('inquiry.required_field') %>');
+          span.appendTo($(this).children('dt'));
+        }
+      });
+    };
+  });
+};
+<% end %>
 <div class="columns">
 <% content = @answer.source_content if @answer %>
 <% if content %>
@@ -6,15 +32,22 @@
     <dd><%= content.name %></dd>
   </dl>
 <% end %>
+<% form_select = @cur_node.columns.where(input_type: 'form_select').first if @cur_node.present? %>
 <% @items.each do |column, data, confirm_data| %>
-  <dl class="column">
+  <% html_class = '' %>
+  <% if form_select %>
+    <% form_select.select_options.each do |option| %>
+      <% html_class += " #{option}" if column.required?(option) %>
+    <% end %>
+  <% end %>
+  <dl class="column<%= html_class %>">
     <dt>
     <%= column.name %>
     <% if column.required == "required" %>
       <span class="required"><%= t('inquiry.required_field') %></span>
     <% end %>
     </dt>
-    <dd>
+    <dd class='<%= 'form-select' if column.input_type == 'form_select' %>'>
     <% if confirm %>
       <% if data.kind_of? Hash %>
         <% data.each do |key, value| %>
@@ -42,6 +75,16 @@
         <% opt = { value: data } %>
         <% opt.merge!(column.additional_attr_to_h) %>
         <%= f.send(column.input_type, column.id, opt) %>
+      <% elsif column.input_type =~ /form_select/ %>
+        <fieldset>
+        <% column.select_options.each_with_index do |value, i| %>
+          <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
+          <% opt.merge!(column.additional_attr_to_h) %>
+          <% checked = (data == value) %>
+          <%= label_tag "#{f.object_name}_#{column.id}_#{i}" do %>
+            <%= send("radio_button_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
+          <% end %>
+        <% end %>
       <% elsif column.input_type =~ /select/ %>
         <% opt = column.additional_attr_to_h %>
         <%= f.send(column.input_type, column.id, column.select_options, { selected: data, include_blank: true }, opt) %>

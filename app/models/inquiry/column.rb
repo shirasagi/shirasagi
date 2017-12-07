@@ -43,8 +43,8 @@ class Inquiry::Column
     value < 0 ? 0 : value
   end
 
-  def validate_data(answer, data)
-    if required?
+  def validate_data(answer, data, in_reply)
+    if required?(in_reply)
       if data.blank? || data.value.blank?
         answer.errors.add :base, "#{name}#{I18n.t('errors.messages.blank')}"
       end
