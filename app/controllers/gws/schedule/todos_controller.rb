@@ -56,18 +56,24 @@ class Gws::Schedule::TodosController < ApplicationController
 
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    @item.edit_range = params.dig(:item, :edit_range)
+    @item.attributes["todo_action"] = params[:action]
     render_destroy @item.disable, {notice: t('gws/schedule/todo.notice.disable')}
   end
 
   def finish
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     return if request.get?
+    @item.edit_range = params.dig(:item, :edit_range)
+    @item.attributes["todo_action"] = params[:action]
     render_update @item.update(todo_state: 'finished')
   end
 
   def revert
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     return if request.get?
+    @item.edit_range = params.dig(:item, :edit_range)
+    @item.attributes["todo_action"] = params[:action]
     render_update @item.update(todo_state: 'unfinished')
   end
 
