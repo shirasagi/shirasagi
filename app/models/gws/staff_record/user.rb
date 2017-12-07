@@ -81,7 +81,11 @@ class Gws::StaffRecord::User
   end
 
   def name_with_code
-    "[#{code}] #{name}"
+    if code.present?
+      "[#{code}] #{name}"
+    else
+      name
+    end
   end
 
   def editable_charge?(user)
