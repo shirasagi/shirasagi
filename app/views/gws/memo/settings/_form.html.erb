@@ -5,4 +5,6 @@
   <dt><%= @model.t :memo_reminder %><%= @model.tt :memo_reminder %></dt>
   <dd><%= f.select :memo_reminder, @item.memo_reminder_options %></dd>
 
+  <dt><%= @model.t :memo_email %><%= @model.tt :memo_email %></dt>
+  <dd><%= f.text_field :memo_email %></dd>
 </dl>
