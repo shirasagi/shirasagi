@@ -14,7 +14,7 @@ class Gws::Memo::Mailer < ActionMailer::Base
     end
     @cc_memo = @cc_memo.flatten.join(", ")
 
-    from = "noreply@example.com"
+    from = @cur_site.memo_email.presence || ActionMailer::Base.default[:from]
     to = Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.email
     subject = "[メッセージ]送信者:#{@cur_user.name}"
     mail(from: from, to: to, subject: subject)
