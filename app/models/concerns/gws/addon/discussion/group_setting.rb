@@ -7,8 +7,11 @@ module Gws::Addon::Discussion::GroupSetting
   included do
     field :discussion_new_days, type: Integer
     field :discussion_unseen_interval, type: Integer
+    field :discussion_recent_limit, type: Integer, default: 5
+    field :discussion_todo_limit, type: Integer, default: 5
+    field :discussion_comment_limit, type: Integer, default: 1000
 
-    permit_params :discussion_new_days, :discussion_unseen_interval
+    permit_params :discussion_new_days, :discussion_unseen_interval, :discussion_recent_limit, :discussion_todo_limit, :discussion_comment_limit
   end
 
   def discussion_new_days
@@ -24,12 +27,4 @@ module Gws::Addon::Discussion::GroupSetting
       [I18n.t("gws/discussion.options.discussion_unseen_interval.10sec"), 10000]
     ]
   end
-
-  #class << self
-  #  # Permission for navigation view
-  #  def allowed?(action, user, opts = {})
-  #    return true if Gws::Board::Category.allowed?(action, user, opts)
-  #    super
-  #  end
-  #end
 end

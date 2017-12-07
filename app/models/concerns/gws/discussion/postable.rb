@@ -33,7 +33,6 @@ module Gws::Discussion::Postable
     permit_params :name
 
     before_validation :set_depth
-    #before_validation :set_forum_setting
 
     validates :name, presence: true, length: { maximum: 80 }
 
@@ -76,62 +75,42 @@ module Gws::Discussion::Postable
   end
 
   def save_clone(new_parent = nil)
-    post = Gws::Discussion::Post.new
+    post = Gws::Discussion::Base.new
     post.attributes = self.attributes
+
     post.id = nil
-    #main_topic
-    #post.state = "closed"
+    post.created = post.updated = Time.zone.now
+    post.released = nil
+    post.descendants_updated = nil
+
+    post.state = "closed" if post.depth == 1
     post.parent = new_parent if new_parent
 
-    file_ids = []
-    files.each do |f|
-      file = SS::File.new
-      file.attributes = f.attributes
-      file.id = nil
-      file.in_file = f.uploaded_file
-      file.user_id = @cur_user.id if @cur_user
+    if respond_to?(:files)
+      file_ids = []
+      files.each do |f|
+        file = SS::File.new
+        file.attributes = f.attributes
+        file.id = nil
+        file.in_file = f.uploaded_file
+        file.user_id = @cur_user.id if @cur_user
 
-      file.save!
-      file_ids << file.id
+        file.save!
+        file_ids << file.id
+      end
+      post.file_ids = file_ids
     end
-    post.file_ids = file_ids
     post.save!
 
     children.each { |c| c.save_clone(post) }
     post
   end
 
-  #def save_descendants_setting
-  #  children.each do |post|
-  #    if post.children.present?
-  #      post.save_descendants_setting
-  #    else
-  #      post.set(
-  #        readable_group_ids: readable_group_ids,
-  #        readable_member_ids: readable_member_ids,
-  #        readable_custom_group_ids: readable_custom_group_ids,
-  #        state: state,
-  #        group_ids: group_ids,
-  #        user_ids: user_ids
-  #      )
-  #    end
-  #  end
-  #end
-
   private
 
   def set_depth
     self.depth = parent ? parent.depth + 1 : 1
   end
-
-  #def set_forum_setting
-  #  return unless forum
-  #  self.readable_group_ids = forum.readable_group_ids
-  #  self.readable_member_ids = forum.readable_member_ids
-  #  self.readable_custom_group_ids = forum.readable_custom_group_ids
-  #  self.group_ids = forum.group_ids
-  #  self.user_ids = forum.user_ids
-  #end
 
   def set_descendants_updated
     self.descendants_updated = updated

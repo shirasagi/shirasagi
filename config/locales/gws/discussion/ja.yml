@@ -44,6 +44,9 @@ ja:
       gws/addon/discussion/group_setting:
         discussion_new_days: 新着表示期間
         discussion_unseen_interval: 新着確認の間隔
+        discussion_recent_limit: 新着表示件数
+        discussion_todo_limit: TODO表示件数
+        discussion_comment_limit: コメントの上限
 
   gws_role:
     read_other_gws_discussion_forums: 電子会議室の閲覧（全て）
@@ -59,3 +62,9 @@ ja:
         - 新着表示期間を入力します。
       discussion_unseen_interval:
         - 新着確認の間隔を設定します。
+      discussion_recent_limit:
+        - 新着一覧の表示件数を設定します。
+      discussion_todo_limit:
+        - TODOの表示件数を設定します。
+      discussion_comment_limit:
+        - １スレッドに対するコメントの上限を設定します。

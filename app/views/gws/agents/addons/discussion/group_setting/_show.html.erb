@@ -6,4 +6,13 @@
 
   <dt><%= @model.t :discussion_unseen_interval %></dt>
   <dd><%= @item.label :discussion_unseen_interval %></dd>
+
+  <dt><%= @model.t :discussion_recent_limit %></dt>
+  <dd><%= @item.send :discussion_recent_limit %></dd>
+
+  <dt><%= @model.t :discussion_todo_limit %></dt>
+  <dd><%= @item.send :discussion_todo_limit %></dd>
+
+  <dt><%= @model.t :discussion_comment_limit %></dt>
+  <dd><%= @item.send :discussion_comment_limit %></dd>
 </dl>

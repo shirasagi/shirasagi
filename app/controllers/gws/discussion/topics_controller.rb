@@ -40,12 +40,12 @@ class Gws::Discussion::TopicsController < ApplicationController
       allow(:read, @cur_user, site: @cur_site).
       where(todo_state: 'unfinished').
       active().
-      limit(10)
+      limit(@cur_site.discussion_todo_limit)
 
     @recent_items = @forum.children.
       where(:descendants_updated.gt => (Time.zone.now - @cur_site.discussion_new_days.day)).
       reorder(descendants_updated: -1).
-      limit(10)
+      limit(@cur_site.discussion_recent_limit)
   end
 
   public

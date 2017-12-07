@@ -7,6 +7,9 @@
   <dl class="see">
     <dt><%= @model.t :name %><%= @model.tt :title %></dt>
     <dd><%= f.text_field :name, class: :name %></dd>
+
+    <dt></dt>
+    <dd style="color: #b30;"><%= "※複製後は非公開状態になります。TODO は複製されません。" %></dd>
   </dl>
 </section>
 

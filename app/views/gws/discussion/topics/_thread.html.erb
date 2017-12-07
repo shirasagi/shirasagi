@@ -90,7 +90,6 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
   <% if children_size > comments.size %>
     <div style="background: #f2f2f2; padding-bottom: 12px; border-left: hidden; border-right: hidden;"></div>
   <% end %>
-
   <% comments.each_with_index do |comment, i| %>
     <div class="addon-body">
       <dl class="see">
@@ -131,68 +130,74 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
   <% end %>
 
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <div class="addon-body replay">
-    <% if @comment && @comment.parent_id == topic.id %>
-      <%= error_messages_for :comment %>
-    <% end %>
-
-    <!-- text -->
-    <div class="ss-addon-markdown">
-      <div class="ss-addon-markdown-toolbar">
-        <%= f.select :text_type, topic.text_type_options, {}, { value: 'plain', class: "ss-addon-markdown-type" } %>
+    <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
+      <div class="addon-body replay notice" style="color: #b30;">
+        コメント数が<%= @cur_site.discussion_comment_limit %>件を超えました。新規スレッドを作成してください。
       </div>
-      <div class="ss-addon-markdown-content">
-        <%= f.text_area :text, value: "", class: "markdown", style: "height: 240px;", required: true %>
+    <% else %>
+      <div class="addon-body replay">
+        <% if @comment && @comment.parent_id == topic.id %>
+          <%= error_messages_for :comment %>
+        <% end %>
+
+        <!-- text -->
+        <div class="ss-addon-markdown">
+          <div class="ss-addon-markdown-toolbar">
+            <%= f.select :text_type, topic.text_type_options, {}, { value: 'plain', class: "ss-addon-markdown-type" } %>
+          </div>
+          <div class="ss-addon-markdown-content">
+            <%= f.text_area :text, value: "", class: "markdown", style: "height: 240px;", required: true %>
+          </div>
+        </div>
+
+        <!-- files -->
+        <div class="comment-files">
+          <%= f.hidden_field "file_ids[]", value: "" %>
+          <span class="upload-menu-new">
+            <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+          </span>
+          <div class="selected-files files" style="display: none;"></div>
+        </div>
+
+        <!-- contributor -->
+        <%= jquery do %>
+          var setContributor = function() {
+            var $this = $(this);
+            $('.discussion-contributor<%= topic.id %> input#item_contributor_model').val($this.data('model'));
+            $('.discussion-contributor<%= topic.id %> input#item_contributor_id').val($this.data('id'));
+            $('.discussion-contributor<%= topic.id %> input#item_contributor_name').val($this.data('name'));
+          };
+          $('.discussion-contributor<%= topic.id %> input[name="tmp[contributor]"]').on('change', setContributor);
+          $('.discussion-contributor<%= topic.id %> input[name="tmp[contributor]"]:checked').each(setContributor);
+        <% end %>
+        <% show_radio_button = proc do |model, id, name, checked| %>
+          <label style="margin-right: 5px">
+            <%= radio_button_tag('tmp[contributor]', "#{model}:#{id}", checked, data: { model: model, id: id.to_s, name: name }) %>
+            <%= name %>
+          </label>
+        <% end %>
+        <div class="see discussion-contributor discussion-contributor<%= topic.id %>">
+          <%= f.hidden_field(:contributor_model) %>
+          <%= f.hidden_field(:contributor_id) %>
+          <%= f.hidden_field(:contributor_name) %>
+
+          <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name, true) %>
+          <% @cur_user.groups.each do |group| %>
+            <% show_radio_button.call('Gws::Group', group.id, group.section_name, false) %>
+          <% end %>
+          <% Gws::CustomGroup.member(@cur_user).each do |group| %>
+            <% show_radio_button.call('Gws::CustomGroup', group.id, group.name, false) %>
+          <% end %>
+        </div>
+
+        <!-- user_ids -->
+        <%= hidden_field_tag "item[user_ids][]", @cur_user.id %>
+
+        <!-- menu -->
+        <div class="menu">
+          <%= f.submit "返信する", class: 'btn primary' %>
+        </div>
       </div>
-    </div>
-
-    <!-- files -->
-    <div class="comment-files">
-      <%= f.hidden_field "file_ids[]", value: "" %>
-      <span class="upload-menu-new">
-        <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-      </span>
-      <div class="selected-files files" style="display: none;"></div>
-    </div>
-
-    <!-- contributor -->
-    <%= jquery do %>
-      var setContributor = function() {
-        var $this = $(this);
-        $('.discussion-contributor<%= topic.id %> input#item_contributor_model').val($this.data('model'));
-        $('.discussion-contributor<%= topic.id %> input#item_contributor_id').val($this.data('id'));
-        $('.discussion-contributor<%= topic.id %> input#item_contributor_name').val($this.data('name'));
-      };
-      $('.discussion-contributor<%= topic.id %> input[name="tmp[contributor]"]').on('change', setContributor);
-      $('.discussion-contributor<%= topic.id %> input[name="tmp[contributor]"]:checked').each(setContributor);
     <% end %>
-    <% show_radio_button = proc do |model, id, name, checked| %>
-      <label style="margin-right: 5px">
-        <%= radio_button_tag('tmp[contributor]', "#{model}:#{id}", checked, data: { model: model, id: id.to_s, name: name }) %>
-        <%= name %>
-      </label>
-    <% end %>
-    <div class="see discussion-contributor discussion-contributor<%= topic.id %>">
-      <%= f.hidden_field(:contributor_model) %>
-      <%= f.hidden_field(:contributor_id) %>
-      <%= f.hidden_field(:contributor_name) %>
-
-      <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name, true) %>
-      <% @cur_user.groups.each do |group| %>
-        <% show_radio_button.call('Gws::Group', group.id, group.section_name, false) %>
-      <% end %>
-      <% Gws::CustomGroup.member(@cur_user).each do |group| %>
-        <% show_radio_button.call('Gws::CustomGroup', group.id, group.name, false) %>
-      <% end %>
-    </div>
-
-    <!-- user_ids -->
-    <%= hidden_field_tag "item[user_ids][]", @cur_user.id %>
-
-    <!-- menu -->
-    <div class="menu">
-      <%= f.submit "返信する", class: 'btn primary' %>
-    </div>
-  </div>
   <% end %>
 </div>

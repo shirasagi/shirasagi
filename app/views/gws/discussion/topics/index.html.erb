@@ -63,45 +63,41 @@ Gws_Discussion_Unseen.renderUnseen(
       <%= link_to "スケジュールを見る", gws_discussion_forum_todos_path %>
     </div>
   </div>
-</div>
 
-<div class="gws-discussion-navi info">
   <div class="addon-view">
     <div class="addon-head"><h2><%= "スレッド一覧" %></h2></div>
     <% @recent_items.each do |item| %>
-      <div class="addon-body">
-        <dl class="see">
-          <dd class="wide">
-            <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-            <%= link_to item.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: item.id) %><br />
-            <%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") rescue nil %>
-          </dd>
-        </dl>
-      </div>
+        <div class="addon-body">
+          <dl class="see">
+            <dd class="wide">
+              <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+              <%= link_to item.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: item.id) %><br />
+              <%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") rescue nil %>
+            </dd>
+          </dl>
+        </div>
     <% end %>
     <% if @recent_items.blank? %>
-      <div class="addon-body">
-        <dl class="see">
-          <dd class="wide">
-            <%= "新着はありません。" %>
-          </dd>
-        </dl>
-      </div>
+        <div class="addon-body">
+          <dl class="see">
+            <dd class="wide">
+              <%= "新着はありません。" %>
+            </dd>
+          </dl>
+        </div>
     <% end %>
     <div class="addon-body">
       <%= link_to "スレッド一覧を見る", { action: :all } %>
     </div>
   </div>
-</div>
 
-<div class="gws-discussion-navi">
   <div class="addon-view">
     <div class="addon-head"><h2><%= "参加者一覧" %></h2></div>
     <div class="addon-body">
       <dl class="see">
         <dd class="wide">
           <% @forum.discussion_members.each do |member| %>
-            <p><%= member.long_name %></p>
+              <p><%= member.long_name %></p>
           <% end %>
         </dd>
       </dl>
