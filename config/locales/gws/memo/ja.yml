@@ -98,6 +98,9 @@ ja:
         name: 名称
         text: 本文
         default: 既定の署名
+      gws/memo/forward:
+        email: メールアドレス
+        default: メール転送設定
       gws/memo/group_setting:
         memo_filesize_limit: 添付サイズ制限
         memo_reminder: リマインダー表示設定
@@ -143,6 +146,13 @@ ja:
         - メッセージを新規作成した際に自動で入力される署名を選択します。
         - 有効：この署名を自動で入力します
         - 無効：この署名を自動で入力しません
+    gws/memo/forward:
+      email:
+        - メッセージ転送先のメールアドレスを入力します。
+      default:
+        - メッセージ転送設定を行います。
+        - 有効：メッセージを登録したメールアドレスに転送します
+        - 無効：転送しません
     gws/memo/group_setting:
       memo_filesize_limit:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
@@ -155,3 +165,4 @@ ja:
       memo_email:
         - 転送したメッセージを受信したときに送信者として表示されるメールアドレスです。
         - 未設定の場合、システム標準の送信者設定が利用されます。
+
