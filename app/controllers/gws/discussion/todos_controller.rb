@@ -5,8 +5,9 @@ class Gws::Discussion::TodosController < ApplicationController
 
   model Gws::Schedule::Todo
 
-  before_action :set_item, only: [ :show, :edit, :update, :delete, :destroy, :disable, :finish, :revert ]
   before_action :set_forum
+  before_action :set_crumbs
+  before_action :set_item, only: [ :show, :edit, :update, :delete, :destroy, :disable, :finish, :revert ]
 
   private
 
@@ -16,6 +17,8 @@ class Gws::Discussion::TodosController < ApplicationController
 
   def set_crumbs
     @crumbs << [t('modules.gws/discussion'), gws_discussion_main_path]
+    @crumbs << [@forum.name, gws_discussion_forum_topics_path]
+    @crumbs << ["TODO", gws_discussion_forum_todos_path]
   end
 
   def pre_params

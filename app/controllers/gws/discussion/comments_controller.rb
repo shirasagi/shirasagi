@@ -6,6 +6,7 @@ class Gws::Discussion::CommentsController < ApplicationController
 
   before_action :set_forum
   before_action :set_topic
+  before_action :set_crumbs
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :copy]
 
   private
@@ -32,6 +33,8 @@ class Gws::Discussion::CommentsController < ApplicationController
 
   def set_crumbs
     @crumbs << [I18n.t('modules.gws/discussion'), gws_discussion_forums_path]
+    @crumbs << [@forum.name, gws_discussion_forum_topics_path]
+    @crumbs << [@topic.name, gws_discussion_forum_topic_comments_path]
   end
 
   public

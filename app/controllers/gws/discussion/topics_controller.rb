@@ -6,6 +6,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   model Gws::Discussion::Topic
 
   before_action :set_forum
+  before_action :set_crumbs
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :comments, :reply, :copy]
 
   private
@@ -16,6 +17,7 @@ class Gws::Discussion::TopicsController < ApplicationController
 
   def set_crumbs
     @crumbs << [I18n.t('modules.gws/discussion'), gws_discussion_forums_path]
+    @crumbs << [@forum.name, gws_discussion_forum_topics_path]
   end
 
   def set_forum
