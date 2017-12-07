@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Gws::Chorg::TestRunner, dbscope: :example do
   let(:site) { create(:gws_group) }
   let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
-  let(:adds_group_to_site) { false }
+  let(:job_opts) { {} }
 
   context 'with add' do
     let(:revision) { create(:gws_revision, site_id: site.id) }
@@ -14,7 +14,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, adds_group_to_site) }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -44,7 +44,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
 
       # check for not changed
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, adds_group_to_site) }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -82,7 +82,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
 
       # check for not changed
       job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      expect { job.perform_now(revision.name, adds_group_to_site) }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -126,7 +126,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
 
       # change group.
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, adds_group_to_site) }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1

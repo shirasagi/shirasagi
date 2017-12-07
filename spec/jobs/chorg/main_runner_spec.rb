@@ -12,7 +12,7 @@ describe Chorg::MainRunner, dbscope: :example do
     it do
       expect(changeset).not_to be_nil
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 1) }.not_to raise_error
+      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -48,7 +48,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -104,7 +104,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page).not_to be_nil
           # execute
           job = described_class.bind(site_id: site, task_id: task)
-          expect { job.perform_now(revision.name, 1) }.not_to raise_error
+          expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
@@ -170,7 +170,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -224,7 +224,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -313,7 +313,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq "foobar02@example.jp"
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -385,7 +385,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -462,7 +462,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -521,7 +521,7 @@ describe Chorg::MainRunner, dbscope: :example do
       expect(changeset).not_to be_nil
       # execute
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 1) }.not_to raise_error
+      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
