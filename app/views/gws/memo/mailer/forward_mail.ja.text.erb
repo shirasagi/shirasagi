@@ -4,7 +4,7 @@
     '' => @item.text,
     '時刻' => @item.send_date.present? ? @item.send_date.strftime("%Y/%m/%d %H:%M") : nil,
     '送信者' => "#{@cur_user.name} <#{@cur_user.email}>",
-    '同時受信者' => @item.member_ids.size > 1 ? @cc_memo : nil,
+    '受信者' => @cc_memo,
     '添付ファイル' => @item.file_ids.present? ? 'あり' : 'なし'
   }
 -%>
