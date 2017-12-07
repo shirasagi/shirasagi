@@ -13,10 +13,10 @@ class Gws::Memo::Mailer < ActionMailer::Base
       item.delete_at(1)
     end
     @cc_memo = @cc_memo.flatten.join(", ")
-    from = "noreply@example.com"
-    to = "jouhou_tesuto_11@dockernet.co.lg.jp"
-    subject = "[メッセージ]送信者:#{@cur_user.name}"
 
+    from = "noreply@example.com"
+    to = Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.email
+    subject = "[メッセージ]送信者:#{@cur_user.name}"
     mail(from: from, to: to, subject: subject)
   end
 end
