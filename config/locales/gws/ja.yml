@@ -322,6 +322,7 @@ ja:
         log_staff_record_severity: 電子職員録のログ
         log_workflow_severity: ワークフローのログ
         log_chorg_severity: 組織変更のログ
+        log_discussion_severity: 電子会議室のログ
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー

@@ -18,6 +18,10 @@ ja:
       gws/discussion/group_setting: 電子会議室
 
   mongoid:
+    models:
+      gws/discussion/form: 電子会議室
+      gws/discussion/topic: スレッド
+      gws/discussion/post: コメント
     attributes:
       gws/discussion/forum:
         name: タイトル
