@@ -5,7 +5,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   let(:item) { create :gws_share_file, category_ids: [category.id] }
   let!(:category) { create :gws_share_category }
   let(:index_path) { gws_share_files_path site }
-  let(:new_path) { new_gws_share_file_path site }
+  let(:new_path) { new_gws_share_folder_file_path site, item.folder }
   let(:show_path) { gws_share_file_path site, item }
   let(:edit_path) { edit_gws_share_file_path site, item }
   let(:delete_path) { delete_gws_share_file_path site, item }

@@ -115,7 +115,7 @@ class Gws::Share::Folder
   private
 
   def set_depth
-    self.depth = name.count('/')
+    self.depth = name.count('/') unless name.nil?
   end
 
   def set_share_max_file_size
