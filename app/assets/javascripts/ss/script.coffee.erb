@@ -210,11 +210,15 @@ class @SS
     return setTimeout (-> $('#notice').slideUp('normal')), 1800
 
   @confirmUnloading: ->
+    changed = false
     $("input[type=text],textarea,select").change ->
-      $(window).on "beforeunload", ->
+      changed = true
+    $(window).on "beforeunload", ->
+      if changed
         return "<%= I18n.t 'ss.confirm.unload' %>"
     $("input[type=submit]").click ->
-      $(window).off "beforeunload"
+      changed = false
+      return true
 
   @randomPassword: (length = 8) ->
     chars = 'abcdefghijkmnopqrstuvwxyz!@#$%&-+ABCDEFGHIJKLMNOP234567890'
