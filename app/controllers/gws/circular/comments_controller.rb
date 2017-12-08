@@ -35,7 +35,7 @@ class Gws::Circular::CommentsController < ApplicationController
   end
 
   def set_post
-    @post ||= Gws::Circular::Post.find(params[:post_id])
+    @post ||= Gws::Circular::Post.site(@cur_site).find(params[:post_id])
     @post ? @post : (raise '404')
   end
 
