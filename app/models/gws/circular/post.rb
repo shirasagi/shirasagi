@@ -58,6 +58,18 @@ class Gws::Circular::Post
     criteria
   }
 
+  scope :and_posts, ->(userid, key) {
+    if key.start_with?('both')
+      where({})
+    elsif key.start_with?('unseen')
+      where("$and" =>
+                [ "$or" =>
+                      [ { "seen.#{userid}".to_sym => { "$exists" => false } } ]
+                ]
+       )
+    end
+  }
+
   scope :without_deleted, ->(date = Time.zone.now) {
     where('$and' => [
       { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
@@ -108,6 +120,13 @@ class Gws::Circular::Post
 
   def state_changed?
     false
+  end
+
+  def article_state_options
+    [
+      [I18n.t('gws/circular.options.article_state.both'), 'both'],
+      [I18n.t('gws/circular.options.article_state.unseen'), 'unseen']
+    ]
   end
 
   def validate_attached_file_size
