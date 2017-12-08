@@ -108,7 +108,7 @@ class Gws::Share::Folder
     @parents ||= begin
       paths = Cms::Node.split_path(name.sub(/^\//, ''))
       paths.pop
-      self.class.all.in(name: paths)
+      self.class.in(name: paths)
     end
   end
 
