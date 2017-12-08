@@ -27,5 +27,9 @@ class Gws::Schedule::UserPlansController < ApplicationController
     @items = Gws::Schedule::Plan.site(@cur_site).
       member(@user).
       search(params[:s])
+
+    @todos = Gws::Schedule::Todo.site(@cur_site).active.
+      member(@user).
+      search(params[:s])
   end
 end

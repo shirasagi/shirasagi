@@ -3,13 +3,13 @@
   <dd><%= f.text_field :image_alt %></dd>
 
   <dt><%= @model.t :image_thumb_size %><%= @model.tt :image_thumb_size %></dt>
-  <dd class="image-thumb-size">
+  <dd class="image-thumb-size short">
     <label class="width">
-      <%= @model.t :image_thumb_width %>
+      <span class="prefix"><%= @model.t :image_thumb_width %></span>
       <%= f.number_field :image_thumb_width %>
     </label>
     <label class="height">
-      <%= @model.t :image_thumb_height %>
+      <span class="prefix"><%= @model.t :image_thumb_height %></span>
       <%= f.number_field :image_thumb_height %>
     </label>
   </dd>
