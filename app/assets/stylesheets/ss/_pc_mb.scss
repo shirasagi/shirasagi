@@ -1229,6 +1229,9 @@ dl.see {
     }
   }
 }
+:root dl.see > dd input, :root dl.see > dd select {
+  vertical-align: middle\0;
+}
 dl.mod-cms-parent_crumbs {
   dd { margin-bottom: 10px; }
 }
@@ -2166,6 +2169,7 @@ form .CodeMirror {
     float: left;
     width: 28px;
     &:first-of-type { margin-left: -7px; }
+    .material-icopns { display: block; }
   }
   .icon a:hover .material-icons { opacity: 0.8; }
   .icon-star {
