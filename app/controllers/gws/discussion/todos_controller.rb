@@ -43,6 +43,7 @@ class Gws::Discussion::TodosController < ApplicationController
   def new
     @item = @model.new pre_params.merge(fix_params)
 
+    @item.name = "[#{@forum.name}]"
     @default_readable_setting = Proc.new do
       @item.readable_setting_range = @forum.readable_setting_range
       @item.readable_group_ids = @forum.readable_group_ids
