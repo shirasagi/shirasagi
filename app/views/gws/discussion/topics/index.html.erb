@@ -1,0 +1,105 @@
+<% if @cur_site.discussion_unseen_interval.present? %>
+<%= jquery do %>
+Gws_Discussion_Unseen.renderUnseen(
+  "<%= gws_discussion_apis_unseen_path(id: @forum.id) %>",
+  <%= @cur_site.discussion_unseen_interval %>,
+  <%= @forum.descendants_updated.to_i %>
+);
+<% end %>
+<% end %>
+
+<h2 class="gws-discussion-topic"><%= @forum.name %></h2>
+
+<p class="gws-discussion-unseen" style="display: none;">
+  <%= link_to t("gws/discussion.notice.reload"), { action: :index } %>
+</p>
+
+<%= paginate @items if @items.try(:current_page) %>
+
+<div class="gws-discussion gws-discussion-thread">
+  <% @items.each do |item| %>
+    <%= form_for :item, url: { action: :reply, id: item.id }, html: { method: :put, multipart: true, autocomplete: :off } do |f| %>
+      <%= render partial: 'thread', locals: { f: f, topic: item, limit: 5 } %>
+    <% end %>
+  <% end %>
+  <% if @items.blank? %>
+    <div class="addon-view">
+      <div class="addon-body">
+        <dl class="see">
+          <dd class="wide">
+            <%= t("gws/discussion.notice.no_topics") %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  <% end %>
+  <%= paginate @items if @items.try(:current_page) %>
+</div>
+
+<div class="gws-discussion-navi">
+  <div class="addon-view">
+    <div class="addon-head"><h2><%= t("gws/discussion.todos") %></h2></div>
+    <% @todos.each do |todo| %>
+    <div class="addon-body">
+      <dl class="see">
+        <dd class="wide">
+          <%= link_to todo.name, gws_discussion_forum_todo_path(id: todo.id) %><br />
+          <%= term(todo) %>
+        </dd>
+      </dl>
+    </div>
+    <% end %>
+    <% if @todos.blank? %>
+    <div class="addon-body">
+      <dl class="see">
+        <dd class="wide">
+          <%= t("gws/discussion.notice.no_todos") %>
+        </dd>
+      </dl>
+    </div>
+    <% end %>
+    <div class="addon-body">
+      <%= link_to t("gws/discussion.links.todo.index"), gws_discussion_forum_todos_path %>
+    </div>
+  </div>
+
+  <div class="addon-view">
+    <div class="addon-head"><h2><%= t("gws/discussion.topics") %></h2></div>
+    <% @recent_items.each do |item| %>
+      <div class="addon-body">
+        <dl class="see">
+          <dd class="wide">
+            <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+            <%= link_to item.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: item.id) %><br />
+            <%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") rescue nil %>
+          </dd>
+        </dl>
+      </div>
+    <% end %>
+    <% if @recent_items.blank? %>
+      <div class="addon-body">
+        <dl class="see">
+          <dd class="wide">
+            <%= t("gws/discussion.notice.no_recents") %>
+          </dd>
+        </dl>
+      </div>
+    <% end %>
+    <div class="addon-body">
+      <%= link_to t("gws/discussion.links.topic.index"), { action: :all } %>
+    </div>
+  </div>
+
+  <div class="addon-view">
+    <div class="addon-head"><h2><%= t("gws/discussion.members") %></h2></div>
+    <div class="addon-body">
+      <dl class="see">
+        <dd class="wide">
+          <% @forum.discussion_members.each do |member| %>
+              <p><%= member.long_name %></p>
+          <% end %>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>
