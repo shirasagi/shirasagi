@@ -34,17 +34,17 @@ class Gws::Discussion::Forum
     Gws::User.in(id: discussion_member_ids)
   end
 
-  def currect_readable?
-    discussion_members.each do |u|
-      p [u.id, u.name, readable?(u)]
-    end
-
-    p "---"
-
-    Gws::User.nin(id: discussion_members.pluck(:id)).each do |u|
-      p [u.id, u.name, readable?(u)]
-    end
-  end
+  #def currect_readable?
+  #  discussion_members.each do |u|
+  #    p [u.id, u.name, readable?(u)]
+  #  end
+  #
+  #  p "---"
+  #
+  # Gws::User.nin(id: discussion_members.pluck(:id)).each do |u|
+  #    p [u.id, u.name, readable?(u)]
+  #  end
+  #end
 
   def save_main_topic
     main_topic = Gws::Discussion::Topic.new
