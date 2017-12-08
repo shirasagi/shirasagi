@@ -1,0 +1,25 @@
+<dl class="see">
+  <dd class="wide">
+    <header>
+      <div class="contributor">
+        <%= @item.contributor_name %>
+      </div>
+      <div class="datetime updated">
+        <%= @item.updated.strftime("%Y/%m/%d %H:%M") %>
+      </div>
+    </header>
+    <div class="markdown-body">
+      <%= @item.html %>
+    </div>
+    <% if @item.files.present? %>
+        <div class="files">
+          <% @item.files.each do |file| %>
+          <span id="file-<%= file.id %>">
+          <img src="/assets/img/gws/ic-file.png" alt="" />
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+          </span>
+          <% end %>
+        </div>
+    <% end %>
+  </dd>
+</dl>
