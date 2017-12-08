@@ -26,6 +26,9 @@
   @include box-shadow(0px 1px 3px #ddd);
   background: $white;
   float: left;
+  @include mb {
+    width: calc(100% - 20px);
+  }
   header {
     h2 {
       display: inline-block;

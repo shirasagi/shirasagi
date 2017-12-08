@@ -12,8 +12,9 @@ section_options = @cur_year.yearly_groups.map { |c| [c.name, c.name] }
     <%= f.text_field :keyword, style: "width: 300px;" %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 
-    &nbsp;
-    <%= @model.t :limit %>
-    <%= f.select :limit, @cur_site.staff_records_limit_options, selected: @limit %>
+    <span class="limit">
+      <%= @model.t :limit %>
+      <%= f.select :limit, @cur_site.staff_records_limit_options, selected: @limit %>
+    </span>
   <% end %>
 </div>

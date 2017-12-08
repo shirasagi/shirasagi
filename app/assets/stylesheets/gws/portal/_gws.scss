@@ -10,7 +10,7 @@
 .gws-portlets {
   margin: -10px;
   @include mb {
-    margin: 0;
+    margin: 0 10px;
     .portlets {
       @include clear;
       width: 100%;
