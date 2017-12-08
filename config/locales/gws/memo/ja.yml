@@ -30,6 +30,8 @@ ja:
     inbox_trash: ゴミ箱
     inbox_draft: 下書き
     inbox_sent: 送信済みトレイ
+  gws/memo/forward:
+    subject: 送信者
   gws/memo/filter:
     options:
       action:
