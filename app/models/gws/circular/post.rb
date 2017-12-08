@@ -110,6 +110,13 @@ class Gws::Circular::Post
     false
   end
 
+  def article_state_options
+    [
+      [I18n.t('gws/circular.options.article_state.both'), 'both'],
+      [I18n.t('gws/circular.options.article_state.unseen'), 'unseen']
+    ]
+  end
+
   def validate_attached_file_size
     return if site.circular_filesize_limit.blank?
     return if site.circular_filesize_limit <= 0
