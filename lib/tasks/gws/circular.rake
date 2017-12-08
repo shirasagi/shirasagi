@@ -14,9 +14,6 @@ namespace :gws do
       if name = ENV['site']
         return Gws::Group.where(name: name)
       end
-
-      ids = Gws::Group.all.map { |group| group.root.try(:id) }.uniq.compact
-      Gws::Group.where(:id.in => ids)
     end
   end
 end
