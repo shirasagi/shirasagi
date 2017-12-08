@@ -88,7 +88,7 @@ class Gws::UsersController < ApplicationController
 
     form_data = build_form_data
     result = @item.valid?
-    if form_data.present? && form_data.invalid?
+    if form_data.present? && form_data.invalid?(:required_check)
       @item.errors[:base] += form_data.errors.full_messages
       result = false
     end
