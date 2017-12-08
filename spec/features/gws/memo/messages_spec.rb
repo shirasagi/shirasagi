@@ -32,8 +32,11 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
     end
 
     it '#toggle_star' do
-      visit toggle_star_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(page).to have_content(memo.name)
+      visit gws_memo_messages_path(site)
+      expect(page).to have_css(".icon.icon-star.off")
+      find('.icon.icon-star.off').click
+      wait_for_ajax
+      expect(page).to have_css(".icon.icon-star.on")
     end
 
     it '#trash_all' do
