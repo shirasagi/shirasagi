@@ -107,8 +107,10 @@ class Gws::Memo::MessagesController < ApplicationController
     @item = @model.new from.merge(get_params)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
-      if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
-        Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
+      unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
+        if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
+          Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
+        end
       end
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
@@ -126,8 +128,10 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
-      if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
-        Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
+      unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
+        if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
+          Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
+        end
       end
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
