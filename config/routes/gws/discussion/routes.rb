@@ -6,6 +6,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :deletion_topics do
+    get :delete, on: :member
+    delete :all, action: :destroy_all, on: :collection
+  end
+
   concern :plans do
     get :events, on: :collection
     get :print, on: :collection
@@ -29,10 +34,10 @@ SS::Application.routes.draw do
     get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
 
     resources :forums, concerns: [:deletion, :copy] do
-      resources :topics, concerns: [:deletion, :copy] do
+      resources :topics, concerns: [:deletion_topics, :copy] do
         get :all, on: :collection
         put :reply, on: :member
-        resources :comments, controller: '/gws/discussion/comments', concerns: [:deletion] do
+        resources :comments, controller: '/gws/discussion/comments', concerns: [:deletion_topics] do
           put :reply, on: :collection
         end
       end
