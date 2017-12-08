@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_discussion_forum", type: :feature, dbscope: :example do
+describe "gws_discussion_topics", type: :feature, dbscope: :example do
   context "reply", js: true do
     let!(:site) { gws_site }
     let!(:item) { create :gws_discussion_topic }
