@@ -9,7 +9,7 @@ Gws_Discussion_Unseen.renderUnseen(
 <% end %>
 
 <p class="gws-discussion-unseen" style="display: none; padding-bottom: 10px;">
-  <%= link_to "※新着投稿があります。クリックすることで再描画します。", { action: :index } %>
+  <%= link_to t("gws/discussion.notice.reload"), { action: :index } %>
 </p>
 
 <div class="gws-discussion">

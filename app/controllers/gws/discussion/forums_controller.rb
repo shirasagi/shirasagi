@@ -51,9 +51,9 @@ class Gws::Discussion::ForumsController < ApplicationController
     if @item.valid?
       item = @item.save_clone
       item.attributes = get_params
-      render_create true, render: { file: :copy }
+      render_create true, location: { action: :index }, render: { file: :copy }
     else
-      render_create false, render: { file: :copy }
+      render_create false, location: { action: :index }, render: { file: :copy }
     end
   end
 end

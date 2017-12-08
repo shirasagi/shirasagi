@@ -1,6 +1,26 @@
 ja:
   gws/discussion:
     admin: 管理
+    topics: スレッド一覧
+    todos: TODO
+    members: 参加者一覧
+    links:
+      forum:
+        back_to_index: 電子会議室一覧へ戻る
+      topic:
+        new: スレッドを新規作成
+        edit: スレッドを編集する
+        copy: スレッドを複製する
+        delete: スレッドを削除する
+        back_to_index: スレッド一覧へ戻る
+        index: スレッド一覧を見る
+      todo:
+        index: スケジュールを見る
+      member:
+        index: 参加者一覧
+    main_topic:
+      name: メインスレッド
+      text: '%{name}のメインスレッドです。'
     options:
       discussion_unseen_interval:
         none: 確認しない
@@ -8,6 +28,13 @@ ja:
         1min: １分
         30sec: ３０秒
         10sec: １０秒
+    notice:
+      reload: ※新着投稿があります。クリックすることで再描画します。
+      forum_copy: ※複製後は非公開状態になります。TODO は複製されません。
+      comment_limit: 'コメント数が%{limit}件を超えました。新規スレッドを作成してください。'
+      no_topics: スレッドはありません。
+      no_recents: 新着はありません。
+      no_todos: 登録されていません
   modules:
     gws/discussion: 電子会議室
     addons:

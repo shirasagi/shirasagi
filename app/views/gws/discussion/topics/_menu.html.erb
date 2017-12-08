@@ -1,8 +1,8 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <!-- <%= link_to "電子会議室一覧へ戻る", gws_discussion_forums_path %> -->
+    <!-- <%= link_to t('gws/discussion.links.forum.back_to_index'), gws_discussion_forums_path %> -->
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to "スレッドを新規作成", action: :new %>
+      <%= link_to t('gws/discussion.links.topic.new'), action: :new %>
     <% end %>
   <% elsif params[:action] =~ /all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

@@ -118,10 +118,10 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
           <% end %>
           <div class="menu">
             <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-              <%= link_to "編集する", edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+              <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
             <% end %>
             <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
-              <%= link_to "削除する", delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+              <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
             <% end %>
           </div>
         </dd>
@@ -132,7 +132,7 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
       <div class="addon-body replay notice" style="color: #b30;">
-        コメント数が<%= @cur_site.discussion_comment_limit %>件を超えました。新規スレッドを作成してください。
+        <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
       </div>
     <% else %>
       <div class="addon-body replay">
@@ -195,7 +195,7 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
 
         <!-- menu -->
         <div class="menu">
-          <%= f.submit "返信する", class: 'btn primary' %>
+          <%= f.submit t("ss.links.reply"), class: 'btn primary' %>
         </div>
       </div>
     <% end %>

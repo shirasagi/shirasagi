@@ -1,7 +1,7 @@
 class Gws::Discussion::Forum
   include Gws::Referenceable
   include Gws::Discussion::Postable
-  #include Gws::Addon::Contributor
+  include Gws::Addon::Contributor
   #include SS::Addon::Markdown
   #include Gws::Addon::File
   include Gws::Addon::Discussion::Release
@@ -17,12 +17,15 @@ class Gws::Discussion::Forum
     main_topic.parent_id = id
 
     main_topic.main_topic = "enabled"
-    main_topic.name = "メインスレッド"
-    main_topic.text= "#{name}のメインスレッドです。"
+    main_topic.name = I18n.t("gws/discussion.main_topic.name")
+    main_topic.text = I18n.t("gws/discussion.main_topic.text", name: name)
     main_topic.text_type = "text"
 
+    main_topic.contributor_model = contributor_model
+    main_topic.contributor_id = contributor_id
+    main_topic.contributor_name = contributor_name
+
     main_topic.user_ids = user_ids
-    main_topic.custom_group_ids = custom_group_ids
     main_topic.group_ids = group_ids
     main_topic.user_id = user_id
     main_topic.site_id = site_id
