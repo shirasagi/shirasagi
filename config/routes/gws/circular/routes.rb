@@ -22,6 +22,10 @@ SS::Application.routes.draw do
       delete action: :disable_all, on: :collection
     end
 
+    resources :admins, concerns: [:posts] do
+      delete action: :disable_all, on: :collection
+    end
+
     resources :trashes, concerns: [:posts] do
       get :recover, on: :member
       get :active, on: :member
