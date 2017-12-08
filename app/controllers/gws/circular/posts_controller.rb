@@ -60,6 +60,7 @@ class Gws::Circular::PostsController < ApplicationController
       allow(:read, @cur_user, site: @cur_site).
       without_deleted.
       search(params[:s]).
+      and_posts(@cur_user.id, params.dig(:s, :article_state) || 'both').
       page(params[:page]).per(50)
   end
 

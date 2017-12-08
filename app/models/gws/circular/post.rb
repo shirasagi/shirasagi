@@ -58,6 +58,18 @@ class Gws::Circular::Post
     criteria
   }
 
+  scope :and_posts, ->(userid, key) {
+    if key.start_with?('both')
+      where({})
+    elsif key.start_with?('unseen')
+      where("$and" =>
+                [ "$or" =>
+                      [ { "seen.#{userid}".to_sym => { "$exists" => false } } ]
+                ]
+       )
+    end
+  }
+
   scope :without_deleted, ->(date = Time.zone.now) {
     where('$and' => [
       { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
