@@ -3,6 +3,9 @@ ja:
     admin: 管理
     setting: 回覧板設定
     active: 削除を取り消す
+    tabs:
+      post: 受信した回覧
+      admin: 作成した回覧
     links:
       disable_all: 削除済みに移動する
     confirm:

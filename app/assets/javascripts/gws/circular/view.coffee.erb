@@ -1,0 +1,9 @@
+class @Gws_Circular_View
+
+  # Circular tabs
+  @renderTabs: (selector)->
+    $(selector).find('a').click ->
+      url = $(this).attr('href')
+      $(this).attr('href', url)
+      return true
+
