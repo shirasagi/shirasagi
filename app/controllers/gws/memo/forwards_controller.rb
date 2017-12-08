@@ -1,7 +1,6 @@
 class Gws::Memo::ForwardsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  #include Gws::SettingFilter
 
   model Gws::Memo::Forward
 
@@ -9,14 +8,14 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   private
 
-   def set_item
-     if @model.user(@cur_user).site(@cur_site).present?
-       @item = @model.find_by(user_id: @cur_user.id, site_id: @cur_site.id)
-     else
-       @item = @model.new(user_id: @cur_user.id, site_id: @cur_site.id)
-       @item.save
-     end
+  def set_item
+   if @model.user(@cur_user).site(@cur_site).present?
+     @item = @model.find_by(user_id: @cur_user.id, site_id: @cur_site.id)
+   else
+     @item = @model.new(user_id: @cur_user.id, site_id: @cur_site.id)
+     @item.save
    end
+  end
 
   def set_crumbs
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
