@@ -25,6 +25,10 @@ module Gws::Addon::Discussion
       %w(public closed).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
     end
 
+    def public?
+      state == 'public'
+    end
+
     private
 
     def set_released

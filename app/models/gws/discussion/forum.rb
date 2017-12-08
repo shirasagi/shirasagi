@@ -5,11 +5,46 @@ class Gws::Discussion::Forum
   #include SS::Addon::Markdown
   #include Gws::Addon::File
   include Gws::Addon::Discussion::Release
+  include Gws::Addon::Discussion::NotifySetting
   include Gws::Addon::ReadableSetting
-  include Gws::Addon::Discussion::GroupPermission
+  include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
   #readable_setting_include_custom_groups
+
+  def discussion_member_ids
+    ids = user_ids
+    groups.each do |g|
+      g = Gws::Group.find(g.id)
+      ids += g.users.pluck(:id)
+    end
+
+    ids += readable_member_ids
+    readable_groups.each do |g|
+      ids += g.users.pluck(:id)
+    end
+
+    readable_custom_groups.each do |custom_group|
+      ids += custom_group.readable_member_ids
+    end
+    ids.uniq
+  end
+
+  def discussion_members
+    Gws::User.in(id: discussion_member_ids)
+  end
+
+  def currect_readable?
+    discussion_members.each do |u|
+      p [u.id, u.name, readable?(u)]
+    end
+
+    p "---"
+
+    Gws::User.nin(id: discussion_members.pluck(:id)).each do |u|
+      p [u.id, u.name, readable?(u)]
+    end
+  end
 
   def save_main_topic
     main_topic = Gws::Discussion::Topic.new
@@ -32,39 +67,4 @@ class Gws::Discussion::Forum
 
     main_topic.save!
   end
-
-  def discussion_members
-    ids = user_ids
-    groups.each do |g|
-      g = Gws::Group.find(g.id)
-      ids += g.users.pluck(:id)
-    end
-
-    ids += readable_member_ids
-    readable_groups.each do |g|
-      ids += g.users.pluck(:id)
-    end
-
-    readable_custom_groups.each do |custom_group|
-      ids += custom_group.readable_member_ids
-    end
-
-    Gws::User.in(id: ids.uniq)
-  end
-
-  def currect_readable?
-    discussion_members.each do |u|
-      p [u.id, u.name, readable?(u)]
-    end
-
-    p "---"
-
-    Gws::User.nin(id: discussion_members.pluck(:id)).each do |u|
-      p [u.id, u.name, readable?(u)]
-    end
-  end
-
-  #def updated?
-  #  created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
-  #end
 end

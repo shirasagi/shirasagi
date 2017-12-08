@@ -56,6 +56,18 @@ class Gws::Discussion::TopicsController < ApplicationController
     set_items
   end
 
+  def create
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if @item.save
+      @item.save_notify_message(@cur_site, @cur_user)
+      render_create true
+    else
+      render_create false
+    end
+  end
+
   def all
     @items = @forum.children.reorder(order: 1, created: 1).
       search(params[:s]).
@@ -76,7 +88,12 @@ class Gws::Discussion::TopicsController < ApplicationController
     @comment.parent_id = @topic.id
     @comment.forum_id = @forum.id
     @comment.name = @topic.name
-    render_create @comment.save, location: { action: :index }, render: { file: :index }
+    if @comment.save
+      @comment.save_notify_message(@cur_site, @cur_user)
+      render_create true, location: { action: :index }, render: { file: :index }
+    else
+      render_create false, location: { action: :index }, render: { file: :index }
+    end
   end
 
   def copy

@@ -35,13 +35,29 @@ ja:
       no_topics: スレッドはありません。
       no_recents: 新着はありません。
       no_todos: 登録されていません
+    notify_message:
+      topic:
+        subject: '[電子会議室] %{forum_name} に投稿がありました'
+        text: |-
+          スレッドが作成されました。
+
+          スレッド: %{topic_name}
+
+          %{text}
+      post:
+        subject: '[電子会議室] %{forum_name}(%{topic_name}) に投稿がありました'
+        text: |-
+          コメントが投稿されました。
+
+          スレッド: %{topic_name}
+
+          %{text}
   modules:
     gws/discussion: 電子会議室
     addons:
       gws/discussion/todo: ToDo
-      gws/discussion/group_permission: 管理権限
       gws/discussion/release: 公開設定
-      gws/discussion/readable_setting: 閲覧権限
+      gws/discussion/notify_setting: 新着通知
       gws/discussion/group_setting: 電子会議室
 
   mongoid:
@@ -67,8 +83,8 @@ ja:
         permission_level: 権限レベル
       gws/addon/discussion/release:
         released: 公開日時
-        release_date: 公開開始日時(予約)
-        close_date: 公開終了日時(予約)
+      gws/addon/discussion/notify_setting:
+        notify_state: メッセージ通知
       gws/addon/discussion/readable_setting:
         readable_group_ids: 閲覧グループ
         readable_member_ids: 閲覧ユーザー
@@ -92,6 +108,13 @@ ja:
     gws/discussion/topic:
       order:
         - 並び順を設定します。数字が小さいほど先頭に表示されます。
+    gws/addon/discussion/release:
+      state:
+        - 公開画面への公開、非公開を選択します。
+    gws/addon/discussion/notify_setting:
+      notify_state:
+        - 設定を有効にすると、スレッドの新規作成、コメントの投稿があった際、参加者に通知メッセージを送信することができます。
+        - 電子会議室が非公開状態の場合、通知メッセージは送信されません。
     gws/addon/discussion/group_setting:
       discussion_new_days:
         - 新着表示期間を設定します。

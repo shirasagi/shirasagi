@@ -62,6 +62,11 @@ class Gws::Discussion::CommentsController < ApplicationController
     @comment.parent_id = @topic.id
     @comment.forum_id = @forum.id
     @comment.name = @topic.name
-    render_create @comment.save, location: { action: :index }, render: { file: :index }
+    if @comment.save
+      @comment.save_notify_message(@cur_site, @cur_user)
+      render_create true, location: { action: :index }, render: { file: :index }
+    else
+      render_create false, location: { action: :index }, render: { file: :index }
+    end
   end
 end
