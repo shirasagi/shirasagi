@@ -1,0 +1,10 @@
+<nav class="mod-navi">
+  <h2><%= link_to t("modules.gws/circular"), gws_circular_posts_path %></a></h2>
+  <h2><%= t("ss.management") %></h2>
+
+  <% if Gws::Circular::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("mongoid.models.gws/circular/trashes"), gws_circular_trashes_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

@@ -3,8 +3,8 @@ class Gws::Share::Management::FilesController < ApplicationController
   include Gws::CrudFilter
   include Gws::FileFilter
 
-  navi_view "gws/share/management/navi"
   model Gws::Share::File
+  navi_view "gws/share/management/navi"
 
   before_action :set_item, only: [:show, :active, :delete, :recover, :destroy]
   before_action :set_selected_items, only: [:destroy_all, :active_all]

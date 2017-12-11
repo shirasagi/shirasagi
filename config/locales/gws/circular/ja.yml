@@ -1,6 +1,5 @@
 ja:
   gws/circular:
-    admin: 管理
     setting: 回覧板設定
     active: 削除を取り消す
     links:
@@ -72,7 +71,7 @@ ja:
     delete_private_gws_circular_categories: カテゴリーの削除（所有）
   mongoid:
     models:
-      gws/circular/post: 回覧板
+      gws/circular/post: トピック
       gws/circular/category: 回覧板/カテゴリー
       gws/circular/trashes: 削除済み
 

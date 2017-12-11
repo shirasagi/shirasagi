@@ -171,7 +171,7 @@ ja:
 
   mongoid:
     models:
-      gws/monitor/topic: 照会・回答/トピック
+      gws/monitor/topic: トピック
       gws/monitor/post: 照会・回答/投稿
       gws/monitor/category: 照会・回答/カテゴリー
     errors:
