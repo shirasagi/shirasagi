@@ -70,6 +70,7 @@
             <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member?(@cur_user) %></span>
             <span><%= item.user_long_name %></span>
+            <span class="state"><%= item.attributes["state"] == 'public' ? t('ss.options.state.public') : t('ss.options.state.closed') %></span>
             <span class="gws-share-categories">
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
