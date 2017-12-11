@@ -26,7 +26,14 @@ class Gws::Monitor::CommentsController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:topic_id], parent_id: params[:parent_id] }
+    if params[:topic_id].present?
+      { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:topic_id], parent_id: params[:parent_id] }
+    elsif params[:answer_id].present?
+      { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:answer_id], parent_id: params[:parent_id] }
+    elsif params[:admin_id].present?
+      { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:admin_id], parent_id: params[:parent_id] }
+    end
+
   end
 
   def pre_params
@@ -34,7 +41,13 @@ class Gws::Monitor::CommentsController < ApplicationController
   end
 
   def set_parent
-    @topic  = @model.find params[:topic_id]
+    if params[:topic_id].present?
+      @topic  = @model.find params[:topic_id]
+    elsif params[:answer_id].present?
+      @topic  = @model.find params[:answer_id]
+    elsif params[:admin_id].present?
+      @topic  = @model.find params[:admin_id]
+    end
     @parent = @model.find params[:parent_id]
   end
 
