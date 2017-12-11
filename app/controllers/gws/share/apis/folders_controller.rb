@@ -79,7 +79,7 @@ class Gws::Share::Apis::FoldersController < ApplicationController
         is_parent: (@item.present? && @item.name.start_with?("#{item.name}\/"))
       }
     end
-    items.compact.uniq.sort{|a, b| (a[:order] <=> b[:order]).nonzero? || (a[:filename] <=> b[:filename])}
+    items.compact.uniq.sort{ |a, b| (a[:order] <=> b[:order]).nonzero? || (a[:filename] <=> b[:filename]) }
   end
 
   def item_url(item)
