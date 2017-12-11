@@ -1,15 +1,18 @@
-module Gws::Monitor::GroupSetting
+module Gws::Addon::Monitor::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
+    attr_accessor :in_monitor_file_size_per_topic_mb, :in_monitor_file_size_per_post_mb
+
     field :monitor_new_days, type: Integer
     field :monitor_file_size_per_topic, type: Integer
     field :monitor_file_size_per_post, type: Integer
     field :monitor_browsed_delay, type: Integer
     field :monitor_delete_threshold, type: Integer, default: 8
     field :default_reminder_start_section, type: String
-    attr_accessor :in_monitor_file_size_per_topic_mb, :in_monitor_file_size_per_post_mb
 
     permit_params :monitor_new_days, :monitor_browsed_delay
     permit_params :in_monitor_file_size_per_topic_mb, :in_monitor_file_size_per_post_mb

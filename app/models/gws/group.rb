@@ -9,6 +9,7 @@ class Gws::Group
   include Gws::Addon::Faq::GroupSetting
   include Gws::Addon::Qna::GroupSetting
   include Gws::Addon::Circular::GroupSetting
+  include Gws::Addon::Monitor::GroupSetting
   include Gws::Addon::StaffRecord::GroupSetting
   include Gws::Addon::Elasticsearch::GroupSetting
   include Gws::Addon::System::MenuSetting

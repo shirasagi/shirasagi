@@ -109,6 +109,13 @@
 </nav>
 
 <nav class="mod-navi">
+  <h2><%= t('modules.gws/monitor') %></h2>
+  <% if Gws::Circular::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_monitor_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
   <h2><%= t('modules.gws/staff_record') %></h2>
   <% if Gws::StaffRecord::Year.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/staff_record/year').sub(/.*\//, ''), gws_staff_record_years_path %></h3>

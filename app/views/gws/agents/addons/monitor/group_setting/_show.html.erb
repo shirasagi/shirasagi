@@ -1,4 +1,6 @@
-<dl class="see">
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-monitor-group-setting"); <% end %>
+
+<dl class="see addon-gws-monitor-group-setting">
   <dt><%= @model.t :monitor_new_days %></dt>
   <dd><%= @item.send :monitor_new_days %> <%= t("datetime.prompts.day") %></dd>
 
