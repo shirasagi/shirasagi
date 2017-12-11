@@ -101,21 +101,34 @@ class Gws::Share::Folder
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth..-1].join("/")
+    @trailing_name ||= name.split("/")[depth-1..-1].join("/")
   end
 
   def parents
     @parents ||= begin
-      paths = Cms::Node.split_path(name.sub(/^\//, ''))
+      paths = split_path(name.sub(/^\//, ''))
       paths.pop
       self.class.in(name: paths)
     end
   end
 
+  def split_path(path)
+    last = nil
+    dirs = path.split('/').map { |n| last = last ? "#{last}/#{n}" : n }
+  end
+
+  def folders
+    Gws::Share::Folder.where(site_id: site_id, name: /^#{name}\//)
+  end
+
+  def children(cond = {})
+    folders.where cond.merge(depth: depth + 1)
+  end
+
   private
 
   def set_depth
-    self.depth = name.count('/') unless name.nil?
+    self.depth = name.count('/') + 1 unless name.nil?
   end
 
   def set_share_max_file_size
