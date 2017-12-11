@@ -17,7 +17,11 @@ class Gws::Circular::CommentsController < ApplicationController
 
   def fix_params
     set_post
-    { user_id: @cur_user.id, site_id: @cur_site.id, post_id: @post.id }
+    if params[:post_id].present?
+      { user_id: @cur_user.id, site_id: @cur_site.id, post_id: @post.id }
+    elsif params[:admin_id].present?
+      { user_id: @cur_user.id, site_id: @cur_site.id, post_id: @post.id }
+    end
   end
 
   def pre_params
@@ -35,21 +39,37 @@ class Gws::Circular::CommentsController < ApplicationController
   end
 
   def set_post
-    @post ||= Gws::Circular::Post.find(params[:post_id])
+    if params[:post_id].present?
+      @post ||= Gws::Circular::Post.find(params[:post_id])
+    elsif params[:admin_id].present?
+      @post ||= Gws::Circular::Post.find(params[:admin_id])
+    end
     @post ? @post : (raise '404')
   end
 
   def crud_redirect_url
-    gws_circular_post_path(id: @post.id)
+    if params[:post_id].present?
+      gws_circular_post_path(id: @post.id)
+    elsif params[:admin_id].present?
+      gws_circular_admin_path(id: @post.id)
+    end
   end
 
   public
 
   def index
     if @category.present?
-      redirect_to gws_circular_category_post_path(id: @post.id)
-    else
-      redirect_to gws_circular_post_path(id: @post.id)
+      if params[:post_id].present?
+        redirect_to gws_circular_category_post_path(id: @post.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_circular_category_admin_path(id: @post.id)
+      end
+    elsif @category.blank?
+      if params[:post_id].present?
+        redirect_to gws_circular_post_path(id: @post.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_circular_admin_path(id: @post.id)
+      end
     end
   end
   alias show index
