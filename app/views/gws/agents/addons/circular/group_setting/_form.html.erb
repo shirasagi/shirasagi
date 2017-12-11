@@ -1,4 +1,6 @@
-<dl class="see">
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-circular-group-setting"); <% end %>
+
+<dl class="see addon-gws-circular-group-setting">
   <dt><%= @model.t :circular_default_due_date %><%= @model.tt :circular_default_due_date %></dt>
   <dd class="short"><%= f.number_field :circular_default_due_date %> <span class="postfix"><%= t('datetime.prompts.day') %></span></dd>
 

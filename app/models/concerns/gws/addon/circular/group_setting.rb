@@ -1,6 +1,8 @@
-module Gws::Circular::GroupSetting
+module Gws::Addon::Circular::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
     field :circular_default_due_date, type: Integer, default: 7

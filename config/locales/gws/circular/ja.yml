@@ -55,6 +55,7 @@ ja:
   modules:
     gws/circular: 回覧板
     addons:
+      gws/circular/group_setting: 回覧板
       gws/circular/category: カテゴリー
   gws_role:
     read_other_gws_circular_posts: 回覧板の閲覧（全て）
@@ -72,10 +73,9 @@ ja:
   mongoid:
     models:
       gws/circular/post: 回覧板
-      gws/circular/category: 回覧板カテゴリー
+      gws/circular/category: 回覧板/カテゴリー
       gws/circular/trashes: 削除済み
-      gws/circular/group_setting: 回覧板設定
-      gws/circular/group_setting/category: カテゴリー
+
     errors:
       models:
         gws/circular/post:
@@ -90,20 +90,17 @@ ja:
         see_type: 既読にする形式
         deleted: 削除日時
         seen: 既読
-      gws/circular/group_setting:
+      gws/circular/comment:
+        name: タイトル
+        text: コメント
+      gws/addon/circular/group_setting:
         circular_default_due_date: 回覧期限日初期値
         circular_max_member: 回覧人数制限
         circular_filesize_limit: 添付サイズ制限
         circular_delete_threshold: 回覧復旧可能期間
       gws/addon/circular/category:
         category_ids: カテゴリー
-      gws/circular/comment:
-        name: タイトル
-        text: コメント
   tooltip:
-    gws/circular/comment:
-      name: タイトルです
-      text: コメントです
     gws/circular/post:
       name:
         - タイトルを入力します。
@@ -113,7 +110,10 @@ ja:
         - 既読にする形式を選択します。
         - 通常回覧：ボタンを押下した時に既読にする
         - 簡易回覧：詳細を開いた時に自動的に既読にする
-    gws/circular/group_setting:
+    gws/circular/comment:
+      name: タイトルです
+      text: コメントです
+    gws/addon/circular/group_setting:
       circular_default_due_date:
         - 回覧期限日時の初期値を、今日から数えて何日後かで入力します。
         - 初期値は 7日 後です。
