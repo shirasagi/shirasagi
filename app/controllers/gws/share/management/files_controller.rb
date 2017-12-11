@@ -3,7 +3,9 @@ class Gws::Share::Management::FilesController < ApplicationController
   include Gws::CrudFilter
   include Gws::FileFilter
 
+  navi_view "gws/share/management/navi"
   model Gws::Share::File
+
   before_action :set_item, only: [:show, :active, :delete, :recover, :destroy]
   before_action :set_selected_items, only: [:destroy_all, :active_all]
   before_action :set_category
@@ -14,9 +16,8 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def set_crumbs
     set_folder
+    @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-      @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
         folder_name = @folder.name.split("/")[i]
@@ -25,10 +26,6 @@ class Gws::Share::Management::FilesController < ApplicationController
         item_path = gws_share_folder_files_path(folder: item_id)
         @crumbs << [folder_name, item_path]
       end
-
-    else
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-      @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
     end
   end
 

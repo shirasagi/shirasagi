@@ -1,4 +1,6 @@
-<dl class="see">
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-share-group-setting"); <% end %>
+
+<dl class="see addon-gws-share-group-setting">
   <dt><%= @model.t :share_max_file_size %></dt>
   <dd><%= number_to_human_size(@item.share_max_file_size) %></dd>
 

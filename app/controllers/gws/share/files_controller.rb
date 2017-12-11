@@ -16,7 +16,6 @@ class Gws::Share::FilesController < ApplicationController
     set_folder
     @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
         item_name = @folder.name.split("/")[0, i+1].join("/")
