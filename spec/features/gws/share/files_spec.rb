@@ -15,6 +15,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
+      wait_for_ajax
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -47,6 +48,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
+      wait_for_ajax
       within "form#item-form" do
         fill_in "item[filename]", with: "modify"
         click_button "保存"
@@ -57,6 +59,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
 
     it "#delete" do
       visit delete_path
+      wait_for_ajax
       within "form" do
         click_button "削除"
       end
