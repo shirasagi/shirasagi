@@ -79,7 +79,20 @@ class Gws::Monitor::CommentsController < ApplicationController
       @item.parent.state_of_the_answers_hash[@cur_group.id.to_s] = "question_not_applicable"
       @item.parent.save
     end
-    render_create @item.save
+
+    if params[:topic_id].present?
+      controller = "gws/monitor/topics"
+      id = params[:topic_id]
+    elsif params[:answer_id].present?
+      controller = "gws/monitor/answers"
+      id = params[:answer_id]
+    elsif params[:admin_id].present?
+      controller = "gws/monitor/admins"
+      id = params[:admin_id]
+    end
+
+    render_create @item.save, {location: {controller: controller, action: 'show', id: id}}
+    #render_create @item.save
   end
 
   def edit
@@ -90,7 +103,19 @@ class Gws::Monitor::CommentsController < ApplicationController
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_update @item.update
+
+    if params[:topic_id].present?
+      controller = "gws/monitor/topics"
+      id = params[:topic_id]
+    elsif params[:answer_id].present?
+      controller = "gws/monitor/answers"
+      id = params[:answer_id]
+    elsif params[:admin_id].present?
+      controller = "gws/monitor/admins"
+      id = params[:admin_id]
+    end
+
+    render_update @item.update, {location: {controller: controller, action: 'show', id: id}}
   end
 
   def delete
