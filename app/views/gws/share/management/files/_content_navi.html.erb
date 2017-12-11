@@ -20,13 +20,16 @@
   <%= select_tag :category_id, options, include_blank: t('modules.gws/share') if @categories.to_options.present? %>
 </div>
 
-<div id="content-navi">
-  <h2 class="content-navi-title">
-    <%= t("gws/share.folder") %>
-  </h2>
+<% if params[:action] == "index" %>
+  <div id="content-navi">
+    <h2 class="content-navi-title">
+      <%= t("gws/share.folder") %>
+    </h2>
 
-  <div class="tree-item<%= ' is-current' if @folder.blank? %>">
-    <%= link_to t('gws/share.all'), gws_share_files_path %>
+    <div class="tree-item<%= ' is-current' if @folder.blank? %>">
+      <%= link_to t('gws/share.all'), gws_share_files_path %>
+    </div>
+    <div class="tree-navi"></div>
   </div>
-  <div class="tree-navi"></div>
-</div>
+<% end %>
+
