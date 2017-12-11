@@ -33,9 +33,11 @@ class Gws::Share::Folder
   before_validation :set_share_max_folder_size
 
   validates :name, presence: true, length: {maximum: 80}
-  validates :order, numericality: {less_than_or_equal_to: 999999}
-  validates :share_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**3, allow_blank: true }
-  validates :share_max_folder_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**4, allow_blank: true }
+  validates :order, numericality: {less_than_or_equal_to: 999_999}
+  validates :share_max_file_size,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**3, allow_blank: true }
+  validates :share_max_folder_size,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**4, allow_blank: true }
 
   validate :validate_parent_name
   validate :validate_rename_children, :validate_rename_parent,
@@ -101,21 +103,34 @@ class Gws::Share::Folder
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth..-1].join("/")
+    @trailing_name ||= name.split("/")[depth-1..-1].join("/")
   end
 
   def parents
     @parents ||= begin
-      paths = Cms::Node.split_path(name.sub(/^\//, ''))
+      paths = split_path(name.sub(/^\//, ''))
       paths.pop
-      self.class.all.in(name: paths)
+      self.class.in(name: paths)
     end
+  end
+
+  def split_path(path)
+    last = nil
+    dirs = path.split('/').map { |n| last = last ? "#{last}/#{n}" : n }
+  end
+
+  def folders
+    Gws::Share::Folder.where(site_id: site_id, name: /^#{name}\//)
+  end
+
+  def children(cond = {})
+    folders.where cond.merge(depth: depth + 1)
   end
 
   private
 
   def set_depth
-    self.depth = name.count('/')
+    self.depth = name.count('/') + 1 unless name.nil?
   end
 
   def set_share_max_file_size

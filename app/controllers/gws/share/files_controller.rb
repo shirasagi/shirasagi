@@ -8,7 +8,7 @@ class Gws::Share::FilesController < ApplicationController
   before_action :set_selected_items, only: [:disable_all, :download_all]
   before_action :set_category
   before_action :set_folder
-  before_action :set_folder_navi, only: [:index]
+  before_action :set_tree_navi, only: [:index]
 
   private
 
@@ -16,14 +16,12 @@ class Gws::Share::FilesController < ApplicationController
     set_folder
     @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
         item_name = @folder.name.split("/")[0, i+1].join("/")
         item_path = gws_share_folder_files_path(folder: Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id)
         @crumbs << [@folder.name.split("/")[i], item_path]
       end
-      @crumbs << [@folder.trailing_name, gws_share_folder_files_path(folder: @folder.id)]
     end
   end
 
@@ -37,14 +35,6 @@ class Gws::Share::FilesController < ApplicationController
   def set_folder
     return if params[:folder].blank?
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
-  end
-
-  def set_folder_navi
-    if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
-      @folder_navi = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
-    elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
-      @folder_navi = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site)
-    end
   end
 
   def fix_params
@@ -79,7 +69,6 @@ class Gws::Share::FilesController < ApplicationController
 
     folder_name = Gws::Share::Folder.site(@cur_site).
         where(id: params[:folder].to_i).pluck(:name).first
-
 
     if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
       @sub_folders = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).

@@ -1,27 +1,3 @@
-<%
-options = options_for_select(@categories.to_options(offset: 1), @category.try(:id))
-%>
-<%= jquery do %>
-
-  $(".gws-category-navi-menu #category_id").change(function() {
-    var cid = $(this).val();
-    <% if @folder -%>
-      if (cid) location.href = '<%= gws_share_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_folder_files_path(folder: @folder.id) %>';
-    <% else -%>
-      if (cid) location.href = '<%= gws_share_files_path(category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_files_path %>';
-    <% end -%>
-  });
-
-<% end %>
-
-<div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options, include_blank: t('modules.gws/share') if @categories.to_options.present? %>
-</div>
-
-<%= render partial: "folder_navi" %>
-
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
