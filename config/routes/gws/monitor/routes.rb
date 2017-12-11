@@ -16,18 +16,21 @@ SS::Application.routes.draw do
     post :question_not_applicable_all, on: :collection
   end
 
+  concern :topic_comment do
+    namespace :parent, path: ":parent_id", parent_id: /\d+/ do
+      resources :comments, controller: '/gws/monitor/comments', concerns: [:deletion]
+    end
+    get :categories, on: :collection
+  end
+
   gws 'monitor' do
-    resources :topics, concerns: [:deletion, :state_change] do
-      namespace :parent, path: ":parent_id", parent_id: /\d+/ do
-        resources :comments, controller: '/gws/monitor/comments', concerns: [:deletion]
-      end
-      get :categories, on: :collection
+    resources :topics, concerns: [:deletion, :state_change, :topic_comment] do
       post :read, on: :member
     end
 
-    resources :answers, concerns: [:deletion, :state_change]
+    resources :answers, concerns: [:deletion, :state_change, :topic_comment]
 
-    resources :admins, concerns: [:deletion, :state_change] do
+    resources :admins, concerns: [:deletion, :state_change, :topic_comment] do
       get :disable, on: :member
       post :disable_all, on: :collection
     end
@@ -48,16 +51,11 @@ SS::Application.routes.draw do
 
     # with category
     scope(path: ":category", as: "category") do
-      resources :topics, concerns: [:deletion, :state_change] do
-        namespace :parent, path: ":parent_id", parent_id: /\d+/ do
-          resources :comments, controller: '/gws/monitor/comments', concerns: [:deletion]
-        end
-        get :categories, on: :collection
-      end
+      resources :topics, concerns: [:deletion, :state_change, :topic_comment]
 
-      resources :answers, concerns: [:deletion, :state_change]
+      resources :answers, concerns: [:deletion, :state_change, :topic_comment]
 
-      resources :admins, concerns: [:deletion, :state_change] do
+      resources :admins, concerns: [:deletion, :state_change, :topic_comment] do
         get :disable, on: :member
         post :disable_all, on: :collection
       end
