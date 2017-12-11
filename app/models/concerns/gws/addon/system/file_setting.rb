@@ -1,6 +1,8 @@
-module Gws::File::GroupSetting
+module Gws::Addon::System::FileSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
     field :multibyte_filename_state, type: String
@@ -18,14 +20,5 @@ module Gws::File::GroupSetting
 
   def multibyte_filename_enabled?
     !multibyte_filename_disabled?
-  end
-
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::File::Setting.allowed?(action, user, opts)
-      # super
-      false
-    end
   end
 end
