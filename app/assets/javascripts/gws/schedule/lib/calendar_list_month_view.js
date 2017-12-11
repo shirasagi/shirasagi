@@ -56,6 +56,9 @@
         }).data('eventNo', i);
 
         var info = $('<div class="td info"></div>').append(evEl);
+        if (event.sanitizedHtml) {
+          info.append('<p>' + event.sanitizedHtml + '</p>');
+        }
         var date = $('<div class="td date"></div>').text(event.startDateLabel);
         var time = $('<div class="td time"></div>').text(event.startTimeLabel);
         if (event.allDay) time.text(event.allDayLabel);
