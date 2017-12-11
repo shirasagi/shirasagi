@@ -55,17 +55,41 @@ class Gws::Monitor::CommentsController < ApplicationController
 
   def index
     if @category.present?
-      redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_category_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_category_admin_path(id: @topic.id)
+      end
     else
-      redirect_to gws_monitor_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_admin_path(id: @topic.id)
+      end
     end
   end
 
   def show
     if @category.present?
-      redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_category_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_category_admin_path(id: @topic.id)
+      end
     else
-      redirect_to gws_monitor_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_admin_path(id: @topic.id)
+      end
     end
   end
 
@@ -92,7 +116,6 @@ class Gws::Monitor::CommentsController < ApplicationController
     end
 
     render_create @item.save, {location: {controller: controller, action: 'show', id: id}}
-    #render_create @item.save
   end
 
   def edit
