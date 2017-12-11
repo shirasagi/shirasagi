@@ -14,6 +14,10 @@ module Gws::Schedule::CalendarFormat
     if data[:readable]
       data[:title] = name
       data[:title] = I18n.t("gws/schedule.private_plan_mark") + name if private_plan?(user)
+
+      if html.present?
+        data[:sanitizedHtml] = ::ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
+      end
     end
 
     #data[:termLabel] = Gws::Schedule::PlansController.helpers.term(self)
