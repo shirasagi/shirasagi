@@ -63,6 +63,29 @@ class Gws::Circular::AdminsController < ApplicationController
       page(params[:page]).per(50)
   end
 
+  def create
+    @item = @model.new get_params
+    if params[:commit] == t("ss.buttons.draft_save")
+      @item.state = 'closed'
+    elsif params[:commit] == t("ss.buttons.publish_save")
+      @item.state = 'public'
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    if params[:commit] == t("ss.buttons.draft_save")
+      @item.state = 'closed'
+    elsif params[:commit] == t("ss.buttons.publish_save")
+      @item.state = 'public'
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update
+  end
+
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.disable, {notice: t('gws/circular.notice.disable')}
