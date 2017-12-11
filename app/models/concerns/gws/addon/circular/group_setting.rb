@@ -34,21 +34,14 @@ module Gws::Addon::Circular::GroupSetting
   end
 
   def circular_delete_threshold_options
-    I18n.t('gws/circular/group_setting.options.circular_delete_threshold').
+    I18n.t('gws/circular.options.circular_delete_threshold').
       map.
       with_index.
       to_a
   end
 
   def circular_delete_threshold_name
-    I18n.t('gws/circular/group_setting.options.circular_delete_threshold')[circular_delete_threshold]
+    I18n.t('gws/circular.options.circular_delete_threshold')[circular_delete_threshold]
   end
-
-  class << self
-    def allowed?(action, user, opts = {})
-      Gws::Circular::Post.allowed?(action, user, opts)
-    end
-  end
-
 end
 

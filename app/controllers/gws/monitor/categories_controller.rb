@@ -24,7 +24,7 @@ class Gws::Monitor::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/monitor/category'), gws_monitor_categories_path]
+    @crumbs << [t('modules.gws/monitor') + '/' + t('mongoid.models.gws/monitor/category'), gws_monitor_categories_path]
   end
 
   def fix_params

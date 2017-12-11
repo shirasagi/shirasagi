@@ -38,9 +38,9 @@ ja:
 
   mongoid:
     models:
-      gws/facility/item: 設備管理/設備
-      gws/facility/category: 設備管理/カテゴリー
-      gws/facility/custom_field: 設備管理/追加入力
+      gws/facility/item: 設備
+      gws/facility/category: カテゴリー
+      gws/facility/custom_field: 追加入力
     attributes:
       gws/facility/item:
         name: 設備名

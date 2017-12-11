@@ -33,16 +33,13 @@ ja:
       - 返信者名
       - 返信欄
       - 返信日時
+    notice:
+      disable: 削除済みに移動しました
+      active: 削除を取り消しました
     options:
       see_type:
         normal: 通常回覧
         simple: 簡易回覧
-    notice:
-      disable: 削除済みに移動しました
-      active: 削除を取り消しました
-  gws/circular/group_setting:
-    max_member_unit: 人
-    options:
       circular_delete_threshold:
         - 6ヶ月
         - 1年
@@ -72,7 +69,7 @@ ja:
   mongoid:
     models:
       gws/circular/post: トピック
-      gws/circular/category: 回覧板/カテゴリー
+      gws/circular/category: カテゴリー
       gws/circular/trashes: 削除済み
 
     errors:

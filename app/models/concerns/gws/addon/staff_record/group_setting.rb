@@ -21,15 +21,4 @@ module Gws::Addon::StaffRecord::GroupSetting
   def divide_duties_limit_options
     [10, 20, 30, 50, 100]
   end
-
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::StaffRecord::Year.allowed?(action, user, opts)
-      return true if Gws::StaffRecord::Group.allowed?(action, user, opts)
-      return true if Gws::StaffRecord::User.allowed?(action, user, opts)
-      # super
-      false
-    end
-  end
 end

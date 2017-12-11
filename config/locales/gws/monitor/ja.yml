@@ -93,6 +93,16 @@ ja:
       article_state:
         open: 配信済み
         closed: 締め切り
+      monitor_delete_threshold:
+        - 1日
+        - 1ヶ月
+        - 3ヶ月
+        - 6ヶ月
+        - 9ヶ月
+        - 12ヶ月
+        - 15ヶ月
+        - 18ヶ月
+        - 24ヶ月
     links:
       back_to_thread: 戻る
       comment: 回答する
@@ -172,8 +182,8 @@ ja:
   mongoid:
     models:
       gws/monitor/topic: トピック
-      gws/monitor/post: 照会・回答/投稿
-      gws/monitor/category: 照会・回答/カテゴリー
+      gws/monitor/post: 投稿
+      gws/monitor/category: カテゴリー
     errors:
       models:
         gws/monitor/category:
@@ -265,17 +275,3 @@ ja:
           - 回答の表示方法を選択します。
         reminder_start_section:
           - リマインダー表示条件を選択します。
-
-  gws/monitor/group_setting:
-    options:
-      monitor_delete_threshold:
-        - 1日
-        - 1ヶ月
-        - 3ヶ月
-        - 6ヶ月
-        - 9ヶ月
-        - 12ヶ月
-        - 15ヶ月
-        - 18ヶ月
-        - 24ヶ月
-

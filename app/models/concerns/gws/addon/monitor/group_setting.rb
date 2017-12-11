@@ -31,22 +31,14 @@ module Gws::Addon::Monitor::GroupSetting
   end
 
   def monitor_delete_threshold_options
-    I18n.t('gws/monitor/group_setting.options.monitor_delete_threshold').
+    I18n.t('gws/monitor.options.monitor_delete_threshold').
         map.
         with_index.
         to_a
   end
 
   def monitor_delete_threshold_name
-    I18n.t('gws/monitor/group_setting.options.monitor_delete_threshold')[monitor_delete_threshold]
-  end
-
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Monitor::Category.allowed?(action, user, opts)
-      super
-    end
+    I18n.t('gws/monitor.options.monitor_delete_threshold')[monitor_delete_threshold]
   end
 
   def default_reminder_start_section_options
@@ -59,14 +51,6 @@ module Gws::Addon::Monitor::GroupSetting
       return name if value == default_reminder_start_section
     end
     nil
-  end
-
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Monitor::Category.allowed?(action, user, opts)
-      super
-    end
   end
 
   private

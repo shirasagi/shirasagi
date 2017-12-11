@@ -51,10 +51,10 @@ ja:
 
   mongoid:
     models:
-      gws/staff_record/year: 電子職員録/年度
-      gws/staff_record/group: 電子職員録/所属
-      gws/staff_record/user: 電子職員録/職員
-      gws/staff_record/seating: 電子職員録/座席表
+      gws/staff_record/year: 年度
+      gws/staff_record/group: 所属
+      gws/staff_record/user: 職員
+      gws/staff_record/seating: 座席表
     attributes:
       gws/addon/staff_record/group_setting:
         staff_records_limit: 電子職員録/表示件数

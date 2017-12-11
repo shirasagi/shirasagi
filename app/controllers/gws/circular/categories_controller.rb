@@ -24,7 +24,7 @@ class Gws::Circular::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/circular/category'), gws_circular_categories_path]
+    @crumbs << [t('modules.gws/circular') + '/' + t('mongoid.models.gws/circular/category'), gws_circular_categories_path]
   end
 
   def fix_params
