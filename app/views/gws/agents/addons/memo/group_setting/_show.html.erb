@@ -1,4 +1,6 @@
-<dl class="see">
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-memo-group-setting"); <% end %>
+
+<dl class="see addon-gws-memo-group-setting">
   <dt><%= @model.t :memo_filesize_limit %></dt>
   <dd><%= @item.memo_filesize_limit %> <%= t('ss.units.mega_byte') if @item.memo_filesize_limit %></dd>
 

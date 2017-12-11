@@ -12,6 +12,7 @@ class Gws::Group
   include Gws::Addon::Monitor::GroupSetting
   include Gws::Addon::Share::GroupSetting
   include Gws::Addon::StaffRecord::GroupSetting
+  include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Elasticsearch::GroupSetting
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting

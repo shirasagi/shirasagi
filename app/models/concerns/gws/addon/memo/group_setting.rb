@@ -1,6 +1,8 @@
-module Gws::Memo::GroupSetting
+module Gws::Addon::Memo::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
     field :memo_filesize_limit, type: Integer
@@ -27,11 +29,4 @@ module Gws::Memo::GroupSetting
   def memo_reminder_name
     I18n.t('gws/memo/group_setting.options.reminder')[memo_reminder]
   end
-
-  class << self
-    def allowed?(action, user, opts = {})
-      Gws::Memo::Signature.allowed?(action, user, opts)
-    end
-  end
-
 end
