@@ -72,6 +72,7 @@
   </ul>
 </div>
 
+<% if @sub_folders.present? %>
 <div class="index">
   <div class="header">
     <%= t('gws/share.child_folder') %>
@@ -80,11 +81,12 @@
     <% @sub_folders.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to (File.basename item.name), gws_share_folder_files_path(folder: item.id), class: "title" %>
+        <%= link_to (File.basename item.name), gws_share_management_folder_files_path(folder: item.id), class: "title" %>
       </div>
     </li>
     <% end %>
   </ul>
 </div>
+<% end %>
 
 <%= paginate @items if @items.try(:current_page) %>
