@@ -22,7 +22,7 @@ class Gws::Share::Management::FilesController < ApplicationController
         folder_name = @folder.name.split("/")[i]
         item_name = @folder.name.split("/")[0, i+1].join("/")
         item_id = Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id
-        item_path = gws_share_folder_files_path(folder: item_id)
+        item_path = gws_share_management_folder_files_path(folder: item_id)
         @crumbs << [folder_name, item_path]
       end
 
