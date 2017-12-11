@@ -1,6 +1,8 @@
-module Gws::StaffRecord::GroupSetting
+module Gws::Addon::StaffRecord::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::GroupSetting
+  extend SS::Addon
+
+  set_addon_type :organization
 
   included do
     field :staff_records_limit, type: Integer, default: 50

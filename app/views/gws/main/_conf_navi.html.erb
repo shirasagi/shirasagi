@@ -107,3 +107,22 @@
     <h3><%= link_to t('gws.category'), gws_circular_categories_path %></h3>
   <% end %>
 </nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/staff_record') %></h2>
+  <% if Gws::StaffRecord::Year.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/staff_record/year').sub(/.*\//, ''), gws_staff_record_years_path %></h3>
+  <% end %>
+
+  <% if @staff_record_settings && @cur_year %>
+    <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('mongoid.models.gws/staff_record/group').sub(/.*\//, ''), gws_staff_record_groups_path(year: @cur_year.id) %></h3>
+    <% end %>
+    <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('mongoid.models.gws/staff_record/user').sub(/.*\//, ''), gws_staff_record_users_path(year: @cur_year.id) %></h3>
+    <% end %>
+    <% if Gws::StaffRecord::Seating.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('mongoid.models.gws/staff_record/seating').sub(/.*\//, ''), gws_staff_record_seatings_path(year: @cur_year.id) %></h3>
+    <% end %>
+  <% end %>
+</nav>
