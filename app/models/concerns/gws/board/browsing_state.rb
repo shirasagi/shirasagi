@@ -20,4 +20,8 @@ module Gws::Board::BrowsingState
 
     self.browsed_users_hash = hash
   end
+
+  def browsed_state_options
+    %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
+  end
 end
