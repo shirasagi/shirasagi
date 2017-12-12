@@ -69,9 +69,15 @@ class Gws::Circular::Post
     end
   }
 
+  scope :and_admins, ->(user) {
+    where("$and" => [
+        { "$or" => [{ :user_ids.in => [user.id] }, { :group_ids.in => user.group_ids }] }
+    ])
+  }
+
   scope :without_deleted, ->(date = Time.zone.now) {
-    where('$and' => [
-      { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
+    where("$and" => [
+        { "$or" => [{ deleted: nil }, { :deleted.gt => date }] }
     ])
   }
 

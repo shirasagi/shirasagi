@@ -60,6 +60,7 @@ class Gws::Circular::AdminsController < ApplicationController
       allow(:read, @cur_user, site: @cur_site).
       without_deleted.
       search(params[:s]).
+      and_admins(@cur_user).
       page(params[:page]).per(50)
   end
 
