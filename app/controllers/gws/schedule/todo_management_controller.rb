@@ -34,7 +34,7 @@ class Gws::Schedule::TodoManagementController < ApplicationController
   end
 
   def active
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.active, {notice: t('gws/schedule/todo_management.notice.active')}
   end
 
@@ -43,7 +43,7 @@ class Gws::Schedule::TodoManagementController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
         next if item.active
       else
         item.errors.add :base, :auth_error
