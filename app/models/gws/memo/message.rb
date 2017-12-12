@@ -225,7 +225,9 @@ class Gws::Memo::Message
   end
 
   def validate_message
-    if self.text.blank? && self.html.blank?
+    if self.text.blank? && self.format == "text"
+      errors.add(:base, :input_message)
+    elsif self.html.blank? && self.format == "html"
       errors.add(:base, :input_message)
     end
   end
