@@ -3,12 +3,13 @@ require 'spec_helper'
 describe "gws_share_files", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:item) { create :gws_share_file, category_ids: [category.id] }
+  let(:folder) { create :gws_share_folder, folder_id: folder.id }
   let!(:category) { create :gws_share_category }
-  let(:index_path) { gws_share_files_path site }
-  let(:new_path) { new_gws_share_file_path site }
-  let(:show_path) { gws_share_file_path site, item }
-  let(:edit_path) { edit_gws_share_file_path site, item }
-  let(:delete_path) { delete_gws_share_file_path site, item }
+  let(:index_path) { gws_share_files_path site, folder }
+  let(:new_path) { new_gws_share_file_path site, folder }
+  let(:show_path) { gws_share_file_path site, folder, item }
+  let(:edit_path) { edit_gws_share_file_path site, folder, item }
+  let(:delete_path) { delete_gws_share_file_path site, folder, item }
 
   context "with auth", js: true do
     before { login_gws_user }
@@ -88,7 +89,6 @@ describe "gws_share_files", type: :feature, dbscope: :example do
                                    .find{ |elem| elem.include?(gws_user._id.to_s + "_") }.split("_").last
         expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_truthy
       end
-
     end
   end
 end
