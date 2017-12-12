@@ -25,10 +25,13 @@ SS::Application.routes.draw do
 
   gws 'monitor' do
     resources :topics, concerns: [:deletion, :state_change, :topic_comment] do
+      get :forward, on: :member
       post :read, on: :member
     end
 
-    resources :answers, concerns: [:deletion, :state_change, :topic_comment]
+    resources :answers, concerns: [:deletion, :state_change, :topic_comment] do
+      get :forward, on: :member
+    end
 
     resources :admins, concerns: [:deletion, :state_change, :topic_comment] do
       get :disable, on: :member
@@ -51,9 +54,13 @@ SS::Application.routes.draw do
 
     # with category
     scope(path: ":category", as: "category") do
-      resources :topics, concerns: [:deletion, :state_change, :topic_comment]
+      resources :topics, concerns: [:deletion, :state_change, :topic_comment] do
+        get :forward, on: :member
+      end
 
-      resources :answers, concerns: [:deletion, :state_change, :topic_comment]
+      resources :answers, concerns: [:deletion, :state_change, :topic_comment] do
+        get :forward, on: :member
+      end
 
       resources :admins, concerns: [:deletion, :state_change, :topic_comment] do
         get :disable, on: :member

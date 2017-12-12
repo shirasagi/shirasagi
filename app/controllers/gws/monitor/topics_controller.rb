@@ -183,5 +183,21 @@ class Gws::Monitor::TopicsController < ApplicationController
     end
     render_destroy_all(entries.size != @items.size)
   end
+
+  def forward
+    set_item
+    @item.id = 0
+    @item.attend_group_ids = []
+    @item.readable_group_ids = []
+    @item.readable_member_ids  = []
+    @item.readable_custom_group_ids  = []
+    @item.state_of_the_answers_hash = {}
+    @item.file_ids = []
+    @item.created = nil
+    @item.updated = nil
+    @model = @item.dup()
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    render file: :new
+  end
 end
 
