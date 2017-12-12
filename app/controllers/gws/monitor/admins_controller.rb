@@ -58,10 +58,17 @@ class Gws::Monitor::AdminsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
-    @items = @items.search(params[:s]).
-        and_admins(@cur_user).
-        custom_order(params.dig(:s, :sort) || 'updated_desc').
-        page(params[:page]).per(50)
+    if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"] &&
+        @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
+      @items = @items.search(params[:s]).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    else
+      @items = @items.search(params[:s]).
+          and_admins(@cur_user).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    end
   end
 
   def show
@@ -131,7 +138,7 @@ class Gws::Monitor::AdminsController < ApplicationController
   end
 
   def disable
-    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.disable, {notice: t('gws/monitor.notice.disable')}
   end
 
