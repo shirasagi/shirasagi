@@ -22,7 +22,7 @@ module Gws::Monitor::Postable
     field :severity, type: String
     field :due_date, type: DateTime
     field :spec_config, type: String, default: '0'
-    field :reminder_start_section, type: String, default: '-3'
+    field :reminder_start_section, type: String, default: '3'
     field :state_of_the_answers_hash, type: Hash, default: {}
 
     validates :descendants_updated, datetime: true
