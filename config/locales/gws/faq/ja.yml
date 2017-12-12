@@ -88,9 +88,9 @@ ja:
 
   mongoid:
     models:
-      gws/faq/topic: よくある質問/トピック
-      gws/faq/post: よくある質問/投稿
-      gws/faq/category: よくある質問/カテゴリー
+      gws/faq/topic: トピック
+      gws/faq/post: 投稿
+      gws/faq/category: カテゴリー
     errors:
       models:
         gws/faq/category:

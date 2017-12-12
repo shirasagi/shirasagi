@@ -10,7 +10,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/schedule/holiday"), gws_schedule_holidays_path]
+    @crumbs << [t('modules.gws/schedule') + '/' + t("mongoid.models.gws/schedule/holiday"), gws_schedule_holidays_path]
   end
 
   def fix_params
