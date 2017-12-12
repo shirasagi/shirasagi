@@ -8,8 +8,8 @@
         $('.primary').show();
         break;
       case "answered":
-        $('.public').show();
-        $('.preparation').show();
+        $('.public').hide();
+        $('.preparation').hide();
         $('.primary').show();
         break;
       case "preparation":
@@ -18,7 +18,7 @@
         $('.primary').hide();
         break;
       case "question_not_applicable":
-        $('.public').show();
+        $('.public').hide();
         $('.preparation').hide();
         $('.primary').show();
         break;
@@ -69,9 +69,9 @@
     <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && !@item.closed? && @item.attend_group_ids.include?(@cur_group.id) %>
     <div class="menu">
       <%= hidden_field_tag "item_id", @item.id %>
-      <% if @item.comment(@cur_group.id).blank? %>
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
       <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
+      <% if @item.comment(@cur_group.id).blank? %>
         <% if params[:controller] == "gws/monitor/topics" %>
           <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
           class: "btn primary") %>
