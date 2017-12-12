@@ -41,21 +41,13 @@ Gws_Discussion_Unseen.renderUnseen(
     <div class="addon-head"><h2><%= t("gws/discussion.todos") %></h2></div>
     <% @todos.each do |todo| %>
     <div class="addon-body">
-      <dl class="see">
-        <dd class="wide">
-          <%= link_to todo.name, gws_discussion_forum_todo_path(id: todo.id) %><br />
-          <%= term(todo) %>
-        </dd>
-      </dl>
+      <%= link_to todo.name, gws_discussion_forum_todo_path(id: todo.id) %><br />
+      <%= term(todo) %>
     </div>
     <% end %>
     <% if @todos.blank? %>
     <div class="addon-body">
-      <dl class="see">
-        <dd class="wide">
-          <%= t("gws/discussion.notice.no_todos") %>
-        </dd>
-      </dl>
+      <%= t("gws/discussion.notice.no_todos") %>
     </div>
     <% end %>
     <div class="addon-body">
@@ -67,22 +59,14 @@ Gws_Discussion_Unseen.renderUnseen(
     <div class="addon-head"><h2><%= t("gws/discussion.topics") %></h2></div>
     <% @recent_items.each do |item| %>
       <div class="addon-body">
-        <dl class="see">
-          <dd class="wide">
-            <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-            <%= link_to item.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: item.id) %><br />
-            <%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") rescue nil %>
-          </dd>
-        </dl>
+        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+        <%= link_to item.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: item.id) %><br />
+        <%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") rescue nil %>
       </div>
     <% end %>
     <% if @recent_items.blank? %>
       <div class="addon-body">
-        <dl class="see">
-          <dd class="wide">
-            <%= t("gws/discussion.notice.no_recents") %>
-          </dd>
-        </dl>
+        <%= t("gws/discussion.notice.no_recents") %>
       </div>
     <% end %>
     <div class="addon-body">
@@ -93,13 +77,9 @@ Gws_Discussion_Unseen.renderUnseen(
   <div class="addon-view">
     <div class="addon-head"><h2><%= t("gws/discussion.members") %></h2></div>
     <div class="addon-body">
-      <dl class="see">
-        <dd class="wide">
-          <% @forum.discussion_members.each do |member| %>
-              <p><%= member.long_name %></p>
-          <% end %>
-        </dd>
-      </dl>
+      <% @forum.discussion_members.each do |member| %>
+          <p><%= member.long_name %></p>
+      <% end %>
     </div>
   </div>
 </div>
