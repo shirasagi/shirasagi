@@ -257,6 +257,7 @@ ja:
       gws/addon/monitor/group:
         group_name:
           - 参加するグループを選択します。
+          - 「公開設定」でステータスを非公開にすることで編集可能となります。
       gws/monitor/topic:
         name:
           - タイトルを入力します。
