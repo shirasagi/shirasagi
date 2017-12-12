@@ -98,7 +98,7 @@ class Gws::Schedule::Todo
   end
 
   def todo_state_options
-    %w(finished unfinished).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
+    %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
 
   def allowed?(action, user, opts = {})
@@ -128,7 +128,8 @@ class Gws::Schedule::Todo
     end
 
     def search_todo_state(params)
-      return all if params.blank? || params[:todo_state].blank?
+      return all.where(todo_state: "unfinished") if params.blank? || params[:todo_state].blank?
+      return all if params[:todo_state] == "both"
       all.where(todo_state: params[:todo_state])
     end
 

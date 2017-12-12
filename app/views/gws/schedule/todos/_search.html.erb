@@ -1,6 +1,6 @@
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: '', html: { method: :get, class: :search } do |f| %>
   <%= f.text_field :keyword, style: 'width: 140px;', placeholder: t('gws/schedule/todo.search_todos') %>
-  <%= f.select :todo_state, @model.new.todo_state_options, include_blank: I18n.t('gws/schedule/todo.options.todo_state.both') %>
+  <%= f.select :todo_state, @model.new.todo_state_options %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 <% end %>
