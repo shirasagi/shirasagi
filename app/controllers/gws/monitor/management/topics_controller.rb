@@ -55,9 +55,16 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
-    @items = @items.search(params[:s]).
-        custom_order(params.dig(:s, :sort) || 'updated_desc').
-        page(params[:page]).per(50)
+    if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"]
+      @items = @items.search(params[:s]).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    else
+      @items = @items.search(params[:s]).
+          and_admins(@cur_user).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    end
   end
 
   def show
