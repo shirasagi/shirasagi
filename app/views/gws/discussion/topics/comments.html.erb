@@ -1,0 +1,5 @@
+<div class="gws-discussion">
+  <%= form_for :item, url: { action: :reply, id: @item.id }, html: { method: :put, multipart: true, autocomplete: :off } do |f| %>
+    <%= render partial: 'thread', locals: { f: f, topic: @item, limit: 0 } %>
+  <% end %>
+</div>

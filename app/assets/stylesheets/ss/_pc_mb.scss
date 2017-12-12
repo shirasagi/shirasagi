@@ -481,7 +481,7 @@ td {
   }
   .current + .child-menu h3 {
     display: block;
-  } 
+  }
   h3 a {
     display: block;
     padding: 5px 15px 5px 60px;
@@ -2320,10 +2320,15 @@ form .CodeMirror {
 
 // -------------------------------------------------------------------------------------------------
 // hide
+<<<<<<< HEAD
 @include mb {
   .hide-mb {
     display: none;
   }
+=======
+.hide-mb {
+  //display: none;
+>>>>>>> shirasagi/dev/gws
 }
 
 
