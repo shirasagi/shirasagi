@@ -1,0 +1,25 @@
+<% @item.in_monitor_file_size_per_topic_mb ||= @item.monitor_file_size_per_topic / (1_024 * 1_024) if @item.monitor_file_size_per_topic %>
+<% @item.in_monitor_file_size_per_post_mb ||= @item.monitor_file_size_per_post / (1_024 * 1_024) if @item.monitor_file_size_per_post %>
+
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-monitor-group-setting"); <% end %>
+
+<dl class="see addon-gws-monitor-group-setting">
+  <dt><%= @model.t :monitor_new_days %><%= @model.tt :monitor_new_days %></dt>
+  <dd class="short"><%= f.number_field :monitor_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
+
+  <dt><%= @model.t :monitor_file_size %><%= @model.tt :monitor_file_size %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t(:monitor_file_size_per_topic).sub(/.*\//, '') %><%= @model.tt :monitor_file_size_per_topic %></dt>
+  <dd class="short"><%= f.number_field :in_monitor_file_size_per_topic_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+
+  <dt class="depth-2"><%= @model.t(:monitor_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :monitor_file_size_per_post %></dt>
+  <dd class="short"><%= f.number_field :in_monitor_file_size_per_post_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+
+  <dt><%= @model.t :monitor_delete_threshold %><%= @model.tt :monitor_delete_threshold %></dt>
+  <dd><%= f.select :monitor_delete_threshold, @item.monitor_delete_threshold_options %></dd>
+
+  <dt><%= @model.t :default_reminder_start_section%><%= @model.tt :default_reminder_start_section %></dt>
+  <dd><%= f.select :default_reminder_start_section, @item.default_reminder_start_section_options %></dd>
+</dl>
+

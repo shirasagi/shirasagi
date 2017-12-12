@@ -3,6 +3,7 @@ class Gws::SharedAddress::Management::AddressesController < ApplicationControlle
   include Gws::CrudFilter
 
   model Gws::SharedAddress::Address
+  navi_view "gws/shared_address/management/navi"
 
   before_action :set_address_group
   before_action :set_group_navi, only: [:index]

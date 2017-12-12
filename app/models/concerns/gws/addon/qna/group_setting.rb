@@ -27,14 +27,6 @@ module Gws::Addon::Qna::GroupSetting
     self[:qna_browsed_delay].presence || 2
   end
 
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Qna::Category.allowed?(action, user, opts)
-      super
-    end
-  end
-
   private
 
   def set_qna_file_size_per_topic
