@@ -72,11 +72,27 @@
       <% if @item.comment(@cur_group.id).blank? %>
       <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
       <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
-      <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-        class: "btn primary") %>
+        <% if params[:controller] == "gws/monitor/topics" %>
+          <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
+          class: "btn primary") %>
+        <% elsif params[:controller] == "gws/monitor/answers" %>
+          <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_answer_parent_comment_path(answer_id: @item.id, parent_id: @item.id) : new_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: @item.id),
+          class: "btn primary") %>
+        <% elsif params[:controller] == "gws/monitor/admins" %>
+          <%= link_to(t('gws/monitor.links.comment'), @category.present? ? new_gws_monitor_category_admin_parent_comment_path(admin_id: @item.id, parent_id: @item.id) : new_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: @item.id),
+          class: "btn primary") %>
+        <% end %>
       <% else %>
-      <%= link_to(t('gws/monitor.links.reply'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-        class: "btn primary") %>
+        <% if params[:controller] == "gws/monitor/topics" %>
+          <%= link_to(t('gws/monitor.links.reply'), @category.present? ? new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
+          class: "btn primary") %>
+        <% elsif params[:controller] == "gws/monitor/answers" %>
+          <%= link_to(t('gws/monitor.links.reply'), @category.present? ? new_gws_monitor_category_answer_parent_comment_path(answer_id: @item.id, parent_id: @item.id) : new_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: @item.id),
+          class: "btn primary") %>
+        <% elsif params[:controller] == "gws/monitor/admins" %>
+          <%= link_to(t('gws/monitor.links.reply'), @category.present? ? new_gws_monitor_category_admin_parent_comment_path(admin_id: @item.id, parent_id: @item.id) : new_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: @item.id),
+          class: "btn primary") %>
+        <% end %>
       <% end %>
     </div>
     <% end %>
