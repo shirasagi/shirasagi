@@ -38,17 +38,9 @@ module Gws::Monitor::GroupSetting
     I18n.t('gws/monitor/group_setting.options.monitor_delete_threshold')[monitor_delete_threshold]
   end
 
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Monitor::Category.allowed?(action, user, opts)
-      super
-    end
-  end
-
   def default_reminder_start_section_options
     options =Gws::Monitor::Topic.new.reminder_start_section_options
-    options.insert(0, [nil,nil])
+    options.insert(0, [nil, nil])
   end
 
   def default_reminder_start_section_name

@@ -62,7 +62,7 @@ class Gws::Monitor::CommentsController < ApplicationController
       elsif params[:admin_id].present?
         redirect_to gws_monitor_category_admin_path(id: @topic.id)
       end
-    else
+    elsif @category.blank?
       if params[:topic_id].present?
         redirect_to gws_monitor_topic_path(id: @topic.id)
       elsif params[:answer_id].present?
@@ -82,7 +82,7 @@ class Gws::Monitor::CommentsController < ApplicationController
       elsif params[:admin_id].present?
         redirect_to gws_monitor_category_admin_path(id: @topic.id)
       end
-    else
+    elsif @category.blank?
       if params[:topic_id].present?
         redirect_to gws_monitor_topic_path(id: @topic.id)
       elsif params[:answer_id].present?
