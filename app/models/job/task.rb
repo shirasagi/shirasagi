@@ -18,7 +18,8 @@ class Job::Task
 
   before_validation :set_name
 
-  scope :site, ->(site) { where(site_id: (site.nil? ? nil : site.id)) }
+  # overwrite `site` scope
+  overwrite_scope :site, ->(site) { where(site_id: (site.nil? ? nil : site.id)) }
   scope :group, ->(group) { where(group_id: (group.nil? ? nil : group.id)) }
 
   class << self
