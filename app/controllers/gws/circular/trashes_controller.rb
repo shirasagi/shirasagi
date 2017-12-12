@@ -42,11 +42,22 @@ class Gws::Circular::TrashesController < ApplicationController
       params[:s][:category_id] = @category.id
     end
 
-    @items = @model.site(@cur_site).
-      owner(:read, @cur_user, site: @cur_site).
-      deleted.
-      search(params[:s]).
-      page(params[:page]).per(50)
+    read_other_permission = @cur_user.gws_role_permissions["read_other_gws_circular_posts_#{@cur_site.id}"]
+    delete_other_permission = @cur_user.gws_role_permissions["delete_other_gws_circular_posts_#{@cur_site.id}"]
+
+    if read_other_permission && delete_other_permission
+      @items = @model.site(@cur_site).
+          deleted.
+          search(params[:s]).
+          page(params[:page]).per(50)
+    else
+      @items = @model.site(@cur_site).
+          owner(:read, @cur_user, site: @cur_site).
+          deleted.
+          search(params[:s]).
+          page(params[:page]).per(50)
+    end
+
   end
 
   def recover

@@ -55,13 +55,24 @@ class Gws::Circular::AdminsController < ApplicationController
       params[:s][:category_id] = @category.id
     end
 
-    @items = @model.site(@cur_site).
-      topic.
-      allow(:read, @cur_user, site: @cur_site).
-      without_deleted.
-      search(params[:s]).
-      and_admins(@cur_user).
-      page(params[:page]).per(50)
+    read_other_permission = @cur_user.gws_role_permissions["read_other_gws_circular_posts_#{@cur_site.id}"]
+    edit_other_permission = @cur_user.gws_role_permissions["edit_other_gws_circular_posts_#{@cur_site.id}"]
+
+    if read_other_permission && edit_other_permission
+      @items = @model.site(@cur_site).
+          topic.
+          without_deleted.
+          search(params[:s]).
+          page(params[:page]).per(50)
+    else
+      @items = @model.site(@cur_site).
+          topic.
+          allow(:read, @cur_user, site: @cur_site).
+          without_deleted.
+          search(params[:s]).
+          and_admins(@cur_user).
+          page(params[:page]).per(50)
+    end
   end
 
   def create
