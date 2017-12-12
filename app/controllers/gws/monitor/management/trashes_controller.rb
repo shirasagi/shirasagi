@@ -77,6 +77,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
   end
 
@@ -86,7 +87,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def active
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.active, {notice: t('gws/monitor.notice.active')}
   end
 
@@ -95,7 +96,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
         next if item.active
       else
         item.errors.add :base, :auth_error
