@@ -51,32 +51,28 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
     <h2><%= link_to topic.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %></h2>
   </div>
   <div class="addon-body">
-    <dl class="see">
-      <dd class="wide">
-        <header>
-          <div class="contributor">
-            <span class="no"><%= "1." %></span>
-            <%= topic.contributor_name %>
-          </div>
-          <div class="datetime updated">
-            <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
-          </div>
-        </header>
-        <div class="markdown-body">
-          <%= topic.html %>
-        </div>
-        <% if topic.files.present? %>
-        <div class="files">
-          <% topic.files.each do |file| %>
-          <span id="file-<%= file.id %>">
-          <img src="/assets/img/gws/ic-file.png" alt="" />
-            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
-          </span>
-          <% end %>
-        </div>
-        <% end %>
-      </dd>
-    </dl>
+    <header>
+      <div class="contributor">
+        <span class="no"><%= "1." %></span>
+        <%= topic.contributor_name %>
+      </div>
+      <div class="datetime updated">
+        <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
+      </div>
+    </header>
+    <div>
+      <%= topic.html %>
+    </div>
+    <% if topic.files.present? %>
+    <div class="files">
+      <% topic.files.each do |file| %>
+      <span id="file-<%= file.id %>">
+      <img src="/assets/img/gws/ic-file.png" alt="" />
+        <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+      </span>
+      <% end %>
+    </div>
+    <% end %>
   </div>
 
   <% children = topic.children %>
@@ -92,40 +88,36 @@ SS_Addon_TempFile.renderDrop($(".comment-files"), <%= @cur_user.id %>);
   <% end %>
   <% comments.each_with_index do |comment, i| %>
     <div class="addon-body">
-      <dl class="see">
-        <dd class="wide">
-          <header>
-            <div class="contributor">
-              <span class="no"><%= "#{offset + i + 2}." %></span>
-              <%= comment.contributor_name %>
-            </div>
-            <div class="datetime updated">
-              <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
-            </div>
-          </header>
-          <div class="markdown-body">
-            <%= comment.html %>
-          </div>
-          <% if comment.files.present? %>
-          <div class="files">
-            <% comment.files.each do |file| %>
-              <span id="file-<%= file.id %>">
-                <img src="/assets/img/gws/ic-file.png" alt="" />
-                <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
-              </span>
-            <% end %>
-          </div>
-          <% end %>
-          <div class="menu">
-            <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-              <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
-            <% end %>
-            <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
-              <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
-            <% end %>
-          </div>
-        </dd>
-      </dl>
+      <header>
+        <div class="contributor">
+          <span class="no"><%= "#{offset + i + 2}." %></span>
+          <%= comment.contributor_name %>
+        </div>
+        <div class="datetime updated">
+          <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
+        </div>
+      </header>
+      <div>
+        <%= comment.html %>
+      </div>
+      <% if comment.files.present? %>
+      <div class="files">
+        <% comment.files.each do |file| %>
+          <span id="file-<%= file.id %>">
+            <img src="/assets/img/gws/ic-file.png" alt="" />
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+          </span>
+        <% end %>
+      </div>
+      <% end %>
+      <div class="menu">
+        <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+        <% end %>
+        <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+        <% end %>
+      </div>
     </div>
   <% end %>
 
