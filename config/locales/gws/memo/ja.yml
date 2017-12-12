@@ -69,6 +69,7 @@ ja:
       models:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+          input_message: 本文を入力してください。
         gws/memo/folder:
           included_memo: メッセージが入っているフォルダーは削除できません。
           used_folder: フィルターが使用中のフォルダーは削除できません。
