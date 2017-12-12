@@ -2,16 +2,16 @@ require 'spec_helper'
 
 describe "gws_share_files", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:item) { create :gws_share_file, category_ids: [category.id] }
-  let(:folder) { create :gws_share_folder, folder_id: folder.id }
+  let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id] }
+  let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
-  let(:index_path) { gws_share_files_path site, folder }
-  let(:new_path) { new_gws_share_file_path site, folder }
-  let(:show_path) { gws_share_file_path site, folder, item }
-  let(:edit_path) { edit_gws_share_file_path site, folder, item }
-  let(:delete_path) { delete_gws_share_file_path site, folder, item }
+  let(:index_path) { gws_share_folder_files_path site, folder }
+  let(:new_path) { new_gws_share_folder_file_path site, folder }
+  let(:show_path) { gws_share_folder_file_path site, folder, item }
+  let(:edit_path) { edit_gws_share_folder_file_path site, folder, item }
+  let(:delete_path) { delete_gws_share_folder_file_path site, folder, item }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it "#index" do
@@ -19,7 +19,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       expect(current_path).not_to eq sns_login_path
     end
 
-    it "#new" do
+    it "#new", js: true do
       visit new_path
       first('#addon-gws-agents-addons-share-category .toggle-head').click
       click_on "カテゴリーを選択する"
