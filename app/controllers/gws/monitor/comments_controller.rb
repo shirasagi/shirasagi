@@ -26,7 +26,14 @@ class Gws::Monitor::CommentsController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:topic_id], parent_id: params[:parent_id] }
+    if params[:topic_id].present?
+      { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:topic_id], parent_id: params[:parent_id] }
+    elsif params[:answer_id].present?
+      { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:answer_id], parent_id: params[:parent_id] }
+    elsif params[:admin_id].present?
+      { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:admin_id], parent_id: params[:parent_id] }
+    end
+
   end
 
   def pre_params
@@ -34,7 +41,13 @@ class Gws::Monitor::CommentsController < ApplicationController
   end
 
   def set_parent
-    @topic  = @model.find params[:topic_id]
+    if params[:topic_id].present?
+      @topic  = @model.find params[:topic_id]
+    elsif params[:answer_id].present?
+      @topic  = @model.find params[:answer_id]
+    elsif params[:admin_id].present?
+      @topic  = @model.find params[:admin_id]
+    end
     @parent = @model.find params[:parent_id]
   end
 
@@ -42,17 +55,41 @@ class Gws::Monitor::CommentsController < ApplicationController
 
   def index
     if @category.present?
-      redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_category_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_category_admin_path(id: @topic.id)
+      end
     else
-      redirect_to gws_monitor_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_admin_path(id: @topic.id)
+      end
     end
   end
 
   def show
     if @category.present?
-      redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_category_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_category_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_category_admin_path(id: @topic.id)
+      end
     else
-      redirect_to gws_monitor_topic_path(id: @topic.id)
+      if params[:topic_id].present?
+        redirect_to gws_monitor_topic_path(id: @topic.id)
+      elsif params[:answer_id].present?
+        redirect_to gws_monitor_answer_path(id: @topic.id)
+      elsif params[:admin_id].present?
+        redirect_to gws_monitor_admin_path(id: @topic.id)
+      end
     end
   end
 
@@ -66,7 +103,19 @@ class Gws::Monitor::CommentsController < ApplicationController
       @item.parent.state_of_the_answers_hash[@cur_group.id.to_s] = "question_not_applicable"
       @item.parent.save
     end
-    render_create @item.save
+
+    if params[:topic_id].present?
+      controller = "gws/monitor/topics"
+      id = params[:topic_id]
+    elsif params[:answer_id].present?
+      controller = "gws/monitor/answers"
+      id = params[:answer_id]
+    elsif params[:admin_id].present?
+      controller = "gws/monitor/admins"
+      id = params[:admin_id]
+    end
+
+    render_create @item.save, {location: {controller: controller, action: 'show', id: id}}
   end
 
   def edit
@@ -77,7 +126,19 @@ class Gws::Monitor::CommentsController < ApplicationController
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_update @item.update
+
+    if params[:topic_id].present?
+      controller = "gws/monitor/topics"
+      id = params[:topic_id]
+    elsif params[:answer_id].present?
+      controller = "gws/monitor/answers"
+      id = params[:answer_id]
+    elsif params[:admin_id].present?
+      controller = "gws/monitor/admins"
+      id = params[:admin_id]
+    end
+
+    render_update @item.update, {location: {controller: controller, action: 'show', id: id}}
   end
 
   def delete
