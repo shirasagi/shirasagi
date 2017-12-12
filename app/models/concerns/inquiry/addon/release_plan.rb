@@ -12,13 +12,14 @@ module Inquiry::Addon
       validates :close_date, datetime: true
       validate :validate_release_date
 
-      scope :and_public, ->(date = nil) {
-        date ||= Time.zone.now
-        where("$and" => [
-          { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
-          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-        ])
-      }
+      # This scope is already declared in app/models/concerns/cms/content.rb
+      # scope :and_public, ->(date = nil) {
+      #   date ||= Time.zone.now
+      #   where("$and" => [
+      #     { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
+      #     { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+      #   ])
+      # }
     end
 
     def public?
