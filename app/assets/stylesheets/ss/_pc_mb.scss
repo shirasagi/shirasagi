@@ -1741,8 +1741,8 @@ div.index {
   }
 }
 .wrap-table {
-  overflow: scroll;
   @include mb {
+    overflow: scroll;
     table.index th, table.index td {
       display: table-cell;
     }
