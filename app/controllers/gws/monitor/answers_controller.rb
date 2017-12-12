@@ -190,6 +190,8 @@ class Gws::Monitor::AnswersController < ApplicationController
     @item.file_ids = []
     @item.created = nil
     @item.updated = nil
+    @item.user_ids = [@cur_user.id]
+    @item.group_ids = [@cur_group.id]
     @model = @item.dup
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     render file: :new
