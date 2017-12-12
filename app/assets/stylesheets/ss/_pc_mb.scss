@@ -770,14 +770,14 @@ td {
       padding: 5px 15px 5px 85px;
       background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
       color: $black;
-      &.current {
-        background-color: $gray1;
-      }
       &:hover {
         background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
         color: $orange;
         text-decoration: none;
       }
+    }
+    .current a {
+      background-color: $gray1;
     }
     @include mb {
       @include clear;
