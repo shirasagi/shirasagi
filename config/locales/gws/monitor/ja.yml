@@ -108,6 +108,7 @@ ja:
       open: 締め切り解除
       export_csv: CSVに出力する
       file_download: ダウンロード
+      forward: 転送する
       confirm:
         public: 受取済みにしますか？
         preparation: 受取待ちにしますか？
