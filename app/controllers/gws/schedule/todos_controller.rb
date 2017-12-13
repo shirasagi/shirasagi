@@ -36,7 +36,9 @@ class Gws::Schedule::TodosController < ApplicationController
   def index
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).active.
-      search(params[:s]).page(params[:page]).per(50)
+      search(params[:s]).
+      custom_order(params.dig(:s, :sort) || 'created_desc').
+      page(params[:page]).per(50)
   end
 
   def create
