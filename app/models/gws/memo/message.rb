@@ -43,7 +43,7 @@ class Gws::Memo::Message
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 
-  after_save :save_reminders, if: ->{ !draft? }
+  after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
   scope :search, ->(params) {
     criteria = where({})
