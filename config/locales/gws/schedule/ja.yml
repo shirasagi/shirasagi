@@ -88,6 +88,7 @@ ja:
       unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
   gws/schedule/todo:
+    disabled_items: 削除済み
     finish_mark: "[完] "
     buttons:
       finish: 完了する
