@@ -111,6 +111,13 @@ ja:
         both: 両方
         finished: 完了
         unfinished: 未完了
+      sort:
+        created_asc:  作成日時(日付順)
+        created_desc: 作成日時(新着順)
+        updated_asc:  更新日時(日付順)
+        updated_desc: 更新日時(新着順)
+        end_at_asc:  期限日(昇順)
+        end_at_desc: 期限日(降順)
   gws/schedule/group_setting:
     options:
       todo_delete_threshold:
