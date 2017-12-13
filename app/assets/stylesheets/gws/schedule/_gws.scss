@@ -418,6 +418,10 @@
     display: table-cell;
     padding: 8px;
     white-space: nowrap;
+
+    .summary {
+      white-space: normal;
+    }
   }
   .date {
     width: 130px;
