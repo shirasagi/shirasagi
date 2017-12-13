@@ -66,6 +66,8 @@ class Gws::Schedule::Todo
       all.reorder(created: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('updated_')
       all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('end_at_')
+      all.reorder(end_at: key.end_with?('_asc') ? 1 : -1)
     else
       all
     end
@@ -112,7 +114,8 @@ class Gws::Schedule::Todo
   end
 
   def sort_options
-    %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+    %w(updated_desc updated_asc created_desc created_asc end_at_desc end_at_asc).map { |k|
+      [I18n.t("gws/schedule/todo.options.sort.#{k}"), k] }
   end
 
   def allowed?(action, user, opts = {})
