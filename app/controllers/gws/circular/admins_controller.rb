@@ -63,7 +63,6 @@ class Gws::Circular::AdminsController < ApplicationController
           topic.
           without_deleted.
           search(params[:s]).
-          and_my_draft(@cur_user).
           page(params[:page]).per(50)
     else
       @items = @model.site(@cur_site).
