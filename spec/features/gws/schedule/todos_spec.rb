@@ -31,7 +31,7 @@ describe "gws_schedule_todos", type: :feature, dbscope: :example, js: true do
       find('.finish-all').click
     end
     wait_for_ajax
-    expect(page).to have_content(item.name)
+    expect(page).to have_no_content(item.name)
   end
 
   it "#revert_all" do
