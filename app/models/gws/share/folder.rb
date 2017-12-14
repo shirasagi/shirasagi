@@ -127,6 +127,11 @@ class Gws::Share::Folder
     folders.where cond.merge(depth: depth + 1)
   end
 
+  def uploadable?(cur_user)
+    return true if cur_user.gws_role_permissions["edit_other_gws_share_files_#{site.id}"] || owned?(cur_user)
+    false
+  end
+
   private
 
   def set_depth
