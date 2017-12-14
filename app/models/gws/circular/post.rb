@@ -75,6 +75,16 @@ class Gws::Circular::Post
     ])
   }
 
+  scope :and_my_draft, ->(user) {
+    where("$nor" => [
+        { "$and" => [
+            { user_ids: { "$not" => { "$in" => [user.id] } } },
+            { group_ids: { "$not" => { "$in" => user.group_ids } } },
+            { state: { "$not" => /^public$/ } } ]
+        }
+    ])
+  }
+
   scope :without_deleted, ->(date = Time.zone.now) {
     where("$and" => [
         { "$or" => [{ deleted: nil }, { :deleted.gt => date }] }
