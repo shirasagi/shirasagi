@@ -57,6 +57,7 @@
               <span class="article_state"><%= item.article_state_name %></span>
               <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
               <span class="categories">
+              <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/monitor.topic.disabled_items') %></span>
                 <% item.categories.compact.each do |category| %>
                   <%= link_to category.trailing_name, gws_monitor_category_management_trashes_path(category: category.id),
                     class: "gws-category-label", style: category_label_css(category) %>
