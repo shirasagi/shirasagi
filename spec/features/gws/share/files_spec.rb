@@ -5,6 +5,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   let(:item) { create :gws_share_file, category_ids: [category.id] }
   let!(:category) { create :gws_share_category }
   let(:index_path) { gws_share_files_path site }
+  let(:folder_path) { gws_share_folder_files_path site, item.folder }
   let(:new_path) { new_gws_share_folder_file_path site, item.folder }
   let(:show_path) { gws_share_folder_file_path site, item, item.folder }
   let(:edit_path) { edit_gws_share_folder_file_path site, item, item.folder }
@@ -13,10 +14,17 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   context "with auth", js: true do
     before { login_gws_user }
 
-    it "#index" do
+    it "hide new menu on the top page" do
       visit index_path
       wait_for_ajax
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_no_content("新規作成")
+    end
+
+    it "appear new menu in writable folder" do
+      item.folder.user_ids = [gws_user.id]
+      visit folder_path
+      wait_for_ajax
+      expect(page).to have_content("新規作成")
     end
 
     it "#new" do
