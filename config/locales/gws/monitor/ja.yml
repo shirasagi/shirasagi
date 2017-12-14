@@ -11,6 +11,7 @@ ja:
       submit: 投稿
       update: 更新
       delete: 削除
+      disabled_items: 削除済み
       browsing_state: 参加グループ
       browsed: 閲覧
       type: 状態
