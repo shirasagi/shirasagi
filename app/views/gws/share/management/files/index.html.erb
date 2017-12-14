@@ -2,6 +2,7 @@
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="gws-share-categories">
+  <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/share.files.disabled_items') %></span>
   <% item.categories.compact.each do |category| %>
     <% if params[:folder].present? %>
       <%= link_to category.trailing_name, gws_share_management_folder_files_path(folder: item.folder_id,category: category.id),
