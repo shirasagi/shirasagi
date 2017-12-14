@@ -200,7 +200,8 @@ class Gws::Share::FilesController < ApplicationController
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     notice = t("gws/share.notice.disable")
-    render_destroy @item.disable, {notice: notice}
+    location = gws_share_folder_files_path(folder: @item.folder.id)
+    render_destroy @item.disable, { location: location, notice: notice }
   end
 
   def download_all

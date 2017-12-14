@@ -24,9 +24,9 @@
         <% if @tap_menu %>
         <% @tap_menu.call item %>
         <% else %>
-          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('gws/share.links.disable'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.show'), action: :show, id: item, folder: item.folder.id if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item, folder: item.folder.id if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('gws/share.links.disable'), action: :delete, id: item, folder: item.folder.id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
           <% if item.try(:image) %>
             <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
@@ -42,7 +42,7 @@
           <% @index_title.call item %>
         <% else %>
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to item.humanized_name, { action: :show, id: item }, class: "title" %>
+          <%= link_to item.humanized_name, { action: :show, id: item, folder: item.folder.id }, class: "title" %>
         <% end %>
 
         <div class="meta">

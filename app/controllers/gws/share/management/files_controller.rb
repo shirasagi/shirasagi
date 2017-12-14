@@ -117,7 +117,8 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def active
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_destroy @item.active
+    location = gws_share_management_folder_files_path(folder: @item.folder.id)
+    render_destroy @item.active, { location: location }
   end
 
   def active_all

@@ -56,6 +56,8 @@ SS::Application.routes.draw do
       end
       scope(path: "folder-:folder", as: "folder") do
         resources :files, concerns: [:deletion, :export] do
+          get :active, on: :member
+          get :recover, on: :member
           post :active_all, on: :collection
         end
       end
