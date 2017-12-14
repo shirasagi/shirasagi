@@ -6,9 +6,9 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   let!(:category) { create :gws_share_category }
   let(:index_path) { gws_share_files_path site }
   let(:new_path) { new_gws_share_folder_file_path site, item.folder }
-  let(:show_path) { gws_share_file_path site, item }
-  let(:edit_path) { edit_gws_share_file_path site, item }
-  let(:delete_path) { delete_gws_share_file_path site, item }
+  let(:show_path) { gws_share_folder_file_path site, item, item.folder }
+  let(:edit_path) { edit_gws_share_folder_file_path site, item, item.folder }
+  let(:delete_path) { delete_gws_share_folder_file_path site, item, item.folder }
 
   context "with auth", js: true do
     before { login_gws_user }
@@ -61,9 +61,9 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       visit delete_path
       wait_for_ajax
       within "form" do
-        click_button "削除"
+        click_button "削除済みに移動する"
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_no_content(item.name)
     end
 
     context "#download_all with auth", js: true do
