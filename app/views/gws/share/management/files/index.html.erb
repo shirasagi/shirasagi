@@ -104,7 +104,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
     <% @sub_folders.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to (File.basename item.name), gws_share_folder_files_path(folder: item.id), class: "title" %>
+        <%= link_to (File.basename item.name), gws_share_management_folder_files_path(folder: item.id), class: "title" %>
       </div>
     </li>
     <% end %>

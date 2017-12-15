@@ -74,6 +74,12 @@
     <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_posts_path, class: 'icon-circular' %></h2>
   <% end %>
 
+  <% if @cur_site.menu_discussion_visible? %>
+    <% if Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h2><%= link_to t('modules.gws/discussion'), gws_discussion_forums_path, class: "icon-board" %></h2>
+    <% end %>
+  <% end %>
+
   <% if @cur_site.menu_monitor_visible? %>
     <% if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
       <h2><%= link_to @cur_site.menu_monitor_label || t('modules.gws/monitor'), gws_monitor_topics_path, class: 'icon-monitor' %></h2>

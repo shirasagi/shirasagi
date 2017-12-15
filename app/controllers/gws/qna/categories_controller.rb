@@ -24,7 +24,7 @@ class Gws::Qna::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/qna/category'), gws_qna_categories_path]
+    @crumbs << [t('modules.gws/qna') + '/' + t('mongoid.models.gws/qna/category'), gws_qna_categories_path]
   end
 
   def fix_params

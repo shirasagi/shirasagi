@@ -1,0 +1,8 @@
+<%= jquery do %>
+    SS_AddonTabs.hide(".mod-gws-release");
+<% end %>
+
+<dl class="see mod-gws-release">
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>
