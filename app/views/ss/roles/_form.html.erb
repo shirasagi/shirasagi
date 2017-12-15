@@ -18,7 +18,7 @@
         <%= button_tag t('ss.buttons.deselect_all'), type: 'button', class: %w(btn deselect-all) %>
       </p>
       <p class="module-name">
-        [<%= @model.mod_name(mod) %>]
+        <%= @model.mod_name(mod) %>
       </p>
       <div class="permissions">
         <% names.each do |name| %>
