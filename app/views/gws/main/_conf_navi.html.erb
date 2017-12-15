@@ -1,7 +1,19 @@
-<nav class="mod-navi">
-  <h2><%= t "gws.site_config" %></h2>
-  <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
+<style>
+#navi .mod-navi h3 { display: none; }
+</style>
+<%= jquery do %>
+  var navi = $('#navi');
+  var curr = navi.find('.current').closest('.mod-navi');
+  var mods = navi.find('.mod-navi').not(curr);
+  curr.find('h3').show();
+  mods.find('h2').addClass('navi-link').click(function() {
+    $(this).parent().find('h3').slideToggle('fast');
+  });
+<% end %>
 
+<nav class="mod-navi main-features">
+  <h2><%= t "gws.main_features" %></h2>
+  <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
   <% if Gws::Group.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.ss/group'), gws_groups_path %></h3>
   <% end %>
@@ -17,27 +29,18 @@
   <% if Gws::Role.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/role'), gws_roles_path %></h3>
   <% end %>
-  <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('modules.gws/report'), gws_report_setting_path %></h3>
-  <% end %>
-  <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('workflow.name'), gws_workflow_setting_path %></h3>
-  <% end %>
   <% if Gws::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/notice'), gws_notices_path %></h3>
   <% end %>
   <% if Gws::Link.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/link'), gws_links_path %></h3>
   <% end %>
-
   <% if Gws::Chorg::Revision.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.gws/chorg'), gws_chorg_main_path %></h3>
   <% end %>
-
   <% if Gws::History.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/history'), gws_histories_path %></h3>
   <% end %>
-
   <% if Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.gws/job'), gws_job_logs_path %></h3>
   <% end %>
@@ -75,6 +78,40 @@
 </nav>
 
 <nav class="mod-navi">
+  <h2><%= t('modules.gws/report') %></h2>
+  <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(Gws::Report::Form.model_name.human, gws_report_forms_path) %></h3>
+  <% end %>
+  <% if Gws::Report::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(Gws::Report::Category.model_name.human, gws_report_categories_path) %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/workflow') %></h2>
+  <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Workflow::Route.model_name.human, gws_workflow_routes_path %></h3>
+  <% end %>
+  <% if Gws::Workflow::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Workflow::Form.model_name.human, gws_workflow_forms_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/circular') %></h2>
+  <% if Gws::Circular::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_circular_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/monitor') %></h2>
+  <% if Gws::Monitor::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_monitor_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
   <h2><%= t('modules.gws/board') %></h2>
   <% if Gws::Board::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.category'), gws_board_categories_path %></h3>
@@ -92,20 +129,6 @@
   <h2><%= t('modules.gws/qna') %></h2>
   <% if Gws::Qna::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.category'), gws_qna_categories_path %></h3>
-  <% end %>
-</nav>
-
-<nav class="mod-navi">
-  <h2><%= t('modules.gws/circular') %></h2>
-  <% if Gws::Circular::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws.category'), gws_circular_categories_path %></h3>
-  <% end %>
-</nav>
-
-<nav class="mod-navi">
-  <h2><%= t('modules.gws/monitor') %></h2>
-  <% if Gws::Circular::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws.category'), gws_monitor_categories_path %></h3>
   <% end %>
 </nav>
 

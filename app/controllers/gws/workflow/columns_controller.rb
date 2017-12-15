@@ -3,7 +3,8 @@ class Gws::Workflow::ColumnsController < ApplicationController
   include Gws::CrudFilter
   include Gws::ColumnFilter
 
-  navi_view 'gws/workflow/settings/navi'
+  navi_view "gws/main/conf_navi"
+
   self.form_model = Gws::Workflow::Form
 
   private
