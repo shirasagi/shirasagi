@@ -5,7 +5,7 @@ class Gws::Workflow::RoutesController < ApplicationController
   model Gws::Workflow::Route
 
   prepend_view_path 'app/views/workflow/routes'
-  navi_view 'gws/workflow/settings/navi'
+  navi_view "gws/main/conf_navi"
 
   private
 
