@@ -86,15 +86,6 @@ module Gws::Addon::Schedule::GroupSetting
     !schedule_drag_drop_denied?
   end
 
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Schedule::Holiday.allowed?(action, user, opts)
-      return true if Gws::Schedule::Category.allowed?(action, user, opts)
-      super
-    end
-  end
-
   private
 
   def set_schedule_max_file_size
