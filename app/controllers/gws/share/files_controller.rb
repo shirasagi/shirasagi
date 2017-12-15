@@ -54,7 +54,9 @@ class Gws::Share::FilesController < ApplicationController
 
   def index
     set_folder
-    raise "404" unless @folder.readable?(@cur_user) if params[:folder].present?
+    if params[:folder].present?
+      raise "404" unless @folder.readable?(@cur_user)
+    end
 
     if @category.present? || @folder.present?
       params[:s] ||= {}
