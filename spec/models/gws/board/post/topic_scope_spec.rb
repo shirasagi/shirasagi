@@ -5,7 +5,7 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
     subject { described_class.topic }
     let!(:topic) { create :gws_board_topic }
     let!(:comment) { create :gws_board_comment }
-    it { is_expected.to include(topic) }
-    it { is_expected.not_to include(comment) }
+    it { expect(subject.pluck(:id)).to include(topic.id) }
+    it { expect(subject.pluck(:id)).not_to include(comment.id) }
   end
 end

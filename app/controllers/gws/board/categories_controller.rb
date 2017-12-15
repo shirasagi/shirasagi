@@ -24,7 +24,7 @@ class Gws::Board::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/board/category'), gws_board_categories_path]
+    @crumbs << [t('modules.gws/board') + '/' + t('mongoid.models.gws/board/category'), gws_board_categories_path]
   end
 
   def fix_params

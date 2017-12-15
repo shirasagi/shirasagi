@@ -1,6 +1,8 @@
 ja:
   modules:
     gws/staff_record: 電子職員録・事務分掌表
+    addons:
+      gws/staff_record/group_setting: 電子職員録
 
   gws/staff_record:
     staff_records: 電子職員録
@@ -49,13 +51,12 @@ ja:
 
   mongoid:
     models:
-      gws/staff_record/group_setting: 電子職員録設定
       gws/staff_record/year: 年度
       gws/staff_record/group: 所属
       gws/staff_record/user: 職員
       gws/staff_record/seating: 座席表
     attributes:
-      gws/staff_record/group_setting:
+      gws/addon/staff_record/group_setting:
         staff_records_limit: 電子職員録/表示件数
         divide_duties_limit: 電子事務分掌表/表示件数
       gws/staff_record/yearly:
@@ -94,6 +95,14 @@ ja:
         remark: 備考
 
   tooltip:
+    gws/addon/staff_record/seating:
+      name: タイトルを入力します。
+      url: 座席表URLを入力します。
+      order: 並び順を入力します。
+      remark: 備考を入力します。
+      in_file:
+        - CSVファイルを指定しインポートを行います。
+        - idが記述されていない行は新規作成になります。
     gws/staff_record/year:
       name: 年度名を入力します。（例：平成00年度）
       code: 西暦を入力します。（例：2017）
@@ -125,14 +134,6 @@ ja:
       staff_records_view: 電子職員録へ表示するかしないかを選択します。
       divide_duties_view: 事務分掌表へ表示するかしないかを選択します。
       order: 並び順を入力します。
-      in_file:
-        - CSVファイルを指定しインポートを行います。
-        - idが記述されていない行は新規作成になります。
-    gws/staff_record/seating:
-      name: タイトルを入力します。
-      url: 座席表URLを入力します。
-      order: 並び順を入力します。
-      remark: 備考を入力します。
       in_file:
         - CSVファイルを指定しインポートを行います。
         - idが記述されていない行は新規作成になります。
