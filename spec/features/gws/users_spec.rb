@@ -30,7 +30,7 @@ describe "gws_users", type: :feature, dbscope: :example do
         fill_in "item[in_password]", with: "pass"
         click_button "保存"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).not_to have_css('#item-form')
 
       #show
       visit show_path
@@ -42,8 +42,7 @@ describe "gws_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name"
         click_button "保存"
       end
-      expect(current_path).to eq show_path
-      expect(page).to have_no_css("form#item-form")
+      expect(page).not_to have_css('#item-form')
 
       #delete
       visit delete_path
@@ -55,7 +54,6 @@ describe "gws_users", type: :feature, dbscope: :example do
       #download
       visit index_path
       click_link I18n.t('ss.links.download')
-
       visit "#{index_path}/download_template"
 
       #import

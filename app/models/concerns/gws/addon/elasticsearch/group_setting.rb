@@ -12,14 +12,6 @@ module Gws::Addon::Elasticsearch::GroupSetting
     validates :elasticsearch_hosts, presence: true, if: ->{ menu_elasticsearch_visible? }
   end
 
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Board::Category.allowed?(action, user, opts)
-      super
-    end
-  end
-
   def elasticsearch_enabled?
     Rails.logger.warn('[DEPRECATION] `elasticsearch_enabled?` is deprecated.  Please use `menu_elasticsearch_visible?` instead.')
     menu_elasticsearch_visible?

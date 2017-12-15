@@ -1,6 +1,5 @@
 ja:
   gws/circular:
-    admin: 管理
     setting: 回覧板設定
     active: 削除を取り消す
     tabs:
@@ -37,6 +36,9 @@ ja:
       - 返信者名
       - 返信欄
       - 返信日時
+    notice:
+      disable: 削除済みに移動しました
+      active: 削除を取り消しました
     options:
       see_type:
         normal: 通常回覧
@@ -44,12 +46,6 @@ ja:
       article_state:
         both: 両方
         unseen: 未読のみ
-    notice:
-      disable: 削除済みに移動しました
-      active: 削除を取り消しました
-  gws/circular/group_setting:
-    max_member_unit: 人
-    options:
       circular_delete_threshold:
         - 6ヶ月
         - 1年
@@ -61,6 +57,7 @@ ja:
   modules:
     gws/circular: 回覧板
     addons:
+      gws/circular/group_setting: 回覧板
       gws/circular/category: カテゴリー
   gws_role:
     read_other_gws_circular_posts: 回覧板の閲覧（全て）
@@ -77,11 +74,10 @@ ja:
     delete_private_gws_circular_categories: カテゴリーの削除（所有）
   mongoid:
     models:
-      gws/circular/post: 回覧板
-      gws/circular/category: 回覧板カテゴリー
+      gws/circular/post: トピック
+      gws/circular/category: カテゴリー
       gws/circular/trashes: 削除済み
-      gws/circular/group_setting: 回覧板設定
-      gws/circular/group_setting/category: カテゴリー
+
     errors:
       models:
         gws/circular/post:
@@ -96,20 +92,17 @@ ja:
         see_type: 既読にする形式
         deleted: 削除日時
         seen: 既読
-      gws/circular/group_setting:
+      gws/circular/comment:
+        name: タイトル
+        text: コメント
+      gws/addon/circular/group_setting:
         circular_default_due_date: 回覧期限日初期値
         circular_max_member: 回覧人数制限
         circular_filesize_limit: 添付サイズ制限
         circular_delete_threshold: 回覧復旧可能期間
       gws/addon/circular/category:
         category_ids: カテゴリー
-      gws/circular/comment:
-        name: タイトル
-        text: コメント
   tooltip:
-    gws/circular/comment:
-      name: タイトルです
-      text: コメントです
     gws/circular/post:
       name:
         - タイトルを入力します。
@@ -119,7 +112,10 @@ ja:
         - 既読にする形式を選択します。
         - 通常回覧：ボタンを押下した時に既読にする
         - 簡易回覧：詳細を開いた時に自動的に既読にする
-    gws/circular/group_setting:
+    gws/circular/comment:
+      name: タイトルです
+      text: コメントです
+    gws/addon/circular/group_setting:
       circular_default_due_date:
         - 回覧期限日時の初期値を、今日から数えて何日後かで入力します。
         - 初期値は 7日 後です。

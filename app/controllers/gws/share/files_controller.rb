@@ -16,7 +16,6 @@ class Gws::Share::FilesController < ApplicationController
     set_folder
     @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
         item_name = @folder.name.split("/")[0, i+1].join("/")
@@ -99,6 +98,7 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def new
+    return redirect_to(action: :index) unless @folder
     @item = @model.new pre_params.merge(fix_params)
     raise "403" unless @item.allowed?(:write, @cur_user, site: @cur_site) && @folder.allowed?(:edit, @cur_user, site: @cur_site)
   end

@@ -13,6 +13,10 @@ $ ->
 
 <% end %>
 
+<%= jquery do %>
+  //SS_Addon_TempFile.renderDrop($("#addon-cms-agents-addons-file .addon-body"), <%= @cur_user.id %>);
+<% end %>
+
 <dl class="see">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>

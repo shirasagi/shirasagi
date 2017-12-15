@@ -31,10 +31,10 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
       expect(page).to have_content('ゴミ箱 (1)')
     end
 
-    it '#toggle_star' do
-      visit toggle_star_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(page).to have_content(memo.name)
-    end
+    # it '#toggle_star' do
+    #   visit toggle_star_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
+    #   expect(page).to have_content(memo.name)
+    # end
 
     it '#trash_all' do
       visit gws_memo_messages_path(site)

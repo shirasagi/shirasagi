@@ -1,7 +1,5 @@
 module Gws::Share
   class Initializer
-    Gws::GroupSetting.plugin Gws::Share::GroupSetting, ->{ gws_share_setting_path }
-
     Gws::Role.permission :read_other_gws_share_files, module_name: 'gws/share'
     Gws::Role.permission :read_private_gws_share_files, module_name: 'gws/share'
     Gws::Role.permission :edit_other_gws_share_files, module_name: 'gws/share'

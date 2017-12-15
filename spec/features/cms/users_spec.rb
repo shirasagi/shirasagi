@@ -11,16 +11,15 @@ describe "cms_users", type: :feature, dbscope: :example do
   let(:delete_path) { delete_cms_user_path site.id, item }
   let(:import_path) { import_cms_users_path site.id }
 
-  it "#index" do
-    login_cms_user
-    visit index_path
-    expect(current_path).not_to eq sns_login_path
-  end
-
-  context "with sns user", js: true do
-    it "#new" do
+  context "with login", js: true do
+    it "#crud" do
       login_cms_user
 
+      #index
+      visit index_path
+      expect(current_path).to eq index_path
+
+      #new
       visit new_path
       click_on "グループを選択する"
       wait_for_cbox
@@ -34,32 +33,26 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-    end
+      expect(page).not_to have_css('#item-form')
 
-    it "#show" do
-      login_cms_user
+      #show
       visit show_path
       expect(page).to have_content(item.name)
-    end
 
-    it "#edit" do
-      login_cms_user
+      #edit
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-    end
+      expect(page).not_to have_css('#item-form')
 
-    it "#delete" do
-      login_cms_user
+      #delete
       visit delete_path
       within "form" do
         click_button "削除"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(current_path).to eq index_path
     end
   end
 
@@ -80,7 +73,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).not_to have_css('#item-form')
     end
 
     it "#show" do

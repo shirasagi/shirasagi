@@ -1,7 +1,5 @@
 module Gws::Monitor
   class Initializer
-    Gws::GroupSetting.plugin Gws::Monitor::GroupSetting, ->{ gws_monitor_setting_path }
-
     Gws::Role.permission :read_other_gws_monitor_posts, module_name: 'gws/monitor'
     Gws::Role.permission :read_private_gws_monitor_posts, module_name: 'gws/monitor'
     Gws::Role.permission :edit_other_gws_monitor_posts, module_name: 'gws/monitor'
