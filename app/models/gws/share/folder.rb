@@ -28,7 +28,7 @@ class Gws::Share::Folder
   permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb,
                 :share_max_folder_size, :in_share_max_folder_size_mb
 
-  before_validation :set_depth
+  before_validation :set_depth, if: ->{ name.present? }
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 

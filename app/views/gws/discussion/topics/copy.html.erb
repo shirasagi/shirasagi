@@ -1,0 +1,18 @@
+<%= form_for :item, url: { action: :copy }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+
+<section class="main-box">
+  <header><h2><%= t("ss.confirm.clone") %></h2></header>
+  <%= error_messages_for :item %>
+
+  <dl class="see">
+    <dt><%= @model.t :name %><%= @model.tt :title %></dt>
+    <dd><%= f.text_field :name, class: :name %></dd>
+  </dl>
+</section>
+
+<footer class="send">
+  <%= f.submit t("ss.buttons.save"), class: "btn-primary" %>
+  <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
+</footer>
+
+<% end %>

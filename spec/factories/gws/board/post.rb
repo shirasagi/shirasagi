@@ -7,7 +7,7 @@ FactoryGirl.define do
     text { "text-#{unique_id}" }
 
     factory :gws_board_comment do
-      association :parent, factory: :gws_board_topic
+      association :parent, factory: :gws_board_post
     end
 
     factory :gws_board_comment_to_comment do

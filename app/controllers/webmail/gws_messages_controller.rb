@@ -58,7 +58,6 @@ class Webmail::GwsMessagesController < ApplicationController
     @item = @model.new get_params
     @item.imap = @imap
     @item.set_ref_files(@mail.attachments)
-
     @item.send_date = Time.zone.now
     render_create @item.save, location: gws_memo_messages_path(folder: 'INBOX')
   end
