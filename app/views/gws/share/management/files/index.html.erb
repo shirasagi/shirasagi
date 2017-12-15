@@ -1,31 +1,8 @@
-<%
-options = options_for_select(@categories.to_options(offset: 1), @category.try(:id))
-%>
-<%= jquery do %>
-
-  $(".gws-category-navi-menu #category_id").change(function() {
-    var cid = $(this).val();
-    <% if @folder -%>
-      if (cid) location.href = '<%= gws_share_management_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_management_folder_files_path(folder: @folder.id) %>';
-    <% else -%>
-      if (cid) location.href = '<%= gws_share_management_files_path(category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_management_files_path %>';
-    <% end -%>
-  });
-
-<% end %>
-
-<div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options, include_blank: t('modules.gws/share') if @categories.to_options.present? %>
-</div>
-
-<%= render partial: "folder_navi" %>
-
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="gws-share-categories">
+  <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/share.files.disabled_items') %></span>
   <% item.categories.compact.each do |category| %>
     <% if params[:folder].present? %>
       <%= link_to category.trailing_name, gws_share_management_folder_files_path(folder: item.folder_id,category: category.id),
@@ -48,9 +25,9 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
         <% if @tap_menu %>
           <% @tap_menu.call item %>
         <% else %>
-          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-          <%= link_to t('gws/share.links.active'), action: :recover, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.show'), action: :show, id: item, folder: item.folder.id if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item, folder: item.folder.id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t('gws/share.links.active'), action: :recover, id: item, folder: item.folder.id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
           <% if item.try(:image) %>
             <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
@@ -66,7 +43,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
           <% @index_title.call item %>
         <% else %>
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, { action: :show, id: item }, class: "title" %>
+          <%= link_to title, { action: :show, id: item, folder: item.folder.id }, class: "title" %>
         <% end %>
 
         <div class="meta">
@@ -96,6 +73,7 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
   </ul>
 </div>
 
+<% if @sub_folders.present? %>
 <div class="index">
   <div class="header">
     <%= t('gws/share.child_folder') %>
@@ -110,5 +88,6 @@ options = options_for_select(@categories.to_options(offset: 1), @category.try(:i
     <% end %>
   </ul>
 </div>
+<% end %>
 
 <%= paginate @items if @items.try(:current_page) %>

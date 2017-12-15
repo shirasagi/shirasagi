@@ -7,6 +7,8 @@ ja:
     folder: フォルダー一覧
     child_folder: 子フォルダー
     folder_download: フォルダー内のファイル一括ダウンロード
+    files:
+      disabled_items: 削除済み
     links:
       categories: カテゴリー
       folder: フォルダー管理
