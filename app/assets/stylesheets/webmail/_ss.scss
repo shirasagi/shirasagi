@@ -74,7 +74,10 @@ li.webmail-accounts {
     a {
       display: inline-block;
       width: 100%;
-      padding: 5px 0 5px 16px;
+      overflow: hidden;
+      padding: 5px 5px 5px 16px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     a:last-child {
       margin-bottom: 8px;
@@ -203,6 +206,9 @@ li.webmail-accounts {
       widht: -webkit-calc(100% - 330px);
       padding-right: 5px;
       font-size: 100%;
+      @include mb {
+        width: 100%;
+      }
     }
     .datetime {
       width: 110px;
@@ -235,6 +241,10 @@ li.webmail-accounts {
     }
     .from {
       float: left;
+      @include mb {
+        float: none;
+        margin-bottom: 10px;
+      }
     }
     .date {
       text-align: right;

@@ -9,7 +9,7 @@ class Gws::Schedule::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/schedule/category"), gws_schedule_plans_path]
+    @crumbs << [t('modules.gws/schedule') + '/' + t("mongoid.models.gws/schedule/category"), gws_schedule_plans_path]
   end
 
   def fix_params

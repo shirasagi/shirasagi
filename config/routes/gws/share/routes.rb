@@ -20,7 +20,7 @@ SS::Application.routes.draw do
   gws "share" do
     resources :files, concerns: [:deletion, :export, :lock] do
       get :download_history, on: :member
-      get :disable, on: :member
+      post :disable, on: :member
       post :disable_all, on: :collection
       post :download_all, on: :collection
     end
@@ -32,12 +32,12 @@ SS::Application.routes.draw do
     # with folder
     scope(path: "folder-:folder", as: "folder") do
       resources :files, concerns: [:deletion, :export] do
+        post :disable, on: :member
         post :download_all, on: :collection
         post :disable_all, on: :collection
       end
     end
 
-    resource :setting, only: [:show, :edit, :update]
     resources :categories, concerns: [:deletion]
 
     namespace "apis" do

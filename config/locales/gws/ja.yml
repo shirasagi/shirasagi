@@ -145,6 +145,7 @@ ja:
       gws/custom_field: 入力項目
       gws/edit_lock: 排他制御
       gws/schedules: スケジュール
+      gws/system/file_setting: ファイル設定
       gws/system/group_setting: システム設定
       gws/system/menu_setting: メニュー設定
       gws/system/log_setting: ログ設定
@@ -278,6 +279,8 @@ ja:
       gws/addon/member:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
+      gws/addon/system/file_setting:
+        multibyte_filename_state: 日本語ファイル名
       gws/addon/system/group_setting:
         sender_user_id: 差出ユーザー
         sendmail_domains: メール送信許可ドメイン
@@ -300,6 +303,7 @@ ja:
         menu_staff_record_state: 電子職員録の表示
         menu_links_state: リンク集の表示
         menu_elasticsearch_state: 全文検索の表示
+        menu_discussion_state: 電子会議室
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数
         log_main_severity: 標準機能のログ
@@ -321,6 +325,7 @@ ja:
         log_staff_record_severity: 電子職員録のログ
         log_workflow_severity: ワークフローのログ
         log_chorg_severity: 組織変更のログ
+        log_discussion_severity: 電子会議室のログ
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_member_ids: 購読ユーザー

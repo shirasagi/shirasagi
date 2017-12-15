@@ -1,8 +1,12 @@
 <%
 
   if params[:action] =~ /new/
-    @item.readable_setting_range = 'select'
-    @item.readable_group_ids = [@cur_group.id]
+    if @default_readable_setting
+      @default_readable_setting.call
+    else
+      @item.readable_setting_range = 'select'
+      @item.readable_group_ids = [@cur_group.id]
+    end
   end
 
 %>

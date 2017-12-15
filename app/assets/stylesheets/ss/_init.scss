@@ -63,7 +63,7 @@ $border-white: 1px solid $white;
   @content;
 }
 @mixin mb {
-  @media only screen and (max-width: 640px) { @content; }
+  @media only screen and (max-width: 768px) { @content; }
 }
 @mixin clear {
     zoom:1;

@@ -3,7 +3,6 @@ module Gws::StaffRecord::PublicYearlyFilter
 
   included do
     before_action :set_year
-
   end
 
   private

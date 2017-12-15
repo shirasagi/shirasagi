@@ -1,46 +1,48 @@
-<table class="index data-table">
-  <tr>
-    <th rowspan="2" style="width: 10%; text-align: center;">
-      <%= link_to t('ss.links.edit'), action: :edit_charge if @item.editable_charge?(@cur_user) %>
-    </th>
-    <th style="width: 10%"><%= @model.t :section_name %></th>
-    <td style="width: 35%"><%= @item.send :section_name %></td>
-    <th style="width: 10%"><%= @model.t :charge_name %></th>
-    <td><%= @item.send :charge_name %></td>
-  </tr>
-  <tr>
-    <th><%= @model.t :charge_address %></th>
-    <td><%= @item.send :charge_address %></td>
-    <th><%= @model.t :charge_tel %></th>
-    <td><%= @item.send :charge_tel %></td>
-  </tr>
-</table>
-
-<br />
-
-<table class="index data-table">
-  <thead>
-    <th style="width: 10%"></td>
-    <th style="width: 10%">No</td>
-    <th style="width: 18%"><%= @model.t :divide_duties %></th>
-    <th style="width: 15%"><%= @model.t :title_name %></th>
-    <th style="width: 12%"><%= @model.t :name %></th>
-    <th style="width: 10%"><%= @model.t :tel_ext %></th>
-    <th><%= @model.t :remark %></th>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
+<div class="wrap-table">
+  <table class="index data-table">
     <tr>
-      <th style="text-align: center">
-        <%= link_to t('ss.links.edit'), action: :edit, id: item.id if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <th rowspan="2" style="width: 10%; text-align: center;">
+        <%= link_to t('ss.links.edit'), action: :edit_charge if @item.editable_charge?(@cur_user) %>
       </th>
-      <td></td>
-      <td><%= br item.send :divide_duties %></td>
-      <td><%= item.send :title_name %></td>
-      <td><%= item.send :name %></td>
-      <td><%= item.send :tel_ext %></td>
-      <td><%= item.send :remark %></td>
+      <th style="width: 10%"><%= @model.t :section_name %></th>
+      <td style="width: 35%"><%= @item.send :section_name %></td>
+      <th style="width: 10%"><%= @model.t :charge_name %></th>
+      <td><%= @item.send :charge_name %></td>
     </tr>
-    <% end %>
-  </tbody>
-</table>
+    <tr>
+      <th><%= @model.t :charge_address %></th>
+      <td><%= @item.send :charge_address %></td>
+      <th><%= @model.t :charge_tel %></th>
+      <td><%= @item.send :charge_tel %></td>
+    </tr>
+  </table>
+
+  <br />
+
+  <table class="index data-table">
+    <thead>
+      <th style="width: 10%"></th>
+      <th style="width: 10%">No</th>
+      <th style="width: 18%"><%= @model.t :divide_duties %></th>
+      <th style="width: 15%"><%= @model.t :title_name %></th>
+      <th style="width: 12%"><%= @model.t :name %></th>
+      <th style="width: 10%"><%= @model.t :tel_ext %></th>
+      <th><%= @model.t :remark %></th>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr>
+        <th style="text-align: center">
+          <%= link_to t('ss.links.edit'), action: :edit, id: item.id if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        </th>
+        <td></td>
+        <td><%= br item.send :divide_duties %></td>
+        <td><%= item.send :title_name %></td>
+        <td><%= item.send :name %></td>
+        <td><%= item.send :tel_ext %></td>
+        <td><%= item.send :remark %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

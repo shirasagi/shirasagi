@@ -41,9 +41,9 @@
           <%= text_area_tag "item[map_points][][text]", point[:text], class: "marker-text", placeholder: @item.t(:marker_text) %>
         </p>
         <p>
-          <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker" } %>
+          <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker btn" } %>
           <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
-          <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker" } %>
+          <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker btn" } %>
         </p>
       </dd>
     <% end %>

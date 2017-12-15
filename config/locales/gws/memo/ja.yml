@@ -51,6 +51,7 @@ ja:
     gws/memo: メッセージ
     addons:
       gws/memo/comments: コメント
+      gws/memo/group_setting: メッセージ
   gws_role:
     read_gws_memo_messages: メッセージの閲覧
     edit_gws_memo_messages: メッセージの編集
@@ -61,7 +62,6 @@ ja:
       gws/memo/folder: フォルダー
       gws/memo/filter: フィルター
       gws/memo/signature: 署名
-      gws/memo/group_setting: メッセージ設定
     errors:
       models:
         gws/memo/message:
@@ -95,7 +95,7 @@ ja:
         name: 名称
         text: 本文
         default: 既定の署名
-      gws/memo/group_setting:
+      gws/addon/memo/group_setting:
         memo_filesize_limit: 添付サイズ制限
         memo_reminder: リマインダー表示設定
   tooltip:
@@ -139,7 +139,7 @@ ja:
         - メッセージを新規作成した際に自動で入力される署名を選択します。
         - 有効：この署名を自動で入力します
         - 無効：この署名を自動で入力しません
-    gws/memo/group_setting:
+    gws/addon/memo/group_setting:
       memo_filesize_limit:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
         - 未指定である場合、制限されません。
