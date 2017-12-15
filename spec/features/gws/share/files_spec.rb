@@ -5,7 +5,9 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id] }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
+  let(:top_path) { gws_share_files_path site }
   let(:index_path) { gws_share_folder_files_path site, folder }
+  let(:folder_path) { gws_share_folder_files_path site, folder }
   let(:new_path) { new_gws_share_folder_file_path site, folder }
   let(:show_path) { gws_share_folder_file_path site, folder, item }
   let(:edit_path) { edit_gws_share_folder_file_path site, folder, item }
@@ -14,9 +16,17 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   context "with auth" do
     before { login_gws_user }
 
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
+    it "hide new menu on the top page", js: true do
+      visit top_path
+      wait_for_ajax
+      expect(page).to have_no_content("新規作成")
+    end
+
+    it "appear new menu in writable folder", js: true do
+      item.folder.user_ids = [gws_user.id]
+      visit folder_path
+      wait_for_ajax
+      expect(page).to have_content("新規作成")
     end
 
     it "#new", js: true do
@@ -46,8 +56,9 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       expect(item.category_ids).to eq [category.id]
     end
 
-    it "#edit" do
+    it "#edit", js: true do
       visit edit_path
+      wait_for_ajax
       within "form#item-form" do
         fill_in "item[filename]", with: "modify"
         click_button "保存"
@@ -56,12 +67,13 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       expect(page).to have_no_css("form#item-form")
     end
 
-    it "#delete" do
+    it "#delete", js: true do
       visit delete_path
+      wait_for_ajax
       within "form" do
-        click_button "削除"
+        click_button "削除済みに移動する"
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_no_content(item.name)
     end
 
     context "#download_all with auth", js: true do
