@@ -1,0 +1,10 @@
+<%= javascript_tag do %>
+$(window).on('load', function() {
+  $(".addon-body.toggle-body").show();
+});
+<% end %>
+
+<dl class="see">
+  <dt class="required"><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+</dl>

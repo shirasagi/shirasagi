@@ -1,0 +1,21 @@
+class @Gws_Discussion_Unseen
+  @url = null
+  @intervalID = null
+  @intervalTime = null
+  @timestamp = null
+
+  @renderUnseen: (url, intervalTime, timestamp) ->
+    @url = url
+    @intervalTime = intervalTime
+    @timestamp = timestamp
+    if @url && @intervalTime && @timestamp
+      @intervalID = setInterval(@checkMessage, @intervalTime)
+
+  @checkMessage: ->
+    $.ajax
+      url: Gws_Discussion_Unseen.url
+      success: (data, status)->
+        timestamp = parseInt(data)
+        if timestamp > Gws_Discussion_Unseen.timestamp
+          $(".gws-discussion-unseen").show()
+          clearInterval(Gws_Discussion_Unseen.intervalID)
