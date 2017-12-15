@@ -37,12 +37,13 @@ class Gws::Memo::Message
   before_validation :set_to, :set_size
 
   validate :validate_attached_file_size
+  validate :validate_message
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 
-  after_save :save_reminders, if: ->{ !draft? }
+  after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -220,6 +221,14 @@ class Gws::Memo::Message
 
     if size > limit
       errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
+    end
+  end
+
+  def validate_message
+    if self.text.blank? && self.format == "text"
+      errors.add(:base, :input_message)
+    elsif self.html.blank? && self.format == "html"
+      errors.add(:base, :input_message)
     end
   end
 
