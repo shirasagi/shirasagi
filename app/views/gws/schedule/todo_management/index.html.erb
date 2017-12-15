@@ -13,6 +13,7 @@
     <span class="datetime"><%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
     <span><%= t('gws/schedule/todo_management.deleted') %></span>
     <span><%= item.deleted.strftime('%Y/%m/%d %H:%M') %></span>
+    <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/schedule/todo.disabled_items') %></span>
 <% end %>
 
 <%= render file: 'gws/crud/index' %>
