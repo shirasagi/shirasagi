@@ -2,7 +2,7 @@ class Gws::Monitor::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/monitor/settings/navi"
+  navi_view "gws/main/conf_navi"
 
   model Gws::Monitor::Category
 
@@ -24,7 +24,7 @@ class Gws::Monitor::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/monitor/group_setting"), gws_monitor_setting_path]
+    @crumbs << [t('modules.gws/monitor') + '/' + t('mongoid.models.gws/monitor/category'), gws_monitor_categories_path]
   end
 
   def fix_params

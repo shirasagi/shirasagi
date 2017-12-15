@@ -3,6 +3,7 @@ class Gws::Circular::TrashesController < ApplicationController
   include Gws::CrudFilter
 
   model Gws::Circular::Post
+  navi_view "gws/circular/management/navi"
 
   before_action :set_item, only: [:show, :delete, :destroy, :active, :recover]
   before_action :set_selected_items, only: [:active_all, :destroy_all]
@@ -16,13 +17,9 @@ class Gws::Circular::TrashesController < ApplicationController
 
   def set_crumbs
     set_category
+    @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
     if @category.present?
-      @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
-      @crumbs << [t('gws/circular.admin'), gws_circular_trashes_path ]
       @crumbs << [@category.name, action: :index]
-    else
-      @crumbs << [I18n.t('modules.gws/circular'), gws_circular_posts_path]
-      @crumbs << [t('gws/circular.admin'), gws_circular_trashes_path ]
     end
   end
 

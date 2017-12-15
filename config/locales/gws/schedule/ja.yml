@@ -88,6 +88,7 @@ ja:
       unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
   gws/schedule/todo:
+    disabled_items: 削除済み
     finish_mark: "[完] "
     buttons:
       finish: 完了する
@@ -122,7 +123,6 @@ ja:
         - 3年
         - 3年6ヶ月
   gws/schedule/todo_management:
-    management: 管理
     active: 削除を取り消す
     deleted: 削除日時
     notice:
@@ -170,10 +170,10 @@ ja:
   mongoid:
     models:
       gws/schedule/plan: スケジュール
-      gws/schedule/category: スケジュール/種別
-      gws/schedule/holiday: スケジュール/休日
-      gws/schedule/comment: スケジュール/コメント
-      gws/schedule/attendance: スケジュール/出欠
+      gws/schedule/category: 種別
+      gws/schedule/holiday: 休日
+      gws/schedule/comment: コメント
+      gws/schedule/attendance: 出欠
     errors:
       models:
         gws/schedule/plan:

@@ -1,0 +1,13 @@
+<% @index_title = proc do |item| %>
+  <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+  <%= link_to title,  gws_discussion_forum_topic_path(forum_id: @forum.id, id: item.id), class: "title" %>
+<% end %>
+
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.copy'), action: :copy, id: item  if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>
