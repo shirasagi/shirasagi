@@ -3,16 +3,19 @@
 </style>
 <%= jquery do %>
   var navi = $('#navi');
+  navi.find('.mod-navi:not(:has(h3))').remove();
+
   var curr = navi.find('.current').closest('.mod-navi');
-  var mods = navi.find('.mod-navi').not(curr);
   curr.find('h3').show();
+
+  var mods = navi.find('.mod-navi').not(curr);
   mods.find('h2').addClass('navi-link').click(function() {
     $(this).parent().find('h3').slideToggle('fast');
   });
 <% end %>
 
 <nav class="mod-navi main-features">
-  <h2><%= t "gws.main_features" %></h2>
+  <h2><%= t "modules.gws" %></h2>
   <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
   <% if Gws::Group.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.ss/group'), gws_groups_path %></h3>
