@@ -14,6 +14,7 @@ module Gws::Addon::Schedule::Repeat
 
     before_save :save_repeat_plan, if: -> { repeat? }
     before_save :remove_repeat_plan, if: -> { repeat_type == '' }
+    before_save :todo_action_repeat_plan, if: -> { self.attributes['todo_action'].present? && edit_range }
     after_save :extract_repeat_plans, if: -> { repeat? }
     before_destroy :remove_repeat_plan, if: -> { repeat_plan }
   end
@@ -54,6 +55,18 @@ module Gws::Addon::Schedule::Repeat
   def destroy_without_repeat_plan
     @skip_remove_repeat_plan = true
     destroy
+  end
+
+  def todo_action_without_repeat_plan(action)
+    @skip_todo_action_repeat_plan = true
+    case action
+    when 'disable'
+      disable
+    when 'finish'
+      update(todo_state: 'finished')
+    when 'revert'
+      update(todo_state: 'unfinished')
+    end
   end
 
   private
@@ -115,6 +128,39 @@ module Gws::Addon::Schedule::Repeat
     plans.each do |plan|
       plan.skip_gws_history
       plan.destroy_without_repeat_plan
+    end
+  end
+
+  def todo_action_repeat_plan
+    return if @skip_todo_action_repeat_plan
+
+    if edit_range == "all" || repeat_type == ''
+      todo_action_all_repeat_plan
+    elsif edit_range == "later"
+      todo_action_later_repeat_plan
+    end
+
+    if repeat_plan && self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).empty?
+      repeat_plan.destroy
+      remove_attribute(:repeat_plan_id)
+    end
+  end
+
+  def todo_action_all_repeat_plan
+    return unless repeat_plan
+    plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).active
+    plans.each do |plan|
+      plan.skip_gws_history
+      plan.todo_action_without_repeat_plan(self.attributes['todo_action'])
+    end
+  end
+
+  def todo_action_later_repeat_plan
+    return unless repeat_plan
+    plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at).active
+    plans.each do |plan|
+      plan.skip_gws_history
+      plan.todo_action_without_repeat_plan(self.attributes['todo_action'])
     end
   end
 end
