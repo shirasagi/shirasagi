@@ -4,8 +4,8 @@ ja:
     category: カテゴリー
     portal: ポータル
     site_config: 設定
-    site_info: グループ情報
-    module_setting: 全体設定
+    site_info: 組織情報
+    main_features: 標準機能
     user_setting: ポータル設定
     organization_addresses: 組織アドレス帳
     question_management: 質問管理

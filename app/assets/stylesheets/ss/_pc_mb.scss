@@ -685,6 +685,11 @@ td {
       text-decoration: none;
     }
   }
+  .navi-link:hover {
+    background-color: $gray1;
+    text-decoration: none;
+    cursor: pointer;
+  }
   @include mb {
     h3 {
       a, a:hover, span {
