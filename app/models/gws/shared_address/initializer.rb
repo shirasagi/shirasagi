@@ -1,7 +1,5 @@
 module Gws::SharedAddress
   class Initializer
-    #Gws::GroupSetting.plugin Gws::Share::GroupSetting, ->{ gws_share_setting_path }
-
     Gws::Role.permission :read_other_gws_shared_address_addresses, module_name: 'gws/shared_address'
     Gws::Role.permission :read_private_gws_shared_address_addresses, module_name: 'gws/shared_address'
     Gws::Role.permission :edit_other_gws_shared_address_addresses, module_name: 'gws/shared_address'

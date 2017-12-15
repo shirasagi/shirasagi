@@ -1,8 +1,0 @@
-<dl class="see">
-  <dt><%= @model.t :memo_filesize_limit %><%= @model.tt :memo_filesize_limit %></dt>
-  <dd class="short"><%= f.number_field :memo_filesize_limit %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
-
-  <dt><%= @model.t :memo_reminder %><%= @model.tt :memo_reminder %></dt>
-  <dd><%= f.select :memo_reminder, @item.memo_reminder_options %></dd>
-
-</dl>

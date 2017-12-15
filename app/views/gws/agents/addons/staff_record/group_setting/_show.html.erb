@@ -1,0 +1,15 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-staff-record-group-setting"); <% end %>
+
+<dl class="see addon-gws-staff-record-group-setting">
+  <dt><%= t "gws/staff_record.staff_records" %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t(:staff_records_limit).sub(/.*\//, '') %></dt>
+  <dd><%= @item.staff_records_limit %></dd>
+
+  <dt><%= t "gws/staff_record.divide_duties" %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t(:divide_duties_limit).sub(/.*\//, '') %></dt>
+  <dd><%= @item.divide_duties_limit %></dd>
+</dl>
