@@ -27,14 +27,6 @@ module Gws::Addon::Faq::GroupSetting
     self[:faq_browsed_delay].presence || 2
   end
 
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Faq::Category.allowed?(action, user, opts)
-      super
-    end
-  end
-
   private
 
   def set_faq_file_size_per_topic

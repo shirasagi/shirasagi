@@ -1,0 +1,27 @@
+<%
+  calendar_options = {
+    tapMenu: @user.blank? || @user.id == @cur_user.id,
+    restUrl: url_for(action: :index),
+    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
+    customButtons: { withTodo: false }
+  }
+  if @cur_site.schedule_drag_drop_denied?
+    calendar_options[:eventStartEditable] = false
+  end
+
+  init_options = params[:calendar] || {}
+%>
+<%= jquery do %>
+  Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+<% end %>
+
+<div class="no-print">
+  <%= link_to(I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters)) %>
+</div>
+
+<section class="main-box gws-schedule-box sheet">
+  <header>
+    <h2><%= @forum.name %></h2>
+  </header>
+  <div id="calendar" class="calendar"></div>
+</section>

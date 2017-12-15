@@ -38,14 +38,4 @@ module Gws::Addon::Facility::GroupSetting
       errors.add :facility_max_hour, :greater_than, count: t(:facility_min_hour)
     end
   end
-
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Facility::Item.allowed?(action, user, opts)
-      return true if Gws::Facility::Category.allowed?(action, user, opts)
-      # super
-      false
-    end
-  end
 end
