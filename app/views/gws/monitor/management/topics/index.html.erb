@@ -21,7 +21,6 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <% next unless item.active? %>
-    <% next unless item.topic_admin?(@cur_user.id, @cur_group.id) %>
         <%
           css_classes = %w(list-item)
           if item.subscribed_groups.where(id: @cur_user.id).present?

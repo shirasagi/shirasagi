@@ -22,7 +22,7 @@ module Gws::Monitor::Postable
     field :severity, type: String
     field :due_date, type: DateTime
     field :spec_config, type: String, default: '0'
-    field :reminder_start_section, type: String, default: '-3'
+    field :reminder_start_section, type: String, default: '3'
     field :state_of_the_answers_hash, type: Hash, default: {}
 
     validates :descendants_updated, datetime: true
@@ -193,8 +193,10 @@ module Gws::Monitor::Postable
 
   def set_default
     return if self.id > 0
-    self.reminder_start_section = @cur_site.default_reminder_start_section if @cur_site && @cur_site.default_reminder_start_section.present?
-    self.due_date = Date.today + 7
+    if @cur_site && @cur_site.default_reminder_start_section.present?
+      self.reminder_start_section = @cur_site.default_reminder_start_section
+    end
+    self.due_date = Time.zone.today + 7
   end
 
   # topic(root_post)を設定
