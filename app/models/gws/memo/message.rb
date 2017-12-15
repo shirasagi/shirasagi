@@ -241,7 +241,7 @@ class Gws::Memo::Message
 
   def in_reminder_date
     if @in_reminder_date
-      date = DateTime.parse(@in_reminder_date) rescue nil
+      date = Time.zone.parse(@in_reminder_date) rescue nil
     end
     date ||= reminder ? reminder.date : reminder_date
     date
