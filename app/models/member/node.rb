@@ -133,7 +133,7 @@ module Member::Node
     before_validation ->{ self.page_layout = layout }
 
     def pages
-      Member::BlogPage.where(filename: /^#{filename}\//, depth: depth + 1).and_public
+      Member::BlogPage.site(site).where(filename: /^#{filename}\//, depth: depth + 1).and_public
     end
   end
 
