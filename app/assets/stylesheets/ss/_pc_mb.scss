@@ -1371,8 +1371,22 @@ footer.send {
     margin: 0 2px;
     color: #b30;
   }
+  .upload-drop-area {
+    margin-top: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    @include border-radius(3px);
+    background: #f2f2f2;
+  }
+  .upload-drop-notice {
+    margin-left: 20px;
+    color: #b30;
+  }
+  .file-dragenter {
+    background: #fbeee8;
+  }
   #selected-files {
-    margin-top: 30px;
+    margin-top: 10px;
     @include clear;
     @include mb {
       margin-top: 10px;

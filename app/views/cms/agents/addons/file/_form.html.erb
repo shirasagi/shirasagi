@@ -11,10 +11,11 @@ $ ->
       #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
       $(this).remove() if id == $(this).find(".file-id").attr("value")
 
-<% end %>
-
-<%= jquery do %>
-  //SS_Addon_TempFile.renderDrop($("#addon-cms-agents-addons-file .addon-body"), <%= @cur_user.id %>);
+  SS_Addon_TempFile.selectUrl = (id) ->
+    return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files/#{id}/select"
+  SS_Addon_TempFile.uploadUrl = ()->
+    return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files.json"
+  SS_Addon_TempFile.renderDrop $("#addon-cms-agents-addons-file .upload-drop-area"), <%= @cur_user.id %>
 <% end %>
 
 <dl class="see">
@@ -37,6 +38,9 @@ $ ->
       <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
       <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn" %>
     </span>
+    <div class="upload-drop-area">
+      <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+    </div>
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
