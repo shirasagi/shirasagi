@@ -16,6 +16,6 @@
 <% if @item.blog_page_locations.present? %>
 <dl class="column">
   <dt><%= @model.t :blog_page_locations %></dt>
-  <dd><%=br @item.blog_page_locations.join("\n") %></dd>
+  <dd><%=br @item.blog_page_locations.pluck(:name).join("\n") %></dd>
 </dl>
 <% end %>
