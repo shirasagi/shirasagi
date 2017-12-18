@@ -41,6 +41,10 @@ module Sys::Addon
       img_source = img_source[1..-1] if img_source.start_with?("'", '"')
       img_source = img_source[0..-2] if img_source.end_with?("'", '"')
       img_source = img_source.strip
+      if img_source.start_with?('.') && respond_to?(:url)
+        # convert relative path to absolute path
+        img_source = ::File.dirname(url) + '/' + img_source
+      end
       img_source
     end
   end
