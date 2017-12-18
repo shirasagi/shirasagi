@@ -38,7 +38,7 @@ var select_body_layout = function() {
       var parts = body_layout["parts"];
       var tags = [];
       var editor_opts = <%= raw editor_opts.to_json %>;
-      var select = $('<select style="margin-bottom: 5px;">');
+      var select = $('<select style="margin-bottom: 5px;"></select>');
 
       $.each(parts, function(i){
         var selector = "#item_html_part_" + i;
