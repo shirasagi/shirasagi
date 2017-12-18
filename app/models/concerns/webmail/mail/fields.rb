@@ -11,7 +11,7 @@ module Webmail::Mail::Fields
   end
 
   def display_sender
-    display_address(sender || from[0])
+    display_address(from[0])
   end
 
   def display_to
