@@ -204,21 +204,67 @@ describe Article::Part::Page, type: :model, dbscope: :example do
   end
 
   describe '#render_loop_html - categories' do
-    let(:node_category) { create :category_node_page }
-    let(:page) { create(:article_page, category_ids: [ node_category.id ]) }
+    context 'empty categories' do
+      let(:page) { create(:article_page) }
 
-    it do
-      expect(item.render_loop_html(page, html: '#{categories}')).to \
-        eq("<span class=\"#{node_category.filename}\"><a href=\"#{node_category.url}\">#{node_category.name}</a></span>")
+      it do
+        expect(item.render_loop_html(page, html: '#{categories}')).to eq('')
+      end
+    end
+
+    context '1 category' do
+      let(:node_category) { create :category_node_page }
+      let(:page) { create(:article_page, category_ids: [ node_category.id ]) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{categories}')).to \
+          eq("<span class=\"#{node_category.filename}\"><a href=\"#{node_category.url}\">#{node_category.name}</a></span>")
+      end
+    end
+
+    context '2 categories' do
+      let(:node_category1) { create :category_node_page }
+      let(:node_category2) { create :category_node_page }
+      let(:page) { create(:article_page, category_ids: [ node_category1.id, node_category2.id ]) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{categories}')).to \
+          include(
+                                                                                  "<span class=\"#{node_category1.filename}\"><a href=\"#{node_category1.url}\">#{node_category1.name}</a></span>",
+                                                                                  "<span class=\"#{node_category2.filename}\"><a href=\"#{node_category2.url}\">#{node_category2.name}</a></span>"
+                                                                                )
+      end
     end
   end
 
   describe '#render_loop_html - pages.count' do
-    let(:node_category) { create :category_node_page }
-    let(:page) { create(:article_page, category_ids: [ node_category.id ]) }
+    let!(:root_category) { create(:category_node_node) }
+    let!(:node_category) { create(:category_node_page, cur_node: root_category) }
+    let!(:node_article) { create(:article_node_page) }
+    let!(:page) { create(:article_page, cur_node: node_article, category_ids: [ node_category.id ]) }
 
-    it do
-      expect(item.render_loop_html(page, html: '#{pages.count}')).to eq('')
+    context 'pages.count on the page' do
+      it do
+        expect(item.render_loop_html(page, html: '#{pages.count}')).to eq('')
+      end
+    end
+
+    context 'node contains 1 page' do
+      it do
+        expect(item.render_loop_html(node_article, html: '#{pages.count}')).to eq('1')
+      end
+    end
+
+    context 'node related to 1 page' do
+      it do
+        expect(item.render_loop_html(node_category, html: '#{pages.count}')).to eq('1')
+      end
+    end
+
+    context 'node contains no pages' do
+      it do
+        expect(item.render_loop_html(root_category, html: '#{pages.count}')).to eq('0')
+      end
     end
   end
 
@@ -254,6 +300,31 @@ describe Article::Part::Page, type: :model, dbscope: :example do
 
       it do
         expect(item.render_loop_html(page, html: '#{img.src}')).to eq('/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png')
+      end
+    end
+
+    context 'img source is relative path' do
+      let(:node) { create(:article_node_page) }
+      let(:page) { create(:article_page, cur_node: node, html: '<img src="../img/logo.png">') }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{img.src}')).to eq("#{File.dirname(page.url)}/../img/logo.png")
+      end
+    end
+
+    context 'img source is external path' do
+      let(:page) { create(:article_page, html: '<img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png">') }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{img.src}')).to eq('https://b.st-hatena.com/images/entry-button/button-only@2x.png')
+      end
+    end
+
+    context 'img source is external path without protocol' do
+      let(:page) { create(:article_page, html: '<img src="//b.st-hatena.com/images/entry-button/button-only@2x.png">') }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{img.src}')).to eq('//b.st-hatena.com/images/entry-button/button-only@2x.png')
       end
     end
 
