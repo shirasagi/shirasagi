@@ -50,13 +50,13 @@ SS::Application.routes.draw do
 
     namespace "management" do
       resources :files, concerns: [:deletion, :export] do
-        get :active, on: :member
+        post :active, on: :member
         get :recover, on: :member
         post :active_all, on: :collection
       end
       scope(path: "folder-:folder", as: "folder") do
         resources :files, concerns: [:deletion, :export] do
-          get :active, on: :member
+          post :active, on: :member
           get :recover, on: :member
           post :active_all, on: :collection
         end
