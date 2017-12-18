@@ -1,43 +1,43 @@
 SS::Application.routes.draw do
 
   concern :deletion do
-    get :delete, :on => :member
+    get :delete, on: :member
     delete action: :destroy_all, on: :collection
   end
 
   concern :copy do
-    get :copy, :on => :member
-    put :copy, :on => :member
+    get :copy, on: :member
+    put :copy, on: :member
   end
 
   concern :move do
-    get :move, :on => :member
-    put :move, :on => :member
+    get :move, on: :member
+    put :move, on: :member
   end
 
   concern :template do
-    get :template, :on => :collection
+    get :template, on: :collection
   end
 
   concern :convert do
-    get :convert, :on => :member
-    put :convert, :on => :member
+    get :convert, on: :member
+    put :convert, on: :member
   end
 
   concern :download do
-    get :download, :on => :collection
+    get :download, on: :collection
   end
 
   concern :import do
-    get :import, :on => :collection
-    post :import, :on => :collection
+    get :import, on: :collection
+    post :import, on: :collection
   end
 
   concern :index_state do
-    get :index_approve, :on => :collection
-    get :index_request, :on => :collection
-    get :index_ready, :on => :collection
-    get :index_closed, :on => :collection
+    get :index_approve, on: :collection
+    get :index_request, on: :collection
+    get :index_ready, on: :collection
+    get :index_closed, on: :collection
   end
 
   concern :contains_urls do
@@ -45,13 +45,13 @@ SS::Application.routes.draw do
   end
 
   concern :role do
-    get "role/edit" => "groups#role_edit", :on => :member
-    put "role" => "groups#role_update", :on => :member
+    get "role/edit" => "groups#role_edit", on: :member
+    put "role" => "groups#role_update", on: :member
   end
 
   concern :lock do
-    get :lock, :on => :member
-    delete :lock, action: :unlock, :on => :member
+    get :lock, on: :member
+    delete :lock, action: :unlock, on: :member
   end
 
   namespace "cms", path: ".s:site" do
@@ -66,9 +66,7 @@ SS::Application.routes.draw do
     resources :roles, concerns: :deletion
     resources :users, concerns: [:deletion, :download, :import]
     resources :groups, concerns: [:deletion, :role, :download, :import]
-    resources :members, concerns: :deletion do
-      get :download, on: :collection
-    end
+    resources :members, concerns: [:deletion, :download]
     resources :contents, path: "contents/(:mod)"
 
     resources :nodes, concerns: :deletion do
@@ -87,14 +85,8 @@ SS::Application.routes.draw do
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
-    resources :notices, concerns: :deletion do
-      get :copy, :on => :member
-      put :copy, :on => :member
-    end
-    resources :public_notices, concerns: :deletion do
-      get :copy, :on => :member
-      put :copy, :on => :member
-    end
+    resources :notices, concerns: [:deletion, :copy]
+    resources :public_notices, concerns: [:deletion, :copy]
     resources :sys_notices, only: [:index, :show]
 
     resources :files, concerns: [:deletion, :template] do
@@ -181,7 +173,7 @@ SS::Application.routes.draw do
     get "copy_nodes" => "copy_nodes#index", as: :copy
     post "copy_nodes" => "copy_nodes#run"
     resource :conf, concerns: [:copy, :move] do
-      get :delete, :on => :member
+      get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
     resources :nodes, concerns: :deletion
