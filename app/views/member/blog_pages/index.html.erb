@@ -5,12 +5,7 @@
     <% if @cur_node %>
       <li class="list-item">
         <div class="info">
-          <%
-            #TODO: fix @cur_node.parent
-            parent = Cms::Node.site(@cur_site).
-              where(filename: File.dirname(@cur_node.filename), depth: @cur_node.depth - 1).first
-          %>
-          <% link = member_blogs_path(cid: parent.id) %>
+          <% link = member_blogs_path(cid: @cur_node.parent) %>
           <%= link_to t('ss.links.parent_directory'), link, class: "up" %>
         </div>
       </li>
