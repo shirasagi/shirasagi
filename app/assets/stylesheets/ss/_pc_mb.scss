@@ -325,6 +325,15 @@ td {
         }
       }
     }
+    .gws-bookmark {
+      .dropdown-menu {
+        left: 0;
+        padding: 5px 5px;
+        li {
+          padding: 5px 5px;
+        }
+      }
+    }
   }
   .sp-menu-button {
     display: none;
@@ -551,6 +560,12 @@ td {
     background-position: left -352px;
   }
   .icon-reminder:hover:before {
+    background-position: -32px -352px;
+  }
+  .icon-bookmark:before {
+    background-position: left -352px;
+  }
+  .icon-bookmark:hover:before {
     background-position: -32px -352px;
   }
   .icon-facility:before {

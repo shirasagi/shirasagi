@@ -11,6 +11,9 @@ module Gws::Addon::System::MenuSetting
     field :menu_reminder_state, type: String, default: 'show'
     field :menu_reminder_label, type: String, localize: true
 
+    field :menu_bookmark_state, type: String, default: 'show'
+    field :menu_bookmark_label, type: String, localize: true
+
     field :menu_schedule_state, type: String, default: 'show'
     field :menu_schedule_label, type: String, localize: true
 
@@ -58,6 +61,7 @@ module Gws::Addon::System::MenuSetting
 
     permit_params :menu_portal_state,
       :menu_reminder_state,
+      :menu_bookmark_state,
       :menu_schedule_state,
       :menu_memo_state,
       :menu_board_state,
@@ -75,6 +79,7 @@ module Gws::Addon::System::MenuSetting
       :menu_discussion_state
     permit_params :menu_portal_label,
       :menu_reminder_label,
+      :menu_bookmark_label,
       :menu_schedule_label,
       :menu_memo_label,
       :menu_board_label,
@@ -98,6 +103,7 @@ module Gws::Addon::System::MenuSetting
 
   alias menu_portal_state_options menu_state_options
   alias menu_reminder_state_options menu_state_options
+  alias menu_bookmark_state_options menu_state_options
   alias menu_schedule_state_options menu_state_options
   alias menu_memo_state_options menu_state_options
   alias menu_board_state_options menu_state_options
@@ -120,6 +126,10 @@ module Gws::Addon::System::MenuSetting
 
   def menu_reminder_visible?
     menu_reminder_state == 'show'
+  end
+
+  def menu_bookmark_visible?
+    menu_bookmark_state == 'show'
   end
 
   def menu_schedule_visible?

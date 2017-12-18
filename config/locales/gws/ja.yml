@@ -130,6 +130,7 @@ ja:
 
   modules:
     gws: 標準機能
+    gws/reminder: リマインダー
     addons:
       gws/role: 権限/ロール
       gws/group_permission: 管理権限
@@ -287,6 +288,7 @@ ja:
         menu_portal_state: ポータルの表示
         menu_schedule_state: スケジュールの表示
         menu_reminder_state: リマインダーの表示
+        menu_bookmark_state: お気に入りの表示
         menu_memo_state: メッセージの表示
         menu_board_state: 掲示板の表示
         menu_question_state: 質問管理の表示
