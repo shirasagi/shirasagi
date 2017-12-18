@@ -2,6 +2,7 @@ class @Googlemaps_Map
   @map        = null
   @form       = null
   @center     = [36.204824, 138.252924]
+  @zoom       = 5
   @markers    = null
   @openedInfo = null
   @resized    = null
@@ -22,7 +23,7 @@ class @Googlemaps_Map
   @load: (selector) ->
     mapOptions = {
       center: new google.maps.LatLng(@center[0], @center[1]),
-      zoom: 5,
+      zoom: @zoom,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       panControl: false,
       zoomControl: true,
