@@ -82,10 +82,6 @@ module Member::Node
     def setting_url
       "#{url}setting/"
     end
-
-    def blog(member)
-      Member::Blog.where(site_id: site.id, member_id: member.id).first
-    end
   end
 
   class MyPhoto
