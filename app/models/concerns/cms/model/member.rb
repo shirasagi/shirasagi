@@ -39,7 +39,6 @@ module Cms::Model::Member
     field :last_loggedin, type: DateTime
 
     permit_params :name, :email, :email_again, :email_type, :password, :in_password, :in_password_again, :state
-    permit_params interest_municipality_ids: []
     permit_params :sends_verification_mail, :in_confirm_personal_info
 
     validates :name, presence: true, length: { maximum: 40 }, if: ->{ enabled? || in_check_name }
