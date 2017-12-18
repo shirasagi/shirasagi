@@ -18,8 +18,8 @@ if (body_layout_id) {
     var parts = body_layout["parts"];
     var tags = [];
     var editor_opts = <%= raw ckeditor_editor_options(readonly: true).to_json %>;
-    var select = $('<select>');
-    $(".mod-body-part-html").append($('<div style="padding-bottom: 10px;">').append(select));
+    var select = $('<select></select>');
+    $(".mod-body-part-html").append($('<div style="padding-bottom: 10px;"></div>').append(select));
 
     $.each(parts, function(i){
       var selector = "#item_html_part_" + i;
