@@ -4,7 +4,7 @@
     <%= render partial: "confirm", locals: { f: f, confirm: false }  %>
     <footer class="send">
       <%= f.submit I18n.t("member.buttons.register"), name: :submit %>
-      <%= f.submit I18n.t("member.buttons.back"), name: :back %>
+      <%= f.submit I18n.t("member.buttons.back"), type: :button, name: :back %>
     </footer>
 </div>
 <% end %>
