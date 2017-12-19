@@ -55,9 +55,17 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
       params[:s][:category] = @category.name
     end
 
-    @items = @items.search(params[:s]).
-        custom_order(params.dig(:s, :sort) || 'updated_desc').
-        page(params[:page]).per(50)
+    if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"] &&
+      @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
+      @items = @items.search(params[:s]).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    else
+      @items = @items.search(params[:s]).
+          and_admins(@cur_user).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    end
   end
 
   def show
@@ -66,6 +74,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
   end
 
@@ -75,7 +84,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def active
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.active, {notice: t('gws/monitor.notice.active')}
   end
 
@@ -84,7 +93,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
         next if item.active
       else
         item.errors.add :base, :auth_error
