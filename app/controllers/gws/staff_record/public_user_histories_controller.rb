@@ -14,7 +14,7 @@ class Gws::StaffRecord::PublicUserHistoriesController < ApplicationController
   end
 
   def set_target_user
-    @user = Gws::StaffRecord::User.find(params[:user])
+    @user = Gws::StaffRecord::User.site(@cur_site).find(params[:user])
   end
 
   public

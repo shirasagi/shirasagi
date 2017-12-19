@@ -13,7 +13,7 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 1) }.not_to raise_error
+      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -49,7 +49,7 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page).not_to be_nil
         # check for not changed
         job = described_class.bind(site_id: site, task_id: task)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -104,7 +104,7 @@ describe Chorg::TestRunner, dbscope: :example do
 
         # check for not changed
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
-        expect { job.perform_now(revision.name, 1) }.not_to raise_error
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -163,7 +163,7 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
       # change group.
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 1) }.not_to raise_error
+      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1

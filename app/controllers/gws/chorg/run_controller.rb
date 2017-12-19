@@ -55,7 +55,12 @@ class Gws::Chorg::RunController < ApplicationController
         job_class = job_class.bind(site_id: @cur_site, user_id: @cur_user, task_id: @task)
         job_class = job_class.set(wait_until: @item.reservation) if @item.reservation
 
-        @job = job_class.perform_later(@revision.name, false)
+        opts = {}
+        if @item.staff_record_create?
+          opts['gws_staff_record'] = { 'name' => @item.staff_record_name, 'code' => @item.staff_record_code }
+        end
+
+        @job = job_class.perform_later(@revision.name, opts)
         @revision.add_to_set(job_ids: @job.job_id)
       rescue => e
         Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

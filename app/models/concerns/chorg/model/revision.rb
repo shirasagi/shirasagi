@@ -3,11 +3,13 @@ module Chorg::Model::Revision
   extend SS::Translation
   include SS::Document
   include Voice::Lockable
+  include SS::Relation::File
 
   included do
     seqid :id
     field :name, type: String
     field :job_ids, type: Array
+    belongs_to_file :user_csv_file
 
     permit_params :name, :changesets
 
