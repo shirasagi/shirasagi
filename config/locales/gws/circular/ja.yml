@@ -2,6 +2,9 @@ ja:
   gws/circular:
     setting: 回覧板設定
     active: 削除を取り消す
+    tabs:
+      post: 受信した回覧
+      admin: 作成した回覧
     links:
       disable_all: 削除済みに移動する
     confirm:
@@ -40,6 +43,9 @@ ja:
       see_type:
         normal: 通常回覧
         simple: 簡易回覧
+      article_state:
+        both: 両方
+        unseen: 未読のみ
       circular_delete_threshold:
         - 6ヶ月
         - 1年

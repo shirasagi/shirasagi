@@ -21,6 +21,7 @@ module Gws::Addon::Portal::Portlet
         without_deleted.
         readable(user, portal.site).
         search(search).
+        and_my_draft(user).
         order(updated: -1).
         page(1).
         per(limit)
