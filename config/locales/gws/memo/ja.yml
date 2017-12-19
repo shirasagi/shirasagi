@@ -84,6 +84,10 @@ ja:
         subject: 件名
         member_ids: 宛先
         body: 本文
+        from: 差出人
+        to: 宛先
+        display_send_date: 送信日時
+        size: サイズ
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:

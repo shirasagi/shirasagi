@@ -80,6 +80,20 @@
   .list-item {
     padding: 5px 8px;
   }
+  .list-item-head {
+    font-weight: bold;
+    padding-bottom: 8px;
+    .head {
+      height: 20px;
+      position: relative;
+      .field { position:absolute; }
+      .from, .to { left: 82px; }
+      .title { left: 236px; }
+      .datetime { right: 128px; }
+      .size { right: 14px; }
+    }
+    @include mb { display: none; }
+  }
   .info {
     @include truncate;
     .field {
