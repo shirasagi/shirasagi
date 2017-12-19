@@ -82,7 +82,7 @@
 
   <% if @cur_site.menu_discussion_visible? %>
     <% if Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to t('modules.gws/discussion'), gws_discussion_forums_path, class: "icon-board" %></h2>
+      <h2><%= link_to t('modules.gws/discussion'), gws_discussion_forums_path, class: "icon-discussion" %></h2>
     <% end %>
   <% end %>
 
