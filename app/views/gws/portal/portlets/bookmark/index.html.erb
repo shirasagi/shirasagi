@@ -1,0 +1,37 @@
+<%
+  items = @portlet.find_bookmark_items(@portal, @cur_user)
+%>
+
+<div class="main-box">
+  <div class="portlet-title"><%= @portlet.name %></div>
+
+  <ul class="list-items">
+    <% items.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, item.url, class: 'title' %>
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="url"><%= link_to item.url, item.url %></span>
+            <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
+          </div>
+        </div>
+        <div class="links">
+          <div class="dropdown dropdown-toggle">
+            <a class="more-btn">
+              <i class="material-icons md-dark">&#xE5D4;</i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
+              <li><%= link_to t('ss.links.show'), gws_bookmark_path(id: item), class: 'dropdown-menu-item' %></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+
+  <% if items.next_page && @portal.my_portal? %>
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_bookmarks_path %></div>
+  <% end %>
+</div>

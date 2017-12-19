@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @item.t :bookmark_model %></dt>
+  <dd><%= f.select :bookmark_model, @item.bookmark_model_options, include_blank: true %></dd>
+
+  <dt><%= @item.t :limit %> </dt>
+  <dd><%= f.number_field :limit %></dd>
+</dl>
