@@ -18,7 +18,9 @@ describe "gws_portal_group_portal", type: :feature, dbscope: :example do
     it "#index" do
       # default portlets
       visit index_path
-      expect(current_path).to eq index_path
+      SS.config.gws['portal']['group_portlets'].each do |data|
+        expect(page).to have_css(".portlet-model-#{data['model']}")
+      end
 
       # all portlets
       portlets

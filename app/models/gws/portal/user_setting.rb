@@ -20,15 +20,13 @@ class Gws::Portal::UserSetting
   before_validation :set_name, if: ->{ portal_user.present? }
 
   def portlet_models
-    %w(free links schedule reminder board faq qna circular monitor share report workflow).map do |key|
+    %w(free links reminder schedule report workflow circular monitor board faq qna share).map do |key|
       Gws::Portal::UserPortlet.portlet_model(key)
     end
   end
 
   def default_portlets
-    %w(schedule reminder monitor circular board faq qna).map do |key|
-      Gws::Portal::UserPortlet.default_portlet(key)
-    end
+    Gws::Portal::UserPortlet.default_portlets(SS.config.gws['portal']['user_portlets'])
   end
 
   private

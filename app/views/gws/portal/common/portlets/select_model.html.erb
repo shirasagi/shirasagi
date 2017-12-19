@@ -7,7 +7,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @portal.portlet_models.each do |item| %>
+      <% @portal.portlet_models.select { |p| @cur_site.menu_visible?(p[:type]) }.each do |item| %>
       <tr>
         <td><%= link_to item[:name], "?portlet_model=#{item[:type]}" %></td>
         <td><%= item[:text] %></td>

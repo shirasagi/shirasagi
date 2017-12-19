@@ -101,6 +101,18 @@ module Gws::Portal::PortletModel
       }
     end
 
+    def default_portlets(conf)
+      conf.map do |data|
+        grid = data.delete('grid') || {}
+        data = data.map { |k, v| [k.to_sym, v] }.to_h
+
+        item = default_portlet(data.delete(:model))
+        item.attributes = data
+        item.grid_data.merge!(grid.symbolize_keys) if grid.present?
+        item
+      end
+    end
+
     def default_portlet(type)
       item = self.new(portlet_model: type)
       item.name = I18n.t("gws/portal.portlets.#{type}.name")

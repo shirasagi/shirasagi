@@ -114,6 +114,11 @@ module Gws::Addon::System::MenuSetting
   alias menu_elasticsearch_state_options menu_state_options
   alias menu_discussion_state_options menu_state_options
 
+  def menu_visible?(name)
+    name = 'question' if name == 'faq' || name == 'qna'
+    try("menu_#{name}_state") != 'hide'
+  end
+
   def menu_portal_visible?
     menu_portal_state == 'show'
   end
