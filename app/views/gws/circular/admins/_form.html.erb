@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
+
+  <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
+  <dd><%= f.text_field :due_date, class: 'date js-date', value: tryb { @item.due_date.strftime('%Y/%m/%d') }, data: { min_date: '+1970/01/01' } %></dd>
+
+  <dt><%= @model.t :see_type %><%= @model.tt :see_type %></dt>
+  <dd><%= f.select :see_type, @item.see_type_options %></dd>
+</dl>

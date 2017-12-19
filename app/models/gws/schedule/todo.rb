@@ -11,6 +11,7 @@ class Gws::Schedule::Todo
   include Gws::Addon::Reminder
   include Gws::Addon::Discussion::Todo
   include SS::Addon::Markdown
+  include Gws::Addon::File
   include Gws::Addon::Member
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
@@ -23,6 +24,8 @@ class Gws::Schedule::Todo
   permit_params :color, :todo_state, :deleted
 
   validates :deleted, datetime: true
+
+  after_save ->{ reminders.destroy if deleted.present? }
 
   def finished?
     todo_state == 'finished'
@@ -42,6 +45,18 @@ class Gws::Schedule::Todo
     where('$or' => [
         { :deleted.exists => true , :deleted.lt => date }
     ])
+  }
+
+  scope :custom_order, ->(key) {
+    if key.start_with?('created_')
+      all.reorder(created: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('updated_')
+      all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('end_at_')
+      all.reorder(end_at: key.end_with?('_asc') ? 1 : -1)
+    else
+      all
+    end
   }
 
   def reminder_user_ids
@@ -81,7 +96,13 @@ class Gws::Schedule::Todo
   end
 
   def todo_state_options
-    %w(finished unfinished).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
+    %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
+  end
+
+  def sort_options
+    %w(updated_desc updated_asc created_desc created_asc end_at_desc end_at_asc).map do |k|
+      [I18n.t("gws/schedule/todo.options.sort.#{k}"), k]
+    end
   end
 
   def allowed?(action, user, opts = {})
@@ -111,8 +132,14 @@ class Gws::Schedule::Todo
     end
 
     def search_todo_state(params)
-      return all if params.blank? || params[:todo_state].blank?
-      all.where(todo_state: params[:todo_state])
+      todo_state = params[:todo_state].presence rescue nil
+      todo_state ||= 'unfinished'
+
+      if todo_state == 'both'
+        all
+      else
+        all.where(todo_state: todo_state)
+      end
     end
 
     def search_start_end(params)
