@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :due_date %></dt>
+  <dd><%= tryb { @item.due_date.strftime('%Y/%m/%d %H:%M') } %></dd>
+
+  <dt><%= @model.t :see_type %></dt>
+  <dd><%= t(@item.see_type, scope: 'gws/circular.options.see_type') %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd class="markdown-body"><%= @item.html %></dd>
+</dl>

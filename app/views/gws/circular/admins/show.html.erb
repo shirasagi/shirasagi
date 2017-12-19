@@ -1,0 +1,101 @@
+<div class="gws-board gws-board-thread">
+  <article class="topic" id="post-<%= @item.id %>">
+    <header>
+      <h2>
+        <span class="name"><%= @item.name %></span>
+        <span class="categories">
+          <% @item.categories.each do |category| %>
+            <%= link_to category.trailing_name, gws_circular_category_admins_path(category: category.id),
+                        class: "gws-category-label", style: category_label_css(category) %>
+          <% end %>
+        </span>
+      </h2>
+      <nav class="meta">
+        <span class="user"><%= @item.user_long_name %></span>
+        <span class="datetime"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+      </nav>
+    </header>
+
+    <div class="body markdown-body">
+      <%= @item.html %>
+    </div>
+
+    <% if @item.files.present? %>
+    <div class="files">
+      <% @item.files.each do |file| %>
+        <span id="file-<%= file.id %>">
+          <img src="/assets/img/gws/ic-file.png" alt=""/>
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+        </span>
+      <% end %>
+    </div>
+    <% end %>
+
+    <div class="menu">
+      <% if @item.member?(@cur_user) %>
+        <%= link_to t('gws/board.links.comment'), @category.present? ? new_gws_circular_category_admin_comment_path(admin_id: @item.id) : new_gws_circular_admin_comment_path(admin_id: @item.id),
+          class: 'btn' %>
+      <% end %>
+    </div>
+  </article>
+
+  <div class="comments">
+    <% @item.comments.each_with_index do |comment, i| %>
+      <aside class="comment" id="post-<%= comment.id %>">
+        <header>
+          <h2><%= comment.name %></h2>
+          <nav class="meta">
+            <span class="user"><%= comment.user.long_name %></span>
+            <span class="datetime"><%= comment.updated.strftime('%Y/%m/%d %H:%M') %></span>
+          </nav>
+        </header>
+
+        <div class="toggle-body">
+          <div class="body"><pre><%= comment.text %></pre></div>
+          <div class="menu">
+            <% if @item.allowed?(:edit, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id %>
+              <%= link_to t('ss.links.edit'),  @category.present? ? edit_gws_circular_category_admin_comment_path(admin_id: @item.id, id: comment.id) : edit_gws_circular_admin_comment_path(admin_id: @item.id, id: comment.id), class: 'btn' %>
+            <% end %>
+            <% if @item.allowed?(:delete, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id  %>
+              <%= link_to t('ss.links.delete'),  @category.present? ? delete_gws_circular_category_admin_comment_path(admin_id: @item.id, id: comment.id) : delete_gws_circular_admin_comment_path(admin_id: @item.id, id: comment.id), class: 'btn' %>
+            <% end %>
+          </div>
+        </div>
+      </aside>
+    <% end %>
+  </div>
+
+  <article class="topic">
+    <header>
+      <h2><span class="name"><%= t('gws/circular.post.member') %></span></h2>
+    </header>
+    <div class="body">
+      <table class="index">
+        <thead>
+        <tr>
+          <th><%= t('gws/circular.post.type') %></th>
+          <th><%= t('gws/circular.post.seen_at') %></th>
+          <th><%= t('gws/circular.post.update_at') %></th>
+          <th><%= t('gws/circular.post.user') %></th>
+          <th><%= t('gws/circular.post.replay') %></th>
+        </tr>
+        </thead>
+        <tbody class="items">
+          <% @item.members.each do |member| %>
+            <% first_comment = @item.comments.where(user_id: member.id).first %>
+            <% last_comment = @item.comments.
+              select { |c| c.user_id == member.id }.
+              sort {|a,b| a.updated <=> b.updated }.last %>
+            <tr>
+              <td><%= @item.seen?(member) ? t('gws/circular.post.seen') :  t('gws/circular.post.unseen') %></td>
+              <td><%= tryb { @item.seen_at(member).strftime('%Y/%m/%d %H:%M') } %></td>
+              <td><%= tryb { last_comment.updated.strftime('%Y/%m/%d %H:%M') } %></td>
+              <td><%= member.name %></td>
+              <td><%= tryb { first_comment.text } %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</div>
