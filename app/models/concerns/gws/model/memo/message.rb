@@ -10,7 +10,7 @@ module Gws::Model
       attr_accessor :in_request_mdn, :in_request_dsn, :state
 
       field :subject, type: String
-      alias name subject
+      alias_method :name, :subject
 
       field :text, type: String
       field :html, type: String
