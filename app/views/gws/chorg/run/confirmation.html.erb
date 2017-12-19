@@ -18,9 +18,19 @@
     <dl class="see mod-chorg-run-confirmation">
       <dt><%= @revision.class.t :name %></dt>
       <dd><%= @revision.name %></dd>
+
       <% if params[:type] == 'main' || !Rails.env.production? %>
       <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
       <dd><%= f.text_field(:reservation, class: 'datetime js-datetime', data: { min_date: '+1970/01/02' }) %></dd>
+
+      <dt><%= @model.t :staff_record_state %><%= @model.tt :staff_record_state %></dt>
+      <dd><%= f.select(:staff_record_state, @item.staff_record_state_options, include_blank: true) %></dd>
+
+      <dt><%= @model.t :staff_record_name %><%= @model.tt :staff_record_name %></dt>
+      <dd><%= f.text_field(:staff_record_name) %></dd>
+
+      <dt><%= @model.t :staff_record_code %><%= @model.tt :staff_record_code %></dt>
+      <dd><%= f.number_field(:staff_record_code) %></dd>
       <% end %>
     </dl>
   </section>
