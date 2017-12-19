@@ -4,6 +4,7 @@ module Gws::Addon::Schedule::Repeat
 
   included do
     attr_accessor :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays, :edit_range
+    attr_accessor :todo_action
     belongs_to :repeat_plan, class_name: "Gws::Schedule::RepeatPlan"
     permit_params :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :edit_range, wdays: []
 
@@ -14,7 +15,7 @@ module Gws::Addon::Schedule::Repeat
 
     before_save :save_repeat_plan, if: -> { repeat? }
     before_save :remove_repeat_plan, if: -> { repeat_type == '' }
-    before_save :todo_action_repeat_plan, if: -> { self.attributes['todo_action'].present? && edit_range }
+    before_save :todo_action_repeat_plan, if: -> { todo_action.present? && edit_range }
     after_save :extract_repeat_plans, if: -> { repeat? }
     before_destroy :remove_repeat_plan, if: -> { repeat_plan }
   end
@@ -151,7 +152,7 @@ module Gws::Addon::Schedule::Repeat
     plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).active
     plans.each do |plan|
       plan.skip_gws_history
-      plan.todo_action_without_repeat_plan(self.attributes['todo_action'])
+      plan.todo_action_without_repeat_plan(todo_action)
     end
   end
 
@@ -160,7 +161,7 @@ module Gws::Addon::Schedule::Repeat
     plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at).active
     plans.each do |plan|
       plan.skip_gws_history
-      plan.todo_action_without_repeat_plan(self.attributes['todo_action'])
+      plan.todo_action_without_repeat_plan(todo_action)
     end
   end
 end
