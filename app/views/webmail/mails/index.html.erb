@@ -29,6 +29,19 @@
   <%= render file: "_list_head" %>
 
   <ul class="list-items ss-messages webmail-mails">
+    <li class="list-item-head">
+      <div class="head">
+        <% if @imap.sent_box?(@mailbox) %>
+          <span class="field to"><%= @model.t :to %></span>
+        <% else %>
+          <span class="field from"><%= @model.t :from %></span>
+        <% end %>
+        <span class="field title"><%= @model.t :subject %></span>
+        <span class="field datetime"><%= @model.t :internal_date %></span>
+        <span class="field size"><%= @model.t :size %></span>
+      </div>
+    </li>
+
     <% @items.each do |item| %>
     <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %> mail-draggable" data-uid="<%= item.uid %>">
       <nav class="tap-menu">

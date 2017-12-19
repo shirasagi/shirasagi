@@ -21,6 +21,7 @@ ja:
       search: 検索
       search/users: ユーザー検索
       search/times: 空き時間検索
+      trash: ゴミ箱
     calendar:
       buttonText:
         listMonth: リスト
@@ -37,6 +38,7 @@ ja:
       show_week: 週表示
       show_day: 日表示
       create_report: レポートを作成する
+      back_to_todo: ToDoへ戻る
     buttons:
       delete_one: 今回のみ
       delete_later: 以降すべて
@@ -112,6 +114,13 @@ ja:
         both: 両方
         finished: 完了
         unfinished: 未完了
+      sort:
+        created_asc:  作成日時(日付順)
+        created_desc: 作成日時(新着順)
+        updated_asc:  更新日時(日付順)
+        updated_desc: 更新日時(新着順)
+        end_at_asc:  期限日(昇順)
+        end_at_desc: 期限日(降順)
   gws/schedule/group_setting:
     options:
       todo_delete_threshold:

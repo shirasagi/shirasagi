@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<% if subscribed_users.include?(@cur_user) && !@item.browsed?(@cur_user) %>
+<% if !@item.browsed?(@cur_user) %>
   <%= jquery do %>
     var formatDate = function(browsedAt) {
       var disp = 'YYYY/MM/DD hh:mm';

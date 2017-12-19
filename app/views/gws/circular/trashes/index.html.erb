@@ -24,6 +24,7 @@
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to t('gws/circular.active'), action: :active, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 <% end %>
 
 <% @index_meta = proc do |item| %>
@@ -39,4 +40,5 @@
     </span>
 <% end %>
 
+<%= render "gws/circular/main/tabs" %>
 <%= render file: 'gws/crud/index' %>

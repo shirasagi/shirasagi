@@ -9,10 +9,11 @@ module Chorg::Runner::Base
     end
   end
 
-  def perform(name, adds_group_to_site)
+  def perform(name, opts)
     @cur_site = self.site
     @cur_user = self.user
-    @adds_group_to_site = adds_group_to_site
+    @adds_group_to_site = opts['newly_created_group_to_site'].presence == 'add'
+    @gws_staff_record = opts['gws_staff_record']
     @item = self.class.revision_class.site(@cur_site).find_by(name: name)
     @item = self.class.revision_class.acquire_lock(@item, 1.hour.from_now)
     unless @item
@@ -40,11 +41,18 @@ module Chorg::Runner::Base
       with_inc_depth do
         results.keys.each do |key|
           # put_log("#{key}: success=#{results[key]["success"]}, failed=#{results[key]["failed"]}")
-          task.log("  [#{I18n.t("chorg.views.revisions/edit.#{key}")}] 成功: #{results[key]["success"]}, 失敗: #{results[key]["failed"]}")
+          msg = [
+            "[#{I18n.t("chorg.views.revisions/edit.#{key}")}]",
+            "成功: #{results[key]["success"]},",
+            "失敗: #{results[key]["failed"]}"
+          ].join(' ')
+          task.log("  #{msg}")
         end
       end
 
       finalize_context
+
+      import_user_csv
     end
   end
 

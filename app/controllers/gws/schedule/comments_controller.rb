@@ -33,7 +33,7 @@ class Gws::Schedule::CommentsController < ApplicationController
   def create
     @item = @model.new get_params
     @item.text_type ||= 'plain'
-    raise "403" unless @cur_schedule.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @cur_schedule.member?(@cur_user) || @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     # render_create @item.save
     result = @item.save
     if result

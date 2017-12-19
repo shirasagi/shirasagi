@@ -1,0 +1,12 @@
+<%= jquery do %>
+Gws_Tab.renderTabs('.gws-schedule-todo-tabs');
+<% end %>
+
+<div class="gws-tabs gws-schedule-todo-tabs">
+  <%= link_to gws_schedule_todos_path, class: "post" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.todo') %></span>
+  <% end %>
+  <%= link_to gws_schedule_todo_management_index_path, class: "admin" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.trash') %></span>
+  <% end %>
+</div>

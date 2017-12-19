@@ -31,7 +31,7 @@ SS::Application.routes.draw do
   end
 
   gws 'discussion' do
-    get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
+    get '/' => redirect { |p, req| "#{req.path}/forums" }, as: :main
 
     resources :forums, concerns: [:deletion, :copy] do
       resources :topics, concerns: [:deletion_topics, :copy] do

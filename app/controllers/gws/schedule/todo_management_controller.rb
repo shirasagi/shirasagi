@@ -11,8 +11,13 @@ class Gws::Schedule::TodoManagementController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
     @crumbs << [t('modules.addons.gws/schedule/todo'), gws_schedule_todos_path]
+    @crumbs << [t('gws/schedule.tabs.trash'), action: :index]
+  end
+
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
   end
 
   public
@@ -29,7 +34,7 @@ class Gws::Schedule::TodoManagementController < ApplicationController
   end
 
   def active
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.active, {notice: t('gws/schedule/todo_management.notice.active')}
   end
 
@@ -38,7 +43,7 @@ class Gws::Schedule::TodoManagementController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
         next if item.active
       else
         item.errors.add :base, :auth_error

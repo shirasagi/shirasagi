@@ -42,11 +42,11 @@ class Gws::Monitor::Topic
     end
   }
 
-  def topic_admin?(userid, groupid)
-    return true if userid == self.user_id || self.user_ids.include?(userid)
-    return true if groupid == self.user_group_id || self.group_ids.include?(groupid)
-    false
-  end
+  scope :and_admins, ->(user) {
+    where("$and" => [
+        { "$or" => [{ :user_ids.in => [user.id] }, { :group_ids.in => user.group_ids }] }
+    ])
+  }
 
   def download_root_path
     "#{Rails.root}/private/files/gws_monitors/"

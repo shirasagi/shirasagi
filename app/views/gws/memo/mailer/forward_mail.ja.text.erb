@@ -1,0 +1,16 @@
+<%-
+  data = {
+    '件名' => @item.name,
+    '' => @item.text,
+    '時刻' => @item.send_date.present? ? @item.send_date.strftime("%Y/%m/%d %H:%M") : nil,
+    '送信者' => "#{@cur_user.name} <#{@cur_user.email}>",
+    '受信者' => @cc_memo,
+    '添付ファイル' => @item.file_ids.present? ? 'あり' : 'なし'
+  }
+-%>
+メッセージが届きました。
+
+<%- data.each do |label, value| -%>
+<%= "#{label}: " if label.present? %><%= value %>
+<%- end -%>
+

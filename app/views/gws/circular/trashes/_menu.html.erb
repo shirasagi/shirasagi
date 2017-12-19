@@ -1,8 +1,9 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
+    <%= link_to t('gws/circular.links.back_to_admin'), gws_circular_admins_path %>
   <% elsif params[:action] =~ /new|create|lock/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+  <% elsif params[:action] =~ /delete|active|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
@@ -11,7 +12,7 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
-    <%= link_to t('gws/circular.active'), action: :recover, id: @item %>
+    <%= link_to t('gws/circular.active'), action: :active, id: @item %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

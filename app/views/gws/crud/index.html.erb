@@ -3,7 +3,7 @@
 
   <ul class="list-items">
     <% @items.each do |item| %>
-    <li class="list-item">
+    <li class="<%= @list_class ? Array[@list_class.call(item)].flatten.compact.join(' ') : 'list-item' %>">
       <nav class="tap-menu">
         <% if @tap_menu %>
           <% @tap_menu.call item %>

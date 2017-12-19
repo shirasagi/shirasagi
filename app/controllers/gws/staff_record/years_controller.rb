@@ -31,4 +31,18 @@ class Gws::StaffRecord::YearsController < ApplicationController
       search(params[:s]).
       page(params[:page]).per(50)
   end
+
+  def copy_situation
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    if request.get?
+      render
+      return
+    end
+
+    job = Gws::StaffRecord::CopySituationJob.bind(site_id: @cur_site, user_id: @cur_user)
+    job.perform_later(@item.id.to_s)
+
+    redirect_to({ action: :show }, { notice: I18n.t('gws/staff_record.notice.copy_situation_started') })
+  end
 end

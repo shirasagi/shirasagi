@@ -8,7 +8,7 @@ module Gws::Board::BrowsingState
 
   def browsed_at(user)
     return if browsed_users_hash.blank?
-    browsed_users_hash[user.id.to_s].try(:localtime)
+    browsed_users_hash[user.id.to_s].try(:in_time_zone)
   end
   alias browsed? browsed_at
 
@@ -19,5 +19,9 @@ module Gws::Board::BrowsingState
     hash[user.id.to_s] = Time.zone.now
 
     self.browsed_users_hash = hash
+  end
+
+  def browsed_state_options
+    %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
   end
 end

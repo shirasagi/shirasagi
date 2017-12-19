@@ -1,0 +1,15 @@
+<%= jquery do %>
+Gws_Tab.renderTabs('.gws-circular-tabs');
+<% end %>
+
+<div class="gws-tabs gws-circular-tabs">
+  <%= link_to({ controller: 'posts', action: 'index' }, { class: 'post' }) do %>
+    <span class="tab-name"><%= t('gws/circular.tabs.post') %></span>
+  <% end %>
+  <%= link_to({ controller: 'admins', action: 'index' }, { class: 'admin' }) do %>
+    <span class="tab-name"><%= t('gws/circular.tabs.admin') %></span>
+  <% end %>
+  <%= link_to({ controller: 'trashes', action: 'index' }, { class: 'trash' }) do %>
+    <span class="tab-name"><%= t('gws/circular.tabs.trash') %></span>
+  <% end %>
+</div>

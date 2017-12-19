@@ -14,6 +14,10 @@
     <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
   <% end %>
 
+  <% if @cur_site.menu_bookmark_visible? %>
+    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
+  <% end %>
+
   <% if @cur_site.menu_schedule_visible? %>
     <h2><%= link_to @cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path, class: "icon-schedule" %></h2>
     <div class="child-menu">
@@ -51,7 +55,7 @@
   <% end %>
 
   <% if @cur_site.menu_circular_visible? %>
-    <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_posts_path, class: 'icon-circular' %></h2>
+    <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_main_path, class: 'icon-circular' %></h2>
   <% end %>
 
   <% if @cur_site.menu_monitor_visible? %>
@@ -82,7 +86,7 @@
 
   <% if @cur_site.menu_discussion_visible? %>
     <% if Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to t('modules.gws/discussion'), gws_discussion_forums_path, class: "icon-board" %></h2>
+      <h2><%= link_to t('modules.gws/discussion'), gws_discussion_forums_path, class: "icon-discussion" %></h2>
     <% end %>
   <% end %>
 

@@ -5,15 +5,18 @@
 #= require fullcalendar/lang/ja
 #= require fullcalendar-scheduler/scheduler.min.js
 #= require gridster/jquery.gridster.min.js
+#= require gws/lib/tab
 #= require gws/lib/popup
 #= require gws/lib/member
 #= require gws/lib/reminder
+#= require gws/lib/bookmark
 #= require gws/lib/edit_lock
 #= require gws/lib/readable_setting
 #= require gws/schedule/lib/view
 #= require gws/schedule/lib/calendar
 #= require gws/schedule/lib/calendar_basic_hour_view
 #= require gws/schedule/lib/calendar_list_month_view
+#= require gws/schedule/lib/calendar_day_view
 #= require gws/schedule/lib/multiple_calendar
 #= require gws/schedule/lib/plan
 #= require gws/schedule/lib/repeat_plan
@@ -23,7 +26,6 @@
 #= require gws/memo/folder
 #= require gws/memo/filter
 #= require gws/monitor/lib/monitor
-#= require gws/monitor/lib/view
 #= require gws/share/lib/share
 #= require gws/portal/lib/portal
 #= require gws/portal/lib/portlet/link
@@ -37,10 +39,6 @@ $ ->
   # tabs
   path = location.pathname + "/"
   $(".gws-schedule-tabs a").each ->
-    menu = $(this)
-    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
-
-  $(".gws-monitor-tabs a").each ->
     menu = $(this)
     menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
