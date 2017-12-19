@@ -55,6 +55,10 @@ class Gws::Board::TopicsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
+    if params[:s]
+      params[:s][:user] = @cur_user
+    end
+
     @items = @items.search(params[:s]).
       order(descendants_updated: -1).
       page(params[:page]).per(50)

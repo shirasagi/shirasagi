@@ -37,4 +37,7 @@ module Chorg::Runner::Test
 
   def move_users_group(_, _)
   end
+
+  def import_user_csv
+  end
 end

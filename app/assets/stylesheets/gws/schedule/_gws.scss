@@ -399,6 +399,19 @@
     display: inline;
   }
 }
+// View: agendaDay
+.fc-agendaDay-view {
+  .fc-time-grid-event {
+    margin-right: 5px;
+  }
+  .fc-event {
+    .fc-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
 
 // View: listMonth
 .fc-listMonth-view {
@@ -418,6 +431,10 @@
     display: table-cell;
     padding: 8px;
     white-space: nowrap;
+
+    .summary {
+      white-space: normal;
+    }
   }
   .date {
     width: 130px;

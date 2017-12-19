@@ -114,6 +114,15 @@ module SS::Document
       class_variable_set(:@@_text_index_fields, fields)
     end
 
+    def overwrite_scope(name, value, &block)
+      normalized = name.to_sym
+      _declared_scopes.delete(normalized)
+      singleton_class.class_eval do
+        remove_method(name)
+      end
+      scope(name, value, &block)
+    end
+
     # Mongoid では find_in_batches が存在しない。
     # find_in_batches のエミュレーションを提供する。
     #

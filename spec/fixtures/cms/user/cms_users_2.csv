@@ -2,5 +2,5 @@ id,–¼,ƒ[ƒ‹ƒAƒhƒŒƒX,ƒpƒXƒ[ƒh,ƒ†[ƒU[ID,DN,ƒOƒ‹[ƒv,CMSƒ[ƒ‹,‰ŠúƒpƒXƒ[ƒ
 2,import_admin_update,import_admin_update@example.jp,,,"cn=Manager,dc=city,dc=shirasagi,dc=jp",A/B,all,–³Œø
 3,import_user1,,,,,,,–³Œø
 4,import_user2,,,,,A/B/D,edit,–³Œø
-5,import_sys,import_sys@example.jp,sys,sys,,A,"all
+5,import_sys,import_sys@example.jp,sys,import_sys,,A,"all
 edit",–³Œø

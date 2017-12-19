@@ -131,7 +131,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         import_user2@example.jp
       )
       expected_names = %w(import_admin import_sys import_user1 import_user2)
-      expected_uids = %w(admin sys user1 user2)
+      expected_uids = %w(import_admin import_sys import_user1 import_user2)
       expected_groups = [ ["A/B/C"], ["A"], ["A/B/C", "A/B/D"], ["A/B/D"] ]
       expected_cms_roles = [ %w(all), %w(all edit), %w(edit), %w(edit) ]
       expected_initial_password_warning = [ 1, 1, 1, 1 ]
@@ -180,7 +180,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         import_sys@example.jp
       )
       expected_names = %w(import_admin_update import_sys)
-      expected_uids = [nil, "sys"]
+      expected_uids = [nil, "import_sys"]
       expected_groups = [ ["A/B"], ["A"] ]
       expected_cms_roles = [ %w(all), %w(all edit) ]
       expected_initial_password_warning = [ nil, nil ]
@@ -192,8 +192,8 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map{ |u| u.cms_roles.order_by(name: 1).map(&:name) }).to eq expected_cms_roles
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
 
-      user1 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user1").first
-      user2 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user2").first
+      user1 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "import_user1").first
+      user2 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "import_user2").first
       expect(user1).not_to be_nil
       expect(user2).not_to be_nil
     end

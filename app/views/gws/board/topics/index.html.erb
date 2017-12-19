@@ -19,9 +19,7 @@
     <% @items.each do |item| %>
     <%
       css_classes = %w(list-item)
-      if item.subscribed_users.where(id: @cur_user.id).present?
-        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
-      end
+      css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
       if item.severity.present?
         css_classes << item.severity
       end

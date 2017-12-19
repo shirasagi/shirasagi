@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Gws::Chorg::MainRunner, dbscope: :example do
   let(:site) { create(:gws_group) }
   let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
-  let(:adds_group_to_site) { false }
+  let(:job_opts) { {} }
 
   context 'with unify' do
     let!(:group1) { create(:gws_revision_new_group) }
@@ -25,7 +25,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     it do
       # execute
       job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      expect { job.perform_now(revision.name, adds_group_to_site) }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -70,7 +70,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     it do
       # execute
       job = described_class.bind(site_id: site, user_id: user, task_id: task)
-      expect { job.perform_now(revision.name, adds_group_to_site) }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
       expect(Gws::Group.where(id: group0.id).first.active?).to be_falsey
       new_group1 = Cms::Group.where(name: changeset.destinations[0]['name']).first
@@ -99,7 +99,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     it do
       # execute
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, adds_group_to_site) }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
       expect(Gws::Group.where(id: group.id).first.active?).to be_falsey
 
