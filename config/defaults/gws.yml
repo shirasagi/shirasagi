@@ -23,6 +23,38 @@ production: &production
       # 初期表示グループ / user_group, root_group
       default_group: user_group
 
+  portal:
+    # Default user portlets
+    # - model: portlet model (required)
+    #   name: portlet name
+    #   limit: items size
+    #   grid:
+    #     col: position x (1..4)
+    #     row: position y (1..n)
+    #     size_x: width (1..4)
+    #     size_y: height (1..4)
+    user_portlets:
+      - model: schedule
+        grid:
+          col: 1
+          row: 1
+          size_x: 4
+          size_y: 2
+      - model: reminder
+      - model: monitor
+      - model: circular
+      - model: board
+      - model: faq
+      - model: qna
+
+    # Default group portlets
+    group_portlets:
+      - model: schedule
+      - model: monitor
+      - model: board
+      - model: faq
+      - model: qna
+
   chorg:
     models:
       - "Gws::Board::Category"
