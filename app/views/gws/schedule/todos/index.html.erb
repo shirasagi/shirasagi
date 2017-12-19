@@ -1,7 +1,7 @@
 <%
 @list_class = proc do |item|
   css_classes = %w(list-item)
-  if item.end_at < Time.zone.now
+  if item.todo_state == 'unfinished' && item.end_at < Time.zone.now
     css_classes << 'todo-over'
   end
   css_classes
