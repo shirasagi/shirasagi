@@ -23,6 +23,8 @@ SS::Application.routes.draw do
   end
 
   gws 'circular' do
+    get '/' => redirect { |p, req| "#{req.path}/posts" }, as: :main
+
     resources :posts, concerns: [:posts], except: [:new, :create, :edit, :update, :destroy]
 
     resources :admins, concerns: [:admins], except: [:destroy] do

@@ -3,11 +3,11 @@ class Gws::Circular::TrashesController < ApplicationController
   include Gws::CrudFilter
   include Gws::Circular::PostFilter
 
-  before_action :set_item, only: [:show, :delete, :destroy, :active, :recover]
-  before_action :set_selected_items, only: [:active_all, :destroy_all]
-  before_action :set_category
-
   private
+
+  def set_cur_tab
+    @cur_tab = [I18n.t('gws/circular.tabs.trash'), action: :index]
+  end
 
   def set_items
     @items ||= @model.site(@cur_site).

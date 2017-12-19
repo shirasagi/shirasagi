@@ -2,8 +2,11 @@ module Gws::Circular::PostFilter
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor(:cur_tab)
     model Gws::Circular::Post
 
+    before_action :set_cur_tab
+    before_action :set_crumbs
     before_action :set_item, only: %i[show edit update disable delete destroy set_seen unset_seen toggle_seen active recover]
     before_action :set_selected_items, only: %i[active_all disable_all destroy_all set_seen_all unset_seen_all download]
     before_action :set_category
@@ -19,14 +22,17 @@ module Gws::Circular::PostFilter
     { due_date: Time.zone.now + @cur_site.circular_default_due_date.day }
   end
 
+  def set_cur_tab
+    @cur_tab = nil
+  end
+
   def set_crumbs
     set_category
+    @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_main_path]
     if @category.present?
-      @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_posts_path]
       @crumbs << [@category.name, action: :index]
-    else
-      @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), action: :index]
     end
+    @crumbs << @cur_tab
   end
 
   def set_category
