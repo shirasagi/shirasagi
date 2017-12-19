@@ -3,6 +3,7 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   include Gws::CrudFilter
 
   model Gws::Monitor::Topic
+  navi_view "gws/monitor/management/navi"
 
   before_action :set_item, only: [
       :show, :edit, :update, :delete, :destroy,
@@ -15,13 +16,9 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
 
   def set_crumbs
     set_category
+    @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
     if @category.present?
-      @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
-      @crumbs << [t("mongoid.models.gws/monitor/management"), gws_monitor_management_topics_path]
       @crumbs << [@category.name, action: :index]
-    else
-      @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
-      @crumbs << [t("mongoid.models.gws/monitor/management"), gws_monitor_management_topics_path]
     end
   end
 
@@ -55,9 +52,16 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
       params[:s][:category] = @category.name
     end
 
-    @items = @items.search(params[:s]).
-        custom_order(params.dig(:s, :sort) || 'updated_desc').
-        page(params[:page]).per(50)
+    if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"]
+      @items = @items.search(params[:s]).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    else
+      @items = @items.search(params[:s]).
+          and_admins(@cur_user).
+          custom_order(params.dig(:s, :sort) || 'updated_desc').
+          page(params[:page]).per(50)
+    end
   end
 
   def show

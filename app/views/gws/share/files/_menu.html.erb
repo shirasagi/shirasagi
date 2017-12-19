@@ -10,7 +10,7 @@
   <% if params[:action] =~ /index/ %>
     <%#= link_to t("gws/share.links.categories"), categories_gws_share_files_path %>
     <% if @model.allowed?(:write, @cur_user, site: @cur_site) && params[:folder] %>
-      <%= link_to t('ss.links.new'), action: :new %>
+      <%= link_to t('ss.links.new'), action: :new if @folder.uploadable?(@cur_user) %>
     <% end %>
     <% if Gws::Share::Folder.allowed?(:edit, @cur_user, site: @cur_site) || Gws::Share::Folder.allowed?(:download, @cur_user, site: @cur_site) %>
       <%= link_to t('gws/share.links.folder'),gws_share_folders_path %>

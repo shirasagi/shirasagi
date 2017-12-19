@@ -68,7 +68,15 @@
 
     <% if @cur_user %>
     <nav class="user">
-      <% if SS.config.gws.disable.blank? && (@ss_mode == :gws) %>
+      <% if @ss_mode == :webmail %>
+        <% group = @cur_user.root_groups.first %>
+        <% if SS.config.gws.disable.blank? && group %>
+          <%= link_to gws_memo_messages_path(site: group.id), class: "user-message" do %>
+            <% count = Gws::Memo::Message.unseens(@cur_user, group).size %>
+            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+          <% end %>
+        <% end %>
+      <% elsif @ss_mode == :gws %>
         <%= jquery do %>Gws_Bookmark.render();<% end %>
         <div class="gws-bookmark dropdown dropdown-toggle">
           <h2><%= I18n.t('modules.gws/bookmark') %></h2>

@@ -56,6 +56,28 @@
     .upload-menu-new {
       margin-left: 5px;
     }
+    .upload-drop-area {
+      padding-top: 5px;
+      padding-bottom: 10px;
+      @include border-radius(3px);
+      background: #f2f2f2;
+    }
+    .upload-drop-notice {
+      margin-left: 10px;
+      color: #b30;
+    }
+    .file-dragenter {
+      background: #fbeee8;
+    }
+  }
+  .selected-files {
+    margin-top: 10px;
+    span {
+      margin: 0 1em 0.5em 0;
+    }
+  }
+  .deselect {
+    cursor: pointer;
   }
   .menu {
     float: right;

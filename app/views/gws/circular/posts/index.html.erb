@@ -17,17 +17,6 @@
     form.appendTo(document.body).submit();
   });
 
-  $(".disable-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("", "<%= I18n.t('gws/circular.confirm.disable') %>");
-    form.append($("<input/>", {name: "_method", value: "delete", type: "hidden"}) );
-    form.appendTo(document.body).submit();
-  });
-
-  $(".download").click(function(){
-    var form = Gws_Circular_Post.buildForm("<%= download_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.download') %>");
-    form.appendTo(document.body).submit();
-  });
-
   $('.gws-category-navi-menu #category_id').change(function() {
     var cid = $(this).val();
     if (cid)
@@ -35,11 +24,16 @@
     else
       location.href = '<%= gws_circular_posts_path %>';
   });
+
+  $(".gws-circular-tabs .post").addClass("current");
+
 <% end %>
 
 <div class="gws-category-navi-menu">
   <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/circular') if @categories.to_options.present? %>
 </div>
+
+<%= render "gws/circular/main/tabs" %>
 
 <div class="index gws-boards">
   <%= render file: '_list_head' %>
@@ -48,8 +42,6 @@
       <li class="list-item <%= 'unread' if (item.member?(@cur_user) && item.unseen?(@cur_user)) %>">
         <nav class="tap-menu">
           <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
           <% if item.try(:image) %>
             <%= link_to image_tag(item.image.thumb_url), item.image.url, {class: "thumb", target: "_blank"} %>

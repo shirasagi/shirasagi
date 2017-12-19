@@ -1,4 +1,9 @@
 ja:
+  gws/chorg:
+    options:
+      staff_record_state:
+        create: 作成する
+
   modules:
     gws/chorg: 組織変更
 
@@ -13,11 +18,23 @@ ja:
     attributes:
       gws/chorg/run_params:
         reservation: 予約実行
+        staff_record_state: 電子職員録
+        staff_record_name: 電子職員録年度名
+        staff_record_code: 電子職員録西暦
 
   tooltip:
     gws/chorg/run_params:
       reservation:
         - 実行する時間を予約できます。
+      staff_record_state:
+        - 電子職員録を作成するかどうかを選択します。
+        - 作成するを選択すると組織変更実行前に現況を元にした電子職員録が作成されます。
+      staff_record_name:
+        - 作成する電子職員録の年度名を入力します。（例：平成00年度）
+        - 電子職員録を作成するを選択した場合、必須です。
+      staff_record_code:
+        - 作成する電子職員録の西暦を入力します。（例：2017）
+        - 電子職員録を作成するを選択した場合、必須です。
 
   job:
     models:

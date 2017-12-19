@@ -11,16 +11,15 @@ describe "cms_users", type: :feature, dbscope: :example do
   let(:delete_path) { delete_cms_user_path site.id, item }
   let(:import_path) { import_cms_users_path site.id }
 
-  it "#index" do
-    login_cms_user
-    visit index_path
-    expect(current_path).not_to eq sns_login_path
-  end
-
-  context "with sns user", js: true do
-    it "#new" do
+  context "with login", js: true do
+    it "#crud" do
       login_cms_user
 
+      #index
+      visit index_path
+      expect(current_path).to eq index_path
+
+      #new
       visit new_path
       click_on "グループを選択する"
       wait_for_cbox
@@ -34,32 +33,26 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-    end
+      expect(page).not_to have_css('#item-form')
 
-    it "#show" do
-      login_cms_user
+      #show
       visit show_path
       expect(page).to have_content(item.name)
-    end
 
-    it "#edit" do
-      login_cms_user
+      #edit
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-    end
+      expect(page).not_to have_css('#item-form')
 
-    it "#delete" do
-      login_cms_user
+      #delete
       visit delete_path
       within "form" do
         click_button "削除"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(current_path).to eq index_path
     end
   end
 
@@ -80,7 +73,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).not_to have_css('#item-form')
     end
 
     it "#show" do
@@ -138,7 +131,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         import_user2@example.jp
       )
       expected_names = %w(import_admin import_sys import_user1 import_user2)
-      expected_uids = %w(admin sys user1 user2)
+      expected_uids = %w(import_admin import_sys import_user1 import_user2)
       expected_groups = [ ["A/B/C"], ["A"], ["A/B/C", "A/B/D"], ["A/B/D"] ]
       expected_cms_roles = [ %w(all), %w(all edit), %w(edit), %w(edit) ]
       expected_initial_password_warning = [ 1, 1, 1, 1 ]
@@ -187,7 +180,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         import_sys@example.jp
       )
       expected_names = %w(import_admin_update import_sys)
-      expected_uids = [nil, "sys"]
+      expected_uids = [nil, "import_sys"]
       expected_groups = [ ["A/B"], ["A"] ]
       expected_cms_roles = [ %w(all), %w(all edit) ]
       expected_initial_password_warning = [ nil, nil ]
@@ -199,8 +192,8 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map{ |u| u.cms_roles.order_by(name: 1).map(&:name) }).to eq expected_cms_roles
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
 
-      user1 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user1").first
-      user2 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user2").first
+      user1 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "import_user1").first
+      user2 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "import_user2").first
       expect(user1).not_to be_nil
       expect(user2).not_to be_nil
     end

@@ -30,6 +30,8 @@ ja:
     inbox_trash: ゴミ箱
     inbox_draft: 下書き
     inbox_sent: 送信済みトレイ
+  gws/memo/forward:
+    subject: 送信者
   gws/memo/filter:
     options:
       action:
@@ -51,6 +53,7 @@ ja:
     gws/memo: メッセージ
     addons:
       gws/memo/comments: コメント
+      gws/memo/group_setting: メッセージ
   gws_role:
     read_gws_memo_messages: メッセージの閲覧
     edit_gws_memo_messages: メッセージの編集
@@ -61,16 +64,20 @@ ja:
       gws/memo/folder: フォルダー
       gws/memo/filter: フィルター
       gws/memo/signature: 署名
+      gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
     errors:
       models:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+          input_message: 本文を入力してください。
         gws/memo/folder:
           included_memo: メッセージが入っているフォルダーは削除できません。
           used_folder: フィルターが使用中のフォルダーは削除できません。
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
+        gws/memo/forward:
+          not_set_email: メールアドレスを設定しないと有効にはできません。
     attributes:
       gws/memo/message:
         name: 件名
@@ -95,9 +102,13 @@ ja:
         name: 名称
         text: 本文
         default: 既定の署名
-      gws/memo/group_setting:
+      gws/memo/forward:
+        email: メールアドレス
+        default: メール転送設定
+      gws/addon/memo/group_setting:
         memo_filesize_limit: 添付サイズ制限
         memo_reminder: リマインダー表示設定
+        memo_email: 転送元メールアドレス
   tooltip:
     gws/memo/message:
       member_ids:
@@ -139,7 +150,14 @@ ja:
         - メッセージを新規作成した際に自動で入力される署名を選択します。
         - 有効：この署名を自動で入力します
         - 無効：この署名を自動で入力しません
-    gws/memo/group_setting:
+    gws/memo/forward:
+      email:
+        - メッセージ転送先のメールアドレスを入力します。
+      default:
+        - メッセージ転送設定を行います。
+        - 有効：メッセージを登録したメールアドレスに転送します
+        - 無効：転送しません
+    gws/addon/memo/group_setting:
       memo_filesize_limit:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
         - 未指定である場合、制限されません。
@@ -148,3 +166,7 @@ ja:
         - メッセージを送信したあと各受信者のリマインダーに表示する日数を選択します。
         - メッセージが下書きの時はリマインダーはまだ登録されません。
         - メッセージが送信された時にリマインダーが登録されます。
+      memo_email:
+        - 転送したメッセージを受信したときに送信者として表示されるメールアドレスです。
+        - 未設定の場合、システム標準の送信者設定が利用されます。
+

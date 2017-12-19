@@ -18,8 +18,8 @@
     <% @crud_buttons.call f %>
   <% else %>
     <% if @item.topic.id == @item.parent.id %>
-      <%= f.submit t("gws/monitor.links.comment"), class: 'btn-primary answer' %>
-      <%= f.submit t("gws/monitor.links.question_not_applicable"), class: 'btn-primary question_not_applicable' %>
+      <%= f.submit t("gws/monitor.links.comment"), class: 'btn-primary answer', data: { confirm: I18n.t("gws/monitor.links.confirm.comment_answer") }  %>
+      <%= f.submit t("gws/monitor.links.question_not_applicable"), class: 'btn-primary question_not_applicable', data: { confirm: I18n.t("gws/monitor.links.confirm.comment_answer") }  %>
     <% else %>
       <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
     <% end %>

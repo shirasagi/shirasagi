@@ -1,4 +1,9 @@
 <nav class="nav-menu">
-  <%= link_to t("gws/monitor.links.back_to_thread"), @category.present? ? gws_monitor_category_topic_path(id: params[:topic_id]) : gws_monitor_topic_path(id: params[:topic_id]) %>
+  <% if params[:topic_id].present? %>
+    <%= link_to t("gws/monitor.links.back_to_thread"), @category.present? ? gws_monitor_category_topic_path(id: params[:topic_id]) : gws_monitor_topic_path(id: params[:topic_id]) %>
+  <% elsif params[:answer_id].present? %>
+    <%= link_to t("gws/monitor.links.back_to_thread"), @category.present? ? gws_monitor_category_answer_path(id: params[:answer_id]) : gws_monitor_answer_path(id: params[:answer_id]) %>
+  <% elsif params[:admin_id].present? %>
+    <%= link_to t("gws/monitor.links.back_to_thread"), @category.present? ? gws_monitor_category_admin_path(id: params[:admin_id]) : gws_monitor_admin_path(id: params[:admin_id]) %>
+  <% end %>
 </nav>
-

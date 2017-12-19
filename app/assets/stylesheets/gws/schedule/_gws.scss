@@ -399,6 +399,19 @@
     display: inline;
   }
 }
+// View: agendaDay
+.fc-agendaDay-view {
+  .fc-time-grid-event {
+    margin-right: 5px;
+  }
+  .fc-event {
+    .fc-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
 
 // View: listMonth
 .fc-listMonth-view {
@@ -418,6 +431,10 @@
     display: table-cell;
     padding: 8px;
     white-space: nowrap;
+
+    .summary {
+      white-space: normal;
+    }
   }
   .date {
     width: 130px;
@@ -650,4 +667,20 @@ dl.gws-schedule-repeat {
 
 .gws-groups-operation {
   margin: 5px 0;
+}
+
+// todo
+.todo-over {
+  .info a {
+    &:before {
+      font-family: 'Material Icons';
+      font-size: 108%;
+      content: '\E002';
+
+      display: block;
+      float: left;
+      width: 18px;
+      height: 1px;
+    }
+  }
 }

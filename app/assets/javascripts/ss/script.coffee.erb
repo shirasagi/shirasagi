@@ -77,9 +77,11 @@ $ ->
 
   # navi
   path = location.pathname + "/"
-  $("#navi .main-navi a, #navi .mod-navi a").each ->
+  $($("#navi .main-navi a, #navi .mod-navi a").get().reverse()).each ->
     menu = $(this)
-    menu.parent().addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+    if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+      menu.parent().addClass("current")
+      return false
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current')
 
   # navi
@@ -211,11 +213,15 @@ class @SS
     return setTimeout (-> $('#notice').slideUp('normal')), 1800
 
   @confirmUnloading: ->
+    changed = false
     $("input[type=text],textarea,select").change ->
-      $(window).on "beforeunload", ->
+      changed = true
+    $(window).on "beforeunload", ->
+      if changed
         return "<%= I18n.t 'ss.confirm.unload' %>"
     $("input[type=submit]").click ->
-      $(window).off "beforeunload"
+      changed = false
+      return true
 
   @randomPassword: (length = 8) ->
     chars = 'abcdefghijkmnopqrstuvwxyz!@#$%&-+ABCDEFGHIJKLMNOP234567890'

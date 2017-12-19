@@ -1,11 +1,20 @@
 ja:
   modules:
     gws/staff_record: 電子職員録・事務分掌表
+    addons:
+      gws/staff_record/group_setting: 電子職員録
 
   gws/staff_record:
     staff_records: 電子職員録
     divide_duties: 電子事務分掌表
     user_histories: 異動履歴
+    no_charge_name: '（なし）'
+    links:
+      copy_situation: 現況から所属と職員を作成する
+    confirm:
+      copy_situation: 現況から所属と職員を作成してよろしいですか？
+    notice:
+      copy_situation_started: 現況から所属と職員の作成処理を開始しました。
     search:
       section: 所属選択
     options:
@@ -49,13 +58,12 @@ ja:
 
   mongoid:
     models:
-      gws/staff_record/group_setting: 電子職員録設定
       gws/staff_record/year: 年度
       gws/staff_record/group: 所属
       gws/staff_record/user: 職員
       gws/staff_record/seating: 座席表
     attributes:
-      gws/staff_record/group_setting:
+      gws/addon/staff_record/group_setting:
         staff_records_limit: 電子職員録/表示件数
         divide_duties_limit: 電子事務分掌表/表示件数
       gws/staff_record/yearly:
@@ -94,6 +102,14 @@ ja:
         remark: 備考
 
   tooltip:
+    gws/addon/staff_record/seating:
+      name: タイトルを入力します。
+      url: 座席表URLを入力します。
+      order: 並び順を入力します。
+      remark: 備考を入力します。
+      in_file:
+        - CSVファイルを指定しインポートを行います。
+        - idが記述されていない行は新規作成になります。
     gws/staff_record/year:
       name: 年度名を入力します。（例：平成00年度）
       code: 西暦を入力します。（例：2017）
@@ -128,11 +144,7 @@ ja:
       in_file:
         - CSVファイルを指定しインポートを行います。
         - idが記述されていない行は新規作成になります。
-    gws/staff_record/seating:
-      name: タイトルを入力します。
-      url: 座席表URLを入力します。
-      order: 並び順を入力します。
-      remark: 備考を入力します。
-      in_file:
-        - CSVファイルを指定しインポートを行います。
-        - idが記述されていない行は新規作成になります。
+
+  job:
+    models:
+      gws/staff_record/copy_situation_job: 電子職員録現況コピージョブ

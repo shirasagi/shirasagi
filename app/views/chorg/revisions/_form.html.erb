@@ -1,4 +1,10 @@
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :user_csv_file_id %><%= @model.tt :user_csv_file_id %></dt>
+  <dd><%= f.file_field :in_user_csv_file %></dd>
+  <% if @item.user_csv_file %>
+  <dd><label><%= f.check_box :rm_user_csv_file %><%= t('ss.buttons.delete') %> (<%= @item.user_csv_file.filename %>)</label></dd>
+  <% end %>
 </dl>

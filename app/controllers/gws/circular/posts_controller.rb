@@ -4,8 +4,8 @@ class Gws::Circular::PostsController < ApplicationController
 
   model Gws::Circular::Post
 
-  before_action :set_item, only: [:show, :edit, :update, :disable, :delete, :destroy, :set_seen, :unset_seen, :toggle_seen]
-  before_action :set_selected_items, only: [:destroy_all, :disable_all, :set_seen_all, :unset_seen_all, :download]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :set_seen, :unset_seen, :toggle_seen]
+  before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all,]
   before_action :set_category
 
   private
@@ -35,17 +35,6 @@ class Gws::Circular::PostsController < ApplicationController
     end
   end
 
-  def render_destroy_all(result)
-    location = crud_redirect_url || { action: :index }
-    notice = result ? { notice: t('gws/circular.notice.disable') } : {}
-    errors = @items.map { |item| [item.id, item.errors.full_messages] }
-
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
-    end
-  end
-
   public
 
   def index
@@ -60,7 +49,31 @@ class Gws::Circular::PostsController < ApplicationController
       allow(:read, @cur_user, site: @cur_site).
       without_deleted.
       search(params[:s]).
+      and_posts(@cur_user.id, params.dig(:s, :article_state) || 'both').
       page(params[:page]).per(50)
+  end
+
+  def create
+    @item = @model.new get_params
+    if params[:commit] == t("ss.buttons.draft_save")
+      @item.state = 'closed'
+    elsif params[:commit] == t("ss.buttons.publish_save")
+      @item.state = 'public'
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    if params[:commit] == t("ss.buttons.draft_save")
+      @item.state = 'closed'
+    elsif params[:commit] == t("ss.buttons.publish_save")
+      @item.state = 'public'
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update
   end
 
   def disable
@@ -99,16 +112,5 @@ class Gws::Circular::PostsController < ApplicationController
   def unset_seen_all
     @items.each{ |item| item.unset_seen(@cur_user).save if item.seen?(@cur_user) }
     render_destroy_all(false)
-  end
-
-  def download
-    raise '403' if @items.empty?
-
-    csv = @items.
-        order(updated: -1).
-        to_csv.
-        encode('SJIS', invalid: :replace, undef: :replace)
-
-    send_data csv, filename: "circular_#{Time.zone.now.to_i}.csv"
   end
 end

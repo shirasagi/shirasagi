@@ -1,0 +1,22 @@
+<% return if depth > 2 %>
+<ul class="<%= css_class %> depth<%= depth %>">
+  <% categories.each do |category| %>
+    <li class="depth<%= depth %>">
+      <span class="depth<%= depth %>">
+      <%= link_to category.name, gws_circular_category_admins_path(category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+      </span>
+
+      <% if category.children? %>
+        <%
+           if category.grandchild?
+             css_class = 'child'
+           else
+             css_class = 'grandchild'
+           end
+        %>
+        <%= render partial: 'category0', locals: { categories: category.children, css_class: css_class, depth: depth + 1 } %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

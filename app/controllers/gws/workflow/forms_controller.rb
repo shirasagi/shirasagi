@@ -4,7 +4,7 @@ class Gws::Workflow::FormsController < ApplicationController
 
   model Gws::Workflow::Form
 
-  navi_view 'gws/workflow/settings/navi'
+  navi_view "gws/main/conf_navi"
 
   private
 

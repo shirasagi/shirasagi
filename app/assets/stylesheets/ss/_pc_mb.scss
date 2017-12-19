@@ -400,6 +400,7 @@ td {
   position: relative;
   float: left;
   width: 210px;
+  margin-bottom: 20px;
   z-index: 1;
   background: $white;
   @include mb {
@@ -407,6 +408,7 @@ td {
     z-index: 200;
     float: none;
     width: 100%;
+    margin-bottom: 0;
     border: none;
   }
 }
@@ -634,6 +636,12 @@ td {
   .icon-address:hover:before {
     background-position: -32px -608px;
   }
+  .icon-discussion:before {
+    background-position: left -736px;
+  }
+  .icon-discussion:hover:before {
+    background-position: -32px -736px;
+  }
 }
 .main-navi-md {
   h2 {
@@ -697,6 +705,11 @@ td {
       color: $orange;
       text-decoration: none;
     }
+  }
+  .navi-link:hover {
+    background-color: $gray1;
+    text-decoration: none;
+    cursor: pointer;
   }
   @include mb {
     h3 {
@@ -1373,16 +1386,36 @@ footer.send {
     margin: 0 2px;
     color: #b30;
   }
+  .upload-drop-area {
+    margin-top: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    @include border-radius(3px);
+    background: #f2f2f2;
+  }
+  .upload-drop-notice {
+    margin-left: 20px;
+    color: #b30;
+  }
+  .file-dragenter {
+    background: #fbeee8;
+  }
   #selected-files {
-    margin-top: 30px;
+    margin-top: 10px;
     @include clear;
     @include mb {
       margin-top: 10px;
     }
   }
 }
+#selected-files, .user-files {
+  -js-display: flex;
+  @include display-flex;
+  @include flex-wrap(wrap);
+  clear: both;
+}
 .file-view {
-  float:left;
+  float: left;
   width: 164px;
   margin: 0px 28px 20px 0px;
   @include mb {

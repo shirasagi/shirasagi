@@ -4,8 +4,7 @@ ja:
     category: カテゴリー
     portal: ポータル
     site_config: 設定
-    site_info: グループ情報
-    module_setting: 全体設定
+    site_info: 組織情報
     user_setting: ポータル設定
     organization_addresses: 組織アドレス帳
     question_management: 質問管理
@@ -146,10 +145,12 @@ ja:
       gws/custom_field: 入力項目
       gws/edit_lock: 排他制御
       gws/schedules: スケジュール
+      gws/system/file_setting: ファイル設定
       gws/system/group_setting: システム設定
       gws/system/menu_setting: メニュー設定
       gws/system/log_setting: ログ設定
       gws/user/custom_form: 拡張情報
+      gws/user/public_duty: 事務分掌
 
   mongoid:
     models:
@@ -279,6 +280,8 @@ ja:
       gws/addon/member:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
+      gws/addon/system/file_setting:
+        multibyte_filename_state: 日本語ファイル名
       gws/addon/system/group_setting:
         sender_user_id: 差出ユーザー
         sendmail_domains: メール送信許可ドメイン
@@ -358,6 +361,11 @@ ja:
       gws/user_form_data:
         form_id: 拡張情報
         column_values: 拡張データ
+      gws/addon/user/public_duty:
+        charge_name: 担当名
+        charge_tel: 担当電話
+        charge_address: 担当住所
+        divide_duties: 分掌事務
 
   tooltip:
     gws/addon/reminder:
@@ -459,6 +467,11 @@ ja:
       memo:
         - 備考を入力します。
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
+    gws/addon/user/public_duty:
+      charge_name: 担当を入力します。
+      charge_tel: 担当電話を入力します。
+      charge_address: 担当住所・電話を入力します。
+      divide_duties: 事務分掌を入力します。
 
   activemodel:
     models:

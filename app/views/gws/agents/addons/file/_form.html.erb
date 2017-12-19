@@ -13,10 +13,7 @@ $ ->
       #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
       $(this).remove() if id == $(this).find(".file-id").attr("value")
 
-<% end %>
-
-<%= jquery do %>
-SS_Addon_TempFile.renderDrop($("#addon-gws-agents-addons-file .addon-body"), <%= @cur_user.id %>);
+  SS_Addon_TempFile.renderDrop $("#addon-gws-agents-addons-file .upload-drop-area"), <%= @cur_user.id %>
 <% end %>
 
 <div class="see gws-addon-file">
@@ -31,6 +28,9 @@ SS_Addon_TempFile.renderDrop($("#addon-gws-agents-addons-file .addon-body"), <%=
     <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
     <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn" %>
   </span>
+  <div class="upload-drop-area">
+    <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+  </div>
 
   <div id="selected-files">
     <% @item.files.each do |file| %>

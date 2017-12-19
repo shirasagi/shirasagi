@@ -24,7 +24,7 @@ class Gws::Faq::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/faq/category'), gws_faq_categories_path]
+    @crumbs << [t('modules.gws/faq') + '/' + t('mongoid.models.gws/faq/category'), gws_faq_categories_path]
   end
 
   def fix_params

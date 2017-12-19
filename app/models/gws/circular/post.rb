@@ -21,6 +21,7 @@ class Gws::Circular::Post
   field :name, type: String
   field :due_date, type: DateTime
   field :deleted, type: DateTime
+  field :state, type: String, default: 'public'
 
   permit_params :name, :due_date, :deleted
 
@@ -58,9 +59,35 @@ class Gws::Circular::Post
     criteria
   }
 
+  scope :and_posts, ->(userid, key) {
+    if key.start_with?('both')
+      where("$and" => [ { state: { "$not" => /^closed$/ } } ] )
+    elsif key.start_with?('unseen')
+      where("$and" => [ { "seen.#{userid}".to_sym => { "$exists" => false } },
+                        { state: { "$not" => /^closed$/ } }
+                      ] )
+    end
+  }
+
+  scope :and_admins, ->(user) {
+    where("$and" => [
+        { "$or" => [{ :user_ids.in => [user.id] }, { :group_ids.in => user.group_ids }] }
+    ])
+  }
+
+  scope :and_my_draft, ->(user) {
+    where("$nor" => [
+        { "$and" => [
+            { user_ids: { "$not" => { "$in" => [user.id] } } },
+            { group_ids: { "$not" => { "$in" => user.group_ids } } },
+            { state: { "$not" => /^public$/ } } ]
+        }
+    ])
+  }
+
   scope :without_deleted, ->(date = Time.zone.now) {
-    where('$and' => [
-      { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
+    where("$and" => [
+        { "$or" => [{ deleted: nil }, { :deleted.gt => date }] }
     ])
   }
 
@@ -108,6 +135,13 @@ class Gws::Circular::Post
 
   def state_changed?
     false
+  end
+
+  def article_state_options
+    [
+      [I18n.t('gws/circular.options.article_state.both'), 'both'],
+      [I18n.t('gws/circular.options.article_state.unseen'), 'unseen']
+    ]
   end
 
   def validate_attached_file_size
