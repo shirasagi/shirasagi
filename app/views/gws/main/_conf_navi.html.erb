@@ -1,7 +1,22 @@
-<nav class="mod-navi">
-  <h2><%= t "gws.site_config" %></h2>
-  <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
+<style>
+#navi .mod-navi h3 { display: none; }
+</style>
+<%= jquery do %>
+  var navi = $('#navi');
+  navi.find('.mod-navi:not(:has(h3))').remove();
 
+  var curr = navi.find('.current').closest('.mod-navi');
+  curr.find('h3').show();
+
+  var mods = navi.find('.mod-navi').not(curr);
+  mods.find('h2').addClass('navi-link').click(function() {
+    $(this).parent().find('h3').slideToggle('fast');
+  });
+<% end %>
+
+<nav class="mod-navi main-features">
+  <h2><%= t "modules.gws" %></h2>
+  <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
   <% if Gws::Group.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.ss/group'), gws_groups_path %></h3>
   <% end %>
@@ -17,45 +32,20 @@
   <% if Gws::Role.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/role'), gws_roles_path %></h3>
   <% end %>
-  <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('modules.gws/report'), gws_report_setting_path %></h3>
-  <% end %>
-  <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('workflow.name'), gws_workflow_setting_path %></h3>
-  <% end %>
   <% if Gws::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/notice'), gws_notices_path %></h3>
   <% end %>
   <% if Gws::Link.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/link'), gws_links_path %></h3>
   <% end %>
-
-  <% Gws::GroupSetting.plugins.each do |mod, url_lazy| %>
-    <% if mod.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h3><%= link_to mod.human_name, instance_exec(&url_lazy) %></h3>
-    <% end %>
-  <% end %>
-
   <% if Gws::Chorg::Revision.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.gws/chorg'), gws_chorg_main_path %></h3>
   <% end %>
-
   <% if Gws::History.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/history'), gws_histories_path %></h3>
   <% end %>
-
   <% if Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.gws/job'), gws_job_logs_path %></h3>
-  <% end %>
-</nav>
-
-<nav class="mod-navi">
-  <h2><%= t('modules.gws/schedule') %></h2>
-  <% if Gws::Schedule::Holiday.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.navi.holiday'), gws_schedule_holidays_path %></h3>
-  <% end %>
-  <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.navi.category'), gws_schedule_categories_path %></h3>
   <% end %>
 </nav>
 
@@ -70,6 +60,16 @@
 </nav>
 
 <nav class="mod-navi">
+  <h2><%= t('modules.gws/schedule') %></h2>
+  <% if Gws::Schedule::Holiday.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/schedule.navi.holiday'), gws_schedule_holidays_path %></h3>
+  <% end %>
+  <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/schedule.navi.category'), gws_schedule_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
   <h2><%= t('modules.gws/facility') %></h2>
   <% if Gws::Facility::Item.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/facility.navi.item'), gws_facility_items_path %></h3>
@@ -77,6 +77,40 @@
   <% end %>
   <% if Gws::Facility::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.category'), gws_facility_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/report') %></h2>
+  <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(Gws::Report::Form.model_name.human, gws_report_forms_path) %></h3>
+  <% end %>
+  <% if Gws::Report::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(Gws::Report::Category.model_name.human, gws_report_categories_path) %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/workflow') %></h2>
+  <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Workflow::Route.model_name.human, gws_workflow_routes_path %></h3>
+  <% end %>
+  <% if Gws::Workflow::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Workflow::Form.model_name.human, gws_workflow_forms_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/circular') %></h2>
+  <% if Gws::Circular::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_circular_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/monitor') %></h2>
+  <% if Gws::Monitor::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_monitor_categories_path %></h3>
   <% end %>
 </nav>
 
@@ -101,3 +135,28 @@
   <% end %>
 </nav>
 
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/share') %></h2>
+  <% if Gws::Share::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_share_categories_path %></h3>
+  <% end %>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t('modules.gws/staff_record') %></h2>
+  <% if Gws::StaffRecord::Year.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/staff_record/year'), gws_staff_record_years_path %></h3>
+  <% end %>
+
+  <% if @staff_record_settings && @cur_year %>
+    <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('mongoid.models.gws/staff_record/group'), gws_staff_record_groups_path(year: @cur_year.id) %></h3>
+    <% end %>
+    <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('mongoid.models.gws/staff_record/user'), gws_staff_record_users_path(year: @cur_year.id) %></h3>
+    <% end %>
+    <% if Gws::StaffRecord::Seating.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_seatings_path(year: @cur_year.id) %></h3>
+    <% end %>
+  <% end %>
+</nav>

@@ -96,9 +96,9 @@ ja:
 
   mongoid:
     models:
-      gws/qna/topic: Ｑ＆Ａ/トピック
-      gws/qna/post: Ｑ＆Ａ/投稿
-      gws/qna/category: Ｑ＆Ａ/カテゴリー
+      gws/qna/topic: トピック
+      gws/qna/post: 投稿
+      gws/qna/category: カテゴリー
     errors:
       models:
         gws/qna/category:

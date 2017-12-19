@@ -4,31 +4,28 @@ class Gws::Share::Management::FilesController < ApplicationController
   include Gws::FileFilter
 
   model Gws::Share::File
+  navi_view "gws/share/management/navi"
+
   before_action :set_item, only: [:show, :active, :delete, :recover, :destroy]
   before_action :set_selected_items, only: [:destroy_all, :active_all]
   before_action :set_category
   before_action :set_folder
-  before_action :set_folder_navi, only: [:index]
+  before_action :set_tree_navi, only: [:index]
 
   private
 
   def set_crumbs
     set_folder
+    @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
     if @folder.present?
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-      @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
         folder_name = @folder.name.split("/")[i]
         item_name = @folder.name.split("/")[0, i+1].join("/")
         item_id = Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id
-        item_path = gws_share_folder_files_path(folder: item_id)
+        item_path = gws_share_management_folder_files_path(folder: item_id)
         @crumbs << [folder_name, item_path]
       end
-
-    else
-      @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-      @crumbs << [t("mongoid.models.gws/share/management"), gws_share_management_files_path]
     end
   end
 
@@ -42,11 +39,6 @@ class Gws::Share::Management::FilesController < ApplicationController
   def set_folder
     return if params[:folder].blank?
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
-  end
-
-  def set_folder_navi
-    @folder_navi = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site)
   end
 
   def fix_params
@@ -64,6 +56,9 @@ class Gws::Share::Management::FilesController < ApplicationController
   public
 
   def index
+    if params[:folder].present?
+      raise "403" unless @folder.allowed?(:edit, @cur_user, site: @cur_site)
+    end
     if @category.present? || @folder.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
@@ -122,7 +117,8 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def active
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_destroy @item.active
+    location = gws_share_management_folder_files_path(folder: @item.folder.id)
+    render_destroy @item.active, { location: location }
   end
 
   def active_all

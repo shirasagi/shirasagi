@@ -9,7 +9,7 @@ class Gws::Facility::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('mongoid.models.gws/facility/category'), gws_facility_categories_path]
+    @crumbs << [t('modules.gws/facility') + '/' + t('mongoid.models.gws/facility/category'), gws_facility_categories_path]
   end
 
   def fix_params

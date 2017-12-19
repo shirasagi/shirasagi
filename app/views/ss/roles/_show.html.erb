@@ -11,7 +11,7 @@
   <dd class="role-permissions">
     <% @model.module_permission_names(separator: true).each do |mod, names| %>
     <div class="module">
-      <p class="module-name">[<%= @model.mod_name(mod) %>]</p>
+      <p class="module-name"><%= @model.mod_name(mod) %></p>
       <div class="permissions">
         <% names.each do |name| %>
           <% if name == :separator %>

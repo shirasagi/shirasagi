@@ -2,7 +2,7 @@ class Gws::Report::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view 'gws/report/settings/navi'
+  navi_view "gws/main/conf_navi"
 
   model Gws::Report::Category
 
