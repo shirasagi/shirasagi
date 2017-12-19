@@ -54,6 +54,10 @@ class Gws::Circular::Post
       criteria = criteria.in(category_ids: params[:category_id])
     end
 
+    if params[:state].present?
+      criteria = criteria.where(state: params[:state])
+    end
+
     criteria
   }
 
@@ -114,6 +118,12 @@ class Gws::Circular::Post
 
   def user?(user)
     self.user.id == user.id
+  end
+
+  def state_options
+    %w(public draft).map do |v|
+      [ I18n.t("ss.options.state.#{v}"), v ]
+    end
   end
 
   def article_state_options

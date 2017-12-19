@@ -66,7 +66,7 @@ class Gws::Circular::AdminsController < ApplicationController
   def create
     @item = @model.new get_params
     if params[:commit] == t("ss.buttons.draft_save")
-      @item.state = 'closed'
+      @item.state = 'draft'
     elsif params[:commit] == t("ss.buttons.publish_save")
       @item.state = 'public'
     end
@@ -78,7 +78,7 @@ class Gws::Circular::AdminsController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params[:commit] == t("ss.buttons.draft_save")
-      @item.state = 'closed'
+      @item.state = 'draft'
     elsif params[:commit] == t("ss.buttons.publish_save")
       @item.state = 'public'
     end

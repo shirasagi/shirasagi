@@ -54,7 +54,7 @@
             <span class="id">#<%= item.id %></span>
             <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
             <span><%= item.user_long_name %></span>
-            <span class="state"><%= item.attributes["state"] == 'public' ? t('ss.options.state.public') : t('ss.options.state.draft') %></span>
+            <span class="state"><%= item.label(:state) %></span>
             <span class="gws-share-categories">
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_circular_category_admins_path(category: category.id),
