@@ -20,6 +20,9 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && params['action'] == 'show' %>
+      <%= link_to t('gws/monitor.links.forward'), action: :forward, id: @item %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

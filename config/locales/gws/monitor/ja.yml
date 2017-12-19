@@ -11,6 +11,7 @@ ja:
       submit: 投稿
       update: 更新
       delete: 削除
+      disabled_items: 削除済み
       browsing_state: 参加グループ
       browsed: 閲覧
       type: 状態
@@ -118,6 +119,7 @@ ja:
       open: 締め切り解除
       export_csv: CSVに出力する
       file_download: ダウンロード
+      forward: 転送する
       confirm:
         public: 受取済みにしますか？
         preparation: 受取待ちにしますか？
@@ -132,6 +134,7 @@ ja:
         active: 削除を取り消しますか？
         disable_all: チェックした項目を削除済みに移動しますか？
         active_all: 選択した項目の削除を取り消しますか？
+        comment_answer: 所属として回答します。よろしいですか？
     errors:
       denied_comment: コメントの投稿は許可されていません。
     tabs:
@@ -252,6 +255,7 @@ ja:
       gws/addon/monitor/group:
         group_name:
           - 参加するグループを選択します。
+          - 「公開設定」でステータスを非公開にすることで編集可能となります。
       gws/monitor/postable:
         name:
           - タイトルを入力します。
