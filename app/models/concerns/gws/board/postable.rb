@@ -46,21 +46,40 @@ module Gws::Board::Postable
 
     scope :topic, ->{ exists parent_id: false }
     scope :topic_comments, ->(topic) { where topic_id: topic.id }
-    scope :search, ->(params) {
-      criteria = where({})
-      return criteria if params.blank?
+  end
 
-      criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
-
-      if params[:severity].present?
-        criteria = criteria.where(severity: params[:severity])
-      end
-      if params[:category].present?
-        category_ids = Gws::Board::Category.site(params[:site]).and_name_prefix(params[:category]).pluck(:id)
-        criteria = criteria.in(category_ids: category_ids)
-      end
+  module ClassMethods
+    def search(params)
+      criteria = all
+      criteria = criteria.search_severity(params)
+      criteria = criteria.search_category(params)
+      criteria = criteria.search_browsed_state(params)
       criteria
-    }
+    end
+
+    def search_severity(params)
+      return all if params.blank? || params[:severity].blank?
+      all.where(severity: params[:severity])
+    end
+
+    def search_category(params)
+      return all if params.blank? || params[:category].blank?
+
+      category_ids = Gws::Board::Category.site(params[:site]).and_name_prefix(params[:category]).pluck(:id)
+      all.in(category_ids: category_ids)
+    end
+
+    def search_browsed_state(params)
+      return all if params.blank? || params[:browsed_state].blank?
+      case params[:browsed_state]
+      when 'read'
+        all.exists("browsed_users_hash.#{params[:user].id}" => 1)
+      when 'unread'
+        all.exists("browsed_users_hash.#{params[:user].id}" => 0)
+      else
+        none
+      end
+    end
   end
 
   # Returns the topic.

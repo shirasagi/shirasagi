@@ -10,4 +10,31 @@
 
   <dt><%= @model.t :close_date %></dt>
   <dd><%= tryb { @item.close_date.strftime("%Y/%m/%d") } %></dd>
+
+  <dd>
+    <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+    <span>
+      <%= link_to gws_staff_record_groups_path(year: @item.id) do %>
+        <%= t('mongoid.models.gws/staff_record/group') %> (<%= number_with_delimiter @item.yearly_groups.size %>)
+      <% end %>
+    </span>
+    <% end %>
+    <% if Gws::StaffRecord::User.allowed?(:read, @cur_user, site: @cur_site) %>
+    <span>
+      <%= link_to gws_staff_record_users_path(year: @item.id) do %>
+        <%= t('mongoid.models.gws/staff_record/user') %> (<%= number_with_delimiter @item.yearly_users.size %>)
+      <% end %>
+    </span>
+    <% end %>
+    <% if Gws::StaffRecord::Seating.allowed?(:read, @cur_user, site: @cur_site) %>
+    <span>
+      <%= link_to gws_staff_record_seatings_path(year: @item.id) do %>
+        <%= t('mongoid.models.gws/staff_record/seating') %> (<%= number_with_delimiter @item.yearly_seatings.size %>)
+      <% end %>
+    </span>
+    <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to(t('gws/staff_record.links.copy_situation'), copy_situation_gws_staff_record_year_path, class: 'btn') %>
+    <% end %>
+  </dd>
 </dl>

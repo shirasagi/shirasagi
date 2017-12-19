@@ -44,13 +44,54 @@ module Chorg::Runner::Main
     end
   end
 
-  private
-
   def user_like?(entity)
     entity.class.ancestors.include?(SS::Model::User)
   end
 
   def group_like?(entity)
     entity.class.ancestors.include?(SS::Model::Group)
+  end
+
+  def import_user_csv
+    if self.class.ss_mode == :gws
+      import_user_csv_gws
+    else
+      import_user_csv_cms
+    end
+  end
+
+  def import_user_csv_cms
+    return if @item.user_csv_file.blank?
+
+    put_log("#{@item.user_csv_file.humanized_name}: import users from csv")
+
+    user = Cms::User.new(cur_site: site, cur_user: user, in_file: @item.user_csv_file.uploaded_file)
+    result = user.import
+
+    task.log("==ユーザーインポート==")
+    if result
+      task.log("  #{@item.user_csv_file.humanized_name}: #{user.imported} ユーザーをインポートしました。")
+    else
+      task.log("  #{@item.user_csv_file.humanized_name}: 次のエラーが発生しました。\n#{user.errors.full_messages.join("\n")}")
+    end
+  end
+
+  def import_user_csv_gws
+    return if @item.user_csv_file.blank?
+
+    put_log("#{@item.user_csv_file.humanized_name}: import users from csv")
+
+    importer = Gws::UserCsv::Importer.new(cur_site: site, cur_user: user, in_file: @item.user_csv_file.uploaded_file)
+    result = importer.valid?
+    if result
+      result = importer.import
+    end
+
+    task.log("==ユーザーインポート==")
+    if result
+      task.log("  #{@item.user_csv_file.humanized_name}: #{importer.imported} ユーザーをインポートしました。")
+    else
+      task.log("  #{@item.user_csv_file.humanized_name}: 次のエラーが発生しました。\n#{importer.errors.full_messages.join("\n")}")
+    end
   end
 end

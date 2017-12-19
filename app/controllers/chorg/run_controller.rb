@@ -56,7 +56,10 @@ class Chorg::RunController < ApplicationController
         job_class = job_class.bind(site_id: @cur_site, user_id: @cur_user, task_id: @task)
         job_class = job_class.set(wait_until: @item.reservation) if @item.reservation
 
-        @job = job_class.perform_later(@cur_revision.name, @item.add_newly_created_group_to_site)
+        opts = {}
+        opts['newly_created_group_to_site'] = 'add' if @item.add_newly_created_group_to_site
+
+        @job = job_class.perform_later(@cur_revision.name, opts)
         @cur_revision.add_to_set(job_ids: @job.job_id)
       rescue => e
         Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
