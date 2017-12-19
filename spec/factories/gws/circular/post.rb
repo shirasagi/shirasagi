@@ -26,18 +26,6 @@ FactoryGirl.define do
       seen { { gws_user.group_ids.first.to_s => Time.zone.now } }
     end
 
-    trait :gws_circular_posts_item3 do
-      member_ids { [999] }
-      readable_member_ids { [gws_user.id] }
-      due_date { Time.zone.tomorrow }
-    end
-
-    trait :gws_circular_posts_item4 do
-      member_ids { [999] }
-      readable_group_ids { gws_user.group_ids }
-      due_date { Time.zone.tomorrow }
-    end
-
     trait :gws_circular_trashes do
       member_ids { [gws_user.id] }
       user_ids { [gws_user.id] }
@@ -60,18 +48,6 @@ FactoryGirl.define do
 
     trait :gws_circular_trashes_item4 do
       member_ids { [gws_user.id] }
-      due_date { Time.zone.tomorrow }
-    end
-
-    trait :gws_circular_trashes_item5 do
-      member_ids { [gws_user.id] }
-      readable_member_ids { [gws_user.id] }
-      due_date { Time.zone.tomorrow }
-    end
-
-    trait :gws_circular_trashes_item6 do
-      member_ids { [gws_user.id] }
-      readable_member_ids { [gws_user.id] }
       due_date { Time.zone.tomorrow }
     end
   end

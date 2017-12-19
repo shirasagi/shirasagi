@@ -1,8 +1,8 @@
 <%= jquery do %>
-Gws_Monitor_View.renderTabs('.gws-monitor-tabs');
+Gws_Tab.renderTabs('.gws-monitor-tabs');
 <% end %>
 
-<div class="gws-monitor-tabs">
+<div class="gws-tabs gws-monitor-tabs">
   <%= link_to gws_monitor_topics_path, class: "unanswer" do %>
     <span class="tab-name"><%= t('gws/monitor.tabs.unanswer') %></span>
   <% end %>
