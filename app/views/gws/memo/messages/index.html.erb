@@ -4,7 +4,7 @@
     <li class="list-item-head">
       <div class="head">
         <% if @cur_folder.path == "INBOX.Sent" %>
-          <span class="field from"><%= @model.t :to %></span>
+          <span class="field to"><%= @model.t :to %></span>
         <% else %>
           <span class="field from"><%= @model.t :from %></span>
         <% end %>
@@ -31,7 +31,13 @@
       </div>
 
       <div class="info">
-        <span class="field from"><%= item.user.long_name %></span>
+        <% if @cur_folder.path == "INBOX.Sent" %>
+          <span class="field to">
+            <%= item.display_to.first if item.to.present? %>
+          </span>
+        <% else %>
+          <span class="field from"><%= item.user.long_name %></span>
+        <% end %>
         <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title' %>
         <span class="field datetime"><%= item.display_send_date %></span>
         <span class="field size"><%= item.display_size %></span>
