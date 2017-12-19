@@ -1,0 +1,5 @@
+class @Gws_Bookmark
+  @render: (opts = {})->
+    $('div.gws-bookmark').click ->
+      $(this).addClass('active')
+      $(this).find('ul').addClass('active')

@@ -4,7 +4,8 @@
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
-<title><%= SS.config.ss.application_name %></title>
+<% window_name = @item.try(:name) || @crumbs.last.try(:first) %>
+<title><%= "#{"#{window_name} | " if window_name.present?}#{SS.config.ss.application_name}" %></title>
 <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
 <%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
 <!--[if lt IE 9]>
@@ -76,6 +77,25 @@
           <% end %>
         <% end %>
       <% elsif @ss_mode == :gws %>
+        <%= jquery do %>Gws_Bookmark.render();<% end %>
+        <div class="gws-bookmark dropdown dropdown-toggle">
+          <h2><%= I18n.t('modules.gws/bookmark') %></h2>
+          <ul class="dropdown-menu">
+            <%= form_for :bookmark, url: gws_apis_bookmarks_path, html: { id: 'bookmark-form' } do |f| %>
+              <%= f.hidden_field :default_name, value: window_name %>
+              <%= f.hidden_field :url, value: request.fullpath %>
+              <%= f.hidden_field :bookmark_model, value: @bookmark_model %>
+              <li>
+                <%= I18n.t('mongoid.attributes.gws/bookmark.name') %>
+                <%= f.text_field :name, value: (@bookmark.try(:name) || window_name) %>
+              </li>
+              <li>
+                <%= f.submit I18n.t('ss.buttons.save') %>
+                <%= f.submit I18n.t('ss.buttons.delete') if @bookmark %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
         <%= link_to gws_memo_messages_path, class: "user-message" do %>
           <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
           <% if count > 0 %><span class="unseen"><%= count %></span><% end %>

@@ -1,0 +1,26 @@
+ja:
+  gws:
+    options:
+      bookmark_model:
+        other: その他
+
+  modules:
+    gws/bookmark: お気に入り
+
+  mongoid:
+    models:
+      gws/bookmark: お気に入り
+    attributes:
+      gws/bookmark:
+        name: タイトル
+        url: URL
+        bookmark_model: 機能
+
+  tooltip:
+    gws/bookmark:
+      name:
+        - タイトルを入力します。
+      url:
+        - URLを入力します。
+      bookmark_model:
+        - リンク先の機能を選択します。
