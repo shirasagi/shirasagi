@@ -11,7 +11,6 @@ class Gws::Circular::Post
   include Gws::Addon::File
   include Gws::Addon::Circular::Category
   include Gws::Addon::Member
-  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
@@ -58,30 +57,8 @@ class Gws::Circular::Post
     criteria
   }
 
-  scope :and_posts, ->(userid, key) {
-    if key.start_with?('both')
-      where("$and" => [ { state: { "$not" => /^closed$/ } } ] )
-    elsif key.start_with?('unseen')
-      where("$and" => [ { "seen.#{userid}".to_sym => { "$exists" => false } },
-                        { state: { "$not" => /^closed$/ } }
-                      ] )
-    end
-  }
-
-  scope :and_admins, ->(user) {
-    where("$and" => [
-        { "$or" => [{ :user_ids.in => [user.id] }, { :group_ids.in => user.group_ids }] }
-    ])
-  }
-
-  scope :and_my_draft, ->(user) {
-    where("$nor" => [
-        { "$and" => [
-            { user_ids: { "$not" => { "$in" => [user.id] } } },
-            { group_ids: { "$not" => { "$in" => user.group_ids } } },
-            { state: { "$not" => /^public$/ } } ]
-        }
-    ])
+  scope :and_public, -> {
+    where(state: 'public')
   }
 
   scope :without_deleted, ->(date = Time.zone.now) {
@@ -90,9 +67,34 @@ class Gws::Circular::Post
     ])
   }
 
-  scope :deleted, -> {
+  scope :only_deleted, -> {
     where(:deleted.exists => true)
   }
+
+  class << self
+    def to_csv
+      CSV.generate do |data|
+        data << I18n.t('gws/circular.csv')
+        each do |item|
+          item.comments.each do |comment|
+            data << [
+              item.id,
+              item.name,
+              comment.id,
+              item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen') ,
+              comment.user.long_name,
+              comment.text,
+              comment.updated.strftime('%Y/%m/%d %H:%M')
+            ]
+          end
+        end
+      end
+    end
+  end
+
+  def public?
+    state == 'public'
+  end
 
   def active?
     deleted.blank? || deleted > Time.zone.now
@@ -114,34 +116,13 @@ class Gws::Circular::Post
     self.user.id == user.id
   end
 
-  def readable?(user, opts = {})
-    readable_group_ids.blank? && readable_member_ids.blank? && readable_custom_group_ids.blank? ||
-      readable_group_ids.any? { |m| user.group_ids.include?(m) } ||
-      readable_member_ids.include?(user.id) ||
-      readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
-  end
-
-  def allowed?(action, user, opts = {})
-    return true if super(action, user, opts)
-    return true if action =~ /read/ && readable?(user)
-    return user?(user) || member?(user) || custom_group_member?(user) if action =~ /read/
-    false
-  end
-
-  def state
-    'public'
-  end
-
-  def state_changed?
-    false
-  end
-
   def article_state_options
-    [
-      [I18n.t('gws/circular.options.article_state.both'), 'both'],
-      [I18n.t('gws/circular.options.article_state.unseen'), 'unseen']
-    ]
+    %w(both unseen).map do |v|
+      [ I18n.t("gws/circular.options.article_state.#{v}"), v ]
+    end
   end
+
+  private
 
   def validate_attached_file_size
     return if site.circular_filesize_limit.blank?
@@ -152,73 +133,6 @@ class Gws::Circular::Post
 
     if size > limit
       errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
-    end
-  end
-
-  class << self
-    def owner(action, user, opts = {})
-      where(owner_condition(action, user, opts))
-    end
-
-    def owner_condition(action, user, opts = {})
-      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
-      action = permission_action || action
-
-      if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
-        { "$or" => [
-          { user_ids: user.id },
-          { permission_level: { "$lte" => level } },
-        ] }
-      elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        { "$or" => [
-          { user_ids: user.id },
-          { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
-        ] }
-      else
-        { user_ids: user.id }
-      end
-    end
-
-    def allow_condition(action, user, opts = {})
-      site_id = opts[:site] ? opts[:site].id : criteria.selector['site_id']
-      action = permission_action || action
-      conds = [
-        { user_ids: user.id },
-        { member_ids: user.id },
-        { readable_member_ids: user.id },
-        { :readable_group_ids.in => user.group_ids }
-      ]
-
-      if readable_setting_included_custom_groups?
-        conds << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      end
-
-      if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
-        conds << { permission_level: { '$lte' => level } }
-      elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        conds << { :group_ids.in => user.group_ids, '$or' => [{ permission_level: { '$lte' => level } }] }
-      end
-
-      { '$or' => conds }
-    end
-
-    def to_csv
-      CSV.generate do |data|
-        data << I18n.t('gws/circular.csv')
-        each do |item|
-          item.comments.each do |comment|
-            data << [
-                item.id,
-                item.name,
-                comment.id,
-                item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen') ,
-                comment.user.long_name,
-                comment.text,
-                comment.updated.strftime('%Y/%m/%d %H:%M')
-            ]
-          end
-        end
-      end
     end
   end
 end

@@ -55,24 +55,12 @@ class Gws::Circular::AdminsController < ApplicationController
       params[:s][:category_id] = @category.id
     end
 
-    read_other_permission = @cur_user.gws_role_permissions["read_other_gws_circular_posts_#{@cur_site.id}"]
-    edit_other_permission = @cur_user.gws_role_permissions["edit_other_gws_circular_posts_#{@cur_site.id}"]
-
-    if read_other_permission && edit_other_permission
-      @items = @model.site(@cur_site).
-          topic.
-          without_deleted.
-          search(params[:s]).
-          page(params[:page]).per(50)
-    else
-      @items = @model.site(@cur_site).
-          topic.
-          allow(:read, @cur_user, site: @cur_site).
-          without_deleted.
-          search(params[:s]).
-          and_admins(@cur_user).
-          page(params[:page]).per(50)
-    end
+    @items = @model.site(@cur_site).
+      topic.
+      without_deleted.
+      allow(:read, @cur_user, site: @cur_site).
+      search(params[:s]).
+      page(params[:page]).per(50)
   end
 
   def create
@@ -82,7 +70,7 @@ class Gws::Circular::AdminsController < ApplicationController
     elsif params[:commit] == t("ss.buttons.publish_save")
       @item.state = 'public'
     end
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_create @item.save
   end
 
@@ -94,7 +82,7 @@ class Gws::Circular::AdminsController < ApplicationController
     elsif params[:commit] == t("ss.buttons.publish_save")
       @item.state = 'public'
     end
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
 
@@ -112,9 +100,9 @@ class Gws::Circular::AdminsController < ApplicationController
     raise '403' if @items.empty?
 
     csv = @items.
-        order(updated: -1).
-        to_csv.
-        encode('SJIS', invalid: :replace, undef: :replace)
+      order(updated: -1).
+      to_csv.
+      encode('SJIS', invalid: :replace, undef: :replace)
 
     send_data csv, filename: "circular_#{Time.zone.now.to_i}.csv"
   end

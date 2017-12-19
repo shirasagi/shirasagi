@@ -29,7 +29,7 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   def set_category
-    @categories = Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    @categories ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
     if category_id = params[:category].presence
       @category ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
     end
@@ -46,10 +46,10 @@ class Gws::Circular::PostsController < ApplicationController
 
     @items = @model.site(@cur_site).
       topic.
-      allow(:read, @cur_user, site: @cur_site).
       without_deleted.
+      and_public.
+      member(@cur_user).
       search(params[:s]).
-      and_posts(@cur_user.id, params.dig(:s, :article_state) || 'both').
       page(params[:page]).per(50)
   end
 
@@ -72,7 +72,7 @@ class Gws::Circular::PostsController < ApplicationController
     elsif params[:commit] == t("ss.buttons.publish_save")
       @item.state = 'public'
     end
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
 
@@ -82,24 +82,30 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   def show
+    raise '404' if !@item.public? || @item.active?
+    raise '403' unless @item.member?(@cur_user)
     if @item.see_type == 'simple' && @item.unseen?(@cur_user)
       @item.set_seen(@cur_user).save
     end
-    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render
   end
 
   def set_seen
-    raise '403' unless @item.unseen?(@cur_user)
+    raise '404' if !@item.public? || @item.active?
+    raise '403' unless @item.member?(@cur_user)
+    raise '404' if @item.seen?(@cur_user)
     render_update @item.set_seen(@cur_user).update
   end
 
   def unset_seen
-    raise '403' unless @item.seen?(@cur_user)
+    raise '404' if !@item.public? || @item.active?
+    raise '403' unless @item.member?(@cur_user)
+    raise '404' if @item.unseen?(@cur_user)
     render_update @item.unset_seen(@cur_user).update
   end
 
   def toggle_seen
+    raise '404' if !@item.public? || @item.active?
     raise '403' unless @item.member?(@cur_user)
     render_update @item.toggle_seen(@cur_user).update
   end
