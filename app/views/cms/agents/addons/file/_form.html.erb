@@ -11,10 +11,17 @@ $ ->
       #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
       $(this).remove() if id == $(this).find(".file-id").attr("value")
 
+  <% if @cur_node %>
   SS_Addon_TempFile.selectUrl = (id) ->
     return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files/#{id}/select"
   SS_Addon_TempFile.uploadUrl = ()->
     return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files.json"
+  <% else %>
+  SS_Addon_TempFile.selectUrl = (id) ->
+    return "/.s<%= @cur_site.id %>/cms/apis/temp_files/#{id}/select"
+  SS_Addon_TempFile.uploadUrl = ()->
+    return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json"
+  <% end %>
   SS_Addon_TempFile.renderDrop $("#addon-cms-agents-addons-file .upload-drop-area"), <%= @cur_user.id %>
 <% end %>
 
