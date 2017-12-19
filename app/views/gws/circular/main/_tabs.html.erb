@@ -9,4 +9,7 @@ Gws_Tab.renderTabs('.gws-circular-tabs');
   <%= link_to gws_circular_admins_path, class: "admin" do %>
     <span class="tab-name"><%= t('gws/circular.tabs.admin') %></span>
   <% end %>
+  <%= link_to gws_circular_trashes_path, class: "trash" do %>
+    <span class="tab-name"><%= t('gws/circular.tabs.trash') %></span>
+  <% end %>
 </div>

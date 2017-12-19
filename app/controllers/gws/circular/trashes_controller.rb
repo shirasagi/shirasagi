@@ -3,7 +3,6 @@ class Gws::Circular::TrashesController < ApplicationController
   include Gws::CrudFilter
 
   model Gws::Circular::Post
-  navi_view "gws/circular/management/navi"
 
   before_action :set_item, only: [:show, :delete, :destroy, :active, :recover]
   before_action :set_selected_items, only: [:active_all, :destroy_all]
