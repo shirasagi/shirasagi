@@ -668,3 +668,19 @@ dl.gws-schedule-repeat {
 .gws-groups-operation {
   margin: 5px 0;
 }
+
+// todo
+.todo-over {
+  .info a {
+    &:before {
+      font-family: 'Material Icons';
+      font-size: 108%;
+      content: '\E002';
+
+      display: block;
+      float: left;
+      width: 18px;
+      height: 1px;
+    }
+  }
+}
