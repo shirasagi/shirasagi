@@ -96,12 +96,20 @@ class Gws::Circular::Post
     end
   end
 
+  def draft?
+    !public?
+  end
+
   def public?
     state == 'public'
   end
 
   def active?
-    deleted.blank? || deleted > Time.zone.now
+    !deleted?
+  end
+
+  def deleted?
+    deleted.present? && deleted <= Time.zone.now
   end
 
   def active
