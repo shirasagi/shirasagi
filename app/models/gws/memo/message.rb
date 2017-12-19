@@ -34,15 +34,17 @@ class Gws::Memo::Message
 
   default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
 
+  after_initialize :set_default_reminder_date, if: :new_record?
   before_validation :set_to, :set_size
 
   validate :validate_attached_file_size
+  validate :validate_message
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 
-  after_save :save_reminders, if: ->{ !draft? }
+  after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -223,10 +225,35 @@ class Gws::Memo::Message
     end
   end
 
+  def validate_message
+    if self.text.blank? && self.format == "text"
+      errors.add(:base, :input_message)
+    elsif self.html.blank? && self.format == "html"
+      errors.add(:base, :input_message)
+    end
+  end
+
   def reminder_date
     return if site.memo_reminder == 0
     result = Time.zone.now.beginning_of_day + (site.memo_reminder - 1).day
     result.end_of_day
+  end
+
+  def in_reminder_date
+    if @in_reminder_date
+      date = Time.zone.parse(@in_reminder_date) rescue nil
+    end
+    date ||= reminder ? reminder.date : reminder_date
+    date
+  end
+
+  def set_default_reminder_date
+    return unless @cur_site
+    if @in_reminder_date.blank? && @cur_site.memo_reminder != 0
+      @in_reminder_date = (Time.zone.now.beginning_of_day + (@cur_site.memo_reminder - 1).day).
+          end_of_day.strftime("%Y/%m/%d %H:%M") unless @cur_site.memo_reminder == 0
+    end
+    @in_reminder_state = (@cur_site.memo_reminder == 0)
   end
 
   class << self
