@@ -6,15 +6,14 @@ class Gws::Circular::Post
   include Gws::Reference::Site
   include Gws::Circular::See
   include Gws::Circular::Sort
-  # include Gws::Circular::Commentable
+  include Gws::Addon::Reminder
   include SS::Addon::Markdown
   include Gws::Addon::File
+  include Gws::Addon::Circular::Category
   include Gws::Addon::Member
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
-  include Gws::Addon::Circular::Category
-  include Gws::Addon::Reminder
 
   seqid :id
 
