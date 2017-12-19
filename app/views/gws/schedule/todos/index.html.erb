@@ -1,6 +1,8 @@
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
   <span><%= item.label(:todo_state) %></span>
+  <span class="datetime"><%= @model.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
 <% end %>
 
 <%= render file: 'gws/crud/index' %>
