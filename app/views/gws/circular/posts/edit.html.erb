@@ -1,0 +1,30 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+
+<%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div><% end %>
+    <div class="addon-body">
+      <%= render file: '_form', locals: { f: f } %>
+    </div>
+  </div>
+  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+</div>
+
+<footer class="send">
+  <% if @crud_buttons %>
+    <% @crud_buttons.call f %>
+  <% else %>
+    <%= f.submit t("ss.buttons.publish_save"), class: 'btn-primary save' %>
+    <%= f.submit t("ss.buttons.draft_save"), class: 'btn-default draft' %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  <% end %>
+</footer>
+
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>
