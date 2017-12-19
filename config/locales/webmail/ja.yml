@@ -147,7 +147,7 @@ ja:
         attachments: 添付ファイル
         unseen: 未読
         flagged: スター付き
-        internal_date: 日時
+        internal_date: 送信日時
       webmail/mailbox:
         name: フォルダー名
       webmail/address:
