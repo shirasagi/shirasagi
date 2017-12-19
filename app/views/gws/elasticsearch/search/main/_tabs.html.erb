@@ -5,7 +5,7 @@ if @s.keyword.present?
 end
 %>
 
-<div class="gws-schedule-tabs">
+<div class="gws-tabs">
   <% @model::WELL_KNOWN_TYPES.each do |type| %>
     <% setting = "Gws::Elasticsearch::Setting::#{type.classify}".constantize.new(cur_site: @cur_site, cur_user: @cur_user) %>
     <% if setting.search_types.present? %>
