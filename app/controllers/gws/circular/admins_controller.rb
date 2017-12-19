@@ -88,6 +88,11 @@ class Gws::Circular::AdminsController < ApplicationController
 
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      return
+    end
+
     render_destroy @item.disable, {notice: t('gws/circular.notice.disable')}
   end
 

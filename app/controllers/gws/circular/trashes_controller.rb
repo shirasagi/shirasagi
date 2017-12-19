@@ -47,13 +47,14 @@ class Gws::Circular::TrashesController < ApplicationController
       page(params[:page]).per(50)
   end
 
-  def recover
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render
-  end
-
   def active
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
     render_destroy @item.active, {notice: t('gws/circular.notice.active')}
   end
 
@@ -62,7 +63,7 @@ class Gws::Circular::TrashesController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
         next if item.active
       else
         item.errors.add :base, :auth_error

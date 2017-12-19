@@ -7,7 +7,7 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), action: :new %>
+      <%= link_to t('ss.links.new'), new_gws_circular_admin_path %>
     <% end %>
   <% else %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
