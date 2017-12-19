@@ -1,3 +1,12 @@
+<%
+@list_class = proc do |item|
+  css_classes = %w(list-item)
+  if item.end_at < Time.zone.now
+    css_classes << 'todo-over'
+  end
+  css_classes
+end
+%>
 <% @index_meta = proc do |item| %>
   <span><%= item.label(:todo_state) %></span>
   <span class="datetime"><%= @model.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %></span>
