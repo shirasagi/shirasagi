@@ -1,11 +1,11 @@
-class Gws::Circular::PostsController < ApplicationController
+class Gws::Circular::AdminsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
   model Gws::Circular::Post
 
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :set_seen, :unset_seen, :toggle_seen]
-  before_action :set_selected_items, only: [:destroy_all, :set_seen_all, :unset_seen_all,]
+  before_action :set_item, only: [:show, :edit, :update, :disable, :delete, :destroy]
+  before_action :set_selected_items, only: [:disable_all, :download]
   before_action :set_category
 
   private
@@ -35,6 +35,17 @@ class Gws::Circular::PostsController < ApplicationController
     end
   end
 
+  def render_destroy_all(result)
+    location = crud_redirect_url || { action: :index }
+    notice = result ? { notice: t('gws/circular.notice.disable') } : {}
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
+  end
+
   public
 
   def index
@@ -44,13 +55,24 @@ class Gws::Circular::PostsController < ApplicationController
       params[:s][:category_id] = @category.id
     end
 
-    @items = @model.site(@cur_site).
-      topic.
-      allow(:read, @cur_user, site: @cur_site).
-      without_deleted.
-      search(params[:s]).
-      and_posts(@cur_user.id, params.dig(:s, :article_state) || 'both').
-      page(params[:page]).per(50)
+    read_other_permission = @cur_user.gws_role_permissions["read_other_gws_circular_posts_#{@cur_site.id}"]
+    edit_other_permission = @cur_user.gws_role_permissions["edit_other_gws_circular_posts_#{@cur_site.id}"]
+
+    if read_other_permission && edit_other_permission
+      @items = @model.site(@cur_site).
+          topic.
+          without_deleted.
+          search(params[:s]).
+          page(params[:page]).per(50)
+    else
+      @items = @model.site(@cur_site).
+          topic.
+          allow(:read, @cur_user, site: @cur_site).
+          without_deleted.
+          search(params[:s]).
+          and_admins(@cur_user).
+          page(params[:page]).per(50)
+    end
   end
 
   def create
@@ -82,35 +104,18 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   def show
-    if @item.see_type == 'simple' && @item.unseen?(@cur_user)
-      @item.set_seen(@cur_user).save
-    end
     raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render
   end
 
-  def set_seen
-    raise '403' unless @item.unseen?(@cur_user)
-    render_update @item.set_seen(@cur_user).update
-  end
+  def download
+    raise '403' if @items.empty?
 
-  def unset_seen
-    raise '403' unless @item.seen?(@cur_user)
-    render_update @item.unset_seen(@cur_user).update
-  end
+    csv = @items.
+        order(updated: -1).
+        to_csv.
+        encode('SJIS', invalid: :replace, undef: :replace)
 
-  def toggle_seen
-    raise '403' unless @item.member?(@cur_user)
-    render_update @item.toggle_seen(@cur_user).update
-  end
-
-  def set_seen_all
-    @items.each{ |item| item.set_seen(@cur_user).save if item.unseen?(@cur_user) }
-    render_destroy_all(false)
-  end
-
-  def unset_seen_all
-    @items.each{ |item| item.unset_seen(@cur_user).save if item.seen?(@cur_user) }
-    render_destroy_all(false)
+    send_data csv, filename: "circular_#{Time.zone.now.to_i}.csv"
   end
 end

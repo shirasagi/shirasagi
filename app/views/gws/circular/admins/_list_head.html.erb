@@ -1,0 +1,14 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <button class="btn disable-all"><%= t('gws/circular.post.disable') %></button>
+    <% end %>
+    <button class="btn download"><%= t('gws/circular.post.download') %></button>
+  </div>
+
+  <div class="list-head-search">
+    <%= render file: '_search' %>
+  </div>
+</div>
