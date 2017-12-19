@@ -4,8 +4,7 @@ ja:
     category: カテゴリー
     portal: ポータル
     site_config: 設定
-    site_info: グループ情報
-    module_setting: 全体設定
+    site_info: 組織情報
     user_setting: ポータル設定
     organization_addresses: 組織アドレス帳
     question_management: 質問管理
@@ -145,6 +144,7 @@ ja:
       gws/custom_field: 入力項目
       gws/edit_lock: 排他制御
       gws/schedules: スケジュール
+      gws/system/file_setting: ファイル設定
       gws/system/group_setting: システム設定
       gws/system/menu_setting: メニュー設定
       gws/system/log_setting: ログ設定
@@ -278,6 +278,8 @@ ja:
       gws/addon/member:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
+      gws/addon/system/file_setting:
+        multibyte_filename_state: 日本語ファイル名
       gws/addon/system/group_setting:
         sender_user_id: 差出ユーザー
         sendmail_domains: メール送信許可ドメイン

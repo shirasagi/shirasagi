@@ -1,0 +1,10 @@
+<nav class="mod-navi">
+  <h2><%= link_to t("modules.gws/monitor"), gws_monitor_topics_path %></a></h2>
+  <h2><%= t("ss.management") %></h2>
+
+  <% if Gws::Monitor::Topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("mongoid.models.gws/monitor/topic"), gws_monitor_management_topics_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

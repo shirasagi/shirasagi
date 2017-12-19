@@ -9,7 +9,7 @@
     <%= hidden_field_tag "item_model", @item.reference_model %>
     <%= hidden_field_tag "item_id", @item.id %>
     <span class="gws-addon-reminder-label">
-      <%= @item.reminder ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
+      <%= @item.reminder(@cur_user) ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
     </span>
     <%= @model.tt :reminder_date %>
   </dt>

@@ -77,9 +77,11 @@ $ ->
 
   # navi
   path = location.pathname + "/"
-  $("#navi .main-navi a, #navi .mod-navi a").each ->
+  $($("#navi .main-navi a, #navi .mod-navi a").get().reverse()).each ->
     menu = $(this)
-    menu.parent().addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+    if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+      menu.parent().addClass("current")
+      return false
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current')
 
   # navi

@@ -27,14 +27,6 @@ module Gws::Addon::Board::GroupSetting
     self[:board_browsed_delay].presence || 2
   end
 
-  class << self
-    # Permission for navigation view
-    def allowed?(action, user, opts = {})
-      return true if Gws::Board::Category.allowed?(action, user, opts)
-      super
-    end
-  end
-
   private
 
   def set_board_file_size_per_topic
