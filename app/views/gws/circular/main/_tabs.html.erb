@@ -1,8 +1,8 @@
 <%= jquery do %>
-Gws_Circular_View.renderTabs('.gws-circular-tabs');
+Gws_Tab.renderTabs('.gws-circular-tabs');
 <% end %>
 
-<div class="gws-circular-tabs">
+<div class="gws-tabs gws-circular-tabs">
   <%= link_to gws_circular_posts_path, class: "post" do %>
     <span class="tab-name"><%= t('gws/circular.tabs.post') %></span>
   <% end %>
