@@ -18,7 +18,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
       expect(item.references).to eq ['reference@localhost']
       expect(item.display_size).to eq '1KB'
       expect(item.display_subject).to eq '件名'
-      expect(item.display_sender).to eq 'admin@example.jp'
+      expect(item.display_sender).to eq 'サイト管理者'
       expect(item.display_to).to eq ['サイト管理者']
       expect(item.display_to).to eq item.display_cc
       expect(item.display_to).to eq item.display_bcc

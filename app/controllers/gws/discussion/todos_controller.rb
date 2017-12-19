@@ -16,7 +16,7 @@ class Gws::Discussion::TodosController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [t('modules.gws/discussion'), gws_discussion_main_path]
+    @crumbs << [t('modules.gws/discussion'), gws_discussion_forums_path]
     @crumbs << [@forum.name, gws_discussion_forum_topics_path]
     @crumbs << ["TODO", gws_discussion_forum_todos_path]
   end
