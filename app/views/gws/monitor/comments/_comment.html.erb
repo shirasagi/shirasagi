@@ -3,25 +3,61 @@
 menu = []
 if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site) && comment.user_group_id != @cur_group.id
   if @category.present?
-    link = new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+    if params[:controller] == "gws/monitor/topics"
+      link = new_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+    elsif  params[:controller] == "gws/monitor/answers"
+      link = new_gws_monitor_category_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.id)
+    elsif  params[:controller] == "gws/monitor/admins"
+      link = new_gws_monitor_category_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.id)
+    end
   else
-    link = new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+    if params[:controller] == "gws/monitor/topics"
+      link = new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+    elsif  params[:controller] == "gws/monitor/answers"
+      link = new_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.id)
+    elsif  params[:controller] == "gws/monitor/admins"
+      link = new_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.id)
+    end
   end
   menu << link_to(t('gws/monitor.links.reply'), link, class: "btn primary")
 end
 if comment.user_group_id == @cur_group.id && @item.attend_group_ids.include?(@cur_group.id)
   if @category.present?
-    link = edit_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    if params[:controller] == "gws/monitor/topics"
+      link = edit_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/answers"
+      link = edit_gws_monitor_category_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/admins"
+      link = edit_gws_monitor_category_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    end
   else
-    link = edit_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    if params[:controller] == "gws/monitor/topics"
+      link = edit_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/answers"
+      link = edit_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/admins"
+      link = edit_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    end
   end
   menu << link_to(t('ss.links.edit'), link, class: "btn")
 end
 if comment.user_group_id == @cur_group.id && @item.attend_group_ids.include?(@cur_group.id)
   if @category.present?
-    link = delete_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    if params[:controller] == "gws/monitor/topics"
+      link = delete_gws_monitor_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/answers"
+      link = delete_gws_monitor_category_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/admins"
+      link = delete_gws_monitor_category_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    end
   else
-    link = delete_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    if params[:controller] == "gws/monitor/topics"
+      link = delete_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/answers"
+      link = delete_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    elsif  params[:controller] == "gws/monitor/admins"
+      link = delete_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+    end
   end
   menu << link_to(t('ss.links.delete'), link, class: "btn")
 end

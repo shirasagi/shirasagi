@@ -43,7 +43,7 @@ module Gws::Addon::Monitor::GroupSetting
 
   def default_reminder_start_section_options
     options =Gws::Monitor::Topic.new.reminder_start_section_options
-    options.insert(0, [nil,nil])
+    options.insert(0, [nil, nil])
   end
 
   def default_reminder_start_section_name
