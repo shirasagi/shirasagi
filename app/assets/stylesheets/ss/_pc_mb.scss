@@ -1379,8 +1379,14 @@ footer.send {
     }
   }
 }
+#selected-files, .user-files {
+  -js-display: flex;
+  @include display-flex;
+  @include flex-wrap(wrap);
+  clear: both;
+}
 .file-view {
-  float:left;
+  float: left;
   width: 164px;
   margin: 0px 28px 20px 0px;
   @include mb {
