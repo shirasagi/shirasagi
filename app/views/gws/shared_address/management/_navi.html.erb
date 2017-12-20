@@ -1,5 +1,5 @@
 <nav class="mod-navi">
-  <h2><%= link_to t("modules.gws/shared_address"), gws_shared_address_addresses_path %></a></h2>
+  <h2><%= link_to t("modules.gws/shared_address"), gws_shared_address_addresses_path %></h2>
   <h2><%= t("ss.management") %></h2>
 
   <% if Gws::SharedAddress::Address.allowed?(:edit, @cur_user, site: @cur_site) %>

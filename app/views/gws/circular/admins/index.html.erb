@@ -1,4 +1,18 @@
 <%= jquery do %>
+  var navi = new Gws_Category_Navi('.gws-category-navi');
+  navi.setBaseUrl('<%= gws_circular_category_admins_path(category: 'ID') %>');
+  navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
+<% end %>
+
+<div class="gws-category-navi dropdown">
+  <%= link_to gws_circular_admins_path, class: 'btn dropdown-toggle' do %>
+    <%= @category.try(:trailing_name) || t('gws.category') %>
+    <i class="material-icons md-13">&#xE313;</i>
+  <% end %>
+  <div class="dropdown-menu dropdown-menu--white"></div>
+</div>
+
+<%= jquery do %>
   $(".disable-all").click(function(){
     var form = Gws_Circular_Post.buildForm("", "<%= I18n.t('gws/circular.confirm.disable') %>");
     form.append($("<input/>", {name: "_method", value: "delete", type: "hidden"}) );
@@ -10,21 +24,9 @@
     form.appendTo(document.body).submit();
   });
 
-  $('.gws-category-navi-menu #category_id').change(function() {
-    var cid = $(this).val();
-    if (cid)
-      location.href = '<%= gws_circular_category_admins_path(category: 'ID') %>'.replace('ID', cid);
-    else
-      location.href = '<%= gws_circular_admins_path %>';
-  });
-
   $(".gws-circular-tabs .admin").addClass("current");
 
 <% end %>
-
-<div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/circular') if @categories.to_options.present? %>
-</div>
 
 <%= render "gws/circular/main/tabs" %>
 
