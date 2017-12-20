@@ -8,7 +8,6 @@ module Gws::Discussion::Postable
 
   included do
     store_in collection: "gws_discussion_posts"
-    set_permission_name "gws_discussion_forums"
 
     attr_accessor :cur_site, :skip_descendants_updated
 

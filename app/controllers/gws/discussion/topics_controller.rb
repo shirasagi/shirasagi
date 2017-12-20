@@ -20,13 +20,18 @@ class Gws::Discussion::TopicsController < ApplicationController
     @crumbs << [@forum.name, gws_discussion_forum_topics_path]
   end
 
+  def pre_params
+    @skip_default_group = true
+    super
+  end
+
   def set_forum
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
 
     if @forum.state == "closed"
       permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
     else
-      permitted = @forum.readable?(@cur_user, site: @cur_site)
+      permitted = @forum.member?(@cur_user, site: @cur_site, include_role: true)
     end
 
     raise "403" unless permitted

@@ -6,45 +6,36 @@ class Gws::Discussion::Forum
   #include Gws::Addon::File
   include Gws::Addon::Discussion::Release
   include Gws::Addon::Discussion::NotifySetting
-  include Gws::Addon::ReadableSetting
+  include Gws::Addon::Member
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
-  #readable_setting_include_custom_groups
+  member_include_custom_groups
+
+  set_permission_name "gws_discussion_forums"
 
   def discussion_member_ids
-    ids = user_ids
-    groups.each do |g|
-      g = Gws::Group.find(g.id)
-      ids += g.users.pluck(:id)
+    ids = []
+
+    # group permission
+    #ids = user_ids
+    #groups.each do |g|
+    #  g = Gws::Group.find(g.id)
+    #  ids += g.users.pluck(:id)
+    #end
+
+    # member
+    ids += member_ids
+    member_custom_groups.each do |custom_group|
+      ids += custom_group.member_ids
     end
 
-    ids += readable_member_ids
-    readable_groups.each do |g|
-      ids += g.users.pluck(:id)
-    end
-
-    readable_custom_groups.each do |custom_group|
-      ids += custom_group.readable_member_ids
-    end
     ids.uniq
   end
 
   def discussion_members
     Gws::User.in(id: discussion_member_ids)
   end
-
-  #def currect_readable?
-  #  discussion_members.each do |u|
-  #    p [u.id, u.name, readable?(u)]
-  #  end
-  #
-  #  p "---"
-  #
-  # Gws::User.nin(id: discussion_members.pluck(:id)).each do |u|
-  #    p [u.id, u.name, readable?(u)]
-  #  end
-  #end
 
   def save_main_topic
     main_topic = Gws::Discussion::Topic.new
