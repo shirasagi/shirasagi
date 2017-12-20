@@ -127,15 +127,15 @@ $(".open-reply").on('click', function() {
   <% end %>
 
   <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
-      <div class="addon-body replay-menu">
+    <div class="addon-body replay-menu">
         <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
         <span>
           <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
         </span>
       </div>
-    <% else %>
-      <% if reply_menu %>
-        <div class="addon-body replay-menu">
+  <% else %>
+    <% if reply_menu %>
+      <div class="addon-body replay-menu">
         <span>
           <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
         </span>
@@ -145,9 +145,9 @@ $(".open-reply").on('click', function() {
         </span>
         <% end %>
       </div>
-      <% end %>
-      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <div class="addon-body replay" style="<%= reply_menu ? "display: none;" : "" %>">
+    <% end %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <div class="addon-body replay" style="<%= reply_menu ? "display: none;" : "" %>">
         <% if @comment && @comment.parent_id == topic.id %>
           <%= error_messages_for :comment %>
         <% end %>
@@ -212,7 +212,7 @@ $(".open-reply").on('click', function() {
         <div class="menu">
           <%= f.submit t("ss.links.reply"), class: 'btn primary' %>
         </div>
-        </div>
-      <% end %>
+      </div>
     <% end %>
+  <% end %>
 </div>
