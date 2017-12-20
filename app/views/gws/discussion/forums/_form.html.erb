@@ -5,6 +5,6 @@ $(window).on('load', function() {
 <% end %>
 
 <dl class="see">
-  <dt class="required"><%= @model.t :name %></dt>
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 </dl>

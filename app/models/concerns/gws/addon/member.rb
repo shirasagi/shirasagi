@@ -16,19 +16,28 @@ module Gws::Addon::Member
 
     validate :validate_presence_member
 
-    scope :member, ->(user) {
-      cond = [{ member_ids: user.id }]
+    scope :member, ->(user, opts = {}) {
+      or_cond = [{ member_ids: user.id }]
       if member_include_custom_groups?
-        cond << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+        or_cond << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
       end
-      self.and([{ '$or' => cond }])
+
+      or_cond << allow_condition(:read, user, site: opts[:site]) if opts[:include_role]
+      self.and([{ '$or' => or_cond }])
     }
   end
 
-  def member?(user)
+  def member?(user, opts = {})
     return true if member_ids.include?(user.id)
     if self.class.member_include_custom_groups?
       return true if (member_custom_group_ids & Gws::CustomGroup.member(user).map(&:id)).present?
+    end
+    if opts[:include_role]
+      if opts[:strict]
+        return allowed?(:read, user, site: opts[:site] || site, strict: true)
+      else
+        return allowed?(:read, user, site: opts[:site] || site) # valid role
+      end
     end
     false
   end

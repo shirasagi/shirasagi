@@ -14,6 +14,6 @@ Gws_Discussion_Unseen.renderUnseen(
 
 <div class="gws-discussion">
   <%= form_for :item, url: { action: :reply, id: @topic.id }, html: { method: :put, multipart: true, autocomplete: :off } do |f| %>
-    <%= render partial: 'thread', locals: { f: f, topic: @topic, limit: 0 } %>
+    <%= render partial: 'gws/discussion/topics/thread', locals: { f: f, topic: @topic, limit: 0, reply_menu: false } %>
   <% end %>
 </div>
