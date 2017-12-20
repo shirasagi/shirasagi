@@ -79,21 +79,19 @@
       <% elsif @ss_mode == :gws %>
         <%= jquery do %>Gws_Bookmark.render();<% end %>
         <div class="gws-bookmark dropdown dropdown-toggle">
-          <h2><%= I18n.t('modules.gws/bookmark') %></h2>
+          <h2><i class="material-icons">&#xE867;</i></h2>
           <ul class="dropdown-menu">
-            <%= form_for :bookmark, url: gws_apis_bookmarks_path, html: { id: 'bookmark-form' } do |f| %>
-              <%= f.hidden_field :default_name, value: window_name %>
-              <%= f.hidden_field :url, value: request.fullpath %>
-              <%= f.hidden_field :bookmark_model, value: @bookmark_model %>
-              <li>
+            <li>
+              <%= form_for :bookmark, url: gws_apis_bookmarks_path, html: { id: 'bookmark-form' } do |f| %>
+                <%= f.hidden_field :default_name, value: window_name %>
+                <%= f.hidden_field :url, value: request.fullpath %>
+                <%= f.hidden_field :bookmark_model, value: @bookmark_model %>
                 <%= I18n.t('mongoid.attributes.gws/bookmark.name') %>
                 <%= f.text_field :name, value: (@bookmark.try(:name) || window_name) %>
-              </li>
-              <li>
-                <%= f.submit I18n.t('ss.buttons.save') %>
-                <%= f.submit I18n.t('ss.buttons.delete') if @bookmark %>
-              </li>
-            <% end %>
+                <%= f.submit I18n.t('ss.buttons.save'), class: "btn" %>
+                <%= f.submit I18n.t('ss.buttons.delete'), class: "btn" if @bookmark %>
+              <% end %>
+            </li>
           </ul>
         </div>
         <%= link_to gws_memo_messages_path, class: "user-message" do %>
