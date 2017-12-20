@@ -8,6 +8,7 @@ describe "cms_roles" do
   subject(:show_path) { cms_role_path site.id, item }
   subject(:edit_path) { edit_cms_role_path site.id, item }
   subject(:delete_path) { delete_cms_role_path site.id, item }
+  subject(:import_path) { import_cms_roles_path site.id, item }
 
   context "with auth" do
     before { login_cms_user }
@@ -51,6 +52,15 @@ describe "cms_roles" do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#import" do
+      visit import_path
+      within "form" do
+        attach_file "item[file]", "#{Rails.root}/spec/fixtures/cms/role/cms_roles_1.csv"
+        click_button "インポート"
+      end
+      expect(status_code).to eq 200
     end
   end
 end

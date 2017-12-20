@@ -63,7 +63,7 @@ SS::Application.routes.draw do
   namespace "cms", path: ".s:site/cms" do
     get "/" => "main#index"
     resource  :site
-    resources :roles, concerns: :deletion
+    resources :roles, concerns: [:deletion, :download, :import]
     resources :users, concerns: [:deletion, :download, :import]
     resources :groups, concerns: [:deletion, :role, :download, :import]
     resources :members, concerns: [:deletion, :download]
