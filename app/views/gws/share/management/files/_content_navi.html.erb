@@ -1,24 +1,26 @@
 <% if params[:action] == "index" %>
-  <% options = options_for_select(@categories.to_options(offset: 1), @category.try(:id)) %>
-
   <%= jquery do %>
-    $(".gws-category-navi-menu #category_id").change(function() {
-    var cid = $(this).val();
+    var navi = new Gws_Category_Navi('.gws-category-navi');
     <% if @folder %>
-      if (cid) location.href = '<%= gws_share_management_folder_files_path(folder: @folder.id, category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_management_folder_files_path(folder: @folder.id) %>';
+      navi.setBaseUrl('<%= gws_share_management_folder_files_path(folder: @folder.id, category: 'ID') %>');
     <% else %>
-      if (cid) location.href = '<%= gws_share_management_files_path(category: 'ID') %>'.replace('ID', cid);
-      else location.href = '<%= gws_share_management_files_path %>';
+      navi.setBaseUrl('<%= gws_share_management_files_path(category: 'ID') %>');
     <% end %>
-    });
-
-    (new SS_TreeNavi('#content-navi .tree-navi')).render("<%= @tree_navi %>");
+    navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
   <% end %>
 
-  <div class="gws-category-navi-menu">
-    <%= select_tag :category_id, options, include_blank: t('modules.gws/share') if @categories.to_options.present? %>
+  <div class="gws-category-navi dropdown">
+    <% url = @folder ? gws_share_management_folder_files_path(folder: @folder.id) : gws_share_management_files_path %>
+    <%= link_to url, class: 'btn dropdown-toggle' do %>
+      <%= @category.try(:trailing_name) || t('gws.category') %>
+      <i class="material-icons md-13">&#xE313;</i>
+    <% end %>
+    <div class="dropdown-menu dropdown-menu--white"></div>
   </div>
+
+  <%= jquery do %>
+    (new SS_TreeNavi('#content-navi .tree-navi')).render("<%= @tree_navi %>");
+  <% end %>
 
   <div id="content-navi">
     <h2 class="content-navi-title">
