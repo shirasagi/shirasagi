@@ -5,6 +5,10 @@
   <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
   <h3><%= link_to t("cms.search_contents_html"), cms_search_contents_html_path %></h3>
   <% end %>
+
+  <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <h3><%= link_to t("cms.search_contents_files"), cms_search_contents_files_path %></h3>
+  <% end %>
 </nav>
 
 <%= render partial: "cms/main/navi" %>

@@ -1,0 +1,50 @@
+<div class="addon-view">
+  <%= form_for :s, url: { action: :index }, html: { class: :search, multipart: true } do |f| %>
+  <div class="search-contents-form">
+    <dl class="see">
+      <dt><%= t("cms.apis.contents.keyword") %><%= tt("search_contents.files.keyword") %></dt>
+      <dd>
+        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+        <%= f.submit t("ss.buttons.search"), name: "search", class: "search btn" %>
+      </dd>
+    </dl>
+  </div>
+  <% end %>
+
+  <dl class="see">
+    <dd class="wide">
+      <div id="selected-files">
+        <% @items.each do |file| %>
+          <div class="file-view">
+            <% page = Cms::Page.in(file_ids: file.id).first %>
+            <% next if page.nil? %>
+            <%= link_to cms_page_path(id: page.id), class: :thumb, target: "_blank" do %>
+              <% if file.image? %>
+                <%= image_tag file.thumb_url, alt: file.name %>
+              <% else %>
+                <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+              <% end %>
+            <% end %>
+
+            <div class="name">
+              <label>
+                <%= file.name %><br />
+                <%= file.filename %>
+              </label><br />
+            </div>
+            <%= link_to cms_page_path(id: page.id), target: "_blank" do %>
+            <span class="name">
+              <label>
+                <%= page.name %><br />
+                <%= page.filename %>
+              </label><br />
+            </span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </dd>
+  </dl>
+</div>
+
+<%= paginate @items %>
