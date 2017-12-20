@@ -75,13 +75,13 @@ class Gws::Memo::Notifier
       text = <<-TEXT
       #{cur_user.name}さんより次の申請について承認依頼が差し戻されました。
       適宜修正を行い、再度承認依頼を行ってください。
-      
+
       - タイトル
         #{item.name}
-      
+
       - 差し戻しコメント
         #{comment}
-      
+
       - 記事URL
         #{url}
       TEXT

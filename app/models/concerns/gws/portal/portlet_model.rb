@@ -5,6 +5,7 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Link
   include Gws::Addon::Portal::Portlet::Schedule
   include Gws::Addon::Portal::Portlet::Reminder
+  include Gws::Addon::Portal::Portlet::Bookmark
   include Gws::Addon::Portal::Portlet::Board
   include Gws::Addon::Portal::Portlet::Faq
   include Gws::Addon::Portal::Portlet::Qna
@@ -18,6 +19,7 @@ module Gws::Portal::PortletModel
     free:     { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
     links:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Link] },
     reminder: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Reminder] },
+    bookmark: { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Bookmark] },
     schedule: { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Schedule] },
     board:    { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Board] },
     faq:      { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Faq] },
@@ -99,6 +101,18 @@ module Gws::Portal::PortletModel
         name: I18n.t("gws/portal.portlets.#{type}.name"),
         text: I18n.t("gws/portal.portlets.#{type}.text"),
       }
+    end
+
+    def default_portlets(conf)
+      conf.map do |data|
+        grid = data.delete('grid') || {}
+        data = data.map { |k, v| [k.to_sym, v] }.to_h
+
+        item = default_portlet(data.delete(:model))
+        item.attributes = data
+        item.grid_data.merge!(grid.symbolize_keys) if grid.present?
+        item
+      end
     end
 
     def default_portlet(type)

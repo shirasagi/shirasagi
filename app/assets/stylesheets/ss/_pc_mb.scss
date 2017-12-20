@@ -325,6 +325,15 @@ td {
         }
       }
     }
+    .gws-bookmark {
+      .dropdown-menu {
+        left: 0;
+        padding: 5px 5px;
+        li {
+          padding: 5px 5px;
+        }
+      }
+    }
   }
   .sp-menu-button {
     display: none;
@@ -553,6 +562,12 @@ td {
     background-position: left -352px;
   }
   .icon-reminder:hover:before {
+    background-position: -32px -352px;
+  }
+  .icon-bookmark:before {
+    background-position: left -352px;
+  }
+  .icon-bookmark:hover:before {
     background-position: -32px -352px;
   }
   .icon-facility:before {
@@ -1371,8 +1386,22 @@ footer.send {
     margin: 0 2px;
     color: #b30;
   }
+  .upload-drop-area {
+    margin-top: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    @include border-radius(3px);
+    background: #f2f2f2;
+  }
+  .upload-drop-notice {
+    margin-left: 20px;
+    color: #b30;
+  }
+  .file-dragenter {
+    background: #fbeee8;
+  }
   #selected-files {
-    margin-top: 30px;
+    margin-top: 10px;
     @include clear;
     @include mb {
       margin-top: 10px;

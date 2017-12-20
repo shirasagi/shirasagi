@@ -10,11 +10,13 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example do
     before { login_gws_user }
 
     it "#index" do
+      forum
       visit index_path
       expect(current_path).not_to eq sns_login_path
     end
 
     it "#new" do
+      forum
       visit new_path
 
       text = "text-#{unique_id}"

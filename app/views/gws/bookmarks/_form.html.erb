@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :url %><%= @model.tt :url %></dt>
+  <dd><%= f.text_field :url %></dd>
+
+  <dt><%= @model.t :bookmark_model %><%= @model.tt :bookmark_model %></dt>
+  <dd><%= f.select :bookmark_model, @item.bookmark_model_options %></dd>
+</dl>

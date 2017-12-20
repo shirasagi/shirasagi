@@ -21,6 +21,7 @@ ja:
       search: 検索
       search/users: ユーザー検索
       search/times: 空き時間検索
+      trash: ゴミ箱
     calendar:
       buttonText:
         listMonth: リスト
@@ -37,6 +38,7 @@ ja:
       show_week: 週表示
       show_day: 日表示
       create_report: レポートを作成する
+      back_to_todo: ToDoへ戻る
     buttons:
       delete_one: 今回のみ
       delete_later: 以降すべて

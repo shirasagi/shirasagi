@@ -1,0 +1,8 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="url"><%= link_to item.url, item.url %></span>
+  <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
+<% end %>
+
+<%= render file: 'cms/crud/index' %>

@@ -4,9 +4,6 @@
     if (cid) location.href = '<%= gws_monitor_category_management_trashes_path(category: 'ID') %>'.replace('ID', cid);
     else location.href = '<%= gws_monitor_management_trashes_path %>';
   });
-
-  $(".gws-monitor-tabs .trash").addClass("current");
-
 <% end %>
 
 <div class="gws-category-navi-menu">
@@ -21,7 +18,6 @@
   <ul class="list-items">
     <% @items.each do |item| %>
         <% next if item.active? %>
-        <% next unless item.topic_admin?(@cur_user.id, @cur_group.id) %>
         <%
           css_classes = %w(list-item)
           if item.subscribed_groups.where(id: @cur_user.id).present?
@@ -58,6 +54,7 @@
               <span class="article_state"><%= item.article_state_name %></span>
               <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
               <span class="categories">
+              <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/monitor.topic.disabled_items') %></span>
                 <% item.categories.compact.each do |category| %>
                   <%= link_to category.trailing_name, gws_monitor_category_management_trashes_path(category: category.id),
                     class: "gws-category-label", style: category_label_css(category) %>

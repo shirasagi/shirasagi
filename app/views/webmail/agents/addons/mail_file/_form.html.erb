@@ -11,6 +11,7 @@ $ ->
       #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
       $(this).remove() if id == $(this).find(".file-id").attr("value")
 
+  SS_Addon_TempFile.renderDrop $("#addon-webmail-agents-addons-mail_file .upload-drop-area"), <%= @cur_user.id %>
 <% end %>
 
 <dl class="see webmail-addon-mail-file">
@@ -22,6 +23,9 @@ $ ->
     <span class="upload-menu-select">
       <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
     </span>
+    <div class="upload-drop-area">
+      <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+    </div>
 
     <div id="selected-files">
       <% @item.ref_files.each do |part| %>

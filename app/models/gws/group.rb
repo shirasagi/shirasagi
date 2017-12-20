@@ -4,15 +4,15 @@ class Gws::Group
   include Gws::SitePermission
   include Gws::Addon::Schedule::GroupSetting
   include Gws::Addon::Facility::GroupSetting
-  include Gws::Addon::Board::GroupSetting
-  include Gws::Addon::Discussion::GroupSetting
-  include Gws::Addon::Faq::GroupSetting
-  include Gws::Addon::Qna::GroupSetting
+  include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Circular::GroupSetting
   include Gws::Addon::Monitor::GroupSetting
+  include Gws::Addon::Board::GroupSetting
+  include Gws::Addon::Faq::GroupSetting
+  include Gws::Addon::Qna::GroupSetting
+  include Gws::Addon::Discussion::GroupSetting
   include Gws::Addon::Share::GroupSetting
   include Gws::Addon::StaffRecord::GroupSetting
-  include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Elasticsearch::GroupSetting
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting

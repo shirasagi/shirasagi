@@ -14,4 +14,5 @@ end
   <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
 <% end %>
 
+<%= render partial: 'gws/schedule/todos/tabs' %>
 <%= render file: 'gws/crud/index' %>

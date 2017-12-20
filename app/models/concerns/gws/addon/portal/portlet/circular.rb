@@ -18,10 +18,10 @@ module Gws::Addon::Portal::Portlet
       end
 
       Gws::Circular::Post.site(portal.site).
+        topic.
         without_deleted.
-        readable(user, portal.site).
+        member(user).
         search(search).
-        and_my_draft(user).
         order(updated: -1).
         page(1).
         per(limit)

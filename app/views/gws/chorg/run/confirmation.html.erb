@@ -1,4 +1,4 @@
-<div class="gws-schedule-tabs">
+<div class="gws-tabs">
   <% path = url_for(action: :confirmation) %>
   <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
     <span class="tab-name">実行</span>
