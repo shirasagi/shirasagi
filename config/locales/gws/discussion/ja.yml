@@ -14,6 +14,8 @@ ja:
         delete: スレッドを削除する
         back_to_index: スレッド一覧へ戻る
         index: スレッド一覧を見る
+        show: 全ての投稿を見る
+        reply: コメントを投稿する
       todo:
         index: スケジュールを見る
       member:
