@@ -242,7 +242,7 @@ td {
     .application-menu {
       -js-display: flex;
       @include display-flex;
-      @include justify-content(center);
+      @include justify-content(space-between);
       clear: both;
     }
   }
@@ -278,6 +278,10 @@ td {
   }
   .user {
     float: right;
+    -js-desplay: flex;
+    @include display-flex;
+    @include align-items(center);
+    @include mb { float: none; }
     a {
       color: $white;
     }
@@ -285,12 +289,15 @@ td {
       margin-right: 10px;
     }
     .dropdown {
-      float: left;
       h2 {
         padding: 15px 40px 15px 20px;
         background: url(/assets/img/arrow-usr.png) no-repeat 90% center;
         color: $white;
         @include mb { padding: 10px 40px 10px 20px; }
+      }
+      &.gws-bookmark h2 {
+        padding: 12px 15px;
+        background: none;
       }
       &:hover h2, &.active h2 {
         position: relative;
@@ -328,9 +335,14 @@ td {
     .gws-bookmark {
       .dropdown-menu {
         left: 0;
+        right: auto;
         padding: 5px 5px;
-        li {
-          padding: 5px 5px;
+        input[type=text] {
+          width: 100%;
+          margin-top: 5px;
+        }
+        .btn {
+          margin-top: 5px;
         }
       }
     }
