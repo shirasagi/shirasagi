@@ -1,6 +1,6 @@
 <% if @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true) %>
 <nav class="mod-navi">
-  <h2><%= link_to @portal.portal_group.trailing_name, gws_portal_group_path %></a></h2>
+  <h2><%= link_to @portal.portal_group.trailing_name, gws_portal_group_path %></h2>
   <h2><%= t("ss.management") %></h2>
 
   <h3><%= link_to t("gws/portal.links.arrange_portlets"), gws_portal_group_layouts_path %></h3>

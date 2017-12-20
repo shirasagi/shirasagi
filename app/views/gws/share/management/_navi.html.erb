@@ -1,5 +1,5 @@
 <nav class="mod-navi">
-  <h2><%= link_to t("modules.gws/share"), gws_share_files_path %></a></h2>
+  <h2><%= link_to t("modules.gws/share"), gws_share_files_path %></h2>
   <h2><%= t("ss.management") %></h2>
 
   <% if Gws::Share::File.allowed?(:edit, @cur_user, site: @cur_site) %>

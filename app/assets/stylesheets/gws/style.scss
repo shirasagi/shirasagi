@@ -39,10 +39,37 @@
 }
 
 // Category
-.gws-category-navi-menu {
-  margin: -5px 0 10px 0;
+.gws-category-navi {
+  margin-bottom: 10px;
+  cursor: auto;
+  .dropdown-menu {
+    min-width: 220px;
+  }
+  .depth-1 {
+    padding-left: 20px;
+  }
+  .link-item {
+    display: inline-block;
+    padding: 8px 10px;
+    color: #333;
+  }
+  .link-item:hover {
+    background-color: $gray1;
+    color: #f25a38;
+    text-decoration: none;
+  }
+  .depth-0 .link-item {
+    display: block;
+  }
+  .depth-1 .link-item {
+    border-radius: 3px;
+  }
+  .separator {
+    display: none;
+  }
   @include mb {
-    padding: 0 10px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 }
 .gws-category-label {
