@@ -14,6 +14,11 @@ class Gws::Discussion::ForumsController < ApplicationController
     @crumbs << [I18n.t('modules.gws/discussion'), gws_discussion_forums_path]
   end
 
+  def pre_params
+    @skip_default_group = true
+    super
+  end
+
   public
 
   def index
@@ -22,7 +27,7 @@ class Gws::Discussion::ForumsController < ApplicationController
     if params[:s] && params[:s][:state] == "closed"
       @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
     else
-      @items = @items.and_public.readable(@cur_user, @cur_site, include_role: true)
+      @items = @items.and_public.member(@cur_user, site: @cur_site, include_role: true)
     end
 
     @items.search(params[:s]).

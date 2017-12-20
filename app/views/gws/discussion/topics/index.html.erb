@@ -37,6 +37,7 @@ Gws_Discussion_Unseen.renderUnseen(
 </div>
 
 <div class="gws-discussion-navi">
+  <% if Gws::Schedule::Todo.allowed?(:read, @cur_user, site: @cur_site) %>
   <div class="addon-view">
     <div class="addon-head"><h2><%= t("gws/discussion.todos") %></h2></div>
     <% @todos.each do |todo| %>
@@ -54,6 +55,7 @@ Gws_Discussion_Unseen.renderUnseen(
       <%= link_to t("gws/discussion.links.todo.index"), gws_discussion_forum_todos_path %>
     </div>
   </div>
+  <% end %>
 
   <div class="addon-view">
     <div class="addon-head"><h2><%= t("gws/discussion.topics") %></h2></div>
@@ -78,7 +80,7 @@ Gws_Discussion_Unseen.renderUnseen(
     <div class="addon-head"><h2><%= t("gws/discussion.members") %></h2></div>
     <div class="addon-body">
       <% @forum.discussion_members.each do |member| %>
-          <p><%= member.long_name %></p>
+        <p><%= member.long_name %></p>
       <% end %>
     </div>
   </div>
