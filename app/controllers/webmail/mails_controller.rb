@@ -25,11 +25,7 @@ class Webmail::MailsController < ApplicationController
   end
 
   def set_item
-    if SS.config.webmail.store_mails
-      @item = @imap.mails.find_and_store params[:id], :body
-    else
-      @item = @imap.mails.find params[:id], :body
-    end
+    @item = SS.config.webmail.store_mails ? @imap.mails.find_and_store(params[:id], :body) : @imap.mails.find(params[:id], :body)
     @item.attributes = fix_params
   end
 
@@ -55,11 +51,7 @@ class Webmail::MailsController < ApplicationController
     @navi_mailboxes = true
     @mailbox = params[:mailbox]
 
-    if params[:action] == 'index' || params[:action] =~ /^(set_|unset_)/
-      @imap.select(@mailbox)
-    else
-      @imap.examine(@mailbox)
-    end
+    params[:action] == 'index' || params[:action] =~ /^(set_|unset_)/ ? @imap.select(@mailbox) : @imap.examine(@mailbox)
   end
 
   public
@@ -76,19 +68,14 @@ class Webmail::MailsController < ApplicationController
   end
 
   def show
-    if @item.unseen?
-      @imap.select(@mailbox)
-      @item.set_seen
-      @mailboxes = @imap.mailboxes.update_status
-    end
+    return unless @item.unseen?
+    @imap.select(@mailbox)
+    @item.set_seen
+    @mailboxes = @imap.mailboxes.update_status
   end
 
   def header_view
-    if SS.config.webmail.store_mails
-      @item = @imap.mails.find_and_store params[:id]
-    else
-      @item = @imap.mails.find params[:id]
-    end
+    @item = SS.config.webmail.store_mails ? @imap.mails.find_and_store(params[:id]) : @imap.mails.find(params[:id])
 
     render plain: @item.header, layout: false
   end
@@ -132,11 +119,7 @@ class Webmail::MailsController < ApplicationController
   end
 
   def reply
-    if SS.config.webmail.store_mails
-      @ref = @imap.mails.find_and_store params[:id], :body
-    else
-      @ref = @imap.mails.find params[:id], :body
-    end
+    @ref = SS.config.webmail.store_mails ? @imap.mails.find_and_store(params[:id], :body) : @imap.mails.find(params[:id], :body)
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply(@ref)
@@ -144,11 +127,7 @@ class Webmail::MailsController < ApplicationController
   end
 
   def reply_all
-    if SS.config.webmail.store_mails
-      @ref = @imap.mails.find_and_store params[:id], :body
-    else
-      @ref = @imap.mails.find params[:id], :body
-    end
+    @ref = SS.config.webmail.store_mails ? @imap.mails.find_and_store(params[:id], :body) : @imap.mails.find(params[:id], :body)
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply_all(@ref)
@@ -156,11 +135,7 @@ class Webmail::MailsController < ApplicationController
   end
 
   def forward
-    if SS.config.webmail.store_mails
-      @ref = @imap.mails.find_and_store params[:id], :body
-    else
-      @ref = @imap.mails.find params[:id], :body
-    end
+    @ref = SS.config.webmail.store_mails ? @imap.mails.find_and_store(params[:id], :body) : @imap.mails.find(params[:id], :body)
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_forward(@ref)

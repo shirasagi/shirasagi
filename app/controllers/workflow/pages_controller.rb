@@ -42,33 +42,24 @@ class Workflow::PagesController < ApplicationController
       params[:workflow_approvers].each do |workflow_approver|
         element = workflow_approver.split(",")
         target_user = SS::User.find(element[1]) rescue nil
-        if target_user
-          email_blank_users.push(target_user.name) if target_user.email.blank?
-        end
+        email_blank_users.push(target_user.name) if target_user && target_user.email.blank?
       end
     else
       current_level = @item.workflow_current_level
       current_workflow_approvers = @item.workflow_approvers_at(current_level)
       current_workflow_approvers.each do |workflow_approver|
         target_user = SS::User.find(workflow_approver[:user_id]) rescue nil
-        if target_user
-          email_blank_users.push(target_user.name) if target_user.email.blank?
-        end
+        email_blank_users.push(target_user.name) if target_user && target_user.email.blank?
       end
       target_user = nil
       target_user_id = @item.workflow_user_id || @cur_user._id
       target_user = SS::User.find(target_user_id) rescue nil
-      if target_user
-        email_blank_users.push(target_user.name) if target_user.email.blank?
-      end
+      email_blank_users.push(target_user.name) if target_user && target_user.email.blank?
     end
-    email_blank_users.uniq!
-    email_blank_users.sort!
+    email_blank_users = email_blank_users.uniq.compact.sort
     return nil if email_blank_users.blank?
     message = t("errors.messages.user_email_blank")
-    email_blank_users.each do |email_blank_user|
-      message += "\n#{email_blank_user}"
-    end
+    email_blank_users.each { |email_blank_user| message += "\n#{email_blank_user}" }
     message
   end
 
@@ -78,10 +69,8 @@ class Workflow::PagesController < ApplicationController
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
     if params[:forced_update_option] == "false"
-      if message = workflow_alert
-        render json: { workflow_alert: message }
-        return
-      end
+      message = workflow_alert
+      return render json: { workflow_alert: message } if message
     end
 
     @item.workflow_user_id = @cur_user._id
@@ -102,10 +91,8 @@ class Workflow::PagesController < ApplicationController
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
     if params[:forced_update_option] == "false"
-      if message = workflow_alert
-        render json: { workflow_alert: message }
-        return
-      end
+      message = workflow_alert
+      return render json: { workflow_alert: message } if message
     end
 
     save_level = @item.workflow_current_level
@@ -113,23 +100,12 @@ class Workflow::PagesController < ApplicationController
 
     if @item.finish_workflow?
       @item.workflow_state = @model::WORKFLOW_STATE_APPROVE
-      @item.state = "public"
-
-      if @item.respond_to?(:release_date)
-        if @item.release_date
-          @item.state = "ready"
-        else
-          @item.release_date = nil
-        end
-      end
+      @item.state = @item.try(:release_date) ? 'ready' : 'public'
     end
 
     if @item.update
       current_level = @item.workflow_current_level
-      if save_level != current_level
-        # escalate workflow
-        request_approval
-      end
+      request_approval if save_level != current_level
 
       workflow_state = @item.workflow_state
       if workflow_state == @model::WORKFLOW_STATE_APPROVE
@@ -153,10 +129,8 @@ class Workflow::PagesController < ApplicationController
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
     if params[:forced_update_option] == "false"
-      if message = workflow_alert
-        render json: { workflow_alert: message }
-        return
-      end
+      message = workflow_alert
+      return render json: { workflow_alert: message } if message
     end
 
     @item.workflow_state = @model::WORKFLOW_STATE_REMAND

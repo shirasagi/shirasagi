@@ -42,67 +42,63 @@ module Faq::Addon::Csv
       def to_csv
         CSV.generate do |data|
           data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            data << csv_line(item)
-          end
+          criteria.each { |item| data << csv_line(item) }
         end
       end
 
       def csv_line(item)
-        line = []
+        [
+          # basic
+          item.basename,
+          item.name,
+          item.index_name,
+          item.layout.try(:name),
+          item.order,
 
-        # basic
-        line << item.basename
-        line << item.name
-        line << item.index_name
-        line << item.layout.try(:name)
-        line << item.order
+          # meta
+          item.keywords,
+          item.description,
+          item.summary_html,
 
-        # meta
-        line << item.keywords
-        line << item.description
-        line << item.summary_html
+          # body
+          item.question,
+          item.html,
 
-        # body
-        line << item.question
-        line << item.html
+          # category
+          item.category_name_tree.join("\n"),
 
-        # category
-        line << item.category_name_tree.join("\n")
+          # event
+          item.event_name,
+          item.event_dates,
 
-        # event
-        line << item.event_name
-        line << item.event_dates
+          # related pages
+          item.related_pages.pluck(:filename).join("\n"),
 
-        # related pages
-        line << item.related_pages.pluck(:filename).join("\n")
+          # crumb
+          item.parent_crumb_urls,
 
-        # crumb
-        line << item.parent_crumb_urls
+          # contact
+          item.label(:contact_state),
+          item.contact_group.try(:name),
+          item.contact_charge,
+          item.contact_tel,
+          item.contact_fax,
+          item.contact_email,
+          item.contact_link_url,
+          item.contact_link_name,
 
-        # contact
-        line << item.label(:contact_state)
-        line << item.contact_group.try(:name)
-        line << item.contact_charge
-        line << item.contact_tel
-        line << item.contact_fax
-        line << item.contact_email
-        line << item.contact_link_url
-        line << item.contact_link_name
+          # released
+          item.released.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.release_date.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.close_date.try(:strftime, "%Y/%m/%d %H:%M"),
 
-        # released
-        line << item.released.try(:strftime, "%Y/%m/%d %H:%M")
-        line << item.release_date.try(:strftime, "%Y/%m/%d %H:%M")
-        line << item.close_date.try(:strftime, "%Y/%m/%d %H:%M")
+          # groups
+          item.groups.pluck(:name).join("\n"),
+          item.permission_level,
 
-        # groups
-        line << item.groups.pluck(:name).join("\n")
-        line << item.permission_level
-
-        # state
-        line << item.label(:state)
-
-        line
+          # state
+          item.label(:state)
+        ]
       end
     end
   end
