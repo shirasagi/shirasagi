@@ -2,14 +2,17 @@
 
 @site = Gws::Group.where(name: SS::Db::Seed.site_name).first
 
-@users = [
-  Gws::User.find_by(uid: "admin"),
-  Gws::User.find_by(uid: "user1"),
-  Gws::User.find_by(uid: "user2"),
-  Gws::User.find_by(uid: "user3"),
-  Gws::User.find_by(uid: "user4"),
-  Gws::User.find_by(uid: "user5")
-]
+def u(uid)
+  @users_hash ||= {}
+  @users_hash[uid.to_s] ||= Gws::User.find_by(uid: uid)
+end
+
+def g(name)
+  @groups_hash ||= {}
+  @groups_hash[name.to_s] ||= Gws::Group.find_by(name: name)
+end
+
+@users = %w[admin user1 user2 user3 user4 user5].map { |uid| u(uid) }
 
 @today = Time.zone.today
 @today_ym = @today.strftime('%Y-%m')
@@ -21,7 +24,7 @@ def create_staff_record_year(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::StaffRecord::Year.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
@@ -30,7 +33,7 @@ def create_staff_record_group(data)
   puts data[:name]
   cond = { site_id: @site._id, year_id: data[:year_id], name: data[:name] }
   item = Gws::StaffRecord::Group.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
@@ -39,7 +42,7 @@ def create_staff_record_user(data)
   puts data[:name]
   cond = { site_id: @site._id, year_id: data[:year_id], section_name: data[:section_name], name: data[:name] }
   item = Gws::StaffRecord::User.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
@@ -97,7 +100,7 @@ def create_notice(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Notice.find_or_create_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   item.update
   item
 end
@@ -112,7 +115,7 @@ def create_link(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Link.find_or_create_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   item.update
   item
 end
@@ -126,7 +129,7 @@ def create_facility_category(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Facility::Category.find_or_create_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   item.update
   item
 end
@@ -143,7 +146,7 @@ def create_facility_item(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Facility::Item.find_or_create_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   item.update
   item
 end
@@ -163,7 +166,7 @@ def create_schedule_category(data)
   cond = { site_id: @site._id, name: data[:name] }
 
   item = Gws::Schedule::Category.find_or_create_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   item.update
   item
 end
@@ -181,7 +184,7 @@ def create_schedule_plan(data)
   #puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Schedule::Plan.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
@@ -222,7 +225,7 @@ def create_board_category(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Board::Category.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
@@ -240,28 +243,35 @@ def create_board_topic(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Board::Topic.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
 
 @bd_topic = [
-  create_board_topic(name: "業務説明会を開催します。", text: "シラサギについても業務説明会を開催します。", mode: "thread", category_ids: [@bd_cate[0].id]),
-  create_board_topic(name: "会議室の増設について", text: "会議室の利用率が高いので増設を考えています。\r\n特に希望される内容などあればお願いします。", mode: "tree", category_ids: [@bd_cate[1].id])
+  create_board_topic(
+    name: "業務説明会を開催します。", text: "シラサギについても業務説明会を開催します。", mode: "thread",
+    category_ids: [@bd_cate[0].id]
+  ),
+  create_board_topic(
+    name: "会議室の増設について",
+    text: "会議室の利用率が高いので増設を考えています。\r\n特に希望される内容などあればお願いします。", mode: "tree",
+    category_ids: [@bd_cate[1].id]
+  )
 ]
 
 def create_board_post(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Board::Post.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
 
-create_board_post(name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
-res = create_board_post(name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
-res = create_board_post(name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topic[1].id, parent_id: res.id)
+create_board_post(cur_user: u('user1'), name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
+res = create_board_post(cur_user: u('sys'), name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
+res = create_board_post(cur_user: u('user1'), name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topic[1].id, parent_id: res.id)
 
 ## -------------------------------------
 puts "# circular/category"
@@ -271,7 +281,7 @@ def create_circular_category(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Circular::Category.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
@@ -288,39 +298,124 @@ def create_circular_post(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Circular::Post.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
 
-@cr_post = [
+@cr_posts = [
   create_circular_post(
     name: "年末年始休暇について", text: "年末年始の休暇は12月29日から1月3日までとなります。\r\nお間違えないようお願いします。",
-    see_type: "normal", state: 'public',
-    member_ids: @users.map(&:id), seen: { @users[2].id.to_s => Time.zone.now, @users[5].id.to_s => Time.zone.now },
-    readable_setting_range: 'public', category_ids: [@cr_cate[0].id]
+    see_type: "normal", state: 'public', due_date: Time.zone.now.beginning_of_day + 7.days,
+    member_ids: %w[sys admin user1 user2 user3 user4 user5].map { |u| u(u).id },
+    seen: { u('user2').id.to_s => Time.zone.now, u('user5').id.to_s => Time.zone.now },
+    category_ids: [@cr_cate[0].id]
   ),
   create_circular_post(
     name: "システム説明会のお知らせ", text: "システム説明会を開催します。\r\n万障お繰り合わせの上ご参加願います。",
-    see_type: "normal", state: 'public',
-    member_ids: [@users[0].id, @users[1].id, @users[3].id, @users[5].id],
-    seen: { @users[0].id.to_s => Time.zone.now, @users[3].id.to_s => Time.zone.now },
-    readable_setting_range: 'select', readable_group_ids: [], category_ids: [@cr_cate[1].id])
+    see_type: "normal", state: 'public', due_date: Time.zone.now.beginning_of_day + 7.days,
+    member_ids: %w[sys admin user1 user3 user5].map { |u| u(u).id },
+    seen: { u('admin').id.to_s => Time.zone.now, u('user3').id.to_s => Time.zone.now },
+    category_ids: [@cr_cate[1].id])
 ]
 
 def create_circular_comment(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Circular::Comment.find_or_initialize_by(cond)
-  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item
 end
 
-create_circular_comment(name: "Re: 年末年始休暇について", text: "内容確認しました。", user_id: @users[5].id, post_id: @cr_post[0].id)
-create_circular_comment(name: "Re: 年末年始休暇について", text: "承知しました。", user_id: @users[2].id, post_id: @cr_post[0].id)
-create_circular_comment(name: "Re: システム説明会のお知らせ", text: "予定があり参加できそうにありません。", user_id: @users[3].id, post_id: @cr_post[2].id)
-create_circular_comment(name: "Re: システム説明会のお知らせ", text: "参加します。", user_id: @users[0].id, post_id: @cr_post[0].id)
+create_circular_comment(
+  post_id: @cr_posts[0].id, cur_user: u('user5'), name: "Re: 年末年始休暇について", text: "内容確認しました。"
+)
+create_circular_comment(
+  post_id: @cr_posts[0].id, cur_user: u('user2'), name: "Re: 年末年始休暇について", text: "承知しました。"
+)
+create_circular_comment(
+  post_id: @cr_posts[2].id, cur_user: u('user3'), name: "Re: システム説明会のお知らせ", text: "予定があり参加できそうにありません。"
+)
+create_circular_comment(
+  post_id: @cr_posts[0].id, cur_user: u('admin'), name: "Re: システム説明会のお知らせ", text: "参加します。")
+
+## -------------------------------------
+puts "# discussion/forum"
+
+def create_discussion_forum(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Gws::Discussion::Forum.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+@ds_forums = [
+  create_discussion_forum(
+    name: 'サイト改善プロジェクト', depth: 1,
+    readable_setting_range: 'select', readable_member_ids: @users.map(&:id)
+  ),
+  create_discussion_forum(
+    name: 'シラサギプロジェクト', depth: 1,
+    readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id]
+  )
+]
+
+def create_discussion_topic(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Gws::Discussion::Topic.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+@ds_topics = [
+  create_discussion_topic(
+    name: 'メインスレッド', text: 'サイト改善プロジェクトのメインスレッドです。', depth: 2, order: 0, main_topic: 'enabled',
+    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
+  ),
+  create_discussion_topic(
+    name: '問い合わせフォームの改善', text: '問い合わせフォームの改善について意見をお願いします。', depth: 2, order: 10,
+    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
+  ),
+  create_discussion_topic(
+    name: 'メインスレッド', text: 'シラサギプロジェクトのメインスレッドです。', depth: 2, order: 0, main_topic: 'enabled',
+    forum_id: @ds_forums[1].id, parent_id: @ds_forums[1].id
+  ),
+]
+
+def create_discussion_post(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Gws::Discussion::Post.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+create_discussion_post(
+  name: 'メインスレッド', text: 'シラサギ市のサイト改善を図りたいと思いますので、皆様のご意見をお願いします。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+)
+create_discussion_post(
+  cur_user: u('user4'), name: 'メインスレッド', text: '全体的なデザインの見直しを行いたいです。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+)
+create_discussion_post(
+  cur_user: u('user5'), name: 'メインスレッド', text: '観光コンンテンツは別途観光サイトを設けたいと思います。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+)
+create_discussion_post(
+  cur_user: u('user3'), name: '問い合わせフォームの改善', text: '投稿時に問い合わせ先の課を選択でき、投稿通知が対象課に届くと良いと思います。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[1].id, parent_id: @ds_topics[1].id
+)
+create_discussion_post(
+  name: 'メインスレッド', text: 'シラサギの改善要望について議論を交わしたいと思います。', depth: 3,
+  forum_id: @ds_forums[1].id, topic_id: @ds_topics[2].id, parent_id: @ds_topics[2].id
+)
 
 ## -------------------------------------
 puts "# max file size"
