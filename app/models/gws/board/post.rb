@@ -13,7 +13,5 @@ class Gws::Board::Post
   around_save ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
 
-  def subscribed_users
-    topic.subscribed_users
-  end
+  delegate :subscribed_users, to: :topic
 end
