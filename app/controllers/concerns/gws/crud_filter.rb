@@ -5,6 +5,7 @@ module Gws::CrudFilter
   included do
     menu_view "gws/crud/menu"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+    before_action :set_bookmark, only: [:index, :show, :new, :edit, :delete]
   end
 
   private
@@ -12,6 +13,14 @@ module Gws::CrudFilter
   def append_view_paths
     append_view_path "app/views/gws/crud"
     append_view_path "app/views/ss/crud"
+  end
+
+  def set_bookmark
+    @bookmark = Gws::Bookmark.where(user: @cur_user, site: @cur_site, url: request.fullpath).first
+    return unless @model
+    @bookmark_model = @model.name.underscore.sub(/gws\/(?<model>[^\/]*)\/?.*/) do
+      Regexp.last_match[:model]
+    end
   end
 
   public
