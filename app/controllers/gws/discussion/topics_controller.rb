@@ -2,6 +2,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
+  helper Gws::Schedule::PlanHelper
   model Gws::Discussion::Topic
 
   before_action :set_forum
@@ -126,7 +127,8 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def all
-    @items = @forum.children.reorder(order: 1, created: 1).
+    @items = @model.in(id: @forum.children.pluck(:id)).
+      reorder(order: 1, created: 1).
       search(params[:s]).
       page(params[:page]).per(50)
   end
