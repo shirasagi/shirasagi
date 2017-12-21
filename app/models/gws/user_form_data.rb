@@ -11,7 +11,8 @@ class Gws::UserFormData
   index({ site_id: 1, user_id: 1 }, { unique: true })
 
   before_validation :set_form_id, if: ->{ @cur_form }
-  validates :user_id, presence: true, uniqueness: { scope: :site_id }, unless: ->{ %i[required_check].include?(validation_context) }
+  validates :user_id, presence: true, uniqueness: { scope: :site_id },
+            unless: ->{ %i[required_check].include?(validation_context) }
   validate :validate_column_values
 
   scope :form, ->(form) { where(form_id: form.id) }
