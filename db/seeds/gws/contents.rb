@@ -380,6 +380,53 @@ create_faq_topic(
 )
 
 ## -------------------------------------
+puts "# memo"
+
+## -------------------------------------
+puts "# monitor/category"
+
+def create_monitor_category(data)
+  create_item(Gws::Monitor::Category, data)
+end
+
+@mon_cate = [
+  create_monitor_category(name: '設備', color: '#FF4000', order: 10),
+  create_monitor_category(name: 'システム操作', color: '#FFF700', order: 20),
+  create_monitor_category(name: 'アンケート', color: '#00FFEE', order: 30)
+]
+
+## -------------------------------------
+puts "# monitor/topic"
+
+def create_monitor_topic(data)
+  create_item(Gws::Monitor::Topic, data)
+end
+
+@mon_topics = [
+  create_monitor_topic(
+    cur_user: u('user4'), name: '共有ファイルに登録できるファイル容量および種類', mode: 'thread', permit_comment: 'allow',
+    due_date: Time.zone.now.beginning_of_day + 7.days,
+    text: '共有ファイルに登録できるファイル容量および種類の制限を教えてください。', category_ids: [@mon_cate[1].id]
+  ),
+  create_monitor_topic(
+    cur_user: u('user5'), name: '新しい公用車の導入', mode: 'thread', permit_comment: 'allow',
+    due_date: Time.zone.now.beginning_of_day + 7.days,
+    text: "公用車の劣化が進んでおり、買い替えを行うことになりました。\r\n希望車種などがあれば回答をお願いします。", category_ids: [@mon_cate[0].id]
+  )
+]
+
+def create_monitor_post(data)
+  create_item(Gws::Monitor::Post, data)
+end
+
+create_monitor_post(
+  cur_user: u('admin'), name: 'Re: 新しい公用車の導入', mode: 'thread', permit_comment: 'allow',
+  due_date: Time.zone.now.beginning_of_day + 7.days,
+  topic_id: @mon_topics[1].id, parent_id: @mon_topics[1].id,
+  text: '車室の広いものを希望します。'
+)
+
+## -------------------------------------
 puts "# max file size"
 
 def save_max_file_size(data)
