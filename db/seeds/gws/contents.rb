@@ -17,16 +17,20 @@ end
 @today = Time.zone.today
 @today_ym = @today.strftime('%Y-%m')
 
+def create_item(model, data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = model.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
+end
+
 ## -------------------------------------
 puts "# staff_record"
 
 def create_staff_record_year(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::StaffRecord::Year.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::StaffRecord::Year, data)
 end
 
 def create_staff_record_group(data)
@@ -97,12 +101,7 @@ end
 puts "# notice"
 
 def create_notice(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Notice.find_or_create_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.update
-  item
+  create_item(Gws::Notice, data)
 end
 
 create_notice name: "#{@site.name}のお知らせです。", text: ("お知らせです。\n" * 10)
@@ -112,12 +111,7 @@ create_notice name: "重要なお知らせです。", text: ("重要なお知ら
 puts "# link"
 
 def create_link(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Link.find_or_create_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.update
-  item
+  create_item(Gws::Link, data)
 end
 
 create_link name: "#{@site.name}について", html: %(<a href="http://ss-proj.org/">SHIRASAGI</a>)
@@ -126,12 +120,7 @@ create_link name: "#{@site.name}について", html: %(<a href="http://ss-proj.o
 puts "# facility/category"
 
 def create_facility_category(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Facility::Category.find_or_create_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.update
-  item
+  create_item(Gws::Facility::Category, data)
 end
 
 @fc_cate = [
@@ -143,12 +132,7 @@ end
 puts "# facility/item"
 
 def create_facility_item(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Facility::Item.find_or_create_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.update
-  item
+  create_item(Gws::Facility::Item, data)
 end
 
 @fc_item = [
@@ -162,13 +146,7 @@ end
 puts "# schedule/category"
 
 def create_schedule_category(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-
-  item = Gws::Schedule::Category.find_or_create_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.update
-  item
+  create_item(Gws::Schedule::Category, data)
 end
 
 @sc_cate = [
@@ -222,12 +200,7 @@ create_schedule_plan name: "繰り返し予定", member_ids: @users.map(&:id),
 puts "# board/category"
 
 def create_board_category(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Board::Category.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Board::Category, data)
 end
 
 @bd_cate = [
@@ -240,12 +213,7 @@ end
 puts "# board/post"
 
 def create_board_topic(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Board::Topic.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Board::Topic, data)
 end
 
 @bd_topic = [
@@ -261,12 +229,7 @@ end
 ]
 
 def create_board_post(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Board::Post.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Board::Post, data)
 end
 
 create_board_post(cur_user: u('user1'), name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
@@ -278,12 +241,7 @@ puts "# circular/category"
 
 
 def create_circular_category(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Circular::Category.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Circular::Category, data)
 end
 
 @cr_cate = [
@@ -295,12 +253,7 @@ end
 puts "# circular/post"
 
 def create_circular_post(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Circular::Post.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Circular::Post, data)
 end
 
 @cr_posts = [
@@ -320,12 +273,7 @@ end
 ]
 
 def create_circular_comment(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Circular::Comment.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Circular::Comment, data)
 end
 
 create_circular_comment(
@@ -338,18 +286,14 @@ create_circular_comment(
   post_id: @cr_posts[2].id, cur_user: u('user3'), name: "Re: システム説明会のお知らせ", text: "予定があり参加できそうにありません。"
 )
 create_circular_comment(
-  post_id: @cr_posts[0].id, cur_user: u('admin'), name: "Re: システム説明会のお知らせ", text: "参加します。")
+  post_id: @cr_posts[0].id, cur_user: u('admin'), name: "Re: システム説明会のお知らせ", text: "参加します。"
+)
 
 ## -------------------------------------
 puts "# discussion/forum"
 
 def create_discussion_forum(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Discussion::Forum.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Discussion::Forum, data)
 end
 
 @ds_forums = [
@@ -364,12 +308,7 @@ end
 ]
 
 def create_discussion_topic(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Discussion::Topic.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Discussion::Topic, data)
 end
 
 @ds_topics = [
@@ -388,12 +327,7 @@ end
 ]
 
 def create_discussion_post(data)
-  puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
-  item = Gws::Discussion::Post.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  puts item.errors.full_messages unless item.save
-  item
+  create_item(Gws::Discussion::Post, data)
 end
 
 create_discussion_post(
@@ -415,6 +349,34 @@ create_discussion_post(
 create_discussion_post(
   name: 'メインスレッド', text: 'シラサギの改善要望について議論を交わしたいと思います。', depth: 3,
   forum_id: @ds_forums[1].id, topic_id: @ds_topics[2].id, parent_id: @ds_topics[2].id
+)
+
+## -------------------------------------
+puts "# faq/category"
+
+def create_faq_category(data)
+  create_item(Gws::Faq::Category, data)
+end
+
+@faq_cate = [
+  create_faq_category(name: "出張", color: "#6FFF00", order: 10),
+  create_faq_category(name: "システム操作", color: "#FFF700", order: 20)
+]
+
+## -------------------------------------
+puts "# faq/topic"
+
+def create_faq_topic(data)
+  create_item(Gws::Faq::Topic, data)
+end
+
+create_faq_topic(
+  name: '新しいグループウェアアカウントの発行はどうすればいいですか。', text: 'システム管理者にアカウント発行の申請を行ってください。',
+  mode: 'thread', permit_comment: 'deny', category_ids: [@faq_cate[1].id], readable_setting_range: 'public'
+)
+create_faq_topic(
+  name: '出張申請はどのように行いますか。', text: 'ワークフローに「出張申請」がありますので、必要事項を記入し申請してください。',
+  mode: 'thread', permit_comment: 'deny', category_ids: [@faq_cate[0].id], readable_setting_range: 'public'
 )
 
 ## -------------------------------------
