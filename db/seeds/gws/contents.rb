@@ -50,7 +50,7 @@ def create_column(type, data)
   puts data[:name]
   cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }
   item = model.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.attributes = data.reverse_merge(cur_site: @site)
   puts item.errors.full_messages unless item.save
   item
 end
@@ -433,10 +433,10 @@ create_circular_comment(
   post_id: @cr_posts[0].id, cur_user: u('user2'), name: "Re: 年末年始休暇について", text: "承知しました。"
 )
 create_circular_comment(
-  post_id: @cr_posts[2].id, cur_user: u('user3'), name: "Re: システム説明会のお知らせ", text: "予定があり参加できそうにありません。"
+  post_id: @cr_posts[1].id, cur_user: u('user3'), name: "Re: システム説明会のお知らせ", text: "予定があり参加できそうにありません。"
 )
 create_circular_comment(
-  post_id: @cr_posts[0].id, cur_user: u('admin'), name: "Re: システム説明会のお知らせ", text: "参加します。"
+  post_id: @cr_posts[1].id, cur_user: u('admin'), name: "Re: システム説明会のお知らせ", text: "参加します。"
 )
 
 ## -------------------------------------
@@ -492,13 +492,15 @@ end
 
 @mon_topics = [
   create_monitor_topic(
-    cur_user: u('user4'), name: '共有ファイルに登録できるファイル容量および種類', mode: 'thread', permit_comment: 'allow',
+    cur_user: u('user4'), name: '共有ファイルに登録できるファイル容量および種類',
     due_date: Time.zone.now.beginning_of_day + 7.days,
+    attend_group_ids: [@site.id] + @site.descendants.pluck(:id),
     text: '共有ファイルに登録できるファイル容量および種類の制限を教えてください。', category_ids: [@mon_cate[1].id]
   ),
   create_monitor_topic(
-    cur_user: u('user5'), name: '新しい公用車の導入', mode: 'thread', permit_comment: 'allow',
+    cur_user: u('user5'), name: '新しい公用車の導入',
     due_date: Time.zone.now.beginning_of_day + 7.days,
+    attend_group_ids: [@site.id] + @site.descendants.pluck(:id),
     text: "公用車の劣化が進んでおり、買い替えを行うことになりました。\n希望車種などがあれば回答をお願いします。", category_ids: [@mon_cate[0].id]
   )
 ]
@@ -508,7 +510,7 @@ def create_monitor_post(data)
 end
 
 create_monitor_post(
-  cur_user: u('admin'), name: 'Re: 新しい公用車の導入', mode: 'thread', permit_comment: 'allow',
+  cur_user: u('admin'), name: 'Re: 新しい公用車の導入',
   due_date: Time.zone.now.beginning_of_day + 7.days,
   topic_id: @mon_topics[1].id, parent_id: @mon_topics[1].id,
   text: '車室の広いものを希望します。'
@@ -588,8 +590,8 @@ end
 
 @rep_form2_cols = [
   create_column(:text, name: '出張先', order: 10, required: 'required', input_type: 'text', form: @rep_forms[1]),
-  create_column(:date, name: '出張日', order: 20, required: 'required', input_type: 'text', form: @rep_forms[1]),
-  create_column(:text_area, name: '報告内容', order: 30, required: 'required', input_type: 'text', form: @rep_forms[1])
+  create_column(:date, name: '出張日', order: 20, required: 'required', form: @rep_forms[1]),
+  create_column(:text_area, name: '報告内容', order: 30, required: 'required', form: @rep_forms[1])
 ]
 
 ## -------------------------------------
@@ -727,7 +729,12 @@ create_user_form_data(cur_user: u('user5'), form: user_form, column_values: [
 puts "# user_title"
 
 def create_user_title(data)
-  create_item(Gws::UserTitle, data)
+  puts data[:name]
+  cond = { group_id: @site._id, name: data[:name] }
+  item = Gws::UserTitle.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
 end
 
 user_titles = [
