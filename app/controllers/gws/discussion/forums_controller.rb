@@ -22,6 +22,8 @@ class Gws::Discussion::ForumsController < ApplicationController
   public
 
   def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
     @items = @model.site(@cur_site).topic
 
     if params[:s] && params[:s][:state] == "closed"
@@ -42,8 +44,51 @@ class Gws::Discussion::ForumsController < ApplicationController
     render_create result
   end
 
+  def edit
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render_update @item.update
+  end
+
+  def delete
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render_destroy @item.destroy
+  end
+
+  def destroy_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+        next if item.destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
   def copy
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
 
     set_item
     if request.get?

@@ -10,7 +10,7 @@ class Gws::Discussion::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
-  set_permission_name "gws_discussion_topics"
+  set_permission_name "gws_discussion_posts"
 
   validates :text, presence: true
 

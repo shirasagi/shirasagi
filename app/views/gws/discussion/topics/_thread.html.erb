@@ -139,14 +139,14 @@ $(".open-reply").on('click', function() {
         <span>
           <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
         </span>
-        <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% if Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
         <span>
           <%= link_to t("gws/discussion.links.topic.reply"), "#", class: "open-reply" %>
         </span>
         <% end %>
       </div>
     <% end %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
       <div class="addon-body replay" style="<%= reply_menu ? "display: none;" : "" %>">
         <% if @comment && @comment.parent_id == topic.id %>
           <%= error_messages_for :comment %>

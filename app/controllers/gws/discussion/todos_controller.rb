@@ -12,6 +12,7 @@ class Gws::Discussion::TodosController < ApplicationController
   private
 
   def set_forum
+    raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
   end
 
@@ -42,13 +43,12 @@ class Gws::Discussion::TodosController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item.name = "[#{@forum.name}]"
     #@item.member_ids = @forum.member_ids
     #@item.member_custom_group_ids = @forum.member_custom_group_ids
     @item.member_ids = @forum.discussion_member_ids
-
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
   def print
