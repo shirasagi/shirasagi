@@ -427,6 +427,45 @@ create_monitor_post(
 )
 
 ## -------------------------------------
+puts "# portal"
+
+## -------------------------------------
+puts "# qna/category"
+
+def create_qna_category(data)
+  create_item(Gws::Qna::Category, data)
+end
+
+@qna_cate = [
+  create_qna_category(name: '福利厚生', color: '#0033FF', order: 10),
+  create_qna_category(name: '防災', color: '#F700FF', order: 20)
+]
+
+## -------------------------------------
+puts "# qna/topic"
+
+def create_qna_topic(data)
+  create_item(Gws::Qna::Topic, data)
+end
+
+qna_topic = create_qna_topic(
+  cur_user: u('user3'), name: '火災が起こった場合の広報課からの避難経路を教えてください。',
+  text: '火災が起こった場合の広報課からの避難経路を教えてください。', category_ids: [@qna_cate[1].id]
+)
+
+## -------------------------------------
+puts "# qna/post"
+
+def create_qna_post(data)
+  create_item(Gws::Qna::Post, data)
+end
+
+create_qna_post(
+  name: 'Re: 火災が起こった場合の広報課からの避難経路を教えてください。',
+  text: '防災マニュアルに従って避難行動を行ってください。'
+)
+
+## -------------------------------------
 puts "# max file size"
 
 def save_max_file_size(data)
