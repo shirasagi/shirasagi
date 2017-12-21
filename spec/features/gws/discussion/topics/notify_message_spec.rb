@@ -14,9 +14,9 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
 
     before { login_gws_user }
     before do
-      forum1.add_to_set(readable_member_ids: discussion_member.id)
-      forum2.add_to_set(readable_member_ids: discussion_member.id)
-      forum3.add_to_set(readable_member_ids: discussion_member.id)
+      forum1.add_to_set(member_ids: discussion_member.id)
+      forum2.add_to_set(member_ids: discussion_member.id)
+      forum3.add_to_set(member_ids: discussion_member.id)
     end
 
     it "with disabled forum" do
