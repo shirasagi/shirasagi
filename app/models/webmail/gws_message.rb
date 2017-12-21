@@ -40,7 +40,7 @@ class Webmail::GwsMessage
       file.write(part.decoded)
       file.rewind
       file.original_filename = part.filename
-      file.content_type =  part.content_type
+      file.content_type = part.content_type
 
       ss_file = SS::File.new
       ss_file.in_file = file

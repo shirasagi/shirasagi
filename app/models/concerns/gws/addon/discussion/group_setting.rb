@@ -20,7 +20,7 @@ module Gws::Addon::Discussion::GroupSetting
 
   def discussion_unseen_interval_options
     [
-      [I18n.t("gws/discussion.options.discussion_unseen_interval.none"),  nil],
+      [I18n.t("gws/discussion.options.discussion_unseen_interval.none"), nil],
       [I18n.t("gws/discussion.options.discussion_unseen_interval.5min"), 300000],
       [I18n.t("gws/discussion.options.discussion_unseen_interval.1min"), 60000],
       [I18n.t("gws/discussion.options.discussion_unseen_interval.30sec"), 30000],
