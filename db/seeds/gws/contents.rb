@@ -146,6 +146,68 @@ end
 create_link name: "#{@site.name}について", html: %(<a href="http://ss-proj.org/">SHIRASAGI</a>)
 
 ## -------------------------------------
+puts "# discussion/forum"
+
+def create_discussion_forum(data)
+  create_item(Gws::Discussion::Forum, data)
+end
+
+@ds_forums = [
+  create_discussion_forum(
+    name: 'サイト改善プロジェクト', depth: 1,
+    readable_setting_range: 'select', readable_member_ids: @users.map(&:id)
+  ),
+  create_discussion_forum(
+    name: 'シラサギプロジェクト', depth: 1,
+    readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id]
+  )
+]
+
+def create_discussion_topic(data)
+  create_item(Gws::Discussion::Topic, data)
+end
+
+@ds_topics = [
+  create_discussion_topic(
+    name: 'メインスレッド', text: 'サイト改善プロジェクトのメインスレッドです。', depth: 2, order: 0, main_topic: 'enabled',
+    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
+  ),
+  create_discussion_topic(
+    name: '問い合わせフォームの改善', text: '問い合わせフォームの改善について意見をお願いします。', depth: 2, order: 10,
+    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
+  ),
+  create_discussion_topic(
+    name: 'メインスレッド', text: 'シラサギプロジェクトのメインスレッドです。', depth: 2, order: 0, main_topic: 'enabled',
+    forum_id: @ds_forums[1].id, parent_id: @ds_forums[1].id
+  ),
+]
+
+def create_discussion_post(data)
+  create_item(Gws::Discussion::Post, data)
+end
+
+create_discussion_post(
+  name: 'メインスレッド', text: 'シラサギ市のサイト改善を図りたいと思いますので、皆様のご意見をお願いします。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+)
+create_discussion_post(
+  cur_user: u('user4'), name: 'メインスレッド', text: '全体的なデザインの見直しを行いたいです。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+)
+create_discussion_post(
+  cur_user: u('user5'), name: 'メインスレッド', text: '観光コンンテンツは別途観光サイトを設けたいと思います。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+)
+create_discussion_post(
+  cur_user: u('user3'), name: '問い合わせフォームの改善', text: '投稿時に問い合わせ先の課を選択でき、投稿通知が対象課に届くと良いと思います。', depth: 3,
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[1].id, parent_id: @ds_topics[1].id
+)
+create_discussion_post(
+  name: 'メインスレッド', text: 'シラサギの改善要望について議論を交わしたいと思います。', depth: 3,
+  forum_id: @ds_forums[1].id, topic_id: @ds_topics[2].id, parent_id: @ds_topics[2].id
+)
+
+## -------------------------------------
 puts "# facility/category"
 
 def create_facility_category(data)
@@ -224,6 +286,20 @@ create_schedule_plan name: "繰り返し予定", member_ids: @users.map(&:id),
        repeat_type: 'weekly', interval: 1, wdays: [],
        repeat_start: base_date.strftime('%Y-%m-%d'),
        repeat_end: (base_date + 5.months).strftime('%Y-%m-%d')
+
+## -------------------------------------
+puts "# schedule/todo"
+
+def create_schedule_todo(data)
+  create_item(Gws::Schedule::Todo, data)
+end
+
+create_schedule_todo(
+  name: '[サイト改善プロジェクト]要求仕様提出', member_ids: [ u('admin').id ],
+  start_at: Time.zone.now + 7.days, end_at: Time.zone.now + 7.days + 1.hour,
+  todo_state: 'unfinished', discussion_forum_id: @ds_forums[0].id,
+  readable_setting_range: 'select', readable_member_ids: @users.map(&:id)
+)
 
 ## -------------------------------------
 puts "# board/category"
@@ -316,68 +392,6 @@ create_circular_comment(
 )
 create_circular_comment(
   post_id: @cr_posts[0].id, cur_user: u('admin'), name: "Re: システム説明会のお知らせ", text: "参加します。"
-)
-
-## -------------------------------------
-puts "# discussion/forum"
-
-def create_discussion_forum(data)
-  create_item(Gws::Discussion::Forum, data)
-end
-
-@ds_forums = [
-  create_discussion_forum(
-    name: 'サイト改善プロジェクト', depth: 1,
-    readable_setting_range: 'select', readable_member_ids: @users.map(&:id)
-  ),
-  create_discussion_forum(
-    name: 'シラサギプロジェクト', depth: 1,
-    readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id]
-  )
-]
-
-def create_discussion_topic(data)
-  create_item(Gws::Discussion::Topic, data)
-end
-
-@ds_topics = [
-  create_discussion_topic(
-    name: 'メインスレッド', text: 'サイト改善プロジェクトのメインスレッドです。', depth: 2, order: 0, main_topic: 'enabled',
-    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
-  ),
-  create_discussion_topic(
-    name: '問い合わせフォームの改善', text: '問い合わせフォームの改善について意見をお願いします。', depth: 2, order: 10,
-    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
-  ),
-  create_discussion_topic(
-    name: 'メインスレッド', text: 'シラサギプロジェクトのメインスレッドです。', depth: 2, order: 0, main_topic: 'enabled',
-    forum_id: @ds_forums[1].id, parent_id: @ds_forums[1].id
-  ),
-]
-
-def create_discussion_post(data)
-  create_item(Gws::Discussion::Post, data)
-end
-
-create_discussion_post(
-  name: 'メインスレッド', text: 'シラサギ市のサイト改善を図りたいと思いますので、皆様のご意見をお願いします。', depth: 3,
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
-)
-create_discussion_post(
-  cur_user: u('user4'), name: 'メインスレッド', text: '全体的なデザインの見直しを行いたいです。', depth: 3,
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
-)
-create_discussion_post(
-  cur_user: u('user5'), name: 'メインスレッド', text: '観光コンンテンツは別途観光サイトを設けたいと思います。', depth: 3,
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
-)
-create_discussion_post(
-  cur_user: u('user3'), name: '問い合わせフォームの改善', text: '投稿時に問い合わせ先の課を選択でき、投稿通知が対象課に届くと良いと思います。', depth: 3,
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[1].id, parent_id: @ds_topics[1].id
-)
-create_discussion_post(
-  name: 'メインスレッド', text: 'シラサギの改善要望について議論を交わしたいと思います。', depth: 3,
-  forum_id: @ds_forums[1].id, topic_id: @ds_topics[2].id, parent_id: @ds_topics[2].id
 )
 
 ## -------------------------------------
