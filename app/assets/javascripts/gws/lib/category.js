@@ -7,9 +7,13 @@ function Gws_Category_Navi(selector) {
 
 Gws_Category_Navi.prototype.setBaseUrl = function(url) {
   this.baseUrl = url;
-}
+};
 
 Gws_Category_Navi.prototype.render = function(items) {
+  if (items.length == 0) {
+    this.el.hide();
+    return;
+  }
   var _this = this;
   var list = [];
   var line = list[0];
