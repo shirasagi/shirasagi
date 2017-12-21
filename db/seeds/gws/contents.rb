@@ -26,6 +26,35 @@ def create_item(model, data)
   item
 end
 
+def create_column(type, data)
+  case type
+    when :text
+      model = Gws::Column::TextField
+    when :text_area
+      model = Gws::Column::TextArea
+    when :number
+      model = Gws::Column::NumberField
+    when :date
+      model = Gws::Column::DateField
+    when :url
+      model = Gws::Column::UrlField
+    when :checkbox
+      model = Gws::Column::CheckBox
+    when :radio
+      model = Gws::Column::RadioButton
+    when :select
+      model = Gws::Column::Select
+    when :file_upload
+      model = Gws::Column::FileUpload
+  end
+  puts data[:name]
+  cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }
+  item = model.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
+end
+
 ## -------------------------------------
 puts "# staff_record"
 
@@ -463,6 +492,76 @@ end
 create_qna_post(
   name: 'Re: 火災が起こった場合の広報課からの避難経路を教えてください。',
   text: '防災マニュアルに従って避難行動を行ってください。'
+)
+
+## -------------------------------------
+puts "# report/category"
+
+def create_report_category(data)
+  create_item(Gws::Report::Category, data)
+end
+
+@rep_cate = [
+  create_report_category(name: '議事録', color: '#3300FF', order: 10),
+  create_report_category(name: '報告書', color: '#00FF22', order: 20)
+]
+
+## -------------------------------------
+puts "# report/form"
+
+def create_report_form(data)
+  create_item(Gws::Report::Form, data)
+end
+
+@rep_forms = [
+  create_report_form(name: '打ち合わせ議事録', order: 10, state: 'public', memo: '打ち合わせ議事録です。', category_ids: [@rep_cate[0].id]),
+  create_report_form(name: '出張報告書', order: 20, state: 'public', memo: '出張報告書です。', category_ids: [@rep_cate[1].id])
+]
+
+@rep_form1_cols = [
+  create_column(:text, name: '打ち合わせ場所', order: 10, required: 'required', tooltips: '打ち合わせ場所をん入力してください。', input_type: 'text', form: @rep_forms[0]),
+  create_column(:date, name: '打ち合わせ日', order: 20, required: 'required', tooltips: '打ち合わせ日を入力してください。', form: @rep_forms[0]),
+  create_column(:text, name: '打ち合わせ時間', order: 30, required: 'required', tooltips: '打ち合わせ時間を入力してください。', input_type: 'text', form: @rep_forms[0]),
+  create_column(:text_area, name: '参加者', order: 40, required: 'required', tooltips: '打ち合わせ参加者を入力してください。', form: @rep_forms[0]),
+  create_column(:text_area, name: '打ち合わせ内容', order: 50, required: 'required', tooltips: '打ち合わせ内容を入力してください。', form: @rep_forms[0]),
+  create_column(:file_upload, name: '添付ファイル', order: 60, required: 'optional', tooltips: '関連資料があればファイルをアップロードしてください。', upload_file_count: 5, form: @rep_forms[0])
+]
+
+@rep_form2_cols = [
+  create_column(:text, name: '出張先', order: 10, required: 'required', input_type: 'text', form: @rep_forms[1]),
+  create_column(:date, name: '出張日', order: 20, required: 'required', input_type: 'text', form: @rep_forms[1]),
+  create_column(:text_area, name: '報告内容', order: 30, required: 'required', input_type: 'text', form: @rep_forms[1])
+]
+
+## -------------------------------------
+puts "# report/file"
+
+def create_report_file(data)
+  create_item(Gws::Report::File, data)
+end
+
+create_report_file(
+  name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
+  member_ids: %w(admin user1 user3).map { |u| u(u).id }, schedule_ids: xyz,
+  readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id },
+  column_values: [
+    @rep_form1_cols[0].serialize_value('会議室101'),
+    @rep_form1_cols[1].serialize_value((@today - 7.days).strftime('%Y/%m/%d')),
+    @rep_form1_cols[2].serialize_value('15:00〜16:00'),
+    @rep_form1_cols[3].serialize_value("広報課　斎藤課長\r\n政策課　白鷺係長"),
+    @rep_form1_cols[4].serialize_value("シラサギプロジェクトについての会議を行った。\r\nかれこれしかじか"),
+    @rep_form1_cols[5].serialize_value([])
+  ]
+)
+create_report_file(
+  cur_user: u('user1'), name: '東京出張報告', state: 'public',
+  member_ids: @users.map(&:id), schedule_ids: xyz,
+  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
+  column_values: [
+    @rep_form2_cols[0].serialize_value('東京都庁'),
+    @rep_form2_cols[1].serialize_value((@today - 3.days).strftime('%Y/%m/%d')),
+    @rep_form2_cols[2].serialize_value("東京都庁で会議のため、出張しました。\r\nかれこれしかじか。")
+  ]
 )
 
 ## -------------------------------------
