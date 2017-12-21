@@ -11,10 +11,10 @@
         <div class="info">
           <%= link_to item.name, item.url, class: 'title' %>
           <div class="meta">
-            <span class="id">#<%= item.id %></span>
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <span class="url"><%= link_to item.url, item.url %></span>
-            <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
+            <% if @portlet.bookmark_model.blank? %>
+              <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
+            <% end %>
           </div>
         </div>
         <div class="links">
