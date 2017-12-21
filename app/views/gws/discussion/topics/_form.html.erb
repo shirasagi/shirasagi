@@ -1,7 +1,13 @@
 <dl class="see">
-  <dt class="required"><%= @model.t :name %></dt>
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :permit_comment %><%= @model.tt :permit_comment %></dt>
+  <dd><%= f.select :permit_comment, @item.permit_comment_options %></dd>
+
+  <dt><%= @model.t :permanently %><%= @model.tt :permanently %></dt>
+  <dd><%= f.select :permanently, @item.permanently_options %></dd>
 </dl>

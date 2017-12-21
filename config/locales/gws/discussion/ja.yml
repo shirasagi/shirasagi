@@ -17,7 +17,7 @@ ja:
         show: 全ての投稿を見る
         reply: コメントを投稿する
       todo:
-        index: スケジュールを見る
+        index: TODO一覧を見る
       member:
         index: 参加者一覧
     main_topic:
@@ -30,6 +30,9 @@ ja:
         1min: １分
         30sec: ３０秒
         10sec: １０秒
+      permit_comment:
+        allow: 許可する
+        deny: 許可しない
     notice:
       reload: ※新着投稿があります。クリックすることで再描画します。
       forum_copy: ※複製後は非公開状態になります。TODO は複製されません。
@@ -74,6 +77,8 @@ ja:
       gws/discussion/topic:
         name: タイトル
         order: 並び順
+        permit_comment: コメント投稿
+        permanently: 更新停止
       gws/discussion/post:
         name: タイトル
       gws/addon/discussion/group_permission:
@@ -126,6 +131,12 @@ ja:
         - タイトルを入力します。
       order:
         - 並び順を設定します。数字が小さいほど先頭に表示されます。
+      order:
+        - 並び順を設定します。数字が小さいほど先頭に表示されます。
+      permit_comment:
+        - コメントを許可するかどうかを選択します。
+      permanently:
+        - 有効にするとコメントの投稿、編集、削除を行えなくなります。
     gws/addon/discussion/release:
       state:
         - 公開画面への公開、非公開を選択します。

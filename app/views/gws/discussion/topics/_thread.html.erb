@@ -116,16 +116,25 @@ $(".open-reply").on('click', function() {
       </div>
       <% end %>
       <div class="menu">
-        <% if comment.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
-          <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
-        <% end %>
-        <% if comment.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
-          <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+        <% if !topic.permanently? %>
+          <% if comment.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
+            <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+          <% end %>
+          <% if comment.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
+            <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+          <% end %>
         <% end %>
       </div>
     </div>
   <% end %>
 
+  <%
+    if topic.permit_comment? && Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site)
+      allowed_comment = true
+    else
+      allowed_comment = false
+    end
+  %>
   <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
     <div class="addon-body replay-menu">
         <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
@@ -139,14 +148,14 @@ $(".open-reply").on('click', function() {
         <span>
           <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
         </span>
-        <% if Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% if allowed_comment %>
         <span>
           <%= link_to t("gws/discussion.links.topic.reply"), "#", class: "open-reply" %>
         </span>
         <% end %>
       </div>
     <% end %>
-    <% if Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if allowed_comment %>
       <div class="addon-body replay" style="<%= reply_menu ? "display: none;" : "" %>">
         <% if @comment && @comment.parent_id == topic.id %>
           <%= error_messages_for :comment %>

@@ -140,6 +140,8 @@ class Gws::Discussion::TopicsController < ApplicationController
 
     set_items
     @topic = Gws::Discussion::Topic.find(params[:id])
+    raise "403" unless @topic.permit_comment?
+
     @comment = Gws::Discussion::Post.new get_params
     @comment.topic_id = @topic.id
     @comment.parent_id = @topic.id
