@@ -44,6 +44,11 @@ SS_Addon_TempFile.select = function(files, dropArea) {
   return false;
 };
 SS_Addon_TempFile.renderDrop($(".comment-files .upload-drop-area"), <%= @cur_user.id %>);
+$(".open-reply").on('click', function() {
+  $(this).closest(".addon-body").next(".replay").show();
+  $(this).remove();
+  return false;
+});
 <% end %>
 
 <div class="addon-view">
@@ -75,7 +80,7 @@ SS_Addon_TempFile.renderDrop($(".comment-files .upload-drop-area"), <%= @cur_use
     <% end %>
   </div>
 
-  <% children = topic.children %>
+  <% children = topic.children.reorder(id: 1) %>
   <% children_size = children.size %>
   <% if limit > 0 %>
     <% comments = topic.children.limit(limit).reverse.to_a %>
@@ -111,23 +116,47 @@ SS_Addon_TempFile.renderDrop($(".comment-files .upload-drop-area"), <%= @cur_use
       </div>
       <% end %>
       <div class="menu">
-        <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
-        <% end %>
-        <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
-          <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+        <% if !topic.permanently? %>
+          <% if comment.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
+            <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+          <% end %>
+          <% if comment.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
+            <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+          <% end %>
         <% end %>
       </div>
     </div>
   <% end %>
 
-  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
-      <div class="addon-body replay notice" style="color: #b30;">
+  <%
+    if topic.permit_comment? && Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site)
+      allowed_comment = true
+    else
+      allowed_comment = false
+    end
+  %>
+  <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
+    <div class="addon-body replay-menu">
         <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
+        <span>
+          <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
+        </span>
       </div>
-    <% else %>
-      <div class="addon-body replay">
+  <% else %>
+    <% if reply_menu %>
+      <div class="addon-body replay-menu">
+        <span>
+          <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
+        </span>
+        <% if allowed_comment %>
+        <span>
+          <%= link_to t("gws/discussion.links.topic.reply"), "#", class: "open-reply" %>
+        </span>
+        <% end %>
+      </div>
+    <% end %>
+    <% if allowed_comment %>
+      <div class="addon-body replay" style="<%= reply_menu ? "display: none;" : "" %>">
         <% if @comment && @comment.parent_id == topic.id %>
           <%= error_messages_for :comment %>
         <% end %>

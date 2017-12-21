@@ -20,20 +20,26 @@ class Gws::Discussion::TopicsController < ApplicationController
     @crumbs << [@forum.name, gws_discussion_forum_topics_path]
   end
 
+  def pre_params
+    @skip_default_group = true
+    super
+  end
+
   def set_forum
+    raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
 
     if @forum.state == "closed"
       permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
     else
-      permitted = @forum.readable?(@cur_user, site: @cur_site)
+      permitted = @forum.member?(@cur_user, site: @cur_site, include_role: true)
     end
 
     raise "403" unless permitted
   end
 
   def set_items
-    @items = @forum.children.reorder(order: 1, created: 1).
+    @items = @forum.children.reorder(order: 1, created: -1).
       page(params[:page]).per(5)
 
     @todos = Gws::Schedule::Todo.
@@ -56,6 +62,15 @@ class Gws::Discussion::TopicsController < ApplicationController
     set_items
   end
 
+  def show
+    render
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
   def create
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
@@ -68,8 +83,52 @@ class Gws::Discussion::TopicsController < ApplicationController
     end
   end
 
+  def edit
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render_update @item.update
+  end
+
+  def delete
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render_destroy @item.destroy
+  end
+
+  def destroy_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+        next if item.destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
   def all
-    @items = @forum.children.reorder(order: 1, created: 1).
+    @items = @model.in(id: @forum.children.pluck(:id)).
+      reorder(order: 1, created: 1).
       search(params[:s]).
       page(params[:page]).per(50)
   end
@@ -79,10 +138,12 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def reply
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site)
 
     set_items
     @topic = Gws::Discussion::Topic.find(params[:id])
+    raise "403" unless @topic.permit_comment?
+
     @comment = Gws::Discussion::Post.new get_params
     @comment.topic_id = @topic.id
     @comment.parent_id = @topic.id
@@ -97,7 +158,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def copy
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
 
     if request.get?
       prefix = I18n.t("workflow.cloned_name_prefix")

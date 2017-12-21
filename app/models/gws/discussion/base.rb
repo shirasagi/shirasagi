@@ -6,11 +6,11 @@ class Gws::Discussion::Base
   include Gws::Addon::File
   include Gws::Addon::Discussion::NotifySetting
   include Gws::Addon::Discussion::Release
-  include Gws::Addon::ReadableSetting
+  include Gws::Addon::Member
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
-  readable_setting_include_custom_groups
+  class_variable_set(:@@_member_ids_required, false)
 
   # indexing to elasticsearch via companion object
   # around_save ::Gws::Elasticsearch::Indexer::DiscussionBaseJob.callback

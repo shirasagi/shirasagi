@@ -1,13 +1,13 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to t('ss.links.back_to_index'), gws_discussion_forum_topics_path(forum_id: @forum.id) %>
-    <% if @topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @topic.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
       <%= link_to t("gws/discussion.links.topic.edit"), edit_gws_discussion_forum_topic_path(forum_id: @forum.id, id: @topic.id) %>
     <% end %>
-    <% if @topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @topic.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
       <%= link_to t("gws/discussion.links.topic.copy"), copy_gws_discussion_forum_topic_path(forum_id: @forum.id, id: @topic.id) %>
     <% end %>
-    <% if @topic.allowed?(:delete, @cur_user, site: @cur_site) %>
+    <% if @topic.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
       <%= link_to t("gws/discussion.links.topic.delete"), delete_gws_discussion_forum_topic_path(forum_id: @forum.id, id: @topic.id) %>
     <% end %>
   <% elsif params[:action] =~ /edit|update|delete/ %>

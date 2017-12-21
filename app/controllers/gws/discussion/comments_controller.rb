@@ -15,14 +15,20 @@ class Gws::Discussion::CommentsController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site, forum_id: @forum.id, topic_id: @topic.id, parent_id: @topic.id }
   end
 
+  def pre_params
+    @skip_default_group = true
+    super
+  end
+
   def set_forum
+    raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
 
     if @forum.state == "closed"
       permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
     else
-      permitted = @forum.readable?(@cur_user, site: @cur_site)
-    end
+    permitted = @forum.member?(@cur_user, site: @cur_site, include_role: true)
+  end
 
     raise "403" unless permitted
   end
@@ -47,14 +53,41 @@ class Gws::Discussion::CommentsController < ApplicationController
     redirect_to action: :index
   end
 
+  def edit
+    raise "403" if @topic.permanently?
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+    render
+  end
+
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update, location: { action: :index }
+    raise "403" if @topic.permanently?
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render_update @item.update
+  end
+
+  def delete
+    raise "403" if @topic.permanently?
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render
+  end
+
+  def destroy
+    raise "403" if @topic.permanently?
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    render_destroy @item.destroy
   end
 
   def reply
+    raise "403" unless @topic.permit_comment?
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     @comment = @model.new get_params
 
     @comment = Gws::Discussion::Post.new get_params

@@ -6,9 +6,11 @@ class Gws::Discussion::Topic
   include Gws::Addon::File
   #include Gws::Addon::Discussion::NotifySetting
   #include Gws::Addon::Discussion::Release
-  #include Gws::Addon::Discussion::ReadableSetting
+  #include Gws::Addon::Member
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+
+  set_permission_name "gws_discussion_topics"
 
   validates :text, presence: true
 

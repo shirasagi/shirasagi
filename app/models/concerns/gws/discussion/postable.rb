@@ -8,7 +8,6 @@ module Gws::Discussion::Postable
 
   included do
     store_in collection: "gws_discussion_posts"
-    set_permission_name "gws_discussion_forums"
 
     attr_accessor :cur_site, :skip_descendants_updated
 
@@ -18,6 +17,8 @@ module Gws::Discussion::Postable
     field :depth, type: Integer
     field :descendants_updated, type: DateTime
     field :main_topic, type: String, default: "disabled"
+    field :permit_comment, type: String, default: "allow"
+    field :permanently, type: String, default: "disabled"
     field :order, type: Integer, default: 0
 
     belongs_to :forum, class_name: "Gws::Discussion::Post", inverse_of: :forum_descendants
@@ -31,7 +32,7 @@ module Gws::Discussion::Postable
     has_many :children, class_name: "Gws::Discussion::Post", dependent: :destroy, inverse_of: :parent,
       order: { created: -1 }
 
-    permit_params :name, :order
+    permit_params :name, :order, :permit_comment, :permanently
 
     before_validation :set_depth
 
@@ -41,8 +42,7 @@ module Gws::Discussion::Postable
     after_save :update_topic_descendants_updated, if: -> { topic_id.present? && !skip_descendants_updated }
     after_save :update_forum_descendants_updated, if: -> { forum_id.present? && !skip_descendants_updated }
 
-    scope :topic, ->{ exists parent_id: false }
-    scope :topic_comments, ->(topic) { where topic_id: topic.id }
+    scope :forum, ->{ exists parent_id: false }
     scope :search, ->(params) {
       criteria = where({})
       return criteria if params.blank?
@@ -60,6 +60,18 @@ module Gws::Discussion::Postable
     parent_id.present?
   end
 
+  def main_topic?
+    main_topic == "enabled"
+  end
+
+  def permit_comment?
+    (permit_comment == "allow") && !permanently?
+  end
+
+  def permanently?
+    permanently == "enabled"
+  end
+
   def main_topic_options
     [
       [I18n.t("ss.options.state.disabled"), "disabled"],
@@ -67,8 +79,18 @@ module Gws::Discussion::Postable
     ]
   end
 
-  def main_topic?
-    main_topic == "enabled"
+  def permit_comment_options
+    [
+      [I18n.t("gws/discussion.options.permit_comment.allow"), "allow"],
+      [I18n.t("gws/discussion.options.permit_comment.deny"), "deny"],
+    ]
+  end
+
+  def permanently_options
+    [
+      [I18n.t("ss.options.state.disabled"), "disabled"],
+      [I18n.t("ss.options.state.enabled"), "enabled"],
+    ]
   end
 
   def new_flag?
