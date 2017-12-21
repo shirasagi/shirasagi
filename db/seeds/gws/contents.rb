@@ -540,6 +540,7 @@ def create_report_file(data)
   create_item(Gws::Report::File, data)
 end
 
+# TODO: スケジュール連携
 create_report_file(
   name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
   member_ids: %w(admin user1 user3).map { |u| u(u).id }, schedule_ids: xyz,
@@ -562,6 +563,31 @@ create_report_file(
     @rep_form2_cols[1].serialize_value((@today - 3.days).strftime('%Y/%m/%d')),
     @rep_form2_cols[2].serialize_value("東京都庁で会議のため、出張しました。\r\nかれこれしかじか。")
   ]
+)
+
+## -------------------------------------
+puts "# shared_address/group"
+
+def create_shared_address_group(data)
+  create_item(Gws::SharedAddress::Group, data)
+end
+
+create_shared_address_group(name: '株式会社シラサギ', order: 10)
+
+## -------------------------------------
+puts "# shared_address/address"
+
+def create_shared_address_address(data)
+  create_item(Gws::SharedAddress::Address, data)
+end
+
+create_shared_address_address(
+  name: '白鷺　二郎', kana: 'シラサギ　ジロウ', company: '株式会社シラサギ', title: '代表取締役社長',
+  tel: '080-0000-0000', email: 'shirasagi@example.jp'
+)
+create_shared_address_address(
+  name: '黒鷺　晋三', kana: 'クロサギ　シンゾウ', company: '株式会社シラサギ',
+  tel: '080-0000-0001', email: 'kurosagi@example.jp'
 )
 
 ## -------------------------------------
