@@ -373,7 +373,7 @@ end
   ),
   create_board_topic(
     name: "会議室の増設について",
-    text: "会議室の利用率が高いので増設を考えています。\r\n特に希望される内容などあればお願いします。", mode: "tree",
+    text: "会議室の利用率が高いので増設を考えています。\n特に希望される内容などあればお願いします。", mode: "tree",
     category_ids: [@bd_cate[1].id]
   )
 ]
@@ -408,14 +408,14 @@ end
 
 @cr_posts = [
   create_circular_post(
-    name: "年末年始休暇について", text: "年末年始の休暇は12月29日から1月3日までとなります。\r\nお間違えないようお願いします。",
+    name: "年末年始休暇について", text: "年末年始の休暇は12月29日から1月3日までとなります。\nお間違えないようお願いします。",
     see_type: "normal", state: 'public', due_date: Time.zone.now.beginning_of_day + 7.days,
     member_ids: %w[sys admin user1 user2 user3 user4 user5].map { |u| u(u).id },
     seen: { u('user2').id.to_s => Time.zone.now, u('user5').id.to_s => Time.zone.now },
     category_ids: [@cr_cate[0].id]
   ),
   create_circular_post(
-    name: "システム説明会のお知らせ", text: "システム説明会を開催します。\r\n万障お繰り合わせの上ご参加願います。",
+    name: "システム説明会のお知らせ", text: "システム説明会を開催します。\n万障お繰り合わせの上ご参加願います。",
     see_type: "normal", state: 'public', due_date: Time.zone.now.beginning_of_day + 7.days,
     member_ids: %w[sys admin user1 user3 user5].map { |u| u(u).id },
     seen: { u('admin').id.to_s => Time.zone.now, u('user3').id.to_s => Time.zone.now },
@@ -499,7 +499,7 @@ end
   create_monitor_topic(
     cur_user: u('user5'), name: '新しい公用車の導入', mode: 'thread', permit_comment: 'allow',
     due_date: Time.zone.now.beginning_of_day + 7.days,
-    text: "公用車の劣化が進んでおり、買い替えを行うことになりました。\r\n希望車種などがあれば回答をお願いします。", category_ids: [@mon_cate[0].id]
+    text: "公用車の劣化が進んでおり、買い替えを行うことになりました。\n希望車種などがあれば回答をお願いします。", category_ids: [@mon_cate[0].id]
   )
 ]
 
@@ -607,8 +607,8 @@ create_report_file(
     @rep_form1_cols[0].serialize_value('会議室101'),
     @rep_form1_cols[1].serialize_value((@today - 7.days).strftime('%Y/%m/%d')),
     @rep_form1_cols[2].serialize_value('15:00〜16:00'),
-    @rep_form1_cols[3].serialize_value("広報課　斎藤課長\r\n政策課　白鷺係長"),
-    @rep_form1_cols[4].serialize_value("シラサギプロジェクトについての会議を行った。\r\nかれこれしかじか"),
+    @rep_form1_cols[3].serialize_value("広報課　斎藤課長\n政策課　白鷺係長"),
+    @rep_form1_cols[4].serialize_value("シラサギプロジェクトについての会議を行った。\nかれこれしかじか"),
     @rep_form1_cols[5].serialize_value([])
   ]
 )
@@ -620,7 +620,7 @@ create_report_file(
   column_values: [
     @rep_form2_cols[0].serialize_value('東京都庁'),
     @rep_form2_cols[1].serialize_value((@today - 3.days).strftime('%Y/%m/%d')),
-    @rep_form2_cols[2].serialize_value("東京都庁で会議のため、出張しました。\r\nかれこれしかじか。")
+    @rep_form2_cols[2].serialize_value("東京都庁で会議のため、出張しました。\nかれこれしかじか。")
   ]
 )
 
