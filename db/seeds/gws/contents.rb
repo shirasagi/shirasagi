@@ -6,7 +6,9 @@
   Gws::User.find_by(uid: "admin"),
   Gws::User.find_by(uid: "user1"),
   Gws::User.find_by(uid: "user2"),
-  Gws::User.find_by(uid: "user3")
+  Gws::User.find_by(uid: "user3"),
+  Gws::User.find_by(uid: "user4"),
+  Gws::User.find_by(uid: "user5")
 ]
 
 @today = Time.zone.today
@@ -184,7 +186,7 @@ def create_schedule_plan(data)
   item
 end
 
-base_date = Date.parse("#{@today_ym}-01")
+base_date = @today.beginning_of_month
 
 puts "予定1..50"
 1.upto(50) do |i|
@@ -244,8 +246,8 @@ def create_board_topic(data)
 end
 
 @bd_topic = [
-  create_board_topic(name: "#{@site.name}のスレッド形式トピック", text: "内容です。", mode: "thread", category_ids: [@bd_cate[0].id]),
-  create_board_topic(name: "#{@site.name}のツリー形式トピック", text: "内容です。", mode: "tree", category_ids: [@bd_cate[1].id])
+  create_board_topic(name: "業務説明会を開催します。", text: "シラサギについても業務説明会を開催します。", mode: "thread", category_ids: [@bd_cate[0].id]),
+  create_board_topic(name: "会議室の増設について", text: "会議室の利用率が高いので増設を考えています。\r\n特に希望される内容などあればお願いします。", mode: "tree", category_ids: [@bd_cate[1].id])
 ]
 
 def create_board_post(data)
@@ -257,9 +259,9 @@ def create_board_post(data)
   item
 end
 
-create_board_post(name: "返信1", text: "内容です。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
-res = create_board_post(name: "返信2", text: "内容です。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
-res = create_board_post(name: "返信3", text: "内容です。", topic_id: @bd_topic[1].id, parent_id: res.id)
+create_board_post(name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
+res = create_board_post(name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
+res = create_board_post(name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topic[1].id, parent_id: res.id)
 
 ## -------------------------------------
 puts "# max file size"
