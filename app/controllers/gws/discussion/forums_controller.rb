@@ -24,7 +24,7 @@ class Gws::Discussion::ForumsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
-    @items = @model.site(@cur_site).topic
+    @items = @model.site(@cur_site).forum
 
     if params[:s] && params[:s][:state] == "closed"
       @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
@@ -33,6 +33,7 @@ class Gws::Discussion::ForumsController < ApplicationController
     end
 
     @items.search(params[:s]).
+      reorder(order: 1, created: 1).
       page(params[:page]).per(50)
   end
 

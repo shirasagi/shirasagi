@@ -40,8 +40,7 @@ module Gws::Discussion::Postable
     after_save :update_topic_descendants_updated, if: -> { topic_id.present? && !skip_descendants_updated }
     after_save :update_forum_descendants_updated, if: -> { forum_id.present? && !skip_descendants_updated }
 
-    scope :topic, ->{ exists parent_id: false }
-    scope :topic_comments, ->(topic) { where topic_id: topic.id }
+    scope :forum, ->{ exists parent_id: false }
     scope :search, ->(params) {
       criteria = where({})
       return criteria if params.blank?

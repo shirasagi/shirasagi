@@ -2,7 +2,6 @@ class Gws::Discussion::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  helper Gws::Schedule::PlanHelper
   model Gws::Discussion::Topic
 
   before_action :set_forum
@@ -39,7 +38,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def set_items
-    @items = @forum.children.reorder(order: 1, created: 1).
+    @items = @forum.children.reorder(order: 1, created: -1).
       page(params[:page]).per(5)
 
     @todos = Gws::Schedule::Todo.

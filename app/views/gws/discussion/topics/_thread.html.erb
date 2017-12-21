@@ -80,7 +80,7 @@ $(".open-reply").on('click', function() {
     <% end %>
   </div>
 
-  <% children = topic.children %>
+  <% children = topic.children.reorder(id: 1) %>
   <% children_size = children.size %>
   <% if limit > 0 %>
     <% comments = topic.children.limit(limit).reverse.to_a %>

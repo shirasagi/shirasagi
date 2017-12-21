@@ -70,6 +70,7 @@ ja:
     attributes:
       gws/discussion/forum:
         name: タイトル
+        order: 並び順
       gws/discussion/topic:
         name: タイトル
         order: 並び順
