@@ -56,6 +56,20 @@ def create_column(type, data)
 end
 
 ## -------------------------------------
+puts "# custom_group"
+
+def create_custom_group(data)
+  create_item(Gws::CustomGroup, data)
+end
+
+@cgroups = [
+  create_custom_group(
+    name: 'シラサギプロジェクト', member_ids: %w[admin user1 user3].map { |uid| u(uid).id },
+    readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id }
+  )
+]
+
+## -------------------------------------
 puts "# staff_record"
 
 def create_staff_record_year(data)
@@ -286,6 +300,37 @@ create_schedule_plan name: "繰り返し予定", member_ids: @users.map(&:id),
        repeat_type: 'weekly', interval: 1, wdays: [],
        repeat_start: base_date.strftime('%Y-%m-%d'),
        repeat_end: (base_date + 5.months).strftime('%Y-%m-%d')
+
+@sch_plan1 = create_schedule_plan(
+  name: 'シラサギ会議', start_at: base_date.strftime('%Y-%m-%d 15:00'), end_at: base_date.strftime('%Y-%m-%d 16:00'),
+  repeat_type: 'weekly', interval: 1, repeat_start: base_date, repeat_end: base_date + 1.month, wdays: [3],
+  member_ids: [u('admin').id], member_custom_group_ids: @cgroups[0].id,
+  facility_ids: [@fc_item[0].id], main_facility_id: @fc_item[0].id,
+  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id], readable_member_ids: [u('sys').id]
+)
+
+create_schedule_plan(
+  name: '定例報告会', start_at: (base_date + 1.day).strftime('%Y-%m-%d 14:00'), end_at: (base_date + 1.day).strftime('%Y-%m-%d 16:00'),
+  repeat_type: 'weekly', interval: 1, repeat_start: base_date + 1.day, repeat_end: base_date + 1.day + 6.month, wdays: [],
+  member_ids: %w[admin user1 user2 user3].map { |uid| u(uid).id },
+  readable_setting_range: 'select'
+)
+
+create_schedule_plan(
+  name: '株式会社シラサギ来社', start_at: (base_date + 2.day).strftime('%Y-%m-%d 10:00'), end_at: (base_date + 1.day).strftime('%Y-%m-%d 11:00'),
+  member_ids: %w[admin user1].map { |uid| u(uid).id },
+  facility_ids: [@fc_item[1].id], main_facility_id: @fc_item[1].id,
+  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id]
+)
+
+@sch_plan2 = create_schedule_plan(
+  cur_user: u('user1'), name: '東京出張',
+  allday: 'allday', start_on: base_date + 13.day + 9.hours, end_on: base_date + 13.day + 9.hours,
+  start_at: base_date + 13.days, end_at: base_date.end_of_day,
+  member_ids: %w[user1].map { |uid| u(uid).id },
+  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
+  category_id: @sc_cate[1].id
+)
 
 ## -------------------------------------
 puts "# schedule/todo"
@@ -554,10 +599,9 @@ def create_report_file(data)
   create_item(Gws::Report::File, data)
 end
 
-# TODO: スケジュール連携
 create_report_file(
   name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
-  member_ids: %w(admin user1 user3).map { |u| u(u).id }, schedule_ids: xyz,
+  member_ids: %w(admin user1 user3).map { |u| u(u).id }, schedule_ids: [@sch_plan1.id.to_s],
   readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id },
   column_values: [
     @rep_form1_cols[0].serialize_value('会議室101'),
@@ -568,9 +612,10 @@ create_report_file(
     @rep_form1_cols[5].serialize_value([])
   ]
 )
+
 create_report_file(
   cur_user: u('user1'), name: '東京出張報告', state: 'public',
-  member_ids: @users.map(&:id), schedule_ids: xyz,
+  member_ids: @users.map(&:id), schedule_ids: [@sch_plan2.id.to_s],
   readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
   column_values: [
     @rep_form2_cols[0].serialize_value('東京都庁'),
