@@ -228,9 +228,9 @@ def create_board_category(data)
 end
 
 @bd_cate = [
-  create_board_category(name: "告知", color: "#002288", order: 1),
-  create_board_category(name: "質問", color: "#EE00DD", order: 2),
-  create_board_category(name: "募集", color: "#CCCCCC", order: 3)
+  create_board_category(name: "告知", color: "#002288", order: 10),
+  create_board_category(name: "質問", color: "#EE00DD", order: 20),
+  create_board_category(name: "募集", color: "#CCCCCC", order: 30)
 ]
 
 ## -------------------------------------
@@ -262,6 +262,65 @@ end
 create_board_post(name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
 res = create_board_post(name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
 res = create_board_post(name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topic[1].id, parent_id: res.id)
+
+## -------------------------------------
+puts "# circular/category"
+
+
+def create_circular_category(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Gws::Circular::Category.find_or_initialize_by(cond)
+  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+@cr_cate = [
+  create_circular_category(name: "必読", color: "#FF0000", order: 10),
+  create_circular_category(name: "案内", color: "#09FF00", order: 20)
+]
+
+## -------------------------------------
+puts "# circular/post"
+
+def create_circular_post(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Gws::Circular::Post.find_or_initialize_by(cond)
+  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+@cr_post = [
+  create_circular_post(
+    name: "年末年始休暇について", text: "年末年始の休暇は12月29日から1月3日までとなります。\r\nお間違えないようお願いします。",
+    see_type: "normal", state: 'public',
+    member_ids: @users.map(&:id), seen: { @users[2].id.to_s => Time.zone.now, @users[5].id.to_s => Time.zone.now },
+    readable_setting_range: 'public', category_ids: [@cr_cate[0].id]
+  ),
+  create_circular_post(
+    name: "システム説明会のお知らせ", text: "システム説明会を開催します。\r\n万障お繰り合わせの上ご参加願います。",
+    see_type: "normal", state: 'public',
+    member_ids: [@users[0].id, @users[1].id, @users[3].id, @users[5].id],
+    seen: { @users[0].id.to_s => Time.zone.now, @users[3].id.to_s => Time.zone.now },
+    readable_setting_range: 'select', readable_group_ids: [], category_ids: [@cr_cate[1].id])
+]
+
+def create_circular_comment(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Gws::Circular::Comment.find_or_initialize_by(cond)
+  item.attributes = data.merge(cur_site: @site, cur_user: @users[0])
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+create_circular_comment(name: "Re: 年末年始休暇について", text: "内容確認しました。", user_id: @users[5].id, post_id: @cr_post[0].id)
+create_circular_comment(name: "Re: 年末年始休暇について", text: "承知しました。", user_id: @users[2].id, post_id: @cr_post[0].id)
+create_circular_comment(name: "Re: システム説明会のお知らせ", text: "予定があり参加できそうにありません。", user_id: @users[3].id, post_id: @cr_post[2].id)
+create_circular_comment(name: "Re: システム説明会のお知らせ", text: "参加します。", user_id: @users[0].id, post_id: @cr_post[0].id)
 
 ## -------------------------------------
 puts "# max file size"
