@@ -6,11 +6,11 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     def find_report_items(portal, user)
-      search = OpenStruct.new({
+      search = OpenStruct.new(
         cur_site: portal.site,
         cur_user: user,
         state: 'inbox'
-      })
+      )
 
       Gws::Report::File.site(portal.site).
         search(search).
