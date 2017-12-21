@@ -665,6 +665,26 @@ create_user_form_data(cur_user: u('user5'), form: user_form, column_values: [
 ])
 
 ## -------------------------------------
+puts "# user_title"
+
+def create_user_title(data)
+  create_item(Gws::UserTitle, data)
+end
+
+user_titles = [
+  create_user_title(name: '部長', order: 10),
+  create_user_title(name: '課長', order: 20),
+  create_user_title(name: '係長', order: 30),
+  create_user_title(name: '主任', order: 40)
+]
+
+u('sys').add_to_set(title_ids: [user_titles[1].id])
+u('admin').add_to_set(title_ids: [user_titles[0].id])
+u('user2').add_to_set(title_ids: [user_titles[3].id])
+u('user3').add_to_set(title_ids: [user_titles[1].id])
+u('user4').add_to_set(title_ids: [user_titles[1].id])
+
+## -------------------------------------
 puts "# max file size"
 
 def save_max_file_size(data)
