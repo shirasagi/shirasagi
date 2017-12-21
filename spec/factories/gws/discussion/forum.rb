@@ -3,8 +3,9 @@ FactoryGirl.define do
     cur_site { gws_site }
     cur_user { gws_user }
 
-    user_ids { [cur_user.id] }
-
     name { "name-#{unique_id}" }
+
+    member_ids { [cur_user.id] }
+    user_ids { [cur_user.id] }
   end
 end
