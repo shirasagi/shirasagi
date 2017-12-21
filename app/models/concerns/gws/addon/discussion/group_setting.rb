@@ -11,7 +11,8 @@ module Gws::Addon::Discussion::GroupSetting
     field :discussion_todo_limit, type: Integer, default: 5
     field :discussion_comment_limit, type: Integer, default: 1000
 
-    permit_params :discussion_new_days, :discussion_unseen_interval, :discussion_recent_limit, :discussion_todo_limit, :discussion_comment_limit
+    permit_params :discussion_new_days, :discussion_unseen_interval, :discussion_recent_limit
+    permit_params :discussion_todo_limit, :discussion_comment_limit
   end
 
   def discussion_new_days

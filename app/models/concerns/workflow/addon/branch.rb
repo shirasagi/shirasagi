@@ -101,7 +101,10 @@ module Workflow::Addon
 
     # backwards compatibility
     def merge(branch)
-      Rails.logger.warn('DEPRECATION WARNING: merge is deprecated and will be removed in future version (user merge_branch instead).')
+      Rails.logger.warn(
+        'DEPRECATION WARNING:' \
+        ' merge is deprecated and will be removed in future version (user merge_branch instead).'
+      )
       self.in_branch = branch
       self.merge_branch
     end
