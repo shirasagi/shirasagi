@@ -79,7 +79,8 @@
       <% elsif @ss_mode == :gws %>
         <%= jquery do %>Gws_Bookmark.render();<% end %>
         <div class="gws-bookmark dropdown dropdown-toggle">
-          <h2><i class="material-icons">&#xE867;</i></h2>
+          <% bookmark_icon = @bookmark ? "&#xE866;" : "&#xE867;" %>
+          <h2><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
           <ul class="dropdown-menu">
             <li>
               <%= form_for :bookmark, url: gws_apis_bookmarks_path, html: { id: 'bookmark-form' } do |f| %>
