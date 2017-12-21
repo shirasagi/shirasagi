@@ -4,7 +4,7 @@ AllCops:
   Exclude:
     - Guardfile
     - Vagrantfile
-    - ",memo/*"
+    - ",memo/**/*"
     - bin/*
     - vendor/bundle/**/*
     - vendor/gems/**/*
