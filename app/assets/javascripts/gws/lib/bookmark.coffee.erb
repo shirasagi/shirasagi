@@ -3,3 +3,22 @@ class @Gws_Bookmark
     $('div.gws-bookmark').click ->
       $(this).addClass('active')
       $(this).find('ul').addClass('active')
+      if $(this).find('div#ajax-box').length > 0
+        return
+      $.ajax
+        type: 'GET'
+        url: opts['url']
+        datatype: 'html'
+        data:
+          bookmark: 
+            url: location.pathname
+            name: opts['name']
+            bookmark_model: opts['model']
+        success: (data) ->
+          $('div.gws-bookmark ul.dropdown-menu li').html(data)
+        error: (xhr, status) ->
+          try
+            errors = $.parseJSON(xhr.responseText)
+            alert [ '== Error ==' ].concat(errors).join('\n')
+          catch ex
+            alert [ '== Error ==' ].concat(xhr['statusText']).join('\n')

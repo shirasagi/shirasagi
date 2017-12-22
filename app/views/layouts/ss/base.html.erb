@@ -83,27 +83,18 @@
           <% end %>
         <% end %>
       <% elsif @ss_mode == :gws %>
-        <%= jquery do %>Gws_Bookmark.render();<% end %>
+        <%= jquery do %>
+          Gws_Bookmark.render({
+            'url': '<%= gws_apis_bookmarks_path %>',
+            'name': '<%= window_name %>',
+            'model': '<%= @model.name.underscore if @model %>'
+          });
+        <% end %>
         <div class="gws-bookmark dropdown dropdown-toggle">
           <% bookmark_icon = @bookmark ? "&#xE866;" : "&#xE867;" %>
           <h2><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
           <ul class="dropdown-menu">
-            <li>
-              <%= form_for :bookmark, url: gws_apis_bookmarks_path, html: { id: 'bookmark-create' } do |f| %>
-                <%= f.hidden_field :default_name, value: window_name %>
-                <%= f.hidden_field :url, value: request.fullpath %>
-                <%= f.hidden_field :bookmark_model, value: @bookmark_model %>
-                <%= I18n.t('mongoid.attributes.gws/bookmark.name') %>
-                <%= f.text_field :name, value: (@bookmark.try(:name) || window_name) %>
-              <% end %>
-              <% if @bookmark %>
-                <%= form_for :bookmark, url: gws_apis_bookmark_path(id: @bookmark), method: :delete, html: { id: 'bookmark-destroy' } do |f| %>
-                  <%= f.hidden_field :url, value: request.fullpath %>
-                <% end %>
-              <% end %>
-              <%= submit_tag I18n.t('ss.buttons.save'), form: 'bookmark-create', class: 'btn' %>
-              <%= submit_tag I18n.t('ss.buttons.delete'), form: 'bookmark-destroy', class: 'btn' if @bookmark %>
-            </li>
+            <li><i class="material-icons"><%= bookmark_icon.html_safe %></i></li>
           </ul>
         </div>
         <%= link_to gws_memo_messages_path, class: "user-message" do %>

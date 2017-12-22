@@ -22,6 +22,14 @@ class Gws::Apis::BookmarksController < ApplicationController
 
   public
 
+  def index
+    @item = find_item
+    return unless params.dig(:bookmark, :bookmark_model)
+    @bookmark_model = params.dig(:bookmark, :bookmark_model).sub(/gws\/(?<model>[^\/]*)\/?.*/) do
+      Regexp.last_match[:model]
+    end
+  end
+
   def create
     item = find_item || @model.new(params.require(:bookmark).permit(permit_fields).merge(fix_params))
     if params.dig(:bookmark, :name).present?
