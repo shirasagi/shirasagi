@@ -65,7 +65,7 @@ $(".open-reply").on('click', function() {
         <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
       </div>
     </header>
-    <div>
+    <div class="markdown-body">
       <%= topic.html %>
     </div>
     <% if topic.files.present? %>
@@ -102,7 +102,7 @@ $(".open-reply").on('click', function() {
           <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
         </div>
       </header>
-      <div>
+      <div class="markdown-body">
         <%= comment.html %>
       </div>
       <% if comment.files.present? %>
