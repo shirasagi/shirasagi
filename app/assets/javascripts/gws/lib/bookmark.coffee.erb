@@ -1,24 +1,49 @@
 class @Gws_Bookmark
   @render: (opts = {})->
-    $('div.gws-bookmark').click ->
-      $(this).addClass('active')
-      $(this).find('ul').addClass('active')
-      if $(this).find('div#ajax-box').length > 0
-        return
+    self = $('.gws-bookmark')
+    self.click ->
+      self.addClass('active')
+      self.find('.dropdown-menu').addClass('active')
+
+    self.find('.save').click ->
+      name = self.find('.bookmark-name').val()
+      html = self.html()
       $.ajax
-        type: 'GET'
         url: opts['url']
-        datatype: 'html'
+        method: 'post'
         data:
-          bookmark: 
+          item:
+            name: name
+            default_name: opts['name']
             url: location.pathname
-            name: opts['name']
-            bookmark_model: opts['model']
-        success: (data) ->
-          $('div.gws-bookmark ul.dropdown-menu li').html(data)
-        error: (xhr, status) ->
-          try
-            errors = $.parseJSON(xhr.responseText)
-            alert [ '== Error ==' ].concat(errors).join('\n')
-          catch ex
-            alert [ '== Error ==' ].concat(xhr['statusText']).join('\n')
+            model: opts['model']
+        beforesend: self.find('.dropdown-menu').html(SS.loading)
+        success: (data)->
+          self.html(html)
+          self.find('.bookmark-id').val(data['bookmark_id'])
+          self.find('.bookmark-name').val(data['name'])
+          self.find('.material-icons').html("&#xE866;")
+        error: (data)->
+          alert('Error')
+
+    self.find('.delete').click ->
+      unless self.find('.bookmark-id').val()
+        return false
+      uri = opts['url'].split('/')
+      uri.push(self.find('#bookmark_id').val())
+      url = uri.join('/')
+      html = self.html()
+      $.ajax
+        url: url
+        method: 'delete'
+        data:
+          item:
+            url: location.pathname
+        beforesend: self.find('.dropdown-menu').html(SS.loading)
+        success: (data)->
+          self.html(html)
+          self.find('.bookmark-id').val('')
+          self.find('.bookmark-name').val(opts['name'])
+          self.find('.material-icons').html("&#xE867;")
+        error: (data)->
+          alert('Error')
