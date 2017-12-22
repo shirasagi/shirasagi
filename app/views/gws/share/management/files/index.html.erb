@@ -1,20 +1,3 @@
-<% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="gws-share-categories">
-  <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/share.files.disabled_items') %></span>
-  <% item.categories.compact.each do |category| %>
-    <% if params[:folder].present? %>
-      <%= link_to category.trailing_name, gws_share_management_folder_files_path(folder: item.folder_id,category: category.id),
-                  class: "gws-category-label", style: category_label_css(category) %>
-    <% else %>
-      <%= link_to category.trailing_name, gws_share_management_files_path(category: category.id),
-                  class: "gws-category-label", style: category_label_css(category) %>
-    <% end %>
-  <% end %>
-  </span>
-<% end %>
-
 <div class="index">
   <%= render file: "_list_head" %>
 
@@ -22,50 +5,37 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="tap-menu">
-        <% if @tap_menu %>
-          <% @tap_menu.call item %>
-        <% else %>
-          <%= link_to t('ss.links.show'), action: :show, id: item, folder: item.folder.id if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: item, folder: item.folder.id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-          <%= link_to t('gws/share.links.active'), action: :recover, id: item, folder: item.folder.id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.show'), action: :show, id: item, folder: item.folder_id if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: item, folder: item.folder_id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('gws/share.links.active'), action: :recover, id: item, folder: item.folder_id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
-          <% if item.try(:image) %>
-            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
-          <% elsif item.try(:image?) %>
-            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
-          <% end %>
+        <% if item.try(:image) %>
+          <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+        <% elsif item.try(:image?) %>
+          <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
         <% end %>
       </nav>
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
-        <% if @index_title %>
-          <% @index_title.call item %>
-        <% else %>
-          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, { action: :show, id: item, folder: item.folder.id }, class: "title" %>
-        <% end %>
+        <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+        <%= link_to title, { action: :show, id: item, folder: item.folder_id }, class: "title" %>
 
         <div class="meta">
-          <% if @index_meta %>
-            <% @index_meta.call item %>
-          <% else %>
-            <% if item.class.fields['_id'].type != BSON::ObjectId %>
-              <span class="id">#<%= item.id %></span>
-            <% end %>
-            <% if item.try(:updated) %>
-              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <% end %>
-            <% if item.try(:filename) %>
-              <span class="filename"><%= File.basename item.filename %></span>
-            <% end %>
-            <% if item.try(:status) %>
-              <span class="state"><%= t "ss.state.#{item.status}" %></span>
-            <% end %>
-            <% if item.try(:order) %>
-              <span class="order"><%= item.order %></span>
+          <span class="id">#<%= item.id %></span>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="gws-share-categories">
+          <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/share.files.disabled_items') %></span>
+          <% item.categories.compact.each do |category| %>
+            <% if params[:folder].present? %>
+              <%= link_to category.trailing_name, gws_share_management_folder_files_path(folder: item.folder_id,category: category.id),
+                          class: "gws-category-label", style: category_label_css(category) %>
+            <% else %>
+              <%= link_to category.trailing_name, gws_share_management_files_path(category: category.id),
+                          class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           <% end %>
+          </span>
         </div>
       </div>
     </li>
