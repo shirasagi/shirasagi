@@ -36,7 +36,7 @@ module Cms::Addon
     private
 
     def check_parents_state
-      p_state = self.parents.any? {|p_node| p_node.try(:for_member_enabled?)}
+      p_state = self.parents.any? { |p_node| p_node.try(:for_member_enabled?) }
       self.for_member_state = 'enabled' if p_state
     end
 

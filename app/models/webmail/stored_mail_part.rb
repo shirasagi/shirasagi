@@ -14,7 +14,7 @@ class Webmail::StoredMailPart
   end
 
   def image?
-    part.main_type.upcase == 'IMAGE'
+    part.main_type.casecmp('IMAGE') == 0
   end
 
   def link_target

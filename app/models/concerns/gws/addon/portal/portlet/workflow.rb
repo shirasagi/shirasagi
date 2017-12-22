@@ -15,11 +15,11 @@ module Gws::Addon::Portal::Portlet
     end
 
     def find_workflow_items(portal, user)
-      search = OpenStruct.new({
+      search = OpenStruct.new(
         cur_site: portal.site,
         cur_user: user,
         state: workflow_state
-      })
+      )
 
       Gws::Workflow::File.site(portal.site).
         search(search).

@@ -53,11 +53,6 @@ Lint/Void:
 Metrics/AbcSize:
   Max: 68
 
-# Offense count: 10
-# Configuration parameters: CountComments.
-Metrics/ClassLength:
-  Max: 201
-
 # Offense count: 43
 Metrics/CyclomaticComplexity:
   Max: 14
@@ -71,11 +66,6 @@ Metrics/LineLength:
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
   Max: 45
-
-# Offense count: 9
-# Configuration parameters: CountComments.
-Metrics/ModuleLength:
-  Max: 180
 
 # Offense count: 36
 Metrics/PerceivedComplexity:

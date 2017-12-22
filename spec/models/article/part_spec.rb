@@ -230,9 +230,9 @@ describe Article::Part::Page, type: :model, dbscope: :example do
       it do
         expect(item.render_loop_html(page, html: '#{categories}')).to \
           include(
-                                                                                  "<span class=\"#{node_category1.filename}\"><a href=\"#{node_category1.url}\">#{node_category1.name}</a></span>",
-                                                                                  "<span class=\"#{node_category2.filename}\"><a href=\"#{node_category2.url}\">#{node_category2.name}</a></span>"
-                                                                                )
+            "<span class=\"#{node_category1.filename}\"><a href=\"#{node_category1.url}\">#{node_category1.name}</a></span>",
+            "<span class=\"#{node_category2.filename}\"><a href=\"#{node_category2.url}\">#{node_category2.name}</a></span>"
+          )
       end
     end
   end
@@ -296,7 +296,8 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     end
 
     context 'html contains <img>' do
-      let(:page) { create(:article_page, html: '<img src="/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png" alt="Tiger">') }
+      let(:html) { '<img src="/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png" alt="Tiger">' }
+      let(:page) { create(:article_page, html: html) }
 
       it do
         expect(item.render_loop_html(page, html: '#{img.src}')).to eq('/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png')
@@ -313,7 +314,8 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     end
 
     context 'img source is external path' do
-      let(:page) { create(:article_page, html: '<img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png">') }
+      let(:html) { '<img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png">' }
+      let(:page) { create(:article_page, html: html) }
 
       it do
         expect(item.render_loop_html(page, html: '#{img.src}')).to eq('https://b.st-hatena.com/images/entry-button/button-only@2x.png')
@@ -321,7 +323,8 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     end
 
     context 'img source is external path without protocol' do
-      let(:page) { create(:article_page, html: '<img src="//b.st-hatena.com/images/entry-button/button-only@2x.png">') }
+      let(:html) { '<img src="//b.st-hatena.com/images/entry-button/button-only@2x.png">' }
+      let(:page) { create(:article_page, html: html) }
 
       it do
         expect(item.render_loop_html(page, html: '#{img.src}')).to eq('//b.st-hatena.com/images/entry-button/button-only@2x.png')

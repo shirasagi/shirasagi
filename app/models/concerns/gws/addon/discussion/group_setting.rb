@@ -11,7 +11,8 @@ module Gws::Addon::Discussion::GroupSetting
     field :discussion_todo_limit, type: Integer, default: 5
     field :discussion_comment_limit, type: Integer, default: 1000
 
-    permit_params :discussion_new_days, :discussion_unseen_interval, :discussion_recent_limit, :discussion_todo_limit, :discussion_comment_limit
+    permit_params :discussion_new_days, :discussion_unseen_interval, :discussion_recent_limit
+    permit_params :discussion_todo_limit, :discussion_comment_limit
   end
 
   def discussion_new_days
@@ -20,11 +21,11 @@ module Gws::Addon::Discussion::GroupSetting
 
   def discussion_unseen_interval_options
     [
-      [I18n.t("gws/discussion.options.discussion_unseen_interval.none"),  nil],
-      [I18n.t("gws/discussion.options.discussion_unseen_interval.5min"), 300000],
-      [I18n.t("gws/discussion.options.discussion_unseen_interval.1min"), 60000],
-      [I18n.t("gws/discussion.options.discussion_unseen_interval.30sec"), 30000],
-      [I18n.t("gws/discussion.options.discussion_unseen_interval.10sec"), 10000]
+      [I18n.t("gws/discussion.options.discussion_unseen_interval.none"), nil],
+      [I18n.t("gws/discussion.options.discussion_unseen_interval.5min"), 300_000],
+      [I18n.t("gws/discussion.options.discussion_unseen_interval.1min"), 60_000],
+      [I18n.t("gws/discussion.options.discussion_unseen_interval.30sec"), 30_000],
+      [I18n.t("gws/discussion.options.discussion_unseen_interval.10sec"), 10_000]
     ]
   end
 end
