@@ -196,7 +196,7 @@ li.webmail-accounts {
       position: relative;
       .field { position:absolute; }
       .from, .to { left: 82px; }
-      .title { left: 236px; }
+      .title { left: 286px; }
       .datetime { right: 128px; }
       .size { right: 14px; }
     }
@@ -212,12 +212,12 @@ li.webmail-accounts {
       vertical-align: text-top;
     }
     .from, .to {
-      width: 150px;
+      width: 200px;
       padding-right: 5px;
     }
     .title {
-      width: calc(100% - 330px);
-      widht: -webkit-calc(100% - 330px);
+      width: calc(100% - 380px);
+      widht: -webkit-calc(100% - 380px);
       padding-right: 5px;
       font-size: 100%;
       @include mb {
