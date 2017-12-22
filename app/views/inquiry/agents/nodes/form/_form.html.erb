@@ -32,7 +32,7 @@ this.changeForm = function(self) {
     <dd><%= content.name %></dd>
   </dl>
 <% end %>
-<% form_select = @cur_node.columns.where(input_type: 'form_select').first if @cur_node.present? %>
+<% form_select = @columns.where(input_type: 'form_select').first if @columns.present? %>
 <% @items.each do |column, data, confirm_data| %>
   <% html_class = '' %>
   <% if form_select %>
