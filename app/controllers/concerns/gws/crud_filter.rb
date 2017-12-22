@@ -17,10 +17,6 @@ module Gws::CrudFilter
 
   def set_bookmark
     @bookmark = Gws::Bookmark.where(user: @cur_user, site: @cur_site, url: request.fullpath).first
-    return unless @model
-    @bookmark_model = @model.name.underscore.sub(/gws\/(?<model>[^\/]*)\/?.*/) do
-      Regexp.last_match[:model]
-    end
   end
 
   public
