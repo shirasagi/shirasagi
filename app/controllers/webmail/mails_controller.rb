@@ -12,11 +12,14 @@ class Webmail::MailsController < ApplicationController
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
+  before_action :set_crumbs
 
   private
 
   def set_crumbs
-    @crumbs << [t("webmail.mail"), { action: :index } ]
+    mailbox = Webmail::Mailbox.new(imap: @imap, name: Net::IMAP.decode_utf7(params[:mailbox]))
+    @crumbs << [t("webmail.mail"), webmail_mails_path]
+    @crumbs << [mailbox.basename, { action: :index }]
     @webmail_other_account_path = :webmail_mails_path
   end
 
