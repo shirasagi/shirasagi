@@ -13,6 +13,8 @@ class Gws::Report::File
 
   member_ids_optional
 
+  attr_accessor :in_skip_notification_mail
+
   seqid :id
   field :state, type: String, default: 'closed'
   field :name, type: String
@@ -21,7 +23,7 @@ class Gws::Report::File
 
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :name, presence: true, length: { maximum: 80 }
-  after_save :send_notification_mail
+  after_save :send_notification_mail, unless: ->{ @in_skip_notification_mail }
 
   scope :and_public, -> { where(state: 'public') }
   scope :and_closed, -> { where(state: 'closed') }
