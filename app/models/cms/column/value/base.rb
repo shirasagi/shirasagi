@@ -24,4 +24,10 @@ class Cms::Column::Value::Base
     self.order = new_value.order
     self.value = new_value.value
   end
+
+  def generate_public_files
+  end
+
+  def remove_public_files
+  end
 end

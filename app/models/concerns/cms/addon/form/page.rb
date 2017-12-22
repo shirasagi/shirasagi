@@ -12,6 +12,8 @@ module Cms::Addon::Form::Page
 
     validate :validate_column_values
 
+    after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
+    after_remove_file :remove_public_files if respond_to?(:after_remove_file)
     after_merge_branch :merge_column_values rescue nil
   end
 
@@ -47,6 +49,18 @@ module Cms::Addon::Form::Page
   end
 
   private
+
+  def generate_public_files
+    column_values.each do |column_value|
+      column_value.generate_public_files
+    end
+  end
+
+  def remove_public_files
+    column_values.each do |column_value|
+      column_value.remove_public_files
+    end
+  end
 
   def merge_column_values
     update_column_values(in_branch.column_values.presence || [])

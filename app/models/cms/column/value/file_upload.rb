@@ -62,6 +62,16 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     end
   end
 
+  def generate_public_files
+    return if file.blank?
+    file.generate_public_file
+  end
+
+  def remove_public_files
+    return if file.blank?
+    file.remove_public_file
+  end
+
   private
 
   def file_icon
