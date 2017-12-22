@@ -421,7 +421,12 @@ end
 ]
 
 def create_circular_comment(data)
-  create_item(Gws::Circular::Comment, data)
+  puts data[:name]
+  cond = { site_id: @site._id, user_id: data[:cur_user].id, name: data[:name] }
+  item = Gws::Circular::Comment.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
 end
 
 create_circular_comment(
