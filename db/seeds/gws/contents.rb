@@ -168,12 +168,10 @@ end
 
 @ds_forums = [
   create_discussion_forum(
-    name: 'サイト改善プロジェクト', depth: 1,
-    readable_setting_range: 'select', readable_member_ids: @users.map(&:id)
+    name: 'サイト改善プロジェクト', depth: 1, member_ids: @users.map(&:id)
   ),
   create_discussion_forum(
-    name: 'シラサギプロジェクト', depth: 1,
-    readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id]
+    name: 'シラサギプロジェクト', depth: 1, member_custom_group_ids: [@cgroups.first.id]
   )
 ]
 
