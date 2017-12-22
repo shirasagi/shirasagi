@@ -600,7 +600,7 @@ def create_report_file(data)
 end
 
 create_report_file(
-  cur_form: @rep_forms[0], name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
+  cur_form: @rep_forms[0], in_skip_notification_mail: true, name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
   member_ids: %w(admin user1 user3).map { |u| u(u).id }, schedule_ids: [@sch_plan1.id.to_s],
   readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id },
   column_values: [
@@ -614,7 +614,7 @@ create_report_file(
 )
 
 create_report_file(
-  cur_user: u('user1'), cur_form: @rep_forms[1], name: '東京出張報告', state: 'public',
+  cur_user: u('user1'), cur_form: @rep_forms[1], in_skip_notification_mail: true, name: '東京出張報告', state: 'public',
   member_ids: @users.map(&:id), schedule_ids: [@sch_plan2.id.to_s],
   readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
   column_values: [
