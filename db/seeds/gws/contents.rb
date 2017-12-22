@@ -383,8 +383,8 @@ def create_board_post(data)
 end
 
 create_board_post(cur_user: u('user1'), name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
-res = create_board_post(cur_user: u('sys'), name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
-res = create_board_post(cur_user: u('user1'), name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topic[1].id, parent_id: res.id)
+res = create_board_post(cur_user: u('user1'), name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
+res = create_board_post(cur_user: u('admin'), name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topic[1].id, parent_id: res.id)
 
 ## -------------------------------------
 puts "# circular/category"
