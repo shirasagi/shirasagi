@@ -29,7 +29,9 @@
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>
-    <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_main_path, class: "icon-memo" %></h2>
+    <% if Gws::Memo::Message.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_main_path, class: "icon-memo" %></h2>
+    <% end %>
   <% end %>
 
   <% if @cur_site.menu_report_visible? %>

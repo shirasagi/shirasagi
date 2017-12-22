@@ -47,9 +47,9 @@ class Gws::Memo::Signature
   end
 
   class << self
-    def allow(action, user, opts = {})
-      super(action, user, opts).where(user_id: user.id)
-    end
+    #def allow(action, user, opts = {})
+    #  super(action, user, opts).where(user_id: user.id)
+    #end
 
     def default_sign(user)
       sign = self.user(user).default.first

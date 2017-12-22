@@ -192,15 +192,15 @@ class Gws::Memo::Message
     self
   end
 
-  def allowed?(action, user, opts = {})
-    action = permission_action || action
-    args = opts.merge(id: self.id)
-    if action == :read
-      return self.class.allow(action, user, args).exists?
-    end
-    return super(action, user, args) unless self.user
-    return super(action, user, args) && (self.user.id == user.id)
-  end
+  #def allowed?(action, user, opts = {})
+  #  action = permission_action || action
+  #  args = opts.merge(id: self.id)
+  #  if action == :read
+  #    return self.class.allow(action, user, args).exists?
+  #  end
+  #  return super(action, user, args) unless self.user
+  #  return super(action, user, args) && (self.user.id == user.id)
+  #end
 
   def new_memo
     if sign = Gws::Memo::Signature.default_sign(@cur_user)
@@ -257,17 +257,17 @@ class Gws::Memo::Message
   end
 
   class << self
-    def allow(action, user, opts = {})
-      folder = opts[:folder]
-      direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-      result = where("#{direction}.#{user.id}" => folder)
-
-      if opts[:id]
-        result = result.where('_id' => opts[:id])
-      end
-
-      result
-    end
+    #def allow(action, user, opts = {})
+    #  folder = opts[:folder]
+    #  direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
+    #  result = where("#{direction}.#{user.id}" => folder)
+    #
+    #  if opts[:id]
+    #    result = result.where('_id' => opts[:id])
+    #  end
+    #
+    #  result
+    #end
 
     def unseens(user, site)
       self.site(site).where('$and' => [

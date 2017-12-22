@@ -91,8 +91,8 @@ class Gws::Memo::Filter
   end
 
   class << self
-    def allow(action, user, opts = {})
-      super(action, user, opts).where(user_id: user.id)
-    end
+    #def allow(action, user, opts = {})
+    #  super(action, user, opts).where(user_id: user.id)
+    #end
   end
 end
