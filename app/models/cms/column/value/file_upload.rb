@@ -86,10 +86,19 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     end
 
     return if file.blank?
-    return if file.model == 'cms/column'
 
-    file.model = 'cms/column_value'
-    file.save!
+    attrs = {}
+
+    if file.model != 'cms/column'
+      attrs[:model] = 'cms/column'
+    end
+    if file.state != _parent.state
+      attrs[:state] = _parent.state
+    end
+
+    if attrs.present?
+      file.set(attrs)
+    end
   end
 
   def delete_file
