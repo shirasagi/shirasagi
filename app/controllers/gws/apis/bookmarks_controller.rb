@@ -16,35 +16,36 @@ class Gws::Apis::BookmarksController < ApplicationController
     @model.where(
       site_id: @cur_site.id,
       user_id: @cur_user.id,
-      url: params.dig(:bookmark, :url)
+      url: params.dig(:item, :url)
     ).first
   end
 
   public
 
-  def index
-    @item = find_item
-    return unless params.dig(:bookmark, :bookmark_model)
-    @bookmark_model = params.dig(:bookmark, :bookmark_model).sub(/gws\/(?<model>[^\/]*)\/?.*/) do
+  def create
+    item = find_item || @model.new(get_params)
+    if params.dig(:item, :name).present?
+      item.name = params.dig(:item, :name)
+    else
+      item.name = params.dig(:item, :default_name)
+    end
+    model = params.dig(:item, :model).sub(/gws\/(?<model>[^\/]*)\/?.*/) do
       Regexp.last_match[:model]
     end
-  end
-
-  def create
-    item = find_item || @model.new(params.require(:bookmark).permit(permit_fields).merge(fix_params))
-    if params.dig(:bookmark, :name).present?
-      item.name = params.dig(:bookmark, :name)
+    if @model::BOOKMARK_MODEL_TYPES.include?(model)
+      item.bookmark_model = model
     else
-      item.name = params.dig(:bookmark, :default_name)
+      item.bookmark_model = 'other'
     end
-    item.bookmark_model = 'other' unless @model::BOOKMARK_MODEL_TYPES.include?(params.dig(:bookmark, :bookmark_model))
 
-    render_create item.save, location: params.dig(:bookmark, :url)
+    item.save
+    render json: { name: item.name, bookmark_id: item.id }
   end
 
   def destroy
     item = find_item
 
-    render_destroy item.destroy, location: params.dig(:bookmark, :url)
+    item.try(:destroy)
+    render nothing: true
   end
 end
