@@ -10,6 +10,11 @@ class Webmail::Mailer < ActionMailer::Base
       attachments[file.name] = file.read
     end
 
+    if @item.in_request_mdn == "1"
+      dnt = Webmail::Converter.extract_address(@item.mail_headers[:from])
+      headers["Disposition-Notification-To"] = dnt
+    end
+
     mail(@item.mail_headers) do |format|
       if @item.html?
         format.html
@@ -18,7 +23,7 @@ class Webmail::Mailer < ActionMailer::Base
       end
     end
 
-    if item.in_request_dsn == "1"
+    if @item.in_request_dsn == "1"
       from = Webmail::Converter.extract_address(mail.from.first)
       mail.smtp_envelope_to = (mail.to.to_a + mail.cc.to_a + mail.bcc.to_a).map do |addr|
         to = Webmail::Converter.extract_address(addr)
