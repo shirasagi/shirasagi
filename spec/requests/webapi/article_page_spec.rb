@@ -71,7 +71,7 @@ describe "webapi", dbscope: :example, type: :request do
         params = {
           item: {
             name: "更新タイトル",
-            body_parts: %w( <div>part0</div> <div>part1</div> <div>part2</div> ),
+            body_parts: %w(<div>part0</div> <div>part1</div> <div>part2</div>),
             layout_id: 1,
             body_layout_id: 1,
             release_date: "2015/11/13 11:00:00",
