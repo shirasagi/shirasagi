@@ -7,7 +7,7 @@ module Cms::ArchiveHelper
     enable = (opts[:enable] != nil) ? opts[:enable] : true
 
     if enable && within_one_year?(date)
-      link_to name , sprintf("#{path}%04d%02d", year, month)
+      link_to name, sprintf("#{path}%04d%02d", year, month)
     else
       name
     end

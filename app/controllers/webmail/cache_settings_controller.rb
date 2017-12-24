@@ -6,7 +6,7 @@ class Webmail::CacheSettingsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("webmail.settings.cache") , { action: :show } ]
+    @crumbs << [t("webmail.settings.cache"), { action: :show } ]
     @webmail_other_account_path = :webmail_cache_setting_path
   end
 

@@ -195,7 +195,7 @@ def save_part(data)
 end
 
 save_part route: "cms/crumb", filename: "breadcrumbs.part.html", name: "パンくず",
-  home_label: "トップ" , mobile_view: "hide"
+  home_label: "トップ", mobile_view: "hide"
 save_part route: "cms/free", filename: "connection.part.html", name: "関連サイト"
 save_part route: "cms/free", filename: "foot-top.part.html", name: "フッター：トップ"
 save_part route: "cms/free", filename: "foot.part.html", name: "フッター"

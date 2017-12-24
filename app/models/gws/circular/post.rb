@@ -85,7 +85,7 @@ class Gws::Circular::Post
               item.id,
               item.name,
               comment.id,
-              item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen') ,
+              item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen'),
               comment.user.long_name,
               comment.text,
               comment.updated.strftime('%Y/%m/%d %H:%M')

@@ -53,16 +53,16 @@ end
 
 save_node filename: "css", name: "CSS", route: "uploader/file", shortcut: "show"
 
-save_node filename: "docs"  , name: "記事"    , route: "article/page", shortcut: "show"
+save_node filename: "docs", name: "記事", route: "article/page", shortcut: "show"
 save_node filename: "topics", name: "注目記事", route: "category/page", shortcut: "show", conditions: %w(product)
 
-save_node filename: "product"     , name: "製品情報", route: "cms/node", shortcut: "show"
+save_node filename: "product", name: "製品情報", route: "cms/node", shortcut: "show"
 save_node filename: "product/word", name: "文書管理", route: "cms/page"
-save_node filename: "product/calc", name: "表計算"  , route: "cms/page"
+save_node filename: "product/calc", name: "表計算", route: "cms/page"
 
-save_node filename: "recruit"      , name: "採用情報", shortcut: "show", route: "category/node"
-save_node filename: "recruit/sales", name: "営業部"  , route: "category/page"
-save_node filename: "recruit/devel", name: "開発部"  , route: "category/page"
+save_node filename: "recruit", name: "採用情報", shortcut: "show", route: "category/node"
+save_node filename: "recruit/sales", name: "営業部", route: "category/page"
+save_node filename: "recruit/devel", name: "開発部", route: "category/page"
 
 save_node route: "event/page", filename: "plan", name: "事業計画", shortcut: "show"
 
@@ -86,14 +86,14 @@ def save_part(data)
   item.update data
 end
 
-save_part filename: "head.part.html"  , name: "ヘッダー", route: "cms/free"
-save_part filename: "navi.part.html"  , name: "ナビ"    , route: "cms/free"
-save_part filename: "foot.part.html"  , name: "フッター", route: "cms/free"
+save_part filename: "head.part.html", name: "ヘッダー", route: "cms/free"
+save_part filename: "navi.part.html", name: "ナビ", route: "cms/free"
+save_part filename: "foot.part.html", name: "フッター", route: "cms/free"
 save_part filename: "crumbs.part.html", name: "パンくず", route: "cms/crumb"
-save_part filename: "tabs.part.html"  , name: "新着タブ", route: "cms/tabs",
+save_part filename: "tabs.part.html", name: "新着タブ", route: "cms/tabs",
   conditions: %w(topics product recruit), limit: 5, ajax_view: "enabled"
 
-save_part filename: "docs/pages.part.html"  , name: "新着記事リスト", route: "article/page"
+save_part filename: "docs/pages.part.html", name: "新着記事リスト", route: "article/page"
 save_part filename: "topics/pages.part.html", name: "注目記事リスト", route: "cms/page", conditions: %w(product)
 
 save_part filename: "product/nodes.part.html", name: "製品情報/フォルダ", route: "cms/node"
