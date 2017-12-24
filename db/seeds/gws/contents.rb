@@ -399,7 +399,6 @@ res = create_board_post(
 ## -------------------------------------
 puts "# circular/category"
 
-
 def create_circular_category(data)
   create_item(Gws::Circular::Category, data)
 end
