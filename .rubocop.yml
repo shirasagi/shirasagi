@@ -31,7 +31,7 @@ Metrics/ModuleLength:
   Max: 500
 
 # Indent private/protected/public as deep as method definitions
-Style/AccessModifierIndentation:
+Layout/AccessModifierIndentation:
   EnforcedStyle: indent
   SupportedStyles:
     - outdent
@@ -59,7 +59,7 @@ Style/EmptyElse:
 
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/IndentationConsistency:
+Layout/IndentationConsistency:
   # The difference between `rails` and `normal` is that the `rails` style
   # prescribes that in classes and modules the `protected` and `private`
   # modifier keywords shall be indented the same as public methods and that
@@ -84,11 +84,11 @@ Style/PercentLiteralDelimiters:
     '%r': '{}'
 
 # Cop supports --auto-correct.
-Style/SpaceAfterComma:
+Layout/SpaceAfterComma:
   Enabled: true
 
 # Cop supports --auto-correct.
-Style/SpaceBeforeFirstArg:
+Layout/SpaceBeforeFirstArg:
   # When `true`, allows most uses of extra spacing if the intent is to align
   # things with the previous or next line, not counting empty lines or comment
   # lines.
@@ -96,7 +96,7 @@ Style/SpaceBeforeFirstArg:
 
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-Style/SpaceInsideBlockBraces:
+Layout/SpaceInsideBlockBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
   SpaceBeforeBlockParameters: true
@@ -111,7 +111,7 @@ Style/SignalException:
     - semantic
 
 # Cop supports --auto-correct.
-Style/TrailingWhitespace:
+Layout/TrailingWhitespace:
   Enabled: true
 
 # Cop supports --auto-correct.
