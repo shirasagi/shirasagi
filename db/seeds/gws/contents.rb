@@ -28,24 +28,24 @@ end
 
 def create_column(type, data)
   case type
-    when :text
-      model = Gws::Column::TextField
-    when :text_area
-      model = Gws::Column::TextArea
-    when :number
-      model = Gws::Column::NumberField
-    when :date
-      model = Gws::Column::DateField
-    when :url
-      model = Gws::Column::UrlField
-    when :checkbox
-      model = Gws::Column::CheckBox
-    when :radio
-      model = Gws::Column::RadioButton
-    when :select
-      model = Gws::Column::Select
-    when :file_upload
-      model = Gws::Column::FileUpload
+  when :text
+    model = Gws::Column::TextField
+  when :text_area
+    model = Gws::Column::TextArea
+  when :number
+    model = Gws::Column::NumberField
+  when :date
+    model = Gws::Column::DateField
+  when :url
+    model = Gws::Column::UrlField
+  when :checkbox
+    model = Gws::Column::CheckBox
+  when :radio
+    model = Gws::Column::RadioButton
+  when :select
+    model = Gws::Column::Select
+  when :file_upload
+    model = Gws::Column::FileUpload
   end
   puts data[:name]
   cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }
