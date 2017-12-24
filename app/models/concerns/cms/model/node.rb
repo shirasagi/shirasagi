@@ -95,10 +95,10 @@ module Cms::Model::Node
   end
 
   def shortcut_options
-      [
-        [I18n.t('ss.options.state.show'), 'show'],
-        [I18n.t('ss.options.state.hide'), 'hide'],
-      ]
+    [
+      [I18n.t('ss.options.state.show'), 'show'],
+      [I18n.t('ss.options.state.hide'), 'hide'],
+    ]
   end
 
   def validate_destination_filename(dst)

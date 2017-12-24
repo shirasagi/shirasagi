@@ -1,5 +1,5 @@
 class SS::Mailer < ActionMailer::Base
   def new_message(args)
-     mail(args)
+    mail(args)
   end
 end

@@ -18,14 +18,14 @@ class Cms::MaxFileSize
     end
 
     def allow(action, user, opts = {})
-       opts_node = opts[:node]
-       return where({}) unless opts_node
+      opts_node = opts[:node]
+      return where({}) unless opts_node
 
-       if opts_node.allowed?(action, user, opts)
-         where({})
-       else
-         none
-       end
+      if opts_node.allowed?(action, user, opts)
+        where({})
+      else
+        none
+      end
     end
 
     def allowed?(action, user, opts = {})

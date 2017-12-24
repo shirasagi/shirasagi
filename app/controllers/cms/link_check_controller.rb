@@ -30,8 +30,8 @@ class Cms::LinkCheckController < ApplicationController
     opts = {
       proxy: proxy,
       progress_proc: ->(size) do
-          progress_data_size = size
-          raise "200"
+        progress_data_size = size
+        raise "200"
       end
     }
 

@@ -9,12 +9,12 @@ class Gws::Memo::ForwardsController < ApplicationController
   private
 
   def set_item
-   if @model.user(@cur_user).site(@cur_site).present?
-     @item = @model.find_by(user_id: @cur_user.id, site_id: @cur_site.id)
-   else
-     @item = @model.new(user_id: @cur_user.id, site_id: @cur_site.id)
-     @item.save
-   end
+    if @model.user(@cur_user).site(@cur_site).present?
+      @item = @model.find_by(user_id: @cur_user.id, site_id: @cur_site.id)
+    else
+      @item = @model.new(user_id: @cur_user.id, site_id: @cur_site.id)
+      @item.save
+    end
   end
 
   def set_crumbs
