@@ -2,7 +2,7 @@ class Cms::WordDictionary
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::SitePermission
+ include Cms::SitePermission
 
   set_permission_name "cms_tools", :use
 
