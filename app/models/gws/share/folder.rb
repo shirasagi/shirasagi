@@ -185,7 +185,7 @@ class Gws::Share::Folder
 
   def validate_children_move_to_other_parent
     if self.attributes["before_folder_name"].include?("/") &&
-        self.attributes["before_folder_name"].split("/").first != self.name.split("/").first
+       self.attributes["before_folder_name"].split("/").first != self.name.split("/").first
       errors.add :base, :not_move_to_under_other_parent
       return false
     end

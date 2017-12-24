@@ -59,7 +59,7 @@ class Gws::Monitor::AdminsController < ApplicationController
     end
 
     if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"] &&
-        @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
+       @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
       @items = @items.search(params[:s]).
           custom_order(params.dig(:s, :sort) || 'updated_desc').
           page(params[:page]).per(50)
