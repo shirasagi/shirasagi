@@ -11,12 +11,12 @@ module Workflow::MemberPermission
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
       action = permission_action || action
       permit = "#{action}_other_#{permission_name}"
-      level = user.cms_roles.where(site_id:  site_id).in(permissions: permit).pluck(:permission_level).max
+      level = user.cms_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
       s = super
       return s if level
 
       permit = "#{action}_member_#{permission_name}"
-      level = user.cms_roles.where(site_id:  site_id).in(permissions: permit).pluck(:permission_level).max
+      level = user.cms_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
       non_members = s.where(:workflow_member_id => nil)
       non_members unless level
 
