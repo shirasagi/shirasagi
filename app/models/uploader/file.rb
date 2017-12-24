@@ -113,7 +113,7 @@ class Uploader::File
     "#{site.full_url}#{filename}"
   end
 
-  def initialize(attributes={})
+  def initialize(attributes = {})
     saved_path = attributes.delete :saved_path
     @saved_path = saved_path unless saved_path.nil?
 

@@ -15,7 +15,7 @@ module Gws::Circular::See
     !unseen?(user)
   end
 
-  def unseen?(user=nil)
+  def unseen?(user = nil)
     return false if user.nil?
     seen.exclude?(user.id.to_s)
   end
@@ -34,7 +34,7 @@ module Gws::Circular::See
     seen?(user) ? unset_seen(user) : set_seen(user)
   end
 
-  def see_action_label(u=user)
+  def see_action_label(u = user)
     key = seen?(u) ? 'unset_seen' : 'set_seen'
     I18n.t(key, scope: 'gws/circular.post')
   end

@@ -1,5 +1,5 @@
 module Gws::Schedule::TodoHelper
-  def menu_items(action, model=@model, item=@item, site=@cur_site, user=@cur_user)
+  def menu_items(action, model = @model, item = @item, site = @cur_site, user = @cur_user)
     result = []
 
     case action

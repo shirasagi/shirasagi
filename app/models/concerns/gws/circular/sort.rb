@@ -8,7 +8,7 @@ module Gws::Circular::Sort
     ]
   end
 
-  def sort_hash(num=0)
+  def sort_hash(num = 0)
     result = {}
     item = sort_items[num]
     result[item[:key]] = item[:order]
