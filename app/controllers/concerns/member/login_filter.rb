@@ -42,7 +42,8 @@ module Member::LoginFilter
       "member_id" => member.id,
       "remote_addr" => remote_addr,
       "user_agent" => request.user_agent,
-      "last_logged_in" => timestamp }
+      "last_logged_in" => timestamp
+    }
     @cur_member = member
   end
 

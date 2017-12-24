@@ -46,8 +46,7 @@ class Opendata::Idea::CommentsController < ApplicationController
              contact_email: params[:item][:contact_email],
              contact_link_url: params[:item][:contact_link_url],
              contact_link_name: params[:item][:contact_link_name],
-             state: params[:item][:state]
-           }
+             state: params[:item][:state]}
     contact_group_id = params[:item][:contact_group_id]
     cond[:contact_group_id] = contact_group_id if contact_group_id.present?
 

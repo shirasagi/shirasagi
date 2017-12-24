@@ -15,7 +15,8 @@ module Board::Addon
 
       validates :map_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
       validates :map_zoom_level, numericality: {
-        only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 18, allow_blank: true }
+        only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 18, allow_blank: true
+      }
       validates :map_view_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
     end
 

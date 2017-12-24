@@ -124,7 +124,8 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
       assoc_site_id: @cms_site.id,
       assoc_node_id: @cms_node.id,
       assoc_page_id: @cur_page.id,
-      state: @cur_page.opendata_dataset_state.presence == 'public' ? 'public' : 'closed' }
+      state: @cur_page.opendata_dataset_state.presence == 'public' ? 'public' : 'closed'
+    }
     attributes[:contact_charge] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
     attributes[:contact_email] = @cur_page.contact_email if @cur_page.respond_to?(:contact_email)
     attributes[:contact_fax] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)

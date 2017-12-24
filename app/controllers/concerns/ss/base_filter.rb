@@ -100,7 +100,8 @@ module SS::BaseFilter
         "user_id" => user.id,
         "remote_addr" => remote_addr,
         "user_agent" => request.user_agent,
-        "last_logged_in" => Time.zone.now.to_i }
+        "last_logged_in" => Time.zone.now.to_i
+      }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
     cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }

@@ -16,7 +16,8 @@ describe Voice::OpenJtalk do
           'voice' => SS.config.voice['openjtalk']['voice'],
           'opts' => SS.config.voice['openjtalk']['opts'],
           'max_length' => SS.config.voice['openjtalk']['max_length'],
-          'sox' => SS.config.voice['openjtalk']['sox'] })
+          'sox' => SS.config.voice['openjtalk']['sox']
+        })
       tmp = Tempfile::new(['voice', '.wav'], '/tmp')
 
       talk.build(site.id, [ 'apple' ], tmp.path)
