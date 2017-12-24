@@ -27,7 +27,6 @@ module Opendata::Sparql
       return true if disable?
 
       begin
-
         temp_file = Tempfile.new("temp")
         open(ttl_url) do |f|
           f.each do |line|
