@@ -64,7 +64,7 @@ save_node filename: "recruit"      , name: "採用情報", shortcut: "show", rou
 save_node filename: "recruit/sales", name: "営業部"  , route: "category/page"
 save_node filename: "recruit/devel", name: "開発部"  , route: "category/page"
 
-save_node route: "event/page", filename: "plan", name:"事業計画", shortcut: "show"
+save_node route: "event/page", filename: "plan", name: "事業計画", shortcut: "show"
 
 ## layout
 Cms::Node.where(site_id: @site._id, filename: /^topics/).update_all(layout_id: layouts["page"].id)

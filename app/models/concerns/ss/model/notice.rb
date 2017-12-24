@@ -32,7 +32,7 @@ module SS::Model::Notice
     field :notice_severity, type: String, default: NOTICE_SEVERITY_NORMAL
     field :notice_target, type: Array, default: []
 
-    permit_params :state, :html, :name, :released, :notice_severity, notice_target:[]
+    permit_params :state, :html, :name, :released, :notice_severity, notice_target: []
 
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }
