@@ -144,11 +144,11 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
         visit public_path
         expect(current_path).to eq public_path
         # page.save_page
-#        expect(page).to have_css("header h1")
-#        expect(page).to have_css("div.point")
-#        expect(page).to have_css("nav.categories")
-#        expect(page).to have_css("div.text")
-#        expect(page).to have_css("div.idea-tabs")
+        # expect(page).to have_css("header h1")
+        # expect(page).to have_css("div.point")
+        # expect(page).to have_css("nav.categories")
+        # expect(page).to have_css("div.text")
+        # expect(page).to have_css("div.idea-tabs")
       end
     end
   end

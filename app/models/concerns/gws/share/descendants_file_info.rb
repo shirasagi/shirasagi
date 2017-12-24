@@ -59,7 +59,7 @@ module Gws::Share::DescendantsFileInfo
   end
 
   def update_folder_descendants_file_info
-#    return unless files
+    # return unless files
     files_count, total_file_size = folder_file_info(self)
     self.set(
       descendants_files_count: files_count,

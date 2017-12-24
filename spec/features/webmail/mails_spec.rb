@@ -59,13 +59,13 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
       # click_link I18n.t('webmail.links.unset_seen')
       # find("#menu > .nav-menu > .dropdown > a").click
       # click_link I18n.t('webmail.links.set_seen')
-#
+      #
       # # star
       # find("#menu > .nav-menu > .dropdown > a").click
       # click_link I18n.t('webmail.links.set_star')
       # find("#menu > .nav-menu > .dropdown > a").click
       # click_link I18n.t('webmail.links.unset_star')
-#
+      #
       # # etc
       # find("#menu > .nav-menu > .dropdown > a").click
       # click_link I18n.t('webmail.links.header_view')

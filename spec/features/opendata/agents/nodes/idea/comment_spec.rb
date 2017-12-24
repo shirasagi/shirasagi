@@ -42,10 +42,10 @@ describe "opendata_agents_nodes_comment", dbscope: :example do
       expect(page).to have_selector "a.comment-add"
     end
 
-#    it "#add" do
-#      visit "http://#{site.domain}#{index_path}"
-#      fill_in "s_comment_body", with: "管理コメント０１"
-#      click_link "コメントを投稿"
-#    end
+    # it "#add" do
+    #  visit "http://#{site.domain}#{index_path}"
+    #  fill_in "s_comment_body", with: "管理コメント０１"
+    #  click_link "コメントを投稿"
+    # end
   end
 end
