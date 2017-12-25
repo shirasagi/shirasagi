@@ -1,4 +1,4 @@
-class Gws::Schedule::TodoManagementController < ApplicationController
+class Gws::Schedule::Todo::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
@@ -12,7 +12,7 @@ class Gws::Schedule::TodoManagementController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
-    @crumbs << [t('modules.addons.gws/schedule/todo'), gws_schedule_todos_path]
+    @crumbs << [t('modules.addons.gws/schedule/todo'), gws_schedule_todo_main_path]
     @crumbs << [t('gws/schedule.tabs.trash'), action: :index]
   end
 

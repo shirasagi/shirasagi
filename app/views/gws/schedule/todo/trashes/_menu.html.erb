@@ -1,9 +1,9 @@
 <nav class="nav-menu">
   <% if params[:action] == 'index' %>
-    <%= link_to t('gws/schedule.links.back_to_todo'), gws_schedule_todos_path %>
+    <%= link_to t('gws/schedule.links.back_to_todo'), gws_schedule_todo_main_path %>
   <% end %>
   <% if params[:action] == 'show' && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to t('gws/schedule/todo_management.links.active'), recover_gws_schedule_todo_management_path  %>
+    <%= link_to t('gws/schedule/todo_management.links.active'), action: :recover  %>
   <% end %>
   <% if params[:action] =~ /recover/ && @item.allowed?(:read, @cur_user, site: @cur_site) %>
     <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>

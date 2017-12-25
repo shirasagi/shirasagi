@@ -1,7 +1,6 @@
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item %>
-  <%= link_to t('gws/schedule/todo_management.links.active'),
-              recover_gws_schedule_todo_management_path(id: item) %>
+  <%= link_to t('gws/schedule/todo_management.links.active'), action: :recover, id: item %>
 <% end %>
 
 <% @index_title = proc do |item| %>
@@ -16,5 +15,5 @@
     <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/schedule/todo.disabled_items') %></span>
 <% end %>
 
-<%= render partial: 'gws/schedule/todos/tabs' %>
+<%= render partial: 'gws/schedule/todo/main/tabs' %>
 <%= render file: 'gws/crud/index' %>

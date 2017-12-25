@@ -45,7 +45,7 @@ module Gws::Schedule::PlanHelper
 
     @todos.map do |todo|
       result = todo.calendar_format(@cur_user, @cur_site)
-      result[:restUrl] = gws_schedule_todos_path
+      result[:restUrl] = gws_schedule_todo_readables_path
       result
     end
   end

@@ -1,5 +1,7 @@
 <%= jquery do %>
-    Gws_Schedule_Todo.render();
+  Gws_Schedule_Todo.render({
+    active: <%== { path: url_for(action: :active_all), confirm: t('gws/schedule/todo.confirm.active_all') }.to_json %>
+  });
 <% end %>
 
 <div class="list-head">

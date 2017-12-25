@@ -35,19 +35,22 @@ SS::Application.routes.draw do
     resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
 
-    resources :todos, concerns: :plans do
-      match :finish, on: :member, via: %i[get post]
-      match :revert, on: :member, via: %i[get post]
-      post :finish_all, on: :collection
-      post :revert_all, on: :collection
-      get :disable, on: :member
-      post :disable_all, on: :collection
-    end
-    resources :todo_management do
-      get :delete, on: :member
-      get :recover, on: :member
-      get :active, on: :member
-      post :active_all, on: :collection
+    namespace 'todo' do
+      get '/' => redirect { |p, req| "#{req.path}/readables" }, as: :main
+      resources :readables, concerns: :plans do
+        match :finish, on: :member, via: %i[get post]
+        match :revert, on: :member, via: %i[get post]
+        post :finish_all, on: :collection
+        post :revert_all, on: :collection
+        get :disable, on: :member
+        post :disable_all, on: :collection
+      end
+      resources :trashes do
+        get :delete, on: :member
+        get :recover, on: :member
+        get :active, on: :member
+        post :active_all, on: :collection
+      end
     end
 
     resources :categories, concerns: :plans

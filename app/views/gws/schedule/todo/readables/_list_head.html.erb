@@ -1,5 +1,9 @@
 <%= jquery do %>
-    Gws_Schedule_Todo.render();
+  Gws_Schedule_Todo.render({
+    disable: <%== { path: url_for(action: :disable_all), confirm: t('gws/schedule/todo.confirm.disable_all') }.to_json %>,
+    finish: <%== { path: url_for(action: :finish_all), confirm: t('gws/schedule/todo.confirm.finish_all') }.to_json %>,
+    revert: <%== { path: url_for(action: :revert_all), confirm: t('gws/schedule/todo.confirm.revert_all') }.to_json %>
+  });
 <% end %>
 
 <div class="list-head">
