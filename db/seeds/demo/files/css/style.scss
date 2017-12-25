@@ -1279,6 +1279,24 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     clear: both;
   }
 }
+.tourist-spot {
+  .img {
+    float: left;
+    margin-right: 15px;
+    @include mb {
+      float: none;
+      margin-right: 0;
+    }
+  }
+  .photos {
+    @include display-flex;
+    @include flex-wrap(wrap);
+    margin: 0 -7px;
+    a {
+      margin: 0 7px 15px;
+    }
+  }
+}
 #sitemap ul {
   @include clear;
 }

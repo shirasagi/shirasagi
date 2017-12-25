@@ -28,10 +28,18 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.find_or_create_by(cond)
-  item.in_file = file
-  item.name = data[:name] if data[:name].present?
-  item.update
+  created = false
+  item = SS::File.find_or_create_by(cond) do |item|
+    item.in_file = file
+    item.name = data[:name] if data[:name].present?
+    created = true
+  end
+
+  if !created
+    item.in_file = file
+    item.name = data[:name] if data[:name].present?
+    item.update
+  end
 
   item
 end
@@ -170,6 +178,68 @@ save_part route: "cms/calendar_nav", filename: "docs/archive/calendar.part.html"
 save_part route: "cms/monthly_nav", filename: "docs/archive/month.part.html", name: "月次", periods: 12
 save_part route: "recommend/history", filename: "history.part.html", name: "閲覧履歴",
   mobile_view: "hide", ajax_view: "enabled", limit: 5
+
+## -------------------------------------
+puts "# forms"
+
+def save_form(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  html = File.read("forms/" + data.delete(:filename)) rescue nil
+
+  item = Cms::Form.find_or_create_by(cond)
+  item.attributes = data.merge html: html
+  item.update
+  item.add_to_set group_ids: @site.group_ids
+
+  item
+end
+
+def save_column(type, data)
+  case type
+    when :text
+      model = Cms::Column::TextField
+    when :text_area
+      model = Cms::Column::TextArea
+    when :number
+      model = Cms::Column::NumberField
+    when :date
+      model = Cms::Column::DateField
+    when :url
+      model = Cms::Column::UrlField
+    when :checkbox
+      model = Cms::Column::CheckBox
+    when :radio
+      model = Cms::Column::RadioButton
+    when :select
+      model = Cms::Column::Select
+    when :file_upload
+      model = Cms::Column::FileUpload
+  end
+  puts data[:name]
+  cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }
+  item = model.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site)
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+form = save_form(name: '観光情報', order: 10, state: 'public', filename: '1.html')
+
+form_columns = [
+  save_column(:file_upload, form: form, name: 'メイン画像', order: 10, required: 'required', tooltips: '画像ファイルをアップロードしてください。', html_tag: 'img'),
+  save_column(:text_area, form: form, name: '説明文', order: 20, required: 'required', tooltips: '説明文を入力してください。'),
+  save_column(:text, form: form, name: '所在地', order: 30, required: 'optional', tooltips: '住所を入力してください。', input_type: 'text'),
+  save_column(:text, form: form, name: 'アクセス', order: 40, required: 'optional', tooltips: 'アクセス情報を入力してください。', input_type: 'text'),
+  save_column(:text, form: form, name: '営業時間', order: 50, required: 'optional', tooltips: '営業時間を入力してください。', input_type: 'text'),
+  save_column(:text, form: form, name: '休業日', order: 60, required: 'optional', tooltips: '休業日を入力してください。', input_type: 'text'),
+  save_column(:text, form: form, name: '料金', order: 70, required: 'optional', input_type: 'text'),
+  save_column(:text, form: form, name: '電話番号', order: 80, required: 'optional', tooltips: '電話番号を入力してください。', input_type: 'text'),
+  save_column(:text, form: form, name: 'E-mail', order: 90, required: 'optional', tooltips: 'メールアドレスを入力してください。', input_type: 'email'),
+  save_column(:url, form: form, name: 'ホームページ', order: 100, required: 'optional', tooltips: 'URLを入力してください。', html_tag: 'a'),
+  save_column(:file_upload, form: form, name: '写真1', order: 110, required: 'optional', tooltips: '写真をアップロードしてください。', html_tag: 'a+img'),
+  save_column(:file_upload, form: form, name: '写真2', order: 120, required: 'optional', tooltips: '写真をアップロードしてください。', html_tag: 'a+img'),
+]
 
 ## -------------------------------------
 puts "# nodes"
@@ -350,7 +420,7 @@ categories = Hash[*array.flatten]
 save_node route: "cms/node", filename: "use", name: "ご利用案内"
 
 ## article
-save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
+save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show", st_form_ids: [form.id]
 
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: layouts["pages"].id, conditions: %w(docs)
@@ -768,7 +838,7 @@ def save_page(data)
   html ||= File.read("pages/" + data[:filename]) rescue nil
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = Cms::Page.find_or_create_by(cond) { |page| page.name = data[:name] }.becomes_with_route(data[:route])
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
@@ -1000,6 +1070,29 @@ save_page route: "event/page", filename: "calendar/page28.html", name: "住民�
   layout_id: layouts["event"].id, category_ids: [categories["calendar/kohen"].id], event_dates: dates,
   schedule: "〇〇年○月〇日", venue: "○○○○○○○○○○", cost: "○○○○○○○○○○",
   content: "○○○○○○○○○○○○○○○○○○○○", related_url: link_url,
+  group_ids: [g_seisaku.id]
+
+file_7 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "keyvisual01.jpg", model: "ss/temp_file"
+file_8 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "keyvisual02.jpg", model: "ss/temp_file"
+file_9 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "keyvisual03.jpg", model: "ss/temp_file"
+
+save_page route: "article/page", filename: "docs/page29.html", name: "シラサギ博物館",
+  layout_id: layouts["pages"].id, form_id: form.id, category_ids: [categories["kanko/geijyutsu"].id],
+  column_values: [
+    form_columns[0].serialize_value(file_7.id),
+    form_columns[1].serialize_value("説明文を入力します。説明文を入力します。説明文を入力します。説明文を入力します。説明文を入力します。説明文を入力します。"),
+    form_columns[2].serialize_value("大鷺県シラサギ市小鷺町1丁目1番地1号"),
+    form_columns[3].serialize_value("シラサギ駅から徒歩5分"),
+    form_columns[4].serialize_value("午前10時から午後4時"),
+    form_columns[5].serialize_value("毎週水曜日"),
+    form_columns[6].serialize_value("大人600円、中高生500円、小学生300円"),
+    form_columns[7].serialize_value("00-0000-0000"),
+    form_columns[8].serialize_value("shirasagi@example.jp"),
+    form_columns[9].serialize_value("http://demo.ss-proj.org/"),
+    form_columns[10].serialize_value(file_8.id),
+    form_columns[11].serialize_value(file_9.id),
+  ],
+  map_points: [{ "name" => "", "loc" => [35.7186823, 139.7741203], "text" => "" }],
   group_ids: [g_seisaku.id]
 
 ## -------------------------------------
