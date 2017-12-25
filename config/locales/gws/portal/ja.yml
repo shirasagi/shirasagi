@@ -5,8 +5,8 @@ ja:
       gws/portal/portlet/free: 自由形式
       gws/portal/portlet/link: リンク設定
       gws/portal/portlet/reminder: リマインダー設定
-      gws/portal/portlet/bookmark: お気に入り設定
       gws/portal/portlet/schedule: スケジュール設定
+      gws/portal/portlet/bookmark: お気に入り設定
       gws/portal/portlet/board: 掲示板設定
       gws/portal/portlet/faq: よくある質問設定
       gws/portal/portlet/qna: Ｑ＆Ａ設定
@@ -36,12 +36,12 @@ ja:
       reminder:
         name: リマインダー
         text: リマインダーを表示します。
-      bookmark:
-        name: お気に入り
-        text: お気に入りを表示します。
       schedule:
         name: スケジュール
         text: 今週のスケジュールを表示します。
+      bookmark:
+        name: お気に入り
+        text: お気に入りを表示します。
       board:
         name: 掲示板
         text: 新着の投稿を表示します。
@@ -118,10 +118,10 @@ ja:
         links/url: URL
       gws/addon/portal/portlet/reminder:
         reminder_filter: 表示範囲
-      gws/addon/portal/portlet/bookmark:
-        bookmark_model: 機能表示範囲
       gws/addon/portal/portlet/schedule:
         schedule_member_ids: 表示ユーザー
+      gws/addon/portal/portlet/bookmark:
+        bookmark_model: 機能表示範囲
       gws/addon/portal/portlet/board:
         board_severity: 重要度
         board_category_ids: カテゴリー

@@ -20,7 +20,7 @@ class Gws::Portal::UserSetting
   before_validation :set_name, if: ->{ portal_user.present? }
 
   def portlet_models
-    %w(free links reminder bookmark schedule report workflow circular monitor board faq qna share).map do |key|
+    %w(free links reminder schedule bookmark report workflow circular monitor board faq qna share).map do |key|
       Gws::Portal::UserPortlet.portlet_model(key)
     end
   end
