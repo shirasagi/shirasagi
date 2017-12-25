@@ -1,11 +1,11 @@
 <%= jquery do %>
   var navi = new Gws_Category_Navi('.gws-category-navi');
-  navi.setBaseUrl('<%= gws_circular_category_posts_path(category: 'ID') %>');
+  navi.setBaseUrl('<%= gws_circular_posts_path(category: 'ID') %>');
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_circular_posts_path, class: 'btn dropdown-toggle' do %>
+  <%= link_to gws_circular_posts_path(category: '~'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
@@ -14,20 +14,12 @@
 
 <%= jquery do %>
   $(".set-seen-all").click(function(){
-    <% if @category %>
-      var form = Gws_Circular_Post.buildForm("<%= set_seen_all_gws_circular_category_posts_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
-    <% else %>
-      var form = Gws_Circular_Post.buildForm("<%= set_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
-    <% end %>
+    var form = Gws_Circular_Post.buildForm("<%= url_for(action: :set_seen_all) %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
     form.appendTo(document.body).submit();
   });
 
   $(".unset-seen-all").click(function(){
-    <% if @category %>
-      var form = Gws_Circular_Post.buildForm("<%= unset_seen_all_gws_circular_category_posts_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
-    <% else %>
-      var form = Gws_Circular_Post.buildForm("<%= unset_seen_all_gws_circular_posts_path %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
-    <% end %>
+    var form = Gws_Circular_Post.buildForm("<%= url_for(action: :unset_seen_all) %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
     form.appendTo(document.body).submit();
   });
 
@@ -63,7 +55,7 @@
             <span><%= item.user_long_name %></span>
             <span class="gws-share-categories">
               <% item.categories.compact.each do |category| %>
-                <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+                <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),
                             class: 'gws-category-label', style: category_label_css(category) %>
               <% end %>
             </span>

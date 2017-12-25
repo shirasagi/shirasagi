@@ -1,11 +1,11 @@
 <%= jquery do %>
   var navi = new Gws_Category_Navi('.gws-category-navi');
-  navi.setBaseUrl('<%= gws_circular_category_trashes_path(category: 'ID') %>');
+  navi.setBaseUrl('<%= gws_circular_trashes_path(category: 'ID') %>');
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_circular_trashes_path, class: 'btn dropdown-toggle' do %>
+  <%= link_to gws_circular_trashes_path(category: '~'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
@@ -14,11 +14,7 @@
 
 <%= jquery do %>
   $(".active-all").click(function(){
-    <% if @category %>
-      var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_category_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
-    <% else %>
-      var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
-    <% end %>
+    var form = Gws_Circular_Post.buildForm("<%= active_all_gws_circular_trashes_path %>", "<%= I18n.t('gws/circular.confirm.active_all') %>");
     form.appendTo(document.body).submit();
   });
 <% end %>
@@ -36,7 +32,7 @@
   <span class="gws-share-categories">
     <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/circular.post.disabled') %></span>
     <% item.categories.compact.each do |category| %>
-      <%= link_to category.trailing_name, gws_circular_category_trashes_path(category: category.id),
+      <%= link_to category.trailing_name, gws_circular_trashes_path(category: category.id),
                   class: 'gws-category-label', style: category_label_css(category) %>
     <% end %>
     </span>

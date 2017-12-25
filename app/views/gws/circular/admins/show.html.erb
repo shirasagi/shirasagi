@@ -5,7 +5,7 @@
         <span class="name"><%= @item.name %></span>
         <span class="categories">
           <% @item.categories.each do |category| %>
-            <%= link_to category.trailing_name, gws_circular_category_admins_path(category: category.id),
+            <%= link_to category.trailing_name, gws_circular_admins_path(category: category.id),
                         class: "gws-category-label", style: category_label_css(category) %>
           <% end %>
         </span>
@@ -33,7 +33,7 @@
 
     <div class="menu">
       <% if @item.member?(@cur_user) %>
-        <%= link_to t('gws/board.links.comment'), @category.present? ? new_gws_circular_category_admin_comment_path(admin_id: @item.id) : new_gws_circular_admin_comment_path(admin_id: @item.id),
+        <%= link_to t('gws/board.links.comment'), new_gws_circular_admin_comment_path(admin_id: @item.id),
           class: 'btn' %>
       <% end %>
     </div>
@@ -54,10 +54,10 @@
           <div class="body"><pre><%= comment.text %></pre></div>
           <div class="menu">
             <% if @item.allowed?(:edit, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id %>
-              <%= link_to t('ss.links.edit'),  @category.present? ? edit_gws_circular_category_admin_comment_path(admin_id: @item.id, id: comment.id) : edit_gws_circular_admin_comment_path(admin_id: @item.id, id: comment.id), class: 'btn' %>
+              <%= link_to t('ss.links.edit'),  edit_gws_circular_admin_comment_path(admin_id: @item.id, id: comment.id), class: 'btn' %>
             <% end %>
             <% if @item.allowed?(:delete, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id  %>
-              <%= link_to t('ss.links.delete'),  @category.present? ? delete_gws_circular_category_admin_comment_path(admin_id: @item.id, id: comment.id) : delete_gws_circular_admin_comment_path(admin_id: @item.id, id: comment.id), class: 'btn' %>
+              <%= link_to t('ss.links.delete'),  delete_gws_circular_admin_comment_path(admin_id: @item.id, id: comment.id), class: 'btn' %>
             <% end %>
           </div>
         </div>

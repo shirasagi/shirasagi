@@ -5,7 +5,7 @@
         <span class="name"><%= @item.name %></span>
         <span class="categories">
           <% @item.categories.each do |category| %>
-            <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+            <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),
                         class: "gws-category-label", style: category_label_css(category) %>
           <% end %>
         </span>
@@ -33,12 +33,12 @@
 
     <div class="menu">
       <% if @item.member?(@cur_user) %>
-        <%= link_to t('gws/board.links.comment'), @category.present? ? new_gws_circular_category_post_comment_path(post_id: @item.id) : new_gws_circular_post_comment_path(post_id: @item.id),
+        <%= link_to t('gws/board.links.comment'), new_gws_circular_post_comment_path(post_id: @item.id),
           class: 'btn' %>
       <% end %>
 
       <% if @item.member?(@cur_user) %>
-        <%= link_to @item.see_action_label(@cur_user), @category.present? ? toggle_seen_gws_circular_category_post_path : toggle_seen_gws_circular_post_path,
+        <%= link_to @item.see_action_label(@cur_user), toggle_seen_gws_circular_post_path,
                     method: :post, class: "btn #{'gws-btn-pushed' if @item.seen?(@cur_user)}" %>
       <% end %>
     </div>

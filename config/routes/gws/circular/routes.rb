@@ -23,25 +23,12 @@ SS::Application.routes.draw do
   end
 
   gws 'circular' do
-    get '/' => redirect { |p, req| "#{req.path}/posts" }, as: :main
+    get '/' => redirect { |p, req| "#{req.path}/~/posts" }, as: :main
 
-    resources :posts, concerns: [:posts], except: [:new, :create, :edit, :update, :destroy]
-
-    resources :admins, concerns: [:admins], except: [:destroy] do
-      delete action: :disable_all, on: :collection
-    end
-
-    resources :trashes, except: [:new, :create, :edit, :update] do
-      get :delete, on: :member
-      delete action: :destroy_all, on: :collection
-      match :active, on: :member, via: [:get, :post]
-      post :active_all, on: :collection
-    end
-
-    scope(path: ':category', as: 'category') do
-      resources :posts, concerns: [:posts]
-      resources :admins, concerns: [:admins]
-      resources :trashes do
+    scope(path: ':category') do
+      resources :posts, concerns: [:posts], except: [:new, :create, :edit, :update, :destroy]
+      resources :admins, concerns: [:admins], except: [:destroy]
+      resources :trashes, except: [:new, :create, :edit, :update] do
         get :delete, on: :member
         delete action: :destroy_all, on: :collection
         get :recover, on: :member
