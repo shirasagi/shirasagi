@@ -1,7 +1,7 @@
 <div class="see mod-gws-schedule-comments">
   <% if @item.comments.present? %>
   <ul class="list-items">
-    <% @item.comments.order_by(updated: -1).each do |comment| %>
+    <% @item.comments.order_by(updated: 1).each do |comment| %>
     <li class="list-item" id="comment-<%= comment.id %>">
       <div class="info">
         <p><%== comment.html %></p>
