@@ -29,11 +29,11 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_cur_folder
-    dir = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
-    unless params[:folder] =~ /INBOX|INBOX.Trash|INBOX.Draft|INBOX.Sent|REDIRECT/
-      user_dir = Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).find_by(_id: params[:folder])
+    if params[:folder] =~ /INBOX|INBOX.Trash|INBOX.Draft|INBOX.Sent|REDIRECT/
+      @cur_folder = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
+    else
+      @cur_folder = Gws::Memo::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).find_by(_id: params[:folder])
     end
-    @cur_folder = dir ? dir : user_dir
   end
 
   def set_group_navi
@@ -52,9 +52,9 @@ class Gws::Memo::MessagesController < ApplicationController
     (params[:commit] == I18n.t('ss.buttons.draft_save')) ? 'INBOX.Draft' : 'INBOX.Sent'
   end
 
-  def from
-    {from: { @cur_user.id.to_s => from_folder }}
-  end
+  #def from
+  #  {from: { @cur_user.id.to_s => from_folder }}
+  #end
 
   def redirect_to_appropriate_folder
     path = @item.from[@cur_user.id.to_s]
@@ -80,9 +80,10 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
-        search(params[:s]).
-        page(params[:page]).per(50)
+      allow(:read, @cur_user, site: @cur_site).
+      folder(@cur_folder, @cur_user).
+      search(params[:s]).
+      page(params[:page]).per(50)
   end
 
   def new
@@ -104,17 +105,22 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def create
-    @item = @model.new from.merge(get_params)
+    @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
-      unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
-        if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
-          Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
-        end
-      end
+
+      # 外部メールへの転送機能?
+      #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
+      #  if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
+      #    Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
+      #  end
+      #end
+      #
+
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
-    render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
+    #render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
+    render_create @item.save, location: { action: :index }
   end
 
   def forward
@@ -128,11 +134,14 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
-      unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
-        if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
-          Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
-        end
-      end
+
+      # 外部メールへの転送機能?
+      #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
+      #  if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
+      #    Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
+      #  end
+      #end
+
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
     render_update @item.update, location: { action: :show, id: @item, folder: from_folder }

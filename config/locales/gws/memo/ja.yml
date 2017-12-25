@@ -54,6 +54,7 @@ ja:
     addons:
       gws/memo/comments: コメント
       gws/memo/group_setting: メッセージ
+      gws/memo/body: 内容
   gws_role:
     read_gws_memo_messages: メッセージの閲覧
     edit_gws_memo_messages: メッセージの編集

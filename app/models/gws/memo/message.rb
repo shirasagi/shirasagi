@@ -1,24 +1,22 @@
 class Gws::Memo::Message
   include ActiveSupport::NumberHelper
   include SS::Document
-  include Gws::Model::Memo::Message
+  #include Gws::Model::Memo::Message
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::SitePermission
   include Gws::Addon::Member
-  include Webmail::Addon::MailBody
+  include Gws::Addon::Memo::Body
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
   include Gws::Addon::Reminder
-  alias reminder_user_ids member_ids
 
-  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user
-  attr_accessor :in_request_mdn, :in_request_dsn, :state
+  store_in collection: "gws_memo_messages"
+
+  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :state
 
   field :subject, type: String
-  alias name subject
-
   field :text, type: String, default: ''
   field :html, type: String
   field :format, type: String
@@ -26,16 +24,28 @@ class Gws::Memo::Message
   field :seen, type: Hash, default: {}
   field :star, type: Hash, default: {}
   field :filtered, type: Hash, default: {}
-  field :from, type: Hash, default: {}
-  field :to, type: Hash, default: {}
+
+  #belongs_to :from, class_name: "Gws::User"
+  #embeds_ids :to, class_name: "Gws::User"
+
+  field :path, type: Hash, default: {}
   field :send_date, type: DateTime
 
-  permit_params :subject, :text, :html, :format
+  alias name subject
+  alias reminder_user_ids member_ids
 
-  default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
+  alias from user
+  alias form_id user_id
+
+  alias to members
+  alias to_ids member_ids
+
+  permit_params :subject, :text, :html, :format, :from_id
+
+  default_scope -> { order_by(send_date: -1, updated: -1) }
 
   after_initialize :set_default_reminder_date, if: :new_record?
-  before_validation :set_to, :set_size
+  before_validation :set_path, :set_size
 
   validate :validate_attached_file_size
   validate :validate_message
@@ -61,8 +71,8 @@ class Gws::Memo::Message
     criteria
   }
 
-  scope :folder, ->(folder) {
-    where("#{folder.direction}.#{folder.user_id}" => folder.folder_path)
+  scope :folder, ->(folder, user) {
+    where("path.#{user.id}" => folder.path)
   }
 
   scope :unseen, ->(user_id) {
@@ -79,10 +89,10 @@ class Gws::Memo::Message
 
   private
 
-  def set_to
-    member_ids.map(&:to_s).each do |id|
-      next unless self.to[id.to_s].blank?
-      self.to[id.to_s] = draft? ? nil : 'INBOX'
+  def set_path
+    self.path = {}
+    member_ids.each do |member_id|
+      self.path[member_id] = "INBOX"
     end
   end
 
@@ -167,21 +177,21 @@ class Gws::Memo::Message
   end
 
   def move(user, path)
-    self.to[user.id.to_s] = path
+    self.path[user.id.to_s] = path
     self
   end
 
-  def draft?
-    from.values.include?('INBOX.Draft')
+  def draft?(user)
+    self.path[user.id.to_s] == 'INBOX.Draft'
   end
 
-  def owned?(user)
-    return true if (self.group_ids & user.group_ids).present?
-    return true if user_ids.to_a.include?(user.id)
-    return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
-    return true if self.member_ids.include?(user.id)
-    false
-  end
+  #def owned?(user)
+  #  return true if (self.group_ids & user.group_ids).present?
+  #  return true if user_ids.to_a.include?(user.id)
+  #  return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
+  #  return true if self.member_ids.include?(user.id)
+  #  false
+  #end
 
   def apply_filters(user)
     matched_filter = Gws::Memo::Filter.site(site).
