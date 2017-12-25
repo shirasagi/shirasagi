@@ -1,12 +1,19 @@
 <%
   items = @portlet.find_board_items(@portal, @cur_user)
 %>
-<div class="main-box">
+<div class="main-box gws-boards">
   <div class="portlet-title"><%= @portlet.name %></div>
 
   <ul class="list-items">
     <% items.each do |item| %>
-      <li class="list-item">
+      <%
+        css_classes = %w(list-item)
+        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
+        if item.severity.present?
+          css_classes << item.severity
+        end
+      %>
+      <li class="<%= css_classes.join(' ') %>">
         <div class="info">
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <%= link_to item.name, gws_board_topic_path(id: item), class: 'title' %>
