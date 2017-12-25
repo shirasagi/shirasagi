@@ -93,7 +93,7 @@ module Gws::Schedule::TodoFilter
     @item.attributes = fix_params
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     return if request.get?
-    render_destroy @item.active, {notice: t('gws/schedule/todo_management.notice.active')}
+    render_destroy @item.active, {notice: t('gws/schedule/todo.notice.active')}
   end
 
   # すべて完了にする
@@ -144,7 +144,7 @@ module Gws::Schedule::TodoFilter
     end
 
     location = crud_redirect_url || { action: :index }
-    notice = { notice: t('gws/schedule/todo_management.notice.active') }
+    notice = { notice: t('gws/schedule/todo.notice.active') }
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 
     respond_to do |format|
