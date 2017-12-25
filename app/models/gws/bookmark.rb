@@ -29,6 +29,8 @@ class Gws::Bookmark
     criteria
   }
 
+  default_scope ->{ order_by(updated: -1) }
+
   def bookmark_model_options
     options = BOOKMARK_MODEL_TYPES.map do |model_type|
       [@cur_site.try(:"menu_#{model_type}_label") || I18n.t("modules.gws/#{model_type}"), model_type]
