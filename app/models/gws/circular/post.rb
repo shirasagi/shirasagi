@@ -41,28 +41,6 @@ class Gws::Circular::Post
   around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
 
   scope :topic, ->{ exists post_id: false }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    if sort_num = params[:sort].to_i
-      criteria = criteria.order_by(new.sort_hash(sort_num))
-    end
-
-    if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :text
-    end
-
-    if params[:category_id].present?
-      criteria = criteria.in(category_ids: params[:category_id])
-    end
-
-    if params[:state].present?
-      criteria = criteria.where(state: params[:state])
-    end
-
-    criteria
-  }
 
   scope :and_public, -> {
     where(state: 'public')
@@ -79,6 +57,35 @@ class Gws::Circular::Post
   }
 
   class << self
+    def search(params)
+      criteria = all
+      criteria = criteria.search_keyword(params)
+      criteria = criteria.search_category_id(params)
+      criteria = criteria.search_state(params)
+      criteria = criteria.order_by_sort(params)
+      criteria
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :text)
+    end
+
+    def search_category_id(params)
+      return all if params.blank? || params[:category_id].blank?
+      all.in(category_ids: params[:category_id])
+    end
+
+    def search_state(params)
+      return all if params.blank? || params[:state].blank?
+      all.where(state: params[:state])
+    end
+
+    def order_by_sort(params)
+      return all if params.blank? || params[:sort].blank?
+      all.reorder(new.sort_hash(params[:sort].to_i))
+    end
+
     def to_csv
       CSV.generate do |data|
         data << I18n.t('gws/circular.csv')
