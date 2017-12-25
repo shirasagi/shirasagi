@@ -7,7 +7,7 @@ module Gws::Schedule::CalendarFormat
     data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
 
     #data[:readable] = allowed?(:read, user, site: site)
-    data[:readable] = readable?(user)
+    data[:readable] = readable?(user) || member?(user)
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")

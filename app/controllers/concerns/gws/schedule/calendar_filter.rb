@@ -10,7 +10,7 @@ module Gws::Schedule::CalendarFilter
   def popup
     set_item
 
-    if @item.readable?(@cur_user)
+    if @item.readable?(@cur_user) || @item.member?(@cur_user)
       render file: "popup", layout: false
     else
       render file: "popup_hidden", layout: false
