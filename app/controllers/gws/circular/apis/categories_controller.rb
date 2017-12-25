@@ -8,7 +8,7 @@ class Gws::Circular::Apis::CategoriesController < ApplicationController
   private
 
   def set_category
-    @categories = @model.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    @categories = @model.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
 
     category_id = params.dig(:s, :category).presence
     @category = @model.where(id: category_id).first if category_id.present?
@@ -25,7 +25,7 @@ class Gws::Circular::Apis::CategoriesController < ApplicationController
     @multi = params[:single].blank?
 
     @items = @model.site(@cur_site).
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       search(params[:s]).
       where(name: parent_name).
       tree_sort

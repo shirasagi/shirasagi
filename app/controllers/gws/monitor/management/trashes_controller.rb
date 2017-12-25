@@ -26,9 +26,9 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
   end
 
   def set_category
-    @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
     if category_id = params[:category].presence
-      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
+      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
     end
   end
 
@@ -56,7 +56,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     end
 
     if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"] &&
-      @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
+       @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
       @items = @items.search(params[:s]).
           custom_order(params.dig(:s, :sort) || 'updated_desc').
           page(params[:page]).per(50)

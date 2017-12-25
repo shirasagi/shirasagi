@@ -62,7 +62,7 @@ class Gws::Workflow::File
         all.allow(:read, cur_user, site: cur_site).selector
       end
       readable_selector = unscoped do
-        all.in(state: %w(approve public)).readable(cur_user, cur_site).selector
+        all.in(state: %w(approve public)).readable(cur_user, site: cur_site).selector
       end
       base_criteria = base_criteria.where('$and' => [{ '$or' => [ allow_selector, readable_selector ] }])
 

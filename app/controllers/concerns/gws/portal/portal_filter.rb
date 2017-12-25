@@ -28,7 +28,7 @@ module Gws::Portal::PortalFilter
     @portal.portal_type = (@portal_user.id == @cur_user.id) ? :my_portal : :user_portal
 
     if @portal.user_portal?
-      raise '403' if !@portal.readable?(@cur_user, site: @cur_site, strict: true)
+      raise '403' if !@portal.portal_readable?(@cur_user, site: @cur_site)
     end
   end
 

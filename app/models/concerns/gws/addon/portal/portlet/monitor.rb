@@ -22,7 +22,7 @@ module Gws::Addon::Portal::Portlet
         search[:category] = cate.name
       end
 
-      custom_group_ids = Gws::CustomGroup.site(portal.site).readable(user, portal.site).pluck(:id)
+      custom_group_ids = Gws::CustomGroup.site(portal.site).readable(user, site: portal.site).pluck(:id)
       state = monitor_answerable_article.presence || 'answerble'
 
       Gws::Monitor::Topic.site(portal.site).

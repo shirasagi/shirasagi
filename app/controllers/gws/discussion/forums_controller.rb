@@ -16,7 +16,7 @@ class Gws::Discussion::ForumsController < ApplicationController
 
   def pre_params
     @skip_default_group = true
-    super
+    super.merge member_ids: [@cur_user.id]
   end
 
   public
@@ -24,12 +24,13 @@ class Gws::Discussion::ForumsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
-    @items = @model.site(@cur_site).forum
+    state = params.dig(:s, :state).presence || 'public'
 
-    if params[:s] && params[:s][:state] == "closed"
-      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
-    else
-      @items = @items.and_public.member(@cur_user, site: @cur_site, include_role: true)
+    @items = @model.site(@cur_site).forum.
+      allow(:read, @cur_user, site: @cur_site)
+
+    if state == "public"
+      @items = @items.and_public.member(@cur_user)
     end
 
     @items.search(params[:s]).

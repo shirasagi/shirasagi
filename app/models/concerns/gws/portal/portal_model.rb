@@ -21,4 +21,10 @@ module Gws::Portal::PortalModel
   def root_portal?
     portal_type == :root_portal
   end
+
+  def portal_readable?(user, opts = {})
+    return true if allowed?(:read, user, site: opts[:site] || site, strict: true)
+    return true if readable?(user, opts[:site] || site)
+    false
+  end
 end

@@ -26,7 +26,7 @@ module Gws::Addon::Portal::Portlet
       end
 
       Gws::Share::File.site(portal.site).
-        readable(user, portal.site).
+        readable(user, site: portal.site).
         active.
         search(search).
         order(updated: -1).

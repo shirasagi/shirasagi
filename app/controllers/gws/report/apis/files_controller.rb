@@ -7,7 +7,7 @@ class Gws::Report::Apis::FilesController < ApplicationController
     @multi = params[:single].blank?
 
     @items = @model.site(@cur_site).
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
   end
