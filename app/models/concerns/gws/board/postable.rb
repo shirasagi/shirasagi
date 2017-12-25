@@ -51,10 +51,16 @@ module Gws::Board::Postable
   module ClassMethods
     def search(params)
       criteria = all
+      criteria = criteria.search_keyword(params)
       criteria = criteria.search_severity(params)
       criteria = criteria.search_category(params)
       criteria = criteria.search_browsed_state(params)
       criteria
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :text, :contributor_name)
     end
 
     def search_severity(params)
