@@ -1,5 +1,6 @@
 class Sns::Login::SamlController < ApplicationController
   include Sns::BaseFilter
+  include Sns::LoginFilter
 
   skip_before_action :verify_authenticity_token, only: :consume
   skip_before_action :logged_in?
@@ -23,7 +24,7 @@ class Sns::Login::SamlController < ApplicationController
       settings.name_identifier_format = @item.name_id_format
       settings.idp_sso_target_url = @item.sso_url
       settings.idp_slo_target_url = @item.slo_url
-      settings.idp_cert = Base64.encode64(SS::Crypt.decrypt(@item.x509_cert))
+      settings.idp_cert = SS::Crypt.decrypt(@item.x509_cert)
       settings.idp_cert_fingerprint = @item.fingerprint
     end
   end
