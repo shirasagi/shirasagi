@@ -26,7 +26,7 @@ class Gws::SharedAddress::AddressesController < ApplicationController
 
   def set_group_navi
     @group_navi = Gws::SharedAddress::Group.site(@cur_site).
-      readable(@cur_user, @cur_site)
+      readable(@cur_user, site: @cur_site)
   end
 
   public
@@ -36,7 +36,7 @@ class Gws::SharedAddress::AddressesController < ApplicationController
     s_params[:address_group_id] = @address_group.id if @address_group.present?
 
     @items = @model.site(@cur_site).
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       search(s_params).
       page(params[:page]).per(50)
   end

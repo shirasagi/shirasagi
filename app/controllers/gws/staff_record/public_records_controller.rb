@@ -17,7 +17,7 @@ class Gws::StaffRecord::PublicRecordsController < ApplicationController
     @limit = params.dig(:s, :limit).presence || @cur_site.staff_records_limit
 
     @items = @cur_year.yearly_users.show_staff_records.
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page]).
       per(@limit)
@@ -27,7 +27,7 @@ class Gws::StaffRecord::PublicRecordsController < ApplicationController
     raise "403" unless @item.readable?(@cur_user)
 
     @items = @cur_year.yearly_users.show_staff_records.
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       where(section_name: @item.section_name).
       where(charge_name: @item.charge_name).
       all

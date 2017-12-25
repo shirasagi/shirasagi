@@ -20,9 +20,9 @@ class Gws::Board::TopicsController < ApplicationController
   end
 
   def set_category
-    @categories = Gws::Board::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    @categories = Gws::Board::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
     if category_id = params[:category].presence
-      @category ||= Gws::Board::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
+      @category ||= Gws::Board::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
     end
   end
 
@@ -41,12 +41,14 @@ class Gws::Board::TopicsController < ApplicationController
   public
 
   def index
+    state = params.dig(:s, :state).presence || 'public'
+
     @items = @model.site(@cur_site).topic
 
-    if params[:s] && params[:s][:state] == "closed"
-      @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
+    if state == "public"
+      @items = @items.and_public.readable(@cur_user, site: @cur_site)
     else
-      @items = @items.and_public.readable(@cur_user, @cur_site)
+      @items = @items.allow(:read, @cur_user, site: @cur_site)
     end
 
     if @category.present?

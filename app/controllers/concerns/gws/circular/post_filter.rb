@@ -36,9 +36,9 @@ module Gws::Circular::PostFilter
   end
 
   def set_category
-    @categories ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    @categories ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
     if category_id = params[:category].presence
-      @category ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
+      @category ||= Gws::Circular::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
     end
   end
 

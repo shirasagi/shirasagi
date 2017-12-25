@@ -18,38 +18,12 @@ module Gws::Addon::SubscriptionSetting
     before_validation :set_subscribed_groups_hash
     before_validation :set_subscribed_members_hash
     before_validation :set_subscribed_custom_groups_hash
-
-    # Allow subscription settings and subscription permissions.
-    scope :subscribed, ->(user, site, opts = {}) {
-      cond = [
-        { "subscribed_group_ids.0" => { "$exists" => false },
-          "subscribed_member_ids.0" => { "$exists" => false },
-          "subscribed_custom_group_ids.0" => { "$exists" => false } },
-        { :subscribed_group_ids.in => user.group_ids },
-        { subscribed_member_ids: user.id },
-      ]
-      if subscription_setting_included_custom_groups?
-        cond << { :subscribed_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      end
-
-      cond << allow_condition(:read, user, site: site) if opts[:include_role]
-      where("$and" => [{ "$or" => cond }])
-    }
   end
 
   def subscription_setting_present?
     return true if subscribed_group_ids.present?
     return true if subscribed_member_ids.present?
     return true if subscribed_custom_group_ids.present?
-    false
-  end
-
-  def subscribed?(user)
-    return true if subscribed_group_ids.blank? && subscribed_member_ids.blank? && subscribed_custom_group_ids.blank?
-    return true if subscribed_group_ids.any? { |m| user.group_ids.include?(m) }
-    return true if subscribed_member_ids.include?(user.id)
-    return true if subscribed_custom_groups.any? { |m| m.member_ids.include?(user.id) }
-    return true if allowed?(:read, user, site: site) # valid role
     false
   end
 

@@ -129,7 +129,7 @@ class Gws::Schedule::PlanSearch
     return if facility_ids.blank?
 
     @facilities = Gws::Facility::Item.site(@cur_site).
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       active.
       any_in(id: facility_ids)
 

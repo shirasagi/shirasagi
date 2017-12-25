@@ -37,12 +37,12 @@ class Gws::Portal::User::PortalController < ApplicationController
         page(1).per(5)
 
       @notices = Gws::Notice.site(@cur_site).and_public.
-        readable(@cur_user, @cur_site).
+        readable(@cur_user, site: @cur_site).
         page(1).per(5)
     end
 
     @links = Gws::Link.site(@cur_site).and_public.
-      readable(@cur_user, @cur_site).to_a
+      readable(@cur_user, site: @cur_site).to_a
 
     show_portal
   end

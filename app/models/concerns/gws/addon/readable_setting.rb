@@ -23,7 +23,9 @@ module Gws::Addon::ReadableSetting
     before_validation :set_readable_custom_groups_hash
 
     # Allow readable settings and readable permissions.
-    scope :readable, ->(user, site, opts = {}) {
+    scope :readable, ->(user, opts = {}) {
+      return where({ _id: -1 }) unless read_permission?(user, opts[:site])
+
       or_cond = [
         { "readable_group_ids.0" => { "$exists" => false },
           "readable_member_ids.0" => { "$exists" => false },
@@ -35,7 +37,6 @@ module Gws::Addon::ReadableSetting
         or_cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
       end
 
-      or_cond << allow_condition(:read, user, site: site) if opts[:include_role]
       where("$and" => [{ "$or" => or_cond }])
     }
   end
@@ -48,16 +49,12 @@ module Gws::Addon::ReadableSetting
   end
 
   def readable?(user, opts = {})
-    return true unless readable_setting_present?
+    return false if !self.class.read_permission?(user, opts[:site] || self.site)
+    return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
     return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
-
-    if opts[:strict]
-      return allowed?(:read, user, site: opts[:site] || site, strict: true)
-    else
-      return allowed?(:read, user, site: opts[:site] || site) # valid role
-    end
+    false
   end
 
   def readable_groups_hash
@@ -121,6 +118,12 @@ module Gws::Addon::ReadableSetting
   end
 
   module ClassMethods
+    def read_permission?(user, site)
+      return true if user.gws_role_permissions["read_other_#{permission_name}_#{site.id}"]
+      return true if user.gws_role_permissions["read_private_#{permission_name}_#{site.id}"]
+      false
+    end
+
     def readable_setting_included_custom_groups?
       class_variable_get(:@@_readable_setting_include_custom_groups)
     end

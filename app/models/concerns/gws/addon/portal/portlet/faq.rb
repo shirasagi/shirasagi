@@ -20,7 +20,7 @@ module Gws::Addon::Portal::Portlet
       Gws::Faq::Topic.site(portal.site).
         topic.
         and_public.
-        readable(user, portal.site).
+        readable(user, site: portal.site).
         search(search).
         order(descendants_updated: -1).
         page(1).

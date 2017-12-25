@@ -106,7 +106,10 @@ module Gws::GroupPermission
       elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
         { "$or" => [
           { user_ids: user.id },
-          { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
+          { permission_level: { "$lte" => level }, "$or" => [
+            { :group_ids.in => user.group_ids },
+            { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+          ] }
         ] }
       else
         { user_ids: user.id }

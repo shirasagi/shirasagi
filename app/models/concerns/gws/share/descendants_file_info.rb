@@ -22,11 +22,11 @@ module Gws::Share::DescendantsFileInfo
   end
 
   def readable_active_files_count(user, site)
-    files.readable(user, site).active.count
+    files.readable(user, site: site).active.count
   end
 
   def readable_deleted_files_count(user, site)
-    files.readable(user, site).deleted.count
+    files.readable(user, site: site).deleted.count
   end
 
   private

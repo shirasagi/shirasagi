@@ -15,7 +15,7 @@ class Gws::StaffRecord::PublicSeatingsController < ApplicationController
 
   def index
     @items = @cur_year.yearly_seatings.
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page])
   end
