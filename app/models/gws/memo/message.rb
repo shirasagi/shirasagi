@@ -14,7 +14,7 @@ class Gws::Memo::Message
 
   store_in collection: "gws_memo_messages"
 
-  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :state
+  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :state, :in_paths
 
   field :subject, type: String
   field :text, type: String, default: ''
@@ -28,7 +28,7 @@ class Gws::Memo::Message
   #belongs_to :from, class_name: "Gws::User"
   #embeds_ids :to, class_name: "Gws::User"
 
-  field :path, type: Hash, default: {}
+  field :paths, type: Hash, default: {}
   field :send_date, type: DateTime
 
   alias name subject
@@ -40,12 +40,12 @@ class Gws::Memo::Message
   alias to members
   alias to_ids member_ids
 
-  permit_params :subject, :text, :html, :format, :from_id
+  permit_params :subject, :text, :html, :format, :from_id, :in_paths
 
   default_scope -> { order_by(send_date: -1, updated: -1) }
 
   after_initialize :set_default_reminder_date, if: :new_record?
-  before_validation :set_path, :set_size
+  before_validation :set_paths, :set_size
 
   validate :validate_attached_file_size
   validate :validate_message
@@ -54,7 +54,7 @@ class Gws::Memo::Message
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 
-  after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
+  after_save :save_reminders, if: ->{ !draft?(@cur_user) && unseen?(@cur_user) }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -72,7 +72,7 @@ class Gws::Memo::Message
   }
 
   scope :folder, ->(folder, user) {
-    where("path.#{user.id}" => folder.path)
+    where("paths.#{user.id}" => /^#{Regexp.escape(folder.path)}$/)
   }
 
   scope :unseen, ->(user_id) {
@@ -89,10 +89,21 @@ class Gws::Memo::Message
 
   private
 
-  def set_path
-    self.path = {}
+  def set_paths
+    self.paths = {}
+
     member_ids.each do |member_id|
-      self.path[member_id] = "INBOX"
+      if paths_was && paths_was[member_id.to_s]
+        self.paths[member_id.to_s] = paths_was[member_id.to_s]
+      else
+        self.paths[member_id.to_s] = "INBOX"
+      end
+    end
+
+    if in_paths.present?
+      in_paths.each do |member_id, path|
+        self.paths[member_id.to_s] = path
+      end
     end
   end
 
@@ -177,12 +188,12 @@ class Gws::Memo::Message
   end
 
   def move(user, path)
-    self.path[user.id.to_s] = path
+    self.paths[user.id.to_s] = path
     self
   end
 
   def draft?(user)
-    self.path[user.id.to_s] == 'INBOX.Draft'
+    self.paths[user.id.to_s] == 'INBOX.Draft'
   end
 
   #def owned?(user)

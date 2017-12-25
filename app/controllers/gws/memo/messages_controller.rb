@@ -4,7 +4,9 @@ class Gws::Memo::MessagesController < ApplicationController
 
   model Gws::Memo::Message
 
-  before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
+  # フィルター機能
+  #before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
+
   before_action :set_item, only: [:show, :edit, :update, :trash, :delete, :destroy, :toggle_star]
   before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
@@ -13,6 +15,10 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :set_cur_folder, only: [:index]
 
   private
+
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
 
   def set_crumbs
     set_cur_folder
@@ -24,8 +30,11 @@ class Gws::Memo::MessagesController < ApplicationController
     end
   end
 
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+  def set_item
+    super
+    return if @item.user_id == @cur_user.id
+    return if @item.member?(@cur_user)
+    raise "403"
   end
 
   def set_cur_folder
@@ -52,10 +61,6 @@ class Gws::Memo::MessagesController < ApplicationController
     (params[:commit] == I18n.t('ss.buttons.draft_save')) ? 'INBOX.Draft' : 'INBOX.Sent'
   end
 
-  #def from
-  #  {from: { @cur_user.id.to_s => from_folder }}
-  #end
-
   def redirect_to_appropriate_folder
     path = @item.from[@cur_user.id.to_s]
     if path.present?
@@ -80,7 +85,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).
+      #allow(:read, @cur_user, site: @cur_site).
       folder(@cur_folder, @cur_user).
       search(params[:s]).
       page(params[:page]).per(50)
@@ -88,17 +93,17 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     @item.new_memo
   end
 
   def reply
     @item = @model.new pre_params.merge(fix_params)
-    item_reply = @model.site(@cur_site).search_replay(params[:id]).first
-    @item.member_ids = item_reply.from.keys.map(&:to_i)
+    item_reply = @model.site(@cur_site).find(params[:id])
+    @item.member_ids = item_reply.member_ids
     @item.subject = "Re: #{item_reply.subject}"
 
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     @item.new_memo
     @item.text += "\n\n"
     @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
@@ -109,7 +114,7 @@ class Gws::Memo::MessagesController < ApplicationController
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
 
-      # 外部メールへの転送機能?
+      # 外部メールへの転送?
       #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
       #  if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
       #    Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
@@ -118,7 +123,7 @@ class Gws::Memo::MessagesController < ApplicationController
       #
 
     end
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     #render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
     render_create @item.save, location: { action: :index }
   end
@@ -130,12 +135,12 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def update
-    @item.attributes = from.merge(get_params)
+    @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
 
-      # 外部メールへの転送機能?
+      # 外部メールへの転送?
       #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
       #  if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
       #    Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
@@ -143,40 +148,46 @@ class Gws::Memo::MessagesController < ApplicationController
       #end
 
     end
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site, folder: params[:folder])
-    render_update @item.update, location: { action: :show, id: @item, folder: from_folder }
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @cur_user.id == @item.user_id
+    render_update @item.update, location: { action: :show, id: @item, folder: params[:folder] }
   end
 
   def show
-    raise '404' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     @item.set_seen(@cur_user).update
     render
   end
 
   def trash
-    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
-    render_destroy @item.move(@cur_user, 'INBOX.Trash').update
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+    @item.in_paths = { @cur_user.id.to_s => 'INBOX.Trash' }
+    render_destroy @item.update
   end
 
   def trash_all
     @items.each do |item|
-      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
-      item.move(@cur_user, 'INBOX.Trash').update
+      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      item.in_paths = { @cur_user.id.to_s => 'INBOX.Trash' }
+      item.update
     end
     render_destroy_all(false)
   end
 
   def move_all
     @items.each do |item|
-      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
-      item.move(@cur_user, params[:path]).update
+      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      item.in_paths = { @cur_user.id.to_s => params[:path] }
+      item.cur_user = @cur_user
+      item.update
     end
     render_destroy_all(false)
   end
 
   def set_seen_all
     @items.each do |item|
-      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      raise '403'unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      item.cur_user = @cur_user
       item.set_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -184,20 +195,22 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_seen_all
     @items.each do |item|
-      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      item.cur_user = @cur_user
       item.unset_seen(@cur_user).update
     end
     render_destroy_all(false)
   end
 
   def toggle_star
-    raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     render_destroy @item.toggle_star(@cur_user).update, location: { action: params[:location] }
   end
 
   def set_star_all
     @items.each do |item|
-      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      item.cur_user = @cur_user
       item.set_star(@cur_user).update
     end
     render_destroy_all(false)
@@ -205,7 +218,8 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_star_all
     @items.each do |item|
-      raise '403' unless item.allowed?(:read, @cur_user, site: @cur_site, folder: params[:folder])
+      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      item.cur_user = @cur_user
       item.unset_star(@cur_user).update
     end
     render_destroy_all(false)

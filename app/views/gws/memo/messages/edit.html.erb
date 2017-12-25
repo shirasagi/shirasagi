@@ -4,7 +4,7 @@
 <% end %>
 
 <% @crud_buttons = proc do |f| %>
-  <% if @item.draft? %>
+  <% if @item.draft?(@cur_user) %>
     <%= f.submit t('ss.buttons.send'), class: 'btn-primary save js-send' %>
     <%= f.submit t('ss.buttons.draft_save'), class: 'btn-default js-save' %>
     <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
