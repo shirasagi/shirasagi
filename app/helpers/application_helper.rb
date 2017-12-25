@@ -139,18 +139,4 @@ module ApplicationHelper
       end
     end
   end
-
-  def bookmark_icon
-    html = []
-    
-    html << '<i class="material-icons">'
-    if Gws::Bookmark.where(user: @cur_user, site: @cur_site, url: request.fullpath).exists?
-      html << "&#xE866;"
-    else
-      html << "&#xE867;"
-    end
-    html << '</i>'
-
-    html.join.html_safe
-  end
 end
