@@ -15,6 +15,10 @@ ja:
       browsed: 閲覧
       list: トピック一覧へ
       confirm: 削除しますか？
+      browsed_user_info:
+        title: 既読者数
+        format: "%{count} 人 / %{total} 人中"
+        more: 詳しく見る
       notice:
         create: トピックを作成しました。
         update: トピックを更新しました。

@@ -1,0 +1,62 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag :single, params[:single] %>
+    <dl class="see">
+      <dt><%= t("mongoid.models.gws/group") %></dt>
+      <dd>
+        <% if browser.ie?(["<10"]) %>
+          <%= render partial: "gws/apis/users/group_dropdown_normal", locals: { f: f } %>
+        <% else %>
+          <%= render partial: "gws/apis/users/group_dropdown_tree", locals: { f: f } %>
+        <% end %>
+      </dd>
+
+      <%= render partial: "gws/apis/users/custom_group_dropdown", locals: { f: f } %>
+
+      <dt><%= Gws::User.t :title_ids %></dt>
+      <dd>
+        <%= f.select :title_ids, Gws::User.new(cur_site: @cur_site).title_id_options,
+                     { selected: params[:s].try(:[], :title_ids), include_blank: true },
+                     { class: "submit-on-change" } %>
+      </dd>
+
+      <dt><%= t "ss.keyword" %></dt>
+      <dd>
+        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+        <%= f.submit  t("ss.buttons.search"), class: :btn %>
+      </dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead>
+  <tr>
+    <th class="name"><%= Gws::User.t :name %></th>
+    <th class="browsed"><%= I18n.t('gws/board.topic.browsed') %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @subscribed_users.each do |user| %>
+    <tr data-user-id="<%= user.id %>">
+      <td class="name"><%= user.long_name %></td>
+      <td class="browsed">
+        <% @item.browsed_at(user).tap do |browsed_at| %>
+              <span class="browsed">
+              <% if browsed_at %>
+                <%= I18n.t('gws/board.options.browsed_state.read') %>
+                  <time datetime="<%= browsed_at.iso8601 %>"><%= I18n.l(browsed_at) %></time>
+              <% else %>
+                <%= I18n.t('gws/board.options.browsed_state.unread') %>
+              <% end %>
+              </span>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @subscribed_users if @subscribed_users.try(:current_page) %>

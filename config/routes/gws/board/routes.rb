@@ -29,6 +29,7 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "categories" => "categories#index"
+      get "browsing_states/:id" => "browsing_states#index", as: 'browsing_states'
     end
   end
 end
