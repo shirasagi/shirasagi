@@ -94,4 +94,9 @@ class Gws::Board::TopicsController < ApplicationController
       end
     end
   end
+
+  def print
+    set_item
+    render file: "print_#{@item.mode}", layout: 'ss/print'
+  end
 end
