@@ -66,7 +66,7 @@
         </tr>
         </thead>
         <tbody class="items">
-          <% @item.members.each do |member| %>
+          <% @item.sorted_overall_members.each do |member| %>
             <% first_comment = @item.comments.where(user_id: member.id).first %>
             <% last_comment = @item.comments.
               select { |c| c.user_id == member.id }.

@@ -14,6 +14,9 @@ class Gws::Circular::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  member_include_custom_groups
+  permission_include_custom_groups
+
   seqid :id
 
   field :name, type: String
