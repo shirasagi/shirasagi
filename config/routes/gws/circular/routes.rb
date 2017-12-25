@@ -7,19 +7,11 @@ SS::Application.routes.draw do
     post :toggle_seen, on: :member
     post :set_seen_all, on: :collection
     post :unset_seen_all, on: :collection
-
-    resources :comments do
-      get :delete, on: :member
-    end
   end
 
   concern :admins do
     match :disable, on: :member, via: [:get, :post]
     post :download, on: :collection
-
-    resources :comments do
-      get :delete, on: :member
-    end
   end
 
   gws 'circular' do
@@ -34,6 +26,9 @@ SS::Application.routes.draw do
         get :recover, on: :member
         get :active, on: :member
         post :active_all, on: :collection
+      end
+      resources :comments, path: ':parent/:post_id/comments' do
+        get :delete, on: :member
       end
     end
 

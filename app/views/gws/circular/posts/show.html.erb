@@ -1,3 +1,4 @@
+<% parent = params[:controller].split('/').last %>
 <div class="gws-board gws-board-thread">
   <article class="topic" id="post-<%= @item.id %>">
     <header>
@@ -5,8 +6,8 @@
         <span class="name"><%= @item.name %></span>
         <span class="categories">
           <% @item.categories.each do |category| %>
-            <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),
-                        class: "gws-category-label", style: category_label_css(category) %>
+            <%= link_to(category.trailing_name, { category: category.id, action: :index },
+                        { class: "gws-category-label", style: category_label_css(category) }) %>
           <% end %>
         </span>
       </h2>
@@ -33,7 +34,7 @@
 
     <div class="menu">
       <% if @item.member?(@cur_user) %>
-        <%= link_to t('gws/board.links.comment'), new_gws_circular_post_comment_path(post_id: @item.id),
+        <%= link_to t('gws/board.links.comment'), new_gws_circular_comment_path(parent: parent, post_id: @item.id),
           class: 'btn' %>
       <% end %>
 
@@ -59,10 +60,10 @@
           <div class="body"><pre><%= comment.text %></pre></div>
           <div class="menu">
             <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-              <%= link_to t('ss.links.edit'),  @category.present? ? edit_gws_circular_category_post_comment_path(post_id: @item.id, id: comment.id) : edit_gws_circular_post_comment_path(post_id: @item.id, id: comment.id), class: 'btn' %>
+              <%= link_to t('ss.links.edit'), edit_gws_circular_comment_path(parent: parent, post_id: @item.id, id: comment.id), class: 'btn' %>
             <% end %>
             <% if comment.allowed?(:delete, @cur_user, site: @cur_site)  %>
-              <%= link_to t('ss.links.delete'),  @category.present? ? delete_gws_circular_category_post_comment_path(post_id: @item.id, id: comment.id) : delete_gws_circular_post_comment_path(post_id: @item.id, id: comment.id), class: 'btn' %>
+              <%= link_to t('ss.links.delete'), delete_gws_circular_comment_path(parent: parent, post_id: @item.id, id: comment.id), class: 'btn' %>
             <% end %>
           </div>
         </div>
