@@ -14,7 +14,7 @@ class Gws::Memo::Message
 
   store_in collection: "gws_memo_messages"
 
-  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :state, :in_paths
+  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_paths
 
   field :subject, type: String
   field :text, type: String, default: ''
@@ -24,6 +24,7 @@ class Gws::Memo::Message
   field :seen, type: Hash, default: {}
   field :star, type: Hash, default: {}
   field :filtered, type: Hash, default: {}
+  field :state, type: String, default: 'public'
 
   #belongs_to :from, class_name: "Gws::User"
   #embeds_ids :to, class_name: "Gws::User"
@@ -45,7 +46,7 @@ class Gws::Memo::Message
   default_scope -> { order_by(send_date: -1, updated: -1) }
 
   after_initialize :set_default_reminder_date, if: :new_record?
-  before_validation :set_paths, :set_size
+  before_validation :set_paths, :set_size, :set_send_date
 
   validate :validate_attached_file_size
   validate :validate_message
@@ -54,7 +55,7 @@ class Gws::Memo::Message
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 
-  after_save :save_reminders, if: ->{ !draft?(@cur_user) && unseen?(@cur_user) }
+  after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
   scope :search, ->(params) {
     criteria = where({})
@@ -71,18 +72,23 @@ class Gws::Memo::Message
     criteria
   }
 
+  scope :and_public, ->() { where(state: "public") }
+  scope :and_closed, ->() { where(state: "closed") }
   scope :folder, ->(folder, user) {
-    where("paths.#{user.id}" => /^#{Regexp.escape(folder.path)}$/)
+    if folder.sent_box?
+      user(user).and_public
+    elsif folder.draft_box?
+      user(user).and_closed
+    else
+      where("paths.#{user.id}" => /^#{Regexp.escape(folder.path)}$/).and_public
+    end
   }
-
   scope :unseen, ->(user_id) {
     where("seen.#{user_id}" => { '$exists' => false })
   }
-
   scope :search_replay, ->(replay_id) {
     where("$and" => [{ "_id" => replay_id }])
   }
-
   scope :unfiltered, ->(user) {
     where(:"filtered.#{user.id}".exists => false)
   }
@@ -111,6 +117,12 @@ class Gws::Memo::Message
     self.size = self.files.pluck(:size).inject(:+)
   end
 
+  def set_send_date
+    now = Time.zone.now
+    self.send_date ||= now if state == "public"
+    self.seen[cur_user.id] ||= now if cur_user
+  end
+
   public
 
   def display_subject
@@ -123,10 +135,6 @@ class Gws::Memo::Message
 
   def attachments?
     files.present?
-  end
-
-  def state_changed?
-    false
   end
 
   def display_to
@@ -188,12 +196,12 @@ class Gws::Memo::Message
   end
 
   def move(user, path)
-    self.paths[user.id.to_s] = path
+    self.in_paths = { user.id.to_s => path }
     self
   end
 
-  def draft?(user)
-    self.paths[user.id.to_s] == 'INBOX.Draft'
+  def draft?
+    self.state == "closed"
   end
 
   #def owned?(user)

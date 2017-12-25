@@ -99,6 +99,14 @@ class Gws::Memo::Folder
     self.class.site(site).user(user)
   end
 
+  def sent_box?
+    path == 'INBOX.Sent'
+  end
+
+  def draft_box?
+    path == 'INBOX.Draft'
+  end
+
   class << self
     #def allow(action, user, opts = {})
     #  super(action, user, opts).where(user_id: user.id)

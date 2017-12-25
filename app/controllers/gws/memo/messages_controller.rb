@@ -113,6 +113,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
+      @item.state = "public"
 
       # 外部メールへの転送?
       #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
@@ -121,7 +122,8 @@ class Gws::Memo::MessagesController < ApplicationController
       #  end
       #end
       #
-
+    else
+      @item.state = "closed"
     end
     raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     #render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
@@ -139,6 +141,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
+      @item.state = "public"
 
       # 外部メールへの転送?
       #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
@@ -146,7 +149,8 @@ class Gws::Memo::MessagesController < ApplicationController
       #    Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
       #  end
       #end
-
+    else
+      @item.state = "closed"
     end
     raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     raise '403' unless @cur_user.id == @item.user_id
@@ -161,15 +165,13 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def trash
     raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
-    @item.in_paths = { @cur_user.id.to_s => 'INBOX.Trash' }
-    render_destroy @item.update
+    render_destroy @item.move(@cur_user, 'INBOX.Trash').update
   end
 
   def trash_all
     @items.each do |item|
       raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
-      item.in_paths = { @cur_user.id.to_s => 'INBOX.Trash' }
-      item.update
+      item.move(@cur_user, 'INBOX.Trash').update
     end
     render_destroy_all(false)
   end
@@ -177,9 +179,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def move_all
     @items.each do |item|
       raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
-      item.in_paths = { @cur_user.id.to_s => params[:path] }
-      item.cur_user = @cur_user
-      item.update
+      item.move(@cur_user, params[:path]).update
     end
     render_destroy_all(false)
   end
@@ -187,7 +187,6 @@ class Gws::Memo::MessagesController < ApplicationController
   def set_seen_all
     @items.each do |item|
       raise '403'unless (@cur_user.id == item.user_id || item.member?(@cur_user))
-      item.cur_user = @cur_user
       item.set_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -196,7 +195,6 @@ class Gws::Memo::MessagesController < ApplicationController
   def unset_seen_all
     @items.each do |item|
       raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
-      item.cur_user = @cur_user
       item.unset_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -210,7 +208,6 @@ class Gws::Memo::MessagesController < ApplicationController
   def set_star_all
     @items.each do |item|
       raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
-      item.cur_user = @cur_user
       item.set_star(@cur_user).update
     end
     render_destroy_all(false)
@@ -219,7 +216,6 @@ class Gws::Memo::MessagesController < ApplicationController
   def unset_star_all
     @items.each do |item|
       raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
-      item.cur_user = @cur_user
       item.unset_star(@cur_user).update
     end
     render_destroy_all(false)
