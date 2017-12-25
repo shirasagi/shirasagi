@@ -444,6 +444,16 @@
   }
   .fc-event {
     display: inline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+}
+.print-preview {
+  .fc-listMonth-view-table {
+    .tr {
+      border-bottom: 1px solid black;
+    }
   }
 }
 
