@@ -19,7 +19,6 @@ class Gws::BookmarksController < ApplicationController
   def index
     @items = @model.site(@cur_site).
       user(@cur_user).
-      order_by(updated: -1).
       search(params[:s]).
       page(params[:page]).per(50)
   end

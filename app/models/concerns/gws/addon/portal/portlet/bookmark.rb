@@ -23,7 +23,6 @@ module Gws::Addon::Portal::Portlet
     def find_bookmark_items(portal, user)
       Gws::Bookmark.site(portal.site).
         user(user).
-        order_by(updated: -1).
         search({ bookmark_model: bookmark_model }).
         page(1).
         per(limit)
