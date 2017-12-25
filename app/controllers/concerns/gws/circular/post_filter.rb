@@ -2,6 +2,7 @@ module Gws::Circular::PostFilter
   extend ActiveSupport::Concern
 
   included do
+    append_view_path 'app/views/gws/circular/main'
     attr_accessor(:cur_tab)
     model Gws::Circular::Post
 
