@@ -17,6 +17,10 @@ class Gws::Schedule::Todo
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  member_include_custom_groups
+  permission_include_custom_groups
+  readable_setting_include_custom_groups
+
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
   field :deleted, type: DateTime
