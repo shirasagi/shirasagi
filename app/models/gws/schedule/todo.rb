@@ -57,6 +57,13 @@ class Gws::Schedule::Todo
     member_ids
   end
 
+  # override Gws::Addon::Reminder#reminder_url
+  def reminder_url(*args)
+    # ret = super
+    name = reference_model.tr('/', '_') + '_readable_path'
+    [name, id: id]
+  end
+
   def calendar_format(user, site)
     result = super
     result[:title] = I18n.t('gws/schedule/todo.finish_mark') + result[:title] if finished?
