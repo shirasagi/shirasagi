@@ -1,49 +1,50 @@
 class @Gws_Bookmark
   @render: (opts = {})->
-    self = $('.gws-bookmark')
-    self.click ->
-      self.addClass('active')
-      self.find('.dropdown-menu').addClass('active')
+    elem = $('.gws-bookmark')
+    $(elem).click ->
+      $(elem).addClass('active')
+      $(elem).find('.dropdown-menu').addClass('active')
 
-    self.find('.save').click ->
-      name = self.find('.bookmark-name').val()
-      html = self.html()
+    $(elem).find('.save').click ->
+      name = $(elem).find('.bookmark-name').val()
+      html = $(elem).html()
       $.ajax
         url: opts['url']
-        method: 'post'
+        method: 'POST'
         data:
           item:
             name: name
             default_name: opts['name']
             url: location.pathname
             model: opts['model']
-        beforesend: self.find('.dropdown-menu').html(SS.loading)
+        beforesend: $(elem).find('.dropdown-menu').html(SS.loading)
         success: (data)->
-          self.html(html)
-          self.find('.bookmark-id').val(data['bookmark_id'])
-          self.find('.bookmark-name').val(data['name'])
-          self.find('.material-icons').html("&#xE866;")
+          $(elem).html(html)
+          $(elem).find('.bookmark-id').val(data['bookmark_id'])
+          $(elem).find('.bookmark-name').val(data['name'])
+          $(elem).find('.material-icons').html("&#xE866;")
         error: (data)->
           alert('Error')
 
-    self.find('.delete').click ->
-      unless self.find('.bookmark-id').val()
+    $(elem).find('.delete').click ->
+      unless $(elem).find('.bookmark-id').val()
         return false
       uri = opts['url'].split('/')
-      uri.push(self.find('#bookmark_id').val())
+      uri.push($(elem).find('#bookmark_id').val())
       url = uri.join('/')
-      html = self.html()
+      html = $(elem).html()
       $.ajax
         url: url
-        method: 'delete'
+        method: 'POST'
         data:
+          _method: 'delete'
           item:
             url: location.pathname
-        beforesend: self.find('.dropdown-menu').html(SS.loading)
+        beforesend: $(elem).find('.dropdown-menu').html(SS.loading)
         success: (data)->
-          self.html(html)
-          self.find('.bookmark-id').val('')
-          self.find('.bookmark-name').val(opts['name'])
-          self.find('.material-icons').html("&#xE867;")
+          $(elem).html(html)
+          $(elem).find('.bookmark-id').val('')
+          $(elem).find('.bookmark-name').val(opts['name'])
+          $(elem).find('.material-icons').html("&#xE867;")
         error: (data)->
           alert('Error')
