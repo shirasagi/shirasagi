@@ -22,8 +22,8 @@ def create_item(model, data)
   cond = { site_id: @site._id, name: data[:name] }
   item = model.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.user_ids ||= [item.cur_user.id]
-  item.group_ids ||= [item.cur_user.group_ids]
+  item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+  item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
   puts item.errors.full_messages unless item.save
   item
 end
@@ -84,8 +84,8 @@ def create_staff_record_group(data)
   cond = { site_id: @site._id, year_id: data[:year_id], name: data[:name] }
   item = Gws::StaffRecord::Group.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.user_ids ||= [item.cur_user.id]
-  item.group_ids ||= [item.cur_user.group_ids]
+  item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+  item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
   puts item.errors.full_messages unless item.save
   item
 end
@@ -95,8 +95,8 @@ def create_staff_record_user(data)
   cond = { site_id: @site._id, year_id: data[:year_id], section_name: data[:section_name], name: data[:name] }
   item = Gws::StaffRecord::User.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.user_ids ||= [item.cur_user.id]
-  item.group_ids ||= [item.cur_user.group_ids]
+  item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+  item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
   puts item.errors.full_messages unless item.save
   item
 end
@@ -283,8 +283,8 @@ def create_schedule_plan(data)
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Schedule::Plan.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.user_ids ||= [item.cur_user.id]
-  item.group_ids ||= [item.cur_user.group_ids]
+  item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+  item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
   puts item.errors.full_messages unless item.save
   item
 end
@@ -455,8 +455,8 @@ def create_circular_comment(data)
   cond = { site_id: @site._id, user_id: data[:cur_user].id, name: data[:name] }
   item = Gws::Circular::Comment.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
-  item.user_ids ||= [item.cur_user.id]
-  item.group_ids ||= [item.cur_user.group_ids]
+  item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+  item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
   puts item.errors.full_messages unless item.save
   item
 end
