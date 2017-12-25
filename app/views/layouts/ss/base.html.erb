@@ -85,7 +85,8 @@
       <% elsif @ss_mode == :gws %>
         <div class="gws-bookmark dropdown dropdown-toggle">
           <% @bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
-          <h2 ><%= bookmark_icon %></h2>
+          <% bookmark_icon = @bookmark ? "&#xE866;" : "&#xE867;" %>
+          <h2 ><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
           <ul class="dropdown-menu">
             <li>
               <%= jquery do %>
