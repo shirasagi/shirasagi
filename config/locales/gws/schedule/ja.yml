@@ -92,6 +92,7 @@ ja:
   gws/schedule/todo:
     disabled_items: 削除済み
     finish_mark: "[完] "
+    todo_over: 期限超過
     buttons:
       finish: 完了する
       revert: 未完了に戻す
