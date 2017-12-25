@@ -24,7 +24,8 @@ class Gws::Schedule::Todo::TrashesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).deleted.
+      member_or_readable(@cur_user, @cur_site).
+      with_only_deleted.
       search(params[:s]).order_by(deleted: -1).page(params[:page]).per(50)
   end
 

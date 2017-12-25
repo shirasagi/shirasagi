@@ -10,19 +10,23 @@ module Gws::Schedule::TodoHelper
       result << -> { link_to t('ss.links.back_to_index'), action: :index }
 
     when /edit|update|delete|move|finish|revert/
-      result << -> { link_to t('ss.links.back_to_show'), action: :show, id: item } if item.allowed?(:read, user, site: site)
+      if item.allowed?(:read, user, site: site) || item.member?(user) || item.readable?(user)
+        result << -> { link_to t('ss.links.back_to_show'), action: :show, id: item }
+      end
       result << -> { link_to t('ss.links.back_to_index'), action: :index }
 
     else
       result << -> { link_to t('ss.links.edit'), action: :edit, id: item } if item.allowed?(:edit, user, site: site)
-      result << -> { link_to t('ss.links.copy'), action: :copy, id: item } if item.allowed?(:edit, user, site: site)
+      if item.allowed?(:read, user, site: site) || item.member?(user) || item.readable?(user)
+        result << -> { link_to t('ss.links.copy'), action: :copy, id: item }
+      end
       result << -> { link_to t('ss.links.delete'), action: :delete, id: item } if item.allowed?(:delete, user, site: site)
 
-      if item.allowed?(:edit, user, site: site) && !item.finished?
+      if !item.finished? && (item.allowed?(:edit, user, site: site) || item.member?(user))
         result << -> { link_to t('gws/schedule/todo.links.finish'), action: :finish, id: item }
       end
 
-      if item.allowed?(:edit, user, site: site) && item.finished?
+      if item.finished? && (item.allowed?(:edit, user, site: site) || item.member?(user))
         result << -> { link_to t('gws/schedule/todo.links.revert'), action: :revert, id: item }
       end
 

@@ -17,12 +17,8 @@ module Gws::Addon::Member
     validate :validate_presence_member
 
     scope :member, ->(user) {
-      or_cond = [{ member_ids: user.id }]
-      if member_include_custom_groups?
-        or_cond << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      end
-
-      self.and([{ '$or' => or_cond }])
+      or_conds = member_conditions(user)
+      self.and([{ '$or' => or_conds }])
     }
   end
 
@@ -96,6 +92,14 @@ module Gws::Addon::Member
 
     def member_ids_required?
       class_variable_get(:@@_member_ids_required)
+    end
+
+    def member_conditions(user)
+      or_conds = [{ member_ids: user.id }]
+      if member_include_custom_groups?
+        or_conds << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      end
+      or_conds
     end
 
     private

@@ -24,20 +24,10 @@ module Gws::Addon::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
-      return where({ _id: -1 }) unless read_permission?(user, opts[:site])
+      return none unless read_permission?(user, opts[:site])
 
-      or_cond = [
-        { "readable_group_ids.0" => { "$exists" => false },
-          "readable_member_ids.0" => { "$exists" => false },
-          "readable_custom_group_ids.0" => { "$exists" => false } },
-        { :readable_group_ids.in => user.group_ids },
-        { readable_member_ids: user.id },
-      ]
-      if readable_setting_included_custom_groups?
-        or_cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      end
-
-      where("$and" => [{ "$or" => or_cond }])
+      or_conds = readable_conditions(user, opts)
+      where("$and" => [{ "$or" => or_conds }])
     }
   end
 
@@ -126,6 +116,20 @@ module Gws::Addon::ReadableSetting
 
     def readable_setting_included_custom_groups?
       class_variable_get(:@@_readable_setting_include_custom_groups)
+    end
+
+    def readable_conditions(user, opts = {})
+      or_conds = [
+        { "readable_group_ids.0" => { "$exists" => false },
+          "readable_member_ids.0" => { "$exists" => false },
+          "readable_custom_group_ids.0" => { "$exists" => false } },
+        { :readable_group_ids.in => user.group_ids },
+        { readable_member_ids: user.id },
+      ]
+      if readable_setting_included_custom_groups?
+        or_conds << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      end
+      or_conds
     end
 
     private

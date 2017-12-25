@@ -20,14 +20,21 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
     super.keep_if { |key| %i[facility_ids].exclude?(key) }
   end
 
-  def render_destroy_all(result)
+  def render_finish_all(result, opts = {})
     location = crud_redirect_url || { action: :index }
-    notice = result ? { notice: t('gws/schedule/todo.notice.disable') } : {}
+    notice = opts[:notice].presence || t("ss.notice.saved")
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
+    if result
+      respond_to do |format|
+        format.html { redirect_to location, notice: notice }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to location, notice: notice }
+        format.json { head json: errors }
+      end
     end
   end
 
@@ -35,25 +42,16 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).active.
+      member_or_readable(@cur_user, site: @cur_site, include_role: true).
+      without_deleted.
       search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'updated_desc').
       page(params[:page]).per(50)
   end
 
-  def create
-    @item = @model.new get_params
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
-    render_create @item.save, location: redirection_url
-  end
-
-  def update
-    @item.attributes = get_params
-    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
-    render_update @item.update, location: redirection_url
+  def show
+    raise '403' if !@item.allowed?(:read, @cur_user, site: @cur_site) && !@item.member?(@cur_user) && !@item.readable(@cur_user)
+    render
   end
 
   def disable
@@ -64,7 +62,7 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
   end
 
   def finish
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
     return if request.get?
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
@@ -72,7 +70,7 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
   end
 
   def revert
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
     return if request.get?
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
@@ -80,14 +78,30 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
   end
 
   def finish_all
-    raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(todo_state: 'finished')
-    render_destroy_all(false)
+    error_items = []
+    @items.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
+        next if item.update(todo_state: 'finished')
+      else
+        item.errors.add :base, :auth_error
+      end
+      error_items << item
+    end
+    @items = error_items
+    render_finish_all(@items.count == 0)
   end
 
   def revert_all
-    raise '403' unless @items.allowed?(:edit, @cur_user, site: @cur_site)
-    @items.update_all(todo_state: 'unfinished')
-    render_destroy_all(false)
+    error_items = []
+    @items.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
+        next if item.update(todo_state: 'unfinished')
+      else
+        item.errors.add :base, :auth_error
+      end
+      error_items << item
+    end
+    @items = error_items
+    render_finish_all(@items.count == 0)
   end
 end
