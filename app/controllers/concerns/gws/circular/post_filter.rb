@@ -65,6 +65,9 @@ module Gws::Circular::PostFilter
       params[:s][:site] = @cur_site
       params[:s][:category_id] = @category.id
     end
+    if params.dig(:s, :article_state).present?
+      params[:s][:user] = @cur_user
+    end
 
     set_items
   end

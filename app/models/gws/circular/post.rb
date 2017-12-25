@@ -62,6 +62,7 @@ class Gws::Circular::Post
       criteria = criteria.search_keyword(params)
       criteria = criteria.search_category_id(params)
       criteria = criteria.search_state(params)
+      criteria = criteria.search_article_state(params)
       criteria = criteria.order_by_sort(params)
       criteria
     end
@@ -79,6 +80,17 @@ class Gws::Circular::Post
     def search_state(params)
       return all if params.blank? || params[:state].blank?
       all.where(state: params[:state])
+    end
+
+    def search_article_state(params)
+      return all if params.blank? || params[:article_state].blank?
+      return all if params[:article_state] == 'both'
+      case params[:article_state]
+      when 'seen'
+        exists("seen.#{params[:user].id}" => true)
+      when 'unseen'
+        exists("seen.#{params[:user].id}" => false)
+      end
     end
 
     def order_by_sort(params)
