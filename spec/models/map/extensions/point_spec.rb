@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Map::Extensions::Point, dbscope: :example do
   describe '#initialize' do
     it do
-      point = described_class[loc: [ 34.0676396, 134.5891117 ], zoom_level: 8]
+      point = described_class[loc: [34.0676396, 134.5891117], zoom_level: 8]
       expect(point).to be_a(described_class)
       expect(point.loc.lat).to eq 34.0676396
       expect(point.loc.lng).to eq 134.5891117
@@ -13,7 +13,7 @@ describe Map::Extensions::Point, dbscope: :example do
 
   describe '#mongoize' do
     it do
-      point = described_class[loc: [ 34.0676396, 134.5891117 ], zoom_level: 8].mongoize
+      point = described_class[loc: [34.0676396, 134.5891117], zoom_level: 8].mongoize
       expect(point).to be_a(Hash)
       expect(point['loc'][0]).to eq 34.0676396
       expect(point['loc'][1]).to eq 134.5891117
@@ -23,7 +23,7 @@ describe Map::Extensions::Point, dbscope: :example do
 
   describe '#empty?' do
     it do
-      point = described_class[loc: [ 34.0676396, 134.5891117 ], zoom_level: 8]
+      point = described_class[loc: [34.0676396, 134.5891117], zoom_level: 8]
       expect(point.empty?).to be_falsey
       expect(point.blank?).to be_falsey
       expect(point.present?).to be_truthy
@@ -70,7 +70,7 @@ describe Map::Extensions::Point, dbscope: :example do
 
   describe '.mongoize' do
     it do
-      point = described_class.mongoize(described_class[loc: [ 34.0676396, 134.5891117 ], zoom_level: 8])
+      point = described_class.mongoize(described_class[loc: [34.0676396, 134.5891117], zoom_level: 8])
       expect(point).to be_a(Hash)
       expect(point['loc'][0]).to eq 34.0676396
       expect(point['loc'][1]).to eq 134.5891117
@@ -116,7 +116,7 @@ describe Map::Extensions::Point, dbscope: :example do
 
   describe ".evolve" do
     it do
-      point = described_class.evolve(described_class[loc: [ 34.0676396, 134.5891117 ], zoom_level: 8])
+      point = described_class.evolve(described_class[loc: [34.0676396, 134.5891117], zoom_level: 8])
       expect(point).to be_a(Hash)
       expect(point['loc'][0]).to eq 34.0676396
       expect(point['loc'][1]).to eq 134.5891117

@@ -51,8 +51,7 @@ class Recommend::SimilarityScore
               "score" => "$score",
             },
           }
-        }
-      }
+        }}
       aggregation = self.collection.aggregate(pipes)
 
       prefs = {}

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Map::Extensions::Loc, dbscope: :example do
   describe '#initialize' do
     it do
-      loc = described_class[ 34.0676396, 134.5891117 ]
+      loc = described_class[34.0676396, 134.5891117]
       expect(loc.lat).to eq 34.0676396
       expect(loc.lng).to eq 134.5891117
     end
@@ -11,7 +11,7 @@ describe Map::Extensions::Loc, dbscope: :example do
 
   describe '#mongoize' do
     it do
-      loc = described_class[ 34.0676396, 134.5891117 ].mongoize
+      loc = described_class[34.0676396, 134.5891117].mongoize
       expect(loc).to be_a(Array)
       expect(loc).to eq [ 34.0676396, 134.5891117 ]
     end
@@ -19,7 +19,7 @@ describe Map::Extensions::Loc, dbscope: :example do
 
   describe '#empty?' do
     it do
-      loc = described_class[ 34.0676396, 134.5891117 ]
+      loc = described_class[34.0676396, 134.5891117]
       expect(loc.empty?).to be_falsey
       expect(loc.blank?).to be_falsey
       expect(loc.present?).to be_truthy

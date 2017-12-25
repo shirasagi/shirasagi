@@ -41,7 +41,7 @@ class Fs::GridFs::CompassImporter < Sass::Importers::Base
     nil
   end
 
-  def key(uri, options={})
+  def key(uri, options = {})
     [ self.class.name + ":#{@root}:" + File.dirname(File.expand_path(uri)), File.basename(uri) ]
   end
 

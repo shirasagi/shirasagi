@@ -44,8 +44,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @columns.each do |column|
       param = params[:item].try(:[], column.id.to_s)
       if column.input_type == "upload_file" &&
-          !param.blank? &&
-          !param.kind_of?(ActionDispatch::Http::UploadedFile)
+         !param.blank? &&
+         !param.kind_of?(ActionDispatch::Http::UploadedFile)
         param = SS::File.with(client: Inquiry::Answer.client_name).find(param)
       end
       @items << [column, param]

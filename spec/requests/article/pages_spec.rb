@@ -21,7 +21,8 @@ describe "Article::PagesController", type: :request, dbscope: :example do
       params = {
         'authenticity_token' => @auth_token,
         'item[email]' => admin_user.email,
-        'item[password]' => admin_user.in_password }
+        'item[password]' => admin_user.in_password
+      }
       post sns_login_path(format: :json), params
     end
 

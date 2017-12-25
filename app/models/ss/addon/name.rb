@@ -18,7 +18,7 @@ class SS::Addon::Name
   end
 
   def path
-    @name.sub("/", "/agents/addons/")#.pluralize
+    @name.sub("/", "/agents/addons/") #.pluralize
   end
 
   def id

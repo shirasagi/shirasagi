@@ -76,14 +76,12 @@ class Recommend::History::Log
         {
           "_id" => { "path" => "$path", "token" => "$token" },
           "count" => { "$sum" => 1 }
-        }
-      }
+        }}
       pipes << { "$group" =>
         {
           "_id" => { "path" => "$_id.path" },
           "tokens" => { "$push" => { token: "$_id.token", count: "$count" } }
-        }
-      }
+        }}
       aggregation = Recommend::History::Log.collection.aggregate(pipes)
 
       prefs = {}
@@ -110,14 +108,12 @@ class Recommend::History::Log
         {
           "_id" => { "path" => "$path", "token" => "$token" },
           "count" => { "$sum" => 1 }
-        }
-      }
+        }}
       pipes << { "$group" =>
         {
           "_id" => { "token" => "$_id.token" },
           "paths" => { "$push" => { path: "$_id.path", count: "$count" } }
-        }
-      }
+        }}
       aggregation = Recommend::History::Log.collection.aggregate(pipes)
 
       prefs = {}

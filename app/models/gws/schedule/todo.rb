@@ -43,7 +43,7 @@ class Gws::Schedule::Todo
 
   scope :expired, ->(date = Time.zone.now) {
     where('$or' => [
-        { :deleted.exists => true , :deleted.lt => date }
+        { :deleted.exists => true, :deleted.lt => date }
     ])
   }
 

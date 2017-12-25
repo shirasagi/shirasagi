@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-# rubocop:disable Style/FirstParameterIndentation
+# rubocop:disable Layout/FirstParameterIndentation
 describe Opendata::UrlResource, dbscope: :example, http_server: true do
   # http.default port: 33_190
   http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")

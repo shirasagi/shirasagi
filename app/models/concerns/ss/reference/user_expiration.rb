@@ -15,8 +15,8 @@ module SS::Reference::UserExpiration
     }
     scope :expired, ->(date = Time.zone.now) {
       where('$or' => [
-        { :account_start_date.exists => true , :account_start_date.gt => date },
-        { :account_expiration_date.exists => true , :account_expiration_date.lt => date }
+        { :account_start_date.exists => true, :account_start_date.gt => date },
+        { :account_expiration_date.exists => true, :account_expiration_date.lt => date }
       ])
     }
   end

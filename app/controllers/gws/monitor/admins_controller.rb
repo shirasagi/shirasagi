@@ -59,7 +59,7 @@ class Gws::Monitor::AdminsController < ApplicationController
     end
 
     if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"] &&
-        @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
+       @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
       @items = @items.search(params[:s]).
           custom_order(params.dig(:s, :sort) || 'updated_desc').
           page(params[:page]).per(50)
@@ -113,28 +113,28 @@ class Gws::Monitor::AdminsController < ApplicationController
     raise '403' unless @item.readable?(@cur_user, @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
     @item.save
-    render_update@item.update
+    render_update @item.update
   end
 
   def preparation
     raise '403' unless @item.readable?(@cur_user, @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
     @item.save
-    render_update@item.update
+    render_update @item.update
   end
 
   def question_not_applicable
     raise '403' unless @item.readable?(@cur_user, @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
     @item.save
-    render_update@item.update
+    render_update @item.update
   end
 
   def answered
     raise '403' unless @item.readable?(@cur_user, @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "answered")
     @item.save
-    render_update@item.update
+    render_update @item.update
   end
 
   def disable

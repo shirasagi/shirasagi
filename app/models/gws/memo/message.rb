@@ -112,12 +112,12 @@ class Gws::Memo::Message
     members.map(&:long_name)
   end
 
-  def unseen?(user=nil)
+  def unseen?(user = nil)
     return false if user.nil?
     seen.exclude?(user.id.to_s)
   end
 
-  def star?(user=:nil)
+  def star?(user = :nil)
     return false if user == :nil
     star.include?(user.id.to_s)
   end

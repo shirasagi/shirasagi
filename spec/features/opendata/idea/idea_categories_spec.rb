@@ -11,7 +11,7 @@ describe "opendata_idea_categories", dbscope: :example do
 
     it "#index" do
       visit index_path
-#      expect(current_path).not_to eq sns_login_path
+      # expect(current_path).not_to eq sns_login_path
     end
   end
 end

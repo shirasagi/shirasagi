@@ -23,7 +23,8 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       cur_node: node_idea,
       layout_id: layout.id,
       category_ids: [ node_category.id ],
-      area_ids: [ node_area.id ] }
+      area_ids: [ node_area.id ]
+    }
 
     10.times.each do |index|
       params[:issue] = "issue#{index}"

@@ -27,7 +27,6 @@ module Opendata::Sparql
       return true if disable?
 
       begin
-
         temp_file = Tempfile.new("temp")
         open(ttl_url) do |f|
           f.each do |line|
@@ -49,7 +48,6 @@ module Opendata::Sparql
 
         client = SPARQL::Client.new(UPDATE_SITE)
         client.update(sparql)
-
       rescue => e
         temp_file.close(true) if temp_file
         raise e

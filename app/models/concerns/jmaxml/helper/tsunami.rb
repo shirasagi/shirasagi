@@ -1,8 +1,7 @@
 module Jmaxml::Helper::Tsunami
   extend ActiveSupport::Concern
   include Jmaxml::Helper::Main
-
-  def info_group_by(target_sub_type)
+ def info_group_by(target_sub_type)
     REXML::XPath.match(@context.xmldoc, '/Report/Body/Tsunami/Forecast/Item').map do |item|
       area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
       next nil unless @context.area_codes.include?(area_code)
@@ -20,15 +19,14 @@ module Jmaxml::Helper::Tsunami
       else
         kind_code = ''
       end
-      next nil if kind_code != target_sub_type.to_s
-
+ next nil if kind_code != target_sub_type.to_s
       area_name = REXML::XPath.first(item, 'Area/Name/text()').to_s.strip
       first_wave = first_height_label(item)
       height = tsunami_height(item)
 
       { area_name: area_name, first_wave: first_wave, height: height }
     end.compact
-  end
+                                                                                                                                                                                                        end
 
   def first_height_label(xml_node)
     first_height = xml_node.elements['FirstHeight']

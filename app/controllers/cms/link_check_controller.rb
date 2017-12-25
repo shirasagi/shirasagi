@@ -30,8 +30,8 @@ class Cms::LinkCheckController < ApplicationController
     opts = {
       proxy: proxy,
       progress_proc: ->(size) do
-          progress_data_size = size
-          raise "200"
+        progress_data_size = size
+        raise "200"
       end
     }
 
@@ -39,7 +39,7 @@ class Cms::LinkCheckController < ApplicationController
       timeout(2) do
         open(url, opts) { |f| return f.status[0].to_i }
       end
-    rescue TimeoutError
+    rescue Timeout::Error
       return 0
     rescue => e
       return 200 if progress_data_size

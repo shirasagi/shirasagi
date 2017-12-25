@@ -92,7 +92,8 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
         'HTTP_HOST' => site.domain,
         'RAW_POST_DATA' => payload,
         'CONTENT_TYPE' => content_type,
-        'X-Hub-Signature' => "sha1=#{digest}" }
+        'X-Hub-Signature' => "sha1=#{digest}"
+      }
 
       perform_enqueued_jobs do
         post(subscriber_path, {}, header)

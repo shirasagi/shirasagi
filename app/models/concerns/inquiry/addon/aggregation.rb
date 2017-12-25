@@ -59,7 +59,8 @@ module Inquiry::Addon
         "_id" => "$source_url",
         "source_name" => { "$max" => "$source_name" },
         "count" => { "$sum" => 1 },
-        "updated" => { "$max" => "$updated" } } }
+        "updated" => { "$max" => "$updated" }
+      } }
       pipes << { "$sort" => { "updated" => -1 } }
 
       Inquiry::Answer.collection.aggregate(pipes)

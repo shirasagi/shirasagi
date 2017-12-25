@@ -36,7 +36,7 @@ module Opendata::Common
     def get_aggregate_field(model, name, opts = {})
       pipes = []
       pipes << { "$match" => model.where({}).selector.merge(name.to_s => { "$exists" => 1 }) }
-      pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
+      pipes << { "$group" => { _id: "$#{name}", count: { "$sum" => 1 } }}
       pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
       pipes << { "$sort" => { count: -1 } }
       limit_aggregation model, pipes, opts[:limit]
@@ -47,7 +47,7 @@ module Opendata::Common
       pipes << { "$match" => model.where({}).selector.merge(name.to_s => { "$exists" => 1 }) }
       pipes << { "$project" => { _id: 0, name.to_s => 1 } }
       pipes << { "$unwind" => "$#{name}" }
-      pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
+      pipes << { "$group" => { _id: "$#{name}", count: { "$sum" => 1 } }}
       pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
       pipes << { "$sort" => { count: -1 } }
       limit_aggregation model, pipes, opts[:limit]
@@ -58,7 +58,7 @@ module Opendata::Common
       pipes << { "$match" => model.where({}).selector.merge("tags" => { "$exists" => 1 }) }
       pipes << { "$project" => { _id: 0, "tags" => 1 } }
       pipes << { "$unwind" => "$tags" }
-      pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
+      pipes << { "$group" => { _id: "$tags", count: { "$sum" => 1 } }}
       pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
       pipes << { "$sort" => { name: 1 } }
       model.collection.aggregate(pipes).to_a
@@ -69,7 +69,7 @@ module Opendata::Common
       pipes << { "$match" => model.where({}).selector.merge("tags" => { "$exists" => 1 }) }
       pipes << { "$project" => { _id: 0, "tags" => 1 } }
       pipes << { "$unwind" => "$tags" }
-      pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
+      pipes << { "$group" => { _id: "$tags", count: { "$sum" => 1 } }}
       pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
       pipes << { "$match" => { name: tag_name }}
       pipes << { "$sort" => { name: 1 } }
@@ -81,7 +81,7 @@ module Opendata::Common
       pipes << { "$match" => model.where({}).selector.merge("resources.#{name}" => { "$exists" => 1 }) }
       pipes << { "$project" => { _id: 0, "resources.#{name}" => 1 } }
       pipes << { "$unwind" => "$resources" }
-      pipes << { "$group" => { _id: "$resources.#{name}", count: { "$sum" =>  1 } }}
+      pipes << { "$group" => { _id: "$resources.#{name}", count: { "$sum" => 1 } }}
       pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
       pipes << { "$sort" => { count: -1 } }
       pipes << { "$limit" => 5 }

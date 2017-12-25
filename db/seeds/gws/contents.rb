@@ -28,24 +28,24 @@ end
 
 def create_column(type, data)
   case type
-    when :text
-      model = Gws::Column::TextField
-    when :text_area
-      model = Gws::Column::TextArea
-    when :number
-      model = Gws::Column::NumberField
-    when :date
-      model = Gws::Column::DateField
-    when :url
-      model = Gws::Column::UrlField
-    when :checkbox
-      model = Gws::Column::CheckBox
-    when :radio
-      model = Gws::Column::RadioButton
-    when :select
-      model = Gws::Column::Select
-    when :file_upload
-      model = Gws::Column::FileUpload
+  when :text
+    model = Gws::Column::TextField
+  when :text_area
+    model = Gws::Column::TextArea
+  when :number
+    model = Gws::Column::NumberField
+  when :date
+    model = Gws::Column::DateField
+  when :url
+    model = Gws::Column::UrlField
+  when :checkbox
+    model = Gws::Column::CheckBox
+  when :radio
+    model = Gws::Column::RadioButton
+  when :select
+    model = Gws::Column::Select
+  when :file_upload
+    model = Gws::Column::FileUpload
   end
   puts data[:name]
   cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }
@@ -304,18 +304,21 @@ create_schedule_plan name: "繰り返し予定", member_ids: @users.map(&:id),
   repeat_type: 'weekly', interval: 1, repeat_start: base_date, repeat_end: base_date + 1.month, wdays: [3],
   member_ids: [u('admin').id], member_custom_group_ids: @cgroups[0].id,
   facility_ids: [@fc_item[0].id], main_facility_id: @fc_item[0].id,
-  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id], readable_member_ids: [u('sys').id]
+  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
+  readable_member_ids: [u('sys').id]
 )
 
 create_schedule_plan(
-  name: '定例報告会', start_at: (base_date + 1.day).strftime('%Y-%m-%d 14:00'), end_at: (base_date + 1.day).strftime('%Y-%m-%d 16:00'),
+  name: '定例報告会', start_at: (base_date + 1.day).strftime('%Y-%m-%d 14:00'),
+  end_at: (base_date + 1.day).strftime('%Y-%m-%d 16:00'),
   repeat_type: 'weekly', interval: 1, repeat_start: base_date + 1.day, repeat_end: base_date + 1.day + 6.month, wdays: [],
   member_ids: %w[admin user1 user2 user3].map { |uid| u(uid).id },
   readable_setting_range: 'select'
 )
 
 create_schedule_plan(
-  name: '株式会社シラサギ来社', start_at: (base_date + 2.day).strftime('%Y-%m-%d 10:00'), end_at: (base_date + 1.day).strftime('%Y-%m-%d 11:00'),
+  name: '株式会社シラサギ来社', start_at: (base_date + 2.day).strftime('%Y-%m-%d 10:00'),
+  end_at: (base_date + 1.day).strftime('%Y-%m-%d 11:00'),
   member_ids: %w[admin user1].map { |uid| u(uid).id },
   facility_ids: [@fc_item[1].id], main_facility_id: @fc_item[1].id,
   readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id]
@@ -380,13 +383,21 @@ def create_board_post(data)
   create_item(Gws::Board::Post, data)
 end
 
-create_board_post(cur_user: u('user1'), name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topics[0].id, parent_id: @bd_topics[0].id)
-res = create_board_post(cur_user: u('user1'), name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topics[1].id, parent_id: @bd_topics[1].id)
-res = create_board_post(cur_user: u('admin'), name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topics[1].id, parent_id: res.id)
+create_board_post(
+  cur_user: u('user1'), name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。",
+  topic_id: @bd_topics[0].id, parent_id: @bd_topics[0].id
+)
+res = create_board_post(
+  cur_user: u('user1'), name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。",
+  topic_id: @bd_topics[1].id, parent_id: @bd_topics[1].id
+)
+res = create_board_post(
+  cur_user: u('admin'), name: "Re: Re: 会議室の増設について", text: "検討します。",
+  topic_id: @bd_topics[1].id, parent_id: res.id
+)
 
 ## -------------------------------------
 puts "# circular/category"
-
 
 def create_circular_category(data)
   create_item(Gws::Circular::Category, data)
@@ -436,7 +447,8 @@ create_circular_comment(
   post_id: @cr_posts[0].id, cur_user: u('user2'), name: "Re: 年末年始休暇について", text: "承知しました。"
 )
 create_circular_comment(
-  post_id: @cr_posts[1].id, cur_user: u('user3'), name: "Re: システム説明会のお知らせ", text: "予定があり参加できそうにありません。"
+  post_id: @cr_posts[1].id, cur_user: u('user3'), name: "Re: システム説明会のお知らせ",
+  text: "予定があり参加できそうにありません。"
 )
 create_circular_comment(
   post_id: @cr_posts[1].id, cur_user: u('admin'), name: "Re: システム説明会のお知らせ", text: "参加します。"
@@ -506,7 +518,8 @@ end
     cur_user: u('user5'), name: '新しい公用車の導入',
     due_date: Time.zone.now.beginning_of_day + 7.days,
     attend_group_ids: [@site.id] + @site.descendants.pluck(:id),
-    text: "公用車の劣化が進んでおり、買い替えを行うことになりました。\n希望車種などがあれば回答をお願いします。", category_ids: [@mon_cate[0].id]
+    text: "公用車の劣化が進んでおり、買い替えを行うことになりました。\n希望車種などがあれば回答をお願いします。",
+    category_ids: [@mon_cate[0].id]
   )
 ]
 
@@ -580,23 +593,51 @@ def create_report_form(data)
 end
 
 @rep_forms = [
-  create_report_form(name: '打ち合わせ議事録', order: 10, state: 'public', memo: '打ち合わせ議事録です。', category_ids: [@rep_cate[0].id]),
-  create_report_form(name: '出張報告書', order: 20, state: 'public', memo: '出張報告書です。', category_ids: [@rep_cate[1].id])
+  create_report_form(
+    name: '打ち合わせ議事録', order: 10, state: 'public', memo: '打ち合わせ議事録です。', category_ids: [@rep_cate[0].id]
+  ),
+  create_report_form(
+    name: '出張報告書', order: 20, state: 'public', memo: '出張報告書です。', category_ids: [@rep_cate[1].id]
+  )
 ]
 
 @rep_form0_cols = [
-  create_column(:text, name: '打ち合わせ場所', order: 10, required: 'required', tooltips: '打ち合わせ場所をん入力してください。', input_type: 'text', form: @rep_forms[0]),
-  create_column(:date, name: '打ち合わせ日', order: 20, required: 'required', tooltips: '打ち合わせ日を入力してください。', form: @rep_forms[0]),
-  create_column(:text, name: '打ち合わせ時間', order: 30, required: 'required', tooltips: '打ち合わせ時間を入力してください。', input_type: 'text', form: @rep_forms[0]),
-  create_column(:text_area, name: '参加者', order: 40, required: 'required', tooltips: '打ち合わせ参加者を入力してください。', form: @rep_forms[0]),
-  create_column(:text_area, name: '打ち合わせ内容', order: 50, required: 'required', tooltips: '打ち合わせ内容を入力してください。', form: @rep_forms[0]),
-  create_column(:file_upload, name: '添付ファイル', order: 60, required: 'optional', tooltips: '関連資料があればファイルをアップロードしてください。', upload_file_count: 5, form: @rep_forms[0])
+  create_column(
+    :text, name: '打ち合わせ場所', order: 10, required: 'required',
+    tooltips: '打ち合わせ場所をん入力してください。', input_type: 'text', form: @rep_forms[0]
+  ),
+  create_column(
+    :date, name: '打ち合わせ日', order: 20, required: 'required',
+    tooltips: '打ち合わせ日を入力してください。', form: @rep_forms[0]
+  ),
+  create_column(
+    :text, name: '打ち合わせ時間', order: 30, required: 'required',
+    tooltips: '打ち合わせ時間を入力してください。', input_type: 'text', form: @rep_forms[0]
+  ),
+  create_column(
+    :text_area, name: '参加者', order: 40, required: 'required',
+    tooltips: '打ち合わせ参加者を入力してください。', form: @rep_forms[0]
+  ),
+  create_column(
+    :text_area, name: '打ち合わせ内容', order: 50, required: 'required',
+    tooltips: '打ち合わせ内容を入力してください。', form: @rep_forms[0]
+  ),
+  create_column(
+    :file_upload, name: '添付ファイル', order: 60, required: 'optional',
+    tooltips: '関連資料があればファイルをアップロードしてください。', upload_file_count: 5, form: @rep_forms[0]
+  )
 ]
 
 @rep_form1_cols = [
-  create_column(:text, name: '出張先', order: 10, required: 'required', input_type: 'text', form: @rep_forms[1]),
-  create_column(:date, name: '出張日', order: 20, required: 'required', form: @rep_forms[1]),
-  create_column(:text_area, name: '報告内容', order: 30, required: 'required', form: @rep_forms[1])
+  create_column(
+    :text, name: '出張先', order: 10, required: 'required', input_type: 'text', form: @rep_forms[1]
+  ),
+  create_column(
+    :date, name: '出張日', order: 20, required: 'required', form: @rep_forms[1]
+  ),
+  create_column(
+    :text_area, name: '報告内容', order: 30, required: 'required', form: @rep_forms[1]
+  )
 ]
 
 ## -------------------------------------
@@ -733,7 +774,8 @@ user_form_columns = [
   ),
   create_column(
     :text, form: user_form, name: '個人携帯電話', order: 30, required: 'optional', input_type: 'tel',
-    tooltips: '個人所有の携帯電話番号を入力してください。', place_holder: '090-0000-0000', additional_attr: 'pattern="\d{2,4}-\d{3,4}-\d{3,4}"'
+    tooltips: '個人所有の携帯電話番号を入力してください。', place_holder: '090-0000-0000',
+    additional_attr: 'pattern="\d{2,4}-\d{3,4}-\d{3,4}"'
   )
 ]
 
@@ -811,18 +853,36 @@ end
 ]
 
 @wf_form0_cols = [
-  create_column(:text, form: @wf_forms[0], name: '出張期間', order: 10, required: 'required', tooltips: '出張期間を入力してください。', input_type: 'text'),
+  create_column(
+    :text, form: @wf_forms[0], name: '出張期間', order: 10, required: 'required',
+    tooltips: '出張期間を入力してください。', input_type: 'text'
+  ),
   create_column(:text, form: @wf_forms[0], name: '出張先', order: 20, required: 'required', input_type: 'text'),
   create_column(:text, form: @wf_forms[0], name: '目的', order: 30, required: 'required', input_type: 'text'),
-  create_column(:number, form: @wf_forms[0], name: '必要経費', order: 40, required: 'optional', postfix_label: '円', minus_type: 'normal'),
+  create_column(
+    :number, form: @wf_forms[0], name: '必要経費', order: 40, required: 'optional',
+    postfix_label: '円', minus_type: 'normal'
+  ),
   create_column(:text_area, form: @wf_forms[0], name: '詳細', order: 50, required: 'required'),
 ]
 
 @wf_form1_cols = [
-  create_column(:text_area, form: @wf_forms[1], name: '起案内容', order: 10, required: 'required', tooltips: '起案内容の詳細説明を入力してください。'),
-  create_column(:text, form: @wf_forms[1], name: '時期', order: 20, required: 'optional', tooltips: '購入、採用時期がある場合は入力してください。', input_type: 'text'),
-  create_column(:text, form: @wf_forms[1], name: '委託行者', order: 30, required: 'optional', tooltips: '購入、採用時期がある場合は入力してください。', input_type: 'text'),
-  create_column(:number, form: @wf_forms[1], name: '金額', order: 40, required: 'optional', postfix_label: '円', minus_type: 'normal'),
+  create_column(
+    :text_area, form: @wf_forms[1], name: '起案内容', order: 10, required: 'required',
+    tooltips: '起案内容の詳細説明を入力してください。'
+  ),
+  create_column(
+    :text, form: @wf_forms[1], name: '時期', order: 20, required: 'optional',
+    tooltips: '購入、採用時期がある場合は入力してください。', input_type: 'text'
+  ),
+  create_column(
+    :text, form: @wf_forms[1], name: '委託行者', order: 30, required: 'optional',
+    tooltips: '購入、採用時期がある場合は入力してください。', input_type: 'text'
+  ),
+  create_column(
+    :number, form: @wf_forms[1], name: '金額', order: 40, required: 'optional',
+    postfix_label: '円', minus_type: 'normal'
+  ),
 ]
 
 ## -------------------------------------

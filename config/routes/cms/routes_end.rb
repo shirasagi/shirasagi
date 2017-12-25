@@ -153,12 +153,12 @@ SS::Application.routes.draw do
         get :download, on: :member
       end
       namespace :node, path: "node:cid/cms", cid: /\w+/ do
-          resources :temp_files, concerns: :deletion do
+        resources :temp_files, concerns: :deletion do
           get :select, on: :member
           get :view, on: :member
           get :thumb, on: :member
           get :download, on: :member
-          end
+        end
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'

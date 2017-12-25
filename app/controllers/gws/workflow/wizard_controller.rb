@@ -27,7 +27,7 @@ class Gws::Workflow::WizardController < ApplicationController
   end
 
   def set_item
-    @item = @model.find(params[:id])#.becomes_with_route
+    @item = @model.find(params[:id]) #.becomes_with_route
     @item.attributes = fix_params
   end
 

@@ -50,17 +50,17 @@ class Urgency::LayoutsController < ApplicationController
     raise "404" unless readable_layout?
   end
 
-  def readable_layout?(item=nil)
+  def readable_layout?(item = nil)
     item = @item unless item
     @items.find { |i| i.id == item.id } ? true : false
   end
 
-  def default_layout?(item=nil)
+  def default_layout?(item = nil)
     item = @item unless item
     item.id == @default_layout.id
   end
 
-  def selected_layout?(item=nil)
+  def selected_layout?(item = nil)
     item = @item unless item
     item.id == @index_page.layout_id
   end

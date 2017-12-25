@@ -71,7 +71,6 @@ module Gws::BaseFilter
         path: request.path, controller: self.class.name.underscore, action: action_name,
         model: Gws::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
       ) rescue nil
-
       Time.zone.now.to_i
     end
 

@@ -15,8 +15,8 @@ module SS::Scope::ActivationDate
     }
     scope :expired, ->(date = Time.zone.now) {
       where('$or' => [
-        { :activation_date.exists => true , :activation_date.gt => date },
-        { :expiration_date.exists => true , :expiration_date.lt => date }
+        { :activation_date.exists => true, :activation_date.gt => date },
+        { :expiration_date.exists => true, :expiration_date.lt => date }
       ])
     }
   end

@@ -15,7 +15,7 @@ module Gws::Circular::Commentable
       (user_ids.include?(opts[:user].id) || member?(opts[:user]))
   end
 
-  def commented?(u=user)
+  def commented?(u = user)
     comments.find { |c| c.user_id == u.id }
   end
 

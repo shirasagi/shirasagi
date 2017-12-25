@@ -6,7 +6,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let(:target_node_name) { unique_id }
     let(:task) { create :copy_nodes_task, target_node_name: target_node_name, site_id: site.id, node_id: node.id }
     let!(:node) { create :cms_node, cur_site: site }
-    let!(:layout) { create :cms_layout , filename: "#{node.filename}/layout" }
+    let!(:layout) { create :cms_layout, filename: "#{node.filename}/layout" }
 
     describe "copy layout which is located under a node" do
 
