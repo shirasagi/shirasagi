@@ -1,0 +1,31 @@
+<%
+  items = @portlet.find_todo_items(@portal, @cur_user)
+%>
+
+<div class="main-box gws-todo-box">
+  <div class="portlet-title"><%= @portlet.name %></div>
+
+  <ul class="list-items">
+    <% items.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, gws_schedule_todo_readable_path(id: item), class: 'title' %>
+
+          <div class="meta">
+            <span><%= item.label(:todo_state) %></span>
+            <span class="datetime">
+              <%= Gws::Schedule::Todo.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %>
+              <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
+                <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+
+  <% if items.next_page %>
+    <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_schedule_todo_main_path %></div>
+  <% end %>
+</div>

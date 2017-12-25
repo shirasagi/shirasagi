@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @item.t :todo_state %></dt>
+  <dd><%= @item.label(:todo_state) %></dd>
+
+  <dt><%= @item.t :todo_member_ids %></dt>
+  <dd><%=br @item.find_todo_members(@portal).map(&:long_name).join("\n") %></dd>
+</dl>
