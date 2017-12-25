@@ -20,7 +20,10 @@ module Gws::Circular::PostFilter
   end
 
   def pre_params
-    { due_date: Time.zone.now + @cur_site.circular_default_due_date.day }
+    set_category
+    ret = { due_date: Time.zone.now + @cur_site.circular_default_due_date.day }
+    ret[:category_ids] = [@category.id] if @category
+    ret
   end
 
   def set_cur_tab
