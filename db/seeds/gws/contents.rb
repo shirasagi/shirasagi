@@ -9,7 +9,7 @@ end
 
 def g(name)
   @groups_hash ||= {}
-  @groups_hash[name.to_s] ||= Gws::Group.find_by(name: name)
+  @groups_hash[name.to_s] ||= Gws::Group.where(name: /\/#{Regexp.escape(name)}$/).first
 end
 
 @users = %w[admin user1 user2 user3 user4 user5].map { |uid| u(uid) }
@@ -22,6 +22,8 @@ def create_item(model, data)
   cond = { site_id: @site._id, name: data[:name] }
   item = model.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.user_ids ||= [item.cur_user.id]
+  item.group_ids ||= [item.cur_user.group_ids]
   puts item.errors.full_messages unless item.save
   item
 end
@@ -65,7 +67,8 @@ end
 @cgroups = [
   create_custom_group(
     name: 'シラサギプロジェクト', member_ids: %w[admin user1 user3].map { |uid| u(uid).id },
-    readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id }
+    readable_setting_range: 'select',
+    readable_group_ids: %w[政策課 広報課].map { |n| g(n).id }
   )
 ]
 
@@ -81,6 +84,8 @@ def create_staff_record_group(data)
   cond = { site_id: @site._id, year_id: data[:year_id], name: data[:name] }
   item = Gws::StaffRecord::Group.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.user_ids ||= [item.cur_user.id]
+  item.group_ids ||= [item.cur_user.group_ids]
   puts item.errors.full_messages unless item.save
   item
 end
@@ -90,6 +95,8 @@ def create_staff_record_user(data)
   cond = { site_id: @site._id, year_id: data[:year_id], section_name: data[:section_name], name: data[:name] }
   item = Gws::StaffRecord::User.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.user_ids ||= [item.cur_user.id]
+  item.group_ids ||= [item.cur_user.group_ids]
   puts item.errors.full_messages unless item.save
   item
 end
@@ -276,6 +283,8 @@ def create_schedule_plan(data)
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Schedule::Plan.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.user_ids ||= [item.cur_user.id]
+  item.group_ids ||= [item.cur_user.group_ids]
   puts item.errors.full_messages unless item.save
   item
 end
@@ -314,7 +323,7 @@ create_schedule_plan name: "繰り返し予定", member_ids: @users.map(&:id),
   repeat_type: 'weekly', interval: 1, repeat_start: base_date, repeat_end: base_date + 1.month, wdays: [3],
   member_ids: [u('admin').id], member_custom_group_ids: @cgroups[0].id,
   facility_ids: [@fc_item[0].id], main_facility_id: @fc_item[0].id,
-  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
+  readable_setting_range: 'select', readable_group_ids: [g('政策課').id],
   readable_member_ids: [u('sys').id]
 )
 
@@ -331,7 +340,7 @@ create_schedule_plan(
   end_at: (base_date + 1.day).strftime('%Y-%m-%d 11:00'),
   member_ids: %w[admin user1].map { |uid| u(uid).id },
   facility_ids: [@fc_item[1].id], main_facility_id: @fc_item[1].id,
-  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id]
+  readable_setting_range: 'select', readable_group_ids: [g('政策課').id]
 )
 
 @sch_plan2 = create_schedule_plan(
@@ -339,7 +348,7 @@ create_schedule_plan(
   allday: 'allday', start_on: base_date + 13.day + 9.hours, end_on: base_date + 13.day + 9.hours,
   start_at: base_date + 13.days, end_at: base_date.end_of_day,
   member_ids: %w[user1].map { |uid| u(uid).id },
-  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
+  readable_setting_range: 'select', readable_group_ids: [g('政策課').id],
   category_id: @sc_cate[1].id
 )
 
@@ -446,6 +455,8 @@ def create_circular_comment(data)
   cond = { site_id: @site._id, user_id: data[:cur_user].id, name: data[:name] }
   item = Gws::Circular::Comment.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.user_ids ||= [item.cur_user.id]
+  item.group_ids ||= [item.cur_user.group_ids]
   puts item.errors.full_messages unless item.save
   item
 end
@@ -660,7 +671,7 @@ end
 create_report_file(
   cur_form: @rep_forms[0], in_skip_notification_mail: true, name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
   member_ids: %w(admin user1 user3).map { |u| u(u).id }, schedule_ids: [@sch_plan1.id.to_s],
-  readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id },
+  readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g(n).id },
   column_values: [
     @rep_form0_cols[0].serialize_value('会議室101'),
     @rep_form0_cols[1].serialize_value((@today - 7.days).strftime('%Y/%m/%d')),
@@ -674,7 +685,7 @@ create_report_file(
 create_report_file(
   cur_user: u('user1'), cur_form: @rep_forms[1], in_skip_notification_mail: true, name: '東京出張報告', state: 'public',
   member_ids: @users.map(&:id), schedule_ids: [@sch_plan2.id.to_s],
-  readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
+  readable_setting_range: 'select', readable_group_ids: [g('政策課').id],
   column_values: [
     @rep_form1_cols[0].serialize_value('東京都庁'),
     @rep_form1_cols[1].serialize_value((@today - 3.days).strftime('%Y/%m/%d')),
@@ -904,7 +915,7 @@ end
 
 create_workflow_file(
   cur_user: u('user1'), cur_form: @wf_forms[0], name: '東京出張申請', state: 'closed',
-  readable_setting_range: 'select', readable_group_ids: %w[政策課].map { |n| g("シラサギ市/企画政策部/#{n}").id },
+  readable_setting_range: 'select', readable_group_ids: %w[政策課].map { |n| g(n).id },
   workflow_user_id: u('user1').id, workflow_state: 'request', workflow_comment: '東京出張を申請します。',
   workflow_approvers: [
     { 'level' => 1, 'user_id' => u('admin').id, 'editable' => '', 'state' => 'request', 'comment' => ''},
@@ -921,7 +932,7 @@ create_workflow_file(
 
 create_workflow_file(
   cur_user: u('user5'), cur_form: @wf_forms[1], name: 'パソコンの購入', state: 'closed',
-  readable_setting_range: 'select', readable_group_ids: %w[広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id },
+  readable_setting_range: 'select', readable_group_ids: %w[広報課].map { |n| g(n).id },
   workflow_user_id: u('user5').id, workflow_state: 'request', workflow_comment: 'パソコン購入の稟議です。',
   workflow_approvers: [
     { 'level' => 1, 'user_id' => u('user3').id, 'editable' => '', 'state' => 'request', 'comment' => ''},
