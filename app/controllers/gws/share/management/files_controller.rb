@@ -30,7 +30,7 @@ class Gws::Share::Management::FilesController < ApplicationController
   end
 
   def set_category
-    @categories = Gws::Share::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    @categories = Gws::Share::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
     if category_id = params[:category].presence
       @category ||= Gws::Share::Category.site(@cur_site).where(id: category_id).first
     end
@@ -67,7 +67,7 @@ class Gws::Share::Management::FilesController < ApplicationController
     end
 
     @items = @model.site(@cur_site).
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       deleted.
       search(params[:s]).
       page(params[:page]).per(50)

@@ -10,7 +10,7 @@ class Gws::Discussion::Base
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
-  class_variable_set(:@@_member_ids_required, false)
+  #class_variable_set(:@@_member_ids_required, false)
 
   # indexing to elasticsearch via companion object
   # around_save ::Gws::Elasticsearch::Indexer::DiscussionBaseJob.callback

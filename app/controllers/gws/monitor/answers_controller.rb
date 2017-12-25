@@ -29,9 +29,9 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def set_category
-    @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+    @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
     if category_id = params[:category].presence
-      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
+      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
     end
   end
 
@@ -66,7 +66,7 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def show
-    raise "403" unless @item.readable?(@cur_user, @cur_site)
+    raise "403" unless @item.readable?(@cur_user, site: @cur_site)
     render file: "/gws/monitor/main/show_#{@item.mode}"
   end
 
@@ -104,28 +104,28 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def public
-    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
     @item.save
     render_update @item.update
   end
 
   def preparation
-    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
     @item.save
     render_update @item.update
   end
 
   def question_not_applicable
-    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
     @item.save
     render_update @item.update
   end
 
   def answered
-    raise '403' unless @item.readable?(@cur_user, @cur_site)
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
     @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "answered")
     @item.save
     render_update @item.update
@@ -136,7 +136,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.readable?(@cur_user, @cur_site)
+      if item.readable?(@cur_user, site: @cur_site)
         item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
         item.save
       else
@@ -152,7 +152,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.readable?(@cur_user, @cur_site)
+      if item.readable?(@cur_user, site: @cur_site)
         item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
         item.save
       else
@@ -168,7 +168,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.readable?(@cur_user, @cur_site)
+      if item.readable?(@cur_user, site: @cur_site)
         item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
         item.save
       else

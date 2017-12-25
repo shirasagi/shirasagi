@@ -22,7 +22,7 @@ SS_TreeUI.render(".index.groups");
       <tr<%= depth %>>
         <td class="expandable">
           <% portal = item.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
-          <% if portal.readable?(@cur_user, site: @cur_site, strict: true) %>
+          <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
             <%= link_to name, gws_portal_group_path(group: item), class: "title" %>
           <% else %>
             <span class="title title--disabled"><%= name %></span>

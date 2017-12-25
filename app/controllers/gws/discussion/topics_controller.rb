@@ -32,7 +32,7 @@ class Gws::Discussion::TopicsController < ApplicationController
     if @forum.state == "closed"
       permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
     else
-      permitted = @forum.member?(@cur_user, site: @cur_site, include_role: true)
+      permitted = @forum.member?(@cur_user)
     end
 
     raise "403" unless permitted

@@ -12,7 +12,7 @@ class Gws::Discussion::Forum
 
   member_include_custom_groups
 
-  class_variable_set(:@@_member_ids_required, false)
+  #class_variable_set(:@@_member_ids_required, false)
 
   set_permission_name "gws_discussion_forums"
 

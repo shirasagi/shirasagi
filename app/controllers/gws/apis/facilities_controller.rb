@@ -8,7 +8,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
   private
 
   def category_criteria
-    Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site)
+    Gws::Facility::Category.site(@cur_site).readable(@cur_user, site: @cur_site)
   end
 
   def set_category
@@ -32,7 +32,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
     @multi = params[:single].blank?
 
     @items = @model.site(@cur_site).
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       reservable(@cur_user).
       active.
       search(params[:s])

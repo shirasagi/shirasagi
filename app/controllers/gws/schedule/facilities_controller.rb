@@ -9,7 +9,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   private
 
   def facility_category_criteria
-    Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site)
+    Gws::Facility::Category.site(@cur_site).readable(@cur_user, site: @cur_site)
   end
 
   def set_category
@@ -36,7 +36,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   end
 
   def set_schedule_category
-    @schedule_categories = Gws::Schedule::Category.site(@cur_site).readable(@cur_user, @cur_site)
+    @schedule_categories = Gws::Schedule::Category.site(@cur_site).readable(@cur_user, site: @cur_site)
 
     schedule_category_id = params.dig(:s, :category_id)
     if schedule_category_id.present?
@@ -57,7 +57,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
 
   def set_items
     @items = Gws::Facility::Item.site(@cur_site).
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       active
     @items = @items.in(category_id: category_ids)
   end

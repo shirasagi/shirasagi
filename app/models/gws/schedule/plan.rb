@@ -42,7 +42,7 @@ class Gws::Schedule::Plan
 
   def category_options
     @category_options ||= Gws::Schedule::Category.site(@cur_site || site).
-      readable(@cur_user || user, @cur_site || site).
+      readable(@cur_user || user, site: @cur_site || site).
       to_options
   end
 

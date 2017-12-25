@@ -12,13 +12,13 @@ class Gws::QuestionManagementController < ApplicationController
   def index
     @faq_items = Gws::Faq::Topic.topic.
       and_public.
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       order_by(descendants_updated: -1).
       limit(5)
 
     @qna_items = Gws::Qna::Topic.topic.
       and_public.
-      readable(@cur_user, @cur_site).
+      readable(@cur_user, site: @cur_site).
       order_by(descendants_updated: -1).
       limit(5)
   end

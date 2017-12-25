@@ -25,7 +25,7 @@ class Gws::Report::FilesController < ApplicationController
       if params[:state] != 'preview'
         criteria = criteria.and_public
       end
-      criteria = criteria.readable(@cur_user, @cur_site)
+      criteria = criteria.readable(@cur_user, site: @cur_site)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
