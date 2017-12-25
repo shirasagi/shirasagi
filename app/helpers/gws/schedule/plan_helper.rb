@@ -1,4 +1,6 @@
 module Gws::Schedule::PlanHelper
+  extend ActiveSupport::Concern
+
   def search_query
     params.select { |k, v| k == 's' }.to_query
   end

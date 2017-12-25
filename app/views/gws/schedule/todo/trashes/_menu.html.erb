@@ -2,11 +2,16 @@
   <% if params[:action] == 'index' %>
     <%= link_to t('gws/schedule.links.back_to_todo'), gws_schedule_todo_main_path %>
   <% end %>
-  <% if params[:action] == 'show' && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to t('gws/schedule/todo_management.links.active'), action: :recover  %>
+  <% if params[:action] == 'show' %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/schedule/todo_management.links.active'), action: :active  %>
+      <%= link_to t('ss.links.delete'), action: :delete  %>
+    <% end %>
   <% end %>
-  <% if params[:action] =~ /recover/ && @item.allowed?(:read, @cur_user, site: @cur_site) %>
-    <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+  <% if params[:action] =~ /recover|delete/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) || @item.member?(@cur_user) || @item.readable?(@cur_user) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
   <% end %>
   <% if params[:id] %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

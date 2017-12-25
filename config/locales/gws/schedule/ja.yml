@@ -104,6 +104,7 @@ ja:
       finish_all: 選択した項目を全て完了にしますか？
       revert_all: 選択した項目を全て未完了に戻しますか？
       disable_all: 削除済みに移動しますか？
+      active_all: 削除を取り消しますか？
     search_todos: ToDoを検索
     links:
       disable: 削除済みに移動する

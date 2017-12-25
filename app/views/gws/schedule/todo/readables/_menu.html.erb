@@ -1,3 +1,32 @@
 <nav class="nav-menu">
-  <%= menu_items(params[:action]).map(&:call).join.html_safe %>
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.new'), action: :new %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move|finish|revert|disable/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) || @item.member?(@cur_user) || @item.readable?(@cur_user) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) || @item.member?(@cur_user) || @item.readable?(@cur_user) %>
+      <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :disable, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user) %>
+      <% if @item.finished? %>
+        <%= link_to t('gws/schedule/todo.links.revert'), action: :revert, id: @item %>
+      <% else %>
+        <%= link_to t('gws/schedule/todo.links.finish'), action: :finish, id: @item %>
+      <% end %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
 </nav>

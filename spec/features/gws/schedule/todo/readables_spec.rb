@@ -34,7 +34,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
   it "#disable" do
     visit disable_gws_schedule_todo_readable_path gws_site, item
     wait_for_ajax
-    expect(page).to have_no_content(item.name)
+    expect(page).to have_content(item.name)
   end
 
   it "#finish_all" do
