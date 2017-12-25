@@ -129,6 +129,12 @@
 }
 
 .gws-memo-folder {
+  .folder {
+    background: #ffffff !important;
+  }
+  .current {
+    background: #f2f2f2 !important;
+  }
   .unseen {
     font-weight: bold;
     color: #f25a38;
