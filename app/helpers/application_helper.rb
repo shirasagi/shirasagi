@@ -144,7 +144,7 @@ module ApplicationHelper
     html = []
     
     html << '<i class="material-icons">'
-    if Gws::Bookmark.where(user: @cur_user, site: @cur_site, url: request.fullpath).present?
+    if Gws::Bookmark.where(user: @cur_user, site: @cur_site, url: request.fullpath).exists?
       html << "&#xE866;"
     else
       html << "&#xE867;"
