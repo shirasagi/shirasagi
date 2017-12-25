@@ -364,7 +364,7 @@ def create_board_topic(data)
   create_item(Gws::Board::Topic, data)
 end
 
-@bd_topic = [
+@bd_topics = [
   create_board_topic(
     name: "業務説明会を開催します。", text: "シラサギについても業務説明会を開催します。", mode: "thread",
     category_ids: [@bd_cate[0].id]
@@ -380,9 +380,9 @@ def create_board_post(data)
   create_item(Gws::Board::Post, data)
 end
 
-create_board_post(cur_user: u('user1'), name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
-res = create_board_post(cur_user: u('user1'), name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
-res = create_board_post(cur_user: u('admin'), name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topic[1].id, parent_id: res.id)
+create_board_post(cur_user: u('user1'), name: "Re: 業務説明会を開催します。", text: "参加は自由ですか。", topic_id: @bd_topics[0].id, parent_id: @bd_topics[0].id)
+res = create_board_post(cur_user: u('user1'), name: "Re: 会議室の増設について", text: "政策課フロアに増設いただけると助かります。", topic_id: @bd_topics[1].id, parent_id: @bd_topics[1].id)
+res = create_board_post(cur_user: u('admin'), name: "Re: Re: 会議室の増設について", text: "検討します。", topic_id: @bd_topics[1].id, parent_id: res.id)
 
 ## -------------------------------------
 puts "# circular/category"
@@ -421,7 +421,12 @@ end
 ]
 
 def create_circular_comment(data)
-  create_item(Gws::Circular::Comment, data)
+  puts data[:name]
+  cond = { site_id: @site._id, user_id: data[:cur_user].id, name: data[:name] }
+  item = Gws::Circular::Comment.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
 end
 
 create_circular_comment(
@@ -456,14 +461,16 @@ def create_faq_topic(data)
   create_item(Gws::Faq::Topic, data)
 end
 
-create_faq_topic(
-  name: '新しいグループウェアアカウントの発行はどうすればいいですか。', text: 'システム管理者にアカウント発行の申請を行ってください。',
-  mode: 'thread', permit_comment: 'deny', category_ids: [@faq_cate[1].id], readable_setting_range: 'public'
-)
-create_faq_topic(
-  name: '出張申請はどのように行いますか。', text: 'ワークフローに「出張申請」がありますので、必要事項を記入し申請してください。',
-  mode: 'thread', permit_comment: 'deny', category_ids: [@faq_cate[0].id], readable_setting_range: 'public'
-)
+@faq_topics = [
+  create_faq_topic(
+    name: '新しいグループウェアアカウントの発行はどうすればいいですか。', text: 'システム管理者にアカウント発行の申請を行ってください。',
+    mode: 'thread', permit_comment: 'deny', category_ids: [@faq_cate[1].id], readable_setting_range: 'public'
+  ),
+  create_faq_topic(
+    name: '出張申請はどのように行いますか。', text: 'ワークフローに「出張申請」がありますので、必要事項を記入し申請してください。',
+    mode: 'thread', permit_comment: 'deny', category_ids: [@faq_cate[0].id], readable_setting_range: 'public'
+  )
+]
 
 ## -------------------------------------
 puts "# memo"
@@ -508,8 +515,8 @@ def create_monitor_post(data)
 end
 
 create_monitor_post(
-  cur_user: u('admin'), name: 'Re: 新しい公用車の導入',
-  due_date: Time.zone.now.beginning_of_day + 7.days,
+  cur_user: u('admin'), name: 'Re: 新しい公用車の導入', state: 'public',
+  due_date: @mon_topics[1].due_date,
   topic_id: @mon_topics[1].id, parent_id: @mon_topics[1].id,
   text: '車室の広いものを希望します。'
 )
@@ -600,7 +607,7 @@ def create_report_file(data)
 end
 
 create_report_file(
-  cur_form: @rep_forms[0], name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
+  cur_form: @rep_forms[0], in_skip_notification_mail: true, name: '第1回シラサギ会議打ち合わせ議事録', state: 'public',
   member_ids: %w(admin user1 user3).map { |u| u(u).id }, schedule_ids: [@sch_plan1.id.to_s],
   readable_setting_range: 'select', readable_group_ids: %w[政策課 広報課].map { |n| g("シラサギ市/企画政策部/#{n}").id },
   column_values: [
@@ -614,7 +621,7 @@ create_report_file(
 )
 
 create_report_file(
-  cur_user: u('user1'), cur_form: @rep_forms[1], name: '東京出張報告', state: 'public',
+  cur_user: u('user1'), cur_form: @rep_forms[1], in_skip_notification_mail: true, name: '東京出張報告', state: 'public',
   member_ids: @users.map(&:id), schedule_ids: [@sch_plan2.id.to_s],
   readable_setting_range: 'select', readable_group_ids: [g('シラサギ市/企画政策部/政策課').id],
   column_values: [
@@ -623,6 +630,49 @@ create_report_file(
     @rep_form1_cols[2].serialize_value("東京都庁で会議のため、出張しました。\nかれこれしかじか。")
   ]
 )
+
+## -------------------------------------
+puts "# share/category"
+
+def create_share_category(data)
+  create_item(Gws::Share::Category, data)
+end
+
+@sh_cate = [
+  create_share_category(name: 'パンフレット', color: '#A600FF', order: 10),
+  create_share_category(name: '写真', color: '#0011FF', order: 20),
+  create_share_category(name: '申請書', color: '#11FF00', order: 30),
+  create_share_category(name: '資料', color: '#FFEE00', order: 40),
+]
+
+## -------------------------------------
+puts "# share/folder"
+
+def create_share_folder(data)
+  create_item(Gws::Share::Folder, data)
+end
+
+@sh_folders = [
+  create_share_folder(name: '講習会資料', order: 10),
+  create_share_folder(name: '事業パンフレット', order: 20),
+  create_share_folder(name: 'イベント写真', order: 30),
+  create_share_folder(name: '座席表', order: 50),
+]
+
+## -------------------------------------
+puts "# share/file"
+
+def create_share_file(data)
+  create_item(Gws::Share::File, data)
+end
+
+@sh_files = []
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/file.pdf'), filename: 'file.pdf', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(in_file: f, name: 'file.pdf', folder_id: @sh_folders[0].id, category_ids: [@sh_cate[3].id])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikakuseisaku.pdf')) do |f|
+  @sh_files << create_share_file(in_file: f, name: 'kikakuseisaku.pdf', folder_id: @sh_folders[3].id)
+end
 
 ## -------------------------------------
 puts "# shared_address/group"
@@ -814,6 +864,41 @@ create_workflow_file(
     @wf_form1_cols[3].serialize_value('100000'),
   ]
 )
+
+## -------------------------------------
+puts "# bookmark"
+
+def create_bookmark(data)
+  puts data[:name]
+  cond = { site_id: @site._id, user_id: data[:cur_user].id, name: data[:name] }
+  item = Gws::Bookmark.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+create_bookmark(cur_user: u('sys'), name: @faq_topics[0].name, url: "/.g#{@site.id}/faq/topics/#{@faq_topics[0].id}", bookmark_model: 'faq')
+create_bookmark(cur_user: u('sys'), name: '企画政策課座席表', url: "/.g#{@site.id}/share/folder-#{@sh_files[1].folder_id}/files/#{@sh_files[1].id}", bookmark_model: 'share')
+create_bookmark(cur_user: u('sys'), name: 'SHIRASAGI公式サイト', url: 'http://www.ss-proj.org/', bookmark_model: 'other')
+
+create_bookmark(cur_user: u('admin'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics", bookmark_model: 'discussion')
+create_bookmark(cur_user: u('admin'), name: @ds_forums[1].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[1].id}/topics", bookmark_model: 'discussion')
+create_bookmark(cur_user: u('admin'), name: @cr_posts[1].name, url: "/.g#{@site.id}/circular/admins/#{@cr_posts[1].id}", bookmark_model: 'circular')
+
+create_bookmark(cur_user: u('user1'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics", bookmark_model: 'discussion')
+create_bookmark(cur_user: u('user1'), name: @ds_forums[1].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[1].id}/topics", bookmark_model: 'discussion')
+
+create_bookmark(cur_user: u('user2'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics", bookmark_model: 'discussion')
+create_bookmark(cur_user: u('user2'), name: @sh_files[0].name, url: "/.g#{@site.id}/share/folder-#{@sh_files[0].folder_id}/files/#{@sh_files[0].id}", bookmark_model: 'share')
+
+create_bookmark(cur_user: u('user3'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics", bookmark_model: 'discussion')
+create_bookmark(cur_user: u('user3'), name: @mon_topics[0].name, url: "/.g1/monitor/topics/#{@mon_topics[0].id}", bookmark_model: 'monitor')
+
+create_bookmark(cur_user: u('user4'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics", bookmark_model: 'discussion')
+create_bookmark(cur_user: u('user4'), name: @bd_topics[0].name, url: "/.g#{@site.id}/board/topics/#{@bd_topics[0].id}", bookmark_model: 'board')
+
+create_bookmark(cur_user: u('user5'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics", bookmark_model: 'discussion')
+create_bookmark(cur_user: u('user5'), name: @bd_topics[1].name, url: "/.g#{@site.id}/board/topics/#{@bd_topics[1].id}", bookmark_model: 'board')
 
 ## -------------------------------------
 puts "# max file size"
