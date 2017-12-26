@@ -82,7 +82,7 @@ class Gws::Memo::Message
     elsif folder.draft_box?
       user(user).and_closed
     else
-      where("path.#{user.id}" => folder.path).and_public
+      where("path.#{user.id}" => folder.folder_path).and_public
     end
   }
   scope :unseen, ->(user_id) {
