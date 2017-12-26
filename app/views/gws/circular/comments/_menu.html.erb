@@ -1,7 +1,7 @@
 <nav class="nav-menu">
-  <% if params[:post_id].present? %>
-    <%= link_to t("gws/board.links.back_to_thread"), @category.present? ? gws_circular_category_post_path(id: params[:post_id]) : gws_circular_post_path(id: params[:post_id]) %>
-  <% elsif params[:admin_id].present? %>
-    <%= link_to t("gws/board.links.back_to_thread"), @category.present? ? gws_circular_category_admin_path(id: params[:admin_id]) : gws_circular_admin_path(id: params[:admin_id]) %>
+  <% if params[:parent] == 'posts' %>
+    <%= link_to t("gws/board.links.back_to_thread"), gws_circular_post_path(id: params[:post_id]) %>
+  <% elsif params[:parent] == 'admins' %>
+    <%= link_to t("gws/board.links.back_to_thread"), gws_circular_admin_path(id: params[:post_id]) %>
   <% end %>
 </nav>

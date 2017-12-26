@@ -43,4 +43,9 @@ module Gws::Circular::See
     %w(normal simple).map{ |key| [I18n.t(key, scope: 'gws/circular.options.see_type'), key] }
   end
 
+  def seen_users
+    seen = self.seen.to_a.select { |user_id, seen_at| seen_at.present? }
+    seen_user_ids = seen.map { |user_id, seen_at| user_id }
+    Gws::User.in(id: seen_user_ids)
+  end
 end

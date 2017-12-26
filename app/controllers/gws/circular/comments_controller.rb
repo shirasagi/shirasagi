@@ -30,11 +30,19 @@ class Gws::Circular::CommentsController < ApplicationController
 
   def set_crumbs
     set_category
+    @crumbs << [t("modules.gws/circular"), gws_circular_main_path]
     if @category.present?
-      @crumbs << [t("modules.gws/circular"), gws_circular_posts_path]
-      @crumbs << [@category.name, gws_circular_category_posts_path]
+      if params[:parent] == 'posts'
+        @crumbs << [@category.name, gws_circular_posts_path]
+        @crumbs << [I18n.t('gws/circular.tabs.post'), action: :index]
+      else
+        @crumbs << [@category.name, gws_circular_admins_path]
+      end
+    end
+    if params[:parent] == 'posts'
+      @crumbs << [I18n.t('gws/circular.tabs.post'), gws_circular_posts_path]
     else
-      @crumbs << [t("modules.gws/circular"), gws_circular_posts_path]
+      @crumbs << [I18n.t('gws/circular.tabs.admin'), gws_circular_admins_path]
     end
   end
 
@@ -58,18 +66,10 @@ class Gws::Circular::CommentsController < ApplicationController
   public
 
   def index
-    if @category.present?
-      if params[:post_id].present?
-        redirect_to gws_circular_category_post_path(id: @post.id)
-      elsif params[:admin_id].present?
-        redirect_to gws_circular_category_admin_path(id: @post.id)
-      end
-    elsif @category.blank?
-      if params[:post_id].present?
-        redirect_to gws_circular_post_path(id: @post.id)
-      elsif params[:admin_id].present?
-        redirect_to gws_circular_admin_path(id: @post.id)
-      end
+    if params[:parent] == 'posts'
+      redirect_to gws_circular_post_path(id: @post.id)
+    elsif params[:parent] == 'admins'
+      redirect_to gws_circular_admin_path(id: @post.id)
     end
   end
   alias show index

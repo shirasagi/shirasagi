@@ -8,14 +8,14 @@
     <% items.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <%= link_to item.name, gws_circular_post_path(id: item), class: 'title' %>
+          <%= link_to item.name, gws_circular_post_path(category: '~', id: item), class: 'title' %>
 
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
             <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
             <span>
               <% item.categories.compact.each do |category| %>
-                <%= link_to category.trailing_name, gws_circular_category_posts_path(category: category.id),
+                <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),
                             class: "gws-category-label", style: category_label_css(category) %>
               <% end %>
             </span>

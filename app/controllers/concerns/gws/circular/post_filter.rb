@@ -2,6 +2,7 @@ module Gws::Circular::PostFilter
   extend ActiveSupport::Concern
 
   included do
+    append_view_path 'app/views/gws/circular/main'
     attr_accessor(:cur_tab)
     model Gws::Circular::Post
 
@@ -19,7 +20,10 @@ module Gws::Circular::PostFilter
   end
 
   def pre_params
-    { due_date: Time.zone.now + @cur_site.circular_default_due_date.day }
+    set_category
+    ret = { due_date: Time.zone.now + @cur_site.circular_default_due_date.day }
+    ret[:category_ids] = [@category.id] if @category
+    ret
   end
 
   def set_cur_tab
@@ -60,6 +64,9 @@ module Gws::Circular::PostFilter
       params[:s] ||= {}
       params[:s][:site] = @cur_site
       params[:s][:category_id] = @category.id
+    end
+    if params.dig(:s, :article_state).present?
+      params[:s][:user] = @cur_user
     end
 
     set_items

@@ -14,6 +14,9 @@ class Gws::Circular::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  member_include_custom_groups
+  permission_include_custom_groups
+
   seqid :id
 
   field :name, type: String
@@ -38,28 +41,6 @@ class Gws::Circular::Post
   around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
 
   scope :topic, ->{ exists post_id: false }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    if sort_num = params[:sort].to_i
-      criteria = criteria.order_by(new.sort_hash(sort_num))
-    end
-
-    if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :text
-    end
-
-    if params[:category_id].present?
-      criteria = criteria.in(category_ids: params[:category_id])
-    end
-
-    if params[:state].present?
-      criteria = criteria.where(state: params[:state])
-    end
-
-    criteria
-  }
 
   scope :and_public, -> {
     where(state: 'public')
@@ -76,6 +57,47 @@ class Gws::Circular::Post
   }
 
   class << self
+    def search(params)
+      criteria = all
+      criteria = criteria.search_keyword(params)
+      criteria = criteria.search_category_id(params)
+      criteria = criteria.search_state(params)
+      criteria = criteria.search_article_state(params)
+      criteria = criteria.order_by_sort(params)
+      criteria
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :text)
+    end
+
+    def search_category_id(params)
+      return all if params.blank? || params[:category_id].blank?
+      all.in(category_ids: params[:category_id])
+    end
+
+    def search_state(params)
+      return all if params.blank? || params[:state].blank?
+      all.where(state: params[:state])
+    end
+
+    def search_article_state(params)
+      return all if params.blank? || params[:article_state].blank?
+      return all if params[:article_state] == 'both'
+      case params[:article_state]
+      when 'seen'
+        exists("seen.#{params[:user].id}" => true)
+      when 'unseen'
+        exists("seen.#{params[:user].id}" => false)
+      end
+    end
+
+    def order_by_sort(params)
+      return all if params.blank? || params[:sort].blank?
+      all.reorder(new.sort_hash(params[:sort].to_i))
+    end
+
     def to_csv
       CSV.generate do |data|
         data << I18n.t('gws/circular.csv')
@@ -94,6 +116,11 @@ class Gws::Circular::Post
         end
       end
     end
+  end
+
+  def reminder_url
+    name = reference_model.tr('/', '_') + '_path'
+    [name, category: '~', id: id]
   end
 
   def draft?
