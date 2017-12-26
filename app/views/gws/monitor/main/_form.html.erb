@@ -1,8 +1,5 @@
 <%= jquery do %>
-  <% unless controller.action_name == 'edit' -%>
-    $('.gws-addon-readable-setting-member').hide();
-  <% end -%>
-    Gws_Monitor_Topic.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
+  Gws_Monitor_Topic.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
 <% end %>
 
 <dl class="see">
@@ -24,4 +21,3 @@
   <%= f.hidden_field :permit_comment, value: 'allow' %>
   <%= f.hidden_field :severity %>
 </dl>
-

@@ -11,11 +11,16 @@ class Gws::Monitor::CommentsController < ApplicationController
 
   def set_crumbs
     set_category
+    @crumbs << [@cur_site.menu_monitor_label || t("modules.gws/monitor"), gws_monitor_main_path]
     if @category.present?
-      @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
       @crumbs << [@category.name, gws_monitor_topics_path]
-    else
-      @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
+    end
+    if params[:topic_id].present?
+      @crumbs << [t('gws/monitor.tabs.unanswer'), action: :index]
+    elsif params[:answer_id].present?
+      @crumbs << [t('gws/monitor.tabs.answer'), action: :index]
+    elsif params[:admin_id].present?
+      @crumbs << [t('gws/monitor.tabs.admin'), action: :index]
     end
   end
 
@@ -77,11 +82,11 @@ class Gws::Monitor::CommentsController < ApplicationController
     @item = @model.new get_params
     case params[:commit]
     when I18n.t("gws/monitor.links.comment")
-      @item.parent.state_of_the_answers_hash[@cur_group.id.to_s] = "answered"
-      @item.parent.save
+      @item.topic.answer_state_hash[@cur_group.id.to_s] = "answered"
+      @item.topic.save
     when I18n.t("gws/monitor.links.question_not_applicable")
-      @item.parent.state_of_the_answers_hash[@cur_group.id.to_s] = "question_not_applicable"
-      @item.parent.save
+      @item.topic.answer_state_hash[@cur_group.id.to_s] = "question_not_applicable"
+      @item.topic.save
     end
 
     if params[:topic_id].present?
@@ -131,4 +136,3 @@ class Gws::Monitor::CommentsController < ApplicationController
     render_destroy @item.destroy
   end
 end
-

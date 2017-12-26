@@ -10,11 +10,14 @@
     return false;
   });
 <% end %>
+
+<nav class="nav-management-menu">
+  <%= link_to gws_monitor_main_path do %>
+    <i class="material-icons md-20">&#xE879;</i><%= t("ss.links.back") %>
+  <% end %>
+</nav>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), action: :new %>
-    <% end %>
   <% elsif params[:action] =~ /new|create|lock|categories/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
@@ -26,14 +29,16 @@
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
       <% if @item.closed? %>
-        <%= link_to t('gws/monitor.links.open'), { action: :open, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.links.confirm.open')  %>
+        <%= link_to t('gws/monitor.links.open'), { action: :open, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.confirm.open')  %>
       <% else %>
-        <%= link_to t('gws/monitor.links.closed'), { action: :close, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.links.confirm.close')  %>
+        <%= link_to t('gws/monitor.links.closed'), { action: :close, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.confirm.close')  %>
       <% end %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/monitor.links.disable_all'), action: :delete, id: @item %>
+      <%= link_to t('gws/monitor.links.disable'), action: :disable, id: @item %>
     <% end %>
+    <%= link_to(t('gws/monitor.links.export_csv'), { action: :download }, class: 'export_csv') %>
+    <%= link_to(t('gws/monitor.links.file_download'), { action: :file_download }, class: 'file_download') %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

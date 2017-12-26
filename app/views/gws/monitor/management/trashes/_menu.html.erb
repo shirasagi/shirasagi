@@ -1,3 +1,8 @@
+<nav class="nav-management-menu">
+  <%= link_to gws_monitor_main_path do %>
+    <i class="material-icons md-20">&#xE879;</i><%= t("ss.links.back") %>
+  <% end %>
+</nav>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
   <% elsif params[:action] =~ /delete|recover/ %>
@@ -8,7 +13,7 @@
   <% else %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to I18n.t('ss.links.delete'), action: :delete, id: @item %>
-      <%= link_to I18n.t('gws/monitor.management.links.active'), action: :recover, id: @item %>
+      <%= link_to I18n.t('gws/monitor.management.links.active'), action: :active, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>

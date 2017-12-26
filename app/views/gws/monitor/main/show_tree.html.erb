@@ -1,7 +1,7 @@
 <%= jquery do %>
     Gws_Monitor_Topic.render();
 
-    switch ("<%= @item[:state_of_the_answers_hash]["#{@cur_group.id}"] %>"){
+    switch ("<%= @item.answer_state_hash[@cur_group.id.to_s] %>"){
       case "public":
         $('.public').hide();
         $('.preparation').show();
@@ -32,8 +32,8 @@
         <span class="name"><%= @item.name %></span>
         <span class="categories">
           <% @item.categories.each do |category| %>
-            <%= link_to category.trailing_name, gws_monitor_topics_path(category: category.id),
-                        class: "gws-category-label", style: category_label_css(category) %>
+            <%= link_to category.trailing_name, { category: category.id },
+                        { class: "gws-category-label", style: category_label_css(category) } %>
           <% end %>
         </span>
       </h2>
@@ -102,7 +102,7 @@
   </div>
   <% end %>
 
-  <% if params[:controller] =~ /admin/ || @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != '0'%>
+  <% if params[:controller] =~ /admin/ || @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != 'my_group'%>
     <%= render partial: 'gws/monitor/main/subscribed_groups' %>
   <% end %>
 </div>

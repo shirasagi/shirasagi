@@ -1,4 +1,4 @@
-class Gws::Monitor::AnswersController < ApplicationController
+class Gws::Monitor::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Monitor::TopicFilter
@@ -11,14 +11,13 @@ class Gws::Monitor::AnswersController < ApplicationController
     if @category.present?
       @crumbs << [@category.name, gws_monitor_topics_path]
     end
-    @crumbs << [t('gws/monitor.tabs.answer'), action: :index]
+    @crumbs << [t('gws/monitor.tabs.admin'), action: :index]
   end
 
   def set_items
     @items = @model.site(@cur_site).topic
-    @items = @items.and_public
-    @items = @items.and_attended(@cur_user, site: @cur_site, group: @cur_group)
-    @items = @items.and_answered(@cur_group)
+    @items = @items.allow(:read, @cur_user, site: @cur_site, private_only: true)
+    @items = @items.only_deleted
     @items = @items.search(params[:s])
     @items = @items.custom_order(params.dig(:s, :sort) || 'updated_desc')
     @items = @items.page(params[:page]).per(50)

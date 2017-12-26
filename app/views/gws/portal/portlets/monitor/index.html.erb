@@ -9,7 +9,7 @@
       <li class="list-item">
         <div class="info">
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-          <%= link_to item.name, gws_monitor_topic_path(id: item), class: 'title' %>
+          <%= link_to item.name, gws_monitor_topic_path(category: '-', id: item), class: 'title' %>
           <% if item.descendants_files_count.to_i > 0 %>
               <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
           <% end %>

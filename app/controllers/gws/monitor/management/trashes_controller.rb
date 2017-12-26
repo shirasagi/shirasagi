@@ -1,21 +1,15 @@
 class Gws::Monitor::Management::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-
-  model Gws::Monitor::Topic
-  navi_view "gws/monitor/management/navi"
-
-  before_action :set_item, only: [
-    :show, :edit, :update, :delete, :destroy, :active, :recover
-  ]
-
-  before_action :set_selected_items, only: [
-      :destroy_all, :active_all
-  ]
-
-  before_action :set_category
+  include Gws::Monitor::TopicFilter
 
   private
+
+  # override Gws::Monitor::TopicFilter#append_view_paths
+  def append_view_paths
+    append_view_path 'app/views/gws/monitor/management/main'
+    super
+  end
 
   def set_crumbs
     set_category
@@ -27,92 +21,12 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     @crumbs << [t('gws/monitor.tabs.trash'), action: :index]
   end
 
-  def set_category
-    @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
-    if category_id = params[:category].presence
-      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
-    end
-  end
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
-  def pre_params
-    current_category_id = super
-    if @category.present?
-      current_category_id[:category_ids] = [ @category.id ]
-    end
-    current_category_id
-  end
-
-  public
-
-  def index
+  def set_items
     @items = @model.site(@cur_site).topic
-
-    if @category.present?
-      params[:s] ||= {}
-      params[:s][:site] = @cur_site
-      params[:s][:category] = @category.name
-    end
-
-    if @cur_user.gws_role_permissions["read_other_gws_monitor_posts_#{@cur_site.id}"] &&
-       @cur_user.gws_role_permissions["delete_other_gws_monitor_posts_#{@cur_site.id}"]
-      @items = @items.search(params[:s]).
-          custom_order(params.dig(:s, :sort) || 'updated_desc').
-          page(params[:page]).per(50)
-    else
-      @items = @items.search(params[:s]).
-          and_admins(@cur_user).
-          custom_order(params.dig(:s, :sort) || 'updated_desc').
-          page(params[:page]).per(50)
-    end
-  end
-
-  def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-    render file: "/gws/monitor/management/main/show_#{@item.mode}"
-  end
-
-  def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
-  end
-
-  def recover
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render
-  end
-
-  def active
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.active, {notice: t('gws/monitor.notice.active')}
-  end
-
-  def active_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site)
-        next if item.active
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_active_all(entries.size != @items.size)
-  end
-
-  def render_active_all(result)
-    location = crud_redirect_url || { action: :index }
-    notice = result ? { notice: t("gws/monitor.notice.active") } : {}
-    errors = @items.map { |item| [item.id, item.errors.full_messages] }
-
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
-    end
+    @items = @items.allow(:read, @cur_user, site: @cur_site)
+    @items = @items.only_deleted
+    @items = @items.search(params[:s])
+    @items = @items.custom_order(params.dig(:s, :sort) || 'updated_desc')
+    @items = @items.page(params[:page]).per(50)
   end
 end

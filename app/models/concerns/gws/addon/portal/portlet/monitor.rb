@@ -29,7 +29,7 @@ module Gws::Addon::Portal::Portlet
         topic.
         and_public.
         search(search).
-        and_topics(user.id, group.id, custom_group_ids, state).
+        and_unanswered(group).
         custom_order('updated_desc').
         page(1).
         per(limit)

@@ -12,10 +12,6 @@
   <div class="dropdown-menu dropdown-menu--white"></div>
 </div>
 
-<%= jquery do %>
-  $(".gws-monitor-tabs .unanswer").addClass("current");
-<% end %>
-
 <%= render "gws/monitor/main/tabs" %>
 
 <div class="index gws-boards">
@@ -56,11 +52,7 @@
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="article_state">
-            <% if item.closed? %>
-              <%= item.article_state_name %>
-            <% else %>
-              <%= item.state_name(@cur_group.id) %>
-            <% end %>
+            <%= item.answer_state_name(@cur_group) %>
           </span>
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
