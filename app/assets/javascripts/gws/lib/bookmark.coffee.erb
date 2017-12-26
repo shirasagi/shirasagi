@@ -1,5 +1,50 @@
 class @Gws_Bookmark
   @render: (opts = {})->
-    $('div.gws-bookmark').click ->
-      $(this).addClass('active')
-      $(this).find('ul').addClass('active')
+    elem = $('.gws-bookmark')
+    $(elem).click ->
+      $(elem).addClass('active')
+      $(elem).find('.dropdown-menu').addClass('active')
+
+    $(elem).find('.save').click ->
+      name = $(elem).find('.bookmark-name').val()
+      html = $(elem).html()
+      $.ajax
+        url: opts['url']
+        method: 'POST'
+        data:
+          item:
+            name: name
+            default_name: opts['name']
+            url: location.pathname
+            model: opts['model']
+        beforesend: $(elem).find('.dropdown-menu').html(SS.loading)
+        success: (data)->
+          $(elem).html(html)
+          $(elem).find('.bookmark-id').val(data['bookmark_id'])
+          $(elem).find('.bookmark-name').val(data['name'])
+          $(elem).find('.material-icons').html("&#xE866;")
+        error: (data)->
+          alert('Error')
+
+    $(elem).find('.delete').click ->
+      unless $(elem).find('.bookmark-id').val()
+        return false
+      uri = opts['url'].split('/')
+      uri.push($(elem).find('#bookmark_id').val())
+      url = uri.join('/')
+      html = $(elem).html()
+      $.ajax
+        url: url
+        method: 'POST'
+        data:
+          _method: 'delete'
+          item:
+            url: location.pathname
+        beforesend: $(elem).find('.dropdown-menu').html(SS.loading)
+        success: (data)->
+          $(elem).html(html)
+          $(elem).find('.bookmark-id').val('')
+          $(elem).find('.bookmark-name').val(opts['name'])
+          $(elem).find('.material-icons').html("&#xE867;")
+        error: (data)->
+          alert('Error')

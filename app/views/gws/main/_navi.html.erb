@@ -14,10 +14,6 @@
     <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_bookmark_visible? %>
-    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
-  <% end %>
-
   <% if @cur_site.menu_schedule_visible? %>
     <h2><%= link_to @cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path, class: "icon-schedule" %></h2>
     <div class="child-menu">
@@ -26,6 +22,10 @@
       <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
       <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>
     </div>
+  <% end %>
+
+  <% if @cur_site.menu_bookmark_visible? %>
+    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>

@@ -20,7 +20,7 @@ class Gws::Portal::GroupSetting
   before_validation :set_name, if: ->{ portal_group.present? }
 
   def portlet_models
-    %w(free links schedule report workflow circular monitor board faq qna share).map do |key|
+    %w(free links schedule bookmark report workflow circular monitor board faq qna share).map do |key|
       Gws::Portal::GroupPortlet.portlet_model(key)
     end
   end

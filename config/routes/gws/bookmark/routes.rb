@@ -9,7 +9,7 @@ SS::Application.routes.draw do
   namespace "gws", path: ".g:site/gws" do
     resources :bookmarks, concerns: [:deletion]
     namespace "apis" do
-      post "bookmarks" => "bookmarks#index"
+      resources :bookmarks, only: [:create, :destroy]
     end
   end
 end

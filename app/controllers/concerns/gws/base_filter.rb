@@ -15,7 +15,6 @@ module Gws::BaseFilter
     before_action :set_gws_logged_in, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
     before_action :set_account_menu, if: ->{ @cur_user }
-    before_action :set_bookmark
     before_action :set_crumbs
     after_action :put_history_log, if: ->{ @cur_user }
     navi_view "gws/main/navi"
@@ -51,14 +50,6 @@ module Gws::BaseFilter
       @account_menu << [group.section_name, gws_default_group_path(default_group: group)]
     end
     @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
-  end
-
-  def set_bookmark
-    @bookmark = Gws::Bookmark.where(user: @cur_user, site: @cur_site, url: request.fullpath).first
-    return unless @model
-    @bookmark_model = @model.name.underscore.sub(/gws\/(?<model>[^\/]*)\/?.*/) do
-      Regexp.last_match[:model]
-    end
   end
 
   def set_gws_logged_in

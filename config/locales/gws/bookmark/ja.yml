@@ -1,5 +1,8 @@
 ja:
   gws:
+    buttons:
+      bookmark: お気に入り登録
+      unbookmark: お気に入り解除
     options:
       bookmark_model:
         other: その他
