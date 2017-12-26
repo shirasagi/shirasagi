@@ -16,7 +16,7 @@ class Gws::Memo::Message
 
   set_permission_name "gws_memo_messages", :edit
 
-  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_paths
+  attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path
 
   field :subject, type: String
   field :text, type: String, default: ''
@@ -31,7 +31,7 @@ class Gws::Memo::Message
   #belongs_to :from, class_name: "Gws::User"
   #embeds_ids :to, class_name: "Gws::User"
 
-  field :paths, type: Hash, default: {}
+  field :path, type: Hash, default: {}
   field :send_date, type: DateTime
 
   alias name subject
@@ -43,12 +43,12 @@ class Gws::Memo::Message
   alias to members
   alias to_ids member_ids
 
-  permit_params :subject, :text, :html, :format, :from_id, :in_paths
+  permit_params :subject, :text, :html, :format, :from_id, :in_path
 
   default_scope -> { order_by(send_date: -1, updated: -1) }
 
   after_initialize :set_default_reminder_date, if: :new_record?
-  before_validation :set_paths, :set_size, :set_send_date
+  before_validation :set_path, :set_size, :set_send_date
 
   validate :validate_attached_file_size
   validate :validate_message
@@ -82,7 +82,7 @@ class Gws::Memo::Message
     elsif folder.draft_box?
       user(user).and_closed
     else
-      where("paths.#{user.id}" => folder.path).and_public
+      where("path.#{user.id}" => folder.path).and_public
     end
   }
   scope :unseen, ->(user_id) {
@@ -97,20 +97,20 @@ class Gws::Memo::Message
 
   private
 
-  def set_paths
-    self.paths = {}
+  def set_path
+    self.path = {}
 
     member_ids.each do |member_id|
-      if paths_was && paths_was[member_id.to_s]
-        self.paths[member_id.to_s] = paths_was[member_id.to_s]
+      if path_was && path_was[member_id.to_s]
+        self.path[member_id.to_s] = path_was[member_id.to_s]
       else
-        self.paths[member_id.to_s] = "INBOX"
+        self.path[member_id.to_s] = "INBOX"
       end
     end
 
-    if in_paths.present?
-      in_paths.each do |member_id, path|
-        self.paths[member_id.to_s] = path
+    if in_path.present?
+      in_path.each do |member_id, path|
+        self.path[member_id.to_s] = path
       end
     end
   end
@@ -198,7 +198,7 @@ class Gws::Memo::Message
   end
 
   def move(user, path)
-    self.in_paths = { user.id.to_s => path }
+    self.in_path = { user.id.to_s => path }
     self
   end
 
