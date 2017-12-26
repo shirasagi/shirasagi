@@ -5,7 +5,7 @@
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_monitor_management_topics_path(category: '~'), class: 'btn dropdown-toggle' do %>
+  <%= link_to gws_monitor_management_topics_path(category: '-'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
