@@ -6,8 +6,14 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   navi_view "gws/monitor/management/navi"
 
   before_action :set_item, only: [
-      :show, :edit, :update, :delete, :destroy,
-      :close, :open, :download, :file_download
+    :show, :edit, :update, :delete, :destroy,
+    :close, :open, :download, :file_download,
+    :public, :preparation, :question_not_applicable, :answered, :disable
+  ]
+
+  before_action :set_selected_items, only: [
+    :destroy_all, :public_all,
+    :preparation_all, :question_not_applicable_all, :disable_all
   ]
 
   before_action :set_category
@@ -36,11 +42,22 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   end
 
   def pre_params
-    current_category_id = super
+    ret = super
     if @category.present?
-      current_category_id[:category_ids] = [ @category.id ]
+      ret[:category_ids] = [ @category.id ]
     end
-    current_category_id
+    ret
+  end
+
+  def render_destroy_all(result)
+    location = crud_redirect_url || { action: :index }
+    notice = result ? { notice: t("gws/monitor.notice.disable") } : {}
+    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice }
+      format.json { head json: errors }
+    end
   end
 
   public
@@ -69,6 +86,15 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
   def show
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render file: "/gws/monitor/management/main/show_#{@item.mode}"
+  end
+
+  def create
+    @item = @model.new get_params
+
+    @item.attributes["readable_group_ids"] = (@item.attend_group_ids + @item.readable_group_ids).uniq
+
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
   end
 
   def update
@@ -101,6 +127,39 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
   end
 
+  def public
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
+    @item.save
+    render_update @item.update
+  end
+
+  def preparation
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
+    @item.save
+    render_update @item.update
+  end
+
+  def question_not_applicable
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
+    @item.save
+    render_update @item.update
+  end
+
+  def answered
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+    @item.state_of_the_answers_hash.update(@cur_group.id.to_s => "answered")
+    @item.save
+    render_update @item.update
+  end
+
+  def disable
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render_destroy @item.disable, {notice: t('gws/monitor.notice.disable')}
+  end
+
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     @download_file_group_ssfile_ids = []
@@ -129,5 +188,53 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     @item.create_download_directory(File.dirname(@item.zip_path))
     @item.create_zip(@item.zip_path, @group_ssfile, @owner_ssfile)
     send_file(@item.zip_path, type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
+  end
+
+  def public_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.readable?(@cur_user, site: @cur_site)
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "public")
+        item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
+  def preparation_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.readable?(@cur_user, site: @cur_site)
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "preparation")
+        item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
+  def question_not_applicable_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.readable?(@cur_user, site: @cur_site)
+        item.state_of_the_answers_hash.update(@cur_group.id.to_s => "question_not_applicable")
+        item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
   end
 end

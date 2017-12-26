@@ -1,4 +1,14 @@
+<%= jquery do %>
+  Gws_Monitor_Topic.render();
+<% end %>
+
 <div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <button class="disable-all btn"><%= t 'gws/monitor.links.disable_all' %></button>
+  </div>
+
   <div class="list-head-search">
     <%= render file: '_search' %>
   </div>

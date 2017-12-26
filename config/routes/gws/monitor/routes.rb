@@ -35,15 +35,17 @@ SS::Application.routes.draw do
         get :forward, on: :member
       end
 
-      resources :admins, concerns: [:deletion, :state_change, :topic_comment] do
-        get :disable, on: :member
-        post :disable_all, on: :collection
-      end
+      # resources :admins, concerns: [:deletion, :state_change, :topic_comment] do
+      #   get :disable, on: :member
+      #   post :disable_all, on: :collection
+      # end
 
       namespace "management" do
         get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
 
-        resources :topics, concerns: [:deletion] do
+        resources :topics, concerns: [:deletion, :state_change, :topic_comment] do
+          get :disable, on: :member
+          post :disable_all, on: :collection
           get :download, on: :member
           post :close, on: :member
           post :open, on: :member
