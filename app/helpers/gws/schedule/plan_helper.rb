@@ -1,4 +1,6 @@
 module Gws::Schedule::PlanHelper
+  extend ActiveSupport::Concern
+
   def search_query
     params.select { |k, v| k == 's' }.to_query
   end
@@ -45,7 +47,7 @@ module Gws::Schedule::PlanHelper
 
     @todos.map do |todo|
       result = todo.calendar_format(@cur_user, @cur_site)
-      result[:restUrl] = gws_schedule_todos_path
+      result[:restUrl] = gws_schedule_todo_readables_path
       result
     end
   end

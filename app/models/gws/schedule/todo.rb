@@ -17,6 +17,10 @@ class Gws::Schedule::Todo
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  member_include_custom_groups
+  permission_include_custom_groups
+  readable_setting_include_custom_groups
+
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
   field :deleted, type: DateTime
@@ -31,20 +35,14 @@ class Gws::Schedule::Todo
     todo_state == 'finished'
   end
 
-  scope :active, ->(date = Time.zone.now) {
+  scope :without_deleted, ->(date = Time.zone.now) {
     where('$and' => [
-        { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
+      { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
     ])
   }
 
-  scope :deleted, -> {
-    where(:deleted.exists => true)
-  }
-
-  scope :expired, ->(date = Time.zone.now) {
-    where('$or' => [
-        { :deleted.exists => true, :deleted.lt => date }
-    ])
+  scope :with_only_deleted, ->(date = Time.zone.now) {
+    where(:deleted.lt => date)
   }
 
   scope :custom_order, ->(key) {
@@ -61,6 +59,13 @@ class Gws::Schedule::Todo
 
   def reminder_user_ids
     member_ids
+  end
+
+  # override Gws::Addon::Reminder#reminder_url
+  def reminder_url(*args)
+    # ret = super
+    name = reference_model.tr('/', '_') + '_readable_path'
+    [name, id: id]
   end
 
   def calendar_format(user, site)
@@ -105,16 +110,11 @@ class Gws::Schedule::Todo
     end
   end
 
-  def allowed?(action, user, opts = {})
-    return true if (action == :read) && owned?(user)
-    super(action, user, opts)
-  end
+  alias allowed_for_managers? allowed?
 
-  def owned?(user)
-    return true if member?(user)
-    return true if (self.group_ids & user.group_ids).present?
-    return true if user_ids.to_a.include?(user.id)
-    return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
+  def allowed?(action, user, opts = {})
+    return true if allowed_for_managers?(action, user, opts)
+    member?(user) || custom_group_member?(user) if action =~ /edit|delete/
     false
   end
 
@@ -155,24 +155,11 @@ class Gws::Schedule::Todo
       criteria
     end
 
-    def allow_condition(action, user, opts = {})
-      cond = [
-        # { :readable_group_ids.in => user.group_ids.to_a },
-        # { readable_member_ids: user.id },
-        { user_ids: user.id },
-        { member_ids: user.id }
-      ]
-
-      if member_include_custom_groups?
-        cond << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      end
-
-      # if readable_setting_included_custom_groups?
-      #   cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-      # end
-
-      {'$or' => cond }
+    def member_or_readable(user, opts = {})
+      or_cond = Array[member_conditions(user)].flatten.compact
+      or_cond += Array[readable_conditions(user, opts)].flatten.compact
+      or_cond << allow_condition(:read, user, site: opts[:site]) if opts[:include_role]
+      where("$and" => [{ "$or" => or_cond }])
     end
   end
 end
-

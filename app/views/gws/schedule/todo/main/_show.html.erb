@@ -3,7 +3,12 @@
   <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :term %></dt>
-  <dd><%= term(@item) %></dd>
+  <dd>
+    <%= term(@item) %>
+    <% if @item.todo_state == 'unfinished' && @item.end_at < Time.zone.now %>
+    <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :color %></dt>
   <dd><%= content_tag :span, @item.name, style: "background-color: #{@item.color}; color: #{@item.text_color}" %></dd>

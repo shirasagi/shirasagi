@@ -1,0 +1,23 @@
+<dl class="see">
+  <dt><%= @model.t :todo_state %><%= @model.tt :todo_state %></dt>
+  <dd><%= f.select :todo_state, @item.todo_state_options %></dd>
+
+  <dt><%= @model.t :todo_member_ids %><%= @model.tt :todo_member_ids %></dt>
+  <dd>
+    <%= f.hidden_field "todo_member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% @item.find_todo_members(@portal).each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "todo_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

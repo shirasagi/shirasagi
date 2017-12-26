@@ -1,20 +1,24 @@
 class @Gws_Schedule_Todo
-  @render: ->
-    $(".list-head .disable-all").on "click", ->
-      form = Gws_Schedule_Todo.buildForm("todos/disable_all", "<%= I18n.t('gws/schedule/todo.confirm.disable_all') %>")
-      form.appendTo(document.body).submit()
+  @render: (opts) ->
+    if opts.disable
+      $(".list-head .disable-all").on "click", ->
+        form = Gws_Schedule_Todo.buildForm(opts.disable.path, opts.disable.confirm)
+        form.appendTo(document.body).submit()
 
-    $(".list-head .finish-all").on "click", ->
-      form = Gws_Schedule_Todo.buildForm("todos/finish_all", "<%= I18n.t('gws/schedule/todo.confirm.finish_all') %>")
-      form.appendTo(document.body).submit()
+    if opts.finish
+      $(".list-head .finish-all").on "click", ->
+        form = Gws_Schedule_Todo.buildForm(opts.finish.path, opts.finish.confirm)
+        form.appendTo(document.body).submit()
 
-    $(".list-head .revert-all").on "click", ->
-      form = Gws_Schedule_Todo.buildForm("todos/revert_all", "<%= I18n.t('gws/schedule/todo.confirm.revert_all') %>")
-      form.appendTo(document.body).submit()
+    if opts.revert
+      $(".list-head .revert-all").on "click", ->
+        form = Gws_Schedule_Todo.buildForm(opts.revert.path, opts.revert.confirm)
+        form.appendTo(document.body).submit()
 
-    $(".list-head .active-all").on "click", ->
-      form = Gws_Schedule_Todo.buildForm("todo_management/active_all", "<%= I18n.t('gws/schedule/todo_management.confirm.active_all') %>")
-      form.appendTo(document.body).submit()
+    if opts.active
+      $(".list-head .active-all").on "click", ->
+        form = Gws_Schedule_Todo.buildForm(opts.active.path, opts.active.confirm)
+        form.appendTo(document.body).submit()
 
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->

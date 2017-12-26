@@ -1,0 +1,20 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) || item.member?(@cur_user) || item.readable?(@cur_user) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :disable, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span><%= item.label(:todo_state) %></span>
+  <span class="datetime">
+    <%= @model.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %>
+    <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
+    <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
+    <% end %>
+  </span>
+  <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
+<% end %>
+
+<%= render partial: 'gws/schedule/todo/main/tabs' %>
+<%= render file: 'gws/crud/index' %>

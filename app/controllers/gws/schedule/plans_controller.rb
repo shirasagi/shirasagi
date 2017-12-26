@@ -27,7 +27,7 @@ class Gws::Schedule::PlansController < ApplicationController
       member(@cur_user).
       search(params[:s])
 
-    @todos = Gws::Schedule::Todo.site(@cur_site).active.
+    @todos = Gws::Schedule::Todo.site(@cur_site).without_deleted.
       member(@cur_user).
       search(params[:s])
   end
