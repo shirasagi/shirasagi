@@ -24,40 +24,9 @@ SS::Application.routes.draw do
   end
 
   gws 'monitor' do
-    get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
+    get '/' => redirect { |p, req| "#{req.path}/~/topics" }, as: :main
 
-    resources :topics, concerns: [:deletion, :state_change, :topic_comment] do
-      get :forward, on: :member
-      post :read, on: :member
-    end
-
-    resources :answers, concerns: [:deletion, :state_change, :topic_comment] do
-      get :forward, on: :member
-    end
-
-    resources :admins, concerns: [:deletion, :state_change, :topic_comment] do
-      get :disable, on: :member
-      post :disable_all, on: :collection
-    end
-
-    namespace "management" do
-      get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
-
-      resources :topics, concerns: [:deletion] do
-        get :download, on: :member
-        post :close, on: :member
-        post :open, on: :member
-        get :file_download, on: :member
-      end
-      resources :trashes, concerns: [:deletion] do
-        get :recover, on: :member
-        get :active, on: :member
-        post :active_all, on: :collection
-      end
-    end
-
-    # with category
-    scope(path: ":category", as: "category") do
+    scope(path: ":category") do
       resources :topics, concerns: [:deletion, :state_change, :topic_comment] do
         get :forward, on: :member
       end
@@ -72,6 +41,8 @@ SS::Application.routes.draw do
       end
 
       namespace "management" do
+        get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
+
         resources :topics, concerns: [:deletion] do
           get :download, on: :member
           post :close, on: :member
@@ -79,6 +50,7 @@ SS::Application.routes.draw do
           get :file_download, on: :member
         end
         resources :trashes, concerns: [:deletion] do
+          get :recover, on: :member
           get :active, on: :member
           post :active_all, on: :collection
         end
@@ -90,7 +62,6 @@ SS::Application.routes.draw do
     namespace "apis" do
       get "categories" => "categories#index"
     end
-
   end
 end
 

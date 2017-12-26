@@ -13,7 +13,7 @@ class Gws::Monitor::CommentsController < ApplicationController
     set_category
     if @category.present?
       @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
-      @crumbs << [@category.name, gws_monitor_category_topics_path]
+      @crumbs << [@category.name, gws_monitor_topics_path]
     else
       @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
     end
@@ -54,42 +54,22 @@ class Gws::Monitor::CommentsController < ApplicationController
   public
 
   def index
-    if @category.present?
-      if params[:topic_id].present?
-        redirect_to gws_monitor_category_topic_path(id: @topic.id)
-      elsif params[:answer_id].present?
-        redirect_to gws_monitor_category_answer_path(id: @topic.id)
-      elsif params[:admin_id].present?
-        redirect_to gws_monitor_category_admin_path(id: @topic.id)
-      end
-    elsif @category.blank?
-      if params[:topic_id].present?
-        redirect_to gws_monitor_topic_path(id: @topic.id)
-      elsif params[:answer_id].present?
-        redirect_to gws_monitor_answer_path(id: @topic.id)
-      elsif params[:admin_id].present?
-        redirect_to gws_monitor_admin_path(id: @topic.id)
-      end
+    if params[:topic_id].present?
+      redirect_to gws_monitor_topic_path(id: @topic.id)
+    elsif params[:answer_id].present?
+      redirect_to gws_monitor_answer_path(id: @topic.id)
+    elsif params[:admin_id].present?
+      redirect_to gws_monitor_admin_path(id: @topic.id)
     end
   end
 
   def show
-    if @category.present?
-      if params[:topic_id].present?
-        redirect_to gws_monitor_category_topic_path(id: @topic.id)
-      elsif params[:answer_id].present?
-        redirect_to gws_monitor_category_answer_path(id: @topic.id)
-      elsif params[:admin_id].present?
-        redirect_to gws_monitor_category_admin_path(id: @topic.id)
-      end
-    elsif @category.blank?
-      if params[:topic_id].present?
-        redirect_to gws_monitor_topic_path(id: @topic.id)
-      elsif params[:answer_id].present?
-        redirect_to gws_monitor_answer_path(id: @topic.id)
-      elsif params[:admin_id].present?
-        redirect_to gws_monitor_admin_path(id: @topic.id)
-      end
+    if params[:topic_id].present?
+      redirect_to gws_monitor_topic_path(id: @topic.id)
+    elsif params[:answer_id].present?
+      redirect_to gws_monitor_answer_path(id: @topic.id)
+    elsif params[:admin_id].present?
+      redirect_to gws_monitor_admin_path(id: @topic.id)
     end
   end
 

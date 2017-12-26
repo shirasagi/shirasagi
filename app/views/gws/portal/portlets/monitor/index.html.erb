@@ -18,7 +18,7 @@
             <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
             <span>
               <% item.categories.compact.each do |category| %>
-                <%= link_to category.trailing_name, gws_monitor_category_topics_path(category: category.id),
+                <%= link_to category.trailing_name, gws_monitor_topics_path(category: category.id),
                             class: "gws-category-label", style: category_label_css(category) %>
               <% end %>
             </span>

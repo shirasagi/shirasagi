@@ -21,7 +21,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     set_category
     @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
     if @category.present?
-      @crumbs << [@category.name, gws_monitor_category_topics_path]
+      @crumbs << [@category.name, gws_monitor_topics_path]
     end
     @crumbs << [t('ss.management'), gws_monitor_management_main_path]
     @crumbs << [t('gws/monitor.tabs.trash'), action: :index]

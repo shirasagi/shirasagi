@@ -22,7 +22,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     set_category
     @crumbs << [@cur_site.menu_monitor_label || t("modules.gws/monitor"), gws_monitor_main_path]
     if @category.present?
-      @crumbs << [@category.name, gws_monitor_category_topics_path]
+      @crumbs << [@category.name, gws_monitor_topics_path]
     end
     @crumbs << [t('gws/monitor.tabs.answer'), action: :index]
   end
