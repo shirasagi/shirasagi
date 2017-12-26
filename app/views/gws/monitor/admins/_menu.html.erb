@@ -1,6 +1,6 @@
 <nav class="nav-management-menu">
   <% if Gws::Monitor::Topic.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to gws_monitor_management_topics_path do %>
+      <%= link_to gws_monitor_management_main_path do %>
           <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
       <% end %>
   <% end %>

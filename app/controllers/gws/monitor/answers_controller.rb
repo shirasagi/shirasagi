@@ -20,12 +20,11 @@ class Gws::Monitor::AnswersController < ApplicationController
 
   def set_crumbs
     set_category
+    @crumbs << [@cur_site.menu_monitor_label || t("modules.gws/monitor"), gws_monitor_main_path]
     if @category.present?
-      @crumbs << [t("modules.gws/monitor"), gws_monitor_answers_path]
-      @crumbs << [@category.name, action: :index]
-    else
-      @crumbs << [t("modules.gws/monitor"), action: :index]
+      @crumbs << [@category.name, gws_monitor_category_topics_path]
     end
+    @crumbs << [t('gws/monitor.tabs.answer'), action: :index]
   end
 
   def set_category

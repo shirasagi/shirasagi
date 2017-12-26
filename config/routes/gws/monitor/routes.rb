@@ -24,6 +24,8 @@ SS::Application.routes.draw do
   end
 
   gws 'monitor' do
+    get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
+
     resources :topics, concerns: [:deletion, :state_change, :topic_comment] do
       get :forward, on: :member
       post :read, on: :member
@@ -39,6 +41,8 @@ SS::Application.routes.draw do
     end
 
     namespace "management" do
+      get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
+
       resources :topics, concerns: [:deletion] do
         get :download, on: :member
         post :close, on: :member
