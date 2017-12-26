@@ -65,8 +65,24 @@ module Webmail::Imap
       [sent_box, draft_box, trash_box]
     end
 
+    def special_mailbox?(name)
+      draft_box?(name) || sent_box?(name) || trash_box?(name)
+    end
+
+    def draft_box?(name)
+      "#{name}.".start_with?("#{draft_box}.")
+    end
+
     def sent_box?(name)
-      (name =~ /^#{Regexp.escape(sent_box)}(\.|$)/).present?
+      "#{name}.".start_with?("#{sent_box}.")
+    end
+
+    def trash_box?(name)
+      "#{name}.".start_with?("#{trash_box}.")
+    end
+
+    def inbox?(name)
+      (name =~ /^INBOX(\.|$)/).present?
     end
 
     def mails

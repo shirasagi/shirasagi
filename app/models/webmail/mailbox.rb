@@ -20,9 +20,9 @@ class Webmail::Mailbox
 
   permit_params :name
 
-  validates :host, presence: true, uniqueness: { scope: [:account, :original_name] }
+  validates :host, presence: true
   validates :account, presence: true
-  validates :original_name, presence: true
+  validates :original_name, presence: true, uniqueness: { scope: [:host, :account] }
   validates :name, presence: true
 
   before_validation :validate_name, if: ->{ @sync && name_changed? }
@@ -64,6 +64,14 @@ class Webmail::Mailbox
       name = dir + name.sub(/^#{Regexp.escape(src)}(\.|$)/, dst + '\\1')
     end
     name
+  end
+
+  def inbox?
+    original_name =~ /^INBOX(\.|$)/
+  end
+
+  def special_mailbox?
+    imap.special_mailboxes.find { |m| original_name =~ /^#{m}(\.|$)/ }.present?
   end
 
   def status
@@ -113,7 +121,7 @@ class Webmail::Mailbox
 
   def validate_name
     self.name = self.name.tr('/', '.')
-    self.name = "INBOX.#{name}" unless self.name =~ /^INBOX\./
+    #self.name = "INBOX.#{name}" unless self.name =~ /^INBOX\./
     self.original_name = Net::IMAP.encode_utf7(name)
     self.delim = '.'
     self.attr = []

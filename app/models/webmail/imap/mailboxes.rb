@@ -9,7 +9,15 @@ module Webmail::Imap
     end
 
     def sort
-      @list.sort_by! { |item| item.locale_name.downcase }
+      @list.sort_by! do |item|
+        if imap.inbox?(item.name)
+          "#{01}#{item.name.downcase}"
+        elsif !imap.special_mailbox?(item.name)
+          "#{02}#{item.name.downcase}"
+        else
+          "#{03}#{item.name.downcase}"
+        end
+      end
       self
     end
 

@@ -10,6 +10,7 @@ ja:
     mail: メール
     message: メッセージ
     mailbox: フォルダー
+    mailbox_root: ルート階層
     signature: 署名
     default_settings: 既定の設定
     create_mailbox_for_reload: 作成されるフォルダー
@@ -149,7 +150,9 @@ ja:
         flagged: スター付き
         internal_date: 送信日時
       webmail/mailbox:
+        original_name: フォルダー名(UTF-7)
         name: フォルダー名
+        parent_name: 親フォルダー
       webmail/address:
         address_group_id: グループ名
         import_format: インポート形式
@@ -185,6 +188,16 @@ ja:
         threshold_mb: 警告表示
 
   tooltip:
+    webmail/mailbox:
+      name:
+        - フォルダー名を入力します。
+        - 例：
+        - 「フォルダー名」
+        - 「親フォルダー.フォルダー名」
+        - 「親フォルダー.親フォルダー.フォルダー名」
+      parent_name:
+        - フォルダー名に親フォルダーを設定します。
+        - このプルダウンはフォルダー名の入力補助用です。
     webmail/address:
       address_group_id:
         - グループ名を入力します。

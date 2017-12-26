@@ -1,4 +1,23 @@
+<%
+  options = @imap.mailboxes.all.map { |item| [item.locale_name, item.name] }
+%>
+<%= jquery do %>
+  $('#parent_name').change(function() {
+    var name = $('#item_name').val();
+    name = name.replace(/.*\./, '');
+
+    var val = $(this).val();
+    if (val != '') name = val + '.' + name;
+
+    $('#item_name').val(name);
+  });
+<% end %>
+
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, required: true %></dd>
+
+  <dt><%= @model.t :parent_name %><%= @model.tt :parent_name %></dt>
+  <dd><%= select_tag :parent_name, options_for_select(options), include_blank: t('webmail.mailbox_root'),
+    style: 'background: #f4f4f4;' %></dd>
 </dl>
