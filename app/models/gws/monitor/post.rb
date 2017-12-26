@@ -2,7 +2,7 @@
 class Gws::Monitor::Post
   include Gws::Referenceable
   include Gws::Monitor::Postable
-  include Gws::Addon::Monitor::Contributor
+  include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Monitor::DescendantsFileInfo
