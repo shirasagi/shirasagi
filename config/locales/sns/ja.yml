@@ -1,7 +1,9 @@
 ja:
+  modules:
+    sns: SNS
+
   sns:
     profile: プロフィール
-    message: メッセージ
     file: ファイル
     user_file: ユーザーファイル
     group_file: グループファイル
@@ -11,29 +13,3 @@ ja:
     thumb_paste: サムネイル
     errors:
       invalid_login: ログインできませんでした。
-
-  sns/message:
-    links:
-      edit_members: 参加者を編集する
-    mail_templates:
-      notification:
-        subject: "%{user}さんからメッセージが届きました。"
-        text: |+
-          %{text}
-
-          下記のURLにアクセスして確認してください。
-          %{url}
-
-  modules:
-    sns: SNS
-
-  mongoid:
-    attributes:
-      sns/message/thread:
-        member_ids: 参加者
-        active_member_ids: 参加者
-        unseen_member_ids: 未読ユーザー
-        name: スレッド名
-        text: 内容
-      sns/message/post:
-        text: 内容

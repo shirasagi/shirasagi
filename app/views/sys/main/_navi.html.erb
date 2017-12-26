@@ -1,5 +1,5 @@
 <nav class="mod-navi">
-  <h2><%= link_to t("sys.conf"), sys_sites_path %></h2>
+  <h2><%= t("sys.conf") %></h2>
 
   <h3><%= link_to t("sys.info"), sys_conf_path %></h3>
   <% if Sys::Site.allowed?(:edit, @cur_user) %>
