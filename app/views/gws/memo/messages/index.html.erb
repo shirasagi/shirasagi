@@ -47,23 +47,6 @@
   </ul>
 </div>
 
-<% if @cur_folder.children.present? %>
-<div class="index">
-  <div class="header">
-    <%= t('gws/memo/message.child_folder') %>
-  </div>
-  <ul class="list-items">
-    <% @cur_folder.children.each do |item| %>
-      <li class="list-item">
-        <div class="info">
-          <%= link_to item.current_name, gws_memo_messages_path(folder: item.folder_path ), { class: 'title' } %>
-        </div>
-      </li>
-    <% end %>
-  </ul>
-</div>
-<% end %>
-
 <%= paginate @items if @items.try(:current_page) %>
 
 <%= jquery do %>
