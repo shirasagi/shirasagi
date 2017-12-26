@@ -80,7 +80,7 @@ class Gws::Memo::Message
     elsif folder.draft_box?
       user(user).and_closed
     else
-      where("paths.#{user.id}" => /^#{Regexp.escape(folder.path)}$/).and_public
+      where("paths.#{user.id}" => folder.path).and_public
     end
   }
   scope :unseen, ->(user_id) {
