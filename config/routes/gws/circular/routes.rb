@@ -39,6 +39,7 @@ SS::Application.routes.draw do
 
     namespace 'apis' do
       get 'categories' => 'categories#index'
+      get 'article_states/:post_id' => 'article_states#index', as: 'article_states'
     end
   end
 end

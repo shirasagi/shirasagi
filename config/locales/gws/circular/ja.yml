@@ -41,6 +41,10 @@ ja:
     notice:
       disable: 削除済みに移動しました
       active: 削除を取り消しました
+    seen_user_info:
+      title: 既読者数
+      format: "%{count} 人 / %{total} 人中"
+      more: 詳しく見る
     options:
       see_type:
         normal: 通常回覧
