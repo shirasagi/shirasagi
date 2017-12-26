@@ -78,7 +78,7 @@ ja:
         name: タイトル
         order: 並び順
         permit_comment: コメント投稿
-        permanently: 更新停止
+        permanently: 編集禁止
       gws/discussion/post:
         name: タイトル
       gws/addon/discussion/group_permission:
