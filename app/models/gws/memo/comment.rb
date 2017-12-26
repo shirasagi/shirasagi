@@ -10,7 +10,10 @@ class Gws::Memo::Comment
   attr_accessor :cur_message
 
   belongs_to :message, class_name: 'Gws::Memo::Message'
+
   validates :message_id, presence: true
+  validates :text, presence: true
+
   before_validation :set_message_id, if: ->{ @cur_message }
   scope :message, ->(message) { where( message_id: message.id ) }
 
