@@ -108,10 +108,6 @@ class Gws::Memo::Folder
   end
 
   class << self
-    #def allow(action, user, opts = {})
-    #  super(action, user, opts).where(user_id: user.id)
-    #end
-
     def static_items(user, site)
       [
           self.new(name: I18n.t('gws/memo/folder.inbox'), path: 'INBOX', user_id: user.id, site_id: site.id),

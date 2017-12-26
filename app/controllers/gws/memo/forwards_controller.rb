@@ -14,10 +14,10 @@ class Gws::Memo::ForwardsController < ApplicationController
   end
 
   def set_item
-    if @model.user(@cur_user).site(@cur_site).present?
-      @item = @model.find_by(user_id: @cur_user.id, site_id: @cur_site.id)
+    if @model.user(@cur_user).present?
+      @item = @model.find_by(user_id: @cur_user.id)
     else
-      @item = @model.new(user_id: @cur_user.id, site_id: @cur_site.id)
+      @item = @model.new(user_id: @cur_user.id)
       @item.save
     end
   end
@@ -30,15 +30,9 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   public
 
-  def show
-    super
-  end
-
-  def edit
-    super
-  end
-
-  def update
-    super
+  def index
+    @items = @model.user(@cur_user).
+      search(params[:s]).
+      page(params[:page]).per(50)
   end
 end
