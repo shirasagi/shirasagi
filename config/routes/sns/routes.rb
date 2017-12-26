@@ -19,15 +19,6 @@ SS::Application.routes.draw do
       post :resize, on: :member
     end
 
-    namespace "message" do
-      resources :threads, concerns: :deletion do
-        resources :posts, concerns: :deletion
-      end
-      namespace "apis" do
-        get 'unseen' => "unseen#index"
-      end
-    end
-
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
     end

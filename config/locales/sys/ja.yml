@@ -7,6 +7,7 @@ ja:
     server_name: サーバー名
     server_addr: サーバーIPアドレス
     remote_addr: 接続元IPアドレス
+    user_agent: ユーザーエージェント
     site: サイト
     user: ユーザー
     group: グループ
