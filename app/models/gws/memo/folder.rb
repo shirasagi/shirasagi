@@ -62,7 +62,7 @@ class Gws::Memo::Folder
   end
 
   def folder_path
-    id == 0 ? path : id.to_s
+    new_record? ? path : id.to_s
   end
 
   def direction
