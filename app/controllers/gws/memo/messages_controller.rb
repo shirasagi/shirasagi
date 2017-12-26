@@ -4,6 +4,8 @@ class Gws::Memo::MessagesController < ApplicationController
 
   model Gws::Memo::Message
 
+  before_action :deny_with_auth
+
   # フィルター機能
   #before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
 
@@ -15,6 +17,10 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :set_cur_folder, only: [:index]
 
   private
+
+  def deny_with_auth
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+  end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
@@ -32,8 +38,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_item
     super
-    return if @item.user_id == @cur_user.id
-    return if @item.member?(@cur_user)
+    return if (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     raise "403"
   end
 
@@ -85,7 +90,6 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).
-      #allow(:read, @cur_user, site: @cur_site).
       folder(@cur_folder, @cur_user).
       search(params[:s]).
       page(params[:page]).per(50)
@@ -93,7 +97,6 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
-    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     @item.new_memo
   end
 
@@ -103,7 +106,6 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.member_ids = item_reply.member_ids
     @item.subject = "Re: #{item_reply.subject}"
 
-    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     @item.new_memo
     @item.text += "\n\n"
     @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
@@ -125,7 +127,6 @@ class Gws::Memo::MessagesController < ApplicationController
     else
       @item.state = "closed"
     end
-    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     #render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
     render_create @item.save, location: { action: :index }
   end
@@ -152,7 +153,6 @@ class Gws::Memo::MessagesController < ApplicationController
     else
       @item.state = "closed"
     end
-    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     raise '403' unless @cur_user.id == @item.user_id
     render_update @item.update, location: { action: :show, id: @item, folder: params[:folder] }
   end

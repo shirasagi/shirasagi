@@ -56,9 +56,7 @@ ja:
       gws/memo/group_setting: メッセージ
       gws/memo/body: 内容
   gws_role:
-    read_gws_memo_messages: メッセージの閲覧
-    edit_gws_memo_messages: メッセージの編集
-    delete_gws_memo_messages: メッセージの削除
+    edit_gws_memo_messages: メッセージの管理
   mongoid:
     models:
       gws/memo/message: メッセージ

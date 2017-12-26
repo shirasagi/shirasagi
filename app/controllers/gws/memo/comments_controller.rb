@@ -4,9 +4,14 @@ class Gws::Memo::CommentsController < ApplicationController
 
   model Gws::Memo::Comment
 
+  before_action :deny_with_auth
   before_action :set_item, only: [:destroy]
 
   private
+
+  def deny_with_auth
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+  end
 
   def set_cur_message
     @cur_message ||= Gws::Memo::Message.find(params[:message_id])

@@ -5,7 +5,7 @@ class Gws::Memo::Comment
   include Gws::SitePermission
   include SS::Addon::Markdown
 
-  set_permission_name 'gws_memo_messages'
+  set_permission_name 'gws_memo_messages', :edit
 
   attr_accessor :cur_message
 

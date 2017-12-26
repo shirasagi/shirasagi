@@ -4,7 +4,7 @@ class Gws::Memo::Filter
   include Gws::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name 'gws_memo_messages'
+  set_permission_name 'gws_memo_messages', :edit
 
   # 一括処理件数
   APPLY_PER = 100
