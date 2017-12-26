@@ -1,41 +1,20 @@
 <div class="subscribed-users">
-  <header>
-    <h2><%= I18n.t('gws/board.topic.browsing_state') %></h2>
-  </header>
+  <div class="addon-head toggle-head">
+    <h2><%= t('gws/board.topic.browsing_state') %></h2>
+  </div>
 
-  <div class="toggle-body">
-    <div class="body">
-      <table class="index">
-        <thead>
-        <tr>
-          <th class="name"><%= Gws::User.t :name %></th>
-          <th class="browsed"><%= I18n.t('gws/board.topic.browsed') %></th>
-        </tr>
-        </thead>
-        <tbody>
-        <% subscribed_users = @item.subscribed_users.to_a %>
-        <% subscribed_users.each do |user| %>
-          <tr data-user-id="<%= user.id %>">
-            <td class="name"><%= user.long_name %></td>
-            <td class="browsed">
-              <% @item.browsed_at(user).tap do |browsed_at| %>
-              <span class="browsed">
-              <% if browsed_at %>
-                <%= I18n.t('gws/board.options.browsed_state.read') %>
-                <time datetime="<%= browsed_at.iso8601 %>"><%= I18n.l(browsed_at) %></time>
-              <% else %>
-                <%= I18n.t('gws/board.options.browsed_state.unread') %>
-              <% end %>
-              </span>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
+  <div class="addon-body toggle-body">
+    <dl class="see mod-gws-board-topic-subscribed-users">
+      <dt><%= t('gws/board.topic.browsed_user_info.title') %></dt>
+      <dd>
+        <span><%= t('gws/board.topic.browsed_user_info.format', count: @item.browsed_users.active.count, total: @item.subscribed_users.active.count) %></span>
+        <%= link_to(t('gws/board.topic.browsed_user_info.more'), gws_board_apis_browsing_states_path, class: %w(btn ajax-box)) %>
+      </dd>
+    </dl>
   </div>
 </div>
+
+<%= jquery do %> SS_AddonTabs.hide(".mod-gws-board-topic-subscribed-users"); <% end %>
 
 <% if !@item.browsed?(@cur_user) %>
   <%= jquery do %>
