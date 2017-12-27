@@ -88,7 +88,7 @@
           <div class="gws-bookmark dropdown dropdown-toggle">
             <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
             <%= jquery do %>
-              Gws_Bookmark.render({
+              new Gws_Bookmark().render({
                 id: '<%= bookmark.try(:id) %>',
                 name: '<%= bookmark.try(:name) %>',
                 default_name: '<%= window_name %>',

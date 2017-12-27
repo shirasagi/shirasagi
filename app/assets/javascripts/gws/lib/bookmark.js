@@ -1,31 +1,35 @@
-this.Gws_Bookmark = (function() {
-  var bookmark_id, default_name, url, model, el, bookmark_icon, unbookmark_icon, loading;
-});
+function Gws_Bookmark() {
+  this.bookmark_id = null;
+  this.default_name = null;
+  this.url = null;
+  this.model = null;
+  this.el = $('.gws-bookmark');
+  this.bookmark_icon = "&#xE866;";
+  this.unbookmark_icon = "&#xE867;";
+  this.loading = false;
+};
 
-Gws_Bookmark.render = function(opts) {
+Gws_Bookmark.prototype.render = function(opts) {
+  var _this, icon, bookmark_name, span, ul, li;
   if (opts === null) {
     opts = {};
   }
-  bookmark_id = opts['id'];
-  default_name = opts['default_name'];
-  url = opts['url'];
-  model = opts['model'];
-  el = $('.gws-bookmark');
-  bookmark_icon = "&#xE866;";
-  unbookmark_icon = "&#xE867;";
-  loading = false;
+  _this = this;
+  _this.bookmark_id = opts['id'];
+  _this.default_name = opts['default_name'];
+  _this.url = opts['url'];
+  _this.model = opts['model'];
 
-  var icon, bookmark_name, span, ul, li;
-  if (bookmark_id) {
-    icon = bookmark_icon;
+  if (_this.bookmark_id) {
+    icon = _this.bookmark_icon;
   } else {
-    icon = unbookmark_icon;
+    icon = _this.unbookmark_icon;
   }
-  bookmark_name = opts['name'] || default_name;
+  bookmark_name = opts['name'] || _this.default_name;
 
   span = $('<span class="bookmark-icon"></span>');
   span.append($('<i class="material-icons">' + icon + '</i>'));
-  el.html(span);
+  _this.el.html(span);
   ul = $('<ul class="dropdown-menu"></ul>');
   ul.append($('<li><div class="bookmark-notice"></div></li>'));
   li = $('<li></li>');
@@ -33,48 +37,49 @@ Gws_Bookmark.render = function(opts) {
   li.append($('<input name="button" type="button" class="btn update" />').val(opts['save']));
   li.append($('<input name="button" type="button" class="btn delete" />').val(opts['delete']));
   ul.append(li);
-  el.append(ul);
+  _this.el.append(ul);
 
-  el.click(function(e) {
-    if (loading) {
+  _this.el.click(function(e) {
+    if (_this.loading) {
       return false;
     } else if ($(e.target).hasClass('update')) {
-      Gws_Bookmark.update();
+      _this.update();
     } else if ($(e.target).hasClass('delete')) {
-      Gws_Bookmark.delete();
-    } else if (bookmark_id) {
-      el.addClass('active');
-      el.find('.dropdown-menu').addClass('active');
+      _this.delete();
+    } else if (_this.bookmark_id) {
+      _this.el.addClass('active');
+      _this.el.find('.dropdown-menu').addClass('active');
     } else {
-      Gws_Bookmark.create();
+      _this.create();
     }
   });
 };
 
-Gws_Bookmark.create = function() {
+Gws_Bookmark.prototype.create = function() {
   loading = true;
-  var html;
-  html = el.find('.dropdown-menu').html();
-  el.find('.dropdown-menu').html(SS.loading);
+  var _this, html;
+  _this = this;
+  html = _this.el.find('.dropdown-menu').html();
+  _this.el.find('.dropdown-menu').html(SS.loading);
   $.ajax({
-    url: url,
+    url: _this.url,
     method: 'POST',
     data: {
       item: {
-        name: default_name,
+        name: _this.default_name,
         url: location.pathname,
-        model: model
+        model: _this.model
       }
     },
     success: function(data) {
-      el.find('.dropdown-menu').html(html);
-      el.addClass('active');
-      el.find('.dropdown-menu').addClass('active');
-      el.find('.material-icons').html(bookmark_icon);
-      el.find('.bookmark-notice').text(data['notice']);
-      el.find('.bookmark-name').val(default_name);
-      bookmark_id = data['bookmark_id'];
-      loading = false;
+      _this.el.find('.dropdown-menu').html(html);
+      _this.el.addClass('active');
+      _this.el.find('.dropdown-menu').addClass('active');
+      _this.el.find('.material-icons').html(_this.bookmark_icon);
+      _this.el.find('.bookmark-notice').text(data['notice']);
+      _this.el.find('.bookmark-name').val(_this.default_name);
+      _this.bookmark_id = data['bookmark_id'];
+      _this.loading = false;
     },
     error: function() {
       alert('Error');
@@ -82,15 +87,16 @@ Gws_Bookmark.create = function() {
   });
 };
 
-Gws_Bookmark.update = function() {
+Gws_Bookmark.prototype.update = function() {
   loading = true;
-  var html, new_name, uri;
-  new_name = el.find('.bookmark-name').val() || default_name;
-  uri = url + '/' + bookmark_id;
-  html = el.find('.dropdown-menu').html();
-  el.find('.dropdown-menu').html(SS.loading);
-  el.addClass('active');
-  el.find('.dropdown-menu').addClass('active');
+  var _this, html, new_name, uri;
+  _this = this;
+  new_name = _this.el.find('.bookmark-name').val() || _this.default_name;
+  uri = _this.url + '/' + _this.bookmark_id;
+  html = _this.el.find('.dropdown-menu').html();
+  _this.el.find('.dropdown-menu').html(SS.loading);
+  _this.el.addClass('active');
+  _this.el.find('.dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
@@ -99,18 +105,18 @@ Gws_Bookmark.update = function() {
       item: {
         name: new_name,
         url: location.pathname,
-        model: model
+        model: _this.model
       }
     },
     success: function(data) {
-      el.find('.dropdown-menu').html(html);
-      el.removeClass('active');
-      el.find('.dropdown-menu').removeClass('active');
-      el.find('.material-icons').html(bookmark_icon);
-      el.find('.bookmark-notice').text(data['notice']);
-      el.find('.bookmark-name').val(new_name);
-      bookmark_id = data['bookmark_id'];
-      loading = false;
+      _this.el.find('.dropdown-menu').html(html);
+      _this.el.removeClass('active');
+      _this.el.find('.dropdown-menu').removeClass('active');
+      _this.el.find('.material-icons').html(_this.bookmark_icon);
+      _this.el.find('.bookmark-notice').text(data['notice']);
+      _this.el.find('.bookmark-name').val(new_name);
+      _this.bookmark_id = data['bookmark_id'];
+      _this.loading = false;
     },
     error: function() {
       alert('Error');
@@ -118,17 +124,18 @@ Gws_Bookmark.update = function() {
   });
 };
 
-Gws_Bookmark.delete = function() {
-  if (!bookmark_id) {
+Gws_Bookmark.prototype.delete = function() {
+  var _this, html, uri;
+  _this = this;
+  if (!_this.bookmark_id) {
     return false;
   }
-  loading = true;
-  var html, uri;
-  uri = url + '/' + bookmark_id;
-  html = el.find('.dropdown-menu').html();
-  el.find('.dropdown-menu').html(SS.loading);
-  el.addClass('active');
-  el.find('.dropdown-menu').addClass('active');
+  _this.loading = true;
+  uri = _this.url + '/' + _this.bookmark_id;
+  html = _this.el.find('.dropdown-menu').html();
+  _this.el.find('.dropdown-menu').html(SS.loading);
+  _this.el.addClass('active');
+  _this.el.find('.dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
@@ -139,14 +146,14 @@ Gws_Bookmark.delete = function() {
       }
     },
     success: function() {
-      el.find('.dropdown-menu').html(html);
-      el.removeClass('active');
-      el.find('.dropdown-menu').removeClass('active');
-      el.find('.material-icons').html(unbookmark_icon);
-      el.find('.bookmark-notice').text('');
-      el.find('.bookmark-name').text(default_name);
-      bookmark_id = null;
-      loading = false;
+      _this.el.find('.dropdown-menu').html(html);
+      _this.el.removeClass('active');
+      _this.el.find('.dropdown-menu').removeClass('active');
+      _this.el.find('.material-icons').html(_this.unbookmark_icon);
+      _this.el.find('.bookmark-notice').text('');
+      _this.el.find('.bookmark-name').text(_this.default_name);
+      _this.bookmark_id = null;
+      _this.loading = false;
     },
     error: function() {
       alert('Error');
