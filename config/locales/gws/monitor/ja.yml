@@ -95,15 +95,15 @@ ja:
         question_not_applicable: 該当なし
         no_state: 状態無し
       monitor_delete_threshold:
-        - 1日
-        - 1ヶ月
-        - 3ヶ月
-        - 6ヶ月
-        - 9ヶ月
-        - 12ヶ月
-        - 15ヶ月
-        - 18ヶ月
-        - 24ヶ月
+        '1.day': 1日
+        '1.month': 1ヶ月
+        '3.months': 3ヶ月
+        '6.months': 6ヶ月
+        '9.months': 9ヶ月
+        '12.months': 12ヶ月
+        '15.months': 15ヶ月
+        '18.months': 18ヶ月
+        '24.months': 24ヶ月
     links:
       back_to_thread: 戻る
       comment: 回答する

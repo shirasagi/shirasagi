@@ -23,9 +23,9 @@ describe Gws::Monitor::DeleteJob, dbscope: :example do
       end
     end
 
-    context 'delete one year ago' do
+    context 'delete 12 months ago' do
       before do
-        site.monitor_delete_threshold = 5
+        site.monitor_delete_threshold = '12.months'
         site.save!
         described_class.bind(site_id: site.id).perform_now
       end
