@@ -25,7 +25,7 @@ class Gws::Monitor::CommentsController < ApplicationController
   end
 
   def set_category
-    if params[:category].present?
+    if params[:category].present? && params[:category] != '-'
       @category ||= Gws::Monitor::Category.site(@cur_site).where(id: params[:category]).first
     end
   end
