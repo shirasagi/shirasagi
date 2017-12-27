@@ -5,12 +5,15 @@ class Gws::Memo::Comment
   include Gws::SitePermission
   include SS::Addon::Markdown
 
-  set_permission_name 'gws_memo_messages'
+  set_permission_name 'private_gws_memo_messages', :edit
 
   attr_accessor :cur_message
 
   belongs_to :message, class_name: 'Gws::Memo::Message'
+
   validates :message_id, presence: true
+  validates :text, presence: true
+
   before_validation :set_message_id, if: ->{ @cur_message }
   scope :message, ->(message) { where( message_id: message.id ) }
 

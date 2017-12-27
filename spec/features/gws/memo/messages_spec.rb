@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'gws_memo_messages', type: :request, dbscope: :example do
+describe 'gws_memo_messages', type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:memo) { create(:gws_memo_message, user: user, site: site) }
@@ -28,7 +28,7 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
 
     it '#trash' do
       visit trash_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(page).to have_content('ゴミ箱 (1)')
+      expect(page).to have_content('ゴミ箱')
     end
 
     # it '#toggle_star' do
@@ -43,7 +43,7 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
         find('.trash-all').click
       end
       wait_for_ajax
-      expect(page).to have_content('ゴミ箱 (1)')
+      expect(page).to have_content('ゴミ箱')
     end
 
     it '#set_seen_all and #unset_seen_all' do
@@ -91,7 +91,7 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
     it '#move_all' do
       visit gws_memo_messages_path(site)
       wait_for_ajax
-      expect(page).to have_content('受信トレイ (1)')
+      expect(page).to have_content('受信トレイ')
       expect(page).to have_content('ゴミ箱')
       find('.list-head label.check input').set(true)
       page.accept_confirm do
@@ -100,7 +100,7 @@ describe 'gws_memo_messages', type: :request, dbscope: :example do
       end
       wait_for_ajax
       expect(page).to have_content('受信トレイ')
-      expect(page).to have_content('ゴミ箱 (1)')
+      expect(page).to have_content('ゴミ箱')
     end
   end
 end
