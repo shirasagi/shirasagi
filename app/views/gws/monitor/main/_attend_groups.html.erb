@@ -19,8 +19,8 @@
         </thead>
         <tbody>
         <% if params[:controller] =~ /admin/ %>
-            <% subscribed_groups = @item.subscribed_groups.to_a %>
-            <% subscribed_groups.each do |group| %>
+            <% attend_groups = @item.attend_groups.to_a %>
+            <% attend_groups.each do |group| %>
                 <% post = @item.children.where(user_group_id: group.id).last %>
                 <td class="state"><%= @item.answer_state_name(group) %></td>
                 <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
@@ -39,11 +39,11 @@
             <% end %>
         <% else %>
             <% if @item.spec_config == 'my_group' %>
-                <% subscribed_groups = @item.subscribed_groups.where(id: @cur_group.id) %>
+                <% attend_groups = @item.attend_groups.where(id: @cur_group.id) %>
             <% else %>
-                <% subscribed_groups = @item.subscribed_groups.to_a %>
+                <% attend_groups = @item.attend_groups.to_a %>
             <% end %>
-            <% subscribed_groups.each do |group| %>
+            <% attend_groups.each do |group| %>
                 <% post = @item.children.where(user_group_id: group.id).last %>
                 <td class="state"><%= @item.answer_state_name(group) %></td>
                 <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>

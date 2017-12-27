@@ -22,7 +22,7 @@
     <% next unless item.active? %>
     <%
       css_classes = %w(list-item)
-      if item.subscribed_groups.where(id: @cur_user.id).present?
+      if item.attend_groups.where(id: @cur_user.id).present?
         css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
       end
       if item.severity.present?

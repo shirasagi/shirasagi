@@ -112,14 +112,14 @@ class Gws::Monitor::Topic
     created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
   end
 
-  def subscribed_groups
-    return Gws::Group.none if new_record?
-    return Gws::Group.none if attend_group_ids.blank?
-
-    conds = [{ id: { '$in' => attend_group_ids.flatten } }]
-
-    Gws::Group.where('$and' => [ { '$or' => conds } ])
-  end
+  # def subscribed_groups
+  #   return Gws::Group.none if new_record?
+  #   return Gws::Group.none if attend_group_ids.blank?
+  #
+  #   conds = [{ id: { '$in' => attend_group_ids.flatten } }]
+  #
+  #   Gws::Group.where('$and' => [ { '$or' => conds } ])
+  # end
 
   def sort_options
     %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
@@ -151,7 +151,7 @@ class Gws::Monitor::Topic
     CSV.generate do |data|
       data << I18n.t('gws/monitor.csv')
 
-      subscribed_groups.each do |group|
+      attend_groups.each do |group|
         post = comment(group.id).last
         data << [
             id,

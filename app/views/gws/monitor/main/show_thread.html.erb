@@ -105,7 +105,7 @@
   <% end %>
 
   <% if params[:controller] =~ /admin/ || @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != 'my_group'%>
-    <%= render partial: 'gws/monitor/main/subscribed_groups' %>
+    <%= render partial: 'gws/monitor/main/attend_groups' %>
   <% end %>
 </div>
 

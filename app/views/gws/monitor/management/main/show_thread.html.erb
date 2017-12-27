@@ -46,8 +46,8 @@
   </div>
   <% end %>
 
-  <% if @item.subscribed_groups.present? %>
-  <%= render partial: 'gws/monitor/management/main/subscribed_groups' %>
+  <% if @item.attend_groups.present? %>
+  <%= render partial: 'gws/monitor/management/main/attend_groups' %>
   <% end %>
 </div>
 
