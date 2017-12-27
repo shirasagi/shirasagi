@@ -25,7 +25,7 @@ SS::Application.routes.draw do
   gws 'monitor' do
     get '/' => redirect { |p, req| "#{req.path}/-/topics" }, as: :main
 
-    scope(path: ":category") do
+    scope(path: ':category', defaults: { category: '-' }) do
       resources :topics, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy] do
         get :forward, on: :member
       end
