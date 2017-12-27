@@ -143,8 +143,6 @@ class Gws::Memo::MessagesController < ApplicationController
       if forward_setting && forward_setting.default == "enabled"
         Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
       end
-    else
-      @item.state = "closed"
     end
     render_update @item.update, location: { action: :show, id: @item, folder: params[:folder] }
   end
