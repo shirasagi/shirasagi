@@ -195,6 +195,12 @@ class Gws::Monitor::Topic
     Fs.rm_rf self.zip_path if File.exist?(self.zip_path)
   end
 
+  def due_date_over?(group, now = Time.zone.now)
+    answered_state = answer_state_hash[group.id.to_s]
+    return if %w(answered question_not_applicable).include?(answered_state)
+    due_date < now
+  end
+
   private
 
   def set_descendants_updated_with_released
