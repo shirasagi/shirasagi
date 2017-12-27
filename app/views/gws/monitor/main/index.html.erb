@@ -1,11 +1,11 @@
 <%= jquery do %>
   var navi = new Gws_Category_Navi('.gws-category-navi');
-  navi.setBaseUrl('<%= gws_monitor_topics_path(category: 'ID') %>');
+  navi.setBaseUrl('<%= url_for(category: 'ID') %>');
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_monitor_topics_path(category: '-'), class: 'btn dropdown-toggle' do %>
+  <%= link_to url_for(category: '-'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
@@ -44,20 +44,18 @@
       <div class="info">
         <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
         <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-        <% if item.descendants_files_count.to_i > 0 %>
-          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+        <% if (file_count = item.descendants.where(user_group_id: @cur_group.id).pluck(:file_ids).flatten.compact.length) > 0 %>
+          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= file_count %></span>
         <% end %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-          <span class="article_state">
-            <%= item.answer_state_name(@cur_group) %>
-          </span>
+          <span class="answer-state"><%= item.answer_state_name(@cur_group) %></span>
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
-              <%= link_to category.trailing_name, gws_monitor_topics_path(category: category.id),
+              <%= link_to category.trailing_name, { category: category.id },
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>
