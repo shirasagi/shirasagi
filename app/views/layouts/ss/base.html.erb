@@ -94,7 +94,7 @@
           <% end %>
           <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
           <% bookmark_icon = bookmark ? "&#xE866;" : "&#xE867;" %>
-          <h2><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
+          <span class="bookmark-icon"><i class="material-icons"><%= bookmark_icon.html_safe %></i></span>
           <ul class="dropdown-menu">
             <li><div class="bookmark-notice"></div></li>
             <li>
