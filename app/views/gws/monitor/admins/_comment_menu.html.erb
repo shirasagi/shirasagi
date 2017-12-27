@@ -1,0 +1,19 @@
+<%
+  menu = []
+  if @item.allowed?(:edit, @cur_user, site: @cur_site)
+    if @item.permit_comment? && @item.public? && !@item.closed?
+      link = new_gws_monitor_admin_parent_comment_path(admin_id: @item, parent_id: recursion ? comment : @item)
+      menu << link_to(t('gws/monitor.links.reply'), link, class: 'btn primary')
+    end
+
+    link = edit_gws_monitor_admin_parent_comment_path(admin_id: @item, parent_id: comment.parent_id, id: comment)
+    menu << link_to(t('ss.links.edit'), link, class: 'btn')
+
+    link = delete_gws_monitor_admin_parent_comment_path(admin_id: @item, parent_id: comment.parent_id, id: comment)
+    menu << link_to(t('ss.links.delete'), link, class: 'btn')
+  end
+%>
+
+<% if menu.present? %>
+  <div class="menu"><%= safe_join(menu) %></div>
+<% end %>
