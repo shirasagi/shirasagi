@@ -9,7 +9,7 @@ describe Gws::Monitor::DeleteJob, dbscope: :example do
   describe '.perform_later' do
     before do
       1.upto(12*3) do |i|
-        topic = create(:gws_monitor_topic, :attend_group_ids, deleted: i.month.ago)
+        topic = create(:gws_monitor_topic, attend_group_ids: user.group_ids, deleted: i.month.ago)
         2.times do
           create(:gws_monitor_post, topic_id: topic.id, parent_id: topic.id)
         end

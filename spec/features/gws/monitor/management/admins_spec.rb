@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_monitor_admins", type: :feature, dbscope: :example do
+describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:g1) { create(:gws_group, name: "#{site.name}/g-#{unique_id}") }
   let(:g2) { create(:gws_group, name: "#{site.name}/g-#{unique_id}") }
@@ -16,14 +16,19 @@ describe "gws_monitor_admins", type: :feature, dbscope: :example do
 
     it "#index" do
       item1
-      visit gws_monitor_admins_path(site)
+      visit gws_monitor_management_admins_path(site)
       expect(page).to have_content(item1.name)
       expect(page).to have_content('回答状況(1/2)')
     end
 
-    it "#new" do
-      visit new_gws_monitor_admin_path(site)
+    it "#edit" do
+      visit edit_gws_monitor_management_admin_path(site, item1)
       expect(page).to have_content('基本情報')
+    end
+
+    it "#show" do
+      visit gws_monitor_management_admin_path(site, item1)
+      expect(page).to have_content(item1.name)
     end
   end
 end
