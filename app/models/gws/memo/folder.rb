@@ -5,7 +5,7 @@ class Gws::Memo::Folder
   include Gws::SitePermission
   include SS::Fields::DependantNaming
 
-  set_permission_name 'gws_memo_messages', :edit
+  set_permission_name 'private_gws_memo_messages', :edit
 
   seqid :id
   field :name, type: String

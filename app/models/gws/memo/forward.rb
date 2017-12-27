@@ -4,7 +4,7 @@ class Gws::Memo::Forward
   include Gws::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name 'gws_memo_messages', :edit
+  set_permission_name 'private_gws_memo_messages', :edit
 
   field :default, type: String, default: 'disabled'
   field :email, type: String

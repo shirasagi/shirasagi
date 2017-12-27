@@ -14,7 +14,7 @@ class Gws::Memo::Message
 
   store_in collection: "gws_memo_messages"
 
-  set_permission_name "gws_memo_messages", :edit
+  set_permission_name 'private_gws_memo_messages', :edit
 
   attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path
 

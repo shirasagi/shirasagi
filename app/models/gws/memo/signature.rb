@@ -4,7 +4,7 @@ class Gws::Memo::Signature
   include SS::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name 'gws_memo_messages', :edit
+  set_permission_name 'private_gws_memo_messages', :edit
 
   field :name, type: String
   field :text, type: String
