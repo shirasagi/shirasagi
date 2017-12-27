@@ -203,6 +203,7 @@ class Gws::Monitor::Topic
   def due_date_over?(group, now = Time.zone.now)
     answered_state = answer_state_hash[group.id.to_s]
     return if %w(answered question_not_applicable).include?(answered_state)
+    return if due_date.blank?
     due_date < now
   end
 
