@@ -1,13 +1,16 @@
 this.Gws_Bookmark = (function() {
   function Gws_Bookmark() {}
 
+  var loading;
+
   Gws_Bookmark.render = function(name, url, model) {
+    loading = false;
     var el, bookmark_icon, unbookmark_icon;
     el = $('.gws-bookmark');
     bookmark_icon = "&#xE866;";
     unbookmark_icon = "&#xE867;";
     el.click(function(e) {
-      if (el.find('img[src="/assets/img/loading.gif"]').length > 0) {
+      if (loading) {
         return false;
       } else if ($(e.target).hasClass('update')) {
         Gws_Bookmark.update(el, name, url, model, bookmark_icon);
@@ -23,6 +26,7 @@ this.Gws_Bookmark = (function() {
   };
 
   Gws_Bookmark.create = function(el, name, url, model, icon) {
+    loading = true;
     var html;
     html = el.html();
     el.find('.dropdown-menu').html(SS.loading);
@@ -44,6 +48,7 @@ this.Gws_Bookmark = (function() {
         el.find('.bookmark-id').val(data['bookmark_id']);
         el.find('.bookmark-name').val(name);
         el.find('.material-icons').html(icon);
+        loading = false;
       },
       error: function() {
         alert('Error');
@@ -52,6 +57,7 @@ this.Gws_Bookmark = (function() {
   };
 
   Gws_Bookmark.update = function(el, name, url, model, icon) {
+    loading = true;
     var html, new_name, uri;
     new_name = el.find('.bookmark-name').val() || name;
     uri = url + '/' + el.find('.bookmark-id').val();
@@ -77,6 +83,7 @@ this.Gws_Bookmark = (function() {
         el.find('.bookmark-notice').text(data['notice']);
         el.find('.bookmark-name').val(data['name']);
         el.find('.material-icons').html(icon);
+        loading = false;
       },
       error: function() {
         alert('Error');
@@ -88,6 +95,7 @@ this.Gws_Bookmark = (function() {
     if (!el.find('.bookmark-id').val()) {
       return false;
     }
+    loading = true;
     var html, uri;
     uri = url + '/' + el.find('.bookmark-id').val();
     html = el.html();
@@ -111,6 +119,7 @@ this.Gws_Bookmark = (function() {
         el.find('.bookmark-id').val('');
         el.find('.bookmark-name').val(name);
         el.find('.material-icons').html(icon);
+        loading = false;
       },
       error: function() {
         alert('Error');
