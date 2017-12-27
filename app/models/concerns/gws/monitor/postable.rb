@@ -84,16 +84,10 @@ module Gws::Monitor::Postable
     descendants_updated > Time.zone.now - site.monitor_new_days.day
   end
 
-  def spec_config_condition(cur_user, cur_group)
-    unless topic.user_ids.include?(cur_user.id) || topic.group_ids.include?(cur_group.id) || topic.spec_config == 'other_groups_and_contents'
-      admin_comment_check = topic.group_ids.include?(user_group_id) || topic.user_ids.include?(user_id)
-      if parent.id == topic.id
-        return false unless user_group_id == cur_group.id
-      else
-        return false unless user_group_id == cur_group.id || (admin_comment_check && parent.user_group_id == cur_group.id)
-      end
-    end
-    return true
+  def showable_comment?(cur_user, cur_group)
+    return true if topic.user_ids.include?(cur_user.id) || topic.group_ids.include?(cur_group.id)
+    return true if topic.spec_config == 'other_groups_and_contents'
+    user_group_id == cur_group.id
   end
 
   def mode_options

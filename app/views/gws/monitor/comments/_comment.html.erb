@@ -34,7 +34,7 @@ end
 
 menu = [] if params[:controller].match(/management/) || @item.closed?
 %>
-<% if comment.spec_config_condition(@cur_user, @cur_group) %>
+<% if comment.showable_comment?(@cur_user, @cur_group) %>
   <aside class="comment" id="post-<%= comment.id %>">
     <header class="<%= 'toggle-head' if recursion %>">
       <h2><%= comment.name %></h2>
@@ -65,9 +65,9 @@ menu = [] if params[:controller].match(/management/) || @item.closed?
   </aside>
 <% end %>
 
-<% if comment.children.present? %>
+<% if recursion && comment.children.present? %>
 <div class="comments">
-  <%= render partial: 'gws/monitor/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
+  <%= render partial: 'gws/monitor/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} %>
 </div>
 <% end %>
 
