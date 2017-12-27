@@ -2,6 +2,7 @@ module Gws::Portal::PortletFilter
   extend ActiveSupport::Concern
 
   included do
+    menu_view 'gws/portal/common/portlets/menu'
     before_action :set_portlet_addons
   end
 
@@ -39,5 +40,15 @@ module Gws::Portal::PortletFilter
 
   def new
     new_portlet
+  end
+
+  def reset
+    raise '403' unless @portal.allowed?(:edit, @cur_user, site: @cur_site)
+    return render(file: 'gws/portal/common/portlets/reset') unless request.post?
+
+    @portal.portlets.destroy_all
+    @portal.save_default_portlets
+
+    redirect_to action: :index, notice: I18n.t('ss.notice.initialized')
   end
 end

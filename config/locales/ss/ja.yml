@@ -68,6 +68,7 @@ ja:
       upload: アップロード
       decode: デコードする
       print: 印刷する
+      initialize: 初期化する
     buttons:
       save: 保存
       new: 新規作成
@@ -106,6 +107,7 @@ ja:
       select_all: 全て選択
       deselect_all: 全て解除
       change: 変更
+      initialize: 初期化
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -118,12 +120,14 @@ ja:
       set_tag: タグを設定してよろしいですか？
       reset_tag: タグを削除してよろしいですか？
       in_use: 使用中のファイルを削除してよろしいですか？
+      initialize: 初期化してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
       started_import: インポートを開始しました。
       sent: 送信しました。
       posted: 投稿しました。
+      initialized: 初期化しました。
       multibyte_filename_disabled: ※日本語ファイル名は使用できません。
       file_droppable: ファイルをドロップすることでアップロードできます。
     warning:

@@ -1,0 +1,27 @@
+<%= form_for :item, url: { action: :reset }, html: { method: :post } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t('ss.links.initialize') %></h2></header>
+
+    <dl class="see">
+      <dt><%= t('gws/portal.delete_portlets_for_reset') %></dt>
+      <dd>
+        <% @portal.portlets.each do |item| %>
+          <%= item.name %><br />
+        <% end %>
+      </dd>
+
+      <dt><%= t('gws/portal.create_portlets_for_reset') %></dt>
+      <dd>
+        <% @portal.default_portlets.each do |item| %>
+          <%= item.name %><br />
+        <% end %>
+      </dd>
+    </dl>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t('ss.buttons.initialize'), class: :save, data: { confirm: I18n.t("ss.confirm.initialize") } %>
+  </footer>
+<% end %>

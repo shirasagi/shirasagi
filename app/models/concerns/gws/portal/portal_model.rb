@@ -27,4 +27,20 @@ module Gws::Portal::PortalModel
     return true if readable?(user, opts[:site] || site)
     false
   end
+
+  def save_default_portlets
+    default_portlets.each do |item|
+      user_ids = [@cur_user.id]
+      user_ids << portal_user_id if try(:portal_user_id)
+
+      item.cur_user   = @cur_user
+      item.cur_site   = @cur_site
+      item.setting_id = id
+      item.user_ids   = user_ids
+
+      if !item.save
+        Rails.logger.warn("#{__FILE__}:#{__LINE__} - " + item.errors.full_messages.join(' '))
+      end
+    end
+  end
 end
