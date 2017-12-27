@@ -1,5 +1,5 @@
 <% if @cur_user.gws_role_permissions["edit_other_gws_monitor_posts_#{@cur_site.id}"].to_i > 0 %>
-<nav class="nav-management-menu">
+<nav class="nav-management-menu hide-mb">
   <%= link_to gws_monitor_management_main_path do %>
     <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
   <% end %>
