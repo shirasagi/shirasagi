@@ -5,6 +5,7 @@ ja:
     #descendants_updated: 更新日時
     no_authority: 権限がありません
     due_date_over: 回答期限超過
+    portal_notice_format: "未回答の照会が %{count}件 あります。グループ内で担当者を決定のうえ、回答してください。"
     topic:
       comment: コメント
       new: 新規作成
@@ -66,19 +67,19 @@ ja:
         my_group: 回答者のみ表示する
         other_groups: 他の回答者名を表示する
         other_groups_and_contents: 他の回答者名と内容を表示する
-      reminder_start_section:
-        post: 配信直後から表示する
-        post_one_day_after: 配信日から1日後に表示
-        post_two_days_after: 配信日から2日後に表示
-        post_three_days_after: 配信日から3日後に表示
-        post_four_days_after: 配信日から4日後に表示
-        post_five_days_after: 配信日から5日後に表示
-        due_date_one_day_ago: 回答期限日の1日前から表示
-        due_date_two_days_ago: 回答期限日の2日前から表示
-        due_date_three_days_ago: 回答期限日の3日前から表示
-        due_date_four_days_ago: 回答期限日の4日前から表示
-        due_date_five_days_ago: 回答期限日の5日前から表示
-        hide: 表示しない
+      notice_state:
+        from_now: 配信直後から表示する
+        1_day_from_released: 配信日から1日後に表示
+        2_days_from_released: 配信日から2日後に表示
+        3_days_from_released: 配信日から3日後に表示
+        4_days_from_released: 配信日から4日後に表示
+        5_days_from_released: 配信日から5日後に表示
+        1_day_before_due_date: 回答期限日の1日前から表示
+        2_days_before_due_date: 回答期限日の2日前から表示
+        3_days_before_due_date: 回答期限日の3日前から表示
+        4_days_before_due_date: 回答期限日の4日前から表示
+        5_days_before_due_date: 回答期限日の5日前から表示
+        none: 表示しない
       mode:
         thread: スレッド
         tree: ツリー
@@ -224,7 +225,7 @@ ja:
         monitor_file_size_per_topic: 添付最大サイズ/トピック単位
         monitor_file_size_per_post: 添付最大サイズ/投稿単位
         monitor_delete_threshold: 削除対象
-        default_reminder_start_section: リマインダー表示設定
+        default_notice_state: お知らせ表示設定
       gws/addon/monitor/release:
         released: 公開日時
         release_date: 公開開始日時(予約)
@@ -253,7 +254,7 @@ ja:
         due_date: 回答期限
         admin_setting: 記事管理設定
         spec_config: 回答表示設定
-        reminder_start_section: リマインダー表示設定
+        notice_state: お知らせ表示設定
 
   tooltip:
       gws/addon/monitor/group_setting:
@@ -265,8 +266,8 @@ ja:
           - 投稿単位での添付最大サイズを入力します。
         monitor_delete_threshold:
           - 照会・回答を完全に削除するまでの期限を入力します。基準は「ゴミ箱」に移動した日です。
-        default_reminder_start_section:
-          - リマインダー表示条件の既定値を選択します。
+        default_notice_state:
+          - お知らせ表示条件の既定値を選択します。
       gws/addon/monitor/contributor:
         contributor_name:
           - 投稿者名を選択します。
@@ -298,5 +299,5 @@ ja:
           - 記事管理者の範囲を選択します。
         spec_config:
           - 回答の表示方法を選択します。
-        reminder_start_section:
-          - リマインダー表示条件を選択します。
+        notice_state:
+          - お知らせ表示条件を選択します。

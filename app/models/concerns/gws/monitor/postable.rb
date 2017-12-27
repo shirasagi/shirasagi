@@ -20,7 +20,6 @@ module Gws::Monitor::Postable
     field :severity, type: String
     field :due_date, type: DateTime
     field :spec_config, type: String, default: 'my_group'
-    field :reminder_start_section, type: String, default: '3'
 
     validates :descendants_updated, datetime: true
 
@@ -33,7 +32,7 @@ module Gws::Monitor::Postable
       order: { created: -1 }
 
     permit_params :name, :mode, :permit_comment, :severity, :due_date,
-                  :spec_config, :reminder_start_section
+                  :spec_config
 
     before_validation :set_topic_id, if: :comment?
 
@@ -108,23 +107,6 @@ module Gws::Monitor::Postable
     %w(my_group other_groups other_groups_and_contents).map do |v|
       [I18n.t("gws/monitor.options.spec_config.#{v}"), v]
     end
-  end
-
-  def reminder_start_section_options
-    [
-      [I18n.t('gws/monitor.options.reminder_start_section.post'), '0'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_one_day_after'), '-1'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_two_days_after'), '-2'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_three_days_after'), '-3'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_four_days_after'), '-4'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_five_days_after'), '-5'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_one_day_ago'), '1'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_two_days_ago'), '2'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_three_days_ago'), '3'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_four_days_ago'), '4'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_five_days_ago'), '5'],
-      [I18n.t('gws/monitor.options.reminder_start_section.hide'), '-999']
-    ]
   end
 
   def severity_options

@@ -17,10 +17,18 @@
 </div>
 <% end %>
 
-<% if @notices.present? %>
+<% if @notices.present? || @monitors.present? %>
 <div class="index portal-notice">
   <div class="list-head"><%= t "mongoid.models.gws/notice" %></div>
   <ul class="list-items">
+    <% if @monitors.present? %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to t('gws/monitor.portal_notice_format', count: @monitors.count), gws_monitor_topics_path, class: "title notice-severity-high" %>
+          <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+        </div>
+      </li>
+    <% end %>
     <% @notices.each do |item| %>
     <li class="list-item">
       <div class="info">

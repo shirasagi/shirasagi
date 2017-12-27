@@ -42,9 +42,7 @@ module Gws::Monitor::TopicFilter
     if @category.present?
       ret[:category_ids] = [ @category.id ]
     end
-    if @cur_site.default_reminder_start_section.present?
-      ret[:reminder_start_section] = @cur_site.default_reminder_start_section
-    end
+    ret[:notice_state] = @cur_site.default_notice_state.presence || '3_days_before_due_date'
     ret
   end
 
@@ -137,7 +135,7 @@ module Gws::Monitor::TopicFilter
     render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
   end
 
-  FORWARD_ATTRIBUTES = %w(name spec_config due_date reminder_start_section mode text_type text category_ids).freeze
+  FORWARD_ATTRIBUTES = %w(name spec_config due_date notice_state notice_start_at mode text_type text category_ids).freeze
 
   # 転送する
   def forward
