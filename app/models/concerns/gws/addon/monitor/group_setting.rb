@@ -42,15 +42,7 @@ module Gws::Addon::Monitor::GroupSetting
   end
 
   def default_reminder_start_section_options
-    options =Gws::Monitor::Topic.new.reminder_start_section_options
-    options.insert(0, [nil, nil])
-  end
-
-  def default_reminder_start_section_name
-    Gws::Monitor::Topic.new.reminder_start_section_options.each do |name, value|
-      return name if value == default_reminder_start_section
-    end
-    nil
+    Gws::Monitor::Topic.new.reminder_start_section_options
   end
 
   private
