@@ -70,7 +70,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
     path = @item.to[@cur_user.id.to_s]
     if path.present?
-      folter = Gws::Memo::Folder.site(@cur_site).user(@cur_user).find(path) rescue nil
+      folter = Gws::Memo::Folder.user(@cur_user).find(path) rescue nil
     end
 
     if folter.present?
@@ -85,8 +85,7 @@ class Gws::Memo::MessagesController < ApplicationController
   public
 
   def index
-    @items = @model.site(@cur_site).
-      folder(@cur_folder, @cur_user).
+    @items = @model.folder(@cur_folder, @cur_user).
       search(params[:s]).
       page(params[:page]).per(50)
   end
@@ -98,7 +97,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def reply
     @item = @model.new pre_params.merge(fix_params)
-    item_reply = @model.site(@cur_site).find(params[:id])
+    item_reply = @model.find(params[:id])
     @item.member_ids = item_reply.member_ids
     @item.subject = "Re: #{item_reply.subject}"
 
@@ -113,13 +112,11 @@ class Gws::Memo::MessagesController < ApplicationController
       @item.send_date = Time.zone.now
       @item.state = "public"
 
-      # 外部メールへの転送?
-      #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
-      #  if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
-      #    Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
-      #  end
-      #end
-      #
+      # 外部メールへの転送
+      forward_setting = Gws::Memo::Forward.user(@cur_user).first
+      if forward_setting && forward_setting.default == "enabled"
+        Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
+      end
     else
       @item.state = "closed"
     end
@@ -140,12 +137,11 @@ class Gws::Memo::MessagesController < ApplicationController
       @item.send_date = Time.zone.now
       @item.state = "public"
 
-      # 外部メールへの転送?
-      #unless Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.nil?
-      #  if Gws::Memo::Forward.site(@cur_site).user(@cur_user).first.default == "enabled"
-      #    Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site).deliver_now
-      #  end
-      #end
+      # 外部メールへの転送
+      forward_setting = Gws::Memo::Forward.user(@cur_user).first
+      if forward_setting && forward_setting.default == "enabled"
+        Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
+      end
     else
       @item.state = "closed"
     end
