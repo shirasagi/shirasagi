@@ -26,14 +26,11 @@ SS::Application.routes.draw do
     get '/' => redirect { |p, req| "#{req.path}/-/topics" }, as: :main
 
     scope(path: ':category', defaults: { category: '-' }) do
-      resources :topics, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy] do
-        get :forward, on: :member
-      end
-      resources :answers, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy] do
-        get :forward, on: :member
-      end
+      resources :topics, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy]
+      resources :answers, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy]
 
       resources :admins, concerns: [:state_change, :topic_comment], except: [:destroy] do
+        get :forward, on: :member
         match :publish, on: :member, via: %i[get post]
         match :disable, on: :member, via: %i[get post]
         post :disable_all, on: :collection

@@ -137,22 +137,18 @@ module Gws::Monitor::TopicFilter
     render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
   end
 
+  FORWARD_ATTRIBUTES = %w(name spec_config due_date reminder_start_section mode text_type text category_ids).freeze
+
   # 転送する
   def forward
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+
     set_item
-    @item.id = 0
-    @item.attend_group_ids = []
-    @item.readable_group_ids = []
-    @item.readable_member_ids  = []
-    @item.readable_custom_group_ids = []
-    @item.answer_state_hash = {}
-    @item.file_ids = []
-    @item.created = nil
-    @item.updated = nil
-    @item.user_ids = [@cur_user.id]
+    @source = @item
+    @item = @model.new(@source.attributes.slice(*FORWARD_ATTRIBUTES).merge(fix_params))
     @item.group_ids = [@cur_group.id]
-    @model = @item.dup
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    @item.user_ids = [@cur_user.id]
+
     render file: :new
   end
 
