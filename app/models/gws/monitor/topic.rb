@@ -10,7 +10,7 @@ class Gws::Monitor::Topic
   include Gws::Addon::Monitor::Release
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
-  include Gws::Monitor::BrowsingState
+  # include Gws::Monitor::BrowsingState
 
   readable_setting_include_custom_groups
 
