@@ -55,8 +55,8 @@ module Gws::Model
           where("path.#{user.id}" => folder.folder_path).and_public
         end
       }
-      scope :unseen, ->(user_id) {
-        where("seen.#{user_id}" => { '$exists' => false })
+      scope :unseen, ->(user) {
+        where("seen.#{user.id}" => { '$exists' => false })
       }
       scope :search_replay, ->(replay_id) {
         where("$and" => [{ "_id" => replay_id }])
@@ -243,20 +243,20 @@ module Gws::Model
     end
 
     module ClassMethods
-      def unseens(user, site)
-        self.site(site).where('$and' => [
-            { "to.#{user.id}".to_sym.exists => true },
-            { "seen.#{user.id}".to_sym.exists => false },
-            { "$where" => "function(){
-  var self = this;
-  var result = false;
-
-  Object.keys(this.from).forEach(function(key){
-    if (self.from[key] !== 'INBOX.Draft') { result = true; }
-  })
-
-  return result;
-}"}])
+      def unseens(user)
+        self.member(user).unseen(user).and_public
+        #self.where('$and' => [
+        #  { "to.#{user.id}".to_sym.exists => true },
+        #  { "seen.#{user.id}".to_sym.exists => false },
+        #  { "$where" => "function(){
+        #    var self = this;
+        #    var result = false;
+        #    Object.keys(this.from).forEach(function(key){
+        #      if (self.from[key] !== 'INBOX.Draft') { result = true; }
+        #    })
+        #    return result;
+        #  }"}]
+        #)
       end
     end
   end

@@ -39,7 +39,7 @@ class Gws::Memo::Folder
   def validate_parent_name
     return if name.count('/') < 1
 
-    unless self.class.site(site).user(user).where(name: parent_name).exists?
+    unless self.class.user(user).where(name: parent_name).exists?
       errors.add :base, :not_found_parent
     end
   end
@@ -70,11 +70,11 @@ class Gws::Memo::Folder
   end
 
   def messages
-    Gws::Memo::Message.site(self.site).folder(self, user)
+    Gws::Memo::Message.folder(self, user)
   end
 
   def unseens
-    messages.unseen(self.user_id)
+    messages.unseen(self.user)
   end
 
   def unseen?
@@ -96,7 +96,7 @@ class Gws::Memo::Folder
   end
 
   def dependant_scope
-    self.class.site(site).user(user)
+    self.class.user(user)
   end
 
   def sent_box?

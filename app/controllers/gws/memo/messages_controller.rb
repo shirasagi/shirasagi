@@ -7,7 +7,6 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :deny_with_auth
 
   before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
-
   before_action :set_item, only: [:show, :edit, :update, :trash, :delete, :destroy, :toggle_star]
   before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,

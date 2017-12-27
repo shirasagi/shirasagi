@@ -57,9 +57,9 @@ class Gws::Memo::Filter
     %w(move trash).map { |m| [I18n.t(m, scope: 'gws/memo/filter.options.action'), m] }
   end
 
-  def folder_options(user, site)
-    Gws::Memo::Folder.site(site).allow(:read, user, site: site).map do |folder|
-      [ERB::Util.html_escape(folder.name).html_safe, folder.id]
+  def folder_options(user)
+    Gws::Memo::Folder.user(user).map do |folder|
+      [ ERB::Util.html_escape(folder.name).html_safe, folder.id ]
     end
   end
 
