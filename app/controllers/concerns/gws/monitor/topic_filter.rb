@@ -36,9 +36,12 @@ module Gws::Monitor::TopicFilter
   end
 
   def pre_params
-    ret = super
+    ret = { due_date: Time.zone.today + 7 }
     if @category.present?
       ret[:category_ids] = [ @category.id ]
+    end
+    if @cur_site.default_reminder_start_section.present?
+      ret[:reminder_start_section] = @cur_site.default_reminder_start_section
     end
     ret
   end

@@ -35,8 +35,6 @@ module Gws::Monitor::Postable
     permit_params :name, :mode, :permit_comment, :severity, :due_date,
                   :spec_config, :reminder_start_section
 
-    after_initialize :set_default
-
     before_validation :set_topic_id, if: :comment?
 
     validates :name, presence: true, length: { maximum: 80 }
@@ -148,14 +146,6 @@ module Gws::Monitor::Postable
   end
 
   private
-
-  def set_default
-    return if self.id > 0
-    if @cur_site && @cur_site.default_reminder_start_section.present?
-      self.reminder_start_section = @cur_site.default_reminder_start_section
-    end
-    self.due_date = Time.zone.today + 7
-  end
 
   # topic(root_post)を設定
   def set_topic_id
