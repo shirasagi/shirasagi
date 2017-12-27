@@ -10,11 +10,10 @@ module Gws::Addon::Monitor::GroupSetting
     field :monitor_new_days, type: Integer
     field :monitor_file_size_per_topic, type: Integer
     field :monitor_file_size_per_post, type: Integer
-    field :monitor_browsed_delay, type: Integer
     field :monitor_delete_threshold, type: String, default: '24.months'
     field :default_reminder_start_section, type: String
 
-    permit_params :monitor_new_days, :monitor_browsed_delay
+    permit_params :monitor_new_days
     permit_params :in_monitor_file_size_per_topic_mb, :in_monitor_file_size_per_post_mb
     permit_params :monitor_delete_threshold, :default_reminder_start_section
 
@@ -24,10 +23,6 @@ module Gws::Addon::Monitor::GroupSetting
 
   def monitor_new_days
     self[:monitor_new_days].presence || 7
-  end
-
-  def monitor_browsed_delay
-    self[:monitor_browsed_delay].presence || 2
   end
 
   def monitor_delete_threshold_options
