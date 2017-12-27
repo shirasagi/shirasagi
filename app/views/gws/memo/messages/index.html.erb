@@ -15,34 +15,39 @@
     </li>
 
     <% @items.each do |item| %>
-    <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
-      <label class="check">
-        <%= check_box_tag 'ids[]', item.id %>
-      </label>
+      <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
+        <li class="list-item seen">
+      <% else %>
+        <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
+      <% end %>
 
-      <div class="icon icon-star <%= item.star?(@cur_user) ? 'on' : 'off' %>">
-        <%= link_to options={action: :toggle_star, id: item.id}, method: :post do %>
-          <i class="material-icons md-18">&#xE838;</i>
-        <% end %>
-      </div>
+        <label class="check">
+          <%= check_box_tag 'ids[]', item.id %>
+        </label>
 
-      <div class="icon icon-attachment">
-        <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
-      </div>
+        <div class="icon icon-star <%= item.star?(@cur_user) ? 'on' : 'off' %>">
+          <%= link_to options={action: :toggle_star, id: item.id}, method: :post do %>
+            <i class="material-icons md-18">&#xE838;</i>
+          <% end %>
+        </div>
 
-      <div class="info">
-        <% if @cur_folder.path == "INBOX.Sent" %>
-          <span class="field to">
-            <%= item.display_to.first if item.to.present? %>
-          </span>
-        <% else %>
-          <span class="field from"><%= item.user.long_name %></span>
-        <% end %>
-        <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title' %>
-        <span class="field datetime"><%= item.display_send_date %></span>
-        <span class="field size"><%= item.display_size %></span>
-      </div>
-    </li>
+        <div class="icon icon-attachment">
+          <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
+        </div>
+
+        <div class="info">
+          <% if @cur_folder.sent_box? == "INBOX.Sent" %>
+            <span class="field to">
+              <%= item.display_to.first if item.to.present? %>
+            </span>
+          <% else %>
+            <span class="field from"><%= item.user.long_name %></span>
+          <% end %>
+          <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title' %>
+          <span class="field datetime"><%= item.display_send_date %></span>
+          <span class="field size"><%= item.display_size %></span>
+        </div>
+      </li>
     <% end %>
   </ul>
 </div>

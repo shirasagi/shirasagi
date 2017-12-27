@@ -93,7 +93,7 @@ module Gws::Model
     def set_send_date
       now = Time.zone.now
       self.send_date ||= now if state == "public"
-      self.seen[cur_user.id] ||= now if cur_user
+      #self.seen[cur_user.id] ||= now if cur_user
     end
 
     public

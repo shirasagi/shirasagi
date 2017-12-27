@@ -149,7 +149,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def show
     raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
-    @item.set_seen(@cur_user).update
+    @item.set_seen(@cur_user).update if @item.state == "public"
     render
   end
 
