@@ -55,7 +55,7 @@ class Gws::Discussion::CommentsController < ApplicationController
 
   def edit
     raise "403" if @topic.permanently?
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     if @item.is_a?(Cms::Addon::EditLock)
       unless @item.acquire_lock
         redirect_to action: :lock
@@ -69,19 +69,19 @@ class Gws::Discussion::CommentsController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" if @topic.permanently?
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
 
   def delete
     raise "403" if @topic.permanently?
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render
   end
 
   def destroy
     raise "403" if @topic.permanently?
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.destroy
   end
 

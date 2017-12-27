@@ -129,7 +129,7 @@
                 <% else %>
                   <%= t("workflow.user_deleted") %>
                 <% end %>
-                <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
+                <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site) %>
                   <%= link_to('#', class: 'workflow-reroute', data: { level: level, user_id: user_id }) do %>
                     <i class="material-icons" style="font-size: inherit">&#xE254;</i>
                   <% end %>
