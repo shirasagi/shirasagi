@@ -3,6 +3,8 @@ class Gws::Monitor::AnswersController < ApplicationController
   include Gws::CrudFilter
   include Gws::Monitor::TopicFilter
 
+  before_action :check_attended
+
   private
 
   def set_crumbs
@@ -22,5 +24,11 @@ class Gws::Monitor::AnswersController < ApplicationController
     @items = @items.search(params[:s])
     @items = @items.custom_order(params.dig(:s, :sort))
     @items = @items.page(params[:page]).per(50)
+  end
+
+  def check_attended
+    if @item
+      raise '403' unless @item.attended?(@cur_group)
+    end
   end
 end
