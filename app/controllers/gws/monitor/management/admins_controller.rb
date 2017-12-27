@@ -4,6 +4,7 @@ class Gws::Monitor::Management::AdminsController < ApplicationController
   include Gws::Monitor::TopicFilter
 
   before_action :check_readable
+  navi_view 'gws/monitor/management/main/navi'
 
   private
 
