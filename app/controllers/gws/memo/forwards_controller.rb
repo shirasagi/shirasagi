@@ -18,6 +18,7 @@ class Gws::Memo::ForwardsController < ApplicationController
       @item = @model.find_by(user_id: @cur_user.id)
     else
       @item = @model.new(user_id: @cur_user.id)
+      @item.site = @cur_site
       @item.save
     end
   end
