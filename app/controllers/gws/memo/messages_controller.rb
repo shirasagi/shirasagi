@@ -8,7 +8,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
   before_action :set_item, only: [:show, :edit, :update, :trash, :delete, :destroy, :toggle_star]
-  before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
+  #before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_folders, only: [:index]
@@ -41,7 +41,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_cur_folder
-    if params[:folder] =~ /^(INBOX|INBOX\.Trash|INBOX\.Draft|INBOX\.Sent|REDIRECT)$/
+    if params[:folder] =~ /^(INBOX|INBOX\.Trash|INBOX\.Draft|INBOX\.Sent)$/
       @cur_folder = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
     else
       @cur_folder = Gws::Memo::Folder.user(@cur_user).find_by(_id: params[:folder])
@@ -57,25 +57,25 @@ class Gws::Memo::MessagesController < ApplicationController
     @model.user(@cur_user).unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
   end
 
-  def redirect_to_appropriate_folder
-    path = @item.from[@cur_user.id.to_s]
-    if path.present?
-      redirect_to({ folder: path })
-    end
-
-    path = @item.to[@cur_user.id.to_s]
-    if path.present?
-      folter = Gws::Memo::Folder.user(@cur_user).find(path) rescue nil
-    end
-
-    if folter.present?
-      redirect_to({ folder: folter.id })
-    elsif path.present?
-      redirect_to({ folder: path })
-    else
-      raise '404'
-    end
-  end
+  #def redirect_to_appropriate_folder
+  #  path = @item.from[@cur_user.id.to_s]
+  #  if path.present?
+  #    redirect_to({ folder: path })
+  #  end
+  #
+  #  path = @item.to[@cur_user.id.to_s]
+  #  if path.present?
+  #    folter = Gws::Memo::Folder.user(@cur_user).find(path) rescue nil
+  #  end
+  #
+  #  if folter.present?
+  #    redirect_to({ folder: folter.id })
+  #  elsif path.present?
+  #    redirect_to({ folder: path })
+  #  else
+  #    raise '404'
+  #  end
+  #end
 
   public
 
