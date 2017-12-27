@@ -86,21 +86,22 @@
       <% elsif @ss_mode == :gws %>
         <div class="gws-bookmark dropdown dropdown-toggle">
           <%= jquery do %>
-            Gws_Bookmark.render({
-              'url': '<%= gws_apis_bookmarks_path %>',
-              'model': '<%= @model.name.underscore if @model %>'
-            });
+            Gws_Bookmark.render(
+              '<%= window_name %>',
+              '<%= gws_apis_bookmarks_path %>',
+              '<%= @model.name.underscore if @model %>'
+            );
           <% end %>
-          <% @bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
-          <% bookmark_icon = @bookmark ? "&#xE866;" : "&#xE867;" %>
-          <h2 ><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
+          <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
+          <% bookmark_icon = bookmark ? "&#xE866;" : "&#xE867;" %>
+          <h2><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
           <ul class="dropdown-menu">
             <li><div class="bookmark-notice"></div></li>
             <li>
-              <%= hidden_field_tag 'bookmark[id]', @bookmark.try(:id), class: 'bookmark-id' %>
-              <%= text_field_tag 'bookmark[name]', (@bookmark.try(:name) || window_name), class: 'bookmark-name' %>
-              <%= submit_tag I18n.t('gws/bookmark.buttons.bookmark'), class: 'btn update' %>
-              <%= submit_tag I18n.t('gws/bookmark.buttons.unbookmark'), class: 'btn delete' %>
+              <%= hidden_field_tag 'bookmark[id]', bookmark.try(:id), class: 'bookmark-id' %>
+              <%= text_field_tag 'bookmark[name]', (bookmark.try(:name) || window_name), class: 'bookmark-name' %>
+              <%= button_tag I18n.t('gws/bookmark.buttons.bookmark'), class: 'btn update' %>
+              <%= button_tag I18n.t('gws/bookmark.buttons.unbookmark'), class: 'btn delete' %>
             </li>
           </ul>
         </div>
