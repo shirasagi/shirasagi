@@ -6,8 +6,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :deny_with_auth
 
-  # フィルター機能
-  #before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
+  before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
 
   before_action :set_item, only: [:show, :edit, :update, :trash, :delete, :destroy, :toggle_star]
   before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
@@ -56,14 +55,12 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def apply_filters
-    @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site, folder: params[:folder]).
-      unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
+    @model.user(@cur_user).unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
   end
 
-  def from_folder
-    (params[:commit] == I18n.t('ss.buttons.draft_save')) ? 'INBOX.Draft' : 'INBOX.Sent'
-  end
+  #def from_folder
+  #  (params[:commit] == I18n.t('ss.buttons.draft_save')) ? 'INBOX.Draft' : 'INBOX.Sent'
+  #end
 
   def redirect_to_appropriate_folder
     path = @item.from[@cur_user.id.to_s]

@@ -72,11 +72,10 @@ class Gws::Memo::Filter
   end
 
   def match?(message)
-    if from
-      from_users = message.from.keys.map { |uid| Gws::User.find(uid) }
-      from_users.each do |from_user|
-        return true if from_user.long_name.include?(from)
-      end
+    from_user = message.from
+
+    if from && from_user
+      return true if from_user.long_name.include?(from)
     end
 
     if subject && message.display_subject.include?(subject)

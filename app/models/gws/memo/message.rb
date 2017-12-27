@@ -73,7 +73,6 @@ class Gws::Memo::Message
 
     criteria
   }
-
   scope :and_public, ->() { where(state: "public") }
   scope :and_closed, ->() { where(state: "closed") }
   scope :folder, ->(folder, user) {
@@ -207,10 +206,8 @@ class Gws::Memo::Message
   end
 
   def apply_filters(user)
-    matched_filter = Gws::Memo::Filter.site(site).
-      allow(:read, user, site: site).enabled.detect{ |f| f.match?(self) }
-
-    self.to[user.id.to_s] = matched_filter.path if matched_filter
+    matched_filter = Gws::Memo::Filter.site(site).user(user).enabled.detect{ |f| f.match?(self) }
+    self.move(user, matched_filter.path) if matched_filter
     self.filtered[user.id.to_s] = Time.zone.now
     self
   end
