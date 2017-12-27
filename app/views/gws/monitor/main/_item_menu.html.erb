@@ -1,0 +1,31 @@
+<% return if !@item.permit_comment? %>
+<% return if !@item.public? %>
+<% return if @item.closed? %>
+<% return if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.attend_group_ids.include?(@cur_group.id) %>
+
+<% answer_state = @item.answer_state_hash[@cur_group.id.to_s] %>
+<div class="menu">
+  <% if %w(gws/monitor/topics gws/monitor/answers).include?(params[:controller]) %>
+    <% if answer_state == 'preparation' %>
+    <%= button_tag(t('gws/monitor.links.public'), type: 'button', class: %w(public btn), data: { ss_action: url_for(action: :public), ss_confirm: t('gws/monitor.confirm.public') }) %>
+    <% end %>
+
+    <% if answer_state == 'public' %>
+    <%= button_tag(t('gws/monitor.links.preparation'), type: 'button', class: %w(preparation btn), data: { ss_action: url_for(action: :preparation), ss_confirm: t('gws/monitor.confirm.preparation') }) %>
+    <% end %>
+  <% end %>
+
+  <% if %w(public answered question_not_applicable).include?(answer_state) %>
+    <% if params[:controller] == 'gws/monitor/topics' %>
+      <% path = new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) %>
+    <% elsif params[:controller] == 'gws/monitor/answers' %>
+      <% path = new_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: @item.id) %>
+    <% elsif params[:controller] == 'gws/monitor/admins' %>
+      <%# path = new_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: @item.id) %>
+    <% end %>
+
+    <% if path %>
+      <%= link_to(t('gws/monitor.links.comment'), path, class: %w(btn primary)) %>
+    <% end %>
+  <% end %>
+</div>

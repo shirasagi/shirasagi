@@ -1,28 +1,5 @@
 <%= jquery do %>
-    Gws_Monitor_Topic.render();
-
-    switch ("<%= @item.answer_state_hash[@cur_group.id.to_s] %>"){
-      case "public":
-        $('.public').hide();
-        $('.preparation').show();
-        $('.primary').show();
-        break;
-      case "answered":
-        $('.public').hide();
-        $('.preparation').hide();
-        $('.primary').show();
-        break;
-      case "preparation":
-        $('.public').show();
-        $('.preparation').hide();
-        $('.primary').hide();
-        break;
-      case "question_not_applicable":
-        $('.public').hide();
-        $('.preparation').hide();
-        $('.primary').show();
-        break;
-    }
+  Gws_Monitor_Topic.render();
 <% end %>
 
 <div class="gws-board gws-board-tree">
@@ -65,36 +42,7 @@
     </div>
     <% end %>
 
-    <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) && !@item.closed? && @item.attend_group_ids.include?(@cur_group.id) %>
-    <div class="menu">
-      <%= hidden_field_tag "item_id", @item.id %>
-      <button class="public btn"><%= t 'gws/monitor.links.public' %></button>
-      <button class="preparation btn"><%= t 'gws/monitor.links.preparation' %></button>
-      <% if @item.comment(@cur_group.id).blank? %>
-        <% if params[:controller] == "gws/monitor/topics" %>
-          <%= link_to(t('gws/monitor.links.comment'), new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-          class: "btn primary") %>
-        <% elsif params[:controller] == "gws/monitor/answers" %>
-          <%= link_to(t('gws/monitor.links.comment'), new_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: @item.id),
-          class: "btn primary") %>
-        <% elsif params[:controller] == "gws/monitor/admins" %>
-          <%= link_to(t('gws/monitor.links.comment'), new_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: @item.id),
-          class: "btn primary") %>
-        <% end %>
-      <% else %>
-        <% if params[:controller] == "gws/monitor/topics" %>
-          <%= link_to(t('gws/monitor.links.reply'), new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-          class: "btn primary") %>
-        <% elsif params[:controller] == "gws/monitor/answers" %>
-          <%= link_to(t('gws/monitor.links.reply'), new_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: @item.id),
-          class: "btn primary") %>
-        <% elsif params[:controller] == "gws/monitor/admins" %>
-          <%= link_to(t('gws/monitor.links.reply'), new_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: @item.id),
-          class: "btn primary") %>
-        <% end %>
-      <% end %>
-    </div>
-    <% end %>
+    <%= render file: '_item_menu' %>
   </article>
 
   <% if @item.children.present? %>
