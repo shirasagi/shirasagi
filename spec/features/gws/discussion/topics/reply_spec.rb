@@ -16,6 +16,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
       visit index_path
       #expect(page).to have_link I18n.t("gws/discussion.main_topic.name")
 
+      click_on "コメントを投稿する"
       text = "text-#{unique_id}"
       within "form" do
         fill_in "item[text]", with: text
