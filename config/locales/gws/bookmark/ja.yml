@@ -1,8 +1,5 @@
 ja:
   gws/bookmark:
-    buttons:
-      bookmark: お気に入りを保存
-      unbookmark: お気に入りを削除
     notice:
       save: お気に入りを保存しました
     options:

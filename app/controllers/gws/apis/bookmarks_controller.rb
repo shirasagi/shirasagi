@@ -42,7 +42,7 @@ class Gws::Apis::BookmarksController < ApplicationController
     item.attributes = get_params
 
     item.update
-    render json: { name: item.name, bookmark_id: item.id, notice: I18n.t('gws/bookmark.notice.save') }
+    render json: { bookmark_id: item.id, notice: I18n.t('gws/bookmark.notice.save') }
   end
 
   def destroy

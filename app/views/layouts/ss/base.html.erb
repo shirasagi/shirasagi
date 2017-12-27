@@ -85,25 +85,18 @@
         <% end %>
       <% elsif @ss_mode == :gws %>
         <div class="gws-bookmark dropdown dropdown-toggle">
-          <%= jquery do %>
-            Gws_Bookmark.render(
-              '<%= window_name %>',
-              '<%= gws_apis_bookmarks_path %>',
-              '<%= @model.name.underscore if @model %>'
-            );
-          <% end %>
           <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
-          <% bookmark_icon = bookmark ? "&#xE866;" : "&#xE867;" %>
-          <span class="bookmark-icon"><i class="material-icons"><%= bookmark_icon.html_safe %></i></span>
-          <ul class="dropdown-menu">
-            <li><div class="bookmark-notice"></div></li>
-            <li>
-              <%= hidden_field_tag 'bookmark[id]', bookmark.try(:id), class: 'bookmark-id' %>
-              <%= text_field_tag 'bookmark[name]', (bookmark.try(:name) || window_name), class: 'bookmark-name' %>
-              <%= button_tag I18n.t('gws/bookmark.buttons.bookmark'), class: 'btn update' %>
-              <%= button_tag I18n.t('gws/bookmark.buttons.unbookmark'), class: 'btn delete' %>
-            </li>
-          </ul>
+          <%= jquery do %>
+            Gws_Bookmark.render({
+              id: '<%= bookmark.try(:id) %>',
+              name: '<%= bookmark.try(:name) %>',
+              default_name: '<%= window_name %>',
+              url: '<%= gws_apis_bookmarks_path %>',
+              model: '<%= @model.name.underscore if @model %>',
+              save: '<%= I18n.t('ss.buttons.save') %>',
+              delete: '<%= I18n.t('ss.buttons.delete') %>'
+            });
+          <% end %>
         </div>
         <%= link_to gws_memo_messages_path, class: "user-message" do %>
           <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
