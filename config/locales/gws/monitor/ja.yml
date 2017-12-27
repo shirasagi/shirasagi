@@ -112,8 +112,8 @@ ja:
       public: 受取済みにする
       preparation: 受取待ちに戻す
       question_not_applicable: 該当なしにする
-      disable: 削除済みに移動する
-      disable_all: 削除済みに移動する
+      disable: ゴミ箱に移動する
+      disable_all: ゴミ箱に移動する
       active_all: 削除を取り消す
       answered: 回答済みにする
       closed: 締め切る
@@ -132,9 +132,9 @@ ja:
       public_all: チェックした項目を受取済みにしますか？
       preparation_all: チェックした項目を受取待ちにしますか？
       question_not_applicable_all: チェックした項目を該当なしにしますか？
-      disable: 削除済みに移動しますか？
+      disable: ゴミ箱に移動しますか？
       active: 削除を取り消しますか？
-      disable_all: チェックした項目を削除済みに移動しますか？
+      disable_all: チェックした項目をゴミ箱に移動しますか？
       active_all: 選択した項目の削除を取り消しますか？
       comment_answer: 所属として回答します。よろしいですか？
       publish: 配信してよろしいですか？
@@ -147,7 +147,9 @@ ja:
       answer: 回答済み
       admin: 作成した設問
       article_management: 回答管理
-      trash: 削除済み
+      trash: ゴミ箱
+      management_admin: 設問管理
+      management_trash: ゴミ箱
     management:
       links:
         back_to_topic: 戻る
@@ -155,7 +157,7 @@ ja:
     notice:
       close: 回答を締め切りました
       open: 締め切りを解除しました
-      disabled: 削除済みに移動しました
+      disabled: ゴミ箱に移動しました
       active: 削除を取り消しました
       published: 公開しました
       public: 受取済みにしました
@@ -252,7 +254,7 @@ ja:
         monitor_file_size_per_post:
           - 投稿単位での添付最大サイズを入力します。
         monitor_delete_threshold:
-          - 照会・回答を完全に削除するまでの期限を入力します。基準は「削除済み」に移動した日です。
+          - 照会・回答を完全に削除するまでの期限を入力します。基準は「ゴミ箱」に移動した日です。
         default_reminder_start_section:
           - リマインダー表示条件の既定値を選択します。
       gws/addon/monitor/contributor:
