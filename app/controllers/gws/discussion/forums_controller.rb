@@ -26,11 +26,12 @@ class Gws::Discussion::ForumsController < ApplicationController
 
     state = params.dig(:s, :state).presence || 'public'
 
-    @items = @model.site(@cur_site).forum.
-      allow(:read, @cur_user, site: @cur_site)
+    @items = @model.site(@cur_site).forum
 
     if state == "public"
       @items = @items.and_public.member(@cur_user)
+    else
+      @items = @items.allow(:read, @cur_user, site: @cur_site)
     end
 
     @items.search(params[:s]).
