@@ -1,24 +1,23 @@
 class @Gws_Bookmark
-  @el = '.gws-bookmark'
-
   @render: (opts = {})->
-    $(Gws_Bookmark.el).click (e) ->
-      if $(Gws_Bookmark.el).find('img[src="/assets/img/loading.gif"]').length > 0
+    el = $('.gws-bookmark')
+    el.click (e) ->
+      if el.find('img[src="/assets/img/loading.gif"]').length > 0
         return false
       else if $(e.target).hasClass('update')
-        Gws_Bookmark.update(opts)
+        Gws_Bookmark.update(el, opts)
       else if $(e.target).hasClass('delete')
-        Gws_Bookmark.delete(opts)
-      else if $(Gws_Bookmark.el).find('.bookmark-id').val()
-        $(Gws_Bookmark.el).addClass('active')
-        $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
+        Gws_Bookmark.delete(el, opts)
+      else if el.find('.bookmark-id').val()
+        el.addClass('active')
+        el.find('.dropdown-menu').addClass('active')
       else
-        Gws_Bookmark.create(opts)
+        Gws_Bookmark.create(el, opts)
 
-  @create: (opts = {})->
+  @create: (el, opts = {})->
     name = $('title').text().split(' | ')[0]
-    html = $(Gws_Bookmark.el).html()
-    $(Gws_Bookmark.el).find('.dropdown-menu').html(SS.loading)
+    html = el.html()
+    el.find('.dropdown-menu').html(SS.loading)
     $.ajax
       url: opts['url']
       method: 'POST'
@@ -28,23 +27,23 @@ class @Gws_Bookmark
           url: location.pathname
           model: opts['model']
       success: (data)->
-        $(Gws_Bookmark.el).html(html)
-        $(Gws_Bookmark.el).addClass('active')
-        $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
-        $(Gws_Bookmark.el).find('.bookmark-notice').text('<%= I18n.t('gws/bookmark.notice.save') %>')
-        $(Gws_Bookmark.el).find('.bookmark-id').val(data['bookmark_id'])
-        $(Gws_Bookmark.el).find('.bookmark-name').val(name)
-        $(Gws_Bookmark.el).find('.material-icons').html("&#xE866;")
+        el.html(html)
+        el.addClass('active')
+        el.find('.dropdown-menu').addClass('active')
+        el.find('.bookmark-notice').text('<%= I18n.t('gws/bookmark.notice.save') %>')
+        el.find('.bookmark-id').val(data['bookmark_id'])
+        el.find('.bookmark-name').val(name)
+        el.find('.material-icons').html("&#xE866;")
       error: (data)->
         alert('Error')
 
-  @update: (opts = {})->
-    name = $(Gws_Bookmark.el).find('.bookmark-name').val() || $('title').text().split(' | ')[0]
-    url = opts['url'] + '/' + $(Gws_Bookmark.el).find('.bookmark-id').val()
-    html = $(Gws_Bookmark.el).html()
-    $(Gws_Bookmark.el).find('.dropdown-menu').html(SS.loading)
-    $(Gws_Bookmark.el).addClass('active')
-    $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
+  @update: (el, opts = {})->
+    name = el.find('.bookmark-name').val() || $('title').text().split(' | ')[0]
+    url = opts['url'] + '/' + el.find('.bookmark-id').val()
+    html = el.html()
+    el.find('.dropdown-menu').html(SS.loading)
+    el.addClass('active')
+    el.find('.dropdown-menu').addClass('active')
     $.ajax
       url: url
       method: 'POST'
@@ -55,25 +54,24 @@ class @Gws_Bookmark
           url: location.pathname
           model: opts['model']
       success: (data)->
-        $(Gws_Bookmark.el).html(html)
-        $(Gws_Bookmark.el).removeClass('active')
-        $(Gws_Bookmark.el).find('.dropdown-menu').removeClass('active')
-        $(Gws_Bookmark.el).find('.bookmark-notice').text('<%= I18n.t('gws/bookmark.notice.save') %>')
-        $(Gws_Bookmark.el).find('.bookmark-name').val(data['name'])
-        $(Gws_Bookmark.el).find('.material-icons').html("&#xE866;")
+        el.html(html)
+        el.removeClass('active')
+        el.find('.dropdown-menu').removeClass('active')
+        el.find('.bookmark-notice').text('<%= I18n.t('gws/bookmark.notice.save') %>')
+        el.find('.bookmark-name').val(data['name'])
+        el.find('.material-icons').html("&#xE866;")
       error: (data)->
         alert('Error')
 
-  @delete: (opts = {})->
-    el = $('.gws-bookmark')
-    unless $(Gws_Bookmark.el).find('.bookmark-id').val()
+  @delete: (el, opts = {})->
+    unless el.find('.bookmark-id').val()
       return false
     name = $('title').text().split(' | ')[0]
-    url = opts['url'] + '/' + $(Gws_Bookmark.el).find('.bookmark-id').val()
-    html = $(Gws_Bookmark.el).html()
-    $(Gws_Bookmark.el).find('.dropdown-menu').html(SS.loading)
-    $(Gws_Bookmark.el).addClass('active')
-    $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
+    url = opts['url'] + '/' + el.find('.bookmark-id').val()
+    html = el.html()
+    el.find('.dropdown-menu').html(SS.loading)
+    el.addClass('active')
+    el.find('.dropdown-menu').addClass('active')
     $.ajax
       url: url
       method: 'POST'
@@ -82,12 +80,12 @@ class @Gws_Bookmark
         item:
           url: location.pathname
       success: (data)->
-        $(Gws_Bookmark.el).html(html)
-        $(Gws_Bookmark.el).removeClass('active')
-        $(Gws_Bookmark.el).find('.dropdown-menu').removeClass('active')
-        $(Gws_Bookmark.el).find('.bookmark-notice').text('')
-        $(Gws_Bookmark.el).find('.bookmark-id').val('')
-        $(Gws_Bookmark.el).find('.bookmark-name').val(name)
-        $(Gws_Bookmark.el).find('.material-icons').html("&#xE867;")
+        el.html(html)
+        el.removeClass('active')
+        el.find('.dropdown-menu').removeClass('active')
+        el.find('.bookmark-notice').text('')
+        el.find('.bookmark-id').val('')
+        el.find('.bookmark-name').val(name)
+        el.find('.material-icons').html("&#xE867;")
       error: (data)->
         alert('Error')
