@@ -1,8 +1,10 @@
 ja:
-  gws:
+  gws/bookmark:
     buttons:
-      bookmark: お気に入り登録
-      unbookmark: お気に入り解除
+      bookmark: お気に入りを保存
+      unbookmark: お気に入りを削除
+    notice:
+      save: お気に入りを保存しました
     options:
       bookmark_model:
         other: その他

@@ -1,50 +1,93 @@
 class @Gws_Bookmark
+  @el = '.gws-bookmark'
+
   @render: (opts = {})->
-    elem = $('.gws-bookmark')
-    $(elem).click ->
-      $(elem).addClass('active')
-      $(elem).find('.dropdown-menu').addClass('active')
-
-    $(elem).find('.save').click ->
-      name = $(elem).find('.bookmark-name').val()
-      html = $(elem).html()
-      $.ajax
-        url: opts['url']
-        method: 'POST'
-        data:
-          item:
-            name: name
-            default_name: opts['name']
-            url: location.pathname
-            model: opts['model']
-        beforesend: $(elem).find('.dropdown-menu').html(SS.loading)
-        success: (data)->
-          $(elem).html(html)
-          $(elem).find('.bookmark-id').val(data['bookmark_id'])
-          $(elem).find('.bookmark-name').val(data['name'])
-          $(elem).find('.material-icons').html("&#xE866;")
-        error: (data)->
-          alert('Error')
-
-    $(elem).find('.delete').click ->
-      unless $(elem).find('.bookmark-id').val()
+    $(Gws_Bookmark.el).click (e) ->
+      if $(Gws_Bookmark.el).find('img[src="/assets/img/loading.gif"]').length > 0
         return false
-      uri = opts['url'].split('/')
-      uri.push($(elem).find('#bookmark_id').val())
-      url = uri.join('/')
-      html = $(elem).html()
-      $.ajax
-        url: url
-        method: 'POST'
-        data:
-          _method: 'delete'
-          item:
-            url: location.pathname
-        beforesend: $(elem).find('.dropdown-menu').html(SS.loading)
-        success: (data)->
-          $(elem).html(html)
-          $(elem).find('.bookmark-id').val('')
-          $(elem).find('.bookmark-name').val(opts['name'])
-          $(elem).find('.material-icons').html("&#xE867;")
-        error: (data)->
-          alert('Error')
+      else if $(e.target).hasClass('update')
+        Gws_Bookmark.update(opts)
+      else if $(e.target).hasClass('delete')
+        Gws_Bookmark.delete(opts)
+      else if $(Gws_Bookmark.el).find('.bookmark-id').val()
+        $(Gws_Bookmark.el).addClass('active')
+        $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
+      else
+        Gws_Bookmark.create(opts)
+
+  @create: (opts = {})->
+    name = $('title').text().split(' | ')[0]
+    html = $(Gws_Bookmark.el).html()
+    $(Gws_Bookmark.el).find('.dropdown-menu').html(SS.loading)
+    $.ajax
+      url: opts['url']
+      method: 'POST'
+      data:
+        item:
+          name: name
+          url: location.pathname
+          model: opts['model']
+      success: (data)->
+        $(Gws_Bookmark.el).html(html)
+        $(Gws_Bookmark.el).addClass('active')
+        $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
+        $(Gws_Bookmark.el).find('.bookmark-notice').text('<%= I18n.t('gws/bookmark.notice.save') %>')
+        $(Gws_Bookmark.el).find('.bookmark-id').val(data['bookmark_id'])
+        $(Gws_Bookmark.el).find('.bookmark-name').val(name)
+        $(Gws_Bookmark.el).find('.material-icons').html("&#xE866;")
+      error: (data)->
+        alert('Error')
+
+  @update: (opts = {})->
+    name = $(Gws_Bookmark.el).find('.bookmark-name').val() || $('title').text().split(' | ')[0]
+    url = opts['url'] + '/' + $(Gws_Bookmark.el).find('.bookmark-id').val()
+    html = $(Gws_Bookmark.el).html()
+    $(Gws_Bookmark.el).find('.dropdown-menu').html(SS.loading)
+    $(Gws_Bookmark.el).addClass('active')
+    $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
+    $.ajax
+      url: url
+      method: 'POST'
+      data:
+        _method: 'patch'
+        item:
+          name: name
+          url: location.pathname
+          model: opts['model']
+      success: (data)->
+        $(Gws_Bookmark.el).html(html)
+        $(Gws_Bookmark.el).removeClass('active')
+        $(Gws_Bookmark.el).find('.dropdown-menu').removeClass('active')
+        $(Gws_Bookmark.el).find('.bookmark-notice').text('<%= I18n.t('gws/bookmark.notice.save') %>')
+        $(Gws_Bookmark.el).find('.bookmark-name').val(data['name'])
+        $(Gws_Bookmark.el).find('.material-icons').html("&#xE866;")
+      error: (data)->
+        alert('Error')
+
+  @delete: (opts = {})->
+    el = $('.gws-bookmark')
+    unless $(Gws_Bookmark.el).find('.bookmark-id').val()
+      return false
+    name = $('title').text().split(' | ')[0]
+    url = opts['url'] + '/' + $(Gws_Bookmark.el).find('.bookmark-id').val()
+    html = $(Gws_Bookmark.el).html()
+    $(Gws_Bookmark.el).find('.dropdown-menu').html(SS.loading)
+    $(Gws_Bookmark.el).addClass('active')
+    $(Gws_Bookmark.el).find('.dropdown-menu').addClass('active')
+    $.ajax
+      url: url
+      method: 'POST'
+      data:
+        _method: 'delete'
+        item:
+          url: location.pathname
+      success: (data)->
+        $(Gws_Bookmark.el).html(html)
+        $(Gws_Bookmark.el).removeClass('active')
+        $(Gws_Bookmark.el).find('.dropdown-menu').removeClass('active')
+        $(Gws_Bookmark.el).find('.bookmark-notice').text('')
+        $(Gws_Bookmark.el).find('.bookmark-id').val('')
+        $(Gws_Bookmark.el).find('.bookmark-name').val(name)
+        $(Gws_Bookmark.el).find('.material-icons').html("&#xE867;")
+      error: (data)->
+        alert('Error')

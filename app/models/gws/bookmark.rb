@@ -35,6 +35,6 @@ class Gws::Bookmark
     options = BOOKMARK_MODEL_TYPES.map do |model_type|
       [@cur_site.try(:"menu_#{model_type}_label") || I18n.t("modules.gws/#{model_type}"), model_type]
     end
-    options.push([I18n.t('gws.options.bookmark_model.other'), 'other'])
+    options.push([I18n.t('gws/bookmark.options.bookmark_model.other'), 'other'])
   end
 end

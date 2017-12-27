@@ -4,14 +4,15 @@
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
-<% window_name = @item.try(:name) || @crumbs.last.try(:first) %>
-<title>
-  <% if window_name.present? %>
-    <%= "#{window_name} | #{SS.config.ss.application_name}" %>
-  <% else %>
-    <%= SS.config.ss.application_name %>
-  <% end %>
-</title>
+<%
+  window_name = @item.try(:name) || @crumbs.last.try(:first)
+  if window_name.present?
+    title = "#{window_name} | #{SS.config.ss.application_name}"
+  else
+    title = SS.config.ss.application_name
+  end
+%>
+<title><%= title %></title>
 <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
 <%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
 <!--[if lt IE 9]>
@@ -84,23 +85,22 @@
         <% end %>
       <% elsif @ss_mode == :gws %>
         <div class="gws-bookmark dropdown dropdown-toggle">
+          <%= jquery do %>
+            Gws_Bookmark.render({
+              'url': '<%= gws_apis_bookmarks_path %>',
+              'model': '<%= @model.name.underscore if @model %>'
+            });
+          <% end %>
           <% @bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
           <% bookmark_icon = @bookmark ? "&#xE866;" : "&#xE867;" %>
           <h2 ><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
           <ul class="dropdown-menu">
+            <li><div class="bookmark-notice"></div></li>
             <li>
-              <%= jquery do %>
-                Gws_Bookmark.render({
-                  'url': '<%= gws_apis_bookmarks_path %>',
-                  'name': '<%= window_name %>',
-                  'model': '<%= @model.name.underscore if @model %>'
-                });
-              <% end %>
               <%= hidden_field_tag 'bookmark[id]', @bookmark.try(:id), class: 'bookmark-id' %>
-              <%= I18n.t('mongoid.attributes.gws/bookmark.name') %>
               <%= text_field_tag 'bookmark[name]', (@bookmark.try(:name) || window_name), class: 'bookmark-name' %>
-              <%= submit_tag I18n.t('gws.buttons.bookmark'), class: 'btn save' %>
-              <%= submit_tag I18n.t('gws.buttons.unbookmark'), class: 'btn delete' %>
+              <%= submit_tag I18n.t('gws/bookmark.buttons.bookmark'), class: 'btn update' %>
+              <%= submit_tag I18n.t('gws/bookmark.buttons.unbookmark'), class: 'btn delete' %>
             </li>
           </ul>
         </div>
