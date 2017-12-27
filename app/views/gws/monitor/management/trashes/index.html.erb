@@ -1,11 +1,11 @@
 <%= jquery do %>
   var navi = new Gws_Category_Navi('.gws-category-navi');
-  navi.setBaseUrl('<%= gws_monitor_category_management_trashes_path(category: 'ID') %>');
+  navi.setBaseUrl('<%= gws_monitor_management_trashes_path(category: 'ID') %>');
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_monitor_management_trashes_path, class: 'btn dropdown-toggle' do %>
+  <%= link_to gws_monitor_management_trashes_path(category: '-'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
@@ -33,7 +33,7 @@
           <nav class="tap-menu">
             <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
             <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= link_to t('gws/monitor.management.links.active'), action: :recover, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+            <%= link_to t('gws/monitor.management.links.active'), action: :active, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
             <% if item.try(:image) %>
                 <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
@@ -53,12 +53,12 @@
             <div class="meta">
               <span class="id">#<%= item.id %></span>
               <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-              <span class="article_state"><%= item.article_state_name %></span>
+              <span class="state"><%= item.label(:state) %></span>
               <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
               <span class="categories">
               <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/monitor.topic.disabled_items') %></span>
                 <% item.categories.compact.each do |category| %>
-                  <%= link_to category.trailing_name, gws_monitor_category_management_trashes_path(category: category.id),
+                  <%= link_to category.trailing_name, gws_monitor_management_trashes_path(category: category.id),
                     class: "gws-category-label", style: category_label_css(category) %>
                 <% end %>
               </span>
@@ -72,4 +72,3 @@
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
-

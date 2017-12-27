@@ -1,16 +1,15 @@
+<% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
 <nav class="nav-management-menu">
-  <% if Gws::Monitor::Topic.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to gws_monitor_management_topics_path do %>
-          <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
-      <% end %>
+  <%= link_to gws_monitor_management_main_path do %>
+    <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
   <% end %>
 </nav>
+<% end %>
 
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%#= link_to t("gws/monitor.links.categories"), categories_gws_monitor_topics_path %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), action: :new %>
+      <%= link_to t('ss.links.new'), new_gws_monitor_admin_path %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|categories/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

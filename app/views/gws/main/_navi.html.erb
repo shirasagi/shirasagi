@@ -60,7 +60,7 @@
 
   <% if @cur_site.menu_monitor_visible? %>
     <% if Gws::Monitor::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_monitor_label || t('modules.gws/monitor'), gws_monitor_topics_path, class: 'icon-monitor' %></h2>
+      <h2><%= link_to @cur_site.menu_monitor_label || t('modules.gws/monitor'), gws_monitor_main_path, class: 'icon-monitor' %></h2>
     <% end %>
   <% end %>
 

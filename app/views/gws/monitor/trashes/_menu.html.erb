@@ -8,21 +8,16 @@
 
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), new_gws_monitor_admin_path %>
-    <% end %>
-  <% elsif params[:action] =~ /new|create|lock|categories/ %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+  <% elsif params[:action] =~ /delete|recover/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && params['action'] == 'show' %>
-      <%= link_to t('gws/monitor.links.forward'), action: :forward, id: @item %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to I18n.t('ss.links.delete'), action: :delete, id: @item %>
+      <%= link_to I18n.t('gws/monitor.management.links.active'), action: :active, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>
-
