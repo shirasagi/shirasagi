@@ -132,6 +132,8 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def update
     @item.attributes = get_params
+    raise '403' unless @cur_user.id == @item.user_id
+
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.send_date = Time.zone.now
@@ -145,7 +147,6 @@ class Gws::Memo::MessagesController < ApplicationController
     else
       @item.state = "closed"
     end
-    raise '403' unless @cur_user.id == @item.user_id
     render_update @item.update, location: { action: :show, id: @item, folder: params[:folder] }
   end
 

@@ -11,8 +11,11 @@
     <%= link_to t('webmail.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
     <%= link_to t('webmail.links.reply_all'), { action: :reply_all }, { class: 'reply-all' } unless @item.draft? %>
     <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
-    <% if SS.config.gws.disable.blank? && !@item.draft? && @cur_user.root_groups.first %>
-      <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: @cur_user.root_groups.first.id) %>
+    <% root_group = @cur_user.root_groups.first %>
+    <% if !@item.draft? && root_group %>
+      <% if SS.config.gws.disable.blank? && Gws::Memo::Message.allowed?(:edit, Gws::User.find(@cur_user.id), site: root_group) %>
+        <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: root_group.id) %>
+      <% end %>
     <% end %>
     <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>
 

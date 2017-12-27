@@ -6,34 +6,29 @@ module Gws::Model
     included do
       store_in collection: "gws_memo_messages"
 
-      attr_accessor :signature, :attachments, :field, :cur_site, :cur_user
-      attr_accessor :in_request_mdn, :in_request_dsn, :state
+      attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path
 
       field :subject, type: String
-      alias_method :name, :subject
-
-      field :text, type: String
+      field :text, type: String, default: ''
       field :html, type: String
       field :format, type: String
       field :size, type: Integer, default: 0
       field :seen, type: Hash, default: {}
       field :star, type: Hash, default: {}
       field :filtered, type: Hash, default: {}
-      field :from, type: Hash, default: {}
-      field :to, type: Hash, default: {}
+      field :state, type: String, default: 'public'
+      field :path, type: Hash, default: {}
       field :send_date, type: DateTime
 
-      permit_params :subject, :text, :html, :format
+      permit_params :subject, :text, :html, :format, :from_id, :in_path
 
-      default_scope -> { order_by([[:send_date, -1], [:updated, -1]]) }
+      default_scope -> { order_by(send_date: -1, updated: -1) }
 
-      before_validation :set_to, :set_size
+      after_initialize :set_default_reminder_date, if: :new_record?
+      before_validation :set_path, :set_size, :set_send_date
 
       validate :validate_attached_file_size
-
-      # indexing to elasticsearch via companion object
-      around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
-      around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+      validate :validate_message
 
       scope :search, ->(params) {
         criteria = where({})
@@ -49,15 +44,23 @@ module Gws::Model
 
         criteria
       }
-
-      scope :folder, ->(folder) {
-        where("#{folder.direction}.#{folder.user_id}" => folder.folder_path)
+      scope :and_public, ->() { where(state: "public") }
+      scope :and_closed, ->() { where(state: "closed") }
+      scope :folder, ->(folder, user) {
+        if folder.sent_box?
+          user(user).and_public
+        elsif folder.draft_box?
+          user(user).and_closed
+        else
+          where("path.#{user.id}" => folder.folder_path).and_public
+        end
       }
-
       scope :unseen, ->(user_id) {
         where("seen.#{user_id}" => { '$exists' => false })
       }
-
+      scope :search_replay, ->(replay_id) {
+        where("$and" => [{ "_id" => replay_id }])
+      }
       scope :unfiltered, ->(user) {
         where(:"filtered.#{user.id}".exists => false)
       }
@@ -65,15 +68,32 @@ module Gws::Model
 
     private
 
-    def set_to
-      member_ids.map(&:to_s).each do |id|
-        next unless self.to[id.to_s].blank?
-        self.to[id.to_s] = draft? ? nil : 'INBOX'
+    def set_path
+      self.path = {}
+
+      member_ids.each do |member_id|
+        if path_was && path_was[member_id.to_s]
+          self.path[member_id.to_s] = path_was[member_id.to_s]
+        else
+          self.path[member_id.to_s] = "INBOX"
+        end
+      end
+
+      if in_path.present?
+        in_path.each do |member_id, path|
+          self.path[member_id.to_s] = path
+        end
       end
     end
 
     def set_size
       self.size = self.files.pluck(:size).inject(:+)
+    end
+
+    def set_send_date
+      now = Time.zone.now
+      self.send_date ||= now if state == "public"
+      self.seen[cur_user.id] ||= now if cur_user
     end
 
     public
@@ -90,16 +110,12 @@ module Gws::Model
       files.present?
     end
 
-    def state_changed?
-      false
-    end
-
     def display_to
       members.map(&:long_name)
     end
 
-    def unseen?(user = :nil)
-      return false if user == :nil
+    def unseen?(user = nil)
+      return false if user.nil?
       seen.exclude?(user.id.to_s)
     end
 
@@ -153,39 +169,19 @@ module Gws::Model
     end
 
     def move(user, path)
-      self.to[user.id.to_s] = path
+      self.in_path = { user.id.to_s => path }
       self
     end
 
     def draft?
-      from.values.include?('INBOX.Draft')
-    end
-
-    def owned?(user)
-      return true if (self.group_ids & user.group_ids).present?
-      return true if user_ids.to_a.include?(user.id)
-      return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
-      return true if self.member_ids.include?(user.id)
-      false
+      self.state == "closed"
     end
 
     def apply_filters(user)
-      matched_filter = Gws::Memo::Filter.site(site).
-          allow(:read, user, site: site).enabled.detect{ |f| f.match?(self) }
-
-      self.to[user.id.to_s] = matched_filter.path if matched_filter
+      matched_filter = Gws::Memo::Filter.site(site).user(user).enabled.detect{ |f| f.match?(self) }
+      self.move(user, matched_filter.path) if matched_filter
       self.filtered[user.id.to_s] = Time.zone.now
       self
-    end
-
-    def allowed?(action, user, opts = {})
-      action = permission_action || action
-      args = opts.merge(id: self.id)
-      if action == :read
-        return self.class.allow(action, user, args).exists?
-      end
-      return super(action, user, args) unless self.user
-      return super(action, user, args) && (self.user.id == user.id)
     end
 
     def new_memo
@@ -211,23 +207,42 @@ module Gws::Model
       end
     end
 
+    def validate_message
+      if self.text.blank? && self.format == "text"
+        errors.add(:base, :input_message)
+      elsif self.html.blank? && self.format == "html"
+        errors.add(:base, :input_message)
+      end
+    end
+
+    def reminder_date
+      return if site.memo_reminder == 0
+      result = Time.zone.now.beginning_of_day + (site.memo_reminder - 1).day
+      result.end_of_day
+    end
+
+    def in_reminder_date
+      if @in_reminder_date
+        date = Time.zone.parse(@in_reminder_date) rescue nil
+      end
+      date ||= reminder ? reminder.date : reminder_date
+      date
+    end
+
+    def set_default_reminder_date
+      return unless @cur_site
+      if @in_reminder_date.blank? && @cur_site.memo_reminder != 0
+        @in_reminder_date = (Time.zone.now.beginning_of_day + (@cur_site.memo_reminder - 1).day).
+            end_of_day.strftime("%Y/%m/%d %H:%M") unless @cur_site.memo_reminder == 0
+      end
+      @in_reminder_state = (@cur_site.memo_reminder == 0)
+    end
+
     def h(str)
       ERB::Util.h(str)
     end
 
     module ClassMethods
-      def allow(action, user, opts = {})
-        folder = opts[:folder]
-        direction = %w(INBOX.Sent INBOX.Draft).include?(folder) ? 'from' : 'to'
-        result = where("#{direction}.#{user.id}" => folder)
-
-        if opts[:id]
-          result = result.where('_id' => opts[:id])
-        end
-
-        result
-      end
-
       def unseens(user, site)
         self.site(site).where('$and' => [
             { "to.#{user.id}".to_sym.exists => true },
