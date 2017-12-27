@@ -47,7 +47,7 @@ class Gws::Discussion::TopicsController < ApplicationController
       discussion_forum(@forum).
       allow(:read, @cur_user, site: @cur_site).
       where(todo_state: 'unfinished').
-      active.
+      without_deleted.
       limit(@cur_site.discussion_todo_limit)
 
     @recent_items = @forum.children.
