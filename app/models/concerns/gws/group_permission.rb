@@ -98,7 +98,7 @@ module Gws::GroupPermission
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
       action = permission_action || action
 
-      if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
+      if (level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]) && !opts[:private_only]
         { "$or" => [
           { user_ids: user.id },
           { permission_level: { "$lte" => level } },
