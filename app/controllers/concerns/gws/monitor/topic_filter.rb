@@ -233,8 +233,7 @@ module Gws::Monitor::TopicFilter
   # 回答一覧CSV
   def download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    csv = @item.to_csv.t
-      encode('SJIS', invalid: :replace, undef: :replace)
+    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
 
     send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
   end
