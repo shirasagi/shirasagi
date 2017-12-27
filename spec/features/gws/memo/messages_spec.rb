@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'gws_memo_messages', type: :request, dbscope: :example do
+describe 'gws_memo_messages', type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:memo) { create(:gws_memo_message, user: user, site: site) }
