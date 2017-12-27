@@ -48,9 +48,9 @@ SS::Application.routes.draw do
       end
 
       namespace "management" do
-        get '/' => redirect { |p, req| "#{req.path}/topics" }, as: :main
+        get '/' => redirect { |p, req| "#{req.path}/admins" }, as: :main
 
-        resources :topics, concerns: [:state_change, :topic_comment], except: [:new, :create, :destroy] do
+        resources :admins, concerns: [:state_change, :topic_comment], except: [:new, :create, :destroy] do
           match :disable, on: :member, via: %i[get post]
           post :disable_all, on: :collection
           get :download, on: :member
@@ -72,4 +72,3 @@ SS::Application.routes.draw do
     end
   end
 end
-

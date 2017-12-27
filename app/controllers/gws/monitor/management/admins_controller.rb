@@ -1,4 +1,4 @@
-class Gws::Monitor::Management::TopicsController < ApplicationController
+class Gws::Monitor::Management::AdminsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Monitor::TopicFilter
