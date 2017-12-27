@@ -59,6 +59,16 @@ class Gws::Monitor::Topic
     where("answer_state_hash.#{group.id}" => { '$in' => %w(question_not_applicable answered) })
   end
 
+  # scope :remind, ->() do
+  #   where("$where" => "function() {
+  #      var sect = parseInt(this.reminder_start_section);
+  #      if (sect == -999) return false;
+  #      dd = (sect > 0) ? this.due_date : this.created;
+  #      dt = new Date(dd.getFullYear(), dd.getMonth(), dd.getDate() - sect);
+  #      return (dt <= ISODate('#{Time.zone.today}'));
+  #    }")
+  # end
+
   def article_state_options
     %w(open closed).map do |v|
       [I18n.t("gws/monitor.options.article_state.#{v}"), v]

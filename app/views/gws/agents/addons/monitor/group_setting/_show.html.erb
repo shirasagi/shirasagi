@@ -16,7 +16,12 @@
   <dt><%= @model.t :monitor_delete_threshold %></dt>
   <dd><%= @item.monitor_delete_threshold_name %></dd>
 
+  <!--
+  <%# reminder_start_section and default_reminder_start_section have no side-effect. %>
+  <%# these attributes are useless. %>
+  <%# so, hide these attributes temporarily. %>
   <dt><%= @model.t :default_reminder_start_section %>	</dt>
   <dd><%= @item.label(:default_reminder_start_section) %></dd>
+  -->
 </dl>
 
