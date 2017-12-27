@@ -12,63 +12,38 @@
   <div class="dropdown-menu dropdown-menu--white"></div>
 </div>
 
-<%= render "gws/monitor/main/tabs" %>
 
-<div class="index gws-boards">
-  <%= render file: "_list_head" %>
-
-  <ul class="list-items">
-    <% @items.each do |item| %>
-        <% next if item.active? %>
-        <%
-          css_classes = %w(list-item)
-          if item.attend_groups.where(id: @cur_user.id).present?
-            css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
-          end
-          if item.severity.present?
-            css_classes << item.severity
-          end
-        %>
-        <li class="<%= css_classes.join(' ') %>">
-          <nav class="tap-menu">
-            <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-            <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= link_to t('gws/monitor.management.links.active'), action: :active, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-
-            <% if item.try(:image) %>
-                <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
-            <% elsif item.try(:image?) %>
-                <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
-            <% end %>
-          </nav>
-
-          <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
-          <div class="info">
-            <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-            <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-            <% if item.descendants_files_count.to_i > 0 %>
-                <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
-            <% end %>
-
-            <div class="meta">
-              <span class="id">#<%= item.id %></span>
-              <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-              <span class="state"><%= item.label(:state) %></span>
-              <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
-              <span class="categories">
-              <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/monitor.topic.disabled_items') %></span>
-                <% item.categories.compact.each do |category| %>
-                  <%= link_to category.trailing_name, gws_monitor_management_trashes_path(category: category.id),
-                    class: "gws-category-label", style: category_label_css(category) %>
-                <% end %>
-              </span>
-              <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count_admin %></span>
-              <span class="state"><%= item.state == 'public' ? t('ss.options.state.public') : t('ss.options.state.closed') %></span>
-            </div>
-          </div>
-        </li>
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to t('gws/monitor.management.links.active'), action: :active, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+  <% if item.descendants_files_count.to_i > 0 %>
+    <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+  <% end %>
+<% end %>
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime">
+    <%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %>
+    <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
+  </span>
+  <span class="datetime"><%= @model.t(:updated) %><%= tryb { item.descendants_updated.strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="datetime"><%= @model.t(:created) %><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="article-state"><%= item.label(:article_state) %></span>
+  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <span class="categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to(category.trailing_name, { category: category.id }, class: "gws-category-label", style: category_label_css(category)) %>
     <% end %>
-  </ul>
-</div>
+  </span>
+  <span class="count">
+    <%= t('gws/monitor.topic.answer_state') %><%= item.answer_count(@cur_group) %>
+  </span>
+  <span class="state"><%= item.label(:state) %></span>
+<% end %>
 
-<%= paginate @items if @items.try(:current_page) %>
+<%= render 'gws/monitor/main/tabs' %>
+<%= render file: 'gws/crud/index' %>
