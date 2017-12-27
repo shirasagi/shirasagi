@@ -41,7 +41,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_cur_folder
-    if params[:folder] =~ /INBOX|INBOX.Trash|INBOX.Draft|INBOX.Sent|REDIRECT/
+    if params[:folder] =~ /^(INBOX|INBOX\.Trash|INBOX\.Draft|INBOX\.Sent|REDIRECT)$/
       @cur_folder = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
     else
       @cur_folder = Gws::Memo::Folder.user(@cur_user).find_by(_id: params[:folder])
@@ -56,10 +56,6 @@ class Gws::Memo::MessagesController < ApplicationController
   def apply_filters
     @model.user(@cur_user).unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
   end
-
-  #def from_folder
-  #  (params[:commit] == I18n.t('ss.buttons.draft_save')) ? 'INBOX.Draft' : 'INBOX.Sent'
-  #end
 
   def redirect_to_appropriate_folder
     path = @item.from[@cur_user.id.to_s]
@@ -116,11 +112,13 @@ class Gws::Memo::MessagesController < ApplicationController
       if forward_setting && forward_setting.default == "enabled"
         Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
       end
+
+      notice = t("ss.notice.sent")
     else
       @item.state = "closed"
+      notice = t("ss.notice.saved")
     end
-    #render_create @item.save, location: { action: :show, id: @item, folder: from_folder }
-    render_create @item.save, location: { action: :index }
+    render_create @item.save, location: { action: :index }, notice: notice
   end
 
   def forward
@@ -143,8 +141,12 @@ class Gws::Memo::MessagesController < ApplicationController
       if forward_setting && forward_setting.default == "enabled"
         Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
       end
+
+      notice = t("ss.notice.sent")
+    else
+      notice = t("ss.notice.saved")
     end
-    render_update @item.update, location: { action: :show, id: @item, folder: params[:folder] }
+    render_update @item.update, location: { action: :index }, notice: notice
   end
 
   def show
