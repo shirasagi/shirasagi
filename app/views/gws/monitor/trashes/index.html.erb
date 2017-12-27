@@ -1,17 +1,16 @@
 <%= jquery do %>
   var navi = new Gws_Category_Navi('.gws-category-navi');
-  navi.setBaseUrl('<%= gws_monitor_management_trashes_path(category: 'ID') %>');
+  navi.setBaseUrl('<%= url_for(category: 'ID') %>');
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_monitor_management_trashes_path(category: '-'), class: 'btn dropdown-toggle' do %>
+  <%= link_to url_for(category: '-'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
   <div class="dropdown-menu dropdown-menu--white"></div>
 </div>
-
 
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -36,19 +35,17 @@
   <% else %>
     <span class="datetime">
     <%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %>
-    <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
+      <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
   </span>
   <% end %>
   <span class="article-state"><%= item.label(:article_state) %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
   <span class="categories">
     <% item.categories.compact.each do |category| %>
-      <%= link_to(category.trailing_name, { category: category.id }, class: "gws-category-label", style: category_label_css(category)) %>
+      <%= link_to(category.trailing_name, url_for(category: category.id), class: "gws-category-label", style: category_label_css(category)) %>
     <% end %>
   </span>
-  <span class="count">
-    <%= t('gws/monitor.topic.answer_state') %><%= item.answer_count(@cur_group) %>
-  </span>
+  <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count(@cur_group) %></span>
   <span class="state"><%= item.label(:state) %></span>
 <% end %>
 

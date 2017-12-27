@@ -1,29 +1,29 @@
 <%= jquery do %>
   var navi = new Gws_Category_Navi('.gws-category-navi');
-  navi.setBaseUrl('<%= gws_monitor_management_admins_path(category: 'ID') %>');
+  navi.setBaseUrl('<%= url_for(category: 'ID') %>');
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_monitor_management_admins_path(category: '-'), class: 'btn dropdown-toggle' do %>
+  <%= link_to url_for(category: '-'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
   <div class="dropdown-menu dropdown-menu--white"></div>
 </div>
 
-<% @tap_menu = proc do |item| %>
+<% @tap_menu ||= proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
   <%= link_to t('gws/monitor.links.disable'), action: :disable, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 <% end %>
-<% @index_title = proc do |item| %>
+<% @index_title ||= proc do |item| %>
   <%= link_to item.name, { action: :show, id: item }, class: "title" %>
   <% if item.descendants_files_count.to_i > 0 %>
     <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
   <% end %>
 <% end %>
-<% @index_meta = proc do |item| %>
+<% @index_meta ||= proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <% sort_key = params.dig(:s, :sort).to_s.presence || 'due_date_desc' %>
   <% if sort_key.start_with?('updated') %>
