@@ -10,10 +10,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on 'システム設定'
+      click_on 'システム情報'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h2', text: 'システム設定')
         expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_css('h3 a', text: 'サイト')
         expect(page).to have_css('h3 a', text: 'グループ')
@@ -38,10 +38,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on 'システム設定'
+      click_on 'システム情報'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h2', text: 'システム設定')
         expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_css('h3 a', text: 'グループ')
@@ -66,10 +66,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on 'システム設定'
+      click_on 'システム情報'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h2', text: 'システム設定')
         expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
@@ -94,10 +94,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on 'システム設定'
+      click_on 'システム情報'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h2', text: 'システム設定')
         expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
@@ -122,10 +122,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on 'システム設定'
+      click_on 'システム情報'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h2', text: 'システム設定')
         expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
@@ -149,10 +149,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on 'システム設定'
+      click_on 'システム情報'
       expect(current_path).to eq sys_conf_path
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2 a', text: 'システム設定')
+        expect(page).to have_css('h2', text: 'システム設定')
         expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
