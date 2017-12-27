@@ -98,12 +98,12 @@ module Gws::Discussion::Postable
   end
 
   def save_clone(new_parent = nil)
-    post = Gws::Discussion::Base.new
+    post = self.class.new
     post.attributes = self.attributes
 
     post.id = nil
     post.created = post.updated = Time.zone.now
-    post.released = nil
+    post.released = nil if respond_to?(:released)
     post.descendants_updated = nil
 
     post.state = "closed" if post.depth == 1
@@ -126,7 +126,7 @@ module Gws::Discussion::Postable
     post.skip_descendants_updated = true
     post.save!
 
-    children.each { |c| c.save_clone(post) }
+    children.order(id: 1).each { |c| c.save_clone(post) }
     post
   end
 
