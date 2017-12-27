@@ -2,7 +2,7 @@ class Gws::Monitor::DeleteJob < Gws::ApplicationJob
 
   def perform(opts = {})
     threshold = parse_monitor_delete_threshold
-    count = Gws::Monitor::Post.site(site).where(:deleted.lt => threshold).destroy_all
+    count = Gws::Monitor::Topic.site(site).topic.where(:deleted.lt => threshold).destroy_all
 
     Rails.logger.info "#{threshold}以前の照会・回答を#{count}件削除しました。"
     puts_history(:info, "#{threshold}以前の照会・回答を#{count}件削除しました。")
