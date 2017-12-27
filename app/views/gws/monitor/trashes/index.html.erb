@@ -45,7 +45,7 @@
       <%= link_to(category.trailing_name, url_for(category: category.id), class: "gws-category-label", style: category_label_css(category)) %>
     <% end %>
   </span>
-  <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count(@cur_group) %></span>
+  <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count_admin %></span>
   <span class="state"><%= item.label(:state) %></span>
 <% end %>
 
