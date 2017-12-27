@@ -20,7 +20,7 @@ module Gws::Model
       field :path, type: Hash, default: {}
       field :send_date, type: DateTime
 
-      permit_params :subject, :text, :html, :format, :from_id, :in_path
+      permit_params :subject, :text, :html, :format, :in_path
 
       default_scope -> { order_by(send_date: -1, updated: -1) }
 
