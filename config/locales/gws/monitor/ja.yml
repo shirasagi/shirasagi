@@ -58,6 +58,8 @@ ja:
         created_desc: 作成日時(新着順)
         updated_asc:  更新日時(日付順)
         updated_desc: 更新日時(新着順)
+        released_asc:  公開日時(日付順)
+        released_desc: 公開日時(新着順)
         due_date_asc:  回答期限(日付順)
         due_date_desc: 回答期限(新着順)
       spec_config:

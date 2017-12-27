@@ -37,6 +37,8 @@ class Gws::Monitor::Topic
       reorder(created: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('updated_')
       reorder(descendants_updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('released_')
+      reorder(released: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('due_date_')
       reorder(due_date: key.end_with?('_asc') ? 1 : -1)
     end
@@ -123,7 +125,7 @@ class Gws::Monitor::Topic
   # end
 
   def sort_options
-    %w(due_date_desc due_date_asc updated_desc updated_asc created_desc created_asc).map do |k|
+    %w(due_date_desc due_date_asc released_desc released_asc updated_desc updated_asc created_desc created_asc).map do |k|
       [I18n.t("gws/monitor.options.sort.#{k}"), k]
     end
   end

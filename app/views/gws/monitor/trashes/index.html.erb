@@ -31,6 +31,8 @@
     <span class="datetime"><%= @model.t(:updated) %><%= tryb { item.descendants_updated.strftime("%Y/%m/%d %H:%M") } %></span>
   <% elsif sort_key.start_with?('created') %>
     <span class="datetime"><%= @model.t(:created) %><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
+  <% elsif sort_key.start_with?('released') %>
+    <span class="datetime"><%= @model.t(:released) %><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
   <% else %>
     <span class="datetime">
     <%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %>
