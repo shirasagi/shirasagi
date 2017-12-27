@@ -5,6 +5,9 @@ class Gws::Elasticsearch::Indexer::MonitorTopicJob < Gws::ApplicationJob
 
   class << self
     def path(*args)
+      opts = args.extract_options!
+      opts[:category] = '-'
+      args << opts
       url_helpers.gws_monitor_topic_path(*args)
     end
   end
