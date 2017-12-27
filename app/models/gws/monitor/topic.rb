@@ -32,12 +32,13 @@ class Gws::Monitor::Topic
   after_destroy :remove_zip
 
   scope :custom_order, ->(key) {
+    key ||= 'due_date_desc'
     if key.start_with?('created_')
-      where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
+      reorder(created: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('updated_')
-      where({}).order_by(descendants_updated: key.end_with?('_asc') ? 1 : -1)
-    else
-      where({})
+      reorder(descendants_updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('due_date_')
+      reorder(due_date: key.end_with?('_asc') ? 1 : -1)
     end
   }
 
@@ -122,7 +123,9 @@ class Gws::Monitor::Topic
   # end
 
   def sort_options
-    %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+    %w(due_date_desc due_date_asc updated_desc updated_asc created_desc created_asc).map do |k|
+      [I18n.t("gws/monitor.options.sort.#{k}"), k]
+    end
   end
 
   def comment(groupid)

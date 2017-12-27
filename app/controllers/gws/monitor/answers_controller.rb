@@ -20,7 +20,7 @@ class Gws::Monitor::AnswersController < ApplicationController
     @items = @items.and_attended(@cur_user, site: @cur_site, group: @cur_group)
     @items = @items.and_answered(@cur_group)
     @items = @items.search(params[:s])
-    @items = @items.custom_order(params.dig(:s, :sort) || 'updated_desc')
+    @items = @items.custom_order(params.dig(:s, :sort))
     @items = @items.page(params[:page]).per(50)
   end
 end

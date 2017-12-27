@@ -25,9 +25,14 @@
 <% end %>
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
-  <span class="datetime"><%= @model.t(:updated) %><%= tryb { item.descendants_updated.strftime("%Y/%m/%d %H:%M") } %></span>
-  <span class="datetime"><%= @model.t(:created) %><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
+  <% sort_key = params.dig(:s, :sort).to_s.presence || 'due_date_desc' %>
+  <% if sort_key.start_with?('updated') %>
+    <span class="datetime"><%= @model.t(:updated) %><%= tryb { item.descendants_updated.strftime("%Y/%m/%d %H:%M") } %></span>
+  <% elsif sort_key.start_with?('created') %>
+    <span class="datetime"><%= @model.t(:created) %><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
+  <% else %>
+    <span class="datetime"><%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
+  <% end %>
   <span class="answer-state"><%= item.answer_state_name(@cur_group) %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
   <span class="categories">

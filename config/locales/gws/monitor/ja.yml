@@ -53,6 +53,13 @@ ja:
       - 回答欄
       - 回答日時
     options:
+      sort:
+        created_asc:  作成日時(日付順)
+        created_desc: 作成日時(新着順)
+        updated_asc:  更新日時(日付順)
+        updated_desc: 更新日時(新着順)
+        due_date_asc:  回答期限(日付順)
+        due_date_desc: 回答期限(新着順)
       spec_config:
         my_group: 回答者のみ表示する
         other_groups: 他の回答者名を表示する

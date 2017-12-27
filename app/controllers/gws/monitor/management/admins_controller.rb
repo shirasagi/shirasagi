@@ -26,7 +26,7 @@ class Gws::Monitor::Management::AdminsController < ApplicationController
     @items = @items.allow(:read, @cur_user, site: @cur_site)
     @items = @items.without_deleted
     @items = @items.search(params[:s])
-    @items = @items.custom_order(params.dig(:s, :sort) || 'updated_desc')
+    @items = @items.custom_order(params.dig(:s, :sort))
     @items = @items.page(params[:page]).per(50)
   end
 end
