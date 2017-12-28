@@ -29,7 +29,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
     # doc[:release_date] =
     # doc[:close_date] =
-    doc[:released] = item.updated.try(:iso8601)
+    doc[:released] = item.send_date.try(:iso8601)
     doc[:state] = item.state
 
     doc[:user_name] = item.user_long_name
@@ -60,7 +60,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
     # doc[:release_date] = item.release_date.try(:iso8601)
     # doc[:close_date] = item.close_date.try(:iso8601)
-    doc[:released] = item.updated.try(:iso8601)
+    doc[:released] = item.send_date.try(:iso8601)
     doc[:state] = item.state
 
     # doc[:group_ids] = item.groups.pluck(:id)
