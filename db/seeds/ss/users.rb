@@ -116,8 +116,8 @@ end
 
 puts "# gws roles"
 r01 = save_gws_role name: I18n.t('gws.roles.admin'), site_id: g00.id, permissions: Gws::Role.permission_names, permission_level: 3
-r02 = save_gws_role name: I18n.t('gws.roles.user'), site_id: g00.id, permissions: load_permissions('gws/roles/manager_permissions.txt'), permission_level: 1
-r03 = save_gws_role name: '部課長', site_id: g00.id, permissions: load_permissions('gws/roles/user_permissions.txt'), permission_level: 1
+r02 = save_gws_role name: I18n.t('gws.roles.user'), site_id: g00.id, permissions: load_permissions('gws/roles/user_permissions.txt'), permission_level: 1
+r03 = save_gws_role name: '部課長', site_id: g00.id, permissions: load_permissions('gws/roles/manager_permissions.txt'), permission_level: 1
 
 Gws::User.find_by(uid: "sys").add_to_set(gws_role_ids: r01.id)
 Gws::User.find_by(uid: "admin").add_to_set(gws_role_ids: r03.id)
