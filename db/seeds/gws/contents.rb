@@ -175,10 +175,10 @@ end
 
 @ds_forums = [
   create_discussion_forum(
-    name: 'サイト改善プロジェクト', order: 0, member_ids: @users.map(&:id)
+    name: 'サイト改善プロジェクト', order: 0, member_ids: @users.map(&:id), user_ids: [u('admin').id]
   ),
   create_discussion_forum(
-    name: 'シラサギプロジェクト', order: 10, member_custom_group_ids: [@cgroups.first.id]
+    name: 'シラサギプロジェクト', order: 10, member_custom_group_ids: [@cgroups.first.id], user_ids: [u('admin').id]
   )
 ]
 
@@ -186,7 +186,12 @@ def create_discussion_topic(data)
   # puts data[:name]
   cond = { site_id: @site._id, forum_id: data[:forum_id], parent_id: data[:parent_id], text: data[:text] }
   item = Gws::Discussion::Topic.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.attributes = data.reverse_merge(
+    cur_site: @site, cur_user: u('admin'),
+    contributor_name: u('admin').long_name,
+    contributor_id: u('admin').id,
+    contributor_model: "Gws::User"
+  )
   puts item.errors.full_messages unless item.save
   item
 end
@@ -194,15 +199,15 @@ end
 @ds_topics = [
   create_discussion_topic(
     name: 'メインスレッド', text: 'サイト改善プロジェクトのメインスレッドです。', order: 0, main_topic: 'enabled',
-    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
+    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id, user_ids: [u('admin').id]
   ),
   create_discussion_topic(
     name: '問い合わせフォームの改善', text: '問い合わせフォームの改善について意見をお願いします。', order: 10,
-    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id
+    forum_id: @ds_forums[0].id, parent_id: @ds_forums[0].id, user_ids: [u('admin').id]
   ),
   create_discussion_topic(
     name: 'メインスレッド', text: 'シラサギプロジェクトのメインスレッドです。', order: 0, main_topic: 'enabled',
-    forum_id: @ds_forums[1].id, parent_id: @ds_forums[1].id
+    forum_id: @ds_forums[1].id, parent_id: @ds_forums[1].id, user_ids: [u('admin').id]
   ),
 ]
 
@@ -210,30 +215,35 @@ def create_discussion_post(data)
   # puts data[:name]
   cond = { site_id: @site._id, forum_id: data[:forum_id], parent_id: data[:parent_id], text: data[:text] }
   item = Gws::Discussion::Post.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.attributes = data.reverse_merge(
+    cur_site: @site, cur_user: u('admin'),
+    contributor_name: u('admin').long_name,
+    contributor_id: u('admin').id,
+    contributor_model: "Gws::User"
+  )
   puts item.errors.full_messages unless item.save
   item
 end
 
 create_discussion_post(
   name: 'メインスレッド', text: 'シラサギ市のサイト改善を図りたいと思いますので、皆様のご意見をお願いします。',
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id, user_ids: [u('admin').id]
 )
 create_discussion_post(
   cur_user: u('user4'), name: 'メインスレッド', text: '全体的なデザインの見直しを行いたいです。',
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id, user_ids: [u('admin').id]
 )
 create_discussion_post(
   cur_user: u('user5'), name: 'メインスレッド', text: '観光コンンテンツは別途観光サイトを設けたいと思います。',
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[0].id, parent_id: @ds_topics[0].id, user_ids: [u('admin').id]
 )
 create_discussion_post(
   cur_user: u('user3'), name: '問い合わせフォームの改善', text: '投稿時に問い合わせ先の課を選択でき、投稿通知が対象課に届くと良いと思います。',
-  forum_id: @ds_forums[0].id, topic_id: @ds_topics[1].id, parent_id: @ds_topics[1].id
+  forum_id: @ds_forums[0].id, topic_id: @ds_topics[1].id, parent_id: @ds_topics[1].id, user_ids: [u('admin').id]
 )
 create_discussion_post(
   name: 'メインスレッド', text: 'シラサギの改善要望について議論を交わしたいと思います。',
-  forum_id: @ds_forums[1].id, topic_id: @ds_topics[2].id, parent_id: @ds_topics[2].id
+  forum_id: @ds_forums[1].id, topic_id: @ds_topics[2].id, parent_id: @ds_topics[2].id, user_ids: [u('admin').id]
 )
 
 ## -------------------------------------
@@ -360,10 +370,9 @@ def create_schedule_todo(data)
 end
 
 create_schedule_todo(
-  name: '[サイト改善プロジェクト]要求仕様提出', member_ids: [ u('admin').id ],
+  name: '[サイト改善プロジェクト]要求仕様提出', member_ids:  @users.map(&:id),
   start_at: Time.zone.now + 7.days, end_at: Time.zone.now + 7.days + 1.hour,
   todo_state: 'unfinished', discussion_forum_id: @ds_forums[0].id,
-  readable_setting_range: 'select', readable_member_ids: @users.map(&:id)
 )
 
 ## -------------------------------------

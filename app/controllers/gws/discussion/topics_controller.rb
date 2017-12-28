@@ -32,7 +32,7 @@ class Gws::Discussion::TopicsController < ApplicationController
     if @forum.state == "closed"
       permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
     else
-      permitted = @forum.member?(@cur_user)
+      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member?(@cur_user)
     end
 
     raise "403" unless permitted
@@ -45,7 +45,7 @@ class Gws::Discussion::TopicsController < ApplicationController
     @todos = Gws::Schedule::Todo.
       site(@cur_site).
       discussion_forum(@forum).
-      allow(:read, @cur_user, site: @cur_site).
+      member(@cur_user).
       where(todo_state: 'unfinished').
       without_deleted.
       limit(@cur_site.discussion_todo_limit)

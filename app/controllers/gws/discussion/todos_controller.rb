@@ -69,7 +69,7 @@ class Gws::Discussion::TodosController < ApplicationController
     @todos = Gws::Schedule::Todo.
       site(@cur_site).
       discussion_forum(@forum).
-      allow(:read, @cur_user, site: @cur_site).
+      member(@cur_user).
       without_deleted.
       search(params[:s]).
       map do |todo|
