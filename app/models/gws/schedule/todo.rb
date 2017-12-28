@@ -110,13 +110,13 @@ class Gws::Schedule::Todo
     end
   end
 
-  alias allowed_for_managers? allowed?
-
-  def allowed?(action, user, opts = {})
-    return true if allowed_for_managers?(action, user, opts)
-    member?(user) || custom_group_member?(user) if action =~ /edit|delete/
-    false
-  end
+  # alias allowed_for_managers? allowed?
+  #
+  # def allowed?(action, user, opts = {})
+  #   return true if allowed_for_managers?(action, user, opts)
+  #   member?(user) || custom_group_member?(user) if action =~ /edit|delete/
+  #   false
+  # end
 
   class << self
     def search(params)

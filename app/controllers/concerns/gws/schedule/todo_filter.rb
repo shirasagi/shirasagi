@@ -46,7 +46,7 @@ module Gws::Schedule::TodoFilter
   end
 
   def show
-    raise '403' if !@item.allowed?(:read, @cur_user, site: @cur_site) && !@item.member?(@cur_user) && !@item.readable(@cur_user)
+    raise '403' if !@item.allowed?(:read, @cur_user, site: @cur_site) && !@item.member?(@cur_user) && !@item.readable?(@cur_user)
     render
   end
 
