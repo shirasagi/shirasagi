@@ -42,7 +42,7 @@
           <%= t 'gws/memo/message.links.move' %> <i class="material-icons md-13">&#xE313;</i>
         </button>
         <ul class="dropdown-menu">
-          <% @folders.select { |g| %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(g.path) }.each do |item| %>
+          <% @folders.select { |g| %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(g.folder_path) }.each do |item| %>
             <li><a href="#" data-path="<%= item.folder_path %>"><%= item.name %></a></li>
           <% end %>
         </ul>
