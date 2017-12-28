@@ -36,7 +36,7 @@
         </div>
 
         <div class="info">
-          <% if @cur_folder.sent_box? == "INBOX.Sent" %>
+          <% if @cur_folder.sent_box? %>
             <span class="field to">
               <%= item.display_to.first if item.to.present? %>
             </span>
@@ -78,9 +78,18 @@
   $(".droppable").droppable({
     tolerance: "pointer",
     drop: function(e, obj){
-      var folder = $(this).find("td a.title");
-      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path(folder: params[:folder]) %>", folder.text() + "<%= t('gws/memo/message.confirm.move_drop') %>");
-      form.append($("<input/>", {name: "path", value: folder.attr("data-path"), type: "hidden"} ));
+      var to_folder = $(this).find("td a.title");
+      var from_folder = "<%= @cur_folder.name %>";
+      var drop_confirm = "";
+
+      drop_confirm += "<%= t('gws/memo/message.confirm.move_drop.head') %>";
+      drop_confirm += " \"" + from_folder + "\" ";
+      drop_confirm += "<%= t('gws/memo/message.confirm.move_drop.to') %>";
+      drop_confirm += " \"" + to_folder.text() + "\" ";
+      drop_confirm += "<%= t('gws/memo/message.confirm.move_drop.tail') %>";
+
+      var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path(folder: params[:folder]) %>", drop_confirm);
+      form.append($("<input/>", {name: "path", value: to_folder.attr("data-path"), type: "hidden"} ));
       form.appendTo(document.body).submit();
     }
   });

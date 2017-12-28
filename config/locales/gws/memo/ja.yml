@@ -24,7 +24,10 @@ ja:
       set_star_all: スターをつけますか?
       unset_star_all: スターをはずしますか?
       move: 移動しますか?
-      move_drop: に移動しますか?
+      move_drop:
+        head: 選択したメッセージを
+        to: から
+        tail: に移動しますか?
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱
