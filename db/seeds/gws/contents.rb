@@ -558,7 +558,7 @@ def create_monitor_post(data)
 end
 
 create_monitor_post(
-  cur_user: u('admin'), name: 'Re: 新しい公用車の導入', state: 'public',
+  cur_user: u('admin'), name: 'Re: 新しい公用車の導入',
   due_date: @mon_topics[1].due_date,
   topic_id: @mon_topics[1].id, parent_id: @mon_topics[1].id,
   text: '車室の広いものを希望します。'
