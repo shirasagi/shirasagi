@@ -76,13 +76,13 @@
     <% if @cur_user %>
     <nav class="user">
       <% if @ss_mode == :webmail %>
-        <% group = @cur_user.root_groups.first %>
-        <% if SS.config.gws.disable.blank? && group %>
-          <% if Gws::Memo::Message.allowed?(:edit, Gws::User.find(@cur_user.id), site: group) %>
-            <%= link_to gws_memo_messages_path(site: group.id), class: "user-message" do %>
-              <% count = Gws::Memo::Message.unseens(@cur_user).size %>
-              <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
-            <% end %>
+        <% gws_user = Gws::User.find(@cur_user.id) %>
+        <% gws_role = gws_user.gws_roles.in(permissions: "edit_private_gws_memo_messages").reorder(site_id: 1).first %>
+        <% gws_group = gws_role.site if gws_role %>
+        <% if SS.config.gws.disable.blank? && gws_group %>
+          <%= link_to gws_memo_messages_path(site: gws_group.id), class: "user-message" do %>
+            <% count = Gws::Memo::Message.unseens(@cur_user).size %>
+            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
           <% end %>
         <% end %>
       <% elsif @ss_mode == :gws %>
