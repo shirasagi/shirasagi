@@ -16,7 +16,7 @@
   <dd><%= f.select :action, @item.action_options %></dd>
 
   <dt><%= @model.t :folder %><%= @model.tt :folder %></dt>
-  <dd><%= f.select :folder, @item.folder_options(@cur_user, @cur_site), selected: @item.folder_id, include_blank: true %></dd>
+  <dd><%= f.select :folder, @item.folder_options(@cur_user), selected: @item.folder_id, include_blank: true %></dd>
 
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>

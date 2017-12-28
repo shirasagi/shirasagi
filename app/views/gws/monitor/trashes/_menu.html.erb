@@ -1,0 +1,23 @@
+<% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <nav class="nav-management-menu">
+    <%= link_to gws_monitor_management_main_path do %>
+      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
+    <% end %>
+  </nav>
+<% end %>
+
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+  <% elsif params[:action] =~ /delete|recover/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to I18n.t('ss.links.delete'), action: :delete, id: @item %>
+      <%= link_to I18n.t('gws/monitor.management.links.active'), action: :active, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>

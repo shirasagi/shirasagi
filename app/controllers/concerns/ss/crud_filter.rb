@@ -168,9 +168,9 @@ module SS::CrudFilter
     end
   end
 
-  def render_destroy_all(result)
-    location = crud_redirect_url || { action: :index }
-    notice = result ? { notice: t("ss.notice.deleted") } : {}
+  def render_destroy_all(result, opts = {})
+    location = opts[:location].presence || crud_redirect_url || { action: :index }
+    notice = result ? { notice: opts[:notice].presence || t("ss.notice.deleted") } : {}
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 
     respond_to do |format|

@@ -75,9 +75,9 @@ ja:
       permit_comment:
         allow: 許可する
         deny: 許可しない
-      answerable_article:
-        answerable: 回答可能
-        readable: 閲覧可能
+      article_state:
+        open: 回答募集中
+        closed: 募集締切
       browsed_state:
         read: 既読
         unread: 未読
@@ -85,15 +85,15 @@ ja:
         normal: 通常
         important: 重要
       state:
-        closed: 未回答
-        public: 受取済み
+        draft: 下書き
+        public: 配信済み
+        closed: 締め切り
+      answer_state:
         preparation: 受取待ち
+        public: 受取済み
         answered: 回答済み
         question_not_applicable: 該当なし
         no_state: 状態無し
-      article_state:
-        open: 配信済み
-        closed: 締め切り
       monitor_delete_threshold:
         - 1日
         - 1ヶ月
@@ -110,31 +110,36 @@ ja:
       reply: 返信する
       categories: カテゴリー
       public: 受取済みにする
-      preparation: 受取待ちにする
+      preparation: 受取待ちに戻す
       question_not_applicable: 該当なしにする
+      disable: 削除済みに移動する
       disable_all: 削除済みに移動する
       active_all: 削除を取り消す
       answered: 回答済みにする
       closed: 締め切る
       open: 締め切り解除
-      export_csv: CSVに出力する
-      file_download: ダウンロード
+      export_csv: 回答一覧CSV
+      file_download: 添付ファイル一括ダウンロード
       forward: 転送する
-      confirm:
-        public: 受取済みにしますか？
-        preparation: 受取待ちにしますか？
-        question_not_applicable: 該当なしにしますか？
-        answer: 回答済みにしますか？
-        close: 回答を締め切りますか？
-        open: 締め切りを解除してよろしいですか？
-        public_all: チェックした項目を受取済みにしますか？
-        preparation_all: チェックした項目を受取待ちにしますか？
-        question_not_applicable_all: チェックした項目を該当なしにしますか？
-        disable: 削除済みに移動しますか？
-        active: 削除を取り消しますか？
-        disable_all: チェックした項目を削除済みに移動しますか？
-        active_all: 選択した項目の削除を取り消しますか？
-        comment_answer: 所属として回答します。よろしいですか？
+      publish: 配信する
+    confirm:
+      public: 受取済みにしますか？
+      preparation: 受取待ちに戻しますか？
+      question_not_applicable: 該当なしにしますか？
+      answer: 回答済みにしますか？
+      close: 回答を締め切りますか？
+      open: 締め切りを解除してよろしいですか？
+      public_all: チェックした項目を受取済みにしますか？
+      preparation_all: チェックした項目を受取待ちにしますか？
+      question_not_applicable_all: チェックした項目を該当なしにしますか？
+      disable: 削除済みに移動しますか？
+      active: 削除を取り消しますか？
+      disable_all: チェックした項目を削除済みに移動しますか？
+      active_all: 選択した項目の削除を取り消しますか？
+      comment_answer: 所属として回答します。よろしいですか？
+      publish: 配信してよろしいですか？
+    buttons:
+      publish: 配信
     errors:
       denied_comment: コメントの投稿は許可されていません。
     tabs:
@@ -150,8 +155,12 @@ ja:
     notice:
       close: 回答を締め切りました
       open: 締め切りを解除しました
-      disable: 削除済みに移動しました
+      disabled: 削除済みに移動しました
       active: 削除を取り消しました
+      published: 公開しました
+      public: 受取済みにしました
+      preparation: 受取待ちに戻しました
+      question_not_applicable: 該当なしにしました
 
   modules:
     gws/monitor: 照会・回答
@@ -265,6 +274,9 @@ ja:
           - コメントを許可するかどうかを選択します。
         severity:
           - 重要度を選択します。
+        draft_alert:
+          - 下書き状態です。
+          - 内容を確認の上、配信してください。
       gws/monitor/category:
         name:
           - カテゴリー名を入力します。

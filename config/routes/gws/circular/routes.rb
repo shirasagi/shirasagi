@@ -15,9 +15,9 @@ SS::Application.routes.draw do
   end
 
   gws 'circular' do
-    get '/' => redirect { |p, req| "#{req.path}/~/posts" }, as: :main
+    get '/' => redirect { |p, req| "#{req.path}/-/posts" }, as: :main
 
-    scope(path: ':category') do
+    scope(path: ':category', defaults: { category: '-' }) do
       resources :posts, concerns: [:posts], except: [:new, :create, :edit, :update, :destroy]
       resources :admins, concerns: [:admins], except: [:destroy]
       resources :trashes, except: [:new, :create, :edit, :update] do

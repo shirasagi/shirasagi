@@ -321,7 +321,7 @@ create_schedule_plan name: "繰り返し予定", member_ids: @users.map(&:id),
 @sch_plan1 = create_schedule_plan(
   name: 'シラサギ会議', start_at: base_date.strftime('%Y-%m-%d 15:00'), end_at: base_date.strftime('%Y-%m-%d 16:00'),
   repeat_type: 'weekly', interval: 1, repeat_start: base_date, repeat_end: base_date + 1.month, wdays: [3],
-  member_ids: [u('admin').id], member_custom_group_ids: @cgroups[0].id,
+  member_ids: [u('admin').id], member_custom_group_ids: [@cgroups[0].id],
   facility_ids: [@fc_item[0].id], main_facility_id: @fc_item[0].id,
   readable_setting_range: 'select', readable_group_ids: [g('政策課').id],
   readable_member_ids: [u('sys').id]

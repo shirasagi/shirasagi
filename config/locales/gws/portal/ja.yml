@@ -21,6 +21,8 @@ ja:
     user_portal: 個人ポータル
     group_portal: 部課ポータル
     root_portal: 全庁ポータル
+    create_portlets_for_reset: 作成されるポートレット
+    delete_portlets_for_reset: 削除されるポートレット
     tabs:
       user_portal: 個人
       root_portal: 全庁
@@ -102,7 +104,10 @@ ja:
 
   mongoid:
     models:
-      gws/portal/setting: ポータル設定
+      gws/portal/group_portlet: 部課ポータル設定
+      gws/portal/group_setting: 部課ポートレット
+      gws/portal/user_portlet: 個人ポータル設定
+      gws/portal/user_setting: 個人ポートレット
     attributes:
       gws/portal/user_setting:
         name: ポータル名

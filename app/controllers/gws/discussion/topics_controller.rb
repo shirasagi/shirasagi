@@ -47,7 +47,7 @@ class Gws::Discussion::TopicsController < ApplicationController
       discussion_forum(@forum).
       allow(:read, @cur_user, site: @cur_site).
       where(todo_state: 'unfinished').
-      active.
+      without_deleted.
       limit(@cur_site.discussion_todo_limit)
 
     @recent_items = @forum.children.
@@ -84,7 +84,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def edit
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     if @item.is_a?(Cms::Addon::EditLock)
       unless @item.acquire_lock
         redirect_to action: :lock
@@ -97,17 +97,17 @@ class Gws::Discussion::TopicsController < ApplicationController
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
 
   def delete
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render
   end
 
   def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.destroy
   end
 
@@ -116,7 +116,7 @@ class Gws::Discussion::TopicsController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
         next if item.destroy
       else
         item.errors.add :base, :auth_error
@@ -158,7 +158,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def copy
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
     if request.get?
       prefix = I18n.t("workflow.cloned_name_prefix")

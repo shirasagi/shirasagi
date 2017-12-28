@@ -18,10 +18,10 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <%= link_to t('gws/memo/message.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
-    <%= link_to(t('ss.links.edit'), action: :edit, id: @item) if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to(t('ss.links.delete'), action: :delete, id: @item) if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+    <%= link_to(t('ss.links.edit'), action: :edit, id: @item) if @cur_user.id == @item.user_id %>
+    <%= link_to(t('ss.links.delete'), action: :delete, id: @item) if @cur_user.id == @item.user_id %>
     <% if %w(INBOX.Trash INBOX.Draft INBOX.Sent).exclude?(params[:folder]) %>
-      <%= link_to(t('gws/memo/message.links.trash'), action: :trash, id: @item) if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to(t('gws/memo/message.links.trash'), action: :trash, id: @item) %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>

@@ -1,9 +1,9 @@
-<%= form_for :item, url: { action: :active }, html: {method: :get, multipart: true } do |f| %>
+<%= form_for :item, url: { action: :active }, html: {method: :post, multipart: true } do |f| %>
   <%= error_messages_for :item %>
 
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
-      <div class="addon-head"><h2><%= t("gws/monitor.links.confirm.active") %></h2></div>
+      <div class="addon-head"><h2><%= t("gws/monitor.confirm.active") %></h2></div>
       <div class="addon-body">
         <%= render file: "_delete" %>
       </div>

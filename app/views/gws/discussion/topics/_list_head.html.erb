@@ -1,5 +1,5 @@
 <div class="list-head">
-  <% if @model.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true) %>
+  <% if @model.allowed?(:delete, @cur_user, site: @cur_site) %>
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">

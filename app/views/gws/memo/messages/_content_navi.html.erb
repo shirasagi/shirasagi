@@ -1,27 +1,21 @@
-<% return unless @group_navi %>
+<% return unless @folders %>
 
 <div id="content-navi">
   <h2 class="content-navi-title"><%= t('gws/memo/message.folder') %></h2>
   <table class="index gws-memo-folder">
-    <thead>
-    <tr>
-      <th><%= t('gws/memo/message.folder_name') %></th>
-    </tr>
-    </thead>
-    <tbody>
-    <% @group_navi.each do |item| %>
+    <% @folders.each do |item| %>
       <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.folder_path) %>
-      <tr class="<%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
-        <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
+      <% unseen = item.unseen? && !item.sent_box? && !item.draft_box? %>
+      <tr class="folder <%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
+        <td class="<%= unseen ? 'unseen' : 'seen' %>">
           <%= link_to item.name,
                       gws_memo_messages_path(folder: item.folder_path ),
-                      {class: 'field title', 'data-path': item.folder_path } %>
-          <% if item.unseen? %>
+                      { class: 'field title', 'data-path': item.folder_path } %>
+          <% if unseen %>
             <span>(<%= item.unseens.count %>)</span>
           <% end %>
         </td>
       </tr>
     <% end %>
-    </tbody>
   </table>
 </div>

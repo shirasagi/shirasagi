@@ -1,22 +1,24 @@
-# "Post" class for BBS. It represents "topic" models.
 class Gws::Monitor::Topic
   include Gws::Referenceable
   include Gws::Monitor::Postable
+  include Gws::Addon::Monitor::Group
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Monitor::DescendantsFileInfo
   include Gws::Addon::Monitor::Category
   include Gws::Addon::Monitor::Release
-  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Monitor::BrowsingState
 
   readable_setting_include_custom_groups
 
+  field :answer_state_hash, type: Hash
   field :article_state, type: String, default: 'open'
   field :deleted, type: DateTime
+
+  before_validation :set_answer_state_hash
 
   validates :deleted, datetime: true
   validates :article_state, inclusion: { in: %w(open closed) }
@@ -24,9 +26,6 @@ class Gws::Monitor::Topic
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MonitorTopicJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MonitorTopicJob.callback
-
-  permit_params :deleted
-  permit_params :article_state
 
   #validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
@@ -42,14 +41,32 @@ class Gws::Monitor::Topic
     end
   }
 
-  scope :and_admins, ->(user) {
+  scope :without_deleted, ->(date = Time.zone.now) {
     where("$and" => [
-        { "$or" => [{ :user_ids.in => [user.id] }, { :group_ids.in => user.group_ids }] }
+      { "$or" => [{ deleted: nil }, { :deleted.gt => date }] }
     ])
   }
 
+  scope :only_deleted, -> {
+    where(:deleted.exists => true)
+  }
+
+  scope :and_unanswered, ->(group) do
+    where("answer_state_hash.#{group.id}" => { '$nin' => %w(question_not_applicable answered) })
+  end
+
+  scope :and_answered, ->(group) do
+    where("answer_state_hash.#{group.id}" => { '$in' => %w(question_not_applicable answered) })
+  end
+
+  def article_state_options
+    %w(open closed).map do |v|
+      [I18n.t("gws/monitor.options.article_state.#{v}"), v]
+    end
+  end
+
   def download_root_path
-    "#{Rails.root}/private/files/gws_monitors/"
+    "#{SS::File.root}/gws_monitors/"
   end
 
   def zip_path
@@ -57,8 +74,11 @@ class Gws::Monitor::Topic
   end
 
   def active?
-    return true unless deleted.present? && deleted < Time.zone.now
-    false
+    deleted.blank? || deleted > Time.zone.now
+  end
+
+  def closed?
+    article_state == 'closed'
   end
 
   def active
@@ -66,54 +86,16 @@ class Gws::Monitor::Topic
   end
 
   def disable
-    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+    update_attributes(deleted: Time.zone.now) if active?
   end
 
-  def closed?
-    article_state == 'closed'
-  end
-
-  def unanswered?(groupid)
-    if closed?
-      case state_of_the_answers_hash[groupid.to_s]
-      when "public", "preparation", nil
-        I18n.t("gws/monitor.options.state.closed")
-      end
+  def answer_state_name(group)
+    answered_state = answer_state_hash[group.id.to_s]
+    if answered_state.blank?
+      I18n.t("gws/monitor.options.answer_state.no_state")
+    else
+      I18n.t("gws/monitor.options.answer_state.#{answered_state}")
     end
-  end
-
-  def article_state_name
-    I18n.t("gws/monitor.options.article_state." + article_state)
-  end
-
-  def state_name(groupid)
-    return I18n.t("gws/monitor.options.state.no_state") if state_of_the_answers_hash[groupid.to_s].blank?
-    I18n.t("gws/monitor.options.state." + state_of_the_answers_hash[groupid.to_s])
-  end
-
-  def spec_config_options
-    [
-        [I18n.t('gws/monitor.options.spec_config.my_group'), '0'],
-        [I18n.t('gws/monitor.options.spec_config.other_groups'), '3'],
-        [I18n.t('gws/monitor.options.spec_config.other_groups_and_contents'), '5']
-    ]
-  end
-
-  def reminder_start_section_options
-    [
-        [I18n.t('gws/monitor.options.reminder_start_section.post'), '0'],
-        [I18n.t('gws/monitor.options.reminder_start_section.post_one_day_after'), '-1'],
-        [I18n.t('gws/monitor.options.reminder_start_section.post_two_days_after'), '-2'],
-        [I18n.t('gws/monitor.options.reminder_start_section.post_three_days_after'), '-3'],
-        [I18n.t('gws/monitor.options.reminder_start_section.post_four_days_after'), '-4'],
-        [I18n.t('gws/monitor.options.reminder_start_section.post_five_days_after'), '-5'],
-        [I18n.t('gws/monitor.options.reminder_start_section.due_date_one_day_ago'), '1'],
-        [I18n.t('gws/monitor.options.reminder_start_section.due_date_two_days_ago'), '2'],
-        [I18n.t('gws/monitor.options.reminder_start_section.due_date_three_days_ago'), '3'],
-        [I18n.t('gws/monitor.options.reminder_start_section.due_date_four_days_ago'), '4'],
-        [I18n.t('gws/monitor.options.reminder_start_section.due_date_five_days_ago'), '5'],
-        [I18n.t('gws/monitor.options.reminder_start_section.hide'), '-999']
-    ]
   end
 
   def updated?
@@ -138,17 +120,17 @@ class Gws::Monitor::Topic
   end
 
   def answer_count_admin
-    answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
+    answered = answer_state_hash.count { |k, v| v.match(/answered|question_not_applicable/) }
     return "(#{answered}/#{attend_group_ids.count})"
   end
 
   def answer_count(cur_group)
     if attend_group_ids.include?(cur_group.id)
-      if spec_config != '0'
-        answered = state_of_the_answers_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
+      if spec_config != 'my_group'
+        answered = answer_state_hash.count{ |k, v| v.match(/answered|question_not_applicable/) }
         return "(#{answered}/#{attend_group_ids.count})"
       else
-        answered = state_of_the_answers_hash[cur_group.id.to_s].match(/answered|question_not_applicable/)
+        answered = answer_state_hash[cur_group.id.to_s].match(/answered|question_not_applicable/)
         return "(#{answered ? 1 : 0}/1)"
       end
     end
@@ -164,7 +146,7 @@ class Gws::Monitor::Topic
         data << [
             id,
             name,
-            unanswered?(group.id) ? unanswered?(group.id) : state_name(group.id),
+            answer_state_name(group),
             group.name,
             post.try(:contributor_name),
             post.try(:text),
@@ -211,5 +193,19 @@ class Gws::Monitor::Topic
     else
       self.descendants_updated = released
     end
+  end
+
+  def set_answer_state_hash
+    prev_hash = answer_state_hash.presence || {}
+    new_hash = self.attend_group_ids.map do |group_id|
+      g = group_id.to_s
+      if prev_hash[g]
+        [g, prev_hash[g]]
+      else
+        [g, "preparation"]
+      end
+    end
+
+    self.answer_state_hash = new_hash.to_h
   end
 end

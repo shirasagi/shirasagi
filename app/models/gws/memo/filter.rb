@@ -4,7 +4,7 @@ class Gws::Memo::Filter
   include Gws::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name 'gws_memo_messages'
+  set_permission_name 'private_gws_memo_messages', :edit
 
   # 一括処理件数
   APPLY_PER = 100
@@ -57,9 +57,9 @@ class Gws::Memo::Filter
     %w(move trash).map { |m| [I18n.t(m, scope: 'gws/memo/filter.options.action'), m] }
   end
 
-  def folder_options(user, site)
-    Gws::Memo::Folder.site(site).allow(:read, user, site: site).map do |folder|
-      [ERB::Util.html_escape(folder.name).html_safe, folder.id]
+  def folder_options(user)
+    Gws::Memo::Folder.user(user).map do |folder|
+      [ ERB::Util.html_escape(folder.name).html_safe, folder.id ]
     end
   end
 
@@ -72,11 +72,10 @@ class Gws::Memo::Filter
   end
 
   def match?(message)
-    if from
-      from_users = message.from.keys.map { |uid| Gws::User.find(uid) }
-      from_users.each do |from_user|
-        return true if from_user.long_name.include?(from)
-      end
+    from_user = message.from
+
+    if from && from_user
+      return true if from_user.long_name.include?(from)
     end
 
     if subject && message.display_subject.include?(subject)
@@ -88,11 +87,5 @@ class Gws::Memo::Filter
 
   def path
     (action == 'trash') ? 'INBOX.Trash' : folder.id.to_s
-  end
-
-  class << self
-    def allow(action, user, opts = {})
-      super(action, user, opts).where(user_id: user.id)
-    end
   end
 end

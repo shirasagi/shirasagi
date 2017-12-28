@@ -22,7 +22,7 @@
             <% subscribed_groups = @item.subscribed_groups.to_a %>
             <% subscribed_groups.each do |group| %>
                 <% post = @item.children.where(user_group_id: group.id).last %>
-                <td class="state"><%= @item.state_name(group.id) %></td>
+                <td class="state"><%= @item.answer_state_name(group) %></td>
                 <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
                 <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
                 <td class="group"><%= group.name %></td>
@@ -38,21 +38,21 @@
                 </tr>
             <% end %>
         <% else %>
-            <% if @item.spec_config == '0' %>
+            <% if @item.spec_config == 'my_group' %>
                 <% subscribed_groups = @item.subscribed_groups.where(id: @cur_group.id) %>
             <% else %>
                 <% subscribed_groups = @item.subscribed_groups.to_a %>
             <% end %>
             <% subscribed_groups.each do |group| %>
                 <% post = @item.children.where(user_group_id: group.id).last %>
-                <td class="state"><%= @item.state_name(group.id) %></td>
+                <td class="state"><%= @item.answer_state_name(group) %></td>
                 <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
                 <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
                 <td class="group"><%= group.name %></td>
                 <td class="user"><%= post ? post.try(:contributor_name) : '' %></td>
-                <td class="contents"><%= post && @item.spec_config != "3" ? post.try(:text) : '' %></td>
+                <td class="contents"><%= post && @item.spec_config != 'other_groups' ? post.try(:text) : '' %></td>
                 <td class="file">
-                  <% if post && post.file_ids.present? && @item.spec_config != "3" %>
+                  <% if post && post.file_ids.present? && @item.spec_config != 'other_groups' %>
                       <img src="/assets/img/gws/ic-file.png" alt="" /><%= post.file_ids.count %>
                   <% else %>
                       <%=  '' %>

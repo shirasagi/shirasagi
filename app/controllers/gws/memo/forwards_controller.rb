@@ -4,15 +4,21 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   model Gws::Memo::Forward
 
+  before_action :deny_with_auth
   before_action :set_item, only: [:show, :edit, :update]
 
   private
 
+  def deny_with_auth
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
   def set_item
-    if @model.user(@cur_user).site(@cur_site).present?
-      @item = @model.find_by(user_id: @cur_user.id, site_id: @cur_site.id)
+    if @model.user(@cur_user).present?
+      @item = @model.find_by(user_id: @cur_user.id)
     else
-      @item = @model.new(user_id: @cur_user.id, site_id: @cur_site.id)
+      @item = @model.new(user_id: @cur_user.id)
+      @item.site = @cur_site
       @item.save
     end
   end
@@ -25,18 +31,9 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   public
 
-  def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-    super
-  end
-
-  def edit
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    super
-  end
-
-  def update
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    super
+  def index
+    @items = @model.user(@cur_user).
+      search(params[:s]).
+      page(params[:page]).per(50)
   end
 end

@@ -1,6 +1,19 @@
+<%= jquery do %>
+  $('.close-topic').click(function() {
+    if (!confirm($(this).data('confirm'))) return false;
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var form = $('<form/>').
+    attr('method', 'POST').
+    attr('action', $(this).attr('href')).
+    append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" })).
+    appendTo("body").submit();
+    return false;
+  });
+<% end %>
+
 <nav class="nav-management-menu">
   <% if Gws::Monitor::Topic.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to gws_monitor_management_topics_path do %>
+      <%= link_to gws_monitor_management_main_path do %>
           <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
       <% end %>
   <% end %>
@@ -8,7 +21,6 @@
 
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%#= link_to t("gws/monitor.links.categories"), categories_gws_monitor_topics_path %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
@@ -20,10 +32,22 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/monitor.links.disable_all'), action: :delete, id: @item %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit %>
+      <% if @item.state == 'draft' %>
+        <%= link_to t('gws/monitor.links.publish'), action: :publish %>
+      <% end %>
+      <% if @item.closed? %>
+        <%= link_to t('gws/monitor.links.open'), { action: :open, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.confirm.open')  %>
+      <% else %>
+        <%= link_to t('gws/monitor.links.closed'), { action: :close, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.confirm.close')  %>
+      <% end %>
     <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/monitor.links.disable'), action: :disable, id: @item %>
+    <% end %>
+    <%= link_to(t('gws/monitor.links.export_csv'), { action: :download }, class: 'export_csv') %>
+    <%= link_to(t('gws/monitor.links.file_download'), { action: :file_download }, class: 'file_download') %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>
-

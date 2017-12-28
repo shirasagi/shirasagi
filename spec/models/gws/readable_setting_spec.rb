@@ -15,7 +15,7 @@ describe Gws::Addon::ReadableSetting, type: :model, dbscope: :example do
     }
   end
 
-  conteext "range" do
+  context "range" do
     it "public" do
       item.update_attributes(init.merge(readable_setting_range: 'public'))
       expect(item.readable_setting_present?).to be_falsey

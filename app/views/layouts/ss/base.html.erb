@@ -78,9 +78,11 @@
       <% if @ss_mode == :webmail %>
         <% group = @cur_user.root_groups.first %>
         <% if SS.config.gws.disable.blank? && group %>
-          <%= link_to gws_memo_messages_path(site: group.id), class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user, group).size %>
-            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+          <% if Gws::Memo::Message.allowed?(:edit, Gws::User.find(@cur_user.id), site: group) %>
+            <%= link_to gws_memo_messages_path(site: group.id), class: "user-message" do %>
+              <% count = Gws::Memo::Message.unseens(@cur_user).size %>
+              <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+            <% end %>
           <% end %>
         <% end %>
       <% elsif @ss_mode == :gws %>
@@ -100,9 +102,11 @@
             <% end %>
           </div>
         <% end %>
-        <%= link_to gws_memo_messages_path, class: "user-message" do %>
-          <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
-          <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+        <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to gws_memo_messages_path, class: "user-message" do %>
+            <% count = Gws::Memo::Message.unseens(@cur_user).size %>
+            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+           <% end %>
         <% end %>
       <% end %>
 

@@ -37,6 +37,7 @@ module Gws::Portal::PortalFilter
 
     raise '403' unless @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
     raise '403' unless @portal.save
+    @portal.save_default_portlets
   end
 
   public

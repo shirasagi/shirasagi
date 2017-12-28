@@ -1,5 +1,5 @@
 <%= jquery do %>
-    Gws_Monitor_Topic.render();
+  Gws_Monitor_Topic.render();
 <% end %>
 
 <div class="list-head">
@@ -7,11 +7,8 @@
 
   <div class="list-head-action">
     <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
-    <button class="active-all btn"><%= t 'gws/monitor.links.active_all' %></button>
+    <button class="active-all btn" data-ss-href="<%= url_for(action: :active_all) %>" data-ss-confirm="<%= I18n.t('gws/monitor.confirm.active_all') %>"><%= t 'gws/monitor.links.active_all' %></button>
   </div>
 
-  <div class="list-head-search">
-    <%= render file: '_search' %>
-  </div>
+  <%= render file: '_search' %>
 </div>
-
