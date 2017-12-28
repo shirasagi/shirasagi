@@ -150,8 +150,6 @@ Gws_Bookmark.prototype.delete = function() {
       _this.el.removeClass('active');
       _this.el.find('.dropdown-menu').removeClass('active');
       _this.el.find('.material-icons').html(_this.unbookmark_icon);
-      _this.el.find('.bookmark-notice').text('');
-      _this.el.find('.bookmark-name').text(_this.default_name);
       _this.bookmark_id = null;
       _this.loading = false;
     },
