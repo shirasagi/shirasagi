@@ -12,6 +12,7 @@ SS::Application.routes.draw do
   concern :admins do
     match :disable, on: :member, via: [:get, :post]
     post :download, on: :collection
+    post :disable_all, on: :collection
   end
 
   gws 'circular' do

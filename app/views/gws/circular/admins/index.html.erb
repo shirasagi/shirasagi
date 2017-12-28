@@ -14,8 +14,7 @@
 
 <%= jquery do %>
   $(".disable-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("", "<%= I18n.t('gws/circular.confirm.disable') %>");
-    form.append($("<input/>", {name: "_method", value: "delete", type: "hidden"}) );
+    var form = Gws_Circular_Post.buildForm("<%= url_for(action: :disable_all) %>", "<%= I18n.t('gws/circular.confirm.disable') %>");
     form.appendTo(document.body).submit();
   });
 
