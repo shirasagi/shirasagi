@@ -145,24 +145,24 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     context "article download" do
       before do
         #create(:article_page, cur_site: site, cur_node: node, name: 'test1_article')
-        create(:cms_node, cur_site: site, name: "くらしのガイド", filename: "filename")
-        create(:cms_layout, cur_site: site, name: "記事レイアウト")
-        create(:ss_group, name: "シラサギ市/企画政策部/政策課")
+        cate_node = create(:category_node_page, cur_site: site, cur_node: node, name: "くらしのガイド")
+        layout = create(:cms_layout, cur_site: site, name: "記事レイアウト")
+        group = create(:ss_group, name: "シラサギ市/企画政策部/政策課")
         create(:article_page, cur_site: site, cur_node: node,
           name: 'test1_article',
           filename: 'test1_filename.html',
-          layout: 1,
+          layout: layout.id,
           order: 0,
           keywords: 'test1_keywords',
           description: 'test1_description',
           summary_html: 'test1_summary_html',
           html: 'test1_html',
-          category_ids: [2],
+          category_ids: [cate_node.id],
           parent_crumb_urls: 'test1_parent_crumb_urls',
           event_name: 'test1_event_name',
           event_dates: "2016/7/6",
           contact_state: 'show',
-          contact_group: 2,
+          contact_group: group.id,
           contact_charge: 'test1_contact_charge',
           contact_tel: 'test1_contact_tel',
           contact_fax: 'test1_contact_fax',
@@ -172,7 +172,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           released: "2016/7/6 0:0:0",
           release_date: "2016/7/6 1:1:1",
           close_date: "2016/7/6 2:2:2",
-          group_ids: [2],
+          group_ids: [group.id],
           permission_level: 1)
       end
 
