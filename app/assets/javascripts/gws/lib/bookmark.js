@@ -26,17 +26,14 @@ Gws_Bookmark.prototype.render = function(opts) {
   }
   var bookmark_name = opts['name'] || this.default_name;
 
-  var span = $('<span class="bookmark-icon"></span>');
-  span.append($('<i class="material-icons">' + icon + '</i>'));
-  this.el.html(span);
+  var span = $('<span class="bookmark-icon"></span>').append($('<i class="material-icons"></i>').html(icon));
   var ul = $('<ul class="dropdown-menu"></ul>');
-  ul.append($('<li><div class="bookmark-notice"></div></li>'));
   var li = $('<li></li>');
   li.append($('<input name="bookmark[name]" id="bookmark_name" class="bookmark-name" type="text">').val(bookmark_name));
   li.append($('<input name="button" type="button" class="btn update" />').val(opts['save']));
   li.append($('<input name="button" type="button" class="btn delete" />').val(opts['delete']));
-  ul.append(li);
-  this.el.append(ul);
+  ul.append($('<li><div class="bookmark-notice"></div></li>')).append(li);
+  this.el.html(span).append(ul);
 
   this.el.click(function(e) {
     if (_this.loading) {
@@ -65,7 +62,7 @@ Gws_Bookmark.prototype.create = function() {
     data: {
       item: {
         name: this.default_name,
-        url: location.pathname,
+        url: location.pathname + location.search,
         model: this.model
       }
     },
@@ -101,7 +98,7 @@ Gws_Bookmark.prototype.update = function() {
       _method: 'patch',
       item: {
         name: new_name,
-        url: location.pathname,
+        url: location.pathname + location.search,
         model: this.model
       }
     },
@@ -138,7 +135,7 @@ Gws_Bookmark.prototype.delete = function() {
     data: {
       _method: 'delete',
       item: {
-        url: location.pathname
+        url: location.pathname + location.search
       }
     },
     success: function() {
