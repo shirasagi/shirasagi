@@ -37,12 +37,6 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
   context "opendata_ref/branch_page" do
     before { login_cms_user }
 
-    around do |example|
-      perform_enqueued_jobs do
-        example.run
-      end
-    end
-
     it do
       visit article_pages_path(site, article_node)
       click_on article_page.name
@@ -59,7 +53,9 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_public').click
       end
-      click_on I18n.t('ss.buttons.publish_save')
+      perform_enqueued_jobs do
+        click_on I18n.t('ss.buttons.publish_save')
+      end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
       article_page.reload
@@ -109,7 +105,9 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
       end
 
       click_on I18n.t('ss.links.edit')
-      click_on I18n.t('ss.buttons.publish_save')
+      perform_enqueued_jobs do
+        click_on I18n.t('ss.buttons.publish_save')
+      end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       # completely change file ids
