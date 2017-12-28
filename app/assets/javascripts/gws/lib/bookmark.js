@@ -7,39 +7,35 @@ function Gws_Bookmark() {
   this.bookmark_icon = "&#xE866;";
   this.unbookmark_icon = "&#xE867;";
   this.loading = false;
-};
+}
 
 Gws_Bookmark.prototype.render = function(opts) {
-  var _this, icon, bookmark_name, span, ul, li;
   if (opts === null) {
     opts = {};
   }
-  _this = this;
-  _this.bookmark_id = opts['id'];
-  _this.default_name = opts['default_name'];
-  _this.url = opts['url'];
-  _this.model = opts['model'];
+  var _this = this;
+  this.bookmark_id = opts['id'];
+  this.default_name = opts['default_name'];
+  this.url = opts['url'];
+  this.model = opts['model'];
 
-  if (_this.bookmark_id) {
-    icon = _this.bookmark_icon;
+  if (this.bookmark_id) {
+    var icon = this.bookmark_icon;
   } else {
-    icon = _this.unbookmark_icon;
+    var icon = this.unbookmark_icon;
   }
-  bookmark_name = opts['name'] || _this.default_name;
+  var bookmark_name = opts['name'] || this.default_name;
 
-  span = $('<span class="bookmark-icon"></span>');
-  span.append($('<i class="material-icons">' + icon + '</i>'));
-  _this.el.html(span);
-  ul = $('<ul class="dropdown-menu"></ul>');
-  ul.append($('<li><div class="bookmark-notice"></div></li>'));
-  li = $('<li></li>');
+  var span = $('<span class="bookmark-icon"></span>').append($('<i class="material-icons"></i>').html(icon));
+  var ul = $('<ul class="dropdown-menu"></ul>');
+  var li = $('<li></li>');
   li.append($('<input name="bookmark[name]" id="bookmark_name" class="bookmark-name" type="text">').val(bookmark_name));
   li.append($('<input name="button" type="button" class="btn update" />').val(opts['save']));
   li.append($('<input name="button" type="button" class="btn delete" />').val(opts['delete']));
-  ul.append(li);
-  _this.el.append(ul);
+  ul.append($('<li><div class="bookmark-notice"></div></li>')).append(li);
+  this.el.html(span).append(ul);
 
-  _this.el.click(function(e) {
+  this.el.click(function(e) {
     if (_this.loading) {
       return false;
     } else if ($(e.target).hasClass('update')) {
@@ -56,19 +52,18 @@ Gws_Bookmark.prototype.render = function(opts) {
 };
 
 Gws_Bookmark.prototype.create = function() {
-  loading = true;
-  var _this, html;
-  _this = this;
-  html = _this.el.find('.dropdown-menu').html();
-  _this.el.find('.dropdown-menu').html(SS.loading);
+  this.loading = true;
+  var _this = this;
+  var html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
   $.ajax({
-    url: _this.url,
+    url: this.url,
     method: 'POST',
     data: {
       item: {
-        name: _this.default_name,
-        url: location.pathname,
-        model: _this.model
+        name: this.default_name,
+        url: location.pathname + location.search,
+        model: this.model
       }
     },
     success: function(data) {
@@ -88,15 +83,14 @@ Gws_Bookmark.prototype.create = function() {
 };
 
 Gws_Bookmark.prototype.update = function() {
-  loading = true;
-  var _this, html, new_name, uri;
-  _this = this;
-  new_name = _this.el.find('.bookmark-name').val() || _this.default_name;
-  uri = _this.url + '/' + _this.bookmark_id;
-  html = _this.el.find('.dropdown-menu').html();
-  _this.el.find('.dropdown-menu').html(SS.loading);
-  _this.el.addClass('active');
-  _this.el.find('.dropdown-menu').addClass('active');
+  this.loading = true;
+  var _this = this;
+  var new_name = this.el.find('.bookmark-name').val() || this.default_name;
+  var uri = this.url + '/' + this.bookmark_id;
+  var html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
+  this.el.addClass('active');
+  this.el.find('.dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
@@ -104,8 +98,8 @@ Gws_Bookmark.prototype.update = function() {
       _method: 'patch',
       item: {
         name: new_name,
-        url: location.pathname,
-        model: _this.model
+        url: location.pathname + location.search,
+        model: this.model
       }
     },
     success: function(data) {
@@ -125,24 +119,23 @@ Gws_Bookmark.prototype.update = function() {
 };
 
 Gws_Bookmark.prototype.delete = function() {
-  var _this, html, uri;
-  _this = this;
-  if (!_this.bookmark_id) {
+  var _this = this;
+  if (!this.bookmark_id) {
     return false;
   }
-  _this.loading = true;
-  uri = _this.url + '/' + _this.bookmark_id;
-  html = _this.el.find('.dropdown-menu').html();
-  _this.el.find('.dropdown-menu').html(SS.loading);
-  _this.el.addClass('active');
-  _this.el.find('.dropdown-menu').addClass('active');
+  this.loading = true;
+  var uri = this.url + '/' + this.bookmark_id;
+  var html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
+  this.el.addClass('active');
+  this.el.find('.dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
     data: {
       _method: 'delete',
       item: {
-        url: location.pathname
+        url: location.pathname + location.search
       }
     },
     success: function() {

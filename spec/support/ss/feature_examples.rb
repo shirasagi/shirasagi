@@ -5,7 +5,9 @@ shared_examples "crud flow" do
 
     # new/create
     click_link I18n.t('ss.links.new')
-    click_button I18n.t('ss.buttons.save')
+    within 'form#item-form' do
+      click_button I18n.t('ss.buttons.save')
+    end
 
     # show
     click_link I18n.t('ss.links.back_to_index')
@@ -14,11 +16,15 @@ shared_examples "crud flow" do
 
     # edit/update
     click_link I18n.t('ss.links.edit')
-    click_button I18n.t('ss.buttons.save')
+    within 'form#item-form' do
+      click_button I18n.t('ss.buttons.save')
+    end
 
     # delete/destroy
     click_link I18n.t('ss.links.delete')
-    click_button I18n.t('ss.buttons.delete')
+    within 'form' do
+      click_button I18n.t('ss.buttons.delete')
+    end
 
     expect(current_path).to eq index_path
   end
