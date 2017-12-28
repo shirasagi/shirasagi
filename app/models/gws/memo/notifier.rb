@@ -124,9 +124,9 @@ class Gws::Memo::Notifier
     message = Gws::Memo::Message.new
     message.cur_site = cur_site
     message.cur_user = cur_user
-    message.member_ids = to_users.pluck(:id) - [ cur_user.id ]
-    message.from = { from_user.id.to_s => 'INBOX.Sent' }
+    message.member_ids = to_users.pluck(:id)
     message.send_date = Time.zone.now
+    message.state = 'public'
 
     message.subject = I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
     message.format = 'text'
