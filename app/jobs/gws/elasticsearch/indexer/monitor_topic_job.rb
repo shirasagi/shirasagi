@@ -1,13 +1,7 @@
 class Gws::Elasticsearch::Indexer::MonitorTopicJob < Gws::ApplicationJob
-  include Gws::Elasticsearch::Indexer::BoardBase
+  include Gws::Elasticsearch::Indexer::MonitorBase
 
   self.model = Gws::Monitor::Topic
-
-  class << self
-    def path(*args)
-      url_helpers.gws_monitor_topic_path(*args)
-    end
-  end
 
   def enum_es_docs
     Enumerator.new do |y|

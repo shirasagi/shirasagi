@@ -20,7 +20,6 @@ module Gws::Monitor::Postable
     field :severity, type: String
     field :due_date, type: DateTime
     field :spec_config, type: String, default: 'my_group'
-    field :reminder_start_section, type: String, default: '3'
 
     validates :descendants_updated, datetime: true
 
@@ -33,9 +32,7 @@ module Gws::Monitor::Postable
       order: { created: -1 }
 
     permit_params :name, :mode, :permit_comment, :severity, :due_date,
-                  :spec_config, :reminder_start_section
-
-    after_initialize :set_default
+                  :spec_config
 
     before_validation :set_topic_id, if: :comment?
 
@@ -86,16 +83,10 @@ module Gws::Monitor::Postable
     descendants_updated > Time.zone.now - site.monitor_new_days.day
   end
 
-  def spec_config_condition(cur_user, cur_group)
-    unless topic.user_ids.include?(cur_user.id) || topic.group_ids.include?(cur_group.id) || topic.spec_config == 'other_groups_and_contents'
-      admin_comment_check = topic.group_ids.include?(user_group_id) || topic.user_ids.include?(user_id)
-      if parent.id == topic.id
-        return false unless user_group_id == cur_group.id
-      else
-        return false unless user_group_id == cur_group.id || (admin_comment_check && parent.user_group_id == cur_group.id)
-      end
-    end
-    return true
+  def showable_comment?(cur_user, cur_group)
+    return true if topic.user_ids.include?(cur_user.id) || topic.group_ids.include?(cur_group.id)
+    return true if topic.spec_config == 'other_groups_and_contents'
+    user_group_id == cur_group.id
   end
 
   def mode_options
@@ -118,23 +109,6 @@ module Gws::Monitor::Postable
     end
   end
 
-  def reminder_start_section_options
-    [
-      [I18n.t('gws/monitor.options.reminder_start_section.post'), '0'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_one_day_after'), '-1'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_two_days_after'), '-2'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_three_days_after'), '-3'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_four_days_after'), '-4'],
-      [I18n.t('gws/monitor.options.reminder_start_section.post_five_days_after'), '-5'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_one_day_ago'), '1'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_two_days_ago'), '2'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_three_days_ago'), '3'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_four_days_ago'), '4'],
-      [I18n.t('gws/monitor.options.reminder_start_section.due_date_five_days_ago'), '5'],
-      [I18n.t('gws/monitor.options.reminder_start_section.hide'), '-999']
-    ]
-  end
-
   def severity_options
     %w(normal important).map { |v| [ I18n.t("gws/monitor.options.severity.#{v}"), v ] }
   end
@@ -148,14 +122,6 @@ module Gws::Monitor::Postable
   end
 
   private
-
-  def set_default
-    return if self.id > 0
-    if @cur_site && @cur_site.default_reminder_start_section.present?
-      self.reminder_start_section = @cur_site.default_reminder_start_section
-    end
-    self.due_date = Time.zone.today + 7
-  end
 
   # topic(root_post)を設定
   def set_topic_id

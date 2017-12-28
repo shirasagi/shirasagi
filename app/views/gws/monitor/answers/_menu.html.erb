@@ -1,9 +1,9 @@
-<% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <nav class="nav-management-menu">
-    <%= link_to gws_monitor_management_main_path do %>
-      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
-    <% end %>
-  </nav>
+<% if @cur_user.gws_role_permissions["edit_other_gws_monitor_posts_#{@cur_site.id}"].to_i > 0 %>
+<nav class="nav-management-menu hide-mb">
+  <%= link_to gws_monitor_management_main_path do %>
+    <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
+  <% end %>
+</nav>
 <% end %>
 
 <nav class="nav-menu">
@@ -20,9 +20,8 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && params['action'] == 'show' %>
-      <%= link_to t('gws/monitor.links.forward'), action: :forward, id: @item %>
+      <%= link_to t('gws/monitor.links.forward'), forward_gws_monitor_admin_path(id: @item) %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>
-

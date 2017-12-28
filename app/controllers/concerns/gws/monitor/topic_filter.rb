@@ -27,7 +27,9 @@ module Gws::Monitor::TopicFilter
   def set_category
     @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
     if category_id = params[:category].presence
-      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
+      if category_id != '-'
+        @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
+      end
     end
   end
 
@@ -36,10 +38,11 @@ module Gws::Monitor::TopicFilter
   end
 
   def pre_params
-    ret = super
+    ret = { due_date: Time.zone.today + 7 }
     if @category.present?
       ret[:category_ids] = [ @category.id ]
     end
+    ret[:notice_state] = @cur_site.default_notice_state.presence || '3_days_before_due_date'
     ret
   end
 
@@ -132,22 +135,18 @@ module Gws::Monitor::TopicFilter
     render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
   end
 
+  FORWARD_ATTRIBUTES = %w(name spec_config due_date notice_state notice_start_at mode text_type text category_ids).freeze
+
   # 転送する
   def forward
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+
     set_item
-    @item.id = 0
-    @item.attend_group_ids = []
-    @item.readable_group_ids = []
-    @item.readable_member_ids  = []
-    @item.readable_custom_group_ids = []
-    @item.answer_state_hash = {}
-    @item.file_ids = []
-    @item.created = nil
-    @item.updated = nil
-    @item.user_ids = [@cur_user.id]
+    @source = @item
+    @item = @model.new(@source.attributes.slice(*FORWARD_ATTRIBUTES).merge(fix_params))
     @item.group_ids = [@cur_group.id]
-    @model = @item.dup
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    @item.user_ids = [@cur_user.id]
+
     render file: :new
   end
 
@@ -228,8 +227,7 @@ module Gws::Monitor::TopicFilter
   # 回答一覧CSV
   def download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    csv = @item.to_csv.t
-      encode('SJIS', invalid: :replace, undef: :replace)
+    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
 
     send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
   end

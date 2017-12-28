@@ -18,8 +18,8 @@
         </tr>
         </thead>
         <tbody>
-        <% subscribed_groups = @item.subscribed_groups.to_a %>
-        <% subscribed_groups.each do |group| %>
+        <% attend_groups = @item.attend_groups.to_a %>
+        <% attend_groups.each do |group| %>
             <% post = @item.children.where(user_group_id: group.id).last %>
             <td class="state"><%= @item.answer_state_name(group) %></td>
             <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>

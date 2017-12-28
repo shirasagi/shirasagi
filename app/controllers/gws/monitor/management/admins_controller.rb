@@ -1,7 +1,10 @@
-class Gws::Monitor::Management::TopicsController < ApplicationController
+class Gws::Monitor::Management::AdminsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Monitor::TopicFilter
+
+  before_action :check_readable
+  navi_view 'gws/monitor/management/main/navi'
 
   private
 
@@ -26,7 +29,13 @@ class Gws::Monitor::Management::TopicsController < ApplicationController
     @items = @items.allow(:read, @cur_user, site: @cur_site)
     @items = @items.without_deleted
     @items = @items.search(params[:s])
-    @items = @items.custom_order(params.dig(:s, :sort) || 'updated_desc')
+    @items = @items.custom_order(params.dig(:s, :sort))
     @items = @items.page(params[:page]).per(50)
+  end
+
+  def check_readable
+    if @item
+      raise '403' unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    end
   end
 end

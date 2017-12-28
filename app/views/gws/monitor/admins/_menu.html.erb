@@ -11,20 +11,20 @@
   });
 <% end %>
 
-<nav class="nav-management-menu">
-  <% if Gws::Monitor::Topic.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to gws_monitor_management_main_path do %>
-          <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
-      <% end %>
+<% if @cur_user.gws_role_permissions["edit_other_gws_monitor_posts_#{@cur_site.id}"].to_i > 0 %>
+<nav class="nav-management-menu hide-mb">
+  <%= link_to gws_monitor_management_main_path do %>
+    <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
   <% end %>
 </nav>
+<% end %>
 
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock|categories/ %>
+  <% elsif params[:action] =~ /new|create|lock|categories|forward/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

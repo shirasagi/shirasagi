@@ -13,14 +13,14 @@
 </div>
 
 <% @tap_menu = proc do |item| %>
-  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-  <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-  <%= link_to t('gws/monitor.management.links.active'), action: :active, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.show'), action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
 <% end %>
 <% @index_title = proc do |item| %>
+  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+  <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
   <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-  <% if item.descendants_files_count.to_i > 0 %>
-    <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+  <% if (file_count = item.descendants.where(user_group_id: @cur_group.id).pluck(:file_ids).flatten.compact.length) > 0 %>
+    <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= file_count %></span>
   <% end %>
 <% end %>
 <% @index_meta = proc do |item| %>
@@ -33,20 +33,18 @@
   <% elsif sort_key.start_with?('released') %>
     <span class="datetime"><%= @model.t(:released) %><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
   <% else %>
-    <span class="datetime">
-    <%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %>
-      <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
-  </span>
+    <span class="datetime"><%= @model.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
   <% end %>
-  <span class="article-state"><%= item.label(:article_state) %></span>
+  <span class="answer-state"><%= item.answer_state_name(@cur_group) %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
   <span class="categories">
     <% item.categories.compact.each do |category| %>
-      <%= link_to(category.trailing_name, url_for(category: category.id), class: "gws-category-label", style: category_label_css(category)) %>
+      <%= link_to(category.trailing_name, { category: category.id }, class: "gws-category-label", style: category_label_css(category)) %>
     <% end %>
   </span>
-  <span class="count"><%= t('gws/monitor.topic.answer_state') %><%= item.answer_count_admin %></span>
-  <span class="state"><%= item.label(:state) %></span>
+  <span class="count">
+    <%= t('gws/monitor.topic.answer_state') %><%= item.answer_count(@cur_group) %>
+  </span>
 <% end %>
 
 <%= render 'gws/monitor/main/tabs' %>

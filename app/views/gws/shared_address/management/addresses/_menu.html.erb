@@ -1,3 +1,9 @@
+<nav class="nav-management-menu hide-mb">
+  <%= link_to gws_shared_address_addresses_path do %>
+    <i class="material-icons md-20">&#xE879;</i><%= t("ss.links.back") %>
+  <% end %>
+</nav>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>

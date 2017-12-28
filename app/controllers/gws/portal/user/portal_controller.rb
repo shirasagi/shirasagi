@@ -39,6 +39,12 @@ class Gws::Portal::User::PortalController < ApplicationController
       @notices = Gws::Notice.site(@cur_site).and_public.
         readable(@cur_user, site: @cur_site).
         page(1).per(5)
+
+      @monitors = Gws::Monitor::Topic.site(@cur_site).topic.
+        and_public.
+        and_attended(@cur_user, site: @cur_site, group: @cur_group).
+        and_unanswered(@cur_group).
+        and_noticed
     end
 
     @links = Gws::Link.site(@cur_site).and_public.
