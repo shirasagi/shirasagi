@@ -33,7 +33,10 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example do
       click_on "削除する"
       expect(page).to have_text(text)
 
-      click_on "削除"
+      within "form" do
+        click_button "削除"
+      end
+
       expect(page).not_to have_text(text)
     end
   end
