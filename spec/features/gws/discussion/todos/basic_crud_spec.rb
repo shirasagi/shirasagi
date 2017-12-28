@@ -4,18 +4,17 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let!(:site) { gws_site }
     let!(:forum) { create :gws_discussion_forum }
-    let!(:index_path) { gws_discussion_forum_todos_path(site: site.id, forum_id: forum.id) }
+    #let!(:index_path) { gws_discussion_forum_todos_path(site: site.id, forum_id: forum.id) }
     let!(:new_path) { new_gws_discussion_forum_todo_path(site: site.id, forum_id: forum.id) }
 
     before { login_gws_user }
 
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
-    end
+    #it "#index" do
+    #  visit index_path
+    #  expect(current_path).not_to eq sns_login_path
+    #end
 
     it "#new" do
-      gws_site
       visit new_path
 
       text = "text-#{unique_id}"
