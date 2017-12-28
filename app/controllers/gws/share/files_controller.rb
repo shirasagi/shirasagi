@@ -94,7 +94,7 @@ class Gws::Share::FilesController < ApplicationController
   def new
     return redirect_to(action: :index) unless @folder
     @item = @model.new pre_params.merge(fix_params)
-    raise "403" unless @item.allowed?(:write, @cur_user, site: @cur_site) && @folder.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @item.allowed?(:write, @cur_user, site: @cur_site) && @folder.uploadable?(@cur_user)
   end
 
   def update
