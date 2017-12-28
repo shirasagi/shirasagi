@@ -58,7 +58,9 @@ class Gws::Facility::Item
   end
 
   def category_options
-    @category_options ||= Gws::Facility::Category.site(@cur_site || site).
+    site = @cur_site || self.site
+    user = @cur_user || self.user
+    @category_options ||= Gws::Facility::Category.site(site).readable(user, site: site).
       map { |c| [c.name, c.id] }
   end
 end
