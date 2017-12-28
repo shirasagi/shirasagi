@@ -7,7 +7,7 @@ function Gws_Bookmark() {
   this.bookmark_icon = "&#xE866;";
   this.unbookmark_icon = "&#xE867;";
   this.loading = false;
-};
+}
 
 Gws_Bookmark.prototype.render = function(opts) {
   var _this, icon, bookmark_name, span, ul, li;
@@ -15,21 +15,21 @@ Gws_Bookmark.prototype.render = function(opts) {
     opts = {};
   }
   _this = this;
-  _this.bookmark_id = opts['id'];
-  _this.default_name = opts['default_name'];
-  _this.url = opts['url'];
-  _this.model = opts['model'];
+  this.bookmark_id = opts['id'];
+  this.default_name = opts['default_name'];
+  this.url = opts['url'];
+  this.model = opts['model'];
 
-  if (_this.bookmark_id) {
-    icon = _this.bookmark_icon;
+  if (this.bookmark_id) {
+    icon = this.bookmark_icon;
   } else {
-    icon = _this.unbookmark_icon;
+    icon = this.unbookmark_icon;
   }
-  bookmark_name = opts['name'] || _this.default_name;
+  bookmark_name = opts['name'] || this.default_name;
 
   span = $('<span class="bookmark-icon"></span>');
   span.append($('<i class="material-icons">' + icon + '</i>'));
-  _this.el.html(span);
+  this.el.html(span);
   ul = $('<ul class="dropdown-menu"></ul>');
   ul.append($('<li><div class="bookmark-notice"></div></li>'));
   li = $('<li></li>');
@@ -37,9 +37,9 @@ Gws_Bookmark.prototype.render = function(opts) {
   li.append($('<input name="button" type="button" class="btn update" />').val(opts['save']));
   li.append($('<input name="button" type="button" class="btn delete" />').val(opts['delete']));
   ul.append(li);
-  _this.el.append(ul);
+  this.el.append(ul);
 
-  _this.el.click(function(e) {
+  this.el.click(function(e) {
     if (_this.loading) {
       return false;
     } else if ($(e.target).hasClass('update')) {
@@ -56,19 +56,19 @@ Gws_Bookmark.prototype.render = function(opts) {
 };
 
 Gws_Bookmark.prototype.create = function() {
-  loading = true;
+  this.loading = true;
   var _this, html;
   _this = this;
-  html = _this.el.find('.dropdown-menu').html();
-  _this.el.find('.dropdown-menu').html(SS.loading);
+  html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
   $.ajax({
-    url: _this.url,
+    url: this.url,
     method: 'POST',
     data: {
       item: {
-        name: _this.default_name,
+        name: this.default_name,
         url: location.pathname,
-        model: _this.model
+        model: this.model
       }
     },
     success: function(data) {
@@ -88,15 +88,15 @@ Gws_Bookmark.prototype.create = function() {
 };
 
 Gws_Bookmark.prototype.update = function() {
-  loading = true;
+  this.loading = true;
   var _this, html, new_name, uri;
   _this = this;
-  new_name = _this.el.find('.bookmark-name').val() || _this.default_name;
-  uri = _this.url + '/' + _this.bookmark_id;
-  html = _this.el.find('.dropdown-menu').html();
-  _this.el.find('.dropdown-menu').html(SS.loading);
-  _this.el.addClass('active');
-  _this.el.find('.dropdown-menu').addClass('active');
+  new_name = this.el.find('.bookmark-name').val() || this.default_name;
+  uri = this.url + '/' + this.bookmark_id;
+  html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
+  this.el.addClass('active');
+  this.el.find('.dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
@@ -105,7 +105,7 @@ Gws_Bookmark.prototype.update = function() {
       item: {
         name: new_name,
         url: location.pathname,
-        model: _this.model
+        model: this.model
       }
     },
     success: function(data) {
@@ -127,15 +127,15 @@ Gws_Bookmark.prototype.update = function() {
 Gws_Bookmark.prototype.delete = function() {
   var _this, html, uri;
   _this = this;
-  if (!_this.bookmark_id) {
+  if (!this.bookmark_id) {
     return false;
   }
-  _this.loading = true;
-  uri = _this.url + '/' + _this.bookmark_id;
-  html = _this.el.find('.dropdown-menu').html();
-  _this.el.find('.dropdown-menu').html(SS.loading);
-  _this.el.addClass('active');
-  _this.el.find('.dropdown-menu').addClass('active');
+  this.loading = true;
+  uri = this.url + '/' + this.bookmark_id;
+  html = this.el.find('.dropdown-menu').html();
+  this.el.find('.dropdown-menu').html(SS.loading);
+  this.el.addClass('active');
+  this.el.find('.dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
