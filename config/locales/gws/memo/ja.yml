@@ -18,16 +18,17 @@ ja:
       trash: ゴミ箱に移す
       reply: 返信する
     confirm:
-      trash_all: ゴミ箱に移しますか?
-      set_seen_all: 既読にしますか?
-      unset_seen_all: 未読にしますか?
-      set_star_all: スターをつけますか?
-      unset_star_all: スターをはずしますか?
+      trash_all: ゴミ箱に移しますか？
+      set_seen_all: 既読にしますか？
+      unset_seen_all: 未読にしますか？
+      set_star_all: スターをつけますか？
+      unset_star_all: スターを外しますか？
       move: 移動しますか?
+      send: 送信してよろしいですか？
       move_drop:
         head: 選択したメッセージを
         to: から
-        tail: に移動しますか?
+        tail: に移動しますか？
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱

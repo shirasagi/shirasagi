@@ -1,6 +1,11 @@
 <%= jquery do %>
   Gws_Memo_Message.render();
   $("#addon-basic").hide();
+  $(".js-send").on("click", function() {
+    if (!confirm('<%= I18n.t("gws/memo/message.confirm.send") %>')) {
+      return false;
+    }
+  });
 <% end %>
 
 <% @crud_buttons = proc do |f| %>
