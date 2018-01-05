@@ -28,7 +28,9 @@ module SS::Model::Address
     field :personal_webpage, type: String
     field :memo, type: String
 
-    permit_params :name, :kana, :company, :title, :tel, :email,
+    belongs_to :member, class_name: "Gws::User"
+
+    permit_params :member_id, :name, :kana, :company, :title, :tel, :email,
                   :home_postal_code, :home_prefecture, :home_city, :home_street_address, :home_tel, :home_fax,
                   :office_postal_code, :office_prefecture, :office_city, :office_street_address, :office_tel, :office_fax,
                   :personal_webpage, :memo
@@ -39,6 +41,7 @@ module SS::Model::Address
     default_scope ->{ order_by kana: 1, name: 1 }
 
     scope :and_has_email, ->{ where :email.exists => true }
+    scope :and_has_member, ->{ where :member_id.exists => true }
   end
 
   def email_address

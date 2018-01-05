@@ -32,6 +32,10 @@ SS::Application.routes.draw do
 
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
 
+    namespace "apis" do
+      get "personal_addresses" => "personal_addresses#index"
+    end
+
     scope '/management' do
       get '/' => redirect { |p, req| "#{req.path}/folders" }, as: :management_main
       resources :folders, concerns: :deletion

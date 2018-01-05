@@ -409,6 +409,7 @@ ja:
         permission_level: 権限レベル
         permissions: 権限設定
       ss/model/address:
+        member_id: ユーザー
         name: 氏名
         kana: カナ
         company: 会社
@@ -662,6 +663,8 @@ ja:
         - /css/mobile.css
         - が設定されます。
     ss/model/address:
+      member_id:
+        - ユーザーを設定します。
       name:
         - 氏名を入力します。
       kana:
