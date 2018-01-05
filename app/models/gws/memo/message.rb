@@ -20,8 +20,8 @@ class Gws::Memo::Message
   alias from user
   alias form_id user_id
 
-  alias to members
-  alias to_ids member_ids
+  alias to to_members
+  alias to_ids to_member_ids
 
   set_permission_name 'private_gws_memo_messages', :edit
 

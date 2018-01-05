@@ -60,7 +60,7 @@ ja:
       gws/memo/comments: コメント
       gws/memo/group_setting: メッセージ
       gws/memo/body: 内容
-      gws/memo/member: 参加者
+      gws/memo/member: 宛先
   gws_role:
     edit_private_gws_memo_messages: メッセージの管理
   mongoid:
@@ -87,7 +87,10 @@ ja:
       gws/memo/message:
         name: 件名
         subject: 件名
-        member_ids: 宛先
+        member_ids: 参加者
+        to_member_ids: 宛先
+        cc_member_ids: CC
+        bcc_member_ids: BCC
         body: 本文
         from: 差出人
         to: 宛先

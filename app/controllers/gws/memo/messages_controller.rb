@@ -93,7 +93,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def reply
     @item = @model.new pre_params.merge(fix_params)
     item_reply = @model.find(params[:id])
-    @item.member_ids = [item_reply.user_id]
+    @item.to_member_ids = [item_reply.user_id]
     @item.subject = "Re: #{item_reply.subject}"
 
     @item.new_memo

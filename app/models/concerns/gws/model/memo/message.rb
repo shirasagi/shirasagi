@@ -110,10 +110,6 @@ module Gws::Model
       files.present?
     end
 
-    def display_to
-      members.map(&:long_name)
-    end
-
     def unseen?(user = nil)
       return false if user.nil?
       seen.exclude?(user.id.to_s)
