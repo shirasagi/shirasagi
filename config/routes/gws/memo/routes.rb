@@ -19,7 +19,6 @@ SS::Application.routes.draw do
         post :unset_star_all
         post :move_all
         put :move
-        post :forward
       end
       member do
         get :trash
@@ -27,6 +26,7 @@ SS::Application.routes.draw do
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply
+        get :forward
       end
     end
 

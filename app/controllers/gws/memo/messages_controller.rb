@@ -122,9 +122,13 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def forward
-    forward_params = params.require(:item).permit(:subject, :text, :html, :format)
-    @item = @model.new pre_params.merge(fix_params).merge(forward_params)
-    render :new
+    @item = @model.new pre_params.merge(fix_params)
+    item_forward = @model.find(params[:id])
+    @item.member_ids = []
+
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
   end
 
   def update

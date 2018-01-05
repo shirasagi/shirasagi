@@ -18,6 +18,7 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <%= link_to t('gws/memo/message.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
+    <%= link_to t('gws/memo/message.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
     <%= link_to(t('ss.links.edit'), action: :edit, id: @item) if @cur_user.id == @item.user_id %>
     <%= link_to(t('ss.links.delete'), action: :delete, id: @item) if @cur_user.id == @item.user_id %>
     <% if %w(INBOX.Trash INBOX.Draft INBOX.Sent).exclude?(params[:folder]) %>
