@@ -1,5 +1,5 @@
 module Gws::Addon
-  module Member
+  module Memo::Member
     extend ActiveSupport::Concern
     extend SS::Addon
     include Gws::Member

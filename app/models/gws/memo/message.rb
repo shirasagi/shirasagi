@@ -6,7 +6,7 @@ class Gws::Memo::Message
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::SitePermission
-  include Gws::Addon::Member
+  include Gws::Addon::Memo::Member
   include Gws::Addon::Memo::Body
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
