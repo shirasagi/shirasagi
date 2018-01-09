@@ -28,6 +28,7 @@ production: &production
     # - model: portlet model (required)
     #   name: portlet name
     #   limit: items size
+    #   category_id: category id
     #   grid:
     #     col: position x (1..4)
     #     row: position y (1..n)
