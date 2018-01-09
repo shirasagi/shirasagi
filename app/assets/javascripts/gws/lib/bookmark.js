@@ -22,7 +22,7 @@ Gws_Bookmark.prototype.render = function(opts) {
   if (this.bookmark_id) {
     var icon = this.bookmark_icon;
   } else {
-    var icon = this.unbookmark_icon;
+    icon = this.unbookmark_icon;
   }
   var bookmark_name = opts['name'] || this.default_name;
 
