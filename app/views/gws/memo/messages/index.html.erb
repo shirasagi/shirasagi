@@ -37,13 +37,12 @@
 
         <div class="info">
           <% if @cur_folder.sent_box? %>
-            <span class="field to">
-              <%= item.display_to.first if item.to.present? %>
-            </span>
+            <% addr = item.to.present? ? item.display_to.first : nil %>
+            <span class="field to" title="<%= addr %>"><%= addr %></span>
           <% else %>
-            <span class="field from"><%= item.user.long_name %></span>
+            <span class="field from" title="<%= item.user.long_name %>"><%= item.user.long_name %></span>
           <% end %>
-          <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title' %>
+          <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %>
           <span class="field datetime"><%= item.display_send_date %></span>
           <span class="field size"><%= item.display_size %></span>
         </div>
