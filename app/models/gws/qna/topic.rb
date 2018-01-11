@@ -14,6 +14,7 @@ class Gws::Qna::Topic
   include Gws::Qna::BrowsingState
 
   readable_setting_include_custom_groups
+  hide_released_field
 
   field :question_state, type: String, default: 'open'
 

@@ -31,7 +31,7 @@ class Gws::Portal::User::PortalController < ApplicationController
   public
 
   def show
-    if @portal_user == @cur_user
+    if @portal.my_portal?
       @sys_notices = Sys::Notice.and_public.
         gw_admin_notice.
         page(1).per(5)

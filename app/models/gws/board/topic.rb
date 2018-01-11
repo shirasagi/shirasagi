@@ -14,6 +14,7 @@ class Gws::Board::Topic
   include Gws::Board::BrowsingState
 
   readable_setting_include_custom_groups
+  hide_released_field
 
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
