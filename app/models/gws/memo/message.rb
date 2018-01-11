@@ -8,6 +8,7 @@ class Gws::Memo::Message
   include Gws::SitePermission
   include Gws::Addon::Memo::Member
   include Gws::Addon::Memo::Body
+  include Gws::Addon::Memo::Priority
   include Gws::Addon::File
   include Gws::Addon::Memo::Comments
   include Gws::Addon::Reminder
