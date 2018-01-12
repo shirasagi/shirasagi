@@ -27,6 +27,8 @@ SS::Application.routes.draw do
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply
         get :forward
+        put :send_mdn
+        put :ignore_mdn
       end
     end
 

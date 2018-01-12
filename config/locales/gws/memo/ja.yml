@@ -38,6 +38,12 @@ ja:
         head: 選択したメッセージを
         to: から
         tail: に移動しますか？
+    notice:
+      send_mdn: 開封確認メッセージを送信しました。
+      ignore_mdn: 開封確認を無視しました。
+    mdn:
+      subject: '[開封確認] %{subject}'
+      confirmed: "メッセージが開封されました。\n%{name} %{date}"
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱

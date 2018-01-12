@@ -25,7 +25,7 @@ module Gws::Model
       default_scope -> { order_by(send_date: -1, updated: -1) }
 
       after_initialize :set_default_reminder_date, if: :new_record?
-      before_validation :set_path, :set_size, :set_send_date
+      before_validation :set_path, :set_size
 
       validate :validate_attached_file_size
       validate :validate_message
@@ -88,12 +88,6 @@ module Gws::Model
 
     def set_size
       self.size = self.files.pluck(:size).inject(:+)
-    end
-
-    def set_send_date
-      now = Time.zone.now
-      self.send_date ||= now if state == "public"
-      #self.seen[cur_user.id] ||= now if cur_user
     end
 
     public
@@ -171,6 +165,10 @@ module Gws::Model
 
     def draft?
       self.state == "closed"
+    end
+
+    def public?
+      self.state == "public"
     end
 
     def apply_filters(user)

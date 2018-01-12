@@ -50,6 +50,19 @@
     </div>
     <% end %>
 
+    <% if @item.public? && @item.request_mdn_ids.include?(@cur_user.id) %>
+    <div class="request-mdn-notice">
+      <span class="message">
+        <i class="material-icons md-18">info</i>
+        <span><%= t("webmail.notice.requested_mdn") %></span>
+      </span>
+      <span class="action">
+        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_gws_memo_message_path %>
+        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_gws_memo_message_path %>
+      </span>
+    </div>
+    <% end %>
+
     <% if @item.attachments.present? %>
       <div class="attachments">
         <% @item.attachments.each do |part| %>

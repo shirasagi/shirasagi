@@ -7,7 +7,7 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :deny_with_auth
 
   before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
-  before_action :set_item, only: [:show, :edit, :update, :trash, :delete, :destroy, :toggle_star]
+  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :trash, :delete, :destroy, :toggle_star]
   #before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
@@ -104,7 +104,6 @@ class Gws::Memo::MessagesController < ApplicationController
   def create
     @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
-      @item.send_date = Time.zone.now
       @item.state = "public"
 
       # 外部メールへの転送
@@ -137,7 +136,6 @@ class Gws::Memo::MessagesController < ApplicationController
 
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
-      @item.send_date = Time.zone.now
       @item.state = "public"
 
       # 外部メールへの転送
@@ -157,6 +155,30 @@ class Gws::Memo::MessagesController < ApplicationController
     raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     @item.set_seen(@cur_user).update if @item.state == "public"
     render
+  end
+
+  def send_mdn
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+
+    @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
+    @item.update
+
+    item_mdn = @model.new fix_params
+    item_mdn.to_member_ids = [@item.user_id]
+    item_mdn.subject = I18n.t("gws/memo/message.mdn.subject", subject: @item.subject)
+    item_mdn.text = I18n.t("gws/memo/message.mdn.confirmed", name: @cur_user.long_name, date: Time.zone.now.strftime("%Y/%m/%d %H:%M"))
+    item_mdn.format = "text"
+    item_mdn.state = "public"
+    item_mdn.save
+
+    render_change :send_mdn, redirect: { action: :show }
+  end
+
+  def ignore_mdn
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+    @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
+    @item.update
+    render_change :ignore_mdn, redirect: { action: :show }
   end
 
   def trash
@@ -215,5 +237,14 @@ class Gws::Memo::MessagesController < ApplicationController
       item.unset_star(@cur_user).update
     end
     render_destroy_all(false)
+  end
+
+  def render_change(action, opts = {})
+    location = params[:redirect].presence || opts[:redirect] || { action: :index }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice: t("gws/memo/message.notice.#{action}") }
+      format.json { render json: { action: params[:action], notice: t("gws/memo/message.notice.#{action}") } }
+    end
   end
 end
