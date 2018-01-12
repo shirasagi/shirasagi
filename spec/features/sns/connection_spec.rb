@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys_conf", type: :feature, dbscope: :example do
+describe "sns_connection", type: :feature, dbscope: :example do
   context "with user which is permitted all" do
     before do
       role = create(:sys_role_admin, name: unique_id)
@@ -10,11 +10,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on I18n.t('sys.info')
-      expect(current_path).to eq sys_conf_path
+      click_on I18n.t('sns.connection')
+      expect(current_path).to eq sns_connection_path
       within 'nav.mod-navi' do
         expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_css('h3 a', text: 'サイト')
         expect(page).to have_css('h3 a', text: 'グループ')
         expect(page).to have_css('h3 a', text: 'ユーザー')
@@ -38,11 +37,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on I18n.t('sys.info')
-      expect(current_path).to eq sys_conf_path
+      click_on I18n.t('sns.connection')
+      expect(current_path).to eq sns_connection_path
       within 'nav.mod-navi' do
         expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')
@@ -66,11 +64,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on I18n.t('sys.info')
-      expect(current_path).to eq sys_conf_path
+      click_on I18n.t('sns.connection')
+      expect(current_path).to eq sns_connection_path
       within 'nav.mod-navi' do
         expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')
@@ -94,11 +91,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on I18n.t('sys.info')
-      expect(current_path).to eq sys_conf_path
+      click_on I18n.t('sns.connection')
+      expect(current_path).to eq sns_connection_path
       within 'nav.mod-navi' do
         expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')
@@ -122,17 +118,15 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on I18n.t('sys.info')
-      expect(current_path).to eq sys_conf_path
+      click_on I18n.t('sns.connection')
+      expect(current_path).to eq sns_connection_path
       within 'nav.mod-navi' do
         expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
         expect(page).to have_css('h3 a', text: 'ユーザー')
         expect(page).to have_no_css('h3 a', text: '権限/ロール')
         expect(page).to have_css('h3 a', text: '認証')
-        expect(page).to have_css('h3 a', text: '最大ファイルサイズ')
         expect(page).to have_no_css('h3 a', text: 'サイト複製')
         expect(page).to have_css('h3 a', text: 'テスト')
         expect(page).to have_css('h3 a', text: '操作履歴')
@@ -149,11 +143,10 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      click_on I18n.t('sys.info')
-      expect(current_path).to eq sys_conf_path
+      click_on I18n.t('sns.connection')
+      expect(current_path).to eq sns_connection_path
       within 'nav.mod-navi' do
         expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'システム情報')
         expect(page).to have_no_css('h3 a', text: 'サイト')
         expect(page).to have_no_css('h3 a', text: 'グループ')
         expect(page).to have_no_css('h3 a', text: 'ユーザー')

@@ -20,7 +20,6 @@ SS::Application.routes.draw do
 
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
-    get "conf" => "conf#index", as: :conf
     get "site_copy" => "site_copy#index", as: :site_copy
     post "site_copy/confirm" => "site_copy#confirm"
     post "site_copy/run" => "site_copy#run"
@@ -29,6 +28,8 @@ SS::Application.routes.draw do
     get "test/http" => "test/http#index", as: :test_http
     get "test/mail" => "test/mail#index", as: :test_mail
     post "test/mail" => "test/mail#create", as: :send_test_mail
+
+    resource :menu_settings, only: [:show, :edit, :update]
 
     resources :users, concerns: :deletion
     resources :notice, concerns: :deletion
