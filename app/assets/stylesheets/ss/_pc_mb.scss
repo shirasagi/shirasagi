@@ -659,13 +659,15 @@ td {
 .main-navi-md {
   h2 {
     a {
-      padding: 7px 10px;
+      padding-left: 14px;
     }
     a:before {
       background: none !important;
     }
     .material-icons {
-      margin-right: 2px;
+      width: 30px;
+      margin-top: -2px;
+      line-height: 20px;
     }
   }
 }
