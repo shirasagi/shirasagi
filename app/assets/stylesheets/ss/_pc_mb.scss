@@ -1961,6 +1961,19 @@ select {
   height: 2.4em;
   max-width: 100%;
   padding: 0 4px;
+  option {
+    color: #333;
+  }
+  &.blank-value, &.has-blank-value :first-child {
+    color: #888;
+  }
+}
+input {
+    &:placeholder-shown { color: #888; }
+    &::-webkit-input-placeholder { color: #888; }
+    &:-moz-placeholder { color: #888; opacity: 1; }
+    &::-moz-placeholder { color: #888; opacity: 1; }
+    &:-ms-input-placeholder { color: #888; }
 }
 input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
 input[type=email], input[type=number], input[type=tel] {

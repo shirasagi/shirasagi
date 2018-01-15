@@ -110,6 +110,14 @@ $ ->
     $(".dropdown").removeClass('active')
     $(".dropdown-menu").removeClass('active')
 
+  # select
+  $("select").change ->
+    if $(this).val() == ""
+      $(this).addClass("blank-value has-blank-value")
+    else
+      $(this).removeClass("blank-value")
+  $("select").change()
+
   SS_ListUI.render("table.index")
   SS_Mobile.render()
   SS_AddonTabs.render()
