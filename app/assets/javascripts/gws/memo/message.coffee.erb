@@ -1,13 +1,15 @@
 class @Gws_Memo_Message
   @render: ->
-    $("#addon-gws-agents-addons-group_permission").hide()
-
     $(".list-head .search").on "click", ->
       $(".gws-memo-search").animate({ height: "toggle" }, "fast")
 
     $(".gws-memo-search .reset").on "click", ->
       $(".gws-memo-search input[type=text]").val("")
       $(".gws-memo-search .search").click()
+
+    $('.cc-bcc-label').click ->
+      $('.gws-addon-memo-member .cc-bcc').animate({ height: 'toggle' }, 'fast')
+      return false
 
     $(".send-mdn,.ignore-mdn").on "click", ->
       return false if $(this).hasClass('disabled')

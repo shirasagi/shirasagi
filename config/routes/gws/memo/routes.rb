@@ -35,6 +35,7 @@ SS::Application.routes.draw do
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
 
     namespace "apis" do
+      get "shared_addresses" => "shared_addresses#index"
       get "personal_addresses" => "personal_addresses#index"
     end
 
