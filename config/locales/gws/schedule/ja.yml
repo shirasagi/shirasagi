@@ -47,12 +47,10 @@ ja:
     options:
       allday:
         allday: 終日
-      repeat_type:
-        none: 繰り返しなし
-        daily: 毎日
-        weekly: 毎週
-        monthly: 毎月
-        yearly: 毎年
+      attendance_state:
+        unknown: 未確認
+        attendance: 参加
+        absence: 不参加
       interval:
         daily: 日
         weekly: 週
@@ -61,16 +59,24 @@ ja:
       repeat_base:
         date: 日付
         wday: 曜日
+      repeat_type:
+        none: 繰り返しなし
+        daily: 毎日
+        weekly: 毎週
+        monthly: 毎月
+        yearly: 毎年
       schedule_attachment_state:
         allow: 許可する
         deny: 許可しない
       schedule_drag_drop_state:
         allow: 許可する
         deny: 許可しない
-      attendance_state:
-        unknown: 未確認
-        attendance: 参加
-        absence: 不参加
+      priority:
+        "1": 最高
+        "2": 高
+        "3": 標準
+        "4": 低
+        "5": 最低
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
@@ -190,6 +196,8 @@ ja:
         end_on: 終了日
         allday: 終日
         term: 日時
+      gws/schedule/priority:
+        priority: 重要度
       gws/schedule/plan: &plan
         repeat_plan_id: 繰り返し
         category_id: 種別
@@ -251,6 +259,8 @@ ja:
         - スケジュールの日時か日を入力します。
         -
         - 「終日」をチェックすると、終日にわたって実施するスケジュールを入力することができ、「終日」にチェックが入っている場合、スケジュールの日を入力します。
+    gws/schedule/priority:
+      priority: 重要度を選択します。
     gws/schedule/plan: &tooltip_plan
       category_id:
         - スケジュール種別を選択します。

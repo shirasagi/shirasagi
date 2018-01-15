@@ -10,9 +10,13 @@
   <dd><%= @item.category.name %></dd>
   <% end %>
 
+  <% if @item.priority.present? %>
+  <dt><%= @model.t :priority %></dt>
+  <dd><%= @item.label :priority %></dd>
+  <% end %>
+
+  <% if @item.color.present? %>
   <dt><%= @model.t :color %></dt>
-  <dd>
-    <span class="gws-schedule-color-block" style="<%= "background-color: #{@item.color}; color: #{@item.text_color}" %>">
-      <%= @item.name %></span>
-  </dd>
+  <dd><%= content_tag :span, @item.name, style: "background-color: #{@item.color}; color: #{@item.text_color}" %></dd>
+  <% end %>
 </dl>
