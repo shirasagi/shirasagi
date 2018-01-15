@@ -3,6 +3,7 @@ class Gws::Schedule::Todo
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Schedule::Priority
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::Schedule::Cloneable
