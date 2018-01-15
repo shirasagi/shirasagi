@@ -54,7 +54,7 @@ module Gws::Schedule::TodoFilter
     if @item.member?(@cur_user) || @item.readable?(@cur_user)
       render file: 'popup', layout: false
     else
-      render file: 'popup_hidden', layout: false
+      render file: 'app/views/gws/schedule/plans/popup_hidden', layout: false
     end
   end
 
