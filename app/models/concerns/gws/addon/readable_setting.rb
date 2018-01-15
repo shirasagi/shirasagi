@@ -24,8 +24,7 @@ module Gws::Addon::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
-      return none unless read_permission?(user, opts[:site])
-
+      return none unless self.allowed?(:read, user, opts)
       or_conds = readable_conditions(user, opts)
       where("$and" => [{ "$or" => or_conds }])
     }
@@ -39,7 +38,8 @@ module Gws::Addon::ReadableSetting
   end
 
   def readable?(user, opts = {})
-    return false if !self.class.read_permission?(user, opts[:site] || self.site)
+    opts[:site] ||= self.site
+    return false unless self.class.allowed?(:read, user, opts)
     return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
@@ -108,12 +108,6 @@ module Gws::Addon::ReadableSetting
   end
 
   module ClassMethods
-    def read_permission?(user, site)
-      return true if user.gws_role_permissions["read_other_#{permission_name}_#{site.id}"]
-      return true if user.gws_role_permissions["read_private_#{permission_name}_#{site.id}"]
-      false
-    end
-
     def readable_setting_included_custom_groups?
       class_variable_get(:@@_readable_setting_include_custom_groups)
     end
