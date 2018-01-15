@@ -6,8 +6,10 @@
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
 
+  <% if @model.released_field_shown? %>
   <dt><%= @model.t :released %><%= @model.tt :released %></dt>
   <dd><%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% end %>
 
   <dt><%= @model.t :release_date %><%= @model.tt :release_date %></dt>
   <dd><%= f.text_field :release_date, class: "datetime js-datetime", value: tryb { @item.release_date.strftime("%Y/%m/%d %H:%M") } %></dd>

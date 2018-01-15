@@ -1,7 +1,7 @@
 FactoryGirl.define do
   trait :gws_user_base do
     transient do
-      cur_group gws_site
+      cur_group { gws_site }
     end
 
     cur_site { gws_site }

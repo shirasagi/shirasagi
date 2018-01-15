@@ -9,6 +9,7 @@ class @Gws_Schedule_Calendar
     $.extend true, params, opts
     $(selector).fullCalendar(params)
     @renderInitialize(selector, init)
+    @overrideAddLink(selector)
 
   @renderInitialize: (selector, init = {})->
     $(selector).fullCalendar('changeView', init['view']) if init['view']
@@ -159,3 +160,16 @@ class @Gws_Schedule_Calendar
       else
         $('body').removeClass('vertical')
         $('body').addClass('horizontal')
+
+  @overrideAddLink: (selector) ->
+    $('.add-plan').click (ev) ->
+      now  = new Date
+      date = $(selector).fullCalendar('getDate')
+      view = $(selector).fullCalendar('getView')
+      href = $(this).attr('href').replace(/\?.*/, '')
+
+      unless view.start.isBefore(now) && view.end.isAfter(now)
+        start = "#{date.format('YYYY-MM-DD')}T#{now.getHours()}:00:00"
+        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}"
+        href  = href + "?start=#{start}&#{state}"
+      $(this).attr('href', href)

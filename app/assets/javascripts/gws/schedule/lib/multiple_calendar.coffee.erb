@@ -48,6 +48,7 @@ class @Gws_Schedule_Multiple_Calendar
     $.extend true, params, opts
     $(selector).fullCalendar(params)
     Gws_Schedule_Calendar.renderInitialize(selector, init)
+    Gws_Schedule_Calendar.overrideAddLink(selector)
 
     controller = $(selector)
     controller.find('.fc-today-button').click ->

@@ -1,9 +1,16 @@
 ja:
+  modules:
+    sys: システム
+    addons:
+      sys/role: ロール
+      sys/saml_setting: SAML設定
+      sys/open_id_connect_setting: OpenId Connect設定
+      sys/environment_setting: 環境変数設定
+      sys/body: お知らせ本文
+
   sys:
     conf: システム設定
-    info: システム情報
     notice: システムのお知らせ
-    connect_info: 接続情報
     server_name: サーバー名
     server_addr: サーバーIPアドレス
     remote_addr: 接続元IPアドレス
@@ -14,6 +21,7 @@ ja:
     test: テスト
     db_tool: DBツール
     role: 権限/ロール
+    menu_settings: メニュー設定
     max_file_size: 最大ファイルサイズ
     site_copy: サイト複製
     webmail_account: メールアカウント
@@ -48,15 +56,6 @@ ja:
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
 
-  modules:
-    sys: システム
-    addons:
-      sys/role: ロール
-      sys/saml_setting: SAML設定
-      sys/open_id_connect_setting: OpenId Connect設定
-      sys/environment_setting: 環境変数設定
-      sys/body: お知らせ本文
-
   sys_role:
     edit_sys_sites: サイトの管理
     edit_sys_notices: システムのお知らせ管理
@@ -68,6 +67,7 @@ ja:
 
   mongoid:
     models:
+      sys/setting: システム設定
       sys/site: サイト
       sys/user: ユーザー
       sys/role: ロール
@@ -76,6 +76,9 @@ ja:
       sys/postal_code: 郵便番号
       sys/mail_log: メールログ
     attributes:
+      sys/setting:
+        menu_file_state: ファイル
+        menu_connection_state: 接続情報
       sys/notice:
         html: 本文
         name: お知らせ見出し

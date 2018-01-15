@@ -7,6 +7,7 @@ SS::Application.routes.draw do
 
   namespace "sns", path: ".u" do
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }, as: :cur_user
+    get "connection" => "connection#index", as: :connection
 
     resource :user_profile, as: :cur_user_profile, only: [:show]
     resource :user_account, as: :cur_user_account
