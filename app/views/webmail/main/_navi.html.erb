@@ -20,7 +20,7 @@ end
 
   <h2>
     <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), 'data-name' => 'INBOX', 'class' => 'mail-droppable mailbox-droppable' do %>
-      <i class="material-icons">&#xE0E1;</i> <%= t('webmail.box.inbox') %>
+      <i class="material-icons">&#xE0E1;</i><%= t('webmail.box.inbox') %>
       <% if @mailboxes && inbox = @mailboxes.inbox %>
         <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
       <% end %>

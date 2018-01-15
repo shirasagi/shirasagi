@@ -1,18 +1,40 @@
 <% setting = Sys::Setting.first || Sys::Setting.new %>
 
-<nav class="main-navi">
+<nav class="main-navi main-navi-md">
   <!--
   <h2><%= link_to t("sns.profile"), sns_cur_user_profile_path %></h2>
   -->
-  <% if setting.try(:menu_file_visible?) %>
-  <h2><%= link_to t("sns.file"), sns_cur_user_files_path, class: 'icon-conv' %></h2>
-  <% end %>
 
-  <h2><%= link_to t("sns.account"), sns_cur_user_account_path, class: 'icon-conf' %></h2>
+  <h2><%= link_to sns_cur_user_account_path do %>
+    <i class="material-icons">&#xE853;</i><%= t("sns.account") %>
+  <% end %></h2>
+
+  <% if setting.try(:menu_file_visible?) %>
+    <h2><%= link_to sns_cur_user_files_path do %>
+      <i class="material-icons">&#xE2C8;</i><%= t("sns.file") %>
+    </h2><% end %>
+  <% end %>
 
   <% if setting.try(:menu_connection_visible?) %>
-  <h2><%= link_to t("sns.connection"), sns_connection_path, class: 'icon-conf' %></h2>
+    <h2><%= link_to sns_connection_path do %>
+      <i class="material-icons">&#xE88F;</i><%= t("sns.connection") %>
+    </h2><% end %>
   <% end %>
+
+  <h2 class="sys-conf"><%= link_to "#" do %>
+    <i class="material-icons">&#xE8B8;</i><%= t("sys.conf") %>
+  </h2><% end %>
 </nav>
 
-<%= render 'sys/main/navi' %>
+<%= jquery do %>
+  var conf = $('.mod-navi a').first().attr('href');
+  if (conf) {
+    $('.main-navi .sys-conf a').attr('href', conf);
+  } else {
+    $('.main-navi .sys-conf').remove();
+  }
+<% end %>
+
+<div class="hide">
+  <%= render 'sys/main/navi' %>
+</div>

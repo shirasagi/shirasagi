@@ -1,12 +1,3 @@
-<%= jquery do %>
-  $('.mod-navi').each(function() {
-    var navi = $(this);
-    if (navi.find('a').length == 0) {
-      navi.remove();
-    }
-  });
-<% end %>
-
 <nav class="mod-navi">
   <h2><%= t("sys.conf") %></h2>
 
