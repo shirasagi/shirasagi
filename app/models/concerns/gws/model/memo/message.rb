@@ -6,7 +6,7 @@ module Gws::Model
     included do
       store_in collection: "gws_memo_messages"
 
-      attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path
+      attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path, :in_request_mdn
 
       field :subject, type: String
       field :text, type: String, default: ''
@@ -20,13 +20,25 @@ module Gws::Model
       field :path, type: Hash, default: {}
       field :send_date, type: DateTime
 
-      permit_params :subject, :text, :html, :format, :in_path
+      embeds_ids :to_members, class_name: "Gws::User"
+      embeds_ids :cc_members, class_name: "Gws::User"
+      embeds_ids :bcc_members, class_name: "Gws::User"
+      embeds_ids :request_mdn, class_name: "Gws::User"
+
+      permit_params :subject, :text, :html, :format, :in_path, :in_request_mdn
+      permit_params to_member_ids: [], cc_member_ids: [], bcc_member_ids: []
 
       default_scope -> { order_by(send_date: -1, updated: -1) }
 
       after_initialize :set_default_reminder_date, if: :new_record?
-      before_validation :set_path, :set_size
 
+      before_validation :set_member_ids
+      before_validation :set_request_mdn
+      before_validation :set_send_date
+      before_validation :set_path
+      before_validation :set_size
+
+      validate :validate_presence_member
       validate :validate_attached_file_size
       validate :validate_message
 
@@ -90,6 +102,27 @@ module Gws::Model
       self.size = self.files.pluck(:size).inject(:+)
     end
 
+    def set_member_ids
+      self.member_ids = (to_member_ids + cc_member_ids + bcc_member_ids).uniq
+    end
+
+    def set_request_mdn
+      return if in_request_mdn != "1"
+      return if send_date.present?
+      self.request_mdn_ids = self.member_ids - [@cur_user.id]
+    end
+
+    def set_send_date
+      now = Time.zone.now
+      self.send_date ||= now if state == "public"
+      #self.seen[cur_user.id] ||= now if cur_user
+    end
+
+    def validate_presence_member
+      return true if to_member_ids.present?
+      errors.add :to_member_ids, :empty
+    end
+
     public
 
     def display_subject
@@ -98,6 +131,18 @@ module Gws::Model
 
     def display_send_date
       send_date ? send_date.strftime('%Y/%m/%d %H:%M') : I18n.t('gws/memo/folder.inbox_draft')
+    end
+
+    def display_to
+      to_members.map(&:long_name)
+    end
+
+    def display_cc
+      cc_members.map(&:long_name)
+    end
+
+    def display_bcc
+      bcc_members.map(&:long_name)
     end
 
     def attachments?

@@ -14,10 +14,12 @@
     <%= f.text_area :html, class: "html", style: "height: 400px;" %>
   </div>
 
+  <% if @item.send_date.blank? %>
   <div class="header-options">
     <lable for="in-request-mdn">
       <%= f.check_box :in_request_mdn, :id => "in-request-mdn" %>
       <%= t('webmail.options.action.request_mdn') %>
     </lable>
   </div>
+  <% end %>
 </div>
