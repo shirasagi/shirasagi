@@ -38,9 +38,7 @@ module Gws::Model
       before_validation :set_path
       before_validation :set_size
 
-      validate :validate_presence_member
       validate :validate_attached_file_size
-      validate :validate_message
 
       scope :search, ->(params) {
         criteria = where({})
@@ -116,11 +114,6 @@ module Gws::Model
       now = Time.zone.now
       self.send_date ||= now if state == "public"
       #self.seen[cur_user.id] ||= now if cur_user
-    end
-
-    def validate_presence_member
-      return true if to_member_ids.present?
-      errors.add :to_member_ids, :empty
     end
 
     public
@@ -243,14 +236,6 @@ module Gws::Model
 
       if size > limit
         errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
-      end
-    end
-
-    def validate_message
-      if self.text.blank? && self.format == "text"
-        errors.add(:base, :input_message)
-      elsif self.html.blank? && self.format == "html"
-        errors.add(:base, :input_message)
       end
     end
 
