@@ -68,9 +68,6 @@ module Gws::Model
       scope :unseen, ->(user) {
         where("seen.#{user.id}" => { '$exists' => false })
       }
-      scope :search_replay, ->(replay_id) {
-        where("$and" => [{ "_id" => replay_id }])
-      }
       scope :unfiltered, ->(user) {
         where(:"filtered.#{user.id}".exists => false)
       }
