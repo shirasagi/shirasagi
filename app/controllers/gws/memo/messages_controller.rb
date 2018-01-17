@@ -90,17 +90,6 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.new_memo
   end
 
-  def reply
-    @item = @model.new pre_params.merge(fix_params)
-    item_reply = @model.find(params[:id])
-    @item.to_member_ids = [item_reply.user_id]
-    @item.subject = "Re: #{item_reply.subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
-  end
-
   def create
     @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
@@ -120,19 +109,20 @@ class Gws::Memo::MessagesController < ApplicationController
     render_create @item.save, location: { action: :index }, notice: notice
   end
 
-  def forward
-    @item = @model.new pre_params.merge(fix_params)
-    item_forward = @model.find(params[:id])
-    @item.member_ids = []
+  def show
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+    @item.set_seen(@cur_user).update if @item.state == "public"
+    render
+  end
 
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
+  def edit
+    raise '403' unless (@cur_user.id == @item.user_id && @item.draft?)
+    render
   end
 
   def update
     @item.attributes = get_params
-    raise '403' unless @cur_user.id == @item.user_id
+    raise '403' unless (@cur_user.id == @item.user_id && @item.draft?)
 
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
@@ -151,10 +141,25 @@ class Gws::Memo::MessagesController < ApplicationController
     render_update @item.update, location: { action: :index }, notice: notice
   end
 
-  def show
-    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
-    @item.set_seen(@cur_user).update if @item.state == "public"
-    render
+  def reply
+    @item = @model.new pre_params.merge(fix_params)
+    item_reply = @model.find(params[:id])
+    @item.to_member_ids = [item_reply.user_id]
+    @item.subject = "Re: #{item_reply.subject}"
+
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+  end
+
+  def forward
+    @item = @model.new pre_params.merge(fix_params)
+    item_forward = @model.find(params[:id])
+    @item.member_ids = []
+
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
   end
 
   def send_mdn
