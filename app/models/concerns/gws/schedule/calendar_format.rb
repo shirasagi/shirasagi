@@ -13,7 +13,6 @@ module Gws::Schedule::CalendarFormat
     data[:title] = I18n.t("gws/schedule.private_plan")
     if data[:readable]
       data[:title] = name
-      data[:title] = I18n.t("gws/schedule.private_plan_mark") + name if private_plan?(user)
 
       if html.present?
         data[:sanitizedHtml] = ::ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
@@ -47,6 +46,10 @@ module Gws::Schedule::CalendarFormat
       data[:className] += ' fc-event-repeat'
     end
 
+    if data[:readable] && private_plan?(user)
+      data[:className] += ' fc-event-private'
+    end
+
     if attendance_check_plan?
       if contains_unknown_attendance?
         data[:className] += ' fc-event-unknown-attendance'
@@ -56,6 +59,10 @@ module Gws::Schedule::CalendarFormat
       attendance_state = attendance.try(:attendance_state) || 'unknown'
 
       data[:className] += " fc-event-user-attendance-#{attendance_state}"
+    end
+
+    if try(:workflow_state).present?
+      data[:className] += " fc-event-workflow-#{workflow_state}"
     end
 
     data

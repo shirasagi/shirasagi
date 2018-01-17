@@ -50,7 +50,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user)
+    raise '403' unless @item.readable?(@cur_user) || @item.member?(@cur_user)
     render
   end
 

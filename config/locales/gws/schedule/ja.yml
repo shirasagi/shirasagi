@@ -2,7 +2,6 @@ ja:
   gws/schedule:
     reminder: リマインダー
     private_plan: 予定あり
-    private_plan_mark: "[秘] "
     loading: 読み込み中
     no_plan: 予定はありません
     search_plans: 予定を検索
@@ -169,6 +168,10 @@ ja:
     edit_private_gws_schedule_plans: 予定の編集（所有）
     delete_other_gws_schedule_plans: 予定の削除（全て）
     delete_private_gws_schedule_plans: 予定の削除（所有）
+    approve_other_gws_schedule_plans: 予定の承認（全て）
+    approve_private_gws_schedule_plans: 予定の承認（所有）
+    reroute_other_gws_schedule_plans: 承認の経路変更（全て）
+    reroute_private_gws_schedule_plans: 承認の経路変更（所有）
     read_other_gws_schedule_categories: 種別の閲覧（全て）
     read_private_gws_schedule_categories: 種別の閲覧（所有）
     edit_other_gws_schedule_categories: 種別の編集（全て）
