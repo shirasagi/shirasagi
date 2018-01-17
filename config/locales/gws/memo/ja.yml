@@ -24,6 +24,7 @@ ja:
       unset_star: スターをはずす
       trash: ゴミ箱に移す
       reply: 返信する
+      reply_all: 全員に返信
       forward: 転送する
       deleted: 削除済み
     confirm:

@@ -193,6 +193,19 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
   end
 
+  def reply_all
+    @item = @model.new pre_params.merge(fix_params)
+    item_reply = @model.find(params[:id])
+
+    @item.to_member_ids = [item_reply.user_id] + item_reply.to_member_ids - [@cur_user.id]
+    @item.cc_member_ids = item_reply.cc_member_ids
+    @item.subject = "Re: #{item_reply.subject}"
+
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+  end
+
   def forward
     @item = @model.new pre_params.merge(fix_params)
     item_forward = @model.find(params[:id])
