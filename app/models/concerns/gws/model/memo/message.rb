@@ -126,15 +126,15 @@ module Gws::Model
     end
 
     def display_to
-      to_members.map(&:long_name)
+      sorted_to_members.map(&:long_name)
     end
 
     def display_cc
-      cc_members.map(&:long_name)
+      sorted_cc_members.map(&:long_name)
     end
 
     def display_bcc
-      bcc_members.map(&:long_name)
+      sorted_bcc_members.map(&:long_name)
     end
 
     def attachments?
