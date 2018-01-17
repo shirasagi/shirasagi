@@ -16,6 +16,7 @@ module Gws::Model
       field :seen, type: Hash, default: {}
       field :star, type: Hash, default: {}
       field :filtered, type: Hash, default: {}
+      field :deleted, type: Hash, default: {}
       field :state, type: String, default: 'public'
       field :path, type: Hash, default: {}
       field :send_date, type: DateTime
@@ -58,7 +59,7 @@ module Gws::Model
       scope :and_closed, ->() { where(state: "closed") }
       scope :folder, ->(folder, user) {
         if folder.sent_box?
-          user(user).and_public
+          user(user).where(:"deleted.from".exists => false).and_public
         elsif folder.draft_box?
           user(user).and_closed
         else
@@ -98,6 +99,7 @@ module Gws::Model
     end
 
     def set_member_ids
+      return if send_date.present?
       self.member_ids = (to_member_ids + cc_member_ids + bcc_member_ids).uniq
     end
 
@@ -139,14 +141,35 @@ module Gws::Model
       files.present?
     end
 
-    def unseen?(user = nil)
-      return false if user.nil?
+    def unseen?(user)
+      return false unless user
       seen.exclude?(user.id.to_s)
     end
 
-    def star?(user = :nil)
-      return false if user == :nil
+    def star?(user)
+      return false unless user
       star.include?(user.id.to_s)
+    end
+
+    def destroy_with_member(user)
+      self.member_ids = member_ids - [user.id]
+      self.deleted[user.id.to_s] = Time.zone.now
+
+      if member_ids.blank? && deleted["from"]
+        destroy
+      else
+        update
+      end
+    end
+
+    def destroy_with_from
+      self.deleted["from"] = Time.zone.now
+
+      if member_ids.blank? && deleted["from"]
+        destroy
+      else
+        update
+      end
     end
 
     def display_size

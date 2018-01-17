@@ -53,7 +53,7 @@
     <% when 'INBOX.Sent', 'INBOX.Draft' %>
       <button class="btn destroy-all"><%= t 'ss.links.delete' %></button>
     <% when 'INBOX.Trash' %>
-    <% # nop %>
+      <button class="btn destroy-all"><%= t 'ss.links.delete' %></button>
     <% else %>
       <button class="btn trash-all"><%= t 'gws/memo/message.links.trash' %></button>
     <% end %>

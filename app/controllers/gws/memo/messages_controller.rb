@@ -141,6 +141,47 @@ class Gws::Memo::MessagesController < ApplicationController
     render_update @item.update, location: { action: :index }, notice: notice
   end
 
+  def delete
+    raise "403" unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+    render
+  end
+
+  def destroy
+    raise "403" unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+
+    if @cur_folder.draft_box?
+      render_destroy @item.destroy
+    elsif @cur_folder.sent_box?
+      render_destroy @item.destroy_with_from
+    else
+      render_destroy @item.destroy_with_member(@cur_user)
+    end
+  end
+
+  def destroy_all
+    do_destroy = proc do |item|
+      if @cur_folder.draft_box?
+        item.destroy
+      elsif @cur_folder.sent_box?
+        item.destroy_with_from
+      else
+        item.destroy_with_member(@cur_user)
+      end
+    end
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if @cur_user.id == item.user_id || item.member?(@cur_user)
+        next if do_destroy.call(item)
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
   def reply
     @item = @model.new pre_params.merge(fix_params)
     item_reply = @model.find(params[:id])
