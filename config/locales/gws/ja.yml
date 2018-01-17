@@ -79,6 +79,9 @@ ja:
         public: 全公開
         select: 選択範囲
         private: 非公開
+      notification:
+        disabled: 通知しない
+        enabled: 通知する
 
     links:
       back_to_portal: ポータルへ戻る
@@ -151,6 +154,7 @@ ja:
       gws/system/log_setting: ログ設定
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
+      gws/notice/notification: 通知
 
   mongoid:
     models:
@@ -368,6 +372,10 @@ ja:
         charge_tel: 担当電話
         charge_address: 担当住所
         divide_duties: 分掌事務
+      gws/addon/notice/notification:
+        message_notification: メッセージ通知
+        email_notification: メール通知
+        notification_noticed: 通知日時
 
   tooltip:
     gws/addon/reminder:
@@ -474,6 +482,16 @@ ja:
       charge_tel: 担当電話を入力します。
       charge_address: 担当住所・電話を入力します。
       divide_duties: 事務分掌を入力します。
+    gws/addon/notice/notification:
+      message_notification:
+        - お知らせをメッセージで通知する場合、「通知する」を選択してください。
+      email_notification:
+        - お知らせをメール通知で通知する場合、「通知する」を選択してください。
+        - メールアドレスが未設定のユーザーには通知されませんのでご注意ください。
+      notification_noticed:
+        - 通知した日時を表示しています。
+        - 通知日時をクリアすることで、再度、通知が送信されるようになります。
+        - お知らせを編集後、再度、通知を送りたい場合、クリアしてください。
 
   activemodel:
     models:

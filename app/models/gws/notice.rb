@@ -5,6 +5,7 @@ class Gws::Notice
   include Gws::Reference::Site
   #include SS::Addon::Body
   include SS::Addon::Markdown
+  include Gws::Addon::Notice::Notification
   include Gws::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission

@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :message_notification %></dt>
+  <dd><%= @item.label :message_notification %></dd>
+
+  <dt><%= @model.t :email_notification %></dt>
+  <dd><%= @item.label :email_notification %></dd>
+
+  <dt><%= @model.t :notification_noticed %></dt>
+  <dd><%= tryb { @item.notification_noticed.strftime('%Y/%m/%d %H:%M') } %></dd>
+</dl>
