@@ -103,10 +103,6 @@ ja:
       gws/memo/message:
         name: 件名
         subject: 件名
-        member_ids: 参加者
-        to_member_ids: 宛先
-        cc_member_ids: CC
-        bcc_member_ids: BCC
         body: 本文
         from: 差出人
         to: 宛先
@@ -133,6 +129,11 @@ ja:
       gws/memo/forward:
         email: メールアドレス
         default: メール転送設定
+      gws/addon/memo/member:
+        member_ids: 参加者
+        to_member_ids: 宛先
+        cc_member_ids: CC
+        bcc_member_ids: BCC
       gws/addon/memo/group_setting:
         memo_filesize_limit: 添付サイズ制限
         memo_reminder: リマインダー表示設定
