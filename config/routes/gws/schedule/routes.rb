@@ -23,6 +23,9 @@ SS::Application.routes.draw do
     get 'search/users' => 'search/users#index', as: :search_users
     get 'search/times' => 'search/times#index', as: :search_times
     get 'search/reservations' => 'search/reservations#index', as: :search_reservations
+    get 'csv' => 'csv#index', as: :csv
+    get 'export_csv' => 'csv#export', as: :export_csv
+    post 'import_csv' => 'csv#import', as: :import_csv
 
     get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
     resources :plans, concerns: :plans

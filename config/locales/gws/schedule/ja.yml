@@ -84,6 +84,12 @@ ja:
       index: 予約状況の確認
       free: 予約可能
       exist: 予約不可
+    import:
+      result: 結果
+      entry: 登録可能
+      exist: 登録済み
+      error: エラー
+      saved: "%{count}件の予定をインポートしました。"
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
@@ -247,7 +253,7 @@ ja:
         attendances: 出欠情報
       gws/schedule/attendance:
         attendance_state: 出欠
-      gws/schedule/facility_column_values:
+      gws/addon/schedule/facility_column_values:
         main_facility_id: 主設備
         facility_column_values: 設備追加情報
 

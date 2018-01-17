@@ -14,6 +14,7 @@ class Gws::Schedule::PlansController < ApplicationController
   public
 
   def index
+    @csv_menu = true
     return render if params[:format] != 'json'
 
     @items = Gws::Schedule::Plan.site(@cur_site).

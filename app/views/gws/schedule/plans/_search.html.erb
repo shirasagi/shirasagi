@@ -1,4 +1,7 @@
 <div class="operations">
+  <% if @csv_menu %>
+    <input type="button" value="CSV" class="btn btn-csv" />
+  <% end %>
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
 
@@ -11,6 +14,9 @@
 <% end %>
 
 <%= jquery do %>
+$('.gws-schedule-box header .operations .btn-csv').on('click', function() {
+  location.href = '<%= gws_schedule_csv_path %>';
+});
 $('.gws-schedule-box header .operations .btn-print').on('click', function() {
   var viewName = $('#calendar').fullCalendar('getView').name;
   var curDate = $('#calendar').fullCalendar('getDate');
