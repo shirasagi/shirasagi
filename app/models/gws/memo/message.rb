@@ -10,7 +10,7 @@ class Gws::Memo::Message
   include Gws::Addon::Memo::Body
   include Gws::Addon::Memo::Priority
   include Gws::Addon::File
-  include Gws::Addon::Memo::Comments
+  #include Gws::Addon::Memo::Comments
   include Gws::Addon::Reminder
 
   after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }

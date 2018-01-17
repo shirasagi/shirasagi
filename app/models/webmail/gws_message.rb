@@ -9,7 +9,7 @@ class Webmail::GwsMessage
   include Gws::Addon::Memo::Member
   include Gws::Addon::Memo::Body
   include Webmail::Addon::MailFile
-  include Gws::Addon::Memo::Comments
+  #include Gws::Addon::Memo::Comments
   #include Gws::Addon::Reminder
 
   alias name subject
