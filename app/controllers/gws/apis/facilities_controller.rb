@@ -21,7 +21,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
   end
 
   def category_ids
-    return if @category.blank?
+    return category_criteria.pluck(:id) + [nil] if @category.blank?
     ids = category_criteria.where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
     ids << @category.id
   end
@@ -36,7 +36,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
       reservable(@cur_user).
       active.
       search(params[:s])
-    @items = @items.in(category_id: category_ids) if @category.present?
+    @items = @items.in(category_id: category_ids)
     @items = @items.page(params[:page]).per(50)
   end
 end

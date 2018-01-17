@@ -154,7 +154,7 @@ module Gws::Addon::System::MenuSetting
   end
 
   def menu_report_visible?
-    menu_workflow_state == 'show'
+    menu_report_state == 'show'
   end
 
   def menu_workflow_visible?

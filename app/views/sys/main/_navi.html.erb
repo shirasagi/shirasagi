@@ -1,15 +1,8 @@
 <nav class="mod-navi">
   <h2><%= t("sys.conf") %></h2>
 
-  <h3><%= link_to t("sys.info"), sys_conf_path %></h3>
-  <% if Sys::Site.allowed?(:edit, @cur_user) %>
-    <h3><%= link_to t("sys.site"), sys_sites_path %></h3>
-  <% end %>
   <% if Sys::Group.allowed?(:edit, @cur_user) %>
     <h3><%= link_to t("sys.group"), sys_groups_path %></h3>
-  <% end %>
-  <% if Sys::Notice.allowed?(:edit, @cur_user) %>
-    <h3><%= link_to t("sys.notice"), sys_notice_index_path %></h3>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>
     <h3><%= link_to t("sys.user"), sys_users_path %></h3>
@@ -21,24 +14,31 @@
     <h3><%= link_to t("sys.auth"), sys_auth_path %></h3>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h3><%= link_to t("sys.max_file_size"), sys_max_file_sizes_path %></h3>
+    <h3><%= link_to t("sys.webmail_account"), import_sys_webmail_accounts_path %></h3>
+  <% end %>
+
+  <% if Sys::Site.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to t("sys.site"), sys_sites_path %></h3>
   <% end %>
   <% if Sys::Site.allowed?(:edit, @cur_user) %>
     <h3><%= link_to t("sys.site_copy"), sys_site_copy_path %></h3>
   <% end %>
-  <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h3><%= link_to t("sys.webmail_account"), import_sys_webmail_accounts_path %></h3>
-  <% end %>
-  <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h3><%= link_to t("sys.test"), sys_test_path %></h3>
-    <h3><%= link_to t("history.log"), history_sys_logs_path %></h3>
-  <% end %>
-  <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h3><%= link_to t("job.main"), job_sys_main_path %></h3>
+
+  <% if Sys::Notice.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to t("sys.notice"), sys_notice_index_path %></h3>
   <% end %>
   <% if Sys::Setting.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to t("sys.menu_settings"), sys_menu_settings_path %></h3>
     <h3><%= link_to t("sys.postal_code"), sys_postal_codes_path %></h3>
+    <h3><%= link_to t("sys.max_file_size"), sys_max_file_sizes_path %></h3>
   <% end %>
+
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to t("sys.test"), sys_test_path %></h3>
+    <h3><%= link_to t("job.main"), job_sys_main_path %></h3>
+    <h3><%= link_to t("history.log"), history_sys_logs_path %></h3>
+  <% end %>
+
   <% if Sys::MailLog.allowed?(:edit, @cur_user) %>
     <h3><%= link_to Sys::MailLog.model_name.human, sys_mail_logs_path %></h3>
   <% end %>

@@ -107,12 +107,15 @@ module Gws::Portal::PortletModel
 
     def default_portlets(conf)
       conf.map do |data|
+        data = data.dup
         grid = data.delete('grid') || {}
+        cate = data.delete('category_id')
         data = data.map { |k, v| [k.to_sym, v] }.to_h
 
         item = default_portlet(data.delete(:model))
         item.attributes = data
         item.grid_data.merge!(grid.symbolize_keys) if grid.present?
+        item.send("#{item.portlet_model}_category_ids=", [cate]) if cate.present?
         item
       end
     end

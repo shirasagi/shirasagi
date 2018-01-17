@@ -1,11 +1,13 @@
 <% if @sys_notices.present? %>
-<div class="index portal-notice">
+<div class="index">
   <div class="list-head"><%= t "sys.notice" %></div>
   <ul class="list-items">
     <% @sys_notices.each do |item| %>
     <li class="list-item">
       <div class="info">
         <%= link_to item.name, gws_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+      </div>
+      <div class="meta">
         <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
       </div>
     </li>
@@ -18,21 +20,23 @@
 <% end %>
 
 <% if @notices.present? || @monitors.present? %>
-<div class="index portal-notice">
+<div class="index">
   <div class="list-head"><%= t "mongoid.models.gws/notice" %></div>
   <ul class="list-items">
     <% if @monitors.present? %>
       <li class="list-item">
         <div class="info">
           <%= link_to t('gws/monitor.portal_notice_format', count: @monitors.count), gws_monitor_topics_path, class: "title notice-severity-high" %>
-          <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
         </div>
       </li>
     <% end %>
+
     <% @notices.each do |item| %>
     <li class="list-item">
       <div class="info">
         <%= link_to item.name, gws_public_notice_path(id: item), class: "title notice-severity-#{item.severity}" %>
+      </div>
+      <div class="meta">
         <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
         <% if item.updated_after_released? %>
           <span class="label"><%= t('gws.history.mode.update') %></span>

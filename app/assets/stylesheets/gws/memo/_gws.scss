@@ -96,9 +96,9 @@
     .head {
       height: 20px;
       position: relative;
-      .field { position:absolute; }
+      .field { position: absolute; }
       .from, .to { left: 82px; }
-      .title { left: 236px; }
+      .title { left: 286px; }
       .priority { right: 224px; }
       .datetime { right: 128px; }
       .size { right: 14px; }
@@ -115,12 +115,12 @@
       vertical-align: text-top;
     }
     .from, .to {
-      width: 150px;
+      width: 200px;
       padding-right: 5px;
     }
     .title {
-      width: calc(100% - 410px);
-      width: -webkit-calc(100% - 410px);
+      width: calc(100% - 460px);
+      width: -webkit-calc(100% - 460px);
       padding-right: 5px;
       font-size: 100%;
       @include mb {
@@ -128,7 +128,7 @@
       }
     }
     .datetime {
-      width: 110px;
+      width: 120px;
       font-weight: normal;
     }
     .priority {
