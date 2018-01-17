@@ -39,6 +39,7 @@ module Gws::Model
       before_validation :set_path
       before_validation :set_size
 
+      validates :subject, presence: true
       validate :validate_attached_file_size
 
       scope :search, ->(params) {
