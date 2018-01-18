@@ -7,7 +7,7 @@ class Gws::Schedule::CsvController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
-    @crumbs << ['CSV', gws_schedule_csv_path]
+    @crumbs << [t('ss.links.import'), gws_schedule_csv_path]
   end
 
   public
@@ -19,22 +19,6 @@ class Gws::Schedule::CsvController < ApplicationController
     #  active.
     #  search(params[:s]).
     #  order_by_title(@cur_site)
-  end
-
-  def export
-    @items = Gws::Schedule::Plan.site(@cur_site).
-      member(@cur_user).
-      search(params[:s])
-
-
-    #enum = Gws::Schedule::PlanCsv::Exporter.dump_csv(@items, site: @cur_site);exit
-
-    filename = "gws_schedule_plans_#{Time.zone.now.to_i}.csv"
-    response.status = 200
-    send_enum(
-      Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site),
-      type: 'text/csv; charset=Shift_JIS', filename: filename
-    )
   end
 
   def import
