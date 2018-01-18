@@ -14,13 +14,16 @@ class Gws::Memo::ForwardsController < ApplicationController
   end
 
   def set_item
-    if @model.user(@cur_user).present?
-      @item = @model.find_by(user_id: @cur_user.id)
-    else
-      @item = @model.new(user_id: @cur_user.id)
-      @item.site = @cur_site
-      @item.save
+    @item = @model.user(@cur_user).site(@cur_site).first
+
+    if @item.nil?
+      @item = @model.new fix_params
+      @item.save!
     end
+  end
+
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
   end
 
   def set_crumbs
@@ -33,6 +36,7 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   def index
     @items = @model.user(@cur_user).
+      site(@cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
   end

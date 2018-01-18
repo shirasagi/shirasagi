@@ -15,6 +15,7 @@ class Gws::Memo::FiltersController < ApplicationController
   def set_item
     super
     raise "404" if @item.user_id != @cur_user.id
+    raise "404" if @item.site_id != @cur_site.id
   end
 
   def set_crumbs
@@ -31,6 +32,7 @@ class Gws::Memo::FiltersController < ApplicationController
 
   def index
     @items = @model.user(@cur_user).
+      site(@cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
   end

@@ -20,6 +20,12 @@ class Gws::Memo::MessagesController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
+  def set_item
+    super
+    raise "404" if (@cur_user.id != @item.user_id) && !@item.member?(@cur_user)
+    raise "404" if @item.site_id != @cur_site.id
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
@@ -34,27 +40,21 @@ class Gws::Memo::MessagesController < ApplicationController
     end
   end
 
-  def set_item
-    super
-    return if (@cur_user.id == @item.user_id || @item.member?(@cur_user))
-    raise "403"
-  end
-
   def set_cur_folder
     if params[:folder] =~ /^(INBOX|INBOX\.Trash|INBOX\.Draft|INBOX\.Sent)$/
       @cur_folder = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
     else
-      @cur_folder = Gws::Memo::Folder.user(@cur_user).find_by(_id: params[:folder])
+      @cur_folder = Gws::Memo::Folder.user(@cur_user).site(@cur_site).find_by(_id: params[:folder])
     end
   end
 
   def set_folders
-    @folders = Gws::Memo::Folder.static_items(@cur_user, @cur_site) + Gws::Memo::Folder.user(@cur_user)
+    @folders = Gws::Memo::Folder.static_items(@cur_user, @cur_site) + Gws::Memo::Folder.user(@cur_user).site(@cur_site)
     @folders.each { |folder| folder.site = @cur_site }
   end
 
   def apply_filters
-    @model.user(@cur_user).unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
+    @model.user(@cur_user).site(@cur_site).unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
   end
 
   #def redirect_to_appropriate_folder
@@ -81,6 +81,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def index
     @items = @model.folder(@cur_folder, @cur_user).
+      site(@cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
   end
@@ -96,7 +97,7 @@ class Gws::Memo::MessagesController < ApplicationController
       @item.state = "public"
 
       # 外部メールへの転送
-      forward_setting = Gws::Memo::Forward.user(@cur_user).first
+      forward_setting = Gws::Memo::Forward.user(@cur_user).site(@cur_site).first
       if forward_setting && forward_setting.default == "enabled"
         Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
       end
@@ -129,7 +130,7 @@ class Gws::Memo::MessagesController < ApplicationController
       @item.state = "public"
 
       # 外部メールへの転送
-      forward_setting = Gws::Memo::Forward.user(@cur_user).first
+      forward_setting = Gws::Memo::Forward.user(@cur_user).site(@cur_site).first
       if forward_setting && forward_setting.default == "enabled"
         Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
       end
@@ -168,7 +169,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def reply
     @item = @model.new pre_params.merge(fix_params)
-    item_reply = @model.find(params[:id])
+    item_reply = @model.site(@cur_site).find(params[:id])
     @item.to_member_ids = [item_reply.user_id]
     @item.subject = "Re: #{item_reply.subject}"
 
@@ -179,7 +180,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def reply_all
     @item = @model.new pre_params.merge(fix_params)
-    item_reply = @model.find(params[:id])
+    item_reply = @model.site(@cur_site).find(params[:id])
 
     @item.to_member_ids = [item_reply.user_id] + item_reply.to_member_ids - [@cur_user.id]
     @item.cc_member_ids = item_reply.cc_member_ids
@@ -192,7 +193,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def forward
     @item = @model.new pre_params.merge(fix_params)
-    item_forward = @model.find(params[:id])
+    item_forward = @model.site(@cur_site).find(params[:id])
     @item.member_ids = []
 
     @item.new_memo

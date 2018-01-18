@@ -298,8 +298,8 @@ module Gws::Model
     end
 
     module ClassMethods
-      def unseens(user)
-        self.member(user).unseen(user).and_public
+      def unseens(user, site)
+        self.member(user).site(site).unseen(user).and_public
         #self.where('$and' => [
         #  { "to.#{user.id}".to_sym.exists => true },
         #  { "seen.#{user.id}".to_sym.exists => false },

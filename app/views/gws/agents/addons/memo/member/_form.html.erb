@@ -8,16 +8,8 @@
     <dt><%= @model.t :to_member_ids %><%= @model.tt :to_member_ids %></dt>
     <dd>
       <%= f.hidden_field "to_member_ids[]", value: "", class: "hidden-ids" %>
-
-      <% group_count = @cur_user.root_groups.size %>
-      <% @cur_user.root_groups.each do |group| %>
-        <%= link_to gws_apis_users_path(site: group), class: "ajax-box" do %>
-          <%= group.name if group_count > 1 %> <%= t "gws.organization_addresses" %>
-        <% end %>
-        <%= link_to gws_memo_apis_shared_addresses_path(site: group), class: "ajax-box" do %>
-          <%= group.name if group_count > 1 %> <%= t "modules.gws/shared_address" %>
-        <% end %>
-      <% end %>
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" %>
       <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
@@ -46,15 +38,8 @@
     <dd>
       <%= f.hidden_field "cc_member_ids[]", value: "", class: "hidden-ids" %>
 
-      <% group_count = @cur_user.root_groups.size %>
-      <% @cur_user.root_groups.each do |group| %>
-        <%= link_to gws_apis_users_path(site: group), class: "ajax-box" do %>
-          <%= group.name if group_count > 1 %> <%= t "gws.organization_addresses" %>
-        <% end %>
-        <%= link_to gws_memo_apis_shared_addresses_path(site: group), class: "ajax-box" do %>
-          <%= group.name if group_count > 1 %> <%= t "modules.gws/shared_address" %>
-        <% end %>
-      <% end %>
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" %>
       <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
@@ -79,15 +64,8 @@
     <dd>
       <%= f.hidden_field "bcc_member_ids[]", value: "", class: "hidden-ids" %>
 
-      <% group_count = @cur_user.root_groups.size %>
-      <% @cur_user.root_groups.each do |group| %>
-        <%= link_to gws_apis_users_path(site: group), class: "ajax-box" do %>
-          <%= group.name if group_count > 1 %> <%= t "gws.organization_addresses" %>
-        <% end %>
-        <%= link_to gws_memo_apis_shared_addresses_path(site: group), class: "ajax-box" do %>
-          <%= group.name if group_count > 1 %> <%= t "modules.gws/shared_address" %>
-        <% end %>
-      <% end %>
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" %>
       <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
