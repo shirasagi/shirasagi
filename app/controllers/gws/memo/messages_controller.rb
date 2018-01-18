@@ -54,7 +54,9 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def apply_filters
-    @model.user(@cur_user).site(@cur_site).unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
+    @model.site(@cur_site).unfiltered(@cur_user).each do |message|
+      message.apply_filters(@cur_user, @cur_site)
+    end
   end
 
   def send_forward_mails

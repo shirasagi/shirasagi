@@ -240,11 +240,11 @@ module Gws::Model
       self.state == "public"
     end
 
-    def apply_filters(user)
+    def apply_filters(user, site)
       matched_filter = Gws::Memo::Filter.site(site).user(user).enabled.detect{ |f| f.match?(self) }
       self.move(user, matched_filter.path) if matched_filter
       self.filtered[user.id.to_s] = Time.zone.now
-      self
+      update
     end
 
     def new_memo
