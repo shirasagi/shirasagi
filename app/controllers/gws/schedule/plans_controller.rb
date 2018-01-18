@@ -46,7 +46,7 @@ class Gws::Schedule::PlansController < ApplicationController
     filename = "gws_schedule_plans_#{Time.zone.now.to_i}.csv"
     response.status = 200
     send_enum(
-      Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site),
+      Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site, user: @cur_user),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
   end
