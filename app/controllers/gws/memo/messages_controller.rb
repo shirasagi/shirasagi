@@ -152,9 +152,9 @@ class Gws::Memo::MessagesController < ApplicationController
     if @cur_folder.draft_box?
       render_destroy @item.destroy
     elsif @cur_folder.sent_box?
-      render_destroy @item.destroy_with_from
+      render_destroy @item.destroy_from_sent
     else
-      render_destroy @item.destroy_with_member(@cur_user)
+      render_destroy @item.destroy_from_member(@cur_user)
     end
   end
 
@@ -163,9 +163,9 @@ class Gws::Memo::MessagesController < ApplicationController
       if @cur_folder.draft_box?
         item.destroy
       elsif @cur_folder.sent_box?
-        item.destroy_with_from
+        item.destroy_from_sent
       else
-        item.destroy_with_member(@cur_user)
+        item.destroy_from_member(@cur_user)
       end
     end
     entries = @items.entries

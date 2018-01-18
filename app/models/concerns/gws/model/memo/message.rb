@@ -60,7 +60,7 @@ module Gws::Model
       scope :and_closed, ->() { where(state: "closed") }
       scope :folder, ->(folder, user) {
         if folder.sent_box?
-          user(user).where(:"deleted.from".exists => false).and_public
+          user(user).where(:"deleted.sent".exists => false).and_public
         elsif folder.draft_box?
           user(user).and_closed
         else
@@ -100,8 +100,8 @@ module Gws::Model
     end
 
     def set_member_ids
-      return if send_date.present?
       self.member_ids = (to_member_ids + cc_member_ids + bcc_member_ids).uniq
+      self.member_ids = member_ids - deleted.keys.map(&:to_i)
     end
 
     def set_request_mdn
@@ -152,21 +152,21 @@ module Gws::Model
       star.include?(user.id.to_s)
     end
 
-    def destroy_with_member(user)
+    def destroy_from_member(user)
       self.member_ids = member_ids - [user.id]
       self.deleted[user.id.to_s] = Time.zone.now
 
-      if member_ids.blank? && deleted["from"]
+      if member_ids.blank? && deleted["sent"]
         destroy
       else
         update
       end
     end
 
-    def destroy_with_from
-      self.deleted["from"] = Time.zone.now
+    def destroy_from_sent
+      self.deleted["sent"] = Time.zone.now
 
-      if member_ids.blank? && deleted["from"]
+      if member_ids.blank? && deleted["sent"]
         destroy
       else
         update
