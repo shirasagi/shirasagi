@@ -48,7 +48,7 @@ class Gws::Share::Folder
   before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
 
-  default_scope ->{ order_by order: 1 }
+  default_scope ->{ order_by order: 1, name: 1 }
 
   scope :sub_folder, ->(key, folder) {
     if key.start_with?('root_folder')
