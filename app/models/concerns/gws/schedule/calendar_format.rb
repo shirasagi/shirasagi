@@ -61,8 +61,8 @@ module Gws::Schedule::CalendarFormat
       data[:className] += " fc-event-user-attendance-#{attendance_state}"
     end
 
-    if try(:workflow_state).present?
-      data[:className] += " fc-event-workflow-#{workflow_state}"
+    if approval_check_plan?
+      data[:className] += " fc-event-approval-#{approval_state}"
     end
 
     data

@@ -86,6 +86,10 @@ class Gws::Schedule::Todo
     false
   end
 
+  def approval_check_plan?
+    false
+  end
+
   def active?
     now = Time.zone.now
     return false if deleted.present? && deleted < now

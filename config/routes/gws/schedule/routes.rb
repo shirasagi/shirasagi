@@ -40,6 +40,7 @@ SS::Application.routes.draw do
     resources :holidays, concerns: :plans
     resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
+    resource :approval, path: ':plan_id/:user_id/approval', only: [:edit, :update]
 
     namespace 'todo' do
       get '/' => redirect { |p, req| "#{req.path}/readables" }, as: :main

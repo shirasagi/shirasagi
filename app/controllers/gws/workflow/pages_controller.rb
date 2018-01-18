@@ -10,7 +10,6 @@ class Gws::Workflow::PagesController < ApplicationController
 
   def set_model
     @model = Gws::Workflow::File
-    @model = Gws::Schedule::Plan if params[:id] =~ /[\da-f]{24}/ # schedule
   end
 
   def set_item

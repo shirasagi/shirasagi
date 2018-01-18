@@ -50,6 +50,10 @@ ja:
         unknown: 未確認
         attendance: 参加
         absence: 不参加
+      approval_state:
+        unknown: 未確認
+        approve: 承認
+        deny: 拒否
       interval:
         daily: 日
         weekly: 週
@@ -157,6 +161,7 @@ ja:
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント
       gws/schedule/attendances: 出欠確認
+      gws/schedule/approvals: 承認
       gws/schedule/reports: レポート
       gws/schedule/group_setting: スケジュール
 
@@ -168,10 +173,6 @@ ja:
     edit_private_gws_schedule_plans: 予定の編集（所有）
     delete_other_gws_schedule_plans: 予定の削除（全て）
     delete_private_gws_schedule_plans: 予定の削除（所有）
-    approve_other_gws_schedule_plans: 予定の承認（全て）
-    approve_private_gws_schedule_plans: 予定の承認（所有）
-    reroute_other_gws_schedule_plans: 承認の経路変更（全て）
-    reroute_private_gws_schedule_plans: 承認の経路変更（所有）
     read_other_gws_schedule_categories: 種別の閲覧（全て）
     read_private_gws_schedule_categories: 種別の閲覧（所有）
     edit_other_gws_schedule_categories: 種別の編集（全て）
@@ -192,6 +193,7 @@ ja:
       gws/schedule/holiday: 休日
       gws/schedule/comment: コメント
       gws/schedule/attendance: 出欠
+      gws/schedule/approval: 承認
     errors:
       models:
         gws/schedule/plan:
@@ -254,8 +256,13 @@ ja:
       gws/addon/schedule/attendances:
         attendance_check_state: 出欠確認
         attendances: 出欠情報
+      gws/addon/schedule/approvals:
+        approval_check_state: 承認
+        approvals: 承認情報
       gws/schedule/attendance:
         attendance_state: 出欠
+      gws/schedule/approval:
+        approval_state: 承認
       gws/addon/schedule/facility_column_values:
         main_facility_id: 主設備
         facility_column_values: 設備追加情報
