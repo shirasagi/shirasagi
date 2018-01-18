@@ -51,4 +51,10 @@
     var $permissions = $(this).closest('.module').find('.permissions');
     modifyCheckBoxAll($permissions, false);
   });
+
+  $('.role-permissions input[type="checkbox"]').on('change', function() {
+    var color = $(this).prop("checked") ? '#333' : '#aaa';
+    $(this).closest('label').css('color', color);
+  });
+  $('.role-permissions input[type="checkbox"]').change();
 <% end %>

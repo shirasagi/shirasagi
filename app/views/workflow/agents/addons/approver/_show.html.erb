@@ -23,7 +23,7 @@
             <div class="addon-body">
               <%= text_area :remand, :comment, value: "" %>
               <div class="buttons">
-                <% if workflow_approver[:state] == 'request' %> 
+                <% if workflow_approver[:state] == 'request' %>
                 <%= button_tag t("workflow.buttons.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
                 <% elsif workflow_approver[:state] == 'pending' %>
                 <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :approve, class: "update-item btn-primary" } %>

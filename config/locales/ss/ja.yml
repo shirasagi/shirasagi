@@ -9,6 +9,7 @@ ja:
     image: 画像
     import: インポート
     import_log: インポートログ
+    export: エクスポート
     login: ログイン
     logout: ログアウト
     module: モジュール
@@ -130,9 +131,14 @@ ja:
       initialized: 初期化しました。
       multibyte_filename_disabled: ※日本語ファイル名は使用できません。
       file_droppable: ファイルをドロップすることでアップロードできます。
+      uploading: アップロードしています。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
+    errors:
+      import:
+        blank_file: ファイルを入力してください。
+        invalid_file_type: 不正なファイル形式です。
     apis:
       groups:
         index: グループを選択する
@@ -433,6 +439,7 @@ ja:
       ss/addon/body:
         html: 本文
       ss/addon/markdown:
+        text_type: 内容形式
         text: 内容
         html: 内容
       ss/addon/mobile_setting:

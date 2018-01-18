@@ -3,24 +3,28 @@ class Gws::Schedule::Plan
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Schedule::Priority
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::Schedule::Cloneable
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
+  include ::Workflow::Addon::Approver
   include Gws::Addon::Schedule::Repeat
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Schedule::Reports
   include Gws::Addon::Schedule::Comments
-  include Gws::Addon::Schedule::Attendances
   include Gws::Addon::Member
+  include Gws::Addon::Schedule::Attendances
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::Schedule::FacilityColumnValues
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include ActiveSupport::NumberHelper
+
+  cattr_reader(:approver_user_class) { Gws::User }
 
   member_include_custom_groups
   permission_include_custom_groups
@@ -94,6 +98,19 @@ class Gws::Schedule::Plan
         :file_size_exceeds_limit,
         size: number_to_human_size(size),
         limit: number_to_human_size(limit))
+    end
+  end
+
+  def validate_workflow_approvers_role
+    return if errors.present?
+
+    users = workflow_approvers.map do |approver|
+      self.class.approver_user_class.where(id: approver[:user_id]).first
+    end
+    users = users.select(&:present?)
+    users.each do |user|
+      errors.add :workflow_approvers, :not_read, name: user.name unless readable?(user) || member?(user)
+      errors.add :workflow_approvers, :not_approve, name: user.name unless allowed?(:approve, user, site: cur_site)
     end
   end
 end

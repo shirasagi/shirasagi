@@ -2,7 +2,6 @@ ja:
   gws/schedule:
     reminder: リマインダー
     private_plan: 予定あり
-    private_plan_mark: "[秘] "
     loading: 読み込み中
     no_plan: 予定はありません
     search_plans: 予定を検索
@@ -47,12 +46,10 @@ ja:
     options:
       allday:
         allday: 終日
-      repeat_type:
-        none: 繰り返しなし
-        daily: 毎日
-        weekly: 毎週
-        monthly: 毎月
-        yearly: 毎年
+      attendance_state:
+        unknown: 未確認
+        attendance: 参加
+        absence: 不参加
       interval:
         daily: 日
         weekly: 週
@@ -61,16 +58,24 @@ ja:
       repeat_base:
         date: 日付
         wday: 曜日
+      repeat_type:
+        none: 繰り返しなし
+        daily: 毎日
+        weekly: 毎週
+        monthly: 毎月
+        yearly: 毎年
       schedule_attachment_state:
         allow: 許可する
         deny: 許可しない
       schedule_drag_drop_state:
         allow: 許可する
         deny: 許可しない
-      attendance_state:
-        unknown: 未確認
-        attendance: 参加
-        absence: 不参加
+      priority:
+        "1": 最高
+        "2": 高
+        "3": 標準
+        "4": 低
+        "5": 最低
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
@@ -78,6 +83,12 @@ ja:
       index: 予約状況の確認
       free: 予約可能
       exist: 予約不可
+    import:
+      result: 結果
+      entry: 登録可能
+      exist: 登録済み
+      error: エラー
+      saved: "%{count}件の予定をインポートしました。"
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
@@ -157,6 +168,10 @@ ja:
     edit_private_gws_schedule_plans: 予定の編集（所有）
     delete_other_gws_schedule_plans: 予定の削除（全て）
     delete_private_gws_schedule_plans: 予定の削除（所有）
+    approve_other_gws_schedule_plans: 予定の承認（全て）
+    approve_private_gws_schedule_plans: 予定の承認（所有）
+    reroute_other_gws_schedule_plans: 承認の経路変更（全て）
+    reroute_private_gws_schedule_plans: 承認の経路変更（所有）
     read_other_gws_schedule_categories: 種別の閲覧（全て）
     read_private_gws_schedule_categories: 種別の閲覧（所有）
     edit_other_gws_schedule_categories: 種別の編集（全て）
@@ -190,6 +205,8 @@ ja:
         end_on: 終了日
         allday: 終日
         term: 日時
+      gws/schedule/priority:
+        priority: 重要度
       gws/schedule/plan: &plan
         repeat_plan_id: 繰り返し
         category_id: 種別
@@ -239,7 +256,7 @@ ja:
         attendances: 出欠情報
       gws/schedule/attendance:
         attendance_state: 出欠
-      gws/schedule/facility_column_values:
+      gws/addon/schedule/facility_column_values:
         main_facility_id: 主設備
         facility_column_values: 設備追加情報
 
@@ -251,6 +268,8 @@ ja:
         - スケジュールの日時か日を入力します。
         -
         - 「終日」をチェックすると、終日にわたって実施するスケジュールを入力することができ、「終日」にチェックが入っている場合、スケジュールの日を入力します。
+    gws/schedule/priority:
+      priority: 重要度を選択します。
     gws/schedule/plan: &tooltip_plan
       category_id:
         - スケジュール種別を選択します。
