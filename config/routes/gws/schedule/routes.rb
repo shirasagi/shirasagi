@@ -10,6 +10,10 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :export do
+    get :download, on: :collection
+  end
+
   concern :deletion do
     get :delete, on: :member
     delete action: :destroy_all, on: :collection
@@ -24,16 +28,15 @@ SS::Application.routes.draw do
     get 'search/times' => 'search/times#index', as: :search_times
     get 'search/reservations' => 'search/reservations#index', as: :search_reservations
     get 'csv' => 'csv#index', as: :csv
-    get 'export_csv' => 'csv#export', as: :export_csv
     post 'import_csv' => 'csv#import', as: :import_csv
 
     get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
-    resources :plans, concerns: :plans
+    resources :plans, concerns: [:plans, :export]
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
     resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
-    resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
+    resources :facility_plans, path: 'facilities/:facility/plans', concerns: [:plans, :export]
     resources :holidays, concerns: :plans
     resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]

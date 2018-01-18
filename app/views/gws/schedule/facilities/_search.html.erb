@@ -13,8 +13,10 @@
 
   $('.gws-schedule-box header .operations .btn-print').on('click', function() {
     var viewName = $('#calendar').fullCalendar('getView').name
+    var curDate = $('#calendar').fullCalendar('getDate');
     if (!viewName) {
       viewName = $('#calendar-controller').fullCalendar('getView').name
+      curDate = $('#calendar-controller').fullCalendar('getDate');
     }
 
     var queryString = '';
@@ -24,7 +26,7 @@
         queryParams.calendar = {};
       }
       queryParams.calendar.view = viewName;
-
+      queryParams.calendar.date = curDate.format();
       queryString = '?' + $.param(queryParams);
     }
     var path = '<%= url_for({ action: :print }) %>' + queryString;
@@ -39,7 +41,7 @@
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <%= f.select :facility_category_id, options_for_select(@facility_categories.to_options(offset: 1), @facility_category.try(:id)), include_blank: t('gws/schedule.tabs.facility') if @facility_categories.present? %>
-  <%= f.select :category_id, options_for_select(@schedule_categories.to_options, @schedule_category.try(:id)), include_blank: " " if @schedule_categories.present? %>
+  <%= f.select :category_id, options_for_select(@schedule_categories.to_options, @schedule_category.try(:id)), include_blank: @model.t(:category_id) if @schedule_categories.present? %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 <% end %>
