@@ -148,32 +148,16 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def destroy
     raise "403" unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
-
-    if @cur_folder.draft_box?
-      render_destroy @item.destroy
-    elsif @cur_folder.sent_box?
-      render_destroy @item.destroy_from_sent
-    else
-      render_destroy @item.destroy_from_member(@cur_user)
-    end
+    render_destroy @item.destroy_from_folder(@cur_user, @cur_folder)
   end
 
   def destroy_all
-    do_destroy = proc do |item|
-      if @cur_folder.draft_box?
-        item.destroy
-      elsif @cur_folder.sent_box?
-        item.destroy_from_sent
-      else
-        item.destroy_from_member(@cur_user)
-      end
-    end
     entries = @items.entries
     @items = []
 
     entries.each do |item|
       if @cur_user.id == item.user_id || item.member?(@cur_user)
-        next if do_destroy.call(item)
+        next if item.destroy_from_folder(@cur_user, @cur_folder)
       else
         item.errors.add :base, :auth_error
       end

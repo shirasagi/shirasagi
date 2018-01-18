@@ -152,6 +152,16 @@ module Gws::Model
       star.include?(user.id.to_s)
     end
 
+    def destroy_from_folder(user, folder)
+      if folder.draft_box?
+        destroy
+      elsif folder.sent_box?
+        destroy_from_sent
+      else
+        destroy_from_member(user)
+      end
+    end
+
     def destroy_from_member(user)
       self.member_ids = member_ids - [user.id]
       self.deleted[user.id.to_s] = Time.zone.now
