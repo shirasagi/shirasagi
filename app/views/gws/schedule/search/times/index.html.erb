@@ -13,7 +13,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
     <% @items.each do |date, hours| %>
 
       <% if @time_search.facilities.blank? %>
-      <% next if hours[0].blank? %>
+      <%# next if hours[0].blank? %>
       <div class="date <%= date.strftime('%a').downcase %>">
         <p class="label"><%= l date, format: :full %></p>
 
@@ -31,13 +31,13 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
       <% end %>
 
       <% @time_search.facilities.each do |facility| %>
-      <% next if hours[1][facility.id].blank? %>
+      <%# next if hours[1][facility.id].blank? %>
       <div class="date <%= date.strftime('%a').downcase %>">
         <p class="label"><%= l date, format: :full %></p>
         <p class="facility"><%= facility.name %></p>
         <% @time_search.hours.each do |hour| %>
           <span class="hour-wrap">
-          <% if hours[1][facility.id].index(hour) %>
+          <% if (hours[1][facility.id] || []).index(hour) %>
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
             <% link_params[:facility_ids] = [facility.id] %>
             <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
