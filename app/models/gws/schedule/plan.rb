@@ -9,7 +9,7 @@ class Gws::Schedule::Plan
   include Gws::Schedule::Cloneable
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
-  include ::Workflow::Addon::Approver
+  #include ::Workflow::Addon::Approver
   include Gws::Addon::Schedule::Repeat
   include SS::Addon::Markdown
   include Gws::Addon::File
