@@ -57,6 +57,17 @@ class Gws::Memo::MessagesController < ApplicationController
     @model.user(@cur_user).site(@cur_site).unfiltered(@cur_user).each{ |message| message.apply_filters(@cur_user).update }
   end
 
+  def send_forward_mails
+    forward_emails = Gws::Memo::Forward.site(@cur_site).
+      in(user_id: @item.member_ids).
+      where(default: "enabled").
+      pluck(:email).
+      select(&:present?)
+
+    return if forward_emails.blank?
+    Gws::Memo::Mailer.forward_mail(@item, forward_emails).deliver_now
+  end
+
   #def redirect_to_appropriate_folder
   #  path = @item.from[@cur_user.id.to_s]
   #  if path.present?
@@ -95,19 +106,18 @@ class Gws::Memo::MessagesController < ApplicationController
     @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.state = "public"
-
-      # 外部メールへの転送
-      forward_setting = Gws::Memo::Forward.user(@cur_user).site(@cur_site).first
-      if forward_setting && forward_setting.default == "enabled"
-        Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
-      end
-
       notice = t("ss.notice.sent")
     else
       @item.state = "closed"
       notice = t("ss.notice.saved")
     end
-    render_create @item.save, location: { action: :index }, notice: notice
+
+    if @item.save
+      send_forward_mails
+      render_create true, location: { action: :index }, notice: notice
+    else
+      render_create false, location: { action: :index }, notice: notice
+    end
   end
 
   def show
@@ -128,18 +138,17 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.state = "public"
-
-      # 外部メールへの転送
-      forward_setting = Gws::Memo::Forward.user(@cur_user).site(@cur_site).first
-      if forward_setting && forward_setting.default == "enabled"
-        Gws::Memo::Mailer.forward_mail(@item, @cur_user, @cur_site, forward_setting.email).deliver_now
-      end
-
       notice = t("ss.notice.sent")
     else
       notice = t("ss.notice.saved")
     end
-    render_update @item.update, location: { action: :index }, notice: notice
+
+    if @item.update
+      send_forward_mails
+      render_update true, location: { action: :index }, notice: notice
+    else
+      render_update false, location: { action: :index }, notice: notice
+    end
   end
 
   def delete

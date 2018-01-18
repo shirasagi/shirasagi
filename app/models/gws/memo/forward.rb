@@ -11,12 +11,9 @@ class Gws::Memo::Forward
 
   permit_params :email, :default
 
+  validates :email, presence: true, if: ->{ self.default == "enabled" }
   validates :email, email: true, if: ->{ email.present? }
-  validate :check_forward, if: ->{ self.default == "enabled" }
-
-  after_save :check_default, if: ->{ default? }
-
-  #default_scope -> { order_by name: 1 }
+  #after_save :check_default, if: ->{ default? }
 
   scope :default, -> { where default: 'disabled' }
   scope :search, ->(params) {
@@ -37,19 +34,10 @@ class Gws::Memo::Forward
 
   private
 
-  def check_default
-    self.class.user(user).
-        where(default: 'disabled').
-        where(:id.ne => id).
-        update_all(default: 'disabled')
-  end
-
-  def check_forward
-    if self.email.blank?
-      errors.add :base, :not_set_email
-      return false
-    end
-    true
-  end
-
+  #def check_default
+  #  self.class.user(user).site(site)
+  #    where(default: 'disabled').
+  #    where(:id.ne => id).
+  #    update_all(default: 'disabled')
+  #end
 end
