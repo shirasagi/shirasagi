@@ -9,6 +9,7 @@
           <span class="field from"><%= @model.t :from %></span>
         <% end %>
         <span class="field title"><%= @model.t :subject %></span>
+        <span class="field priority"><%= @model.t :priority %></span>
         <span class="field datetime"><%= @model.t :display_send_date %></span>
         <span class="field size"><%= @model.t :size %></span>
       </div>
@@ -43,6 +44,7 @@
             <span class="field from" title="<%= item.user.long_name %>"><%= item.user.long_name %></span>
           <% end %>
           <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %>
+          <span class="field priority"><%= item.label :priority %></span>
           <span class="field datetime"><%= item.display_send_date %></span>
           <span class="field size"><%= item.display_size %></span>
         </div>

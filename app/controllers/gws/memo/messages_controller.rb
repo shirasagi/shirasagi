@@ -7,7 +7,7 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :deny_with_auth
 
   before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
-  before_action :set_item, only: [:show, :edit, :update, :trash, :delete, :destroy, :toggle_star]
+  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :trash, :delete, :destroy, :toggle_star]
   #before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
@@ -90,21 +90,9 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.new_memo
   end
 
-  def reply
-    @item = @model.new pre_params.merge(fix_params)
-    item_reply = @model.find(params[:id])
-    @item.member_ids = [item_reply.user_id]
-    @item.subject = "Re: #{item_reply.subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
-  end
-
   def create
     @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
-      @item.send_date = Time.zone.now
       @item.state = "public"
 
       # 外部メールへの転送
@@ -121,19 +109,23 @@ class Gws::Memo::MessagesController < ApplicationController
     render_create @item.save, location: { action: :index }, notice: notice
   end
 
-  def forward
-    forward_params = params.require(:item).permit(:subject, :text, :html, :format)
-    @item = @model.new pre_params.merge(fix_params).merge(forward_params)
-    render :new
+  def show
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+    @item.set_seen(@cur_user).update if @item.state == "public"
+    render
+  end
+
+  def edit
+    raise '403' unless (@cur_user.id == @item.user_id && @item.draft?)
+    render
   end
 
   def update
     @item.attributes = get_params
-    raise '403' unless @cur_user.id == @item.user_id
+    raise '403' unless (@cur_user.id == @item.user_id && @item.draft?)
 
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
-      @item.send_date = Time.zone.now
       @item.state = "public"
 
       # 外部メールへの転送
@@ -149,10 +141,103 @@ class Gws::Memo::MessagesController < ApplicationController
     render_update @item.update, location: { action: :index }, notice: notice
   end
 
-  def show
-    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
-    @item.set_seen(@cur_user).update if @item.state == "public"
+  def delete
+    raise "403" unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     render
+  end
+
+  def destroy
+    raise "403" unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+
+    if @cur_folder.draft_box?
+      render_destroy @item.destroy
+    elsif @cur_folder.sent_box?
+      render_destroy @item.destroy_from_sent
+    else
+      render_destroy @item.destroy_from_member(@cur_user)
+    end
+  end
+
+  def destroy_all
+    do_destroy = proc do |item|
+      if @cur_folder.draft_box?
+        item.destroy
+      elsif @cur_folder.sent_box?
+        item.destroy_from_sent
+      else
+        item.destroy_from_member(@cur_user)
+      end
+    end
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if @cur_user.id == item.user_id || item.member?(@cur_user)
+        next if do_destroy.call(item)
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
+  def reply
+    @item = @model.new pre_params.merge(fix_params)
+    item_reply = @model.find(params[:id])
+    @item.to_member_ids = [item_reply.user_id]
+    @item.subject = "Re: #{item_reply.subject}"
+
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+  end
+
+  def reply_all
+    @item = @model.new pre_params.merge(fix_params)
+    item_reply = @model.find(params[:id])
+
+    @item.to_member_ids = [item_reply.user_id] + item_reply.to_member_ids - [@cur_user.id]
+    @item.cc_member_ids = item_reply.cc_member_ids
+    @item.subject = "Re: #{item_reply.subject}"
+
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+  end
+
+  def forward
+    @item = @model.new pre_params.merge(fix_params)
+    item_forward = @model.find(params[:id])
+    @item.member_ids = []
+
+    @item.new_memo
+    @item.text += "\n\n"
+    @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
+  end
+
+  def send_mdn
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+
+    @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
+    @item.update
+
+    item_mdn = @model.new fix_params
+    item_mdn.to_member_ids = [@item.user_id]
+    item_mdn.subject = I18n.t("gws/memo/message.mdn.subject", subject: @item.subject)
+    item_mdn.text = I18n.t("gws/memo/message.mdn.confirmed", name: @cur_user.long_name, date: Time.zone.now.strftime("%Y/%m/%d %H:%M"))
+    item_mdn.format = "text"
+    item_mdn.state = "public"
+    item_mdn.save
+
+    render_change :send_mdn, redirect: { action: :show }
+  end
+
+  def ignore_mdn
+    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
+    @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
+    @item.update
+    render_change :ignore_mdn, redirect: { action: :show }
   end
 
   def trash
@@ -211,5 +296,14 @@ class Gws::Memo::MessagesController < ApplicationController
       item.unset_star(@cur_user).update
     end
     render_destroy_all(false)
+  end
+
+  def render_change(action, opts = {})
+    location = params[:redirect].presence || opts[:redirect] || { action: :index }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice: t("gws/memo/message.notice.#{action}") }
+      format.json { render json: { action: params[:action], notice: t("gws/memo/message.notice.#{action}") } }
+    end
   end
 end

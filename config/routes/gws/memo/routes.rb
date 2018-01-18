@@ -19,7 +19,6 @@ SS::Application.routes.draw do
         post :unset_star_all
         post :move_all
         put :move
-        post :forward
       end
       member do
         get :trash
@@ -27,10 +26,19 @@ SS::Application.routes.draw do
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply
+        get :reply_all
+        get :forward
+        put :send_mdn
+        put :ignore_mdn
       end
     end
 
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
+
+    namespace "apis" do
+      get "shared_addresses" => "shared_addresses#index"
+      get "personal_addresses" => "personal_addresses#index"
+    end
 
     scope '/management' do
       get '/' => redirect { |p, req| "#{req.path}/folders" }, as: :management_main

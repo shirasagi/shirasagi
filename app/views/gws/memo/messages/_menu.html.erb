@@ -18,10 +18,16 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <%= link_to t('gws/memo/message.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
-    <%= link_to(t('ss.links.edit'), action: :edit, id: @item) if @cur_user.id == @item.user_id %>
-    <%= link_to(t('ss.links.delete'), action: :delete, id: @item) if @cur_user.id == @item.user_id %>
+    <%= link_to t('gws/memo/message.links.reply_all'), { action: :reply_all }, { class: 'reply_all' } unless @item.draft? %>
+    <%= link_to t('gws/memo/message.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
+    <% if @item.draft? && (@cur_user.id == @item.user_id) %>
+      <%= link_to(t('ss.links.edit'), action: :edit, id: @item) %>
+    <% end %>
     <% if %w(INBOX.Trash INBOX.Draft INBOX.Sent).exclude?(params[:folder]) %>
       <%= link_to(t('gws/memo/message.links.trash'), action: :trash, id: @item) %>
+    <% end %>
+    <% if %w(INBOX.Trash INBOX.Draft INBOX.Sent).include?(params[:folder]) %>
+      <%= link_to(t('ss.links.delete'), action: :delete, id: @item) %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>

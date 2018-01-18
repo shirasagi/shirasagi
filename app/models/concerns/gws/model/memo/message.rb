@@ -6,7 +6,7 @@ module Gws::Model
     included do
       store_in collection: "gws_memo_messages"
 
-      attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path
+      attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path, :in_request_mdn
 
       field :subject, type: String
       field :text, type: String, default: ''
@@ -16,19 +16,31 @@ module Gws::Model
       field :seen, type: Hash, default: {}
       field :star, type: Hash, default: {}
       field :filtered, type: Hash, default: {}
+      field :deleted, type: Hash, default: {}
       field :state, type: String, default: 'public'
       field :path, type: Hash, default: {}
       field :send_date, type: DateTime
 
-      permit_params :subject, :text, :html, :format, :in_path
+      embeds_ids :to_members, class_name: "Gws::User"
+      embeds_ids :cc_members, class_name: "Gws::User"
+      embeds_ids :bcc_members, class_name: "Gws::User"
+      embeds_ids :request_mdn, class_name: "Gws::User"
+
+      permit_params :subject, :text, :html, :format, :in_path, :in_request_mdn
+      permit_params to_member_ids: [], cc_member_ids: [], bcc_member_ids: []
 
       default_scope -> { order_by(send_date: -1, updated: -1) }
 
       after_initialize :set_default_reminder_date, if: :new_record?
-      before_validation :set_path, :set_size, :set_send_date
 
+      before_validation :set_member_ids
+      before_validation :set_request_mdn
+      before_validation :set_send_date
+      before_validation :set_path
+      before_validation :set_size
+
+      validates :subject, presence: true
       validate :validate_attached_file_size
-      validate :validate_message
 
       scope :search, ->(params) {
         criteria = where({})
@@ -48,7 +60,7 @@ module Gws::Model
       scope :and_closed, ->() { where(state: "closed") }
       scope :folder, ->(folder, user) {
         if folder.sent_box?
-          user(user).and_public
+          user(user).where(:"deleted.sent".exists => false).and_public
         elsif folder.draft_box?
           user(user).and_closed
         else
@@ -57,9 +69,6 @@ module Gws::Model
       }
       scope :unseen, ->(user) {
         where("seen.#{user.id}" => { '$exists' => false })
-      }
-      scope :search_replay, ->(replay_id) {
-        where("$and" => [{ "_id" => replay_id }])
       }
       scope :unfiltered, ->(user) {
         where(:"filtered.#{user.id}".exists => false)
@@ -90,6 +99,17 @@ module Gws::Model
       self.size = self.files.pluck(:size).inject(:+)
     end
 
+    def set_member_ids
+      self.member_ids = (to_member_ids + cc_member_ids + bcc_member_ids).uniq
+      self.member_ids = member_ids - deleted.keys.map(&:to_i)
+    end
+
+    def set_request_mdn
+      return if in_request_mdn != "1"
+      return if send_date.present?
+      self.request_mdn_ids = self.member_ids - [@cur_user.id]
+    end
+
     def set_send_date
       now = Time.zone.now
       self.send_date ||= now if state == "public"
@@ -106,22 +126,51 @@ module Gws::Model
       send_date ? send_date.strftime('%Y/%m/%d %H:%M') : I18n.t('gws/memo/folder.inbox_draft')
     end
 
+    def display_to
+      sorted_to_members.map(&:long_name)
+    end
+
+    def display_cc
+      sorted_cc_members.map(&:long_name)
+    end
+
+    def display_bcc
+      sorted_bcc_members.map(&:long_name)
+    end
+
     def attachments?
       files.present?
     end
 
-    def display_to
-      members.map(&:long_name)
-    end
-
-    def unseen?(user = nil)
-      return false if user.nil?
+    def unseen?(user)
+      return false unless user
       seen.exclude?(user.id.to_s)
     end
 
-    def star?(user = :nil)
-      return false if user == :nil
+    def star?(user)
+      return false unless user
       star.include?(user.id.to_s)
+    end
+
+    def destroy_from_member(user)
+      self.member_ids = member_ids - [user.id]
+      self.deleted[user.id.to_s] = Time.zone.now
+
+      if member_ids.blank? && deleted["sent"]
+        destroy
+      else
+        update
+      end
+    end
+
+    def destroy_from_sent
+      self.deleted["sent"] = Time.zone.now
+
+      if member_ids.blank? && deleted["sent"]
+        destroy
+      else
+        update
+      end
     end
 
     def display_size
@@ -177,6 +226,10 @@ module Gws::Model
       self.state == "closed"
     end
 
+    def public?
+      self.state == "public"
+    end
+
     def apply_filters(user)
       matched_filter = Gws::Memo::Filter.site(site).user(user).enabled.detect{ |f| f.match?(self) }
       self.move(user, matched_filter.path) if matched_filter
@@ -204,14 +257,6 @@ module Gws::Model
 
       if size > limit
         errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
-      end
-    end
-
-    def validate_message
-      if self.text.blank? && self.format == "text"
-        errors.add(:base, :input_message)
-      elsif self.html.blank? && self.format == "html"
-        errors.add(:base, :input_message)
       end
     end
 

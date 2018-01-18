@@ -25,13 +25,42 @@
       <div class="date"><%= @item.display_send_date %></div>
     </div>
 
-    <% if @item.to.present? %>
-      <div class="addresses">
+    <% if (@item.to_members + @item.cc_members + @item.bcc_members).present? %>
+    <div class="addresses">
+      <% if @item.to_members.present? %>
         <div class="address">
-          <div class="label"><%= @model.t :member_ids %></div>
+          <div class="label"><%= @model.t :to_member_ids %></div>
           <div class="value"><%= @item.display_to.join('; ') %></div>
         </div>
-      </div>
+      <% end %>
+
+      <% if @item.cc_members.present? %>
+        <div class="address">
+          <div class="label"><%= @model.t :cc_member_ids %></div>
+          <div class="value"><%= @item.display_cc.join('; ') %></div>
+        </div>
+      <% end %>
+
+      <% if @item.bcc_members.present? && (@cur_folder.sent_box? || @cur_folder.draft_box?) %>
+        <div class="address">
+          <div class="label"><%= @model.t :bcc_member_ids %></div>
+          <div class="value"><%= @item.display_bcc.join('; ') %></div>
+        </div>
+      <% end %>
+    </div>
+    <% end %>
+
+    <% if @item.public? && @item.request_mdn_ids.include?(@cur_user.id) %>
+    <div class="request-mdn-notice">
+      <span class="message">
+        <i class="material-icons md-18">info</i>
+        <span><%= t("webmail.notice.requested_mdn") %></span>
+      </span>
+      <span class="action">
+        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_gws_memo_message_path %>
+        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_gws_memo_message_path %>
+      </span>
+    </div>
     <% end %>
 
     <% if @item.attachments.present? %>

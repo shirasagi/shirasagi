@@ -6,10 +6,11 @@ class Gws::Memo::Message
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::SitePermission
-  include Gws::Addon::Member
+  include Gws::Addon::Memo::Member
   include Gws::Addon::Memo::Body
+  include Gws::Addon::Memo::Priority
   include Gws::Addon::File
-  include Gws::Addon::Memo::Comments
+  #include Gws::Addon::Memo::Comments
   include Gws::Addon::Reminder
 
   after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
@@ -20,8 +21,8 @@ class Gws::Memo::Message
   alias from user
   alias form_id user_id
 
-  alias to members
-  alias to_ids member_ids
+  alias to to_members
+  alias to_ids to_member_ids
 
   set_permission_name 'private_gws_memo_messages', :edit
 

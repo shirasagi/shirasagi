@@ -6,10 +6,10 @@ class Webmail::GwsMessage
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::SitePermission
-  include Gws::Addon::Member
+  include Gws::Addon::Memo::Member
   include Gws::Addon::Memo::Body
   include Webmail::Addon::MailFile
-  include Gws::Addon::Memo::Comments
+  #include Gws::Addon::Memo::Comments
   #include Gws::Addon::Reminder
 
   alias name subject
@@ -18,8 +18,8 @@ class Webmail::GwsMessage
   alias from user
   alias form_id user_id
 
-  alias to members
-  alias to_ids member_ids
+  alias to to_members
+  alias to_ids to_member_ids
 
   set_permission_name 'private_gws_memo_messages', :edit
 
