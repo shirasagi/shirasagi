@@ -156,6 +156,13 @@ ja:
       gws/user/public_duty: 事務分掌
       gws/notice/notification: 通知
 
+  gws_notification:
+    gws/notice:
+      subject: "お知らせが掲載されました"
+      text: |
+        お知らせに「%{name}」が掲載されました。
+        %{path} をブラウザで開き、内容をご確認ください。
+
   mongoid:
     models:
       gws/group: グループ
@@ -504,3 +511,4 @@ ja:
     models:
       gws/reminder/notification_job: リマインダー通知
       gws/history_archive_job: 操作履歴アーカイブ作成
+
