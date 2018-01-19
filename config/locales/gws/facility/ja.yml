@@ -14,6 +14,8 @@ ja:
       usage_day: 利用日
       hours: 時間
       times: 回数
+    errors:
+      require_approver: 予約承認には管理ユーザーの登録が必要です。
 
   gws_role:
     read_other_gws_facility_items: 設備の閲覧（全て）
@@ -52,6 +54,7 @@ ja:
         min_minutes_limit: 時間制限（最小）
         max_minutes_limit: 時間制限（最大）
         max_days_limit: 予約可能期間
+        approval_check_state: 予約承認
         html: 設備概要
       gws/facility/category:
         name: カテゴリー名
@@ -88,6 +91,8 @@ ja:
         - 連続して利用することが可能な最大の時間を入力します。
       max_days_limit:
         - 何日先まで予約可能かを入力します。
+      approval_check_state:
+        - 予約に管理ユーザーの承認を必要とします。
     gws/facility/category:
       name:
         - カテゴリー名を入力します。
