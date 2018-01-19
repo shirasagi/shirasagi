@@ -1,0 +1,22 @@
+<%= form_for :item, url: { action: :create }, html: { method: :post, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t('gws/attendance.confirm.time_card.new') %></h2></div>
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @model.t :name %></dt>
+        <dd><%= t('gws/attendance.formats.time_card_name', month: l(@cur_month.to_date, format: :attendance_year_month)) %></dd>
+      </dl>
+      <%= f.hidden_field :in_year, value: @cur_month.year.to_s %>
+      <%= f.hidden_field :in_month, value: @cur_month.month.to_s %>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>

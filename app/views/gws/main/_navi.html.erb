@@ -26,7 +26,7 @@
   <% end %>
 
   <% if Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site) %>
-  <h2><%= link_to t('modules.gws/attendance'), gws_attendance_time_cards_path, class: "icon-attendance" %></h2>
+  <h2><%= link_to t('modules.gws/attendance'), gws_attendance_time_cards_main_path, class: "icon-attendance" %></h2>
   <% end %>
 
   <% if @cur_site.menu_bookmark_visible? %>

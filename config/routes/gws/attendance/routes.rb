@@ -1,7 +1,13 @@
 SS::Application.routes.draw do
   Gws::Attendance::Initializer
 
+  concern :deletion do
+    get :delete, on: :member
+    delete action: :destroy_all, on: :collection
+  end
+
   gws 'attendance' do
-    resources :time_cards
+    get 'time_cards' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :time_cards_main
+    resources :time_cards, path: 'time_cards/:year_month', only: %i[index new create]
   end
 end

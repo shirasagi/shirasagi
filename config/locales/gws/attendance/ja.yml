@@ -1,4 +1,18 @@
 ja:
+  gws/attendance:
+    prev_month: 先月
+    next_month: 翌月
+    confirm:
+      time_card:
+        new: タイムカードを新規作成してよろしですか？
+    formats:
+      time_card_name: '%{month}のタイムカード'
+
+  date:
+    formats:
+      attendance_year_month: ! '%Y年%1m月'
+      attendance_month_day: ! '%1m月%1d日 (%a)'
+
   modules:
     gws/attendance: 出退勤
 

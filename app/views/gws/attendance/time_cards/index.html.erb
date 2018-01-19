@@ -1,0 +1,121 @@
+<% if @item.blank? %>
+  <p>タイムカードはありません。</p>
+  <%= link_to(t('ss.links.new'), action: :new) rescue nil %>
+<% else %>
+<div>
+  <div class="aside" style="width: 230px; float: left">
+    <div>
+      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38">出勤</button>
+      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38">退勤</button>
+    </div>
+    <div>
+      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">休始</button>
+      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">休終</button>
+      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">外出</button>
+      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">外戻</button>
+    </div>
+
+    <!--
+    <div>
+      履歴
+      <table class="index">
+        <thead>
+        <tr>
+          <th style="width: 8em;">日時</th>
+          <th>内容</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>1/18 18:03</td>
+          <td>退勤</td>
+        </tr>
+        <tr>
+          <td>1/18 12:55</td>
+          <td>休憩終了</td>
+        </tr>
+        <tr>
+          <td>1/18 12:02</td>
+          <td>休憩開始</td>
+        </tr>
+        <tr>
+          <td>1/18 8:52</td>
+          <td>出勤</td>
+        </tr>
+        <tr>
+          <td>1/17 18:03</td>
+          <td>退勤</td>
+        </tr>
+        <tr>
+          <td>1/18 12:55</td>
+          <td>休憩終了</td>
+        </tr>
+        <tr>
+          <td>1/18 12:02</td>
+          <td>休憩開始</td>
+        </tr>
+        <tr>
+          <td>1/17 8:52</td>
+          <td>出勤</td>
+        </tr>
+        <tr>
+          <td>1/16 18:03</td>
+          <td>退勤</td>
+        </tr>
+        <tr>
+          <td>1/18 12:55</td>
+          <td>休憩終了</td>
+        </tr>
+        <tr>
+          <td>1/18 12:02</td>
+          <td>休憩開始</td>
+        </tr>
+        <tr>
+          <td>1/16 8:52</td>
+          <td>出勤</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    -->
+  </div>
+  <div class="main" style="margin-left: 240px;">
+    <nav class="nav-menu">
+      <%= select_tag(:year_month, options_for_select([['2017年12月', '201712'], ['2018年1月', '201801'], ['2018年2月', '201802']], params[:year_month])) %>
+      <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+      <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+    </nav>
+
+    <table class="index">
+      <tbody>
+      <% date = @cur_month %>
+      <% while date <= @cur_month.end_of_month %>
+        <% if date.day == 1 || date.day == 16 %>
+          <tr style="background-color: #ddd">
+            <th style="padding: 5px; width: 7.5em;">日付</th>
+            <th style="padding: 5px; width: 3.5em;">出勤</th>
+            <th style="padding: 5px; width: 3.5em;">退勤</th>
+            <th style="padding: 5px; width: 3.5em;">休始</th>
+            <th style="padding: 5px; width: 3.5em;">休終</th>
+            <th style="padding: 5px; width: 3.5em;">外出</th>
+            <th style="padding: 5px; width: 3.5em;">外戻</th>
+            <th>備考</th>
+          </tr>
+        <% end %>
+        <tr class="<% Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
+          <td style="padding: 5px"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+          <td style="padding: 5px">8:23</td>
+          <td style="padding: 5px">17:12</td>
+          <td style="padding: 5px">12:02</td>
+          <td style="padding: 5px">12:42</td>
+          <td style="padding: 5px"></td>
+          <td style="padding: 5px"></td>
+          <td style="padding: 5px"></td>
+        </tr>
+        <% date += 1.day %>
+      <% end %>
+      </tbody>
+    </table>
+    <% end %>
+  </div>
+</div>
