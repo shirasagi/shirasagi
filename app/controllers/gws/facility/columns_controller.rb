@@ -19,7 +19,6 @@ class Gws::Facility::ColumnsController < ApplicationController
 
   def input_form
     set_form
-    raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
     @items = @cur_form.columns.order_by(order: 1, id: 1)
 
     render_opts = {}
