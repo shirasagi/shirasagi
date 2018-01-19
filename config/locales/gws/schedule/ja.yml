@@ -54,6 +54,10 @@ ja:
         unknown: 未確認
         approve: 承認
         deny: 拒否
+      approved_state:
+        request: 承認待ち
+        approve: 承認済み
+        deny: 差し戻し
       interval:
         daily: 日
         weekly: 週
@@ -160,8 +164,8 @@ ja:
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント
-      gws/schedule/attendances: 出欠確認
-      gws/schedule/approvals: 承認
+      gws/schedule/attendance: 出欠確認
+      gws/schedule/approval: 承認
       gws/schedule/reports: レポート
       gws/schedule/group_setting: スケジュール
 
@@ -253,11 +257,11 @@ ja:
         name: ToDo
         term: 期限
         todo_state: 状態
-      gws/addon/schedule/attendances:
+      gws/addon/schedule/attendance:
         attendance_check_state: 出欠確認
         attendances: 出欠情報
-      gws/addon/schedule/approvals:
-        approval_check_state: 承認
+      gws/addon/schedule/approval:
+        approval_member_ids: 承認者
         approvals: 承認情報
       gws/schedule/attendance:
         attendance_state: 出欠
@@ -343,7 +347,7 @@ ja:
       term:
         - タスクの期限日を入力します。
 
-    gws/addon/schedule/attendances:
+    gws/addon/schedule/attendance:
       attendance_check_state:
         - 出欠確認を有効にするかしないかを選択してください。
 

@@ -15,6 +15,7 @@
     <dd><%= text_field_tag('comment[text]', nil, style: 'width: 40em;') %></dd>
   </dl>
 
+  <%= f.hidden_field('facility_id') %>
   <%= hidden_field_tag('redirect_to', params[:redirect_to]) %>
 
   <footer class="send">

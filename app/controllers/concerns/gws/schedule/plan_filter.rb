@@ -50,7 +50,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user) || @item.member?(@cur_user)
+    raise '403' unless @item.readable?(@cur_user) || @item.member?(@cur_user) || @item.approval_member?(@cur_user)
     render
   end
 
@@ -66,6 +66,7 @@ module Gws::Schedule::PlanFilter
   def create
     @item = @model.new get_params
     @item.set_facility_column_values(params)
+    @item.reset_approvals
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_create @item.save, location: redirection_url
@@ -74,6 +75,7 @@ module Gws::Schedule::PlanFilter
   def update
     @item.attributes = get_params
     @item.set_facility_column_values(params)
+    @item.reset_approvals
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 

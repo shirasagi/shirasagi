@@ -15,10 +15,10 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Reports
   include Gws::Addon::Schedule::Comments
   include Gws::Addon::Member
-  include Gws::Addon::Schedule::Attendances
+  include Gws::Addon::Schedule::Attendance
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::Schedule::FacilityColumnValues
-  include Gws::Addon::Schedule::Approvals
+  include Gws::Addon::Schedule::Approval
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
@@ -63,7 +63,7 @@ class Gws::Schedule::Plan
   end
 
   def approval_check_plan?
-    approval_check_enabled?
+    approval_state.present?
   end
 
   alias allowed_for_managers? allowed?

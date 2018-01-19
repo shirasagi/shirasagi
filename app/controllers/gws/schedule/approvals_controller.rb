@@ -38,7 +38,9 @@ class Gws::Schedule::ApprovalsController < ApplicationController
     set_cur_schedule
     set_target_user
 
-    @item = @cur_schedule.approvals.where(user_id: @target_user.id).first_or_create
+    cond = { user_id: @target_user.id, facility_id: get_params[:facility_id].to_s.presence }
+
+    @item = @cur_schedule.approvals.where(cond).first_or_create
     @item.attributes = fix_params
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
@@ -60,22 +62,27 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   public
 
   def edit
-    raise "403" unless @cur_schedule.member?(@cur_user) || @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @cur_schedule.member?(@cur_user) ||
+                       @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site) ||
+                       @cur_schedule.approval_member?(@cur_user)
     @item.valid?
     render(layout: 'ss/ajax')
   end
 
   def update
-    raise "403" unless @cur_schedule.member?(@cur_user) || @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @cur_schedule.member?(@cur_user) ||
+                       @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site) ||
+                       @cur_schedule.approval_member?(@cur_user)
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 
     render_opts = {
-      location: params[:redirect_to]
+      location: CGI.unescapeHTML(params[:redirect_to])
     }
 
     result = @item.save
     if result
+      @cur_schedule.update_approval_state
       post_comment
     end
     render_update result, render_opts
