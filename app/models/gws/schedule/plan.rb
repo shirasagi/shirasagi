@@ -79,6 +79,7 @@ class Gws::Schedule::Plan
 
     ids = member_ids
     ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
+    ids += try(:facility_approver_ids) || []
     ids.uniq!
     Gws::User.in(id: ids)
   end
