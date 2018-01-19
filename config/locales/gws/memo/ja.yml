@@ -92,6 +92,8 @@ ja:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
           input_message: 本文を入力してください。
+          self_quota_over: メッセージ容量が制限を超過している為、送信できませんでした。
+          member_quota_over: "%{member}さんのメッセージ容量が制限を超過している為、送信できませんでした。"
         gws/memo/folder:
           included_memo: メッセージが入っているフォルダーは削除できません。
           used_folder: フィルターが使用中のフォルダーは削除できません。
@@ -134,6 +136,7 @@ ja:
         cc_member_ids: CC
         bcc_member_ids: BCC
       gws/addon/memo/group_setting:
+        memo_quota: メッセージ容量制限
         memo_filesize_limit: 添付サイズ制限
         memo_reminder: リマインダー表示設定
         memo_email: 転送元メールアドレス
@@ -189,10 +192,16 @@ ja:
         - 有効：メッセージを登録したメールアドレスに転送します
         - 無効：転送しません
     gws/addon/memo/group_setting:
+      memo_quota:
+        - メッセージの合計容量の上限を入力します。
+        - 合計容量が超えたユーザーはメッセージの送受信ができません。
+        - 各受信フォルダー、送信済みフォルダー、下書きフォルダー内のメッセージが対象となります。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
       memo_filesize_limit:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
-        - 未指定である場合、制限されません。
-        - 初期値は 未指定 です。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
       memo_reminder:
         - メッセージを送信したあと各受信者のリマインダーに表示する日数を選択します。
         - メッセージが下書きの時はリマインダーはまだ登録されません。

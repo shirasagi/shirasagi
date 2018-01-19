@@ -40,7 +40,6 @@ module Gws::Model
       before_validation :set_size
 
       validates :subject, presence: true
-      validate :validate_attached_file_size
 
       scope :search, ->(params) {
         criteria = where({})
@@ -96,7 +95,11 @@ module Gws::Model
     end
 
     def set_size
-      self.size = self.files.pluck(:size).inject(:+)
+      #self.size = subject.bytesize
+      #self.size += text.bytesize if text.present?
+      #self.size += html.bytesize if html.present?
+      self.size = 1024
+      self.size += files.pluck(:size).sum if files.present?
     end
 
     def set_member_ids
@@ -107,6 +110,7 @@ module Gws::Model
     def set_request_mdn
       return if in_request_mdn != "1"
       return if send_date.present?
+      return unless @cur_user
       self.request_mdn_ids = self.member_ids - [@cur_user.id]
     end
 
@@ -117,6 +121,26 @@ module Gws::Model
     end
 
     public
+
+    def readable?(user, site)
+      return false if self.site_id != site.id
+      return true if member?(user)
+
+      if self.user_id == user.id
+        if deleted["sent"]
+          return false
+        else
+          return true
+        end
+      end
+
+      return false
+    end
+
+    def editable?(user, site)
+      return false if self.site_id != site.id
+      (self.user_id == user.id && draft?)
+    end
 
     def display_subject
       subject.presence || 'No title'
@@ -184,13 +208,7 @@ module Gws::Model
     end
 
     def display_size
-      result = 1024
-
-      if self.size && (self.size > result)
-        result = self.size
-      end
-
-      ActiveSupport::NumberHelper.number_to_human_size(result, precision: 0)
+      ActiveSupport::NumberHelper.number_to_human_size((size > 1024 ? size : 1024))
     end
 
     def format_options
@@ -256,18 +274,6 @@ module Gws::Model
 
     def html?
       format == 'html'
-    end
-
-    def validate_attached_file_size
-      return if site.memo_filesize_limit.blank?
-      return if site.memo_filesize_limit <= 0
-
-      limit = site.memo_filesize_limit * 1024 * 1024
-      size = files.compact.map(&:size).sum
-
-      if size > limit
-        errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
-      end
     end
 
     def reminder_date

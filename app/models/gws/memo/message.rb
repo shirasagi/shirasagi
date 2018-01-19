@@ -10,6 +10,7 @@ class Gws::Memo::Message
   include Gws::Addon::Memo::Body
   include Gws::Addon::Memo::Priority
   include Gws::Addon::File
+  include Gws::Addon::Memo::Quota
   #include Gws::Addon::Memo::Comments
   include Gws::Addon::Reminder
 

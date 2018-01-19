@@ -22,8 +22,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_item
     super
-    raise "404" if (@cur_user.id != @item.user_id) && !@item.member?(@cur_user)
-    raise "404" if @item.site_id != @cur_site.id
+    raise "404" unless @item.readable?(@cur_user, @cur_site)
   end
 
   def fix_params
@@ -123,19 +122,18 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def show
-    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     @item.set_seen(@cur_user).update if @item.state == "public"
     render
   end
 
   def edit
-    raise '403' unless (@cur_user.id == @item.user_id && @item.draft?)
+    raise "404" unless @item.editable?(@cur_user, @cur_site)
     render
   end
 
   def update
     @item.attributes = get_params
-    raise '403' unless (@cur_user.id == @item.user_id && @item.draft?)
+    raise "404" unless @item.editable?(@cur_user, @cur_site)
 
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
@@ -154,12 +152,10 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def delete
-    raise "403" unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     render
   end
 
   def destroy
-    raise "403" unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     render_destroy @item.destroy_from_folder(@cur_user, @cur_folder)
   end
 
@@ -213,8 +209,6 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def send_mdn
-    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
-
     @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
     @item.update
 
@@ -230,20 +224,18 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def ignore_mdn
-    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
     @item.update
     render_change :ignore_mdn, redirect: { action: :show }
   end
 
   def trash
-    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     render_destroy @item.move(@cur_user, 'INBOX.Trash').update
   end
 
   def trash_all
     @items.each do |item|
-      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      raise "404" unless item.readable?(@cur_user, @cur_site)
       item.move(@cur_user, 'INBOX.Trash').update
     end
     render_destroy_all(false)
@@ -251,7 +243,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def move_all
     @items.each do |item|
-      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      raise "404" unless item.readable?(@cur_user, @cur_site)
       item.move(@cur_user, params[:path]).update
     end
     render_destroy_all(false)
@@ -259,7 +251,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_seen_all
     @items.each do |item|
-      raise '403'unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      raise "404" unless item.readable?(@cur_user, @cur_site)
       item.set_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -267,20 +259,19 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_seen_all
     @items.each do |item|
-      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      raise "404" unless item.readable?(@cur_user, @cur_site)
       item.unset_seen(@cur_user).update
     end
     render_destroy_all(false)
   end
 
   def toggle_star
-    raise '403' unless (@cur_user.id == @item.user_id || @item.member?(@cur_user))
     render_destroy @item.toggle_star(@cur_user).update, location: { action: params[:location] }
   end
 
   def set_star_all
     @items.each do |item|
-      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      raise "404" unless item.readable?(@cur_user, @cur_site)
       item.set_star(@cur_user).update
     end
     render_destroy_all(false)
@@ -288,7 +279,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_star_all
     @items.each do |item|
-      raise '403' unless (@cur_user.id == item.user_id || item.member?(@cur_user))
+      raise "404" unless item.readable?(@cur_user, @cur_site)
       item.unset_star(@cur_user).update
     end
     render_destroy_all(false)
