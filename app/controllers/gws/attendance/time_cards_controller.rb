@@ -5,9 +5,9 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   model Gws::Attendance::TimeCard
 
   before_action :set_cur_month
-  before_action :set_items, only: %i[index enter leave break_enter break_leave time]
-  before_action :set_item, only: %i[enter leave break_enter break_leave time]
-  before_action :set_record, only: %i[time]
+  before_action :set_items, only: %i[index enter leave break_enter break_leave time memo]
+  before_action :set_item, only: %i[enter leave break_enter break_leave time memo]
+  before_action :set_record, only: %i[time memo]
 
   helper_method :format_time, :hour_options, :minute_options, :round_up_minute
 
@@ -166,6 +166,24 @@ class Gws::Attendance::TimeCardsController < ApplicationController
       notice = t('ss.notice.saved')
     else
       notice = @cell.errors.full_messages.join("\n")
+    end
+    redirect_to location, notice: notice
+  end
+
+  def memo
+    if request.get?
+      render layout: false
+      return
+    end
+
+    safe_params = params.require(:record).permit(:memo)
+    @record.memo = safe_params[:memo]
+
+    location = { action: :index }
+    if @record.save
+      notice = t('ss.notice.saved')
+    else
+      notice = @record.errors.full_messages.join("\n")
     end
     redirect_to location, notice: notice
   end

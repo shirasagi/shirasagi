@@ -40,7 +40,7 @@
     padding: 5px;
     width: 7.5em;
   }
-  .gws-attendance .main .time-card th.cell {
+  .gws-attendance .main .time-card th.time {
     padding: 5px;
     width: 5em;
   }
@@ -158,11 +158,11 @@
         <% if date.day == 1 || date.day == 16 %>
           <tr class="header">
             <th class="date">日付</th>
-            <th class="cell">出勤</th>
-            <th class="cell">退勤</th>
+            <th class="time">出勤</th>
+            <th class="time">退勤</th>
             <% break_times.each do |i| %>
-              <th class="cell"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
-              <th class="cell"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+              <th class="time"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+              <th class="time"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
             <% end %>
             <th>備考</th>
           </tr>
@@ -170,13 +170,13 @@
         <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
           <% record = @item.records.where(date: date).first %>
           <td><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
-          <td class="cell" data-day="<%= date.day %>" data-type="enter"><%= record ? format_time(date, record.enter) : '' %></td>
-          <td class="cell" data-day="<%= date.day %>" data-type="leave"><%= record ? format_time(date, record.leave) : '' %></td>
+          <td class="time" data-day="<%= date.day %>" data-type="enter"><%= record ? format_time(date, record.enter) : '' %></td>
+          <td class="time" data-day="<%= date.day %>" data-type="leave"><%= record ? format_time(date, record.leave) : '' %></td>
           <% break_times.each do |i| %>
-            <td class="cell" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>"><%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %></td>
-            <td class="cell" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>"><%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %></td>
+            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>"><%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %></td>
+            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>"><%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %></td>
           <% end %>
-          <td><%= record ? record.memo : '' %></td>
+          <td class="memo" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
         </tr>
         <% date += 1.day %>
       <% end %>
@@ -197,8 +197,9 @@
     $form.submit();
   });
 
-  $('.gws-attendance .time-card .cell').on('click', function() {
-    $('.gws-attendance .time-card .cell').removeClass('focus');
+  $('.gws-attendance .time-card .time').on('click', function() {
+    $('.gws-attendance .time-card .time').removeClass('focus');
+    $('.gws-attendance .time-card .memo').removeClass('focus');
     $(this).addClass('focus');
 
     var offset = $(this).offset();
@@ -207,6 +208,22 @@
     var url = <%== url_for(action: :time, day: ':day', type: ':type').to_json %>;
     url = url.replace(':day', $(this).data('day'));
     url = url.replace(':type', $(this).data('type'));
+
+    $('.gws-attendance .cell-toolbar').offset(offset);
+    $('.gws-attendance .cell-toolbar .edit').attr('href', url);
+    $('.gws-attendance .cell-toolbar').show();
+  });
+
+  $('.gws-attendance .time-card .memo').on('click', function() {
+    $('.gws-attendance .time-card .time').removeClass('focus');
+    $('.gws-attendance .time-card .memo').removeClass('focus');
+    $(this).addClass('focus');
+
+    var offset = $(this).offset();
+    offset.left += $(this).outerWidth();
+
+    var url = <%== url_for(action: :memo, day: ':day').to_json %>;
+    url = url.replace(':day', $(this).data('day'));
 
     $('.gws-attendance .cell-toolbar').offset(offset);
     $('.gws-attendance .cell-toolbar .edit').attr('href', url);
