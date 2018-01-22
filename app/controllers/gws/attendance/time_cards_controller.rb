@@ -5,8 +5,8 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   model Gws::Attendance::TimeCard
 
   before_action :set_cur_month
-  before_action :set_items, only: %i[index enter leave]
-  before_action :set_item, only: %i[enter leave]
+  before_action :set_items, only: %i[index enter leave break_enter break_leave]
+  before_action :set_item, only: %i[enter leave break_enter break_leave]
 
   helper_method :format_time
 
@@ -100,6 +100,24 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     @item.histories.create(date: @cur_date, action: 'leave')
     record = @item.records.where(date: @cur_date).first_or_create
     record.leave = @now
+    render_update record.save, location: { action: :index }
+  end
+
+  def break_enter
+    @now = Time.zone.now
+    @cur_date = @cur_site.calc_attendance_date(@now)
+    @item.histories.create(date: @cur_date, action: 'enter')
+    record = @item.records.where(date: @cur_date).first_or_create
+    record["break_enter#{params[:index]}"] = @now
+    render_update record.save, location: { action: :index }
+  end
+
+  def break_leave
+    @now = Time.zone.now
+    @cur_date = @cur_site.calc_attendance_date(@now)
+    @item.histories.create(date: @cur_date, action: 'enter')
+    record = @item.records.where(date: @cur_date).first_or_create
+    record["break_leave#{params[:index]}"] = @now
     render_update record.save, location: { action: :index }
   end
 
