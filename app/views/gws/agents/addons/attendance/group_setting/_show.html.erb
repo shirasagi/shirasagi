@@ -1,0 +1,6 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-attendance-group-setting"); <% end %>
+
+<dl class="see addon-gws-attendance-group-setting">
+  <dt><%= @model.t :attendance_time_changed_at %></dt>
+  <dd><%= @item.attendance_time_changed_at.utc.hour %> <%= t("datetime.prompts.hour") %></dd>
+</dl>

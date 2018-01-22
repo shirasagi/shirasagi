@@ -18,7 +18,14 @@ ja:
 
   modules:
     gws/attendance: 出退勤
+    addons:
+      gws/attendance/group_setting: 出退勤
 
   gws_role:
     use_gws_attendance_time_cards: 出退勤の利用
     manage_gws_attendance_time_cards: 出退勤の管理
+
+  mongoid:
+    attributes:
+      gws/addon/attendance/group_setting:
+        attendance_time_changed_at: 日替わり時刻
