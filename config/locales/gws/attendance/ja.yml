@@ -10,6 +10,11 @@ ja:
       time_card_name: '%{month}のタイムカード'
       break_enter: '休始%{count}'
       break_leave: '休終%{count}'
+    buttons:
+      close: 閉じる
+    edit_cell:
+      time: 時刻
+      reason: 修正理由
 
   date:
     formats:
@@ -38,3 +43,10 @@ ja:
         attendance_break_time_state3: 休憩3表示
         attendance_break_enter_label3: 休憩3開始ラベル
         attendance_break_leave_label3: 休憩3終了ラベル
+
+  activemodel:
+    attributes:
+      gws/attendance/time_edit:
+        in_hour: 時
+        in_minute: 分
+        in_reason: 修正理由

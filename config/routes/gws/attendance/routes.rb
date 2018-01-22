@@ -14,6 +14,8 @@ SS::Application.routes.draw do
       post :leave, on: :collection
       post :break_enter, path: 'break_enter:index', on: :collection
       post :break_leave, path: 'break_leave:index', on: :collection
+      match :time, path: ':day/:type/time', on: :collection, via: %i[get post]
+      match :memo, path: ':day/:type/memo', on: :collection, via: %i[get post]
     end
   end
 end

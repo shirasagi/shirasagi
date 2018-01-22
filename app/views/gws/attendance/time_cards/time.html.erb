@@ -1,0 +1,25 @@
+<%= form_for :cell, url: { action: :time }, html: {method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :cell %>
+
+  <% val = @record.send(params[:type]) %>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t('gws/attendance.edit_cell.time') %></dt>
+          <dd>
+            <%= f.select(:in_hour, hour_options, selected: val.try(:hour) || Time.zone.now.hour) %>
+            <%= f.select(:in_minute, minute_options, selected: round_up_minute(val.try(:min) || Time.zone.now.min)) %>
+          </dd>
+          <dt><%= @model.t :in_reason %></dt>
+          <dd><%= f.text_field(:in_reason) %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+<% end %>

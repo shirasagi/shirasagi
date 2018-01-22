@@ -1,3 +1,58 @@
+<style>
+  .gws-attendance {
+    position: relative;
+  }
+
+  .gws-attendance .cell-toolbar {
+    position: absolute;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .gws-attendance .aside {
+    width: 230px;
+    float: left;
+  }
+
+  .gws-attendance .aside button.large {
+    width: 113px;
+    height: 60px;
+    color: white;
+    background-color: #f25a38;
+  }
+
+  .gws-attendance .aside button.small {
+    width: 54px;
+    height: 30px;
+    color: white;
+    background-color: #7d941c;
+  }
+
+  .gws-attendance .main {
+    margin-left: 240px;
+  }
+
+  .gws-attendance .main .time-card tr.header {
+    background-color: #ddd;
+  }
+
+  .gws-attendance .main .time-card th.date {
+    padding: 5px;
+    width: 7.5em;
+  }
+  .gws-attendance .main .time-card th.cell {
+    padding: 5px;
+    width: 5em;
+  }
+  .gws-attendance .main .time-card td {
+    padding: 5px;
+    border: 1px solid transparent;
+  }
+  .gws-attendance .main .time-card td.focus {
+    border: 1px solid greenyellow;
+  }
+</style>
+
 <% break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time_state#{i + 1}"] == 'show' } %>
 
 <% if @item.blank? %>
@@ -5,16 +60,21 @@
   <%= link_to(t('ss.links.new'), action: :new) rescue nil %>
 <% else %>
 <div class="gws-attendance">
-  <div class="aside" style="width: 230px; float: left">
+  <div class="cell-toolbar">
+    <a href="#" class="edit ajax-box">EDIT</a>
+    <a href="#" class="remove ajax-box">REMOVE</a>
+  </div>
+
+  <div class="aside">
     <div>
-      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38" data-action="<%= url_for(action: 'enter') %>">出勤</button>
-      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38" data-action="<%= url_for(action: 'leave') %>">退勤</button>
+      <button class="large" data-action="<%= url_for(action: 'enter') %>">出勤</button>
+      <button class="large" data-action="<%= url_for(action: 'leave') %>">退勤</button>
     </div>
     <% if break_times.present? %>
     <div>
       <% break_times.each do |i| %>
-        <button style="width: 54px; height: 30px; color: white; background-color: #7d941c" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
-        <button style="width: 54px; height: 30px; color: white; background-color: #7d941c" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
+        <button class="small" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
+        <button class="small" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
       <% end %>
     </div>
     <% end %>
@@ -83,7 +143,7 @@
     </div>
     -->
   </div>
-  <div class="main" style="margin-left: 240px;">
+  <div class="main">
     <nav class="nav-menu">
       <%= select_tag(:year_month, options_for_select([['2017年12月', '201712'], ['2018年1月', '201801'], ['2018年2月', '201802']], params[:year_month])) %>
       <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
@@ -91,32 +151,32 @@
       <%= link_to(t('ss.links.download'), { action: :download }, class: :btn) %>
     </nav>
 
-    <table class="index">
+    <table class="index time-card">
       <tbody>
       <% date = @cur_month %>
       <% while date <= @cur_month.end_of_month %>
         <% if date.day == 1 || date.day == 16 %>
-          <tr style="background-color: #ddd">
-            <th style="padding: 5px; width: 7.5em;">日付</th>
-            <th style="padding: 5px; width: 5em;">出勤</th>
-            <th style="padding: 5px; width: 5em;">退勤</th>
+          <tr class="header">
+            <th class="date">日付</th>
+            <th class="cell">出勤</th>
+            <th class="cell">退勤</th>
             <% break_times.each do |i| %>
-              <th style="padding: 5px; width: 5em;"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
-              <th style="padding: 5px; width: 5em;"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+              <th class="cell"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+              <th class="cell"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
             <% end %>
             <th>備考</th>
           </tr>
         <% end %>
         <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
           <% record = @item.records.where(date: date).first %>
-          <td style="padding: 5px"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
-          <td style="padding: 5px"><%= record ? format_time(date, record.enter) : '' %></td>
-          <td style="padding: 5px"><%= record ? format_time(date, record.leave) : '' %></td>
+          <td><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+          <td class="cell" data-day="<%= date.day %>" data-type="enter"><%= record ? format_time(date, record.enter) : '' %></td>
+          <td class="cell" data-day="<%= date.day %>" data-type="leave"><%= record ? format_time(date, record.leave) : '' %></td>
           <% break_times.each do |i| %>
-            <td style="padding: 5px"><%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %></td>
-            <td style="padding: 5px"><%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %></td>
+            <td class="cell" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>"><%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %></td>
+            <td class="cell" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>"><%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %></td>
           <% end %>
-          <td style="padding: 5px"><%= record ? record.memo : '' %></td>
+          <td><%= record ? record.memo : '' %></td>
         </tr>
         <% date += 1.day %>
       <% end %>
@@ -130,11 +190,28 @@
   $('.gws-attendance button').on('click', function() {
     var action = $(this).data('action');
     var token = $('meta[name="csrf-token"]').attr('content');
-    console.log(action);
 
     $form = $('<form/>', { action: action, method: 'post' });
     $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
     $('body').append($form);
     $form.submit();
   });
+
+  $('.gws-attendance .time-card .cell').on('click', function() {
+    $('.gws-attendance .time-card .cell').removeClass('focus');
+    $(this).addClass('focus');
+
+    var offset = $(this).offset();
+    offset.left += $(this).outerWidth();
+
+    var url = <%== url_for(action: :time, day: ':day', type: ':type').to_json %>;
+    url = url.replace(':day', $(this).data('day'));
+    url = url.replace(':type', $(this).data('type'));
+
+    $('.gws-attendance .cell-toolbar').offset(offset);
+    $('.gws-attendance .cell-toolbar .edit').attr('href', url);
+    $('.gws-attendance .cell-toolbar').show();
+  });
+
+  $('.gws-attendance .cell-toolbar').hide();
 <% end %>

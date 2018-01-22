@@ -5,10 +5,11 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   model Gws::Attendance::TimeCard
 
   before_action :set_cur_month
-  before_action :set_items, only: %i[index enter leave break_enter break_leave]
-  before_action :set_item, only: %i[enter leave break_enter break_leave]
+  before_action :set_items, only: %i[index enter leave break_enter break_leave time]
+  before_action :set_item, only: %i[enter leave break_enter break_leave time]
+  before_action :set_record, only: %i[time]
 
-  helper_method :format_time
+  helper_method :format_time, :hour_options, :minute_options, :round_up_minute
 
   private
 
@@ -40,18 +41,41 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def set_item
-    @cur_month
     @item = @items.find_by(year_month: @cur_month)
+  end
+
+  def set_record
+    @cur_date = @cur_month.change(day: Integer(params[:day]))
+    @record = @item.records.where(date: @cur_date).first_or_create
   end
 
   def format_time(date, time)
     return if time.blank?
 
     time = time.localtime
-    if date.day == time.day
-      "#{time.hour}:#{'%02d' % time.min}"
+    hour = time.hour
+    if date.day != time.day
+      hour += 24
+    end
+    "#{hour}:#{format('%02d', time.min)}"
+  end
+
+  def hour_options
+    start_hour = @cur_site.attendance_time_changed_at.utc.hour
+    (start_hour..24).map { |h| [ "#{h}時", h ] } + (0..(start_hour - 1)).map { |h| [ "#{h + 24}時", h ] }
+  end
+
+  def minute_options
+    12.times.to_a.map { |m| m * 5 }.map { |m| [ "#{m}分", m ] }
+  end
+
+  def round_up_minute(min, scale = 5)
+    return if min.blank?
+
+    if (min % scale) == 0
+      min
     else
-      "#{time.hour + 24}:#{'%02d' % time.min}"
+      ((min / scale) + 1) * scale
     end
   end
 
@@ -88,7 +112,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   def enter
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, action: 'enter')
+    @item.histories.create(date: @cur_date, field_name: 'enter', action: 'set')
     record = @item.records.where(date: @cur_date).first_or_create
     record.enter = @now
     render_update record.save, location: { action: :index }
@@ -97,7 +121,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   def leave
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, action: 'leave')
+    @item.histories.create(date: @cur_date, field_name: 'leave', action: 'set')
     record = @item.records.where(date: @cur_date).first_or_create
     record.leave = @now
     render_update record.save, location: { action: :index }
@@ -106,7 +130,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   def break_enter
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, action: 'enter')
+    @item.histories.create(date: @cur_date, field_name: "break_enter#{params[:index]}", action: 'set')
     record = @item.records.where(date: @cur_date).first_or_create
     record["break_enter#{params[:index]}"] = @now
     render_update record.save, location: { action: :index }
@@ -115,10 +139,35 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   def break_leave
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, action: 'enter')
+    @item.histories.create(date: @cur_date, field_name: "break_leave#{params[:index]}", action: 'set')
     record = @item.records.where(date: @cur_date).first_or_create
     record["break_leave#{params[:index]}"] = @now
     render_update record.save, location: { action: :index }
+  end
+
+  def time
+    @model = Gws::Attendance::TimeEdit
+    if request.get?
+      @cell = @model.new
+      render layout: false
+      return
+    end
+
+    @cell = @model.new params.require(:cell).permit(@model.permitted_fields).merge(fix_params)
+    result = false
+    if @cell.valid?
+      @item.histories.create(date: @cur_date, field_name: params[:type], action: 'modify', reason: @cell.in_reason)
+      @record.send("#{params[:type]}=", @cell.calc_time(@cur_date))
+      result = @record.save
+    end
+
+    location = { action: :index }
+    if result
+      notice = t('ss.notice.saved')
+    else
+      notice = @cell.errors.full_messages.join("\n")
+    end
+    redirect_to location, notice: notice
   end
 
   # def edit
