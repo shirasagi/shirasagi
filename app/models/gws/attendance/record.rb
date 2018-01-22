@@ -7,11 +7,9 @@ class Gws::Attendance::Record
   field :date, type: DateTime
   field :enter, type: DateTime
   field :leave, type: DateTime
-  field :break_enter1, type: DateTime
-  field :break_leave1, type: DateTime
-  field :break_enter2, type: DateTime
-  field :break_leave2, type: DateTime
-  field :break_enter3, type: DateTime
-  field :break_leave3, type: DateTime
+  SS.config.gws.attendance['max_break'].times do |i|
+    field "break_enter#{i + 1}", type: DateTime
+    field "break_leave#{i + 1}", type: DateTime
+  end
   field :memo, type: String
 end
