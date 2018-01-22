@@ -8,6 +8,8 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   before_action :set_items, only: %i[index enter leave]
   before_action :set_item, only: %i[enter leave]
 
+  helper_method :format_time
+
   private
 
   def set_crumbs
@@ -42,6 +44,17 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     @item = @items.find_by(year_month: @cur_month)
   end
 
+  def format_time(date, time)
+    return if time.blank?
+
+    time = time.localtime
+    if date.day == time.day
+      "#{time.hour}:#{'%02d' % time.min}"
+    else
+      "#{time.hour + 24}:#{'%02d' % time.min}"
+    end
+  end
+
   public
 
   def index
@@ -74,7 +87,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def enter
     @now = Time.zone.now
-    @cur_date = @now.beginning_of_day
+    @cur_date = @cur_site.calc_attendance_date(@now)
     @item.histories.create(date: @cur_date, action: 'enter')
     record = @item.records.where(date: @cur_date).first_or_create
     record.enter = @now
@@ -83,7 +96,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def leave
     @now = Time.zone.now
-    @cur_date = @now.beginning_of_day
+    @cur_date = @cur_site.calc_attendance_date(@now)
     @item.histories.create(date: @cur_date, action: 'leave')
     record = @item.records.where(date: @cur_date).first_or_create
     record.leave = @now

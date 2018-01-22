@@ -33,6 +33,10 @@ module Gws::Addon::Attendance::GroupSetting
     %w(hide show).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
   end
 
+  def calc_attendance_date(time = Time.zone.now)
+    Time.zone.at(time - attendance_time_changed_at).beginning_of_day
+  end
+
   private
 
   def set_attendance_time_changed_at
