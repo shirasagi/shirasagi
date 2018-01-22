@@ -84,6 +84,7 @@
       <%= select_tag(:year_month, options_for_select([['2017年12月', '201712'], ['2018年1月', '201801'], ['2018年2月', '201802']], params[:year_month])) %>
       <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
       <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+      <%= link_to(t('ss.links.download'), { action: :download }, class: :btn) %>
     </nav>
 
     <table class="index">

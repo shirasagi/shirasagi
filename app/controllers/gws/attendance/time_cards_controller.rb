@@ -67,6 +67,11 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     render_create @item.save, location: { action: :index }
   end
 
+  def download
+    # TODO: implementation
+    raise NotImplementedError
+  end
+
   def enter
     @now = Time.zone.now
     @cur_date = @now.beginning_of_day
