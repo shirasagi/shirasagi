@@ -1,7 +1,7 @@
 class Gws::Schedule::ApprovalsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::Memo::NotificationFilter
+  #include Gws::Memo::NotificationFilter
 
   model Gws::Schedule::Approval
 
@@ -59,6 +59,24 @@ class Gws::Schedule::ApprovalsController < ApplicationController
     Gws::Schedule::Comment.create(safe_params)
   end
 
+  def send_approval_approve_mail
+    Gws::Memo::Notifier.deliver_workflow_approve!(
+      cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+      to_users: @cur_schedule.members, item: @cur_schedule,
+      url: gws_schedule_plan_url(id: @cur_schedule),
+      comment: params.dig(:comment, :text)
+    ) rescue nil
+  end
+
+  def send_approval_deny_mail
+    Gws::Memo::Notifier.deliver_workflow_remand!(
+      cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+      to_users: @cur_schedule.members, item: @cur_schedule,
+      url: gws_schedule_plan_url(id: @cur_schedule),
+      comment: params.dig(:comment, :text)
+    ) rescue nil
+  end
+
   public
 
   def edit
@@ -82,8 +100,14 @@ class Gws::Schedule::ApprovalsController < ApplicationController
 
     result = @item.save
     if result
-      @cur_schedule.update_approval_state
       post_comment
+
+      @cur_schedule.update_approval_state
+      if @cur_schedule.approval_state == 'approve'
+        send_approval_approve_mail
+      elsif params.dig(:item, :approval_state) == 'deny'
+        send_approval_deny_mail
+      end
     end
     render_update result, render_opts
   end

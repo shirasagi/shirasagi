@@ -38,6 +38,11 @@ module Gws::Addon::Schedule::Approval
     approval_facilities.map(&:user_ids).flatten.uniq
   end
 
+  def all_approvers
+    ids = approval_member_ids + facility_approver_ids
+    Gws::User.in(id: ids.uniq)
+  end
+
   def approval_member?(user)
     approval_member_ids.include?(user.id) || facility_approver_ids.include?(user.id)
   end
