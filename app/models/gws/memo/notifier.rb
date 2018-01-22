@@ -124,7 +124,7 @@ class Gws::Memo::Notifier
     message = Gws::Memo::Message.new
     message.cur_site = cur_site
     message.cur_user = cur_user
-    message.member_ids = to_users.pluck(:id)
+    message.to_member_ids = to_users.pluck(:id)
     message.send_date = Time.zone.now
     message.state = 'public'
 
