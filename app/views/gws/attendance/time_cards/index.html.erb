@@ -170,7 +170,12 @@
         <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
           <% record = @item.records.where(date: date).first %>
           <td><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
-          <td class="time" data-day="<%= date.day %>" data-type="enter"><%= record ? format_time(date, record.enter) : '' %></td>
+          <td class="time" data-day="<%= date.day %>" data-type="enter">
+            <%= record ? format_time(date, record.enter) : '' %>
+            <% if record && (reason = record.find_latest_reason('enter')) %>
+            <%= reason %>
+            <% end %>
+          </td>
           <td class="time" data-day="<%= date.day %>" data-type="leave"><%= record ? format_time(date, record.leave) : '' %></td>
           <% break_times.each do |i| %>
             <td class="time" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>"><%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %></td>
@@ -220,7 +225,7 @@
     $(this).addClass('focus');
 
     var offset = $(this).offset();
-    offset.left += $(this).outerWidth();
+    offset.left -= $('.gws-attendance .cell-toolbar').outerWidth();
 
     var url = <%== url_for(action: :memo, day: ':day').to_json %>;
     url = url.replace(':day', $(this).data('day'));

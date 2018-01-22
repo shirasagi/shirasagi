@@ -12,4 +12,11 @@ class Gws::Attendance::Record
     field "break_leave#{i + 1}", type: DateTime
   end
   field :memo, type: String
+
+  def find_latest_reason(field_name)
+    criteria = time_card.histories.where(date: date)
+    criteria.where(field_name: field_name)
+    history = criteria.order_by(created: -1).first
+    history.try(:reason).presence
+  end
 end
