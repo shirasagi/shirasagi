@@ -5,6 +5,8 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   model Gws::Attendance::TimeCard
 
   before_action :set_cur_month
+  before_action :set_items, only: %i[index enter leave]
+  before_action :set_item, only: %i[enter leave]
 
   private
 
@@ -28,12 +30,23 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     @cur_month = Time.zone.parse("#{year}/#{month}/01")
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site).
+      user(@cur_user).
+      allow(:use, @cur_user, site: @cur_site).
+      search(params[:s])
+  end
+
+  def set_item
+    @cur_month
+    @item = @items.find_by(year_month: @cur_month)
+  end
+
   public
 
   def index
-    @items = @model.site(@cur_site).
-      allow(:use, @cur_user, site: @cur_site).
-      search(params[:s]).
+    set_items
+    @items = @items.
       page(params[:page]).per(50)
     @item = @items.where(year_month: @cur_month).first
   end
@@ -52,6 +65,24 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:use, @cur_user, site: @cur_site)
     render_create @item.save, location: { action: :index }
+  end
+
+  def enter
+    @now = Time.zone.now
+    @cur_date = @now.beginning_of_day
+    @item.histories.create(date: @cur_date, action: 'enter')
+    record = @item.records.where(date: @cur_date).first_or_create
+    record.enter = @now
+    render_update record.save, location: { action: :index }
+  end
+
+  def leave
+    @now = Time.zone.now
+    @cur_date = @now.beginning_of_day
+    @item.histories.create(date: @cur_date, action: 'leave')
+    record = @item.records.where(date: @cur_date).first_or_create
+    record.leave = @now
+    render_update record.save, location: { action: :index }
   end
 
   # def edit

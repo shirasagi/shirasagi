@@ -2,11 +2,11 @@
   <p>タイムカードはありません。</p>
   <%= link_to(t('ss.links.new'), action: :new) rescue nil %>
 <% else %>
-<div>
+<div class="gws-attendance">
   <div class="aside" style="width: 230px; float: left">
     <div>
-      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38">出勤</button>
-      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38">退勤</button>
+      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38" data-action="<%= url_for(action: 'enter') %>">出勤</button>
+      <button style="width: 113px; height: 60px; color: white; background-color: #f25a38" data-action="<%= url_for(action: 'leave') %>">退勤</button>
     </div>
     <div>
       <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">休始</button>
@@ -102,15 +102,16 @@
             <th>備考</th>
           </tr>
         <% end %>
-        <tr class="<% Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
+        <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
+          <% record = @item.records.where(date: date).first %>
           <td style="padding: 5px"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
-          <td style="padding: 5px">8:23</td>
-          <td style="padding: 5px">17:12</td>
-          <td style="padding: 5px">12:02</td>
-          <td style="padding: 5px">12:42</td>
-          <td style="padding: 5px"></td>
-          <td style="padding: 5px"></td>
-          <td style="padding: 5px"></td>
+          <td style="padding: 5px"><%= tryb { I18n.l(record.enter, format: :attendance_time_only) } %></td>
+          <td style="padding: 5px"><%= tryb { I18n.l(record.leave, format: :attendance_time_only) } %></td>
+          <td style="padding: 5px"><%= tryb { I18n.l(record.break_enter1, format: :attendance_time_only) } %></td>
+          <td style="padding: 5px"><%= tryb { I18n.l(record.break_leave1, format: :attendance_time_only) } %></td>
+          <td style="padding: 5px"><%= tryb { I18n.l(record.break_enter2, format: :attendance_time_only) } %></td>
+          <td style="padding: 5px"><%= tryb { I18n.l(record.break_leave2, format: :attendance_time_only) } %></td>
+          <td style="padding: 5px"><%= tryb { record.memo } %></td>
         </tr>
         <% date += 1.day %>
       <% end %>
@@ -119,3 +120,16 @@
     <% end %>
   </div>
 </div>
+
+<%= jquery do %>
+  $('.gws-attendance button').on('click', function() {
+    var action = $(this).data('action');
+    var token = $('meta[name="csrf-token"]').attr('content');
+    console.log(action);
+
+    $form = $('<form/>', { action: action, method: 'post' });
+    $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
+    $('body').append($form);
+    $form.submit();
+  });
+<% end %>
