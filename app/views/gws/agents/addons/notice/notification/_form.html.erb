@@ -1,6 +1,8 @@
 <dl class="see mod-gws-notice-notification">
+  <% if @cur_site.menu_memo_visible? %>
   <dt><%= @model.t :message_notification %><%= @model.tt :message_notification %></dt>
   <dd><%= f.select :message_notification, @item.message_notification_options, include_blank: true %></dd>
+  <% end %>
 
   <dt><%= @model.t :email_notification %><%= @model.tt :email_notification %></dt>
   <dd><%= f.select :email_notification, @item.email_notification_options, include_blank: true %></dd>
