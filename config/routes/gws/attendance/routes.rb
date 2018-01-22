@@ -12,6 +12,8 @@ SS::Application.routes.draw do
       get :download, on: :collection
       post :enter, on: :collection
       post :leave, on: :collection
+      post :break_enter, path: 'break_enter:index', on: :collection
+      post :break_leave, path: 'break_leave:index', on: :collection
     end
   end
 end

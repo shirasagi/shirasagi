@@ -1,3 +1,5 @@
+<% break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time_state#{i + 1}"] == 'show' } %>
+
 <% if @item.blank? %>
   <p>タイムカードはありません。</p>
   <%= link_to(t('ss.links.new'), action: :new) rescue nil %>
@@ -8,12 +10,14 @@
       <button style="width: 113px; height: 60px; color: white; background-color: #f25a38" data-action="<%= url_for(action: 'enter') %>">出勤</button>
       <button style="width: 113px; height: 60px; color: white; background-color: #f25a38" data-action="<%= url_for(action: 'leave') %>">退勤</button>
     </div>
+    <% if break_times.present? %>
     <div>
-      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">休始</button>
-      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">休終</button>
-      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">外出</button>
-      <button style="width: 54px; height: 30px; color: white; background-color: #7d941c">外戻</button>
+      <% break_times.each do |i| %>
+        <button style="width: 54px; height: 30px; color: white; background-color: #7d941c" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
+        <button style="width: 54px; height: 30px; color: white; background-color: #7d941c" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
+      <% end %>
     </div>
+    <% end %>
 
     <!--
     <div>
@@ -96,10 +100,10 @@
             <th style="padding: 5px; width: 7.5em;">日付</th>
             <th style="padding: 5px; width: 3.5em;">出勤</th>
             <th style="padding: 5px; width: 3.5em;">退勤</th>
-            <th style="padding: 5px; width: 3.5em;">休始</th>
-            <th style="padding: 5px; width: 3.5em;">休終</th>
-            <th style="padding: 5px; width: 3.5em;">外出</th>
-            <th style="padding: 5px; width: 3.5em;">外戻</th>
+            <% break_times.each do |i| %>
+              <th style="padding: 5px; width: 3.5em;"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+              <th style="padding: 5px; width: 3.5em;"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <% end %>
             <th>備考</th>
           </tr>
         <% end %>
@@ -108,10 +112,10 @@
           <td style="padding: 5px"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
           <td style="padding: 5px"><%= tryb { I18n.l(record.enter, format: :attendance_time_only) } %></td>
           <td style="padding: 5px"><%= tryb { I18n.l(record.leave, format: :attendance_time_only) } %></td>
-          <td style="padding: 5px"><%= tryb { I18n.l(record.break_enter1, format: :attendance_time_only) } %></td>
-          <td style="padding: 5px"><%= tryb { I18n.l(record.break_leave1, format: :attendance_time_only) } %></td>
-          <td style="padding: 5px"><%= tryb { I18n.l(record.break_enter2, format: :attendance_time_only) } %></td>
-          <td style="padding: 5px"><%= tryb { I18n.l(record.break_leave2, format: :attendance_time_only) } %></td>
+          <% break_times.each do |i| %>
+            <td style="padding: 5px"><%= tryb { I18n.l(record["break_enter#{i + 1}"].local, format: :attendance_time_only) } %></td>
+            <td style="padding: 5px"><%= tryb { I18n.l(record["break_leave#{i + 1}"].local, format: :attendance_time_only) } %></td>
+          <% end %>
           <td style="padding: 5px"><%= tryb { record.memo } %></td>
         </tr>
         <% date += 1.day %>
