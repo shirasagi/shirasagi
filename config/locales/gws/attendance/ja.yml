@@ -2,11 +2,14 @@ ja:
   gws/attendance:
     prev_month: 先月
     next_month: 翌月
+    break: 休憩
     confirm:
       time_card:
         new: タイムカードを新規作成してよろしですか？
     formats:
       time_card_name: '%{month}のタイムカード'
+      break_enter: '休始%{count}'
+      break_leave: '休終%{count}'
 
   date:
     formats:
@@ -29,3 +32,12 @@ ja:
     attributes:
       gws/addon/attendance/group_setting:
         attendance_time_changed_at: 日替わり時刻
+        attendance_break_time_state1: 休憩1表示
+        attendance_break_enter_label1: 休憩1開始ラベル
+        attendance_break_leave_label1: 休憩1終了ラベル
+        attendance_break_time_state2: 休憩2表示
+        attendance_break_enter_label2: 休憩2開始ラベル
+        attendance_break_leave_label2: 休憩2終了ラベル
+        attendance_break_time_state3: 休憩3表示
+        attendance_break_enter_label3: 休憩3開始ラベル
+        attendance_break_leave_label3: 休憩3終了ラベル

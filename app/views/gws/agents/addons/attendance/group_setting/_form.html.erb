@@ -4,4 +4,13 @@
 <dl class="see addon-gws-attendance-group-setting">
   <dt><%= @model.t :attendance_time_changed_at %><%= @model.tt :attendance_time_changed_at %></dt>
   <dd><%= f.select :in_attendance_time_change_hour, @item.attendance_time_changed_at_options %></dd>
+
+  <% SS.config.gws.attendance['max_break'].times do |i| %>
+    <dt><%= t('gws/attendance.break') %><%= i + 1 %></dt>
+    <dd>
+      <%= f.select "attendance_break_time_state#{i + 1}", @item.attendance_break_time_options %>
+      <%= f.text_field "attendance_break_enter_label#{i + 1}", placeholder: t('gws/attendance.formats.break_enter', count: i + 1), style: 'width: 10.5em;' %>
+      <%= f.text_field "attendance_break_leave_label#{i + 1}", placeholder: t('gws/attendance.formats.break_leave', count: i + 1), style: 'width: 10.5em;' %>
+    </dd>
+  <% end %>
 </dl>
