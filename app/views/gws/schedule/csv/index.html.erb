@@ -1,6 +1,5 @@
 <style>
-.gws-schedule-csv .import-log:empty { display: none; }
-.gws-schedule-csv .import-log { min-height: 2em; background: #f7f7f7; padding: 10px; }
+.gws-schedule-csv .import-log { min-height: 2em; padding: 20px 10px 10px; border-top: 1px solid #f2f2f2; }
 .gws-schedule-csv .import-loading { color: #bbb; }
 .gws-schedule-csv .import-skip td { color: #bbb; }
 .gws-schedule-csv .import-error td { color: #e00; }
@@ -19,10 +18,12 @@
     },
     success: function(data, status) {
       var log = $('.import-log');
+      log.html('')
 
       if (data.messages) {
-        log.html(data.messages.join('<br />'));
-      } else if (data.items) {
+        log.append(data.messages.join('<br />'));
+      }
+      if (data.items) {
         var count = { success: 0, skip: 0, error: 0 };
         var html = '<table class="index mt-1"><thead><tr>' +
           '<th style="width: 150px"><%= @model.t :start_at %></th>' +
@@ -50,7 +51,7 @@
         tabs += '<span class="ml-1"><%= t('gws/schedule.import.exist') %>(' + count.skip + ')</span>';
         tabs += '<span class="ml-1"><%= t('gws/schedule.import.error') %>(' + count.error + ')</span>';
 
-        log.html(tabs + html);
+        log.append(tabs + html);
       }
     }
   });

@@ -84,6 +84,13 @@ class Gws::Schedule::Plan
     Gws::User.in(id: ids)
   end
 
+  def readable?(user, opts = {})
+    return true if allowed?(:read, user, opts)
+    return true if member?(user)
+    return true if approval_member?(user)
+    super
+  end
+
   private
 
   def validate_color
