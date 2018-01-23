@@ -56,6 +56,21 @@ class Gws::Attendance::TimeCard
     end
   end
 
+  def punch(field_name, now = Time.zone.now)
+    raise "unable to punch: #{field_name}" if !Gws::Attendance::Record.punchable_field_names.include?(field_name)
+
+    date = (@cur_site || site).calc_attendance_date(now)
+    self.histories.create(date: date, field_name: field_name, action: 'set')
+    record = self.records.where(date: date).first_or_create
+    if record.send(field_name).present?
+      errors.add :base, :already_punched
+      return false
+    end
+
+    record.send("#{field_name}=", now)
+    record.save
+  end
+
   private
 
   def normalize_date

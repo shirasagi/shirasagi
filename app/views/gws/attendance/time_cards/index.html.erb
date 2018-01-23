@@ -61,6 +61,8 @@
 <% break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time_state#{i + 1}"] == 'show' } %>
 
 <div class="gws-attendance">
+  <%= error_messages_for :item %>
+
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
   <div class="cell-toolbar">
     <a href="#" class="edit ajax-box">EDIT</a>

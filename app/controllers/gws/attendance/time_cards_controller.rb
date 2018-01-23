@@ -48,6 +48,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def set_item
     @item = @items.find_by(date: @cur_month)
+    @item.attributes = fix_params
   end
 
   def set_record
@@ -123,43 +124,14 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def enter
     raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
-    @now = Time.zone.now
-    @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, field_name: 'enter', action: 'set')
-    record = @item.records.where(date: @cur_date).first_or_create
-    record.enter = @now
-    render_update record.save, location: { action: :index }
+
+    render_opts = { location: { action: :index }, render: { file: :index } }
+    render_update @item.punch("#{params[:action]}#{params[:index]}"), render_opts
   end
 
-  def leave
-    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
-    @now = Time.zone.now
-    @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, field_name: 'leave', action: 'set')
-    record = @item.records.where(date: @cur_date).first_or_create
-    record.leave = @now
-    render_update record.save, location: { action: :index }
-  end
-
-  def break_enter
-    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
-    @now = Time.zone.now
-    @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, field_name: "break_enter#{params[:index]}", action: 'set')
-    record = @item.records.where(date: @cur_date).first_or_create
-    record["break_enter#{params[:index]}"] = @now
-    render_update record.save, location: { action: :index }
-  end
-
-  def break_leave
-    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
-    @now = Time.zone.now
-    @cur_date = @cur_site.calc_attendance_date(@now)
-    @item.histories.create(date: @cur_date, field_name: "break_leave#{params[:index]}", action: 'set')
-    record = @item.records.where(date: @cur_date).first_or_create
-    record["break_leave#{params[:index]}"] = @now
-    render_update record.save, location: { action: :index }
-  end
+  alias leave enter
+  alias break_enter enter
+  alias break_leave enter
 
   def time
     raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site)

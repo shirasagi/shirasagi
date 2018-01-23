@@ -45,6 +45,10 @@ ja:
         attendance_break_time_state3: 休憩3表示
         attendance_break_enter_label3: 休憩3開始ラベル
         attendance_break_leave_label3: 休憩3終了ラベル
+    errors:
+      models:
+        gws/attendance/time_card:
+          already_punched: 打刻済みです。
 
   activemodel:
     attributes:
