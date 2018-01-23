@@ -19,8 +19,8 @@ SS::Application.routes.draw do
     end
 
     namespace 'management' do
-      get '/' => redirect { |p, req| "#{req.path}/time_cards" }, as: :main
-      resources :time_cards, concerns: [:deletion] do
+      get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
+      resources :time_cards, path: 'time_cards/:year_month', concerns: [:deletion] do
         get :download, on: :collection
       end
     end

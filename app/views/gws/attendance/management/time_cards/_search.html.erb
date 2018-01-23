@@ -1,7 +1,6 @@
 <% @s = OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.select :date, [['2018年1月', '201801']] %>
     <%= f.select :group, [['企画政策部', 2], ['企画政策部/政策課', 3], ['企画政策部/広報課', 4]], include_blank: 'グループ' %>
     <%= f.select :user, [['鈴木 茂', 3], ['渡辺 和子', 4], ['斎藤拓哉', 5]], include_blank: 'ユーザー' %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
