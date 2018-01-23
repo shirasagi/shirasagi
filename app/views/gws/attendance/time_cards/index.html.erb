@@ -28,6 +28,11 @@
     background-color: #7d941c;
   }
 
+  .gws-attendance .aside button:disabled {
+    color: #999;
+    background-color: #ddd;
+  }
+
   .gws-attendance .main {
     margin-left: 240px;
   }
@@ -55,10 +60,6 @@
 
 <% break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time_state#{i + 1}"] == 'show' } %>
 
-<% if @item.blank? %>
-  <p>タイムカードはありません。</p>
-  <%= link_to(t('ss.links.new'), action: :new) rescue nil %>
-<% else %>
 <div class="gws-attendance">
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
   <div class="cell-toolbar">
@@ -69,16 +70,16 @@
 
   <div class="aside">
     <div>
-      <button class="large" data-action="<%= url_for(action: 'enter') %>">出勤</button>
-      <button class="large" data-action="<%= url_for(action: 'leave') %>">退勤</button>
+      <button class="large" data-action="<%= url_for(action: 'enter') %>" <% if @item.blank? %>disabled<% end %>>出勤</button>
+      <button class="large" data-action="<%= url_for(action: 'leave') %>" <% if @item.blank? %>disabled<% end %>>退勤</button>
     </div>
     <% if break_times.present? %>
-    <div>
-      <% break_times.each do |i| %>
-        <button class="small" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
-        <button class="small" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
-      <% end %>
-    </div>
+      <div>
+        <% break_times.each do |i| %>
+          <button class="small" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>" <% if @item.blank? %>disabled<% end %>><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
+          <button class="small" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>" <% if @item.blank? %>disabled<% end %>><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
+        <% end %>
+      </div>
     <% end %>
 
     <!--
@@ -153,6 +154,9 @@
       <%= link_to(t('ss.links.download'), { action: :download }, class: :btn) %>
     </nav>
 
+    <% if @item.blank? %>
+      <p>タイムカードはありません。</p>
+    <% else %>
     <table class="index time-card">
       <tbody>
       <% date = @cur_month %>

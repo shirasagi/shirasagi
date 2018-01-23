@@ -11,11 +11,7 @@ class Gws::Attendance::TimeCard
   embeds_many :histories, class_name: 'Gws::Attendance::History'
   embeds_many :records, class_name: 'Gws::Attendance::Record'
 
-  attr_accessor :in_year, :in_month
-
-  permit_params :in_year, :in_month
-
-  before_validation :set_name_and_year_month
+  before_validation :set_name
 
   class << self
     def search(params = {})
@@ -62,9 +58,10 @@ class Gws::Attendance::TimeCard
 
   private
 
-  def set_name_and_year_month
-    self.year_month = Time.zone.parse("#{in_year}/#{in_month}/01")
-    month = I18n.l(self.year_month.to_date, format: :attendance_year_month)
-    self.name = I18n.t('gws/attendance.formats.time_card_name', month: month)
+  def set_name
+    self.name ||= begin
+      month = I18n.l(self.year_month.to_date, format: :attendance_year_month)
+      I18n.t('gws/attendance.formats.time_card_name', month: month)
+    end
   end
 end

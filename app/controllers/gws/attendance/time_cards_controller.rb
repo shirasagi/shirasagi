@@ -6,6 +6,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   before_action :set_cur_month
   before_action :set_items, only: %i[index enter leave break_enter break_leave time memo]
+  before_action :create_new_time_card_if_necessary, only: %i[index]
   before_action :set_item, only: %i[enter leave break_enter break_leave time memo]
   before_action :set_record, only: %i[time memo]
 
@@ -21,16 +22,21 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def pre_params
-    { in_year: @cur_month.year, in_month: @cur_month.month }
-  end
-
   def set_cur_month
     raise '404' if params[:year_month].blank? || params[:year_month].length != 6
 
     year = params[:year_month][0..3]
     month = params[:year_month][4..5]
     @cur_month = Time.zone.parse("#{year}/#{month}/01")
+  end
+
+  def create_new_time_card_if_necessary
+    @item = @items.where(year_month: @cur_month).first
+    if @item.blank? && Time.zone.now.year == @cur_month.year && Time.zone.now.month == @cur_month.month
+      @item = @model.new fix_params
+      @item.year_month = @cur_month
+      @item.save!
+    end
   end
 
   def set_items
@@ -82,7 +88,6 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   public
 
   def index
-    set_items
     @items = @items.
       page(params[:page]).per(50)
     @item = @items.where(year_month: @cur_month).first
@@ -93,16 +98,16 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   #   render
   # end
 
-  def new
-    @item = @model.new pre_params.merge(fix_params)
-    raise "403" unless @item.allowed?(:use, @cur_user, site: @cur_site)
-  end
-
-  def create
-    @item = @model.new get_params
-    raise "403" unless @item.allowed?(:use, @cur_user, site: @cur_site)
-    render_create @item.save, location: { action: :index }
-  end
+  # def new
+  #   @item = @model.new pre_params.merge(fix_params)
+  #   raise "403" unless @item.allowed?(:use, @cur_user, site: @cur_site)
+  # end
+  #
+  # def create
+  #   @item = @model.new get_params
+  #   raise "403" unless @item.allowed?(:use, @cur_user, site: @cur_site)
+  #   render_create @item.save, location: { action: :index }
+  # end
 
   def download
     # TODO: implementation
