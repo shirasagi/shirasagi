@@ -113,26 +113,8 @@ li.webmail-accounts {
     top: 6px;
     right: 10px;
   }
-  .quota {
+  .ss-quota-bar {
     margin: 0 10px 10px;
-    border: 1px solid #ccc;
-    background-color: #ddd;
-    @include background(linear-gradient(top, #ddd, #eee));
-    line-height: 20px;
-  }
-  .label {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-  }
-  .usage {
-    height: 20px;
-    background-color: #6d6;
-    @include background(linear-gradient(top, #dfd, #4b4));
-  }
-  .usage.over-threshold {
-    background-color: #ff0f0f;
-    @include background(linear-gradient(top, #ffcccc, #ff0f0f));
   }
 }
 .webmail-quota-alert {

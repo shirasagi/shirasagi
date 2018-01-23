@@ -23,6 +23,7 @@ ja:
     login_url: ログインURL
     all: すべて
     keyword: キーワード
+    quota: 容量
 
     views:
       login/login:

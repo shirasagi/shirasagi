@@ -31,5 +31,13 @@
       <%= link_to t('gws/share.all'), gws_share_files_path %>
     </div>
     <div class="tree-navi"></div>
+
+    <% if @folder %>
+    <div class="content-navi-title" style="margin-top: 10px; border-top: 1px solid #f2f2f2;"><%= t('ss.quota') %></div>
+    <div class="ss-quota-bar">
+      <div class="label"><%= @folder.quota_label %></div>
+      <div class="usage <%= @folder.quota_over? ? 'over-threshold' : '' %>" style="width: <%= @folder.quota_percentage %>%"></div>
+    </div>
+    <% end %>
   </div>
 <% end %>

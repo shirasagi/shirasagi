@@ -132,6 +132,30 @@ class Gws::Share::Folder
     false
   end
 
+  def quota_bytes
+    share_max_folder_size.to_i
+  end
+
+  def quota_label
+    h = ApplicationController.helpers
+    if quota_bytes > 0
+      "#{h.number_to_human_size(descendants_total_file_size)}/#{h.number_to_human_size(quota_bytes)}"
+    else
+      "#{h.number_to_human_size(descendants_total_file_size)}"
+    end
+  end
+
+  def quota_over?
+    return false if quota_bytes <= 0
+    descendants_total_file_size >= quota_bytes
+  end
+
+  def quota_percentage
+    return 0 if quota_bytes <= 0
+    percentage = (descendants_total_file_size.to_f / quota_bytes.to_f) * 100
+    percentage > 100 ? 100 : percentage
+  end
+
   private
 
   def set_depth
