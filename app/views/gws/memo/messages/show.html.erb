@@ -78,7 +78,10 @@
 
     <div class="addon-body">
       <% if @item.html? %>
-        <div class="body body--html"><%= @item.sanitize_html %></div>
+        <div class="body body--html">
+          <%= html_editor ".body--html .html", readonly: true %>
+          <%= text_area_tag :html, @item.html, class: "html", style: "height: 400px;" %>
+        </div>
       <% else %>
         <div class="body body--text"><%= br @item.text %></div>
       <% end %>

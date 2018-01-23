@@ -11,6 +11,7 @@ class Gws::Memo::SignaturesController < ApplicationController
   def set_item
     super
     raise "404" if @item.user_id != @cur_user.id
+    raise "404" if @item.site_id != @cur_site.id
   end
 
   def deny_with_auth
@@ -31,6 +32,7 @@ class Gws::Memo::SignaturesController < ApplicationController
 
   def index
     @items = @model.user(@cur_user).
+      site(@cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
   end

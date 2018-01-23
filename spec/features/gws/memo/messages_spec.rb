@@ -17,13 +17,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
     it '#new' do
       visit new_gws_memo_message_path(site)
       wait_for_ajax
-      expect(page).to have_content('参加者')
+      expect(page).to have_content('宛先')
     end
 
     it '#edit' do
       visit edit_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
       wait_for_ajax
-      expect(page).to have_content('参加者')
+      expect(page).to have_content('宛先')
     end
 
     it '#trash' do

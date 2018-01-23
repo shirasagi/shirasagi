@@ -5,10 +5,55 @@
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
+</dl>
 
-  <dt><%= @model.t :from %><%= @model.tt :from %></dt>
-  <dd><%= f.text_field :from %></dd>
+<dl class="see" style="margin-top: 20px;">
+  <dt><%= @model.t :from_member_ids %><%= @model.tt :from_member_ids %></dt>
+  <dd>
+    <%= f.hidden_field "from_member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
+    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected sortable-index">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.from_members.each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "from_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
 
+<dl class="see">
+  <dt><%= @model.t :to_member_ids %><%= @model.tt :to_member_ids %></dt>
+  <dd>
+    <%= f.hidden_field "to_member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
+    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected sortable-index">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.to_members.each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "to_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see">
   <dt><%= @model.t :subject %><%= @model.tt :subject %></dt>
   <dd><%= f.text_field :subject %></dd>
 

@@ -92,13 +92,13 @@ ja:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
           input_message: 本文を入力してください。
+          self_quota_over: メッセージ容量が制限を超過している為、送信できませんでした。
+          member_quota_over: "%{member}さんのメッセージ容量が制限を超過している為、送信できませんでした。"
         gws/memo/folder:
           included_memo: メッセージが入っているフォルダーは削除できません。
           used_folder: フィルターが使用中のフォルダーは削除できません。
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
-        gws/memo/forward:
-          not_set_email: メールアドレスを設定しないと有効にはできません。
     attributes:
       gws/memo/message:
         name: 件名
@@ -116,7 +116,8 @@ ja:
         order: 並び順
       gws/memo/filter:
         name: フィルター名
-        from: 条件/差出人
+        from_member_ids: 条件/差出人
+        to_member_ids: 条件/宛先
         subject: 条件/件名
         action: アクション
         folder: フォルダー
@@ -135,6 +136,7 @@ ja:
         cc_member_ids: CC
         bcc_member_ids: BCC
       gws/addon/memo/group_setting:
+        memo_quota: メッセージ容量制限
         memo_filesize_limit: 添付サイズ制限
         memo_reminder: リマインダー表示設定
         memo_email: 転送元メールアドレス
@@ -153,12 +155,13 @@ ja:
       name:
         - フィルターの名前を入力します。
         - 作成したフィルターはメッセージの受信時に各条件が1度のみ評価されます。
-      from:
-        - フィルターの条件となる差出人名を入力します。
-        - 差出人名は中間一致で評価されます。
+      from_member_ids:
+        - フィルターの条件となる差出人を選択します。
+      to_member_ids:
+        - フィルターの条件となる宛先（CC含む）を選択します。
       subject:
         - フィルターの条件となる件名を入力します。
-        - 件名は中間一致で評価されます。
+        - 件名は部分一致で評価されます。
       action:
         - 条件に合致したメッセージに対して行う操作を選択します。
         - 移動する：指定したフォルダーにメッセージを移動します
@@ -189,10 +192,16 @@ ja:
         - 有効：メッセージを登録したメールアドレスに転送します
         - 無効：転送しません
     gws/addon/memo/group_setting:
+      memo_quota:
+        - メッセージの合計容量の上限を入力します。
+        - 合計容量が超えたユーザーはメッセージの送受信ができません。
+        - 各受信フォルダー、送信済みフォルダー、下書きフォルダー内のメッセージが対象となります。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
       memo_filesize_limit:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
-        - 未指定である場合、制限されません。
-        - 初期値は 未指定 です。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
       memo_reminder:
         - メッセージを送信したあと各受信者のリマインダーに表示する日数を選択します。
         - メッセージが下書きの時はリマインダーはまだ登録されません。

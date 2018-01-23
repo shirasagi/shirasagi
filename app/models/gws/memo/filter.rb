@@ -6,19 +6,19 @@ class Gws::Memo::Filter
 
   set_permission_name 'private_gws_memo_messages', :edit
 
-  # 一括処理件数
-  APPLY_PER = 100
-
   field :name, type: String
-  field :from, type: String
   field :subject, type: String
   field :action, type: String
   field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
 
+  embeds_ids :from_members, class_name: "Gws::User"
+  embeds_ids :to_members, class_name: "Gws::User"
+
   belongs_to :folder, class_name: 'Gws::Memo::Folder'
 
-  permit_params :name, :from, :subject, :action, :folder, :state, :order
+  permit_params :name, :subject, :action, :folder, :state, :order
+  permit_params from_member_ids: [], to_member_ids: []
 
   validates :name, presence: true
   validates :action, presence: true
@@ -41,10 +41,9 @@ class Gws::Memo::Filter
   private
 
   def validate_conditions
-    %w(from subject).each do |key|
-      return true if send(key).present?
+    if from_member_ids.blank? && to_member_ids.blank? && subject.blank?
+      errors.add :base, I18n.t('gws/memo/filter.errors.blank_conditions')
     end
-    errors.add :base, I18n.t('gws/memo/filter.errors.blank_conditions')
   end
 
   public
@@ -72,17 +71,25 @@ class Gws::Memo::Filter
   end
 
   def match?(message)
-    from_user = message.from
-
-    if from && from_user
-      return true if from_user.long_name.include?(from)
-    end
-
-    if subject && message.display_subject.include?(subject)
-      return true
-    end
-
+    return true if subject_match?(message)
+    return true if from_match?(message)
+    return true if to_match?(message)
     false
+  end
+
+  def subject_match?(message)
+    return false if subject.blank?
+    message.display_subject.include?(subject)
+  end
+
+  def from_match?(message)
+    return false if from_member_ids.blank?
+    from_member_ids.include?(message.user_id)
+  end
+
+  def to_match?(message)
+    return false if to_member_ids.blank?
+    (to_member_ids & (message.to_member_ids + message.cc_member_ids)).present?
   end
 
   def path

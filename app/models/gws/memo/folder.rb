@@ -74,7 +74,7 @@ class Gws::Memo::Folder
   end
 
   def unseens
-    messages.unseen(self.user)
+    messages.site(site).unseen(user)
   end
 
   def unseen?

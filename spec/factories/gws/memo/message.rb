@@ -9,7 +9,7 @@ FactoryGirl.define do
     format { 'text' }
 
     path { { gws_user.id.to_s => 'INBOX.Sent' } }
-    member_ids { [gws_user.id] }
+    to_member_ids { [gws_user.id] }
 
     send_date { Time.zone.now }
   end

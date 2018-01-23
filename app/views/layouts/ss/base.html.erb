@@ -81,7 +81,7 @@
         <% gws_group = gws_role.site if gws_role %>
         <% if SS.config.gws.disable.blank? && gws_group %>
           <%= link_to gws_memo_messages_path(site: gws_group.id), class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user).size %>
+            <% count = Gws::Memo::Message.unseens(@cur_user, gws_group).size %>
             <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
           <% end %>
         <% end %>
@@ -104,7 +104,7 @@
         <% end %>
         <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to gws_memo_messages_path, class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user).size %>
+            <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
             <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
            <% end %>
         <% end %>
