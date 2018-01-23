@@ -7,7 +7,7 @@ SS::Application.routes.draw do
   end
 
   gws 'attendance' do
-    get 'time_cards' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :time_cards_main
+    get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
     resources :time_cards, path: 'time_cards/:year_month', only: %i[index new create] do
       get :download, on: :collection
       post :enter, on: :collection
@@ -16,6 +16,11 @@ SS::Application.routes.draw do
       post :break_leave, path: 'break_leave:index', on: :collection
       match :memo, path: ':day/memo', on: :collection, via: %i[get post]
       match :time, path: ':day/:type', on: :collection, via: %i[get post]
+    end
+
+    namespace 'management' do
+      get '/' => redirect { |p, req| "#{req.path}/time_cards" }, as: :main
+      resources :time_cards, concerns: [:deletion]
     end
   end
 end

@@ -1,0 +1,7 @@
+<% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) } %>
+<nav class="nav-management-menu hide-mb" style="top: -50px;">
+  <%= link_to gws_attendance_management_main_path do %>
+    <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
+  <% end %>
+</nav>
+<% end %>
