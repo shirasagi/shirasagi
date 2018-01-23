@@ -157,7 +157,7 @@
     </nav>
 
     <% if @item.blank? %>
-      <p>タイムカードはありません。</p>
+      <p><%= t('gws/attendance.no_time_cards') %></p>
     <% else %>
     <table class="index time-card">
       <tbody>
@@ -165,14 +165,14 @@
       <% while date <= @cur_month.end_of_month %>
         <% if date.day == 1 || date.day == 16 %>
           <tr class="header">
-            <th class="date">日付</th>
-            <th class="time">出勤</th>
-            <th class="time">退勤</th>
+            <th class="date"><%= Gws::Attendance::Record.t :date %></th>
+            <th class="time"><%= Gws::Attendance::Record.t :enter %></th>
+            <th class="time"><%= Gws::Attendance::Record.t :leave %></th>
             <% break_times.each do |i| %>
               <th class="time"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
               <th class="time"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
             <% end %>
-            <th>備考</th>
+            <th><%= Gws::Attendance::Record.t :memo %></th>
           </tr>
         <% end %>
         <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">

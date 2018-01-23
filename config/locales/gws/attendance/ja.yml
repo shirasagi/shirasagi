@@ -3,6 +3,7 @@ ja:
     prev_month: 先月
     next_month: 翌月
     break: 休憩
+    no_time_cards: タイムカードはありません。
     confirm:
       time_card:
         new: タイムカードを新規作成してよろしですか？
@@ -33,7 +34,26 @@ ja:
     manage_all_gws_attendance_time_cards: 出退勤の管理（全て）
 
   mongoid:
+    models:
+      gws/attendance/time_card: タイムカード
+      gws/attendance/record: レコード
+      gws/attendance/history: 履歴
     attributes:
+      gws/attendance/time_card:
+        name: 名前
+        date: 日付
+        record: レコード
+        histories: 履歴
+      gws/attendance/record:
+        date: 日付
+        enter: 出勤
+        leave: 退勤
+        memo: 備考
+      gws/attendance/history:
+        date: 日付
+        field_name: フィールド名
+        action: アクション
+        reason: 修正理由
       gws/addon/attendance/group_setting:
         attendance_time_changed_at: 日替わり時刻
         attendance_break_time_state1: 休憩1表示
