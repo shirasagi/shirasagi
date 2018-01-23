@@ -110,6 +110,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def enter
+    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
     @item.histories.create(date: @cur_date, field_name: 'enter', action: 'set')
@@ -119,6 +120,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def leave
+    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
     @item.histories.create(date: @cur_date, field_name: 'leave', action: 'set')
@@ -128,6 +130,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def break_enter
+    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
     @item.histories.create(date: @cur_date, field_name: "break_enter#{params[:index]}", action: 'set')
@@ -137,6 +140,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def break_leave
+    raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
     @now = Time.zone.now
     @cur_date = @cur_site.calc_attendance_date(@now)
     @item.histories.create(date: @cur_date, field_name: "break_leave#{params[:index]}", action: 'set')
@@ -146,6 +150,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def time
+    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site)
     @model = Gws::Attendance::TimeEdit
     if request.get?
       @cell = @model.new
@@ -171,6 +176,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def memo
+    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site)
     if request.get?
       render layout: false
       return

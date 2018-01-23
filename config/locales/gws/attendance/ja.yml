@@ -27,7 +27,8 @@ ja:
       gws/attendance/group_setting: 出退勤
 
   gws_role:
-    use_gws_attendance_time_cards: 出退勤の利用
+    use_gws_attendance_time_cards: 出退勤時刻の打刻
+    edit_gws_attendance_time_cards: 出退勤時刻の変更
     manage_private_gws_attendance_time_cards: 出退勤の管理（自所属）
     manage_all_gws_attendance_time_cards: 出退勤の管理（全て）
 

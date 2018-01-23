@@ -60,10 +60,12 @@
   <%= link_to(t('ss.links.new'), action: :new) rescue nil %>
 <% else %>
 <div class="gws-attendance">
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
   <div class="cell-toolbar">
     <a href="#" class="edit ajax-box">EDIT</a>
     <a href="#" class="remove ajax-box">REMOVE</a>
   </div>
+  <% end %>
 
   <div class="aside">
     <div>
@@ -202,6 +204,7 @@
     $form.submit();
   });
 
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
   $('.gws-attendance .time-card .time').on('click', function() {
     $('.gws-attendance .time-card .time').removeClass('focus');
     $('.gws-attendance .time-card .memo').removeClass('focus');
@@ -234,6 +237,7 @@
     $('.gws-attendance .cell-toolbar .edit').attr('href', url);
     $('.gws-attendance .cell-toolbar').show();
   });
+  <% end %>
 
   $('.gws-attendance .cell-toolbar').hide();
 <% end %>
