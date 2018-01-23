@@ -208,7 +208,7 @@ module Gws::Model
     end
 
     def display_size
-      ActiveSupport::NumberHelper.number_to_human_size((size > 1024 ? size : 1024))
+      ActiveSupport::NumberHelper.number_to_human_size((size.to_i > 1024 ? size.to_i : 1024))
     end
 
     def format_options
