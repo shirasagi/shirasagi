@@ -31,6 +31,19 @@ class Gws::Attendance::TimeCard
       return all if params.blank? || params[:keyword].blank?
       all.keyword_in(params[:keyword], :name)
     end
+
+    def in_groups(groups)
+      group_ids = []
+      groups.each do |group|
+        group_ids += Gws::Group.in_group(group).pluck(:id)
+      end
+      group_ids.uniq!
+
+      users = Gws::User.in(group_ids: group_ids).active
+      user_ids = users.pluck(:id)
+
+      all.in(user_id: user_ids)
+    end
   end
 
   def year_options
