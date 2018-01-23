@@ -62,7 +62,8 @@ module Gws::Addon::Memo::Quota
 
     def quota_label(user, site)
       h = ApplicationController.helpers
-      "#{h.number_to_human_size(usage_bytes(user, site))}/#{h.number_to_human_size(quota_bytes(site))}"
+      usage = quota_over?(user, site) ? quota_bytes(site) : usage_bytes(user, site)
+      "#{h.number_to_human_size(usage)}/#{h.number_to_human_size(quota_bytes(site))}"
     end
 
     def quota_over?(user, site)
