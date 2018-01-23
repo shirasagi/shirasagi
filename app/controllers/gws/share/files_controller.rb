@@ -9,6 +9,7 @@ class Gws::Share::FilesController < ApplicationController
   before_action :set_category
   before_action :set_folder
   before_action :set_tree_navi, only: [:index]
+  after_action :update_folder_file_info, only: [:create, :update]
 
   private
 
@@ -48,6 +49,10 @@ class Gws::Share::FilesController < ApplicationController
     @skip_default_group = true
     p[:category_ids] = [ @category.id ] if @category.present?
     p
+  end
+
+  def update_folder_file_info
+    @folder.update_folder_descendants_file_info if @folder
   end
 
   public

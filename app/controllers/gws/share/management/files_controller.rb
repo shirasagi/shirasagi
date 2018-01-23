@@ -11,6 +11,7 @@ class Gws::Share::Management::FilesController < ApplicationController
   before_action :set_category
   before_action :set_folder
   before_action :set_tree_navi, only: [:index]
+  after_action :update_folder_file_info, only: [:create, :update, :destroy, :destroy_all]
 
   private
 
@@ -51,6 +52,10 @@ class Gws::Share::Management::FilesController < ApplicationController
       p[:category_ids] = [ @category.id ]
     end
     p
+  end
+
+  def update_folder_file_info
+    @folder.update_folder_descendants_file_info if @folder
   end
 
   public

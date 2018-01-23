@@ -19,11 +19,14 @@
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
         <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-        <%= link_to item.humanized_name, { action: :show, id: item, folder: item.folder_id }, class: "title" %>
+        <%= link_to item.name, { action: :show, id: item, folder: item.folder_id }, class: "title" %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="filename"><%= File.basename item.filename %></span>
+          <span class="content-type"><%= item.content_type %></span>
+          <span class="size"><%= number_to_human_size(item.size) %></span>
           <span class="gws-share-categories">
             <% item.categories.readable(@cur_user, site: @cur_site).compact.each do |category| %>
               <% if params[:folder].present? %>
