@@ -5,12 +5,12 @@ class Gws::Attendance::TimeCard
   include Gws::Reference::User
   include Gws::SitePermission
 
-  # seqid :id
   field :name, type: String
-  field :year_month, type: DateTime
+  field :date, type: DateTime
   embeds_many :histories, class_name: 'Gws::Attendance::History'
   embeds_many :records, class_name: 'Gws::Attendance::Record'
 
+  before_validation :normalize_date
   before_validation :set_name
 
   class << self
@@ -58,9 +58,16 @@ class Gws::Attendance::TimeCard
 
   private
 
+  def normalize_date
+    return if self.date.blank?
+    if self.date.day != 1
+      self.date = date.beginning_of_month
+    end
+  end
+
   def set_name
     self.name ||= begin
-      month = I18n.l(self.year_month.to_date, format: :attendance_year_month)
+      month = I18n.l(date.to_date, format: :attendance_year_month)
       I18n.t('gws/attendance.formats.time_card_name', month: month)
     end
   end

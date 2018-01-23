@@ -31,10 +31,10 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def create_new_time_card_if_necessary
-    @item = @items.where(year_month: @cur_month).first
+    @item = @items.where(date: @cur_month).first
     if @item.blank? && Time.zone.now.year == @cur_month.year && Time.zone.now.month == @cur_month.month
       @item = @model.new fix_params
-      @item.year_month = @cur_month
+      @item.date = @cur_month
       @item.save!
     end
   end
@@ -47,7 +47,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def set_item
-    @item = @items.find_by(year_month: @cur_month)
+    @item = @items.find_by(date: @cur_month)
   end
 
   def set_record
@@ -56,7 +56,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def year_month_options
-    @items.pluck(:year_month).sort.map do |date|
+    @items.pluck(:date).sort.map do |date|
       date = date.localtime
       [ I18n.l(date.to_date, format: :attendance_year_month), "#{date.year}#{format('%02d', date.month)}" ]
     end
@@ -97,7 +97,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   def index
     @items = @items.
       page(params[:page]).per(50)
-    @item = @items.where(year_month: @cur_month).first
+    @item = @items.where(date: @cur_month).first
   end
 
   # def show
