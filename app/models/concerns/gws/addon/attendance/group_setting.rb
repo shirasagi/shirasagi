@@ -7,6 +7,8 @@ module Gws::Addon::Attendance::GroupSetting
   included do
     attr_accessor :in_attendance_time_change_hour
 
+    field :attendance_year_changed_month, type: Integer, default: 4
+    field :attendance_management_year, type: Integer, default: 3
     field :attendance_time_changed_at, type: DateTime, default: Time::EPOCH + 3.hours
     SS.config.gws.attendance['max_break'].times do |i|
       field "attendance_break_time_state#{i + 1}", type: String
@@ -19,8 +21,26 @@ module Gws::Addon::Attendance::GroupSetting
     end
 
     permit_params :in_attendance_time_change_hour
+    permit_params :attendance_year_changed_month, :attendance_management_year
 
     before_validation :set_attendance_time_changed_at
+
+    validates :attendance_year_changed_month, presence: true,
+              numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 12, allow_blank: true }
+    validates :attendance_management_year, presence: true,
+              numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 99, allow_blank: true }
+  end
+
+  def attendance_management_year_options
+    (1..10).map do |y|
+      [ "#{y}#{I18n.t('datetime.prompts.year')}", y.to_s ]
+    end
+  end
+
+  def attendance_year_changed_month_options
+    (1..12).map do |m|
+      [ "#{m}#{I18n.t('datetime.prompts.month')}", m.to_s ]
+    end
   end
 
   def attendance_time_changed_at_options

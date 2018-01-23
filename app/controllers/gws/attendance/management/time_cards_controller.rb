@@ -6,6 +6,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
   before_action :check_model_permission
   before_action :set_groups
+  before_action :set_active_year_range
   before_action :set_cur_month
   before_action :set_search_params
   before_action :set_items
@@ -25,7 +26,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def check_model_permission
-    raise "403" if !@model.allowed?(:manage_private, @cur_user, site: @cur_site) && !@model.allowed?(:manage_all, @cur_user, site: @cur_site)
+    raise "403" unless %i[manage_private manage_all].any? { |priv| @model.allowed?(priv, @cur_user, site: @cur_site) }
   end
 
   def set_groups
@@ -38,12 +39,26 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     end
   end
 
+  def set_active_year_range
+    @active_year_range ||= begin
+      end_date = Time.zone.now.beginning_of_month
+
+      start_date = end_date
+      start_date -= 1.month while start_date.month != @cur_site.attendance_year_changed_month
+      start_date -= @cur_site.attendance_management_year.years
+
+      [start_date, end_date]
+    end
+  end
+
   def set_cur_month
     raise '404' if params[:year_month].blank? || params[:year_month].length != 6
 
     year = params[:year_month][0..3]
     month = params[:year_month][4..5]
     @cur_month = Time.zone.parse("#{year}/#{month}/01")
+
+    raise '404' if @cur_month < @active_year_range.first || @active_year_range.last < @cur_month
   end
 
   def set_search_params
@@ -66,13 +81,11 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def year_month_options
+    set_active_year_range
+
     options = []
-    start_date = Time.zone.now.beginning_of_month
-    end_date = start_date
-    end_date -= 1.month while end_date.month != 4
-    end_date = end_date - 3.years
-    date = start_date
-    while date >= end_date
+    date = @active_year_range.last
+    while date >= @active_year_range.first
       options << [l(date.to_date, format: :attendance_year_month), "#{date.year}#{format('%02d', date.month)}"]
       date -= 1.month
     end
