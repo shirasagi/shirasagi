@@ -10,7 +10,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   before_action :set_item, only: %i[enter leave break_enter break_leave time memo]
   before_action :set_record, only: %i[time memo]
 
-  helper_method :format_time, :hour_options, :minute_options, :round_up_minute
+  helper_method :year_month_options, :format_time, :hour_options, :minute_options, :round_up_minute
 
   private
 
@@ -53,6 +53,13 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   def set_record
     @cur_date = @cur_month.change(day: Integer(params[:day]))
     @record = @item.records.where(date: @cur_date).first_or_create
+  end
+
+  def year_month_options
+    @items.pluck(:year_month).sort.map do |date|
+      date = date.localtime
+      [ I18n.l(date.to_date, format: :attendance_year_month), "#{date.year}#{format('%02d', date.month)}" ]
+    end
   end
 
   def format_time(date, time)
