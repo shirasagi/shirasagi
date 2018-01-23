@@ -364,34 +364,35 @@
   margin-right: 3px;
   padding: 0 2px;
   border-radius: 2px;
-  background-color: $orange;
   color: $white;
 }
 .fc-event-private .fc-content:before {
   @include fc_event_prefix;
+  background-color: #f2b;
   content: '秘';
 }
 .fc-event-unknown-attendance .fc-content:before {
   @include fc_event_prefix;
+  background-color: $orange;
   content: '未';
 }
 .fc-event-user-attendance-absence {
   display: none;
 }
-.fc-event-workflow-request .fc-content:before {
+.fc-event-approval-request .fc-content:before {
   @include fc_event_prefix;
   background-color: #84e;
   content: '申';
 }
-.fc-event-workflow-approve .fc-content:before {
+.fc-event-approval-approve .fc-content:before {
   @include fc_event_prefix;
   background-color: #84e;
   content: '認';
 }
-.fc-event-workflow-remand .fc-content:before {
+.fc-event-approval-deny .fc-content:before {
   @include fc_event_prefix;
   background-color: #84e;
-  content: '戻';
+  content: '否';
 }
 
 .fc-holiday {
@@ -444,8 +445,8 @@
     display: table-cell;
     padding: 8px;
     white-space: nowrap;
-
     .summary {
+      color: #888;
       white-space: normal;
     }
   }

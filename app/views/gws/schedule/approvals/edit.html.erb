@@ -1,0 +1,29 @@
+<%= form_for :item, url: { action: :update }, html: { id: 'item-form', method: :put, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <dl class="see">
+    <dt><%= Gws::User.t :name %></dt>
+    <dd><%= @item.user_name %></dd>
+
+    <dt><%= @model.t :approval_state %></dt>
+    <dd>
+      <%= @item.label :approval_state %>
+      <%= f.hidden_field(:approval_state) %>
+    </dd>
+
+    <dt><%= Gws::Schedule::Comment.t :text %></dt>
+    <dd><%= text_field_tag('comment[text]', nil, style: 'width: 40em;') %></dd>
+  </dl>
+
+  <%= f.hidden_field('facility_id') %>
+  <%= hidden_field_tag('redirect_to', params[:redirect_to]) %>
+
+  <footer class="send">
+    <% if @crud_buttons %>
+      <% @crud_buttons.call f %>
+    <% else %>
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+    <% end %>
+  </footer>
+<% end %>

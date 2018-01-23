@@ -21,11 +21,12 @@ class Gws::Facility::Item
   field :min_minutes_limit, type: Integer
   field :max_minutes_limit, type: Integer
   field :max_days_limit, type: Integer
+  field :approval_check_state, type: String, default: 'disabled'
 
   belongs_to :category, class_name: 'Gws::Facility::Category'
 
   permit_params :name, :order, :category_id, :activation_date, :expiration_date
-  permit_params :min_minutes_limit, :max_minutes_limit, :max_days_limit
+  permit_params :min_minutes_limit, :max_minutes_limit, :max_days_limit, :approval_check_state
 
   validates :name, presence: true
   validates :activation_date, datetime: true
@@ -33,6 +34,8 @@ class Gws::Facility::Item
   validates :min_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :max_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :max_days_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :approval_check_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
+  validate :validate_approval_check_state, if: ->{ approval_check_state == 'enabled' }
 
   default_scope -> { order_by order: 1, name: 1 }
 
@@ -62,5 +65,15 @@ class Gws::Facility::Item
     user = @cur_user || self.user
     @category_options ||= Gws::Facility::Category.site(site).readable(user, site: site).
       map { |c| [c.name, c.id] }
+  end
+
+  def approval_check_state_options
+    %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
+  private
+
+  def validate_approval_check_state
+    errors.add(:base, I18n.t('gws/facility.errors.require_approver')) if user_ids.blank?
   end
 end

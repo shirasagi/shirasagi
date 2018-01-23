@@ -14,11 +14,6 @@ class Gws::Schedule::CsvController < ApplicationController
 
   def index
     @item = Gws::Schedule::PlanCsv::Importer.new #get_params
-
-    #@items = Gws::User.site(@cur_site).
-    #  active.
-    #  search(params[:s]).
-    #  order_by_title(@cur_site)
   end
 
   def import
@@ -30,7 +25,7 @@ class Gws::Schedule::CsvController < ApplicationController
       render json: { messages: @item.errors.full_messages }.to_json
     elsif params[:import_mode] == "save"
       @item.import
-      render json: { messages: [t("gws/schedule.import.saved", count: @item.imported)] }.to_json
+      render json: { items: @item.items , messages: [t("gws/schedule.import.saved", count: @item.imported)] }.to_json
     else
       @item.import(confirm: true)
       render json: { items: @item.items }.to_json

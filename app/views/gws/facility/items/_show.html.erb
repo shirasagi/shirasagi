@@ -21,16 +21,21 @@
     <% end %>
   </dd>
 
+  <% if @item.max_days_limit %>
   <dt><%= @model.t :max_days_limit %></dt>
-  <dd>
-    <% if @item.max_days_limit %>
-    <%= @item.max_days_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.days') %>
+  <dd><%= @item.max_days_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.days') %></dd>
     <% end %>
-  </dd>
 
+  <% if @item.activation_date.present? %>
   <dt><%= @model.t :activation_date %></dt>
   <dd><%= tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% end %>
 
+  <% if @item.expiration_date.present? %>
   <dt><%= @model.t :expiration_date %></dt>
   <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% end %>
+
+  <dt><%= @model.t :approval_check_state %></dt>
+  <dd><%= @item.label :approval_check_state %></dd>
 </dl>

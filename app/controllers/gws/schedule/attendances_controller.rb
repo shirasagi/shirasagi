@@ -71,7 +71,7 @@ class Gws::Schedule::AttendancesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 
     render_opts = {
-      location: params[:redirect_to]
+      location: CGI.unescapeHTML(params[:redirect_to])
     }
 
     result = @item.save

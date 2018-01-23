@@ -1,4 +1,4 @@
-module Gws::Addon::Schedule::Attendances
+module Gws::Addon::Schedule::Attendance
   extend ActiveSupport::Concern
   extend SS::Addon
 

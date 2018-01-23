@@ -14,25 +14,27 @@ class Gws::Memo::Notifier
       url = opts.delete(:url)
       comment = opts.delete(:comment)
       cur_site = opts[:cur_site]
+      cur_user = opts[:cur_user]
       item = opts[:item]
+      from = item.try(:workflow_user) || cur_user
 
       title = "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{cur_site.name}"
-      text = <<-TEXT
-      #{item.workflow_user.name}さんより次の記事について承認依頼が届きました。
-      承認作業を行ってください。
 
-      - タイトル
-        #{item.name}
+      text = []
+      text << "#{from.name}さんより次の記事について承認依頼が届きました。"
+      text << "承認作業を行ってください。\n"
 
-      - 申請者コメント
-        #{comment}
+      text << "- タイトル"
+      text << "  #{item.name}\n"
 
-      - 記事URL
-        #{url}
-      TEXT
+      text << "- 申請者コメント" if comment.present?
+      text << "  #{comment}\n" if comment.present?
+
+      text << "- 記事URL"
+      text << "  #{url}\n"
 
       opts[:item_title] = title
-      opts[:item_text] = text
+      opts[:item_text] = text.join("\n")
 
       new(opts).deliver!
     end
@@ -124,7 +126,7 @@ class Gws::Memo::Notifier
     message = Gws::Memo::Message.new
     message.cur_site = cur_site
     message.cur_user = cur_user
-    message.member_ids = to_users.pluck(:id)
+    message.to_member_ids = to_users.pluck(:id)
     message.send_date = Time.zone.now
     message.state = 'public'
 

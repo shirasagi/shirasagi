@@ -1,6 +1,11 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd>
+    <% if @item.approval_state %>
+      <span class="mr-1">(<%= @item.label :approval_state %>)</span>
+    <% end %>
+    <%= @item.send :name %>
+  </dd>
 
   <dt><%= @model.t :term %></dt>
   <dd><%= term(@item) %></dd>
