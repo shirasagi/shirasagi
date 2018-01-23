@@ -20,7 +20,9 @@ SS::Application.routes.draw do
 
     namespace 'management' do
       get '/' => redirect { |p, req| "#{req.path}/time_cards" }, as: :main
-      resources :time_cards, concerns: [:deletion]
+      resources :time_cards, concerns: [:deletion] do
+        get :download, on: :collection
+      end
     end
   end
 end

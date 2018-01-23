@@ -1,0 +1,14 @@
+<% @index_title = proc do |item| %>
+  <% title = "#{item.user.name}の#{item.name}" %>
+  <%= link_to title, { action: :show, id: item }, class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="user"><%= item.user.name %></span>
+  <span class="date"><%= I18n.l(item.year_month.to_date, format: :attendance_year_month) %></span>
+  <span class="date">勤務日数: 20日</span>
+  <span class="date">勤務時間: 168.72時間</span>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>
