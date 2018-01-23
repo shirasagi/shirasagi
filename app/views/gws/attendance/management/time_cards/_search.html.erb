@@ -1,8 +1,8 @@
 <% @s = OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.select :group, [['企画政策部', 2], ['企画政策部/政策課', 3], ['企画政策部/広報課', 4]], include_blank: 'グループ' %>
-    <%= f.select :user, [['鈴木 茂', 3], ['渡辺 和子', 4], ['斎藤拓哉', 5]], include_blank: 'ユーザー' %>
+    <%= f.select :group_id, group_options, include_blank: Gws::Group.model_name.human %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <%= link_to(t('ss.buttons.clear'), { action: :index }, { class: 'btn', style: 'font-weight: normal;' }) %>
   <% end %>
 </div>

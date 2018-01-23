@@ -5,9 +5,13 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   model Gws::Attendance::TimeCard
 
   before_action :check_model_permission
+  before_action :set_groups
   before_action :set_cur_month
+  before_action :set_search_params
   before_action :set_items
   before_action :set_item, only: %i[show edit update delete destroy]
+
+  helper_method :group_options
 
   private
 
@@ -24,6 +28,16 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     raise "403" if !@model.allowed?(:manage_private, @cur_user, site: @cur_site) && !@model.allowed?(:manage_all, @cur_user, site: @cur_site)
   end
 
+  def set_groups
+    if @model.allowed?(:manage_all, @cur_user, site: @cur_site)
+      @groups = Gws::Group.in_group(@cur_site).active
+    elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site)
+      @groups = @cur_user.groups.active
+    else
+      @groups = Gws::Group.none
+    end
+  end
+
   def set_cur_month
     raise '404' if params[:year_month].blank? || params[:year_month].length != 6
 
@@ -32,18 +46,27 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     @cur_month = Time.zone.parse("#{year}/#{month}/01")
   end
 
+  def set_search_params
+    @s = OpenStruct.new(params[:s])
+    if @s.group_id.present?
+      @s.group = @groups.find(@s.group_id) rescue nil
+    end
+  end
+
   def set_items
     @items ||= begin
-      criteria = @model.site(@cur_site).where(date: @cur_month).search(params[:s])
-      if !@model.allowed?(:manage_all, @cur_user, site: @cur_site)
-        criteria = criteria.in_groups(@cur_user.groups)
-      end
+      criteria = @model.site(@cur_site).where(date: @cur_month).search(@s)
+      criteria = criteria.in_groups(@groups)
       criteria
     end
   end
 
   def set_item
     @item = @items.find(params[:id])
+  end
+
+  def group_options
+    @groups.map { |g| [g.section_name, g.id] }
   end
 
   public
