@@ -11,7 +11,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   before_action :set_items
   before_action :set_item, only: %i[show edit update delete destroy]
 
-  helper_method :group_options
+  helper_method :year_month_options, :group_options
 
   private
 
@@ -63,6 +63,20 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
   def set_item
     @item = @items.find(params[:id])
+  end
+
+  def year_month_options
+    options = []
+    start_date = Time.zone.now.beginning_of_month
+    end_date = start_date
+    end_date -= 1.month while end_date.month != 4
+    end_date = end_date - 3.years
+    date = start_date
+    while date >= end_date
+      options << [l(date.to_date, format: :attendance_year_month), "#{date.year}#{format('%02d', date.month)}"]
+      date -= 1.month
+    end
+    options
   end
 
   def group_options

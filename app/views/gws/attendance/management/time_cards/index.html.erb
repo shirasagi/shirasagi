@@ -1,6 +1,9 @@
 <% @index_title = proc do |item| %>
   <% title = "#{item.user.name}の#{item.name}" %>
-  <%= link_to title, { action: :show, id: item }, class: "title" %>
+  <%= link_to({ action: :show, id: item }, class: "title") do %>
+    <i class="material-icons md-18">&#xE898;</i>
+    <%= title %>
+  <% end %>
 <% end %>
 
 <% @index_meta = proc do |item| %>
@@ -11,4 +14,20 @@
   <span class="group"><%= item.user.gws_default_group.section_name %></span>
 <% end %>
 
+<div class="gws-category-navi gws-attendance-year-month-navi">
+  <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month])) %>
+  <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+  <% if @cur_month.next_month < Time.zone.now %>
+  <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+  <% end %>
+</div>
+
 <%= render file: 'gws/crud/index' %>
+
+<%= jquery do %>
+  var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH' }).to_json %>;
+  $('.gws-attendance-year-month-navi select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    location.href = baseUrl.replace(':YEAR_MONTH', val);
+  });
+<% end %>
