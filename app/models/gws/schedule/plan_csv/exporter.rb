@@ -42,7 +42,7 @@ class Gws::Schedule::PlanCsv::Exporter
     Enumerator.new do |y|
       y << encode_sjis(csv_headers.to_csv)
       @criteria.each do |item|
-        next unless item.readable?(user) || item.member?(user)
+        next unless item.readable?(user, site: site)
         y << encode_sjis(item_to_csv(item).to_csv)
       end
     end

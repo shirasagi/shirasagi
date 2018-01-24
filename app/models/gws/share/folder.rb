@@ -6,7 +6,7 @@ class Gws::Share::Folder
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   #include SS::UserPermission
-  include Gws::Addon::File
+  #include Gws::Addon::File
   include Gws::Share::DescendantsFileInfo
   include Gws::Addon::History
   include SS::Fields::DependantNaming
