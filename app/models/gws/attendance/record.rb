@@ -20,10 +20,19 @@ class Gws::Attendance::Record
   field :memo, type: String
   self.punchable_field_names = self.punchable_field_names.freeze
 
-  def find_latest_reason(field_name)
+  def find_latest_history(field_name)
     criteria = time_card.histories.where(date: date)
     criteria.where(field_name: field_name)
-    history = criteria.order_by(created: -1).first
-    history.try(:reason).presence
+    criteria.order_by(created: -1).first
+  end
+
+  def find_latest_reason(field_name)
+    find_latest_history(field_name).try(:reason).presence
+  end
+
+  def calc_working_time
+    return if enter.blank? || leave.blank?
+    duration = (leave - enter).to_i
+    Time::EPOCH + duration
   end
 end

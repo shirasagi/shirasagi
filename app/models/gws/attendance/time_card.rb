@@ -60,7 +60,7 @@ class Gws::Attendance::TimeCard
     end
 
     def lock_all
-      all.each do |item|
+      criteria.each do |item|
         item.lock_state = 'locked'
         item.save!
       end
@@ -70,13 +70,17 @@ class Gws::Attendance::TimeCard
     end
 
     def unlock_all
-      all.each do |item|
+      criteria.each do |item|
         item.lock_state = 'unlocked'
         item.save!
       end
       true
     rescue
       false
+    end
+
+    def enum_csv(site, encoding)
+      Gws::Attendance::TimeCardEnumerator.new(site, all, encoding)
     end
   end
 
@@ -115,6 +119,10 @@ class Gws::Attendance::TimeCard
 
   def unlocked?
     !locked?
+  end
+
+  def enum_csv(encoding)
+    Gws::Attendance::TimeCardEnumerator.new(@cur_site || site, [ self ], encoding)
   end
 
   private

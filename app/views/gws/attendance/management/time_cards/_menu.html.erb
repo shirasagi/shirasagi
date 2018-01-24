@@ -12,7 +12,7 @@
     <%= link_to t('ss.links.download'), action: :download, s: params[:s] %>
     <%= link_to t('gws/attendance.links.lock'), action: :lock, s: params[:s] %>
     <%= link_to t('gws/attendance.links.unlock'), action: :unlock, s: params[:s] %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+  <% elsif params[:action] =~ /new|create|lock|unlock|download/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

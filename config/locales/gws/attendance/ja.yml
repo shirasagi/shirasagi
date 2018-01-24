@@ -7,6 +7,7 @@ ja:
     no_target_users: 対象者がいません。
     already_locked: タイムカードは締められています。
     confirm:
+      download: タイムカードをダウンロードしてよろしですか？
       lock: タイムカードを締めてよろしですか？
       unlock: タイムカードを締めを解除してよろしですか？
     formats:

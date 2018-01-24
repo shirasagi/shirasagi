@@ -5,9 +5,9 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   model Gws::Attendance::TimeCard
 
   before_action :set_cur_month
-  before_action :set_items, only: %i[index enter leave break_enter break_leave time memo]
+  before_action :set_items
   before_action :create_new_time_card_if_necessary, only: %i[index]
-  before_action :set_item, only: %i[enter leave break_enter break_leave time memo]
+  before_action :set_item, only: %i[download enter leave break_enter break_leave time memo]
   before_action :set_record, only: %i[time memo]
 
   helper_method :year_month_options, :format_time, :hour_options, :minute_options, :round_up_minute
@@ -118,8 +118,14 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   # end
 
   def download
-    # TODO: implementation
-    raise NotImplementedError
+    if request.get?
+      return
+    end
+
+    safe_params = params.require(:item).permit(:encoding)
+    encoding = safe_params[:encoding]
+    filename = "time_cards_#{Time.zone.now.to_i}.csv"
+    send_enum(@item.enum_csv(encoding), type: "text/csv; charset=#{encoding}", filename: filename)
   end
 
   def enter

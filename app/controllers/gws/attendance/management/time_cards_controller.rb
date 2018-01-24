@@ -106,6 +106,22 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     render
   end
 
+  def download
+    if request.get?
+      user_ids = @items.pluck(:user_id)
+      @target_users = Gws::User.in(id: user_ids).active
+      if @target_users.blank?
+        redirect_to({ action: :index, s: params[:s] }, { notice: t('gws/attendance.no_target_users') })
+      end
+      return
+    end
+
+    safe_params = params.require(:item).permit(:encoding)
+    encoding = safe_params[:encoding]
+    filename = "time_cards_#{Time.zone.now.to_i}.csv"
+    send_enum(@items.enum_csv(@cur_site, encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
   def lock
     if request.get?
       user_ids = @items.and_unlocked.pluck(:user_id)
