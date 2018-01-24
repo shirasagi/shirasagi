@@ -34,6 +34,7 @@ production: &production
     #     row: position y (1..n)
     #     size_x: width (1..4)
     #     size_y: height (1..4)
+    #   reminder_filter: future or all
     user_portlets:
       - model: schedule
         grid:
