@@ -4,7 +4,7 @@ module Gws::Addon::Memo::Quota
 
   included do
     validate :validate_attached_file_size
-    validate :validate_quota, if: -> { new_record? }
+    validate :validate_quota, if: -> { send_date_was.blank? }
   end
 
   def validate_attached_file_size
@@ -20,13 +20,17 @@ module Gws::Addon::Memo::Quota
   end
 
   def validate_quota
-    return unless @cur_site
     return unless @cur_user
+    return unless @cur_site
+    return unless @cur_site.memo_quota.to_i > 0
 
     if self.class.quota_over?(@cur_user, @cur_site)
-      errors.add :base, :self_quota_over
+      action = draft? ? I18n.t("ss.buttons.save") : I18n.t("ss.buttons.send")
+      errors.add :base, :self_quota_over, action: action
       return
     end
+
+    return if draft?
 
     self.members.each do |member|
       if self.class.quota_over?(member, @cur_site)
