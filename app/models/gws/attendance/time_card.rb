@@ -9,9 +9,12 @@ class Gws::Attendance::TimeCard
   field :date, type: DateTime
   embeds_many :histories, class_name: 'Gws::Attendance::History'
   embeds_many :records, class_name: 'Gws::Attendance::Record'
+  field :lock_state, type: String
 
   before_validation :normalize_date
   before_validation :set_name
+
+  validates :lock_state, inclusion: { in: %w(locked unlocked), allow_blank: true }
 
   class << self
     def search(params = {})
@@ -47,6 +50,34 @@ class Gws::Attendance::TimeCard
 
       all.in(user_id: user_ids)
     end
+
+    def and_unlocked
+      all.and('$or' => [{ lock_state: 'unlocked' }, { :lock_state.exists => false }])
+    end
+
+    def and_locked
+      all.where(lock_state: 'locked')
+    end
+
+    def lock_all
+      all.each do |item|
+        item.lock_state = 'locked'
+        item.save!
+      end
+      true
+    rescue
+      false
+    end
+
+    def unlock_all
+      all.each do |item|
+        item.lock_state = 'unlocked'
+        item.save!
+      end
+      true
+    rescue
+      false
+    end
   end
 
   def year_options
@@ -76,6 +107,10 @@ class Gws::Attendance::TimeCard
 
     record.send("#{field_name}=", now)
     record.save
+  end
+
+  def locked?
+    lock_state == 'locked'
   end
 
   private

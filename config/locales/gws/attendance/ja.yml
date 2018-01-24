@@ -4,15 +4,21 @@ ja:
     next_month: 翌月
     break: 休憩
     no_time_cards: タイムカードはありません。
+    no_target_users: 対象者がいません。
     confirm:
-      time_card:
-        new: タイムカードを新規作成してよろしですか？
+      lock: タイムカードを締めてよろしですか？
+      unlock: タイムカードを締めを解除してよろしですか？
     formats:
       time_card_name: '%{month}のタイムカード'
       break_enter: '休始%{count}'
       break_leave: '休終%{count}'
     buttons:
       close: 閉じる
+      lock: 締める
+      unlock: 締めを解除する
+    links:
+      lock: 締める
+      unlock: 締めを解除する
     edit_cell:
       time: 時刻
       reason: 修正理由

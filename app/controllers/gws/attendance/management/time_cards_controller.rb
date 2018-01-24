@@ -105,4 +105,34 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   def show
     render
   end
+
+  def lock
+    if request.get?
+      user_ids = @items.and_unlocked.pluck(:user_id)
+      @target_users = Gws::User.in(id: user_ids).active
+      if @target_users.blank?
+        redirect_to({ action: :index, s: params[:s] }, { notice: t('gws/attendance.no_target_users') })
+      end
+      return
+    end
+
+    safe_params = params.require(:item).permit(user_ids: [])
+    user_ids = Gws::User.in(id: safe_params[:user_ids]).active.pluck(:id)
+    render_update @items.in(user_id: user_ids).lock_all, location: { action: :index }, render: { file: :lock }
+  end
+
+  def unlock
+    if request.get?
+      user_ids = @items.and_locked.pluck(:user_id)
+      @target_users = Gws::User.in(id: user_ids).active
+      if @target_users.blank?
+        redirect_to({ action: :index, s: params[:s] }, { notice: t('gws/attendance.no_target_users') })
+      end
+      return
+    end
+
+    safe_params = params.require(:item).permit(user_ids: [])
+    user_ids = Gws::User.in(id: safe_params[:user_ids]).active.pluck(:id)
+    render_update @items.in(user_id: user_ids).unlock_all, location: { action: :index }, render: { file: :unlock }
+  end
 end
