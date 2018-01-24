@@ -24,6 +24,11 @@ ja:
     edit_cell:
       time: 時刻
       reason: 修正理由
+    tooltips:
+      encoding:
+        - 文字コードを選択してください。
+        - 難読人名に対して特殊な漢字を割り当てている場合は「UTF-8」を選択してください。
+        - 通常の利用の場合ですと「シフトJIS」を選択して問題ありません。
 
   date:
     formats:
