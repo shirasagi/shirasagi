@@ -2402,3 +2402,28 @@ form .CodeMirror {
     display: none;
   }
 }
+
+// -------------------------------------------------------------------------------------------------
+// quota
+.ss-quota-bar {
+  position: relative;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  @include background(linear-gradient(top, #ddd, #eee));
+  line-height: 20px;
+
+  .label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+  }
+  .usage {
+    height: 20px;
+    background-color: #6d6;
+    @include background(linear-gradient(top, #dfd, #7d7 90%));
+  }
+  .usage.over-threshold {
+    background-color: #ff0f0f;
+    @include background(linear-gradient(top, #ffcccc, #ff0f0f));
+  }
+}

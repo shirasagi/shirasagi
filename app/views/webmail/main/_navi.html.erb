@@ -89,7 +89,7 @@ end
     <i class="material-icons md-dark">&#xE5D5;</i>
   <% end if @quota.quota?  %>
 
-  <div class="quota">
+  <div class="ss-quota-bar">
     <div class="label"><%= @quota.label %></div>
     <div class="usage <%= @quota.over_threshold? ? 'over-threshold' : '' %>" style="width: <%= @quota.percentage %>%"></div>
   </div>
