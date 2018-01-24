@@ -38,6 +38,7 @@ SS::Application.routes.draw do
     namespace "apis" do
       get "shared_addresses" => "shared_addresses#index"
       get "personal_addresses" => "personal_addresses#index"
+      get "messages" => "messages#index"
     end
 
     scope '/management' do
@@ -46,6 +47,12 @@ SS::Application.routes.draw do
       resources :filters, concerns: :deletion
       resources :signatures, concerns: :deletion
       resource :forwards, only: [:show, :edit, :update]
+
+      get 'export_messages' => 'export_messages#index'
+      put 'export_messages' => 'export_messages#export'
+      get 'start_export_messages' => 'export_messages#start_export'
+      get 'import_messages' => 'import_messages#index'
+      put 'import_messages' => 'import_messages#import'
     end
   end
 end

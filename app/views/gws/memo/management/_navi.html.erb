@@ -5,6 +5,8 @@
   <h3><%= link_to t('mongoid.models.gws/memo/filter'), gws_memo_filters_path %></h3>
   <h3><%= link_to t('mongoid.models.gws/memo/signature'), gws_memo_signatures_path %></h3>
   <h3><%= link_to t('mongoid.models.gws/memo/forward'), gws_memo_forwards_path %></h3>
+  <h3><%= link_to t('ss.export'), gws_memo_export_messages_path %></h3>
+  <h3><%= link_to t('ss.import'), gws_memo_import_messages_path %></h3>
 </nav>
 
 <%= render partial: 'gws/main/navi' %>

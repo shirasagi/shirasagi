@@ -15,6 +15,8 @@ ja:
     message: メッセージ
     select_check: 件のメッセージを選択
     commit_params_check: 送信
+    export_messages: エクスポート
+    import_messages: インポート
     links:
       move: 移動する
       etc: その他
@@ -42,9 +44,17 @@ ja:
     notice:
       send_mdn: 開封確認メッセージを送信しました。
       ignore_mdn: 開封確認を無視しました。
+      start_export: エクスポートを開始しました。
+      start_import: インポートしました。
+    export:
+      subject: '[メッセージ] エクスポートが完了しました。 %{datetime}'
+      notiry_message: "メッセージのエクスポートが完了しました。\nダウンロード： %{link}"
+      start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、メッセージにてダウンロードリンクが通知されます。"
     mdn:
       subject: '[開封確認] %{subject}'
       confirmed: "メッセージが開封されました。\n%{name} %{date}"
+    errors:
+      blank_message: メッセージを選択してください。
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱
@@ -142,6 +152,12 @@ ja:
         memo_email: 転送元メールアドレス
       gws/addon/memo/priority:
         priority: 重要度
+  activemodel:
+    models:
+      gws/memo/message_importer: インポート
+    attributes:
+      gws/memo/message_importer:
+        in_file: ファイル
   tooltip:
     gws/memo/message:
       member_ids:
@@ -212,3 +228,7 @@ ja:
     gws/addon/memo/priority:
       priority:
         - メッセージの重要度を選択します。
+
+  job:
+    models:
+      gws/memo/message_export: メッセージ/エクスポート

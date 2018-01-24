@@ -20,6 +20,7 @@ module Gws::Model
       field :state, type: String, default: 'public'
       field :path, type: Hash, default: {}
       field :send_date, type: DateTime
+      field :import_info, type: Hash, default: nil
 
       embeds_ids :to_members, class_name: "Gws::User"
       embeds_ids :cc_members, class_name: "Gws::User"

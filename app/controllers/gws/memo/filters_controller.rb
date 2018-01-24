@@ -4,6 +4,8 @@ class Gws::Memo::FiltersController < ApplicationController
 
   model Gws::Memo::Filter
 
+  navi_view "gws/memo/management/navi"
+
   before_action :deny_with_auth
 
   private
