@@ -140,6 +140,7 @@ class Gws::Memo::MessagesController < ApplicationController
       @item.state = "public"
       notice = t("ss.notice.sent")
     else
+      @item.state = "closed"
       notice = t("ss.notice.saved")
     end
 
