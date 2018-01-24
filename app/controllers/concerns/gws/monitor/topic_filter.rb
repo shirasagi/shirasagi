@@ -236,7 +236,7 @@ module Gws::Monitor::TopicFilter
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     @download_file_group_ssfile_ids = []
-    @item.subscribed_groups.each do |group|
+    @item.attend_groups.each do |group|
       if @item.comment(group.id).present?
         download_file_ids = @item.comment(group.id)[0]
         @download_file_group_ssfile_ids << [File.basename(download_file_ids.user_group_name), download_file_ids.file_ids]
