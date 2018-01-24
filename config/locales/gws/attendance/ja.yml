@@ -5,6 +5,7 @@ ja:
     break: 休憩
     no_time_cards: タイムカードはありません。
     no_target_users: 対象者がいません。
+    already_locked: タイムカードは締められています。
     confirm:
       lock: タイムカードを締めてよろしですか？
       unlock: タイムカードを締めを解除してよろしですか？

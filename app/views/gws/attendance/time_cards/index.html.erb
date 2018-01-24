@@ -63,7 +63,7 @@
 <div class="gws-attendance">
   <%= error_messages_for :item %>
 
-  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @item.unlocked? %>
   <div class="cell-toolbar">
     <a href="#" class="edit ajax-box">EDIT</a>
     <a href="#" class="remove ajax-box">REMOVE</a>
@@ -72,14 +72,14 @@
 
   <div class="aside">
     <div>
-      <button class="large" data-action="<%= url_for(action: 'enter') %>" <% if @item.blank? %>disabled<% end %>>出勤</button>
-      <button class="large" data-action="<%= url_for(action: 'leave') %>" <% if @item.blank? %>disabled<% end %>>退勤</button>
+      <button class="large" data-action="<%= url_for(action: 'enter') %>" <% if @item.blank? || @item.locked? %>disabled<% end %>>出勤</button>
+      <button class="large" data-action="<%= url_for(action: 'leave') %>" <% if @item.blank? || @item.locked? %>disabled<% end %>>退勤</button>
     </div>
     <% if break_times.present? %>
       <div>
         <% break_times.each do |i| %>
-          <button class="small" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>" <% if @item.blank? %>disabled<% end %>><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
-          <button class="small" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>" <% if @item.blank? %>disabled<% end %>><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
+          <button class="small" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>" <% if @item.blank? || @item.locked? %>disabled<% end %>><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
+          <button class="small" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>" <% if @item.blank? || @item.locked? %>disabled<% end %>><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
         <% end %>
       </div>
     <% end %>
@@ -154,6 +154,9 @@
       <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
       <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
       <%= link_to(t('ss.links.download'), { action: :download }, class: :btn) %>
+      <% if @item.locked? %>
+      <span><%= t('gws/attendance.already_locked') %></span>
+      <% end %>
     </nav>
 
     <% if @item.blank? %>
@@ -210,7 +213,7 @@
     $form.submit();
   });
 
-  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @item.unlocked? %>
   $('.gws-attendance .time-card .time').on('click', function() {
     $('.gws-attendance .time-card .time').removeClass('focus');
     $('.gws-attendance .time-card .memo').removeClass('focus');

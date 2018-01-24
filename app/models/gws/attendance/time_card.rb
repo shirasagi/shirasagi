@@ -113,6 +113,10 @@ class Gws::Attendance::TimeCard
     lock_state == 'locked'
   end
 
+  def unlocked?
+    !locked?
+  end
+
   private
 
   def normalize_date

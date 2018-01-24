@@ -124,6 +124,10 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def enter
     raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
+    if @item.locked?
+      redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
+      return
+    end
 
     render_opts = { location: { action: :index }, render: { file: :index } }
     render_update @item.punch("#{params[:action]}#{params[:index]}"), render_opts
@@ -135,6 +139,11 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def time
     raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site)
+    if @item.locked?
+      redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
+      return
+    end
+
     @model = Gws::Attendance::TimeEdit
     if request.get?
       @cell = @model.new
@@ -161,6 +170,11 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def memo
     raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site)
+    if @item.locked?
+      redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
+      return
+    end
+
     if request.get?
       render layout: false
       return
