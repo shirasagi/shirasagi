@@ -43,9 +43,14 @@
               <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
             </tr>
           <% end %>
-          <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
+          <% tr_css_classes = [] %>
+          <% tr_css_classes << (Time.zone.now.beginning_of_day == date ? 'current' : nil) %>
+          <% tr_css_classes << if holiday?(date); 'holiday' elsif date.wday == 0; 'sunday' elsif date.wday == 6; 'saturday' end %>
+          <tr class="<%= tr_css_classes.compact.join(' ') %>">
             <% record = @item.records.where(date: date).first %>
-            <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+            <td class="date">
+              <%= I18n.l(date.to_date, format: :attendance_month_day) %>
+            </td>
             <td class="time" data-day="<%= date.day %>" data-type="enter">
               <%= record ? format_time(date, record.enter) : '' %>
               <% render_reason.call(record.try(:find_latest_history, 'enter')) %>

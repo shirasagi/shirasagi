@@ -11,6 +11,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   before_action :set_record, only: %i[time memo]
 
   helper_method :year_month_options, :format_time, :hour_options, :minute_options, :round_up_minute
+  helper_method :holiday?
 
   private
 
@@ -91,6 +92,11 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     else
       ((min / scale) + 1) * scale
     end
+  end
+
+  def holiday?(date)
+    return true if HolidayJapan.check(date.localtime.to_date)
+    Gws::Schedule::Holiday.site(@cur_site).and_public.search(start: date, end: date).present?
   end
 
   public

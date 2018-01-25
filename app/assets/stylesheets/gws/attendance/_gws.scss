@@ -104,9 +104,21 @@
         min-width: 6em;
       }
 
-      //.focus {
-      //  border: 1px solid greenyellow;
-      //}
+      tr.holiday, tr.sunday {
+        td.date {
+          color: red;
+        }
+      }
+
+      tr.saturday {
+        td.date {
+          color: blue;
+        }
+      }
+
+      .focus {
+        border: 1px solid greenyellow;
+      }
     }
 
     .reason-tooltips {
