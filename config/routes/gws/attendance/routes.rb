@@ -20,7 +20,7 @@ SS::Application.routes.draw do
 
     namespace 'management' do
       get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
-      resources :time_cards, path: 'time_cards/:year_month', concerns: [:deletion] do
+      resources :time_cards, path: 'time_cards/:year_month', except: %i[new create], concerns: %i[deletion] do
         match :download, on: :collection, via: %i[get post]
         match :lock, on: :collection, via: %i[get post]
         match :unlock, on: :collection, via: %i[get post]
