@@ -19,6 +19,8 @@ SS::Application.routes.draw do
       get :resize, on: :member
       post :resize, on: :member
     end
+    get "download_job_files/:filename" => "download_job_files#index",
+        filename: %r{[^\/]+}, format: false
 
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
@@ -36,6 +38,8 @@ SS::Application.routes.draw do
       get :thumb, on: :member
       get :download, on: :member
     end
+    get "download_job_files/:filename" => "download_job_files#index",
+        filename: %r{[^\/]+}, format: false, as: :download_job_files
 
     namespace "apis" do
       resources :temp_files, concerns: :deletion do
