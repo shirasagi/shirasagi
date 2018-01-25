@@ -8,9 +8,7 @@ class Gws::Attendance::TimeEdit
 
   permit_params :in_hour, :in_minute, :in_reason
 
-  validates :in_hour, presence: true
   validates :in_hour, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 24, allow_blank: true }
-  validates :in_minute, presence: true
   validates :in_minute, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 60, allow_blank: true }
   validates :in_reason, presence: true, length: { maximum: 80 }
 
@@ -21,6 +19,10 @@ class Gws::Attendance::TimeEdit
   end
 
   def calc_time(date)
-    date.change(hour: Integer(in_hour), min: Integer(in_minute))
+    if in_hour.blank? || in_minute.blank?
+      return nil
+    else
+      date.change(hour: Integer(in_hour), min: Integer(in_minute))
+    end
   end
 end
