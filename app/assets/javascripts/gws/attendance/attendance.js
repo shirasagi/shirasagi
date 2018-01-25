@@ -94,6 +94,12 @@ Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
   var url = urlTemplate;
   url = url.replace(':day', $cell.data('day'));
   url = url.replace(':type', $cell.data('type'));
+  this.$toolbar.find('.edit').attr('href', url);
+  if (this.options.editable || this.isCellToday($cell)) {
+    this.$toolbar.find('.edit').show();
+  } else {
+    this.$toolbar.find('.edit').hide();
+  }
 
   var offset = $cell.offset();
   if ($cell.hasClass('top')) {
@@ -102,7 +108,6 @@ Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
     offset.top += $cell.outerHeight();
   }
 
-  this.$toolbar.find('.edit').attr('href', url);
   // call `show` and then call `offset`. order is important
   this.$toolbar.show();
   this.$toolbar.offset(offset);

@@ -84,80 +84,80 @@
 
   .main {
     margin-left: 230px;
+  }
 
-    .nav-menu {
-      margin: 5px 0;
+  .nav-menu {
+    margin: 5px 0;
+  }
+
+  .reason-tooltip {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 1.1;
+    @include border-radius(8px);
+    background: $orange;
+    color: $white;
+    text-align: center;
+    cursor: pointer;
+
+    .reason {
+      display: none;
+    }
+  }
+
+  .time-card-wrap {
+    overflow-x: auto;
+  }
+
+  .time-card {
+    background: $white;
+    white-space: nowrap;
+
+    th {
+      padding: 5px;
+      border: 1px solid transparent;
     }
 
-    .reason-tooltip {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      line-height: 1.1;
-      @include border-radius(8px);
-      background: $orange;
-      color: $white;
-      text-align: center;
-      cursor: pointer;
+    td {
+      padding: 5px;
+      border: 1px solid $gray1;
+    }
 
-      .reason {
-        display: none;
+    tr.header {
+      background-color: #ddd;
+    }
+
+    tr.current {
+      background-color: #ffffae;
+    }
+
+    th.date, td.date {
+      width: 7.5em;
+    }
+
+    th.time, td.time {
+      width: 6em;
+    }
+
+    th.memo, td.memo {
+      min-width: 6em;
+    }
+
+    tr.holiday, tr.sunday {
+      td.date {
+        color: red;
       }
     }
 
-    .time-card-wrap {
-      overflow-x: auto;
+    tr.saturday {
+      td.date {
+        color: blue;
+      }
     }
 
-    .time-card {
-      background: $white;
-      white-space: nowrap;
-
-      th {
-        padding: 5px;
-        border: 1px solid transparent;
-      }
-
-      td {
-        padding: 5px;
-        border: 1px solid $gray1;
-      }
-
-      tr.header {
-        background-color: #ddd;
-      }
-
-      tr.current {
-        background-color: #ffffae;
-      }
-
-      th.date, td.date {
-        width: 7.5em;
-      }
-
-      th.time, td.time {
-        width: 6em;
-      }
-
-      th.memo, td.memo {
-        min-width: 6em;
-      }
-
-      tr.holiday, tr.sunday {
-        td.date {
-          color: red;
-        }
-      }
-
-      tr.saturday {
-        td.date {
-          color: blue;
-        }
-      }
-
-      .focus {
-        border: 1px solid $orange;
-      }
+    .focus {
+      border: 1px solid $orange;
     }
   }
 }

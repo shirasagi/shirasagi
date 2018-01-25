@@ -13,6 +13,7 @@ ja:
       unlock: タイムカードを締めを解除してよろしですか？
     formats:
       time_card_name: '%{month}のタイムカード'
+      time_card_full_name: '%{user_name}の%{month}のタイムカード'
       break_enter: '休始%{count}'
       break_leave: '休終%{count}'
     buttons:

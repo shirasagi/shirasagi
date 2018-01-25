@@ -1,6 +1,7 @@
 class Gws::Attendance::Management::TimeCardsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Attendance::TimeCardFilter
 
   model Gws::Attendance::TimeCard
 
@@ -10,19 +11,18 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   before_action :set_cur_month
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: %i[show edit update delete destroy]
+  before_action :set_item, only: %i[show delete destroy time memo]
+  before_action :set_record, only: %i[time memo]
 
   helper_method :year_month_options, :group_options
+
+  append_view_path 'app/views/gws/attendance/time_cards'
 
   private
 
   def set_crumbs
     @crumbs << [t('modules.gws/attendance'), gws_attendance_main_path]
     @crumbs << [t('ss.management'), gws_attendance_management_main_path]
-  end
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
   end
 
   def check_model_permission
@@ -37,28 +37,6 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     else
       @groups = Gws::Group.none
     end
-  end
-
-  def set_active_year_range
-    @active_year_range ||= begin
-      end_date = Time.zone.now.beginning_of_month
-
-      start_date = end_date
-      start_date -= 1.month while start_date.month != @cur_site.attendance_year_changed_month
-      start_date -= @cur_site.attendance_management_year.years
-
-      [start_date, end_date]
-    end
-  end
-
-  def set_cur_month
-    raise '404' if params[:year_month].blank? || params[:year_month].length != 6
-
-    year = params[:year_month][0..3]
-    month = params[:year_month][4..5]
-    @cur_month = Time.zone.parse("#{year}/#{month}/01")
-
-    raise '404' if @cur_month < @active_year_range.first || @active_year_range.last < @cur_month
   end
 
   def set_search_params
@@ -78,6 +56,20 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
   def set_item
     @item = @items.find(params[:id])
+    @item.attributes = fix_params
+  end
+
+  def set_record
+    @cur_date = @cur_month.change(day: Integer(params[:day]))
+    @record = @item.records.where(date: @cur_date).first_or_create
+  end
+
+  def crud_redirect_url
+    if params[:action] == 'time' || params[:action] == 'memo'
+      { action: :show }
+    else
+      super
+    end
   end
 
   def year_month_options
@@ -104,6 +96,14 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
   def show
     render
+  end
+
+  def delete
+    render
+  end
+
+  def destroy
+    render_destroy @item.destroy
   end
 
   def download
