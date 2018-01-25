@@ -10,7 +10,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   before_action :set_item, only: %i[download enter leave break_enter break_leave time memo]
   before_action :set_record, only: %i[time memo]
 
-  helper_method :year_month_options, :format_time, :hour_options, :minute_options, :round_up_minute
+  helper_method :year_month_options, :format_time, :hour_options, :minute_options
   helper_method :holiday?
 
   private
@@ -82,16 +82,6 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def minute_options
     60.times.to_a.map { |m| [ "#{m}分", m ] }
-  end
-
-  def round_up_minute(min, scale = 5)
-    return if min.blank?
-
-    if (min % scale) == 0
-      min
-    else
-      ((min / scale) + 1) * scale
-    end
   end
 
   def holiday?(date)

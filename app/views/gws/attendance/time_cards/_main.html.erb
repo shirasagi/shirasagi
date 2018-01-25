@@ -1,13 +1,11 @@
 <% render_reason = proc do |history| %>
   <% if history.present? && history.reason.present? %>
-    <div class="tooltip reason-tooltips">
+    <div class="reason-tooltip">
       <i class="material-icons md-13">&#xE0C9;</i>
-      <ul>
-        <li>
-          <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time><br>
-          <span class="reason"><%= history.reason %></span>
-        </li>
-      </ul>
+      <div class="reason">
+        <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time><br>
+        <span><%= history.reason %></span>
+      </div>
     </div>
   <% end %>
 <% end %>
@@ -31,6 +29,7 @@
         <tbody>
         <% date = @cur_month %>
         <% while date <= @cur_month.end_of_month %>
+          <% offset = date.day >= 16 ? 'top' : '' %>
           <% if date.day == 1 || date.day == 16 %>
             <tr class="header">
               <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
@@ -51,25 +50,25 @@
             <td class="date">
               <%= I18n.l(date.to_date, format: :attendance_month_day) %>
             </td>
-            <td class="time" data-day="<%= date.day %>" data-type="enter">
+            <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="enter">
               <%= record ? format_time(date, record.enter) : '' %>
               <% render_reason.call(record.try(:find_latest_history, 'enter')) %>
             </td>
-            <td class="time" data-day="<%= date.day %>" data-type="leave">
+            <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="leave">
               <%= record ? format_time(date, record.leave) : '' %>
               <% render_reason.call(record.try(:find_latest_history, 'leave')) %>
             </td>
             <% @break_times.each do |i| %>
-              <td class="time" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>">
+              <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>">
                 <%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %>
                 <% render_reason.call(record.try(:find_latest_history, "break_enter#{i + 1}")) %>
               </td>
-              <td class="time" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>">
+              <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>">
                 <%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %>
                 <% render_reason.call(record.try(:find_latest_history, "break_leave#{i + 1}")) %>
               </td>
             <% end %>
-            <td class="memo" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
+            <td class="memo <%= offset %>" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
           </tr>
           <% date += 1.day %>
         <% end %>
@@ -77,11 +76,13 @@
       </table>
     </div>
 
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked? %>
-      <div class="cell-toolbar">
-        <a href="#" class="edit ajax-box">EDIT</a>
-        <a href="#" class="remove ajax-box">REMOVE</a>
+    <div class="cell-toolbar">
+      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked? %>
+        <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
+        <a href="#" class="delete ajax-box"><%= t('ss.links.delete') %></a>
+      <% end %>
+      <div class="reason">
       </div>
-    <% end %>
+    </div>
   <% end %>
 </div>

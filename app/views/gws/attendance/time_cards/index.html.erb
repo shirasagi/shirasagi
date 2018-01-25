@@ -7,50 +7,12 @@
 </div>
 
 <%= jquery do %>
-  $('.gws-attendance button').on('click', function() {
-    var action = $(this).data('action');
-    var token = $('meta[name="csrf-token"]').attr('content');
-
-    $form = $('<form/>', { action: action, method: 'post' });
-    $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
-    $('body').append($form);
-    $form.submit();
-  });
-
-  <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked? %>
-  $('.gws-attendance .time-card .time').on('click', function() {
-    $('.gws-attendance .time-card .time').removeClass('focus');
-    $('.gws-attendance .time-card .memo').removeClass('focus');
-    $(this).addClass('focus');
-
-    var offset = $(this).offset();
-    offset.left += $(this).outerWidth();
-
-    var url = <%== url_for(action: :time, day: ':day', type: ':type').to_json %>;
-    url = url.replace(':day', $(this).data('day'));
-    url = url.replace(':type', $(this).data('type'));
-
-    $('.gws-attendance .cell-toolbar').offset(offset);
-    $('.gws-attendance .cell-toolbar .edit').attr('href', url);
-    $('.gws-attendance .cell-toolbar').show();
-  });
-
-  $('.gws-attendance .time-card .memo').on('click', function() {
-    $('.gws-attendance .time-card .time').removeClass('focus');
-    $('.gws-attendance .time-card .memo').removeClass('focus');
-    $(this).addClass('focus');
-
-    var offset = $(this).offset();
-    offset.left -= $('.gws-attendance .cell-toolbar').outerWidth();
-
-    var url = <%== url_for(action: :memo, day: ':day').to_json %>;
-    url = url.replace(':day', $(this).data('day'));
-
-    $('.gws-attendance .cell-toolbar').offset(offset);
-    $('.gws-attendance .cell-toolbar .edit').attr('href', url);
-    $('.gws-attendance .cell-toolbar').show();
-  });
-  <% end %>
-
-  $('.gws-attendance .cell-toolbar').hide();
+  var attendance = new Gws_Attendance(
+    '.gws-attendance',
+    {
+      editable: <%== (@model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked?).to_json %>,
+      timeUrl: <%== url_for(action: :time, day: ':day', type: ':type').to_json %>,
+      memoUrl: <%== url_for(action: :memo, day: ':day').to_json %>
+    }
+  );
 <% end %>

@@ -3,9 +3,28 @@
   position: relative;
 
   .cell-toolbar {
+    display: none;
     position: absolute;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.5);
+    padding: 5px 0px;
+    border: $border-gray4;
+    background: $white;
+    @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+    a {
+      display: block;
+      padding: 5px 15px;
+      line-height: 1.8;
+      white-space: nowrap;
+      &:hover { background: $gray1; }
+    }
+
+    .reason {
+      display: none;
+      padding: 5px 15px;
+      time {
+        color: $gray2;
+      }
+    }
   }
 
   .aside {
@@ -70,6 +89,22 @@
       margin: 5px 0;
     }
 
+    .reason-tooltip {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      line-height: 1.1;
+      @include border-radius(8px);
+      background: $orange;
+      color: $white;
+      text-align: center;
+      cursor: pointer;
+
+      .reason {
+        display: none;
+      }
+    }
+
     .time-card-wrap {
       overflow-x: auto;
     }
@@ -117,13 +152,7 @@
       }
 
       .focus {
-        border: 1px solid greenyellow;
-      }
-    }
-
-    .reason-tooltips {
-      time {
-        color: $gray2;
+        border: 1px solid $orange;
       }
     }
   }

@@ -9,7 +9,7 @@
           <dt><%= t('gws/attendance.edit_cell.time') %></dt>
           <dd>
             <%= f.select(:in_hour, hour_options, selected: val.try(:hour) || Time.zone.now.hour) %>
-            <%= f.select(:in_minute, minute_options, selected: round_up_minute(val.try(:min) || Time.zone.now.min)) %>
+            <%= f.select(:in_minute, minute_options, selected: val.try(:min) || Time.zone.now.min) %>
           </dd>
           <dt><%= @model.t :in_reason %></dt>
           <dd><%= f.text_field(:in_reason) %></dd>
