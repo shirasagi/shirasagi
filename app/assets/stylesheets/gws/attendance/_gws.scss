@@ -70,29 +70,43 @@
       margin: 5px 0;
     }
 
+    .time-card-wrap {
+      overflow-x: auto;
+    }
+
     .time-card {
-      tr.header {
-        background-color: #ddd;
-      }
+      background: $white;
+      white-space: nowrap;
 
-      th.date {
-        padding: 5px;
-        width: 7.5em;
-      }
-
-      th.time {
-        padding: 5px;
-        width: 6em;
-      }
-
-      td {
+      th {
         padding: 5px;
         border: 1px solid transparent;
       }
 
-      td.focus {
-        border: 1px solid greenyellow;
+      td {
+        padding: 5px;
+        border: 1px solid $gray1;
       }
+
+      tr.header {
+        background-color: #ddd;
+      }
+
+      th.date, td.date {
+        width: 7.5em;
+      }
+
+      th.time, td.time {
+        width: 6em;
+      }
+
+      th.memo, td.memo {
+        min-width: 6em;
+      }
+
+      //.focus {
+      //  border: 1px solid greenyellow;
+      //}
     }
 
     .reason-tooltips {
