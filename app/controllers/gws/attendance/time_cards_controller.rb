@@ -140,7 +140,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   alias break_leave enter
 
   def time
-    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site) && Time.zone.now.to_date != @record.date.to_date
     if @item.locked?
       redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
       return
@@ -171,7 +171,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def memo
-    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site) && Time.zone.now.to_date != @record.date.to_date
     if @item.locked?
       redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
       return

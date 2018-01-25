@@ -127,6 +127,10 @@
         background-color: #ddd;
       }
 
+      tr.current {
+        background-color: #ffffae;
+      }
+
       th.date, td.date {
         width: 7.5em;
       }

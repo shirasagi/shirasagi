@@ -3,6 +3,7 @@ Gws_Attendance = function (el, options) {
   this.$el = $(el);
   this.$toolbar = this.$el.find('.cell-toolbar');
   this.options = options;
+  this.now = new Date(options.now);
   this.render();
 };
 
@@ -56,23 +57,43 @@ Gws_Attendance.prototype.onClickMemo = function($cell) {
   this.onClickCell($cell, this.options.memoUrl);
 };
 
-Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
+Gws_Attendance.prototype.setFocus = function($cell) {
   this.$el.find('.time-card .time').removeClass('focus');
   this.$el.find('.time-card .memo').removeClass('focus');
   $cell.addClass('focus');
+};
+
+Gws_Attendance.prototype.setReason = function($cell) {
+  this.$toolbar.find('.reason').html('');
+
+  var reasonHtml = $cell.find('.reason-tooltip .reason').html();
+  if (reasonHtml) {
+    this.$toolbar.find('.reason').append(reasonHtml);
+    this.$toolbar.find('.reason').show();
+    return true;
+  } else {
+    this.$toolbar.find('.reason').hide();
+    return false;
+  }
+};
+
+Gws_Attendance.prototype.isCellToday = function($cell) {
+  return $cell.closest('tr').hasClass('current');
+};
+
+Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
+  this.setFocus($cell);
+
+  if (! this.setReason($cell)) {
+    if (!this.options.editable && !this.isCellToday($cell)) {
+      this.$toolbar.hide();
+      return;
+    }
+  }
 
   var url = urlTemplate;
   url = url.replace(':day', $cell.data('day'));
   url = url.replace(':type', $cell.data('type'));
-
-  var reasonHtml = $cell.find('.reason-tooltip .reason').html();
-  this.$toolbar.find('.reason').html('');
-  if (reasonHtml) {
-    this.$toolbar.find('.reason').append(reasonHtml);
-    this.$toolbar.find('.reason').show();
-  } else {
-    this.$toolbar.find('.reason').hide();
-  }
 
   var offset = $cell.offset();
   if ($cell.hasClass('top')) {

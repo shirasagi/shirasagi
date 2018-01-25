@@ -77,9 +77,7 @@
     </div>
 
     <div class="cell-toolbar">
-      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked? %>
-        <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
-      <% end %>
+      <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
       <div class="reason">
       </div>
     </div>
