@@ -10,6 +10,8 @@ module Gws::Addon::Attendance::GroupSetting
     field :attendance_year_changed_month, type: Integer, default: 4
     field :attendance_management_year, type: Integer, default: 3
     field :attendance_time_changed_at, type: DateTime, default: Time::EPOCH + 3.hours
+    field :attendance_enter_label, type: String
+    field :attendance_leave_label, type: String
     SS.config.gws.attendance['max_break'].times do |i|
       field "attendance_break_time_state#{i + 1}", type: String
       field "attendance_break_enter_label#{i + 1}", type: String
@@ -22,6 +24,7 @@ module Gws::Addon::Attendance::GroupSetting
 
     permit_params :in_attendance_time_change_hour
     permit_params :attendance_year_changed_month, :attendance_management_year
+    permit_params :attendance_enter_label, :attendance_leave_label
 
     before_validation :set_attendance_time_changed_at
 

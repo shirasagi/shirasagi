@@ -18,14 +18,14 @@
       <% while date <= @cur_month.end_of_month %>
         <% if date.day == 1 || date.day == 16 %>
           <tr class="header">
-            <th class="date"><%= Gws::Attendance::Record.t :date %></th>
-            <th class="time"><%= Gws::Attendance::Record.t :enter %></th>
-            <th class="time"><%= Gws::Attendance::Record.t :leave %></th>
+            <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
+            <th class="time"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
+            <th class="time"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
             <% @break_times.each do |i| %>
               <th class="time"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
               <th class="time"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
             <% end %>
-            <th><%= Gws::Attendance::Record.t :memo %></th>
+            <th><%= Gws::Attendance::Record.t(:memo) %></th>
           </tr>
         <% end %>
         <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">

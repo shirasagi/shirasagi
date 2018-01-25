@@ -2,6 +2,7 @@ ja:
   gws/attendance:
     prev_month: 先月
     next_month: 翌月
+    enter_leave: 出退勤
     break: 休憩
     no_time_cards: タイムカードはありません。
     no_target_users: 対象者がいません。

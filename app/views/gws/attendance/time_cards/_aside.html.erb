@@ -1,7 +1,11 @@
 <div class="aside">
   <div class="buttons">
-    <button class="btn large" data-action="<%= url_for(action: 'enter') %>" <% if @item.blank? || @item.locked? %>disabled<% end %>>出勤</button>
-    <button class="btn large" data-action="<%= url_for(action: 'leave') %>" <% if @item.blank? || @item.locked? %>disabled<% end %>>退勤</button>
+    <button class="btn large" data-action="<%= url_for(action: 'enter') %>" <% if @item.blank? || @item.locked? %>disabled<% end %>>
+      <%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %>
+    </button>
+    <button class="btn large" data-action="<%= url_for(action: 'leave') %>" <% if @item.blank? || @item.locked? %>disabled<% end %>>
+      <%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %>
+    </button>
   </div>
   <% if @break_times.present? %>
     <div class="buttons">

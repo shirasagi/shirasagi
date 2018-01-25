@@ -10,6 +10,12 @@
   <dt><%= @model.t :attendance_time_changed_at %></dt>
   <dd><%= @item.attendance_time_changed_at.utc.hour %> <%= t("datetime.prompts.hour") %></dd>
 
+  <dt><%= t('gws/attendance.enter_leave') %></dt>
+  <dd>
+    <%= @item.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %>
+    <%= @item.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %>
+  </dd>
+
   <% SS.config.gws.attendance['max_break'].times do |i| %>
     <dt><%= t('gws/attendance.break') %><%= i + 1 %></dt>
     <dd>
