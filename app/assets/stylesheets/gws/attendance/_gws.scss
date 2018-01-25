@@ -82,7 +82,7 @@
 
       th.time {
         padding: 5px;
-        width: 5em;
+        width: 6em;
       }
 
       td {
@@ -92,6 +92,12 @@
 
       td.focus {
         border: 1px solid greenyellow;
+      }
+    }
+
+    .reason-tooltips {
+      time {
+        color: $gray2;
       }
     }
   }

@@ -1,3 +1,17 @@
+<% render_reason = proc do |history| %>
+  <% if history.present? && history.reason.present? %>
+    <div class="tooltip reason-tooltips">
+      <i class="material-icons md-13">&#xE0C9;</i>
+      <ul>
+        <li>
+          <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time><br>
+          <span class="reason"><%= history.reason %></span>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
+
 <div class="main">
   <nav class="nav-menu">
     <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month])) %>
@@ -33,14 +47,21 @@
           <td><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
           <td class="time" data-day="<%= date.day %>" data-type="enter">
             <%= record ? format_time(date, record.enter) : '' %>
-            <% if record && (reason = record.find_latest_reason('enter')) %>
-              <%= reason %>
-            <% end %>
+            <% render_reason.call(record.try(:find_latest_history, 'enter')) %>
           </td>
-          <td class="time" data-day="<%= date.day %>" data-type="leave"><%= record ? format_time(date, record.leave) : '' %></td>
+          <td class="time" data-day="<%= date.day %>" data-type="leave">
+            <%= record ? format_time(date, record.leave) : '' %>
+            <% render_reason.call(record.try(:find_latest_history, 'leave')) %>
+          </td>
           <% @break_times.each do |i| %>
-            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>"><%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %></td>
-            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>"><%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %></td>
+            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>">
+              <%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %>
+              <% render_reason.call(record.try(:find_latest_history, "break_enter#{i + 1}")) %>
+            </td>
+            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>">
+              <%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %>
+              <% render_reason.call(record.try(:find_latest_history, "break_leave#{i + 1}")) %>
+            </td>
           <% end %>
           <td class="memo" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
         </tr>

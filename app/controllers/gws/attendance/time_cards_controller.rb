@@ -76,11 +76,11 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def hour_options
     start_hour = @cur_site.attendance_time_changed_at.utc.hour
-    (start_hour..24).map { |h| [ "#{h}時", h ] } + (0..(start_hour - 1)).map { |h| [ "#{h + 24}時", h ] }
+    (start_hour..24).map { |h| [ "#{h}時", h ] } + (1..(start_hour - 1)).map { |h| [ "#{h + 24}時", h ] }
   end
 
   def minute_options
-    12.times.to_a.map { |m| m * 5 }.map { |m| [ "#{m}分", m ] }
+    60.times.to_a.map { |m| [ "#{m}分", m ] }
   end
 
   def round_up_minute(min, scale = 5)

@@ -21,13 +21,8 @@ class Gws::Attendance::Record
   self.punchable_field_names = self.punchable_field_names.freeze
 
   def find_latest_history(field_name)
-    criteria = time_card.histories.where(date: date)
-    criteria.where(field_name: field_name)
+    criteria = time_card.histories.where(date: date, field_name: field_name)
     criteria.order_by(created: -1).first
-  end
-
-  def find_latest_reason(field_name)
-    find_latest_history(field_name).try(:reason).presence
   end
 
   def calc_working_time
