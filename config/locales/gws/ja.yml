@@ -308,6 +308,7 @@ ja:
         menu_portal_state: ポータルの表示
         menu_schedule_state: スケジュールの表示
         menu_reminder_state: リマインダーの表示
+        menu_attendance_state: 出退勤の表示
         menu_bookmark_state: お気に入りの表示
         menu_memo_state: メッセージの表示
         menu_board_state: 掲示板の表示
