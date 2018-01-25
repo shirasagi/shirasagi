@@ -1,0 +1,98 @@
+// gws/attendance
+.gws-attendance {
+  position: relative;
+
+  .cell-toolbar {
+    position: absolute;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .aside {
+    width: 230px;
+    float: left;
+
+    .buttons {
+      -js-display: flex;
+      @include display-flex;
+      @include flex-wrap(wrap);
+      @include align-items(center);
+    }
+
+    button {
+      margin: 2.5px;
+
+      @include btn;
+
+      &.large {
+        font-size: $px18;
+        padding: 5px;
+        width: 105px;
+        height: 60px;
+        &:enabled {
+          background: #f25a38;
+          @include background(linear-gradient(top, #f25a38, #f79c88));
+          @include filter-gradient(#f25a38, #f79c88, vertical);
+          &:hover {
+            background: #f25a38;
+            text-decoration:none;
+          }
+        }
+      }
+
+      &.small {
+        padding: 5px;
+        width: 50px;
+        height: 30px;
+        //color: white;
+        &:enabled {
+          background-color: #7d941c;
+          @include background(linear-gradient(top, #7d941c, #e1efa9));
+          @include filter-gradient(#7d941c, #e1efa9, vertical);
+          &:hover {
+            background: #7d941c;
+            text-decoration:none;
+          }
+        }
+      }
+
+      &:disabled {
+        color: #999;
+        background-color: #ddd;
+      }
+    }
+  }
+
+  .main {
+    margin-left: 230px;
+
+    .nav-menu {
+      margin: 5px 0;
+    }
+
+    .time-card {
+      tr.header {
+        background-color: #ddd;
+      }
+
+      th.date {
+        padding: 5px;
+        width: 7.5em;
+      }
+
+      th.time {
+        padding: 5px;
+        width: 5em;
+      }
+
+      td {
+        padding: 5px;
+        border: 1px solid transparent;
+      }
+
+      td.focus {
+        border: 1px solid greenyellow;
+      }
+    }
+  }
+}

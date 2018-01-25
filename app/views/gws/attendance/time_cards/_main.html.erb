@@ -1,0 +1,59 @@
+<div class="main">
+  <nav class="nav-menu">
+    <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month])) %>
+    <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+    <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+    <%= link_to(t('ss.links.download'), { action: :download }, class: :btn) %>
+    <% if @item && @item.locked? %>
+      <span><%= t('gws/attendance.already_locked') %></span>
+    <% end %>
+  </nav>
+
+  <% if @item.blank? %>
+    <p><%= t('gws/attendance.no_time_cards') %></p>
+  <% else %>
+    <table class="index time-card">
+      <tbody>
+      <% date = @cur_month %>
+      <% while date <= @cur_month.end_of_month %>
+        <% if date.day == 1 || date.day == 16 %>
+          <tr class="header">
+            <th class="date"><%= Gws::Attendance::Record.t :date %></th>
+            <th class="time"><%= Gws::Attendance::Record.t :enter %></th>
+            <th class="time"><%= Gws::Attendance::Record.t :leave %></th>
+            <% @break_times.each do |i| %>
+              <th class="time"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+              <th class="time"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <% end %>
+            <th><%= Gws::Attendance::Record.t :memo %></th>
+          </tr>
+        <% end %>
+        <tr class="<%= Time.zone.now.beginning_of_day == date ? 'current' : '' %>">
+          <% record = @item.records.where(date: date).first %>
+          <td><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+          <td class="time" data-day="<%= date.day %>" data-type="enter">
+            <%= record ? format_time(date, record.enter) : '' %>
+            <% if record && (reason = record.find_latest_reason('enter')) %>
+              <%= reason %>
+            <% end %>
+          </td>
+          <td class="time" data-day="<%= date.day %>" data-type="leave"><%= record ? format_time(date, record.leave) : '' %></td>
+          <% @break_times.each do |i| %>
+            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>"><%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %></td>
+            <td class="time" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>"><%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %></td>
+          <% end %>
+          <td class="memo" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
+        </tr>
+        <% date += 1.day %>
+      <% end %>
+      </tbody>
+    </table>
+
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked? %>
+      <div class="cell-toolbar">
+        <a href="#" class="edit ajax-box">EDIT</a>
+        <a href="#" class="remove ajax-box">REMOVE</a>
+      </div>
+    <% end %>
+  <% end %>
+</div>
