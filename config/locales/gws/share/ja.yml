@@ -99,6 +99,8 @@ ja:
         order: 並び順
         share_max_file_size: 最大ファイルサイズ
         share_max_folder_size: 総容量制限
+        descendants_files_count: ファイル数
+        descendants_total_file_size: ファイル容量
 
   tooltip:
     gws/share/category:
