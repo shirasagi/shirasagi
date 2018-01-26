@@ -9,7 +9,7 @@
 <% render_time = proc do |field_name| %>
   <% time = record.try(field_name) %>
   <% history = record.try(:find_latest_history, field_name) %>
-  <tr>
+  <tr data-field-name="<%= field_name %>">
     <th><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
     <td class="time"><%= @portlet.format_attendance_time(date, time) %></td>
     <td class="reason">
@@ -19,9 +19,9 @@
     </td>
     <td class="operation">
       <% if time.present? %>
-        <button type="button" class="btn"><%= '修正' %></button>
+        <button name="edit" type="button" class="btn"><%= t('ss.buttons.edit') %></button>
       <% else %>
-        <button type="button" class="btn"><%= '打刻' %></button>
+        <button name="punch" type="button" class="btn"><%= t('gws/attendance.buttons.punch') %></button>
       <% end %>
     </td>
   </tr>
@@ -32,16 +32,16 @@
 
   <div class="header">
     <%= I18n.l(Time.zone.now.to_date, format: :full) %>
-    <th class="memo"><button type="button" class="btn"><%= t('ss.buttons.download') %></button></th>
+    <%= link_to t('ss.buttons.download'), download_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}"), class: 'btn' %>
   </div>
 
   <div class="today-time-card">
     <table>
       <thead>
       <th></th>
-      <th>時刻</th>
-      <th>修正理由</th>
-      <th>操作</th>
+      <th><%= t('gws/attendance.edit_cell.time') %></th>
+      <th><%= t('gws/attendance.edit_cell.reason') %></th>
+      <th></th>
       </thead>
       <tbody>
       <% render_time.call('enter') %>
@@ -50,12 +50,27 @@
         <% render_time.call("break_enter#{i + 1}") %>
         <% render_time.call("break_leave#{i + 1}") %>
       <% end %>
-      <tr>
+      <tr data-field-name="memo">
         <th><%= Gws::Attendance::Record.t(:memo) %></th>
         <td class="memo" colspan="2"><%= record.try(:memo) %></td>
-        <td class="operation"><button type="button" class="btn"><%= t('ss.buttons.edit') %></button></td>
+        <td class="operation">
+          <button name="edit" type="button" class="btn"><%= t('ss.buttons.edit') %></button>
+        </td>
       </tr>
       </tbody>
     </table>
   </div>
 </div>
+
+<%= jquery do %>
+  var $portlet = new Gws_Attendance_Portlet(
+    '.gws-attendance',
+    {
+      ref: <%== request.fullpath.to_json %>,
+      punchUrl: <%== "#{gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}")}/:TYPE".to_json %>,
+      editUrl: <%== time_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}", day: format('%02d', date.day), type: ':TYPE', ref: request.fullpath).to_json %>,
+      confirmMessage: <%== t('gws/attendance.confirm.punch').to_json %>,
+      successMessage: <%== t('gws/attendance.notice.punched').to_json %>
+    }
+  );
+<% end %>

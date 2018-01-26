@@ -20,6 +20,10 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     @crumbs << [t('modules.gws/attendance'), action: :index]
   end
 
+  def crud_redirect_url
+    params[:ref].presence || super
+  end
+
   def create_new_time_card_if_necessary
     @item = @items.where(date: @cur_month).first
     if @item.blank? && Time.zone.now.year == @cur_month.year && Time.zone.now.month == @cur_month.month
@@ -90,12 +94,13 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def enter
     raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
+    location = params[:ref].presence || { action: :index }
     if @item.locked?
-      redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
+      redirect_to(location, { notice: t('gws/attendance.already_locked') })
       return
     end
 
-    render_opts = { location: { action: :index }, render: { file: :index } }
+    render_opts = { location: location, render: { file: :index }, notice: t('gws/attendance.notice.punched') }
     render_update @item.punch("#{params[:action]}#{params[:index]}"), render_opts
   end
 

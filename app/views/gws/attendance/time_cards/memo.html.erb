@@ -1,6 +1,8 @@
 <%= form_for :record, url: { action: :memo }, html: {method: :post, multipart: true } do |f| %>
   <%= error_messages_for :record %>
 
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
       <div class="addon-body">

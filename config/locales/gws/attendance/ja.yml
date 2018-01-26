@@ -11,6 +11,9 @@ ja:
       download: タイムカードをダウンロードしてよろしですか？
       lock: タイムカードを締めてよろしですか？
       unlock: タイムカードを締めを解除してよろしですか？
+      punch: 打刻してよろしいですか？
+    notice:
+      punched: 打刻しました。
     formats:
       time_card_name: '%{month}のタイムカード'
       time_card_full_name: '%{user_name}の%{month}のタイムカード'
@@ -20,9 +23,11 @@ ja:
       close: 閉じる
       lock: 締める
       unlock: 締めを解除する
+      punch: 打刻
     links:
       lock: 締める
       unlock: 締めを解除する
+      punch: 打刻する
     edit_cell:
       time: 時刻
       reason: 修正理由

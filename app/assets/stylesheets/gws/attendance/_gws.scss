@@ -198,5 +198,10 @@
         }
       }
     }
+
+    button:disabled {
+      color: #999;
+      background-color: #ddd;
+    }
   }
 }

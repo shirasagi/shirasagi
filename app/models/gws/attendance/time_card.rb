@@ -102,7 +102,6 @@ class Gws::Attendance::TimeCard
     raise "unable to punch: #{field_name}" if !Gws::Attendance::Record.punchable_field_names.include?(field_name)
 
     date = (@cur_site || site).calc_attendance_date(now)
-    self.histories.create(date: date, field_name: field_name, action: 'set')
     record = self.records.where(date: date).first_or_create
     if record.send(field_name).present?
       errors.add :base, :already_punched
@@ -110,6 +109,7 @@ class Gws::Attendance::TimeCard
     end
 
     record.send("#{field_name}=", now)
+    self.histories.create(date: date, field_name: field_name, action: 'set')
     record.save
   end
 

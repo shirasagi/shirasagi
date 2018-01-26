@@ -1,6 +1,8 @@
 <%= form_for :cell, url: { action: :time }, html: { method: :post, multipart: true, class: 'cell-edit' } do |f| %>
   <%= error_messages_for :cell %>
 
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
   <% val = @record.send(params[:type]) %>
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
