@@ -29,5 +29,11 @@ SS::Application.routes.draw do
         match :unlock, on: :collection, via: %i[get post]
       end
     end
+
+    namespace 'apis' do
+      namespace 'management' do
+        get 'users' => 'users#index'
+      end
+    end
   end
 end
