@@ -32,7 +32,7 @@
           <th class="time"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
           <% @break_times.each do |i| %>
             <th class="time"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
-            <th class="time"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <th class="time"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
           <% end %>
           <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
         </tr>

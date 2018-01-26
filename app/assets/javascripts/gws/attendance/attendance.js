@@ -10,9 +10,22 @@ Gws_Attendance = function (el, options) {
 Gws_Attendance.prototype.render = function() {
   var _this = this;
 
-  this.$el.find('button').on('click', function() {
+  this.$el.find('button[name=punch]').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
     var action = $(this).data('action');
-    _this.postPunchAction(action);
+    var confirm = $(this).data('confirm');
+    _this.onPunchClicked(action, confirm);
+  });
+
+  this.$el.find('button[name=edit]').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    var action = $(this).data('action');
+    var confirm = $(this).data('confirm');
+    _this.onEditClicked(action, confirm);
   });
 
   $(document).on('click', this.el + ' .time-card .time', function(ev) {
@@ -34,13 +47,38 @@ Gws_Attendance.prototype.render = function() {
   });
 };
 
-Gws_Attendance.prototype.postPunchAction = function(action) {
+Gws_Attendance.prototype.onPunchClicked = function(action, message) {
+  if (! action) {
+    return
+  }
+
+  if (message) {
+    if (! confirm(message)) {
+      return;
+    }
+  }
+
   var token = $('meta[name="csrf-token"]').attr('content');
 
   $form = $('<form/>', { action: action, method: 'post' });
   $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
   $('body').append($form);
   $form.submit();
+};
+
+Gws_Attendance.prototype.onEditClicked = function(action, message) {
+  if (!action) {
+    return
+  }
+
+  if (message) {
+    if (!confirm(message)) {
+      return;
+    }
+  }
+
+  $a = $('<a />', { href: action });
+  $a.colorbox({ open: true, width: '90%' });
 };
 
 Gws_Attendance.prototype.hideToolbar = function() {
