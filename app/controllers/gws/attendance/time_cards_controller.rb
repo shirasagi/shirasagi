@@ -37,6 +37,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     @items ||= @model.site(@cur_site).
       user(@cur_user).
       allow(:use, @cur_user, site: @cur_site).
+      where(:date.gte => @active_year_range.first).
       search(params[:s])
   end
 
@@ -67,7 +68,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def year_month_options
-    @items.pluck(:date).sort.map do |date|
+    @items.pluck(:date).sort { |lhs, rhs| rhs <=> lhs }.map do |date|
       date = date.localtime
       [ I18n.l(date.to_date, format: :attendance_year_month), "#{date.year}#{format('%02d', date.month)}" ]
     end

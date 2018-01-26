@@ -37,6 +37,14 @@ Gws_Attendance.prototype.render = function() {
     $(this).find('.reason').show();
   });
 
+  this.$el.find('select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    if (! val) {
+      return;
+    }
+    location.href = _this.options.indexUrl.replace(':year_month', val);
+  });
+
   $(document).on('click', this.el + ' .time-card .time', function(ev) {
     ev.preventDefault();
     ev.stopPropagation();
