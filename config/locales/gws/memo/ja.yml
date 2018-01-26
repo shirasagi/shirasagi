@@ -29,6 +29,7 @@ ja:
       reply_all: 全員に返信
       forward: 転送する
       deleted: 削除済み
+      print: 印刷
     confirm:
       trash_all: ゴミ箱に移しますか？
       set_seen_all: 既読にしますか？
