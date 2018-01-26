@@ -61,6 +61,7 @@ class Gws::Attendance::TimeCard
 
     def lock_all
       criteria.each do |item|
+        item.histories.create(date: item.date, field_name: '$all', action: 'lock')
         item.lock_state = 'locked'
         item.save!
       end
@@ -71,6 +72,7 @@ class Gws::Attendance::TimeCard
 
     def unlock_all
       criteria.each do |item|
+        item.histories.create(date: item.date, field_name: '$all', action: 'unlock')
         item.lock_state = 'unlocked'
         item.save!
       end
