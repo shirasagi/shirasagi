@@ -63,6 +63,12 @@ ja:
         date: 日付
         enter: 出勤
         leave: 退勤
+        break_enter1: 休始1
+        break_leave1: 休終1
+        break_enter2: 休始2
+        break_leave2: 休終2
+        break_enter3: 休始3
+        break_leave3: 休終3
         memo: 備考
       gws/attendance/history:
         date: 日付

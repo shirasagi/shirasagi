@@ -161,3 +161,42 @@
     }
   }
 }
+
+.gws-portlets {
+  .gws-attendance {
+    .header {
+      margin: 5px 0;
+      padding: 5px;
+    }
+
+    .today-time-card {
+      margin: 5px 0;
+      padding: 5px;
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0px;
+        table-layout: fixed;
+
+        th, td {
+          border: 1px solid $gray4;
+          padding: 5px;
+        }
+
+        th {
+          background: $gray1;
+          width: 5em;
+        }
+
+        td.time {
+          min-width: 4.5em;
+          text-align: center;
+        }
+
+        td.reason {
+          min-width: 7.5em;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<%
+  break_times = SS.config.gws.attendance['max_break'].times.to_a.select do |i|
+    @cur_site["attendance_break_time_state#{i + 1}"] == 'show'
+  end
+  date = Time.zone.now.beginning_of_day
+  record = @portlet.find_attendance_record(@portal, @cur_user, date)
+%>
+
+<% render_time = proc do |field_name| %>
+  <% time = record.try(field_name) %>
+  <% history = record.try(:find_latest_history, field_name) %>
+  <tr>
+    <th><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
+    <td class="time"><%= @portlet.format_attendance_time(date, time) %></td>
+    <td class="reason">
+      <% if history.present? && history.reason.present? %>
+        <%= history.reason %>
+      <% end %>
+    </td>
+    <td class="operation">
+      <% if time.present? %>
+        <button type="button" class="btn"><%= '修正' %></button>
+      <% else %>
+        <button type="button" class="btn"><%= '打刻' %></button>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+
+<div class="main-box gws-attendance">
+  <div class="portlet-title"><%= @portlet.name %></div>
+
+  <div class="header">
+    <%= I18n.l(Time.zone.now.to_date, format: :full) %>
+    <th class="memo"><button type="button" class="btn"><%= t('ss.buttons.download') %></button></th>
+  </div>
+
+  <div class="today-time-card">
+    <table>
+      <thead>
+      <th></th>
+      <th>時刻</th>
+      <th>修正理由</th>
+      <th>操作</th>
+      </thead>
+      <tbody>
+      <% render_time.call('enter') %>
+      <% render_time.call('leave') %>
+      <% break_times.each do |i| %>
+        <% render_time.call("break_enter#{i + 1}") %>
+        <% render_time.call("break_leave#{i + 1}") %>
+      <% end %>
+      <tr>
+        <th><%= Gws::Attendance::Record.t(:memo) %></th>
+        <td class="memo" colspan="2"><%= record.try(:memo) %></td>
+        <td class="operation"><button type="button" class="btn"><%= t('ss.buttons.edit') %></button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
