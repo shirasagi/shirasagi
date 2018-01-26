@@ -1,4 +1,6 @@
 <%
+  return unless Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site)
+
   break_times = SS.config.gws.attendance['max_break'].times.to_a.select do |i|
     @cur_site["attendance_break_time_state#{i + 1}"] == 'show'
   end
