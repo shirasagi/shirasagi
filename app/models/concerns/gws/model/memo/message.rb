@@ -10,7 +10,7 @@ module Gws::Model
 
       field :subject, type: String
       field :text, type: String, default: ''
-      field :html, type: String
+      field :html, type: String, default: ''
       field :format, type: String
       field :size, type: Integer, default: 0
       field :seen, type: Hash, default: {}

@@ -8,6 +8,7 @@ class Gws::Memo::Filter
 
   field :name, type: String
   field :subject, type: String
+  field :body, type: String
   field :action, type: String
   field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
@@ -17,7 +18,7 @@ class Gws::Memo::Filter
 
   belongs_to :folder, class_name: 'Gws::Memo::Folder'
 
-  permit_params :name, :subject, :action, :folder, :state, :order
+  permit_params :name, :subject, :body, :action, :folder, :state, :order
   permit_params from_member_ids: [], to_member_ids: []
 
   validates :name, presence: true
@@ -41,7 +42,7 @@ class Gws::Memo::Filter
   private
 
   def validate_conditions
-    if from_member_ids.blank? && to_member_ids.blank? && subject.blank?
+    if from_member_ids.blank? && to_member_ids.blank? && subject.blank? && body.blank?
       errors.add :base, I18n.t('gws/memo/filter.errors.blank_conditions')
     end
   end
@@ -72,6 +73,7 @@ class Gws::Memo::Filter
 
   def match?(message)
     return true if subject_match?(message)
+    return true if body_match?(message)
     return true if from_match?(message)
     return true if to_match?(message)
     false
@@ -80,6 +82,15 @@ class Gws::Memo::Filter
   def subject_match?(message)
     return false if subject.blank?
     message.display_subject.include?(subject)
+  end
+
+  def body_match?(message)
+    return false if body.blank?
+    if message.format == "html"
+      message.html.to_s.include?(body)
+    else
+      message.text.to_s.include?(body)
+    end
   end
 
   def from_match?(message)
