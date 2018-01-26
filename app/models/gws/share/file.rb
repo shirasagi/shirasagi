@@ -61,36 +61,6 @@ class Gws::Share::File
 
       criteria
     end
-
-    def download_root_path
-      "#{Rails.root}/private/files/gws_share_files/"
-    end
-
-    def zip_path(user_id, tmp_dir_name)
-      self.download_root_path + user_id.to_s + "_" + tmp_dir_name + "/" + user_id.to_s
-    end
-
-    def create_download_directory(user_id, root_temp_dir, temp_dir)
-      Dir.glob(root_temp_dir + "/" + user_id.to_s + "_*").each do |tmp|
-        FileUtils.rm_rf(File.dirname(tmp)) if File.exists?(File.dirname(tmp))
-      end
-
-      FileUtils.mkdir_p(File.dirname(temp_dir)) unless FileTest.exist?(File.dirname(temp_dir))
-    end
-
-    def create_zip(zipfile, items, filename_duplicate_flag)
-      Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
-        items.each do |item|
-          if File.exist?(item.path)
-            if filename_duplicate_flag == 0
-              zip_file.add(NKF::nkf('-sx --cp932', item.download_filename), item.path)
-            elsif filename_duplicate_flag == 1
-              zip_file.add(NKF::nkf('-sx --cp932', item._id.to_s + "_" + item.download_filename), item.path)
-            end
-          end
-        end
-      end
-    end
   end
 
   def remove_public_file

@@ -53,6 +53,7 @@ class Gws::Share::FilesController < ApplicationController
 
   def update_folder_file_info
     @folder.update_folder_descendants_file_info if @folder
+    @item.folder.update_folder_descendants_file_info if @item.folder != @folder
   end
 
   public
@@ -215,17 +216,19 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def download_all
-    zipfile = Time.zone.now.strftime("%Y-%m-%d_%H-%M-%S") + ".zip"
-    tmp_dir_name = SecureRandom.hex(4).to_s
+    zip = Gws::Share::Compressor.new(@cur_user, items: @items)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
 
-    filenames = []
-    @items.each { |item| filenames.push(item.name) }
-    filename_duplicate_flag = filenames.size == filenames.uniq.size ? 0 : 1
+    if zip.deley_download?
+      job = Gws::Share::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
 
-    @model.create_download_directory(@cur_user.id, @model.download_root_path, @model.zip_path(@cur_user.id, tmp_dir_name))
-    @model.create_zip(@model.zip_path(@cur_user.id, tmp_dir_name), @items, filename_duplicate_flag)
-    send_file(@model.zip_path(@cur_user.id, tmp_dir_name), type: 'application/zip',
-              filename: zipfile, disposition: 'attachment', x_sendfile: true)
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :index }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
   end
 
   def render_destroy_all(result)

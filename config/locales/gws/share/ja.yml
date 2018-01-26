@@ -24,6 +24,9 @@ ja:
     notice:
         active: 削除を取り消しました。
         disable: 削除済みに移動しました。
+    mailers:
+      compressed:
+        subject: ダウンロード準備完了のお知らせ
 
   modules:
     gws/share: 共有ファイル
@@ -126,3 +129,7 @@ ja:
         - 最大ファイルサイズを入力します。
       share_files_capacity:
         - 総容量を入力します。
+
+  job:
+    models:
+      gws/share/compress_job: 共有ファイル/圧縮ダウンロード

@@ -10,4 +10,25 @@
 
   <dt><%= @model.t :share_max_folder_size %></dt>
   <dd><%= number_to_human_size(@item.share_max_folder_size) %></dd>
+
+  <% if SS::File.where(folder_id: @item._id, deleted: nil).present? %>
+    <dt><%= t('gws/share.links.file_download') %></dt>
+    <dd>
+      <div>
+        <span class="mr-2">
+          <%= @item.t :descendants_files_count %>:
+          <%= number_with_delimiter(@item.descendants_files_count) %>
+        </span>
+        <span class="mr-4">
+          <%= @item.t :descendants_total_file_size %>:
+          <%= number_to_human_size(@item.descendants_total_file_size) %>
+        </span>
+      </div>
+      <div class="mt-2">
+        <%= link_to t('gws/share.links.file_download'), download_folder_gws_share_folder_path,
+          class: 'btn file_download', 'data-confirm' => t('ss.confirm.download')  %>
+      </div>
+    </dd>
+  <% end %>
 </dl>
+

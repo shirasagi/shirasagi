@@ -4,9 +4,17 @@ class SS::DownloadJobFile
   attr_reader :user, :filename, :path
   attr_accessor :in_file, :in_path
 
-  def url
+  def initialize(user, filename)
+    @user = user
+    @filename = filename
+
+    id_path = sprintf("%02d", user.id.to_s.slice(0, 2)) + "/#{user.id}"
+    @path = "#{self.class.root}/#{id_path}/#{filename}"
+  end
+
+  def url(opts = {})
     Rails.application.routes.url_helpers.
-      sns_download_job_files_path(user: user.id, filename: filename)
+      sns_download_job_files_path(user: user.id, filename: filename, name: opts[:name])
   end
 
   def read
@@ -31,15 +39,11 @@ class SS::DownloadJobFile
     return true
   end
 
-  def initialize(user, filename)
-    @user = user
-    @filename = filename
-
-    id_path = sprintf("%02d", user.id.to_s.slice(0, 2)) + "/#{user.id}"
-    @path = "#{Rails.root}/private/download/#{id_path}/#{filename}"
-  end
-
   class << self
+    def root
+      "#{Rails.root}/private/download"
+    end
+
     def find(user, filename)
       item = self.new(user, filename)
       ::File.exist?(item.path) ? item : nil

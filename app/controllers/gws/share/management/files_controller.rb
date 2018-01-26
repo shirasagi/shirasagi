@@ -56,6 +56,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def update_folder_file_info
     @folder.update_folder_descendants_file_info if @folder
+    @item.folder.update_folder_descendants_file_info if @item.folder != @folder
   end
 
   public

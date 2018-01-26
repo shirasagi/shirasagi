@@ -48,7 +48,7 @@ class Gws::Share::Folder
   before_destroy :validate_children, :validate_files
   after_destroy :remove_zip
 
-  default_scope ->{ order_by order: 1, name: 1 }
+  default_scope ->{ order_by depth: 1, order: 1, name: 1 }
 
   scope :sub_folder, ->(key, folder) {
     if key.start_with?('root_folder')
@@ -65,40 +65,6 @@ class Gws::Share::Folder
 
       criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
       criteria
-    end
-
-    def download_root_path
-      "#{Rails.root}/private/files/gws_share_files/"
-    end
-
-    def zip_path(folder_id)
-      self.download_root_path + folder_id.to_s.split(//).join("/") + "/_/#{folder_id}"
-    end
-
-    def create_download_directory(download_dir)
-      FileUtils.mkdir_p(download_dir) unless Dir.exist?(download_dir)
-    end
-
-    def create_zip(zipfile, items, filename_duplicate_flag, folder_updated_time)
-      if File.exist?(zipfile)
-        return if folder_updated_time < File.stat(zipfile).mtime
-        File.unlink(zipfile) if folder_updated_time > File.stat(zipfile).mtime
-      end
-
-      Zip::File.open(zipfile, Zip::File::CREATE) do |zip_file|
-        items.each_with_index do |item, idx|
-          def item.download_filename
-            name =~ /\./ ? name : name.sub(/\..*/, '') + '.' + extname
-          end
-          if File.exist?(item.path)
-            if filename_duplicate_flag == 0
-              zip_file.add(NKF::nkf('-sx --cp932', item.download_filename), item.path)
-            elsif filename_duplicate_flag == 1
-              zip_file.add(NKF::nkf('-sx --cp932', item._id.to_s + "_" + item.download_filename), item.path)
-            end
-          end
-        end
-      end
     end
   end
 

@@ -89,6 +89,10 @@ ja:
     confirm:
       readable_setting:
         empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
+    notice:
+      delay_download_with_message: |-
+        ファイル数が多い、またはファイル容量が大きいためバックグランドでファイルを準備します。
+        ダウンロードの準備ができましたらメッセージでお知らせします。
     errors:
       allowed_domains_only_root: はルートグループにのみ設定できます。
 
