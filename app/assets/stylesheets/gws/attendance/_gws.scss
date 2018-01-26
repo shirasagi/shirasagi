@@ -36,9 +36,16 @@
     padding: 8px 10px;
   }
 
-  .nav-menu {
+  .nav-menu, .nav-operation {
     margin: 5px 0;
+    display: inline-block;
   }
+
+  .nav-operation {
+    float: right;
+    @include mb { float: none; }
+  }
+
   .reason-tooltip {
     position: relative;
     display: inline-block;

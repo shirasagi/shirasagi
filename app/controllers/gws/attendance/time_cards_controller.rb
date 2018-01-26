@@ -7,7 +7,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   before_action :set_cur_month
   before_action :set_items
   before_action :create_new_time_card_if_necessary, only: %i[index]
-  before_action :set_item, only: %i[download enter leave break_enter break_leave time memo]
+  before_action :set_item, only: %i[download enter leave break_enter break_leave time memo print]
   before_action :set_record, only: %i[time memo]
   before_action :check_time_editable, only: %i[time]
   before_action :check_memo_editable, only: %i[memo]
@@ -90,6 +90,10 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     encoding = safe_params[:encoding]
     filename = "time_cards_#{Time.zone.now.to_i}.csv"
     send_enum(@item.enum_csv(encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
+  def print
+    render file: 'print', layout: 'ss/print'
   end
 
   def enter

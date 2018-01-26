@@ -10,6 +10,7 @@ SS::Application.routes.draw do
     get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
     resources :time_cards, path: 'time_cards/:year_month', only: %i[index] do
       match :download, on: :collection, via: %i[get post]
+      get :print, on: :collection
       post :enter, on: :collection
       post :leave, on: :collection
       post :break_enter, path: 'break_enter:index', on: :collection
