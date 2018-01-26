@@ -90,7 +90,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
     safe_params = params.require(:item).permit(:encoding)
     encoding = safe_params[:encoding]
     filename = "time_cards_#{Time.zone.now.to_i}.csv"
-    send_enum(@item.enum_csv(encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+    send_enum(@item.enum_csv(OpenStruct.new(encoding: encoding)), type: "text/csv; charset=#{encoding}", filename: filename)
   end
 
   def print

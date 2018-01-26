@@ -105,3 +105,20 @@ ja:
         in_hour: 時
         in_minute: 分
         in_reason: 修正理由
+      gws/attendance/download_param:
+        term: 期間
+        from_date: 開始日
+        to_date: 終了日
+        user_ids: ユーザー
+        encoding: 文字コード
+
+  tooltip:
+    gws/attendance/download_param:
+      term:
+        - ダウンロード期間を設定してください。
+      user_ids:
+        - ダウンロードするユーザーを選択してください。
+      encoding:
+        - 文字コードを選択してください。
+        - 難読人名に対して特殊な漢字を割り当てている場合は「UTF-8」を選択してください。
+        - 通常の利用の場合ですと「シフトJIS」を選択して問題ありません。

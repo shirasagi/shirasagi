@@ -1,9 +1,9 @@
 class Gws::Attendance::TimeCardEnumerator < Enumerator
 
-  def initialize(site, time_cards, encoding)
+  def initialize(site, time_cards, params)
     @cur_site = site
     @time_cards = time_cards.dup
-    @encoding = encoding
+    @params = params
 
     @break_times = SS.config.gws.attendance['max_break'].times.to_a.select do |i|
       @cur_site["attendance_break_time#{i + 1}_state"] == 'show'
@@ -63,39 +63,47 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
     end
 
     while date < time_card.date.end_of_month
-      record = time_card.records.where(date: date).first
-      terms.clear
+      if include_range?(date)
+        record = time_card.records.where(date: date).first
+        terms.clear
 
-      terms << time_card.user.uid
-      terms << time_card.user.name
-      terms << date.to_date.iso8601
-      terms << record.try(:enter).try(:strftime, '%H:%M')
-      terms << record.try(:leave).try(:strftime, '%H:%M')
-      put_history_p.call(record.try(:find_latest_history, 'enter'))
-      put_history_p.call(record.try(:find_latest_history, 'leave'))
-      @break_times.each do |i|
-        terms << record.try("break_enter#{i + 1}").try(:strftime, '%H:%M')
-        terms << record.try("break_leave#{i + 1}").try(:strftime, '%H:%M')
-        put_history_p.call(record.try(:find_latest_history, "break_enter#{i + 1}"))
-        put_history_p.call(record.try(:find_latest_history, "break_leave#{i + 1}"))
+        terms << time_card.user.uid
+        terms << time_card.user.name
+        terms << date.to_date.iso8601
+        terms << record.try(:enter).try(:strftime, '%H:%M')
+        terms << record.try(:leave).try(:strftime, '%H:%M')
+        put_history_p.call(record.try(:find_latest_history, 'enter'))
+        put_history_p.call(record.try(:find_latest_history, 'leave'))
+        @break_times.each do |i|
+          terms << record.try("break_enter#{i + 1}").try(:strftime, '%H:%M')
+          terms << record.try("break_leave#{i + 1}").try(:strftime, '%H:%M')
+          put_history_p.call(record.try(:find_latest_history, "break_enter#{i + 1}"))
+          put_history_p.call(record.try(:find_latest_history, "break_leave#{i + 1}"))
+        end
+        terms << record.try(:memo)
+
+        y << encode(terms.to_csv)
       end
-      terms << record.try(:memo)
-
-      y << encode(terms.to_csv)
 
       date += 1.day
     end
   end
 
+  def include_range?(date)
+    return false if @params.from_date.present? && date < @params.from_date
+    return false if @params.to_date.present? && date > @params.to_date
+    true
+  end
+
   def bom
-    return '' if @encoding == 'Shift_JIS'
+    return '' if @params.encoding == 'Shift_JIS'
     "\uFEFF"
   end
 
   def encode(str)
     return '' if str.blank?
 
-    str = str.encode('CP932', invalid: :replace, undef: :replace) if @encoding == 'Shift_JIS'
+    str = str.encode('CP932', invalid: :replace, undef: :replace) if @params.encoding == 'Shift_JIS'
     str
   end
 end

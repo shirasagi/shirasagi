@@ -81,8 +81,8 @@ class Gws::Attendance::TimeCard
       false
     end
 
-    def enum_csv(site, encoding)
-      Gws::Attendance::TimeCardEnumerator.new(site, all, encoding)
+    def enum_csv(site, params)
+      Gws::Attendance::TimeCardEnumerator.new(site, all, params)
     end
   end
 
@@ -126,8 +126,8 @@ class Gws::Attendance::TimeCard
     !locked?
   end
 
-  def enum_csv(encoding)
-    Gws::Attendance::TimeCardEnumerator.new(@cur_site || site, [ self ], encoding)
+  def enum_csv(params)
+    Gws::Attendance::TimeCardEnumerator.new(@cur_site || site, [ self ], params)
   end
 
   private

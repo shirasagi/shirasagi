@@ -34,7 +34,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     if @model.allowed?(:manage_all, @cur_user, site: @cur_site)
       @groups = Gws::Group.in_group(@cur_site).active
     elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site)
-      @groups = @cur_user.groups.active
+      @groups = Gws::Group.in_group(@cur_group).active
     else
       @groups = Gws::Group.none
     end
@@ -125,6 +125,8 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def download
+    @model = Gws::Attendance::DownloadParam
+
     if request.get?
       user_ids = @items.pluck(:user_id)
       @target_users = Gws::User.in(id: user_ids).active
@@ -134,10 +136,20 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
       return
     end
 
-    safe_params = params.require(:item).permit(:encoding)
-    encoding = safe_params[:encoding]
+    @item = @model.new params.require(:item).permit(@model.permitted_fields).merge(fix_params)
+    if @item.invalid?
+      render_update false, render: { file: :download }
+      return
+    end
+
+    time_cards = Gws::Attendance::TimeCard.site(@cur_site).in_groups(@groups)
+    time_cards = time_cards.gte(date: @item.from_date.beginning_of_month)
+    time_cards = time_cards.lte(date: @item.to_date.end_of_month)
+    time_cards = time_cards.in(user_id: @item.user_ids)
+    time_cards = time_cards.reorder(user_id: 1, date: 1)
+
     filename = "time_cards_#{Time.zone.now.to_i}.csv"
-    send_enum(@items.enum_csv(@cur_site, encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+    send_enum(time_cards.enum_csv(@cur_site, @item), type: "text/csv; charset=#{@item.encoding}", filename: filename)
   end
 
   def lock
