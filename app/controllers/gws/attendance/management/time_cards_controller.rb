@@ -9,6 +9,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   before_action :set_groups
   before_action :set_active_year_range
   before_action :set_cur_month
+  before_action :check_cur_month
   before_action :set_search_params
   before_action :set_items
   before_action :set_item, only: %i[show delete destroy time memo]
@@ -37,6 +38,10 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     else
       @groups = Gws::Group.none
     end
+  end
+
+  def check_cur_month
+    raise '404' if @cur_month < @active_year_range.first || @active_year_range.last < @cur_month
   end
 
   def set_search_params

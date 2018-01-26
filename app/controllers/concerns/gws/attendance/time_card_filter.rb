@@ -32,8 +32,6 @@ module Gws::Attendance::TimeCardFilter
     year = params[:year_month][0..3]
     month = params[:year_month][4..5]
     @cur_month = Time.zone.parse("#{year}/#{month}/01")
-
-    raise '404' if @cur_month < @active_year_range.first || @active_year_range.last < @cur_month
   end
 
   def format_time(date, time)
