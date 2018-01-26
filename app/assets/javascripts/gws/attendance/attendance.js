@@ -28,6 +28,15 @@ Gws_Attendance.prototype.render = function() {
     _this.onEditClicked(action, confirm);
   });
 
+  this.$el.find('.reason-tooltip').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.hideToolbar();
+    _this.hideTooltip();
+    $(this).find('.reason').show();
+  });
+
   $(document).on('click', this.el + ' .time-card .time', function(ev) {
     ev.preventDefault();
     ev.stopPropagation();
@@ -44,6 +53,7 @@ Gws_Attendance.prototype.render = function() {
 
   $(document).on('click', function() {
     _this.hideToolbar();
+    _this.hideTooltip();
   });
 };
 
@@ -82,9 +92,11 @@ Gws_Attendance.prototype.onEditClicked = function(action, message) {
 };
 
 Gws_Attendance.prototype.hideToolbar = function() {
-  this.$toolbar.find('.reason').html('');
-  this.$toolbar.find('.reason').hide();
   this.$toolbar.hide();
+};
+
+Gws_Attendance.prototype.hideTooltip = function() {
+  this.$el.find('.reason-tooltip .reason').hide();
 };
 
 Gws_Attendance.prototype.onClickTime = function($cell) {
@@ -101,32 +113,17 @@ Gws_Attendance.prototype.setFocus = function($cell) {
   $cell.addClass('focus');
 };
 
-Gws_Attendance.prototype.setReason = function($cell) {
-  this.$toolbar.find('.reason').html('');
-
-  var reasonHtml = $cell.find('.reason-tooltip .reason').html();
-  if (reasonHtml) {
-    this.$toolbar.find('.reason').append(reasonHtml);
-    this.$toolbar.find('.reason').show();
-    return true;
-  } else {
-    this.$toolbar.find('.reason').hide();
-    return false;
-  }
-};
-
 Gws_Attendance.prototype.isCellToday = function($cell) {
   return $cell.closest('tr').hasClass('current');
 };
 
 Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
+  this.hideTooltip();
   this.setFocus($cell);
 
-  if (! this.setReason($cell)) {
-    if (!this.options.editable && !this.isCellToday($cell)) {
-      this.$toolbar.hide();
-      return;
-    }
+  if (!this.options.editable && !this.isCellToday($cell)) {
+    this.$toolbar.hide();
+    return;
   }
 
   var url = urlTemplate;

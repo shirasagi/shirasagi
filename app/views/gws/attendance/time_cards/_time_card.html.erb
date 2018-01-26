@@ -3,8 +3,8 @@
     <div class="reason-tooltip">
       <i class="material-icons md-13">&#xE0C9;</i>
       <div class="reason">
-        <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time><br>
-        <span><%= history.reason %></span>
+        <div><%= history.reason %></div>
+        <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
       </div>
     </div>
   <% end %>
@@ -59,6 +59,4 @@
 
 <div class="cell-toolbar">
   <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
-  <div class="reason">
-  </div>
 </div>

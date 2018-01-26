@@ -17,14 +17,6 @@
       white-space: nowrap;
       &:hover { background: $gray1; }
     }
-
-    .reason {
-      display: none;
-      padding: 5px 15px;
-      time {
-        color: $gray2;
-      }
-    }
   }
 
   .attendance-box {
@@ -47,8 +39,8 @@
   .nav-menu {
     margin: 5px 0;
   }
-
   .reason-tooltip {
+    position: relative;
     display: inline-block;
     width: 16px;
     height: 16px;
@@ -61,6 +53,44 @@
 
     .reason {
       display: none;
+      position: absolute;
+      z-index: 101;
+
+      color: $black;
+      text-align: left;
+      //padding: 5px;
+      border: $border-gray4;
+      background: $white;
+      @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+      @include border-radius(3px);
+
+      bottom: 100%;
+      left: 50%;
+      margin-left: -60px;
+
+      time {
+        display: block;
+        padding: 5px;
+        border-top: $border-gray1;
+        font-size: 80%;
+        color: $gray2;
+        text-align: right;
+      }
+
+      div {
+        padding: 5px;
+      }
+
+      &:after {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 60px;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: $gray4 transparent transparent transparent;
+      }
     }
   }
 
@@ -120,6 +150,10 @@
 
     th.time, td.time {
       width: 6em;
+    }
+
+    td.time {
+      text-align: center;
     }
 
     th.memo, td.memo {
