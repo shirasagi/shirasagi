@@ -9,17 +9,16 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock|reply|forward/ %>
+  <% elsif params[:action] =~ /new|create|lock/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|move/ %>
-    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
-    <% end %>
+  <% elsif params[:action] =~ /edit|update|delete|mov|reply|forward|ref/ %>
+    <%= link_to t('ss.links.back_to_show'), action: :show %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <%= link_to t('gws/memo/message.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
     <%= link_to t('gws/memo/message.links.reply_all'), { action: :reply_all }, { class: 'reply_all' } unless @item.draft? %>
     <%= link_to t('gws/memo/message.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
+    <%= link_to t('gws/memo/message.links.ref'), { action: :ref }, { class: 'new' } unless @item.draft? %>
     <% if @item.draft? && (@cur_user.id == @item.user_id) %>
       <%= link_to(t('ss.links.edit'), action: :edit, id: @item) %>
     <% end %>

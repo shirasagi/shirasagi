@@ -28,6 +28,7 @@ ja:
       reply: 返信する
       reply_all: 全員に返信
       forward: 転送する
+      ref: 新規メッセージとして編集する
       deleted: 削除済み
       print: 印刷
     confirm:

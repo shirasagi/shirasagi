@@ -266,10 +266,22 @@ module Gws::Model
       update
     end
 
-    def new_memo
-      if sign = Gws::Memo::Signature.default_sign(@cur_user)
+    def new_memo(ref = nil)
+      if sign = Gws::Memo::Signature.site(@cur_site).default_sign(@cur_user)
         self.text = "\n\n#{sign}"
         self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
+      end
+
+      if ref
+        self.to_member_ids = ref.to_member_ids
+        self.cc_member_ids = ref.cc_member_ids
+
+        self.subject = ref.subject
+        self.format = ref.format
+        self.text = ref.text
+        self.html = ref.html
+
+        self.priority = ref.priority
       end
     end
 

@@ -209,6 +209,14 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
   end
 
+  def ref
+    @item = @model.new pre_params.merge(fix_params)
+    @ref = @model.site(@cur_site).find(params[:id]) rescue nil
+
+    @item.new_memo(@ref)
+    render :new
+  end
+
   def send_mdn
     @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
     @item.update

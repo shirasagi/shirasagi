@@ -28,6 +28,7 @@ SS::Application.routes.draw do
         get :reply
         get :reply_all
         get :forward
+        get :ref
         get :print
         put :send_mdn
         put :ignore_mdn
