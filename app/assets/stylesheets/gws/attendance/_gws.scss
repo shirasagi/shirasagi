@@ -66,7 +66,7 @@
 
       bottom: 100%;
       left: 50%;
-      margin-left: -60px;
+      margin-left: -50px;
 
       time {
         display: block;
@@ -85,13 +85,17 @@
         content: " ";
         position: absolute;
         top: 100%;
-        left: 60px;
+        left: 50px;
         margin-left: -5px;
         border-width: 5px;
         border-style: solid;
         border-color: $gray4 transparent transparent transparent;
       }
     }
+  }
+
+  .today-wrap {
+    overflow-x: auto;
   }
 
   .today {
