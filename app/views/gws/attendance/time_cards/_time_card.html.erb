@@ -10,6 +10,15 @@
   <% end %>
 <% end %>
 
+<% render_time = proc do |date, record, field_name| %>
+  <% td_classes = %w(time) %>
+  <% td_classes << (date.day >= 16 ? 'top' : nil) %>
+  <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>" data-type="<%= field_name %>">
+    <%= format_time(date, record.try(field_name)) %>
+    <% render_reason.call(record.try(:find_latest_history, field_name)) %>
+  </td>
+<% end %>
+
 <div class="time-card-wrap">
   <table class="time-card">
     <tbody>
@@ -22,8 +31,8 @@
           <th class="time"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
           <th class="time"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
           <% @break_times.each do |i| %>
-            <th class="time"><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
-            <th class="time"><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <th class="time"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <th class="time"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
           <% end %>
           <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
         </tr>
@@ -33,26 +42,12 @@
       <% tr_css_classes << if holiday?(date); 'holiday' elsif date.wday == 0; 'sunday' elsif date.wday == 6; 'saturday' end %>
       <tr class="<%= tr_css_classes.compact.join(' ') %>">
         <% record = @item.records.where(date: date).first %>
-        <td class="date">
-          <%= I18n.l(date.to_date, format: :attendance_month_day) %>
-        </td>
-        <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="enter">
-          <%= record ? format_time(date, record.enter) : '' %>
-          <% render_reason.call(record.try(:find_latest_history, 'enter')) %>
-        </td>
-        <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="leave">
-          <%= record ? format_time(date, record.leave) : '' %>
-          <% render_reason.call(record.try(:find_latest_history, 'leave')) %>
-        </td>
+        <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+        <% render_time.call(date, record, 'enter') %>
+        <% render_time.call(date, record, 'leave') %>
         <% @break_times.each do |i| %>
-          <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="<%= "break_enter#{i + 1}" %>">
-            <%= record ? format_time(date, record["break_enter#{i + 1}"]) : '' %>
-            <% render_reason.call(record.try(:find_latest_history, "break_enter#{i + 1}")) %>
-          </td>
-          <td class="time <%= offset %>" data-day="<%= date.day %>" data-type="<%= "break_leave#{i + 1}" %>">
-            <%= record ? format_time(date, record["break_leave#{i + 1}"]) : '' %>
-            <% render_reason.call(record.try(:find_latest_history, "break_leave#{i + 1}")) %>
-          </td>
+          <% render_time.call(date, record, "break_enter#{i + 1}") %>
+          <% render_time.call(date, record, "break_leave#{i + 1}") %>
         <% end %>
         <td class="memo <%= offset %>" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
       </tr>

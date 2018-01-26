@@ -13,13 +13,13 @@ module Gws::Addon::Attendance::GroupSetting
     field :attendance_enter_label, type: String
     field :attendance_leave_label, type: String
     SS.config.gws.attendance['max_break'].times do |i|
-      field "attendance_break_time_state#{i + 1}", type: String
-      field "attendance_break_enter_label#{i + 1}", type: String
-      field "attendance_break_leave_label#{i + 1}", type: String
-      alias_method("attendance_break_time_state#{i + 1}_options", :attendance_break_time_options)
-      permit_params "attendance_break_time_state#{i + 1}"
-      permit_params "attendance_break_enter_label#{i + 1}"
-      permit_params "attendance_break_leave_label#{i + 1}"
+      field "attendance_break_time#{i + 1}_state", type: String
+      field "attendance_break_enter#{i + 1}_label", type: String
+      field "attendance_break_leave#{i + 1}_label", type: String
+      alias_method("attendance_break_time#{i + 1}_state_options", :attendance_break_time_options)
+      permit_params "attendance_break_time#{i + 1}_state"
+      permit_params "attendance_break_enter#{i + 1}_label"
+      permit_params "attendance_break_leave#{i + 1}_label"
     end
 
     permit_params :in_attendance_time_change_hour

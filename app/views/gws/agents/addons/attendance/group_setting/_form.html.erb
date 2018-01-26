@@ -20,9 +20,9 @@
   <% SS.config.gws.attendance['max_break'].times do |i| %>
     <dt><%= t('gws/attendance.break') %><%= i + 1 %></dt>
     <dd>
-      <%= f.select "attendance_break_time_state#{i + 1}", @item.attendance_break_time_options %>
-      <%= f.text_field "attendance_break_enter_label#{i + 1}", placeholder: t('gws/attendance.formats.break_enter', count: i + 1), style: 'width: 10.5em;' %>
-      <%= f.text_field "attendance_break_leave_label#{i + 1}", placeholder: t('gws/attendance.formats.break_leave', count: i + 1), style: 'width: 10.5em;' %>
+      <%= f.select "attendance_break_time#{i + 1}_state", @item.attendance_break_time_options %>
+      <%= f.text_field "attendance_break_enter#{i + 1}_label", placeholder: t('gws/attendance.formats.break_enter', count: i + 1), style: 'width: 10.5em;' %>
+      <%= f.text_field "attendance_break_leave#{i + 1}_label", placeholder: t('gws/attendance.formats.break_leave', count: i + 1), style: 'width: 10.5em;' %>
     </dd>
   <% end %>
 </dl>

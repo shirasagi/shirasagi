@@ -10,8 +10,8 @@
   <% if @break_times.present? %>
     <div class="buttons">
       <% @break_times.each do |i| %>
-        <button class="btn small" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>" <% if @item.blank? || @item.locked? %>disabled<% end %>><%= @cur_site["attendance_break_enter_label#{i + 1}"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
-        <button class="btn small" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>" <% if @item.blank? || @item.locked? %>disabled<% end %>><%= @cur_site["attendance_break_leave_label#{i + 1}"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
+        <button class="btn small" data-action="<%= url_for(action: 'break_enter', index: i + 1) %>" <% if @item.blank? || @item.locked? %>disabled<% end %>><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></button>
+        <button class="btn small" data-action="<%= url_for(action: 'break_leave', index: i + 1) %>" <% if @item.blank? || @item.locked? %>disabled<% end %>><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></button>
       <% end %>
     </div>
   <% end %>

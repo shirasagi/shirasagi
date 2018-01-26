@@ -6,7 +6,7 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
     @encoding = encoding
 
     @break_times = SS.config.gws.attendance['max_break'].times.to_a.select do |i|
-      @cur_site["attendance_break_time_state#{i + 1}"] == 'show'
+      @cur_site["attendance_break_time#{i + 1}_state"] == 'show'
     end
 
     super() do |y|
@@ -31,9 +31,9 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
     terms << "#{leave_label}#{Gws::Attendance::History.t(:created)}"
     terms << "#{leave_label}#{Gws::Attendance::History.t(:reason)}"
     @break_times.each do |i|
-      break_enter_label = @cur_site["attendance_break_enter_label#{i + 1}"].presence
+      break_enter_label = @cur_site["attendance_break_enter#{i + 1}_label"].presence
       break_enter_label ||= I18n.t('gws/attendance.formats.break_enter', count: i + 1)
-      break_leave_label = @cur_site["attendance_break_leave_label#{i + 1}"].presence
+      break_leave_label = @cur_site["attendance_break_leave#{i + 1}_label"].presence
       break_leave_label ||= I18n.t('gws/attendance.formats.break_enter', count: i + 1)
       terms << break_enter_label
       terms << break_leave_label

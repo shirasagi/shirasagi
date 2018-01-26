@@ -1,4 +1,4 @@
-<% @break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time_state#{i + 1}"] == 'show' } %>
+<% @break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time#{i + 1}_state"] == 'show' } %>
 
 <div class="gws-attendance">
   <%= error_messages_for :item %>

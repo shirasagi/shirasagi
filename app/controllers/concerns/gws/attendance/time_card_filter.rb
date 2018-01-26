@@ -37,7 +37,7 @@ module Gws::Attendance::TimeCardFilter
   end
 
   def format_time(date, time)
-    return if time.blank?
+    return '--:--' if time.blank?
 
     time = time.localtime
     hour = time.hour
