@@ -1,0 +1,2 @@
+お知らせに「<%= @item.name %>」が掲載されました。
+<%= gws_public_notice_url(protocol: @item.site.canonical_scheme, host: @item.site.canonical_domain, site: @item.site, id: @item) %> をブラウザで開き、内容をご確認ください。
