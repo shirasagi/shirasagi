@@ -111,6 +111,19 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     render_destroy @item.destroy
   end
 
+  def destroy_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      next if item.destroy
+
+      item.errors.add :base, :auth_error
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
   def download
     if request.get?
       user_ids = @items.pluck(:user_id)
