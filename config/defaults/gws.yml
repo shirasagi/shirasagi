@@ -43,6 +43,7 @@ production: &production
           size_x: 4
           size_y: 2
       - model: reminder
+        reminder_filter: future
       - model: monitor
       - model: circular
       - model: board

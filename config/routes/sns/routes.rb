@@ -38,8 +38,8 @@ SS::Application.routes.draw do
       get :thumb, on: :member
       get :download, on: :member
     end
-    get "download_job_files/:filename" => "download_job_files#index",
-        filename: %r{[^\/]+}, format: false, as: :download_job_files
+    get "download_job_files/:filename(/:name)" => "download_job_files#index",
+        filename: %r{[^\/]+}, name: %r{[^\/]+}, format: false, as: :download_job_files
 
     namespace "apis" do
       resources :temp_files, concerns: :deletion do

@@ -1028,7 +1028,7 @@ td {
     }
   }
 }
-#content-navi + .index {
+#content-navi + .index, #content-navi ~ .content-main {
   float: right;
   width: calc(100% - 260px);
 }
@@ -1040,7 +1040,7 @@ td {
     max-height: 200px;
     margin: 0 10px 10px;
   }
-  #content-navi + .index {
+  #content-navi + .index, #content-navi ~ .content-main {
     float: none;
     width: auto;
   }
@@ -1050,47 +1050,47 @@ td {
   color: #bbb;
 }
 .tree-navi .tree-item {
-  padding: 2px;
+  display: flex;
+  margin: 2px 0;
 }
 .tree-navi .tree-item a {
   color: #333;
-}
-.tree-navi .tree-item a:hover {
-  color: #f25a38;
 }
 .tree-navi .is-parent {
   font-weight: bold;
 }
 .tree-navi .is-current {
   background: #f2f2f2;
-  font-weight: bold;
 }
 .tree-navi .item-pad {
-  float: left;
   width: 20px;
-  min-height: 1px;
 }
 .tree-navi .item-mark {
-  float: left;
-  margin-top: 1px;
-  padding: 0 1px 1px;
-  border: 1px solid #d0d0d0;
-  border-radius: 2px;
-  background-color: #fff;
-  line-height: 1;
-  &:hover {
-    border-color: $orange;
-  }
+  padding: 2px;
   .material-icons {
+    padding: 1px;
+    border: 1px solid #d0d0d0;
+    border-radius: 2px;
+    background-color: #fff;
     font-size: 13px;
+    vertical-align: top;
+    &:hover {
+      border-color: $orange;
+      color: #f25a38;
+    }
   }
 }
 .tree-navi .item-name {
-  display: block;
+  flex-grow: 10;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 4px;
+  padding: 2px;
   white-space: nowrap;
+  text-decoration: none;
+  &:hover {
+    background: #f2f2f2;
+    color: #f25a38;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1662,6 +1662,17 @@ div.index {
     margin: 6px 0 6px -5px;
   }
 }
+.list-head-title {
+  margin: -10px 0 0 -18px;;
+  padding: 10px 12px;
+  font-weight: bold;
+  &:before {
+    margin-right: 6px;
+    padding-left: 3px;
+    background: #f25a38;
+    content: ' ';
+  }
+}
 .list-head-action {
   float: left;
   margin: 1px 0 10px;
@@ -2073,10 +2084,11 @@ form .CodeMirror {
   left: 0px;
   z-index: 100;
   width: 100%;
-  padding: 16px 8px;
+  padding: 10px 8px;
   box-shadow: 0px 6px 12px rgba(0,0,0,.2);
   background-color:rgba(90,90,90,.94);
   color: #fff;
+  line-height: 1.8;
   .wrap {
     text-align: center;
   }

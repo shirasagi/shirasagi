@@ -125,7 +125,7 @@ module SS::Model::File
   end
 
   def download_filename
-    name =~ /\./ ? name : name.sub(/\..*/, '') + extname
+    name =~ /\./ ? name : name.sub(/\..*/, '') + '.' + extname
   end
 
   def basename

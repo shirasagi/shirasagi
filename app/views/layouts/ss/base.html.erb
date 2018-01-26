@@ -135,7 +135,7 @@
 </aside>
 
 <% if notice %>
-<script> SS.notice('<%= notice %>'); </script>
+<script> SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); </script>
 <% end %>
 
 <div id="wrap">
