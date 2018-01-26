@@ -53,5 +53,30 @@ $ ->
         </div>
       </div>
     <% end %>
+
+    <% @item.ref_files.each do |file| %>
+      <div id="file-<%= file.id %>" class="file-view">
+
+        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+          <% if file.image? %>
+            <%= image_tag file.thumb_url, alt: file.name %>
+          <% else %>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+          <% end %>
+        <% end %>
+
+        <div class="name">
+          <label>
+            <input type="hidden" name="item[ref_file_ids][]" value="<%= file.id %>" class="file-id" />
+            <%= file.name %>
+          </label><br />
+        </div>
+
+        <div class="action">
+          <!-- attach and paste not supported -->
+          <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

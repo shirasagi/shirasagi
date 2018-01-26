@@ -202,11 +202,12 @@ class Gws::Memo::MessagesController < ApplicationController
   def forward
     @item = @model.new pre_params.merge(fix_params)
     item_forward = @model.site(@cur_site).find(params[:id])
-    @item.member_ids = []
+    @item.subject = "Fwd: #{item_forward.display_subject}"
 
     @item.new_memo
     @item.text += "\n\n"
     @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
+    @item.ref_file_ids = item_forward.file_ids
   end
 
   def ref
@@ -214,6 +215,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @ref = @model.site(@cur_site).find(params[:id]) rescue nil
 
     @item.new_memo(@ref)
+    @item.ref_file_ids = @ref.file_ids
     render :new
   end
 
