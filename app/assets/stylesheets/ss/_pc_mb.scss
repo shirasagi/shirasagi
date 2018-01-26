@@ -1050,47 +1050,47 @@ td {
   color: #bbb;
 }
 .tree-navi .tree-item {
-  padding: 2px;
+  display: flex;
+  margin: 2px 0;
 }
 .tree-navi .tree-item a {
   color: #333;
-}
-.tree-navi .tree-item a:hover {
-  color: #f25a38;
 }
 .tree-navi .is-parent {
   font-weight: bold;
 }
 .tree-navi .is-current {
   background: #f2f2f2;
-  font-weight: bold;
 }
 .tree-navi .item-pad {
-  float: left;
   width: 20px;
-  min-height: 1px;
 }
 .tree-navi .item-mark {
-  float: left;
-  margin-top: 1px;
-  padding: 0 1px 1px;
-  border: 1px solid #d0d0d0;
-  border-radius: 2px;
-  background-color: #fff;
-  line-height: 1;
-  &:hover {
-    border-color: $orange;
-  }
+  padding: 2px;
   .material-icons {
+    padding: 1px;
+    border: 1px solid #d0d0d0;
+    border-radius: 2px;
+    background-color: #fff;
     font-size: 13px;
+    vertical-align: top;
+    &:hover {
+      border-color: $orange;
+      color: #f25a38;
+    }
   }
 }
 .tree-navi .item-name {
-  display: block;
+  flex-grow: 10;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 4px;
+  padding: 2px;
   white-space: nowrap;
+  text-decoration: none;
+  &:hover {
+    background: #f2f2f2;
+    color: #f25a38;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
