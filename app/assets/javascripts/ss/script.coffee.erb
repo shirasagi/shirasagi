@@ -218,13 +218,15 @@ class @SS
       e.preventDefault();
       return false
 
-  @notice: (message) ->
+  @notice: (message, opts = {}) ->
     notice = $('#notice')
     if !notice.hasClass('js-notice')
       notice.addClass('js-notice').click ->
         notice.slideUp('normal')
     notice.find('.wrap').html(message)
     notice.slideDown('normal')
+    if opts
+      return if opts.timeout == 0
     return setTimeout (-> $('#notice').slideUp('normal')), 1800
 
   @confirmUnloading: ->
