@@ -17,9 +17,12 @@
 
     <dl class="see mod-chorg-run-confirmation">
       <dt><%= @revision.class.t :name %></dt>
-      <dd><%= @revision.name %></dd>
+      <dd>
+        <%= @revision.name %>
+        <%= f.hidden_field(:staff_record_state, value: nil) %>
+      </dd>
 
-      <% if params[:type] == 'main' || !Rails.env.production? %>
+      <% if params[:type] == 'main' %>
       <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
       <dd><%= f.text_field(:reservation, class: 'datetime js-datetime', data: { min_date: '+1970/01/02' }) %></dd>
 
