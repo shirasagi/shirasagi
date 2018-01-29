@@ -53,6 +53,9 @@ module SS::Model::User
     # 利用制限
     field :restriction, type: String
 
+    # 利用停止
+    field :lock_state, type: String
+
     belongs_to :organization, class_name: "SS::Group"
     belongs_to :switch_user, class_name: "SS::User"
 
@@ -61,7 +64,7 @@ module SS::Model::User
     permit_params :name, :kana, :uid, :email, :password, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
     permit_params :in_password
     permit_params :account_start_date, :account_expiration_date, :initial_password_warning, :session_lifetime
-    permit_params :restriction
+    permit_params :restriction, :lock_state
     permit_params :organization_id, :organization_uid, :switch_user_id
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
@@ -95,6 +98,9 @@ module SS::Model::User
       self.and(
         { "$or" => [ { "account_start_date" => nil }, { "account_start_date" => { "$lte" => now } } ] },
         { "$or" => [ { "account_expiration_date" => nil }, { "account_expiration_date" => { "$gt" => now } } ] })
+    end
+    scope :and_unlocked, -> do
+      self.and('$or' => [{ lock_state: 'unlocked' }, { :lock_state.exists => false }])
     end
   end
 
@@ -221,6 +227,14 @@ module SS::Model::User
     !enabled?
   end
 
+  def locked?
+    lock_state == 'locked'
+  end
+
+  def unlocked?
+    !locked?
+  end
+
   def initial_password_warning_options
     [
       [I18n.t('ss.options.state.disabled'), ''],
@@ -241,6 +255,12 @@ module SS::Model::User
   def restriction_options
     %w(none api_only).map do |v|
       [ I18n.t("ss.options.restriction.#{v}"), v ]
+    end
+  end
+
+  def lock_state_options
+    %w(unlocked locked).map do |v|
+      [ I18n.t("ss.options.user_lock_state.#{v}"), v ]
     end
   end
 
