@@ -11,7 +11,7 @@ module Webmail::Mail::Fields
   end
 
   def display_sender
-    display_address(from[0])
+    display_address(from[0] || sender)
   end
 
   def display_to
@@ -27,12 +27,13 @@ module Webmail::Mail::Fields
   end
 
   def display_address(address)
-    return nil if address.blank?
+    return [] if address.blank?
     begin
       addr = ::Mail::Address.new(Net::IMAP.encode_utf7(address))
-      addr.display_name.blank? ? addr.address : Net::IMAP.decode_utf7(addr.display_name)
+      name = addr.display_name.blank? ? addr.address : Net::IMAP.decode_utf7(addr.display_name)
+      [name, addr.address]
     rescue
-      address
+      [address, nil]
     end
   end
 

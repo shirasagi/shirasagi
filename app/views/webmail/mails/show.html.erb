@@ -1,5 +1,19 @@
 <% addons = @item ? @item.class.addons : [] %>
 
+<%= jquery do %>
+  Webmail_Mail_Address.render({
+    lang: {
+      send: "<%= t('webmail.links.address.send') %>",
+      entry: "<%= t('webmail.links.address.entry') %>",
+      copy: "<%= t('webmail.links.address.copy') %>"
+    },
+    urls: {
+      send: "<%= new_webmail_mail_path %>",
+      add: "<%= add_webmail_addresses_path %>"
+    }
+  });
+<% end %>
+
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
     <div class="addon-head">
@@ -8,36 +22,59 @@
       </span>
       <h2 class="subject">
         <%= @item.display_subject %>
-        <!--
-        <span class="icon-attachment">
-          <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
-        </span>
-        -->
       </h2>
-      <div class="from"><%= @item.sender || @item.from[0] %></div>
+      <div class="from">
+        <% addr = @item.display_sender %>
+        <span class="address-item dropdown webmail-dropdown dropdown-toggle" data-email="<%= addr[1] %>">
+          <span class="address-name"><%= addr[0] %></span>
+          &lt;<%= addr[1] %>&gt;
+          <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+        </span>
+      </div>
       <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
     </div>
 
     <% if (@item.to + @item.cc + @item.bcc).present? %>
-    <div class="addresses">
+    <div class="address-header">
       <% if @item.to.present? %>
-      <div class="address">
+      <div class="address-field">
         <div class="label"><%= @model.t :to %></div>
-        <div class="value"><%= @item.display_to.join('; ') %></div>
+        <div class="value">
+          <% @item.display_to.each do |addr| %>
+            <span class="address-item dropdown webmail-dropdown dropdown-toggle" data-email="<%= addr[1] %>">
+              <span class="address-name"><%= addr[0] %></span>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </span>
+          <% end %>
+        </div>
       </div>
       <% end %>
 
       <% if @item.cc.present? %>
-      <div class="address">
+      <div class="address-field">
         <div class="label"><%= @model.t :cc %></div>
-        <div class="value"><%= @item.display_cc.join('; ') %></div>
+        <div class="value">
+          <% @item.display_cc.each do |addr| %>
+            <span class="address-item dropdown webmail-dropdown dropdown-toggle" data-email="<%= addr[1] %>">
+              <span class="address-name"><%= addr[0] %></span>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </span>
+          <% end %>
+        </div>
       </div>
       <% end %>
 
       <% if @item.bcc.present? %>
-      <div class="address">
+      <div class="address-field">
         <div class="label"><%= @model.t :bcc %></div>
-        <div class="value"><%= @item.display_bcc.join('; ') %></div>
+        <div class="value">
+          <% @item.display_bcc.each do |addr| %>
+            <span class="address-item dropdown webmail-dropdown dropdown-toggle" data-email="<%= addr[1] %>">
+              <span class="address-name"><%= addr[0] %></span>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </span>
+          <% end %>
+        </div>
       </div>
       <% end %>
     </div>

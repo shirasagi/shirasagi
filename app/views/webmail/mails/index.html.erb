@@ -65,10 +65,10 @@
       </div>
       <div class="info">
         <% if @imap.sent_box?(@mailbox) %>
-          <% title = item.display_to.join(',') %>
+          <% title = item.display_to.map { |m| m[0] }.join(',') %>
           <span class="field to" title="<%= title %>"><%= title %></span>
         <% else %>
-          <span class="field from" title="<%= item.display_sender %>"><%= item.display_sender %></span>
+          <span class="field from" title="<%= item.display_sender[0] %>"><%= item.display_sender[0] %></span>
         <% end %>
         <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title", title: item.display_subject %>
         <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>

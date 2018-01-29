@@ -86,6 +86,16 @@ class Webmail::MailsController < ApplicationController
     end
   end
 
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    @item.new_mail
+
+    # send from address
+    if data = params[:item].presence
+      @item.to << data[:to].to_s if data[:to].present?
+    end
+  end
+
   def edit
     raise "404" unless @item.draft?
     @item.set_ref_files(@item.attachments)
@@ -147,11 +157,6 @@ class Webmail::MailsController < ApplicationController
 
     send_data part.decoded, filename: part.filename,
               content_type: part.content_type, disposition: disposition
-  end
-
-  def new
-    @item = @model.new pre_params.merge(fix_params)
-    @item.new_mail
   end
 
   def reply
