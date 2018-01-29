@@ -8,7 +8,11 @@
   <dd><%= @item.attendance_year_changed_month %> <%= t("datetime.prompts.month") %></dd>
 
   <dt><%= @model.t :attendance_time_changed_at %></dt>
-  <dd><%= @item.attendance_time_changed_at.utc.hour %> <%= t("datetime.prompts.hour") %></dd>
+  <dd>
+    <% if @item.attendance_time_changed_at %>
+    <%= @item.attendance_time_changed_at.utc.hour %> <%= t("datetime.prompts.hour") %>
+    <% end %>
+  </dd>
 
   <dt><%= t('gws/attendance.enter_leave') %></dt>
   <dd>
