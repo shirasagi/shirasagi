@@ -235,6 +235,14 @@ module SS::Model::User
     !locked?
   end
 
+  def lock
+    update_attributes(lock_state: 'locked')
+  end
+
+  def unlock
+    update_attributes(lock_state: 'unlocked')
+  end
+
   def initial_password_warning_options
     [
       [I18n.t('ss.options.state.disabled'), ''],

@@ -8,6 +8,8 @@ class Gws::UsersController < ApplicationController
   # navi_view "gws/main/conf_navi"
   navi_view 'gws/user_conf/navi'
 
+  before_action :set_selected_items, only: [:destroy_all, :lock_all, :unlock_all]
+
   private
 
   def set_crumbs
@@ -167,5 +169,37 @@ class Gws::UsersController < ApplicationController
     end
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
     render_create result, location: { action: :index }, render: { file: :import }
+  end
+
+  def lock_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.attributes = fix_params
+        next if item.lock
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size, notice: t('ss.notice.lock_user_all'))
+  end
+
+  def unlock_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.attributes = fix_params
+        next if item.unlock
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size, notice: t('ss.notice.unlock_user_all'))
   end
 end

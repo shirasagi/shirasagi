@@ -72,6 +72,8 @@ ja:
       decode: デコードする
       print: 印刷する
       initialize: 初期化する
+      lock_user: 利用を停止する
+      unlock_user: 利用停止を解除する
     buttons:
       save: 保存
       new: 新規作成
@@ -134,6 +136,8 @@ ja:
       multibyte_filename_disabled: ※日本語ファイル名は使用できません。
       file_droppable: ファイルをドロップすることでアップロードできます。
       uploading: アップロードしています。
+      lock_user_all: 利用を停止しました。
+      unlock_user_all: 利用停止を解除しました。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。

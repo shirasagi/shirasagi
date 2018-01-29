@@ -18,6 +18,11 @@ SS::Application.routes.draw do
     put "role" => "groups#role_update", :on => :member
   end
 
+  concern :lock_and_unlock do
+    post :lock_all, on: :collection
+    post :unlock_all, on: :collection
+  end
+
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
     get "site_copy" => "site_copy#index", as: :site_copy
@@ -31,7 +36,7 @@ SS::Application.routes.draw do
 
     resource :menu_settings, only: [:show, :edit, :update]
 
-    resources :users, concerns: :deletion
+    resources :users, concerns: [:deletion, :lock_and_unlock]
     resources :notice, concerns: :deletion
     resources :groups, concerns: [:deletion, :role]
     resources :sites, concerns: :deletion
