@@ -45,20 +45,35 @@ class Gws::User
   def gws_default_group
     return @gws_default_group if @gws_default_group
     return nil unless @cur_site
-    if gws_default_group_ids.present? && group_id = gws_default_group_ids[@cur_site.id.to_s]
-      @gws_default_group = groups.in_group(@cur_site).where(id: group_id).first
-    end
-    @gws_default_group ||= gws_main_group(@cur_site)
+    @gws_default_group = find_gws_default_group(@cur_site)
+    @gws_default_group ||= find_gws_main_group(@cur_site)
   end
 
-  def gws_main_group(site = nil)
+  def find_gws_default_group(site = nil)
+    return if gws_default_group_ids.blank?
+
     site ||= @cur_site
-    if group_id = gws_main_group_ids[site.id.to_s]
-      main_group = groups.in_group(site).where(id: group_id).first
+    group_id = gws_default_group_ids[site.id.to_s]
+    return if group_id.blank?
+
+    ids = Array(group_id).compact & self.group_ids
+    return if ids.blank?
+
+    groups.in_group(site).in(id: ids).active.first
+  end
+
+  def find_gws_main_group(site = nil)
+    site ||= @cur_site
+
+    group_id = gws_main_group_ids[site.id.to_s]
+    ids = Array(group_id).compact & self.group_ids
+    if ids.present?
+      main_group = groups.in_group(site).in(id: ids).active.first
     end
-    main_group ||= groups.in_group(site).first
+    main_group ||= groups.in_group(site).active.first
     main_group
   end
+  alias gws_main_group find_gws_main_group
 
   private
 
