@@ -43,6 +43,16 @@ class Webmail::AddressesController < ApplicationController
       per(50)
   end
 
+  def new
+    super
+
+    # entry from address
+    if data = params[:item].presence
+      @item.name  = data[:name].presence
+      @item.email = data[:email].presence
+    end
+  end
+
   def download
     s_params = params[:s] || {}
     s_params[:address_group_id] = @address_group.id if @address_group.present?
@@ -62,5 +72,16 @@ class Webmail::AddressesController < ApplicationController
     result = @item.import_csv
     flash.now[:notice] = t("ss.notice.saved") if result
     render_create result, location: { action: :index }, render: { file: :import }
+  end
+
+  def add
+    email = params.dig(:item, :email).to_s
+    redirect_to(action: :index) if email.blank?
+
+    if item = @model.user(@cur_user).where(email: email).first
+      redirect_to action: :edit, id: item.id
+    else
+      redirect_to action: :new, item: params[:item]
+    end
   end
 end

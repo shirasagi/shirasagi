@@ -61,7 +61,9 @@ SS::Application.routes.draw do
     resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
       account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
     resources :mailboxes, path: 'account-:account/mailboxes', account: /\d+/, concerns: [:deletion, :mailbox]
-    resources :addresses, path: 'account-:account/addresses', account: /\d+/, concerns: [:deletion, :export]
+    resources :addresses, path: 'account-:account/addresses', account: /\d+/, concerns: [:deletion, :export] do
+      get :add, on: :collection
+    end
     resources :address_groups, path: 'account-:account/addresses_groups', account: /\d+/, concerns: [:deletion]
     resources :signatures, path: 'account-:account/signatures', account: /\d+/, concerns: [:deletion]
     resources :filters, path: 'account-:account/filters', concerns: [:deletion, :filter]

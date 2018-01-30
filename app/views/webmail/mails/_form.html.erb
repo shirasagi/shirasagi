@@ -16,7 +16,6 @@ Webmail_Address_Autocomplete.render(
 <dl class="webmail-mail-form-address to">
   <dt><%= @model.t :to %></dt>
   <dd><%= text_field_tag "to", nil, "class" => "address autocomplete", "data-name" => "item[to][]" %></dd>
-  <dd><%= render 'address_form', { f: f, field: :to } %></dd>
   <dd>
     <div class="selected-address">
       <% @item.to.each do |address| %>
@@ -28,6 +27,7 @@ Webmail_Address_Autocomplete.render(
       <% end %>
     </div>
   </dd>
+  <dd><%= render 'address_form', { f: f, field: :to } %></dd>
 </dl>
 
 <% if cc_blank = @item.cc .blank? && @item.cc_text.blank? && @item.bcc.blank? && @item.bcc_text.blank? %>
@@ -37,7 +37,6 @@ Webmail_Address_Autocomplete.render(
 <dl class="webmail-mail-form-address cc-bcc cc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :cc %></dt>
   <dd><%= text_field_tag "cc", nil, "class" => "address autocomplete", "data-name" => "item[cc][]" %></dd>
-  <dd><%= render 'address_form', { f: f, field: :cc } %></dd>
   <dd>
     <div class="selected-address">
       <% @item.cc.each do |address| %>
@@ -49,13 +48,14 @@ Webmail_Address_Autocomplete.render(
       <% end %>
     </div>
   </dd>
+  <dd><%= render 'address_form', { f: f, field: :cc } %></dd>
 </dl>
 
 <dl class="webmail-mail-form-address cc-bcc bcc <%= 'hide' if cc_blank %>">
   <dt><%= @model.t :bcc %></dt>
   <dd><%= text_field_tag "bcc", nil, "class" => "address autocomplete", "data-name" => "item[bcc][]" %></dd>
-  <dd><%= render 'address_form', { f: f, field: :bcc } %></dd>
   <dd>
     <div class="selected-address"></div>
   </dd>
+  <dd><%= render 'address_form', { f: f, field: :bcc } %></dd>
 </dl>

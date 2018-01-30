@@ -16,6 +16,7 @@ ja:
     create_mailbox_for_reload: 作成されるフォルダー
     delete_mailbox_for_reload: 削除されるフォルダー
     account_setting: アカウント設定
+    personal: 個人
     box:
       inbox: 受信トレイ
       sent: 送信済み
@@ -71,6 +72,10 @@ ja:
       empty_mailbox: 空にする
       select_account: アカウント
       forward_gws_message: 連絡メモに転送する
+      address:
+        send:  メッセージを作成する
+        entry: アドレス帳に登録する
+        copy:  メールアドレスをコピー
     confirm:
       empty_mailbox: フォルダーを空にしてよろしいですか？
       clear_cache: キャッシュを削除してよろしいですか？
