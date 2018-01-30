@@ -6,7 +6,16 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     def find_attendance_time_card(portal, user, date = Time.zone.now)
-      Gws::Attendance::TimeCard.site(portal.site).user(user).where(date: date.beginning_of_month).first
+      date = date.beginning_of_month
+      time_card = Gws::Attendance::TimeCard.site(portal.site).user(user).where(date: date).first
+      if time_card.blank? && Time.zone.now.year == date.year && Time.zone.now.month == date.month
+        time_card = Gws::Attendance::TimeCard.new
+        time_card.cur_site = portal.site
+        time_card.cur_user = user
+        time_card.date = date
+        time_card.save!
+      end
+      time_card
     end
 
     def format_attendance_time(date, time)

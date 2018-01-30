@@ -4,8 +4,11 @@
   break_times = SS.config.gws.attendance['max_break'].times.to_a.select do |i|
     @cur_site["attendance_break_time_state#{i + 1}"] == 'show'
   end
+
   date = Time.zone.now
   time_card = @portlet.find_attendance_time_card(@portal, @cur_user, date.beginning_of_month)
+  return if time_card.blank?
+
   record = time_card.records.where(date: date.beginning_of_day).first
 %>
 
