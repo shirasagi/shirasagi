@@ -43,11 +43,28 @@ end
     <div class="files">
       <% comment.files.each do |file| %>
         <span id="file-<%= file.id %>">
-          <img src="/assets/img/gws/ic-file.png" alt="" />
+          <i class="material-icons">&#xE226;</i>
           <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
         </span>
       <% end %>
     </div>
+    <% end %>
+
+    <% if comment.links.present? %>
+      <div class="links">
+        <% (comment.links || []).each do |item| %>
+          <span class="link-item">
+            <i class="material-icons">&#xE157;</i>
+            <% if item[:name].present? && item[:url].present? %>
+              <%= link_to item[:name], item[:url] %>
+            <% elsif item[:name].present? %>
+              <%= item[:name] %>
+            <% else %>
+              <%= link_to item[:url], item[:url] %>
+            <% end %>
+          </span>
+        <% end %>
+      </div>
     <% end %>
 
     <% if menu.present? %>

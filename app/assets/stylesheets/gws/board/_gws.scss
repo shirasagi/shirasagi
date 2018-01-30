@@ -33,18 +33,18 @@
     .body {
       @include box-body;
     }
-    .files {
+    .files, .links {
       margin: 10px;
-      padding: 15px;
+      padding: 10px;
       border-radius: 4px;
       background-color: $gray1;
-      a {
-        display: inline-block;
-        margin-right: 8px;
-        line-height: 1.5;
-        word-break: normal;
-        word-wrap: normal;
-      }
+    }
+    .files a, .link-item {
+      display: inline-block;
+      margin-right: 8px;
+      line-height: 1.5;
+      word-break: normal;
+      word-wrap: normal;
     }
     .status {
       padding: 15px;

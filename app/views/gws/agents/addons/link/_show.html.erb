@@ -1,0 +1,17 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th style="width: 40%;"><%= @item.t('links/name') %></th>
+      <th><%= @item.t('links/url') %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% (@item.links || []).each do |item| %>
+    <tr>
+      <td><%= item[:name] %></td>
+      <td><%= link_to item[:url], item[:url] if item[:url].present? %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
