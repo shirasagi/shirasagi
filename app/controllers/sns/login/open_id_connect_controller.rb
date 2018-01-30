@@ -111,7 +111,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
 
     return unless @resp
 
-    user = SS::User.uid_or_email(@resp.id).and_enabled.first
+    user = SS::User.uid_or_email(@resp.id).and_enabled.and_unlocked.first
     if user.blank?
       Rails.logger.info("#{@resp.id}: user not found")
       render_login nil, nil

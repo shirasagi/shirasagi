@@ -72,6 +72,8 @@ ja:
       decode: デコードする
       print: 印刷する
       initialize: 初期化する
+      lock_user: 利用を停止する
+      unlock_user: 利用停止を解除する
     buttons:
       save: 保存
       new: 新規作成
@@ -134,6 +136,8 @@ ja:
       multibyte_filename_disabled: ※日本語ファイル名は使用できません。
       file_droppable: ファイルをドロップすることでアップロードできます。
       uploading: アップロードしています。
+      lock_user_all: 利用を停止しました。
+      unlock_user_all: 利用停止を解除しました。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
@@ -266,6 +270,9 @@ ja:
       encoding:
         Shift_JIS: シフトJIS
         UTF-8: UTF-8
+      user_lock_state:
+        unlocked: 利用可
+        locked: 利用停止
 
     tasks:
       started: 開始しました。
@@ -368,6 +375,7 @@ ja:
         initial_password_warning: 初期パスワード警告
         session_lifetime: セッション寿命
         restriction: 利用制限
+        lock_state: 利用状態
         remark: 備考
         organization_id: 所属組織
         organization_uid: 職員番号
@@ -564,6 +572,10 @@ ja:
         - セッションの寿命を秒数で指定します。
         - 最大 3600（1時間）です。
         - 空欄の場合は、システムの既定値が用いられます。
+      restriction:
+        - 利用制限を選択します。
+      lock_state:
+        - 利用状態を選択します。
       remark:
         - 備考を入力します。
       organization_id: 所属する組織を選択します。

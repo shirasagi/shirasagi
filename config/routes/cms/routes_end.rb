@@ -66,7 +66,10 @@ SS::Application.routes.draw do
     get "/" => "main#index"
     resource  :site
     resources :roles, concerns: [:deletion, :download, :import]
-    resources :users, concerns: [:deletion, :download, :import]
+    resources :users, concerns: [:deletion, :download, :import] do
+      post :lock_all, on: :collection
+      post :unlock_all, on: :collection
+    end
     resources :groups, concerns: [:deletion, :role, :download, :import]
     resources :members, concerns: [:deletion, :download]
     resources :contents, path: "contents/(:mod)"

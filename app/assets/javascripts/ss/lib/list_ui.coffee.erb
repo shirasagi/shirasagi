@@ -71,3 +71,25 @@ class @SS_ListUI
       for id in checked
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
       form.appendTo(document.body).submit()
+
+    $(".list-head [data-ss-list-head-method]").on "click", ->
+      method = $(this).data('ss-list-head-method') || 'post'
+      action = $(this).data('ss-list-head-action') || ''
+
+      params = { authenticity_token: $('meta[name="csrf-token"]').attr('content') }
+
+      method = method.toString().toLowerCase()
+      if method == 'delete' || method == 'patch'
+        params._method = method
+        method = 'post'
+
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+
+      form = $("<form/>", action: action, method: method)
+      for key,value of params
+        form.append($("<input/>", name: key, value: value, type: "hidden" ))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()

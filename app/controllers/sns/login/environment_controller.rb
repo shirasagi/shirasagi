@@ -27,7 +27,7 @@ class Sns::Login::EnvironmentController < ApplicationController
     end
 
     uid_or_email = request.env[key]
-    user = SS::User.uid_or_email(uid_or_email).and_enabled.first
+    user = SS::User.uid_or_email(uid_or_email).and_enabled.and_unlocked.first
     if user.blank?
       render_login nil, nil
       return

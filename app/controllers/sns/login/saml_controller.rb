@@ -51,7 +51,7 @@ class Sns::Login::SamlController < ApplicationController
 
     raise "403" unless response.is_valid?
 
-    user = SS::User.uid_or_email(response.nameid).and_enabled.first
+    user = SS::User.uid_or_email(response.nameid).and_enabled.and_unlocked.first
     if user.blank?
       Rails.logger.info("#{response.nameid}: user not found")
       render_login nil, nil

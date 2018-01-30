@@ -34,7 +34,7 @@ class Sns::LoginController < ApplicationController
     end
 
     @item = SS::User.authenticate(email_or_uid, password) rescue false
-    @item = nil if @item && !@item.enabled?
+    @item = nil if @item && (@item.disabled? || @item.locked?)
     @item = @item.try_switch_user || @item if @item
 
     render_login @item, email_or_uid, session: true, password: password
