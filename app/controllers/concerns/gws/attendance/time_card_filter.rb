@@ -46,7 +46,7 @@ module Gws::Attendance::TimeCardFilter
   end
 
   def hour_options
-    start_hour = @cur_site.attendance_time_changed_at.utc.hour
+    start_hour = @cur_site.attendance_time_changed_minute / 60
     (start_hour..24).map { |h| [ "#{h}時", h ] } + (1..(start_hour - 1)).map { |h| [ "#{h + 24}時", h ] }
   end
 
