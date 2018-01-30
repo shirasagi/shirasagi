@@ -59,7 +59,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
     message = Gws::Memo::Message.new
     message.cur_site = site
     message.cur_user = site.sender_user || notice.user
-    message.member_ids = select_recipients(notice).pluck(:id)
+    message.to_member_ids = select_recipients(notice).pluck(:id)
     message.send_date = @now
     message.state = 'public'
     message.subject = subject
