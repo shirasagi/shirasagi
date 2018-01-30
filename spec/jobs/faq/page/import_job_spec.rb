@@ -2,6 +2,14 @@ require 'spec_helper'
 
 describe Faq::Page::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
+  let!(:group1) do
+    name = 'シラサギ市'
+    Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
+  end
+  let!(:group2) do
+    name = 'シラサギ市/企画政策部/政策課'
+    Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
+  end
   let!(:layout) { create(:cms_layout, site: site, name: "FAQ") }
   let!(:category_1) { create(:category_node_node, site: site, filename: "faq", name: "よくある質問") }
   let!(:category_2) { create(:category_node_page, site: site, filename: "faq/c1", name: "くらし・手続き") }
