@@ -1,3 +1,5 @@
+<% return if @custom_groups.blank? %>
+
 <%= jquery do %>
   $("form.search #s_custom_group").on("change", function(e) {
     SS_SearchUI.selectItems()

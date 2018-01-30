@@ -1,0 +1,21 @@
+<%= form_for :record, url: { action: :memo }, html: {method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :record %>
+
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= Gws::Attendance::Record.t :memo %></dt>
+          <dd><%= f.text_field :memo %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+<% end %>

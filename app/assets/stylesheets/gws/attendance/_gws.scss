@@ -1,0 +1,266 @@
+// gws/attendance
+.gws-attendance {
+  position: relative;
+
+  .cell-toolbar {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    padding: 5px 0px;
+    border: $border-gray4;
+    background: $white;
+    @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+    a {
+      display: block;
+      padding: 5px 15px;
+      line-height: 1.8;
+      white-space: nowrap;
+      &:hover { background: $gray1; }
+    }
+  }
+
+  .attendance-box {
+    @include box;
+    @include mb { margin: 0 10px 10px; }
+  }
+
+  .attendance-box-title {
+    //margin: -15px -10px 15px;
+    padding: 8px 10px;
+    border-bottom: $border-gray1;
+    background: rgba(0,0,0,.02);
+    font-weight: bold;
+  }
+
+  .attendance-box-main {
+    padding: 8px 10px;
+  }
+
+  .nav-menu, .nav-operation {
+    margin: 5px 0;
+    display: inline-block;
+  }
+
+  .nav-operation {
+    float: right;
+    @include mb { float: none; }
+  }
+
+  .reason-tooltip {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 1.1;
+    @include border-radius(8px);
+    background: $orange;
+    color: $white;
+    text-align: center;
+    cursor: pointer;
+
+    .reason {
+      display: none;
+      position: absolute;
+      z-index: 101;
+
+      color: $black;
+      text-align: left;
+      //padding: 5px;
+      border: $border-gray4;
+      background: $white;
+      @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+      @include border-radius(3px);
+
+      bottom: 100%;
+      left: 50%;
+      margin-left: -50px;
+
+      time {
+        display: block;
+        padding: 5px;
+        border-top: $border-gray1;
+        font-size: 80%;
+        color: $gray2;
+        text-align: right;
+      }
+
+      div {
+        padding: 5px;
+      }
+
+      &:after {
+        content: " ";
+        position: absolute;
+        top: 100%;
+        left: 50px;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: $gray4 transparent transparent transparent;
+      }
+    }
+  }
+
+  .today-wrap {
+    overflow-x: auto;
+  }
+
+  .today {
+    white-space: nowrap;
+    border-collapse: collapse;
+    border-spacing: 0px;
+
+    th, td {
+      padding: 5px;
+      border: 1px solid $gray4;
+    }
+
+    th {
+      background-color: $gray1;
+    }
+
+    th.time, td.time {
+      width: 6em;
+    }
+
+    td.time {
+      text-align: center;
+    }
+  }
+
+  .time-card-wrap {
+    overflow-x: auto;
+  }
+
+  .time-card {
+    white-space: nowrap;
+    border-collapse: collapse;
+    border-spacing: 0px;
+
+    th {
+      padding: 5px;
+      border: 1px solid $gray4;
+    }
+
+    td {
+      padding: 5px;
+      border: 1px solid $gray4;
+    }
+
+    tr.header {
+      background-color: $gray1;
+    }
+
+    tr.current {
+      background-color: #ffffae;
+    }
+
+    th.date, td.date {
+      width: 7.5em;
+    }
+
+    th.time, td.time {
+      width: 6em;
+    }
+
+    td.time {
+      text-align: center;
+    }
+
+    th.memo, td.memo {
+      min-width: 6em;
+    }
+
+    tr.holiday, tr.sunday {
+      td.date {
+        color: red;
+      }
+    }
+
+    tr.saturday {
+      td.date {
+        color: blue;
+      }
+    }
+
+    .focus {
+      background-color: #f2a950;
+    }
+  }
+}
+
+.print-preview {
+  .gws-attendance {
+    .attendance-box-title {
+      border-bottom: 1px solid transparent;
+      background: transparent;
+    }
+
+    .time-card {
+      th {
+        border: 1px solid $black;
+        font-weight: bold;
+      }
+
+      td {
+        border: 1px solid $black;
+      }
+
+      tr.header {
+        background-color: $gray1;
+      }
+
+      tr.current {
+        background-color: transparent;
+      }
+
+      .focus {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.gws-portlets {
+  .gws-attendance {
+    .header {
+      margin: 5px 0;
+      padding: 5px;
+    }
+
+    .today-time-card {
+      margin: 5px 0;
+      padding: 5px;
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0px;
+        table-layout: fixed;
+
+        th, td {
+          border: 1px solid $gray4;
+          padding: 5px;
+        }
+
+        th {
+          background: $gray1;
+          width: 5em;
+        }
+
+        td.time {
+          min-width: 4.5em;
+          text-align: center;
+        }
+
+        td.reason {
+          min-width: 7.5em;
+        }
+      }
+    }
+
+    button:disabled {
+      color: #999;
+      background-color: #ddd;
+    }
+  }
+}

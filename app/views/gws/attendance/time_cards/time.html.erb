@@ -1,0 +1,40 @@
+<%= form_for :cell, url: { action: :time }, html: { method: :post, multipart: true, class: 'cell-edit' } do |f| %>
+  <%= error_messages_for :cell %>
+
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
+  <% val = @record.send(params[:type]) %>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t('gws/attendance.edit_cell.time') %></dt>
+          <dd>
+            <%= f.select(:in_hour, hour_options, selected: val.try(:hour) || Time.zone.now.hour, include_blank: true) %>
+            <%= f.select(:in_minute, minute_options, selected: val.try(:min) || Time.zone.now.min, include_blank: true) %>
+            <%= button_tag(t('ss.buttons.clear'), type: 'reset', name: 'clear', class: 'btn') %>
+          </dd>
+          <dt><%= @model.t :in_reason %></dt>
+          <dd><%= f.text_field(:in_reason) %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  $('form.cell-edit button[name=clear]').on('click', function() {
+    console.log('on click clear');
+    var $select = $('form.cell-edit select[name="cell[in_hour]"]');
+    console.log($select.find('option:selected').length);
+    $select.find('option:selected').removeAttr('selected');
+
+    $('form.cell-edit select[name="cell[in_hour]"] option:selected').removeAttr('selected');
+    $('form.cell-edit select[name="cell[in_minute]"] option:selected').removeAttr('selected');
+  });
+<% end %>

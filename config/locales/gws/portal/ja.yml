@@ -16,6 +16,7 @@ ja:
       gws/portal/portlet/share: 共有ファイル設定
       gws/portal/portlet/report: レポート設定
       gws/portal/portlet/workflow: ワークフロー設定
+      gws/portal/portlet/attendance: 出退勤設定
 
   gws/portal:
     user_portal: 個人ポータル
@@ -72,6 +73,9 @@ ja:
       workflow:
         name: ワークフロー
         text: 新着のワークフローを表示します。
+      attendance:
+        name: 出退勤
+        text: 本日の出退勤を表示および打刻します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置

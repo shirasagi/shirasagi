@@ -124,6 +124,9 @@ production: &production
       - "id"
     max_division: 3
 
+  attendance:
+    max_break: 3
+
 test:
   <<: *production
   disable: false

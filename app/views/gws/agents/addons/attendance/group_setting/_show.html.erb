@@ -1,0 +1,31 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-attendance-group-setting"); <% end %>
+
+<dl class="see addon-gws-attendance-group-setting">
+  <dt><%= @model.t :attendance_management_year %></dt>
+  <dd><%= @item.attendance_management_year %> <%= t("datetime.prompts.year") %></dd>
+
+  <dt><%= @model.t :attendance_year_changed_month %></dt>
+  <dd><%= @item.attendance_year_changed_month %> <%= t("datetime.prompts.month") %></dd>
+
+  <dt><%= @model.t :attendance_time_changed_minute %></dt>
+  <dd><%= @item.attendance_time_changed_minute / 60 %> <%= t("datetime.prompts.hour") %>
+  </dd>
+
+  <dt><%= t('gws/attendance.enter_leave') %></dt>
+  <dd>
+    <%= @item.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %>
+    <%= @item.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %>
+  </dd>
+
+  <% SS.config.gws.attendance['max_break'].times do |i| %>
+    <dt><%= t('gws/attendance.break') %><%= i + 1 %></dt>
+    <dd>
+      <% if @item["attendance_break_time#{i + 1}_state"] == 'show' %>
+        <span><%= @item["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></span>
+        <span><%= @item["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></span>
+      <% else %>
+        <%= @item.label("attendance_break_time#{i + 1}_state").presence || t('ss.options.state.hide') %>
+      <% end %>
+    </dd>
+  <% end %>
+</dl>

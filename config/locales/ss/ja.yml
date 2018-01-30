@@ -24,6 +24,7 @@ ja:
     all: すべて
     keyword: キーワード
     quota: 容量
+    encoding: 文字コード
 
     views:
       login/login:
@@ -262,6 +263,10 @@ ja:
       multibyte_filename_state:
         enabled: アップロード可
         disabled: アップロード不可
+      encoding:
+        Shift_JIS: シフトJIS
+        UTF-8: UTF-8
+
     tasks:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
