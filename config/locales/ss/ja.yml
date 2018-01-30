@@ -133,7 +133,6 @@ ja:
       sent: 送信しました。
       posted: 投稿しました。
       initialized: 初期化しました。
-      multibyte_filename_disabled: ※日本語ファイル名は使用できません。
       file_droppable: ファイルをドロップすることでアップロードできます。
       uploading: アップロードしています。
       lock_user_all: 利用を停止しました。
