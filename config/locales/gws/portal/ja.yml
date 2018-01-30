@@ -83,7 +83,6 @@ ja:
       edit_portlet: ポートレットを編集する
     buttons:
       save_layouts: 配置を保存する
-      add_item: 新しい要素を追加
     options:
       reminder_filter:
         all: すべて表示
@@ -126,9 +125,6 @@ ja:
         limit: 表示件数
       gws/addon/portal/portlet/free:
         html: 内容
-      gws/addon/portal/portlet/link:
-        links/name: 表示名
-        links/url: URL
       gws/addon/portal/portlet/reminder:
         reminder_filter: 表示範囲
       gws/addon/portal/portlet/schedule:

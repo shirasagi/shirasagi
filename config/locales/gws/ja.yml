@@ -89,6 +89,7 @@ ja:
     buttons:
       register: 登録
       unset: 解除
+      add_item: 新しい要素を追加
     confirm:
       readable_setting:
         empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
@@ -159,6 +160,7 @@ ja:
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
       gws/notice/notification: 通知
+      gws/link: リンク
 
   gws_notification:
     gws/notice:
@@ -297,6 +299,9 @@ ja:
       gws/addon/member:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
+      gws/addon/link/feature:
+        links/name: 表示名
+        links/url: URL
       gws/addon/system/file_setting:
         multibyte_filename_state: 日本語ファイル名
       gws/addon/system/group_setting:

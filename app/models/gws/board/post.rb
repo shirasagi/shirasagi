@@ -5,6 +5,7 @@ class Gws::Board::Post
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
+  include Gws::Addon::Link
   include Gws::Board::DescendantsFileInfo
   include Gws::Addon::GroupPermission
   include Gws::Addon::History

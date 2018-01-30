@@ -1889,6 +1889,11 @@ table.index {
     width: 15px;
   }
 }
+table.form-index {
+  input[type=text] {
+    width: 100%;
+  }
+}
 table.index.data-table {
   border-collapse: collapse;
   th, td {
