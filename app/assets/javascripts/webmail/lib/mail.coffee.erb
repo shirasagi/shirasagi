@@ -318,11 +318,11 @@ class @Webmail_Mail_Address
       addr.addClass('clickable')
       name  = addr.find('.address-name').text()
       email = addr.data('email')
-      menu = $(this).find('.dropdown-menu')
-
+      menu = addr.find('.dropdown-menu')
       menu.append('<li class="dropdown-menu-item disabled">' + email + '</li>')
       return true unless email
 
+      addr.find('.address-name').prepend('<i class="material-icons md-14">&#xE7FD;</i>')
       menu.append('<li><a href="#" class="addr-send">' + lang.send + '</a></li>')
       menu.append('<li><a href="#" class="addr-entry">' + lang.entry + '</a></li>')
       menu.append('<li><a href="#" class="addr-copy">' + lang.copy + '</a></li>')
