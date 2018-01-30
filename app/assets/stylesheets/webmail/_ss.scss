@@ -267,14 +267,13 @@ li.webmail-accounts {
     }
   }
   .address-item {
-    &:after {
-      content: ', ';
-    }
-    &:last-of-type:after {
-      content: '';
-    }
+    margin: 0 10px 0 0;
     &.clickable:hover {
       text-decoration: underline;
+    }
+    .material-icons {
+      margin: 2px 1px 0 0;
+      vertical-align: top;
     }
   }
   .request-mdn-notice {
