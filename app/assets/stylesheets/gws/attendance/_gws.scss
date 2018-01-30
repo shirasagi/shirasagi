@@ -189,6 +189,38 @@
   }
 }
 
+.print-preview {
+  .gws-attendance {
+    .attendance-box-title {
+      border-bottom: 1px solid transparent;
+      background: transparent;
+    }
+
+    .time-card {
+      th {
+        border: 1px solid $black;
+        font-weight: bold;
+      }
+
+      td {
+        border: 1px solid $black;
+      }
+
+      tr.header {
+        background-color: $gray1;
+      }
+
+      tr.current {
+        background-color: transparent;
+      }
+
+      .focus {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
 .gws-portlets {
   .gws-attendance {
     .header {
