@@ -31,9 +31,9 @@ module Webmail::Mail::Fields
     begin
       addr = ::Mail::Address.new(Net::IMAP.encode_utf7(address))
       name = addr.display_name.blank? ? addr.address : Net::IMAP.decode_utf7(addr.display_name)
-      [name, addr.address]
+      OpenStruct.new(name: name, email: addr.address, address: address)
     rescue
-      [address, nil]
+      OpenStruct.new(name: address, email: nil, address: address)
     end
   end
 
