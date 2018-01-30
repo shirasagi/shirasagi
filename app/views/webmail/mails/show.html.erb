@@ -24,8 +24,8 @@
         <%= @item.display_subject %>
       </h2>
       <div class="from">
-        <span class="address-item dropdown webmail-dropdown dropdown-toggle" data-email="<%= addr.display_sender.email %>">
-          <span class="address-name"><%= addr.display_sender.address %></span>
+        <span class="address-item dropdown webmail-dropdown dropdown-toggle" data-email="<%= @item.display_sender.email %>">
+          <span class="address-name"><%= @item.display_sender.address %></span>
           <ul class="dropdown-menu webmail-dropdown-menu"></ul>
         </span>
       </div>
