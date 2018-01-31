@@ -1,6 +1,7 @@
 function SS_SortableForm(selector, opts) {
+  this.opts  = opts || {}
   this.el    = $(selector);
-  this.limit = opts.limit || 0;
+  this.limit = this.opts.limit || 0;
   this.head  = this.el.find('thead');
   this.body  = this.el.find('tbody');
 
@@ -37,7 +38,7 @@ SS_SortableForm.prototype.setEvent = function(item) {
   var _this = this;
 
   item.find('.action-insert').click(function() {
-    if (_this.body.find('tr').length >= _this.limit) return false;
+    if (_this.limit && _this.body.find('tr').length >= _this.limit) return false;
 
     var newItem = _this.base.clone();
     $(this).closest('tr').after(newItem);
