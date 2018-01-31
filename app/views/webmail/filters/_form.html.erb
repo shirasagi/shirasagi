@@ -1,6 +1,14 @@
 <%= jquery do %>
-  var sort = new SS_SortableForm('.webmail-filter-conditions');
+  var sort = new SS_SortableForm('.webmail-filter-conditions', { limit: 10 });
   sort.renderItems(<%== @item.conditions.to_json %>);
+
+  $('#item_action').change(function() {
+    if ($(this).val().match(/copy|move/)) {
+      $('#item_mailbox').show();
+    } else {
+      $('#item_mailbox').hide();
+    }
+  }).change();
 <% end %>
 
 <dl class="see">
@@ -28,10 +36,15 @@
   </dd>
 
   <dt><%= @model.t :action %></dt>
-  <dd><%= f.select :action, @item.action_options %></dd>
+  <dd>
+    <%= f.select :action, @item.action_options %>
+    <%= f.select :mailbox, @item.mailbox_options, include_blank: @model.t(:mailbox) %>
+  </dd>
 
+  <!--
   <dt><%= @model.t :mailbox %></dt>
   <dd><%= f.select :mailbox, @item.mailbox_options, include_blank: true %></dd>
+  -->
 
   <dt><%= @model.t :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
