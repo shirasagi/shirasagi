@@ -1,5 +1,5 @@
 <%= jquery do %>
-  var sort = new SS_SortableForm('.mod-gws-addon-link');
+  var sort = new SS_SortableForm('.mod-gws-addon-link .index');
   sort.renderItems(<%== @item.links.to_json %>);
 <% end %>
 
