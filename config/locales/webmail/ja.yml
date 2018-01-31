@@ -49,6 +49,17 @@ ja:
         delete: サーバから削除する
         request_mdn: 開封確認メッセージを要求する
         request_dsn: 配信確認メッセージを要求する
+      filter_field:
+        from: 差出人
+        to: 宛先
+        cc: CC
+        bcc: BCC
+        subject: 件名
+        body: 本文
+      filter_operator:
+        include: に次を含む
+        exclude: に次を含まない
+
     links:
       back_to_contents: 受信トレイへ戻る
       etc: その他
@@ -171,9 +182,10 @@ ja:
       webmail/filter:
         name: フィルター名
         order: 並び順
-        from: 条件/差出人
-        to: 条件/宛先
-        subject: 条件/件名
+        conditions: 検索条件
+        conditions/field: フィールド
+        conditions/operator: 判定
+        conditions/value: 値
         action: アクション
         mailbox: フォルダー
 

@@ -1885,11 +1885,6 @@ table.index {
     width: 15px;
   }
 }
-table.form-index {
-  input[type=text] {
-    width: 100%;
-  }
-}
 table.index.data-table {
   border-collapse: collapse;
   th, td {
@@ -1905,30 +1900,61 @@ table.index.data-table {
   }
 }
 .sortable-index {
-  tr td:first-child {
+  .sortable-handle-head {
+    width: 10px;
+  }
+  td:first-of-type {
+    padding-left: 22px;
     cursor: move;
     &:before {
       display: inline-block;
-      position: relative;
-      left: -10px;
-      float: left;
+      position: absolute;
       width: 1px;
       height: 1.6em;
-      margin-right: 5px;
+      margin-left: -12px;
       border-left: 1px dotted #aaa;
       border-right: 1px dotted #aaa;
       content: '';
     }
   }
-  tr .sortable-head {
-    width: 10px;
-    padding-right: 0px;
+  td.sortable-handle {
+    padding: 0 5px 0 10px;
+    cursor: move;
+    &:before {
+      display: inline-block;
+      position: static;
+      width: 1px;
+      height: 1.6em;
+      margin: 0;
+      border-left: 1px dotted #aaa;
+      border-right: 1px dotted #aaa;
+      content: '';
+    }
+  }
+  .sortable-buttons-head {
+    width: 100px;
+  }
+  .sortable-buttons .btn {
+    padding: 6px 8px;
   }
   .ui-sortable-helper {
     @include box-shadow(0px 1px 3px #888);
     .deselect {
       display: none;
     }
+  }
+}
+table.form-index {
+  th, td {
+    padding: 6px;
+  }
+  select, input[type=text] {
+    width: 100%;
+  }
+}
+table.form-index.sortable-index {
+  td:first-of-type:before {
+    margin-top: 4px;
   }
 }
 .dropdown-container {

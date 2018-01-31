@@ -1,15 +1,31 @@
+<%= jquery do %>
+  var sort = new SS_SortableForm('.webmail-filter-conditions');
+  sort.renderItems(<%== @item.conditions.to_json %>);
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :from %></dt>
-  <dd><%= f.text_field :from %></dd>
-
-  <dt><%= @model.t :to %></dt>
-  <dd><%= f.text_field :to %></dd>
-
-  <dt><%= @model.t :subject %></dt>
-  <dd><%= f.text_field :subject %></dd>
+  <dt><%= @model.t :conditions %></dt>
+  <dd>
+    <table class="index form-index sortable-index webmail-filter-conditions">
+      <thead>
+        <tr>
+          <th style="width: 120px;"><%= @model.t "conditions/field" %></th>
+          <th style="width: 140px;"><%= @model.t "conditions/operator" %></th>
+          <th><%= @model.t "conditions/value" %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-base="true">
+          <td><%= f.select_tag 'item[conditions][][field]', options_for_select(@item.field_options), id: nil %></td>
+          <td><%= f.select_tag 'item[conditions][][operator]', options_for_select(@item.operator_options), id: nil %></td>
+          <td><%= f.text_field_tag 'item[conditions][][value]', nil, id: nil %></td>
+        </tr>
+      </tbody>
+    </table>
+  </dd>
 
   <dt><%= @model.t :action %></dt>
   <dd><%= f.select :action, @item.action_options %></dd>
