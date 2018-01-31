@@ -1,30 +1,21 @@
 <%= jquery do %>
-  var portlet = new Gws_Link_List('.mod-gws-addon-link');
-  portlet.renderItems(<%== @item.links.to_json %>);
-  $('.sortable-index tbody').sortable();
+  var sort = new SS_SortableForm('.mod-gws-addon-link');
+  sort.renderItems(<%== @item.links.to_json %>);
 <% end %>
 
 <div class="mod-gws-addon-link">
   <table class="index form-index sortable-index">
     <thead>
       <tr>
-        <th class="sortable-head"></th>
         <th style="width: 40%;"><%= @item.t('links/name') %></th>
         <th><%= @item.t('links/url') %></th>
-        <th style="width: 100px;"></th>
       </tr>
     </thead>
     <tbody>
       <tr data-base="true">
-        <td class="sortable-head"></td>
         <td><%= f.text_field_tag 'item[links][][name]', nil, id: nil %></td>
         <td><%= f.text_field_tag 'item[links][][url]', nil, id: nil %></td>
-        <td><button type="button" class="btn remove-item"><%= t('ss.buttons.delete') %></button></td>
       </tr>
     </tbody>
   </table>
-
-  <div style="margin-top: 10px; text-align: center;">
-    <button type="button" class="btn add-item"><%= t('gws.buttons.add_item') %></button>
-  </div>
 </div>

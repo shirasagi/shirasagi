@@ -2,14 +2,15 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
-  <dt><%= @model.t :from %></dt>
-  <dd><%= @item.send :from %></dd>
+  <dt><%= @model.t :conditions %></dt>
 
-  <dt><%= @model.t :to %></dt>
-  <dd><%= @item.send :to %></dd>
-
-  <dt><%= @model.t :subject %></dt>
-  <dd><%= @item.send :subject %></dd>
+  <% @item.conditions.each do |cond| %>
+  <dd>
+    <em>"<%= @item.label :field, value: cond[:field] %>"</em>
+    <%= @item.label :operator, value: cond[:operator] %>
+    <em>"<%= cond[:value] %>"</em>
+  </dd>
+  <% end %>
 
   <dt><%= @model.t :action %></dt>
   <dd><%= @item.label :action %></dd>
