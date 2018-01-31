@@ -22,6 +22,9 @@ module Gws::Model
       field :send_date, type: DateTime
       field :import_info, type: Hash, default: nil
 
+      field :to_member_name, type: String, default: ''
+      field :from_member_name, type: String, default: ''
+
       embeds_ids :to_members, class_name: "Gws::User"
       embeds_ids :cc_members, class_name: "Gws::User"
       embeds_ids :bcc_members, class_name: "Gws::User"
@@ -39,6 +42,7 @@ module Gws::Model
       before_validation :set_send_date
       before_validation :set_path
       before_validation :set_size
+      before_validation :set_member_name
 
       validates :subject, presence: true
 
@@ -101,6 +105,11 @@ module Gws::Model
       #self.size += html.bytesize if html.present?
       self.size = 1024
       self.size += files.pluck(:size).sum if files.present?
+    end
+
+    def set_member_name
+      self.from_member_name = @cur_user.long_name if @cur_user
+      self.to_member_name = display_to.join("; ")
     end
 
     def set_member_ids

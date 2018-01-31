@@ -1,17 +1,47 @@
+<%= jquery do %>
+  <% if @cur_folder.path == "INBOX.Sent" %>
+  $(".list-item-head .to").on("click", function() {
+    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "to_member_name").to_query %>";
+    return false;
+  });
+  <% else %>
+  $(".list-item-head .from").on("click", function() {
+    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "from_member_name").to_query %>";
+    return false;
+  });
+  <% end %>
+  $(".list-item-head .title").on("click", function() {
+    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "subject").to_query %>";
+    return false;
+  });
+  $(".list-item-head .priority").on("click", function() {
+    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "priority").to_query %>";
+    return false;
+  });
+  $(".list-item-head .datetime").on("click", function() {
+    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "send_date").to_query %>";
+    return false;
+  });
+  $(".list-item-head .size").on("click", function() {
+    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "size").to_query %>";
+    return false;
+  });
+<% end %>
+
 <div class="index">
   <%= render file: '_list_head' %>
   <ul class="list-items ss-messages gws-memos">
     <li class="list-item-head">
       <div class="head">
         <% if @cur_folder.path == "INBOX.Sent" %>
-          <span class="field to"><%= @model.t :to %></span>
+          <span class="field to"><%= @model.t :to %><%== @cur_user.memo_message_sort_icon(@sort_hash, "to_member_name") %></span>
         <% else %>
-          <span class="field from"><%= @model.t :from %></span>
+          <span class="field from"><%= @model.t :from %><%== @cur_user.memo_message_sort_icon(@sort_hash, "from_member_name") %></span>
         <% end %>
-        <span class="field title"><%= @model.t :subject %></span>
-        <span class="field priority"><%= @model.t :priority %></span>
-        <span class="field datetime"><%= @model.t :display_send_date %></span>
-        <span class="field size"><%= @model.t :size %></span>
+        <span class="field title"><%= @model.t :subject %><%== @cur_user.memo_message_sort_icon(@sort_hash, "subject") %></span>
+        <span class="field priority"><%= @model.t :priority %><%== @cur_user.memo_message_sort_icon(@sort_hash, "priority") %></span>
+        <span class="field datetime"><%= @model.t :display_send_date %><%== @cur_user.memo_message_sort_icon(@sort_hash, "send_date") %></span>
+        <span class="field size"><%= @model.t :size %><%== @cur_user.memo_message_sort_icon(@sort_hash, "size") %></span>
       </div>
     </li>
 

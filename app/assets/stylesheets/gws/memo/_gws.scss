@@ -96,11 +96,14 @@
     .head {
       height: 20px;
       position: relative;
-      .field { position: absolute; }
+      .field {
+        position: absolute;
+        cursor: pointer;
+      }
       .from, .to { left: 82px; }
       .title { left: 286px; }
-      .priority { right: 224px; }
-      .datetime { right: 128px; }
+      .priority { right: 206px; }
+      .datetime { right: 110px; }
       .size { right: 14px; }
     }
     @include mb { display: none; }
