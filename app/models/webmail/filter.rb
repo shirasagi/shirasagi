@@ -25,7 +25,7 @@ class Webmail::Filter
   validates :name, presence: true
   validates :conditions, presence: true
   validates :action, presence: true
-  validates :mailbox, presence: true, if: ->{ action =~ /copy|move/ }
+  validates :mailbox, presence: true, if: ->{ mailbox_required? }
 
   before_validation :set_conditions
 
@@ -62,6 +62,18 @@ class Webmail::Filter
     %w(copy move trash delete).map { |m| [I18n.t("webmail.options.action.#{m}"), m] }
   end
 
+  def conditions_summary
+    conditions.map do |cond|
+      field = label(:field, value: cond[:field])
+      operator = label(:operator, value: cond[:operator])
+      %("#{field}" #{operator} "#{cond[:value]}")
+    end
+  end
+
+  def mailbox_required?
+    action =~ /copy|move/
+  end
+
   def mailbox_options
     imap.mailboxes.load.all.map do |box|
       pad = '&nbsp;' * 4 * box.depth
@@ -86,6 +98,13 @@ class Webmail::Filter
   end
 
   def apply(mailbox, add_search_keys = [])
+    keys = add_search_keys + search_keys
+
+    if keys.blank?
+      errors.add :conditions, :invalid
+      return false
+    end
+
     imap.select(mailbox)
     uids = imap.conn.uid_sort(%w(REVERSE ARRIVAL), add_search_keys + search_keys, 'UTF-8')
     uids_apply(uids, mailbox)

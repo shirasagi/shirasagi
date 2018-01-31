@@ -29,17 +29,18 @@ class Webmail::FiltersController < ApplicationController
   end
 
   def apply
-    mailbox = params[:mailbox].presence
-    location = { action: :show }
-    return redirect_to(location) if mailbox.blank?
-
     set_item
+
+    mailbox = params[:mailbox].presence
+    return render(file: :show) if mailbox.blank?
+
     count = @item.apply(mailbox)
+    return render(file: :show) if count == false
 
     @imap.mailboxes.update_status
 
     respond_to do |format|
-      format.html { redirect_to location, notice: t('webmail.notice.multiple.filtered', count: count) }
+      format.html { redirect_to(action: :show, notice: t('webmail.notice.multiple.filtered', count: count)) }
       format.json { head :no_content }
     end
   end

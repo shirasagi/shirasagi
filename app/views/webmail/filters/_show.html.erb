@@ -3,20 +3,15 @@
   <dd><%= @item.send :name %></dd>
 
   <dt><%= @model.t :conditions %></dt>
-
-  <% @item.conditions.each do |cond| %>
-  <dd>
-    <em>"<%= @item.label :field, value: cond[:field] %>"</em>
-    <%= @item.label :operator, value: cond[:operator] %>
-    <em>"<%= cond[:value] %>"</em>
-  </dd>
-  <% end %>
+  <dd><%= safe_join @item.conditions_summary, '<br />'.html_safe %></dd>
 
   <dt><%= @model.t :action %></dt>
-  <dd><%= @item.label :action %></dd>
-
-  <dt><%= @model.t :mailbox %></dt>
-  <dd><%= @item.send :decode_mailbox %></dd>
+  <dd>
+    <%= @item.label :action %>
+    <% if @item.mailbox_required? %>
+      <span class="mx-2">/</span> <%= @item.send :decode_mailbox %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
