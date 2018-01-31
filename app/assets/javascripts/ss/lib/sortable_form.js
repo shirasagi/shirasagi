@@ -1,7 +1,8 @@
-function SS_SortableForm(selector) {
-  this.el   = $(selector);
-  this.head = this.el.find('thead');
-  this.body = this.el.find('tbody');
+function SS_SortableForm(selector, opts) {
+  this.el    = $(selector);
+  this.limit = opts.limit || 0;
+  this.head  = this.el.find('thead');
+  this.body  = this.el.find('tbody');
 
   this.head.find('tr').prepend('<th class="sortable-handle-head"></th>');
   this.body.find('tr').prepend('<td class="sortable-handle"></td>');
@@ -36,6 +37,8 @@ SS_SortableForm.prototype.setEvent = function(item) {
   var _this = this;
 
   item.find('.action-insert').click(function() {
+    if (_this.body.find('tr').length >= _this.limit) return false;
+
     var newItem = _this.base.clone();
     $(this).closest('tr').after(newItem);
     _this.setEvent(newItem);
