@@ -35,7 +35,7 @@ $('a.ajax-box').data('on-select', function($item) {
           <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
           <dd>
             <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>
-            <%= link_to "メッセージを選択する", gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box" %>
+            <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box" %>
           </dd>
           <dd>
             <table class="index ajax-selected" style="display: none;">

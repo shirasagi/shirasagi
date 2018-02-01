@@ -30,6 +30,7 @@ ja:
       forward: 転送する
       ref: 新規メッセージとして編集する
       deleted: 削除済み
+      sort: 並び替え
       print: 印刷
     confirm:
       trash_all: ゴミ箱に移しますか？
