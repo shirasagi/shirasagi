@@ -66,7 +66,6 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def write_json(name, data)
-    dump("#{@output_dir}/#{name}.json")
     File.write("#{@output_dir}/#{name}.json", data)
   end
 

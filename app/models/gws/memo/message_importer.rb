@@ -126,7 +126,6 @@ class Gws::Memo::MessageImporter
     return nil if id.nil? || name.nil?
     user = Gws::User.unscoped.find(id) rescue nil
     if user && user.name == name
-      dump(user)
       user
     else
       nil

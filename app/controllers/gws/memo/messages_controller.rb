@@ -93,7 +93,6 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def index
     @sort_hash = @cur_user.memo_message_sort_hash(@cur_folder, params[:sort], params[:order])
-    dump(@sort_hash)
     @items = @model.folder(@cur_folder, @cur_user).
       site(@cur_site).
       search(params[:s]).
