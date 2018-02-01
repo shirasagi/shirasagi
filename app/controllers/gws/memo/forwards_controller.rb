@@ -4,6 +4,8 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   model Gws::Memo::Forward
 
+  navi_view "gws/memo/management/navi"
+
   before_action :deny_with_auth
   before_action :set_item, only: [:show, :edit, :update]
 

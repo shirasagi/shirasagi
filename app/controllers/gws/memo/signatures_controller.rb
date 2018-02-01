@@ -4,6 +4,8 @@ class Gws::Memo::SignaturesController < ApplicationController
 
   model Gws::Memo::Signature
 
+  navi_view "gws/memo/management/navi"
+
   before_action :deny_with_auth
 
   private

@@ -4,9 +4,9 @@ module Gws::Addon
     extend SS::Addon
 
     included do
-      attr_accessor :in_clone_file
+      attr_accessor :in_clone_file, :ref_file_ids
       embeds_ids :files, class_name: "SS::File"
-      permit_params file_ids: []
+      permit_params file_ids: [], ref_file_ids: []
 
       before_save :clone_files, if: ->{ in_clone_file }
       before_save :save_files
@@ -40,6 +40,7 @@ module Gws::Addon
           end
           ids << file.id
         end
+        ids += save_ref_files
         self.attributes["file_ids"] = ids
 
         del_ids = file_ids_was.to_a - ids
@@ -79,6 +80,42 @@ module Gws::Addon
           file.destroy unless self.class.where(:id.ne => id, file_ids: file.id).exists?
         end
       end
+    end
+
+    def ref_files
+      return [] if ref_file_ids.blank?
+
+      files = []
+      ref_file_ids.each do |ref_file_id|
+        file = SS::File.find(ref_file_id) rescue nil
+        files << file if file
+      end
+      files
+    end
+
+    private
+
+    def save_ref_files
+      add_ids = []
+      ref_files.each do |ref_file|
+        file = Fs::UploadedFile.new
+        file.binmode
+        file.write(ref_file.read)
+        file.rewind
+        file.original_filename = ref_file.filename
+
+        ss_file = SS::File.new
+        ss_file.state = state
+        ss_file.name = ref_file.name
+        ss_file.model = model_name.i18n_key
+        ss_file.user_id = @cur_user.try(:id) || try(:user_id)
+        ss_file.site_id = @cur_site.try(:id) || try(:site_id)
+        ss_file.in_file = file
+        ss_file.save
+
+        add_ids << ss_file.id
+      end
+      add_ids
     end
   end
 end

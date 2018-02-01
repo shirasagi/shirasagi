@@ -60,6 +60,47 @@
 
     <div class="dropdown dropdown-toggle gws-memo-dropdown">
       <button class="btn">
+        <%= t 'gws/memo/message.links.sort' %><i class="material-icons md-13">&#xE313;</i>
+      </button>
+      <ul class="dropdown-menu">
+        <% if params[:folder] == 'INBOX.Sent' %>
+          <li>
+            <a class="set-star-all" href="<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "to_member_name").to_query %>">
+              <%= @model.t(:to) %><%== @cur_user.memo_message_sort_icon(@sort_hash, "to_member_name") %>
+            </a>
+          </li>
+        <% else %>
+          <li>
+            <a class="set-star-all" href="<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "from_member_name").to_query %>">
+              <%= @model.t(:from) %><%== @cur_user.memo_message_sort_icon(@sort_hash, "from_member_name") %>
+            </a>
+          </li>
+        <% end %>
+        <li>
+          <a class="set-star-all" href="<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "subject").to_query %>">
+            <%= @model.t :subject %><%==  @cur_user.memo_message_sort_icon(@sort_hash, "subject") %>
+          </a>
+        </li>
+        <li>
+          <a class="set-star-all" href="<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "priority").to_query %>">
+            <%= @model.t :priority %><%==  @cur_user.memo_message_sort_icon(@sort_hash, "priority") %>
+          </a>
+        </li>
+        <li>
+          <a class="set-star-all" href="<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "send_date").to_query %>">
+            <%= @model.t :display_send_date %><%==  @cur_user.memo_message_sort_icon(@sort_hash, "send_date") %>
+          </a>
+        </li>
+        <li>
+          <a class="set-star-all" href="<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "size").to_query %>">
+            <%= @model.t :size %><%==  @cur_user.memo_message_sort_icon(@sort_hash, "size") %>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dropdown dropdown-toggle gws-memo-dropdown">
+      <button class="btn">
         <%= t 'gws/memo/message.links.etc' %> <i class="material-icons md-13">&#xE313;</i>
       </button>
       <ul class="dropdown-menu">

@@ -4,6 +4,8 @@ class Gws::Memo::FoldersController < ApplicationController
 
   model Gws::Memo::Folder
 
+  navi_view "gws/memo/management/navi"
+
   before_action :deny_with_auth
 
   private

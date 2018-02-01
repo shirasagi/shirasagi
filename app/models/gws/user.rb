@@ -4,6 +4,7 @@ class Gws::User
   include Gws::SitePermission
   include Gws::Addon::User::PublicDuty
   include Gws::Addon::User::CustomForm
+  include Gws::Addon::Memo::MessageSort
   include Gws::Addon::Role
   include SS::Addon::UserGroupHistory
   include Gws::Addon::History

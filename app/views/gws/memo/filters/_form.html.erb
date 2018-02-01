@@ -57,6 +57,9 @@
   <dt><%= @model.t :subject %><%= @model.tt :subject %></dt>
   <dd><%= f.text_field :subject %></dd>
 
+  <dt><%= @model.t :body %><%= @model.tt :body %></dt>
+  <dd><%= f.text_field :body %></dd>
+
   <dt><%= @model.t :action %><%= @model.tt :action %></dt>
   <dd><%= f.select :action, @item.action_options %></dd>
 

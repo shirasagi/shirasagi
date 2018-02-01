@@ -1,3 +1,4 @@
+# set to_member_ids
 class SS::Migration20180124000000
   def change
     Gws::Memo::Message.each do |message|

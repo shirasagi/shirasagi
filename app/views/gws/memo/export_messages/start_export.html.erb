@@ -1,0 +1,15 @@
+<%= form_for :item, url: { action: :export }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.export") %></h2></div>
+      <div class="addon-body">
+        <div><%=br t("gws/memo/message.export.start_message") %></div>
+      </div>
+      <footer class="send">
+        <%= link_to t('ss.links.back'), { action: :index } , { class: "btn btn-primary" } %>
+      </footer>
+    </div>
+  </div>
+<% end %>

@@ -10,7 +10,7 @@ module Gws::Model
 
       field :subject, type: String
       field :text, type: String, default: ''
-      field :html, type: String
+      field :html, type: String, default: ''
       field :format, type: String
       field :size, type: Integer, default: 0
       field :seen, type: Hash, default: {}
@@ -20,6 +20,10 @@ module Gws::Model
       field :state, type: String, default: 'public'
       field :path, type: Hash, default: {}
       field :send_date, type: DateTime
+      field :import_info, type: Hash, default: nil
+
+      field :to_member_name, type: String, default: ''
+      field :from_member_name, type: String, default: ''
 
       embeds_ids :to_members, class_name: "Gws::User"
       embeds_ids :cc_members, class_name: "Gws::User"
@@ -38,6 +42,7 @@ module Gws::Model
       before_validation :set_send_date
       before_validation :set_path
       before_validation :set_size
+      before_validation :set_member_name
 
       validates :subject, presence: true
 
@@ -100,6 +105,11 @@ module Gws::Model
       #self.size += html.bytesize if html.present?
       self.size = 1024
       self.size += files.pluck(:size).sum if files.present?
+    end
+
+    def set_member_name
+      self.from_member_name = @cur_user.long_name if @cur_user
+      self.to_member_name = display_to.join("; ")
     end
 
     def set_member_ids
@@ -265,10 +275,22 @@ module Gws::Model
       update
     end
 
-    def new_memo
-      if sign = Gws::Memo::Signature.default_sign(@cur_user)
+    def new_memo(ref = nil)
+      if sign = Gws::Memo::Signature.site(@cur_site).default_sign(@cur_user)
         self.text = "\n\n#{sign}"
         self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
+      end
+
+      if ref
+        self.to_member_ids = ref.to_member_ids
+        self.cc_member_ids = ref.cc_member_ids
+
+        self.subject = ref.subject
+        self.format = ref.format
+        self.text = ref.text
+        self.html = ref.html
+
+        self.priority = ref.priority
       end
     end
 

@@ -15,6 +15,8 @@ ja:
     message: メッセージ
     select_check: 件のメッセージを選択
     commit_params_check: 送信
+    export_messages: エクスポート
+    import_messages: インポート
     links:
       move: 移動する
       etc: その他
@@ -26,7 +28,10 @@ ja:
       reply: 返信する
       reply_all: 全員に返信
       forward: 転送する
+      ref: 新規メッセージとして編集する
       deleted: 削除済み
+      sort: 並び替え
+      print: 印刷
     confirm:
       trash_all: ゴミ箱に移しますか？
       set_seen_all: 既読にしますか？
@@ -42,9 +47,17 @@ ja:
     notice:
       send_mdn: 開封確認メッセージを送信しました。
       ignore_mdn: 開封確認を無視しました。
+      start_export: エクスポートを開始しました。
+      start_import: インポートしました。
+    export:
+      subject: '[メッセージ] エクスポートが完了しました。 %{datetime}'
+      notiry_message: "メッセージのエクスポートが完了しました。\nダウンロード： %{link}"
+      start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、メッセージにてダウンロードリンクが通知されます。"
     mdn:
       subject: '[開封確認] %{subject}'
       confirmed: "メッセージが開封されました。\n%{name} %{date}"
+    errors:
+      blank_message: メッセージを選択してください。
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱
@@ -119,6 +132,7 @@ ja:
         from_member_ids: 条件/差出人
         to_member_ids: 条件/宛先
         subject: 条件/件名
+        body: 条件/本文
         action: アクション
         folder: フォルダー
         state: 状態
@@ -142,6 +156,12 @@ ja:
         memo_email: 転送元メールアドレス
       gws/addon/memo/priority:
         priority: 重要度
+  activemodel:
+    models:
+      gws/memo/message_importer: インポート
+    attributes:
+      gws/memo/message_importer:
+        in_file: ファイル
   tooltip:
     gws/memo/message:
       member_ids:
@@ -161,6 +181,9 @@ ja:
         - フィルターの条件となる宛先（CC含む）を選択します。
       subject:
         - フィルターの条件となる件名を入力します。
+        - 件名は部分一致で評価されます。
+      body:
+        - フィルターの条件となる本文を入力します。
         - 件名は部分一致で評価されます。
       action:
         - 条件に合致したメッセージに対して行う操作を選択します。
@@ -212,3 +235,7 @@ ja:
     gws/addon/memo/priority:
       priority:
         - メッセージの重要度を選択します。
+
+  job:
+    models:
+      gws/memo/message_export: メッセージ/エクスポート
