@@ -155,7 +155,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def delete
-    #
+    render
   end
 
   def destroy
