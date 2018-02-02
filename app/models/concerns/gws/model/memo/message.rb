@@ -243,16 +243,28 @@ module Gws::Model
       send_date ? send_date.strftime('%Y/%m/%d %H:%M') : I18n.t('gws/memo/folder.inbox_draft')
     end
 
+    def to_members?
+      to_members.present? || to_webmail_address_groups.present? || to_shared_address_groups.present?
+    end
+
+    def cc_members?
+      cc_members.present? || cc_webmail_address_groups.present? || cc_shared_address_groups.present?
+    end
+
+    def bcc_members?
+      bcc_members.present? || bcc_webmail_address_groups.present? || bcc_shared_address_groups.present?
+    end
+
     def display_to
-      sorted_to_members.map(&:long_name)
+      sorted_to_members.map(&:long_name) + to_webmail_address_groups.pluck(:name) + to_shared_address_groups.pluck(:name)
     end
 
     def display_cc
-      sorted_cc_members.map(&:long_name)
+      sorted_cc_members.map(&:long_name) + cc_webmail_address_groups.pluck(:name) + cc_shared_address_groups.pluck(:name)
     end
 
     def display_bcc
-      sorted_bcc_members.map(&:long_name)
+      sorted_bcc_members.map(&:long_name) + bcc_webmail_address_groups.pluck(:name) + bcc_shared_address_groups.pluck(:name)
     end
 
     def attachments?

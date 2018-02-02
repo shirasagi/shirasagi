@@ -38,7 +38,7 @@
 
         <div class="info">
           <% if @cur_folder.sent_box? %>
-            <% addr = item.to.present? ? item.display_to.first : nil %>
+            <% addr = item.to_members? ? item.display_to.first : nil %>
             <span class="field to" title="<%= addr %>"><%= addr %></span>
           <% else %>
             <span class="field from" title="<%= item.user.long_name %>"><%= item.user.long_name %></span>

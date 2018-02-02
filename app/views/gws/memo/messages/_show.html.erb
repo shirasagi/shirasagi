@@ -16,23 +16,26 @@
     <div class="date"><%= @item.display_send_date %></div>
   </div>
 
-  <% if (@item.to_members + @item.cc_members + @item.bcc_members).present? %>
+  <% show_to_section = @item.to_members? %>
+  <% show_cc_section = @item.cc_members? %>
+  <% show_bcc_section = @item.bcc_members? && (@cur_folder.sent_box? || @cur_folder.draft_box?) %>
+  <% if show_to_section || show_cc_section || show_bcc_section %>
     <div class="addresses">
-      <% if @item.to_members.present? %>
+      <% if show_to_section %>
         <div class="address">
           <div class="label"><%= @model.t :to_member_ids %></div>
           <div class="value"><%= @item.display_to.join('; ') %></div>
         </div>
       <% end %>
 
-      <% if @item.cc_members.present? %>
+      <% if show_cc_section %>
         <div class="address">
           <div class="label"><%= @model.t :cc_member_ids %></div>
           <div class="value"><%= @item.display_cc.join('; ') %></div>
         </div>
       <% end %>
 
-      <% if @item.bcc_members.present? && (@cur_folder.sent_box? || @cur_folder.draft_box?) %>
+      <% if show_bcc_section %>
         <div class="address">
           <div class="label"><%= @model.t :bcc_member_ids %></div>
           <div class="value"><%= @item.display_bcc.join('; ') %></div>
