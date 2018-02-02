@@ -31,7 +31,10 @@
       <% if @multi %>
       <th class="checkbox"><input type="checkbox" /></th>
       <% end %>
-      <th class="from"><%= @model.t :from %></th>
+      <th class="from">
+        <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+        <%= @model.t :from %>
+      </th>
       <th class="name"><%= @model.t :subject %></th>
       <th class="priority"><%= @model.t :priority %></th>
       <th class="send_date"><%= @model.t :display_send_date %></th>
@@ -42,6 +45,7 @@
     <% @items.each do |item| %>
       <tr class="list-item"
         data-id="<%= item.id %>"
+        data-attachments="<%= item.attachments? ? 1 : nil %>"
         data-from="<%= item.user.try(:long_name) %>"
         data-name="<%= item.subject %>"
         data-priority="<%= item.label :priority %>"
@@ -50,7 +54,10 @@
         <% if @multi %>
         <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
         <% end %>
-        <td><%= item.user.try(:long_name) %></td>
+        <td>
+          <i class="material-icons md-15" <%== item.attachments? ? '' : 'style="visibility: hidden;"' %>>&#xE226;</i>
+          <%= item.user.try(:long_name) %>
+        </td>
         <td><%= link_to item.subject, "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= item.label :priority %></td>
         <td><%= item.display_send_date %></td>
