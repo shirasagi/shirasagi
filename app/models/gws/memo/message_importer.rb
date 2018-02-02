@@ -62,17 +62,16 @@ class Gws::Memo::MessageImporter
       item.to_member_ids = []
       data['to_members'].each do |data_user|
         user = find_user(data_user)
-        item.to_member_ids += [user.id]
+        item.to_member_ids += [user.id] if user
       end
     end
-    item.to_member_ids = [@cur_user.id] if item.to_member_ids.blank?
 
     # cc_member_ids
     if data['cc_members'].present?
       item.cc_member_ids = []
       data['cc_members'].each do |data_user|
         user = find_user(data_user)
-        item.cc_member_ids += [user.id]
+        item.cc_member_ids += [user.id] if user
       end
     end
 
@@ -81,14 +80,30 @@ class Gws::Memo::MessageImporter
       item.bcc_member_ids = []
       data['bcc_members'].each do |data_user|
         user = find_user(data_user)
-        item.bcc_member_ids += [user.id]
+        item.bcc_member_ids += [user.id] if user
+      end
+    end
+
+    # check member_ids
+    if item.draft?
+      #
+    else
+      if item.to_member_ids.blank?
+        item.to_member_ids = [@cur_user.id]
+      end
+      member_ids = (item.to_member_ids + item.cc_member_ids + item.bcc_member_ids).uniq
+      if !member_ids.include?(@cur_user.id)
+        item.to_member_ids += [@cur_user.id]
       end
     end
 
     # deleted
     item.deleted = {}
-    if !item.draft?
-      (item.to_member_ids + item.cc_member_ids + item.bcc_member_ids).uniq.each do |id|
+    if item.draft?
+      #
+    else
+      member_ids = (item.to_member_ids + item.cc_member_ids + item.bcc_member_ids).uniq
+      member_ids.each do |id|
         item.deleted[id.to_s] = @datetime if id != @cur_user.id
       end
       item.deleted["sent"] = @datetime unless @sent_by_cur_user
@@ -130,6 +145,10 @@ class Gws::Memo::MessageImporter
     else
       nil
     end
+  end
+
+  def member_ids(item)
+    (item.to_member_ids + item.cc_member_ids + item.bcc_member_ids).uniq
   end
 
   def save_ss_file(data)

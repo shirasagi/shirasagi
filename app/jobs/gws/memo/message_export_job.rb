@@ -1,12 +1,12 @@
 class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def perform(opts = {})
-    message_ids = opts[:message_ids]
-    return if message_ids.blank?
-
     @datetime = Time.zone.now
-    @message_ids = message_ids
+    @message_ids = opts[:message_ids]
+    @root_url = opts[:root_url].to_s
     @output_zip = SS::DownloadJobFile.new(user, "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
     @output_dir = @output_zip.path.sub(::File.extname(@output_zip.path), "")
+
+    return if @message_ids.blank?
 
     FileUtils.rm_rf(@output_dir)
     FileUtils.rm_rf(@output_zip.path)
@@ -59,7 +59,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     item.to_member_ids = [user.id]
     item.subject = I18n.t("gws/memo/message.export.subject", datetime: @datetime.strftime('%Y/%m/%d %H:%M'))
     item.format = "text"
-    item.text = I18n.t("gws/memo/message.export.notiry_message", link: @output_zip.url)
+    item.text = I18n.t("gws/memo/message.export.notiry_message", link:  ::File.join(@root_url, @output_zip.url))
     item.send_date = @datetime
     item.deleted = { "sent" => @datetime }
     item.save!
