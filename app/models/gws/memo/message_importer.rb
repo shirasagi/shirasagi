@@ -103,7 +103,7 @@ class Gws::Memo::MessageImporter
       #
     else
       member_ids = (item.to_member_ids + item.cc_member_ids + item.bcc_member_ids).uniq
-      member_ids.uniq.each do |id|
+      member_ids.each do |id|
         item.deleted[id.to_s] = @datetime if id != @cur_user.id
       end
       item.deleted["sent"] = @datetime unless @sent_by_cur_user

@@ -8,8 +8,6 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
     return if @message_ids.blank?
 
-    dump(@root_url)
-
     FileUtils.rm_rf(@output_dir)
     FileUtils.rm_rf(@output_zip.path)
     FileUtils.mkdir_p(@output_dir)
