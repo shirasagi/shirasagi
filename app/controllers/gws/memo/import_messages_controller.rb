@@ -40,6 +40,11 @@ class Gws::Memo::ImportMessagesController < ApplicationController
       render file: :index
       return
     end
+    if ::File.extname(file.original_filename) != ".zip"
+      @item.errors.add :in_file, :invalid_file_type
+      render file: :index
+      return
+    end
 
     @item.cur_site = @cur_site
     @item.cur_user = @cur_user

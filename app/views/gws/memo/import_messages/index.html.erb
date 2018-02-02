@@ -8,9 +8,12 @@
         <dl class="see">
           <dt><%= @model.t :in_file %></dt>
           <dd><%= f.file_field :in_file, class: "file" %></dd>
+
+          <dd class="wide" style="color: #b30; margin-top: 10px;">
+            <%=br t("gws/memo/message.import.caution") %>
+          </dd>
         </dl>
       </div>
-
       <footer class="send">
         <%= f.submit t("ss.import"), class: :save %>
       </footer>
