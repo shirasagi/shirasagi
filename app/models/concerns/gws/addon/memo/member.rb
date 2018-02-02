@@ -8,8 +8,6 @@ module Gws::Addon
       class_variable_set(:@@_member_ids_required, false)
     end
 
-    public
-
     def sorted_to_members
       return @sorted_to_members if @sorted_to_members
 
@@ -35,7 +33,7 @@ module Gws::Addon
 
     def validate_presence_member
       return true if draft?
-      return true if to_member_ids.present?
+      return true if member_ids.present?
       errors.add :to_member_ids, :empty
     end
   end

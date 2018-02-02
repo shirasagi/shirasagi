@@ -7,7 +7,7 @@
   <dl class="see to">
     <dt><%= @model.t :to_member_ids %><%= @model.tt :to_member_ids %></dt>
     <dd>
-      <%= f.hidden_field "to_member_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "in_to_members[]", value: "", class: "hidden-ids" %>
       <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
       <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" %>
       <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" %>
@@ -20,7 +20,19 @@
         <tbody>
           <% @item.sorted_to_members.each do |user| %>
           <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "to_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+            <td><%= f.hidden_field "in_to_members[]", value: user.id, id: nil %> <%= user.long_name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end %>
+          <% @item.to_webmail_address_groups.each do |group| %>
+          <tr data-id="webmail_group:<%= group.id %>">
+            <td><%= f.hidden_field "in_to_members[]", value: "webmail_group:#{group.id}", id: nil %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end %>
+          <% @item.to_shared_address_groups.each do |group| %>
+          <tr data-id="shared_group:<%= group.id %>">
+            <td><%= f.hidden_field "in_to_members[]", value: "shared_group:#{group.id}", id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
@@ -36,7 +48,7 @@
   <dl class="see cc-bcc cc  <%= 'hide' if cc_blank %>">
     <dt><%= @model.t :cc_member_ids %><%= @model.tt :cc_member_ids %></dt>
     <dd>
-      <%= f.hidden_field "cc_member_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "in_cc_members[]", value: "", class: "hidden-ids" %>
 
       <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
       <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" %>
@@ -50,9 +62,21 @@
         <tbody>
         <% @item.sorted_cc_members.each do |user| %>
             <tr data-id="<%= user.id %>">
-              <td><%= f.hidden_field "cc_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+              <td><%= f.hidden_field "in_cc_members[]", value: user.id, id: nil %> <%= user.long_name %></td>
               <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
             </tr>
+        <% end %>
+        <% @item.cc_webmail_address_groups.each do |group| %>
+          <tr data-id="webmail_group:<%= group.id %>">
+            <td><%= f.hidden_field "in_cc_members[]", value: "webmail_group:#{group.id}", id: nil %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+        <% @item.cc_shared_address_groups.each do |group| %>
+          <tr data-id="shared_group:<%= group.id %>">
+            <td><%= f.hidden_field "in_cc_members[]", value: "shared_group:#{group.id}", id: nil %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
         <% end %>
         </tbody>
       </table>
@@ -62,7 +86,7 @@
   <dl class="see cc-bcc bcc  <%= 'hide' if cc_blank %>">
     <dt><%= @model.t :bcc_member_ids %><%= @model.tt :bcc_member_ids %></dt>
     <dd>
-      <%= f.hidden_field "bcc_member_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "in_bcc_members[]", value: "", class: "hidden-ids" %>
 
       <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
       <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" %>
@@ -76,9 +100,21 @@
         <tbody>
         <% @item.sorted_bcc_members.each do |user| %>
             <tr data-id="<%= user.id %>">
-              <td><%= f.hidden_field "bcc_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+              <td><%= f.hidden_field "in_bcc_members[]", value: user.id, id: nil %> <%= user.long_name %></td>
               <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
             </tr>
+        <% end %>
+        <% @item.bcc_webmail_address_groups.each do |group| %>
+          <tr data-id="webmail_group:<%= group.id %>">
+            <td><%= f.hidden_field "in_bcc_members[]", value: "webmail_group:#{group.id}", id: nil %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+        <% @item.bcc_shared_address_groups.each do |group| %>
+          <tr data-id="shared_group:<%= group.id %>">
+            <td><%= f.hidden_field "in_bcc_members[]", value: "shared_group:#{group.id}", id: nil %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
         <% end %>
         </tbody>
       </table>

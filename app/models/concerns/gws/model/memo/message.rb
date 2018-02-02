@@ -7,6 +7,7 @@ module Gws::Model
       store_in collection: "gws_memo_messages"
 
       attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path, :in_request_mdn
+      attr_accessor :in_to_members, :in_cc_members, :in_bcc_members
 
       field :subject, type: String
       field :text, type: String, default: ''
@@ -26,12 +27,22 @@ module Gws::Model
       field :from_member_name, type: String, default: ''
 
       embeds_ids :to_members, class_name: "Gws::User"
+      embeds_ids :to_webmail_address_groups, class_name: "Webmail::AddressGroup"
+      embeds_ids :to_shared_address_groups, class_name: "Gws::SharedAddress::Group"
+
       embeds_ids :cc_members, class_name: "Gws::User"
+      embeds_ids :cc_webmail_address_groups, class_name: "Webmail::AddressGroup"
+      embeds_ids :cc_shared_address_groups, class_name: "Gws::SharedAddress::Group"
+
       embeds_ids :bcc_members, class_name: "Gws::User"
+      embeds_ids :bcc_webmail_address_groups, class_name: "Webmail::AddressGroup"
+      embeds_ids :bcc_shared_address_groups, class_name: "Gws::SharedAddress::Group"
+
       embeds_ids :request_mdn, class_name: "Gws::User"
 
       permit_params :subject, :text, :html, :format, :in_path, :in_request_mdn
-      permit_params to_member_ids: [], cc_member_ids: [], bcc_member_ids: []
+      # permit_params to_member_ids: [], cc_member_ids: [], bcc_member_ids: []
+      permit_params in_to_members: [], in_cc_members: [], in_bcc_members: []
 
       default_scope -> { order_by(send_date: -1, updated: -1) }
 
@@ -60,8 +71,8 @@ module Gws::Model
 
         criteria
       }
-      scope :and_public, ->() { where(state: "public") }
-      scope :and_closed, ->() { where(state: "closed") }
+      scope :and_public, -> { where(state: "public") }
+      scope :and_closed, -> { where(state: "closed") }
       scope :folder, ->(folder, user) {
         if folder.sent_box?
           user(user).where(:"deleted.sent".exists => false).and_public
@@ -112,8 +123,80 @@ module Gws::Model
       self.to_member_name = display_to.join("; ")
     end
 
+    def in_recipients?
+      return true if Array(in_to_members).flatten.compact.uniq.select(&:present?).present?
+      return true if Array(in_cc_members).flatten.compact.uniq.select(&:present?).present?
+      return true if Array(in_bcc_members).flatten.compact.uniq.select(&:present?).present?
+      false
+    end
+
+    def extract_members(in_members)
+      users = []
+      webmail_address_groups = []
+      shared_address_groups = []
+
+      Array(in_members).flatten.compact.uniq.select(&:present?).each do |member_id|
+        if member_id.start_with?('webmail_group:')
+          group_id = member_id[14..-1]
+          webmail_address_groups << Webmail::AddressGroup.user(@cur_user).find(group_id) rescue nil
+        elsif member_id.start_with?('shared_group:')
+          group_id = member_id[13..-1]
+          shared_address_groups << Gws::SharedAddress::Group.site(@cur_site).find(group_id) rescue nil
+        else
+          users << Gws::User.find(member_id) rescue nil
+        end
+      end
+
+      [ users.compact, webmail_address_groups.compact, shared_address_groups.compact ]
+    end
+
+    def extract_to_members
+      members, webmail_address_groups, shared_address_groups = extract_members(in_to_members)
+      self.to_member_ids = members.map(&:id)
+      self.to_webmail_address_group_ids = webmail_address_groups.map(&:id)
+      self.to_shared_address_group_ids = shared_address_groups.map(&:id)
+    end
+
+    def extract_cc_members
+      members, webmail_address_groups, shared_address_groups = extract_members(in_cc_members)
+      self.cc_member_ids = members.map(&:id)
+      self.cc_webmail_address_group_ids = webmail_address_groups.map(&:id)
+      self.cc_shared_address_group_ids = shared_address_groups.map(&:id)
+    end
+
+    def extract_bcc_members
+      members, webmail_address_groups, shared_address_groups = extract_members(in_bcc_members)
+      self.bcc_member_ids = members.map(&:id)
+      self.bcc_webmail_address_group_ids = webmail_address_groups.map(&:id)
+      self.bcc_shared_address_group_ids = shared_address_groups.map(&:id)
+    end
+
+    def extract_overall_members
+      ids = []
+      ids += Array(to_member_ids)
+      ids += Array(cc_member_ids)
+      ids += Array(bcc_member_ids)
+
+      group_ids = Array(to_webmail_address_group_ids) + Array(cc_webmail_address_group_ids) + Array(bcc_webmail_address_group_ids)
+      ids += Webmail::Address.user(@cur_user).
+        in(address_group_id: group_ids).pluck(:member_id)
+
+      group_ids = Array(to_shared_address_group_ids) + Array(cc_shared_address_group_ids) + Array(bcc_shared_address_group_ids)
+      ids += Gws::SharedAddress::Address.site(@cur_site).readable(@cur_user, site: @cur_site).
+        in(address_group_id: group_ids).pluck(:member_id)
+
+      self.member_ids = Gws::User.in(id: ids.compact.uniq).pluck(:id)
+    end
+
     def set_member_ids
-      self.member_ids = (to_member_ids + cc_member_ids + bcc_member_ids).uniq
+      # self.member_ids = (to_member_ids + cc_member_ids + bcc_member_ids).uniq
+      if in_to_members.present? || in_cc_members.present? || in_bcc_members.present?
+        extract_to_members
+        extract_cc_members
+        extract_bcc_members
+        extract_overall_members
+      end
+
       self.member_ids = member_ids - deleted.keys.map(&:to_i)
     end
 
@@ -316,7 +399,7 @@ module Gws::Model
       return unless @cur_site
       if @in_reminder_date.blank? && @cur_site.memo_reminder != 0
         @in_reminder_date = (Time.zone.now.beginning_of_day + (@cur_site.memo_reminder - 1).day).
-            end_of_day.strftime("%Y/%m/%d %H:%M") unless @cur_site.memo_reminder == 0
+            end_of_day.strftime("%Y/%m/%d %H:%M")
       end
       @in_reminder_state = (@cur_site.memo_reminder == 0)
     end
