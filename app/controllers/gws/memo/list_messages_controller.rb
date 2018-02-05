@@ -82,7 +82,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
 
   def update
     @item.attributes = get_params
-    raise '404' unless @item.editable?(@cur_user, @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')

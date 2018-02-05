@@ -3,19 +3,22 @@ class Gws::Memo::ListMessage
   include SS::Document
   include Gws::Model::Memo::Message
   include Gws::Referenceable
-  include Gws::Reference::User
+  # DO NOT INCLUDE Gws::Reference::User module
+  # because gws/memo/filter match hidden user accidentally if Gws::Reference::User module was included.
+  # include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Memo::Member
   include Gws::Addon::Memo::Body
-  # include Gws::Addon::Memo::Priority
   include Gws::Addon::File
   include Gws::Addon::Memo::Quota
   include Gws::Addon::GroupPermission
 
-  attr_accessor :cur_list
+  attr_accessor :cur_user, :cur_list
   belongs_to :list, class_name: 'Gws::Memo::List'
 
   before_validation :set_list
+
+  validates :list_id, presence: true
 
   scope :and_list_message, ->{ where(type: 'Gws::Memo::ListMessage') }
   scope :and_list, ->(list) { where(list_id: list.id) }
@@ -23,8 +26,8 @@ class Gws::Memo::ListMessage
   alias name subject
   alias reminder_user_ids member_ids
 
-  alias from user
-  alias form_id user_id
+  # alias from user
+  # alias form_id user_id
 
   alias to to_members
   alias to_ids to_member_ids
@@ -32,6 +35,11 @@ class Gws::Memo::ListMessage
   # # indexing to elasticsearch via companion object
   # around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   # around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+
+  # override Gws::Model::Memo::Message#display_from
+  def display_from
+    sender_name.presence || list.sender_name || list.name || I18n.t('gws/memo.no_senders')
+  end
 
   private
 
