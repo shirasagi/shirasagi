@@ -8,6 +8,8 @@ class Gws::Memo::ListMessagesController < ApplicationController
 
   before_action :set_list
   before_action :set_crumbs
+  before_action :set_search_params
+  helper_method :state_options
 
   private
 
@@ -22,6 +24,10 @@ class Gws::Memo::ListMessagesController < ApplicationController
     @crumbs << [@cur_list.name, action: :index ]
   end
 
+  def set_search_params
+    @s = params[:s] || {}
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_list: @cur_list }
   end
@@ -34,6 +40,12 @@ class Gws::Memo::ListMessagesController < ApplicationController
     { state: 'closed' }
   end
 
+  def state_options
+    %w(closed public).map do |v|
+      [ I18n.t("gws/memo.options.state.#{v}"), v ]
+    end
+  end
+
   public
 
   def index
@@ -41,7 +53,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
 
     @items = @model.site(@cur_site).and_list(@cur_list).and_list_message.
       allow(:read, @cur_user, site: @cur_site).
-      search(params[:s]).
+      search(@s).
       page(params[:page]).per(50)
   end
 

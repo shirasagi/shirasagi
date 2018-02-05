@@ -8,6 +8,9 @@ ja:
         '3': 標準
         '4': 低
         '5': 最低
+      state:
+        closed: 下書き
+        public: 送信済み
     links:
       show_messages: メッセージを見る
   gws/memo/message:

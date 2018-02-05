@@ -59,20 +59,20 @@ module Gws::Model
 
       validates :subject, presence: true
 
-      scope :search, ->(params) {
-        criteria = where({})
-        return criteria if params.blank?
-
-        if params[:subject].present?
-          criteria = criteria.keyword_in params[:subject], :subject
-        end
-
-        params.values_at(:text, :html).reject(&:blank?).each do |value|
-          criteria = criteria.keyword_in value, :text, :html
-        end
-
-        criteria
-      }
+      # scope :search, ->(params) {
+      #   criteria = where({})
+      #   return criteria if params.blank?
+      #
+      #   if params[:subject].present?
+      #     criteria = criteria.keyword_in params[:subject], :subject
+      #   end
+      #
+      #   params.values_at(:text, :html).reject(&:blank?).each do |value|
+      #     criteria = criteria.keyword_in value, :text, :html
+      #   end
+      #
+      #   criteria
+      # }
       scope :and_public, -> { where(state: "public") }
       scope :and_closed, -> { self.and('$or' => [ { :state.ne => "public" }, { :state.exists => false } ]) }
       scope :folder, ->(folder, user) {
@@ -427,6 +427,35 @@ module Gws::Model
     end
 
     module ClassMethods
+      def search(params)
+        all.search_keyword(params).search_subject(params).search_text_or_html(params).search_state(params)
+      end
+
+      def search_keyword(params = {})
+        return all if params.blank? || params[:keyword].blank?
+        all.keyword_in(params[:keyword], :subject, :text, :html)
+      end
+
+      def search_subject(params = {})
+        return all if params.blank? || params[:subject].blank?
+        all.keyword_in params[:subject], :subject
+      end
+
+      def search_text_or_html(params = {})
+        return all if params.blank? || (params[:text].blank? && params[:html].blank?)
+
+        criteria = all
+        params.values_at(:text, :html).reject(&:blank?).each do |value|
+          criteria = criteria.keyword_in value, :text, :html
+        end
+        criteria
+      end
+
+      def search_state(params = {})
+        return all if params.blank? || params[:state].blank?
+        all.where(state: params[:state])
+      end
+
       def unseens(user, site)
         self.member(user).site(site).unseen(user).and_public
         #self.where('$and' => [
