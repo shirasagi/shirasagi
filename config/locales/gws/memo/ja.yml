@@ -15,6 +15,9 @@ ja:
         public: 送信済み
     links:
       show_messages: メッセージを見る
+      publish: 送信する
+    confirm:
+      publish: 送信してよろしいですか？
   gws/memo/message:
     folder: フォルダー
     child_folder: 子フォルダー

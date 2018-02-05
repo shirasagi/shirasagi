@@ -63,51 +63,22 @@ class Gws::Memo::ListMessagesController < ApplicationController
   end
 
   def create
-    @item = @model.new get_params
-    if params['commit'] == t('gws/memo/message.commit_params_check')
-      raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
-      @item.attributes = send_params
-      notice = t("ss.notice.sent")
-    else
-      @item.attributes = draft_params
-      notice = t("ss.notice.saved")
-    end
-
-    if @item.save
-      # send_forward_mails
-      render_create true, location: { action: :index }, notice: notice
-    else
-      render_create false, location: { action: :index }, notice: notice
-    end
+    @item = @model.new get_params.merge(draft_params)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
   end
 
   def edit
-    raise '403' if @item.public?
+    raise '404' if @item.public?
     super
   end
 
   def update
-    raise '403' if @item.public?
-
-    @item.attributes = get_params
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
+    @item.attributes = get_params.merge(draft_params)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    if params['commit'] == t('gws/memo/message.commit_params_check')
-      raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
-      @item.attributes = send_params
-      notice = t("ss.notice.sent")
-    else
-      @item.attributes = draft_params
-      notice = t("ss.notice.saved")
-    end
-
-    if @item.update
-      # send_forward_mails
-      render_update true, location: { action: :index }, notice: notice
-    else
-      render_update false, location: { action: :index }, notice: notice
-    end
+    raise '404' if @item.public?
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.save
   end
 
   def destroy
@@ -115,5 +86,20 @@ class Gws::Memo::ListMessagesController < ApplicationController
 
     fake_folder = OpenStruct.new({ :draft_box? => @item.draft?, :sent_box? => @item.public? })
     render_destroy @item.destroy_from_folder(@cur_user, fake_folder)
+  end
+
+  def publish
+    set_item
+    raise '404' if @item.public?
+    raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
+
+    if request.get?
+      return
+    end
+
+    @item.attributes = send_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+
+    render_update @item.save, notice: t('ss.notice.sent'), render: { file: :publish }
   end
 end

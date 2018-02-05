@@ -51,7 +51,9 @@ SS::Application.routes.draw do
       resources :signatures, concerns: :deletion
       resource :forwards, only: [:show, :edit, :update]
       resources :lists, concerns: :deletion do
-        resources :messages, controller: 'list_messages', concerns: :deletion
+        resources :messages, controller: 'list_messages', concerns: :deletion do
+          match :publish, on: :member, via: %i[get post]
+        end
       end
       resources :categories, concerns: :deletion
 

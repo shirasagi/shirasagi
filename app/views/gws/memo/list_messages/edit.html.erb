@@ -1,20 +1,5 @@
-<%= jquery do %>
-  Gws_Memo_Message.render();
-  $("#addon-basic").hide();
-  $(".js-send").on("click", function() {
-    if (!confirm('<%= I18n.t("gws/memo/message.confirm.send") %>')) {
-      return false;
-    }
-  });
-<% end %>
-
 <% @crud_buttons = proc do |f| %>
-  <% if @item.allowed?(:send, @cur_user, site: @cur_site) %>
-    <%= f.submit t('ss.buttons.send'), class: 'btn-primary save js-send' %>
-    <%= f.submit t('ss.buttons.draft_save'), class: 'btn-default js-save' %>
-  <% else %>
-    <%= f.submit t('ss.buttons.draft_save'), class: 'btn-primary js-save' %>
-  <% end %>
+  <%= f.submit t('ss.buttons.draft_save'), class: 'btn-primary js-save' %>
   <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 <% end %>
 
