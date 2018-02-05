@@ -18,6 +18,8 @@ class Gws::Memo::List
   field :signature, type: String
   embeds_ids :categories, class_name: 'Gws::Memo::Category'
 
+  has_many :messages, class_name: 'Gws::Memo::ListMessage', dependent: :nullify
+
   permit_params :name, :sender_name, :signature, category_ids: []
 
   validates :name, presence: true, length: { maximum: 80 }

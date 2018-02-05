@@ -23,7 +23,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+    { cur_user: @cur_user, cur_site: @cur_site, cur_list: @cur_list }
   end
 
   public
@@ -31,7 +31,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
   def index
     raise '403' unless @cur_list.allowed?(:read, @cur_user, site: @cur_site)
 
-    @items = @model.site(@cur_site).and_list_message.
+    @items = @model.site(@cur_site).and_list(@cur_list).and_list_message.
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
