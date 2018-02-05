@@ -14,8 +14,9 @@ class Gws::Memo::List
   permission_include_custom_groups
 
   field :name, type: String
+  embeds_ids :categories, class_name: 'Gws::Memo::Category'
 
-  permit_params :name
+  permit_params :name, category_ids: []
 
   validates :name, presence: true, length: { maximum: 80 }
 
