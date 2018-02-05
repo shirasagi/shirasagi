@@ -139,10 +139,10 @@ module Gws::Model
       shared_address_groups = []
 
       Array(in_members).flatten.compact.uniq.select(&:present?).each do |member_id|
-        if member_id.start_with?('webmail_group:')
+        if member_id.to_s.start_with?('webmail_group:')
           group_id = member_id[14..-1]
           webmail_address_groups << Webmail::AddressGroup.user(@cur_user).find(group_id) rescue nil
-        elsif member_id.start_with?('shared_group:')
+        elsif member_id.to_s.start_with?('shared_group:')
           group_id = member_id[13..-1]
           shared_address_groups << Gws::SharedAddress::Group.site(@cur_site).find(group_id) rescue nil
         else
@@ -389,7 +389,9 @@ module Gws::Model
 
       if ref
         self.to_member_ids = ref.to_member_ids
+        self.to_shared_address_group_ids = ref.to_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
         self.cc_member_ids = ref.cc_member_ids
+        self.cc_shared_address_group_ids = ref.cc_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
 
         self.subject = ref.subject
         self.format = ref.format

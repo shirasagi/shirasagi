@@ -195,7 +195,9 @@ class Gws::Memo::MessagesController < ApplicationController
     item_reply = @model.site(@cur_site).find(params[:id])
 
     @item.to_member_ids = [item_reply.user_id] + item_reply.to_member_ids - [@cur_user.id]
+    @item.to_shared_address_group_ids = item_reply.to_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
     @item.cc_member_ids = item_reply.cc_member_ids
+    @item.cc_shared_address_group_ids = item_reply.cc_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
     @item.subject = "Re: #{item_reply.subject}"
 
     @item.new_memo
@@ -224,25 +226,29 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def send_mdn
-    @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
-    @item.update
-
     item_mdn = @model.new fix_params
-    item_mdn.to_member_ids = [@item.user_id]
+    item_mdn.in_to_members = [@item.user_id]
     item_mdn.subject = I18n.t("gws/memo/message.mdn.subject", subject: @item.subject)
-    item_mdn.text = I18n.t("gws/memo/message.mdn.confirmed", name: @cur_user.long_name, date: Time.zone.now.strftime("%Y/%m/%d %H:%M"))
+    date = Time.zone.now.strftime("%Y/%m/%d %H:%M")
+    item_mdn.text = I18n.t("gws/memo/message.mdn.confirmed", name: @cur_user.long_name, date: date)
     item_mdn.format = "text"
     item_mdn.state = "public"
     item_mdn.in_validate_presence_member = true
-    item_mdn.save
+    result = item_mdn.save
 
-    render_change :send_mdn, redirect: { action: :show }
+    if result
+      @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
+      @item.update
+    else
+      @item.errors[:base] += item_mdn.errors.full_messages
+    end
+
+    render_change result, :send_mdn, redirect: { action: :show }
   end
 
   def ignore_mdn
     @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
-    @item.update
-    render_change :ignore_mdn, redirect: { action: :show }
+    render_change @item.update, :ignore_mdn, redirect: { action: :show }
   end
 
   def print
@@ -305,12 +311,19 @@ class Gws::Memo::MessagesController < ApplicationController
     render_destroy_all(false)
   end
 
-  def render_change(action, opts = {})
+  def render_change(result, action, opts = {})
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
-    respond_to do |format|
-      format.html { redirect_to location, notice: t("gws/memo/message.notice.#{action}") }
-      format.json { render json: { action: params[:action], notice: t("gws/memo/message.notice.#{action}") } }
+    if result
+      respond_to do |format|
+        format.html { redirect_to location, notice: t("gws/memo/message.notice.#{action}") }
+        format.json { render json: { action: params[:action], notice: t("gws/memo/message.notice.#{action}") } }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to location, notice: @item.errors.full_messages.join("\n") }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+      end
     end
   end
 end
