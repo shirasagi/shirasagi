@@ -8,6 +8,8 @@ ja:
         '3': 標準
         '4': 低
         '5': 最低
+    links:
+      show_messages: メッセージを見る
   gws/memo/message:
     folder: フォルダー
     child_folder: 子フォルダー
@@ -100,6 +102,14 @@ ja:
     edit_private_gws_memo_lists: リストの編集（所有）
     delete_other_gws_memo_lists: リストの削除（全て）
     delete_private_gws_memo_lists: リストの削除（所有）
+    read_other_gws_memo_list_messages: リストメッセージの閲覧（全て）
+    read_private_gws_memo_list_messages: リストメッセージの閲覧（所有）
+    edit_other_gws_memo_list_messages: リストメッセージの編集（全て）
+    edit_private_gws_memo_list_messages: リストメッセージの編集（所有）
+    delete_other_gws_memo_list_messages: リストメッセージの削除（全て）
+    delete_private_gws_memo_list_messages: リストメッセージの削除（所有）
+    send_other_gws_memo_list_messages: リストメッセージの送信（全て）
+    send_private_gws_memo_list_messages: リストメッセージの送信（所有）
     read_other_gws_memo_categories: カテゴリーの閲覧（全て）
     read_private_gws_memo_categories: カテゴリーの閲覧（所有）
     edit_other_gws_memo_categories: カテゴリーの編集（全て）

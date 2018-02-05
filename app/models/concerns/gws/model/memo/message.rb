@@ -9,6 +9,7 @@ module Gws::Model
       attr_accessor :signature, :attachments, :field, :cur_site, :cur_user, :in_path, :in_request_mdn
       attr_accessor :in_to_members, :in_cc_members, :in_bcc_members
 
+      field :type, type: String
       field :subject, type: String
       field :text, type: String, default: ''
       field :html, type: String, default: ''
@@ -48,6 +49,7 @@ module Gws::Model
 
       after_initialize :set_default_reminder_date, if: :new_record?
 
+      before_validation :set_type
       before_validation :set_member_ids
       before_validation :set_request_mdn
       before_validation :set_send_date
@@ -72,7 +74,7 @@ module Gws::Model
         criteria
       }
       scope :and_public, -> { where(state: "public") }
-      scope :and_closed, -> { where(state: "closed") }
+      scope :and_closed, -> { self.and('$or' => [ { :state.ne => "public" }, { :state.exists => false } ]) }
       scope :folder, ->(folder, user) {
         if folder.sent_box?
           user(user).where(:"deleted.sent".exists => false).and_public
@@ -188,6 +190,10 @@ module Gws::Model
       self.member_ids = Gws::User.in(id: ids.compact.uniq).pluck(:id)
     end
 
+    def set_type
+      self.type ||= self.class.model_name.name
+    end
+
     def set_member_ids
       # self.member_ids = (to_member_ids + cc_member_ids + bcc_member_ids).uniq
       if in_to_members.present? || in_cc_members.present? || in_bcc_members.present?
@@ -209,7 +215,7 @@ module Gws::Model
 
     def set_send_date
       now = Time.zone.now
-      self.send_date ||= now if state == "public"
+      self.send_date ||= now if public?
       #self.seen[cur_user.id] ||= now if cur_user
     end
 
@@ -356,7 +362,7 @@ module Gws::Model
     end
 
     def draft?
-      self.state == "closed"
+      !public?
     end
 
     def public?

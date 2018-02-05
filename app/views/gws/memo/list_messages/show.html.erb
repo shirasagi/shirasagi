@@ -1,0 +1,12 @@
+<%= jquery do %>
+  Gws_Memo_Message.render();
+  $("#addon-gws-agents-addons-member").hide();
+
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>
+
+<div class="addon-views">
+  <%= render file: '_show' %>
+  <%= render file: '_addons_show', locals: { addons: @item.class.addons } %>
+</div>
