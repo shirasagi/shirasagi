@@ -35,6 +35,7 @@
 #= require ss/lib/workflow
 #= require ss/lib/sortable_form
 #= require ss/lib/text_zoom
+#= require ss/lib/popup_notice
 #= require cms/lib/editor
 #= require cms/lib/form
 #= require cms/lib/edit_lock
@@ -114,6 +115,9 @@ $ ->
       $(this).find('.dropdown-menu').removeClass('active')
     $dropdown.toggleClass('active')
     $dropdown.find('.dropdown-menu').toggleClass('active')
+
+    # popup_notice
+    SS_PopupNotice.closePopup()
     e.stopPropagation()
   $(document).click (e) ->
     $(".dropdown").removeClass('active')
@@ -133,7 +137,11 @@ $ ->
   SS_Tooltips.render(".tooltip")
   SS_SearchUI.render()
   SS_Color.render()
+<<<<<<< HEAD
   SS_TextZoom.render()
+=======
+  SS_PopupNotice.render()
+>>>>>>> e5b5768ea... [add] gws/memo/notices
 
 class @SS
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'

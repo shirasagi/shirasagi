@@ -23,10 +23,10 @@ class Gws::Discussion::Post
     notify_member_ids = f.discussion_member_ids - [user.id]
     return if notify_member_ids.blank?
 
-    item = Gws::Memo::Message.new
+    item = Gws::Memo::Notice.new
     item.cur_site = site
     item.cur_user = user
-    item.to_member_ids = notify_member_ids
+    item.member_ids = notify_member_ids
     item.subject = I18n.t("gws/discussion.notify_message.post.subject", forum_name: forum.name, topic_name: topic.name)
     item.format = "text"
     item.text = I18n.t("gws/discussion.notify_message.post.text", topic_name: topic.name, text: text)

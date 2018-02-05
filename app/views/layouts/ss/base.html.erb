@@ -102,11 +102,57 @@
             <% end %>
           </div>
         <% end %>
+
+        <%= jquery do %>
+          $(".gws-memo-notice .unseens").click(function() { $(".gws-memo-notice .unseens").toggle(); });
+          (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
+        <% end %>
+        <div class="gws-memo-notice popup-notice-container">
+          <%= link_to gws_memo_notices_path, "class" => "user-message ajax-popup-notice", "data-url" => recent_gws_memo_notices_path do %>
+            <% count = Gws::Memo::Notice.unseens(@cur_user, @cur_site).size %>
+            <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
+          <% end %>
+          <div class="popup-notice" style="display: none;">
+            <h2><%= t('modules.gws/memo/notice') %></h2>
+            <div class="popup-notice-items"></div>
+            <%= link_to t("gws/memo/message.links.unseens"), "#",
+              "class" => "ajax-popup-notice unseens",
+              "data-url" => recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
+            %>
+            <%= link_to t("gws/memo/message.links.seens"), "#",
+              "class" => "ajax-popup-notice unseens",
+              "data-url" => recent_gws_memo_notices_path,
+              "style" => "display: none;"
+            %>
+            <%= link_to t("ss.links.more_all"),  gws_memo_notices_path %>
+          </div>
+        </div>
+
         <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to gws_memo_messages_path, class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
-            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
-           <% end %>
+          <%= jquery do %>
+            $(".gws-memo-message .unseens").click(function() { $(".gws-memo-message .unseens").toggle(); });
+            (new SS_PopupNotice(".gws-memo-message.popup-notice-container")).render();
+          <% end %>
+          <div class="gws-memo-message popup-notice-container">
+            <%= link_to gws_memo_messages_path, "class" => "user-message ajax-popup-notice", "data-url" => recent_gws_memo_messages_path do %>
+              <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
+              <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+            <% end %>
+            <div class="popup-notice" style="display: none;">
+              <h2><%= t('modules.gws/memo/message') %></h2>
+              <div class="popup-notice-items"></div>
+              <%= link_to t("gws/memo/message.links.unseens"), "#",
+                "class" => "ajax-popup-notice unseens",
+                "data-url" => recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
+              %>
+              <%= link_to t("gws/memo/message.links.seens"), "#",
+                "class" => "ajax-popup-notice unseens",
+                "data-url" => recent_gws_memo_messages_path,
+                "style" => "display: none;"
+              %>
+              <%= link_to t("ss.links.more_all"), gws_memo_messages_path %>
+            </div>
+          </div>
         <% end %>
       <% end %>
 

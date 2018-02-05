@@ -135,7 +135,18 @@ td {
   color: #aaa;
 }
 
-
+// -------------------------------------------------------------------------------------------------
+// Popup Notice
+.popup-notice-container .popup-notice {
+  position: absolute;
+  top: 100%;
+  background: #ffffff;
+  a { color: #f25a38 !important; }
+  box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.2);
+  .list-item.unseen {
+    background: #f9e9e3;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // head

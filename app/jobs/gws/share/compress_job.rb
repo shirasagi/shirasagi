@@ -10,12 +10,11 @@ class Gws::Share::CompressJob < Gws::ApplicationJob
     subject = item.subject
     subject = NKF.nkf("-w", subject) if subject =~ /ISO-2022-JP/i
 
-    message = Gws::Memo::Message.new
+    message = Gws::Memo::Notice.new
     message.cur_site      = site
     message.cur_user      = user
-    message.to_member_ids = [user.id]
+    message.member_ids    = [user.id]
     message.send_date     = Time.zone.now
-    message.state         = 'public'
     message.subject       = subject
     message.format        = 'text'
     message.text          = item.decoded
