@@ -33,10 +33,14 @@ class Gws::Memo::ListMessagesController < ApplicationController
   end
 
   def send_params
+    @capacity_over_members, valid_members = @cur_list.overall_members.to_a.partition do |user|
+      @item.quota_over?(user, @cur_site)
+    end
+
     {
       state: 'public',
       sender_name: @cur_list.sender_name.presence || @cur_list.name,
-      member_ids: @cur_list.overall_members.pluck(:id),
+      member_ids: valid_members.map(&:id),
       in_validate_presence_member: true
     }
   end
@@ -94,6 +98,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
     raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
 
     if request.get?
+      send_params
       return
     end
 

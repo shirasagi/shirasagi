@@ -18,6 +18,8 @@ ja:
       publish: 送信する
     confirm:
       publish: 送信してよろしいですか？
+    notice:
+      capacity_over_members: 次の受信者のメッセージ容量が制限を超過しています。次の受信者にはメッセージが届きません。
   gws/memo/message:
     folder: フォルダー
     child_folder: 子フォルダー
@@ -155,6 +157,10 @@ ja:
         to: 宛先
         display_send_date: 送信日時
         size: サイズ
+        member_ids: 参加者
+        to_member_ids: 宛先
+        cc_member_ids: CC
+        bcc_member_ids: BCC
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:
@@ -178,11 +184,6 @@ ja:
       gws/memo/forward:
         email: メールアドレス
         default: メール転送設定
-      gws/addon/memo/member:
-        member_ids: 参加者
-        to_member_ids: 宛先
-        cc_member_ids: CC
-        bcc_member_ids: BCC
       gws/addon/memo/group_setting:
         memo_quota: メッセージ容量制限
         memo_filesize_limit: 添付サイズ制限
