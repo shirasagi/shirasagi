@@ -184,6 +184,8 @@ ja:
         priority: 重要度
       gws/memo/list:
         name: タイトル
+        sender_name: 送信者名
+        signature: 署名
         category_ids: カテゴリー
   activemodel:
     models:
@@ -267,6 +269,10 @@ ja:
     gws/memo/list:
       name:
         - タイトルを入力します。
+      sender_name:
+        - 送信者を入力します。省略した場合、送信者名としてタイトルが用いられます。
+      signature:
+        - 署名を入力します。
       category_ids:
         - カテゴリーを選択します。
 

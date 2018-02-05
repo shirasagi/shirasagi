@@ -2,6 +2,12 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
+  <dt><%= @model.t :sender_name %></dt>
+  <dd><%= @item.sender_name %></dd>
+
+  <dt><%= @model.t :signature %></dt>
+  <dd><%= br @item.signature %></dd>
+
   <dt><%= @model.t :category_ids %></dt>
   <dd>
     <% @item.categories.each do |category| %>
