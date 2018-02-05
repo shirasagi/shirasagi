@@ -81,7 +81,14 @@ class Gws::Memo::ListMessagesController < ApplicationController
     end
   end
 
+  def edit
+    raise '403' if @item.public?
+    super
+  end
+
   def update
+    raise '403' if @item.public?
+
     @item.attributes = get_params
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
