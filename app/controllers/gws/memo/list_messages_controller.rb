@@ -26,6 +26,14 @@ class Gws::Memo::ListMessagesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site, cur_list: @cur_list }
   end
 
+  def send_params
+    { state: 'public', member_ids: @cur_list.overall_members.pluck(:id) }
+  end
+
+  def draft_params
+    { state: 'closed' }
+  end
+
   public
 
   def index
@@ -41,10 +49,10 @@ class Gws::Memo::ListMessagesController < ApplicationController
     @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
       raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
-      @item.state = "public"
+      @item.attributes = send_params
       notice = t("ss.notice.sent")
     else
-      @item.state = "closed"
+      @item.attributes = draft_params
       notice = t("ss.notice.saved")
     end
 
@@ -53,6 +61,28 @@ class Gws::Memo::ListMessagesController < ApplicationController
       render_create true, location: { action: :index }, notice: notice
     else
       render_create false, location: { action: :index }, notice: notice
+    end
+  end
+
+  def update
+    @item.attributes = get_params
+    raise '404' unless @item.editable?(@cur_user, @cur_site)
+
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    if params['commit'] == t('gws/memo/message.commit_params_check')
+      raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
+      @item.attributes = send_params
+      notice = t("ss.notice.sent")
+    else
+      @item.attributes = draft_params
+      notice = t("ss.notice.saved")
+    end
+
+    if @item.update
+      # send_forward_mails
+      render_update true, location: { action: :index }, notice: notice
+    else
+      render_update false, location: { action: :index }, notice: notice
     end
   end
 end
