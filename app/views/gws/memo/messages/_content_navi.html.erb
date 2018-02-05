@@ -20,10 +20,12 @@
   </table>
 
   <% if @cur_site.memo_quota %>
+  <% quota = @model.new %>
   <div class="content-navi-title" style="margin-top: 10px; border-top: 1px solid #f2f2f2;"><%= t('ss.quota') %></div>
   <div class="ss-quota-bar">
-    <div class="label"><%= @model.quota_label(@cur_user, @cur_site) %></div>
-    <div class="usage <%= @model.quota_over?(@cur_user, @cur_site) ? 'over-threshold' : '' %>" style="width: <%= @model.quota_percentage(@cur_user, @cur_site) %>%"></div>
+    <div class="label"><%= quota.quota_label(@cur_user, @cur_site) %></div>
+    <div class="usage <%= quota.quota_over?(@cur_user, @cur_site) ? 'over-threshold' : '' %>" style="width: <%= quota.quota_percentage(@cur_user, @cur_site) %>%">
+    </div>
   </div>
   <% end %>
 </div>
