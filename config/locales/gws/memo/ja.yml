@@ -1,6 +1,8 @@
 ja:
   gws/memo:
     setting: メッセージ設定
+    no_subjects: 'No title'
+    no_senders: 'No name'
     options:
       priority:
         '1': 最高

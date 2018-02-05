@@ -41,7 +41,7 @@
             <% addr = item.to_members? ? item.display_to.first : nil %>
             <span class="field to" title="<%= addr %>"><%= addr %></span>
           <% else %>
-            <span class="field from" title="<%= item.user.long_name %>"><%= item.user.long_name %></span>
+            <span class="field from" title="<%= item.display_from %>"><%= item.display_from %></span>
           <% end %>
           <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %>
           <span class="field priority"><%= item.label :priority %></span>

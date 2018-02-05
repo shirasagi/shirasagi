@@ -33,7 +33,11 @@ class Gws::Memo::ListMessagesController < ApplicationController
   end
 
   def send_params
-    { state: 'public', member_ids: @cur_list.overall_members.pluck(:id) }
+    {
+      state: 'public',
+      sender_name: @cur_list.sender_name.presence || @cur_list.name,
+      member_ids: @cur_list.overall_members.pluck(:id)
+    }
   end
 
   def draft_params

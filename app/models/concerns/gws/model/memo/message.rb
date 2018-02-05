@@ -11,6 +11,7 @@ module Gws::Model
 
       field :type, type: String
       field :subject, type: String
+      field :sender_name, type: String
       field :text, type: String, default: ''
       field :html, type: String, default: ''
       field :format, type: String
@@ -242,7 +243,11 @@ module Gws::Model
     end
 
     def display_subject
-      subject.presence || 'No title'
+      subject.presence || I18n.t('gws/memo.no_subjects')
+    end
+
+    def display_from
+      sender_name.presence || user.try(:long_name) || I18n.t('gws/memo.no_senders')
     end
 
     def display_send_date
