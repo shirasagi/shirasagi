@@ -123,12 +123,12 @@ class Gws::Memo::Notifier
   def deliver!
     cur_user.cur_site ||= cur_group
 
-    message = Gws::Memo::Message.new
+    message = Gws::Memo::Notice.new
     message.cur_site = cur_site
     message.cur_user = cur_user
-    message.to_member_ids = to_users.pluck(:id)
+    message.member_ids = to_users.pluck(:id)
+
     message.send_date = Time.zone.now
-    message.state = 'public'
 
     message.subject = I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
     message.format = 'text'

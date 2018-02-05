@@ -1,0 +1,24 @@
+<div class="index gws-memo-notices">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
+        <nav class="tap-menu">
+          <%= link_to t('ss.links.show'), action: :show, id: item %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item %>
+        </nav>
+
+        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+        <div class="info">
+          <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+          <div class="meta">
+            <span class="datetime"><%= item.send_date.strftime("%Y/%m/%d %H:%M") %></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
