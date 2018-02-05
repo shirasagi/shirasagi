@@ -94,6 +94,12 @@ ja:
       gws/memo/priority: 重要度
   gws_role:
     edit_private_gws_memo_messages: メッセージの管理
+    read_other_gws_memo_lists: リストの閲覧（全て）
+    read_private_gws_memo_lists: リストの閲覧（所有）
+    edit_other_gws_memo_lists: リストの編集（全て）
+    edit_private_gws_memo_lists: リストの編集（所有）
+    delete_other_gws_memo_lists: リストの削除（全て）
+    delete_private_gws_memo_lists: リストの削除（所有）
   mongoid:
     models:
       gws/memo/message: メッセージ
@@ -102,6 +108,7 @@ ja:
       gws/memo/signature: 署名
       gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
+      gws/memo/list: リスト
     errors:
       models:
         gws/memo/message:
@@ -158,6 +165,8 @@ ja:
         memo_email: 転送元メールアドレス
       gws/addon/memo/priority:
         priority: 重要度
+      gws/memo/list:
+        name: タイトル
   activemodel:
     models:
       gws/memo/message_importer: インポート
@@ -237,6 +246,9 @@ ja:
     gws/addon/memo/priority:
       priority:
         - メッセージの重要度を選択します。
+    gws/memo/list:
+      name:
+        - タイトルを入力します。
 
   job:
     models:

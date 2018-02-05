@@ -1,0 +1,37 @@
+class Gws::Memo::List
+  extend SS::Translation
+  include SS::Document
+  include Gws::Referenceable
+  include Gws::Reference::User
+  include Gws::Reference::Site
+  include Gws::Addon::Member
+  include Gws::Addon::ReadableSetting
+  include Gws::Addon::GroupPermission
+  include Gws::Addon::History
+
+  member_include_custom_groups
+  readable_setting_include_custom_groups
+  permission_include_custom_groups
+
+  field :name, type: String
+
+  permit_params :name
+
+  validates :name, presence: true, length: { maximum: 80 }
+
+  class << self
+    def search(params)
+      all.search_name(params).search_keyword(params)
+    end
+
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.search_text(params[:name])
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name)
+    end
+  end
+end

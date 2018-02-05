@@ -49,6 +49,7 @@ SS::Application.routes.draw do
       resources :filters, concerns: :deletion
       resources :signatures, concerns: :deletion
       resource :forwards, only: [:show, :edit, :update]
+      resources :lists, concerns: :deletion
 
       get 'export_messages' => 'export_messages#index'
       put 'export_messages' => 'export_messages#export'
