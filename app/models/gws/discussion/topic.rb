@@ -8,6 +8,7 @@ class Gws::Discussion::Topic
   #include Gws::Addon::Discussion::Release
   #include Gws::Addon::Member
   include Gws::Addon::GroupPermission
+  include Gws::Addon::Discussion::Quota
   include Gws::Addon::History
 
   set_permission_name "gws_discussion_topics"

@@ -19,6 +19,8 @@ module Gws::Discussion::Postable
     field :main_topic, type: String, default: "disabled"
     field :permit_comment, type: String, default: "allow"
     field :permanently, type: String, default: "disabled"
+    field :forum_quota, type: Integer, default: nil
+    field :topic_quota, type: Integer, default: nil
     field :order, type: Integer, default: 0
 
     belongs_to :forum, class_name: "Gws::Discussion::Post", inverse_of: :forum_descendants
@@ -32,7 +34,7 @@ module Gws::Discussion::Postable
     has_many :children, class_name: "Gws::Discussion::Post", dependent: :destroy, inverse_of: :parent,
       order: { created: -1 }
 
-    permit_params :name, :order, :permit_comment, :permanently
+    permit_params :name, :order, :permit_comment, :permanently, :forum_quota, :topic_quota
 
     before_validation :set_depth
 
@@ -54,6 +56,15 @@ module Gws::Discussion::Postable
 
   def root_post
     parent.nil? ? self : parent.root_post
+  end
+
+  def current_forum
+    depth == 1 ? self : forum
+  end
+
+  def current_topic
+    return nil unless comment?
+    depth == 2 ? self : parent
   end
 
   def comment?
