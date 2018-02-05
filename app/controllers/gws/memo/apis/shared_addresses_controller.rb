@@ -19,7 +19,7 @@ class Gws::Memo::Apis::SharedAddressesController < ApplicationController
       @address_group = Gws::SharedAddress::Group.find(params[:s][:group]) rescue nil
     end
 
-    @groups = Gws::SharedAddress::Group.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    @groups = Gws::SharedAddress::Group.site(@cur_site).readable(@cur_user, site: @cur_site)
   end
 
   def set_multi
