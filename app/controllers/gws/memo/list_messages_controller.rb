@@ -102,4 +102,11 @@ class Gws::Memo::ListMessagesController < ApplicationController
       render_update false, location: { action: :index }, notice: notice
     end
   end
+
+  def destroy
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    fake_folder = OpenStruct.new({ :draft_box? => @item.draft?, :sent_box? => @item.public? })
+    render_destroy @item.destroy_from_folder(@cur_user, fake_folder)
+  end
 end

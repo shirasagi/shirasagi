@@ -144,7 +144,7 @@ ja:
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
     attributes:
-      gws/memo/message:
+      gws/model/memo/message:
         name: 件名
         subject: 件名
         body: 本文
