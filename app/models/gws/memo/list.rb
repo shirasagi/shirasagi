@@ -9,7 +9,7 @@ class Gws::Memo::List
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
-  member_include_custom_groups
+  # member_include_custom_groups
   readable_setting_include_custom_groups
   permission_include_custom_groups
 
