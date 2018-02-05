@@ -100,6 +100,12 @@ ja:
     edit_private_gws_memo_lists: リストの編集（所有）
     delete_other_gws_memo_lists: リストの削除（全て）
     delete_private_gws_memo_lists: リストの削除（所有）
+    read_other_gws_memo_categories: カテゴリーの閲覧（全て）
+    read_private_gws_memo_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_memo_categories: カテゴリーの編集（全て）
+    edit_private_gws_memo_categories: カテゴリーの編集（所有）
+    delete_other_gws_memo_categories: カテゴリーの削除（全て）
+    delete_private_gws_memo_categories: カテゴリーの削除（所有）
   mongoid:
     models:
       gws/memo/message: メッセージ
@@ -109,6 +115,7 @@ ja:
       gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
       gws/memo/list: リスト
+      gws/memo/category: カテゴリー
     errors:
       models:
         gws/memo/message:
