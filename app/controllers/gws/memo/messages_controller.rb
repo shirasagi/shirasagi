@@ -109,6 +109,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @item = @model.new get_params
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.state = "public"
+      @item.in_validate_presence_member = true
       notice = t("ss.notice.sent")
     else
       @item.state = "closed"
@@ -140,6 +141,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     if params['commit'] == t('gws/memo/message.commit_params_check')
       @item.state = "public"
+      @item.in_validate_presence_member = true
       notice = t("ss.notice.sent")
     else
       @item.state = "closed"
@@ -231,6 +233,7 @@ class Gws::Memo::MessagesController < ApplicationController
     item_mdn.text = I18n.t("gws/memo/message.mdn.confirmed", name: @cur_user.long_name, date: Time.zone.now.strftime("%Y/%m/%d %H:%M"))
     item_mdn.format = "text"
     item_mdn.state = "public"
+    item_mdn.in_validate_presence_member = true
     item_mdn.save
 
     render_change :send_mdn, redirect: { action: :show }

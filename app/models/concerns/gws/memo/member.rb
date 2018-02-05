@@ -4,6 +4,7 @@ module Gws::Memo::Member
 
   included do
     member_ids_optional
+    attr_accessor :in_validate_presence_member
   end
 
   def sorted_to_members
@@ -30,7 +31,7 @@ module Gws::Memo::Member
   private
 
   def validate_presence_member
-    return true if draft?
+    return true if !in_validate_presence_member
     return true if member_ids.present?
     errors.add :to_member_ids, :empty
   end

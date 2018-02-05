@@ -36,7 +36,8 @@ class Gws::Memo::ListMessagesController < ApplicationController
     {
       state: 'public',
       sender_name: @cur_list.sender_name.presence || @cur_list.name,
-      member_ids: @cur_list.overall_members.pluck(:id)
+      member_ids: @cur_list.overall_members.pluck(:id),
+      in_validate_presence_member: true
     }
   end
 
