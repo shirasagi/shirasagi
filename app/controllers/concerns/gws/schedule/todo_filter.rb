@@ -8,16 +8,21 @@ module Gws::Schedule::TodoFilter
 
     before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active]
     before_action :set_selected_items, only: [:destroy_all, :disable_all, :finish_all, :revert_all, :active_all]
+    before_action :set_skip_default_group
   end
 
   private
 
   def pre_params
-    super.keep_if { |key| %i[facility_ids].exclude?(key) }
+    super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(member_ids: [@cur_user.id])
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def set_skip_default_group
+    @skip_default_group = true
   end
 
   def render_finish_all(result, opts = {})
