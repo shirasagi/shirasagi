@@ -13,12 +13,14 @@ class Gws::Memo::ListMessage
   include Gws::Addon::Memo::Quota
   include Gws::Addon::GroupPermission
 
-  attr_accessor :cur_user, :cur_list
+  attr_accessor :cur_user, :cur_list, :in_append_signature
   belongs_to :list, class_name: 'Gws::Memo::List'
 
   before_validation :set_list
 
   validates :list_id, presence: true
+
+  before_save :append_signature, if: ->{ @in_append_signature }
 
   scope :and_list_message, ->{ where(type: 'Gws::Memo::ListMessage') }
   scope :and_list, ->(list) { where(list_id: list.id) }
@@ -46,5 +48,13 @@ class Gws::Memo::ListMessage
   def set_list
     return if @cur_list.blank?
     self.list = @cur_list
+  end
+
+  def append_signature
+    sign = list.signature.presence
+    if sign
+      self.text += "\n\n#{sign}" if self.text.present?
+      self.html += "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />') if self.html.present?
+    end
   end
 end
