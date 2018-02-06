@@ -38,11 +38,6 @@ class Gws::Memo::ListMessage
   # around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   # around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 
-  # override Gws::Model::Memo::Message#display_from
-  def display_from
-    sender_name.presence || list.sender_name || list.name || I18n.t('gws/memo.no_senders')
-  end
-
   private
 
   def set_list

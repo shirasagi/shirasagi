@@ -11,7 +11,6 @@ module Gws::Model
 
       field :type, type: String
       field :subject, type: String
-      field :sender_name, type: String
       field :text, type: String, default: ''
       field :html, type: String, default: ''
       field :format, type: String
@@ -122,7 +121,7 @@ module Gws::Model
     end
 
     def set_member_name
-      self.from_member_name = @cur_user.long_name if @cur_user
+      self.from_member_name = @cur_user.long_name if @cur_user && from_member_name.blank?
       self.to_member_name = display_to.join("; ")
     end
 
@@ -244,10 +243,6 @@ module Gws::Model
 
     def display_subject
       subject.presence || I18n.t('gws/memo.no_subjects')
-    end
-
-    def display_from
-      sender_name.presence || user.try(:long_name) || I18n.t('gws/memo.no_senders')
     end
 
     def display_send_date

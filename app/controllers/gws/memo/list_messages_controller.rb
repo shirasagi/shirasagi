@@ -43,7 +43,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
 
     {
       state: 'public',
-      sender_name: @cur_list.sender_name.presence || @cur_list.name,
+      from_member_name: @cur_list.sender_name.presence || @cur_list.name,
       member_ids: valid_members.map(&:id),
       in_validate_presence_member: true,
       in_append_signature: true,
