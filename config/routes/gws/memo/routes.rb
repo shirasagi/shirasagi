@@ -53,6 +53,7 @@ SS::Application.routes.draw do
       resources :lists, concerns: :deletion do
         resources :messages, controller: 'list_messages', concerns: :deletion do
           match :publish, on: :member, via: %i[get post]
+          get :seen, on: :member
         end
       end
       resources :categories, concerns: :deletion

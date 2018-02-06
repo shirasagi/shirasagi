@@ -7,7 +7,11 @@
         </span>
     </h2>
     <div class="from"><%= @item.from_member_name || t('gws/memo.no_senders') %></div>
-    <div class="date"><%= @item.display_send_date %></div>
+    <div class="date"><%= @item.display_send_date %>
+      <% if @item.allowed?(:send, @cur_user, site: @cur_site) && @item.public? %>
+        <%= link_to(t('gws/memo.buttons.seen'), { action: :seen }, { class: 'btn' }) %>
+      <% end %>
+    </div>
   </div>
 
   <% show_to_section = @item.to_members? %>

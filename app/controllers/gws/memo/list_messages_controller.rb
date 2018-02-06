@@ -112,4 +112,12 @@ class Gws::Memo::ListMessagesController < ApplicationController
 
     render_update @item.save, notice: t('ss.notice.sent'), render: { file: :publish }
   end
+
+  def seen
+    set_item
+    raise '404' if @item.draft?
+    raise '403' unless @item.allowed?(:send, @cur_user, site: @cur_site)
+
+    @items = Gws::User.site(@cur_site).in(id: @item.member_ids).active.search(params[:s])
+  end
 end

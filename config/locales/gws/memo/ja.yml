@@ -3,6 +3,7 @@ ja:
     setting: メッセージ設定
     no_subjects: 'No title'
     no_senders: 'No name'
+    unseen: 未読
     options:
       priority:
         '1': 最高
@@ -16,6 +17,8 @@ ja:
     links:
       show_messages: メッセージを見る
       publish: 送信する
+    buttons:
+      seen: 送信者一覧
     confirm:
       publish: 送信してよろしいですか？
     notice:
@@ -161,6 +164,7 @@ ja:
         to_member_ids: 宛先
         cc_member_ids: CC
         bcc_member_ids: BCC
+        seen: 既読日時
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:
