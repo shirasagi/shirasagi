@@ -26,7 +26,7 @@ class Gws::Memo::List
 
   class << self
     def search(params)
-      all.search_name(params).search_keyword(params)
+      all.search_name(params).search_keyword(params).search_category(params)
     end
 
     def search_name(params)
@@ -37,6 +37,11 @@ class Gws::Memo::List
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
       all.keyword_in(params[:keyword], :name)
+    end
+
+    def search_category(params)
+      return all if params.blank? || params[:category_id].blank?
+      all.where(category_ids: params[:category_id])
     end
   end
 end
