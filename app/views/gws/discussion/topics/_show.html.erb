@@ -10,4 +10,7 @@
 
   <dt><%= @model.t :permanently %></dt>
   <dd><%= @item.label :permanently %></dd>
+
+  <dt><%= @model.t :topic_quota %></dt>
+  <dd><%= @item.topic_quota %> <%= t('ss.units.mega_byte') if @item.topic_quota %></dd>
 </dl>

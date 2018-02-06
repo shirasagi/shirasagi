@@ -38,7 +38,7 @@
   var modifyCheckBoxAll = function($permissions, state) {
     var $checkboxes = $permissions.find('input[type=checkbox]');
     $checkboxes.each(function() {
-      $(this).prop('checked', state);
+      $(this).prop('checked', state).change();
     });
   }
 

@@ -10,4 +10,7 @@ $(window).on('load', function() {
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :forum_quota %><%= @model.tt :forum_quota %></dt>
+  <dd class="short"><%= f.number_field :forum_quota, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
 </dl>
