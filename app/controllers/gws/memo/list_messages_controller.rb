@@ -32,6 +32,10 @@ class Gws::Memo::ListMessagesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site, cur_list: @cur_list }
   end
 
+  def permit_fields
+    super - %i[in_request_mdn]
+  end
+
   def send_params
     @capacity_over_members, valid_members = @cur_list.overall_members.to_a.partition do |user|
       @item.quota_over?(user, @cur_site)
