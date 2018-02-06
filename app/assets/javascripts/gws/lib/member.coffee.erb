@@ -55,7 +55,7 @@ class @Gws_Member
     name = dl.find('.hidden-ids').attr('name')
     num = 0
     list.each ->
-      if tbody.find('tr[data-id=' + $(this).data('id') + ']').length == 0
+      if tbody.find('tr[data-id="' + $(this).data('id') + '"]').length == 0
         tr = $(this).clone(true)
         tr.find('input').attr('name', name)
         tbody.append(tr)
