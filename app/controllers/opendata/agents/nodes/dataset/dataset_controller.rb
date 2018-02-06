@@ -31,7 +31,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     raise "404" unless @dataset_app
 
     cond = { site_id: @cur_site.id, dataset_ids: @dataset_app.id }
-    @apps = Opendata::App.where(cond).order_by(:updated.asc)
+    @apps = Opendata::App.where(cond).and_public.order_by(:updated.asc)
   end
 
   def set_ideas
@@ -44,7 +44,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     raise "404" unless @dataset_idea
 
     cond = { site_id: @cur_site.id, dataset_ids: @dataset_idea.id }
-    @ideas = Opendata::Idea.where(cond).order_by(:updated.asc)
+    @ideas = Opendata::Idea.where(cond).and_public.order_by(:updated.asc)
   end
 
   public
@@ -129,7 +129,10 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     @model = Opendata::Dataset
     # SHIRASAGI uses 50 for default page size.
     # but datasetsets search uses 20 for its page size because IE is very slow if page size sets to 50,
-    @items = @model.site(@cur_site).search(params[:s]).order_by(_id: -1).page(params[:page]).per(20)
+    @items = @model.site(@cur_site).search(params[:s]).and_public.
+      order_by(_id: -1).
+      page(params[:page]).
+      per(20)
     render layout: "opendata/ajax"
   end
 end
