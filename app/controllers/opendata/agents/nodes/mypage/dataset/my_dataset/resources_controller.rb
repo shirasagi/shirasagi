@@ -45,7 +45,11 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
 
     @item.status = status
     @item.workflow = { member: @cur_member, route: @route, workflow_reset: true }
-    @deliver_mail = true if status == "request" && @dataset.status != "request"
+    if status == "request" && @dataset.status != "request"
+      @deliver_mail = true
+      @dataset.cur_site = @cur_site
+      @dataset.apply_status(status, @item.workflow)
+    end
   end
 
   def fix_params
@@ -70,12 +74,14 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
     return unless @item.errors.empty?
     args = {
       m_id: @cur_member.id,
-      t_uid: @dataset.workflow_approvers.first[:user_id],
       site: @cur_site,
       item: @dataset,
       url: ::File.join(@cur_site.full_url, opendata_dataset_path(site: @cur_site, cid: @dataset.parent, id: @dataset))
     }
-    Opendata::Mailer.request_resource_mail(args).deliver_now rescue nil
+    @dataset.workflow_pull_up_approvers_at(1).each do |approver|
+      args[:t_uid] = approver[:user_id]
+      Opendata::Mailer.request_resource_mail(args).deliver_now rescue nil
+    end
   end
 
   public
