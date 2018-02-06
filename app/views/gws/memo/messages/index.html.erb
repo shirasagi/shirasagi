@@ -97,29 +97,29 @@
 
   <% if @cur_folder.path == "INBOX.Sent" %>
   $(".list-item-head .to").on("click", function() {
-    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "to_member_name").to_query %>";
+    location.href = "<%== gws_memo_messages_path(folder: @cur_folder.folder_path) + "?" + @cur_user.memo_message_sort_query(@sort_hash, "to_member_name").to_query %>";
     return false;
   });
   <% else %>
   $(".list-item-head .from").on("click", function() {
-    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "from_member_name").to_query %>";
+    location.href = "<%== gws_memo_messages_path(folder: @cur_folder.folder_path)  + "?" +  @cur_user.memo_message_sort_query(@sort_hash, "from_member_name").to_query %>";
     return false;
   });
   <% end %>
   $(".list-item-head .title").on("click", function() {
-    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "subject").to_query %>";
+    location.href = "<%== gws_memo_messages_path(folder: @cur_folder.folder_path)  + "?" +  @cur_user.memo_message_sort_query(@sort_hash, "subject").to_query %>";
     return false;
   });
   $(".list-item-head .priority").on("click", function() {
-    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "priority").to_query %>";
+    location.href = "<%== gws_memo_messages_path(folder: @cur_folder.folder_path)  + "?" +  @cur_user.memo_message_sort_query(@sort_hash, "priority").to_query %>";
     return false;
   });
   $(".list-item-head .datetime").on("click", function() {
-    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "send_date").to_query %>";
+    location.href = "<%== gws_memo_messages_path(folder: @cur_folder.folder_path)  + "?" +  @cur_user.memo_message_sort_query(@sort_hash, "send_date").to_query %>";
     return false;
   });
   $(".list-item-head .size").on("click", function() {
-    location.href = "<%= gws_memo_messages_path(folder: @cur_folder.folder_path) %>?<%= @cur_user.memo_message_sort_query(@sort_hash, "size").to_query %>";
+    location.href = "<%== gws_memo_messages_path(folder: @cur_folder.folder_path)  + "?" +  @cur_user.memo_message_sort_query(@sort_hash, "size").to_query %>";
     return false;
   });
 <% end %>
