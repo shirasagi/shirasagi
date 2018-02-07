@@ -34,7 +34,7 @@ licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c|
   </dl>
   <dl class="tag">
     <dt><%= I18n.t("opendata.labels.tag") %></dt>
-    <dd><%= f.text_field :tag %></dd>
+    <dd><%= f.select :tag, @model.tag_options, include_blank: true, selected: tryb { params[:s][:tag] } %></dd>
   </dl>
   <dl class="format">
     <dt><%= I18n.t("opendata.labels.format") %></dt>

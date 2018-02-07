@@ -145,6 +145,17 @@ class Opendata::Dataset
       Opendata::Common.get_tag(self, tag_name)
     end
 
+    def tag_options
+      pipes = []
+      pipes << { "$match" => { "route" => "opendata/dataset" } }
+      pipes << { "$unwind" => "$tags" }
+      pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
+      self.collection.aggregate(pipes).map do |data|
+        tag = data["_id"]
+        [tag, tag]
+      end
+    end
+
     def format_options
       pipes = []
       pipes << { "$match" => { "route" => "opendata/dataset" } }
