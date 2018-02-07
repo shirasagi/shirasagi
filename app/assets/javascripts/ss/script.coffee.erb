@@ -76,13 +76,20 @@ $ ->
         link.not(".current").slideToggle("fast")
         return false
 
+  # crumbs
+  crumbs = $('#crumbs a[href]').map ->
+    return $(this).attr('href')
+  crumbs = crumbs.get()
+  crumbs.shift()
+
   # navi
   path = location.pathname + "/"
   addCurrent = (selector) ->
     added = false
     $($(selector).get().reverse()).each ->
       menu = $(this)
-      if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+      href = menu.attr('href')
+      if path.match(new RegExp('^' + href + '(\/|$)')) || crumbs.indexOf(href) != -1
         menu.addClass("current").parent().addClass("current")
         added = true
         return false
