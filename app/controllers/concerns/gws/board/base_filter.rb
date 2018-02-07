@@ -30,6 +30,6 @@ module Gws::Board::BaseFilter
   def set_crumbs
     @crumbs << [@cur_site.menu_board_label || t("modules.gws/board"), gws_board_topics_path(mode: '-', category: '-')]
     @crumbs << [t("ss.navi.#{@mode}"), gws_board_topics_path(category: '-')]
-    @crumbs << [@category.name, action: :index] if @category.present?
+    @crumbs << [@category.name, gws_board_topics_path] if @category.present?
   end
 end
