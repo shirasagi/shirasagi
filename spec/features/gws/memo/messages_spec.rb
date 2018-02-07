@@ -4,6 +4,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:memo) { create(:gws_memo_message, user: user, site: site) }
+  let!(:draft_memo) { create(:gws_memo_message, :with_draft, user: user, site: site) }
 
   context 'with auth', js: true do
     before { login_gws_user }
@@ -21,7 +22,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
     end
 
     it '#edit' do
-      visit edit_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
+      visit edit_gws_memo_message_path(site: site, folder: 'INBOX.Draft', id: draft_memo.id)
       wait_for_ajax
       expect(page).to have_content('宛先')
     end
@@ -70,18 +71,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
     it '#set_star_all and #unset_star_all' do
       visit gws_memo_messages_path(site)
       find('.list-head label.check input').set(true)
+      click_button "その他"
+      wait_for_ajax
       page.accept_confirm do
-        click_button "その他"
-        find('.set-star-all').click
+        click_link 'スターをつける'
       end
       wait_for_ajax
       expect(page).to have_css(".icon.icon-star.on")
       expect(page).to have_no_css(".icon.icon-star.off")
 
       find('.list-head label.check input').set(true)
+      click_button "その他"
+      wait_for_ajax
       page.accept_confirm do
-        click_button "その他"
-        find('.unset-star-all').click
+        click_link 'スターをはずす'
       end
       wait_for_ajax
       expect(page).to have_css(".icon.icon-star.off")
