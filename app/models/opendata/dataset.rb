@@ -51,8 +51,11 @@ class Opendata::Dataset
 
   permit_params :text, :tags, tags: []
 
+  define_model_callbacks :generate_search_file
+
   before_save :seq_filename, if: ->{ basename.blank? }
   after_save :on_state_changed, if: ->{ state_changed? }
+  after_save :generate_search_file, if: ->{ @db_changes }
 
   default_scope ->{ where(route: "opendata/dataset") }
 
@@ -77,6 +80,11 @@ class Opendata::Dataset
     super
   end
 
+  def dataset_search_html_path(site = nil)
+    cur_site = site || self.site
+    "#{Rails.root}/private/sites/#{cur_site.host.split(//).join('/')}/_/dataset_search.html"
+  end
+
   private
 
   def validate_filename
@@ -96,7 +104,18 @@ class Opendata::Dataset
     end
   end
 
+  def generate_search_file
+    return false unless serve_static_file?
+    run_callbacks :generate_search_file do
+      Opendata::Agents::Tasks::Node::SearchDatasetController.new.generate_search_file(self)
+    end
+  end
+
   class << self
+    def dataset_search_html_path(site)
+      self.new.dataset_search_html_path(site)
+    end
+
     def to_dataset_path(path)
       suffix = %w(/point.html /point/members.html /apps/show.html /ideas/show.html).find { |suffix| path.end_with? suffix }
       return path if suffix.blank?
