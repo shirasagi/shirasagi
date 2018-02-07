@@ -18,6 +18,6 @@ class Gws::Elasticsearch::Setting::Board
     cate = @categories.find { |cate| cate.name == cate_name }
     return if cate.blank?
 
-    [ cate, url_helpers.gws_board_category_topics_path(site: cur_site, category: cate) ]
+    [ cate, url_helpers.gws_board_topics_path(site: cur_site, mode: '-', category: cate) ]
   end
 end
