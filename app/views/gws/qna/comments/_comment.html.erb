@@ -2,27 +2,15 @@
 
 menu = []
 if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
-  if @category.present?
-    link = new_gws_qna_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
-  else
-    link = new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
-  end
+  link = new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
   menu << link_to(t('gws/qna.links.comment'), link, class: "btn primary")
 end
 if comment.allowed?(:edit, @cur_user, site: @cur_site)
-  if @category.present?
-    link = edit_gws_qna_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  else
-    link = edit_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  end
+  link = edit_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   menu << link_to(t('ss.links.edit'), link, class: "btn")
 end
 if comment.allowed?(:delete, @cur_user, site: @cur_site)
-  if @category.present?
-    link = delete_gws_qna_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  else
-    link = delete_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  end
+  link = delete_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   menu << link_to(t('ss.links.delete'), link, class: "btn")
 end
 if @item.resolved?

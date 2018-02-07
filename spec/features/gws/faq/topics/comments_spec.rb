@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "gws_faq_topics", type: :feature, dbscope: :example do
   context "comments" do
     let(:site) { gws_site }
-    let(:show_path) { gws_faq_topic_path site, topic }
+    let(:show_path) { gws_faq_topic_path site, '-', '-', topic }
     let(:name) { unique_id }
     let(:text) { unique_id }
 
