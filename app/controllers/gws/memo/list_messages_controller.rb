@@ -47,11 +47,12 @@ class Gws::Memo::ListMessagesController < ApplicationController
       member_ids: valid_members.map(&:id),
       in_validate_presence_member: true,
       in_append_signature: true,
+      in_skip_validates_sender_quota: true,
     }
   end
 
   def draft_params
-    { state: 'closed' }
+    { state: 'closed', in_skip_validates_sender_quota: true }
   end
 
   def state_options

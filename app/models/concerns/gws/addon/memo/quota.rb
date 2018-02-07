@@ -3,6 +3,8 @@ module Gws::Addon::Memo::Quota
   extend SS::Addon
 
   included do
+    attr_accessor :in_skip_validates_sender_quota
+    @in_skip_validates_sender_quota = false
     validate :validate_attached_file_size
     validate :validate_quota, if: -> { send_date_was.blank? }
   end
@@ -24,10 +26,12 @@ module Gws::Addon::Memo::Quota
     return unless @cur_site
     return unless @cur_site.memo_quota.to_i > 0
 
-    if quota_over?(@cur_user, @cur_site)
-      action = draft? ? I18n.t("ss.buttons.save") : I18n.t("ss.buttons.send")
-      errors.add :base, :self_quota_over, action: action
-      return
+    if !@in_skip_validates_sender_quota
+      if quota_over?(@cur_user, @cur_site)
+        action = draft? ? I18n.t("ss.buttons.save") : I18n.t("ss.buttons.send")
+        errors.add :base, :self_quota_over, action: action
+        return
+      end
     end
 
     return if draft?
