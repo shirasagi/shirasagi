@@ -34,6 +34,7 @@
 #= require ss/lib/color
 #= require ss/lib/workflow
 #= require ss/lib/sortable_form
+#= require ss/lib/text_zoom
 #= require cms/lib/editor
 #= require cms/lib/form
 #= require cms/lib/edit_lock
@@ -132,11 +133,14 @@ $ ->
   SS_Tooltips.render(".tooltip")
   SS_SearchUI.render()
   SS_Color.render()
+  SS_TextZoom.render()
 
 class @SS
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
 
   @config = {}
+
+  @noticeTimeoutId = null
 
   @disableClick: (el)->
     return false if el.data('clicked')
@@ -227,6 +231,7 @@ class @SS
       return false
 
   @notice: (message, opts = {}) ->
+    SS.clearNotice()
     notice = $('#notice')
     if !notice.hasClass('js-notice')
       notice.addClass('js-notice').click ->
@@ -235,7 +240,14 @@ class @SS
     notice.slideDown('normal')
     if opts
       return if opts.timeout == 0
-    return setTimeout (-> $('#notice').slideUp('normal')), 1800
+    SS.noticeTimeoutId = setTimeout (-> $('#notice').slideUp('normal')), 1800
+    return SS.noticeTimeoutId
+
+  @clearNotice: ->
+    if SS.noticeTimeoutId
+      clearTimeout SS.noticeTimeoutId
+      SS.noticeTimeoutId = null
+    $('#notice').hide()
 
   @confirmUnloading: ->
     changed = false
