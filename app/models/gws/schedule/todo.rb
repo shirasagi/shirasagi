@@ -110,7 +110,7 @@ class Gws::Schedule::Todo
   end
 
   def sort_options
-    %w(updated_desc updated_asc created_desc created_asc end_at_desc end_at_asc).map do |k|
+    %w(end_at_asc end_at_desc updated_desc updated_asc created_desc created_asc).map do |k|
       [I18n.t("gws/schedule/todo.options.sort.#{k}"), k]
     end
   end
