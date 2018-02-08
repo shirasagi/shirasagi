@@ -4,8 +4,8 @@ function Gws_Bookmark() {
   this.url = null;
   this.model = null;
   this.el = $('.gws-bookmark');
-  this.bookmarkIcon = "&#xE866;";
-  this.unbookmarkIcon = "&#xE867;";
+  this.bookmarkIcon = "&#xE838;";
+  this.unbookmarkIcon = "&#xE83A;";
   this.loading = false;
 }
 
