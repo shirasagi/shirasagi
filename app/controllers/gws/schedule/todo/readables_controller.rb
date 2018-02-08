@@ -15,6 +15,6 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
       member_or_readable(@cur_user, site: @cur_site, include_role: true).
       without_deleted.
       search(params[:s]).
-      custom_order(params.dig(:s, :sort) || 'updated_desc')
+      custom_order(params.dig(:s, :sort) || 'end_at_asc')
   end
 end
