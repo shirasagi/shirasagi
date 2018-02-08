@@ -5,6 +5,8 @@ class Gws::Monitor::AdminsController < ApplicationController
 
   before_action :check_readable
 
+  navi_view "gws/monitor/main/navi"
+
   private
 
   def set_crumbs

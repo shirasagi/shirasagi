@@ -8,6 +8,8 @@ class Gws::Workflow::FilesController < ApplicationController
   before_action :set_cur_form, only: %i[new create]
   before_action :set_search_params
 
+  navi_view "gws/workflow/main/navi"
+
   private
 
   def set_crumbs

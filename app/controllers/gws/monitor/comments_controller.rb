@@ -11,6 +11,8 @@ class Gws::Monitor::CommentsController < ApplicationController
   before_action :check_updatable, only: %i[edit update]
   before_action :check_destroyable, only: %i[delete destroy]
 
+  navi_view "gws/monitor/main/navi"
+
   private
 
   def set_crumbs

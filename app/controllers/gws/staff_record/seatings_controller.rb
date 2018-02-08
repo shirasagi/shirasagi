@@ -5,7 +5,7 @@ class Gws::StaffRecord::SeatingsController < ApplicationController
 
   model Gws::StaffRecord::Seating
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/main/navi"
 
   before_action :set_year
 

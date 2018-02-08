@@ -6,6 +6,8 @@ class Gws::Board::CommentsController < ApplicationController
 
   model Gws::Board::Post
 
+  navi_view "gws/board/main/navi"
+
   private
 
   def fix_params

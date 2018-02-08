@@ -7,6 +7,8 @@ class Gws::PersonalAddress::AddressesController < ApplicationController
   before_action :set_address_group
   before_action :set_group_navi, only: [:index]
 
+  navi_view "gws/personal_address/main/navi"
+
   private
 
   def set_crumbs

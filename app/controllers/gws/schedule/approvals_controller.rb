@@ -5,6 +5,8 @@ class Gws::Schedule::ApprovalsController < ApplicationController
 
   model Gws::Schedule::Approval
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_cur_schedule

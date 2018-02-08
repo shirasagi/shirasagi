@@ -5,6 +5,8 @@ class Gws::Schedule::AttendancesController < ApplicationController
 
   model Gws::Schedule::Attendance
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_cur_schedule

@@ -5,7 +5,7 @@ class Gws::Portal::Group::LayoutsController < ApplicationController
 
   model Gws::Portal::GroupSetting
 
-  navi_view 'gws/portal/group/navi'
+  navi_view 'gws/portal/main/navi'
   menu_view 'gws/portal/common/layouts/menu'
 
   before_action :set_portal_setting

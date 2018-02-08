@@ -4,7 +4,7 @@ class Gws::Monitor::Management::AdminsController < ApplicationController
   include Gws::Monitor::TopicFilter
 
   before_action :check_readable
-  navi_view 'gws/monitor/management/main/navi'
+  navi_view "gws/monitor/main/navi"
 
   private
 
@@ -16,11 +16,10 @@ class Gws::Monitor::Management::AdminsController < ApplicationController
 
   def set_crumbs
     set_category
-    @crumbs << [t("modules.gws/monitor"), gws_monitor_topics_path]
+    @crumbs << [@cur_site.menu_monitor_label || t("modules.gws/monitor"), gws_monitor_topics_path]
     if @category.present?
       @crumbs << [@category.name, gws_monitor_topics_path]
     end
-    @crumbs << [t('ss.management'), gws_monitor_management_main_path]
     @crumbs << [t('gws/monitor.tabs.article_management'), action: :index]
   end
 

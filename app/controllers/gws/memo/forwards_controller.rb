@@ -4,7 +4,7 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   model Gws::Memo::Forward
 
-  navi_view "gws/memo/management/navi"
+  navi_view "gws/memo/messages/navi"
 
   before_action :deny_with_auth
   before_action :set_item, only: [:show, :edit, :update]
@@ -30,7 +30,6 @@ class Gws::Memo::ForwardsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
-    @crumbs << [t('ss.management'), gws_memo_management_main_path ]
     @crumbs << [t('mongoid.models.gws/memo/forward'), gws_memo_forwards_path ]
   end
 

@@ -3,7 +3,7 @@ class Gws::Facility::ColumnsController < ApplicationController
   include Gws::CrudFilter
   include Gws::ColumnFilter
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/schedule/main/navi"
 
   self.form_model = Gws::Facility::Item
 
@@ -11,6 +11,7 @@ class Gws::Facility::ColumnsController < ApplicationController
 
   def set_crumbs
     set_form
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
     @crumbs << [t('gws/facility.navi.item'), gws_facility_items_path]
     @crumbs << [@cur_form.name, gws_facility_item_path(id: @cur_form)]
   end

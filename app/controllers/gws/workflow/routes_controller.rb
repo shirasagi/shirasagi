@@ -5,12 +5,12 @@ class Gws::Workflow::RoutesController < ApplicationController
   model Gws::Workflow::Route
 
   prepend_view_path 'app/views/workflow/routes'
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/workflow/main/navi"
 
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/workflow'), gws_workflow_setting_path]
+    @crumbs << [@cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_setting_path]
     @crumbs << [@model.model_name.human, action: :index]
   end
 

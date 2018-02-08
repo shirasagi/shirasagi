@@ -9,6 +9,8 @@ class Gws::Discussion::TopicsController < ApplicationController
   before_action :set_crumbs
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :comments, :reply, :copy]
 
+  navi_view "gws/discussion/main/navi"
+
   private
 
   def fix_params

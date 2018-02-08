@@ -2,7 +2,7 @@ class Gws::Faq::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/faq/main/navi"
 
   model Gws::Faq::Category
 
@@ -24,7 +24,8 @@ class Gws::Faq::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/faq') + '/' + t('mongoid.models.gws/faq/category'), gws_faq_categories_path]
+    @crumbs << [@cur_site.menu_faq_label || t("modules.gws/faq"), gws_faq_topics_path(mode: '-', category: '-')]
+    @crumbs << [t('mongoid.models.gws/faq/category'), gws_faq_categories_path]
   end
 
   def fix_params

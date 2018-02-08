@@ -3,6 +3,8 @@ class Gws::Circular::PostsController < ApplicationController
   include Gws::CrudFilter
   include Gws::Circular::PostFilter
 
+  navi_view "gws/circular/main/navi"
+
   private
 
   def set_cur_tab

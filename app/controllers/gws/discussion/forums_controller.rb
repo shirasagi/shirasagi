@@ -4,6 +4,8 @@ class Gws::Discussion::ForumsController < ApplicationController
 
   model Gws::Discussion::Forum
 
+  navi_view "gws/discussion/main/navi"
+
   private
 
   def fix_params

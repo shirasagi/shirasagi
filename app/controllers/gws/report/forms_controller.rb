@@ -2,13 +2,13 @@ class Gws::Report::FormsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/report/main/navi"
   model Gws::Report::Form
 
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/report'), gws_report_setting_path]
+    @crumbs << [@cur_site.menu_report_label || t('modules.gws/report'), gws_report_setting_path]
     @crumbs << [Gws::Report::Form.model_name.human, gws_report_forms_path]
   end
 

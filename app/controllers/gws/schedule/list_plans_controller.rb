@@ -3,6 +3,8 @@ class Gws::Schedule::ListPlansController < ApplicationController
   include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
+  navi_view "gws/schedule/main/navi"
+
   menu_view "gws/crud/menu"
 
   def index

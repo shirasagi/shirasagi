@@ -14,10 +14,12 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   helper_method :year_month_options
 
+  navi_view "gws/attendance/main/navi"
+
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/attendance'), action: :index]
+    @crumbs << [@cur_site.menu_attendance_label || t('modules.gws/attendance'), action: :index]
   end
 
   def crud_redirect_url

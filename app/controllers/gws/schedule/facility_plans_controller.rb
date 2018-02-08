@@ -7,6 +7,8 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   before_action :set_facility
   before_action :set_download_url, only: :index
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_facility

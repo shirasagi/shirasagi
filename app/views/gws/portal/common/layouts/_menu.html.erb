@@ -1,9 +1,3 @@
-<nav class="nav-management-menu hide-mb">
-<%= link_to gws_portal_path do %>
-    <i class="material-icons md-20">&#xE879;</i><%= t("ss.links.back") %>
-  <% end %>
-</nav>
-
 <% if @portal.allowed?(:edit, @cur_user, site: @cur_site) %>
   <nav class="nav-menu">
     <button class="btn gws-portlets-serialize" data-href="<%= url_for(action: :update, format: :json) %>">

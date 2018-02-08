@@ -4,12 +4,13 @@ class Gws::Facility::CategoriesController < ApplicationController
 
   model Gws::Facility::Category
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/schedule/main/navi"
 
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/facility') + '/' + t('mongoid.models.gws/facility/category'), gws_facility_categories_path]
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [t('gws/facility.navi.category'), gws_facility_categories_path]
   end
 
   def fix_params

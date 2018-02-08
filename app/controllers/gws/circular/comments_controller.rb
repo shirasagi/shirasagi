@@ -7,6 +7,8 @@ class Gws::Circular::CommentsController < ApplicationController
   before_action :set_category
   before_action :set_post
 
+  navi_view "gws/circular/main/navi"
+
   private
 
   def set_category

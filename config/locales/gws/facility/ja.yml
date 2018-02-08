@@ -6,8 +6,9 @@ ja:
       minutes: 分
       days: 日先まで
     navi:
-      item: 設備
-      usage: 利用率
+      item: 設備設定
+      usage: 設備利用率
+      category: 設備カテゴリー
     usage:
       type: 種類
       usage_month: 利用月

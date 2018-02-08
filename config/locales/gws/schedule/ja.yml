@@ -158,6 +158,7 @@ ja:
         - 3年6ヶ月
   modules:
     gws/schedule: スケジュール
+    gws/schedule/todo: TODO
     addons:
       gws/schedule/facility: 設備予約
       gws/schedule/facility_column_values: 設備追加情報
@@ -193,6 +194,7 @@ ja:
   mongoid:
     models:
       gws/schedule/plan: スケジュール
+      gws/schedule/todo: ToDo
       gws/schedule/category: 種別
       gws/schedule/holiday: 休日
       gws/schedule/comment: コメント

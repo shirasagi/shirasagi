@@ -4,6 +4,8 @@ class Gws::Share::FoldersController < ApplicationController
 
   model Gws::Share::Folder
 
+  navi_view "gws/share/main/navi"
+
   private
 
   def set_crumbs

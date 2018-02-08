@@ -3,11 +3,12 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
   include Gws::CrudFilter
   include Gws::Schedule::TodoFilter
 
+  navi_view "gws/schedule/todo/main/navi"
+
   private
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
-    @crumbs << [t('modules.addons.gws/schedule/todo'), gws_schedule_todo_readables_path]
+    @crumbs << [@cur_site.menu_todo_label || t('modules.addons.gws/schedule/todo'), gws_schedule_todo_main_path]
   end
 
   def set_items

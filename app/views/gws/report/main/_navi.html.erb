@@ -1,0 +1,16 @@
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_report_label || t('modules.gws/report'), gws_report_files_main_path, class: "icon-report" %></h2>
+  <h3><%= link_to t('gws/report.options.file_state.inbox'), gws_report_files_path(state: 'inbox') %></h3>
+  <h3><%= link_to t('gws/report.options.file_state.sent'), gws_report_files_path(state: 'sent') %></h3>
+  <h3><%= link_to t('gws/report.options.file_state.closed'), gws_report_files_path(state: 'closed') %></h3>
+  <h3><%= link_to t('gws/report.options.file_state.readable'), gws_report_files_path(state: 'readable') %></h3>
+
+  <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(Gws::Report::Form.model_name.human, gws_report_forms_path, class: "management") %></h3>
+  <% end %>
+  <% if Gws::Report::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(Gws::Report::Category.model_name.human, gws_report_categories_path, class: "management") %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

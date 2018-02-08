@@ -6,6 +6,8 @@ class Gws::Qna::CommentsController < ApplicationController
 
   model Gws::Qna::Post
 
+  navi_view "gws/qna/main/navi"
+
   private
 
   def fix_params
