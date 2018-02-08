@@ -29,7 +29,7 @@ class @SS_PopupNotice
       $(@target).find(".popup-notice").show()
       $(@target).find(".popup-notice-items").html(@loading).addClass("popup-notice-loading")
 
-      url = $(e.target).attr("data-url") || $(e.target).attr("href")
+      url = $(e.currentTarget).attr("data-url") || $(e.currentTarget).attr("href")
       $.ajax
         url: url
         beforeSend: () ->
