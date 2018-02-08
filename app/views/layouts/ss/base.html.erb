@@ -108,7 +108,8 @@
           (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
         <% end %>
         <div class="gws-memo-notice popup-notice-container">
-          <%= link_to gws_memo_notices_path, "class" => "user-message ajax-popup-notice", "data-url" => recent_gws_memo_notices_path do %>
+          <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice", "data-url" => recent_gws_memo_notices_path do %>
+            <i class="material-icons">&#xE0D8;</i>
             <% count = Gws::Memo::Notice.unseens(@cur_user, @cur_site).size %>
             <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
           <% end %>
