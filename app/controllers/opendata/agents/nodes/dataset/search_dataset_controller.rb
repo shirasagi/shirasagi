@@ -4,6 +4,10 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
 
   private
 
+  def colorbox_limit
+    100
+  end
+
   def pages
     @model = Opendata::Dataset
 
@@ -26,6 +30,12 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   def index
     @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
     @items = pages.page(params[:page]).per(@cur_node.limit || 20)
+  end
+
+  def index_tags
+    @cur_node.layout = nil
+    @tags = pages.aggregate_array :tags, limit: colorbox_limit
+    render "opendata/agents/nodes/dataset/search_dataset/tags", layout: "opendata/dataset_aggregation"
   end
 
   def rss
