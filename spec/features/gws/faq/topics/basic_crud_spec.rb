@@ -5,11 +5,11 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
     let(:site) { gws_site }
     let(:item) { create :gws_faq_topic }
     let!(:category) { create :gws_faq_category }
-    let(:index_path) { gws_faq_topics_path site }
-    let(:new_path) { new_gws_faq_topic_path site }
-    let(:show_path) { gws_faq_topic_path site, item }
-    let(:edit_path) { edit_gws_faq_topic_path site, item }
-    let(:delete_path) { delete_gws_faq_topic_path site, item }
+    let(:index_path) { gws_faq_topics_path site, '-', '-' }
+    let(:new_path) { new_gws_faq_topic_path site, '-', '-' }
+    let(:show_path) { gws_faq_topic_path site, '-', '-', item }
+    let(:edit_path) { edit_gws_faq_topic_path site, '-', '-', item }
+    let(:delete_path) { delete_gws_faq_topic_path site, '-', '-', item }
 
     before { login_gws_user }
 

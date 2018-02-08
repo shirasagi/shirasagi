@@ -1,30 +1,12 @@
 class Gws::Board::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Board::BaseFilter
   include Gws::Memo::NotificationFilter
 
   model Gws::Board::Topic
 
-  before_action :set_category
-
   private
-
-  def set_crumbs
-    set_category
-    if @category.present?
-      @crumbs << [@cur_site.menu_board_label || t("modules.gws/board"), gws_board_topics_path]
-      @crumbs << [@category.name, action: :index]
-    else
-      @crumbs << [@cur_site.menu_board_label || t("modules.gws/board"), action: :index]
-    end
-  end
-
-  def set_category
-    @categories = Gws::Board::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
-    if category_id = params[:category].presence
-      @category ||= Gws::Board::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
-    end
-  end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
@@ -32,25 +14,29 @@ class Gws::Board::TopicsController < ApplicationController
 
   def pre_params
     p = super
-    if @category.present?
-      p[:category_ids] = [ @category.id ]
-    end
+    p[:category_ids] = [@category.id] if @category.present?
     p
+  end
+
+  def items
+    if @mode == 'editable'
+      @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site)
+    else
+      @model.site(@cur_site).topic.and_public.readable(@cur_user, site: @cur_site)
+    end
+  end
+
+  def readable?
+    if @mode == 'editable'
+      @item.allowed?(:read, @cur_user, site: @cur_site)
+    else
+      @item.readable?(@cur_user)
+    end
   end
 
   public
 
   def index
-    state = params.dig(:s, :state).presence || 'public'
-
-    @items = @model.site(@cur_site).topic
-
-    if state == "public"
-      @items = @items.and_public.readable(@cur_user, site: @cur_site)
-    else
-      @items = @items.allow(:read, @cur_user, site: @cur_site)
-    end
-
     if @category.present?
       params[:s] ||= {}
       params[:s][:site] = @cur_site
@@ -61,19 +47,19 @@ class Gws::Board::TopicsController < ApplicationController
       params[:s][:user] = @cur_user
     end
 
-    @items = @items.search(params[:s]).
+    @items = items.search(params[:s]).
       order(descendants_updated: -1).
       page(params[:page]).per(50)
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user)
+    raise '403' unless readable?
     render file: "show_#{@item.mode}"
   end
 
   def read
     set_item
-    raise '403' unless @item.readable?(@cur_user)
+    raise '403' unless readable?
 
     result = true
     if !@item.browsed?(@cur_user)

@@ -1,6 +1,6 @@
 <div class="index gws-boards">
   <ul class="list-items">
-    <li class="list-head"><%= link_to t("modules.gws/faq"), gws_faq_topics_path %></li>
+    <li class="list-head"><%= link_to t("modules.gws/faq"), gws_faq_topics_path(mode: '-', category: '-') %></li>
 
     <% @faq_items.each do |item| %>
     <%
@@ -15,7 +15,7 @@
     <li class="<%= css_classes.join(' ') %>">
       <div class="info">
         <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-        <%= link_to item.name, gws_faq_topic_path(id: item), class: "title" %>
+        <%= link_to item.name, gws_faq_topic_path(mode: '-', category: '-', id: item), class: "title" %>
         <% if item.descendants_files_count.to_i > 0 %>
           <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
         <% end %>
@@ -26,7 +26,7 @@
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
-              <%= link_to category.trailing_name, gws_faq_category_topics_path(category: category.id),
+              <%= link_to category.trailing_name, gws_faq_topics_path(mode: '-', category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>
@@ -39,7 +39,7 @@
 
 <div class="index gws-boards">
   <ul class="list-items">
-    <li class="list-head"><%= link_to t("modules.gws/qna"), gws_qna_topics_path %></li>
+    <li class="list-head"><%= link_to t("modules.gws/qna"), gws_qna_topics_path(mode: '-', category: '-') %></li>
 
     <% @qna_items.each do |item| %>
     <%
@@ -54,7 +54,7 @@
     <li class="<%= css_classes.join(' ') %>">
       <div class="info">
         <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-        <%= link_to item.name, gws_qna_topic_path(id: item), class: "title" %>
+        <%= link_to item.name, gws_qna_topic_path(mode: '-', category: '-', id: item), class: "title" %>
         <% if item.descendants_files_count.to_i > 0 %>
           <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
         <% end %>
@@ -65,7 +65,7 @@
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
-              <%= link_to category.trailing_name, gws_qna_category_topics_path(category: category.id),
+              <%= link_to category.trailing_name, gws_qna_topics_path(mode: '-', category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>

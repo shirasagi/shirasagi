@@ -12,6 +12,7 @@ ja:
       update: 更新
       delete: 削除
       browsing_state: 通知先
+      browsed_state: 状態
       browsed: 閲覧
       list: トピック一覧へ
       confirm: 削除しますか？

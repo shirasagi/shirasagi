@@ -75,7 +75,13 @@
 
   <% if @cur_site.menu_board_visible? %>
     <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_board_label || t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>
+      <h2><%= link_to @cur_site.menu_board_label || t('modules.gws/board'), gws_board_main_path, class: "icon-board" %></h2>
+      <div class="child-menu">
+        <h3><%= link_to t('ss.navi.readable'), gws_board_topics_path(mode: '-', category: '-') %></h3>
+        <% if Gws::Board::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <h3><%= link_to t('ss.navi.editable'), gws_board_topics_path(mode: 'editable', category: '-') %></h3>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
 
@@ -84,10 +90,16 @@
       <h2><%= link_to @cur_site.menu_question_label || t('gws.question_management'), gws_question_management_path, class: "icon-question" %></h2>
       <div class="child-menu">
         <% if Gws::Faq::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-          <h3><%= link_to t('modules.gws/faq'), gws_faq_topics_path %></h3>
+          <h3><%= link_to t('modules.gws/faq'), gws_faq_topics_path(mode: '-', category: '-') %></h3>
+          <% if Gws::Faq::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <h3><%= link_to '( ' + t('ss.navi.editable') + ' )', gws_faq_topics_path(mode: 'editable', category: '-') %></h3>
+          <% end %>
         <% end %>
         <% if Gws::Qna::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-          <h3><%= link_to t('modules.gws/qna'), gws_qna_topics_path %></h3>
+          <h3><%= link_to t('modules.gws/qna'), gws_qna_topics_path(mode: '-', category: '-') %></h3>
+          <% if Gws::Qna::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <h3><%= link_to '( ' + t('ss.navi.editable') + ' )', gws_qna_topics_path(mode: 'editable', category: '-') %></h3>
+          <% end %>
         <% end %>
       </div>
     <% end %>

@@ -1,11 +1,11 @@
 <%= jquery do %>
   var navi = new Gws_Category_Navi('.gws-category-navi');
-  navi.setBaseUrl('<%= gws_qna_category_topics_path(category: 'ID') %>');
+  navi.setBaseUrl('<%= gws_qna_topics_path(category: 'ID') %>');
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
 <div class="gws-category-navi dropdown">
-  <%= link_to gws_qna_topics_path, class: 'btn dropdown-toggle' do %>
+  <%= link_to gws_qna_topics_path(category: '-'), class: 'btn dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
@@ -53,7 +53,7 @@
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
-              <%= link_to category.trailing_name, gws_qna_category_topics_path(category: category.id),
+              <%= link_to category.trailing_name, gws_qna_topics_path(category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
             <span class="<%= "gws-category-label gws-category-label-#{item.question_state}" %>">

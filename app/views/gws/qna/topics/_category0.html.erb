@@ -3,7 +3,7 @@
   <% categories.each do |category| %>
     <li class="depth<%= depth %>">
       <span class="depth<%= depth %>">
-      <%= link_to category.name, gws_qna_category_topics_path(category: category.id),
+      <%= link_to category.name, gws_qna_topics_path(category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
       </span>
 
