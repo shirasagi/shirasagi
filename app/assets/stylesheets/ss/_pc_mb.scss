@@ -139,15 +139,103 @@ td {
 // Popup Notice
 .popup-notice-container .popup-notice {
   position: absolute;
+  display: block;
   top: 100%;
-  background: #ffffff;
-  a { color: #f25a38 !important; }
+  right: 0;
+  width: 450px;
   box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.2);
-  .list-item.unseen {
-    background: #f9e9e3;
+  background: #ffffff;
+  @include mb {
+    left: 0;
+    width: 100%;
+  }
+  h2 {
+    padding: 10px;
+    border-bottom: solid 1px #f2f2f2;
+  }
+  ul {
+    margin: 0;
+    li {
+      padding: 15px;
+      border-bottom: solid 1px #f2f3f4;
+      &.list-item:hover {
+        background: #ebebeb;
+      }
+    }
+  }
+  a { color: #f25a38 !important; }
+  .list-item.seen {
+    background: #f4f4f4;
+  }
+  a.ajax-popup-notice,.ajax-popup-notice+a {
+    display: inline-block;
+    float: left;
+    width: 50%;
+    padding: 10px 0;
+    background: #f2f2f2;
+    text-align: center;
+    &:hover {
+      background: #ebebeb;
+    }
   }
 }
-
+.gws-memo-notice {
+  padding: 12px;
+  .popup-notice {
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: -14px;
+      right: 54px;
+      width: 0;
+      height: 0;
+      border: 9px solid transparent;
+      border-top: none;
+      border-bottom: 14px solid $white;
+      @include mb {
+        right: 75px;
+      }
+    }
+  }
+}
+.gws-memo-message {
+  margin-right: 10px;
+  .popup-notice {
+    &:before {
+      content: "";
+      position: absolute;
+      top: -14px;
+      right: 5px;
+      width: 0;
+      height: 0;
+      border: transparent 9px solid;
+      border-top: 0;
+      border-bottom: 14px solid $white;
+      @include mb {
+        right: 26px;
+      }
+    }
+  }
+}
+.popup-notice {
+  margin-right: 20px;
+  @include mb {
+    margin-right: 0;
+  }
+}
+// -------------------------------------------------------------------------------------------------
+// memo gws-memo-notices
+.gws-memo-notices {
+  .list-item {
+    &.seen {
+      background: #f4f4f4;
+    }
+    &.seen:hover, &.unseen:hover {
+      background: #ebebeb;
+    }
+  }
+}
 // -------------------------------------------------------------------------------------------------
 // head
 #head {
@@ -296,7 +384,6 @@ td {
     -js-desplay: flex;
     @include display-flex;
     @include align-items(center);
-    @include mb { float: none; }
     a {
       color: $white;
     }
@@ -349,8 +436,7 @@ td {
         color: $white;
       }
       .dropdown-menu {
-        left: 0;
-        right: auto;
+        right: 0;
         padding: 5px 5px;
         input[type=text] {
           width: 100%;
