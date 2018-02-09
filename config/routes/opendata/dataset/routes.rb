@@ -8,6 +8,8 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
+    get "download_reports" => "dataset/download_reports#index", as: :download_reports
+    get "download_reports/download" => "dataset/download_reports#download", as: :download_reports_download
     resources :crawls, concerns: :deletion, module: :dataset
     resources :dataset_categories, concerns: :deletion, module: :dataset
     resources :dataset_groups, concerns: :deletion, module: :dataset do
