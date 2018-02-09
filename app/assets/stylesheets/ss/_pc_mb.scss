@@ -632,8 +632,10 @@ td {
       color: $orange;
       text-decoration: none;
     }
-    &:hover.management {
+    &.management:hover {
       background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+      color: $orange;
+      text-decoration: none;
     }
   }
   .navi-link:hover {
@@ -738,6 +740,8 @@ td {
       }
       &:hover.management {
         background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+        color: $orange;
+        text-decoration: none;
       }
     }
     .current a {
