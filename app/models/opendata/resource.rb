@@ -24,6 +24,20 @@ class Opendata::Resource
     "/resource"
   end
 
+  def download_histories
+    Opendata::ResourceDownloadHistory.where(
+      dataset_id: dataset.id,
+      resource_id: id
+    )
+  end
+
+  def create_download_history
+    Opendata::ResourceDownloadHistory.create_download_history(
+      dataset_id: dataset.id,
+      resource_id: id
+    )
+  end
+
   private
 
   def set_filename
