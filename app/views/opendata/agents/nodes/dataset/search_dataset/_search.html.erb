@@ -72,7 +72,7 @@ groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name
   </dl>
   <dl class="sort">
     <dt><%= I18n.t("opendata.labels.sort") %></dt>
-    <dd><%= select_tag :sort, @model.sort_options %></dd>
+    <dd><%= f.select :sort, @model.sort_options %></dd>
   </dl>
   <dl class="option">
     <dt><%= I18n.t("opendata.labels.search_option") %></dt>
