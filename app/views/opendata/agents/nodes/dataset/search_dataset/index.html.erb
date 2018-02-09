@@ -1,4 +1,4 @@
-<% file = @model.dataset_search_html_path(@cur_site) %>
+<% file = @model.dataset_search_html_path(@cur_site, @cur_node) %>
 <% if !@cur_node.serve_static_file? %>
   <%= render partial: 'search' %>
 <% elsif Fs.exists?(file) %>

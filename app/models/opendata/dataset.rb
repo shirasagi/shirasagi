@@ -80,9 +80,15 @@ class Opendata::Dataset
     super
   end
 
-  def dataset_search_html_path(site = nil)
-    cur_site = site || self.site
-    "#{Rails.root}/private/sites/#{cur_site.host.split(//).join('/')}/_/dataset_search.html"
+  def dataset_search_html_path(site = nil, node = nil)
+    site ||= self.site
+    node ||= Opendata::Node::SearchDataset.site(site).and_public.first
+    if node.present?
+      filename = "#{node.filename}/dataset_search.html"
+    else
+      filename = 'dataset_search.html'
+    end
+    "#{Rails.root}/private/sites/#{site.host.split(//).join('/')}/_/#{filename}"
   end
 
   private
@@ -112,8 +118,8 @@ class Opendata::Dataset
   end
 
   class << self
-    def dataset_search_html_path(site)
-      self.new.dataset_search_html_path(site)
+    def dataset_search_html_path(site, node = nil)
+      self.new.dataset_search_html_path(site, node)
     end
 
     def to_dataset_path(path)
