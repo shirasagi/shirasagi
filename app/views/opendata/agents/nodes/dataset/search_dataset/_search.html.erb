@@ -15,6 +15,12 @@ for(var i=0;pair[i];i++) {
   });
 }
 $(".tag a.more").colorbox({ fixed: true, height: "80%" });
+$('select[name="s[tag]"]').change(function() {
+  if($(this).val() == "<%= I18n.t('ss.links.more') %>") {
+    $(this).val('');
+    $(this).parents('.tag').find('.more').click();
+  }
+});
 <% end %>
 
 <%
@@ -56,7 +62,7 @@ groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name
   <dl class="tag">
     <dt><%= I18n.t("opendata.labels.tag") %></dt>
     <dd><%= f.select :tag, @model.tag_options, include_blank: true %></dd>
-    <dd><%= link_to t('ss.links.more'), "#{@cur_node.url}tags/", class: "more" %></dd>
+    <%= link_to t('ss.links.more'), "#{@cur_node.url}tags/", class: "more", style: 'display: none;' %>
   </dl>
   <dl class="format">
     <dt><%= I18n.t("opendata.labels.format") %></dt>

@@ -93,6 +93,10 @@ class Opendata::Dataset
 
   private
 
+  def options_limit
+    self.class.options_limit
+  end
+
   def validate_filename
     @basename.blank? ? nil : super
   end
@@ -118,6 +122,10 @@ class Opendata::Dataset
   end
 
   class << self
+    def options_limit
+      100
+    end
+
     def dataset_search_html_path(site, node = nil)
       self.new.dataset_search_html_path(site, node)
     end
@@ -175,10 +183,13 @@ class Opendata::Dataset
       pipes << { "$match" => { "route" => "opendata/dataset" } }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
-      self.collection.aggregate(pipes).map do |data|
+      options = self.collection.aggregate(pipes).map do |data|
         tag = data["_id"]
         [tag, tag]
       end
+      options = options.take(options_limit)
+      options << [I18n.t('ss.links.more'), I18n.t('ss.links.more')] if options.count > options_limit
+      options
     end
 
     def format_options

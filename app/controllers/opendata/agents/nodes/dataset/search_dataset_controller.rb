@@ -4,10 +4,6 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
 
   private
 
-  def colorbox_limit
-    100
-  end
-
   def pages
     @model = Opendata::Dataset
 
@@ -34,7 +30,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
 
   def index_tags
     @cur_node.layout = nil
-    @tags = pages.aggregate_array :tags, limit: colorbox_limit
+    @tags = pages.aggregate_array :tags
     render "opendata/agents/nodes/dataset/search_dataset/tags", layout: "opendata/dataset_aggregation"
   end
 

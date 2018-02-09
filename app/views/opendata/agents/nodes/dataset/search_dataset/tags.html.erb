@@ -19,16 +19,5 @@ $('.search-dataset-tag a').click(function() {
   <% end %>
   <% if @tags.count == 0 %>
     <div><%= I18n.t("opendata.labels.not_data") %></div>
-  <% else %>
-    <article>
-      <header>
-        <h2>
-          <a>
-            <%= t("opendata.search_datasets.deselect") %>
-            <span class="name"></span>
-          </a>
-        </h2>
-      </header>
-    </article>
   <% end %>
 </div>
