@@ -1,9 +1,3 @@
-<nav class="nav-management-menu hide-mb">
-  <%= link_to gws_attendance_main_path do %>
-    <i class="material-icons md-20">&#xE879;</i><%= t("ss.links.back") %>
-  <% end %>
-</nav>
-
 <% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) } %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>

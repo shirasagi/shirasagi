@@ -3,6 +3,8 @@ class Gws::Schedule::Search::TimesController < ApplicationController
 
   model Gws::Schedule::PlanSearch
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_crumbs

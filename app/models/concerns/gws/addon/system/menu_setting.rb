@@ -5,7 +5,7 @@ module Gws::Addon::System::MenuSetting
   set_addon_type :organization
 
   included do
-    %w(portal reminder schedule attendance bookmark memo board question report workflow circular monitor share
+    %w(portal reminder schedule todo attendance bookmark memo board faq question report workflow circular monitor share
        shared_address personal_address staff_record links discussion).each do |name|
       define_menu_setting(name)
     end

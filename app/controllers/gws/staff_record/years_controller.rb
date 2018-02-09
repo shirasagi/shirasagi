@@ -5,7 +5,7 @@ class Gws::StaffRecord::YearsController < ApplicationController
 
   model Gws::StaffRecord::Year
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/main/navi"
 
   before_action :set_year, if: ->{ @item && !@item.new_record? }
 

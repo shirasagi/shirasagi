@@ -4,7 +4,7 @@ class Gws::Memo::SignaturesController < ApplicationController
 
   model Gws::Memo::Signature
 
-  navi_view "gws/memo/management/navi"
+  navi_view "gws/memo/messages/navi"
 
   before_action :deny_with_auth
 
@@ -22,7 +22,6 @@ class Gws::Memo::SignaturesController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
-    @crumbs << [t('ss.management'), gws_memo_management_main_path ]
     @crumbs << [t('mongoid.models.gws/memo/signature'), gws_memo_signatures_path ]
   end
 

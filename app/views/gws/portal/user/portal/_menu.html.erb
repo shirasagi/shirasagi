@@ -1,10 +1,2 @@
-<nav class="nav-management-menu hide-mb">
-  <% if @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true) %>
-    <%= link_to gws_portal_user_layouts_path(user: @portal_user) do %>
-      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
-    <% end %>
-  <% end %>
-</nav>
-
 <nav class="nav-menu">
 </nav>

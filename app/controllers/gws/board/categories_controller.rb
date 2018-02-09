@@ -2,9 +2,9 @@ class Gws::Board::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/main/conf_navi"
-
   model Gws::Board::Category
+
+  navi_view "gws/board/main/navi"
 
   def index
     #raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
@@ -24,7 +24,8 @@ class Gws::Board::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/board') + '/' + t('mongoid.models.gws/board/category'), gws_board_categories_path]
+    @crumbs << [@cur_site.menu_board_label || t("modules.gws/board"), gws_board_topics_path(mode: '-', category: '-')]
+    @crumbs << [t('mongoid.models.gws/board/category'), gws_board_categories_path]
   end
 
   def fix_params

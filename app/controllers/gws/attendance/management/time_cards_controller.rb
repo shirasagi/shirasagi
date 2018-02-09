@@ -17,12 +17,14 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
 
   helper_method :year_month_options, :group_options
 
+  navi_view "gws/attendance/main/navi"
+
   append_view_path 'app/views/gws/attendance/time_cards'
 
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/attendance'), gws_attendance_main_path]
+    @crumbs << [@cur_site.menu_attendance_label || t('modules.gws/attendance'), gws_attendance_main_path]
     @crumbs << [t('ss.management'), gws_attendance_management_main_path]
   end
 

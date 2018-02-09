@@ -1,0 +1,10 @@
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_personal_address_label || t("modules.gws/personal_address"), gws_personal_address_addresses_path %></h2>
+  <h3><%= link_to t("ss.navi.readable"), gws_personal_address_addresses_path %></h3>
+
+  <% if Gws::SharedAddress::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("gws/personal_address.navi.group"), gws_personal_address_management_groups_path, class: "management" %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

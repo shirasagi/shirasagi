@@ -6,6 +6,8 @@ class Gws::Qna::TopicsController < ApplicationController
 
   model Gws::Qna::Topic
 
+  navi_view "gws/qna/main/navi"
+
   private
 
   def fix_params

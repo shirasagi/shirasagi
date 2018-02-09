@@ -2,7 +2,7 @@ class Gws::Share::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/share/main/navi"
 
   model Gws::Share::Category
 
@@ -23,6 +23,7 @@ class Gws::Share::CategoriesController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [@cur_site.menu_share_label || t("modules.gws/share"), gws_share_files_path]
     @crumbs << [t("mongoid.models.gws/share/category"), gws_share_categories_path]
   end
 

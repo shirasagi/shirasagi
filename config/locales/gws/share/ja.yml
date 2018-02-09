@@ -11,7 +11,6 @@ ja:
       disabled_items: 削除済み
     links:
       categories: カテゴリー
-      folder: フォルダー管理
       disable: 削除済みに移動する
       active: 削除を取り消す
       file_download: ダウンロード
@@ -27,6 +26,10 @@ ja:
     mailers:
       compressed:
         subject: ダウンロード準備完了のお知らせ
+    navi:
+      folder: フォルダー
+      category: カテゴリー
+      management: 削除済み一覧
 
   modules:
     gws/share: 共有ファイル
@@ -63,7 +66,7 @@ ja:
     models:
       gws/share/file: ファイル
       gws/share/folder: フォルダー
-      gws/share/category: 共有ファイル/カテゴリー
+      gws/share/category: カテゴリー
     errors:
       models:
         gws/share/file:

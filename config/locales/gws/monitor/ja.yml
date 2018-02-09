@@ -157,10 +157,10 @@ ja:
       unanswer: 未回答
       answer: 回答済み
       admin: 作成した設問
-      article_management: 回答管理
+      article_management: 設問（管理）
       trash: ゴミ箱
-      management_admin: 設問管理
-      management_trash: ゴミ箱
+      management_admin: 設問（管理）
+      management_trash: ゴミ箱（管理）
     management:
       links:
         back_to_topic: 戻る

@@ -1,15 +1,3 @@
-<nav class="nav-management-menu">
-  <% if Gws::SharedAddress::Address.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to gws_shared_address_management_addresses_path do %>
-      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
-    <% end %>
-  <% elsif Gws::SharedAddress::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to gws_shared_address_management_groups_path do %>
-      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
-    <% end %>
-  <% end %>
-</nav>
-
 <nav class="nav-menu">
   <% if params[:action] !~ /index/ %>
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>

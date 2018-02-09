@@ -3,7 +3,7 @@ class Gws::SharedAddress::Management::GroupsController < ApplicationController
   include Gws::CrudFilter
 
   model Gws::SharedAddress::Group
-  navi_view "gws/shared_address/management/navi"
+  navi_view "gws/shared_address/main/navi"
 
   private
 

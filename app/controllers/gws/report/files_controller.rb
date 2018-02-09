@@ -10,6 +10,8 @@ class Gws::Report::FilesController < ApplicationController
   before_action :set_search_params
   before_action :redirect_to_appropriate_state, only: %i[show]
 
+  navi_view "gws/report/main/navi"
+
   private
 
   def set_crumbs

@@ -2,7 +2,7 @@ class Gws::Circular::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/circular/main/navi"
 
   model Gws::Circular::Category
 
@@ -24,7 +24,8 @@ class Gws::Circular::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/circular') + '/' + t('mongoid.models.gws/circular/category'), gws_circular_categories_path]
+    @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_main_path]
+    @crumbs << [t('mongoid.models.gws/circular/category'), gws_circular_categories_path]
   end
 
   def fix_params

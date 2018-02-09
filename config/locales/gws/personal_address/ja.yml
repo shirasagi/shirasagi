@@ -1,5 +1,7 @@
 ja:
   gws/personal_address:
+    navi:
+      group: グループ設定
 
   modules:
     gws/personal_address: 個人アドレス帳

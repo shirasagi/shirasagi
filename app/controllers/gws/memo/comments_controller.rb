@@ -7,6 +7,8 @@ class Gws::Memo::CommentsController < ApplicationController
   before_action :deny_with_auth
   before_action :set_item, only: [:destroy]
 
+  navi_view "gws/memo/messages/navi"
+
   private
 
   def deny_with_auth

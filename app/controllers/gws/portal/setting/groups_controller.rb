@@ -4,7 +4,7 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
 
   model Gws::Group
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/portal/main/navi"
 
   private
 

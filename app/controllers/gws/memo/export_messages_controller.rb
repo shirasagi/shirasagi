@@ -4,7 +4,7 @@ class Gws::Memo::ExportMessagesController < ApplicationController
 
   model Gws::Memo::Message
 
-  navi_view "gws/memo/management/navi"
+  navi_view "gws/memo/messages/navi"
   menu_view nil
 
   before_action :deny_with_auth
@@ -17,7 +17,6 @@ class Gws::Memo::ExportMessagesController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
-    @crumbs << [t('ss.management'), gws_memo_management_main_path ]
     @crumbs << [t('gws/memo/message.export_messages'), gws_memo_export_messages_path ]
   end
 

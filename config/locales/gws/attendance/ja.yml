@@ -44,6 +44,8 @@ ja:
 
   modules:
     gws/attendance: 出退勤
+    gws/attendance/time_card: タイムカード
+    gws/attendance/management/time_card: 管理
     addons:
       gws/attendance/group_setting: 出退勤
 

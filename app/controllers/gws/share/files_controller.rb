@@ -11,6 +11,8 @@ class Gws::Share::FilesController < ApplicationController
   before_action :set_tree_navi, only: [:index]
   after_action :update_folder_file_info, only: [:create, :update]
 
+  navi_view "gws/share/main/navi"
+
   private
 
   def set_crumbs

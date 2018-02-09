@@ -28,7 +28,7 @@ module Gws::Faq::BaseFilter
   end
 
   def set_crumbs
-    @crumbs << [t("modules.gws/faq"), gws_faq_topics_path(mode: '-', category: '-')]
+    @crumbs << [@cur_site.menu_faq_label || t("modules.gws/faq"), gws_faq_topics_path(mode: '-', category: '-')]
     @crumbs << [t("ss.navi.#{@mode}"), gws_faq_topics_path(category: '-')]
     @crumbs << [@category.name, gws_faq_topics_path] if @category.present?
   end

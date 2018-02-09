@@ -1,6 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] == 'index' %>
-    <%= link_to t('gws/schedule.links.back_to_todo'), gws_schedule_todo_main_path %>
+    <%#= link_to t('gws/schedule.links.back_to_todo'), gws_schedule_todo_main_path %>
   <% end %>
   <% if params[:action] == 'show' %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>

@@ -6,6 +6,8 @@ class Gws::Board::TopicsController < ApplicationController
 
   model Gws::Board::Topic
 
+  navi_view "gws/board/main/navi"
+
   private
 
   def fix_params

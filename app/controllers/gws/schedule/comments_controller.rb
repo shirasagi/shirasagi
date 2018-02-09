@@ -5,6 +5,8 @@ class Gws::Schedule::CommentsController < ApplicationController
 
   model Gws::Schedule::Comment
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_cur_schedule

@@ -5,6 +5,8 @@ class Gws::Monitor::AnswersController < ApplicationController
 
   before_action :check_attended
 
+  navi_view "gws/monitor/main/navi"
+
   private
 
   def set_crumbs

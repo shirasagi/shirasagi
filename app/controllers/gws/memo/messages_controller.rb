@@ -14,6 +14,8 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :set_folders, only: [:index]
   before_action :set_cur_folder, only: [:index]
 
+  navi_view "gws/memo/messages/navi"
+
   private
 
   def deny_with_auth

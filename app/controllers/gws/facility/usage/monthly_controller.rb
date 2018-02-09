@@ -3,6 +3,8 @@ class Gws::Facility::Usage::MonthlyController < ApplicationController
   include Gws::CrudFilter
   include Gws::Facility::UsageFilter
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def target_range
