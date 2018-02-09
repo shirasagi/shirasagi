@@ -1,0 +1,81 @@
+<div class="addon-view gws-memo" id="message-<%= @item.id %>">
+  <div class="addon-head">
+    <h2 class="subject">
+      <%= @item.display_subject %>
+      <span class="icon-attachment">
+          <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
+        </span>
+    </h2>
+    <div class="from"><%= @item.from_member_name || t('gws/memo.no_senders') %></div>
+    <div class="date"><%= @item.display_send_date %>
+      <% if @item.allowed?(:send, @cur_user, site: @cur_site) && @item.public? %>
+        <%= link_to(t('gws/memo.buttons.seen'), { action: :seen }, { class: 'btn' }) %>
+      <% end %>
+    </div>
+  </div>
+
+  <% show_to_section = @item.to_members? %>
+  <% show_cc_section = @item.cc_members? %>
+  <% show_bcc_section = @item.bcc_members? && (@cur_folder.sent_box? || @cur_folder.draft_box?) %>
+  <% if show_to_section || show_cc_section || show_bcc_section %>
+    <div class="addresses">
+      <% if show_to_section %>
+        <div class="address">
+          <div class="label"><%= @model.t :to_member_ids %></div>
+          <div class="value"><%= @item.display_to.join('; ') %></div>
+        </div>
+      <% end %>
+
+      <% if show_cc_section %>
+        <div class="address">
+          <div class="label"><%= @model.t :cc_member_ids %></div>
+          <div class="value"><%= @item.display_cc.join('; ') %></div>
+        </div>
+      <% end %>
+
+      <% if show_bcc_section %>
+        <div class="address">
+          <div class="label"><%= @model.t :bcc_member_ids %></div>
+          <div class="value"><%= @item.display_bcc.join('; ') %></div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @item.public? && @item.request_mdn_ids.include?(@cur_user.id) %>
+    <div class="request-mdn-notice">
+      <span class="message">
+        <i class="material-icons md-18">info</i>
+        <span><%= t("webmail.notice.requested_mdn") %></span>
+      </span>
+      <span class="action">
+        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_gws_memo_message_path %>
+        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_gws_memo_message_path %>
+      </span>
+    </div>
+  <% end %>
+
+  <% if @item.attachments.present? %>
+    <div class="attachments">
+      <% @item.attachments.each do |part| %>
+        <div class="file">
+          <%= link_to({action: :parts, section: part.section}, target: part.link_target) do %>
+            <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
+            <%= part.filename %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="addon-body">
+    <% if @item.html? %>
+      <div class="body body--html">
+        <%= html_editor ".body--html .html", readonly: true %>
+        <%= text_area_tag :html, @item.html, class: "html", style: "height: 400px;" %>
+      </div>
+    <% else %>
+      <div class="body body--text"><%= auto_link br @item.text %></div>
+    <% end %>
+  </div>
+</div>

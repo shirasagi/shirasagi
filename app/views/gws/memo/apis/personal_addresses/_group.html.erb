@@ -1,0 +1,41 @@
+<div class="search-ui-form">
+  <%= form_for :s_group, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <% @inherit_keys.each do |key| %>
+      <%= hidden_field_tag key, params[key] %>
+    <% end %>
+    <%= hidden_field_tag 'fragment', '#gws-memo-persona-address-group' %>
+
+    <dl class="see">
+      <dt><%= t "ss.keyword" %></dt>
+      <dd>
+        <%= f.text_field :name, value: params.dig(:s_group, :name) %>
+        <%= f.submit  t("ss.buttons.search"), class: :btn %>
+      </dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+    <% end %>
+    <th class="name"><%= Webmail::AddressGroup.t :name %></th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @group_items.each do |item| %>
+    <tr class="list-item" data-id="webmail_group:<%= item.id %>" data-name="<%= item.name %>" data-email="webmail_group:<%= item.id %>" data-address="group:<%= item.id %>">
+      <% if @multi %>
+        <td class="checkbox"><input type="checkbox" name="ids[]" value="webmail_group:<%= item.id %>" /></td>
+      <% end %>
+      <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+      <td></td>
+      <td></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

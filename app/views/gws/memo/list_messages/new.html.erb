@@ -1,0 +1,18 @@
+<style>
+  div#addon-basic {
+    display: none;
+  }
+  div#addon-gws-agents-addons-memo-body .header-options {
+    display: none;
+  }
+  select#item_signature {
+    display: none;
+  }
+</style>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t('ss.buttons.draft_save'), class: 'btn-primary js-save' %>
+  <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+<% end %>
+
+<%= render file: 'ss/crud/new' %>

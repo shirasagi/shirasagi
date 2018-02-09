@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :gws_memo_message, class: Gws::Memo::Message do
     cur_site { gws_site }
     cur_user { gws_user }
@@ -9,8 +8,12 @@ FactoryGirl.define do
     format { 'text' }
 
     path { { gws_user.id.to_s => 'INBOX.Sent' } }
-    to_member_ids { [gws_user.id] }
+    in_to_members { [gws_user.id.to_s] }
 
     send_date { Time.zone.now }
+
+    trait :with_draft do
+      state 'closed'
+    end
   end
 end

@@ -1,0 +1,8 @@
+<% @s = OpenStruct.new params[:s] %>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.select :state, state_options, include_blank: true %>
+    <%= f.text_field :keyword, style: "width: 220px;" %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <% end %>
+</div>

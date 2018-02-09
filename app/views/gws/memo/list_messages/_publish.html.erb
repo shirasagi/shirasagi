@@ -1,0 +1,12 @@
+<dl class="see">
+  <dt><%= @model.t :subject %></dt>
+  <dd><%= @item.subject %></dd>
+
+  <% if @capacity_over_members.present? %>
+    <dt><%= t('mongoid.attributes.gws/addon/memo/group_setting.memo_quota') %></dt>
+    <dd><%= t('gws/memo.notice.capacity_over_members') %></dd>
+    <% @capacity_over_members.each_slice(8) do |users| %>
+      <dd><%= users.map(&:long_name).join(', ') %></dd>
+    <% end %>
+  <% end %>
+</dl>

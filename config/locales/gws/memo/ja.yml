@@ -1,6 +1,9 @@
 ja:
   gws/memo:
     setting: メッセージ設定
+    no_subjects: 'No title'
+    no_senders: 'No name'
+    unseen: 未読
     options:
       priority:
         '1': 最高
@@ -8,6 +11,18 @@ ja:
         '3': 標準
         '4': 低
         '5': 最低
+      state:
+        closed: 下書き
+        public: 送信済み
+    links:
+      show_messages: メッセージを見る
+      publish: 送信する
+    buttons:
+      seen: 送信者一覧
+    confirm:
+      publish: 送信してよろしいですか？
+    notice:
+      capacity_over_members: 次の受信者のメッセージ容量が制限を超過しています。次の受信者にはメッセージが届きません。
   gws/memo/message:
     folder: フォルダー
     child_folder: 子フォルダー
@@ -94,6 +109,26 @@ ja:
       gws/memo/priority: 重要度
   gws_role:
     edit_private_gws_memo_messages: メッセージの管理
+    read_other_gws_memo_lists: リストの閲覧（全て）
+    read_private_gws_memo_lists: リストの閲覧（所有）
+    edit_other_gws_memo_lists: リストの編集（全て）
+    edit_private_gws_memo_lists: リストの編集（所有）
+    delete_other_gws_memo_lists: リストの削除（全て）
+    delete_private_gws_memo_lists: リストの削除（所有）
+    read_other_gws_memo_list_messages: リストメッセージの閲覧（全て）
+    read_private_gws_memo_list_messages: リストメッセージの閲覧（所有）
+    edit_other_gws_memo_list_messages: リストメッセージの編集（全て）
+    edit_private_gws_memo_list_messages: リストメッセージの編集（所有）
+    delete_other_gws_memo_list_messages: リストメッセージの削除（全て）
+    delete_private_gws_memo_list_messages: リストメッセージの削除（所有）
+    send_other_gws_memo_list_messages: リストメッセージの送信（全て）
+    send_private_gws_memo_list_messages: リストメッセージの送信（所有）
+    read_other_gws_memo_categories: カテゴリーの閲覧（全て）
+    read_private_gws_memo_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_memo_categories: カテゴリーの編集（全て）
+    edit_private_gws_memo_categories: カテゴリーの編集（所有）
+    delete_other_gws_memo_categories: カテゴリーの削除（全て）
+    delete_private_gws_memo_categories: カテゴリーの削除（所有）
   mongoid:
     models:
       gws/memo/message: メッセージ
@@ -102,6 +137,8 @@ ja:
       gws/memo/signature: 署名
       gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
+      gws/memo/list: リスト
+      gws/memo/category: カテゴリー
     errors:
       models:
         gws/memo/message:
@@ -115,7 +152,7 @@ ja:
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
     attributes:
-      gws/memo/message:
+      gws/model/memo/message:
         name: 件名
         subject: 件名
         body: 本文
@@ -123,6 +160,11 @@ ja:
         to: 宛先
         display_send_date: 送信日時
         size: サイズ
+        member_ids: 参加者
+        to_member_ids: 宛先
+        cc_member_ids: CC
+        bcc_member_ids: BCC
+        seen: 既読日時
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:
@@ -146,11 +188,6 @@ ja:
       gws/memo/forward:
         email: メールアドレス
         default: メール転送設定
-      gws/addon/memo/member:
-        member_ids: 参加者
-        to_member_ids: 宛先
-        cc_member_ids: CC
-        bcc_member_ids: BCC
       gws/addon/memo/group_setting:
         memo_quota: メッセージ容量制限
         memo_filesize_limit: 添付サイズ制限
@@ -158,6 +195,11 @@ ja:
         memo_email: 転送元メールアドレス
       gws/addon/memo/priority:
         priority: 重要度
+      gws/memo/list:
+        name: タイトル
+        sender_name: 送信者名
+        signature: 署名
+        category_ids: カテゴリー
   activemodel:
     models:
       gws/memo/message_importer: インポート
@@ -237,6 +279,15 @@ ja:
     gws/addon/memo/priority:
       priority:
         - メッセージの重要度を選択します。
+    gws/memo/list:
+      name:
+        - タイトルを入力します。
+      sender_name:
+        - 送信者を入力します。省略した場合、送信者名としてタイトルが用いられます。
+      signature:
+        - 署名を入力します。
+      category_ids:
+        - カテゴリーを選択します。
 
   job:
     models:

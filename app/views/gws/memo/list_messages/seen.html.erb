@@ -1,0 +1,29 @@
+<div class="main-box">
+  <%= render file: '_seen_search' %>
+
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= Gws::User.t :name %></th>
+      <th><%= @model.t :seen %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |item| %>
+    <% seen_at = @item.seen[item.id.to_s] %>
+    <tr>
+      <td><%= item.long_name %></td>
+      <td>
+        <% if seen_at %>
+          <%= seen_at.strftime('%Y/%m/%d %H:%M') %>
+        <% else %>
+          <%= t('gws/memo.unseen') %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+</div>

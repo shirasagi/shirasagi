@@ -41,6 +41,7 @@ SS::Application.routes.draw do
       get "shared_addresses" => "shared_addresses#index"
       get "personal_addresses" => "personal_addresses#index"
       get "messages" => "messages#index"
+      get "categories" => "categories#index"
     end
 
     scope '/management' do
@@ -49,6 +50,13 @@ SS::Application.routes.draw do
       resources :filters, concerns: :deletion
       resources :signatures, concerns: :deletion
       resource :forwards, only: [:show, :edit, :update]
+      resources :lists, concerns: :deletion do
+        resources :messages, controller: 'list_messages', concerns: :deletion do
+          match :publish, on: :member, via: %i[get post]
+          get :seen, on: :member
+        end
+      end
+      resources :categories, concerns: :deletion
 
       get 'export_messages' => 'export_messages#index'
       put 'export_messages' => 'export_messages#export'

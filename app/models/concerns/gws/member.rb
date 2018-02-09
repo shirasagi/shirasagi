@@ -37,13 +37,17 @@ module Gws::Member
     @sorted_members = member_ids.map { |id| hash[id] }.compact
   end
 
-  def sorted_overall_members
+  def overall_members
     member_ids = member_custom_groups.pluck(:member_ids).flatten
     member_ids += self.member_ids
     member_ids.compact!
     member_ids.uniq!
 
-    members = Gws::User.in(id: member_ids)
+    Gws::User.in(id: member_ids)
+  end
+
+  def sorted_overall_members
+    members = overall_members
 
     return members.order_by_title(site || cur_site) unless self.class.keep_members_order?
     return @sorted_members if @sorted_members

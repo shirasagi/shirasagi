@@ -1,0 +1,17 @@
+<%= form_for :item, url: { action: :publish }, html: { method: :post, multipart: true, id: 'item-form' } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('gws/memo.confirm.publish') %></h2></div>
+      <div class="addon-body">
+        <%= render file: '_publish' %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t('ss.buttons.send'), class: 'btn-primary save js-send' %>
+    <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  </footer>
+<% end %>

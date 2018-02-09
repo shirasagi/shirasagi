@@ -24,7 +24,6 @@ describe 'gws_memo_filters', type: :feature, dbscope: :example do
       name = "name-#{unique_id}"
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[from]", with: "from-#{unique_id}"
         fill_in "item[subject]", with: "subject-#{unique_id}"
         select folder.name
         click_button "保存"
