@@ -102,6 +102,7 @@ ja:
         url_copy: URLのコピー
       gws/share/folder:
         name: フォルダー名
+        depth: 階層
         order: 並び順
         share_max_file_size: 最大ファイルサイズ
         share_max_folder_size: 総容量制限

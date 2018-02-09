@@ -65,6 +65,8 @@ ja:
     attributes:
       gws/workflow/file:
         name: タイトル
+        form_id: フォーム
+        workflow_member_id: 承認者
       gws/workflow/form:
         name: タイトル
         order: 並び順

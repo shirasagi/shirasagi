@@ -78,7 +78,6 @@ ja:
 
   modules:
     board: 掲示板
-    board: 掲示板
     addons:
       board/file: ファイル
       board/list: リスト表示
@@ -107,6 +106,8 @@ ja:
   mongoid:
     models:
       board/node/board: 掲示板
+      board/post: 掲示板投稿
+      board/anpi_post: 安否確認投稿
 
     attributes:
       cms/addon/captcha:

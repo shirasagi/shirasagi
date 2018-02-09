@@ -123,6 +123,8 @@ ja:
         name: ポートレット名
         portlet_model: ポートレット種別
         limit: 表示件数
+        grid_data: 配置情報
+        links: リンク
       gws/addon/portal/portlet/free:
         html: 内容
       gws/addon/portal/portlet/reminder:

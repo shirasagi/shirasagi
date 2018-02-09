@@ -44,6 +44,8 @@ ja:
         route: 属性
         name: 名前
         order: 並び順
+        form_id: フォーム
+        form_type: フォーム種別
         required: 必須入力
         tooltips: ツールチップ
         prefix_label: 前ラベル

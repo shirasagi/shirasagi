@@ -197,6 +197,7 @@ ja:
       gws/schedule/todo: ToDo
       gws/schedule/category: 種別
       gws/schedule/holiday: 休日
+      gws/schedule/todo: ToDo
       gws/schedule/comment: コメント
       gws/schedule/attendance: 出欠
       gws/schedule/approval: 承認
@@ -233,6 +234,7 @@ ja:
         color: 表示色
       gws/addon/schedule/repeat:
         <<: *repeat_plan
+        repeat_plan_id: 繰り返し予定
         repeat_start: 繰り返し - 開始日
         repeat_end: 繰り返し - 終了日
         wdays: 繰り返し曜日
@@ -259,10 +261,13 @@ ja:
         name: ToDo
         term: 期限
         todo_state: 状態
+        deleted: 削除日時
+        discussion_forum_id: 電子会議室
       gws/addon/schedule/attendance:
         attendance_check_state: 出欠確認
         attendances: 出欠情報
       gws/addon/schedule/approval:
+        approval_state: 承認状態
         approval_member_ids: 承認者
         approvals: 承認情報
       gws/schedule/attendance:

@@ -171,6 +171,7 @@ ja:
 
   mongoid:
     models:
+      gws/category: 汎用カテゴリー
       gws/group: グループ
       gws/custom_group: カスタムグループ
       gws/custom_group_member: カスタムグループメンバー
@@ -261,15 +262,17 @@ ja:
         upload: 添付
       gws/reference/user:
         user_id: 作成者
-        user_uid: 作成者
-        user_name: 作成者
+        user_uid: 作成者(UID)
+        user_name: 作成者(氏名)
         user_tel: 電話番号
-        user_group_id: 作成者
-        user_group_name: 作成者
+        user_group_id: 作成者(グループ)
+        user_group_name: 作成者(グループ名)
       gws/reference/site:
         site_id: 組織
       gws/export:
         in_file: ファイル
+      gws/addon/file:
+        file_ids: ファイル
       gws/addon/reminder:
         reminder_url: リマインダーURL
         reminder_name: リマインダー名
@@ -281,11 +284,11 @@ ja:
         permission_level: 権限レベル
       gws/addon/group_permission:
         group_ids: 管理グループ
-        groups_hash: 管理グループ
+        groups_hash: 管理グループ(ハッシュ)
         user_ids: 管理ユーザー
-        users_hash: 管理ユーザー
+        users_hash: 管理ユーザー(ハッシュ)
         custom_group_ids: 管理カスタムグループ
-        custom_groups_hash: 管理カスタムグループ
+        custom_groups_hash: 管理カスタムグループ(ハッシュ)
         permission_level: 権限レベル
       gws/addon/release:
         released: 公開日時
@@ -294,8 +297,11 @@ ja:
       gws/addon/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
+        readable_groups_hash: 閲覧グループ(ハッシュ)
         readable_member_ids: 閲覧ユーザー
+        readable_members_hash: 閲覧ユーザー(ハッシュ)
         readable_custom_group_ids: 閲覧カスタムグループ
+        readable_custom_groups_hash: 閲覧カスタムグループ(ハッシュ)
       gws/addon/member:
         member_ids: 参加ユーザー
         member_custom_group_ids: 参加カスタムグループ
@@ -310,26 +316,47 @@ ja:
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
       gws/addon/system/menu_setting:
+        menu_portal_label: ポータルの表示
         menu_portal_state: ポータルの表示
+        menu_schedule_label: スケジュールの表示
         menu_schedule_state: スケジュールの表示
-        menu_todo_state: スケジュールの表示
+        menu_todo_label: ToDoの表示
+        menu_todo_state: ToDoの表示
+        menu_reminder_label: リマインダーの表示
         menu_reminder_state: リマインダーの表示
+        menu_attendance_label: 出退勤の表示
         menu_attendance_state: 出退勤の表示
+        menu_bookmark_label: お気に入りの表示
         menu_bookmark_state: お気に入りの表示
+        menu_memo_label: メッセージの表示
         menu_memo_state: メッセージの表示
+        menu_board_label: 掲示板の表示
         menu_board_state: 掲示板の表示
+        menu_faq_label: よくある質問の表示
         menu_faq_state: よくある質問の表示
+        menu_question_label: Ｑ＆Ａの表示
         menu_question_state: Ｑ＆Ａの表示
+        menu_workflow_label: ワークフローの表示
         menu_workflow_state: ワークフローの表示
+        menu_report_label: レポートの表示
         menu_report_state: レポートの表示
+        menu_circular_label: 回覧板の表示
         menu_circular_state: 回覧板の表示
+        menu_monitor_label: 照会・回答の表示
         menu_monitor_state: 照会・回答の表示
+        menu_share_label: 共有ファイルの表示
         menu_share_state: 共有ファイルの表示
+        menu_shared_address_label: 共有アドレス帳の表示
         menu_shared_address_state: 共有アドレス帳の表示
+        menu_personal_address_label: 個人アドレス帳の表示
         menu_personal_address_state: 個人アドレス帳の表示
+        menu_staff_record_label: 電子職員録の表示
         menu_staff_record_state: 電子職員録の表示
+        menu_links_label: リンク集の表示
         menu_links_state: リンク集の表示
+        menu_elasticsearch_label: 全文検索の表示
         menu_elasticsearch_state: 全文検索の表示
+        menu_discussion_label: 電子会議室
         menu_discussion_state: 電子会議室
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数
@@ -355,9 +382,14 @@ ja:
         log_discussion_severity: 電子会議室のログ
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
+        subscribed_groups_hash: 購読グループ(ハッシュ)
         subscribed_member_ids: 購読ユーザー
+        subscribed_members_hash: 購読ユーザー(ハッシュ)
         subscribed_custom_group_ids: 購読カスタムグループ
+        subscribed_custom_groups_hash: 購読カスタムグループ(ハッシュ)
       gws/addon/contributor:
+        contributor_model: 投稿者（モデル）
+        contributor_id: 投稿者（データID）
         contributor_name: 投稿者名
       gws/addon/custom_field:
         tooltips: ツールチップ

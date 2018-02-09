@@ -239,6 +239,17 @@ ja:
         mode: 表示形式
         permit_comment: コメント
         severity: 重要度
+        topic_id: トピック
+        parent_id: 親投稿
+        descendants_updated: トピック内更新日時
+        descendants_files_count: トピック内添付ファイル数
+        descendants_total_file_size: トピック内添付ファイル容量
+        spec_config: 回答表示設定
+        due_date: 回答期限
+        answer_state: 回答状況
+        article_state: 募集状況
+        deleted: 削除日時
+        notice_at: 通知日時
       gws/monitor/topic:
         name: 質問タイトル
       gws/monitor/post:
@@ -250,10 +261,8 @@ ja:
       gws/addon/monitor/contributor:
         contributor_name: 投稿者名
       gws/monitor/topic:
-        name: タイトル
         due_date: 回答期限
         admin_setting: 記事管理設定
-        spec_config: 回答表示設定
         notice_state: お知らせ表示設定
 
   tooltip:
