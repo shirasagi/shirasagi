@@ -19,6 +19,7 @@ SS::Application.routes.draw do
         post :unset_star_all
         post :move_all
         put :move
+        get :recent
       end
       member do
         get :trash
@@ -33,6 +34,10 @@ SS::Application.routes.draw do
         put :send_mdn
         put :ignore_mdn
       end
+    end
+
+    resources :notices, concerns: :deletion do
+      get :recent, on: :collection
     end
 
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]

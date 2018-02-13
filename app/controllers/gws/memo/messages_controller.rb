@@ -11,7 +11,7 @@ class Gws::Memo::MessagesController < ApplicationController
   #before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
-  before_action :set_folders, only: [:index]
+  before_action :set_folders, only: [:index, :recent]
   before_action :set_cur_folder, only: [:index]
 
   navi_view "gws/memo/messages/navi"
@@ -100,6 +100,16 @@ class Gws::Memo::MessagesController < ApplicationController
       search(params[:s]).
       reorder(@sort_hash).
       page(params[:page]).per(50)
+  end
+
+  def recent
+    @cur_folder = @folders.select { |folder| folder.folder_path == "INBOX" }.first
+    @items = @model.folder(@cur_folder, @cur_user).
+      site(@cur_site).
+      search(params[:s]).
+      limit(5)
+
+    render :recent, layout: false
   end
 
   def new
