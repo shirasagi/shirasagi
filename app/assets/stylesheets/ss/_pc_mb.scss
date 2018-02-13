@@ -181,6 +181,21 @@ td {
 }
 .gws-memo-notice {
   padding: 12px;
+  .ajax-popup-notice {
+    position: relative;
+    .unseen {
+      position: absolute;
+      top: -7px;
+      right: -8px;
+      display: inline-block;
+      min-width: 16px;
+      padding: 0 2px;
+      border-radius: 4px;
+      background-color: #f00;
+      font-size: 80%;
+      text-align: center;
+    }
+  }
   .popup-notice {
     &:before {
       content: "";
@@ -229,10 +244,10 @@ td {
 .gws-memo-notices {
   .list-item {
     &.seen {
-      background: #f4f4f4;
+      background-color: #f4f4f4;
     }
     &.seen:hover, &.unseen:hover {
-      background: #ebebeb;
+      background-color: #ebebeb;
     }
   }
 }
