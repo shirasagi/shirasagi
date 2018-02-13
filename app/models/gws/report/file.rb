@@ -3,7 +3,7 @@ class Gws::Report::File
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::Reminder
+  #include Gws::Addon::Reminder
   include Gws::Addon::Report::CustomForm
   include Gws::Addon::Member
   include Gws::Addon::Schedules
@@ -90,14 +90,6 @@ class Gws::Report::File
 
   def closed?
     !public?
-  end
-
-  # override Gws::Addon::Reminder#reminder_url
-  def reminder_url(*args)
-    ret = super
-    options = ret.extract_options!
-    options[:state] = 'all'
-    [ *ret, options ]
   end
 
   private

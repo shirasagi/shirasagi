@@ -6,7 +6,7 @@ class Gws::Circular::Post
   include Gws::Reference::Site
   include Gws::Circular::See
   include Gws::Circular::Sort
-  include Gws::Addon::Reminder
+  #include Gws::Addon::Reminder
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Circular::Category
@@ -106,11 +106,6 @@ class Gws::Circular::Post
         end
       end
     end
-  end
-
-  def reminder_url
-    name = reference_model.tr('/', '_') + '_path'
-    [name, category: '-', id: id]
   end
 
   def draft?
