@@ -12,6 +12,10 @@ module Opendata::Common
   end
 
   class << self
+    def options_limit
+      100
+    end
+
     def limit_aggregation(model, pipes, limit)
       return model.collection.aggregate(pipes).to_a unless limit
 

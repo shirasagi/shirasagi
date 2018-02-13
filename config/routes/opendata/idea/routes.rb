@@ -37,6 +37,7 @@ SS::Application.routes.draw do
     get "idea/:idea/app/show.:format" => "public#show_app", cell: "nodes/idea/idea", format: false
 
     match "search_idea/(index.:format)" => "public#index", cell: "nodes/idea/search_idea", via: [:get, :post]
+    get "search_idea/tags" => "public#index_tags", cell: "nodes/app/search_idea"
     get "search_idea/rss.xml" => "public#rss", cell: "nodes/idea/search_idea"
   end
 

@@ -93,10 +93,6 @@ class Opendata::Dataset
 
   private
 
-  def options_limit
-    self.class.options_limit
-  end
-
   def validate_filename
     @basename.blank? ? nil : super
   end
@@ -122,10 +118,6 @@ class Opendata::Dataset
   end
 
   class << self
-    def options_limit
-      100
-    end
-
     def dataset_search_html_path(site, node = nil)
       self.new.dataset_search_html_path(site, node)
     end
@@ -187,8 +179,8 @@ class Opendata::Dataset
         tag = data["_id"]
         [tag, tag]
       end
-      options = options.take(options_limit)
-      options << [I18n.t('ss.links.more'), I18n.t('ss.links.more')] if options.count > options_limit
+      options = options.take(Opendata::Common.options_limit)
+      options << [I18n.t('ss.links.more'), I18n.t('ss.links.more')] if options.count > Opendata::Common.options_limit
       options
     end
 
