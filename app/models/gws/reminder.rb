@@ -48,9 +48,10 @@ class Gws::Reminder
   end
 
   def url_lazy
-    return -> { '#' } unless item
     url, options = item.reminder_url
-    -> { send url, options }
+    -> { send(url, options) }
+  rescue
+    -> { nil }
   end
 
   def updated?

@@ -12,9 +12,9 @@ class Gws::Memo::Message
   include Gws::Addon::File
   include Gws::Addon::Memo::Quota
   #include Gws::Addon::Memo::Comments
-  include Gws::Addon::Reminder
+  #include Gws::Addon::Reminder
 
-  after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
+  #after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
   alias name subject
   alias reminder_user_ids member_ids
