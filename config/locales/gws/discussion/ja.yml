@@ -78,6 +78,13 @@ ja:
           forum_quota_over: "電子会議室の容量制限を超過している為、保存できませんでした。"
           topic_quota_over: "スレッドの容量制限を超過している為、保存できませんでした。"
     attributes:
+      gws/discussion/postable:
+        topic_id: スレッド
+        parent_id: 親投稿
+        descendants_updated: スレッド内更新日時
+        main_topic: メインスレッド
+        permanently: 編集禁止
+        permit_comment: コメント投稿
       gws/discussion/forum:
         name: タイトル
         order: 並び順

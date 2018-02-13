@@ -66,6 +66,7 @@ ja:
         date: 日付
         record: レコード
         histories: 履歴
+        lock_state: ロック状態
       gws/attendance/record:
         date: 日付
         enter: 出勤
@@ -84,6 +85,8 @@ ja:
         reason: 修正理由
         created: 修正時刻
       gws/addon/attendance/group_setting:
+        attendance_enter_label: 出勤表示
+        attendance_leave_label: 退勤表示
         attendance_management_year: 管理年数
         attendance_year_changed_month: 年度替わり月
         attendance_time_changed_minute: 日替わり時刻

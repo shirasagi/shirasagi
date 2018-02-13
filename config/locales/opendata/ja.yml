@@ -373,6 +373,8 @@ ja:
       opendata/idea: アイデア
       opendata/idea_comment: コメント
       opendata/csv2rdf_setting: RDF変換設定
+      opendata/member_notice: 会員通知
+      opendata/resources: リソース
     attributes:
       opendata/addon/category:
         category_ids: 分野

@@ -308,6 +308,8 @@ ja:
 
   mongoid:
     models:
+      session: セッション
+      simple_captcha/simple_captcha_data: 画像認証
       ss/site: サイト
       ss/user: ユーザー
       ss/user_title: 役職
@@ -320,6 +322,7 @@ ja:
       ss/task: タスク
       ss/max_file_size: 最大ファイルサイズ
       ss/thumb_file: サムネイルファイル
+      ss/migration: DBマイグレーション
     errors:
       models:
         ss/model/group:
@@ -342,6 +345,7 @@ ja:
         layout_id: レイアウト
         shortcut: ショートカット
         view_state: 状態
+        text_index: 全文検索インデックス(未使用)
       ss/model/site:
         name: サイト名
         host: ホスト名

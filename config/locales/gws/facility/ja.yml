@@ -66,7 +66,9 @@ ja:
         facility_max_hour: 取得可能時間（終了）
       gws/addon/facility/reservable_setting:
         reservable_group_ids: 予約可能グループ
+        reservable_groups_hash: 予約可能グループ(ハッシュ)
         reservable_member_ids: 予約可能ユーザー
+        reservable_members_hash: 予約可能ユーザー(ハッシュ)
       gws/addon/facility/column_setting:
         columns: 追加入力
       gws/facility/custom_field:

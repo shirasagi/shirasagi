@@ -27,7 +27,7 @@ ja:
       request: 申請
       approve: 承認
       remand: 差し戻し
-      pull_up: 引き上げ承認 
+      pull_up: 引き上げ承認
     mail:
       subject:
         request: 承認申請
@@ -75,12 +75,14 @@ ja:
     delete_private_workflow_routes: 承認ルートの削除（所有）
 
   mongoid:
+    models:
+      workflow/route: 承認経路
     attributes:
       workflow/addon/approver:
         workflow_user_id: 申請者
         workflow_state: 承認状態
         workflow_comment: 申請コメント
-        workflow_pull_up: 引き上げ承認 
+        workflow_pull_up: 引き上げ承認
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
         approved: 承認日時
@@ -88,7 +90,7 @@ ja:
         approver_comment: 承認者コメント
       workflow/model/route:
         name: 名前
-        pull_up: 引き上げ承認 
+        pull_up: 引き上げ承認
         approvers: 承認者
         required_counts: 必要承認数
         group_ids: グループ
@@ -134,8 +136,8 @@ ja:
     workflow/model/route:
       name:
         - 承認経路の名前を入力します。
-      pull_up: 
-        - 引き上げ承認の有効、無効を設定します。 
+      pull_up:
+        - 引き上げ承認の有効、無効を設定します。
       approvers:
         - 承認者を選択します。
       required_counts:

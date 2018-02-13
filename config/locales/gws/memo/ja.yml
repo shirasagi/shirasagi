@@ -153,6 +153,18 @@ ja:
           found_children: 子フォルダーが存在します。
     attributes:
       gws/model/memo/message:
+        deleted: 削除状態
+        filtered: フィルター適用
+        format: フォーマット
+        html: 本文HTML
+        path: 保存パス
+        request_mdn_ids: 開封確認
+        seen: 既読状態
+        star: フラグ
+        text: 本文TEXT
+        member_custom_group_ids: カスタムグループメンバー
+        send_date: 送信日時
+      gws/memo/message:
         name: 件名
         subject: 件名
         body: 本文
@@ -179,6 +191,7 @@ ja:
         body: 条件/本文
         action: アクション
         folder: フォルダー
+        folder_id: フォルダー
         state: 状態
         order: 並び順
       gws/memo/signature:
