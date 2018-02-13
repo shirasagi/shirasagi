@@ -19,6 +19,7 @@ ja:
       gws/portal/portlet/attendance: 出退勤設定
 
   gws/portal:
+    self_portal: 個人
     user_portal: 個人ポータル
     group_portal: 部課ポータル
     root_portal: 全庁ポータル
