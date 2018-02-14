@@ -120,6 +120,14 @@ class Gws::Workflow::File
     allowed?(:delete, user, opts) && !workflow_requested?
   end
 
+  # override Gws::Addon::Reminder#reminder_url
+  def reminder_url(*args)
+    ret = super
+    options = ret.extract_options!
+    options[:state] = 'all'
+    [ *ret, options ]
+  end
+
   private
 
   def rewrite_file_ref
