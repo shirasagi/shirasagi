@@ -9,10 +9,10 @@
   <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
 
   <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path %></h3>
+    <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path, class: "management" %></h3>
   <% end %>
   <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path %></h3>
+    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path, class: "management" %></h3>
   <% end %>
 
   <% if params[:group].present? %>

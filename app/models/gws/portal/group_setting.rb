@@ -29,6 +29,10 @@ class Gws::Portal::GroupSetting
     Gws::Portal::GroupPortlet.default_portlets(SS.config.gws['portal']['group_portlets'])
   end
 
+  def group_name
+    (site_id == portal_group_id) ? I18n.t("gws/portal.root_portal") : portal_group.trailing_name
+  end
+
   private
 
   def set_name

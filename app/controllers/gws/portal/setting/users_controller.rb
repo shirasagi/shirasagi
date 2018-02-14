@@ -10,7 +10,7 @@ class Gws::Portal::Setting::UsersController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/user"), gws_users_path]
+    @crumbs << [t("gws/portal.user_portal"), gws_users_path]
   end
 
   def fix_params

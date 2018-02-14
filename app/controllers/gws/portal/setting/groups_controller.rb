@@ -9,7 +9,7 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/group"), action: :index]
+    @crumbs << [t("gws/portal.group_portal"), action: :index]
   end
 
   def fix_params

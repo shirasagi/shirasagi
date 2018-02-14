@@ -15,13 +15,16 @@ module Gws::Portal::PortalFilter
       @portal_group = Gws::Group.find(params[:group])
       @portal = @portal_group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
       @portal.portal_type = (@portal_group.id == @cur_site.id) ? :root_portal : :group_portal
+      @window_name = @portal.group_name
       return
     end
 
     if params[:user].present?
       @portal_user = Gws::User.find(params[:user])
+      @window_name = @portal_user.name
     else
       @portal_user = @cur_user
+      @window_name = @cur_site.menu_portal_label || t("modules.gws/portal")
     end
 
     @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
