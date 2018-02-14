@@ -64,7 +64,7 @@ categories = transform_category(@cur_categories)
   </dl>
   <dl class="license">
     <dt><%= I18n.t("opendata.labels.license") %></dt>
-    <dd><%= f.text_field :license %></dd>
+    <dd><%= f.select :license, @model.license_options, include_blank: true %></dd>
   </dl>
   <dl class="sort">
     <dt><%= I18n.t("opendata.labels.sort") %></dt>

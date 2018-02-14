@@ -141,6 +141,17 @@ class Opendata::App
       options
     end
 
+    def license_options
+      pipes = []
+      pipes << { "$match" => { "route" => "opendata/app" } }
+      pipes << { "$unwind" => "$license" }
+      pipes << { "$group" => { "_id" => "$license", "count" => { "$sum" => 1 } } }
+      self.collection.aggregate(pipes).map do |data|
+        license = data["_id"]
+        [license, license]
+      end
+    end
+
     def sort_options
       [
         [I18n.t("opendata.sort_options.released"), "released"],
