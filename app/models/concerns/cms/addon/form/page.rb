@@ -48,6 +48,12 @@ module Cms::Addon::Form::Page
     end
   end
 
+  def copy_column_values(from_item)
+    self.column_values = from_item.column_values.map do |column_value|
+      column_value.new_clone
+    end
+  end
+
   private
 
   def generate_public_files
