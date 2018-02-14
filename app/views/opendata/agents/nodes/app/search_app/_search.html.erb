@@ -2,11 +2,11 @@
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
 <%= jquery do %>
-var pair=location.search.substring(1).split('&');
+var pair = location.search.substring(1).split('&');
 for(var i=0;pair[i];i++) {
   var kv = pair[i].split('=');
   var key = decodeURIComponent(kv[0]);
-  var value = decodeURIComponent(kv[1]);
+  var value = decodeURIComponent(kv[1]).replace('+', ' ');
   $('input[name="' + key + '"]').each(function() {
     $(this).val(value);
   });
