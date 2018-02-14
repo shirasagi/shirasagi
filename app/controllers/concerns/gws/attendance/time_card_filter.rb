@@ -72,8 +72,9 @@ module Gws::Attendance::TimeCardFilter
     @cell = @model.new params.require(:cell).permit(@model.permitted_fields).merge(fix_params)
     result = false
     if @cell.valid?
-      @item.histories.create(date: @cur_date, field_name: params[:type], action: 'modify', reason: @cell.in_reason)
-      @record.send("#{params[:type]}=", @cell.calc_time(@cur_date))
+      time = @cell.calc_time(@cur_date)
+      @item.histories.create(date: @cur_date, field_name: params[:type], action: 'modify', time: time, reason: @cell.in_reason)
+      @record.send("#{params[:type]}=", time)
       result = @record.save
     end
 

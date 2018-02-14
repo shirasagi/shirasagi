@@ -6,6 +6,7 @@ class Gws::Attendance::History
 
   field :date, type: DateTime
   field :field_name, type: String
+  field :time, type: DateTime
   field :action, type: String
   field :reason, type: String
 end

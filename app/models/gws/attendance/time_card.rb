@@ -114,7 +114,7 @@ class Gws::Attendance::TimeCard
     end
 
     record.send("#{field_name}=", now)
-    self.histories.create(date: date, field_name: field_name, action: 'set')
+    self.histories.create(date: date, field_name: field_name, action: 'set', time: now)
     record.save
   end
 
