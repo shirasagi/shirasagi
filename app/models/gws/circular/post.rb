@@ -108,6 +108,11 @@ class Gws::Circular::Post
     end
   end
 
+  def reminder_url
+    name = reference_model.tr('/', '_') + '_path'
+    [name, category: '-', id: id]
+  end
+
   def draft?
     !public?
   end

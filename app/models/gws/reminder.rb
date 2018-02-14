@@ -49,7 +49,7 @@ class Gws::Reminder
 
   def url_lazy
     url, options = item.reminder_url
-    -> { send(url, options) }
+    -> { send(url, options) rescue nil }
   rescue
     -> { nil }
   end
