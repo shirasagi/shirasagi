@@ -63,13 +63,4 @@ class Opendata::Idea::CommentsController < ApplicationController
 
     render_create @item.valid?
   end
-
-  def destroy
-    comment = Opendata::IdeaComment.where(site_id: @cur_site.id, id: params[:id]).first
-    comment.comment_deleted = Time.zone.now
-    comment.apply_status("closed", workflow_reset: true)
-    comment.save
-    render_destroy comment
-  end
-
 end
