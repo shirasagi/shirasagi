@@ -1,6 +1,6 @@
 <nav class="main-navi">
   <% if @cur_site.menu_portal_visible? %>
-    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
+    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), gws_portal_path, class: "icon-portal" %></h2>
   <% end %>
 
   <% if @cur_site.menu_schedule_visible? %>
