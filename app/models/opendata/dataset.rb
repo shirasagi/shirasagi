@@ -152,7 +152,7 @@ class Opendata::Dataset
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
       options = self.collection.aggregate(pipes).map do |data|
         tag = data["_id"]
-        [tag, tag]
+        ["#{tag}(#{data['count']})", tag]
       end
       options = options.take(Opendata::Common.options_limit)
       options << [I18n.t('ss.links.more'), I18n.t('ss.links.more')] if options.count > Opendata::Common.options_limit
