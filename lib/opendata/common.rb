@@ -13,7 +13,7 @@ module Opendata::Common
 
   class << self
     def options_limit
-      100
+      SS.config.opendata.options_limit
     end
 
     def limit_aggregation(model, pipes, limit)
