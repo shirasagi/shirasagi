@@ -430,7 +430,7 @@ module Gws::Model
 
     module ClassMethods
       def search(params)
-        all.search_keyword(params).search_subject(params).search_text_or_html(params).search_state(params)
+        all.search_keyword(params).search_subject(params).search_text_or_html(params).search_state(params).search_unseen(params)
       end
 
       def search_keyword(params = {})
@@ -441,6 +441,12 @@ module Gws::Model
       def search_subject(params = {})
         return all if params.blank? || params[:subject].blank?
         all.keyword_in params[:subject], :subject
+      end
+
+      def search_unseen(params = {})
+        return all if params.blank? || params[:unseen].blank?
+        user_id = params[:unseen]
+        where("seen.#{user_id}" => { '$exists' => false })
       end
 
       def search_text_or_html(params = {})

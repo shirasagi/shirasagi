@@ -47,6 +47,8 @@ ja:
       deleted: 削除済み
       sort: 並び替え
       print: 印刷
+      unseens: 未読のみ
+      seens: 既読含む
     confirm:
       trash_all: ゴミ箱に移しますか？
       set_seen_all: 既読にしますか？
@@ -64,10 +66,11 @@ ja:
       ignore_mdn: 開封確認を無視しました。
       start_export: エクスポートを開始しました。
       start_import: インポートしました。
+      no_recents: 新着はありません
     export:
-      subject: '[メッセージ] エクスポートが完了しました。 %{datetime}'
+      subject: '[メッセージ] エクスポートが完了しました。'
       notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
-      start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、メッセージにてダウンロードリンクが通知されます。"
+      start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
     import:
       caution: "※差出人や送信者等のユーザー情報は、エクスポートしたデータとID及び氏名が一致している場合のみ復元されます。"
     mdn:
@@ -101,6 +104,8 @@ ja:
         - 送信後５日間のみ表示する
   modules:
     gws/memo: メッセージ
+    gws/memo/message: メッセージ
+    gws/memo/notice: 通知
     addons:
       gws/memo/comments: コメント
       gws/memo/group_setting: メッセージ
@@ -152,6 +157,9 @@ ja:
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
     attributes:
+      gws/memo/notice:
+        name: 件名
+        display_send_date: 送信日時
       gws/model/memo/message:
         deleted: 削除状態
         filtered: フィルター適用

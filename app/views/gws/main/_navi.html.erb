@@ -24,7 +24,7 @@
 
   <% if @cur_site.menu_memo_visible? %>
     <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_main_path, class: "icon-memo" %></h2>
+      <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_messages_path, class: "icon-memo" %></h2>
     <% end %>
   <% end %>
 
