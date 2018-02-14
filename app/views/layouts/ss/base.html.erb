@@ -130,19 +130,21 @@
           <% end %>
           <div class="popup-notice" style="display: none;">
             <header class="popup-notice-header">
-              <h2><%= t('modules.gws/memo/notice') %></h2>
-              <%= link_to t("gws/memo/message.links.unseens"), "#",
-                "class" => "ajax-popup-notice unseens",
-                "data-url" => recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
-              %>
-              <%= link_to t("gws/memo/message.links.seens"), "#",
-                "class" => "ajax-popup-notice unseens",
-                "data-url" => recent_gws_memo_notices_path,
-                "style" => "display: none;"
-              %>
+              <h2>
+                <%= t('modules.gws/memo/notice') %>
+                <%= link_to t("gws/memo/message.links.unseens"), "#",
+                  "class" => "ajax-popup-notice unseens",
+                  "data-url" => recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
+                %>
+                <%= link_to t("gws/memo/message.links.seens"), "#",
+                  "class" => "ajax-popup-notice unseens",
+                  "data-url" => recent_gws_memo_notices_path,
+                  "style" => "display: none;"
+                %>
+              </h2>
             </header>
             <div class="popup-notice-items"></div>
-            <%= link_to t("ss.links.more_all"),  gws_memo_notices_path %>
+            <%= link_to t("ss.links.more_all"), gws_memo_notices_path, class: "more-all" %>
           </div>
         </div>
 
@@ -158,19 +160,21 @@
             <% end %>
             <div class="popup-notice" style="display: none;">
               <header class="popup-notice-header">
-                <h2><%= t('modules.gws/memo/message') %></h2>
-                <%= link_to t("gws/memo/message.links.unseens"), "#",
-                  "class" => "ajax-popup-notice unseens",
-                  "data-url" => recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
-                %>
-                <%= link_to t("gws/memo/message.links.seens"), "#",
-                  "class" => "ajax-popup-notice unseens",
-                  "data-url" => recent_gws_memo_messages_path,
-                  "style" => "display: none;"
-                %>
+                <h2>
+                  <%= t('modules.gws/memo/message') %>
+                  <%= link_to t("gws/memo/message.links.unseens"), "#",
+                    "class" => "ajax-popup-notice unseens",
+                    "data-url" => recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
+                  %>
+                  <%= link_to t("gws/memo/message.links.seens"), "#",
+                    "class" => "ajax-popup-notice unseens",
+                    "data-url" => recent_gws_memo_messages_path,
+                    "style" => "display: none;"
+                  %>
+                </h2>
               </header>
               <div class="popup-notice-items"></div>
-              <%= link_to t("ss.links.more_all"), gws_memo_messages_path %>
+              <%= link_to t("ss.links.more_all"), gws_memo_messages_path, class: "more-all" %>
             </div>
           </div>
         <% end %>
