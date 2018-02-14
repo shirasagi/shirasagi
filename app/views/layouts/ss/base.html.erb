@@ -78,7 +78,7 @@
       <div class="dropdown dropdown-toggle">
         <h2>
           <% if @cur_group %>
-          <span class="group"><%= @cur_group.trailing_name %></span>
+            <span class="group"><%= @cur_group.trailing_name %></span>
           <% end %>
           <%= @cur_user.name %>
         </h2>
@@ -87,6 +87,12 @@
             <li><%= link_to *link_params %></li>
           <% end %>
           <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
+          <li>
+            <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
+              <label><%= t('ss.text_zoom') %></label>
+              <span class="zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></span><span class="zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></span><span class="zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></span>
+            </div>
+          </li>
           <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
         </ul>
       </div>
@@ -179,28 +185,6 @@
           </div>
         <% end %>
       <% end %>
-
-      <div class="dropdown dropdown-toggle">
-        <h2>
-          <% if @cur_group %>
-          <span class="group"><%= @cur_group.trailing_name %></span>
-          <% end %>
-          <%= @cur_user.name %>
-        </h2>
-        <ul class="dropdown-menu">
-          <% @account_menu.to_a.each do |link_params| %>
-            <li><%= link_to *link_params %></li>
-          <% end %>
-          <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
-          <li>
-            <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
-              <label><%= t('ss.text_zoom') %></label>
-              <span class="zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></span><span class="zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></span><span class="zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></span>
-            </div>
-          </li>
-          <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
-        </ul>
-      </div>
     </nav>
     <% end %>
   </div>
