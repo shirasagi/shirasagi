@@ -74,8 +74,19 @@ module ApplicationHelper
     h.join("\n").html_safe
   end
 
-  def tt(key, html_wrap = true)
-    msg = I18n.t("tooltip.#{key}", default: "")
+  def tt(key, *args)
+    opts = args.extract_options!
+
+    html_wrap = args.shift
+    html_wrap = opts[:html_wrap] if html_wrap.nil?
+    html_wrap = true if html_wrap.nil?
+
+    msg = nil
+    Array(opts[:scope]).flatten.each do |scope|
+      msg = I18n.t(key, default: '', scope: scope)
+      break if msg.present?
+    end
+    msg = I18n.t(key, default: '', scope: 'tooltip') if msg.blank?
     return msg if msg.blank? || !html_wrap
     msg = [msg] if msg.class.to_s == "String"
     list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }

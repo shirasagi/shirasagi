@@ -82,7 +82,7 @@ class Gws::Schedule::PlanSearch
           f_hours[facility.id] << i
         end
       end
-      free_times << [date, [hours, f_hours.presence]] if hours.present? || f_hours.present?
+      free_times << [date, [hours, f_hours]] #if hours.present? || f_hours.present?
     end
 
     return free_times

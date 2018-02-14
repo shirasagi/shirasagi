@@ -1,5 +1,8 @@
 ja:
   gws/shared_address:
+    navi:
+      address: アドレス設定
+      group: グループ設定
 
   modules:
     gws/shared_address: 共有アドレス帳

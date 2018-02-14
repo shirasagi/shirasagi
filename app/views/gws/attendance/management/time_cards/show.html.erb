@@ -1,0 +1,24 @@
+<% @break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time#{i + 1}_state"] == 'show' } %>
+
+<div class="gws-attendance">
+  <%= error_messages_for :item %>
+
+  <div class="attendance-box">
+    <div class="attendance-box-title"><%= I18n.t('gws/attendance.formats.time_card_full_name', user_name: @item.user.name, month: I18n.l(@item.date.to_date, format: :attendance_year_month)) %></div>
+    <div class="attendance-box-main">
+      <%= render file: 'gws/attendance/time_cards/_time_card' %>
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+  var attendance = new Gws_Attendance(
+    '.gws-attendance',
+    {
+      now: <%== Time.zone.now.rfc2822.to_json %>,
+      editable: <%== %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) }.present?.to_json %>,
+      timeUrl: <%== url_for(action: :time, day: ':day', type: ':type').to_json %>,
+      memoUrl: <%== url_for(action: :memo, day: ':day').to_json %>
+    }
+  );
+<% end %>

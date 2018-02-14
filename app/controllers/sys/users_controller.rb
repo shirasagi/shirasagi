@@ -6,6 +6,8 @@ class Sys::UsersController < ApplicationController
 
   menu_view "sys/crud/menu"
 
+  before_action :set_selected_items, only: [:destroy_all, :lock_all, :unlock_all]
+
   private
 
   def set_crumbs
@@ -34,5 +36,37 @@ class Sys::UsersController < ApplicationController
 
   def destroy_all
     disable_all
+  end
+
+  def lock_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.attributes = fix_params
+        next if item.lock
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size, notice: t('ss.notice.lock_user_all'))
+  end
+
+  def unlock_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:edit, @cur_user, site: @cur_site)
+        item.attributes = fix_params
+        next if item.unlock
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size, notice: t('ss.notice.unlock_user_all'))
   end
 end

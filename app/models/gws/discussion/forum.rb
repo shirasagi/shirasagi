@@ -8,6 +8,7 @@ class Gws::Discussion::Forum
   include Gws::Addon::Discussion::NotifySetting
   include Gws::Addon::Member
   include Gws::Addon::GroupPermission
+  include Gws::Addon::Discussion::Quota
   include Gws::Addon::History
 
   member_include_custom_groups

@@ -9,6 +9,7 @@ ja:
     image: 画像
     import: インポート
     import_log: インポートログ
+    export: エクスポート
     login: ログイン
     logout: ログアウト
     module: モジュール
@@ -22,12 +23,20 @@ ja:
     login_url: ログインURL
     all: すべて
     keyword: キーワード
+    quota: 容量
+    encoding: 文字コード
+    text_zoom: 文字サイズ
 
     views:
       login/login:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
+    navi:
+      readable: 閲覧一覧
+      editable: 管理一覧
+      unseen: 未読一覧
+      seen: 既読一覧
     links:
       cms: サイト管理
       gws: グループ
@@ -68,6 +77,9 @@ ja:
       upload: アップロード
       decode: デコードする
       print: 印刷する
+      initialize: 初期化する
+      lock_user: 利用を停止する
+      unlock_user: 利用停止を解除する
     buttons:
       save: 保存
       new: 新規作成
@@ -106,6 +118,7 @@ ja:
       select_all: 全て選択
       deselect_all: 全て解除
       change: 変更
+      initialize: 初期化
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -118,17 +131,26 @@ ja:
       set_tag: タグを設定してよろしいですか？
       reset_tag: タグを削除してよろしいですか？
       in_use: 使用中のファイルを削除してよろしいですか？
+      initialize: 初期化してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
       started_import: インポートを開始しました。
       sent: 送信しました。
       posted: 投稿しました。
-      multibyte_filename_disabled: ※日本語ファイル名は使用できません。
+      initialized: 初期化しました。
       file_droppable: ファイルをドロップすることでアップロードできます。
+      uploading: アップロードしています。
+      lock_user_all: 利用を停止しました。
+      unlock_user_all: 利用停止を解除しました。
+      text_zoomed: "文字サイズを %{count} に設定しました。"
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
+    errors:
+      import:
+        blank_file: ファイルを入力してください。
+        invalid_file_type: 不正なファイル形式です。
     apis:
       groups:
         index: グループを選択する
@@ -251,6 +273,17 @@ ja:
       multibyte_filename_state:
         enabled: アップロード可
         disabled: アップロード不可
+      encoding:
+        Shift_JIS: シフトJIS
+        UTF-8: UTF-8
+      user_lock_state:
+        unlocked: 利用可
+        locked: 利用停止
+      text_zoom:
+        zoom_in: '+'
+        zoom_out: '-'
+        reset: 標準
+
     tasks:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
@@ -281,6 +314,8 @@ ja:
 
   mongoid:
     models:
+      session: セッション
+      simple_captcha/simple_captcha_data: 画像認証
       ss/site: サイト
       ss/user: ユーザー
       ss/user_title: 役職
@@ -293,6 +328,7 @@ ja:
       ss/task: タスク
       ss/max_file_size: 最大ファイルサイズ
       ss/thumb_file: サムネイルファイル
+      ss/migration: DBマイグレーション
     errors:
       models:
         ss/model/group:
@@ -315,6 +351,7 @@ ja:
         layout_id: レイアウト
         shortcut: ショートカット
         view_state: 状態
+        text_index: 全文検索インデックス(未使用)
       ss/model/site:
         name: サイト名
         host: ホスト名
@@ -352,6 +389,7 @@ ja:
         initial_password_warning: 初期パスワード警告
         session_lifetime: セッション寿命
         restriction: 利用制限
+        lock_state: 利用状態
         remark: 備考
         organization_id: 所属組織
         organization_uid: 職員番号
@@ -405,6 +443,7 @@ ja:
         permission_level: 権限レベル
         permissions: 権限設定
       ss/model/address:
+        member_id: ユーザー
         name: 氏名
         kana: カナ
         company: 会社
@@ -428,6 +467,7 @@ ja:
       ss/addon/body:
         html: 本文
       ss/addon/markdown:
+        text_type: 内容形式
         text: 内容
         html: 内容
       ss/addon/mobile_setting:
@@ -546,6 +586,10 @@ ja:
         - セッションの寿命を秒数で指定します。
         - 最大 3600（1時間）です。
         - 空欄の場合は、システムの既定値が用いられます。
+      restriction:
+        - 利用制限を選択します。
+      lock_state:
+        - 利用状態を選択します。
       remark:
         - 備考を入力します。
       organization_id: 所属する組織を選択します。
@@ -658,6 +702,8 @@ ja:
         - /css/mobile.css
         - が設定されます。
     ss/model/address:
+      member_id:
+        - ユーザーを設定します。
       name:
         - 氏名を入力します。
       kana:

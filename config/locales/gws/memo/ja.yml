@@ -1,6 +1,28 @@
 ja:
   gws/memo:
     setting: メッセージ設定
+    no_subjects: 'No title'
+    no_senders: 'No name'
+    unseen: 未読
+    options:
+      priority:
+        '1': 最高
+        '2': 高
+        '3': 標準
+        '4': 低
+        '5': 最低
+      state:
+        closed: 下書き
+        public: 送信済み
+    links:
+      show_messages: メッセージを見る
+      publish: 送信する
+    buttons:
+      seen: 送信者一覧
+    confirm:
+      publish: 送信してよろしいですか？
+    notice:
+      capacity_over_members: 次の受信者のメッセージ容量が制限を超過しています。次の受信者にはメッセージが届きません。
   gws/memo/message:
     folder: フォルダー
     child_folder: 子フォルダー
@@ -8,6 +30,8 @@ ja:
     message: メッセージ
     select_check: 件のメッセージを選択
     commit_params_check: 送信
+    export_messages: エクスポート
+    import_messages: インポート
     links:
       move: 移動する
       etc: その他
@@ -17,14 +41,40 @@ ja:
       unset_star: スターをはずす
       trash: ゴミ箱に移す
       reply: 返信する
+      reply_all: 全員に返信
+      forward: 転送する
+      ref: 新規メッセージとして編集する
+      deleted: 削除済み
+      sort: 並び替え
+      print: 印刷
     confirm:
-      trash_all: ゴミ箱に移しますか?
-      set_seen_all: 既読にしますか?
-      unset_seen_all: 未読にしますか?
-      set_star_all: スターをつけますか?
-      unset_star_all: スターをはずしますか?
+      trash_all: ゴミ箱に移しますか？
+      set_seen_all: 既読にしますか？
+      unset_seen_all: 未読にしますか？
+      set_star_all: スターをつけますか？
+      unset_star_all: スターを外しますか？
       move: 移動しますか?
-      move_drop: に移動しますか?
+      send: 送信してよろしいですか？
+      move_drop:
+        head: 選択したメッセージを
+        to: から
+        tail: に移動しますか？
+    notice:
+      send_mdn: 開封確認メッセージを送信しました。
+      ignore_mdn: 開封確認を無視しました。
+      start_export: エクスポートを開始しました。
+      start_import: インポートしました。
+    export:
+      subject: '[メッセージ] エクスポートが完了しました。 %{datetime}'
+      notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
+      start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、メッセージにてダウンロードリンクが通知されます。"
+    import:
+      caution: "※差出人や送信者等のユーザー情報は、エクスポートしたデータとID及び氏名が一致している場合のみ復元されます。"
+    mdn:
+      subject: '[開封確認] %{subject}'
+      confirmed: "メッセージが開封されました。\n%{name} %{date}"
+    errors:
+      blank_message: メッセージを選択してください。
   gws/memo/folder:
     inbox: 受信トレイ
     inbox_trash: ゴミ箱
@@ -54,10 +104,31 @@ ja:
     addons:
       gws/memo/comments: コメント
       gws/memo/group_setting: メッセージ
+      gws/memo/body: 内容
+      gws/memo/member: 宛先
+      gws/memo/priority: 重要度
   gws_role:
-    read_gws_memo_messages: メッセージの閲覧
-    edit_gws_memo_messages: メッセージの編集
-    delete_gws_memo_messages: メッセージの削除
+    edit_private_gws_memo_messages: メッセージの管理
+    read_other_gws_memo_lists: リストの閲覧（全て）
+    read_private_gws_memo_lists: リストの閲覧（所有）
+    edit_other_gws_memo_lists: リストの編集（全て）
+    edit_private_gws_memo_lists: リストの編集（所有）
+    delete_other_gws_memo_lists: リストの削除（全て）
+    delete_private_gws_memo_lists: リストの削除（所有）
+    read_other_gws_memo_list_messages: リストメッセージの閲覧（全て）
+    read_private_gws_memo_list_messages: リストメッセージの閲覧（所有）
+    edit_other_gws_memo_list_messages: リストメッセージの編集（全て）
+    edit_private_gws_memo_list_messages: リストメッセージの編集（所有）
+    delete_other_gws_memo_list_messages: リストメッセージの削除（全て）
+    delete_private_gws_memo_list_messages: リストメッセージの削除（所有）
+    send_other_gws_memo_list_messages: リストメッセージの送信（全て）
+    send_private_gws_memo_list_messages: リストメッセージの送信（所有）
+    read_other_gws_memo_categories: カテゴリーの閲覧（全て）
+    read_private_gws_memo_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_memo_categories: カテゴリーの編集（全て）
+    edit_private_gws_memo_categories: カテゴリーの編集（所有）
+    delete_other_gws_memo_categories: カテゴリーの削除（全て）
+    delete_private_gws_memo_categories: カテゴリーの削除（所有）
   mongoid:
     models:
       gws/memo/message: メッセージ
@@ -66,28 +137,46 @@ ja:
       gws/memo/signature: 署名
       gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
+      gws/memo/list: リスト
+      gws/memo/category: カテゴリー
     errors:
       models:
         gws/memo/message:
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
           input_message: 本文を入力してください。
+          self_quota_over: "メッセージ容量が制限を超過している為、%{action}できませんでした。"
+          member_quota_over: "%{member}さんのメッセージ容量が制限を超過している為、送信できませんでした。"
         gws/memo/folder:
           included_memo: メッセージが入っているフォルダーは削除できません。
           used_folder: フィルターが使用中のフォルダーは削除できません。
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
-        gws/memo/forward:
-          not_set_email: メールアドレスを設定しないと有効にはできません。
     attributes:
+      gws/model/memo/message:
+        deleted: 削除状態
+        filtered: フィルター適用
+        format: フォーマット
+        html: 本文HTML
+        path: 保存パス
+        request_mdn_ids: 開封確認
+        seen: 既読状態
+        star: フラグ
+        text: 本文TEXT
+        member_custom_group_ids: カスタムグループメンバー
+        send_date: 送信日時
       gws/memo/message:
         name: 件名
         subject: 件名
-        member_ids: 宛先
         body: 本文
         from: 差出人
         to: 宛先
         display_send_date: 送信日時
         size: サイズ
+        member_ids: 参加者
+        to_member_ids: 宛先
+        cc_member_ids: CC
+        bcc_member_ids: BCC
+        seen: 既読日時
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:
@@ -96,10 +185,13 @@ ja:
         order: 並び順
       gws/memo/filter:
         name: フィルター名
-        from: 条件/差出人
+        from_member_ids: 条件/差出人
+        to_member_ids: 条件/宛先
         subject: 条件/件名
+        body: 条件/本文
         action: アクション
         folder: フォルダー
+        folder_id: フォルダー
         state: 状態
         order: 並び順
       gws/memo/signature:
@@ -110,9 +202,23 @@ ja:
         email: メールアドレス
         default: メール転送設定
       gws/addon/memo/group_setting:
+        memo_quota: メッセージ容量制限
         memo_filesize_limit: 添付サイズ制限
         memo_reminder: リマインダー表示設定
         memo_email: 転送元メールアドレス
+      gws/addon/memo/priority:
+        priority: 重要度
+      gws/memo/list:
+        name: タイトル
+        sender_name: 送信者名
+        signature: 署名
+        category_ids: カテゴリー
+  activemodel:
+    models:
+      gws/memo/message_importer: インポート
+    attributes:
+      gws/memo/message_importer:
+        in_file: ファイル
   tooltip:
     gws/memo/message:
       member_ids:
@@ -126,12 +232,16 @@ ja:
       name:
         - フィルターの名前を入力します。
         - 作成したフィルターはメッセージの受信時に各条件が1度のみ評価されます。
-      from:
-        - フィルターの条件となる差出人名を入力します。
-        - 差出人名は中間一致で評価されます。
+      from_member_ids:
+        - フィルターの条件となる差出人を選択します。
+      to_member_ids:
+        - フィルターの条件となる宛先（CC含む）を選択します。
       subject:
         - フィルターの条件となる件名を入力します。
-        - 件名は中間一致で評価されます。
+        - 件名は部分一致で評価されます。
+      body:
+        - フィルターの条件となる本文を入力します。
+        - 件名は部分一致で評価されます。
       action:
         - 条件に合致したメッセージに対して行う操作を選択します。
         - 移動する：指定したフォルダーにメッセージを移動します
@@ -162,10 +272,16 @@ ja:
         - 有効：メッセージを登録したメールアドレスに転送します
         - 無効：転送しません
     gws/addon/memo/group_setting:
+      memo_quota:
+        - メッセージの合計容量の上限を入力します。
+        - 合計容量が超えたユーザーはメッセージの送受信ができません。
+        - 各受信フォルダー、送信済みフォルダー、下書きフォルダー内のメッセージが対象となります。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
       memo_filesize_limit:
         - メッセージに添付されるファイルの合計容量の上限を入力します。
-        - 未指定である場合、制限されません。
-        - 初期値は 未指定 です。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
       memo_reminder:
         - メッセージを送信したあと各受信者のリマインダーに表示する日数を選択します。
         - メッセージが下書きの時はリマインダーはまだ登録されません。
@@ -173,4 +289,19 @@ ja:
       memo_email:
         - 転送したメッセージを受信したときに送信者として表示されるメールアドレスです。
         - 未設定の場合、システム標準の送信者設定が利用されます。
+    gws/addon/memo/priority:
+      priority:
+        - メッセージの重要度を選択します。
+    gws/memo/list:
+      name:
+        - タイトルを入力します。
+      sender_name:
+        - 送信者を入力します。省略した場合、送信者名としてタイトルが用いられます。
+      signature:
+        - 署名を入力します。
+      category_ids:
+        - カテゴリーを選択します。
 
+  job:
+    models:
+      gws/memo/message_export: メッセージ/エクスポート

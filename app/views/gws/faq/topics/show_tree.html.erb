@@ -5,7 +5,7 @@
         <span class="name"><%= @item.name %></span>
         <span class="categories">
           <% @item.categories.each do |category| %>
-            <%= link_to category.trailing_name, gws_faq_category_topics_path(category: category.id),
+            <%= link_to category.trailing_name, gws_faq_topics_path(category: category.id),
                         class: "gws-category-label", style: category_label_css(category) %>
           <% end %>
         </span>
@@ -39,7 +39,7 @@
 
     <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
-      <%= link_to(t('gws/faq.links.comment'), @category.present? ? new_gws_faq_category_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) : new_gws_faq_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
+      <%= link_to(t('gws/faq.links.comment'), new_gws_faq_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
         class: "btn primary") %>
     </div>
     <% end %>

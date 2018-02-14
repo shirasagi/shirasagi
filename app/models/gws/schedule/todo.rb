@@ -3,6 +3,7 @@ class Gws::Schedule::Todo
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Schedule::Priority
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::Schedule::Cloneable
@@ -85,6 +86,10 @@ class Gws::Schedule::Todo
     false
   end
 
+  def approval_check_plan?
+    false
+  end
+
   def active?
     now = Time.zone.now
     return false if deleted.present? && deleted < now
@@ -105,18 +110,18 @@ class Gws::Schedule::Todo
   end
 
   def sort_options
-    %w(updated_desc updated_asc created_desc created_asc end_at_desc end_at_asc).map do |k|
+    %w(end_at_asc end_at_desc updated_desc updated_asc created_desc created_asc).map do |k|
       [I18n.t("gws/schedule/todo.options.sort.#{k}"), k]
     end
   end
 
-  alias allowed_for_managers? allowed?
-
-  def allowed?(action, user, opts = {})
-    return true if allowed_for_managers?(action, user, opts)
-    member?(user) || custom_group_member?(user) if action =~ /edit|delete/
-    false
-  end
+  # alias allowed_for_managers? allowed?
+  #
+  # def allowed?(action, user, opts = {})
+  #   return true if allowed_for_managers?(action, user, opts)
+  #   member?(user) || custom_group_member?(user) if action =~ /edit|delete/
+  #   false
+  # end
 
   class << self
     def search(params)

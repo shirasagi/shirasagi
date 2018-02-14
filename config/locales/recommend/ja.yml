@@ -16,6 +16,9 @@ ja:
       recommend/content_list: リスト表示
 
   mongoid:
+    models:
+      recommend/history_log: 履歴
+      recommend/similarity_score: スコア
     attributes:
       recommend/addon/content_list:
         exclude_paths: 除外パス

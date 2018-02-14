@@ -10,8 +10,15 @@
     <% end %>
   </dd>
 
+  <% if @item.priority.present? %>
+  <dt><%= @model.t :priority %></dt>
+  <dd><%= @item.label :priority %></dd>
+  <% end %>
+
+  <% if @item.color.present? %>
   <dt><%= @model.t :color %></dt>
   <dd><%= content_tag :span, @item.name, style: "background-color: #{@item.color}; color: #{@item.text_color}" %></dd>
+  <% end %>
 
   <dt><%= @model.t :todo_state %></dt>
   <dd><%= @item.label(:todo_state) %></dd>

@@ -10,4 +10,7 @@
 
   <dt><%= @model.t :permanently %><%= @model.tt :permanently %></dt>
   <dd><%= f.select :permanently, @item.permanently_options %></dd>
+
+  <dt><%= @model.t :topic_quota %><%= @model.tt :topic_quota %></dt>
+  <dd class="short"><%= f.number_field :topic_quota, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
 </dl>

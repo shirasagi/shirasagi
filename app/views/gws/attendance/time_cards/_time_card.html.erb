@@ -1,0 +1,62 @@
+<% render_reason = proc do |history| %>
+  <% if history.present? && history.reason.present? %>
+    <div class="reason-tooltip">
+      <i class="material-icons md-13">&#xE0C9;</i>
+      <div class="reason">
+        <div><%= history.reason %></div>
+        <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% render_time = proc do |date, record, field_name| %>
+  <% td_classes = %w(time) %>
+  <% td_classes << (date.day >= 16 ? 'top' : nil) %>
+  <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>" data-type="<%= field_name %>">
+    <%= format_time(date, record.try(field_name)) %>
+    <% render_reason.call(record.try(:find_latest_history, field_name)) %>
+  </td>
+<% end %>
+
+<div class="time-card-wrap">
+  <table class="time-card">
+    <tbody>
+    <% date = @cur_month %>
+    <% while date <= @cur_month.end_of_month %>
+      <% offset = date.day >= 16 ? 'top' : '' %>
+      <% if date.day == 1 || date.day == 16 %>
+        <tr class="header">
+          <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
+          <th class="time"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
+          <th class="time"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
+          <% @break_times.each do |i| %>
+            <th class="time"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <th class="time"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
+          <% end %>
+          <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
+        </tr>
+      <% end %>
+      <% tr_css_classes = [] %>
+      <% tr_css_classes << (Time.zone.now.beginning_of_day == date ? 'current' : nil) %>
+      <% tr_css_classes << if holiday?(date); 'holiday' elsif date.wday == 0; 'sunday' elsif date.wday == 6; 'saturday' end %>
+      <tr class="<%= tr_css_classes.compact.join(' ') %>">
+        <% record = @item.records.where(date: date).first %>
+        <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+        <% render_time.call(date, record, 'enter') %>
+        <% render_time.call(date, record, 'leave') %>
+        <% @break_times.each do |i| %>
+          <% render_time.call(date, record, "break_enter#{i + 1}") %>
+          <% render_time.call(date, record, "break_leave#{i + 1}") %>
+        <% end %>
+        <td class="memo <%= offset %>" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
+      </tr>
+      <% date += 1.day %>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="cell-toolbar">
+  <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
+</div>

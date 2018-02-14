@@ -12,7 +12,9 @@ module Gws::Addon::Portal::Portlet
     end
 
     def monitor_answerable_article_options
-      Gws::Monitor::Topic.new.answerable_article_options
+      %w(unanswer answer).map do |v|
+        [I18n.t("gws/monitor.tabs.#{v}"), v]
+      end
     end
 
     def find_monitor_items(portal, user, group)
@@ -22,15 +24,18 @@ module Gws::Addon::Portal::Portlet
         search[:category] = cate.name
       end
 
-      custom_group_ids = Gws::CustomGroup.site(portal.site).readable(user, site: portal.site).pluck(:id)
-      state = monitor_answerable_article.presence || 'answerble'
+      state = monitor_answerable_article.presence
 
-      Gws::Monitor::Topic.site(portal.site).
-        topic.
-        and_public.
-        search(search).
-        and_unanswered(group).
-        custom_order('updated_desc').
+      criteria = Gws::Monitor::Topic.site(portal.site).topic.and_public.
+        and_attended(user, site: portal.site, group: group)
+      if state == 'unanswer'
+        criteria = criteria.and_unanswered(group)
+      elsif state == 'answer'
+        criteria = criteria.and_answered(group)
+      end
+
+      criteria.search(search).
+        custom_order('due_date_desc').
         page(1).
         per(limit)
     end

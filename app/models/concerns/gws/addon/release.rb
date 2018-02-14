@@ -4,6 +4,8 @@ module Gws::Addon
     extend SS::Addon
 
     included do
+      class_variable_set(:@@_hide_released_field, nil)
+
       field :state, type: String, default: "public", overwrite: true
       field :released, type: DateTime
       field :release_date, type: DateTime
@@ -60,6 +62,18 @@ module Gws::Addon
 
     def set_released
       self.released ||= Time.zone.now
+    end
+
+    module ClassMethods
+      def released_field_shown?
+        !class_variable_get(:@@_hide_released_field)
+      end
+
+      private
+
+      def hide_released_field
+        class_variable_set(:@@_hide_released_field, true)
+      end
     end
   end
 end

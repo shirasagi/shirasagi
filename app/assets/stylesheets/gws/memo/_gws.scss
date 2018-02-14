@@ -36,6 +36,16 @@
       }
     }
   }
+  .request-mdn-notice {
+    @include clear;
+    padding: 5px 15px;
+    border-bottom: 1px solid #969696;
+    background-color: #cecece;
+    line-height: 25px;
+    .action {
+      float: right;
+    }
+  }
   .show-image {
     display: block;
     margin: -5px 0 10px;
@@ -79,6 +89,7 @@
 .gws-memos {
   .list-item {
     padding: 5px 8px;
+    display: block;
   }
   .list-item-head {
     font-weight: bold;
@@ -86,10 +97,14 @@
     .head {
       height: 20px;
       position: relative;
-      .field { position:absolute; }
+      .field {
+        position: absolute;
+        cursor: pointer;
+      }
       .from, .to { left: 82px; }
-      .title { left: 236px; }
-      .datetime { right: 128px; }
+      .title { left: 286px; }
+      .priority { right: 206px; }
+      .datetime { right: 110px; }
       .size { right: 14px; }
     }
     @include mb { display: none; }
@@ -104,12 +119,12 @@
       vertical-align: text-top;
     }
     .from, .to {
-      width: 150px;
+      width: 200px;
       padding-right: 5px;
     }
     .title {
-      width: calc(100% - 330px);
-      widht: -webkit-calc(100% - 330px);
+      width: calc(100% - 460px);
+      width: -webkit-calc(100% - 460px);
       padding-right: 5px;
       font-size: 100%;
       @include mb {
@@ -117,11 +132,14 @@
       }
     }
     .datetime {
-      width: 110px;
+      width: 120px;
       font-weight: normal;
     }
+    .priority {
+      width: 80px;
+    }
     .size {
-      width: 50px;
+      //width: 50px;
       font-weight: normal;
       text-align: right;
     }
@@ -129,6 +147,12 @@
 }
 
 .gws-memo-folder {
+  .folder {
+    background: #ffffff !important;
+  }
+  .current {
+    background: #f2f2f2 !important;
+  }
   .unseen {
     font-weight: bold;
     color: #f25a38;
@@ -149,27 +173,39 @@
 .gws-memo-dropdown {
 display: inline;
 font-weight: normal;
-.dropdown-menu {
-  left: 0;
-  margin: 0;
-  padding: 5px 0;
-  border: 1px solid #ccc;
-  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
-  background: #fff;
-  text-align: left;
-  a {
-    @include truncate;
-    padding: 5px 10px;
-    color: $black;
-  }
-  a:hover {
-    background-color: $gray1;
-    color: $orange;
-    text-decoration: none;
-  }
-  .pad {
-    display: inline-block;
-    width: 10px;
+  .dropdown-menu {
+    left: 0;
+    margin: 0;
+    padding: 5px 0;
+    border: 1px solid #ccc;
+    @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+    background: #fff;
+    text-align: left;
+    a {
+      @include truncate;
+      padding: 5px 10px;
+      color: $black;
+    }
+    a:hover {
+      background-color: $gray1;
+      color: $orange;
+      text-decoration: none;
+    }
+    .pad {
+      display: inline-block;
+      width: 10px;
+    }
   }
 }
+.gws-addon-memo-member {
+  dl.cc-bcc {
+    padding-top: 10px;
+    border-top: 1px solid #e4e4e4;
+  }
+  dt {
+    min-width: 50px !important;
+  }
+  dd {
+    margin: 0px 0px 0px 50px !important;
+  }
 }

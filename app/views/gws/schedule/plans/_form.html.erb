@@ -31,6 +31,9 @@
   <dd><%= f.select :category_id, @item.category_options, include_blank: " " %></dd>
   <% end %>
 
+  <dt><%= @model.t :priority %><%= @model.tt :priority %></dt>
+  <dd><%= f.select :priority, @item.priority_options, include_blank: " " %></dd>
+
   <dt><%= @model.t :color %><%= @model.tt :color %></dt>
   <dd><%= f.text_field :color, class: 'js-color', 'data-clear' => 1 %></dd>
 </dl>

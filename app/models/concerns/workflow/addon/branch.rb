@@ -113,7 +113,7 @@ module Workflow::Addon
       return unless in_branch
 
       run_callbacks(:merge_branch) do
-        attributes = Hash[branch.attributes]
+        attributes = Hash[in_branch.attributes]
         attributes.delete("_id")
         attributes.delete("filename")
         attributes.select! { |k| self.fields.keys.include?(k) }

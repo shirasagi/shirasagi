@@ -5,5 +5,5 @@
 <% if @item.html? %>
   <div class="body body--html"><%= @item.sanitize_html %></div>
 <% else %>
-  <div class="body body--text"><%= br @item.text %></div>
+  <div class="body body--text"><%= auto_link br @item.text %></div>
 <% end %>

@@ -5,7 +5,7 @@
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= @model.t(:category_id) %></dt>
-      <dd><%= select_tag("s[category]", options_for_select(@categories.to_options, @category.try(:id))) %></dd>
+      <dd><%= select_tag("s[category]", options_for_select(@categories.to_options, @category.try(:id)), include_blank: true) %></dd>
 
       <dt><%= @model.t :name %></dt>
       <dd>

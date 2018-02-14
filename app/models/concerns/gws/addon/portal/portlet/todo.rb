@@ -6,7 +6,7 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :todo_state, type: String, default: 'unfinished'
+      field :todo_state, type: String
       embeds_ids :todo_members, class_name: "Gws::User"
       permit_params :todo_state, todo_member_ids: []
     end

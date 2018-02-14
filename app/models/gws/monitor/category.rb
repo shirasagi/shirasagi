@@ -3,7 +3,6 @@ class Gws::Monitor::Category
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::SubscriptionSetting
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History

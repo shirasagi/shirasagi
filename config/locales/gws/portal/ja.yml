@@ -16,11 +16,15 @@ ja:
       gws/portal/portlet/share: 共有ファイル設定
       gws/portal/portlet/report: レポート設定
       gws/portal/portlet/workflow: ワークフロー設定
+      gws/portal/portlet/attendance: 出退勤設定
 
   gws/portal:
+    self_portal: 個人
     user_portal: 個人ポータル
     group_portal: 部課ポータル
     root_portal: 全庁ポータル
+    create_portlets_for_reset: 作成されるポートレット
+    delete_portlets_for_reset: 削除されるポートレット
     tabs:
       user_portal: 個人
       root_portal: 全庁
@@ -70,6 +74,9 @@ ja:
       workflow:
         name: ワークフロー
         text: 新着のワークフローを表示します。
+      attendance:
+        name: 出退勤
+        text: 本日の出退勤を表示および打刻します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -77,7 +84,6 @@ ja:
       edit_portlet: ポートレットを編集する
     buttons:
       save_layouts: 配置を保存する
-      add_item: 新しい要素を追加
     options:
       reminder_filter:
         all: すべて表示
@@ -102,7 +108,10 @@ ja:
 
   mongoid:
     models:
-      gws/portal/setting: ポータル設定
+      gws/portal/group_portlet: 部課ポータル設定
+      gws/portal/group_setting: 部課ポートレット
+      gws/portal/user_portlet: 個人ポータル設定
+      gws/portal/user_setting: 個人ポートレット
     attributes:
       gws/portal/user_setting:
         name: ポータル名
@@ -115,11 +124,10 @@ ja:
         name: ポートレット名
         portlet_model: ポートレット種別
         limit: 表示件数
+        grid_data: 配置情報
+        links: リンク
       gws/addon/portal/portlet/free:
         html: 内容
-      gws/addon/portal/portlet/link:
-        links/name: 表示名
-        links/url: URL
       gws/addon/portal/portlet/reminder:
         reminder_filter: 表示範囲
       gws/addon/portal/portlet/schedule:

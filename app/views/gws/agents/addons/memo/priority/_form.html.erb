@@ -1,0 +1,6 @@
+<div class="gws-addon-memo-priority">
+  <dl class="see">
+    <dt><%= @model.t :priority %><%= @model.tt :priority %></dt>
+    <dd><%= f.select :priority, @item.priority_options, include_blank: true %></dd>
+  </dl>
+</div>

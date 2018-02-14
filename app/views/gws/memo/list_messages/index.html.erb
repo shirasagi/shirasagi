@@ -1,0 +1,16 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('ss.links.show'), action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% if item.draft? %>
+  <%= link_to(t('ss.links.edit'), action: :edit, id: item) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% end %>
+  <%= link_to(t('ss.links.delete'), action: :delete, id: item) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <% if item.class.fields['_id'].type != BSON::ObjectId %>
+    <span class="id">#<%= item.id %></span>
+  <% end %>
+  <span class="datetime"><%= item.display_send_date %></span>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>

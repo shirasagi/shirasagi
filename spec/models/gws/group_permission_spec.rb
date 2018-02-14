@@ -8,20 +8,16 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
   let(:item) { create :gws_schedule_plan }
   let(:new_item) { build :gws_schedule_plan }
   let(:init) do
-    {
-      user_ids: [],
-      group_ids: [],
-      custom_group_ids: []
-    }
+    { user_ids: [], group_ids: [], custom_group_ids: [] }
   end
 
   context 'full permissions' do
     it do
       # blank
       item.update_attributes(init)
-      expect(item.user_ids.present?).to be_falsey
-      expect(item.group_ids.present?).to be_falsey
-      expect(item.custom_group_ids.present?).to be_falsey
+      expect(item.user_ids.blank?).to be_truthy
+      expect(item.group_ids.blank?).to be_truthy
+      expect(item.custom_group_ids.blank?).to be_truthy
 
       expect(item.allowed?(:read, user, site: site)).to be_truthy
       expect(item.allowed?(:edit, user, site: site)).to be_truthy

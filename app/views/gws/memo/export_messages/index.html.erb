@@ -1,0 +1,73 @@
+<%= jquery do %>
+$('a.ajax-box').data('on-select', function($item) {
+  var data        = $item.closest("[data-id]");
+  var id          = data.data("id");
+  var attachments = data.data("attachments");
+  var from        = data.data("from");
+  var name        = data.data("name");
+  var priority    = data.data("priority");
+  var send_date   = data.data("send_date");
+  var size        = data.data("display_size");
+
+  tr    = $("<tr />").attr("data-id", id);
+  input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
+  input = input.val(id).removeClass("hidden-ids");
+  a     = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>').on("click", SS_SearchUI.deselect);
+
+  var icon = $('<i class="material-icons md-15">&#xE226;</i>');
+  console.log(attachments);
+  if (!attachments) {
+    icon.css("visibility","hidden");
+  }
+  tr.append($('<td />').text(from).prepend(icon));
+  tr.append($('<td />').append(input).append(name));
+  tr.append($('<td />').text(priority));
+  tr.append($('<td />').text(send_date));
+  tr.append($('<td />').text(size));
+  tr.append($('<td />').append(a));
+  SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
+  SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+});
+<% end %>
+
+<%= form_for :item, url: { action: :export }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+  <%= f.hidden_field "root_url", value: root_url, class: "hidden-ids" %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.export") %></h2></div>
+      <div class="addon-body">
+        <dl class="see" style="margin-top: 20px;">
+          <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
+          <dd>
+            <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>
+            <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box" %>
+          </dd>
+          <dd>
+            <table class="index ajax-selected" style="display: none;">
+              <thead>
+              <tr>
+                <th class="from">
+                  <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+                  <%= @model.t :from %>
+                </th>
+                <th class="name"><%= @model.t :subject %></th>
+                <th class="priority"><%= @model.t :priority %></th>
+                <th class="send_date"><%= @model.t :display_send_date %></th>
+                <th class="size"><%= @model.t :size %></th>
+                <th class="deselect"></th>
+              </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </dd>
+        </dl>
+      </div>
+
+      <footer class="send">
+        <%= f.submit t("ss.export"), { class: "btn btn-primary" } %>
+      </footer>
+    </div>
+  </div>
+<% end %>

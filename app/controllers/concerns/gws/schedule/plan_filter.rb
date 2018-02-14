@@ -43,6 +43,14 @@ module Gws::Schedule::PlanFilter
     @file_addon_state = 'hide' if @cur_site.schedule_attachment_denied?
   end
 
+  def send_approval_mail
+    Gws::Memo::Notifier.deliver_workflow_request!(
+      cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+      to_users: @item.all_approvers, item: @item,
+      url: url_for(action: :show)
+    ) rescue nil
+  end
+
   public
 
   def index
@@ -50,7 +58,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user)
+    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
     render
   end
 
@@ -60,24 +68,30 @@ module Gws::Schedule::PlanFilter
 
   def print
     @portrait = 'horizontal'
-    render layout: 'ss/print'
+    render file: 'print', layout: 'ss/print'
   end
 
   def create
     @item = @model.new get_params
     @item.set_facility_column_values(params)
+    @item.reset_approvals
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    render_create @item.save, location: redirection_url
+    saved = @item.save
+    render_create saved, location: redirection_url
+    send_approval_mail if saved && @item.approval_present?
   end
 
   def update
     @item.attributes = get_params
     @item.set_facility_column_values(params)
+    @item.reset_approvals
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    render_update @item.update, location: redirection_url
+    saved = @item.update
+    render_update saved, location: redirection_url
+    send_approval_mail if saved && @item.approval_present?
   end
 
   def destroy

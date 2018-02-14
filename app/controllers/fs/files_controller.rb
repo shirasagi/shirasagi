@@ -51,11 +51,13 @@ class Fs::FilesController < ApplicationController
   def send_item(disposition = :inline)
     set_last_modified
 
+    filename = @item.name.presence || @item.filename
+
     if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.filename,
+      send_file @item.path, type: @item.content_type, filename: filename,
                 disposition: disposition, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.filename,
+      send_data @item.read, type: @item.content_type, filename: filename,
                 disposition: disposition
     end
   end

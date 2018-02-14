@@ -70,15 +70,31 @@ ja:
       gws/discussion/forum: 電子会議室
       gws/discussion/topic: スレッド
       gws/discussion/post: コメント
+    errors:
+      models:
+        gws/addon/discussion/quota:
+          file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+          total_quota_over: "電子会議室の総容量制限を超過している為、保存できませんでした。"
+          forum_quota_over: "電子会議室の容量制限を超過している為、保存できませんでした。"
+          topic_quota_over: "スレッドの容量制限を超過している為、保存できませんでした。"
     attributes:
+      gws/discussion/postable:
+        topic_id: スレッド
+        parent_id: 親投稿
+        descendants_updated: スレッド内更新日時
+        main_topic: メインスレッド
+        permanently: 編集禁止
+        permit_comment: コメント投稿
       gws/discussion/forum:
         name: タイトル
         order: 並び順
+        forum_quota: 容量制限
       gws/discussion/topic:
         name: タイトル
         order: 並び順
         permit_comment: コメント投稿
         permanently: 編集禁止
+        topic_quota: 容量制限
       gws/discussion/post:
         name: タイトル
       gws/addon/discussion/group_permission:
@@ -98,6 +114,8 @@ ja:
         readable_member_ids: 閲覧ユーザー
         readable_custom_group_ids: 閲覧カスタムグループ
       gws/addon/discussion/group_setting:
+        discussion_quota: 総容量制限
+        discussion_filesize_limit: 添付サイズ制限
         discussion_new_days: 新着表示期間
         discussion_unseen_interval: 新着確認の間隔
         discussion_recent_limit: 新着表示件数
@@ -126,6 +144,11 @@ ja:
     gws/discussion/forum:
       name:
         - タイトルを入力します。
+      forum_quota:
+        - 電子会議室の使用容量の上限を入力します。
+        - 使用容量が超えた場合、投稿ができません。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
     gws/discussion/topic:
       name:
         - タイトルを入力します。
@@ -137,6 +160,11 @@ ja:
         - コメントを許可するかどうかを選択します。
       permanently:
         - 有効にするとコメントの投稿、編集、削除を行えなくなります。
+      topic_quota:
+        - スレッドの使用容量の上限を入力します。
+        - 使用容量が超えた場合、投稿ができません。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
     gws/addon/discussion/release:
       state:
         - 公開画面への公開、非公開を選択します。
@@ -145,6 +173,15 @@ ja:
         - 設定を有効にすると、スレッドの新規作成、コメントの投稿があった際、参加者に通知メッセージを送信することができます。
         - 電子会議室が非公開状態の場合、通知メッセージは送信されません。
     gws/addon/discussion/group_setting:
+      discussion_quota:
+        - 電子会議室の合計容量の上限を入力します。
+        - 合計容量が超えた場合、投稿ができません。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
+      discussion_filesize_limit:
+        - スレッドまたは投稿に添付されるファイルの合計容量の上限を入力します。
+        - 未設定である場合、制限されません。
+        - 初期値は 未設定 です。
       discussion_new_days:
         - 新着表示期間を設定します。
       discussion_unseen_interval:

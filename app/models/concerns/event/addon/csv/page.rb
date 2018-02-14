@@ -6,7 +6,7 @@ module Event::Addon::Csv
     extend SS::Addon
 
     def category_name_tree
-      id_list = categories.pluck(:id)
+      id_list = categories.where(route: /^category\//).pluck(:id)
 
       ct_list = []
       id_list.each do |id|
@@ -15,11 +15,12 @@ module Event::Addon::Csv
         filename_array = Cms::Node.where(_id: id).map(&:filename).first.split(/\//)
         filename_array.each do |filename|
           filename_str << filename
-          name_list << Cms::Node.where(filename: filename_str.join("/")).map(&:name).first
+          node = Cms::Node.site(site).where(filename: filename_str.join("/")).first
+          name_list << node.name if node
         end
         ct_list << name_list.join("/")
       end
-      ct_list
+      ct_list.sort
     end
 
     module ClassMethods

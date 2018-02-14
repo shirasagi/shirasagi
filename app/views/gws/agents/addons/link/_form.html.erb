@@ -1,0 +1,21 @@
+<%= jquery do %>
+  var sort = new SS_SortableForm('.mod-gws-addon-link .index');
+  sort.renderItems(<%== @item.links.to_json %>);
+<% end %>
+
+<div class="mod-gws-addon-link">
+  <table class="index form-index sortable-index">
+    <thead>
+      <tr>
+        <th style="width: 40%;"><%= @item.t('links/name') %></th>
+        <th><%= @item.t('links/url') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-base="true">
+        <td><%= f.text_field_tag 'item[links][][name]', nil, id: nil %></td>
+        <td><%= f.text_field_tag 'item[links][][url]', nil, id: nil %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

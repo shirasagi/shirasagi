@@ -1,27 +1,31 @@
-<% return unless @group_navi %>
+<% return unless @folders %>
 
 <div id="content-navi">
   <h2 class="content-navi-title"><%= t('gws/memo/message.folder') %></h2>
   <table class="index gws-memo-folder">
-    <thead>
-    <tr>
-      <th><%= t('gws/memo/message.folder_name') %></th>
-    </tr>
-    </thead>
-    <tbody>
-    <% @group_navi.each do |item| %>
+    <% @folders.each do |item| %>
       <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.folder_path) %>
-      <tr class="<%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
-        <td class="<%= item.unseen? ? 'unseen' : 'seen' %>">
+      <% unseen = item.unseen? && !item.sent_box? && !item.draft_box? %>
+      <tr class="folder <%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
+        <td class="<%= unseen ? 'unseen' : 'seen' %>">
           <%= link_to item.name,
                       gws_memo_messages_path(folder: item.folder_path ),
-                      {class: 'field title', 'data-path': item.folder_path } %>
-          <% if item.unseen? %>
+                      { class: 'field title', 'data-path': item.folder_path } %>
+          <% if unseen %>
             <span>(<%= item.unseens.count %>)</span>
           <% end %>
         </td>
       </tr>
     <% end %>
-    </tbody>
   </table>
+
+  <% if @cur_site.memo_quota %>
+  <% quota = @model.new %>
+  <div class="content-navi-title" style="margin-top: 10px; border-top: 1px solid #f2f2f2;"><%= t('ss.quota') %></div>
+  <div class="ss-quota-bar">
+    <div class="label"><%= quota.quota_label(@cur_user, @cur_site) %></div>
+    <div class="usage <%= quota.quota_over?(@cur_user, @cur_site) ? 'over-threshold' : '' %>" style="width: <%= quota.quota_percentage(@cur_user, @cur_site) %>%">
+    </div>
+  </div>
+  <% end %>
 </div>

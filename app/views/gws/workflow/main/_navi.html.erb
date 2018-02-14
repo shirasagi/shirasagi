@@ -1,0 +1,15 @@
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
+  <h3><%= link_to t('ss.navi.readable'), gws_workflow_files_main_path %></h3>
+  <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
+  <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>
+
+  <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Workflow::Route.model_name.human, gws_workflow_routes_path, class: "management" %></h3>
+  <% end %>
+  <% if Gws::Workflow::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Workflow::Form.model_name.human, gws_workflow_forms_path, class: "management" %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

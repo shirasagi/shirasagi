@@ -18,9 +18,13 @@ SS::Application.routes.draw do
     put "role" => "groups#role_update", :on => :member
   end
 
+  concern :lock_and_unlock do
+    post :lock_all, on: :collection
+    post :unlock_all, on: :collection
+  end
+
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
-    get "conf" => "conf#index", as: :conf
     get "site_copy" => "site_copy#index", as: :site_copy
     post "site_copy/confirm" => "site_copy#confirm"
     post "site_copy/run" => "site_copy#run"
@@ -30,7 +34,9 @@ SS::Application.routes.draw do
     get "test/mail" => "test/mail#index", as: :test_mail
     post "test/mail" => "test/mail#create", as: :send_test_mail
 
-    resources :users, concerns: :deletion
+    resource :menu_settings, only: [:show, :edit, :update]
+
+    resources :users, concerns: [:deletion, :lock_and_unlock]
     resources :notice, concerns: :deletion
     resources :groups, concerns: [:deletion, :role]
     resources :sites, concerns: :deletion

@@ -17,11 +17,21 @@ def ss_site
 end
 
 def login_user(user)
-  visit "#{sns_login_path}?ref=/robots.txt"
+  visit sns_login_path
   within "form" do
     fill_in "item[email]", with: user.email
     fill_in "item[password]", with: "pass"
+    set_value_to_hidden_input('input#ref', '/robots.txt')
     click_button "ログイン"
+  end
+end
+
+# set value to hidden input
+def set_value_to_hidden_input(selector, value)
+  if page.driver.is_a?(Capybara::Selenium::Driver)
+    page.execute_script("return $('#{selector}').val('#{value}');")
+  else
+    first(selector, visible: false).set(value)
   end
 end
 

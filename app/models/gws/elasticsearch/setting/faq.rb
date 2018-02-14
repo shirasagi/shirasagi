@@ -18,6 +18,6 @@ class Gws::Elasticsearch::Setting::Faq
     cate = @categories.find { |cate| cate.name == cate_name }
     return if cate.blank?
 
-    [ cate, url_helpers.gws_faq_category_topics_path(site: cur_site, category: cate) ]
+    [ cate, url_helpers.gws_faq_topics_path(site: cur_site, mode: '-', category: cate) ]
   end
 end

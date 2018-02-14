@@ -27,6 +27,7 @@ ja:
         in_password: パスワード
         name: アカウント名
         roles: ロール
+        last_loggedin: 最終ログイン日時
         account_start_date: 有効期限（開始）
         account_expiration_date: 有効期限（終了）
         remark: 備考

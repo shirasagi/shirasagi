@@ -1,0 +1,9 @@
+<dl class="see">
+  <dt class="wide"></dt>
+  <dd class="wide"><%= l(@cur_month.to_date, format: :attendance_year_month) %>のタイムカード</dd>
+  <dd class="wide">
+    <% @target_users.each do |user| %>
+      <label><%= check_box_tag "#{f.object_name}[user_ids][]", user.id, true, { id: nil } %><%= user.long_name %></label>
+    <% end %>
+  </dd>
+</dl>

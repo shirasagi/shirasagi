@@ -7,14 +7,20 @@
 @import "schedule/gws";
 @import "circular/gws";
 @import "memo/gws";
-@import "share/gws";
 @import "portal/gws";
 @import "discussion/gws";
+@import "monitor/gws";
+@import "attendance/gws";
 
 // File
-.gws-addon-file .upload-menu-select {
-  display: none;
-  float: right;
+.gws-addon-file {
+  .upload-menu-select {
+    display: none;
+    float: right;
+  }
+  .action-attach, .action-paste, .action-thumb {
+    display: none !important;
+  }
 }
 
 // Reminder

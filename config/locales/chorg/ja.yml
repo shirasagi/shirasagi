@@ -109,6 +109,7 @@ ja:
     attributes:
       chorg/model/revision:
         name: 名前
+        job_ids: ジョブ
         user_csv_file_id: ユーザーCSVファイル
       chorg/model/changeset:
         type: 種別

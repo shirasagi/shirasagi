@@ -5,6 +5,8 @@ class Gws::Schedule::UserPlansController < ApplicationController
 
   before_action :set_user
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_user

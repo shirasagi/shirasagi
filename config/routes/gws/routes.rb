@@ -7,13 +7,18 @@ SS::Application.routes.draw do
   end
 
   concern :download do
-    get :download, :on => :collection
-    get :download_template, :on => :collection
+    get :download, on: :collection
+    get :download_template, on: :collection
   end
 
   concern :import do
-    get :import, :on => :collection
-    post :import, :on => :collection
+    get :import, on: :collection
+    post :import, on: :collection
+  end
+
+  concern :lock_and_unlock do
+    post :lock_all, on: :collection
+    post :unlock_all, on: :collection
   end
 
   namespace "gws", path: ".g:site" do
@@ -28,7 +33,7 @@ SS::Application.routes.draw do
     resource  :site
     resources :groups, concerns: [:deletion]
     resources :custom_groups, concerns: [:deletion]
-    resources :users, concerns: [:deletion, :download, :import]
+    resources :users, concerns: [:deletion, :download, :import, :lock_and_unlock]
     resources :user_titles, concerns: [:deletion]
     resources :roles, concerns: [:deletion]
     resources :notices, concerns: [:deletion]

@@ -3,6 +3,8 @@ class Gws::Schedule::Search::UsersController < ApplicationController
   #include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_crumbs

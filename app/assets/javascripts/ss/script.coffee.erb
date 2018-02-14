@@ -13,6 +13,7 @@
 #= require jquery.autosize
 #= require marked
 #= require starts-with/startswith.js
+#= require string-repeat/repeat.js
 #= require_self
 #= require ss/lib/form
 #= require ss/lib/font
@@ -32,6 +33,8 @@
 #= require ss/lib/clipboard
 #= require ss/lib/color
 #= require ss/lib/workflow
+#= require ss/lib/sortable_form
+#= require ss/lib/text_zoom
 #= require cms/lib/editor
 #= require cms/lib/form
 #= require cms/lib/edit_lock
@@ -75,13 +78,20 @@ $ ->
         link.not(".current").slideToggle("fast")
         return false
 
+  # crumbs
+  crumbs = $('#crumbs a[href]').map ->
+    return $(this).attr('href')
+  crumbs = crumbs.get()
+  crumbs.shift()
+
   # navi
   path = location.pathname + "/"
   addCurrent = (selector) ->
     added = false
     $($(selector).get().reverse()).each ->
       menu = $(this)
-      if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+      href = menu.attr('href')
+      if path.match(new RegExp('^' + href + '(\/|$)')) || crumbs.indexOf(href) != -1
         menu.addClass("current").parent().addClass("current")
         added = true
         return false
@@ -109,17 +119,28 @@ $ ->
     $(".dropdown").removeClass('active')
     $(".dropdown-menu").removeClass('active')
 
+  # select
+  $("select").change ->
+    if $(this).val() == ""
+      $(this).addClass("blank-value has-blank-value")
+    else
+      $(this).removeClass("blank-value")
+  $("select").change()
+
   SS_ListUI.render("table.index")
   SS_Mobile.render()
   SS_AddonTabs.render()
   SS_Tooltips.render(".tooltip")
   SS_SearchUI.render()
   SS_Color.render()
+  SS_TextZoom.render()
 
 class @SS
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
 
   @config = {}
+
+  @noticeTimeoutId = null
 
   @disableClick: (el)->
     return false if el.data('clicked')
@@ -209,14 +230,24 @@ class @SS
       e.preventDefault();
       return false
 
-  @notice: (message) ->
+  @notice: (message, opts = {}) ->
+    SS.clearNotice()
     notice = $('#notice')
     if !notice.hasClass('js-notice')
       notice.addClass('js-notice').click ->
         notice.slideUp('normal')
     notice.find('.wrap').html(message)
     notice.slideDown('normal')
-    return setTimeout (-> $('#notice').slideUp('normal')), 1800
+    if opts
+      return if opts.timeout == 0
+    SS.noticeTimeoutId = setTimeout (-> $('#notice').slideUp('normal')), 1800
+    return SS.noticeTimeoutId
+
+  @clearNotice: ->
+    if SS.noticeTimeoutId
+      clearTimeout SS.noticeTimeoutId
+      SS.noticeTimeoutId = null
+    $('#notice').hide()
 
   @confirmUnloading: ->
     changed = false

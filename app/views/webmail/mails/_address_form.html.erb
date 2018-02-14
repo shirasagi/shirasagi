@@ -10,18 +10,31 @@ SS_SearchUI.select = Webmail_Mail_Form_Address.select;
 
 <dl class="see webmail-address-field">
   <dd class="wide">
-    <% group_count = @cur_user.root_groups.size %>
-    <% @cur_user.root_groups.each do |group| %>
-      <%= link_to gws_apis_users_path(site: group), class: "ajax-box" do %>
-        <%= group.name if group_count > 1 %> <%= t "gws.organization_addresses" %>
-      <% end %>
-      <%= link_to gws_shared_address_apis_addresses_path(site: group), class: "ajax-box" do %>
-        <%= group.name if group_count > 1 %> <%= t "modules.gws/shared_address" %>
-      <% end %>
-    <% end %>
+    <div class="address-groups">
+      <% groups = @cur_user.root_groups.entries %>
 
-    <%= link_to webmail_apis_addresses_path, class: "ajax-box" do %>
-      <%= t "mongoid.models.webmail/address" %>
-    <% end %>
+      <div class="address-group">
+        <% if groups.size > 1 %>
+          <div class="address-group-label"><%= t "webmail.personal" %></div>
+        <% end %>
+        <%= link_to webmail_apis_addresses_path, class: "ajax-box" do %>
+          <%= t "mongoid.models.webmail/address" %>
+        <% end %>
+      </div>
+
+      <% groups.each do |group| %>
+        <div class="address-group">
+          <% if groups.size > 1 %>
+            <div class="address-group-label"><%= group.name %></div>
+          <% end %>
+          <%= link_to gws_apis_users_path(site: group), class: "ajax-box" do %>
+            <%= t "gws.organization_addresses" %>
+          <% end %>
+          <%= link_to gws_shared_address_apis_addresses_path(site: group), class: "ajax-box" do %>
+            <%= t "modules.gws/shared_address" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </dd>
 </dl>

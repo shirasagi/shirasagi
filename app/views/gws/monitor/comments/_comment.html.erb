@@ -1,40 +1,4 @@
-<%
-
-menu = []
-if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site) && comment.user_group_id != @cur_group.id
-  if params[:controller] == "gws/monitor/topics"
-    link = new_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
-  elsif  params[:controller] == "gws/monitor/answers"
-    link = new_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.id)
-  elsif  params[:controller] == "gws/monitor/admins"
-    link = new_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.id)
-  end
-  menu << link_to(t('gws/monitor.links.reply'), link, class: "btn primary")
-end
-if comment.user_group_id == @cur_group.id && @item.attend_group_ids.include?(@cur_group.id)
-  if params[:controller] == "gws/monitor/topics"
-    link = edit_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  elsif  params[:controller] == "gws/monitor/answers"
-    link = edit_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  elsif  params[:controller] == "gws/monitor/admins"
-    link = edit_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  end
-  menu << link_to(t('ss.links.edit'), link, class: "btn")
-end
-if comment.user_group_id == @cur_group.id && @item.attend_group_ids.include?(@cur_group.id)
-  if params[:controller] == "gws/monitor/topics"
-    link = delete_gws_monitor_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  elsif  params[:controller] == "gws/monitor/answers"
-    link = delete_gws_monitor_answer_parent_comment_path(answer_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  elsif  params[:controller] == "gws/monitor/admins"
-    link = delete_gws_monitor_admin_parent_comment_path(admin_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  end
-  menu << link_to(t('ss.links.delete'), link, class: "btn")
-end
-
-menu = [] if params[:controller].match(/management/) || @item.closed?
-%>
-<% if comment.spec_config_condition(@cur_user, @cur_group) %>
+<% if comment.showable_comment?(@cur_user, @cur_group) %>
   <aside class="comment" id="post-<%= comment.id %>">
     <header class="<%= 'toggle-head' if recursion %>">
       <h2><%= comment.name %></h2>
@@ -58,16 +22,14 @@ menu = [] if params[:controller].match(/management/) || @item.closed?
       </div>
       <% end %>
 
-      <% if menu.present? %>
-      <div class="menu"><%= safe_join(menu) %></div>
-      <% end %>
+      <%= render file: '_comment_menu', locals: { comment: comment, recursion: recursion } %>
     </div>
   </aside>
 <% end %>
 
-<% if comment.children.present? %>
+<% if recursion && comment.children.present? %>
 <div class="comments">
-  <%= render partial: 'gws/monitor/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
+  <%= render partial: 'gws/monitor/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} %>
 </div>
 <% end %>
 

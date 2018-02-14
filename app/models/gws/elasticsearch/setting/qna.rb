@@ -18,6 +18,6 @@ class Gws::Elasticsearch::Setting::Qna
     cate = @categories.find { |cate| cate.name == cate_name }
     return if cate.blank?
 
-    [ cate, url_helpers.gws_qna_category_topics_path(site: cur_site, category: cate) ]
+    [ cate, url_helpers.gws_qna_topics_path(site: cur_site, mode: '-', category: cate) ]
   end
 end

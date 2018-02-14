@@ -9,6 +9,8 @@ class Gws::Discussion::TodosController < ApplicationController
   before_action :set_crumbs
   before_action :set_item, only: [ :show, :edit, :update, :delete, :destroy, :disable, :finish, :revert ]
 
+  navi_view "gws/discussion/main/navi"
+
   private
 
   def set_forum
@@ -56,7 +58,7 @@ class Gws::Discussion::TodosController < ApplicationController
       site(@cur_site).
       discussion_forum(@forum).
       allow(:read, @cur_user, site: @cur_site).
-      active.
+      without_deleted.
       search(params[:s])
 
     render layout: 'ss/print'
@@ -69,8 +71,8 @@ class Gws::Discussion::TodosController < ApplicationController
     @todos = Gws::Schedule::Todo.
       site(@cur_site).
       discussion_forum(@forum).
-      allow(:read, @cur_user, site: @cur_site).
-      active.
+      member(@cur_user).
+      without_deleted.
       search(params[:s]).
       map do |todo|
         result = todo.calendar_format(@cur_user, @cur_site)

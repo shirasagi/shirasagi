@@ -21,7 +21,7 @@ Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%==
 <section class="main-box gws-schedule-box sheet">
   <header>
     <h2>
-      <%= (@user || @cur_user).long_name %>
+      <%= @facility.try(:name) || (@user || @cur_user).long_name %>
     </h2>
   </header>
   <div id="calendar" class="calendar"></div>

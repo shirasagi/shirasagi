@@ -1,0 +1,22 @@
+<%= form_for :item, url: { action: :import }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.import") %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= @model.t :in_file %></dt>
+          <dd><%= f.file_field :in_file, class: "file" %></dd>
+
+          <dd class="wide" style="color: #b30; margin-top: 10px;">
+            <%=br t("gws/memo/message.import.caution") %>
+          </dd>
+        </dl>
+      </div>
+      <footer class="send">
+        <%= f.submit t("ss.import"), class: :save %>
+      </footer>
+    </div>
+  </div>
+<% end %>

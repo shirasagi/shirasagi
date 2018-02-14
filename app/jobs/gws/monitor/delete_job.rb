@@ -1,20 +1,29 @@
 class Gws::Monitor::DeleteJob < Gws::ApplicationJob
 
   def perform(opts = {})
-    case site.monitor_delete_threshold
-    when 0 then
-      threshold = 1.day.ago
-    when 1 then
-      threshold = 1.month.ago
-    when 2..7 then
-      threshold = (3 * (site.monitor_delete_threshold - 1)).month.ago
-    when 8 then
-      threshold = 24.months.ago
-    end
-    count = Gws::Monitor::Post.where(:deleted.lt => threshold).destroy_all if threshold
+    threshold = parse_monitor_delete_threshold
+    count = Gws::Monitor::Topic.site(site).topic.where(:deleted.lt => threshold).destroy_all
 
     Rails.logger.info "#{threshold}以前の照会・回答を#{count}件削除しました。"
     puts_history(:info, "#{threshold}以前の照会・回答を#{count}件削除しました。")
+  end
+
+  private
+
+  def parse_monitor_delete_threshold
+    return 24.months.ago if site.monitor_delete_threshold.blank?
+
+    term, unit = site.monitor_delete_threshold.split('.')
+    case unit.singularize
+    when 'day'
+      Integer(term).days.ago
+    when 'month'
+      Integer(term).months.ago
+    when 'year'
+      Integer(term).years.ago
+    else
+      24.months.ago
+    end
   end
 end
 

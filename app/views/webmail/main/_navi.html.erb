@@ -20,7 +20,7 @@ end
 
   <h2>
     <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), 'data-name' => 'INBOX', 'class' => 'mail-droppable mailbox-droppable' do %>
-      <i class="material-icons">&#xE0E1;</i> <%= t('webmail.box.inbox') %>
+      <i class="material-icons">&#xE0E1;</i><%= t('webmail.box.inbox') %>
       <% if @mailboxes && inbox = @mailboxes.inbox %>
         <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
       <% end %>
@@ -89,7 +89,7 @@ end
     <i class="material-icons md-dark">&#xE5D5;</i>
   <% end if @quota.quota?  %>
 
-  <div class="quota">
+  <div class="ss-quota-bar">
     <div class="label"><%= @quota.label %></div>
     <div class="usage <%= @quota.over_threshold? ? 'over-threshold' : '' %>" style="width: <%= @quota.percentage %>%"></div>
   </div>

@@ -15,18 +15,19 @@ class Webmail::Filter
   field :name, type: String
   field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
-  field :from, type: String
-  field :to, type: String
-  field :subject, type: String
+
+  field :conditions, type: Array, default: []
   field :action, type: String
 
-  permit_params :host, :account, :mailbox, :name, :state, :order, :from, :to, :subject, :action
+  permit_params :host, :account, :mailbox, :name, :state, :order, :action
+  permit_params conditions: [:field, :operator, :value]
 
   validates :name, presence: true
+  validates :conditions, presence: true
   validates :action, presence: true
-  validates :mailbox, presence: true, if: ->{ action =~ /copy|move/ }
+  validates :mailbox, presence: true, if: ->{ mailbox_required? }
 
-  validate :validate_conditions
+  before_validation :set_conditions
 
   default_scope -> { order_by order: 1 }
 
@@ -45,12 +46,32 @@ class Webmail::Filter
     criteria
   }
 
+  def field_options
+    %w(from to cc bcc subject body).map { |m| [I18n.t("webmail.options.filter_field.#{m}"), m] }
+  end
+
+  def operator_options
+    %w(include exclude).map { |m| [I18n.t("webmail.options.filter_operator.#{m}"), m] }
+  end
+
   def state_options
     %w(enabled disabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
   end
 
   def action_options
     %w(copy move trash delete).map { |m| [I18n.t("webmail.options.action.#{m}"), m] }
+  end
+
+  def conditions_summary
+    conditions.map do |cond|
+      field = label(:field, value: cond[:field])
+      operator = label(:operator, value: cond[:operator])
+      %("#{field}" #{operator} "#{cond[:value]}")
+    end
+  end
+
+  def mailbox_required?
+    action =~ /copy|move/
   end
 
   def mailbox_options
@@ -67,25 +88,35 @@ class Webmail::Filter
 
   def search_keys
     keys = []
-    %w(from to subject).each do |key|
-      keys += [key.upcase, send(key).dup.force_encoding('ASCII-8BIT')] if send(key).present?
+    conditions.each do |cond|
+      next if cond[:field].blank? || cond[:value].blank?
+      keys << 'NOT' if cond[:operator] == 'exclude'
+      keys << cond[:field].upcase
+      keys << cond[:value].dup.force_encoding('ASCII-8BIT')
     end
     keys
   end
 
   def apply(mailbox, add_search_keys = [])
-    imap.examine(mailbox)
+    keys = add_search_keys + search_keys
+
+    if keys.blank?
+      errors.add :conditions, :invalid
+      return false
+    end
+
+    imap.select(mailbox)
     uids = imap.conn.uid_sort(%w(REVERSE ARRIVAL), add_search_keys + search_keys, 'UTF-8')
     uids_apply(uids, mailbox)
   end
 
   private
 
-  def validate_conditions
-    %w(from to subject).each do |key|
-      return true if send(key).present?
+  def set_conditions
+    conditions = self.conditions.map do |data|
+      (data[:field].present? && data[:operator].present? && data[:value].present?) ? data : nil
     end
-    errors.add :base, I18n.t("webmail.errors.blank_conditions")
+    self.conditions = conditions.compact
   end
 
   def uids_apply(uids, mailbox)

@@ -1,0 +1,14 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <%= render file: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <button class="destroy-all btn"><%= t("ss.links.delete") %></button>
+      <button class="lock-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :lock_all) %>"><%= t("ss.links.lock_user") %></button>
+      <button class="unlock-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :unlock_all) %>"><%= t("ss.links.unlock_user") %></button>
+    </div>
+  </div>
+
+  <%= render file: "_search" %>
+</div>

@@ -11,7 +11,6 @@ ja:
       disabled_items: 削除済み
     links:
       categories: カテゴリー
-      folder: フォルダー管理
       disable: 削除済みに移動する
       active: 削除を取り消す
       file_download: ダウンロード
@@ -24,6 +23,13 @@ ja:
     notice:
         active: 削除を取り消しました。
         disable: 削除済みに移動しました。
+    mailers:
+      compressed:
+        subject: ダウンロード準備完了のお知らせ
+    navi:
+      folder: フォルダー
+      category: カテゴリー
+      management: 削除済み一覧
 
   modules:
     gws/share: 共有ファイル
@@ -60,7 +66,7 @@ ja:
     models:
       gws/share/file: ファイル
       gws/share/folder: フォルダー
-      gws/share/category: 共有ファイル/カテゴリー
+      gws/share/category: カテゴリー
     errors:
       models:
         gws/share/file:
@@ -96,9 +102,12 @@ ja:
         url_copy: URLのコピー
       gws/share/folder:
         name: フォルダー名
+        depth: 階層
         order: 並び順
         share_max_file_size: 最大ファイルサイズ
         share_max_folder_size: 総容量制限
+        descendants_files_count: ファイル数
+        descendants_total_file_size: ファイル容量
 
   tooltip:
     gws/share/category:
@@ -124,3 +133,7 @@ ja:
         - 最大ファイルサイズを入力します。
       share_files_capacity:
         - 総容量を入力します。
+
+  job:
+    models:
+      gws/share/compress_job: 共有ファイル/圧縮ダウンロード

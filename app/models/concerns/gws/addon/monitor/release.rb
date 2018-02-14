@@ -39,6 +39,10 @@ module Gws::Addon::Monitor
       %w(draft public closed).map { |m| [I18n.t("gws/monitor.options.state.#{m}"), m] }
     end
 
+    def public?
+      state == 'public'
+    end
+
     private
 
     def validate_release_date

@@ -40,6 +40,9 @@ ja:
   mongoid:
     models:
       rdf/object:
+      rdf/class: 種別
+      rdf/prop: 項目
+      rdf/vocab: 語彙
     attributes:
       rdf/object:
         vocab: 語彙

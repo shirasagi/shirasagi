@@ -68,6 +68,8 @@ ja:
       inquiry/feedback: フィードバック
 
   mongoid:
+    models:
+      inquiry/column: 入力項目
     attributes:
       inquiry/addon/message:
         inquiry_html: 説明テキスト

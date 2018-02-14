@@ -84,4 +84,17 @@ Gws_Discussion_Unseen.renderUnseen(
       <% end %>
     </div>
   </div>
+
+  <% if quota = @forum.forum_quota_model %>
+  <div class="addon-view">
+    <div class="addon-head"><h2><%= t('ss.quota') %></h2></div>
+    <div class="addon-body">
+      <div class="ss-quota-bar">
+        <% quota = @forum.forum_quota_model %>
+        <div class="label"><%= quota.label %></div>
+        <div class="usage <%= quota.over? ? 'over-threshold' : '' %>" style="width: <%= quota.percentage %>%"></div>
+      </div>
+    </div>
+  </div>
+  <% end %>
 </div>

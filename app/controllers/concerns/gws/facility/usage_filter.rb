@@ -15,6 +15,7 @@ module Gws::Facility::UsageFilter
   private
 
   def set_crumbs
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
     @crumbs << [t('gws/facility.navi.usage'), { action: :index }]
   end
 

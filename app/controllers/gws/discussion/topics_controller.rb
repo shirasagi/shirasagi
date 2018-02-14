@@ -9,6 +9,8 @@ class Gws::Discussion::TopicsController < ApplicationController
   before_action :set_crumbs
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :comments, :reply, :copy]
 
+  navi_view "gws/discussion/main/navi"
+
   private
 
   def fix_params
@@ -32,7 +34,7 @@ class Gws::Discussion::TopicsController < ApplicationController
     if @forum.state == "closed"
       permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
     else
-      permitted = @forum.member?(@cur_user)
+      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member?(@cur_user)
     end
 
     raise "403" unless permitted
@@ -45,9 +47,9 @@ class Gws::Discussion::TopicsController < ApplicationController
     @todos = Gws::Schedule::Todo.
       site(@cur_site).
       discussion_forum(@forum).
-      allow(:read, @cur_user, site: @cur_site).
+      member(@cur_user).
       where(todo_state: 'unfinished').
-      active.
+      without_deleted.
       limit(@cur_site.discussion_todo_limit)
 
     @recent_items = @forum.children.
@@ -84,7 +86,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def edit
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     if @item.is_a?(Cms::Addon::EditLock)
       unless @item.acquire_lock
         redirect_to action: :lock
@@ -97,17 +99,17 @@ class Gws::Discussion::TopicsController < ApplicationController
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
 
   def delete
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render
   end
 
   def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     render_destroy @item.destroy
   end
 
@@ -116,7 +118,7 @@ class Gws::Discussion::TopicsController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, grants_none_to_owner: true)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
         next if item.destroy
       else
         item.errors.add :base, :auth_error
@@ -158,7 +160,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def copy
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, grants_none_to_owner: true)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
     if request.get?
       prefix = I18n.t("workflow.cloned_name_prefix")

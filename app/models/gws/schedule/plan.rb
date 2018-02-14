@@ -3,6 +3,7 @@ class Gws::Schedule::Plan
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Schedule::Priority
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::Schedule::Cloneable
@@ -13,10 +14,11 @@ class Gws::Schedule::Plan
   include Gws::Addon::File
   include Gws::Addon::Schedule::Reports
   include Gws::Addon::Schedule::Comments
-  include Gws::Addon::Schedule::Attendances
   include Gws::Addon::Member
+  include Gws::Addon::Schedule::Attendance
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::Schedule::FacilityColumnValues
+  include Gws::Addon::Schedule::Approval
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
@@ -60,6 +62,10 @@ class Gws::Schedule::Plan
     attendance_check_enabled?
   end
 
+  def approval_check_plan?
+    approval_state.present?
+  end
+
   alias allowed_for_managers? allowed?
 
   def allowed?(action, user, opts = {})
@@ -73,8 +79,16 @@ class Gws::Schedule::Plan
 
     ids = member_ids
     ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
+    ids += try(:facility_approver_ids) || []
     ids.uniq!
     Gws::User.in(id: ids)
+  end
+
+  def readable?(user, opts = {})
+    return true if allowed?(:read, user, opts)
+    return true if member?(user)
+    return true if approval_member?(user)
+    super
   end
 
   private

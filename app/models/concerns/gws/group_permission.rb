@@ -35,8 +35,6 @@ module Gws::GroupPermission
   # @param [String] action
   # @param [Gws::User] user
   def allowed?(action, user, opts = {})
-    return true if (!opts[:grants_none_to_owner]) && persisted? && user_ids.to_a.include?(user.id)
-
     site    = opts[:site] || @cur_site
     action  = permission_action || action
 
@@ -99,20 +97,15 @@ module Gws::GroupPermission
       action = permission_action || action
 
       if (level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]) && !opts[:private_only]
-        { "$or" => [
-          { user_ids: user.id },
-          { permission_level: { "$lte" => level } },
-        ] }
+        { permission_level: { "$lte" => level } }
       elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        { "$or" => [
+        { permission_level: { "$lte" => level }, "$or" => [
           { user_ids: user.id },
-          { permission_level: { "$lte" => level }, "$or" => [
-            { :group_ids.in => user.group_ids },
-            { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
-          ] }
+          { :group_ids.in => user.group_ids },
+          { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
         ] }
       else
-        { user_ids: user.id }
+        { _id: -1 }
       end
     end
 

@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :menu_file_state %><%= @model.tt :menu_file_state %></dt>
+  <dd><%= f.select :menu_file_state, @item.menu_state_options %></dd>
+
+  <dt><%= @model.t :menu_connection_state %><%= @model.tt :menu_connection_state %></dt>
+  <dd><%= f.select :menu_connection_state, @item.menu_state_options %></dd>
+</dl>

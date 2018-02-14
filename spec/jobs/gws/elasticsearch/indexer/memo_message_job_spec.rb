@@ -30,7 +30,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, tmpdir:
     let!(:message) do
       create(
         :gws_memo_message, cur_site: site, cur_user: user,
-        from: { user.id.to_s => 'INBOX.Sent' }, member_ids: [recipient.id],
+        path: { recipient.id.to_s => 'INBOX' }, member_ids: [recipient.id],
         file_ids: [file.id]
       )
     end
@@ -68,7 +68,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, tmpdir:
         expectation = expect do
           create(
             :gws_memo_message, cur_site: site, cur_user: user,
-            from: { user.id.to_s => 'INBOX.Sent' }, member_ids: [recipient.id],
+            path: { recipient.id.to_s => 'INBOX' }, member_ids: [recipient.id],
             file_ids: [file.id]
           )
         end
@@ -80,7 +80,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, tmpdir:
       let!(:message) do
         create(
           :gws_memo_message, cur_site: site, cur_user: user,
-          from: { user.id.to_s => 'INBOX.Sent' }, member_ids: [recipient.id],
+          path: { recipient.id.to_s => 'INBOX' }, member_ids: [recipient.id],
           file_ids: [file.id]
         )
       end
@@ -99,7 +99,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, tmpdir:
       let!(:message) do
         create(
           :gws_memo_message, cur_site: site, cur_user: user,
-          from: { user.id.to_s => 'INBOX.Sent' }, member_ids: [recipient.id],
+          path: { recipient.id.to_s => 'INBOX' }, member_ids: [recipient.id],
           file_ids: [file.id]
         )
       end

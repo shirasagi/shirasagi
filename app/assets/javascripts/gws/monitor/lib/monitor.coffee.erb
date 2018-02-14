@@ -2,15 +2,19 @@ class @Gws_Monitor_Topic
   @render: ->
     $(".public").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
-      id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/public", method: "post", data: {confirm: "<%= I18n.t('gws/monitor.confirm.public') %>"})
+      $this = $(this)
+      action = $this.data('ss-action')
+      confirm = $this.data('ss-confirm')
+      form = $("<form/>", action: action, method: "post", data: {confirm: confirm})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
     $(".preparation").on "click", ->
       token = $('meta[name="csrf-token"]').attr('content')
-      id = $("#item_id").val()
-      form = $("<form/>", action: "#{id}/preparation", method: "post", data: {confirm: "<%= I18n.t('gws/monitor.confirm.preparation') %>"})
+      $this = $(this)
+      action = $this.data('ss-action')
+      confirm = $this.data('ss-confirm')
+      form = $("<form/>", action: action, method: "post", data: {confirm: confirm})
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 

@@ -4,14 +4,15 @@
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
-<% window_name = @item.try(:name) || @crumbs.last.try(:first) %>
-<title>
-  <% if window_name.present? %>
-    <%= "#{window_name} | #{SS.config.ss.application_name}" %>
-  <% else %>
-    <%= SS.config.ss.application_name %>
-  <% end %>
-</title>
+<%
+  window_name = @item.try(:name) || @crumbs.last.try(:first)
+  if window_name.present?
+    title = "#{window_name} | #{SS.config.ss.application_name}"
+  else
+    title = SS.config.ss.application_name
+  end
+%>
+<title><%= title %></title>
 <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
 <%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
 <!--[if lt IE 9]>
@@ -75,38 +76,37 @@
     <% if @cur_user %>
     <nav class="user">
       <% if @ss_mode == :webmail %>
-        <% group = @cur_user.root_groups.first %>
-        <% if SS.config.gws.disable.blank? && group %>
-          <%= link_to gws_memo_messages_path(site: group.id), class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user, group).size %>
+        <% gws_user = Gws::User.find(@cur_user.id) %>
+        <% gws_role = gws_user.gws_roles.in(permissions: "edit_private_gws_memo_messages").reorder(site_id: 1).first %>
+        <% gws_group = gws_role.site if gws_role %>
+        <% if SS.config.gws.disable.blank? && gws_group %>
+          <%= link_to gws_memo_messages_path(site: gws_group.id), class: "user-message" do %>
+            <% count = Gws::Memo::Message.unseens(@cur_user, gws_group).size %>
             <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
           <% end %>
         <% end %>
       <% elsif @ss_mode == :gws %>
-        <div class="gws-bookmark dropdown dropdown-toggle">
-          <% @bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
-          <% bookmark_icon = @bookmark ? "&#xE866;" : "&#xE867;" %>
-          <h2 ><i class="material-icons"><%= bookmark_icon.html_safe %></i></h2>
-          <ul class="dropdown-menu">
-            <li>
-              <%= jquery do %>
-                Gws_Bookmark.render({
-                  'url': '<%= gws_apis_bookmarks_path %>',
-                  'name': '<%= window_name %>',
-                  'model': '<%= @model.name.underscore if @model %>'
-                });
-              <% end %>
-              <%= hidden_field_tag 'bookmark[id]', @bookmark.try(:id), class: 'bookmark-id' %>
-              <%= I18n.t('mongoid.attributes.gws/bookmark.name') %>
-              <%= text_field_tag 'bookmark[name]', (@bookmark.try(:name) || window_name), class: 'bookmark-name' %>
-              <%= submit_tag I18n.t('gws.buttons.bookmark'), class: 'btn save' %>
-              <%= submit_tag I18n.t('gws.buttons.unbookmark'), class: 'btn delete' %>
-            </li>
-          </ul>
-        </div>
-        <%= link_to gws_memo_messages_path, class: "user-message" do %>
-          <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
-          <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+        <% if @cur_site.menu_bookmark_visible? %>
+          <div class="gws-bookmark dropdown dropdown-toggle">
+            <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
+            <%= jquery do %>
+              new Gws_Bookmark().render({
+                id: '<%= bookmark.try(:id) %>',
+                name: '<%= bookmark.try(:name) %>',
+                default_name: '<%= window_name %>',
+                url: '<%= gws_apis_bookmarks_path %>',
+                model: '<%= @model.name.underscore if @model %>',
+                save: '<%= I18n.t('ss.buttons.save') %>',
+                delete: '<%= I18n.t('ss.buttons.delete') %>'
+              });
+            <% end %>
+          </div>
+        <% end %>
+        <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to gws_memo_messages_path, class: "user-message" do %>
+            <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
+            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+           <% end %>
         <% end %>
       <% end %>
 
@@ -122,6 +122,12 @@
             <li><%= link_to *link_params %></li>
           <% end %>
           <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
+          <li>
+            <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
+              <label><%= t('ss.text_zoom') %></label>
+              <span class="zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></span><span class="zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></span><span class="zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></span>
+            </div>
+          </li>
           <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
         </ul>
       </div>
@@ -135,7 +141,7 @@
 </aside>
 
 <% if notice %>
-<script> SS.notice('<%= notice %>'); </script>
+<script> SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); </script>
 <% end %>
 
 <div id="wrap">

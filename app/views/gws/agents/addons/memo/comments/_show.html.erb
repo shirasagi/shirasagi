@@ -1,7 +1,7 @@
 <div class="see mod-gws-schedule-comments">
   <% if @item.comments.present? %>
   <ul class="list-items">
-    <% @item.comments.order_by(updated: -1).each do |comment| %>
+    <% @item.comments.order_by(updated: 1).each do |comment| %>
     <li class="list-item" id="comment-<%= comment.id %>">
       <div class="info">
         <p><%== comment.html %></p>
@@ -25,7 +25,8 @@
   <% end %>
 
   <%= form_tag(gws_memo_comments_path(message_id: @item), id: 'comment-form', method: :post) do %>
-    <%= text_field_tag 'item[text]' %>
+    <%= error_messages_for :item %>
+    <%= text_field_tag 'item[text]', '', required: true %>
     <%= hidden_field_tag('redirect_to', request.fullpath) %>
     <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
   <% end %>

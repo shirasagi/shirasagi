@@ -6,7 +6,7 @@ class Gws::Portal::Group::SettingsController < ApplicationController
   model Gws::Portal::GroupSetting
 
   prepend_view_path 'app/views/gws/portal/common/settings'
-  navi_view 'gws/portal/group/navi'
+  navi_view 'gws/portal/main/navi'
   menu_view 'gws/crud/resource_menu'
 
   before_action :set_portal_setting

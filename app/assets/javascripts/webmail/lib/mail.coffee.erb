@@ -308,6 +308,42 @@ class @Webmail_Mail_Detail
       $(this).css('height', 'auto')
       $(this).removeAttr('data-url')
 
+class @Webmail_Mail_Address
+  @render: (opts)->
+    lang = opts.lang
+    urls = opts.urls
+
+    $('.address-item').each ->
+      addr  = $(this)
+      addr.addClass('clickable')
+      name  = addr.find('.address-name').text()
+      email = addr.data('email')
+      menu = addr.find('.dropdown-menu')
+
+      unless email
+        addr.removeClass('dropdown')
+        menu.remove()
+        return true
+
+      addr.find('.address-name').prepend('<i class="material-icons md-14">&#xE7FD;</i>')
+      menu.append('<li class="dropdown-menu-item disabled">' + email + '</li>')
+      menu.append('<li><a href="#" class="addr-send">' + lang.send + '</a></li>')
+      menu.append('<li><a href="#" class="addr-entry">' + lang.entry + '</a></li>')
+      menu.append('<li><a href="#" class="addr-copy">' + lang.copy + '</a></li>')
+
+      $(this).find('.addr-send').click ->
+        location.href = urls.send + "?" + $.param({ item: { to: name + "<" + email + ">" } })
+        return false
+
+      $(this).find('.addr-entry').click ->
+        location.href = urls.add + "?" + $.param({ item: { name: name, email: email } })
+        return false
+
+      $(this).find('.addr-copy').click ->
+        SS_Clipboard.copy(email)
+        $(".dropdown, .dropdown-menu").removeClass('active')
+        return false
+
 class @Webmail_Mail_Form
   @render: ->
     $('.js-autosize').autosize()

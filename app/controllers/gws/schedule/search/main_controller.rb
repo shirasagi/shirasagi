@@ -3,6 +3,8 @@ class Gws::Schedule::Search::MainController < ApplicationController
   #include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
+  navi_view "gws/schedule/main/navi"
+
   def index
     @time_search = Gws::Schedule::PlanSearch.new
   end

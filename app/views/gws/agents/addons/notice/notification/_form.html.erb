@@ -1,0 +1,23 @@
+<dl class="see mod-gws-notice-notification">
+  <% if @cur_site.menu_memo_visible? %>
+  <dt><%= @model.t :message_notification %><%= @model.tt :message_notification %></dt>
+  <dd><%= f.select :message_notification, @item.message_notification_options, include_blank: true %></dd>
+  <% end %>
+
+  <dt><%= @model.t :email_notification %><%= @model.tt :email_notification %></dt>
+  <dd><%= f.select :email_notification, @item.email_notification_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :notification_noticed %><%= @model.tt :notification_noticed %></dt>
+  <dd>
+    <span class="notification-noticed"><%= tryb { @item.notification_noticed.strftime('%Y/%m/%d H%:%M') } %></span>
+    <%= button_tag(t('ss.buttons.clear'), type: 'reset', class: 'btn btn-clear') %>
+    <%= f.hidden_field :notification_noticed %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  $('.mod-gws-notice-notification .btn-clear').on('click', function(){
+    $('span.notification-noticed').html('');
+    $('.mod-gws-notice-notification #item_notification_noticed').val('');
+  });
+<% end %>

@@ -68,8 +68,8 @@ ja:
         divide_duties_limit: 電子事務分掌表/表示件数
       gws/staff_record/yearly:
         year_id: 年度
-        year_code: 年度
-        year_name: 年度
+        year_code: 西暦
+        year_name: 年度名
       gws/staff_record/year:
         code: 西暦
         name: 年度名
@@ -95,6 +95,7 @@ ja:
         staff_records_view: 電子職員録へ表示
         divide_duties_view: 事務分掌表へ表示
         order: 並び順
+        section_order: 所属並び順
       gws/staff_record/seating:
         name: タイトル
         order: 並び順

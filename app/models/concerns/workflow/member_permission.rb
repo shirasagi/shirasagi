@@ -2,8 +2,24 @@ module Workflow::MemberPermission
   extend ActiveSupport::Concern
 
   def allowed?(action, user, opts = {})
-    opts[:access] = :member if workflow_member_id.present?
-    super(action, user, opts)
+    site = opts[:site] || @cur_site
+    node = opts[:node] || @cur_node
+
+    action = permission_action || action
+    if new_record?
+      is_owned = node ? node.owned?(user) : false
+    else
+      is_owned = owned?(user)
+    end
+
+    permits = ["#{action}_other_#{self.class.permission_name}"]
+    permits << "#{action}_private_#{self.class.permission_name}" if is_owned
+    permits << "#{action}_member_#{self.class.permission_name}" if workflow_member_id.present?
+
+    permits.each do |permit|
+      return true if user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
+    end
+    false
   end
 
   module ClassMethods

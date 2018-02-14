@@ -44,9 +44,9 @@
 </div>
 
 <% if @sub_folders.present? %>
-<div class="index">
-  <div class="header">
-    <%= t('gws/share.child_folder') %>
+<div class="content-main index">
+  <div class="list-head">
+    <h2 class="list-head-title"><%= t('gws/share.child_folder') %></h2>
   </div>
   <ul class="list-items">
     <% @sub_folders.each do |item| %>

@@ -16,19 +16,14 @@ class Gws::Apis::BookmarksController < ApplicationController
     @model.where(
       site_id: @cur_site.id,
       user_id: @cur_user.id,
-      url: params.dig(:item, :url)
+      url: params.dig(:item, :url).to_s
     ).first
   end
 
   public
 
   def create
-    item = find_item || @model.new(get_params)
-    if params.dig(:item, :name).present?
-      item.name = params.dig(:item, :name)
-    else
-      item.name = params.dig(:item, :default_name)
-    end
+    item = @model.new(get_params)
     model = params.dig(:item, :model).sub(/gws\/(?<model>[^\/]*)\/?.*/) do
       Regexp.last_match[:model]
     end
@@ -39,7 +34,15 @@ class Gws::Apis::BookmarksController < ApplicationController
     end
 
     item.save
-    render json: { name: item.name, bookmark_id: item.id }
+    render json: { bookmark_id: item.id, notice: I18n.t('gws/bookmark.notice.save') }
+  end
+
+  def update
+    item = find_item
+    item.attributes = get_params
+
+    item.update
+    render json: { bookmark_id: item.id, notice: I18n.t('gws/bookmark.notice.save') }
   end
 
   def destroy

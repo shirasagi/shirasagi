@@ -1,0 +1,6 @@
+<% return if @item.priority.blank? %>
+
+<dl class="see mod-gws-memo-priority">
+  <dt><%= @model.t :priority %></dt>
+  <dd><%= @item.label :priority %></dd>
+</dl>

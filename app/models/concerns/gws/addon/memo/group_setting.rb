@@ -5,11 +5,12 @@ module Gws::Addon::Memo::GroupSetting
   set_addon_type :organization
 
   included do
-    field :memo_filesize_limit, type: Integer
+    field :memo_quota, type: Integer, default: nil
+    field :memo_filesize_limit, type: Integer, default: nil
     field :memo_reminder, type: Integer, default: 3
     field :memo_email, type: String
 
-    permit_params :memo_filesize_limit, :memo_reminder, :memo_email
+    permit_params :memo_quota, :memo_filesize_limit, :memo_reminder, :memo_email
 
     validates :memo_reminder, numericality: true
     validates :memo_email, email: true, if: ->{ memo_email.present? }

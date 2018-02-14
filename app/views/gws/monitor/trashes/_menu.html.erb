@@ -1,11 +1,3 @@
-<% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <nav class="nav-management-menu">
-    <%= link_to gws_monitor_management_main_path do %>
-      <i class="material-icons md-20">&#xE8B8;</i><%= t("ss.management") %>
-    <% end %>
-  </nav>
-<% end %>
-
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
   <% elsif params[:action] =~ /delete|recover/ %>

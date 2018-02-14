@@ -6,11 +6,11 @@ class @SS_Font
     @set(@size) if @size != 100
 
     vr = $("#ss-medium")
-    vr.html '<a href="#" onclick="return SS_Font.set(100)">' + vr.text() + '</a>'
+    vr.html '<a href="#" onclick="return SS_Font.set(100)">' + vr.html() + '</a>'
     vr = $("#ss-small")
-    vr.html '<a href="#" onclick="return SS_Font.set(false)">' + vr.text() + '</a>'
+    vr.html '<a href="#" onclick="return SS_Font.set(false)">' + vr.html() + '</a>'
     vr = $("#ss-large")
-    vr.html '<a href="#" onclick="return SS_Font.set(true)">' + vr.text() + '</a>'
+    vr.html '<a href="#" onclick="return SS_Font.set(true)">' + vr.html() + '</a>'
 
   @set: (size) ->
     if size == true

@@ -1,0 +1,36 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('gws/memo.links.show_messages'), gws_memo_list_messages_path(list_id: item)) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.show'), action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.edit'), action: :edit, id: item) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.delete'), action: :delete, id: item) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, gws_memo_list_messages_path(list_id: item), class: 'title' %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, { action: :index, category: category.id },
+                  class: 'gws-category-label', style: category_label_css(category) %>
+    <% end %>
+  </span>
+<% end %>
+
+<%= jquery do %>
+  var navi = new Gws_Category_Navi('.gws-category-navi');
+  navi.setBaseUrl('<%= url_for(action: :index, category: 'ID') %>');
+  navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
+<% end %>
+
+<div class="gws-category-navi dropdown">
+  <%= link_to({ action: :index }, { class: 'btn dropdown-toggle' }) do %>
+    <%= @category.try(:trailing_name) || t('gws.category') %>
+    <i class="material-icons md-13">&#xE313;</i>
+  <% end %>
+  <div class="dropdown-menu dropdown-menu--white"></div>
+</div>
+
+<%= render file: 'gws/crud/index' %>

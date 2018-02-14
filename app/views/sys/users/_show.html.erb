@@ -50,6 +50,9 @@
   <dd><%= @item.label :restriction %></dd>
   <% end %>
 
+  <dt><%= @model.t :lock_state %></dt>
+  <dd><%= @item.label :lock_state %></dd>
+
   <% if @item.organization.present? %>
   <dt><%= @model.t :organization_id %></dt>
   <dd><%= @item.organization.name %></dd>

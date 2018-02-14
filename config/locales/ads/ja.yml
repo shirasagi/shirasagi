@@ -37,6 +37,7 @@ ja:
 
   mongoid:
     models:
+      ads/access_log: 広告アクセスログ
       ads/banner: 広告バナー
     attributes:
       ads/addon/category:

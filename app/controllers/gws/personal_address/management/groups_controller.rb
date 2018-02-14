@@ -4,6 +4,8 @@ class Gws::PersonalAddress::Management::GroupsController < ApplicationController
 
   model Webmail::AddressGroup
 
+  navi_view "gws/personal_address/main/navi"
+
   private
 
   def set_crumbs

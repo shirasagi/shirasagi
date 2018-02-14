@@ -1,74 +1,107 @@
 namespace :ss do
   task :models => :environment do
-    models = {}
-    fields = {}
+    @models = {}
+    @fields = {}
+    @errors = []
 
-    Mongoid.models.each do |model|
+    puts "Analysing..."
+
+    Mongoid.models.sort { |a, b| a.to_s <=> b.to_s }.each do |model|
       next if model.to_s =~ /^Mongoid::/
+      puts "- #{model}"
 
       coll = model.collection_name
-      coll_t = I18n.t "mongoid.models.#{model.to_s.underscore}"
-      models[coll] ||= coll_t if coll_t !~ /[\.:\/]/
-      fields[coll] ||= {}
+      @models[coll] ||= nil
+      @fields[coll] ||= {}
 
-      model.fields.each do |name, field|
-        next if fields[coll][name].present?
+      if !@models[coll]
+        coll_t = I18n.t("mongoid.models.#{coll.to_s.singularize.sub('_', '/')}", raise: true) rescue nil
+        coll_t ||= I18n.t("mongoid.models.#{model.to_s.underscore}", raise: true) rescue nil
+        @errors << [model.to_s.underscore] unless coll_t
+        @models[coll] = coll_t
+      end
 
-        if name == "_id"
-          name_t = "ID"
-        else
-          name_t = model.try(:t, name) || name
-          name_t = nil if name_t =~ /[\.:\/]/
+      model.fields.sort.each do |name, field|
+        @fields[coll][name] ||= {}
+        @fields[coll][name][:type] ||= field.type.to_s
+
+        if !@fields[coll][name][:name]
+          name_t = (name == "_id") ? 'ID' : model.t(name) rescue nil
+          name_t = nil if name == name_t
+          @errors << ["#{model.to_s.underscore}.#{name}"] unless name_t
+          @fields[coll][name][:name] = name_t
         end
-
-        type = field.type.to_s
-        meta = nil
-
-        # if type == "SS::Extensions::ObjectIds"
-        #   type = "Array"
-        #   meta = "##{field.metadata[:elem_class]}" if field.metadata[:elem_class]
-        # elsif type == "Object" && name =~ /_id$/
-        #   type = "Integer"
-        #   meta = "##{field.metadata[:class_name]}" if field.metadata[:class_name]
-        # elsif type == "SS::Extensions::Words"
-        #   type = "Array"
-        #   meta = "Words"
-        # end
-
-        fields[coll][name] = "#{type}\t#{name_t}"
       end
     end
 
-    tsv = ""
-    tsv << "Collection\tField\tType\tMemo\n"
-    fields.sort.each do |coll, coll_data|
-      coll_t = models[coll]
+    puts "\n----\nStatistics"
+    puts "- Models: #{@models.size}"
+    puts "- Missing: #{@errors.size}"
 
-      idx = 0
-      coll_data.each do |name, val|
-        if idx == 0
-          tsv << "#{coll}\t"
-        elsif idx == 1
-          tsv << (coll_t.present? ? "(#{coll_t})\t" : "\t")
-        else
-          tsv << "\t"
+    puts "\n----\nOutput"
+    write("#{Rails.root}/tmp/models.md", markdown)
+    write("#{Rails.root}/tmp/models.tsv", tsv, "w:windows-31j")
+    write_pdf("#{Rails.root}/tmp/models.pdf")
+  end
+
+  def output_header
+    "Database Schema v#{SS.version}" # Time.zone.now.strftime('%Y.%m.%d')
+  end
+
+  def markdown
+    header = "# #{output_header}\n\n"
+    header + @models.sort.map do |coll, coll_t|
+      lines = []
+      lines << "## " + [coll, coll_t].compact.join(' / ')
+      lines << ""
+      lines << "|Field|Description|Type|"
+      lines << "|-----|-----------|----|"
+
+      @fields[coll].each { |k, v| lines << "|#{k}|#{v[:name]}|#{v[:type]}|" }
+      lines.join("\n")
+    end.join("\n\n")
+  end
+
+  def tsv
+    header = "#{output_header}\n\n"
+    header + @models.sort.map do |coll, coll_t|
+      lines = []
+      lines << "Collection\tDescription"
+      lines << "#{coll}\t#{coll_t}"
+      lines << ""
+      lines << "Field\tDescription\tType"
+
+      @fields[coll].each { |k, v| lines << "#{k}\t#{v[:name]}\t#{v[:type]}" }
+      lines.join("\n")
+    end.join("\n\n")
+  end
+
+  def write_pdf(filename)
+    require 'thinreports'
+    report = Thinreports::Report.new layout: "#{Rails.root}/lib/fixtures/ss/models"
+
+    @models.sort.map do |coll, coll_t|
+      report.start_new_page
+
+      report.list.header do |header|
+        header.item(:collection_name).value(coll)
+      end
+
+      @fields[coll].each do |key, val|
+        report.list.add_row do |row|
+          row.item(:name).value(key)
+          row.item(:type).value(val[:type])
+          row.item(:description).value(val[:name])
         end
-        idx += 1
-
-        val = val.sub(/^.*::/, "*")
-        tsv << "#{name}\t#{val}\n"
       end
     end
 
-    file = "#{Rails.root}/tmp/models_tsv.txt"
-    puts ">> #{file}"
-    File.write(file, tsv)
+    puts "- #{filename}"
+    report.generate(filename: filename)
+  end
 
-    md = tsv.gsub(/(^|$)/m, '|').gsub(/\t/m, '|')
-    md = md.sub(/\n/, "\n|---|---|---|---|\n").chop
-
-    file = "#{Rails.root}/tmp/models_md.txt"
-    puts ">> #{file}"
-    File.write(file, md)
+  def write(file, data, mode = "w")
+    puts "- #{file}"
+    File.open(file, mode) { |f| f.puts(data) }
   end
 end

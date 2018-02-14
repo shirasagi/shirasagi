@@ -3,10 +3,10 @@ Gws_Tab.renderTabs('.gws-monitor-tabs');
 <% end %>
 
 <div class="gws-tabs gws-monitor-tabs">
-  <%= link_to gws_monitor_management_topics_path, class: "article_management" do %>
-    <span class="tab-name"><%= t('gws/monitor.tabs.article_management') %></span>
+  <%= link_to gws_monitor_management_admins_path, class: "article_management" do %>
+    <span class="tab-name"><%= t('gws/monitor.tabs.management_admin') %></span>
   <% end %>
   <%= link_to gws_monitor_management_trashes_path, class: "trash" do %>
-    <span class="tab-name"><%= t('gws/monitor.tabs.trash') %></span>
+    <span class="tab-name"><%= t('gws/monitor.tabs.management_trash') %></span>
   <% end %>
 </div>

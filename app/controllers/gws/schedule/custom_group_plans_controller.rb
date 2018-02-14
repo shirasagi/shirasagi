@@ -6,6 +6,8 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
 
   before_action :set_group
 
+  navi_view "gws/schedule/main/navi"
+
   private
 
   def set_group

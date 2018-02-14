@@ -1,11 +1,5 @@
 // Portal
 
-.portal-notice {
-  .datetime {
-    margin-left: 5px;
-    color: #888;
-  }
-}
 // portlets
 .gws-portlets {
   margin: -10px;
@@ -96,15 +90,5 @@
   }
   .portlet-html .main-box {
     overflow-y: hidden;
-  }
-}
-
-// management portlets
-.mod-gws-portal-portlet-link-table {
-  td {
-    padding: 6px;
-  }
-  input[type=text] {
-    width: 100%;
   }
 }

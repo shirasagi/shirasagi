@@ -7,6 +7,7 @@ SS::Application.routes.draw do
 
   namespace "sns", path: ".u" do
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }, as: :cur_user
+    get "connection" => "connection#index", as: :connection
 
     resource :user_profile, as: :cur_user_profile, only: [:show]
     resource :user_account, as: :cur_user_account
@@ -18,6 +19,8 @@ SS::Application.routes.draw do
       get :resize, on: :member
       post :resize, on: :member
     end
+    get "download_job_files/:filename" => "download_job_files#index",
+      filename: %r{[^\/]+}, format: false
 
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
@@ -35,6 +38,8 @@ SS::Application.routes.draw do
       get :thumb, on: :member
       get :download, on: :member
     end
+    get "download_job_files/:filename(/:name)" => "download_job_files#index",
+      filename: %r{[^\/]+}, name: %r{[^\/]+}, format: false, as: :download_job_files
 
     namespace "apis" do
       resources :temp_files, concerns: :deletion do

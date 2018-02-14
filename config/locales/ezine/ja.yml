@@ -61,6 +61,9 @@ ja:
 
   mongoid:
     models:
+      ezine/column: メルマガ項目
+      ezine/entry: メルマガ購読依頼
+      ezine/member: メルマガ購読者
       ezine/page: メルマガ記事
     attributes:
       ezine/node/page:

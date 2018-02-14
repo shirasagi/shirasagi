@@ -2,40 +2,38 @@ require 'spec_helper'
 
 describe "gws_monitor_topics", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:item) { create :gws_monitor_topic, :gws_monitor_topics }
-  let(:item2) { create :gws_monitor_topic, :gws_monitor_topics_item2 }
-  let(:item3) { create :gws_monitor_topic, :gws_monitor_topics_item3 }
-  let(:index_path) { gws_monitor_topics_path site, gws_user }
-  let(:new_path) { new_gws_monitor_topic_path site, gws_user }
+  let(:g1) { create(:gws_group, name: "#{site.name}/g-#{unique_id}") }
+  let(:g2) { create(:gws_group, name: "#{site.name}/g-#{unique_id}") }
+  let(:r1) { create(:gws_role_admin) }
+  let(:u1) { create(:gws_user, group_ids: [g1.id], gws_role_ids: [r1.id]) }
+  let(:item1) do
+    create(
+      :gws_monitor_topic, attend_group_ids: [g1.id, g2.id], state: 'public', article_state: 'open', spec_config: 'my_group',
+      answer_state_hash: { g1.id.to_s => "preparation", g2.id.to_s => "preparation" }
+    )
+  end
+  let(:item2) do
+    create(
+      :gws_monitor_topic, attend_group_ids: [g1.id, g2.id], state: 'public', article_state: 'open',
+      spec_config: 'other_groups_and_contents', answer_state_hash: { g1.id.to_s => "preparation", g2.id.to_s => "preparation" }
+    )
+  end
 
-  context "with auth", js: true do
-    before { login_gws_user }
-
-    it "#index" do
-      item
-      visit index_path
-      wait_for_ajax
-      expect(page).to have_content(item.name)
-    end
+  context "with auth" do
+    before { login_user u1 }
 
     it "#index display only my group" do
-      item2
-      visit index_path
-      wait_for_ajax
+      item1
+      visit gws_monitor_topics_path(site)
+      expect(page).to have_content(item1.name)
       expect(page).to have_content('回答状況(0/1)')
     end
 
     it "#index display all groups" do
-      item3
-      visit index_path
-      wait_for_ajax
+      item2
+      visit gws_monitor_topics_path(site)
+      expect(page).to have_content(item2.name)
       expect(page).to have_content('回答状況(0/2)')
-    end
-
-    it "#new" do
-      visit new_path
-      wait_for_ajax
-      expect(page).to have_content('基本情報')
     end
   end
 end

@@ -6,9 +6,15 @@ function SS_TreeNavi(selector) {
 
 SS_TreeNavi.prototype.render = function(url) {
   var _this = this;
+  var loading= $(SS.loading);
+
   $.ajax({
     url: url,
+    beforeSend: function() {
+      _this.el.append(loading);
+    },
     success: function(data) {
+      loading.remove();
       _this.el.append(_this.renderItems(data.items));
       _this.registerEvents();
     }
@@ -17,10 +23,16 @@ SS_TreeNavi.prototype.render = function(url) {
 
 SS_TreeNavi.prototype.renderChildren = function(item) {
   var _this = this;
+  var loading= $(SS.loading);
+
   $.ajax({
     url: $(item).find('.item-mark').attr('href'),
     data: 'only_children=1',
+    beforeSend: function() {
+      item.after(loading);
+    },
     success: function(data) {
+      loading.remove();
       item.after(_this.renderItems(data.items));
       _this.registerEvents();
     }

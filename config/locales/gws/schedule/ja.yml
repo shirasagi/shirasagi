@@ -2,7 +2,6 @@ ja:
   gws/schedule:
     reminder: リマインダー
     private_plan: 予定あり
-    private_plan_mark: "[秘] "
     loading: 読み込み中
     no_plan: 予定はありません
     search_plans: 予定を検索
@@ -47,12 +46,18 @@ ja:
     options:
       allday:
         allday: 終日
-      repeat_type:
-        none: 繰り返しなし
-        daily: 毎日
-        weekly: 毎週
-        monthly: 毎月
-        yearly: 毎年
+      attendance_state:
+        unknown: 未確認
+        attendance: 参加
+        absence: 不参加
+      approval_state:
+        unknown: 未確認
+        approve: 承認
+        deny: 拒否
+      approved_state:
+        request: 承認待ち
+        approve: 承認済み
+        deny: 差し戻し
       interval:
         daily: 日
         weekly: 週
@@ -61,16 +66,24 @@ ja:
       repeat_base:
         date: 日付
         wday: 曜日
+      repeat_type:
+        none: 繰り返しなし
+        daily: 毎日
+        weekly: 毎週
+        monthly: 毎月
+        yearly: 毎年
       schedule_attachment_state:
         allow: 許可する
         deny: 許可しない
       schedule_drag_drop_state:
         allow: 許可する
         deny: 許可しない
-      attendance_state:
-        unknown: 未確認
-        attendance: 参加
-        absence: 不参加
+      priority:
+        "1": 最高
+        "2": 高
+        "3": 標準
+        "4": 低
+        "5": 最低
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
@@ -78,6 +91,12 @@ ja:
       index: 予約状況の確認
       free: 予約可能
       exist: 予約不可
+    import:
+      result: 結果
+      entry: 登録可能
+      exist: 登録済み
+      error: エラー
+      saved: "%{count}件の予定をインポートしました。"
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
@@ -139,13 +158,15 @@ ja:
         - 3年6ヶ月
   modules:
     gws/schedule: スケジュール
+    gws/schedule/todo: TODO
     addons:
       gws/schedule/facility: 設備予約
       gws/schedule/facility_column_values: 設備追加情報
       gws/schedule/repeat: 繰り返し
       gws/schedule/todo: ToDo
       gws/schedule/comments: コメント
-      gws/schedule/attendances: 出欠確認
+      gws/schedule/attendance: 出欠確認
+      gws/schedule/approval: 承認
       gws/schedule/reports: レポート
       gws/schedule/group_setting: スケジュール
 
@@ -173,10 +194,13 @@ ja:
   mongoid:
     models:
       gws/schedule/plan: スケジュール
+      gws/schedule/todo: ToDo
       gws/schedule/category: 種別
       gws/schedule/holiday: 休日
+      gws/schedule/todo: ToDo
       gws/schedule/comment: コメント
       gws/schedule/attendance: 出欠
+      gws/schedule/approval: 承認
     errors:
       models:
         gws/schedule/plan:
@@ -190,6 +214,8 @@ ja:
         end_on: 終了日
         allday: 終日
         term: 日時
+      gws/schedule/priority:
+        priority: 重要度
       gws/schedule/plan: &plan
         repeat_plan_id: 繰り返し
         category_id: 種別
@@ -208,6 +234,7 @@ ja:
         color: 表示色
       gws/addon/schedule/repeat:
         <<: *repeat_plan
+        repeat_plan_id: 繰り返し予定
         repeat_start: 繰り返し - 開始日
         repeat_end: 繰り返し - 終了日
         wdays: 繰り返し曜日
@@ -234,12 +261,20 @@ ja:
         name: ToDo
         term: 期限
         todo_state: 状態
-      gws/addon/schedule/attendances:
+        deleted: 削除日時
+        discussion_forum_id: 電子会議室
+      gws/addon/schedule/attendance:
         attendance_check_state: 出欠確認
         attendances: 出欠情報
+      gws/addon/schedule/approval:
+        approval_state: 承認状態
+        approval_member_ids: 承認者
+        approvals: 承認情報
       gws/schedule/attendance:
         attendance_state: 出欠
-      gws/schedule/facility_column_values:
+      gws/schedule/approval:
+        approval_state: 承認
+      gws/addon/schedule/facility_column_values:
         main_facility_id: 主設備
         facility_column_values: 設備追加情報
 
@@ -251,6 +286,8 @@ ja:
         - スケジュールの日時か日を入力します。
         -
         - 「終日」をチェックすると、終日にわたって実施するスケジュールを入力することができ、「終日」にチェックが入っている場合、スケジュールの日を入力します。
+    gws/schedule/priority:
+      priority: 重要度を選択します。
     gws/schedule/plan: &tooltip_plan
       category_id:
         - スケジュール種別を選択します。
@@ -317,7 +354,7 @@ ja:
       term:
         - タスクの期限日を入力します。
 
-    gws/addon/schedule/attendances:
+    gws/addon/schedule/attendance:
       attendance_check_state:
         - 出欠確認を有効にするかしないかを選択してください。
 

@@ -4,21 +4,22 @@ class Gws::Memo::Filter
   include Gws::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name 'gws_memo_messages'
-
-  # 一括処理件数
-  APPLY_PER = 100
+  set_permission_name 'private_gws_memo_messages', :edit
 
   field :name, type: String
-  field :from, type: String
   field :subject, type: String
+  field :body, type: String
   field :action, type: String
   field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
 
+  embeds_ids :from_members, class_name: "Gws::User"
+  embeds_ids :to_members, class_name: "Gws::User"
+
   belongs_to :folder, class_name: 'Gws::Memo::Folder'
 
-  permit_params :name, :from, :subject, :action, :folder, :state, :order
+  permit_params :name, :subject, :body, :action, :folder, :state, :order
+  permit_params from_member_ids: [], to_member_ids: []
 
   validates :name, presence: true
   validates :action, presence: true
@@ -41,10 +42,9 @@ class Gws::Memo::Filter
   private
 
   def validate_conditions
-    %w(from subject).each do |key|
-      return true if send(key).present?
+    if from_member_ids.blank? && to_member_ids.blank? && subject.blank? && body.blank?
+      errors.add :base, I18n.t('gws/memo/filter.errors.blank_conditions')
     end
-    errors.add :base, I18n.t('gws/memo/filter.errors.blank_conditions')
   end
 
   public
@@ -57,9 +57,9 @@ class Gws::Memo::Filter
     %w(move trash).map { |m| [I18n.t(m, scope: 'gws/memo/filter.options.action'), m] }
   end
 
-  def folder_options(user, site)
-    Gws::Memo::Folder.site(site).allow(:read, user, site: site).map do |folder|
-      [ERB::Util.html_escape(folder.name).html_safe, folder.id]
+  def folder_options(user)
+    Gws::Memo::Folder.user(user).map do |folder|
+      [ ERB::Util.html_escape(folder.name).html_safe, folder.id ]
     end
   end
 
@@ -72,27 +72,38 @@ class Gws::Memo::Filter
   end
 
   def match?(message)
-    if from
-      from_users = message.from.keys.map { |uid| Gws::User.find(uid) }
-      from_users.each do |from_user|
-        return true if from_user.long_name.include?(from)
-      end
-    end
-
-    if subject && message.display_subject.include?(subject)
-      return true
-    end
-
+    return true if subject_match?(message)
+    return true if body_match?(message)
+    return true if from_match?(message)
+    return true if to_match?(message)
     false
+  end
+
+  def subject_match?(message)
+    return false if subject.blank?
+    message.display_subject.include?(subject)
+  end
+
+  def body_match?(message)
+    return false if body.blank?
+    if message.format == "html"
+      message.html.to_s.include?(body)
+    else
+      message.text.to_s.include?(body)
+    end
+  end
+
+  def from_match?(message)
+    return false if from_member_ids.blank?
+    from_member_ids.include?(message.user_id)
+  end
+
+  def to_match?(message)
+    return false if to_member_ids.blank?
+    (to_member_ids & (message.to_member_ids + message.cc_member_ids)).present?
   end
 
   def path
     (action == 'trash') ? 'INBOX.Trash' : folder.id.to_s
-  end
-
-  class << self
-    def allow(action, user, opts = {})
-      super(action, user, opts).where(user_id: user.id)
-    end
   end
 end

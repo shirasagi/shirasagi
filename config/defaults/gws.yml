@@ -28,11 +28,13 @@ production: &production
     # - model: portlet model (required)
     #   name: portlet name
     #   limit: items size
+    #   category_id: category id
     #   grid:
     #     col: position x (1..4)
     #     row: position y (1..n)
     #     size_x: width (1..4)
     #     size_y: height (1..4)
+    #   reminder_filter: future or all
     user_portlets:
       - model: schedule
         grid:
@@ -41,6 +43,7 @@ production: &production
           size_x: 4
           size_y: 2
       - model: reminder
+        reminder_filter: future
       - model: monitor
       - model: circular
       - model: board
@@ -120,6 +123,9 @@ production: &production
       - "_id"
       - "id"
     max_division: 3
+
+  attendance:
+    max_break: 3
 
 test:
   <<: *production

@@ -4,7 +4,7 @@ class Gws::Memo::Signature
   include SS::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name 'gws_memo_messages'
+  set_permission_name 'private_gws_memo_messages', :edit
 
   field :name, type: String
   field :text, type: String
@@ -47,10 +47,6 @@ class Gws::Memo::Signature
   end
 
   class << self
-    def allow(action, user, opts = {})
-      super(action, user, opts).where(user_id: user.id)
-    end
-
     def default_sign(user)
       sign = self.user(user).default.first
       sign ? sign.text.presence : nil

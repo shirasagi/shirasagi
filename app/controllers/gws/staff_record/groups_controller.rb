@@ -5,7 +5,7 @@ class Gws::StaffRecord::GroupsController < ApplicationController
 
   model Gws::StaffRecord::Group
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/main/navi"
 
   before_action :set_year
 

@@ -46,9 +46,11 @@
         var event = events[i];
         if (event.className.indexOf('fc-holiday') !== -1) continue;
 
-        var evEl = $('<a class="fc-event fc-event-point"></a>').text(event.title);
+        var cont = $('<span class="fc-content"></span>').text(event.title);
+        var evEl = $('<a class="fc-event fc-event-point"></a>').append(cont);
+
+        evEl.addClass(event.className.join(' '));
         evEl.css({ 'color': event.textColor, 'background-color': event.backgroundColor });
-        //evEl.addClass(event.className.join(' '));
 
         evEl.bind('click', function(ev) {
           var eventNo = $(this).data('eventNo');

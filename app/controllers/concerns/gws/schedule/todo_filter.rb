@@ -8,16 +8,21 @@ module Gws::Schedule::TodoFilter
 
     before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active]
     before_action :set_selected_items, only: [:destroy_all, :disable_all, :finish_all, :revert_all, :active_all]
+    before_action :set_skip_default_group
   end
 
   private
 
   def pre_params
-    super.keep_if { |key| %i[facility_ids].exclude?(key) }
+    super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(member_ids: [@cur_user.id])
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def set_skip_default_group
+    @skip_default_group = true
   end
 
   def render_finish_all(result, opts = {})
@@ -46,7 +51,7 @@ module Gws::Schedule::TodoFilter
   end
 
   def show
-    raise '403' if !@item.allowed?(:read, @cur_user, site: @cur_site) && !@item.member?(@cur_user) && !@item.readable(@cur_user)
+    raise '403' if !@item.allowed?(:read, @cur_user, site: @cur_site) && !@item.member?(@cur_user) && !@item.readable?(@cur_user)
     render
   end
 
@@ -54,7 +59,7 @@ module Gws::Schedule::TodoFilter
     if @item.member?(@cur_user) || @item.readable?(@cur_user)
       render file: 'popup', layout: false
     else
-      render file: 'popup_hidden', layout: false
+      render file: 'app/views/gws/schedule/plans/popup_hidden', layout: false
     end
   end
 

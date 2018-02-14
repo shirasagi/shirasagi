@@ -10,7 +10,7 @@ class Gws::Monitor::Topic
   include Gws::Addon::Monitor::Release
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
-  include Gws::Monitor::BrowsingState
+  # include Gws::Monitor::BrowsingState
 
   readable_setting_include_custom_groups
 
@@ -18,7 +18,13 @@ class Gws::Monitor::Topic
   field :article_state, type: String, default: 'open'
   field :deleted, type: DateTime
 
+  field :notice_state, type: String
+  field :notice_at, type: DateTime
+
+  permit_params :notice_state
+
   before_validation :set_answer_state_hash
+  before_validation :set_notice_at
 
   validates :deleted, datetime: true
   validates :article_state, inclusion: { in: %w(open closed) }
@@ -32,12 +38,15 @@ class Gws::Monitor::Topic
   after_destroy :remove_zip
 
   scope :custom_order, ->(key) {
+    key ||= 'due_date_desc'
     if key.start_with?('created_')
-      where({}).order_by(created: key.end_with?('_asc') ? 1 : -1)
+      reorder(created: key.end_with?('_asc') ? 1 : -1)
     elsif key.start_with?('updated_')
-      where({}).order_by(descendants_updated: key.end_with?('_asc') ? 1 : -1)
-    else
-      where({})
+      reorder(descendants_updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('released_')
+      reorder(released: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('due_date_')
+      reorder(due_date: key.end_with?('_asc') ? 1 : -1)
     end
   }
 
@@ -59,9 +68,36 @@ class Gws::Monitor::Topic
     where("answer_state_hash.#{group.id}" => { '$in' => %w(question_not_applicable answered) })
   end
 
+  scope :and_noticed, ->(now = Time.zone.now) do
+    lte(notice_at: now)
+  end
+
   def article_state_options
     %w(open closed).map do |v|
       [I18n.t("gws/monitor.options.article_state.#{v}"), v]
+    end
+  end
+
+  def notice_state_options
+    # [
+    #   [I18n.t('gws/monitor.options.notice_state.post'), '0'],
+    #   [I18n.t('gws/monitor.options.notice_state.post_one_day_after'), '-1'],
+    #   [I18n.t('gws/monitor.options.notice_state.post_two_days_after'), '-2'],
+    #   [I18n.t('gws/monitor.options.notice_state.post_three_days_after'), '-3'],
+    #   [I18n.t('gws/monitor.options.notice_state.post_four_days_after'), '-4'],
+    #   [I18n.t('gws/monitor.options.notice_state.post_five_days_after'), '-5'],
+    #   [I18n.t('gws/monitor.options.notice_state.due_date_one_day_ago'), '1'],
+    #   [I18n.t('gws/monitor.options.notice_state.due_date_two_days_ago'), '2'],
+    #   [I18n.t('gws/monitor.options.notice_state.due_date_three_days_ago'), '3'],
+    #   [I18n.t('gws/monitor.options.notice_state.due_date_four_days_ago'), '4'],
+    #   [I18n.t('gws/monitor.options.notice_state.due_date_five_days_ago'), '5'],
+    #   [I18n.t('gws/monitor.options.notice_state.hide'), '-999']
+    # ]
+    %w(
+      from_now 1_day_from_released 2_days_from_released 3_days_from_released 4_days_from_released 5_days_from_released
+      1_day_before_due_date 2_days_before_due_date 3_days_before_due_date 4_days_before_due_date 5_days_before_due_date
+    ).map do |v|
+      [I18n.t("gws/monitor.options.notice_state.#{v}"), v]
     end
   end
 
@@ -102,17 +138,19 @@ class Gws::Monitor::Topic
     created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
   end
 
-  def subscribed_groups
-    return Gws::Group.none if new_record?
-    return Gws::Group.none if attend_group_ids.blank?
-
-    conds = [{ id: { '$in' => attend_group_ids.flatten } }]
-
-    Gws::Group.where('$and' => [ { '$or' => conds } ])
-  end
+  # def subscribed_groups
+  #   return Gws::Group.none if new_record?
+  #   return Gws::Group.none if attend_group_ids.blank?
+  #
+  #   conds = [{ id: { '$in' => attend_group_ids.flatten } }]
+  #
+  #   Gws::Group.where('$and' => [ { '$or' => conds } ])
+  # end
 
   def sort_options
-    %w(updated_desc updated_asc created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+    %w(due_date_desc due_date_asc released_desc released_asc updated_desc updated_asc created_desc created_asc).map do |k|
+      [I18n.t("gws/monitor.options.sort.#{k}"), k]
+    end
   end
 
   def comment(groupid)
@@ -141,7 +179,7 @@ class Gws::Monitor::Topic
     CSV.generate do |data|
       data << I18n.t('gws/monitor.csv')
 
-      subscribed_groups.each do |group|
+      attend_groups.each do |group|
         post = comment(group.id).last
         data << [
             id,
@@ -185,6 +223,13 @@ class Gws::Monitor::Topic
     Fs.rm_rf self.zip_path if File.exist?(self.zip_path)
   end
 
+  def due_date_over?(group, now = Time.zone.now)
+    answered_state = answer_state_hash[group.id.to_s]
+    return if %w(answered question_not_applicable).include?(answered_state)
+    return if due_date.blank?
+    due_date < now
+  end
+
   private
 
   def set_descendants_updated_with_released
@@ -207,5 +252,24 @@ class Gws::Monitor::Topic
     end
 
     self.answer_state_hash = new_hash.to_h
+  end
+
+  def set_notice_at
+    case notice_state
+    when 'from_now'
+      self.notice_at = ::Time::EPOCH
+    when *%w(1_day_from_released 2_days_from_released 3_days_from_released 4_days_from_released 5_days_from_released)
+      term, = notice_state.split('_')
+      self.notice_at = (released || created) + Integer(term).days
+    when *%w(1_day_before_due_date 2_days_before_due_date 3_days_before_due_date 4_days_before_due_date 5_days_before_due_date)
+      term, = notice_state.split('_')
+      if due_date.present?
+        self.notice_at = due_date - Integer(term).days
+      else
+        self.notice_at = nil
+      end
+    else
+      self.notice_at = nil
+    end
   end
 end

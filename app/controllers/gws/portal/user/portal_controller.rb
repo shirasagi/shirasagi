@@ -7,6 +7,8 @@ class Gws::Portal::User::PortalController < ApplicationController
 
   before_action :set_portal_setting
 
+  navi_view "gws/portal/main/navi"
+
   private
 
   def set_crumbs
@@ -14,7 +16,7 @@ class Gws::Portal::User::PortalController < ApplicationController
     if @portal_user == @cur_user
       @crumbs << [t("modules.gws/portal"), gws_portal_user_path(user: @portal_user)]
     else
-      @crumbs << [t("gws/portal.user_portal"), gws_portal_setting_users_path]
+      #@crumbs << [t("gws/portal.user_portal"), gws_portal_setting_users_path]
       @crumbs << [@portal_user.name, gws_portal_user_path(user: @portal_user)]
     end
   end
@@ -31,7 +33,7 @@ class Gws::Portal::User::PortalController < ApplicationController
   public
 
   def show
-    if @portal_user == @cur_user
+    if @portal.my_portal?
       @sys_notices = Sys::Notice.and_public.
         gw_admin_notice.
         page(1).per(5)
@@ -39,6 +41,12 @@ class Gws::Portal::User::PortalController < ApplicationController
       @notices = Gws::Notice.site(@cur_site).and_public.
         readable(@cur_user, site: @cur_site).
         page(1).per(5)
+
+      @monitors = Gws::Monitor::Topic.site(@cur_site).topic.
+        and_public.
+        and_attended(@cur_user, site: @cur_site, group: @cur_group).
+        and_unanswered(@cur_group).
+        and_noticed
     end
 
     @links = Gws::Link.site(@cur_site).and_public.

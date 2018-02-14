@@ -19,11 +19,17 @@ class Gws::SharedAddress::Group
 
   class << self
     def search(params)
-      criteria = where({})
-      return criteria if params.blank?
+      all.search_name(params).search_keyword(params)
+    end
 
-      criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
-      criteria
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.search_text(params[:name])
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name)
     end
   end
 end

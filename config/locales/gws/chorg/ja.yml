@@ -12,8 +12,8 @@ ja:
 
   mongoid:
     models:
-      gws/chorg/revision: 変更内容
-      gws/chorg/chageset: リビジョン
+      gws/chorg/revision: リビジョン
+      gws/chorg/changeset: 変更内容
       gws/chorg/run_params: 組織変更実行オプション
     attributes:
       gws/chorg/run_params:

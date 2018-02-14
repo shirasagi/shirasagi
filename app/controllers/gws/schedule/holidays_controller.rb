@@ -3,14 +3,15 @@ class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::CrudFilter
   include Gws::Schedule::CalendarFilter
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/schedule/main/navi"
 
   model Gws::Schedule::Holiday
 
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/schedule') + '/' + t("mongoid.models.gws/schedule/holiday"), gws_schedule_holidays_path]
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [t('gws/schedule.navi.holiday'), gws_schedule_holidays_path]
   end
 
   def fix_params

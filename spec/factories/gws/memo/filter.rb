@@ -5,7 +5,7 @@ FactoryGirl.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    from { "from-#{unique_id}" }
+    from_member_ids { [gws_user.id] }
     subject { "subject-#{unique_id}" }
     action { 'trash' }
   end

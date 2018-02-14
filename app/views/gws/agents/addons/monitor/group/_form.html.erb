@@ -1,6 +1,6 @@
 <dl class="see gws-addon-monitor-group">
   <dt><%= t("modules.addons.gws/monitor/group") %><%= @model.tt :group_name %></dt>
-  <% if @item.state == 'closed' || @item.id == 0 %>
+  <% if @item.new_record? %>
     <dd>
     <%= f.hidden_field "attend_group_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
@@ -12,15 +12,15 @@
     <table class="index ajax-selected">
       <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
-      <% if @item.state == 'closed' || @item.id == 0 %>
-        <% @item.subscribed_groups.each do |group| %>
+      <% if @item.new_record? %>
+        <% @item.attend_groups.each do |group| %>
           <tr data-id="<%= group.id %>">
             <td><%= f.hidden_field "attend_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
       <% else %>
-        <% @item.subscribed_groups.each do |group| %>
+        <% @item.attend_groups.each do |group| %>
           <tr data-id="<%= group.id %>">
             <td><%= f.hidden_field "attend_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn", style: "display: none" %></td>

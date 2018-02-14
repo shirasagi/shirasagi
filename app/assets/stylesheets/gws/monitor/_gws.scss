@@ -1,0 +1,13 @@
+.gws-monitor-due-date-over {
+  margin-right: 8px;
+  color: #d00;
+  font-weight: bold;
+  &:before {
+    font-family: 'Material Icons';
+    font-size: 108%;
+    content: '\E001';
+
+    display: inline;
+    vertical-align: -3px;
+  }
+}

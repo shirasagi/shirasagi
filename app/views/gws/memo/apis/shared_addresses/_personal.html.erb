@@ -1,0 +1,58 @@
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <% @inherit_keys.each do |key| %>
+      <%= hidden_field_tag key, params[key] %>
+    <% end %>
+
+    <dl class="see">
+      <dt><%= @model.t :address_group_id %></dt>
+      <dd>
+        <%= f.select :group, @groups.map {|c| [c.name, c.id]},
+                     { selected: params[:s].try(:[], :group), include_blank: true },
+                     { class: "submit-on-change" } %>
+      </dd>
+
+      <dt><%= t "ss.keyword" %></dt>
+      <dd>
+        <%= f.text_field :keyword, value: params.dig(:s, :keyword) %>
+        <%= f.submit  t("ss.buttons.search"), class: :btn %>
+      </dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+    <% end %>
+    <th class="name"><%= Gws::User.t :name %></th>
+    <th><%= "#{@model.t :name} (#{t('modules.gws/shared_address')})" %></th>
+    <th><%= @model.t :email %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @items.each do |item| %>
+    <% if item.member %>
+      <tr class="list-item" data-id="<%= item.member_id %>" data-name="<%= item.member.long_name %>" data-email="<%= item.email_address %>" data-address="<%= item.email %>">
+        <% if @multi %>
+          <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.member_id %>" /></td>
+        <% end %>
+        <td><%= link_to item.member.long_name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= item.name %></td>
+        <td><%= item.email %></td>
+      </tr>
+    <% else %>
+      <tr class="list-item">
+        <% if @multi %>
+          <td class="checkbox"></td>
+        <% end %>
+        <td><%= t("gws/memo/message.links.deleted") %></td>
+        <td><%= item.name %></td>
+        <td><%= item.email %></td>
+      </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>

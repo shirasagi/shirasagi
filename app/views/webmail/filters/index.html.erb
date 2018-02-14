@@ -6,6 +6,7 @@
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="state"><%= item.label :state %></span>
   <span class="order"><%= item.order %></span>
+  <span class="summary"><%= item.conditions_summary.first %></span>
 <% end %>
 
 <%= render file: "ss/crud/index" %>

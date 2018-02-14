@@ -12,12 +12,13 @@ SS::Application.routes.draw do
   concern :admins do
     match :disable, on: :member, via: [:get, :post]
     post :download, on: :collection
+    post :disable_all, on: :collection
   end
 
   gws 'circular' do
     get '/' => redirect { |p, req| "#{req.path}/-/posts" }, as: :main
 
-    scope(path: ':category') do
+    scope(path: ':category', defaults: { category: '-' }) do
       resources :posts, concerns: [:posts], except: [:new, :create, :edit, :update, :destroy]
       resources :admins, concerns: [:admins], except: [:destroy]
       resources :trashes, except: [:new, :create, :edit, :update] do

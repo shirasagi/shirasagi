@@ -7,21 +7,16 @@ SS::Application.routes.draw do
   end
 
   gws "faq" do
-    resources :topics, concerns: [:deletion] do
-      namespace :parent, path: ":parent_id", parent_id: /\d+/ do
-        resources :comments, controller: '/gws/faq/comments', concerns: [:deletion]
-      end
-      get :categories, on: :collection
-      post :read, on: :member
-    end
+    get '/' => redirect { |p, req| "#{req.path}/-/-/topics" }, as: :main
 
     # with category
-    scope(path: ":category", as: "category") do
+    scope path: ':mode/:category' do
       resources :topics, concerns: [:deletion] do
         namespace :parent, path: ":parent_id", parent_id: /\d+/ do
           resources :comments, controller: '/gws/faq/comments', concerns: [:deletion]
         end
         get :categories, on: :collection
+        post :read, on: :member
       end
     end
 

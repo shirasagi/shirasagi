@@ -1,14 +1,31 @@
 class @Gws_Memo_Message
   @render: ->
-    $("#addon-gws-agents-addons-group_permission").hide()
-    $(".addon-body .header-options").hide()
-
     $(".list-head .search").on "click", ->
       $(".gws-memo-search").animate({ height: "toggle" }, "fast")
 
     $(".gws-memo-search .reset").on "click", ->
       $(".gws-memo-search input[type=text]").val("")
       $(".gws-memo-search .search").click()
+
+    $('.cc-bcc-label').click ->
+      $('.gws-addon-memo-member .cc-bcc').animate({ height: 'toggle' }, 'fast')
+      return false
+
+    $(".send-mdn,.ignore-mdn").on "click", ->
+      return false if $(this).hasClass('disabled')
+
+      $.ajax
+        url: $(this).attr("href")
+        method: 'POST'
+        dataType: 'json'
+        data:
+          _method: 'put'
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        beforeSend: ->
+          $(".send-mdn,.ignore-mdn").addClass('disabled')
+        success: (data) ->
+          SS.notice(data.notice)
+          $(".request-mdn-notice").remove()
 
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->

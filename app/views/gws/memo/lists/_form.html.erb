@@ -1,0 +1,29 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :sender_name %><%= @model.tt :sender_name %></dt>
+  <dd><%= f.text_field :sender_name %></dd>
+
+  <dt><%= @model.t :signature %><%= @model.tt :signature %></dt>
+  <dd><%= f.text_area :signature %></dd>
+
+  <dt><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
+  <dd>
+    <%= f.hidden_field 'category_ids[]', value: '', class: 'hidden-ids' %>
+    <%= link_to t('gws.apis.categories.index'), gws_memo_apis_categories_path, class: 'ajax-box' %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Memo::Category.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.categories.each do |item| %>
+        <tr data-id="<%= item.id %>">
+          <td><%= f.hidden_field 'category_ids[]', value: item.id, id: nil %> <%= item.name %></td>
+          <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -7,10 +7,10 @@ module Gws::Share::DescendantsFileInfo
     field :descendants_total_file_size, type: Integer
 
     validate :validate_attached_file_size
-    after_save_files :set_file_info
+    #after_save_files :set_file_info
 
     after_save :update_folder_descendants_file_info
-    after_destroy_files :update_folder_descendants_file_info
+    #after_destroy_files :update_folder_descendants_file_info
   end
 
   def total_file_size
@@ -27,6 +27,15 @@ module Gws::Share::DescendantsFileInfo
 
   def readable_deleted_files_count(user, site)
     files.readable(user, site: site).deleted.count
+  end
+
+  def update_folder_descendants_file_info
+    # return unless files
+    files_count, total_file_size = folder_file_info(self)
+    self.set(
+      descendants_files_count: files_count,
+      descendants_total_file_size: total_file_size
+    ) if Gws::Share::Folder.where(_id: self._id).compact.present?
   end
 
   private
@@ -56,15 +65,6 @@ module Gws::Share::DescendantsFileInfo
     files_count, total_file_size = folder_file_info(self)
     self.descendants_files_count = files_count
     self.descendants_total_file_size = total_file_size
-  end
-
-  def update_folder_descendants_file_info
-    # return unless files
-    files_count, total_file_size = folder_file_info(self)
-    self.set(
-      descendants_files_count: files_count,
-      descendants_total_file_size: total_file_size
-    ) if Gws::Share::Folder.where(_id: self._id).compact.present?
   end
 end
 

@@ -1,0 +1,91 @@
+<%
+  return unless Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site)
+
+  break_times = SS.config.gws.attendance['max_break'].times.to_a.select do |i|
+    @cur_site["attendance_break_time_state#{i + 1}"] == 'show'
+  end
+
+  date = Time.zone.now
+  time_card = @portlet.find_attendance_time_card(@portal, @cur_user, date.beginning_of_month)
+  return if time_card.blank?
+
+  record = time_card.records.where(date: date.beginning_of_day).first
+%>
+
+<% render_time = proc do |field_name| %>
+  <% time = record.try(field_name) %>
+  <% history = record.try(:find_latest_history, field_name) %>
+  <tr data-field-name="<%= field_name %>">
+    <th><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
+    <td class="time"><%= @portlet.format_attendance_time(date, time) %></td>
+    <td class="reason">
+      <% if history.present? && history.reason.present? %>
+        <%= history.reason %>
+      <% end %>
+    </td>
+    <% if time_card.unlocked? %>
+    <td class="operation">
+      <% if time.present? %>
+        <button name="edit" type="button" class="btn"><%= t('ss.buttons.edit') %></button>
+      <% else %>
+        <button name="punch" type="button" class="btn"><%= t('gws/attendance.buttons.punch') %></button>
+      <% end %>
+    </td>
+    <% end %>
+  </tr>
+<% end %>
+
+<div class="main-box gws-attendance">
+  <div class="portlet-title"><%= @portlet.name %></div>
+
+  <div class="header">
+    <%= I18n.l(Time.zone.now.to_date, format: :full) %>
+    <%= link_to t('ss.buttons.download'), download_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}"), class: 'btn' %>
+  </div>
+  <% if time_card.locked? %>
+    <div><%= t('gws/attendance.already_locked') %></div>
+  <% end %>
+
+  <div class="today-time-card">
+    <table>
+      <thead>
+      <th></th>
+      <th><%= t('gws/attendance.edit_cell.time') %></th>
+      <th><%= t('gws/attendance.edit_cell.reason') %></th>
+      <% if time_card.unlocked? %>
+      <th></th>
+      <% end %>
+      </thead>
+      <tbody>
+      <% render_time.call('enter') %>
+      <% render_time.call('leave') %>
+      <% break_times.each do |i| %>
+        <% render_time.call("break_enter#{i + 1}") %>
+        <% render_time.call("break_leave#{i + 1}") %>
+      <% end %>
+      <tr data-field-name="memo">
+        <th><%= Gws::Attendance::Record.t(:memo) %></th>
+        <td class="memo" colspan="2"><%= record.try(:memo) %></td>
+        <% if time_card.unlocked? %>
+        <td class="operation">
+          <button name="edit" type="button" class="btn"><%= t('ss.buttons.edit') %></button>
+        </td>
+        <% end %>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= jquery do %>
+  var $portlet = new Gws_Attendance_Portlet(
+    '.gws-attendance',
+    {
+      ref: <%== request.fullpath.to_json %>,
+      punchUrl: <%== "#{gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}")}/:TYPE".to_json %>,
+      editUrl: <%== time_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}", day: format('%02d', date.day), type: ':TYPE', ref: request.fullpath).to_json %>,
+      confirmMessage: <%== t('gws/attendance.confirm.punch').to_json %>,
+      successMessage: <%== t('gws/attendance.notice.punched').to_json %>
+    }
+  );
+<% end %>

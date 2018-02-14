@@ -1,6 +1,8 @@
 class Gws::QuestionManagementController < ApplicationController
   include Gws::BaseFilter
 
+  navi_view "gws/qna/main/navi"
+
   private
 
   def set_crumbs

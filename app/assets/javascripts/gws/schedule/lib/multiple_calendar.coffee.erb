@@ -14,7 +14,7 @@ class @Gws_Schedule_Multiple_Calendar
 
   @defaultParams: (opts) ->
     defaultView: 'basicWeek'
-    header: { left: 'today prev next title', right: 'withAbsence withTodo basicWeek timelineDay' },
+    header: { left: 'today prev next title', right: 'withAbsence withTodo basicWeek,timelineDay' },
     slotDuration: '01:00'
     slotLabelFormat: 'H'
     views:
@@ -28,7 +28,7 @@ class @Gws_Schedule_Multiple_Calendar
         maxTime: '22:00'
 
   @controllerParams: (opts)->
-    header: { left: 'today prev next title', right: 'withAbsence withTodo basicWeek timelineDay' },
+    header: { left: 'today prev next title', right: 'withAbsence withTodo basicWeek,timelineDay' },
     eventSources: []
     eventAfterAllRender: (view)->
       if view.name == 'basicWeek'
@@ -48,6 +48,7 @@ class @Gws_Schedule_Multiple_Calendar
     $.extend true, params, opts
     $(selector).fullCalendar(params)
     Gws_Schedule_Calendar.renderInitialize(selector, init)
+    Gws_Schedule_Calendar.overrideAddLink(selector)
 
     controller = $(selector)
     controller.find('.fc-today-button').click ->

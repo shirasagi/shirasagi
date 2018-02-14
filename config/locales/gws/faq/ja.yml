@@ -108,6 +108,12 @@ ja:
         mode: 表示形式
         permit_comment: コメント
         severity: 重要度
+        topic_id: トピック
+        parent_id: 親投稿
+        browsed_users_hash: 既読ユーザー
+        descendants_updated: トピック内更新日時
+        descendants_files_count: トピック内添付ファイル数
+        descendants_total_file_size: トピック内添付ファイル容量
       gws/faq/topic:
         name: 質問タイトル
       gws/faq/post:

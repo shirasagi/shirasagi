@@ -113,26 +113,8 @@ li.webmail-accounts {
     top: 6px;
     right: 10px;
   }
-  .quota {
+  .ss-quota-bar {
     margin: 0 10px 10px;
-    border: 1px solid #ccc;
-    background-color: #ddd;
-    @include background(linear-gradient(top, #ddd, #eee));
-    line-height: 20px;
-  }
-  .label {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-  }
-  .usage {
-    height: 20px;
-    background-color: #6d6;
-    @include background(linear-gradient(top, #dfd, #4b4));
-  }
-  .usage.over-threshold {
-    background-color: #ff0f0f;
-    @include background(linear-gradient(top, #ffcccc, #ff0f0f));
   }
 }
 .webmail-quota-alert {
@@ -190,6 +172,7 @@ li.webmail-accounts {
 .webmail-mails {
   .list-item {
     padding: 5px 8px;
+    display: block;
   }
   .list-item-head {
     font-weight: bold;
@@ -258,6 +241,7 @@ li.webmail-accounts {
     }
     .from {
       float: left;
+      line-height: 1.4;
       @include mb {
         float: none;
         margin-bottom: 10px;
@@ -265,21 +249,32 @@ li.webmail-accounts {
     }
     .date {
       text-align: right;
+      line-height: 1.4;
     }
   }
-  .addresses {
+  .address-header {
     padding: 5px 15px;
     border-top: 1px solid #e4e4e4;
     background-color: #fafafa;
-    .address {
-      padding: 3px 0;
-      .label {
-        float: left;
-        color: #888;
-      }
-      .value {
-        padding: 0 0 0 45px;
-      }
+  }
+  .address-field {
+    padding: 3px 0;
+    .label {
+      float: left;
+      color: #888;
+    }
+    .value {
+      padding: 0 0 0 45px;
+    }
+  }
+  .address-item {
+    margin: 0 10px 0 0;
+    &.clickable:hover {
+      text-decoration: underline;
+    }
+    .material-icons {
+      margin: 2px 1px 0 0;
+      vertical-align: top;
     }
   }
   .request-mdn-notice {
@@ -287,6 +282,7 @@ li.webmail-accounts {
     padding: 5px 15px;
     border-bottom: 1px solid #969696;
     background-color: #cecece;
+    line-height: 25px;
     .action {
       float: right;
     }
@@ -347,16 +343,19 @@ li.webmail-accounts {
   }
   .selected-address {
     @include clear;
+    margin-top: 10px;
     cursor: pointer;
-    min-height: 12px;
     span {
       float: left;
-      background: #f2f2f2;
-      padding: 2px 2px 4px 4px;
-      margin: 0px 4px 4px 0px;
-      border: 1px solid #d0d0d0;
-      border-radius: 3px;
       max-width: 500px;
+      margin: 0px 4px 4px 0px;
+      padding: 2px 5px;
+      border: 1px solid #bbccdd;
+      border-radius: 3px;
+      background: #ddeeff;
+      &:hover {
+        background: #d7e7f7;
+      }
     }
     .invalid-address {
       border-bottom: dotted 2px red;
@@ -405,29 +404,19 @@ li.webmail-accounts {
 .webmail-address-field.see {
   padding: 0;
   .ajax-box {
-    float: left;
+    //float: left;
   }
-  .addresses {
-    @include clear;
+  .address-groups {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: start;
+  }
+  .address-group {
+    padding: 0 10px 5px 0;
+  }
+  .address-group-label {
     display: block;
-    tbody, td {
-      display: inline;
-      float: left;
-    }
-    tr {
-      display: inline-block;
-      float: left;
-      margin: 4px 10px 6px 0;
-      td:first-of-type {
-        padding: 2px 0;
-        border-bottom: 1px dashed #aaa;
-        color: #048;
-      }
-    }
-    .deselect {
-      margin-left: 4px;
-      padding: 2px 4px;
-    }
+    padding: 0 0 2px 0;
   }
 }
 .webmail-addon-mail-file {

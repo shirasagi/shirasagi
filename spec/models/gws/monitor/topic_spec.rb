@@ -10,7 +10,7 @@ RSpec.describe Gws::Monitor::Topic, type: :model, dbscope: :example, tmpdir: tru
     end
 
     context "default params" do
-      subject { create(:gws_monitor_topic, :attend_group_ids) }
+      subject { create(:gws_monitor_topic, attend_group_ids: gws_user.group_ids) }
       it { expect(subject.errors.size).to eq 0 }
     end
 
@@ -21,7 +21,7 @@ RSpec.describe Gws::Monitor::Topic, type: :model, dbscope: :example, tmpdir: tru
   end
 
   describe "#to_csv" do
-    subject { create(:gws_monitor_topic, :attend_group_ids) }
+    subject { create(:gws_monitor_topic, attend_group_ids: gws_user.group_ids) }
     it { expect(subject.to_csv).to be_truthy }
   end
 end

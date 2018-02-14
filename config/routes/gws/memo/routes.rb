@@ -19,7 +19,6 @@ SS::Application.routes.draw do
         post :unset_star_all
         post :move_all
         put :move
-        post :forward
       end
       member do
         get :trash
@@ -27,10 +26,23 @@ SS::Application.routes.draw do
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply
+        get :reply_all
+        get :forward
+        get :ref
+        get :print
+        put :send_mdn
+        put :ignore_mdn
       end
     end
 
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
+
+    namespace "apis" do
+      get "shared_addresses" => "shared_addresses#index"
+      get "personal_addresses" => "personal_addresses#index"
+      get "messages" => "messages#index"
+      get "categories" => "categories#index"
+    end
 
     scope '/management' do
       get '/' => redirect { |p, req| "#{req.path}/folders" }, as: :management_main
@@ -38,6 +50,19 @@ SS::Application.routes.draw do
       resources :filters, concerns: :deletion
       resources :signatures, concerns: :deletion
       resource :forwards, only: [:show, :edit, :update]
+      resources :lists, concerns: :deletion do
+        resources :messages, controller: 'list_messages', concerns: :deletion do
+          match :publish, on: :member, via: %i[get post]
+          get :seen, on: :member
+        end
+      end
+      resources :categories, concerns: :deletion
+
+      get 'export_messages' => 'export_messages#index'
+      put 'export_messages' => 'export_messages#export'
+      get 'start_export_messages' => 'export_messages#start_export'
+      get 'import_messages' => 'import_messages#index'
+      put 'import_messages' => 'import_messages#import'
     end
   end
 end
