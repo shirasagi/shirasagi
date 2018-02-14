@@ -1,0 +1,7 @@
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminder_main_path, class: "icon-reminder" %></h2>
+  <h3><%= link_to t('gws/portal.options.reminder_filter.future'), gws_reminder_items_path(mode: '-') %></h3>
+  <h3><%= link_to t('gws/portal.options.reminder_filter.all'), gws_reminder_items_path(mode: 'all') %></h3>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>
