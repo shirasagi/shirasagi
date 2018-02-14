@@ -25,6 +25,7 @@ ja:
     keyword: キーワード
     quota: 容量
     encoding: 文字コード
+    text_zoom: 文字サイズ
 
     views:
       login/login:
@@ -142,6 +143,7 @@ ja:
       uploading: アップロードしています。
       lock_user_all: 利用を停止しました。
       unlock_user_all: 利用停止を解除しました。
+      text_zoomed: "文字サイズを %{count} に設定しました。"
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
@@ -277,6 +279,10 @@ ja:
       user_lock_state:
         unlocked: 利用可
         locked: 利用停止
+      text_zoom:
+        zoom_in: '+'
+        zoom_out: '-'
+        reset: 標準
 
     tasks:
       started: 開始しました。

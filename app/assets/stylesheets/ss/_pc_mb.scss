@@ -331,6 +331,26 @@ td {
           }
         }
       }
+
+      .text-zoom {
+        padding: 8px 10px;
+
+        .zoom-btn {
+          display: inline-block;
+          text-align: center;
+          cursor: pointer;
+          &:hover {
+            color: $orange;
+            background: #eee;
+          }
+        }
+        .zoom-in, .zoom-out {
+          width: 20px;
+        }
+        .zoom-reset {
+          padding: 0 10px;
+        }
+      }
     }
     .gws-bookmark {
       padding: 12px 12px;
