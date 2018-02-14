@@ -1123,6 +1123,10 @@ td {
       content: ' ';
     }
   }
+  .content-navi-separator {
+    margin: 10px -10px;
+    border-top: 1px solid #f2f2f2;
+  }
 }
 #content-navi + .index, #content-navi ~ .content-main {
   float: right;

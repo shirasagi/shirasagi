@@ -194,3 +194,12 @@ a.gws-category-label:hover {
   padding-top: 20px;
   border-top: 1px solid #eee;
 }
+
+// Content Navi
+.gws-content-navi-links {
+  display: flex;
+  .link-item {
+    flex: 1;
+    text-align: center;
+  }
+}

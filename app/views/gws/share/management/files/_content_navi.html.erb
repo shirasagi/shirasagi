@@ -31,6 +31,22 @@
       <%= link_to t('gws/share.all'), gws_share_management_files_path %>
     </div>
     <div class="tree-navi"></div>
+
+    <% if @folder %>
+      <div class="content-navi-title" style="margin-top: 10px; border-top: 1px solid #f2f2f2;"><%= t('ss.quota') %></div>
+      <div class="ss-quota-bar">
+        <div class="label"><%= @folder.quota_label %></div>
+        <div class="usage <%= @folder.quota_over? ? 'over-threshold' : '' %>" style="width: <%= @folder.quota_percentage %>%"></div>
+      </div>
+
+      <div class="content-navi-separator"></div>
+      <div class="gws-content-navi-links">
+        <%= link_to t('gws/share.navi.management'), gws_share_management_folder_files_path(folder: @folder), class: 'link-item' %>
+        <% if Gws::Share::File.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('gws/share.navi.folder'), gws_share_folder_path(id: @folder), class: 'link-item' %>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 <% end %>
 

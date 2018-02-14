@@ -14,6 +14,7 @@ ja:
       disable: 削除済みに移動する
       active: 削除を取り消す
       file_download: ダウンロード
+      folder_setting: フォルダー情報
       confirm:
         disable: 削除済みにしてよろしいですか？
         active: 削除を取り消してよろしいですか？
@@ -27,9 +28,10 @@ ja:
       compressed:
         subject: ダウンロード準備完了のお知らせ
     navi:
+      file: ファイル
       folder: フォルダー
       category: カテゴリー
-      management: 削除済み一覧
+      management: ゴミ箱
 
   modules:
     gws/share: 共有ファイル
