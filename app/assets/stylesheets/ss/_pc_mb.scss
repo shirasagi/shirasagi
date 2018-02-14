@@ -151,26 +151,31 @@ td {
   }
   h2 {
     padding: 10px;
-    border-bottom: solid 1px #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+    a {
+      float: right;
+    }
   }
   ul {
     margin: 0;
     li {
       padding: 15px;
-      border-bottom: solid 1px #f2f3f4;
-      &.list-item:hover {
-        background: #ebebeb;
+      border-bottom: 1px solid  #f2f2f2;
+      &.list-item {
+        &.unseen {
+          background-color: #f9e9e3;
+        }
+        &:hover {
+          background: #fbeee8;
+        }
       }
     }
   }
   a { color: #f25a38 !important; }
-  .list-item.seen {
-    background: #f4f4f4;
-  }
-  a.ajax-popup-notice,.ajax-popup-notice+a {
+  .more-all {
     display: inline-block;
     float: left;
-    width: 50%;
+    width: 100%;
     padding: 10px 0;
     background: #f2f2f2;
     text-align: center;
@@ -237,18 +242,6 @@ td {
   margin-right: 20px;
   @include mb {
     margin-right: 0;
-  }
-}
-// -------------------------------------------------------------------------------------------------
-// memo gws-memo-notices
-.gws-memo-notices {
-  .list-item {
-    &.seen {
-      background-color: #f4f4f4;
-    }
-    &.seen:hover, &.unseen:hover {
-      background-color: #ebebeb;
-    }
   }
 }
 // -------------------------------------------------------------------------------------------------
@@ -2509,9 +2502,16 @@ form .CodeMirror {
     border-color: #e8e8e8;
     background-color: #f4f4f4;
   }
+  // .unseen {
+  //   border-color: #f2f2f2;
+  //   background-color: #f9e9e3;
+  // }
   .unseen:hover, .seen:hover {
     background: #ebebeb;
   }
+  // .unseen:hover, .seen:hover {
+  //   background: #fbeee8;
+  // }
   .icon {
     float: left;
     width: 28px;
