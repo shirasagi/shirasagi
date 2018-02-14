@@ -417,11 +417,12 @@ td {
     .dropdown-menu {
       top: 100%;
       right: 0;
-      min-width: 200px;
+      min-width: 260px;
       margin: 0;
       padding: 5px 0px;
       border: $border-gray4;
       background: $white;
+      @include mb { left: 0; }
       li {
         display: block;
         list-style: none;
@@ -437,24 +438,33 @@ td {
           }
         }
       }
-
       .text-zoom {
-        padding: 8px 10px;
-
-        .zoom-btn {
+        @include clear;
+        padding: 5px 0;
+        border-top: 1px solid  #f2f2f2;
+        border-bottom: 1px solid  #f2f2f2;
+        label {
           display: inline-block;
-          text-align: center;
-          cursor: pointer;
-          &:hover {
-            color: $orange;
-            background: #eee;
-          }
+          padding: 8px 10px;
         }
-        .zoom-in, .zoom-out {
-          width: 20px;
+        .wrap {
+          float: right;
+          padding: 2px 10px;
+        }
+        .zoom-btn {
+          @include btn;
+          cursor: pointer;
+        }
+        .zoom-out {
+          border-right: none;
+          @include border-radius(3px 0 0 3px);
         }
         .zoom-reset {
-          padding: 0 10px;
+          @include border-radius(0);
+        }
+        .zoom-in {
+          border-left: none;
+          @include border-radius(0 3px 3px 0);
         }
       }
     }
