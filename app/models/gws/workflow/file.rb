@@ -3,7 +3,7 @@ class Gws::Workflow::File
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::Reminder
+  #include Gws::Addon::Reminder
   include ::Workflow::Addon::Approver
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -118,14 +118,6 @@ class Gws::Workflow::File
 
   def destroyable?(user, opts)
     allowed?(:delete, user, opts) && !workflow_requested?
-  end
-
-  # override Gws::Addon::Reminder#reminder_url
-  def reminder_url(*args)
-    ret = super
-    options = ret.extract_options!
-    options[:state] = 'all'
-    [ *ret, options ]
   end
 
   private

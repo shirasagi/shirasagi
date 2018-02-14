@@ -18,7 +18,13 @@
 
         <div class="info">
           <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
-          <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
+
+          <% url = instance_exec(&item.url_lazy) %>
+          <% if url %>
+            <%= link_to item.name, url, class: "title" %>
+          <% else %>
+            <%= item.name %>
+          <% end %>
 
           <div class="meta">
             <% if item.date.present? %>
