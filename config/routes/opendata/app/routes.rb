@@ -50,6 +50,7 @@ SS::Application.routes.draw do
 
     match "search_app/(index.:format)" => "public#index", cell: "nodes/app/search_app", via: [:get, :post]
     get "search_app/tags" => "public#index_tags", cell: "nodes/app/search_app"
+    get "search_app/search" => "public#search", cell: "nodes/app/search_app"
     get "search_app/rss.xml" => "public#rss", cell: "nodes/app/search_app"
   end
 

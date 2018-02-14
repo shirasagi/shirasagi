@@ -82,6 +82,7 @@ SS::Application.routes.draw do
       via: [:get, :post]
     match "search_dataset/(index.:format)" => "public#index", cell: "nodes/dataset/search_dataset", via: [:get, :post]
     get "search_dataset/tags" => "public#index_tags", cell: "nodes/dataset/search_dataset"
+    get "search_dataset/search" => "public#search", cell: "nodes/dataset/search_dataset"
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/dataset/search_dataset"
   end
 

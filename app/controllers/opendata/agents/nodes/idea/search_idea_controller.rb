@@ -43,6 +43,11 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
     render "opendata/agents/nodes/idea/search_idea/tags", layout: "opendata/idea_aggregation"
   end
 
+  def search
+    @model = Opendata::Idea
+    @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
+  end
+
   def rss
     @items = pages.limit(100)
     render_rss @cur_node, @items

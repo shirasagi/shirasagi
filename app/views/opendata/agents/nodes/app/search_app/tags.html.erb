@@ -1,10 +1,10 @@
 <%= jquery do %>
-$('.search-app-tag a').click(function() {
+$('.search-opendata-tag a').click(function() {
   $('select[name="s[tag]"]').val($(this).find('.name').text());
   $.colorbox.close();
 });
 <% end %>
-<div class='search-app-tag'>
+<div class='search-opendata-tag'>
   <% @tags.each do |data| %>
   <article>
     <header>

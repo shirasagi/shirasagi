@@ -36,10 +36,7 @@ class Opendata::App
   validates :license, presence: true
   validate :validate_appurl
 
-  define_model_callbacks :generate_search_file
-
   before_save :seq_filename, if: ->{ basename.blank? }
-  after_save :generate_search_file, if: ->{ @db_changes }
 
   default_scope ->{ where(route: "opendata/app") }
 
@@ -100,24 +97,6 @@ class Opendata::App
     zip_filename
   end
 
-  def app_search_html_path(site = nil, node = nil)
-    site ||= self.site
-    node ||= Opendata::Node::SearchApp.site(site).and_public.first
-    if node.present?
-      filename = "#{node.filename}/app_search.html"
-    else
-      filename = 'app_search.html'
-    end
-    "#{Rails.root}/private/sites/#{site.host.split(//).join('/')}/_/#{filename}"
-  end
-
-  def generate_search_file
-    return false unless serve_static_file?
-    run_callbacks :generate_search_file do
-      Opendata::Agents::Tasks::Node::SearchAppController.new.generate_search_file(self)
-    end
-  end
-
   private
 
   def validate_filename
@@ -138,10 +117,6 @@ class Opendata::App
   end
 
   class << self
-    def app_search_html_path(site, node = nil)
-      self.new.app_search_html_path(site, node)
-    end
-
     def to_app_path(path)
       suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
                   /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }

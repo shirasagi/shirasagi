@@ -44,10 +44,7 @@ class Opendata::Idea
   permit_params :text, :point, :commented, :total_comment, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []
   permit_params :issue, :data, :note
 
-  define_model_callbacks :generate_search_file
-
   before_save :seq_filename, if: ->{ basename.blank? }
-  after_save :generate_search_file, if: ->{ @db_changes }
 
   default_scope ->{ where(route: "opendata/idea") }
 
@@ -93,24 +90,6 @@ class Opendata::Idea
     super
   end
 
-  def idea_search_html_path(site = nil, node = nil)
-    site ||= self.site
-    node ||= Opendata::Node::SearchIdea.site(site).and_public.first
-    if node.present?
-      filename = "#{node.filename}/idea_search.html"
-    else
-      filename = 'idea_search.html'
-    end
-    "#{Rails.root}/private/sites/#{site.host.split(//).join('/')}/_/#{filename}"
-  end
-
-  def generate_search_file
-    return false unless serve_static_file?
-    run_callbacks :generate_search_file do
-      Opendata::Agents::Tasks::Node::SearchIdeaController.new.generate_search_file(self)
-    end
-  end
-
   private
 
   def validate_filename
@@ -122,10 +101,6 @@ class Opendata::Idea
   end
 
   class << self
-    def idea_search_html_path(site, node = nil)
-      self.new.idea_search_html_path(site, node)
-    end
-
     def to_idea_path(path)
       suffix = %w(/point.html /point/members.html /comment/show.html /comment/add.html /comment/delete.html
                   /dataset/show.html /app/show.html).find { |suffix| path.end_with? suffix }

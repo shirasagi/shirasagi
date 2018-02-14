@@ -1,8 +1,8 @@
-<% file = @model.dataset_search_html_path(@cur_site, @cur_node) %>
+<% file = "#{@cur_node.path}/search.html" %>
 <% if Fs.exists?(file) %>
   <%== Fs.read(file) %>
 <% else %>
-  <%= render partial: 'search' %>
+  <%= render file: 'opendata/agents/nodes/dataset/search_dataset/search' %>
 <% end %>
 
 <%= paginate @items %>

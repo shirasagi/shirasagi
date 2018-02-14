@@ -177,7 +177,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
 
     it "#tag_input" do
       visit index_path
-      fill_in "s_tag", with: "tag5"
+      select "tag5"
       click_button "検索"
 
       page_idea = Opendata::Idea.find_by(tags: 'tag5')
@@ -194,7 +194,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
     it "keyword and tag input" do
       visit index_path
       fill_in "s_keyword", with: "text3"
-      fill_in "s_tag", with: "tag5"
+      select "tag5"
       select "すべてのキーワードを含む"
       click_button "検索"
 
