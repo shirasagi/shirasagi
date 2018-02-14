@@ -12,6 +12,7 @@ module Gws::Memo::NotificationFilter
     return if response.code !~ /^3/
 
     users = @item.subscribed_users
+    users = users.nin(id: @cur_user.id) if @cur_user
     return if users.blank?
 
     Gws::Memo::Notifier.deliver!(
