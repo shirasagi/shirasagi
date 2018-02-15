@@ -486,6 +486,44 @@ td {
         }
       }
     }
+    .gws-contrast {
+      padding: 8px 10px;
+      border-bottom: 1px solid  #f2f2f2;
+
+      .caret {
+        float: right;
+      }
+
+      &:hover {
+        cursor: pointer;
+        color: $orange;
+        background: #eee;
+        * {
+          cursor: pointer;
+        }
+      }
+    }
+    .gws-contrast-loading, .gws-contrast-error {
+      padding: 8px 10px;
+    }
+    
+    #user-contrast-menu {
+      .user-contrast-menu-header {
+        border-bottom: 1px solid  #f2f2f2;
+        font-weight: bold;
+        text-align: center;
+
+        .caret {
+          float: left;
+        }
+      }
+
+      .gws-contrast-item {
+        display: block;
+        padding: 8px 10px;
+        cursor: pointer;
+      }
+    }
   }
   .sp-menu-button {
     display: none;
