@@ -15,11 +15,11 @@
   <% end %>
 
   <% if @cur_site.menu_todo_visible? %>
-    <h2><%= link_to @cur_site.menu_todo_label || t('modules.gws/schedule/todo'), gws_schedule_todo_main_path, class: "icon-todo" %></h2>
+    <h2><%= link_to @cur_site.menu_todo_label || t('modules.gws/todo'), gws_schedule_todo_main_path, class: "icon-todo" %></h2>
   <% end %>
 
   <% if @cur_site.menu_reminder_visible? %>
-    <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
+    <h2><%= link_to @cur_site.menu_reminder_label || t('modules.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>

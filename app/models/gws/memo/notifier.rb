@@ -1,7 +1,7 @@
 class Gws::Memo::Notifier
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_group, :cur_user, :to_users, :item, :item_title, :item_text
+  attr_accessor :action, :cur_site, :cur_group, :cur_user, :to_users, :item, :item_title, :item_text
 
   class << self
     def deliver!(opts)
@@ -127,12 +127,10 @@ class Gws::Memo::Notifier
     message.cur_site = cur_site
     message.cur_user = cur_user
     message.member_ids = to_users.pluck(:id)
-
     message.send_date = Time.zone.now
-
-    message.subject = I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
+    message.subject = I18n.t("gws_memo_notification.#{i18n_key}.#{action}.subject", name: item_title, default: item_title)
     message.format = 'text'
-    message.text = I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: item_text, default: item_text)
+    message.text = I18n.t("gws_memo_notification.#{i18n_key}.#{action}.text", name: item_title, text: item_text, default: item_text)
 
     message.save!
   end
