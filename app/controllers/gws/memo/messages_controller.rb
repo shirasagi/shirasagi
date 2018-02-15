@@ -6,13 +6,13 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :deny_with_auth
 
-  before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
   before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy, :toggle_star]
   #before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_folders, only: [:index, :recent]
   before_action :set_cur_folder, only: [:index]
+  before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
 
   navi_view "gws/memo/messages/navi"
 
@@ -55,7 +55,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def apply_filters
-    @model.site(@cur_site).unfiltered(@cur_user).each do |message|
+    @model.site(@cur_site).folder(@cur_folder, @cur_user).unfiltered(@cur_user).each do |message|
       message.apply_filters(@cur_user, @cur_site)
     end
   end
