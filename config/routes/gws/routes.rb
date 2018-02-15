@@ -51,6 +51,7 @@ SS::Application.routes.draw do
     resource :user_form, concerns: [:deletion] do
       resources :user_form_columns, concerns: :deletion, path: '/columns'
     end
+    resources :contrasts, concerns: [:deletion]
 
     namespace "apis" do
       get "groups" => "groups#index"

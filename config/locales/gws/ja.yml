@@ -134,6 +134,7 @@ ja:
     edit_private_gws_links: リンク集の編集（所有）
     delete_other_gws_links: リンク集の削除（全て）
     delete_private_gws_links: リンク集の削除（所有）
+    edit_gws_contrasts: コントラストの管理
 
   modules:
     gws: 標準機能
@@ -187,6 +188,7 @@ ja:
       gws/user_setting: ユーザー設定
       gws/user_form: 拡張情報
       gws/user_form_data: 拡張データ
+      gws/contrast: コントラスト
     attributes:
       gws/model/category:
         model: モデル
@@ -427,6 +429,13 @@ ja:
         message_notification: メッセージ通知
         email_notification: メール通知
         notification_noticed: 通知日時
+      gws/contrast:
+        name: 名前
+        css_class_name: 英字名
+        order: 並び順
+        status: ステータス
+        text_color: 文字色
+        color: 背景色
 
   tooltip:
     gws/addon/reminder:
@@ -543,6 +552,21 @@ ja:
         - 通知した日時を表示しています。
         - 通知日時をクリアすることで、再度、通知が送信されるようになります。
         - お知らせを編集後、再度、通知を送りたい場合、クリアしてください。
+    gws/contrast:
+      name:
+        - 名前を入力します。
+      css_class_name:
+        - 英字名を入力します。
+        - 英数字で一意な名前を入力してください。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      state:
+        - 公開、非公開を選択します。
+      text_color:
+        - 文字色を選択します。
+      color:
+        - 背景色を選択します。
 
   activemodel:
     models:
