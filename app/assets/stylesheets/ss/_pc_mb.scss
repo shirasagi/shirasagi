@@ -486,6 +486,23 @@ td {
         }
       }
     }
+    .gws-contrast {
+      padding: 8px 10px;
+      border-bottom: 1px solid  #f2f2f2;
+
+      .caret {
+        float: right;
+      }
+
+      &:hover {
+        cursor: pointer;
+        color: $orange;
+        background: #eee;
+      }
+    }
+    .gws-contrast-loading {
+      padding: 8px 10px;
+    }
   }
   .sp-menu-button {
     display: none;
