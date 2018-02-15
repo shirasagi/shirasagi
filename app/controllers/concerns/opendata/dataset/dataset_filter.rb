@@ -14,7 +14,9 @@ module Opendata::Dataset::DatasetFilter
   end
 
   def aggregate_areas(limit)
-    counts = pages.aggregate_array(:area_ids, limit: limit).map { |c| [c["id"], c["count"]] }.to_h
+    counts = pages.aggregate_array(:area_ids, limit: limit)
+    @areas_popped = counts.popped?
+    counts = counts.map { |c| [c["id"], c["count"]] }.to_h
 
     areas = []
     Opendata::Node::Area.site(@cur_site).and_public.order_by(order: 1).map do |item|

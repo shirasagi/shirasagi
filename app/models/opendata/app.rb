@@ -127,6 +127,31 @@ class Opendata::App
       end
     end
 
+    def tag_options
+      pipes = []
+      pipes << { "$match" => { "route" => "opendata/app" } }
+      pipes << { "$unwind" => "$tags" }
+      pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
+      options = self.collection.aggregate(pipes).map do |data|
+        tag = data["_id"]
+        ["#{tag}(#{data['count']})", tag]
+      end
+      options = options.take(Opendata::Common.options_limit)
+      options << [I18n.t('ss.links.more'), I18n.t('ss.links.more')] if options.count > Opendata::Common.options_limit
+      options
+    end
+
+    def license_options
+      pipes = []
+      pipes << { "$match" => { "route" => "opendata/app" } }
+      pipes << { "$unwind" => "$license" }
+      pipes << { "$group" => { "_id" => "$license", "count" => { "$sum" => 1 } } }
+      self.collection.aggregate(pipes).map do |data|
+        license = data["_id"]
+        [license, license]
+      end
+    end
+
     def sort_options
       [
         [I18n.t("opendata.sort_options.released"), "released"],

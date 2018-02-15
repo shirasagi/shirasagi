@@ -28,6 +28,17 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     @items = pages.page(params[:page]).per(@cur_node.limit || 20)
   end
 
+  def index_tags
+    @cur_node.layout = nil
+    @tags = pages.aggregate_array :tags
+    render "opendata/agents/nodes/dataset/search_dataset/tags", layout: "opendata/dataset_aggregation"
+  end
+
+  def search
+    @model = Opendata::Dataset
+    @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
+  end
+
   def rss
     @items = pages.limit(100)
     render_rss @cur_node, @items

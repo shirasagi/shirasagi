@@ -108,6 +108,20 @@ class Opendata::Idea
       path[0..(path.length - suffix.length - 1)] + '.html'
     end
 
+    def tag_options
+      pipes = []
+      pipes << { "$match" => { "route" => "opendata/idea" } }
+      pipes << { "$unwind" => "$tags" }
+      pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
+      options = self.collection.aggregate(pipes).map do |data|
+        tag = data["_id"]
+        ["#{tag}(#{data['count']})", tag]
+      end
+      options = options.take(Opendata::Common.options_limit)
+      options << [I18n.t('ss.links.more'), I18n.t('ss.links.more')] if options.count > Opendata::Common.options_limit
+      options
+    end
+
     def sort_options
       [
         [I18n.t("opendata.sort_options.released"), "released"],

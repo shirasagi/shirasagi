@@ -1,0 +1,23 @@
+<%= jquery do %>
+$('.search-opendata-tag a').click(function() {
+  $('select[name="s[tag]"]').val($(this).find('.name').text());
+  $.colorbox.close();
+});
+<% end %>
+<div class='search-opendata-tag'>
+  <% @tags.each do |data| %>
+  <article>
+    <header>
+      <h2>
+        <a>
+          <span class="name"><%= data["id"] %></span>
+          <span class="count">(<%= data["count"] %>)</span>
+        </a>
+      </h2>
+    </header>
+  </article>
+  <% end %>
+  <% if @tags.count == 0 %>
+    <div><%= I18n.t("opendata.labels.not_data") %></div>
+  <% end %>
+</div>
