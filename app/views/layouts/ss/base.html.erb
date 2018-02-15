@@ -107,10 +107,9 @@
         </ul>
         <% if @ss_mode == :gws %>
           <ul id="user-contrast-menu" class="dropdown-menu cascade-sub-menu">
-            <li>
+            <li class="user-contrast-menu-header">
               <a href="#user-main-dropdown" class="cascade-back">
-                <i class="material-icons">&#xE314;</i>
-                <label><%= t('mongoid.models.gws/contrast') %></label>
+                <i class="material-icons caret">&#xE314;</i><%= t('mongoid.models.gws/contrast') %>
               </a>
             </li>
             <li>
@@ -123,6 +122,8 @@
             var contrast = new Gws_Contrast({
               siteId: <%== @cur_site.id.to_json %>,
               url: <%== gws_apis_contrasts_path(format: 'json').to_json %>,
+              defaultContrast: <%== t('gws.default_contrast').to_json %>,
+              notice: <%== t('gws.notice.contrast_changed', name: ':name').to_json %>,
               loadError: <%== t('mongoid.errors.models.gws/contrast.load_error').to_json %>
             });
 

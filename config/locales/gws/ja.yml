@@ -8,6 +8,7 @@ ja:
     user_setting: ポータル設定
     organization_addresses: 組織アドレス帳
     question_management: 質問管理
+    default_contrast: 既定のコントラスト
     roles:
       admin: 管理者
       user: 一般ユーザー
@@ -97,6 +98,7 @@ ja:
       delay_download_with_message: |-
         ファイル数が多い、またはファイル容量が大きいためバックグランドでファイルを準備します。
         ダウンロードの準備ができましたらメッセージでお知らせします。
+      contrast_changed: 'コントラストを「%{name}」に変更しました。'
     errors:
       allowed_domains_only_root: はルートグループにのみ設定できます。
 

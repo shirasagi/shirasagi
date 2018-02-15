@@ -27,16 +27,23 @@ Gws_Contrast.prototype.render = function() {
 
   this.$el.on('click', '.gws-contrast-item', function(ev) {
     var $this = $(this);
-    _this.changeContrast($this.data('text-color'), $this.data('color'));
-    Gws_Contrast.setContrastId(_this.opts.siteId, $this.data('id'));
+    var id = $this.data('id');
+    if (id === 'default') {
+      _this.removeContrast($this.data('text-color'), $this.data('color'));
+      Gws_Contrast.removeContrastId(_this.opts.siteId);
+    } else {
+      _this.changeContrast($this.data('text-color'), $this.data('color'));
+      Gws_Contrast.setContrastId(_this.opts.siteId, id);
+    }
+    SS.notice(_this.opts.notice.replace(':name', $this.text()));
 
-    ev.preventDefault();
     ev.stopPropagation();
   });
 };
 
 Gws_Contrast.prototype.loadContrasts = function() {
   if (this.$el.data('loadedAt')) {
+    this.checkActiveContrast();
     return;
   }
 
@@ -61,12 +68,41 @@ Gws_Contrast.prototype.showError = function(xhr) {
 };
 
 Gws_Contrast.prototype.renderContrasts = function(data) {
+  this.renderContrast('default', this.opts.defaultContrast);
+
   var _this = this;
   $.each(data, function() {
-    var $a = $('<a />', { class: 'gws-contrast-item', data: { id: this._id['$oid'], 'text-color': this.text_color, color: this.color } });
-    $a.html(this.name)
-    _this.$el.append($('<li/>').html($a));
+    _this.renderContrast(this._id['$oid'], this.name, this.color, this.text_color);
   });
+
+  this.checkActiveContrast();
+};
+
+Gws_Contrast.prototype.renderContrast = function(id, name, color, textColor) {
+  var dataAttrs = { id: id };
+  if (color) {
+    dataAttrs.color = color;
+  }
+  if (textColor) {
+    dataAttrs.textColor = textColor;
+  }
+
+  var $input = $('<input/>', { type: 'radio', name: 'gws-contrast-item', value: id });
+  var $label = $('<label/>', { class: 'gws-contrast-item', data: dataAttrs });
+  $label.append($input);
+  $label.append(' ' + name);
+
+  this.$el.append($('<li/>').append($label));
+};
+
+Gws_Contrast.prototype.checkActiveContrast = function() {
+  var contrastId = Gws_Contrast.getContrastId(this.opts.siteId);
+  if (! contrastId) {
+    $('input[name="gws-contrast-item"]').val(['default']);
+    return;
+  }
+
+  $('input[name="gws-contrast-item"]').val([contrastId]);
 };
 
 Gws_Contrast.prototype.changeContrast = function(color, textColor) {
@@ -76,4 +112,12 @@ Gws_Contrast.prototype.changeContrast = function(color, textColor) {
   }
 
   this.$style.html(this.template.replace(/:color/g, color).replace(/:background/g, textColor));
+};
+
+Gws_Contrast.prototype.removeContrast = function() {
+  if (! this.$style) {
+    return;
+  }
+
+  this.$style.html('');
 };
