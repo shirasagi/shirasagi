@@ -1,14 +1,62 @@
-function Gws_Contrast() {
+function Gws_Contrast(opts) {
+  this.opts = opts;
+  this.$el = $('#user-contrast-menu');
+
+  this.render();
 }
 
 Gws_Contrast.prototype.render = function() {
   var _this = this;
 
-  $('#user-contrast-menu').data('load', function() {
+  this.$el.data('load', function() {
     _this.loadContrasts();
+  });
+
+  this.$el.on('click', '.gws-contrast-item', function(ev) {
+    var $this = $(this);
+    _this.changeContrast($this.data('text-color'), $this.data('color'));
+
+    ev.preventDefault();
+    ev.stopPropagation();
   });
 };
 
 Gws_Contrast.prototype.loadContrasts = function() {
-  console.log('Gws_Contrast#loadContrasts');
+  if (this.$el.data('loadedAt')) {
+    return;
+  }
+
+  var _this = this;
+  $.ajax({
+    url: this.opts.url,
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) { _this.renderContrasts(data); },
+    error: function(xhr, status, error) { _this.showError(xhr); },
+    complete: function(xhr, status) { _this.completeLoading(xhr); }
+  });
+};
+
+Gws_Contrast.prototype.completeLoading = function(xhr) {
+  this.$el.data('loadedAt', Date.now());
+  this.$el.find('.gws-contrast-loading').closest('li').hide();
+};
+
+Gws_Contrast.prototype.showError = function(xhr) {
+  this.$el.append($('<li/>').html('<div class="gws-contrast-error">' + this.opts.loadError + '</div>'));
+};
+
+Gws_Contrast.prototype.renderContrasts = function(data) {
+  var _this = this;
+  $.each(data, function() {
+    var $a = $('<a />', { class: 'gws-contrast-item', data: { 'text-color': this.text_color, color: this.color } });
+    $a.html(this.name)
+    _this.$el.append($('<li/>').html($a));
+  });
+};
+
+Gws_Contrast.prototype.changeContrast = function(color, textColor) {
+  console.log('Gws_Contrast#changeContrast');
+  console.log(color);
+  console.log(textColor);
 };

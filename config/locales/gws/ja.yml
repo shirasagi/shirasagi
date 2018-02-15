@@ -189,6 +189,10 @@ ja:
       gws/user_form: 拡張情報
       gws/user_form_data: 拡張データ
       gws/contrast: コントラスト
+    errors:
+      models:
+        gws/contrast:
+          load_error: 読み込みに失敗しました。
     attributes:
       gws/model/category:
         model: モデル

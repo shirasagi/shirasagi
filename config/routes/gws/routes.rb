@@ -61,6 +61,7 @@ SS::Application.routes.draw do
       delete "reminders" => "reminders#destroy"
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
+      get "contrasts" => "contrasts#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member
