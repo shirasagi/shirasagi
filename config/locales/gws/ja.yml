@@ -195,7 +195,7 @@ ja:
       models:
         gws/contrast:
           load_error: 読み込みに失敗しました。
-          no_contrasts: コントラストはありません。
+          no_contrasts: 定義がありません。
     attributes:
       gws/model/category:
         model: モデル
@@ -367,6 +367,8 @@ ja:
         menu_elasticsearch_state: 全文検索の表示
         menu_discussion_label: 電子会議室
         menu_discussion_state: 電子会議室
+        menu_contrast_label: コントラスト
+        menu_contrast_state: コントラスト
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数
         log_main_severity: 標準機能のログ

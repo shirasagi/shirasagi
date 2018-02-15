@@ -6,7 +6,7 @@ module Gws::Addon::System::MenuSetting
 
   included do
     %w(portal reminder schedule todo attendance bookmark memo board faq question report workflow circular monitor share
-       shared_address personal_address staff_record links discussion).each do |name|
+       shared_address personal_address staff_record links discussion contrast).each do |name|
       define_menu_setting(name)
     end
     define_menu_setting('elasticsearch', default_state: 'hide')
