@@ -1,6 +1,7 @@
 function Gws_Contrast(opts) {
   this.opts = opts;
   this.$el = $('#user-contrast-menu');
+  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; }';
 
   this.render();
 }
@@ -56,7 +57,10 @@ Gws_Contrast.prototype.renderContrasts = function(data) {
 };
 
 Gws_Contrast.prototype.changeContrast = function(color, textColor) {
-  console.log('Gws_Contrast#changeContrast');
-  console.log(color);
-  console.log(textColor);
+  if (! this.$style) {
+    this.$style = $('<style/>', { type: 'text/css' });
+    $('head').append(this.$style);
+  }
+
+  this.$style.html(this.template.replace(/:color/g, color).replace(/:background/g, textColor));
 };
