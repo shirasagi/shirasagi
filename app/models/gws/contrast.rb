@@ -7,16 +7,13 @@ class Gws::Contrast
   set_permission_name 'gws_contrasts', :edit
 
   field :name, type: String
-  field :css_class_name, type: String
   field :order, type: Integer
   field :state, type: String, default: 'public'
   field :text_color, type: String
   field :color, type: String
-  permit_params :name, :css_class_name, :order, :state, :text_color, :color
+  permit_params :name, :order, :state, :text_color, :color
 
   validates :name, presence: true, length: { maximum: 40 }
-  # validates :css_class_name, presence: true, uniqueness: { scope: :site_id }
-  validates :css_class_name, presence: true
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :text_color, presence: true, if: -> { state == 'public' }
   validates :color, presence: true, if: -> { state == 'public' }

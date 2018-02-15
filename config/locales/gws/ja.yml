@@ -438,7 +438,6 @@ ja:
         notification_noticed: 通知日時
       gws/contrast:
         name: 名前
-        css_class_name: 英字名
         order: 並び順
         status: ステータス
         text_color: 文字色
@@ -562,9 +561,6 @@ ja:
     gws/contrast:
       name:
         - 名前を入力します。
-      css_class_name:
-        - 英字名を入力します。
-        - 英数字で一意な名前を入力してください。
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
