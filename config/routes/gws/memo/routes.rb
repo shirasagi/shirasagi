@@ -36,7 +36,7 @@ SS::Application.routes.draw do
       end
     end
 
-    resources :notices, concerns: :deletion do
+    resources :notices, concerns: :deletion, only: [:index, :show, :destroy] do
       get :recent, on: :collection
     end
 
