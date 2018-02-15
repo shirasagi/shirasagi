@@ -53,7 +53,7 @@ Gws_Contrast.prototype.loadContrasts = function() {
     type: 'GET',
     dataType: 'json',
     success: function(data) { _this.renderContrasts(data); },
-    error: function(xhr, status, error) { _this.showError(xhr); },
+    error: function(xhr, status, error) { _this.showMessage(this.opts.loadError); },
     complete: function(xhr, status) { _this.completeLoading(xhr); }
   });
 };
@@ -63,11 +63,16 @@ Gws_Contrast.prototype.completeLoading = function(xhr) {
   this.$el.find('.gws-contrast-loading').closest('li').hide();
 };
 
-Gws_Contrast.prototype.showError = function(xhr) {
-  this.$el.append($('<li/>').html('<div class="gws-contrast-error">' + this.opts.loadError + '</div>'));
+Gws_Contrast.prototype.showMessage = function(message) {
+  this.$el.append($('<li/>').html('<div class="gws-contrast-error">' + message + '</div>'));
 };
 
 Gws_Contrast.prototype.renderContrasts = function(data) {
+  if (data.length === 0) {
+    this.showMessage(this.opts.noContrasts);
+    return;
+  }
+
   this.renderContrast('default', this.opts.defaultContrast);
 
   var _this = this;

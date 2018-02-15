@@ -124,7 +124,8 @@
               url: <%== gws_apis_contrasts_path(format: 'json').to_json %>,
               defaultContrast: <%== t('gws.default_contrast').to_json %>,
               notice: <%== t('gws.notice.contrast_changed', name: ':name').to_json %>,
-              loadError: <%== t('mongoid.errors.models.gws/contrast.load_error').to_json %>
+              loadError: <%== t('mongoid.errors.models.gws/contrast.load_error').to_json %>,
+              noContrasts: <%== t('mongoid.errors.models.gws/contrast.no_contrasts').to_json %>
             });
 
             <% if cookies["gws-contrast-#{@cur_site.id}"].present? %>

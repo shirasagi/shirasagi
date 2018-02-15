@@ -195,6 +195,7 @@ ja:
       models:
         gws/contrast:
           load_error: 読み込みに失敗しました。
+          no_contrasts: コントラストはありません。
     attributes:
       gws/model/category:
         model: モデル
