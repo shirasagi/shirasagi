@@ -35,11 +35,4 @@ module Gws::Addon::System::MenuSetting
     name = 'question' if name == 'faq' || name == 'qna'
     try("menu_#{name}_state") != 'hide'
   end
-
-  #def menu_label(klass)
-  #  key = klass.model_name.i18n_key.to_s.scan(/(gws\/[^\/]+)/).flatten.first
-  #  name = send("menu_#{key.sub("gws/", "")}_label") rescue nil
-  #  name = I18n.t("modules.#{key}") unless name
-  #  name
-  #end
 end
