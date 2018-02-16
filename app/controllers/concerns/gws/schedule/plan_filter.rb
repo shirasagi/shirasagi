@@ -44,10 +44,10 @@ module Gws::Schedule::PlanFilter
   end
 
   def send_approval_mail
-    Gws::Memo::Notifier.deliver_workflow_request!(
+    Gws::Schedule::Notifier::Approval.deliver_request!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
       to_users: @item.all_approvers, item: @item,
-      url: url_for(action: :show)
+      url: url_for(action: :show, id: @item)
     ) rescue nil
   end
 
