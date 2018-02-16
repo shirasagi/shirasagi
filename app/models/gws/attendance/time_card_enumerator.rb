@@ -70,13 +70,13 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
         terms << time_card.user.uid
         terms << time_card.user.name
         terms << date.to_date.iso8601
-        terms << record.try(:enter).try(:strftime, '%H:%M')
-        terms << record.try(:leave).try(:strftime, '%H:%M')
+        terms << format_time(date, record.try(:enter))
+        terms << format_time(date, record.try(:leave))
         put_history_p.call(record.try(:find_latest_history, 'enter'))
         put_history_p.call(record.try(:find_latest_history, 'leave'))
         @break_times.each do |i|
-          terms << record.try("break_enter#{i + 1}").try(:strftime, '%H:%M')
-          terms << record.try("break_leave#{i + 1}").try(:strftime, '%H:%M')
+          terms << format_time(date, record.try("break_enter#{i + 1}"))
+          terms << format_time(date, record.try("break_leave#{i + 1}"))
           put_history_p.call(record.try(:find_latest_history, "break_enter#{i + 1}"))
           put_history_p.call(record.try(:find_latest_history, "break_leave#{i + 1}"))
         end
@@ -105,5 +105,16 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
 
     str = str.encode('CP932', invalid: :replace, undef: :replace) if @params.encoding == 'Shift_JIS'
     str
+  end
+
+  def format_time(date, time)
+    return nil if time.blank?
+
+    time = time.localtime
+    hour = time.hour
+    if date.day != time.day
+      hour += 24
+    end
+    "#{hour}:#{format('%02d', time.min)}"
   end
 end
