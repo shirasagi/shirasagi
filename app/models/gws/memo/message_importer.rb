@@ -131,6 +131,7 @@ class Gws::Memo::MessageImporter
       end
     end
 
+    item.allow_other_user_files
     item.save
   end
 
