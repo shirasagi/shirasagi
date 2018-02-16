@@ -378,3 +378,26 @@ ja:
       subject: "[更新通知][スケジュール] %{name}"
       text: |
         「%{name}」の出欠確認に回答がありました。
+
+    gws/schedule/plan/approval/request:
+      subject: "[承認依頼][スケジュール] %{name}"
+      text: |
+        %{from}さんより次の予定について承認依頼が届きました。
+        承認作業を行ってください。
+
+        %{text}
+
+    gws/schedule/plan/approval/approve:
+      subject: "[承認完了][スケジュール] %{name}"
+      text: |
+        次の予定が承認されました。
+
+        %{text}
+
+    gws/schedule/plan/approval/remand:
+      subject: "[差し戻し][スケジュール] %{name}"
+      text: |
+        %{from}さんより次の予定について承認依頼が差し戻されました。
+        適宜修正を行い、再度承認依頼を行ってください。
+
+        %{text}
