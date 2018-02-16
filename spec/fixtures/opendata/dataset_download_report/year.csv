@@ -1,0 +1,6 @@
+,,,2016,2017,2018
+dataset1,,http://test.localhost.jp/dataset/1.html
+,resourceA.txt,,1,0,1
+,resourceB.txt,,0,2,0
+dataset2,,http://test.localhost.jp/dataset/2.html
+,resourceC.txt,,0,0,0

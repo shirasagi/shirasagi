@@ -1,7 +1,7 @@
 class Opendata::Dataset::DownloadReportsController < ApplicationController
   include Cms::BaseFilter
 
-  model Opendata::DownloadReport
+  model Opendata::DatasetDownloadReport
 
   navi_view "opendata/main/navi"
 
@@ -10,7 +10,13 @@ class Opendata::Dataset::DownloadReportsController < ApplicationController
   private
 
   def set_item
-    @item = @model.new(params[:item])
+    attributes = params[:item] || {}
+    attributes.merge!(
+      cur_node: @cur_node,
+      cur_site: @cur_site,
+      cur_user: @cur_user
+    )
+    @item = @model.new(attributes)
   end
 
   public
@@ -19,6 +25,8 @@ class Opendata::Dataset::DownloadReportsController < ApplicationController
   end
 
   def download
-    render :index unless @item.valid?
+    return render :index unless @item.valid?
+    send_data @item.csv.encode("SJIS", invalid: :replace, undef: :replace),
+      filename: "dataset_download_report_#{Time.zone.now.to_i}.csv"
   end
 end
