@@ -159,6 +159,7 @@ ja:
   modules:
     gws/schedule: スケジュール
     gws/schedule/todo: TODO
+    gws/todo: TODO
     addons:
       gws/schedule/facility: 設備予約
       gws/schedule/facility_column_values: 設備追加情報
