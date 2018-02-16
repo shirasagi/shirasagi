@@ -96,7 +96,8 @@ ja:
       entry: 登録可能
       exist: 登録済み
       error: エラー
-      saved: "%{count}件の予定をインポートしました。"
+      saved: 登録完了
+      count: "%{count} 件の予定をインポートしました。"
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
