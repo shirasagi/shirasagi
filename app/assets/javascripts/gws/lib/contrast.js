@@ -110,13 +110,13 @@ Gws_Contrast.prototype.checkActiveContrast = function() {
   $('input[name="gws-contrast-item"]').val([contrastId]);
 };
 
-Gws_Contrast.prototype.changeContrast = function(color, textColor) {
+Gws_Contrast.prototype.changeContrast = function(textColor, color) {
   if (! this.$style) {
     this.$style = $('<style/>', { type: 'text/css' });
     $('head').append(this.$style);
   }
 
-  this.$style.html(this.template.replace(/:color/g, color).replace(/:background/g, textColor));
+  this.$style.html(this.template.replace(/:color/g, textColor).replace(/:background/g, color));
 };
 
 Gws_Contrast.prototype.removeContrast = function() {

@@ -131,7 +131,7 @@
             <% if cookies["gws-contrast-#{@cur_site.id}"].present? %>
               <% contrast = Gws::Contrast.site(@cur_site).and_public.find(cookies["gws-contrast-#{@cur_site.id}"]) rescue nil %>
               <% if contrast.present? %>
-                contrast.changeContrast(<%== contrast.color.to_json %>, <%== contrast.text_color.to_json %>);
+                contrast.changeContrast(<%== contrast.text_color.to_json %>, <%== contrast.color.to_json %>);
               <% end %>
             <% end %>
           <% end %>
