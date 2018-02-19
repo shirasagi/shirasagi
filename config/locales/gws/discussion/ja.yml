@@ -2,7 +2,7 @@ ja:
   gws/discussion:
     admin: 管理
     topics: スレッド一覧
-    todos: TODO
+    todos: ToDo
     members: 参加者一覧
     links:
       forum:
@@ -17,7 +17,7 @@ ja:
         show: 全ての投稿を見る
         reply: コメントを投稿する
       todo:
-        index: TODO一覧を見る
+        index: ToDo一覧を見る
       member:
         index: 参加者一覧
     main_topic:
@@ -35,7 +35,7 @@ ja:
         deny: 許可しない
     notice:
       reload: ※新着投稿があります。クリックすることで再描画します。
-      forum_copy: ※複製後は非公開状態になります。TODO は複製されません。
+      forum_copy: ※複製後は非公開状態になります。ToDo は複製されません。
       comment_limit: 'コメント数が%{limit}件を超えました。新規スレッドを作成してください。'
       no_topics: スレッドはありません。
       no_recents: 新着はありません。
@@ -119,7 +119,7 @@ ja:
         discussion_new_days: 新着表示期間
         discussion_unseen_interval: 新着確認の間隔
         discussion_recent_limit: 新着表示件数
-        discussion_todo_limit: TODO表示件数
+        discussion_todo_limit: ToDo表示件数
         discussion_comment_limit: コメントの上限
 
   gws_role:
@@ -189,6 +189,6 @@ ja:
       discussion_recent_limit:
         - 新着一覧の表示件数を設定します。
       discussion_todo_limit:
-        - TODOの表示件数を設定します。
+        - ToDoの表示件数を設定します。
       discussion_comment_limit:
         - １スレッドに対するコメントの上限を設定します。
