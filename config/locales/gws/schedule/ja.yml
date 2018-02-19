@@ -159,8 +159,8 @@ ja:
         - 3年6ヶ月
   modules:
     gws/schedule: スケジュール
-    gws/schedule/todo: TODO
-    gws/todo: TODO
+    gws/schedule/todo: ToDo
+    gws/todo: ToDo
     addons:
       gws/schedule/facility: 設備予約
       gws/schedule/facility_column_values: 設備追加情報
