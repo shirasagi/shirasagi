@@ -2,6 +2,8 @@ class Gws::Reminder::ItemsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
+  helper Gws::Schedule::PlanHelper
+
   model Gws::Reminder
   navi_view "gws/reminder/main/navi"
   before_action :set_mode
@@ -27,5 +29,11 @@ class Gws::Reminder::ItemsController < ApplicationController
       where(cond).
       search(params[:s]).
       page(params[:page]).per(50)
+  end
+
+  def redirect
+    set_item
+    raise "404" if @item.user_id != @cur_user.id
+    @item.set(read_at: Time.zone.now)
   end
 end

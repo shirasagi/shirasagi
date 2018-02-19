@@ -20,6 +20,7 @@ function SS_SortableForm(selector, opts) {
   this.body.find('tr').each(function(idx, tr) {
     _this.setEvent($(tr));
   });
+  this.onInsert = this.opts.onInsert || false;
 }
 
 SS_SortableForm.prototype.renderItems = function(items) {
@@ -34,6 +35,13 @@ SS_SortableForm.prototype.renderItems = function(items) {
   });
 };
 
+SS_SortableForm.prototype.resetItems = function() {
+  var newItem = this.base.clone();
+  this.body.find('tr').remove();
+  this.body.prepend(newItem);
+  this.setEvent(newItem);
+};
+
 SS_SortableForm.prototype.setEvent = function(item) {
   var _this = this;
 
@@ -42,6 +50,9 @@ SS_SortableForm.prototype.setEvent = function(item) {
 
     var newItem = _this.base.clone();
     $(this).closest('tr').after(newItem);
+    if (_this.onInsert) {
+      _this.onInsert(newItem);
+    }
     _this.setEvent(newItem);
     return false;
   });

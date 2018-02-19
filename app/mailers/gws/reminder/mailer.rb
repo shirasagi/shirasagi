@@ -10,7 +10,7 @@ class Gws::Reminder::Mailer < ActionMailer::Base
     to = from
 
     subject = I18n.t(
-      "gws.reminder.notification.subject",
+      "gws/reminder.notification.subject",
       model: I18n.t("mongoid.models.#{reminder.model}"),
       name: @item.name)
 

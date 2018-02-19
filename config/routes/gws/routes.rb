@@ -58,6 +58,7 @@ SS::Application.routes.draw do
       get "facilities" => "facilities#index"
       post "reminders" => "reminders#create"
       delete "reminders" => "reminders#destroy"
+      post "reminders/restore" => "reminders#restore", as: :restore_reminder
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
       get "contrasts" => "contrasts#index"
@@ -74,7 +75,9 @@ SS::Application.routes.draw do
   gws "reminder" do
     get '/' => redirect { |p, req| "#{req.path}/-/items" }, as: :main
     scope path: ':mode' do
-      resources :items, only: [:index, :destroy], concerns: [:deletion]
+      resources :items, only: [:index, :destroy], concerns: [:deletion] do
+        get :redirect, on: :member
+      end
     end
   end
 end

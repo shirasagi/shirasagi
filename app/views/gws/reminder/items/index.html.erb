@@ -1,5 +1,5 @@
 <%= jquery do %>
-  Gws_Reminder.renderList({ url: "<%= gws_apis_reminders_path %>" });
+  Gws_Reminder.renderList({ url: "<%= gws_apis_reminders_path %>", restore_url: "<%= gws_apis_restore_reminder_path %>" });
 <% end %>
 
 <div class="index">
@@ -7,8 +7,9 @@
 
   <ul class="list-items">
     <% @items.each do |item| %>
-    <li class="list-item"
-      data-id="<%= item.item_id %>"
+    <li class="list-item <%= item.deleted? ?  'deleted' : '' %> <%= item.activated? ?  'activated' : '' %>"
+      data-id="<%= item.id %>"
+      data-item_id="<%= item.item_id %>"
       data-name="<%= item.name %>"
       data-model="<%= item.model %>"
       data-date="<%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %>">
@@ -16,39 +17,30 @@
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
         <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
-
-        <% url = instance_exec(&item.url_lazy) %>
-        <% if url %>
-          <%= link_to item.name, url, class: "title" %>
-        <% else %>
-          <%= item.name %>
-        <% end %>
+        <%= link_to item.name, { action: :redirect, id: item.id }, class: "title" %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
-          <% if item.date.present? %>
+          <% if item.start_at.present? %>
+            <span class="datetime"><%= term(item) %></span>
+          <% else %>
             <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
           <% end %>
-          <span class="label"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
-          <% if item.updated_user_name.present? %>
-            <span class="user"><%= item.updated_user_name %></span>
-          <% end %>
-          <% if item.updated_date.present? %>
-            <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
-          <% end %>
-          <% if item.updated_field_names.present? %>
-            <span class="label"><%= item.t :updated_fields %></span>
-            <span class="fields"><%= truncate item.updated_field_names.join(', '), length: 30 %></span>
+          <% item.notifications.each do |notification| %>
+            <span class="datetime"><%= tryb { notification.interval_label } %></span>
           <% end %>
         </div>
       </div>
 
       <div class="links">
-        <img class="updated" src="/assets/img/ic-check.png" alt="" style="display: none; vertical-align: middle; margin: 0px 4px" />
-        <% if item.date.present? %>
-        <%= select_tag :notification, options_for_select(item.notification_options, tryb { item.notifications.first.notify_before }), class: :notification %>
-        <% end %>
-        <input type="button" class="btn delete" value="<%= t('gws.buttons.unset') %>" />
+        <div class="dropdown dropdown-toggle">
+          <a class="more-btn">
+            <i class="material-icons md-dark">&#xE5D4;</i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
+            <li><a class="dropdown-menu-item gws-reminder-unset delete" href="#"><%= t('gws.buttons.unset') %></a></li>
+          </ul>
+        </div>
       </div>
     </li>
     <% end %>

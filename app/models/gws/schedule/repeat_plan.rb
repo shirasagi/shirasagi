@@ -80,6 +80,7 @@ class Gws::Schedule::RepeatPlan
       next if base_plan.edit_range == "later" && plan.start_at < base_plan.start_at
 
       plan.skip_gws_history
+      plan.remove_repeat_reminder(base_plan) if plan.respond_to?(:remove_repeat_reminder)
       plan.destroy_without_repeat_plan
     end
 
@@ -101,6 +102,7 @@ class Gws::Schedule::RepeatPlan
       end
 
       plan.skip_gws_history
+      plan.set_repeat_reminder_conditions(base_plan) if plan.respond_to?(:set_repeat_reminder_conditions)
       plan.save
       saved += 1
     end

@@ -1,12 +1,59 @@
+<%
+  reminder_conditions = @item.reminder_conditions(@cur_user)
+  reminder_conditions = reminder_conditions.map do |item|
+    item.base_time ||= @item.reminder_base_time_options.dig(0, 1)
+    item
+  end
+%>
+
+<%= jquery do %>
+  var toggleConditions = function() {
+    if ($("#addon-basic #item_allday").prop('checked')) {
+      $(".remider-conditions .allday").show();
+    }
+    else {
+      $(".remider-conditions .allday").hide();
+    }
+  };
+  var setIntervalStep = function(ele) {
+    if ($(ele).val() == "minutes"){
+      $(ele).closest("tr").find(".interval").attr("step", 10);
+    }
+    else {
+      $(ele).closest("tr").find(".interval").attr("step", 1);
+    }
+  };
+  var changeIntervalStep = function(newItem) {
+    $(newItem).find(".interval_type").change(function() {
+      setIntervalStep(this);
+    });
+  };
+  var sort = new SS_SortableForm('.remider-conditions', { limit: 5, onInsert: function(newItem) {
+      toggleConditions();
+      changeIntervalStep(newItem);
+    }
+  });
+  sort.renderItems(<%== reminder_conditions.to_json %>);
+  $("#addon-basic #item_allday").on("click", toggleConditions);
+  toggleConditions();
+  $(".remider-conditions tr").each(function() { changeIntervalStep(this); });
+  $(".remider-conditions tr .interval_type").each(function() { setIntervalStep(this); });
+<% end %>
+
 <dl class="see gws-addon-reminder">
   <dt>
     <%= @model.t :reminder_date %><%= @model.tt :reminder_date %>
   </dt>
   <dd>
-    <%= f.text_field :in_reminder_date, value: tryb { @item.in_reminder_date.strftime("%Y/%m/%d %H:%M") }, class: "datetime js-datetime" %>
-    <label style="margin-left: 10px; vertical-align: middle;">
-      <%= f.check_box :in_reminder_state, {}, 'disabled', 'enabled' %>
-      <%= t 'gws.options.reminder_state.disable' %>
-    </label>
+    <table class="remider-conditions">
+      <tbody>
+      <tr data-base="true">
+        <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', nil, step: 10, min: 0, class: "interval" %></td>
+        <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_options), class: "interval_type" %></td>
+        <td class="allday"><%= select_tag 'item[in_reminder_conditions][][base_time]', options_for_select(@item.reminder_base_time_options), class: "base_time" %></td>
+      </tr>
+      </tbody>
+    </table>
   </dd>
 </dl>

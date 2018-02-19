@@ -93,7 +93,7 @@ class Gws::Report::File
   end
 
   # override Gws::Addon::Reminder#reminder_url
-   def reminder_url(*args)
+  def reminder_url(*args)
     ret = super
     options = ret.extract_options!
     options[:state] = 'all'
