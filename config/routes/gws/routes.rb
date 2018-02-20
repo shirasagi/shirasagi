@@ -51,6 +51,7 @@ SS::Application.routes.draw do
     resource :user_form, concerns: [:deletion] do
       resources :user_form_columns, concerns: :deletion, path: '/columns'
     end
+    resources :contrasts, concerns: [:deletion]
 
     namespace "apis" do
       get "groups" => "groups#index"
@@ -60,6 +61,7 @@ SS::Application.routes.draw do
       delete "reminders" => "reminders#destroy"
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
+      get "contrasts" => "contrasts#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

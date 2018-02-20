@@ -2,6 +2,7 @@ class Gws::Memo::Notifier
   include ActiveModel::Model
 
   attr_accessor :cur_site, :cur_group, :cur_user, :to_users, :item, :item_title, :item_text
+  attr_accessor :subject, :text
 
   class << self
     def deliver!(opts)
@@ -123,16 +124,16 @@ class Gws::Memo::Notifier
   def deliver!
     cur_user.cur_site ||= cur_group
 
-    message = Gws::Memo::Message.new
+    message = Gws::Memo::Notice.new
     message.cur_site = cur_site
     message.cur_user = cur_user
-    message.to_member_ids = to_users.pluck(:id)
-    message.send_date = Time.zone.now
-    message.state = 'public'
+    message.member_ids = to_users.pluck(:id)
 
-    message.subject = I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
+    message.send_date = Time.zone.now
+
+    message.subject = subject || I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
     message.format = 'text'
-    message.text = I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: item_text, default: item_text)
+    message.text = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: item_text, default: item_text)
 
     message.save!
   end

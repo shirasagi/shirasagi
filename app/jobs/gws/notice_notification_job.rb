@@ -56,12 +56,11 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
     text = text.truncate(60)
     text = I18n.t("gws_notification.#{i18n_key}.text", name: notice.name, text: text, path: path, default: text)
 
-    message = Gws::Memo::Message.new
+    message = Gws::Memo::Notice.new
     message.cur_site = site
-    message.cur_user = site.sender_user || notice.user
-    message.to_member_ids = select_recipients(notice).pluck(:id)
+    message.cur_user = user
+    message.member_ids = select_recipients(notice).pluck(:id)
     message.send_date = @now
-    message.state = 'public'
     message.subject = subject
     message.format = 'text'
     message.text = text

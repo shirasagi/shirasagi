@@ -209,3 +209,15 @@ font-weight: normal;
     margin: 0px 0px 0px 50px !important;
   }
 }
+// -------------------------------------------------------------------------------------------------
+// memo gws-memo-notices
+.gws-memo-notices {
+  .list-item {
+    &.unseen {
+      background-color: #f9e9e3;
+    }
+    &.seen:hover, &.unseen:hover {
+      background-color: #fbeee8
+    }
+  }
+}

@@ -96,7 +96,8 @@ ja:
       entry: 登録可能
       exist: 登録済み
       error: エラー
-      saved: "%{count}件の予定をインポートしました。"
+      saved: 登録完了
+      count: "%{count} 件の予定をインポートしました。"
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
@@ -158,7 +159,8 @@ ja:
         - 3年6ヶ月
   modules:
     gws/schedule: スケジュール
-    gws/schedule/todo: TODO
+    gws/schedule/todo: ToDo
+    gws/todo: ToDo
     addons:
       gws/schedule/facility: 設備予約
       gws/schedule/facility_column_values: 設備追加情報
@@ -377,3 +379,26 @@ ja:
       subject: "[更新通知][スケジュール] %{name}"
       text: |
         「%{name}」の出欠確認に回答がありました。
+
+    gws/schedule/plan/approval/request:
+      subject: "[承認依頼][スケジュール] %{name}"
+      text: |
+        %{from}さんより次の予定について承認依頼が届きました。
+        承認作業を行ってください。
+
+        %{text}
+
+    gws/schedule/plan/approval/approve:
+      subject: "[承認完了][スケジュール] %{name}"
+      text: |
+        次の予定が承認されました。
+
+        %{text}
+
+    gws/schedule/plan/approval/remand:
+      subject: "[差し戻し][スケジュール] %{name}"
+      text: |
+        %{from}さんより次の予定について承認依頼が差し戻されました。
+        適宜修正を行い、再度承認依頼を行ってください。
+
+        %{text}

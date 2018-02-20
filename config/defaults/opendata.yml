@@ -1,6 +1,8 @@
 # Fuseki Server
 
 production: &production
+  options_limit: 100
+
   # SPARQL Endpoint
   fuseki:
     disable: true

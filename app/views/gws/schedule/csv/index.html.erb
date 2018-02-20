@@ -1,8 +1,9 @@
 <style>
 .gws-schedule-csv .import-log { min-height: 2em; padding: 20px 10px 10px; border-top: 1px solid #f2f2f2; }
 .gws-schedule-csv .import-loading { color: #bbb; }
-.gws-schedule-csv .import-skip td { color: #bbb; }
-.gws-schedule-csv .import-error td { color: #e00; }
+.gws-schedule-csv .import-exist { color: #bbb; }
+.gws-schedule-csv .import-saved { color: #06d; }
+.gws-schedule-csv .import-error { color: #e00; }
 </style>
 
 <%= jquery do %>
@@ -21,10 +22,10 @@
       log.html('')
 
       if (data.messages) {
-        log.append(data.messages.join('<br />'));
+        log.append('<div class="mb-1">' + data.messages.join('<br />') + '</div>');
       }
       if (data.items) {
-        var count = { success: 0, skip: 0, error: 0 };
+        var count = { exist: 0, entry: 0, saved: 0, error: 0 };
         var html = '<table class="index mt-1"><thead><tr>' +
           '<th style="width: 150px"><%= @model.t :start_at %></th>' +
           '<th style="width: 150px"><%= @model.t :end_at %></th>' +
@@ -33,8 +34,9 @@
           '</tr></thead><tbody>';
 
         $.each(data.items, function(i, item){
-          if (item.result == 'success') count.success += 1;
-          if (item.result == 'skip') count.skip += 1;
+          if (item.result == 'exist') count.exist += 1;
+          if (item.result == 'entry') count.entry += 1;
+          if (item.result == 'saved') count.saved += 1;
           if (item.result == 'error') count.error += 1;
 
           html += '<tr class="import-' + item.result + '">' +
@@ -46,10 +48,12 @@
         });
         html += '</tbody></table>';
 
-        var tabs = ''
-        tabs += '<span><%= t('gws/schedule.import.entry') %>(' + count.success + ')</span>';
-        tabs += '<span class="ml-1"><%= t('gws/schedule.import.exist') %>(' + count.skip + ')</span>';
-        tabs += '<span class="ml-1"><%= t('gws/schedule.import.error') %>(' + count.error + ')</span>';
+        var tabs = '<div class="mb-1">';
+        if (count.exist) tabs += '<span class="ml-2 import-exist"><%= t('gws/schedule.import.exist') %>(' + count.exist + ')</span>';
+        if (count.entry) tabs += '<span class="ml-2 import-entry"><%= t('gws/schedule.import.entry') %>(' + count.entry + ')</span>';
+        if (count.saved) tabs += '<span class="ml-2 import-saved"><%= t('gws/schedule.import.saved') %>(' + count.saved + ')</span>';
+        if (count.error) tabs += '<span class="ml-2 import-error"><%= t('gws/schedule.import.error') %>(' + count.error + ')</span>';
+        tabs += '</div>'
 
         log.append(tabs + html);
       }

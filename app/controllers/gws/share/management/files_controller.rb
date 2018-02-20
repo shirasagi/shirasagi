@@ -11,7 +11,8 @@ class Gws::Share::Management::FilesController < ApplicationController
   before_action :set_category
   before_action :set_folder
   before_action :set_tree_navi, only: [:index]
-  after_action :update_folder_file_info, only: [:create, :update, :destroy, :destroy_all]
+  after_action :update_folder_file_info, only: [:create, :update, :destroy]
+  after_action :update_folder_file_infos, only: [:destroy_all]
 
   private
 
@@ -57,7 +58,15 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def update_folder_file_info
     @folder.update_folder_descendants_file_info if @folder
-    @item.folder.update_folder_descendants_file_info if @item.folder != @folder
+    @item.folder.update_folder_descendants_file_info if @item && @item.folder != @folder
+  end
+
+  def update_folder_file_infos
+    return if @folder_ids.blank?
+
+    Gws::Share::Folder.site(@cur_site).in(id: @folder_ids.uniq).each do |folder|
+      folder.update_folder_descendants_file_info
+    end
   end
 
   public
@@ -135,6 +144,25 @@ class Gws::Share::Management::FilesController < ApplicationController
     entries.each do |item|
       if item.allowed?(:edit, @cur_user, site: @cur_site)
         next if item.active
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
+  def destroy_all
+    entries = @items.entries
+    @items = []
+    @folder_ids = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
+        if item.destroy
+          @folder_ids << item.folder_id
+          next
+        end
       else
         item.errors.add :base, :auth_error
       end

@@ -1,0 +1,91 @@
+<% return if @cur_node.blank? %>
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+<%= jquery do %>
+var pair = location.search.substring(1).split('&');
+for(var i=0;pair[i];i++) {
+  var kv = pair[i].split('=');
+  var key = decodeURIComponent(kv[0]);
+  var value = decodeURIComponent(kv[1]).replace('+', ' ');
+  $('input[name="' + key + '"]').each(function() {
+    $(this).val(value);
+  });
+  $('select[name="' + key + '"]').each(function() {
+    $(this).val(value);
+  });
+}
+$(".tag a.more").colorbox({ fixed: true, height: "80%" });
+$('select[name="s[tag]"]').change(function() {
+  if($(this).val() == "<%= I18n.t('ss.links.more') %>") {
+    $(this).val('');
+    $(this).parents('.tag').find('.more').click();
+  }
+});
+<% end %>
+
+<%
+def transform_category(categories, indent = 0)
+  indent_chars = t('opendata.labels.category_prefixes')
+  ret = []
+  categories.each do |m|
+    next if m.blank?
+    ret << ["#{"　　" * indent}#{indent_chars[indent]} #{m.name}", m.id]
+    children = m.children.and_public.sort(order: 1)
+    cc = children.count
+    if cc > 0
+      ret += transform_category(children, indent + 1)
+    end
+  end
+  ret
+end
+
+areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+categories = transform_category(@cur_categories)
+licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c| [c.name, c.id] }
+groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+@s = OpenStruct.new
+
+%>
+<%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-datasets-form", method: :get } do |f| %>
+  <dl class="keyword">
+    <dt><%= I18n.t("opendata.labels.keyword") %></dt>
+    <dd><%= f.text_field :keyword %></dd>
+  </dl>
+  <dl class="category">
+    <dt><%= I18n.t("opendata.labels.category_ids") %></dt>
+    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
+  </dl>
+  <dl class="area">
+    <dt><%= I18n.t("opendata.labels.area") %></dt>
+    <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
+  </dl>
+  <dl class="tag">
+    <dt><%= I18n.t("opendata.labels.tag") %></dt>
+    <dd><%= f.select :tag, @model.tag_options, include_blank: true %></dd>
+    <%= link_to t('ss.links.more'), "#{@cur_node.url}tags/", class: "more", style: 'display: none;' %>
+  </dl>
+  <dl class="format">
+    <dt><%= I18n.t("opendata.labels.format") %></dt>
+    <dd><%= f.select :format, @model.format_options, include_blank: true %></dd>
+  </dl>
+  <dl class="license">
+    <dt><%= I18n.t("opendata.labels.license") %></dt>
+    <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
+  </dl>
+  <dl class="group">
+    <dt><%= I18n.t("opendata.labels.group_ids") %></dt>
+    <dd><%= f.select :dataset_group, groups, include_blank: "" %></dd>
+  </dl>
+  <dl class="sort">
+    <dt><%= I18n.t("opendata.labels.sort") %></dt>
+    <dd><%= f.select :sort, @model.sort_options %></dd>
+  </dl>
+  <dl class="option">
+    <dt><%= I18n.t("opendata.labels.search_option") %></dt>
+    <dd><%= f.select :option, @model.search_options %></dd>
+  </dl>
+
+  <div class="send">
+    <%= submit_tag t("ss.buttons.search"), name: :search %>
+  </div>
+<% end %>

@@ -62,7 +62,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   end
 
   def send_approval_approve_mail
-    Gws::Memo::Notifier.deliver_workflow_approve!(
+    Gws::Schedule::Notifier::Approval.deliver_approve!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
       to_users: @cur_schedule.members, item: @cur_schedule,
       url: gws_schedule_plan_url(id: @cur_schedule),
@@ -71,7 +71,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   end
 
   def send_approval_deny_mail
-    Gws::Memo::Notifier.deliver_workflow_remand!(
+    Gws::Schedule::Notifier::Approval.deliver_remand!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
       to_users: @cur_schedule.members, item: @cur_schedule,
       url: gws_schedule_plan_url(id: @cur_schedule),

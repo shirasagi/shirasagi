@@ -1,0 +1,41 @@
+class @SS_PopupNotice
+  @ajaxTriggered = false
+
+  @render: ()->
+    $(document).on "click", (e)=>
+      SS_PopupNotice.closePopup()
+
+  @closePopup: ()->
+    $(".popup-notice").hide()
+
+  @closeDropdown: ()->
+    $(".dropdown,.dropdown-menu").removeClass('active')
+
+  constructor: (target) ->
+    @target = target
+    @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+
+  render: () ->
+    $(@target).find(".popup-notice").hide()
+    $(@target).on "click", (e)=>
+      e.stopPropagation()
+
+    $($(@target).find(".ajax-popup-notice")).on "click", (e)=>
+      return false if SS_PopupNotice.ajaxTriggered
+
+      SS_PopupNotice.closePopup()
+      SS_PopupNotice.closeDropdown()
+
+      $(@target).find(".popup-notice").show()
+      $(@target).find(".popup-notice-items").html(@loading).addClass("popup-notice-loading")
+
+      url = $(e.currentTarget).attr("data-url") || $(e.currentTarget).attr("href")
+      $.ajax
+        url: url
+        beforeSend: () ->
+          SS_PopupNotice.ajaxTriggered = true
+        success: (data) ->
+          $(".popup-notice-loading").html(data).removeClass("popup-notice-loading")
+          SS_PopupNotice.ajaxTriggered = false
+
+      return false

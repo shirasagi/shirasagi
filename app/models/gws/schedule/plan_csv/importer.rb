@@ -118,7 +118,7 @@ class Gws::Schedule::PlanCsv::Importer
 
   def save_item(item, opts)
     if item.persisted?
-      result   = 'skip'
+      result   = 'exist'
       messages = [I18n.t('gws/schedule.import.exist')]
     elsif !item.allowed?(:edit, cur_user, site: cur_site)
       result   = 'error'
@@ -127,13 +127,15 @@ class Gws::Schedule::PlanCsv::Importer
       result   = 'error'
       messages = item.errors.full_messages
     else
-      result   = 'success'
+      result   = 'entry'
       messages = [I18n.t('gws/schedule.import.entry')]
     end
 
-    if opts[:confirm] && result == 'success'
+    if !opts[:confirm] && result == 'entry'
       if item.save
         @imported += 1
+        result   = 'saved'
+        messages = [I18n.t('gws/schedule.import.saved')]
       else
         result   = 'error'
         messages = item.errors.full_messages

@@ -145,6 +145,20 @@ class Opendata::Dataset
       Opendata::Common.get_tag(self, tag_name)
     end
 
+    def tag_options
+      pipes = []
+      pipes << { "$match" => { "route" => "opendata/dataset" } }
+      pipes << { "$unwind" => "$tags" }
+      pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
+      options = self.collection.aggregate(pipes).map do |data|
+        tag = data["_id"]
+        ["#{tag}(#{data['count']})", tag]
+      end
+      options = options.take(Opendata::Common.options_limit)
+      options << [I18n.t('ss.links.more'), I18n.t('ss.links.more')] if options.count > Opendata::Common.options_limit
+      options
+    end
+
     def format_options
       pipes = []
       pipes << { "$match" => { "route" => "opendata/dataset" } }

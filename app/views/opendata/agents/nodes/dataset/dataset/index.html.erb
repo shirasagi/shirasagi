@@ -43,6 +43,9 @@ $ ->
 <article class="areas nodes">
   <header><h1><%= I18n.t("opendata.labels.area") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/areas" %>
+  <% if @areas_popped %>
+  <nav><%= link_to t('ss.links.more'), "#{@node_url}areas/", class: "more" %></nav>
+  <% end %>
 </article>
 
 <article class="tags nodes">

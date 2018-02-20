@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :text_color %></dt>
+  <dd>
+    <span style="display: inline-block; width: 2em; background-color: <%= @item.text_color %>; border: 1px solid gray; margin: 0px;">&nbsp;</span>
+    <%= @item.text_color %>
+  </dd>
+
+  <dt><%= @model.t :color %></dt>
+  <dd>
+    <span style="display: inline-block; width: 2em; background-color: <%= @item.color %>; border: 1px solid gray; margin: 0px;">&nbsp;</span>
+    <%= @item.color %>
+  </dd>
+</dl>
