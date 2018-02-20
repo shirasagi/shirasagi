@@ -24,27 +24,14 @@ class Gws::Schedule::Todo
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
-  field :deleted, type: DateTime
 
   permit_params :color, :todo_state, :deleted
-
-  validates :deleted, datetime: true
 
   after_save ->{ reminders.destroy if deleted.present? }
 
   def finished?
     todo_state == 'finished'
   end
-
-  scope :without_deleted, ->(date = Time.zone.now) {
-    where('$and' => [
-      { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
-    ])
-  }
-
-  scope :with_only_deleted, ->(date = Time.zone.now) {
-    where(:deleted.lt => date)
-  }
 
   scope :custom_order, ->(key) {
     if key.start_with?('created_')

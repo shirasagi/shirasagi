@@ -16,7 +16,7 @@ class Gws::Schedule::Todo::TrashesController < ApplicationController
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       member(@cur_user).
-      with_only_deleted.
+      only_deleted.
       search(params[:s]).
       order_by(deleted: -1)
   end
