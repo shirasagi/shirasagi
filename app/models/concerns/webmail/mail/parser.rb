@@ -43,7 +43,7 @@ module Webmail::Mail::Parser
       reply_to: parse_address_field(mail[:reply_to]),
       in_reply_to: mail.in_reply_to,
       references: parse_references(mail.references),
-      subject: mail.subject,
+      subject: parse_subject(mail),
       content_type: mail.mime_type,
       has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil),
       disposition_notification_to: parse_address_field(mail[:disposition_notification_to])
@@ -57,16 +57,26 @@ module Webmail::Mail::Parser
 
     ::Mail::AddressList.new(field.value).addresses.map do |addr|
       if addr.display_name.present?
-        addr.decoded
+        charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
+        addr.decoded.encode('UTF-8', charset) rescue addr.decoded
       else
-        addr.address.sub(/^"/, '').sub(/"$/, '')
+        addr.address
       end
     end
+  rescue => e
+    raise(e) if Rails.env.development?
+    [field.value]
   end
 
   def parse_references(references)
     return [] if references.blank?
     references.is_a?(Array) ? references : [references]
+  end
+
+  def parse_subject(mail)
+    value = mail.header_fields.find { |m| m.name.casecmp('subject') == 0 }.try(:value)
+    return mail.subject unless value
+    decode_jp(mail.subject, value.start_with?('=?ISO-2022-JP?') ? 'ISO-2022-JP' : nil)
   end
 
   def parse_body_structure
@@ -122,11 +132,11 @@ module Webmail::Mail::Parser
     if msg.multipart?
       if part = msg.find_first_mime_type('text/plain')
         self.format = 'text'
-        self.text = part.decoded
+        self.text = decode_jp(part.body.to_s, part.charset)
       end
       if part = msg.find_first_mime_type('text/html')
         self.format = 'html'
-        self.html = part.decoded
+        self.html = decode_jp(part.body.to_s, part.charset)
       end
 
       @_all_parts = {}
@@ -138,16 +148,22 @@ module Webmail::Mail::Parser
     else
       if msg.mime_type == 'text/plain'
         self.format = 'text'
-        self.text = msg.decoded
+        self.text = decode_jp(msg.body.to_s, msg.charset)
       end
       if msg.mime_type == 'text/html'
         self.format = 'html'
-        self.html = msg.decoded
+        self.html = decode_jp(msg.body.to_s, msg.charset)
       end
     end
   end
 
   private
+
+  def decode_jp(str, src_encoding = nil)
+    return str if str.blank? || src_encoding == 'UTF-8'
+    src_encoding = 'CP50220' if src_encoding.try(:upcase) == 'ISO-2022-JP'
+    str.encode('UTF-8', src_encoding) rescue str.encode('UTF-8')
+  end
 
   def flatten_all_parts(part, pos = [], buf = {})
     if part.multipart?

@@ -29,8 +29,8 @@ module Webmail::Mail::Fields
   def display_address(address)
     return [] if address.blank?
     begin
-      addr = ::Mail::Address.new(Net::IMAP.encode_utf7(address))
-      name = addr.display_name.blank? ? addr.address : Net::IMAP.decode_utf7(addr.display_name)
+      addr = ::Mail::Address.new(address)
+      name = addr.display_name.blank? ? addr.address : addr.display_name
       OpenStruct.new(name: name, email: addr.address, address: address)
     rescue
       OpenStruct.new(name: address, email: nil, address: address)
