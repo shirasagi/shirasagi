@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
+describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:group) { gws_user.groups.first }
   let!(:item) { create :gws_schedule_plan }
@@ -8,9 +8,9 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
   let(:new_path) { new_gws_schedule_group_plan_path site, group }
   let(:show_path) { gws_schedule_group_plan_path site, group, item }
   let(:edit_path) { edit_gws_schedule_group_plan_path site, group, item }
-  let(:delete_path) { delete_gws_schedule_group_plan_path site, group, item }
+  let(:delete_path) { soft_delete_gws_schedule_group_plan_path site, group, item }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it "#index" do

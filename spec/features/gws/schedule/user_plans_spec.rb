@@ -7,7 +7,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
   let(:new_path) { new_gws_schedule_user_plan_path site, gws_user }
   let(:show_path) { gws_schedule_user_plan_path site, gws_user, item }
   let(:edit_path) { edit_gws_schedule_user_plan_path site, gws_user, item }
-  let(:delete_path) { delete_gws_schedule_user_plan_path site, gws_user, item }
+  let(:delete_path) { soft_delete_gws_schedule_user_plan_path site, gws_user, item }
 
   context "with auth", js: true do
     before { login_gws_user }

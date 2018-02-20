@@ -105,4 +105,21 @@ module Gws::Schedule::PlanFilter
     @item = @item.new_clone
     render file: :new
   end
+
+  def soft_delete
+    set_item
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = Time.zone.now
+    render_destroy @item.save
+  end
+
+  def soft_delete_all
+    raise NotImplementedError
+  end
 end
