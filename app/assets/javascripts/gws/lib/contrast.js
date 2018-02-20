@@ -95,7 +95,7 @@ Gws_Contrast.prototype.renderContrast = function(id, name, color, textColor) {
   var $input = $('<input/>', { type: 'radio', name: 'gws-contrast-item', value: id });
   var $label = $('<label/>', { class: 'gws-contrast-item', data: dataAttrs });
   $label.append($input);
-  $label.append(' ' + name);
+  $label.append('<span class="gws-contrast-name">' + name + '</span>');
 
   this.$el.append($('<li/>').append($label));
 };
