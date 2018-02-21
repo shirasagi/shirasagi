@@ -69,6 +69,38 @@ module Gws::CrudFilter
     render_destroy @item.destroy
   end
 
+  def soft_delete
+    set_item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = Time.zone.now
+    render_destroy @item.save
+  end
+
+  def undo_delete
+    set_item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = nil
+
+    render_opts = {}
+    render_opts[:location] = { action: :index }
+    render_opts[:render] = { file: :undo_delete }
+    render_opts[:notice] = t('ss.notice.restored')
+
+    render_update @item.save, render_opts
+  end
+
   def destroy_all
     entries = @items.entries
     @items = []

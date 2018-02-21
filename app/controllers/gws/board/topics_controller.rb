@@ -92,19 +92,6 @@ class Gws::Board::TopicsController < ApplicationController
     render file: "print_#{@item.mode}", layout: 'ss/print'
   end
 
-  def soft_delete
-    set_item
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-
-    if request.get?
-      render
-      return
-    end
-
-    @item.deleted = Time.zone.now
-    render_destroy @item.save
-  end
-
   def undo_delete
     set_item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
