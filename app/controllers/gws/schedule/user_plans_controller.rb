@@ -26,7 +26,7 @@ class Gws::Schedule::UserPlansController < ApplicationController
   public
 
   def events
-    @items = Gws::Schedule::Plan.site(@cur_site).
+    @items = Gws::Schedule::Plan.site(@cur_site).without_deleted.
       member(@user).
       search(params[:s])
 

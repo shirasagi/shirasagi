@@ -27,7 +27,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   public
 
   def events
-    @items = Gws::Schedule::Plan.site(@cur_site).
+    @items = Gws::Schedule::Plan.site(@cur_site).without_deleted.
       facility(@facility).
       search(params[:s])
 

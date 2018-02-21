@@ -19,6 +19,7 @@ module Gws::Addon::Portal::Portlet
 
       Gws::Qna::Topic.site(portal.site).
         topic.
+        without_deleted.
         and_public.
         readable(user, site: portal.site).
         search(search).
