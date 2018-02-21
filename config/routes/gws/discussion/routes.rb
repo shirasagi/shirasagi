@@ -6,6 +6,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :soft_deletion do
+    match :soft_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :deletion_topics do
     get :delete, on: :member
     delete :all, action: :destroy_all, on: :collection
@@ -33,7 +38,7 @@ SS::Application.routes.draw do
   gws 'discussion' do
     get '/' => redirect { |p, req| "#{req.path}/forums" }, as: :main
 
-    resources :forums, concerns: [:deletion, :copy] do
+    resources :forums, concerns: [:soft_deletion, :copy], except: [:destroy] do
       resources :topics, concerns: [:deletion_topics, :copy] do
         get :all, on: :collection
         put :reply, on: :member
@@ -42,6 +47,9 @@ SS::Application.routes.draw do
         end
       end
       resources :todos, concerns: [:plans, :todos, :copy]
+    end
+    resources :trashes, concerns: [:deletion, :copy], except: [:new, :create, :edit, :update] do
+      match :undo_delete, on: :member, via: [:get, :post]
     end
 
     namespace "apis" do
