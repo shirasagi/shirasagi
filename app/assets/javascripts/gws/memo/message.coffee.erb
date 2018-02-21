@@ -11,6 +11,14 @@ class @Gws_Memo_Message
       $('.gws-addon-memo-member .cc-bcc').animate({ height: 'toggle' }, 'fast')
       return false
 
+     $('.add-template').change ->
+       return if $(this).val() == ""
+       if $('#item_format').val() == "html"
+         CKEDITOR.instances['item_html'].insertText($(this).val())
+       else
+         Webmail_Mail_Form.insertText($("#item_text"), $(this).val())
+       $(this).val("")
+
     $(".send-mdn,.ignore-mdn").on "click", ->
       return false if $(this).hasClass('disabled')
 
