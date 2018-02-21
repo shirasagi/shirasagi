@@ -6,6 +6,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :soft_deletion do
+    match :soft_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :workflow do
     post :request_update, on: :member
     post :approve_update, on: :member
@@ -19,7 +24,10 @@ SS::Application.routes.draw do
     resources :routes, concerns: :deletion
     scope :files do
       get '/' => redirect { |p, req| "#{req.path}/all" }, as: :files_main
-      resources :files, path: ':state', concerns: [:deletion, :workflow] do
+      resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
+        match :undo_delete, on: :member, via: [:get, :post]
+      end
+      resources :files, path: ':state', concerns: [:soft_deletion, :workflow], except: [:destroy] do
         get :print, on: :member
         match :copy, on: :member, via: %i[get post]
       end

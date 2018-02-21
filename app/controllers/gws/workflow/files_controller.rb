@@ -56,7 +56,7 @@ class Gws::Workflow::FilesController < ApplicationController
   public
 
   def index
-    @items = @model.site(@cur_site).
+    @items = @model.site(@cur_site).without_deleted.
       search(@s).
       page(params[:page]).per(50)
   end

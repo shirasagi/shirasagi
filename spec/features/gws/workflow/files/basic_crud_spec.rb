@@ -51,7 +51,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
       within "form#item-form" do
         fill_in "item[name]", with: item_name2
         fill_in "item[text]", with: item_text2
-        click_on "公開保存"
+        click_on "保存"
       end
 
       expect(page).to have_css("div.addon-body dd", text: item_name2)
@@ -64,13 +64,16 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
       expect(item.files.first.id).to eq file.id
 
       #
-      # Delete
+      # Soft Delete
       #
       click_on "削除する"
       within "form" do
         click_on "削除"
       end
-      expect(Gws::Workflow::File.site(site).count).to eq 0
+      expect(Gws::Workflow::File.site(site).count).to eq 1
+      Gws::Workflow::File.site(site).first.tap do |workflow|
+        expect(workflow.deleted).not_to be_nil
+      end
     end
   end
 end
