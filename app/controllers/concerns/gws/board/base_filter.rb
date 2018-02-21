@@ -8,10 +8,12 @@ module Gws::Board::BaseFilter
     before_action :set_crumbs
   end
 
+  ALLOWED_MODE = %w(readable editable trash).freeze
+
   private
 
   def set_mode
-    @mode = %w(editable).include?(params[:mode]) ? params[:mode] : 'readable'
+    @mode = ALLOWED_MODE.include?(params[:mode]) ? params[:mode] : 'readable'
   end
 
   def set_category

@@ -37,6 +37,7 @@ ja:
       editable: 管理一覧
       unseen: 未読一覧
       seen: 既読一覧
+      trash: ゴミ箱
     links:
       cms: サイト管理
       gws: グループ
