@@ -29,4 +29,18 @@ class Opendata::Dataset::DatasetsController < ApplicationController
 
     render layout: "ss/ajax"
   end
+
+  def copy
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    if request.get?
+      prefix = I18n.t("workflow.cloned_name_prefix")
+      @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
+      return
+    end
+
+    @copy = @item.new_clone(get_params)
+    render_update @copy.save, location: { action: :index }, render: { file: :copy }
+  end
 end

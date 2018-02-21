@@ -101,6 +101,48 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           expect(current_path).to eq index_path
         end
       end
+
+      describe "#copy" do
+        describe "confirm page" do
+          before do
+            visit show_path
+          end
+
+          context "when allowed edit user" do
+            it do
+              click_link "複製する"
+              expect(status_code).to eq 200
+            end
+          end
+
+          context "when not allowed edit user" do
+            before { login_user(user) }
+            let(:user) { create(:cms_test_user, group: cms_group, role: dataset_read_only_role) }
+            let(:dataset_read_only_role) do
+              create(:cms_role,
+                name: "dataset_read_only_role",
+                permissions: ["read_other_opendata_datasets"])
+            end
+
+            it { expect(page).not_to have_link '複製する' }
+            it do
+              visit copy_opendata_dataset_path site, node, item
+              expect(status_code).to eq 403
+            end
+          end
+        end
+
+        describe "dataset copy" do
+          before { visit copy_opendata_dataset_path site, node, item }
+          subject { click_button "保存" }
+
+          it do
+            expect{ subject }.to change(Opendata::Dataset, :count).by(1)
+            expect(status_code).to eq 200
+          end
+
+        end
+      end
     end
   end
 

@@ -16,6 +16,7 @@ class Opendata::Dataset
   include Workflow::MemberPermission
   include Opendata::DatasetSearchable
   include Opendata::DatasetTemplateVariables
+  include Opendata::DatasetCopy
 
   set_permission_name "opendata_datasets"
 
