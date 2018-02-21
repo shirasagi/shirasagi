@@ -1,0 +1,12 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <%= render file: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+    </div>
+  </div>
+
+  <%= render file: "_search" %>
+</div>

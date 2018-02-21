@@ -38,8 +38,10 @@ class Gws::Memo::Apis::SharedAddressesController < ApplicationController
 
     s_group_params = params[:s_group] || {}
 
-    @items = @model.
+    @items = @model.site(@cur_site).
       and_has_member.
+      readable(@cur_user, site: @cur_site).
+      without_deleted.
       search(s_params).
       page(params[:page]).
       per(50)
