@@ -46,7 +46,6 @@ class Gws::Share::Folder
   validate :validate_folder_name, if: ->{ self.attributes["action"] =~ /create|update/ }
 
   before_destroy :validate_children, :validate_files
-  after_destroy :remove_zip
 
   default_scope ->{ order_by depth: 1, order: 1, name: 1 }
 
@@ -136,10 +135,6 @@ class Gws::Share::Folder
   def set_share_max_folder_size
     return if in_share_max_folder_size_mb.blank?
     self.share_max_folder_size = Integer(in_share_max_folder_size_mb) * 1_024 * 1_024
-  end
-
-  def remove_zip
-    Fs.rm_rf self.class.zip_path(id) if File.exist?(self.class.zip_path(id))
   end
 
   def dependant_scope
