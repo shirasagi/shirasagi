@@ -28,6 +28,18 @@ class Gws::Schedule::HolidaysController < ApplicationController
 
   public
 
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    @item.edit_range = params.dig(:item, :edit_range)
+    render_destroy @item.destroy
+  end
+
+  def copy
+    set_item
+    @item = @item.new_clone
+    render file: :new
+  end
+
   def events
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).

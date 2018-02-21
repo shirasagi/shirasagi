@@ -45,7 +45,7 @@
       forms = forms.readable(@cur_user, site: @cur_site)
       forms = forms.order_by(order: 1, created: 1)
     %>
-    <% if forms.present? %>
+    <% if forms.present? && @model == Gws::Schedule::Plan %>
       <%= dropdown_link(t('gws/schedule.links.create_report')) do %>
         <% forms.limit(form_limit).each do |form| %>
           <%= link_to(new_gws_report_form_file_path(state: 'inbox', form_id: form, plan_id: @item.id), class: %w(dropdown-item no-calendar-state)) do %>
