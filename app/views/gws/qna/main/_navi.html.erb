@@ -4,6 +4,7 @@
 
   <% if Gws::Qna::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('ss.navi.editable'), gws_qna_topics_path(mode: 'editable', category: '-') %></h3>
+    <h3><%= link_to t('ss.navi.trash'), gws_qna_topics_path(mode: 'trash', category: '-'), class: 'trash' %></h3>
   <% end %>
   <% if Gws::Qna::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.category'), gws_qna_categories_path, class: "management" %></h3>

@@ -22,17 +22,21 @@ class Gws::Qna::TopicsController < ApplicationController
 
   def items
     if @mode == 'editable'
-      @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site)
+      @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site).without_deleted
+    elsif @mode == 'trash'
+      @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site).only_deleted
     else
-      @model.site(@cur_site).topic.and_public.readable(@cur_user, site: @cur_site)
+      @model.site(@cur_site).topic.and_public.readable(@cur_user, site: @cur_site).without_deleted
     end
   end
 
   def readable?
     if @mode == 'editable'
-      @item.allowed?(:read, @cur_user, site: @cur_site)
+      @item.allowed?(:read, @cur_user, site: @cur_site) && @item.deleted.blank?
+    elsif @mode == 'trash'
+      @item.allowed?(:read, @cur_user, site: @cur_site) && @item.deleted.present?
     else
-      @item.readable?(@cur_user)
+      @item.readable?(@cur_user) && @item.deleted.blank?
     end
   end
 
