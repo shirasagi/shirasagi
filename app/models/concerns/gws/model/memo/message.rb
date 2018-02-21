@@ -327,7 +327,13 @@ module Gws::Model
     end
 
     def signature_options
-      Gws::Memo::Signature.site(cur_site).allow(:read, cur_user, site: cur_site).map do |c|
+      Gws::Memo::Signature.site(cur_site).user(cur_user).map do |c|
+        [c.name, c.text]
+      end
+    end
+
+    def template_options
+      @template_options ||= Gws::Memo::Template.site(cur_site).map do |c|
         [c.name, c.text]
       end
     end

@@ -4,6 +4,9 @@
   <h3><%= link_to t('mongoid.models.gws/memo/folder'), gws_memo_folders_path, class: "management" %></h3>
   <h3><%= link_to t('mongoid.models.gws/memo/filter'), gws_memo_filters_path, class: "management" %></h3>
   <h3><%= link_to t('mongoid.models.gws/memo/signature'), gws_memo_signatures_path, class: "management" %></h3>
+  <% if Gws::Memo::Template.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/memo/template'), gws_memo_templates_path, class: "management" %></h3>
+  <% end %>
   <h3><%= link_to t('mongoid.models.gws/memo/forward'), gws_memo_forwards_path, class: "management" %></h3>
   <% if Gws::Memo::List.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/memo/list'), gws_memo_lists_path, class: "management" %></h3>

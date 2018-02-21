@@ -54,6 +54,7 @@ SS::Application.routes.draw do
       resources :folders, concerns: :deletion
       resources :filters, concerns: :deletion
       resources :signatures, concerns: :deletion
+      resources :templates, concerns: :deletion
       resource :forwards, only: [:show, :edit, :update]
       resources :lists, concerns: :deletion do
         resources :messages, controller: 'list_messages', concerns: :deletion do

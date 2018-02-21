@@ -134,12 +134,19 @@ ja:
     edit_private_gws_memo_categories: カテゴリーの編集（所有）
     delete_other_gws_memo_categories: カテゴリーの削除（全て）
     delete_private_gws_memo_categories: カテゴリーの削除（所有）
+    read_other_gws_memo_templates: 電話メモの閲覧（全て）
+    read_private_gws_memo_templates: 電話メモの閲覧（所有）
+    edit_other_gws_memo_templates: 電話メモの編集（全て）
+    edit_private_gws_memo_templates: 電話メモの編集（所有）
+    delete_other_gws_memo_templates: 電話メモの削除（全て）
+    delete_private_gws_memo_templates: 電話メモの削除（所有）
   mongoid:
     models:
       gws/memo/message: メッセージ
       gws/memo/folder: フォルダー
       gws/memo/filter: フィルター
       gws/memo/signature: 署名
+      gws/memo/template: 電話メモ
       gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
       gws/memo/list: リスト
@@ -206,6 +213,10 @@ ja:
         name: 名称
         text: 本文
         default: 既定の署名
+      gws/memo/template:
+        name: 名称
+        text: 本文
+        order: 並び順
       gws/memo/forward:
         email: メールアドレス
         default: メール転送設定
@@ -272,6 +283,14 @@ ja:
         - メッセージを新規作成した際に自動で入力される署名を選択します。
         - 有効：この署名を自動で入力します
         - 無効：この署名を自動で入力しません
+    gws/memo/template:
+      name:
+        - 電話メモの一覧に表示される名称を入力します。
+      text:
+        - 電話メモの本文を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
     gws/memo/forward:
       email:
         - メッセージ転送先のメールアドレスを入力します。
