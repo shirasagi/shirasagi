@@ -173,7 +173,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def destroy
-    render_destroy @item.destroy_from_folder(@cur_user, @cur_folder)
+    render_destroy @item.destroy_from_folder(@cur_user, @cur_folder, unsend: params[:unsend])
   end
 
   def destroy_all
@@ -265,6 +265,10 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def print
     render :print, layout: 'ss/print'
+  end
+
+  def cancel
+    render file: :delete
   end
 
   def trash

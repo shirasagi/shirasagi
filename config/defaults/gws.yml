@@ -127,6 +127,9 @@ production: &production
   attendance:
     max_break: 3
 
+  memo:
+    disable_unsend: true
+
 test:
   <<: *production
   disable: false

@@ -32,6 +32,7 @@ ja:
     commit_params_check: 送信
     export_messages: エクスポート
     import_messages: インポート
+    unsend: 送信先のメッセージも削除する（送信取り消し）
     links:
       move: 移動する
       etc: その他
