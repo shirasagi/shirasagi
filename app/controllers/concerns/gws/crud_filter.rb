@@ -99,4 +99,24 @@ module Gws::CrudFilter
     end
     render_destroy_all(entries.size != @items.size)
   end
+
+  def soft_delete_all
+    set_selected_items
+
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      item.try(:cur_site=, @cur_site)
+      item.try(:cur_user=, @cur_user)
+      if item.allowed?(:delete, @cur_user, site: @cur_site)
+        item.deleted = Time.zone.now
+        next if item.save
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
 end
