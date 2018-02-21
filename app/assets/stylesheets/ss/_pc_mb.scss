@@ -139,7 +139,7 @@ td {
 // Popup Notice
 .popup-notice-container .popup-notice {
   position: absolute;
-  display: block;
+  display: inline-block;
   top: 100%;
   right: 0;
   width: 450px;
@@ -162,6 +162,7 @@ td {
       padding: 15px;
       border-bottom: 1px solid  #f2f2f2;
       &.list-item {
+        width: 100%;
         &.unseen {
           background-color: #f9e9e3;
         }
@@ -185,13 +186,17 @@ td {
   }
 }
 .gws-memo-notice {
-  padding: 12px;
-  .ajax-popup-notice {
+  &:hover {
+    background: #424242;
+  }
+  &>.ajax-popup-notice {
     position: relative;
+    display: block;
+    padding: 12px;
     .unseen {
       position: absolute;
-      top: -7px;
-      right: -8px;
+      top: 7px;
+      right: 8px;
       display: inline-block;
       min-width: 16px;
       padding: 0 2px;
@@ -220,6 +225,7 @@ td {
   }
 }
 .gws-memo-message {
+  display: inline-block;
   margin-right: 10px;
   .popup-notice {
     &:before {
@@ -364,7 +370,7 @@ td {
     @include mb { display: none; }
   }
   .user-message {
-    float: left;
+    display: block;
     width: 50px;
     height: 49px;
     background-image: url(/assets/img/ic-message-off.png);
@@ -389,7 +395,7 @@ td {
   }
   .user {
     float: right;
-    -js-desplay: flex;
+    -js-display: flex;
     @include display-flex;
     @include align-items(center);
     a {
@@ -469,7 +475,11 @@ td {
       }
     }
     .gws-bookmark {
+      display: inline-block;
       padding: 12px 12px;
+      &:hover {
+        background-color: #424242;
+      }
       .bookmark-icon {
         color: $white;
       }
