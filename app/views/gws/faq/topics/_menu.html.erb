@@ -11,11 +11,18 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
-    <% end %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% if @mode == 'trash' %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.restore'), action: :undo_delete, id: @item %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+      <% end %>
+    <% else %>
+      <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+      <% end %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
+      <% end %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
