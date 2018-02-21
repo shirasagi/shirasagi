@@ -17,6 +17,15 @@
 
   <dt><%= @model.t :conditions %></dt>
   <dd>
+    <div class="mb-3">
+      <% @item.conjunction_options.each do |label, value| %>
+      <label class="mr-2">
+        <%= f.radio_button :conjunction, value, class: "btn-#{value}" %>
+        <%= label %>
+      </label>
+      <% end %>
+    </div>
+
     <table class="index form-index sortable-index webmail-filter-conditions">
       <thead>
         <tr>

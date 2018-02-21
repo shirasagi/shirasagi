@@ -87,9 +87,16 @@ module Webmail::Imap
     def apply_recent_filters
       return 0 if inbox.status.recent == 0
 
-      counts = Webmail::Filter.user(imap.user).enabled.map do |filter|
+      imap.examine('INBOX')
+      filters = Webmail::Filter.user(imap.user).imap_setting(imap.user, imap.setting).enabled.entries
+
+      filters.each do |filter|
         filter.imap = imap
-        filter.apply 'INBOX', ['NEW']
+        filter.uids = filter.uids_search(['NEW'])
+      end
+
+      counts = filters.map do |filter|
+        filter.uids_apply(filter.uids)
       end
 
       update_status

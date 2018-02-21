@@ -34,13 +34,15 @@ class Webmail::FiltersController < ApplicationController
     mailbox = params[:mailbox].presence
     return render(file: :show) if mailbox.blank?
 
-    count = @item.apply(mailbox)
+    @imap.examine(mailbox)
+    uids = @item.uids_search([])
+    count = @item.uids_apply(uids)
     return render(file: :show) if count == false
 
     @imap.mailboxes.update_status
 
     respond_to do |format|
-      format.html { redirect_to(action: :show, notice: t('webmail.notice.multiple.filtered', count: count)) }
+      format.html { redirect_to({ action: :show }, notice: t('webmail.notice.multiple.filtered', count: count)) }
       format.json { head :no_content }
     end
   end
