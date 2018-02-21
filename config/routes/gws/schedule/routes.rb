@@ -38,7 +38,7 @@ SS::Application.routes.draw do
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: [:plans, :export]
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
-      match :restore, on: :member, via: [:get, :post]
+      match :undo_delete, on: :member, via: [:get, :post]
     end
     resources :holidays, concerns: [:plans, :deletion]
     resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion

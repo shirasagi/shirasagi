@@ -16,7 +16,7 @@ class Gws::Schedule::TrashesController < ApplicationController
       page(params[:page]).per(50)
   end
 
-  def restore
+  def undo_delete
     set_item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
@@ -29,7 +29,7 @@ class Gws::Schedule::TrashesController < ApplicationController
 
     render_opts = {}
     render_opts[:location] = gws_schedule_plan_path(id: @item)
-    render_opts[:render] = { file: :restore }
+    render_opts[:render] = { file: :undo_delete }
     render_opts[:notice] = t('ss.notice.restored')
 
     render_update @item.save, render_opts
