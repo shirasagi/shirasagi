@@ -34,7 +34,7 @@ FactoryGirl.define do
     text "bbbb\nbbbb"
   end
 
-  factory :opendata_url_resource, class: Opendata::Resource do
+  factory :opendata_url_resource, class: Opendata::UrlResource do
     name { unique_id }
     text "eeee\nffff"
   end
