@@ -267,10 +267,6 @@ class Gws::Memo::MessagesController < ApplicationController
     render :print, layout: 'ss/print'
   end
 
-  def cancel
-    render file: :delete
-  end
-
   def trash
     render_destroy @item.move(@cur_user, 'INBOX.Trash').update
   end
