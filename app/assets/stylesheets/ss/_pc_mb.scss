@@ -186,6 +186,7 @@ td {
   }
 }
 .gws-memo-notice {
+  display: inline-block;
   &:hover {
     background: #424242;
   }
@@ -226,6 +227,7 @@ td {
 }
 .gws-memo-message {
   display: inline-block;
+  vertical-align: bottom;
   margin-right: 10px;
   .popup-notice {
     &:before {
@@ -405,6 +407,7 @@ td {
       margin-right: 10px;
     }
     .dropdown {
+      display: inline-block;
       h2 {
         padding: 15px 40px 15px 20px;
         background: url(/assets/img/arrow-usr.png) no-repeat 90% center;
