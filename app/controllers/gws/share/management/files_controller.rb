@@ -73,7 +73,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def index
     if params[:folder].present?
-      raise "403" unless @folder.readable?(@cur_user, site: @cur_site)
+      raise "403" unless @folder.allowed?(:read, @cur_user, site: @cur_site)
     end
     if @category.present? || @folder.present?
       params[:s] ||= {}
@@ -83,7 +83,7 @@ class Gws::Share::Management::FilesController < ApplicationController
     end
 
     @items = @model.site(@cur_site).
-      readable(@cur_user, site: @cur_site).
+      allow(:read, @cur_user, site: @cur_site).
       deleted.
       search(params[:s]).
       page(params[:page]).per(50)
@@ -94,13 +94,12 @@ class Gws::Share::Management::FilesController < ApplicationController
         pluck(:name).
         first
 
-    @sub_folders = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
+    @sub_folders = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).
         sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
-    raise "403" unless @item.readable?(@cur_user)
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render
   end
 
