@@ -8,7 +8,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     let(:new_path) { new_gws_schedule_plan_path site }
     let(:show_path) { gws_schedule_plan_path site, item }
     let(:edit_path) { edit_gws_schedule_plan_path site, item }
-    let(:delete_path) { delete_gws_schedule_plan_path site, item }
+    let(:delete_path) { soft_delete_gws_schedule_plan_path site, item }
 
     before { login_gws_user }
 
