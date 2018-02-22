@@ -116,6 +116,27 @@ module Gws::Schedule::PlanFilter
     end
 
     @item.deleted = Time.zone.now
+    @item.edit_range = params.dig(:item, :edit_range)
     render_destroy @item.save
+  end
+
+  def undo_delete
+    set_item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = nil
+    @item.edit_range = params.dig(:item, :edit_range)
+
+    render_opts = {}
+    render_opts[:location] = gws_schedule_plan_path(id: @item)
+    render_opts[:render] = { file: :undo_delete }
+    render_opts[:notice] = t('ss.notice.restored')
+
+    render_update @item.save, render_opts
   end
 end
