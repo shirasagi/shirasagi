@@ -2,4 +2,6 @@
   <% if @item.repeat_plan.present? %> Gws_Schedule_Repeat_Plan.renderSubmitButtons(); <% end %>
 <% end %>
 
+<%= hidden_field_tag 'calendar[view]', params.dig(:calendar, :view) %>
+
 <%= render file: "ss/crud/_delete" %>

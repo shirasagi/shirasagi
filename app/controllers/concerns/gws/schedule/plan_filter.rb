@@ -36,7 +36,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def redirection_url
-    url_for(action: :index) + "?calendar[view]=#{redirection_view}&calendar[date]=#{@item.start_at.to_date}"
+    url_for(action: :index, calendar: { view: redirection_view, date: @item.start_at.to_date.to_s })
   end
 
   def set_file_addon_state
@@ -117,7 +117,7 @@ module Gws::Schedule::PlanFilter
 
     @item.deleted = Time.zone.now
     @item.edit_range = params.dig(:item, :edit_range)
-    render_destroy @item.save
+    render_destroy @item.save, location: redirection_url
   end
 
   def undo_delete
@@ -133,7 +133,7 @@ module Gws::Schedule::PlanFilter
     @item.edit_range = params.dig(:item, :edit_range)
 
     render_opts = {}
-    render_opts[:location] = gws_schedule_plan_path(id: @item)
+    render_opts[:location] = { action: :index }
     render_opts[:render] = { file: :undo_delete }
     render_opts[:notice] = t('ss.notice.restored')
 
