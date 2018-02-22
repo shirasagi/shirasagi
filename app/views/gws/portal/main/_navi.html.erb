@@ -25,10 +25,12 @@
   <% end %>
 
   <% if params[:user].present? %>
-    <h2><%= @portal.portal_user.name %></h2>
-    <h3><%= link_to t("gws/portal.links.arrange_portlets"), gws_portal_user_layouts_path, class: "management" %></h3>
-    <h3><%= link_to t("gws/portal.links.manage_portlets"), gws_portal_user_portlets_path, class: "management" %></h3>
-    <h3><%= link_to t("gws/portal.links.settings"), gws_portal_user_settings_path, class: "management" %></h3>
+    <% if @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true) %>
+      <h2><%= @portal.portal_user.name %></h2>
+      <h3><%= link_to t("gws/portal.links.arrange_portlets"), gws_portal_user_layouts_path, class: "management" %></h3>
+      <h3><%= link_to t("gws/portal.links.manage_portlets"), gws_portal_user_portlets_path, class: "management" %></h3>
+      <h3><%= link_to t("gws/portal.links.settings"), gws_portal_user_settings_path, class: "management" %></h3>
+    <% end %>
   <% end %>
 </nav>
 
