@@ -8,10 +8,18 @@ class Gws::Schedule::TrashesController < ApplicationController
 
   menu_view 'gws/crud/menu'
 
-  def index
+  private
+
+  def set_items
     @items = Gws::Schedule::Plan.site(@cur_site).only_deleted.
       allow(:read, @cur_user, site: @cur_site).
-      search(params[:s]).
+      search(params[:s])
+  end
+
+  public
+
+  def index
+    @items = @items.
       order_by(start_at: -1).
       page(params[:page]).per(50)
   end

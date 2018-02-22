@@ -6,6 +6,7 @@ module Gws::Schedule::PlanFilter
     model Gws::Schedule::Plan
     before_action :check_schedule_visible
     before_action :set_file_addon_state
+    before_action :set_items
   end
 
   private
@@ -29,6 +30,25 @@ module Gws::Schedule::PlanFilter
       member_ids: params[:member_ids].presence || [@cur_user.id],
       facility_ids: params[:facility_ids].presence
     }
+  end
+
+  def set_items
+    @items ||= Gws::Schedule::Plan.site(@cur_site).without_deleted.
+      member(@cur_user).
+      search(params[:s])
+  end
+
+  # override SS::CrudFilter#set_item
+  def set_item
+    set_items
+    @item ||= begin
+      item = @items.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
   end
 
   def redirection_view

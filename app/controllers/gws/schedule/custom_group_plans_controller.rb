@@ -20,9 +20,12 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
     @crumbs << [@group.name, action: :index]
   end
 
+  def set_items
+    @items = @group.sorted_members
+  end
+
   public
 
   def index
-    @items = @group.sorted_members
   end
 end
