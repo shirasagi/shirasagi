@@ -7,7 +7,7 @@
   <% if Gws::Memo::Template.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/memo/template'), gws_memo_templates_path, class: "management" %></h3>
   <% end %>
-  <% if SS.config.gws.dig("disable_external_email").blank? %>
+  <% if SS.config.gws.dig("memo", "disable_mail_forward").blank? %>
     <h3><%= link_to t('mongoid.models.gws/memo/forward'), gws_memo_forwards_path, class: "management" %></h3>
   <% end %>
   <% if Gws::Memo::List.allowed?(:read, @cur_user, site: @cur_site) %>

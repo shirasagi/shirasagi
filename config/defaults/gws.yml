@@ -7,9 +7,6 @@ production: &production
   # Disable navigation
   disable_navi: false
 
-  # Disable external email features
-  disable_external_email: false
-
   # StyleSheets on gws pages.
   stylesheets: ["gws/style"]
 
@@ -132,6 +129,7 @@ production: &production
 
   memo:
     disable_unsend: true
+    disable_mail_forward: false
 
 test:
   <<: *production
