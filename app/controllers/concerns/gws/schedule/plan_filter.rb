@@ -156,12 +156,15 @@ module Gws::Schedule::PlanFilter
 
     @item.deleted = nil
     @item.edit_range = params.dig(:item, :edit_range)
+    @item.reset_approvals
 
     render_opts = {}
     render_opts[:location] = { action: :index }
     render_opts[:render] = { file: :undo_delete }
     render_opts[:notice] = t('ss.notice.restored')
 
-    render_update @item.save, render_opts
+    saved = @item.save
+    render_update saved, render_opts
+    send_approval_mail if saved && @item.approval_present?
   end
 end
