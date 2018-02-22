@@ -23,11 +23,7 @@ class Gws::Share::Apis::FoldersController < ApplicationController
 
   def root_items
     if @type == 'gws/share/files'
-      if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
-        @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site).limit(@limit)
-      elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
-        @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site).limit(@limit)
-      end
+      @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site).limit(@limit)
     elsif @type == 'gws/share/management/files'
       @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site).limit(@limit)
     end
@@ -35,17 +31,10 @@ class Gws::Share::Apis::FoldersController < ApplicationController
 
   def tree_items
     if @type == 'gws/share/files'
-      if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
-        @item.parents.map do |item|
-          next unless item.allowed?(:read, @cur_user, site: @cur_site)
-          item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
-        end.flatten
-      elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
-        @item.parents.map do |item|
-          next unless item.allowed?(:read, @cur_user, site: @cur_site)
-          item.children.readable(@cur_user, site: @cur_site).limit(@limit)
-        end.flatten
-      end
+      @item.parents.map do |item|
+        next unless item.allowed?(:read, @cur_user, site: @cur_site)
+        item.children.readable(@cur_user, site: @cur_site).limit(@limit)
+      end.flatten
     elsif @type == 'gws/share/management/files'
       @item.parents.map do |item|
         next unless item.allowed?(:read, @cur_user, site: @cur_site)
@@ -56,11 +45,7 @@ class Gws::Share::Apis::FoldersController < ApplicationController
 
   def child_items
     if @type == 'gws/share/files'
-      if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
-        @item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
-      elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
-        @item.children.readable(@cur_user, site: @cur_site).limit(@limit)
-      end
+      @item.children.readable(@cur_user, site: @cur_site).limit(@limit)
     elsif @type == 'gws/share/management/files'
       @item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
     end
