@@ -139,7 +139,7 @@ td {
 // Popup Notice
 .popup-notice-container .popup-notice {
   position: absolute;
-  display: block;
+  display: inline-block;
   top: 100%;
   right: 0;
   width: 450px;
@@ -162,6 +162,7 @@ td {
       padding: 15px;
       border-bottom: 1px solid  #f2f2f2;
       &.list-item {
+        width: 100%;
         &.unseen {
           background-color: #f9e9e3;
         }
@@ -185,13 +186,18 @@ td {
   }
 }
 .gws-memo-notice {
-  padding: 12px;
-  .ajax-popup-notice {
+  display: inline-block;
+  &:hover {
+    background: #424242;
+  }
+  &>.ajax-popup-notice {
     position: relative;
+    display: block;
+    padding: 12px;
     .unseen {
       position: absolute;
-      top: -7px;
-      right: -8px;
+      top: 7px;
+      right: 8px;
       display: inline-block;
       min-width: 16px;
       padding: 0 2px;
@@ -220,6 +226,8 @@ td {
   }
 }
 .gws-memo-message {
+  display: inline-block;
+  vertical-align: bottom;
   margin-right: 10px;
   .popup-notice {
     &:before {
@@ -364,7 +372,7 @@ td {
     @include mb { display: none; }
   }
   .user-message {
-    float: left;
+    display: block;
     width: 50px;
     height: 49px;
     background-image: url(/assets/img/ic-message-off.png);
@@ -389,7 +397,7 @@ td {
   }
   .user {
     float: right;
-    -js-desplay: flex;
+    -js-display: flex;
     @include display-flex;
     @include align-items(center);
     a {
@@ -399,6 +407,7 @@ td {
       margin-right: 10px;
     }
     .dropdown {
+      display: inline-block;
       h2 {
         padding: 15px 40px 15px 20px;
         background: url(/assets/img/arrow-usr.png) no-repeat 90% center;
@@ -469,7 +478,11 @@ td {
       }
     }
     .gws-bookmark {
+      display: inline-block;
       padding: 12px 12px;
+      &:hover {
+        background-color: #424242;
+      }
       .bookmark-icon {
         color: $white;
       }
@@ -489,11 +502,9 @@ td {
     .gws-contrast {
       padding: 8px 10px;
       border-bottom: 1px solid  #f2f2f2;
-
       .caret {
         float: right;
       }
-
       &:hover {
         cursor: pointer;
         color: $orange;
@@ -506,23 +517,31 @@ td {
     .gws-contrast-loading, .gws-contrast-error {
       padding: 8px 10px;
     }
-    
     #user-contrast-menu {
+      height: auto;
+      min-height: 200px;
       .user-contrast-menu-header {
         border-bottom: 1px solid  #f2f2f2;
         font-weight: bold;
-        text-align: center;
-
-        .caret {
-          float: left;
-        }
+        .cascade-back { padding: 8px 10px; }
+        .caret { float: left; }
       }
-
       .gws-contrast-item {
         display: block;
-        padding: 8px 10px;
+        padding: 8px 10px 8px 12px;
         cursor: pointer;
+        input[type="radio"] {
+          margin: 4px 7px 3px 4px;
+          vertical-align: top;
+        }
+        .gws-contrast-name {
+          display: inline-block;
+          width: calc(100% - 32px);
+        }
       }
+    }
+    .gws-contrast, .user-contrast-menu-header {
+      .material-icons { line-height: 0.8; }
     }
   }
   .sp-menu-button {

@@ -12,9 +12,9 @@ SS_CascadeMenu.render = function() {
     var $currDropdown = $this.closest('.dropdown-menu');
     var $nextDropdown = $(ref);
 
-    if ($currDropdown.height() > $nextDropdown.height()) {
-      $nextDropdown.height($currDropdown.height());
-    }
+    // if ($currDropdown.height() > $nextDropdown.height()) {
+    //   $nextDropdown.height($currDropdown.height());
+    // }
 
     $nextDropdown.addClass('active');
     $currDropdown.removeClass('active');
