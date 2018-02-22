@@ -165,7 +165,7 @@ module Gws::Circular::PostFilter
   end
 
   def toggle_seen
-    raise '404' if !@item.public? || @item.active?
+    raise '404' if !@item.public? || !@item.active?
     raise '403' unless @item.member?(@cur_user)
     render_update @item.toggle_seen(@cur_user).update
   end
