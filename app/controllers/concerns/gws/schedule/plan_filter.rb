@@ -33,9 +33,14 @@ module Gws::Schedule::PlanFilter
   end
 
   def set_items
-    @items ||= Gws::Schedule::Plan.site(@cur_site).without_deleted.
-      member(@cur_user).
-      search(params[:s])
+    @items ||= begin
+      or_conds = Gws::Schedule::Plan.member_conditions(@cur_user)
+      or_conds << { approval_member_ids: @cur_user.id }
+      Gws::Schedule::Plan.site(@cur_site).
+        without_deleted.
+        and([{ '$or' => or_conds }]).
+        search(params[:s])
+    end
   end
 
   # override SS::CrudFilter#set_item
