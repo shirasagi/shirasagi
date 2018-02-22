@@ -164,6 +164,7 @@ module Gws::Schedule::PlanFilter
     render_opts[:notice] = t('ss.notice.restored')
 
     saved = @item.save
+    flash[:errors] = @item.errors.full_messages if saved && @item.errors.present?
     render_update saved, render_opts
     send_approval_mail if saved && @item.approval_present?
   end
