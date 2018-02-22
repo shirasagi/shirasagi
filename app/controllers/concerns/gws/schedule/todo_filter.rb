@@ -157,4 +157,10 @@ module Gws::Schedule::TodoFilter
       format.json { head json: errors }
     end
   end
+
+  def copy
+    set_item
+    @item = @item.new_clone
+    render file: :new
+  end
 end
