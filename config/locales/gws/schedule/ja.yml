@@ -174,6 +174,8 @@ ja:
     edit_private_gws_schedule_plans: 予定の編集（所有）
     delete_other_gws_schedule_plans: 予定の削除（全て）
     delete_private_gws_schedule_plans: 予定の削除（所有）
+    trash_other_gws_schedule_plans: 予定ゴミ箱の管理（全て）
+    trash_private_gws_schedule_plans: 予定ゴミ箱の管理（所有）
     read_other_gws_schedule_categories: 種別の閲覧（全て）
     read_private_gws_schedule_categories: 種別の閲覧（所有）
     edit_other_gws_schedule_categories: 種別の編集（全て）
@@ -186,6 +188,8 @@ ja:
     edit_private_gws_schedule_todos: ToDoの編集（所有）
     delete_other_gws_schedule_todos: ToDoの削除（全て）
     delete_private_gws_schedule_todos: ToDoの削除（所有）
+    trash_other_gws_schedule_todos: ToDoゴミ箱の管理（全て）
+    trash_private_gws_schedule_todos: ToDoゴミ箱の管理（所有）
 
   mongoid:
     models:
