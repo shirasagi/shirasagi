@@ -118,8 +118,4 @@ module Gws::Schedule::PlanFilter
     @item.deleted = Time.zone.now
     render_destroy @item.save
   end
-
-  def soft_delete_all
-    raise NotImplementedError
-  end
 end

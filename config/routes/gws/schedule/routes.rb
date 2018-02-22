@@ -7,7 +7,6 @@ SS::Application.routes.draw do
     get :popup, on: :member
     get :copy, on: :member
     match :soft_delete, on: :member, via: [:get, :post]
-    post :soft_delete_all, on: :collection
   end
 
   concern :export do
