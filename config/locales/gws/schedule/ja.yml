@@ -121,18 +121,12 @@ ja:
       disable: 削除済みに移動しました
       active: 削除を取り消しました
     confirm:
-      active: 削除を取り消しますか？
       finish: 完了にしてよろしいですか？
       revert: 未完了に戻してよろしいですか？
-      disable: 削除済みに移動しますか？
       finish_all: 選択した項目を全て完了にしますか？
       revert_all: 選択した項目を全て未完了に戻しますか？
-      disable_all: 選択した項目を全て削除済みに移動しますか？
-      active_all: 選択した項目の削除を取り消しますか？
     search_todos: ToDoを検索
     links:
-      active: 削除を取り消す
-      disable: 削除済みに移動する
       finish: 完了する
       revert: 未完了に戻す
     options:

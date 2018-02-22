@@ -18,7 +18,7 @@
       <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.delete'), action: :disable, id: @item %>
+      <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user) %>
       <% if @item.finished? %>

@@ -83,15 +83,6 @@ class Gws::Schedule::Todo
     true
   end
 
-  def disable
-    now = Time.zone.now
-    update_attributes(deleted: now) if deleted.blank? || deleted > now
-  end
-
-  def active
-    update_attributes(deleted: nil)
-  end
-
   def todo_state_options
     %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
@@ -101,14 +92,6 @@ class Gws::Schedule::Todo
       [I18n.t("gws/schedule/todo.options.sort.#{k}"), k]
     end
   end
-
-  # alias allowed_for_managers? allowed?
-  #
-  # def allowed?(action, user, opts = {})
-  #   return true if allowed_for_managers?(action, user, opts)
-  #   member?(user) || custom_group_member?(user) if action =~ /edit|delete/
-  #   false
-  # end
 
   class << self
     def search(params)

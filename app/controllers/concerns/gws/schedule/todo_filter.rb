@@ -64,13 +64,19 @@ module Gws::Schedule::TodoFilter
   end
 
   # 論理削除
-  def disable
-    @item.attributes = fix_params
+  def soft_delete
+    set_item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    return if request.get?
+
+    if request.get?
+      render
+      return
+    end
+
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
-    render_destroy @item.disable, {notice: t('gws/schedule/todo.notice.disable')}
+    @item.deleted = Time.zone.now
+    render_destroy @item.save
   end
 
   # 完了にする
@@ -93,13 +99,13 @@ module Gws::Schedule::TodoFilter
     render_update @item.update(todo_state: 'unfinished')
   end
 
-  # 削除を取り消す
-  def active
-    @item.attributes = fix_params
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    return if request.get?
-    render_destroy @item.active, {notice: t('gws/schedule/todo.notice.active')}
-  end
+  # # 削除を取り消す
+  # def active
+  #   @item.attributes = fix_params
+  #   raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+  #   return if request.get?
+  #   render_destroy @item.active, {notice: t('gws/schedule/todo.notice.active')}
+  # end
 
   # すべて完了にする
   def finish_all
@@ -133,30 +139,30 @@ module Gws::Schedule::TodoFilter
     render_finish_all(@items.count == 0)
   end
 
-  # すべての削除を取り消す
-  def active_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site)
-        item.attributes = fix_params
-        next if item.active
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-
-    location = crud_redirect_url || { action: :index }
-    notice = { notice: t('gws/schedule/todo.notice.active') }
-    errors = @items.map { |item| [item.id, item.errors.full_messages] }
-
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
-    end
-  end
+  # # すべての削除を取り消す
+  # def active_all
+  #   entries = @items.entries
+  #   @items = []
+  #
+  #   entries.each do |item|
+  #     if item.allowed?(:delete, @cur_user, site: @cur_site)
+  #       item.attributes = fix_params
+  #       next if item.active
+  #     else
+  #       item.errors.add :base, :auth_error
+  #     end
+  #     @items << item
+  #   end
+  #
+  #   location = crud_redirect_url || { action: :index }
+  #   notice = { notice: t('gws/schedule/todo.notice.active') }
+  #   errors = @items.map { |item| [item.id, item.errors.full_messages] }
+  #
+  #   respond_to do |format|
+  #     format.html { redirect_to location, notice }
+  #     format.json { head json: errors }
+  #   end
+  # end
 
   def copy
     set_item
