@@ -15,7 +15,6 @@ $(function() {
 <% end %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%#= link_to t("gws/qna.links.categories"), categories_gws_qna_topics_path %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
