@@ -1,14 +1,10 @@
-<%= jquery do %>
-  Gws_Monitor_Topic.render();
-<% end %>
-
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button class="public-all btn" data-ss-href="<%= url_for(action: :public_all) %>" data-ss-confirm="<%= I18n.t('gws/monitor.confirm.public_all') %>"><%= t 'gws/monitor.links.public' %></button>
-    <button class="preparation-all btn" data-ss-href="<%= url_for(action: :preparation_all) %>" data-ss-confirm="<%= I18n.t('gws/monitor.confirm.preparation_all') %>"><%= t 'gws/monitor.links.preparation' %></button>
-    <button class="question_not_applicable-all btn" data-ss-href="<%= url_for(action: :question_not_applicable_all) %>" data-ss-confirm="<%= I18n.t('gws/monitor.confirm.question_not_applicable') %>"><%= t 'gws/monitor.links.question_not_applicable' %></button>
+    <button class="public-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :public_all) %>" data-ss-confirmation="<%= t('gws/monitor.confirm.public_all') %>"><%= t('gws/monitor.links.public') %></button>
+    <button class="preparation-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :preparation_all) %>" data-ss-confirmation="<%= t('gws/monitor.confirm.preparation_all') %>"><%= t('gws/monitor.links.preparation') %></button>
+    <button class="question-not-applicable-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :question_not_applicable_all) %>" data-ss-confirmation="<%= t('gws/monitor.confirm.question_not_applicable') %>"><%= t('gws/monitor.links.question_not_applicable') %></button>
   </div>
 
   <%= render file: '_search' %>

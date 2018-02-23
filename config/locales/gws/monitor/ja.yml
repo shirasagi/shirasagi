@@ -123,9 +123,6 @@ ja:
       public: 受取済みにする
       preparation: 受取待ちに戻す
       question_not_applicable: 該当なしにする
-      disable: ゴミ箱に移動する
-      disable_all: ゴミ箱に移動する
-      active_all: 削除を取り消す
       answered: 回答済みにする
       closed: 締め切る
       open: 締め切り解除
@@ -143,10 +140,6 @@ ja:
       public_all: チェックした項目を受取済みにしますか？
       preparation_all: チェックした項目を受取待ちにしますか？
       question_not_applicable_all: チェックした項目を該当なしにしますか？
-      disable: ゴミ箱に移動しますか？
-      active: 削除を取り消しますか？
-      disable_all: チェックした項目をゴミ箱に移動しますか？
-      active_all: 選択した項目の削除を取り消しますか？
       comment_answer: 所属として回答します。よろしいですか？
       publish: 配信してよろしいですか？
     buttons:
@@ -164,12 +157,9 @@ ja:
     management:
       links:
         back_to_topic: 戻る
-        active: 削除を取り消す
     notice:
       close: 回答を締め切りました
       open: 締め切りを解除しました
-      disabled: ゴミ箱に移動しました
-      active: 削除を取り消しました
       published: 公開しました
       public: 受取済みにしました
       preparation: 受取待ちに戻しました

@@ -7,8 +7,8 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to I18n.t('ss.links.restore'), action: :undo_delete, id: @item %>
       <%= link_to I18n.t('ss.links.delete'), action: :delete, id: @item %>
-      <%= link_to I18n.t('gws/monitor.management.links.active'), action: :active, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
