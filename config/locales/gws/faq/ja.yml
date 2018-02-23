@@ -153,3 +153,7 @@ ja:
     gws/faq/category:
       name:
         - カテゴリー名を入力します。
+
+  job:
+    models:
+      gws/faq/trash_purge_job: よくある質問/投稿ゴミ箱の掃除
