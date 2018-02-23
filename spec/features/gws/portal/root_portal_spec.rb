@@ -18,7 +18,7 @@ describe "gws_portal_group_portal", type: :feature, dbscope: :example do
       end
       expect(Gws::Portal::GroupPortlet.all.size).to eq(0)
 
-      first('.nav-management-menu a').click
+      first('.current-navi a.management').click
       expect(current_path).to eq gws_portal_group_layouts_path(site: site, group: group)
       expect(Gws::Portal::GroupPortlet.all.size).to eq(default_portlets.size)
 
