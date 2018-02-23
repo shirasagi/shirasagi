@@ -104,6 +104,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
     if result
       post_comment
 
+      @cur_schedule = @cur_schedule.class.find(@cur_schedule.id) # nocache
       @cur_schedule.update_approval_state
       if @cur_schedule.approval_state == 'approve'
         send_approval_approve_mail
