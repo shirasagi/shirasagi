@@ -26,10 +26,10 @@ class Gws::Discussion::TrashesController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @model.allowed?(:trash, @cur_user, site: @cur_site)
 
     @items = @model.site(@cur_site).forum.only_deleted
-    @items = @items.allow(:read, @cur_user, site: @cur_site)
+    @items = @items.allow(:trash, @cur_user, site: @cur_site)
     @items.search(params[:s]).
       reorder(order: 1, created: 1).
       page(params[:page]).per(50)
