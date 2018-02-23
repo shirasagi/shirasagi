@@ -85,7 +85,7 @@ class Gws::Share::Management::FilesController < ApplicationController
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
       deleted.
-      search(params[:s]).
+      custom_order(params.dig(:s, :sort) || 'updated_desc').
       page(params[:page]).per(50)
 
     folder_name = Gws::Share::Folder.site(@cur_site).

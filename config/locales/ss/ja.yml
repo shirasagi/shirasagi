@@ -268,6 +268,7 @@ ja:
         updated_desc: 更新日時(新着順)
         order_asc:  指定値(昇順)
         order_desc: 指定値(降順)
+        filename: ファイル名
       restriction:
         none: 制限なし
         api_only: API利用のみ
@@ -433,8 +434,8 @@ ja:
         download: ダウンロード
         model: モデル
         state: 状態
-        name: ファイル名（表示用）
-        filename: ファイル名
+        name: ファイル名
+        filename: ファイル名（英数）
         size: ファイルサイズ
         content_type: コンテンツタイプ
         resizing: リサイズ
@@ -677,9 +678,9 @@ ja:
       in_file:
         - ファイルを選択します。
       name:
-        - ファイル名（表示用）を入力します。
-      filename:
         - ファイル名を入力します。
+      filename:
+        - ファイル名（英数）を入力します。
       geo_location:
         - 緯度・経度を10進で入力します。
     ss/model/user_title:
