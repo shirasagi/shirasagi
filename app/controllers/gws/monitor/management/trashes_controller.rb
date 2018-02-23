@@ -25,7 +25,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
 
   def set_items
     @items = @model.site(@cur_site).topic
-    @items = @items.allow(:read, @cur_user, site: @cur_site)
+    @items = @items.allow(:trash, @cur_user, site: @cur_site)
     @items = @items.only_deleted
     @items = @items.search(params[:s])
     @items = @items.custom_order(params.dig(:s, :sort))
