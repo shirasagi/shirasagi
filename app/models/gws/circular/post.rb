@@ -46,16 +46,6 @@ class Gws::Circular::Post
     where(state: 'public')
   }
 
-  scope :without_deleted, ->(date = Time.zone.now) {
-    where("$and" => [
-        { "$or" => [{ deleted: nil }, { :deleted.gt => date }] }
-    ])
-  }
-
-  scope :only_deleted, -> {
-    where(:deleted.exists => true)
-  }
-
   class << self
     def search(params)
       criteria = all
@@ -137,14 +127,6 @@ class Gws::Circular::Post
 
   def deleted?
     deleted.present? && deleted <= Time.zone.now
-  end
-
-  def active
-    update_attributes(deleted: nil)
-  end
-
-  def disable
-    update_attributes(deleted: Time.zone.now) if active?
   end
 
   def custom_group_member?(user)
