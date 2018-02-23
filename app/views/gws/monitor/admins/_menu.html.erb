@@ -31,7 +31,7 @@
       <% end %>
       <% if @item.closed? %>
         <%= link_to t('gws/monitor.links.open'), { action: :open, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.confirm.open')  %>
-      <% else %>
+      <% elsif @item.public? %>
         <%= link_to t('gws/monitor.links.closed'), { action: :close, id: @item }, class: 'close-topic', 'data-confirm' => t('gws/monitor.confirm.close')  %>
       <% end %>
     <% end %>
