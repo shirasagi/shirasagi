@@ -26,7 +26,7 @@ class Gws::SharedAddress::Management::TrashesController < ApplicationController
     # s_params[:address_group_id] = @address_group.id if @address_group.present?
 
     @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).
+      allow(:trash, @cur_user, site: @cur_site).
       only_deleted.
       search(s_params).
       page(params[:page]).per(50)

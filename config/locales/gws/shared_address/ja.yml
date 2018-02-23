@@ -14,6 +14,8 @@ ja:
     edit_private_gws_shared_address_addresses: アドレス帳の編集（所有）
     delete_other_gws_shared_address_addresses: アドレス帳の削除（全て）
     delete_private_gws_shared_address_addresses: アドレス帳の削除（所有）
+    trash_other_gws_shared_address_addresses: アドレス帳ゴミ箱の管理（全て）
+    trash_private_gws_shared_address_addresses: アドレス帳ゴミ箱の管理（所有）
     read_other_gws_shared_address_groups: グループの閲覧（全て）
     read_private_gws_shared_address_groups: グループの閲覧（所有）
     edit_other_gws_shared_address_groups: グループの編集（全て）
