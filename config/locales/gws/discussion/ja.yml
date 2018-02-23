@@ -194,3 +194,7 @@ ja:
         - ToDoの表示件数を設定します。
       discussion_comment_limit:
         - １スレッドに対するコメントの上限を設定します。
+
+  job:
+    models:
+      gws/discussion/trash_purge_job: 電子会議室ゴミ箱の掃除
