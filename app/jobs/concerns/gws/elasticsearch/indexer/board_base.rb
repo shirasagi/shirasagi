@@ -5,7 +5,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
   module ClassMethods
     def convert_to_doc(cur_site, topic, post)
       doc = {}
-      doc[:url] = path(site: cur_site, id: topic, anchor: "post-#{post.id}")
+      doc[:url] = path(site: cur_site, mode: '-', category: '-', id: topic, anchor: "post-#{post.id}")
       doc[:name] = post.name
       doc[:mode] = post.try(:mode)
       doc[:text] = post.text
@@ -38,7 +38,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
 
     def convert_file_to_doc(cur_site, topic, post, file)
       doc = {}
-      doc[:url] = path(site: cur_site, id: topic, anchor: "file-#{file.id}")
+      doc[:url] = path(site: cur_site, mode: '-', category: '-', id: topic, anchor: "file-#{file.id}")
       doc[:name] = file.name
       doc[:categories] = topic.categories.pluck(:name)
       doc[:data] = Base64.strict_encode64(::File.binread(file.path))
