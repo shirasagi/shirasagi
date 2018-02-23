@@ -52,7 +52,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true, js
       expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(Sys::MailLog.count).to eq 2
-      expect(Gws::Memo::Message.count).to eq 2
+      expect(Gws::Memo::Notice.count).to eq 2
 
       #
       # user1: 申請を承認する
@@ -78,7 +78,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true, js
         eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(Sys::MailLog.count).to eq 2
-      expect(Gws::Memo::Message.count).to eq 2
+      expect(Gws::Memo::Notice.count).to eq 2
 
       #
       # user2: 申請を承認する
@@ -104,7 +104,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, tmpdir: true, js
         eq({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2})
 
       expect(Sys::MailLog.count).to eq 3
-      expect(Gws::Memo::Message.count).to eq 3
+      expect(Gws::Memo::Notice.count).to eq 3
     end
   end
 end
