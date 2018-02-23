@@ -5,6 +5,9 @@ class Gws::Elasticsearch::Indexer::CircularCommentJob < Gws::ApplicationJob
 
   class << self
     def path(*args)
+      options = args.extract_options!
+      options.delete(:mode)
+      args << options
       url_helpers.gws_circular_post_path(*args)
     end
   end
