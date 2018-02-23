@@ -76,7 +76,7 @@ class Gws::Share::FilesController < ApplicationController
     @items = @model.site(@cur_site).
       readable(@cur_user, site: @cur_site).
       active.search(params[:s]).
-      custom_order(params.dig(:s, :sort) || 'created_desc').
+      custom_order(params.dig(:s, :sort) || 'updated_desc').
       page(params[:page]).per(50)
 
     folder_name = Gws::Share::Folder.site(@cur_site).
