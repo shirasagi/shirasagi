@@ -40,3 +40,7 @@ ja:
         - グループ名を入力します。
       order:
         - 並び順を入力します。
+
+  job:
+    models:
+      gws/shared_address/trash_purge_job: 共有アドレス/ゴミ箱の掃除
