@@ -15,15 +15,23 @@ module Gws::Elasticsearch::Indexer::Base
       before_file_ids = collect_file_ids_was_for_save(item)
 
       ret = yield
-      if site.menu_elasticsearch_visible?
-        after_file_ids = collect_file_ids_for_save(item)
-        remove_file_ids = before_file_ids - after_file_ids
+      return ret unless site.menu_elasticsearch_visible?
 
+      after_file_ids = collect_file_ids_for_save(item)
+      remove_file_ids = before_file_ids - after_file_ids
+
+      if item.deleted.present?
+        # soft deleted
         job = self.bind(site_id: site)
-        job.perform_later(
-          action: 'index', id: item.id.to_s, remove_file_ids: remove_file_ids.map(&:to_s)
-        )
+        job.perform_later(action: 'delete', id: item.id.to_s, remove_file_ids: (before_file_ids | after_file_ids).map(&:to_s))
+        return ret
       end
+
+      job = self.bind(site_id: site)
+      job.perform_later(
+        action: 'index', id: item.id.to_s, remove_file_ids: remove_file_ids.map(&:to_s)
+      )
+
       ret
     end
 
@@ -33,10 +41,11 @@ module Gws::Elasticsearch::Indexer::Base
       file_ids = collect_file_ids_for_destroy(item)
 
       ret = yield
-      if item.site.menu_elasticsearch_visible?
-        job = self.bind(site_id: site)
-        job.perform_later(action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s))
-      end
+      return ret unless item.site.menu_elasticsearch_visible?
+
+      job = self.bind(site_id: site)
+      job.perform_later(action: 'delete', id: id.to_s, remove_file_ids: file_ids.map(&:to_s))
+
       ret
     end
 
@@ -130,7 +139,7 @@ module Gws::Elasticsearch::Indexer::Base
     end
 
     if remove_file_ids.present?
-      remove_file_ids.each do |id|
+      remove_file_ids.uniq.each do |id|
         with_rescue(Elasticsearch::Transport::Transport::ServerError) do
           es_client.delete(index: index_name, type: index_type, id: "file-#{id}")
         end
