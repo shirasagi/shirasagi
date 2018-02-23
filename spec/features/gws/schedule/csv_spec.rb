@@ -17,8 +17,10 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
 
       # import
       visit csv_path
-      within "form" do
-        click_button I18n.t('ss.import')
+      page.accept_confirm do
+        within "form" do
+          click_button I18n.t('ss.import')
+        end
       end
       expect(current_path).to eq csv_path
     end
