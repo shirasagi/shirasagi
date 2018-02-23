@@ -41,10 +41,6 @@ SS::Application.routes.draw do
         get :download, on: :member
         get :file_download, on: :member
       end
-      resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
-        match :undo_delete, on: :member, via: %i[get post]
-        # post :undo_delete_all, on: :collection
-      end
 
       namespace "management" do
         get '/' => redirect { |p, req| "#{req.path}/admins" }, as: :main

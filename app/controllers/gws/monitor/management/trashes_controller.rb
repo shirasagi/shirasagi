@@ -20,7 +20,7 @@ class Gws::Monitor::Management::TrashesController < ApplicationController
     if @category.present?
       @crumbs << [@category.name, gws_monitor_topics_path]
     end
-    @crumbs << [t('gws/monitor.tabs.management_trash'), action: :index]
+    @crumbs << [t('ss.navi.trash'), action: :index]
   end
 
   def set_items
