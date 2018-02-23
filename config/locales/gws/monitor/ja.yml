@@ -300,3 +300,7 @@ ja:
           - 回答の表示方法を選択します。
         notice_state:
           - お知らせ表示条件を選択します。
+
+  job:
+    models:
+      gws/monitor/trash_purge_job: 照会・回答/投稿ゴミ箱の掃除
