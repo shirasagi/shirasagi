@@ -162,3 +162,7 @@ ja:
     gws/qna/category:
       name:
         - カテゴリー名を入力します。
+
+  job:
+    models:
+      gws/qna/trash_purge_job: Ｑ＆Ａ/投稿ゴミ箱の掃除
