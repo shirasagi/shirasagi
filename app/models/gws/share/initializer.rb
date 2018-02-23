@@ -9,6 +9,8 @@ module Gws::Share
     Gws::Role.permission :delete_private_gws_share_files, module_name: 'gws/share'
     Gws::Role.permission :write_other_gws_share_files, module_name: 'gws/share'
     Gws::Role.permission :write_private_gws_share_files, module_name: 'gws/share'
+    Gws::Role.permission :trash_other_gws_share_files, module_name: 'gws/share'
+    Gws::Role.permission :trash_private_gws_share_files, module_name: 'gws/share'
 
     Gws::Role.permission :read_other_gws_share_categories, module_name: 'gws/share'
     Gws::Role.permission :read_private_gws_share_categories, module_name: 'gws/share'

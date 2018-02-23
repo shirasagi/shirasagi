@@ -2,7 +2,7 @@
   <h2><%= link_to @cur_site.menu_share_label || t('modules.gws/share'), gws_share_files_path, class: "icon-share" %></h2>
   <h3><%= link_to t('ss.navi.readable'), gws_share_files_path %></h3>
 
-  <% if Gws::Share::File.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% if Gws::Share::File.allowed?(:trash, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('ss.navi.trash'), gws_share_management_files_path, class: 'trash' %></h3>
   <% end %>
 
