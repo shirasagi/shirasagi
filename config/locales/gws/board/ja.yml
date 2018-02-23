@@ -154,3 +154,7 @@ ja:
     gws/board/category:
       name:
         - カテゴリー名を入力します。
+
+  job:
+    models:
+      gws/board/trash_purge_job: 掲示板/投稿ゴミ箱の掃除
