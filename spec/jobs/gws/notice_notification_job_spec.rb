@@ -41,8 +41,8 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Memo::Message.count).to eq 1
-      Gws::Memo::Message.first.tap do |message|
+      expect(Gws::Memo::Notice.count).to eq 1
+      Gws::Memo::Notice.first.tap do |message|
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
@@ -78,8 +78,8 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Memo::Message.count).to eq 1
-      Gws::Memo::Message.first.tap do |message|
+      expect(Gws::Memo::Notice.count).to eq 1
+      Gws::Memo::Notice.first.tap do |message|
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
