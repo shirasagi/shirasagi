@@ -400,3 +400,8 @@ ja:
         適宜修正を行い、再度承認依頼を行ってください。
 
         %{text}
+
+  job:
+    models:
+      gws/schedule/trash_purge_job: 予定ゴミ箱の掃除
+      gws/schedule/todo_trash_purge_job: ToDoゴミ箱の掃除
