@@ -7,6 +7,8 @@
   <dt><%= @model.t :circular_filesize_limit %><%= @model.tt :circular_filesize_limit %></dt>
   <dd class="short"><%= f.number_field :circular_filesize_limit %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
 
+  <% if false %>
   <dt><%= @model.t :circular_delete_threshold %><%= @model.tt :circular_delete_threshold %></dt>
   <dd><%= f.select :circular_delete_threshold, @item.circular_delete_threshold_options %></dd>
+  <% end %>
 </dl>

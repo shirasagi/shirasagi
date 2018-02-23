@@ -21,6 +21,8 @@
   <dt><%= @model.t :schedule_drag_drop_state %><%= @model.tt :schedule_drag_drop_state %></dt>
   <dd><%= f.select :schedule_drag_drop_state, @item.schedule_drag_drop_state_options %></dd>
 
+  <% if false %>
   <dt><%= @model.t :todo_delete_threshold %><%= @model.tt :todo_delete_threshold %></dt>
   <dd><%= f.select :todo_delete_threshold, @item.todo_delete_threshold_options %></dd>
+  <% end %>
 </dl>
