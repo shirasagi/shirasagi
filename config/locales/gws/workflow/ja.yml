@@ -101,3 +101,7 @@ ja:
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
+
+  job:
+    models:
+      gws/workflow/trash_purge_job: ワークフロー/申請ゴミ箱の掃除
