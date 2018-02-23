@@ -9,6 +9,7 @@ ja:
       twitter: Twitter ID でログイン
       facebook: Facebook ID でログイン
       yahoojp: Yahoo! JAPAN ID でログイン
+      yahoojp_v2: Yahoo! JAPAN ID（V2）でログイン
       google_oauth2: Google アカウントでログイン
       github: GitHub アカウントでログイン
     options:

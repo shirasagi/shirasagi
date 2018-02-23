@@ -285,7 +285,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    omniauth-yahoojp (0.1.3)
+    omniauth-yahoojp (0.2.0)
       httpauth
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
