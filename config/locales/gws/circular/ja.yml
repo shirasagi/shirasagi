@@ -1,23 +1,17 @@
 ja:
   gws/circular:
     setting: 回覧板設定
-    active: 削除を取り消す
     tabs:
       post: 受信した回覧
       admin: 作成した回覧
       trash: ゴミ箱
     links:
-      disable_all: 削除済みに移動する
       back_to_admin: 作成した回覧へ戻る
     confirm:
-      active: 削除を取り消しますか？
-      disable: 削除済みに移動しますか？
-      active_all: 選択した項目の削除を取り消しますか？
       set_seen_all: 選択した項目を全て既読にしますか？
       unset_seen_all: 選択した項目を全て未読に戻しますか？
       download: 選択した項目を全てCSVに出力しますか？
     post:
-      disable: 削除する
       disabled: 削除済み
       seen: 既読
       unseen: 未読
@@ -38,9 +32,6 @@ ja:
       - 返信者名
       - 返信欄
       - 返信日時
-    notice:
-      disable: 削除済みに移動しました
-      active: 削除を取り消しました
     seen_user_info:
       title: 既読者数
       format: "%{count} 人 / %{total} 人中"
@@ -72,6 +63,8 @@ ja:
     edit_private_gws_circular_posts: 回覧板の編集（所有）
     delete_other_gws_circular_posts: 回覧板の削除（全て）
     delete_private_gws_circular_posts: 回覧板の削除（所有）
+    trash_other_gws_circular_posts: 回覧板ゴミ箱の管理（全て）
+    trash_private_gws_circular_posts: 回覧板ゴミ箱の管理（所有）
     read_other_gws_circular_categories: カテゴリーの閲覧（全て）
     read_private_gws_circular_categories: カテゴリーの閲覧（所有）
     edit_other_gws_circular_categories: カテゴリーの編集（全て）
@@ -82,7 +75,6 @@ ja:
     models:
       gws/circular/post: トピック
       gws/circular/category: カテゴリー
-      gws/circular/trashes: 削除済み
 
     errors:
       models:
@@ -135,5 +127,9 @@ ja:
         - 初期値は 未指定 です。
       circular_delete_threshold:
         - 回覧を保持する期間を入力します。
-        - 作成日からこの期間が経過すると自動で物理削除されます。
+        - 作成日からこの期間が経過すると自動で完全に削除されます。
         - 初期値は 2年 です。
+
+  job:
+    models:
+      gws/circular/trash_purge_job: 回覧板ゴミ箱の掃除

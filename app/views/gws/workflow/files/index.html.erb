@@ -2,7 +2,7 @@
   <%= link_to(t('ss.links.show'), action: :show, id: item) if item.readable?(@cur_user, site: @cur_site) %>
   <%= link_to(t('ss.links.edit'), action: :edit, id: item) if item.editable?(@cur_user, site: @cur_site) %>
   <%= link_to(t('ss.links.copy'), action: :copy, id: item) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <%= link_to(t('ss.links.delete'), action: :delete, id: item) if item.destroyable?(@cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.delete'), action: :soft_delete, id: item) if item.destroyable?(@cur_user, site: @cur_site) %>
 
   <% if item.try(:image) %>
     <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>

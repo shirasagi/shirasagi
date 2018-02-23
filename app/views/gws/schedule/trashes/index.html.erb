@@ -1,0 +1,31 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= term(item) %></span>
+
+  <% if item.facilities.present? %>
+    <span class="user"><%= item.facilities.map(&:name).join(', ') %></span>
+  <% end %>
+
+  <% if c = item.category %>
+    <span class="gws-schedule-color-block" style="<%= "background: #{c.color}; color: #{c.text_color}" %>"><%= c.name %></span>
+  <% end %>
+<% end %>
+
+<% if flash[:errors].present? %>
+<div id="errorExplanation" class="errorExplanation">
+  <h2><%= t('errors.template.header', count: flash[:errors].length) %></h2>
+  <p><%= t('errors.template.body', count: flash[:errors].length) %></p>
+  <ul>
+    <% flash[:errors].each do |error| %>
+      <li><%= error %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

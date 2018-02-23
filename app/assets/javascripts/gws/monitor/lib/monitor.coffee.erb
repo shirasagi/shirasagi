@@ -32,31 +32,6 @@ class @Gws_Monitor_Topic
       form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden"))
       form.appendTo(document.body).submit()
 
-    $(".public-all").on "click", ->
-      $this = $(this)
-      form = Gws_Monitor_Topic.buildForm($this.data('ss-href'), $this.data('ss-confirm'))
-      form.appendTo(document.body).submit()
-
-    $(".preparation-all").on "click", ->
-      $this = $(this)
-      form = Gws_Monitor_Topic.buildForm($this.data('ss-href'), $this.data('ss-confirm'))
-      form.appendTo(document.body).submit()
-
-    $(".question_not_applicable-all").on "click", ->
-      $this = $(this)
-      form = Gws_Monitor_Topic.buildForm($this.data('ss-href'), $this.data('ss-confirm'))
-      form.appendTo(document.body).submit()
-
-    $(".disable-all").on "click", ->
-      $this = $(this)
-      form = Gws_Monitor_Topic.buildForm($this.data('ss-href'), $this.data('ss-confirm'))
-      form.appendTo(document.body).submit()
-
-    $(".active-all").on "click", ->
-      $this = $(this)
-      form = Gws_Monitor_Topic.buildForm($this.data('ss-href'), $this.data('ss-confirm'))
-      form.appendTo(document.body).submit()
-
   @buildForm: (action, confirm)->
     checked = $(".list-item input:checkbox:checked").map ->
       $(this).val()

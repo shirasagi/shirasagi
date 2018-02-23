@@ -1,0 +1,23 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('ss.links.show'), action: :show, id: item) if item.readable?(@cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.restore'), action: :undo_delete, id: item) if item.destroyable?(@cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.delete'), action: :delete, id: item) if item.destroyable?(@cur_user, site: @cur_site) %>
+
+  <% if item.try(:image) %>
+    <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+  <% elsif item.try(:image?) %>
+    <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+  <% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="state"><%= t "ss.state.#{item.status}" %></span>
+  <% if item.form.present? %>
+    <span class="form"><%= t('gws/workflow.labels.form') %>: <%= item.form.name %></span>
+  <% end %>
+  <span class="user"><%= t('gws/workflow.labels.user') %>: <%= item.user_name %></span>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>

@@ -1,4 +1,4 @@
-<% return if @item.schedules.blank? %>
+<% return if @item.schedules.without_deleted.readable(@cur_user, site: @cur_site).blank? %>
 
 <dl class="see mod-gws-schedules">
   <dt class="wide"></dt>
@@ -13,7 +13,7 @@
       </tr>
       </thead>
       <tbody>
-      <% @item.schedules.readable(@cur_user, site: @cur_site).each do |schedule| %>
+      <% @item.schedules.without_deleted.readable(@cur_user, site: @cur_site).each do |schedule| %>
         <tr>
           <td>
             <%= link_to(schedule.name, gws_schedule_plan_path(id: schedule)) %>

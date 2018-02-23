@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
+describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:facility) { create :gws_facility_item }
   let(:item) { create :gws_schedule_facility_plan, facility_ids: [facility.id] }
@@ -8,9 +8,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
   let(:new_path) { new_gws_schedule_facility_plan_path site, facility }
   let(:show_path) { gws_schedule_facility_plan_path site, facility, item }
   let(:edit_path) { edit_gws_schedule_facility_plan_path site, facility, item }
-  let(:delete_path) { delete_gws_schedule_facility_plan_path site, facility, item }
+  let(:delete_path) { soft_delete_gws_schedule_facility_plan_path site, facility, item }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it "#index" do

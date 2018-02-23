@@ -6,8 +6,7 @@ SS::Application.routes.draw do
     get :print, on: :collection
     get :popup, on: :member
     get :copy, on: :member
-    get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
   end
 
   concern :export do
@@ -31,13 +30,16 @@ SS::Application.routes.draw do
     post 'import_csv' => 'csv#import', as: :import_csv
 
     get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
-    resources :plans, concerns: [:plans, :export]
+    resources :plans, concerns: [:plans, :export], except: [:destroy]
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
     resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: [:plans, :export]
-    resources :holidays, concerns: :plans
+    resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
+      match :undo_delete, on: :member, via: [:get, :post]
+    end
+    resources :holidays, concerns: [:plans, :deletion]
     resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
     resource :approval, path: ':plan_id/:user_id/approval', only: [:edit, :update]
@@ -47,18 +49,17 @@ SS::Application.routes.draw do
       resources :readables, concerns: :plans do
         match :finish, on: :member, via: %i[get post]
         match :revert, on: :member, via: %i[get post]
-        match :disable, on: :member, via: %i[get post]
         post :finish_all, on: :collection
         post :revert_all, on: :collection
-        post :disable_all, on: :collection
+        post :soft_delete_all, on: :collection
       end
       resources :trashes, concerns: :deletion do
-        match :active, on: :member, via: %i[get post]
-        post :active_all, on: :collection
+        match :undo_delete, on: :member, via: %i[get post]
+        post :undo_delete_all, on: :collection
       end
     end
 
-    resources :categories, concerns: :plans
+    resources :categories, concerns: :deletion
     resource :user_setting, only: [:show, :edit, :update]
   end
 end

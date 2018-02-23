@@ -1,13 +1,9 @@
-<%= jquery do %>
-    Gws_Share_File.render();
-<% end %>
-
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button class="download-all btn"><%= t :"gws/share.links.file_download" %></button>
-    <button class="disable-all btn"><%= t :"gws/share.links.disable" %></button>
+    <button class="disable-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :disable_all) %>" data-ss-confirmation="<%= t('ss.confirm.soft_delete') %>"><%= t('ss.links.delete') %></button>
+    <button class="download-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :download_all) %>" data-ss-confirmation="<%= t('gws/share.links.confirm.download_all') %>"><%= t("gws/share.links.file_download") %></button>
   </div>
 
   <%= render file: "_search" %>

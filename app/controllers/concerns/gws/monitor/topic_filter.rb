@@ -46,28 +46,6 @@ module Gws::Monitor::TopicFilter
     ret
   end
 
-  # def render_destroy_all(result)
-  #   location = crud_redirect_url || { action: :index }
-  #   notice = result ? { notice: t("gws/monitor.notice.disable") } : {}
-  #   errors = @items.map { |item| [item.id, item.errors.full_messages] }
-  #
-  #   respond_to do |format|
-  #     format.html { redirect_to location, notice }
-  #     format.json { head json: errors }
-  #   end
-  # end
-
-  # def render_active_all(result)
-  #   location = crud_redirect_url || { action: :index }
-  #   notice = result ? { notice: t("gws/monitor.notice.active") } : {}
-  #   errors = @items.map { |item| [item.id, item.errors.full_messages] }
-  #
-  #   respond_to do |format|
-  #     format.html { redirect_to location, notice }
-  #     format.json { head json: errors }
-  #   end
-  # end
-
   public
 
   def index
@@ -84,51 +62,6 @@ module Gws::Monitor::TopicFilter
     raise "403" unless @item.attended?(@cur_group) || @item.allowed?(:read, @cur_user, site: @cur_site)
     render file: "show_#{@item.mode}"
   end
-
-  # def create
-  #   @item = @model.new get_params
-  #
-  #   # @item.readable_group_ids = (@item.attend_group_ids + @item.readable_group_ids).uniq
-  #
-  #   raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-  #   render_create @item.save
-  # end
-  #
-  # def update
-  #   @item.attributes = get_params
-  #   @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-  #   # diff_attend_group_readable_group = (@item.attend_group_ids - @item.readable_group_ids).uniq
-  #   # if diff_attend_group_readable_group.present?
-  #   #   @item.readable_group_ids = @item.readable_group_ids + diff_attend_group_readable_group
-  #   # end
-  #
-  #   raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-  #   render_update @item.update
-  # end
-
-  # def read
-  #   set_item
-  #   raise '403' unless @item.readable?(@cur_user)
-  #
-  #   result = true
-  #   if !@item.browsed?(@cur_user)
-  #     @item.set_browsed(@cur_user)
-  #     @item.record_timestamps = false
-  #     result = @item.save
-  #   end
-  #
-  #   if result
-  #     respond_to do |format|
-  #       format.html { redirect_to({ action: :show }, { notice: t('ss.notice.saved') }) }
-  #       format.json { render json: { _id: @item.id, browsed_at: @item.browsed_at(@cur_user) }, content_type: json_content_type }
-  #     end
-  #   else
-  #     respond_to do |format|
-  #       format.html { render({ file: :edit }) }
-  #       format.json { render(json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type) }
-  #     end
-  #   end
-  # end
 
   def destroy
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
@@ -175,30 +108,6 @@ module Gws::Monitor::TopicFilter
     @item.answer_state_hash.update(@cur_group.id.to_s => "question_not_applicable")
     @item.save
     render_update @item.update
-  end
-
-  # def answered
-  #   @item.attributes = fix_params
-  #   raise '403' unless @item.attended?(@cur_group)
-  #   @item.answer_state_hash.update(@cur_group.id.to_s => "answered")
-  #   @item.save
-  #   render_update @item.update
-  # end
-
-  # 削除済みに移動する
-  def disable
-    @item.attributes = fix_params
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    return if request.get?
-    render_destroy @item.disable, {notice: t('gws/monitor.notice.disabled')}
-  end
-
-  # 削除を取り消す
-  def active
-    @item.attributes = fix_params
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    return if request.get?
-    render_destroy @item.active, {notice: t('gws/monitor.notice.active')}
   end
 
   # 公開する
@@ -315,19 +224,19 @@ module Gws::Monitor::TopicFilter
     render_destroy_all(@items.blank?, notice: t("gws/monitor.notice.question_not_applicable"))
   end
 
-  # すべての削除を取り消す
-  def active_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site)
-        next if item.active
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(@items.blank?, notice: t("gws/monitor.notice.active"))
-  end
+  # # すべての削除を取り消す
+  # def undo_delete_all
+  #   entries = @items.entries
+  #   @items = []
+  #
+  #   entries.each do |item|
+  #     if item.allowed?(:delete, @cur_user, site: @cur_site)
+  #       next if item.active
+  #     else
+  #       item.errors.add :base, :auth_error
+  #     end
+  #     @items << item
+  #   end
+  #   render_destroy_all(@items.blank?, notice: t("gws/monitor.notice.active"))
+  # end
 end

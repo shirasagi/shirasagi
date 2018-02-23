@@ -1,13 +1,8 @@
-<%= jquery do %>
-    Gws_Share_File.render();
-<% end %>
-
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-      <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
-      <button class="active-all btn"><%= t :"gws/share.links.active" %></button>
+    <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
   </div>
 
   <%= render file: "_search" %>

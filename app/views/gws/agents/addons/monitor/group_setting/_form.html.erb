@@ -16,10 +16,12 @@
   <dt class="depth-2"><%= @model.t(:monitor_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :monitor_file_size_per_post %></dt>
   <dd class="short"><%= f.number_field :in_monitor_file_size_per_post_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
 
+  <% if false %>
   <dt><%= @model.t :monitor_delete_threshold %><%= @model.tt :monitor_delete_threshold %></dt>
   <dd><%= f.select :monitor_delete_threshold, @item.monitor_delete_threshold_options %></dd>
+  <% end %>
 
-  <dt><%= @model.t :default_notice_state%><%= @model.tt :default_notice_state %></dt>
+  <dt><%= @model.t :default_notice_state %><%= @model.tt :default_notice_state %></dt>
   <dd><%= f.select :default_notice_state, @item.default_notice_state_options, include_blank: true %></dd>
 </dl>
 

@@ -17,6 +17,7 @@ module Gws::Addon::Schedule::Repeat
     before_save :remove_repeat_plan, if: -> { repeat_type == '' }
     before_save :todo_action_repeat_plan, if: -> { todo_action.present? && edit_range }
     after_save :extract_repeat_plans, if: -> { repeat? }
+    after_save :do_soft_or_undo_delete_with_repeat_plans, if: -> { deleted_changed? }
     before_destroy :remove_repeat_plan, if: -> { repeat_plan }
   end
 
@@ -162,6 +163,32 @@ module Gws::Addon::Schedule::Repeat
     plans.each do |plan|
       plan.skip_gws_history
       plan.todo_action_without_repeat_plan(todo_action)
+    end
+  end
+
+  def do_soft_or_undo_delete_with_repeat_plans
+    return unless repeat_plan
+
+    if edit_range == 'all'
+      plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
+    elsif edit_range == 'later'
+      plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at)
+    else
+      return
+    end
+
+    if deleted.present?
+      plans = plans.without_deleted
+    else
+      plans = plans.only_deleted
+    end
+
+    plans.each do |plan|
+      plan.cur_site = @cur_site
+      plan.cur_user = @cur_user
+      plan.skip_gws_history
+      plan.deleted = self.deleted
+      errors[:base] += plan.errors.full_messages if !plan.save
     end
   end
 end

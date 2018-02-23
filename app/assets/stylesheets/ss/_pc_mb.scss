@@ -777,10 +777,16 @@ td {
     &.management {
       background: url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
+    &.trash {
+      background: url(/assets/img/ic-trash.png) no-repeat 35px center;
+    }
     color: $black;
     @at-root h3.current a {
       background-color: $gray1;
       &.management {
+        background-color: $gray1;
+      }
+      &.trash {
         background-color: $gray1;
       }
     }
@@ -791,6 +797,11 @@ td {
     }
     &.management:hover {
       background: $gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
+      color: $orange;
+      text-decoration: none;
+    }
+    &.trash:hover {
+      background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
       color: $orange;
       text-decoration: none;
     }

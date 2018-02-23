@@ -19,6 +19,9 @@ SS::Application.routes.draw do
         post :read, on: :member
         post :resolve, on: :member
         post :unresolve, on: :member
+        match :soft_delete, on: :member, via: %i[get post]
+        match :undo_delete, on: :member, via: %i[get post]
+        post :soft_delete_all, on: :collection
       end
     end
 

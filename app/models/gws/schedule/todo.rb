@@ -24,27 +24,14 @@ class Gws::Schedule::Todo
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
-  field :deleted, type: DateTime
 
   permit_params :color, :todo_state, :deleted
-
-  validates :deleted, datetime: true
 
   after_save ->{ reminders.destroy if deleted.present? }
 
   def finished?
     todo_state == 'finished'
   end
-
-  scope :without_deleted, ->(date = Time.zone.now) {
-    where('$and' => [
-      { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
-    ])
-  }
-
-  scope :with_only_deleted, ->(date = Time.zone.now) {
-    where(:deleted.lt => date)
-  }
 
   scope :custom_order, ->(key) {
     if key.start_with?('created_')
@@ -96,15 +83,6 @@ class Gws::Schedule::Todo
     true
   end
 
-  def disable
-    now = Time.zone.now
-    update_attributes(deleted: now) if deleted.blank? || deleted > now
-  end
-
-  def active
-    update_attributes(deleted: nil)
-  end
-
   def todo_state_options
     %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
@@ -114,14 +92,6 @@ class Gws::Schedule::Todo
       [I18n.t("gws/schedule/todo.options.sort.#{k}"), k]
     end
   end
-
-  # alias allowed_for_managers? allowed?
-  #
-  # def allowed?(action, user, opts = {})
-  #   return true if allowed_for_managers?(action, user, opts)
-  #   member?(user) || custom_group_member?(user) if action =~ /edit|delete/
-  #   false
-  # end
 
   class << self
     def search(params)

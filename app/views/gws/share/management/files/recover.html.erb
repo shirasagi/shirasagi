@@ -3,7 +3,7 @@
 
     <div class="addon-views">
       <div class="addon-view" id="addon-basic">
-        <div class="addon-head"><h2><%= t("gws/share.links.confirm.active") %></h2></div>
+        <div class="addon-head"><h2><%= t("ss.confirm.restore") %></h2></div>
         <div class="addon-body">
           <%= render file: "_delete" %>
         </div>
@@ -11,7 +11,7 @@
     </div>
 
     <footer class="send">
-      <%= f.submit t("gws/share.links.active"), class: 'btn-danger delete' %>
+      <%= f.submit t("ss.buttons.restore"), class: 'btn-danger delete' %>
       <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
     </footer>
 <% end %>

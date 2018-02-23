@@ -9,10 +9,13 @@ SS::Application.routes.draw do
     post :unset_seen_all, on: :collection
   end
 
+  concern :soft_deletion do
+    match :soft_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :admins do
-    match :disable, on: :member, via: [:get, :post]
-    post :download, on: :collection
-    post :disable_all, on: :collection
+    post :download_all, on: :collection
   end
 
   gws 'circular' do
@@ -20,13 +23,12 @@ SS::Application.routes.draw do
 
     scope(path: ':category', defaults: { category: '-' }) do
       resources :posts, concerns: [:posts], except: [:new, :create, :edit, :update, :destroy]
-      resources :admins, concerns: [:admins], except: [:destroy]
+      resources :admins, concerns: [:admins, :soft_deletion], except: [:destroy]
       resources :trashes, except: [:new, :create, :edit, :update] do
         get :delete, on: :member
         delete action: :destroy_all, on: :collection
         get :recover, on: :member
-        get :active, on: :member
-        post :active_all, on: :collection
+        match :undo_delete, on: :member, via: [:get, :post]
       end
       resources :comments, path: ':parent/:post_id/comments' do
         get :delete, on: :member

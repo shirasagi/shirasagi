@@ -1,0 +1,16 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <%= render file: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <% if @mode == 'trash' %>
+        <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+      <% else %>
+        <button class="soft-delete-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :soft_delete_all) %>" data-ss-confirmation="<%= t('ss.confirm.soft_delete') %>"><%= t :"ss.links.delete" %></button>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render file: "_search" %>
+</div>

@@ -95,7 +95,7 @@ module Gws::Facility::UsageFilter
   end
 
   def aggregate
-    criteria = Gws::Schedule::Plan.site(@cur_site)
+    criteria = Gws::Schedule::Plan.site(@cur_site).without_deleted
     criteria = criteria.in(facility_ids: @items.pluck(:id))
     criteria = criteria.gte(start_at: @target_time).lt(start_at: @target_time + target_range)
 

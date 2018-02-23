@@ -22,6 +22,7 @@ module Gws::Addon::Portal::Portlet
       )
 
       Gws::Workflow::File.site(portal.site).
+        without_deleted.
         search(search).
         page(1).
         per(limit)

@@ -37,6 +37,7 @@ ja:
       editable: 管理一覧
       unseen: 未読一覧
       seen: 既読一覧
+      trash: ゴミ箱
     links:
       cms: サイト管理
       gws: グループ
@@ -81,6 +82,8 @@ ja:
       initialize: 初期化する
       lock_user: 利用を停止する
       unlock_user: 利用停止を解除する
+      trash: ゴミ箱
+      restore: 元に戻す
     buttons:
       save: 保存
       new: 新規作成
@@ -120,9 +123,11 @@ ja:
       deselect_all: 全て解除
       change: 変更
       initialize: 初期化
+      restore: 元に戻す
     confirm:
       delete: 削除してよろしいですか？
-      soft_delete: データの実削除ではなく無効状態として保存されます。
+      soft_delete: 削除してよろしいですか？
+      hard_delete: 完全に削除してよろしいですか？
       convert: 変換してよろしいですか？
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
@@ -133,6 +138,7 @@ ja:
       reset_tag: タグを削除してよろしいですか？
       in_use: 使用中のファイルを削除してよろしいですか？
       initialize: 初期化してよろしいですか？
+      restore: 元に戻してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -145,6 +151,9 @@ ja:
       lock_user_all: 利用を停止しました。
       unlock_user_all: 利用停止を解除しました。
       text_zoomed: "文字サイズを %{count} に設定しました。"
+      restored: 元に戻しました。
+    info:
+      soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。

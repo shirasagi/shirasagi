@@ -13,8 +13,10 @@
   <dt class="depth-2"><%= @model.t(:monitor_file_size_per_post).sub(/.*\//, '') %></dt>
   <dd><%= number_to_human_size(@item.monitor_file_size_per_post) %></dd>
 
+  <% if false %>
   <dt><%= @model.t :monitor_delete_threshold %></dt>
   <dd><%= @item.label(:monitor_delete_threshold) %></dd>
+  <% end %>
 
   <dt><%= @model.t :default_notice_state %>	</dt>
   <dd><%= @item.label(:default_notice_state) %></dd>

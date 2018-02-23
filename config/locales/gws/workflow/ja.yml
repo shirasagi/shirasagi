@@ -47,6 +47,8 @@ ja:
     approve_private_gws_workflow_files: 申請の承認（所有）
     reroute_other_gws_workflow_files: 申請の経路変更（全て）
     reroute_private_gws_workflow_files: 申請の経路変更（所有）
+    trash_other_gws_workflow_files: 申請ゴミ箱の管理（全て）
+    trash_private_gws_workflow_files: 申請ゴミ箱の管理（所有）
 
     read_other_gws_workflow_forms: 申請フォームの閲覧（全て）
     read_private_gws_workflow_forms: 申請フォームの閲覧（所有）
@@ -99,3 +101,7 @@ ja:
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
+
+  job:
+    models:
+      gws/workflow/trash_purge_job: ワークフロー/申請ゴミ箱の掃除

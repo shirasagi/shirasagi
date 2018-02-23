@@ -1,14 +1,7 @@
-<%= jquery do %>
-  Gws_Schedule_Todo.render({
-    active: <%== { path: url_for(action: :active_all), confirm: t('gws/schedule/todo.confirm.active_all') }.to_json %>
-  });
-<% end %>
-
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button class="active-all btn"><%= t('gws/schedule/todo.links.active') %></button>
     <button class="destroy-all btn"><%= t('ss.links.delete') %></button>
   </div>
 

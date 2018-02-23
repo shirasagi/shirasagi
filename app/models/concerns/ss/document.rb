@@ -13,9 +13,13 @@ module SS::Document
 
     field :created, type: DateTime, default: -> { Time.zone.now }
     field :updated, type: DateTime, default: -> { created }
+    field :deleted, type: DateTime
     field :text_index, type: String
 
     validate :validate_updated, if: -> { in_updated.present? }
+    validates :created, datetime: true
+    validates :updated, datetime: true
+    validates :deleted, datetime: true
     before_save :set_db_changes
     before_save :set_updated
     before_save :set_text_index
@@ -39,6 +43,14 @@ module SS::Document
       else
         all_in name: words
       end
+    }
+    scope :without_deleted, ->(date = Time.zone.now) {
+      where('$and' => [
+        { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
+      ])
+    }
+    scope :only_deleted, ->(date = Time.zone.now) {
+      where(:deleted.lt => date)
     }
   end
 

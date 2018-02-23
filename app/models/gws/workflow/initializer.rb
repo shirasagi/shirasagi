@@ -17,6 +17,8 @@ module Gws::Workflow
     Gws::Role.permission :approve_other_gws_workflow_files, module_name: 'gws/workflow'
     Gws::Role.permission :reroute_private_gws_workflow_files, module_name: 'gws/workflow'
     Gws::Role.permission :reroute_other_gws_workflow_files, module_name: 'gws/workflow'
+    Gws::Role.permission :trash_private_gws_workflow_files, module_name: 'gws/workflow'
+    Gws::Role.permission :trash_other_gws_workflow_files, module_name: 'gws/workflow'
 
     Gws::Role.permission :read_other_gws_workflow_forms, module_name: 'gws/workflow'
     Gws::Role.permission :read_private_gws_workflow_forms, module_name: 'gws/workflow'

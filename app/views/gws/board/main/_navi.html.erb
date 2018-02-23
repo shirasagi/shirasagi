@@ -4,6 +4,9 @@
   <% if Gws::Board::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('ss.navi.editable'), gws_board_topics_path(mode: 'editable', category: '-') %></h3>
   <% end %>
+  <% if Gws::Board::Post.allowed?(:trash, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('ss.navi.trash'), gws_board_topics_path(mode: 'trash', category: '-'), class: 'trash' %></h3>
+  <% end %>
 
   <% if Gws::Board::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.category'), gws_board_categories_path, class: "management" %></h3>

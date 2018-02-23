@@ -15,8 +15,10 @@ $(function() {
 <% end %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), action: :new %>
+    <% if @mode != 'trash' %>
+      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.new'), action: :new %>
+      <% end %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|categories/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
@@ -26,19 +28,26 @@ $(function() {
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
-    <% end %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
-    <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <% if @item.resolved? %>
-        <%= link_to t('gws/qna.links.unresolve'), { action: :unresolve, id: @item },
-          class: 'resolve-topic', 'data-confirm' => t('gws/qna.confirm.unresolve') %>
-      <% else %>
-        <%= link_to t('gws/qna.links.resolve'), { action: :resolve, id: @item },
-          class: 'resolve-topic', 'data-confirm' => t('gws/qna.confirm.resolve') %>
+    <% if @mode == 'trash' %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.restore'), action: :undo_delete, id: @item %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+      <% end %>
+    <% else %>
+      <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+      <% end %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
+      <% end %>
+      <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% if @item.resolved? %>
+          <%= link_to t('gws/qna.links.unresolve'), { action: :unresolve, id: @item },
+            class: 'resolve-topic', 'data-confirm' => t('gws/qna.confirm.unresolve') %>
+        <% else %>
+          <%= link_to t('gws/qna.links.resolve'), { action: :resolve, id: @item },
+            class: 'resolve-topic', 'data-confirm' => t('gws/qna.confirm.resolve') %>
+        <% end %>
       <% end %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

@@ -22,17 +22,21 @@ class Gws::Board::TopicsController < ApplicationController
 
   def items
     if @mode == 'editable'
-      @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site)
+      @model.site(@cur_site).topic.allow(:read, @cur_user, site: @cur_site).without_deleted
+    elsif @mode == 'trash'
+      @model.site(@cur_site).topic.allow(:trash, @cur_user, site: @cur_site).only_deleted
     else
-      @model.site(@cur_site).topic.and_public.readable(@cur_user, site: @cur_site)
+      @model.site(@cur_site).topic.and_public.readable(@cur_user, site: @cur_site).without_deleted
     end
   end
 
   def readable?
     if @mode == 'editable'
-      @item.allowed?(:read, @cur_user, site: @cur_site)
+      @item.allowed?(:read, @cur_user, site: @cur_site) && @item.deleted.blank?
+    elsif @mode == 'trash'
+      @item.allowed?(:trash, @cur_user, site: @cur_site) && @item.deleted.present?
     else
-      @item.readable?(@cur_user)
+      @item.readable?(@cur_user) && @item.deleted.blank?
     end
   end
 
@@ -86,5 +90,24 @@ class Gws::Board::TopicsController < ApplicationController
   def print
     set_item
     render file: "print_#{@item.mode}", layout: 'ss/print'
+  end
+
+  def undo_delete
+    set_item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = nil
+
+    render_opts = {}
+    render_opts[:location] = gws_board_topics_path(mode: 'editable')
+    render_opts[:render] = { file: :undo_delete }
+    render_opts[:notice] = t('ss.notice.restored')
+
+    render_update @item.save, render_opts
   end
 end

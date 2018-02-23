@@ -87,6 +87,10 @@ class @SS_ListUI
         $(this).val()
       return false if checked.length == 0
 
+      confirmation = $(this).data('ss-confirmation') || ''
+      if confirmation
+        return false unless confirm(confirmation)
+
       form = $("<form/>", action: action, method: method)
       for key,value of params
         form.append($("<input/>", name: key, value: value, type: "hidden" ))

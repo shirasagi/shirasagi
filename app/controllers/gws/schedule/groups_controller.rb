@@ -12,9 +12,13 @@ class Gws::Schedule::GroupsController < ApplicationController
     @crumbs << [t('gws/schedule.tabs.group'), action: :index]
   end
 
+  def set_items
+    @items ||= @cur_site.descendants.active
+  end
+
   public
 
   def index
-    @items = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
+    @items = @items.tree_sort(root_name: @cur_site.name)
   end
 end

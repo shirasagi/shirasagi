@@ -8,7 +8,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example do
     let!(:new_path) { new_gws_discussion_forum_path site }
     let!(:show_path) { gws_discussion_forum_path site, item }
     let!(:edit_path) { edit_gws_discussion_forum_path site, item }
-    let!(:delete_path) { delete_gws_discussion_forum_path site, item }
+    let!(:delete_path) { soft_delete_gws_discussion_forum_path site, item }
 
     before { login_gws_user }
 
