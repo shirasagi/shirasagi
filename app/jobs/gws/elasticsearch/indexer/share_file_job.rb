@@ -9,6 +9,10 @@ class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
     'gws_share_files'
   end
 
+  def index_item_id
+    "file-#{@id}"
+  end
+
   def enum_es_docs
     Enumerator.new do |y|
       doc = {}
