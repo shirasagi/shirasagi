@@ -3,7 +3,7 @@
   <h3><%= link_to t('ss.navi.readable'), gws_share_files_path %></h3>
 
   <% if Gws::Share::File.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/share.navi.management'), gws_share_management_files_path %></h3>
+    <h3><%= link_to t('ss.navi.trash'), gws_share_management_files_path, class: 'trash' %></h3>
   <% end %>
 
   <% if Gws::Share::Folder.allowed?(:edit, @cur_user, site: @cur_site) || Gws::Share::Folder.allowed?(:download, @cur_user, site: @cur_site) %>

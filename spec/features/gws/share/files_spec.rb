@@ -11,7 +11,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   let(:new_path) { new_gws_share_folder_file_path site, folder }
   let(:show_path) { gws_share_folder_file_path site, folder, item }
   let(:edit_path) { edit_gws_share_folder_file_path site, folder, item }
-  let(:delete_path) { delete_gws_share_folder_file_path site, folder, item }
+  let(:delete_path) { soft_delete_gws_share_folder_file_path site, folder, item }
 
   context "with auth" do
     before { login_gws_user }
@@ -71,7 +71,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       visit delete_path
       wait_for_ajax
       within "form" do
-        click_button "削除済みに移動する"
+        click_button "削除"
       end
       expect(page).to have_no_content(item.name)
     end
