@@ -14,6 +14,7 @@ module Member::Node
     include Member::Addon::TwitterOauth
     include Member::Addon::FacebookOauth
     include Member::Addon::YahooJpOauth
+    include Member::Addon::YahooJpOauthV2
     include Member::Addon::GoogleOauth
     include Member::Addon::GithubOauth
     include Cms::Addon::Release
