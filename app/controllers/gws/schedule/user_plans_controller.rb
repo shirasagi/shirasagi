@@ -10,7 +10,7 @@ class Gws::Schedule::UserPlansController < ApplicationController
   private
 
   def set_user
-    @user = Gws::User.site(@cur_site).find(params[:user])
+    @user ||= Gws::User.site(@cur_site).find(params[:user])
     raise '404' unless @user.active?
   end
 
@@ -21,6 +21,15 @@ class Gws::Schedule::UserPlansController < ApplicationController
   def redirection_view
     return 'month' if params.dig(:calendar, :view) == 'timelineDay'
     super
+  end
+
+  def set_items
+    set_user
+    @items ||= begin
+      Gws::Schedule::Plan.site(@cur_site).without_deleted.
+        member(@user).
+        search(params[:s])
+    end
   end
 
   public
