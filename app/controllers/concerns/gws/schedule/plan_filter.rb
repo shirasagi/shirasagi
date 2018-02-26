@@ -34,11 +34,11 @@ module Gws::Schedule::PlanFilter
 
   def set_items
     @items ||= begin
-      or_conds = Gws::Schedule::Plan.member_conditions(@cur_user)
-      or_conds << { approval_member_ids: @cur_user.id }
-      Gws::Schedule::Plan.site(@cur_site).
-        without_deleted.
-        and([{ '$or' => or_conds }]).
+      #or_conds = Gws::Schedule::Plan.member_conditions(@cur_user)
+      #or_conds << { approval_member_ids: @cur_user.id }
+      Gws::Schedule::Plan.site(@cur_site).without_deleted.
+        member(@cur_user).
+        #and([{ '$or' => or_conds }]).
         search(params[:s])
     end
   end

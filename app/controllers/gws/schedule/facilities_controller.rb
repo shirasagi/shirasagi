@@ -67,9 +67,11 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   public
 
   def index
+    # show facilities
   end
 
   def print
-    super
+    @portrait = 'horizontal'
+    render action: 'print', layout: 'ss/print'
   end
 end

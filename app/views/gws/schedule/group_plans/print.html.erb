@@ -9,7 +9,7 @@ SS_Clipboard.renderCopy();
 
 <section class="main-box gws-schedule-box sheet">
   <header>
-    <h2><%= @group.trailing_name %></h2>
+    <h2><%= @group.try(:trailing_name) || @group.name %></h2>
   </header>
 
   <div class="calendar" id="calendar-controller"></div>
