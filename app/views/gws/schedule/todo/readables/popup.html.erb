@@ -40,7 +40,7 @@
   menu = []
   menu << link_to(I18n.t('ss.links.show'), { action: :show })
   menu << link_to(I18n.t('ss.links.edit'), { action: :edit }) if @item.allowed?(:edit, @cur_user, @cur_site)
-  menu << link_to(I18n.t('ss.links.delete'), { action: :disable }) if @item.allowed?(:delete, @cur_user, @cur_site)
+  menu << link_to(I18n.t('ss.links.delete'), { action: :soft_delete }) if @item.allowed?(:delete, @cur_user, @cur_site)
   if @item.allowed?(:edit, @cur_user, @cur_site) && !@item.finished?
     menu << link_to(I18n.t('gws/schedule/todo.links.finish'), { action: :finish })
   end
