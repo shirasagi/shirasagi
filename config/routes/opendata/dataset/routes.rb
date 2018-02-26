@@ -7,6 +7,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :copy do
+    get :copy, on: :member
+    put :copy, on: :member
+  end
+
   content "opendata" do
     get "dataset_download_reports" => "dataset/download_reports#index", as: :dataset_download_reports
     get "dataset_download_reports/download" => "dataset/download_reports#download", as: :dataset_download_reports_download
@@ -15,7 +20,7 @@ SS::Application.routes.draw do
     resources :dataset_groups, concerns: :deletion, module: :dataset do
       get "search" => "dataset_groups/search#index", on: :collection
     end
-    resources :datasets, concerns: :deletion, module: :dataset do
+    resources :datasets, concerns: [:deletion, :copy], module: :dataset do
       get "search" => "datasets/search#index", on: :collection
       get :check_for_update, on: :member
       resources :resources, concerns: :deletion do
