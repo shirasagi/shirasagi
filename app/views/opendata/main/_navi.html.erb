@@ -37,6 +37,7 @@
     <li><%= link_to t("workflow.page.approve"), opendata_datasets_approve_path, class: "icon-node" %></li>
     <li><%= link_to t("workflow.page.request"), opendata_datasets_request_path, class: "icon-node" %></li>
   </ul>
+  <h3><%= link_to Opendata::DatasetDownloadReport.model_name.human, opendata_dataset_download_reports_path, class: "icon-node" %></h3>
 <% elsif @cur_node.route == "opendata/app" %>
   <h3><span><%= t "workflow.pages" %></span></h3>
   <ul class="narrow-page">

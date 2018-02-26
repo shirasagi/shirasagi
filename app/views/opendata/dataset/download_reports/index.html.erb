@@ -1,0 +1,23 @@
+<div class="search-form">
+  <%= form_for :item, url: { action: :download }, html: { class: "search", method: :get } do |f| %>
+    <%= error_messages_for :item, header_message: t('activemodel.errors.template.header')  %>
+    <span>
+      <%= f.label :period %>
+      <%= f.select :start_year, @item.years %>
+      <%= f.select :start_month, @item.months %>
+    </span>
+    <span style="margin: 0 5px;">~</span>
+    <span style="margin-right: 10px;">
+      <%= f.select :end_year, @item.years %>
+      <%= f.select :end_month, @item.months %>
+    </span>
+
+    <span style="margin: 0 5px;">
+      <%= f.label :type %>
+      <%= f.select :type, @item.types %>
+    </span>
+
+    <input type="submit" value="<%= t('ss.buttons.download') %>" class="btn" />
+    <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='<%= opendata_dataset_download_reports_path %>'" class="btn" />
+  <% end %>
+</div>
