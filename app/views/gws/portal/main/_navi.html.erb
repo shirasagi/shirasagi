@@ -15,13 +15,6 @@
     <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
   <% end %>
 
-  <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path %></h3>
-  <% end %>
-  <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path %></h3>
-  <% end %>
-
   <% if params[:group].present? %>
     <% if @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true) %>
       <h2><%= @portal.portal_group.trailing_name %></h2>
@@ -37,6 +30,15 @@
       <h3><%= link_to t("gws/portal.links.arrange_portlets"), gws_portal_user_layouts_path, class: "management" %></h3>
       <h3><%= link_to t("gws/portal.links.manage_portlets"), gws_portal_user_portlets_path, class: "management" %></h3>
       <h3><%= link_to t("gws/portal.links.settings"), gws_portal_user_settings_path, class: "management" %></h3>
+    <% end %>
+  <% end %>
+
+  <% if params[:group].present? || params[:user].present? %>
+    <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path, class: "management" %></h3>
+    <% end %>
+    <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path, class: "management" %></h3>
     <% end %>
   <% end %>
 </nav>
