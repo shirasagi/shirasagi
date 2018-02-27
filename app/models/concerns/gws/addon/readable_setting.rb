@@ -17,7 +17,7 @@ module Gws::Addon::ReadableSetting
     permit_params :readable_setting_range
     permit_params readable_group_ids: [], readable_member_ids: [], readable_custom_group_ids: []
 
-    before_validation :apply_readable_setting_range, if: ->{ readable_setting_range }
+    before_validation :apply_readable_setting_range, if: ->{ readable_setting_range_changed? && readable_setting_range }
     before_validation :set_readable_groups_hash
     before_validation :set_readable_members_hash
     before_validation :set_readable_custom_groups_hash
