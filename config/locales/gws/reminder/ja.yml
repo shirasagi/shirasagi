@@ -84,7 +84,3 @@ ja:
   job:
     models:
       gws/reminder/notification_job: リマインダー通知
-
-  abcdef:
-    aaaa: "aaa"
-

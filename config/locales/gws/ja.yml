@@ -73,7 +73,6 @@ ja:
     links:
       back_to_portal: ポータルへ戻る
     buttons:
-      register: リマインダーを登録
       unset: 解除
       add_item: 新しい要素を追加
     confirm:
