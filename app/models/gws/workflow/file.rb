@@ -122,7 +122,9 @@ class Gws::Workflow::File
 
   # override Gws::Addon::Reminder#reminder_url
   def reminder_url(*args)
-    ret = super
+    #ret = super
+    name = reference_model.tr('/', '_') + '_readable_path'
+    ret = [name, id: id]
     options = ret.extract_options!
     options[:state] = 'all'
     [ *ret, options ]
