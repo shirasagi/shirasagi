@@ -34,7 +34,7 @@ class Gws::Reminder
   validates :item_id, presence: true
 
   default_scope -> {
-    order_by date: -1
+    order_by date: 1
   }
   scope :search, ->(params) {
     criteria = where({})
