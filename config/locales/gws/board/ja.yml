@@ -86,12 +86,23 @@ ja:
         「%{name}」が作成または更新されました。
 
         %{text}
+
     gws/board/post:
       subject: "[更新通知][掲示板] %{name}"
       text: |
         「%{name}」に投稿がありました。
 
         %{text}
+
+    gws/board/topic/destroy:
+      subject: "[削除通知][掲示板] %{name}"
+      text: |
+        「%{name}」が削除されました。
+
+    gws/board/post/destroy:
+      subject: "[削除通知][掲示板] %{name}"
+      text: |
+        「%{name}」の投稿が削除されました。
 
   mongoid:
     models:
