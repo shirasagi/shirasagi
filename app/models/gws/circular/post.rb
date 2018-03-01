@@ -6,7 +6,7 @@ class Gws::Circular::Post
   include Gws::Reference::Site
   include Gws::Circular::See
   include Gws::Circular::Sort
-  include Gws::Addon::Reminder
+  #include Gws::Addon::Reminder
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Circular::Category

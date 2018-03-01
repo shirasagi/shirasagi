@@ -19,7 +19,7 @@
   <% end %>
 
   <% if @cur_site.menu_reminder_visible? %>
-    <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminders_path, class: "icon-reminder" %></h2>
+    <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminder_main_path, class: "icon-reminder" %></h2>
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>

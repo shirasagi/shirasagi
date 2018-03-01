@@ -1,52 +1,15 @@
 class @Gws_Reminder
-  @renderAddon: (opts = {})->
-    addon = $(".gws-addon-reminder")
-
-    params = {
-      data:
-        item:
-          item_id: addon.find("#item_id").val()
-          model: addon.find("#item_model").val()
-          name: addon.find("#item_name").val()
-      beforeSend: (data)->
-        $(".gws-addon-reminder-label").html("")
-      success: (data)->
-        $(".gws-addon-reminder-label").html(data)
-      error: (data)->
-        alert("Error")
-    }
-    $.extend true, params, opts
-
-    $("#gws-addon-reminder-set").click ->
-      ajax_params = { method: "post" }
-      $.extend true, ajax_params, params
-      ajax_params["data"]["item"]["date"] = addon.find("#item_date").val()
-      $.ajax(ajax_params)
-
-    $("#gws-addon-reminder-unset").click ->
-      ajax_params = { method: "post" }
-      $.extend true, ajax_params, params
-      ajax_params["data"]["_method"] = "delete"
-      $.ajax(ajax_params)
-
   @renderList: (opts = {})->
     el = $(opts['el'] || document)
 
-    @noticeTimer = null
-    showInformation = (item, state) ->
-      switch state
-        when 'updating'
-          item.find('.updated').hide()
-          clearTimeout(@noticeTimer) if @noticeTimer
-          $('#notice').hide()
-        when 'updated'
-          item.find('.updated').show()
-          @noticeTimer = SS.notice("<%= I18n.t('ss.notice.saved') %>")
-        else
-          item.find('.updated').hide()
-
     el.find('.list-item').each ->
-      $(this).find('.links').prepend('<a class="restore" href="#" style="display: none;"><%= I18n.t('gws.links.restore_reminder') %></a>')
+      $(this).find('.links').prepend('<a class="restore" href="#" style="display: none;"><%= I18n.t('gws/reminder.links.restore_reminder') %></a>')
+
+    el.find('.list-item.deleted').each ->
+      $(this).find('.check, .meta, .delete, .updated, .more-btn').hide()
+      $(this).find('.dropdown-menu').removeClass('active')
+      $(this).find('.restore').show()
+      $(this).find('.notification').hide()
 
     el.find('.list-item .delete').click ->
       item = $(this).closest('.list-item')
@@ -55,11 +18,11 @@ class @Gws_Reminder
         method: 'post'
         data:
           _method: 'delete'
-          item:
-            item_id: item.data('id')
-            model: item.data('model')
-            name: item.data('name')
-            date: item.data('date')
+          id: item.data('id')
+          item_id: item.data('item_id')
+          item_model: item.data('model')
+          item_name: item.data('name')
+          date: item.data('date')
         success: (data)->
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .updated, .more-btn').hide()
           item.find('.dropdown-menu').removeClass('active')
@@ -73,14 +36,14 @@ class @Gws_Reminder
     el.find('.list-item .restore').click ->
       item = $(this).closest('.list-item')
       $.ajax
-        url: opts['url']
+        url: opts['restore_url']
         method: 'post'
         data:
-          item:
-            item_id: item.data('id')
-            model: item.data('model')
-            name: item.data('name')
-            date: item.data('date')
+          id: item.data('id')
+          item_id: item.data('item_id')
+          item_model: item.data('model')
+          item_name: item.data('name')
+          date: item.data('date')
         success: (data)->
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .more-btn').show()
           item.find('.restore').hide()
@@ -92,22 +55,33 @@ class @Gws_Reminder
           alert('Error')
       return false
 
-    el.find('.list-item .notification').change ->
-      item = $(this).closest('.list-item')
-      idx = this.selectedIndex
-      value = this.options[idx].value
-      showInformation(item, 'updating')
-      $.ajax
-        url: "#{opts['url']}/notifications"
-        method: 'post'
-        data:
-          item:
-            item_id: item.data('id')
-            model: item.data('model')
-            in_notify_before: value
-        success: (data)->
-          showInformation(item, 'updated')
-          return false
-        error: (data)->
-          showInformation(item, 'none')
-          alert('Error')
+  #@renderAddon: (opts = {})->
+  #  addon = $(".gws-addon-reminder")
+  #
+  #  params = {
+  #    data:
+  #      item:
+  #        item_id: addon.find("#item_id").val()
+  #        model: addon.find("#item_model").val()
+  #        name: addon.find("#item_name").val()
+  #    beforeSend: (data)->
+  #      $(".gws-addon-reminder-label").html("")
+  #    success: (data)->
+  #      $(".gws-addon-reminder-label").html(data)
+  #    error: (data)->
+  #      alert("Error")
+  #  }
+  #  $.extend true, params, opts
+  #
+  #  $("#gws-addon-reminder-set").click ->
+  #    ajax_params = { method: "post" }
+  #    $.extend true, ajax_params, params
+  #    ajax_params["data"]["item"]["date"] = addon.find("#item_date").val()
+  #    $.ajax(ajax_params)
+  #
+  #  $("#gws-addon-reminder-unset").click ->
+  #    ajax_params = { method: "post" }
+  #    $.extend true, ajax_params, params
+  #    ajax_params["data"]["_method"] = "delete"
+  #    $.ajax(ajax_params)
+  #    $.ajax(ajax_params)

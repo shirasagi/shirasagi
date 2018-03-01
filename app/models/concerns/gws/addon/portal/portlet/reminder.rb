@@ -15,8 +15,11 @@ module Gws::Addon::Portal::Portlet
     end
 
     def reminder_condition
-      return {} if reminder_filter == 'all'
-      { date: { '$gte' => Time.zone.now } }
+      condition = { "deleted" => { "$exists" => false } }
+      if reminder_filter == 'future'
+        condition["date"] = { '$gte' => Time.zone.now }
+      end
+      condition
     end
 
     def find_reminder_items(portal, user)

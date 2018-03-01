@@ -2,7 +2,9 @@
   items = @portlet.find_reminder_items(@portal, @cur_user)
 %>
 <%= jquery do %>
-  Gws_Reminder.renderList({ url: "<%= gws_apis_reminders_path %>", el: ".<%= @portlet.portlet_id_class %>" });
+  Gws_Reminder.renderList({
+    url: "<%= gws_apis_reminders_path %>", restore_url: "<%= gws_apis_restore_reminder_path %>", el: ".<%= @portlet.portlet_id_class %>"
+  });
 <% end %>
 
 <div class="main-box">
@@ -10,26 +12,30 @@
 
   <ul class="list-items">
     <% items.each do |item| %>
-      <li class="list-item"
-        data-id="<%= item.item_id %>"
+      <li class="list-item <%= item.deleted? ?  'deleted' : '' %> <%= item.activated? ?  'activated' : '' %>"
+        data-id="<%= item.id %>"
+        data-item_id="<%= item.item_id %>"
         data-name="<%= item.name %>"
         data-model="<%= item.model %>"
         data-date="<%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %>">
 
         <div class="info">
-          <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
-          <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
+          <% if item.model == "gws/schedule/plan" || item.model == "gws/schedule/todo" %>
+            <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
+            <%= link_to item.name, redirect_gws_reminder_item_path(id: item.id, mode: "-"), class: "title" %>
+          <% else %>
+            <%= item.name %>
+          <% end %>
 
           <div class="meta">
-            <% if item.date.present? %>
+            <span class="id">#<%= item.id %></span>
+            <% if item.start_at.present? %>
+              <span class="datetime"><%= term(item) %></span>
+            <% else %>
               <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
             <% end %>
-            <span class="label"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
-            <% if item.updated_user_name.present? %>
-              <span class="user"><%= item.updated_user_name %></span>
-            <% end %>
-            <% if item.updated_date.present? %>
-              <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
+            <% item.notifications.each do |notification| %>
+              <span class="datetime"><%= tryb { notification.interval_label } %></span>
             <% end %>
           </div>
         </div>
@@ -50,6 +56,6 @@
   </ul>
 
   <% if items.next_page && @portal.my_portal? %>
-  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_reminders_path %></div>
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_reminder_main_path %></div>
   <% end %>
 </div>
