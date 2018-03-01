@@ -378,6 +378,21 @@ ja:
       text: |
         「%{name}」の出欠確認に回答がありました。
 
+    gws/schedule/plan/destroy:
+      subject: "[削除通知][スケジュール] %{name}"
+      text: |
+        「%{name}」が削除されました。
+
+    gws/schedule/comment/destroy:
+      subject: "[削除通知][スケジュール] %{name}"
+      text: |
+        「%{name}」のコメントが削除されました。
+
+    gws/schedule/attendance/destroy:
+      subject: "[削除通知][スケジュール] %{name}"
+      text: |
+        「%{name}」の出欠確認の回答が削除されました。
+
     gws/schedule/plan/approval/request:
       subject: "[承認依頼][スケジュール] %{name}"
       text: |

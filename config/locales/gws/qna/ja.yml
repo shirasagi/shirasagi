@@ -89,12 +89,23 @@ ja:
         「%{name}」が作成または更新されました。
 
         %{text}
+
     gws/qna/post:
       subject: "[更新通知][Ｑ＆Ａ] %{name}"
       text: |
         「%{name}」に投稿がありました。
 
         %{text}
+
+    gws/qna/topic/destroy:
+      subject: "[削除通知][Ｑ＆Ａ] %{name}"
+      text: |
+        「%{name}」が削除されました。
+
+    gws/qna/post/destroy:
+      subject: "[削除通知][Ｑ＆Ａ] %{name}"
+      text: |
+        「%{name}」の投稿が削除されました。
 
   mongoid:
     models:
