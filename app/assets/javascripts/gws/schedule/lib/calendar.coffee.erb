@@ -3,7 +3,7 @@ class @Gws_Schedule_Calendar
     noPlan: '<%= I18n.t('gws/schedule.no_plan') %>'
 
   @render: (selector, opts = {}, init = {})->
-    params = @defaultParams(opts)
+    params = @defaultParams(selector, opts)
     $.extend true, params, @editableParams(opts) if opts['restUrl']
     $.extend true, params, @tapMenuParams(opts) if opts['restUrl']
     $.extend true, params, opts
@@ -23,7 +23,7 @@ class @Gws_Schedule_Calendar
         Gws_Popup.render($(this), $(data).show())
         return false
 
-  @defaultParams: (opts) ->
+  @defaultParams: (selector, opts) ->
     buttonText:
       listMonth: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>"
     columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
@@ -38,13 +38,20 @@ class @Gws_Schedule_Calendar
         click: (e) ->
           $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'))
           $(this).toggleClass("fc-state-active")
+      withListView:
+        text: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>"
+        click: (e) ->
+          $.fullCalendar.toggleListFormat(selector)
+          $(selector).fullCalendar('refetchEvents')
+          $(window).trigger('resize') # for AgendaView
+          $(this).toggleClass("fc-state-active")
     contentHeight: 'auto'
     displayEventEnd:
       basicWeek: true
     endParam: 's[end]'
     fixedWeekCount: false
     slotEventOverlap: false
-    header: { left: 'today prev next title', right: 'withAbsence withTodo month,basicWeek,agendaDay,listMonth' },
+    header: { left: 'today prev next title', right: 'withAbsence withTodo withListView month,basicWeek,agendaDay' },
     lang: 'ja'
     nextDayThreshold: '00:00:00' # 複数日表示の閾値
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
@@ -57,7 +64,10 @@ class @Gws_Schedule_Calendar
       day: "<%= I18n.t('gws/schedule.calendar.titleFormat.day') %>"
     loading: (isLoading, view) ->
       if isLoading
-        $(this).find('.fc-widget-content').eq(0).prepend('<span class="fc-loading"><%= I18n.t('gws/schedule.loading') %></span>')
+        if $(selector).hasClass("fc-list-format")
+          $(this).find('.fc-view').prepend('<span class="fc-loading"><%= I18n.t('gws/schedule.loading') %></span>')
+        else
+          $(this).find('.fc-widget-content').eq(0).prepend('<span class="fc-loading"><%= I18n.t('gws/schedule.loading') %></span>')
       else
         $(this).find('.fc-loading').remove()
     eventAfterAllRender: (view) ->
