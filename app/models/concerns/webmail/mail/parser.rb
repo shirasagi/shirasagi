@@ -160,6 +160,7 @@ module Webmail::Mail::Parser
   private
 
   def decode_jp(str, src_encoding = nil)
+    str.force_encoding('UTF-8')
     return str if str.blank? || src_encoding == 'UTF-8'
     src_encoding = 'CP50220' if src_encoding.try(:upcase) == 'ISO-2022-JP'
     str.encode('UTF-8', src_encoding) rescue str.encode('UTF-8')
