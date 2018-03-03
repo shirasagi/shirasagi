@@ -13,7 +13,7 @@
       <tbody>
       <% reports.order_by(updated: 1).each do |report| %>
         <tr>
-          <td><%= link_to(report.name, gws_report_file_path(state: 'all', id: report)) %></td>
+          <td><%= link_to(report.name, gws_report_file_path(state: 'redirect', id: report)) %></td>
           <td><%= I18n.l(report.updated) %></td>
         </tr>
       <% end %>
