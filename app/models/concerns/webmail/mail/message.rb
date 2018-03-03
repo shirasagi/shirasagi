@@ -40,7 +40,7 @@ module Webmail::Mail::Message
 
   def new_reply_all(ref)
     self.reply_uid = ref.uid
-    self.to = (ref.from + ref.to).reject { |c| c.include?(imap.user.email) }
+    self.to = (ref.from + ref.to).reject { |c| imap.user.email.present? && c.include?(imap.user.email) }
     self.cc = ref.cc
     self.to_text = self.to.join('; ')
     self.cc_text = self.cc.join('; ')
@@ -79,7 +79,7 @@ module Webmail::Mail::Message
     text = "\n\n"
     text += "#{sign}\n\n" if sign.present?
     text += reply_body_info(ref) + "\n"
-    text += ref.text.to_s.gsub(/^/m, "> ")
+    text += decode_jp(ref.text.to_s).gsub(/^/m, "> ")
     text
   end
 
@@ -87,7 +87,7 @@ module Webmail::Mail::Message
     if ref.html.present?
       bq = ref.sanitize_html(remove_image: true)
     else
-      bq = h(ref.text.to_s).gsub(/\r\n|\n/, '<br />')
+      bq = h(decode_jp(ref.text.to_s)).gsub(/\r\n|\n/, '<br />')
     end
 
     html = "<p></p>"
