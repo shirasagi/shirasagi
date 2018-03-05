@@ -57,7 +57,7 @@ class @SS_Addon_TempFile
               files = JSON.parse(request.response)
               SS_Addon_TempFile.select(files, dropArea)
             else
-              alert(["== Error =="].concat(request.responseJSON).join("\n"))
+              alert(["== Error =="].concat($.parseJSON(request.response)).join("\n"))
             SS_Addon_TempFile.dropEventTriggered = false
 
         request.open("POST", SS_Addon_TempFile.uploadUrl())
