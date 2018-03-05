@@ -1,5 +1,6 @@
 <%
   reminder_conditions = @item.reminder_conditions(@cur_user)
+  reminder_conditions = @item.in_reminder_conditions if @item.in_reminder_conditions
 %>
 
 <%= jquery do %>

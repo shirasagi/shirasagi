@@ -1,8 +1,4 @@
 <div class="main-box">
-<% url = instance_exec(&@item.url_lazy) %>
-<% if url %>
-<%= jquery do %>location.href = "<%= url %>";<% end %>
-<% else %>
   <div class="gws-reminder-notfound">
     <div class="notice"><%= t("gws/reminder.notfound.summary") %></div>
     <% same_name_items = @item.same_name_items %>
@@ -27,6 +23,5 @@
       </ul>
     <% end %>
   </div>
-<% end %>
 </div>
 

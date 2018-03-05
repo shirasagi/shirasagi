@@ -127,6 +127,7 @@ class Gws::Workflow::File
     ret = [name, id: id]
     options = ret.extract_options!
     options[:state] = 'all'
+    options[:site] = site_id
     [ *ret, options ]
   end
 

@@ -26,7 +26,7 @@ module Gws::Addon
 
     def reminder_url
       name = reference_model.tr('/', '_') + '_path'
-      [name, id: id]
+      [name, id: id, site: site_id]
     end
 
     def reminder_notify_state_options
