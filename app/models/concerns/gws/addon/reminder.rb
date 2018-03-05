@@ -26,7 +26,7 @@ module Gws::Addon
 
     def reminder_url
       name = reference_model.tr('/', '_') + '_path'
-      [name, id: id]
+      [name, id: id, site: site_id]
     end
 
     def reminder_notify_state_options
@@ -37,6 +37,12 @@ module Gws::Addon
 
     def reminder_interval_type_options
       I18n.t("gws/reminder.options.interval_type").map do |k, v|
+        [ v, k.to_s ]
+      end
+    end
+
+    def reminder_interval_type_allday_options
+      I18n.t("gws/reminder.options.interval_type_allday").map do |k, v|
         [ v, k.to_s ]
       end
     end

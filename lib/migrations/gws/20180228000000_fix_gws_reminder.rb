@@ -43,6 +43,9 @@ class SS::Migration20180228000000
       end
 
       if item.try(:allday) == "allday"
+        notification.state = "enabled"
+        notification.interval = 1
+        notification.interval_type = "days"
         notification.base_time = "8:00"
         base_at = Time.zone.parse("#{reminder.start_at.strftime("%Y/%m/%d")} #{notification.base_time}")
         notification.notify_at = base_at - (notification.interval.send(notification.interval_type))

@@ -73,6 +73,13 @@ class Gws::Reminder
     -> { nil }
   end
 
+  def url
+    url, options = item.reminder_url
+    Rails.application.routes.url_helpers.send(url, options)
+  rescue
+    nil
+  end
+
   def updated?
     updated_fields.present?
   end
