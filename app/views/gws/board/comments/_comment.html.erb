@@ -34,6 +34,7 @@ end
           <i class="material-icons">&#xE226;</i>
           <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
         </span>
+        <% if @cur_site.board_break_line == 'vertically' %><br><% end %>
       <% end %>
     </div>
     <% end %>
@@ -51,6 +52,7 @@ end
               <%= link_to item[:url], item[:url] %>
             <% end %>
           </span>
+          <% if @cur_site.board_break_line == 'vertically' %><br><% end %>
         <% end %>
       </div>
     <% end %>

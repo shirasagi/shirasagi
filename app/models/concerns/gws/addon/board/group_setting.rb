@@ -11,9 +11,13 @@ module Gws::Addon::Board::GroupSetting
     field :board_file_size_per_topic, type: Integer
     field :board_file_size_per_post, type: Integer
     field :board_browsed_delay, type: Integer
+    field :board_break_line, type: String
 
     permit_params :board_new_days, :board_browsed_delay
     permit_params :in_board_file_size_per_topic_mb, :in_board_file_size_per_post_mb
+    permit_params :board_break_line
+
+    validates :board_break_line, inclusion: { in: %w(horizontal vertically), allow_blank: true }
 
     before_validation :set_board_file_size_per_topic
     before_validation :set_board_file_size_per_post
@@ -25,6 +29,10 @@ module Gws::Addon::Board::GroupSetting
 
   def board_browsed_delay
     self[:board_browsed_delay].presence || 2
+  end
+
+  def board_break_line_options
+    %w(horizontal vertically).map { |v| [ I18n.t("gws/board.options.board_break_line.#{v}"), v ] }
   end
 
   private

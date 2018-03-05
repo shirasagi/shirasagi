@@ -50,6 +50,9 @@ ja:
       severity:
         normal: 通常
         important: 重要
+      board_break_line:
+        horizontal: 横並び
+        vertically: 縦並び
     links:
       back_to_thread: 戻る
       comment: 返信する
@@ -138,6 +141,7 @@ ja:
         board_file_size_per_topic: 添付最大サイズ/トピック単位
         board_file_size_per_post: 添付最大サイズ/投稿単位
         board_browsed_delay: 既読にするまでの秒数
+        board_break_line: リンク表示の並び
       gws/board/category:
         name: カテゴリー名
       gws/addon/board/category:
@@ -162,6 +166,8 @@ ja:
         - 投稿単位での添付最大サイズを入力します。
       board_browsed_delay:
         - 掲示板を既読にするまでの秒数を入力します。
+      board_break_line:
+        - 投稿のリンク表示の並びを選択します。
     gws/board/category:
       name:
         - カテゴリー名を入力します。
