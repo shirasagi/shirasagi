@@ -2,8 +2,13 @@
   var submit_search = function() {
     if ($('#calendar-controller').length) {
       var view = $('#calendar-controller').fullCalendar('getView');
+      var view_format = 'default';
+      if (view.el.closest(".fc").hasClass('fc-list-format')) {
+        view_format = 'list';
+      }
       $('form.search').append('<input type="hidden" name="calendar[view]" value="' + view.name + '" />');
       $('form.search').append('<input type="hidden" name="calendar[date]" value="' + view.start.format() + '" />');
+      $('form.search').append('<input type="hidden" name="calendar[viewFormat]" value="' + view_format + '" />');
     }
     $("form.search").submit();
   };

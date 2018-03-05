@@ -1,7 +1,7 @@
 <% return if params[:action] =~ /index/ %>
 
 <%= jquery do %>
-  var state = "calendar[date]=<%= params.dig(:calendar, :date) %>&calendar[view]=<%= params.dig(:calendar, :view) %>"
+  var state = "calendar[date]=<%= params.dig(:calendar, :date) %>&calendar[view]=<%= params.dig(:calendar, :view) %>&calendar[viewFormat]=<%= params.dig(:calendar, :viewFormat) %>"
   $('.nav-menu a').each(function() {
     if ($(this).hasClass('no-calendar-state')) {
       return;

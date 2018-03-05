@@ -60,8 +60,12 @@ module Gws::Schedule::PlanFilter
     params.dig(:calendar, :view).presence || 'month'
   end
 
+  def redirection_view_format
+    params.dig(:calendar, :viewFormat).presence || 'default'
+  end
+
   def redirection_url
-    url_for(action: :index, calendar: { view: redirection_view, date: @item.start_at.to_date.to_s })
+    url_for(action: :index, calendar: { view: redirection_view, date: @item.start_at.to_date.to_s, viewFormat: redirection_view_format })
   end
 
   def set_file_addon_state

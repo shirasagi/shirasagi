@@ -3,5 +3,6 @@
 <% end %>
 
 <%= hidden_field_tag 'calendar[view]', params.dig(:calendar, :view) %>
+<%= hidden_field_tag 'calendar[viewFormat]', params.dig(:calendar, :viewFormat) %>
 
 <%= render file: "ss/crud/_delete" %>

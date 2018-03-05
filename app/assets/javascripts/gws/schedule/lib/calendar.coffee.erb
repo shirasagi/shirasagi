@@ -14,6 +14,11 @@ class @Gws_Schedule_Calendar
   @renderInitialize: (selector, init = {})->
     $(selector).fullCalendar('changeView', init['view']) if init['view']
     $(selector).fullCalendar('gotoDate', init['date']) if init['date']
+
+    if init['viewFormat'] == 'list'
+      $.fullCalendar.toggleListFormat(selector)
+      $(selector).find('.fc-withListView-button').addClass("fc-state-active")
+
     Gws_Schedule_View.renderSideCalendars(selector)
 
     $("#{selector}-header .calendar-text").each ->
@@ -84,7 +89,8 @@ class @Gws_Schedule_Calendar
       if opts['tapMenu']
         now   = new Date
         start = "#{date.format()}T#{now.getHours()}:00:00"
-        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}"
+        view_format = if view.el.closest(".fc").hasClass('fc-list-format') then 'list' else 'default'
+        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}&calendar[viewFormat]=#{view_format}"
         links = "<a href='#{url}/new?start=#{start}&#{state}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
 
       if $('#calendar-controller').length == 0
@@ -125,7 +131,8 @@ class @Gws_Schedule_Calendar
       Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>")
 
       popup_url = if event.restUrl then event.restUrl else url
-      state = "calendar[date]=#{event.start.format('YYYY-MM-DD')}&calendar[view]=#{view.name}"
+      view_format = if view.el.closest(".fc").hasClass('fc-list-format') then 'list' else 'default'
+      state = "calendar[date]=#{event.start.format('YYYY-MM-DD')}&calendar[view]=#{view.name}&calendar[viewFormat]=#{view_format}"
 
       $.ajax
         url: "#{popup_url}/#{event.id}/popup"
@@ -180,6 +187,7 @@ class @Gws_Schedule_Calendar
 
       unless view.start.isBefore(now) && view.end.isAfter(now)
         start = "#{date.format('YYYY-MM-DD')}T#{now.getHours()}:00:00"
-        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}"
+        view_format = if view.el.closest(".fc").hasClass('fc-list-format') then 'list' else 'default'
+        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}&calendar[viewFormat]=#{view_format}"
         href  = href + "?start=#{start}&#{state}"
       $(this).attr('href', href)
