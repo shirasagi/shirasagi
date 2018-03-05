@@ -48,12 +48,19 @@ var fullCalendar_renderListEvents = function(segs) {
     if (event.sanitizedHtml) {
       info.append('<p class="summary">' + event.sanitizedHtml + '</p>');
     }
-    var date = $('<div class="td date"></div>').text(event.startDateLabel);
-    var time = $('<div class="td time"></div>').text(event.startTimeLabel);
-    if (event.allDay) time.text(event.allDayLabel);
+    if (event.allDay) {
+      var startLabel = event.startDateLabel + ' ' + event.allDayLabel;
+      var endLabel = event.endDateLabel + ' ' + event.allDayLabel;
+    }
+    else {
+      var startLabel = event.startDateLabel + ' ' + event.startTimeLabel;
+      var endLabel = event.endDateLabel + ' ' + event.endTimeLabel;
+    }
+    var startAt = $('<div class="td startAt"></div>').text(startLabel);
+    var delimiter = $('<div class="td delimiter"></div>').text('-');
+    var endAt = $('<div class="td endAt"></div>').text(endLabel);
+    var tr = $('<div class="tr"></div>').appendTo(table).append(startAt).append(delimiter).append(endAt).append(info);
     eventCount++;
-
-    var tr = $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
     if (event.className.indexOf('fc-event-todo') !== -1) {
       tr.addClass('fc-event-todo');
     }
