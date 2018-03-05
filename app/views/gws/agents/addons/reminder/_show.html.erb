@@ -43,18 +43,28 @@
     <%= @model.tt :reminder_date %>
   </dt>
   <dd>
+    <% if @item.allday == "allday" %>
     <table class="remider-conditions">
       <tbody>
       <tr data-base="true">
         <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
-        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', nil, step: 10, min: 0, class: "interval" %></td>
-        <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_options), class: "interval_type" %></td>
-        <td class="allday" <%== (@item.allday == "allday") ? '' : 'style="display: none;"' %>>
-          <%= select_tag 'item[in_reminder_conditions][][base_time]', options_for_select(@item.reminder_base_time_options), class: "base_time" %>
-        </td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, class: "interval" %></td>
+        <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_allday_options), class: "interval_type" %></td>
+        <td><%= select_tag 'item[in_reminder_conditions][][base_time]', options_for_select(@item.reminder_base_time_options), class: "base_time" %></td>
       </tr>
       </tbody>
     </table>
+    <% else %>
+    <table class="remider-conditions">
+      <tbody>
+      <tr data-base="true">
+        <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, class: "interval" %></td>
+        <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_options), class: "interval_type" %></td>
+      </tr>
+      </tbody>
+    </table>
+    <% end %>
     <%= button_tag t("gws/reminder.buttons.register_reminder"), id: "gws-addon-reminder-set", class: :btn %>
   </dd>
 </dl>

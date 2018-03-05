@@ -41,6 +41,12 @@ module Gws::Addon
       end
     end
 
+    def reminder_interval_type_allday_options
+      I18n.t("gws/reminder.options.interval_type_allday").map do |k, v|
+        [ v, k.to_s ]
+      end
+    end
+
     def reminder_base_time_options
       I18n.t("gws/reminder.options.base_time").map do |k, v|
         [ v, k.to_s ]
