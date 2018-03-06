@@ -171,7 +171,7 @@ class @Gws_Schedule_Calendar
 
   @changePrintPreviewPortrait: (view) ->
     if $('body').hasClass('print-preview')
-      if view.type == 'agendaDay' || view.type == 'listMonth'
+      if view.type == 'agendaDay' || view.type == 'listMonth' || view.el.closest(".fc").hasClass("fc-list-format")
         $('body').removeClass('horizontal')
         $('body').addClass('vertical')
       else
