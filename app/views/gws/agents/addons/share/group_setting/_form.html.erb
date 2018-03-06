@@ -12,4 +12,7 @@
 
   <dt><%= @model.t :share_files_capacity %><%= @model.tt :share_files_capacity %></dt>
   <dd class="short"><%= f.number_field :in_share_files_capacity_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+
+  <dt><%= @model.t :share_default_sort %><%= @model.tt :share_default_sort %></dt>
+  <dd><%= f.select :share_default_sort, @item.share_default_sort_options %></dd>
 </dl>
