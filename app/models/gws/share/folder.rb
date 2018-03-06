@@ -75,7 +75,7 @@ class Gws::Share::Folder
     @parents ||= begin
       paths = split_path(name.sub(/^\//, ''))
       paths.pop
-      self.class.in(name: paths)
+      dependant_scope.in(name: paths)
     end
   end
 
@@ -148,7 +148,7 @@ class Gws::Share::Folder
     if name.split('/')[name.count('/')].blank?
       errors.add :name, :blank
     else
-      errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+      errors.add :base, :not_found_parent unless dependant_scope.where(name: File.dirname(name)).exists?
     end
   end
 
@@ -178,7 +178,7 @@ class Gws::Share::Folder
   end
 
   def validate_children
-    if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+    if name.present? && dependant_scope.where(name: /^#{Regexp.escape(name)}\//).exists?
       errors.add :base, :found_children
       return false
     end
@@ -195,11 +195,11 @@ class Gws::Share::Folder
 
   def validate_folder_name
     if self.id == 0
-      errors.add :base, :not_create_same_folder if self.class.site(site).where(name: self.name).first
+      errors.add :base, :not_create_same_folder if dependant_scope.where(name: self.name).first
     end
 
     if self.id != 0
-      if self.class.site(site).where(name: self.name).present? && self.class.site(site).where(id: self.id).first.name != self.name
+      if dependant_scope.where(name: self.name).present? && dependant_scope.where(id: self.id).first.name != self.name
         errors.add :base, :not_move_to_same_name_folder
       end
     end
