@@ -46,17 +46,26 @@ class Webmail::FiltersController < ApplicationController
       raise I18n.t("errors.messages.invalid_csv")
     end
 
+    conf = @imap_setting.imap_settings(@cur_user.imap_default_settings)
     table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
     table.each do |row|
       conditions = row[@model.t(:conditions)].to_s.split("\n").collect do |value|
         JSON.parse(value, symbolize_names: true)
       end
-      item = @model.find_or_initialize_by(conditions: conditions)
-      @model.fields.each_key do |key|
-        next if key == '_id'
-        next if key == 'conditions'
-        item.write_attribute(key, row[@model.t(key)].try(:strip))
+      item = @model.find_or_initialize_by(
+        host: conf[:host],
+        account: conf[:account],
+        conjunction: value(row, :conjunction),
+        conditions: conditions,
+        action: value(row, :action),
+        mailbox: value(row, :mailbox),
+        user_id: @cur_user.id
+      )
+      @model::EXPORT_ATTRIBUTES.each do |attribute|
+        next if attribute == 'conditions'
+        item.write_attribute(attribute, value(row, attribute))
       end
+      item.save
     end
 
     render_update true, location: { action: :index }, render: { file: :import }
@@ -84,15 +93,15 @@ class Webmail::FiltersController < ApplicationController
   private
 
   def enum_csv
-    fields = @model.fields.sort
+    attributes = @model::EXPORT_ATTRIBUTES
     Enumerator.new do |y|
-      y << encode(fields.collect { |name, field| @model.t(name) })
+      y << encode(attributes.collect { |attribute| @model.t(attribute) })
       @items.each do |item|
-        row = fields.collect do |name, field|
-          if name == 'conditions'
-            item.send(name).collect(&:to_json).join("\n")
+        row = attributes.collect do |attribute|
+          if attribute == 'conditions'
+            item.send(attribute).collect(&:to_json).join("\n")
           else
-            item.send(name)
+            item.send(attribute)
           end
         end
         y << encode(row)
@@ -102,5 +111,9 @@ class Webmail::FiltersController < ApplicationController
 
   def encode(str)
     str.to_csv.encode('CP932', invalid: :replace, undef: :replace)
+  end
+
+  def value(row, key)
+    row[@model.t(key)].try(:strip)
   end
 end
