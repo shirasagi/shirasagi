@@ -1,0 +1,53 @@
+<div class="popup-title"><%= link_to @item.name, { action: :show } %></div>
+<div class="popup-date"><%= term(@item) %></div>
+
+<% if @item.text.present? %>
+    <div class="popup-description">
+      <div class="text <%= "markdown-body" if @item.text_type == "markdown" %>">
+        <%= @item.html %>
+      </div>
+    </div>
+<% end %>
+
+<div class="popup-attributes">
+  <div class="popup-attr popup-members">
+    <div class="popup-label"><%= t("modules.addons.gws/member") %></div>
+    <div class="popup-value">
+      <%= @item.members.order_by_title(@cur_site).map(&:long_name).join(', ') %>
+    </div>
+  </div>
+
+  <% if hist = @item.histories.where(mode: 'update').first %>
+      <div class="popup-attr popup-history">
+        <div class="popup-label"><%= t "gws.history.user.update" %></div>
+        <div class="popup-value">
+          <span class="user"><%= hist.user_long_name %></span>
+          <% if hist.user_tel %><span class="tel"><%= hist.user_tel %></span><% end %>
+        </div>
+      </div>
+  <% end %>
+
+  <div class="popup-attr popup-history">
+    <div class="popup-label"><%= t "gws.history.user.create" %></div>
+    <div class="popup-value">
+      <span class="user"><%= @item.user_long_name %></span>
+      <% if @item.user_tel %><span class="tel"><%= @item.user_tel %></span><% end %>
+    </div>
+  </div>
+</div>
+
+<%
+  menu = []
+  menu << link_to(I18n.t('ss.links.show'), { action: :show })
+  menu << link_to(I18n.t('ss.links.edit'), { action: :edit }) if @item.allowed?(:edit, @cur_user, @cur_site)
+  menu << link_to(I18n.t('ss.links.delete'), { action: :soft_delete }) if @item.allowed?(:delete, @cur_user, @cur_site)
+  if @item.allowed?(:edit, @cur_user, @cur_site) && !@item.finished?
+    menu << link_to(I18n.t('gws/schedule/todo.links.finish'), { action: :finish })
+  end
+  if @item.allowed?(:edit, @cur_user, @cur_site) && @item.finished?
+    menu << link_to(I18n.t('gws/schedule/todo.links.revert'), { action: :revert })
+  end
+%>
+<% if menu.present? %>
+    <div class="popup-menu"><%= safe_join(menu) %></div>
+<% end %>
