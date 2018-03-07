@@ -109,6 +109,7 @@ ja:
       over_than_facility_hours: 設備予約は取得可能時間内で登録してください。（%{min}時～%{max}時）
       unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
+      not_found_reservable_facilities: 予約可能な設備が見つかりません。
   gws/schedule/todo:
     active: 削除を取り消す
     disabled_items: 削除済み

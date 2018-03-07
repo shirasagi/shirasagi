@@ -36,12 +36,18 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[name]", with: "name"
         fill_in "item[start_at]", with: "2016/04/01 12:00"
         fill_in "item[end_at]", with: "2016/04/01 13:00"
-        click_button I18n.t('ss.buttons.save')
+        click_button I18n.t('gws/schedule.facility_reservation.index')
       end
       expect(page).to have_css("form#item-form")
+      expect(page).to have_css("#cboxLoadedContent")
 
       within '#cboxLoadedContent .send' do
         click_on I18n.t('ss.buttons.confirm')
+      end
+      expect(page).not_to have_css("#cboxLoadedContent")
+
+      within 'form#item-form' do
+        click_button I18n.t('ss.buttons.save')
       end
 
       wait_for_ajax
