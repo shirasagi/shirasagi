@@ -113,6 +113,8 @@ ja:
       gws/memo/body: 内容
       gws/memo/member: 宛先
       gws/memo/priority: 重要度
+      gws/memo/notice/reply:
+        discussion: 電子会議室
   gws_role:
     edit_private_gws_memo_messages: メッセージの管理
     read_other_gws_memo_lists: リストの閲覧（全て）

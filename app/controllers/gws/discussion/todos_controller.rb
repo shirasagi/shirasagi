@@ -7,7 +7,6 @@ class Gws::Discussion::TodosController < ApplicationController
 
   before_action :set_forum
   before_action :set_crumbs
-  #before_action :set_item, only: [ :show, :edit, :update, :delete, :destroy, :disable, :finish, :revert ]
 
   navi_view "gws/discussion/main/navi"
 
@@ -86,19 +85,4 @@ class Gws::Discussion::TodosController < ApplicationController
 
     @items = @todos + @holidays
   end
-
-  #def create
-  #  @item = @model.new get_params
-  #  raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-  #
-  #  render_create @item.save, location: { action: :index }
-  #end
-
-  #def update
-  #  @item.attributes = get_params
-  #  @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-  #  raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-  #
-  #  render_update @item.update, location: { action: :index }
-  #end
 end

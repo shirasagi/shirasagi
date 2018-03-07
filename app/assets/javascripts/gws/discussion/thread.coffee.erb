@@ -1,0 +1,61 @@
+class @Gws_Discussion_Thread
+  @render: (user) ->
+    # temp file
+    appendSelectedFile = (selected, fileId, humanizedName) ->
+      span  = $('<span></span>')
+      img   = $('<img src="/assets/img/gws/ic-file.png" alt="" />')
+      a     = $('<a target="_blank"></a>')
+      input = $('<input type="hidden" name="item[file_ids][]" class="file-id" />')
+      icon  = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>")
+
+      span.attr("data-file-id", fileId)
+      span.attr("id", "file-" + fileId)
+      a.text(humanizedName)
+      a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view")
+      input.attr("value", fileId)
+      icon.on "click", (e) ->
+        $(this).parent("span").remove()
+        if $(selected).find("[data-file-id]").length <= 0
+          $(selected).hide()
+        return false;
+
+      span.append(img)
+      span.append(a)
+      span.append(icon)
+      span.append(input)
+
+      $(selected).show()
+      $(selected).append(span)
+
+    $('a.ajax-box').data 'on-select', ($item) ->
+      selected = $.colorbox.element().closest(".comment-files").find(".selected-files")
+      fileId = $item.data('id')
+      humanizedName = $item.data('humanized-name')
+      appendSelectedFile(selected, fileId, humanizedName)
+      return $.colorbox.close()
+
+    SS_Addon_TempFile.select = (files, dropArea) ->
+      $(files).each (i, file) ->
+        selected = $(dropArea).closest(".comment-files").find(".selected-files")
+        fileId = file["_id"]
+        humanizedName = file["name"]
+        appendSelectedFile(selected, fileId, humanizedName)
+      return false
+
+    SS_Addon_TempFile.renderDrop($(".comment-files .upload-drop-area"), user)
+
+    # reply
+    $(".open-reply").on 'click', ->
+      $(this).closest(".addon-body").next(".reply").show()
+      $(this).remove()
+      return false
+
+    # reply contributor
+    $(".reply[data-topic]").each () ->
+      topic = $(this).attr("data-topic")
+      setContributor = () ->
+        $('.discussion-contributor' + topic + ' input#item_contributor_model').val($(this).data('model'))
+        $('.discussion-contributor' + topic + ' input#item_contributor_id').val($(this).data('id'))
+        $('.discussion-contributor' + topic + ' input#item_contributor_name').val($(this).data('name'))
+      $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]').on('change', setContributor)
+      $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]:checked').each(setContributor)

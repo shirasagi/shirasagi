@@ -1,0 +1,19 @@
+<% css_classes ||= [] %>
+<% addons.each do |addon| %>
+  <% buf = nil %>
+  <% if addon.klass == Gws::Addon::Memo::Notice::Reply %>
+     <% buf = render file: @item.reply_addon_show_file if @item.reply_addon_show_file %>
+     <% addon_name = @item.reply_addon_name %>
+  <% else %>
+     <% buf = render file: addon.show_file if addon.show_file %>
+     <% addon_name = addon.name %>
+  <% end %>
+
+  <% next if buf.blank? %>
+  <div class="addon-view <%= css_classes.join(' ') %>" id="addon-<%= addon.id %>">
+    <div class="addon-head toggle-head <%= css_classes.join(' ') %>"><h2><%= addon_name %></h2></div>
+    <div class="addon-body toggle-body <%= css_classes.join(' ') %>">
+      <%= buf %>
+    </div>
+  </div>
+<% end %>
