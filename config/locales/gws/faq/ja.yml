@@ -137,6 +137,7 @@ ja:
         faq_file_size_per_topic: 添付最大サイズ/トピック単位
         faq_file_size_per_post: 添付最大サイズ/投稿単位
         faq_browsed_delay: 既読にするまでの秒数
+        faq_files_break: ファイル表示の並び
       gws/faq/category:
         name: カテゴリー名
       gws/addon/faq/category:
@@ -161,6 +162,8 @@ ja:
         - 投稿単位での添付最大サイズを入力します。
       faq_browsed_delay:
         - よくある質問を既読にするまでの秒数を入力します。
+      faq_files_break:
+        - 添付ファイルの表示の並びを選択します。
     gws/faq/category:
       name:
         - カテゴリー名を入力します。

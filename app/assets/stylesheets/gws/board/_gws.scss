@@ -40,11 +40,16 @@
       background-color: $gray1;
     }
     .files a, .link-item {
-      display: inline-block;
-      margin-right: 8px;
       line-height: 1.5;
       word-break: normal;
       word-wrap: normal;
+    }
+    .block {
+      display: block;
+    }
+    .inline-block {
+      display: inline-block;
+      margin-right: 8px;
     }
     .status {
       padding: 15px;

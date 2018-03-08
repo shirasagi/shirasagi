@@ -216,6 +216,7 @@ ja:
         monitor_file_size_per_post: 添付最大サイズ/投稿単位
         monitor_delete_threshold: 削除対象
         default_notice_state: お知らせ表示設定
+        monitor_files_break: ファイル表示の並び
       gws/addon/monitor/release:
         released: 公開日時
         release_date: 公開開始日時(予約)
@@ -267,6 +268,8 @@ ja:
           - 照会・回答を完全に削除するまでの期限を入力します。基準は「ゴミ箱」に移動した日です。
         default_notice_state:
           - お知らせ表示条件の既定値を選択します。
+        monitor_files_break:
+        - 添付ファイルの表示の並びを選択します。
       gws/addon/monitor/contributor:
         contributor_name:
           - 投稿者名を選択します。

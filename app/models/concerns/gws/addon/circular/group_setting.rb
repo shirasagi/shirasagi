@@ -1,6 +1,7 @@
 module Gws::Addon::Circular::GroupSetting
   extend ActiveSupport::Concern
   extend SS::Addon
+  include Gws::Break
 
   set_addon_type :organization
 
@@ -9,12 +10,17 @@ module Gws::Addon::Circular::GroupSetting
     field :circular_max_member, type: Integer
     field :circular_filesize_limit, type: Integer
     field :circular_delete_threshold, type: Integer, default: 3
+    field :circular_files_break, type: String, default: 'vertically'
 
     permit_params :circular_default_due_date, :circular_max_member,
-                  :circular_filesize_limit, :circular_delete_threshold
+                  :circular_filesize_limit, :circular_delete_threshold,
+                  :circular_files_break
 
     validates :circular_default_due_date, numericality: true
     validates :circular_delete_threshold, numericality: true
+    validates :circular_files_break, inclusion: { in: %w(vertically horizontal), allow_blank: true }
+
+    alias_method :circular_files_break_options, :break_options
   end
 
   def circular_default_due_date

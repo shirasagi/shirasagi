@@ -1,6 +1,7 @@
 module Gws::Addon::Qna::GroupSetting
   extend ActiveSupport::Concern
   extend SS::Addon
+  include Gws::Break
 
   set_addon_type :organization
 
@@ -11,12 +12,18 @@ module Gws::Addon::Qna::GroupSetting
     field :qna_file_size_per_topic, type: Integer
     field :qna_file_size_per_post, type: Integer
     field :qna_browsed_delay, type: Integer
+    field :qna_files_break, type: String, default: 'vertically'
 
     permit_params :qna_new_days, :qna_browsed_delay
     permit_params :in_qna_file_size_per_topic_mb, :in_qna_file_size_per_post_mb
+    permit_params :qna_files_break
 
     before_validation :set_qna_file_size_per_topic
     before_validation :set_qna_file_size_per_post
+
+    validates :qna_files_break, inclusion: { in: %w(vertically horizontal), allow_blank: true }
+
+    alias_method :qna_files_break_options, :break_options
   end
 
   def qna_new_days
