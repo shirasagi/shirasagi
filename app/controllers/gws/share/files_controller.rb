@@ -73,7 +73,7 @@ class Gws::Share::FilesController < ApplicationController
       params[:s][:folder] = @folder.id if @folder.present?
     end
 
-    @sort = params.dig(:s, :sort) || @cur_site.share_default_sort || 'updated_desc'
+    @sort = params.dig(:s, :sort) || @cur_site.share_default_sort || 'filename'
 
     @items = @model.site(@cur_site).
       readable(@cur_user, site: @cur_site).

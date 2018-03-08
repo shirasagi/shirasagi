@@ -10,7 +10,7 @@ module Gws::Addon::Share::GroupSetting
 
     field :share_max_file_size, type: Integer, default: 0
     field :share_files_capacity, type: Integer, default: 0
-    field :share_default_sort, type: String, default: 'updated_desc'
+    field :share_default_sort, type: String, default: 'filename'
 
     permit_params :share_max_file_size, :in_share_max_file_size_mb
     permit_params :share_files_capacity, :in_share_files_capacity_mb
