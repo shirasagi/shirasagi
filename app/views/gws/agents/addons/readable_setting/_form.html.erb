@@ -11,10 +11,6 @@
 
 %>
 <%= jquery do %>
-  <% if !@item.readable_setting_present? %>
-  SS_AddonTabs.hide(".gws-addon-readable-setting");
-  <% end %>
-
   (new Gws_ReadableSetting('.gws-addon-readable-setting')).render();
 <% end %>
 
