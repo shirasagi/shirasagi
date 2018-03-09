@@ -10,8 +10,8 @@ module Gws::GroupPermission
     field :users_hash, type: Hash
     field :custom_groups_hash, type: Hash
 
-    embeds_ids :groups, class_name: "SS::Group"
-    embeds_ids :users, class_name: "SS::User"
+    embeds_ids :groups, class_name: "Gws::Group"
+    embeds_ids :users, class_name: "Gws::User"
     embeds_ids :custom_groups, class_name: "Gws::CustomGroup"
 
     permit_params :permission_level, group_ids: [], user_ids: [], custom_group_ids: []

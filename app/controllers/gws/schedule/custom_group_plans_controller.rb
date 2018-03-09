@@ -22,7 +22,9 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
   end
 
   def set_users
-    @users = @group.sorted_members
+    @users = @group.sorted_members.select do |u|
+      u.readable?(@cur_user, site: @cur_site, permission: false)
+    end
   end
 
   def set_items

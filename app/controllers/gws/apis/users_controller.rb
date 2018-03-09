@@ -46,6 +46,7 @@ class Gws::Apis::UsersController < ApplicationController
 
     @items = criteria.active.
       in(group_ids: group_ids).
+      readable(@cur_user, site: @cur_site, permission: false).
       search(params[:s]).
       order_by_title(@cur_site).
       page(params[:page]).per(50)

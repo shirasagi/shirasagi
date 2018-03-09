@@ -23,7 +23,9 @@ class Gws::Schedule::GroupPlansController < ApplicationController
   end
 
   def set_users
-    @users = @group.users.active.order_by_title(@cur_site).compact
+    @users = @group.users.active.
+      readable(@cur_user, site: @cur_site, permission: false).
+      order_by_title(@cur_site).compact
   end
 
   def set_items

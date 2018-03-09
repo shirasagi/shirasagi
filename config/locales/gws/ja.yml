@@ -471,18 +471,18 @@ ja:
         - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
     gws/addon/group_permission:
       custom_group_ids:
-        - このページを編集可能にするカスタムグループを選択します。
+        - 編集を許可するカスタムグループを選択します。
     gws/addon/readable_setting:
       readable_setting_range:
         - <b>全公開</b> - 誰でも閲覧できます。
         - <b>選択範囲</b> - 選択した対象のみ閲覧できます。
         - <b>非公開</b> - 作成者のみ閲覧できます。
       readable_custom_group_ids:
-        - このページを閲覧可能にするカスタムグループを選択します。
+        - 閲覧を許可するカスタムグループを選択します。
       readable_group_ids:
-        - このページを閲覧可能にするグループを選択します。
+        - 閲覧を許可するグループを選択します。
       readable_member_ids:
-        - このページを閲覧可能にするユーザーを選択します。
+        - 閲覧を許可するユーザーを選択します。
     gws/addon/subscription_setting:
       subscribed_custom_group_ids:
         - このページを購読するカスタムグループを選択します。

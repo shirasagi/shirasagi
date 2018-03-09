@@ -28,6 +28,13 @@ class Gws::UsersController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def pre_params
+    @default_readable_setting = Proc.new do
+      @item.readable_setting_range = 'public'
+    end
+    {}
+  end
+
   def group_ids
     if params[:s].present? && params[:s][:group].present?
       @group = @cur_site.descendants.active.find(params[:s][:group]) rescue nil
