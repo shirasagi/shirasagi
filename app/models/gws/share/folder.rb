@@ -35,10 +35,11 @@ class Gws::Share::Folder
   validates :name, presence: true, length: {maximum: 80}
   validates :order, numericality: {less_than_or_equal_to: 999_999}
   validates :share_max_file_size,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**3, allow_blank: true }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :share_max_folder_size,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**4, allow_blank: true }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
+  validate :validate_share_max_file_size, :validate_share_max_folder_size
   validate :validate_parent_name
   validate :validate_rename_children, :validate_rename_parent,
            :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
@@ -139,6 +140,18 @@ class Gws::Share::Folder
 
   def dependant_scope
     self.class.site(@cur_site || site)
+  end
+
+  def validate_share_max_file_size
+    file_size = 1024
+    return if in_share_max_file_size_mb.to_i <= file_size
+    errors.add :share_max_file_size, :less_than_or_equal_to, count: [file_size.to_s(:delimited), 'MB'].join(' ')
+  end
+
+  def validate_share_max_folder_size
+    folder_size = 1024**2
+    return if in_share_max_folder_size_mb.to_i <= folder_size
+    errors.add :share_max_folder_size, :less_than_or_equal_to, count: [folder_size.to_s(:delimited), 'MB'].join(' ')
   end
 
   def validate_parent_name
