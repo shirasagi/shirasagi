@@ -43,7 +43,9 @@ class Webmail::FiltersController < ApplicationController
 
     file = params[:item].try(:[], :in_file)
     if file.nil? || ::File.extname(file.original_filename) != ".csv"
-      raise I18n.t("errors.messages.invalid_csv")
+      @item = @model.new
+      @item.errors.add :base, I18n.t("errors.messages.invalid_csv")
+      return false
     end
 
     conf = @imap_setting.imap_settings(@cur_user.imap_default_settings)
@@ -68,7 +70,7 @@ class Webmail::FiltersController < ApplicationController
       item.save
     end
 
-    render_update true, location: { action: :index }, render: { file: :import }
+    render_update true, location: { action: :index }
   end
 
   def apply
