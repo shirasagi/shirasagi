@@ -25,7 +25,7 @@ class @SS_PopupNotice
 
       SS_PopupNotice.closeDropdown()
 
-      if $(@target).find(".popup-notice").is(":visible")
+      if $(e.currentTarget).hasClass("toggle-popup-notice") && $(@target).find(".popup-notice").is(":visible")
         $(@target).find(".popup-notice").hide()
         return false
 
