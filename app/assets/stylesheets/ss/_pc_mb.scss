@@ -268,11 +268,10 @@ td {
     }
     .ss-logo-wrap {
       width: 210px;
-      padding: 6px 15px;
-
-      .ss-logo-application-name {
-        display: none;
-      }
+      padding: 8px 15px 5px;
+    }
+    .ss-logo-application-name {
+      display: none;
     }
   }
   .cms, .gws, .sns, .webmail {
@@ -520,6 +519,7 @@ td {
     .gws-contrast-loading, .gws-contrast-error {
       padding: 8px 10px;
     }
+
     #user-contrast-menu {
       height: auto;
       min-height: 200px;
@@ -1314,9 +1314,8 @@ td {
 #content-navi {
   @include box;
   float: left;
-  width: 250px;
+  width: 38%;
   padding: 10px;
-
   .content-navi-title {
     margin: -10px -10px 10px;
     padding: 10px 12px;
@@ -1332,7 +1331,7 @@ td {
 }
 #content-navi + .index, #content-navi ~ .content-main {
   float: right;
-  width: calc(100% - 260px);
+  width: calc(100% - 38% - 10px);
 }
 @include mb {
   #content-navi {
@@ -1365,7 +1364,7 @@ td {
   background: #f2f2f2;
 }
 .tree-navi .item-pad {
-  width: 20px;
+  padding-left: 20px;
 }
 .tree-navi .item-mark {
   padding: 2px;
