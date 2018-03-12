@@ -15,7 +15,7 @@ class Opendata::UrlResource
 
   validates :crawl_update, presence: true
 
-  validate :validate_original_url
+  validate :validate_original_url, if: -> { in_file.blank? }
 
   after_save -> { dataset.save(validate: false) }
   after_destroy -> { dataset.save(validate: false) }
@@ -157,4 +157,3 @@ class Opendata::UrlResource
     end
   end
 end
-

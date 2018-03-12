@@ -4,7 +4,7 @@ class Gws::Discussion::ForumsController < ApplicationController
 
   model Gws::Discussion::Forum
 
-  navi_view "gws/discussion/main/navi"
+  navi_view 'gws/discussion/main/navi'
 
   private
 
@@ -28,7 +28,7 @@ class Gws::Discussion::ForumsController < ApplicationController
 
     state = params.dig(:s, :state).presence || 'public'
 
-    @items = @model.site(@cur_site).forum
+    @items = @model.site(@cur_site).forum.without_deleted
 
     if state == "public"
       @items = @items.and_public.member(@cur_user)
@@ -72,25 +72,25 @@ class Gws::Discussion::ForumsController < ApplicationController
     render
   end
 
-  def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.destroy
-  end
-
-  def destroy_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size)
-  end
+  # def destroy
+  #   raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+  #   render_destroy @item.destroy
+  # end
+  #
+  # def destroy_all
+  #   entries = @items.entries
+  #   @items = []
+  #
+  #   entries.each do |item|
+  #     if item.allowed?(:delete, @cur_user, site: @cur_site)
+  #       next if item.destroy
+  #     else
+  #       item.errors.add :base, :auth_error
+  #     end
+  #     @items << item
+  #   end
+  #   render_destroy_all(entries.size != @items.size)
+  # end
 
   def copy
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)

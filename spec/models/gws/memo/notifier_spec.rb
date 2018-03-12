@@ -17,7 +17,7 @@ RSpec.describe Gws::Memo::Notifier, type: :model do
     end
 
     it do
-      expect(Gws::Memo::Message.count).to eq 1
+      expect(Gws::Memo::Notice.count).to eq 1
     end
   end
 end

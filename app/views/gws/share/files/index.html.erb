@@ -18,13 +18,14 @@
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
-        <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-        <%= link_to item.name, { action: :show, id: item, folder: item.folder_id }, class: "title" %>
+        <%= link_to({ action: :show, id: item, folder: item.folder_id }, class: "title") do %>
+          <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
+          <%= item.name %>
+        <% end %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-          <span class="filename"><%= File.basename item.filename %></span>
           <span class="content-type"><%= item.content_type %></span>
           <span class="size"><%= number_to_human_size(item.size) %></span>
           <span class="gws-share-categories">
@@ -56,7 +57,10 @@
     <% @sub_folders.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to item.trailing_name, gws_share_folder_files_path(folder: item), class: "title" %>
+        <%= link_to gws_share_folder_files_path(folder: item), class: "title" do %>
+          <i class="material-icons md-18 md-dark title-icon">&#xE2C8;</i>
+          <%= item.trailing_name %>
+        <% end %>
       </div>
     </li>
     <% end %>

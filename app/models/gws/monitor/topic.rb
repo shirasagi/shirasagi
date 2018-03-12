@@ -50,16 +50,6 @@ class Gws::Monitor::Topic
     end
   }
 
-  scope :without_deleted, ->(date = Time.zone.now) {
-    where("$and" => [
-      { "$or" => [{ deleted: nil }, { :deleted.gt => date }] }
-    ])
-  }
-
-  scope :only_deleted, -> {
-    where(:deleted.exists => true)
-  }
-
   scope :and_unanswered, ->(group) do
     where("answer_state_hash.#{group.id}" => { '$nin' => %w(question_not_applicable answered) })
   end
@@ -117,14 +107,6 @@ class Gws::Monitor::Topic
     article_state == 'closed'
   end
 
-  def active
-    update_attributes(deleted: nil)
-  end
-
-  def disable
-    update_attributes(deleted: Time.zone.now) if active?
-  end
-
   def answer_state_name(group)
     answered_state = answer_state_hash[group.id.to_s]
     if answered_state.blank?
@@ -137,15 +119,6 @@ class Gws::Monitor::Topic
   def updated?
     created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
   end
-
-  # def subscribed_groups
-  #   return Gws::Group.none if new_record?
-  #   return Gws::Group.none if attend_group_ids.blank?
-  #
-  #   conds = [{ id: { '$in' => attend_group_ids.flatten } }]
-  #
-  #   Gws::Group.where('$and' => [ { '$or' => conds } ])
-  # end
 
   def sort_options
     %w(due_date_desc due_date_asc released_desc released_asc updated_desc updated_asc created_desc created_asc).map do |k|

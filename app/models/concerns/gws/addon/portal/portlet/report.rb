@@ -13,6 +13,7 @@ module Gws::Addon::Portal::Portlet
       )
 
       Gws::Report::File.site(portal.site).
+        without_deleted.
         search(search).
         order_by(updated: -1, id: -1).
         page(1).

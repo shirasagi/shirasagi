@@ -9,6 +9,8 @@ production: &production
   facebook_client_secret:
   yahoojp_client_id:
   yahoojp_client_secret:
+  yahoojp_v2_client_id:
+  yahoojp_v2_client_secret:
   google_oauth2_client_id:
   google_oauth2_client_secret:
   github_client_id:

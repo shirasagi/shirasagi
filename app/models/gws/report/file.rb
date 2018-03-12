@@ -3,7 +3,7 @@ class Gws::Report::File
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::Reminder
+  #include Gws::Addon::Reminder
   include Gws::Addon::Report::CustomForm
   include Gws::Addon::Member
   include Gws::Addon::Schedules
@@ -94,9 +94,12 @@ class Gws::Report::File
 
   # override Gws::Addon::Reminder#reminder_url
   def reminder_url(*args)
-    ret = super
+    #ret = super
+    name = reference_model.tr('/', '_') + '_readable_path'
+    ret = [name, id: id]
     options = ret.extract_options!
     options[:state] = 'all'
+    options[:site] = site_id
     [ *ret, options ]
   end
 

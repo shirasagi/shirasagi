@@ -5,6 +5,7 @@ class Gws::Schedule::Holiday
   include Gws::Reference::Site
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
+  include Gws::Schedule::Cloneable
   include Gws::Addon::Schedule::Repeat
   include Gws::SitePermission
   include Gws::Addon::History
@@ -17,7 +18,7 @@ class Gws::Schedule::Holiday
 
   validates :color, presence: true
 
-  def readable?(user)
+  def readable?(user, opts = {})
     true
   end
 

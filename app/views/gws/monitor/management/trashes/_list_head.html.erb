@@ -1,13 +1,8 @@
-<%= jquery do %>
-  Gws_Monitor_Topic.render();
-<% end %>
-
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
     <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
-    <button class="active-all btn" data-ss-href="<%= url_for(action: :active_all) %>" data-ss-confirm="<%= I18n.t('gws/monitor.confirm.active_all') %>"><%= t 'gws/monitor.links.active_all' %></button>
   </div>
 
   <%= render file: '_search' %>

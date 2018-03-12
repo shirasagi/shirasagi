@@ -8,8 +8,8 @@ class Gws::Schedule::Todo
   include Gws::Schedule::Planable
   include Gws::Schedule::Cloneable
   include Gws::Schedule::CalendarFormat
-  include Gws::Addon::Schedule::Repeat
   include Gws::Addon::Reminder
+  include Gws::Addon::Schedule::Repeat
   include Gws::Addon::Discussion::Todo
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -24,27 +24,12 @@ class Gws::Schedule::Todo
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
-  field :deleted, type: DateTime
 
   permit_params :color, :todo_state, :deleted
-
-  validates :deleted, datetime: true
-
-  after_save ->{ reminders.destroy if deleted.present? }
 
   def finished?
     todo_state == 'finished'
   end
-
-  scope :without_deleted, ->(date = Time.zone.now) {
-    where('$and' => [
-      { '$or' => [{ deleted: nil }, { :deleted.gt => date }] }
-    ])
-  }
-
-  scope :with_only_deleted, ->(date = Time.zone.now) {
-    where(:deleted.lt => date)
-  }
 
   scope :custom_order, ->(key) {
     if key.start_with?('created_')
@@ -66,7 +51,7 @@ class Gws::Schedule::Todo
   def reminder_url(*args)
     # ret = super
     name = reference_model.tr('/', '_') + '_readable_path'
-    [name, id: id]
+    [name, id: id, site: site_id]
   end
 
   def calendar_format(user, site)
@@ -79,7 +64,7 @@ class Gws::Schedule::Todo
   def private_plan?(user)
     return false if readable_custom_group_ids.present?
     return false if readable_group_ids.present?
-    readable_member_ids == [user.id]
+    readable_member_ids == [user.id] && member_ids == [user.id]
   end
 
   def attendance_check_plan?
@@ -96,15 +81,6 @@ class Gws::Schedule::Todo
     true
   end
 
-  def disable
-    now = Time.zone.now
-    update_attributes(deleted: now) if deleted.blank? || deleted > now
-  end
-
-  def active
-    update_attributes(deleted: nil)
-  end
-
   def todo_state_options
     %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
@@ -114,14 +90,6 @@ class Gws::Schedule::Todo
       [I18n.t("gws/schedule/todo.options.sort.#{k}"), k]
     end
   end
-
-  # alias allowed_for_managers? allowed?
-  #
-  # def allowed?(action, user, opts = {})
-  #   return true if allowed_for_managers?(action, user, opts)
-  #   member?(user) || custom_group_member?(user) if action =~ /edit|delete/
-  #   false
-  # end
 
   class << self
     def search(params)

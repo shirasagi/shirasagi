@@ -7,6 +7,7 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example, tmpdir
   let(:es_host) { "#{unique_id}.example.jp" }
   let(:es_url) { "http://#{es_host}" }
   let(:attachment) { tmp_ss_file(user: user, contents: File.binread(file_path), binary: true, content_type: 'image/png') }
+  let(:requests) { [] }
 
   before do
     # enable elastic search
@@ -16,81 +17,148 @@ describe Gws::Elasticsearch::Indexer::WorkflowFileJob, dbscope: :example, tmpdir
   end
 
   before do
-    stub_request(:any, /#{Regexp.escape(es_host)}/).
-      to_return(body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' })
+    stub_request(:any, /#{Regexp.escape(es_host)}/).to_return do |request|
+      # examine request later
+      requests << request.as_json.dup
+      { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
+    end
   end
 
   after do
     WebMock.reset!
   end
 
-  context 'indexing' do
-    let!(:file) do
-      create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [attachment.id])
-    end
-
-    describe '#index' do
-      it do
-        job = described_class.bind(site_id: site)
-        job.perform_now(action: 'index', id: file.id.to_s)
-
-        expect(Gws::Job::Log.count).to eq 1
-        Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
-        end
-      end
-    end
-
-    describe '#delete' do
-      it do
-        job = described_class.bind(site_id: site)
-        job.perform_now(action: 'delete', id: file.id.to_s, remove_file_ids: file.file_ids)
-
-        expect(Gws::Job::Log.count).to eq 1
-        Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
-        end
-      end
-    end
-  end
-
   describe '.callback' do
     context 'when model was created' do
       it do
-        expectation = expect do
-          create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [attachment.id])
+        workflow = nil
+        perform_enqueued_jobs do
+          expectation = expect do
+            workflow = create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [attachment.id])
+          end
+          expectation.to change { performed_jobs.size }.by(1)
         end
-        expectation.to change { enqueued_jobs.size }.by(1)
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(requests.length).to eq 2
+        requests.first.tap do |request|
+          expect(request['method']).to eq 'put'
+          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+          body = JSON.parse(request['body'])
+          expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
+        end
+        requests.second.tap do |request|
+          expect(request['method']).to eq 'put'
+          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
+          body = JSON.parse(request['body'])
+          expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}#file-#{attachment.id}"
+        end
       end
     end
 
     context 'when model was updated' do
-      let!(:file) do
+      let!(:workflow) do
         create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [attachment.id])
       end
 
       it do
-        expectation = expect do
-          file.text = unique_id
-          file.file_ids = []
-          file.save!
+        perform_enqueued_jobs do
+          expectation = expect do
+            workflow.text = unique_id
+            workflow.file_ids = []
+            workflow.save!
+          end
+          expectation.to change { performed_jobs.size }.by(1)
         end
-        expectation.to change { enqueued_jobs.size }.by(1)
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(requests.length).to eq 2
+        requests.first.tap do |request|
+          expect(request['method']).to eq 'put'
+          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+          body = JSON.parse(request['body'])
+          expect(body['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
+        end
+        # file was removed from topic
+        requests.second.tap do |request|
+          expect(request['method']).to eq 'delete'
+          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
+        end
       end
     end
 
     context 'when model was destroyed' do
-      let!(:file) do
+      let!(:workflow) do
         create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [attachment.id])
       end
 
       it do
-        expectation = expect do
-          file.destroy
+        perform_enqueued_jobs do
+          expectation = expect do
+            workflow.destroy
+          end
+          expectation.to change { performed_jobs.size }.by(1)
         end
-        expectation.to change { enqueued_jobs.size }.by(1)
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(requests.length).to eq 2
+        requests.first.tap do |request|
+          expect(request['method']).to eq 'delete'
+          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+        end
+        # file was removed from topic
+        requests.second.tap do |request|
+          expect(request['method']).to eq 'delete'
+          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
+        end
+      end
+    end
+
+    context 'when model was soft deleted' do
+      let!(:workflow) do
+        create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [attachment.id])
+      end
+
+      it do
+        perform_enqueued_jobs do
+          expectation = expect do
+            workflow.deleted = Time.zone.now
+            workflow.save!
+          end
+          expectation.to change { performed_jobs.size }.by(1)
+        end
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(requests.length).to eq 2
+        requests.first.tap do |request|
+          expect(request['method']).to eq 'delete'
+          expect(request['uri']['path']).to end_with("/workflow-#{workflow.id}")
+        end
+        # file was removed from topic
+        requests.second.tap do |request|
+          expect(request['method']).to eq 'delete'
+          expect(request['uri']['path']).to end_with("/file-#{attachment.id}")
+        end
       end
     end
   end

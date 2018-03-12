@@ -35,10 +35,11 @@ class Gws::Share::Folder
   validates :name, presence: true, length: {maximum: 80}
   validates :order, numericality: {less_than_or_equal_to: 999_999}
   validates :share_max_file_size,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**3, allow_blank: true }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :share_max_folder_size,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1024**4, allow_blank: true }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
+  validate :validate_share_max_file_size, :validate_share_max_folder_size
   validate :validate_parent_name
   validate :validate_rename_children, :validate_rename_parent,
            :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
@@ -46,7 +47,6 @@ class Gws::Share::Folder
   validate :validate_folder_name, if: ->{ self.attributes["action"] =~ /create|update/ }
 
   before_destroy :validate_children, :validate_files
-  after_destroy :remove_zip
 
   default_scope ->{ order_by depth: 1, order: 1, name: 1 }
 
@@ -76,7 +76,7 @@ class Gws::Share::Folder
     @parents ||= begin
       paths = split_path(name.sub(/^\//, ''))
       paths.pop
-      self.class.in(name: paths)
+      dependant_scope.in(name: paths)
     end
   end
 
@@ -138,12 +138,20 @@ class Gws::Share::Folder
     self.share_max_folder_size = Integer(in_share_max_folder_size_mb) * 1_024 * 1_024
   end
 
-  def remove_zip
-    Fs.rm_rf self.class.zip_path(id) if File.exist?(self.class.zip_path(id))
-  end
-
   def dependant_scope
     self.class.site(@cur_site || site)
+  end
+
+  def validate_share_max_file_size
+    file_size = 1024
+    return if in_share_max_file_size_mb.to_i <= file_size
+    errors.add :share_max_file_size, :less_than_or_equal_to, count: [file_size.to_s(:delimited), 'MB'].join(' ')
+  end
+
+  def validate_share_max_folder_size
+    folder_size = 1024**2
+    return if in_share_max_folder_size_mb.to_i <= folder_size
+    errors.add :share_max_folder_size, :less_than_or_equal_to, count: [folder_size.to_s(:delimited), 'MB'].join(' ')
   end
 
   def validate_parent_name
@@ -153,7 +161,7 @@ class Gws::Share::Folder
     if name.split('/')[name.count('/')].blank?
       errors.add :name, :blank
     else
-      errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+      errors.add :base, :not_found_parent unless dependant_scope.where(name: File.dirname(name)).exists?
     end
   end
 
@@ -183,7 +191,7 @@ class Gws::Share::Folder
   end
 
   def validate_children
-    if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+    if name.present? && dependant_scope.where(name: /^#{Regexp.escape(name)}\//).exists?
       errors.add :base, :found_children
       return false
     end
@@ -200,11 +208,11 @@ class Gws::Share::Folder
 
   def validate_folder_name
     if self.id == 0
-      errors.add :base, :not_create_same_folder if self.class.site(site).where(name: self.name).first
+      errors.add :base, :not_create_same_folder if dependant_scope.where(name: self.name).first
     end
 
     if self.id != 0
-      if self.class.site(site).where(name: self.name).present? && self.class.site(site).where(id: self.id).first.name != self.name
+      if dependant_scope.where(name: self.name).present? && dependant_scope.where(id: self.id).first.name != self.name
         errors.add :base, :not_move_to_same_name_folder
       end
     end

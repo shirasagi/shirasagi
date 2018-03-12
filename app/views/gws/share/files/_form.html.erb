@@ -12,9 +12,6 @@
     <dt><%= @model.t :name %><%= @model.tt :name %></dt>
     <dd><%= f.text_field :name %></dd>
 
-    <dt><%= @model.t :filename %><%= @model.tt :filename %></dt>
-    <dd><%= f.text_field :filename %></dd>
-
     <dt><%= @model.t :geo_location %><%= @model.tt :geo_location %></dt>
     <dd>
       <%= number_field_tag "#{f.object_name}[geo_location][lat]", @item.geo_location.try(:lat), step: :any %>

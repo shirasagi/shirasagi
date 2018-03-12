@@ -59,6 +59,10 @@ module Workflow::Addon
         item.lock_until = nil
       end
 
+      if item.is_a?(Cms::Addon::Form::Page)
+        item.copy_column_values(self)
+      end
+
       item.instance_variable_set(:@new_clone, true)
       item
     end

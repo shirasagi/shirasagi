@@ -16,8 +16,7 @@
     <% end %>
 
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%# link_to t('ss.links.delete'), action: :disable, id: @item %>
-      <%= link_to t('ss.links.delete'), action: :disable, id: @item %>
+      <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
     <% end %>
 
     <%= link_to t('ss.links.back_to_index'), action: :index %>

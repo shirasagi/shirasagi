@@ -3,7 +3,12 @@
   <dd><%= @item.send :name %></dd>
 
   <dt><%= @model.t :conditions %></dt>
-  <dd><%= safe_join @item.conditions_summary, '<br />'.html_safe %></dd>
+  <dd>
+    <div class="mb-2">
+      [ <%= @item.label :conjunction %> ]
+    </div>
+    <%= safe_join @item.conditions_summary, '<br />'.html_safe %>
+  </dd>
 
   <dt><%= @model.t :action %></dt>
   <dd>

@@ -1,13 +1,12 @@
 class Gws::Discussion::TodosController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::Schedule::PlanFilter
+  include Gws::Schedule::TodoFilter
 
   model Gws::Schedule::Todo
 
   before_action :set_forum
   before_action :set_crumbs
-  before_action :set_item, only: [ :show, :edit, :update, :delete, :destroy, :disable, :finish, :revert ]
 
   navi_view "gws/discussion/main/navi"
 
@@ -85,35 +84,5 @@ class Gws::Discussion::TodosController < ApplicationController
     end
 
     @items = @todos + @holidays
-  end
-
-  def create
-    @item = @model.new get_params
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
-    render_create @item.save, location: { action: :index }
-  end
-
-  def update
-    @item.attributes = get_params
-    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
-    render_update @item.update, location: { action: :index }
-  end
-
-  def disable
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.disable
-  end
-
-  def finish
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(todo_state: 'finished')
-  end
-
-  def revert
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    render_update @item.update(todo_state: 'unfinished')
   end
 end

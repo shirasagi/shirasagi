@@ -6,6 +6,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :soft_deletion do
+    match :soft_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :export do
     get :download, on: :collection
     get :download_template, on: :collection
@@ -22,7 +27,10 @@ SS::Application.routes.draw do
 
     namespace "management" do
       resources :groups, concerns: [:deletion]
-      resources :addresses, concerns: [:deletion, :export]
+      resources :addresses, concerns: [:soft_deletion, :export], except: [:destroy]
+      resources :trashes, concerns: [:deletion, :export], except: [:new, :create, :edit, :update] do
+        match :undo_delete, on: :member, via: [:get, :post]
+      end
 
       scope(path: "group-:group", as: "group") do
         resources :addresses, concerns: [:deletion, :export]

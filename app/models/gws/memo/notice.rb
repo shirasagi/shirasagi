@@ -4,6 +4,7 @@ class Gws::Memo::Notice
   include Gws::Reference::Site
   include SS::UserPermission
   include Gws::Addon::Memo::Body
+  include Gws::Addon::Memo::Notice::Reply
   include Gws::Addon::File
   #include Gws::SitePermission
 

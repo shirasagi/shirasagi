@@ -4,6 +4,9 @@ production: &production
   # Application name
   application_name: SHIRASAGI
 
+  # Application Logo html
+  application_logo_html: '<div class="ss-logo-wrap"><img src="/assets/img/logo.png" alt="SHIRASAGI"><span class="ss-logo-application-name">SHIRASAGI</span></div>'
+
   # StyleSheets on management pages.
   stylesheets: ["ss/style"]
 

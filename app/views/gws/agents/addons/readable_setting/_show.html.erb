@@ -1,9 +1,3 @@
-<%= jquery do %>
-  <% if !@item.readable_setting_present? %>
-  SS_AddonTabs.hide(".gws-addon-readable-setting");
-  <% end %>
-<% end %>
-
 <%
   select_disp = @item.readable_setting_present? ? 'block' : ''
 %>

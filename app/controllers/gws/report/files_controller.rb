@@ -56,7 +56,7 @@ class Gws::Report::FilesController < ApplicationController
 
   def set_items
     set_search_params
-    @items ||= @model.site(@cur_site).search(@s)
+    @items ||= @model.site(@cur_site).search(@s).without_deleted
   end
 
   def set_item

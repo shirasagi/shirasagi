@@ -1,0 +1,11 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <% if SS.config.gws.dig("memo", "disable_unsend").blank? %>
+    <% if @item.send_date && @cur_folder.sent_box? %>
+    <dt><%= t('gws/memo/message.unsend') %></dt>
+    <dd><%= check_box_tag("unsend", "1") %></dl>
+    <% end %>
+  <% end %>
+</dl>

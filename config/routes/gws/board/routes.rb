@@ -18,6 +18,9 @@ SS::Application.routes.draw do
         get :categories, on: :collection
         get :print, on: :member
         post :read, on: :member
+        match :soft_delete, on: :member, via: %i[get post]
+        match :undo_delete, on: :member, via: %i[get post]
+        post :soft_delete_all, on: :collection
       end
     end
 

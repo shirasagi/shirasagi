@@ -4,6 +4,9 @@
   <% if Gws::SharedAddress::Address.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("gws/shared_address.navi.address"), gws_shared_address_management_addresses_path, class: "management" %></h3>
   <% end %>
+  <% if Gws::SharedAddress::Address.allowed?(:trash, @cur_user, site: @cur_site) %>
+    <h3><%= link_to "#{t("ss.links.trash")} (#{t("gws/shared_address.navi.address")})", gws_shared_address_management_trashes_path, class: "trash" %></h3>
+  <% end %>
   <% if Gws::SharedAddress::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("gws/shared_address.navi.group"), gws_shared_address_management_groups_path, class: "management" %></h3>
   <% end %>

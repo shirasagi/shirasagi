@@ -46,16 +46,16 @@ module Gws::Circular::PostFilter
     end
   end
 
-  def render_destroy_all(result)
-    location = crud_redirect_url || { action: :index }
-    notice = result ? { notice: t('gws/circular.notice.disable') } : {}
-    errors = @items.map { |item| [item.id, item.errors.full_messages] }
-
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
-    end
-  end
+  # def render_destroy_all(result)
+  #   location = crud_redirect_url || { action: :index }
+  #   notice = result ? { notice: t('gws/circular.notice.disable') } : {}
+  #   errors = @items.map { |item| [item.id, item.errors.full_messages] }
+  #
+  #   respond_to do |format|
+  #     format.html { redirect_to location, notice }
+  #     format.json { head json: errors }
+  #   end
+  # end
 
   public
 
@@ -95,51 +95,7 @@ module Gws::Circular::PostFilter
     render_update @item.update
   end
 
-  def disable
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-
-    if request.get?
-      return
-    end
-
-    render_destroy @item.disable, { notice: t('gws/circular.notice.disable') }
-  end
-
-  def active
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-
-    if request.get?
-      render
-      return
-    end
-
-    render_destroy @item.active, {notice: t('gws/circular.notice.active')}
-  end
-
-  def active_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site)
-        next if item.active
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-
-    location = crud_redirect_url || { action: :index }
-    notice = { notice: t('gws/circular.notice.active') }
-    errors = @items.map { |item| [item.id, item.errors.full_messages] }
-
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
-    end
-  end
-
-  def download
+  def download_all
     raise '403' if @items.empty?
 
     csv = @items.
@@ -165,7 +121,7 @@ module Gws::Circular::PostFilter
   end
 
   def toggle_seen
-    raise '404' if !@item.public? || @item.active?
+    raise '404' if !@item.public? || !@item.active?
     raise '403' unless @item.member?(@cur_user)
     render_update @item.toggle_seen(@cur_user).update
   end

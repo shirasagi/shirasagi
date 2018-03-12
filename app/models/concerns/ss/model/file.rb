@@ -41,7 +41,7 @@ module SS::Model::File
     before_save :save_file
     before_destroy :remove_file
 
-    default_scope ->{ order_by id: -1 }
+    default_scope ->{ order_by name: 1 }
   end
 
   module ClassMethods

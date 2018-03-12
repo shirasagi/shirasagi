@@ -10,8 +10,9 @@ class Gws::Schedule::UserPlansController < ApplicationController
   private
 
   def set_user
-    @user = Gws::User.site(@cur_site).find(params[:user])
+    @user ||= Gws::User.site(@cur_site).find(params[:user])
     raise '404' unless @user.active?
+    raise '403' unless @user.readable?(@cur_user, site: @cur_site, permission: false)
   end
 
   def pre_params
@@ -23,10 +24,19 @@ class Gws::Schedule::UserPlansController < ApplicationController
     super
   end
 
+  def set_items
+    set_user
+    @items ||= begin
+      Gws::Schedule::Plan.site(@cur_site).without_deleted.
+        member(@user).
+        search(params[:s])
+    end
+  end
+
   public
 
   def events
-    @items = Gws::Schedule::Plan.site(@cur_site).
+    @items = Gws::Schedule::Plan.site(@cur_site).without_deleted.
       member(@user).
       search(params[:s])
 

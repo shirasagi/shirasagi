@@ -73,22 +73,19 @@ class Gws::Share::FilesController < ApplicationController
       params[:s][:folder] = @folder.id if @folder.present?
     end
 
+    @sort = params.dig(:s, :sort) || @cur_site.share_default_sort || 'filename'
+
     @items = @model.site(@cur_site).
       readable(@cur_user, site: @cur_site).
       active.search(params[:s]).
-      custom_order(params.dig(:s, :sort) || 'created_desc').
+      custom_order(@sort).
       page(params[:page]).per(50)
 
     folder_name = Gws::Share::Folder.site(@cur_site).
         where(id: params[:folder].to_i).pluck(:name).first
 
-    if @cur_user.gws_role_permissions["read_other_gws_share_folders_#{@cur_site.id}"]
-      @sub_folders = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).
-          sub_folder(params[:folder] || 'root_folder', folder_name)
-    elsif @cur_user.gws_role_permissions["read_private_gws_share_folders_#{@cur_site.id}"]
-      @sub_folders = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site).
-          sub_folder(params[:folder] || 'root_folder', folder_name)
-    end
+    @sub_folders = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site).
+        sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
@@ -173,7 +170,7 @@ class Gws::Share::FilesController < ApplicationController
     else
       respond_to do |format|
         format.html { render }
-        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
+        format.json { render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked }
       end
     end
   end
@@ -205,14 +202,14 @@ class Gws::Share::FilesController < ApplicationController
     else
       respond_to do |format|
         format.html { render file: :show }
-        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
+        format.json { render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked }
       end
     end
   end
 
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    notice = t("gws/share.notice.disable")
+    notice = t("ss.notice.deleted")
     location = gws_share_folder_files_path(folder: @item.folder_id)
     render_destroy @item.disable, { location: location, notice: notice }
   end
@@ -235,11 +232,7 @@ class Gws::Share::FilesController < ApplicationController
 
   def render_destroy_all(result)
     location = crud_redirect_url || { action: :index }
-    if params[:action] == "disable_all" || params[:action] == "disable"
-      notice = result ? { notice: t("gws/share.notice.disable") } : {}
-    else
-      notice = result ? { notice: t("ss.notice.deleted") } : {}
-    end
+    notice = result ? { notice: t("ss.notice.deleted") } : {}
 
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 

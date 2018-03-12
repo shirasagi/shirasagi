@@ -1,0 +1,169 @@
+<%
+  return "" unless @item.reply_item
+
+  topic = @item.reply_item
+  forum = Gws::Discussion::Forum.find(@item.reply_item.forum_id)
+
+  return "" if forum.deleted?
+  return "" if forum.state == "closed"
+  return "" unless forum.member?(@cur_user)
+%>
+
+<%= jquery do %>
+$('form').ajaxForm({
+  url: "<%= reply_gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id, format: :json) %>",
+  beforeSend: function() {
+    $("form input[type='submit']").attr("disabled", "disabled");
+  },
+  success: function(data, status) {
+    location.reload();
+  },
+  error: function(data, status) {
+    alert(["== Error =="].concat(data.responseJSON).join("\n"));
+    $("form input[type='submit']").removeAttr("disabled");
+  }
+});
+Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+<% end %>
+
+<dl class="see addon-gws-memo-reply">
+  <%= form_for :item, url: "", html: { method: :put, multipart: true, autocomplete: :off } do |f| %>
+    <div class="gws-discussion">
+    <div class="addon-view">
+      <div class="addon-head">
+        <h2>
+          <%= link_to "#{forum.name}", gws_discussion_forum_topics_path(forum_id: forum.id) %>
+          <%= link_to "(#{topic.name})", gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id) %>
+        </h2>
+      </div>
+      <div class="addon-body">
+        <header>
+          <div class="contributor">
+            <span class="no"><%= "1." %></span>
+            <%= topic.contributor_name %>
+          </div>
+          <div class="datetime updated">
+            <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
+          </div>
+        </header>
+        <div class="markdown-body">
+          <%= topic.html %>
+        </div>
+        <% if topic.files.present? %>
+          <div class="files">
+            <% topic.files.each do |file| %>
+              <span id="file-<%= file.id %>">
+                <img src="/assets/img/gws/ic-file.png" alt="" />
+                <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+              </span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <% children = topic.children.reorder(id: 1) %>
+      <% children_size = children.size %>
+      <% comments = topic.children.limit(5).reverse.to_a %>
+      <% offset = children_size - comments.size %>
+      <% if children_size > comments.size %>
+        <div style="background: #f2f2f2; padding-bottom: 12px; border-left: hidden; border-right: hidden;"></div>
+      <% end %>
+      <% comments.each_with_index do |comment, i| %>
+        <div class="addon-body">
+          <header>
+            <div class="contributor">
+              <span class="no"><%= "#{offset + i + 2}." %></span>
+              <%= comment.contributor_name %>
+            </div>
+            <div class="datetime updated">
+              <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
+            </div>
+          </header>
+          <div class="markdown-body">
+            <%= comment.html %>
+          </div>
+          <% if comment.files.present? %>
+            <div class="files">
+              <% comment.files.each do |file| %>
+                <span id="file-<%= file.id %>">
+                  <img src="/assets/img/gws/ic-file.png" alt="" />
+                  <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%
+        if topic.permit_comment? && Gws::Discussion::Post.allowed?(:edit, @cur_user, site: @cur_site)
+          allowed_comment = true
+        else
+          allowed_comment = false
+        end
+      %>
+      <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
+        <div class="addon-body reply-menu">
+          <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
+          <span>
+            <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id) %>
+          </span>
+        </div>
+      <% elsif allowed_comment %>
+        <div class="addon-body reply" data-topic="<%= topic.id %>">
+          <!-- text -->
+          <div class="ss-addon-markdown">
+            <div class="ss-addon-markdown-toolbar">
+              <%= select_tag "item[text_type]",  options_for_select(topic.text_type_options), { value: 'plain', class: "ss-addon-markdown-type" } %>
+            </div>
+            <div class="ss-addon-markdown-content">
+              <%= text_area_tag "item[text]", "", class: "markdown", style: "height: 240px;", required: true %>
+            </div>
+          </div>
+
+          <!-- files -->
+          <div class="comment-files">
+            <%= f.hidden_field "file_ids[]", value: "" %>
+            <span class="upload-menu-new">
+              <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+            </span>
+            <span class="upload-drop-area">
+              <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+            </span>
+            <div class="selected-files files" style="display: none;"></div>
+          </div>
+
+          <!-- contributor -->
+          <% show_radio_button = proc do |model, id, name, checked| %>
+          <label style="margin-right: 5px">
+            <%= radio_button_tag('tmp[contributor]', "#{model}:#{id}", checked, data: { model: model, id: id.to_s, name: name }) %>
+            <%= name %>
+          </label>
+          <% end %>
+          <div class="see discussion-contributor discussion-contributor<%= topic.id %>">
+            <%= hidden_field_tag "item[contributor_model]" %>
+            <%= hidden_field_tag "item[contributor_id]" %>
+            <%= hidden_field_tag "item[contributor_name]" %>
+
+            <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name, true) %>
+            <% @cur_user.groups.in_group(@cur_site).active.each do |group| %>
+              <% show_radio_button.call('Gws::Group', group.id, group.section_name, false) %>
+            <% end %>
+            <% Gws::CustomGroup.member(@cur_user).readable(@cur_user, site: @cur_site).each do |group| %>
+              <% show_radio_button.call('Gws::CustomGroup', group.id, group.name, false) %>
+            <% end %>
+          </div>
+
+          <!-- user_ids -->
+          <%= hidden_field_tag "item[user_ids][]", @cur_user.id %>
+
+          <!-- menu -->
+          <div class="menu">
+            <%= f.submit t("ss.links.reply"), class: 'btn primary' %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <% end %>
+</dl>

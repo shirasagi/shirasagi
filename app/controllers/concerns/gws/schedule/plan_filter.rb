@@ -6,6 +6,7 @@ module Gws::Schedule::PlanFilter
     model Gws::Schedule::Plan
     before_action :check_schedule_visible
     before_action :set_file_addon_state
+    before_action :set_items
   end
 
   private
@@ -31,12 +32,36 @@ module Gws::Schedule::PlanFilter
     }
   end
 
+  def set_items
+    @items ||= begin
+      #or_conds = Gws::Schedule::Plan.member_conditions(@cur_user)
+      #or_conds << { approval_member_ids: @cur_user.id }
+      Gws::Schedule::Plan.site(@cur_site).without_deleted.
+        member(@cur_user).
+        #and([{ '$or' => or_conds }]).
+        search(params[:s])
+    end
+  end
+
+  # override SS::CrudFilter#set_item
+  def set_item
+    set_items
+    @item ||= begin
+      item = @items.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
   def redirection_view
     params.dig(:calendar, :view).presence || 'month'
   end
 
   def redirection_url
-    url_for(action: :index) + "?calendar[view]=#{redirection_view}&calendar[date]=#{@item.start_at.to_date}"
+    url_for(action: :index, calendar: { view: redirection_view, date: @item.start_at.to_date.to_s })
   end
 
   def set_file_addon_state
@@ -104,5 +129,43 @@ module Gws::Schedule::PlanFilter
     set_item
     @item = @item.new_clone
     render file: :new
+  end
+
+  def soft_delete
+    set_item
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = Time.zone.now
+    @item.edit_range = params.dig(:item, :edit_range)
+    render_destroy @item.save, location: redirection_url
+  end
+
+  def undo_delete
+    set_item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = nil
+    @item.edit_range = params.dig(:item, :edit_range)
+    @item.reset_approvals
+
+    render_opts = {}
+    render_opts[:location] = { action: :index }
+    render_opts[:render] = { file: :undo_delete }
+    render_opts[:notice] = t('ss.notice.restored')
+
+    saved = @item.save
+    flash[:errors] = @item.errors.full_messages if saved && @item.errors.present?
+    render_update saved, render_opts
+    send_approval_mail if saved && @item.approval_present?
   end
 end

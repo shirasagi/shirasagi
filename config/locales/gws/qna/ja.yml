@@ -73,6 +73,8 @@ ja:
     edit_private_gws_qna_posts: 投稿の編集（所有）
     delete_other_gws_qna_posts: 投稿の削除（全て）
     delete_private_gws_qna_posts: 投稿の削除（所有）
+    trash_other_gws_qna_posts: 投稿ゴミ箱の管理（全て）
+    trash_private_gws_qna_posts: 投稿ゴミ箱の管理（所有）
     read_other_gws_qna_categories: カテゴリーの閲覧（全て）
     read_private_gws_qna_categories: カテゴリーの閲覧（所有）
     edit_other_gws_qna_categories: カテゴリーの編集（全て）
@@ -87,12 +89,23 @@ ja:
         「%{name}」が作成または更新されました。
 
         %{text}
+
     gws/qna/post:
       subject: "[更新通知][Ｑ＆Ａ] %{name}"
       text: |
         「%{name}」に投稿がありました。
 
         %{text}
+
+    gws/qna/topic/destroy:
+      subject: "[削除通知][Ｑ＆Ａ] %{name}"
+      text: |
+        「%{name}」が削除されました。
+
+    gws/qna/post/destroy:
+      subject: "[削除通知][Ｑ＆Ａ] %{name}"
+      text: |
+        「%{name}」の投稿が削除されました。
 
   mongoid:
     models:
@@ -160,3 +173,7 @@ ja:
     gws/qna/category:
       name:
         - カテゴリー名を入力します。
+
+  job:
+    models:
+      gws/qna/trash_purge_job: Ｑ＆Ａ/投稿ゴミ箱の掃除

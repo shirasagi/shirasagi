@@ -1,0 +1,89 @@
+ja:
+  gws/reminder:
+    notification:
+      subject: "[リマインダー] %{model} - %{name}"
+      created: 登録しました。
+      updated: 更新しました。
+    notfound:
+      summary: 予定は存在しません。変更されたか削除されています。
+      same_name_items: 同じ件名の予定
+      same_repeat_items: 同じ繰り返し予定
+    options:
+      notify_state:
+        disabled: 通知しない
+        enabled: 通知する
+        mail: メール通知
+      interval_type:
+        minutes: 分前
+        hours: 時間前
+        days: 日前
+        weeks: 週前
+      interval_type_allday:
+        days: 日前
+        weeks: 週前
+      base_time:
+        "8:00": "午前 8:00"
+        "8:30": "午前 8:30"
+        "9:00": "午前 9:00"
+        "9:30": "午前 9:30"
+        "10:00": "午前 10:00"
+        "10:30": "午前 10:30"
+        "11:00": "午前 11:00"
+        "11:30": "午前 11:30"
+        "12:00": "午前 12:00"
+        "12:30": "午前 12:30"
+        "13:00": "午後 1:00"
+        "13:30": "午後 1:30"
+        "14:00": "午後 2:00"
+        "14:30": "午後 2:30"
+        "15:00": "午後 3:00"
+        "15:30": "午後 3:30"
+        "16:00": "午後 4:00"
+        "16:30": "午後 4:30"
+        "17:00": "午後 5:00"
+        "17:30": "午後 5:30"
+        "18:00": "午後 6:00"
+        "18:30": "午後 6:30"
+        "19:00": "午後 7:00"
+        "19:30": "午後 7:30"
+        "20:00": "午後 8:00"
+    links:
+      restore_reminder: 元に戻す
+    buttons:
+      register_reminder: リマインダーを登録
+
+  modules:
+    gws/reminder: リマインダー
+    addons:
+      gws/reminder: リマインダー設定
+
+  mongoid:
+    models:
+      gws/reminder: リマインダー
+    attributes:
+      gws/reminder:
+        name: タイトル
+        date: 日時
+        url: URL
+        updated_fields: 変更内容
+        updated_user_id: 更新者ID
+        updated_user_uid: 更新者UID
+        updated_user_name: 更新者
+        updated_date: 更新日
+      gws/addon/reminder:
+        reminder_url: リマインダーURL
+        reminder_name: リマインダー名
+        reminder_date: リマインダー日時
+
+  tooltip:
+    gws/addon/reminder:
+      reminder_date:
+        - リマインダー日時を登録または解除することができます。
+        -
+        - リマインダー日時を登録する場合、日時を入力後「通知する」を設定し、登録ボタンをクリックします。
+        -
+        - リマインダー日時を解除する場合、「通知しない」を設定し、登録ボタンをクリックします。
+
+  job:
+    models:
+      gws/reminder/notification_job: リマインダー通知

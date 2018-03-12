@@ -47,7 +47,7 @@ module Gws::Model
 
       default_scope -> { order_by(send_date: -1, updated: -1) }
 
-      after_initialize :set_default_reminder_date, if: :new_record?
+      #after_initialize :set_default_reminder_date, if: :new_record?
 
       before_validation :set_type
       before_validation :set_member_ids
@@ -287,8 +287,12 @@ module Gws::Model
       star.include?(user.id.to_s)
     end
 
-    def destroy_from_folder(user, folder)
+    def destroy_from_folder(user, folder, opts = {})
+      unsend = opts[:unsend]
+
       if folder.draft_box?
+        destroy
+      elsif folder.sent_box? && unsend == "1"
         destroy
       elsif folder.sent_box?
         destroy_from_sent
@@ -327,7 +331,13 @@ module Gws::Model
     end
 
     def signature_options
-      Gws::Memo::Signature.site(cur_site).allow(:read, cur_user, site: cur_site).map do |c|
+      Gws::Memo::Signature.site(cur_site).user(cur_user).map do |c|
+        [c.name, c.text]
+      end
+    end
+
+    def template_options
+      @template_options ||= Gws::Memo::Template.site(cur_site).map do |c|
         [c.name, c.text]
       end
     end
@@ -401,28 +411,28 @@ module Gws::Model
       format == 'html'
     end
 
-    def reminder_date
-      return if site.memo_reminder == 0
-      result = Time.zone.now.beginning_of_day + (site.memo_reminder - 1).day
-      result.end_of_day
-    end
+    #def reminder_date
+    #  return if site.memo_reminder == 0
+    #  result = Time.zone.now.beginning_of_day + (site.memo_reminder - 1).day
+    #  result.end_of_day
+    #end
 
-    def in_reminder_date
-      if @in_reminder_date
-        date = Time.zone.parse(@in_reminder_date) rescue nil
-      end
-      date ||= reminder ? reminder.date : reminder_date
-      date
-    end
+    #def in_reminder_date
+    #  if @in_reminder_date
+    #    date = Time.zone.parse(@in_reminder_date) rescue nil
+    #  end
+    #  date ||= reminder ? reminder.date : reminder_date
+    #  date
+    #end
 
-    def set_default_reminder_date
-      return unless @cur_site
-      if @in_reminder_date.blank? && @cur_site.memo_reminder != 0
-        @in_reminder_date = (Time.zone.now.beginning_of_day + (@cur_site.memo_reminder - 1).day).
-            end_of_day.strftime("%Y/%m/%d %H:%M")
-      end
-      @in_reminder_state = (@cur_site.memo_reminder == 0)
-    end
+    #def set_default_reminder_date
+    #  return unless @cur_site
+    #  if @in_reminder_date.blank? && @cur_site.memo_reminder != 0
+    #    @in_reminder_date = (Time.zone.now.beginning_of_day + (@cur_site.memo_reminder - 1).day).
+    #        end_of_day.strftime("%Y/%m/%d %H:%M")
+    #  end
+    #  @in_reminder_state = (@cur_site.memo_reminder == 0)
+    #end
 
     def h(str)
       ERB::Util.h(str)

@@ -3,12 +3,12 @@
   <h3><%= link_to t('gws/monitor.tabs.unanswer'), gws_monitor_topics_path, class: 'topic' %></h3>
   <h3><%= link_to t('gws/monitor.tabs.answer'), gws_monitor_answers_path, class: 'answer' %></h3>
   <h3><%= link_to t('gws/monitor.tabs.admin'), gws_monitor_admins_path, class: 'admin' %></h3>
-  <h3><%= link_to t('gws/monitor.tabs.trash'), gws_monitor_trashes_path, class: 'trash' %></h3>
 
-  <% #if @cur_user.gws_role_permissions["edit_other_gws_monitor_posts_#{@cur_site.id}"].to_i > 0 %>
   <% if Gws::Monitor::Topic.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/monitor.tabs.management_admin'), gws_monitor_management_admins_path, class: "management" %></h3>
-    <h3><%= link_to t('gws/monitor.tabs.management_trash'), gws_monitor_management_trashes_path, class: "management" %></h3>
+  <% end %>
+  <% if Gws::Monitor::Topic.allowed?(:trash, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('ss.navi.trash'), gws_monitor_management_trashes_path, class: "trash" %></h3>
   <% end %>
 
   <% if Gws::Monitor::Category.allowed?(:read, @cur_user, site: @cur_site) %>

@@ -123,9 +123,6 @@ ja:
       public: 受取済みにする
       preparation: 受取待ちに戻す
       question_not_applicable: 該当なしにする
-      disable: ゴミ箱に移動する
-      disable_all: ゴミ箱に移動する
-      active_all: 削除を取り消す
       answered: 回答済みにする
       closed: 締め切る
       open: 締め切り解除
@@ -143,10 +140,6 @@ ja:
       public_all: チェックした項目を受取済みにしますか？
       preparation_all: チェックした項目を受取待ちにしますか？
       question_not_applicable_all: チェックした項目を該当なしにしますか？
-      disable: ゴミ箱に移動しますか？
-      active: 削除を取り消しますか？
-      disable_all: チェックした項目をゴミ箱に移動しますか？
-      active_all: 選択した項目の削除を取り消しますか？
       comment_answer: 所属として回答します。よろしいですか？
       publish: 配信してよろしいですか？
     buttons:
@@ -158,18 +151,13 @@ ja:
       answer: 回答済み
       admin: 作成した設問
       article_management: 設問（管理）
-      trash: ゴミ箱
       management_admin: 設問（管理）
-      management_trash: ゴミ箱（管理）
     management:
       links:
         back_to_topic: 戻る
-        active: 削除を取り消す
     notice:
       close: 回答を締め切りました
       open: 締め切りを解除しました
-      disabled: ゴミ箱に移動しました
-      active: 削除を取り消しました
       published: 公開しました
       public: 受取済みにしました
       preparation: 受取待ちに戻しました
@@ -191,6 +179,8 @@ ja:
     edit_private_gws_monitor_posts: 投稿の編集（所有）
     delete_other_gws_monitor_posts: 投稿の削除（全て）
     delete_private_gws_monitor_posts: 投稿の削除（所有）
+    trash_other_gws_monitor_posts: 投稿ゴミ箱の管理（全て）
+    trash_private_gws_monitor_posts: 投稿ゴミ箱の管理（所有）
     read_other_gws_monitor_categories: カテゴリーの閲覧（全て）
     read_private_gws_monitor_categories: カテゴリーの閲覧（所有）
     edit_other_gws_monitor_categories: カテゴリーの編集（全て）
@@ -310,3 +300,7 @@ ja:
           - 回答の表示方法を選択します。
         notice_state:
           - お知らせ表示条件を選択します。
+
+  job:
+    models:
+      gws/monitor/trash_purge_job: 照会・回答/投稿ゴミ箱の掃除

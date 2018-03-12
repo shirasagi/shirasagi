@@ -29,8 +29,13 @@
     <li class="<%= css_classes.join(' ') %>">
       <nav class="tap-menu">
         <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-        <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <% if @mode == 'trash' %>
+          <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <% else %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <% end %>
 
         <% if item.try(:image) %>
           <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>

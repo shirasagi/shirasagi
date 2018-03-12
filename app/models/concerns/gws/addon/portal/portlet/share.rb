@@ -12,7 +12,9 @@ module Gws::Addon::Portal::Portlet
     end
 
     def share_folder_options
-      Gws::Share::File.new(cur_user: @cur_user, cur_site: @cur_site).folder_options
+      Gws::Share::Folder.site(@cur_site)
+        .allow(:read, @cur_user, site: @cur_site)
+        .pluck(:name, :id)
     end
 
     def find_share_items(portal, user)

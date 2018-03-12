@@ -51,7 +51,7 @@ module Gws::Addon::Schedule::Facility
   end
 
   def validate_facility_double_booking
-    plans = self.class.ne(id: id).
+    plans = self.class.ne(id: id).without_deleted.
       where(site_id: site_id).
       where(:end_at.gt => start_at, :start_at.lt => end_at).
       any_in(facility_ids: facility_ids)

@@ -5,6 +5,10 @@
   <h3><%= link_to t('gws/report.options.file_state.closed'), gws_report_files_path(state: 'closed') %></h3>
   <h3><%= link_to t('gws/report.options.file_state.readable'), gws_report_files_path(state: 'readable') %></h3>
 
+  <% if Gws::Report::File.allowed?(:trash, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('ss.links.trash'), gws_report_trashes_path, class: 'trash' %></h3>
+  <% end %>
+
   <% if Gws::Report::Form.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to(Gws::Report::Form.model_name.human, gws_report_forms_path, class: "management") %></h3>
   <% end %>

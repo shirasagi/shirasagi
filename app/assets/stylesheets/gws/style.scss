@@ -11,6 +11,7 @@
 @import "discussion/gws";
 @import "monitor/gws";
 @import "attendance/gws";
+@import "reminder/gws";
 
 // File
 .gws-addon-file {
@@ -23,21 +24,6 @@
   }
 }
 
-// Reminder
-.gws-reminder-updated-flag {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  @include border-radius(8px);
-  background: $orange;
-  color: $white;
-  font-weight: bold;
-  text-align: center;
-  line-height: 1.1;
-  &:after {
-    content: "!";
-  }
-}
 .gws-list-item--deleted {
   .title {
     color: #888;

@@ -23,8 +23,13 @@ class @SS_PopupNotice
     $($(@target).find(".ajax-popup-notice")).on "click", (e)=>
       return false if SS_PopupNotice.ajaxTriggered
 
-      SS_PopupNotice.closePopup()
       SS_PopupNotice.closeDropdown()
+
+      if $(e.currentTarget).hasClass("toggle-popup-notice") && $(@target).find(".popup-notice").is(":visible")
+        $(@target).find(".popup-notice").hide()
+        return false
+
+      SS_PopupNotice.closePopup()
 
       $(@target).find(".popup-notice").show()
       $(@target).find(".popup-notice-items").html(@loading).addClass("popup-notice-loading")

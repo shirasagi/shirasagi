@@ -329,4 +329,174 @@ describe Opendata::Dataset, dbscope: :example do
       it { expect(described_class.format_options).to include(%w(CSV CSV)) }
     end
   end
+
+  describe "dataset copy" do
+    subject { org_dataset.new_clone }
+
+    around do |example|
+      Timecop.freeze(Time.zone.now) do
+        example.run
+      end
+    end
+
+    let!(:site) { cms_site }
+    let!(:user) { cms_user }
+    let(:license_logo_file) { upload_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
+    let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+    let(:org_dataset) do
+      dataset = create(:opendata_dataset, dataset_attributes)
+      dataset.instance_variable_set(:@cur_node, node)
+      dataset.instance_variable_set(:@cur_site, site)
+      dataset.instance_variable_set(:@cur_user, user)
+      dataset
+    end
+    let(:dataset_attributes) do
+      {
+        cur_node: node,
+        site_id: site.id,
+        user_id: user.id,
+        permission_level: 1,
+        group_ids: [1],
+        state: "public",
+        order: 1,
+        category_ids: [1],
+        related_page_ids: [1],
+        related_page_sort: "name",
+        created: Time.zone.yesterday,
+        updated: Time.zone.yesterday,
+        name: "test dataset",
+        area_ids: [1],
+        point: 1,
+        text: "text",
+        tags: ["tag"],
+        member_id: 1,
+        dataset_group_ids: [1],
+        contact_state: "hide",
+        contact_charge: "test charge",
+        contact_tel: "0000-00-00000",
+        contact_fax: "0000-00-00001",
+        contact_email: "test@example.jp",
+        contact_link_url: "http://example.jp",
+        contact_link_name: "test link",
+        contact_group_id: 1,
+      }
+    end
+
+    def upload_file(file, content_type = nil)
+      uploaded_file = Fs::UploadedFile.create_from_file(file, basename: "spec")
+      uploaded_file.content_type = content_type || "application/octet-stream"
+      uploaded_file
+    end
+
+    it do
+      target = subject
+      expect_reset_fields = {
+        id: nil,
+        cur_user: user,
+        cur_site: site,
+        cur_node: node,
+        state: "closed",
+        created: Time.zone.now,
+        updated: Time.zone.now,
+        released: nil,
+        related_page_ids: [],
+        related_page_sort: nil,
+        point: 0,
+        downloaded: 0
+      }
+      expect_reset_fields.each { |k, v| expect(target.send(k)).to eq(v) }
+      expect_copy_fields = dataset_attributes.reject { |k, v| expect_reset_fields.keys.include?(k) }
+      expect_copy_fields.each { |k, v| expect(subject.send(k)).to eq(v) }
+    end
+
+    describe "related file resouces copy" do
+      subject do
+        dataset = org_dataset.new_clone
+        dataset.save
+        dataset.resources.first
+      end
+
+      let!(:file_resource) do
+        file = Rails.root.join("spec", "fixtures", "opendata", "test.json")
+        resource_attributes = attributes_for(:opendata_resource)
+        resource_attributes.merge!(
+          created: Time.zone.yesterday,
+          updated: Time.zone.yesterday,
+          license_id: license.id,
+          in_file: upload_file(file, "application/json"),
+          in_tsv: upload_file(file, "application/json")
+        )
+        resource = org_dataset.resources.new(resource_attributes)
+        resource.save!
+        resource.in_file.close
+        resource
+      end
+
+      it do
+        expect(subject.id).not_to eq file_resource.id
+        expect(subject.created).to eq Time.zone.now
+        expect(subject.updated).to eq Time.zone.now
+        expect(subject.file_id).not_to eq file_resource.file_id
+        expect(subject.file.uploaded_file.read).to eq file_resource.file.uploaded_file.read
+        expect(subject.tsv_id).not_to eq file_resource.tsv_id
+        expect(subject.tsv.uploaded_file.read).to eq file_resource.tsv.uploaded_file.read
+        expect_copy_fields = [
+          :name,
+          :text,
+          :format,
+          :license_id,
+          :filename
+        ]
+        expect_copy_fields.each { |k| expect(subject.send(k)).to eq(file_resource.send(k)) }
+      end
+    end
+
+    describe "related url resoruces copy" do
+      subject do
+        dataset = org_dataset.new_clone
+        dataset.save
+        dataset.url_resources.first
+      end
+
+      let!(:url_resource) do
+        file = Rails.root.join("spec", "fixtures", "opendata", "test.json")
+        resource_attributes = attributes_for(:opendata_url_resource)
+        resource_attributes.merge!(
+          created: Time.zone.yesterday,
+          updated: Time.zone.yesterday,
+          license_id: license.id,
+          in_file: upload_file(file, "application/json"),
+          original_url: "http://test@example.jp/test.json",
+          original_updated: Time.zone.yesterday,
+          crawl_state: "same",
+          crawl_update: "none",
+          format: "JSON"
+        )
+        resource = org_dataset.url_resources.new(resource_attributes)
+        resource.save!
+        resource.in_file.close
+        resource
+      end
+
+      it do
+        expect(subject.id).not_to eq url_resource.id
+        expect(subject.created).to eq Time.zone.now
+        expect(subject.updated).to eq Time.zone.now
+        expect(subject.file_id).not_to eq url_resource.file_id
+        expect(subject.file.uploaded_file.read).to eq url_resource.file.uploaded_file.read
+        expect_copy_fields = [
+          :name,
+          :text,
+          :format,
+          :license_id,
+          :filename,
+          :original_url,
+          :original_updated,
+          :crawl_state,
+          :crawl_update
+        ]
+        expect_copy_fields.each { |k| expect(subject.send(k)).to eq(url_resource.send(k)) }
+      end
+    end
+  end
 end

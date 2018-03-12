@@ -11,25 +11,15 @@ ja:
       disabled_items: 削除済み
     links:
       categories: カテゴリー
-      disable: 削除済みに移動する
-      active: 削除を取り消す
       file_download: ダウンロード
       confirm:
-        disable: 削除済みにしてよろしいですか？
-        active: 削除を取り消してよろしいですか？
-        disable_all: チェックした項目を削除済みに移動しますか？
-        active_all: 選択した項目の削除を取り消しますか？
         download_all: 選択した項目をダウンロードしますか？
-    notice:
-        active: 削除を取り消しました。
-        disable: 削除済みに移動しました。
     mailers:
       compressed:
         subject: ダウンロード準備完了のお知らせ
     navi:
       folder: フォルダー
       category: カテゴリー
-      management: 削除済み一覧
 
   modules:
     gws/share: 共有ファイル
@@ -47,6 +37,8 @@ ja:
     delete_private_gws_share_files: ファイルの削除（所有）
     write_other_gws_share_files: ファイルのアップロード（全て）
     write_private_gws_share_files: ファイルのアップロード（所有）
+    trash_other_gws_share_files: ファイルゴミ箱の管理（全て）
+    trash_private_gws_share_files: ファイルゴミ箱の管理（所有）
     read_other_gws_share_categories: カテゴリーの閲覧（全て）
     read_private_gws_share_categories: カテゴリーの閲覧（所有）
     edit_other_gws_share_categories: カテゴリーの編集（全て）
@@ -93,6 +85,7 @@ ja:
       gws/addon/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
         share_files_capacity: 総容量制限
+        share_default_sort: 並び順の規定値
       gws/share/category:
         name: カテゴリー名
       gws/share/file:
@@ -133,7 +126,10 @@ ja:
         - 最大ファイルサイズを入力します。
       share_files_capacity:
         - 総容量を入力します。
+      share_default_sort:
+        - ファイル一覧の並び順の規定値を選択します。
 
   job:
     models:
       gws/share/compress_job: 共有ファイル/圧縮ダウンロード
+      gws/share/trash_purge_job: 共有ファイル/ゴミ箱の掃除

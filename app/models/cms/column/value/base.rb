@@ -25,6 +25,12 @@ class Cms::Column::Value::Base
     self.value = new_value.value
   end
 
+  def new_clone
+    ret = self.class.new self.attributes.to_h.except('_id', '_type', 'created', 'updated')
+    ret.instance_variable_set(:@new_clone, true)
+    ret
+  end
+
   def generate_public_files
   end
 

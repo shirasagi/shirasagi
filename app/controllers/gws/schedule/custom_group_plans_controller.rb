@@ -5,6 +5,7 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
   include Gws::Memo::NotificationFilter
 
   before_action :set_group
+  before_action :set_users, only: [:index, :print]
 
   navi_view "gws/schedule/main/navi"
 
@@ -20,9 +21,22 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
     @crumbs << [@group.name, action: :index]
   end
 
+  def set_users
+    @users = @group.sorted_members.select do |u|
+      u.readable?(@cur_user, site: @cur_site, permission: false)
+    end
+  end
+
+  def set_items
+    @items ||= begin
+      Gws::Schedule::Plan.site(@cur_site).without_deleted.
+        search(params[:s])
+    end
+  end
+
   public
 
   def index
-    @items = @group.sorted_members
+    # show custom groups
   end
 end

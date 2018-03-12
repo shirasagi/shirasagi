@@ -9,6 +9,7 @@ ja:
       twitter: Twitter ID でログイン
       facebook: Facebook ID でログイン
       yahoojp: Yahoo! JAPAN ID でログイン
+      yahoojp_v2: Yahoo! JAPAN ID（V2）でログイン
       google_oauth2: Google アカウントでログイン
       github: GitHub アカウントでログイン
     options:
@@ -20,6 +21,8 @@ ja:
       facebook_oauth:
         <<: *disabled_enabled
       yahoojp_oauth:
+        <<: *disabled_enabled
+      yahoojp_v2_oauth:
         <<: *disabled_enabled
       google_oauth2_oauth:
         <<: *disabled_enabled
@@ -111,6 +114,7 @@ ja:
       member/twitter_oauth: Twitter OAuth 認証
       member/facebook_oauth: Facebook OAuth 認証
       member/yahoo_jp_oauth: Yahoo! OAuth 認証
+      member/yahoo_jp_oauth_v2: Yahoo! OAuth V2 認証
       member/google_oauth: Google OAuth 認証
       member/github_oauth: GitHub OAuth 認証
       member/file: ファイル
@@ -194,6 +198,10 @@ ja:
         yahoojp_oauth: OAuth 認証
         yahoojp_client_id: アプリケーションID
         yahoojp_client_secret: シークレット
+      member/addon/yahoo_jp_oauth_v2:
+        yahoojp_v2_oauth: OAuth 認証
+        yahoojp_v2_client_id: アプリケーションID
+        yahoojp_v2_client_secret: シークレット
       member/addon/google_oauth:
         google_oauth2_oauth: OAuth 認証
         google_oauth2_client_id: クライアントID

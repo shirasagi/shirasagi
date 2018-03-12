@@ -19,7 +19,7 @@ class Gws::Share::Management::FilesController < ApplicationController
   def set_crumbs
     set_folder
     @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
-    @crumbs << [t('gws/share.navi.management'), gws_share_management_files_path]
+    @crumbs << [t('ss.navi.trash'), gws_share_management_files_path]
     if @folder.present?
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
@@ -73,7 +73,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def index
     if params[:folder].present?
-      raise "403" unless @folder.readable?(@cur_user, site: @cur_site)
+      raise "403" unless @folder.allowed?(:read, @cur_user, site: @cur_site)
     end
     if @category.present? || @folder.present?
       params[:s] ||= {}
@@ -83,9 +83,9 @@ class Gws::Share::Management::FilesController < ApplicationController
     end
 
     @items = @model.site(@cur_site).
-      readable(@cur_user, site: @cur_site).
+      allow(:read, @cur_user, site: @cur_site).
       deleted.
-      search(params[:s]).
+      custom_order(params.dig(:s, :sort) || 'updated_desc').
       page(params[:page]).per(50)
 
     folder_name = Gws::Share::Folder.site(@cur_site).
@@ -94,13 +94,12 @@ class Gws::Share::Management::FilesController < ApplicationController
         pluck(:name).
         first
 
-    @sub_folders = Gws::Share::Folder.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
+    @sub_folders = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).
         sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
-    raise "403" unless @item.readable?(@cur_user)
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render
   end
 
@@ -174,7 +173,7 @@ class Gws::Share::Management::FilesController < ApplicationController
   def render_destroy_all(result)
     location = crud_redirect_url || { action: :index }
     if params[:action] == "active_all"
-      notice = result ? { notice: t("gws/share.notice.active") } : {}
+      notice = result ? { notice: t("ss.notice.restored") } : {}
     else
       notice = result ? { notice: t("ss.notice.deleted") } : {}
     end
@@ -191,7 +190,7 @@ class Gws::Share::Management::FilesController < ApplicationController
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     render_opts = opts[:render].presence || { file: :delete }
     if params[:action] == "active"
-      notice = opts[:notice].presence || t("gws/share.notice.active")
+      notice = opts[:notice].presence || t("ss.notice.restored")
     elsif params[:action] == "destroy"
       notice = opts[:notice].presence || t("ss.notice.deleted")
     else

@@ -1,21 +1,72 @@
 <%= jquery do %>
-  //$(".addon-views").prepend($(".gws-addon-reminder").closest(".addon-view"));
-  Gws_Reminder.renderAddon({ url: "<%= gws_apis_reminders_path %>" });
+  var setIntervalStep = function(ele) {
+    if ($(ele).val() == "minutes"){
+      $(ele).closest("tr").find(".interval").attr("step", 10);
+    }
+    else {
+      $(ele).closest("tr").find(".interval").attr("step", 1);
+    }
+  };
+  var changeIntervalStep = function(newItem) {
+    $(newItem).find(".interval_type").change(function() {
+      setIntervalStep(this);
+    });
+  };
+
+  var sort = new SS_SortableForm('.remider-conditions', { limit: 5, onInsert: function(newItem) {
+    changeIntervalStep(newItem);
+  }});
+  sort.renderItems(<%== @item.reminder_conditions(@cur_user).to_json %>);
+
+  SS.ajaxForm("#ajax-form", {
+    success: function(data) {
+      sort.resetItems();
+      sort.renderItems(data["reminder_conditions"]);
+      $(".remider-conditions tr").each(function() { changeIntervalStep(this); });
+      $(".remider-conditions tr .interval_type").each(function() { setIntervalStep(this) });
+      SS.notice('<%= t('gws/reminder.notification.created') %>');
+    },
+    error: function(data) { alert("Error"); }
+  });
+  $(".remider-conditions tr").each(function() { changeIntervalStep(this); });
+  $(".remider-conditions tr .interval_type").each(function() { setIntervalStep(this) });
 <% end %>
+
+<%= form_for :item, url: gws_apis_reminders_path, html: { id: "ajax-form", multipart: true, autocomplete: :off } do %>
 
 <dl class="see gws-addon-reminder">
   <dt>
     <%= hidden_field_tag "item_name", @item.reference_name %>
     <%= hidden_field_tag "item_model", @item.reference_model %>
     <%= hidden_field_tag "item_id", @item.id %>
-    <span class="gws-addon-reminder-label">
-      <%= @item.reminder(@cur_user) ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
-    </span>
+    <span class="gws-addon-reminder-label"><%= @item.t :reminder_date %></span>
     <%= @model.tt :reminder_date %>
   </dt>
   <dd>
-    <%= text_field_tag "item_date", tryb { @item.in_reminder_date.strftime("%Y/%m/%d %H:%M") }, class: "datetime js-datetime" %>
-    <%= button_tag t("gws.buttons.register"), id: "gws-addon-reminder-set", class: :btn %>
-    <%= button_tag t("gws.buttons.unset"), id: "gws-addon-reminder-unset", class: :btn %>
+    <% if @item.allday == "allday" %>
+    <table class="remider-conditions">
+      <tbody>
+      <tr data-base="true">
+        <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, class: "interval" %></td>
+        <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_allday_options), class: "interval_type" %></td>
+        <td><%= select_tag 'item[in_reminder_conditions][][base_time]', options_for_select(@item.reminder_base_time_options), class: "base_time" %></td>
+      </tr>
+      </tbody>
+    </table>
+    <% else %>
+    <table class="remider-conditions">
+      <tbody>
+      <tr data-base="true">
+        <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
+        <td><%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, class: "interval" %></td>
+        <td><%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_options), class: "interval_type" %></td>
+      </tr>
+      </tbody>
+    </table>
+    <% end %>
+    <%= button_tag t("gws/reminder.buttons.register_reminder"), id: "gws-addon-reminder-set", class: :btn %>
   </dd>
 </dl>
+
+<% end %>

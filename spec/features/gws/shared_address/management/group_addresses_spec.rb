@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "gws_shared_address_management_group_addresses", type: :feature, dbscope: :example do
+describe "gws_shared_address_management_group_addresses", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:address_group) { create :gws_shared_address_group }
   let!(:item) { create :gws_shared_address_address, address_group_id: address_group.id }
-  let(:index_path) { gws_shared_address_management_group_addresses_path(site, address_group) }
+  let(:index_path) { gws_shared_address_management_addresses_path(site) }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it_behaves_like 'crud flow'

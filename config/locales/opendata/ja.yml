@@ -518,6 +518,27 @@ ja:
         assoc_method: 連携確認方法
         assoc_filename: 連携ファイル
 
+  activemodel:
+    models:
+      opendata/dataset_download_report: ダウンロードレポート
+    attributes:
+      opendata/dataset_download_report:
+        period: 期間
+        type: 単位
+        export: 出力
+      opendata/dataset_download_report/type:
+        day: 日
+        month: 月
+        year: 年
+    errors:
+      models:
+        opendata/dataset_download_report:
+          attributes:
+            base:
+              period: 期間の指定が不正です。開始と終了は同じ、または開始が終了より過去の日付となるよう入力してください。
+      template:
+        header: 入力内容を確認してください。
+
   tooltip:
     opendata/dataset:
       text:

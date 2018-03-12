@@ -28,8 +28,8 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
         click_button "保存"
       end
 
-      item = Gws::Memo::Message.where(subject: /#{forum1.name}/).first
-      expect(item).to be nil
+      item = Gws::Memo::Notice.where(subject: /#{forum1.name}/).first
+      expect(item).to be_nil
     end
 
     it "with enabled forum" do
@@ -41,8 +41,8 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
         click_button "保存"
       end
 
-      item = Gws::Memo::Message.where(subject: /#{forum2.name}/).first
-      expect(item).not_to be nil
+      item = Gws::Memo::Notice.where(subject: /#{forum2.name}/).first
+      expect(item).not_to be_nil
     end
 
     it "with enabled closed" do
@@ -54,8 +54,8 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
         click_button "保存"
       end
 
-      item = Gws::Memo::Message.where(subject: /#{forum3.name}/).first
-      expect(item).to be nil
+      item = Gws::Memo::Notice.where(subject: /#{forum3.name}/).first
+      expect(item).to be_nil
     end
   end
 end

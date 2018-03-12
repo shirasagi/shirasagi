@@ -1,18 +1,10 @@
-<%= jquery do %>
-  Gws_Schedule_Todo.render({
-    disable: <%== { path: url_for(action: :disable_all), confirm: t('gws/schedule/todo.confirm.disable_all') }.to_json %>,
-    finish: <%== { path: url_for(action: :finish_all), confirm: t('gws/schedule/todo.confirm.finish_all') }.to_json %>,
-    revert: <%== { path: url_for(action: :revert_all), confirm: t('gws/schedule/todo.confirm.revert_all') }.to_json %>
-  });
-<% end %>
-
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button class="disable-all btn"><%= t 'ss.links.delete' %></button>
-    <button class="finish-all btn"><%= t 'gws/schedule/todo.links.finish' %></button>
-    <button class="revert-all btn"><%= t 'gws/schedule/todo.links.revert' %></button>
+    <button class="disable-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :soft_delete_all) %>" data-ss-confirmation="<%= t('ss.confirm.soft_delete') %>"><%= t 'ss.links.delete' %></button>
+    <button class="finish-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :finish_all) %>" data-ss-confirmation="<%= t('gws/schedule/todo.confirm.finish_all') %>"><%= t 'gws/schedule/todo.links.finish' %></button>
+    <button class="revert-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :revert_all) %>" data-ss-confirmation="<%= t('gws/schedule/todo.confirm.revert_all') %>"><%= t 'gws/schedule/todo.links.revert' %></button>
   </div>
 
   <div class="list-head-search">

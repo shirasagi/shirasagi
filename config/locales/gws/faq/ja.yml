@@ -65,6 +65,8 @@ ja:
     edit_private_gws_faq_posts: 投稿の編集（所有）
     delete_other_gws_faq_posts: 投稿の削除（全て）
     delete_private_gws_faq_posts: 投稿の削除（所有）
+    trash_other_gws_faq_posts: 投稿ゴミ箱の管理（全て）
+    trash_private_gws_faq_posts: 投稿ゴミ箱の管理（所有）
     read_other_gws_faq_categories: カテゴリーの閲覧（全て）
     read_private_gws_faq_categories: カテゴリーの閲覧（所有）
     edit_other_gws_faq_categories: カテゴリーの編集（全て）
@@ -79,12 +81,23 @@ ja:
         「%{name}」が作成または更新されました。
 
         %{text}
+
     gws/faq/post:
       subject: "[更新通知][よくある質問] %{name}"
       text: |
         「%{name}」に投稿がありました。
 
         %{text}
+
+    gws/faq/topic/destroy:
+      subject: "[削除通知][よくある質問] %{name}"
+      text: |
+        「%{name}」が削除されました。
+
+    gws/faq/post/destroy:
+      subject: "[削除通知][よくある質問] %{name}"
+      text: |
+        「%{name}」の投稿が削除されました。
 
   mongoid:
     models:
@@ -151,3 +164,7 @@ ja:
     gws/faq/category:
       name:
         - カテゴリー名を入力します。
+
+  job:
+    models:
+      gws/faq/trash_purge_job: よくある質問/投稿ゴミ箱の掃除

@@ -87,6 +87,20 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
     return if file.blank?
 
+    if @new_clone
+      attributes = Hash[file.attributes]
+      attributes.select!{ |k| file.fields.keys.include?(k) }
+
+      clone_file = SS::File.new(attributes)
+      clone_file.id = nil
+      clone_file.in_file = file.uploaded_file
+      clone_file.user_id = @cur_user.id if @cur_user
+
+      clone_file.save(validate: false)
+
+      self.file = clone_file
+    end
+
     attrs = {}
 
     if file.model != 'cms/column'

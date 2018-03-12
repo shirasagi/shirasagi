@@ -1,12 +1,107 @@
+<%
+  reminder_conditions = @item.reminder_conditions(@cur_user)
+  reminder_conditions = @item.in_reminder_conditions if @item.in_reminder_conditions
+%>
+
+<%= jquery do %>
+  var toggleConditions = function() {
+    if ($("#addon-basic #item_allday").prop('checked')) {
+      $("#remider-conditions-allday").show();
+      $("#remider-conditions").hide();
+
+      $("#remider-conditions [name]").each(function() {
+        $(this).attr("name", "");
+      });
+      $("#remider-conditions-allday [name]").each(function() {
+        $(this).attr("name", $(this).attr("data-name"));
+      });
+    }
+    else {
+      $("#remider-conditions-allday").hide();
+      $("#remider-conditions").show();
+
+      $("#remider-conditions [name]").each(function() {
+        $(this).attr("name", $(this).attr("data-name"));
+      });
+      $("#remider-conditions-allday [name]").each(function() {
+        $(this).attr("name", "");
+      });
+    }
+  };
+  $("#addon-basic #item_allday").on("click", toggleConditions);
+  toggleConditions();
+
+  var setIntervalStep = function(ele) {
+    if ($(ele).val() == "minutes"){
+      $(ele).closest("tr").find(".interval").attr("step", 10);
+    }
+    else {
+      $(ele).closest("tr").find(".interval").attr("step", 1);
+    }
+  };
+  var changeIntervalStep = function(newItem) {
+    $(newItem).find(".interval_type").change(function() {
+      setIntervalStep(this);
+    });
+  };
+  var sort1 = new SS_SortableForm('#remider-conditions', { limit: 5, onInsert: changeIntervalStep });
+  var sort2 = new SS_SortableForm('#remider-conditions-allday', { limit: 5, onInsert: changeIntervalStep });
+
+  <% if @item.allday == "allday" %>
+  sort2.renderItems(<%== reminder_conditions.to_json %>);
+  <% else %>
+  sort1.renderItems(<%== reminder_conditions.to_json %>);
+  <% end %>
+
+  $(".gws-addon-reminder table tr").each(function() { changeIntervalStep(this); });
+  $(".gws-addon-reminder table tr .interval_type").each(function() { setIntervalStep(this); });
+<% end %>
+
 <dl class="see gws-addon-reminder">
   <dt>
     <%= @model.t :reminder_date %><%= @model.tt :reminder_date %>
   </dt>
   <dd>
-    <%= f.text_field :in_reminder_date, value: tryb { @item.in_reminder_date.strftime("%Y/%m/%d %H:%M") }, class: "datetime js-datetime" %>
-    <label style="margin-left: 10px; vertical-align: middle;">
-      <%= f.check_box :in_reminder_state, {}, 'disabled', 'enabled' %>
-      <%= t 'gws.options.reminder_state.disable' %>
-    </label>
+    <table id="remider-conditions" class="remider-conditions">
+      <tbody>
+      <tr data-base="true">
+        <td>
+          <%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options),
+            'class' => 'state', 'data-name' => 'item[in_reminder_conditions][][state]' %>
+        </td>
+        <td>
+          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0,
+            'class' => 'interval', 'data-name' => 'item[in_reminder_conditions][][interval]' %>
+        </td>
+        <td>
+          <%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_options),
+            'class' => 'interval_type', 'data-name' => 'item[in_reminder_conditions][][interval_type]' %>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <table id="remider-conditions-allday" class="remider-conditions">
+      <tbody>
+      <tr data-base="true">
+        <td>
+          <%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options),
+            'class' => 'state', 'data-name' => 'item[in_reminder_conditions][][state]' %>
+        </td>
+        <td>
+          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0,
+            'class' => 'interval', 'data-name' => 'item[in_reminder_conditions][][interval]' %>
+        </td>
+        <td>
+          <%= select_tag 'item[in_reminder_conditions][][interval_type]', options_for_select(@item.reminder_interval_type_allday_options),
+            'class' => 'interval_type', 'data-name' => 'item[in_reminder_conditions][][interval_type]' %>
+        </td>
+        <td>
+          <%= select_tag 'item[in_reminder_conditions][][base_time]', options_for_select(@item.reminder_base_time_options),
+            'class' => 'base_time', 'data-name' => 'item[in_reminder_conditions][][base_time]' %>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </dd>
 </dl>

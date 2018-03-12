@@ -41,7 +41,6 @@ SS::Application.routes.draw do
     resources :sys_notices, only: [:index, :show]
     resources :links, concerns: [:deletion]
     resources :public_links, only: [:index, :show]
-    resources :reminders, only: [:index, :destroy], concerns: [:deletion]
     resources :histories, only: [:index]
     resources :histories, only: [:index, :show], path: 'histories/:ymd', as: :daily_histories do
       match :download, on: :collection, via: [:get, :post]
@@ -59,6 +58,7 @@ SS::Application.routes.draw do
       get "facilities" => "facilities#index"
       post "reminders" => "reminders#create"
       delete "reminders" => "reminders#destroy"
+      post "reminders/restore" => "reminders#restore", as: :restore_reminder
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
       get "contrasts" => "contrasts#index"
@@ -68,6 +68,15 @@ SS::Application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+      end
+    end
+  end
+
+  gws "reminder" do
+    get '/' => redirect { |p, req| "#{req.path}/-/items" }, as: :main
+    scope path: ':mode' do
+      resources :items, only: [:index, :destroy], concerns: [:deletion] do
+        get :redirect, on: :member
       end
     end
   end

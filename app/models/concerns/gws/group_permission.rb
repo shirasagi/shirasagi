@@ -10,8 +10,8 @@ module Gws::GroupPermission
     field :users_hash, type: Hash
     field :custom_groups_hash, type: Hash
 
-    embeds_ids :groups, class_name: "SS::Group"
-    embeds_ids :users, class_name: "SS::User"
+    embeds_ids :groups, class_name: "Gws::Group"
+    embeds_ids :users, class_name: "Gws::User"
     embeds_ids :custom_groups, class_name: "Gws::CustomGroup"
 
     permit_params :permission_level, group_ids: [], user_ids: [], custom_group_ids: []
@@ -38,8 +38,13 @@ module Gws::GroupPermission
     site    = opts[:site] || @cur_site
     action  = permission_action || action
 
-    permits = ["#{action}_other_#{self.class.permission_name}"]
-    permits << "#{action}_private_#{self.class.permission_name}" if owned?(user) || (!opts[:strict] && new_record?)
+    permits = []
+    if opts[:only] != :private
+      permits << "#{action}_other_#{self.class.permission_name}"
+    end
+    if opts[:only] != :other
+      permits << "#{action}_private_#{self.class.permission_name}" if owned?(user) || (!opts[:strict] && new_record?)
+    end
 
     permits.each do |permit|
       return true if user.gws_role_permissions["#{permit}_#{site.id}"].to_i > 0

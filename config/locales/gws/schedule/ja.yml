@@ -121,18 +121,12 @@ ja:
       disable: 削除済みに移動しました
       active: 削除を取り消しました
     confirm:
-      active: 削除を取り消しますか？
       finish: 完了にしてよろしいですか？
       revert: 未完了に戻してよろしいですか？
-      disable: 削除済みに移動しますか？
       finish_all: 選択した項目を全て完了にしますか？
       revert_all: 選択した項目を全て未完了に戻しますか？
-      disable_all: 選択した項目を全て削除済みに移動しますか？
-      active_all: 選択した項目の削除を取り消しますか？
     search_todos: ToDoを検索
     links:
-      active: 削除を取り消す
-      disable: 削除済みに移動する
       finish: 完了する
       revert: 未完了に戻す
     options:
@@ -180,6 +174,8 @@ ja:
     edit_private_gws_schedule_plans: 予定の編集（所有）
     delete_other_gws_schedule_plans: 予定の削除（全て）
     delete_private_gws_schedule_plans: 予定の削除（所有）
+    trash_other_gws_schedule_plans: 予定ゴミ箱の管理（全て）
+    trash_private_gws_schedule_plans: 予定ゴミ箱の管理（所有）
     read_other_gws_schedule_categories: 種別の閲覧（全て）
     read_private_gws_schedule_categories: 種別の閲覧（所有）
     edit_other_gws_schedule_categories: 種別の編集（全て）
@@ -192,6 +188,8 @@ ja:
     edit_private_gws_schedule_todos: ToDoの編集（所有）
     delete_other_gws_schedule_todos: ToDoの削除（全て）
     delete_private_gws_schedule_todos: ToDoの削除（所有）
+    trash_other_gws_schedule_todos: ToDoゴミ箱の管理（全て）
+    trash_private_gws_schedule_todos: ToDoゴミ箱の管理（所有）
 
   mongoid:
     models:
@@ -380,6 +378,21 @@ ja:
       text: |
         「%{name}」の出欠確認に回答がありました。
 
+    gws/schedule/plan/destroy:
+      subject: "[削除通知][スケジュール] %{name}"
+      text: |
+        「%{name}」が削除されました。
+
+    gws/schedule/comment/destroy:
+      subject: "[削除通知][スケジュール] %{name}"
+      text: |
+        「%{name}」のコメントが削除されました。
+
+    gws/schedule/attendance/destroy:
+      subject: "[削除通知][スケジュール] %{name}"
+      text: |
+        「%{name}」の出欠確認の回答が削除されました。
+
     gws/schedule/plan/approval/request:
       subject: "[承認依頼][スケジュール] %{name}"
       text: |
@@ -402,3 +415,8 @@ ja:
         適宜修正を行い、再度承認依頼を行ってください。
 
         %{text}
+
+  job:
+    models:
+      gws/schedule/trash_purge_job: 予定ゴミ箱の掃除
+      gws/schedule/todo_trash_purge_job: ToDoゴミ箱の掃除

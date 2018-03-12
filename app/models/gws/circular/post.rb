@@ -6,7 +6,7 @@ class Gws::Circular::Post
   include Gws::Reference::Site
   include Gws::Circular::See
   include Gws::Circular::Sort
-  include Gws::Addon::Reminder
+  #include Gws::Addon::Reminder
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Circular::Category
@@ -44,16 +44,6 @@ class Gws::Circular::Post
 
   scope :and_public, -> {
     where(state: 'public')
-  }
-
-  scope :without_deleted, ->(date = Time.zone.now) {
-    where("$and" => [
-        { "$or" => [{ deleted: nil }, { :deleted.gt => date }] }
-    ])
-  }
-
-  scope :only_deleted, -> {
-    where(:deleted.exists => true)
   }
 
   class << self
@@ -120,7 +110,7 @@ class Gws::Circular::Post
 
   def reminder_url
     name = reference_model.tr('/', '_') + '_path'
-    [name, category: '-', id: id]
+    [name, category: '-', id: id, site: site_id]
   end
 
   def draft?
@@ -137,14 +127,6 @@ class Gws::Circular::Post
 
   def deleted?
     deleted.present? && deleted <= Time.zone.now
-  end
-
-  def active
-    update_attributes(deleted: nil)
-  end
-
-  def disable
-    update_attributes(deleted: Time.zone.now) if active?
   end
 
   def custom_group_member?(user)

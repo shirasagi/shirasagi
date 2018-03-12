@@ -39,6 +39,7 @@ class Gws::Schedule::PlanSearch
     return [] if @condition.blank?
 
     plans = Gws::Schedule::Plan.site(@cur_site).
+      without_deleted.
       between_dates(start_on, end_on + 1.day).
       and('$or' => @condition)
 

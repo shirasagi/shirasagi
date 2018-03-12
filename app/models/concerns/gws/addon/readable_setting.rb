@@ -17,14 +17,14 @@ module Gws::Addon::ReadableSetting
     permit_params :readable_setting_range
     permit_params readable_group_ids: [], readable_member_ids: [], readable_custom_group_ids: []
 
-    before_validation :apply_readable_setting_range, if: ->{ readable_setting_range }
+    before_validation :apply_readable_setting_range, if: ->{ readable_setting_range_changed? && readable_setting_range }
     before_validation :set_readable_groups_hash
     before_validation :set_readable_members_hash
     before_validation :set_readable_custom_groups_hash
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
-      return none unless self.allowed?(:read, user, opts)
+      return none if opts[:permission] != false && !self.allowed?(:read, user, opts)
       or_conds = readable_conditions(user, opts)
       where("$and" => [{ "$or" => or_conds }])
     }
@@ -39,7 +39,7 @@ module Gws::Addon::ReadableSetting
 
   def readable?(user, opts = {})
     opts[:site] ||= self.site
-    return false unless self.class.allowed?(:read, user, opts)
+    return false if opts[:permission] != false && !self.class.allowed?(:read, user, opts)
     return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)

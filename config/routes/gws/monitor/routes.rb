@@ -6,6 +6,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :soft_deletion do
+    match :soft_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :state_change do
     post :public, on: :member
     post :preparation, on: :member
@@ -19,7 +24,6 @@ SS::Application.routes.draw do
     namespace :parent, path: ":parent_id", parent_id: /\d+/ do
       resources :comments, controller: '/gws/monitor/comments', concerns: [:deletion]
     end
-    # get :categories, on: :collection
   end
 
   gws 'monitor' do
@@ -29,35 +33,27 @@ SS::Application.routes.draw do
       resources :topics, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy]
       resources :answers, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy]
 
-      resources :admins, concerns: [:state_change, :topic_comment], except: [:destroy] do
+      resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment], except: [:destroy] do
         get :forward, on: :member
         match :publish, on: :member, via: %i[get post]
-        match :disable, on: :member, via: %i[get post]
-        post :disable_all, on: :collection
         post :close, on: :member
         post :open, on: :member
         get :download, on: :member
         get :file_download, on: :member
       end
-      resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
-        match :active, on: :member, via: %i[get post]
-        post :active_all, on: :collection
-      end
 
       namespace "management" do
         get '/' => redirect { |p, req| "#{req.path}/admins" }, as: :main
 
-        resources :admins, concerns: [:state_change, :topic_comment], except: [:new, :create, :destroy] do
-          match :disable, on: :member, via: %i[get post]
-          post :disable_all, on: :collection
+        resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment], except: [:new, :create, :destroy] do
           get :download, on: :member
           post :close, on: :member
           post :open, on: :member
           get :file_download, on: :member
         end
         resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
-          match :active, on: :member, via: %i[get post]
-          post :active_all, on: :collection
+          match :undo_delete, on: :member, via: %i[get post]
+          # post :undo_delete_all, on: :collection
         end
       end
     end

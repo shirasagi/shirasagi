@@ -49,6 +49,9 @@ ja:
         delete: サーバから削除する
         request_mdn: 開封確認メッセージを要求する
         request_dsn: 配信確認メッセージを要求する
+      conjunction:
+        and: すべての条件に一致
+        or: いずれかの条件に一致
       filter_field:
         from: 差出人
         to: 宛先
@@ -182,6 +185,7 @@ ja:
       webmail/filter:
         name: フィルター名
         order: 並び順
+        conjunction: 検索条件の接続
         conditions: 検索条件
         conditions/field: フィールド
         conditions/operator: 判定

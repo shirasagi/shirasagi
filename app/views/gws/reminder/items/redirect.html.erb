@@ -1,0 +1,27 @@
+<div class="main-box">
+  <div class="gws-reminder-notfound">
+    <div class="notice"><%= t("gws/reminder.notfound.summary") %></div>
+    <% same_name_items = @item.same_name_items %>
+    <% if same_name_items.present? %>
+      <h2><%= t("gws/reminder.notfound.same_name_items") %></h2>
+      <ul>
+      <% same_name_items.each do |item| %>
+      <% url, options = item.reminder_url %>
+        <li><%= link_to(item.name, send(url, options)) rescue item.name %></li>
+      <% end %>
+      </ul>
+    <% end %>
+
+    <% same_repeat_items = @item.same_name_items %>
+    <% if same_repeat_items.present? %>
+      <h2><%= t("gws/reminder.notfound.same_repeat_items") %></h2>
+      <ul>
+      <% same_repeat_items.each do |item| %>
+      <% url, options = item.reminder_url %>
+        <li><%= link_to(item.name, send(url, options)) rescue item.name %></li>
+      <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>
+

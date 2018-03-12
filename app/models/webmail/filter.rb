@@ -8,6 +8,8 @@ class Webmail::Filter
   # 一括処理件数
   APPLY_PER = 100
 
+  attr_accessor :uids
+
   field :host, type: String
   field :account, type: String
   field :mailbox, type: String
@@ -16,10 +18,11 @@ class Webmail::Filter
   field :state, type: String, default: 'enabled'
   field :order, type: Integer, default: 0
 
+  field :conjunction, type: String, default: 'and'
   field :conditions, type: Array, default: []
   field :action, type: String
 
-  permit_params :host, :account, :mailbox, :name, :state, :order, :action
+  permit_params :host, :account, :mailbox, :name, :state, :order, :action, :conjunction
   permit_params conditions: [:field, :operator, :value]
 
   validates :name, presence: true
@@ -45,6 +48,10 @@ class Webmail::Filter
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
     criteria
   }
+
+  def conjunction_options
+    %w(and or).map { |m| [I18n.t("webmail.options.conjunction.#{m}"), m] }
+  end
 
   def field_options
     %w(from to cc bcc subject body).map { |m| [I18n.t("webmail.options.filter_field.#{m}"), m] }
@@ -88,47 +95,35 @@ class Webmail::Filter
 
   def search_keys
     keys = []
+    keys << 'OR' if conjunction == 'or'
+
     conditions.each do |cond|
       next if cond[:field].blank? || cond[:value].blank?
       keys << 'NOT' if cond[:operator] == 'exclude'
       keys << cond[:field].upcase
       keys << cond[:value].dup.force_encoding('ASCII-8BIT')
     end
+
     keys
   end
 
-  def apply(mailbox, add_search_keys = [])
-    keys = add_search_keys + search_keys
+  def uids_search(keys = [])
+    keys = keys.dup + search_keys
+    return imap.conn.uid_sort(%w(REVERSE ARRIVAL), keys, 'UTF-8') if keys.present?
 
-    if keys.blank?
-      errors.add :conditions, :invalid
-      return false
-    end
-
-    imap.select(mailbox)
-    uids = imap.conn.uid_sort(%w(REVERSE ARRIVAL), add_search_keys + search_keys, 'UTF-8')
-    uids_apply(uids, mailbox)
+    errors.add :conditions, :invalid
+    return false
   end
 
-  private
-
-  def set_conditions
-    conditions = self.conditions.map do |data|
-      (data[:field].present? && data[:operator].present? && data[:value].present?) ? data : nil
-    end
-    self.conditions = conditions.compact
-  end
-
-  def uids_apply(uids, mailbox)
+  def uids_apply(uids)
     count = 0
     return count if uids.blank?
 
     uids.each_slice(APPLY_PER) do |sliced_uids|
       if action == "copy"
-        imap.uids_copy(sliced_uids, self.mailbox)
+        imap.uids_copy(sliced_uids, mailbox)
       elsif action == "move"
-        imap.examine(mailbox)
-        imap.uids_move(sliced_uids, self.mailbox)
+        imap.uids_move(sliced_uids, mailbox)
       elsif action == "trash"
         imap.uids_move_trash(sliced_uids)
       elsif action == "delete"
@@ -139,5 +134,14 @@ class Webmail::Filter
     end
 
     count
+  end
+
+  private
+
+  def set_conditions
+    conditions = self.conditions.map do |data|
+      (data[:field].present? && data[:operator].present? && data[:value].present?) ? data : nil
+    end
+    self.conditions = conditions.compact
   end
 end

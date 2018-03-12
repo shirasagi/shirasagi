@@ -1,0 +1,13 @@
+<div class="list-head">
+  <% if @model.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <div class="list-head-action-destroy">
+      <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+    </div>
+  </div>
+  <% end %>
+
+  <%= render file: "_search" %>
+</div>

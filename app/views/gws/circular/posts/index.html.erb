@@ -12,22 +12,6 @@
   <div class="dropdown-menu dropdown-menu--white"></div>
 </div>
 
-<%= jquery do %>
-  $(".set-seen-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("<%= url_for(action: :set_seen_all) %>", "<%= I18n.t('gws/circular.confirm.set_seen_all') %>");
-    form.appendTo(document.body).submit();
-  });
-
-  $(".unset-seen-all").click(function(){
-    var form = Gws_Circular_Post.buildForm("<%= url_for(action: :unset_seen_all) %>", "<%= I18n.t('gws/circular.confirm.unset_seen_all') %>");
-    form.appendTo(document.body).submit();
-  });
-
-  $(".gws-circular-tabs .post").addClass("current");
-<% end %>
-
-<%#= render "gws/circular/main/tabs" %>
-
 <div class="index gws-boards">
   <%= render file: '_list_head' %>
   <ul class="list-items">

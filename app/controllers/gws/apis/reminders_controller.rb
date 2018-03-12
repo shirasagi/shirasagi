@@ -1,68 +1,57 @@
 class Gws::Apis::RemindersController < ApplicationController
   include Gws::ApiFilter
-  include Gws::CrudFilter
+  include Gws::BaseFilter
 
   model Gws::Reminder
-
-  private
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
-  def set_item
-  end
-
-  def permit_fields
-    @model.permitted_fields
-  end
-
-  def find_item
-    attr = get_params
-    reminder = @model.where(
-      site_id: @cur_site.id,
-      user_id: @cur_user.id,
-      model: attr[:model],
-      item_id: attr[:item_id]
-    ).first
-  end
 
   public
 
   def create
-    item = find_item || @model.new
-    item.attributes = get_params
-    item.read_at = Time.zone.now
+    item = params[:item_model].camelize.constantize.find(params[:item_id])
+    cond = {
+      site_id: @cur_site.id,
+      user_id: @cur_user.id,
+      model: item.reference_model,
+      item_id: item.id
+    }
+    reminder = Gws::Reminder.where(cond).first || Gws::Reminder.new(cond)
+    conditions = item.validate_reminder_conditions(params.dig(:item, :in_reminder_conditions))
+    item.apply_reminders(reminder, conditions)
+    reminder.save!
 
-    if item.save
-      render plain: I18n.t("gws.reminder.states.entry"), layout: false
-    else
-      render plain: "Error", layout: false
-    end
+    reminder.reload
+    reminder.destroy if reminder.notifications.blank?
+
+    render json: { reminder_conditions: (reminder.destroyed? ? [] : reminder.notifications) }
   end
 
   def destroy
-    item = find_item
-
-    if item.blank? || item.destroy
-      render plain: I18n.t("gws.reminder.states.empty"), layout: false
-    else
-      render plain: "Error", layout: false
+    @now = Time.zone.now
+    reminder = Gws::Reminder.find(params[:id])
+    reminder.deleted = @now
+    reminder.read_at = @now
+    reminder.notifications.each do |notification|
+      notification.delivered_at = nil
     end
+
+    reminder.save!
+    render plain: I18n.t('gws/reminder.notification.updated'), layout: false
   end
 
-  def notification
-    item = find_item
-    raise "404" if item.blank?
-
-    notification = item.notifications.first
-    notification = item.notifications.new unless notification
-    notification.attributes = params.require(:item).permit(:in_notify_before)
-
-    if notification.valid? && item.save
-      render plain: I18n.t("gws.reminder.states.entry"), layout: false
-    else
-      render plain: "Error", layout: false
+  def restore
+    @now = Time.zone.now
+    reminder = Gws::Reminder.find(params[:id])
+    reminder.deleted = nil
+    reminder.read_at = @now
+    reminder.notifications.each do |notification|
+      if notification.notify_at < @now
+        notification.delivered_at = nil
+      else
+        notification.delivered_at = Time.zone.at(0)
+      end
     end
+
+    reminder.save!
+    render plain: I18n.t('gws/reminder.notification.updated'), layout: false
   end
 end

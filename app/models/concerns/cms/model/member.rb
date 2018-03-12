@@ -8,10 +8,11 @@ module Cms::Model::Member
   OAUTH_PROVIDER_TWITTER = 'twitter'.freeze
   OAUTH_PROVIDER_FACEBOOK = 'facebook'.freeze
   OAUTH_PROVIDER_YAHOOJP = 'yahoojp'.freeze
+  OAUTH_PROVIDER_YAHOOJP_V2 = 'yahoojp_v2'.freeze
   OAUTH_PROVIDER_GOOGLE_OAUTH2 = 'google_oauth2'.freeze
   OAUTH_PROVIDER_GITHUB = 'github'.freeze
   OAUTH_PROVIDERS = [ OAUTH_PROVIDER_TWITTER, OAUTH_PROVIDER_FACEBOOK, OAUTH_PROVIDER_YAHOOJP,
-                      OAUTH_PROVIDER_GOOGLE_OAUTH2, OAUTH_PROVIDER_GITHUB ].freeze
+                      OAUTH_PROVIDER_YAHOOJP_V2, OAUTH_PROVIDER_GOOGLE_OAUTH2, OAUTH_PROVIDER_GITHUB ].freeze
 
   included do
     store_in collection: "cms_members"

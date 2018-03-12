@@ -5,7 +5,7 @@ class Gws::Schedule::GroupPlansController < ApplicationController
   include Gws::Memo::NotificationFilter
 
   before_action :set_group
-  before_action :set_items
+  before_action :set_users, only: [:index, :print]
 
   navi_view "gws/schedule/main/navi"
 
@@ -22,12 +22,22 @@ class Gws::Schedule::GroupPlansController < ApplicationController
     @crumbs << [@group.trailing_name, action: :index]
   end
 
+  def set_users
+    @users = @group.users.active.
+      readable(@cur_user, site: @cur_site, permission: false).
+      order_by_title(@cur_site).compact
+  end
+
   def set_items
-    @items = @group.users.active.order_by_title(@cur_site).compact
+    @items ||= begin
+      Gws::Schedule::Plan.site(@cur_site).without_deleted.
+        search(params[:s])
+    end
   end
 
   public
 
   def index
+    # show plans
   end
 end
