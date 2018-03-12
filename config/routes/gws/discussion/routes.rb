@@ -25,9 +25,9 @@ SS::Application.routes.draw do
   end
 
   concern :todos do
-    get :finish, on: :member
-    get :revert, on: :member
-    get :disable, on: :member
+    match :finish, on: :member, via: %i[get post]
+    match :revert, on: :member, via: %i[get post]
+    match :soft_delete, on: :member, via: [:get, :post]
   end
 
   concern :copy do

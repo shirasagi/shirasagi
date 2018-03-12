@@ -17,6 +17,7 @@ class Gws::Discussion::Post
 
   def save_notify_message(site, user)
     f = Gws::Discussion::Forum.find(forum.id)
+    return if f.deleted?
     return unless f.public?
     return unless f.notify_enabled?
 
@@ -31,6 +32,11 @@ class Gws::Discussion::Post
     item.format = "text"
     item.text = I18n.t("gws/discussion.notify_message.post.text", topic_name: topic.name, text: text)
     item.send_date = Time.zone.now
+
+    # set topic
+    item.reply_item_id = topic.id
+    item.reply_model = topic.reference_model
+    item.reply_module = "discussion"
     item.save!
   end
 end

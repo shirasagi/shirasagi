@@ -1,5 +1,6 @@
-<% if @cur_site.discussion_unseen_interval.present? %>
 <%= jquery do %>
+Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+<% if @cur_site.discussion_unseen_interval.present? %>
 Gws_Discussion_Unseen.renderUnseen(
   "<%= gws_discussion_apis_unseen_path(id: @forum.id) %>",
   <%= @cur_site.discussion_unseen_interval %>,
