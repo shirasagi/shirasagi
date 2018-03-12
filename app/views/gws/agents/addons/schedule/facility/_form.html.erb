@@ -216,7 +216,7 @@
         html_facility_reservation = $('<div></div>').html(data)
         if ($(html_facility_reservation).find('.reservation.exist').length) {
           confirmFacilityReservation();
-        } else if (!$(html_facility_reservation).find('.gws-schedule-search-times-result').length) {
+        } else if (!$(html_facility_reservation).find('.date').length) {
           confirmFacilityReservation();
         } else {
           proceed();

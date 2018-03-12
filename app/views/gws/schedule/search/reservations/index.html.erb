@@ -1,5 +1,5 @@
 <section class="main-box gws-schedule-box gws-schedule-search">
-  <% if @items.present? %>
+  <% if @items.present? && @items.select { |item| item[1][1].present? }.present? %>
   <div class="gws-schedule-search-times-result">
     <% @items.each do |date, hours| %>
 

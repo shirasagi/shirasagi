@@ -21,12 +21,16 @@ class Gws::Facility::Item
   field :min_minutes_limit, type: Integer
   field :max_minutes_limit, type: Integer
   field :max_days_limit, type: Integer
+  field :reservation_start_date, type: DateTime
+  field :reservation_end_date, type: DateTime
   field :approval_check_state, type: String, default: 'disabled'
 
   belongs_to :category, class_name: 'Gws::Facility::Category'
 
   permit_params :name, :order, :category_id, :activation_date, :expiration_date
-  permit_params :min_minutes_limit, :max_minutes_limit, :max_days_limit, :approval_check_state
+  permit_params :min_minutes_limit, :max_minutes_limit, :max_days_limit
+  permit_params :reservation_start_date, :reservation_end_date
+  permit_params :approval_check_state
 
   validates :name, presence: true
   validates :activation_date, datetime: true
@@ -34,6 +38,8 @@ class Gws::Facility::Item
   validates :min_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :max_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :max_days_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :reservation_start_date, datetime: true
+  validates :reservation_end_date, datetime: true
   validates :approval_check_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
   validate :validate_approval_check_state, if: ->{ approval_check_state == 'enabled' }
 

@@ -79,8 +79,8 @@ class Gws::Schedule::PlanSearch
           datetime = (date + i.hours).to_datetime
           @facilities.each do |facility|
             next if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
-            next if facility.activation_date.present? && datetime < facility.activation_date
-            next if facility.expiration_date.present? && datetime >= facility.expiration_date
+            next if facility.reservation_start_date.present? && datetime < facility.reservation_start_date
+            next if facility.reservation_end_date.present? && datetime >= facility.reservation_end_date
 
             f_hours[facility.id] ||= []
             f_hours[facility.id] << i
