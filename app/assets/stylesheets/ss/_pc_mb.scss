@@ -137,17 +137,39 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 // Popup Notice
+.popup-notice-container {
+  position: relative;
+  @include mb {
+    position: static;
+  }
+}
 .popup-notice-container .popup-notice {
   position: absolute;
   display: inline-block;
   top: 100%;
-  right: 0;
+  right: -55px;
   width: 450px;
   box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.2);
   background: #ffffff;
   @include mb {
     left: 0;
     width: 100%;
+    max-width: 450px;
+  }
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -14px;
+    right: 70px;
+    width: 0;
+    height: 0;
+    border: 9px solid transparent;
+    border-top: none;
+    border-bottom: 14px solid $white;
+    @include mb {
+      left: 62px;
+    }
   }
   h2 {
     padding: 10px;
@@ -207,49 +229,14 @@ td {
       text-align: center;
     }
   }
-  .popup-notice {
-    &:before {
-      content: "";
-      display: block;
-      position: absolute;
-      top: -14px;
-      right: 54px;
-      width: 0;
-      height: 0;
-      border: 9px solid transparent;
-      border-top: none;
-      border-bottom: 14px solid $white;
-      @include mb {
-        right: 75px;
-      }
-    }
-  }
 }
 .gws-memo-message {
   display: inline-block;
   vertical-align: bottom;
-  margin-right: 10px;
-  .popup-notice {
-    &:before {
-      content: "";
-      position: absolute;
-      top: -14px;
-      right: 5px;
-      width: 0;
-      height: 0;
-      border: transparent 9px solid;
-      border-top: 0;
-      border-bottom: 14px solid $white;
-      @include mb {
-        right: 26px;
-      }
-    }
-  }
-}
-.popup-notice {
-  margin-right: 20px;
   @include mb {
-    margin-right: 0;
+    .popup-notice:before {
+      left: 110px;
+    }
   }
 }
 // -------------------------------------------------------------------------------------------------
@@ -405,14 +392,24 @@ td {
     a {
       color: $white;
     }
+    span {
+      display: inline-block;
+      max-width: 200px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      @include mb {
+        max-width: 160px;
+      }
+    }
     .group {
       margin-right: 10px;
     }
     .dropdown {
       display: inline-block;
       h2 {
-        padding: 15px 40px 15px 20px;
-        background: url(/assets/img/arrow-usr.png) no-repeat 90% center;
+        padding: 15px 40px 15px 15px;
+        background: url(/assets/img/arrow-usr.png) no-repeat right 15px center;
         color: $white;
         @include mb { padding: 10px 40px 10px 20px; }
       }
@@ -433,7 +430,6 @@ td {
       padding: 5px 0px;
       border: $border-gray4;
       background: $white;
-      @include mb { left: 0; }
       li {
         display: block;
         list-style: none;
@@ -491,6 +487,7 @@ td {
       .dropdown-menu {
         right: 0;
         padding: 5px 5px;
+        @include mb { left: 0; }
         input[type=text] {
           width: 100%;
           margin-top: 5px;
