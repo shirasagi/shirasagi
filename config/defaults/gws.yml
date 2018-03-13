@@ -131,6 +131,10 @@ production: &production
     disable_unsend: true
     disable_mail_forward: false
 
+  popup_notice:
+    # Default search condition in popup / unseen, seen
+    search_condition: unseen
+
 test:
   <<: *production
   disable: false
