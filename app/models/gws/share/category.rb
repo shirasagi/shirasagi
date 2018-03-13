@@ -16,7 +16,7 @@ class Gws::Share::Category
   class << self
     def and_name_prefix(name_prefix)
       name_prefix = name_prefix[1..-1] if name_prefix.starts_with?('/')
-      self.or({ name: name_prefix }, { name: /^Regexp.escape(name_prefix)\// })
+      self.or({ name: name_prefix }, { name: /^#{Regexp.escape(name_prefix)}\// })
     end
   end
 
