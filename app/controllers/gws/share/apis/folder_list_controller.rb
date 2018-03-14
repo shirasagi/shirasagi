@@ -1,4 +1,4 @@
-class Gws::Share::Apis::FoldersController < ApplicationController
+class Gws::Share::Apis::FolderListController < ApplicationController
   include Gws::BaseFilter
 
   model Gws::Share::Folder
@@ -60,7 +60,7 @@ class Gws::Share::Apis::FoldersController < ApplicationController
         order: item.depth == 1 ? item.order : item.parents.where(depth: 1).first.order,
         depth: item.depth,
         url: item_url(item),
-        tree_url: gws_share_apis_folders_path(id: item.id, type: @type),
+        tree_url: gws_share_apis_folder_list_path(id: item.id, type: @type),
         is_current: (@item.present? && item.id == @item.id),
         is_parent: (@item.present? && @item.name.start_with?("#{item.name}\/"))
       }

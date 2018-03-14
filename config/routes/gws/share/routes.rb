@@ -41,10 +41,7 @@ SS::Application.routes.draw do
     resources :categories, concerns: [:deletion]
 
     namespace "apis" do
-      get "folders" => "folders#index"
-    end
-
-    namespace "apis" do
+      get "folder_list" => "folder_list#index"
       get "categories" => "categories#index"
     end
 
