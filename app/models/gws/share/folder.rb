@@ -27,9 +27,10 @@ class Gws::Share::Folder
   has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
 
   permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb,
-                :share_max_folder_size, :in_share_max_folder_size_mb
+                :share_max_folder_size, :in_share_max_folder_size_mb, :in_basename, :in_parent
 
   before_validation :set_depth, if: ->{ name.present? }
+  before_validation :set_name_and_depth, if: ->{ in_basename.present? }
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 
@@ -76,7 +77,7 @@ class Gws::Share::Folder
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth-1..-1].join("/")
+    @trailing_name ||= name.split("/")[depth-1..-1].join("/") if name.present?
   end
 
   def parent
@@ -139,6 +140,20 @@ class Gws::Share::Folder
   end
 
   private
+
+  def set_name_and_depth
+    if in_parent.present?
+      parent_folder = dependant_scope.find(in_parent) rescue nil
+    end
+
+    if parent_folder.present?
+      self.name = "#{parent_folder.name}/#{in_basename}"
+    else
+      self.name = in_basename
+    end
+
+    set_depth
+  end
 
   def set_depth
     self.depth = name.count('/') + 1 unless name.nil?
