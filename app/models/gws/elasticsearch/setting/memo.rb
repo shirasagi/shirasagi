@@ -12,4 +12,8 @@ class Gws::Elasticsearch::Setting::Memo
     return [] unless cur_site.menu_memo_visible?
     [ model.collection_name ]
   end
+
+  def manageable_filter
+    nil
+  end
 end
