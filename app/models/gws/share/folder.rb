@@ -69,6 +69,10 @@ class Gws::Share::Folder
       criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
       criteria
     end
+
+    def tree_sort(options = {})
+      SS::TreeList.build self, options
+    end
   end
 
   def trailing_name
