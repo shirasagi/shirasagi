@@ -22,6 +22,7 @@ class Gws::Share::Folder
   field :share_max_folder_size, type: Integer, default: 0
   attr_accessor :in_share_max_file_size_mb
   attr_accessor :in_share_max_folder_size_mb
+  attr_accessor :in_basename, :in_parent
 
   has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
 
@@ -38,6 +39,8 @@ class Gws::Share::Folder
             numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :share_max_folder_size,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :in_basename, length: {maximum: 80}
+  validates :in_basename, format: { with: /\A[^\\\/:*?"<>|]*\z/, message: :invalid_chars_as_name }
 
   validate :validate_share_max_file_size, :validate_share_max_folder_size
   validate :validate_parent_name
@@ -70,6 +73,15 @@ class Gws::Share::Folder
 
   def trailing_name
     @trailing_name ||= name.split("/")[depth-1..-1].join("/")
+  end
+
+  def parent
+    @parent ||= begin
+      if name.present?
+        parent_name = File.dirname(name)
+        dependant_scope.where(name: parent_name).first
+      end
+    end
   end
 
   def parents
