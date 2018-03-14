@@ -73,6 +73,8 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
     # doc[:readable_group_ids] =
     # doc[:readable_custom_group_ids] =
     doc[:readable_member_ids] = item.members.pluck(:id)
+    doc[:path] = item.path
+    doc[:deleted] = item.deleted
 
     doc[:updated] = file.updated.try(:iso8601)
     doc[:created] = file.created.try(:iso8601)

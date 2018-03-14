@@ -77,6 +77,8 @@ class Gws::Memo::MessagesController < ApplicationController
     path = @item.path[@cur_user.id.to_s]
     if path.present?
       redirect_to({ folder: path })
+    elsif (@cur_user.id == @item.user_id) && @item.deleted["sent"].nil?
+      redirect_to({ folder: "INBOX.Sent" })
     else
       raise '404'
     end
