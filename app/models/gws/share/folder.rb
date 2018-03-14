@@ -124,7 +124,7 @@ class Gws::Share::Folder
     if quota_bytes > 0
       "#{h.number_to_human_size(descendants_total_file_size)}/#{h.number_to_human_size(quota_bytes)}"
     else
-      "#{h.number_to_human_size(descendants_total_file_size)}"
+      h.number_to_human_size(descendants_total_file_size)
     end
   end
 
