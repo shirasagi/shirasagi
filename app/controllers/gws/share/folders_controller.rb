@@ -75,6 +75,19 @@ class Gws::Share::FoldersController < ApplicationController
     render
   end
 
+  def move
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.attributes = get_params
+    render_update @item.save, { controller: params["controller"] }
+  end
+
   def download_folder
     raise "403" unless @model.allowed?(:download, @cur_user, site: @cur_site)
 

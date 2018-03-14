@@ -27,6 +27,7 @@ SS::Application.routes.draw do
 
     resources :folders, concerns: [:deletion, :export] do
       get :download_folder, on: :member
+      match :move, on: :member, via: [:get, :post]
     end
 
     # with folder

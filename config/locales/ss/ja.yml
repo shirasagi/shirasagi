@@ -139,6 +139,7 @@ ja:
       in_use: 使用中のファイルを削除してよろしいですか？
       initialize: 初期化してよろしいですか？
       restore: 元に戻してよろしいですか？
+      move: 移動してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
