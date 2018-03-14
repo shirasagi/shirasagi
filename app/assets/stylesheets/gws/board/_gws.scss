@@ -33,7 +33,7 @@
     .heading {
       margin-bottom: 8px;
       padding-left: 8px;
-      border-left: 3px solid $orange;
+      border-left: 3px solid $blue;
       color: $black3;
       font-weight: bold;
     }
@@ -51,11 +51,7 @@
       word-break: normal;
       word-wrap: normal;
     }
-    .block {
-      display: block;
-    }
-    .inline-block {
-      display: inline-block;
+    .d-inline-block {
       margin-right: 8px;
     }
     .status {
