@@ -55,7 +55,7 @@ class Gws::Share::FilesController < ApplicationController
 
   def update_folder_file_info
     @folder.update_folder_descendants_file_info if @folder
-    @item.folder.update_folder_descendants_file_info if @item.folder != @folder
+    @item.folder.update_folder_descendants_file_info if @item.is_a?(Gws::Share::File) && @item.folder != @folder
   end
 
   public
@@ -98,8 +98,23 @@ class Gws::Share::FilesController < ApplicationController
 
   def new
     return redirect_to(action: :index) unless @folder
+    raise "403" unless @model.allowed?(:write, @cur_user, site: @cur_site) && @folder.uploadable?(@cur_user)
+
+    @model = Gws::Share::FileUploader
     @item = @model.new pre_params.merge(fix_params)
-    raise "403" unless @item.allowed?(:write, @cur_user, site: @cur_site) && @folder.uploadable?(@cur_user)
+  end
+
+  def create
+    return redirect_to(action: :index) unless @folder
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site) && @folder.uploadable?(@cur_user)
+
+    @model = Gws::Share::FileUploader
+    @item = @model.new get_params
+    @item.folder_id = params[:folder] if params[:folder]
+    @item.category_ids = [ @category.id ] if @category.present?
+    @item.readable_member_ids = [@cur_user.id]
+
+    render_create @item.save_files, location: { action: :index }
   end
 
   def update

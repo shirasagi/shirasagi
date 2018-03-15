@@ -62,6 +62,7 @@ ja:
       gws/share/file: ファイル
       gws/share/folder: フォルダー
       gws/share/category: カテゴリー
+      gws/share/file_uploader: ファイルアップローダー
     errors:
       models:
         gws/share/file:
@@ -107,6 +108,8 @@ ja:
         descendants_total_file_size: ファイル容量
         in_basename: フォルダー名
         in_parent: 親フォルダー
+      gws/share/file_uploader:
+        in_file_ids: ファイル
 
   tooltip:
     gws/share/category:
