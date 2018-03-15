@@ -42,7 +42,7 @@
         <% if @tab_display =="tab_url" %>
           <div id="tab-url">
             <header><h1><%= I18n.t("opendata.labels.public_url") %></h1></header>
-            <p><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></p>
+            <p><%= auto_link paragraph(@cur_page.appurl), html: { target: "_blank" } %></p>
           </div>
         <% else %>
           <% if @tab_display == "tab_html" %>

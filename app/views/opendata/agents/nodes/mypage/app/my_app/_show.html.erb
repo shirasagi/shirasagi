@@ -16,7 +16,7 @@
 
   <tr class="parent-row text">
     <td class="field"><%= @model.t :text %></td>
-    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+    <td class="input"><%= auto_link paragraph(@item.text), html: { target: "_blank" } %></td>
   </tr>
 
   <tr class="parent-row license">
@@ -31,7 +31,7 @@
 
   <tr class="parent-row appurl">
     <td class="field"><%= @model.t :appurl %></td>
-    <td class="input"><%= auto_link br(@item.appurl), html: { target: "_blank" } %></td>
+    <td class="input"><%= auto_link paragraph(@item.appurl), html: { target: "_blank" } %></td>
   </tr>
 
   <tr class="parent-row categories">

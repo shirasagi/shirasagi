@@ -26,7 +26,7 @@
 
   <tr class="parent-row">
     <td class="field"><%= @model.t :text %></td>
-    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+    <td class="input"><%= auto_link paragraph(@item.text), html: { target: "_blank" } %></td>
   </tr>
 
   <% if @item.tsv %>

@@ -81,7 +81,7 @@ categories = [
 </nav>
 
 <div class="text">
-  <%= auto_link br(@cur_page.text) %>
+  <%= auto_link paragraph(@cur_page.text) %>
 </div>
 
 <div class="dataset-tabs tabs"  id="dataset-tabs-<%= @cur_node.id %>">
@@ -102,7 +102,7 @@ categories = [
               </div>
               <% if rs.text.present? %>
               <div class="text">
-                <%= auto_link br(rs.text) %>
+                <%= auto_link paragraph(rs.text) %>
               </div>
               <% end %>
               <% if rs.rdf_iri.present? %>
@@ -136,7 +136,7 @@ categories = [
               </div>
               <% if urs.text.present? %>
               <div class="text">
-                <%= auto_link br(urs.text) %>
+                <%= auto_link paragraph(urs.text) %>
               </div>
               <% end %>
               <% if urs.rdf_iri.present? %>
