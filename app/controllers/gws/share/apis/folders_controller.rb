@@ -9,37 +9,55 @@ class Gws::Share::Apis::FoldersController < ApplicationController
     @item = @model.find(params[:id]) if params[:id].present?
 
     if params[:only_children]
+      items = []
       items = child_items if @item
     else
-      items = root_items
-      items += @item.parents.entries + [@item] if @item
-      items += tree_items + child_items if @item
+      items = root_items.entries
+      if @item
+        items = append_items(items, @item.parents.entries + [@item])
+        items = append_tree_items(items)
+        items = append_items(items, child_items.entries, @item)
+      end
     end
 
-    render json: { items: multi_tier_items_hash(items) }.to_json
+    render json: { items: items_hash(items) }.to_json
   end
 
   private
+
+  def append_items(items, add_items, pos_item = nil)
+    return items if add_items.blank?
+    pos_item ||= add_items.first
+
+    items.each_with_index do |item, idx|
+      if item == pos_item
+        items.insert(idx + 1, *add_items)
+        break
+      end
+    end
+    items
+  end
+
+  def append_tree_items(items)
+    if @type == 'gws/share/files'
+      @item.parents.each do |item|
+        next unless item.allowed?(:read, @cur_user, site: @cur_site)
+        items = append_items(items, item.children.readable(@cur_user, site: @cur_site).limit(@limit).entries, item)
+      end
+    elsif @type == 'gws/share/management/files'
+      @item.parents.each do |item|
+        next unless item.allowed?(:read, @cur_user, site: @cur_site)
+        items = append_items(items, item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit).entries, item)
+      end
+    end
+    items
+  end
 
   def root_items
     if @type == 'gws/share/files'
       @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site).limit(@limit)
     elsif @type == 'gws/share/management/files'
       @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site).limit(@limit)
-    end
-  end
-
-  def tree_items
-    if @type == 'gws/share/files'
-      @item.parents.map do |item|
-        next unless item.allowed?(:read, @cur_user, site: @cur_site)
-        item.children.readable(@cur_user, site: @cur_site).limit(@limit)
-      end.flatten
-    elsif @type == 'gws/share/management/files'
-      @item.parents.map do |item|
-        next unless item.allowed?(:read, @cur_user, site: @cur_site)
-        item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
-      end.flatten
     end
   end
 
@@ -51,25 +69,8 @@ class Gws::Share::Apis::FoldersController < ApplicationController
     end
   end
 
-  def multi_tier_items_hash(items)
-    return items_hash(items) if @item.blank?
-    sorted_items = items_hash(items.select { |item| item.depth == 1 })
-    items.map(&:depth).uniq.sort.drop(1).each do |depth|
-      cur_items = items.select { |item| item.depth == depth }
-      filename = cur_items.first.parents.order_by(depth: -1).first.name
-      return sorted_items if filename.blank?
-      sorted_items.each_with_index do |sorted_item, index|
-        next if sorted_items[index][:filename] != filename
-        sorted_items[index] = [sorted_item, items_hash(cur_items)]
-        break sorted_items.flatten!
-      end
-    end
-    sorted_items
-  end
-
   def items_hash(items)
-    items = items.compact.uniq.sort{ |a, b| (a.order <=> b.order).nonzero? || (a.name <=> b.name) }
-    items = items.map do |item|
+    items = items.compact.map do |item|
       {
         name: item.trailing_name,
         filename: item.name,
@@ -81,7 +82,7 @@ class Gws::Share::Apis::FoldersController < ApplicationController
         is_parent: (@item.present? && @item.name.start_with?("#{item.name}\/"))
       }
     end
-    items.uniq.sort_by { |item| item[:order] }
+    items.uniq
   end
 
   def item_url(item)
