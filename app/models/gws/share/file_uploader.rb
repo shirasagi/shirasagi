@@ -1,8 +1,8 @@
 class Gws::Share::FileUploader
-  include ActiveModel::Model
-  include SS::PermitParams
+  include SS::Document
+  include Gws::Addon::Share::Category
 
-  attr_accessor :cur_site, :cur_user, :folder_id, :category_ids, :readable_member_ids
+  attr_accessor :cur_site, :cur_user, :folder_id, :readable_member_ids
   attr_accessor :file_ids
   permit_params file_ids: []
 
@@ -20,7 +20,7 @@ class Gws::Share::FileUploader
       item.cur_site = @cur_site if @cur_site
       item.cur_user = @cur_user if @cur_user
       item.folder_id = @folder_id if @folder_id
-      item.category_ids = @category_ids if @category_ids
+      item.category_ids = category_ids if category_ids.present?
       item.readable_member_ids = @readable_member_ids if @readable_member_ids
       item.user_ids = [ @cur_user.id ] if @cur_user
       if item.invalid?
