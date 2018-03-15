@@ -16,7 +16,7 @@ class Gws::Share::Apis::FoldersController < ApplicationController
       items += tree_items + child_items if @item
     end
 
-    render json: { items: items_hash(items) }.to_json
+    render json: { items: multi_tier_items_hash(items) }.to_json
   end
 
   private
@@ -51,6 +51,22 @@ class Gws::Share::Apis::FoldersController < ApplicationController
     end
   end
 
+  def multi_tier_items_hash(items)
+    return items_hash(items) if @item.blank?
+    sorted_items = items_hash(items.select { |item| item.depth == 1 })
+    items.map(&:depth).uniq.sort.drop(1).each do |depth|
+      cur_items = items.select { |item| item.depth == depth }
+      filename = cur_items.first.parents.order_by(depth: -1).first.name
+      return sorted_items if filename.blank?
+      sorted_items.each_with_index do |sorted_item, index|
+        next if sorted_items[index][:filename] != filename
+        sorted_items[index] = [sorted_item, items_hash(cur_items)]
+        break sorted_items.flatten!
+      end
+    end
+    sorted_items
+  end
+
   def items_hash(items)
     items = items.compact.uniq.sort{ |a, b| (a.order <=> b.order).nonzero? || (a.name <=> b.name) }
     items = items.map do |item|
@@ -65,7 +81,7 @@ class Gws::Share::Apis::FoldersController < ApplicationController
         is_parent: (@item.present? && @item.name.start_with?("#{item.name}\/"))
       }
     end
-    items.uniq.sort{ |a, b| a[:order] <=> b[:order] }
+    items.uniq.sort_by { |item| item[:order] }
   end
 
   def item_url(item)
