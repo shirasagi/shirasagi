@@ -115,5 +115,34 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
       end
     end
+
+    context 'download' do
+      it do
+        visit gws_attendance_main_path(site)
+
+        within '.monthly .nav-operation' do
+          click_on I18n.t('ss.buttons.download')
+        end
+      end
+    end
+
+    context 'print' do
+      it do
+        visit gws_attendance_main_path(site)
+
+        within '.monthly .nav-operation' do
+          click_on I18n.t('ss.buttons.print')
+        end
+
+        within '.sheet' do
+          title = I18n.t(
+            'gws/attendance.formats.time_card_full_name',
+            user_name: gws_user.name,
+            month: I18n.l(now.to_date, format: :attendance_year_month)
+          )
+          expect(page).to have_css('.attendance-box-title', text: title)
+        end
+      end
+    end
   end
 end
