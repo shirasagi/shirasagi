@@ -87,5 +87,33 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
       end
     end
+
+    context 'navigate to prev month' do
+      it do
+        visit gws_attendance_main_path(site)
+
+        within '.monthly .nav-menu' do
+          click_on I18n.t('gws/attendance.prev_month')
+        end
+
+        within '.monthly' do
+          expect(page).to have_content(I18n.t('gws/attendance.no_time_cards'))
+        end
+      end
+    end
+
+    context 'navigate to next month' do
+      it do
+        visit gws_attendance_main_path(site)
+
+        within '.monthly .nav-menu' do
+          click_on I18n.t('gws/attendance.next_month')
+        end
+
+        within '.monthly' do
+          expect(page).to have_content(I18n.t('gws/attendance.no_time_cards'))
+        end
+      end
+    end
   end
 end
