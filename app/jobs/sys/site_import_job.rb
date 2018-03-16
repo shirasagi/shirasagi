@@ -52,6 +52,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :update_ss_files
     invoke :update_opendata_dataset_resources
     invoke :update_opendata_app_appfiles
+    invoke :update_ss_files_url
 
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
@@ -103,6 +104,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     @cms_user_roles_map = {}
     @cms_roles_map = {}
     @ss_files_map = {}
+    @ss_files_url = {}
     @cms_layouts_map = {}
     @cms_body_layouts_map = {}
     @cms_nodes_map = {}
@@ -162,6 +164,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       end
 
       data.each { |k, v| item[k] = v }
+      item = item.becomes_with_route || item rescue item
       yield(item) if block_given?
 
       if save_document(item)
