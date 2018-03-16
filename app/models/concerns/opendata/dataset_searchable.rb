@@ -8,7 +8,7 @@ module Opendata::DatasetSearchable
       params << :tag
       params << :area_id
       params << :category_id
-      params << :dataset_group
+      params << :dataset_group_id
       params << :format
       params << :license_id
       params << :option
@@ -25,7 +25,7 @@ module Opendata::DatasetSearchable
       criteria = self.all
       return criteria if params.blank?
       [ :search_keyword, :search_ids, :search_name, :search_tag, :search_area_id, :search_category_id,
-        :search_dataset_group, :search_format, :search_license_id, :search_poster, ].each do |m|
+        :search_dataset_group_id, :search_format, :search_license_id, :search_poster, ].each do |m|
         criteria = criteria.send(m, params)
       end
 
@@ -89,14 +89,11 @@ module Opendata::DatasetSearchable
       all.where(operator => [ category_ids: { "$in" => category_ids } ])
     end
 
-    def search_dataset_group(params)
-      return all if params.blank? || params[:dataset_group].blank?
+    def search_dataset_group_id(params)
+      return all if params.blank? || params[:dataset_group_id].blank?
 
-      site = params[:site]
-      groups = Opendata::DatasetGroup.site(site).and_public.search_text(params[:dataset_group])
-      groups = groups.pluck(:id).presence || [-1]
       operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-      all.where(operator => [ dataset_group_ids: { "$in" => groups } ])
+      all.where(operator => [ dataset_group_ids: params[:dataset_group_id].to_i ])
     end
 
     def search_format(params)
