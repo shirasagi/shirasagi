@@ -13,6 +13,7 @@ module Gws::Memo::NotificationFilter
   def send_update_notification
     return if request.get?
     return if response.code !~ /^3/
+    return unless @item.try(:notify_enabled?)
 
     users = @item.subscribed_users
     users = users.nin(id: @cur_user.id) if @cur_user
@@ -30,6 +31,7 @@ module Gws::Memo::NotificationFilter
   def send_destroy_notification
     return if request.get?
     return if response.code !~ /^3/
+    return unless @item.try(:notify_enabled?)
 
     set_destroyed_item # soft deleted
     return if @destroyed_items.blank?
@@ -54,6 +56,7 @@ module Gws::Memo::NotificationFilter
   def set_destroyed_item
     return if request.get?
     return if response.code !~ /^3/
+    return unless @item.try(:notify_enabled?)
 
     @destroyed_items ||= []
     if @item

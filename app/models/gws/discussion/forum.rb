@@ -5,7 +5,7 @@ class Gws::Discussion::Forum
   #include SS::Addon::Markdown
   #include Gws::Addon::File
   include Gws::Addon::Discussion::Release
-  include Gws::Addon::Discussion::NotifySetting
+  include Gws::Addon::Memo::NotifySetting
   include Gws::Addon::Member
   include Gws::Addon::GroupPermission
   include Gws::Addon::Discussion::Quota

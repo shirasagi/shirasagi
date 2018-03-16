@@ -1,9 +1,11 @@
-module Gws::Addon::Discussion::NotifySetting
+module Gws::Addon::Memo::NotifySetting
   extend ActiveSupport::Concern
   extend SS::Addon
 
   included do
-    field :notify_state, type: String, default: 'disabled'
+    class_variable_set(:@@_notify_state_default, 'disabled')
+
+    field :notify_state, type: String, default: ->{ notify_state_default }
     permit_params :notify_state
   end
 
@@ -15,5 +17,9 @@ module Gws::Addon::Discussion::NotifySetting
 
   def notify_enabled?
     notify_state == 'enabled'
+  end
+
+  def notify_state_default
+    self.class.class_variable_get(:@@_notify_state_default)
   end
 end

@@ -113,6 +113,7 @@ ja:
       gws/memo/body: 内容
       gws/memo/member: 宛先
       gws/memo/priority: 重要度
+      gws/memo/notify_setting: 通知
       gws/memo/notice/reply:
         discussion: 電子会議室
   gws_role:
@@ -235,6 +236,9 @@ ja:
         sender_name: 送信者名
         signature: 署名
         category_ids: カテゴリー
+      gws/addon/memo/notify_setting:
+        notify_state: 通知設定
+
   activemodel:
     models:
       gws/memo/message_importer: インポート
@@ -331,6 +335,9 @@ ja:
         - 署名を入力します。
       category_ids:
         - カテゴリーを選択します。
+    gws/addon/memo/notify_setting:
+      notify_state:
+        - 参加者への通知の有無を設定します。
 
   job:
     models:
