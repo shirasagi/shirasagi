@@ -5,6 +5,8 @@ class Opendata::Agents::Tasks::Node::SearchDatasetsController < ApplicationContr
     @node.layout = nil
     url = "#{@node.url}search.html"
     file = "#{@node.path}/search.html"
-    generate_node @node, url: url, file: file
+    if generate_node @node, url: url, file: file
+      @task.log url if @task
+    end
   end
 end
