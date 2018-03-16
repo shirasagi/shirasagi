@@ -127,6 +127,11 @@ Gws_Attendance.prototype.isCellToday = function($cell) {
 
 Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
   this.hideTooltip();
+
+  if (! $cell.data('day')) {
+    return;
+  }
+
   this.setFocus($cell);
 
   if (!this.options.editable && !this.isCellToday($cell)) {
