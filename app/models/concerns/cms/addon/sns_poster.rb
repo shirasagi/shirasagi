@@ -48,9 +48,22 @@ module Cms::Addon
       %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
     end
 
-    def message_format(html)
+    def fb_message_format(html)
+      s = @cur_site || site
+
+      postfix = ''
+      if s.facebook_appends_here_state == 'show'
+        postfix = "\n"
+        postfix += (s.facebook_appends_here_prefix.presence || s.facebook_appends_here_prefix_default)
+        postfix += full_url
+      end
+
+      max = s.facebook_max_text_length || 253
+      max -= postfix.length
+      return postfix if max <= 0
+
       html = ActionController::Base.helpers.strip_tags(html)
-      html = ActionController::Base.helpers.truncate(html, :length=> 253)
+      ActionController::Base.helpers.truncate(html, length: max) + postfix
     end
 
     def use_twitter_post?
@@ -152,11 +165,11 @@ module Cms::Addon
     end
 
     def post_to_facebook
-      message = message_format(html)
+      message = fb_message_format(html)
       access_token = self.site.facebook_access_token
       graph = Koala::Facebook::API.new(access_token)
       # facebokに投稿し、戻り値を取得
-      facebook_params = graph.put_wall_post(message, { "link"=> full_url })
+      facebook_params = graph.put_wall_post(message, { "link" => full_url })
       facebook_param = facebook_params['id'].to_s
       # 戻り値からUID/PID取得し、DBに保存
       facebook_id_array = facebook_id_separator(facebook_param)
