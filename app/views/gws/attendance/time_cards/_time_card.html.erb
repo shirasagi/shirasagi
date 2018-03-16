@@ -12,6 +12,7 @@
 
 <% render_time = proc do |date, record, field_name| %>
   <% td_classes = %w(time) %>
+  <% td_classes << field_name %>
   <% td_classes << (date.day >= 16 ? 'top' : nil) %>
   <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>" data-type="<%= field_name %>">
     <%= format_time(date, record.try(field_name)) %>
@@ -28,11 +29,11 @@
       <% if date.day == 1 || date.day == 16 %>
         <tr class="header">
           <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
-          <th class="time"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
-          <th class="time"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
+          <th class="time enter"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
+          <th class="time leave"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
           <% @break_times.each do |i| %>
-            <th class="time"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
-            <th class="time"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
+            <th class="time <%= "break_enter#{i + 1}" %>"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <th class="time <%= "break_leave#{i + 1}" %>"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
           <% end %>
           <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
         </tr>
