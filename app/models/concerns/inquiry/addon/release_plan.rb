@@ -11,24 +11,7 @@ module Inquiry::Addon
       validates :release_date, datetime: true
       validates :close_date, datetime: true
       validate :validate_release_date
-
-      # This scope is already declared in app/models/concerns/cms/content.rb
-      # scope :and_public, ->(date = nil) {
-      #   date ||= Time.zone.now
-      #   where("$and" => [
-      #     { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
-      #     { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-      #   ])
-      # }
-    end
-
-    def public?
-      if (release_date.present? && release_date > Time.zone.now) ||
-         (close_date.present? && close_date < Time.zone.now)
-        false
-      else
-        super
-      end
+      validate :validate_release_state
     end
 
     def label(name)
@@ -43,12 +26,19 @@ module Inquiry::Addon
     private
 
     def validate_release_date
-      self.released ||= release_date
+      self.released ||= release_date if respond_to?(:released)
 
-      if close_date.present?
-        if release_date.present? && release_date >= close_date
-          errors.add :close_date, :greater_than, count: t(:release_date)
-        end
+      if close_date.present? && release_date.present? && release_date >= close_date
+        errors.add :close_date, :greater_than, count: t(:release_date)
+      end
+    end
+
+    def validate_release_state
+      return if errors.present?
+
+      if try(:state) == "public"
+        self.state = "ready" if release_date && release_date > Time.zone.now
+        self.state = "closed" if close_date && close_date <= Time.zone.now
       end
     end
   end
