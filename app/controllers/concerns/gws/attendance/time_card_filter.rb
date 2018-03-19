@@ -58,7 +58,10 @@ module Gws::Attendance::TimeCardFilter
 
   def holiday?(date)
     return true if HolidayJapan.check(date.localtime.to_date)
-    Gws::Schedule::Holiday.site(@cur_site).and_public.search(start: date, end: date).present?
+    Gws::Schedule::Holiday.site(@cur_site).
+      and_public.
+      allow(:read, @cur_user, site: @cur_site).
+      search(start: date, end: date).present?
   end
 
   public
