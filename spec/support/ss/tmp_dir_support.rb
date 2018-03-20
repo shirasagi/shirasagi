@@ -31,6 +31,8 @@ module SS
 
           if contents.respond_to?(:path)
             source_file = contents.path
+          elsif ::File.exists?(contents)
+            source_file = contents
           else
             source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
           end
