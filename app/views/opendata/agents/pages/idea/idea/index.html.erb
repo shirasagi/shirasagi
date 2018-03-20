@@ -97,28 +97,28 @@ categories = [
 <% if @cur_page.issue.present? %>
 <div class="issue">
   <h2><%= I18n.t("opendata.labels.issue") %></h2>
-  <p><%= auto_link br(@cur_page.issue) %></p>
+  <p><%= auto_link paragraph(@cur_page.issue) %></p>
 </div>
 <% end %>
 
 <% if @cur_page.text.present? %>
 <div class="idea">
   <h2><%= I18n.t("opendata.labels.idea") %></h2>
-  <p><%= auto_link br(@cur_page.text) %></p>
+  <p><%= auto_link paragraph(@cur_page.text) %></p>
 </div>
 <% end %>
 
 <% if @cur_page.data.present? %>
 <div class="data">
   <h2><%= I18n.t("opendata.labels.data") %></h2>
-  <p><%= auto_link br(@cur_page.data) %></p>
+  <p><%= auto_link paragraph(@cur_page.data) %></p>
 </div>
 <% end %>
 
 <% if @cur_page.note.present? %>
 <div class="note">
   <h2><%= I18n.t("opendata.labels.note") %></h2>
-  <p><%= auto_link br(@cur_page.note) %></p>
+  <p><%= auto_link paragraph(@cur_page.note) %></p>
 </div>
 <% end %>
 

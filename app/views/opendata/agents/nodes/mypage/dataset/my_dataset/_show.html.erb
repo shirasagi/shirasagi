@@ -15,7 +15,7 @@
   </tr>
   <tr class="parent-row text">
     <td class="field"><%= @model.t :text %></td>
-    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+    <td class="input"><%= auto_link paragraph(@item.text), html: { target: "_blank" } %></td>
   </tr>
   <tr class="parent-row tags">
     <td class="field"><%= @model.t :tags %></td>

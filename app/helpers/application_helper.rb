@@ -11,6 +11,13 @@ module ApplicationHelper
     h(str.to_s).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
   end
 
+  def paragraph(str)
+    texts = h(str.to_s).split(/(\r\n?)|(\n)/)
+    texts.map! { |t| t.strip }
+    texts.select!(&:present?)
+    texts.reduce('') { |a, e| a + "<p>#{e}</p>" }.html_safe
+  end
+
   def snip(str, opt = {})
     len = opt[:length] || 80
     "#{str.to_s[0..len-1]}#{str.to_s.size > len ? ".." : ""}".html_safe
