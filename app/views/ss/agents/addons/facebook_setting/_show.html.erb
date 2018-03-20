@@ -13,4 +13,16 @@
 
   <dt><%= @model.t :facebook_access_token %></dt>
   <dd><%= @item.facebook_access_token %></dd>
+
+  <dt><%= @model.t :facebook_max_text_length %></dt>
+  <dd><%= @item.label :facebook_max_text_length %></dd>
+
+  <dt><%= @model.t :facebook_appends_here_state %></dt>
+  <dd>
+    <% if @item.facebook_appends_here_state == 'show' %>
+      <%= @item.facebook_appends_here_prefix || @item.facebook_appends_here_prefix_default %>
+    <% else %>
+      <%= @item.label :facebook_appends_here_state %>
+    <% end %>
+  </dd>
 </dl>
