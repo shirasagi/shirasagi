@@ -9,6 +9,7 @@ module Gws::Addon::System::MenuSetting
        shared_address personal_address staff_record links discussion contrast).each do |name|
       define_menu_setting(name)
     end
+    define_menu_setting('contrast', default_state: 'hide')
     define_menu_setting('elasticsearch', default_state: 'hide')
   end
 

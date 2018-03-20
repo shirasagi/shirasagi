@@ -29,6 +29,7 @@ module Sys::SiteImport::Contents
       item[:st_category_ids] = convert_ids(@cms_nodes_map, item[:st_category_ids])
       item[:ads_category_ids] = convert_ids(@cms_nodes_map, item[:ads_category_ids])
       item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids])
+      item[:column_values] = nil # TODO: cms/form, cms/column ?
     end
   end
 

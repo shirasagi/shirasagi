@@ -4,10 +4,11 @@ module SS::Relation::Thumb
 
   included do
     cattr_accessor(:thumbs_resizing) { {} }
+    attr_accessor :disable_thumb
 
     has_many :thumbs, class_name: "SS::ThumbFile", foreign_key: :original_id, dependent: :destroy
     after_save :destroy_thumbs, if: -> { in_file || resizing }
-    after_save :save_thumbs, if: -> { image? }
+    after_save :save_thumbs, if: -> { disable_thumb.blank? && image? }
 
     thumb_size [120, 90]
   end
