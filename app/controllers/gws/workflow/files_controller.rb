@@ -7,6 +7,7 @@ class Gws::Workflow::FilesController < ApplicationController
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
   before_action :set_search_params
+  before_action :set_items
 
   navi_view "gws/workflow/main/navi"
 
@@ -34,9 +35,34 @@ class Gws::Workflow::FilesController < ApplicationController
     @cur_form ||= @forms.find(params[:form_id])
   end
 
+  def set_search_params
+    @s ||= begin
+      s = OpenStruct.new params[:s]
+      s.state = params[:state] if params[:state]
+      s.cur_site = @cur_site
+      s.cur_user = @cur_user
+      s
+    end
+  end
+
+  def set_items
+    set_search_params
+    @items ||= @model.site(@cur_site).without_deleted.search(@s)
+  end
+
   def set_item
-    super
+    set_items
+
+    @item ||= begin
+      item = @items.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+
     @cur_form ||= @item.form if @item.present?
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
   end
 
   def fix_params
@@ -46,23 +72,13 @@ class Gws::Workflow::FilesController < ApplicationController
     params
   end
 
-  def set_search_params
-    @s = OpenStruct.new params[:s]
-    @s.state = params[:state] if params[:state]
-    @s.cur_site = @cur_site
-    @s.cur_user = @cur_user
-  end
-
   public
 
   def index
-    @items = @model.site(@cur_site).without_deleted.
-      search(@s).
-      page(params[:page]).per(50)
+    @items = @items.page(params[:page]).per(50)
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
     render
   end
 
