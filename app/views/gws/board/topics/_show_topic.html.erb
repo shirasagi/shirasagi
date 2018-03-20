@@ -25,7 +25,7 @@
         <%= I18n.t('modules.addons.gws/file') %>
       </span>
       <% @item.files.each do |file| %>
-        <span id="file-<%= file.id %>" class='<%= @cur_site.board_files_break == 'horizontal' ? 'd-inline-block' : 'd-block' %>'>
+        <span id="file-<%= file.id %>" class='<%= @cur_site.board_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>'>
           <i class="material-icons">&#xE226;</i>
           <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
         </span>
@@ -39,7 +39,7 @@
         <%= I18n.t('modules.addons.gws/link') %>
       </span>
       <% (@item.links || []).each do |item| %>
-        <span class="link-item <%= @cur_site.board_links_break == 'horizontal' ? 'd-inline-block' : 'd-block' %>">
+        <span class="link-item <%= @cur_site.board_links_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
           <i class="material-icons">&#xE157;</i>
           <% if item[:name].present? && item[:url].present? %>
             <%= link_to item[:name], item[:url] %>
