@@ -1,0 +1,23 @@
+<% addons = @addons || @item.try(:addons) || [] %>
+
+<%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :post, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.confirm.move") %></h2></div>
+      <div class="addon-body">
+        <%= render file: "_move", locals: { f: f } %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>
