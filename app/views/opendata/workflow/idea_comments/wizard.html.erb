@@ -35,7 +35,7 @@ $ ->
   <dt><%= t("workflow.route") %><%= @model.tt :workflow_routes %></dt>
   <dd>
     <%= select_tag :workflow_route, options_for_select(route_options) %>
-    <%= link_to t("workflow.button.select"), "#", class: "workflow-route-start cboxElement btn" %>
+    <%= link_to t("workflow.buttons.select"), "#", class: "workflow-route-start cboxElement btn" %>
   </dd>
 </dl>
 <% else %>
