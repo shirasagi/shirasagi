@@ -66,7 +66,7 @@ SS::Application.routes.draw do
     end
     resources :address_groups, path: 'account-:account/addresses_groups', account: /\d+/, concerns: [:deletion]
     resources :signatures, path: 'account-:account/signatures', account: /\d+/, concerns: [:deletion]
-    resources :filters, path: 'account-:account/filters', concerns: [:deletion, :filter]
+    resources :filters, path: 'account-:account/filters', concerns: [:deletion, :export, :filter]
     resource :cache_setting, path: 'account-:account/cache_setting', only: [:show, :update]
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, :on => :member

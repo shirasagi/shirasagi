@@ -8,6 +8,8 @@ class Webmail::Filter
   # 一括処理件数
   APPLY_PER = 100
 
+  EXPORT_ATTRIBUTES = %w(name conjunction conditions action mailbox state order).freeze
+
   attr_accessor :uids
 
   field :host, type: String
