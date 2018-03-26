@@ -1,6 +1,9 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <!-- <%= link_to t('gws/discussion.links.forum.back_to_index'), gws_discussion_forums_path %> -->
+    <% if @forum.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/discussion.links.forum.edit'), edit_gws_discussion_forum_path(id: @forum.id) %>
+    <% end %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('gws/discussion.links.topic.new'), action: :new %>
     <% end %>
