@@ -38,6 +38,18 @@ module Gws::Addon::Schedule::Facility
     if max_days_limit && end_at > now + max_days_limit.days
       errors.add :base, I18n.t("gws/schedule.errors.faciliy_day_lte", count: max_days_limit)
     end
+
+    reservation_start_date = facilities.pluck(:reservation_start_date).compact.max
+    if reservation_start_date.present? && start_at < reservation_start_date
+      errors.add :start_at, I18n.t('gws/schedule.errors.less_than_max_date',
+        date: I18n.l(reservation_start_date.localtime, format: :long))
+    end
+
+    reservation_end_date = facilities.pluck(:reservation_end_date).compact.min
+    if reservation_end_date.present? && end_at >= reservation_end_date
+      errors.add :end_at, I18n.t('gws/schedule.errors.less_than_max_date',
+        date: I18n.l(reservation_end_date.localtime, format: :long))
+    end
   end
 
   def validate_reservable_members

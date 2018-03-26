@@ -26,6 +26,7 @@
 
 <%= jquery do %>
   var confirm = <%== @item.persisted?.to_json %>;
+  var html_facility_reservation, item_submit;
 
   var requiredParams = function() {
     var repeatType = $('select[name="item[repeat_type]"]').val();
@@ -50,7 +51,7 @@
       return;
     }
 
-    facility_ids = [];
+    var facility_ids = [];
     $('.gws-schedule-facility table.ajax-selected tbody tr').each(function() {
       facility_ids.push($(this).data('id'));
     });
@@ -68,7 +69,7 @@
       end_on: endOn,
       facility_ids: facility_ids
     };
-  }
+  };
 
   var optionalParams = function() {
     var params = {};
@@ -79,7 +80,7 @@
       params.interval = val;
     }
 
-    var wdays = []
+    var wdays = [];
     $('input[name="item[wdays][]"]:checked').each(function() {
       wdays.push($(this).val());
     });
@@ -93,20 +94,19 @@
     }
 
     return params;
-  }
+  };
 
   var proceed = function() {
     $.colorbox.close();
     confirm = true;
-    $('form#item-form').submit();
-  }
+  };
 
   var cancel = function() {
     $.colorbox.close();
     confirm = false;
-  }
+  };
 
-  var confirmFacilityReservation = function() {
+  var query = function() {
     var s = requiredParams();
     if ($.isEmptyObject(s)) {
       return false;
@@ -135,30 +135,57 @@
       d.max_hour = maxHour;
     }
 
-    var query = $.param({ s: s, d: d });
-    var href = <%== gws_schedule_search_reservations_path.to_json %> + "?" + query;
-    var $confirmationLink = $('<a/>').attr('href', href);
-    $confirmationLink.colorbox({
-      maxWidth: "80%",
-      maxHeight: "80%",
-      fixed: true,
-      open: true,
-      onComplete: function() {
-        $('#cboxLoadedContent .send .confirm').on('click', function(e) {
-          proceed();
-          e.preventDefault();
-          return false;
-        });
-        $('#cboxLoadedContent .send .cancel').on('click', function(e) {
-          cancel();
-          e.preventDefault();
-          return false;
-        });
-      }
-    });
+    return($.param({ s: s, d: d }));
+  };
 
+  var confirmFacilityReservation = function() {
+    if (!query()) {
+      return false;
+    }
+
+    var href = <%== gws_schedule_search_reservations_path.to_json %> + "?" + query();
+    if ($(html_facility_reservation).html()) {
+      $.colorbox({
+        html: $(html_facility_reservation).html(),
+        maxWidth: "80%",
+        maxHeight: "80%",
+        fixed: true,
+        open: true,
+        onComplete: function() {
+          colorboxEvent();
+        }
+      });
+    } else {
+      var $confirmationLink = $('<a/>').attr('href', href);
+      $confirmationLink.colorbox({
+        maxWidth: "80%",
+        maxHeight: "80%",
+        fixed: true,
+        open: true,
+        onComplete: function() {
+          colorboxEvent();
+        }
+      });
+    }
+    $(html_facility_reservation).html('');
     return true;
-  }
+  };
+
+  var colorboxEvent = function() {
+    $('#cboxLoadedContent .send .confirm').on('click', function(e) {
+      proceed();
+      if (item_submit) {
+        $('form#item-form').submit();
+      }
+      e.preventDefault();
+      return false;
+    });
+    $('#cboxLoadedContent .send .cancel').on('click', function(e) {
+      cancel();
+      e.preventDefault();
+      return false;
+    });
+  };
 
   var changeVisibility = function() {
     var s = requiredParams();
@@ -167,30 +194,43 @@
     } else {
       $('.btn-confirm-facility-reservation').show();
     }
-  }
+  };
 
   $('.btn-confirm-facility-reservation').on('click', function (e) {
+    item_submit = false;
     confirmFacilityReservation();
     e.preventDefault();
     return false;
   });
 
   $('form#item-form').on('submit', function(e) {
-    if (confirm) {
+    if (confirm || !query()) {
       return true;
     }
 
-    ret = confirmFacilityReservation();
-    if (ret) {
-      e.preventDefault();
-      return false;
-    }
+    item_submit = true;
+    var href = <%== gws_schedule_search_reservations_path.to_json %> + "?" + query();
+    $.ajax({
+      url: href,
+      success: function(data) {
+        html_facility_reservation = $('<div></div>').html(data)
+        if ($(html_facility_reservation).find('.reservation.exist').length) {
+          confirmFacilityReservation();
+        } else if (!$(html_facility_reservation).find('.date').length) {
+          confirmFacilityReservation();
+        } else {
+          proceed();
+          $('form#item-form').submit();
+        }
+      }
+    });
+    return false;
   });
 
   $('select[name="item[repeat_type]"]').on('change', function() {
     confirm = false;
     changeVisibility();
-  })
+  });
 
   $('input[name="item[repeat_start]"]').on('change', function() {
     confirm = false;
