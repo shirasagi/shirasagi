@@ -33,6 +33,13 @@
 }
 
 // -------------------------------------------------------------------------------------------------
+// display
+// https://getbootstrap.com/docs/4.0/utilities/display/
+
+.d-inline-block{ display: inline-block !important; }
+.d-block{ display: block !important; }
+
+// -------------------------------------------------------------------------------------------------
 // spacing
 
 .mx-auto, .ml-auto { margin-left: auto !important; }

@@ -30,6 +30,13 @@
         margin-right: 4px;
       }
     }
+    .heading {
+      margin-bottom: 8px;
+      padding-left: 8px;
+      border-left: 3px solid $blue;
+      color: $black3;
+      font-weight: bold;
+    }
     .body {
       @include box-body;
     }
@@ -40,8 +47,6 @@
       background-color: $gray1;
     }
     .files a, .link-item {
-      display: inline-block;
-      margin-right: 8px;
       line-height: 1.5;
       word-break: normal;
       word-wrap: normal;

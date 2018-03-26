@@ -98,6 +98,7 @@ ja:
         circular_max_member: 回覧人数制限
         circular_filesize_limit: 添付サイズ制限
         circular_delete_threshold: 回覧復旧可能期間
+        circular_files_break: ファイル表示の並び
       gws/addon/circular/category:
         category_ids: カテゴリー
   tooltip:
@@ -129,6 +130,8 @@ ja:
         - 回覧を保持する期間を入力します。
         - 作成日からこの期間が経過すると自動で完全に削除されます。
         - 初期値は 2年 です。
+      circular_files_break:
+        - 添付ファイルの表示の並びを選択します。
 
   job:
     models:

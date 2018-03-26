@@ -146,6 +146,7 @@ ja:
         qna_file_size_per_topic: 添付最大サイズ/トピック単位
         qna_file_size_per_post: 添付最大サイズ/投稿単位
         qna_browsed_delay: 既読にするまでの秒数
+        qna_files_break: ファイル表示の並び
       gws/qna/category:
         name: カテゴリー名
       gws/addon/qna/category:
@@ -170,6 +171,8 @@ ja:
         - 投稿単位での添付最大サイズを入力します。
       qna_browsed_delay:
         - Ｑ＆Ａを既読にするまでの秒数を入力します。
+      qna_files_break:
+        - 添付ファイルの表示の並びを選択します。
     gws/qna/category:
       name:
         - カテゴリー名を入力します。

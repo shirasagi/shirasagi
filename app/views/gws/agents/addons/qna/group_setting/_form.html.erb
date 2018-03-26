@@ -18,4 +18,7 @@
 
   <dt><%= @model.t :qna_browsed_delay %><%= @model.tt :qna_browsed_delay %></dt>
   <dd class="short"><%= f.number_field :qna_browsed_delay %> <span class="postfix"><%= t("datetime.prompts.second") %></span></dd>
+
+  <dt><%= @model.t :qna_files_break %><%= @model.tt :qna_files_break %></dt>
+  <dd><%= f.select :qna_files_break, @item.qna_files_break_options %></dd>
 </dl>
