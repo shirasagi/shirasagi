@@ -314,8 +314,8 @@ ja:
         menu_board_state: 掲示板の表示
         menu_faq_label: よくある質問の表示
         menu_faq_state: よくある質問の表示
-        menu_question_label: Ｑ＆Ａの表示
-        menu_question_state: Ｑ＆Ａの表示
+        menu_qna_label: Ｑ＆Ａの表示
+        menu_qna_state: Ｑ＆Ａの表示
         menu_workflow_label: ワークフローの表示
         menu_workflow_state: ワークフローの表示
         menu_report_label: レポートの表示
