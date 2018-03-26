@@ -41,6 +41,9 @@
           </span>
         </div>
       </div>
+      <div class="links">
+        <%= link_to t('ss.links.download'), { action: :download, id: item }, { class: "btn" } %>
+      </div>
     </li>
     <% end %>
   </ul>
