@@ -11,6 +11,7 @@ module Inquiry::Addon
       validates :reception_start_date, datetime: true
       validates :reception_close_date, datetime: true
       validate :validate_reception_date
+      before_save :validate_reception_state
     end
 
     def reception_enabled?
@@ -34,6 +35,11 @@ module Inquiry::Addon
           errors.add :reception_close_date, :greater_than, count: t(:reception_start_date)
         end
       end
+    end
+
+    def validate_reception_state
+      return if reception_enabled?
+      remove_owned_files
     end
   end
 end
