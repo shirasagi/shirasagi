@@ -15,15 +15,15 @@ module Webmail::Mail::Fields
   end
 
   def display_to
-    to.map { |c| display_address(c) }
+    to.to_a.map { |c| display_address(c) }
   end
 
   def display_cc
-    cc.map { |c| display_address(c) }
+    cc.to_a.map { |c| display_address(c) }
   end
 
   def display_bcc
-    bcc.map { |c| display_address(c) }
+    bcc.to_a.map { |c| display_address(c) }
   end
 
   def display_address(address)
