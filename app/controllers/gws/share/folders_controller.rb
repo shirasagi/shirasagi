@@ -20,7 +20,6 @@ class Gws::Share::FoldersController < ApplicationController
   def pre_params
     p = super
     p[:readable_member_ids] = [@cur_user.id]
-    @skip_default_group = true
     p
   end
 

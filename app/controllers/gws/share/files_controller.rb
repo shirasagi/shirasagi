@@ -48,7 +48,6 @@ class Gws::Share::FilesController < ApplicationController
     p = super
     p[:readable_member_ids] = [@cur_user.id]
     p[:folder_id] = params[:folder] if params[:folder]
-    @skip_default_group = true
     p[:category_ids] = [ @category.id ] if @category.present?
     p
   end
