@@ -33,16 +33,16 @@
         <thead>
         <tr>
           <% field_names.each do |field_name| %>
-            <th class="time"><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
+            <th class="time <%= field_name %>"><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
           <% end %>
           <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
         </tr>
         </thead>
         <tbody>
         <% if @today_time_card.unlocked? %>
-        <tr>
+        <tr class="action">
           <% field_names.each do |field_name| %>
-            <td class="time">
+            <td class="time <%= field_name %>">
               <% if @today_record.try(:find_latest_history, field_name).present? %>
                 <%= button_tag(t('ss.buttons.edit'), name: 'edit', type: 'button', class: 'btn', data: { action: time_gws_attendance_time_cards_path(year_month: year_month, day: day02, type: field_name, ref: request.fullpath) }) %>
               <% else %>
@@ -59,9 +59,9 @@
             <td colspan="<%= field_names.length + 1 %>"><%= t('gws/attendance.already_locked') %></td>
           </tr>
         <% end %>
-        <tr>
+        <tr class="info">
           <% field_names.each do |field_name| %>
-            <td class="time">
+            <td class="time <%= field_name %>">
               <%= format_time(@today, @today_record.try(field_name)) %>
               <% render_reason.call(@today_record.try(:find_latest_history, field_name)) %>
             </td>

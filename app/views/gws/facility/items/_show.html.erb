@@ -26,6 +26,16 @@
   <dd><%= @item.max_days_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.days') %></dd>
     <% end %>
 
+  <% if @item.reservation_start_date.present? %>
+  <dt><%= @model.t :reservation_start_date %></dt>
+  <dd><%= I18n.l(@item.reservation_start_date) %></dd>
+  <% end %>
+
+  <% if @item.reservation_end_date.present? %>
+  <dt><%= @model.t :reservation_end_date %></dt>
+  <dd><%= I18n.l(@item.reservation_end_date) %></dd>
+  <% end %>
+
   <% if @item.activation_date.present? %>
   <dt><%= @model.t :activation_date %></dt>
   <dd><%= tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>

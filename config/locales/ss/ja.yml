@@ -26,6 +26,7 @@ ja:
     quota: 容量
     encoding: 文字コード
     text_zoom: 文字サイズ
+    default_here_label: "詳細はこちら⇒"
 
     views:
       login/login:
@@ -139,6 +140,7 @@ ja:
       in_use: 使用中のファイルを削除してよろしいですか？
       initialize: 初期化してよろしいですか？
       restore: 元に戻してよろしいですか？
+      move: 移動してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -294,6 +296,13 @@ ja:
         zoom_in: '+'
         zoom_out: '-'
         reset: 標準
+      facebook_max_text_length:
+        '0': テキストなし
+        '50': 50文字
+        '100': 100文字
+        '150': 150文字
+        '200': 200文字
+        '250': 250文字
 
     tasks:
       started: 開始しました。
@@ -497,6 +506,9 @@ ja:
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: 既定の画像URL
         facebook_access_token: アクセストークン
+        facebook_max_text_length: 最大テキスト長
+        facebook_appends_here_state: 詳細はこちらの表示
+        facebook_appends_here_label: 詳細はこちらのラベル
       ss/addon/twitter_setting:
         twitter_card: カード形式
         twitter_username: ユーザー名
@@ -788,6 +800,11 @@ ja:
       facebook_access_token:
         - アクセストークンを設定します。
         - 設定するとFacebookへの自動投稿が可能になります。
+      facebook_max_text_length:
+        - Facebookへ投稿する際のテキストの最大長を選択します。
+      facebook_appends_here_state:
+        - Facebookへ投稿する際、テキストの末尾に「詳細はこちらへ」を表示するかどうかを選択します。
+        - 後続の入力欄に表示するラベルを入力します。
     ss/addon/twitter_setting:
       twitter_card:
         - Twitter のカード形式を選択します。

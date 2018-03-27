@@ -1,5 +1,5 @@
 <% file = "#{@cur_node.path}/search.html" %>
-<% if Fs.exists?(file) %>
+<% if !controller.preview_path? && Fs.exists?(file) %>
   <%== Fs.read(file) %>
 <% else %>
   <%= render file: 'opendata/agents/nodes/dataset/search_dataset/search' %>

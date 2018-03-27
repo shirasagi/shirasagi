@@ -4,6 +4,7 @@ class Gws::Attendance::Apis::Management::UsersController < ApplicationController
   model Gws::User
 
   before_action :set_manageable_groups
+  before_action :set_search_params
   before_action :set_group
   before_action :set_custom_group
 
@@ -12,22 +13,29 @@ class Gws::Attendance::Apis::Management::UsersController < ApplicationController
   private
 
   def set_manageable_groups
-    if Gws::Attendance::TimeCard.allowed?(:manage_all, @cur_user, site: @cur_site)
-      @manageable_groups = Gws::Group.in_group(@cur_site).active
-    elsif Gws::Attendance::TimeCard.allowed?(:manage_private, @cur_user, site: @cur_site)
-      @manageable_groups = Gws::Group.in_group(@cur_group).active
-    else
-      @manageable_groups = Gws::Group.none
+    @manageable_groups ||= begin
+      if Gws::Attendance::TimeCard.allowed?(:manage_all, @cur_user, site: @cur_site)
+        Gws::Group.in_group(@cur_site).active
+      elsif Gws::Attendance::TimeCard.allowed?(:manage_private, @cur_user, site: @cur_site)
+        available_groups_for_user = @cur_user.groups.in_group(@cur_site).active
+        Gws::Group.in_groups(available_groups_for_user).active
+      else
+        Gws::Group.none
+      end
     end
   end
 
+  def set_search_params
+    @s = OpenStruct.new(params[:s])
+  end
+
   def set_group
-    if params.dig(:s, :group).present?
-      @group = @manageable_groups.find(params.dig(:s, :group)) rescue nil
-      @group ||= @cur_group
-    else
-      @group = @cur_group
+    search_group = @s.group
+    if search_group.present?
+      @group = @manageable_groups.find(search_group) rescue nil
     end
+
+    @group ||= @cur_group
 
     @groups = @manageable_groups.tree_sort(root_name: @cur_site.name)
   end
@@ -37,7 +45,7 @@ class Gws::Attendance::Apis::Management::UsersController < ApplicationController
   end
 
   def group_ids
-    @group_ids ||= @manageable_groups.pluck(:id)
+    @group_ids ||= @manageable_groups.in_group(@group).pluck(:id)
   end
 
   def self.local_prefixes
@@ -53,12 +61,11 @@ class Gws::Attendance::Apis::Management::UsersController < ApplicationController
     if @custom_group.present?
       criteria = @custom_group.members
     else
-      criteria = @model.site(@cur_site)
+      criteria = @model.site(@cur_site).in(group_ids: group_ids)
     end
 
     @items = criteria.active.
-      in(group_ids: group_ids).
-      search(params[:s]).
+      search(@s).
       order_by_title(@cur_site).
       page(params[:page]).per(50)
   end

@@ -33,6 +33,14 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     end
   end
 
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.kind_of?(String)
+    @items = dataset.resources.in(id: ids)
+    raise "400" unless @items.present?
+  end
+
   public
 
   def index

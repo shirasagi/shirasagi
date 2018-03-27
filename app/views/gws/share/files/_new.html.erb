@@ -1,0 +1,57 @@
+<dl class="see">
+  <dt><%= Gws::Share::File.t :folder_id %></dt>
+  <dd><%= @folder.name %></dd>
+</dl>
+
+<div class="see gws-addon-file">
+  <span class="upload-menu-new">
+    <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+  </span>
+
+  <span class="upload-menu-select">
+    <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
+    <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn" %>
+  </span>
+
+  <div class="upload-drop-area">
+    <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+  </div>
+
+  <div id="selected-files">
+    <% SS::TempFile.where(user_id: @cur_user.id).each do |file| %>
+      <div id="file-<%= file.id %>" class="file-view">
+
+        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+          <% if file.image? %>
+            <%= image_tag file.thumb_url, alt: file.name %>
+          <% else %>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+          <% end %>
+        <% end %>
+
+        <div class="name">
+          <label>
+            <%= hidden_field_tag "#{f.object_name}[file_ids][]", file.id, id: nil, class: 'file-id' %>
+            <%= file.name %>
+          </label><br />
+        </div>
+
+        <div class="action">
+          <%= link_to t("ss.buttons.delete"), "#", class: 'action-delete', onclick: "deleteContent('#{file.id}'); return false;" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= jquery do %>
+  SS_Addon_TempFile.renderDrop($("#item-form .upload-drop-area"), <%== @cur_user.id.to_json %>);
+
+  window.deleteContent = function (id) {
+    $("#item-form .file-view").each(function() {
+      if (id == $(this).find(".file-id").attr("value")) {
+        $(this).remove();
+      }
+    });
+  };
+<% end %>

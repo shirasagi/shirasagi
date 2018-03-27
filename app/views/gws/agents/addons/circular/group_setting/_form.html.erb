@@ -11,4 +11,7 @@
   <dt><%= @model.t :circular_delete_threshold %><%= @model.tt :circular_delete_threshold %></dt>
   <dd><%= f.select :circular_delete_threshold, @item.circular_delete_threshold_options %></dd>
   <% end %>
+
+  <dt><%= @model.t :circular_files_break %><%= @model.tt :circular_files_break %></dt>
+  <dd><%= f.select :circular_files_break, @item.circular_files_break_options %></dd>
 </dl>

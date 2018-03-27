@@ -22,7 +22,7 @@ module Event::Addon
 
     def condition_hash(opts = {})
       h = super
-      today = Time.zone.now
+      today = Time.zone.today
       case sort
       when "event_dates"
         { "$and" => [ h, { "event_dates.0" => { "$exists" => true } } ] }

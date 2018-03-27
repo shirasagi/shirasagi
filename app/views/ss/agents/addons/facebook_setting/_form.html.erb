@@ -16,4 +16,13 @@
 
   <dt><%= @model.t :facebook_access_token %><%= @model.tt :facebook_access_token %></dt>
   <dd><%= f.text_field :facebook_access_token %></dd>
+
+  <dt><%= @model.t :facebook_max_text_length %><%= @model.tt :facebook_max_text_length %></dt>
+  <dd><%= f.select :facebook_max_text_length, @item.facebook_max_text_length_options %></dd>
+
+  <dt><%= @model.t :facebook_appends_here_state %><%= @model.tt :facebook_appends_here_state %></dt>
+  <dd>
+    <%= f.select :facebook_appends_here_state, @item.facebook_appends_here_state_options, include_blank: true %>
+    <%= f.text_field :facebook_appends_here_prefix, placeholder: @item.facebook_appends_here_prefix_default %>
+  </dd>
 </dl>

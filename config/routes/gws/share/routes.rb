@@ -27,6 +27,7 @@ SS::Application.routes.draw do
 
     resources :folders, concerns: [:deletion, :export] do
       get :download_folder, on: :member
+      match :move, on: :member, via: [:get, :post]
     end
 
     # with folder
@@ -41,11 +42,9 @@ SS::Application.routes.draw do
     resources :categories, concerns: [:deletion]
 
     namespace "apis" do
-      get "folders" => "folders#index"
-    end
-
-    namespace "apis" do
       get "categories" => "categories#index"
+      get "folders/:mode" => "folders#index", as: 'folders'
+      get "folder_list" => "folder_list#index"
     end
 
     namespace "management" do

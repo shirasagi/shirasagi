@@ -69,6 +69,9 @@ ja:
       notification:
         disabled: 通知しない
         enabled: 通知する
+      break:
+        vertically: 縦並び
+        horizontal: 横並び
 
     links:
       back_to_portal: ポータルへ戻る

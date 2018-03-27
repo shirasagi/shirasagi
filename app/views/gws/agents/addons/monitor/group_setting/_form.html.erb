@@ -23,5 +23,8 @@
 
   <dt><%= @model.t :default_notice_state %><%= @model.tt :default_notice_state %></dt>
   <dd><%= f.select :default_notice_state, @item.default_notice_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :monitor_files_break %><%= @model.tt :monitor_files_break %></dt>
+  <dd><%= f.select :monitor_files_break, @item.monitor_files_break_options %></dd>
 </dl>
 

@@ -77,9 +77,6 @@ $ ->
 
 <% end %>
 
-<link data-turbolinks-track="true" href="/assets/css/multi-select/css/multi-select.css" media="all" rel="stylesheet" />
-<script data-turbolinks-track="true" src="/assets/js/jquery.multi-select.js"></script>
-
 <div class="mod-workflow">
 
   <% if @item.state == "closed" %>
@@ -87,11 +84,17 @@ $ ->
       <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
         <section class="mod-workflow-approve">
-          <h1><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h1>
-          <%= text_area :remand, :comment, value: "", style: "display: none;" %>
-          <div class="buttons">
-            <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
-            <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item" } %>
+          <div class="addon-view">
+            <div class="addon-head">
+              <h2><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h2>
+            </div>
+            <div class="addon-body">
+              <%= text_area :remand, :comment, value: "", style: "display: none;" %>
+              <div class="buttons">
+                <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
+                <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
+              </div>
+            </div>
           </div>
         </section>
       <% end %>

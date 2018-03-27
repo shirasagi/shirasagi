@@ -18,6 +18,12 @@
   <dt><%= @model.t :max_days_limit %><%= @model.tt :max_days_limit %></dt>
   <dd><%= f.number_field :max_days_limit %><%= I18n.t('gws/facility.prompts.days') %></dd>
 
+  <dt><%= @model.t :reservation_start_date %><%= @model.tt :reservation_start_date %></dt>
+  <dd><%= f.text_field :reservation_start_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.reservation_start_date) } %></dd>
+
+  <dt><%= @model.t :reservation_end_date %><%= @model.tt :reservation_end_date %></dt>
+  <dd><%= f.text_field :reservation_end_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.reservation_end_date) } %></dd>
+
   <dt><%= @model.t :activation_date %><%= @model.tt :activation_date %></dt>
   <dd><%= f.text_field :activation_date, class: 'datetime js-datetime', value: tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 

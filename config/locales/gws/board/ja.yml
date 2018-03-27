@@ -138,6 +138,8 @@ ja:
         board_file_size_per_topic: 添付最大サイズ/トピック単位
         board_file_size_per_post: 添付最大サイズ/投稿単位
         board_browsed_delay: 既読にするまでの秒数
+        board_files_break: ファイル表示の並び
+        board_links_break: リンク表示の並び
       gws/board/category:
         name: カテゴリー名
       gws/addon/board/category:
@@ -162,6 +164,10 @@ ja:
         - 投稿単位での添付最大サイズを入力します。
       board_browsed_delay:
         - 掲示板を既読にするまでの秒数を入力します。
+      board_files_break:
+        - 添付ファイルの表示の並びを選択します。
+      board_links_break:
+        - 投稿のリンク表示の並びを選択します。
     gws/board/category:
       name:
         - カテゴリー名を入力します。

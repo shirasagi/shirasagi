@@ -70,17 +70,21 @@ class Gws::Schedule::PlanSearch
       ymd = date.strftime('%Y-%m-%d')
       hours = []
       f_hours = {}
-      self.hours.each do |i|
-        if @facilities.blank?
+      if @facilities.blank?
+        self.hours.each do |i|
           hours << i unless plan_times.key?("#{ymd} #{i}")
-          next
         end
+      else
+        self.hours.each do |i|
+          datetime = (date + i.hours).to_datetime
+          @facilities.each do |facility|
+            next if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
+            next if facility.reservation_start_date.present? && datetime < facility.reservation_start_date
+            next if facility.reservation_end_date.present? && datetime >= facility.reservation_end_date
 
-        @facilities.each do |facility|
-          next if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
-
-          f_hours[facility.id] ||= []
-          f_hours[facility.id] << i
+            f_hours[facility.id] ||= []
+            f_hours[facility.id] << i
+          end
         end
       end
       free_times << [date, [hours, f_hours]] #if hours.present? || f_hours.present?

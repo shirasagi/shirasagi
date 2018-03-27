@@ -22,13 +22,15 @@ class Gws::Share::Folder
   field :share_max_folder_size, type: Integer, default: 0
   attr_accessor :in_share_max_file_size_mb
   attr_accessor :in_share_max_folder_size_mb
+  attr_accessor :in_basename, :in_parent
 
   has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
 
   permit_params :name, :order, :share_max_file_size, :in_share_max_file_size_mb,
-                :share_max_folder_size, :in_share_max_folder_size_mb
+                :share_max_folder_size, :in_share_max_folder_size_mb, :in_basename, :in_parent
 
   before_validation :set_depth, if: ->{ name.present? }
+  before_validation :set_name_and_depth, if: ->{ in_basename.present? }
   before_validation :set_share_max_file_size
   before_validation :set_share_max_folder_size
 
@@ -38,6 +40,8 @@ class Gws::Share::Folder
             numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :share_max_folder_size,
             numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :in_basename, length: {maximum: 80}
+  validates :in_basename, format: { with: /\A[^\\\/:*?"<>|]*\z/, message: :invalid_chars_as_name }
 
   validate :validate_share_max_file_size, :validate_share_max_folder_size
   validate :validate_parent_name
@@ -66,10 +70,23 @@ class Gws::Share::Folder
       criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
       criteria
     end
+
+    def tree_sort(options = {})
+      SS::TreeList.build self, options
+    end
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth-1..-1].join("/")
+    @trailing_name ||= name.split("/")[depth-1..-1].join("/") if name.present?
+  end
+
+  def parent
+    @parent ||= begin
+      if name.present?
+        parent_name = File.dirname(name)
+        dependant_scope.where(name: parent_name).first
+      end
+    end
   end
 
   def parents
@@ -107,7 +124,7 @@ class Gws::Share::Folder
     if quota_bytes > 0
       "#{h.number_to_human_size(descendants_total_file_size)}/#{h.number_to_human_size(quota_bytes)}"
     else
-      "#{h.number_to_human_size(descendants_total_file_size)}"
+      h.number_to_human_size(descendants_total_file_size)
     end
   end
 
@@ -123,6 +140,20 @@ class Gws::Share::Folder
   end
 
   private
+
+  def set_name_and_depth
+    if in_parent.present?
+      parent_folder = dependant_scope.find(in_parent) rescue nil
+    end
+
+    if parent_folder.present?
+      self.name = "#{parent_folder.name}/#{in_basename}"
+    else
+      self.name = in_basename
+    end
+
+    set_depth
+  end
 
   def set_depth
     self.depth = name.count('/') + 1 unless name.nil?

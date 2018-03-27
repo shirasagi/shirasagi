@@ -47,18 +47,21 @@ module Gws::Attendance::TimeCardFilter
 
   def hour_options
     start_hour = @cur_site.attendance_time_changed_minute / 60
-    first_part = (start_hour..24).map { |h| [ "#{h}時", h ] }
-    last_part = (1..(start_hour - 1)).map { |h| h + 24 }.map { |h| [ "#{h}時", h ] }
+    first_part = (start_hour..24).map { |h| [ I18n.t('gws/attendance.hour', count: h), h ] }
+    last_part = (1..(start_hour - 1)).map { |h| h + 24 }.map { |h| [ I18n.t('gws/attendance.hour', count: h), h ] }
     first_part + last_part
   end
 
   def minute_options
-    60.times.to_a.map { |m| [ "#{m}分", m ] }
+    60.times.to_a.map { |m| [ I18n.t('gws/attendance.minute', count: m), m ] }
   end
 
   def holiday?(date)
     return true if HolidayJapan.check(date.localtime.to_date)
-    Gws::Schedule::Holiday.site(@cur_site).and_public.search(start: date, end: date).present?
+    Gws::Schedule::Holiday.site(@cur_site).
+      and_public.
+      allow(:read, @cur_user, site: @cur_site).
+      search(start: date, end: date).present?
   end
 
   public

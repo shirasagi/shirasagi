@@ -1,6 +1,7 @@
 module Gws::Addon::Faq::GroupSetting
   extend ActiveSupport::Concern
   extend SS::Addon
+  include Gws::Break
 
   set_addon_type :organization
 
@@ -11,12 +12,18 @@ module Gws::Addon::Faq::GroupSetting
     field :faq_file_size_per_topic, type: Integer
     field :faq_file_size_per_post, type: Integer
     field :faq_browsed_delay, type: Integer
+    field :faq_files_break, type: String, default: 'vertically'
 
     permit_params :faq_new_days, :faq_browsed_delay
     permit_params :in_faq_file_size_per_topic_mb, :in_faq_file_size_per_post_mb
+    permit_params :faq_files_break
 
     before_validation :set_faq_file_size_per_topic
     before_validation :set_faq_file_size_per_post
+
+    validates :faq_files_break, inclusion: { in: %w(vertically horizontal), allow_blank: true }
+
+    alias_method :faq_files_break_options, :break_options
   end
 
   def faq_new_days

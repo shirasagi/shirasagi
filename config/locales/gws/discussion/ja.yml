@@ -1,12 +1,20 @@
 ja:
   gws/discussion:
     admin: 管理
-    topics: スレッド一覧
+    topics: スレッド
     todos: ToDo
-    members: 参加者一覧
+    members: 参加者
+    navi:
+      forum:
+        readable: 会議室一覧
+      topic:
+        readable: スレッド一覧
+      todo:
+        readable: ToDo一覧
     links:
       forum:
-        back_to_index: 電子会議室一覧へ戻る
+        back_to_index: 会議室一覧へ戻る
+        edit: 会議室の編集
       topic:
         new: スレッドを新規作成
         edit: スレッドを編集する

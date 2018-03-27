@@ -20,6 +20,9 @@ ja:
     navi:
       folder: フォルダー
       category: カテゴリー
+    apis:
+      folders:
+        index: フォルダーを選択する
 
   modules:
     gws/share: 共有ファイル
@@ -59,6 +62,7 @@ ja:
       gws/share/file: ファイル
       gws/share/folder: フォルダー
       gws/share/category: カテゴリー
+      gws/share/file_uploader: ファイルアップローダー
     errors:
       models:
         gws/share/file:
@@ -79,6 +83,7 @@ ja:
           not_move_to_under_other_parent: 最上位のフォルダーをまたいでフォルダーを移動することはできません。
           not_create_same_folder: フォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
           not_move_to_same_name_folder: 移動先にフォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
+          invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
     attributes:
       gws/addon/share/category:
         category_ids: カテゴリー
@@ -101,6 +106,10 @@ ja:
         share_max_folder_size: 総容量制限
         descendants_files_count: ファイル数
         descendants_total_file_size: ファイル容量
+        in_basename: フォルダー名
+        in_parent: 親フォルダー
+      gws/share/file_uploader:
+        in_file_ids: ファイル
 
   tooltip:
     gws/share/category:
@@ -121,6 +130,8 @@ ja:
       share_max_folder_size:
         - フォルダーの総容量制限を入力します。
         - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
+      in_parent:
+        - 親フォルダーを選択してください。
     gws/addon/share/group_setting:
       share_max_file_size:
         - 最大ファイルサイズを入力します。

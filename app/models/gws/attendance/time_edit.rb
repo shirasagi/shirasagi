@@ -32,6 +32,7 @@ class Gws::Attendance::TimeEdit
 
   def validates_in_hour
     return if errors.present?
+    return if in_hour.blank?
 
     start_hour = @cur_site.attendance_time_changed_minute / 60
     if Integer(in_hour) < start_hour

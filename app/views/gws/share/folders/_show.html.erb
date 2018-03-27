@@ -1,9 +1,14 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.trailing_name %></dd>
+
+  <% if @item.parent.present? %>
+  <dt><%= @model.t :in_parent %></dt>
+  <dd><%= @item.parent.name %></dd>
+  <% end %>
 
   <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
+  <dd><%= @item.order %></dd>
 
   <dt><%= @model.t :share_max_file_size %></dt>
   <dd><%= number_to_human_size(@item.share_max_file_size) %></dd>

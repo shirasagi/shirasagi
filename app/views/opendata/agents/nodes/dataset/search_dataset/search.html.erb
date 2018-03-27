@@ -39,10 +39,10 @@ def transform_category(categories, indent = 0)
   ret
 end
 
-areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).pluck(:name, :id)
 categories = transform_category(@cur_categories)
-licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c| [c.name, c.id] }
-groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).pluck(:name, :id)
+groups = Opendata::DatasetGroup.site(@cur_site).and_public.sort(order: 1).pluck(:name, :id)
 @s = OpenStruct.new
 
 %>
@@ -74,7 +74,7 @@ groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name
   </dl>
   <dl class="group">
     <dt><%= I18n.t("opendata.labels.group_ids") %></dt>
-    <dd><%= f.select :dataset_group, groups, include_blank: "" %></dd>
+    <dd><%= f.select :dataset_group_id, groups, include_blank: "" %></dd>
   </dl>
   <dl class="sort">
     <dt><%= I18n.t("opendata.labels.sort") %></dt>
