@@ -30,10 +30,13 @@
 
   var requiredParams = function() {
     var repeatType = $('select[name="item[repeat_type]"]').val();
+    var allday = $('input[type=checkbox][name="item[allday]"]').prop('checked');
 
     var startOn;
     if (repeatType) {
       startOn = $('input[name="item[repeat_start]"]').val();
+    } else if (allday) {
+      startOn = $('input[name="item[start_on]"]').val();
     } else {
       startOn = $('input[name="item[start_at]"]').val();
     }
@@ -44,6 +47,8 @@
     var endOn;
     if (repeatType) {
       endOn = $('input[name="item[repeat_end]"]').val();
+    } else if (allday) {
+      endOn = $('input[name="item[end_on]"]').val();
     } else {
       endOn = $('input[name="item[end_at]"]').val();
     }
