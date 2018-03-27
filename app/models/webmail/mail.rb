@@ -90,7 +90,27 @@ class Webmail::Mail
   end
 
   def validate_message(msg)
-    errors.add :to, :blank if msg.to.blank?
+    if msg.to.blank?
+      errors.add :to, :blank
+      return errors.blank?
+    end
+
+    validate_email_address(msg, :to)
+    validate_email_address(msg, :cc)
+    validate_email_address(msg, :bcc)
+    errors.blank?
+  end
+
+  def validate_email_address(msg, field)
+    emails = msg.send(field)
+    return errors.blank? if emails.blank?
+
+    begin
+      emails = emails.map { |to| Webmail::Converter.extract_address(to) }
+      emails.each { |email| raise "invalid address" unless email =~ EmailValidator::REGEXP }
+    rescue => e
+      errors.add field, :invalid_email_included
+    end
     errors.blank?
   end
 
