@@ -16,6 +16,12 @@ class Gws::Discussion::ForumsController < ApplicationController
     @crumbs << [I18n.t('modules.gws/discussion'), gws_discussion_forums_path]
   end
 
+  def set_item
+    super
+    @forum = @item.dup
+    @forum.id = @item.id
+  end
+
   def pre_params
     @skip_default_group = true
     super.merge member_ids: [@cur_user.id]

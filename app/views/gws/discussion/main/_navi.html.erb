@@ -1,8 +1,3 @@
-<%
-  forum = @forum
-  forum = @item if forum.nil? && @item.try(:class) == Gws::Discussion::Forum
-%>
-
 <nav class="mod-navi">
   <h2><%= link_to @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path, class: "icon-discussion" %></h2>
   <h3><%= link_to t('gws/discussion.navi.forum.readable'), gws_discussion_forums_path %></h3>
@@ -11,15 +6,15 @@
     <h3><%= link_to t('ss.navi.trash'), gws_discussion_trashes_path, class: 'trash' %></h3>
   <% end %>
 
-  <% if forum %>
-    <% if forum.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to forum.name, gws_discussion_forum_path(id: forum.id) %></h2>
+  <% if @forum && @forum.id.to_i > 0 %>
+    <% if @forum.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h2><%= link_to @forum.name, gws_discussion_forum_path(id: @forum.id) %></h2>
     <% else %>
-      <h2><%= forum.name %></h2>
+      <h2><%= @forum.name %></h2>
     <% end %>
-    <h3><%= link_to t('ss.navi.readable'), gws_discussion_forum_topics_path(forum_id: forum.id) %></h3>
-    <h3><%= link_to t('gws/discussion.navi.todo.readable'), gws_discussion_forum_todos_path(forum_id: forum.id) %></h3>
-    <h3><%= link_to t('gws/discussion.navi.topic.readable'), all_gws_discussion_forum_topics_path(forum_id: forum.id) %></h3>
+    <h3><%= link_to t('ss.navi.readable'), gws_discussion_forum_topics_path(forum_id: @forum.id) %></h3>
+    <h3><%= link_to t('gws/discussion.navi.todo.readable'), gws_discussion_forum_todos_path(forum_id: @forum.id) %></h3>
+    <h3><%= link_to t('gws/discussion.navi.topic.readable'), all_gws_discussion_forum_topics_path(forum_id: @forum.id) %></h3>
   <% end %>
 </nav>
 
