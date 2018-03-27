@@ -63,9 +63,8 @@ module Webmail::Mail::Parser
         addr.address
       end
     end
-  rescue => e
-    raise(e) if Rails.env.development?
-    [field.value]
+  rescue Mail::Field::ParseError, StandardError
+    [field.decoded] rescue [field.value]
   end
 
   def parse_references(references)
