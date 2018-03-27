@@ -11,6 +11,11 @@
       curDate = $('#calendar-controller').fullCalendar('getDate');
     }
 
+    var viewFormat = "default";
+    if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
+      viewFormat = "list";
+    }
+
     var queryString = '';
     if (viewName) {
       var queryParams = <%== request.query_parameters.to_json %>;
@@ -19,6 +24,7 @@
       }
       queryParams.calendar.view = viewName;
       queryParams.calendar.date = curDate.format();
+      queryParams.calendar.viewFormat = viewFormat;
       queryString = '?' + $.param(queryParams);
     }
     var path = '<%= url_for({ action: :print }) %>' + queryString;
