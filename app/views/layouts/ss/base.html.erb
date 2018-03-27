@@ -103,12 +103,37 @@
           </div>
         <% end %>
 
+        <%
+          search_condition = SS.config.gws.dig("popup_notice", "search_condition")
+          if search_condition == "unseen"
+            default_label  = t("gws/memo/message.links.seens")
+            switched_label = t("gws/memo/message.links.unseens")
+            default_url    = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
+            switched_url   = recent_gws_memo_notices_path
+          else
+            default_label  = t("gws/memo/message.links.unseens")
+            switched_label = t("gws/memo/message.links.seens")
+            default_url    = recent_gws_memo_notices_path
+            switched_url   = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
+          end
+        %>
         <%= jquery do %>
-          $(".gws-memo-notice .unseens").click(function() { $(".gws-memo-notice .unseens").toggle(); });
+          $(".gws-memo-notice .unseens").click(function() {
+            $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
+              var url = $(this).attr("data-url");
+              var switched = $(this).attr("data-url-switched");
+              $(this).attr("data-url", switched);
+              $(this).attr("data-url-switched", url);
+            });
+            var label = $(this).text();
+            var switched = $(this).attr("data-label-switched");
+            $(this).text(switched);
+            $(this).attr("data-label-switched", label);
+          });
           (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
         <% end %>
         <div class="gws-memo-notice popup-notice-container">
-          <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => recent_gws_memo_notices_path do %>
+          <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
             <i class="material-icons">&#xE0D8;</i>
             <% count = Gws::Memo::Notice.unseens(@cur_user, @cur_site).size %>
             <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
@@ -117,14 +142,11 @@
             <header class="popup-notice-header">
               <h2>
                 <%= t('modules.gws/memo/notice') %>
-                <%= link_to t("gws/memo/message.links.unseens"), "#",
+                <%= link_to default_label, "#",
                   "class" => "ajax-popup-notice unseens",
-                  "data-url" => recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
-                %>
-                <%= link_to t("gws/memo/message.links.seens"), "#",
-                  "class" => "ajax-popup-notice unseens",
-                  "data-url" => recent_gws_memo_notices_path,
-                  "style" => "display: none;"
+                  "data-url" => default_url,
+                  "data-url-switched" =>  switched_url,
+                  "data-label-switched" => switched_label
                 %>
               </h2>
             </header>
@@ -134,12 +156,37 @@
         </div>
 
         <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%
+             search_condition = SS.config.gws.dig("popup_notice", "search_condition")
+            if search_condition == "unseen"
+              default_label  = t("gws/memo/message.links.seens")
+              switched_label = t("gws/memo/message.links.unseens")
+              default_url    = recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
+              switched_url   = recent_gws_memo_messages_path
+            else
+              default_label  = t("gws/memo/message.links.unseens")
+              switched_label = t("gws/memo/message.links.seens")
+              default_url    = recent_gws_memo_messages_path
+              switched_url   = recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
+            end
+          %>
           <%= jquery do %>
-            $(".gws-memo-message .unseens").click(function() { $(".gws-memo-message .unseens").toggle(); });
+            $(".gws-memo-message .unseens").click(function() {
+              $(".gws-memo-message.popup-notice-container [data-url]").each(function() {
+                var url = $(this).attr("data-url");
+                var switched = $(this).attr("data-url-switched");
+                $(this).attr("data-url", switched);
+                $(this).attr("data-url-switched", url);
+              });
+              var label = $(this).text();
+              var switched = $(this).attr("data-label-switched");
+              $(this).text(switched);
+              $(this).attr("data-label-switched", label);
+            });
             (new SS_PopupNotice(".gws-memo-message.popup-notice-container")).render();
           <% end %>
           <div class="gws-memo-message popup-notice-container">
-            <%= link_to gws_memo_messages_path, "class" => "user-message ajax-popup-notice toggle-popup-notice", "data-url" => recent_gws_memo_messages_path do %>
+            <%= link_to gws_memo_messages_path, "class" => "user-message ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
               <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
               <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
             <% end %>
@@ -147,14 +194,11 @@
               <header class="popup-notice-header">
                 <h2>
                   <%= t('modules.gws/memo/message') %>
-                  <%= link_to t("gws/memo/message.links.unseens"), "#",
+                  <%= link_to default_label, "#",
                     "class" => "ajax-popup-notice unseens",
-                    "data-url" => recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
-                  %>
-                  <%= link_to t("gws/memo/message.links.seens"), "#",
-                    "class" => "ajax-popup-notice unseens",
-                    "data-url" => recent_gws_memo_messages_path,
-                    "style" => "display: none;"
+                    "data-url" => default_url,
+                    "data-url-switched" =>  switched_url,
+                    "data-label-switched" => switched_label
                   %>
                 </h2>
               </header>
