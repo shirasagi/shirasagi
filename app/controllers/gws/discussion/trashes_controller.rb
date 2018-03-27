@@ -19,7 +19,6 @@ class Gws::Discussion::TrashesController < ApplicationController
   end
 
   def pre_params
-    @skip_default_group = true
     super.merge member_ids: [@cur_user.id]
   end
 
