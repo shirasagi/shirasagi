@@ -86,6 +86,7 @@ $(function() {
             <%= send("radio_button_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
           <% end %>
         <% end %>
+        </fieldset>
       <% elsif column.input_type =~ /select/ %>
         <% opt = column.additional_attr_to_h %>
         <%= f.send(column.input_type, column.id, column.select_options, { selected: data, include_blank: true }, opt) %>
