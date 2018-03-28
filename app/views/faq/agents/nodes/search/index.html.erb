@@ -12,12 +12,12 @@
   <%= form_tag @url, multipart: true, method: "get" do |f| %>
     <% if categories.present? %>
     <div class="category">
-      <%= t('faq.query.category') %>
+      <label for="category"><%= t('faq.query.category') %></label>
       <%= select_tag :category,  options_for_select(category_options, @category.try(:to_i)), include_blank: true %>
     </div>
     <% end %>
     <div class="keyword">
-      <%= t('faq.query.keyword') %>
+      <label for="keyword"><%= t('faq.query.keyword') %></label>
       <%= text_field_tag :keyword, @keyword %>
     </div>
     <div class="submitters">

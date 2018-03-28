@@ -10,6 +10,6 @@ $ ->
   <%= render file: "facility/agents/addons/search_setting/view/index" %>
   <footer class="send">
     <%= submit_tag t('facility.submit.search'), name: nil %>
-    <%= submit_tag t('facility.submit.reset'), name: nil, class: :reset %>
+    <%= submit_tag t('facility.submit.reset'), type: :reset, name: nil, class: :reset %>
   </footer>
 <% end %>

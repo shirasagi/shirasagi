@@ -24,11 +24,12 @@ def cate_form(item)
 end
 
 %>
-<div class="area-form">
+<fieldset class="area-form">
   <%= f.hidden_field "area_ids[]", value: "" %>
 
   <% categories.each do |cate| %>
   <div class="parent">
-    <%= cate_form cate %></div>
+    <%= cate_form cate %>
+  </div>
   <% end %>
-</div>
+</fieldset>

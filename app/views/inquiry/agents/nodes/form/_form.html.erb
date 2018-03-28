@@ -1,3 +1,5 @@
+<% f ||= nil %>
+<% confirm ||= false %>
 <%= javascript_tag do %>
 $(function() {
   var confirm = <%= confirm.to_json %>;
@@ -5,7 +7,7 @@ $(function() {
     self.find('input').each(function() {
       if ($(this).prop('checked') || confirm) {
         var value = $(this).val();
-        $("dl").each(function() {
+        $(".column").each(function() {
           $(this).find('span.required').remove();
           var span;
           if ($(this).hasClass(value) && $(this).children('span').text() === '') {
@@ -17,10 +19,10 @@ $(function() {
     });
   };
 
-  $('dd.form-select').each(function() {
+  $('.form-select').each(function() {
     return changeForm($(this));
   });
-  $(document).on('change', 'dd.form-select', function(e) {
+  $(document).on('change', '.form-select', function(e) {
     return changeForm($(this));
   });
 });
@@ -41,14 +43,7 @@ $(function() {
       <% html_class += " #{option}" if column.required?(option) %>
     <% end %>
   <% end %>
-  <dl class="column<%= html_class %>">
-    <dt>
-    <%= column.name %>
-    <% if column.required == "required" %>
-      <span class="required"><%= t('inquiry.required_field') %></span>
-    <% end %>
-    </dt>
-    <dd class='<%= 'form-select' if column.input_type == 'form_select' %>'>
+  <%= inquiry_column_tag(column, f: f, confirm: confirm, html: { class: "column#{html_class}" }) do %>
     <% if confirm %>
       <% if data.kind_of? Hash %>
         <% data.each do |key, value| %>
@@ -77,7 +72,6 @@ $(function() {
         <% opt.merge!(column.additional_attr_to_h) %>
         <%= f.send(column.input_type, column.id, opt) %>
       <% elsif column.input_type =~ /form_select/ %>
-        <fieldset>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
           <% opt.merge!(column.additional_attr_to_h) %>
@@ -86,12 +80,10 @@ $(function() {
             <%= send("radio_button_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
           <% end %>
         <% end %>
-        </fieldset>
       <% elsif column.input_type =~ /select/ %>
         <% opt = column.additional_attr_to_h %>
         <%= f.send(column.input_type, column.id, column.select_options, { selected: data, include_blank: true }, opt) %>
       <% elsif column.input_type =~ /radio_button/ %>
-        <fieldset>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
           <% opt.merge!(column.additional_attr_to_h) %>
@@ -100,9 +92,7 @@ $(function() {
             <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
           <% end %>
         <% end %>
-        </fieldset>
       <% elsif column.input_type =~ /check_box/ %>
-        <fieldset>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = column.additional_attr_to_h %>
           <% checked = data.try(:[], "#{i}") ? true : false %>
@@ -110,27 +100,17 @@ $(function() {
             <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}][#{i}]", value, checked, opt) %><span><%= value %></span>
           <% end %>
         <% end %>
-        </fieldset>
       <% elsif column.input_type =~ /upload_file/ %>
         <% opt = {id: "#{f.object_name}_#{column.id}" } %>
         <% opt.merge!(column.additional_attr_to_h) %>
         <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %>
       <% end %>
     <% end %>
-    </dd>
     <% if column.input_confirm == "enabled" && !confirm %>
-      <dt>
-        <%= f.label "#{column.id}_confirm", t("inquiry.confirm_input", name: column.name) %>
-        <% if column.required == "required" %>
-          <span class="required"><%= t('inquiry.required_field') %></span>
-        <% end %>
-      </dt>
-      <dd>
-        <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
-        <% opt = { value: "" } %>
-        <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
-      </dd>
+      <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
+      <% opt = { value: "" } %>
+      <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
     <% end %>
-  </dl>
+  <% end %>
 <% end %>
 </div>

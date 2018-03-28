@@ -61,10 +61,10 @@
     <% if @comment_mode %>
       <%= form_for :s, url: "", html: { class: "opendata-add-comment-form", method: :get } do |f| %>
         <dl class="comment-body">
-          <dt>本文</dt>
-          <dd><%= f.text_area :comment_body, maxlength: "400" %></dd>
+          <dt><%= f.label(:comment_body, Opendata::Idea.t(:comment_body)) %></dt>
+          <dd><%= f.text_area(:comment_body, maxlength: "400", title: Opendata::IdeaComment.t(:text)) %></dd>
         </dl>
-        <%= link_to I18n.t("opendata.labels.add_comment"), "", class: "comment-add" %>
+        <%= link_to(I18n.t("opendata.labels.add_comment"), "", class: "comment-add") %>
       <% end %>
     <% elsif member_login_enabled? %>
       <div class="invite"><%= I18n.t("opendata.labels.comment_invite_start") %><%= link_to I18n.t("opendata.labels.login"),"#{member_login_path}login.html?ref=#{CGI.escape(@idea.url)}" %><%= I18n.t("opendata.labels.comment_invite_end") %></div>
