@@ -89,9 +89,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def recent
-    @cur_folder = @folders.select { |folder| folder.folder_path == "INBOX" }.first
-    @items = @model.folder(@cur_folder, @cur_user).
-      site(@cur_site).
+    @items = @model.member(@cur_user).site(@cur_site).and_public.
       search(params[:s]).
       limit(5)
 
