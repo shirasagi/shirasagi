@@ -14,6 +14,10 @@ module OpenURI
         options.symbolize_keys!
         options.delete(:proxy)
         options[:proxy_http_basic_authentication] = [proxy_uri, proxy_username, proxy_password]
+
+        options.delete(:ssl_verify_mode)
+        options[:ssl_verify_mode] = OpenSSL::SSL::VERIFY_NONE
+
         rest = [options]
       end
     end
