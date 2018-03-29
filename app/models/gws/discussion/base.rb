@@ -4,7 +4,7 @@ class Gws::Discussion::Base
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
-  include Gws::Addon::Discussion::NotifySetting
+  include Gws::Addon::Memo::NotifySetting
   include Gws::Addon::Discussion::Release
   include Gws::Addon::Member
   include Gws::Addon::GroupPermission

@@ -10,6 +10,7 @@ class Gws::Schedule::Plan
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
   include Gws::Addon::Schedule::Repeat
+  include Gws::Addon::Memo::NotifySetting
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Schedule::Reports
