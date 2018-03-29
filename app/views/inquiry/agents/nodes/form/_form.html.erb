@@ -1,32 +1,3 @@
-<% f ||= nil %>
-<% confirm ||= false %>
-<%= javascript_tag do %>
-$(function() {
-  var confirm = <%= confirm.to_json %>;
-  var changeForm = function(self) {
-    self.find('input').each(function() {
-      if ($(this).prop('checked') || confirm) {
-        var value = $(this).val();
-        $(".column").each(function() {
-          $(this).find('span.required').remove();
-          var span;
-          if ($(this).hasClass(value) && $(this).children('span').text() === '') {
-            span = $("<span/>").attr('class', 'required').text('<%= t('inquiry.required_field') %>');
-            span.appendTo($(this).children('dt'));
-          }
-        });
-      };
-    });
-  };
-
-  $('.form-select').each(function() {
-    return changeForm($(this));
-  });
-  $(document).on('change', '.form-select', function(e) {
-    return changeForm($(this));
-  });
-});
-<% end %>
 <div class="columns">
 <% content = @answer.source_content if @answer %>
 <% if content %>

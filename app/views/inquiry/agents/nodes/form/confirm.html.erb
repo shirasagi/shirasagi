@@ -1,4 +1,4 @@
-<%= jquery do %>Inquiry_Form.render();<% end %>
+<%= jquery do %>Inquiry_Form.render({ confirm: true, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
 <div class="inquiry-form confirm">
 <%= form_for :item, url: "#{@cur_node.url}create.html", html: { multipart: true } do |f| %>
   <% if @answer.errors.empty? %>
