@@ -4,7 +4,16 @@ module Inquiry::FormHelper
   def inquiry_column_tag(column, options, &block)
     tag_name = options[:confirm] ? 'dl' : 'fieldset'
 
-    content_tag(tag_name, options[:html] || {}) do
+    if column.required_in_select_form.present?
+      select_form = column.required_in_select_form.select(&:present?)
+    end
+
+    css_classes = %w(column)
+    if select_form.present?
+      css_classes << 'select-form-target'
+    end
+
+    content_tag(tag_name, class: css_classes, data: { select_form: select_form }) do
       inquiry_label_tag(column, options)
       inquiry_fields_tag(column, options, &block)
     end
@@ -14,10 +23,10 @@ module Inquiry::FormHelper
     tag_name = options[:confirm] ? 'dt' : 'legend'
 
     if options[:confirm] || %w(form_select radio_button check_box).include?(column.input_type)
-      label = column.name
+      label = content_tag('span', column.name, class: 'label')
     else
       f = options[:f]
-      label = label_tag("#{f.object_name}[#{column.id}]", column.name)
+      label = f.label("#{column.id}", column.name)
     end
 
     output_buffer << content_tag(tag_name) do

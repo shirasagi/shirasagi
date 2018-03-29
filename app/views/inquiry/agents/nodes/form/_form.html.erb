@@ -6,15 +6,8 @@
     <dd><%= content.name %></dd>
   </dl>
 <% end %>
-<% form_select = @columns.where(input_type: 'form_select').first if @columns.present? %>
 <% @items.each do |column, data, confirm_data| %>
-  <% html_class = '' %>
-  <% if form_select %>
-    <% form_select.select_options.each do |option| %>
-      <% html_class += " #{option}" if column.required?(option) %>
-    <% end %>
-  <% end %>
-  <%= inquiry_column_tag(column, f: f, confirm: confirm, html: { class: "column#{html_class}" }) do %>
+  <%= inquiry_column_tag(column, f: f, confirm: confirm) do %>
     <% if confirm %>
       <% if data.kind_of? Hash %>
         <% data.each do |key, value| %>

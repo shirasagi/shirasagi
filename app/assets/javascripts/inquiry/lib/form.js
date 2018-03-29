@@ -23,28 +23,57 @@ Inquiry_Form.prototype.render = function() {
   });
 
   var _this = this;
-  $('.form-select').each(function() {
-    return _this.changeForm($(this));
+  $(document).on('change', '.form-select input[type="radio"]', function() {
+    return _this.changeForm();
   });
-  $(document).on('change', '.form-select', function() {
-    return _this.changeForm($(this));
+
+  if ($('.form-select').length > 0) {
+    this.changeForm();
+  }
+};
+
+Inquiry_Form.prototype.collectSelectFormValues = function() {
+  var selector;
+  if (this.options.confirm) {
+    selector = 'input[type="hidden"]';
+  } else {
+    selector = 'input[type="radio"]:checked';
+  }
+
+  var values = [];
+  $('.form-select ' + selector).each(function() {
+    var val = $(this).val();
+    if (values.indexOf(val) < 0) {
+      values.push(val);
+    }
+  });
+  return values;
+};
+
+Inquiry_Form.prototype.intersect = function(arr1, arr2) {
+  return arr1.filter(function(el) {
+    return arr2.indexOf(el) !== -1
   });
 };
 
-Inquiry_Form.prototype.changeForm = function(self) {
+Inquiry_Form.prototype.changeForm = function() {
   var _this = this;
+  var checkedValues = this.collectSelectFormValues();
 
-  self.find('input').each(function () {
-    if ($(this).prop('checked') || _this.options.confirm) {
-      var value = $(this).val();
-      $(".column").each(function () {
-        $(this).find('span.required').remove();
-        var span;
-        if ($(this).hasClass(value) && $(this).children('span').text() === '') {
-          span = $("<span/>").attr('class', 'required').text(_this.options.requiredLabel);
+  $('.select-form-target').each(function() {
+    if (_this.intersect(checkedValues, $(this).data('select-form')).length > 0) {
+      // append required label if absent
+      if ($(this).find('span.required').length === 0) {
+        var span = $("<span/>").attr('class', 'required').text(_this.options.requiredLabel);
+        if (_this.options.confirm) {
           span.appendTo($(this).children('dt'));
+        } else {
+          span.appendTo($(this).children('legend'));
         }
-      });
+      }
+    } else {
+      // remove required label
+      $(this).find('span.required').remove();
     }
   });
 };
