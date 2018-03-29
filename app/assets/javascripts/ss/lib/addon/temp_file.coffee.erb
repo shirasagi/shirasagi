@@ -52,12 +52,18 @@ class @SS_Addon_TempFile
         #  return false
         request.onload = (e) ->
           if request.readyState == XMLHttpRequest.DONE
+            da.removeClass('file-dragenter')
             if request.status == 200 || request.status == 201
-              da.removeClass('file-dragenter')
               files = JSON.parse(request.response)
               SS_Addon_TempFile.select(files, dropArea)
+            else if request.status == 413
+              alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"))
             else
-              alert(["== Error =="].concat(request.responseJSON).join("\n"))
+              try
+                json = $.parseJSON(request.response)
+                alert(["== Error =="].concat(json).join("\n"))
+              catch
+                alert(["== Error =="].concat(request.statusText).join("\n"))
             SS_Addon_TempFile.dropEventTriggered = false
 
         request.open("POST", SS_Addon_TempFile.uploadUrl())

@@ -28,6 +28,13 @@ SS.ajaxForm("form.user-file", {
       });
       $.colorbox.close();
     });
+  },
+  error: function(xhr) {
+    if (xhr.status == 413) {
+      alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+    } else {
+      alert(["== Error =="].concat(xhr.statusText).join("\n"));
+    }
   }
 });
 
