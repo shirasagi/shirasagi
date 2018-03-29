@@ -16,6 +16,8 @@ class Gws::Memo::Message
 
   #after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
+  before_save :apply_filters, if: -> { public? && send_date_was.blank? }
+
   alias name subject
   alias reminder_user_ids member_ids
 
@@ -30,4 +32,17 @@ class Gws::Memo::Message
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+
+  private
+
+  def apply_filters
+    return unless @cur_site
+
+    member_ids.each do |member_id|
+      next if filtered[member_id.to_s]
+      matched_filter = Gws::Memo::Filter.site(@cur_site).where(user_id: member_id).enabled.detect{ |f| f.match?(self) }
+      self.path[member_id.to_s] = matched_filter.path if matched_filter
+      self.filtered[member_id.to_s] = Time.zone.now
+    end
+  end
 end

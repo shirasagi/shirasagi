@@ -12,7 +12,6 @@ class Gws::Memo::MessagesController < ApplicationController
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_folders, only: [:index, :recent]
   before_action :set_cur_folder, only: [:index]
-  before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
 
   navi_view "gws/memo/messages/navi"
 
@@ -56,12 +55,6 @@ class Gws::Memo::MessagesController < ApplicationController
     @folders.each { |folder| folder.site = @cur_site }
   end
 
-  def apply_filters
-    @model.site(@cur_site).folder(@cur_folder, @cur_user).unfiltered(@cur_user).each do |message|
-      message.apply_filters(@cur_user, @cur_site)
-    end
-  end
-
   def send_forward_mails
     forward_emails = Gws::Memo::Forward.site(@cur_site).
       in(user_id: @item.member_ids).
@@ -96,9 +89,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def recent
-    @cur_folder = @folders.select { |folder| folder.folder_path == "INBOX" }.first
-    @items = @model.folder(@cur_folder, @cur_user).
-      site(@cur_site).
+    @items = @model.member(@cur_user).site(@cur_site).and_public.
       search(params[:s]).
       limit(5)
 
