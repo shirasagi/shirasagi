@@ -72,9 +72,9 @@
     <% end %>
   <% end %>
 
-  <% if @cur_site.menu_question_visible? %>
+  <% if @cur_site.menu_qna_visible? %>
     <% if Gws::Qna::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_question_label || t('modules.gws/qna'), gws_qna_topics_path(mode: '-', category: '-'), class: "icon-question" %></h2>
+      <h2><%= link_to @cur_site.menu_qna_label || t('modules.gws/qna'), gws_qna_topics_path(mode: '-', category: '-'), class: "icon-question" %></h2>
     <% end %>
   <% end %>
 

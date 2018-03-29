@@ -5,7 +5,7 @@ module Gws::Addon::System::MenuSetting
   set_addon_type :organization
 
   included do
-    %w(portal reminder schedule todo attendance bookmark memo board faq question report workflow circular monitor share
+    %w(portal reminder schedule todo attendance bookmark memo board faq qna report workflow circular monitor share
        shared_address personal_address staff_record links discussion contrast).each do |name|
       define_menu_setting(name)
     end
@@ -33,7 +33,6 @@ module Gws::Addon::System::MenuSetting
   end
 
   def menu_visible?(name)
-    name = 'question' if name == 'faq' || name == 'qna'
     try("menu_#{name}_state") != 'hide'
   end
 end
