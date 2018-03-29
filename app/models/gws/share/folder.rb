@@ -45,12 +45,14 @@ class Gws::Share::Folder
 
   validate :validate_share_max_file_size, :validate_share_max_folder_size
   validate :validate_parent_name
-  validate :validate_rename_children, :validate_rename_parent,
+  validate :validate_rename_children,
            :validate_children_move_to_other_parent, if: ->{ self.attributes["action"] == "update" }
 
   validate :validate_folder_name, if: ->{ self.attributes["action"] =~ /create|update/ }
 
   before_destroy :validate_children, :validate_files
+
+  after_save :rename_children, if: ->{ @db_changes }
 
   default_scope ->{ order_by depth: 1, order: 1, name: 1 }
 
@@ -204,14 +206,6 @@ class Gws::Share::Folder
     true
   end
 
-  def validate_rename_parent
-    if !self.attributes["before_folder_name"].include?("/") && self.attributes["before_folder_name"] != self.name
-      errors.add :base, :not_rename_parent
-      return false
-    end
-    true
-  end
-
   def validate_children_move_to_other_parent
     if self.attributes["before_folder_name"].include?("/") &&
        self.attributes["before_folder_name"].split("/").first != self.name.split("/").first
@@ -248,5 +242,22 @@ class Gws::Share::Folder
       end
     end
     true
+  end
+
+  def rename_children
+    return unless @db_changes["name"]
+    return unless @db_changes["name"][0]
+
+    src = @db_changes["name"][0]
+    dst = @db_changes["name"][1]
+
+    folder_ids = Gws::Share::Folder.where(site_id: site_id, name: /^#{src}\//).pluck(:id)
+    folder_ids.each do |id|
+      folder = Gws::Share::Folder.where(id: id).first
+      next unless folder
+
+      folder.name = folder.name.sub(/^#{src}\//, "#{dst}/")
+      folder.save(validate: false)
+    end
   end
 end
