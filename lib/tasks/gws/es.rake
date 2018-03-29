@@ -109,7 +109,7 @@ namespace :gws do
         break
       end
 
-      # Rake::Task['gws:es:feed_all_memos'].execute
+      Rake::Task['gws:es:feed_all_memos'].execute
       Rake::Task['gws:es:feed_all_boards'].execute
       Rake::Task['gws:es:feed_all_faqs'].execute
       Rake::Task['gws:es:feed_all_qnas'].execute
@@ -120,30 +120,30 @@ namespace :gws do
       Rake::Task['gws:es:feed_all_files'].execute
     end
 
-    # task feed_all_memos: :environment do
-    #   site = Gws::Group.find_by(name: ENV['site'])
-    #   if !site.menu_elasticsearch_visible?
-    #     puts 'elasticsearch was not enabled'
-    #     break
-    #   end
-    #
-    #   if site.elasticsearch_client.nil?
-    #     puts 'elasticsearch was not configured'
-    #     break
-    #   end
-    #
-    #   puts 'gws/memo/message and gws/memo/comment'
-    #   Gws::Memo::Message.site(site).each do |message|
-    #     puts "- #{message.subject}"
-    #     job = Gws::Elasticsearch::Indexer::MemoMessageJob.bind(site_id: site)
-    #     job.perform_now(action: 'index', id: message.id.to_s)
-    #     message.comments.each do |comment|
-    #       puts "-- #{comment.text.try(:truncate, 40)}"
-    #       job = Gws::Elasticsearch::Indexer::MemoCommentJob.bind(site_id: site)
-    #       job.perform_now(action: 'index', id: comment.id.to_s)
-    #     end
-    #   end
-    # end
+    task feed_all_memos: :environment do
+      site = Gws::Group.find_by(name: ENV['site'])
+      if !site.menu_elasticsearch_visible?
+        puts 'elasticsearch was not enabled'
+        break
+      end
+
+      if site.elasticsearch_client.nil?
+        puts 'elasticsearch was not configured'
+        break
+      end
+
+      puts 'gws/memo/message'
+      Gws::Memo::Message.site(site).each do |message|
+        puts "- #{message.subject}"
+        job = Gws::Elasticsearch::Indexer::MemoMessageJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: message.id.to_s)
+        #message.comments.each do |comment|
+        #  puts "-- #{comment.text.try(:truncate, 40)}"
+        #  job = Gws::Elasticsearch::Indexer::MemoCommentJob.bind(site_id: site)
+        #  job.perform_now(action: 'index', id: comment.id.to_s)
+        #end
+      end
+    end
 
     task feed_all_boards: :environment do
       site = Gws::Group.find_by(name: ENV['site'])

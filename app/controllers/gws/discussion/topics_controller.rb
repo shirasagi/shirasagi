@@ -23,7 +23,7 @@ class Gws::Discussion::TopicsController < ApplicationController
   end
 
   def pre_params
-    @skip_default_group = true
+    #@skip_default_group = true
     super
   end
 

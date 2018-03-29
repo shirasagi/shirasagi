@@ -27,7 +27,7 @@ class Gws::Memo::Message
 
   set_permission_name 'private_gws_memo_messages', :edit
 
-  # # indexing to elasticsearch via companion object
-  # around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
-  # around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
 end
