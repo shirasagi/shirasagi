@@ -19,6 +19,7 @@ SS::Application.routes.draw do
 
     resources :tasks, only: [:index, :show, :destroy], concerns: [:deletion] do
       post :reset_state, on: :member
+      get :download, on: :member
     end
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
@@ -36,6 +37,7 @@ SS::Application.routes.draw do
 
     resources :tasks, only: [:index, :show, :destroy], concerns: [:deletion] do
       post :reset_state, on: :member
+      get :download, on: :member
     end
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
