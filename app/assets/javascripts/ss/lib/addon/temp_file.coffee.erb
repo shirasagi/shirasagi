@@ -56,6 +56,8 @@ class @SS_Addon_TempFile
             if request.status == 200 || request.status == 201
               files = JSON.parse(request.response)
               SS_Addon_TempFile.select(files, dropArea)
+            else if request.status == 413
+              alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"))
             else
               try
                 json = $.parseJSON(request.response)
