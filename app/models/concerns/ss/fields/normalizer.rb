@@ -33,6 +33,7 @@ module SS::Fields::Normalizer
     self.class.fields.each do |name, field_def|
       next if name[0] == '_'
       next unless field_def.default_val.nil?
+      name = "#{name}_translations" if field_def.options[:localize]
       if has_attribute?(name) && blank_attribute?(name, send(name), field_def)
         remove_attribute(name)
       end
