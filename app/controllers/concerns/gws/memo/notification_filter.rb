@@ -75,7 +75,7 @@ module Gws::Memo::NotificationFilter
     if @items.present?
       @destroyed_items ||= []
       @items.each do |item|
-        @destroyed_items << [item.dup, users]
+        @destroyed_items << [item.dup, item.subscribed_users]
       end
     end
   end
