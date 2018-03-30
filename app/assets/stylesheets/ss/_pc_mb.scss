@@ -395,6 +395,7 @@ td {
     span {
       display: inline-block;
       max-width: 200px;
+      line-height: 1;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -477,7 +478,7 @@ td {
     }
     .gws-bookmark {
       display: inline-block;
-      padding: 12px 12px;
+      padding: 10px 10px;
       &:hover {
         background-color: #424242;
       }
