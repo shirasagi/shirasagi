@@ -11,6 +11,14 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     end
   end
 
+  describe '#render_loop_html - id' do
+    let(:page) { create(:article_page, name: 'ページ &') }
+
+    it do
+      expect(item.render_loop_html(page, html: '#{id}')).to eq(page.id.to_s)
+    end
+  end
+
   describe '#render_loop_html - name' do
     let(:page) { create(:article_page, name: 'ページ &') }
 
