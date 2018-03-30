@@ -30,7 +30,7 @@ module Gws::Qna::BaseFilter
   end
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_question_label || t("modules.gws/qna"), gws_qna_topics_path(mode: '-', category: '-')]
+    @crumbs << [@cur_site.menu_qna_label || t("modules.gws/qna"), gws_qna_topics_path(mode: '-', category: '-')]
     @crumbs << [t("ss.navi.#{@mode}"), gws_qna_topics_path(category: '-')]
     @crumbs << [@category.name, gws_qna_topics_path] if @category.present?
   end
