@@ -318,7 +318,6 @@
 
 // events
 .fc-event {
-  padding: 1px 1px 1px 2px;
   border: none;
   border-radius: 0;
   font-size: 90%;
@@ -327,6 +326,9 @@
     word-break: normal;
     word-wrap: normal;
   }
+}
+.fc-time-grid-event .fc-content:before {
+  float: left;
 }
 .fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-title {
   font-size: 90%;
@@ -344,6 +346,7 @@
   &:hover { color: $orange; text-decoration: underline; }
 }
 .fc-event-range {
+  padding: 1px 2px;
   border-color: #966;
   background-color: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
@@ -364,7 +367,7 @@
 }
 @mixin fc_event_prefix {
   display: inline-block;
-  margin-right: 3px;
+  margin-right: 2px;
   padding: 0 2px;
   border-radius: 2px;
   color: $white;
@@ -450,6 +453,7 @@
     white-space: nowrap;
     .summary {
       color: #888;
+      font-size: 90%;
       white-space: normal;
     }
   }
@@ -467,6 +471,8 @@
   }
   .delimiter {
     width: 2px;
+    padding-left: 0;
+    padding-right: 0;
   }
   .fc-event {
     display: inline;
@@ -480,6 +486,20 @@
     .tr {
       border-bottom: 1px solid black;
     }
+  }
+  .fc-event {
+    color: #333 !important;
+  }
+  .fc-event-range {
+    border: 1px solid #888;
+    padding: 1px 2px;
+    background-color: #fff !important;
+  }
+  .fc-event .fc-content:before {
+    border: 1px solid #333;
+    border-width: 0 1px;
+    background-color: transparent;
+    color: #333 !important;
   }
 }
 
