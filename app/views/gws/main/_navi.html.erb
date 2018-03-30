@@ -136,7 +136,10 @@
     <nav class="mod-navi">
       <h2><%= link_to @cur_site.menu_links_label || t('mongoid.models.gws/link'), gws_public_links_path %></h2>
       <% @links.each do |item| %>
-      <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
+        <% item.links.each do |link| %>
+          <% next if link["url"].blank? || link["name"].blank? %>
+          <h3><%= link_to link["name"], link["url"] %></h3>
+        <% end %>
       <% end %>
     </nav>
   <% end %>
