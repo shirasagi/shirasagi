@@ -242,6 +242,9 @@
     margin: 10px 0 !important;
   }
 }
+.fc-view {
+  min-height: 35px;
+}
 .fc-view table {
   box-sizing: border-box;
 }
@@ -347,7 +350,7 @@
   color: #000;
   &:hover { color: #000; text-decoration: underline; }
 }
-.fc-agenda-view .fc-event-point {
+.fc-agenda-view .fc-day-grid .fc-event-point {
   background-color: #bdf;
   color: #000;
 }
@@ -455,6 +458,15 @@
   }
   .time {
     width: 50px;
+  }
+  .startAt {
+    width: 120px;
+  }
+  .endAt {
+    width: 120px;
+  }
+  .delimiter {
+    width: 2px;
   }
   .fc-event {
     display: inline;

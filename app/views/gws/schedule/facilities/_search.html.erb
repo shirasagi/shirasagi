@@ -2,8 +2,18 @@
   var submit_search = function() {
     if ($('#calendar-controller').length) {
       var view = $('#calendar-controller').fullCalendar('getView');
+      var view_format = 'default';
+      if (view.el.closest(".fc").hasClass('fc-list-format')) {
+        view_format = 'list';
+      }
+      var view_attendance = 'inactive';
+      if(view.el.closest(".fc").find('.fc-withAbsence-button').hasClass("fc-state-active")) {
+        view_attendance = 'active';
+      }
       $('form.search').append('<input type="hidden" name="calendar[view]" value="' + view.name + '" />');
       $('form.search').append('<input type="hidden" name="calendar[date]" value="' + view.start.format() + '" />');
+      $('form.search').append('<input type="hidden" name="calendar[viewFormat]" value="' + view_format + '" />');
+      $('form.search').append('<input type="hidden" name="calendar[viewAttendance]" value="' + view_attendance + '" />');
     }
     $("form.search").submit();
   };
