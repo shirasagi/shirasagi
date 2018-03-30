@@ -13,7 +13,6 @@ class Gws::CustomGroupsController < ApplicationController
   end
 
   def pre_params
-    @skip_default_group = true
     { readable_member_ids: [@cur_user.id] }
   end
 

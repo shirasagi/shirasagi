@@ -3,7 +3,7 @@
     <% @items.each do |item| %>
       <li class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
         <div class="info">
-          <%= link_to item.subject, { action: :show, id: item.id }, class: "title" %>
+          <%= link_to item.subject, { action: :show, id: item.id, folder: item.path[@cur_user.id.to_s] }, class: "title" %>
           <div class="meta">
             <span class="datetime"><%= item.display_send_date %></span>
           </div>

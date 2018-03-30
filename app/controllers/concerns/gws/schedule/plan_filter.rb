@@ -24,7 +24,6 @@ module Gws::Schedule::PlanFilter
   end
 
   def pre_params
-    @skip_default_group = true
     {
       start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
       member_ids: params[:member_ids].presence || [@cur_user.id],

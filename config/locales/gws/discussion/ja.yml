@@ -70,7 +70,6 @@ ja:
     addons:
       gws/discussion/todo: ToDo
       gws/discussion/release: 公開設定
-      gws/discussion/notify_setting: 新着通知
       gws/discussion/group_setting: 電子会議室
 
   mongoid:
@@ -115,8 +114,6 @@ ja:
         permission_level: 権限レベル
       gws/addon/discussion/release:
         released: 公開日時
-      gws/addon/discussion/notify_setting:
-        notify_state: メッセージ通知
       gws/addon/discussion/readable_setting:
         readable_group_ids: 閲覧グループ
         readable_member_ids: 閲覧ユーザー
@@ -178,10 +175,6 @@ ja:
     gws/addon/discussion/release:
       state:
         - 公開画面への公開、非公開を選択します。
-    gws/addon/discussion/notify_setting:
-      notify_state:
-        - 設定を有効にすると、スレッドの新規作成、コメントの投稿があった際、参加者に通知メッセージを送信することができます。
-        - 電子会議室が非公開状態の場合、通知メッセージは送信されません。
     gws/addon/discussion/group_setting:
       discussion_quota:
         - 電子会議室の合計容量の上限を入力します。

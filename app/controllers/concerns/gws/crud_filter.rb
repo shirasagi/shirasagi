@@ -4,7 +4,8 @@ module Gws::CrudFilter
 
   included do
     menu_view "gws/crud/menu"
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
+    before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
   end
 
   private
@@ -70,7 +71,7 @@ module Gws::CrudFilter
   end
 
   def soft_delete
-    set_item
+    set_item unless @item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
     if request.get?
@@ -133,7 +134,7 @@ module Gws::CrudFilter
   end
 
   def soft_delete_all
-    set_selected_items
+    set_selected_items unless @items
 
     entries = @items.entries
     @items = []

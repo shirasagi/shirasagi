@@ -379,13 +379,6 @@ module Gws::Model
       self.state == "public"
     end
 
-    def apply_filters(user, site)
-      matched_filter = Gws::Memo::Filter.site(site).user(user).enabled.detect{ |f| f.match?(self) }
-      self.move(user, matched_filter.path) if matched_filter
-      self.filtered[user.id.to_s] = Time.zone.now
-      update
-    end
-
     def new_memo(ref = nil)
       if sign = Gws::Memo::Signature.site(@cur_site).default_sign(@cur_user)
         self.text = "\n\n#{sign}"

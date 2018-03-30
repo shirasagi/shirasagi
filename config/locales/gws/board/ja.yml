@@ -50,6 +50,9 @@ ja:
       severity:
         normal: 通常
         important: 重要
+      subscribed_users_readable_state:
+        admin: 管理権限のみ
+        subscriber: 購読者全員
     links:
       back_to_thread: 戻る
       comment: 返信する
@@ -62,6 +65,7 @@ ja:
     addons:
       gws/board/group_setting: 掲示板
       gws/board/category: カテゴリー
+      gws/board/notify_setting: 通知
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -144,6 +148,9 @@ ja:
         name: カテゴリー名
       gws/addon/board/category:
         category_ids: カテゴリー
+      gws/addon/board/notify_setting:
+        notify_state: 通知設定
+        subscribed_users_readable_state: 通知先表示
 
   tooltip:
     gws/board/postable:

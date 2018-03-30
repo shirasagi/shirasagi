@@ -1,3 +1,4 @@
+<% if @item.subscribed_users_readable?(@cur_user) %>
 <div class="subscribed-users">
   <div class="addon-head toggle-head">
     <h2><%= t('gws/board.topic.browsing_state') %></h2>
@@ -13,8 +14,8 @@
     </dl>
   </div>
 </div>
-
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-board-topic-subscribed-users"); <% end %>
+<% end %>
 
 <% if !@item.browsed?(@cur_user) %>
   <%= jquery do %>

@@ -8,6 +8,7 @@ class Gws::Board::Topic
   include Gws::Addon::Link
   include Gws::Board::DescendantsFileInfo
   include Gws::Addon::Board::Category
+  include Gws::Addon::Board::NotifySetting
   include Gws::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission

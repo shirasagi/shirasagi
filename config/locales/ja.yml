@@ -150,6 +150,7 @@ ja:
       not_found_parent_nodes: に親フォルダー「%{name}」がありません。
       root_node_save_error: ルートフォルダーを作成できませんでした。
       imap_setting_validation_error: "必須項目が入力されていません。"
+      request_entity_too_large: データのサイズが大きすぎます。
     template:
       body: 次の項目を確認してください。
       header:

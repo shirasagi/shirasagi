@@ -7,12 +7,11 @@ class Gws::Memo::MessagesController < ApplicationController
   before_action :deny_with_auth
 
   before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy, :toggle_star]
-  #before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
+  before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_folders, only: [:index, :recent]
   before_action :set_cur_folder, only: [:index]
-  before_action :apply_filters, only: [:index], if: -> { params[:folder] == 'INBOX' }
 
   navi_view "gws/memo/messages/navi"
 
@@ -32,6 +31,8 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_crumbs
+    return if params[:folder] == 'REDIRECT'
+
     set_cur_folder
     @crumbs << [@cur_site.menu_memo_label || t('mongoid.models.gws/memo/message'), gws_memo_messages_path ]
     if @cur_folder.folder_path != 'INBOX'
@@ -54,12 +55,6 @@ class Gws::Memo::MessagesController < ApplicationController
     @folders.each { |folder| folder.site = @cur_site }
   end
 
-  def apply_filters
-    @model.site(@cur_site).folder(@cur_folder, @cur_user).unfiltered(@cur_user).each do |message|
-      message.apply_filters(@cur_user, @cur_site)
-    end
-  end
-
   def send_forward_mails
     forward_emails = Gws::Memo::Forward.site(@cur_site).
       in(user_id: @item.member_ids).
@@ -71,25 +66,16 @@ class Gws::Memo::MessagesController < ApplicationController
     Gws::Memo::Mailer.forward_mail(@item, forward_emails).deliver_now
   end
 
-  #def redirect_to_appropriate_folder
-  #  path = @item.from[@cur_user.id.to_s]
-  #  if path.present?
-  #    redirect_to({ folder: path })
-  #  end
-  #
-  #  path = @item.to[@cur_user.id.to_s]
-  #  if path.present?
-  #    folter = Gws::Memo::Folder.user(@cur_user).find(path) rescue nil
-  #  end
-  #
-  #  if folter.present?
-  #    redirect_to({ folder: folter.id })
-  #  elsif path.present?
-  #    redirect_to({ folder: path })
-  #  else
-  #    raise '404'
-  #  end
-  #end
+  def redirect_to_appropriate_folder
+    path = @item.path[@cur_user.id.to_s]
+    if path.present?
+      redirect_to({ folder: path })
+    elsif (@cur_user.id == @item.user_id) && @item.deleted["sent"].nil?
+      redirect_to({ folder: "INBOX.Sent" })
+    else
+      raise '404'
+    end
+  end
 
   public
 
@@ -103,9 +89,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def recent
-    @cur_folder = @folders.select { |folder| folder.folder_path == "INBOX" }.first
-    @items = @model.folder(@cur_folder, @cur_user).
-      site(@cur_site).
+    @items = @model.member(@cur_user).site(@cur_site).and_public.
       search(params[:s]).
       limit(5)
 
