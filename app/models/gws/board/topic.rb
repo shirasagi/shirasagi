@@ -16,6 +16,7 @@ class Gws::Board::Topic
   include Gws::Board::BrowsingState
 
   readable_setting_include_custom_groups
+  permission_include_custom_groups
   hide_released_field
 
   validates :category_ids, presence: true
