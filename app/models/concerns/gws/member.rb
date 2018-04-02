@@ -7,9 +7,10 @@ module Gws::Member
     class_variable_set(:@@_member_ids_required, true)
 
     embeds_ids :members, class_name: "Gws::User"
+    embeds_ids :member_groups, class_name: "Gws::Group"
     embeds_ids :member_custom_groups, class_name: "Gws::CustomGroup"
 
-    permit_params member_ids: [], member_custom_group_ids: []
+    permit_params member_ids: [], member_group_ids: [], member_custom_group_ids: []
 
     before_validation :validate_member_ids, if: -> { member_ids.present? }
 
@@ -23,6 +24,7 @@ module Gws::Member
 
   def member?(user)
     return true if member_ids.include?(user.id)
+    return true if user.group_ids.any? { |group_id| member_group_ids.include?(group_id) }
     if self.class.member_include_custom_groups?
       return true if (member_custom_group_ids & Gws::CustomGroup.member(user).map(&:id)).present?
     end
@@ -40,6 +42,7 @@ module Gws::Member
   def overall_members
     member_ids = member_custom_groups.pluck(:member_ids).flatten
     member_ids += self.member_ids
+    member_ids += Gws::User.in(group_ids: Gws::Group.in(id: member_group_ids).pluck(:id)).pluck(:id)
     member_ids.compact!
     member_ids.uniq!
 
@@ -59,6 +62,7 @@ module Gws::Member
   def sorted_overall_members_was
     member_ids = Gws::CustomGroup.site(site || cur_site).in(id: member_custom_group_ids_was).pluck(:member_ids).flatten
     member_ids += self.member_ids_was.to_a
+    member_ids += Gws::User.in(group_ids: Gws::Group.in(id: member_group_ids_was).pluck(:id)).pluck(:id)
     member_ids.compact!
     member_ids.uniq!
 
@@ -80,6 +84,7 @@ module Gws::Member
   def validate_presence_member
     return true unless self.class.member_ids_required?
     return true if member_ids.present?
+    return true if member_group_ids.present?
     return true if self.class.member_include_custom_groups? && member_custom_group_ids.present?
     errors.add :member_ids, :empty
   end
@@ -99,8 +104,9 @@ module Gws::Member
 
     def member_conditions(user)
       or_conds = [{ member_ids: user.id }]
+      or_conds << { :member_group_ids.in => user.group_ids }
       if member_include_custom_groups?
-        or_conds << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+        or_conds << { :member_custom_group_ids.in => Gws::CustomGroup.member(user).pluck(:id) }
       end
       or_conds
     end
