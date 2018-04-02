@@ -30,12 +30,20 @@ module Gws::Share::DescendantsFileInfo
   end
 
   def update_folder_descendants_file_info
-    # return unless files
-    files_count, total_file_size = folder_file_info(self)
-    self.set(
-      descendants_files_count: files_count,
-      descendants_total_file_size: total_file_size
-    ) if Gws::Share::Folder.where(_id: self._id).compact.present?
+    path = nil
+    name.split("/").each do |n|
+      path = path ? path + "/" + n : n
+      folder = Gws::Share::Folder.site(site).where(name: path).first
+
+      descendants_folder_ids = Gws::Share::Folder.site(site).where(name: /^#{folder.name}\//).pluck(:id)
+      descendants_folder_ids << folder.id
+      descendants_files = Gws::Share::File.site(site).in(folder_id: descendants_folder_ids)
+
+      folder.set(
+        descendants_files_count: descendants_files.count,
+        descendants_total_file_size: descendants_files.pluck(:size).sum
+      )
+    end
   end
 
   private
