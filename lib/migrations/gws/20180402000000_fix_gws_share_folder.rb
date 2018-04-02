@@ -1,4 +1,3 @@
-# set to_member_ids
 class SS::Migration20180402000000
   def change
     folder_ids = Gws::Share::Folder.all.pluck(:id)

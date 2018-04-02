@@ -32,8 +32,9 @@ module Gws::Share::DescendantsFileInfo
   def update_folder_descendants_file_info
     path = nil
     name.split("/").each do |n|
-      path = path ? path + "/" + n : n
+      path = path ? (path + "/" + n) : n
       folder = Gws::Share::Folder.site(site).where(name: path).first
+      next unless folder
 
       descendants_folder_ids = Gws::Share::Folder.site(site).where(name: /^#{folder.name}\//).pluck(:id)
       descendants_folder_ids << folder.id
