@@ -13,7 +13,8 @@ module Gws::Memo::NotificationFilter
 
   def send_update_notification
     return if request.get?
-    return if response.code !~ /^3/
+    #return if response.code !~ /^3/
+    return if @item.errors.present?
 
     if @item.respond_to?(:notify_enabled?)
       return unless @item.notify_enabled?
@@ -36,15 +37,15 @@ module Gws::Memo::NotificationFilter
     return if request.get?
     return if response.code !~ /^3/
 
-    if @item.respond_to?(:notify_enabled?)
-      return unless @item.notify_enabled?
-    end
-
     @destroyed_items ||= []
     @destroyed_items << @destroyed_item if @destroyed_item
     return if @destroyed_items.blank?
 
     @destroyed_items.each do |item, users|
+      if item.respond_to?(:notify_enabled?)
+        next unless item.notify_enabled?
+      end
+
       users = users.nin(id: @cur_user.id) if @cur_user
       next if users.blank?
 
