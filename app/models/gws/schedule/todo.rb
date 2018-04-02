@@ -91,6 +91,15 @@ class Gws::Schedule::Todo
     end
   end
 
+  def subscribed_users
+    return Gws::User.none if new_record?
+
+    ids = member_ids
+    ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
+    ids.uniq!
+    Gws::User.in(id: ids)
+  end
+
   class << self
     def search(params)
       criteria = all.search_keyword(params)

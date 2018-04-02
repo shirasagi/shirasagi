@@ -2,6 +2,7 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::TodoFilter
+  include Gws::Memo::NotificationFilter
 
   navi_view "gws/schedule/todo/main/navi"
 

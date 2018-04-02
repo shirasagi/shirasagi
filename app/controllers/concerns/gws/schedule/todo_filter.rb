@@ -6,7 +6,7 @@ module Gws::Schedule::TodoFilter
     helper Gws::Schedule::TodoHelper
     model Gws::Schedule::Todo
 
-    before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active]
+    before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active soft_delete]
     before_action :set_selected_items, only: [:destroy_all, :disable_all, :finish_all, :revert_all, :active_all]
     before_action :set_skip_default_group
   end
@@ -65,7 +65,7 @@ module Gws::Schedule::TodoFilter
 
   # 論理削除
   def soft_delete
-    set_item
+    set_item unless @item
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
     if request.get?
