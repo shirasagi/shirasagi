@@ -10,6 +10,7 @@ class Gws::Schedule::Todo
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
   include Gws::Addon::Schedule::Repeat
+  include Gws::Addon::Memo::NotifySetting
   include Gws::Addon::Discussion::Todo
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -21,6 +22,8 @@ class Gws::Schedule::Todo
   member_include_custom_groups
   permission_include_custom_groups
   readable_setting_include_custom_groups
+
+  class_variable_set(:@@_notify_state_default, 'enabled')
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
