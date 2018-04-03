@@ -118,7 +118,13 @@ class Gws::Share::Folder
   end
 
   def quota_bytes
-    share_max_folder_size.to_i
+    return @quota_bytes if @quota_bytes
+    if depth == 1
+      @quota_bytes = share_max_folder_size
+    else
+      @quota_bytes = parents.where(depth: 1).first.try(:share_max_folder_size)
+    end
+    @quota_bytes = @quota_bytes || 0
   end
 
   def quota_label
