@@ -65,9 +65,9 @@ class Gws::Faq::TopicsController < ApplicationController
 
     result = true
     if !@item.browsed?(@cur_user)
-      @item.set_browsed(@cur_user)
-      @item.record_timestamps = false
-      result = @item.save
+      @item.set_browsed!(@cur_user)
+      result = true
+      @item.reload
     end
 
     if result

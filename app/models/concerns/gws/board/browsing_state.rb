@@ -12,13 +12,10 @@ module Gws::Board::BrowsingState
   end
   alias browsed? browsed_at
 
-  def set_browsed(user)
-    hash = self.browsed_users_hash
-    hash ||= {}
-    hash = hash.dup
-    hash[user.id.to_s] = Time.zone.now
-
-    self.browsed_users_hash = hash
+  def set_browsed!(user)
+    # to update hash partially, use `#persist_atomic_operations` method.
+    # be careful, you must not use `#set` method. this method update hash totally.
+    persist_atomic_operations('$set' => { "browsed_users_hash.#{user.id}" => Time.zone.now })
   end
 
   def browsed_state_options
