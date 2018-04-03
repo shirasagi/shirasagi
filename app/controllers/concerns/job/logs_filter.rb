@@ -67,7 +67,7 @@ module Job::LogsFilter
         return
       end
 
-      num = log_criteria.term(from).delete
+      num = log_criteria.term(from).destroy_all
 
       compact
 
