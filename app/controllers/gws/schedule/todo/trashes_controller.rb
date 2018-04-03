@@ -2,7 +2,7 @@ class Gws::Schedule::Todo::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::TodoFilter
-  include Gws::Memo::NotificationFilter
+  include Gws::Schedule::Todo::NotificationFilter
 
   navi_view "gws/schedule/todo/main/navi"
 

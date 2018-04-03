@@ -11,7 +11,7 @@ module Gws::Memo::NotificationFilter
 
   private
 
-  def send_update_notification
+  def send_update_notification(subject = nil, text = nil)
     return if request.get?
     #return if response.code !~ /^3/
     return if @item.errors.present?
@@ -27,7 +27,7 @@ module Gws::Memo::NotificationFilter
 
     Gws::Memo::Notifier.deliver!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-      to_users: users, item: @item
+      to_users: users, item: @item, subject: subject, text: text
     )
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

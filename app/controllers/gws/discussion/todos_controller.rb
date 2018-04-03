@@ -2,6 +2,7 @@ class Gws::Discussion::TodosController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::TodoFilter
+  include Gws::Schedule::Todo::NotificationFilter
 
   model Gws::Schedule::Todo
 

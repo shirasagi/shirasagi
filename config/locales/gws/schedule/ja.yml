@@ -401,6 +401,16 @@ ja:
       text: |
         「%{name}」が削除されました。
 
+    gws/schedule/todo/finish:
+      subject: "[更新通知][ToDo] %{name}"
+      text: |
+        「%{name}」が完了になりました。
+
+    gws/schedule/todo/revert:
+      subject: "[更新通知][ToDo] %{name}"
+      text: |
+        「%{name}」が未完了になりました。
+
     gws/schedule/attendance/destroy:
       subject: "[削除通知][スケジュール] %{name}"
       text: |
