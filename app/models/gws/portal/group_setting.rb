@@ -17,8 +17,6 @@ class Gws::Portal::GroupSetting
   validates :name, presence: true
   validates :portal_group_id, presence: true, uniqueness: { scope: :site_id }
 
-  before_validation :set_name, if: ->{ portal_group.present? }
-
   def portlet_models
     %w(free links schedule bookmark report workflow circular monitor board faq qna share attendance).map do |key|
       Gws::Portal::GroupPortlet.portlet_model(key)
@@ -27,11 +25,5 @@ class Gws::Portal::GroupSetting
 
   def default_portlets
     Gws::Portal::GroupPortlet.default_portlets(SS.config.gws['portal']['group_portlets'])
-  end
-
-  private
-
-  def set_name
-    self.name = portal_group.name if self.name.blank?
   end
 end
