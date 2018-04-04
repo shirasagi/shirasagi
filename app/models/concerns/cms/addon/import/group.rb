@@ -56,6 +56,7 @@ module Cms::Addon::Import
 
     def validate_import
       return errors.add :in_file, :blank if in_file.blank?
+      return errors.add :cur_site, :blank if cur_site.blank?
 
       fname = in_file.original_filename
       return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
@@ -81,7 +82,7 @@ module Cms::Addon::Import
       expiration_date = row[t("expiration_date")].to_s.strip
 
       if id.present?
-        item = self.class.unscoped.where(id: id).first
+        item = self.class.unscoped.site(cur_site).where(id: id).first
         if item.blank?
           self.errors.add :base, :not_found, line_no: index, id: id
           return nil

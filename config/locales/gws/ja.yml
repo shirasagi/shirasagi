@@ -415,6 +415,8 @@ ja:
         status: ステータス
         text_color: 文字色
         color: 背景色
+      gws/addon/import/group:
+        in_file: ファイル
 
   tooltip:
     gws/model/category:
