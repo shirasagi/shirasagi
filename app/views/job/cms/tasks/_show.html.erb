@@ -50,5 +50,12 @@
   <dd><%= @item.current_count %></dd>
 
   <dt><%= @model.t :logs %></dt>
-  <dd><%= text_area_tag :logs, @item.logs.blank? ? "" : safe_join(@item.logs, "\n"), readonly: true, style: "height: 400px" %></dd>
+  <dd>
+    <% limit = 1000 %>
+    <%= t('job.log_notice', count: limit) %>
+    <%= text_area_tag :logs, safe_join(@item.head_logs(limit), "\n"), readonly: true, style: "height: 400px" %>
+    <% if ::File.exists?(@item.log_file_path) %>
+      <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
+    <% end %>
+  </dd>
 </dl>

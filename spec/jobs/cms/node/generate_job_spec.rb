@@ -26,6 +26,10 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect(task.current_count).to eq 0
         expect(task.logs).to include(include("#{node.url}index.html"))
         expect(task.node_id).to be_nil
+        # logs are saved in a file
+        expect(::File.exists?(task.log_file_path)).to be_truthy
+        # and there are no `logs` field
+        expect(task[:logs]).to be_nil
       end
       Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
         expect(task.state).to eq 'ready'
