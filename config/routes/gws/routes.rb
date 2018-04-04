@@ -31,7 +31,7 @@ SS::Application.routes.draw do
     get "default_groups/:default_group" => "default_groups#update", as: :default_group
     get "question_management" => "question_management#index"
     resource  :site
-    resources :groups, concerns: [:deletion]
+    resources :groups, concerns: [:deletion, :download, :import]
     resources :custom_groups, concerns: [:deletion]
     resources :users, concerns: [:deletion, :download, :import, :lock_and_unlock]
     resources :user_titles, concerns: [:deletion]
