@@ -35,7 +35,7 @@ SS::Application.routes.draw do
     resources :custom_groups, concerns: [:deletion]
     resources :users, concerns: [:deletion, :download, :import, :lock_and_unlock]
     resources :user_titles, concerns: [:deletion]
-    resources :roles, concerns: [:deletion]
+    resources :roles, concerns: [:deletion, :download, :import]
     resources :notices, concerns: [:deletion]
     resources :public_notices, only: [:index, :show]
     resources :sys_notices, only: [:index, :show]

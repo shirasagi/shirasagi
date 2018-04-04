@@ -417,6 +417,8 @@ ja:
         color: 背景色
       gws/addon/import/group:
         in_file: ファイル
+      gws/addon/import/role:
+        in_file: ファイル
 
   tooltip:
     gws/model/category:
