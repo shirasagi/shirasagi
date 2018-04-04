@@ -12,12 +12,14 @@ ja:
     current_month: 今月
     filter_all: 全て
     date_range_delimiter: ～
-    keyword: 検索キーワード
+    keyword: キーワード
     no_event: イベントはありません
     dates:
-      setting: 検索期間設定
+      setting: 開催期間
+      start_date: 開始
+      close_date: 終了
     category:
-      setting: 検索カテゴリー設定
+      setting: カテゴリー
     search:
       no-result: 検索結果が見つかりませんでした。
 

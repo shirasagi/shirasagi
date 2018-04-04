@@ -21,6 +21,7 @@ ja:
       search: データセットを検索
       select: データセットを設定する
       deselect: 削除
+      name: データセット名
     search_dataset_groups:
       index: データセットグループを選択する
       search: データセットグループを検索

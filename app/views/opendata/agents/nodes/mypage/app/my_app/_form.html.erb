@@ -10,27 +10,27 @@ $ ->
 
 <table class="see opendata-app">
   <tr class="parent-row">
-    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="field"><%= f.label(:name, @model.t(:name)) %><%= required_label %></td>
     <td class="input"><%= f.text_field :name %></td>
   </tr>
 
   <tr class="parent-row">
-    <td class="field"><%= @model.t :text %><%= @item.tt :text %><%= required_label %></td>
+    <td class="field"><%= f.label(:text, @model.t(:text)) %><%= @item.tt :text %><%= required_label %></td>
     <td class="input"><%= f.text_area :text %></td>
   </tr>
 
   <tr class="parent-row">
-    <td class="field"><%= @model.t :license %><%= required_label %></td>
+    <td class="field"><%= f.label(:license, @model.t(:license)) %><%= required_label %></td>
     <td class="input"><%= f.text_field :license %></td>
   </tr>
 
   <tr class="parent-row">
-    <td class="field"><%= @model.t :tags %><%= @item.tt :tags %></td>
+    <td class="field"><%= f.label(:tags, @model.t(:tags)) %><%= @item.tt :tags %></td>
     <td class="input"><%= f.text_field :tags %></td>
   </tr>
 
   <tr class="parent-row">
-    <td class="field"><%= @model.t :appurl %></td>
+    <td class="field"><%= f.label(:appurl, @model.t(:appurl)) %></td>
     <td class="input"><%= f.text_area :appurl %></td>
   </tr>
 
