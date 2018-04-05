@@ -36,7 +36,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
     before { login_cms_user }
 
     it "#count" do
-      visit cms_preview_path(site: site, path: node_cms.url)
+      visit cms_preview_path(site: site, path: "#{node_cms.filename}/")
       expect(page).to have_css(".ads-banners")
       expect(page).to have_selector(".banners span a", text: item.name)
 

@@ -1,8 +1,10 @@
 require 'spec_helper'
 
-describe "cms_apis_temp_files" do
+describe "cms_apis_temp_files", dbscope: :example, tmpdir: true do
   let(:site) { cms_site }
-  let(:item) { Cms::TempFile.last }
+  let(:item) do
+    tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'ss/temp_file')
+  end
   let(:index_path) { cms_apis_temp_files_path site.id }
   let(:new_path) { new_cms_apis_temp_file_path site.id }
   let(:show_path) { cms_apis_temp_file_path site.id, item }
@@ -44,7 +46,7 @@ describe "cms_apis_temp_files" do
     it "#edit" do
       visit edit_path
       within "#ajax-form" do
-        fill_in "item[filename]", with: "modify"
+        fill_in "item[name]", with: "modify"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path
