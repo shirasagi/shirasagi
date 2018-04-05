@@ -1,7 +1,7 @@
 require "csv"
 
-module Cms::Addon::Import
-  module Group
+module Gws::Addon::Import
+  module Role
     extend ActiveSupport::Concern
     extend SS::Addon
 
@@ -12,10 +12,7 @@ module Cms::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(
-          id name order ldap_dn contact_tel contact_fax contact_email contact_link_url
-          contact_link_name activation_date expiration_date
-        )
+        %w(id name permissions permission_level)
       end
 
       def to_csv
@@ -25,15 +22,8 @@ module Cms::Addon::Import
             line = []
             line << item.id
             line << item.name
-            line << item.order
-            line << item.ldap_dn
-            line << item.contact_tel
-            line << item.contact_fax
-            line << item.contact_email
-            line << item.contact_link_url
-            line << item.contact_link_name
-            line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
-            line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
+            line << item.localized_permissions.join("\n")
+            line << item.permission_level
             data << line
           end
         end
@@ -50,6 +40,29 @@ module Cms::Addon::Import
         update_row(row, i + 2)
       end
       return errors.empty?
+    end
+
+    def localized_permissions
+      localized = []
+      self._module_permission_names.each do |mod, names|
+        names.each do |name|
+          next unless self.permissions.include? name.to_s
+          localized.push "[#{self.class.mod_name(mod)}]#{I18n.t("#{self.collection_name.to_s.singularize}.#{name}")}"
+        end
+      end
+      localized
+    end
+
+    def normalized_permissions(localized)
+      normalized = []
+      self.class.module_permission_names(separator: true).each do |mod, names|
+        names.each do |name|
+          permission = "[#{self.class.mod_name(mod)}]#{I18n.t("#{self.collection_name.to_s.singularize}.#{name}")}"
+          next unless localized.include? permission
+          normalized << name.to_s
+        end
+      end
+      normalized
     end
 
     private
@@ -69,17 +82,10 @@ module Cms::Addon::Import
     end
 
     def update_row(row, index)
-      id             = row[t("id")].to_s.strip
-      name           = row[t("name")].to_s.strip
-      order          = row[t("order")].to_s.strip
-      ldap_dn        = row[t("ldap_dn")].to_s.strip
-      contact_tel    = row[t("contact_tel")].to_s.strip
-      contact_fax    = row[t("contact_fax")].to_s.strip
-      contact_email  = row[t("contact_email")].to_s.strip
-      contact_link_url = row[t("contact_link_url")].to_s.strip
-      contact_link_name = row[t("contact_link_name")].to_s.strip
-      activation_date = row[t("activation_date")].to_s.strip
-      expiration_date = row[t("expiration_date")].to_s.strip
+      id               = row[t("id")].to_s.strip
+      name             = row[t("name")].to_s.strip
+      permissions      = row[t("permissions")].to_s.strip.split("\n")
+      permission_level = row[t("permission_level")].to_s.strip.to_i
 
       if id.present?
         item = self.class.unscoped.site(cur_site).where(id: id).first
@@ -97,16 +103,10 @@ module Cms::Addon::Import
         item = self.class.new
       end
 
-      item.name            = name
-      item.order           = order
-      item.ldap_dn         = ldap_dn
-      item.contact_tel     = contact_tel
-      item.contact_fax     = contact_fax
-      item.contact_email   = contact_email
-      item.contact_link_url = contact_link_url
-      item.contact_link_name = contact_link_name
-      item.activation_date = activation_date
-      item.expiration_date = expiration_date
+      item.name             = name
+      item.permissions      = item.normalized_permissions(permissions)
+      item.permission_level = (permission_level == 0) ? 1 : permission_level
+      item.site_id          = cur_site.id
 
       if item.save
         @imported += 1

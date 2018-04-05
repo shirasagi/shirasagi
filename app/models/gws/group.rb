@@ -20,6 +20,7 @@ class Gws::Group
   include Gws::Addon::System::LogSetting
   include Gws::Addon::System::GroupSetting
   include Gws::Addon::History
+  include Gws::Addon::Import::Group
 
   set_permission_name "gws_groups", :edit
 
