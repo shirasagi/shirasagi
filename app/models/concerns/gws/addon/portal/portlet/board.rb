@@ -7,12 +7,17 @@ module Gws::Addon::Portal::Portlet
 
     included do
       field :board_severity, type: String
+      field :board_browsed_state, type: String
       embeds_ids :board_categories, class_name: "Gws::Board::Category"
-      permit_params :board_severity, board_category_ids: []
+      permit_params :board_severity, :board_browsed_state, board_category_ids: []
     end
 
     def board_severity_options
       %w(normal important).map { |v| [ I18n.t("gws/board.options.severity.#{v}"), v ] }
+    end
+
+    def board_browsed_state_options
+      %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
     end
 
     def find_board_items(portal, user)
@@ -23,6 +28,10 @@ module Gws::Addon::Portal::Portlet
       end
       if cate = board_categories.first
         search[:category] = cate.name
+      end
+      if board_browsed_state.present?
+        search[:user] = user
+        search[:browsed_state] = board_browsed_state
       end
 
       Gws::Board::Topic.site(portal.site).
