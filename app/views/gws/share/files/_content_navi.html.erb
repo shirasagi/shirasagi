@@ -38,6 +38,9 @@
       <div class="label"><%= @folder.quota_label %></div>
       <div class="usage <%= @folder.quota_over? ? 'over-threshold' : '' %>" style="width: <%= @folder.quota_percentage %>%"></div>
     </div>
+    <div class="total-usage" style="margin-top: 5px;">
+      <%= t("gws/share.quota.total_usage", usage: number_to_human_size(@folder.descendants_total_file_size)) %>
+    </div>
     <% end %>
   </div>
 <% end %>

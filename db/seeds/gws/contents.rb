@@ -745,6 +745,8 @@ Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikakuseis
   @sh_files << create_share_file(in_file: f, name: 'kikakuseisaku.pdf', folder_id: @sh_folders[3].id)
 end
 
+@sh_folders.each(&:update_folder_descendants_file_info)
+
 ## -------------------------------------
 puts "# shared_address/group"
 
