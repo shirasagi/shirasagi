@@ -57,7 +57,7 @@ describe "gws_portal_permissions", type: :feature, dbscope: :example do
       expect(page).not_to have_content(user.name)
 
       visit gws_portal_group_path(site: site, group: user.groups.first)
-      expect(page).to have_content(I18n.t('gws/portal.portlets.board.name'))
+      expect(page).not_to have_content(I18n.t('gws/portal.portlets.board.name'))
       visit gws_portal_group_layouts_path(site: site, group: user.groups.first)
       expect(page).not_to have_content(user.name)
       visit gws_portal_group_portlets_path(site: site, group: user.groups.first)
@@ -66,7 +66,7 @@ describe "gws_portal_permissions", type: :feature, dbscope: :example do
       expect(page).not_to have_content(user.name)
 
       visit gws_portal_group_path(site: site, group: site)
-      expect(page).to have_content(I18n.t('gws/portal.portlets.board.name'))
+      expect(page).not_to have_content(I18n.t('gws/portal.portlets.board.name'))
       visit gws_portal_group_layouts_path(site: site, group: site)
       expect(page).not_to have_content(user.name)
       visit gws_portal_group_portlets_path(site: site, group: site)

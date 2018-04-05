@@ -9,6 +9,9 @@ describe "gws_portal_setting_groups", type: :feature, dbscope: :example do
 
     it "#index" do
       visit gws_portal_path(site: site)
+      expect(page).not_to have_content(I18n.t('gws/portal.group_portal'))
+
+      visit gws_portal_group_path(site: site, group: site)
       expect(page).to have_content(I18n.t('gws/portal.group_portal'))
 
       visit gws_portal_setting_groups_path(site: site)
