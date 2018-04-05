@@ -85,17 +85,20 @@ module SS::Model::Task
       return false
     end
 
-    self.started       = Time.zone.now
-    self.closed        = nil
-    self.state         = "running"
-    self.interrupt     = nil
-    self.total_count   = 0
-    self.current_count = 0
-    result = save
+    change_state("running", { started: Time.zone.now })
+  end
 
-    clear_log if result
+  def ready
+    if running?
+      Rails.logger.info "already running."
+      return false
+    end
+    if state == "ready"
+      Rails.logger.info "already ready."
+      return false
+    end
 
-    result
+    change_state("ready")
   end
 
   def close
@@ -119,16 +122,16 @@ module SS::Model::Task
 
     self.unset(:logs) if self[:logs].present?
 
-    ::FileUtils.rm_f(log_file_path) if ::File.exists?(log_file_path)
+    ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exists?(log_file_path)
   end
 
   def log_file_path
-    raise if new_record?
+    return if new_record?
     @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
   end
 
   def logs
-    if ::File.exists?(log_file_path)
+    if log_file_path && ::File.exists?(log_file_path)
       return ::File.readlines(log_file_path, chomp: true) rescue []
     end
 
@@ -136,7 +139,7 @@ module SS::Model::Task
   end
 
   def head_logs(n = 1_000)
-    if ::File.exists?(log_file_path)
+    if log_file_path && ::File.exists?(log_file_path)
       texts = []
       open(log_file_path) do |f|
         n.times do
@@ -180,5 +183,19 @@ module SS::Model::Task
 
   def set_site_id
     self.site_id ||= @cur_site.id
+  end
+
+  def change_state(state, attrs = {})
+    self.started       = attrs[:started]
+    self.closed        = nil
+    self.state         = state
+    self.interrupt     = nil
+    self.total_count   = 0
+    self.current_count = 0
+    result = save
+
+    clear_log if result
+
+    result
   end
 end
