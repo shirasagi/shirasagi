@@ -14,7 +14,7 @@
 </section>
 
 <footer class="send">
-  <%= f.submit t("ss.import"), class: :save %>
-  <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  <%= f.submit t("ss.import"), class: :save, class: :save, data: { confirm: I18n.t("ss.confirm.import") } %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>
