@@ -5,7 +5,7 @@
 <% end %>
 <% @answer.data.each do |data| %>
 <%= "- #{data.column.name}" %>
-<%= "#{data.value}" %>
+<%= convert_to_lines(data.value.to_s) %>
 <%= "" %>
 <% end %>
 <% if @node.reply_lower_text.present? %>
