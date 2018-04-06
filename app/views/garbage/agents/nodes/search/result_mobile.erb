@@ -1,0 +1,12 @@
+<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
+<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
+
+<%= render partial: "navi_mobile", locals: { current: "result" } %>
+
+<ul>
+  <% @items.each do |item| %>
+    <li><%= link_to item.name, item.url %></li>
+  <% end %>
+</ul>
+
+<%= paginate @items if @items.try(:current_page) %>

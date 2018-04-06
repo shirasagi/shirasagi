@@ -1,0 +1,25 @@
+<dl class="see mod-garbage-category">
+  <dt><%= t("garbage.category.setting") %><%= @model.tt :st_categories %></dt>
+  <dd class="wide" style="line-height: 2.5">
+    <%= f.hidden_field "st_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("garbage.category.index"), garbage_search_categories_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= t("garbage.category.name") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.st_categories.each do |cate| %>
+        <tr data-id="<%= cate.id %>">
+          <td><%= f.hidden_field "st_category_ids[]", value: cate.id %> <%= cate.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

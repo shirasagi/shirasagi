@@ -1,0 +1,18 @@
+<%= form_for :item, url: { action: :index }, html: { method: :delete, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t("views.confirm.delete") %></h2></header>
+    <dl class="see">
+      <dt><%= @item.t :save_term %></dt>
+      <dd><%= f.select :save_term, @item.delete_term_options %></dd>
+    </dl>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("views.button.delete"), class: :delete %>
+  <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>

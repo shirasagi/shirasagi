@@ -1,0 +1,52 @@
+ja:
+  garbage:
+    garbage: ゴミDB
+    node: ゴミ品目一覧
+    search: ゴミ品目検索
+    page: ゴミ品目
+    item: 品目
+    remark: 出し方・ワンポイント
+    category:
+      name: 分別区分
+      setting: 分別区分設定
+      index: 分別区分を設定する
+      search: ゴミ品目の分別区分を検索
+      setting: 分別区分を選択
+
+    search: ゴミ品目検索
+    result: 検索結果
+    count: 件の品目がヒットしました。
+    first_to_last: 件の品目を表示しています。
+    edit_page: 編集する
+    empty: 上記の条件ではゴミ品目が見つかりませんでした。
+    button:
+      add_info: 項目を追加する
+      del_info: 削除
+      del_info_confirm: 項目を削除してよろしいですか？
+    submit:
+      search: この条件で検索する
+      reset: 検索条件をリセットする
+      change: 検索条件を変更する
+
+  modules:
+    garbage: ゴミDB
+    addons:
+      garbage/body: ゴミ品目
+      garbage/additional_info: 追加情報
+      garbage/category: ゴミの分別区分
+      garbage/category_setting: ゴミの分別区分
+
+  cms:
+    nodes:
+      garbage/page: ゴミ品目
+      garbage/node: ゴミ品目リスト
+      garbage/category: ゴミの分別区分
+      garbage/search: ゴミ品目検索
+
+  mongoid:
+    attributes:
+      garbage/node/page:
+        name: 品目名
+        remark: 出し方・ワンポイント
+        field: 項目名
+        value: 内容
