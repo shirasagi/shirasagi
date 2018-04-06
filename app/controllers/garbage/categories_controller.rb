@@ -2,17 +2,18 @@ class Garbage::CategoriesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
 
-  model Garbage::Node::Category
-
-  prepend_view_path "app/views/cms/node/nodes"
-  navi_view "garbage/categories/navi"
+  model Garbage::Node::Base
 
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
+  
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
 
-    def pre_params
-      { route: "garbage/category" }
-    end
+  public
+
+  def index
+    redirect_to node_nodes_path
+    return
+  end
 end

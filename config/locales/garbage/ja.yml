@@ -1,9 +1,8 @@
 ja:
   garbage:
     garbage: ゴミDB
-    node: ゴミ品目一覧
+    node: ゴミ品目
     search: ゴミ品目検索
-    page: ゴミ品目
     item: 品目
     remark: 出し方・ワンポイント
     category:
@@ -40,7 +39,7 @@ ja:
     nodes:
       garbage/page: ゴミ品目
       garbage/node: ゴミ品目リスト
-      garbage/category: ゴミの分別区分
+      garbage/category: ゴミ品目カテゴリー
       garbage/search: ゴミ品目検索
 
   mongoid:
@@ -49,4 +48,4 @@ ja:
         name: 品目名
         remark: 出し方・ワンポイント
         field: 項目名
-        value: 内容
+        category_ids: カテゴリー

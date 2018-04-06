@@ -4,15 +4,18 @@ class Garbage::SearchesController < ApplicationController
 
   model Garbage::Node::Base
 
-  prepend_view_path "app/views/cms/node/nodes"
-  navi_view "facility/search/navi"
-
   private
-    def fix_params
-      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-    end
+  
+  def redirect_url
+    diff = (@item.route.pluralize !~ /^garbage\//)
+    diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
+  end
 
-    def pre_params
-      { route: "garbage/node" }
-    end
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
+
+  def pre_params
+    { route: "garbage/node" }
+  end
 end
