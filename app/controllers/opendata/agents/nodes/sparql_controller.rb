@@ -14,7 +14,13 @@ class Opendata::Agents::Nodes::SparqlController < ApplicationController
     end
 
     file_format = params[:format]
-    result = Opendata::Sparql.select(params[:query], file_format)
+    begin
+      result = Opendata::Sparql.select(params[:query], file_format)
+    rescue SPARQL::Client::ClientError
+      html_page = "<p>#{I18n.t('opendata.errors.messages.cannot_connect_fuseki')}</p>"
+      html_page += "<p>#{I18n.t('errors.messages.try_again_at_a_time')}</p>"
+      return send_data html_page, type: 'text/html', disposition: :inline
+    end
 
     if result == true
       send_data "Disabled", type: "text/html", disposition: :inline

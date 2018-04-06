@@ -151,6 +151,8 @@ ja:
       root_node_save_error: ルートフォルダーを作成できませんでした。
       imap_setting_validation_error: "必須項目が入力されていません。"
       request_entity_too_large: データのサイズが大きすぎます。
+      contact_system_administrator: システム管理者にお問い合わせください。
+      try_again_at_a_time: 時間を置いてもう一度お試しください。
     template:
       body: 次の項目を確認してください。
       header:

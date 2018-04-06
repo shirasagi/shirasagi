@@ -44,6 +44,7 @@ ja:
         build_rdf_failed: RDFの作成に失敗しました。
         validate_appurl: はアプリのファイルを登録している場合、入力できません。
         validate_appfile: はアプリの公開URLを登録している場合、登録できません。
+        cannot_connect_fuseki: Fusekiに接続できません。
     crawl_state:
       same:
       updated: 更新
