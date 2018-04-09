@@ -38,7 +38,7 @@ module Gws::CrudFilter
 
   def create
     @item = @model.new get_params
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    return render_create(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
     render_create @item.save
   end
 
@@ -56,7 +56,7 @@ module Gws::CrudFilter
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    return render_update(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     render_update @item.update
   end
 
