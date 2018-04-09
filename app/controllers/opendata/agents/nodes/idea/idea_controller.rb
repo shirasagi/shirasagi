@@ -12,11 +12,12 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
 
   def set_idea
     @idea_path = Opendata::Idea.to_idea_path(@cur_path)
-    @idea = Opendata::Idea.site(@cur_site).and_public.
+    @idea = Opendata::Idea.site(@cur_site).
       filename(@idea_path).
       first
 
     raise "404" unless @idea
+    raise '404' if !@preview && !@idea.public?
   end
 
   public
@@ -97,10 +98,11 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
 
     idea_path = @cur_path.sub(/\/dataset\/.*/, ".html")
 
-    @idea_ds = Opendata::Idea.site(@cur_site).and_public.
+    @idea_ds = Opendata::Idea.site(@cur_site).
       filename(idea_path).
       first
     raise "404" unless @idea_ds
+    raise '404' if !@preview && !@idea_ds.public?
 
   end
 
@@ -109,10 +111,11 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
 
     idea_path = @cur_path.sub(/\/app\/.*/, ".html")
 
-    @idea_ap = Opendata::Idea.site(@cur_site).and_public.
+    @idea_ap = Opendata::Idea.site(@cur_site).
     filename(idea_path).
     first
     raise "404" unless @idea_ap
+    raise '404' if !@preview && !@idea_ap.public?
 
   end
 

@@ -14,21 +14,23 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
 
   def set_app
     @app_path ||= Opendata::App.to_app_path(@cur_path)
-    @app ||= Opendata::App.site(@cur_site).and_public.
+    @app ||= Opendata::App.site(@cur_site).
       filename(@app_path).
       first
 
     raise "404" unless @app
+    raise '404' if !@preview && !@app.public?
   end
 
   def set_ideas
     @app_idea_path = Opendata::App.to_app_path(@cur_path)
 
-    @app_idea = Opendata::App.site(@cur_site).and_public.
+    @app_idea = Opendata::App.site(@cur_site).
       filename(@app_idea_path).
       first
 
     raise "404" unless @app_idea
+    raise '404' if !@preview && !@app_idea.public?
 
     cond = { site_id: @cur_site.id, app_ids: @app_idea.id }
     @ideas = Opendata::Idea.where(cond).and_public.order_by(:updated.asc)

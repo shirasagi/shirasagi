@@ -1,29 +1,31 @@
-<%= coffee do %>
-  $ ->
+<% if @preview.blank? %>
+  <%= coffee do %>
+    $ ->
 
-  $(".comment-add").click (event)->
-    text = $('#s_comment_body').val()
-    if text.length > 0
-      $(@).css('pointer-events', 'none')
+    $(".comment-add").click (event)->
+      text = $('#s_comment_body').val()
+      if text.length > 0
+        $(@).css('pointer-events', 'none')
+        $.ajax
+          url: "<%= @idea.comment_add_url %>"
+          type: "POST"
+          data: { comment_body : text, authenticity_token: "<%= form_authenticity_token %>" }
+          success: (data)->
+            $("#idea-comments").html data
+      event.preventDefault()
+
+    $(".comment_delete").click (event)->
       $.ajax
-        url: "<%= @idea.comment_add_url %>"
+        url: "<%= @idea.comment_delete_url %>"
         type: "POST"
-        data: { comment_body : text, authenticity_token: "<%= form_authenticity_token %>" }
+        data: { comment : $(this).attr("id"), authenticity_token: "<%= form_authenticity_token %>" }
         success: (data)->
           $("#idea-comments").html data
-    event.preventDefault()
+      event.preventDefault()
 
-  $(".comment_delete").click (event)->
-    $.ajax
-      url: "<%= @idea.comment_delete_url %>"
-      type: "POST"
-      data: { comment : $(this).attr("id"), authenticity_token: "<%= form_authenticity_token %>" }
-      success: (data)->
-        $("#idea-comments").html data
-    event.preventDefault()
+    $(".comment .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
 
-  $(".comment .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
-
+  <% end %>
 <% end %>
 
   <div class="info-wrap">
@@ -43,7 +45,7 @@
             <% end %>
           </div>
           <% if @comment_mode && [@idea.member_id, comment.member_id].include?(@cur_member.id) %>
-          <%= link_to I18n.t("opendata.labels.delete"), "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
+          <%= link_to I18n.t("opendata.labels.delete"), "#", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
           <% end %>
 
           <% member_name = comment.get_member_name %>
@@ -64,7 +66,7 @@
           <dt>本文</dt>
           <dd><%= f.text_area :comment_body, maxlength: "400" %></dd>
         </dl>
-        <%= link_to I18n.t("opendata.labels.add_comment"), "", class: "comment-add" %>
+        <%= link_to I18n.t("opendata.labels.add_comment"), "#", class: "comment-add" %>
       <% end %>
     <% elsif member_login_enabled? %>
       <div class="invite"><%= I18n.t("opendata.labels.comment_invite_start") %><%= link_to I18n.t("opendata.labels.login"),"#{member_login_path}login.html?ref=#{CGI.escape(@idea.url)}" %><%= I18n.t("opendata.labels.comment_invite_end") %></div>
