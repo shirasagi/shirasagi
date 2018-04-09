@@ -43,7 +43,7 @@ class Gws::Share::File
     elsif key == 'filename'
       all.reorder(name: 1)
     elsif key.start_with?('filename_')
-      all.reorder(filename: key.end_with?('_asc') ? 1 : -1)
+      all.reorder(name: key.end_with?('_asc') ? 1 : -1)
     else
       all
     end
