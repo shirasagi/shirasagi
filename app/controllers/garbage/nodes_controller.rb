@@ -24,15 +24,17 @@ class Garbage::NodesController < ApplicationController
         @model.t(:name),
         @model.t(:layout),
         @model.t(:category_ids),
-        @model.t(:remark)
+        @model.t(:remark),
+        @model.t(:groups)
       ]
       items.each do |item|
         row = []
         row << item.basename
         row << item.name
         row << item.layout.try(:name)
-        row << item.categories.map(&:name).join("\n")
+        row << item.categories.pluck(:name).join("\n")
         row << item.remark
+        row << item.groups.pluck(:name).join("_n")
         data << row
       end
     end
@@ -51,72 +53,36 @@ class Garbage::NodesController < ApplicationController
     return if request.get?
     @item = @model.new
 
-    in_file = params.dig(:item, :file)
-    if in_file.blank?
-      @item.errors.add :base, "ファイルを選択してください。"
+    file = params.dig(:item, :file)
+    if file.blank?
+      @item.errors.add :base, I18n.t("ss.errors.import.blank_file")
+      return
+    end
+
+    if ::File.extname(file.original_filename) != ".csv"
+      @item.errors.add :base, I18n.t("ss.errors.import.invalid_file_type")
       return
     end
 
     begin
-      CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      in_file.rewind
+      CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
     rescue => e
-      @item.errors.add :base, "不正なファイル形式です。"
+      @item.errors.add :base, I18n.t("ss.errors.import.invalid_file_type")
+      return
     end
 
-    result = import_csv(in_file)
-    render_create result, location: { action: :import }
-    flash.now[:notice] = "#{@count}件の更新をおこないました。"
-  end
+    begin
+      # save csv to use in job
+      ss_file = SS::File.new
+      ss_file.in_file = file
+      ss_file.model = "garbage/file"
+      ss_file.save!
 
-  def import_csv(csv)
-    require "csv"
-
-    @count = 0
-    st_categories = @cur_node.becomes_with_route.st_categories.map{|c| [c.name, c.id]}.to_h
-
-    # destroy all documents
-    @cur_node.children.where(route: "garbage/page").destroy_all
-
-    # update documents
-    table = CSV.read(csv.tempfile.path, headers: true, encoding: 'SJIS:UTF-8')
-    table.each_with_index do |row, idx|
-
-      begin
-        filename = row[@model.t("filename")].to_s.strip
-        name     = row[@model.t("name")].to_s.strip
-        layout   = Cms::Layout.where(name: row[@model.t("layout")].to_s.strip).first
-        remark   = row[@model.t("remark")].to_s.strip
-        categories = row[@model.t("category_ids")].to_s.strip.split("\n")
-        categories_ids = categories.map{ |c| st_categories[c] }.compact
-
-        raise "フォルダー名を入力してください。" if filename.blank?
-
-        filename = ::File.join(@cur_node.filename, filename)
-        cond = { site_id: @cur_site.id, filename: filename }
-
-        item = Garbage::Node::Page.find_or_create_by(cond)
-        item.name   = name
-        item.remark = remark
-        item.layout = layout
-        item.category_ids = categories_ids
-
-        item.cur_site = @cur_site
-        item.cur_node = @cur_node
-        item.cur_user = @cur_user
-
-        if item.save
-          @count += 1
-        else
-          raise item.errors.full_messages.join(", ")
-        end
-
-      rescue => e
-        @item.errors.add :base, "インポート失敗#{idx + 2}行目: #{e.to_s}"
-      end
-
+      # call job
+      Garbage::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
+      flash.now[:notice] = I18n.t("ss.notice.started_import")
+    rescue => e
+      @item.errors.add :base, e.to_s
     end
-
-    @item.errors.empty?
   end
 end

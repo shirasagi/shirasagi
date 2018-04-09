@@ -52,7 +52,7 @@ module Garbage::Node
 
         cond << { filename: /^#{filename}\// } if conditions.blank?
         conditions.each do |url|
-          node = Cms::Node.filename(url).first
+          node = Cms::Node.site(cur_site || site).filename(url).first
           next unless node
           cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
         end
@@ -79,7 +79,7 @@ module Garbage::Node
 
         cids << id
         conditions.each do |url|
-          node = Cms::Node.filename(url).first
+          node = Cms::Node.site(cur_site || site).filename(url).first
           next unless node
           cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
           cids << node.id
