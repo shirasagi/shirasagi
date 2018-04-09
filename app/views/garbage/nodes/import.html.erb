@@ -11,7 +11,7 @@
 </section>
 
 <footer class="send">
-  <%= f.submit t("ss.import"), class: :save, onclick: "return confirm('既に登録されているごみ品目をすべて削除しインポートを行います。更新処理を開始してよろしいですか？');" %>
-  <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+  <%= f.submit t("ss.import"), class: :save, onclick: "return confirm('#{t("ss.confirm.import")}')" %>
+  <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn btn-default" %>
 </footer>
 <% end %>
