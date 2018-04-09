@@ -42,6 +42,8 @@ class Gws::Share::File
       all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
     elsif key == 'filename'
       all.reorder(name: 1)
+    elsif key.start_with?('filename_')
+      all.reorder(filename: key.end_with?('_asc') ? 1 : -1)
     else
       all
     end
@@ -91,7 +93,9 @@ class Gws::Share::File
   end
 
   def sort_options
-    %w(updated_desc updated_asc filename created_desc created_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+    %w(filename_asc filename_desc updated_desc updated_asc created_desc created_asc).map do |k|
+      [I18n.t("ss.options.sort.#{k}"), k]
+    end
   end
 
   private
