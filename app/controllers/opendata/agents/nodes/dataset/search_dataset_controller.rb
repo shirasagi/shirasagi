@@ -10,7 +10,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     focus = params.permit(s: [@model.search_params])[:s].presence || {}
     focus = focus.merge(site: @cur_site)
 
-    sort = Opendata::Dataset.sort_hash params.permit(:sort)[:sort]
+    sort = Opendata::Dataset.sort_hash(params.dig(:s, :sort) || params.permit(:sort)[:sort])
 
     @model.site(@cur_site).and_public.
       search(focus).

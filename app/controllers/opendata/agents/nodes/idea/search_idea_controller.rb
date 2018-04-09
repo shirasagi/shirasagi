@@ -10,15 +10,15 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
     focus = params.permit(s: [@model.search_params])[:s].presence || {}
     focus = focus.merge(site: @cur_site)
 
-    case params.permit(:sort)[:sort]
+    case params.dig(:s, :sort) || params.permit(:sort)[:sort]
     when "released"
-      sort = { released: -1 }
+      sort = { released: -1, _id: -1 }
     when "popular"
-      sort = { point: -1 }
+      sort = { point: -1, _id: -1 }
     when "attention"
-      sort = { commented: -1 }
+      sort = { commented: -1, _id: -1 }
     else
-      sort = { released: -1 }
+      sort = { released: -1, _id: -1 }
     end
 
     @model.site(@cur_site).and_public.
