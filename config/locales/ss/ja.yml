@@ -280,6 +280,8 @@ ja:
         order_asc:  指定値(昇順)
         order_desc: 指定値(降順)
         filename: ファイル名
+        filename_asc: ファイル名(昇順)
+        filename_desc: ファイル名(降順)
       restriction:
         none: 制限なし
         api_only: API利用のみ
