@@ -16,9 +16,9 @@ class Opendata::Agents::Nodes::SparqlController < ApplicationController
     file_format = params[:format]
     begin
       result = Opendata::Sparql.select(params[:query], file_format)
-    rescue SPARQL::Client::ClientError
+    rescue
       html_page = "<p>#{I18n.t('opendata.errors.messages.cannot_connect_fuseki')}</p>"
-      html_page += "<p>#{I18n.t('errors.messages.try_again_at_a_time')}</p>"
+      html_page += "<p>#{I18n.t('errors.messages.try_again_later')}</p>"
       return send_data html_page, type: 'text/html', disposition: :inline
     end
 

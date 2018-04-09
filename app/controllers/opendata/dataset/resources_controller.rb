@@ -69,39 +69,6 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     render_update @item.update
   end
 
-  def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-    begin
-      result = @item.destroy
-    rescue SPARQL::Client::ClientError
-      message = I18n.t('opendata.errors.messages.cannot_connect_fuseki')
-      message << I18n.t('errors.messages.contact_system_administrator')
-      @item.errors.add :base, message
-    end
-    render_destroy result
-  end
-
-  def destroy_all
-    entries = @items.entries
-    @items = []
-    message = I18n.t('opendata.errors.messages.cannot_connect_fuseki')
-    message << I18n.t('errors.messages.contact_system_administrator')
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        begin
-          item.destroy
-        rescue SPARQL::Client::ClientError
-          next item.errors.add :base, message
-        end
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size)
-  end
-
   def download
     raise "403" unless @dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @item = @dataset.resources.find params[:resource_id]
