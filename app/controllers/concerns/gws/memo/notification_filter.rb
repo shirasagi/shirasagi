@@ -11,9 +11,10 @@ module Gws::Memo::NotificationFilter
 
   private
 
-  def send_update_notification
+  def send_update_notification(subject = nil, text = nil)
     return if request.get?
-    return if response.code !~ /^3/
+    #return if response.code !~ /^3/
+    return if @item.errors.present?
 
     if @item.respond_to?(:notify_enabled?)
       return unless @item.notify_enabled?
@@ -26,7 +27,7 @@ module Gws::Memo::NotificationFilter
 
     Gws::Memo::Notifier.deliver!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-      to_users: users, item: @item
+      to_users: users, item: @item, subject: subject, text: text
     )
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -36,15 +37,15 @@ module Gws::Memo::NotificationFilter
     return if request.get?
     return if response.code !~ /^3/
 
-    if @item.respond_to?(:notify_enabled?)
-      return unless @item.notify_enabled?
-    end
-
     @destroyed_items ||= []
     @destroyed_items << @destroyed_item if @destroyed_item
     return if @destroyed_items.blank?
 
     @destroyed_items.each do |item, users|
+      if item.respond_to?(:notify_enabled?)
+        next unless item.notify_enabled?
+      end
+
       users = users.nin(id: @cur_user.id) if @cur_user
       next if users.blank?
 

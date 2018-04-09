@@ -374,6 +374,13 @@ ja:
 
         %{text}
 
+    gws/schedule/todo:
+      subject: "[更新通知][ToDo] %{name}"
+      text: |
+        「%{name}」が作成または更新されました。
+
+        %{text}
+
     gws/schedule/attendance:
       subject: "[更新通知][スケジュール] %{name}"
       text: |
@@ -388,6 +395,21 @@ ja:
       subject: "[削除通知][スケジュール] %{name}"
       text: |
         「%{name}」のコメントが削除されました。
+
+    gws/schedule/todo/destroy:
+      subject: "[削除通知][ToDo] %{name}"
+      text: |
+        「%{name}」が削除されました。
+
+    gws/schedule/todo/finish:
+      subject: "[更新通知][ToDo] %{name}"
+      text: |
+        「%{name}」が完了になりました。
+
+    gws/schedule/todo/revert:
+      subject: "[更新通知][ToDo] %{name}"
+      text: |
+        「%{name}」が未完了になりました。
 
     gws/schedule/attendance/destroy:
       subject: "[削除通知][スケジュール] %{name}"

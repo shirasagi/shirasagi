@@ -10,6 +10,7 @@ class Gws::Schedule::Todo
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
   include Gws::Addon::Schedule::Repeat
+  include Gws::Addon::Memo::NotifySetting
   include Gws::Addon::Discussion::Todo
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -21,6 +22,8 @@ class Gws::Schedule::Todo
   member_include_custom_groups
   permission_include_custom_groups
   readable_setting_include_custom_groups
+
+  class_variable_set(:@@_notify_state_default, 'enabled')
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
@@ -89,6 +92,15 @@ class Gws::Schedule::Todo
     %w(end_at_asc end_at_desc updated_desc updated_asc created_desc created_asc).map do |k|
       [I18n.t("gws/schedule/todo.options.sort.#{k}"), k]
     end
+  end
+
+  def subscribed_users
+    return Gws::User.none if new_record?
+
+    ids = member_ids
+    ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
+    ids.uniq!
+    Gws::User.in(id: ids)
   end
 
   class << self
