@@ -25,7 +25,6 @@ module Garbage::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Garbage::Addon::Body
-    #include Garbage::Addon::AdditionalInfo
     include Garbage::Addon::Category
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
@@ -46,19 +45,18 @@ module Garbage::Node
 
     default_scope ->{ where(route: "garbage/search") }
 
-    public
-      def condition_hash
-        cond = []
+    def condition_hash
+      cond = []
 
-        cond << { filename: /^#{filename}\// } if conditions.blank?
-        conditions.each do |url|
-          node = Cms::Node.site(cur_site || site).filename(url).first
-          next unless node
-          cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
-        end
-
-        { '$or' => cond }
+      cond << { filename: /^#{filename}\// } if conditions.blank?
+      conditions.each do |url|
+        node = Cms::Node.site(cur_site || site).filename(url).first
+        next unless node
+        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
       end
+
+      { '$or' => cond }
+    end
   end
 
   class Category
@@ -72,21 +70,20 @@ module Garbage::Node
 
     default_scope ->{ where(route: "garbage/category") }
 
-    public
-      def condition_hash
-        cond = []
-        cids = []
+    def condition_hash
+      cond = []
+      cids = []
 
-        cids << id
-        conditions.each do |url|
-          node = Cms::Node.site(cur_site || site).filename(url).first
-          next unless node
-          cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
-          cids << node.id
-        end
-        cond << { :category_ids.in => cids } if cids.present?
-
-        { '$or' => cond }
+      cids << id
+      conditions.each do |url|
+        node = Cms::Node.site(cur_site || site).filename(url).first
+        next unless node
+        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cids << node.id
       end
+      cond << { :category_ids.in => cids } if cids.present?
+
+      { '$or' => cond }
+    end
   end
 end

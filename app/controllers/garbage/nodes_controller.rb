@@ -5,7 +5,7 @@ class Garbage::NodesController < ApplicationController
   model Garbage::Node::Page
 
   private
-  
+
   def redirect_url
     diff = (@item.route.pluralize != "garbage/pages")
     diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
@@ -20,7 +20,7 @@ class Garbage::NodesController < ApplicationController
 
     csv = CSV.generate do |data|
       data << [
-        @model.t(:filename), 
+        @model.t(:filename),
         @model.t(:name),
         @model.t(:layout),
         @model.t(:category_ids),
@@ -40,7 +40,7 @@ class Garbage::NodesController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-      filename: "garbage_pages_#{Time.now.strftime("%Y_%m%d_%H%M")}.csv"
+      filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public
