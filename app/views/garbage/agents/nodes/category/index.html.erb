@@ -1,0 +1,21 @@
+<table class="garbage-nodes">
+  <caption><%= @cur_node.name %></caption>
+  <thead>
+    <tr>
+      <th><%= t('garbage.item') %></th>
+      <th><%= t('garbage.category.name') %></th>
+      <th><%= t('garbage.remark') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= link_to item.name, item.url %></td>
+        <td><%=br item.categories.map(&:name).join("\n") %></td>
+        <td><%=br item.remark %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>
