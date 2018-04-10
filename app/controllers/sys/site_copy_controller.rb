@@ -49,11 +49,7 @@ class Sys::SiteCopyController < ApplicationController
   def run
     set_item
     @item.attributes = get_params
-    @item.state = 'ready'
-    @item.started = nil
-    @item.closed = nil
-    @item.logs = []
-    if @item.save
+    if @item.ready
       Sys::SiteCopyJob.perform_later
 
       respond_to do |format|
