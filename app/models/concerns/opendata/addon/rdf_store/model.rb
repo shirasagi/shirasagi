@@ -15,6 +15,11 @@ module Opendata::Addon::RdfStore::Model
     save_rdf_graph rescue nil
   end
 
+  def destroy
+    return false unless self.valid?
+    super
+  end
+
   private
 
   def validate_fuseki
