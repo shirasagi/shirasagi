@@ -82,7 +82,7 @@ module Gws::Addon
         cond["notify_at"] = base_at - (cond["interval"].send(cond["interval_type"]))
         cond
       end
-      conditions = conditions.uniq { |cond| cond["notify_at"] }
+      conditions = conditions.uniq { |cond| [cond["notify_at"], cond["state"]] }
       conditions = conditions.sort_by { |cond| cond["notify_at"] }
       conditions
     end
