@@ -57,6 +57,7 @@ class Webmail::GwsMessagesController < ApplicationController
   def create
     @item = @model.new get_params
     @item.imap = @imap
+    @item.in_validate_presence_member = true
     @item.set_ref_files(@mail.attachments)
     render_create @item.save, location: gws_memo_messages_path(folder: 'INBOX')
   end
