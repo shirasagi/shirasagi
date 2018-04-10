@@ -13,6 +13,10 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [
     <dt><%= I18n.t("opendata.labels.category_ids") %></dt>
     <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
   </dl>
+  <dl class="sort">
+    <dt><%= I18n.t("opendata.labels.sort") %></dt>
+    <dd><%= f.select :sort, Opendata::DatasetGroup.sort_options %></dd>
+  </dl>
 
   <div class="send">
     <%= submit_tag t("ss.buttons.search"), name: :search %>
