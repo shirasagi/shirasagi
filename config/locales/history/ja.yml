@@ -9,7 +9,12 @@ ja:
     backup_version: バックアップ時のバージョン
     save_term:
       day: １日
+      week: １週間
+      2_weeks: ２週間
       month: １ヶ月
+      2_months: ２ヶ月
+      3_months: ３ヶ月
+      6_months: ６ヶ月
       year: １年
       all_save: すべて保存
       all_delete: すべて削除
