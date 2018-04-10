@@ -5,6 +5,7 @@ SS_DIR=/var/www/shirasagi
 PORT_COMPA=8001
 PORT_CHILD=8002
 PORT_OPEND=8003
+PORT_LPSPL=8004
 
 # selinux 
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
@@ -49,6 +50,8 @@ rvm install 2.4.2
 rvm use 2.4.2 --default
 gem install bundler
 
+if [ ! `which ruby` ]; then exit 1; fi
+
 git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
 sudo mkdir -p /var/www
 sudo mv shirasagi $SS_DIR
@@ -76,6 +79,7 @@ sudo firewall-cmd --add-port=http/tcp --permanent
 sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
 sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
 sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_LPSPL}/tcp --permanent
 sudo firewall-cmd --reload
 
 #### Furigana
@@ -270,17 +274,25 @@ server {
     server_name ${SS_HOSTNAME}:${PORT_OPEND};
     root ${SS_DIR}/public/sites/o/p/e/n/d/a/t/a/_/;
 }
+server {
+    listen  ${PORT_LPSPL};
+    include conf.d/server/shirasagi.conf;
+    server_name ${SS_HOSTNAME}:${PORT_LPSPL};
+    root ${SS_DIR}/public/sites/l/p/_/_/;
+}
 EOF
 
 sudo mkdir /etc/nginx/conf.d/server/
 cat <<EOF | sudo tee /etc/nginx/conf.d/server/shirasagi.conf
 include conf.d/common/drop.conf;
+error_page 404 /404.html;
 
 location @app {
     include conf.d/header.conf;
     if (\$request_filename ~ .*\\.(ico|gif|jpe?g|png|css|js)$) { access_log off; }
     proxy_pass http://127.0.0.1:3000;
     proxy_set_header X-Accel-Mapping ${SS_DIR}/=/private_files/;
+    proxy_intercept_errors on;
 }
 location / {
     try_files \$uri \$uri/index.html @app;
@@ -298,31 +310,6 @@ EOF
 
 sudo systemctl restart nginx.service
 
-#### daemonize
-
-cat <<EOF | sudo tee /etc/systemd/system/shirasagi-unicorn.service
-[Unit]
-Description=Shirasagi Unicorn Server
-After=mongod.service
-
-[Service]
-User=${SS_USER}
-WorkingDirectory=${SS_DIR}
-ExecStart=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:start
-ExecStop=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:stop
-ExecReload=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:restart
-Type=forking
-PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
-
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
-sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
-sudo systemctl daemon-reload
-sudo systemctl enable shirasagi-unicorn.service
-sudo systemctl start shirasagi-unicorn.service
-
 cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
@@ -330,12 +317,15 @@ bundle exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \
 bundle exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
 bundle exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
 bundle exec rake ss:create_site data="{ name: \"オープンデータサンプル\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
+bundle exec rake ss:create_site data="{ name: \"ＬＰサンプル\", host: \"lp_\", domains: \"${SS_HOSTNAME}:${PORT_LPSPL}\" }"
 bundle exec rake db:seed name=demo site=www
 bundle exec rake db:seed name=company site=company
 bundle exec rake db:seed name=childcare site=childcare
 bundle exec rake db:seed name=opendata site=opendata
+bundle exec rake db:seed name=lp site=lp_
 bundle exec rake db:seed name=gws
 bundle exec rake db:seed name=webmail
+bundle exec rake assets:precompile RAILS_ENV=production
 
 # use openlayers as default map
 echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongo ss > /dev/null
@@ -364,3 +354,32 @@ cd /etc/ImageMagick && cat << EOF | sudo patch
 +  <policy domain="coder" rights="read | write" pattern="PNG" />
  </policymap>
 EOF
+
+#### daemonize
+
+cat <<EOF | sudo tee /etc/systemd/system/shirasagi-unicorn.service
+[Unit]
+Description=Shirasagi Unicorn Server
+After=mongod.service
+
+[Service]
+User=${SS_USER}
+WorkingDirectory=${SS_DIR}
+Environment=RAILS_ENV=production
+SyslogIdentifier=unicorn
+PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
+Type=forking
+TimeoutSec=300
+
+ExecStart=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:start
+ExecStop=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:stop
+ExecReload=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:restart
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
+sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
+sudo systemctl daemon-reload
+sudo systemctl enable shirasagi-unicorn.service
+sudo systemctl start shirasagi-unicorn.service
