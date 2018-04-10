@@ -122,7 +122,7 @@ class Opendata::Dataset
         { downloaded: -1, _id: -1 }
       else
         return { released: -1 } if sort.blank?
-        { sort.sub(/ .*/, "") => (/-1$/.match?(sort) ? -1 : 1) }
+        { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
       end
     end
 
