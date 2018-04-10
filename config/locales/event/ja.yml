@@ -12,12 +12,14 @@ ja:
     current_month: 今月
     filter_all: 全て
     date_range_delimiter: ～
-    keyword: 検索キーワード
+    keyword: キーワード
     no_event: イベントはありません
     dates:
-      setting: 検索期間設定
+      setting: 開催期間
+      start_date: 開始
+      close_date: 終了
     category:
-      setting: 検索カテゴリー設定
+      setting: カテゴリー
     search:
       no-result: 検索結果が見つかりませんでした。
 
@@ -165,6 +167,7 @@ ja:
           #{html}　リンク先ページの本文が表示されます。
           #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
           #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
+          #{id}　リンク先のファイルIDが表示されます。
           #{group}　リンク先ページの所有グループが表示されます。
           #{groups}　リンク先ページの全ての所有グループが表示されます。
           #{img.src}　リンク先ページ内に画像が存在する場合、リンク先ページの先頭の画像が表示されます。それ以外の場合、既定のパスが表示されます。

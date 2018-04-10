@@ -9,6 +9,9 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example do
 
     it "#index" do
       visit gws_portal_path(site: site)
+      expect(page).not_to have_content(I18n.t('gws/portal.user_portal'))
+
+      visit gws_portal_user_path(site: site, user: user)
       expect(page).to have_content(I18n.t('gws/portal.user_portal'))
 
       visit gws_portal_setting_users_path(site: site)

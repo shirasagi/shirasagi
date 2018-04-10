@@ -13,6 +13,7 @@ module Gws::Portal::GroupExtension
       readable_group_ids: [id],
       group_ids: [id]
     })
+    portal.name = trailing_name
     portal.attributes = params
     portal
   end

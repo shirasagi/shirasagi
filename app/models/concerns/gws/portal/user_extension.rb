@@ -13,6 +13,7 @@ module Gws::Portal::UserExtension
       readable_member_ids: [id],
       user_ids: [id]
     })
+    portal.name = long_name
     portal.attributes = params
     portal
   end

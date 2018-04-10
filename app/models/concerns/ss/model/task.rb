@@ -23,7 +23,6 @@ module SS::Model::Task
     field :closed, type: DateTime
     field :total_count, type: Integer, default: 0
     field :current_count, type: Integer, default: 0
-    field :logs, type: Array, default: []
 
     before_validation :set_site_id, if: ->{ @cur_site }
 
@@ -82,35 +81,93 @@ module SS::Model::Task
 
   def start
     if running?
-      log "already running."
+      Rails.logger.info "already running."
       return false
     end
 
-    self.started       = Time.zone.now
-    self.closed        = nil
-    self.state         = "running"
-    self.interrupt     = nil
-    self.total_count   = 0
-    self.current_count = 0
-    self.logs          = []
-    save
+    change_state("running", { started: Time.zone.now })
+  end
+
+  def ready
+    if running?
+      Rails.logger.info "already running."
+      return false
+    end
+    if state == "ready"
+      Rails.logger.info "already ready."
+      return false
+    end
+
+    change_state("ready")
   end
 
   def close
     self.closed = Time.zone.now
     self.state  = "stop"
-    save
+    result = save
+
+    if result && @log_file
+      @log_file.close
+      @log_file = nil
+    end
+
+    result
   end
 
   def clear_log(msg = nil)
-    self.logs = []
-    self.logs << msg if msg
+    if @log_file
+      @log_file.close
+      @log_file = nil
+    end
+
+    self.unset(:logs) if self[:logs].present?
+
+    ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exists?(log_file_path)
+  end
+
+  def log_file_path
+    return if new_record?
+    @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
+  end
+
+  def logs
+    if log_file_path && ::File.exists?(log_file_path)
+      return ::File.readlines(log_file_path, chomp: true) rescue []
+    end
+
+    self[:logs] || []
+  end
+
+  def head_logs(n = 1_000)
+    if log_file_path && ::File.exists?(log_file_path)
+      texts = []
+      open(log_file_path) do |f|
+        n.times do
+          line = f.gets || break
+          texts << line.chomp
+        end
+      end
+      texts
+    elsif self[:logs].present?
+      self[:logs][0..(n - 1)]
+    else
+      []
+    end
   end
 
   def log(msg)
+    @log_file ||= begin
+      dirname = ::File.dirname(log_file_path)
+      ::FileUtils.mkdir_p(dirname) unless ::Dir.exists?(dirname)
+
+      file = ::File.open(log_file_path, 'a')
+      file.sync = true
+      file
+    end
+
     puts msg
+    @log_file.puts msg
     Rails.logger.info msg
-    self.logs << msg
   end
 
   def process(controller, action, params = {})
@@ -126,5 +183,19 @@ module SS::Model::Task
 
   def set_site_id
     self.site_id ||= @cur_site.id
+  end
+
+  def change_state(state, attrs = {})
+    self.started       = attrs[:started]
+    self.closed        = nil
+    self.state         = state
+    self.interrupt     = nil
+    self.total_count   = 0
+    self.current_count = 0
+    result = save
+
+    clear_log if result
+
+    result
   end
 end

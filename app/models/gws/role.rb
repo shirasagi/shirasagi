@@ -4,6 +4,7 @@ class Gws::Role
   include Gws::Reference::Site
   include Gws::SitePermission
   include Gws::Addon::History
+  include Gws::Addon::Import::Role
 
   set_permission_name "gws_roles", :edit
 

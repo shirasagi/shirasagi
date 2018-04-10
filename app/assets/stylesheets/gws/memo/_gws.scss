@@ -85,7 +85,15 @@
     margin-top: 5px;
   }
 }
-
+@media screen and (max-width:1080px) and (min-width:768px) {
+  div {
+    &#content-navi.gws-content-navi,
+    &.index.gws-memos-index {
+      float: none !important;
+      width: 100% !important;
+    }
+  }
+}
 .gws-memos {
   .list-item {
     padding: 5px 8px;
@@ -95,53 +103,77 @@
     font-weight: bold;
     padding-bottom: 8px;
     .head {
+      @include display-flex;
+      -js-display: flex;
       height: 20px;
       position: relative;
       .field {
-        position: absolute;
+        display: inline-block;
         cursor: pointer;
       }
-      .from, .to { left: 82px; }
-      .title { left: 286px; }
-      .priority { right: 206px; }
-      .datetime { right: 110px; }
-      .size { right: 14px; }
+      .from, .to {
+        width: calc(50% - 100px);
+        text-indent: 79.84px;
+      }
+      .title {
+        width: calc(50% - 130px);
+      }
+      .priority {
+        width: 50px;
+      }
+      .datetime {
+        width: 120px;
+      }
+      .size {
+        width: 60px;
+      }
     }
     @include mb { display: none; }
   }
   .info {
     @include truncate;
+    @include display-flex;
+    -js-display: flex;
+    @include mb {
+      clear: both;
+      display: block;
+    }
     .field {
-      display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       vertical-align: text-top;
+      @include mb {
+        display: inline-block;
+      }
     }
     .from, .to {
-      width: 200px;
+      width: calc(50% - 132.84px);
       padding-right: 5px;
+      @include mb {
+        width: 100%;
+        padding-right: 0;
+      }
     }
     .title {
-      width: calc(100% - 460px);
-      width: -webkit-calc(100% - 460px);
+      width: calc(50% - 75px);
       padding-right: 5px;
       font-size: 100%;
       @include mb {
-        width: auto;
+        width: 100%;
+        padding-right: 0;
       }
+    }
+    .priority {
+      width: 50px;
     }
     .datetime {
       width: 120px;
       font-weight: normal;
     }
-    .priority {
-      width: 80px;
-    }
     .size {
-      //width: 50px;
+      width: 60px;
       font-weight: normal;
-      text-align: right;
     }
   }
 }

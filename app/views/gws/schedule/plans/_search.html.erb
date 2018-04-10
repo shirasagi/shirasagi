@@ -11,6 +11,21 @@
       curDate = $('#calendar-controller').fullCalendar('getDate');
     }
 
+    var viewFormat = "default";
+    if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
+      viewFormat = "list";
+    }
+
+    var viewTodo = "inactive";
+    if ($('#calendar').find('.fc-withTodo-button').hasClass("fc-state-active")) {
+      viewTodo = "active";
+    }
+
+    var viewAttendance = "inactive";
+    if ($('#calendar').find('.fc-withAbsence-button').hasClass("fc-state-active")) {
+      viewAttendance = "active";
+    }
+
     var queryString = '';
     if (viewName) {
       var queryParams = <%== request.query_parameters.to_json %>;
@@ -19,6 +34,9 @@
       }
       queryParams.calendar.view = viewName;
       queryParams.calendar.date = curDate.format();
+      queryParams.calendar.viewFormat = viewFormat;
+      queryParams.calendar.viewTodo = viewTodo;
+      queryParams.calendar.viewAttendance = viewAttendance;
       queryString = '?' + $.param(queryParams);
     }
     var path = '<%= url_for({ action: :print }) %>' + queryString;

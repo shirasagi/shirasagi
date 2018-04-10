@@ -284,6 +284,7 @@ ja:
         readable_custom_groups_hash: 閲覧カスタムグループ(ハッシュ)
       gws/addon/member:
         member_ids: 参加ユーザー
+        member_group_ids: 参加グループ
         member_custom_group_ids: 参加カスタムグループ
       gws/addon/link/feature:
         links/name: 表示名
@@ -415,6 +416,10 @@ ja:
         status: ステータス
         text_color: 文字色
         color: 背景色
+      gws/addon/import/group:
+        in_file: ファイル
+      gws/addon/import/role:
+        in_file: ファイル
 
   tooltip:
     gws/model/category:

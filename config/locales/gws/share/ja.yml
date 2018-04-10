@@ -23,6 +23,8 @@ ja:
     apis:
       folders:
         index: フォルダーを選択する
+    quota:
+      total_usage: "総使用量 : %{usage}"
 
   modules:
     gws/share: 共有ファイル

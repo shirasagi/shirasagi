@@ -2,6 +2,9 @@
   <dt><%= @model.t :board_severity %><%= @model.tt :board_severity %></dt>
   <dd><%= f.select :board_severity, @item.board_severity_options, include_blank: true %></dd>
 
+  <dt><%= @model.t :board_browsed_state %><%= @model.tt :board_browsed_state %></dt>
+  <dd><%= f.select :board_browsed_state, @item.board_browsed_state_options, include_blank: t("gws/board.options.browsed_state.both") %></dd>
+
   <dt><%= @model.t :board_category_ids %><%= @model.tt :board_category_ids %></dt>
   <dd>
     <%= f.hidden_field "board_category_ids[]", value: "", class: "hidden-ids" %>

@@ -1,7 +1,7 @@
 class Gws::Column::Value::NumberField < Gws::Column::Value::Base
   field :minus_type, type: String
   field :scale, type: Integer
-  field :decimal, type: BigDecimal
+  field :decimal, type: SS::Extensions::Decimal128
 
   def validate_value(record, attribute)
     return if column.blank?

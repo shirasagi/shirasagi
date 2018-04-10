@@ -40,13 +40,13 @@ module SS::Model::JobLog
 
   def save_term_options
     %w(day month year all_save).map do |v|
-      [ I18n.t(:"history.save_term.#{v}"), v ]
+      [ I18n.t("history.save_term.#{v}"), v ]
     end
   end
 
   def delete_term_options
-    %w(year month all_delete).map do |v|
-      [ I18n.t(:"history.save_term.#{v}"), v ]
+    %w(6.months 3.months 2.months month 2.weeks week all_delete).map do |v|
+      [ I18n.t("history.save_term.#{v.sub('.', '_')}"), v ]
     end
   end
 
@@ -77,13 +77,22 @@ module SS::Model::JobLog
 
   module ClassMethods
     def term_to_date(name)
-      case name.to_s
+      num, unit = name.to_s.split('.')
+      if unit.blank?
+        unit, num = num, unit
+      end
+      num = 1 if !num.numeric?
+      num = num.to_i
+
+      case unit.singularize
       when "year"
-        Time.zone.now - 1.year
+        Time.zone.now - num.years
       when "month"
-        Time.zone.now - 1.month
+        Time.zone.now - num.months
+      when "week"
+        Time.zone.now - num.weeks
       when "day"
-        Time.zone.now - 1.day
+        Time.zone.now - num.days
       when "all_delete"
         Time.zone.now
       when "all_save"

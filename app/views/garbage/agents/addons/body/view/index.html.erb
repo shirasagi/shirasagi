@@ -1,0 +1,6 @@
+<dl class="see body">
+  <% if @cur_node.remark.present? %>
+    <dt><%= @cur_node.class.t :remark %></dt>
+    <dd><%= @cur_node.remark %></dd>
+  <% end %>
+</dl>

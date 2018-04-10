@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "sns_apis_temp_files" do
+describe "sns_apis_temp_files", dbscope: :example, tmpdir: true do
   let(:user) { ss_user }
-  let(:item) { SS::TempFile.last }
+  let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, model: 'ss/temp_file') }
   let(:index_path) { sns_apis_temp_files_path user.id }
   let(:new_path) { new_sns_apis_temp_file_path user.id }
   let(:show_path) { sns_apis_temp_file_path user.id, item }
@@ -38,7 +38,7 @@ describe "sns_apis_temp_files" do
     it "#edit" do
       visit edit_path
       within "#ajax-form" do
-        fill_in "item[filename]", with: "modify"
+        fill_in "item[name]", with: "modify"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path

@@ -31,8 +31,10 @@ def cate_form(f, item)
 end
 %>
 
-<% categories.each do |cate| %>
-  <div class="parent category">
-    <%= cate_form(f, cate) %>
-  </div>
-<% end %>
+<fieldset>
+  <% categories.each do |cate| %>
+    <div class="parent category">
+      <%= cate_form(f, cate) %>
+    </div>
+  <% end %>
+</fieldset>

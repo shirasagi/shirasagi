@@ -139,6 +139,7 @@ ja:
         bookmark_model: 機能表示範囲
       gws/addon/portal/portlet/board:
         board_severity: 重要度
+        board_browsed_state: 既読・未読
         board_category_ids: カテゴリー
       gws/addon/portal/portlet/faq:
         faq_category_ids: カテゴリー

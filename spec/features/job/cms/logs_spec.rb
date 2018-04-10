@@ -10,6 +10,15 @@ describe "job_cms_logs", dbscope: :example do
   let(:log3) { create(:job_log, :job_log_failed, job: job) }
   let(:logs) { [log1, log2, log3] }
 
+  before do
+    logs.each do |log|
+      ::FileUtils.mkdir_p(::File.dirname(log.file_path)) rescue nil
+      ::File.open(log.file_path, 'wt') do |f|
+        f.puts unique_id
+      end
+    end
+  end
+
   context "with auth" do
     before { login_cms_user }
 
@@ -72,6 +81,11 @@ describe "job_cms_logs", dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(Job::Log.count).to eq 0
+
+      # log files should be removed
+      expect(::File.exists?(log1.file_path)).to be_falsey
+      expect(::File.exists?(log2.file_path)).to be_falsey
+      expect(::File.exists?(log3.file_path)).to be_falsey
     end
   end
 end

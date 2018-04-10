@@ -17,8 +17,6 @@ class Gws::Portal::UserSetting
   validates :name, presence: true
   validates :portal_user_id, presence: true, uniqueness: { scope: :site_id }
 
-  before_validation :set_name, if: ->{ portal_user.present? }
-
   def portlet_models
     %w(free links reminder schedule todo bookmark report workflow circular monitor board faq qna share attendance).map do |key|
       Gws::Portal::UserPortlet.portlet_model(key)
@@ -27,11 +25,5 @@ class Gws::Portal::UserSetting
 
   def default_portlets
     Gws::Portal::UserPortlet.default_portlets(SS.config.gws['portal']['user_portlets'])
-  end
-
-  private
-
-  def set_name
-    self.name = portal_user.long_name if self.name.blank?
   end
 end

@@ -65,4 +65,11 @@ module Job::TasksFilter
       end
     end
   end
+
+  def download
+    set_item
+    raise '404' if !::File.exists?(@item.log_file_path)
+    send_file @item.log_file_path, type: 'text/plain', filename: "#{@item.id}.log",
+              disposition: :attachment, x_sendfile: true
+  end
 end

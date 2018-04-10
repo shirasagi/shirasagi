@@ -5,15 +5,15 @@
   <%= form_tag("", method: :get) do %>
     <table>
       <tr>
-        <th>Query</th>
+        <th><label for="query">Query</label></th>
         <td>
-          <textarea name="query"><%= @default_query %></textarea>
+          <textarea id="query" name="query"><%= @default_query %></textarea>
         </td>
       </tr>
       <tr>
-        <th>Format</th>
+        <th><label for="format">Format</label></th>
         <td>
-          <select name="format">
+          <select id="format" name="format">
             <option value="HTML">HTML</option>
             <option value="HTML_TABLE">HTML (TABLE Only)</option>
             <option value="JSON">JSON</option>

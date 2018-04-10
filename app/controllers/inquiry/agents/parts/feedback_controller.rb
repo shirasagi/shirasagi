@@ -1,5 +1,6 @@
 class Inquiry::Agents::Parts::FeedbackController < ApplicationController
   include Cms::PartFilter::View
+  helper Inquiry::FormHelper
 
   before_action :set_parent
   before_action :set_columns

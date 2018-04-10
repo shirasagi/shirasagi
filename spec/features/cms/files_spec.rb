@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "cms_files" do
+describe "cms_files", dbscope: :example, tmpdir: true do
   let(:site) { cms_site }
-  let(:item) { Cms::File.last }
+  let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'cms/file') }
   let(:index_path) { cms_files_path site.id }
   let(:new_path) { new_cms_file_path site.id }
   let(:show_path) { cms_file_path site.id, item }
@@ -38,7 +38,7 @@ describe "cms_files" do
     it "#edit" do
       visit edit_path
       within "form#item-form" do
-        fill_in "item[filename]", with: "modify"
+        fill_in "item[name]", with: "modify"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path

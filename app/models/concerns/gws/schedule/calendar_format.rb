@@ -22,6 +22,8 @@ module Gws::Schedule::CalendarFormat
     #data[:termLabel] = Gws::Schedule::PlansController.helpers.term(self)
     data[:startDateLabel] = date_label(start_at)
     data[:startTimeLabel] = time_label(start_at)
+    data[:endDateLabel] = date_label(end_at)
+    data[:endTimeLabel] = time_label(end_at)
     data[:allDayLabel] = label(:allday)
 
     coloring = color.present? ? self : try(:category)

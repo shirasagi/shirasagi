@@ -1,0 +1,35 @@
+<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
+<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
+
+<%= coffee do %>
+
+$ ->
+  $(".ajax-box").on "click", ->
+    $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "./result.html" }) %>"})
+    return false
+
+<% end %>
+
+<%= render partial: "navi", locals: { current: "result" } %>
+
+<table class="columns">
+  <caption><%= @cur_node.name %></caption>
+  <thead>
+    <tr>
+      <th><%= t('garbage.item') %></th>
+      <th><%= t('garbage.category.name') %></th>
+      <th><%= t('garbage.remark') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= item.name %></td>
+        <td><%=br item.categories.map(&:name).join("\n") %></td>
+        <td><%=br item.remark %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

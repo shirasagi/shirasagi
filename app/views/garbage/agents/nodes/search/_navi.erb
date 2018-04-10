@@ -1,0 +1,25 @@
+<dl class="condition">
+  <dt class="name"><%= t("garbage.item") %></dt>
+  <dd><%= @name %></dd>
+  <dt class="category"><%= t("garbage.category.name") %></dt>
+  <dd><%= @categories.pluck(:name).join("、") %></dd>
+</dl>
+
+<nav class="setting">
+  <%= link_to t("garbage.submit.change"), "#", class: "ajax-box" %>
+</nav>
+
+<section class="result">
+  <h2>
+    <span class="number"><%= @items.count %></span>
+    <%= t("garbage.count") %>
+    <% if @items.count > 0 %>
+      <span class="first"><%= @items.offset_value + 1 %></span>
+      <%= "～" %>
+      <span class="last">
+      <%= (@items.current_page * @cur_node.limit) > @items.count ? @items.count : (@items.current_page * @cur_node.limit) %>
+      </span>
+      <%= t("garbage.first_to_last") %>
+    <% end %>
+  </h2>
+</section>

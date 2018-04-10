@@ -29,7 +29,7 @@ module SS::JobFilter
     return reset if params[:reset]
     return redirect_to({ action: :index }) if @item.running?
 
-    @item.update_attributes state: "ready"
+    @item.ready
     job_class.bind(job_bindings).perform_later(job_options)
 
     redirect_to({ action: :index }, { notice: t("ss.tasks.started") })

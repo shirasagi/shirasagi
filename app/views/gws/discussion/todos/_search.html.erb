@@ -15,6 +15,11 @@ $('.gws-schedule-box header .operations .btn-print').on('click', function() {
     viewName = $('#calendar-controller').fullCalendar('getView').name
   }
 
+  var viewFormat = "default";
+  if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
+    viewFormat = "list";
+  }
+
   var queryString = '';
   if (viewName) {
     var queryParams = <%== request.query_parameters.to_json %>;
@@ -22,6 +27,7 @@ $('.gws-schedule-box header .operations .btn-print').on('click', function() {
       queryParams.calendar = {};
     }
     queryParams.calendar.view = viewName;
+    queryParams.calendar.viewFormat = viewFormat;
     queryString = '?' + $.param(queryParams);
   }
 

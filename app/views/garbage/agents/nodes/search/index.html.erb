@@ -1,0 +1,15 @@
+<%= form_tag "./result.html", multipart: true, method: "get" do %>
+  <div class="name">
+    <h2><%= t('garbage.item') %></h2>
+    <%= text_field_tag :name, @name %>
+  </div>
+
+  <div class="category">
+    <h2><%= t("garbage.category.setting") %></h2>
+    <%= select_tag 'category_ids[]',  options_for_select(@options, @category_ids.first), include_blank: "" %>
+  </div>
+
+  <footer class="send">
+    <%= submit_tag t('garbage.submit.search'), name: nil %>
+  </footer>
+<% end %>

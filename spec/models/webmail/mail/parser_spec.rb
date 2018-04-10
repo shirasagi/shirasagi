@@ -18,8 +18,11 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
       expect(item.references).to eq ['reference@localhost']
       expect(item.display_size).to eq '1KB'
       expect(item.display_subject).to eq '件名'
-      expect(item.display_sender).to eq 'サイト管理者'
-      expect(item.display_to).to eq ['サイト管理者']
+      expect(item.display_sender.name).to eq 'サイト管理者'
+      expect(item.display_sender.email).to eq 'admin@example.jp'
+      expect(item.display_to.length).to eq 1
+      expect(item.display_to.first.name).to eq 'サイト管理者'
+      expect(item.display_to.first.email).to eq 'admin@example.jp'
       expect(item.display_to).to eq item.display_cc
       expect(item.display_to).to eq item.display_bcc
       expect(item.format).to eq 'text'
@@ -45,8 +48,11 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
       expect(item.from).to eq item.cc
       expect(item.from).to eq item.bcc
       expect(item.display_subject).to eq '件名'
-      expect(item.display_sender).to eq 'admin@example.jp'
-      expect(item.display_to).to eq ['admin@example.jp']
+      expect(item.display_sender.name).to eq 'admin@example.jp'
+      expect(item.display_sender.email).to eq 'admin@example.jp'
+      expect(item.display_to.length).to eq 1
+      expect(item.display_to.first.name).to eq 'admin@example.jp'
+      expect(item.display_to.first.email).to eq 'admin@example.jp'
       expect(item.display_to).to eq item.display_cc
       expect(item.display_to).to eq item.display_bcc
       expect(item.format).to eq 'html'

@@ -32,6 +32,15 @@ $('.popup-attributes .custom-group-name').click(function() {
       </div>
       <% end %>
 
+      <% @item.member_groups.each do |g| %>
+        <div class="custom-group">
+          <a class="custom-group-name" href="#"><%= g.section_name %></a><br/>
+          <div class="custom-group-members" id="custom-group-<%= g.id %>">
+            <%= Gws::User.active.in(group_ids: g.id).map(&:long_name).join(', ') %>
+          </div>
+        </div>
+      <% end %>
+
       <%= @item.members.order_by_title(@cur_site).map(&:long_name).join(', ') %>
     </div>
   </div>

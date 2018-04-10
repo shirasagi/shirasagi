@@ -1,4 +1,4 @@
-<%= jquery do %>Inquiry_Form.render();<% end %>
+<%= jquery do %>Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
 
 <%== @cur_part.upper_html %>
 

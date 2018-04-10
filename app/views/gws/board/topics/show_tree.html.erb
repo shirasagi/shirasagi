@@ -10,6 +10,7 @@
   <% if @item.subscribed_users.present? %>
   <%= render partial: 'gws/board/topics/subscribed_users' %>
   <% end %>
+  <%= render partial: 'gws/board/topics/browsed' %>
 </div>
 
 <%= jquery do %>

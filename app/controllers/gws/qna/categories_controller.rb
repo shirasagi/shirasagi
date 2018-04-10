@@ -24,7 +24,7 @@ class Gws::Qna::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_question_label || t("modules.gws/qna"), gws_qna_topics_path(mode: '-', category: '-')]
+    @crumbs << [@cur_site.menu_qna_label || t("modules.gws/qna"), gws_qna_topics_path(mode: '-', category: '-')]
     @crumbs << [t('mongoid.models.gws/qna/category'), gws_qna_categories_path]
   end
 

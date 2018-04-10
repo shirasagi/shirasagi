@@ -3,6 +3,7 @@ module Cms::TemplateVariable
   include SS::TemplateVariable
 
   included do
+    template_variable_handler(:id, :template_variable_handler_name)
     template_variable_handler(:name, :template_variable_handler_name)
     template_variable_handler(:url, :template_variable_handler_name)
     template_variable_handler(:html, :template_variable_handler_html)

@@ -46,36 +46,36 @@ categories = transform_category(@cur_categories)
 %>
 <%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-apps-form", method: :get } do |f| %>
   <dl class="keyword">
-    <dt><%= I18n.t("opendata.labels.keyword") %></dt>
-    <dd><%= f.text_field :keyword %></dd>
+    <dt><%= f.label(:keyword, I18n.t("opendata.labels.keyword")) %></dt>
+    <dd><%= f.text_field(:keyword) %></dd>
   </dl>
   <dl class="category">
-    <dt><%= I18n.t("opendata.labels.category_ids") %></dt>
-    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
+    <dt><%= f.label(:category_id, I18n.t("opendata.labels.category_ids")) %></dt>
+    <dd><%= f.select(:category_id, categories, include_blank: "") %></dd>
   </dl>
   <dl class="area">
-    <dt><%= I18n.t("opendata.labels.area") %></dt>
-    <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
+    <dt><%= f.label(:area_id, I18n.t("opendata.labels.area")) %></dt>
+    <dd><%= f.select(:area_id, areas, include_blank: "") %></dd>
   </dl>
   <dl class="tag">
-    <dt><%= I18n.t("opendata.labels.tag") %></dt>
-    <dd><%= f.select :tag, @model.tag_options, include_blank: true %></dd>
-    <%= link_to t('ss.links.more'), "#{@cur_node.url}tags/", class: "more", style: 'display: none;' %>
+    <dt><%= f.label(:tag, I18n.t("opendata.labels.tag")) %></dt>
+    <dd><%= f.select(:tag, @model.tag_options, include_blank: true) %></dd>
+    <%= link_to(t('ss.links.more'), "#{@cur_node.url}tags/", class: "more", style: 'display: none;') %>
   </dl>
   <dl class="license">
-    <dt><%= I18n.t("opendata.labels.license") %></dt>
-    <dd><%= f.select :license, @model.license_options, include_blank: true %></dd>
+    <dt><%= f.label(:license, I18n.t("opendata.labels.license")) %></dt>
+    <dd><%= f.select(:license, @model.license_options, include_blank: true) %></dd>
   </dl>
   <dl class="sort">
-    <dt><%= I18n.t("opendata.labels.sort") %></dt>
+    <dt><%= f.label(:sort, I18n.t("opendata.labels.sort")) %></dt>
     <dd><%= f.select :sort, @model.sort_options %></dd>
   </dl>
   <dl class="option">
-    <dt><%= I18n.t("opendata.labels.search_option") %></dt>
-    <dd><%= f.select :option, @model.search_options %></dd>
+    <dt><%= f.label(:option, I18n.t("opendata.labels.search_option")) %></dt>
+    <dd><%= f.select(:option, @model.search_options) %></dd>
   </dl>
 
   <div class="send">
-    <%= submit_tag t("ss.buttons.search"), name: :search %>
+    <%= submit_tag(t("ss.buttons.search"), name: :search) %>
   </div>
 <% end %>

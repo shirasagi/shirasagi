@@ -1,9 +1,9 @@
 class Gws::Column::NumberField < Gws::Column::Base
   include Gws::Addon::Column::TextLike
 
-  field :min_decimal, type: BigDecimal
-  field :max_decimal, type: BigDecimal
-  field :initial_decimal, type: BigDecimal
+  field :min_decimal, type: SS::Extensions::Decimal128
+  field :max_decimal, type: SS::Extensions::Decimal128
+  field :initial_decimal, type: SS::Extensions::Decimal128
   field :scale, type: Integer
   field :minus_type, type: String
 
