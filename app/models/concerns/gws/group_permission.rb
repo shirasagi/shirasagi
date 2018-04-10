@@ -37,8 +37,8 @@ module Gws::GroupPermission
   def allowed?(action, user, opts = {})
     site    = opts[:site] || @cur_site
     action  = permission_action || action
-
     permits = []
+
     if opts[:only] != :private
       permits << "#{action}_other_#{self.class.permission_name}"
     end
@@ -49,6 +49,8 @@ module Gws::GroupPermission
     permits.each do |permit|
       return true if user.gws_role_permissions["#{permit}_#{site.id}"].to_i > 0
     end
+
+    errors.add :base, :auth_error
     false
   end
 
