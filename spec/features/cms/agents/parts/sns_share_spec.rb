@@ -20,7 +20,6 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       expect(page).to have_css(".twitter")
       expect(page).to have_css(".hatena")
       expect(page).to have_css(".google")
-      expect(page).to have_css(".evernote")
       expect(page).to have_css(".line")
     end
   end
@@ -45,7 +44,6 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       expect(page).to have_css('.twitter')
       expect(page).to have_css('.hatena')
       expect(page).to have_css('.google')
-      expect(page).to have_css('.evernote')
       expect(page).to have_css('.line')
       expect(find('div.fb-like div.fb-like')['data-href']).to eq node.full_url[0..-2]
       expect(find('div.twitter a')['data-url']).to eq node.full_url[0..-2]

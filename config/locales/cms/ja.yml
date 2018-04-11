@@ -215,7 +215,6 @@ ja:
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
       google: Google+
-      evernote: Evernote
       line: LINEで送る
 
     opendata_ref/license:
@@ -1453,7 +1452,7 @@ ja:
         - is_node() フォルダーならばtrue, それ以外はfalseを返します。
         - in_node('/docs') ファイル名がdocsから始まるならばtrue, それ以外はfalseを返します。
         - has_pages() 現在のフォルダーにページがある、または現在のフォルダーのカテゴリーに所属しているならばtrue, それ以外はfalseを返します。
- 
+
     cms/addon/child_list:
       child_list:
         - |-
@@ -1613,4 +1612,4 @@ ja:
       cms/check_links_job: リンクチェック
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み
-      cms/role/import_job: 権限インポート 
+      cms/role/import_job: 権限インポート
