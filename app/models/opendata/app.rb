@@ -150,7 +150,7 @@ class Opendata::App
       pipes << { "$sort" => { '_id' => 1 } }
       self.collection.aggregate(pipes).map do |data|
         license = data["_id"]
-        [license, license]
+        ["#{license}(#{data['count']})", license]
       end
     end
 

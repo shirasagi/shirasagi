@@ -169,7 +169,7 @@ class Opendata::Dataset
       pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
       self.collection.aggregate(pipes).map do |data|
         format = data["_id"]
-        [format, format]
+        ["#{format}(#{data['count']})", format]
       end
     end
   end
