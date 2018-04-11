@@ -20,7 +20,12 @@
         <% end %>
       </nav>
 
-      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <% if @index_check %>
+        <% @index_check.call item %>
+      <% else %>
+        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <% end %>
+
       <div class="info">
         <% if @index_title %>
           <% @index_title.call item %>
