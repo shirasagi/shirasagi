@@ -1,27 +1,35 @@
 <% controller.javascript "/assets/js/jquery.colorbox.js" %>
 <% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
 
-<%= jquery do %>SS.renderAjaxBox({ fixed: true, width: "90%", height: "90%" });<% end %>
-<%= coffee do %>
-$ ->
-  @insertContent = (cont) ->
-    if (typeof tinymce) != "undefined"
-      tinymce.get("item_html").execCommand("mceInsertContent", false, cont)
-    else if (typeof CKEDITOR != "undefined")
-      CKEDITOR.instances.item_html.insertHtml(cont)
-
-  @deleteContent = (id) ->
-    if (typeof tinymce) != "undefined"
-      data = tinymce.get(Cms_Form.editorId).getContent()
-    else if (typeof CKEDITOR != "undefined")
-      data = CKEDITOR.instances[Cms_Form.editorId].getData()
-    file = 'fs/' + id.split('').join('/') + '/_/'
-    $(".file-view").each ->
-      if id == $(this).find(".file-id").attr("value")
-        if data.includes(file)
-          unless confirm('<%= I18n.t('ss.confirm.in_use') %>')
-            return
-        $(this).remove()
+<%= jquery do %>
+SS.renderAjaxBox({ fixed: true, width: "90%", height: "90%" });
+window.insertContent = function(cont) {
+  if ((typeof tinymce) != "undefined") {
+    tinymce.get("item_html").execCommand("mceInsertContent", false, cont);
+  }
+  else if (typeof CKEDITOR != "undefined") {
+    CKEDITOR.instances.item_html.insertHtml(cont);
+  }
+};
+window.deleteContent = function(id) {
+  if ((typeof tinymce) != "undefined") {
+    data = tinymce.get("item_html").getContent();
+  }
+  else if ((typeof CKEDITOR) != "undefined") {
+    data = CKEDITOR.instances.item_html.getData();
+  }
+  file = 'fs/' + id.split('').join('/') + '/_/';
+  $(".file-view").each(function() {
+    if (id == $(this).find(".file-id").attr("value")) {
+      if (data.indexOf(file) > 0) {
+        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
+          return;
+        }
+      }
+      $(this).remove();
+    }
+  });
+};
 <% end %>
 
 <dl class="column">

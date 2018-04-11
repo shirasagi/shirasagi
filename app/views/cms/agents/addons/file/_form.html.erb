@@ -42,7 +42,7 @@ SS_Addon_TempFile.uploadUrl = function() {
   return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json";
 };
 <% end %>
-SS_Addon_TempFile.renderDrop($("#addon-cms-agents-addons-file .upload-drop-area"), <%= @cur_user.id %>);
+SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
 <dl class="see">
