@@ -9,7 +9,7 @@ module Gws::Circular::PostFilter
     before_action :set_cur_tab
     before_action :set_crumbs
     before_action :set_item, only: %i[show edit update disable delete destroy set_seen unset_seen toggle_seen active recover]
-    before_action :set_selected_items, only: %i[active_all disable_all destroy_all set_seen_all unset_seen_all download]
+    before_action :set_selected_items, only: %i[active_all disable_all destroy_all set_seen_all unset_seen_all download_all]
     before_action :set_category
   end
 
