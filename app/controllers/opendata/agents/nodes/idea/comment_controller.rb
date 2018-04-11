@@ -16,7 +16,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   def set_comments
     @idea_path = Opendata::Idea.to_idea_path(@cur_path)
 
-    @idea = Opendata::Idea.site(@cur_site).and_public.
+    @idea = Opendata::Idea.site(@cur_site).
       filename(@idea_path).
       first
 
@@ -26,6 +26,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
     @comment_mode = logged_in?(redirect: false)
 
     raise "404" unless @idea
+    raise '404' if !@preview && !@idea.public?
   end
 
   def set_workflow

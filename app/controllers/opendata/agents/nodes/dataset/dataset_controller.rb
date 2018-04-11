@@ -14,21 +14,23 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
 
   def set_dataset
     @dataset_path = Opendata::Dataset.to_dataset_path(@cur_path)
-    @dataset = Opendata::Dataset.site(@cur_site).and_public.
+    @dataset = Opendata::Dataset.site(@cur_site).
       filename(@dataset_path).
       first
 
     raise "404" unless @dataset
+    raise '404' if !@preview && !@dataset.public?
   end
 
   def set_apps
     @dataset_app_path = Opendata::Dataset.to_dataset_path(@cur_path)
 
-    @dataset_app = Opendata::Dataset.site(@cur_site).and_public.
+    @dataset_app = Opendata::Dataset.site(@cur_site).
       filename(@dataset_app_path).
       first
 
     raise "404" unless @dataset_app
+    raise '404' if !@preview && !@dataset_app.public?
 
     cond = { site_id: @cur_site.id, dataset_ids: @dataset_app.id }
     @apps = Opendata::App.where(cond).and_public.order_by(:updated.asc)
@@ -37,11 +39,12 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   def set_ideas
     @dataset_idea_path = Opendata::Dataset.to_dataset_path(@cur_path)
 
-    @dataset_idea = Opendata::Dataset.site(@cur_site).and_public.
+    @dataset_idea = Opendata::Dataset.site(@cur_site).
       filename(@dataset_idea_path).
       first
 
     raise "404" unless @dataset_idea
+    raise '404' if !@preview && !@dataset_idea.public?
 
     cond = { site_id: @cur_site.id, dataset_ids: @dataset_idea.id }
     @ideas = Opendata::Idea.where(cond).and_public.order_by(:updated.asc)
