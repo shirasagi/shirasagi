@@ -11,12 +11,24 @@
     <%= link_to t('webmail.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
     <%= link_to t('webmail.links.reply_all'), { action: :reply_all }, { class: 'reply-all' } unless @item.draft? %>
     <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
-    <% root_group = @cur_user.root_groups.first %>
-    <% if !@item.draft? && root_group %>
-      <% if SS.config.gws.disable.blank? && Gws::Memo::Message.allowed?(:edit, Gws::User.find(@cur_user.id), site: root_group) %>
-        <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: root_group.id, mailbox: @mailbox) %>
-      <% end %>
+
+    <%
+      groups = nil
+      groups = @cur_user.root_groups.select do |group|
+        Gws::Memo::Message.allowed?(:edit, Gws::User.find(@cur_user.id), site: group)
+      end if !@item.draft? && SS.config.gws.disable.blank?
+    %>
+    <% if groups.present? %>
+      <div class="dropdown webmail-dropdown dropdown-toggle">
+        <a><%= t('webmail.links.forward_gws_message') %> <i class="material-icons md-13">&#xE313;</i></a>
+        <ul class="dropdown-menu webmail-dropdown-menu">
+          <% groups.each do |group| %>
+          <li><%= link_to group.name, new_webmail_gws_message_path(site: group.id, mailbox: @mailbox) %></li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
+
     <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>
 
     <div class="dropdown webmail-dropdown dropdown-toggle">
