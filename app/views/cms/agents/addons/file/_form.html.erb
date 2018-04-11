@@ -1,36 +1,48 @@
-<%= coffee do %>
-$ ->
-  @insertContent = (cont) ->
-    if (typeof tinymce) != "undefined"
-      tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont)
-    else if (typeof CKEDITOR != "undefined")
-      CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont)
+<%= jquery do %>
+window.insertContent = function(cont) {
+  if ((typeof tinymce) != "undefined") {
+    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
+  }
+  else if (typeof CKEDITOR != "undefined") {
+    CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
+  }
+};
+window.deleteContent = function(id) {
+  if ((typeof tinymce) != "undefined") {
+    data = tinymce.get(Cms_Form.editorId).getContent();
+  }
+  else if ((typeof CKEDITOR) != "undefined") {
+    data = CKEDITOR.instances[Cms_Form.editorId].getData();
+  }
+  file = 'fs/' + id.split('').join('/') + '/_/';
+  $(".file-view").each(function() {
+    if (id == $(this).find(".file-id").attr("value")) {
+      if (data.indexOf(file) > 0) {
+        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
+          return;
+        }
+      }
+      $(this).remove();
+    }
+  });
+};
 
-  @deleteContent = (id) ->
-    if (typeof tinymce) != "undefined"
-      data = tinymce.get(Cms_Form.editorId).getContent()
-    else if (typeof CKEDITOR != "undefined")
-      data = CKEDITOR.instances[Cms_Form.editorId].getData()
-    file = 'fs/' + id.split('').join('/') + '/_/'
-    $(".file-view").each ->
-      if id == $(this).find(".file-id").attr("value")
-        if data.includes(file)
-          unless confirm('<%= I18n.t('ss.confirm.in_use') %>')
-            return
-        $(this).remove()
-
-  <% if @cur_node %>
-  SS_Addon_TempFile.selectUrl = (id) ->
-    return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files/#{id}/select"
-  SS_Addon_TempFile.uploadUrl = ()->
-    return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files.json"
-  <% else %>
-  SS_Addon_TempFile.selectUrl = (id) ->
-    return "/.s<%= @cur_site.id %>/cms/apis/temp_files/#{id}/select"
-  SS_Addon_TempFile.uploadUrl = ()->
-    return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json"
-  <% end %>
-  SS_Addon_TempFile.renderDrop $("#addon-cms-agents-addons-file .upload-drop-area"), <%= @cur_user.id %>
+<% if @cur_node %>
+SS_Addon_TempFile.selectUrl = function(id) {
+  return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files/" + id  + "/select";
+};
+SS_Addon_TempFile.uploadUrl = function() {
+  return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files.json";
+};
+<% else %>
+SS_Addon_TempFile.selectUrl = function(id) {
+  return "/.s<%= @cur_site.id %>/cms/apis/temp_files/" + id  + "/select";
+};
+SS_Addon_TempFile.uploadUrl = function() {
+  return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json";
+};
+<% end %>
+SS_Addon_TempFile.renderDrop($("#addon-cms-agents-addons-file .upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
 <dl class="see">
