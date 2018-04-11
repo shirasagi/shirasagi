@@ -1,9 +1,7 @@
-<%= coffee do %>
-$ ->
-  @deleteContent = ->
-    $(".file-view").remove()
-    return false
-
+<%= jquery do %>
+window.deleteContent = function() {
+  $(".file-view").remove();
+};
 <% end %>
 
 <dl class="see">
@@ -28,7 +26,7 @@ $ ->
             <%= @item.image.basename %>
           </div>
           <div class="action delete">
-            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent();" %>
+            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent(); return false;" %>
           </div>
         </div>
       <% end %>
