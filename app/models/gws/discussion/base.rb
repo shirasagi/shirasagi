@@ -1,5 +1,4 @@
 class Gws::Discussion::Base
-  include Gws::Referenceable
   include Gws::Discussion::Postable
   include Gws::Addon::Contributor
   include SS::Addon::Markdown

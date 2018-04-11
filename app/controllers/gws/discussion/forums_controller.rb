@@ -41,8 +41,9 @@ class Gws::Discussion::ForumsController < ApplicationController
       @items = @items.allow(:read, @cur_user, site: @cur_site)
     end
 
-    @items.search(params[:s]).
-      reorder(order: 1, created: 1).
+    @items = @items.search(params[:s])
+
+    @items.reorder(order: 1, created: 1).
       page(params[:page]).per(50)
   end
 
