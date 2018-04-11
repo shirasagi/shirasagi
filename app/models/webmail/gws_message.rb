@@ -8,6 +8,7 @@ class Webmail::GwsMessage
   include Gws::SitePermission
   include Gws::Addon::Memo::Member
   include Gws::Addon::Memo::Body
+  include Gws::Addon::Memo::Priority
   include Webmail::Addon::MailFile
   include Gws::Addon::Memo::Quota
   #include Gws::Addon::Memo::Comments

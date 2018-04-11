@@ -172,30 +172,28 @@ ja:
         name: 件名
         display_send_date: 送信日時
       gws/model/memo/message:
-        deleted: 削除状態
-        filtered: フィルター適用
-        format: フォーマット
-        html: 本文HTML
-        path: 保存パス
-        request_mdn_ids: 開封確認
-        seen: 既読状態
-        star: フラグ
-        text: 本文TEXT
-        member_custom_group_ids: カスタムグループメンバー
-        send_date: 送信日時
-      gws/memo/message:
         name: 件名
         subject: 件名
         body: 本文
-        from: 差出人
-        to: 宛先
-        display_send_date: 送信日時
+        text: 本文TEXT
+        html: 本文HTML
+        seen: 既読日時
+        star: フラグ
+        filtered: フィルター適用
+        deleted: 削除状態
+        format: フォーマット
+        path: 保存パス
         size: サイズ
         member_ids: 参加者
+        from: 差出人
+        to: 宛先
         to_member_ids: 宛先
         cc_member_ids: CC
         bcc_member_ids: BCC
-        seen: 既読日時
+        member_custom_group_ids: カスタムグループメンバー
+        send_date: 送信日時
+        display_send_date: 送信日時
+        request_mdn_ids: 開封確認
       gws/memo/comment:
         name: タイトル
       gws/memo/folder:
