@@ -19,71 +19,70 @@ module Opendata::IdeaSearchable
     end
 
     def search(params)
-      criteria = self.where({})
+      criteria = self.all
       return criteria if params.blank?
 
       SEARCH_HANDLERS.each do |handler|
-        criteria = send(handler, params, criteria)
+        criteria = criteria.send(handler, params)
       end
 
       criteria
     end
-
-    private
 
     SEARCH_HANDLERS = [ :search_keyword, :search_tag, :search_area_id, :search_category_id, :search_poster ].freeze
 
-    def search_keyword(params, criteria)
-      if params[:keyword].present?
-        option = params[:option].presence || 'all_keywords'
-        method = option == 'all_keywords' ? 'and' : 'any'
-        criteria = criteria.keyword_in params[:keyword], :name, :text, :issue, :data, :note, method: method
-      end
-      criteria
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+
+      option = params[:option].presence || 'all_keywords'
+      method = option == 'all_keywords' ? 'and' : 'any'
+      all.keyword_in params[:keyword], :name, :text, :issue, :data, :note, method: method
     end
 
-    def search_tag(params, criteria)
-      if params[:tag].present?
-        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-        criteria = criteria.where(operator => [ tags: params[:tag] ])
-      end
-      criteria
-    end
-
-    def search_area_id(params, criteria)
-      if params[:area_id].present?
-        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-        criteria = criteria.where(operator => [ area_ids: params[:area_id].to_i ])
-      end
-      criteria
-    end
-
-    def search_category_id(params, criteria)
-      return criteria if params[:category_id].blank?
+    def search_tag(params)
+      return all if params.blank? || params[:tag].blank?
 
       operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+      all.where(operator => [ tags: params[:tag] ])
+    end
+
+    def search_area_id(params)
+      return all if params.blank? || params[:area_id].blank?
+
+      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+      all.where(operator => [ area_ids: params[:area_id].to_i ])
+    end
+
+    def search_category_id(params)
+      return all if params.blank? || params[:category_id].blank?
 
       category_id = params[:category_id].to_i
       category_node = Cms::Node.site(params[:site]).and_public.where(id: category_id).first
-      return criteria if category_node.blank?
+      return all if category_node.blank?
 
       category_ids = [ category_id ]
       category_node.all_children.and_public.each do |child|
         category_ids << child.id
       end
 
-      criteria.where(operator => [ category_ids: { "$in" => category_ids } ])
+      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+      all.where(operator => [ category_ids: { "$in" => category_ids } ])
     end
 
-    def search_poster(params, criteria)
-      if params[:poster].present?
-        cond = {}
-        cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
-        cond = { :workflow_member_id => nil } if params[:poster] == "admin"
-        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-        criteria = criteria.where(operator => [ cond ])
-      end
-      criteria
+    def search_poster(params)
+      return all if params.blank? || params[:poster].blank?
+
+      poster = params[:poster]
+      cond = case poster
+             when "member"
+               { :workflow_member_id.exists => true }
+             when "admin"
+               { :workflow_member_id => nil }
+             end
+      return all if cond.blank?
+
+      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+      all.where(operator => [ cond ])
     end
   end
 end
