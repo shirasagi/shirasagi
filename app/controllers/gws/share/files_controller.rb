@@ -6,6 +6,7 @@ class Gws::Share::FilesController < ApplicationController
   model Gws::Share::File
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :unlock, :disable]
   before_action :set_selected_items, only: [:disable_all, :download_all]
+  before_action :set_categories, only: [:index]
   before_action :set_category
   before_action :set_folder
   before_action :set_tree_navi, only: [:index]
@@ -28,16 +29,20 @@ class Gws::Share::FilesController < ApplicationController
     end
   end
 
-  def set_category
+  def set_categories
     @categories = Gws::Share::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
-    if category_id = params[:category].presence
-      @category ||= Gws::Share::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
-    end
+  end
+
+  def set_category
+    return if params[:category].blank?
+    @category ||= Gws::Share::Category.site(@cur_site).find(id: params[:category])
+    raise '403' unless @category.readable?(@cur_user) || @category.allowed?(:read, @cur_user, site: @cur_site)
   end
 
   def set_folder
     return if params[:folder].blank?
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
+    raise "403" unless @folder.readable?(@cur_user) || @folder.allowed?(:read, @cur_user, site: @cur_site)
   end
 
   def fix_params
@@ -61,9 +66,6 @@ class Gws::Share::FilesController < ApplicationController
 
   def index
     set_folder
-    if params[:folder].present?
-      raise "404" unless @folder.readable?(@cur_user)
-    end
 
     if @category.present? || @folder.present?
       params[:s] ||= {}
@@ -74,21 +76,29 @@ class Gws::Share::FilesController < ApplicationController
 
     @sort = params.dig(:s, :sort) || @cur_site.share_default_sort || 'filename_asc'
 
-    @items = @model.site(@cur_site).
-      readable(@cur_user, site: @cur_site).
-      active.search(params[:s]).
+    @items = @model.site(@cur_site).active
+
+    if @model.other_permission?(:read, @cur_user, site: @cur_site)
+      @items = @items.allow(:read, @cur_user, site: @cur_site)
+    else
+      @items = @items.readable(@cur_user, site: @cur_site)
+    end
+
+    @items = @items.
+      search(params[:s]).
       custom_order(@sort).
       page(params[:page]).per(50)
 
     folder_name = Gws::Share::Folder.site(@cur_site).
-        where(id: params[:folder].to_i).pluck(:name).first
+      where(id: params[:folder].to_i).pluck(:name).first
 
     @sub_folders = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site).
-        sub_folder(params[:folder] || 'root_folder', folder_name)
+      sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
-    raise "404" unless @item.readable?(@cur_user)
+    raise "404" unless @item.readable?(@cur_user) || @item.allowed?(:read, @cur_user, site: @cur_site)
+
     if params[:folder].present?
       raise "404" unless @item.folder_id.to_s == params[:folder]
     end
