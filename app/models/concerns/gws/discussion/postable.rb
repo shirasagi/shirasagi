@@ -2,6 +2,7 @@ module Gws::Discussion::Postable
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::GroupPermission
