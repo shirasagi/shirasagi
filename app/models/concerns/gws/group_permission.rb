@@ -116,6 +116,12 @@ module Gws::GroupPermission
       end
     end
 
+    def other_permission?(action, user, opts = {})
+      site   = opts[:site]
+      action = permission_action || action
+      user.gws_role_permissions.include?("#{action}_other_#{permission_name}_#{site.id}")
+    end
+
     def permission_included_custom_groups?
       class_variable_get(:@@_permission_include_custom_groups)
     end
