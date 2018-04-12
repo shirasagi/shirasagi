@@ -1312,7 +1312,7 @@ td {
 #content-navi {
   @include box;
   float: left;
-  width: 38%;
+  width: 30%;
   padding: 10px;
   .content-navi-title {
     margin: -10px -10px 10px;
@@ -1329,7 +1329,7 @@ td {
 }
 #content-navi + .index, #content-navi ~ .content-main {
   float: right;
-  width: calc(100% - 38% - 10px);
+  width: calc(100% - 30% - 10px);
 }
 @include mb {
   #content-navi {
