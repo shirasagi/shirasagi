@@ -52,6 +52,10 @@
 </section>
 
 <footer class="send">
-  <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
-  <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
+  <% if @submit %>
+    <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
+    <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
+  <% else %>
+    <%= button_tag t('ss.buttons.close'), class: 'btn-default cancel', type: :reset %>
+  <% end %>
 </footer>

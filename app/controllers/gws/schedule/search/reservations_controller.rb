@@ -23,8 +23,9 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
   public
 
   def index
-    @s = get_params
+    @submit = params[:submit].present?
 
+    @s = get_params
     @time_search = Gws::Schedule::PlanSearch.new(@s)
     @time_search.valid?
 
