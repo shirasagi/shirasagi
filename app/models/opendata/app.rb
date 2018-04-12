@@ -129,7 +129,7 @@ class Opendata::App
 
     def tag_options
       pipes = []
-      pipes << { "$match" => { "route" => "opendata/app" } }
+      pipes << { "$match" => { "route" => "opendata/app", 'state' => 'public' } }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
       options = self.collection.aggregate(pipes).map do |data|
@@ -143,7 +143,7 @@ class Opendata::App
 
     def license_options
       pipes = []
-      pipes << { "$match" => { "route" => "opendata/app" } }
+      pipes << { "$match" => { "route" => "opendata/app", 'state' => 'public' } }
       pipes << { "$unwind" => "$license" }
       pipes << { "$group" => { "_id" => "$license", "count" => { "$sum" => 1 } } }
       self.collection.aggregate(pipes).map do |data|
@@ -169,8 +169,8 @@ class Opendata::App
       when "attention"
         { executed: -1, _id: -1 }
       else
-        return { released: -1 } if sort.blank?
-        { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
+        return { released: -1, _id: -1 } if sort.blank?
+        { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
       end
     end
 

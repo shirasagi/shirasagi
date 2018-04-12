@@ -110,7 +110,7 @@ class Opendata::Idea
 
     def tag_options
       pipes = []
-      pipes << { "$match" => { "route" => "opendata/idea" } }
+      pipes << { "$match" => { "route" => "opendata/idea", 'state' => 'public' } }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
       options = self.collection.aggregate(pipes).map do |data|
@@ -140,7 +140,7 @@ class Opendata::Idea
         { commented: -1, _id: -1 }
       else
         return { released: -1 } if sort.blank?
-        { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
+        { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
       end
     end
 
