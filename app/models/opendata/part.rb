@@ -41,6 +41,7 @@ module Opendata::Part
   class DatasetGroup
     include Cms::Model::Part
     include Cms::Addon::Release
+    include Cms::Addon::NodeList
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -48,6 +49,10 @@ module Opendata::Part
 
     def condition_hash
       {} # TODO:
+    end
+
+    def sort_options
+      Opendata::DatasetGroup.sort_options
     end
   end
 

@@ -1,6 +1,7 @@
 class Opendata::Agents::Parts::Dataset::DatasetGroupController < ApplicationController
   include Cms::PartFilter::View
   helper Opendata::UrlHelper
+  helper Cms::ListHelper
 
   private
 
@@ -19,7 +20,7 @@ class Opendata::Agents::Parts::Dataset::DatasetGroupController < ApplicationCont
 
     @items = Opendata::DatasetGroup.site(@cur_site).and_public.
       where(cond).
-      order_by(created: -1).
+      order_by(@cur_part.sort_hash).
       limit(10)
 
     render
