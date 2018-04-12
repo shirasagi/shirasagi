@@ -132,6 +132,7 @@ class Opendata::App
       pipes << { "$match" => { "route" => "opendata/app", 'state' => 'public' } }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
+      pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
       options = self.collection.aggregate(pipes).map do |data|
         tag = data["_id"]
         ["#{tag}(#{data['count']})", tag]
@@ -146,9 +147,10 @@ class Opendata::App
       pipes << { "$match" => { "route" => "opendata/app", 'state' => 'public' } }
       pipes << { "$unwind" => "$license" }
       pipes << { "$group" => { "_id" => "$license", "count" => { "$sum" => 1 } } }
+      pipes << { "$sort" => { '_id' => 1 } }
       self.collection.aggregate(pipes).map do |data|
         license = data["_id"]
-        [license, license]
+        ["#{license}(#{data['count']})", license]
       end
     end
 

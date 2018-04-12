@@ -113,6 +113,7 @@ class Opendata::Idea
       pipes << { "$match" => { "route" => "opendata/idea", 'state' => 'public' } }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
+      pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
       options = self.collection.aggregate(pipes).map do |data|
         tag = data["_id"]
         ["#{tag}(#{data['count']})", tag]

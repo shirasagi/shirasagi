@@ -151,6 +151,7 @@ class Opendata::Dataset
       pipes << { "$match" => { "route" => "opendata/dataset", 'state' => 'public' } }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
+      pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
       options = self.collection.aggregate(pipes).map do |data|
         tag = data["_id"]
         ["#{tag}(#{data['count']})", tag]
@@ -165,9 +166,10 @@ class Opendata::Dataset
       pipes << { "$match" => { "route" => "opendata/dataset", 'state' => 'public' } }
       pipes << { "$unwind" => "$resources" }
       pipes << { "$group" => { "_id" => "$resources.format", "count" => { "$sum" => 1 } } }
+      pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
       self.collection.aggregate(pipes).map do |data|
         format = data["_id"]
-        [format, format]
+        ["#{format}(#{data['count']})", format]
       end
     end
   end
