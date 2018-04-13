@@ -59,12 +59,12 @@ categories = transform_category(@cur_categories)
   </dl>
   <dl class="tag">
     <dt><%= f.label(:tag, I18n.t("opendata.labels.tag")) %></dt>
-    <dd><%= f.select(:tag, @model.tag_options, include_blank: true) %></dd>
+    <dd><%= f.select(:tag, @model.tag_options(@cur_site), include_blank: true) %></dd>
     <%= link_to(t('ss.links.more'), "#{@cur_node.url}tags/", class: "more", style: 'display: none;') %>
   </dl>
   <dl class="license">
     <dt><%= f.label(:license, I18n.t("opendata.labels.license")) %></dt>
-    <dd><%= f.select(:license, @model.license_options, include_blank: true) %></dd>
+    <dd><%= f.select(:license, @model.license_options(@cur_site), include_blank: true) %></dd>
   </dl>
   <dl class="sort">
     <dt><%= f.label(:sort, I18n.t("opendata.labels.sort")) %></dt>

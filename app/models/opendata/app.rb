@@ -127,9 +127,9 @@ class Opendata::App
       end
     end
 
-    def tag_options
+    def tag_options(site)
       pipes = []
-      pipes << { "$match" => { "route" => "opendata/app", 'state' => 'public' } }
+      pipes << { "$match" => self.site(site).and_public.selector }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
       pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
@@ -142,9 +142,9 @@ class Opendata::App
       options
     end
 
-    def license_options
+    def license_options(site)
       pipes = []
-      pipes << { "$match" => { "route" => "opendata/app", 'state' => 'public' } }
+      pipes << { "$match" => self.site(site).and_public.selector }
       pipes << { "$unwind" => "$license" }
       pipes << { "$group" => { "_id" => "$license", "count" => { "$sum" => 1 } } }
       pipes << { "$sort" => { '_id' => 1 } }
