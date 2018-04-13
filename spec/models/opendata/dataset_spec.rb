@@ -304,7 +304,7 @@ describe Opendata::Dataset, dbscope: :example do
 
   describe ".format_options" do
     context "empty dataset" do
-      it { expect(described_class.format_options).to eq [] }
+      it { expect(described_class.format_options(cms_site)).to eq [] }
     end
 
     context "CSV Resource" do
@@ -326,7 +326,7 @@ describe Opendata::Dataset, dbscope: :example do
         end
       end
 
-      it { expect(described_class.format_options).to include(%w(CSV CSV)) }
+      it { expect(described_class.format_options(cms_site)).to include(%w(CSV(1) CSV)) }
     end
   end
 

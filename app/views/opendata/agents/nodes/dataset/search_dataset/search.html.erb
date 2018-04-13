@@ -61,12 +61,12 @@ groups = Opendata::DatasetGroup.site(@cur_site).and_public.sort(order: 1).pluck(
   </dl>
   <dl class="tag">
     <dt><%= f.label(:tag, I18n.t("opendata.labels.tag")) %></dt>
-    <dd><%= f.select(:tag, @model.tag_options, include_blank: true) %></dd>
+    <dd><%= f.select(:tag, @model.tag_options(@cur_site), include_blank: true) %></dd>
     <%= link_to(t('ss.links.more'), "#{@cur_node.url}tags/", class: "more", style: 'display: none;') %>
   </dl>
   <dl class="format">
     <dt><%= f.label(:format, I18n.t("opendata.labels.format")) %></dt>
-    <dd><%= f.select(:format, @model.format_options, include_blank: true) %></dd>
+    <dd><%= f.select(:format, @model.format_options(@cur_site), include_blank: true) %></dd>
   </dl>
   <dl class="license">
     <dt><%= f.label(:license_id, I18n.t("opendata.labels.license")) %></dt>
@@ -74,7 +74,7 @@ groups = Opendata::DatasetGroup.site(@cur_site).and_public.sort(order: 1).pluck(
   </dl>
   <dl class="group">
     <dt><%= f.label(:dataset_group_id, I18n.t("opendata.labels.group_ids")) %></dt>
-    <dd><%= f.select(:dataset_group_id, groups, include_blank: "") %></dd>
+    <dd><%= f.select(:dataset_group_id, @model.dataset_group_options(@cur_site), include_blank: true) %></dd>
   </dl>
   <dl class="sort">
     <dt><%= f.label(:sort, I18n.t("opendata.labels.sort")) %></dt>

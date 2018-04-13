@@ -146,9 +146,9 @@ class Opendata::Dataset
       Opendata::Common.get_tag(self, tag_name)
     end
 
-    def tag_options
+    def tag_options(site)
       pipes = []
-      pipes << { "$match" => { "route" => "opendata/dataset", 'state' => 'public' } }
+      pipes << { "$match" => self.site(site).and_public.selector }
       pipes << { "$unwind" => "$tags" }
       pipes << { "$group" => { "_id" => "$tags", "count" => { "$sum" => 1 } } }
       pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
@@ -161,9 +161,9 @@ class Opendata::Dataset
       options
     end
 
-    def format_options
+    def format_options(site)
       pipes = []
-      pipes << { "$match" => { "route" => "opendata/dataset", 'state' => 'public' } }
+      pipes << { "$match" => self.site(site).and_public.selector }
       pipes << { "$unwind" => "$resources" }
       pipes << { "$group" => { "_id" => "$resources.format", "count" => { "$sum" => 1 } } }
       pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
@@ -171,6 +171,21 @@ class Opendata::Dataset
         format = data["_id"]
         ["#{format}(#{data['count']})", format]
       end
+    end
+
+    def dataset_group_options(site)
+      pipes = []
+      pipes << { "$match" => self.site(site).and_public.selector }
+      pipes << { "$unwind" => "$dataset_group_ids" }
+      pipes << { "$group" => { "_id" => "$dataset_group_ids", "count" => { "$sum" => 1 } } }
+      pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
+      options = self.collection.aggregate(pipes).map do |data|
+        item = Opendata::DatasetGroup.where(_id: data['_id']).first
+        next if item.blank?
+        next if item.state != 'public'
+        ["#{item.name}(#{data['count']})", data['_id']]
+      end
+      options.compact
     end
   end
 end
