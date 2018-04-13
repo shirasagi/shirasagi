@@ -1,6 +1,7 @@
 class Gws::Share::FileUploader
   include SS::Document
   include Gws::Addon::Share::Category
+  include Gws::Addon::GroupPermission
 
   attr_accessor :cur_site, :cur_user, :folder_id, :readable_member_ids
   attr_accessor :file_ids
@@ -23,6 +24,12 @@ class Gws::Share::FileUploader
       item.category_ids = category_ids if category_ids.present?
       item.readable_member_ids = @readable_member_ids if @readable_member_ids
       item.user_ids = [ @cur_user.id ] if @cur_user
+
+      item.permission_level = permission_level
+      item.group_ids = group_ids
+      item.user_ids = user_ids
+      item.custom_group_ids = custom_group_ids
+
       if item.invalid?
         errors[:base] += item.errors.full_messages
         next
