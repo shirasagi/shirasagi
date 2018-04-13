@@ -1,3 +1,31 @@
+<%= jquery do %>
+$(".gws-schedule-search-times-result .hour-wrap").on({
+  mouseenter: function(){
+    var plan = $(this).data("plan");
+    if (plan) {
+      var user_name = "";
+      user_name += '<p>' + plan["user_section_name"] + '<\p>';
+      user_name += '<p>' + plan["user_long_name"] + '<\p>';
+
+      $(this).append('<div class="user-tooltip">' + user_name + '</div>');
+      var popup = $(this).find(".user-tooltip");
+      popup.css("top", popup.position().top - $("#cboxLoadedContent").scrollTop());
+      popup.css("left", popup.position().left - $("#cboxLoadedContent").scrollLeft());
+
+      if (!$("#cboxLoadedContent").hasClass("scroll-user-tooltip")){
+        $("#cboxLoadedContent").on("scroll", function(){
+          $(".gws-schedule-search-overall-result .user-tooltip").remove();
+        });
+        $("#cboxLoadedContent").addClass("scroll-user-tooltip");
+      }
+    }
+  },
+  mouseleave: function(){
+    $(this).find(".user-tooltip").remove();
+  }
+});
+<% end %>
+
 <section class="main-box">
   <div class="gws-schedule-search-overall-result">
     <span class="datetime-wrap start"><%= l(@start_on, format: :gws_long) rescue nil %></span>
@@ -35,7 +63,8 @@
             <% css_classes << 'exist' %>
           <% end %>
 
-          <span class="<%= wrap_classes.join(' ') %>">
+          <% data_plan = hours[2].dig(facility.id, hour) %>
+          <span class="<%= wrap_classes.join(' ') %>" data-plan="<%= data_plan ? data_plan.to_json : "" %>">
             <span class="<%= css_classes.join(' ') %>"><%= hour %></span>
           </span>
           <% overall_exist = 'exist' if css_classes.include?('exist') && wrap_classes.include?('active') %>

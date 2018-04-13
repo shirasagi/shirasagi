@@ -186,6 +186,9 @@
   .free {
     background-color: #999;
     color: #fff;
+  }
+  .hour.exist {
+    cursor: pointer;
     &:hover {
       background-color: #e70;
     }
@@ -199,6 +202,17 @@
   }
   .reservation.exist {
     color: $orange;
+  }
+  .user-tooltip {
+    position: fixed;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 1px 6px #d0d0d0;
+    padding: 8px;
+    white-space: nowrap;
+    overflow: auto;
+    z-index: 10000;
+    color: #000;
+    background: #ffffff;
   }
 }
 .gws-schedule-search-overall-result {
