@@ -843,11 +843,11 @@ footer.contact {
   .columns {
     margin-bottom: $box-margin;
   }
-  dl {
+  dl, fieldset {
     @include clear;
     padding: 15px 0;
     border-bottom: $border-dotted;
-    dt {
+    dt, legend {
       float: left;
       width: 230px;
       padding: 0 10px;
@@ -857,7 +857,7 @@ footer.contact {
         color: $red;
       }
     }
-    dd {
+    dd, .fields {
       float: left;
       padding: 0 $item-margin;
       input[type=text], input[type=email] {

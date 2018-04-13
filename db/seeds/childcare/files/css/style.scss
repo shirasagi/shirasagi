@@ -1152,7 +1152,7 @@ textarea {
 .columns {
   border-top: 1px solid $gray3;
   border-bottom: 1px solid $gray3;
-  dl {
+  dl, fieldset {
     @include clear;
     padding: 10px 0;
     border-bottom: 1px dotted $gray3;
@@ -1160,7 +1160,7 @@ textarea {
       border: none;
     }
   }
-  dt {
+  dt, legend {
     clear: left;
     float: left;
     width: 12em;
@@ -1170,7 +1170,7 @@ textarea {
       width: 100%;
     }
   }
-  dd {
+  dd, .fields {
     padding-left: 13em;
     @include mb {
       padding: 0;
@@ -1340,14 +1340,16 @@ textarea {
 // institution
 .institution {
   form {
-    h2 {
+    h2, legend {
       @include h2;
+      width: 100%;
     }
     .keyword, .category, .service, .location {
       margin-bottom: 15px;
       div {
         display: inline-block;
         min-width: 150px;
+        &.keyword { display: block; }
         @include mb {
           display: block;
         }
@@ -1357,7 +1359,7 @@ textarea {
   .condition {
     @include clear;
     margin-bottom: 15px;
-    dt {
+    dt, legend {
       clear: left;
       float: left;
       width: 10em;
@@ -1521,14 +1523,18 @@ textarea {
 // -----------------------------------------------------------------------------
 // colorbox
 #colorbox {
-  h2 {
+  h2, legend {
     @include h2;
+    width: 100%;
   }
   .keyword, .category, .service, .location {
     margin-bottom: 15px;
     div {
       display: inline-block;
       min-width: 150px;
+      &.keyword {
+        min-width: 100%;
+      }
       @include mb {
         display: block;
       }
