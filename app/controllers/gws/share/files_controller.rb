@@ -120,7 +120,6 @@ class Gws::Share::FilesController < ApplicationController
     @model = Gws::Share::FileUploader
     @item = @model.new get_params
     @item.folder_id = params[:folder] if params[:folder]
-    @item.readable_member_ids = [@cur_user.id]
 
     render_create @item.save_files, location: { action: :index }
   end
