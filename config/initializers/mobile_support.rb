@@ -30,7 +30,7 @@ module SS
 
     def mobile_path?(request, uri)
       return false if uri.path.blank?
-      uri.path.start_with?("#{cur_site(request).mobile_location}/")
+      uri.path.start_with?(cur_site(request).mobile_url)
     end
 
     def fs_path?(_, uri)
@@ -46,7 +46,7 @@ module SS
       return url if relative_path?(request, uri)
       return url if mobile_path?(request, uri)
       return url if fs_path?(request, uri)
-      uri.path = "#{cur_site(request).mobile_location}#{uri.path}"
+      uri.path = ::File.join(cur_site(request).mobile_url, uri.path.to_s.sub(cur_site(request).url, ""))
       uri.to_s
     end
 

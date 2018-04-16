@@ -149,7 +149,10 @@ class Cms::PreviewController < ApplicationController
     h << '<script src="/assets/js/jquery.colorbox.js"></script>'
     h << '<script>'
     h << '$(function(){'
-    h << '  SS_Preview.mobile_path = "' + @cur_site.mobile_location + '";'
+    if @cur_site.subdir.present?
+      h << '  SS_Preview.preview_path = "' + "/#{@cur_site.subdir}" + '";'
+    end
+    h << '  SS_Preview.mobile_path = "' + @cur_site.mobile_path + '";'
     if @preview_page
       h << 'SS_Preview.request_path = "' + request.path + '";'
       h << 'SS_Preview.form_item = ' + @preview_item.to_json + ';'
