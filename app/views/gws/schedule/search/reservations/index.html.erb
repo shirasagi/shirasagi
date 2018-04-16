@@ -26,7 +26,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
 });
 <% end %>
 
-<section class="main-box gws-schedule-box gws-schedule-search">
+<section class="gws-schedule-box gws-schedule-search">
   <div class="gws-schedule-search-overall-result">
     <span class="datetime-wrap start"><%= l(@start_on, format: :gws_long) rescue nil %></span>
     <span class="delimiter">-</span>
@@ -76,13 +76,13 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
       <% end %>
     <% end %>
   </div>
-</section>
 
-<footer class="send">
-  <% if @submit %>
-    <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
-    <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
-  <% else %>
-    <%= button_tag t('ss.buttons.close'), class: 'btn-default cancel', type: :reset %>
-  <% end %>
-</footer>
+  <footer class="send mt-4">
+    <% if @submit %>
+      <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
+      <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
+    <% else %>
+      <%= button_tag t('ss.buttons.close'), class: 'btn-default cancel', type: :reset %>
+    <% end %>
+  </footer>
+</section>
