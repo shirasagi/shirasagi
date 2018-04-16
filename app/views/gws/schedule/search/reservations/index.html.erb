@@ -1,56 +1,88 @@
+<%= jquery do %>
+$(".gws-schedule-search-times-result .hour-wrap").on({
+  mouseenter: function(){
+    var plan = $(this).data("plan");
+    if (plan) {
+      var user_name = "";
+      user_name += '<p>' + plan["user_section_name"] + '<\p>';
+      user_name += '<p>' + plan["user_long_name"] + '<\p>';
+      $(this).append('<div class="user-tooltip">' + user_name + '</div>');
+
+      var popup = $(this).find(".user-tooltip");
+      popup.css("top", popup.position().top - $("#cboxLoadedContent").scrollTop());
+      popup.css("left", popup.position().left - $("#cboxLoadedContent").scrollLeft());
+
+      if (!$("#cboxLoadedContent").hasClass("scroll-user-tooltip")){
+        $("#cboxLoadedContent").on("scroll", function(){
+          $(".gws-schedule-search-overall-result .user-tooltip").remove();
+        });
+        $("#cboxLoadedContent").addClass("scroll-user-tooltip");
+      }
+    }
+  },
+  mouseleave: function(){
+    $(this).find(".user-tooltip").remove();
+  }
+});
+<% end %>
+
 <section class="main-box gws-schedule-box gws-schedule-search">
-  <% if @items.present? && @items.select { |item| item[1][1].present? }.present? %>
+  <div class="gws-schedule-search-overall-result">
+    <span class="datetime-wrap start"><%= l(@start_on, format: :gws_long) rescue nil %></span>
+    <span class="delimiter">-</span>
+    <span class="datetime-wrap end"><%= l(@end_on, format: :gws_long) rescue nil %></span>
+    <% if @reservation_valid  %>
+      <span class="reservation-valid free"><%= t('gws/schedule.facility_reservation.free') %></span>
+    <% else %>
+      <span class="reservation-valid exist"><%= t('gws/schedule.facility_reservation.exist') %></span>
+    <% end %>
+  </div>
+
   <div class="gws-schedule-search-times-result">
     <% @items.each do |date, hours| %>
 
       <% if @time_search.facilities.blank? %>
-      <% next if hours[0].blank? %>
-      <div class="date <%= date.strftime('%a').downcase %>">
-        <p class="label"><%= l date, format: :full %></p>
-
-        <% @time_search.hours.each do |hour| %>
-          <% wrap_classes = %w(hour-wrap) %>
-          <% wrap_classes << 'active' if @hour_range.include?(hour) %>
-          <% css_classes = %w(hour) %>
-          <% css_classes << (hours[0].index(hour) ? 'free' : 'exist') %>
-          <span class="<%= wrap_classes.join(' ') %>">
-            <span class="<%= css_classes.join(' ') %>"><%= hour %></span>
-          </span>
-        <% end %>
-      </div>
+        <%= I18n.t('gws/schedule.errors.not_found_reservable_facilities') %>
       <% end %>
 
       <% @time_search.facilities.each do |facility| %>
-      <% next if hours[1][facility.id].blank? %>
       <div class="date <%= date.strftime('%a').downcase %>">
         <p class="label"><%= l date, format: :full %></p>
         <p class="facility"><%= facility.name %></p>
         <% overall_exist = nil %>
         <% @time_search.hours.each do |hour| %>
           <% wrap_classes = %w(hour-wrap) %>
-          <% wrap_classes << 'active' if @hour_range.include?(hour) %>
+          <% wrap_classes << 'active' if @hour_range[date].include?(hour) %>
           <% css_classes = %w(hour) %>
-          <% css_classes << (hours[1][facility.id].include?(hour) ? 'free' : 'exist') %>
-          <span class="<%= wrap_classes.join(' ') %>">
+
+          <% if hours[1][facility.id].present? %>
+            <% css_classes << (hours[1][facility.id].include?(hour) ? 'free' : 'exist') %>
+          <% else %>
+            <% css_classes << 'exist' %>
+          <% end %>
+
+          <% data_plan = hours[2].dig(facility.id, hour) %>
+          <span class="<%= wrap_classes.join(' ') %>" data-plan="<%= data_plan ? data_plan.to_json : "" %>">
             <span class="<%= css_classes.join(' ') %>"><%= hour %></span>
           </span>
           <% overall_exist = 'exist' if css_classes.include?('exist') && wrap_classes.include?('active') %>
         <% end %>
         <% if overall_exist == 'exist' %>
-          <p class="reservation exist"><%= I18n.t('gws/schedule.facility_reservation.exist') %></p>
+          <p class="reservation exist"><%= t('gws/schedule.facility_reservation.exist') %></p>
         <% else %>
-          <p class="reservation free"><%= I18n.t('gws/schedule.facility_reservation.free') %></p>
+          <p class="reservation free"><%= t('gws/schedule.facility_reservation.free') %></p>
         <% end %>
       </div>
       <% end %>
     <% end %>
   </div>
-  <% else %>
-    <%= I18n.t('gws/schedule.errors.not_found_reservable_facilities') %>
-  <% end %>
 </section>
 
 <footer class="send">
-  <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
-  <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
+  <% if @submit %>
+    <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
+    <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
+  <% else %>
+    <%= button_tag t('ss.buttons.close'), class: 'btn-default cancel', type: :reset %>
+  <% end %>
 </footer>

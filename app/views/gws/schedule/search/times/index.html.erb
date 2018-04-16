@@ -1,5 +1,20 @@
 <%= jquery do %>
 Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
+
+$(".gws-schedule-search-times-result .hour-wrap").on({
+  mouseenter: function(){
+    var plan = $(this).data("plan");
+    if (plan) {
+      var user_name = "";
+      user_name += '<p>' + plan["user_section_name"] + '<\p>';
+      user_name += '<p>' + plan["user_long_name"] + '<\p>';
+      $(this).append('<div class="user-tooltip">' + user_name + '</div>');
+    }
+  },
+  mouseleave: function(){
+    $(this).find(".user-tooltip").remove();
+  }
+});
 <% end %>
 
 <%= render "gws/schedule/search/main/tabs" %>
@@ -36,7 +51,9 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
         <p class="label"><%= l date, format: :full %></p>
         <p class="facility"><%= facility.name %></p>
         <% @time_search.hours.each do |hour| %>
-          <span class="hour-wrap">
+
+          <% data_plan = hours[2].dig(facility.id, hour) %>
+          <span class="hour-wrap" data-plan="<%= data_plan ? data_plan.to_json : "" %>">
           <% if (hours[1][facility.id] || []).index(hour) %>
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
             <% link_params[:facility_ids] = [facility.id] %>

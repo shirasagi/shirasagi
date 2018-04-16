@@ -125,6 +125,7 @@ ja:
       change: 変更
       initialize: 初期化
       restore: 元に戻す
+      close: 閉じる
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？

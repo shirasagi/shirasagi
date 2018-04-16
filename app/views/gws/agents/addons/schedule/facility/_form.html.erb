@@ -214,7 +214,7 @@
     }
 
     item_submit = true;
-    var href = <%== gws_schedule_search_reservations_path.to_json %> + "?" + query();
+    var href = <%== gws_schedule_search_reservations_path.to_json %> + "?" + query() + "&submit=1";
     $.ajax({
       url: href,
       success: function(data) {

@@ -186,18 +186,48 @@
   .free {
     background-color: #999;
     color: #fff;
+  }
+  .hour.exist {
+    cursor: pointer;
     &:hover {
       background-color: #e70;
     }
   }
   .active {
-    background-color: $gray4;
+    background-color: #ffc;
   }
   .reservation.free {
     background-color: transparent;
     color: $black3
   }
   .reservation.exist {
+    color: $orange;
+  }
+  .user-tooltip {
+    position: absolute;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 1px 6px #d0d0d0;
+    padding: 8px;
+    white-space: nowrap;
+    overflow: auto;
+    z-index: 10000;
+    color: #000;
+    background: #ffffff;
+  }
+  #cboxLoadedContent .user-tooltip {
+    position: fixed;
+  }
+}
+.gws-schedule-search-overall-result {
+  padding-left: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  .reservation-valid.free {
+    padding-left: 10px;
+    color: $black3
+  }
+  .reservation-valid.exist {
+    padding-left: 10px;
     color: $orange;
   }
 }

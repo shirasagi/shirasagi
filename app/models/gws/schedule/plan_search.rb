@@ -48,6 +48,7 @@ class Gws::Schedule::PlanSearch
 
   def free_times(plans)
     plan_times = {}
+    facility_times = {}
     plans.each do |plan|
       time = Time.zone.parse plan.start_at.strftime("%Y-%m-%d %H:00:00")
       fids = facility_ids & plan.facility_ids
@@ -55,11 +56,14 @@ class Gws::Schedule::PlanSearch
       while time < plan.end_at
         hour = time.hour
         #plan_times[time.strftime("%Y-%m-%d #{hour}")] = fids if hour >= min_hour && hour <= max_hour
-        if hour >= min_hour && hour <= max_hour
+        if hour >= min_hour && hour <= max_hour && fids.present?
           key = time.strftime("%Y-%m-%d #{hour}")
           plan_times[key] ||= []
           plan_times[key] += fids
           plan_times[key].uniq!
+
+          facility_times[key] ||= {}
+          fids.each { |fid| facility_times[key][fid] = plan }
         end
         time += 1.hour
       end
@@ -70,6 +74,7 @@ class Gws::Schedule::PlanSearch
       ymd = date.strftime('%Y-%m-%d')
       hours = []
       f_hours = {}
+      p_hours = {}
       if @facilities.blank?
         self.hours.each do |i|
           hours << i unless plan_times.key?("#{ymd} #{i}")
@@ -78,7 +83,15 @@ class Gws::Schedule::PlanSearch
         self.hours.each do |i|
           datetime = (date + i.hours).to_datetime
           @facilities.each do |facility|
-            next if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
+            if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
+              plan = facility_times["#{ymd} #{i}"][facility.id]
+
+              p_hours[facility.id] ||= {}
+              p_hours[facility.id][i] ||= []
+              p_hours[facility.id][i] = plan_attributes(plan)
+              next
+            end
+
             next if facility.reservation_start_date.present? && datetime < facility.reservation_start_date
             next if facility.reservation_end_date.present? && datetime >= facility.reservation_end_date
 
@@ -87,7 +100,7 @@ class Gws::Schedule::PlanSearch
           end
         end
       end
-      free_times << [date, [hours, f_hours]] #if hours.present? || f_hours.present?
+      free_times << [date, [hours, f_hours, p_hours]] #if hours.present? || f_hours.present?
     end
 
     return free_times
@@ -149,5 +162,16 @@ class Gws::Schedule::PlanSearch
       interval: interval || 1,
       wdays: wdays, repeat_base: repeat_base
     )
+  end
+
+  def plan_attributes(plan)
+    attr = { id: plan.id.to_s }
+    if plan.user
+      attr[:user_long_name] = plan.user.long_name
+
+      section_name = plan.user.gws_main_group(@cur_site).section_name rescue nil
+      attr[:user_section_name] = section_name if section_name
+    end
+    attr
   end
 end
