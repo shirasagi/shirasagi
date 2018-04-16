@@ -104,6 +104,10 @@ textarea {
   height: 6.5em;
   padding: 12px;
   line-height: 1.4;
+  border: 1px solid $gray3;
+  @include mb {
+    width: 100%;
+  }
 }
 .send {
   padding: 15px 0;
@@ -1107,7 +1111,23 @@ textarea {
   }
   .category, .keyword {
     display: inline-block;
+    width: calc(50% - 45px);
     margin: 0 10px 10px 0;
+    @include mb {
+      width: 100%;
+    }
+    label {
+      display: block;
+    }
+    select {
+      width: 100%;
+      max-width: 200px;
+      height: 2.2em;
+    }
+    input {
+      width: 100%;
+      max-width: 300px;
+    }
   }
   .submitters {
     text-align: center;

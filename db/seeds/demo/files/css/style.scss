@@ -7,6 +7,9 @@
   input[type="submit"], button, select, textarea {
     -webkit-appearance: none;
   }
+  input[type="text"], input[type="email"] {
+    border: $border-hgry;
+  }
 }
 html {
   height: 100%;
@@ -301,9 +304,6 @@ img {
       color: #202020;
     }
   }
-}
-_::content, #navi .wrap .sangyo a:not(*:root) {
-  width: 175px;
 }
 #navi .wrap li:hover > ul,
 #navi .wrap .focus > ul {
@@ -1902,6 +1902,12 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       margin-bottom: 3px;
       &.three {
         margin-right: $item-margin;
+      }
+      &.keyword, &.category, &.service, &.location {
+        @include mb {
+          padding: 0 10px;
+          box-sizing: border-box;
+        }
       }
     }
   }
