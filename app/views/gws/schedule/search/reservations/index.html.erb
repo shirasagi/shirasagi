@@ -6,8 +6,8 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
       var user_name = "";
       user_name += '<p>' + plan["user_section_name"] + '<\p>';
       user_name += '<p>' + plan["user_long_name"] + '<\p>';
-
       $(this).append('<div class="user-tooltip">' + user_name + '</div>');
+
       var popup = $(this).find(".user-tooltip");
       popup.css("top", popup.position().top - $("#cboxLoadedContent").scrollTop());
       popup.css("left", popup.position().left - $("#cboxLoadedContent").scrollLeft());

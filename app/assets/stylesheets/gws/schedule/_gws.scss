@@ -204,7 +204,7 @@
     color: $orange;
   }
   .user-tooltip {
-    position: fixed;
+    position: absolute;
     border: 1px solid #d0d0d0;
     box-shadow: 0 1px 6px #d0d0d0;
     padding: 8px;
@@ -213,6 +213,9 @@
     z-index: 10000;
     color: #000;
     background: #ffffff;
+  }
+  #cboxLoadedContent .user-tooltip {
+    position: fixed;
   }
 }
 .gws-schedule-search-overall-result {
