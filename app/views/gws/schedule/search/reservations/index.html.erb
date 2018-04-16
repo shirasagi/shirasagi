@@ -26,7 +26,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
 });
 <% end %>
 
-<section class="main-box">
+<section class="main-box gws-schedule-box gws-schedule-search">
   <div class="gws-schedule-search-overall-result">
     <span class="datetime-wrap start"><%= l(@start_on, format: :gws_long) rescue nil %></span>
     <span class="delimiter">-</span>
@@ -37,9 +37,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
       <span class="reservation-valid exist"><%= t('gws/schedule.facility_reservation.exist') %></span>
     <% end %>
   </div>
-</section>
 
-<section class="main-box gws-schedule-box gws-schedule-search">
   <div class="gws-schedule-search-times-result">
     <% @items.each do |date, hours| %>
 
