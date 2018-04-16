@@ -52,7 +52,12 @@ module Opendata::Part
     end
 
     def sort_options
-      Opendata::DatasetGroup.sort_options
+      Opendata::DatasetGroup.sort_options.push([I18n.t('opendata.sort_options.count_1'), 'count -1'])
+    end
+
+    def sort_hash
+      return { name: 1 } if sort.blank?
+      { sort.sub(/ .*/, "").to_s => (sort.end_with?('-1') ? -1 : 1) }
     end
   end
 

@@ -162,6 +162,7 @@ ja:
       released: 新着順
       popular: 人気順
       attention: 注目順
+      count_1: 件数の多い順
       datasets:
         released: 新着データセット
         popular: 人気データセット
