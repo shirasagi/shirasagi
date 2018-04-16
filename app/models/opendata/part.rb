@@ -52,7 +52,7 @@ module Opendata::Part
     end
 
     def sort_options
-      Opendata::DatasetGroup.sort_options.push([I18n.t('opendata.sort_options.count_1'), 'count -1'])
+      Opendata::DatasetGroup.sort_options.push([I18n.t('opendata.sort_options.count_desc'), 'count -1'])
     end
 
     def sort_hash
