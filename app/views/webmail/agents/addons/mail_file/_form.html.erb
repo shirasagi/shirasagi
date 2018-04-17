@@ -1,17 +1,23 @@
-<%= coffee do %>
-$ ->
-  @insertContent = (cont) ->
-    if (typeof tinymce) != "undefined"
-      tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont)
-    else if (typeof CKEDITOR != "undefined")
-      CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont)
-
-  @deleteContent = (id) ->
-    $(".file-view").each ->
-      #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
-      $(this).remove() if id == $(this).find(".file-id").attr("value")
-
-  SS_Addon_TempFile.renderDrop $("#addon-webmail-agents-addons-mail_file .upload-drop-area"), <%= @cur_user.id %>
+<%= jquery do %>
+window.insertContent = function(cont) {
+  if ((typeof tinymce) != "undefined") {
+    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
+  }
+  else if (typeof CKEDITOR != "undefined") {
+    CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
+  }
+};
+window.deleteContent = function(id) {
+  $(".file-view").each(function() {
+    //if (id == $(this).find("input[type=checkbox]").attr("value")) {
+    //  $(this).remove();
+    //}
+    if (id == $(this).find(".file-id").attr("value")) {
+      $(this).remove();
+    }
+  });
+};
+SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
 <dl class="see webmail-addon-mail-file">
