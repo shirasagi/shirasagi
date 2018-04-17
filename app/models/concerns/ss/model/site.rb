@@ -73,20 +73,6 @@ module SS::Model::Site
       root
     end
 
-    #def filtered_domains
-    #  filtered = []
-    #  domains_with_subdir.each do |domain_with_subdir|
-    #    if SS.config.kana.location.present?
-    #      filtered << "#{domain_with_subdir}/".sub("/", "#{SS.config.kana.location}/").sub(/\/$/, "")
-    #    end
-    #
-    #    if !mobile_disabled? && mobile_location.present?
-    #      filtered << "#{domain_with_subdir}/".sub("/", "#{mobile_location}/").sub(/\/$/, "")
-    #    end
-    #  end
-    #  filtered
-    #end
-
     def mypage_full_url
       if mypage_domain.present?
         "#{mypage_scheme.presence || 'http'}://#{mypage_domain}/".sub(/\/+$/, "/")
@@ -157,7 +143,7 @@ module SS::Model::Site
           depth = 0
 
           sites.each do |s|
-            domains = s.domains_with_subdir #+ s.filtered_domains
+            domains = s.domains_with_subdir
             domains.each do |domain|
               if host_with_path =~ /^#{domain}\// && "#{domain}/".count("/") > depth
                 site = s
