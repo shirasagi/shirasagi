@@ -27,7 +27,7 @@ SS_Clipboard.renderCopy();
   <dd><%= @item.send :tel_ext %></dd>
 
   <dt><%= @model.t :title_ids %></dt>
-  <dd><%= tryb { @item.title.name } %></dd>
+  <dd><%= tryb { @item.title.name_with_code } %></dd>
 
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.label :type %></dd>
