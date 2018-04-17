@@ -418,7 +418,9 @@ ja:
         organization_uid: 職員番号
         switch_user_id: 切り替えユーザー
       ss/model/user_title:
+        code: 役職コード
         name: 役職名
+        remark: 備考
         order: 並び順
         group_id: グループ
         activation_date: 有効期限（開始）
@@ -708,8 +710,11 @@ ja:
       geo_location:
         - 緯度・経度を10進で入力します。
     ss/model/user_title:
-      name:
-        - 役職名を入力します。
+      code: 役職コードを入力します。
+      name: 役職名を入力します。
+      activation_date: 有効期限の開始日時を入力します。
+      expiration_date: 有効期限の終了日時を入力します。
+      remark: 備考を入力します。
       order:
         - 並び順を入力します。
         - 数字が大きいほど上位に表示されます。

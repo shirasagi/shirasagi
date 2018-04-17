@@ -1,6 +1,9 @@
 <dl class="see">
+  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
+  <dd><%= f.text_field :code, autofocus: true %></dd>
+
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name, autofocus: true %></dd>
+  <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
@@ -10,4 +13,7 @@
 
   <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>
   <dd><%= f.text_field :expiration_date, class: 'datetime js-datetime', value: tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
 </dl>
