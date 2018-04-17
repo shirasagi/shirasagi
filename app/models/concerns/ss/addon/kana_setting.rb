@@ -16,5 +16,17 @@ module SS::Addon
         [I18n.t("ss.options.kana_format.romaji"), "romaji"],
       ]
     end
+
+    def kana_location
+      @kana_location ||= SS.config.kana.location
+    end
+
+    def kana_path
+      ::File.join(url, kana_location)
+    end
+
+    def kana_url
+      ::File.join(url, kana_location, "/")
+    end
   end
 end
