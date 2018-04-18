@@ -15,21 +15,19 @@ module Opendata::Addon::RdfStore::Model
     save_rdf_graph rescue nil
   end
 
-  def destroy
+  def validate_and_destroy
     return false unless self.valid?
-    super
+    self.destroy
   end
 
   private
 
   def validate_fuseki
-    begin
-      Opendata::Sparql.select('select distinct * where { graph ?g { ?s ?p ?o . } } limit 0', 'HTML')
-    rescue
-      message = I18n.t('opendata.errors.messages.cannot_connect_fuseki')
-      message << I18n.t('errors.messages.contact_system_administrator')
-      self.errors.add :base, message
-    end
+    Opendata::Sparql.select('select distinct * where { graph ?g { ?s ?p ?o . } } limit 0', 'HTML')
+  rescue
+    message = I18n.t('opendata.errors.messages.cannot_connect_fuseki')
+    message << I18n.t('errors.messages.contact_system_administrator')
+    self.errors.add :base, message
   end
 
   def save_rdf_graph

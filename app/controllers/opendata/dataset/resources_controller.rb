@@ -69,6 +69,26 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     render_update @item.update
   end
 
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+    render_destroy @item.validate_and_destroy
+  end
+
+  def destroy_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        next if item.validate_and_destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
+  end
+
   def download
     raise "403" unless @dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @item = @dataset.resources.find params[:resource_id]
