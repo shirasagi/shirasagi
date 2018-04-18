@@ -1,6 +1,17 @@
 <section class="main-box">
   <header><h2><%= @item.name %></h2></header>
-  <div class="markdown-body">
-    <%= sanitize @item.html %>
-  </div>
+
+  <ul class="list-items">
+    <% (@item.links || []).each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <% if item[:url].present? %>
+          <%= link_to item[:name].presence || item[:url], item[:url] %>
+        <% elsif item[:name].present? %>
+          <%= item[:name] %>
+        <% end %>
+      </div>
+    </li>
+    <% end %>
+  </ul>
 </section>

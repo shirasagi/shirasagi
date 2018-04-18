@@ -4,6 +4,6 @@ FactoryGirl.define do
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    html { "<s>s</s>" }
+    links { [ { "name" => "SHIRASAGI", "url" => "http://ss-proj.org/" } ] }
   end
 end
