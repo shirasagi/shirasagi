@@ -18,29 +18,6 @@
   </div>
 
   <div id="selected-files">
-    <% SS::TempFile.where(user_id: @cur_user.id).each do |file| %>
-      <div id="file-<%= file.id %>" class="file-view">
-
-        <%= link_to file.url, class: :thumb, target: "_blank" do %>
-          <% if file.image? %>
-            <%= image_tag file.thumb_url, alt: file.name %>
-          <% else %>
-            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-          <% end %>
-        <% end %>
-
-        <div class="name">
-          <label>
-            <%= hidden_field_tag "#{f.object_name}[file_ids][]", file.id, id: nil, class: 'file-id' %>
-            <%= file.name %>
-          </label><br />
-        </div>
-
-        <div class="action">
-          <%= link_to t("ss.buttons.delete"), "#", class: 'action-delete', onclick: "deleteContent('#{file.id}'); return false;" %>
-        </div>
-      </div>
-    <% end %>
   </div>
 </div>
 

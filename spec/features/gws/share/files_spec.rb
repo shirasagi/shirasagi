@@ -42,7 +42,14 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
         click_on category.name
       end
       within "form#item-form" do
+        # click_on I18n.t('ss.buttons.upload')
+        find('a.btn', text: I18n.t('ss.buttons.upload')).click
+      end
+      within '#cboxLoadedContent' do
         expect(page).to have_content(ss_file.name)
+        click_on ss_file.name
+      end
+      within "form#item-form" do
         find('input[type=submit]').click
       end
       expect(current_path).not_to eq new_path
