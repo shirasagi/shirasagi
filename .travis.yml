@@ -2,7 +2,7 @@ language: ruby
 dist: trusty
 sudo: false
 rvm:
-  - 2.4.2
+  - 2.4.4
 
 cache:
   apt: true
@@ -23,8 +23,7 @@ addons:
       - libsox-dev
       - lame
       - libmp3lame-dev
-      # chromium-chromedriver is old to work, required 2.30 over.
-      # - chromium-chromedriver
+      - chromium-chromedriver
       # open-jtalk package is blacklisted
       # - open-jtalk
       # ubuntu 12.04 mecab is too old to work

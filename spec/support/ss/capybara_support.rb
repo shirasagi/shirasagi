@@ -40,9 +40,12 @@ module SS::CapybaraSupport
       options.add_preference('download.prompt_for_download', false)
       options.add_preference('download.default_directory', SS::DownloadHelpers.path)
       options.add_argument('window-size=1680,1050')
-      if ENV['headless'] != '0'
+      if ENV.fetch('headless', '1') != '0'
         options.add_argument('headless')
         options.add_argument('disable-gpu')
+        if ENV.fetch('sandbox', '0') != '0' || (ENV["CI"] == "true" && ENV["TRAVIS"] == "true")
+          options.add_argument('no-sandbox')
+        end
       end
 
       if ::File.exist?('/usr/lib/chromium-browser/chromedriver')
