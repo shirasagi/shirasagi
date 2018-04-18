@@ -80,7 +80,7 @@ class Gws::UserCsv::Exporter
     terms << nil
     terms << item.tel
     terms << item.tel_ext
-    terms << item.title(site).try(:name)
+    terms << item.title(site).try(:code)
     terms << item.label(:type)
     terms << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
     terms << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)

@@ -9,16 +9,19 @@ module SS::Model::UserTitle
     store_in collection: "ss_user_titles"
 
     seqid :id
+    field :code, type: String
     field :name, type: String
+    field :remark, type: String
     field :order, type: Integer, default: 0
     field :activation_date, type: DateTime
     field :expiration_date, type: DateTime
 
     belongs_to :group, class_name: "SS::Group"
 
-    permit_params :name, :order, :activation_date, :expiration_date
+    permit_params :code, :name, :remark, :order, :activation_date, :expiration_date
 
-    validates :name, presence: true, uniqueness: { scope: :group_id }, length: { maximum: 40 }
+    validates :code, presence: true, uniqueness: { scope: :group_id }, length: { maximum: 40 }
+    validates :name, presence: true
     validates :order, presence: true
     validates :group_id, presence: true
     validates :activation_date, datetime: true
@@ -30,8 +33,12 @@ module SS::Model::UserTitle
       criteria = where({})
       return criteria if params.blank?
 
-      criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+      criteria = criteria.keyword_in params[:keyword], :code, :name if params[:keyword].present?
       criteria
     }
+  end
+
+  def name_with_code
+    code.present? ? "#{name} (#{code})" : name
   end
 end

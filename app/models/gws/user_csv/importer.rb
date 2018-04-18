@@ -118,7 +118,7 @@ class Gws::UserCsv::Importer
 
   def set_title(item)
     value = row_value('title_ids')
-    title = Gws::UserTitle.site(cur_site).where(name: value).first if value.present?
+    title = Gws::UserTitle.site(cur_site).where(code: value).first if value.present?
     item.in_title_id = title ? title.id : ''
   end
 

@@ -34,7 +34,7 @@ class Gws::User
   scope :site, ->(site) { self.in(group_ids: Gws::Group.site(site).pluck(:id)) }
 
   def title_id_options
-    Gws::UserTitle.site(cur_site).active.map { |m| [m.name, m.id] }
+    Gws::UserTitle.site(cur_site).active.map { |m| [m.name_with_code, m.id] }
   end
 
   def set_gws_default_group_id(group_id)
