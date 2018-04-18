@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :arrival_start_date %></dt>
+  <dd><%= tryb{@item.send(:arrival_start_date).strftime("%Y/%m/%d %H:%M")} %></dd>
+
+  <dt><%= @model.t :arrival_close_date %></dt>
+  <dd><%= tryb{@item.send(:arrival_close_date).strftime("%Y/%m/%d %H:%M")} %></dd>
+</dl>

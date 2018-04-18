@@ -1,0 +1,48 @@
+ja:
+  mail_page:
+    page: メール取込ページ
+
+  modules:
+    mail_page: メール取込
+    addons:
+      mail_page/mail_setting: メール取込設定
+      mail_page/arrival_plan: 緊急情報表示
+
+  cms:
+    nodes:
+      mail_page/page: メール取込
+    parts:
+      mail_page/page: 緊急情報
+
+  mongoid:
+    models:
+      mail_page/page: メール取込ページ
+      mail_page/node/page: メール取込
+    attributes:
+      mail_page/addon/mail_setting:
+        mail_page_from_conditions: 送信者メールアドレス
+        mail_page_to_conditions: 宛先メールアドレス
+        arrival_days: 緊急情報表示期間
+      mail_page/addon/arrival_plan:
+        arrival_start_date: 緊急情報表示開始日時
+        arrival_close_date: 緊急情報表示終了日時
+
+  tooltip:
+    mail_page/addon/mail_setting:
+      mail_page_from_conditions:
+        - メール取込の送信者メールアドレス（From）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの受信アドレスと一致した際にページを作成します。
+      mail_page_to_conditions:
+        - メール取込の宛先メールアドレス（To）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にページを作成します。
+      arrival_days:
+        - 取込ページの緊急情報パーツ表示期間を設定します。
+    mail_page/addon/arrival_plan:
+      arrival_start_date:
+        - 緊急情報パーツに表示を開始する日時を指定します。
+      arrival_close_date:
+        - 表示を終了する日時を指定します。
+
+  job:
+    models:
+      mail_page/import_job: メール取込

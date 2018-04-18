@@ -1,0 +1,10 @@
+<dl class="see mod-mail_page-mail_setting">
+  <dt><%= @model.t :mail_page_from_conditions %><%= @model.tt :mail_page_from_conditions %></dt>
+  <dd><%= f.text_area :mail_page_from_conditions %></dd>
+
+  <dt><%= @model.t :mail_page_to_conditions %><%= @model.tt :mail_page_to_conditions %></dt>
+  <dd><%= f.text_area :mail_page_to_conditions %></dd>
+
+  <dt><%= @model.t :arrival_days %><%= @model.tt :arrival_days %></dt>
+  <dd class="short"><%= f.number_field :arrival_days, min: 1 %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
+</dl>

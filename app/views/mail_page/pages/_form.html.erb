@@ -1,0 +1,23 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :title %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
+  <dd><%= f.text_field :index_name %></dd>
+
+  <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
+  <dd>
+    <%= link_to t('ss.links.input'), '#', onclick: '$("#article-pages-form-dd-input").toggle(); $(this).hide(); return false;' %>
+    <%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename", style: "display: none" %>
+  </dd>
+
+  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
+  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
+
+  <%= render file: 'cms/pages/_form_body_parts', locals: { f: f } %>
+
+  <%= render file: 'cms/pages/_form_template_form', locals: { f: f } %>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>
