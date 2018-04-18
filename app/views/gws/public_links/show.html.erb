@@ -1,20 +1,17 @@
 <section class="main-box">
   <header><h2><%= @item.name %></h2></header>
-  <table class="index">
-    <thead>
-      <tr>
-        <th style="width: 40%;"><%= @item.t('links/name') %></th>
-        <th><%= @item.t('links/url') %></th>
-      </tr>
-    </thead>
 
-    <tbody>
-      <% (@item.links || []).each do |item| %>
-      <tr>
-        <td><%= item[:name] %></td>
-        <td><%= link_to item[:url], item[:url] if item[:url].present? %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <ul class="list-items">
+    <% (@item.links || []).each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <% if item[:url].present? %>
+          <%= link_to item[:name].presence || item[:url], item[:url] %>
+        <% elsif item[:name].present? %>
+          <%= item[:name] %>
+        <% end %>
+      </div>
+    </li>
+    <% end %>
+  </ul>
 </section>

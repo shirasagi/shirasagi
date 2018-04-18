@@ -5,12 +5,10 @@
     <% (@portlet.links || []).each do |item| %>
     <li class="list-item">
       <div class="info">
-        <% if item[:name].present? && item[:url].present? %>
-          <%= link_to item[:name], item[:url] %>
+        <% if item[:url].present? %>
+          <%= link_to item[:name].presence || item[:url], item[:url] %>
         <% elsif item[:name].present? %>
           <%= item[:name] %>
-        <% else %>
-          <%= link_to item[:url], item[:url] %>
         <% end %>
       </div>
     </li>

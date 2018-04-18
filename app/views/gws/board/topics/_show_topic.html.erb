@@ -41,12 +41,10 @@
       <% (@item.links || []).each do |item| %>
         <span class="link-item <%= @cur_site.board_links_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
           <i class="material-icons">&#xE157;</i>
-          <% if item[:name].present? && item[:url].present? %>
-            <%= link_to item[:name], item[:url] %>
+          <% if item[:url].present? %>
+            <%= link_to item[:name].presence || item[:url], item[:url] %>
           <% elsif item[:name].present? %>
             <%= item[:name] %>
-          <% else %>
-            <%= link_to item[:url], item[:url] %>
           <% end %>
         </span>
       <% end %>
