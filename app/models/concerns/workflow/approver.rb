@@ -18,11 +18,12 @@ module Workflow::Approver
     field :workflow_state, type: String
     field :workflow_comment, type: String
     field :workflow_pull_up, type: String
+    field :workflow_on_resume, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
     field :approved, type: DateTime
 
-    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up
+    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_resume
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
     permit_params :workflow_reset, :workflow_cancel_request
@@ -184,6 +185,14 @@ module Workflow::Approver
     max_editable_approvers[:editable].to_i > 0
   end
 
+  def workflow_back_to_previous?
+    workflow_on_resume == 'back_to_previous'
+  end
+
+  def workflow_back_to_init?
+    !workflow_back_to_previous?
+  end
+
   private
 
   def reset_workflow
@@ -268,6 +277,10 @@ module Workflow::Approver
 
   def workflow_pull_up_options
     %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
+  def workflow_on_resume_options
+    %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_resume.#{v}"), v] }
   end
 
   module ClassMethods

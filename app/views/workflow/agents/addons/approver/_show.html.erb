@@ -99,6 +99,9 @@
           <dd><%= @item.label :workflow_pull_up %></dd>
         <% end %>
 
+        <dt><%= @model.t :workflow_on_resume %></dt>
+        <dd><%= @item.label :workflow_on_resume %></dd>
+
         <dt><%= @model.t :workflow_approvers %></dt>
         <dd>
           <% if @item.workflow_approvers.present? %>

@@ -89,6 +89,7 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
     @item.workflow_comment = params[:workflow_comment]
     @item.workflow_pull_up = params[:workflow_pull_up].present? ? params[:workflow_pull_up] : 'disabled'
+    @item.workflow_on_resume = params[:workflow_on_resume]
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
 

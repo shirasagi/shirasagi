@@ -92,6 +92,7 @@ SS_Workflow.prototype = {
     uri += "/" + updatetype + "_update";
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
+    var workflow_on_resume = $("#workflow_on_resume").prop("value");
     var redirect_location = this.options.redirect_location;
     var remand_comment = $("#remand_comment").prop("value");
     var forced_update_option;
@@ -107,6 +108,7 @@ SS_Workflow.prototype = {
       data: {
         workflow_comment: workflow_comment,
         workflow_pull_up: workflow_pull_up,
+        workflow_on_resume: workflow_on_resume,
         workflow_approvers: approvers,
         workflow_required_counts: required_counts,
         remand_comment: remand_comment,
