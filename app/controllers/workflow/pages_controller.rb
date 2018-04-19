@@ -31,7 +31,7 @@ class Workflow::PagesController < ApplicationController
     end
 
     @item.set_workflow_approver_state_to_request
-    @item.update
+    @item.save
   end
 
   def workflow_alert
@@ -86,13 +86,13 @@ class Workflow::PagesController < ApplicationController
 
     @item.approved = nil
     @item.workflow_user_id = @cur_user._id
-    @item.workflow_state   = "request"
+    @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
     @item.workflow_comment = params[:workflow_comment]
     @item.workflow_pull_up = params[:workflow_pull_up].present? ? params[:workflow_pull_up] : 'disabled'
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
 
-    if @item.update
+    if @item.save
       request_approval
       render json: { workflow_state: @item.workflow_state }
     else
@@ -131,7 +131,7 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    if !@item.update
+    if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
       return
     end
@@ -171,18 +171,19 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_state = @model::WORKFLOW_STATE_REMAND
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])
 
-    if @item.update
-      if @item.workflow_state == "remand"
-        Workflow::Mailer.send_remand_mails(
-          f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
-          site: @cur_site, page: @item,
-          url: params[:url], comment: params[:remand_comment]
-        )
-      end
-      render json: { workflow_state: @item.workflow_state }
-    else
+    if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
+      return
     end
+
+    if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
+      Workflow::Mailer.send_remand_mails(
+        f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+        site: @cur_site, page: @item,
+        url: params[:url], comment: params[:remand_comment]
+      )
+    end
+    render json: { workflow_state: @item.workflow_state }
   end
 
   def branch_create
