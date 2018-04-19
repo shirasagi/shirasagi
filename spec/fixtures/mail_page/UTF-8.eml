@@ -1,0 +1,35 @@
+Return-Path: <sample@example.jp>
+Received: from fsav303.example.jp (fsav303.example.jp [153.120.85.134])
+	by www3450.example.jp (8.14.5/8.14.5) with ESMTP id w3JBq8eC000317
+	for <sample@example.jp>; Thu, 19 Apr 2018 20:52:08 +0900 (JST)
+	(envelope-from sample@example.jp)
+Received: from www3450.example.jp (49.212.235.190)
+ by fsav303.example.jp (F-Secure/fsigk_smtp/530/fsav303.example.jp);
+ Thu, 19 Apr 2018 20:52:08 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav303.example.jp)
+Received: from [192.168.32.103] (aa018212.ppp.asahi-net.or.jp [110.5.18.212])
+	(authenticated bits=0)
+	by www3450.example.jp (8.14.5/8.14.5) with ESMTP id w3JBq72F000295
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <sample@example.jp>; Thu, 19 Apr 2018 20:52:08 +0900 (JST)
+	(envelope-from sample@example.jp)
+To: =?UTF-8?B?5LyK6Jek5oKg?= <sample@example.jp>
+From: =?UTF-8?B?5LyK6Jek5oKg?= <sample@example.jp>
+Subject: UTF-8
+Message-ID: <5971ff64-6ee7-8260-ed7d-0affe0b02157@example.jp>
+Date: Thu, 19 Apr 2018 20:52:09 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Antivirus: Avast (VPS 180419-0, 2018/04/19), Outbound message
+X-Antivirus-Status: Clean
+
+【緊急メールサービス】
+シラサギ役場よりお知らせします。
+暴風警報が発表されました。
+農業用施設等につきましては、十分な管理をお願いします。
+今後の気象情報に注意ください。
+
