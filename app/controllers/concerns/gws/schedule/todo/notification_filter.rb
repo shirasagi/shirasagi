@@ -4,7 +4,7 @@ module Gws::Schedule::Todo::NotificationFilter
 
   included do
     after_action :send_finish_notification, only: [:finish]
-    after_action :send_revert_notification, only: [:revert]    
+    after_action :send_revert_notification, only: [:revert]
   end
 
   private
