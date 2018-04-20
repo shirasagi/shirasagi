@@ -56,10 +56,10 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
 
   describe '.calc_time' do
     context 'within same day' do
-      let (:item) do
+      let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: '9', in_minute: '13', in_reason: unique_id)
       end
-      let (:time) do
+      let(:time) do
         Time.zone.now.beginning_of_day
       end
 
