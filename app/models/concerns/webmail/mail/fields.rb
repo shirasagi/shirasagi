@@ -30,7 +30,7 @@ module Webmail::Mail::Fields
     return [] if address.blank?
     begin
       addr = ::Mail::Address.new(address)
-      name = addr.display_name.blank? ? addr.address : addr.display_name
+      name = addr.display_name.presence || addr.address
       OpenStruct.new(name: name, email: addr.address, address: address)
     rescue
       OpenStruct.new(name: address, email: nil, address: address)
