@@ -62,6 +62,10 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       # capybara は element が存在しない場合、しばらく待機するので、以下の確認は登録を待機する意味もある
       expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
 
+      # リマインダーは非同期で登録される。
+      # 処理実行中に plan が削除されてしまう可能性がある為 sleep する。
+      sleep 1
+
       expect(Gws::Reminder.count).to eq 1
     end
   end
