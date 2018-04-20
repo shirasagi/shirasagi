@@ -131,28 +131,29 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    if @item.update
-      current_level = @item.workflow_current_level
-      if save_level != current_level
-        # escalate workflow
-        request_approval
-      end
-
-      if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
-        # finished workflow
-        Workflow::Mailer.send_approve_mails(
-          f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
-          site: @cur_site, page: @item,
-          url: params[:url], comment: params[:remand_comment]
-        )
-
-        @item.delete if @item.try(:branch?) && @item.state == "public"
-      end
-
-      render json: { workflow_state: @item.workflow_state }
-    else
+    if !@item.update
       render json: @item.errors.full_messages, status: :unprocessable_entity
+      return
     end
+
+    current_level = @item.workflow_current_level
+    if save_level != current_level
+      # escalate workflow
+      request_approval
+    end
+
+    if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
+      # finished workflow
+      Workflow::Mailer.send_approve_mails(
+        f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+        site: @cur_site, page: @item,
+        url: params[:url], comment: params[:remand_comment]
+      )
+
+      @item.delete if @item.try(:branch?) && @item.state == "public"
+    end
+
+    render json: { workflow_state: @item.workflow_state }
   end
 
   alias pull_up_update approve_update
