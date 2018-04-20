@@ -1,18 +1,28 @@
 class Workflow::Mailer < ActionMailer::Base
   def request_mail(args)
-    @from_user = SS::User.find(args[:f_uid])
-    @to_user   = SS::User.find(args[:t_uid])
+    @from_user = SS::User.find(args[:f_uid]) rescue nil
+    @to_user   = SS::User.find(args[:t_uid]) rescue nil
     @subject   = "[#{I18n.t('workflow.mail.subject.request')}]#{args[:page].name} - #{args[:site].name}"
     @page      = args[:page]
     @url       = args[:url]
     @comment   = args[:comment]
     @site      = args[:site]
 
-    from_email = format_email(@from_user) || site_sender(@site)
+    from_email = format_email(@from_user) || site_sender(@site) || system_sender
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
     mail from: from_email, to: to_email
+  end
+
+  def self.send_request_mails(args)
+    args = args.dup
+    Array(args.delete(:t_uids)).flatten.compact.uniq.each do |t_uid|
+      args[:t_uid] = t_uid
+
+      m = self.request_mail(args)
+      m.deliver_now if m
+    end
   end
 
   def approve_mail(args)
