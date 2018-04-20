@@ -15,6 +15,7 @@ ja:
     member: ログインメンバー
     empty_route_options: 承認経路が設定されていません。
     request_cancelled_message: 承認申請は申請者によってキャンセルされました。
+    restart_workflow: 再申請
     state:
       request: 申請中
       approve: 承認
@@ -28,6 +29,7 @@ ja:
       approve: 承認
       remand: 差し戻し
       pull_up: 引き上げ承認
+      restart: 再申請
     mail:
       subject:
         request: 承認申請

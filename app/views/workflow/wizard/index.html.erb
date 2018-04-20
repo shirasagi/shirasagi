@@ -1,5 +1,5 @@
 <% if @ss_mode == :cms %>
-  <% route_options = Workflow::Route.site(@cur_site).route_options(@cur_user) %>
+  <% route_options = Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item) %>
 <% else %>
   <% route_options = Workflow::Route.route_options(@cur_user) %>
 <% end %>

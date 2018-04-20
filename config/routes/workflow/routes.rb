@@ -5,10 +5,14 @@ SS::Application.routes.draw do
   concern :deletion do
     get :delete, on: :member
     delete action: :destroy_all, on: :collection
+  end
+
+  concern :workflow do
     post :request_update, on: :member
     post :approve_update, on: :member
     post :remand_update, on: :member
     post :pull_up_update, on: :member
+    post :restart_update, on: :member
   end
 
   concern :branch do
@@ -17,7 +21,7 @@ SS::Application.routes.draw do
 
   content "workflow" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: :deletion
+    resources :pages, concerns: [:deletion, :workflow]
     match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]
     get "/wizard/:id/reroute" => "wizard#reroute"
     post "/wizard/:id/reroute" => "wizard#do_reroute"
@@ -26,7 +30,7 @@ SS::Application.routes.draw do
 
   namespace "workflow", path: ".s:site/workflow" do
     get "/" => "main#index"
-    resources :pages, concerns: [:deletion, :branch]
+    resources :pages, concerns: [:deletion, :workflow, :branch]
     get "/search_approvers" => "search_approvers#index"
     resources :routes, concerns: :deletion
     match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]
