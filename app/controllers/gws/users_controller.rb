@@ -29,7 +29,7 @@ class Gws::UsersController < ApplicationController
   end
 
   def pre_params
-    @default_readable_setting = Proc.new do
+    @default_readable_setting = proc do
       @item.readable_setting_range = 'public'
     end
     {}
