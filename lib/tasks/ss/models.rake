@@ -25,12 +25,12 @@ namespace :ss do
         @fields[coll][name] ||= {}
         @fields[coll][name][:type] ||= field.type.to_s
 
-        if !@fields[coll][name][:name]
-          name_t = (name == "_id") ? 'ID' : model.t(name) rescue nil
-          name_t = nil if name == name_t
-          @errors << ["#{model.to_s.underscore}.#{name}"] unless name_t
-          @fields[coll][name][:name] = name_t
-        end
+        next if @fields[coll][name][:name]
+
+        name_t = (name == "_id") ? 'ID' : model.t(name) rescue nil
+        name_t = nil if name == name_t
+        @errors << ["#{model.to_s.underscore}.#{name}"] unless name_t
+        @fields[coll][name][:name] = name_t
       end
     end
 
