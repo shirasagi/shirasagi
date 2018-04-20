@@ -28,8 +28,8 @@ module Cms::Addon
                     :facebook_user_id,
                     :facebook_post_id
 
-      after_generate_file { post_sns }
-      after_remove_file { delete_sns }
+      after_generate_file :post_sns, if: ->{ @db_changes }
+      after_remove_file :delete_sns, if: ->{ @db_changes }
     end
 
     def facebook_auto_post_options
