@@ -13,7 +13,7 @@ class Opendata::DatasetDownloadReport
 
   validate :start_is_new_date_than_end
 
-  def initialize(attributes={})
+  def initialize(attributes = {})
     super
     today = Time.zone.now
     @start_year ||= today.year
