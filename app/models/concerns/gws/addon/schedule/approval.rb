@@ -6,7 +6,7 @@ module Gws::Addon::Schedule::Approval
     field :approval_state, type: String
 
     embeds_ids :approval_members, class_name: "Gws::User"
-    embeds_many :approvals, class_name: 'Gws::Schedule::Approval', cascade_callbacks: :true
+    embeds_many :approvals, class_name: 'Gws::Schedule::Approval', cascade_callbacks: true
 
     permit_params :approval_state
     permit_params approval_member_ids: []
