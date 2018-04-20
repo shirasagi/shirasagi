@@ -169,17 +169,39 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    @item.workflow_state = @model::WORKFLOW_STATE_REMAND
+    workflow_level = @item.workflow_current_level
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])
+    if @item.workflow_back_to_init?
+      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
+    elsif workflow_level <= 1
+      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
+    else
+      copy = @item.workflow_approvers.to_a
+      copy.each do |approver|
+        if approver[:level] == workflow_level - 1
+          approver[:state] = @model::WORKFLOW_STATE_REQUEST
+          approver[:comment] = ''
+        end
+      end
+      @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    end
 
     if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
       return
     end
 
-    if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
+    begin
+      recipients = []
+      if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
+        recipients << @item.workflow_user_id
+      else
+        prev_level_approvers = @item.workflow_approvers_at(workflow_level - 1)
+        recipients += prev_level_approvers.map { |hash| hash[:user_id] }
+      end
+
       Workflow::Mailer.send_remand_mails(
-        f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+        f_uid: @cur_user._id, t_uids: recipients,
         site: @cur_site, page: @item,
         url: params[:url], comment: params[:remand_comment]
       )
