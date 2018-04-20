@@ -47,7 +47,7 @@ class Gws::Reminder
     where(
       "deleted" => { "$exists" => false },
       "notifications.notify_at" => { "$exists" => true, "$ne" => Time.zone.at(0) },
-      "notifications.delivered_at" => Time.zone.at(0),
+      "notifications.delivered_at" => Time.zone.at(0)
     )
   }
   scope :notify_between, ->(from, to) {
