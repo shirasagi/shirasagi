@@ -138,14 +138,13 @@ class Workflow::PagesController < ApplicationController
         request_approval
       end
 
-      workflow_state = @item.workflow_state
-      if workflow_state == @model::WORKFLOW_STATE_APPROVE
-        @item.workflow_state = workflow_state
+      if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
         # finished workflow
-        args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
-                 site: @cur_site, page: @item,
-                 url: params[:url], comment: params[:remand_comment] }
-        Workflow::Mailer.approve_mail(args).deliver_now if args[:t_uid] rescue nil
+        Workflow::Mailer.send_approve_mails(
+          f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+          site: @cur_site, page: @item,
+          url: params[:url], comment: params[:remand_comment]
+        )
 
         @item.delete if @item.try(:branch?) && @item.state == "public"
       end
@@ -173,10 +172,11 @@ class Workflow::PagesController < ApplicationController
 
     if @item.update
       if @item.workflow_state == "remand"
-        args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
-                 site: @cur_site, page: @item,
-                 url: params[:url], comment: params[:remand_comment] }
-        Workflow::Mailer.remand_mail(args).deliver_now if args[:t_uid] rescue nil
+        Workflow::Mailer.send_remand_mails(
+          f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+          site: @cur_site, page: @item,
+          url: params[:url], comment: params[:remand_comment]
+        )
       end
       render json: { workflow_state: @item.workflow_state }
     else
