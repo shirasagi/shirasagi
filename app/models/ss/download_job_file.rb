@@ -8,7 +8,7 @@ class SS::DownloadJobFile
     @user = user
     @filename = filename
 
-    id_path = sprintf("%02d", user.id.to_s.slice(0, 2)) + "/#{user.id}"
+    id_path = "%02d" % user.id.to_s.slice(0, 2) + "/#{user.id}"
     @path = "#{self.class.root}/#{id_path}/#{filename}"
   end
 
