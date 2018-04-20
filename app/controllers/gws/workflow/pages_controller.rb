@@ -76,6 +76,7 @@ class Gws::Workflow::PagesController < ApplicationController
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
 
     if @item.finish_workflow?
+      @item.approved = Time.zone.now
       @item.workflow_state = @model::WORKFLOW_STATE_APPROVE
       @item.state = "approve"
     end
