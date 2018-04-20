@@ -9,7 +9,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:hour) do
         site.attendance_time_changed_minute / 60
       end
-      let (:item) do
+      let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
       it do
@@ -21,7 +21,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:hour) do
         site.attendance_time_changed_minute / 60 + 24
       end
-      let (:item) do
+      let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
       it do
@@ -33,7 +33,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:hour) do
         site.attendance_time_changed_minute / 60 - 1
       end
-      let (:item) do
+      let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
       it do
@@ -45,7 +45,7 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
       let(:hour) do
         site.attendance_time_changed_minute / 60 + 25
       end
-      let (:item) do
+      let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: hour.to_s, in_minute: '0', in_reason: unique_id)
       end
       it do
@@ -69,10 +69,10 @@ describe Gws::Attendance::TimeEdit, type: :model, dbscope: :example do
     end
 
     context 'when day is over' do
-      let (:item) do
+      let(:item) do
         described_class.new(cur_site: site, cur_user: user, in_hour: '25', in_minute: '13', in_reason: unique_id)
       end
-      let (:time) do
+      let(:time) do
         Time.zone.now.beginning_of_day
       end
 
