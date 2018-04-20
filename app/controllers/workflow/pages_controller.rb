@@ -2,7 +2,7 @@ class Workflow::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  before_action :set_item, only: [:request_update, :approve_update, :remand_update, :branch_create]
+  before_action :set_item, only: %i[request_update approve_update pull_up_update remand_update branch_create]
 
   private
 
@@ -111,8 +111,11 @@ class Workflow::PagesController < ApplicationController
     end
 
     save_level = @item.workflow_current_level
-    @item.skip_approve
-    @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+    if params[:action] == 'pull_up_update'
+      @item.pull_up_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+    else
+      @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+    end
 
     if @item.finish_workflow?
       @item.approved = Time.zone.now
@@ -153,6 +156,8 @@ class Workflow::PagesController < ApplicationController
     end
   end
 
+  alias pull_up_update approve_update
+
   def remand_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
@@ -162,8 +167,6 @@ class Workflow::PagesController < ApplicationController
         return
       end
     end
-
-    @item.skip_approve
 
     @item.workflow_state = @model::WORKFLOW_STATE_REMAND
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])

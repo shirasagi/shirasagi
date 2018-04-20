@@ -26,7 +26,7 @@
                 <% if workflow_approver[:state] == 'request' %>
                 <%= button_tag t("workflow.buttons.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
                 <% elsif workflow_approver[:state] == 'pending' %>
-                <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :approve, class: "update-item btn-primary" } %>
+                <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :pull_up, class: "update-item btn-primary" } %>
                 <% end %>
                 <%= button_tag t("workflow.buttons.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
               </div>
