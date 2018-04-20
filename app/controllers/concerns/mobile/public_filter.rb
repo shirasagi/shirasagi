@@ -9,7 +9,7 @@ module Mobile::PublicFilter
 
   def set_request_path_with_mobile
     return if @cur_site.mobile_disabled?
-    return if @cur_main_path !~ /^#{@cur_site.mobile_location}\//
+    return if @cur_path !~ /^#{@cur_site.mobile_url}/
     @cur_main_path.sub!(/^#{@cur_site.mobile_location}\//, "/")
     filters << :mobile
   end
@@ -32,7 +32,7 @@ module Mobile::PublicFilter
 
     # links
     location = @cur_site.mobile_location.gsub(/^\/|\/$/, "")
-    body.gsub!(/href="\/(?!#{location}\/)(?!fs\/)/, "href=\"/#{location}/")
+    body.gsub!(/href="#{@cur_site.url}(?!#{location}\/)(?!fs\/)/, "href=\"#{@cur_site.url}#{location}/")
     body.gsub!(/<span .*?id="ss-(small|medium|large|kana|pc|mb)".*?>.*?<\/span>/, "")
 
     # tags

@@ -1,6 +1,7 @@
 #= require jquery.datetimepicker
 
 class @SS_Preview
+  @preview_path = ""
   @mobile_path = "/mobile"
   @request_path = null
   @form_item = null
@@ -16,7 +17,7 @@ class @SS_Preview
       date = date.replace(/[^\d]/g, "")
       path = SS_Preview.request_path
       path ||= location.pathname
-      path = path.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date ) + location.search
+      path = path.replace(///\/preview\d*(#{SS_Preview.mobile_path}|#{SS_Preview.preview_path})?///, "/preview" + date + SS_Preview.preview_path ) + location.search
 
       if SS_Preview.request_path
         SS_Preview.submitFormPreview(path, SS_Preview.form_item)
@@ -30,7 +31,7 @@ class @SS_Preview
       date = date.replace(/[^\d]/g, "")
       path = SS_Preview.request_path
       path ||= location.pathname
-      path = path.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date + "/mobile" ) + location.search
+      path = path.replace(///\/preview\d*(#{SS_Preview.mobile_path}|#{SS_Preview.preview_path})?///, "/preview" + date + SS_Preview.mobile_path ) + location.search
 
       if SS_Preview.request_path
         SS_Preview.submitFormPreview(path, SS_Preview.form_item)

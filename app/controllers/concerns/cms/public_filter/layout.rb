@@ -224,6 +224,9 @@ module Cms::PublicFilter::Layout
     if @javascript_config.nil?
       @javascript_config = {}
 
+      @javascript_config["site_url"] = @cur_site.url
+      @javascript_config["kana_url"] = @cur_site.kana_url
+
       conf = Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?)
       @javascript_config.merge!(conf)
 

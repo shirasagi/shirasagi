@@ -177,9 +177,16 @@ class @SS
 
 class @SS_Kana
   @dir = "<%= SS.config.kana.location %>"
+  @siteUrl = "/"
+  @kanaUrl = "<%= SS.config.kana.location %>" + "/"
 
   @render: ->
     #bind = 'onclick="return SS_Kana.loadPage($(this))"'
+
+    if SS.config["site_url"] && SS.config["kana_url"]
+      SS_Kana.siteUrl = SS.config["site_url"]
+      SS_Kana.kanaUrl = SS.config["kana_url"]
+
     if $("body").data("kana")
       url = SS_Kana.url(location.pathname, false)
       bind = 'onclick="location.href=\'' + url + '\'; return false"'
@@ -191,10 +198,11 @@ class @SS_Kana
 
   @url: (url, bool = null) ->
     bool = $("body").data("kana") if bool == null
+
     if bool
-      url = @dir + url
+      url = url.replace(///^(\/\.s\d+?\/preview\d*)?#{@siteUrl}///, "$1" + @kanaUrl)
     else
-      url = url.replace(new RegExp("^" + @dir.replace("/", "\/") + "\/"), "/")
+      url = url.replace(///^(\/\.s\d+?\/preview\d*)?#{@kanaUrl}///, "$1" + @siteUrl)
     return url
 
   @loadPage: (elem) ->
