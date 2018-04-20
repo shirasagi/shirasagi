@@ -27,7 +27,7 @@ class Gws::Schedule::CsvController < ApplicationController
       render json: { messages: @item.errors.full_messages }.to_json
     elsif params[:import_mode] == "save"
       @item.import
-      render json: { items: @item.items , messages: [t("gws/schedule.import.count", count: @item.imported)] }.to_json
+      render json: { items: @item.items, messages: [t("gws/schedule.import.count", count: @item.imported)] }.to_json
     else
       @item.import(confirm: true)
       render json: { items: @item.items }.to_json
