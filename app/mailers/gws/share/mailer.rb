@@ -5,7 +5,7 @@ class Gws::Share::Mailer < ActionMailer::Base
 
     from = ActionMailer::Base.default[:from]
     to = format_email(@user)
-    subject = I18n.t("gws/share.mailers.compressed.subject",)
+    subject = I18n.t("gws/share.mailers.compressed.subject")
 
     mail(from: from, to: to, subject: subject)
   end
