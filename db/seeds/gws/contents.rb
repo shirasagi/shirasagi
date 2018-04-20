@@ -372,7 +372,7 @@ end
 create_schedule_todo(
   name: '[サイト改善プロジェクト]要求仕様提出', member_ids:  @users.map(&:id),
   start_at: Time.zone.now + 7.days, end_at: Time.zone.now + 7.days + 1.hour,
-  todo_state: 'unfinished', discussion_forum_id: @ds_forums[0].id,
+  todo_state: 'unfinished', discussion_forum_id: @ds_forums[0].id
 )
 
 ## -------------------------------------
