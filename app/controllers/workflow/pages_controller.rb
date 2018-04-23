@@ -138,10 +138,12 @@ class Workflow::PagesController < ApplicationController
       workflow_state = @item.workflow_state
       if workflow_state == @model::WORKFLOW_STATE_APPROVE
         @item.workflow_state = workflow_state
+        url = params[:url].to_s
+        url.sub!(/#{@item.id}$/, @item.master.id.to_s) if @item.try(:branch?) && @item.state == "public"
         # finished workflow
         args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                  site: @cur_site, page: @item,
-                 url: params[:url], comment: params[:remand_comment] }
+                 url: url, comment: params[:remand_comment] }
         Workflow::Mailer.approve_mail(args).deliver_now if args[:t_uid] rescue nil
 
         @item.delete if @item.try(:branch?) && @item.state == "public"
