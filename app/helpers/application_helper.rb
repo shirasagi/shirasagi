@@ -18,6 +18,10 @@ module ApplicationHelper
     texts.reduce('') { |a, e| a + "<p>#{e}</p>" }.html_safe
   end
 
+  def remove_script(str)
+    str.to_s.gsub(/<script.*[\s\S]*\/script>/,"").html_safe
+  end
+
   def snip(str, opt = {})
     len = opt[:length] || 80
     "#{str.to_s[0..len-1]}#{str.to_s.size > len ? ".." : ""}".html_safe
