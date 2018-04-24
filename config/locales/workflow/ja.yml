@@ -50,7 +50,7 @@ ja:
       posted_by:
         member: マイページ投稿
         admin: 管理側投稿
-      on_resume:
+      on_remand:
         back_to_init: 最初に戻る
         back_to_previous: 直前に戻る
     required_count_label:
@@ -88,7 +88,7 @@ ja:
         workflow_state: 承認状態
         workflow_comment: 申請コメント
         workflow_pull_up: 引き上げ承認
-        workflow_on_resume: 差し戻し時
+        workflow_on_remand: 差し戻し時
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
         approved: 承認日時
@@ -97,7 +97,7 @@ ja:
       workflow/model/route:
         name: 名前
         pull_up: 引き上げ承認
-        on_resume: 差し戻し時
+        on_remand: 差し戻し時
         approvers: 承認者
         required_counts: 必要承認数
         group_ids: グループ
@@ -145,7 +145,7 @@ ja:
         - 承認経路の名前を入力します。
       pull_up:
         - 引き上げ承認の有効、無効を設定します。
-      on_resume:
+      on_remand:
         - 差し戻し時の動作を選択します。
         - 「最初に戻る」は、、差し戻し時、承認を最初からやり直します。これが既定の動作です。
         - 「直前に戻る」は、差し戻し時、直前のレベルからやり直します。

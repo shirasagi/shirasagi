@@ -27,7 +27,7 @@ describe "back_to_previous route", dbscope: :example, js: true do
     context "single user at a stage" do
       let!(:route_single_user) do
         create(
-          :workflow_route, name: route_name, on_resume: 'back_to_previous',
+          :workflow_route, name: route_name, on_remand: 'back_to_previous',
           approvers: [
             { "level" => 1, "user_id" => user1.id },
             { "level" => 2, "user_id" => user2.id },

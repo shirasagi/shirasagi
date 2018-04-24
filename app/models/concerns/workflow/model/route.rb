@@ -11,16 +11,16 @@ module Workflow::Model::Route
     seqid :id
     field :name, type: String
     field :pull_up, type: String
-    field :on_resume, type: String
+    field :on_remand, type: String
     embeds_ids :groups, class_name: "SS::Group"
     field :approvers, type: Workflow::Extensions::Route::Approvers
     field :required_counts, type: Workflow::Extensions::Route::RequiredCounts
-    permit_params :name, :pull_up, :on_resume
+    permit_params :name, :pull_up, :on_remand
     permit_params group_ids: [], approvers: [ :level, :user_id, :editable ], required_counts: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :pull_up, inclusion: { in: %w(enabled disabled), allow_blank: true }
-    validates :on_resume, inclusion: { in: %w(back_to_init back_to_previous), allow_blank: true }
+    validates :on_remand, inclusion: { in: %w(back_to_init back_to_previous), allow_blank: true }
     validate :validate_approvers_presence
     validate :validate_approvers_consecutiveness
     validate :validate_required_counts
@@ -61,8 +61,8 @@ module Workflow::Model::Route
     %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
-  def on_resume_options
-    %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_resume.#{v}"), v] }
+  def on_remand_options
+    %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_remand.#{v}"), v] }
   end
 
   def levels

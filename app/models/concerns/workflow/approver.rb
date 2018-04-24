@@ -18,12 +18,12 @@ module Workflow::Approver
     field :workflow_state, type: String
     field :workflow_comment, type: String
     field :workflow_pull_up, type: String
-    field :workflow_on_resume, type: String
+    field :workflow_on_remand, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
     field :approved, type: DateTime
 
-    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_resume
+    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
     permit_params :workflow_reset, :workflow_cancel_request
@@ -186,7 +186,7 @@ module Workflow::Approver
   end
 
   def workflow_back_to_previous?
-    workflow_on_resume == 'back_to_previous'
+    workflow_on_remand == 'back_to_previous'
   end
 
   def workflow_back_to_init?
@@ -279,8 +279,8 @@ module Workflow::Approver
     %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
-  def workflow_on_resume_options
-    %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_resume.#{v}"), v] }
+  def workflow_on_remand_options
+    %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_remand.#{v}"), v] }
   end
 
   module ClassMethods

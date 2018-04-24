@@ -59,7 +59,7 @@ class Gws::Workflow::PagesController < ApplicationController
     @item.workflow_state   = "request"
     @item.workflow_comment = params[:workflow_comment]
     @item.workflow_pull_up = params[:workflow_pull_up]
-    @item.workflow_on_resume = params[:workflow_on_resume]
+    @item.workflow_on_remand = params[:workflow_on_remand]
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
 
