@@ -30,16 +30,13 @@
                 <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :pull_up, class: "update-item btn-primary" } %>
                 <% end %>
               </div>
+              <% if @ss_mode == :cms %>
               <div class="checkbox">
                 <label>
-                  <% force = @cur_site.forced_update rescue nil %>
-                  <% if force == "enabled" %>
-                  <%= check_box_tag 'forced-update', true, true, class: 'forced' %><%= t("errors.messages.forced_update") %>
-                  <% else %>
-                  <%= check_box_tag 'forced-update', true, false, class: 'forced' %><%= t("errors.messages.forced_update") %>
-                  <% end %>
+                  <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "enabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
                 </label>
               </div>
+              <% end %>
             </div>
           </div>
         </section>
