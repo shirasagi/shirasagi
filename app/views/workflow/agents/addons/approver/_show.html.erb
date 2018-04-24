@@ -94,10 +94,8 @@
           <dd><%= @item.workflow_comment %></dd>
         <% end %>
 
-        <% if @item.workflow_pull_up.present? %>
-          <dt><%= @model.t :workflow_pull_up %></dt>
-          <dd><%= @item.label :workflow_pull_up %></dd>
-        <% end %>
+        <dt><%= @model.t :workflow_pull_up %></dt>
+        <dd><%= @item.label :workflow_pull_up %></dd>
 
         <dt><%= @model.t :workflow_on_resume %></dt>
         <dd><%= @item.label :workflow_on_resume %></dd>
