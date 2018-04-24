@@ -23,8 +23,6 @@ class Gws::Schedule::Todo
   permission_include_custom_groups
   readable_setting_include_custom_groups
 
-  class_variable_set(:@@_notify_state_default, 'enabled')
-
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
 
