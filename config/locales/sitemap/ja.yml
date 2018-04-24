@@ -27,6 +27,8 @@ ja:
     approve_private_sitemap_pages: ページの承認（所有）
     reroute_other_sitemap_pages: ページの承認経路変更（全て）
     reroute_private_sitemap_pages: ページの承認経路変更（所有）
+    revoke_other_sitemap_pages: ページの承認申請取消（全て）
+    revoke_private_sitemap_pages: ページの承認申請取消（所有）
 
   mongoid:
     models:

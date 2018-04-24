@@ -230,6 +230,23 @@ class Workflow::PagesController < ApplicationController
     render json: { workflow_state: @item.workflow_state }
   end
 
+  def request_cancel
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user)
+
+    return if request.get?
+
+    @item.approved = nil
+    @item.workflow_user_id = nil
+    @item.workflow_state = @model::WORKFLOW_STATE_CANCELLED
+
+    if @item.save
+      render json: { notice: t('workflow.notice.request_cancelled') }
+    else
+      render json: { workflow_alert: @item.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   def branch_create
     raise "400" if @item.branch?
 

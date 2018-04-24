@@ -331,6 +331,8 @@ ja:
     approve_member_opendata_datasets: データセットの承認（メンバー）
     reroute_other_opendata_datasets: データセットの承認経路変更（全て）
     reroute_private_opendata_datasets: データセットの承認経路変更（所有）
+    revoke_other_opendata_datasets: データセットの承認申請取消（全て）
+    revoke_private_opendata_datasets: データセットの承認申請取消（所有）
     read_other_opendata_apps: アプリの閲覧（全て）
     read_private_opendata_apps: アプリの閲覧（所有）
     read_member_opendata_apps: アプリの閲覧（メンバー）
@@ -348,6 +350,8 @@ ja:
     approve_member_opendata_apps: アプリの承認（メンバー）
     reroute_other_opendata_apps: アプリの承認経路変更（全て）
     reroute_private_opendata_apps: アプリの承認経路変更（所有）
+    revoke_other_opendata_apps: アプリの承認申請取消（全て）
+    revoke_private_opendata_apps: アプリの承認申請取消（所有）
     read_other_opendata_ideas: アイデアの閲覧（全て）
     read_private_opendata_ideas: アイデアの閲覧（所有）
     read_member_opendata_ideas: アイデアの閲覧（メンバー）
@@ -365,6 +369,8 @@ ja:
     approve_member_opendata_ideas: アイデアの承認（メンバー）
     reroute_other_opendata_ideas: アイデアの承認経路変更（全て）
     reroute_private_opendata_ideas: アイデアの承認経路変更（所有）
+    revoke_other_opendata_ideas: アイデアの承認申請取消（全て）
+    revoke_private_opendata_ideas: アイデアの承認申請取消（所有）
 
   mongoid:
     models:

@@ -13,6 +13,7 @@ SS::Application.routes.draw do
     post :remand_update, on: :member
     post :pull_up_update, on: :member
     post :restart_update, on: :member
+    post :request_cancel, on: :member
   end
 
   concern :branch do

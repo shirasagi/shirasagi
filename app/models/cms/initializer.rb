@@ -89,6 +89,8 @@ module Cms
     Cms::Role.permission :approve_private_cms_pages
     Cms::Role.permission :reroute_other_cms_pages
     Cms::Role.permission :reroute_private_cms_pages
+    Cms::Role.permission :revoke_other_cms_pages
+    Cms::Role.permission :revoke_private_cms_pages
     Cms::Role.permission :move_private_cms_nodes
     Cms::Role.permission :move_private_cms_pages
     Cms::Role.permission :move_other_cms_nodes
