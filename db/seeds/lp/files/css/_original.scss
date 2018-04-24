@@ -195,19 +195,25 @@ body {
   text-align: center;
 }
 // contact
-.inquiry-form .columns dt {
-  margin-bottom: 0.2em;
+.inquiry-form .columns fieldset {
+  margin-bottom: 20px;
+  dt {
+    margin-bottom: 0.2em;
+  }
 }
 .inquiry-form .columns dd input[type="text"],
 .inquiry-form .columns dd input[type="email"],
-.inquiry-form .columns dd textarea {
+.inquiry-form .columns dd textarea,
+.inquiry-form .columns .fields input[type="text"],
+.inquiry-form .columns .fields input[type="email"],
+.inquiry-form .columns .fields textarea {
   display: block;
   width: 100%;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #555;
+  color: #5a5a5a;
   background-color: #fff;
   background-image: none;
   border: 1px solid #ccc;
@@ -239,12 +245,14 @@ body {
     opacity: 1;
   }
 }
-
+.inquiry-form .columns legend {
+  margin-bottom: 0;
+  border-bottom: none;
+  font-size: 100%;
+}
 .inquiry-form .columns dd label span {
   padding: 0 8px 0 4px;
 }
-
-
 .inquiry-form .columns dd textarea {
   height: 15em;
 }
@@ -456,7 +464,10 @@ ul.col3-flex {
 // contact
 form {
   .required {
+    display: inline-block;
+    margin-left: 4px;
     color: #ee0000;
+    font-weight: bold;
   }
 }
 #body--contact-confirm .inquiry-form.confirm, #body--contact-create .inquiry-form.confirm, #body--contact-sent .inquiry-sent {

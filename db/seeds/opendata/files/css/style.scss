@@ -666,10 +666,15 @@ textarea {
     }
     select {
       width: 249px;
+      height: 33px;
+    }
+    input, select {
+      border: 1px solid $gray2;
     }
   }
   .send input {
     float: right;
+    margin-top : 10px;
     @include btn-black;
   }
 }
