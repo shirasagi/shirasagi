@@ -88,11 +88,11 @@ module Workflow::Approver
     return false if level.nil?
 
     copy = workflow_approvers.to_a
-    targets = copy.select do |workflow_approver|
-      workflow_approver[:level] == level && workflow_approver[:state] == WORKFLOW_STATE_PENDING
-    end
-    targets.each do |workflow_approver|
-      workflow_approver[:state] = WORKFLOW_STATE_REQUEST
+    copy.each do |workflow_approver|
+      if workflow_approver[:level] == level
+        workflow_approver[:state] = WORKFLOW_STATE_REQUEST
+        workflow_approver[:comment] = ''
+      end
     end
 
     # Be careful, partial update is meaningless. We must update entirely.
