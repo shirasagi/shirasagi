@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :ss_user_title, class: SS::UserTitle do
-    name { "title-#{unique_id}" }
+    code { "code-#{unique_id}" }
+    name { "name-#{unique_id}" }
+    remark { "remark-#{unique_id}" }
   end
 end
