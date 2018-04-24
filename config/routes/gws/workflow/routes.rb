@@ -15,6 +15,8 @@ SS::Application.routes.draw do
     post :request_update, on: :member
     post :approve_update, on: :member
     post :remand_update, on: :member
+    post :pull_up_update, on: :member
+    post :restart_update, on: :member
     match :request_cancel, on: :member, via: [:get, :post]
   end
 
