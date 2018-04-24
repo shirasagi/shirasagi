@@ -2,7 +2,7 @@ class Workflow::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  before_action :set_item, only: [:request_update, :approve_update, :remand_update, :branch_create]
+  before_action :set_item, only: %i[request_update approve_update pull_up_update remand_update branch_create]
 
   private
 
@@ -111,8 +111,11 @@ class Workflow::PagesController < ApplicationController
     end
 
     save_level = @item.workflow_current_level
-    @item.skip_approve
-    @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+    if params[:action] == 'pull_up_update'
+      @item.pull_up_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+    else
+      @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+    end
 
     if @item.finish_workflow?
       @item.approved = Time.zone.now
@@ -128,30 +131,32 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    if @item.update
-      current_level = @item.workflow_current_level
-      if save_level != current_level
-        # escalate workflow
-        request_approval
-      end
-
-      workflow_state = @item.workflow_state
-      if workflow_state == @model::WORKFLOW_STATE_APPROVE
-        @item.workflow_state = workflow_state
-        # finished workflow
-        args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
-                 site: @cur_site, page: @item,
-                 url: params[:url], comment: params[:remand_comment] }
-        Workflow::Mailer.approve_mail(args).deliver_now if args[:t_uid] rescue nil
-
-        @item.delete if @item.try(:branch?) && @item.state == "public"
-      end
-
-      render json: { workflow_state: @item.workflow_state }
-    else
+    if !@item.update
       render json: @item.errors.full_messages, status: :unprocessable_entity
+      return
     end
+
+    current_level = @item.workflow_current_level
+    if save_level != current_level
+      # escalate workflow
+      request_approval
+    end
+
+    if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
+      # finished workflow
+      Workflow::Mailer.send_approve_mails(
+        f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+        site: @cur_site, page: @item,
+        url: params[:url], comment: params[:remand_comment]
+      )
+
+      @item.delete if @item.try(:branch?) && @item.state == "public"
+    end
+
+    render json: { workflow_state: @item.workflow_state }
   end
+
+  alias pull_up_update approve_update
 
   def remand_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
@@ -163,17 +168,16 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    @item.skip_approve
-
     @item.workflow_state = @model::WORKFLOW_STATE_REMAND
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])
 
     if @item.update
       if @item.workflow_state == "remand"
-        args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
-                 site: @cur_site, page: @item,
-                 url: params[:url], comment: params[:remand_comment] }
-        Workflow::Mailer.remand_mail(args).deliver_now if args[:t_uid] rescue nil
+        Workflow::Mailer.send_remand_mails(
+          f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+          site: @cur_site, page: @item,
+          url: params[:url], comment: params[:remand_comment]
+        )
       end
       render json: { workflow_state: @item.workflow_state }
     else

@@ -8,7 +8,7 @@ class Workflow::Mailer < ActionMailer::Base
     @comment   = args[:comment]
     @site      = args[:site]
 
-    from_email = format_email(@from_user) || default_sender(@site)
+    from_email = format_email(@from_user) || site_sender(@site)
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
@@ -16,32 +16,52 @@ class Workflow::Mailer < ActionMailer::Base
   end
 
   def approve_mail(args)
-    @from_user = SS::User.find(args[:f_uid])
-    @to_user   = SS::User.find(args[:t_uid])
+    @from_user = SS::User.find(args[:f_uid]) rescue nil
+    @to_user   = SS::User.find(args[:t_uid]) rescue nil
     @subject   = "[#{I18n.t('workflow.mail.subject.approve')}]#{args[:page].name} - #{args[:site].name}"
     @page      = args[:page]
     @url       = args[:url]
 
-    from_email = format_email(@from_user) || default_sender(@site)
+    from_email = format_email(@from_user) || site_sender(@site) || system_sender
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
     mail from: from_email, to: to_email
   end
 
+  def self.send_approve_mails(args)
+    args = args.dup
+    Array(args.delete(:t_uids)).flatten.compact.uniq.each do |t_uid|
+      args[:t_uid] = t_uid
+
+      m = self.approve_mail(args)
+      m.deliver_now if m
+    end
+  end
+
   def remand_mail(args)
-    @from_user = SS::User.find(args[:f_uid])
-    @to_user   = SS::User.find(args[:t_uid])
+    @from_user = SS::User.find(args[:f_uid]) rescue nil
+    @to_user   = SS::User.find(args[:t_uid]) rescue nil
     @subject   = "[#{I18n.t('workflow.mail.subject.remand')}]#{args[:page].name} - #{args[:site].name}"
     @page      = args[:page]
     @url       = args[:url]
     @comment   = args[:comment]
 
-    from_email = format_email(@from_user) || default_sender(@site)
+    from_email = format_email(@from_user) || site_sender(@site) || system_sender
     to_email = format_email(@to_user)
     return nil if from_email.blank? || to_email.blank?
 
     mail from: from_email, to: to_email
+  end
+
+  def self.send_remand_mails(args)
+    args = args.dup
+    Array(args.delete(:t_uids)).flatten.compact.uniq.each do |t_uid|
+      args[:t_uid] = t_uid
+
+      m = self.remand_mail(args)
+      m.deliver_now if m
+    end
   end
 
   private
@@ -56,6 +76,17 @@ class Workflow::Mailer < ActionMailer::Base
     end
   end
 
-  def default_sender(site)
+  def site_sender(site)
+    return if site.blank? || site.sender_email.blank?
+
+    if site.sender_name.present?
+      "#{site.sender_name} <#{site.sender_email}>"
+    else
+      site.sender_email
+    end
+  end
+
+  def system_sender
+    SS.config.mail.default_from
   end
 end

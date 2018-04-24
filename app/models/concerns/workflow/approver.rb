@@ -99,14 +99,16 @@ module Workflow::Approver
     true
   end
 
-  def update_current_workflow_approver_state(user, state, comment = nil)
+  def update_current_workflow_approver_state(user_or_id, state, comment = nil)
     level = workflow_current_level
     return false if level.nil?
 
-    user = user._id if user.respond_to?(:_id)
+    user_id = user_or_id.id if user_or_id.respond_to?(:id)
+    user_id ||= user_or_id.to_i
+
     copy = workflow_approvers.to_a
     targets = copy.select do |workflow_approver|
-      workflow_approver[:level] == level && workflow_approver[:user_id] == user
+      workflow_approver[:level] == level && workflow_approver[:user_id] == user_id
     end
     # do loop even though targets length is always 1
     targets.each do |workflow_approver|
@@ -117,6 +119,28 @@ module Workflow::Approver
     # Be careful, partial update is meaningless. We must update entirely.
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     true
+  end
+
+  def pull_up_workflow_approver_state(user_or_id, state, comment = nil)
+    user_id = user_or_id.id if user_or_id.respond_to?(:id)
+    user_id ||= user_or_id.to_i
+
+    level = workflow_approvers.select { |approver| approver[:user_id] == user_id }.map { |approver| approver[:level] }.max
+    return if level.nil?
+
+    copy = workflow_approvers.to_a
+    copy.each do |approver|
+      if approver[:level] < level
+        approver[:state] = WORKFLOW_STATE_APPROVE
+      end
+
+      if approver[:level] == level && approver[:user_id] == user_id
+        approver[:state] = state
+        approver[:comment] = comment
+      end
+    end
+
+    self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
   end
 
   def finish_workflow?
@@ -145,17 +169,6 @@ module Workflow::Approver
     return false if self.workflow_pull_up == 'enabled' && state == WORKFLOW_STATE_PENDING
     return false if state == WORKFLOW_STATE_REQUEST
     true
-  end
-
-  def skip_approve
-    current_approver = workflow_approvers.select { |approver| approver[:user_id] == @cur_user._id }
-    workflow_approvers.each do |approver|
-      if approver[:level] < current_approver[0][:level]
-        update_current_workflow_approver_state(approver[:user_id], WORKFLOW_STATE_APPROVE)
-      elsif approver[:level] == current_approver[0][:level]
-        update_current_workflow_approver_state(approver[:user_id], WORKFLOW_STATE_REQUEST)
-      end
-    end
   end
 
   def workflow_requested?

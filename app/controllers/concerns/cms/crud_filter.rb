@@ -4,7 +4,7 @@ module Cms::CrudFilter
 
   included do
     menu_view "cms/crud/menu"
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   end
 
   private
@@ -111,6 +111,12 @@ module Cms::CrudFilter
   end
 
   def lock
+    set_item rescue nil
+    if @item.blank?
+      head :no_content
+      return
+    end
+
     if @item.acquire_lock(force: params[:force].present?)
       render
     else
@@ -122,6 +128,12 @@ module Cms::CrudFilter
   end
 
   def unlock
+    set_item rescue nil
+    if @item.blank?
+      head :no_content
+      return
+    end
+
     unless @item.locked?
       respond_to do |format|
         format.html { redirect_to(action: :edit) }
