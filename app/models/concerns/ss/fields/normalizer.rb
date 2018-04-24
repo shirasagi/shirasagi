@@ -20,11 +20,22 @@ module SS::Fields::Normalizer
     normalize = true
     normalize = field_def.metadata.fetch(:normalize, true) if field_def.metadata
     return unless normalize
-    value = send(name)
-    if value.present? && value.length > 1
-      value = value.dup
-      if value.strip!
-        send("#{name}=", value)
+
+    if field_def.options[:localize]
+      hash_value = hash_value_orig = send("#{name}_translations")
+      hash_value = hash_value.map { |k, v| [ k, v.present? ? v.strip : v ] }
+      hash_value = hash_value.delete_if { |k, v| v.blank? }
+      hash_value = Hash[hash_value]
+      if hash_value != hash_value_orig
+        send("#{name}_translations=", hash_value)
+      end
+    else
+      value = send(name)
+      if value.present? && value.length > 1
+        value = value.dup
+        if value.strip!
+          send("#{name}=", value)
+        end
       end
     end
   end
