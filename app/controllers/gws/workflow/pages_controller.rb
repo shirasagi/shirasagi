@@ -127,25 +127,52 @@ class Gws::Workflow::PagesController < ApplicationController
   def remand_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
-    @item.workflow_state = @model::WORKFLOW_STATE_REMAND
+    workflow_level = @item.workflow_current_level
     @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])
-
-    if @item.update
-      if @item.workflow_state == "remand"
-        args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
-                 site: @cur_site, page: @item,
-                 url: params[:url], comment: params[:remand_comment] }
-        Workflow::Mailer.remand_mail(args).deliver_now if validate_domain(args[:t_uid])
-        Gws::Memo::Notifier.deliver_workflow_remand!(
-          cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-          to_users: Gws::User.where(id: @item.workflow_user_id), item: @item,
-          url: params[:url], comment: params[:remand_comment]
-        ) rescue nil
-      end
-      render json: { workflow_state: @item.workflow_state }
+    if @item.workflow_back_to_init?
+      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
+    elsif workflow_level <= 1
+      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
     else
+      copy = @item.workflow_approvers.to_a
+      copy.each do |approver|
+        if approver[:level] == workflow_level - 1
+          approver[:state] = @model::WORKFLOW_STATE_REQUEST
+          approver[:comment] = ''
+        end
+      end
+      @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    end
+
+    if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
+
+    begin
+      recipients = []
+      if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
+        recipients << @item.workflow_user_id
+      else
+        prev_level_approvers = @item.workflow_approvers_at(workflow_level - 1)
+        recipients += prev_level_approvers.map { |hash| hash[:user_id] }
+      end
+
+      mail_recipients = recipients.select { |user_id| validate_domain(user_id) }
+      if mail_recipients.present?
+        Workflow::Mailer.send_remand_mails(
+          f_uid: @cur_user._id, t_uids: mail_recipients,
+          site: @cur_site, page: @item,
+          url: params[:url], comment: params[:remand_comment]
+        )
+      end
+
+      Gws::Memo::Notifier.deliver_workflow_remand!(
+        cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+        to_users: Gws::User.and_enabled.in(id: recipients), item: @item,
+        url: params[:url], comment: params[:remand_comment]
+      ) rescue nil
+    end
+    render json: { workflow_state: @item.workflow_state }
   end
 
   def branch_create
