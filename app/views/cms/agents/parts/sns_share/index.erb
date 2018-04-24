@@ -55,13 +55,6 @@ url = File.join(@cur_site.full_url, @cur_main_path)
       </script>
     </div>
 
-  <% elsif service == "evernote" %>
-    <div class="site evernote">
-      <script type="text/javascript" src="//static.evernote.com/noteit.js"></script>
-      <a href="#" onclick="Evernote.doClip({ url: '<%= url %>' }); return false;">
-        <img src="//static.evernote.com/article-clipper.png" alt="Clip to Evernote" /></a>
-    </div>
-
   <% elsif service == "line" %>
     <div class="site line">
       <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" ></div>
