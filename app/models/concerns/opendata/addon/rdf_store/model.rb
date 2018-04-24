@@ -15,9 +15,9 @@ module Opendata::Addon::RdfStore::Model
     save_rdf_graph rescue nil
   end
 
-  def destroy
+  def validate_and_destroy
     return false unless self.valid?
-    super
+    self.destroy
   end
 
   private
