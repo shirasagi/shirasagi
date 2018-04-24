@@ -79,7 +79,7 @@ module Gws::Addon
         end
 
         cond["interval"] = cond["interval"].to_i
-        cond["notify_at"] = base_at - (cond["interval"].send(cond["interval_type"]))
+        cond["notify_at"] = base_at - (cond["interval"].send cond["interval_type"])
         cond
       end
       conditions = conditions.uniq { |cond| [cond["notify_at"], cond["state"]] }
@@ -169,7 +169,7 @@ module Gws::Addon
           base_at = start_at
         end
 
-        notification.notify_at = base_at - (notification.interval.send(notification.interval_type))
+        notification.notify_at = base_at - (notification.interval.send notification.interval_type)
         if notification.notify_at < Time.zone.now
           notification.delivered_at = nil
         else

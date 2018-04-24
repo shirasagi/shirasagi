@@ -23,20 +23,17 @@ class SS::Migration20180228000000
       d2 = notification.notify_at
 
       interval = ((d1 - d2) * 24 * 60).to_i
+      notification.state = "enabled"
       if interval == 10
-        notification.state = "enabled"
         notification.interval = 10
         notification.interval_type = "minutes"
       elsif interval == 30
-        notification.state = "enabled"
         notification.interval = 30
         notification.interval_type = "minutes"
       elsif interval == 60
-        notification.state = "enabled"
         notification.interval = 1
         notification.interval_type = "hours"
       else # set 10 minutes
-        notification.state = "enabled"
         notification.interval = 10
         notification.interval_type = "minutes"
         notification.notify_at = reminder.date.advance(minutes: -10)
@@ -48,7 +45,7 @@ class SS::Migration20180228000000
         notification.interval_type = "days"
         notification.base_time = "8:00"
         base_at = Time.zone.parse("#{reminder.start_at.strftime("%Y/%m/%d")} #{notification.base_time}")
-        notification.notify_at = base_at - (notification.interval.send(notification.interval_type))
+        notification.notify_at = base_at - (notification.interval.send notification.interval_type)
       end
 
       if notification.notify_at < Time.zone.now

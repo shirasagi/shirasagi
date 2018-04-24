@@ -40,7 +40,7 @@ class Gws::Reminder::ItemsController < ApplicationController
     if redirect_url
       redirect_to redirect_url
     else
-      #
+      render
     end
   end
 end

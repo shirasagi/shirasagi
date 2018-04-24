@@ -178,7 +178,7 @@ class Gws::Memo::MessageImporter
 
   class << self
     def t(*args)
-      human_attribute_name *args
+      human_attribute_name(*args)
     end
   end
 end
