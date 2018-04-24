@@ -88,7 +88,7 @@ module Rss::Wrappers
       def authors
         return [] if @item.author.blank?
         address = ::Mail::Address.new(@item.author)
-        [ { name: address.display_name, email: address.address } ]
+        [ { name: address.display_name || address.name, email: address.address } ]
       rescue
         [ { email: @item.author } ]
       end

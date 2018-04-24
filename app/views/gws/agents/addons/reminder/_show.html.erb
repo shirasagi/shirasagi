@@ -19,6 +19,9 @@
   sort.renderItems(<%== @item.reminder_conditions(@cur_user).to_json %>);
 
   SS.ajaxForm("#ajax-form", {
+    beforeSend: function(xhr, settings) {
+      SS.clearNotice();
+    },
     success: function(data) {
       sort.resetItems();
       sort.renderItems(data["reminder_conditions"]);

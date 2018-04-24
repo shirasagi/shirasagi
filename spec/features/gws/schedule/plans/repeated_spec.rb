@@ -74,18 +74,6 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           expect(item.repeat_plan_id).not_to be_nil
           expect(item.text).to eq text
         end
-
-        # gws_reminders
-        expect(Gws::Reminder.count).to eq 122
-        Gws::Reminder.first.tap do |item|
-          expect(item.name).to eq name
-          expect(item.url_lazy).not_to be_nil
-          expect(item.date).to eq start_at
-          expect(item.model).to eq 'gws/schedule/plan'
-          expect(item.item_id).not_to be_nil
-          expect(item.read_at).to be_nil
-          # expect(item.updated_fields).to eq ["groups_hash"]
-        end
       end
     end
 
@@ -154,18 +142,6 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           expect(item.allday).to be_nil
           expect(item.repeat_plan_id).not_to be_nil
           expect(item.text).to be_nil
-        end
-
-        # gws_reminders
-        expect(Gws::Reminder.count).to eq 13
-        Gws::Reminder.first.tap do |item|
-          expect(item.name).to eq name
-          expect(item.url_lazy).not_to be_nil
-          expect(item.date).to eq start_at
-          expect(item.model).to eq 'gws/schedule/plan'
-          expect(item.item_id).not_to be_nil
-          expect(item.read_at).to be_nil
-          # expect(item.updated_fields).to eq ["groups_hash"]
         end
       end
     end
