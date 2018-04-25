@@ -4,6 +4,10 @@ class Gws::Discussion::ForumsController < ApplicationController
 
   model Gws::Discussion::Forum
 
+  ALLOWED_MODES = %w(readable editable).freeze
+
+  before_action :set_mode
+
   navi_view 'gws/discussion/main/navi'
 
   private
@@ -22,8 +26,20 @@ class Gws::Discussion::ForumsController < ApplicationController
     @forum.id = @item.id
   end
 
+  def set_mode
+    @mode = ALLOWED_MODES.include?(params[:mode]) ? params[:mode] : 'readable'
+  end
+
   def pre_params
     super.merge member_ids: [@cur_user.id]
+  end
+
+  def items
+    if @mode == 'editable'
+      @model.site(@cur_site).forum.without_deleted.allow(:read, @cur_user, site: @cur_site)
+    else
+      @model.site(@cur_site).forum.without_deleted.and_public.member(@cur_user)
+    end
   end
 
   public
@@ -31,18 +47,7 @@ class Gws::Discussion::ForumsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
-    state = params.dig(:s, :state).presence || 'public'
-
-    @items = @model.site(@cur_site).forum.without_deleted
-
-    if state == "public"
-      @items = @items.and_public.member(@cur_user)
-    else
-      @items = @items.allow(:read, @cur_user, site: @cur_site)
-    end
-
-    @items = @items.search(params[:s])
-
+    @items = items.search(params[:s])
     @items.reorder(order: 1, created: 1).
       page(params[:page]).per(50)
   end

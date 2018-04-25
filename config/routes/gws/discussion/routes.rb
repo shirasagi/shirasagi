@@ -36,18 +36,21 @@ SS::Application.routes.draw do
   end
 
   gws 'discussion' do
-    get '/' => redirect { |p, req| "#{req.path}/forums" }, as: :main
+    get '/' => redirect { |p, req| "#{req.path}/-/forums" }, as: :main
 
-    resources :forums, concerns: [:soft_deletion, :copy], except: [:destroy] do
-      resources :topics, concerns: [:deletion_topics, :copy] do
-        get :all, on: :collection
-        put :reply, on: :member
-        resources :comments, controller: '/gws/discussion/comments', concerns: [:deletion_topics] do
-          put :reply, on: :collection
+    scope path: ':mode' do
+      resources :forums, concerns: [:soft_deletion, :copy], except: [:destroy] do
+        resources :topics, concerns: [:deletion_topics, :copy] do
+          get :all, on: :collection
+          put :reply, on: :member
+          resources :comments, controller: '/gws/discussion/comments', concerns: [:deletion_topics] do
+            put :reply, on: :collection
+          end
         end
+        resources :todos, concerns: [:plans, :todos, :copy]
       end
-      resources :todos, concerns: [:plans, :todos, :copy]
     end
+
     resources :trashes, concerns: [:deletion, :copy], except: [:new, :create, :edit, :update] do
       match :undo_delete, on: :member, via: [:get, :post]
     end

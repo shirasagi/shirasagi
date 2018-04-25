@@ -14,7 +14,7 @@ class Gws::Discussion::TrashesController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [I18n.t('modules.gws/discussion'), gws_discussion_forums_path]
+    @crumbs << [I18n.t('modules.gws/discussion'), gws_discussion_main_path]
     @crumbs << [I18n.t('ss.navi.trash'), { action: :index }]
   end
 

@@ -4,7 +4,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example do
   context "copy", js: true do
     let!(:site) { gws_site }
     let!(:item) { create :gws_discussion_forum }
-    let!(:copy_path) { copy_gws_discussion_forum_path site, item }
+    let!(:copy_path) { copy_gws_discussion_forum_path(mode: '-', site: site.id, id: item.id) }
 
     before { login_gws_user }
 

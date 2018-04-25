@@ -86,17 +86,19 @@ class @Gws_Schedule_Calendar
       else
         $(this).find('.fc-loading').remove()
     eventAfterAllRender: (view) ->
-      todo = $('.fc .fc-withTodo-button').hasClass('fc-state-active')
-      if todo
-        $('.fc .fc-event-todo').show()
-      else
-        $('.fc .fc-event-todo').hide()
+      todo = $('.fc .fc-withTodo-button')
+      if todo.length
+        if todo.hasClass('fc-state-active')
+          $('.fc .fc-event-todo').show()
+        else
+          $('.fc .fc-event-todo').hide()
 
-      attendance = $('.fc .fc-withAbsence-button').hasClass('fc-state-active')
-      if attendance
-        $('.fc .fc-event-user-attendance-absence').show()
-      else
-        $('.fc .fc-event-user-attendance-absence').hide()
+      attendance = $('.fc .fc-withAbsence-button')
+      if attendance.length
+        if attendance.hasClass('fc-state-active')
+          $('.fc .fc-event-user-attendance-absence').show()
+        else
+          $('.fc .fc-event-user-attendance-absence').hide()
 
       Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"))
       Gws_Schedule_Calendar.changePrintPreviewPortrait(view)

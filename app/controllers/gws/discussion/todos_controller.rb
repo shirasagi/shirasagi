@@ -54,10 +54,9 @@ class Gws::Discussion::TodosController < ApplicationController
   end
 
   def print
-    @items = Gws::Schedule::Todo.
-      site(@cur_site).
+    @items = @model.site(@cur_site).
       discussion_forum(@forum).
-      allow(:read, @cur_user, site: @cur_site).
+      member_or_readable(@cur_user, site: @cur_site, include_role: true).
       without_deleted.
       search(params[:s])
 
@@ -68,10 +67,9 @@ class Gws::Discussion::TodosController < ApplicationController
     @start_at = params[:s][:start].to_date
     @end_at = params[:s][:end].to_date
 
-    @todos = Gws::Schedule::Todo.
-      site(@cur_site).
+    @todos = @model.site(@cur_site).
       discussion_forum(@forum).
-      member(@cur_user).
+      member_or_readable(@cur_user, site: @cur_site, include_role: true).
       without_deleted.
       search(params[:s]).
       map do |todo|

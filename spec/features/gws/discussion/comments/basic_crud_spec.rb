@@ -4,7 +4,7 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let!(:site) { gws_site }
     let!(:item) { create :gws_discussion_topic }
-    let!(:index_path) { gws_discussion_forum_topic_comments_path(site: site.id, forum_id: item.forum.id, topic_id: item.id) }
+    let!(:index_path) { gws_discussion_forum_topic_comments_path(mode: '-', site: site.id, forum_id: item.forum.id, topic_id: item.id) }
 
     before { login_gws_user }
 

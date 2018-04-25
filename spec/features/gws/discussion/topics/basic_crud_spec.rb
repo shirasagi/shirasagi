@@ -4,11 +4,11 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let!(:site) { gws_site }
     let!(:item) { create :gws_discussion_topic }
-    let!(:index_path) { gws_discussion_forum_topics_path(site: site.id, forum_id: item.forum.id) }
-    let!(:new_path) { new_gws_discussion_forum_topic_path(site: site.id, forum_id: item.forum.id) }
-    let!(:show_path) { gws_discussion_forum_topic_path(site: site.id, forum_id: item.forum.id, id: item.id) }
-    let!(:edit_path) { edit_gws_discussion_forum_topic_path(site: site.id, forum_id: item.forum.id, id: item.id) }
-    let!(:delete_path) { delete_gws_discussion_forum_topic_path(site: site.id, forum_id: item.forum.id, id: item.id) }
+    let!(:index_path) { gws_discussion_forum_topics_path(mode: '-', site: site.id, forum_id: item.forum.id) }
+    let!(:new_path) { new_gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: item.forum.id) }
+    let!(:show_path) { gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: item.forum.id, id: item.id) }
+    let!(:edit_path) { edit_gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: item.forum.id, id: item.id) }
+    let!(:delete_path) { delete_gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: item.forum.id, id: item.id) }
 
     before { login_gws_user }
 
