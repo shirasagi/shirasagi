@@ -3,7 +3,9 @@ FactoryGirl.define do
     cur_site { gws_site }
     cur_user { gws_user }
 
-    name { "title-#{unique_id}" }
+    code { "code-#{unique_id}" }
+    name { "name-#{unique_id}" }
+    remark { "remark-#{unique_id}" }
   end
 
   trait :gws_user_title_random_order do
