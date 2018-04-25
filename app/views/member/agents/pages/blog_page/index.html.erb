@@ -18,6 +18,6 @@
     </ul>
   </div>
   <div class="body">
-    <%= remove_script @cur_page.html %>
+    <%= sanitize(@cur_page.html) %>
   </div>
 </article>

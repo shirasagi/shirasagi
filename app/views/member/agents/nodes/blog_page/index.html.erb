@@ -25,7 +25,7 @@
           </ul>
         </div>
         <div class="body">
-          <%= remove_script item.html %>
+          <%= sanitize(item.html) %>
         </div>
       </article>
     <% end %>

@@ -20,7 +20,7 @@ module Member::Addon::Blog
     end
 
     def template_variable_handler_html(name, issuer)
-      ApplicationController.helpers.remove_script(self.send(name))
+      ApplicationController.helpers.sanitize(self.send(name))
     end
 
     def template_variable_handler_img_src(name, issuer)
