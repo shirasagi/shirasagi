@@ -56,7 +56,7 @@ class Gws::Schedule::PlanSearch
       while time < plan.end_at
         hour = time.hour
         #plan_times[time.strftime("%Y-%m-%d #{hour}")] = fids if hour >= min_hour && hour <= max_hour
-        if hour >= min_hour && hour <= max_hour && fids.present?
+        if hour >= min_hour && hour <= max_hour
           key = time.strftime("%Y-%m-%d #{hour}")
           plan_times[key] ||= []
           plan_times[key] += fids

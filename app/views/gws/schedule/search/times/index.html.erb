@@ -38,7 +38,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
             <% link_params = @time_search.link_params(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
             <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
           <% else %>
-            <span class="hour exist"><%= hour %></span>
+            <span class="hour"><%= hour %></span>
           <% end %>
           </span>
         <% end %>
