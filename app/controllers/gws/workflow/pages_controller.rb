@@ -4,7 +4,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
   prepend_view_path "app/views/workflow/pages"
 
-  before_action :set_item, only: %i[request_update approve_update pull_up_update remand_update branch_create]
+  before_action :set_item, only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create]
 
   private
 
@@ -55,8 +55,9 @@ class Gws::Workflow::PagesController < ApplicationController
       raise "403" unless @item.allowed?(:reroute, @cur_user)
     end
 
+    @item.approved = nil
     @item.workflow_user_id = @cur_user._id
-    @item.workflow_state   = "request"
+    @item.workflow_state   = @model::WORKFLOW_STATE_REQUEST
     @item.workflow_comment = params[:workflow_comment]
     @item.workflow_pull_up = params[:workflow_pull_up]
     @item.workflow_on_remand = params[:workflow_on_remand]
@@ -64,6 +65,28 @@ class Gws::Workflow::PagesController < ApplicationController
     @item.workflow_required_counts = params[:workflow_required_counts]
 
     if @item.valid?
+      request_approval
+      render json: { workflow_state: @item.workflow_state }
+    else
+      render json: @item.errors.full_messages, status: :unprocessable_entity
+    end
+  end
+
+  def restart_update
+    raise "403" unless @item.allowed?(:edit, @cur_user)
+
+    @item.approved = nil
+    @item.workflow_user_id = @cur_user.id
+    @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
+    @item.workflow_comment = params[:workflow_comment]
+    copy = @item.workflow_approvers.to_a
+    copy.each do |approver|
+      approver[:state] = @model::WORKFLOW_STATE_PENDING
+      approver[:comment] = ''
+    end
+    @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+
+    if @item.save
       request_approval
       render json: { workflow_state: @item.workflow_state }
     else
