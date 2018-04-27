@@ -229,7 +229,7 @@ img {
           top: 0;
           right: 0;
           margin: 0;
-          padding: 6px 10px;
+          padding: 4px 10px;
           @include border-radius(0);
           -webkit-appearance: none;
         }
@@ -2175,6 +2175,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   }
   .send {
     clear: both;
+    margin-top: 1em;
     text-align: center;
     input {
       @include btn-org;
@@ -2937,6 +2938,104 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     margin-right: 20px;
   }
 }
+// -----------------------------------------------------------------------------
+// garbage
+.garbage {
+  form {
+    @include mb {
+      padding: 10px 10px 30px;
+    }
+  }
+  .name, .category, .condition {
+    @include clear;
+    clear: both;
+    width: 100%;
+    margin-bottom: $box-margin;
+    h2, dt {
+      clear: both;
+      float: left;
+      width: 200px;
+      padding: 6px $item-margin;
+      font-weight: bold;
+      background: $hblue;
+      @include border-radius(3px);
+      @include mb {
+        @include box-sizing(border-box);
+        float: none;
+        width: 100%;
+        margin-bottom: $item-margin;
+      }
+    }
+    input, select, dd {
+      float: left;
+      min-width: 500px;
+      margin: 8px $item-margin;
+      @include mb {
+        @include box-sizing(border-box);
+        float: none;
+        width: 100%;
+        min-width: auto;
+        min-width: initial;
+        margin: 0;
+      }
+    }
+  }
+  .condition {
+    margin-bottom: 0;
+    @include mb {
+      @include box-sizing(border-box);
+      padding: 10px;
+    }
+  }
+  .send {
+    text-align: center;
+    input {
+      margin-right: $item-margin;
+      @include btn-org;
+    }
+  }
+  .setting {
+    text-align: right;
+    @include mb {
+      padding: 10px;
+    }
+    a, a:hover {
+      @include btn-org;
+      color: #000;
+      text-decoration: none;
+    }
+  }
+  .result {
+    margin: $item-margin 0;
+    @include mb {
+      padding: 0 10px;
+    }
+  }
+  table.columns {
+    width: 100%;
+    margin-bottom: $box-margin;
+    @include mb {
+      width: calc(100% - 20px);
+      margin: 0 10px 30px;
+    }
+    caption {
+      padding: 0 10px;
+      color: $blue;
+      text-align: left;
+    }
+    th {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+      background: #ffefbb;
+      text-align: left;
+    }
+    td {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+    }
+  }
+}
+
 // -----------------------------------------------------------------------------
 @include mb {
   #head, #navi .wrap, #wrap, #main, #side, #addition, #ad,
