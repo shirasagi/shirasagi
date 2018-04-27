@@ -11,6 +11,7 @@ class History::Backup
   field :ref_coll, type: String
   field :ref_class, type: String
   field :data, type: Hash
+  field :state, type: String
 
   validates :ref_coll, presence: true
   validates :data, presence: true
@@ -20,7 +21,12 @@ class History::Backup
   end
 
   def get
-    coll.find(_id: data["_id"]).first
+    item = ref_class.constantize.find(data["_id"])
+    if item.current_backup
+      item.current_backup.data
+    else
+      item.backups.first.data
+    end
   end
 
   def restore
@@ -36,7 +42,19 @@ class History::Backup
     data.delete("file_ids") # TODO: for attachment files
 
     begin
-      resp = query.update_many('$set' => data)
+      query.update_many('$set' => data)
+      item = ref_class.constantize.find(self.data["_id"])
+      current = item.current_backup
+      before = item.before_backup
+
+      self.state = 'current'
+      current.state = 'before' if current
+      before.state = nil if before
+
+      self.update
+      current.update if current
+      before.update if before
+
       return true
     rescue => e
       errors.add :base, "error. #{e}"

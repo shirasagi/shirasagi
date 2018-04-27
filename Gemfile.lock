@@ -547,6 +547,7 @@ DEPENDENCIES
   clam_scan
   coffee-rails (~> 4.1.0)
   coveralls
+  diff-lcs
   diffy
   dotenv-rails
   dynamic_form

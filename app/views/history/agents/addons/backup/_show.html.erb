@@ -1,9 +1,16 @@
 <%
 
 return render(text: "") if @item.backups.size == 0
+source = ERB::Util.url_encode(request.path)
+before = @item.before_backup || @item.backups.last if @item.backups.present?
 
 %>
 <dl class="see mod-history-backup">
+  <% if before %>
+    <dd>
+      <%= link_to I18n.t('history.compare_before_state'), history_cms_change_path(source: source, id: before.id), class: 'btn' %>
+    </dd>
+  <% end %>
   <% @item.backups.limit(10).each do |item| %>
   <dd>
     <% if @item.allowed?(:edit, @cur_user) %>

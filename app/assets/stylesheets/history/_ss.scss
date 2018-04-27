@@ -10,4 +10,15 @@
   td.diff {
     background-color: #ffc;
   }
+  td span {
+    &.add {
+      background-color: #cfc;
+    }
+    &.delete {
+      background-color: #fcc;
+    }
+    &.change {
+      background-color: #ffc;
+    }
+  }
 }
