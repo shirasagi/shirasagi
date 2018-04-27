@@ -18,7 +18,7 @@
         Gws::Memo::Message.allowed?(:edit, Gws::User.find(@cur_user.id), site: group)
       end if !@item.draft? && SS.config.gws.disable.blank?
     %>
-    <% if groups.present? %>
+    <% if groups.size >= 2 %>
       <div class="dropdown webmail-dropdown dropdown-toggle">
         <a><%= t('webmail.links.forward_gws_message') %> <i class="material-icons md-13">&#xE313;</i></a>
         <ul class="dropdown-menu webmail-dropdown-menu">
@@ -27,6 +27,9 @@
           <% end %>
         </ul>
       </div>
+    <% elsif groups.present? %>
+      <% group = groups.first %>
+      <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: group.id, mailbox: @mailbox) %>
     <% end %>
 
     <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>

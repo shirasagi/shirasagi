@@ -316,7 +316,7 @@ class @Webmail_Mail_Address
     $('.address-item').each ->
       addr  = $(this)
       addr.addClass('clickable')
-      name  = addr.find('.address-name').text()
+      name  = addr.data('name')
       email = addr.data('email')
       menu = addr.find('.dropdown-menu')
 
