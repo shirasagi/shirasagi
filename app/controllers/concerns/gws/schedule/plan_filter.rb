@@ -1,6 +1,7 @@
 module Gws::Schedule::PlanFilter
   extend ActiveSupport::Concern
   include Gws::Schedule::CalendarFilter
+  include Gws::Schedule::CalendarFilter::Transition
 
   included do
     model Gws::Schedule::Plan
@@ -55,33 +56,8 @@ module Gws::Schedule::PlanFilter
     raise e
   end
 
-  def redirection_view
-    params.dig(:calendar, :view).presence || 'month'
-  end
-
-  def redirection_view_format
-    params.dig(:calendar, :viewFormat).presence || 'default'
-  end
-
-  def redirection_view_todo
-    params.dig(:calendar, :viewTodo).presence || 'active'
-  end
-
-  def redirection_view_attendance
-    params.dig(:calendar, :viewAttendance).presence || 'inactive'
-  end
-
   def redirection_url
-    url_for(
-      action: :index,
-      calendar: {
-        view: redirection_view,
-        date: @item.start_at.to_date.to_s,
-        viewFormat: redirection_view_format,
-        viewTodo: redirection_view_todo,
-        viewAttendance: redirection_view_attendance
-      }
-    )
+    url_for(action: :index, calendar: redirection_calendar_params)
   end
 
   def set_file_addon_state

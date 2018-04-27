@@ -32,12 +32,14 @@ ja:
         day: YYYY年 M月 D日（ddd）
     links:
       add_plan: 予定を作成
+      add_todo: ToDoを作成
       add_holiday: 休日を作成
       show_month: 月表示
       show_week: 週表示
       show_day: 日表示
       create_report: レポートを作成する
       back_to_todo: ToDoへ戻る
+      back_to_calendar: カレンダーへ戻る
     buttons:
       delete_one: 今回のみ
       delete_later: 以降すべて

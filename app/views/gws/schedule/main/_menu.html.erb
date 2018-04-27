@@ -1,25 +1,7 @@
 <% return if params[:action] =~ /index/ %>
 
 <%= jquery do %>
-  var date = "calendar[date]=" + "<%= params.dig(:calendar, :date) %>";
-  var view = "calendar[view]=" + "<%= params.dig(:calendar, :view) %>";
-  var viewFormat = "calendar[viewFormat]=" + "<%= params.dig(:calendar, :viewFormat) %>";
-  var viewTodo = "calendar[viewTodo]=" + "<%= params.dig(:calendar, :viewTodo) %>";
-  var viewAttendance = "calendar[viewAttendance]=" + "<%= params.dig(:calendar, :viewAttendance) %>";
-  var state = date + "&" + view + "&" + viewFormat + "&" + viewTodo + "&" + viewAttendance;
-  $('.nav-menu a').each(function() {
-    if ($(this).hasClass('no-calendar-state')) {
-      return;
-    }
-
-    var href = $(this).attr('href');
-    if (href.indexOf('?') >= 0) {
-      href += "&" + state;
-    } else {
-      href += "?" + state;
-    }
-    $(this).attr('href', href);
-  });
+  (new Gws_Schedule_CalendarTransition(<%== params[:calendar].to_json %>)).renderLinks('.nav-menu a')
 <% end %>
 
 <nav class="nav-menu">
