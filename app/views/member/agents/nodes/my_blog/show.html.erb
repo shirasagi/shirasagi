@@ -21,7 +21,7 @@
       </ul>
     </div>
     <div class="body">
-      <%== @item.html %>
+      <%= sanitize(@item.html) %>
     </div>
   </article>
 </div>

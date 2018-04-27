@@ -19,6 +19,10 @@ module Member::Addon::Blog
       ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
     end
 
+    def template_variable_handler_html(name, issuer)
+      ApplicationController.helpers.sanitize(self.send(name))
+    end
+
     def template_variable_handler_img_src(name, issuer)
       dummy_source = ERB::Util.html_escape("/assets/img/dummy.png")
 
