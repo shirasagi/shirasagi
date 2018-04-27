@@ -28,8 +28,8 @@ module Cms::Addon
                     :facebook_user_id,
                     :facebook_post_id
 
-      after_generate_file { post_sns }
-      after_remove_file { delete_sns }
+      after_save :post_sns
+      after_remove_file :delete_sns
     end
 
     def facebook_auto_post_options
@@ -122,6 +122,8 @@ module Cms::Addon
     private
 
     def post_sns
+      return unless public?
+      return unless public_node?
       return if @posted_sns
 
       # tweet
