@@ -7,6 +7,9 @@
   input[type="submit"], button, select, textarea {
     -webkit-appearance: none;
   }
+  input[type="text"], input[type="email"] {
+    border: $border-hgry;
+  }
 }
 html {
   height: 100%;
@@ -301,9 +304,6 @@ img {
       color: #202020;
     }
   }
-}
-_::content, #navi .wrap .sangyo a:not(*:root) {
-  width: 175px;
 }
 #navi .wrap li:hover > ul,
 #navi .wrap .focus > ul {
@@ -1238,11 +1238,11 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     margin-bottom: $item-margin;
     padding-left: 23px;
   }
-  dl {
+  dl, fieldset {
     margin-bottom: 10px;
     padding-bottom: 5px;
     border-bottom: $border-hgry;
-    dt {
+    dt, legend {
       float: left;
       min-width: 15%;
       font-weight: bold;
@@ -1660,20 +1660,18 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   @include mb {
     padding: 0 15px;
   }
-  h2 {
+  h2, legend, .keyword label {
     clear: both;
+    display: block;
+    width: 100%;
     margin-bottom: 6px;
     padding: 0 10px;
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px16;
     font-weight: bold;
-  }
-  .keyword {
-    input{
-      width: 469px;
-      @include mb { width: auto; }
-    }
+    box-sizing: border-box;
+
   }
   .keyword, .category, .service, .location {
     @include clear;
@@ -1688,6 +1686,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       }
     }
   }
+  .categories { text-align: left; }
   .send {
     margin-bottom: $box-margin;
     text-align: center;
@@ -1702,15 +1701,19 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     }
   }
 }
+.body--calendar-search #main form .keyword input {
+  width: 469px;
+  @include mb { width: auto; }
+}
 // -----------------------------------------------------------------------------
 // inquiry login
 .inquiry-form, .columns, .form-login {
-  dl {
+  dl, fieldset {
     @include clear;
     clear: both;
     width: 100%;
     margin-bottom: $box-margin;
-    dt {
+    dt, legend {
       clear: both;
       float: left;
       width: 200px;
@@ -1724,7 +1727,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
         font-weight: normal;
       }
     }
-    dd {
+    dd, .fields {
       float: left;
       width: 832px;
       padding: 0 $item-margin;
@@ -1865,14 +1868,17 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 // -----------------------------------------------------------------------------
 // map
 .map {
-  h2 {
+  h2, legend {
     clear: both;
+    display: block;
+    width: 100%;
     margin-bottom: 6px;
     padding: 0 10px;
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px16;
     font-weight: bold;
+    box-sizing: border-box;
   }
   .cms-nodes h2 {
     margin: 0;
@@ -1896,6 +1902,12 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       margin-bottom: 3px;
       &.three {
         margin-right: $item-margin;
+      }
+      &.keyword, &.category, &.service, &.location {
+        @include mb {
+          padding: 0 10px;
+          box-sizing: border-box;
+        }
       }
     }
   }
@@ -2144,14 +2156,16 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   width: 512px !important;
 }
 #colorbox {
-  h2 {
+  h2, legend {
     clear: both;
+    width: 100%;
     margin-bottom: 6px;
     padding: 0 10px;
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px16;
     font-weight: bold;
+    box-sizing: border-box;
   }
   .category, .service, .location {
     div {
@@ -3274,8 +3288,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   .inquiry-form, .columns, .form-login {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
-    dl {
-      dt {
+    dl, fieldset {
+      dt, legend {
         width: 100%;
         margin-bottom: $smart-margin;
         @include box-sizing(border-box);
@@ -3283,7 +3297,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
           display: inline;
         }
       }
-      dd {
+      dd, .fields {
         width: 100%;
         @include box-sizing(border-box);
         input[type="text"], input[type="email"], textarea {
@@ -3476,5 +3490,4 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       margin: 0 $smart-margin $smart-margin;
     }
   }
-
 }

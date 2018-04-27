@@ -58,13 +58,13 @@ class Garbage::ImportJob < Cms::ApplicationJob
   end
 
   def set_page_categories(row, item)
-    @st_categories ||= node.becomes_with_route.st_categories.map{|c| [c.name, c.id]}.to_h
+    @st_categories ||= node.becomes_with_route.st_categories.map{ |c| [c.name, c.id] }.to_h
     categories = row[@model.t("category_ids")].to_s.strip.split("\n")
     item.category_ids = categories.map{ |c| @st_categories[c] }.compact
   end
 
   def set_page_groups(row, item)
-    @groups ||= SS::Group.all.map{|g| [g.name, g.id]}.to_h
+    @groups ||= SS::Group.all.map{ |g| [g.name, g.id] }.to_h
     groups = row[@model.t("groups")].to_s.strip.split("\n")
     item.group_ids = groups.map { |g| @groups[g] }.compact
   end

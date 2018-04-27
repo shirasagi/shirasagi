@@ -10,7 +10,6 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
     context "default params" do
       subject { create :gws_schedule_plan }
       it { expect(subject.errors.size).to eq 0 }
-      it { expect(Gws::Reminder.where(item_id: subject.id, model: described_class.name.underscore).count).to eq 1 }
     end
 
     context "time" do
@@ -21,7 +20,6 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
       it { expect(subject.errors.size).to eq 0 }
       it { expect(subject.start_at).to eq start_at }
       it { expect(subject.end_at).to eq end_at }
-      it { expect(Gws::Reminder.where(item_id: subject.id, model: described_class.name.underscore).count).to eq 1 }
     end
 
     context "allday" do
@@ -34,6 +32,14 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
       it { expect(subject.end_on).to eq end_on }
       it { expect(subject.start_at).to eq Time.zone.local(2010, 1, 1, 0, 0, 0) }
       it { expect(subject.end_at).to eq Time.zone.local(2010, 1, 1, 23, 59, 59) }
+    end
+
+    context "with reminders" do
+      let(:reminder_condition) do
+        { 'user_id' => gws_user.id, 'state' => 'mail', 'interval' => 10, 'interval_type' => 'minutes' }
+      end
+      subject { create :gws_schedule_plan, in_reminder_conditions: [ reminder_condition ] }
+      it { expect(subject.errors.size).to eq 0 }
       it { expect(Gws::Reminder.where(item_id: subject.id, model: described_class.name.underscore).count).to eq 1 }
     end
   end

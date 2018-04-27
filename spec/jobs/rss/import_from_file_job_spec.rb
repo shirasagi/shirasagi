@@ -17,8 +17,8 @@ describe Rss::ImportFromFileJob, dbscope: :example do
       expect(item.html).to eq '本文1'
       expect(item.released).to eq Time.zone.parse('2015-06-12T19:00:00+09:00')
       expect(item.authors.count).to eq 1
-      expect(item.authors.first.name).to be_nil
-      expect(item.authors.first.email).to eq 'momose_tomoka@example.com (百瀬 友香)'
+      expect(item.authors.first.name).to eq '百瀬 友香'
+      expect(item.authors.first.email).to eq 'momose_tomoka@example.com'
       expect(item.authors.first.uri).to be_nil
       expect(item.state).to eq 'closed'
     end

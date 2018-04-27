@@ -4,11 +4,11 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let!(:site) { gws_site }
     let!(:item) { create :gws_discussion_forum }
-    let!(:index_path) { gws_discussion_forums_path site }
-    let!(:new_path) { new_gws_discussion_forum_path site }
-    let!(:show_path) { gws_discussion_forum_path site, item }
-    let!(:edit_path) { edit_gws_discussion_forum_path site, item }
-    let!(:delete_path) { soft_delete_gws_discussion_forum_path site, item }
+    let!(:index_path) { gws_discussion_forums_path(mode: '-', site: site.id) }
+    let!(:new_path) { new_gws_discussion_forum_path(mode: '-', site: site.id) }
+    let!(:show_path) { gws_discussion_forum_path(mode: '-', site: site.id, id: item.id) }
+    let!(:edit_path) { edit_gws_discussion_forum_path(mode: '-', site: site.id, id: item.id) }
+    let!(:delete_path) { soft_delete_gws_discussion_forum_path(mode: '-', site: site.id, id: item.id) }
 
     before { login_gws_user }
 

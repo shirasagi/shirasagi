@@ -13,7 +13,6 @@ class Gws::Memo::Forward
 
   validates :email, presence: true, if: ->{ self.default == "enabled" }
   validates :email, email: true, if: ->{ email.present? }
-  #after_save :check_default, if: ->{ default? }
 
   scope :default, -> { where default: 'disabled' }
   scope :search, ->(params) {
@@ -31,13 +30,4 @@ class Gws::Memo::Forward
   def default?
     default == 'disabled'
   end
-
-  private
-
-  #def check_default
-  #  self.class.user(user).site(site)
-  #    where(default: 'disabled').
-  #    where(:id.ne => id).
-  #    update_all(default: 'disabled')
-  #end
 end

@@ -11,6 +11,7 @@ Environment=RAILS_ENV=production
 SyslogIdentifier=unicorn
 PIDFile=/var/www/shirasagi/tmp/pids/unicorn.pid
 Type=forking
+TimeoutSec=300
 
 ExecStart=/usr/local/rvm/bin/start_unicorn  -c config/unicorn.rb -E production -D
 ExecStop=/usr/bin/kill -QUIT $MAINPID

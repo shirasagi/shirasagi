@@ -197,24 +197,24 @@ end
 
 def save_column(type, data)
   case type
-    when :text
-      model = Cms::Column::TextField
-    when :text_area
-      model = Cms::Column::TextArea
-    when :number
-      model = Cms::Column::NumberField
-    when :date
-      model = Cms::Column::DateField
-    when :url
-      model = Cms::Column::UrlField
-    when :checkbox
-      model = Cms::Column::CheckBox
-    when :radio
-      model = Cms::Column::RadioButton
-    when :select
-      model = Cms::Column::Select
-    when :file_upload
-      model = Cms::Column::FileUpload
+  when :text
+    model = Cms::Column::TextField
+  when :text_area
+    model = Cms::Column::TextArea
+  when :number
+    model = Cms::Column::NumberField
+  when :date
+    model = Cms::Column::DateField
+  when :url
+    model = Cms::Column::UrlField
+  when :checkbox
+    model = Cms::Column::CheckBox
+  when :radio
+    model = Cms::Column::RadioButton
+  when :select
+    model = Cms::Column::Select
+  when :file_upload
+    model = Cms::Column::FileUpload
   end
   puts data[:name]
   cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }

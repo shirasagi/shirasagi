@@ -61,7 +61,9 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       click_link I18n.t('ss.links.import')
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/user/gws_users.csv"
-        click_button I18n.t('ss.import')
+        page.accept_confirm do
+          click_button I18n.t('ss.import')
+        end
       end
       expect(current_path).to eq index_path
     end

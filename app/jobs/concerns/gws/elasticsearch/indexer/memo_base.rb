@@ -25,7 +25,7 @@ module Gws::Elasticsearch::Indexer::MemoBase
 
       job = self.bind(site_id: site)
       job.perform_later(
-          action: 'index', id: item.id.to_s, remove_file_ids: remove_file_ids.map(&:to_s)
+        action: 'index', id: item.id.to_s, remove_file_ids: remove_file_ids.map(&:to_s)
       )
 
       ret

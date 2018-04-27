@@ -8,8 +8,6 @@ module Gws::Addon::Memo::Notice::Reply
     field :reply_item_id, type: String
   end
 
-  public
-
   def reply_addon_name
     return nil if reply_module.blank?
     I18n.t "modules.addons.gws/memo/notice/reply.#{reply_module}", default: name.titleize

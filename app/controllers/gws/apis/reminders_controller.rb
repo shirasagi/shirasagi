@@ -4,8 +4,6 @@ class Gws::Apis::RemindersController < ApplicationController
 
   model Gws::Reminder
 
-  public
-
   def create
     item = params[:item_model].camelize.constantize.find(params[:item_id])
     cond = {

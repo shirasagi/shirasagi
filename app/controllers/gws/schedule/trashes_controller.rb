@@ -11,9 +11,11 @@ class Gws::Schedule::TrashesController < ApplicationController
   private
 
   def set_items
-    @items = Gws::Schedule::Plan.site(@cur_site).only_deleted.
-      allow(:trash, @cur_user, site: @cur_site).
-      search(params[:s])
+    @items ||= begin
+      Gws::Schedule::Plan.site(@cur_site).only_deleted.
+        allow(:trash, @cur_user, site: @cur_site).
+        search(params[:s])
+    end
   end
 
   public

@@ -7,12 +7,14 @@ module Gws::Portal::UserExtension
   end
 
   def find_portal_setting(params = {})
-    portal = portal_setting || Gws::Portal::UserSetting.new({
-      site_id: params[:cur_site].id,
-      portal_user_id: id,
-      readable_member_ids: [id],
-      user_ids: [id]
-    })
+    portal = portal_setting || Gws::Portal::UserSetting.new(
+      {
+        site_id: params[:cur_site].id,
+        portal_user_id: id,
+        readable_member_ids: [id],
+        user_ids: [id]
+      }
+    )
     portal.name = long_name
     portal.attributes = params
     portal

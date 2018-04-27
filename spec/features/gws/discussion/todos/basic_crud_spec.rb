@@ -4,8 +4,8 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let!(:site) { gws_site }
     let!(:forum) { create :gws_discussion_forum }
-    let!(:index_path) { gws_discussion_forum_todos_path(site: site.id, forum_id: forum.id) }
-    let!(:new_path) { new_gws_discussion_forum_todo_path(site: site.id, forum_id: forum.id) }
+    let!(:index_path) { gws_discussion_forum_todos_path(mode: '-', site: site.id, forum_id: forum.id) }
+    let!(:new_path) { new_gws_discussion_forum_todo_path(mode: '-', site: site.id, forum_id: forum.id) }
 
     before { login_gws_user }
 

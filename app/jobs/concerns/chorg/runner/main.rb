@@ -34,7 +34,7 @@ module Chorg::Runner::Main
     with_all_entities([self.class.user_class]) do |user|
       old_ids = user.group_ids
       old_names = user.groups.pluck(:name).join(",")
-      new_ids = substituter.call(user.group_ids)
+      new_ids = substituter.call(:group_ids, user.group_ids, to_id)
       if old_ids != new_ids
         user.group_ids = new_ids
         save_or_collect_errors(user)

@@ -4,7 +4,7 @@ module Gws::Addon::Schedule::Attendance
 
   included do
     field :attendance_check_state, type: String
-    embeds_many :attendances, class_name: 'Gws::Schedule::Attendance', cascade_callbacks: :true
+    embeds_many :attendances, class_name: 'Gws::Schedule::Attendance', cascade_callbacks: true
     validates :attendance_check_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
     permit_params :attendance_check_state
 

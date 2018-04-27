@@ -11,7 +11,7 @@
 
 <%= jquery do %>
 $('form').ajaxForm({
-  url: "<%= reply_gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id, format: :json) %>",
+  url: "<%= reply_gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id, format: :json, mode: '-') %>",
   beforeSend: function() {
     $("form input[type='submit']").attr("disabled", "disabled");
   },
@@ -32,8 +32,8 @@ Gws_Discussion_Thread.render(<%= @cur_user.id %>);
     <div class="addon-view">
       <div class="addon-head">
         <h2>
-          <%= link_to "#{forum.name}", gws_discussion_forum_topics_path(forum_id: forum.id) %>
-          <%= link_to "(#{topic.name})", gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id) %>
+          <%= link_to "#{forum.name}", gws_discussion_forum_topics_path(forum_id: forum.id, mode: '-') %>
+          <%= link_to "(#{topic.name})", gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id, mode: '-') %>
         </h2>
       </div>
       <div class="addon-body">

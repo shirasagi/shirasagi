@@ -16,6 +16,7 @@ test:
       hosts:
         - localhost:27017
       options:
+        truncate_logs: false
         read:
           mode: :primary
 
@@ -26,6 +27,7 @@ development:
       hosts:
         - localhost:27017
       options:
+        truncate_logs: false
         #user: username
         #password: password
 

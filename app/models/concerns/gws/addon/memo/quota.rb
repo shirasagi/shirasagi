@@ -43,8 +43,6 @@ module Gws::Addon::Memo::Quota
     end
   end
 
-  public
-
   def usage_bytes(user, site)
     @usage_bytes ||= {}
     return @usage_bytes[user.id] if @usage_bytes[user.id]

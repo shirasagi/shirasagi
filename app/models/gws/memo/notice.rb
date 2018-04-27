@@ -39,7 +39,7 @@ class Gws::Memo::Notice
   private
 
   def set_send_date
-    self.send_date ||=  Time.zone.now if state == "public"
+    self.send_date ||= Time.zone.now if state == "public"
   end
 
   public

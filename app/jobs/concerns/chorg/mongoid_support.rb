@@ -100,8 +100,7 @@ module Chorg::MongoidSupport
     updates = {}
     target_fields(entity).each do |k, _|
       v = entity[k]
-      next if v.blank?
-      new_value = substituter.call(v)
+      new_value = substituter.call(k, v, entity.try(:contact_group_id))
       updates[k] = new_value if v != new_value
     end
 

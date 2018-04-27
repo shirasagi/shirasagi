@@ -8,6 +8,7 @@ ja:
       forum:
         readable: 会議室一覧
       topic:
+        portal: 会議室ポータル
         readable: スレッド一覧
       todo:
         readable: ToDo一覧
@@ -20,7 +21,6 @@ ja:
         edit: スレッドを編集する
         copy: スレッドを複製する
         delete: スレッドを削除する
-        back_to_index: スレッド一覧へ戻る
         index: スレッド一覧を見る
         show: 全ての投稿を見る
         reply: コメントを投稿する

@@ -36,7 +36,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   def set_selected_items
     ids = params[:ids]
     raise "400" unless ids
-    ids = ids.split(",") if ids.kind_of?(String)
+    ids = ids.split(",") if ids.is_a?(String)
     @items = dataset.resources.in(id: ids)
     raise "400" unless @items.present?
   end
@@ -67,6 +67,26 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     @item.status = params[:item][:state]
     @item.workflow = { workflow_reset: true } if @dataset.member.present?
     render_update @item.update
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+    render_destroy @item.validate_and_destroy
+  end
+
+  def destroy_all
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        next if item.validate_and_destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size)
   end
 
   def download

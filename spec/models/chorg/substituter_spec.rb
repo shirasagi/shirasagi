@@ -1,33 +1,34 @@
 require 'spec_helper'
 
 describe Chorg::Substituter::IdSubstituter, dbscope: :example do
+  let(:group) { cms_group }
   describe "#call" do
     context "with Fixnum" do
       let(:from) { 32_840 }
       let(:to) { 27_509 }
       subject { described_class.new(from, to) }
-      it { expect(subject.call(32_840)).to eq 27_509 }
-      it { expect(subject.call(53_643)).to eq 53_643 }
+      it { expect(subject.call(:key, 32_840, group.id)).to eq 27_509 }
+      it { expect(subject.call(:key, 53_643, group.id)).to eq 53_643 }
     end
 
     context "with Array" do
       let(:from) { 32_840 }
       let(:to) { 27_509 }
       subject { described_class.new(from, to) }
-      it { expect(subject.call([32_840])).to eq [27_509] }
-      it { expect(subject.call([53_643])).to eq [53_643] }
-      it { expect(subject.call([32_840, 53_643, 2_105])).to eq [27_509, 53_643, 2_105] }
+      it { expect(subject.call(:key, [32_840], group.id)).to eq [27_509] }
+      it { expect(subject.call(:key, [53_643], group.id)).to eq [53_643] }
+      it { expect(subject.call(:key, [32_840, 53_643, 2_105], group.id)).to eq [27_509, 53_643, 2_105] }
     end
 
     context "from Fixnum to Array" do
       let(:from) { 32_840 }
       let(:to) { [ 27_509, 62_033 ] }
       subject { described_class.new(from, to) }
-      it { expect(subject.call(32_840)).to eq 27_509 }
-      it { expect(subject.call(53_643)).to eq 53_643 }
-      it { expect(subject.call([32_840])).to eq [27_509, 62_033] }
-      it { expect(subject.call([53_643])).to eq [53_643] }
-      it { expect(subject.call([32_840, 53_643])).to eq [27_509, 62_033, 53_643] }
+      it { expect(subject.call(:key, 32_840, group.id)).to eq 27_509 }
+      it { expect(subject.call(:key, 53_643, group.id)).to eq 53_643 }
+      it { expect(subject.call(:key, [32_840], group.id)).to eq [27_509, 62_033] }
+      it { expect(subject.call(:key, [53_643], group.id)).to eq [53_643] }
+      it { expect(subject.call(:key, [32_840, 53_643], group.id)).to eq [27_509, 62_033, 53_643] }
     end
   end
 
@@ -53,24 +54,25 @@ describe Chorg::Substituter::IdSubstituter, dbscope: :example do
 end
 
 describe Chorg::Substituter::StringSubstituter do
+  let(:group) { cms_group }
   describe "#call" do
     context "with String" do
       context "with email" do
         let(:from) { "kmsrgxit7k@example.jp" }
         let(:to) { "1b3ubagfds@example.jp" }
         subject { described_class.new(from, to) }
-        it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "1b3ubagfds@example.jp" }
-        it { expect(subject.call("purwwnlydv@example.jp")).to eq "purwwnlydv@example.jp" }
+        it { expect(subject.call(:key, "kmsrgxit7k@example.jp", group.id)).to eq "1b3ubagfds@example.jp" }
+        it { expect(subject.call(:key, "purwwnlydv@example.jp", group.id)).to eq "purwwnlydv@example.jp" }
       end
 
       context "with group hierarchy" do
         let(:from) { "組織変更/企画政策部/企画政策部 広報課" }
         let(:to) { "組織変更/企画政策部/企画政策部 政策課" }
         subject { described_class.new(from, to) }
-        it { expect(subject.call("組織変更/企画政策部/企画政策部 広報課")).to eq "組織変更/企画政策部/企画政策部 政策課" }
-        it { expect(subject.call("組織変更/危機管理部/危機管理部 管理課")).to eq "組織変更/危機管理部/危機管理部 管理課" }
-        it { expect(subject.call("企画政策部 広報課")).to eq "企画政策部 広報課" }
-        it { expect(subject.call("危機管理部 管理課")).to eq "危機管理部 管理課" }
+        it { expect(subject.call(:key, "組織変更/企画政策部/企画政策部 広報課", group.id)).to eq "組織変更/企画政策部/企画政策部 政策課" }
+        it { expect(subject.call(:key, "組織変更/危機管理部/危機管理部 管理課", group.id)).to eq "組織変更/危機管理部/危機管理部 管理課" }
+        it { expect(subject.call(:key, "企画政策部 広報課", group.id)).to eq "企画政策部 広報課" }
+        it { expect(subject.call(:key, "危機管理部 管理課", group.id)).to eq "危機管理部 管理課" }
       end
     end
   end
@@ -99,6 +101,7 @@ describe Chorg::Substituter::StringSubstituter do
 end
 
 describe Chorg::Substituter do
+  let(:group) { cms_group }
   context "with simple substitution" do
     let(:from) do
       { id: 30_016, name: "組織変更/企画政策部/企画政策部 長生き課",
@@ -108,20 +111,20 @@ describe Chorg::Substituter do
       { id: 31_016, name: "組織変更/健康管理部/健康管理部 地域連携課",
         contact_email: "1b3ubagfds@example.jp", release_date: Time.zone.now }
     end
-    subject { described_class.collect(from, to) }
+    subject { described_class.collect(from, to, group.id) }
 
     describe "#call" do
-      it { expect(subject.call(30_016)).to eq 31_016 }
-      it { expect(subject.call("組織変更/企画政策部/企画政策部 長生き課")).to eq "組織変更/健康管理部/健康管理部 地域連携課" }
-      it { expect(subject.call("企画政策部 長生き課")).to eq "健康管理部 地域連携課" }
-      it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "1b3ubagfds@example.jp" }
+      it { expect(subject.call(:key, 30_016, group.id)).to eq 31_016 }
+      it { expect(subject.call(:key, "組織変更/企画政策部/企画政策部 長生き課", group.id)).to eq "組織変更/健康管理部/健康管理部 地域連携課" }
+      it { expect(subject.call(:key, "企画政策部 長生き課", group.id)).to eq "健康管理部 地域連携課" }
+      it { expect(subject.call(:key, "kmsrgxit7k@example.jp", group.id)).to eq "1b3ubagfds@example.jp" }
 
       # array
-      it { expect(subject.call([30_016])).to eq [31_016] }
+      it { expect(subject.call(:key, [30_016], group.id)).to eq [31_016] }
 
       # not replaced
-      it { expect(subject.call("30_015")).to eq "30_015" }
-      it { expect(subject.call("30_016")).to eq "30_016" }
+      it { expect(subject.call(:key, "30_015", group.id)).to eq "30_015" }
+      it { expect(subject.call(:key, "30_016", group.id)).to eq "30_016" }
     end
   end
 
@@ -136,23 +139,23 @@ describe Chorg::Substituter do
       { id: 31_016, name: "組織変更/健康管理部/健康管理部 地域連携課",
         contact_email: "1b3ubagfds@example.jp", release_date: Time.zone.now }
     end
-    subject { described_class.collect(from1, to1).collect(from2, to2) }
+    subject { described_class.collect(from1, to1, group.id).collect(from2, to2, group.id) }
 
-    it { expect(subject.call(30_015)).to eq 31_015 }
-    it { expect(subject.call(30_016)).to eq 31_016 }
-    it { expect(subject.call("組織変更/企画政策部")).to eq "組織変更/健康管理部" }
-    it { expect(subject.call("企画政策部")).to eq "健康管理部" }
-    it { expect(subject.call("組織変更/企画政策部/企画政策部 長生き課")).to eq "組織変更/健康管理部/健康管理部 地域連携課" }
-    it { expect(subject.call("企画政策部 長生き課")).to eq "健康管理部 地域連携課" }
-    it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "1b3ubagfds@example.jp" }
+    it { expect(subject.call(:key, 30_015, group.id)).to eq 31_015 }
+    it { expect(subject.call(:key, 30_016, group.id)).to eq 31_016 }
+    it { expect(subject.call(:key, "組織変更/企画政策部", group.id)).to eq "組織変更/健康管理部" }
+    it { expect(subject.call(:key, "企画政策部", group.id)).to eq "健康管理部" }
+    it { expect(subject.call(:key, "組織変更/企画政策部/企画政策部 長生き課", group.id)).to eq "組織変更/健康管理部/健康管理部 地域連携課" }
+    it { expect(subject.call(:key, "企画政策部 長生き課", group.id)).to eq "健康管理部 地域連携課" }
+    it { expect(subject.call(:key, "kmsrgxit7k@example.jp", group.id)).to eq "1b3ubagfds@example.jp" }
 
     # array
-    it { expect(subject.call([30_015])).to eq [31_015] }
-    it { expect(subject.call([30_016])).to eq [31_016] }
+    it { expect(subject.call(:key, [30_015], group.id)).to eq [31_015] }
+    it { expect(subject.call(:key, [30_016], group.id)).to eq [31_016] }
 
     # not replaced
-    it { expect(subject.call("30_015")).to eq "30_015" }
-    it { expect(subject.call("30_016")).to eq "30_016" }
+    it { expect(subject.call(:key, "30_015", group.id)).to eq "30_015" }
+    it { expect(subject.call(:key, "30_016", group.id)).to eq "30_016" }
   end
 
   describe "<=>" do
@@ -171,13 +174,13 @@ describe Chorg::Substituter do
         contact_email: "kmsrgxit7k@example.jp", release_date: Time.zone.now }
     end
     let(:to) { { id: 31_016 } }
-    subject { described_class.new.collect(from, to) }
+    subject { described_class.new.collect(from, to, group.id) }
 
     describe "#call" do
-      it { expect(subject.call(30_016)).to eq 31_016 }
-      it { expect(subject.call("組織変更/企画政策部/企画政策部 長生き課")).to eq "組織変更/企画政策部/企画政策部 長生き課" }
-      it { expect(subject.call("企画政策部 長生き課")).to eq "企画政策部 長生き課" }
-      it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "kmsrgxit7k@example.jp" }
+      it { expect(subject.call(:key, 30_016, group.id)).to eq 31_016 }
+      it { expect(subject.call(:key, "組織変更/企画政策部/企画政策部 長生き課", group.id)).to eq "組織変更/企画政策部/企画政策部 長生き課" }
+      it { expect(subject.call(:key, "企画政策部 長生き課", group.id)).to eq "企画政策部 長生き課" }
+      it { expect(subject.call(:key, "kmsrgxit7k@example.jp", group.id)).to eq "kmsrgxit7k@example.jp" }
     end
   end
 end

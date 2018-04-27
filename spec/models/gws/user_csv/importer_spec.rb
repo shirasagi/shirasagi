@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
   let(:site) { gws_site }
-  let!(:title) { create(:gws_user_title, name: '社長') }
+  let!(:title) { create(:gws_user_title, code: 'E100', name: '社長') }
 
   context 'with no forms' do
     let(:file) { "#{Rails.root}/spec/fixtures/gws/user/gws_users.csv" }

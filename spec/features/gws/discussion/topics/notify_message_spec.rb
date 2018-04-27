@@ -8,9 +8,9 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
     let!(:forum2) { create :gws_discussion_forum, notify_state: "enabled" }
     let!(:forum3) { create :gws_discussion_forum, notify_state: "enabled", state: "closed" }
 
-    let!(:new_path1) { new_gws_discussion_forum_topic_path(site: site.id, forum_id: forum1.id) }
-    let!(:new_path2) { new_gws_discussion_forum_topic_path(site: site.id, forum_id: forum2.id) }
-    let!(:new_path3) { new_gws_discussion_forum_topic_path(site: site.id, forum_id: forum3.id) }
+    let!(:new_path1) { new_gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: forum1.id) }
+    let!(:new_path2) { new_gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: forum2.id) }
+    let!(:new_path3) { new_gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: forum3.id) }
 
     before { login_gws_user }
     before do

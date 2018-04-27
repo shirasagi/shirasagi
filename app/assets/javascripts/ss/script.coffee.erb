@@ -260,7 +260,9 @@ class @SS
     if SS.noticeTimeoutId
       clearTimeout SS.noticeTimeoutId
       SS.noticeTimeoutId = null
-    $('#notice').hide()
+    notice = $('#notice')
+    notice.hide()
+    notice.find('.wrap').html('')
 
   @confirmUnloading: ->
     changed = false

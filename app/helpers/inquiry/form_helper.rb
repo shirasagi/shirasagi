@@ -26,7 +26,7 @@ module Inquiry::FormHelper
       label = content_tag('span', column.name, class: 'label')
     else
       f = options[:f]
-      label = f.label("#{column.id}", column.name)
+      label = f.label(column.id.to_s, column.name)
     end
 
     output_buffer << content_tag(tag_name) do

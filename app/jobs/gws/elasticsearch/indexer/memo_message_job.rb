@@ -13,10 +13,8 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
   def enum_es_docs
     Enumerator.new do |y|
       y << convert_to_doc
-      item.files.each do |file|
-        y << convert_file_to_doc(file)
-      end
-   end
+      item.files.each { |file| y << convert_file_to_doc(file) }
+    end
   end
 
   def convert_to_doc

@@ -86,7 +86,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs[0]['changes']).to include('name')
         expect(task.entity_logs[1]['model']).to eq 'Article::Page'
         expect(task.entity_logs[1]['id']).to eq '1'
-        expect(task.entity_logs[1]['changes']).to include('contact_tel', 'contact_fax', 'contact_email')
+        expect(task.entity_logs[1]['changes']).to include(
+          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
       end
     end
 
@@ -201,7 +203,65 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs[0]['changes']).to include('name')
         expect(task.entity_logs[1]['model']).to eq 'Article::Page'
         expect(task.entity_logs[1]['id']).to eq '1'
-        expect(task.entity_logs[1]['changes']).to include('contact_tel', 'contact_fax', 'contact_email')
+        expect(task.entity_logs[1]['changes']).to include(
+          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
+      end
+    end
+
+    context 'with overwrite some fields' do
+      context "with Article::Page" do
+        let(:group) { create(:cms_group, name: "組織変更/グループ#{unique_id}") }
+        let(:page) { create(:revisoin_page, cur_site: site, group: group, filename: unique_id) }
+
+        it do
+          # ensure create models
+          expect(changeset).not_to be_nil
+          expect(page).not_to be_nil
+          # execute
+          job = described_class.bind(site_id: site, task_id: task)
+          expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+
+          # check for job was succeeded
+          expect(Job::Log.count).to eq 1
+          Job::Log.first.tap do |log|
+            expect(log.logs).to include(include('INFO -- : Started Job'))
+            expect(log.logs).to include(include('INFO -- : Completed Job'))
+          end
+
+          expect(Cms::Group.where(name: group.name).first).to be_nil
+          expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
+          expect(Cms::Group.where(id: group.id).first.contact_email).to eq changeset.destinations.first["contact_email"]
+          expect(Cms::Group.where(id: group.id).first.contact_tel).to eq changeset.destinations.first["contact_tel"]
+          expect(Cms::Group.where(id: group.id).first.contact_fax).to eq changeset.destinations.first["contact_fax"]
+          expect(Cms::Group.where(id: group.id).first.contact_link_url).to eq changeset.destinations.first["contact_link_url"]
+          expect(Cms::Group.where(id: group.id).first.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
+          # ldap_dn is expected not to be changed.
+          expect(Cms::Group.where(id: group.id).first.ldap_dn).to eq group.ldap_dn
+          # check page
+          save_filename = page.filename
+          page.reload
+          expect(page.group_ids).to eq [ group.id ]
+          expect(page.filename).to eq save_filename
+          expect(page.contact_group_id).to eq group.id
+          expect(page.contact_email).to eq changeset.destinations.first["contact_email"]
+          expect(page.contact_tel).to eq changeset.destinations.first["contact_tel"]
+          expect(page.contact_fax).to eq changeset.destinations.first["contact_fax"]
+          expect(page.contact_link_url).to eq changeset.destinations.first["contact_link_url"]
+          expect(page.contact_link_name).to eq changeset.destinations.first["contact_link_name"]
+
+          task.reload
+          expect(task.state).to eq 'stop'
+          expect(task.entity_logs.count).to eq 2
+          expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+          expect(task.entity_logs[0]['id']).to eq group.id.to_s
+          expect(task.entity_logs[0]['changes']).to include('name')
+          expect(task.entity_logs[1]['model']).to eq 'Article::Page'
+          expect(task.entity_logs[1]['id']).to eq '1'
+          expect(task.entity_logs[1]['changes']).to include(
+            'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+          )
+        end
       end
     end
   end
@@ -275,7 +335,9 @@ describe Chorg::MainRunner, dbscope: :example do
 
         expect(task.entity_logs[4]['model']).to eq 'Article::Page'
         expect(task.entity_logs[4]['id']).to eq '1'
-        expect(task.entity_logs[4]['changes']).to include('contact_tel', 'contact_fax', 'contact_email')
+        expect(task.entity_logs[4]['changes']).to include(
+          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
 
         expect(task.entity_logs[5]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[5]['id']).to eq group1.id.to_s

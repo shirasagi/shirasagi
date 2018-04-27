@@ -45,7 +45,7 @@ module Chorg::PrimitiveRunner
     if save_or_collect_errors(group)
       put_log("updated group: #{group.name}(#{group.id})")
       inc_counter(:move, :success)
-      substituter.collect(source_attributes, group.attributes)
+      substituter.collect(source_attributes, group.attributes, [group.id])
     else
       inc_counter(:move, :failed)
     end
@@ -71,7 +71,7 @@ module Chorg::PrimitiveRunner
     end
     source_groups = source_groups.compact
     source_groups.each do |source_group|
-      substituter.collect(source_group.attributes, destination_group.attributes)
+      substituter.collect(source_group.attributes, destination_group.attributes, [destination_group.id])
       next if source_group.id == destination_group.id
       move_users_group(source_group.id, destination_group.id)
       delete_group_ids << source_group.id
@@ -118,7 +118,7 @@ module Chorg::PrimitiveRunner
     # be careful, user's group_ids has only first division group.
     move_users_group(source_group.id, destination_group_ids.first)
     # group of page/node/layout/part has all division groups.
-    substituter.collect(source_group.attributes, destination_attributes)
+    substituter.collect(source_group.attributes, destination_attributes, destination_group_ids)
     delete_group_ids << source_group.id unless destination_group_ids.include?(source_group.id)
   end
 
