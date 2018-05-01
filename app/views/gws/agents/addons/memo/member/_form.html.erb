@@ -3,7 +3,10 @@
   $('.sortable-index tbody').sortable();
 <% end %>
 
-<% show_shared_addr = Gws::SharedAddress::Address.allowed?(:read, @cur_user, site: @cur_site) %>
+<%
+show_shared_addr = Gws::SharedAddress::Address.allowed?(:read, @cur_user, site: @cur_site)
+show_shared_addr = false unless @cur_site.menu_shared_address_visible?
+%>
 
 <div class="gws-addon-memo-member">
   <dl class="see to">

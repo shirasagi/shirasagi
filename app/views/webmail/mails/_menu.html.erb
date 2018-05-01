@@ -15,7 +15,7 @@
     <%
       groups = nil
       groups = @cur_user.root_groups.select do |group|
-        Gws::Memo::Message.allowed?(:edit, Gws::User.find(@cur_user.id), site: group)
+        Gws::Memo::Message.allowed?(:edit, @cur_user.gws_user, site: group)
       end if !@item.draft? && SS.config.gws.disable.blank?
     %>
     <% if groups.size >= 2 %>
