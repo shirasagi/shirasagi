@@ -31,7 +31,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
     <span class="datetime-wrap start"><%= l(@start_on, format: :gws_long) rescue nil %></span>
     <span class="delimiter">-</span>
     <span class="datetime-wrap end"><%= l(@end_on, format: :gws_long) rescue nil %></span>
-    <% if @reservation_valid  %>
+    <% if @reservation_valid %>
       <span class="reservation-valid free"><%= t('gws/schedule.facility_reservation.free') %></span>
     <% else %>
       <span class="reservation-valid exist"><%= t('gws/schedule.facility_reservation.exist') %></span>
@@ -78,11 +78,6 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
   </div>
 
   <footer class="send mt-4">
-    <% if @submit %>
-      <%= submit_tag t('ss.buttons.confirm'), class: 'btn-primary confirm' %>
-      <%= button_tag t('ss.buttons.cancel'), class: 'btn-default cancel', type: :reset %>
-    <% else %>
-      <%= button_tag t('ss.buttons.close'), class: 'btn-default cancel', type: :reset %>
-    <% end %>
+    <%= button_tag t('ss.buttons.close'), class: 'btn-default cancel', type: :reset %>
   </footer>
 </section>
