@@ -1,5 +1,6 @@
 module Gws::Schedule::TodoFilter
   extend ActiveSupport::Concern
+  include Gws::Schedule::CalendarFilter::Transition
 
   included do
     prepend_view_path 'app/views/gws/schedule/todo/main'
@@ -14,11 +15,26 @@ module Gws::Schedule::TodoFilter
   private
 
   def pre_params
-    super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(member_ids: [@cur_user.id])
+    super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(
+      start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
+      end_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
+      member_ids: [@cur_user.id]
+    )
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def crud_redirect_url
+    path = params.dig(:calendar, :path)
+    if path.present?
+      uri = URI(path)
+      uri.query = redirection_calendar_params.to_param
+      uri.to_s
+    else
+      nil
+    end
   end
 
   def set_skip_default_group

@@ -7,6 +7,12 @@
     });
 <% end %>
 
+<%= hidden_field_tag 'calendar[path]', params.dig(:calendar, :path) %>
+<%= hidden_field_tag 'calendar[view]', params.dig(:calendar, :view) %>
+<%= hidden_field_tag 'calendar[viewFormat]', params.dig(:calendar, :viewFormat) %>
+<%= hidden_field_tag 'calendar[viewTodo]', params.dig(:calendar, :viewTodo) %>
+<%= hidden_field_tag 'calendar[viewAttendance]', params.dig(:calendar, :viewAttendance) %>
+
 <dl class="see gws-schedule-plan">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>

@@ -103,6 +103,12 @@ class @Gws_Schedule_Calendar
       Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"))
       Gws_Schedule_Calendar.changePrintPreviewPortrait(view)
 
+  @viewStateQuery: (view) ->
+    format = if view.el.closest(".fc").hasClass('fc-list-format') then 'list' else 'default'
+    todo = if $('.fc .fc-withTodo-button').hasClass("fc-state-active") then 'active' else 'inactive'
+    attendance = if $('.fc .fc-withAbsence-button').hasClass("fc-state-active") then 'active' else 'inactive'
+    return "calendar[path]=#{location.pathname}&calendar[view]=#{view.name}&calendar[viewFormat]=#{format}&calendar[viewTodo]=#{todo}&calendar[viewAttendance]=#{attendance}"
+
   @tapMenuParams: (opts) ->
     url = opts['restUrl']
 
@@ -112,11 +118,11 @@ class @Gws_Schedule_Calendar
       if opts['tapMenu']
         now = new Date
         start = "#{date.format()}T#{now.getHours()}:00:00"
-        view_format = if view.el.closest(".fc").hasClass('fc-list-format') then 'list' else 'default'
-        view_todo = if $('.fc .fc-withTodo-button').hasClass("fc-state-active") then 'active' else 'inactive'
-        view_attendance = if $('.fc .fc-withAbsence-button').hasClass("fc-state-active") then 'active' else 'inactive'
-        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}&calendar[viewFormat]=#{view_format}&calendar[viewTodo]=#{view_todo}&calendar[viewAttendance]=#{view_attendance}"
+        state = "calendar[date]=#{date.format()}&" + Gws_Schedule_Calendar.viewStateQuery(view)
         links = "<a href='#{url}/new?start=#{start}&#{state}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
+
+        todo = url.replace(/schedule\/.*/, 'schedule/todo/readables')
+        links += "<a href='#{todo}/new?start=#{start}&#{state}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_todo' %></a>"
 
       if $('#calendar-controller').length == 0
         if view.name != 'month'
@@ -156,10 +162,7 @@ class @Gws_Schedule_Calendar
       Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>")
 
       popup_url = if event.restUrl then event.restUrl else url
-      view_format = if view.el.closest(".fc").hasClass('fc-list-format') then 'list' else 'default'
-      view_todo = if $('.fc .fc-withTodo-button').hasClass("fc-state-active") then 'active' else 'inactive'
-      view_attendance = if $('.fc .fc-withAbsence-button').hasClass("fc-state-active") then 'active' else 'inactive'
-      state = "calendar[date]=#{event.start.format('YYYY-MM-DD')}&calendar[view]=#{view.name}&calendar[viewFormat]=#{view_format}&calendar[viewTodo]=#{view_todo}&calendar[viewAttendance]=#{view_attendance}"
+      state = "calendar[date]=#{event.start.format('YYYY-MM-DD')}&" + Gws_Schedule_Calendar.viewStateQuery(view)
 
       $.ajax
         url: "#{popup_url}/#{event.id}/popup"
@@ -214,10 +217,7 @@ class @Gws_Schedule_Calendar
 
       unless view.start.isBefore(now) && view.end.isAfter(now)
         start = "#{date.format('YYYY-MM-DD')}T#{now.getHours()}:00:00"
-        view_format = if view.el.closest(".fc").hasClass('fc-list-format') then 'list' else 'default'
-        view_todo = if $('.fc .fc-withTodo-button').hasClass("fc-state-active") then 'active' else 'inactive'
-        view_attendance = if $('.fc .fc-withAbsence-button').hasClass("fc-state-active") then 'active' else 'inactive'
-        state = "calendar[date]=#{date.format()}&calendar[view]=#{view.name}&calendar[viewFormat]=#{view_format}&calendar[viewTodo]=#{view_todo}&calendar[viewAttendance]=#{view_attendance}"
+        state = "calendar[date]=#{date.format()}&" + Gws_Schedule_Calendar.viewStateQuery(view)
         href  = href + "?start=#{start}&#{state}"
       $(this).attr('href', href)
 
