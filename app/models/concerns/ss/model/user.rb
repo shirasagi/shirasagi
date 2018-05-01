@@ -288,6 +288,11 @@ module SS::Model::User
     switch_user
   end
 
+  # Cast
+  def gws_user
+    @gws_user ||= is_a?(Gws::User) ? self : Gws::User.find(id)
+  end
+
   private
 
   def dbpasswd_authenticate(in_passwd)

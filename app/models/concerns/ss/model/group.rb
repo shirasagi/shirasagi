@@ -123,6 +123,11 @@ module SS::Model::Group
     !new_record? && !name_was.to_s.include?('/')
   end
 
+  # Cast
+  def gws_group
+    is_a?(Gws::Group) ? self : Gws::Group.find(id)
+  end
+
   private
 
   def validate_name
