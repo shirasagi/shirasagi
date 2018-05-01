@@ -30,8 +30,10 @@ SS_SearchUI.select = Webmail_Mail_Form_Address.select;
           <%= link_to gws_apis_users_path(site: group), class: "ajax-box" do %>
             <%= t "gws.organization_addresses" %>
           <% end %>
-          <%= link_to gws_shared_address_apis_addresses_path(site: group), class: "ajax-box" do %>
-            <%= t "modules.gws/shared_address" %>
+          <% if Gws::SharedAddress::Address.allowed?(:read, Gws::User.find(@cur_user.id), site: group) %>
+            <%= link_to gws_shared_address_apis_addresses_path(site: group), class: "ajax-box" do %>
+              <%= t "modules.gws/shared_address" %>
+            <% end %>
           <% end %>
         </div>
       <% end %>
