@@ -39,6 +39,7 @@ class Gws::SharedAddress::AddressesController < ApplicationController
 
     @items = @model.site(@cur_site).
       readable(@cur_user, site: @cur_site).
+      without_deleted.
       search(s_params).
       page(params[:page]).per(50)
   end
