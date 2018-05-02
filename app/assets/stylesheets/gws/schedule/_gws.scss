@@ -512,28 +512,6 @@
     white-space: normal;
   }
 }
-.print-preview {
-  .fc-listMonth-view-table {
-    .tr {
-      border-bottom: 1px solid black;
-    }
-  }
-  .fc-event {
-    color: #333 !important;
-  }
-  .fc-event-range {
-    border: 1px solid #888;
-    padding: 1px 2px;
-    background-color: #fff !important;
-  }
-  .fc-event .fc-content:before {
-    border: 1px solid #333;
-    border-width: 0 1px;
-    background-color: transparent;
-    color: #333 !important;
-  }
-}
-
 // View: timelineDay
 .fc-timelineDay-view {
   .fc-scrollpane, .fc-scrollpane-inner {
@@ -549,15 +527,14 @@
     padding-top: 4px;
   }
   .fc-event {
+    margin-left: 1px;
+    border-bottom: 1px solid #d8d8d8;
     z-index: 0;
   }
-}
-.facility.calendar .fc-timelineDay-view {
-  .fc-event {
-    //top: 4px !important;
+  .fc-event-point {
+    background-color: #eee;
   }
 }
-
 // View: basicHour
 .fc-basicHour-view {
   .fc-hour- {
@@ -583,6 +560,28 @@
   .fc-event {
     border-left: 1px solid #555;
     z-index: 0;
+  }
+}
+// Print View
+.print-preview {
+  .fc-listMonth-view-table {
+    .tr {
+      border-bottom: 1px solid black;
+    }
+  }
+  .fc-event {
+    color: #333 !important;
+  }
+  .fc-day-grid-event, .fc-timeline-event {
+    border-bottom: 1px solid #555;
+    padding: 1px 0;
+    background-color: #f4f4f4 !important;
+  }
+  .fc-event .fc-content:before {
+    border: 1px solid #333;
+    border-width: 0 1px;
+    background-color: transparent;
+    color: #333 !important;
   }
 }
 
