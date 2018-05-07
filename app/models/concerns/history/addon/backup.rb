@@ -4,6 +4,7 @@ module History::Addon
     extend ActiveSupport::Concern
 
     included do
+      attr_accessor :skip_history_backup
       after_save :save_backup, if: -> { @db_changes.present? }
       before_destroy :destroy_backups
     end
@@ -15,6 +16,8 @@ module History::Addon
     private
 
     def save_backup
+      return if @skip_history_backup
+
       max_age = History::Backup.max_age
 
       # add backup

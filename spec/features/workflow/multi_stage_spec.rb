@@ -44,12 +44,14 @@ describe "multi_stage", dbscope: :example, js: true do
       end
 
       it do
-        login_cms_user
-        visit show_path
+        expect(item.backups.count).to eq 1
 
         #
         # admin: send request
         #
+        login_cms_user
+        visit show_path
+
         within ".mod-workflow-request" do
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
@@ -68,6 +70,8 @@ describe "multi_stage", dbscope: :example, js: true do
         expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
         expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 1
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -101,6 +105,8 @@ describe "multi_stage", dbscope: :example, js: true do
           eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
         expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -135,6 +141,8 @@ describe "multi_stage", dbscope: :example, js: true do
         expect(item.workflow_approvers[1]).to \
           eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
         expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'request', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 3
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -170,6 +178,8 @@ describe "multi_stage", dbscope: :example, js: true do
           eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
         expect(item.workflow_approvers[2]).to \
           eq({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
+        # backup is created because page is in public
+        expect(item.backups.count).to eq 2
 
         expect(Sys::MailLog.count).to eq 4
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count

@@ -29,6 +29,8 @@ describe "my_group", dbscope: :example, js: true do
 
     context "when all users approve request" do
       it do
+        expect(item.backups.count).to eq 1
+
         #
         # admin: send request
         #
@@ -57,6 +59,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.workflow_approvers.count).to eq 2
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -98,6 +102,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
 
@@ -121,6 +127,8 @@ describe "my_group", dbscope: :example, js: true do
           include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
+        # backup is created because page is in public
+        expect(item.backups.count).to eq 2
 
         expect(Sys::MailLog.count).to eq 3
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -136,6 +144,7 @@ describe "my_group", dbscope: :example, js: true do
 
     context "when first user remands request" do
       it do
+        expect(item.backups.count).to eq 1
         #
         # admin: send request
         #
@@ -164,6 +173,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.workflow_approvers.count).to eq 2
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -205,6 +216,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user1.id, editable: '', state: 'remand', comment: remand_comment1})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 3
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -222,6 +235,7 @@ describe "my_group", dbscope: :example, js: true do
 
     context "when first user approves request and then second user remands request" do
       it do
+        expect(item.backups.count).to eq 1
         #
         # admin: send request
         #
@@ -250,6 +264,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.workflow_approvers.count).to eq 2
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
 
@@ -272,6 +288,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
 
@@ -295,6 +313,8 @@ describe "my_group", dbscope: :example, js: true do
           include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user2.id, editable: '', state: 'remand', comment: remand_comment2})
+        # no backups are created
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 3
         ActionMailer::Base.deliveries.last.tap do |mail|
@@ -311,6 +331,7 @@ describe "my_group", dbscope: :example, js: true do
 
     context "when request is cancelled" do
       it do
+        expect(item.backups.count).to eq 1
         #
         # admin: send request
         #
@@ -339,6 +360,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.workflow_approvers.count).to eq 2
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created while requesting approve
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
 
@@ -361,6 +384,8 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        # no backups are created
+        expect(item.backups.count).to eq 1
 
         expect(Sys::MailLog.count).to eq 2
       end
