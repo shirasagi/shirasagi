@@ -11,6 +11,11 @@ SS::Application.routes.draw do
     get :download, :on => :collection
   end
 
+  concern :command do
+    get :command, on: :member
+    post :command, on: :member
+  end
+
   # Google Person Finder
   concern :gpf do
     get :gpf, action: :edit_gpf, on: :member
@@ -31,14 +36,14 @@ SS::Application.routes.draw do
     resources :blog_pages, concerns: :deletion
     resources :blog_page_locations, concerns: :deletion
 
-    resources :photos, concerns: :deletion do
+    resources :photos, concerns: [:deletion, :command] do
       get :index_listable, on: :collection
       get :index_slideable, on: :collection
     end
     resources :photo_searches, concerns: :deletion
     resources :photo_categories, concerns: :deletion
     resources :photo_locations, concerns: :deletion
-    resources :photo_spots, concerns: :deletion
+    resources :photo_spots, concerns: [:deletion, :command]
     resources :registrations, concerns: :deletion
 
     # resources :groups, concerns: :deletion do

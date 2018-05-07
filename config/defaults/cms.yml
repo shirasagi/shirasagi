@@ -125,6 +125,9 @@ production: &production
   close_days_before: 7
   max_term_form: 10
 
+  commands_path:
+    - '/config/commands'
+
 test:
   <<: *production
 

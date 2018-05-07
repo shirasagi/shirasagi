@@ -8,6 +8,7 @@ ja:
     check_links: リンクチェック実行結果
     check_links_nodes: フォルダー
     check_links_pages: ページ
+    command: コマンド
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
@@ -263,6 +264,10 @@ ja:
     read_cms_body_layouts: 本文レイアウトの閲覧
     edit_cms_body_layouts: 本文レイアウトの編集
     delete_cms_body_layouts: 本文レイアウトの削除
+    read_cms_commands: コマンドの閲覧
+    edit_cms_commands: コマンドの編集
+    delete_cms_commands: コマンドの削除
+    use_cms_commands: コマンドの実行
     use_cms_tools: 運用ツールの利用
     use_cms_editor_extensions: エディターの高度な利用
     read_other_cms_nodes: フォルダーの閲覧（全て）
@@ -409,6 +414,7 @@ ja:
       cms/import_page: 取り込みページ
       cms/word_dictionary: かな辞書
       cms/loop_setting: ループHTML
+      cms/command: コマンド
       cms/form: 定型フォーム
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
@@ -512,6 +518,14 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
+      cms/command:
+        name: タイトル
+        description: 説明
+        order: 並び順
+        command: コマンド
+        output: 出力
+        target: 対象
+        path: パス
       cms/addon/meta:
         keywords: キーワード
         description: 概要
@@ -1502,6 +1516,35 @@ ja:
     cms/addon/for_member_node:
       for_member_state:
         - 会員がログインしている時のみ閲覧できるように設定します。
+
+    cms/command:
+      name:
+        - タイトルを入力します。
+      description:
+        - コマンドの説明を入力します。
+      order:
+        - コマンドの並び順に利用します。
+        - 数字が小さいほど一覧ページの上位にリンクが表示されます。
+      command:
+        - |-
+          コマンドを入力します。
+          コマンドを実行する箇所に応じて引数が追加されます。
+
+          第一引数：
+          site　サイト設定からコマンドを実行した場合に追加されます。
+          folder　フォルダー取り込み、フォルダー書き込みからコマンドを実行した場合に追加されます。
+          page　ページ取り込みからコマンドを実行した場合に追加されます。
+
+          第二引数：
+          第一引数に応じた同期対象のパス
+
+          コマンド例：
+          echo
+
+          実行例：
+          site /var/www/shirasagi/public/sites/w/w/w/_
+      output:
+        - コマンドを並び順の通りに実行します。
 
     cms/form:
       name:

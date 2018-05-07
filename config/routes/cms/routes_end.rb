@@ -33,6 +33,11 @@ SS::Application.routes.draw do
     post :import, on: :collection
   end
 
+  concern :command do
+    get :command, on: :member
+    post :command, on: :member
+  end
+
   concern :index_state do
     get :index_approve, on: :collection
     get :index_request, on: :collection
@@ -82,11 +87,14 @@ SS::Application.routes.draw do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :contains_urls]
+    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls]
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :loop_settings, concerns: :deletion
+    resources :command_settings, concerns: :deletion do
+      post :run, on: :member
+    end
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
@@ -118,6 +126,8 @@ SS::Application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "import" => "import#import"
     post "import" => "import#import"
+    get "command" => "command#command"
+    post "command" => "command#command"
     get "all_contents(.:format)" => "all_contents#index", format: { default: :html }, as: "all_contents"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
@@ -182,6 +192,8 @@ SS::Application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "import" => "import#import"
     post "import" => "import#import"
+    get "command" => "command#command"
+    post "command" => "command#command"
     get "copy_nodes" => "copy_nodes#index", as: :copy
     post "copy_nodes" => "copy_nodes#run"
     resource :conf, concerns: [:copy, :move] do
@@ -189,7 +201,7 @@ SS::Application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :contains_urls]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls]
     resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]
     resources :import_nodes, concerns: [:deletion, :copy, :move]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }

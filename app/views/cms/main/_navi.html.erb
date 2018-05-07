@@ -43,4 +43,7 @@
   <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to t("cms.generate_page"), cms_generate_pages_path, class: "icon-write" %></h2>
   <% end %>
+  <% if Cms::Command.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to t("cms.command"), cms_command_path, class: "icon-write" %></h2>
+  <% end %>
 </nav>
