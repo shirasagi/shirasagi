@@ -28,9 +28,12 @@ module History::LogFilter::View
     return if request.get?
 
     from = @model.term_to_date params[:item][:save_term]
+    user_ids = params.dig(:item, :user_ids)
+    user_ids.reject!(&:blank?) if user_ids.present?
     raise "500" if from == false
 
     @items = @model.where(cond)
+    @items = @items.in(user: user_ids) if user_ids.present?
     @items = @items.where(created: { "$gte" => from }) if from
     @items = @items.sort(created: 1, id: 1)
     send_csv @items
@@ -42,7 +45,8 @@ module History::LogFilter::View
     require "csv"
 
     csv = CSV.generate do |data|
-      data << %w(Date User Target Action URL SessionID RequestID)
+      header = %w(created user_name model_name action path session_id request_id)
+      data << header.collect { |k| History::Log.t(k) }
       items.each do |item|
         line = []
         line << item.created.strftime("%Y-%m-%d %H:%M")

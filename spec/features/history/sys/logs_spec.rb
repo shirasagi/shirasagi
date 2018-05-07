@@ -24,7 +24,7 @@ describe "history_sys_logs", dbscope: :example do
       click_on 'ダウンロード'
       click_on 'ダウンロード'
 
-      expect(page).to have_content('Date,User,Target,Action,URL')
+      expect(page).to have_content('操作日時,ユーザー,モデル名,アクション,URL,セッションID,リクエストID')
       expect(page).to have_content(',login,/.mypage/login')
       expect(page).to have_content(',create,/path/to/')
 
