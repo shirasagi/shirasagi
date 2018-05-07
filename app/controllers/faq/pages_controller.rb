@@ -16,6 +16,11 @@ class Faq::PagesController < ApplicationController
 
   public
 
+  def new
+    super
+    @item.question = params[:question].to_s
+  end
+
   def download
     csv = @model.site(@cur_site).node(@cur_node).to_csv.encode("SJIS", invalid: :replace, undef: :replace)
     filename = @model.to_s.tableize.gsub(/\//, "_")

@@ -1,0 +1,30 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-inquiry-faq");
+<% end %>
+
+<dl class="see mod-inquiry-faq">
+  <dt><%= @model.t :faq_id %><%= @model.tt :faq_id %></dt>
+  <dd>
+    <%= f.hidden_field "faq_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1, model: 'Faq::Node::Page'), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @item.faq.present? %>
+        <tr data-id="<%= @item.faq.id %>">
+          <td><%= f.hidden_field "faq_id", value: @item.faq.id %> <%= @item.faq.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+        <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>
+      </tbody>
+    </table>
+  </dd>
+</dl>

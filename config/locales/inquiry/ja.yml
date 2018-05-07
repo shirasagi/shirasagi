@@ -46,6 +46,7 @@ ja:
 
     links:
       back_to_page: 元のページに戻る
+      faq: FAQを新規作成
 
   modules:
     inquiry: メールフォーム
@@ -59,6 +60,7 @@ ja:
       inquiry/reception_plan: 回答受付期間
       inquiry/aggregation: 集計
       inquiry/feedback_setting: フィードバック設定
+      inquiry/faq: FAQ
 
   cms:
     nodes:
@@ -103,6 +105,9 @@ ja:
       inquiry/addon/aggregation:
         aggregation_state: 集計設定
 
+      inquiry/addon/faq:
+        faq_id: FAQフォルダー
+
       inquiry/column:
         name: 項目名
         html: 説明テキスト
@@ -114,6 +119,7 @@ ja:
         required_in_select_form: フォーム別必須入力
         additional_attr: 追加属性
         input_confirm: 入力確認
+        question: FAQ引用
         max_upload_file_size: 最大ファイルサイズ設定
         transfers: キーワード
 
@@ -200,6 +206,8 @@ ja:
         - 出力される入力形式のHTMLに属性を追加することが可能です。
       input_confirm:
         - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
+      question:
+        - FAQの新規作成時に回答データを引用するかどうかを選択します。
       max_upload_file_size:
         - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
       transfers:
@@ -229,6 +237,10 @@ ja:
         - 下部に任意の内容をHTMLで記述することが可能です。
       feedback_confirmation:
         - 確認画面を利用する場合は「使用する」を選択してください。
+    inquiry/addon/faq:
+      faq_id:
+        - FAQのフォルダーを選択します。
+        - 回答データからFAQのページを作成できます。
 
   errors:
     messages:
