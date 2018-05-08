@@ -25,16 +25,14 @@ class Cms::Command
     end
   end
 
-  def escaped_command
-    input = command.split("\s")
-    input[0] = input[0].slice(/[^\/]*$/)
-    input.join(' ').strip
+  def escaped_command(target, path)
+    Shellwords.join([Shellwords.escape(command), target, path])
   end
 
   def run(target, path)
     data = []
     data << "PATH=#{commands_path.join(':') rescue nil}"
-    data << [escaped_command, target, path].join(' ')
+    data << Shellwords.join(['/bin/bash', '-rc', escaped_command(target, path)])
     self.output = Open3.capture2e(data.join(';'))[0]
     self.update
   end
