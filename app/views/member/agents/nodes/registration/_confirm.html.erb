@@ -5,7 +5,11 @@
   </header>
   <% end %>
 
+  <% if @cur_node.notify_mail_enabled? %>
+  <%= f.hidden_field :sends_notify_mail, value: 'yes' %>
+  <% else %>
   <%= f.hidden_field :sends_verification_mail, value: 'yes' %>
+  <% end %>
 
   <dl class="colum name">
     <dt><%= @item.class.t :name %></dt>

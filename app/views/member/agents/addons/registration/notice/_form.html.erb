@@ -1,0 +1,7 @@
+<dl class="see mod-cms-member-registration-notice">
+  <dt><%= @model.t :notice_state %><%= @model.tt :notice_state %></dt>
+  <dd><%= f.select :notice_state, @item.notice_state_options %></dd>
+
+  <dt><%= @model.t :notice_email %><%= @model.tt :notice_email %></dt>
+  <dd><%= f.text_field :notice_email %></dd>
+</dl>

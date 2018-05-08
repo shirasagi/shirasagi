@@ -71,7 +71,9 @@ SS::Application.routes.draw do
       post :unlock_all, on: :collection
     end
     resources :groups, concerns: [:deletion, :role, :download, :import]
-    resources :members, concerns: [:deletion, :download]
+    resources :members, concerns: [:deletion, :download] do
+      post :verify, on: :member
+    end
     resources :contents, path: "contents/(:mod)"
 
     resources :nodes, concerns: :deletion do

@@ -1,4 +1,13 @@
 class Member::Mailer < ActionMailer::Base
+  def notify_mail(member)
+    @member = member
+    @node = Member::Node::Registration.first
+    return if @node.blank?
+    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+
+    mail from: sender, to: @node.notice_email
+  end
+
   # 会員登録に対して確認メールを配信する。
   #
   # @param [Cms::Member] member

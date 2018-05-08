@@ -105,6 +105,9 @@ ja:
       post_gpf: Google Person Finder に登録してよろしいですか？
     units:
       person: "%{count} 人"
+    mail:
+      subject:
+        notify: 会員登録申請
 
   modules:
     member: メンバー
@@ -133,6 +136,7 @@ ja:
       member/photo/license: ライセンス
       member/photo/license_setting: ライセンス
       member/registration/sender_address: 送信者設定
+      member/registration/notice: メール通知
       member/registration/confirmation: 登録確認
       member/registration/reply: 登録確認メール
       member/registration/reset_password_mail: パスワード再設定メール
@@ -253,6 +257,9 @@ ja:
       member/addon/registration/sender_address:
         sender_name: 送信者名
         sender_email: 送信メールアドレス
+      member/addon/registration/notice:
+        notice_state: 通知設定
+        notice_email: 通知メールアドレス
       member/addon/registration/confirmation:
         confirm_personal_data_state: 個人情報保護状態
         confirm_personal_data_html: 個人情報保護HTML
@@ -334,6 +341,10 @@ ja:
       confirm_email_address: |-
         %{sender_email} からメールが届きます。
         迷惑メールの防止のためメールの受信設定を行っている方は、「 %{sender_domain} 」からのメールが受信できるように、ドメイン指定受信の設定を行ってください。
+      notify_email_address_html: |-
+        <h2>メールアドレスの確認</h2>
+        管理者による確認後、%{sender_email} から登録案内メールを %{email} に送信します。
+        メールに記載の案内を読み、登録を完了してください。
       verify_email_address_html: |-
         <h2>メールアドレスの確認</h2>
         %{sender_email} から登録案内メールを %{email} に送りました。
@@ -439,6 +450,11 @@ ja:
         - 送信者名を設定します。
       sender_email:
         - 送信メールアドレスを設定します。
+    member/addon/registration/notice:
+      notice_state:
+        - メンバーの登録申請通知を使用するか設定します。
+      notice_email:
+        - メンバーの登録申請を通知する先のメールアドレスを入力します。
     member/addon/registration/required_fields:
       kana_required:
         - 氏名（ふりがな）の入力を必須とする場合、「必須」を選択します。

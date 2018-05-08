@@ -21,6 +21,7 @@ module Cms::Model::Member
     attr_accessor :in_password
     attr_accessor :in_password_again
     attr_accessor :email_again
+    attr_accessor :sends_notify_mail
     attr_accessor :sends_verification_mail
     attr_accessor :in_confirm_personal_info
     attr_accessor :in_check_name
@@ -38,9 +39,11 @@ module Cms::Model::Member
     field :oauth_token, type: String
     field :site_email, type: String
     field :last_loggedin, type: DateTime
+    field :verify_mail_sent, type: DateTime
 
     permit_params :name, :email, :email_again, :email_type, :password, :in_password, :in_password_again, :state
-    permit_params :sends_verification_mail, :in_confirm_personal_info
+    permit_params interest_municipality_ids: []
+    permit_params :sends_notify_mail, :sends_verification_mail, :in_confirm_personal_info
 
     validates :name, presence: true, length: { maximum: 40 }, if: ->{ enabled? || in_check_name }
     validates :email, email: true, length: { maximum: 80 }
@@ -53,6 +56,7 @@ module Cms::Model::Member
     before_validation :encrypt_password, if: ->{ in_password.present? }
     before_validation :set_site_email, if: ->{ email.present? }
 
+    after_create :send_notify_mail, if: ->{ oauth_type.blank? }
     after_create :send_verification_mail, if: ->{ oauth_type.blank? }
 
     scope :and_enabled, -> { self.or({ state: 'enabled' }, { state: nil }) }
@@ -103,6 +107,10 @@ module Cms::Model::Member
 
   def set_site_email
     self.site_email = "#{site_id}_#{email}"
+  end
+
+  def send_notify_mail
+    Member::Mailer.notify_mail(self).deliver_now if self.sends_notify_mail == 'yes'
   end
 
   def send_verification_mail
