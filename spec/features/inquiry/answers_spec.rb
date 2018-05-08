@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe "inquiry_answers", dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :inquiry_node_form, cur_site: site }
+  let(:faq_node) { create :faq_node_page, cur_site: site }
+  let(:node) { create :inquiry_node_form, cur_site: site, faq: faq_node }
   let(:index_path) { inquiry_answers_path(site, node) }
 
   let(:remote_addr) { "X.X.X.X" }
@@ -23,9 +24,9 @@ describe "inquiry_answers", dbscope: :example do
   let(:check_column) { node.columns[5] }
 
   before do
-    node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})
+    node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site}).merge(question: 'enabled')
     node.columns.create! attributes_for(:inquiry_column_optional).reverse_merge({cur_site: site})
-    node.columns.create! attributes_for(:inquiry_column_email).reverse_merge({cur_site: site})
+    node.columns.create! attributes_for(:inquiry_column_email).reverse_merge({cur_site: site}).merge(question: 'enabled')
     node.columns.create! attributes_for(:inquiry_column_radio).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_select).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_check).reverse_merge({cur_site: site})
@@ -222,6 +223,58 @@ describe "inquiry_answers", dbscope: :example do
         expect(csv_lines[1][6]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
         expect(csv_lines[1][7]).to be_nil
         expect(csv_lines[1][8]).to be_nil
+      end
+    end
+  end
+
+  context "when create faq/page that use inquiry/answer" do
+    before { login_cms_user }
+
+    context "usual case" do
+      it do
+        visit index_path
+        expect(page).to have_css(".list-item a", text: answer.data_summary)
+        click_on answer.data_summary
+
+        expect(page).to have_css("#addon-basic dt", text: name_column.name)
+        expect(page).to have_css("#addon-basic dd", text: name)
+        expect(page).to have_css("#addon-basic dt", text: email_column.name)
+        expect(page).to have_css("#addon-basic dd", text: email)
+        expect(page).to have_css("#addon-basic dt", text: radio_column.name)
+        expect(page).to have_css("#addon-basic dd", text: radio)
+        expect(page).to have_css("#addon-basic dt", text: select_column.name)
+        expect(page).to have_css("#addon-basic dd", text: select)
+
+        expect(page).to have_css("#addon-basic dd", text: remote_addr)
+        expect(page).to have_css("#addon-basic dd", text: user_agent)
+
+        expect(page).to have_css('#menu a', text: "FAQを新規作成")
+        click_on "FAQを新規作成"
+        expect(page).to have_css("#item_question", text: [name, email].join(','))
+      end
+    end
+
+    context "when a column was destroyed after answers ware committed" do
+      before { email_column.destroy }
+
+      it do
+        visit index_path
+        expect(page).to have_css(".list-item a", text: answer.data_summary)
+        click_on answer.data_summary
+
+        expect(page).to have_css("#addon-basic dt", text: name_column.name)
+        expect(page).to have_css("#addon-basic dd", text: name)
+        expect(page).to have_css("#addon-basic dt", text: radio_column.name)
+        expect(page).to have_css("#addon-basic dd", text: radio)
+        expect(page).to have_css("#addon-basic dt", text: select_column.name)
+        expect(page).to have_css("#addon-basic dd", text: select)
+
+        expect(page).to have_css("#addon-basic dd", text: remote_addr)
+        expect(page).to have_css("#addon-basic dd", text: user_agent)
+
+        expect(page).to have_css('#menu a', text: "FAQを新規作成")
+        click_on "FAQを新規作成"
+        expect(page).to have_css("#item_question", text: name)
       end
     end
   end
