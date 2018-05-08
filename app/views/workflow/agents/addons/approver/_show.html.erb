@@ -30,16 +30,13 @@
                 <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :pull_up, class: "update-item btn-primary" } %>
                 <% end %>
               </div>
+              <% if @ss_mode == :cms %>
               <div class="checkbox">
                 <label>
-                  <% force = @cur_site.forced_update rescue nil %>
-                  <% if force == "enabled" %>
-                  <%= check_box_tag 'forced-update', true, true, class: 'forced' %><%= t("errors.messages.forced_update") %>
-                  <% else %>
-                  <%= check_box_tag 'forced-update', true, false, class: 'forced' %><%= t("errors.messages.forced_update") %>
-                  <% end %>
+                  <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "enabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
                 </label>
               </div>
+              <% end %>
             </div>
           </div>
         </section>
@@ -62,90 +59,85 @@
   <% if @item.workflow_state? %>
   <div class="mod-workflow-view">
     <dl class="see">
-      <% if @item.workflow_state == "cancelled" %>
-
-        <dt><%= @model.t :workflow_state %></dt>
-        <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
-        <dd><%= t("workflow.request_cancelled_message") %></dd>
-
-      <% else %>
-
-        <dt><%= @model.t :workflow_user_id %></dt>
-        <dd>
-          <% if @item.workflow_member.present? %>
-            <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
-          <% elsif @item.workflow_user.present? %>
-            <%= "#{@item.workflow_user.long_name}(#{@item.workflow_user.email})" %>
-          <% else %>
-            <%= t("workflow.user_deleted") %>
-          <% end %>
-        </dd>
-
-        <dt><%= @model.t :workflow_state %></dt>
-        <dd>
-          <%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %>
-          <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @item.workflow_requested? %>
-          <%= link_to(t('workflow.buttons.cancel'), { action: :request_cancel }, class: :btn) rescue nil %>
-          <% end %>
-        </dd>
-
-        <% if @item.workflow_comment.present? %>
-          <dt><%= @model.t :workflow_comment %></dt>
-          <dd><%= @item.workflow_comment %></dd>
+      <dt><%= @model.t :workflow_user_id %></dt>
+      <dd>
+        <% if @item.workflow_member.present? %>
+          <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
+        <% elsif @item.workflow_user.present? %>
+          <%= "#{@item.workflow_user.long_name}(#{@item.workflow_user.email})" %>
+        <% else %>
+          <%= t("workflow.user_deleted") %>
         <% end %>
+      </dd>
 
-        <% if @item.workflow_pull_up.present? %>
-          <dt><%= @model.t :workflow_pull_up %></dt>
-          <dd><%= @item.label :workflow_pull_up %></dd>
-        <% end %>
-
-        <dt><%= @model.t :workflow_approvers %></dt>
-        <dd>
-          <% if @item.workflow_approvers.present? %>
-          <table class="index">
-            <tbody>
-            <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
-              <% workflow_approvers.each_with_index do |workflow_approver, index| %>
-              <% user_id = workflow_approver[:user_id] %>
-              <% user = SS::User.where(id: user_id).first %>
-              <% state = workflow_approver[:state] %>
-              <tr>
-                <% if index == 0 %>
-                <td rowspan="<%= workflow_approvers.count %>">
-                  <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
-                </td>
-                <td rowspan="<%= workflow_approvers.count %>">
-                  <% required_count = @item.workflow_required_counts[level - 1] %>
-                  <% if required_count %>
-                    <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
-                  <% else %>
-                    <%= t('workflow.required_count_label.all') %>
-                  <% end %>
-                </td>
-                <% end %>
-                <td>
-                <% if user %>
-                  <%= "#{user.long_name}(#{user.email})" %>
-                <% else %>
-                  <%= t("workflow.user_deleted") %>
-                <% end %>
-                <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site) %>
-                  <%= link_to('#', class: 'workflow-reroute', data: { level: level, user_id: user_id }) do %>
-                    <i class="material-icons" style="font-size: inherit">&#xE254;</i>
-                  <% end %>
-                <% end %>
-                </td>
-                <td><%= t("workflow.state.#{state}") %></td>
-                <td><%= workflow_approver[:comment] %></td>
-              </tr>
-              <% end %>
-            <% end %>
-            </tbody>
-          </table>
+      <dt><%= @model.t :workflow_state %></dt>
+      <dd>
+        <%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %>
+        <% if @item.workflow_requested? %>
+          <% if @ss_mode == :cms && @item.allowed?(:revoke, @cur_user, site: @cur_site) %>
+            <%= link_to t('workflow.buttons.cancel'), { controller: '/workflow/pages', action: 'request_cancel' }, { class: "btn request-cancel", data: { ss_confirmation: t("workflow.confirm.request_cancel") } } %>
+          <% elsif @ss_mode == :gws && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to(t('workflow.buttons.cancel'), { action: :request_cancel }, class: :btn) rescue nil %>
           <% end %>
-        </dd>
+        <% end %>
+      </dd>
 
+      <% if @item.workflow_comment.present? %>
+        <dt><%= @model.t :workflow_comment %></dt>
+        <dd><%= @item.workflow_comment %></dd>
       <% end %>
+
+      <dt><%= @model.t :workflow_pull_up %></dt>
+      <dd><%= @item.label :workflow_pull_up %></dd>
+
+      <dt><%= @model.t :workflow_on_remand %></dt>
+      <dd><%= @item.label :workflow_on_remand %></dd>
+
+      <dt><%= @model.t :workflow_approvers %></dt>
+      <dd>
+        <% if @item.workflow_approvers.present? %>
+        <table class="index">
+          <tbody>
+          <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
+            <% workflow_approvers.each_with_index do |workflow_approver, index| %>
+            <% user_id = workflow_approver[:user_id] %>
+            <% user = SS::User.where(id: user_id).first %>
+            <% state = workflow_approver[:state] %>
+            <tr>
+              <% if index == 0 %>
+              <td rowspan="<%= workflow_approvers.count %>">
+                <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+              </td>
+              <td rowspan="<%= workflow_approvers.count %>">
+                <% required_count = @item.workflow_required_counts[level - 1] %>
+                <% if required_count %>
+                  <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
+                <% else %>
+                  <%= t('workflow.required_count_label.all') %>
+                <% end %>
+              </td>
+              <% end %>
+              <td>
+              <% if user %>
+                <%= "#{user.long_name}(#{user.email})" %>
+              <% else %>
+                <%= t("workflow.user_deleted") %>
+              <% end %>
+              <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site) %>
+                <%= link_to('#', class: 'workflow-reroute', data: { level: level, user_id: user_id }) do %>
+                  <i class="material-icons" style="font-size: inherit">&#xE254;</i>
+                <% end %>
+              <% end %>
+              </td>
+              <td><%= t("workflow.state.#{state}") %></td>
+              <td><%= workflow_approver[:comment] %></td>
+            </tr>
+            <% end %>
+          <% end %>
+          </tbody>
+        </table>
+        <% end %>
+      </dd>
     </dl>
   </div>
   <% end %>

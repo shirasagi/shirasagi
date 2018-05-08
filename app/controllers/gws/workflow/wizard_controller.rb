@@ -5,7 +5,7 @@ class Gws::Workflow::WizardController < ApplicationController
   prepend_view_path "app/views/workflow/wizard"
 
   before_action :set_route, only: [:approver_setting]
-  before_action :set_item, only: [:approver_setting, :reroute, :do_reroute]
+  before_action :set_item
 
   private
 
@@ -18,8 +18,8 @@ class Gws::Workflow::WizardController < ApplicationController
   end
 
   def set_route
-    route_id = params[:route_id]
-    if "my_group" == route_id
+    @route_id = params[:route_id]
+    if "my_group" == @route_id || "restart" == @route_id
       @route = nil
     else
       @route = Gws::Workflow::Route.find(params[:route_id])
@@ -27,7 +27,7 @@ class Gws::Workflow::WizardController < ApplicationController
   end
 
   def set_item
-    @item = @model.find(params[:id]) #.becomes_with_route
+    @item = @model.find(params[:id])
     @item.attributes = fix_params
   end
 
@@ -41,8 +41,10 @@ class Gws::Workflow::WizardController < ApplicationController
     @item.workflow_user_id = nil
     @item.workflow_state = nil
     @item.workflow_comment = nil
-    @item.workflow_approvers = nil
-    @item.workflow_required_counts = nil
+    if "restart" != @route_id
+      @item.workflow_approvers = nil
+      @item.workflow_required_counts = nil
+    end
 
     if @route.present?
       if @item.apply_workflow?(@route)
@@ -50,8 +52,12 @@ class Gws::Workflow::WizardController < ApplicationController
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
-    else
+    elsif "my_group" == @route_id
       render file: :approver_setting, layout: false
+    elsif "restart" == @route_id
+      render file: "approver_setting_restart", layout: false
+    else
+      raise "404"
     end
   end
 

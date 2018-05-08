@@ -11,12 +11,16 @@ module Workflow::Model::Route
     seqid :id
     field :name, type: String
     field :pull_up, type: String
+    field :on_remand, type: String
     embeds_ids :groups, class_name: "SS::Group"
     field :approvers, type: Workflow::Extensions::Route::Approvers
     field :required_counts, type: Workflow::Extensions::Route::RequiredCounts
-    permit_params :name, :pull_up, group_ids: [], approvers: [ :level, :user_id, :editable ], required_counts: []
+    permit_params :name, :pull_up, :on_remand
+    permit_params group_ids: [], approvers: [ :level, :user_id, :editable ], required_counts: []
 
     validates :name, presence: true, length: { maximum: 40 }
+    validates :pull_up, inclusion: { in: %w(enabled disabled), allow_blank: true }
+    validates :on_remand, inclusion: { in: %w(back_to_init back_to_previous), allow_blank: true }
     validate :validate_approvers_presence
     validate :validate_approvers_consecutiveness
     validate :validate_required_counts
@@ -26,9 +30,12 @@ module Workflow::Model::Route
   end
 
   module ClassMethods
-    def route_options(user)
+    def route_options(user, options = {})
       ret = []
-      ret = [ [ t("my_group"), "my_group" ] ] unless SS.config.workflow.disable_my_group
+      if options[:item].present? && options[:item].workflow_approvers.present?
+        ret << [ I18n.t("workflow.restart_workflow"), "restart" ]
+      end
+      ret << [ t("my_group"), "my_group" ] unless SS.config.workflow.disable_my_group
       group_ids = user.group_ids.to_a
       criteria.and(:group_ids.in => group_ids).each do |route|
         ret << [ route.name, route.id ]
@@ -52,6 +59,10 @@ module Workflow::Model::Route
 
   def pull_up_options
     %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
+  def on_remand_options
+    %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_remand.#{v}"), v] }
   end
 
   def levels

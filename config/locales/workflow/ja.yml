@@ -15,6 +15,7 @@ ja:
     member: ログインメンバー
     empty_route_options: 承認経路が設定されていません。
     request_cancelled_message: 承認申請は申請者によってキャンセルされました。
+    restart_workflow: 再申請
     state:
       request: 申請中
       approve: 承認
@@ -28,6 +29,7 @@ ja:
       approve: 承認
       remand: 差し戻し
       pull_up: 引き上げ承認
+      restart: 再申請
     mail:
       subject:
         request: 承認申請
@@ -48,6 +50,9 @@ ja:
       posted_by:
         member: マイページ投稿
         admin: 管理側投稿
+      on_remand:
+        back_to_init: 最初に戻る
+        back_to_previous: 直前に戻る
     required_count_label:
       all: 全員の承認が必要
       minimum: "%{required_count} 人の承認が必要"
@@ -83,6 +88,7 @@ ja:
         workflow_state: 承認状態
         workflow_comment: 申請コメント
         workflow_pull_up: 引き上げ承認
+        workflow_on_remand: 差し戻し時
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
         approved: 承認日時
@@ -91,6 +97,7 @@ ja:
       workflow/model/route:
         name: 名前
         pull_up: 引き上げ承認
+        on_remand: 差し戻し時
         approvers: 承認者
         required_counts: 必要承認数
         group_ids: グループ
@@ -138,6 +145,10 @@ ja:
         - 承認経路の名前を入力します。
       pull_up:
         - 引き上げ承認の有効、無効を設定します。
+      on_remand:
+        - 差し戻し時の動作を選択します。
+        - 「最初に戻る」は、、差し戻し時、承認を最初からやり直します。これが既定の動作です。
+        - 「直前に戻る」は、差し戻し時、直前のレベルからやり直します。
       approvers:
         - 承認者を選択します。
       required_counts:

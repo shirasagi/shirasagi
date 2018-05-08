@@ -44,6 +44,8 @@ module Member
     Cms::Role.permission :approve_private_member_blogs
     Cms::Role.permission :reroute_other_member_blogs
     Cms::Role.permission :reroute_private_member_blogs
+    Cms::Role.permission :revoke_other_member_blogs
+    Cms::Role.permission :revoke_private_member_blogs
 
     Cms::Role.permission :read_other_member_photos
     Cms::Role.permission :read_private_member_photos

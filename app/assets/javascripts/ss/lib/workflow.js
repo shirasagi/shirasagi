@@ -16,6 +16,12 @@ SS_Workflow = function (el, options) {
     return false;
   });
 
+  $(document).on("click", ".mod-workflow-view .request-cancel", function (e) {
+    pThis.cancelRequest($(this));
+    e.preventDefault();
+    return false;
+  });
+
   this.$el.find(".mod-workflow-approve").insertBefore("#addon-basic");
 
   this.$el.find(".toggle-label").on("click", function (e) {
@@ -92,6 +98,7 @@ SS_Workflow.prototype = {
     uri += "/" + updatetype + "_update";
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
+    var workflow_on_remand = $("#workflow_on_remand").prop("value");
     var redirect_location = this.options.redirect_location;
     var remand_comment = $("#remand_comment").prop("value");
     var forced_update_option;
@@ -107,11 +114,53 @@ SS_Workflow.prototype = {
       data: {
         workflow_comment: workflow_comment,
         workflow_pull_up: workflow_pull_up,
+        workflow_on_remand: workflow_on_remand,
         workflow_approvers: approvers,
         workflow_required_counts: required_counts,
         remand_comment: remand_comment,
         url: this.options.request_url,
         forced_update_option: forced_update_option
+      },
+      success: function (data) {
+        if (data["workflow_alert"]) {
+          alert(data["workflow_alert"]);
+          return;
+        }
+        if (data["workflow_state"] === "approve" && redirect_location !== "") {
+          location.href = redirect_location;
+        } else {
+          location.reload();
+        }
+      },
+      error: function(xhr, status) {
+        try {
+          var errors = $.parseJSON(xhr.responseText);
+          alert(["== Error =="].concat(errors).join("\n"));
+        }
+        catch (ex) {
+          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+        }
+      }
+    });
+  },
+  cancelRequest: function($this) {
+    var confirmation = $this.data('ss-confirmation');
+    if (confirmation) {
+      if (!confirm(confirmation)) {
+        return false;
+      }
+    }
+
+    var method = $this.data('ss-method') || 'post';
+    var action = $this.attr('href');
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+      type: method,
+      url: action,
+      async: false,
+      data: {
+        authenticity_token: csrfToken
       },
       success: function (data) {
         if (data["workflow_alert"]) {

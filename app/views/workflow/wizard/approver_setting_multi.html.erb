@@ -15,6 +15,8 @@
   <dd><%= @route.name %></dd>
   <dt><%= @model.t :workflow_pull_up %></dt>
   <dd><%= @route.label :pull_up %><%= hidden_field :workflow, :pull_up, value: @route.pull_up %></dd>
+  <dt><%= @model.t :workflow_on_remand %></dt>
+  <dd><%= @route.label :on_remand %><%= hidden_field :workflow, :on_remand, value: @route.on_remand %></dd>
   <dt><%= @model.t :workflow_comment %><%= @model.tt :workflow_comment %></dt>
   <dd><%= text_area :workflow, :comment, value: @item.workflow_comment %></dd>
 </dl>

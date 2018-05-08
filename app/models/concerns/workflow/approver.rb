@@ -18,11 +18,12 @@ module Workflow::Approver
     field :workflow_state, type: String
     field :workflow_comment, type: String
     field :workflow_pull_up, type: String
+    field :workflow_on_remand, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
     field :approved, type: DateTime
 
-    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up
+    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
     permit_params :workflow_reset, :workflow_cancel_request
@@ -87,11 +88,11 @@ module Workflow::Approver
     return false if level.nil?
 
     copy = workflow_approvers.to_a
-    targets = copy.select do |workflow_approver|
-      workflow_approver[:level] == level && workflow_approver[:state] == WORKFLOW_STATE_PENDING
-    end
-    targets.each do |workflow_approver|
-      workflow_approver[:state] = WORKFLOW_STATE_REQUEST
+    copy.each do |workflow_approver|
+      if workflow_approver[:level] == level
+        workflow_approver[:state] = WORKFLOW_STATE_REQUEST
+        workflow_approver[:comment] = ''
+      end
     end
 
     # Be careful, partial update is meaningless. We must update entirely.
@@ -184,6 +185,14 @@ module Workflow::Approver
     max_editable_approvers[:editable].to_i > 0
   end
 
+  def workflow_back_to_previous?
+    workflow_on_remand == 'back_to_previous'
+  end
+
+  def workflow_back_to_init?
+    !workflow_back_to_previous?
+  end
+
   private
 
   def reset_workflow
@@ -268,6 +277,10 @@ module Workflow::Approver
 
   def workflow_pull_up_options
     %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
+  def workflow_on_remand_options
+    %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_remand.#{v}"), v] }
   end
 
   module ClassMethods
