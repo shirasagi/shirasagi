@@ -81,9 +81,9 @@ describe "pull_up", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: ''})
+          eq({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
         expect(item.workflow_approvers[1]).to \
-          eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: ''})
+          eq({level: 2, user_id: user2.id, editable: '', state: 'other_pulled_up', comment: ''})
         expect(item.workflow_approvers[2]).to \
           eq({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
 
@@ -137,7 +137,7 @@ describe "pull_up", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: ''})
+          eq({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
         expect(item.workflow_approvers[1]).to \
           eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
         expect(item.workflow_approvers[2]).to \
@@ -198,9 +198,9 @@ describe "pull_up", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: ''})
+          eq({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
         expect(item.workflow_approvers[1]).to \
-          eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: ''})
+          eq({level: 2, user_id: user2.id, editable: '', state: 'other_pulled_up', comment: ''})
         expect(item.workflow_approvers[2]).to \
           eq({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
 
@@ -254,7 +254,7 @@ describe "pull_up", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: ''})
+          eq({level: 1, user_id: user1.id, editable: '', state: 'other_pulled_up', comment: ''})
         expect(item.workflow_approvers[1]).to \
           eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
         expect(item.workflow_approvers[2]).to \

@@ -580,7 +580,8 @@ describe "multi_stage", dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers[0]).to \
           eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
-        expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        expect(item.workflow_approvers[1]).to \
+          eq({level: 1, user_id: user2.id, editable: '', state: 'other_approved', comment: ''})
         expect(item.workflow_approvers[2]).to eq({level: 2, user_id: user3.id, editable: '', state: 'request', comment: ''})
 
         expect(Sys::MailLog.count).to eq 3
@@ -613,7 +614,8 @@ describe "multi_stage", dbscope: :example, js: true do
         expect(item.state).to eq "public"
         expect(item.workflow_approvers[0]).to \
           eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
-        expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        expect(item.workflow_approvers[1]).to \
+          eq({level: 1, user_id: user2.id, editable: '', state: 'other_approved', comment: ''})
         expect(item.workflow_approvers[2]).to \
           eq({level: 2, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
 

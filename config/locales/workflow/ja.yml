@@ -22,6 +22,9 @@ ja:
       pending: 下位承認待ち
       remand: 差し戻し
       cancelled: 申請キャンセル
+      other_approved: 他者承認済
+      other_remanded: 他者差し戻し
+      other_pulled_up: 引き上げ
     buttons:
       select: 選択
       cancel: 取消

@@ -99,9 +99,9 @@ class Gws::Workflow::PagesController < ApplicationController
 
     save_level = @item.workflow_current_level
     if params[:action] == 'pull_up_update'
-      @item.pull_up_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+      @item.pull_up_workflow_approver_state(@cur_user, params[:remand_comment])
     else
-      @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+      @item.approve_workflow_approver_state(@cur_user, params[:remand_comment])
     end
 
     if @item.finish_workflow?
@@ -150,23 +150,7 @@ class Gws::Workflow::PagesController < ApplicationController
   def remand_update
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
-    workflow_level = @item.workflow_current_level
-    @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])
-    if @item.workflow_back_to_init?
-      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
-    elsif workflow_level <= 1
-      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
-    else
-      copy = @item.workflow_approvers.to_a
-      copy.each do |approver|
-        if approver[:level] == workflow_level - 1
-          approver[:state] = @model::WORKFLOW_STATE_REQUEST
-          approver[:comment] = ''
-        end
-      end
-      @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
-    end
-
+    @item.remand_workflow_approver_state(@cur_user, params[:remand_comment])
     if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
@@ -176,7 +160,7 @@ class Gws::Workflow::PagesController < ApplicationController
       if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
         recipients << @item.workflow_user_id
       else
-        prev_level_approvers = @item.workflow_approvers_at(workflow_level - 1)
+        prev_level_approvers = @item.workflow_approvers_at(@item.workflow_current_level)
         recipients += prev_level_approvers.map { |hash| hash[:user_id] }
       end
 
