@@ -6,6 +6,11 @@ $(".file").on("change", function() {
   $(".name").val(name);
   $(".filename").val(name);
 });
+$('#item-form').submit(function(){
+  if($('#item_in_file').val() && $('#item_name').val() && $('#item_basename').val()) {
+    alert(`<%= I18n.t('cms.confirm.check_accessibility_manually') %>`);
+  }
+});
 <% end %>
 
 <%= form_for :item, url: { action: :import }, html: {id: "item-form", method: :post, multipart: true} do |f| %>

@@ -13,7 +13,9 @@ describe "cms_import" do
 
       within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/import/site.zip"
-        click_button "取り込み"
+        page.accept_alert do
+          click_button "取り込み"
+        end
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))
     end

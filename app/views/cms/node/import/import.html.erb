@@ -1,3 +1,10 @@
+<%= jquery do %>
+$('#item-form').submit(function(){
+  if($('#item_in_file').val()) {
+    alert(`<%= I18n.t('cms.confirm.check_accessibility_manually') %>`);
+  }
+});
+<% end %>
 <%= form_for :item, url: { action: :import }, html: {id: "item-form", method: :post, multipart: true} do |f| %>
   <%= error_messages_for :item %>
 
