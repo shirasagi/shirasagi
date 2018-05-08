@@ -2,7 +2,7 @@
 
 return render(text: "") if @item.backups.size == 0
 source = ERB::Util.url_encode(request.path)
-before = @item.before_backup || @item.backups.last if @item.backups.present?
+before = @item.before_backup || @item.backups.last
 
 %>
 <dl class="see mod-history-backup">
