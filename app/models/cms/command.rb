@@ -19,8 +19,13 @@ class Cms::Command
 
   default_scope -> { order_by(order: 1, name: 1) }
 
+  def command_enabled?
+    return false if SS.config.cms.command.blank?
+    SS.config.cms.command['disable'].blank?
+  end
+
   def commands_path
-    SS.config.cms.commands_path.collect do |path|
+    SS.config.cms.command['path'].collect do |path|
       [Rails.root, path].join('/')
     end
   end
@@ -37,6 +42,11 @@ class Cms::Command
     self.update
   end
 
+  def allowed?(action, user, opts = {})
+    return false unless command_enabled?
+    super
+  end
+
   class << self
     def search(params = {})
       criteria = self.where({})
@@ -49,6 +59,11 @@ class Cms::Command
         criteria = criteria.keyword_in params[:keyword], :name, :html
       end
       criteria
+    end
+
+    def allow(action, user, opts = {})
+      return false unless self.new.command_enabled?
+      super
     end
   end
 end
