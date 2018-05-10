@@ -63,6 +63,7 @@ ja:
     view_page: 公開画面
     view_site: サイト確認
     word_dictionary: 単語置換辞書
+    form_not_selected: 定型フォームが選択されていません
 
     adobe_reader:
       remark:

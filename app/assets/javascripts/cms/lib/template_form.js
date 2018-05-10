@@ -1,37 +1,69 @@
 Cms_TemplateForm = function(options) {
   this.options = options;
+  this.$formChangeBtn = $('#addon-basic .btn-form-change');
+  this.$formSelect = $('#addon-basic select[name="item[form_id]"]');
   this.$formPage = $('#addon-cms-agents-addons-form-page');
   this.$formPageBody = this.$formPage.find('.addon-body');
+  this.selectedFormId = null;
+};
+
+Cms_TemplateForm.instance = null;
+
+Cms_TemplateForm.render = function(options) {
+  if (Cms_TemplateForm.instance) {
+    return;
+  }
+
+  var instance = new Cms_TemplateForm(options);
+  instance.render();
+  Cms_TemplateForm.instance = instance;
 };
 
 Cms_TemplateForm.prototype = {
   render: function() {
-    var $select = $('#addon-basic select[name="item[form_id]"]');
+    this.changeForm();
+
     var pThis = this;
-
-    $('#addon-basic .btn-form-change').on('click', function() {
-      pThis.changeForm($select.val());
+    this.$formChangeBtn.on('click', function() {
+      pThis.changeForm();
     });
-
-    if ($select.val()) {
-      this.activateForm();
+  },
+  changeForm: function() {
+    var formId = this.$formSelect.val();
+    if (formId) {
+      if (!this.selectedFormId || this.selectedFormId !== formId) {
+        this.loadAndActivateForm(formId);
+        this.selectedFormId = formId;
+      } else {
+        this.activateForm();
+      }
     } else {
       this.deactivateForm();
     }
   },
-  changeForm: function(formId) {
-    var param = this.options.params;
-    if (!param) {
-      param = {};
-    }
+  loadAndActivateForm: function(formId) {
+    var pThis = this;
 
-    if (formId) {
-      param.form_id = formId;
-    } else {
-      param.form_id = '';
-    }
-
-    location.href = this.options.url + '?' + $.param(param);
+    this.$formChangeBtn.attr('disabled', true);
+    $.ajax({
+      url: this.options.formUrlTemplate.replace(':id', formId),
+      type: 'GET',
+      success: function(html) {
+        pThis.loadForm(html);
+        pThis.activateForm();
+      },
+      error: function(xhr, status, error) {
+        pThis.showError(error);
+        pThis.activateForm();
+      },
+      complete: function() {
+        pThis.$formChangeBtn.attr('disabled', false);
+      }
+    });
+  },
+  loadForm: function(html) {
+    this.$formPage.html($(html).html());
+    SS.render();
   },
   showError: function(msg) {
     this.$formPageBody.html('<p>' + msg + '</p>');
