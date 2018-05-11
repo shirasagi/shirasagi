@@ -15,12 +15,15 @@ class Cms::Node::CommandController < ApplicationController
 
     return if request.get?
 
-    @output = []
-    @model.site(@cur_site).allow(:use, @cur_user, site: @cur_site).each do |command|
+    output = []
+    @model.site(@cur_site).allow(:use, @cur_user, site: @cur_site).order_by(order: 1, id: 1).each do |command|
       command.run(@target, @target_path)
-      @output << command.output
+      output << command.output
     end
-    @output = @output.join("\n")
-    render
+    output = output.join("\n")
+    respond_to do |format|
+      format.html { redirect_to({ action: :command, result: output }, { notice: t('ss.notice.run') }) }
+      format.json { head :no_content }
+    end
   end
 end

@@ -53,7 +53,9 @@ SS::Application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     get "generate" => "generate#index"
     post "generate" => "generate#run"
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :command, :opendata_ref, :contains_urls, :tag]
+    resources :pages, concerns: [
+      :deletion, :copy, :move, :lock, :download, :import, :command, :opendata_ref, :contains_urls, :tag
+    ]
   end
 
   content "article" do

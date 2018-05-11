@@ -79,7 +79,7 @@ SS::Application.routes.draw do
     resources :members, concerns: [:deletion, :download]
     resources :contents, path: "contents/(:mod)"
 
-    resources :nodes, concerns: :deletion do
+    resources :nodes, concerns: [:deletion, :command] do
       get :routes, on: :collection
     end
 
@@ -196,7 +196,7 @@ SS::Application.routes.draw do
     post "command" => "command#command"
     get "copy_nodes" => "copy_nodes#index", as: :copy
     post "copy_nodes" => "copy_nodes#run"
-    resource :conf, concerns: [:copy, :move] do
+    resource :conf, concerns: [:copy, :move, :command] do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion

@@ -84,4 +84,31 @@ module Cms::NodeFilter
       render_update @item.move(destination), location: location, render: { file: :move }
     end
   end
+
+  def command
+    set_item rescue nil
+    if @item.blank?
+      head :no_content
+      return
+    end
+
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node)
+
+    @target = 'folder'
+    @target_path = @item.path
+
+    return if request.get?
+
+    output = []
+    Cms::Command.site(@cur_site).allow(:use, @cur_user, site: @cur_site).order_by(order: 1, id: 1).each do |command|
+      command.run(@target, @target_path)
+      output << command.output
+    end
+    output = output.join("\n")
+    respond_to do |format|
+      format.html { redirect_to({ action: :command, result: output }, { notice: t('ss.notice.run') }) }
+      format.json { head :no_content }
+    end
+  end
 end

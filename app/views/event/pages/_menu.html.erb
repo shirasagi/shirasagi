@@ -29,7 +29,7 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
     <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% if @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node) %>
       <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
         <%= link_to(t('ss.links.command'), { action: :command, id: @item }, class: :command) rescue nil %>
       <% end %>

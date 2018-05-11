@@ -20,6 +20,14 @@ class Cms::CommandSettingsController < ApplicationController
 
   public
 
+  def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    set_items
+    @items = @items.search(params[:s])
+      .order_by(order: 1, id: 1)
+      .page(params[:page]).per(50)
+  end
+
   def update
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
@@ -32,6 +40,6 @@ class Cms::CommandSettingsController < ApplicationController
     raise "403" unless @model.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node)
     @target = 'site'
     @target_path = @cur_site.path
-    render_update @item.run(@target, @target_path)
+    render_update @item.run(@target, @target_path), notice: t("ss.notice.run")
   end
 end
