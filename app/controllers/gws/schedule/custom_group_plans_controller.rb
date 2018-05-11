@@ -23,7 +23,7 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
 
   def set_users
     @users = @group.sorted_members.select do |u|
-      u.readable?(@cur_user, site: @cur_site, permission: false)
+      u.readable_user?(@cur_user, site: @cur_site)
     end
   end
 

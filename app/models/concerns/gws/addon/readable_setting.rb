@@ -24,7 +24,7 @@ module Gws::Addon::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
-      return none if opts[:permission] != false && !self.allowed?(:read, user, opts)
+      return none unless self.allowed?(:read, user, opts)
       or_conds = readable_conditions(user, opts)
       where("$and" => [{ "$or" => or_conds }])
     }
@@ -38,8 +38,9 @@ module Gws::Addon::ReadableSetting
   end
 
   def readable?(user, opts = {})
+    return false unless self.class.allowed?(:read, user, opts)
+
     opts[:site] ||= self.site
-    return false if opts[:permission] != false && !self.class.allowed?(:read, user, opts)
     return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)

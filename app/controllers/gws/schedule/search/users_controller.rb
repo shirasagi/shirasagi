@@ -20,7 +20,7 @@ class Gws::Schedule::Search::UsersController < ApplicationController
     return if params.dig(:s, :keyword).blank?
 
     @items = Gws::User.site(@cur_site).active.
-      readable(@cur_user, site: @cur_site, permission: false).
+      readable_users(@cur_user, site: @cur_site).
       search(params[:s]).
       order_by_title(@cur_site)
   end
