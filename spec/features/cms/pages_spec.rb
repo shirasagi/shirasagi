@@ -231,12 +231,4 @@ describe "cms_pages" do
       end
     end
   end
-
-  def fill_in_ckeditor(locator, opts)
-    content = opts.fetch(:with).to_json
-    page.execute_script <<-SCRIPT
-      $('textarea##{locator}').text(#{content});
-      CKEDITOR.instances['#{locator}'].setData(#{content});
-    SCRIPT
-  end
 end
