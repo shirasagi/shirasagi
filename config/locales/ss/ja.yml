@@ -142,6 +142,7 @@ ja:
       initialize: 初期化してよろしいですか？
       restore: 元に戻してよろしいですか？
       move: 移動してよろしいですか？
+      send: 送信してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。

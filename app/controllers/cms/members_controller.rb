@@ -42,6 +42,9 @@ class Cms::MembersController < ApplicationController
   end
 
   def verify
+    raise '404' unless @node = Member::Node::Registration.first
+    return if request.get?
+
     Member::Mailer.verification_mail(@item).deliver_now
     @item.verify_mail_sent = Time.zone.now.to_i
     render_update @item.update, notice: I18n.t('ss.notice.sent')

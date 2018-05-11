@@ -1,0 +1,31 @@
+<%
+  text = []
+  text << @node.reply_upper_text
+  text << "#{@node.full_url}verify?#{ { token: @item.verification_token }.to_query }"
+  text << @node.reply_lower_text
+  text << @node.reply_signature
+  text = text.join("\n\n")
+%>
+<%= form_for :item, url: { action: :verify }, html: { method: :verify, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t("ss.confirm.send") %></h2></div>
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @node.t :subject %></dt>
+        <dd><%= @node.subject %></dd>
+
+        <dt><%= t('modules.addons.ss/body') %></dt>
+        <dd><%= text_area_tag :name, text, readonly: true %></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("ss.buttons.send"), class: 'btn-primary send' %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+<% end %>

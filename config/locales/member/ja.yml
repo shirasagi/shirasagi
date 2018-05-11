@@ -342,7 +342,6 @@ ja:
         %{sender_email} からメールが届きます。
         迷惑メールの防止のためメールの受信設定を行っている方は、「 %{sender_domain} 」からのメールが受信できるように、ドメイン指定受信の設定を行ってください。
       notify_email_address_html: |-
-        <h2>メールアドレスの確認</h2>
         管理者による確認後、%{sender_email} から登録案内メールを %{email} に送信します。
         メールに記載の案内を読み、登録を完了してください。
       verify_email_address_html: |-
