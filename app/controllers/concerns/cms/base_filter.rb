@@ -47,7 +47,6 @@ module Cms::BaseFilter
         controller: params[:controller], action: 'login',
         cur_site: @cur_site, cur_user: @cur_user, item: @cur_site
       ) rescue nil
-
       Time.zone.now.to_i
     end
 
