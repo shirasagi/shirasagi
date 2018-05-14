@@ -81,6 +81,20 @@ module Gws::Addon::ReadableSetting
     I18n.t("gws.options.readable_setting_range.#{val}")
   end
 
+  def overall_readers
+    case readable_setting_range
+    when 'public'
+      Gws::User.all
+    when 'select'
+      user_ids = readable_members.pluck(:id)
+      user_ids += Gws::User.in(group_ids: readable_groups.active.pluck(:id)).pluck(:id)
+      user_ids.uniq!
+      Gws::User.in(id: user_ids)
+    else # private
+      Gws::User.none
+    end
+  end
+
   private
 
   def apply_readable_setting_range
