@@ -33,4 +33,33 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context 'when notification_noticed was cleared' do
+    let!(:item) do
+      create(
+        :gws_notice, cur_site: site,
+        message_notification: 'enabled', email_notification: 'enabled',
+        notification_noticed: Time.zone.now - 1.day
+      )
+    end
+
+    it do
+      expect(item.notification_noticed).not_to be_nil
+
+      visit index_path
+      click_on item.name
+      click_on I18n.t('ss.links.edit')
+
+      within 'form#item-form' do
+        click_on I18n.t('ss.buttons.clear')
+        click_on I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      expect(Gws::Notice.all.count).to eq 1
+      Gws::Notice.all.first.tap do |item|
+        expect(item.notification_noticed).to be_nil
+      end
+    end
+  end
 end
