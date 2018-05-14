@@ -5,6 +5,7 @@ module Cms::Addon::Form::Page
   included do
     belongs_to :form, class_name: 'Cms::Form'
     embeds_many :column_values, class_name: 'Cms::Column::Value::Base', cascade_callbacks: true
+    field :column_values_updated, type: DateTime
 
     permit_params :form_id
 
@@ -20,26 +21,35 @@ module Cms::Addon::Form::Page
   def update_column_values(new_values)
     column_values = self.column_values.to_a.dup
 
+    changes = false
     new_values.each do |new_value|
       old = column_values.find { |column_value| column_value.column_id == new_value.column_id }
       if old.present?
         if old.class == new_value.class
-          old.update_value(new_value)
+          if old.update_value(new_value)
+            changes = true
+          end
         else
           column_values.delete_if { |column_value| column_value.column_id == new_value.column_id }
           column_values << new_value
+          changes = true
         end
       else
         column_values << new_value
+        changes = true
       end
     end
 
     column_ids = new_values.map(&:column_id)
     column_values = column_values.delete_if do |column_value|
-      !column_ids.include?(column_value.column_id)
+      unincludes = !column_ids.include?(column_value.column_id)
+      changes = true if unincludes
+      unincludes
     end
 
     self.column_values = column_values
+    # to create history record, timestamp field must be updated
+    self.column_values_updated = Time.zone.now if changes
   end
 
   def validate_column_values
