@@ -12,6 +12,7 @@ module Cms::BaseFilter
     before_action :validate_cms
     before_action :set_cms_assets
     before_action :set_site
+    before_action :set_cms_logged_in, if: ->{ @cur_user }
     before_action :validate_service, if: ->{ SS.config.service.cms_limitation.present? }
     before_action :set_node
     before_action :set_group, if: ->{ @cur_user }
@@ -34,6 +35,22 @@ module Cms::BaseFilter
     @cur_site = Cms::Site.find id: params[:site]
     request.env["ss.site"] = @cur_site
     @crumbs << [@cur_site.name, cms_contents_path]
+  end
+
+  def set_cms_logged_in
+    cms_session = session[:cms]
+    cms_session ||= {}
+    cms_session[@cur_site.id.to_s] ||= {}
+    cms_session[@cur_site.id.to_s]['last_logged_in'] ||= begin
+      self.class.log_class.create_log!(
+        request, response,
+        controller: params[:controller], action: 'login',
+        cur_site: @cur_site, cur_user: @cur_user, item: @cur_site
+      ) rescue nil
+      Time.zone.now.to_i
+    end
+
+    session[:cms] = cms_session
   end
 
   def validate_service

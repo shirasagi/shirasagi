@@ -18,18 +18,19 @@ describe "history_cms_logs" do
     it "#index" do
       visit index_path
       expect(current_path).to eq index_path
-      expect(page).to have_css('.list-item', count: 5)
+      expect(page).to have_css('.list-item', count: 6)
 
       click_on 'ダウンロード'
       click_on 'ダウンロード'
 
-      expect(page).to have_content('Date,User,Target,Action,URL')
+      expect(page).to have_content('操作日時,ユーザー,モデル名,アクション,URL,セッションID,リクエストID')
+      expect(page).to have_content(",login,#{index_path}")
       expect(page).to have_content(',create,/path/to/')
 
       visit index_path
       click_on '削除する'
       click_on '削除'
-      expect(page).to have_css('.list-item', count: 6)
+      expect(page).to have_css('.list-item', count: 7)
 
       visit index_path
       click_on '削除する'

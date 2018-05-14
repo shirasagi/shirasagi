@@ -1,7 +1,6 @@
 <div class="index">
   <ul class="list-items">
     <% @items.each do |item| %>
-    <% name = item.try(:name) || item.try(:title) || "##{item.id}" %>
     <li class="list-item">
       <div class="info">
         <h3 class="title"><%= item.target_label %> : <%= item.action %></h3>

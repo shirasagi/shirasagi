@@ -61,7 +61,10 @@ class History::Log
     def create_controller_log!(request, response, options)
       return if request.get?
       return if response.code !~ /^3/
+      create_log!(request, response, options)
+    end
 
+    def create_log!(request, response, options)
       log              = new
       log.session_id   = request.session.id
       log.request_id   = request.uuid
