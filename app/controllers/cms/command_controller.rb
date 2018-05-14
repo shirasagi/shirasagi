@@ -9,19 +9,17 @@ class Cms::CommandController < ApplicationController
   def command
     raise "403" unless @model.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node)
 
+    @commands = @model.site(@cur_site).allow(:use, @cur_user, site: @cur_site).order_by(order: 1, id: 1)
     @target = 'site'
     @target_path = @cur_site.path
 
     return if request.get?
 
-    output = []
-    @model.site(@cur_site).allow(:use, @cur_user, site: @cur_site).order_by(order: 1, id: 1).each do |command|
+    @commands.each do |command|
       command.run(@target, @target_path)
-      output << command.output
     end
-    output = output.join("\n")
     respond_to do |format|
-      format.html { redirect_to({ action: :command, result: output }, { notice: t('ss.notice.run') }) }
+      format.html { redirect_to({ action: :command }, { notice: t('ss.notice.run') }) }
       format.json { head :no_content }
     end
   end

@@ -12,7 +12,7 @@
       <dd><%= @target_path %></dd>
 
       <dt><%= @model.t :output %><%= @model.tt :output %></dt>
-      <dd><%= text_area_tag 'item[output]', params[:result].to_s, readonly: true %></dd>
+      <dd><%= text_area_tag 'item[output]', @commands.pluck(:output).join("\n"), readonly: true %></dd>
     </dl>
   </section>
 

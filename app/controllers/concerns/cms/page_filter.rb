@@ -156,19 +156,17 @@ module Cms::PageFilter
     raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
     raise "403" unless Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node)
 
+    @commands = Cms::Command.site(@cur_site).allow(:use, @cur_user, site: @cur_site).order_by(order: 1, id: 1)
     @target = 'page'
     @target_path = @item.path
 
     return if request.get?
 
-    output = []
-    Cms::Command.site(@cur_site).allow(:use, @cur_user, site: @cur_site).order_by(order: 1, id: 1).each do |command|
+    @commands.each do |command|
       command.run(@target, @target_path)
-      output << command.output
     end
-    output = output.join("\n")
     respond_to do |format|
-      format.html { redirect_to({ action: :command, result: output }, { notice: t('ss.notice.run') }) }
+      format.html { redirect_to({ action: :command }, { notice: t('ss.notice.run') }) }
       format.json { head :no_content }
     end
   end
