@@ -27,7 +27,6 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('gws/reminder.buttons.register_reminder')
       end
       expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
-      puts Gws::Reminder.all.count
       expect(Gws::Reminder.where(item_id: item.id).count).to eq 1
     end
   end
