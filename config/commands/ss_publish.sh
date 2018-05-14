@@ -1,4 +1,17 @@
 #!/bin/sh
+#
+# ss_publish.sh
+#
+# Description:
+#   第二引数(PAR_PATH)のフォルダ、ファイルを転送するスクリプト
+#   第一引数(PAR_CMD)が page ならば scp を使用する
+#   第一引数が site, folder ならば rsync を使用する
+#
+# Usage:
+#   ss_publish.sh site /var/www/shirasagi/public/sites/w/w/w/_
+#   ss_publish.sh page /var/www/shirasagi/public/sites/w/w/w/_/docs/page1.html
+#
+##############################################################################
 
 PATH=$PATH:/usr/bin:/bin
 PAR_CMD=${1:-"site"}
