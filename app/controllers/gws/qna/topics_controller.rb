@@ -36,7 +36,7 @@ class Gws::Qna::TopicsController < ApplicationController
     elsif @mode == 'trash'
       @item.allowed?(:trash, @cur_user, site: @cur_site) && @item.deleted.present?
     else
-      @item.readable?(@cur_user) && @item.deleted.blank?
+      (@item.allowed?(:read, @cur_user, site: @cur_site) || @item.readable?(@cur_user)) && @item.deleted.blank?
     end
   end
 
