@@ -1,12 +1,25 @@
 class Gws::Column::DateField < Gws::Column::Base
 
+  field :input_type, type: String
   field :place_holder, type: String
-  permit_params :place_holder, :html_tag, :html_additional_attr
+  permit_params :input_type, :place_holder, :html_tag, :html_additional_attr
+
+  def input_type_options
+    %w(date datetime).map do |v|
+      [ I18n.t("gws/column.options.date_input_type.#{v}"), v ]
+    end
+  end
 
   def form_options
     options = {}
     options['placeholder'] = place_holder if place_holder.present?
-    options['class'] = %w(date js-date)
+
+    if input_type == "datetime"
+      options['class'] = %w(datetime js-datetime)
+    else
+      options['class'] = %w(date js-date)
+    end
+
     options
   end
 

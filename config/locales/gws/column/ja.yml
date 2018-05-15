@@ -5,6 +5,9 @@ ja:
         text: テキスト
         email: メールアドレス
         tel: 電話番号
+      date_input_type:
+        date: 日付のみ
+        datetime: 日付＋時間
       minus_type:
         normal: "-"
         filled_triangle: "▲"
@@ -54,6 +57,8 @@ ja:
         place_holder: プレースホルダー
       gws/column/text_field:
         input_type: 種類
+      gws/column/date_field:
+        input_type: 種類
       gws/column/file_upload:
         upload_file_count: アップロードファイル数
       gws/column/number_field:
@@ -90,6 +95,10 @@ ja:
       input_type:
         - 種類を選択します。
         - 一部の種類は、最近のブラウザでしかサポートされていません。
+
+    gws/column/date_field:
+      input_type:
+        - 種類を選択します。
 
     gws/column/number_field:
       min_decimal:

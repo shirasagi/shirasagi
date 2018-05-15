@@ -1,4 +1,7 @@
 <dl class="see mod-gws-column-date_field">
+  <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
+  <dd><%= f.select :input_type, @item.input_type_options %></dd>
+
   <dt><%= @model.t :place_holder %><%= @model.tt :place_holder %></dt>
   <dd><%= f.text_field :place_holder %></dd>
 </dl>
