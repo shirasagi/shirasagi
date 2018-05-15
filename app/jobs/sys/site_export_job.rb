@@ -22,6 +22,8 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_groups
     invoke :export_cms_users
     invoke :export_cms_roles
+    invoke :export_cms_forms
+    invoke :export_cms_columns
     invoke :export_cms_layouts
     invoke :export_cms_body_layouts
     invoke :export_cms_nodes
@@ -78,6 +80,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     scope ||= model.site(@src_site)
     scope.pluck(:id).each do |id|
       item = model.unscoped.find(id)
+      item = item.becomes_with_route || item rescue item
       yield(item) if block_given?
       json.write(item.to_json)
       store_file_ids(item)
@@ -92,6 +95,12 @@ class Sys::SiteExportJob < SS::ApplicationJob
     @ss_file_ids << item[:file_id] if item[:file_id].present?
     @ss_file_ids << item[:tsv_id] if item[:tsv_id].present?
     @ss_file_ids << item[:icon_id] if item[:icon_id].present?
+    if item[:column_values].present?
+      item.column_values.each do |column_value|
+        next if column_value.class_name != 'Cms::Column::Value::FileUpload'
+        @ss_file_ids << column_value.file_id
+      end
+    end
   end
 
   def export_version
@@ -126,6 +135,16 @@ class Sys::SiteExportJob < SS::ApplicationJob
     json.close
   end
 
+  def export_cms_forms
+    export_documents "cms_forms", Cms::Form
+  end
+
+  def export_cms_columns
+    export_documents "cms_columns", Cms::Column::Base do |item|
+      item.class_name = item._type
+    end
+  end
+
   def export_cms_layouts
     export_documents "cms_layouts", Cms::Layout
   end
@@ -148,6 +167,12 @@ class Sys::SiteExportJob < SS::ApplicationJob
       @ss_file_ids += item[:resources].map { |m| m[:file_id] } if item[:resources].present?
       @ss_file_ids += item[:url_resources].map { |m| m[:file_id] } if item[:url_resources].present?
       @ss_file_ids += item[:appfiles].map { |m| m[:file_id] } if item[:appfiles].present?
+
+      if item[:column_values].present?
+        item.column_values.each do |column_value|
+          column_value.class_name = column_value._type
+        end
+      end
     end
   end
 
