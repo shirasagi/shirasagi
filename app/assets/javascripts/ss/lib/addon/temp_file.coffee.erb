@@ -38,6 +38,8 @@ class @SS_Addon_TempFile
         token = $('meta[name="csrf-token"]').attr('content')
         formData = new FormData()
         formData.append('authenticity_token', token)
+        if $('#file-resizing').val()
+          formData.append('item[resizing]', $('#file-resizing').val())
         files = e.originalEvent.dataTransfer.files
         return false if files.length == 0
 
