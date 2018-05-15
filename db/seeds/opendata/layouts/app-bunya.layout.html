@@ -12,31 +12,31 @@
 <div id="page">
   <header id="head">
     <div class="wrap">
-      </ part "tab" />
+      {{ part "tab" }}
       <div class="login">
-        </ part "mypage-login" />
+        {{ part "mypage-login" }}
       </div>
     </div>
   </header>
-  </ part "app-head" />
+  {{ part "app-head" }}
 
   <div id="wrap">
-    </ part "crumbs" />
+    {{ part "crumbs" }}
     <div id="main">
       <header id="page-name"><h1>#{page_name}</h1></header>
-      </ yield />
+      {{ yield }}
     </div>
     <div id="side">
       <section id="dataset-attention">
-        </ part "dataset-attention" />
+        {{ part "dataset-attention" }}
       </section>
       <section id="idea-attention">
-        </ part "idea-attention" />
+        {{ part "idea-attention" }}
       </section>
     </div>
   </div>
 
-  </ part "foot" />
+  {{ part "foot" }}
 
 </div>
 </body>

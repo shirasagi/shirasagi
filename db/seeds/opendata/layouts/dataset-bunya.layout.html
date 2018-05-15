@@ -12,35 +12,35 @@
 <div id="page">
   <header id="head">
     <div class="wrap">
-      </ part "tab" />
+      {{ part "tab" }}
       <div class="login">
-        </ part "mypage-login" />
+        {{ part "mypage-login" }}
       </div>
     </div>
   </header>
-  </ part "dataset-head" />
+  {{ part "dataset-head" }}
 
   <div id="wrap">
-    </ part "crumbs" />
+    {{ part "crumbs" }}
     <div id="main">
       <header id="page-name"><h1>#{page_name}</h1></header>
-      </ yield />
+      {{ yield }}
     </div>
     <div id="side">
       <section id="search-group">
         <header><h1 id="od-searchgroup-name">グループ</h1></header>
-        </ part "dataset-group" />
+        {{ part "dataset-group" }}
       </section>
       <section id="app-attention">
-        </ part "app-attention" />
+        {{ part "app-attention" }}
       </section>
       <section id="idea-attention">
-        </ part "idea-attention" />
+        {{ part "idea-attention" }}
       </section>
     </div>
   </div>
 
-  </ part "foot" />
+  {{ part "foot" }}
 
 </div>
 </body>

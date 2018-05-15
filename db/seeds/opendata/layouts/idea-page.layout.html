@@ -12,23 +12,23 @@
 <div id="page">
   <header id="head">
     <div class="wrap">
-      </ part "tab" />
+      {{ part "tab" }}
       <div class="login">
-        </ part "mypage-login" />
+        {{ part "mypage-login" }}
       </div>
     </div>
   </header>
-  </ part "idea-head" />
+  {{ part "idea-head" }}
 
   <div id="wrap" class="one">
-    </ part "crumbs" />
+    {{ part "crumbs" }}
     <div id="main">
-      </ part "sns-share" />
-      </ yield />
+      {{ part "sns-share" }}
+      {{ yield }}
     </div>
   </div>
 
-  </ part "foot" />
+  {{ part "foot" }}
 
 </div>
 </body>
