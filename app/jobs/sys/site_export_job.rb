@@ -113,9 +113,9 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_cms_groups
-    items = @src_site.groups.only(:id, :name).entries
+    items = @src_site.groups.entries
     @src_site.groups.each do |g|
-      items += g.descendants.only(:id, :name).entries
+      items += g.descendants.entries
     end
     write_json "cms_groups", items.to_json
   end
@@ -123,7 +123,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   def export_cms_users
     json = open_json("cms_users")
     Cms::User.unscoped.site(@src_site, state: 'all').pluck(:id).each do |id|
-      json.write Cms::User.unscoped.only(:uid, :email, :cms_role_ids).find(id).to_json
+      json.write Cms::User.unscoped.find(id).to_json
     end
     json.close
   end

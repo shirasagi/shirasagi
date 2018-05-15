@@ -196,11 +196,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_groups
-    @cms_groups_map = {}
-
-    read_json("cms_groups").each do |data|
-      @cms_groups_map[data['_id']] = Cms::Group.unscoped.where(name: data['name']).first.try(:id)
-    end
+    @task.log("- import cms_groups")
+    @cms_groups_map = import_documents "cms_groups", Cms::Group, %w(name)
   end
 
   def import_cms_users
@@ -209,8 +206,14 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     read_json("cms_users").each do |data|
       keyword = data['uid'].presence || data['email']
-      @cms_users_map[data['_id']] = Cms::User.unscoped.flex_find(keyword).try(:id)
-      @cms_user_roles_map[data['_id']] = data['cms_role_ids']
+      id   = data.delete('_id')
+      data = convert_data(data)
+      item = Cms::User.unscoped.flex_find(keyword) || Cms::User.new
+      data.each { |k, v| item[k] = v }
+      if save_document(item)
+        @cms_users_map[id] = item.id
+        @cms_user_roles_map[id] = data['cms_role_ids']
+      end
     end
   end
 
