@@ -7,9 +7,14 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :command do
+    get :command, on: :member
+    post :command, on: :member
+  end
+
   content "ezine" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: :deletion do
+    resources :pages, concerns: [:deletion, :command] do
       get :delivery_confirmation, on: :member
       get :delivery_test_confirmation, on: :member
       get :sent_logs, on: :member
@@ -24,7 +29,7 @@ SS::Application.routes.draw do
     resources :columns, concerns: :deletion
     resources :backnumbers, concerns: :deletion
 
-    resources :member_pages, module: :member_page, controller: :main, concerns: :deletion do
+    resources :member_pages, module: :member_page, controller: :main, concerns: [:deletion, :command] do
       get :delivery_confirmation, on: :member
       get :delivery_test_confirmation, on: :member
       get :sent_logs, on: :member

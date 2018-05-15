@@ -7,8 +7,13 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :command do
+    get :command, on: :member
+    post :command, on: :member
+  end
+
   content "opendata" do
-    resources :ideas, concerns: :deletion, module: :idea do
+    resources :ideas, concerns: [:deletion, :command], module: :idea do
       resources :comments, concerns: :deletion
     end
     resources :idea_categories, concerns: :deletion, module: :idea

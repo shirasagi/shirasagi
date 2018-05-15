@@ -1,0 +1,29 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :description %></dt>
+  <dd><%= @item.description %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :command %></dt>
+  <dd><%= @item.command %></dd>
+
+  <dt><%= @model.t :target %></dt>
+  <dd><%= @target %></dd>
+
+  <dt><%= @model.t :path %></dt>
+  <dd><%= @target_path %></dd>
+
+  <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site) %>
+    <% if @item.output.present? %>
+      <dt><%= @model.t :output %></dt>
+      <dd><%= text_area_tag 'item[output]', @item.output, readonly: true %></dd>
+    <% end %>
+
+    <dt></dt>
+    <dd><%= button_to I18n.t('ss.buttons.run'), { action: :run }, class: 'btn' %></dd>
+  <% end %>
+</dl>

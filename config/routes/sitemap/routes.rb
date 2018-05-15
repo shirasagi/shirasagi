@@ -14,9 +14,14 @@ SS::Application.routes.draw do
     put :copy, :on => :member
   end
 
+  concern :command do
+    get :command, on: :member
+    post :command, on: :member
+  end
+
   content "sitemap" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud] do
+    resources :pages, concerns: [:deletion, :crud, :command] do
       get :export_urls, on: :collection
     end
   end

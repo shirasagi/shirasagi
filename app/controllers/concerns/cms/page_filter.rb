@@ -146,6 +146,31 @@ module Cms::PageFilter
     render_update @copy.save, location: { action: :index }, render: { file: :copy }
   end
 
+  def command
+    set_item rescue nil
+    if @item.blank?
+      head :no_content
+      return
+    end
+
+    raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node)
+
+    @commands = Cms::Command.site(@cur_site).allow(:use, @cur_user, site: @cur_site).order_by(order: 1, id: 1)
+    @target = 'page'
+    @target_path = @item.path
+
+    return if request.get?
+
+    @commands.each do |command|
+      command.run(@target, @target_path)
+    end
+    respond_to do |format|
+      format.html { redirect_to({ action: :command }, { notice: t('ss.notice.run') }) }
+      format.json { head :no_content }
+    end
+  end
+
   def contains_urls
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render

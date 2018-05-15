@@ -33,6 +33,10 @@ module Cms
     Cms::Role.permission :read_cms_body_layouts
     Cms::Role.permission :edit_cms_body_layouts
     Cms::Role.permission :delete_cms_body_layouts
+    Cms::Role.permission :read_cms_commands
+    Cms::Role.permission :edit_cms_commands
+    Cms::Role.permission :delete_cms_commands
+    Cms::Role.permission :use_cms_commands
     Cms::Role.permission :use_cms_tools
     Cms::Role.permission :use_cms_editor_extensions
     Cms::Role.permission :read_other_cms_nodes

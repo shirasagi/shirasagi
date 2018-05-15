@@ -1,0 +1,23 @@
+<%= form_for :item, url: { action: :command }, html: {id: "item-form", method: :post, multipart: true} do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t :"cms.command" %></h2></header>
+
+    <dl class="see">
+      <dt><%= @model.t :target %></dt>
+      <dd><%= @target %></dd>
+
+      <dt><%= @model.t :path %></dt>
+      <dd><%= @target_path %></dd>
+
+      <dt><%= @model.t :output %><%= @model.tt :output %></dt>
+      <dd><%= text_area_tag 'item[output]', @commands.pluck(:output).join("\n"), readonly: true %></dd>
+    </dl>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.run"), class: :save %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{contents_path(@cur_node)}'; return false;" %>
+  </footer>
+<% end %>
