@@ -10,14 +10,18 @@ module Inquiry::Addon
       field :required_in_select_form, type: Array
       field :additional_attr, type: String, default: ""
       field :input_confirm, type: String, default: ""
+      field :question, type: String, default: 'disabled'
       field :max_upload_file_size, type: Integer, default: 0
       field :transfers, type: Array
       permit_params :input_type, :required, :additional_attr
-      permit_params :select_options, :input_confirm, :max_upload_file_size
+      permit_params :select_options, :input_confirm, :question, :max_upload_file_size
       permit_params required_in_select_form: []
 
       validates :input_type, presence: true, inclusion: {
         in: %w(text_field text_area email_field radio_button select check_box upload_file form_select)
+      }
+      validates :question, presence: true, inclusion: {
+        in: %w(enabled disabled)
       }
       validate :validate_input_type_upload_file
       validate :validate_select_options
@@ -48,6 +52,12 @@ module Inquiry::Addon
         [I18n.t('inquiry.options.input_confirm.disabled'), 'disabled'],
         [I18n.t('inquiry.options.input_confirm.enabled'), 'enabled'],
       ]
+    end
+
+    def question_options
+      %w(disabled enabled).map do |v|
+        [ I18n.t("ss.options.state.#{v}"), v ]
+      end
     end
 
     # def max_upload_file_size_options

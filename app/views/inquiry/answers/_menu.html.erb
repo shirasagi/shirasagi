@@ -7,6 +7,15 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <%
+      question = @item.data.select do |data|
+        data.column.question == 'enabled' rescue false
+      end
+      question.collect! do |data|
+        data.value
+      end
+    %>
+    <%= link_to t('inquiry.links.faq'), new_faq_page_path(cid: @item.node.faq_id, question: question.join(',')) rescue nil %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
    <% end %>
 </nav>

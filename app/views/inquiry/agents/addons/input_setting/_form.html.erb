@@ -48,6 +48,9 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
   <dt><%= @model.t :input_confirm %><%= @model.tt :input_confirm %></dt>
   <dd><%= f.select :input_confirm, @item.input_confirm_options %></dd>
 
+  <dt><%= @model.t :question %><%= @model.tt :question %></dt>
+  <dd><%= f.select :question, @item.question_options %></dd>
+
   <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
   <dd><%= f.text_field :max_upload_file_size, style: "width: 60px;" %></dd>
 
