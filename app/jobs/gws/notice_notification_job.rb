@@ -46,6 +46,9 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
   end
 
   def send_notification_by_message(notice)
+    recipients = notice.overall_readers.site(@cur_site || site).active
+    return if recipients.blank?
+
     path = Rails.application.routes.url_helpers.gws_public_notice_url(
       protocol: site.canonical_scheme, host: site.canonical_domain, site: site, id: notice
     )
@@ -59,7 +62,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
     message = Gws::Memo::Notice.new
     message.cur_site = site
     message.cur_user = user
-    message.member_ids = select_recipients(notice).pluck(:id)
+    message.member_ids = recipients.pluck(:id)
     message.send_date = @now
     message.subject = subject
     message.format = 'text'
@@ -69,7 +72,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
   end
 
   def send_notification_by_email(notice)
-    select_recipients(notice).pluck(:email).compact.uniq.each do |email|
+    notice.overall_readers.site(@cur_site || site).active.pluck(:email).compact.uniq.each do |email|
       next if email.blank?
 
       mail = Gws::Notice::Mailer.notify_mail(site, notice, email)
@@ -78,13 +81,5 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
       mail.deliver_now
       Rails.logger.info("#{notice.name}: #{email}へ通知送信")
     end
-  end
-
-  def select_recipients(notice)
-    user_ids = notice.readable_members.pluck(:id)
-    user_ids += Gws::User.in(group_ids: notice.readable_groups.active.pluck(:id)).active
-    user_ids.uniq!
-
-    Gws::User.in(id: user_ids)
   end
 end

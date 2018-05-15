@@ -1,0 +1,125 @@
+require 'spec_helper'
+
+describe "gws_notices", type: :feature, dbscope: :example, js: true do
+  let(:site) { gws_site }
+  let(:index_path) { gws_notices_path(site) }
+
+  before do
+    ActionMailer::Base.deliveries = []
+
+    site.canonical_scheme = %w(http https).sample
+    site.canonical_domain = "#{unique_id}.example.jp"
+    site.sender_name = unique_id
+    site.sender_email = "#{site.sender_name}@example.jp"
+    site.save!
+
+    login_gws_user
+  end
+
+  after do
+    ActionMailer::Base.deliveries = []
+  end
+
+  context 'with notification' do
+    let(:name) { unique_id }
+    let(:text) { unique_id }
+    let!(:recipient1) { create(:gws_user, group_ids: gws_user.group_ids) }
+    let!(:recipient2) { create(:gws_user, group_ids: gws_user.group_ids) }
+
+    it do
+      visit index_path
+      click_on I18n.t('ss.links.new')
+
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in 'item[text]', with: text
+
+        select I18n.t('gws.options.notification.enabled'), from: 'item[message_notification]'
+        select I18n.t('gws.options.notification.enabled'), from: 'item[email_notification]'
+
+        within '#addon-gws-agents-addons-readable_setting' do
+          click_on I18n.t('ss.apis.users.index')
+        end
+      end
+      within '#cboxLoadedContent' do
+        click_on recipient1.name
+      end
+      within 'form#item-form' do
+        click_on I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      expect(Gws::Notice.all.count).to eq 1
+      Gws::Notice.all.first.tap do |item|
+        expect(item.name).to eq name
+        expect(item.text).to eq text
+        expect(item.message_notification).to eq 'enabled'
+        expect(item.email_notification).to eq 'enabled'
+        expect(item.notification_noticed).to be_nil
+        expect(item.state).to eq 'public'
+      end
+
+      # send notification
+      Gws::NoticeNotificationJob.bind(site_id: site).perform_now
+
+      # job was succeeded
+      expect(Gws::Job::Log.count).to eq 1
+      Gws::Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
+      expect(Gws::Notice.all.count).to eq 1
+      Gws::Notice.all.first.tap do |notice|
+        # record notification_noticed
+        expect(notice.notification_noticed).not_to be_nil
+
+        expect(ActionMailer::Base.deliveries.length).to be > 0
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail.from.first).to eq site.sender_email
+          expect(mail.to.first).not_to be_nil
+          expect(mail.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include(notice.name)
+        end
+
+        expect(Gws::Memo::Notice.count).to eq 1
+        Gws::Memo::Notice.first.tap do |message|
+          expect(message.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+          expect(message.text).to include(notice.name)
+          expect(message.text).to \
+            include("#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
+        end
+      end
+    end
+  end
+
+  context 'when notification_noticed was cleared' do
+    let!(:item) do
+      create(
+        :gws_notice, cur_site: site,
+        message_notification: 'enabled', email_notification: 'enabled',
+        notification_noticed: Time.zone.now - 1.day
+      )
+    end
+
+    it do
+      expect(item.notification_noticed).not_to be_nil
+
+      visit index_path
+      click_on item.name
+      click_on I18n.t('ss.links.edit')
+
+      within 'form#item-form' do
+        click_on I18n.t('ss.buttons.clear')
+        click_on I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      expect(Gws::Notice.all.count).to eq 1
+      Gws::Notice.all.first.tap do |item|
+        expect(item.notification_noticed).to be_nil
+      end
+    end
+  end
+end
