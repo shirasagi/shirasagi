@@ -31,6 +31,8 @@ class Gws::Circular::Post
   validates :deleted, datetime: true
   validate :validate_attached_file_size
 
+  after_save :send_notification
+
   alias reminder_date due_date
   alias reminder_user_ids member_ids
 
@@ -160,6 +162,62 @@ class Gws::Circular::Post
 
     if size > limit
       errors.add(:base, :file_size_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
+    end
+  end
+
+  def send_notification
+    added_member_ids = removed_member_ids = []
+
+    if state == 'public'
+      cur_member_ids = sorted_overall_members.pluck(:id)
+      prev_member_ids = sorted_overall_members_was.pluck(:id)
+
+      if state_was == 'draft'
+        # just published
+        added_member_ids = cur_member_ids
+        removed_member_ids = []
+      else
+        added_member_ids = cur_member_ids - prev_member_ids
+        removed_member_ids = prev_member_ids - cur_member_ids
+      end
+    end
+
+    if state == 'draft' && state_was == 'public'
+      # just depublished
+      cur_member_ids = sorted_overall_members.pluck(:id)
+      prev_member_ids = sorted_overall_members_was.pluck(:id)
+
+      added_member_ids = []
+      removed_member_ids = (cur_member_ids + prev_member_ids).uniq
+    end
+
+    return if added_member_ids.blank? && removed_member_ids.blank?
+    create_memo_notice(added_member_ids, removed_member_ids)
+  end
+
+  def create_memo_notice(added_member_ids, removed_member_ids)
+    if added_member_ids.present?
+      message = Gws::Memo::Notice.new
+      message.cur_site = site
+      message.cur_user = @cur_user || user
+      message.member_ids = added_member_ids
+      message.send_date = Time.zone.now
+      message.subject = I18n.t("gws_notification.gws/circular/post.subject", name: name)
+      message.format = 'text'
+      message.text = I18n.t("gws_notification.gws/circular/post.text", name: name, text: text)
+      message.save!
+    end
+
+    if removed_member_ids.present?
+      message = Gws::Memo::Notice.new
+      message.cur_site = site
+      message.cur_user = @cur_user || user
+      message.member_ids = removed_member_ids
+      message.send_date = Time.zone.now
+      message.subject = I18n.t("gws_notification.gws/circular/post/remove.subject", name: name)
+      message.format = 'text'
+      message.text = I18n.t("gws_notification.gws/circular/post/remove.text", name: name)
+      message.save!
     end
   end
 end
