@@ -17,11 +17,9 @@
     <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
 
     <%= jquery do %>
-      var templateForm = new Cms_TemplateForm({
-        url: <%== request.path.to_json %>,
-        params: <%== request.query_parameters.to_json %>
+      Cms_TemplateForm.render({
+        formUrlTemplate: <%== cms_apis_form_path(id: ':id', item_type: 'page', item_id: @item.new_record? ? nil : @item.id).to_json %>
       });
-      templateForm.render();
     <% end %>
   </dd>
 <% end %>

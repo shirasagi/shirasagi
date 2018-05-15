@@ -21,7 +21,9 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     self.order = new_value.order
     self.html_tag = new_value.html_tag
     self.html_additional_attr = new_value.html_additional_attr
+    return false if file_id == new_value.file_id
     self.file_id = new_value.file_id
+    true
   end
 
   def value

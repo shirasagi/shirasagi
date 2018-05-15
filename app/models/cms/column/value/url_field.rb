@@ -24,7 +24,9 @@ class Cms::Column::Value::UrlField < Cms::Column::Value::Base
     self.order = new_value.order
     self.html_tag = new_value.html_tag
     self.html_additional_attr = new_value.html_additional_attr
+    return false if value == new_value.value
     self.value = new_value.value
+    true
   end
 
   def html_additional_attr_to_h

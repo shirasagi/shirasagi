@@ -19,7 +19,9 @@ class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
   def update_value(new_value)
     self.name = new_value.name
     self.order = new_value.order
+    return false if values == new_value.values
     self.values = new_value.values.dup
+    true
   end
 
   def value

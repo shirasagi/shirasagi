@@ -18,7 +18,9 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
     self.order = new_value.order
     self.html_tag = new_value.html_tag
     self.html_additional_attr = new_value.html_additional_attr
+    return false if date == new_value.date
     self.date = new_value.date
+    true
   end
 
   def html_additional_attr_to_h

@@ -22,7 +22,9 @@ class Cms::Column::Value::Base
   def update_value(new_value)
     self.name = new_value.name
     self.order = new_value.order
+    return false if value == new_value.value
     self.value = new_value.value
+    true
   end
 
   def new_clone
