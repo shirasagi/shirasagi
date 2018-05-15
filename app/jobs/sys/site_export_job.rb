@@ -34,6 +34,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_editor_templates
     invoke :export_cms_theme_templates
     invoke :export_cms_source_cleaner_templates
+    invoke :export_cms_loop_settings
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
     invoke :export_kana_dictionaries
@@ -194,6 +195,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_cms_page_searches
     export_documents "cms_page_searches", Cms::PageSearch
+  end
+
+  def export_cms_loop_settings
+    export_documents "cms_loop_settings", Cms::LoopSetting
   end
 
   def export_ezine_columns

@@ -83,6 +83,10 @@ module Sys::SiteImport::Contents
     end
   end
 
+  def import_cms_loop_settings
+    @cms_loop_settings_map = import_documents "cms_loop_settings", Cms::LoopSetting
+  end
+
   def import_ezine_columns
     import_documents "ezine_columns", Ezine::Column
   end
