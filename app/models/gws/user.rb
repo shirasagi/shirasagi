@@ -33,6 +33,25 @@ class Gws::User
 
   scope :site, ->(site) { self.in(group_ids: Gws::Group.site(site).pluck(:id)) }
 
+  scope :readable_users, ->(user, opts = {}) {
+    return all if self.allowed?(:read, user, opts)
+    or_conds = readable_conditions(user, opts)
+    or_conds.unshift({ id: user.id })
+    where("$and" => [{ "$or" => or_conds }])
+  }
+
+  def readable_user?(user, opts = {})
+    return true if id == user.id
+    return true if self.class.allowed?(:read, user, opts)
+
+    opts[:site] ||= self.site
+    return true if !readable_setting_present?
+    return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
+    return true if readable_member_ids.include?(user.id)
+    return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    false
+  end
+
   def title_id_options
     Gws::UserTitle.site(cur_site).active.map { |m| [m.name_with_code, m.id] }
   end
