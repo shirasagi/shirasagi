@@ -27,5 +27,6 @@ SS::Application.routes.draw do
     get "backups/:source/:id" => "backups#show", as: :backup, source: /[^\/]+/
     put "backups/:source/:id" => "backups#update", source: /[^\/]+/
     get "backups/:source/:id/restore" => "backups#restore", as: :restore, source: /[^\/]+/
+    get "backups/:source/:id/change" => "backups#change", as: :change, source: /[^\/]+/
   end
 end

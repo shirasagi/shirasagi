@@ -32,6 +32,7 @@ gem 'momentjs-rails'
 # Additional
 gem 'browser'
 gem 'clam_scan'
+gem 'diff-lcs'
 gem 'diffy'
 gem 'dynamic_form'
 gem 'fast_blank'

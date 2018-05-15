@@ -16,4 +16,8 @@ module History::BackupFilter
       render action: :restore
     end
   end
+
+  def change
+    #
+  end
 end

@@ -1,6 +1,7 @@
 class History::Cms::BackupsController < ApplicationController
   include Cms::BaseFilter
   include History::BackupFilter
+  helper History::DiffHelper
 
   model History::Backup
 
