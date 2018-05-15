@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :title %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
+  <dd><%= f.text_field :basename, class: "filename" %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>
