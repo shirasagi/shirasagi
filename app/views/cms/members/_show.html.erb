@@ -8,6 +8,14 @@
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
 
+  <% if @item.state == 'temporary' && Member::Node::Registration.first.present? %>
+    <dt><%= I18n.t('modules.addons.member/registration/reply') %></dt>
+    <dd><%= link_to I18n.t('cms.buttons.send_verify_mail'), verify_cms_member_path, class: 'btn' %></dd>
+    <% if @item.verify_mail_sent.present? %>
+      <dd><%= I18n.l(@item.verify_mail_sent) %> <%= I18n.t('ss.buttons.send') %></dd>
+    <% end %>
+  <% end %>
+
   <dt><%= @model.t :oauth_type %></dt>
   <dd><%= @item.send :oauth_type %></dd>
 

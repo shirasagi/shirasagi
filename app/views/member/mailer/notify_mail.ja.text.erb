@@ -1,0 +1,9 @@
+<% message.subject = "[#{I18n.t('member.mail.subject.notify')}]#{@member.name} - #{@node.site.name}" %>
+<%= @member.name %>(ログインメンバー)さんより会員登録申請が届きました。
+下記URLより登録確認メールを送信してください。
+
+- <%= @member.t :name %>
+  <%= @member.name %>
+
+- URL
+  <%= "#{@node.site.mypage_full_url.chop}#{cms_member_path(site: @node.site.id, id: @member.id)}" %>

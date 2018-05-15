@@ -1,3 +1,4 @@
+<% action = @cur_node.notify_mail_enabled? ? 'notify' : 'verify' %>
 <div class="cms-member-registration-notice">
-  <%= simple_format I18n.t("views.registration.verify_email_address_html", sender_email: @cur_node.sender_email, email: @item.email, resend_url: "#{@cur_node.url}send_again") %>
+  <%= simple_format I18n.t("views.registration.#{action}_email_address_html", sender_email: @cur_node.sender_email, email: @item.email, resend_url: "#{@cur_node.url}send_again") %>
 </div>
