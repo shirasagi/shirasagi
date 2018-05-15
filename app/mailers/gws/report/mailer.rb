@@ -1,5 +1,5 @@
 class Gws::Report::Mailer < ActionMailer::Base
-  def publish_mail(item, opts)
+  def publish_mail(item, opts = {})
     @item = item
     mail(opts)
   end

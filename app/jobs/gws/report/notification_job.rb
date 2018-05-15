@@ -1,27 +1,18 @@
 class Gws::Report::NotificationJob < Gws::ApplicationJob
   def perform(item_id, added_member_ids, removed_member_ids)
     item = Gws::Report::File.site(site).find(item_id)
+    @user = item.user
 
-    sender = item.user
-    sender_email = format_email(sender) || default_from_email
     Gws::User.in(id: added_member_ids).each do |recipient|
-      recipient_email = format_email(recipient)
-      next if recipient_email.blank?
-
-      mail = Gws::Report::Mailer.publish_mail(item, from: sender_email, to: recipient_email)
+      mail = Gws::Report::Mailer.publish_mail(item)
       next if mail.blank?
-
-      mail.deliver_now
+      create_memo_notice(mail, recipient)
     end
 
     Gws::User.in(id: removed_member_ids).each do |recipient|
-      recipient_email = format_email(recipient)
-      next if recipient_email.blank?
-
-      mail = Gws::Report::Mailer.depublish_mail(item, from: sender_email, to: recipient_email)
+      mail = Gws::Report::Mailer.depublish_mail(item)
       next if mail.blank?
-
-      mail.deliver_now
+      create_memo_notice(mail, recipient)
     end
   end
 
@@ -39,5 +30,17 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
 
   def default_from_email
     site.sender_address
+  end
+
+  def create_memo_notice(mail, recipient)
+    message = Gws::Memo::Notice.new
+    message.cur_site = site
+    message.cur_user = @user
+    message.member_ids = [recipient.id]
+    message.send_date = Time.zone.now
+    message.subject = mail.subject
+    message.format = 'text'
+    message.text = mail.decoded
+    message.save!
   end
 end
