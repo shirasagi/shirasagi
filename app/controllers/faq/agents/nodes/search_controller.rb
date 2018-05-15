@@ -17,7 +17,7 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
     end
     @category = params[:category]
     @keyword = params[:keyword]
-    @url = mobile_path? ? "#{@cur_site.mobile_location}#{@cur_node.url}" : @cur_node.url
+    @url = mobile_path? ? ::File.join(@cur_site.mobile_url, @cur_node.filename) : @cur_node.url
 
     @query = {}
     @query[:category] = @category.blank? ? {} : { :category_ids.in => [@category.to_i] }
