@@ -1,0 +1,8 @@
+<%= jquery do %>
+$('#item-form').submit(function(){
+  if($('#item_name').val() && $('#item_basename').val()) {
+    alert(`<%= I18n.t('cms.confirm.check_accessibility_manually') %>`);
+  }
+});
+<% end %>
+<%= render file: 'ss/crud/edit' %>
