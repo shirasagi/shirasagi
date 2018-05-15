@@ -1,0 +1,36 @@
+<div class="gws-facility-state">
+  <%= render 'gws/facility/state/main/search' %>
+
+  <div class="main-box">
+    <table class="index">
+      <thead>
+        <tr>
+          <th><%= t('gws/facility.state.facility') %></th>
+          <th style="width: 200px;"><%= t('gws/facility.state.start_at') %></th>
+          <th style="width: 200px;"><%= t('gws/facility.state.end_at') %></th>
+          <th><%= t('gws/facility.state.section') %></th>
+          <th><%= t('gws/facility.state.user') %></th>
+          <th><%= t('gws/facility.state.purpose') %></th>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+          <% item.plans.each do |plan| %>
+            <tr>
+              <td><%= item.name %></td>
+              <td><%= l(plan.start_at, format: :gws_long) %></td>
+              <td><%= l(plan.end_at, format: :gws_long) %></td>
+              <td><%= plan.section_name %></td>
+              <td><%= tryb { plan.user.name } %></td>
+
+              <% if plan.readable?(@cur_user, site: @cur_site) %>
+              <td><%= plan.name %></td>
+              <% else %>
+              <td><%= t("gws/schedule.private_plan") %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

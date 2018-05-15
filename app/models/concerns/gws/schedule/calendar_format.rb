@@ -69,12 +69,4 @@ module Gws::Schedule::CalendarFormat
 
     data
   end
-
-  def facility_calendar_format(user, site)
-    data = calendar_format(user, site)
-    data[:className] = 'fc-event-range'
-    data[:backgroundColor] = category.color if category
-    data[:textColor] = category.text_color if category
-    data
-  end
 end

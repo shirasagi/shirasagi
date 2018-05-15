@@ -11,6 +11,7 @@ SS::Application.routes.draw do
       get :input_form, on: :collection
     end
     resources :items, concerns: [:deletion]
+    resources :categories, concerns: [:deletion]
     namespace :usage do
       get '/' => 'main#index', as: :main
       resources :yearly, only: [:index], path: 'yearly/:yyyy', yyyy: %r{\d{4}} do
@@ -20,6 +21,11 @@ SS::Application.routes.draw do
         get :download, on: :collection
       end
     end
-    resources :categories, concerns: [:deletion]
+    namespace :state do
+      get '/' => 'main#index', as: :main
+      resources :daily, only: [:index], path: 'daily/:yyyymmdd', yyyymmdd: %r{\d{8}} do
+        get :download, on: :collection
+      end
+    end
   end
 end

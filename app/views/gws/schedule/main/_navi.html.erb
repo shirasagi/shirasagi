@@ -26,12 +26,13 @@
     <h3><%= link_to t('gws/schedule.navi.category'), gws_schedule_categories_path, class: "management" %></h3>
   <% end %>
 
+  <% if Gws::Facility::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/facility.navi.category'), gws_facility_categories_path, class: "management" %></h3>
+  <% end %>
   <% if Gws::Facility::Item.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/facility.navi.item'), gws_facility_items_path, class: "management" %></h3>
     <h3><%= link_to t('gws/facility.navi.usage'), gws_facility_usage_main_path, class: "management" %></h3>
-  <% end %>
-  <% if Gws::Facility::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/facility.navi.category'), gws_facility_categories_path, class: "management" %></h3>
+    <h3><%= link_to t('gws/facility.navi.state'), gws_facility_state_main_path, class: "management" %></h3>
   <% end %>
 </nav>
 
