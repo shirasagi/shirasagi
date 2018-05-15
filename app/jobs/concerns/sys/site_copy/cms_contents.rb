@@ -86,6 +86,8 @@ module Sys::SiteCopy::CmsContents
       :form
     elsif ancestors.include?(SS::Model::Column)
       :column
+    elsif klass == Cms::LoopSetting
+      :loop_setting
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
     elsif ancestors.include?(Jmaxml::QuakeRegion)
@@ -180,6 +182,8 @@ module Sys::SiteCopy::CmsContents
       resolve_form_reference(id_or_ids)
     when :column
       resolve_column_reference(id_or_ids)
+    when :loop_setting
+      resolve_loop_setting_reference(id_or_ids)
     end
   end
 
