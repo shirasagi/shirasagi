@@ -24,12 +24,13 @@ class Workflow::PagesController < ApplicationController
     current_level = @item.workflow_current_level
     current_workflow_approvers = @item.workflow_pull_up_approvers_at(current_level)
     Workflow::Mailer.send_request_mails(
-      f_uid: @cur_user._id, t_uids: current_workflow_approvers.map { |approver| approver[:user_id] },
+      f_uid: @item.workflow_user_id, t_uids: current_workflow_approvers.map { |approver| approver[:user_id] },
       site: @cur_site, page: @item,
-      url: params[:url], comment: params[:workflow_comment]
+      url: params[:url], comment: @item.workflow_comment
     )
 
     @item.set_workflow_approver_state_to_request
+    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.save
   end
 
@@ -83,6 +84,7 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
+    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
     @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
@@ -103,6 +105,7 @@ class Workflow::PagesController < ApplicationController
   def restart_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
+    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
     @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
@@ -134,15 +137,17 @@ class Workflow::PagesController < ApplicationController
 
     save_level = @item.workflow_current_level
     if params[:action] == 'pull_up_update'
-      @item.pull_up_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+      @item.pull_up_workflow_approver_state(@cur_user, params[:remand_comment])
     else
-      @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_APPROVE, params[:remand_comment])
+      @item.approve_workflow_approver_state(@cur_user, params[:remand_comment])
     end
 
+    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if @item.finish_workflow?
       @item.approved = Time.zone.now
       @item.workflow_state = @model::WORKFLOW_STATE_APPROVE
       @item.state = "public"
+      @item.skip_history_backup = false if @item.respond_to?(:skip_history_backup)
 
       if @item.respond_to?(:release_date)
         if @item.release_date
@@ -192,23 +197,8 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    workflow_level = @item.workflow_current_level
-    @item.update_current_workflow_approver_state(@cur_user, @model::WORKFLOW_STATE_REMAND, params[:remand_comment])
-    if @item.workflow_back_to_init?
-      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
-    elsif workflow_level <= 1
-      @item.workflow_state = @model::WORKFLOW_STATE_REMAND
-    else
-      copy = @item.workflow_approvers.to_a
-      copy.each do |approver|
-        if approver[:level] == workflow_level - 1
-          approver[:state] = @model::WORKFLOW_STATE_REQUEST
-          approver[:comment] = ''
-        end
-      end
-      @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
-    end
-
+    @item.remand_workflow_approver_state(@cur_user, params[:remand_comment])
+    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
       return
@@ -219,7 +209,7 @@ class Workflow::PagesController < ApplicationController
       if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
         recipients << @item.workflow_user_id
       else
-        prev_level_approvers = @item.workflow_approvers_at(workflow_level - 1)
+        prev_level_approvers = @item.workflow_approvers_at(@item.workflow_current_level)
         recipients += prev_level_approvers.map { |hash| hash[:user_id] }
       end
 
@@ -242,6 +232,7 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_user_id = nil
     @item.workflow_state = @model::WORKFLOW_STATE_CANCELLED
 
+    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if @item.save
       render json: { notice: t('workflow.notice.request_cancelled') }
     else

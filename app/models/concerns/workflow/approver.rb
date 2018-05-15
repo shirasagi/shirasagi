@@ -10,6 +10,11 @@ module Workflow::Approver
   WORKFLOW_STATE_PENDING = "pending".freeze
   WORKFLOW_STATE_REMAND = "remand".freeze
   WORKFLOW_STATE_CANCELLED = "cancelled".freeze
+  WORKFLOW_STATE_OTHER_APPROVED = "other_approved".freeze
+  WORKFLOW_STATE_OTHER_REMANDED = "other_remanded".freeze
+  WORKFLOW_STATE_OTHER_PULLED_UP = "other_pulled_up".freeze
+
+  WORKFLOW_STATE_COMPLETES = [ WORKFLOW_STATE_APPROVE, WORKFLOW_STATE_OTHER_APPROVED, WORKFLOW_STATE_OTHER_PULLED_UP ].freeze
 
   included do
     cattr_reader(:approver_user_class) { Cms::User }
@@ -59,7 +64,7 @@ module Workflow::Approver
 
   def workflow_current_level
     workflow_levels.each do |level|
-      return level unless complete?(level)
+      return level unless workflow_completed_at?(level)
     end
     nil
   end
@@ -80,7 +85,7 @@ module Workflow::Approver
     end
   end
 
-  def workflow_required_counts_at(level)
+  def workflow_required_count_at(level)
     self.workflow_required_counts[level - 1] || false
   end
 
@@ -122,7 +127,36 @@ module Workflow::Approver
     true
   end
 
-  def pull_up_workflow_approver_state(user_or_id, state, comment = nil)
+  def approve_workflow_approver_state(user_or_id, comment = nil)
+    level = workflow_current_level
+    return if level.nil?
+
+    user_id = user_or_id.id if user_or_id.respond_to?(:id)
+    user_id ||= user_or_id.to_i
+
+    copy = workflow_approvers.to_a
+    copy.each do |approver|
+      if approver[:level] == level && approver[:user_id] == user_id
+        approver[:state] = WORKFLOW_STATE_APPROVE
+        approver[:comment] = comment
+      end
+    end
+
+    self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+
+    if workflow_completed_at?(level)
+      copy.each do |approver|
+        if approver[:level] == level && approver[:user_id] != user_id && approver[:state] == WORKFLOW_STATE_REQUEST
+          approver[:state] = WORKFLOW_STATE_OTHER_APPROVED
+          approver[:comment] = ''
+        end
+      end
+
+      self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    end
+  end
+
+  def pull_up_workflow_approver_state(user_or_id, comment = nil)
     user_id = user_or_id.id if user_or_id.respond_to?(:id)
     user_id ||= user_or_id.to_i
 
@@ -132,16 +166,54 @@ module Workflow::Approver
     copy = workflow_approvers.to_a
     copy.each do |approver|
       if approver[:level] < level
-        approver[:state] = WORKFLOW_STATE_APPROVE
+        approver[:state] = WORKFLOW_STATE_OTHER_PULLED_UP
+        approver[:comment] = ''
       end
 
       if approver[:level] == level && approver[:user_id] == user_id
-        approver[:state] = state
+        approver[:state] = WORKFLOW_STATE_APPROVE
         approver[:comment] = comment
       end
     end
 
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+  end
+
+  def remand_workflow_approver_state(user_or_id, comment = nil)
+    level = workflow_current_level
+    return if level.nil?
+
+    user_id = user_or_id.id if user_or_id.respond_to?(:id)
+    user_id ||= user_or_id.to_i
+
+    copy = workflow_approvers.to_a
+    copy.each do |approver|
+      if approver[:level] == level
+        if approver[:user_id] == user_id
+          approver[:state] = WORKFLOW_STATE_REMAND
+          approver[:comment] = comment
+        elsif approver[:state] == WORKFLOW_STATE_REQUEST
+          approver[:state] = WORKFLOW_STATE_OTHER_REMANDED
+          approver[:comment] = ''
+        end
+      end
+    end
+
+    self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+
+    if workflow_back_to_init?
+      self.workflow_state = WORKFLOW_STATE_REMAND
+    elsif level <= 1
+      self.workflow_state = WORKFLOW_STATE_REMAND
+    else
+      copy.each do |approver|
+        if approver[:level] == level - 1
+          approver[:state] = WORKFLOW_STATE_REQUEST
+          approver[:comment] = ''
+        end
+      end
+      self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    end
   end
 
   def finish_workflow?
@@ -247,7 +319,7 @@ module Workflow::Approver
     errors.add :workflow_required_counts, :not_select if workflow_required_counts.blank?
 
     workflow_levels.each do |level|
-      required_count = workflow_required_counts_at(level)
+      required_count = workflow_required_count_at(level)
       next if required_count == false
 
       approvers = workflow_approvers_at(level)
@@ -256,12 +328,12 @@ module Workflow::Approver
     end
   end
 
-  def complete?(level)
-    required_counts = workflow_required_counts_at(level)
+  def workflow_completed_at?(level)
+    required_count = workflow_required_count_at(level)
     approvers = workflow_approvers_at(level)
-    required_counts = approvers.length if required_counts == false
-    approved = approvers.count { |approver| approver[:state] == WORKFLOW_STATE_APPROVE }
-    approved >= required_counts
+    required_count = approvers.length if required_count == false
+    approved = approvers.count { |approver| WORKFLOW_STATE_COMPLETES.include?(approver[:state]) }
+    approved >= required_count
   end
 
   def validate_user(route, users, *actions)
