@@ -83,6 +83,10 @@ module Gws::Schedule::Planable
     sprintf('%d:%02d', datetime.hour, datetime.minute)
   end
 
+  def section_name
+    user.gws_main_group(site).section_name rescue nil
+  end
+
   private
 
   # API / Mode: month, week, day

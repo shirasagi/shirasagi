@@ -4,10 +4,11 @@
       <% cate = Gws::Facility::Category.site(@cur_site).readable(@cur_user, site: @cur_site).order_by(order: 1, id: 1) %>
       <%= f.select :category, cate.pluck(:name, :id), include_blank: true %>
       <%= f.select :year, @years %>
-      <%= f.select :month, @months, include_blank: t("ads.yearly") %>
+      <%= f.select :month, @months %>
+      <%= f.select :day, (1..31).to_a.map { |d| ["#{d}#{t('datetime.prompts.day')}", d] } %>
     </span>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-    <%= link_to t('ss.buttons.reset'), gws_facility_usage_main_path, class: 'btn' %>
+    <%= link_to t('ss.buttons.reset'), gws_facility_state_main_path, class: 'btn' %>
   <% end %>
 </div>
 
@@ -17,6 +18,8 @@
     var category = $form.find('select[name="s[category]"]').val();
     var year = $form.find('select[name="s[year]"]').val();
     var month = $form.find('select[name="s[month]"]').val();
+    var day = $form.find('select[name="s[day]"]').val();
+    var ymd = year + ('0' + month).slice(-2) + ('0' + day).slice(-2)
 
     var query = '';
     if (category) {
@@ -26,11 +29,7 @@
       query = '?' + $.param(query);
     }
 
-    if (month) {
-      location.href = '<%= gws_facility_usage_main_path %>/monthly/' + year + ('0' + month).slice(-2) + query;
-    } else {
-      location.href = '<%= gws_facility_usage_main_path %>/yearly/' + year + query;
-    }
+    location.href = '<%= gws_facility_state_main_path %>/daily/' + ymd + query;
 
     e.preventDefault();
     return false;

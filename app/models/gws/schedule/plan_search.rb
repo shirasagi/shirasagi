@@ -169,7 +169,7 @@ class Gws::Schedule::PlanSearch
     if plan.user
       attr[:user_long_name] = plan.user.long_name
 
-      section_name = plan.user.gws_main_group(@cur_site).section_name rescue nil
+      section_name = plan.section_name
       attr[:user_section_name] = section_name if section_name
     end
     attr

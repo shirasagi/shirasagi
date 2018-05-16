@@ -57,7 +57,14 @@ module Gws::Schedule::PlanFilter
   end
 
   def redirection_url
-    url_for(action: :index, calendar: redirection_calendar_params)
+    path = params.dig(:calendar, :path)
+    if path.present?
+      uri = URI(path)
+      uri.query = redirection_calendar_params.to_param
+      uri.to_s
+    else
+      url_for(action: :index, calendar: redirection_calendar_params)
+    end
   end
 
   def set_file_addon_state

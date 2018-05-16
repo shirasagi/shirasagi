@@ -34,7 +34,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   public
 
   def events
-    render json: @items.map { |m| m.facility_calendar_format(@cur_user, @cur_site) }.to_json
+    render json: @items.map { |m| m.calendar_format(@cur_user, @cur_site) }.to_json
   end
 
   def download

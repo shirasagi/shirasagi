@@ -27,12 +27,15 @@ module Gws::Facility::UsageFilter
     @target_time ||= begin
       yyyy = params[:yyyy].presence
       yyyymm = params[:yyyymm].presence
-      raise '403' if yyyy.blank? && yyyymm.blank?
+      yyyymmdd = params[:yyyymmdd].presence
+      raise '403' if yyyy.blank? && yyyymm.blank? && yyyymmdd.blank?
 
       if yyyy
         Time.zone.parse("#{yyyy}/01/01")
-      else
+      elsif yyyymm
         Time.zone.parse("#{yyyymm[0..3]}/#{yyyymm[4..5]}/01")
+      else
+        Time.zone.parse("#{yyyymmdd[0..3]}/#{yyyymmdd[4..5]}/#{yyyymmdd[6..7]}")
       end
     end
   end
@@ -41,7 +44,8 @@ module Gws::Facility::UsageFilter
     @s ||= begin
       s = OpenStruct.new(params[:s])
       s[:year] ||= @target_time.year
-      s[:month] ||= @target_time.month if params[:yyyymm].present?
+      s[:month] ||= @target_time.month if params[:yyyymm].present? || params[:yyyymmdd].present?
+      s[:day] ||= @target_time.day if params[:yyyymmdd].present?
       s
     end
   end
