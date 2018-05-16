@@ -26,7 +26,7 @@ module Cms::Model::Node
     validate :validate_ancestors
 
     after_save :rename_children, if: ->{ @db_changes }
-    after_save :remove_files_recursively, if: ->{ @db_changes && @db_changes["state"] && !public? }
+    after_save :remove_files_recursively, if: ->{ remove_files_recursively? }
     after_destroy :remove_all
     after_destroy :destroy_children
 
@@ -156,6 +156,12 @@ module Cms::Model::Node
 
   def category_node?
     %w(category/node category/page opendata/category).include?(route)
+  end
+
+  def remove_files_recursively?
+    return true if @db_changes && @db_changes["state"] && !public?
+    return true if @db_changes && @db_changes["route"] && public?
+    false
   end
 
   def remove_files_recursively
