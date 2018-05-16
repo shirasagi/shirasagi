@@ -1,26 +1,37 @@
 module OpenURI
-  class << self
-    alias_method :open_uri_without_proxy, :open_uri
-  end
+  def self.open_uri_with_proxy(name, *rest, &block)
+    proxy_uri = SS.config.proxy.proxy_http_basic_authentication["proxy_uri"]
+    proxy_username = SS.config.proxy.proxy_http_basic_authentication["proxy_username"]
+    proxy_password = SS.config.proxy.proxy_http_basic_authentication["proxy_password"]
+    proxy_password = SS::Crypt.decrypt(proxy_password) || proxy_password if proxy_password.present?
+    ssl_verify_mode = SS.config.proxy.ssl_verify_mode
 
-  def self.open_uri(name, *rest, &block)
-    if !SS.config.open_uri_proxy.disable
-      proxy_uri = SS.config.open_uri_proxy.proxy_http_basic_authentication["proxy_uri"]
-      proxy_username = SS.config.open_uri_proxy.proxy_http_basic_authentication["proxy_username"]
-      proxy_password = SS.config.open_uri_proxy.proxy_http_basic_authentication["proxy_password"]
-
-      options = rest.first || {}
-      if options.kind_of?(Hash)
-        options.symbolize_keys!
+    options = rest.first || {}
+    if options.is_a?(Hash)
+      options.symbolize_keys!
+      if proxy_uri.present?
         options.delete(:proxy)
-        options[:proxy_http_basic_authentication] = [proxy_uri, proxy_username, proxy_password]
+        options.delete(:proxy_http_basic_authentication)
 
-        options.delete(:ssl_verify_mode)
-        options[:ssl_verify_mode] = OpenSSL::SSL::VERIFY_NONE
+        if proxy_username.present? || proxy_password.present?
+          options[:proxy_http_basic_authentication] = [ proxy_uri, proxy_username, proxy_password ]
+        else
+          options[:proxy] = proxy_uri
+        end
+      end
 
-        rest = [options]
+      if ssl_verify_mode.present? && OpenSSL::SSL.constants.include?(ssl_verify_mode.to_sym)
+        options[:ssl_verify_mode] = "OpenSSL::SSL::#{ssl_verify_mode}".constantize
       end
     end
-    open_uri_without_proxy name, *rest, &block
+
+    open_uri_without_proxy name, options, &block
+  end
+
+  class << self
+    return if SS.config.proxy.disable
+
+    alias open_uri_without_proxy open_uri
+    alias open_uri open_uri_with_proxy
   end
 end
