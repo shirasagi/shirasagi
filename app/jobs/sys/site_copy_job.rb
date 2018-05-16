@@ -2,6 +2,9 @@ class Sys::SiteCopyJob < SS::ApplicationJob
   include Job::SS::TaskFilter
   include Sys::SiteCopy::SsFiles
   include Sys::SiteCopy::CmsRoles
+  include Sys::SiteCopy::CmsForms
+  include Sys::SiteCopy::CmsColumns
+  include Sys::SiteCopy::CmsLoopSettings
   include Sys::SiteCopy::CmsLayouts
   include Sys::SiteCopy::CmsNodes
   include Sys::SiteCopy::CmsParts
@@ -32,6 +35,9 @@ class Sys::SiteCopyJob < SS::ApplicationJob
     Rails.logger.debug("サイト #{@src_site.host} を #{@dest_site.host} へコピーします。")
 
     copy_cms_roles
+    copy_cms_forms
+    copy_cms_columns
+    copy_cms_loop_settings
     copy_cms_layouts
     copy_cms_nodes
     copy_cms_parts

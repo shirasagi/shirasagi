@@ -22,6 +22,8 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_groups
     invoke :export_cms_users
     invoke :export_cms_roles
+    invoke :export_cms_forms
+    invoke :export_cms_columns
     invoke :export_cms_layouts
     invoke :export_cms_body_layouts
     invoke :export_cms_nodes
@@ -32,6 +34,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_editor_templates
     invoke :export_cms_theme_templates
     invoke :export_cms_source_cleaner_templates
+    invoke :export_cms_loop_settings
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
     invoke :export_kana_dictionaries
@@ -78,6 +81,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     scope ||= model.site(@src_site)
     scope.pluck(:id).each do |id|
       item = model.unscoped.find(id)
+      item = item.becomes_with_route || item rescue item
       yield(item) if block_given?
       json.write(item.to_json)
       store_file_ids(item)
@@ -92,6 +96,12 @@ class Sys::SiteExportJob < SS::ApplicationJob
     @ss_file_ids << item[:file_id] if item[:file_id].present?
     @ss_file_ids << item[:tsv_id] if item[:tsv_id].present?
     @ss_file_ids << item[:icon_id] if item[:icon_id].present?
+    if item[:column_values].present?
+      item.column_values.each do |column_value|
+        next if column_value.class_name != 'Cms::Column::Value::FileUpload'
+        @ss_file_ids << column_value.file_id
+      end
+    end
   end
 
   def export_version
@@ -103,9 +113,9 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_cms_groups
-    items = @src_site.groups.only(:id, :name).entries
+    items = @src_site.groups.entries
     @src_site.groups.each do |g|
-      items += g.descendants.only(:id, :name).entries
+      items += g.descendants.entries
     end
     write_json "cms_groups", items.to_json
   end
@@ -113,7 +123,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   def export_cms_users
     json = open_json("cms_users")
     Cms::User.unscoped.site(@src_site, state: 'all').pluck(:id).each do |id|
-      json.write Cms::User.unscoped.only(:uid, :email, :cms_role_ids).find(id).to_json
+      json.write Cms::User.unscoped.find(id).to_json
     end
     json.close
   end
@@ -124,6 +134,16 @@ class Sys::SiteExportJob < SS::ApplicationJob
       json.write Cms::Role.unscoped.without(:created, :updated).find(id).to_json
     end
     json.close
+  end
+
+  def export_cms_forms
+    export_documents "cms_forms", Cms::Form
+  end
+
+  def export_cms_columns
+    export_documents "cms_columns", Cms::Column::Base do |item|
+      item.class_name = item._type
+    end
   end
 
   def export_cms_layouts
@@ -148,6 +168,12 @@ class Sys::SiteExportJob < SS::ApplicationJob
       @ss_file_ids += item[:resources].map { |m| m[:file_id] } if item[:resources].present?
       @ss_file_ids += item[:url_resources].map { |m| m[:file_id] } if item[:url_resources].present?
       @ss_file_ids += item[:appfiles].map { |m| m[:file_id] } if item[:appfiles].present?
+
+      if item[:column_values].present?
+        item.column_values.each do |column_value|
+          column_value.class_name = column_value._type
+        end
+      end
     end
   end
 
@@ -169,6 +195,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_cms_page_searches
     export_documents "cms_page_searches", Cms::PageSearch
+  end
+
+  def export_cms_loop_settings
+    export_documents "cms_loop_settings", Cms::LoopSetting
   end
 
   def export_ezine_columns

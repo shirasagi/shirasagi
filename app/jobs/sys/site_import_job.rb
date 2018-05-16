@@ -32,6 +32,9 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_roles
     invoke :import_cms_users_roles
     invoke :import_ss_files
+    invoke :import_cms_forms
+    invoke :import_cms_columns
+    invoke :import_cms_loop_settings
     invoke :import_cms_layouts
     invoke :import_cms_body_layouts
     invoke :import_cms_nodes
@@ -105,6 +108,9 @@ class Sys::SiteImportJob < SS::ApplicationJob
     @cms_roles_map = {}
     @ss_files_map = {}
     @ss_files_url = {}
+    @cms_forms_map = {}
+    @cms_columns_map = {}
+    @cms_loop_settings_map = {}
     @cms_layouts_map = {}
     @cms_body_layouts_map = {}
     @cms_nodes_map = {}
@@ -142,6 +148,11 @@ class Sys::SiteImportJob < SS::ApplicationJob
       data[name] = @ss_files_map[data[name]] if data[name].present?
     end
 
+    data['form_id'] = @cms_forms_map[data['form_id']] if data['form_id'].present?
+    data['st_form_ids'] = convert_ids(@cms_forms_map, data['st_form_ids']) if data['st_form_ids'].present?
+
+    data['loop_setting_id'] = @cms_loop_settings_map[data['loop_setting_id']] if data['loop_setting_id'].present?
+
     data
   end
 
@@ -165,6 +176,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       data.each { |k, v| item[k] = v }
       item = item.becomes_with_route || item rescue item
+      data.each { |k, v| item[k] = v }
       yield(item) if block_given?
 
       if save_document(item)
@@ -184,11 +196,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_groups
-    @cms_groups_map = {}
-
-    read_json("cms_groups").each do |data|
-      @cms_groups_map[data['_id']] = Cms::Group.unscoped.where(name: data['name']).first.try(:id)
-    end
+    @task.log("- import cms_groups")
+    @cms_groups_map = import_documents "cms_groups", Cms::Group, %w(name)
   end
 
   def import_cms_users
@@ -197,8 +206,14 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     read_json("cms_users").each do |data|
       keyword = data['uid'].presence || data['email']
-      @cms_users_map[data['_id']] = Cms::User.unscoped.flex_find(keyword).try(:id)
-      @cms_user_roles_map[data['_id']] = data['cms_role_ids']
+      id   = data.delete('_id')
+      data = convert_data(data)
+      item = Cms::User.unscoped.flex_find(keyword) || Cms::User.new
+      data.each { |k, v| item[k] = v }
+      if save_document(item)
+        @cms_users_map[id] = item.id
+        @cms_user_roles_map[id] = data['cms_role_ids']
+      end
     end
   end
 

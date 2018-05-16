@@ -29,7 +29,14 @@ module Sys::SiteImport::Contents
       item[:st_category_ids] = convert_ids(@cms_nodes_map, item[:st_category_ids])
       item[:ads_category_ids] = convert_ids(@cms_nodes_map, item[:ads_category_ids])
       item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids])
-      item[:column_values] = nil # TODO: cms/form, cms/column ?
+      if item[:column_values].present?
+        item[:column_values] = item[:column_values].collect do |column_value|
+          next if column_value['class_name'].blank?
+          column_value['column_id'] = @cms_columns_map[column_value['column_id']]
+          column_value['file_id'] = @ss_files_map[column_value['file_id']] if column_value['file_id'].present?
+          column_value['class_name'].constantize.new(column_value)
+        end
+      end
     end
   end
 
@@ -56,6 +63,28 @@ module Sys::SiteImport::Contents
 
   def import_cms_source_cleaner_templates
     import_documents "cms_source_cleaner_templates", Cms::SourceCleanerTemplate
+  end
+
+  def import_cms_forms
+    @cms_forms_map = import_documents "cms_forms", Cms::Form
+  end
+
+  def import_cms_columns
+    read_json('cms_columns').each do |data|
+      id   = data.delete('_id')
+      data = convert_data(data)
+
+      item = data['class_name'].constantize.new
+      data.each { |k, v| item[k] = v }
+
+      if save_document(item)
+        @cms_columns_map[id] = item.id
+      end
+    end
+  end
+
+  def import_cms_loop_settings
+    @cms_loop_settings_map = import_documents "cms_loop_settings", Cms::LoopSetting
   end
 
   def import_ezine_columns

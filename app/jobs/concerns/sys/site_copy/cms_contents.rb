@@ -13,6 +13,16 @@ module Sys::SiteCopy::CmsContents
       # at first, copy non-reference values and references which have no possibility of circular reference
       dest_content = klass.new(cur_site: @dest_site)
       dest_content.attributes = copy_basic_attributes(src_content, klass)
+      if dest_content.respond_to?(:column_values)
+        dest_content.column_values = src_content.column_values.map do |src_column_value|
+          dest_column_value = src_column_value.dup
+          dest_column_value.column_id = resolve_reference(:column, src_column_value.column_id)
+          if dest_column_value.respond_to?(:file_id)
+            dest_column_value.file_id = resolve_reference(:file, src_column_value.file_id)
+          end
+          dest_column_value
+        end
+      end
       dest_content.save!
       dest_content.id
     end
@@ -72,6 +82,12 @@ module Sys::SiteCopy::CmsContents
       :part
     elsif ancestors.include?(Cms::Model::Member)
       :member
+    elsif klass == Cms::Form
+      :form
+    elsif ancestors.include?(SS::Model::Column)
+      :column
+    elsif klass == Cms::LoopSetting
+      :loop_setting
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
     elsif ancestors.include?(Jmaxml::QuakeRegion)
@@ -162,6 +178,12 @@ module Sys::SiteCopy::CmsContents
       resolve_page_reference(id_or_ids)
     when :part
       resolve_part_reference(id_or_ids)
+    when :form
+      resolve_form_reference(id_or_ids)
+    when :column
+      resolve_column_reference(id_or_ids)
+    when :loop_setting
+      resolve_loop_setting_reference(id_or_ids)
     end
   end
 
