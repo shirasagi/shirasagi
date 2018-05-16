@@ -1799,6 +1799,9 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
     width: 100%;
     padding: 0;
   }
+  .fields {
+    width: auto;
+  }
 }
 .back-to-ref a {
   @include btn-gry;
