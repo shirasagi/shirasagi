@@ -38,9 +38,9 @@ module Gws::Addon::ReadableSetting
   end
 
   def readable?(user, opts = {})
-    return false unless self.class.allowed?(:read, user, opts)
-
     opts[:site] ||= self.site
+
+    return false unless self.class.allowed?(:read, user, opts)
     return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
