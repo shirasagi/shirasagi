@@ -11,7 +11,7 @@ module Cms::Addon
       validates :for_member_state, inclusion: { in: %w(disabled enabled) }
       before_save :check_parents_state
       after_save :set_children_state
-      after_save :remove_files_recursively, if: ->{ for_member_enabled? }
+      after_save :remove_files_recursively, if: ->{ remove_files_recursively? }
     end
 
     def for_member_state_options
@@ -45,6 +45,11 @@ module Cms::Addon
       self.all_children.each do |c_node|
         c_node.set(for_member_state: 'enabled')
       end
+    end
+
+    def remove_files_recursively?
+      return true if super
+      for_member_enabled?
     end
   end
 end
