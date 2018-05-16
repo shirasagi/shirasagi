@@ -26,6 +26,11 @@ class Gws::Column::NumberField < Gws::Column::Base
     if max_decimal.present?
       options['max'] = max_decimal
     end
+    if scale.present? && scale > 0
+      options['step'] = "0.#{"0" * (scale - 1)}1"
+    end
+
+    options['step'] ||= 1
     options
   end
 
