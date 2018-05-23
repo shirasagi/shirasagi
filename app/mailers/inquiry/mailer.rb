@@ -11,19 +11,19 @@ class Inquiry::Mailer < ActionMailer::Base
     @subject = "[#{I18n.t('inquiry.notify')}]#{node.name} - #{site.name}"
 
     @answer_data = []
-    @answer.data.each do |data|
-      @answer_data << "- #{data.column.name}"
-      @answer_data << data.value.to_s
+    if @node.notice_content == "include_answers"
+      @answer.data.each do |data|
+        @answer_data << "- #{data.column.name}"
+        @answer_data << data.value.to_s
+        @answer_data << ""
+      end
+      @answer_data << "- #{@answer.class.t('remote_addr')}"
+      @answer_data << @answer.remote_addr
       @answer_data << ""
+      @answer_data << "- #{@answer.class.t('user_agent')}"
+      @answer_data << @answer.user_agent
     end
-    @answer_data << "- #{@answer.class.t('remote_addr')}"
-    @answer_data << @answer.remote_addr
-    @answer_data << ""
-    @answer_data << "- #{@answer.class.t('user_agent')}"
-    @answer_data << @answer.user_agent
     @answer_data = @answer_data.join("\n")
-
-    @answer_data = nil if @node.notice_content == "link_only"
 
     from = "#{node.from_name} <#{node.from_email}>"
     mail(from: from, to: notice_email)
