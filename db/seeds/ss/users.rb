@@ -43,7 +43,7 @@ puts "# roles"
 r01 = save_role name: I18n.t('sys.roles.admin'), permissions: Sys::Role.permission_names
 
 def save_user(data, only_on_creates = {})
-  if item = SS::User.where(email: data[:email]).first
+  if item = SS::User.where(uid: data[:uid]).first
     puts "exists #{data[:name]}"
     item.update data
     return item
