@@ -18,7 +18,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
       next if item.notification_noticed.present?
 
       criteria = Gws::Notice.where(id: item.id)
-      item = criteria.find_one_and_update({ '$set' => { notification_noticed: @now } }, return_document: :after)
+      item = criteria.find_one_and_update({ '$set' => { notification_noticed: @now.utc } }, return_document: :after)
       next unless item
 
       send_one_notification(item)

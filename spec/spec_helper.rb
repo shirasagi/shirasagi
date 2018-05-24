@@ -109,7 +109,10 @@ RSpec.configure do |config|
 end
 
 def unique_id
-  Time.zone.now.to_f.to_s.delete('.').to_i.to_s(36)
+  num = Time.zone.now.to_f.to_s.delete('.').to_i
+  # add random value to work with `Timecop.freeze`
+  num += rand(0xffff)
+  num.to_s(36)
 end
 
 # ref.

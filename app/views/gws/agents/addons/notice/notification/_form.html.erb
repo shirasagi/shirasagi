@@ -13,7 +13,7 @@ return if @cur_site.canonical_domain.blank?
 
   <dt><%= @model.t :notification_noticed %><%= @model.tt :notification_noticed %></dt>
   <dd>
-    <span class="notification-noticed"><%= tryb { @item.notification_noticed.strftime('%Y/%m/%d %H:%M') } %></span>
+    <span class="notification-noticed"><%= tryb { I18n.l(@item.notification_noticed) } %></span>
     <%= button_tag(t('ss.buttons.clear'), type: 'reset', class: 'btn btn-clear') %>
     <%= f.hidden_field :notification_noticed %>
   </dd>
