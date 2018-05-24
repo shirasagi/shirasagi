@@ -31,10 +31,10 @@ user_permissions = Cms::Role.permission_names.select { |n| n =~ /_(private|other
 r01 = save_role name: I18n.t('cms.roles.admin'), site_id: @site.id, permissions: admin_permissions, permission_level: 3
 r02 = save_role name: I18n.t('cms.roles.user'), site_id: @site.id, permissions: user_permissions, permission_level: 1
 
-Cms::User.find_by(uid: "sys").add_to_set(cms_role_ids: r01.id)
-Cms::User.find_by(uid: "admin").add_to_set(cms_role_ids: r01.id)
-Cms::User.find_by(uid: "user1").add_to_set(cms_role_ids: r02.id)
-Cms::User.find_by(uid: "user2").add_to_set(cms_role_ids: r02.id)
-Cms::User.find_by(uid: "user3").add_to_set(cms_role_ids: r02.id)
-Cms::User.find_by(uid: "user4").add_to_set(cms_role_ids: r01.id)
-Cms::User.find_by(uid: "user5").add_to_set(cms_role_ids: r02.id)
+Cms::User.unscoped.find_by(uid: "sys").add_to_set(cms_role_ids: r01.id)
+Cms::User.unscoped.find_by(uid: "admin").add_to_set(cms_role_ids: r01.id)
+Cms::User.unscoped.find_by(uid: "user1").add_to_set(cms_role_ids: r02.id)
+Cms::User.unscoped.find_by(uid: "user2").add_to_set(cms_role_ids: r02.id)
+Cms::User.unscoped.find_by(uid: "user3").add_to_set(cms_role_ids: r02.id)
+Cms::User.unscoped.find_by(uid: "user4").add_to_set(cms_role_ids: r01.id)
+Cms::User.unscoped.find_by(uid: "user5").add_to_set(cms_role_ids: r02.id)
