@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
   private
 
   def set_dataset
-    @dataset_path = @cur_path.sub(/\/resource\/.*/, ".html")
+    @dataset_path = @cur_main_path.sub(/\/resource\/.*/, ".html")
 
     @dataset = Opendata::Dataset.site(@cur_site).and_public.
       filename(@dataset_path).

@@ -11,7 +11,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   private
 
   def set_idea
-    @idea_path = Opendata::Idea.to_idea_path(@cur_path)
+    @idea_path = Opendata::Idea.to_idea_path(@cur_main_path)
     @idea = Opendata::Idea.site(@cur_site).
       filename(@idea_path).
       first
@@ -96,7 +96,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   def show_dataset
     @cur_node.layout = nil
 
-    idea_path = @cur_path.sub(/\/dataset\/.*/, ".html")
+    idea_path = @cur_main_path.sub(/\/dataset\/.*/, ".html")
 
     @idea_ds = Opendata::Idea.site(@cur_site).
       filename(idea_path).
@@ -109,7 +109,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   def show_app
     @cur_node.layout = nil
 
-    idea_path = @cur_path.sub(/\/app\/.*/, ".html")
+    idea_path = @cur_main_path.sub(/\/app\/.*/, ".html")
 
     @idea_ap = Opendata::Idea.site(@cur_site).
     filename(idea_path).

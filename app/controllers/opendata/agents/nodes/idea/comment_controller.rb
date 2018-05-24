@@ -14,7 +14,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   private
 
   def set_comments
-    @idea_path = Opendata::Idea.to_idea_path(@cur_path)
+    @idea_path = Opendata::Idea.to_idea_path(@cur_main_path)
 
     @idea = Opendata::Idea.site(@cur_site).
       filename(@idea_path).
