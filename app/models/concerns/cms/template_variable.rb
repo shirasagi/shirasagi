@@ -35,6 +35,7 @@ module Cms::TemplateVariable
   end
 
   def template_variable_handler_class(name, issuer)
+    return nil if try(:basename).blank?
     self.basename.sub(/\..*/, "").dasherize
   end
 
