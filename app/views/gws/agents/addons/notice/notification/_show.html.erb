@@ -1,3 +1,7 @@
+<%
+return if @cur_site.canonical_domain.blank?
+%>
+
 <dl class="see">
   <% if @cur_site.menu_memo_visible? %>
   <dt><%= @model.t :message_notification %></dt>

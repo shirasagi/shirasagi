@@ -1,3 +1,7 @@
+<%
+return if @cur_site.canonical_domain.blank?
+%>
+
 <dl class="see mod-gws-notice-notification">
   <% if @cur_site.menu_memo_visible? %>
   <dt><%= @model.t :message_notification %><%= @model.tt :message_notification %></dt>
