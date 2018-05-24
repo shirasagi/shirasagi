@@ -8,5 +8,5 @@
   <dd><%= @item.label :email_notification %></dd>
 
   <dt><%= @model.t :notification_noticed %></dt>
-  <dd><%= tryb { @item.notification_noticed.strftime('%Y/%m/%d %H:%M') } %></dd>
+  <dd><%= tryb { I18n.l(@item.notification_noticed) } %></dd>
 </dl>

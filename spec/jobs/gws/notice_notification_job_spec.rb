@@ -7,6 +7,7 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
   let(:sender) { gws_user }
   let(:recipient1) { create(:gws_user) }
   let(:recipient2) { create(:gws_user) }
+  let(:now) { Time.zone.now.beginning_of_minute }
 
   before do
     ActionMailer::Base.deliveries = []
@@ -24,6 +25,12 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
     site.save!
   end
 
+  around do |example|
+    Timecop.freeze(now) do
+      example.run
+    end
+  end
+
   context 'text notice' do
     let!(:notice) do
       create(
@@ -33,6 +40,9 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
     end
 
     it do
+      notice.reload
+      expect(notice.notification_noticed).to be_nil
+
       described_class.bind(site_id: site.id).perform_now
 
       expect(Gws::Job::Log.count).to eq 1
@@ -40,6 +50,9 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Started Job'))
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
+
+      notice.reload
+      expect(notice.notification_noticed).to eq now
 
       expect(Gws::Memo::Notice.count).to eq 1
       Gws::Memo::Notice.first.tap do |message|
@@ -70,6 +83,9 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
     end
 
     it do
+      notice.reload
+      expect(notice.notification_noticed).to be_nil
+
       described_class.bind(site_id: site.id).perform_now
 
       expect(Gws::Job::Log.count).to eq 1
@@ -77,6 +93,9 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Started Job'))
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
+
+      notice.reload
+      expect(notice.notification_noticed).to eq now
 
       expect(Gws::Memo::Notice.count).to eq 1
       Gws::Memo::Notice.first.tap do |message|
@@ -106,7 +125,13 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
     end
 
     it do
+      notice.reload
+      expect(notice.notification_noticed).to be_nil
+
       described_class.bind(site_id: site.id).perform_now
+
+      notice.reload
+      expect(notice.notification_noticed).to be_nil
 
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
