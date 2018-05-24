@@ -13,7 +13,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   private
 
   def set_app
-    @app_path ||= Opendata::App.to_app_path(@cur_path)
+    @app_path ||= Opendata::App.to_app_path(@cur_main_path)
     @app ||= Opendata::App.site(@cur_site).
       filename(@app_path).
       first
@@ -23,7 +23,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   end
 
   def set_ideas
-    @app_idea_path = Opendata::App.to_app_path(@cur_path)
+    @app_idea_path = Opendata::App.to_app_path(@cur_main_path)
 
     @app_idea = Opendata::App.site(@cur_site).
       filename(@app_idea_path).
