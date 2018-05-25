@@ -125,6 +125,12 @@ module Workflow::Addon
           attributes.delete(n)
         end
 
+        self.workflow_user_id = nil
+        self.workflow_state = nil
+        self.workflow_comment = nil
+        self.workflow_approvers = nil
+        self.workflow_required_counts = nil
+
         self.attributes = attributes
         self.master_id = nil
         self.allow_other_user_files if respond_to?(:allow_other_user_files)
