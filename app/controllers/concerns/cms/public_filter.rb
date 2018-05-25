@@ -124,7 +124,7 @@ module Cms::PublicFilter
 
   def x_sendfile(file = @file)
     return unless Fs.file?(file)
-    response.headers["Expires"] = 1.day.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
+    response.headers["Expires"] = 1.day.from_now.httpdate if file.to_s.downcase.end_with?(*%w(.css .js .gif .jpg .png))
     response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
     ss_send_file(file, type: Fs.content_type(file), disposition: :inline)
@@ -214,7 +214,7 @@ module Cms::PublicFilter
   end
 
   def rescue_action(e = nil)
-    return render_error(e, status: e.to_s.to_i) if e.to_s =~ /^\d+$/
+    return render_error(e, status: e.to_s.to_i) if e.to_s.numeric?
     return render_error(e, status: 404) if e.is_a? Mongoid::Errors::DocumentNotFound
     return render_error(e, status: 404) if e.is_a? ActionController::RoutingError
     raise e
