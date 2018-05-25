@@ -22,27 +22,17 @@ module Cms::PublicFilter
       @cur_main_path.sub!(/\.p\d+\.html$/, ".html")
     end
 
-    if @html =~ /\.part\.html$/
-      part = find_part(@html)
-      raise "404" unless part
-      @cur_path = params[:ref] || "/"
-      set_main_path
-      if resp = render_part(part)
-        return send_part(resp)
-      end
-    elsif page = find_page(@cur_main_path)
-      if resp = render_page(page)
-        self.response = resp
-        return send_page(page)
-      end
-    elsif node = find_node(@cur_main_path)
-      if resp = render_node(node)
-        self.response = resp
-        return send_page(node)
-      end
+    sends = false
+    enum_contents.each do |content|
+      resp = instance_exec(&content.render_content)
+      next if !resp
+
+      instance_exec(resp, &content.send_content)
+      sends = true
+      break
     end
 
-    page_not_found if response.body.blank?
+    page_not_found if !sends
   end
 
   private
@@ -138,6 +128,70 @@ module Cms::PublicFilter
     response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
     ss_send_file(file, type: Fs.content_type(file), disposition: :inline)
+  end
+
+  def enum_contents
+    Enumerator.new do |y|
+      if @html =~ /\.part\.html$/ && part = find_part(@html)
+        y << create_part_content(part)
+        next
+      end
+
+      if page = find_page(@cur_main_path)
+        y << create_page_content(page)
+      end
+
+      if !@cur_main_path.include?('.') && !@cur_main_path.end_with?('/') && page = find_page("#{@cur_main_path}/index.html")
+        y << create_page_content(page)
+      end
+
+      if node = find_node(@cur_main_path)
+        y << create_node_content(node)
+      end
+    end
+  end
+
+  def create_part_content(part)
+    content = OpenStruct.new
+
+    content[:render_content] = proc do
+      @cur_path = params[:ref] || "/"
+      set_main_path
+      render_part(part)
+    end
+    content[:send_content] = proc do |resp|
+      send_part(resp)
+    end
+
+    content
+  end
+
+  def create_page_content(page)
+    content = OpenStruct.new
+
+    content[:render_content] = proc do
+      render_page(page)
+    end
+    content[:send_content] = proc do |resp|
+      self.response = resp
+      send_page(page)
+    end
+
+    content
+  end
+
+  def create_node_content(node)
+    content = OpenStruct.new
+
+    content[:render_content] = proc do
+      render_node(node)
+    end
+    content[:send_content] = proc do |resp|
+      self.response = resp
+      send_page(node)
+    end
+
+    content
   end
 
   def send_part(body)
