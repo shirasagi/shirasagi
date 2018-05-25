@@ -33,6 +33,7 @@ module Member::LoginFilter
     return nil if translate_redirect_option(opts) == REDIRECT_OPTION_DISABLED
 
     ref = "?ref=#{CGI.escape(request.env["REQUEST_URI"])}" if request.env["REQUEST_URI"].present?
+    flash[:alert] = I18n.t("sns.errors.session_timed_out")
     redirect_to "#{member_login_path}#{ref}"
     nil
   end

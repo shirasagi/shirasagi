@@ -14,3 +14,4 @@ ja:
     thumb_paste: サムネイル
     errors:
       invalid_login: ログインできませんでした。
+      session_timed_out: セッションがタイムアウトしました。再度ログインしてください。
