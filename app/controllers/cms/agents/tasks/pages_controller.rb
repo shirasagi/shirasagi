@@ -70,6 +70,8 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   end
 
   def release_page(page)
+    page.cur_site = @site
+
     if page.public?
       page.state = "closed"
       page.close_date = nil
