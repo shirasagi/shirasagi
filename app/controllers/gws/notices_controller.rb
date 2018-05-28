@@ -4,7 +4,7 @@ class Gws::NoticesController < ApplicationController
 
   model Gws::Notice
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/notice/main/navi"
 
   private
 
