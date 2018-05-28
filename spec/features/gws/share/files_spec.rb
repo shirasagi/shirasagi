@@ -51,7 +51,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
         find('input[type=submit]').click
       end
       expect(current_path).not_to eq new_path
-      expect(page).to have_content(folder.name)
+      within ".tree-navi" do
+        expect(page).to have_content(folder.name)
+      end
     end
 
     it "#show" do
