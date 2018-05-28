@@ -5,9 +5,12 @@
   <h3><%= link_to t("facility.page"), facility_page_path(cid: @item.parent.id, id: @item.id) %></h3>
   <% end %>
   <h3><%= link_to t("facility.image"), facility_images_path(cid: @item.id) %></h3>
+  <h3><%= link_to "#{t("ss.links.trash")} (#{t("facility.image")})", trash_facility_images_path(cid: @item.id), class: :trash %></h3>
   <h3><%= link_to t("facility.map"), facility_maps_path(cid: @item.id) %></h3>
+  <h3><%= link_to "#{t("ss.links.trash")} (#{t("facility.map")})", trash_facility_maps_path(cid: @item.id), class: :trash %></h3>
 <% else %>
   <h3><%= link_to t("facility.page"), facility_pages_path %></h3>
+  <h3><%= link_to "#{t("ss.links.trash")} (#{t("facility.page")})", trash_facility_pages_path, class: :trash %></h3>
 <% end %>
 
 <% end %>

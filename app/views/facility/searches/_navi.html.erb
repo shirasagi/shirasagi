@@ -1,5 +1,6 @@
 <%= node_navi :facility do %>
 
 <h3><%= link_to t("facility.search"), facility_searches_path %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("facility.search")})", trash_facility_searches_path, class: :trash %></h3>
 
 <% end %>

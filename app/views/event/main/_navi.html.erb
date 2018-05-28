@@ -1,5 +1,6 @@
 <%= node_navi :event do %>
 
 <h3><%= link_to t("event.page"), event_pages_path %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("event.page")})", trash_event_pages_path, class: :trash %></h3>
 
 <% end %>

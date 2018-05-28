@@ -1,5 +1,5 @@
 class Gws::Qna::TrashPurgeJob < Gws::ApplicationJob
-  include Gws::TrashPurge::BaseJob
+  include SS::TrashPurge::BaseJob
 
   self.model = Gws::Qna::Topic
 

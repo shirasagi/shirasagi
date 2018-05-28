@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :crud do
     get :move, :on => :member
     put :move, :on => :member
@@ -21,7 +29,7 @@ SS::Application.routes.draw do
 
   content "sitemap" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud, :command] do
+    resources :pages, concerns: [:deletion, :trash, :crud, :command] do
       get :export_urls, on: :collection
     end
   end

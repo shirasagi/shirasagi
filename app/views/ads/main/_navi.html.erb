@@ -1,6 +1,7 @@
 <%= node_navi :ads do %>
 
 <h3><%= link_to t("ads.banner"), ads_banners_path %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t('ads.banner')})", trash_ads_banners_path, class: "trash" %></h3>
 <h3><%= link_to t("ads.access_log"), ads_access_logs_path %></h3>
 
 <% end %>

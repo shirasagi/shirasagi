@@ -32,7 +32,17 @@ module Cms::CrudFilter
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items
-    @items = @items.search(params[:s])
+    @items = @items
+      .search(params[:s])
+      .page(params[:page]).per(50)
+  end
+
+  def trash
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    set_items
+    @items = @items.unscope_and
+      .only_deleted
+      .search(params[:s])
       .page(params[:page]).per(50)
   end
 

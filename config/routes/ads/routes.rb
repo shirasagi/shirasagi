@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :command do
     get :command, on: :member
     post :command, on: :member
@@ -14,7 +22,7 @@ SS::Application.routes.draw do
 
   content "ads" do
     get "/" => redirect { |p, req| "#{req.path}/banners" }, as: :main
-    resources :banners, concerns: [:deletion, :command]
+    resources :banners, concerns: [:deletion, :trash, :command]
     get "access_logs" => "access_logs#index", as: :access_logs
     get "access_logs/download" => "access_logs#download", as: :access_logs_download
   end

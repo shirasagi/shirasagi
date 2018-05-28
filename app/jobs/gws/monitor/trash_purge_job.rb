@@ -1,5 +1,5 @@
 class Gws::Monitor::TrashPurgeJob < Gws::ApplicationJob
-  include Gws::TrashPurge::BaseJob
+  include SS::TrashPurge::BaseJob
 
   self.model = Gws::Monitor::Topic
 

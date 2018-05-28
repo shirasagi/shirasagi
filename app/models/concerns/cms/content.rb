@@ -35,6 +35,8 @@ module Cms::Content
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
 
+    default_scope { without_deleted }
+
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = nil) {
       if target == 'descendant'
@@ -73,6 +75,12 @@ module Cms::Content
         criteria = criteria.keyword_in params[:keyword], :name, :filename, :html
       end
       criteria
+    end
+
+    def unscope_and
+      all.tap do |criteria|
+        criteria.selector.delete('$and')
+      end
     end
   end
 
@@ -121,7 +129,7 @@ module Cms::Content
 
   def public_node?
     return true unless dirname
-    Cms::Node.where(site_id: site_id).in_path(dirname).ne(state: "public").empty?
+    Cms::Node.unscoped.where(site_id: site_id).in_path(dirname).ne(state: "public").empty?
   end
 
   def order
@@ -154,7 +162,7 @@ module Cms::Content
     return @parent = false if depth == 1 || filename !~ /\//
 
     path = File.dirname(filename)
-    @parent = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
+    @parent = Cms::Node.unscoped.where(site_id: site_id).in_path(path).sort(depth: -1).first
   end
 
   def becomes_with_route(name = nil)
@@ -179,6 +187,11 @@ module Cms::Content
 
   def node_target_options
     %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
+  end
+
+  def deleted_node?
+    return false unless dirname
+    Cms::Node.unscoped.only_deleted.where(site_id: site_id).in_path(dirname).present?
   end
 
   private

@@ -4,10 +4,13 @@ describe "cms_layouts" do
   subject(:site) { cms_site }
   subject(:item) { Cms::Layout.last }
   subject(:index_path) { cms_layouts_path site.id }
+  subject(:trash_path) { trash_cms_layouts_path site.id }
   subject(:new_path) { new_cms_layout_path site.id }
   subject(:show_path) { cms_layout_path site.id, item }
   subject(:edit_path) { edit_cms_layout_path site.id, item }
   subject(:delete_path) { delete_cms_layout_path site.id, item }
+  subject(:soft_delete_path) { soft_delete_cms_layout_path site.id, item }
+  subject(:undo_delete_path) { undo_delete_cms_layout_path site.id, item }
 
   context "with auth" do
     before { login_cms_user }
@@ -43,6 +46,26 @@ describe "cms_layouts" do
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
 
     it "#delete" do

@@ -1,6 +1,7 @@
 class Ezine::MemberPage::MainController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
+  include Cms::TrashFilter
 
   model Ezine::Page
 
@@ -15,16 +16,6 @@ class Ezine::MemberPage::MainController < ApplicationController
 
   def pre_params
     super.merge(state: 'closed')
-  end
-
-  def load_pages
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-
-    @items = @model.site(@cur_site).node(@cur_node).
-      allow(:read, @cur_user).
-      search(params[:s]).
-      order_by(updated: -1).
-      page(params[:page]).per(50)
   end
 
   def load_members(method = :members_to_deliver)
@@ -42,7 +33,24 @@ class Ezine::MemberPage::MainController < ApplicationController
   public
 
   def index
-    load_pages
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+    @items = @model.site(@cur_site).node(@cur_node).
+      allow(:read, @cur_user).
+      search(params[:s]).
+      order_by(updated: -1).
+      page(params[:page]).per(50)
+  end
+
+  def trash
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+    @items = @model.unscope_and.site(@cur_site).node(@cur_node).
+      allow(:read, @cur_user).
+      only_deleted.
+      search(params[:s]).
+      order_by(updated: -1).
+      page(params[:page]).per(50)
   end
 
   def delivery_confirmation

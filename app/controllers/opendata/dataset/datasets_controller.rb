@@ -1,6 +1,7 @@
 class Opendata::Dataset::DatasetsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::TrashFilter
   include Workflow::PageFilter
   helper Opendata::FormHelper
 
@@ -19,6 +20,14 @@ class Opendata::Dataset::DatasetsController < ApplicationController
 
   def index
     @items = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user).
+      search(params[:s]).
+      order_by(updated: -1).
+      page(params[:page]).per(50)
+  end
+
+  def trash
+    @items = @model.unscope_and.site(@cur_site).node(@cur_node).allow(:read, @cur_user).
+      only_deleted.
       search(params[:s]).
       order_by(updated: -1).
       page(params[:page]).per(50)

@@ -1,7 +1,9 @@
 <%= node_navi :cms do %>
 
 <h3><%= link_to t("cms.import_node_index"), node_import_nodes_path %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("cms.import_node_index")})", trash_node_import_nodes_path, class: :trash rescue nil %></h3>
 <h3><%= link_to t("cms.import_page_index"), node_import_pages_path %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("cms.import_page_index")})", trash_node_import_pages_path, class: :trash rescue nil %></h3>
 
 <!--
 <ul class="narrow-page">

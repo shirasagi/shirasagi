@@ -1,10 +1,13 @@
 class Cms::NodesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::TrashFilter
 
   model Cms::Node
 
   navi_view "cms/main/navi"
+
+  before_action :set_tree_navi, only: [:index, :trash]
 
   private
 
@@ -29,6 +32,16 @@ class Cms::NodesController < ApplicationController
   def index
     @items = @model.site(@cur_site).
       allow(:read, @cur_user).
+      where(depth: 1).
+      search(params[:s]).
+      order_by(filename: 1).
+      page(params[:page]).per(50)
+  end
+
+  def trash
+    @items = @model.unscope_and.site(@cur_site).
+      allow(:read, @cur_user).
+      only_deleted.
       where(depth: 1).
       search(params[:s]).
       order_by(filename: 1).

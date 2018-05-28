@@ -1,12 +1,12 @@
 class Facility::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::TrashFilter
   include Facility::PageFilter
 
   model Facility::Node::Page
 
   prepend_view_path "app/views/cms/node/nodes"
-  menu_view "facility/page/menu"
 
   private
 

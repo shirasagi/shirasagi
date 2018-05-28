@@ -1,6 +1,7 @@
 class Event::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
+  include Cms::TrashFilter
   include Workflow::PageFilter
 
   model Event::Page

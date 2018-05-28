@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :copy do
     get :copy, on: :member
     put :copy, on: :member
@@ -25,7 +33,7 @@ SS::Application.routes.draw do
     resources :dataset_groups, concerns: :deletion, module: :dataset do
       get "search" => "dataset_groups/search#index", on: :collection
     end
-    resources :datasets, concerns: [:deletion, :copy, :command], module: :dataset do
+    resources :datasets, concerns: [:deletion, :trash, :copy, :command], module: :dataset do
       get "search" => "datasets/search#index", on: :collection
       get :check_for_update, on: :member
       resources :resources, concerns: :deletion do

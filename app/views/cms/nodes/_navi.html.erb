@@ -1,0 +1,7 @@
+<nav class="mod-navi">
+  <h2><%= Cms::Node.model_name.human %></h2>
+  <h3><%= link_to Cms::Node.model_name.human, cms_nodes_path %></h3>
+  <h3><%= link_to "#{t("ss.links.trash")} (#{Cms::Node.model_name.human})", trash_cms_nodes_path, class: :trash %></h3>
+</nav>
+
+<%= render(partial: "cms/main/navi") %>

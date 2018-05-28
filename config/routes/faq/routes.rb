@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :copy do
     get :copy, :on => :member
     put :copy, :on => :member
@@ -47,7 +55,10 @@ SS::Application.routes.draw do
 
   content "faq" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :command, :contains_urls, :tag]
+    resources :pages, concerns: [
+      :deletion, :trash, :copy, :move, :lock, :download,
+      :import, :command, :contains_urls, :tag
+    ]
     resources :searches, concerns: :deletion
   end
 

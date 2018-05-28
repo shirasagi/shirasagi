@@ -63,7 +63,7 @@ module Cms::Model::Node
   def parents
     dirs = self.class.split_path(filename)
     dirs.pop
-    Cms::Node.where(site_id: site_id, :filename.in => dirs).sort(depth: 1)
+    Cms::Node.unscoped.where(site_id: site_id, :filename.in => dirs).sort(depth: 1)
   end
 
   def nodes
@@ -161,6 +161,7 @@ module Cms::Model::Node
   def remove_files_recursively?
     return true if @db_changes && @db_changes["state"] && !public?
     return true if @db_changes && @db_changes["route"] && public?
+    return true if deleted?
     false
   end
 

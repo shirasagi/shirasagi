@@ -1,6 +1,7 @@
 class Sitemap::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
+  include Cms::TrashFilter
   include Workflow::PageFilter
 
   model Sitemap::Page

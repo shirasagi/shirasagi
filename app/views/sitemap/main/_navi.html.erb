@@ -1,5 +1,6 @@
 <%= node_navi :sitemap do %>
 
 <h3><%= link_to t("mongoid.models.sitemap/page"), sitemap_pages_path %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("mongoid.models.sitemap/page")})", trash_sitemap_pages_path, class: :trash %></h3>
 
 <% end %>

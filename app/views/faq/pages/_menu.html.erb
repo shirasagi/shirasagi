@@ -5,9 +5,9 @@
       <%= link_to t('ss.links.download'), { action: :download } %>
       <%= link_to t('ss.links.import'), { action: :import } %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+  <% elsif params[:action] =~ /new|create|trash|lock/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
-  <% elsif params[:action] =~ /edit|update|delete|move|command/ %>
+  <% elsif params[:action] =~ /edit|update|delete|soft_delete|undo_delete|move|command/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.back_to_show'), { action: :show, id: @item }, class: "back-to-show" %>
     <% end %>
@@ -26,14 +26,22 @@
     <% if @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to(t('ss.links.move'), { action: :move, id: @item }, class: :move) rescue nil %>
     <% end %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
-    <% end %>
     <% if @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node) %>
       <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
         <%= link_to(t('ss.links.command'), { action: :command, id: @item }, class: :command) rescue nil %>
       <% end %>
     <% end %>
-    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+    <% if @item.deleted? %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to t('ss.links.restore'), { action: :undo_delete, id: @item }, class: :undo_delete rescue nil %>
+        <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete rescue nil %>
+      <% end %>
+      <%= link_to t('ss.links.back_to_index'), { action: :trash }, class: "back-to-index" %>
+    <% else %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to t('ss.links.delete'), { action: :soft_delete, id: @item }, class: :soft_delete rescue nil %>
+      <% end %>
+      <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+    <% end %>
   <% end %>
 </nav>

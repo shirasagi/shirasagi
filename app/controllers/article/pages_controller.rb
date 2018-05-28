@@ -1,6 +1,7 @@
 class Article::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
+  include Cms::TrashFilter
   include Workflow::PageFilter
   include Cms::OpendataRef::PageFilter
 

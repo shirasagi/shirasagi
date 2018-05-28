@@ -1,6 +1,7 @@
 class Member::MypagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::TrashFilter
 
   model Member::Node::Base
 

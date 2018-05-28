@@ -4,10 +4,13 @@ describe "cms_pages" do
   subject(:site) { cms_site }
   subject(:item) { Cms::Page.last }
   subject(:index_path) { cms_pages_path site.id }
+  subject(:trash_path) { trash_cms_pages_path site.id }
   subject(:new_path) { new_cms_page_path site.id }
   subject(:show_path) { cms_page_path site.id, item }
   subject(:edit_path) { edit_cms_page_path site.id, item }
   subject(:delete_path) { delete_cms_page_path site.id, item }
+  subject(:soft_delete_path) { soft_delete_cms_page_path site.id, item }
+  subject(:undo_delete_path) { undo_delete_cms_page_path site.id, item }
   subject(:move_path) { move_cms_page_path site.id, item }
   subject(:copy_path) { copy_cms_page_path site.id, item }
   subject(:contains_urls_path) { contains_urls_cms_page_path site.id, item }
@@ -84,6 +87,26 @@ describe "cms_pages" do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
 
     it "#contains_urls" do

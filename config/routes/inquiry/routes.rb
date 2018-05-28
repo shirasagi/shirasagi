@@ -7,13 +7,21 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :download do
     get :download, on: :collection
   end
 
   content "inquiry" do
     get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
-    resources :nodes, concerns: :deletion
+    resources :nodes, concerns: [:deletion, :trash]
     resources :forms, concerns: :deletion
     resources :columns, concerns: :deletion
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :destroy]
