@@ -10,6 +10,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
     let(:show_path) { gws_board_topic_path site, '-', '-', item }
     let(:edit_path) { edit_gws_board_topic_path site, '-', '-', item }
     let(:delete_path) { delete_gws_board_topic_path site, '-', '-', item }
+    let(:now) { Time.zone.at(Time.zone.now.to_i) }
 
     before { login_gws_user }
 
@@ -19,11 +20,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
     end
 
     it "#new" do
-      now = Time.zone.at(Time.zone.now.to_i)
       Timecop.freeze(now) do
         visit new_path
-        click_on "カテゴリーを選択する"
-        wait_for_cbox
+        click_on I18n.t("gws.apis.categories.index")
         within "tbody.items" do
           click_on category.name
         end
@@ -31,19 +30,19 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "name"
           fill_in "item[text]", with: "text"
-          click_button "保存"
+          click_button I18n.t("ss.buttons.save")
         end
-        expect(current_path).not_to eq new_path
-
-        item = Gws::Board::Topic.site(site).first
-        expect(item.name).to eq "name"
-        expect(item.text).to eq "text"
-        expect(item.state).to eq "public"
-        expect(item.mode).to eq "thread"
-        expect(item.descendants_updated).to eq now
-        expect(item.descendants_files_count).to eq 0
-        expect(item.category_ids).to eq [category.id]
+        expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
       end
+
+      item = Gws::Board::Topic.site(site).first
+      expect(item.name).to eq "name"
+      expect(item.text).to eq "text"
+      expect(item.state).to eq "public"
+      expect(item.mode).to eq "thread"
+      expect(item.descendants_updated).to eq now
+      expect(item.descendants_files_count).to eq 0
+      expect(item.category_ids).to eq [category.id]
     end
 
     it "#show" do
@@ -53,24 +52,23 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
-      click_on "カテゴリーを選択する"
-      wait_for_cbox
+      click_on I18n.t("gws.apis.categories.index")
       within "tbody.items" do
         click_on category.name
       end
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
     end
 
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t("ss.buttons.delete")
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
     end
   end
 end
