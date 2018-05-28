@@ -148,6 +148,7 @@ ja:
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
       gws/notice/notification: 通知
+      gws/notice/comment_setting: コメント設定
       gws/link: リンク
 
   gws_notification:
@@ -410,6 +411,8 @@ ja:
         message_notification: メッセージ通知
         email_notification: メール通知
         notification_noticed: 通知日時
+      gws/addon/notice/comment_setting:
+        comment_state: コメント投稿
       gws/contrast:
         name: 名前
         order: 並び順
@@ -541,6 +544,10 @@ ja:
         - 文字色を選択します。
       color:
         - 背景色を選択します。
+
+    gws/addon/notice/comment_setting:
+      comment_state:
+        - コメント投稿を有効にするかどうかを選択します。
 
   activemodel:
     models:
