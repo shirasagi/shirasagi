@@ -12,6 +12,9 @@ module Rss::Addon
       field :rss_max_docs, type: Integer
       field :rss_refresh_method, type: String
       field :page_state, type: String
+      field :rss_imported_min_released, type: DateTime
+      field :rss_imported_max_released, type: DateTime
+
       permit_params :rss_url, :rss_max_docs, :rss_refresh_method
       validates :page_state, inclusion: { in: %w(public closed), allow_blank: true }
     end

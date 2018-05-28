@@ -47,6 +47,12 @@ class Rss::ImportBase < Cms::ApplicationJob
     # remove unimported pages
     remove_unimported_pages
 
+    # update rss released
+    node.set(
+      rss_imported_min_released: @min_released,
+      rss_imported_max_released: @max_released
+    )
+
     # remove old pages
     model.limit_docs(site, node, node.rss_max_docs) do |item|
       put_history_log(item, :destroy)
@@ -122,10 +128,15 @@ class Rss::ImportBase < Cms::ApplicationJob
   end
 
   def remove_unimported_pages
-    return if @rss_links.blank? || @min_released.blank? || @max_released.blank?
+    return if @rss_links.blank?
+
+    rss_imported_min_released = node.rss_imported_min_released
+    rss_imported_max_released = node.rss_imported_max_released
+
+    return if rss_imported_min_released.blank? || rss_imported_max_released.blank?
 
     criteria = model.site(site).node(node)
-    criteria = criteria.between(released: @min_released..@max_released)
+    criteria = criteria.between(released: rss_imported_min_released..rss_imported_max_released)
     criteria = criteria.nin(rss_link: @rss_links)
     criteria.each do |item|
       item.destroy
