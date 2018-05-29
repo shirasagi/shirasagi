@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :gws_notice, class: Gws::Notice do
+  factory :gws_notice, class: Gws::Notice::Post do
     cur_site { gws_site }
     cur_user { gws_user }
 

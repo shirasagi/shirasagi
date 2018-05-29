@@ -39,7 +39,7 @@ class Gws::Portal::User::PortalController < ApplicationController
         gw_admin_notice.
         page(1).per(5)
 
-      @notices = Gws::Notice.site(@cur_site).and_public.
+      @notices = Gws::Notice::Post.site(@cur_site).and_public.
         readable(@cur_user, site: @cur_site).
         page(1).per(5)
 

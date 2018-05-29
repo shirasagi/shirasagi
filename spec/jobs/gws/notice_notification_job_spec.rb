@@ -56,7 +56,7 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
 
       expect(Gws::Memo::Notice.count).to eq 1
       Gws::Memo::Notice.first.tap do |message|
-        expect(message.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+        expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
       end
@@ -65,7 +65,7 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.to.first).to eq recipient1.email
-        expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+        expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
         expect(notify_mail.body.raw_source).to include(notice.name)
         expect(notify_mail.body.raw_source).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
@@ -99,7 +99,7 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
 
       expect(Gws::Memo::Notice.count).to eq 1
       Gws::Memo::Notice.first.tap do |message|
-        expect(message.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+        expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
       end
@@ -108,7 +108,7 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.to.first).to eq recipient1.email
-        expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+        expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
         expect(notify_mail.body.raw_source).to include(notice.name)
         expect(notify_mail.body.raw_source).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
@@ -166,7 +166,7 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
 
       expect(Gws::Memo::Notice.count).to be > 0
       Gws::Memo::Notice.first.tap do |message|
-        expect(message.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+        expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
       end
@@ -175,7 +175,7 @@ describe Gws::NoticeNotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.to.first).not_to be_nil
-        expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+        expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
         expect(notify_mail.body.raw_source).to include(notice.name)
         expect(notify_mail.body.raw_source).to include("#{scheme}://#{domain}/.g#{site.id}/gws/public_notices/#{notice.id}")

@@ -2,12 +2,12 @@ class Gws::PublicNoticesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Notice
+  model Gws::Notice::Post
 
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/notice"), action: :index]
+    @crumbs << [t("mongoid.models.gws/notice/post"), action: :index]
   end
 
   public

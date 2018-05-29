@@ -8,7 +8,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
   private
 
   def select_items
-    criteria = Gws::Notice.site(site).and_public
+    criteria = Gws::Notice::Post.site(site).and_public
     criteria = criteria.and('$or' => [{ message_notification: 'enabled' }, { email_notification: 'enabled' }])
     @items = criteria.exists(notification_noticed: false)
   end
@@ -17,7 +17,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
     each_item do |item|
       next if item.notification_noticed.present?
 
-      criteria = Gws::Notice.where(id: item.id)
+      criteria = Gws::Notice::Post.where(id: item.id)
       item = criteria.find_one_and_update({ '$set' => { notification_noticed: @now.utc } }, return_document: :after)
       next unless item
 
@@ -53,7 +53,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
       protocol: site.canonical_scheme, host: site.canonical_domain, site: site, id: notice
     )
 
-    i18n_key = Gws::Notice.model_name.i18n_key
+    i18n_key = Gws::Notice::Post.model_name.i18n_key
     subject = I18n.t("gws_notification.#{i18n_key}.subject", name: notice.name, default: notice.name)
     text = ApplicationController.helpers.sanitize(notice.html.presence || '', tags: [])
     text = text.truncate(60)

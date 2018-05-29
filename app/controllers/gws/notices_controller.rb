@@ -2,14 +2,14 @@ class Gws::NoticesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Notice
+  model Gws::Notice::Post
 
   navi_view "gws/notice/main/navi"
 
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/notice"), action: :index]
+    @crumbs << [t("mongoid.models.gws/notice/post"), action: :index]
   end
 
   def fix_params

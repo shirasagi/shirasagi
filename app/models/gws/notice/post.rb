@@ -1,4 +1,4 @@
-class Gws::Notice
+class Gws::Notice::Post
   include SS::Document
   include Gws::Referenceable
   include Gws::Reference::User
@@ -11,6 +11,9 @@ class Gws::Notice
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+
+  store_in collection: 'gws_notices'
+  set_permission_name 'gws_notices'
 
   seqid :id
   field :name, type: String

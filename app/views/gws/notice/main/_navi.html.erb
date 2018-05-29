@@ -1,17 +1,17 @@
 <nav class="mod-navi current-navi">
-  <h2><%= link_to t('mongoid.models.gws/notice'), gws_notices_path, class: 'icon-notice' %></h2>
+  <h2><%= link_to t('mongoid.models.gws/notice/post'), gws_notices_path, class: 'icon-notice' %></h2>
 
   <h3><%= link_to t('ss.navi.readable'), gws_notices_path, class: 'readable' %></h3>
 
-  <% if Gws::Notice.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% if Gws::Notice::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('ss.navi.editable'), gws_notices_path, class: 'management' %></h3>
   <% end %>
 
-  <% if Gws::Notice.allowed?(:trash, @cur_user, site: @cur_site) %>
+  <% if Gws::Notice::Post.allowed?(:trash, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('ss.navi.trash'), gws_notices_path, class: 'trash' %></h3>
   <% end %>
 
-  <% if Gws::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% if Gws::Notice::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.category'), gws_notices_path, class: 'management' %></h3>
   <% end %>
 </nav>

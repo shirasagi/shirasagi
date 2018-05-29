@@ -49,8 +49,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-      expect(Gws::Notice.all.count).to eq 1
-      Gws::Notice.all.first.tap do |item|
+      expect(Gws::Notice::Post.all.count).to eq 1
+      Gws::Notice::Post.all.first.tap do |item|
         expect(item.name).to eq name
         expect(item.text).to eq text
         expect(item.message_notification).to eq 'enabled'
@@ -69,8 +69,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Notice.all.count).to eq 1
-      Gws::Notice.all.first.tap do |notice|
+      expect(Gws::Notice::Post.all.count).to eq 1
+      Gws::Notice::Post.all.first.tap do |notice|
         # record notification_noticed
         expect(notice.notification_noticed).not_to be_nil
 
@@ -78,14 +78,14 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail.from.first).to eq site.sender_email
           expect(mail.to.first).not_to be_nil
-          expect(mail.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+          expect(mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(notice.name)
         end
 
         expect(Gws::Memo::Notice.count).to eq 1
         Gws::Memo::Notice.first.tap do |message|
-          expect(message.subject).to eq I18n.t('gws_notification.gws/notice.subject', name: notice.name)
+          expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
           expect(message.text).to include(notice.name)
           expect(message.text).to \
             include("#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
@@ -116,8 +116,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-      expect(Gws::Notice.all.count).to eq 1
-      Gws::Notice.all.first.tap do |item|
+      expect(Gws::Notice::Post.all.count).to eq 1
+      Gws::Notice::Post.all.first.tap do |item|
         expect(item.notification_noticed).to be_nil
       end
     end
