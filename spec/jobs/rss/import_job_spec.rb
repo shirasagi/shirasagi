@@ -87,6 +87,51 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     end
   end
 
+  context "when rss is not changed" do
+    let(:path) { "sample-rdf.xml" }
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:site) { cms_site }
+    let(:node) { create :rss_node_page, site: site, rss_url: url }
+    let(:user) { cms_user }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
+
+    it do
+      described_class.bind(bindings).perform_now
+      expect(Rss::Page.count).to eq 5
+
+      http.options real_path: "/sample-rdf.xml"
+
+      described_class.bind(bindings).perform_now
+      # expected count is 5.
+      expect(Rss::Page.count).to eq 5
+      # doc1 is not changed.
+      doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first
+      expect(doc1).not_to be_nil
+      expect(doc1.name).to eq '記事1'
+      expect(doc1.released).to eq Time.zone.parse('2015-06-12T19:00:00+09:00')
+      # doc2 is not changed.
+      doc2 = Rss::Page.where(rss_link: "http://example.jp/rdf/2.html").first
+      expect(doc2).not_to be_nil
+      expect(doc2.name).to eq '記事2'
+      expect(doc2.released).to eq Time.zone.parse('2015-06-11T14:00:00+09:00')
+      # doc3 is not changed.
+      doc3 = Rss::Page.where(rss_link: "http://example.jp/rdf/3.html").first
+      expect(doc3).not_to be_nil
+      expect(doc3.name).to eq '記事3'
+      expect(doc3.released).to eq Time.zone.parse('2015-06-10T09:00:00+09:00')
+      # doc4 is not changed.
+      doc4 = Rss::Page.where(rss_link: "http://example.jp/rdf/4.html").first
+      expect(doc4).not_to be_nil
+      expect(doc4.name).to eq '記事4'
+      expect(doc4.released).to eq Time.zone.parse('2015-06-09T15:00:00+09:00')
+      # doc5 is not changed.
+      doc5 = Rss::Page.where(rss_link: "http://example.jp/rdf/5.html").first
+      expect(doc5).not_to be_nil
+      expect(doc5.name).to eq '記事5'
+      expect(doc5.released).to eq Time.zone.parse('2015-06-08T10:00:00+09:00')
+    end
+  end
+
   context "when rss is updated" do
     let(:path) { "sample-rdf.xml" }
     let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
@@ -102,8 +147,8 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       http.options real_path: "/sample-rdf-2.xml"
 
       described_class.bind(bindings).perform_now
-      # expected count is 5, 1 added, 1 deleted, 1 updated.
-      expect(Rss::Page.count).to eq 5
+      # expected count is 3, 1 added, 3 deleted, 1 updated.
+      expect(Rss::Page.count).to eq 3
       # doc1 is updated.
       doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first
       expect(doc1).not_to be_nil
@@ -112,9 +157,62 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       # doc2 is deleted.
       doc2 = Rss::Page.where(rss_link: "http://example.jp/rdf/2.html").first
       expect(doc2).to be_nil
-      # doc6 is added
+      # doc3 is not changed.
+      doc3 = Rss::Page.where(rss_link: "http://example.jp/rdf/3.html").first
+      expect(doc3).not_to be_nil
+      expect(doc3.name).to eq '記事3'
+      expect(doc3.released).to eq Time.zone.parse('2015-06-10T09:00:00+09:00')
+      # doc4 is deleted.
+      doc4 = Rss::Page.where(rss_link: "http://example.jp/rdf/4.html").first
+      expect(doc4).to be_nil
+      # doc5 is deleted.
+      doc5 = Rss::Page.where(rss_link: "http://example.jp/rdf/5.html").first
+      expect(doc5).to be_nil
+      # doc6 is added.
       doc6 = Rss::Page.where(rss_link: "http://example.jp/rdf/6.html").first
       expect(doc6).not_to be_nil
+    end
+  end
+
+  context "when first rss and last rss was deleted" do
+    let(:path) { "sample-rdf.xml" }
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:site) { cms_site }
+    let(:node) { create :rss_node_page, site: site, rss_url: url }
+    let(:user) { cms_user }
+    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
+
+    it do
+      described_class.bind(bindings).perform_now
+      expect(Rss::Page.count).to eq 5
+
+      http.options real_path: "/sample-rdf-3.xml"
+
+      described_class.bind(bindings).perform_now
+      # expected count is 3, 2 deleted.
+      expect(Rss::Page.count).to eq 3
+
+      # doc1 is deleted.
+      doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first
+      expect(doc1).to be_nil
+      # doc2 is not changed.
+      doc3 = Rss::Page.where(rss_link: "http://example.jp/rdf/2.html").first
+      expect(doc3).not_to be_nil
+      expect(doc3.name).to eq '記事2'
+      expect(doc3.released).to eq Time.zone.parse('2015-06-11T14:00:00+09:00')
+      # doc3 is not changed.
+      doc3 = Rss::Page.where(rss_link: "http://example.jp/rdf/3.html").first
+      expect(doc3).not_to be_nil
+      expect(doc3.name).to eq '記事3'
+      expect(doc3.released).to eq Time.zone.parse('2015-06-10T09:00:00+09:00')
+      # doc4 is not changed.
+      doc3 = Rss::Page.where(rss_link: "http://example.jp/rdf/4.html").first
+      expect(doc3).not_to be_nil
+      expect(doc3.name).to eq '記事4'
+      expect(doc3.released).to eq Time.zone.parse('2015-06-09T15:00:00+09:00')
+      # doc5 is deleted.
+      doc5 = Rss::Page.where(rss_link: "http://example.jp/rdf/5.html").first
+      expect(doc5).to be_nil
     end
   end
 end

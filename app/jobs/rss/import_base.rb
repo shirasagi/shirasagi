@@ -125,7 +125,7 @@ class Rss::ImportBase < Cms::ApplicationJob
     return if @rss_links.blank? || @min_released.blank? || @max_released.blank?
 
     criteria = model.site(site).node(node)
-    criteria = criteria.between(released: @min_released..@max_released)
+    #criteria = criteria.between(released: @min_released..@max_released)
     criteria = criteria.nin(rss_link: @rss_links)
     criteria.each do |item|
       item.destroy
