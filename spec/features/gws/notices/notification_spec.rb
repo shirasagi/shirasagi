@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:index_path) { gws_notices_path(site) }
+  let(:index_path) { gws_notice_editables_path(site) }
 
   before do
     ActionMailer::Base.deliveries = []

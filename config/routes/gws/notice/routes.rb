@@ -6,8 +6,8 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
-  namespace "gws", path: ".g:site/gws" do
-    resources :notices, concerns: [:deletion]
-    resources :public_notices, only: [:index, :show]
+  gws 'notice' do
+    resources :readables, only: [:index, :show]
+    resources :editables, concerns: [:deletion]
   end
 end

@@ -49,7 +49,7 @@ class Gws::NoticeNotificationJob < Gws::ApplicationJob
     recipients = notice.overall_readers.site(@cur_site || site).active
     return if recipients.blank?
 
-    path = Rails.application.routes.url_helpers.gws_public_notice_url(
+    path = Rails.application.routes.url_helpers.gws_notice_readable_url(
       protocol: site.canonical_scheme, host: site.canonical_domain, site: site, id: notice
     )
 

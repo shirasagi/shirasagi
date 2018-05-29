@@ -1,8 +1,10 @@
-class Gws::PublicNoticesController < ApplicationController
+class Gws::Notice::ReadablesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
   model Gws::Notice::Post
+
+  navi_view "gws/notice/main/navi"
 
   private
 

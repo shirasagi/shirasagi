@@ -1,4 +1,4 @@
-class Gws::NoticesController < ApplicationController
+class Gws::Notice::EditablesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
