@@ -104,6 +104,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       described_class.bind(bindings).perform_now
       # expected count is 5.
       expect(Rss::Page.count).to eq 5
+
       # doc1 is not changed.
       doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first
       expect(doc1).not_to be_nil
@@ -149,6 +150,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       described_class.bind(bindings).perform_now
       # expected count is 3, 1 added, 3 deleted, 1 updated.
       expect(Rss::Page.count).to eq 3
+
       # doc1 is updated.
       doc1 = Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first
       expect(doc1).not_to be_nil
