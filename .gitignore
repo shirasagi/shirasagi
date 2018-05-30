@@ -3,6 +3,7 @@
 
 /.bundle
 /.project
+/.ruby-version
 
 /config/*.yml
 /config/after_initializers
