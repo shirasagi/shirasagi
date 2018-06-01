@@ -24,7 +24,7 @@ production: &production
   cache_mails: true
 
   # Store mail cache as static file
-  store_mails: true
+  store_mails: false
 
   # Quota cache
   cache_quota: true
