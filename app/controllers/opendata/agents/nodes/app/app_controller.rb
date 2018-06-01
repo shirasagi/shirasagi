@@ -138,7 +138,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   def add_executed
     @cur_node.layout = nil
     @add = false
-    if @app.present?
+    if @app.present? && Mongoid::Config.clients[:default_post].blank?
       exec = @app.executed.to_i
       @app.executed = exec + 1
       res = @app.save(validate: false)
