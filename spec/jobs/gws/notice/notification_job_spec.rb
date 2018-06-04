@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::NoticeNotificationJob, dbscope: :example do
+describe Gws::Notice::NotificationJob, dbscope: :example do
   let(:site) { gws_site }
   let(:scheme) { %w(http https).sample }
   let(:domain) { "#{unique_id}.example.jp" }

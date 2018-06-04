@@ -1,4 +1,4 @@
-class Gws::NoticeNotificationJob < Gws::ApplicationJob
+class Gws::Notice::NotificationJob < Gws::ApplicationJob
   def perform
     @now = Time.zone.now
     select_items

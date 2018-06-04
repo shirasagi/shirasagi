@@ -79,5 +79,5 @@ ja:
 
   job:
     models:
-      gws/notice_notification_job: お知らせ通知
+      gws/notice/notification_job: お知らせ通知
       gws/notice/trash_purge_job: お知らせゴミ箱の掃除
