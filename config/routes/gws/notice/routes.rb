@@ -10,5 +10,9 @@ SS::Application.routes.draw do
     resources :readables, only: [:index, :show]
     resources :editables, concerns: [:deletion]
     resources :categories, concerns: [:deletion]
+
+    namespace "apis" do
+      get "categories" => "categories#index"
+    end
   end
 end
