@@ -1,3 +1,6 @@
+# Require `belongs_to` associations by default. Previous versions had false.
+Mongoid::Config.belongs_to_required_by_default = false
+
 module SkipMongoidQueryCache
   private
 
