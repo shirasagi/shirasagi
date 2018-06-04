@@ -7,6 +7,13 @@ ja:
     delete_other_gws_notices: お知らせの削除（全て）
     delete_private_gws_notices: お知らせの削除（所有）
 
+    read_other_gws_notice_categories: カテゴリーの閲覧（全て）
+    read_private_gws_notice_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_notice_categories: カテゴリーの編集（全て）
+    edit_private_gws_notice_categories: カテゴリーの編集（所有）
+    delete_other_gws_notice_categories: カテゴリーの削除（全て）
+    delete_private_gws_notice_categories: カテゴリーの削除（所有）
+
   modules:
     gws/notice: お知らせ
     addons:
@@ -23,6 +30,13 @@ ja:
   mongoid:
     models:
       gws/notice/post: お知らせ
+      gws/notice/category: カテゴリー
+    errors:
+      models:
+        gws/notice/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
     attributes:
       gws/notice/post:
         name: タイトル

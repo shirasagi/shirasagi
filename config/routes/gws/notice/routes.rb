@@ -9,5 +9,6 @@ SS::Application.routes.draw do
   gws 'notice' do
     resources :readables, only: [:index, :show]
     resources :editables, concerns: [:deletion]
+    resources :categories, concerns: [:deletion]
   end
 end

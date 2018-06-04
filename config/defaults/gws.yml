@@ -76,6 +76,7 @@ production: &production
       - "Gws::Memo::Message"
       - "Gws::Monitor::Category"
       - "Gws::Monitor::Post"
+      - "Gws::Notice::Category"
       - "Gws::Notice::Post"
       - "Gws::Portal::GroupPortlet"
       - "Gws::Portal::GroupSetting"
