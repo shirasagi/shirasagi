@@ -2,6 +2,7 @@
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="state"><%= t "ss.state.#{item.state_with_release_date}" %></span>
+  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
 
   <% if attr = item.label(:severity).presence %>
     <span class="label"><%= attr %></span>
@@ -13,6 +14,10 @@
       <%= link_to category.trailing_name, url_for(action: :index, s: { category: category.id }), class: "gws-category-label", style: category_label_css(category) %>
     <% end %>
   </span>
+  <% end %>
+
+  <% if item.files.count > 0 %>
+    <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
   <% end %>
 <% end %>
 
