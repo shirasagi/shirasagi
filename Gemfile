@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.9'
+gem 'rails', '~> 5.1.0'
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2.2'
 gem 'therubyracer', '~> 0.12.3', platforms: :ruby
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
@@ -14,9 +14,9 @@ gem 'unicorn-worker-killer'
 
 # Database
 gem 'mongo_session_store-rails4'
-gem 'mongoid', '~> 5.1.0' #, git: 'https://github.com/mongodb/mongoid.git'
-gem 'mongoid-rspec'
-gem 'mongoid-grid_fs'
+gem 'mongoid', '~> 7.0' #, git: 'https://github.com/mongodb/mongoid.git'
+gem 'mongoid-rspec', git: 'https://github.com/mongoid/mongoid-rspec'
+gem 'mongoid-grid_fs', git: 'https://github.com/mongoid/mongoid-grid_fs.git'
 
 # Assets
 gem 'autosize-rails'
