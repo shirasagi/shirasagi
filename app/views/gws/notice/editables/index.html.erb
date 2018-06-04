@@ -6,6 +6,14 @@
   <% if attr = item.label(:severity).presence %>
     <span class="label"><%= attr %></span>
   <% end %>
+
+  <% if item.categories.present? %>
+  <span class="categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, url_for(action: :index, s: { category: category.id }), class: "gws-category-label", style: category_label_css(category) %>
+    <% end %>
+  </span>
+  <% end %>
 <% end %>
 
 <%= render file: "gws/crud/index" %>

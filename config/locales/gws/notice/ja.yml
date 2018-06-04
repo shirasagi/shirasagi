@@ -19,6 +19,7 @@ ja:
     addons:
       gws/notice/notification: 通知
       gws/notice/comment_setting: コメント設定
+      gws/notice/category: カテゴリー
 
   gws_notification:
     gws/notice/post:
@@ -47,6 +48,8 @@ ja:
         notification_noticed: 通知日時
       gws/addon/notice/comment_setting:
         comment_state: コメント投稿
+      gws/addon/notice/category:
+        category_ids: カテゴリー
 
   tooltip:
     gws/notice/post:

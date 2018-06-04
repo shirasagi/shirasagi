@@ -5,6 +5,7 @@ class Gws::Notice::Post
   include Gws::Reference::Site
   #include SS::Addon::Body
   include SS::Addon::Markdown
+  include Gws::Addon::Notice::Category
   include Gws::Addon::Notice::CommentSetting
   include Gws::Addon::Notice::Notification
   include Gws::Addon::Release
