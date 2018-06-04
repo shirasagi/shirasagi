@@ -8,7 +8,7 @@ SS::Application.routes.draw do
 
   concern :deletion_all do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+   #delete action: :destroy_all, on: :collection
   end
 
   content "opendata" do

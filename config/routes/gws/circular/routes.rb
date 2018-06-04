@@ -26,7 +26,7 @@ SS::Application.routes.draw do
       resources :admins, concerns: [:admins, :soft_deletion], except: [:destroy]
       resources :trashes, except: [:new, :create, :edit, :update] do
         get :delete, on: :member
-        delete action: :destroy_all, on: :collection
+        #delete action: :destroy_all, on: :collection
         get :recover, on: :member
         match :undo_delete, on: :member, via: [:get, :post]
       end
@@ -37,7 +37,7 @@ SS::Application.routes.draw do
 
     resources :categories do
       get :delete, on: :member
-      delete action: :destroy_all, on: :collection
+      #delete action: :destroy_all, on: :collection
     end
 
     namespace 'apis' do

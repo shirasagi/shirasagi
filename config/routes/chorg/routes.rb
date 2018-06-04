@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    #delete action: :destroy_all, on: :collection
   end
 
   namespace('chorg', as: 'chorg', path: '.s:site/chorg', module: 'chorg') do
