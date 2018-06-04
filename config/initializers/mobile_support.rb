@@ -63,8 +63,8 @@ module SS
   module MobileRedirecting
     extend ActiveSupport::Concern
 
-    def redirect_to_with_shirasagi(options = {}, response_status = {})
-      redirect_to_without_shirasagi(options, response_status)
+    def redirect_to_shirasagi(options = {}, response_status = {})
+      super(options, response_status)
       if SS::MobileSupport.mobile?(request)
         save_location = self.location
         self.location = SS::MobileSupport.embed_mobile_path(request, save_location)
@@ -75,14 +75,12 @@ HTML
         end
       end
     end
-
-    included do
-      alias_method_chain :redirect_to, :shirasagi
-    end
   end
 end
 
-ActiveSupport.on_load(:action_controller) do
-  # include SS::MobileUrlFor
-  include SS::MobileRedirecting
-end
+ActionController::Base.prepend(SS::MobileRedirecting)
+
+#ActiveSupport.on_load(:action_controller) do
+#  include SS::MobileUrlFor
+#  include SS::MobileRedirecting
+#end
