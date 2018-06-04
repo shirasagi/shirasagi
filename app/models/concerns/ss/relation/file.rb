@@ -7,16 +7,16 @@ module SS::Relation::File
       store = opts[:store_as] || "#{name.to_s.singularize}_id"
       class_name = opts[:class_name] || "SS::File"
 
-      belongs_to name, foreign_key: store, class_name: class_name, dependent: :destroy
+      belongs_to name.to_sym, foreign_key: store, class_name: class_name, dependent: :destroy
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
       permit_params "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
 
-      before_save "validate_relation_#{name}", if: ->{ send("in_#{name}").present? }
-      before_save "save_relation_#{name}", if: ->{ send("in_#{name}").present? }
-      before_save "remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
-      after_save "update_relation_#{name}_state", if: ->{ send(name).present? }
+      before_save "validate_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
+      before_save "save_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
+      before_save "remove_relation_#{name}".to_sym, if: ->{ send("rm_#{name}").to_s == "1" }
+      after_save "update_relation_#{name}_state".to_sym, if: ->{ send(name).present? }
 
       define_method("validate_relation_#{name}") do
         file = relation_file(name, opts)
