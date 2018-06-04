@@ -29,13 +29,39 @@ class Gws::Notice::Post
   default_scope -> {
     order_by released: -1
   }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
-    criteria
-  }
+  class << self
+    def search(params)
+      all.search_keyword(params).search_group(params).search_category(params)
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :html)
+    end
+
+    def search_group(params)
+      return all if params.blank? || params[:group].blank?
+
+      group = params[:group]
+      return all if group.blank? || !group.active?
+
+      group_ids = [ group.id ] + group.descendants.active.pluck(:id)
+
+      all.where('$and' =>[
+        { '$or' => [
+          { :readable_setting_range.exists => false },
+          { readable_setting_range: 'select' }
+        ] },
+        :readable_group_ids.in => group_ids
+      ])
+    end
+
+    def search_category(params)
+      return all if params.blank? || params[:category].blank?
+      all.where(category_ids: params[:category].to_i)
+    end
+  end
 
   def severity_options
     [

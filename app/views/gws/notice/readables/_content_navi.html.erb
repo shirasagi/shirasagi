@@ -1,0 +1,48 @@
+<% if params[:action] == "index" %>
+  <% render_tree_navi = proc do |group| %>
+    <div class="tree-item is-open is-cache <% if group == @selected_group %>is-current<% end %>" data-filename="<%= group.name %>">
+      <% (group.depth - @cur_site.depth).times do %>
+        <div class="item-pad"></div>
+      <% end %>
+      <%= link_to '#', class: 'item-mark' do %>
+        <i class="material-icons">&#xE15B;</i>
+      <% end %>
+      <%= link_to group.trailing_name, { action: :index, group: group.id }, class: 'item-name' %>
+    </div>
+  <% end %>
+
+  <%= jquery do %>
+    var navi = new Gws_Category_Navi('.gws-category-navi');
+    <% if @selected_group %>
+      navi.setBaseUrl('<%= url_for(action: :index, group: @selected_group.id, category: 'ID') %>');
+    <% else %>
+      navi.setBaseUrl('<%= url_for(action: :index, category: 'ID') %>');
+    <% end %>
+    navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
+  <% end %>
+
+  <div class="gws-category-navi dropdown">
+    <%= link_to url_for(action: :index, category: '-'), class: 'btn dropdown-toggle' do %>
+      <%= @category.try(:trailing_name) || t('gws.category') %>
+      <i class="material-icons md-13">&#xE313;</i>
+    <% end %>
+    <div class="dropdown-menu dropdown-menu--white"></div>
+  </div>
+
+  <%= jquery do %>
+    var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
+    treeNavi.registerEvents();
+  <% end %>
+
+  <div id="content-navi">
+    <h2 class="content-navi-title">
+      <%= Gws::Group.model_name.human %>
+    </h2>
+
+    <div class="tree-navi">
+      <% Gws::Group.all.in(id: @cur_site.descendants.pluck(:id) + [@cur_site.id]).active.tree_sort.each do |group| %>
+        <% render_tree_navi.call(group) %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -7,7 +7,12 @@ SS::Application.routes.draw do
   end
 
   gws 'notice' do
-    resources :readables, only: [:index, :show]
+    get '/' => redirect { |p, req| "#{req.path}/-/-/readables" }, as: :main
+
+    scope path: ':group/:category' do
+      resources :readables, only: [:index, :show]
+    end
+
     resources :editables, concerns: [:deletion]
     resources :categories, concerns: [:deletion]
 

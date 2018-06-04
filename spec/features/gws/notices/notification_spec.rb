@@ -88,7 +88,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
           expect(message.text).to include(notice.name)
           expect(message.text).to \
-            include("#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/gws/public_notices/#{notice.id}")
+            include("#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
         end
       end
     end

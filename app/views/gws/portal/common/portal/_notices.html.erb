@@ -34,7 +34,7 @@
     <% @notices.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to item.name, gws_notice_readable_path(id: item), class: "title notice-severity-#{item.severity}" %>
+        <%= link_to item.name, gws_notice_readable_path(group: @cur_site, category: '-', id: item), class: "title notice-severity-#{item.severity}" %>
       </div>
       <div class="meta">
         <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
@@ -47,5 +47,5 @@
     <% end %>
   </ul>
   <% end %>
-  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_notice_readables_path %></div>
+  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_notice_readables_path(group: @cur_site, category: '-') %></div>
 </div>

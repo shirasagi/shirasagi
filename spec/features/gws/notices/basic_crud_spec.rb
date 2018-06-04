@@ -4,7 +4,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let!(:item) { create :gws_notice }
   let(:index_path) { gws_notice_editables_path(site) }
-  let(:public_index_path) { gws_notice_readables_path(site) }
+  let(:public_index_path) { gws_notice_readables_path(site: site, group: site, category: '-') }
 
   context "with auth" do
     before { login_gws_user }
