@@ -228,6 +228,8 @@ GEM
       activerecord
       kaminari-core (= 1.1.1)
     kaminari-core (1.1.1)
+    kaminari-mongoid (0.1.2)
+      kaminari
     kgio (2.11.2)
     koala (3.0.0)
       addressable
@@ -584,6 +586,7 @@ DEPENDENCIES
   js_cookie_rails
   json-jwt
   kaminari
+  kaminari-mongoid
   koala
   kramdown
   levenshtein
