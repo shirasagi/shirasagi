@@ -6,6 +6,8 @@ ja:
     edit_private_gws_notices: お知らせの編集（所有）
     delete_other_gws_notices: お知らせの削除（全て）
     delete_private_gws_notices: お知らせの削除（所有）
+    trash_other_gws_notices: お知らせゴミ箱の管理（全て）
+    trash_private_gws_notices: お知らせゴミ箱の管理（所有）
 
     read_other_gws_notice_categories: カテゴリーの閲覧（全て）
     read_private_gws_notice_categories: カテゴリーの閲覧（所有）
@@ -78,3 +80,4 @@ ja:
   job:
     models:
       gws/notice_notification_job: お知らせ通知
+      gws/notice/trash_purge_job: お知らせゴミ箱の掃除

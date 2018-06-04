@@ -1,9 +1,9 @@
-class Gws::Notice::EditablesController < ApplicationController
+class Gws::Notice::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :soft_delete]
+  before_action :set_item, only: [:show, :delete, :destroy, :undo_delete]
 
   model Gws::Notice::Post
 
@@ -22,7 +22,7 @@ class Gws::Notice::EditablesController < ApplicationController
   def set_items
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
-      without_deleted.
+      only_deleted.
       search(params[:s])
   end
 

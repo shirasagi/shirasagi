@@ -6,6 +6,11 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :soft_deletion do
+    match :soft_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   gws 'notice' do
     get '/' => redirect { |p, req| "#{req.path}/-/-/readables" }, as: :main
 
@@ -13,7 +18,10 @@ SS::Application.routes.draw do
       resources :readables, only: [:index, :show]
     end
 
-    resources :editables, concerns: [:deletion]
+    resources :editables, concerns: [:soft_deletion], except: [:destroy]
+    resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
+      match :undo_delete, on: :member, via: [:get, :post]
+    end
     resources :categories, concerns: [:deletion]
 
     namespace "apis" do

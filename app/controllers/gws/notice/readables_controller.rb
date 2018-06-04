@@ -40,6 +40,7 @@ class Gws::Notice::ReadablesController < ApplicationController
   def set_items
     @items = @model.site(@cur_site).and_public.
       readable(@cur_user, site: @cur_site).
+      without_deleted.
       search(params[:s])
 
     if @selected_group != @cur_site

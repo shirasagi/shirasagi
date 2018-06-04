@@ -8,7 +8,7 @@
   <% end %>
 
   <% if Gws::Notice::Post.allowed?(:trash, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('ss.navi.trash'), gws_notice_editables_path, class: 'trash' %></h3>
+    <h3><%= link_to t('ss.navi.trash'), gws_notice_trashes_path, class: 'trash' %></h3>
   <% end %>
 
   <% if Gws::Notice::Category.allowed?(:read, @cur_user, site: @cur_site) %>
