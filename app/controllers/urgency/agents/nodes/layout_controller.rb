@@ -3,7 +3,7 @@ class Urgency::Agents::Nodes::LayoutController < ApplicationController
   include Cms::PublicFilter::Page
 
   def index
-    page = Cms::Page.where(filename: /index.html$/, depth: @cur_node.depth).first
+    page = @cur_node.find_index_page
 
     raise "404" unless page
     raise "404" unless controller.class.to_s =~ /Preview/
