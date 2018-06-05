@@ -35,9 +35,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       ss_file
 
       visit new_path
-      first('#addon-gws-agents-addons-share-category .toggle-head').click
-      click_on "カテゴリーを選択する"
-      wait_for_cbox
+      click_on I18n.t("gws.apis.categories.index")
       within "tbody.items" do
         click_on category.name
       end
@@ -53,7 +51,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
         find('input[type=submit]').click
       end
       expect(current_path).not_to eq new_path
-      expect(page).to have_content(folder.name)
+      within ".tree-navi" do
+        expect(page).to have_content(folder.name)
+      end
     end
 
     it "#show" do
