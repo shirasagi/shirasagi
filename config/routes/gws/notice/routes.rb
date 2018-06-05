@@ -26,6 +26,9 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "categories" => "categories#index"
+      scope path: ':notice_id' do
+        resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+      end
     end
   end
 end

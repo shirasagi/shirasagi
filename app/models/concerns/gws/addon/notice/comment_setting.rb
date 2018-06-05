@@ -13,4 +13,8 @@ module Gws::Addon::Notice::CommentSetting
       [I18n.t("ss.options.state.#{v}"), v]
     end
   end
+
+  def comment_state_enabled?
+    comment_state == 'enabled'
+  end
 end

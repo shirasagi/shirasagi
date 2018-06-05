@@ -9,6 +9,7 @@ class Gws::Notice::Post
   include Gws::Addon::Link
   include Gws::Addon::Notice::Category
   include Gws::Addon::Notice::CommentSetting
+  include Gws::Addon::Notice::CommentPost
   include Gws::Addon::Notice::Notification
   include Gws::Addon::Release
   include Gws::Addon::ReadableSetting

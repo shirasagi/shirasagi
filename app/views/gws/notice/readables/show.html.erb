@@ -1,6 +1,18 @@
-<section class="main-box">
-  <header><h2><%= @item.send :name %></h2></header>
-  <div class="markdown-body">
-    <%= @item.html %>
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= @item.send :name %></h2></div>
+    <div class="addon-body">
+      <%= @item.html %>
+    </div>
   </div>
-</section>
+
+  <% if @item.files.present? %>
+  <%= render file: "_addons_show", locals: {addons: @item.addons.select { |addon| addon.klass == Gws::Addon::File}} %>
+  <% end %>
+
+  <% if @item.links.present? %>
+  <%= render file: "_addons_show", locals: {addons: @item.addons.select {|addon| addon.klass == Gws::Addon::Link}} %>
+  <% end %>
+
+  <%= render file: "_addons_show", locals: {addons: @item.addons.select {|addon| addon.klass == Gws::Addon::Notice::CommentPost}} %>
+</div>

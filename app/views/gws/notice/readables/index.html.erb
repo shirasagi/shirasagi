@@ -22,6 +22,10 @@
   <% if item.files.count > 0 %>
     <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
   <% end %>
+
+  <% if item.comments.count > 0 %>
+    <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
+  <% end %>
 <% end %>
 
 <%= render file: "gws/crud/index" %>
