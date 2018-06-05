@@ -1,0 +1,11 @@
+<div class="list-head">
+  <div class="list-head-action">
+    <%= render file: "_list_head_tags" %>
+  </div>
+
+  <%= render file: "_search" %>
+</div>
+
+<%= jquery do %>
+  $('.list-items .list-item label.check').remove();
+<% end %>
