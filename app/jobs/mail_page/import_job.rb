@@ -7,11 +7,12 @@ class MailPage::ImportJob < Cms::ApplicationJob
     mail = ::Mail.new(Fs::binread(file))
     from = mail.from[0]
     to = mail.to[0]
+    body = mail.text_part ? mail.text_part.decoded : mail.decoded
 
     put_log("from: " + from)
     put_log("to: " + to)
     put_log("subject: " + mail.subject)
-    put_log("body: \n" + mail.decoded)
+    put_log("body: \n" + body)
 
     from_domain = from.sub(/^.+@/, "")
     to_domain = to.sub(/^.+@/, "")
