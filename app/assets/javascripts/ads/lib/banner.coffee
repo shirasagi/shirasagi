@@ -8,6 +8,11 @@ class @Ads_Banner
     list.each ->
       wrap.append $(this)
 
+
+lll
+
+
+
 #  ## puts access log
 #  @countHandle: ->
 #    $(".ads-banners a").click (e) ->
