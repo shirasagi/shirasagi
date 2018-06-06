@@ -38,6 +38,33 @@ class @SS_Preview
       else
         location.href = path
 
+    $("#ss-preview .part").click ->
+      $('.preview-part').each ->
+        if $(this).hasClass('preview-hide')
+          $(this).removeClass('preview-hide')
+          _this = $(this)
+          targetClass = _this.attr('class').split(' ').filter (item) ->
+            item != 'preview-part'
+          _this.nextUntil('.' + targetClass.pop()).each ->
+            if $(this).width() > _this.width()
+              _this.width($(this).width())
+            if $(this).height() > _this.height()
+              _this.height($(this).height())
+            if $(this).offset().top > _this.offset().top
+              _this.css('top', $(this).offset().top)
+            if $(this).offset().left > _this.offset().left
+              _this.css('left', $(this).offset().left)
+        else
+          $(this).attr('style', '')
+          $(this).addClass('preview-hide')
+
+    $('#ss-preview #preview_part').change ->
+      button = $('#ss-preview .preview-part-button')
+      if $(this).val() == ''
+        button.addClass('preview-hide')
+        return false
+      button.attr('onclick', 'window.open("' + $(this).val() + '")')
+      button.removeClass('preview-hide')
 
     if SS_Preview.request_path
       $('body a [href="#"]').val("onclick", "return false;")
