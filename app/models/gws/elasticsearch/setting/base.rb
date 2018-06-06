@@ -18,6 +18,12 @@ module Gws::Elasticsearch::Setting::Base
     nil
   end
 
+  def search_settings
+    search_settings = []
+    search_settings << self if allowed?(:read)
+    search_settings
+  end
+
   def search_types
     search_types = []
     search_types << model.collection_name if allowed?(:read)
@@ -119,6 +125,28 @@ module Gws::Elasticsearch::Setting::Base
     query0[:bool][:minimum_should_match] = 1
 
     query0
+  end
+
+  def build_filter
+    filter_query = {}
+    filter_query[:bool] = {}
+    filter_query[:bool][:minimum_should_match] = 1
+    filter_query[:bool][:should] = []
+    filter_query[:bool][:should] << readable_filter
+    manage_filter = manageable_filter
+    if manage_filter.present?
+      filter_query[:bool][:should] << manage_filter
+    end
+
+    filter_query
+
+    type_query = {}
+    type_query[:bool] = {}
+    type_query[:bool][:must] = []
+    type_query[:bool][:must] << filter_query
+    type_query[:bool][:must] << { type: { value: search_types.first } }
+
+    type_query
   end
 
   private
