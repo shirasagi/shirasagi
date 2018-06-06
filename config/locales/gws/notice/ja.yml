@@ -1,4 +1,12 @@
 ja:
+  gws/notice:
+    body_size: 本文
+    individual_body_size: 個別容量制限
+    total_body_size: 総容量制限
+    file_size: 添付ファイル
+    individual_file_size: 個別容量制限
+    total_file_size: 総容量制限
+
   gws_role:
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
@@ -8,6 +16,13 @@ ja:
     delete_private_gws_notices: お知らせの削除（所有）
     trash_other_gws_notices: お知らせゴミ箱の管理（全て）
     trash_private_gws_notices: お知らせゴミ箱の管理（所有）
+
+    read_other_gws_notice_folders: フォルダーの閲覧（全て）
+    read_private_gws_notice_folders: フォルダーの閲覧（所有）
+    edit_other_gws_notice_folders: フォルダーの編集（全て）
+    edit_private_gws_notice_folders: フォルダーの編集（所有）
+    delete_other_gws_notice_folders: フォルダーの削除（全て）
+    delete_private_gws_notice_folders: フォルダーの削除（所有）
 
     read_other_gws_notice_categories: カテゴリーの閲覧（全て）
     read_private_gws_notice_categories: カテゴリーの閲覧（所有）
@@ -23,6 +38,7 @@ ja:
       gws/notice/comment_setting: コメント設定
       gws/notice/comment_post: コメント
       gws/notice/category: カテゴリー
+      gws/notice/resource_limitation: 容量制限
 
   gws_notification:
     gws/notice/post:
@@ -34,6 +50,7 @@ ja:
   mongoid:
     models:
       gws/notice/post: お知らせ
+      gws/notice/folder: フォルダー
       gws/notice/category: カテゴリー
     errors:
       models:
@@ -56,6 +73,10 @@ ja:
         text: コメント
       gws/addon/notice/category:
         category_ids: カテゴリー
+      gws/addon/notice/resource_limitation:
+        notice_total_body_size_limit: 本文総容量制限
+        notice_individual_file_size_limit: 添付ファイル個別容量制限
+        notice_total_file_size_limit: 添付ファイル総容量制限
 
   tooltip:
     gws/notice/post:
@@ -80,6 +101,17 @@ ja:
     gws/addon/notice/comment_setting:
       comment_state:
         - コメント投稿を有効にするかどうかを選択します。
+
+    gws/addon/notice/resource_limitation:
+      notice_total_body_size_limit:
+        - フォルダーの総本文制限を入力します。
+        - 下位のフォルダーは上位のフォルダーの制限値を上回ることはできません。
+      notice_individual_file_size_limit:
+        - 最大ファイルサイズを入力します。
+        - 下位のフォルダーは上位のフォルダーの制限値を上回ることはできません。
+      notice_total_file_size_limit:
+        - フォルダーの総容量制限を入力します。
+        - 下位のフォルダーは上位のフォルダーの制限値を上回ることはできません。
 
   job:
     models:

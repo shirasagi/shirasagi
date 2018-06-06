@@ -165,6 +165,14 @@ ja:
         gws/contrast:
           load_error: 読み込みに失敗しました。
           no_contrasts: 定義がありません。
+        gws/model/folder:
+          not_found_parent: 親フォルダーが存在しません。
+          found_children: 子フォルダーが存在します。
+          not_move_to_parent: 最上位フォルダーに変更することはできません。
+          not_move_to_under_other_parent: 最上位のフォルダーをまたいでフォルダーを移動することはできません。
+          not_create_same_folder: フォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
+          not_move_to_same_name_folder: 移動先にフォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
+          invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
     attributes:
       gws/model/category:
         model: モデル
@@ -187,6 +195,13 @@ ja:
         content_type: コンテンツタイプ
         resizing: リサイズ
         geo_location: 緯度・経度
+      gws/model/folder:
+        name: フォルダー名
+        depth: 階層
+        order: 並び順
+        state: 状態
+        in_basename: フォルダー名
+        in_parent: 親フォルダー
       gws/user:
         gws_main_group_ids: グループ（主）
         gws_default_group_ids: グループ（既定）
@@ -502,6 +517,14 @@ ja:
         - 文字色を選択します。
       color:
         - 背景色を選択します。
+    gws/model/folder:
+      name:
+        - フォルダー名を入力します。
+        - 親フォルダー名にスラッシュ区切りでサブフォルダーを作成することができます。
+      order:
+        - 並び順を入力します。
+      in_parent:
+        - 親フォルダーを選択してください。
 
   activemodel:
     models:

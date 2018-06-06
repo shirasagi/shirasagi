@@ -11,6 +11,10 @@
     <h3><%= link_to t('ss.navi.trash'), gws_notice_trashes_path, class: 'trash' %></h3>
   <% end %>
 
+  <% if Gws::Notice::Folder.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Notice::Folder.model_name.human, gws_notice_folders_path, class: 'management' %></h3>
+  <% end %>
+
   <% if Gws::Notice::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.category'), gws_notice_categories_path, class: 'management' %></h3>
   <% end %>

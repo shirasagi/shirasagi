@@ -22,10 +22,15 @@ SS::Application.routes.draw do
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
       match :undo_delete, on: :member, via: [:get, :post]
     end
+    resources :folders, concerns: [:deletion] do
+      match :move, on: :member, via: [:get, :post]
+    end
     resources :categories, concerns: [:deletion]
 
     namespace "apis" do
       get "categories" => "categories#index"
+      get "folders" => "folders#index"
+
       scope path: ':notice_id' do
         resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
       end

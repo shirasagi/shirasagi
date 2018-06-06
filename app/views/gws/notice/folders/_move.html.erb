@@ -1,16 +1,11 @@
-<%= jquery do %>
-  $('#addon-gws-agents-addons-file').hide();
-<% end %>
-
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :in_basename, value: @item.trailing_name %></dd>
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.trailing_name %><%= f.hidden_field :in_basename, value: @item.trailing_name %></dd>
 
-<% if @item.new_record? %>
   <dt><%= @model.t :in_parent %><%= @model.tt :in_parent %></dt>
   <dd>
     <%= f.hidden_field :in_parent, value: '', class: 'hidden-ids' %>
-    <%= link_to t('gws/share.apis.folders.index'), gws_share_apis_folders_path(mode: 'manageable', single: true), class: 'ajax-box' %>
+    <%= link_to t('gws/share.apis.folders.index'), gws_notice_apis_folders_path(mode: 'manageable', except: @item.id, single: true), class: 'ajax-box' %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -25,13 +20,4 @@
       </tbody>
     </table>
   </dd>
-<% else %>
-  <% if @item.parent.present? %>
-  <dt><%= @model.t :in_parent %></dt>
-  <dd><%= f.hidden_field :in_parent, value: @item.parent.id, id: nil %> <%= @item.parent.name %></dd>
-  <% end %>
-<% end %>
-
-  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
-  <dd><%= f.number_field :order %></dd>
 </dl>
