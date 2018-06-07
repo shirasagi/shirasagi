@@ -5,6 +5,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
 
   before_action :set_mode
   before_action :set_folders
+  before_action :set_root_folder
   before_action :set_cur_folder
   before_action :set_items
 
@@ -33,16 +34,25 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
     end
   end
 
-  def set_cur_folder
+  def set_root_folder
     return if params[:folder_id].blank? || params[:folder_id] == '-'
-    @cur_folder = @folders.find(params[:folder_id])
+    @root_folder = @folders.find(params[:folder_id])
+  end
+
+  def set_cur_folder
+    return if params[:id].blank? || params[:id] == '-'
+    @cur_folder = @folders.find(params[:id])
   end
 
   def set_items
     @items ||= begin
       conds = []
       # root folders
-      conds << { depth: 1 }
+      if @root_folder.present?
+        conds << { depth: @root_folder.depth + 1 }
+      else
+        conds << { depth: 1 }
+      end
 
       # sub folders tree
       if @cur_folder.present?

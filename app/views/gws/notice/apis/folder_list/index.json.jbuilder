@@ -10,8 +10,8 @@ json.items do
             gws_notice_readables_path(folder_id: item.id)
           end
     json.url url if url
-    json.tree_url gws_notice_apis_folder_list_path(id: item.id)
+    json.tree_url gws_notice_apis_folder_list_path(folder_id: item.id)
     json.is_current @cur_folder && @cur_folder.id == item.id
-    json.is_parent false
+    json.is_parent @cur_folder && @cur_folder.name.start_with?("#{item.name}/")
   end
 end

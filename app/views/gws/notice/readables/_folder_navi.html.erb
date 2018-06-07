@@ -1,6 +1,6 @@
 <%= jquery do %>
   var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
-  treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: 'readable', format: 'json').to_json %>);
+  treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: 'readable', folder_id: '-', id: @folder, format: 'json').to_json %>);
 <% end %>
 
 <div id="content-navi">
