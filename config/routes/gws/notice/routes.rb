@@ -30,7 +30,7 @@ SS::Application.routes.draw do
     namespace "apis" do
       get "categories" => "categories#index"
       get "folders" => "folders#index"
-
+      get ":mode/folder_list" => "folder_list#index", as: "folder_list"
       scope path: ':notice_id' do
         resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
       end
