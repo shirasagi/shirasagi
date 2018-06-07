@@ -13,7 +13,8 @@ class Gws::Notice::TrashesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/notice/post"), action: :index]
+    @crumbs << [t("mongoid.models.gws/notice/post"), gws_notice_main_path]
+    @crumbs << [t('ss.navi.trash'), action: :index]
   end
 
   def fix_params

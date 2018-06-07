@@ -26,7 +26,8 @@ class Gws::Notice::ReadablesController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/notice/post"), action: :index]
+    @crumbs << [t("mongoid.models.gws/notice/post"), gws_notice_main_path]
+    @crumbs << [t('ss.navi.readable'), action: :index, folder_id: '-', category_id: '-']
   end
 
   def set_folders
