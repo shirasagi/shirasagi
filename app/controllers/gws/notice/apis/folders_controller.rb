@@ -20,8 +20,17 @@ class Gws::Notice::Apis::FoldersController < ApplicationController
   def set_items
     @items ||= @model.site(@cur_site).
       nin(id: @excepts).
-      allow(:read, @cur_user, site: @cur_site).
       search(@s)
+
+    if params[:mode] == 'manageable'
+      @items = @items.allow(:read, @cur_user, site: @cur_site)
+    elsif params[:mode] == 'editable'
+      @items = @items.member(@cur_user)
+    elsif params[:mode] == 'readable'
+      @items = @items.readable(@cur_user, site: @cur_site)
+    else
+      @items = @model.none
+    end
   end
 
   public

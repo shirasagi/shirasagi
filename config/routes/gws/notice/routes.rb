@@ -16,7 +16,9 @@ SS::Application.routes.draw do
 
     scope path: ':folder_id/:category_id' do
       resources :readables, only: [:index, :show]
-      resources :editables, concerns: [:soft_deletion], except: [:destroy]
+      resources :editables, concerns: [:soft_deletion], except: [:destroy] do
+        match :move, on: :member, via: [:get, :post]
+      end
     end
 
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do

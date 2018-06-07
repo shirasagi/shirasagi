@@ -8,7 +8,7 @@ class Gws::Notice::EditablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :soft_delete]
+  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
   before_action :set_default_readable_setting, only: [:new]
 
@@ -97,5 +97,17 @@ class Gws::Notice::EditablesController < ApplicationController
   def index
     @categories = @categories.tree_sort
     @items = @items.page(params[:page]).per(50)
+  end
+
+  def move
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.attributes = get_params
+    render_update @item.save
   end
 end
