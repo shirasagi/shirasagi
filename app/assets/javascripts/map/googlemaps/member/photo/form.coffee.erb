@@ -88,13 +88,10 @@ class @Member_Photo_Form
       Member_Photo_Form.dataID += 1
 
     if Googlemaps_Map.markers.length > 0
-      zoomChangeBoundsListener = google.maps.event.addListener Googlemaps_Map.map, 'bounds_changed', ( event ) ->
-        if this.getZoom() > 13 && this.initialZoom == true
+      google.maps.event.addListenerOnce Googlemaps_Map.map, 'idle', (event) ->
+        if this.getZoom() > 13
           this.setZoom(13)
-          this.initialZoom = false
-        google.maps.event.removeListener(zoomChangeBoundsListener)
 
-      Googlemaps_Map.map.initialZoom = true
       Googlemaps_Map.map.fitBounds(markerBounds)
     return
 
