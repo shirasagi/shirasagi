@@ -4,6 +4,7 @@ class Gws::Notice::TrashesController < ApplicationController
 
   before_action :set_items
   before_action :set_item, only: [:show, :delete, :destroy, :undo_delete]
+  before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
 
   model Gws::Notice::Post
 
@@ -35,6 +36,14 @@ class Gws::Notice::TrashesController < ApplicationController
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @items = @items.in(id: ids)
+    raise "400" unless @items.present?
   end
 
   public

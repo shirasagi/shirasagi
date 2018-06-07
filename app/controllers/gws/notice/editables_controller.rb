@@ -9,6 +9,8 @@ class Gws::Notice::EditablesController < ApplicationController
   before_action :set_search_params
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :soft_delete]
+  before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
+  before_action :set_default_readable_setting, only: [:new]
 
   model Gws::Notice::Post
 
@@ -18,6 +20,12 @@ class Gws::Notice::EditablesController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("mongoid.models.gws/notice/post"), action: :index]
+  end
+
+  def pre_params
+    {
+      folder: @folder,
+    }
   end
 
   def fix_params
@@ -65,6 +73,23 @@ class Gws::Notice::EditablesController < ApplicationController
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def set_default_readable_setting
+    @default_readable_setting = proc do
+      @item.readable_setting_range = @folder.readable_setting_range
+      @item.readable_group_ids = @folder.readable_group_ids
+      @item.readable_member_ids = @folder.readable_member_ids
+      @item.readable_custom_group_ids = @folder.readable_custom_group_ids
+    end
+  end
+
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @items = @items.in(id: ids)
+    raise "400" unless @items.present?
   end
 
   public

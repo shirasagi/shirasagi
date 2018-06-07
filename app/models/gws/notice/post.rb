@@ -3,6 +3,7 @@ class Gws::Notice::Post
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Reference::Notice::Folder
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File

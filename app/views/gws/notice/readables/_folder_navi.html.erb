@@ -1,15 +1,3 @@
-<% render_tree_navi = proc do |group| %>
-  <div class="tree-item is-open is-cache <% if group == @selected_group %>is-current<% end %>" data-filename="<%= group.name %>">
-    <% (group.depth - @cur_site.depth).times do %>
-      <div class="item-pad"></div>
-    <% end %>
-    <%= link_to '#', class: 'item-mark' do %>
-      <i class="material-icons">&#xE15B;</i>
-    <% end %>
-    <%= link_to group.trailing_name, { action: :index, group: group.id }, class: 'item-name' %>
-  </div>
-<% end %>
-
 <%= jquery do %>
   var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
   treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: 'readable', format: 'json').to_json %>);
@@ -17,7 +5,7 @@
 
 <div id="content-navi">
   <h2 class="content-navi-title">
-    <%= t("gws/notice.folder") %>
+    <%= t('mongoid.models.gws/notice/folder') %>
   </h2>
 
   <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
