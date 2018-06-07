@@ -7,9 +7,12 @@ ja:
     file_size: 添付ファイル
     individual_file_size: 個別容量制限
     total_file_size: 総容量制限
+    total_body_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
+    total_file_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
     links:
       set_seen: 既読にする
       unset_seen: 未読にする
+      reclaim_total_size: 使用量を再計算する
     confirm:
       set_seen: 既読にしてもよろしいですか？
       unset_seen: 未読にしてもよろしいですか？
@@ -69,6 +72,11 @@ ja:
           too_deep: は%{max}階層以下にしてください。
           not_found_parent: 親カテゴリーが存在しません。
           found_children: 子カテゴリーが存在します。
+        gws/notice/post:
+          exceeded_individual_body_size_limit: 本文（%{size}）が個別容量制限（%{limit}）を超えました。本文を短くしてください。
+          exceeded_total_body_size_limit: 本文総容量（%{size}）が総容量制限（%{limit}）を超えました。不要なお知らせを削除してください。
+          exceeded_individual_file_size_limit: 添付ファイルサイズ（%{size}）が個別容量制限（%{limit}）を超えました。添付ファイルの容量を小さくしてください。
+          exceeded_total_file_size_limit: 添付ファイル総容量（%{size}）が総容量制限（%{limit}）を超えました。不要なお知らせを削除してください。
     attributes:
       gws/notice/post:
         name: タイトル
@@ -122,13 +130,10 @@ ja:
     gws/addon/notice/resource_limitation:
       notice_total_body_size_limit:
         - フォルダーの総本文制限を入力します。
-        - 下位のフォルダーは上位のフォルダーの制限値を上回ることはできません。
       notice_individual_file_size_limit:
         - 最大ファイルサイズを入力します。
-        - 下位のフォルダーは上位のフォルダーの制限値を上回ることはできません。
       notice_total_file_size_limit:
         - フォルダーの総容量制限を入力します。
-        - 下位のフォルダーは上位のフォルダーの制限値を上回ることはできません。
 
   job:
     models:

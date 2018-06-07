@@ -13,6 +13,14 @@ class Gws::Notice::FoldersController < ApplicationController
     @crumbs << [Gws::Notice::Folder.model_name.human, gws_notice_folders_path]
   end
 
+  def pre_params
+    {
+      notice_total_body_size_limit: SS.config.gws.notice['default_notice_total_body_size_limit'],
+      notice_individual_file_size_limit: SS.config.gws.notice['default_notice_individual_file_size_limit'],
+      notice_total_file_size_limit: SS.config.gws.notice['default_notice_total_file_size_limit'],
+    }
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
@@ -34,6 +42,15 @@ class Gws::Notice::FoldersController < ApplicationController
     end
 
     @item.attributes = get_params
-    render_update @item.save, { controller: params["controller"] }
+    render_update @item.save
+  end
+
+  def reclaim
+    set_item
+
+    @item.reclaim!
+    render_update true
+  rescue => e
+    render_update false
   end
 end

@@ -28,6 +28,7 @@ SS::Application.routes.draw do
     end
     resources :folders, concerns: [:deletion] do
       match :move, on: :member, via: [:get, :post]
+      post :reclaim, on: :member
     end
     resources :categories, concerns: [:deletion]
 

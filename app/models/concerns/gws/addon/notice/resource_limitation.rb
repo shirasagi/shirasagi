@@ -56,7 +56,9 @@ module Gws::Addon::Notice::ResourceLimitation
   def notice_total_body_size_percentage
     return 0 if notice_total_body_size_limit <= 0
     percentage = (notice_total_body_size.to_f / notice_total_body_size_limit.to_f) * 100
-    percentage > 100 ? 100 : percentage
+    percentage = 0 if percentage < 0
+    percentage = 100 if percentage > 100
+    percentage
   end
 
   def notice_total_file_size_over?
@@ -67,6 +69,8 @@ module Gws::Addon::Notice::ResourceLimitation
   def notice_total_file_size_percentage
     return 0 if notice_total_file_size_limit <= 0
     percentage = (notice_total_file_size.to_f / notice_total_file_size_limit.to_f) * 100
-    percentage > 100 ? 100 : percentage
+    percentage = 0 if percentage < 0
+    percentage = 100 if percentage > 100
+    percentage
   end
 end

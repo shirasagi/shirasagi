@@ -24,10 +24,15 @@ class Gws::Notice::Post
   seqid :id
   field :name, type: String
   field :severity, type: String
+  field :total_file_size, type: Integer
 
   permit_params :name, :severity
 
   validates :name, presence: true, length: { maximum: 80 }
+  validate :validate_body_size
+  validate :validate_file_size
+  before_save :update_body_size
+  before_save :update_file_size
 
   default_scope -> {
     order_by released: -1
@@ -70,5 +75,69 @@ class Gws::Notice::Post
     [
       [I18n.t('gws.options.severity.high'), 'high'],
     ]
+  end
+
+  private
+
+  def validate_body_size
+    return if folder.blank?
+    return if text.blank?
+
+    if text.length > folder.notice_individual_body_size_limit
+      options = {
+        size: text.length.to_s(:human_size),
+        limit: folder.notice_individual_body_size_limit.to_s(:human_size)
+      }
+      errors.add :base, :exceeded_individual_body_size_limit, options
+    end
+
+    if text.length + folder.notice_total_body_size > folder.notice_total_body_size_limit
+      options = {
+        size: (text.length + folder.notice_total_body_size).to_s(:human_size),
+        limit: folder.notice_total_body_size_limit.to_s(:human_size)
+      }
+      errors.add :base, :exceeded_total_body_size_limit, options
+    end
+  end
+
+  def validate_file_size
+    return if folder.blank?
+
+    self.total_file_size = 0
+    return if files.blank?
+
+    files.each do |file|
+      self.total_file_size += file.size
+
+      if file.size > folder.notice_individual_file_size_limit
+        options = {
+          size: file.size.to_s(:human_size),
+          limit: folder.notice_individual_file_size_limit.to_s(:human_size)
+        }
+        errors.add :base, :exceeded_individual_file_size_limit, options
+      end
+    end
+
+    if self.total_file_size + folder.notice_total_file_size > folder.notice_total_file_size_limit
+      options = {
+        size: (self.total_file_size + folder.notice_total_file_size).to_s(:human_size),
+        limit: folder.notice_total_file_size_limit.to_s(:human_size)
+      }
+      errors.add :base, :exceeded_total_file_size_limit, options
+    end
+  end
+
+  def update_body_size
+    return if folder.blank?
+
+    folder_was.inc(notice_total_body_size: - text_was.length) if folder_was && text_was
+    folder.inc(notice_total_body_size: text.length) if text
+  end
+
+  def update_file_size
+    return if folder.blank?
+
+    folder_was.inc(notice_total_file_size: - total_file_size_was) if folder_was && total_file_size_was
+    folder.inc(notice_total_file_size: total_file_size) if total_file_size
   end
 end
