@@ -1,5 +1,6 @@
 ja:
   gws/notice:
+    all: すべてのお知らせ
     body_size: 本文
     individual_body_size: 個別容量制限
     total_body_size: 総容量制限

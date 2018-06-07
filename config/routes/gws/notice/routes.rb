@@ -14,11 +14,11 @@ SS::Application.routes.draw do
   gws 'notice' do
     get '/' => redirect { |p, req| "#{req.path}/-/-/readables" }, as: :main
 
-    scope path: ':group/:category' do
+    scope path: ':folder_id/:category_id' do
       resources :readables, only: [:index, :show]
+      resources :editables, concerns: [:soft_deletion], except: [:destroy]
     end
 
-    resources :editables, concerns: [:soft_deletion], except: [:destroy]
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
       match :undo_delete, on: :member, via: [:get, :post]
     end
@@ -30,7 +30,7 @@ SS::Application.routes.draw do
     namespace "apis" do
       get "categories" => "categories#index"
       get "folders" => "folders#index"
-      get ":mode/folder_list" => "folder_list#index", as: "folder_list"
+      get ":folder_id/:category_id/:mode/folder_list" => "folder_list#index", as: "folder_list"
       scope path: ':notice_id' do
         resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
       end

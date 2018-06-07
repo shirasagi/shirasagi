@@ -2,9 +2,11 @@ class Gws::Notice::ReadablesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  before_action :set_selected_group
+  before_action :set_folders
+  before_action :set_folder
   before_action :set_categories
   before_action :set_category
+  before_action :set_search_params
   before_action :set_items
   before_action :set_item, only: [:show]
 
@@ -27,29 +29,36 @@ class Gws::Notice::ReadablesController < ApplicationController
     @crumbs << [t("mongoid.models.gws/notice/post"), action: :index]
   end
 
+  def set_folders
+    @folders ||= Gws::Notice::Folder.site(@cur_site).readable(@cur_user, site: @cur_site)
+  end
+
+  def set_folder
+    return if params[:folder_id].blank? || params[:folder_id] == '-'
+    @folder = @folders.find(params[:folder_id])
+  end
+
   def set_categories
     @categories ||= Gws::Notice::Category.site(@cur_site).readable(@cur_user, site: @cur_site)
   end
 
   def set_category
-    return if params[:category].blank? || params[:category] == '-'
-    @category ||= @categories.find(id: params[:category])
+    return if params[:category_id].blank? || params[:category_id] == '-'
+    @category ||= @categories.find(id: params[:category_id])
     raise '403' unless @category.readable?(@cur_user) || @category.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
+  def set_search_params
+    @s = params[:s].presence || {}
+    @s[:folder_id] = @folder.id if @folder.present?
+    @s[:category_id] = @category.id if @category.present?
   end
 
   def set_items
     @items = @model.site(@cur_site).and_public.
       readable(@cur_user, site: @cur_site).
       without_deleted.
-      search(params[:s])
-
-    if @selected_group != @cur_site
-      @items = @items.search(cur_site: @cur_site, group: @selected_group)
-    end
-
-    if @category.present?
-      @items = @items.search(category: @category.id)
-    end
+      search(@s)
   end
 
   def set_item

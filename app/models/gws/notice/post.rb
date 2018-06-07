@@ -33,7 +33,7 @@ class Gws::Notice::Post
 
   class << self
     def search(params)
-      all.search_keyword(params).search_group(params).search_category(params)
+      all.search_keyword(params).search_folder(params).search_category(params)
     end
 
     def search_keyword(params)
@@ -41,26 +41,14 @@ class Gws::Notice::Post
       all.keyword_in(params[:keyword], :name, :html)
     end
 
-    def search_group(params)
-      return all if params.blank? || params[:group].blank?
-
-      group = params[:group]
-      return all if group.blank? || !group.active?
-
-      group_ids = [ group.id ] + group.descendants.active.pluck(:id)
-
-      all.where('$and' =>[
-        { '$or' => [
-          { :readable_setting_range.exists => false },
-          { readable_setting_range: 'select' }
-        ] },
-        :readable_group_ids.in => group_ids
-      ])
+    def search_folder(params)
+      return all if params.blank? || params[:folder_id].blank?
+      all.where(folder_id: params[:folder_id].to_i)
     end
 
     def search_category(params)
-      return all if params.blank? || params[:category].blank?
-      all.where(category_ids: params[:category].to_i)
+      return all if params.blank? || params[:category_id].blank?
+      all.where(category_ids: params[:category_id].to_i)
     end
   end
 
