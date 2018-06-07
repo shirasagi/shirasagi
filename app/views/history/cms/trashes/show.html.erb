@@ -1,0 +1,27 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div>
+    <div class="addon-body">
+      <dl class="see mod-history-trashes">
+        <dt><%= @model.t :ref_coll %></dt>
+        <dd><%= @item.ref_coll %></dd>
+
+        <dt><%= @model.t :ref_class %></dt>
+        <dd><%= @item.ref_class.constantize.model_name.human %></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<div class="main-box">
+  <table class="see index history-trash">
+    <% @item.data.sort.each do |k, v| %>
+      <tr>
+        <th><%= k %></th>
+        <td>
+          <%= v.present? ? v.inspect : "" %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

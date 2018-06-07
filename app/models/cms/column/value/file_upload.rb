@@ -119,8 +119,10 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def delete_file
     return if file.blank?
-
+    return nil unless File.exist?(file.path)
+    path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    FileUtils.mkdir_p(File.dirname(path))
+    FileUtils.cp(file.path, path)
     self.file.destroy
-    self.file_id = nil
   end
 end

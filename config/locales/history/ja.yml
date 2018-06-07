@@ -39,6 +39,7 @@ ja:
   mongoid:
     models:
       history/log: 操作履歴
+      history/trash: ゴミ箱
     attributes:
       history/log:
         session_id: セッションID
@@ -53,4 +54,9 @@ ja:
       history/backup:
         version: バージョン
         ref_coll: 保存コレクション
+        data: 保存データ
+      history/trash:
+        version: バージョン
+        ref_coll: 保存コレクション
+        ref_class: 保存クラス
         data: 保存データ

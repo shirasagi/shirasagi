@@ -1,0 +1,96 @@
+class History::Trash
+  include SS::Document
+  include SS::Reference::User
+  include SS::Reference::Site
+  include Cms::SitePermission
+
+  store_in_repl_master
+  index({ created: -1 })
+
+  field :version, type: String, default: SS.version
+  field :ref_coll, type: String
+  field :ref_class, type: String
+  field :data, type: Hash
+
+  validates :ref_coll, presence: true
+  validates :data, presence: true
+
+  def restore(save = false)
+    attributes = data.dup
+    if attributes[:column_values].present?
+      attributes[:column_values] = attributes[:column_values].collect do |column_value|
+        next column_value if column_value['class_name'].blank?
+        column_value = column_value['class_name'].constantize.new(column_value)
+        next column_value unless column_value.respond_to?(:file_id)
+        file = self.class.where(ref_coll: 'ss_files', 'data._id' => column_value.file_id).first
+        if file.present?
+          file = save ? file.restore! : file.restore
+        end
+        next column_value if file.blank?
+        column_value.file = file
+        next column_value unless save
+        path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+        next column_value unless File.exist?(path)
+        FileUtils.mkdir_p(File.dirname(file.path))
+        FileUtils.cp(path, file.path)
+        FileUtils.rm_rf(File.dirname(path))
+        column_value
+      end
+    end
+    if attributes[:file_ids].present?
+      attributes[:file_ids] = attributes[:file_ids].collect do |file_id|
+        file = self.class.where(ref_coll: 'ss_files', 'data._id' => file_id).first
+        if file.present?
+          file = save ? file.restore! : file.restore
+        end
+        next if file.blank?
+        next unless save
+        path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+        next unless File.exist?(path)
+        FileUtils.mkdir_p(File.dirname(file.path))
+        FileUtils.cp(path, file.path)
+        FileUtils.rm_rf(File.dirname(path))
+        file._id
+      end
+    end
+    item = ref_class.constantize.find_or_initialize_by(_id: data[:_id])
+    item = item.becomes_with_route(data[:route]) if data[:route].present?
+    attributes.each do |k, v|
+      item[k] = v
+    end
+    if item.respond_to?(:in_file)
+      path = "#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+      if File.exist?(path)
+        file = Fs::UploadedFile.create_from_file(path, content_type: item.content_type)
+      else
+        file = Fs::UploadedFile.new("ss_trash")
+        file.original_filename = 'dummy'
+      end
+      item.in_file = file
+    end
+    if save
+      return false unless item.save
+      self.destroy
+    end
+    item
+  end
+
+  def restore!
+    self.restore(true)
+  end
+
+  class << self
+    def search(params = {})
+      criteria = self.all
+      return criteria if params.blank?
+
+      if params[:name].present?
+        criteria = criteria.search_text params[:name]
+      end
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :data
+      end
+      criteria
+    end
+  end
+end

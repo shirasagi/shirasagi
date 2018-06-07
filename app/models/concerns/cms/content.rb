@@ -34,6 +34,7 @@ module Cms::Content
     before_validation :set_filename
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
+    before_destroy :create_history_trash
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = nil) {
@@ -217,5 +218,19 @@ module Cms::Content
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
     @basename = filename.sub(/.*\//, "") if @basename
+  end
+
+  def create_history_trash
+    backup = History::Trash.new
+    backup.ref_coll = collection_name
+    backup.ref_class = self.class.to_s
+    if self[:column_values].present?
+      self.column_values.each do |column_value|
+        column_value.class_name = column_value._type
+      end
+    end
+    backup.data = attributes
+    backup.site = self.site
+    backup.save
   end
 end
