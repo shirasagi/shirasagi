@@ -18,6 +18,12 @@ module Gws::Board::BrowsingState
     persist_atomic_operations('$set' => { "browsed_users_hash.#{user.id}" => Time.zone.now })
   end
 
+  def unset_browsed!(user)
+    # to update hash partially, use `#persist_atomic_operations` method.
+    # be careful, you must not use `#set` method. this method update hash totally.
+    persist_atomic_operations('$unset' => { "browsed_users_hash.#{user.id}" => '' })
+  end
+
   def browsed_state_options
     %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
   end
