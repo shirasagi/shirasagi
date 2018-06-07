@@ -138,15 +138,18 @@ module Gws::Elasticsearch::Setting::Base
       filter_query[:bool][:should] << manage_filter
     end
 
-    filter_query
-
     type_query = {}
     type_query[:bool] = {}
-    type_query[:bool][:must] = []
-    type_query[:bool][:must] << filter_query
-    type_query[:bool][:must] << { type: { value: search_types.first } }
+    type_query[:bool][:minimum_should_match] = 1
+    type_query[:bool][:should] = search_types.map { |type| { type: { value: type } } }
 
-    type_query
+    query = {}
+    query[:bool] = {}
+    query[:bool][:must] = []
+    query[:bool][:must] << filter_query
+    query[:bool][:must] << type_query
+
+    query
   end
 
   private
