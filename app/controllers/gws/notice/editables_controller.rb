@@ -33,7 +33,7 @@ class Gws::Notice::EditablesController < ApplicationController
   end
 
   def set_folders
-    @folders ||= Gws::Notice::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    @folders ||= Gws::Notice::Folder.site(@cur_site).member(@cur_user)
   end
 
   def set_folder
@@ -53,7 +53,11 @@ class Gws::Notice::EditablesController < ApplicationController
 
   def set_search_params
     @s = params[:s].presence || {}
-    @s[:folder_id] = @folder.id if @folder.present?
+    if @folder.present?
+      @s[:folder_ids] = [ @folder.id ]
+      @s[:folder_ids] += @folder.folders.member(@cur_user).pluck(:id)
+    end
+
     @s[:category_id] = @category.id if @category.present?
   end
 

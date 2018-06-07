@@ -50,7 +50,10 @@ class Gws::Notice::ReadablesController < ApplicationController
 
   def set_search_params
     @s = params[:s].presence || {}
-    @s[:folder_id] = @folder.id if @folder.present?
+    if @folder.present?
+      @s[:folder_ids] = [ @folder.id ]
+      @s[:folder_ids] += @folder.folders.readable(@cur_user, site: @cur_site).pluck(:id)
+    end
     @s[:category_id] = @category.id if @category.present?
   end
 

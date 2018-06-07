@@ -34,7 +34,7 @@ class Gws::Notice::Post
 
   class << self
     def search(params)
-      all.search_keyword(params).search_folder(params).search_category(params)
+      all.search_keyword(params).search_folders(params).search_category(params)
     end
 
     def search_keyword(params)
@@ -42,9 +42,9 @@ class Gws::Notice::Post
       all.keyword_in(params[:keyword], :name, :html)
     end
 
-    def search_folder(params)
-      return all if params.blank? || params[:folder_id].blank?
-      all.where(folder_id: params[:folder_id].to_i)
+    def search_folders(params)
+      return all if params.blank? || params[:folder_ids].blank?
+      all.in(folder_id: params[:folder_ids].select(&:numeric?).map(&:to_i))
     end
 
     def search_category(params)
