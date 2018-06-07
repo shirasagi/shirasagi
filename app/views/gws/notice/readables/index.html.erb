@@ -2,9 +2,22 @@
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
 <% end %>
 
+<%
+  @list_class = proc do |item|
+    css_classes = %w(list-item)
+    if item.browsed?(@cur_user)
+      css_classes << 'read'
+    else
+      css_classes << 'unread'
+    end
+    css_classes
+  end
+%>
+
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="user"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
   <% if item.folder.present? %>
     <span class="folder"><%= t('mongoid.models.gws/notice/folder') %>: <%= item.folder.name %></span>

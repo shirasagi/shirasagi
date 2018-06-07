@@ -7,6 +7,15 @@ ja:
     file_size: 添付ファイル
     individual_file_size: 個別容量制限
     total_file_size: 総容量制限
+    links:
+      set_seen: 既読にする
+      unset_seen: 未読にする
+    confirm:
+      set_seen: 既読にしてもよろしいですか？
+      unset_seen: 未読にしてもよろしいですか？
+    notice:
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
 
   gws_role:
     read_other_gws_notices: お知らせの閲覧（全て）

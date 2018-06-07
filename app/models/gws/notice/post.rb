@@ -16,6 +16,7 @@ class Gws::Notice::Post
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Gws::Board::BrowsingState
 
   store_in collection: 'gws_notices'
   set_permission_name 'gws_notices'
@@ -34,7 +35,7 @@ class Gws::Notice::Post
 
   class << self
     def search(params)
-      all.search_keyword(params).search_folders(params).search_category(params)
+      all.search_keyword(params).search_folders(params).search_category(params).search_browsed_state(params)
     end
 
     def search_keyword(params)
@@ -50,6 +51,18 @@ class Gws::Notice::Post
     def search_category(params)
       return all if params.blank? || params[:category_id].blank?
       all.where(category_ids: params[:category_id].to_i)
+    end
+
+    def search_browsed_state(params)
+      return all if params.blank? || params[:browsed_state].blank?
+      case params[:browsed_state]
+      when 'read'
+        all.exists("browsed_users_hash.#{params[:user].id}" => 1)
+      when 'unread'
+        all.exists("browsed_users_hash.#{params[:user].id}" => 0)
+      else
+        none
+      end
     end
   end
 

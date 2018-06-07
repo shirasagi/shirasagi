@@ -8,7 +8,7 @@ class Gws::Notice::ReadablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show]
+  before_action :set_item, only: [:show, :toggle_browsed]
 
   model Gws::Notice::Post
 
@@ -49,7 +49,9 @@ class Gws::Notice::ReadablesController < ApplicationController
   end
 
   def set_search_params
-    @s = params[:s].presence || {}
+    @s = OpenStruct.new(params[:s].presence)
+    @s[:site] = @cur_site
+    @s[:user] = @cur_user
     if @folder.present?
       @s[:folder_ids] = [ @folder.id ]
       @s[:folder_ids] += @folder.folders.readable(@cur_user, site: @cur_site).pluck(:id)
@@ -80,5 +82,17 @@ class Gws::Notice::ReadablesController < ApplicationController
   def index
     @categories = @categories.tree_sort
     @items = @items.page(params[:page]).per(50)
+  end
+
+  def toggle_browsed
+    if @item.browsed?(@cur_user)
+      @item.unset_browsed!(@cur_user)
+    else
+      @item.set_browsed!(@cur_user)
+    end
+
+    render_update true
+  rescue => e
+    render_update false
   end
 end
