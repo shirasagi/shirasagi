@@ -1,18 +1,51 @@
+<h2 class="gws-notice-post"><%= @item.name %></h2>
+
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2><%= @item.send :name %></h2></div>
+    <div class="addon-head">
+      <div class="main">
+        <% if @item.categories.present? %>
+          <span class="categories">
+          <% @item.categories.compact.each do |category| %>
+            <%= link_to category.trailing_name, url_for(action: :index, category: category.id), class: "gws-category-label", style: category_label_css(category) %>
+          <% end %>
+          </span>
+        <% end %>
+      </div>
+      <div class="aside">
+        <span class="updated"><%= I18n.l(@item.updated) %></span>
+        <span class="user"><%= @item.contributor_name.presence || @item.user_long_name %></span>
+        <span class="severity">
+          <span class="severity-label"><%= @model.t :severity %></span>
+          <span class="severity-value"><%= @item.label(:severity) %></span>
+        </span>
+      </div>
+    </div>
     <div class="addon-body">
-      <%= @item.html %>
+      <div class="main">
+        <%= @item.html %>
+      </div>
+      <% if @item.files.present? %>
+        <div class="files">
+          <% @item.files.each do |file| %>
+          <span id="file-<%= file.id %>">
+            <i class="material-icons">&#xE226;</i>
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+          </span>
+          <% end %>
+        </div>
+      <% end %>
+      <% if @item.links.present? %>
+        <div class="links">
+        <% @item.links.each_with_index do |link, i| %>
+          <span id="link-<%= i %>">
+            <%= link_to link['name'], link['url'] %>
+          </span>
+        <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
-
-  <% if @item.files.present? %>
-  <%= render file: "_addons_show", locals: {addons: @item.addons.select { |addon| addon.klass == Gws::Addon::File}} %>
-  <% end %>
-
-  <% if @item.links.present? %>
-  <%= render file: "_addons_show", locals: {addons: @item.addons.select {|addon| addon.klass == Gws::Addon::Link}} %>
-  <% end %>
 
   <%= render file: "_addons_show", locals: {addons: @item.addons.select {|addon| addon.klass == Gws::Addon::Notice::CommentPost}} %>
 </div>
