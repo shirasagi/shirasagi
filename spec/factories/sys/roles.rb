@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :sys_role, class: Sys::Role do
     cur_user { ss_user }
     name "sys_role"

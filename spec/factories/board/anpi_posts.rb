@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :board_anpi_post, class: Board::AnpiPost do
     text { "#{unique_id}\n#{unique_id}" }
     public_scope "group"

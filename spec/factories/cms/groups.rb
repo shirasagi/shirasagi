@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_group, class: Cms::Group do
     name { "cms_group" }
   end

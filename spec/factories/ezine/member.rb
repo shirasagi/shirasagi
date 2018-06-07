@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ezine_member, class: Ezine::Member do
     sequence(:email) { |n| "#{n}@example.jp" }
     email_type "text"

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Gws::Share::File, type: :model, dbscope: :example do
-  describe "FactoryGirl test" do
+  describe "FactoryBot test" do
     describe "default" do
       before { create :gws_share_file }
       it { expect(described_class.count).to eq 1 }

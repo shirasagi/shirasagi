@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_user_base, class: Cms::User do
     transient do
       group nil

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
-  describe "FactoryGirl test" do
+  describe "FactoryBot test" do
     describe "board_post" do
       before { create :gws_board_post }
       it { expect(described_class.count).to eq 1 }

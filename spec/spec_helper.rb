@@ -75,9 +75,9 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper
   config.include ActiveSupport::Testing::TimeHelpers
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.before(:all) do
-    FactoryGirl.reload
+    FactoryBot.reload
     Capybara.app_host = nil
   end
 

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   path1 = rand(0x100000000).to_s(36)
   path2 = rand(0x100000000).to_s(36)
   page_identity1 = rand(0x100000000).to_s(36)

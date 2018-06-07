@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ss_file, class: SS::File do
     cur_user { ss_user }
     model { "ss/#{unique_id}" }

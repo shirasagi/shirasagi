@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :rss_page, class: Rss::Page, traits: [:cms_page] do
     transient do
       site nil

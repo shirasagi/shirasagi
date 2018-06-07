@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :webmail_user, class: SS::User do
     conf = SS.config.webmail.test_user || {}
 

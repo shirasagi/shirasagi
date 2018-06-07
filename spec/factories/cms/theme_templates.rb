@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_theme_template, class: Cms::ThemeTemplate do
     transient do
       site nil

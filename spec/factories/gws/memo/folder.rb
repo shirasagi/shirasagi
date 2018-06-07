@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :gws_memo_folder, class: Gws::Memo::Folder do
     cur_site { gws_site }

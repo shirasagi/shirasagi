@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :gws_schedule_todo, class: Gws::Schedule::Todo do
     cur_site { gws_site }

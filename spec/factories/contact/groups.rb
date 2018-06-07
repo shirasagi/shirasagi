@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :contact_group, class: Cms::Group do
     name "contact_group"
     contact_tel "0000000000"

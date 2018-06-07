@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_qna_post, class: Gws::Qna::Post do
     cur_site { gws_site }
     cur_user { gws_user }

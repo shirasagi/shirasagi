@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :opendata_part_mypage_login, class: Opendata::Part::MypageLogin, traits: [:cms_part] do
     route "opendata/mypage_login"
   end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_member, class: Cms::Member do
     cur_site { cms_site }
     name { unique_id.to_s }

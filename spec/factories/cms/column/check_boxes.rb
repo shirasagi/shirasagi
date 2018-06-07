@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_column_check_box, class: Cms::Column::CheckBox do
     cur_site { cms_site }
 

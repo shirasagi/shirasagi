@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :opendata_csv2rdf_setting, class: Opendata::Csv2rdfSetting do
     transient do
       resource nil

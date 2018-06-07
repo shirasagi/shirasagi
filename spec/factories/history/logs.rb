@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :history_log, class: History::Log do
     url "/path/to"
     controller "module/controller"

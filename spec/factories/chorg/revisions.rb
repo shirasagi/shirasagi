@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :revision, class: Chorg::Revision do
     name { "組織変更_#{unique_id}" }
   end

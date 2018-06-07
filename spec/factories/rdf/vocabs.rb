@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :rdf_vocab, class: Rdf::Vocab do
     transient do
       site nil

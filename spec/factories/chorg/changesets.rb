@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :add_changeset, class: Chorg::Changeset do
     type Chorg::Changeset::TYPE_ADD
     destinations { [ { name: "組織変更/新設グループ_#{unique_id}" }.stringify_keys ] }

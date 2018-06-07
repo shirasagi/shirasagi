@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :gws_memo_signature, class: Gws::Memo::Signature do
     cur_site { gws_site }

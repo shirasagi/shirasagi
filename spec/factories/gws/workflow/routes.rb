@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_workflow_route, class: Gws::Workflow::Route do
     name { unique_id }
     group_ids { [ gws_site.id ] }

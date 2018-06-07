@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :opendata_node_category, class: Opendata::Node::Category, traits: [:cms_node] do
     route "opendata/category"
     filename { "category-#{unique_id}" }

@@ -87,7 +87,7 @@ group :development, :test do
   gem 'capybara'
   gem 'coveralls', require: false
   gem 'dotenv-rails'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'fuubar'
   gem 'guard'
   gem 'guard-rspec', '~> 4.3.1'

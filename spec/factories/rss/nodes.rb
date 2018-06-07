@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :rss_node_page, class: Rss::Node::Page, traits: [:cms_node] do
     route "rss/page"
     rss_url { "http://example.com/#{filename}" }

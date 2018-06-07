@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :inquiry_column_name, class: Inquiry::Column do
     name "お名前"
     input_type "text_field"

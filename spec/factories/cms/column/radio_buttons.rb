@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_column_radio_button, class: Cms::Column::RadioButton do
     cur_site { cms_site }
 
