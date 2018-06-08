@@ -21,6 +21,10 @@ class Gws::Elasticsearch::Setting::All
     {}
   end
 
+  def search_settings
+    all_settings
+  end
+
   def search_types
     search_types = []
     all_settings.each do |setting|

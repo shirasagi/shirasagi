@@ -35,30 +35,23 @@ class Gws::Elasticsearch::Searcher
     @client ||= setting.cur_site.elasticsearch_client
   end
 
+  def filters
+    @filters ||= setting.search_settings.map { |s| s.build_filter }
+  end
+
   def search
     query = {}
     query[:bool] = {}
     query[:bool][:must] = { query_string: { query: keyword, default_field: field_name, default_operator: 'AND' } }
-    query[:bool][:filter] = build_filter
+
+    query[:bool][:filter] = {}
+    query[:bool][:filter][:bool] = {}
+    query[:bool][:filter][:bool][:minimum_should_match] = 1
+    query[:bool][:filter][:bool][:should] = filters
 
     search_params = { index: index, from: from, size: size, body: { query: query } }
-    search_params[:type] = type if type.present?
+    #search_params[:type] = type if type.present?
+
     client.search(search_params)
-  end
-
-  private
-
-  def build_filter
-    filter_query = {}
-    filter_query[:bool] = {}
-    filter_query[:bool][:minimum_should_match] = 1
-    filter_query[:bool][:should] = []
-    filter_query[:bool][:should] << setting.readable_filter
-    manageable_filter = setting.manageable_filter
-    if manageable_filter.present?
-      filter_query[:bool][:should] << manageable_filter
-    end
-
-    filter_query
   end
 end
