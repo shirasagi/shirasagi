@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:index_path) { gws_notice_editables_path(site) }
+  let(:folder) { create(:gws_notice_folder) }
+  let(:index_path) { gws_notice_editables_path(site: site, folder_id: folder, category_id: '-') }
 
   before do
     ActionMailer::Base.deliveries = []
@@ -88,7 +89,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
           expect(message.text).to include(notice.name)
           expect(message.text).to \
-            include("#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
+            include("#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
         end
       end
     end
@@ -97,7 +98,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   context 'when notification_noticed was cleared' do
     let!(:item) do
       create(
-        :gws_notice, cur_site: site,
+        :gws_notice_post, cur_site: site, folder: folder,
         message_notification: 'enabled', email_notification: 'enabled',
         notification_noticed: Time.zone.now - 1.day
       )

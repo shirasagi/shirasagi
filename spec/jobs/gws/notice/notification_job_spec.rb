@@ -8,6 +8,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
   let(:recipient1) { create(:gws_user) }
   let(:recipient2) { create(:gws_user) }
   let(:now) { Time.zone.now.beginning_of_minute }
+  let(:folder) { create(:gws_notice_folder) }
 
   before do
     ActionMailer::Base.deliveries = []
@@ -34,7 +35,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
   context 'text notice' do
     let!(:notice) do
       create(
-        :gws_notice, cur_site: site, cur_user: sender, message_notification: 'enabled', email_notification: 'enabled',
+        :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
+        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'select', readable_member_ids: [recipient1.id, recipient2.id], state: 'public'
       )
     end
@@ -59,7 +61,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
+          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 2
@@ -70,7 +72,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(notify_mail.body.multipart?).to be_falsey
         expect(notify_mail.body.raw_source).to include(notice.name)
         expect(notify_mail.body.raw_source).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
+          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
     end
   end
@@ -78,7 +80,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
   context 'markdown notice' do
     let!(:notice) do
       create(
-        :gws_notice, cur_site: site, cur_user: sender, message_notification: 'enabled', email_notification: 'enabled',
+        :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
+        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'select', readable_member_ids: [recipient1.id, recipient2.id], state: 'public',
         text: "# #{unique_id}\n#{unique_id}\n\n* #{unique_id}", text_type: 'markdown'
       )
@@ -104,7 +107,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
+          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 2
@@ -115,7 +118,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(notify_mail.body.multipart?).to be_falsey
         expect(notify_mail.body.raw_source).to include(notice.name)
         expect(notify_mail.body.raw_source).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
+          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
     end
   end
@@ -123,7 +126,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
   context 'non-public notice' do
     let!(:notice) do
       create(
-        :gws_notice, cur_site: site, cur_user: sender, message_notification: 'enabled', email_notification: 'enabled',
+        :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
+        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'select', readable_member_ids: [recipient1.id, recipient2.id], state: 'closed'
       )
     end
@@ -154,7 +158,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       recipient1
       recipient2
       create(
-        :gws_notice, cur_site: site, cur_user: sender, message_notification: 'enabled', email_notification: 'enabled',
+        :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
+        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'public', state: 'public'
       )
     end
@@ -173,7 +178,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
+          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
       expect(ActionMailer::Base.deliveries.length).to be > 0
@@ -184,7 +189,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(notify_mail.body.multipart?).to be_falsey
         expect(notify_mail.body.raw_source).to include(notice.name)
         expect(notify_mail.body.raw_source).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/#{site.id}/-/readables/#{notice.id}")
+          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
     end
   end
@@ -194,7 +199,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       recipient1
       recipient2
       create(
-        :gws_notice, cur_site: site, cur_user: sender, message_notification: 'enabled', email_notification: 'enabled',
+        :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
+        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'private', state: 'public'
       )
     end
