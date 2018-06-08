@@ -1,6 +1,6 @@
 json.items do
   json.array!(@items) do |item|
-    json.name item.trailing_name
+    json.name item.name.split('/').last
     json.filename item.name
     json.order item.order
     json.depth item.depth

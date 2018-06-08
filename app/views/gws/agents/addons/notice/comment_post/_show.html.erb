@@ -26,7 +26,7 @@
         <td class="user-name"><%= comment.user_name %></td>
         <td class="updated"><%= I18n.l(comment.updated) %></td>
         <td class="operations">
-          <% if comment.user_id == @cur_user.id || @item.allowed_for_managers?(:edit, @cur_user, site: @cur_site) %>
+          <% if comment.user_id == @cur_user.id || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
             <%= link_to(t('ss.buttons.edit'), edit_gws_notice_apis_comment_path(notice_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
             <%= link_to(t('ss.buttons.delete'), delete_gws_notice_apis_comment_path(notice_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
           <% end %>

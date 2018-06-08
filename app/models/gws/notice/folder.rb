@@ -47,6 +47,21 @@ class Gws::Notice::Folder
 
       last_folder
     end
+
+    def for_manageable(site, user)
+      self.site(site).allow(:read, user, site: site)
+    end
+
+    def for_editable(site, user)
+      or_conds = self.member_conditions(user)
+      or_conds += self.readable_conditions(user, site: site)
+      self.site(site).where('$and' => [{ '$or' => or_conds }])
+    end
+
+    def for_readable(site, user)
+      or_conds = self.readable_conditions(user, site: site)
+      self.site(site).where('$and' => [{ '$or' => or_conds }])
+    end
   end
 
   def notices

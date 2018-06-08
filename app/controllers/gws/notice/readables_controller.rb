@@ -31,7 +31,7 @@ class Gws::Notice::ReadablesController < ApplicationController
   end
 
   def set_folders
-    @folders ||= Gws::Notice::Folder.site(@cur_site).readable(@cur_user, site: @cur_site)
+    @folders ||= Gws::Notice::Folder.for_readable(@cur_site, @cur_user)
   end
 
   def set_folder
@@ -55,7 +55,7 @@ class Gws::Notice::ReadablesController < ApplicationController
     @s[:user] = @cur_user
     if @folder.present?
       @s[:folder_ids] = [ @folder.id ]
-      @s[:folder_ids] += @folder.folders.readable(@cur_user, site: @cur_site).pluck(:id)
+      @s[:folder_ids] += @folder.folders.for_readable(@cur_site, @cur_user).pluck(:id)
     end
     @s[:category_id] = @category.id if @category.present?
   end
@@ -83,6 +83,10 @@ class Gws::Notice::ReadablesController < ApplicationController
   def index
     @categories = @categories.tree_sort
     @items = @items.page(params[:page]).per(50)
+  end
+
+  def show
+    render
   end
 
   def toggle_browsed

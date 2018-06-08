@@ -18,19 +18,15 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
 
   def set_folders
     @folders ||= begin
-      folders = @model.site(@cur_site)
-
       if @cur_mode == 'manageable'
-        folders = folders.allow(:read, @cur_user, site: @cur_site)
+        @model.for_manageable(@cur_site, @cur_user)
       elsif @cur_mode == 'editable'
-        folders = folders.member(@cur_user)
+        @model.for_editable(@cur_site, @cur_user)
       elsif @cur_mode == 'readable'
-        folders = folders.readable(@cur_user, site: @cur_site)
+        @model.for_readable(@cur_site, @cur_user)
       else
-        folders = @model.none
+        @model.none
       end
-
-      folders
     end
   end
 
@@ -49,7 +45,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
       conds = []
       # root folders
       if @root_folder.present?
-        conds << { depth: @root_folder.depth + 1 }
+        conds << { name: /#{Regexp.escape(@root_folder.name)}\//, depth: @root_folder.depth + 1 }
       else
         conds << { depth: 1 }
       end
@@ -67,12 +63,8 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
         end
       end
 
-      @folders.where('$and' =>[{'$or' => conds}]).order_by(depth: 1, order: 1, id: 1)
+      @folders.where('$and' =>[{'$or' => conds}]).tree_sort
     end
-  end
-
-  def root_items
-    @folders.where(depth: 1)
   end
 
   public

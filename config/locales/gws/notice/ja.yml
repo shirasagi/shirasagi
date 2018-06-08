@@ -22,6 +22,7 @@ ja:
     notice:
       set_seen: 既読にしました。
       unset_seen: 未読にしました。
+      not_a_member_in_this_folder: このフォルダーへお知らせを掲示する権限がありません。
 
   gws_role:
     read_other_gws_notices: お知らせの閲覧（全て）
