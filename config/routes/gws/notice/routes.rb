@@ -20,6 +20,7 @@ SS::Application.routes.draw do
       end
       resources :editables, concerns: [:soft_deletion], except: [:destroy] do
         match :move, on: :member, via: [:get, :post]
+        match :create_my_folder, on: :collection, via: [:get, :post]
       end
     end
 

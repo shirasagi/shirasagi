@@ -13,9 +13,12 @@ ja:
       set_seen: 既読にする
       unset_seen: 未読にする
       reclaim_total_size: 使用量を再計算する
+      create_my_folder: 自所属を作成する
+      move_to_my_folder: 自所属フォルダーを開く
     confirm:
       set_seen: 既読にしてもよろしいですか？
       unset_seen: 未読にしてもよろしいですか？
+      create_my_folder: 自所属を作成してよろしいですか？
     notice:
       set_seen: 既読にしました。
       unset_seen: 未読にしました。
@@ -36,6 +39,7 @@ ja:
     edit_private_gws_notice_folders: フォルダーの編集（所有）
     delete_other_gws_notice_folders: フォルダーの削除（全て）
     delete_private_gws_notice_folders: フォルダーの削除（所有）
+    my_folder_private_gws_notice_folders: 自所属フォルダーの作成
 
     read_other_gws_notice_categories: カテゴリーの閲覧（全て）
     read_private_gws_notice_categories: カテゴリーの閲覧（所有）

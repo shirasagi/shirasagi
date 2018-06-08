@@ -4,6 +4,7 @@ class Gws::Notice::EditablesController < ApplicationController
 
   before_action :set_folders
   before_action :set_folder
+  before_action :set_my_folder
   before_action :set_categories
   before_action :set_category
   before_action :set_search_params
@@ -39,7 +40,12 @@ class Gws::Notice::EditablesController < ApplicationController
 
   def set_folder
     return if params[:folder_id].blank? || params[:folder_id] == '-'
-    @folder = @folders.find(params[:folder_id])
+    @folder ||= @folders.find(params[:folder_id])
+  end
+
+  def set_my_folder
+    @my_folder ||= @folders.where(name: @cur_group.name).first
+    @my_folder_exists = Gws::Notice::Folder.site(@cur_site).where(name: @cur_group.name).present?
   end
 
   def set_categories
@@ -114,5 +120,26 @@ class Gws::Notice::EditablesController < ApplicationController
 
     @item.attributes = get_params
     render_update @item.save
+  end
+
+  def create_my_folder
+    raise '403' if !Gws::Notice::Folder.allowed?(:my_folder, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    folder = Gws::Notice::Folder.create_my_folder!(@cur_site, @cur_group)
+    render_opts = {
+      location: url_for(action: :index, folder_id: folder)
+    }
+    render_create true, render_opts
+  rescue => e
+    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    render_opts = {
+      render: { file: :create_my_folder }
+    }
+    render_create false, render_opts
   end
 end

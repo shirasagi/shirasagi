@@ -6,6 +6,12 @@
 <div id="content-navi">
   <h2 class="content-navi-title">
     <%= t('mongoid.models.gws/notice/folder') %>
+    <% if !@my_folder_exists && Gws::Notice::Folder.allowed?(:my_folder, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/notice.links.create_my_folder'), { action: :create_my_folder }, class: 'btn' %>
+    <% end %>
+    <% if @my_folder && (@folder.blank? || @my_folder != @folder) %>
+      <%= link_to t('gws/notice.links.move_to_my_folder'), { action: :index, folder_id: @my_folder }, class: 'btn' %>
+    <% end %>
   </h2>
 
   <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
