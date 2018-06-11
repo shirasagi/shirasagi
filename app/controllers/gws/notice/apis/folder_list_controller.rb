@@ -19,11 +19,11 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
   def set_folders
     @folders ||= begin
       if @cur_mode == 'manageable'
-        @model.for_manageable(@cur_site, @cur_user)
+        @model.for_post_manager(@cur_site, @cur_user)
       elsif @cur_mode == 'editable'
-        @model.for_editable(@cur_site, @cur_user)
+        @model.for_post_editor(@cur_site, @cur_user)
       elsif @cur_mode == 'readable'
-        @model.for_readable(@cur_site, @cur_user)
+        @model.for_post_reader(@cur_site, @cur_user)
       else
         @model.none
       end

@@ -14,4 +14,9 @@ FactoryGirl.define do
     permissions { Gws::Role.permission_names }
     permission_level 3
   end
+
+  factory :gws_role_notice_admin, class: Gws::Role, traits: [:gws_role] do
+    permissions { Gws::Role.permission_names.select { |name| name.include?('gws_notice') } }
+    permission_level 3
+  end
 end

@@ -35,7 +35,7 @@ class Gws::Notice::EditablesController < ApplicationController
   end
 
   def set_folders
-    @folders ||= Gws::Notice::Folder.for_editable(@cur_site, @cur_user)
+    @folders ||= Gws::Notice::Folder.for_post_editor(@cur_site, @cur_user)
   end
 
   def set_folder
@@ -62,7 +62,7 @@ class Gws::Notice::EditablesController < ApplicationController
     @s = params[:s].presence || {}
     if @folder.present?
       @s[:folder_ids] = [ @folder.id ]
-      @s[:folder_ids] += @folder.folders.for_editable(@cur_site, @cur_user).pluck(:id)
+      @s[:folder_ids] += @folder.folders.for_post_editor(@cur_site, @cur_user).pluck(:id)
     end
 
     @s[:category_id] = @category.id if @category.present?
