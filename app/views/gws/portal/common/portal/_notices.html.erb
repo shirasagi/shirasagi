@@ -32,16 +32,17 @@
     <% end %>
 
     <% @notices.each do |item| %>
-    <li class="list-item">
+    <li class="list-item <%= item.browsed?(@cur_user) ? 'read' : 'unread' %>">
       <div class="info">
         <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: "title notice-severity-#{item.severity}" %>
       </div>
       <div class="meta">
-        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
-        <% if item.updated_after_released? %>
-          <span class="label"><%= t('gws.history.mode.update') %></span>
-          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        <% if item.categories.readable(@cur_user, site: @cur_site).present? %>
+          <% item.categories.readable(@cur_user, site: @cur_site).each do |category| %>
+            <%= link_to category.trailing_name, gws_notice_readables_path(folder_id: '-', category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
+          <% end %>
         <% end %>
+        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
       </div>
     </li>
     <% end %>

@@ -4,12 +4,16 @@ module Gws::Board::BrowsingState
 
   included do
     field :browsed_users_hash, type: Hash
+
+    scope :and_read, ->(user) { exists("browsed_users_hash.#{user.id}" => true) }
+    scope :and_unread, ->(user) { exists("browsed_users_hash.#{user.id}" => false) }
   end
 
   def browsed_at(user)
     return if browsed_users_hash.blank?
     browsed_users_hash[user.id.to_s].try(:in_time_zone)
   end
+
   alias browsed? browsed_at
 
   def set_browsed!(user)
