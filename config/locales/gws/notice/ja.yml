@@ -9,6 +9,7 @@ ja:
     total_file_size: 総容量制限
     total_body_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
     total_file_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
+    gws_addon_member_head: 投稿者
     links:
       set_seen: 既読にする
       unset_seen: 未読にする
@@ -86,6 +87,10 @@ ja:
       gws/notice/post:
         name: タイトル
         severity: 種別
+      gws/notice/folder:
+        member_ids: 投稿ユーザー
+        member_group_ids: 投稿グループ
+        member_custom_group_ids: 投稿カスタムグループ
       gws/addon/notice/notification:
         message_notification: メッセージ通知
         email_notification: メール通知
