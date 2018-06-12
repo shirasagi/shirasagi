@@ -25,8 +25,10 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
 
   def download
     @item = @dataset.resources.find_by id: params[:id], filename: params[:filename].force_encoding("utf-8")
-    @item.dataset.inc downloaded: 1
-    @item.create_download_history
+    if Mongoid::Config.clients[:default_post].blank?
+      @item.dataset.inc downloaded: 1
+      @item.create_download_history
+    end
 
     @cur_node.layout_id = nil
     send_file @item.file.path, type: @item.content_type, filename: @item.filename,
