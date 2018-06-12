@@ -7,6 +7,9 @@ class Gws::Notice::Folder
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  member_include_custom_groups
+  readable_setting_include_custom_groups
+
   class << self
     def create_my_folder!(site, group)
       full_name = ''

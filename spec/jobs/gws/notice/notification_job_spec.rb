@@ -2,11 +2,14 @@ require 'spec_helper'
 
 describe Gws::Notice::NotificationJob, dbscope: :example do
   let(:site) { gws_site }
+  let(:group1) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
   let(:scheme) { %w(http https).sample }
   let(:domain) { "#{unique_id}.example.jp" }
   let(:sender) { gws_user }
-  let(:recipient1) { create(:gws_user) }
-  let(:recipient2) { create(:gws_user) }
+  let!(:recipient1) { create(:gws_user) }
+  let!(:recipient2) { create(:gws_user, group_ids: [ group1.id ]) }
+  let!(:recipient3) { create(:gws_user) }
+  let!(:custom_group1) { create :gws_custom_group, member_ids: [recipient3.id] }
   let(:now) { Time.zone.now.beginning_of_minute }
   let(:folder) { create(:gws_notice_folder) }
 
@@ -37,7 +40,9 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
         message_notification: 'enabled', email_notification: 'enabled',
-        readable_setting_range: 'select', readable_member_ids: [recipient1.id, recipient2.id], state: 'public'
+        readable_setting_range: 'select', readable_member_ids: [recipient1.id],
+        readable_group_ids: [group1.id], readable_custom_group_ids: [custom_group1.id],
+        state: 'public'
       )
     end
 
@@ -58,13 +63,14 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
 
       expect(Gws::Memo::Notice.count).to eq 1
       Gws::Memo::Notice.first.tap do |message|
+        expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to \
           include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
-      expect(ActionMailer::Base.deliveries.length).to eq 2
+      expect(ActionMailer::Base.deliveries.length).to eq 3
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.to.first).to eq recipient1.email
@@ -82,7 +88,9 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
         message_notification: 'enabled', email_notification: 'enabled',
-        readable_setting_range: 'select', readable_member_ids: [recipient1.id, recipient2.id], state: 'public',
+        readable_setting_range: 'select', readable_member_ids: [recipient1.id],
+        readable_group_ids: [group1.id], readable_custom_group_ids: [custom_group1.id],
+        state: 'public',
         text: "# #{unique_id}\n#{unique_id}\n\n* #{unique_id}", text_type: 'markdown'
       )
     end
@@ -104,13 +112,14 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
 
       expect(Gws::Memo::Notice.count).to eq 1
       Gws::Memo::Notice.first.tap do |message|
+        expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to \
           include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
-      expect(ActionMailer::Base.deliveries.length).to eq 2
+      expect(ActionMailer::Base.deliveries.length).to eq 3
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.to.first).to eq recipient1.email
@@ -128,7 +137,9 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
         message_notification: 'enabled', email_notification: 'enabled',
-        readable_setting_range: 'select', readable_member_ids: [recipient1.id, recipient2.id], state: 'closed'
+        readable_setting_range: 'select', readable_member_ids: [recipient1.id],
+        readable_group_ids: [group1.id], readable_custom_group_ids: [custom_group1.id],
+        state: 'closed'
       )
     end
 
@@ -175,6 +186,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
 
       expect(Gws::Memo::Notice.count).to be > 0
       Gws::Memo::Notice.first.tap do |message|
+        expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.text).to include(notice.name)
         expect(message.text).to \

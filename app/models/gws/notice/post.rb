@@ -18,6 +18,8 @@ class Gws::Notice::Post
   include Gws::Addon::History
   include Gws::Board::BrowsingState
 
+  readable_setting_include_custom_groups
+
   store_in collection: 'gws_notices'
   set_permission_name 'gws_notices'
 
