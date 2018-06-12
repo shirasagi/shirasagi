@@ -67,6 +67,22 @@ class Gws::Notice::Folder
     end
   end
 
+  def for_post_manager?(site, user)
+    allowed?(:read, user, site: site)
+  end
+
+  def for_post_editor?(site, user)
+    member?(user) || for_post_reader?(site, user)
+  end
+
+  def for_post_reader?(site, user)
+    return true if !readable_setting_present?
+    return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
+    return true if readable_member_ids.include?(user.id)
+    return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    false
+  end
+
   def notices
     Gws::Notice::Post.all.site(site).where(folder_id: id)
   end

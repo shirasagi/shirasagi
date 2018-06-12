@@ -10,8 +10,11 @@
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="state"><%= t "ss.state.#{item.state_with_release_date}" %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
-  <% if item.folder.present? %>
-    <span class="folder"><%= t('mongoid.models.gws/notice/folder') %>: <%= item.folder.name %></span>
+  <% if item.folder.present? && item.folder.for_post_editor?(@cur_site, @cur_user) %>
+    <span class="folder">
+      <span class="label"><%= t('mongoid.models.gws/notice/folder') %></span>
+      <span class="folder-name"><%= item.folder.name %></span>
+    </span>
   <% end %>
 
   <% if attr = item.label(:severity).presence %>
