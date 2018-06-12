@@ -30,7 +30,7 @@ class Gws::Group
 
   validate :validate_parent_name, if: ->{ cur_site.present? }
 
-  scope :site, ->(site) { where name: /^#{::Regexp.escape(site.name)}(\/|$)/ }
+  scope :site, ->(site) { self.and name: /^#{::Regexp.escape(site.name)}(\/|$)/ }
 
   private
 

@@ -1,0 +1,168 @@
+puts "# share/category"
+
+def create_share_category(data)
+  create_item(Gws::Share::Category, data)
+end
+
+@sh_cate = [
+  create_share_category(name: 'パンフレット', color: '#A600FF', order: 10),
+  create_share_category(name: '写真', color: '#0011FF', order: 20),
+  create_share_category(name: '申請書', color: '#11FF00', order: 30),
+  create_share_category(name: '資料', color: '#FFEE00', order: 40),
+]
+
+## -------------------------------------
+puts "# share/folder"
+
+def create_share_folder(data)
+  create_item(Gws::Share::Folder, data)
+end
+
+
+@sh_folders = [
+  create_share_folder(cur_user: u("admin"), name: '講習会資料', order: 10, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("admin"), name: '事業パンフレット', order: 20, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("admin"), name: 'イベント写真', order: 30, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("admin"), name: '座席表', order: 50, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: 'イベント写真/企画セミナー', order: 10, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '事業パンフレット/広報関連パンフレット', order: 10, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '座席表/企画政策部 政策課', order: 10, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '講習会資料/企画セミナー', order: 10, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: 'イベント写真/防災イベント', order: 20, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '事業パンフレット/防災関連パンフレット', order: 20, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '座席表/企画政策部 広報課', order: 20, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '講習会資料/防災セミナー', order: 20, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: 'イベント写真/広報イベント', order: 30, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '事業パンフレット/観光パンフレット', order: 30, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '座席表/危機管理部 管理課', order: 30, group_ids: [ g('政策課').id ]),
+  create_share_folder(cur_user: u("sys"), name: '座席表/危機管理部 防災課', order: 40, group_ids: [ g('政策課').id ]),
+]
+
+def sh_folder(name)
+  @sh_folders.find { |folder| folder.name == name || folder.name.end_with?("/#{name}") }
+end
+
+## -------------------------------------
+puts "# share/file"
+
+def create_share_file(data)
+  create_item(Gws::Share::File, data)
+end
+
+@sh_files = []
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/bosai01.jpg'), filename: 'bosai01.jpg', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'bosai01.jpg', folder_id: sh_folder("防災イベント").id, category_ids: [@sh_cate[1].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikaku01.jpg'), filename: 'kikaku01.jpg', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'kikaku01.jpg', folder_id: sh_folder("企画セミナー").id, category_ids: [@sh_cate[1].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikaku01.jpg'), filename: 'koho01.jpg', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'koho01.jpg', folder_id: sh_folder("広報イベント").id, category_ids: [@sh_cate[1].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市広報パンフレット', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市広報パンフレット', folder_id: sh_folder("広報関連パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市総合パンフレット', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市総合パンフレット', folder_id: sh_folder("事業パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市観光マップ', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市観光マップ', folder_id: sh_folder("観光パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市観光案内', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市観光案内', folder_id: sh_folder("観光パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市防災計画パンフレット', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市防災計画パンフレット', folder_id: sh_folder("防災関連パンフレット").id, group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/seminar_application.pdf'), filename: 'セミナー参加申込書', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'セミナー参加申込書', folder_id: sh_folder("講習会資料").id, category_ids: [@sh_cate[2].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/file.pdf'), filename: '企画セミナーチラシ', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("admin"), in_file: f, name: '企画セミナーチラシ', folder_id: sh_folder("講習会資料/企画セミナー").id, category_ids: [@sh_cate[3].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikakuseisakubu_kohoka.pdf'), filename: '企画政策部広報課', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '企画政策部 広報課', folder_id: sh_folder("企画政策部 広報課").id, group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikakuseisakubu_seisakuka.pdf'), filename: '企画制作部政策課', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("admin"), in_file: f, name: '企画政策部 政策課', folder_id: sh_folder("企画政策部 政策課").id, group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikikanribu_kanrika.pdf'), filename: '危機管理部管理課', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '危機管理部 管理課', folder_id: sh_folder("危機管理部 管理課").id, group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikikanribu_bosaika.pdf'), filename: '危機管理部防災課', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '危機管理部 防災課', folder_id: sh_folder("危機管理部 防災課").id, group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/nenkankousyuukai_keikaku.pdf'), filename: '年間講習会計画', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '年間講習会計画', folder_id: sh_folder("講習会資料").id, category_ids: [@sh_cate[3].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/koho_shirasagi.pdf'), filename: '広報シラサギ', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '広報シラサギ', folder_id: sh_folder("広報関連パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/hontyousya_floorzu.pdf'), filename: '本庁舎フロア図', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '本庁舎フロア図', folder_id: sh_folder("座席表").id, group_ids: [ g('政策課').id ])
+end
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/bosai_seminarreport.pdf'), filename: '防災セミナー報告書', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '防災セミナー報告書', folder_id: sh_folder("防災セミナー").id, category_ids: [@sh_cate[3].id], group_ids: [ g('政策課').id ])
+end
+
+@sh_folders.each(&:update_folder_descendants_file_info)
+
+def sh_file(name)
+  @sh_files.find { |file| file.name == name }
+end
+
+## -------------------------------------
+# Gws::StaffRecord
+
+load "#{Rails.root}/db/seeds/gws/contents/staff_record.rb"
+
+## -------------------------------------
+puts "# shared_address/group"
+
+def create_shared_address_group(data)
+  create_item(Gws::SharedAddress::Group, data)
+end
+
+@sh_address_group = [
+
+  create_shared_address_group(name: '企画政策部 政策課', order: 10),
+  create_shared_address_group(name: '企画政策部 広報課', order: 10),
+  create_shared_address_group(name: '危機管理部 管理課', order: 10),
+  create_shared_address_group(name: '危機管理部 防災課', order: 10),
+]
+
+## -------------------------------------
+puts "# shared_address/address"
+
+def create_shared_address_address(data)
+  create_item(Gws::SharedAddress::Address, data)
+end
+
+create_shared_address_address(
+  name: 'サイト管理者', member_id: u('admin'), email: 'admin@demo-ss-proj.org', kana: 'サイト カンリシャ',
+  readable_setting_range: 'public', address_group_id: @sh_address_group[1].id
+)
+create_shared_address_address(
+  name: 'システム管理者', member_id: u('sys').id, email: 'sys@demo-ss-proj.org',
+   address_group_id: @sh_address_group[1].id
+)
+create_shared_address_address(
+  name: '伊藤 幸子', member_id: u('user4').id, email: 'user4@demo-ss.proj.org',
+   address_group_id: @sh_address_group[3].id
+)
+create_shared_address_address(
+  name: '斉藤 拓也', member_id: u('user3').id, email: 'user3@demo-ss.proj.org',
+   address_group_id: @sh_address_group[2].id
+)
+create_shared_address_address(
+  name: '渡辺 和子', member_id: u('user2').id,email: 'user2@demo-ss.proj.org',
+   address_group_id: @sh_address_group[3].id
+)
+create_shared_address_address(
+  name: '鈴木 茂', member_id: u('user1').id, email: 'user1@demo-ss.proj.org',
+   address_group_id: @sh_address_group[1].id
+)
+create_shared_address_address(
+  name: '高橋 清', member_id: u('user5').id, email: 'user5@demo-ss.prpj.org',
+   address_group_id: @sh_address_group[2].id
+)
