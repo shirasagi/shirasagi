@@ -18,18 +18,18 @@ class Gws::Notice::Apis::FoldersController < ApplicationController
   end
 
   def set_items
-    @items ||= @model.site(@cur_site).
-      nin(id: @excepts).
-      search(@s)
+    @items ||= begin
+      if params[:mode] == 'manageable'
+        items = @model.for_post_manager(@cur_site, @cur_user)
+      elsif params[:mode] == 'editable'
+        items = @model.for_post_editor(@cur_site, @cur_user)
+      elsif params[:mode] == 'readable'
+        items = @model.for_post_reader(@cur_site, @cur_user)
+      else
+        items = @model.none
+      end
 
-    if params[:mode] == 'manageable'
-      @items = @items.allow(:read, @cur_user, site: @cur_site)
-    elsif params[:mode] == 'editable'
-      @items = @items.member(@cur_user)
-    elsif params[:mode] == 'readable'
-      @items = @items.readable(@cur_user, site: @cur_site)
-    else
-      @items = @model.none
+      items.nin(id: @excepts).search(@s)
     end
   end
 

@@ -17,6 +17,7 @@ ja:
       gws/portal/portlet/report: レポート設定
       gws/portal/portlet/workflow: ワークフロー設定
       gws/portal/portlet/attendance: 出退勤設定
+      gws/portal/portlet/notice: お知らせ設定
 
   gws/portal:
     self_portal: 個人
@@ -77,6 +78,9 @@ ja:
       attendance:
         name: 出退勤
         text: 本日の出退勤を表示および打刻します。
+      notice:
+        name: お知らせ
+        text: 新着のお知らせを表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -155,6 +159,11 @@ ja:
         share_folder_id: フォルダー
       gws/addon/portal/portlet/workflow:
         workflow_state: 表示範囲
+      gws/addon/portal/portlet/notice:
+        notice_severity: 重要度
+        notice_browsed_state: 既読・未読
+        notice_category_ids: カテゴリー
+        notice_folder_ids: フォルダー
 
   tooltip:
     gws/portal/user_setting:

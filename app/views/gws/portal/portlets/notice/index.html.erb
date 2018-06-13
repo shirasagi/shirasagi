@@ -1,0 +1,47 @@
+<%
+  items = @portlet.find_notice_items(@portal, @cur_user)
+%>
+<div class="main-box gws-notices">
+  <div class="portlet-title"><%= @portlet.name %></div>
+
+  <ul class="list-items">
+    <% items.each do |item| %>
+      <%
+        css_classes = %w(list-item)
+        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
+        if item.severity.present?
+          css_classes << item.severity
+        end
+      %>
+      <li class="<%= css_classes.join(' ') %>">
+        <div class="info">
+          <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'title' %>
+          <% if item.files.present? %>
+            <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
+          <% end %>
+          <% if item.comments.count > 0 %>
+            <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
+          <% end %>
+
+          <div class="meta">
+            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+            <% if attr = item.label(:severity).presence %>
+              <span class="label"><%= attr %></span>
+            <% end %>
+            <span>
+              <% item.categories.compact.each do |category| %>
+                <%= link_to category.trailing_name, gws_notice_readables_path(folder_id: '-', category_id: category.id),
+                            class: "gws-category-label", style: category_label_css(category) %>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+
+  <% if items.next_page %>
+    <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_notice_main_path %></div>
+  <% end %>
+</div>
