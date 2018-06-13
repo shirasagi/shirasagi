@@ -35,7 +35,7 @@
       <h2><%= link_to t("cms.import_node"), cms_import_path, class: "icon-conf" %></h2>
     <% end %>
   <% end %>
-  <h2><%= link_to t("cms.all_contents"), cms_all_contents_path, class: "icon-conf" %></h2>
+  <h2><%= link_to t("cms.all_contents"), cms_all_contents_download_path, class: "icon-conf" %></h2>
 
   <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to t("cms.generate_node"), cms_generate_nodes_path, class: "icon-write" %></h2>

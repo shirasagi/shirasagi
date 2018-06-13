@@ -132,6 +132,10 @@ SS::Application.routes.draw do
     get "command" => "command#command"
     post "command" => "command#command"
     get "all_contents(.:format)" => "all_contents#index", format: { default: :html }, as: "all_contents"
+    get 'all_contents/download' => 'all_contents#index'
+    post 'all_contents/download' => 'all_contents#download'
+    get 'all_contents/import' => 'all_contents#import'
+    post 'all_contents/import' => 'all_contents#import'
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
