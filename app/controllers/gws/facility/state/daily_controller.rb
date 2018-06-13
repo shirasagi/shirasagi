@@ -24,7 +24,7 @@ class Gws::Facility::State::DailyController < ApplicationController
     @facility_category = facility_category_criteria.find(facility_category_id) rescue nil
     return [] if @facility_category.blank?
 
-    ids = facility_category_criteria.where(name: /^#{Regexp.escape(@facility_category.name)}\//).pluck(:id)
+    ids = facility_category_criteria.where(name: /^#{::Regexp.escape(@facility_category.name)}\//).pluck(:id)
     ids << @facility_category.id
   end
 

@@ -46,7 +46,7 @@ module Chorg::Substituter
     def initialize(from_value, to_value, key = nil, group_ids = nil)
       @from_value = from_value
       @to_value = to_value.nil? ? "" : to_value
-      @from_regex = /#{Regexp.escape(@from_value)}/
+      @from_regex = /#{::Regexp.escape(@from_value)}/
       @key = key
       @group_ids = group_ids
     end

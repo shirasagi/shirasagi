@@ -49,7 +49,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         fill_in "workflow[comment]", with: workflow_comment1
         click_on I18n.t("workflow.buttons.request")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -75,7 +75,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -101,7 +101,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.remand")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -130,7 +130,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         fill_in "workflow[comment]", with: workflow_comment2
         click_on I18n.t("workflow.buttons.request")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -156,7 +156,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment2)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -183,7 +183,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment3)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -211,7 +211,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment4)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment4)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id

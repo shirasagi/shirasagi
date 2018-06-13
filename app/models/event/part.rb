@@ -23,7 +23,7 @@ module Event::Part
 
       # second, lookup siblings node
       Event::Node::Search.site(self.site).and_public.
-        where(filename: /^#{Regexp.escape(parent.filename)}/, depth: self.depth).first
+        where(filename: /^#{::Regexp.escape(parent.filename)}/, depth: self.depth).first
     end
 
     def search_url

@@ -30,7 +30,7 @@ class Gws::Memo::Folder
     end
   end
 
-  scope :descendent, ->(name) { where( name: /^#{Regexp.escape(name)}\// ) }
+  scope :descendent, ->(name) { where( name: /^#{::Regexp.escape(name)}\// ) }
 
   before_destroy :validate_destroy
 

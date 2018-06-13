@@ -9,7 +9,7 @@ class SS::TreeList
     @items = items
     @options = options
     root_name = @options[:root_name].presence
-    root_name = /^#{Regexp.escape(root_name)}\// if root_name
+    root_name = /^#{::Regexp.escape(root_name)}\// if root_name
 
     @items = @items.map do |item, parts, orders|
       [ item, join_part(parts.zip(orders)) ]

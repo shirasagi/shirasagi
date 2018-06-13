@@ -7,7 +7,7 @@ class Sns::MypageController < ApplicationController
 
   def cms_sites
     SS::Site.all.select do |site|
-      @cur_user.groups.active.in(name: site.groups.active.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ } ).present?
+      @cur_user.groups.active.in(name: site.groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).present?
     end
   end
 

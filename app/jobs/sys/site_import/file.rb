@@ -65,7 +65,7 @@ module Sys::SiteImport::File
     dst_path = "=\"#{dst}"
 
     fields = Cms::ApiFilter::Contents::HTML_FIELDS
-    path = "=\"#{Regexp.escape(src)}"
+    path = "=\"#{::Regexp.escape(src)}"
     cond = { "$or" => fields.map { |field| { field => /#{path}/ } } }
 
     criterias = [

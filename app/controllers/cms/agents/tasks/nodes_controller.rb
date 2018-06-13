@@ -18,7 +18,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     generate_root_pages unless @node
 
     nodes = Cms::Node.site(@site).and_public
-    nodes = nodes.where(filename: /^#{Regexp.escape(@node.filename)}(\/|$)/) if @node
+    nodes = nodes.where(filename: /^#{::Regexp.escape(@node.filename)}(\/|$)/) if @node
     ids   = nodes.pluck(:id)
 
     ids.each do |id|

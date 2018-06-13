@@ -53,7 +53,7 @@ class Inquiry::Answer
       end
 
       if params[:url].present?
-        criteria = criteria.where(source_url: /^#{Regexp.escape(params[:url])}/)
+        criteria = criteria.where(source_url: /^#{::Regexp.escape(params[:url])}/)
       elsif params[:feedback]
         criteria = criteria.where(source_url: { "$exists" => true, "$ne" => nil })
       end

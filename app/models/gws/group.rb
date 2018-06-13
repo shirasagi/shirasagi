@@ -30,14 +30,14 @@ class Gws::Group
 
   validate :validate_parent_name, if: ->{ cur_site.present? }
 
-  scope :site, ->(site) { where name: /^#{Regexp.escape(site.name)}(\/|$)/ }
+  scope :site, ->(site) { where name: /^#{::Regexp.escape(site.name)}(\/|$)/ }
 
   private
 
   def validate_parent_name
     return if cur_site.id == id
 
-    if name !~ /^#{Regexp.escape(cur_site.name)}\//
+    if name !~ /^#{::Regexp.escape(cur_site.name)}\//
       errors.add :name, :not_a_child_group
     elsif name.scan('/').size > 1
       errors.add :base, :not_found_parent_group unless self.class.where(name: File.dirname(name)).exists?

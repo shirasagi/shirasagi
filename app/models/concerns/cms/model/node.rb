@@ -105,7 +105,7 @@ module Cms::Model::Node
     dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
 
     return errors.add :filename, :empty if dst.blank?
-    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{Regexp.escape(fix_extname || "")})?$/
+    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
 
     return errors.add :base, :same_filename if filename == dst
     return errors.add :filename, :taken if Cms::Node.site(site).where(filename: dst).first

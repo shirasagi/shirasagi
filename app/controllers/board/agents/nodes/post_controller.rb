@@ -106,7 +106,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
     @words = params[:keyword].split(/[\s　]+/).uniq.compact
     @query = @words.map do |w|
-      [ { name: /#{Regexp.escape(w)}/ }, { text: /#{Regexp.escape(w)}/ } ]
+      [ { name: /#{::Regexp.escape(w)}/ }, { text: /#{::Regexp.escape(w)}/ } ]
     end.flatten
 
     @items = @model.site(@cur_site).node(@cur_node).or(@query).

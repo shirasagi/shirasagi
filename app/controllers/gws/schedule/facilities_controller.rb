@@ -48,7 +48,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
 
   def category_ids
     return nil if @facility_category.blank?
-    ids = facility_category_criteria.where(name: /^#{Regexp.escape(@facility_category.name)}\//).pluck(:id)
+    ids = facility_category_criteria.where(name: /^#{::Regexp.escape(@facility_category.name)}\//).pluck(:id)
     ids << @facility_category.id
   end
 

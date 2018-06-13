@@ -92,7 +92,7 @@ module Cms::PublicFilter::Layout
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
 
     html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
-      @window_name = Regexp.last_match(1)
+      @window_name = ::Regexp.last_match(1)
       ''
     end
 
@@ -120,8 +120,8 @@ module Cms::PublicFilter::Layout
       (?<datetime>|_datetime)
       \}
     ).join
-    html.gsub!(Regexp.compile(template)) do
-      matchdata = Regexp.last_match
+    html.gsub!(::Regexp.compile(template)) do
+      matchdata = ::Regexp.last_match
       if matchdata[:item] == 'released'
         item = @cur_item.released
       else
@@ -137,7 +137,7 @@ module Cms::PublicFilter::Layout
     end
 
     html.gsub!(conditional_tag_template) do
-      render_conditional_tag(Regexp.last_match)
+      render_conditional_tag(::Regexp.last_match)
     end
 
     html
