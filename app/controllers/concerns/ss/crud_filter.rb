@@ -1,5 +1,6 @@
 module SS::CrudFilter
   extend ActiveSupport::Concern
+  include SS::ImplicitRenderFilter
 
   included do
     before_action :prepend_current_view_path
