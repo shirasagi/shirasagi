@@ -67,6 +67,11 @@ module Event::Addon
       html = []
       dates = []
       range = []
+
+      event_dates = event_dates.split(/\r\n|\n/).map do |d|
+        d = Time.zone.parse(d) rescue nil
+      end.compact
+
       event_dates.each do |d|
         if range.present? && range.last.tomorrow != d
           dates << range
@@ -74,6 +79,7 @@ module Event::Addon
         end
         range << d
       end
+
       dates << range if range.present?
       dates.each do |range|
         cls = "event-dates"
