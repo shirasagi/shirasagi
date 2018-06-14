@@ -16,7 +16,7 @@ describe "gws_apis_facilities", type: :feature, dbscope: :example do
       expect(page).to have_content(item2.name)
 
       visit "#{path}?s[category]=#{cate.id}"
-      expect(page).not_to have_content(item1.name)
+      expect(page).to have_no_content(item1.name)
       expect(page).to have_content(item2.name)
     end
   end

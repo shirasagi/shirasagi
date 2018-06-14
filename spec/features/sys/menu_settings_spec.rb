@@ -32,8 +32,8 @@ describe "sys_menu_settings", type: :feature, dbscope: :example do
         click_button I18n.t('ss.buttons.save')
       end
       visit sns_mypage_path
-      expect(page).not_to have_css('.main-navi a', text: I18n.t("sns.file"))
-      expect(page).not_to have_css('.main-navi a', text: I18n.t("sns.connection"))
+      expect(page).to have_no_css('.main-navi a', text: I18n.t("sns.file"))
+      expect(page).to have_no_css('.main-navi a', text: I18n.t("sns.connection"))
     end
   end
 end

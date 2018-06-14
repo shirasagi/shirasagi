@@ -25,13 +25,13 @@ describe "gws_circular_trashes", type: :feature, dbscope: :example do
     it "#index not display except deleted" do
       item3
       visit gws_circular_trashes_path(site)
-      expect(page).not_to have_content(item3.name)
+      expect(page).to have_no_content(item3.name)
     end
 
     it "#index not display only member_ids" do
       item4
       visit gws_circular_trashes_path(site)
-      expect(page).not_to have_content(item4.name)
+      expect(page).to have_no_content(item4.name)
     end
 
     it "#show only user_ids" do

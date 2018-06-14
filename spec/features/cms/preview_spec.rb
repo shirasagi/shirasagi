@@ -85,7 +85,7 @@ describe "cms_preview", type: :feature, dbscope: :example do
       it do
         visit mobile_preview_path
         expect(page).to have_selector('title', count: 1)
-        expect(page).not_to have_css('meta[charset=shift_jis]')
+        expect(page).to have_no_css('meta[charset=shift_jis]')
         expect(page).to have_css('div.category-nodes div.tag-article div h2', count: 2)
         expect(page).to have_css('div.faq-search form')
         expect(page).to have_css('div.category-nodes div#category-list')

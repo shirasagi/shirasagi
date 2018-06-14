@@ -27,16 +27,16 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
       visit item.url
       expect(status_code).to eq 200
       expect(page).to have_css('div.condition', text: item.name)
-      expect(page).not_to have_css('div.condition', text: node.name)
-      expect(page).not_to have_css('div.condition time')
+      expect(page).to have_no_css('div.condition', text: node.name)
+      expect(page).to have_no_css('div.condition time')
     end
 
     it do
       visit node.url
       expect(status_code).to eq 200
-      expect(page).not_to have_css('div.condition', text: item.name)
+      expect(page).to have_no_css('div.condition', text: item.name)
       expect(page).to have_css('div.condition', text: node.name)
-      expect(page).not_to have_css('div.condition time')
+      expect(page).to have_no_css('div.condition time')
     end
   end
 end

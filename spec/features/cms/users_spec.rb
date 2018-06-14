@@ -33,7 +33,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
 
       #show
       visit show_path
@@ -45,7 +45,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
 
       #delete
       visit delete_path
@@ -73,7 +73,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
     end
 
     it "#show" do

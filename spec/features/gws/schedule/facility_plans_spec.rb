@@ -44,7 +44,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       within '#cboxLoadedContent .send' do
         click_on I18n.t('ss.buttons.close')
       end
-      expect(page).not_to have_css("#cboxLoadedContent")
+      expect(page).to have_no_css("#cboxLoadedContent")
 
       within 'form#item-form' do
         click_button I18n.t('ss.buttons.save')
