@@ -1,11 +1,15 @@
 <% controller.javascript "/assets/js/jquery.colorbox.js" %>
 <% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
 
-<%= coffee do %>
-$(window).on "load", ->
-  $(".ajax-box").on "click", ->
-    $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "" }) %>"})
-    return false
+<%= jquery do %>
+  $(window).on("load", function () {
+    $(".ajax-box").on("click", function () {
+      $.colorbox({
+        html: '<%=j render(partial: "modal", locals: { search_path: "" }) %>'
+      });
+      return false;
+    });
+  });
 <% end %>
 
 <dl class="condition">

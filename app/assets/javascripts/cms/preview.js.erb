@@ -1,0 +1,108 @@
+
+//=require jquery.datetimepicker
+
+this.SS_Preview = (function () {
+  function SS_Preview() {
+  }
+
+  SS_Preview.preview_path = "";
+
+  SS_Preview.mobile_path = "/mobile";
+
+  SS_Preview.request_path = null;
+
+  SS_Preview.form_item = null;
+
+  SS_Preview.render = function () {
+    $("#ss-preview .date").datetimepicker({
+      lang: "ja",
+      roundTime: "ceil",
+      step: 30,
+      closeOnDateSelect: true
+    });
+    $("#ss-preview .preview").click(function () {
+      var date, path;
+      date = $("#ss-preview .date").val();
+      if (date === "") {
+        return;
+      }
+      date = date.replace(/[^\d]/g, "");
+      path = SS_Preview.request_path;
+      path || (path = location.pathname);
+      path = path.replace(RegExp("\\/preview\\d*(" + SS_Preview.mobile_path + "|" + SS_Preview.preview_path + ")?"), "/preview" + date + SS_Preview.preview_path) + location.search;
+      if (SS_Preview.request_path) {
+        return SS_Preview.submitFormPreview(path, SS_Preview.form_item);
+      } else {
+        return location.href = path;
+      }
+    });
+    $("#ss-preview .mobile").click(function () {
+      var date, path;
+      date = $("#ss-preview .date").val();
+      if (date === "") {
+        return;
+      }
+      date = date.replace(/[^\d]/g, "");
+      path = SS_Preview.request_path;
+      path || (path = location.pathname);
+      path = path.replace(RegExp("\\/preview\\d*(" + SS_Preview.mobile_path + "|" + SS_Preview.preview_path + ")?"), "/preview" + date + SS_Preview.mobile_path) + location.search;
+      if (SS_Preview.request_path) {
+        return SS_Preview.submitFormPreview(path, SS_Preview.form_item);
+      } else {
+        return location.href = path;
+      }
+    });
+    if (SS_Preview.request_path) {
+      return $('body a [href="#"]').val("onclick", "return false;");
+    }
+  };
+
+  SS_Preview.submitFormPreview = function (path, form_item) {
+    var form, token;
+    token = $('meta[name="csrf-token"]').attr('content');
+    form = $("<form>");
+    $(form).attr("method", "post");
+    $(form).attr("action", path);
+    SS_Preview.appendParams(form, "preview_item", form_item);
+    form.append($("<input/>", {
+      name: "authenticity_token",
+      value: token,
+      type: "hidden"
+    }));
+    form.appendTo("body");
+    form.submit();
+    return false;
+  };
+
+  SS_Preview.appendParams = function (form, name, params) {
+    var k, results, v;
+    if (params.length <= 0) {
+      form.append($("<input/>", {
+        name: name + "[]",
+        value: "",
+        type: "hidden"
+      }));
+    }
+    results = [];
+    for (k in params) {
+      v = params[k];
+      if (k.match(/^\d+$/)) {
+        k = "";
+      }
+      if (typeof v === 'object') {
+        results.push(SS_Preview.appendParams(form, name + "[" + k + "]", v));
+      } else {
+        results.push(form.append($("<input/>", {
+          name: name + "[" + k + "]",
+          value: v,
+          type: "hidden"
+        })));
+      }
+    }
+    return results;
+  };
+
+  return SS_Preview;
+
+})();
+

@@ -1,17 +1,19 @@
-<%= coffee do %>
+<%= jquery do %>
+  SS.ajaxForm("form.user-file", {
+    success: function() {
+      return $("#cboxLoadedContent").load("<%= url_for(action: :index) %>");
+    }
+  });
 
-SS.ajaxForm "form.user-file",
-  success: ->
-    $("#cboxLoadedContent").load "<%= url_for(action: :index) %>"
+  SS.ajax(".user-files .select", {
+    success: function(data) {
+       $("#selected-files .file-view").remove();
+       $("#selected-files").append(data);
+       return $.colorbox.close();
+    }
+  });
 
-SS.ajax ".user-files .select",
-  success: (data) ->
-    $("#selected-files .file-view").remove()
-    $("#selected-files").append data
-    $.colorbox.close()
-
-SS.ajaxDelete ".user-files .delete"
-
+  SS.ajaxDelete(".user-files .delete");
 <% end %>
 
 <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>

@@ -11,51 +11,63 @@
   end
 %>
 <%= javascript_include_tag "opendata/public" %>
-<%= coffee do %>
-$ ->
+<%= jquery do %>
 
   <% if member_login_enabled? && @tab_count > 1 %>
-  # Tabs
-  SS_Tabs.render("#idea-tabs-<%= @cur_node.id %>");
+
+  // Tabs
+    SS_Tabs.render("#idea-tabs-<%= @cur_node.id %>");
   <% end %>
 
   <% if @cur_node.show_point? %>
-  # show point
-  Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
+
+  // show point
+    Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
   <% end %>
 
-  # show comment
-  $.ajax
-    url: "<%= path_prefix %><%= @cur_page.comment_url %>"
-    success: (data)->
-      $("#idea-comments").html data
-
+  // show comment
+  $.ajax({
+  url: "<%= path_prefix %><%= @cur_page.comment_url %>",
+  success: function(data) {
+  $("#idea-comments").html(data);
+  }
+  });
   <% if dataset_enabled? %>
-  # show related_dataset
-  $.ajax
-    url: "<%= path_prefix %><%= @cur_page.related_dataset_url %>"
-    success: (data)->
-      $("#related_dataset").html data
+
+  // show related_dataset
+    $.ajax({
+    url: "<%= path_prefix %><%= @cur_page.related_dataset_url %>",
+    success: function(data) {
+    $("#related_dataset").html(data);
+    }
+    });
   <% end %>
 
   <% if app_enabled? %>
-  # show related_app
-  $.ajax
-    url: "<%= path_prefix %><%= @cur_page.related_app_url %>"
-    success: (data)->
-      $("#related_app").html data
+
+  // show related_app
+    $.ajax({
+    url: "<%= path_prefix %><%= @cur_page.related_app_url %>",
+    success: function(data) {
+    $("#related_app").html(data);
+    }
+    });
   <% end %>
 
-  # hide categories
-  $(".categories a[data-class=other]").click ->
-    type = $(this).attr("class")
-    $(".categories a." + type).show()
-    $(this).remove()
-    return false
+  // hide categories
+  $(".categories a[data-class=other]").click(function() {
+  var type;
+  type = $(this).attr("class");
+  $(".categories a." + type).show();
+  $(this).remove();
+  return false;
+  });
 
-  # preview
-  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
-
+  //preview
+  $("a.content").colorbox({
+  fixed: true,
+  width: "90%",
+  height: "90%"});
 <% end %>
 
 <header>

@@ -1,21 +1,29 @@
-<%= coffee do %>
-$ ->
-  reload = ->
-    if $("#task-form .state").html().match(/(ready|running)/)
-      $.ajax
-        url: "<%= url_for(action: :index, format: :json) %>"
-        success: (data)->
-          started = data["started"] + ""
-          closed  = data["closed"] + ""
-          $("#task-form .state").html data["state"]
-          $("#task-form .count").html data["current_count"] + " / " + data["total_count"]
-          $("#task-form .started").html started.replace(/\..*/, "").replace("T", " ")
-          $("#task-form .closed").html closed.replace(/\..*/, "").replace("T", " ")
-          $("#task-form .log").val data["logs"].join("\n")
-          if data["state"] == "stop"
-            $("#task-form .stop-button").hide()
-            $("#task-form .run-button").show()
-  setInterval reload, 10000
+<%= jquery do %>
+
+  var reload;
+  reload = function () {
+    if ($("#task-form .state").html().match(/(ready|running)/)) {
+      $.ajax({
+        url: "<%= url_for(action: :index, format: :json) %>",
+        success: function (data) {
+          var closed, started;
+          started = data["started"] + "";
+          closed = data["closed"] + "";
+          $("#task-form .state").html(data["state"]);
+          $("#task-form .count").html(data["current_count"] + " / " + data["total_count"]);
+          $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .log").val(data["logs"].join("\n"));
+          if (data["state"] === "stop") {
+            $("#task-form .stop-button").hide();
+            $("#task-form .run-button").show();
+          }
+        }
+      });
+    }
+  };
+  setInterval(reload, 10000);
+
 <% end %>
 
 <div class="main-box">

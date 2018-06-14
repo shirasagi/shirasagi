@@ -3,12 +3,15 @@
 
 <%= render_facility_search_map "#map-canvas", markers: @markers, site: @cur_site %>
 
-<%= coffee do %>
-$(window).on "load", ->
-  # setup search modal window
-  $(".ajax-box").on "click", ->
-    $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "./map.html" }) %>"})
-    return false
+<%= jquery do %>
+  $(window).on("load", function () {
+    $(".ajax-box").on("click", function () {
+      $.colorbox({
+        html: "<%=j render(partial: 'modal', locals: { search_path: './map.html' }) %>"
+      });
+      return false;
+    });
+  });
 <% end %>
 
 <%= render file: "facility/agents/addons/search_result/view/upper" %>

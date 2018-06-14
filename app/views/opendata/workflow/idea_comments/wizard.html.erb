@@ -1,31 +1,39 @@
-<%= coffee do %>
-$ ->
-  $(".workflow-route-start").on "click", (e) ->
-    uri = []
-    uri[0] = location.pathname.split("/")[0]
-    uri[1] = location.pathname.split("/")[1]
-    uri[2] = "opendata" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "workflow"
-    uri[4] = "idea_comments"
-    uri[5] = location.pathname.split("/")[6]
-    uri[6] = "approver_setting"
-    uri = uri.join("/")
-    route_id = $("#workflow_route").val()
-    $.ajax
-      type: "post"
-      url: uri
-      async: false
-      data:
+<%= jquery do %>
+
+  $(".workflow-route-start").on("click", function (e) {
+    var route_id, uri;
+    uri = [];
+    uri[0] = location.pathname.split("/")[0];
+    uri[1] = location.pathname.split("/")[1];
+    uri[2] = "opendata" + '<%= @cur_node? @cur_node.id : "" %>';
+    uri[3] = "workflow";
+    uri[4] = "idea_comments";
+    uri[5] = location.pathname.split("/")[6];
+    uri[6] = "approver_setting";
+    uri = uri.join("/");
+    route_id = $("#workflow_route").val();
+    $.ajax({
+      type: "post",
+      url: uri,
+      async: false,
+      data: {
         route_id: route_id
-      success: (html, status) ->
-        $(".workflow-partial-section").html(html)
-      error: (xhr, status) ->
-        try
-          errors = $.parseJSON(xhr.responseText)
+      },
+      success: function (html, status) {
+        $(".workflow-partial-section").html(html);
+      },
+      error: function (xhr, status) {
+        var errors;
+        try {
+          errors = $.parseJSON(xhr.responseText);
           alert(["== Error =="].concat(errors).join("\n"));
-        catch
+        } catch (_error) {
           alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
-    e.preventDefault()
+        }
+      }
+    });
+    e.preventDefault();
+  });
 
 <% end %>
 

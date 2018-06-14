@@ -1,9 +1,12 @@
-<%= coffee do %>
-SS_SearchUI.modal()
-SS.ajax "#ajax-box .select",
-  success: (data) ->
-    $("#selected-member-photos").append data
-    $.colorbox.close()
+<%= jquery do %>
+  SS_SearchUI.modal();
+  SS.ajax("#ajax-box .select", {
+    success: function (data) {
+      $("#selected-member-photos").append(data);
+      $.colorbox.close();
+    }
+  });
+
 <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">

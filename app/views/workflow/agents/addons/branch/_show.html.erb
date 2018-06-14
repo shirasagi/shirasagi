@@ -1,34 +1,45 @@
 <% return "" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)  %>
 
-<%= coffee do %>
-$ ->
-  toggleCreateBranchButton = ()->
-    dt = $("dl.branch .create-branch").closest("dt")
-    result = dt.next("dl.branch .result")
-    if $(".branches .name").length
-      dt.hide()
-      dt.next("dt").show()
-      result.show()
-    else
-      dt.show()
-      dt.next("dt").hide()
-      result.hide()
+<%= jquery do %>
 
-  toggleCreateBranchButton()
-  $(".create-branch").on "click", ->
-    path = "<%= branch_create_workflow_page_path(id: @item.id) %>"
-    $.ajax
-      type: "POST",
-      url: path
-      beforeSend: ->
-        $(".result").show()
-        $(".result").html(SS.loading)
-      success: (data)->
-        $(".result").html(data)
-        $(".result a").removeClass()
-        toggleCreateBranchButton()
-      error: (data, status) ->
-        alert(["== Error =="].concat(data.responseJSON).join("\n"))
+    var toggleCreateBranchButton;
+toggleCreateBranchButton = function () {
+  var dt, result;
+  dt = $("dl.branch .create-branch").closest("dt");
+  result = dt.next("dl.branch .result");
+  if ($(".branches .name").length) {
+    dt.hide();
+    dt.next("dt").show();
+    return result.show();
+  } else {
+    dt.show();
+    dt.next("dt").hide();
+    return result.hide();
+
+  }
+};
+toggleCreateBranchButton();
+$(".create-branch").on("click", function () {
+  var path;
+  path = "<%= branch_create_workflow_page_path(id: @item.id) %>";
+  $.ajax({
+    type: "POST",
+    url: path,
+    beforeSend: function () {
+      $(".result").show();
+      $(".result").html(SS.loading);
+    },
+    success: function (data) {
+      $(".result").html(data);
+      $(".result a").removeClass();
+      toggleCreateBranchButton();
+    },
+    error: function (data, status) {
+      alert(["== Error =="].concat(data.responseJSON).join("\n"));
+    }
+  });
+});
+
 <% end %>
 
 <%

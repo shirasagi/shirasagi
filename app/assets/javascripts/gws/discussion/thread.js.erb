@@ -1,0 +1,76 @@
+this.Gws_Discussion_Thread = (function () {
+  function Gws_Discussion_Thread() {
+  }
+
+  Gws_Discussion_Thread.render = function (user) {
+    var appendSelectedFile;
+    //temp file
+    appendSelectedFile = function (selected, fileId, humanizedName) {
+      var a, icon, img, input, span;
+      span = $('<span></span>');
+      img = $('<img src="/assets/img/gws/ic-file.png" alt="" />');
+      a = $('<a target="_blank"></a>');
+      input = $('<input type="hidden" name="item[file_ids][]" class="file-id" />');
+      icon = $("<i class=\"material-icons md-18 md-inactive deselect\">close</i>");
+      span.attr("data-file-id", fileId);
+      span.attr("id", "file-" + fileId);
+      a.text(humanizedName);
+      a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
+      input.attr("value", fileId);
+      icon.on("click", function (e) {
+        $(this).parent("span").remove();
+        if ($(selected).find("[data-file-id]").length <= 0) {
+          $(selected).hide();
+        }
+        return false;
+      });
+      span.append(img);
+      span.append(a);
+      span.append(icon);
+      span.append(input);
+      $(selected).show();
+      return $(selected).append(span);
+    };
+    $('a.ajax-box').data('on-select', function ($item) {
+      var fileId, humanizedName, selected;
+      selected = $.colorbox.element().closest(".comment-files").find(".selected-files");
+      fileId = $item.data('id');
+      humanizedName = $item.data('humanized-name');
+      appendSelectedFile(selected, fileId, humanizedName);
+      return $.colorbox.close();
+    });
+    SS_Addon_TempFile.select = function (files, dropArea) {
+      $(files).each(function (i, file) {
+        var fileId, humanizedName, selected;
+        selected = $(dropArea).closest(".comment-files").find(".selected-files");
+        fileId = file["_id"];
+        humanizedName = file["name"];
+        return appendSelectedFile(selected, fileId, humanizedName);
+      });
+      return false;
+    };
+//reply
+    SS_Addon_TempFile.renderDrop($(".comment-files .upload-drop-area"), user);
+    $(".open-reply").on('click', function () {
+      $(this).closest(".addon-body").next(".reply").show();
+      $(this).remove();
+      return false;
+    });
+//rely contriutor
+    return $(".reply[data-topic]").each(function () {
+      var setContributor, topic;
+      topic = $(this).attr("data-topic");
+      setContributor = function () {
+        $('.discussion-contributor' + topic + ' input#item_contributor_model').val($(this).data('model'));
+        $('.discussion-contributor' + topic + ' input#item_contributor_id').val($(this).data('id'));
+        return $('.discussion-contributor' + topic + ' input#item_contributor_name').val($(this).data('name'));
+      };
+      $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]').on('change', setContributor);
+      return $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]:checked').each(setContributor);
+    });
+  };
+
+  return Gws_Discussion_Thread;
+
+})();
+

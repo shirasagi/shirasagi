@@ -1,0 +1,107 @@
+this.SS_Addon_TempFile = (function () {
+  function SS_Addon_TempFile() {
+  }
+
+  SS_Addon_TempFile.select = null;
+
+  SS_Addon_TempFile.userId = null;
+
+  SS_Addon_TempFile.dropEventTriggered = null;
+
+  SS_Addon_TempFile.selectUrl = function (id) {
+    return "/.u" + this.userId + "/apis/temp_files/" + id + "/select";
+  };
+
+  SS_Addon_TempFile.uploadUrl = function () {
+    return "/.u" + this.userId + "/apis/temp_files.json";
+  };
+
+  SS_Addon_TempFile.renderDrop = function (selector, userId) {
+    this.userId = userId;
+    if (!this.select) {
+      this.select = function (files, dropArea) {
+        var file, id, j, len, results, url;
+        results = [];
+        for (j = 0, len = files.length; j < len; j++) {
+          file = files[j];
+          id = file["_id"];
+          url = SS_Addon_TempFile.selectUrl(id);
+          results.push($.ajax({
+            url: url,
+            success: function (data) {
+              return $("#selected-files").append(data);
+            }
+          }));
+        }
+        return results;
+      };
+    }
+    return $(selector).each(function (i, da) {
+      da = $(da);
+      da.on('dragenter', function (e) {
+        da.addClass('file-dragenter');
+        return false;
+      });
+      da.on('dragleave', function (e) {
+        da.removeClass('file-dragenter');
+        return false;
+      });
+      da.on('dragover', function (e) {
+        da.addClass('file-dragenter');
+        return false;
+      });
+      return da.on('drop', function (e) {
+        var dropArea, file, files, formData, j, len, request, token;
+        dropArea = e.target;
+        token = $('meta[name="csrf-token"]').attr('content');
+        formData = new FormData();
+        formData.append('authenticity_token', token);
+        if ($('#file-resizing').val()) {
+          formData.append('item[resizing]', $('#file-resizing').val());
+        }
+        files = e.originalEvent.dataTransfer.files;
+        if (files.length === 0) {
+          return false;
+        }
+        if (SS_Addon_TempFile.dropEventTriggered) {
+          return false;
+        }
+        SS_Addon_TempFile.dropEventTriggered = true;
+        for (j = 0, len = files.length; j < len; j++) {
+          file = files[j];
+          formData.append('item[in_files][]', file);
+        }
+        request = new XMLHttpRequest();
+        //request.upload.addEventListener 'progress', (e) ->
+        //  return false
+        request.onload = function (e) {
+          var json;
+          if (request.readyState === XMLHttpRequest.DONE) {
+            da.removeClass('file-dragenter');
+            if (request.status === 200 || request.status === 201) {
+              files = JSON.parse(request.response);
+              SS_Addon_TempFile.select(files, dropArea);
+            } else if (request.status === 413) {
+              alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+            } else {
+              try {
+                json = $.parseJSON(request.response);
+                alert(["== Error =="].concat(json).join("\n"));
+              } catch (_error) {
+                alert(["== Error =="].concat(request.statusText).join("\n"));
+              }
+            }
+            return SS_Addon_TempFile.dropEventTriggered = false;
+          }
+        };
+        request.open("POST", SS_Addon_TempFile.uploadUrl());
+        request.send(formData);
+        return false;
+      });
+    });
+  };
+
+  return SS_Addon_TempFile;
+
+})();
+
