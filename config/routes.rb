@@ -54,6 +54,9 @@ SS::Application.routes.draw do
     get   "auth_token" => "auth_token#index", as: :auth_token
     get   "cms" => "mypage#cms"
     get   "gws" => "mypage#gws"
+    if ::Rails.env.development?
+      get "bootstrap" => "bootstrap#index"
+    end
 
     namespace "login" do
       # SAML SSO

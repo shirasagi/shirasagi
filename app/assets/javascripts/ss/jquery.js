@@ -1,0 +1,12 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery-ui/widgets/sortable
+//= require jquery-ui/widgets/draggable
+//= require jquery-ui/widgets/droppable
+//= require jquery-ui/widgets/autocomplete
+//= require jquery.form
+//= require jquery.datetimepicker
+//= require jquery.multi-select
+//= require jquery.colorbox-min.js
+//= require jquery.minicolors
+//= require jquery.autosize
