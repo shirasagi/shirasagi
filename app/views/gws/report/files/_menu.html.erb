@@ -5,7 +5,7 @@
       <% if @forms.present? %>
         <%= dropdown_link(t('ss.links.new')) do %>
           <% @forms.limit(form_limit).each do |form| %>
-            <%= link_to(new_gws_report_form_file_path(form_id: form), class: 'dropdown-item') do %>
+            <%= link_to(new_gws_report_form_file_path(form_id: form), class: 'ss-dropdown-item') do %>
               <%= form.name %>
               <% if form.categories.present? %>
               <span class="categories">
@@ -16,7 +16,7 @@
               <% end %>
             <% end %>
           <% end %>
-          <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path, class: 'dropdown-item more-forms') %>
+          <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path, class: 'ss-dropdown-item more-forms') %>
         <% end %>
       <% end %>
     <% end %>

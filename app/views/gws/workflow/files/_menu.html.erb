@@ -4,11 +4,11 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <% if @forms.present? %>
         <%= dropdown_link(t('ss.links.new')) do %>
-          <%= link_to(t('gws/workflow.forms.default'), new_gws_workflow_form_file_path(form_id: 'default'), class: 'dropdown-item') %>
+          <%= link_to(t('gws/workflow.forms.default'), new_gws_workflow_form_file_path(form_id: 'default'), class: 'ss-dropdown-item') %>
           <% @forms.limit(form_limit).each do |form| %>
-            <%= link_to(form.name, new_gws_workflow_form_file_path(form_id: form), class: 'dropdown-item') %>
+            <%= link_to(form.name, new_gws_workflow_form_file_path(form_id: form), class: 'ss-dropdown-item') %>
           <% end %>
-          <%= link_to(t('gws/workflow.forms.more'), new_gws_workflow_file_path, class: 'dropdown-item more-forms') %>
+          <%= link_to(t('gws/workflow.forms.more'), new_gws_workflow_file_path, class: 'ss-dropdown-item more-forms') %>
         <% end %>
       <% else %>
         <%= link_to(t('ss.links.new'), new_gws_workflow_form_file_path(form_id: 'default')) %>

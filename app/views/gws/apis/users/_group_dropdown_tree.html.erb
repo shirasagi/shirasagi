@@ -12,9 +12,9 @@
     return false;
   });
 <% end %>
-<button class="dropdown btn" type="button"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
+<button class="ss-dropdown btn" type="button"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
 <%= hidden_field_tag("s[group]", @group.id) %>
-<div class="dropdown-container">
+<div class="ss-dropdown-container">
   <table class="index groups">
     <tbody>
     <tr data-depth="0" class="toggle">

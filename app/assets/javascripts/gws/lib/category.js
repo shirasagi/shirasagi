@@ -42,9 +42,9 @@ Gws_Category_Navi.prototype.render = function(items) {
     html.push(data.items.join('<span class="separator"></span>'));
     html.push('</div>');
   });
-  this.el.find('.dropdown-menu').append(html.join(''));
+  this.el.find('.ss-dropdown-menu').append(html.join(''));
 
-  var toggle = this.el.find('.dropdown-toggle');
+  var toggle = this.el.find('.ss-dropdown-toggle');
   if (isCate) {
     var icon = '<i class="material-icons md-18 md-dark">&#xE14C;</i>';
     toggle.after('<a class="ml-1" href="' + toggle.attr('href') + '">' + icon + '</a>');

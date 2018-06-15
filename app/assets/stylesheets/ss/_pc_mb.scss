@@ -90,11 +90,11 @@ td {
   }
 }
 
-.dropdown {
+.ss-dropdown {
   position: relative;
   cursor: pointer;
 }
-.dropdown-menu {
+.ss-dropdown-menu {
   display: none;
   position: absolute;
   z-index: 500;
@@ -103,26 +103,26 @@ td {
     display: block;
   }
 }
-.dropdown-menu--top-right {
+.ss-dropdown-menu--top-right {
   bottom: -10px;
   right: 0;
 }
-.dropdown-menu--white {
+.ss-dropdown-menu--white {
   padding: 5px 0;
   box-shadow: 1px 3px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #d0d0d0;
   background-color: #fff;
 }
-.dropdown-menu--white li {
+.ss-dropdown-menu--white li {
   border-bottom: 1px solid #eee;
   &:hover {
     background: #f2f2f2;
   }
 }
-.dropdown-menu--white li:last-child {
+.ss-dropdown-menu--white li:last-child {
   border: none;
 }
-.dropdown-menu-item {
+.ss-dropdown-menu-item {
   display: block;
   padding: 8px 12px;
   color: #000;
@@ -131,7 +131,7 @@ td {
     color: #f25a38;
   }
 }
-.dropdown-menu-item.disabled {
+.ss-dropdown-menu-item.disabled {
   color: #aaa;
 }
 
@@ -498,7 +498,7 @@ td {
     .group {
       margin-right: 10px;
     }
-    .dropdown {
+    .ss-dropdown {
       display: inline-block;
       h2 {
         padding: 15px 40px 15px 15px;
@@ -515,7 +515,7 @@ td {
         display: block;
       }
     }
-    .dropdown-menu {
+    .ss-dropdown-menu {
       top: 100%;
       right: 0;
       min-width: 260px;
@@ -577,7 +577,7 @@ td {
       .bookmark-icon {
         color: $white;
       }
-      .dropdown-menu {
+      .ss-dropdown-menu {
         right: 0;
         padding: 5px 5px;
         @include mb { left: 0; }
@@ -947,7 +947,7 @@ td {
       }
     }
   }
-  .dropdown {
+  .ss-dropdown {
     h2 {
       background: url(/assets/img/ic-arrow-off.png) no-repeat 190px center;
     }
@@ -983,7 +983,7 @@ td {
       }
     }
   }
-  .dropdown-menu {
+  .ss-dropdown-menu {
     @include clear;
     width: 400px;
     top: -1px;
@@ -1339,7 +1339,7 @@ td {
     a:not(.no-margin) {
       margin-right: 16px;
     }
-    .dropdown-toggle {
+    .ss-dropdown-toggle {
       &:after {
         display: inline-block;
         width: 0;
@@ -1352,7 +1352,7 @@ td {
         border-left: .3em solid transparent;
       }
     }
-    .dropdown-toggle-split {
+    .ss-dropdown-toggle-split {
       font-size: 80%;
       margin-left: 4px;
       margin-right: 16px;
@@ -2359,7 +2359,7 @@ table.form-index.sortable-index {
     margin-top: 4px;
   }
 }
-.dropdown-container {
+.ss-dropdown-container {
   display: none;
   position: absolute;
   overflow: auto;

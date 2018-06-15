@@ -9,13 +9,13 @@
     navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
   <% end %>
 
-  <div class="gws-category-navi dropdown">
+  <div class="gws-category-navi ss-dropdown">
     <% url = @folder ? gws_share_management_folder_files_path(folder: @folder.id) : gws_share_management_files_path %>
-    <%= link_to url, class: 'btn dropdown-toggle' do %>
+    <%= link_to url, class: 'btn ss-dropdown-toggle' do %>
       <%= @category.try(:trailing_name) || t('gws.category') %>
       <i class="material-icons md-13">&#xE313;</i>
     <% end %>
-    <div class="dropdown-menu dropdown-menu--white"></div>
+    <div class="ss-dropdown-menu ss-dropdown-menu--white"></div>
   </div>
 
   <%= jquery do %>

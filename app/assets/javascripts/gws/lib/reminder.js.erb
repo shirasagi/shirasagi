@@ -13,7 +13,7 @@ this.Gws_Reminder = (function () {
     });
     el.find('.list-item.deleted').each(function () {
       $(this).find('.check, .meta, .delete, .updated, .more-btn').hide();
-      $(this).find('.dropdown-menu').removeClass('active');
+      $(this).find('.ss-dropdown-menu').removeClass('active');
       $(this).find('.restore').show();
       return $(this).find('.notification').hide();
     });
@@ -33,7 +33,7 @@ this.Gws_Reminder = (function () {
         },
         success: function (data) {
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .updated, .more-btn').hide();
-          item.find('.dropdown-menu').removeClass('active');
+          item.find('.ss-dropdown-menu').removeClass('active');
           item.find('.restore').show();
           item.find('.notification').hide();
           return false;

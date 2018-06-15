@@ -4,12 +4,12 @@
   navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
 <% end %>
 
-<div class="gws-category-navi dropdown">
-  <%= link_to gws_qna_topics_path(category: '-'), class: 'btn dropdown-toggle' do %>
+<div class="gws-category-navi ss-dropdown">
+  <%= link_to gws_qna_topics_path(category: '-'), class: 'btn ss-dropdown-toggle' do %>
     <%= @category.try(:trailing_name) || t('gws.category') %>
     <i class="material-icons md-13">&#xE313;</i>
   <% end %>
-  <div class="dropdown-menu dropdown-menu--white"></div>
+  <div class="ss-dropdown-menu ss-dropdown-menu--white"></div>
 </div>
 
 <div class="index gws-boards">

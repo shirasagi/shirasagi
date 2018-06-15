@@ -9,7 +9,7 @@ SS_CascadeMenu.render = function() {
       return;
     }
 
-    var $currDropdown = $this.closest('.dropdown-menu');
+    var $currDropdown = $this.closest('.ss-dropdown-menu');
     var $nextDropdown = $(ref);
 
     // if ($currDropdown.height() > $nextDropdown.height()) {
@@ -31,7 +31,7 @@ SS_CascadeMenu.render = function() {
     var $this = $(this);
     var ref = $this.attr('href');
 
-    var $currDropdown = $this.closest('.dropdown-menu');
+    var $currDropdown = $this.closest('.ss-dropdown-menu');
     var $nextDropdown = $(ref);
 
     $nextDropdown.addClass('active');

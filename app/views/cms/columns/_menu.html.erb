@@ -6,9 +6,9 @@
           <% if index > 0 %>
             <hr>
           <% end %>
-          <h3 class="dropdown-item"><%= mod_def[1][:name] %></h3>
+          <h3 class="ss-dropdown-item"><%= mod_def[1][:name] %></h3>
           <% mod_def[1][:items].each do |name, type| %>
-            <%= link_to(name, new_cms_form_columns_type_path(form_id: @cur_form, type: type), class: 'dropdown-item') %>
+            <%= link_to(name, new_cms_form_columns_type_path(form_id: @cur_form, type: type), class: 'ss-dropdown-item') %>
           <% end %>
         <% end %>
       <% end %>

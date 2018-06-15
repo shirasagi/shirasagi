@@ -107,14 +107,14 @@ this.Webmail_Mail_List = (function () {
     $(".list-head .move-all, .list-head .copy-all").each(function () {
       var menu, url;
       url = $(this).data('href');
-      menu = $("#webmail-mailboxes-list .dropdown-menu").clone();
+      menu = $("#webmail-mailboxes-list .ss-dropdown-menu").clone();
       menu.find("a").click(function () {
         var uids;
         uids = Webmail_Mail_List.findCheckedUids();
         if (uids.length === 0) {
           return false;
         }
-        $('.dropdown-menu').removeClass('active');
+        $('.ss-dropdown-menu').removeClass('active');
         return Webmail_Mail_List.updateMails(url, {
           ids: uids,
           dst: $(this).data('name')
@@ -128,7 +128,7 @@ this.Webmail_Mail_List = (function () {
       if (uids.length === 0) {
         return false;
       }
-      $('.dropdown-menu').removeClass('active');
+      $('.ss-dropdown-menu').removeClass('active');
       $.ajax({
         url: $(this).attr('href'),
         method: 'POST',
@@ -149,7 +149,7 @@ this.Webmail_Mail_List = (function () {
       if (!confirm('<%= I18n.t("webmail.confirm.empty_mailbox") %>')) {
         return false;
       }
-      $('.dropdown-menu').removeClass('active');
+      $('.ss-dropdown-menu').removeClass('active');
       $.ajax({
         url: $(this).attr('href'),
         method: 'POST',
@@ -447,7 +447,7 @@ this.Webmail_Mail_Detail = (function () {
       return false;
     });
     $(".update-mail").on("click", function () {
-      $('.dropdown-menu').removeClass('active');
+      $('.ss-dropdown-menu').removeClass('active');
       $.ajax({
         url: $(this).attr('href'),
         method: 'POST',
@@ -521,14 +521,14 @@ this.Webmail_Mail_Address = (function () {
       addr.addClass('clickable');
       name = addr.data('name');
       email = addr.data('email');
-      menu = addr.find('.dropdown-menu');
+      menu = addr.find('.ss-dropdown-menu');
       if (!email) {
-        addr.removeClass('dropdown');
+        addr.removeClass('ss-dropdown');
         menu.remove();
         return true;
       }
       addr.find('.address-name').prepend('<i class="material-icons md-14">&#xE7FD;</i>');
-      menu.append('<li class="dropdown-menu-item disabled">' + email + '</li>');
+      menu.append('<li class="ss-dropdown-menu-item disabled">' + email + '</li>');
       menu.append('<li><a href="#" class="addr-send">' + lang.send + '</a></li>');
       menu.append('<li><a href="#" class="addr-entry">' + lang.entry + '</a></li>');
       menu.append('<li><a href="#" class="addr-copy">' + lang.copy + '</a></li>');
@@ -551,7 +551,7 @@ this.Webmail_Mail_Address = (function () {
       });
       return $(this).find('.addr-copy').click(function () {
         SS_Clipboard.copy(email);
-        $(".dropdown, .dropdown-menu").removeClass('active');
+        $(".ss-dropdown, .ss-dropdown-menu").removeClass('active');
         return false;
       });
     });

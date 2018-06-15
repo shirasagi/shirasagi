@@ -28,7 +28,7 @@ Gws_Bookmark.prototype.render = function(opts) {
   var bookmarkName = opts['name'] || this.defaultName;
 
   var span = $('<span class="bookmark-icon"></span>').append($('<i class="material-icons"></i>').html(icon));
-  var ul = $('<ul class="dropdown-menu"></ul>');
+  var ul = $('<ul class="ss-dropdown-menu"></ul>');
   var li = $('<li></li>');
   li.append($('<input name="bookmark[name]" id="bookmark_name" class="bookmark-name" type="text">').val(bookmarkName));
   li.append($('<input name="button" type="button" class="btn update" />').val(opts['save']));
@@ -45,7 +45,7 @@ Gws_Bookmark.prototype.render = function(opts) {
       _this.delete();
     } else if (_this.bookmarkId) {
       _this.el.addClass('active');
-      _this.el.find('.dropdown-menu').addClass('active');
+      _this.el.find('.ss-dropdown-menu').addClass('active');
     } else {
       _this.create();
     }
@@ -55,8 +55,8 @@ Gws_Bookmark.prototype.render = function(opts) {
 Gws_Bookmark.prototype.create = function() {
   this.loading = true;
   var _this = this;
-  var html = this.el.find('.dropdown-menu').html();
-  this.el.find('.dropdown-menu').html(SS.loading);
+  var html = this.el.find('.ss-dropdown-menu').html();
+  this.el.find('.ss-dropdown-menu').html(SS.loading);
   $.ajax({
     url: this.url,
     method: 'POST',
@@ -68,9 +68,9 @@ Gws_Bookmark.prototype.create = function() {
       }
     },
     success: function(data) {
-      _this.el.find('.dropdown-menu').html(html);
+      _this.el.find('.ss-dropdown-menu').html(html);
       _this.el.addClass('active');
-      _this.el.find('.dropdown-menu').addClass('active');
+      _this.el.find('.ss-dropdown-menu').addClass('active');
       _this.el.find('.material-icons').html(_this.bookmarkIcon);
       _this.el.find('.bookmark-notice').text(data['notice']);
       _this.el.find('.bookmark-name').val(_this.defaultName);
@@ -88,10 +88,10 @@ Gws_Bookmark.prototype.update = function() {
   var _this = this;
   var newName = this.el.find('.bookmark-name').val() || this.defaultName;
   var uri = this.url + '/' + this.bookmarkId;
-  var html = this.el.find('.dropdown-menu').html();
-  this.el.find('.dropdown-menu').html(SS.loading);
+  var html = this.el.find('.ss-dropdown-menu').html();
+  this.el.find('.ss-dropdown-menu').html(SS.loading);
   this.el.addClass('active');
-  this.el.find('.dropdown-menu').addClass('active');
+  this.el.find('.ss-dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
@@ -104,9 +104,9 @@ Gws_Bookmark.prototype.update = function() {
       }
     },
     success: function(data) {
-      _this.el.find('.dropdown-menu').html(html);
+      _this.el.find('.ss-dropdown-menu').html(html);
       _this.el.removeClass('active');
-      _this.el.find('.dropdown-menu').removeClass('active');
+      _this.el.find('.ss-dropdown-menu').removeClass('active');
       _this.el.find('.material-icons').html(_this.bookmarkIcon);
       _this.el.find('.bookmark-notice').text(data['notice']);
       _this.el.find('.bookmark-name').val(newName);
@@ -126,10 +126,10 @@ Gws_Bookmark.prototype.delete = function() {
   }
   this.loading = true;
   var uri = this.url + '/' + this.bookmarkId;
-  var html = this.el.find('.dropdown-menu').html();
-  this.el.find('.dropdown-menu').html(SS.loading);
+  var html = this.el.find('.ss-dropdown-menu').html();
+  this.el.find('.ss-dropdown-menu').html(SS.loading);
   this.el.addClass('active');
-  this.el.find('.dropdown-menu').addClass('active');
+  this.el.find('.ss-dropdown-menu').addClass('active');
   $.ajax({
     url: uri,
     method: 'POST',
@@ -140,9 +140,9 @@ Gws_Bookmark.prototype.delete = function() {
       }
     },
     success: function() {
-      _this.el.find('.dropdown-menu').html(html);
+      _this.el.find('.ss-dropdown-menu').html(html);
       _this.el.removeClass('active');
-      _this.el.find('.dropdown-menu').removeClass('active');
+      _this.el.find('.ss-dropdown-menu').removeClass('active');
       _this.el.find('.material-icons').html(_this.unbookmarkIcon);
       _this.bookmarkId = null;
       _this.loading = false;

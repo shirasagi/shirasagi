@@ -114,7 +114,7 @@ $(function () {
     return false;
   });
   //dropdown
-  $(".dropdown-toggle").click(function (e) {
+  $(".ss-dropdown-toggle").click(function (e) {
     var $dropdown, $target, $this, ref;
     $this = $(this);
     $target = $(e.target);
@@ -122,22 +122,22 @@ $(function () {
     if (ref) {
       $dropdown = $this.find(ref);
     } else {
-      $dropdown = $target.closest('.dropdown');
+      $dropdown = $target.closest('.ss-dropdown');
     }
-    $(".dropdown").not($dropdown.get(0)).each(function () {
+    $(".ss-dropdown").not($dropdown.get(0)).each(function () {
       $(this).removeClass('active');
-      return $(this).find('.dropdown-menu').removeClass('active');
+      return $(this).find('.ss-dropdown-menu').removeClass('active');
     });
     //select
     $dropdown.toggleClass('active');
-    $dropdown.find('.dropdown-menu').toggleClass('active');
+    $dropdown.find('.ss-dropdown-menu').toggleClass('active');
     // popup_notice
     SS_PopupNotice.closePopup();
     return e.stopPropagation();
   });
   $(document).click(function (e) {
-    $(".dropdown").removeClass('active');
-    return $(".dropdown-menu").removeClass('active');
+    $(".ss-dropdown").removeClass('active');
+    return $(".ss-dropdown-menu").removeClass('active');
   });
   $("select").change(function () {
     if ($(this).val() === "") {

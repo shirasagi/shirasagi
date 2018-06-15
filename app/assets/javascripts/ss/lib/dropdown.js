@@ -1,8 +1,8 @@
 this.SS_Dropdown = (function () {
   SS_Dropdown.render = function () {
-    return $("button.dropdown").each(function () {
+    return $("button.ss-dropdown").each(function () {
       var dropdown, target;
-      target = $(this).parent().find(".dropdown-container")[0];
+      target = $(this).parent().find(".ss-dropdown-container")[0];
       dropdown = new SS_Dropdown(this, {
         target: target
       });

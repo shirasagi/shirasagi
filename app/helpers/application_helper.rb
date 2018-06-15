@@ -145,14 +145,14 @@ module ApplicationHelper
     if split
       html_options[:class] << 'no-margin'
     else
-      html_options[:class] << 'dropdown-toggle'
+      html_options[:class] << 'ss-dropdown-toggle'
     end
-    content_tag(:div, class: 'dropdown') do
+    content_tag(:div, class: 'ss-dropdown') do
       output_buffer << link_to(name, split ? url_options : '#', html_options)
       if split
-        output_buffer << tag(:span, class: %w(dropdown-toggle dropdown-toggle-split))
+        output_buffer << tag(:span, class: %w(ss-dropdown-toggle ss-dropdown-toggle-split))
       end
-      output_buffer << content_tag(:div, class: %w(dropdown-menu gws-dropdown-menu cms-dropdown-menu)) do
+      output_buffer << content_tag(:div, class: %w(ss-dropdown-menu gws-dropdown-menu cms-dropdown-menu)) do
         inner
       end
     end

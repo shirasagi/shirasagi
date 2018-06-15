@@ -87,7 +87,7 @@
         <% end %>
       <% elsif @ss_mode == :gws %>
         <% if @cur_site.menu_bookmark_visible? %>
-          <div class="gws-bookmark dropdown dropdown-toggle">
+          <div class="gws-bookmark ss-dropdown ss-dropdown-toggle">
             <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
             <%= jquery do %>
               new Gws_Bookmark().render({
@@ -207,14 +207,14 @@
           </div>
         </div>
       <% end %>
-      <div class="dropdown dropdown-toggle" data-ref="#user-main-dropdown">
+      <div class="ss-dropdown ss-dropdown-toggle" data-ref="#user-main-dropdown">
         <h2>
           <% if @cur_group %>
             <span class="group"><%= @cur_group.trailing_name %></span>
           <% end %>
           <span class="name"><%= @cur_user.name %></span>
         </h2>
-        <ul class="dropdown-menu" id="user-main-dropdown">
+        <ul class="ss-dropdown-menu" id="user-main-dropdown">
           <% @account_menu.to_a.each do |link_params| %>
             <li><%= link_to *link_params %></li>
           <% end %>
@@ -238,7 +238,7 @@
           <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
         </ul>
         <% if @ss_mode == :gws && @cur_site.menu_contrast_visible? %>
-          <ul id="user-contrast-menu" class="dropdown-menu cascade-sub-menu">
+          <ul id="user-contrast-menu" class="ss-dropdown-menu cascade-sub-menu">
             <li class="user-contrast-menu-header">
               <a href="#user-main-dropdown" class="cascade-back">
                 <i class="material-icons caret">&#xE314;</i><%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>

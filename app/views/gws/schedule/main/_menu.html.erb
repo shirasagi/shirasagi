@@ -35,7 +35,7 @@
     <% if forms.present? && @model == Gws::Schedule::Plan %>
       <%= dropdown_link(t('gws/schedule.links.create_report')) do %>
         <% forms.limit(form_limit).each do |form| %>
-          <%= link_to(new_gws_report_form_file_path(state: 'inbox', form_id: form, plan_id: @item.id), class: %w(dropdown-item no-calendar-state)) do %>
+          <%= link_to(new_gws_report_form_file_path(state: 'inbox', form_id: form, plan_id: @item.id), class: %w(ss-dropdown-item no-calendar-state)) do %>
             <%= form.name %>
             <% if form.categories.present? %>
               <span class="categories">
@@ -46,7 +46,7 @@
             <% end %>
           <% end %>
         <% end %>
-        <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path(state: 'inbox', plan_id: @item.id), class: %w(dropdown-item no-calendar-state more-forms)) %>
+        <%= link_to(t('gws/workflow.forms.more'), new_gws_report_file_path(state: 'inbox', plan_id: @item.id), class: %w(ss-dropdown-item no-calendar-state more-forms)) %>
       <% end %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

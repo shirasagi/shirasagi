@@ -24,10 +24,10 @@
         <%= @item.display_subject %>
       </h2>
       <div class="from">
-        <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+        <span class="address-item ss-dropdown webmail-dropdown ss-dropdown-toggle"
           data-name="<%= @item.display_sender.name %>" data-email="<%= @item.display_sender.email %>">
           <%= @item.display_sender.address %>
-          <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+          <ul class="ss-dropdown-menu webmail-dropdown-menu"></ul>
         </span>
       </div>
       <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
@@ -40,10 +40,10 @@
         <div class="label"><%= @model.t :to %></div>
         <div class="value">
           <% @item.display_to.each do |addr| %>
-            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+            <span class="address-item ss-dropdown webmail-dropdown ss-dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
               <%= addr.name %>
-              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+              <ul class="ss-dropdown-menu webmail-dropdown-menu"></ul>
             </span>
           <% end %>
         </div>
@@ -55,10 +55,10 @@
         <div class="label"><%= @model.t :cc %></div>
         <div class="value">
           <% @item.display_cc.each do |addr| %>
-            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+            <span class="address-item ss-dropdown webmail-dropdown ss-dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
               <%= addr.name %>
-              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+              <ul class="ss-dropdown-menu webmail-dropdown-menu"></ul>
             </span>
           <% end %>
         </div>
@@ -70,10 +70,10 @@
         <div class="label"><%= @model.t :bcc %></div>
         <div class="value">
           <% @item.display_bcc.each do |addr| %>
-            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+            <span class="address-item ss-dropdown webmail-dropdown ss-dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
               <%= addr.name %>
-              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+              <ul class="ss-dropdown-menu webmail-dropdown-menu"></ul>
             </span>
           <% end %>
         </div>

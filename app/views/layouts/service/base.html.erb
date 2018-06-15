@@ -27,11 +27,11 @@
 
     <% if @cur_user %>
     <nav class="user">
-      <div class="dropdown dropdown-toggle">
+      <div class="ss-dropdown ss-dropdown-toggle">
         <h2>
           <span class="name"><%= @cur_user.name %></span>
         </h2>
-        <ul class="dropdown-menu">
+        <ul class="ss-dropdown-menu">
           <li><%#= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
           <li><%= link_to t('ss.logout'), service_logout_path, class: 'logout' %></li>
         </ul>

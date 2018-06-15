@@ -26,9 +26,9 @@
     width: 10px;
   }
 }
-#menu .nav-menu .dropdown {
+#menu .nav-menu .ss-dropdown {
   display: inline;
-  .dropdown-menu {
+  .ss-dropdown-menu {
     a {
       display: block;
       padding: 5px 10px;
@@ -128,14 +128,14 @@ li.webmail-accounts {
 // mails
 
 .webmail-mails-head {
-  .dropdown {
+  .ss-dropdown {
     display: inline;
     font-weight: normal;
     .btn {
       padding-right: 8px;
     }
   }
-  .dropdown-menu {
+  .ss-dropdown-menu {
     width: 200px;
   }
 }
