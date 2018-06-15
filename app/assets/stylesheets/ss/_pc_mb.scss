@@ -335,15 +335,36 @@ td {
 // head
 #head {
   @include clear;
+  -js-display: flex;
+  @include display-flex;
   position: relative;
   z-index: 100;
   border-bottom: $border-gray4;
   background: $black2;
   font-size: 14px;
-  h1 {
-    float: left;
+  height: 50px;
+
+  @include mb {
+    @include flex-direction(column);
+    height: unset;
+  }
+
+  .ss-head-item {
+    height: 100%;
+
+    -js-display: flex;
+    @include display-flex;
+    @include align-items(center);
+    @include justify-content(center);
+
+    @include mb {
+      @include justify-content(space-between);
+      padding: 3px 0;
+    }
+  }
+  .application-name {
     a {
-      display: block;
+      display: inline-block;
     }
     .ss-logo-wrap {
       width: 210px;
@@ -352,37 +373,23 @@ td {
     .ss-logo-application-name {
       display: none;
     }
+    @include mb {
+      -js-display: flex;
+      @include display-flex;
+      @include justify-content(space-between);
+      clear: both;
+    }
   }
   .cms, .gws, .sns, .webmail {
-    @include clear;
-    float: left;
-    @include mb { float: none; }
-    h2 {
-      float: left;
-      a {
-        display: block;
-        color: $white;
-        &.current, &:hover {
-          color: $black;
-          text-decoration: none;
-        }
-      }
-    }
-    p {
-      float: left;
-      a {
-        display: block;
-        padding: 15px 10px;
-        color: $white;
-        &:hover {
-          background: $white;
-          color: $black;
-          text-decoration: none;
-        }
+    a {
+      color: $white;
+      &.current, &:hover {
+        color: $black;
+        text-decoration: none;
       }
     }
   }
-  .cms h2 a {
+  .cms a {
     padding: 15px 20px 15px 55px;
     background: url(/assets/img/ic-cms-off.png) no-repeat 20px center;
     @include mb {
@@ -396,7 +403,7 @@ td {
       }
     }
   }
-  .gws h2 a {
+  .gws a {
     padding: 15px 20px 15px 70px;
     background: url(/assets/img/ic-gws-off.png) no-repeat 20px center;
     @include mb {
@@ -410,7 +417,7 @@ td {
       }
     }
   }
-  .sns h2 a {
+  .sns a {
     padding: 15px 20px 15px 60px;
     background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
     @include mb {
@@ -424,7 +431,7 @@ td {
       }
     }
   }
-  .webmail h2 a {
+  .webmail a {
     padding: 15px 20px 15px 60px;
     background: url(/assets/img/ic-mail-off.png) no-repeat 20px center;
     @include mb {
@@ -438,49 +445,17 @@ td {
       }
     }
   }
-  @include mb {
-    .application-menu {
-      -js-display: flex;
-      @include display-flex;
-      @include justify-content(space-between);
-      clear: both;
-    }
-  }
   .env {
-    float: left;
-    padding: 15px 10px;
     color: $white;
+
+    span {
+      padding: 15px 10px;
+    }
+
     @include mb { display: none; }
   }
-  .user-message {
-    display: block;
-    width: 50px;
-    height: 49px;
-    background-image: url(/assets/img/ic-message-off.png);
-    background-repeat: no-repeat;
-    background-position: center center;
-    text-decoration: none;
-    text-align: right;
-    &:hover {
-      background-color: $gray3;
-    }
-    .unseen {
-      display: inline-block;
-      min-width: 16px;
-      margin: 8px 8px 0 0;
-      padding: 0 2px;
-      border-radius: 4px;
-      background-color: #f00;
-      color: #fff;
-      font-size: 80%;
-      text-align: center;
-    }
-  }
   .user {
-    float: right;
-    -js-display: flex;
-    @include display-flex;
-    @include align-items(center);
+    margin-left: auto;
     a {
       color: $white;
     }
@@ -591,6 +566,30 @@ td {
         }
       }
     }
+    .user-message {
+      display: block;
+      width: 50px;
+      height: 49px;
+      background-image: url(/assets/img/ic-message-off.png);
+      background-repeat: no-repeat;
+      background-position: center center;
+      text-decoration: none;
+      text-align: right;
+      &:hover {
+        background-color: $gray3;
+      }
+      .unseen {
+        display: inline-block;
+        min-width: 16px;
+        margin: 8px 8px 0 0;
+        padding: 0 2px;
+        border-radius: 4px;
+        background-color: #f00;
+        color: #fff;
+        font-size: 80%;
+        text-align: center;
+      }
+    }
     .gws-contrast {
       padding: 8px 10px;
       border-bottom: 1px solid  #f2f2f2;
@@ -641,7 +640,9 @@ td {
     display: none;
     @include mb {
       display: block;
-      float: right;
+      position: absolute;
+      top: 0;
+      right: 0;
       line-height: 1;
       a {
         position: relative;

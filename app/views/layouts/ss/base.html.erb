@@ -26,55 +26,56 @@
 <div id="page">
 
 <header id="head">
-  <div class="wrap">
-    <h1 class="application-name"><%= link_to sns_mypage_path do %><%== SS.config.ss.application_logo_html %><% end %></h1>
+  <div class="sp-menu-button">
+    <a href="#" class="">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
+  </div>
 
-    <div class="sp-menu-button">
-      <a href="#" class="">
-        <span></span>
-        <span></span>
-        <span></span>
-      </a>
-    </div>
+  <div class="ss-head-item application-name">
+    <%= link_to sns_mypage_path do %><%== SS.config.ss.application_logo_html %><% end %>
+  </div>
 
-    <div class="application-menu">
-      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
-      <div class="cms">
+  <div class="ss-head-item application-menu">
+    <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
+      <div class="application-menu-item cms">
         <% if @ss_mode == :cms %>
-        <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
+          <%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %>
         <% else %>
-        <h2><%= link_to t('ss.links.cms'), sns_cms_path %></h2>
+          <%= link_to t('ss.links.cms'), sns_cms_path %>
         <% end %>
       </div>
-      <% end %>
-
-      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
-      <div class="gws">
-        <% if @ss_mode == :gws %>
-        <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
-        <% else %>
-        <h2><%= link_to t('ss.links.gws'), sns_gws_path %></h2>
-        <% end %>
-      </div>
-      <% end %>
-
-      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
-      <div class="webmail">
-        <% if @ss_mode == :webmail %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
-        <% else %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %></h2>
-        <% end %>
-      </div>
-      <% end %>
-    </div>
-
-    <% if Rails.env.development? %>
-    <div class="env dev">&lt;Development&gt;</div>
     <% end %>
 
-    <% if @cur_user %>
-    <nav class="user">
+    <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
+      <div class="application-menu-item gws">
+        <% if @ss_mode == :gws %>
+          <%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %>
+        <% else %>
+          <%= link_to t('ss.links.gws'), sns_gws_path %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
+      <div class="application-menu-item webmail">
+        <% if @ss_mode == :webmail %>
+          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %>
+        <% else %>
+          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if Rails.env.development? %>
+    <div class="ss-head-item env dev"><span>&lt;Development&gt;</span></div>
+  <% end %>
+
+  <% if @cur_user %>
+    <div class="ss-head-item user">
       <% if @ss_mode == :webmail %>
         <% gws_user = @cur_user.gws_user %>
         <% gws_role = gws_user.gws_roles.in(permissions: "edit_private_gws_memo_messages").reorder(site_id: 1).first %>
@@ -267,12 +268,11 @@
               <% end %>
             <% end %>
           <% end %>
-        <% end %>
-      </div>
-    </nav>
-    <% end %>
-  </div>
-<!-- /#head --></header>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</header><!-- /#head -->
 
 <aside id="notice">
   <div class="wrap"><%= notice %></div>

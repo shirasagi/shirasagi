@@ -18,10 +18,10 @@
 <div id="page-login">
 
 <header id="head">
-  <div class="wrap">
-    <h1 class="application-name"><%== SS.config.ss.application_logo_html %></h1>
+  <div class="ss-head-item application-name">
+    <%= link_to sns_mypage_path do %><%== SS.config.ss.application_logo_html %><% end %>
   </div>
-<!-- /#head --></header>
+</header><!-- /#head -->
 
 <aside id="notice">
   <div class="wrap"><%= notice %></div>
