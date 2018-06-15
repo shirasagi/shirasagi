@@ -706,6 +706,7 @@ td {
   margin-bottom: 20px;
   z-index: 1;
   background: $white;
+  border-right: $border-gray4;
   @include mb {
     display: none;
     z-index: 200;
