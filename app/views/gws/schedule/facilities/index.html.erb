@@ -32,7 +32,7 @@
       <% if item.text.present? %>
       <span class="calendar-attr calendar-text">
         <a class="calendar-text-link" href="#"><%= item.t :html %></a>
-        <div class="calendar-text-popup" style="display: none;"><%= br item.text %></div>
+        <div class="calendar-text-popup markdown-body" style="display: none;"><%= item.html %></div>
       </span>
       <% end %>
     </div>
