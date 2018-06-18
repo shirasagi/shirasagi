@@ -1,2 +1,2 @@
-id,ユーザーID,職員番号,アカウント番号,アカウント名,メールアドレス,IMAP/ホスト,IMAP/認証方式,IMAP/ユーザー名,IMAP/パスワード,警告表示,送信済みフォルダー,下書きフォルダー,ゴミ箱フォルダー
-1,,,1,edit,edit@example.jp,example.jp,,sys,,123,INBOX.Sent,INBOX.Draft,INBOX.Trash
+id,ユーザーID,職員番号,アカウント番号,アカウント名,名前,メールアドレス,IMAP/ホスト,IMAP/認証方式,IMAP/ユーザー名,IMAP/パスワード,警告表示,送信済みフォルダー,下書きフォルダー,ゴミ箱フォルダー
+1,,,1,edit,ユーザー1,edit@example.jp,example.jp,,sys,,123,INBOX.Sent,INBOX.Draft,INBOX.Trash

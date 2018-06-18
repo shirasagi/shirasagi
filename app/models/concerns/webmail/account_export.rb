@@ -67,6 +67,7 @@ module Webmail::AccountExport
 
     account_index    = row[t("account_index")].to_s.strip.to_i - 1
     name             = row[Webmail::ImapSetting.t("name")].to_s.strip
+    from             = row[Webmail::ImapSetting.t("from")].to_s.strip
     address          = row[Webmail::ImapSetting.t("address")].to_s.strip
     imap_host        = row[Webmail::ImapSetting.t("imap_host")].to_s.strip
     imap_auth_type   = row[Webmail::ImapSetting.t("imap_auth_type")].to_s.strip
@@ -81,6 +82,7 @@ module Webmail::AccountExport
 
     setting = Webmail::ImapSetting.new.replace(
       name: name,
+      from: from,
       address: address,
       imap_host: imap_host,
       imap_auth_type: imap_auth_type,
@@ -113,7 +115,7 @@ module Webmail::AccountExport
 
   def account_fields
     %w(
-      name address imap_host imap_auth_type imap_account in_imap_password
+      name from address imap_host imap_auth_type imap_account in_imap_password
       threshold_mb imap_sent_box imap_draft_box imap_trash_box
     )
   end

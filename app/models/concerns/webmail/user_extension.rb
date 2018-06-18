@@ -5,7 +5,7 @@ module Webmail::UserExtension
     field :imap_default_index, type: Integer, default: 0
     field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
     permit_params :default_imap_index, imap_settings: [
-      :address, :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+      :from, :address, :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
       :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
       :default
     ]

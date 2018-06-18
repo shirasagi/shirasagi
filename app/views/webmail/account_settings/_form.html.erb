@@ -34,6 +34,9 @@
   <dt><%= @model.t :imap_setting_name %><%= @model.tt :imap_setting_name %></dt>
   <dd><%= text_field_tag "item[imap_settings][][name]", setting.name, class: :name, required: true %></dd>
 
+  <dt><%= @model.t :from %><%= @model.tt :from %></dt>
+  <dd><%= text_field_tag "item[imap_settings][][from]", setting.from, placeholder: @defaults[:from], class: :from %></dd>
+
   <dt><%= @model.t :address %><%= @model.tt :address %></dt>
   <dd><%= text_field_tag "item[imap_settings][][address]", setting.address, placeholder: @defaults[:address], class: :address %></dd>
 
