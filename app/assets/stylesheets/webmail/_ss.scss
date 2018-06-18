@@ -156,7 +156,7 @@ li.webmail-accounts {
 
 @media print {
   .webmail-print {
-    #head, #foot, #navi, #crumbs, #menu {
+    #head, #foot, #navi, #ss-crumbs, #menu {
       display: none;
     }
     #page:after {
