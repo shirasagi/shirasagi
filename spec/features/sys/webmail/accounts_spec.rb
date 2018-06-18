@@ -36,6 +36,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
       user = SS::User.find(1)
       sys_account = user.imap_settings[0]
       expect(sys_account.name).to eq "sys"
+      expect(sys_account.from).to eq "ユーザー1"
       expect(sys_account.address).to eq "sys@example.jp"
       expect(sys_account.imap_host).to eq "example.jp"
       expect(sys_account.imap_auth_type).to eq "CRAM-MD5"
@@ -47,6 +48,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
 
       admin_account = user.imap_settings[1]
       expect(admin_account.name).to eq "admin"
+      expect(admin_account.from).to eq "ユーザー2"
       expect(admin_account.address).to eq "admin@example.jp"
       expect(admin_account.imap_host).to eq "example.jp"
       expect(admin_account.imap_auth_type).to eq "PLAIN"
@@ -58,6 +60,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
 
       user_account = user.imap_settings[2]
       expect(user_account.name).to eq "user1"
+      expect(user_account.from).to eq "ユーザー3"
       expect(user_account.address).to eq "user1@example.jp"
       expect(user_account.imap_host).to eq "example.jp"
       expect(user_account.imap_auth_type).to eq ""
@@ -88,6 +91,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
       user = SS::User.find(1)
       sys_account = user.imap_settings[0]
       expect(sys_account.name).to eq "edit"
+      expect(sys_account.from).to eq "ユーザー1"
       expect(sys_account.address).to eq "edit@example.jp"
       expect(sys_account.imap_host).to eq "example.jp"
       expect(sys_account.imap_auth_type).to eq ""
@@ -99,6 +103,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
 
       admin_account = user.imap_settings[1]
       expect(admin_account.name).to eq "admin"
+      expect(admin_account.from).to eq "ユーザー2"
       expect(admin_account.address).to eq "admin@example.jp"
       expect(admin_account.imap_host).to eq "example.jp"
       expect(admin_account.imap_auth_type).to eq "PLAIN"
@@ -110,6 +115,7 @@ describe "sys_webmail_accounts", type: :feature, dbscope: :example do
 
       user_account = user.imap_settings[2]
       expect(user_account.name).to eq "user1"
+      expect(user_account.from).to eq "ユーザー3"
       expect(user_account.address).to eq "user1@example.jp"
       expect(user_account.imap_host).to eq "example.jp"
       expect(user_account.imap_auth_type).to eq ""

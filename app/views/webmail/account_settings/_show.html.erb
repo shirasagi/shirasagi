@@ -4,6 +4,9 @@
   <dt><%= @model.t :imap_setting_name %></dt>
   <dd><%= setting.name %></dd>
 
+  <dt><%= @model.t :from %></dt>
+  <dd><%= setting.from.presence || @cur_user.name %></dd>
+
   <dt><%= @model.t :address %></dt>
   <dd><%= setting.address.presence || @cur_user.email %></dd>
 

@@ -20,6 +20,7 @@ module Webmail::Imap
     end
 
     def email_address
+      return %(#{conf[:from]} <#{address}>) if conf[:from].present?
       %(#{user.name} <#{address}>)
     end
 

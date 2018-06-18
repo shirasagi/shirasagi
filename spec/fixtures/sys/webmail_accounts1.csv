@@ -1,4 +1,4 @@
-id,ユーザーID,職員番号,アカウント番号,アカウント名,メールアドレス,IMAP/ホスト,IMAP/認証方式,IMAP/ユーザー名,IMAP/パスワード,警告表示,送信済みフォルダー,下書きフォルダー,ゴミ箱フォルダー
-1,,,1,sys,sys@example.jp,example.jp,CRAM-MD5,sys,pass,123,INBOX.Sent,INBOX.Draft,INBOX.Trash
-1,,,2,admin,admin@example.jp,example.jp,PLAIN,admin,pass,234,INBOX.Sent,INBOX.Draft,INBOX.Trash
-1,,,3,user1,user1@example.jp,example.jp,,user1,pass,345,INBOX.Sent,INBOX.Draft,INBOX.Trash
+id,ユーザーID,職員番号,アカウント番号,アカウント名,名前,メールアドレス,IMAP/ホスト,IMAP/認証方式,IMAP/ユーザー名,IMAP/パスワード,警告表示,送信済みフォルダー,下書きフォルダー,ゴミ箱フォルダー
+1,,,1,sys,ユーザー1,sys@example.jp,example.jp,CRAM-MD5,sys,pass,123,INBOX.Sent,INBOX.Draft,INBOX.Trash
+1,,,2,admin,ユーザー2,admin@example.jp,example.jp,PLAIN,admin,pass,234,INBOX.Sent,INBOX.Draft,INBOX.Trash
+1,,,3,user1,ユーザー3,user1@example.jp,example.jp,,user1,pass,345,INBOX.Sent,INBOX.Draft,INBOX.Trash

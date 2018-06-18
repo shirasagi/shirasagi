@@ -5,6 +5,10 @@ class Webmail::ImapSetting < Hash
     self[:name]
   end
 
+  def from
+    self[:from]
+  end
+
   def address
     self[:address]
   end
@@ -62,6 +66,7 @@ class Webmail::ImapSetting < Hash
 
   def imap_settings(default_conf = {})
     user_conf = {
+      from: from,
       address: address,
       host: imap_host,
       auth_type: imap_auth_type,

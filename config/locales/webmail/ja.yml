@@ -137,6 +137,7 @@ ja:
     attributes:
       ss/model/user:
         imap_setting_name: アカウント名
+        from: 名前
         address: メールアドレス
         imap_host: IMAP/ホスト
         imap_auth_type: IMAP/認証方式
@@ -197,6 +198,7 @@ ja:
     attributes:
       webmail/imap_setting:
         name: アカウント名
+        from: 名前
         address: メールアドレス
         imap_host: IMAP/ホスト
         imap_auth_type: IMAP/認証方式
