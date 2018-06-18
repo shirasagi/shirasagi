@@ -721,19 +721,18 @@ td {
 .site-navi {
   @include clear;
   border-bottom: $border-gray5;
-  h2 {
+  .site-navi-item {
     float: left;
-    width: 105px;
     text-align: center;
-    @include mb { width: 50%; }
+    @include mb {
+      width: 50%;
+    }
     a {
       display: block;
       padding: 45px 0 10px;
-      background: url(/assets/img/ic-preview-off.png) no-repeat center 5px;
       color: $black;
       font-size: $px12;
       &:hover {
-        background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center 5px;
         color: $orange;
         text-decoration: none;
       }
@@ -745,10 +744,22 @@ td {
         text-align: left;
       }
     }
-    .external {
-      background-image: url(/assets/img/ic-site-off.png);
+  }
+  .view-site {
+    width: 105px;
+    a {
+      background: url(/assets/img/ic-site-off.png) no-repeat center 5px;
       &:hover {
-        background-image: url(/assets/img/ic-site-on.png);
+        background: $gray1 url(/assets/img/ic-site-on.png) no-repeat center 5px;
+      }
+    }
+  }
+  .preview-site {
+    width: 104px;
+    a {
+      background: url(/assets/img/ic-preview-off.png) no-repeat center 5px;
+      &:hover {
+        background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center 5px;
       }
     }
   }
