@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    #delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   namespace("kana", as: "kana", path: ".s:site/kana", module: "kana") do

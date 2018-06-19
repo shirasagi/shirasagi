@@ -3,7 +3,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    #delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :soft_deletion do
@@ -21,7 +21,7 @@ SS::Application.routes.draw do
     get :print, on: :collection
     get :popup, on: :member
     get :delete, on: :member
-    #delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :todos do
