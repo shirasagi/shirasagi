@@ -1675,9 +1675,9 @@ dl.see {
     }
   }
 }
-:root dl.see > dd input, :root dl.see > dd select {
-  vertical-align: middle\0;
-}
+//:root dl.see > dd input, :root dl.see > dd select {
+//  vertical-align: middle\0;
+//}
 dl.mod-cms-parent_crumbs {
   dd { margin-bottom: 10px; }
 }
@@ -2396,55 +2396,56 @@ table.form-index.sortable-index {
 
 // -------------------------------------------------------------------------------------------------
 // form
-select, input, textarea, button {
-  font-size: 100%;
-  font-family: $font-base;
-}
-@include mb {
-  input[type="submit"] {
-    -webkit-appearance: none;
-  }
-  label > input {
-    vertical-align: middle;
-  }
-}
+//select, input, textarea, button {
+//  font-size: 100%;
+//  font-family: $font-base;
+//}
+//@include mb {
+//  input[type="submit"] {
+//    -webkit-appearance: none;
+//  }
+//  label > input {
+//    vertical-align: middle;
+//  }
+//}
 #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
   @include ss-btn;
   &.add-date {
     @include ss-btn-orange;
   }
 }
-select {
-  @include input;
-  height: 2.4em;
-  max-width: 100%;
-  padding: 0 4px;
-  option {
-    color: #333;
-  }
-  &.blank-value, &.has-blank-value :first-child {
-    color: #888;
-  }
-}
-input {
-    &:placeholder-shown { color: #888; }
-    &::-webkit-input-placeholder { color: #888; }
-    &:-moz-placeholder { color: #888; opacity: 1; }
-    &::-moz-placeholder { color: #888; opacity: 1; }
-    &:-ms-input-placeholder { color: #888; }
-}
-input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-input[type=email], input[type=number], input[type=tel] {
-  @include input;
-  width: 80%;
-  padding: 6px;
-}
-@include mb {
-  input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-  input[type=email], input[type=number], input[type=tel] {
-    width: 100% !important;
-  }
-}
+//select {
+//  @include input;
+//  height: 2.4em;
+//  max-width: 100%;
+//  padding: 0 4px;
+//  -webkit-appearance: menulist;
+//  option {
+//    color: #333;
+//  }
+//  &.blank-value, &.has-blank-value :first-child {
+//    color: #888;
+//  }
+//}
+//input {
+//    &:placeholder-shown { color: #888; }
+//    &::-webkit-input-placeholder { color: #888; }
+//    &:-moz-placeholder { color: #888; opacity: 1; }
+//    &::-moz-placeholder { color: #888; opacity: 1; }
+//    &:-ms-input-placeholder { color: #888; }
+//}
+//input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
+//input[type=email], input[type=number], input[type=tel] {
+//  @include input;
+//  width: 80%;
+//  padding: 6px;
+//}
+//@include mb {
+//  input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
+//  input[type=email], input[type=number], input[type=tel] {
+//    width: 100% !important;
+//  }
+//}
 input[type=number] {
   width: 12em;
 }
@@ -2485,12 +2486,18 @@ input.time {
   }
 }
 textarea {
-  @include input;
+  //@include input;
   width: 100%;
   height: 6.5em;
   padding: 5px 5px;
   line-height: 1.4;
 }
+.bmd-form-group {
+  textarea.form-control {
+    line-height: 1.4;
+  }
+}
+
 textarea.code {
   height: 30em;
   font-size: 120%;
@@ -2661,6 +2668,11 @@ form .CodeMirror {
   margin: 0 0 20px;
   padding: 10px;
   border: 1px solid #ddd;
+  form {
+    input[type=text] {
+      width: 80%;
+    }
+  }
 }
 .search-ui-select {
   margin: 10px 0 0;
