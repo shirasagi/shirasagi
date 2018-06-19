@@ -55,6 +55,7 @@ gem 'rubyzip'
 gem 'thinreports'
 
 # OAuth
+gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
@@ -81,6 +82,7 @@ gem 'sparql-client'
 gem 'unf'
 
 # elasticsearch
+gem 'faraday', '~> 0.14.0'
 gem 'elasticsearch'
 
 group :development, :test do
