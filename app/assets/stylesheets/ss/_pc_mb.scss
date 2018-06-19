@@ -1560,6 +1560,10 @@ td {
 .list-search .index-search {
   margin-bottom: 0;
   border: none;
+
+  span.bmd-form-group {
+    padding-top: unset;
+  }
 }
 .ss-confirm-text {
   margin: 10px;
@@ -2062,6 +2066,9 @@ div.index {
     float: left;
     width: 32px;
     margin: 6px 0 6px -5px;
+  }
+  .btn {
+    @include bmd-outline-border();
   }
 }
 .list-head-title {
