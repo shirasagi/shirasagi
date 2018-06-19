@@ -45,7 +45,7 @@ module Sys::SiteCopy::CmsContents
   end
 
   def reference_class(name, field)
-    metadata = field.metadata
+    metadata = field.options[:metadata]
     return nil if metadata.blank?
 
     if array_field?(name, field)
@@ -58,7 +58,7 @@ module Sys::SiteCopy::CmsContents
   end
 
   def on_copy(name, field)
-    metadata = field.metadata
+    metadata = field.options[:metadata]
     return nil if metadata.blank?
 
     metadata[:on_copy]

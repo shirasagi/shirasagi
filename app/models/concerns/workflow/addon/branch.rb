@@ -33,7 +33,7 @@ module Workflow::Addon
 
     def new_clone(attributes = {})
       attributes = self.attributes.merge(attributes).select { |k| self.fields.keys.include?(k) }
-      self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
+      self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
         attributes.delete(n)
       end
 
@@ -121,7 +121,7 @@ module Workflow::Addon
         attributes.delete("_id")
         attributes.delete("filename")
         attributes.select! { |k| self.fields.keys.include?(k) }
-        self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
+        self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
           attributes.delete(n)
         end
 

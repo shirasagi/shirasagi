@@ -39,7 +39,7 @@ module Job::Cms::CopyNodes::CmsContents
   end
 
   def reference_class(name, field)
-    metadata = field.metadata
+    metadata = field.options[:metadata]
     return nil if metadata.blank?
 
     if array_field?(name, field)
