@@ -12,7 +12,7 @@
     <div class="version">ver. <%= tryb{SS.version} %></div>
   </header>
 
-  <%= form_tag action: params[:action] do |f| %>
+  <%= form_tag(action: params[:action]) do %>
     <% if flash[:alert] %>
     <div class="error-message"><%= flash[:alert] %></div>
     <% end %>
@@ -21,17 +21,17 @@
     <%= hidden_field_tag :ref, params[:ref] %>
 
     <div class="form-group">
-      <label><%== t("ss.views.login/login.id") %></label>
-      <%= text_field :item, :email, class: "alnum", autofocus: true %>
+      <label for="item_email" class="bmd-label-floating"><%== t("ss.views.login/login.id") %></label>
+      <%= text_field :item, :email, class: "form-control", autofocus: true %>
     </div>
 
     <div class="form-group">
-      <label><%= t("ss.views.login/login.password") %></label>
-      <%= password_field :item, :password %>
+      <label for="item_password" class="bmd-label-floating"><%= t("ss.views.login/login.password") %></label>
+      <%= password_field :item, :password, class: "form-control" %>
     </div>
 
     <footer class="send">
-      <%= submit_tag t("ss.login"), class: "btn-primary" %>
+      <%= submit_tag t("ss.login"), class: "btn btn-raised btn-primary" %>
     </footer>
   <% end %>
 
