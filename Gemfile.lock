@@ -67,6 +67,8 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     aes_key_wrap (1.0.1)
+    archive-zip (0.11.0)
+      io-like (~> 0.3.0)
     arel (8.0.0)
     ast (2.4.0)
     autosize-rails (1.18.17)
@@ -90,6 +92,9 @@ GEM
       xpath (~> 3.1)
     childprocess (0.9.0)
       ffi (~> 1.0, >= 1.0.11)
+    chromedriver-helper (1.2.0)
+      archive-zip (~> 0.10)
+      nokogiri (~> 1.8)
     clam_scan (0.0.2)
     cliver (0.3.2)
     coderay (1.1.2)
@@ -194,6 +199,7 @@ GEM
     httpauth (0.2.1)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
+    io-like (0.3.0)
     jaro_winkler (1.5.1)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
@@ -564,6 +570,7 @@ DEPENDENCIES
   browser
   bxslider-rails
   capybara
+  chromedriver-helper
   clam_scan
   coffee-rails (~> 4.2.2)
   coveralls
