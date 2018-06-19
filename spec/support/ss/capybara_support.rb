@@ -35,6 +35,7 @@ module SS::CapybaraSupport
 
   def activate_chrome(config)
     require 'selenium-webdriver'
+    Capybara.server = :webrick
     Capybara.register_driver :chrome do |app|
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_preference('download.prompt_for_download', false)
@@ -72,6 +73,7 @@ module SS::CapybaraSupport
 
   def activate_poltergeist(config)
     require 'capybara/poltergeist'
+    Capybara.server = :webrick
     Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, inspector: true)
     end
