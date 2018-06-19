@@ -22,7 +22,7 @@
 // clipboard
 
 .clipboard-copy-button {
-  @include btn;
+  @include ss-btn;
   margin-left: 4px;
   padding: 1px 4px;
   &.copied {

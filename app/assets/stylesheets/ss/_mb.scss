@@ -148,7 +148,7 @@ nav.main-menu, nav.sub-menu, nav.nav-menu, nav.page-menu, nav.addon-menu, nav.sn
   padding: 10px;
   a {
     display: inline-block;
-    @include btn;
+    @include ss-btn;
     padding: 8px 15px 5px;
   }
   div {

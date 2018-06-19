@@ -527,7 +527,7 @@ td {
           padding: 2px 10px;
         }
         .zoom-btn {
-          @include btn;
+          @include ss-btn;
           cursor: pointer;
         }
         .zoom-out {
@@ -1270,7 +1270,7 @@ td {
 }
 #ss-mb, #ss-pc {
   margin-top: 10px;
-  @include btn;
+  @include ss-btn;
 }
 // -------------------------------------------------------------------------------------------------
 // breadcrumb
@@ -1753,9 +1753,9 @@ footer.send {
       margin: 0 4px;
     }
   }
-  input.publish_save, input.save, button.save, input.delete {
-    @include btn-red;
-  }
+  //input.publish_save, input.save, button.save, input.delete {
+  //  @include ss-btn-red;
+  //}
 }
 .field_with_errors {
   display: inline;
@@ -1764,18 +1764,18 @@ footer.send {
 // -------------------------------------------------------------------------------------------------
 // button
 
-.btn {
-  @include btn;
-}
-.btn-primary {
-  @include btn-red;
-}
-.btn-default {
-  @include btn-gray-l;
-}
-.btn-success {
-  @include btn-orange;
-}
+//.btn {
+//  @include btn;
+//}
+//.btn-primary {
+//  @include ss-btn-red;
+//}
+//.btn-default {
+//  @include ss-btn-gray-l;
+//}
+//.btn-success {
+//  @include ss-btn-orange;
+//}
 .chorg-revisions {
   margin-bottom: 10px;
   .btn {
@@ -1869,7 +1869,7 @@ footer.send {
     display: inline-block;
     margin-bottom: 5px;
     a {
-      @include btn;
+      @include ss-btn;
       margin-bottom: 5px;
     }
   }
@@ -1986,7 +1986,7 @@ footer.send {
     }
   }
   .add-marker {
-    @include btn-orange;
+    @include ss-btn-orange;
     margin: 10px 0 28px;
   }
 }
@@ -2409,9 +2409,9 @@ select, input, textarea, button {
   }
 }
 #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
-  @include btn;
+  @include ss-btn;
   &.add-date {
-    @include btn-orange;
+    @include ss-btn-orange;
   }
 }
 select {
@@ -2651,7 +2651,7 @@ form .CodeMirror {
 #colorbox {
   .menu {
     a {
-      @include btn;
+      @include ss-btn;
     }
   }
 }

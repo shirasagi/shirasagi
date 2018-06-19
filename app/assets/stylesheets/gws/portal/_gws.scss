@@ -81,7 +81,7 @@
     bottom: 0;
   }
   .portlet-html .edit-portlet {
-    @include btn;
+    @include ss-btn;
     display: block;
     position: absolute;
     z-index: 1;
