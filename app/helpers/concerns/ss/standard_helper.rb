@@ -99,7 +99,7 @@ module SS::StandardHelper
     list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
 
     h = []
-    h << %(<div class="tooltip">?)
+    h << %(<div class="ss-tooltip">?)
     h << %(<ul>)
     h << list
     h << %(</ul>)

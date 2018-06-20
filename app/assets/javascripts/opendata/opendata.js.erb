@@ -198,10 +198,10 @@ this.Opendata_Tooltips = (function () {
 
   Opendata_Tooltips.render = function () {
     var ttips;
-    ttips = $(".tooltip");
+    ttips = $(".ss-tooltip");
     ttips.click(function (ev) {
       var css, cur, hgt, ofs, style;
-      $(".tooltip ul").hide();
+      $(".ss-tooltip ul").hide();
       cur = $(this);
       hgt = cur.find("ul").outerHeight();
       ofs = cur.offset();
@@ -209,20 +209,20 @@ this.Opendata_Tooltips = (function () {
         cur.find("ul").css("bottom", (hgt * (-1) - 15) + "px");
         css = "ul:after {border: 8px solid transparent; border-bottom-color:#fff; bottom:" + (hgt - 5) + "px;}";
         style = $("<style>").append(document.createTextNode(css));
-        $(".tooltip ul style").remove();
+        $(".ss-tooltip ul style").remove();
         cur.find("ul").append(style);
       } else {
         cur.find("ul").css("bottom", "18px");
         css = "ul:after {border: 8px solid transparent; border-top-color:#fff; bottom:-13px;}";
         style = $("<style>").append(document.createTextNode(css));
-        $(".tooltip ul style").remove();
+        $(".ss-tooltip ul style").remove();
         cur.find("ul").append(style);
       }
       return cur.find("ul").show();
     });
     return $(document).click(function (ev) {
       if (!ttips.is($(ev.target).closest("div"))) {
-        return $(".tooltip ul").hide();
+        return $(".ss-tooltip ul").hide();
       }
     });
   };

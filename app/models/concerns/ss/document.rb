@@ -71,7 +71,7 @@ module SS::Document
       list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
 
       h = []
-      h << %(<div class="tooltip">?)
+      h << %(<div class="ss-tooltip">?)
       h << %(<ul>)
       h << list
       h << %(</ul>)
