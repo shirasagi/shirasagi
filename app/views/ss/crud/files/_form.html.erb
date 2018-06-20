@@ -9,50 +9,58 @@
     <dt><%= @model.t :name %><%= @model.tt :name %></dt>
     <dd><%= f.text_field :name %></dd>
 
-    <dt><%= @model.t :geo_location %><%= @model.tt :geo_location %></dt>
-    <dd>
-      <%= number_field_tag "#{f.object_name}[geo_location][lat]", @item.geo_location.try(:lat), step: :any %>
-      <%= number_field_tag "#{f.object_name}[geo_location][lng]", @item.geo_location.try(:lng), step: :any %>
-    </dd>
+    <% if @item.image? %>
+      <dt><%= @model.t :geo_location %><%= @model.tt :geo_location %></dt>
+      <dd>
+        <div class="input-group">
+          <div class="form-group">
+            <%= number_field_tag "#{f.object_name}[geo_location][lat]", @item.geo_location.try(:lat), step: :any %>
+          </div>
+          <div class="form-group">
+            <%= number_field_tag "#{f.object_name}[geo_location][lng]", @item.geo_location.try(:lng), step: :any %>
+          </div>
+        </div>
+      </dd>
+    <% end %>
   <% end %>
 </dl>
 
 <% if @item.persisted? && @item.image? %>
-  <div class="ss-image-edit-canvas">
-    <div class="toolbar">
-      <div class="btn-group">
+  <div class="ss-image-edit-canvas bmd-form-group">
+    <div class="ss-toolbar">
+      <div class="ss-btn-group">
         <button type="button" class="btn btn-zoom-in" data-func="zoomIn"><i class="material-icons">&#xE8FF;</i></button>
         <button type="button" class="btn btn-zoom-out" data-func="zoomOut"><i class="material-icons">&#xE900;</i></button>
       </div>
-      <div class="btn-group">
+      <div class="ss-btn-group">
         <button type="button" class="btn btn-rotate-left" data-func="rotateRight"><i class="material-icons">&#xE419;</i></button>
         <button type="button" class="btn btn-rotate-right" data-func="rotateLeft"><i class="material-icons">&#xE41A;</i></button>
       </div>
-      <div class="btn-group">
+      <div class="ss-btn-group">
         <button type="button" class="btn btn-submit-crop" data-func="submit"><i class="material-icons">&#xE876;</i></button>
         <button type="button" class="btn btn-cancel-crop" data-func="cancel"><i class="material-icons">&#xE5CD;</i></button>
       </div>
 
-      <div class="btn-group">
-        <div class="input-group">
+      <div class="ss-btn-group">
+        <div class="ss-input-group">
           <%= select_tag('size', options_for_select(@model.resizing_options), include_blank: true) %>
         </div>
       </div>
 
-      <div class="btn-group">
-        <div class="input-group">
+      <div class="ss-btn-group">
+        <div class="ss-input-group">
           <label for="ss-image-edit-canvas-inspection-x">X</label>
           <input name="x" id="ss-image-edit-canvas-inspection-x" type="text" readonly>
         </div>
-        <div class="input-group">
+        <div class="ss-input-group">
           <label for="ss-image-edit-canvas-inspection-y">Y</label>
           <input name="y" id="ss-image-edit-canvas-inspection-y" type="text" readonly>
         </div>
-        <div class="input-group">
+        <div class="ss-input-group">
           <label for="ss-image-edit-canvas-inspection-width">W</label>
           <input name="width" id="ss-image-edit-canvas-inspection-width" type="text" readonly>
         </div>
-        <div class="input-group">
+        <div class="ss-input-group">
           <label for="ss-image-edit-canvas-inspection-height">H</label>
           <input name="height" id="ss-image-edit-canvas-inspection-height" type="text" readonly>
         </div>

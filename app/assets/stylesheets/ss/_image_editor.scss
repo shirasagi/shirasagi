@@ -1,11 +1,11 @@
 .ss-image-edit-canvas {
   position: relative;
-  margin-top: 48px;
+  margin-top: 20px;
 
-  .toolbar {
+  .ss-toolbar {
     display: block;
     position: absolute;
-    top: -45px;
+    top: -20px;
     left: 0px;
     background: $black3;
     height: 40px;
@@ -29,7 +29,7 @@
     }
   }
 
-  .btn-group {
+  .ss-btn-group {
     display: inline-block;
     margin: 0;
     padding: 0;
@@ -37,7 +37,7 @@
     vertical-align: top;
   }
 
-  .input-group {
+  .ss-input-group {
     display: inline-block;
     margin: 4px 0;
     padding: 0 2px;
@@ -47,6 +47,12 @@
     }
     input {
       width: 4em;
+      background: $gray4;
+      border-width: 1px;
+      padding: 6px;
+    }
+    select {
+      height: 32px;
       background: $gray4;
     }
   }
@@ -62,18 +68,7 @@
     color: $white;
   }
 
-  //.btn-group ~ .btn-group {
-  //  &:before {
-  //    content: '';
-  //    position: absolute;
-  //    top: 2px;
-  //    width: 0px;
-  //    height: 35px;
-  //    border-left: 1px solid $gray2;
-  //    border-right: 1px solid $gray1;
-  //  }
-  //}
-  .btn-group ~ .btn-group {
+  .ss-btn-group ~ .ss-btn-group {
     border-left: 1px solid $gray2;
     //border-right: 1px solid $gray1;
   }

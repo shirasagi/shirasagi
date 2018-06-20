@@ -17,7 +17,7 @@ SS_ImageEditor = function (el) {
     }
   );
 
-  this.$el.find('.toolbar button').on('click', function (e) {
+  this.$el.find('.ss-toolbar button').on('click', function (e) {
     var func = $(this).data('func');
     if (func && pThis[func]) {
       pThis[func]();
@@ -29,7 +29,7 @@ SS_ImageEditor = function (el) {
     }
   });
 
-  this.$el.find('.toolbar select[name=size]').on('change', function () {
+  this.$el.find('.ss-toolbar select[name=size]').on('change', function () {
     var val = $(this).val();
     if (! val) {
       return;
@@ -56,10 +56,10 @@ SS_ImageEditor.prototype = {
 
   updateInspect: function() {
     var data = this.cropper.getData(true);
-    this.$el.find('.toolbar input[name=x]').val(data.x);
-    this.$el.find('.toolbar input[name=y]').val(data.y);
-    this.$el.find('.toolbar input[name=width]').val(data.width);
-    this.$el.find('.toolbar input[name=height]').val(data.height);
+    this.$el.find('.ss-toolbar input[name=x]').val(data.x);
+    this.$el.find('.ss-toolbar input[name=y]').val(data.y);
+    this.$el.find('.ss-toolbar input[name=width]').val(data.width);
+    this.$el.find('.ss-toolbar input[name=height]').val(data.height);
   },
 
   changeSize: function(width, height) {
@@ -76,7 +76,7 @@ SS_ImageEditor.prototype = {
     var data = this.cropper.getData(true);
     var val = data.width + ',' + data.height;
 
-    this.$el.find('.toolbar select[name=size] option').each(function() {
+    this.$el.find('.ss-toolbar select[name=size] option').each(function() {
       this.selected = (this.value === val);
     });
   },
@@ -146,7 +146,7 @@ SS_ImageEditor.prototype = {
     this.cropper.destroy();
     this.cropper = null;
 
-    this.$el.find('.toolbar').hide();
+    this.$el.find('.ss-toolbar').hide();
     this.$el.find('img.target').attr('src', newImageData);
     this.$el.find("input[name='item[in_data_url]']").val(newImageData);
   },
@@ -155,6 +155,6 @@ SS_ImageEditor.prototype = {
     this.cropper.destroy();
     this.cropper = null;
 
-    this.$el.find('.toolbar').hide();
+    this.$el.find('.ss-toolbar').hide();
   }
 };

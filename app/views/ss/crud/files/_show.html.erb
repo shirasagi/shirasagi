@@ -17,8 +17,10 @@
   <dt><%= @model.t :content_type %></dt>
   <dd><%= @item.content_type %></dd>
 
+  <% if @item.image? %>
   <dt><%= @model.t :geo_location %></dt>
   <dd><%= @item.geo_location %></dd>
+  <% end %>
 
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>

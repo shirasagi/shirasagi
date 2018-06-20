@@ -8,7 +8,7 @@
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% else %>
     <%= link_to(t('ss.links.edit'), { action: :edit, id: @item }, class: :edit) if @model.allowed?(:edit, @cur_user) %>
-    <%= link_to(t('ss.links.resize'), { action: :resize, id: @item }, class: :resize) if @model.allowed?(:edit, @cur_user) %>
+    <%= link_to(t('ss.links.resize'), { action: :resize, id: @item }, class: :resize) if @model.allowed?(:edit, @cur_user) && @item.image? %>
     <%= link_to(t('ss.links.delete'), { action: :delete, id: @item }, class: :delete) if @model.allowed?(:delete, @cur_user) %>
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% end %>
