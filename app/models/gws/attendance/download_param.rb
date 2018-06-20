@@ -28,13 +28,15 @@ class Gws::Attendance::DownloadParam
       end
       return msg if msg.blank? || !html_wrap
       msg = [msg] if msg.class.to_s == "String"
-      list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
+      list = msg.map { |d| "<p>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></p>" }
 
       h = []
       h << %(<div class="ss-tooltip">?)
-      h << %(<ul>)
+      h << %(<button class="ss-tooltip-toggle" tabindex="-1"><i class="material-icons">help</i></button>)
+      h << %(<div class="ss-tooltip-body">)
       h << list
-      h << %(</ul>)
+      h << %(<div class="popper__arrow" x-arrow></div>)
+      h << %(</div>)
       h << %(</div>)
       h.join("\n").html_safe
     end

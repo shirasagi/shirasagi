@@ -1686,22 +1686,21 @@ dl.mod-cms-parent_crumbs {
   dd { margin-bottom: 10px; }
 }
 .ss-tooltip {
-  position: relative;
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-left: 5px;
-  line-height: 1.1;
-  @include border-radius(8px);
-  background: $orange;
-  color: $white;
-  text-align: center;
-  cursor: pointer;
-  ul {
-    position: absolute;
+  .ss-tooltip-toggle {
+    @include appearance(none);
+
+    border: none;
+    color: $orange;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 4px;
+    .material-icons {
+      font-size: 1.5rem;
+    }
+  }
+  .ss-tooltip-body {
     display: none;
-    left: -220px;
-    width: 30em;
     padding: 15px;
     border: $border-gray4;
     line-height: 1.6;
@@ -1713,37 +1712,58 @@ dl.mod-cms-parent_crumbs {
     font-weight: normal;
     text-align: left;
     cursor: auto;
-    @include mb {
-      left: -70px;
-      width: 20em;
-    }
+  }
+  .popper__arrow {
     &:before {
       content: "";
       position: absolute;
-      left: 215px;
-      bottom: -12px;
       width: 0;
       height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 12px solid $gray4;
-      @include mb {
-        left: 65px;
-      }
+      border: $border-gray4;
     }
     &:after {
       content: "";
       position: absolute;
-      left: 215px;
-      bottom: -19px;
       width: 0;
       height: 0;
+      border: 8px solid transparent;
       border-left: 12px solid transparent;
       border-right: 12px solid transparent;
+      left: calc(50% - 12px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+  .ss-tooltip-body[x-placement="top"] .popper__arrow {
+    &:before {
+      border-width: 12px 12px 0 12px;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      bottom: -12px;
+      left: calc(50% - 12px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    &:after {
       border-top: 12px solid $white;
-      @include mb {
-        left: 65px;
-      }
+      bottom: -19px;
+    }
+  }
+  .ss-tooltip-body[x-placement="bottom"] .popper__arrow {
+    &:before {
+      border-width: 0 12px 12px 12px;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-top-color: transparent;
+      top: -12px;
+      left: calc(50% - 12px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    &:after {
+      border-bottom: 12px solid $white;
+      top: -19px;
     }
   }
 }
