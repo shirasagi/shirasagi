@@ -174,7 +174,9 @@ describe "opendata_agents_nodes_app", dbscope: :example, js: true do
       node.show_point = 'hide'
       node.save!
 
-      app.touch
+
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # app.touch
       app.save!
     end
 
@@ -197,7 +199,8 @@ describe "opendata_agents_nodes_app", dbscope: :example, js: true do
       node.show_tabs = 'released'
       node.save!
 
-      app.touch
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # app.touch
       app.save!
     end
 
@@ -219,7 +222,8 @@ describe "opendata_agents_nodes_app", dbscope: :example, js: true do
       node.tab_titles = { 'released' => 'アプリ一覧' }
       node.save!
 
-      app.touch
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # app.touch
       app.save!
     end
 

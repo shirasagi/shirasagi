@@ -93,7 +93,8 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
       node_app.show_point = 'hide'
       node_app.save!
 
-      app.touch
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # app.touch
       app.save!
     end
 
@@ -116,7 +117,8 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
       node_app.show_tabs = 'released'
       node_app.save!
 
-      app.touch
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # app.touch
       app.save!
     end
 
