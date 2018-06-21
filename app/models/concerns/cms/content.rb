@@ -223,7 +223,7 @@ module Cms::Content
   def create_history_trash
     backup = History::Trash.new
     backup.ref_coll = collection_name
-    backup.ref_class = self.class.to_s
+    backup.ref_class = self.becomes_with_route.class.to_s
     if self[:column_values].present?
       self.column_values.each do |column_value|
         column_value.class_name = column_value._type
@@ -231,6 +231,7 @@ module Cms::Content
     end
     backup.data = attributes
     backup.site = self.site
+    backup.user = @cur_user
     backup.save
   end
 end

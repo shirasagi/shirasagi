@@ -6,9 +6,22 @@ class History::Cms::TrashesController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    @ref_coll_options = [Cms::Page, Cms::Part, Cms::Layout, Cms::Node].collect do |model|
+      [model.model_name.human, model.collection_name]
+    end
+    set_items
+    @items = @items.where(ref_coll: params[:coll].to_s)
+      .search(params[:s])
+      .order_by(created: -1)
+      .page(params[:page])
+      .per(50)
+  end
+
   def undo_delete
     set_item
-    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     if request.get?
       render
@@ -29,7 +42,7 @@ class History::Cms::TrashesController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+      if item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
         next if item.restore!
       else
         item.errors.add :base, :auth_error

@@ -1,6 +1,6 @@
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-  <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 <% end %>
 
@@ -9,14 +9,12 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
-  <% if item.try(:updated) %>
-    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="filename"><%= item.data['filename'] %></span>
+  <% if item.data['route'].present? %>
+  <span class="route"><%= t "modules.#{item.data['route'].sub(/\/.*/, '')}" %></span>
   <% end %>
-  <span class="ref-coll"><%= item.ref_coll %></span>
-  <% if item.try(:ref_class) %>
-    <span class="ref-class"><%= item.ref_class.constantize.model_name.human %></span>
-  <% end %>
+  <span class="user"><%= item.user.try(:name) %></span>
 <% end %>
 
 <%= render file: "cms/crud/index" %>

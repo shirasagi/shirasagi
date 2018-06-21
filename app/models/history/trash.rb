@@ -15,8 +15,19 @@ class History::Trash
   validates :ref_coll, presence: true
   validates :data, presence: true
 
+  def model
+    ref_class.constantize
+  end
+
+  def parent
+    path = File.dirname(data[:filename])
+    History::Trash.where('data.filename' => path, 'data.site_id' => data[:site_id]).first
+  end
+
   def restore(save = false)
+    parent.restore! if parent.present?
     attributes = data.dup
+    attributes[:state] = 'closed'
     if attributes[:column_values].present?
       attributes[:column_values] = attributes[:column_values].collect do |column_value|
         next column_value if column_value['class_name'].blank?
@@ -53,7 +64,7 @@ class History::Trash
         file._id
       end
     end
-    item = ref_class.constantize.find_or_initialize_by(_id: data[:_id])
+    item = model.find_or_initialize_by(_id: data[:_id])
     item = item.becomes_with_route(data[:route]) if data[:route].present?
     attributes.each do |k, v|
       item[k] = v
@@ -88,7 +99,7 @@ class History::Trash
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :data
+        criteria = criteria.keyword_in params[:keyword], 'data.name', 'data.filename', 'data.html'
       end
       criteria
     end

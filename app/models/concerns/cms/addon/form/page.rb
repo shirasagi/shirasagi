@@ -18,6 +18,22 @@ module Cms::Addon::Form::Page
     after_merge_branch :merge_column_values rescue nil
   end
 
+  def form_html
+    return '' if form.blank?
+    html = form.html
+    html.gsub!(/\{\{(.+)\}\}/) do
+      name_or_id = $1.strip
+      column_value = column_values.
+          where('$or' => [ { id: name_or_id }, { name: name_or_id } ]).
+          order_by(order: 1, created: 1).
+          first
+      if column_value
+        column_value.to_html
+      end
+    end
+    html
+  end
+
   def update_column_values(new_values)
     column_values = self.column_values.to_a.dup
 

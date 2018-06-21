@@ -77,6 +77,7 @@ module Cms::CrudFilter
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+    @item.cur_user = @cur_user if @item.respond_to?(:cur_user)
     render_destroy @item.destroy
   end
 
@@ -86,6 +87,7 @@ module Cms::CrudFilter
 
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
         next if item.destroy
       else
         item.errors.add :base, :auth_error

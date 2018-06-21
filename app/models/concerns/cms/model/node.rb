@@ -225,7 +225,10 @@ module Cms::Model::Node
 
   def destroy_children
     %w(nodes pages parts layouts).each do |name|
-      send(name).destroy_all
+      send(name).each do |item|
+        item.cur_user = @cur_user
+        item.destroy
+      end
     end
   end
 

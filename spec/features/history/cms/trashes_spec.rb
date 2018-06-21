@@ -4,7 +4,7 @@ describe "history_cms_trashes", dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:page_item) { create(:article_page, cur_node: node) }
-  let(:index_path) { history_cms_trashes_path(site: site.id) }
+  let(:index_path) { history_cms_trashes_path(site: site.id, coll: 'cms_pages') }
   let(:node_path) { article_pages_path(site: site.id, cid: node.id) }
   let(:page_path) { article_page_path(site: site.id, cid: node.id, id: page_item.id) }
 
@@ -15,7 +15,7 @@ describe "history_cms_trashes", dbscope: :example, js: true do
       visit page_path
       click_link '削除する'
       click_button '削除'
-      expect(page).not_to have_css('a.title', text: page_item.name)
+      expect(page).to have_no_css('a.title', text: page_item.name)
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -33,7 +33,7 @@ describe "history_cms_trashes", dbscope: :example, js: true do
       visit page_path
       click_link '削除する'
       click_button '削除'
-      expect(page).not_to have_css('a.title', text: page_item.name)
+      expect(page).to have_no_css('a.title', text: page_item.name)
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)

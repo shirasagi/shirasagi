@@ -1,0 +1,9 @@
+<nav class="mod-navi">
+  <h2><%= History::Trash.model_name.human %></h2>
+  <h3><%= link_to Cms::Page.model_name.human, { action: :index, coll: 'cms_pages' } %></h3>
+  <h3><%= link_to Cms::Part.model_name.human, { action: :index, coll: 'cms_parts' } %></h3>
+  <h3><%= link_to Cms::Layout.model_name.human, { action: :index, coll: 'cms_layouts' } %></h3>
+  <h3><%= link_to Cms::Node.model_name.human, { action: :index, coll: 'cms_nodes' } %></h3>
+</nav>
+
+<%= render(partial: "cms/main/navi") %>

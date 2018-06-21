@@ -31,6 +31,11 @@ ja:
     buttons:
       restore: 復元
 
+  cms_role:
+    read_history_trashes: ゴミ箱の閲覧
+    edit_history_trashes: ゴミ箱の復元
+    delete_history_trashes: ゴミ箱の完全削除
+
   modules:
     history: 履歴
     addons:
