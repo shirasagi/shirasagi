@@ -106,7 +106,7 @@ group :development, :test do
   gem 'rspec-its'
   gem 'rspec-rails'
   gem 'rubocop', require: false
-  gem 'spring', '~> 1.1.3'
+  gem 'spring', '~> 2.0.2'
   gem 'timecop'
 end
 
