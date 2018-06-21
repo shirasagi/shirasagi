@@ -13,7 +13,7 @@ module SS::Relation::File
       permit_params "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
 
-      before_save "validate_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
+      validate "validate_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
       before_save "save_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
       before_save "remove_relation_#{name}".to_sym, if: ->{ send("rm_#{name}").to_s == "1" }
       after_save "update_relation_#{name}_state".to_sym, if: ->{ send(name).present? }
