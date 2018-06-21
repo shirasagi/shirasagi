@@ -13,7 +13,7 @@ gem 'unicorn'
 gem 'unicorn-worker-killer'
 
 # Database
-gem 'mongoid', '~> 7.0' #, git: 'https://github.com/mongodb/mongoid.git'
+gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git' #'~> 7.1.0'
 gem 'mongo_session_store', git: 'https://github.com/mongoid/mongo_session_store.git'
 gem 'mongoid-rspec', git: 'https://github.com/mongoid/mongoid-rspec.git'
 gem 'mongoid-grid_fs', git: 'https://github.com/mongoid/mongoid-grid_fs.git'
