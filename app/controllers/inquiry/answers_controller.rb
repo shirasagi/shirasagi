@@ -97,7 +97,11 @@ class Inquiry::AnswersController < ApplicationController
   def download_afile
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     if params[:id]
-      file = ::SS::File.with(client: Inquiry::Answer.client_name).find(params[:fid].to_i) rescue nil
+
+      client_name = Inquiry::Answer.persistence_context.send(:client_name)
+      file = SS::File.with(client: client_name) do |model|
+        break model.where(id: params[:fid].to_i).first
+      end
       unless file.blank?
         send_afile file
       end
