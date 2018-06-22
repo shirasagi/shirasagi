@@ -27,9 +27,9 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.find_or_create_by(cond)
+  item = SS::File.new(cond)
   item.in_file = file
-  item.update
+  item.save!
 
   item
 end
