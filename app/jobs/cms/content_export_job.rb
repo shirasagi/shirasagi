@@ -2,7 +2,7 @@ class Cms::ContentExportJob < Sys::SiteExportJob
 
   self.task_name = 'cms:export_content'
 
-  def perform
+  def perform(opts = {})
     @src_site = Cms::Site.find(@task.site_id)
 
     @output_dir = "#{Rails.root}/private/export/content-#{@src_site.host}"

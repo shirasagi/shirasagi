@@ -132,7 +132,8 @@ SS::Application.routes.draw do
     get "command" => "command#command"
     post "command" => "command#command"
     get "all_contents(.:format)" => "all_contents#index", format: { default: :html }, as: "all_contents"
-    get 'all_contents/download' => 'all_contents#index'
+    post "all_contents(.:format)" => "all_contents#run"
+    get 'all_contents/download' => 'all_contents#download'
     post 'all_contents/download' => 'all_contents#download'
     get 'all_contents/import' => 'all_contents#import'
     post 'all_contents/import' => 'all_contents#import'

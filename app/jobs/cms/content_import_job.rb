@@ -51,6 +51,7 @@ class Cms::ContentImportJob < Sys::SiteImportJob
     invoke :update_opendata_app_appfiles
     invoke :update_ss_files_url
 
+    FileUtils.rm(@import_zip)
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
   end

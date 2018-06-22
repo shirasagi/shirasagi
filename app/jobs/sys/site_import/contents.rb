@@ -41,7 +41,7 @@ module Sys::SiteImport::Contents
       item[:ads_category_ids] = convert_ids(@cms_nodes_map, item[:ads_category_ids])
       item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids])
       if item[:column_values].present?
-        item[:column_values] = item[:column_values].each do |column_value|
+        item[:column_values].each do |column_value|
           next if column_value['class_name'].blank?
           column_value['_id'] = column_value['_id'].delete('$oid')
           column_value['column_id'] = @cms_columns_map[column_value['column_id']]

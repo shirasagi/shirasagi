@@ -1,16 +1,14 @@
 class Cms::AllContentsController < ApplicationController
   include Cms::BaseFilter
+  include SS::JobFilter
 
   navi_view "cms/main/navi"
 
   def download
+    file = "#{Rails.root}/private/export/content-#{@cur_site.host}.zip"
+    redirect_to({ action: :index }) unless FileTest.exist?(file)
     return if request.get?
-    job = Cms::ContentExportJob.new
-    job.task = mock_task(
-      site_id: @cur_site.id
-    )
-    job.perform
-    send_file "#{Rails.root}/private/export/content-#{@cur_site.host}.zip"
+    send_file file
   end
 
   def import
@@ -23,15 +21,14 @@ class Cms::AllContentsController < ApplicationController
         raise I18n.t("errors.messages.invalid_zip")
       end
 
-      import_dir = "#{Rails.root}/private/import/"
-      FileUtils.rm_rf(import_dir)
+      import_dir = "#{Rails.root}/private/import"
+      import_zip = "#{import_dir}/content-#{@cur_site.host}.zip"
+      FileUtils.rm(import_zip) if FileTest.exists?(import_zip)
       FileUtils.mkdir_p(import_dir)
-      File.open("#{import_dir}#{file.original_filename}", 'w+b') do |fp|
-        fp.write file.read
-      end
+      FileUtils.cp(file.path, import_zip)
 
       # call job
-      Cms::ContentImportJob.bind(site_id: @cur_site).perform_later(file: file.original_filename)
+      Cms::ContentImportJob.bind(site_id: @cur_site).perform_later(file: "content-#{@cur_site.host}.zip")
       flash.now[:notice] = I18n.t("ss.notice.started_import")
     rescue => e
       @item.errors.add :base, e.to_s
@@ -46,5 +43,23 @@ class Cms::AllContentsController < ApplicationController
       puts(msg)
     end
     task
+  end
+
+  def job_class
+    Cms::ContentExportJob
+  end
+
+  def job_bindings
+    {
+      site_id: @cur_site.id,
+    }
+  end
+
+  def task_name
+    job_class.task_name
+  end
+
+  def set_item
+    @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil
   end
 end
