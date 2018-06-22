@@ -12,8 +12,8 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
       before do
         get(
           "#{subscriber_path}?hub.mode=subscribe&hub.topic=http://example.org/&hub.challenge=#{challenge}",
-          {},
-          { 'HTTP_HOST' => site.domain })
+          params: {},
+          headers: { 'HTTP_HOST' => site.domain })
       end
 
       it do
@@ -31,8 +31,8 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
         perform_enqueued_jobs do
           post(
             subscriber_path,
-            {},
-            { 'HTTP_HOST' => site.domain, 'RAW_POST_DATA' => payload, 'CONTENT_TYPE' => content_type })
+            params: {},
+            headers: { 'HTTP_HOST' => site.domain, 'RAW_POST_DATA' => payload, 'CONTENT_TYPE' => content_type })
         end
       end
 
@@ -53,8 +53,8 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
       before do
         get(
           "#{subscriber_path}?hub.mode=subscribe&hub.topic=http://example.org/topic1.xml&hub.challenge=#{challenge}",
-          {},
-          { 'HTTP_HOST' => site.domain })
+          params: {},
+          headers: { 'HTTP_HOST' => site.domain })
       end
 
       it do
@@ -67,8 +67,8 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
       before do
         get(
           "#{subscriber_path}?hub.mode=subscribe&hub.topic=http://example.org/topic2.xml&hub.challenge=#{challenge}",
-          {},
-          { 'HTTP_HOST' => site.domain })
+          params: {},
+          headers: { 'HTTP_HOST' => site.domain })
       end
 
       it do
@@ -96,7 +96,7 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
       }
 
       perform_enqueued_jobs do
-        post(subscriber_path, {}, header)
+        post(subscriber_path, params: {}, headers: header)
       end
     end
 
@@ -131,8 +131,8 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
       before do
         get(
           "#{subscriber_path}?hub.mode=subscribe&hub.topic=http://example.org/&hub.challenge=#{challenge}",
-          {},
-          { 'HTTP_HOST' => site.domain })
+          params: {},
+          headers: { 'HTTP_HOST' => site.domain })
       end
 
       it do
@@ -153,8 +153,8 @@ describe "Rss::Agents::Nodes::WeatherXmlController", type: :request, dbscope: :e
         perform_enqueued_jobs do
           post(
             subscriber_path,
-            {},
-            { 'HTTP_HOST' => site.domain, 'RAW_POST_DATA' => payload, 'CONTENT_TYPE' => content_type })
+            params: {},
+            headers: { 'HTTP_HOST' => site.domain, 'RAW_POST_DATA' => payload, 'CONTENT_TYPE' => content_type })
         end
       end
 

@@ -30,7 +30,7 @@ describe "webapi", dbscope: :example, type: :request do
 
   context "with login" do
     before do
-      post login_path, correct_login_params
+      post login_path, params: correct_login_params
       SS.config.replace_value_at(:env, :json_datetime_format, "%Y/%m/%d %H:%M:%S")
     end
 
@@ -79,7 +79,7 @@ describe "webapi", dbscope: :example, type: :request do
           }
         }
 
-        put update_page_path, params
+        put update_page_path, params: params
         expect(response.status).to eq 204
         updated_page = Cms::Page.find(page.id)
 
@@ -97,13 +97,13 @@ describe "webapi", dbscope: :example, type: :request do
 
       it "200" do
         params = { item: { state: "closed" } }
-        put update_page_path, params
+        put update_page_path, params: params
         expect(response.status).to eq 204
         updated_page = Cms::Page.find(page.id)
         expect(updated_page.state).to eq params[:item][:state]
 
         params = { item: { state: "public" } }
-        put update_page_path, params
+        put update_page_path, params: params
         expect(response.status).to eq 204
         updated_page = Cms::Page.find(page.id)
         expect(updated_page.state).to eq params[:item][:state]
@@ -111,7 +111,7 @@ describe "webapi", dbscope: :example, type: :request do
 
       it "400" do
         params = {}
-        put update_page_path, params
+        put update_page_path, params: params
         expect(response.status).to eq 400
       end
 
@@ -122,7 +122,7 @@ describe "webapi", dbscope: :example, type: :request do
             close_date: "2015/11/13 11:00:00"
           }
         }
-        put update_page_path, params
+        put update_page_path, params: params
         expect(response.status).to eq 422
       end
     end
