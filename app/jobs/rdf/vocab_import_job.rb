@@ -64,7 +64,7 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
     raise Rdf::VocabImportJobError, I18n.t("rdf.errors.unable_to_load_vocab") if builder.attributes.blank?
 
     uri = builder.attributes[:uri]
-    uri ||= Rdf::Vocab.normalize_uri(ontology_subject.to_s)
+    uri ||= ontology_subject.to_s.sub("##{ontology_subject.fragment}", '#')
 
     vocab = Rdf::Vocab.site(@cur_site).where(uri: uri).first || Rdf::Vocab.new
     vocab.attributes = builder.attributes
@@ -104,12 +104,11 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
 
       # puts "builder.attributes=#{builder.attributes}"
       if klass == Rdf::Prop
-        name = object.to_s.gsub(/^#{vocab.uri}/, '')
-        create_prop(vocab, name, builder.attributes)
+        create_prop(vocab, object.fragment, builder.attributes)
       else
         attributes = builder.attributes.dup
         attributes[:vocab_id] = vocab.id
-        attributes[:name] = object.to_s.gsub(/^#{vocab.uri}/, '')
+        attributes[:name] = object.fragment
         @pending_classes << [klass, attributes]
       end
     end
