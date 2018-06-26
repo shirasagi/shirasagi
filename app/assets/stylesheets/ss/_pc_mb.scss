@@ -2476,6 +2476,12 @@ input[type=email], input[type=number], input[type=tel] {
 input[type=number] {
   width: 12em;
 }
+.input-group.ss-number-field {
+  input[type=number] {
+    width: 12em;
+    flex-grow: unset;
+  }
+}
 input.alnum {
   ime-mode: disabled;
 }

@@ -13,7 +13,12 @@
   <dd><%= f.text_field :extensions %></dd>
 
   <dt><%= @model.t :size %><%= @model.tt :size %></dt>
-  <dd><%= f.number_field :in_size_mb %> <%= t "ss.units.mega_byte" %></dd>
+  <dd>
+    <div class="input-group ss-number-field">
+      <%= f.number_field :in_size_mb %>
+      <div class="input-group-append"><span class="input-group-text"><%= t "ss.units.mega_byte" %></span></div>
+    </div>
+  </dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
