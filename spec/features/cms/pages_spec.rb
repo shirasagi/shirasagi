@@ -104,10 +104,7 @@ describe "cms_pages" do
         login_cms_user
         visit new_cms_page_path(site)
 
-        html_text = ""
-        10.times.each do
-          html_text += "<p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p>"
-        end
+        html_text = "<p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p>" * 10
 
         fill_in_ckeditor "item[html]", with: html_text
         click_on I18n.t("cms.mobile_size_check")
@@ -227,7 +224,7 @@ describe "cms_pages" do
         login_cms_user
         visit new_cms_page_path(site)
 
-        expect(page).not_to have_text(I18n.t("cms.mobile_size_check"))
+        expect(page).to have_no_text(I18n.t("cms.mobile_size_check"))
       end
     end
   end

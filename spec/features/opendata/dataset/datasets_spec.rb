@@ -124,7 +124,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
                 permissions: ["read_other_opendata_datasets"])
             end
 
-            it { expect(page).not_to have_link '複製する' }
+            it { expect(page).to have_no_link '複製する' }
             it do
               visit copy_opendata_dataset_path site, node, item
               expect(status_code).to eq 403
