@@ -46,12 +46,13 @@ module Sys::SiteCopy::CmsContents
 
   def reference_class(name, field)
     metadata = field.options[:metadata]
-    return nil if metadata.blank?
+    association = field.association
+    return nil if metadata.blank? && association.blank?
 
     if array_field?(name, field)
       klass = metadata[:elem_class]
     else
-      klass = metadata.try(:class_name)
+      klass = association.try(:class_name)
     end
     klass = klass.constantize if klass.is_a?(String)
     klass
