@@ -18,6 +18,7 @@ namespace :gws do
       Gws::Discussion::TrashPurgeJob.bind(site_id: site).perform_now(*params)
       Gws::Share::TrashPurgeJob.bind(site_id: site).perform_now(*params)
       Gws::SharedAddress::TrashPurgeJob.bind(site_id: site).perform_now(*params)
+      Gws::Notice::TrashPurgeJob.bind(site_id: site).perform_now(*params)
     end
   end
 end

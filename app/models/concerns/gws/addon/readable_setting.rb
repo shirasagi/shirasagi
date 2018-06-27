@@ -88,7 +88,13 @@ module Gws::Addon::ReadableSetting
       Gws::User.all
     when 'select'
       user_ids = readable_members.pluck(:id)
-      user_ids += Gws::User.in(group_ids: readable_groups.active.pluck(:id)).pluck(:id)
+      group_ids = readable_groups.active.pluck(:id)
+      if self.class.readable_setting_included_custom_groups?
+        user_ids += readable_custom_groups.pluck(:member_ids).flatten
+        member_group_ids = readable_custom_groups.pluck(:member_group_ids).flatten.uniq
+        group_ids += Gws::Group.site(@cur_site || site).in(id: member_group_ids).active.pluck(:id)
+      end
+      user_ids += Gws::User.in(group_ids: group_ids).pluck(:id)
       user_ids.uniq!
       Gws::User.in(id: user_ids)
     else # private

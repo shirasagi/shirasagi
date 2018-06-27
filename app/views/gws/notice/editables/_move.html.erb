@@ -1,0 +1,28 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :folder_id %><%= @model.tt :folder_id %></dt>
+  <dd>
+    <%= f.hidden_field :folder_id, value: '', class: 'hidden-ids' %>
+    <%= link_to t('gws/share.apis.folders.index'), gws_notice_apis_folders_path(mode: 'editable', except: @item.folder_id, single: true), class: 'ajax-box' %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Share::Folder.t :name %></th>
+        <th class="deselect"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.folder.present? %>
+        <tr data-id="<%= @item.folder.id %>">
+          <td><%= f.hidden_field :folder_id, value: @item.folder.id, id: nil %> <%= @item.folder.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), '#', class: 'deselect btn' %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

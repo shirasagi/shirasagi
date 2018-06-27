@@ -111,12 +111,6 @@ ja:
     edit_private_gws_custom_groups: カスタムグループの編集（所有）
     delete_other_gws_custom_groups: カスタムグループの削除（全て）
     delete_private_gws_custom_groups: カスタムグループの削除（所有）
-    read_other_gws_notices: お知らせの閲覧（全て）
-    read_private_gws_notices: お知らせの閲覧（所有）
-    edit_other_gws_notices: お知らせの編集（全て）
-    edit_private_gws_notices: お知らせの編集（所有）
-    delete_other_gws_notices: お知らせの削除（全て）
-    delete_private_gws_notices: お知らせの削除（所有）
     read_other_gws_links: リンク集の閲覧（全て）
     read_private_gws_links: リンク集の閲覧（所有）
     edit_other_gws_links: リンク集の編集（全て）
@@ -147,15 +141,7 @@ ja:
       gws/system/log_setting: ログ設定
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
-      gws/notice/notification: 通知
       gws/link: リンク
-
-  gws_notification:
-    gws/notice:
-      subject: "お知らせが掲載されました"
-      text: |
-        お知らせに「%{name}」が掲載されました。
-        %{path} をブラウザで開き、内容をご確認ください。
 
   mongoid:
     models:
@@ -166,7 +152,6 @@ ja:
       gws/user: ユーザー
       gws/user_title: 役職
       gws/role: 権限/ロール
-      gws/notice: お知らせ
       gws/link: リンク集
       gws/share: 共有ファイル
       gws/history: 操作履歴
@@ -180,6 +165,14 @@ ja:
         gws/contrast:
           load_error: 読み込みに失敗しました。
           no_contrasts: 定義がありません。
+        gws/model/folder:
+          not_found_parent: 親フォルダーが存在しません。
+          found_children: 子フォルダーが存在します。
+          not_move_to_parent: 最上位フォルダーに変更することはできません。
+          not_move_to_under_other_parent: 最上位のフォルダーをまたいでフォルダーを移動することはできません。
+          not_create_same_folder: フォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
+          not_move_to_same_name_folder: 移動先にフォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
+          invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
     attributes:
       gws/model/category:
         model: モデル
@@ -202,15 +195,19 @@ ja:
         content_type: コンテンツタイプ
         resizing: リサイズ
         geo_location: 緯度・経度
+      gws/model/folder:
+        name: フォルダー名
+        depth: 階層
+        order: 並び順
+        state: 状態
+        in_basename: フォルダー名
+        in_parent: 親フォルダー
       gws/user:
         gws_main_group_ids: グループ（主）
         gws_default_group_ids: グループ（既定）
       gws/custom_group:
         name: グループ名
         order: 表示順
-      gws/notice:
-        name: タイトル
-        severity: 種別
       gws/link:
         name: タイトル
       gws/history:
@@ -406,10 +403,6 @@ ja:
         charge_tel: 担当電話
         charge_address: 担当住所
         divide_duties: 分掌事務
-      gws/addon/notice/notification:
-        message_notification: メッセージ通知
-        email_notification: メール通知
-        notification_noticed: 通知日時
       gws/contrast:
         name: 名前
         order: 並び順
@@ -455,13 +448,6 @@ ja:
     gws/addon/role:
       gws_role_ids:
         - ロールを選択します。
-    gws/notice:
-      name:
-        - タイトルを入力します。
-      severity:
-        - 種別を選択します。
-        - 「重要なお知らせ」の場合、チェックをつけます。
-        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
     gws/link:
       name:
         - タイトルを入力します。
@@ -519,16 +505,6 @@ ja:
       charge_tel: 担当電話を入力します。
       charge_address: 担当住所・電話を入力します。
       divide_duties: 事務分掌を入力します。
-    gws/addon/notice/notification:
-      message_notification:
-        - お知らせをメッセージで通知する場合、「通知する」を選択してください。
-      email_notification:
-        - お知らせをメール通知で通知する場合、「通知する」を選択してください。
-        - メールアドレスが未設定のユーザーには通知されませんのでご注意ください。
-      notification_noticed:
-        - 通知した日時を表示しています。
-        - 通知日時をクリアすることで、再度、通知が送信されるようになります。
-        - お知らせを編集後、再度、通知を送りたい場合、クリアしてください。
     gws/contrast:
       name:
         - 名前を入力します。
@@ -541,6 +517,14 @@ ja:
         - 文字色を選択します。
       color:
         - 背景色を選択します。
+    gws/model/folder:
+      name:
+        - フォルダー名を入力します。
+        - 親フォルダー名にスラッシュ区切りでサブフォルダーを作成することができます。
+      order:
+        - 並び順を入力します。
+      in_parent:
+        - 親フォルダーを選択してください。
 
   activemodel:
     models:

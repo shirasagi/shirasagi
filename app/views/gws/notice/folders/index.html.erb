@@ -1,0 +1,8 @@
+<% @index_title = proc do |item| %>
+  <%= link_to({ action: :show, id: item}, class: "title") do %>
+    <i class="material-icons md-18 md-dark title-icon">&#xE2C8;</i>
+    <%= item.name %>
+  <% end %>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

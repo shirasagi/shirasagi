@@ -39,9 +39,18 @@ class Gws::Portal::User::PortalController < ApplicationController
         gw_admin_notice.
         page(1).per(5)
 
-      @notices = Gws::Notice.site(@cur_site).and_public.
-        readable(@cur_user, site: @cur_site).
-        page(1).per(5)
+      @notices = Gws::Notice::Post.site(@cur_site).without_deleted.and_public.
+        readable(@cur_user, site: @cur_site)
+      if SS.config.gws.notice['portal_browsed_state'] == 'unread'
+        @notices = @notices.and_unread(@cur_user)
+      elsif SS.config.gws.notice['portal_browsed_state'] == 'read'
+        @notices = @notices.and_read(@cur_user)
+      elsif SS.config.gws.notice['portal_browsed_state'] == 'both'
+        @notices = @notices
+      else
+        @notices = @notices.and_unread(@cur_user)
+      end
+      @notices = @notices.page(1).per(5)
 
       @monitors = Gws::Monitor::Topic.site(@cur_site).topic.
         and_public.

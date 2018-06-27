@@ -1,0 +1,19 @@
+<dl class="see mod-gws-notice-resource-limitation">
+  <dt><%= t('gws/notice.body_size') %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t('gws/notice.individual_body_size') %></dt>
+  <dd class="depth-2"><%= number_to_human_size(@item.notice_individual_body_size_limit) %></dd>
+
+  <dt class="depth-2"><%= t('gws/notice.total_body_size') %><%= @model.tt :notice_total_body_size_limit %></dt>
+  <dd class="depth-2"><%= f.number_field :notice_total_body_size_limit_mb %> <%= t("ss.units.mega_byte") %></dd>
+
+  <dt><%= t('gws/notice.file_size') %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t('gws/notice.individual_file_size') %><%= @model.tt :notice_individual_file_size_limit %></dt>
+  <dd class="depth-2"><%= f.number_field :notice_individual_file_size_limit_mb %> <%= t("ss.units.mega_byte") %></dd>
+
+  <dt class="depth-2"><%= t('gws/notice.total_file_size') %><%= @model.tt :notice_total_file_size_limit %></dt>
+  <dd class="depth-2"><%= f.number_field :notice_total_file_size_limit_mb %> <%= t("ss.units.mega_byte") %></dd>
+</dl>

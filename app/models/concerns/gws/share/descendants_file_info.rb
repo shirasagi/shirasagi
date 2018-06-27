@@ -1,5 +1,6 @@
 module Gws::Share::DescendantsFileInfo
   extend ActiveSupport::Concern
+  extend SS::Translation
   include ActiveSupport::NumberHelper
 
   included do

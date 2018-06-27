@@ -1,0 +1,50 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+<% end %>
+
+<%
+  @list_class = proc do |item|
+    css_classes = %w(list-item)
+    if item.browsed?(@cur_user)
+      css_classes << 'read'
+    else
+      css_classes << 'unread'
+    end
+    css_classes
+  end
+%>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="user"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
+  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <% if item.folder.present? && item.folder.for_post_reader?(@cur_site, @cur_user) %>
+    <span class="folder">
+      <span class="label"><%= t('mongoid.models.gws/notice/folder') %></span>
+      <span class="folder-name"><%= item.folder.name %></span>
+    </span>
+  <% end %>
+
+  <% if attr = item.label(:severity).presence %>
+    <span class="label"><%= attr %></span>
+  <% end %>
+
+  <% if item.categories.present? %>
+    <span class="categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, url_for(action: :index, category: category.id), class: "gws-category-label", style: category_label_css(category) %>
+    <% end %>
+  </span>
+  <% end %>
+
+  <% if item.files.count > 0 %>
+    <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
+  <% end %>
+
+  <% if item.comments.count > 0 %>
+    <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
+  <% end %>
+<% end %>
+
+<%= render file: "gws/crud/index" %>
