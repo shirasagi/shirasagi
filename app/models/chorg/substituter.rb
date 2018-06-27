@@ -27,7 +27,7 @@ module Chorg::Substituter
     end
 
     def call(key, value, group_id)
-      if value.is_a?(Fixnum)
+      if value.is_a?(Integer)
         value == @from_value ? @first_to_value : value
       elsif value.is_a?(Enumerable)
         value.map { |e| e == @from_value ? @to_value : e }.flatten.uniq

@@ -128,7 +128,7 @@ module Chorg::PrimitiveRunner
     end
     source_groups.compact.each do |source_group|
       empty_attributes = {}
-      source_group.attributes.select { |_, v| v.is_a?(Fixnum) }.each { |k, v| empty_attributes[k] = v }
+      source_group.attributes.select { |_, v| v.is_a?(Integer) }.each { |k, v| empty_attributes[k] = v }
       validation_substituter.collect(source_group.attributes, empty_attributes)
       delete_group_ids << source_group.id
       inc_counter(:delete, :success)

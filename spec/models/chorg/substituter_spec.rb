@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Chorg::Substituter::IdSubstituter, dbscope: :example do
   let(:group) { cms_group }
   describe "#call" do
-    context "with Fixnum" do
+    context "with Integer" do
       let(:from) { 32_840 }
       let(:to) { 27_509 }
       subject { described_class.new(from, to) }
@@ -20,7 +20,7 @@ describe Chorg::Substituter::IdSubstituter, dbscope: :example do
       it { expect(subject.call(:key, [32_840, 53_643, 2_105], group.id)).to eq [27_509, 53_643, 2_105] }
     end
 
-    context "from Fixnum to Array" do
+    context "from Integer to Array" do
       let(:from) { 32_840 }
       let(:to) { [ 27_509, 62_033 ] }
       subject { described_class.new(from, to) }
