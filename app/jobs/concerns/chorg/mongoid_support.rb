@@ -55,11 +55,15 @@ module Chorg::MongoidSupport
       return true
     end
 
-    metadata = v.options[:metadata]
-    return false if metadata.blank?
+    if v.class == Mongoid::Fields::ForeignKey
+      options = v.association ? v.association.options : {}
+    else
+      options = v.options[:metadata] ? v.options[:metadata] : {}
+    end
+    return false if options.blank?
 
     classes = [:class_name, :elem_class].map do |k|
-      v = metadata[k]
+      v = options[k]
       v = v.constantize if v.present?
       v
     end.compact
