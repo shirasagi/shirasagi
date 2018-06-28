@@ -22,7 +22,7 @@ module Cms::GeneratorFilter::Rss
 
     begin
       @exists = true
-      response.body = render_node node
+      response.body = render_node(node) || ''
       response.content_type ||= "application/rss+xml"
     rescue StandardError => e
       @exists = false
