@@ -39,11 +39,11 @@ describe "cms_preview", type: :feature, dbscope: :example do
     let!(:node_child1) { create :category_node_node, cur_site: site, cur_node: node_root }
     let!(:node_child2) { create :category_node_node, cur_site: site, cur_node: node_root }
     let!(:node_faq_search) { create :faq_node_search, cur_site: site, cur_node: node_root }
+    let(:faq_part_search) { create(:faq_part_search, cur_site: site, cur_node: node_faq_search) }
     let(:pc_preview_path) { "#{cms_preview_path(site: site)}#{node_root.url}" }
     let(:mobile_preview_path) { "#{cms_preview_path(site: site)}#{site.mobile_location}#{node_root.url}" }
 
     before do
-      faq_part_search = create(:faq_part_search, cur_site: site, cur_node: node_faq_search)
       category_part_node = create(
         :category_part_node,
         cur_site: site,
@@ -78,6 +78,11 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes nav#category-list')
         expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
         expect(page).to have_selector('footer', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
+        expect(page).to have_css('a.preview-part', text: faq_part_search.name)
+        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.part')}']")
+        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.layout')}']")
+        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.node')}']")
+        expect(page).not_to have_xpath("//input[@value='#{Cms::Page.model_name.human}']")
       end
     end
 
@@ -91,6 +96,10 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes div#category-list')
         expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
         expect(page).to have_selector('div', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
+        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.part')}']")
+        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.layout')}']")
+        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.node')}']")
+        expect(page).not_to have_xpath("//input[@value='#{Cms::Page.model_name.human}']")
       end
     end
   end
