@@ -38,7 +38,7 @@ module Webmail::BaseFilter
     @imap_setting = @cur_user.imap_settings[params[:account].to_i]
 
     if @imap_setting
-      @redirect_path = webmail_login_failed_path
+      @redirect_path = webmail_login_failed_path(account: params[:account])
     else
       @redirect_path = webmail_account_setting_path
       @imap_setting = Webmail::ImapSetting.new
