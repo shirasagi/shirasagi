@@ -69,8 +69,10 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
         <tr class="keywords">
           <td><%= text_field_tag "item[transfers][][keyword]", transfer[:keyword], { id: nil, class: "keyword" } %></td>
           <td>
-            <%= email_field_tag "item[transfers][][email]", transfer[:email], { id: nil, class: "email" } %>
-            <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
+            <div class="input-group">
+              <%= email_field_tag "item[transfers][][email]", transfer[:email], { id: nil, class: "email" } %>
+              <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
+            </div>
           </td>
         </tr>
         <%   end %>
@@ -78,8 +80,10 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
         <tr class="keywords">
           <td><%= text_field_tag "item[transfers][][keyword]", nil, { id: nil, class: "keyword" } %></td>
           <td>
-            <%= email_field_tag "item[transfers][][email]", nil, { id: nil, class: "email" } %>
-            <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
+            <div class="input-group">
+              <%= email_field_tag "item[transfers][][email]", nil, { id: nil, class: "email" } %>
+              <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
+            </div>
           </td>
         </tr>
         <% end %>
