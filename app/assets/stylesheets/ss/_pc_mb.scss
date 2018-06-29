@@ -1518,7 +1518,7 @@ td {
   &:hover { background: #f4f4f4; }
   &:hover { background: $orange2; }
 }
-.addon-view, .search-pages, .index-search, .search-form {
+.addon-view, .search-pages, .search-form {
   &:not(.print) {
     @include box;
   }

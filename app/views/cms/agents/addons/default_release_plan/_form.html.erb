@@ -11,11 +11,23 @@
   <dd><%= f.select :default_release_plan_state, @item.default_release_plan_state_options %></dd>
 
   <dt><%= @model.t :default_release_days_after %><%= @model.tt :default_release_days_after %></dt>
-  <dd class="short"><%= f.number_field :default_release_days_after %> <span class="postfix"><%= t("ss.units.days_after") %></span></dd>
+  <dd class="short">
+    <div class="input-group" style="width: 12em;">
+      <%= f.number_field :default_release_days_after %> <span class="input-group-append"><%= t("ss.units.days_after") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :default_close_days_after %><%= @model.tt :default_close_days_after %></dt>
-  <dd class="short"><%= f.number_field :default_close_days_after %> <span class="postfix"><%= t("ss.units.days_after") %></span></dd>
+  <dd class="short">
+    <div class="input-group" style="width: 12em;">
+      <%= f.number_field :default_close_days_after %> <span class="input-group-append"><%= t("ss.units.days_after") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :close_days_before %><%= @model.tt :close_days_before %></dt>
-  <dd class="short"><%= f.number_field :close_days_before %> <span class="postfix"><%= t("ss.units.days_before") %></span></dd>
+  <dd class="short">
+    <div class="input-group" style="width: 12em;">
+      <%= f.number_field :close_days_before %> <span class="input-group-append"><%= t("ss.units.days_before") %></span>
+    </div>
+  </dd>
 </dl>

@@ -3,7 +3,7 @@
 
   <footer class="send">
     <%= f.submit t("ss.buttons.search"), name: "search", class: "search btn-primary" %>
-    <%= link_to t("ss.buttons.reset"), "./pages", class: "reset btn-default" %>
+    <%= link_to t("ss.buttons.reset"), "./pages", class: "reset btn btn-default btn-raised btn-lg" %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
       <%= f.button t("ss.buttons.save"), name: "save", class: "save btn-default" %>
     <% end %>

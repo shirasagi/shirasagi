@@ -59,19 +59,23 @@
   $("input[name='layout_ids[]']").remove();
 <% end %>
 
-<%= form_for :item, url: { action: :update }, html: { class: "index-search", multipart: true } do |f| %>
+<%= form_for :item, url: { action: :update }, html: { class: "search-pages", multipart: true } do |f| %>
 <div class="search-contents-form">
   <dl class="see">
     <dt><%= t("cms.apis.contents.keyword") %><%= tt("search_contents.html.keyword") %></dt>
     <dd>
-      <%= text_field_tag :keyword, "", value: @keyword, class: :keyword %>
-      <%= f.submit t("ss.buttons.search"), name: "search", class: "search btn" %>
+      <div class="input-group" style="width: 80%;">
+        <%= text_field_tag :keyword, "", value: @keyword, class: :keyword %>
+        <%= f.submit t("ss.buttons.search"), name: "search", class: "search btn" %>
+      </div>
     </dd>
 
     <dt><%= t("cms.apis.contents.replacement") %><%= tt("search_contents.html.replacement") %></dt>
     <dd>
-      <%= text_field_tag :replacement, "", value: @replacement, class: :replacement %>
-      <%= f.submit t("ss.buttons.replace_all"), name: "replace", class: "replace btn" %>
+      <div class="input-group" style="width: 80%;">
+        <%= text_field_tag :replacement, "", value: @replacement, class: :replacement %>
+        <%= f.submit t("ss.buttons.replace_all"), name: "replace", class: "replace btn" %>
+      </div>
     </dd>
 
     <dt><%= t("cms.apis.contents.option") %><%= tt("search_contents.html.option") %></dt>

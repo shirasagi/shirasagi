@@ -68,27 +68,27 @@
   });
 <% end %>
 
+<% render_crumb_url = proc do |url| %>
+<dd class="crumb-urls">
+  <div class="input-group">
+    <%= text_field_tag "item[parent_crumb_urls][]", url, class: :parent_crumb_urls %>
+    <%= button_tag t("ss.buttons.delete"), {type: :button, class: "delete-crumb btn"} %>
+  </div>
+</dd>
+<dd class="crumb-categories">
+  <%= select_tag('parent-crumbs', options_for_select([]), { id: nil, include_blank: t('cms.options.parent_crumb.blank'), class: 'parent-crumbs' }) %>
+</dd>
+<% end %>
+
 <dl class="see mod-cms-parent_crumbs">
   <dt><%= @model.t :parent_crumb_urls %><%= @model.tt :parent_crumb_urls %></dt>
 
   <% if @item.parent_crumb_urls.present? %>
     <% @item.parent_crumb_urls.each do |url| %>
-
-      <dd class="crumb-urls">
-        <%= text_field_tag "item[parent_crumb_urls][]", url, class: :parent_crumb_urls %>
-        <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn" } %>
-      </dd>
-      <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
-
+      <% render_crumb_url.call(url) %>
     <% end %>
   <% else %>
-
-    <dd class="crumb-urls">
-      <%= text_field_tag "item[parent_crumb_urls][]", "", class: :parent_crumb_urls %>
-      <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn" } %>
-    </dd>
-    <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
-
+    <% render_crumb_url.call("") %>
   <% end %>
 
   <dd><%= button_tag t("cms.buttons.add_crumb"), { type: :button, class: "add-crumb btn" } %></dd>

@@ -13,8 +13,10 @@
   %>
   <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
   <dd>
-    <%= f.select(:form_id, options_from_collection_for_select(ancestral_forms, :id, :name, selected: cur_form.try(:id)), include_blank: true) %>
-    <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+    <div class="input-group">
+      <%= f.select(:form_id, options_from_collection_for_select(ancestral_forms, :id, :name, selected: cur_form.try(:id)), { include_blank: true }, { style: 'flex-grow: unset;' }) %>
+      <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+    </div>
 
     <%= jquery do %>
       Cms_TemplateForm.render({

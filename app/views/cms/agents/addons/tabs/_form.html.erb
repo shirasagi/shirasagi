@@ -6,5 +6,9 @@
   <dd><%= f.number_field :limit %></dd>
 
   <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
-  <dd class="short"><%= f.number_field :new_days %> <span class="prefix"><%= t "datetime.prompts.day" %></span></dd>
+  <dd class="short">
+    <div class="input-group" style="width: 12em;">
+      <%= f.number_field :new_days %> <span class="input-group-append"><%= t "datetime.prompts.day" %></span>
+    </div>
+  </dd>
 </dl>
