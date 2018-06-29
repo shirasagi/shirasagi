@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_group, class: Gws::Group do
     name { "group-#{unique_id}" }
   end

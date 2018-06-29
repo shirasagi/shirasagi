@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :jmaxml_forecast_region_base, class: Jmaxml::ForecastRegion do
     cur_site { cms_site }
 

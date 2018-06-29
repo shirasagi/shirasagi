@@ -13,10 +13,12 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
       before do
         SS.config.replace_value_at(:recommend, :disable, false)
 
-        article_page.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        #article_page.touch
         article_page.save!
 
-        cms_page.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        #cms_page.touch
         cms_page.save!
       end
 
@@ -94,10 +96,12 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
       before do
         SS.config.replace_value_at(:recommend, :disable, true)
 
-        article_page.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        #article_page.touch
         article_page.save!
 
-        cms_page.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        #cms_page.touch
         cms_page.save!
       end
 

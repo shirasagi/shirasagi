@@ -7,7 +7,11 @@ class Webmail::LoginController < ApplicationController
   private
 
   def default_logged_in_path
-    webmail_main_path
+    if @cur_user.imap_settings.present?
+      webmail_main_path(account: @cur_user.imap_default_index)
+    else
+      webmail_account_setting_path
+    end
   end
 
   def get_params
@@ -37,6 +41,7 @@ class Webmail::LoginController < ApplicationController
     @item = SS::User.authenticate(email_or_uid, password) rescue false
     @item = nil if @item && !@item.enabled?
     @item = @item.try_switch_user || @item if @item
+    @cur_user = @item
 
     render_login @item, email_or_uid, session: true, password: password, logout_path: webmail_logout_path
   end

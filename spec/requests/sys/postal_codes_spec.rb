@@ -15,7 +15,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
   end
   before do
     Sys::PostalCodesController.allow_forgery_protection = false
-    post login_path, correct_login_params
+    post login_path, params: correct_login_params
     SS.config.replace_value_at(:env, :json_datetime_format, "%Y/%m/%d %H:%M:%S")
   end
   after do
@@ -57,7 +57,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
   describe 'POST #import' do
     context 'When item[:in_official_csv] is 0' do
       before do
-        post import_sys_postal_codes_path, {
+        post import_sys_postal_codes_path, params: {
           item: {
             in_file: file,
             in_official_csv: '0'
@@ -72,7 +72,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
     end
     context 'When item[:in_official_csv] is 1' do
       before do
-        post import_sys_postal_codes_path, {
+        post import_sys_postal_codes_path, params: {
           item: {
             in_file: file,
             in_official_csv: '1'

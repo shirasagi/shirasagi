@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :mail_page_page, class: MailPage::Page, traits: [:cms_page] do
     route "mail_page/page"
     keywords { "#{unique_id} #{unique_id}" }

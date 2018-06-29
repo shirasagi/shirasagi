@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :uploader_node_base, class: Uploader::Node::Base, traits: [:cms_node] do
     route "uploader/base"
   end

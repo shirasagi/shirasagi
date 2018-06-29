@@ -201,8 +201,8 @@ module Cms::Addon
       @search ||= begin
         cur_date = Time.zone.now
 
-        name           = search_name.present? ? { name: /#{Regexp.escape(search_name)}/ } : {}
-        filename       = search_filename.present? ? { filename: /#{Regexp.escape(search_filename)}/ } : {}
+        name           = search_name.present? ? { name: /#{::Regexp.escape(search_name)}/ } : {}
+        filename       = search_filename.present? ? { filename: /#{::Regexp.escape(search_filename)}/ } : {}
         keyword        = build_search_keyword_criteria
         categories     = search_category_ids.present? ? { category_ids: search_category_ids } : {}
         groups         = search_group_ids.present? ? { group_ids: search_group_ids } : {}
@@ -308,7 +308,7 @@ module Cms::Addon
 
     def build_search_keyword_criteria
       if search_keyword.present?
-        { "$or" => KEYWORD_FIELDS.map { |field| { field => /#{Regexp.escape(search_keyword)}/ } } }
+        { "$or" => KEYWORD_FIELDS.map { |field| { field => /#{::Regexp.escape(search_keyword)}/ } } }
       else
         {}
       end
@@ -316,7 +316,7 @@ module Cms::Addon
 
     def build_search_nodes_criteria
       if search_node_ids.present?
-        { filename: /^#{search_nodes.map { |node| Regexp.escape("#{node.filename}/") }.join("|")}/ }
+        { filename: /^#{search_nodes.map { |node| ::Regexp.escape("#{node.filename}/") }.join("|")}/ }
       else
         {}
       end

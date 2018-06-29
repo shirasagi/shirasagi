@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_form, class: Cms::Form do
     cur_user { cms_user }
     name { unique_id }

@@ -48,6 +48,7 @@ module SS::Model::Column
     end
 
     def build_column_values(hash)
+      hash = hash.to_unsafe_h if hash.respond_to?(:to_unsafe_h)
       hash.map do |key, value|
         column = all.find(key) rescue nil
         next nil if column.blank?

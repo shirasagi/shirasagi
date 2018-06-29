@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_loop_setting, class: Cms::LoopSetting do
     transient do
       site nil

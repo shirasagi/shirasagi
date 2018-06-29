@@ -1,10 +1,12 @@
 require 'spec_helper'
 
 describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true do
-  let(:user) { create :webmail_user }
+  let(:site) { create :gws_group }
+  let(:user) { create :webmail_user, group_ids: [site.id] }
+  let(:role) { create :gws_role_admin, cur_site: site, cur_user: user }
   let(:item_title) { "rspec-#{unique_id}" }
   let(:index_path) { webmail_mails_path(account: 0) }
-  let(:role) { create :gws_role_admin }
+  let(:messages_path) { gws_memo_messages_path(site: site.id) }
 
   context "with auth" do
     before { login_user(user) }
@@ -26,15 +28,25 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true d
       sleep 1
       expect(current_path).to eq index_path
 
-      # gws_message
+      if Webmail::Mailer.delivery_method == :test
+        pending "delivery_method is :test"
+      end
+
       click_link item_title
+
+      # gws_message
       click_link I18n.t('webmail.links.forward_gws_message')
 
-      first('.gws-addon-member .ajax-box').click
+      first('.gws-addon-memo-member .ajax-box').click
       wait_for_cbox
 
       click_on user.name
-      click_button I18n.t('ss.buttons.send')
+      page.accept_alert do
+        click_button I18n.t('ss.buttons.send')
+      end
+
+      expect(current_path).to eq messages_path
+      click_link item_title
     end
   end
 end

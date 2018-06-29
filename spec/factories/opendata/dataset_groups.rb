@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :opendata_dataset_group, class: Opendata::DatasetGroup do
     transient do
       categories nil

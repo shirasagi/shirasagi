@@ -2,7 +2,7 @@ class Gws::Attendance::Record
   extend SS::Translation
   include SS::Document
 
-  embedded_in :time_card
+  embedded_in :time_card, class_name: 'Gws::Attendance::TimeCard'
 
   cattr_accessor(:punchable_field_names)
 

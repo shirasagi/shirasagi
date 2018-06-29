@@ -23,7 +23,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         'item[email]' => admin_user.email,
         'item[password]' => admin_user.in_password
       }
-      post sns_login_path(format: :json), params
+      post sns_login_path(format: :json), params: params
     end
 
     describe "GET /pages.json" do
@@ -45,7 +45,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         params = { 'authenticity_token' => @auth_token,
                    'item[name]' => '記事タイトル',
                    'item[basename]' => "filename#{rand(0xffffffff).to_s(36)}" }
-        post index_path, params
+        post index_path, params: params
         expect(response.status).to eq 201
         page = JSON.parse(response.body)
         expect(page["_id"]).to eq 1
@@ -229,7 +229,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
 
       # login
       params = { 'authenticity_token' => @auth_token, 'item[email]' => user.email, 'item[password]' => user.in_password }
-      post sns_login_path(format: :json), params
+      post sns_login_path(format: :json), params: params
     end
 
     describe "GET /page/:id/lock.json" do

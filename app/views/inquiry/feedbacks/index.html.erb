@@ -7,10 +7,10 @@
   end
 %>
 <% @tap_menu = proc do |item| %>
-  <%= link_to t('ss.links.show'), { action: :show, id: CGI.escape(item.id) }.merge(s: params[:s]) %>
+  <%= link_to t('ss.links.show'), { action: :show, id: CGI.escape(item.id) }.merge(s: params.to_unsafe_h[:s]) %>
 <% end %>
 <% @index_title = proc do |item| %>
-  <%= link_to item.source_name, { action: :show, id: CGI.escape(item.id) }.merge(s: params[:s]), class: "title" %>
+  <%= link_to item.source_name, { action: :show, id: CGI.escape(item.id) }.merge(s: params.to_unsafe_h[:s]), class: "title" %>
 <% end %>
 <% @index_meta = proc do |item| %>
   <span class="filename"><%= item.id %></span>

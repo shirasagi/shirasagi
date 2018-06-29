@@ -28,11 +28,12 @@ describe Rdf::PropertyExpander, dbscope: :example do
     it do
       expect(subject).not_to be_empty
       expect(subject.length).to be > 5
-      expect(subject[0]).to include(:ids => include(10),
-                                    :names => include("種別"),
-                                    :properties => include("ic:種別"),
-                                    :classes => include(nil),
-                                    :comments => include)
+      expect(subject.select{ |hash| hash[:names] == ["種別"] }.first).to include(
+        :names => include("種別"),
+        :properties => include("ic:種別"),
+        :classes => include(nil),
+        :comments => include('様々な事物の種類の表記')
+      )
     end
   end
 end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_column_file_upload, class: Cms::Column::FileUpload do
     cur_site { cms_site }
 

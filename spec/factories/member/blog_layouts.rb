@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :member_blog_layout, class: Member::BlogLayout do
     cur_site { cms_site }
     name { unique_id }

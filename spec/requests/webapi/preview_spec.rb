@@ -30,7 +30,7 @@ describe "webapi", dbscope: :example, type: :request do
   end
 
   context "with login" do
-    before { post login_path, correct_login_params }
+    before { post login_path, params: correct_login_params }
 
     context "preview" do
       describe "GET /.s{site}/preview/{path}" do
@@ -45,7 +45,7 @@ describe "webapi", dbscope: :example, type: :request do
       describe "POST /.s{site}/preview/{path}" do
         it "200" do
           params = { preview_item: { id: item.id } }
-          post form_preview_path, params
+          post form_preview_path, params: params
           expect(response.status).to eq 200
         end
 
@@ -57,7 +57,7 @@ describe "webapi", dbscope: :example, type: :request do
             body_parts: %w(パーツ１ パーツ２ パーツ３),
           } }
 
-          post form_preview_path, params
+          post form_preview_path, params: params
           expect(response.status).to eq 200
 
           expect(response.body.include?('パーツ１')).to be_truthy
@@ -70,7 +70,7 @@ describe "webapi", dbscope: :example, type: :request do
 
         #it "400" do
         #  params = {}
-        #  post form_preview_path, params
+        #  post form_preview_path, params: params
         #  expect(response.status).to eq 400
         #end
       end

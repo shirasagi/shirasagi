@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_file, class: Cms::File do
     cur_user { cms_user }
     model { "cms/file" }

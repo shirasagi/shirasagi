@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ckan_node_page, class: Ckan::Node::Page do
     site_id { ss_site.id }
     name { unique_id }

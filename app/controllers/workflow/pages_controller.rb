@@ -248,6 +248,7 @@ class Workflow::PagesController < ApplicationController
       copy = @item.new_clone
       copy.master = @item
       copy.save
+      @item.reload
     end
 
     @items = @item.branches

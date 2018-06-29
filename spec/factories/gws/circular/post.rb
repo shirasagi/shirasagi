@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_circular_post, class: Gws::Circular::Post do
     cur_site { gws_site }
     cur_user { gws_user }

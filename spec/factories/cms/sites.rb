@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_site, class: Cms::Site do
     name "Site"
     host "test"

@@ -77,7 +77,7 @@ class Uploader::File
 
   def link
     return path.sub(/.*?\/_\//, "/") if Fs.mode == :grid_fs
-    "/sites#{path.sub(/^#{Regexp.escape(SS::Site.root)}/, '')}"
+    "/sites#{path.sub(/^#{::Regexp.escape(SS::Site.root)}/, '')}"
   end
 
   def filename
@@ -206,7 +206,7 @@ class Uploader::File
       return items if params.blank?
 
       if params[:keyword].present?
-        items = items.select { |item| item.basename =~ /#{Regexp.escape(params[:keyword])}/i }
+        items = items.select { |item| item.basename =~ /#{::Regexp.escape(params[:keyword])}/i }
       end
       items
     end

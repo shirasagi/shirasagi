@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :workflow_route, class: Workflow::Route do
     name { unique_id }
     group_ids { [ cms_group.id ] }

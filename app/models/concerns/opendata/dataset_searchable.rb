@@ -53,7 +53,7 @@ module Opendata::DatasetSearchable
       return all if params.blank? || params[:name].blank?
 
       if params[:modal].present?
-        words = params[:name].split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i }
+        words = params[:name].split(/[\s　]+/).uniq.compact.map { |w| /#{::Regexp.escape(w)}/i }
         all.all_in name: words
       else
         all.keyword_in params[:keyword], :name

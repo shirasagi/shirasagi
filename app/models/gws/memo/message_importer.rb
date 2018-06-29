@@ -39,7 +39,7 @@ class Gws::Memo::MessageImporter
 
     item = Gws::Memo::Message.new
     data.each do |k, v|
-      next if %w(user members to_members cc_members bcc_members files).include?(k)
+      next if %w(user members to_members cc_members bcc_members files list_id).include?(k)
       item[k] = v
     end
 

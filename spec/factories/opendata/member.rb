@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :opendata_member, class: Opendata::Member do
     cur_site { cms_site }
     name { unique_id }

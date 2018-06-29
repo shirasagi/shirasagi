@@ -618,7 +618,7 @@ class @Mobile_Size_Checker
 
         if Mobile_Size_Checker.error.length > 0
           for err in Mobile_Size_Checker.error
-            result.append("<p>#{err}</p>")
+            result.append('<p class="error">' + err + '</p>')
 
         else
           result.append("<p>" + Mobile_Size_Checker.message["mobile_check"] + "</p>")
@@ -675,10 +675,8 @@ class @Mobile_Size_Checker
     mobile_size = Mobile_Size_Checker.mobile_size
     size = Mobile_Size_Checker.get_str_byte(html)
     if mobile_size < size
-      err_str = "<p class=\"error\">"
-      err_str += Mobile_Size_Checker.message["SizeCheckError"]
+      err_str = Mobile_Size_Checker.message["SizeCheckError"]
       err_str += "(本文サイズ：#{parseInt(size/1024)}KB"
-      err_str += "</p>"
 
       Mobile_Size_Checker.error = [err_str]
 
@@ -742,7 +740,7 @@ class @Mobile_Size_Checker
               msg: err
               detail: err
             })
-            result.append("<p>#{err}</p>")
+            result.append('<p class="error">' + err + '</p>')
 
           Syntax_Checker.pushError(errors)
           Mobile_Size_Checker.result_close(result)

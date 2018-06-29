@@ -4,6 +4,7 @@ class Uploader::FilesController < ApplicationController
 
   model Uploader::File
 
+  before_action :set_format
   before_action :create_folder
   before_action :redirect_from_index
   before_action :set_item
@@ -11,6 +12,10 @@ class Uploader::FilesController < ApplicationController
   navi_view "uploader/main/navi"
 
   private
+
+  def set_format
+    request.formats = [params[:format] || :html]
+  end
 
   def create_folder
     return if @model.file(@cur_node.path)

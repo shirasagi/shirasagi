@@ -29,7 +29,7 @@ module Webmail::Imap
         self.conn = Net::IMAP.new conf[:host], conf[:options]
         conn.authenticate conf[:auth_type], conf[:account], conf[:password]
         return true
-      rescue SocketError, Net::IMAP::NoResponseError, Errno::ECONNREFUSED => e
+      rescue SocketError, Net::IMAP::Error, Errno::ECONNREFUSED => e
         self.error = e.to_s
       end
       false

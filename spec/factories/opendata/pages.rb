@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :opendata_dataset, class: Opendata::Dataset, traits: [:cms_page] do
     route "opendata/dataset"
     text "aaaa\naaaa"

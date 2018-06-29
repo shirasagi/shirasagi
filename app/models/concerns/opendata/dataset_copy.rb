@@ -7,7 +7,7 @@ module Opendata::DatasetCopy
 
   def cloned_name?
     prefix = I18n.t("workflow.cloned_name_prefix")
-    name =~ /^\[#{Regexp.escape(prefix)}\]/
+    name =~ /^\[#{::Regexp.escape(prefix)}\]/
   end
 
   def new_clone(attributes = {})

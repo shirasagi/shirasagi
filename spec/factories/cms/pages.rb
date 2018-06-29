@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   trait :cms_page do
     cur_site { cms_site }
     cur_user { cms_user }

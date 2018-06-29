@@ -48,6 +48,7 @@ class Cms::Form
   end
 
   def build_column_values(hash)
+    hash = hash.to_unsafe_h if hash.respond_to?(:to_unsafe_h)
     hash.map do |key, value|
       column = columns.find(key) rescue nil
       next nil if column.blank?

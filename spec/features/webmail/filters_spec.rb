@@ -15,7 +15,7 @@ describe "webmail_filters", type: :feature, dbscope: :example, imap: true do
       click_link I18n.t('ss.links.new')
       within "form#item-form" do
         fill_in "item[name]", with: item_title
-        fill_in "item[from]", with: item_title
+        fill_in "item[conditions][][value]", with: item_title
         select I18n.t('webmail.box.inbox'), from: "item[mailbox]"
         #find("option[value='INBOX']").select_option
       end

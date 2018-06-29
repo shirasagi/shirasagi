@@ -22,7 +22,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
 
   def category_ids
     return category_criteria.pluck(:id) + [nil] if @category.blank?
-    ids = category_criteria.where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
+    ids = category_criteria.where(name: /^#{::Regexp.escape(@category.name)}\//).pluck(:id)
     ids << @category.id
   end
 

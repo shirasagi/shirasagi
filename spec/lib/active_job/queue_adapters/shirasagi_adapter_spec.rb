@@ -15,7 +15,7 @@ describe ActiveJob::QueueAdapters::ShirasagiAdapter, dbscope: :example do
     let(:job) { SS::ExampleJob.new }
 
     it do
-      expect { described_class.enqueue(job) }.to change { Job::Task.count }.by(1)
+      expect { described_class.new.enqueue(job) }.to change { Job::Task.count }.by(1)
     end
   end
 
@@ -24,7 +24,7 @@ describe ActiveJob::QueueAdapters::ShirasagiAdapter, dbscope: :example do
     let(:timestamp) { Time.zone.now }
 
     it do
-      expect { described_class.enqueue_at(job, timestamp) }.to change { Job::Task.count }.by(1)
+      expect { described_class.new.enqueue_at(job, timestamp) }.to change { Job::Task.count }.by(1)
     end
   end
 
@@ -42,11 +42,11 @@ describe ActiveJob::QueueAdapters::ShirasagiAdapter, dbscope: :example do
     end
 
     before do
-      described_class.enqueue(job1)
+      described_class.new.enqueue(job1)
     end
 
     it do
-      expect { described_class.enqueue(job2) }.to raise_error Job::SizeLimitExceededError
+      expect { described_class.new.enqueue(job2) }.to raise_error Job::SizeLimitExceededError
     end
   end
 end

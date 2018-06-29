@@ -55,11 +55,15 @@ module Chorg::MongoidSupport
       return true
     end
 
-    metadata = v.options[:metadata]
-    return false if metadata.blank?
+    if v.class == Mongoid::Fields::ForeignKey
+      options = v.association ? v.association.options : {}
+    else
+      options = v.options[:metadata] ? v.options[:metadata] : {}
+    end
+    return false if options.blank?
 
     classes = [:class_name, :elem_class].map do |k|
-      v = metadata[k]
+      v = options[k]
       v = v.constantize if v.present?
       v
     end.compact
@@ -67,7 +71,7 @@ module Chorg::MongoidSupport
   end
 
   def build_exclude_fields(defs)
-    @exclude_fields = defs.map { |e| e.start_with?("/") && e.end_with?("/") ? /#{Regexp.escape(e[1..-2])}/ : e }.freeze
+    @exclude_fields = defs.map { |e| e.start_with?("/") && e.end_with?("/") ? /#{::Regexp.escape(e[1..-2])}/ : e }.freeze
   end
 
   def updatable_field?(k, v)
@@ -75,7 +79,7 @@ module Chorg::MongoidSupport
     return false unless String == field_type
 
     @exclude_fields.each do |filter|
-      if filter.is_a?(Regexp)
+      if filter.is_a?(::Regexp)
         return false if filter =~ k
       elsif k == filter
         return false

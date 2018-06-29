@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_share_file, class: Gws::Share::File do
     association :folder, factory: :gws_share_folder
     cur_site { gws_site }

@@ -21,7 +21,7 @@ module Fs::GridFs
     end
 
     def path_filter(path)
-      patt = Regexp.escape(Rails.root.to_s)
+      patt = ::Regexp.escape(Rails.root.to_s)
       path.sub(/^#{patt}/, "").sub(/^\//, "")
     end
 
@@ -40,7 +40,7 @@ module Fs::GridFs
 
     def directory?(path)
       return false if file?(path)
-      Mongoid::GridFs.find(filename: /#{Regexp.escape(path_filter(path))}/) != nil
+      Mongoid::GridFs.find(filename: /#{::Regexp.escape(path_filter(path))}/) != nil
     end
 
     def read(path)
@@ -93,7 +93,7 @@ module Fs::GridFs
       dest = path_filter(dest)
 
       count = 0
-      Mongoid::GridFs.file_model.where(filename: /^#{Regexp.escape(src)}(\/.*|$)/).each do |fs|
+      Mongoid::GridFs.file_model.where(filename: /^#{::Regexp.escape(src)}(\/.*|$)/).each do |fs|
         count += 1
         fs.filename = fs.filename.sub(src, dest)
         fs.save
@@ -104,14 +104,14 @@ module Fs::GridFs
 
     def rm_rf(path)
       path0 = path_filter(path)
-      path0 = Regexp.escape(path0)
+      path0 = ::Regexp.escape(path0)
       Mongoid::GridFs.file_model.where(filename: /^#{path0}(\/.*|$)/).destroy
       [ path ]
     end
 
     def glob(path)
       path = path_filter(path)
-      path = Regexp.escape(path)
+      path = ::Regexp.escape(path)
       path = path.gsub('\\*\\*/', "([^/]*\/)*")
       path = path.gsub('\\*', ".*")
       Mongoid::GridFs.file_model.where(filename: /^#{path}$/).map { |fs| fs.filename }

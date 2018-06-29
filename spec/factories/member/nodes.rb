@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :member_node_login, class: Member::Node::Login, traits: [:cms_node] do
     cur_site { cms_site }
     route "member/login"

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :rdf_prop, class: Rdf::Prop do
     transient do
       vocab nil

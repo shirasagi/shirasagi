@@ -222,7 +222,7 @@ class Gws::Share::Folder
   end
 
   def validate_children
-    if name.present? && dependant_scope.where(name: /^#{Regexp.escape(name)}\//).exists?
+    if name.present? && dependant_scope.where(name: /^#{::Regexp.escape(name)}\//).exists?
       errors.add :base, :found_children
       return false
     end

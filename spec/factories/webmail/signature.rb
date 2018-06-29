@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :webmail_signature, class: Webmail::Signature do
     cur_user { ss_user }
 

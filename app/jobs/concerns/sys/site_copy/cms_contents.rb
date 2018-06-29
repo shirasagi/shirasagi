@@ -45,20 +45,21 @@ module Sys::SiteCopy::CmsContents
   end
 
   def reference_class(name, field)
-    metadata = field.metadata
-    return nil if metadata.blank?
+    metadata = field.options[:metadata]
+    association = field.association
+    return nil if metadata.blank? && association.blank?
 
     if array_field?(name, field)
       klass = metadata[:elem_class]
     else
-      klass = metadata.try(:class_name)
+      klass = association.try(:class_name)
     end
     klass = klass.constantize if klass.is_a?(String)
     klass
   end
 
   def on_copy(name, field)
-    metadata = field.metadata
+    metadata = field.options[:metadata]
     return nil if metadata.blank?
 
     metadata[:on_copy]

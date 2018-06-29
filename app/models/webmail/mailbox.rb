@@ -61,7 +61,7 @@ class Webmail::Mailbox
     list.each do |src, dst|
       next unless name =~ /^#{src}(\.|$)/
       dir = src.include?('.') ? src.sub(/[^.]+$/, '') : ''
-      name = dir + name.sub(/^#{Regexp.escape(src)}(\.|$)/, dst + '\\1')
+      name = dir + name.sub(/^#{::Regexp.escape(src)}(\.|$)/, dst + '\\1')
     end
     name
   end

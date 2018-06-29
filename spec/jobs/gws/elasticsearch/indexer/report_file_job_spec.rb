@@ -17,7 +17,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, tmpdir: 
   end
 
   before do
-    stub_request(:any, /#{Regexp.escape(es_host)}/).to_return do |request|
+    stub_request(:any, /#{::Regexp.escape(es_host)}/).to_return do |request|
       # examine request later
       requests << request.as_json.dup
       { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }

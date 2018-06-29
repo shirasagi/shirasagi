@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :job_log, class: Job::Log do
     transient do
       job nil

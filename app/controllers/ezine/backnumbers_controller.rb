@@ -11,6 +11,6 @@ class Ezine::BacknumbersController < ApplicationController
 
   def index
     # TODO:
-    render nothing: true
+    head :ok
   end
 end

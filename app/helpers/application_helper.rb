@@ -33,7 +33,7 @@ module ApplicationHelper
     current = @cur_path.sub(/\?.*/, "")
     return nil if current.delete("/").blank?
     return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-    return :current if current =~ /^#{Regexp.escape(url)}(\/|\?|$)/
+    return :current if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
     nil
   end
 

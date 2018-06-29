@@ -34,14 +34,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on "選択"
 
         within ".ms-container" do
-          find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-          find("li.ms-elem-selectable", text: /#{Regexp.escape(user2.uid)}/).click
+          find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
+          find("li.ms-elem-selectable", text: /#{::Regexp.escape(user2.uid)}/).click
         end
 
         fill_in "workflow[comment]", with: workflow_comment
         click_on "申請"
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -65,7 +65,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on "承認"
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -91,7 +91,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on "承認"
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment2)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id

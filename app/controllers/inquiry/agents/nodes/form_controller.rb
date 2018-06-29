@@ -43,11 +43,15 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @data = {}
     @to = [@cur_node.notice_email]
     @columns.each do |column|
-      param = params[:item].try(:[], column.id.to_s)
+      param = params.to_unsafe_h[:item].try(:[], column.id.to_s)
       if column.input_type == "upload_file" &&
          !param.blank? &&
          !param.kind_of?(ActionDispatch::Http::UploadedFile)
-        param = SS::File.with(client: Inquiry::Answer.client_name).find(param)
+
+        client_name = Inquiry::Answer.persistence_context.send(:client_name)
+        param = SS::File.with(client: client_name) do |model|
+          break model.find(param)
+        end
       end
       @items << [column, param]
       @data[column.id] = [param]

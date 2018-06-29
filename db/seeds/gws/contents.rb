@@ -9,7 +9,7 @@ end
 
 def g(name)
   @groups_hash ||= {}
-  @groups_hash[name.to_s] ||= Gws::Group.where(name: /\/#{Regexp.escape(name)}$/).first
+  @groups_hash[name.to_s] ||= Gws::Group.where(name: /\/#{::Regexp.escape(name)}$/).first
 end
 
 @users = %w[admin user1 user2 user3 user4 user5].map { |uid| u(uid) }

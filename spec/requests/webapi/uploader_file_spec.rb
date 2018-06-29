@@ -43,7 +43,7 @@ describe "webapi", dbscope: :example, type: :request do
   end
 
   context "with login" do
-    before { post login_path, correct_login_params }
+    before { post login_path, params: correct_login_params }
 
     context "upload file" do
       describe "POST /.s{site}/uploader{cid}/files/{filename}?do=new_files&format=json" do
@@ -56,13 +56,13 @@ describe "webapi", dbscope: :example, type: :request do
               ]
             }
           }
-          post upload_file_path, correct_upload_file_params
+          post upload_file_path, params: correct_upload_file_params
           expect(response.status).to eq 201
         end
 
         it "400" do
           params = {}
-          post upload_file_path, params
+          post upload_file_path, params: params
           expect(response.status).to eq 422
           expect(response.body).to include I18n.t('errors.messages.set_filename')
         end
@@ -84,11 +84,11 @@ describe "webapi", dbscope: :example, type: :request do
               ]
             }
           }
-          post upload_file_path, correct_upload_file_params
+          post upload_file_path, params: correct_upload_file_params
           expect(response.status).to eq 201
-          post upload_file_path, correct_upload_file_params
+          post upload_file_path, params: correct_upload_file_params
           expect(response.status).to eq 201
-          post upload_file_path, invalid_upload_file_params
+          post upload_file_path, params: invalid_upload_file_params
           expect(response.status).to eq 422
         end
       end
@@ -108,7 +108,7 @@ describe "webapi", dbscope: :example, type: :request do
             ]
           }
         }
-        post upload_file_path, correct_upload_file_params
+        post upload_file_path, params: correct_upload_file_params
         expect(response.status).to eq 201
 
         edit_uploaded_file_params = {
@@ -119,7 +119,7 @@ describe "webapi", dbscope: :example, type: :request do
             ]
           }
         }
-        put edit_uploaded_file_path, edit_uploaded_file_params
+        put edit_uploaded_file_path, params: edit_uploaded_file_params
         expect(response.status).to eq 204
       end
 
@@ -132,13 +132,13 @@ describe "webapi", dbscope: :example, type: :request do
             ]
           }
         }
-        put invalid_uploaded_file_path, edit_uploaded_file_params
+        put invalid_uploaded_file_path, params: edit_uploaded_file_params
         expect(response.status).to eq 404
       end
 
       it "422" do
         params = {}
-        post upload_file_path, params
+        post upload_file_path, params: params
         expect(response.status).to eq 422
         expect(response.body).to include I18n.t('errors.messages.set_filename')
       end
@@ -158,7 +158,7 @@ describe "webapi", dbscope: :example, type: :request do
             ]
           }
         }
-        post upload_file_path, correct_upload_file_params
+        post upload_file_path, params: correct_upload_file_params
         expect(response.status).to eq 201
 
         delete destroy_uploaded_file_path
@@ -180,7 +180,7 @@ describe "webapi", dbscope: :example, type: :request do
             ]
           }
         }
-        post upload_file_path, correct_upload_file_params
+        post upload_file_path, params: correct_upload_file_params
         expect(response.status).to eq 201
 
         get index_uploaded_file_path

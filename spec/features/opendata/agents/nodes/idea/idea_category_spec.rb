@@ -84,7 +84,8 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
       node_idea.show_point = 'hide'
       node_idea.save!
 
-      page_idea.touch
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # page_idea.touch
       page_idea.save!
     end
 
@@ -107,7 +108,8 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
       node_idea.show_tabs = 'released'
       node_idea.save!
 
-      page_idea.touch
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # page_idea.touch
       page_idea.save!
     end
 
@@ -129,7 +131,8 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
       node_idea.tab_titles = { 'released' => 'アイデア一覧' }
       node_idea.save!
 
-      page_idea.touch
+      # https://jira.mongodb.org/browse/MONGOID-4544
+      # page_idea.touch
       page_idea.save!
     end
 

@@ -127,7 +127,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(member.sex).to eq sex
       expect(member.birthday).to eq birthday
 
-      mail.body.raw_source =~ /(#{Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
+      mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
       expect(url).not_to be_nil
       visit url
@@ -331,7 +331,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.raw_source).to include(node_registration.reset_password_lower_text)
       expect(mail.body.raw_source).to include(node_registration.reset_password_signature)
 
-      mail.body.raw_source =~ /(#{Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
+      mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
       expect(url).not_to be_nil
       visit url

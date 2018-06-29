@@ -2,7 +2,7 @@ module Gws::Schedule::PlanHelper
   extend ActiveSupport::Concern
 
   def search_query
-    params.select { |k, v| k == 's' }.to_query
+    params.to_unsafe_h.select { |k, v| k == 's' }.to_query
   end
 
   def term(item)

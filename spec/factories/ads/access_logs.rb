@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ads_access_log, class: Ads::AccessLog do
     cur_site { cms_site }
     link_url { "http://example.jp/#{unique_id}" }

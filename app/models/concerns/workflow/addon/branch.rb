@@ -28,12 +28,12 @@ module Workflow::Addon
 
     def cloned_name?
       prefix = I18n.t("workflow.cloned_name_prefix")
-      name =~ /^\[#{Regexp.escape(prefix)}\]/
+      name =~ /^\[#{::Regexp.escape(prefix)}\]/
     end
 
     def new_clone(attributes = {})
       attributes = self.attributes.merge(attributes).select { |k| self.fields.keys.include?(k) }
-      self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
+      self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
         attributes.delete(n)
       end
 
@@ -117,11 +117,12 @@ module Workflow::Addon
       return unless in_branch
 
       run_callbacks(:merge_branch) do
+        self.reload
         attributes = Hash[in_branch.attributes]
         attributes.delete("_id")
         attributes.delete("filename")
         attributes.select! { |k| self.fields.keys.include?(k) }
-        self.fields.select { |n, v| (v.metadata && v.metadata[:branch] == false) }.each do |n, v|
+        self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
           attributes.delete(n)
         end
 

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ezine_column, class: Ezine::Column do
     state "public"
     required "required"

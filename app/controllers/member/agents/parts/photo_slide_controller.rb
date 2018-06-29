@@ -26,7 +26,7 @@ class Member::Agents::Parts::PhotoSlideController < ApplicationController
     end
 
     @node = @cur_part.parent
-    return render nothing: true unless @node
+    return head :ok unless @node
 
     @items = Member::Photo.site(@cur_site).
       node(@node).

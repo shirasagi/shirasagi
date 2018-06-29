@@ -8,7 +8,7 @@ module Cms::PublicFilter::ConditionalTag
       " (?<cond>[^(]*)\\('?\\/?(?<path>[^')]*)'?\\) ?\\}",
       "(?<data>[^#]*(\\#\\{ ?else?if[^#]*|\\#\\{ ?else ?\\}[^#]*)*)\\#\\{ ?end(|if)? ?\\})"
     ].join
-    Regexp.compile(template)
+    ::Regexp.compile(template)
   end
 
   def render_conditional_tag(matchdata)
@@ -27,12 +27,12 @@ module Cms::PublicFilter::ConditionalTag
       " (?<cond>[^(]*)\\('?\\/?(?<path>[^')]*)'?\\) ?\\}",
       "(?<data>[^#]*)(\\#\\{ ?else?if[^}]*\\}|\\#\\{ ?else ?\\})"
     ].join
-    Regexp.compile(template)
+    ::Regexp.compile(template)
   end
 
   def render_condition_if(matchdata)
     if matchdata[:template] =~ conditional_tag_data
-      data = Regexp.last_match[:data]
+      data = ::Regexp.last_match[:data]
     else
       data = matchdata[:data]
     end
@@ -42,10 +42,10 @@ module Cms::PublicFilter::ConditionalTag
   def render_condition_elsif(parent_matchdata)
     if parent_matchdata[:template] =~ conditional_tag_template('elsif') ||
        parent_matchdata[:template] =~ conditional_tag_template('elseif')
-      matchdata = Regexp.last_match
+      matchdata = ::Regexp.last_match
       if matchdata[:template] =~ conditional_tag_data('elsif') ||
          matchdata[:template] =~ conditional_tag_data('elseif')
-        data = Regexp.last_match[:data]
+        data = ::Regexp.last_match[:data]
       else
         data = matchdata[:data]
       end
@@ -53,7 +53,7 @@ module Cms::PublicFilter::ConditionalTag
       return @data if @data
       if "#{matchdata[:data]}\#\{end(|if)?\}" =~ conditional_tag_template('elsif') ||
          "#{matchdata[:data]}\#\{end(|if)?\}" =~ conditional_tag_template('elseif')
-        render_condition_elsif(Regexp.last_match)
+        render_condition_elsif(::Regexp.last_match)
         return @data if @data
       end
     end
@@ -62,7 +62,7 @@ module Cms::PublicFilter::ConditionalTag
 
   def render_condition_else(matchdata)
     if matchdata[:template] =~ /\#\{ ?else ?\}(?<data>[^#]*)\#\{ ?end(|if)? ?\}/
-      @data = Regexp.last_match[:data]
+      @data = ::Regexp.last_match[:data]
     else
       @data = ''
     end

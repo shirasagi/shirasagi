@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_column_select, class: Cms::Column::Select do
     cur_site { cms_site }
 

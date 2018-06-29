@@ -26,7 +26,7 @@ describe "webapi body_layout", dbscope: :example, type: :request do
   end
 
   context "with login" do
-    before { post login_path, correct_login_params }
+    before { post login_path, params: correct_login_params }
 
     describe "GET /.s{site}/cms/body_layouts/{id}.json" do
       it "200" do

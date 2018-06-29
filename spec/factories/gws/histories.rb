@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_history_model, class: Gws::History do
     session_id { unique_id }
     request_id { unique_id }

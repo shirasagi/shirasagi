@@ -10,7 +10,7 @@ class Cms::Group
   permit_params :cms_role_ids
 
   default_scope -> { active }
-  scope :site, ->(site) { self.in(name: site.groups.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ }) }
+  scope :site, ->(site) { self.in(name: site.groups.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ }) }
 
   validate :validate_sites, if: ->{ cur_site.present? }
 
@@ -23,7 +23,7 @@ class Cms::Group
   def validate_sites
     return if cur_site.group_ids.index(id)
 
-    cond = cur_site.groups.map { |group| name =~ /^#{Regexp.escape(group.name)}\// }.compact
+    cond = cur_site.groups.map { |group| name =~ /^#{::Regexp.escape(group.name)}\// }.compact
     self.errors.add :name, :not_a_child_group if cond.blank?
   end
 end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :webmail_address, class: Webmail::Address do
     cur_user { ss_user }
 

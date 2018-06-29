@@ -1,6 +1,6 @@
 <%
 
-return render(text: "") if @item.backups.size == 0
+return render(plain: "") if @item.backups.size == 0
 source = ERB::Util.url_encode(request.path)
 before = @item.before_backup || @item.backups.last
 

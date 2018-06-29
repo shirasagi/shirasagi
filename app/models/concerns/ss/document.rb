@@ -29,7 +29,7 @@ module SS::Document
       method = options[:method].presence || 'and'
       operator = method == 'and' ? "$and" : "$or"
 
-      words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i } if words.is_a?(String)
+      words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{::Regexp.escape(w)}/i } if words.is_a?(String)
       words = words[0..4]
       cond  = words.map do |word|
         { "$or" => fields.map { |field| { field => word } } }
@@ -37,7 +37,7 @@ module SS::Document
       where(operator => cond)
     }
     scope :search_text, ->(words) {
-      words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i } if words.is_a?(String)
+      words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{::Regexp.escape(w)}/i } if words.is_a?(String)
       if self.class_variable_get(:@@_text_index_fields).present?
         all_in text_index: words
       else
@@ -192,7 +192,7 @@ module SS::Document
       return 0 unless Mongoid::Criteria.new(self).exists?
       map = %(function(){ emit(1, Object.bsonsize(this)); })
       reduce = %(function(k, v){ if (0 == v.length) return 0; return Array.sum(v); })
-      data = map_reduce(map, reduce).out(inline: true).first.try(:[], :value).to_i || 0
+      data = map_reduce(map, reduce).out(inline: 1).first.try(:[], :value).to_i || 0
     end
   end
 

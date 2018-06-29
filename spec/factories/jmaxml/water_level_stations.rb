@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :jmaxml_water_level_station_base, class: Jmaxml::WaterLevelStation do
     cur_site { cms_site }
 

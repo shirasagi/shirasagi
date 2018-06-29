@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   trait :jmaxml_trigger_base do
     cur_site { cms_site }
     name { unique_id }

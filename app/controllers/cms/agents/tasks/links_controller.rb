@@ -95,6 +95,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       urls = urls.map { |url| (url[0] == "/") ? File.join(@base_url, url) : url }
       set_errors_in_contents(ref, urls)
     end
+    head :ok
   end
 
   # Checks the url.
