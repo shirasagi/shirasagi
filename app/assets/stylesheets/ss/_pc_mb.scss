@@ -152,7 +152,7 @@ td {
   box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.2);
   background: #ffffff;
   @include mb {
-    left: 0;
+    right: 0;
     width: 100%;
     max-width: 450px;
   }
@@ -168,7 +168,7 @@ td {
     border-top: none;
     border-bottom: 14px solid $white;
     @include mb {
-      left: 62px;
+      right: 229px;
     }
   }
   h2 {
@@ -235,7 +235,99 @@ td {
   vertical-align: bottom;
   @include mb {
     .popup-notice:before {
-      left: 110px;
+      right: 279px;
+    }
+  }
+}
+// -------------------------------------------------------------------------------------------------
+// gws-notice-post
+.gws-notice-post {
+  font-size: 180%;
+  font-weight: bold;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+.addon-view#addon-basic {
+  .categories {
+    float: left;
+    margin: 20px 10px 0;
+    .gws-category-label {
+      font-size: 100%;
+    }
+  }
+  .aside {
+    float: right;
+    margin: 20px 10px 0;
+    text-align: right;
+    .updated, .user, .severity {
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+  .files, .links {
+    span {
+      display: block;
+    }
+  }
+  #gws-notice-text {
+    margin-bottom: 30px;
+  }
+  .files {
+    margin-bottom: 30px;
+    span {
+      a {
+        padding-left: 30px;
+        vertical-align: middle;
+        &[class^="icon-"] {
+          background: url(/assets/img/gws/ic-file.png) no-repeat left;
+        }
+        &.icon-csv {
+          background: url(/assets/img/gws/ic-csv.gif) no-repeat left;
+        }
+        &.icon-doc {
+          background: url(/assets/img/gws/ic-word.gif) no-repeat left;
+        }
+        &.icon-pptx {
+          background: url(/assets/img/gws/ic-pptx.gif) no-repeat left;
+        }
+        &.icon-pdf {
+          background: url(/assets/img/gws/ic-pdf.gif) no-repeat left;
+        }
+        &.icon-txt {
+          background: url(/assets/img/gws/ic-txt.gif) no-repeat left;
+        }
+        &.icon-xls {
+          background: url(/assets/img/gws/ic-xls.gif) no-repeat left;
+        }
+      }
+    }
+  }
+  .links a {
+    padding-left: 30px;
+    background: url(/assets/img/gws/ic-link.png) no-repeat left;
+    vertical-align: middle;
+  }
+  .addon-body {
+    clear: both;
+  }
+  .menu {
+    margin: 0 10px 20px;
+    text-align: right;
+  }
+}
+#addon-gws-agents-addons-notice-comment_post form {
+  margin-bottom: 15px;
+  &+table.index {
+    border-collapse:collapse;
+    border: none;
+    border-top: 1px solid #dcdcdc;
+    thead th {
+      padding: 11.5px 18px;
+      background: none;
+    }
+    tbody tr {
+      border-bottom: 1px solid #dcdcdc;
+      background: none;
     }
   }
 }
@@ -1937,6 +2029,9 @@ div.index {
   @include box;
   position: static;
   @include mb { margin: 0 10px 10px; }
+  .more {
+    margin: 0 18px 10px;
+  }
 }
 #ajax-box {
   div.index {
@@ -1946,7 +2041,7 @@ div.index {
 .list-head {
   @include clear;
   margin: 0px 0px 10px;
-  padding: 10px 18px 0;
+  padding: 10px 18px 10px;
   border-bottom: $border-gray1;
   font-weight: bold;
   @include mb { padding: 10px 20px; }
@@ -2112,6 +2207,12 @@ div.index {
       word-wrap: normal;
       .btn {
         margin-top: 4px;
+      }
+    }
+    .gws-notice-file-count, .gws-notice-comment-count {
+      display: inline-block;
+      img {
+        margin-right: 2px;
       }
     }
   }

@@ -65,6 +65,7 @@
   }
 }
 .gws-category-label {
+  display: inline-block;
   padding: 1px 5px;
   @include border-radius(3px);
   background-color: #e8e8e8;

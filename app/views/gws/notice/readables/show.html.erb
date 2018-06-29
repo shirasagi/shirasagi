@@ -22,14 +22,13 @@
       </div>
     </div>
     <div class="addon-body">
-      <div class="main">
+      <div class="main" id="gws-notice-text">
         <%= @item.html %>
       </div>
       <% if @item.files.present? %>
         <div class="files">
           <% @item.files.each do |file| %>
           <span id="file-<%= file.id %>">
-            <i class="material-icons">&#xE226;</i>
             <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
           </span>
           <% end %>
