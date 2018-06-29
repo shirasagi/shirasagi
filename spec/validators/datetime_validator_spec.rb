@@ -7,7 +7,7 @@ describe DatetimeValidator, type: :validator do
     let(:value) { '2016/13/01' }
     it do
       is_expected.to be_valid
-      is_expected.expiration_date.to be_nil
+      expect(is_expected.target.expiration_date).to be_nil
     end
   end
 
@@ -15,7 +15,7 @@ describe DatetimeValidator, type: :validator do
     let(:value) { '2016/01/01' }
     it do
       is_expected.to be_valid
-      is_expected.expiration_date.not_to be_nil
+      expect(is_expected.target.expiration_date).not_to be_nil
     end
   end
 
@@ -23,7 +23,7 @@ describe DatetimeValidator, type: :validator do
     let(:value) { '2016/1/01 30:00' }
     it do
       is_expected.to be_valid
-      is_expected.expiration_date.to be_nil
+      expect(is_expected.target.expiration_date).to be_nil
     end
   end
 
@@ -31,7 +31,7 @@ describe DatetimeValidator, type: :validator do
     let(:value) { '2016/01/01 00:00' }
     it do
       is_expected.to be_valid
-      is_expected.expiration_date.not_to be_nil
+      expect(is_expected.target.expiration_date).not_to be_nil
     end
   end
 end
