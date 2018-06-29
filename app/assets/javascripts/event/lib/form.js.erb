@@ -15,17 +15,17 @@ this.Event_Form = (function () {
       });
       $(".mod-event button:button.clear").click(function () {
         var close, start;
-        start = $(this).parent("dd").find(".start").val();
-        close = $(this).parent("dd").find(".close").val();
+        start = $(this).closest("dd").find(".start-date").val();
+        close = $(this).closest("dd").find(".close-date").val();
         if (start !== "" || close !== "") {
           if (confirm(Event_Form.deleteMessage)) {
-            Event_Form.clearTermForm($(this).parent("dd"));
+            Event_Form.clearTermForm($(this).closest("dd"));
           }
         } else {
 //      $(".mod-event input.date").datepicker
 //        dateFormat: "yy/mm/dd",
 //        yearRange: "-10:+10"
-          Event_Form.clearTermForm($(this).parent("dd"));
+          Event_Form.clearTermForm($(this).closest("dd"));
         }
       });
       $("form").submit(function () {
@@ -34,7 +34,7 @@ this.Event_Form = (function () {
         dates = [];
         for (k = 0, len = terms.length; k < len; k++) {
           term = terms[k];
-          add = Event_Form.termToDates($(term).find(".start").val(), $(term).find(".close").val());
+          add = Event_Form.termToDates($(term).find(".start-date").val(), $(term).find(".close-date").val());
           dates = dates.concat(add);
         }
         $(".mod-event .event-dates").val(Event_Form.datesToString(dates));
@@ -143,9 +143,9 @@ this.Event_Form = (function () {
   };
 
   Event_Form.setStoredDates = function () {
-    var d, date, dates, i, k, l, len, len1, results, stored, term, terms;
-    stored = $(".mod-event .event-dates").val().split(/\r\n|\n/);
-    dates = [];
+    var d, date, i, k, l, len, len1, term;
+    var stored = $(".mod-event .event-dates").val().split(/\r\n|\n/);
+    var dates = [];
     for (k = 0, len = stored.length; k < len; k++) {
       d = stored[k];
       date = new Date(d);
@@ -153,34 +153,32 @@ this.Event_Form = (function () {
         dates.push(date);
       }
     }
-    terms = this.datesToTerm(dates);
-    results = [];
+    var terms = this.datesToTerm(dates);
     for (i = l = 0, len1 = terms.length; l < len1; i = ++l) {
       term = terms[i];
       if (i !== 0) {
         this.cloneTermForm();
       }
-      $(".mod-event dd.dates:last").find(".start").val(this.dateToString(term[0]));
-      results.push($(".mod-event dd.dates:last").find(".close").val(this.dateToString(term[1])));
+      $(".mod-event dd.dates:last").find(".start-date").val(this.dateToString(term[0]));
+      $(".mod-event dd.dates:last").find(".close-date").val(this.dateToString(term[1]));
     }
-    return results;
   };
 
   Event_Form.cloneTermForm = function () {
     var cln;
     cln = $(".mod-event dd.dates:last").clone(false).insertAfter($(".mod-event dd.dates:last"));
-    cln.find(".start").val("");
-    cln.find(".close").val("");
+    cln.find(".start-date").val("");
+    cln.find(".close-date").val("");
     cln.find(".clear").click(function () {
       var close, start;
-      start = $(this).parent("dd").find(".start").val();
-      close = $(this).parent("dd").find(".close").val();
+      start = $(this).closest("dd").find(".start-date").val();
+      close = $(this).closest("dd").find(".close-date").val();
       if (start !== "" || close !== "") {
         if (confirm(Event_Form.deleteMessage)) {
-          Event_Form.clearTermForm($(this).parent("dd"));
+          Event_Form.clearTermForm($(this).closest("dd"));
         }
       } else {
-        Event_Form.clearTermForm($(this).parent("dd"));
+        Event_Form.clearTermForm($(this).closest("dd"));
       }
     });
     $(".mod-event .date").attr("id", "").datetimepicker({
@@ -194,8 +192,8 @@ this.Event_Form = (function () {
   };
 //$(".mod-event button:button.add-date").attr "disabled", true
   Event_Form.clearTermForm = function (ele) {
-    ele.find(".start").val("");
-    ele.find(".close").val("");
+    ele.find(".start-date").val("");
+    ele.find(".close-date").val("");
     if ($(".mod-event dd.dates").length > 1) {
       ele.remove();
     }

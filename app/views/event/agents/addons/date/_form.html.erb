@@ -11,9 +11,20 @@
 
   <dt><%= @model.t :event_dates %><%= @model.tt :event_dates %></dt>
   <dd class="dates">
-    <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
-    - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
-    <%= button_tag t("event.del_date"), { type: :button, class: "clear btn" } %>
+    <div class="input-group">
+      <div class="form-group">
+        <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start-date" } %>
+      </div>
+      <div class="form-group">
+        <span class="input-group-prepend input-group-append">-</span>
+      </div>
+      <div class="form-group">
+        <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close-date" } %>
+      </div>
+      <div class="form-group">
+        <%= button_tag t("event.del_date"), { type: :button, class: "clear btn" } %>
+      </div>
+    </div>
   </dd>
   <dd class="setting-dates">
     <%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %>
