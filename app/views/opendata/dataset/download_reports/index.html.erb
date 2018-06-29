@@ -1,23 +1,26 @@
 <div class="search-form">
-  <%= form_for :item, url: { action: :download }, html: { class: "search", method: :get } do |f| %>
-    <%= error_messages_for :item, header_message: t('activemodel.errors.template.header')  %>
-    <span>
-      <%= f.label :period %>
-      <%= f.select :start_year, @item.years %>
-      <%= f.select :start_month, @item.months %>
-    </span>
-    <span style="margin: 0 5px;">~</span>
-    <span style="margin-right: 10px;">
-      <%= f.select :end_year, @item.years %>
-      <%= f.select :end_month, @item.months %>
-    </span>
+  <%= form_for :item, url: { action: :download }, html: { class: "search", method: :get, style: "margin-bottom: unset;" } do |f| %>
+    <div class="form-group" style="padding-top: unset;">
+      <%= error_messages_for :item, header_message: t('activemodel.errors.template.header')  %>
 
-    <span style="margin: 0 5px;">
-      <%= f.label :type %>
-      <%= f.select :type, @item.types %>
-    </span>
+      <div class="input-group" style="width: 20em;">
+        <span style="padding: 0 5px;"><%= f.label :period %></span>
+        <%= f.select(:start_year, @item.years) %>
+        <%= f.select(:start_month, @item.months, {}, { style: 'margin-left: 5px;' }) %>
+        <span style="padding: 0 10px;">~</span>
+        <%= f.select(:end_year, @item.years) %>
+        <%= f.select(:end_month, @item.months, {}, { style: 'margin-left: 5px;' }) %>
+      </div>
 
-    <input type="submit" value="<%= t('ss.buttons.download') %>" class="btn" />
-    <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='<%= opendata_dataset_download_reports_path %>'" class="btn" />
+      <div class="input-group" style="width: 4em; margin-left: 20px;">
+        <span style="padding: 0 5px;"><%= f.label :type %></span>
+        <%= f.select :type, @item.types %>
+      </div>
+
+      <div class="input-group" style="margin-left: 20px;">
+        <%= f.submit(t('ss.buttons.download'), name: nil, class: 'btn') %>
+        <%= f.button(t('ss.buttons.reset'), name: nil, type: 'reset', class: 'btn', onclick: "location.href='<%= opendata_dataset_download_reports_path'") %>
+      </div>
+    </div>
   <% end %>
 </div>

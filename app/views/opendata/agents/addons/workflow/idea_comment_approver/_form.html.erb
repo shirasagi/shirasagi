@@ -8,9 +8,13 @@
   state.remove();
 
   <% if @item.allowed?(:release, @cur_user, site: @cur_site) %>
-    $(".save").val('<%= t("ss.buttons.draft_save") %>');
-    $("<input />").attr("type", "submit").attr("name", "publish_save").attr("value", '<%= t("ss.buttons.publish_save") %>').attr("class", "publish_save").insertAfter("#item-form input.save");
-  <% end %>>
+    $(".save").val "<%= t("ss.buttons.draft_save") %>"
+    $("<input />").attr("type", "submit")
+      .attr("name", "publish_save")
+      .attr("value", "<%= t("ss.buttons.publish_save") %>")
+      .attr("class", "publish_save btn btn-primary btn-raised btn-lg")
+      .insertAfter("#item-form input.save");
+  <% end %>
 
   $(".save").on("click", function (e) {
     $("<input />").attr("type", "hidden").attr("name", "item[state]").attr("value", "closed").appendTo("#item-form");
