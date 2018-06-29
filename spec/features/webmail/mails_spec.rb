@@ -31,6 +31,10 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
       sleep 1
       expect(current_path).to eq index_path
 
+      if Webmail::Mailer.delivery_method == :test
+        pending "delivery_method is :test"
+      end
+
       # reply
       click_link item_title
       click_link I18n.t('webmail.links.reply')
