@@ -1,0 +1,80 @@
+this.SS_Addon_Markdown = (function () {
+  function SS_Addon_Markdown() {
+  }
+
+  SS_Addon_Markdown.container = 'ss-addon-markdown';
+
+  SS_Addon_Markdown.content = 'ss-addon-markdown-content';
+
+  SS_Addon_Markdown.toolbar = 'ss-addon-markdown-toolbar';
+
+  SS_Addon_Markdown.options = 'ss-addon-markdown-options';
+
+  SS_Addon_Markdown.type = 'ss-addon-markdown-type';
+
+  SS_Addon_Markdown.preview = 'ss-addon-markdown-preview';
+
+  SS_Addon_Markdown.previewUrl = '/.u/addons/markdown';
+
+  SS_Addon_Markdown.previewLabel = '<%= I18n.t("ss.links.preview") %>';
+
+  SS_Addon_Markdown.previewButton = 'ss-addon-markdown-preview-button';
+
+  SS_Addon_Markdown.helpUrl = 'https://help.github.com/articles/basic-writing-and-formatting-syntax/';
+
+  SS_Addon_Markdown.helpLabel = '<%= I18n.t("ss.links.markdown_help") %>';
+
+  SS_Addon_Markdown.helpButton = 'ss-addon-markdown-help-button';
+
+  SS_Addon_Markdown.render = function () {
+    $("." + this.toolbar).append("<span class='" + this.options + "'></span>");
+    $("." + this.container).append("<div class='" + this.preview + " markdown-body'>preview</div>");
+    this.renderForm($("." + this.type).val());
+    return $("." + this.type).change(function () {
+      return SS_Addon_Markdown.renderForm($(this).val());
+    });
+  };
+
+  SS_Addon_Markdown.resetContent = function () {
+    $("." + this.preview).html('').hide();
+    return $("." + this.content + " textarea").show();
+  };
+
+  SS_Addon_Markdown.renderForm = function (type) {
+    $("." + this.options).html('');
+    this.resetContent();
+    if (type === 'markdown') {
+      return this.renderFormMarkdown();
+    }
+  };
+
+  SS_Addon_Markdown.renderFormMarkdown = function () {
+    $("." + this.options).append("<input type='button' class='btn " + this.previewButton + "' value='" + this.previewLabel + "' />");
+    $("." + this.options).append("<a href='" + this.helpUrl + "' class='" + this.helpButton + "' target='_blank'>" + this.helpLabel + "</a>");
+    return $("." + this.previewButton).on('click', function () {
+      var text;
+      $(this).toggleClass('active');
+      if ($(this).hasClass('active')) {
+        text = $("." + SS_Addon_Markdown.content + " textarea").val();
+        $("." + SS_Addon_Markdown.content + " textarea").hide();
+        //$(".#{SS_Addon_Markdown.preview}").html(marked(text, breaks: true)).show()
+        return $.ajax({
+          url: SS_Addon_Markdown.previewUrl,
+          method: "post",
+          data: {
+            text: text
+          },
+          success: function (data) {
+            return $("." + SS_Addon_Markdown.preview).html(data).show();
+          }
+        });
+      } else {
+        return SS_Addon_Markdown.resetContent();
+      }
+    });
+  };
+
+  return SS_Addon_Markdown;
+
+})();
+

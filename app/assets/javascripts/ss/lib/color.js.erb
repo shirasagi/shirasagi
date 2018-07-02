@@ -1,0 +1,25 @@
+this.SS_Color = (function () {
+  function SS_Color() {
+  }
+
+  SS_Color.render = function () {
+    return $(".js-color").each(function () {
+      var btn, sel;
+      sel = $(this);
+      sel.minicolors();
+      if (sel.data('clear')) {
+        btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.clear') %>' />").uniqueId();
+        $(sel).after(btn).after(' ');
+        return $('#' + btn.attr('id')).click(function () {
+          return $(sel).minicolors('value', {
+            color: 'transparent'
+          });
+        });
+      }
+    });
+  };
+
+  return SS_Color;
+
+})();
+

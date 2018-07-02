@@ -1,8 +1,11 @@
-<%= coffee do %>
-$ ->
-  @deletePhotoContent = (id) ->
-    $(".file-view").each ->
-      $(this).remove() if id == $(this).find(".photo-id").attr("value")
+<%= jquery do %>
+  window.deletePhotoContent = function (id) {
+    $(".file-view").each(function () {
+      if (id === $(this).find(".photo-id").attr("value")) {
+        $(this).remove();
+      }
+    });
+  };
 <% end %>
 
 <dl class="see mod-photo spot">

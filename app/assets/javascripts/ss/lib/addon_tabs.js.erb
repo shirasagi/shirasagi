@@ -1,0 +1,34 @@
+this.SS_AddonTabs = (function () {
+  function SS_AddonTabs() {
+  }
+
+  SS_AddonTabs.render = function () {
+    return $('.toggle-head').on('click', function () {
+      return $(this).parent().find('.toggle-body').animate({
+        height: 'toggle'
+      }, 'fast');
+    });
+  };
+
+  SS_AddonTabs.head = function (content) {
+    return $(content).parent().parent().find('.addon-head');
+  };
+
+  SS_AddonTabs.show = function (view) {
+    return $(view).parent().show();
+  };
+
+  SS_AddonTabs.hide = function (view) {
+    return $(view).parent().hide();
+  };
+
+  SS_AddonTabs.toggleView = function (view) {
+    console.log("SS_AddonTabs.toggleView is deprecated");
+    return $(view).parent().hide();
+  };
+  //TODO: depracated
+
+  return SS_AddonTabs;
+
+})();
+

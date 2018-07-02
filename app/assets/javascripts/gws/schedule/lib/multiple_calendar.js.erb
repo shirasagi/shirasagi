@@ -1,0 +1,120 @@
+this.Gws_Schedule_Multiple_Calendar = (function () {
+  function Gws_Schedule_Multiple_Calendar() {
+  }
+
+  Gws_Schedule_Multiple_Calendar.render = function (selector, opts, init) {
+    var params;
+    if (opts == null) {
+      opts = {};
+    }
+    if (init == null) {
+      init = {};
+    }
+    params = Gws_Schedule_Calendar.defaultParams(opts);
+    if (opts['restUrl']) {
+      $.extend(true, params, Gws_Schedule_Calendar.editableParams(opts));
+    }
+    if (opts['restUrl']) {
+      $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(opts));
+    }
+    $.extend(true, params, this.defaultParams(opts));
+    $.extend(true, params, this.contentParams(opts));
+    $.extend(true, params, opts);
+    $(selector).fullCalendar(params);
+    Gws_Schedule_Calendar.renderInitialize(selector, init);
+    return $(document).click(function (ev) {
+      return $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove();
+    });
+  };
+
+  Gws_Schedule_Multiple_Calendar.defaultParams = function (opts) {
+    return {
+      defaultView: 'basicWeek',
+      header: {
+        left: 'today prev next title',
+        right: 'withAbsence withTodo basicWeek,timelineDay'
+      },
+      slotDuration: '01:00',
+      slotLabelFormat: 'H',
+      views: {
+        basicHour: {
+          type: 'day',
+          buttonText: '日', //TODO: Use lang.
+          contentHeight: 25
+        },
+        timelineDay: {
+          contentHeight: 25,
+          minTime: '08:00',
+          maxTime: '22:00'
+        }
+      }
+    };
+  };
+
+  Gws_Schedule_Multiple_Calendar.controllerParams = function (opts) {
+    return {
+      header: {
+        left: 'today prev next title',
+        right: 'withAbsence withTodo basicWeek,timelineDay'
+      },
+      eventSources: [],
+      eventAfterAllRender: function (view) {
+        if (view.name === 'basicWeek') {
+          return view.el.find(".fc-body").hide();
+        }
+      }
+    };
+  };
+
+  Gws_Schedule_Multiple_Calendar.contentParams = function (opts) {
+    return {
+      eventRender: function (event, element, view) {
+        if (view.name === 'basicHour') {
+          return BasicHourView.eventRender(event, element, view);
+        }
+      },
+      eventAfterAllRender: function (view) {
+      }
+    };
+  };
+  //view.el.find(".fctoolbar, .fc-head").remove("")
+
+  Gws_Schedule_Multiple_Calendar.renderController = function (selector, opts, init) {
+    var controller, params;
+    if (opts == null) {
+      opts = {};
+    }
+    if (init == null) {
+      init = {};
+    }
+    params = Gws_Schedule_Calendar.defaultParams(opts);
+    $.extend(true, params, this.defaultParams(opts));
+    $.extend(true, params, this.controllerParams(opts));
+    $.extend(true, params, opts);
+    $(selector).fullCalendar(params);
+    Gws_Schedule_Calendar.renderInitialize(selector, init);
+    Gws_Schedule_Calendar.overrideAddLink(selector);
+    controller = $(selector);
+    controller.find('.fc-today-button').click(function () {
+      return $('.calendar.multiple .fc-today-button').click();
+    });
+    controller.find('.fc-prev-button').click(function () {
+      return $('.calendar.multiple .fc-prev-button').click();
+    });
+    controller.find('.fc-next-button').click(function () {
+      return $('.calendar.multiple .fc-next-button').click();
+    });
+    controller.find('.fc-basicWeek-button').click(function () {
+      return $('.calendar.multiple .fc-basicWeek-button').click();
+    });
+    controller.find('.fc-timelineDay-button').click(function () {
+      return $('.calendar.multiple .fc-timelineDay-button').click();
+    });
+    return controller.find('.fc-basicHour-button').click(function () {
+      return $('.calendar.multiple .fc-basicHour-button').click();
+    });
+  };
+
+  return Gws_Schedule_Multiple_Calendar;
+
+})();

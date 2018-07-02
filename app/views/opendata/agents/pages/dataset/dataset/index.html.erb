@@ -11,38 +11,46 @@
   end
 %>
 <%= javascript_include_tag "opendata/public" %>
-<%= coffee do %>
-$ ->
-  # Tabs
-  SS_Tabs.render("#dataset-tabs-<%= @cur_node.id %>");
+<%= jquery do %>
+//Tabs
+SS_Tabs.render("#dataset-tabs-<%= @cur_node.id %>");
 
   <% if @cur_node.show_point? %>
-  # show point
+    //show point
   Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
   <% end %>
 
-  # show apps
-  $.ajax
-    url: "<%= path_prefix %><%= @cur_page.dataset_apps_url %>"
-    success: (data)->
-      $(".dataset-apps").html data
+  //show apps
+  $.ajax({
+    url: "<%= path_prefix %><%= @cur_page.dataset_apps_url %>",
+    success: function (data) {
+      $(".dataset-apps").html(data);
+    }
+  });
 
-  # show ideas
-  $.ajax
-    url: "<%= path_prefix %><%= @cur_page.dataset_ideas_url %>"
-    success: (data)->
-      $(".dataset-ideas").html data
+  //show ideas
+$.ajax({
+  url: "<%= path_prefix %><%= @cur_page.dataset_ideas_url %>",
+  success: function (data) {
+    $(".dataset-ideas").html(data);
 
-  # hide categories
-  $(".categories a[data-class=other]").click ->
-    type = $(this).attr("class")
-    $(".categories a." + type).show()
-    $(this).remove()
-    return false
+  //hide categorise
+  }
+});
+$(".categories a[data-class=other]").click(function () {
+  var type;
+  type = $(this).attr("class");
+  $(".categories a." + type).show();
+  $(this).remove();
+  return false;
+  // preview
 
-  # preview
-  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
-
+});
+$("a.content").colorbox({
+  fixed: true,
+  width: "90%",
+  height: "90%"
+});
 <% end %>
 
 <header>

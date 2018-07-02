@@ -1,0 +1,163 @@
+this.SS_SearchUI = (function () {
+  function SS_SearchUI() {
+  }
+
+  SS_SearchUI.anchorAjaxBox;
+
+  SS_SearchUI.defaultSelector = function (item) {
+    var a, data, id, input, name, self, tr;
+    self = this;
+    data = item.closest("[data-id]");
+    id = data.data("id");
+    name = data.data("name") || data.find(".select-item").text() || item.text() || data.text();
+    tr = $("<tr />").attr("data-id", id);//attr
+    input = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
+    input = input.val(id).removeClass("hidden-ids");
+    a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>').on("click", self.deselect);
+    tr.append($('<td />').append(input).append(name));
+    tr.append($('<td />').append(a));
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
+    return self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  SS_SearchUI.select = function (item) {
+    var selector;
+    selector = $.colorbox.element().data('on-select');
+    if (selector) {
+      return selector(item);
+    } else {
+      return this.defaultSelector(item);
+    }
+  };
+
+  SS_SearchUI.selectItems = function () {
+    var self;
+    self = this;
+    $("#ajax-box .items input:checkbox").filter(":checked").each(function () {
+      return self.select($(this));
+    });
+    return self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+  };
+
+  SS_SearchUI.deselect = function (e) {
+    var table;
+    table = $(this).parents(".ajax-selected:first");
+    $(this).parents("tr:first").remove();
+    if (table.find("tbody tr").size() === 0) {
+      table.hide();
+    }
+    table.trigger("change");
+    return e.preventDefault();
+  };
+
+  SS_SearchUI.toggleSelectButton = function () {
+    if ($("#ajax-box .items input:checkbox").filter(":checked").size() > 0) {
+      return $("#ajax-box .select-items").parent("div").show();
+    } else {
+      return $("#ajax-box .select-items").parent("div").hide();
+    }
+  };
+
+  SS_SearchUI.render = function () {
+    var self;
+    self = this;
+    return $(".ajax-selected").each(function () {
+      $(this).find("a.deselect").on("click", self.deselect);
+      if ($(this).find("a.deselect").size() === 0) {
+        return $(this).hide();
+      }
+    });
+  };
+
+  SS_SearchUI.modal = function (options) {
+    var el, i, len, self, submit_on_changes;
+    if (options == null) {
+      options = {};
+    }
+    self = this;
+    if ($.colorbox.element().hasClass("ajax-box")) {
+      self.anchorAjaxBox = $.colorbox.element();
+    }
+    $("#ajax-box form.search").on("submit", function (e) {
+      $(this).ajaxSubmit({
+        url: $(this).attr("action"),
+        success: function (data) {
+          return $("#cboxLoadedContent").html(data);
+        },
+        error: function (data, status) {
+          return alert("== Error ==");
+        }
+      });
+      return e.preventDefault();
+    });
+    $("#ajax-box .pagination a").on("click", function (e) {
+      return self.selectItems();
+    });
+    submit_on_changes = options.submit_on_changes;
+    if (!submit_on_changes) {
+      submit_on_changes = ["#s_group"];
+    }
+    for (i = 0, len = submit_on_changes.length; i < len; i++) {
+      el = submit_on_changes[i];
+      $("#ajax-box " + el).on("change", function (e) {
+        self.selectItems();
+        return $("#ajax-box form.search").submit();
+      });
+    }
+    $("#ajax-box .submit-on-change").on("change", function (e) {
+      self.selectItems();
+      return $("#ajax-box form.search").submit();
+    });
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+      var id, item, tr;
+      id = $(this).data("id");
+      tr = $("#colorbox .items [data-id='" + id + "']");
+      tr.find("input[type=checkbox]").remove();
+      item = tr.find(".select-item,.select-single-item").html();
+      return tr.find(".select-item,.select-single-item").replaceWith("<span class='select-item' style='color: #888'>" + item + "</span>");
+    });
+    SS_ListUI.render("table.index");
+    $("#ajax-box a.select-item").on("click", function (e) {
+      if (!SS.disableClick($(this))) {
+        return false;
+      }
+      //append newly selected item
+      self.select($(this));
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      e.preventDefault();
+      return $.colorbox.close();
+    });
+      //remove old items
+    $("#ajax-box .select-single-item").on("click", function (e) {
+      if (!SS.disableClick($(this))) {
+        return false;
+      }
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+        if ($(this).find("input[value]").length) {
+          return $(this).remove();
+        }
+      });
+      //append newly selected item
+      self.select($(this));
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      e.preventDefault();
+      return $.colorbox.close();
+    });
+    $("#ajax-box .select-items").on("click", function (e) {
+      if (!SS.disableClick($(this))) {
+        return false;
+      }
+      self.selectItems();
+      e.preventDefault();
+      return $.colorbox.close();
+    });
+    $("#ajax-box .index").on("change", function (e) {
+      return self.toggleSelectButton();
+    });
+    return self.toggleSelectButton();
+  };
+
+  return SS_SearchUI;
+
+})();
+

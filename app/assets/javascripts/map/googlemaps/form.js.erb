@@ -1,0 +1,284 @@
+this.Map_Form = (function () {
+  function Map_Form() {
+  }
+
+  Map_Form.maxPointForm = 10;
+
+  Map_Form.deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>";
+
+  Map_Form.dataID = 0;
+
+  Map_Form.clickIcon = "//maps.google.com/mapfiles/ms/icons/blue-dot.png";
+
+  Map_Form.clickMarker = null;
+
+  Map_Form.setMapLoc = function (ele, lat, lon) {
+    lat = Math.ceil(lat * Math.pow(10, 6)) / Math.pow(10, 6);
+    lon = Math.ceil(lon * Math.pow(10, 6)) / Math.pow(10, 6);
+    ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
+  };
+
+  Map_Form.getMapLoc = function (ele) {
+    var latlon;
+    latlon = ele.val().split(',');
+    return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]));
+  };
+
+  Map_Form.validateLoc = function (ele) {
+    var lat, latlon, lon;
+    latlon = ele.val().split(',');
+    lat = parseFloat(latlon[0]);
+    lon = parseFloat(latlon[1]);
+    if (!(lat && !isNaN(lat))) {
+      return false;
+    }
+    if (!(lon && !isNaN(lon))) {
+      return false;
+    }
+    if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Map_Form.attachMessage = function (id) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id], 'click', function (event) {
+      if (Googlemaps_Map.openedInfo) {
+        Googlemaps_Map.openedInfo.close();
+      }
+      $('dd[data-id = "' + id + '"]').each(function () {
+        var marker_html, name, text;
+        name = $(this).find(".marker-name").val();
+        text = $(this).find(".marker-text").val();
+        if (name !== "" || text !== "") {
+          marker_html = '<div class="marker-info">';
+          if (name !== "") {
+            marker_html += '<p>' + name + '</p>';
+          }
+          if (text !== "") {
+            $.each(text.split(/[\r\n]+/), function () {
+              if (this.match(/^https?:\/\//)) {
+                return marker_html += '<p><a href="' + this + '">' + this + '</a></p>';
+              } else {
+                return marker_html += '<p>' + this + '</p>';
+              }
+            });
+          }
+          Googlemaps_Map.openedInfo = new google.maps.InfoWindow({
+            content: marker_html,
+            maxWidth: 260
+          });
+          Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id]);
+        }
+        return false;
+      });
+    });
+  };
+
+  Map_Form.geocoderSearch = function (address) {
+    var geocoder;
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({
+      "address": address,
+      "region": "jp"
+    }, function (results, status) {
+      var result;
+      if (status === google.maps.GeocoderStatus.OK) {
+        result = results[0];
+        Googlemaps_Map.map.setCenter(result.geometry.location);
+        if (result.geometry.viewport) {
+          Googlemaps_Map.map.fitBounds(result.geometry.viewport);
+        }
+      } else {
+        alert("<%= I18n.t('map.alert.invalid_center') %>");
+      }
+    });
+    return false;
+  };
+
+  Map_Form.clonePointForm = function () {
+    var cln;
+    if ($(".mod-map dd.marker").length < Map_Form.maxPointForm) {
+      cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"));
+      cln.attr("data-id", Map_Form.dataID);
+      Map_Form.dataID += 1;
+      cln.find("input,textarea").val("");
+      cln.find(".marker-name").val("");
+      cln.find(".clear-marker").on('click', function () {
+        return Map_Form.clearPointForm(cln);
+      });
+      cln.find(".set-marker").on('click', function () {
+        return Map_Form.createMarker(cln);
+      });
+      cln.find(".marker-name").on('keypress', function (e) {
+        if (e.which === 13) {
+          return false;
+        }
+      });
+      cln.find(".marker-loc-input").on('keypress', function (e) {
+        if (e.which === 13) {
+          $(this).closest("dd.marker").find(".set-marker").trigger("click");
+          return false;
+        }
+      });
+      cln.find(".marker-loc-input").on('focus', function (e) {
+        if (Map_Form.clickMarker !== null) {
+          Map_Form.clickMarker.setMap(null);
+          return $(".mod-map .clicked").val("");
+        }
+      });
+    }
+    if ($(".mod-map dd.marker").length === Map_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
+  };
+
+  Map_Form.clearPointForm = function (ele) {
+    if (ele.find(".marker-loc").val() !== "") {
+      if (confirm(Map_Form.deleteMessage)) {
+        if (Googlemaps_Map.markers[parseInt(ele.attr("data-id"))]) {
+          Googlemaps_Map.markers[parseInt(ele.attr("data-id"))].setMap(null);
+        }
+        ele.find("input,textarea").val("");
+        if ($(".mod-map dd.marker").length > 1) {
+          ele.remove();
+        }
+      }
+    } else {
+      if (Googlemaps_Map.markers[parseInt(ele.attr("data-id"))]) {
+        Googlemaps_Map.markers[parseInt(ele.attr("data-id"))].setMap(null);
+      }
+      ele.find("input,textarea").val("");
+      if ($(".mod-map dd.marker").length > 1) {
+        ele.remove();
+      }
+    }
+    $(".mod-map dd .add-marker").parent().show();
+  };
+
+  Map_Form.createMarker = function (ele) {
+    var dataId, loc;
+    loc = null;
+    if ($(".mod-map .clicked").val() !== "") {
+      loc = $(".mod-map .clicked").val();
+    } else if (ele.find(".marker-loc-input").val() !== "") {
+      if (Map_Form.validateLoc(ele.find(".marker-loc-input"))) {
+        loc = ele.find(".marker-loc-input").val();
+      } else {
+        alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
+      }
+    }
+    if (!loc) {
+      return;
+    }
+    ele.find(".marker-loc").val(loc);
+    ele.find(".marker-loc-input").val(loc);
+    dataId = parseInt(ele.attr("data-id"));
+    if (Googlemaps_Map.markers[dataId]) {
+      Googlemaps_Map.markers[dataId].setMap(null);
+    }
+    Googlemaps_Map.markers[dataId] = new google.maps.Marker({
+      position: Map_Form.getMapLoc(ele.find(".marker-loc")),
+      map: Googlemaps_Map.map
+    });
+    Map_Form.attachMessage(dataId);
+    if (Map_Form.clickMarker) {
+      $(".mod-map .clicked").val("");
+      return Map_Form.clickMarker.setMap(null);
+    }
+  };
+
+  Map_Form.renderMarkers = function () {
+    var i, len, m, markerBounds, ref, zoomChangeBoundsListener;
+    markerBounds = new google.maps.LatLngBounds();
+    if (Googlemaps_Map.markers) {
+      ref = Googlemaps_Map.markers;
+      for (i = 0, len = ref.length; i < len; i++) {
+        m = ref[i];
+        m.setMap(null);
+      }
+    }
+    Googlemaps_Map.markers = [];
+    Map_Form.dataID = 0;
+    $(".mod-map dd.marker").each(function () {
+      var loc;
+      $(this).attr("data-id", Map_Form.dataID);
+      if ($(this).find(".marker-loc").val() !== "") {
+        loc = Map_Form.getMapLoc($(this).find(".marker-loc"));
+        Googlemaps_Map.markers[Map_Form.dataID] = new google.maps.Marker({
+          position: loc,
+          map: Googlemaps_Map.map
+        });
+        Map_Form.attachMessage(Map_Form.dataID);
+        markerBounds.extend(loc);
+      }
+      return Map_Form.dataID += 1;
+    });
+    if (Googlemaps_Map.markers.length > 0) {
+      google.maps.event.addListenerOnce(Googlemaps_Map.map, 'idle', function (event) {
+        if (this.getZoom() > 13) {
+          this.setZoom(13);
+        }
+      });
+      Googlemaps_Map.map.fitBounds(markerBounds);
+    }
+  };
+
+  Map_Form.renderEvents = function () {
+    google.maps.event.addListener(Googlemaps_Map.map, 'click', function (event) {
+      Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng());
+      if (Map_Form.clickMarker !== null) {
+        Map_Form.clickMarker.setMap(null);
+      }
+      return Map_Form.clickMarker = new google.maps.Marker({
+        position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
+        icon: Map_Form.clickIcon,
+        map: Googlemaps_Map.map
+      });
+    });
+    $(".mod-map .add-marker").on('click', function (e) {
+      Map_Form.clonePointForm();
+      return false;
+    });
+    $(".mod-map .clear-marker").on('click', function (e) {
+      Map_Form.clearPointForm($(this).closest("dd.marker"));
+      return false;
+    });
+    $(".mod-map .set-marker").on('click', function (e) {
+      Map_Form.createMarker($(this).closest("dd.marker"));
+      return false;
+    });
+    $(".mod-map .location-search button").on('click', function (e) {
+      Map_Form.geocoderSearch($(".mod-map .keyword").val());
+      return false;
+    });
+    $(".mod-map .keyword").on('keypress', function (e) {
+      if (e.which === 13) {
+        Map_Form.geocoderSearch($(this).val());
+        return false;
+      }
+    });
+    $(".mod-map .marker-name").on('keypress', function (e) {
+      if (e.which === 13) {
+        return false;
+      }
+    });
+    $(".mod-map .marker-loc-input").on('keypress', function (e) {
+      if (e.which === 13) {
+        $(this).closest("dd.marker").find(".set-marker").trigger("click");
+        return false;
+      }
+    });
+    return $(".mod-map .marker-loc-input").on('focus', function (e) {
+      if (Map_Form.clickMarker !== null) {
+        Map_Form.clickMarker.setMap(null);
+        return $(".mod-map .clicked").val("");
+      }
+    });
+  };
+
+  return Map_Form;
+
+})();
+

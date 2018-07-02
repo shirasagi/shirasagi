@@ -1,0 +1,110 @@
+this.Gws_Reminder = (function () {
+  function Gws_Reminder() {
+  }
+
+  Gws_Reminder.renderList = function (opts) {
+    var el;
+    if (opts == null) {
+      opts = {};
+    }
+    el = $(opts['el'] || document);
+    el.find('.list-item').each(function () {
+      return $(this).find('.links').prepend('<a class="restore" href="#" style="display: none;"><%= I18n.t("gws/reminder.links.restore_reminder") %></a>');
+    });
+    el.find('.list-item.deleted').each(function () {
+      $(this).find('.check, .meta, .delete, .updated, .more-btn').hide();
+      $(this).find('.dropdown-menu').removeClass('active');
+      $(this).find('.restore').show();
+      return $(this).find('.notification').hide();
+    });
+    el.find('.list-item .delete').click(function () {
+      var item;
+      item = $(this).closest('.list-item');
+      $.ajax({
+        url: opts['url'],
+        method: 'post',
+        data: {
+          _method: 'delete',
+          id: item.data('id'),
+          item_id: item.data('item_id'),
+          item_model: item.data('model'),
+          item_name: item.data('name'),
+          date: item.data('date')
+        },
+        success: function (data) {
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .updated, .more-btn').hide();
+          item.find('.dropdown-menu').removeClass('active');
+          item.find('.restore').show();
+          item.find('.notification').hide();
+          return false;
+        },
+        error: function (data) {
+          return alert('Error');
+        }
+      });
+      return false;
+    });
+    return el.find('.list-item .restore').click(function () {
+      var item;
+      item = $(this).closest('.list-item');
+      $.ajax({
+        url: opts['restore_url'],
+        method: 'post',
+        data: {
+          id: item.data('id'),
+          item_id: item.data('item_id'),
+          item_model: item.data('model'),
+          item_name: item.data('name'),
+          date: item.data('date')
+        },
+        success: function (data) {
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .more-btn').show();
+          item.find('.restore').hide();
+          if (item.find('.notification')[0]) {
+            item.find('.notification')[0].selectedIndex = 0;
+          }
+          item.find('.notification').show();
+          return false;
+        },
+        error: function (data) {
+          return alert('Error');
+        }
+      });
+      return false;
+    });
+  };
+
+  return Gws_Reminder;
+
+})();
+
+//@renderAddon: (opts = {})->
+//  addon = $(".gws-addon-reminder")
+
+//  params = {
+//    data:
+//      item:
+//        item_id: addon.find("#item_id").val()
+//        model: addon.find("#item_model").val()
+//        name: addon.find("#item_name").val()
+//    beforeSend: (data)->
+//      $(".gws-addon-reminder-label").html("")
+//    success: (data)->
+//      $(".gws-addon-reminder-label").html(data)
+//    error: (data)->
+//      alert("Error")
+//  }
+//  $.extend true, params, opts
+
+//  $("#gws-addon-reminder-set").click ->
+//    ajax_params = { method: "post" }
+//    $.extend true, ajax_params, params
+//    ajax_params["data"]["item"]["date"] = addon.find("#item_date").val()
+//    $.ajax(ajax_params)
+
+//  $("#gws-addon-reminder-unset").click ->
+//    ajax_params = { method: "post" }
+//    $.extend true, ajax_params, params
+//    ajax_params["data"]["_method"] = "delete"
+//    $.ajax(ajax_params)
+//    $.ajax(ajax_params)

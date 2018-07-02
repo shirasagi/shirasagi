@@ -1,9 +1,10 @@
-<%= coffee do %>
-$ ->
-  $(".reset").on "click", ->
-    $(".prop").prop "checked", false
-    $(".keyword").val("")
-    return false
+<%= jquery do %>
+  $(".reset").on("click", function () {
+    $(".prop").prop("checked", false);
+    $(".keyword").val("");
+    return false;
+  });
+
 <% end %>
 
 <%= form_tag search_path, multipart: true, method: "get" do %>

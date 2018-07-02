@@ -1,38 +1,45 @@
-<%= coffee do %>
-$ ->
-  $(".mod-facility-additional-info .add-info").on 'click', ->
-    if $(".mod-facility-additional-info").length < 10
-      dd = $(".mod-facility-additional-info dd:last").clone(true)
-      dt = $(".mod-facility-additional-info dt:last").clone(true)
-      dd.find("input").val("")
-      dd.find("textarea").val("")
-      dt.find("input").val("")
-      dt.find("textarea").val("")
-      $(".mod-facility-additional-info dd:last").after(dt)
-      $(".mod-facility-additional-info dt:last").after(dd)
-    return false
-
-  $(".mod-facility-additional-info .clear").on 'click', ->
-    dd = $(this).closest("dd")
-    dt = dd.prev("dt")
-
-    if $(".mod-facility-additional-info dt").length > 2
-      if dt.find("input").val() != "" || dd.find("textarea").val() != ""
-        if confirm("<%= t("facility.button.del_info_confirm") %>")
-          dt.remove()
-          dd.remove()
-      else
-        dt.remove()
-        dd.remove()
-    else
-      if dt.find("input").val() != "" || dd.find("textarea").val() != ""
-        if confirm("<%= t("facility.button.del_info_confirm") %>")
-          dt.find("input").val("")
-          dd.find("textarea").val("")
-      else
-        dt.find("input").val("")
-        dd.find("textarea").val("")
-    return false
+<%= jquery do %>
+  $(".mod-facility-additional-info .add-info").on('click', function () {
+    var dd, dt;
+    if ($(".mod-facility-additional-info").length < 10) {
+      dd = $(".mod-facility-additional-info dd:last").clone(true);
+      dt = $(".mod-facility-additional-info dt:last").clone(true);
+      dd.find("input").val("");
+      dd.find("textarea").val("");
+      dt.find("input").val("");
+      dt.find("textarea").val("");
+      $(".mod-facility-additional-info dd:last").after(dt);
+      $(".mod-facility-additional-info dt:last").after(dd);
+    }
+    return false;
+  });
+  $(".mod-facility-additional-info .clear").on('click', function () {
+    var dd, dt;
+    dd = $(this).closest("dd");
+    dt = dd.prev("dt");
+    if ($(".mod-facility-additional-info dt").length > 2) {
+      if (dt.find("input").val() !== "" || dd.find("textarea").val() !== "") {
+        if (confirm('<%= t("facility.button.del_info_confirm") %>')) {
+          dt.remove();
+          dd.remove();
+        }
+      } else {
+        dt.remove();
+        dd.remove();
+      }
+    } else {
+      if (dt.find("input").val() !== "" || dd.find("textarea").val() !== "") {
+        if (confirm('<%= t("facility.button.del_info_confirm") %>')) {
+          dt.find("input").val("");
+          dd.find("textarea").val("");
+        }
+      } else {
+        dt.find("input").val("");
+        dd.find("textarea").val("");
+      }
+    }
+    return false;
+  });
 
 <% end %>
 

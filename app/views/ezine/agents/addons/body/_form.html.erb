@@ -1,22 +1,26 @@
-<%= coffee do %>
-  $ ->
-    $('.ezine-convert-button').click ->
-      if (typeof tinymce != 'undefined')
-        text = convert_html_to_text tinymce.get('item_html').getContent()
-      else if (typeof CKEDITOR != 'undefined')
-        text = convert_html_to_text CKEDITOR.instances.item_html.getData()
-      else
-        text = ""
+<%= jquery do %>
+  var convert_html_to_text;
 
-      $('.ezine-page-text').val(text)
+  $('.ezine-convert-button').click(function () {
+    var text;
+    if (typeof tinymce !== 'undefined') {
+      text = convert_html_to_text(tinymce.get('item_html').getContent());
+    } else if (typeof CKEDITOR !== 'undefined') {
+      text = convert_html_to_text(CKEDITOR.instances.item_html.getData());
+    } else {
+      text = "";
+    }
+    $('.ezine-page-text').val(text);
+  });
 
-  convert_html_to_text = (html) ->
-    html = html.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g,'')
-    html = html.replace(/&quot;|&#34;/g, '"')
-    html = html.replace(/&apos;|&#39;/g, '\'')
-    html = html.replace(/&lt;|&#60;/g, '\<')
-    html = html.replace(/&gt;|&#62;/g, '\>')
-    html = html.replace(/&nbsp;|&#160;/g, ' ')
+  convert_html_to_text = function (html) {
+    html = html.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g, '');
+    html = html.replace(/&quot;|&#34;/g, '"');
+    html = html.replace(/&apos;|&#39;/g, '\'');
+    html = html.replace(/&lt;|&#60;/g, '\<');
+    html = html.replace(/&gt;|&#62;/g, '\>');
+    html = html.replace(/&nbsp;|&#160;/g, ' ');
+  };
 <% end %>
 
 <%= html_editor ".ezine-page-html", height: "400px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>

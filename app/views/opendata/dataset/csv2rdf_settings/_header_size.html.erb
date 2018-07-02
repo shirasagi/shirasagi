@@ -28,18 +28,23 @@ actual_rows = @cur_resource.parse_tsv.size
 
 <p><%= t("opendata.messages.max_row_notice", max: 20)%></p>
 
-<%= coffee do %>
-$ ->
-  render_table_header = ->
-    val = parseInt($("select[name='item[header_rows]']").val())
-    $("div.csv2rdf-settings-table-container table tr").removeClass("selected").removeClass("last_child")
-    if val > 0
-      for i in [0..val - 1]
-        $("div.csv2rdf-settings-table-container table tr:eq(#{i})").addClass("selected")
-      $("div.csv2rdf-settings-table-container table tr:eq(#{val - 1})").addClass("last_child")
+<%= jquery do %>
 
-  $("select[name='item[header_rows]']").on 'change', ->
-    render_table_header()
+  var render_table_header;
+render_table_header = function () {
+  var i, j, ref, val;
+  val = parseInt($("select[name='item[header_rows]']").val());
+  $("div.csv2rdf-settings-table-container table tr").removeClass("selected").removeClass("last_child");
+  if (val > 0) {
+    for (i = j = 0, ref = val - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+      $("div.csv2rdf-settings-table-container table tr:eq(" + i + ")").addClass("selected");
+    }
+    $("div.csv2rdf-settings-table-container table tr:eq(" + (val - 1) + ")").addClass("last_child");
+  }
+};
+$("select[name='item[header_rows]']").on('change', function () {
+  render_table_header();
+});
+render_table_header();
 
-  render_table_header()
 <% end %>

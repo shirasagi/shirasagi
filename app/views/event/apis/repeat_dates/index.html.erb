@@ -1,14 +1,22 @@
-<%= coffee do %>
-$(".event-repeat-js-date").datetimepicker({ lang: "ja", timepicker: false, format: "Y/m/d" })
-$("form.event-repeat-dates").on "submit", (e) ->
-  $(this).ajaxSubmit(
-    url: $(this).attr("action")
-    success: (data) ->
-      $("#cboxLoadedContent").html data
-    error: (data, status) ->
-      alert(["== Error =="].concat(data.responseJSON).join("\n"))
-  )
-  return false
+<%= jquery do %>
+  $(".event-repeat-js-date").datetimepicker({
+    lang: "ja",
+    timepicker: false,
+    format: "Y/m/d"
+  });
+
+  $("form.event-repeat-dates").on("submit", function (e) {
+    $(this).ajaxSubmit({
+      url: $(this).attr("action"),
+      success: function (data) {
+        $("#cboxLoadedContent").html(data);
+      },
+      error: function (data, status) {
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+    });
+    return false;
+  });
 <% end %>
 
 <%= form_tag(event_apis_repeat_dates_path(site: @cur_site.id), :method => :put, class: "event-repeat-dates") do |f| %>

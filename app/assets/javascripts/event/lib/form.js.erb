@@ -1,0 +1,212 @@
+this.Event_Form = (function () {
+  function Event_Form() {
+  }
+
+  Event_Form.maxTermForm = 10;
+
+  Event_Form.deleteMessage = "<%= I18n.t('event.confirm.delete_date') %>";
+
+  Event_Form.render = function () {
+    if ($("form .mod-event").length) {
+      $(".mod-event button:button.add-date").click(function () {
+        if ($(".mod-event dd.dates").length < Event_Form.maxTermForm) {
+          Event_Form.cloneTermForm();
+        }
+      });
+      $(".mod-event button:button.clear").click(function () {
+        var close, start;
+        start = $(this).parent("dd").find(".start").val();
+        close = $(this).parent("dd").find(".close").val();
+        if (start !== "" || close !== "") {
+          if (confirm(Event_Form.deleteMessage)) {
+            Event_Form.clearTermForm($(this).parent("dd"));
+          }
+        } else {
+//      $(".mod-event input.date").datepicker
+//        dateFormat: "yy/mm/dd",
+//        yearRange: "-10:+10"
+          Event_Form.clearTermForm($(this).parent("dd"));
+        }
+      });
+      $("form").submit(function () {
+        var add, dates, k, len, term, terms;
+        terms = $(".mod-event .dates");
+        dates = [];
+        for (k = 0, len = terms.length; k < len; k++) {
+          term = terms[k];
+          add = Event_Form.termToDates($(term).find(".start").val(), $(term).find(".close").val());
+          dates = dates.concat(add);
+        }
+        $(".mod-event .event-dates").val(Event_Form.datesToString(dates));
+      });
+      Event_Form.setStoredDates();
+      if ($(".mod-event dd.dates").length >= this.maxTermForm) {
+        $(".mod-event .setting-dates").hide();
+      }
+    }
+  };
+
+  Event_Form.dateToString = function (date) {
+    var dd, mm, yy;
+    yy = date.getYear();
+    mm = date.getMonth() + 1;
+    dd = date.getDate();
+    if (yy < 2000) {
+      yy += 1900;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    return yy + "/" + mm + "/" + dd;
+  };
+
+  Event_Form.datesToString = function (dates) {
+    var d, j, k, l, len, len1, setstr, tmp;
+    tmp = [];
+    for (k = 0, len = dates.length; k < len; k++) {
+      d = dates[k];
+      j = 0;
+      while (j < tmp.length) {
+        if (this.dateToString(d) === this.dateToString(tmp[j])) {
+          break;
+        }
+        j++;
+      }
+      if (j === tmp.length) {
+        tmp.push(d);
+      }
+    }
+    dates = tmp;
+    dates.sort(function (a, b) {
+      return a - b;
+    });
+    setstr = "";
+    for (l = 0, len1 = dates.length; l < len1; l++) {
+      d = dates[l];
+      setstr += this.dateToString(d);
+      setstr += "\r\n";
+    }
+    return setstr;
+  };
+
+  Event_Form.isValidDate = function (date) {
+    if (Object.prototype.toString.call(date) !== "[object Date]") {
+      return false;
+    }
+    if (!isNaN(date.getTime()) && date.getYear() > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  Event_Form.termToDates = function (start, close) {
+    var closeDate, d, dates, startDate;
+    startDate = new Date(start);
+    closeDate = new Date(close);
+    dates = [];
+    if (this.isValidDate(startDate) && this.isValidDate(closeDate)) {
+      d = new Date(startDate);
+      while (d <= closeDate) {
+        dates.push(new Date(d));
+        d.setDate(d.getDate() + 1);
+      }
+    } else if (this.isValidDate(startDate)) {
+      dates.push(new Date(startDate));
+    } else if (this.isValidDate(closeDate)) {
+      dates.push(new Date(closeDate));
+    }
+    return dates;
+  };
+
+  Event_Form.datesToTerm = function (dates) {
+    var d, i, k, len, term, terms, tommorow;
+    terms = [];
+    term = [];
+    for (i = k = 0, len = dates.length; k < len; i = ++k) {
+      d = dates[i];
+      term.push(d);
+      tommorow = new Date(d);
+      tommorow.setDate(tommorow.getDate() + 1);
+      if (i + 1 < dates.length && this.dateToString(dates[i + 1]) !== this.dateToString(tommorow)) {
+        terms.push([term[0], term[term.length - 1]]);
+        term = [];
+      }
+    }
+    if (term.length >= 1) {
+      terms.push([term[0], term[term.length - 1]]);
+    }
+    return terms;
+  };
+
+  Event_Form.setStoredDates = function () {
+    var d, date, dates, i, k, l, len, len1, results, stored, term, terms;
+    stored = $(".mod-event .event-dates").val().split(/\r\n|\n/);
+    dates = [];
+    for (k = 0, len = stored.length; k < len; k++) {
+      d = stored[k];
+      date = new Date(d);
+      if (this.isValidDate(date)) {
+        dates.push(date);
+      }
+    }
+    terms = this.datesToTerm(dates);
+    results = [];
+    for (i = l = 0, len1 = terms.length; l < len1; i = ++l) {
+      term = terms[i];
+      if (i !== 0) {
+        this.cloneTermForm();
+      }
+      $(".mod-event dd.dates:last").find(".start").val(this.dateToString(term[0]));
+      results.push($(".mod-event dd.dates:last").find(".close").val(this.dateToString(term[1])));
+    }
+    return results;
+  };
+
+  Event_Form.cloneTermForm = function () {
+    var cln;
+    cln = $(".mod-event dd.dates:last").clone(false).insertAfter($(".mod-event dd.dates:last"));
+    cln.find(".start").val("");
+    cln.find(".close").val("");
+    cln.find(".clear").click(function () {
+      var close, start;
+      start = $(this).parent("dd").find(".start").val();
+      close = $(this).parent("dd").find(".close").val();
+      if (start !== "" || close !== "") {
+        if (confirm(Event_Form.deleteMessage)) {
+          Event_Form.clearTermForm($(this).parent("dd"));
+        }
+      } else {
+        Event_Form.clearTermForm($(this).parent("dd"));
+      }
+    });
+    $(".mod-event .date").attr("id", "").datetimepicker({
+      lang: "ja",
+      timepicker: false,
+      format: "Y/m/d"
+    });
+    if ($(".mod-event dd.dates").length >= this.maxTermForm) {
+      return $(".mod-event .setting-dates").hide();
+    }
+  };
+//$(".mod-event button:button.add-date").attr "disabled", true
+  Event_Form.clearTermForm = function (ele) {
+    ele.find(".start").val("");
+    ele.find(".close").val("");
+    if ($(".mod-event dd.dates").length > 1) {
+      ele.remove();
+    }
+//yearRange: "-10:+10"
+
+
+    if ($(".mod-event dd.dates").length < this.maxTermForm) {
+      return $(".mod-event .setting-dates").show();
+    }
+  };
+
+  return Event_Form;
+
+})();

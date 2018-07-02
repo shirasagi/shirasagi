@@ -1,11 +1,11 @@
 <% if @cur_member %>
-  <%= coffee do %>
-
-    # show notification
-    $.ajax
-      url: "<%= mypage_path %>notice/show.html"
-      success: (data)->
-        $("#my-notice").html data
+<%= jquery do %>
+  $.ajax({
+    url: "<%= mypage_path %>notice/show.html",
+    success: function (data) {
+      $("#my-notice").html(data);
+    }
+  });
 
   <% end %>
 
