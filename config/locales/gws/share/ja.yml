@@ -31,6 +31,7 @@ ja:
     addons:
       gws/share/category: カテゴリー
       gws/share/group_setting: 共有ファイル
+      gws/share/resource_limitation: 容量制限
 
   gws_role:
     read_other_gws_share_files: ファイルの閲覧（全て）
@@ -75,16 +76,7 @@ ja:
           too_deep: は%{max}階層以下にしてください。
           not_found_parent: 親カテゴリーが存在しません。
         gws/share/folder:
-          file_size_exceeds_limit: ファイルサイズ（%{size}）が最大ファイルサイズ（%{limit}）を超えました。
-          file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダーの最大サイズ（%{limit}）を超えました。
-          not_found_parent: 親フォルダーが存在しません。
-          found_children: 子フォルダーが存在します。
           found_files: フォルダー内、または削除済みのフォルダー内にファイルが存在しています。
-          not_move_to_parent: 最上位フォルダーに変更することはできません。
-          not_move_to_under_other_parent: 最上位のフォルダーをまたいでフォルダーを移動することはできません。
-          not_create_same_folder: フォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
-          not_move_to_same_name_folder: 移動先にフォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
-          invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
     attributes:
       gws/addon/share/category:
         category_ids: カテゴリー
@@ -92,6 +84,9 @@ ja:
         share_max_file_size: 最大ファイルサイズ
         share_files_capacity: 総容量制限
         share_default_sort: 並び順の規定値
+      gws/addon/share/resource_limitation:
+        share_max_file_size: 最大ファイルサイズ
+        share_max_folder_size: 総容量制限
       gws/share/category:
         name: カテゴリー名
       gws/share/file:
@@ -100,17 +95,12 @@ ja:
         folder_id: フォルダー名
         url_copy: URLのコピー
       gws/share/folder:
-        name: フォルダー名
-        depth: 階層
-        order: 並び順
-        share_max_file_size: 最大ファイルサイズ
-        share_max_folder_size: 総容量制限
-        descendants_files_count: ファイル数
-        descendants_total_file_size: ファイル容量
-        in_basename: フォルダー名
-        in_parent: 親フォルダー
+        file_ids: ファイル
       gws/share/file_uploader:
         in_file_ids: ファイル
+      gws/share/descendants_file_info:
+        descendants_files_count: 総ファイル数
+        descendants_total_file_size: 総ファイル容量
 
   tooltip:
     gws/share/category:
@@ -119,20 +109,6 @@ ja:
     gws/share/file:
       folder: フォルダー名を選択します。
       url_copy: クリップボードにファイルのURLをコピーします。
-    gws/share/folder:
-      name:
-        - フォルダー名を入力します。
-        - 親フォルダー名にスラッシュ区切りでサブフォルダーを作成することができます。
-      order:
-        - 並び順を入力します。
-      share_max_file_size:
-        - 最大ファイルサイズを入力します。
-        - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
-      share_max_folder_size:
-        - フォルダーの総容量制限を入力します。
-        - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
-      in_parent:
-        - 親フォルダーを選択してください。
     gws/addon/share/group_setting:
       share_max_file_size:
         - 最大ファイルサイズを入力します。
@@ -140,6 +116,13 @@ ja:
         - 総容量を入力します。
       share_default_sort:
         - ファイル一覧の並び順の規定値を選択します。
+    gws/addon/share/resource_limitation:
+      share_max_file_size:
+        - 最大ファイルサイズを入力します。
+        - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
+      share_max_folder_size:
+        - フォルダーの総容量制限を入力します。
+        - 最上位のフォルダーの設定が下位の全てのフォルダーに適用されます。
 
   job:
     models:

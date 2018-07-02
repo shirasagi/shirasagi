@@ -151,7 +151,7 @@ end
 puts "# notice"
 
 def create_notice(data)
-  create_item(Gws::Notice, data)
+  create_item(Gws::Notice::Post, data)
 end
 
 create_notice name: "#{@site.name}のお知らせです。", text: ("お知らせです。\n" * 10)

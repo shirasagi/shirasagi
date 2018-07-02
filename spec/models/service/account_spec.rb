@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Service::Account do
   let(:admin) { create(:service_account_admin) }
   let(:item) { create(:service_account) }
+  let(:notice_folder) { create(:gws_notice_folder) }
 
   it "methods" do
     expect(item.admin?).to be_falsey
@@ -29,7 +30,7 @@ describe Service::Account do
 
     # use quota
     create(:cms_notice, cur_site: cms_site)
-    create(:gws_notice, cur_site: gws_site)
+    create(:gws_notice_post, cur_site: gws_site, folder: notice_folder)
     create(:webmail_signature, cur_user: gws_user)
     item.organization_ids = SS::Group.organizations.pluck(:id)
     item.reload_quota_used

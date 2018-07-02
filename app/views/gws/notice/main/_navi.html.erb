@@ -1,0 +1,23 @@
+<nav class="mod-navi current-navi">
+  <h2><%= link_to t('mongoid.models.gws/notice/post'), gws_notice_main_path, class: 'icon-notice' %></h2>
+
+  <h3><%= link_to t('ss.navi.readable'), gws_notice_readables_path(folder_id: '-', category_id: '-'), class: 'readable' %></h3>
+
+  <% if Gws::Notice::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('ss.navi.editable'), gws_notice_editables_path(folder_id: '-', category_id: '-'), class: 'management' %></h3>
+  <% end %>
+
+  <% if Gws::Notice::Post.allowed?(:trash, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('ss.navi.trash'), gws_notice_trashes_path, class: 'trash' %></h3>
+  <% end %>
+
+  <% if Gws::Notice::Folder.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to Gws::Notice::Folder.model_name.human, gws_notice_folders_path, class: 'management' %></h3>
+  <% end %>
+
+  <% if Gws::Notice::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_notice_categories_path, class: 'management' %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

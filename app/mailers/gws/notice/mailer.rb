@@ -1,7 +1,7 @@
 class Gws::Notice::Mailer < ActionMailer::Base
   def notify_mail(site, notice, to)
     from = from_email(site).presence || ActionMailer::Base.default[:from]
-    subject = I18n.t("gws_notification.#{Gws::Notice.model_name.i18n_key}.subject", name: notice.name, default: notice.name)
+    subject = I18n.t("gws_notification.#{Gws::Notice::Post.model_name.i18n_key}.subject", name: notice.name, default: notice.name)
 
     @item = notice
     mail(from: from, to: to, subject: subject) do |format|

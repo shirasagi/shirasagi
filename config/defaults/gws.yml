@@ -76,7 +76,8 @@ production: &production
       - "Gws::Memo::Message"
       - "Gws::Monitor::Category"
       - "Gws::Monitor::Post"
-      - "Gws::Notice"
+      - "Gws::Notice::Category"
+      - "Gws::Notice::Post"
       - "Gws::Portal::GroupPortlet"
       - "Gws::Portal::GroupSetting"
       - "Gws::Portal::UserPortlet"
@@ -134,6 +135,12 @@ production: &production
   popup_notice:
     # Default search condition in popup / unseen, seen
     search_condition: unseen
+
+  notice:
+    default_notice_total_body_size_limit: 31_457_280
+    default_notice_individual_file_size_limit: 10_485_760
+    default_notice_total_file_size_limit: 31_457_280
+    portal_browsed_state: unread
 
 test:
   <<: *production

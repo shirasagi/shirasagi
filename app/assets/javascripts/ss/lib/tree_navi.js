@@ -6,35 +6,51 @@ function SS_TreeNavi(selector) {
 
 SS_TreeNavi.prototype.render = function(url) {
   var _this = this;
-  var loading= $(SS.loading);
+  var loading = $(SS.loading);
 
   $.ajax({
     url: url,
     beforeSend: function() {
+      if (_this.errorEl) {
+        _this.errorEl.hide();
+      }
       _this.el.append(loading);
     },
     success: function(data) {
-      loading.remove();
       _this.el.append(_this.renderItems(data.items));
       _this.registerEvents();
+    },
+    error: function(xhr, status, error) {
+      _this.showError(xhr, status, error);
+    },
+    complete: function() {
+      loading.remove();
     }
   });
 };
 
 SS_TreeNavi.prototype.renderChildren = function(item) {
   var _this = this;
-  var loading= $(SS.loading);
+  var loading = $(SS.loading);
 
   $.ajax({
     url: $(item).find('.item-mark').attr('href'),
     data: 'only_children=1',
     beforeSend: function() {
+      if (_this.errorEl) {
+        _this.errorEl.hide();
+      }
       item.after(loading);
     },
     success: function(data) {
-      loading.remove();
       item.after(_this.renderItems(data.items));
       _this.registerEvents();
+    },
+    error: function(xhr, status, error) {
+      _this.showError(xhr, status, error);
+    },
+    complete: function() {
+      loading.remove();
     }
   });
   return false;
@@ -98,4 +114,15 @@ SS_TreeNavi.prototype.closeItem = function(item, mark) {
       $(this).hide();
     }
   });
+};
+
+SS_TreeNavi.prototype.showError = function(xhr, status, error) {
+  if (! this.errorEl) {
+    this.errorEl = $('<div class="error" />');
+    this.el.append(this.errorEl);
+    this.errorEl.hide();
+  }
+
+  this.errorEl.html(error);
+  this.errorEl.show();
 };

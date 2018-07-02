@@ -1,0 +1,12 @@
+<dl class="see">
+  <% if @item.folder.present? %>
+    <dt><%= @model.t :folder_id %></dt>
+    <dd><%= @item.folder.name %></dd>
+  <% end %>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :severity %></dt>
+  <dd><%= @item.label :severity %></dd>
+</dl>

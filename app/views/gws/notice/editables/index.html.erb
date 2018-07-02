@@ -1,0 +1,41 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.move'), action: :move, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="state"><%= t "ss.state.#{item.state_with_release_date}" %></span>
+  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <% if item.folder.present? && item.folder.for_post_editor?(@cur_site, @cur_user) %>
+    <span class="folder">
+      <span class="label"><%= t('mongoid.models.gws/notice/folder') %></span>
+      <span class="folder-name"><%= item.folder.name %></span>
+    </span>
+  <% end %>
+
+  <% if attr = item.label(:severity).presence %>
+    <span class="label"><%= attr %></span>
+  <% end %>
+
+  <% if item.categories.present? %>
+  <span class="categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, url_for(action: :index, category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
+    <% end %>
+  </span>
+  <% end %>
+
+  <% if item.files.count > 0 %>
+    <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
+  <% end %>
+
+  <% if item.comments.count > 0 %>
+    <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
+  <% end %>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

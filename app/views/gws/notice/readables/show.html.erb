@@ -1,0 +1,112 @@
+<h2 class="gws-notice-post"><%= @item.name %></h2>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head">
+      <div class="main">
+        <% if @item.categories.present? %>
+          <span class="categories">
+          <% @item.categories.compact.each do |category| %>
+            <%= link_to category.trailing_name, url_for(action: :index, category: category.id), class: "gws-category-label", style: category_label_css(category) %>
+          <% end %>
+          </span>
+        <% end %>
+      </div>
+      <div class="aside">
+        <span class="updated"><%= I18n.l(@item.updated) %></span>
+        <span class="user"><%= @item.contributor_name.presence || @item.user_long_name %></span>
+        <span class="severity">
+          <span class="severity-label"><%= @model.t :severity %></span>
+          <span class="severity-value"><%= @item.label(:severity) %></span>
+        </span>
+      </div>
+    </div>
+    <div class="addon-body">
+      <div class="main" id="gws-notice-text">
+        <%= @item.html %>
+      </div>
+      <% if @item.files.present? %>
+        <div class="files">
+          <% @item.files.each do |file| %>
+          <span id="file-<%= file.id %>">
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+          </span>
+          <% end %>
+        </div>
+      <% end %>
+      <% if @item.links.present? %>
+        <div class="links">
+        <% @item.links.each_with_index do |link, i| %>
+          <span id="link-<%= i %>">
+            <%= link_to link['name'], link['url'] %>
+          </span>
+        <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class="menu">
+      <%= button_tag @item.browsed?(@cur_user) ? t('gws/notice.links.unset_seen') : t('gws/notice.links.set_seen'), name: 'toggle-browsed', type: 'button', class: 'btn' %>
+    </div>
+  </div>
+
+  <%= render file: "_addons_show", locals: {addons: @item.addons.select {|addon| addon.klass == Gws::Addon::Notice::CommentPost}} %>
+</div>
+
+<%= jquery do %>
+  var url = "<%= url_for(action: :toggle_browsed, format: 'json') %>";
+  var browsed = <%== @item.browsed?(@cur_user) ? true.to_json : false.to_json %>;
+  var $button = $('button[name=toggle-browsed]');
+  var token = $('meta[name="csrf-token"]').attr('content');
+
+  var renderButton = function() {
+    if (browsed) {
+      $button.html("<%= t('gws/notice.links.unset_seen') %>");
+    } else {
+      $button.html("<%= t('gws/notice.links.set_seen') %>");
+    }
+  };
+
+  var toggleBrowsed = function(success) {
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: { authenticity_token: token },
+      success: success
+    });
+  };
+
+  var setBrowsed = function() {
+    if (! confirm("<%= t('gws/notice.confirm.set_seen') %>")) {
+      return;
+    }
+
+    toggleBrowsed(function() {
+      browsed = true;
+      renderButton();
+      SS.notice("<%= t('gws/notice.notice.set_seen') %>");
+    });
+    return;
+  };
+
+  var unsetBrowsed = function() {
+    if (! confirm("<%= t('gws/notice.confirm.unset_seen') %>")) {
+      return;
+    }
+
+    toggleBrowsed(function() {
+      browsed = false;
+      renderButton();
+      SS.notice("<%= t('gws/notice.notice.unset_seen') %>");
+    });
+    return;
+  };
+
+  $button.on('click', function() {
+    if (browsed) {
+      unsetBrowsed();
+    } else {
+      setBrowsed();
+    }
+    return false;
+  });
+<% end %>
