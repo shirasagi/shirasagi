@@ -1,5 +1,3 @@
-<%= stylesheet_link_tag "opendata/private", media: "all" %>
-
 <% @s = OpenStruct.new params[:s] %>
 <div class="rdf-prop-search-form">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
