@@ -41,13 +41,13 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
 
           within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
+            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
           end
 
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -83,7 +83,7 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -122,13 +122,13 @@ describe "my_group", dbscope: :example, js: true do
             click_on I18n.t("workflow.buttons.select")
 
             within ".ms-container" do
-              find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
+              find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
             end
 
             fill_in "workflow[comment]", with: workflow_comment
             click_on I18n.t("workflow.buttons.request")
           end
-          expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+          expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
           item.reload
           expect(item.workflow_user_id).to eq cms_user.id
@@ -164,7 +164,7 @@ describe "my_group", dbscope: :example, js: true do
             click_on I18n.t("workflow.buttons.approve")
           end
 
-          expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+          expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
           item.reload
           expect(item.workflow_state).to eq "approve"

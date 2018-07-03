@@ -36,7 +36,7 @@ class Gws::Notice::Folder
 
           conds = []
           conds << { name: full_name }
-          conds << { name: /#{Regexp.escape(full_name)}\// }
+          conds << { name: /#{::Regexp.escape(full_name)}\// }
           descendants_group_ids = Gws::Group.all.active.where('$and' => [{ '$or' => conds }]).pluck(:id)
 
           folder.member_group_ids = group_ids
