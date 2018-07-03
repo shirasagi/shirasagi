@@ -19,7 +19,7 @@ Rails:
 Rails/Output:
   Enabled: false
 
-Lint/DefEndAlignment:
+Layout/DefEndAlignment:
   AutoCorrect: false
 
 Metrics/ClassLength:
