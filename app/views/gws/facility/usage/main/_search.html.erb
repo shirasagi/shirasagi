@@ -6,8 +6,8 @@
       <%= f.select :year, @years %>
       <%= f.select :month, @months, include_blank: t("ads.yearly") %>
     </span>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-    <%= link_to t('ss.buttons.reset'), gws_facility_usage_main_path, class: 'btn' %>
+    <%= f.submit t('ss.buttons.search'), class: 'btn' %>
+    <%= link_to t('ss.buttons.reset'), gws_facility_usage_main_path, class: 'btn btn-secondary' %>
   <% end %>
 </div>
 

@@ -7,8 +7,8 @@
       <%= f.select :month, @months %>
       <%= f.select :day, (1..31).to_a.map { |d| ["#{d}#{t('datetime.prompts.day')}", d] } %>
     </span>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-    <%= link_to t('ss.buttons.reset'), gws_facility_state_main_path, class: 'btn' %>
+    <%= f.submit t('ss.buttons.search'), class: 'btn' %>
+    <%= link_to t('ss.buttons.reset'), gws_facility_state_main_path, class: 'btn btn-secondary' %>
   <% end %>
 </div>
 

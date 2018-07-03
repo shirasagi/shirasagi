@@ -10,13 +10,19 @@
 
   <dt><%= @model.t :minutes_limit %><%= @model.tt :minutes_limit %></dt>
   <dd>
-    <%= f.number_field :min_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
-    〜
-    <%= f.number_field :max_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
+    <div class="input-group" style="width: 18em;">
+      <%= f.number_field :min_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
+      〜
+      <%= f.number_field :max_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
+    </div>
   </dd>
 
   <dt><%= @model.t :max_days_limit %><%= @model.tt :max_days_limit %></dt>
-  <dd><%= f.number_field :max_days_limit %><%= I18n.t('gws/facility.prompts.days') %></dd>
+  <dd>
+    <div class="input-group" style="width: 12em;">
+    <%= f.number_field :max_days_limit %><%= I18n.t('gws/facility.prompts.days') %>
+    </div>
+  </dd>
 
   <dt><%= @model.t :reservation_start_date %><%= @model.tt :reservation_start_date %></dt>
   <dd><%= f.text_field :reservation_start_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.reservation_start_date) } %></dd>

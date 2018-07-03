@@ -9,8 +9,8 @@ function SS_SortableForm(selector, opts) {
   this.body.find('tr').prepend('<td class="sortable-handle"></td>');
   this.head.find('tr').append('<th class="sortable-buttons-head"></th>');
   this.body.find('tr').append('<td class="sortable-buttons">' +
-    '<button class="btn action-insert" type="button"><i class="material-icons md-13">&#xE145;</i></button> ' +
-    '<button class="btn action-remove" type="button"><i class="material-icons md-13">&#xE15B;</i></button>' +
+    '<button class="btn btn-outline action-insert" type="button"><i class="material-icons md-13">&#xE145;</i></button> ' +
+    '<button class="btn btn-outline action-remove" type="button"><i class="material-icons md-13">&#xE15B;</i></button>' +
     '</td>');
 
   this.base = this.body.find('tr[data-base]').last().clone();

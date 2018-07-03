@@ -95,6 +95,9 @@
     .search {
       float: right;
       margin: -5px 0 -5px 20px;
+      * + * {
+        margin-left: 4px;
+      }
       @include mb {
         float: none;
         margin: 0;
@@ -114,9 +117,22 @@
     h2 .search {
       margin: -5px 0;
     }
+    .bmd-form-group {
+      padding-top: unset;
+    }
   }
 }
 .gws-schedule-search {
+  .dates-field {
+    width: 32em;
+    @include justify-content(space-between);
+    * {
+      @include flex-grow(unset);
+    }
+    input {
+      width: 9em;
+    }
+  }
   .send {
     padding-top: 0;
     @include mb {

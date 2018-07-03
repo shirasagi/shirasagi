@@ -7,11 +7,11 @@
 </header>
 
 <% @s = OpenStruct.new params[:s] %>
-<%= form_for :s, url: gws_schedule_search_times_path, html: { method: :get, class: :search } do |f| %>
+<%= form_for :s, url: gws_schedule_search_times_path, html: { method: :get } do |f| %>
   <dl class="see gws-schedule-search-field">
     <dt><%= Gws::Schedule::Plan.t :term %></dt>
     <dd>
-      <div class="dates-field">
+      <div class="dates-field input-group">
         <%= f.text_field :start_on, class: "date start", value: tryb { @time_search.start_on.strftime("%Y/%m/%d") } %>
         - <%= f.text_field :end_on, class: "date end", value: tryb { @time_search.end_on.strftime("%Y/%m/%d") } %>
 

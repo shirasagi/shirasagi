@@ -28,9 +28,9 @@ this.Gws_Schedule_Plan = (function () {
 
   Gws_Schedule_Plan.renderAlldayForm = function () {
     this.changeDateForm();
-    return $('#item_allday').change(function () {
+    $('#item_allday').change(function () {
       Gws_Schedule_Plan.changeDateValue();
-      return Gws_Schedule_Plan.changeDateForm();
+      Gws_Schedule_Plan.changeDateForm();
     });
   };
   // @example
@@ -41,7 +41,7 @@ this.Gws_Schedule_Plan = (function () {
     var etime, stime;
     if ($('#item_allday').prop('checked')) {
       $('#item_start_on').val($('#item_start_at').val().replace(/ .*/, ''));
-      return $('#item_end_on').val($('#item_end_at').val().replace(/ .*/, ''));
+      $('#item_end_on').val($('#item_end_at').val().replace(/ .*/, ''));
     } else {
       stime = $('#item_start_at').val().replace(/.* /, '');
       etime = $('#item_end_at').val().replace(/.* /, '');
@@ -52,17 +52,17 @@ this.Gws_Schedule_Plan = (function () {
         etime = '00:00';
       }
       $('#item_start_at').val($('#item_start_on').val() + (" " + stime));
-      return $('#item_end_at').val($('#item_end_on').val() + (" " + etime));
+      $('#item_end_at').val($('#item_end_on').val() + (" " + etime));
     }
   };
 
   Gws_Schedule_Plan.changeDateForm = function () {
     if ($('#item_allday').prop('checked')) {
-      $('.dates-field').show();
-      return $('.datetimes-field').hide();
+      $('.dates-field').css('display', 'flex');
+      $('.datetimes-field').hide();
     } else {
       $('.dates-field').hide();
-      return $('.datetimes-field').show();
+      $('.datetimes-field').show();
     }
   };
 

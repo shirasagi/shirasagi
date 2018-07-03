@@ -46,9 +46,9 @@
 
 <div class="operations">
   <% if @download_url %>
-    <input type="button" value="CSV" class="btn btn-csv" />
+    <input type="button" value="CSV" class="btn btn-outline btn-csv" />
   <% end %>
-  <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
+  <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-outline btn-print" />
 </div>
 
 <% category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options %>
@@ -56,5 +56,5 @@
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <%= f.select :category_id, category_options, include_blank: @model.t(:category_id) if category_options.present? %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
-  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn btn-outline" />
 <% end %>

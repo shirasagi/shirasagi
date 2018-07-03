@@ -8,9 +8,10 @@
 
   <dt><%= @model.t :term %><%= @model.tt :term %></dt>
   <dd>
-    <div class="dates-field">
+    <div class="dates-field input-group" style="width: 18em;">
       <%= f.text_field :start_on, class: "date start", value: tryb{@item.start_on.strftime("%Y/%m/%d")} %>
-      - <%= f.text_field :end_on, class: "date end", value: tryb{@item.end_on.strftime("%Y/%m/%d")} %>
+      -
+      <%= f.text_field :end_on, class: "date end", value: tryb{@item.end_on.strftime("%Y/%m/%d")} %>
     </div>
   </dd>
 
