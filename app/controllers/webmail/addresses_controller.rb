@@ -81,7 +81,7 @@ class Webmail::AddressesController < ApplicationController
     if item = @model.user(@cur_user).where(email: email).first
       redirect_to action: :edit, id: item.id
     else
-      redirect_to action: :new, item: params[:item]
+      redirect_to action: :new, item: params[:item].to_unsafe_h
     end
   end
 end
