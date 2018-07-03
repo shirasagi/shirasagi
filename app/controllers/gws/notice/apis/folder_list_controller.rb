@@ -45,7 +45,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
       conds = []
       # root folders
       if @root_folder.present?
-        conds << { name: /#{Regexp.escape(@root_folder.name)}\//, depth: @root_folder.depth + 1 }
+        conds << { name: /#{::Regexp.escape(@root_folder.name)}\//, depth: @root_folder.depth + 1 }
       else
         conds << { depth: 1 }
       end
@@ -59,7 +59,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
           full_name << '/'
           depth += 1
 
-          conds << { name: /#{Regexp.escape(full_name)}/, depth: depth + 1 }
+          conds << { name: /#{::Regexp.escape(full_name)}/, depth: depth + 1 }
         end
       end
 

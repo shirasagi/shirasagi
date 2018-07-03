@@ -53,7 +53,7 @@ describe "request cancel", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -79,7 +79,7 @@ describe "request cancel", dbscope: :example, js: true do
           end
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
 
         item.reload
         expect(item.workflow_state).to eq "cancelled"
@@ -113,7 +113,7 @@ describe "request cancel", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -139,7 +139,7 @@ describe "request cancel", dbscope: :example, js: true do
           end
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
 
         item.reload
         expect(item.workflow_state).to eq "cancelled"

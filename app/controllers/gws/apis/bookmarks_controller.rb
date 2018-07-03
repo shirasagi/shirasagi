@@ -25,7 +25,7 @@ class Gws::Apis::BookmarksController < ApplicationController
   def create
     item = @model.new(get_params)
     model = params.dig(:item, :model).sub(/gws\/(?<model>[^\/]*)\/?.*/) do
-      Regexp.last_match[:model]
+      ::Regexp.last_match[:model]
     end
     if @model::BOOKMARK_MODEL_TYPES.include?(model)
       item.bookmark_model = model
