@@ -49,6 +49,6 @@ class Gws::Apis::BookmarksController < ApplicationController
     item = find_item
 
     item.try(:destroy)
-    render nothing: true
+    head :ok
   end
 end
