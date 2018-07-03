@@ -98,7 +98,7 @@ class Inquiry::Answer
           ss_file.state = "closed"
           ss_file.model = "inquiry/temp_file"
           ss_file.save
-          break ss_file
+          ss_file
         end
         values = [ ss_file._id, ss_file.filename, ss_file.size ]
         value = ss_file._id

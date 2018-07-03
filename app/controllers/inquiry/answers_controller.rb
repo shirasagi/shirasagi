@@ -100,7 +100,7 @@ class Inquiry::AnswersController < ApplicationController
 
       client_name = Inquiry::Answer.persistence_context.send(:client_name)
       file = SS::File.with(client: client_name) do |model|
-        break model.where(id: params[:fid].to_i).first
+        model.where(id: params[:fid].to_i).first
       end
       unless file.blank?
         send_afile file
