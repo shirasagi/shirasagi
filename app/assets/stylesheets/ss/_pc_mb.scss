@@ -1626,6 +1626,13 @@ dl.see {
         margin: 5px 0;
       }
     }
+    .form-group {
+      padding-top: 0;
+      margin-bottom: 0;
+    }
+    .form-group + .form-group {
+      margin-left: 8px;
+    }
   }
   > dt ~ dt { margin-top: 15px; }
   > dd ~ dd {
@@ -1657,6 +1664,9 @@ dl.see {
     }
   }
   > dd.short {
+    .input-group {
+      width: 12em;
+    }
     @include mb {
       -js-display: flex;
       @include display-flex;
@@ -2274,6 +2284,7 @@ div.index {
 table.index {
   width: 100%;
   border: $border-gray5;
+  border-collapse: separate;
   background: $white;
   tr:nth-child(2n) {
     background: #f8f8f8;
@@ -2548,6 +2559,7 @@ form .CodeMirror {
   }
   .minicolors-input {
     height: inherit;
+    width: 8em;
   }
   .minicolors-swatch {
     top: 2px;
