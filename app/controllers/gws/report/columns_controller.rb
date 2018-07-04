@@ -3,7 +3,7 @@ class Gws::Report::ColumnsController < ApplicationController
   include Gws::CrudFilter
   include Gws::ColumnFilter
 
-  navi_view "gws/main/conf_navi"
+  navi_view "gws/report/main/navi"
   self.form_model = Gws::Report::Form
 
   private
