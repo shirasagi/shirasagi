@@ -1,5 +1,5 @@
 <% @s = OpenStruct.new params[:s] %>
-<%= form_for :s, url: '', html: { method: :get, class: :search } do |f| %>
+<%= form_for :s, url: '', html: { method: :get, class: 'index-search' } do |f| %>
   <%= f.select :sort, @model.new.sort_options %>
   <%= f.text_field :keyword, style: 'width: 140px;', placeholder: t('gws/schedule/todo.search_todos') %>
   <%= f.select :todo_state, @model.new.todo_state_options %>
