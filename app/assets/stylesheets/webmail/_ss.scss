@@ -387,6 +387,9 @@ li.webmail-accounts {
     float: right;
     margin-bottom: 15px;
     text-align: right;
+    select {
+      display: inline;
+    }
   }
   #item_signature {
     max-width: 200px;

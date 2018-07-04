@@ -62,15 +62,19 @@
   <dd><%= text_field_tag "item[imap_settings][][imap_trash_box]", setting.imap_trash_box %></dd>
 
   <dt><%= @model.t :threshold_mb %><%= @model.tt :threshold_mb %></dt>
-  <dd><%= number_field_tag "item[imap_settings][][threshold_mb]", setting.threshold_mb, min: 0 %> <%= t "ss.units.mega_byte" %></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= number_field_tag "item[imap_settings][][threshold_mb]", setting.threshold_mb, min: 0 %> <span class="input-group-append"><%= t "ss.units.mega_byte" %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
   <dd><%= check_box_tag "item[imap_settings][][default]", 1, default_index, class: "default-index" %></dd>
 
   <dt></dt>
   <dd>
-    <%= button_tag t('webmail.buttons.test_connection'), class: 'imap-test', type: :button %>
+    <%= button_tag t('webmail.buttons.test_connection'), class: 'imap-test btn', type: :button %>
     <span class="imap-test-resp" style="margin-left: 10px; margin-right: 10px;"></span>
-    <%= button_tag "削除", class: 'delete-imap-setting', type: :button %>
+    <%= button_tag "削除", class: 'delete-imap-setting btn', type: :button %>
   </dd>
 </dl>

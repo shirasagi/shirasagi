@@ -20,8 +20,15 @@
       <dd><%= f.text_field :text, style: "width: 300px;" %></dd>
       <dt><%= @model.t :date %></dt>
       <dd>
-        <%= f.text_field :since, class: "date js-date" %>
-        - <%= f.text_field :before, class: "date js-date" %>
+        <div class="input-group">
+          <div class="form-group">
+            <%= f.text_field :since, class: "date js-date" %>
+          </div>
+          <span>-</span>
+          <div class="form-group">
+            <%= f.text_field :before, class: "date js-date" %>
+          </div>
+        </div>
       </dd>
       <dt><%= @model.t :flags %></dt>
       <dd>
@@ -31,7 +38,7 @@
 
       <dt></dt>
       <dd>
-        <input type="submit" value="<%= t 'ss.buttons.search' %>" class="btn search" />
+        <%= f.submit t('ss.buttons.search'), name: nil, class: 'btn search' %>
         <input type="reset" value="<%= t 'ss.buttons.reset' %>" class="btn reset" />
       </dd>
     </dl>
