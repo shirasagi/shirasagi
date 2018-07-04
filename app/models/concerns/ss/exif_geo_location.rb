@@ -1,5 +1,7 @@
 module SS::ExifGeoLocation
   extend ActiveSupport::Concern
+  include Mongoid::Document
+  include SS::PermitParams
 
   included do
     field :geo_location, type: Map::Extensions::Loc
