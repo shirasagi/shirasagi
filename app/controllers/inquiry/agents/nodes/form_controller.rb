@@ -50,7 +50,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
         client_name = Inquiry::Answer.persistence_context.send(:client_name)
         param = SS::File.with(client: client_name) do |model|
-          break model.find(param)
+          model.find(param)
         end
       end
       @items << [column, param]

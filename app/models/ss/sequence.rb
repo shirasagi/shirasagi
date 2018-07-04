@@ -29,7 +29,9 @@ class SS::Sequence
 
     def unset_sequence(coll, name, options)
       sid = "#{coll}_#{name}"
-      self.with(options[:with] || {}).destroy_all(_id: sid)
+      self.with(options[:with] || {}) do |model|
+        model.destroy_all(_id: sid)
+      end
     end
   end
 end
