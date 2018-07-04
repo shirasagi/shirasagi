@@ -96,7 +96,7 @@ class Gws::Memo::Folder
   end
 
   def dependant_scope
-    self.class.user(user)
+    self.class.site(site).user(user)
   end
 
   def sent_box?
