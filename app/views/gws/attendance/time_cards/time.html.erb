@@ -10,9 +10,11 @@
         <dl class="see">
           <dt><%= t('gws/attendance.edit_cell.time') %></dt>
           <dd>
-            <%= f.select(:in_hour, hour_options, selected: val.try(:hour) || Time.zone.now.hour, include_blank: true) %>
-            <%= f.select(:in_minute, minute_options, selected: val.try(:min) || Time.zone.now.min, include_blank: true) %>
-            <%= button_tag(t('ss.buttons.clear'), type: 'reset', name: 'clear', class: 'btn') %>
+            <div class="input-group" style="width: 20em;">
+              <%= f.select(:in_hour, hour_options, selected: val.try(:hour) || Time.zone.now.hour, include_blank: true) %>
+              <%= f.select(:in_minute, minute_options, selected: val.try(:min) || Time.zone.now.min, include_blank: true) %>
+              <%= button_tag(t('ss.buttons.clear'), type: 'reset', name: 'clear', class: 'btn') %>
+            </div>
           </dd>
           <dt><%= @model.t :in_reason %></dt>
           <dd><%= f.text_field(:in_reason) %></dd>
