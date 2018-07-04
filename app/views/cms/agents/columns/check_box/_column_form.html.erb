@@ -1,10 +1,12 @@
 <% value ||= [] %>
 <%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <% column.select_options.each do |val| %>
-    <label>
-      <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options) %>
-      <%= val %>
-    </label>
-  <% end %>
+  <div class="input-group check-box-column">
+    <% column.select_options.each do |val| %>
+      <label>
+        <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options) %>
+        <%= val %>
+      </label>
+    <% end %>
+  </div>
 </dd>

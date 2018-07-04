@@ -1,7 +1,9 @@
 <% value ||= nil %>
 <%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <span class="prefix"><%= column.prefix_label %></span>
-  <%= text_field_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
-  <span class="postfix"><%= column.postfix_label %></span>
+  <div class="input-group text-field-column">
+    <span class="prefix input-group-prepend"><%= column.prefix_label %></span>
+    <%= text_field_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
+    <span class="postfix input-group-append"><%= column.postfix_label %></span>
+  </div>
 </dd>

@@ -1,7 +1,7 @@
 <% return if @cur_form.blank? && (@item.cur_form || @item.form).blank? %>
 <% @cur_form ||= (@item.cur_form || @item.form) %>
 
-<dl class="see mod-gws-workflow-custom_form">
+<dl class="see mod-custom-form mod-gws-workflow-custom_form">
   <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
     <%= render(file: column.column_form_path, locals: { column: column, object_name: 'custom', value: @item.read_column_value(column) }) %>
   <% end %>

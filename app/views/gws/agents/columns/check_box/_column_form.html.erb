@@ -1,10 +1,14 @@
 <% value ||= [] %>
 <%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <% column.select_options.each do |val| %>
-    <label>
-      <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options) %>
-      <%= val %>
-    </label>
-  <% end %>
+  <div class="input-group check-box-column">
+    <span class="prefix input-group-prepend"><%= column.prefix_label %></span>
+    <% column.select_options.each do |val| %>
+      <label>
+        <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options) %>
+        <%= val %>
+      </label>
+    <% end %>
+    <span class="postfix input-group-append"><%= column.postfix_label %></span>
+  </div>
 </dd>

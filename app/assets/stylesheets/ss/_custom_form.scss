@@ -1,0 +1,63 @@
+.mod-custom-form {
+  .text-field-column, .url-field-column {
+    width: 80%;
+  }
+  .prefix {
+    margin-right: 4px;
+  }
+  .postfix {
+    margin-left: 4px;
+  }
+  .date-field-column {
+    input {
+      @include flex-grow(unset);
+    }
+    input.date {
+      width: 9em;
+    }
+    input.datetime {
+      width: 12em;
+    }
+  }
+  .number-field-column {
+    input {
+      @include flex-grow(unset);
+      width: 12em;
+    }
+  }
+  .text-area-column {
+    width: 80%;
+    .prefix {
+      margin-right: unset;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .postfix {
+      margin-left: unset;
+      margin-top: 4px;
+      display: block;
+    }
+  }
+  .select-column {
+    select {
+      @include flex-grow(unset);
+      width: auto;
+    }
+  }
+  .radio-button-column, .check-box-column {
+    @include align-items(center);
+    label {
+      display: inline;
+      margin: 0;
+    }
+    label + label {
+      margin-left: 1rem;
+    }
+  }
+  .file-upload-column {
+    @include align-items(center);
+    .humanized-name {
+      margin-left: 8px;
+    }
+  }
+}

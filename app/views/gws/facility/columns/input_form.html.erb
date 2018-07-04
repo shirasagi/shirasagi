@@ -1,7 +1,7 @@
 <% return if @items.blank? %>
 
 <% object_name = params[:object_name].presence || 'item' %>
-<dl class="see">
+<dl class="see mod-custom-form">
   <% @items.each do |item| %>
     <%= render(file: item.column_form_path, locals: { column: item, object_name: object_name }) %>
   <% end %>

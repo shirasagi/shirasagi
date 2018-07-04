@@ -6,7 +6,7 @@
     cur_data = Gws::UserFormData.site(@cur_site).form(cur_form).user(@item).order_by(id: 1, created: 1).first
   end
 %>
-<dl class="see gws-user-custom_form">
+<dl class="see mod-custom-form gws-user-custom_form">
   <% cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
     <%= render(file: column.column_form_path, locals: { column: column, object_name: 'custom', value: cur_data.try(:read_column_value, column) }) %>
   <% end %>

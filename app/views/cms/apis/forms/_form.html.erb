@@ -8,7 +8,7 @@ f = OpenStruct.new
 f.object_name = 'item'
 %>
 
-<dl class="see mod-cms-form-page column-values">
+<dl class="see mod-custom-form mod-cms-form-page column-values">
   <% @item.columns.order_by(order: 1, created: 1).each do |column| %>
     <% value = find_column_value(column) %>
     <%= render file: column.column_form_path, locals: { f: f, object_name: "#{f.object_name}[column_values]", column: column, value: value } %>

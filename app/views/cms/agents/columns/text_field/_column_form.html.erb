@@ -1,5 +1,7 @@
 <% value ||= nil %>
 <%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <%= text_field_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
+  <div class="input-group text-field-column">
+    <%= text_field_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
+  </div>
 </dd>

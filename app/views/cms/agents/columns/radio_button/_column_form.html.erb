@@ -1,10 +1,12 @@
 <% value ||= nil %>
 <%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <% column.select_options.each do |val| %>
-    <label>
-      <%= radio_button_tag("#{object_name}[#{column.id}]", val, value.try(:value) == val, column.form_options) %>
-      <%= val %>
-    </label>
-  <% end %>
+  <div class="input-group radio-button-column">
+    <% column.select_options.each do |val| %>
+      <label>
+        <%= radio_button_tag("#{object_name}[#{column.id}]", val, value.try(:value) == val, column.form_options) %>
+        <%= val %>
+      </label>
+    <% end %>
+  </div>
 </dd>

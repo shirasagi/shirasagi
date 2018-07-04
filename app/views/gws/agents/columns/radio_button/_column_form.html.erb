@@ -1,10 +1,14 @@
 <% value ||= nil %>
 <%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <% column.select_options.each do |val| %>
-    <label>
-      <%= radio_button_tag("#{object_name}[#{column.id}]", val, value.try(:value) == val, column.form_options) %>
-      <%= val %>
-    </label>
-  <% end %>
+  <div class="input-group radio-button-column">
+    <span class="prefix input-group-prepend"><%= column.prefix_label %></span>
+    <% column.select_options.each do |val| %>
+      <label>
+        <%= radio_button_tag("#{object_name}[#{column.id}]", val, value.try(:value) == val, column.form_options) %>
+        <%= val %>
+      </label>
+    <% end %>
+    <span class="postfix input-group-append"><%= column.postfix_label %></span>
+  </div>
 </dd>

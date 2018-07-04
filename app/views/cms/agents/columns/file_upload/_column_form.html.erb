@@ -7,10 +7,12 @@
 %>
 <%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
-  <%= link_to(t('ss.links.upload'), cms_apis_temp_files_path, class: %w(ajax-box btn btn-file-upload), data: { column_id: column.id.to_s }) %>
-  <span class="humanized-name column-<%= column.id %>"><%= file.try(:humanized_name) %></span>
-  <%= hidden_field_tag("#{object_name}[#{column.id}]", file.try(:id), form_options) %>
-  <%= link_to('#', class: 'btn-file-delete', style: file ? '' : 'display: none') do %>
-    <i class="material-icons" style="font-size: 120%;">&#xE872;</i>
-  <% end %>
+  <div class="input-group file-upload-column">
+    <%= link_to(t('ss.links.upload'), cms_apis_temp_files_path, class: %w(ajax-box btn btn-file-upload), data: { column_id: column.id.to_s }) %>
+    <span class="humanized-name column-<%= column.id %>"><%= file.try(:humanized_name) %></span>
+    <%= hidden_field_tag("#{object_name}[#{column.id}]", file.try(:id), form_options) %>
+    <%= link_to('#', class: 'btn-file-delete', style: file ? '' : 'display: none') do %>
+      <i class="material-icons" style="font-size: 120%;">&#xE872;</i>
+    <% end %>
+  </div>
 </dd>
