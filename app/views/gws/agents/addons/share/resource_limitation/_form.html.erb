@@ -6,9 +6,17 @@
 
   <dl class="see mod-gws-share-resource-limitation">
     <dt><%= @model.t :share_max_file_size %><%= @model.tt :share_max_file_size %></dt>
-    <dd><%= f.number_field :in_share_max_file_size_mb %> <%= t("ss.units.mega_byte") %></dd>
+    <dd class="short">
+      <div class="input-group" style="width: 12em">
+        <%= f.number_field :in_share_max_file_size_mb %><span class="input-group-append"><%= t("ss.units.mega_byte") %></span>
+      </div>
+    </dd>
 
     <dt><%= @model.t :share_max_folder_size %><%= @model.tt :share_max_folder_size %></dt>
-    <dd><%= f.number_field :in_share_max_folder_size_mb %> <%= t("ss.units.mega_byte") %></dd>
+    <dd class="short">
+      <div class="input-group" style="width: 12em">
+        <%= f.number_field :in_share_max_folder_size_mb %><span class="input-group-append"><%= t("ss.units.mega_byte") %></span>
+      </div>
+    </dd>
   </dl>
 <% end %>
