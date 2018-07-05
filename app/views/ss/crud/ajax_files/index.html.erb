@@ -33,7 +33,11 @@ SS.ajaxForm("form.user-file", {
     if (xhr.status == 413) {
       alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
     } else {
-      alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      try {
+        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+      } catch {
+        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      }
     }
   }
 });
