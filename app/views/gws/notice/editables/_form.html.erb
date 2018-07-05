@@ -1,9 +1,11 @@
 <dl class="see">
-  <dt><%= @model.t :folder_id %></dt>
-  <dd>
-    <%= @item.folder.name %>
-    <%= f.hidden_field :folder_id %>
-  </dd>
+  <% if @item.folder.present? %>
+    <dt><%= @model.t :folder_id %></dt>
+    <dd>
+      <%= @item.folder.name %>
+      <%= f.hidden_field :folder_id %>
+    </dd>
+  <% end %>
 
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>
