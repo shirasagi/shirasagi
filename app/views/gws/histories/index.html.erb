@@ -8,15 +8,17 @@
 <div class="index">
   <div class="list-head">
     <div class="list-head-action">
-      <% if now.to_date != origin.to_date %>
-      <%= link_to(t('gws.history.days.today'), { ymd: now.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal; margin-right: 12px;') %>
-      <% end %>
+      <div class="input-group">
+        <% if now.to_date != origin.to_date %>
+        <%= link_to(t('gws.history.days.today'), { ymd: now.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal; margin-right: 12px;') %>
+        <% end %>
 
-      <% if now >= next_day %>
-      <%= link_to(t('gws.history.days.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
-      <% end %>
-      <%= text_field_tag(:ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: Gws::HistoryArchiveJob.threshold_day(now, @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d'), max_date: 0}) %>
-      <%= link_to(t('gws.history.days.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+        <% if now >= next_day %>
+        <%= link_to(t('gws.history.days.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+        <% end %>
+        <%= text_field_tag(:ymd, origin.strftime('%Y/%m/%d'), class: 'datetime js-date', data: { min_date: Gws::HistoryArchiveJob.threshold_day(now, @cur_site.effective_log_save_days.days).strftime('%Y/%m/%d'), max_date: 0}) %>
+        <%= link_to(t('gws.history.days.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
+      </div>
     </div>
 
     <%= render file: "_search" %>
