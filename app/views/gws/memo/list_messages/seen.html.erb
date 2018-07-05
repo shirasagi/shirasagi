@@ -15,7 +15,7 @@
       <td><%= item.long_name %></td>
       <td>
         <% if seen_at %>
-          <%= seen_at.strftime('%Y/%m/%d %H:%M') %>
+          <%= seen_at.in_time_zone.strftime('%Y/%m/%d %H:%M') %>
         <% else %>
           <%= t('gws/memo.unseen') %>
         <% end %>
