@@ -72,6 +72,9 @@ Metrics/ModuleLength:
   Enabled: true
   Max: 500
 
+Naming/UncommunicativeMethodParamName:
+  AllowedNames: [ 'ns' ]
+
 Rails:
   Enabled: true
 
