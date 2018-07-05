@@ -241,12 +241,13 @@ this.SS = (function () {
       success: function () {
       },
       error: function (data, status) {
-        return alert(["== Error =="].concat(data.responseJSON).join("\n"));
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+        $.rails.enableFormElements(elem);
       }
     };
-    return elem.on("submit", function (e) {
+    elem.on("submit", function (e) {
       $(this).ajaxSubmit($.extend(true, defaults, params));
-      return e.preventDefault();
+      e.preventDefault();
     });
   };
 

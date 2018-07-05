@@ -9,6 +9,7 @@ $('#ajax-form').ajaxForm({
   error: function(data, status, err) {
     resp = eval(data.responseText);
     alert(resp.join("\n"));
+    $.rails.enableFormElements($('#ajax-form'));
   }
 });
 
