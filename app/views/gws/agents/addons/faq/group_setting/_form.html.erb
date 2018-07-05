@@ -5,19 +5,35 @@
 
 <dl class="see addon-gws-faq-group-setting">
   <dt><%= @model.t :faq_new_days %><%= @model.tt :faq_new_days %></dt>
-  <dd class="short"><%= f.number_field :faq_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :faq_new_days %> <span class="postfix input-group-append"><%= t("datetime.prompts.day") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :faq_file_size %><%= @model.tt :faq_file_size %></dt>
   <dd></dd>
 
   <dt class="depth-2"><%= @model.t(:faq_file_size_per_topic).sub(/.*\//, '') %><%= @model.tt :faq_file_size_per_topic %></dt>
-  <dd class="short"><%= f.number_field :in_faq_file_size_per_topic_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :in_faq_file_size_per_topic_mb %> <span class="postfix input-group-append"><%= t("ss.units.mega_byte") %></span>
+    </div>
+  </dd>
 
   <dt class="depth-2"><%= @model.t(:faq_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :faq_file_size_per_post %></dt>
-  <dd class="short"><%= f.number_field :in_faq_file_size_per_post_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :in_faq_file_size_per_post_mb %> <span class="postfix input-group-append"><%= t("ss.units.mega_byte") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :faq_browsed_delay %><%= @model.tt :faq_browsed_delay %></dt>
-  <dd class="short"><%= f.number_field :faq_browsed_delay %> <span class="postfix"><%= t("datetime.prompts.second") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :faq_browsed_delay %> <span class="postfix input-group-append"><%= t("datetime.prompts.second") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :faq_files_break %><%= @model.tt :faq_files_break %></dt>
   <dd><%= f.select :faq_files_break, @item.faq_files_break_options %></dd>

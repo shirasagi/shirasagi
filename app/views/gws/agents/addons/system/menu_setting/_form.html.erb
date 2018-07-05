@@ -4,8 +4,14 @@
   <dl class="see addon-gws-system-menu-setting">
     <dt><%= @model.t("menu_#{type}_state") %><%= @model.tt("menu_#{type}_state") %></dt>
     <dd>
-      <%= f.select "menu_#{type}_state", @item.send("menu_#{type}_state_options") %>
-      <%= f.text_field("menu_#{type}_label", placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
+      <div class="input-group">
+        <div class="form-group">
+          <%= f.select "menu_#{type}_state", @item.send("menu_#{type}_state_options") %>
+        </div>
+        <div class="form-group">
+          <%= f.text_field("menu_#{type}_label", placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
+        </div>
+      </div>
     </dd>
   </dl>
 <% end %>

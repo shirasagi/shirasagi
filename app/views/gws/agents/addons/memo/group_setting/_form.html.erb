@@ -2,10 +2,18 @@
 
 <dl class="see addon-gws-memo-group-setting">
   <dt><%= @model.t :memo_quota %><%= @model.tt :memo_quota %></dt>
-  <dd class="short"><%= f.number_field :memo_quota, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :memo_quota, min: 0 %> <span class="postfix input-group-append"><%= t('ss.units.mega_byte') %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :memo_filesize_limit %><%= @model.tt :memo_filesize_limit %></dt>
-  <dd class="short"><%= f.number_field :memo_filesize_limit, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :memo_filesize_limit, min: 0 %> <span class="postfix input-group-append"><%= t('ss.units.mega_byte') %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :memo_reminder %><%= @model.tt :memo_reminder %></dt>
   <dd><%= f.select :memo_reminder, @item.memo_reminder_options %></dd>

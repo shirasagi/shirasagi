@@ -2,10 +2,18 @@
 
 <dl class="see addon-gws-circular-group-setting">
   <dt><%= @model.t :circular_default_due_date %><%= @model.tt :circular_default_due_date %></dt>
-  <dd class="short"><%= f.number_field :circular_default_due_date %> <span class="postfix"><%= t('datetime.prompts.day') %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :circular_default_due_date %> <span class="postfix input-group-append"><%= t('datetime.prompts.day') %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :circular_filesize_limit %><%= @model.tt :circular_filesize_limit %></dt>
-  <dd class="short"><%= f.number_field :circular_filesize_limit %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :circular_filesize_limit %> <span class="postfix input-group-append"><%= t('ss.units.mega_byte') %></span>
+    </div>
+  </dd>
 
   <% if false %>
   <dt><%= @model.t :circular_delete_threshold %><%= @model.tt :circular_delete_threshold %></dt>

@@ -5,16 +5,28 @@
 
 <dl class="see addon-gws-monitor-group-setting">
   <dt><%= @model.t :monitor_new_days %><%= @model.tt :monitor_new_days %></dt>
-  <dd class="short"><%= f.number_field :monitor_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :monitor_new_days %> <span class="postfix input-group-append"><%= t("datetime.prompts.day") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :monitor_file_size %><%= @model.tt :monitor_file_size %></dt>
   <dd></dd>
 
   <dt class="depth-2"><%= @model.t(:monitor_file_size_per_topic).sub(/.*\//, '') %><%= @model.tt :monitor_file_size_per_topic %></dt>
-  <dd class="short"><%= f.number_field :in_monitor_file_size_per_topic_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :in_monitor_file_size_per_topic_mb %> <span class="postfix input-group-append"><%= t("ss.units.mega_byte") %></span>
+    </div>
+  </dd>
 
   <dt class="depth-2"><%= @model.t(:monitor_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :monitor_file_size_per_post %></dt>
-  <dd class="short"><%= f.number_field :in_monitor_file_size_per_post_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :in_monitor_file_size_per_post_mb %> <span class="postfix input-group-append"><%= t("ss.units.mega_byte") %></span>
+    </div>
+  </dd>
 
   <% if false %>
   <dt><%= @model.t :monitor_delete_threshold %><%= @model.tt :monitor_delete_threshold %></dt>

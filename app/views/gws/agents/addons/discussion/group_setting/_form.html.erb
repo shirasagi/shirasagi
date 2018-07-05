@@ -2,13 +2,25 @@
 
 <dl class="see addon-gws-discussion-group-setting">
   <dt><%= @model.t :discussion_quota %><%= @model.tt :discussion_quota %></dt>
-  <dd class="short"><%= f.number_field :discussion_quota, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :discussion_quota, min: 0 %> <span class="postfix input-group-append"><%= t('ss.units.mega_byte') %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :discussion_filesize_limit %><%= @model.tt :discussion_filesize_limit %></dt>
-  <dd class="short"><%= f.number_field :discussion_filesize_limit, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :discussion_filesize_limit, min: 0 %> <span class="postfix input-group-append"><%= t('ss.units.mega_byte') %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :discussion_new_days %><%= @model.tt :discussion_new_days %></dt>
-  <dd><%= f.number_field :discussion_new_days, min: 0 %> <%= t("datetime.prompts.day") %></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :discussion_new_days, min: 0 %> <span class="postfix input-group-append"><%= t("datetime.prompts.day") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :discussion_unseen_interval %><%= @model.tt :discussion_unseen_interval %></dt>
   <dd><%= f.select :discussion_unseen_interval, @item.discussion_unseen_interval_options %></dd>

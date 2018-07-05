@@ -13,16 +13,30 @@
 
   <dt><%= t('gws/attendance.enter_leave') %></dt>
   <dd>
-    <%= f.text_field :attendance_enter_label, placeholder: Gws::Attendance::Record.t(:enter), style: 'width: 10.5em;' %>
-    <%= f.text_field :attendance_leave_label, placeholder: Gws::Attendance::Record.t(:leave), style: 'width: 10.5em;' %>
+    <div class="input-group">
+      <div class="form-group">
+        <%= f.text_field :attendance_enter_label, placeholder: Gws::Attendance::Record.t(:enter), style: 'width: 10.5em;' %>
+      </div>
+      <div class="form-group">
+        <%= f.text_field :attendance_leave_label, placeholder: Gws::Attendance::Record.t(:leave), style: 'width: 10.5em;' %>
+      </div>
+    </div>
   </dd>
 
   <% SS.config.gws.attendance['max_break'].times do |i| %>
     <dt><%= t('gws/attendance.break') %><%= i + 1 %></dt>
     <dd>
-      <%= f.select "attendance_break_time#{i + 1}_state", @item.attendance_break_time_options %>
-      <%= f.text_field "attendance_break_enter#{i + 1}_label", placeholder: t('gws/attendance.formats.break_enter', count: i + 1), style: 'width: 10.5em;' %>
-      <%= f.text_field "attendance_break_leave#{i + 1}_label", placeholder: t('gws/attendance.formats.break_leave', count: i + 1), style: 'width: 10.5em;' %>
+      <div class="input-group">
+        <div class="form-group">
+          <%= f.select "attendance_break_time#{i + 1}_state", @item.attendance_break_time_options %>
+        </div>
+        <div class="form-group">
+          <%= f.text_field "attendance_break_enter#{i + 1}_label", placeholder: t('gws/attendance.formats.break_enter', count: i + 1), style: 'width: 10.5em;' %>
+        </div>
+        <div class="form-group">
+          <%= f.text_field "attendance_break_leave#{i + 1}_label", placeholder: t('gws/attendance.formats.break_leave', count: i + 1), style: 'width: 10.5em;' %>
+        </div>
+      </div>
     </dd>
   <% end %>
 </dl>

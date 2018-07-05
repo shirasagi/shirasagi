@@ -16,7 +16,11 @@
   <dd><%= f.select :schedule_attachment_state, @item.schedule_attachment_state_options %></dd>
 
   <dt><%= @model.t :schedule_max_file_size %><%= @model.tt :schedule_max_file_size %></dt>
-  <dd class="short"><%= f.number_field :in_schedule_max_file_size_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
+  <dd class="short">
+    <div class="input-group">
+      <%= f.number_field :in_schedule_max_file_size_mb %> <span class="postfix input-group-append"><%= t("ss.units.mega_byte") %></span>
+    </div>
+  </dd>
 
   <dt><%= @model.t :schedule_drag_drop_state %><%= @model.tt :schedule_drag_drop_state %></dt>
   <dd><%= f.select :schedule_drag_drop_state, @item.schedule_drag_drop_state_options %></dd>
