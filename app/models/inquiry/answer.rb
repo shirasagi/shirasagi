@@ -66,7 +66,7 @@ class Inquiry::Answer
       path = source_url
       path = path[1..-1] if path.start_with?("/")
 
-      Cms::Node.site(site).in_path(path).sort(depth: -1).first
+      Cms::Node.site(site).in_path(path).order_by(depth: -1).first
     end
 
     def find_page(site, source_url)
