@@ -10,7 +10,7 @@ section_options = @cur_year.yearly_groups.map { |c| [c.name, c.name] }
     <%= f.select :year_id, year_options %>
     <%= f.select :section_name, section_options, include_blank: t('gws/staff_record.search.section') %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <%= f.submit t("ss.buttons.search"), name: nil, class: "btn" %>
 
     <span class="limit">
       <%= @model.t :limit %>
