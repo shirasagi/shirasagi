@@ -1,0 +1,8 @@
+<nav class="mod-navi">
+  <h2><%= I18n.t('cms.all_contents') %></h2>
+  <h3><%= link_to t('ss.export'), cms_all_contents_path %></h3>
+  <h3><%= link_to t('ss.download'), cms_all_contents_download_path %></h3>
+  <h3><%= link_to t('ss.import'), cms_all_contents_import_path %></h3>
+</nav>
+
+<%= render partial: "cms/main/navi" %>

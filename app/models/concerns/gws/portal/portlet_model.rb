@@ -73,7 +73,7 @@ module Gws::Portal::PortletModel
   end
 
   def view_file
-    "gws/portal/portlets/#{portlet_model}/index.html.erb"
+    "gws/portal/portlets/#{portlet_model}/download.html.erb"
   end
 
   def portlet_id_class

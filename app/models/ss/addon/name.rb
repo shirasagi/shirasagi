@@ -41,7 +41,7 @@ class SS::Addon::Name
   end
 
   def view_file
-    file = "#{Rails.root}/app/views/#{path}/view/index.html.erb"
+    file = "#{Rails.root}/app/views/#{path}/view/download.html.erb"
     File.exists?(file) ? file : nil
   end
 end

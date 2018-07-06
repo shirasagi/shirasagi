@@ -12,6 +12,17 @@ module Sys::SiteImport::Contents
   def import_cms_nodes
     @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename) do |item|
       item[:opendata_site_ids] = [] if item[:opendata_site_ids].present?
+      if item[:filters].present?
+        item.filters.each_with_index do |filter, i|
+          filter.fields.each do |k, v|
+            data = filter.attributes
+            data.delete('_id')
+            filter = filter.class.new(data)
+            filter[k] = filter[k].to_datetime if v.type == DateTime && item[k].present?
+            item.filters[i] = filter
+          end
+        end
+      end
     end
   end
 
@@ -30,12 +41,17 @@ module Sys::SiteImport::Contents
       item[:ads_category_ids] = convert_ids(@cms_nodes_map, item[:ads_category_ids])
       item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids])
       if item[:column_values].present?
-        item[:column_values] = item[:column_values].collect do |column_value|
+        item[:column_values].each do |column_value|
           next if column_value['class_name'].blank?
+          column_value['_id'] = column_value['_id'].delete('$oid')
           column_value['column_id'] = @cms_columns_map[column_value['column_id']]
           column_value['file_id'] = @ss_files_map[column_value['file_id']] if column_value['file_id'].present?
-          column_value['class_name'].constantize.new(column_value)
+          column_value['_type'] = column_value['class_name']
+          column_value['class_name'].constantize.fields.each do |k, v|
+            column_value[k] = column_value[k].to_datetime if v.type == DateTime && column_value[k].present?
+          end
         end
+        item.form.build_column_values(item[:column_values])
       end
     end
   end
