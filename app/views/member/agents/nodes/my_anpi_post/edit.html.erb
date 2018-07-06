@@ -1,6 +1,6 @@
 <%= render partial: "menu" %>
 
-<%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { method: :put, multipart: true, autocomplete: :off, class: "mypage-edit member-anpi-post-page" } do |f| %>
+<%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { method: :put, multipart: true, autocomplete: :off, class: "mypage-edit member-anpi-post-page",  } do |f| %>
 
   <div class="mypage-form member-anpi-post-page">
     <%= error_messages_for :item, header_message: false %>
