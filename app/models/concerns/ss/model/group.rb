@@ -90,6 +90,15 @@ module SS::Model::Group
     self.class.where(name: /^#{name}\//)
   end
 
+  def parents
+    return self.class.none unless name.include?("/")
+
+    n = nil
+    parent_names = name.sub("/#{trailing_name}", "").split(/\//)
+    parent_names = parent_names.map { |name| n = (n ? "#{n}/#{name}" : name) }
+    self.class.in(name: parent_names)
+  end
+
   # Soft delete
   def disable
     super

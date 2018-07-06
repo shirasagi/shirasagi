@@ -1,0 +1,45 @@
+ja:
+  gws/presence:
+    group: グループ
+    buttons:
+      register_reminder: リマインダーを登録
+    links:
+      all_groups: 全てのグループ
+
+    options:
+      presence_state:
+        available: 在席
+        unavailable: 離席
+        leave: 退社
+        dayoff: 休み
+
+  modules:
+    gws/presence: 在席管理
+    gws/presence/users: 在席状況
+    gws/presence/management/users: 管理
+    addons:
+      gws/presence/delegator_setting: 在席管理
+
+  gws_role:
+    edit_private_gws_user_presences: 在席状況の管理（所有）
+    edit_other_gws_user_presences: 在席状況の管理（全て）
+
+  mongoid:
+    models:
+      gws/presence: 在席管理
+    attributes:
+      gws/presence/user_presence:
+        state: ステータス
+        plan: 予定
+        memo: メモ
+      gws/addon/presence/delegator_setting:
+        presence_editable_title_ids: 編集可能な役職
+
+  tooltip:
+    gws/presence/user_presence:
+      state:
+        - ステータスを入力します。
+      plan:
+        - 予定を入力します。
+      memo:
+        - メモを入力します。

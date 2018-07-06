@@ -1,0 +1,54 @@
+<% @time = Time.zone.now %>
+
+<div class="index content-main presence-users group-users">
+  <div class="list-head">
+    <h2 class="list-head-title">
+      <span class="group">
+        <% if @group %>
+          <%= @group.try(:trailing_name) || @group.name %>
+        <% else %>
+          <%= t('gws/presence.links.all_groups') %>
+        <% end %>
+      </span>
+      （<time datetime="<%= @time %>>"><%=l @time, format: :long %></time>）
+      <i class="material-icons md-18 editicon" onClick="location.reload();">refresh</i>
+    </h2>
+    <nav>
+      <%= render file: '_search' %>
+    </nav>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="index data-table">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::User.t :name %></th>
+        <th class="presence-plan"><%= Gws::Presence::UserPresence.t :plan %></th>
+        <th class="presence-memo"><%= Gws::Presence::UserPresence.t :memo %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) || Gws::Presence::UserPresence.new %>
+        <tr>
+          <td>
+            <%= link_to item.name, { action: :edit, id: item.id }, class: "group-name" %>
+            <% if user_presence.state.present? %>
+            <span class="presence_state <%= user_presence.state %>">
+              <%= user_presence.label :state %>
+            </span>
+            <% end %>
+          </td>
+          <td>
+            <%= user_presence.plan %>
+          </td>
+          <td>
+            <%= user_presence.memo %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <%= paginate @items if @items.try(:current_page) %>
+  </div>
+</div>

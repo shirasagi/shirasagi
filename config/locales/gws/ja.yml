@@ -47,6 +47,8 @@ ja:
         parent_id: 親カテゴリー
       custom_groups:
         index: カスタムグループを選択する
+      user_titles:
+        index: 役職を選択する
     options:
       severity:
         high: 重要なお知らせ

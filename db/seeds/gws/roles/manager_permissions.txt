@@ -143,3 +143,4 @@ trash_private_gws_shared_address_addresses
 trash_private_gws_workflow_files
 use_gws_attendance_time_cards
 write_private_gws_share_files
+edit_private_gws_user_presences

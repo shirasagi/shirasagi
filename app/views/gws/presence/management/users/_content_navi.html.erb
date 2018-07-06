@@ -1,0 +1,42 @@
+<% return "" unless params[:action] =~ /index/ %>
+
+<% opts = @group ? { current: @group.id, expand_all: true } : { expand_all: true } %>
+<%= jquery do %>SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);<% end %>
+
+<div id="content-navi" class="presence-groups">
+  <h2 class="content-navi-title">
+    <%= t('gws/presence.group') %>
+  </h2>
+
+  <div class="tree-navi">
+    <div class="all-groups list-item <%= @group ?  "" : "current" %>">
+      <%= link_to t('gws/presence.links.all_groups'), gws_presence_management_users_path %>
+    </div>
+
+    <div class="tree-groups">
+      <table class="index groups">
+        <tbody class="items">
+        <% @groups.each do |group| %>
+          <tr data-id="<%= group.id %>" class="list-item <%= (group.id == @group.try(:id)) ? "current" : "" %>" data-depth="<%= group.depth %>">
+            <td class="expandable"><%= link_to group.trailing_name, gws_presence_management_group_users_path(group: group.id) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @custom_groups.present? %>
+      <div class="custom-groups">
+        <table class="index groups">
+          <tbody class="items">
+          <% @custom_groups.each do |group| %>
+            <tr class="list-item <%= (group.id == @group.try(:id)) ? "current" : "" %>">
+              <td><%= link_to group.name, gws_presence_management_custom_group_users_path(group: group.id) %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>

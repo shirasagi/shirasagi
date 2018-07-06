@@ -18,6 +18,7 @@ ja:
       gws/portal/portlet/workflow: ワークフロー設定
       gws/portal/portlet/attendance: 出退勤設定
       gws/portal/portlet/notice: お知らせ設定
+      gws/portal/portlet/presence: 在席管理設定
 
   gws/portal:
     self_portal: 個人
@@ -81,6 +82,9 @@ ja:
       notice:
         name: お知らせ
         text: 新着のお知らせを表示します。
+      presence:
+        name: 在席管理
+        text: グループに所属するユーザーの在席状況を表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -164,6 +168,9 @@ ja:
         notice_browsed_state: 既読・未読
         notice_category_ids: カテゴリー
         notice_folder_ids: フォルダー
+      gws/addon/portal/portlet/presence:
+        group_id: グループ
+        custom_group_id: カスタムグループ
 
   tooltip:
     gws/portal/user_setting:

@@ -3,7 +3,6 @@ module SS::Model::User
   extend SS::Translation
   include SS::Document
   include SS::Fields::Normalizer
-  include SS::Reference::UserTitles
   include SS::Reference::UserExpiration
   include Ldap::Addon::User
 

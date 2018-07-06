@@ -1,0 +1,10 @@
+<dl class="see">
+  <% if @item.group %>
+    <dt><%= @model.t :group_id %></dt>
+    <dd><%= @item.group.name %></dd>
+  <% end %>
+  <% if @item.custom_group %>
+    <dt><%= @model.t :custom_group_id %></dt>
+    <dd><%= @item.custom_group.name %></dd>
+  <% end %>
+</dl>

@@ -1,0 +1,23 @@
+<div class="gws-addon-delegator_setting">
+  <dl class="see">
+    <dt><%= @model.t :presence_editable_title_ids %><%= @model.tt :presence_editable_title_ids %></dt>
+    <dd>
+      <%= f.hidden_field "presence_editable_title_ids[]", value: "", class: "hidden-ids" %>
+      <%= link_to t("gws.apis.user_titles.index"), gws_apis_user_titles_path, class: "ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= @model.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+        <% @item.presence_editable_titles.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= f.hidden_field "presence_editable_title_ids[]", value: item.id, id: nil %> <%= item.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+        <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+</div>

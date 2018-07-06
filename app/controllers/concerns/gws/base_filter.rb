@@ -8,6 +8,7 @@ module Gws::BaseFilter
     self.log_class = Gws::History
 
     helper Gws::LayoutHelper
+    helper Gws::Presence::UserHelper
 
     before_action :validate_gws
     before_action :set_gws_assets
