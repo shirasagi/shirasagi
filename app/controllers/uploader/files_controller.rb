@@ -152,8 +152,16 @@ class Uploader::FilesController < ApplicationController
     if !@item.directory?
       @text ? (@item.text = @text) : @item.read
     end
+    ext = @item.ext
+    filename = @item.filename
     @item.filename = @filename if @filename && @filename =~ /^#{@cur_node.filename}/
     @item.site = @cur_site
+    if ext != @item.ext
+      @item.errors.add :base, "#{filename}#{I18n.t("errors.messages.invalid_file_type")}"
+      @item.filename = filename
+      render_update false
+      return
+    end
     result = @item.save
     @item.path = @item.saved_path unless result
 
