@@ -3,7 +3,21 @@ class Cms::AllContentsController < ApplicationController
 
   navi_view "cms/main/navi"
 
-  def index
+  private
+
+  def set_crumbs
+    @crumbs << [t("cms.all_contents"), cms_all_contents_path]
+    case params[:action]
+    when 'download_all'
+      @crumbs << [t("cms.all_content.download_tab"), cms_all_contents_download_path]
+    when 'import'
+      @crumbs << [t("cms.all_content.import_tab"), cms_all_contents_import_path]
+    end
+  end
+
+  public
+
+  def download_all
     respond_to do |format|
       format.html
       format.csv do
@@ -13,5 +27,14 @@ class Cms::AllContentsController < ApplicationController
                   filename: "all_contents_#{Time.zone.now.to_i}.csv"
       end
     end
+  end
+
+  def import
+    if request.get?
+      render
+      return
+    end
+
+    raise NotImplementedError
   end
 end

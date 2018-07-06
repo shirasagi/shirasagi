@@ -2,7 +2,7 @@ ja:
   cms:
     add_max_file_size: 最大ファイルサイズを設定する
     alert: 警告
-    all_contents: 全コンテンツ一覧出力
+    all_contents: 全コンテンツ
     body_layout: 本文レイアウト
     calendar_view: カレンダー表示
     check_links: リンクチェック実行結果
@@ -73,7 +73,12 @@ ja:
         - </div>
         - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
     all_content:
-      description: サイト内の全コンテンツを出力します。
+      download_tab: 一覧出力
+      download_head: 全コンテンツ一覧出力
+      download_description: サイト内の全コンテンツを出力します。
+      import_tab: 一括設定
+      import_head: 全コンテンツ一括設定
+      import_description: サイト内の全コンテンツを一括して設定します。一括して設定できるのは、タイトル、レイアウト、キーワード、概要、サマリー、カテゴリー、検索条件URL、並び順、表示件数、上部HTML、ループHTML、下部HTML、NEWマーク期間、管理グループです。
     roles:
       admin: 管理者
       user: 編集者
