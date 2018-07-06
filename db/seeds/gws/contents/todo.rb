@@ -204,7 +204,7 @@ end
     readable_member_ids: [u('sys').id]
   ),
   create_schedule_todo(
-    name: '#{@site_name}会議資料作成', member_ids:  [u('admin').id],
+    name: "#{@site_name}会議資料作成", member_ids:  [u('admin').id],
     start_at: second_monday_of_month(base_date + 2.months).strftime('%Y-%m-%d 17:00'),
     end_at: second_monday_of_month(base_date + 2.months).strftime('%Y-%m-%d 17:00'),
     readable_setting_range: 'select', state: 'select', priority: '1', todo_state: 'finished',
