@@ -59,20 +59,20 @@ end
 Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/kikaku01.jpg'), filename: 'koho01.jpg', content_type: 'application/pdf') do |f|
   @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'koho01.jpg', folder_id: sh_folder("広報イベント").id, category_ids: [@sh_cate[1].id], group_ids: [ g('政策課').id ])
 end
-Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市広報パンフレット', content_type: 'application/pdf') do |f|
-  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市広報パンフレット', folder_id: sh_folder("広報関連パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: '#{@site_name}市広報パンフレット', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '#{@site_name}市広報パンフレット', folder_id: sh_folder("広報関連パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
 end
-Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市総合パンフレット', content_type: 'application/pdf') do |f|
-  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市総合パンフレット', folder_id: sh_folder("事業パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: '#{@site_name}市総合パンフレット', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '#{@site_name}市総合パンフレット', folder_id: sh_folder("事業パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
 end
-Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市観光マップ', content_type: 'application/pdf') do |f|
-  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市観光マップ', folder_id: sh_folder("観光パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: '#{@site_name}市観光マップ', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '#{@site_name}市観光マップ', folder_id: sh_folder("観光パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
 end
-Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市観光案内', content_type: 'application/pdf') do |f|
-  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市観光案内', folder_id: sh_folder("観光パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: '#{@site_name}市観光案内', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '#{@site_name}市観光案内', folder_id: sh_folder("観光パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
 end
-Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: 'シラサギ市防災計画パンフレット', content_type: 'application/pdf') do |f|
-  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'シラサギ市防災計画パンフレット', folder_id: sh_folder("防災関連パンフレット").id, group_ids: [ g('政策課').id ])
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/shirasagi_kohopamphlet.pdf'), filename: '#{@site_name}市防災計画パンフレット', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '#{@site_name}市防災計画パンフレット', folder_id: sh_folder("防災関連パンフレット").id, group_ids: [ g('政策課').id ])
 end
 Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/seminar_application.pdf'), filename: 'セミナー参加申込書', content_type: 'application/pdf') do |f|
   @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: 'セミナー参加申込書', folder_id: sh_folder("講習会資料").id, category_ids: [@sh_cate[2].id], group_ids: [ g('政策課').id ])
@@ -95,8 +95,8 @@ end
 Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/nenkankousyuukai_keikaku.pdf'), filename: '年間講習会計画', content_type: 'application/pdf') do |f|
   @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '年間講習会計画', folder_id: sh_folder("講習会資料").id, category_ids: [@sh_cate[3].id], group_ids: [ g('政策課').id ])
 end
-Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/koho_shirasagi.pdf'), filename: '広報シラサギ', content_type: 'application/pdf') do |f|
-  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '広報シラサギ', folder_id: sh_folder("広報関連パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
+Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/koho_shirasagi.pdf'), filename: '広報#{@site_name}', content_type: 'application/pdf') do |f|
+  @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '広報#{@site_name}', folder_id: sh_folder("広報関連パンフレット").id, category_ids: [@sh_cate[0].id], group_ids: [ g('政策課').id ])
 end
 Fs::UploadedFile.create_from_file(Rails.root.join('db/seeds/gws/files/hontyousya_floorzu.pdf'), filename: '本庁舎フロア図', content_type: 'application/pdf') do |f|
   @sh_files << create_share_file(cur_user: u("sys"), in_file: f, name: '本庁舎フロア図', folder_id: sh_folder("座席表").id, group_ids: [ g('政策課').id ])

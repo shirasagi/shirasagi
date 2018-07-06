@@ -23,7 +23,7 @@ end
     due_date: @now.beginning_of_day + 7.days,
     attend_group_ids: [@site.id] + @site.descendants.pluck(:id),
     text: '共有ファイルに登録できるファイル容量および種類の制限を教えてください。', category_ids: [@mon_cate[1].id],
-    state: 'public', article_state:'open'
+    state: 'public', article_state: 'open'
   ),
 
   create_monitor_topic(

@@ -208,14 +208,14 @@ create_schedule_plan(name: "地域イベント打ち合わせ", member_ids: [ u(
   group_ids: [g("政策課").id]
 )
 @sch_plan2 = create_schedule_plan(
-  cur_user: u("sys"), name: "シラサギ支所訪問 (#{second_monday_of_month(base_date).strftime('%m')}月)", member_ids: [ u("user1").id, u("sys").id],
+  cur_user: u("sys"), name: "#{@site_name}支所訪問 (#{second_monday_of_month(base_date).strftime('%m')}月)", member_ids: [ u("user1").id, u("sys").id],
   start_at: second_monday_of_month(base_date).strftime('%Y-%m-%d 13:00'),
   end_at: second_monday_of_month(base_date).strftime('%Y-%m-%d 15:00'),
   group_ids: [ g("政策課").id ], readable_setting_range: 'select',
   readable_group_ids: [g('政策課').id], priority: '4'
 )
 @sch_plan2 = create_schedule_plan(
-  cur_user: u("sys"), name: "シラサギ支所訪問 (#{first_monday_of_month(base_date + 1.months).strftime('%m')}月)", member_ids: [ u("user1").id, u("sys").id],
+  cur_user: u("sys"), name: "#{@site_name}支所訪問 (#{first_monday_of_month(base_date + 1.months).strftime('%m')}月)", member_ids: [ u("user1").id, u("sys").id],
   start_at: first_monday_of_month(base_date + 1.months).strftime('%Y-%m-%d 11:00'),
   end_at: first_monday_of_month(base_date + 1.months).strftime('%Y-%m-%d 12:00'),
   group_ids: [ g("政策課").id ], readable_setting_range: 'select',
@@ -291,7 +291,7 @@ create_schedule_plan(
   category_id: @sc_cate[0].id,
   group_ids: [ g("政策課").id ]
 )
-create_schedule_plan(name: "株式会社シラサギ様来庁", member_ids: [ u("admin").id, u("user4").id],
+create_schedule_plan(name: "株式会社#{@site_name}様来庁", member_ids: [ u("admin").id, u("user4").id],
   start_at: first_tuesday_of_month(base_date).strftime('%Y-%m-%d 10:00'),
   end_at: first_tuesday_of_month(base_date).strftime('%Y-%m-%d 11:00'),
   repeat_type: 'monthly', interval: 1, repeat_start: first_tuesday_of_month(base_date),
@@ -532,7 +532,7 @@ create_schedule_plan(name: "アカサギ商事様来庁", member_ids: [ u("user2
   end_on: (third_wednesday_of_month(base_date + 2.months) + 1.day).strftime('%Y-%m-%d'),
   category_id: @sc_cate[1].id, group_ids: [ g("政策課").id ]
 )
-create_schedule_plan(name: "シラサギテレビ局来庁",cur_user: u("user3"),
+create_schedule_plan(name: "#{@site_name}テレビ局来庁",cur_user: u("user3"),
   member_ids: [ u("user3").id, u("user5").id],
   start_at: forth_friday_of_month(base_date + 2.months).strftime('%Y-%m-%d 13:00'),
   end_at: forth_friday_of_month(base_date + 2.months).strftime('%Y-%m-%d 14:00')
@@ -589,7 +589,7 @@ create_schedule_plan(name: "清掃活動", cur_user: u("user2"), member_ids: [u(
   facility_ids: [@fc_item[3].id], main_facility_id: @fc_item[3].id, priority: '1'
 )
 @sch_plan1 = create_schedule_plan(
-  cur_user: u("user5"), name: 'シラサギ印刷様来社',
+  cur_user: u("user5"), name: '#{@site_name}印刷様来社',
   start_at: forth_monday_of_month(base_date + 2.months).strftime('%Y-%m-%d 14:00'),
   end_at: forth_monday_of_month(base_date + 2.months).strftime('%Y-%m-%d 15:00'), interval: 1,
   member_ids: [u("user5").id],

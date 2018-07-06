@@ -36,5 +36,5 @@ end
 
 create_qna_post(
   cur_user: u('user4'), name: 'Re: 火災が起こった場合の広報課からの避難経路を教えてください。',
-  text: '防災計画資料をご覧ください。', topic_id: @qna_topics[0].id, parent_id: @qna_topics[0].id,
+  text: '防災計画資料をご覧ください。', topic_id: @qna_topics[0].id, parent_id: @qna_topics[0].id
 )

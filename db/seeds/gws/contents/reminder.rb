@@ -96,7 +96,7 @@ find_todo_by_name("事務用品発注").tap do |item|
   )
  end
 end
-find_todo_by_name("シラサギ会議資料作成").tap do |item|
+find_todo_by_name("#{@site_name}会議資料作成").tap do |item|
   create_reminder(
     cur_user: u('admin'), name: item.reference_name, model: item.reference_model, item_id: item.id,
     date: item.start_at, start_at: item.start_at, end_at: item.end_at, allday: item.allday, repeat_plan_id: item.repeat_plan_id,

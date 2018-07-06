@@ -20,12 +20,12 @@ def create_memo_folder(user, data)
 end
 
 @memo_folders = []
-@memo_folders << create_memo_folder(u('sys'), name: "シラサギプロジェクト", order: 10)
+@memo_folders << create_memo_folder(u('sys'), name: "#{@site_name}プロジェクト", order: 10)
 @memo_folders << create_memo_folder(u('sys'), name: "イベント", order: 20)
 @memo_folders << create_memo_folder(u('sys'), name: "サイト管理者から", order: 30)
 
 %w(admin user1 user2 user3 user4 user5).each do |user_name|
-  @memo_folders << create_memo_folder(u(user_name), name: "シラサギプロジェクト", order: 10)
+  @memo_folders << create_memo_folder(u(user_name), name: "#{@site_name}プロジェクト", order: 10)
   @memo_folders << create_memo_folder(u(user_name), name: "イベント", order: 20)
   @memo_folders << create_memo_folder(u(user_name), name: "システム管理者から", order: 30)
 end
@@ -46,7 +46,7 @@ def create_memo_filter(user, data)
   item
 end
 
-create_memo_filter u('sys'), name: "シラサギプロジェクト", subject: "シラサギプロジェクト", order: 10,
+create_memo_filter u('sys'), name: "#{@site_name}プロジェクト", subject: "#{@site_name}プロジェクト", order: 10,
   action: 'move', folder_id: @memo_folders[0].id
 create_memo_filter u('sys'), name: "イベント", subject: "イベント", order: 20,
   action: 'move', folder_id: @memo_folders[1].id
@@ -54,7 +54,7 @@ create_memo_filter u('sys'), name: "サイト管理者から", from_member_ids: 
   action: 'move', folder_id: @memo_folders[2].id
 
 %w(admin user1 user2 user3 user4 user5).each_with_index do |user_name, idx|
-  create_memo_filter u(user_name), name: "シラサギプロジェクト", subject: "シラサギプロジェクト", order: 10,
+  create_memo_filter u(user_name), name: "#{@site_name}プロジェクト", subject: "#{@site_name}プロジェクト", order: 10,
     action: 'move', folder_id: @memo_folders[idx*3 + 3].id
   create_memo_filter u(user_name), name: "イベント", subject: "イベント", order: 20,
     action: 'move', folder_id: @memo_folders[idx*3 + 4].id
@@ -121,7 +121,7 @@ user = u('sys')
     group_ids: [g('政策課').id], user_ids: [u('sys').id])
 ]
 
-def create_memo_message(user, data)
+def create_memo_list_message(user, data)
   puts data[:name]
   cond = { site_id: @site._id, subject: data[:subject] }
   item = Gws::Memo::ListMessage.find_or_initialize_by(cond)
@@ -130,7 +130,7 @@ def create_memo_message(user, data)
   item
 end
 
-create_memo_message(
+create_memo_list_message(
   u("sys"), list_id: @memo_lists[0].id, subject: "システムメンテナンスを実施します。",
   state: "public", format: "text",
   text: [
@@ -138,16 +138,22 @@ create_memo_message(
     "詳細は追って連絡しますが、日時に不都合のある方はシステム管理者までご相談ください。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "システム管理者",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
   ].join("\n"),
-    in_to_members: [u("sys").id, u("admin").id, u("user1").id, u("user2").id, u("user3").id,
-                    u("user4").id, u("user5").id],
-      seen: { u('sys').id.to_s => @now, u('admin').id.to_s => @now, u('user1').id.to_s => @now, u('user4').id.to_s => @now,
-              u('user5').id.to_s => @now}
-
+  in_to_members: [
+    u("sys").id, u("admin").id, u("user1").id, u("user2").id, u("user3").id,
+    u("user4").id, u("user5").id
+  ],
+  seen: {
+    u('sys').id.to_s => @now,
+    u('admin').id.to_s => @now,
+    u('user1').id.to_s => @now,
+    u('user4').id.to_s => @now,
+    u('user5').id.to_s => @now
+  }
 )
 
 
@@ -181,7 +187,7 @@ create_message(
     "防災訓練の資料作成をお願いします。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　危機管理部 管理課",
+    "#{@site_name}市　危機管理部 管理課",
     "伊藤　幸子",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -204,15 +210,17 @@ create_message(
     "　本庁舎全館",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "システム管理者",
     "Email：sys@demo.ss-proj.org",
-    "〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号",
+    "〒000-0000　大鷺県#{@site_name}市小鷺町1丁目1番地1号",
     "電話番号：00－0000－0000",
     "----------------------------------------------------",
   ].join("\n"),
-  in_to_members: [u("sys").id, u("admin").id, u("user1").id, u("user2").id, u("user3").id,
-                  u("user4").id, u("user5").id],
+  in_to_members: [
+    u("sys").id, u("admin").id, u("user1").id, u("user2").id, u("user3").id,
+    u("user4").id, u("user5").id
+  ],
   file_ids: [file.id]
 )
 end
@@ -227,7 +235,7 @@ create_message(
     "ご協力よろしくお願いします。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "鈴木 茂",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -250,7 +258,7 @@ create_message(
     "詳細は添付資料をご確認ください。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　危機管理部 管理課",
+    "#{@site_name}市　危機管理部 管理課",
     "渡辺　和子",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -267,7 +275,7 @@ create_message(
     "詳細は追って連絡しますが、日時に不都合のある方はシステム管理者までご相談ください。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "システム管理者",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -275,35 +283,36 @@ create_message(
   in_to_members: [u("sys").id]
 )
 create_message(
-  cur_user: u("user1"), subject: "[お電話がありました]シラサギ商事　山本様 ", state: "public", format: "text",
+  cur_user: u("user1"), subject: "[お電話がありました]#{@site_name}商事　山本様 ", state: "public", format: "text",
   text: [
     "システム管理者さん",
     "",
-    "シラサギ商事 山本様よりお電話がありました。",
+    "#{@site_name}商事 山本様よりお電話がありました。",
     "あらためてご連絡をいただけるそうです。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "鈴木 茂",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
   ].join("\n"),
-  in_to_members: [u("sys").id], priority: '3',
+  in_to_members: [u("sys").id], priority: '3'
 )
 create_message(
   cur_user: u("admin"), subject: "サイト改善プロジェクト", state: "public", format: "text",
   text: [
-    "シラサギ市ホームページの改善プロジェクトを電子会議室に立ち上げました。",
+    "#{@site_name}市ホームページの改善プロジェクトを電子会議室に立ち上げました。",
     "ご意見・要望など投稿ください。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "サイト管理者",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
   ].join("\n"),
   in_to_members: [u("sys").id, u("admin").id, u("user1").id, u("user2").id, u("user3").id,
-                  u("user4").id, u("user5").id], priority: '3',
+                  u("user4").id, u("user5").id
+  ], priority: '3'
 )
 new_ss_files("db/seeds/gws/files/file.pdf", cur_user: u("sys"), filename: "file2.pdf", model: "ss/temp_file", state: "closed").tap do |file|
 create_message(
@@ -311,7 +320,7 @@ create_message(
   text: [
     "お疲れ様です。",
     "",
-    "シラサギ市の広報活動について、クロサギ放送様からインタビュー取材を受ける予定です。",
+    "#{@site_name}市の広報活動について、クロサギ放送様からインタビュー取材を受ける予定です。",
     "部長にも、取材が来ますので当日は在席をお願いします。",
     "",
     "・日時",
@@ -319,16 +328,16 @@ create_message(
     "・場所",
     "　広報課内",
     "・インタビュー内容",
-    "　シラサギ市の広報活動について",
+    "　#{@site_name}市の広報活動について",
     "・参加予定",
     "",
     "　クロサギ放送　吉田様",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　広報課",
+    "#{@site_name}市　企画政策部　広報課",
     "斎藤　拓也",
     "",
     "Email：user3@demo.ss-proj.org",
-    "〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号",
+    "〒000-0000　大鷺県#{@site_name}市小鷺町1丁目1番地1号",
     "電話番号：00－0000－0000",
     "----------------------------------------------------",
   ].join("\n"),
@@ -345,7 +354,7 @@ create_message(
     "折り返しご連絡をお願いします。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "サイト管理者",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -353,15 +362,15 @@ create_message(
   in_to_members: [u("user1").id]
 )
 create_message(
-  cur_user: u("user4"), subject: "[お電話がありました]株式会社シラサギ　小野様 ", state: "public", format: "text",
+  cur_user: u("user4"), subject: "[お電話がありました]株式会社#{@site_name}　小野様 ", state: "public", format: "text",
   text: [
     "渡辺さん",
     "",
-    "株式会社シラサギ 小野様よりお電話がありました。",
+    "株式会社#{@site_name} 小野様よりお電話がありました。",
     "折り返しご連絡をお願いします。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　危機管理部 管理課",
+    "#{@site_name}市　危機管理部 管理課",
     "伊藤　幸子",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -377,7 +386,7 @@ create_message(
     "折り返しご連絡をお願いします。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　広報課",
+    "#{@site_name}市　企画政策部　広報課",
     "高橋　清",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -393,7 +402,7 @@ create_message(
     "折り返しご連絡をお願いします。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　危機管理部 管理課",
+    "#{@site_name}市　危機管理部 管理課",
     "渡辺　和子",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -409,7 +418,7 @@ create_message(
     "折り返しご連絡をお願いします。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　広報課",
+    "#{@site_name}市　企画政策部　広報課",
     "斎藤　拓也",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -419,16 +428,16 @@ create_message(
 new_ss_files("db/seeds/gws/files/file.pdf", cur_user: u("sys"), filename: "file2.pdf", model: "ss/temp_file", state: "closed").tap do |file|
 create_message(
   cur_user: u("sys"), subject: "システム操作研修のお知らせ", state: "public", format: "text",
-  text: "シラサギプロジェクトの会議資料作成は進んでいますか。", priority: '1',
+  text: "#{@site_name}プロジェクトの会議資料作成は進んでいますか。", priority: '1',
   to_member_name: "伊藤 幸子 (user4); 渡辺 和子 (user2); 高橋 清 (user5); 斎藤　拓也 (user3); 鈴木 茂 (user1)",
   member_ids: [u("user1").id, u("user2").id, u("user3").id, u("user4").id, u("user5").id],
   in_to_members: [u("user1").id, u("user2").id, u("user3").id, u("user4").id, u("user5").id, u("admin").id],
   path: {
-    u("sys").id.to_s => memo_folder(u("sys"), "シラサギプロジェクト").id,
-    u("admin").id.to_s => memo_folder(u("admin"), "シラサギプロジェクト").id,
-    u("user1").id.to_s => memo_folder(u("user1"), "シラサギプロジェクト").id,
-    u("user3").id.to_s => memo_folder(u("user3"), "シラサギプロジェクト").id,
-    u("user5").id.to_s => memo_folder(u("user5"), "シラサギプロジェクト").id,
+    u("sys").id.to_s => memo_folder(u("sys"), "#{@site_name}プロジェクト").id,
+    u("admin").id.to_s => memo_folder(u("admin"), "#{@site_name}プロジェクト").id,
+    u("user1").id.to_s => memo_folder(u("user1"), "#{@site_name}プロジェクト").id,
+    u("user3").id.to_s => memo_folder(u("user3"), "#{@site_name}プロジェクト").id,
+    u("user5").id.to_s => memo_folder(u("user5"), "#{@site_name}プロジェクト").id,
   },
     file_ids: [file.id]
 )
@@ -441,7 +450,7 @@ create_message(
     "イベント一ヶ月前の○月○日までに資料を作成します。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "鈴木 茂",
     "電話番号：00−0000−0000",
     "----------------------------------------------------",
@@ -457,7 +466,7 @@ create_message(
      u("user1").id.to_s => memo_folder(u("user1"), "イベント").id,
      u("user3").id.to_s => memo_folder(u("user3"), "イベント").id,
      u("user5").id.to_s => memo_folder(u("user5"), "イベント").id,
-  },
+   },
     file_ids: [file.id]
 )
 end
@@ -469,7 +478,7 @@ create_message(
     "今月開催の地域振興イベントの計画書の作成をお願いできますか。",
     "",
     "----------------------------------------------------",
-    "シラサギ市　企画政策部　政策課",
+    "#{@site_name}市　企画政策部　政策課",
     "サイト管理者\n電話番号：00−0000−0000",
     "----------------------------------------------------"
   ].join("\n"),
@@ -493,7 +502,7 @@ create_message(
 #
 # create_message(
 #   cur_user: u("user3"), subject: "地域振興イベント資料", state: "public", format: "text",
-#   text: "地域振興イベント関係者各位\n\nお疲れ様です。\n\nイベント資料を作成しましたので、ご確認をお願いします。\n\n ----------------------------------------------------\nシラサギ市　企画政策部　広報課\n斎藤　拓也\n電話番号：00−0000−0000\n----------------------------------------------------",
+#   text: "地域振興イベント関係者各位\n\nお疲れ様です。\n\nイベント資料を作成しましたので、ご確認をお願いします。\n\n ----------------------------------------------------\n#{@site_name}市　企画政策部　広報課\n斎藤　拓也\n電話番号：00−0000−0000\n----------------------------------------------------",
 #   to_member_name: "地域振興イベント",
 #   member_ids: [u("sys").id, u("admin").id, u("user1").id, u("user3").id, u("user5").id],
 #   path: {

@@ -66,8 +66,8 @@ end
   ),
   create_column(
     :text_area, name: '報告内容', order: 30, required: 'required', form: @rep_forms[1]
-  ),
-  ]
+  )
+]
 
 @rep_form2_cols = [
   create_column(
