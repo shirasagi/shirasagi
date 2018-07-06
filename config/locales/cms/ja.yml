@@ -1669,3 +1669,4 @@ ja:
       cms/node/copy_nodes_job: フォルダー複製
       cms/import_files_job: ページ/フォルダー取り込み
       cms/role/import_job: 権限インポート
+      cms/all_contents_import_job: 全コンテンツ一括設定

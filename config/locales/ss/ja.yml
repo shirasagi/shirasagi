@@ -158,6 +158,7 @@ ja:
       text_zoomed: "文字サイズを %{count} に設定しました。"
       restored: 元に戻しました。
       run: 実行しました。
+      already_job_started: 実行準備中であるか、実行中です。
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:

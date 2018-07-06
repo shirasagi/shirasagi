@@ -3,6 +3,8 @@ class Cms::AllContentsController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  before_action :set_task, only: [:import]
+
   private
 
   def set_crumbs
@@ -13,6 +15,11 @@ class Cms::AllContentsController < ApplicationController
     when 'import'
       @crumbs << [t("cms.all_content.import_tab"), cms_all_contents_import_path]
     end
+  end
+
+  def set_task
+    job_class = Cms::AllContentsImportJob
+    @task = job_class.task_class.find_or_create_by(site_id: @cur_site.id, name: job_class.task_name)
   end
 
   public
@@ -35,6 +42,26 @@ class Cms::AllContentsController < ApplicationController
       return
     end
 
-    raise NotImplementedError
+    safe_params = params.require(:item).permit(:in_file)
+    file = safe_params[:in_file]
+    if file.blank? || ::File.extname(file.original_filename).casecmp(".csv") != 0
+      @errors = [ t("errors.messages.invalid_csv") ]
+      render({ action: :import })
+      return
+    end
+
+    if !@task.ready
+      @errors = [ t('ss.notice.already_job_started') ]
+      render({ action: :import })
+      return
+    end
+
+    temp_file = SS::TempFile.new
+    temp_file.in_file = file
+    temp_file.save!
+
+    job = Cms::AllContentsImportJob.bind(site_id: @cur_site, user_id: @cur_user)
+    job.perform_later(temp_file.id)
+    redirect_to({ action: :import }, { notice: t('ss.notice.started_import') })
   end
 end
