@@ -1,0 +1,18 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="state"><%= item.label(:state) %></span>
+  <span class="order"><%= item.order %></span>
+  <span class="categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to category.trailing_name, gws_report_forms_path(s: {category_ids: [category.id]}), class: 'gws-category-label', style: category_label_css(category) %>
+    <% end %>
+  </span>
+<% end %>
+
+<%= render file: 'gws/crud/index' %>
