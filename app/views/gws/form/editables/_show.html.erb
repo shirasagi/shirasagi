@@ -11,6 +11,12 @@
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label(:state) %></dd>
 
+  <dt><%= @model.t :release_date %></dt>
+  <dd><%= tryb { I18n.l(@item.release_date.to_date) } %></dd>
+
+  <dt><%= @model.t :close_date %></dt>
+  <dd><%= tryb { I18n.l(@item.close_date.to_date) } %></dd>
+
   <dt><%= @model.t :memo %></dt>
   <dd><%= br @item.memo %></dd>
 </dl>

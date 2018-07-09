@@ -19,14 +19,22 @@ class Gws::Form::Form
   field :state, type: String, default: 'closed'
   field :memo, type: String
 
-  permit_params :name, :description, :order, :memo
+  field :release_date, type: DateTime
+  field :close_date, type: DateTime
+
+  permit_params :name, :description, :order, :memo, :release_date, :close_date
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
 
-  scope :and_public, ->{
-    where(state: 'public')
+  scope :and_public, ->(date = Time.zone.now) {
+    date = date.dup
+    where("$and" => [
+      { state: "public" },
+      { "$or" => [ { release_date: nil }, { :release_date.lte => date } ] },
+      { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+    ])
   }
 
   class << self
