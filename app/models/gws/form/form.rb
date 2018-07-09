@@ -23,13 +23,16 @@ class Gws::Form::Form
   field :close_date, type: DateTime
 
   field :anonymous_state, type: String, default: 'disabled'
+  field :answer_limit_state, type: String
 
-  permit_params :name, :description, :order, :memo, :release_date, :close_date, :anonymous_state
+  permit_params :name, :description, :order, :memo, :release_date, :close_date, :anonymous_state, :answer_limit_state
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :anonymous_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
+  validates :answer_limit_state, inclusion: { in: %w(once_per_user), allow_blank: true }
+  validate :validate_anonymous_state_and_answer_limit_state
 
   scope :and_public, ->(date = Time.zone.now) {
     date = date.dup
@@ -73,11 +76,27 @@ class Gws::Form::Form
     %w(disabled enabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
   end
 
+  def anonymous?
+    anonymous_state == 'enabled'
+  end
+
+  def answer_limit_state_options
+    %w(once_per_user).map { |m| [I18n.t("gws/form.options.answer_limit.#{m}"), m] }
+  end
+
   def closed?
     !public?
   end
 
   def public?
     state == 'public'
+  end
+
+  private
+
+  def validate_anonymous_state_and_answer_limit_state
+    if anonymous? && answer_limit_state == 'once_per_user'
+      errors.add :answer_limit_state, :answer_limit_state_consistency_error
+    end
   end
 end

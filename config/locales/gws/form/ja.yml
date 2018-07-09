@@ -1,5 +1,8 @@
 ja:
   gws/form:
+    options:
+      answer_limit:
+        once_per_user: 回答を一人1回に制限
 
   gws_role:
     read_other_gws_form_forms: フォームの閲覧（全て）
@@ -29,6 +32,11 @@ ja:
       gws/form/form: フォーム
       gws/form/category: カテゴリー
 
+    errors:
+      models:
+        gws/form/form:
+          answer_limit_state_consistency_error: は、匿名回答が有効な場合、回答を一人1回に制限することはできません。
+
     attributes:
       gws/form/form:
         name: タイトル
@@ -38,6 +46,7 @@ ja:
         release_date: 有効期限（開始）
         close_date: 有効期限（終了）
         anonymous_state: 匿名回答
+        answer_limit_state: 回答制限
         memo: 備考
       gws/addon/form/category:
         category_ids: カテゴリー
@@ -64,6 +73,9 @@ ja:
       anonymous_state:
         - 匿名回答を有効にすると、回答者に関する情報が記録されません。
         - 既定では無効で、誰が回答したかを記録します。
+      answer_limit_state:
+        - 回答制限を選択します。
+        - 「一人1回に制限する」を選択すると、一度回答したユーザーは回答することができません。
       memo:
         - 備考を入力します。
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
