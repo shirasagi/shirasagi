@@ -15,7 +15,7 @@ class Uploader::File
 
   def save
     return false unless valid?
-    if image?
+    if binary.present? && image?
       list = Magick::ImageList.new
       list.from_blob(binary)
       extract_geo_location(list)
