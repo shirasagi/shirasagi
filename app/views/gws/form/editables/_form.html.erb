@@ -14,6 +14,9 @@
   <dt><%= @model.t :close_date %><%= @model.tt :close_date %></dt>
   <dd><%= f.text_field :close_date, class: 'datetime js-date', value: tryb { @item.close_date.strftime("%Y/%m/%d") } %></dd>
 
+  <dt><%= @model.t :anonymous_state %><%= @model.tt :anonymous_state %></dt>
+  <dd><%= f.select :anonymous_state, @item.anonymous_state_options %></dd>
+
   <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
   <dd><%= f.text_area :memo %></dd>
 </dl>

@@ -22,11 +22,14 @@ class Gws::Form::Form
   field :release_date, type: DateTime
   field :close_date, type: DateTime
 
-  permit_params :name, :description, :order, :memo, :release_date, :close_date
+  field :anonymous_state, type: String, default: 'disabled'
+
+  permit_params :name, :description, :order, :memo, :release_date, :close_date, :anonymous_state
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
+  validates :anonymous_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
 
   scope :and_public, ->(date = Time.zone.now) {
     date = date.dup
@@ -64,6 +67,10 @@ class Gws::Form::Form
 
   def state_options
     %w(closed public).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
+  end
+
+  def anonymous_state_options
+    %w(disabled enabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
   end
 
   def closed?
