@@ -303,7 +303,7 @@ module Gws::Model
 
     def destroy_from_member(user)
       self.member_ids = member_ids - [user.id]
-      self.deleted[user.id.to_s] = Time.zone.now
+      self.deleted[user.id.to_s] = Time.zone.now.utc
 
       if member_ids.blank? && deleted["sent"]
         destroy
@@ -313,7 +313,7 @@ module Gws::Model
     end
 
     def destroy_from_sent
-      self.deleted["sent"] = Time.zone.now
+      self.deleted["sent"] = Time.zone.now.utc
 
       if member_ids.blank? && deleted["sent"]
         destroy
@@ -343,7 +343,7 @@ module Gws::Model
     end
 
     def set_seen(user)
-      self.seen[user.id.to_s] = Time.zone.now
+      self.seen[user.id.to_s] = Time.zone.now.utc
       self
     end
 
@@ -353,7 +353,7 @@ module Gws::Model
     end
 
     def set_star(user)
-      self.star[user.id.to_s] = Time.zone.now
+      self.star[user.id.to_s] = Time.zone.now.utc
       self
     end
 
