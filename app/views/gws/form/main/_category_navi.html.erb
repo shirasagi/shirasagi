@@ -1,0 +1,17 @@
+<%= jquery do %>
+  var navi = new Gws_Category_Navi('.gws-category-navi');
+  <% if @selected_folder %>
+    navi.setBaseUrl('<%= url_for(action: :index, folder_id: @selected_folder.id, category_id: 'ID') %>');
+  <% else %>
+    navi.setBaseUrl('<%= url_for(action: :index, category_id: 'ID') %>');
+  <% end %>
+  navi.render(<%== @categories.to_json(only: %i(_id name), methods: :trailing_name) %>);
+<% end %>
+
+<div class="gws-category-navi dropdown">
+  <%= link_to url_for(action: :index, category_id: '-'), class: 'btn dropdown-toggle' do %>
+    <%= @category.try(:trailing_name) || t('gws.category') %>
+    <i class="material-icons md-13">&#xE313;</i>
+  <% end %>
+  <div class="dropdown-menu dropdown-menu--white"></div>
+</div>

@@ -49,14 +49,19 @@ class Gws::Form::Form
       return criteria if params.blank?
 
       criteria = criteria.search_keyword(params)
+      criteria = criteria.search_category(params)
       criteria = criteria.search_categories(params)
       criteria
     end
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+      all.keyword_in(params[:keyword], :name, :description)
+    end
 
-      all.keyword_in(params[:keyword], :name)
+    def search_category(params)
+      return all if params.blank? || params[:category_id].blank?
+      all.where(category_ids: params[:category_id].to_i)
     end
 
     def search_categories(params)

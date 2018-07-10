@@ -17,6 +17,8 @@ class Gws::Form::EditablesController < ApplicationController
 
   navi_view "gws/form/main/navi"
 
+  append_view_path "app/views/gws/form/main"
+
   private
 
   def set_crumbs
@@ -49,7 +51,7 @@ class Gws::Form::EditablesController < ApplicationController
   end
 
   def set_categories
-    @categories ||= Gws::Notice::Category.site(@cur_site).readable(@cur_user, site: @cur_site)
+    @categories ||= Gws::Form::Category.site(@cur_site).readable(@cur_user, site: @cur_site)
   end
 
   def set_category
