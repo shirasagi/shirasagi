@@ -7,6 +7,7 @@ class Gws::Form::FilesController < ApplicationController
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
   before_action :set_search_params
+  before_action :set_items
   # before_action :redirect_to_appropriate_state, only: %i[show]
 
   navi_view "gws/form/main/navi"
@@ -69,10 +70,24 @@ class Gws::Form::FilesController < ApplicationController
 
   def fix_params
     set_cur_form
-    { cur_site: @cur_site, cur_form: @cur_form }
+    { cur_site: @cur_site, cur_user: @cur_user, cur_form: @cur_form }
+  end
+
+  def set_items
+    @items ||= begin
+      items = @model.site(@cur_site).form(@cur_form)
+      if @cur_form.file_closed?
+        items = items.user(@cur_user)
+      end
+      items
+    end
   end
 
   public
+
+  def index
+    @items = @items.search(@s).page(params[:page]).per(50)
+  end
 
   def new
     raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
@@ -88,7 +103,6 @@ class Gws::Form::FilesController < ApplicationController
 
     @item = @model.new fix_params
     @item.name = @cur_form.name
-    @item.cur_user = @cur_user if !@cur_form.anonymous?
     custom = params.require(:custom)
     new_column_values = @cur_form.build_column_values(custom)
     @item.update_column_values(new_column_values)
