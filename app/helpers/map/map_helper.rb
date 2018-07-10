@@ -49,7 +49,7 @@ module Map::MapHelper
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
 
-    jquery { s.join("\n").html_safe }
+    jquery {s.join("\n").html_safe}
   end
 
   def render_map_form(selector, opts = {})
@@ -91,7 +91,7 @@ module Map::MapHelper
       s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'
     end
 
-    jquery { s.join("\n").html_safe }
+    jquery {s.join("\n").html_safe}
   end
 
   def render_facility_search_map(selector, opts = {})
@@ -122,7 +122,7 @@ module Map::MapHelper
       s << 'Facility_Search.render("' + selector + '", opts);'
     end
 
-    jquery { s.join("\n").html_safe }
+    jquery {s.join("\n").html_safe}
   end
 
   def render_member_photo_form_map(selector, opts = {})
@@ -157,7 +157,7 @@ module Map::MapHelper
       s << 'Member_Photo_Form.setExifLatLng("#item_in_image");'
     end
 
-    jquery { s.join("\n").html_safe }
+    jquery {s.join("\n").html_safe}
   end
 
   def render_marker_info(item)
