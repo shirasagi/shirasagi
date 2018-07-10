@@ -25,6 +25,7 @@ module Map::MapHelper
     api = opts[:api] || map_setting[:api] || SS.config.map.api
     #center = opts[:center]
     markers = opts[:markers]
+    zoom_level = opts[:zoom_level]
 
     if api == "openlayers"
       include_openlayers_api
@@ -40,8 +41,11 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
 
+      options = {}
+      options[:zoom] = zoom_level if zoom_level
+
       s = []
-      s << 'Googlemaps_Map.load("' + selector + '");'
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{ options.to_json });"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
 
@@ -55,6 +59,7 @@ module Map::MapHelper
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     #markers = opts[:markers]
+    zoom_level = opts[:zoom_level]
 
     if api == "openlayers"
       include_openlayers_api
@@ -72,12 +77,15 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
 
+      options = {}
+      options[:zoom] = zoom_level if zoom_level
+
       s = []
       s << 'SS_AddonTabs.hide(".mod-map");'
       s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'Map_Form.maxPointForm = ' + max_point_form.to_json + ';' if max_point_form.present?
       s << 'Googlemaps_Map.setForm(Map_Form);'
-      s << 'Googlemaps_Map.load("' + selector + '");'
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{ options.to_json });"
       s << 'Googlemaps_Map.renderMarkers();'
       s << 'Googlemaps_Map.renderEvents();'
       s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'

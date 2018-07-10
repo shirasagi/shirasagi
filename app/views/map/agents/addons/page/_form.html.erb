@@ -1,13 +1,13 @@
-<%= render_map_form "#map-canvas", site: @cur_site %>
+<%= render_map_form "#map-canvas", site: @cur_site, zoom_level: @item.map_zoom_level %>
 
 <div class="mod-map">
   <div class="location-search">
     <%= text_field_tag :keyword, nil, class: "keyword", placeholder: t("map.search") %>
     <%= button_tag t("ss.buttons.search"), { type: :button, class: "btn" } %>
   </div>
-  <p>
-      ズームレベル：<%= f.number_field :map_zoom_level %>
-　</p>
+  <dl class="see">
+    <dt>ズームレベル</dt><dd><%= f.number_field :map_zoom_level, readonly: "readonly" %></dd>
+　</dl>
   <div id="map-canvas" style="width: 100%; height: 320px"></div>
   <dl class="marker-setting">
     <dt>

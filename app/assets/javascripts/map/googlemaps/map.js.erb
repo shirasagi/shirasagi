@@ -17,7 +17,8 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.resized = null;
 
   Googlemaps_Map.attachMessage = function (id) {
-    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event)
+    {
       if (Googlemaps_Map.openedInfo) {
         Googlemaps_Map.openedInfo.close();
       }
@@ -35,7 +36,11 @@ this.Googlemaps_Map = (function () {
     return this.form = form;
   };
 
-  Googlemaps_Map.load = function (selector) {
+  Googlemaps_Map.load = function (selector, options) {
+    if (options && options.zoom) {
+      Googlemaps_Map.zoom = options.zoom;
+    }
+
     var mapOptions;
     mapOptions = {
       center: new google.maps.LatLng(this.center[0], this.center[1]),
@@ -131,14 +136,14 @@ this.Googlemaps_Map = (function () {
 
       }
     });
-    if (!$.isEmptyObject(Googlemaps_Map.markers)) {
-      google.maps.event.addListenerOnce(Googlemaps_Map.map, 'idle', function (event) {
-        if (this.getZoom() > 13) {
-          this.setZoom(13);
-        }
-      });
-      Googlemaps_Map.map.fitBounds(markerBounds);
-    }
+//    if (!$.isEmptyObject(Googlemaps_Map.markers)) {
+//      google.maps.event.addListenerOnce(Googlemaps_Map.map, 'idle', function (event) {
+//        if (this.getZoom() > 13) {
+//          this.setZoom(13);
+//        }
+//      });
+//      Googlemaps_Map.map.fitBounds(markerBounds);
+//    }
   };
 
   return Googlemaps_Map;

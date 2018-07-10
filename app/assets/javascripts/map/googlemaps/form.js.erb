@@ -106,7 +106,8 @@ this.Map_Form = (function () {
       cln.find("input,textarea").val("");
       cln.find(".marker-name").val("");
       cln.find(".clear-marker").on('click', function () {
-        return Map_Form.clearPointForm(cln);
+        return Map_Form.clearPointF
+        orm(cln);
       });
       cln.find(".set-marker").on('click', function () {
         return Map_Form.createMarker(cln);
@@ -215,14 +216,6 @@ this.Map_Form = (function () {
       }
       return Map_Form.dataID += 1;
     });
-    if (Googlemaps_Map.markers.length > 0) {
-      google.maps.event.addListenerOnce(Googlemaps_Map.map, 'idle', function (event) {
-        if (this.getZoom() > 13) {
-          this.setZoom(13);
-        }
-      });
-      Googlemaps_Map.map.fitBounds(markerBounds);
-    }
   };
 
   Map_Form.renderEvents = function () {
@@ -236,6 +229,10 @@ this.Map_Form = (function () {
         icon: Map_Form.clickIcon,
         map: Googlemaps_Map.map
       });
+    });
+    google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (event) {
+      var zoom = Googlemaps_Map.map.getZoom();
+      $('input[name="item[map_zoom_level]"]').val(zoom);
     });
     $(".mod-map .add-marker").on('click', function (e) {
       Map_Form.clonePointForm();
