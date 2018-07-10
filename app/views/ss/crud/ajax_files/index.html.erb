@@ -39,6 +39,7 @@ SS.ajaxForm("form.user-file", {
         alert(["== Error =="].concat(xhr.statusText).join("\n"));
       }
     }
+    $.rails.enableFormElements($('form.user-file'));
   }
 });
 
