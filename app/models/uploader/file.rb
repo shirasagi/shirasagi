@@ -1,6 +1,5 @@
 class Uploader::File
   include ActiveModel::Model
-  include SS::ExifGeoLocation
 
   attr_accessor :path, :binary, :site
   attr_reader :saved_path, :is_dir
@@ -18,7 +17,6 @@ class Uploader::File
     if binary.present? && image?
       list = Magick::ImageList.new
       list.from_blob(binary)
-      extract_geo_location(list)
       list.each do |image|
         case SS.config.env.image_exif_option
         when "auto_orient"

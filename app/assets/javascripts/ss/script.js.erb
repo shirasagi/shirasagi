@@ -242,7 +242,6 @@ this.SS = (function () {
       },
       error: function (data, status) {
         alert(["== Error =="].concat(data.responseJSON).join("\n"));
-        $.rails.enableFormElements(elem);
       }
     };
     elem.on("submit", function (e) {
