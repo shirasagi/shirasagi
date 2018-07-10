@@ -1,7 +1,7 @@
 ja:
   gws/form:
     options:
-      answer_limit:
+      file_count_limit:
         once_per_user: 回答を一人1回に制限
     buttons:
       continuous: 続けて入力
@@ -32,13 +32,8 @@ ja:
   mongoid:
     models:
       gws/form/form: フォーム
-      gws/form/answer: 回答
+      gws/form/file: 回答
       gws/form/category: カテゴリー
-
-    errors:
-      models:
-        gws/form/form:
-          answer_limit_state_consistency_error: は、匿名回答が有効な場合、回答を一人1回に制限することはできません。
 
     attributes:
       gws/form/form:
@@ -49,7 +44,8 @@ ja:
         release_date: 有効期限（開始）
         close_date: 有効期限（終了）
         anonymous_state: 匿名回答
-        answer_limit_state: 回答制限
+        file_state: 回答結果
+        file_count_limit: 回答制限
         memo: 備考
       gws/addon/form/category:
         category_ids: カテゴリー
@@ -76,7 +72,11 @@ ja:
       anonymous_state:
         - 匿名回答を有効にすると、回答者に関する情報が記録されません。
         - 既定では無効で、誰が回答したかを記録します。
-      answer_limit_state:
+      file_state:
+        - 回答結果を公開するかどうかを選択します。
+        - 「公開」を選択すると、フォームの閲覧者に設定されていれば、誰の回答でも閲覧することができます。
+        - 「非公開」を選択すると、自分の回答のみを閲覧できます。
+      file_count_limit:
         - 回答制限を選択します。
         - 「一人1回に制限する」を選択すると、一度回答したユーザーは回答することができません。
       memo:

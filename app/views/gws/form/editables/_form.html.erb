@@ -17,8 +17,11 @@
   <dt><%= @model.t :anonymous_state %><%= @model.tt :anonymous_state %></dt>
   <dd><%= f.select :anonymous_state, @item.anonymous_state_options %></dd>
 
-  <dt><%= @model.t :answer_limit_state %><%= @model.tt :answer_limit_state %></dt>
-  <dd><%= f.select :answer_limit_state, @item.answer_limit_state_options, include_blank: true %></dd>
+  <dt><%= @model.t :file_state %><%= @model.tt :file_state %></dt>
+  <dd><%= f.select :file_state, @item.file_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :file_count_limit %><%= @model.tt :file_count_limit %></dt>
+  <dd><%= f.select :file_count_limit, @item.file_count_limit_options, include_blank: true %></dd>
 
   <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
   <dd><%= f.text_area :memo %></dd>
