@@ -15,7 +15,11 @@ SS::Application.routes.draw do
     get '/' => redirect { |p, req| "#{req.path}/-/-/readables" }, as: :main
 
     scope path: ':folder_id/:category_id' do
-      resources :readables, only: [:index, :show]
+      resources :readables, only: [:index] do
+        resources :files, only: [:new, :create] do
+          get :print, on: :collection
+        end
+      end
 
       resources :editables, concerns: [:soft_deletion], except: [:destroy] do
         match :publish, on: :member, via: [:get, :post]
