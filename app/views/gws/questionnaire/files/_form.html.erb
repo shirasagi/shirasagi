@@ -1,17 +1,6 @@
 <% return if @cur_form.blank? && (@item.cur_form || @item.form).blank? %>
 <% @cur_form ||= (@item.cur_form || @item.form) %>
 
-<div class="header">
-  <% Time.zone.today.tap do |today| %>
-    <time datetime="<%= today.iso8601 %>" class="timestamp"><%= I18n.l(today) %></time>
-  <% end %>
-  <span class="name"><%= @cur_form.contributor_name %></span>
-</div>
-
-<h2 class="title"><%= @cur_form.name %></h2>
-
-<div class="description"><%= br auto_link(@cur_form.description) %></div>
-
 <dl class="see mod-gws-questionnaire-custom_form">
   <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
     <%= render(file: column.column_form_path, locals: {column: column, object_name: 'custom', value: @item.read_column_value(column)}) %>

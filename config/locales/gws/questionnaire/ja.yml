@@ -1,5 +1,9 @@
 ja:
   gws/questionnaire:
+    tabs:
+      personal: 自分の回答
+      others: 他人の回答
+    file_name: "%{form}の回答"
 
   gws_role:
     read_other_gws_questionnaire_forms: アンケートの閲覧（全て）
@@ -23,6 +27,7 @@ ja:
     addons:
       gws/questionnaire/column_setting: 入力設定
       gws/questionnaire/category: カテゴリー
+      gws/questionnaire/custom_form: アンケート
 
   mongoid:
     models:
@@ -44,6 +49,12 @@ ja:
         memo: 備考
       gws/addon/questionnaire/category:
         category_ids: カテゴリー
+      gws/questionnaire/file:
+        name: 回答名
+        updated: 回答日
+        created: 初回回答日
+      gws/reference/questionnaire/form:
+        form_id: アンケート
 
   tooltip:
     gws/questionnaire/form:

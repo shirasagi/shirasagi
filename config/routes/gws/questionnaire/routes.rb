@@ -17,6 +17,7 @@ SS::Application.routes.draw do
     scope path: ':folder_id/:category_id' do
       resources :readables, only: [:index] do
         resource :file, except: [:new, :create, :show] do
+          get :others, on: :collection
           get :delete, on: :member
           get :print, on: :collection
         end

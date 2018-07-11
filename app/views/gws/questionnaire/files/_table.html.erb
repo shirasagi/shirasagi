@@ -1,0 +1,39 @@
+<div class="form-table">
+  <div class="form-table-body">
+    <div class="form-table-body-inner">
+      <table>
+        <thead>
+        <tr>
+          <% @cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+            <th><%= column.name %></th>
+          <% end %>
+          <% if !@cur_form.anonymous? %>
+            <th><%= Gws::User.t :name %></th>
+            <th><%= @model.t :updated %></th>
+          <% end %>
+        </tr>
+        </thead>
+        <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <% @cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+              <% column_value = item.column_values.where(column_id: column.id).first %>
+              <td>
+                <%= column.try(:prefix_label) %>
+                <%= br(column_value ? column_value.value : '') %>
+                <%= column.try(:postfix_label) %>
+              </td>
+            <% end %>
+            <% if !@cur_form.anonymous? %>
+              <td><%= item.user_long_name %></td>
+              <td><%= I18n.l(item.updated) %></td>
+            <% end %>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

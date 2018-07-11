@@ -5,10 +5,10 @@ class Gws::Questionnaire::FilesController < ApplicationController
   model Gws::Questionnaire::File
 
   before_action :set_forms
-  before_action :set_cur_form, only: %i[new create]
-  before_action :set_search_params
+  before_action :set_cur_form
+  before_action :check_form_permissions
   before_action :set_items
-  # before_action :redirect_to_appropriate_state, only: %i[show]
+  before_action :set_item, only: %i[edit update delete destroy]
 
   navi_view "gws/questionnaire/main/navi"
 
@@ -18,7 +18,7 @@ class Gws::Questionnaire::FilesController < ApplicationController
     set_cur_form
     @crumbs << [t('modules.gws/questionnaire'), gws_questionnaire_main_path]
     @crumbs << [t('ss.navi.readable'), gws_questionnaire_readables_path]
-    @crumbs << [@cur_form.name, action: :new]
+    @crumbs << [@cur_form.name, action: :edit]
   end
 
   def set_forms
@@ -35,42 +35,23 @@ class Gws::Questionnaire::FilesController < ApplicationController
 
   def set_cur_form
     raise '404' if params[:readable_id].blank?
-    set_forms
-    @cur_form ||= @forms.find(params[:readable_id])
-  end
-
-  def set_search_params
-    @s ||= begin
-      s = OpenStruct.new params[:s]
-      s.state = params[:state] if params[:state]
-      s.cur_site = @cur_site
-      s.cur_user = @cur_user
-      s
+    @cur_form ||= begin
+      set_forms
+      @forms.find(params[:readable_id])
     end
   end
 
-  # def redirect_to_appropriate_state
-  #   return if params[:state] != 'redirect'
-  #
-  #   if @item.user_ids.include?(@cur_user.id) || (@item.group_ids & @cur_user.group_ids).present?
-  #     if @item.public?
-  #       state = 'sent'
-  #     else
-  #       state = 'closed'
-  #     end
-  #   elsif @item.member_ids.include?(@cur_user.id)
-  #     state = 'inbox'
-  #   else
-  #     state = 'readable'
-  #   end
-  #
-  #   raise '404' if state.blank?
-  #   redirect_to(state: state)
-  # end
+  def check_form_permissions
+    raise '403' unless @cur_form.readable?(@cur_user, site: @cur_site)
+  end
 
   def fix_params
     set_cur_form
     { cur_site: @cur_site, cur_user: @cur_user, cur_form: @cur_form }
+  end
+
+  def pre_params
+    { name: t("gws/questionnaire.file_name", form: @cur_form.name) }
   end
 
   def set_items
@@ -83,35 +64,41 @@ class Gws::Questionnaire::FilesController < ApplicationController
     end
   end
 
+  def set_item
+    @item ||= begin
+      item = @items.where(user_id: @cur_user.id).order_by(created: 1).first
+      item ||= @model.new(pre_params)
+      item.attributes = fix_params
+      item
+    end
+  end
+
   public
 
-  def index
-    @items = @items.search(@s).page(params[:page]).per(50)
+  def edit
+    render
   end
 
-  def new
-    raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
-
-    @item = @model.new pre_params.merge(fix_params)
-    render_opts = { file: :new }
-    render_opts[:layout] = false if request.xhr?
-    render render_opts
-  end
-
-  def create
-    raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
-
-    @item = @model.new fix_params
-    @item.name = @cur_form.name
+  def update
     custom = params.require(:custom)
     new_column_values = @cur_form.build_column_values(custom)
     @item.update_column_values(new_column_values)
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    render_opts = { location: { action: :edit } }
+    render_update @item.save, render_opts
+  end
 
-    render_opts = { location: gws_questionnaire_readables_path }
-    if params[:continuous].present?
-      render_opts[:location] = { action: :new }
-    end
+  def delete
+    render
+  end
 
-    render_create(@item.save, render_opts)
+  def destroy
+    render_opts = { location: { action: :edit } }
+    render_destroy @item.new_record? ? true : @item.destroy, render_opts
+  end
+
+  def others
+    raise '404' if @cur_form.file_closed?
+    @items = @items.ne(user_id: @cur_user.id).order_by(updated: -1).page(params[:page]).per(50)
   end
 end
