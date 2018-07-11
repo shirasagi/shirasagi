@@ -1,0 +1,41 @@
+SS::Application.routes.draw do
+  Gws::Questionnaire::Initializer
+
+  concern :deletion do
+    get :delete, on: :member
+    delete :destroy_all, on: :collection, path: ''
+  end
+
+  concern :soft_deletion do
+    match :soft_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
+  gws 'questionnaire' do
+    get '/' => redirect { |p, req| "#{req.path}/-/-/readables" }, as: :main
+
+    scope path: ':folder_id/:category_id' do
+      resources :readables, only: [:index] do
+        resources :files, concerns: [:deletion] do
+          get :print, on: :collection
+        end
+      end
+
+      resources :editables, concerns: [:soft_deletion], except: [:destroy] do
+        match :publish, on: :member, via: [:get, :post]
+        match :depublish, on: :member, via: [:get, :post]
+        resources :columns, concerns: :deletion
+      end
+    end
+
+    resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
+      match :undo_delete, on: :member, via: [:get, :post]
+    end
+
+    resources :categories, concerns: [:deletion]
+
+    namespace "apis" do
+      get "categories" => "categories#index"
+    end
+  end
+end
