@@ -24,17 +24,15 @@ class Gws::Questionnaire::Form
 
   field :anonymous_state, type: String, default: 'disabled'
   field :file_state, type: String
-  field :file_count_limit, type: String
 
   permit_params :name, :description, :order, :memo, :release_date, :close_date, :anonymous_state
-  permit_params :file_state, :file_count_limit
+  permit_params :file_state
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :anonymous_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
   validates :file_state, inclusion: { in: %w(closed public), allow_blank: true }
-  validates :file_count_limit, inclusion: { in: %w(once_per_user), allow_blank: true }
 
   scope :and_public, ->(date = Time.zone.now) {
     date = date.dup
@@ -105,9 +103,5 @@ class Gws::Questionnaire::Form
 
   def file_public?
     file_state == 'public'
-  end
-
-  def file_count_limit_options
-    %w(once_per_user).map { |m| [I18n.t("gws/questionnaire.options.file_count_limit.#{m}"), m] }
   end
 end

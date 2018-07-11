@@ -1,10 +1,5 @@
 ja:
   gws/questionnaire:
-    options:
-      file_count_limit:
-        once_per_user: 回答を一人1回に制限
-    buttons:
-      continuous: 続けて入力
 
   gws_role:
     read_other_gws_questionnaire_forms: アンケートの閲覧（全て）

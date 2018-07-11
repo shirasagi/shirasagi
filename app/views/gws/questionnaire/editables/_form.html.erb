@@ -20,9 +20,6 @@
   <dt><%= @model.t :file_state %><%= @model.tt :file_state %></dt>
   <dd><%= f.select :file_state, @item.file_state_options, include_blank: true %></dd>
 
-  <dt><%= @model.t :file_count_limit %><%= @model.tt :file_count_limit %></dt>
-  <dd><%= f.select :file_count_limit, @item.file_count_limit_options, include_blank: true %></dd>
-
   <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
   <dd><%= f.text_area :memo %></dd>
 </dl>

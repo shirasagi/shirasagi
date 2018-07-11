@@ -16,9 +16,6 @@
       <% @crud_buttons.call f %>
     <% else %>
       <%= f.submit t('ss.buttons.save'), class: %w(btn-primary save) %>
-      <% if @cur_form.file_count_limit != 'once_per_user' %>
-        <%= f.submit t('gws/questionnaire.buttons.continuous'), name: 'continuous', class: %w(btn-primary save) %>
-      <% end %>
       <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: 'reset', onclick: "location.href='#{gws_questionnaire_readables_path}'; return false;" %>
     <% end %>
   </footer>
