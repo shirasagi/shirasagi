@@ -9,6 +9,7 @@ class Gws::Questionnaire::Form
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Gws::Questionnaire::AnswerState
 
   readable_setting_include_custom_groups
   permission_include_custom_groups
@@ -51,6 +52,7 @@ class Gws::Questionnaire::Form
       criteria = criteria.search_keyword(params)
       criteria = criteria.search_category(params)
       criteria = criteria.search_categories(params)
+      criteria = criteria.search_answer_state(params)
       criteria
     end
 
@@ -70,6 +72,20 @@ class Gws::Questionnaire::Form
 
       category_ids = category_ids.map(&:to_i)
       all.in(category_ids: category_ids)
+    end
+
+    def search_answer_state(params)
+      return all if params.blank? || params[:answered_state].blank?
+      case params[:answered_state]
+      when 'answered'
+        all.and_answered(params[:user])
+      when 'unanswered'
+        all.and_unanswered(params[:user])
+      when 'both'
+        all
+      else
+        none
+      end
     end
   end
 

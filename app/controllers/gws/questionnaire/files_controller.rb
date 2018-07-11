@@ -85,7 +85,13 @@ class Gws::Questionnaire::FilesController < ApplicationController
     @item.update_column_values(new_column_values)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     render_opts = { location: { action: :edit } }
-    render_update @item.save, render_opts
+
+    result = @item.save
+    if result
+      @cur_form.set_answered!(@cur_user)
+    end
+
+    render_update result, render_opts
   end
 
   def delete
@@ -94,7 +100,17 @@ class Gws::Questionnaire::FilesController < ApplicationController
 
   def destroy
     render_opts = { location: { action: :edit } }
-    render_destroy @item.new_record? ? true : @item.destroy, render_opts
+    if @item.new_record?
+      render_destroy true, render_opts
+      return
+    end
+
+    result = @item.destroy
+    if result
+      @cur_form.unset_answered!(@cur_user)
+    end
+
+    render_destroy result, render_opts
   end
 
   def others

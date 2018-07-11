@@ -3,6 +3,11 @@ ja:
     tabs:
       personal: 自分の回答
       others: 他人の回答
+    options:
+      answered_state:
+        answered: 回答済
+        unanswered: 未回答
+        both: 両方
     file_name: "%{form}の回答"
 
   gws_role:

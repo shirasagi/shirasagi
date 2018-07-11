@@ -1,15 +1,26 @@
-<% @index_title = proc do |item| %>
-  <%= link_to item.name, edit_gws_questionnaire_readable_file_path(readable_id: item), class: "title" %>
-<% end %>
-
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), edit_gws_questionnaire_readable_file_path(readable_id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_check = proc do |item| %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, edit_gws_questionnaire_readable_file_path(readable_id: item), class: "title" %>
 <% end %>
 
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <span class="answered">
+    <% answered = item.answered_at(@cur_user) %>
+    <% if answered %>
+    <span><%= Gws::Questionnaire::File.t :updated %>: <%= I18n.l(answered) %></span>
+    <% else %>
+    <span><%= t("gws/questionnaire.options.answered_state.unanswered") %></span>
+    <% end %>
+  </span>
 
   <% if item.categories.present? %>
     <span class="categories">
