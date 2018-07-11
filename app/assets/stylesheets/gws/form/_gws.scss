@@ -1,0 +1,41 @@
+.gws-form {
+  .form-table {
+    border: $border-gray5;
+    overflow-x: auto;
+    margin: 16px;
+    box-sizing: content-box;
+  }
+  .form-table-header-inner {
+    width: 2000px;
+  }
+  .form-table-body {
+    width: 100%;
+    table {
+      width: 100%;
+      background: $white;
+      tr:nth-child(2n) {
+        background: #f8f8f8;
+      }
+      tr.current, tr:hover {
+        background: $gray1;
+      }
+      th, td {
+        padding: 6px 18px;
+        white-space: nowrap;
+        @include mb { display: inline-block; }
+      }
+      thead th {
+        background: $gray1;
+        color: $gray2;
+        &.deselect {
+          width: 100px;
+        }
+      }
+      tbody {
+        td {
+          border-top: $border-gray5;
+        }
+      }
+    }
+  }
+}
