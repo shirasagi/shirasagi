@@ -1,39 +1,40 @@
 class Cms::AllContent
-  class << self
-    FIELDS_DEF = [
-      %w(page_id to_page_id),
-      %w(node_id to_node_id),
-      %w(route),
-      %w(name),
-      %w(index_name),
-      %w(filename),
-      %w(url to_url),
-      %w(layout to_layout),
-      %w(keywords),
-      %w(description),
-      %w(summary_html),
-      %w(conditions),
-      %w(sort),
-      %w(limit),
-      %w(upper_html),
-      %w(loop_setting_id to_loop_setting),
-      %w(loop_html),
-      %w(lower_html),
-      %w(new_days),
-      %w(category_ids to_categories),
-      %w(files to_files),
-      %w(file_urls to_file_urls),
-      %w(use_map to_map_points),
-      %w(group_names to_group_names),
-      %w(released),
-      %w(release_date),
-      %w(close_date),
-      %w(created),
-      %w(updated),
-      %w(status to_label),
-      %w(file_size to_file_size),
-    ].freeze
+  # check reverse mapping in `app/jobs/cms/all_contents_import_job.rb`
+  FIELDS_DEF = [
+    %w(page_id to_page_id),
+    %w(node_id to_node_id),
+    %w(route),
+    %w(name),
+    %w(index_name),
+    %w(filename),
+    %w(url to_url),
+    %w(layout to_layout),
+    %w(keywords),
+    %w(description),
+    %w(summary_html),
+    %w(conditions),
+    %w(sort),
+    %w(limit),
+    %w(upper_html),
+    %w(loop_setting_id to_loop_setting),
+    %w(loop_html),
+    %w(lower_html),
+    %w(new_days),
+    %w(category_ids to_categories),
+    %w(files to_files),
+    %w(file_urls to_file_urls),
+    %w(use_map to_map_points),
+    %w(group_names to_group_names),
+    %w(released),
+    %w(release_date),
+    %w(close_date),
+    %w(created),
+    %w(updated),
+    %w(status to_label),
+    %w(file_size to_file_size),
+  ].freeze
 
+  class << self
     def enum_csv(site)
       Enumerator.new do |y|
         y << encode_sjis(header.to_csv)
@@ -45,8 +46,6 @@ class Cms::AllContent
       end
     end
 
-    private
-
     def encode_sjis(str)
       str.encode("SJIS", invalid: :replace, undef: :replace)
     end
@@ -54,6 +53,8 @@ class Cms::AllContent
     def header
       FIELDS_DEF.map { |e| I18n.t("all_content.#{e[0]}") }
     end
+
+    private
 
     def row(content)
       FIELDS_DEF.map do |e|
@@ -67,20 +68,23 @@ class Cms::AllContent
           val = nil
         end
 
-        val = I18n.l(val) if val.is_a?(Time) || val.is_a?(Date) || val.is_a?(DateTime)
+        val = I18n.l(val) if val.respond_to?(:strftime)
         val
       end
     end
 
     def to_page_id(key, content)
-      content.is_a?(Cms::Model::Page) ? content.id : nil
+      return nil if !content.is_a?(Cms::Model::Page)
+      content.id
     end
 
     def to_node_id(key, content)
-      content.is_a?(Cms::Model::Node) ? content.id : nil
+      return nil if !content.is_a?(Cms::Model::Node)
+      content.id
     end
 
     def to_layout(key, content)
+      return nil if content.layout.blank?
       content.layout.filename
     end
 
@@ -94,14 +98,15 @@ class Cms::AllContent
     end
 
     def to_categories(key, content)
-      Category::Node::Base.where(:id.in => content.category_ids).
+      Cms::Node.site(content.site).
+        where(:id.in => content.category_ids).
         pluck(:name, :filename).
         map { |name, filename| "#{filename}(#{name})" }.
         join("\n")
     end
 
     def to_files(key, content)
-      content.files.map(&:name).join("\n")
+      content.files.pluck(:name).join("\n")
     end
 
     def to_file_urls(key, content)
@@ -113,7 +118,7 @@ class Cms::AllContent
     end
 
     def to_group_names(key, content)
-      Cms::Group.where(:id.in => content.group_ids).pluck(:name).join(",")
+      Cms::Group.site(content.site).where(:id.in => content.group_ids).pluck(:name).join(",")
     end
 
     def to_label(key, content)
