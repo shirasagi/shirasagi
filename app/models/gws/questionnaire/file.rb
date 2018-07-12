@@ -75,6 +75,10 @@ class Gws::Questionnaire::File
     #     none
     #   end
     # end
+
+    def enum_csv(params)
+      Gws::Questionnaire::FileEnumerator.new(self, params)
+    end
   end
 
   # def state_options

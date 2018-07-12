@@ -294,9 +294,9 @@ ja:
       multibyte_filename_state:
         enabled: アップロード可
         disabled: アップロード不可
-      encoding:
-        Shift_JIS: シフトJIS
-        UTF-8: UTF-8
+      csv_encoding:
+        Shift_JIS: シフトJIS（Excel 2016 より前）
+        UTF-8: UTF-8（Excel 2016 以降）
       user_lock_state:
         unlocked: 利用可
         locked: 利用停止

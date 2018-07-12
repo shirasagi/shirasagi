@@ -86,4 +86,23 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
   def summary
     @items = @cur_form.files
   end
+
+  def download_all
+    @items = @cur_form.files.search(@s).order_by(updated: -1)
+
+    if request.get?
+      render
+      return
+    end
+
+    safe_params = params.require(:item).permit(:encoding)
+    encoding = safe_params[:encoding]
+    filename = "questionnaire_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum(
+      @items.enum_csv(OpenStruct.new(cur_site: @cur_site, cur_form: @cur_form, encoding: encoding)),
+      type: "text/csv; charset=#{encoding}", filename: filename
+    )
+  end
 end
