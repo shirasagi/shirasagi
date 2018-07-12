@@ -1,6 +1,8 @@
 <div class="list-head">
   <div class="operations">
-    <%= button_tag(t("ss.buttons.csv"), name: "csv", type: "button", class: "btn btn-csv") %>
+    <% if params[:action] == 'index' %>
+      <%= button_tag(t("ss.buttons.csv"), name: "csv", type: "button", class: "btn btn-csv") %>
+    <% end %>
     <%= button_tag(t("ss.buttons.print"), name: "print", type: "button", class: "btn btn-print") %>
   </div>
 

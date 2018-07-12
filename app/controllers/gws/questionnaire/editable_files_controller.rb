@@ -77,4 +77,8 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
   def index
     @items = @cur_form.files.order_by(updated: -1).page(params[:page]).per(50)
   end
+
+  def summary
+    @items = @cur_form.files
+  end
 end
