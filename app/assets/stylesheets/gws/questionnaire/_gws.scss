@@ -55,4 +55,12 @@
       padding: 0;
     }
   }
+
+  .list-head {
+    .operations {
+      display: inline-block;
+      float: right;
+      margin-left: 16px;
+    }
+  }
 }

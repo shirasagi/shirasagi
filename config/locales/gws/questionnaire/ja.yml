@@ -3,6 +3,8 @@ ja:
     tabs:
       personal: 自分の回答
       others: 他人の回答
+      files: 回答一覧
+      summary: 集計
     options:
       answered_state:
         answered: 回答済
@@ -12,6 +14,7 @@ ja:
       anonymous:
         head: 匿名アンケート
         body: このアンケートの回答は匿名で登録されます。アンケート管理者は誰が回答したかを特定することはできません。
+      count_limit: "最新 %{count} 件を表示しています。"
     file_name: "%{form}の回答"
 
   gws_role:

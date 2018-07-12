@@ -27,6 +27,9 @@ SS::Application.routes.draw do
         match :publish, on: :member, via: [:get, :post]
         match :depublish, on: :member, via: [:get, :post]
         resources :columns, concerns: :deletion
+        resources :files, controller: 'editable_files', only: [:index] do
+          get :summary, on: :collection
+        end
       end
     end
 
