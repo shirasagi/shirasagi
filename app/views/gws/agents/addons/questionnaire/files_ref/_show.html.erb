@@ -1,0 +1,11 @@
+<% return if @item.files.blank? %>
+
+<div class="see mod-questionaire-files-ref">
+  ※最新 5 件を表示しています。
+  <table class="index">
+    <thead></thead>
+  </table>
+  <% @item.files.order_by(updated: -1).limit(5).each do |file| %>
+  <% end %>
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_report_files_path(state: 'inbox') %></div>
+</div>

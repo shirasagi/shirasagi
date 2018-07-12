@@ -6,6 +6,7 @@ class Gws::Questionnaire::Form
   include Gws::Addon::Contributor
   include Gws::Addon::Questionnaire::ColumnSetting
   include Gws::Addon::Questionnaire::Category
+  include Gws::Addon::Questionnaire::FilesRef
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
