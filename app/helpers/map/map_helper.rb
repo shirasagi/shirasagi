@@ -36,6 +36,8 @@ module Map::MapHelper
       s << '  readonly: true,'
       s << '  markers: ' + markers.to_json + ',' if markers.present?
       s << '  layers: ' + SS.config.map.layers.to_json + ','
+      s << '  zoom: ' + zoom_level.to_json
+
       s << '};'
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else

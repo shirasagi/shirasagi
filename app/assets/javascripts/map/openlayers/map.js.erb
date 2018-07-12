@@ -65,7 +65,8 @@ this.Openlayers_Map = (function () {
         projection: "EPSG:3857",
         center: ol.proj.transform(center, "EPSG:4326", "EPSG:3857"),
         maxZoom: 18,
-        zoom: this.opts['zoom'] || 10
+        zoom: this.opts['this.getZoom'] || 10
+
       }),
       logo: true
     });
