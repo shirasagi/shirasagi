@@ -7,6 +7,8 @@
   end
 %>
 
+<%= javascript_include_tag 'ss/chart' %>
+
 <div class="summary">
   <dl class="see">
     <dt><%= t "inquiry.total_count" %></dt>
@@ -20,8 +22,12 @@
 <% @cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
   <% next if !select_like_columns.any? { |t| column.is_a?(t) } %>
 
-  <div class="summary">
+  <div class="summary" id="summary-<%= column.id %>">
     <h2><%= column.name %></h2>
+
+    <div class="chart">
+      <canvas id="canvas-<%= column.id %>"></canvas>
+    </div>
 
     <table class="index">
       <tbody>
@@ -37,4 +43,42 @@
       </tbody>
     </table>
   </div>
+
+  <%= jquery do %>
+    function randomColor() {
+      var randomInt = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      var h = randomInt(0, 360);
+      var s = randomInt(42, 98);
+      var l = randomInt(40, 90);
+
+      return "hsl(" + h + "," + s + "%," + l + "%)";
+    }
+
+    var labels = [];
+    var values = [];
+    var bgColors = [];
+    <% column.select_options.each do |option| %>
+      labels.push(<%== option.to_json %>);
+      values.push(<%== find_aggregation_count(column.id, option).to_json %>);
+      bgColors.push(randomColor());
+    <% end %>
+
+    var config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: values,
+          backgroundColor: bgColors
+        }],
+        labels: labels
+      },
+      options: { responsive: true }
+    };
+
+    var ctx = $("#canvas-<%= column.id %>")[0].getContext("2d");
+    var chart = new Chart(ctx, config);
+  <% end %>
 <% end %>
