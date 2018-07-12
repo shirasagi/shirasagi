@@ -63,4 +63,16 @@
       margin-left: 16px;
     }
   }
+
+  .summary {
+    border: none;
+    padding: 15px 10px;
+
+    h2 {
+      background: $gray1;
+      @include border-radius(2px);
+      padding: 6px 18px;
+      border: $border-gray5;
+    }
+  }
 }

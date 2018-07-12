@@ -1,1 +1,40 @@
-<p>put summary here.</p>
+<% select_like_columns = [Gws::Column::CheckBox, Gws::Column::RadioButton, Gws::Column::Select] %>
+
+<%
+  def find_aggregation_count(column_id, option)
+    ret = @aggregation.find { |aggr| aggr["_id"]["column_id"] == column_id && aggr["_id"]["value"] == option }
+    ret ? ret["count"] : 0
+  end
+%>
+
+<div class="summary">
+  <dl class="see">
+    <dt><%= t "inquiry.total_count" %></dt>
+    <dd>
+      <%= @items.count.to_s(:delimited) %>
+      <%= t "ss.units.count" %>
+    </dd>
+  </dl>
+</div>
+
+<% @cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+  <% next if !select_like_columns.any? { |t| column.is_a?(t) } %>
+
+  <div class="summary">
+    <h2><%= column.name %></h2>
+
+    <table class="index">
+      <tbody>
+        <% column.select_options.each do |option| %>
+          <tr>
+            <td><%= option %></td>
+            <td class="count">
+              <%= find_aggregation_count(column.id, option).to_s(:delimited) %>
+              <%= t "ss.units.count" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

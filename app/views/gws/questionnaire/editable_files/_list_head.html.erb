@@ -6,5 +6,7 @@
     <%= button_tag(t("ss.buttons.print"), name: "print", type: "button", class: "btn btn-print") %>
   </div>
 
-  <%= render file: "_search" %>
+  <% if params[:action] == 'index' %>
+    <%= render file: "_search" %>
+  <% end %>
 </div>

@@ -85,6 +85,7 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
 
   def summary
     @items = @cur_form.files
+    @aggregation = @items.aggregate
   end
 
   def download_all
