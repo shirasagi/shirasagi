@@ -8,6 +8,10 @@ ja:
         answered: 回答済
         unanswered: 未回答
         both: 両方
+    notices:
+      anonymous:
+        head: 匿名アンケート
+        body: このアンケートの回答は匿名で登録されます。アンケート管理者は誰が回答したかを特定することはできません。
     file_name: "%{form}の回答"
 
   gws_role:

@@ -1,3 +1,10 @@
+<% if @cur_form.anonymous? %>
+  <div class="anonymous-notice">
+    <h2><%= t("gws/questionnaire.notices.anonymous.head") %></h2>
+    <p><%= t("gws/questionnaire.notices.anonymous.body") %></p>
+  </div>
+<% end %>
+
 <div class="addon-view" id="addon-basic">
   <div class="addon-body">
     <div class="header">

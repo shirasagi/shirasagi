@@ -38,4 +38,21 @@
       }
     }
   }
+
+  .anonymous-notice {
+    margin: 0px 0px 10px 0px;
+    padding: 20px 20px;
+    border: 1px solid $orange;
+    @include border-radius(3px);
+    background-color: #fff;
+    h2 {
+      margin: -20px -20px 25px;
+      padding: 8px 20px;
+      background-color: $orange;
+      color: #fff;
+    }
+    p, ul {
+      padding: 0;
+    }
+  }
 }
