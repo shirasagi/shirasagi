@@ -191,22 +191,21 @@ this.Map_Form = (function () {
   };
 
   Map_Form.renderMarkers = function () {
-    var i, len, m, markerBounds, ref, zoomChangeBoundsListener;
+    var i, len, markerBounds;
     markerBounds = new google.maps.LatLngBounds();
     if (Googlemaps_Map.markers) {
-      ref = Googlemaps_Map.markers;
+      var ref = Googlemaps_Map.markers;
       for (i = 0, len = ref.length; i < len; i++) {
-        m = ref[i];
+        var m = ref[i];
         m.setMap(null);
       }
     }
     Googlemaps_Map.markers = [];
     Map_Form.dataID = 0;
     $(".mod-map dd.marker").each(function () {
-      var loc;
       $(this).attr("data-id", Map_Form.dataID);
       if ($(this).find(".marker-loc").val() !== "") {
-        loc = Map_Form.getMapLoc($(this).find(".marker-loc"));
+        var loc = Map_Form.getMapLoc($(this).find(".marker-loc"));
         Googlemaps_Map.markers[Map_Form.dataID] = new google.maps.Marker({
           position: loc,
           map: Googlemaps_Map.map
@@ -214,8 +213,10 @@ this.Map_Form = (function () {
         Map_Form.attachMessage(Map_Form.dataID);
         markerBounds.extend(loc);
       }
-      return Map_Form.dataID += 1;
+      Map_Form.dataID += 1;
     });
+
+    Googlemaps_Map.map.setCenter(markerBounds.getCenter());
   };
 
   Map_Form.renderEvents = function () {

@@ -41,7 +41,7 @@ this.Openlayers_Map_Form = (function () {
     this.renderMarkers();
     this.initPopup();
     this.resize();
-    return this.renderEvents();
+    this.renderEvents();
   };
 
   Openlayers_Map_Form.prototype.createLayers = function (layerOpts) {
@@ -424,12 +424,12 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.resize = function () {
-    var extent;
     if (!this.markerLayer) {
       return;
     }
-    extent = this.markerLayer.getSource().getExtent();
-    return this.map.getView().fit(extent, this.map.getSize());
+    var extent = this.markerLayer.getSource().getExtent();
+    //this.map.getView().fit(extent, this.map.getSize());
+    this.map.getView().setCenter(ol.extent.getCenter(extent));
   };
 
   return Openlayers_Map_Form;
