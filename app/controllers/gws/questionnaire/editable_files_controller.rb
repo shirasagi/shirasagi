@@ -6,6 +6,7 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
 
   before_action :set_forms
   before_action :set_cur_form
+  before_action :set_search_params
   # before_action :check_form_permissions
   # before_action :set_items
   # before_action :set_item, only: %i[edit update delete destroy]
@@ -44,6 +45,10 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
     end
   end
 
+  def set_search_params
+    @s = OpenStruct.new(params[:s].presence || {})
+  end
+
   # def check_form_permissions
   #   raise '403' unless @cur_form.readable?(@cur_user, site: @cur_site)
   # end
@@ -75,7 +80,7 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
   public
 
   def index
-    @items = @cur_form.files.order_by(updated: -1).page(params[:page]).per(50)
+    @items = @cur_form.files.search(@s).order_by(updated: -1).page(params[:page]).per(50)
   end
 
   def summary
