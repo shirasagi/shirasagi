@@ -259,7 +259,6 @@ this.Openlayers_Map = (function () {
       return;
     }
     extent = this.markerLayer.getSource().getExtent();
-    //return this.map.getView().fit(extent, this.map.getSize());
     this.map.getView().setCenter(ol.extent.getCenter(extent));
 
   };
