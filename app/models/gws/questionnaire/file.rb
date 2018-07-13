@@ -81,17 +81,25 @@ class Gws::Questionnaire::File
     end
 
     def aggregate
+      select_like_columns = [ Gws::Column::Value::CheckBox, Gws::Column::Value::RadioButton, Gws::Column::Value::Select ]
+
       pipes = []
       pipes << { "$match" => self.all.selector }
-
-      select_like_columns = [ Gws::Column::CheckBox, Gws::Column::Value::RadioButton, Gws::Column::Select ]
-
-      pipes << { "$match" => { "column_values._type" => { "$in" => select_like_columns.map(&:name) } } }
       pipes << { "$unwind" => "$column_values" }
-      pipes << { "$group" => {
-        _id: { "column_id" => "$column_values.column_id", "value" => "$column_values.value" },
-        count: { "$sum"=> 1 }
-      } }
+      pipes << { "$match" => { "column_values._type" => { "$in" => select_like_columns.map(&:name) } } }
+      pipes << {
+        "$project" => {
+          "column_values.column_id" => 1,
+          "column_values.values" => { "$ifNull" => [ "$column_values.values", [ "$column_values.value" ] ] }
+        }
+      }
+      pipes << { "$unwind" => "$column_values.values" }
+      pipes << {
+        "$group" => {
+          _id: { "column_id" => "$column_values.column_id", "value" => "$column_values.values" },
+          count: { "$sum"=> 1 }
+        }
+      }
 
       self.collection.aggregate(pipes).to_a
     end
