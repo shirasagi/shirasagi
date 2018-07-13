@@ -99,8 +99,11 @@ class Gws::Questionnaire::Form
     !public?
   end
 
-  def public?
-    state == 'public'
+  def public?(now = Time.zone.now)
+    return false if state != 'public'
+    return false if release_date && release_date > now
+    return false if close_date && close_date <= now
+    true
   end
 
   def anonymous_state_options

@@ -106,3 +106,14 @@ ja:
       memo:
         - 備考を入力します。
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
+
+  gws_notification:
+    gws/questionnaire/form:
+      subject: "[更新通知][アンケート] %{name}"
+      text: |
+        「%{name}」が作成または更新されました。
+        %{path} をブラウザで開き、アンケートに回答してください。
+
+  job:
+    models:
+      gws/questionnaire/notification_job: アンケート通知
