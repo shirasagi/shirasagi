@@ -11,6 +11,7 @@ class Gws::Questionnaire::Form
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Questionnaire::AnswerState
+  include Gws::Questionnaire::Notification
 
   readable_setting_include_custom_groups
   permission_include_custom_groups

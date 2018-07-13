@@ -170,6 +170,7 @@ class Gws::Questionnaire::EditablesController < ApplicationController
     end
     return if request.get?
 
+    @item.attributes = get_params
     @item.state = 'public'
     render_opts = { render: { file: :publish }, notice: t('gws/workflow.notice.published') }
     render_update @item.save, render_opts
