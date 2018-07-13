@@ -263,7 +263,8 @@ this.Openlayers_Member_Photo_Form = (function () {
       return;
     }
     extent = this.markerLayer.getSource().getExtent();
-    return this.map.getView().fit(extent, this.map.getSize());
+    this.map.getView().setCenter(ol.extent.getCenter(extent));
+
   };
 
   return Openlayers_Member_Photo_Form;
