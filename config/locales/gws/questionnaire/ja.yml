@@ -1,5 +1,7 @@
 ja:
   gws/questionnaire:
+    file_name: "%{form}の回答"
+    view_files: 回答一覧へ
     tabs:
       personal: 自分の回答
       others: 他人の回答
@@ -17,7 +19,6 @@ ja:
       count_limit: "最新 %{count} 件を表示しています。"
     confirm:
       download: ダウンロードしてよろしいですか？
-    file_name: "%{form}の回答"
 
   gws_role:
     read_other_gws_questionnaire_forms: アンケートの閲覧（全て）

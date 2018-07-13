@@ -1,3 +1,9 @@
+<div class="navi" style="position: relative;">
+  <div class="navi-container" style="position: absolute; top: -50px; left: 6em;">
+    <%= link_to I18n.t("gws/questionnaire.view_files"), gws_questionnaire_editable_files_path(editable_id: @item), class: 'btn' %>
+  </div>
+</div>
+
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
