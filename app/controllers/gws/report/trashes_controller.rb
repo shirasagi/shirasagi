@@ -20,9 +20,7 @@ class Gws::Report::TrashesController < ApplicationController
   def set_forms
     @forms ||= begin
       criteria = Gws::Report::Form.site(@cur_site)
-      if params[:state] != 'preview'
-        criteria = criteria.and_public
-      end
+      criteria = criteria.and_public
       criteria = criteria.readable(@cur_user, site: @cur_site)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
