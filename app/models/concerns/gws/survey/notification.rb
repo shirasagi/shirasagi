@@ -3,7 +3,7 @@ module Gws::Survey::Notification
   extend SS::Translation
 
   included do
-    field :notification_notice_state, type: String
+    field :notification_notice_state, type: String, default: 'enabled'
     field :notification_noticed_at, type: DateTime
 
     permit_params :notification_notice_state
@@ -27,8 +27,8 @@ module Gws::Survey::Notification
   end
 
   def send_notification
-    return if state != "public"
-    return if public?
+    return if notification_notice_state != "enabled"
+    return if !public?
 
     Gws::Survey::NotificationJob.bind(site_id: site.id).perform_now(id.to_s)
   end

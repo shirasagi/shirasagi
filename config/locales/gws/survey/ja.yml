@@ -76,6 +76,8 @@ ja:
         created: 初回回答日
       gws/reference/survey/form:
         form_id: アンケート
+      gws/survey/notification:
+        notification_notice_state: 通知
 
   tooltip:
     gws/survey/form:

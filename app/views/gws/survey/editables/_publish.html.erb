@@ -2,6 +2,6 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
-  <dt>通知</dt>
+  <dt><%= @model.t :notification_notice_state %></dt>
   <dd><%= f.select :notification_notice_state, @item.notification_notice_state_options %></dd>
 </dl>
