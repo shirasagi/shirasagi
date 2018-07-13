@@ -1,6 +1,6 @@
 class Gws::Questionnaire::FileEnumerator < Enumerator
   def initialize(items, params)
-    @items = items
+    @items = items.criteria.dup
     @cur_site = params[:cur_site]
     @cur_form = params[:cur_form]
     @encoding = params[:encoding]
@@ -32,7 +32,30 @@ class Gws::Questionnaire::FileEnumerator < Enumerator
     terms = []
     @cur_form.columns.order_by(order: 1, name: 1).each do |column|
       column_value = item.column_values.where(column_id: column.id).first
-      terms << "#{column.try(:prefix_label)}#{column_value ? column_value.value : ''}#{column.try(:postfix_label)}"
+      if column_value.blank?
+        terms << nil
+        next
+      end
+
+      term = ""
+      if column.is_a?(Gws::Column::TextArea)
+        term << "#{column.prefix_label}\n" if column.prefix_label
+        term << column_value.value
+        term << "\n#{column.postfix_label}" if column.postfix_label
+      elsif column.is_a?(Gws::Column::FileUpload)
+        if column_value.files.present?
+          column_value.files.each do |file|
+            term << "\n" if !term.empty?
+            term << column.prefix_label if column.prefix_label
+            term << file.humanized_name
+            term << column.postfix_label if column.postfix_label
+          end
+        end
+      else
+        term = "#{column.prefix_label}#{column_value.value}#{column.postfix_label}"
+      end
+
+      terms << term
     end
 
     if !@cur_form.anonymous?
