@@ -7,8 +7,6 @@ class Gws::Survey::CategoriesController < ApplicationController
   navi_view "gws/survey/main/navi"
 
   def index
-    #raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
-
     @search_params = params[:s]
     @search_params = @search_params.delete_if { |k, v| v.blank? } if @search_params
     @search_params = @search_params.presence

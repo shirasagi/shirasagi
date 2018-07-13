@@ -2,8 +2,6 @@ class Gws::Survey::ReadablesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  before_action :set_folders
-  before_action :set_folder
   before_action :set_categories
   before_action :set_category
   before_action :set_search_params
@@ -30,15 +28,6 @@ class Gws::Survey::ReadablesController < ApplicationController
   def set_crumbs
     @crumbs << [t('modules.gws/survey'), gws_survey_main_path]
     @crumbs << [t('ss.navi.readable'), action: :index, folder_id: '-', category_id: '-']
-  end
-
-  def set_folders
-    # @folders ||= Gws::Notice::Folder.for_post_reader(@cur_site, @cur_user)
-  end
-
-  def set_folder
-    # return if params[:folder_id].blank? || params[:folder_id] == '-'
-    # @folder = @folders.find(params[:folder_id])
   end
 
   def set_categories
