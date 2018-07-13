@@ -76,7 +76,9 @@ class Gws::Questionnaire::FilesController < ApplicationController
   public
 
   def edit
-    render
+    render_opts = {}
+    render_opts[:layout] = false if request.xhr?
+    render render_opts
   end
 
   def update
