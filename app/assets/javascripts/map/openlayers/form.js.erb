@@ -282,9 +282,9 @@ this.Openlayers_Map_Form = (function () {
       };
     })(this));
     this.map.getView().on("propertychange", function(e) {
-      console.log("view propertychange");
       if (e.key === 'resolution') {
-        console.log(this.getZoom());
+        var zoom = this.getZoom();
+        $('input[name="item[map_zoom_level]"]').val(zoom);
       }
     });
     $(".mod-map .add-marker").on('click', (function (_this) {

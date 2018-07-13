@@ -5,7 +5,7 @@
     <%= text_field_tag :keyword, nil, class: "keyword", placeholder: t("map.search") %>
     <%= button_tag t("ss.buttons.search"), { type: :button, class: "btn" } %>
   </div>
-  <%=f.number_field :map_zoom_level, readonly: "readonly"%>
+  <%=f.number_field :map_zoom_level%>
   <div id="map-canvas" style="width: 100%; height: 320px"></div>
   <dl class="marker-setting">
     <dt>
