@@ -7,9 +7,6 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
   before_action :set_forms
   before_action :set_cur_form
   before_action :set_search_params
-  # before_action :check_form_permissions
-  # before_action :set_items
-  # before_action :set_item, only: %i[edit update delete destroy]
 
   navi_view "gws/questionnaire/main/navi"
 
@@ -28,9 +25,6 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
   def set_forms
     @forms ||= begin
       criteria = Gws::Questionnaire::Form.site(@cur_site)
-      # if params[:state] != 'preview'
-      #   criteria = criteria.and_public
-      # end
       criteria = criteria.allow(:read, @cur_user, site: @cur_site)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
@@ -49,33 +43,10 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
     @s = OpenStruct.new(params[:s].presence || {})
   end
 
-  # def check_form_permissions
-  #   raise '403' unless @cur_form.readable?(@cur_user, site: @cur_site)
-  # end
-
   def fix_params
     set_cur_form
     { cur_site: @cur_site, cur_user: @cur_user, cur_form: @cur_form }
   end
-
-  # def pre_params
-  #   { name: t("gws/questionnaire.file_name", form: @cur_form.name) }
-  # end
-
-  # def set_items
-  #   @items ||= begin
-  #     items = @cur_form.files
-  #   end
-  # end
-
-  # def set_item
-  #   @item ||= begin
-  #     item = @items.where(user_id: @cur_user.id).order_by(created: 1).first
-  #     item ||= @model.new(pre_params)
-  #     item.attributes = fix_params
-  #     item
-  #   end
-  # end
 
   public
 
@@ -86,6 +57,18 @@ class Gws::Questionnaire::EditableFilesController < ApplicationController
   def summary
     @items = @cur_form.files
     @aggregation = @items.aggregate
+  end
+
+  def notification
+    @items = @cur_form.files
+    if request.get?
+      render
+      return
+    end
+
+    job_class = Gws::Questionnaire::NotificationJob.bind(site_id: @cur_site)
+    job_class.perform_later(@cur_form.id.to_s, { resend: true, unanswered_only: true })
+    redirect_to({ action: :index }, { notice: I18n.t('gws/questionnaire.notices.notification_job_started') })
   end
 
   def download_all

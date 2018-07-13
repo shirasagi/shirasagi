@@ -29,6 +29,7 @@ SS::Application.routes.draw do
         resources :columns, concerns: :deletion
         resources :files, controller: 'editable_files', only: [:index] do
           match :download_all, on: :collection, via: [:get, :post]
+          match :notification, on: :collection, via: [:get, :post]
           get :summary, on: :collection
         end
       end

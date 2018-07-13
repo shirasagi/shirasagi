@@ -2,6 +2,7 @@ ja:
   gws/questionnaire:
     file_name: "%{form}の回答"
     view_files: 回答一覧へ
+    send_notification_to_unanswered_users: 未回答者に通知を送る
     tabs:
       personal: 自分の回答
       others: 他人の回答
@@ -17,8 +18,10 @@ ja:
         head: 匿名アンケート
         body: このアンケートの回答は匿名で登録されます。アンケート管理者は誰が回答したかを特定することはできません。
       count_limit: "最新 %{count} 件を表示しています。"
+      notification_job_started: 通知処理を開始しました。
     confirm:
       download: ダウンロードしてよろしいですか？
+      notification_to_unanswered_users: 未回答者に通知を送ってよろしいですか？
 
   gws_role:
     read_other_gws_questionnaire_forms: アンケートの閲覧（全て）
@@ -109,10 +112,10 @@ ja:
 
   gws_notification:
     gws/questionnaire/form:
-      subject: "[更新通知][アンケート] %{name}"
+      subject: "[回答依頼] %{name}"
       text: |
-        「%{name}」が作成または更新されました。
-        %{path} をブラウザで開き、アンケートに回答してください。
+        「%{name}」への回答をお願いします。
+        %{path} をブラウザで開き、表示された画面に記載のアンケートへ回答してください。
 
   job:
     models:

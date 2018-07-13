@@ -30,6 +30,6 @@ module Gws::Questionnaire::Notification
     return if state != "public"
     return if public?
 
-    Gws::Questionnaire::NotificationJob.bind(site_id: site.id).perform_now(id)
+    Gws::Questionnaire::NotificationJob.bind(site_id: site.id).perform_now(id.to_s)
   end
 end

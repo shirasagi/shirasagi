@@ -1,7 +1,8 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index|summary/ %>
     <%= link_to t('ss.links.back_to_show'), gws_questionnaire_editable_path(id: @cur_form) %>
-  <% elsif params[:action] =~ /new|create|lock|download_all/ %>
+    <%= link_to(t("gws/questionnaire.send_notification_to_unanswered_users"), { action: :notification }) %>
+  <% elsif params[:action] =~ /new|create|lock|download_all|notification/ %>
     <%= link_to t('ss.links.back_to_show'), gws_questionnaire_editable_path(id: @cur_form) %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
