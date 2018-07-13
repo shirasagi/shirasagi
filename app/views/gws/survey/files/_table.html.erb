@@ -1,0 +1,67 @@
+<% cur_form ||= @cur_form %>
+<% items ||= @items %>
+
+<div class="form-table">
+  <div class="form-table-body">
+    <div class="form-table-body-inner">
+      <table>
+        <thead>
+        <tr>
+          <% cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+            <th><%= column.name %></th>
+          <% end %>
+          <% if !cur_form.anonymous? %>
+            <th><%= Gws::User.t :name %></th>
+            <th><%= Gws::Survey::File.t :updated %></th>
+          <% end %>
+        </tr>
+        </thead>
+        <tbody>
+        <% items.each do |item| %>
+          <tr>
+            <% cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+              <% column_value = item.column_values.where(column_id: column.id).first %>
+              <td class="<%= column.class.name.underscore.gsub("/", "-") %>">
+                <div class="container">
+                  <% if column.is_a?(Gws::Column::TextArea) %>
+                    <% if column.prefix_label %>
+                      <span class="prefix"><%= column.prefix_label %></span><br/>
+                    <% end %>
+                    <span class="value"><%= auto_link(br(column_value ? column_value.value : '')) %></span>
+                    <% if column.postfix_label %>
+                      <br/><span class="postfix"><%= column.postfix_label %></span>
+                    <% end %>
+                  <% elsif column.is_a?(Gws::Column::FileUpload) %>
+                    <% if column_value.present? && column_value.files.present? %>
+                      <% column_value.files.each do |file| %>
+                        <span class="prefix"><%= column.prefix_label %></span>
+                        <span class="value"><%= link_to(file.humanized_name, file.url, file.image? ? {} : { download: true }) %></span>
+                        <span class="postfix"><%= column.postfix_label %></span>
+                        <br/>
+                      <% end %>
+                    <% end %>
+                  <% else %>
+                    <% if column.prefix_label %>
+                      <span class="prefix"><%= column.prefix_label %></span>
+                    <% end %>
+                    <span class="value"><%= auto_link(column_value ? column_value.value : '') %></span>
+                    <% if column.postfix_label %>
+                      <span class="postfix"><%= column.postfix_label %></span>
+                    <% end %>
+                  <% end %>
+                </div>
+              </td>
+            <% end %>
+            <% if !cur_form.anonymous? %>
+              <td><div><%= item.user_long_name %></div></td>
+              <td><div><%= I18n.l(item.updated) %></div></td>
+            <% end %>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%= paginate items if items.try(:current_page) %>

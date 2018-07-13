@@ -1,0 +1,17 @@
+<%= form_for :item, url: { action: :notification }, html: { method: :post } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('gws/survey.confirm.notification_to_unanswered_users') %></h2></div>
+      <div class="addon-body">
+        <%= render file: '_notification', locals: {f: f} %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t('ss.buttons.send'), class: 'btn-primary save' %>
+    <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

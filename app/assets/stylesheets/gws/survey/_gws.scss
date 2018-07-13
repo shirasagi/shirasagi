@@ -1,0 +1,81 @@
+.gws-survey {
+  .form-table {
+    border: $border-gray5;
+    overflow-x: auto;
+    margin: 16px;
+    box-sizing: content-box;
+  }
+  .form-table-header-inner {
+    width: 2000px;
+  }
+  .form-table-body {
+    width: 100%;
+    table {
+      width: 100%;
+      background: $white;
+      tr:nth-child(2n) {
+        background: #f8f8f8;
+      }
+      tr.current, tr:hover {
+        background: $gray1;
+      }
+      th, td {
+        padding: 6px 18px;
+        white-space: nowrap;
+        @include mb { display: inline-block; }
+      }
+      thead th {
+        background: $gray1;
+        color: $gray2;
+        &.deselect {
+          width: 100px;
+        }
+      }
+      tbody {
+        td {
+          border-top: $border-gray5;
+        }
+      }
+    }
+  }
+
+  .anonymous-notice {
+    margin: 0px 0px 10px 0px;
+    padding: 20px 20px;
+    border: 1px solid $orange;
+    @include border-radius(3px);
+    background-color: #fff;
+    h2 {
+      margin: -20px -20px 25px;
+      padding: 8px 20px;
+      background-color: $orange;
+      color: #fff;
+    }
+    p, ul {
+      padding: 0;
+    }
+  }
+
+  .list-head {
+    .operations {
+      display: inline-block;
+      float: right;
+      margin-left: 16px;
+    }
+  }
+
+  .summary {
+    border: none;
+    padding: 15px 10px;
+
+    h2 {
+      background: $gray1;
+      @include border-radius(2px);
+      padding: 6px 18px;
+      border: $border-gray5;
+    }
+  }
+  .chart {
+    padding: 15px 10px;
+  }
+}

@@ -1,0 +1,34 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), edit_gws_survey_readable_file_path(readable_id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_check = proc do |item| %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, edit_gws_survey_readable_file_path(readable_id: item), class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <span class="answered">
+    <% answered = item.answered_at(@cur_user) %>
+    <% if answered %>
+    <span><%= Gws::Survey::File.t :updated %>: <%= I18n.l(answered) %></span>
+    <% else %>
+    <span><%= t("gws/survey.options.answered_state.unanswered") %></span>
+    <% end %>
+  </span>
+
+  <% if item.categories.present? %>
+    <span class="categories">
+    <% item.categories.readable(@cur_user, site: @cur_site).each do |category| %>
+      <%= link_to category.trailing_name, url_for(action: :index, category: category.id), class: "gws-category-label", style: category_label_css(category) %>
+    <% end %>
+  </span>
+  <% end %>
+<% end %>
+
+<%= render file: "gws/crud/index" %>
