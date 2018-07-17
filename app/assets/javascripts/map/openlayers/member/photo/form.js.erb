@@ -194,6 +194,12 @@ this.Openlayers_Member_Photo_Form = (function () {
         return _this.createMarker($(".mod-map .marker-loc"));
       };
     })(this));
+    this.map.getView().on("propertychange", function(e) {
+      if (e.key === 'resolution') {
+        var zoom = this.getZoom();
+        $('input[name="item[map_zoom_level]"]').val(zoom);
+      }
+    });
     return $(".mod-map .clear-marker").on('click', (function (_this) {
       return function (e) {
         _this.clearMarker($(".mod-map .marker-loc"));
