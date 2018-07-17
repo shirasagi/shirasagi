@@ -220,6 +220,7 @@ GEM
     httpauth (0.2.1)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
+    icalendar (2.4.1)
     io-like (0.3.0)
     jaro_winkler (1.5.1)
     jbuilder (2.7.0)
@@ -604,6 +605,7 @@ DEPENDENCIES
   guard-rspec (~> 4.3.1)
   guard-rubocop (~> 1.1.0)
   holiday_japan (~> 1.2.5)
+  icalendar
   jbuilder (~> 2.0)
   jquery-form-rails
   jquery-minicolors-rails

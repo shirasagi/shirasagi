@@ -61,27 +61,11 @@ module Event::Addon
     end
 
     def dates_to_html(format = :default)
-      event_dates = self[:event_dates]
-      return "" unless event_dates.present?
+      return "" unless self[:event_dates].present?
 
       html = []
-      dates = []
-      range = []
 
-      event_dates = event_dates.split(/\r\n|\n/).map do |d|
-        d = Time.zone.parse(d) rescue nil
-      end.compact
-
-      event_dates.each do |d|
-        if range.present? && range.last.tomorrow != d
-          dates << range
-          range = []
-        end
-        range << d
-      end
-
-      dates << range if range.present?
-      dates.each do |range|
+      get_event_dates.each do |range|
         cls = "event-dates"
 
         if range.size != 1
@@ -95,6 +79,30 @@ module Event::Addon
         html << "<span class=\"#{cls}\">#{range}</span>"
       end
       html.join
+    end
+
+    def get_event_dates
+      event_dates = self[:event_dates]
+      return "" unless event_dates.present?
+
+      @dates = []
+      range = []
+
+      event_dates = event_dates.split(/\R/).map do |d|
+        d = Time.zone.parse(d) rescue nil
+      end.compact
+
+      event_dates.each do |d|
+        if range.present? && range.last.tomorrow != d
+          @dates << range
+          range = []
+        end
+        range << d
+      end
+
+      @dates << range if range.present?
+
+      @dates
     end
 
     private

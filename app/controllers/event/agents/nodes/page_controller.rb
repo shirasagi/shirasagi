@@ -3,6 +3,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
   include Cms::ForMemberFilter::Node
   include Event::EventHelper
   helper Event::EventHelper
+  helper Event::IcalHelper
 
   def index
     @year  = Time.zone.today.year.to_i
@@ -53,6 +54,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
   def index_monthly
     @events = {}
+    @items = []
     start_date = Date.new(@year, @month, 1)
     close_date = @month != 12 ? Date.new(@year, @month + 1, 1) : Date.new(@year + 1, 1, 1)
 
@@ -65,24 +67,29 @@ class Event::Agents::Nodes::PageController < ApplicationController
       page.event_dates.split(/\r\n|\n/).each do |date|
         d = Date.parse(date)
         next unless @events[d]
+        @items << page
         @events[d] << [
           page,
           page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
         ]
       end
     end
+    @items.uniq!
 
     render :monthly
   end
 
   def index_daily
     @date = Date.new(@year, @month, @day)
+    @items = []
     @events = events([@date.mongoize]).map do |page|
+      @items << page
       [
         page,
         page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
       ]
     end
+    @items.uniq!
 
     render :daily
   end
