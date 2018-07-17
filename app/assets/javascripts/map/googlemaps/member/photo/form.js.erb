@@ -103,6 +103,7 @@ this.Member_Photo_Form = (function () {
         m.setMap(null);
       }
     }
+
     Googlemaps_Map.markers = [];
     Member_Photo_Form.dataID = 0;
     $(".mod-map .marker").each(function () {
@@ -156,9 +157,13 @@ this.Member_Photo_Form = (function () {
       Member_Photo_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng());
       return Member_Photo_Form.createMarker($(".mod-map .marker-loc"));
     });
-    return $(".mod-map .clear-marker").on('click', function (e) {
+    $(".mod-map .clear-marker").on('click', function (e) {
       Member_Photo_Form.clearMarker($(".mod-map .marker-loc"));
       return false;
+    });
+    google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (event) {
+      var zoom = Googlemaps_Map.map.getZoom();
+      $('input[name="item[map_zoom_level]"]').val(zoom);
     });
   };
 
