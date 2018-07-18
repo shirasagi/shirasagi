@@ -8,6 +8,8 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.center = [36.204824, 138.252924];
 
+  Googlemaps_Map.centerMode = "fit_bounds";
+
   Googlemaps_Map.zoom = 13;
 
   Googlemaps_Map.markers = null;
@@ -39,6 +41,9 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.load = function (selector, options) {
     if (options && options.zoom) {
       Googlemaps_Map.zoom = options.zoom;
+    }
+    if (options && options.center_mode) {
+      GGooglemaps_Map.centerMode = options.center_mode;
     }
 
     var mapOptions;
@@ -136,7 +141,16 @@ this.Googlemaps_Map = (function () {
 
       }
     });
-    Googlemaps_Map.map.setCenter(markerBounds.getCenter());
+
+    if (Googlemaps_Map.markers.length === 0) {
+      Googlemaps_Map.map.setCenter(Googlemaps_Map.center);
+    } else {
+      if (Googlemaps_Map.centerMode === "bounds_center") {
+        Googlemaps_Map.map.setCenter(markerBounds.getCenter());
+      } else {
+        Googlemaps_Map.map.fitBounds(markerBounds);
+      }
+    }
   };
 
   return Googlemaps_Map;

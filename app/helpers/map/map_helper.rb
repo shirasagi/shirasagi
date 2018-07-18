@@ -24,7 +24,7 @@ module Map::MapHelper
     api = opts[:api] || map_setting[:api] || SS.config.map.api
     #center = opts[:center]
     markers = opts[:markers]
-    zoom_level = opts[:zoom_level]
+    map_options = opts[:map] || {}
 
     if api == "openlayers"
       include_openlayers_api
@@ -41,11 +41,8 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
 
-      options = {}
-      options[:zoom] = zoom_level if zoom_level
-
       s = []
-      s << "Googlemaps_Map.load(\"" + selector + "\", #{ options.to_json });"
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{ map_options.to_json });"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
 
