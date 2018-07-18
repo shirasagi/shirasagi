@@ -22,18 +22,20 @@ class Gws::Survey::Form
   field :state, type: String, default: 'closed'
   field :memo, type: String
 
+  field :due_date, type: DateTime
   field :release_date, type: DateTime
   field :close_date, type: DateTime
 
   field :anonymous_state, type: String, default: 'disabled'
   field :file_state, type: String
 
-  permit_params :name, :description, :order, :memo, :release_date, :close_date, :anonymous_state
+  permit_params :name, :description, :order, :memo, :due_date, :release_date, :close_date, :anonymous_state
   permit_params :file_state
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
+  validates :due_date, presence: true, datetime: true
   validates :anonymous_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
   validates :file_state, inclusion: { in: %w(closed public), allow_blank: true }
 

@@ -1,3 +1,32 @@
+<%
+now = Time.zone.now
+after_1day = now + 1.day
+after_2days = now + 2.days
+after_3days = now + 3.days
+@list_class = proc do |item|
+  ret = %w(list-item survey-item)
+
+  if item.answered?(@cur_user)
+    ret << 'answered'
+  else
+    ret << 'unanswered'
+    if now >= item.due_date
+      ret << 'over-limit'
+    elsif after_1day >= item.due_date
+      ret << 'near-limit'
+      ret << 'near-limit-1'
+    elsif after_2days >= item.due_date
+      ret << 'near-limit'
+      ret << 'near-limit-2'
+    elsif after_3days >= item.due_date
+      ret << 'near-limit'
+      ret << 'near-limit-3'
+    end
+  end
+
+  ret
+end
+%>
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), edit_gws_survey_readable_file_path(readable_id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
 <% end %>
@@ -10,17 +39,18 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
-  <span class="answered">
-    <% answered = item.answered_at(@cur_user) %>
-    <% if answered %>
-    <span><%= Gws::Survey::File.t :updated %>: <%= I18n.l(answered) %></span>
-    <% else %>
-    <span><%= t("gws/survey.options.answered_state.unanswered") %></span>
-    <% end %>
-  </span>
+  <% answered = item.answered_at(@cur_user) %>
+  <% if answered %>
+    <span class="answered"><%= Gws::Survey::File.t :updated %>: <%= I18n.l(answered) %></span>
+  <% else %>
+    <span class="limit">
+      <%= @model.t(:due_date) %>:
+      <%= tryb { I18n.l(item.due_date) } %>
+      (<%= now >= item.due_date ? t("gws/survey.over_limit") : time_ago_in_words(item.due_date) %>)
+    </span>
+  <% end %>
 
   <% if item.categories.present? %>
     <span class="categories">

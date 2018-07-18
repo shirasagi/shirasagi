@@ -11,23 +11,23 @@
   <dt><%= @model.t :description %></dt>
   <dd><%= br @item.description %></dd>
 
-  <dt><%= @model.t :order %></dt>
-  <dd><%= @item.order %></dd>
-
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label(:state) %></dd>
-
-  <dt><%= @model.t :release_date %></dt>
-  <dd><%= tryb { I18n.l(@item.release_date.to_date) } %></dd>
-
-  <dt><%= @model.t :close_date %></dt>
-  <dd><%= tryb { I18n.l(@item.close_date.to_date) } %></dd>
 
   <dt><%= @model.t :anonymous_state %></dt>
   <dd><%= @item.label :anonymous_state %></dd>
 
   <dt><%= @model.t :file_state %></dt>
   <dd><%= @item.label :file_state %></dd>
+
+  <dt><%= @model.t :due_date %></dt>
+  <dd><%= tryb { I18n.l(@item.due_date) } %></dd>
+
+  <dt><%= @model.t :release_date %></dt>
+  <dd><%= tryb { I18n.l(@item.release_date) } %></dd>
+
+  <dt><%= @model.t :close_date %></dt>
+  <dd><%= tryb { I18n.l(@item.close_date) } %></dd>
 
   <dt><%= @model.t :memo %></dt>
   <dd><%= br @item.memo %></dd>

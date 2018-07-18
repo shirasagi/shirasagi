@@ -50,6 +50,6 @@ class Gws::Survey::TrashesController < ApplicationController
   public
 
   def index
-    @items = @items.page(params[:page]).per(50)
+    @items = @items.order_by(updated: -1, id: 1).page(params[:page]).per(50)
   end
 end

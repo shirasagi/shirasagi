@@ -3,6 +3,7 @@ ja:
     file_name: "%{form}の回答"
     view_files: 回答一覧へ
     send_notification_to_unanswered_users: 未回答者に通知を送る
+    over_limit: 期限超過
     tabs:
       personal: 自分の回答
       others: 他人の回答
@@ -60,8 +61,9 @@ ja:
         description: 説明
         order: 並び順
         state: 公開状態
-        release_date: 有効期限（開始）
-        close_date: 有効期限（終了）
+        due_date: 回答期限
+        release_date: 公開期限（開始）
+        close_date: 公開期限（終了）
         anonymous_state: 匿名回答
         file_state: 回答結果
         file_count_limit: 回答制限
@@ -90,6 +92,8 @@ ja:
         - 数字が小さいほど上位に表示されます。
       state:
         - フォームを公開するかどうかを選択します。
+      due_date:
+        - 回答期限を指定します。
       release_date:
         - 公開を開始する日付を指定します。
         - 指定した日付がくると公開になります。

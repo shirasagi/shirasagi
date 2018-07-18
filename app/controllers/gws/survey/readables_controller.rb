@@ -74,7 +74,7 @@ class Gws::Survey::ReadablesController < ApplicationController
 
   def index
     @categories = @categories.tree_sort
-    @items = @items.page(params[:page]).per(50)
+    @items = @items.order_by(due_date: 1, order: 1, updated: -1).page(params[:page]).per(50)
   end
 
   def show

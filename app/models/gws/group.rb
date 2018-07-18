@@ -15,6 +15,7 @@ class Gws::Group
   include Gws::Addon::Share::GroupSetting
   include Gws::Addon::StaffRecord::GroupSetting
   include Gws::Addon::Elasticsearch::GroupSetting
+  include Gws::Addon::Survey::GroupSetting
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting
   include Gws::Addon::System::LogSetting

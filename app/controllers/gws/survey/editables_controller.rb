@@ -22,6 +22,10 @@ class Gws::Survey::EditablesController < ApplicationController
     @crumbs << [t('ss.navi.editable'), action: :index, folder_id: '-', category_id: '-']
   end
 
+  def pre_params
+    { due_date: Time.zone.now.beginning_of_hour + 1.hour + @cur_site.survey_default_due_date.day }
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
@@ -76,7 +80,7 @@ class Gws::Survey::EditablesController < ApplicationController
 
   def index
     @categories = @categories.tree_sort
-    @items = @items.page(params[:page]).per(50)
+    @items = @items.order_by(updated: -1, id: 1).page(params[:page]).per(50)
   end
 
   def publish

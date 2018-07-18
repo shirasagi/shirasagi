@@ -79,3 +79,35 @@
     padding: 15px 10px;
   }
 }
+
+.survey-item {
+  &.over-limit {
+    .limit {
+      color: #e00;
+      font-weight: bold;
+
+      &:before {
+        font-family: 'Material Icons';
+        font-size: 108%;
+        content: '\E002';
+
+        display: inline;
+        vertical-align: -3px;
+      }
+    }
+  }
+  &.near-limit {
+    .limit {
+      font-weight: bold;
+
+      &:before {
+        font-family: 'Material Icons';
+        font-size: 108%;
+        content: '\E000';
+
+        display: inline;
+        vertical-align: -3px;
+      }
+    }
+  }
+}
