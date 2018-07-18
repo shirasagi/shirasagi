@@ -26,6 +26,8 @@ ja:
       notification_to_unanswered_users: 未回答者に通知を送ってよろしいですか？
     buttons:
       zip_all_files: 添付ファイル
+    navi:
+      readable: 受信トレイ
 
   gws_role:
     read_other_gws_survey_forms: アンケートの閲覧（全て）
