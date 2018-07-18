@@ -20,9 +20,12 @@ ja:
         body: このアンケートの回答は匿名で登録されます。アンケート管理者は誰が回答したかを特定することはできません。
       count_limit: "最新 %{count} 件を表示しています。"
       notification_job_started: 通知処理を開始しました。
+      no_files: "添付ファイルがありません。"
     confirm:
       download: ダウンロードしてよろしいですか？
       notification_to_unanswered_users: 未回答者に通知を送ってよろしいですか？
+    buttons:
+      zip_all_files: 添付ファイル
 
   gws_role:
     read_other_gws_survey_forms: アンケートの閲覧（全て）

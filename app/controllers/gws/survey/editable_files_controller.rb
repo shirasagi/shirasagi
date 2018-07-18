@@ -89,4 +89,37 @@ class Gws::Survey::EditableFilesController < ApplicationController
       type: "text/csv; charset=#{encoding}", filename: filename
     )
   end
+
+  def zip_all_files
+    file_ids = []
+    @cur_form.files.search(@s).each do |file|
+      file.column_values.each do |value|
+        next if !value.is_a?(Gws::Column::Value::FileUpload)
+        next if value.file_ids.blank?
+
+        file_ids += value.file_ids
+      end
+    end
+
+    if file_ids.blank?
+      redirect_to({ action: :index }, { notice: t("gws/survey.notices.no_files") })
+      return
+    end
+
+    files = SS::File.in(id: file_ids)
+
+    zip = Gws::Share::Compressor.new(@cur_user, items: files, filename: "survey_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip")
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
+
+    if zip.deley_download?
+      job = Gws::Share::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :index }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
+  end
 end
