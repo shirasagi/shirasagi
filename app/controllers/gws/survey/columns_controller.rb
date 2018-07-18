@@ -10,7 +10,7 @@ class Gws::Survey::ColumnsController < ApplicationController
 
   def set_crumbs
     set_form
-    @crumbs << [t('modules.gws/survey'), gws_survey_main_path]
+    @crumbs << [@cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path]
     @crumbs << [t('ss.navi.editable'), gws_survey_editables_path]
     @crumbs << [@cur_form.name, gws_survey_editable_path(id: @cur_form)]
   end

@@ -13,7 +13,7 @@ class Gws::Survey::TrashesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/survey'), gws_survey_main_path]
+    @crumbs << [@cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path]
     @crumbs << [t('ss.navi.trash'), action: :index]
   end
 

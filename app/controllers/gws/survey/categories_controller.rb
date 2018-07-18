@@ -22,7 +22,7 @@ class Gws::Survey::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/survey'), gws_survey_main_path]
+    @crumbs << [@cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path]
     @crumbs << [t('gws.category'), gws_survey_categories_path]
   end
 

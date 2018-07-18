@@ -16,10 +16,9 @@ class Gws::Survey::EditableFilesController < ApplicationController
 
   def set_crumbs
     set_cur_form
-    @crumbs << [t('modules.gws/survey'), gws_survey_main_path]
+    @crumbs << [@cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path]
     @crumbs << [t('ss.navi.editable'), gws_survey_editables_path]
     @crumbs << [@cur_form.name, gws_survey_editable_path(id: @cur_form)]
-    @crumbs << [t("gws/survey.tabs.files"), action: :index]
   end
 
   def set_forms
