@@ -70,6 +70,7 @@ this.Map_Form = (function () {
             maxWidth: 260
           });
           Googlemaps_Map.openedInfo.open(Googlemaps_Map.markers[id].getMap(), Googlemaps_Map.markers[id]);
+
         }
         return false;
       });
@@ -106,8 +107,7 @@ this.Map_Form = (function () {
       cln.find("input,textarea").val("");
       cln.find(".marker-name").val("");
       cln.find(".clear-marker").on('click', function () {
-        return Map_Form.clearPointF
-        orm(cln);
+        return Map_Form.clearPointForm(cln);
       });
       cln.find(".set-marker").on('click', function () {
         return Map_Form.createMarker(cln);
@@ -216,7 +216,11 @@ this.Map_Form = (function () {
       Map_Form.dataID += 1;
     });
 
-    Googlemaps_Map.map.setCenter(markerBounds.getCenter());
+    if (Googlemaps_Map.markers.length === 0) {
+      Googlemaps_Map.map.setCenter(Googlemaps_Map.center);
+    } else {
+      Googlemaps_Map.map.setCenter(markerBounds.getCenter());
+    }
   };
 
   Map_Form.renderEvents = function () {
@@ -277,6 +281,4 @@ this.Map_Form = (function () {
   };
 
   return Map_Form;
-
 })();
-

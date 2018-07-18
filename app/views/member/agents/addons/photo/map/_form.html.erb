@@ -1,7 +1,7 @@
 <%= render_member_photo_form_map "#map-canvas", site: @cur_site, zoom_level: @item.map_zoom_level %>
 
 <div class="mod-map">
-  <%=f.number_field :map_zoom_level, type: "hidden"%>
+  <%= f.number_field :map_zoom_level, type: "hidden" %>
   <dl class="marker-setting">
     <%= hidden_field_tag :clicked, nil, class: "loc clicked" %>
     <% if @item.map_points.blank? %>

@@ -5,7 +5,6 @@ module Map::MapHelper
     key = opts[:api_key] || map_setting[:api_key] || SS.config.map.api_key
     language = opts[:language] || SS.config.map.language
     region = opts[:region] || SS.config.map.region
-
     params = {}
     params[:v] = 3
     params[:key] = key if key.present?
@@ -37,7 +36,6 @@ module Map::MapHelper
       s << '  markers: ' + markers.to_json + ',' if markers.present?
       s << '  layers: ' + SS.config.map.layers.to_json + ','
       s << '  zoom: ' + zoom_level.to_json
-
       s << '};'
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
@@ -51,7 +49,7 @@ module Map::MapHelper
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
 
-    jquery {s.join("\n").html_safe}
+    jquery { s.join("\n").html_safe }
   end
 
   def render_map_form(selector, opts = {})
@@ -93,7 +91,7 @@ module Map::MapHelper
       s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'
     end
 
-    jquery {s.join("\n").html_safe}
+    jquery { s.join("\n").html_safe }
   end
 
   def render_facility_search_map(selector, opts = {})
@@ -159,12 +157,11 @@ module Map::MapHelper
       s << 'Member_Photo_Form.setExifLatLng("#item_in_image");'
     end
 
-    jquery {s.join("\n").html_safe}
+    jquery { s.join("\n").html_safe }
   end
 
   def render_marker_info(item)
     h = []
-
     h << %(<div class="maker-info" data-id="#{item.id}">)
     h << %(<p class="name">#{item.name}</p>)
     h << %(<p class="address">#{item.address}</p>)
