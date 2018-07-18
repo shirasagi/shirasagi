@@ -1,0 +1,44 @@
+<nav class="event-date">
+  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <ul>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1) %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1) %></li>
+  </ul>
+</nav>
+
+<div class="event-calendar">
+  <table class="calendar">
+    <thead>
+    <tr>
+      <% t_wdays.each do |wday| %>
+        <th><span class="wday"><%= wday %><span class="unit"><%= t_date('wday') %></span></span></th>
+      <% end %>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <% @events.each_with_index do |(date, events), i| %>
+        <% if i != 0 && (i % 7) == 0 %>
+          </tr><tr>
+        <% end %>
+        <td class="<%= event_td_class(date, @date) %>">
+          <%= link_to_daily date, name: date.day, path: @cur_node.parent.try(:url).to_s, enable: events.present? %>
+          <% if date.national_holiday? %>
+            <div class="holiday"><%= HolidayJapan.name date %></div>
+          <% end %>
+          <% if events.blank? %>
+            <div class="no-event"><%= t("event.no_event") %></div>
+          <% end %>
+          <% events.each do |event, categories| %>
+            <%= link_to (event.event_name.present? ? event.event_name : event.name), event.url %>
+            <% if categories.present? %>
+              <% cate = categories.entries.sort_by{ |c| c.order }.first %>
+              <div class="<%= cate.basename %>"><%= link_to cate.name, cate.url %></div>
+            <% end %>
+          <% end %>
+        </td>
+      <% end %>
+      </tr>
+      </tbody>
+  </table>
+</div>

@@ -16,12 +16,13 @@ class Event::Agents::Nodes::PageController < ApplicationController
   def monthly
     @year  = params[:year].to_i if @year.blank?
     @month = params[:month].to_i if @month.blank?
-    date   = Date.new(@year, @month, 1)
-    @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(date, format: :long_month)}"
+    @date  = Date.new(@year, @month, 1)
+    @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(@date, format: :long_month)}"
 
-    if within_one_year?(date)
+    return index_monthly_table
+    if within_one_year?(@date)
       index_monthly
-    elsif within_one_year?(date.advance(months: 1, days: -1))
+    elsif within_one_year?(@date.advance(months: 1, days: -1))
       index_monthly
     else
       raise "404"
@@ -32,10 +33,10 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @year  = params[:year].to_i
     @month = params[:month].to_i
     @day   = params[:day].to_i
-    date   = Date.new(@year, @month, @day)
-    @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(date, format: :long)}"
+    @date  = Date.new(@year, @month, @day)
+    @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(@date, format: :long)}"
 
-    if within_one_year?(date)
+    if within_one_year?(@date)
       index_daily
     else
       raise "404"
@@ -77,6 +78,30 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @items.uniq!
 
     render :monthly
+  end
+
+  def index_monthly_table
+    @events = {}
+    start_date = @date.advance(days: -1 * @date.wday)
+    close_date = start_date.advance(days: 7 * 6)
+
+    (start_date...close_date).each do |d|
+      @events[d] = []
+    end
+
+    dates = (start_date...close_date).map { |m| m.mongoize }
+    events(dates).each do |page|
+      page.event_dates.split(/\R/).each do |date|
+        d = Date.parse(date)
+        next unless @events[d]
+        @events[d] << [
+          page,
+          page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
+        ]
+      end
+    end
+
+    render(:monthly_table)
   end
 
   def index_daily
