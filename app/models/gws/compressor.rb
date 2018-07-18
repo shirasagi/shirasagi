@@ -1,11 +1,13 @@
-class Gws::Share::Compressor
-  attr_accessor :user, :items, :filename, :name
+class Gws::Compressor
+  attr_accessor :user, :model, :items, :filename, :name
   attr_accessor :root, :path, :url
 
   def initialize(user, attr = {})
     self.user     = user
+    self.model    = attr[:model] || Gws::Share::File
+    self.model    = model.to_s.constantize if !model.is_a?(Class)
     self.items    = attr[:items]
-    self.items    = Gws::Share::File.in(id: items) if items.is_a?(Array)
+    self.items    = model.in(id: items) if items.is_a?(Array)
     self.filename = attr[:filename] || "share_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
     self.name     = attr[:name]
 
@@ -16,7 +18,7 @@ class Gws::Share::Compressor
   end
 
   def serialize
-    { items: items.map(&:id), filename: filename, name: name, url: url }
+    { model: model.name, items: items.map(&:id), filename: filename, name: name, url: url }
   end
 
   def type

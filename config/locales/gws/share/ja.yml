@@ -126,5 +126,4 @@ ja:
 
   job:
     models:
-      gws/share/compress_job: 共有ファイル/圧縮ダウンロード
       gws/share/trash_purge_job: 共有ファイル/ゴミ箱の掃除

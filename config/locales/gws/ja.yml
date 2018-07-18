@@ -540,3 +540,4 @@ ja:
   job:
     models:
       gws/history_archive_job: 操作履歴アーカイブ作成
+      gws/compress_job: ファイル/圧縮ダウンロード
