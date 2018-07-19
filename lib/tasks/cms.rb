@@ -2,27 +2,63 @@ module Tasks
   class Cms
     class << self
       def generate_nodes
-        with_node(::Cms::Node::GenerateJob)
+        each_sites do |site|
+          if ENV.key?("node")
+            with_node(site, ENV["node"]) do |node|
+              perform_job(::Cms::Node::GenerateJob, site: site, node: node)
+            end
+          else
+            perform_job(::Cms::Node::GenerateJob, site: site)
+          end
+        end
       end
 
       def generate_pages
-        with_node(::Cms::Page::GenerateJob, attachments: ENV["attachments"])
+        each_sites do |site|
+          if ENV.key?("node")
+            with_node(site, ENV["node"]) do |node|
+              perform_job(::Cms::Page::GenerateJob, site: site, node: node, attachments: ENV["attachments"])
+            end
+          else
+            perform_job(::Cms::Page::GenerateJob, site: site, attachments: ENV["attachments"])
+          end
+        end
       end
 
       def update_pages
-        with_node(::Cms::Page::UpdateJob)
+        each_sites do |site|
+          if ENV.key?("node")
+            with_node(site, ENV["node"]) do |node|
+              perform_job(::Cms::Page::UpdateJob, site: site, node: node)
+            end
+          else
+            perform_job(::Cms::Page::UpdateJob, site: site)
+          end
+        end
       end
 
       def release_pages
-        with_site(::Cms::Page::ReleaseJob)
+        each_sites do |site|
+          perform_job(::Cms::Page::ReleaseJob, site: site)
+        end
       end
 
       def remove_pages
-        with_site(::Cms::Page::RemoveJob)
+        each_sites do |site|
+          perform_job(::Cms::Page::RemoveJob, site: site)
+        end
       end
 
       def check_links
-        with_node(::Cms::CheckLinksJob, email: ENV["email"])
+        each_sites do |site|
+          if ENV.key?("node")
+            with_node(site, ENV["node"]) do |node|
+              perform_job(::Cms::CheckLinksJob, site: site, node: node, email: ENV["email"])
+            end
+          else
+            perform_job(::Cms::CheckLinksJob, site: site, email: ENV["email"])
+          end
+        end
       end
 
       def import_files
@@ -30,75 +66,96 @@ module Tasks
       end
 
       def export_site
-        puts "Please input site name: site=[site_name]" or exit if ENV['site'].blank?
-
-        site = ::SS::Site.where(host: ENV['site']).first
-        puts "Site not found: #{ENV['site']}" or exit unless site
-
-        job = ::Sys::SiteExportJob.new
-        job.task = mock_task(
-          source_site_id: site.id
-        )
-        job.perform
+        with_site do |site|
+          job = ::Sys::SiteExportJob.new
+          job.task = mock_task(
+            source_site_id: site.id
+          )
+          job.perform
+        end
       end
 
       def import_site
-        puts "Please input site name: site=[site_name]" or exit if ENV['site'].blank?
-        puts "Please input import file: site=[site_name]" or exit if ENV['file'].blank?
+        with_site do |site|
+          puts "Please input import file: site=[site_name]" or break if ENV['file'].blank?
 
-        site = ::SS::Site.where(host: ENV['site']).first
-        puts "Site not found: #{ENV['site']}" or exit unless site
+          file = ENV['file']
+          puts "File not found: #{ENV['file']}" or break unless ::File.exist?(file)
 
-        file = ENV['file']
-        puts "File not found: #{ENV['file']}" or exit unless ::File.exist?(file)
-
-        job = ::Sys::SiteImportJob.new
-        job.task = mock_task(
-          target_site_id: site.id,
-          import_file: file
-        )
-        job.perform
+          job = ::Sys::SiteImportJob.new
+          job.task = mock_task(
+            target_site_id: site.id,
+            import_file: file
+          )
+          job.perform
+        end
       end
 
       def set_subdir_url
-        puts "Please input site_name: site=[site_name]" or exit if ENV['site'].blank?
+        with_site do |site|
+          puts "# layouts"
+          gsub_attrs(::Cms::Layout.site(site))
 
-        @site = ::SS::Site.where(host: ENV['site']).first
-        puts "Site not found: #{ENV['site']}" or exit unless @site
+          puts "# parts"
+          gsub_attrs(::Cms::Part.site(site))
 
-        puts "# layouts"
-        gsub_attrs(::Cms::Layout)
+          puts "# pages"
+          gsub_attrs(::Cms::Page.site(site))
 
-        puts "# parts"
-        gsub_attrs(::Cms::Part)
-
-        puts "# pages"
-        gsub_attrs(::Cms::Page)
-
-        puts "# nodes"
-        gsub_attrs(::Cms::Node)
-      end
-
-      private
-
-      def find_sites(site)
-        return ::Cms::Site unless site
-        ::Cms::Site.where host: site
-      end
-
-      def with_site(job_class, opts = {})
-        find_sites(ENV["site"]).each do |site|
-          job = job_class.bind(site_id: site)
-          job.perform_now(opts)
+          puts "# nodes"
+          gsub_attrs(::Cms::Node.site(site))
         end
       end
 
-      def with_node(job_class, opts = {})
-        find_sites(ENV["site"]).each do |site|
-          job = job_class.bind(site_id: site)
-          job = job.bind(node_id: ::Cms::Node.site(site).find_by(filename: ENV["node"]).id) if ENV["node"]
-          job.perform_now(opts)
+      def each_sites
+        name = ENV['site']
+        if name
+          all_ids = ::Cms::Site.where(host: name).pluck(:id)
+        else
+          all_ids = ::Cms::Site.all.pluck(:id)
         end
+
+        all_ids.each_slice(20) do |ids|
+          ::Cms::Site.where(:id.in => ids).each do |site|
+            yield site
+          end
+        end
+      end
+
+      def with_site(name)
+        if name.blank?
+          puts "Please input site_name: site=[site_name]"
+          return
+        end
+
+        site = ::Cms::Site.where(host: name).first
+        if !site
+          puts "Site not found: #{name}"
+          return
+        end
+
+        yield site
+      end
+
+      def with_node(site, name)
+        if name.blank?
+          puts "Please input node_name: node=[node_name]"
+          return
+        end
+
+        node = ::Cms::Node.site(site).where(filename: name).first
+        if !node
+          puts "Node not found under site #{site.host}: #{name}"
+          return
+        end
+
+        yield node
+      end
+
+      def perform_job(job_class, opts = {})
+        job = job_class.bind(site_id: opts.delete(:site))
+        job = job.bind(node_id: opts.delete(:node)) if opts.key?(:node)
+        job.perform_now(opts)
       end
 
       def mock_task(attr)
@@ -124,22 +181,21 @@ module Tasks
         end
       end
 
-      def gsub_attrs(model)
-        ids = model.site(@site).pluck(:id)
-        ids.each do |id|
-          item = model.find(id) rescue nil
-          next unless item
+      def gsub_attrs(criteria)
+        all_ids = criteria.pluck(:id)
+        all_ids.each_slice(100) do |ids|
+          criteria.klass.where(:id.in => ids).each do |item|
+            item = item.becomes_with_route
+            attrs = %w(html upper_html lower_html roop_html)
+            attrs.each do |attr|
+              next unless item.respond_to?(attr) && item.respond_to?("#{attr}=")
+              next unless item.send(attr).present?
+              item.send("#{attr}=", gsub_path(item.send(attr)))
+            end
+            item.save!
 
-          item = item.becomes_with_route
-          attrs = %w(html upper_html lower_html roop_html)
-          attrs.each do |attr|
-            next unless item.respond_to?(attr) && item.respond_to?("#{attr}=")
-            next unless item.send(attr).present?
-            item.send("#{attr}=", gsub_path(item.send(attr)))
+            puts item.name
           end
-          item.save!
-
-          puts item.name
         end
       end
     end
