@@ -1,38 +1,23 @@
 namespace :unicorn do
   desc "Start unicorn"
-  task(:start) do
-    conf = "#{Rails.root}/config/unicorn.rb"
-    env  = ENV['RAILS_ENV'] || "development"
-    sh "bundle exec unicorn_rails -c #{conf} -E #{env} -D"
-  end
+  task(start: :load_classes) { ::Tasks::Unicorn.start }
 
   desc "Stop unicorn"
-  task(:stop) { unicorn_signal :QUIT }
+  task(stop: :load_classes) { ::Tasks::Unicorn.stop }
 
   desc "Restart unicorn with USR2"
-  task(:restart) { unicorn_signal :USR2 }
+  task(restart: :load_classes) { ::Tasks::Unicorn.restart }
 
   desc "Increment number of worker processes"
-  task(:increment) { unicorn_signal :TTIN }
+  task(increment: :load_classes) { ::Tasks::Unicorn.increment }
 
   desc "Decrement number of worker processes"
-  task(:decrement) { unicorn_signal :TTOU }
+  task(decrement: :load_classes) { ::Tasks::Unicorn.decrement }
 
   desc "Unicorn pstree (depends on pstree command)"
-  task(:pstree) do
-    sh "pstree '#{unicorn_pid}'"
-  end
+  task(pstree: :load_classes) { ::Tasks::Unicorn.pstree }
 
-  def unicorn_signal signal
-    Process.kill signal, unicorn_pid
-  end
-
-  def unicorn_pid
-    begin
-      File.read("#{Rails.root}/tmp/pids/unicorn.pid").to_i
-    rescue Errno::ENOENT
-      puts "Unicorn doesn't seem to be running"
-      exit
-    end
+  task(:load_classes) do
+    require_relative "./unicorn"
   end
 end

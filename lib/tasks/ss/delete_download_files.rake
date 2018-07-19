@@ -1,5 +1,5 @@
 namespace :ss do
-  task :delete_download_files => :environment do
+  task delete_download_files: :environment do
     return if Fs.mode != :file
 
     puts "delete download files"

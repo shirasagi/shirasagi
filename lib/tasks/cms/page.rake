@@ -1,49 +1,29 @@
 namespace :cms do
-  def find_sites(site)
-    return Cms::Site unless site
-    Cms::Site.where host: site
+  task generate_nodes: :environment do
+    ::Tasks::Cms.generate_nodes
   end
 
-  def with_site(job_class, opts = {})
-    find_sites(ENV["site"]).each do |site|
-      job = job_class.bind(site_id: site)
-      job.perform_now(opts)
-    end
+  task generate_pages: :environment do
+    ::Tasks::Cms.generate_pages
   end
 
-  def with_node(job_class, opts = {})
-    find_sites(ENV["site"]).each do |site|
-      job = job_class.bind(site_id: site)
-      job = job.bind(node_id: Cms::Node.site(site).find_by(filename: ENV["node"]).id) if ENV["node"]
-      job.perform_now(opts)
-    end
+  task update_pages: :environment do
+    ::Tasks::Cms.update_pages
   end
 
-  task :generate_nodes => :environment do
-    with_node(Cms::Node::GenerateJob)
+  task release_pages: :environment do
+    ::Tasks::Cms.release_pages
   end
 
-  task :generate_pages => :environment do
-    with_node(Cms::Page::GenerateJob, attachments: ENV["attachments"])
+  task remove_pages: :environment do
+    ::Tasks::Cms.remove_pages
   end
 
-  task :update_pages => :environment do
-    with_node(Cms::Page::UpdateJob)
+  task check_links: :environment do
+    ::Tasks::Cms.check_links
   end
 
-  task :release_pages => :environment do
-    with_site(Cms::Page::ReleaseJob)
-  end
-
-  task :remove_pages => :environment do
-    with_site(Cms::Page::RemoveJob)
-  end
-
-  task :check_links => :environment do
-    with_node(Cms::CheckLinksJob, email: ENV["email"])
-  end
-
-  task :import_files => :environment do
-    Cms::ImportFilesJob.perform_now
+  task import_files: :environment do
+    ::Tasks::Cms.import_files
   end
 end

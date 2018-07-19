@@ -1,5 +1,5 @@
 namespace :gws do
-  task :set_admin_role => :environment do
+  task set_admin_role: :environment do
     puts "Please input user name: user=[user_name]" or exit if ENV['user'].blank?
     puts "Please input site_name: site=[site_name]" or exit if ENV['site'].blank?
 
