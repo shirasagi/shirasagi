@@ -7,9 +7,10 @@
     <%= link_to t('ss.links.back_to_index'), gws_survey_readables_path %>
     <%= link_to t('ss.links.print'), action: :print %>
   <% elsif params[:action] =~ /edit|update|delete|move|others/ %>
-    <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% if @cur_form.file_editable? %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), gws_survey_readables_path %>
-    <%# link_to t('ss.links.print'), action: :print %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>

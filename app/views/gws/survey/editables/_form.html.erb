@@ -11,6 +11,9 @@
   <dt><%= @model.t :file_state %><%= @model.tt :file_state %></dt>
   <dd><%= f.select :file_state, @item.file_state_options, include_blank: true %></dd>
 
+  <dt><%= @model.t :file_edit_state %><%= @model.tt :file_edit_state %></dt>
+  <dd><%= f.select :file_edit_state, @item.file_edit_state_options %></dd>
+
   <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
   <dd><%= f.text_field :due_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.due_date) } %></dd>
 

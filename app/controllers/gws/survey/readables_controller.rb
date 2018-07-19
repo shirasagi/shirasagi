@@ -6,7 +6,7 @@ class Gws::Survey::ReadablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :toggle_browsed]
+  before_action :set_item, only: [:show]
 
   model Gws::Survey::Form
 
@@ -80,16 +80,4 @@ class Gws::Survey::ReadablesController < ApplicationController
   def show
     render
   end
-
-  # def toggle_browsed
-  #   if @item.browsed?(@cur_user)
-  #     @item.unset_browsed!(@cur_user)
-  #   else
-  #     @item.set_browsed!(@cur_user)
-  #   end
-  #
-  #   render_update true
-  # rescue => e
-  #   render_update false
-  # end
 end

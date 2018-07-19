@@ -14,6 +14,10 @@ ja:
         answered: 回答済
         unanswered: 未回答
         both: 両方
+      file_edit_state:
+        disabled: 無効
+        enabled: 有効
+        enabled_until_due_date: 締切まで有効
     notices:
       anonymous:
         head: 匿名アンケート
@@ -71,7 +75,7 @@ ja:
         close_date: 公開期限（終了）
         anonymous_state: 匿名回答
         file_state: 回答結果
-        file_count_limit: 回答制限
+        file_edit_state: 回答の編集
         memo: 備考
       gws/addon/survey/files_ref:
         files: 回答一覧
@@ -114,9 +118,11 @@ ja:
         - 回答結果を公開するかどうかを選択します。
         - 「公開」を選択すると、フォームの閲覧者に設定されていれば、誰の回答でも閲覧することができます。
         - 「非公開」を選択すると、自分の回答のみを閲覧できます。
-      file_count_limit:
-        - 回答制限を選択します。
-        - 「一人1回に制限する」を選択すると、一度回答したユーザーは回答することができません。
+      file_edit_state:
+        - 回答の編集を有効にするか無効にするか選択します。
+        - 「無効」を選択すると、回答を編集することができなくなります。
+        - 「有効」を選択すると、いつでも回答を編集することができます。
+        - 「締切まで有効」を選択すると、締切までの間、回答を編集することができます。
       memo:
         - 備考を入力します。
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。

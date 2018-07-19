@@ -8,7 +8,7 @@ class Gws::Survey::FilesController < ApplicationController
   before_action :set_cur_form
   before_action :check_form_permissions
   before_action :set_items
-  before_action :set_item, only: %i[edit update delete destroy]
+  before_action :set_item, only: %i[show edit update delete destroy]
 
   navi_view "gws/survey/main/navi"
 
@@ -75,18 +75,32 @@ class Gws::Survey::FilesController < ApplicationController
 
   public
 
+  def show
+    render
+  end
+
   def edit
+    if @item.persisted? && !@cur_form.file_editable?
+      redirect_to(action: :show)
+      return
+    end
+
     render_opts = {}
     render_opts[:layout] = false if request.xhr?
     render render_opts
   end
 
   def update
+    raise '403' if @item.persisted? && !@cur_form.file_editable?
+
     custom = params.require(:custom)
     new_column_values = @cur_form.build_column_values(custom)
     @item.update_column_values(new_column_values)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     render_opts = { location: { action: :edit } }
+    if !@cur_form.file_editable?
+      render_opts[:location] = { action: :show }
+    end
 
     result = @item.save
     if result
@@ -97,10 +111,13 @@ class Gws::Survey::FilesController < ApplicationController
   end
 
   def delete
+    raise '403' if !@cur_form.file_editable?
     render
   end
 
   def destroy
+    raise '403' if !@cur_form.file_editable?
+
     render_opts = { location: { action: :edit } }
     if @item.new_record?
       render_destroy true, render_opts

@@ -1,0 +1,10 @@
+  <div class="addon-views gws-survey">
+    <%= render file: '_basic_info' %>
+    <%= render file: '_tabs', locals: { cur_tab: 'personal' } %>
+
+    <div class="addon-view">
+      <div class="addon-body" style="border-top: none">
+        <%= render file: '_show' %>
+      </div>
+    </div>
+  </div>
