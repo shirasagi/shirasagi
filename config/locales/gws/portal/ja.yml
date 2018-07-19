@@ -19,6 +19,7 @@ ja:
       gws/portal/portlet/attendance: 出退勤設定
       gws/portal/portlet/notice: お知らせ設定
       gws/portal/portlet/presence: 在席管理設定
+      gws/portal/portlet/survey: アンケート
 
   gws/portal:
     self_portal: 個人
@@ -85,6 +86,9 @@ ja:
       presence:
         name: 在席管理
         text: グループに所属するユーザーの在席状況を表示します。
+      survey:
+        name: アンケート
+        text: 新着または期限間近のアンケートを表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -171,6 +175,10 @@ ja:
       gws/addon/portal/portlet/presence:
         group_id: グループ
         custom_group_id: カスタムグループ
+      gws/addon/portal/portlet/survey:
+        survey_answered_state: 回答・未回答
+        survey_sort: 並び順
+        survey_category_ids: カテゴリー
 
   tooltip:
     gws/portal/user_setting:

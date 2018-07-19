@@ -1,0 +1,34 @@
+<dl class="see">
+  <dt><%= @model.t :survey_answered_state %><%= @model.tt :survey_answered_state %></dt>
+  <dd><%= f.select :survey_answered_state, @item.survey_answered_state_options, include_blank: t("gws/board.options.browsed_state.both") %></dd>
+
+  <dt><%= @model.t :survey_sort %><%= @model.tt :survey_sort %></dt>
+  <dd><%= f.select :survey_sort, @item.survey_sort_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :survey_category_ids %><%= @model.tt :survey_category_ids %></dt>
+  <dd>
+    <%= f.hidden_field "survey_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws.apis.categories.index"), gws_survey_apis_categories_path(single: true), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Survey::Category.t :name %></th>
+        <th class="deselect"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.survey_categories.readable(@cur_user, site: @cur_site).each do |cate| %>
+        <tr data-id="<%= cate.id %>">
+          <td><%= f.hidden_field "survey_category_ids[]", value: cate.id, id: nil %> <%= cate.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @item.t :limit %><%= @item.tt :limit %></dt>
+  <dd><%= f.number_field :limit %></dd>
+</dl>

@@ -18,6 +18,9 @@ ja:
         disabled: 無効
         enabled: 有効
         enabled_until_due_date: 締切まで有効
+      sort:
+        due_date: 回答期限
+        updated: 新着順
     notices:
       anonymous:
         head: 匿名アンケート
