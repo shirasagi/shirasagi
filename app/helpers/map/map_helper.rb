@@ -119,7 +119,7 @@ module Map::MapHelper
       s << 'Facility_Search.render("' + selector + '", opts);'
     end
 
-    jquery {s.join("\n").html_safe}
+    jquery { s.join("\n").html_safe }
   end
 
   def render_member_photo_form_map(selector, opts = {})
