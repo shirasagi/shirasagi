@@ -33,7 +33,7 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
           next
         end
 
-        criteria = Gws::Survey::Form.where(id: item.id)
+        criteria = Gws::Survey::Form.site(site).where(id: item.id).exists(notification_noticed_at: false)
         item = criteria.find_one_and_update({ '$set' => { notification_noticed_at: @now.utc } }, return_document: :after)
         if !item
           Rails.logger.info("#{item.name}: 通知を送信済みです")
