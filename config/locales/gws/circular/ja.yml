@@ -131,7 +131,7 @@ ja:
     gws/addon/circular/group_setting:
       circular_default_due_date:
         - 回覧期限日時の初期値を、今日から数えて何日後かで入力します。
-        - 初期値は 7日 後です。
+        - 初期値は 7 日後です。
       circular_max_member:
         - 参加者の人数の上限を入力します。
         - 未指定である場合、制限されません。

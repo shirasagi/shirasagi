@@ -8,6 +8,7 @@ class Gws::Group
   include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Circular::GroupSetting
   include Gws::Addon::Monitor::GroupSetting
+  include Gws::Addon::Survey::GroupSetting
   include Gws::Addon::Board::GroupSetting
   include Gws::Addon::Faq::GroupSetting
   include Gws::Addon::Qna::GroupSetting
@@ -15,7 +16,6 @@ class Gws::Group
   include Gws::Addon::Share::GroupSetting
   include Gws::Addon::StaffRecord::GroupSetting
   include Gws::Addon::Elasticsearch::GroupSetting
-  include Gws::Addon::Survey::GroupSetting
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting
   include Gws::Addon::System::LogSetting
