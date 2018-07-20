@@ -10,9 +10,24 @@ class Uploader::File
   validate :validate_filename
   validate :validate_scss
   validate :validate_coffee
+  validate :validate_size
 
   def save
     return false unless valid?
+    if binary.present? && image?
+      list = Magick::ImageList.new
+      list.from_blob(binary)
+      list.each do |image|
+        case SS.config.env.image_exif_option
+        when "auto_orient"
+          image.auto_orient!
+        when "strip"
+          image.strip!
+        end
+
+      end
+      binary = list.to_blob
+    end
     begin
       if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
@@ -168,6 +183,15 @@ class Uploader::File
     @js = CoffeeScript.compile @binary
   rescue => e
     errors.add :coffee, e.message
+  end
+
+  def validate_size
+    return if directory?
+    limit_size = SS::MaxFileSize.find_size(ext.sub('.', ''))
+    return if binary.size <= limit_size
+    self.errors.add :base, :too_large_file, filename: filename,
+      size: ActiveSupport::NumberHelper.number_to_human_size(binary.size),
+      limit: ActiveSupport::NumberHelper.number_to_human_size(limit_size)
   end
 
   def compile_scss
