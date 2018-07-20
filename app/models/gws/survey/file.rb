@@ -10,6 +10,8 @@ class Gws::Survey::File
 
   attr_accessor :in_skip_notification_mail
 
+  index(updated: -1)
+
   seqid :id
   field :name, type: String
 
