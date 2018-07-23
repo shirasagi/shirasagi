@@ -25,6 +25,7 @@ module Map::MapHelper
     #center = opts[:center]
     markers = opts[:markers]
     map_options = opts[:map] || {}
+    zoom_level = map[:zoom_level]
 
     if api == "openlayers"
       include_openlayers_api
@@ -35,7 +36,7 @@ module Map::MapHelper
       s << '  readonly: true,'
       s << '  markers: ' + markers.to_json + ',' if markers.present?
       s << '  layers: ' + SS.config.map.layers.to_json + ','
-      #s << '  zoom: ' + zoom_level.to_json
+      s << '  zoom: ' + zoom_level.to_json
       s << '};'
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
