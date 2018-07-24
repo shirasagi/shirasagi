@@ -21,6 +21,7 @@
 //= require map/openlayers/facility/search
 //= require map/openlayers/member/photo/form
 //= require jplayer/jquery.jplayer
+
 $(function () {
   SS_Kana.render();
   SS_Font.render();
@@ -711,7 +712,9 @@ this.SS_VoiceController = (function () {
     var timestamp = (new Date).getTime();
     var url = '<%= I18n.t("voice.messages.no_audio_solution") %>';
 
-    return template.replace(":TIMESTAMP:", timestamp).replace(":URL:", url);
+    template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
+    template = template.replace(new RegExp(":URL:", 'g'), url);
+    return template;
   };
 
   return SS_VoiceController;
