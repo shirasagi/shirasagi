@@ -10,6 +10,10 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @month = Time.zone.today.month.to_i
     @cur_node.window_name = @cur_node.name
 
+    @items = Cms::Page.site(@cur_site).and_public(@cur_date).
+      where(@cur_node.condition_hash).
+      where('event_dates.0' => { "$exists" => true })
+
     monthly
   end
 
@@ -55,7 +59,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
   def index_monthly
     @events = {}
-    @items = []
+    @items ||= []
     start_date = Date.new(@year, @month, 1)
     close_date = @month != 12 ? Date.new(@year, @month + 1, 1) : Date.new(@year + 1, 1, 1)
 
@@ -68,7 +72,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
       page.event_dates.split(/\r\n|\n/).each do |date|
         d = Date.parse(date)
         next unless @events[d]
-        @items << page
+        @items << page if @items.is_a?(Array)
         @events[d] << [
           page,
           page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)

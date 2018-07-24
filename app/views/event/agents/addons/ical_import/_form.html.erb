@@ -1,0 +1,13 @@
+<dl class="see mod-event-ical_import">
+  <dt><%= @model.t :ical_import_url %><%= @model.tt :ical_import_url %></dt>
+  <dd><%= f.text_field :ical_import_url %></dd>
+
+  <dt><%= @model.t :ical_max_docs %><%= @model.tt :ical_max_docs %></dt>
+  <dd><%= f.number_field :ical_max_docs %></dd>
+
+  <dt><%= @model.t :ical_refresh_method %><%= @model.tt :ical_refresh_method %></dt>
+  <dd><%= f.select :ical_refresh_method, @item.ical_refresh_method_options %></dd>
+
+  <dt><%= @model.t :ical_page_state %><%= @model.tt :ical_page_state %></dt>
+  <dd><%= f.select :ical_page_state, @item.ical_page_state_options, include_blank: true %></dd>
+</dl>

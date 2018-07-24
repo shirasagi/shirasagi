@@ -1,0 +1,10 @@
+<dl class="see mod-rss-import">
+  <dt><%= @model.t :ical_link %><%= @model.tt :ical_link %></dt>
+  <dd><%= f.text_field :ical_link %></dd>
+
+  <dt><%= @model.t :ical_description %><%= @model.tt :ical_description %></dt>
+  <dd>
+    <%= html_editor ".event-ical-text", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+    <%= f.text_area :ical_description, class: "event-ical-text monospace", style: "height:400px;" %>
+  </dd>
+</dl>

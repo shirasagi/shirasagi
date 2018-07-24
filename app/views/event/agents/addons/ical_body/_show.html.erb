@@ -1,0 +1,10 @@
+<dl class="see mod-ezine-page-body">
+  <dt><%= @model.t :ical_link %></dt>
+  <dd><%= @item.ical_link %></dd>
+
+  <dt><%= @model.t :ical_description %></dt>
+  <dd>
+    <%= html_editor "#mod-event-ical_body", height: "400px", readonly: true %>
+    <%= text_area_tag "mod-event-ical_body", @item.ical_description, class: "monospace", style: "height: 400px;" %>
+  </dd>
+</dl>

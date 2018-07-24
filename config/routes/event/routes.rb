@@ -41,6 +41,7 @@ SS::Application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: [:deletion, :crud, :download, :import, :command, :contains_urls, :tag]
     resources :searches, only: [:index]
+    resources :icals, concerns: [:deletion, :crud, :download, :import, :command, :contains_urls, :tag]
   end
 
   node "event" do
@@ -50,6 +51,7 @@ SS::Application.routes.draw do
     get "page/:year:month:day.:format" => "public#daily", cell: "nodes/page",
       year: /\d{4}/, month: /\d{2}/, day: /\d{2}/
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
+    get 'ical/(index.:format)' => 'public#index', cell: 'nodes/ical'
   end
 
   part "event" do
@@ -60,6 +62,7 @@ SS::Application.routes.draw do
   page "event" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
     get "search/(index.:format)" => "public#index", cell: "node/search"
+    get 'ical/:filename.:format' => 'public#index', cell: 'pages/ical'
   end
 
   namespace "event", path: ".s:site/event" do
