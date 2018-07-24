@@ -14,20 +14,7 @@ class Uploader::File
 
   def save
     return false unless valid?
-    if binary.present? && image?
-      list = Magick::ImageList.new
-      list.from_blob(binary)
-      list.each do |image|
-        case SS.config.env.image_exif_option
-        when "auto_orient"
-          image.auto_orient!
-        when "strip"
-          image.strip!
-        end
-
-      end
-      binary = list.to_blob
-    end
+    remove_exif if binary.present? && image?
     begin
       if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
@@ -135,6 +122,27 @@ class Uploader::File
     is_dir = attributes.delete :is_dir
     @is_dir = is_dir.nil? ? false : is_dir
     super
+  end
+
+  def remove_exif
+    list = Magick::ImageList.new
+    list.from_blob(binary)
+    list.each do |image|
+      case SS.config.env.image_exif_option
+      when "auto_orient"
+        image.auto_orient!
+      when "strip"
+        image.strip!
+      end
+
+    end
+    @binary = list.to_blob
+  end
+
+  class << self
+    def remove_exif(binary)
+      self.new(binary: binary).remove_exif
+    end
   end
 
   private

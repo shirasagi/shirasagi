@@ -172,7 +172,9 @@ class Uploader::FilesController < ApplicationController
         @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
         result = false
       else
-        Fs.binwrite @item.saved_path, file.read
+        binary = file.read
+        binary = Uploader::File.remove_exif(binary) if file.content_type =~ /^image\//
+        Fs.binwrite @item.saved_path, binary
       end
     end
 
