@@ -32,15 +32,26 @@ module Workflow::Model::Route
   module ClassMethods
     def route_options(user, options = {})
       ret = []
-      if options[:item].present? && options[:item].workflow_approvers.present?
+      item = options[:item]
+
+      if item && item.workflow_approvers.present?
         ret << [ I18n.t("workflow.restart_workflow"), "restart" ]
       end
-      ret << [ t("my_group"), "my_group" ] unless SS.config.workflow.disable_my_group
+      ret << [ [ t("my_group"), "my_group" ] ] unless SS.config.workflow.disable_my_group
+
+      categories = item.categories.where(:default_route_id.exists => true) rescue nil
+      if categories.present?
+        ret = categories.map do |item|
+          cate = item.becomes_with_route
+          [ cate.default_route.name, cate.default_route.id ]
+        end
+      end
+
       group_ids = user.group_ids.to_a
       criteria.and(:group_ids.in => group_ids).each do |route|
         ret << [ route.name, route.id ]
       end
-      ret
+      ret.uniq
     end
 
     def search(params)

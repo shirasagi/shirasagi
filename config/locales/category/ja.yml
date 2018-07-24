@@ -9,6 +9,7 @@ ja:
     addons:
       category/category: カテゴリー
       category/setting: カテゴリー
+      category/workflow: 承認ルート
 
   cms:
     nodes:
@@ -29,6 +30,8 @@ ja:
         partial_node: フォルダー
         integration_master_node: 統合元フォルダー
         integration_partial_node: 対象フォルダー
+      category/addon/workflow:
+        default_route_id: 承認ルート
 
   errors:
     messages:
@@ -52,3 +55,7 @@ ja:
       integration_partial_node:
         - 統合対象となるフォルダーを選択します。
         - 統合後は削除されます。
+    category/addon/workflow:
+      default_route_id:
+        - 既定の承認ルートを設定します。
+        - ページに、このカテゴリーを設定した際に有効となります。

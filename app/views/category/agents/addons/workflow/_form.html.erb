@@ -1,0 +1,6 @@
+<%= jquery do %>SS_AddonTabs.hide(".mod-category-workflow");<% end %>
+
+<dl class="see mod-category-workflow">
+  <dt><%= @model.t :default_route_id %><%= @model.tt :default_route_id %></dt>
+  <dd><%= select_tag "item[default_route_id]", options_for_select(@item.default_route_options, @item.default_route_id), include_blank: true %></dd>
+</dl>
