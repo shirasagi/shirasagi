@@ -2,11 +2,13 @@ module SS::ZipFileImport
   extend ActiveSupport::Concern
 
   def perform(temp_file_id)
-    @cur_file = SS::TempFile.find(temp_file_id)
+    @cur_file = SS::File.find(temp_file_id)
 
     import_file
   ensure
-    @cur_file.destroy
+    if @cur_file && @cur_file.model == 'ss/temp_file'
+      @cur_file.destroy
+    end
   end
 
   module ClassMethods
