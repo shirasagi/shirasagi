@@ -5,6 +5,11 @@
   <dt><%= @model.t :user_csv_file_id %></dt>
   <dd><%= tryb { @item.user_csv_file.humanized_name } %></dd>
 
+  <% if @model == ::Chorg::Revision %>
+    <dt><%= @model.t :content_csv_file_id %></dt>
+    <dd><%= tryb { @item.content_csv_file.humanized_name } %></dd>
+  <% end %>
+
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>
     <%= render file: "_#{params[:action]}_#{type}", locals: { type: type, changesets: changesets } %>

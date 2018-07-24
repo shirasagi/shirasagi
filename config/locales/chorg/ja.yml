@@ -116,6 +116,8 @@ ja:
       chorg/run_params:
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
         reservation: 予約実行
+      chorg/revision:
+        content_csv_file_id: コンテンツCSVファイル
 
   tooltip:
     chorg/model/revision:
@@ -126,6 +128,10 @@ ja:
         - ユーザーCSVには異動後のグループ名や役職を設定してください。
         -
         - ファイルを選択しない場合、組織変更実行後にユーザーは異動しませんので手動でユーザーを異動させてください。
+    chorg/revision:
+      content_csv_file_id:
+        - 組織変更実行後にパーツ、レイアウト、ページ、フォルダーの異動を行うためのコンテンツCSVファイルを選択します。
+        - コンテンツCSVには異動後のグループ名などを設定してください。
     chorg/run_params:
       reservation:
         - 実行する時間を予約できます。

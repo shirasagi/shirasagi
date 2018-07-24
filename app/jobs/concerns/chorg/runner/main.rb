@@ -57,6 +57,7 @@ module Chorg::Runner::Main
       import_user_csv_gws
     else
       import_user_csv_cms
+      import_content_csv_cms
     end
   end
 
@@ -74,6 +75,18 @@ module Chorg::Runner::Main
     else
       task.log("  #{@item.user_csv_file.humanized_name}: 次のエラーが発生しました。\n#{user.errors.full_messages.join("\n")}")
     end
+  end
+
+  def import_content_csv_cms
+    return if @item.content_csv_file.blank?
+
+    put_log("#{@item.content_csv_file.humanized_name}: import contents from csv")
+
+    # user = Cms::User.new(cur_site: site, cur_user: user, in_file: @item.user_csv_file.uploaded_file)
+    # result = user.import
+
+    task.log("==コンテンツインポート==")
+    Cms::AllContentsImportJob.bind(site_id: site).perform_now(@item.content_csv_file_id)
   end
 
   def import_user_csv_gws
