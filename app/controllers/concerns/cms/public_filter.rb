@@ -22,27 +22,15 @@ module Cms::PublicFilter
       @cur_main_path.sub!(/\.p\d+\.html$/, ".html")
     end
 
-    if @html =~ /\.part\.html$/
-      part = find_part(@html)
-      raise "404" unless part
-      @cur_path = params[:ref] || "/"
-      set_main_path
-      if resp = render_part(part)
-        return send_part(resp)
-      end
-    elsif page = find_page(@cur_main_path)
-      if resp = render_page(page)
-        self.response = resp
-        return send_page(page)
-      end
-    elsif node = find_node(@cur_main_path)
-      if resp = render_node(node)
-        self.response = resp
-        return send_page(node)
+    sends = false
+    enum_contents.each do |renderer|
+      if instance_exec(&renderer)
+        sends = true
+        break
       end
     end
 
-    page_not_found if response.body.blank?
+    page_not_found if !sends
   end
 
   private
@@ -134,10 +122,59 @@ module Cms::PublicFilter
 
   def x_sendfile(file = @file)
     return unless Fs.file?(file)
-    response.headers["Expires"] = 1.day.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
+    response.headers["Expires"] = 1.day.from_now.httpdate if file.to_s.downcase.end_with?(*%w(.css .js .gif .jpg .jpeg .png))
     response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
     ss_send_file(file, type: Fs.content_type(file), disposition: :inline)
+  end
+
+  def enum_contents
+    Enumerator.new do |y|
+      if @html =~ /\.part\.html$/ && part = find_part(@html)
+        y << proc { render_and_send_part(part) }
+        next
+      end
+
+      if page = find_page(@cur_main_path)
+        y << proc { render_and_send_page(page) }
+      end
+
+      if !@cur_main_path.include?('.') && !@cur_main_path.end_with?('/') && page = find_page("#{@cur_main_path}/index.html")
+        y << proc { render_and_send_page(page) }
+      end
+
+      if node = find_node(@cur_main_path)
+        y << proc { render_and_send_node(node) }
+      end
+    end
+  end
+
+  def render_and_send_part(part)
+    @cur_path = params[:ref] || "/"
+    set_main_path
+    resp = render_part(part)
+    return false if !resp
+
+    send_part(resp)
+    true
+  end
+
+  def render_and_send_page(page)
+    resp = render_page(page)
+    return false if !resp
+
+    self.response = resp
+    send_page(page)
+    true
+  end
+
+  def render_and_send_node(node)
+    resp = render_node(node)
+    return false if !resp
+
+    self.response = resp
+    send_page(node)
+    true
   end
 
   def send_part(body)
@@ -160,7 +197,7 @@ module Cms::PublicFilter
   end
 
   def rescue_action(e = nil)
-    return render_error(e, status: e.to_s.to_i) if e.to_s =~ /^\d+$/
+    return render_error(e, status: e.to_s.to_i) if e.to_s.numeric?
     return render_error(e, status: 404) if e.is_a? Mongoid::Errors::DocumentNotFound
     return render_error(e, status: 404) if e.is_a? ActionController::RoutingError
     raise e
