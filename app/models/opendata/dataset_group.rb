@@ -3,9 +3,9 @@ class Opendata::DatasetGroup
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::TemplateVariable
+  include Opendata::Addon::Category
   include Cms::Addon::Release
   include Cms::Addon::GroupPermission
-  include Opendata::Addon::Category
 
   set_permission_name :opendata_datasets
 

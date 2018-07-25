@@ -19,7 +19,7 @@ module Gws::Board::BrowsingState
   def set_browsed!(user)
     # to update hash partially, use `#persist_atomic_operations` method.
     # be careful, you must not use `#set` method. this method update hash totally.
-    persist_atomic_operations('$set' => { "browsed_users_hash.#{user.id}" => Time.zone.now })
+    persist_atomic_operations('$set' => { "browsed_users_hash.#{user.id}" => Time.zone.now.utc })
   end
 
   def unset_browsed!(user)

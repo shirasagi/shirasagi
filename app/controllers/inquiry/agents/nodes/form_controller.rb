@@ -76,7 +76,6 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   public
 
   def new
-    #
   end
 
   def confirm

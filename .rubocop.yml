@@ -12,24 +12,6 @@ AllCops:
   # Default formatter will be used if no `-f/--format` option is given.
   DefaultFormatter: fuubar
 
-Rails:
-  Enabled: true
-
-# Cop supports --auto-correct.
-Rails/Output:
-  Enabled: false
-
-Layout/DefEndAlignment:
-  AutoCorrect: false
-
-Metrics/ClassLength:
-  Enabled: true
-  Max: 500
-
-Metrics/ModuleLength:
-  Enabled: true
-  Max: 500
-
 # Indent private/protected/public as deep as method definitions
 Layout/AccessModifierIndentation:
   EnforcedStyle: indent
@@ -40,22 +22,8 @@ Layout/AccessModifierIndentation:
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
 
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# Checks if usage of `%()` or `%Q()` matches configuration.
-Style/BarePercentLiterals:
-  EnforcedStyle: bare_percent
-  SupportedStyles:
-    - percent_q
-    - bare_percent
-
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/EmptyElse:
-  EnforcedStyle: empty
-  SupportedStyles:
-    - empty
-    - nil
-    - both
+Layout/DefEndAlignment:
+  AutoCorrect: false
 
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -70,18 +38,6 @@ Layout/IndentationConsistency:
   SupportedStyles:
     - normal
     - rails
-
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  # Specify the default preferred delimiter for all types with the 'default' key
-  # Override individual delimiters (even with default specified) by specifying
-  # an individual key
-  PreferredDelimiters:
-    default: ()
-    '%i': '[]'
-    '%I': '[]'
-    '%r': '{}'
 
 # Cop supports --auto-correct.
 Layout/SpaceAfterComma:
@@ -102,6 +58,60 @@ Layout/SpaceInsideBlockBraces:
   SpaceBeforeBlockParameters: true
 
 # Cop supports --auto-correct.
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Lint/RescueException:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: true
+  Max: 500
+
+Metrics/ModuleLength:
+  Enabled: true
+  Max: 500
+
+Naming/UncommunicativeMethodParamName:
+  AllowedNames: [ 'ns' ]
+
+Rails:
+  Enabled: true
+
+# Cop supports --auto-correct.
+Rails/Output:
+  Enabled: false
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+# Checks if usage of `%()` or `%Q()` matches configuration.
+Style/BarePercentLiterals:
+  EnforcedStyle: bare_percent
+  SupportedStyles:
+    - percent_q
+    - bare_percent
+
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/EmptyElse:
+  EnforcedStyle: empty
+  SupportedStyles:
+    - empty
+    - nil
+    - both
+
+# Cop supports --auto-correct.
+# Configuration parameters: PreferredDelimiters.
+Style/PercentLiteralDelimiters:
+  # Specify the default preferred delimiter for all types with the 'default' key
+  # Override individual delimiters (even with default specified) by specifying
+  # an individual key
+  PreferredDelimiters:
+    default: ()
+    '%i': '[]'
+    '%I': '[]'
+    '%r': '{}'
+
+# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/SignalException:
   EnforcedStyle: only_raise
@@ -109,10 +119,6 @@ Style/SignalException:
     - only_raise
     - only_fail
     - semantic
-
-# Cop supports --auto-correct.
-Layout/TrailingWhitespace:
-  Enabled: true
 
 # Cop supports --auto-correct.
 Style/UnneededPercentQ:
@@ -133,6 +139,3 @@ Style/WordArray:
   MinSize: 0
   # The regular expression `WordRegex` decides what is considered a word.
   WordRegex: !ruby/regexp '/\A[\p{Word}\n\t]+\z/'
-
-Lint/RescueException:
-  Enabled: false

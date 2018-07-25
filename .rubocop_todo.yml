@@ -340,6 +340,9 @@ Naming/HeredocDelimiterNaming:
     - 'spec/lib/voice/converter_spec.rb'
     - 'spec/lib/voice/scraper_spec.rb'
 
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
 # Offense count: 149
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: snake_case, normalcase, non_integer
