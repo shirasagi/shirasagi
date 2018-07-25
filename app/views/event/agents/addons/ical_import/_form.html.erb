@@ -12,8 +12,8 @@
   <dd><%= f.select :ical_page_state, @item.ical_page_state_options, include_blank: true %></dd>
 
   <dt><%= @model.t :ical_import_date_ago %><%= @model.tt :ical_import_date_ago %></dt>
-  <dd><%= f.number_field :ical_import_date_ago %></dd>
+  <dd><%= f.number_field :ical_import_date_ago, min: 0 %> <%= I18n.t('ss.units.days_before') %></dd>
 
   <dt><%= @model.t :ical_import_date_after %><%= @model.tt :ical_import_date_after %></dt>
-  <dd><%= f.number_field :ical_import_date_after %></dd>
+  <dd><%= f.number_field :ical_import_date_after, min: 0 %> <%= I18n.t('ss.units.days_after') %></dd>
 </dl>

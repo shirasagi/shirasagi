@@ -11,9 +11,13 @@
   <dt><%= @model.t :ical_page_state %></dt>
   <dd><%= @item.label :ical_page_state %></dd>
 
-  <dt><%= @model.t :ical_import_date_ago %></dt>
-  <dd><%= @item.ical_import_date_ago %></dd>
+  <% if @item.ical_import_date_ago.present? %>
+    <dt><%= @model.t :ical_import_date_ago %></dt>
+    <dd><%= @item.ical_import_date_ago %> <%= I18n.t('ss.units.days_before') %></dd>
+  <% end %>
 
-  <dt><%= @model.t :ical_import_date_after %></dt>
-  <dd><%= @item.ical_import_date_after %></dd>
+  <% if @item.ical_import_date_after.present? %>
+    <dt><%= @model.t :ical_import_date_after %></dt>
+    <dd><%= @item.ical_import_date_after %> <%= I18n.t('ss.units.days_after') %></dd>
+  <% end %>
 </dl>

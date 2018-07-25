@@ -12,7 +12,10 @@ module Event::Addon
       field :ical_import_date_after, type: Integer
       permit_params :ical_import_url, :ical_max_docs, :ical_refresh_method, :ical_page_state
       permit_params :ical_import_date_ago, :ical_import_date_after
+      validates :ical_refresh_method, inclusion: { in: %w(manual auto), allow_blank: true }
       validates :ical_page_state, inclusion: { in: %w(public closed), allow_blank: true }
+      validates :ical_import_date_ago, numericality: { greater_than_or_equal_to: 0, allow_blank: true }
+      validates :ical_import_date_after, numericality: { greater_than_or_equal_to: 0, allow_blank: true }
     end
 
     def ical_refresh_method_options

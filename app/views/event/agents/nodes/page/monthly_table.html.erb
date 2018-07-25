@@ -33,6 +33,7 @@
               <div class="no-event"><%= t("event.no_event") %></div>
             <% end %>
             <% events.each do |event, categories| %>
+              <% event = event.becomes_with_route %>
               <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
                 <% if categories.present? %>
                   <% cate = categories.entries.sort_by{ |c| c.order }.first %>
