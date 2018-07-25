@@ -1,4 +1,4 @@
-<%= render_map_form "#map-canvas", site: @cur_site, zoom_level: @item.map_zoom_level %>
+<%= render_map_form "#map-canvas", site: @cur_site, map: { zoom: @item.map_zoom_level } %>
 
 <div class="mod-map">
   <div class="location-search">

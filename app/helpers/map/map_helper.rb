@@ -22,22 +22,20 @@ module Map::MapHelper
     map_setting = opts[:site].map_setting rescue {}
 
     api = opts[:api] || map_setting[:api] || SS.config.map.api
-    #center = opts[:center]
     markers = opts[:markers]
     map_options = opts[:map] || {}
-    zoom_level = map[:zoom_level]
 
     if api == "openlayers"
       include_openlayers_api
 
+      # set default values
+      map_options[:readonly] = true
+      map_options[:markers] = markers if markers.present?
+      map_options[:layers] = SS.config.map.layers
+
       s = []
       s << 'var canvas = $("' + selector + '")[0];'
-      s << 'var opts = {'
-      s << '  readonly: true,'
-      s << '  markers: ' + markers.to_json + ',' if markers.present?
-      s << '  layers: ' + SS.config.map.layers.to_json + ','
-      s << '  zoom: ' + zoom_level.to_json
-      s << '};'
+      s << "var opts = #{ map_options.to_json };"
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
       include_googlemaps_api(opts)
@@ -56,34 +54,31 @@ module Map::MapHelper
     api = opts[:api] || map_setting[:api] || SS.config.map.api
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
-    #markers = opts[:markers]
-    zoom_level = opts[:zoom_level]
+    map_options = opts[:map] || {}
 
     if api == "openlayers"
       include_openlayers_api
 
+      # set default values
+      map_options[:readonly] = true
+      map_options[:center] = center.reverse if center.present?
+      map_options[:layers] = SS.config.map.layers
+      map_options[:max_point_form] = max_point_form if max_point_form.present?
+
       s = []
       s << 'var canvas = $("' + selector + '")[0];'
-      s << 'var opts = {'
-      s << '  readonly: true,'
-      s << '  center:' + center.reverse.to_json + ',' if center.present?
-      s << '  layers: ' + SS.config.map.layers.to_json + ','
-      s << '  max_point_form: ' + max_point_form.to_json + ',' if max_point_form.present?
-      s << '};'
+      s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Map_Form(canvas, opts);'
       s << 'SS_AddonTabs.hide(".mod-map");'
     else
       include_googlemaps_api(opts)
-
-      options = {}
-      options[:zoom] = zoom_level if zoom_level
 
       s = []
       s << 'SS_AddonTabs.hide(".mod-map");'
       s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'Map_Form.maxPointForm = ' + max_point_form.to_json + ';' if max_point_form.present?
       s << 'Googlemaps_Map.setForm(Map_Form);'
-      s << "Googlemaps_Map.load(\"" + selector + "\", #{ options.to_json });"
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{ map_options.to_json });"
       s << 'Googlemaps_Map.renderMarkers();'
       s << 'Googlemaps_Map.renderEvents();'
       s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'
@@ -128,19 +123,21 @@ module Map::MapHelper
 
     api = opts[:api] || map_setting[:api] || SS.config.map.api
     center = opts[:center] || SS.config.map.map_center
+    map_options = opts[:map] || {}
 
     s = []
     if api == "openlayers"
       include_openlayers_api
       controller.javascript "/assets/js/exif-js.js"
 
+      # set default values
+      map_options[:readonly] = true
+      map_options[:center] = center.reverse if center.present?
+      map_options[:layers] = SS.config.map.layers
+
       s = []
       s << 'var canvas = $("' + selector + '")[0];'
-      s << 'var opts = {'
-      s << '  readonly: true,'
-      s << '  center:' + center.reverse.to_json + ',' if center.present?
-      s << '  layers: ' + SS.config.map.layers.to_json + ','
-      s << '};'
+      s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'
       s << 'map.setExifLatLng("#item_in_image");'
     else
@@ -149,7 +146,7 @@ module Map::MapHelper
 
       s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'Googlemaps_Map.setForm(Member_Photo_Form);'
-      s << 'Googlemaps_Map.load("' + selector + '");'
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{ map_options.to_json });"
       s << 'Googlemaps_Map.renderMarkers();'
       s << 'Googlemaps_Map.renderEvents();'
       s << 'Member_Photo_Form.setExifLatLng("#item_in_image");'

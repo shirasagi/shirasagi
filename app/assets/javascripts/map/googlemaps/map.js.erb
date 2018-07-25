@@ -8,8 +8,6 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.center = [36.204824, 138.252924];
 
-  Googlemaps_Map.centerMode = "fit_bounds";
-
   Googlemaps_Map.zoom = 13;
 
   Googlemaps_Map.markers = null;
@@ -41,9 +39,6 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.load = function (selector, options) {
     if (options && options.zoom) {
       Googlemaps_Map.zoom = options.zoom;
-    }
-    if (options && options.center_mode) {
-      Googlemaps_Map.centerMode = options.center_mode;
     }
 
     var mapOptions;
