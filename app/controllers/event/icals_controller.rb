@@ -3,7 +3,7 @@ class Event::IcalsController < ApplicationController
   include Cms::PageFilter
   include Workflow::PageFilter
 
-  model Event::Ical
+  model Event::Page
 
   append_view_path "app/views/cms/pages"
   navi_view "event/main/navi"

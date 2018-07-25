@@ -23,10 +23,13 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
     Rails.logger.info("start importing ics")
 
+    today = Time.zone.now.to_date
     pages = Cms::Page.site(site).select{ |page| @events.collect(&:url).collect(&:to_s).include?(page.full_url) }
 
     if @events.present?
       @events.each do |event|
+        next if node.ical_import_date_ago.present? && event.dtstart.to_date < today - node.ical_import_date_ago.days
+        next if node.ical_import_date_after.present? && event.dtstart.to_date > today + node.ical_import_date_after.days
         item = model.site(site).node(node).where(ical_link: event.url.to_s).first || model.new
         item.ical_link = event.url
         next if site_page?(pages, item)
@@ -35,13 +38,12 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
         item.cur_node = node
         item.cur_user = user
         item.name = item.event_name = event.summary
-        item.filename = nil
         item.layout_id = node.page_layout_id if node.page_layout_id.present?
         item.state = node.ical_page_state if node.ical_page_state.present?
         if event.description.present?
           description = event.description
           description = description.push('').join(';') if description.is_a?(Icalendar::Values::Array)
-          item.ical_description = Nokogiri::HTML.parse(description).text
+          item.html = Nokogiri::HTML.parse(description).text
         end
         date = event.dtstart.to_date
         end_date = event.dtend.to_date if event.dtend.present?
@@ -68,7 +70,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   private
 
   def model
-    @model ||= Event::Ical.with_repl_master
+    @model ||= Event::Page.with_repl_master
   end
 
   def site_page?(pages, item)
@@ -120,7 +122,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   def put_history_log(page, action)
     log = History::Log.new
     log.url          = Rails.application.routes.url_helpers.import_event_icals_path site, node
-    log.controller   = "event/icals"
+    log.controller   = "event/pages"
     log.user_id      = user.id if user
     log.site_id      = site.id if site
     log.action       = action

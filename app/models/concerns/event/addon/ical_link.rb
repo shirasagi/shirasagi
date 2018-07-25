@@ -1,12 +1,11 @@
 module Event::Addon
-  module IcalBody
+  module IcalLink
     extend SS::Addon
     extend ActiveSupport::Concern
 
     included do
       field :ical_link, type: String
-      field :ical_description, type: String
-      permit_params :ical_link, :ical_description
+      permit_params :ical_link
     end
 
     module ClassMethods
@@ -36,15 +35,17 @@ module Event::Addon
     end
 
     def json_path
-      nil
+      return if ical_link.present?
+      super
     end
 
     def json_url
-      nil
+      return if ical_link.present?
+      super
     end
 
     def serve_static_file?
-      false
+      ical_link.blank?
     end
   end
 end

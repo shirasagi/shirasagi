@@ -56,7 +56,7 @@ module Event::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    default_scope ->{ where(route: "event/ical") }
+    default_scope ->{ where(route: "event/page") }
 
     def condition_hash
       cond = super
@@ -68,7 +68,7 @@ module Event::Node
     private
 
     def purge_pages
-      Event::Ical.limit_docs(@cur_site, self, ical_max_docs)
+      Event::Page.limit_docs(@cur_site, self, ical_max_docs)
     end
   end
 end

@@ -10,4 +10,10 @@
 
   <dt><%= @model.t :ical_page_state %><%= @model.tt :ical_page_state %></dt>
   <dd><%= f.select :ical_page_state, @item.ical_page_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :ical_import_date_ago %><%= @model.tt :ical_import_date_ago %></dt>
+  <dd><%= f.number_field :ical_import_date_ago %></dd>
+
+  <dt><%= @model.t :ical_import_date_after %><%= @model.tt :ical_import_date_after %></dt>
+  <dd><%= f.number_field :ical_import_date_after %></dd>
 </dl>

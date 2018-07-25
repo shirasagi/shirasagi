@@ -62,7 +62,6 @@ SS::Application.routes.draw do
   page "event" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
     get "search/(index.:format)" => "public#index", cell: "node/search"
-    get 'ical/:filename.:format' => 'public#index', cell: 'pages/ical'
   end
 
   namespace "event", path: ".s:site/event" do

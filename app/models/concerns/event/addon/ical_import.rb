@@ -8,7 +8,10 @@ module Event::Addon
       field :ical_max_docs, type: Integer
       field :ical_refresh_method, type: String
       field :ical_page_state, type: String
+      field :ical_import_date_ago, type: Integer
+      field :ical_import_date_after, type: Integer
       permit_params :ical_import_url, :ical_max_docs, :ical_refresh_method, :ical_page_state
+      permit_params :ical_import_date_ago, :ical_import_date_after
       validates :ical_page_state, inclusion: { in: %w(public closed), allow_blank: true }
     end
 

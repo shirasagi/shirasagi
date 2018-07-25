@@ -3,7 +3,7 @@ class Event::Agents::Nodes::IcalController < ApplicationController
   helper Cms::ListHelper
 
   def pages
-    Event::Ical.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
+    Event::Page.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
   end
 
   def index
