@@ -23,10 +23,9 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
     Rails.logger.info("start importing ics")
 
-    today = Time.zone.now.to_date
-    pages = Cms::Page.site(site).select{ |page| @events.collect(&:url).collect(&:to_s).include?(page.full_url) }
-
     if @events.present?
+      today = Time.zone.now.to_date
+      pages = Cms::Page.site(site).select{ |page| @events.collect(&:url).collect(&:to_s).include?(page.full_url) }
       @events.each do |event|
         next if node.ical_import_date_ago.present? && event.dtstart.to_date < today - node.ical_import_date_ago.days
         next if node.ical_import_date_after.present? && event.dtstart.to_date > today + node.ical_import_date_after.days

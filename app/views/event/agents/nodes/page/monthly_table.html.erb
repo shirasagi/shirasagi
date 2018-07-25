@@ -22,20 +22,26 @@
           </tr><tr>
         <% end %>
         <td class="<%= event_td_class(date, @date) %>">
-          <%= link_to_daily date, name: date.day, path: @cur_node.parent.try(:url).to_s, enable: events.present? %>
-          <% if date.national_holiday? %>
-            <div class="holiday"><%= HolidayJapan.name date %></div>
-          <% end %>
-          <% if events.blank? %>
-            <div class="no-event"><%= t("event.no_event") %></div>
-          <% end %>
-          <% events.each do |event, categories| %>
-            <%= link_to (event.event_name.present? ? event.event_name : event.name), event.url %>
-            <% if categories.present? %>
-              <% cate = categories.entries.sort_by{ |c| c.order }.first %>
-              <div class="<%= cate.basename %>"><%= link_to cate.name, cate.url %></div>
+          <div class="date">
+            <div class="daily">
+              <%= link_to_daily date, name: date.day, path: @cur_node.parent.try(:url).to_s, enable: events.present? %>
+            </div>
+            <% if date.national_holiday? %>
+              <div class="holiday"><%= HolidayJapan.name date %></div>
             <% end %>
-          <% end %>
+            <% if events.blank? %>
+              <div class="no-event"><%= t("event.no_event") %></div>
+            <% end %>
+            <% events.each do |event, categories| %>
+              <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+                <% if categories.present? %>
+                  <% cate = categories.entries.sort_by{ |c| c.order }.first %>
+                  <div class="data <%= cate.basename %>"><%= link_to cate.name, cate.url %></div>
+                <% end %>
+                <div class="event"><%= link_to (event.event_name.present? ? event.event_name : event.name), event.url %></div>
+              </div>
+            <% end %>
+          </div>
         </td>
       <% end %>
       </tr>

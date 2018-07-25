@@ -41,7 +41,7 @@ SS::Application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: [:deletion, :crud, :download, :import, :command, :contains_urls, :tag]
     resources :searches, only: [:index]
-    resources :icals, concerns: [:deletion, :crud, :download, :import, :command, :contains_urls, :tag]
+    resources :icals, concerns: [:deletion, :crud, :import, :command, :contains_urls, :tag]
   end
 
   node "event" do

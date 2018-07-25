@@ -1,6 +1,9 @@
 <%= code_editor ".mod-event-calendarlist .html", mode: :html %>
 
 <dl class="see mod-event-calendarlist">
+  <dt><%= @model.t :event_display %></dt>
+  <dd><%= f.select :event_display, @item.event_display_options %></dd>
+
   <dt><%= @model.t :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 

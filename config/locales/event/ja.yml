@@ -43,6 +43,12 @@ ja:
         event_dates_today: イベント日(今日)
         event_dates_tomorrow: イベント日(明日)
         event_dates_week: イベント日(一週間以内)
+      event_display:
+        list: リスト形式
+        table: 表形式
+      ical_refresh_method:
+        manual: 手動
+        auto: 自動
 
     apis:
       repeat_dates:
@@ -62,11 +68,14 @@ ja:
       event/calendar_list: リスト表示
       event/page_list: リスト表示
       event/body: イベント情報
+      event/ical_import: iCal取込
+      event/ical_link: iCal情報
 
   cms:
     nodes:
       event/page: イベントリスト
       event/search: イベント検索
+      event/ical: iCal取り込み
     parts:
       event/calendar: カレンダー
       event/search: イベント検索
@@ -93,6 +102,7 @@ ja:
     models:
       event/page: イベントページ
       event/search: イベント検索ページ
+      event/ical: iCal取込
     attributes:
       cms/model/page:
         event_name: イベントタイトル
@@ -106,6 +116,17 @@ ja:
         value: 内容
         contact: お問い合わせ
         event_keyword: イベント検索ワード
+      event/addon/calendar_list:
+        event_display: 表示形式
+      event/addon/ical_import:
+        ical_import_url: iCal配信URL
+        ical_max_docs: 最大保存件数
+        ical_refresh_method: 更新方法
+        ical_page_state: ページステータス
+        ical_import_date_ago: 取り込み制限(過去)
+        ical_import_date_after: 取り込み制限(未来)
+      event/addon/ical_link:
+        ical_link: ソースURL
 
   datetime:
     prompts:
@@ -118,6 +139,7 @@ ja:
   job:
     models:
       event/page/import_job: イベントページインポート
+      event/ical/import_job: iCalインポート
 
   tooltip:
     event/addon/date:
@@ -191,3 +213,29 @@ ja:
             &lt;/header>
             &lt;p>#{summary}&lt;/p>
           &lt;/article>
+    event/addon/calendar_list:
+      event_display:
+        - イベントカレンダーの表示形式を指定します。
+    event/addon/ical_import:
+      ical_import_url:
+        - iCal配信URLを設定します。
+      ical_max_docs:
+        - 最大保存件数を設定します。
+        -
+        - iCal を取り込んだ際に記事数が「最大保存件数」を超えた場合、イベント開始日の古い順に記事を削除し、記事数が「最大保存件数」以下になるように調整します。
+        -
+        - 「最大保存件数」に 0 を指定すると、無制限に記事を保存します。
+      ical_refresh_method:
+        - iCal取り込みの更新方法を指定します。
+        - 手動の場合は、管理画面上でインポートを行うことで取り込みを行います。
+        - 自動の場合は、インストール時に設定した周期で自動で取り込みを行います。
+      ical_page_state:
+        - iCal を取り込んだ際の記事のステータスを設定します。
+        - 設定しない場合、記事は公開保存されます。
+      ical_import_date_ago:
+        - 取り込む過去のイベントの日時を日単位で制限します。
+      ical_import_date_after:
+        - 取り込む未来のイベントの日時を日単位で制限します。
+    event/addon/ical_link:
+      ical_link:
+        - ソースURLを設定します。

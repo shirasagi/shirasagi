@@ -24,7 +24,6 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @date  = Date.new(@year, @month, 1)
     @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(@date, format: :long_month)}"
 
-    return index_monthly_table
     if within_one_year?(@date)
       index_monthly
     elsif within_one_year?(@date.advance(months: 1, days: -1))
@@ -59,8 +58,9 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   def index_monthly
+    return index_monthly_table if @cur_node.event_display == 'table'
     @events = {}
-    @items = [] if @index
+    @items = [] unless @index
     start_date = Date.new(@year, @month, 1)
     close_date = @month != 12 ? Date.new(@year, @month + 1, 1) : Date.new(@year + 1, 1, 1)
 
@@ -73,20 +73,21 @@ class Event::Agents::Nodes::PageController < ApplicationController
       page.event_dates.split(/\r\n|\n/).each do |date|
         d = Date.parse(date)
         next unless @events[d]
-        @items << page if @index
+        @items << page unless @index
         @events[d] << [
           page,
           page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
         ]
       end
     end
-    @items.uniq! if @index
+    @items.uniq! unless @index
 
     render :monthly
   end
 
   def index_monthly_table
     @events = {}
+    @items = [] unless @index
     start_date = @date.advance(days: -1 * @date.wday)
     close_date = start_date.advance(days: 7 * 6)
 
@@ -99,12 +100,14 @@ class Event::Agents::Nodes::PageController < ApplicationController
       page.event_dates.split(/\R/).each do |date|
         d = Date.parse(date)
         next unless @events[d]
+        @items << page unless @index
         @events[d] << [
           page,
           page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
         ]
       end
     end
+    @items.uniq! unless @index
 
     render(:monthly_table)
   end
