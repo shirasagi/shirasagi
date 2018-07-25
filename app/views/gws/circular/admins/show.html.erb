@@ -11,6 +11,7 @@
   <% end %>
   <% if item.allowed?(:delete, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id  %>
     <%= link_to t('ss.links.delete'), delete_gws_circular_comment_path(parent: parent, post_id: item, id: comment), class: 'btn' %>
+
   <% end %>
 <% end %>
 

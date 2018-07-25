@@ -5,6 +5,7 @@
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= t("mongoid.models.gws/group") %></dt>
+
       <dd>
         <% if browser.ie?(["<10"]) %>
           <%= render partial: "gws/apis/users/group_dropdown_normal", locals: { f: f } %>
