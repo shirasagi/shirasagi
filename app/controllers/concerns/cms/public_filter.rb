@@ -23,13 +23,11 @@ module Cms::PublicFilter
     end
 
     sends = false
-    enum_contents.each do |content|
-      resp = instance_exec(&content.render_content)
-      next if !resp
-
-      instance_exec(resp, &content.send_content)
-      sends = true
-      break
+    enum_contents.each do |renderer|
+      if instance_exec(&renderer)
+        sends = true
+        break
+      end
     end
 
     page_not_found if !sends
@@ -133,65 +131,50 @@ module Cms::PublicFilter
   def enum_contents
     Enumerator.new do |y|
       if @html =~ /\.part\.html$/ && part = find_part(@html)
-        y << create_part_content(part)
+        y << proc { render_and_send_part(part) }
         next
       end
 
       if page = find_page(@cur_main_path)
-        y << create_page_content(page)
+        y << proc { render_and_send_page(page) }
       end
 
       if !@cur_main_path.include?('.') && !@cur_main_path.end_with?('/') && page = find_page("#{@cur_main_path}/index.html")
-        y << create_page_content(page)
+        y << proc { render_and_send_page(page) }
       end
 
       if node = find_node(@cur_main_path)
-        y << create_node_content(node)
+        y << proc { render_and_send_node(node) }
       end
     end
   end
 
-  def create_part_content(part)
-    content = OpenStruct.new
+  def render_and_send_part(part)
+    @cur_path = params[:ref] || "/"
+    set_main_path
+    resp = render_part(part)
+    return false if !resp
 
-    content[:render_content] = proc do
-      @cur_path = params[:ref] || "/"
-      set_main_path
-      render_part(part)
-    end
-    content[:send_content] = proc do |resp|
-      send_part(resp)
-    end
-
-    content
+    send_part(resp)
+    true
   end
 
-  def create_page_content(page)
-    content = OpenStruct.new
+  def render_and_send_page(page)
+    resp = render_page(page)
+    return false if !resp
 
-    content[:render_content] = proc do
-      render_page(page)
-    end
-    content[:send_content] = proc do |resp|
-      self.response = resp
-      send_page(page)
-    end
-
-    content
+    self.response = resp
+    send_page(page)
+    true
   end
 
-  def create_node_content(node)
-    content = OpenStruct.new
+  def render_and_send_node(node)
+    resp = render_node(node)
+    return false if !resp
 
-    content[:render_content] = proc do
-      render_node(node)
-    end
-    content[:send_content] = proc do |resp|
-      self.response = resp
-      send_page(node)
-    end
-
-    content
+    self.response = resp
+    send_page(node)
+    true
   end
 
   def send_part(body)
