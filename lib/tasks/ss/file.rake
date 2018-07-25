@@ -1,5 +1,5 @@
 namespace :ss do
-  task :export_files_for_update => :environment do
+  task export_files_for_update: :environment do
     SS::File.all.each do |file|
       puts file.path
       next unless file[:file_id]

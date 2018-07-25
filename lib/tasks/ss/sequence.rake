@@ -1,5 +1,5 @@
 namespace :ss do
-  task :reset_sequence => :environment do
+  task reset_sequence: :environment do
     ::Rails.application.eager_load!
 
     model = ENV["model"]

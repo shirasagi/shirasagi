@@ -1,13 +1,12 @@
 namespace :recommend do
-  task :create_similarity_scores => :environment do
-    site = Cms::Site.where(host: ENV["site"]).first
-    puts "Please input site_name: site=[site_name]" or exit unless site
-
-    job = Recommend::CreateSimilarityScoresJob.bind(site_id: site.id)
-    job.perform_now(ENV["days"])
+  task create_similarity_scores: :environment do
+    ::Tasks::Cms.with_site(ENV['site']) do |site|
+      job = Recommend::CreateSimilarityScoresJob.bind(site_id: site.id)
+      job.perform_now(ENV["days"])
+    end
   end
 
-  task :destroy_similarity_scores => :environment do
+  task destroy_similarity_scores: :environment do
     site = Cms::Site.where(host: ENV["site"]).first
 
     job = Recommend::DestroySimilarityScoresJob
@@ -15,7 +14,7 @@ namespace :recommend do
     job.perform_now
   end
 
-  task :destroy_history_logs => :environment do
+  task destroy_history_logs: :environment do
     site = Cms::Site.where(host: ENV["site"]).first
 
     job = Recommend::DestroyHistoryLogsJob
