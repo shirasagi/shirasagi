@@ -31,7 +31,7 @@ class Uploader::FilesController < ApplicationController
 
   def set_item
     filename = ::CGI.unescape params[:filename]
-    raise "404" if filename != @cur_node.filename && filename !~ /^#{@cur_node.filename}\//
+    raise "404" if filename != @cur_node.filename && !filename.start_with?("#{@cur_node.filename}/")
     @item = @model.file "#{@cur_node.site.path}/#{filename}"
     raise "404" unless @item
     @item.site = @cur_site
@@ -154,7 +154,7 @@ class Uploader::FilesController < ApplicationController
     end
     ext = @item.ext
     filename = @item.filename
-    @item.filename = @filename if @filename && @filename =~ /^#{@cur_node.filename}/
+    @item.filename = @filename if @filename && @filename.start_with?(@cur_node.filename)
     @item.site = @cur_site
     if ext != @item.ext
       @item.errors.add :base, "#{filename}#{I18n.t("errors.messages.invalid_file_type")}"
@@ -172,7 +172,9 @@ class Uploader::FilesController < ApplicationController
         @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
         result = false
       else
-        Fs.binwrite @item.saved_path, file.read
+        binary = file.read
+        binary = Uploader::File.remove_exif(binary) if file.content_type.start_with?('image/')
+        Fs.binwrite @item.saved_path, binary
       end
     end
 
