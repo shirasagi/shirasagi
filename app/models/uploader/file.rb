@@ -14,7 +14,7 @@ class Uploader::File
 
   def save
     return false unless valid?
-    remove_exif if binary.present? && image?
+    @binary = self.class.remove_exif(binary) if binary.present? && image?
     begin
       if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
@@ -74,7 +74,7 @@ class Uploader::File
   end
 
   def image?
-    self.content_type =~ /^image\//
+    self.content_type.start_with?('image/')
   end
 
   def link
@@ -124,24 +124,19 @@ class Uploader::File
     super
   end
 
-  def remove_exif
-    list = Magick::ImageList.new
-    list.from_blob(binary)
-    list.each do |image|
-      case SS.config.env.image_exif_option
-      when "auto_orient"
-        image.auto_orient!
-      when "strip"
-        image.strip!
-      end
-
-    end
-    @binary = list.to_blob
-  end
-
   class << self
     def remove_exif(binary)
-      self.new(binary: binary).remove_exif
+      list = Magick::ImageList.new
+      list.from_blob(binary)
+      list.each do |image|
+        case SS.config.env.image_exif_option
+        when "auto_orient"
+          image.auto_orient!
+        when "strip"
+          image.strip!
+        end
+      end
+      list.to_blob
     end
   end
 

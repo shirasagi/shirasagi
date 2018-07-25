@@ -173,7 +173,7 @@ class Uploader::FilesController < ApplicationController
         result = false
       else
         binary = file.read
-        binary = Uploader::File.remove_exif(binary) if file.content_type =~ /^image\//
+        binary = Uploader::File.remove_exif(binary) if file.content_type.start_with?('image/')
         Fs.binwrite @item.saved_path, binary
       end
     end
