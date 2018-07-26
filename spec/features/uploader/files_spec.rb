@@ -223,4 +223,99 @@ describe "uploader_files", dbscope: :example, type: :feature do
       expect(page).to have_no_css(".list-item")
     end
   end
+
+  context "with scss" do
+    before { login_cms_user }
+
+    it "#index" do
+      visit index_path
+      expect(current_path).not_to eq sns_login_path
+    end
+
+    it "upload file" do
+      visit index_path
+      expect(current_path).not_to eq sns_login_path
+
+      click_link "アップロード"
+
+      within "form" do
+        attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "style.scss").to_s
+        click_button "保存"
+      end
+
+      expect(page).to have_css("a.file", text: "style.scss")
+      expect(page).to have_css("a.file", text: "style.css")
+    end
+
+    it "overwrite file" do
+      visit index_path
+      expect(current_path).not_to eq sns_login_path
+
+      click_link "アップロード"
+
+      within "form" do
+        attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "style.scss").to_s
+        click_button "保存"
+      end
+
+      expect(page).to have_css("a.file", text: "style.scss")
+      expect(page).to have_css("a.file", text: "style.css")
+
+      click_link "style.scss"
+      expect(status_code).to eq 200
+
+      click_link "編集する"
+      expect(status_code).to eq 200
+
+      within "form" do
+        fill_in "item[filename]", with: "#{node.filename}/replace.scss"
+        attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "replace.scss").to_s
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+
+      click_link "一覧へ戻る"
+
+      expect(page).to have_css("a.file", text: "replace.scss")
+      expect(page).to have_css("a.file", text: "replace.css")
+      expect(page).to have_no_css("a.file", text: "style.scss")
+      expect(page).to have_css("a.file", text: "style.css")
+    end
+
+    it '#edit' do
+      visit index_path
+      expect(current_path).not_to eq sns_login_path
+
+      click_link "アップロード"
+
+      within "form" do
+        attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "style.scss").to_s
+        click_button "保存"
+      end
+
+      expect(page).to have_css("a.file", text: "style.scss")
+      expect(page).to have_css("a.file", text: "style.css")
+
+      click_link "style.scss"
+      expect(status_code).to eq 200
+
+      click_link "編集する"
+      expect(status_code).to eq 200
+
+      within "form" do
+        fill_in "item[filename]", with: "#{node.filename}/replace.scss"
+        fill_in 'item[text]', with: 'html { height: 75%; }'
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(page).to have_css('#item_text', text: 'html { height: 75%; }')
+
+      click_link "一覧へ戻る"
+
+      expect(page).to have_css("a.file", text: "replace.scss")
+      expect(page).to have_css("a.file", text: "replace.css")
+      expect(page).to have_no_css("a.file", text: "style.scss")
+      expect(page).to have_css("a.file", text: "style.css")
+    end
+  end
 end

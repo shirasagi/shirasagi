@@ -74,7 +74,7 @@ class Uploader::File
   end
 
   def image?
-    self.content_type.start_with?('image/')
+    self.content_type.to_s.start_with?('image/')
   end
 
   def link
