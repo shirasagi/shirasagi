@@ -16,8 +16,6 @@ class Gws::Circular::Apis::ArticleStatesController < ApplicationController
   def set_group
     if params[:s].present? && params[:s][:group].present?
       @group = @cur_site.descendants.active.find(params[:s][:group]) rescue nil
-    elsif SS.config.gws.apis.dig('users', 'default_group') == 'user_group'
-      @group = @cur_user.groups.active.in_group(@cur_site).first
     else
       @group = @cur_site
     end
