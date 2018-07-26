@@ -50,6 +50,12 @@ class Cms::AllContentsController < ApplicationController
       return
     end
 
+    if !Cms::AllContent.valid_header?(file)
+      @errors = [ t("errors.messages.malformed_csv") ]
+      render({ action: :import })
+      return
+    end
+
     if !@task.ready
       @errors = [ t('ss.notice.already_job_started') ]
       render({ action: :import })

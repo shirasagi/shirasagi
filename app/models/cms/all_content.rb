@@ -54,6 +54,25 @@ class Cms::AllContent
       FIELDS_DEF.map { |e| I18n.t("all_content.#{e[0]}") }
     end
 
+    def valid_header?(path)
+      path = path.path if path.respond_to?(:path)
+
+      match_count = 0
+      ::CSV.foreach(path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+        FIELDS_DEF.each do |e|
+          if row.key?(I18n.t("all_content.#{e[0]}"))
+            match_count += 1
+          end
+        end
+        break
+      end
+
+      # if 80% of headers are matched, we considered it is valid
+      match_count >= FIELDS_DEF.length * 0.8
+    rescue
+      false
+    end
+
     private
 
     def row(content)
