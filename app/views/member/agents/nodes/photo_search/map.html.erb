@@ -1,6 +1,6 @@
 <%= render partial: "upper" %>
 
-<%= render_map "#map-canvas", markers: @markers, site: @cur_site, map: { zoom: @cur_page.map_zoom_level } %>
+<%= render_map "#map-canvas", markers: @markers, site: @cur_site %>
 
 <div id="map-canvas" style="width: 100%; height: 400px;"></div>
 

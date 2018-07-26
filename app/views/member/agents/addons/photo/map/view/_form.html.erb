@@ -1,7 +1,5 @@
 <%= render_member_photo_form_map "#map-canvas", site: @cur_site, map: { zoom: @item.map_zoom_level } %>
 
-
-
 <div class="mod-map">
   <%= f.number_field :map_zoom_level, type: "hidden" %>
   <dl class="marker-setting">

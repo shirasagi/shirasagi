@@ -35,13 +35,13 @@ module Map::MapHelper
 
       s = []
       s << 'var canvas = $("' + selector + '")[0];'
-      s << "var opts = #{ map_options.to_json };"
+      s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
       include_googlemaps_api(opts)
 
       s = []
-      s << "Googlemaps_Map.load(\"" + selector + "\", #{ map_options.to_json });"
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
 
@@ -78,7 +78,7 @@ module Map::MapHelper
       s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'Map_Form.maxPointForm = ' + max_point_form.to_json + ';' if max_point_form.present?
       s << 'Googlemaps_Map.setForm(Map_Form);'
-      s << "Googlemaps_Map.load(\"" + selector + "\", #{ map_options.to_json });"
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.renderMarkers();'
       s << 'Googlemaps_Map.renderEvents();'
       s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'
@@ -146,7 +146,7 @@ module Map::MapHelper
 
       s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'Googlemaps_Map.setForm(Member_Photo_Form);'
-      s << "Googlemaps_Map.load(\"" + selector + "\", #{ map_options.to_json });"
+      s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.renderMarkers();'
       s << 'Googlemaps_Map.renderEvents();'
       s << 'Member_Photo_Form.setExifLatLng("#item_in_image");'
