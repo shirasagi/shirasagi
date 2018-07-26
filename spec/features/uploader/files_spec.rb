@@ -17,11 +17,11 @@ describe "uploader_files", dbscope: :example, type: :feature do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
 
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css("div.info")
@@ -34,11 +34,11 @@ describe "uploader_files", dbscope: :example, type: :feature do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
 
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css("div.info")
@@ -49,17 +49,17 @@ describe "uploader_files", dbscope: :example, type: :feature do
       click_link "logo.png"
       expect(status_code).to eq 200
 
-      click_link "編集する"
+      click_link I18n.t('ss.links.edit')
       expect(status_code).to eq 200
 
       within "form" do
         fill_in "item[filename]", with: "#{node.filename}/replace.png"
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "webapi", "replace.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
 
-      click_link "一覧へ戻る"
+      click_link I18n.t('ss.links.back_to_index')
 
       expect(page).to have_css("a.file", text: "replace.png")
     end
@@ -68,11 +68,11 @@ describe "uploader_files", dbscope: :example, type: :feature do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "新規フォルダー"
+      click_link I18n.t('uploader.links.new_directory')
 
       within "form" do
         fill_in "item[directory]", with: unique_id
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css("div.info")
@@ -85,22 +85,22 @@ describe "uploader_files", dbscope: :example, type: :feature do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "webapi", "replace.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
-      click_link "新規フォルダー"
+      click_link I18n.t('uploader.links.new_directory')
       within "form" do
         fill_in "item[directory]", with: "logos"
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       files = page.all("a.file,a.dir").map(&:text)
@@ -110,7 +110,7 @@ describe "uploader_files", dbscope: :example, type: :feature do
 
       within "form" do
         fill_in "s[keyword]", with: "logo"
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
       end
       expect(status_code).to eq 200
 
@@ -130,16 +130,16 @@ describe "uploader_files", dbscope: :example, type: :feature do
 
       # upload multiple files
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "webapi", "replace.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css("div.info a.file", count: 2)
@@ -149,7 +149,7 @@ describe "uploader_files", dbscope: :example, type: :feature do
       find(:css, "input[value='logo.png']").set(true)
       page.accept_alert do
         within "div.list-head-action" do
-          click_button "削除する"
+          click_button I18n.t('ss.links.delete')
         end
       end
 
@@ -173,10 +173,10 @@ describe "uploader_files", dbscope: :example, type: :feature do
       #
       # examine file crud
       #
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
       expect(page).to have_css(".list-item a", text: "logo.png")
 
@@ -184,42 +184,42 @@ describe "uploader_files", dbscope: :example, type: :feature do
       expect(page).to have_css(".see dd", text: "#{node.filename}/logo.png")
       expect(page).to have_css(".see dd img")
 
-      click_link "編集する"
+      click_link I18n.t('ss.links.edit')
       expect(page).to have_css("form")
       fill_in "item[filename]", with: "#{node.filename}/replace.png"
-      click_button "保存"
+      click_button I18n.t("ss.buttons.save")
 
-      click_link "詳細へ戻る"
+      click_link I18n.t('ss.links.back_to_show')
       expect(page).to have_css(".see dd", text: "#{node.filename}/replace.png")
       expect(page).to have_css(".see dd img")
 
-      click_link "削除する"
-      click_button "削除"
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t("ss.buttons.delete")
       expect(page).to have_no_css(".list-item")
 
       #
       # examine directory crud
       #
-      click_link "新規フォルダー"
+      click_link I18n.t('uploader.links.new_directory')
       fill_in "item[directory]", with: "foo"
-      click_button "保存"
+      click_button I18n.t("ss.buttons.save")
 
       expect(page).to have_css(".list-item a", text: "foo")
       click_link "foo"
 
-      expect(page).to have_css(".list-item a.up", text: "上の階層へ")
-      click_link "上の階層へ"
+      expect(page).to have_css(".list-item a.up", text: I18n.t("ss.links.parent_directory"))
+      click_link I18n.t("ss.links.parent_directory")
 
-      click_link "詳細を見る"
+      click_link I18n.t("ss.links.show")
       expect(page).to have_css(".see dd", text: "#{node.filename}/foo")
-      click_link "編集する"
+      click_link I18n.t('ss.links.edit')
       fill_in "item[filename]", with: "#{node.filename}/bar"
-      click_button "保存"
-      click_link "詳細へ戻る"
+      click_button I18n.t("ss.buttons.save")
+      click_link I18n.t('ss.links.back_to_show')
       expect(page).to have_css(".see dd", text: "#{node.filename}/bar")
 
-      click_link "削除する"
-      click_button "削除"
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t("ss.buttons.delete")
       expect(page).to have_no_css(".list-item")
     end
   end
@@ -236,11 +236,11 @@ describe "uploader_files", dbscope: :example, type: :feature do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
 
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "style.scss").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css("a.file", text: "style.scss")
@@ -251,11 +251,11 @@ describe "uploader_files", dbscope: :example, type: :feature do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
 
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "style.scss").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css("a.file", text: "style.scss")
@@ -264,17 +264,17 @@ describe "uploader_files", dbscope: :example, type: :feature do
       click_link "style.scss"
       expect(status_code).to eq 200
 
-      click_link "編集する"
+      click_link I18n.t('ss.links.edit')
       expect(status_code).to eq 200
 
       within "form" do
         fill_in "item[filename]", with: "#{node.filename}/replace.scss"
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "replace.scss").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
 
-      click_link "一覧へ戻る"
+      click_link I18n.t('ss.links.back_to_index')
 
       expect(page).to have_css("a.file", text: "replace.scss")
       expect(page).to have_css("a.file", text: "replace.css")
@@ -286,11 +286,11 @@ describe "uploader_files", dbscope: :example, type: :feature do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link "アップロード"
+      click_link I18n.t('ss.links.upload')
 
       within "form" do
         attach_file "item[files][]", Rails.root.join("spec", "fixtures", "uploader", "style.scss").to_s
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css("a.file", text: "style.scss")
@@ -299,18 +299,18 @@ describe "uploader_files", dbscope: :example, type: :feature do
       click_link "style.scss"
       expect(status_code).to eq 200
 
-      click_link "編集する"
+      click_link I18n.t('ss.links.edit')
       expect(status_code).to eq 200
 
       within "form" do
         fill_in "item[filename]", with: "#{node.filename}/replace.scss"
         fill_in 'item[text]', with: 'html { height: 75%; }'
-        click_button "保存"
+        click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
       expect(page).to have_css('#item_text', text: 'html { height: 75%; }')
 
-      click_link "一覧へ戻る"
+      click_link I18n.t('ss.links.back_to_index')
 
       expect(page).to have_css("a.file", text: "replace.scss")
       expect(page).to have_css("a.file", text: "replace.css")
