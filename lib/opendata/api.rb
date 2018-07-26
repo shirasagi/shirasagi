@@ -48,6 +48,8 @@ module Opendata::Api
                               get_num_url_resources(dataset[:url_resources])
     package[:tags] = convert_tags(dataset)
     package[:groups] = convert_dataset_groups(dataset[:dataset_group_ids])
+    package[:categories] = convert_dataset_categories(dataset[:category_ids])
+    package[:areas] = convert_dataset_areas(dataset[:area_ids])
 
     # map attributes
     [ [ :private, :state ], [ :revision_timestamp, :released ], [ :id, :_id ], [ :metadata_created, :created ],
@@ -174,6 +176,57 @@ module Opendata::Api
     end
 
     return package_group
+  end
+
+  def convert_dataset_category(category_id)
+    package_category = {}
+
+    dataset_category = Opendata::Node::Category.site(@cur_site).and_public.where(id: category_id).first
+
+    if dataset_category
+      package_category[:id] = dataset_category.id
+      package_category[:name] = dataset_category.name
+      package_category[:filename] = dataset_category.filename
+      package_category[:depth] = dataset_category.depth
+    end
+
+    return package_category
+  end
+
+
+  def convert_dataset_categories(dataset_category_ids = [])
+    package_categories = []
+
+    dataset_category_ids.each do |category_id|
+      package_categories << convert_dataset_category(category_id)
+    end
+
+    return package_categories
+  end
+
+  def convert_dataset_area(area_id)
+    package_area = {}
+
+    dataset_area = Opendata::Node::Area.site(@cur_site).and_public.where(id: area_id).first
+
+    if dataset_area
+      package_area[:id] = dataset_area.id
+      package_area[:name] = dataset_area.name
+      package_area[:filename] = dataset_area.filename
+      package_area[:depth] = dataset_area.depth
+    end
+
+    return package_area
+  end
+
+  def convert_dataset_areas(dataset_area_ids = [])
+    package_areas = []
+
+    dataset_area_ids.each do |area_id|
+      package_areas << convert_dataset_area(area_id)
+    end
+
+    return package_areas
   end
 
   def get_member(member_id)
