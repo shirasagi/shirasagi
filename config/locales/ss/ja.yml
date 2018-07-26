@@ -163,6 +163,8 @@ ja:
       restored: 元に戻しました。
       run: 実行しました。
       already_job_started: 実行準備中であるか、実行中です。
+      clipboard_copied: コピーしました。
+      clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:
@@ -316,6 +318,7 @@ ja:
     tasks:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
+      confirm_start: 処理を開始しますか？
       confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
     units:
       count: 件
@@ -559,6 +562,12 @@ ja:
         city_kana: 区市町村（カナ）
         town: 町名
         town_kana: 町名（カナ）
+      ss/model/prefecture_code:
+        code: 都道府県又は市区町村コード
+        prefecture: 都道府県名
+        prefecture_kana: 都道府県名（カナ）
+        city: 市区町村名
+        city_kana: 市区町村名（カナ）
       ss/thumb_file:
         original_id: 元画像ID
         image_size: 画像サイズ

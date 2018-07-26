@@ -21,12 +21,14 @@ ja:
     parts:
       ckan/status: 件数
       ckan/page: ページリスト
+      ckan/reference: 参照
 
   modules:
     ckan: CKAN
     addons:
       ckan/server: CKAN 新着
       ckan/status: CKAN 件数
+      ckan/reference: 参照
 
   mongoid:
     attributes:
@@ -44,6 +46,9 @@ ja:
         ckan_basicauth_password: Basic認証パスワード
         ckan_status: 種類
         ckan_value_url: 件数部分のリンクURL
+      ckan/part/reference:
+        link_name: リンク名
+        exporter_id: エクスポート
 
   tooltip:
     ckan/addon/status:

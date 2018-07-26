@@ -13,6 +13,7 @@ module Opendata::DatasetCopy
   def new_clone(attributes = {})
     attributes = self.attributes.merge(attributes).select { |k| self.fields.keys.include?(k) }
     attributes.merge!(id: nil,
+                      uuid: nil,
                       cur_user: @cur_user,
                       cur_site: @cur_site,
                       cur_node: @cur_node,
@@ -27,6 +28,7 @@ module Opendata::DatasetCopy
                       filename: "#{dirname}/",
                       basename: "")
     item = self.class.new(attributes)
+    item.reset_harvest_attributes
     item.instance_variable_set(:@original, self)
     item
   end
@@ -47,6 +49,8 @@ module Opendata::DatasetCopy
       attributes = Hash[r.attributes]
       attributes.select!{ |k| r.fields.keys.include?(k) }
       attributes.merge!(id: nil,
+                        uuid: nil,
+                        revision_id: nil,
                         file_id: nil,
                         in_file: r.file.uploaded_file,
                         tsv_id: nil,
@@ -54,6 +58,7 @@ module Opendata::DatasetCopy
                         created: Time.zone.now,
                         updated: Time.zone.now)
       resource = resources.new(attributes)
+      resource.reset_harvest_attributes
       resource.save
     end
   end
@@ -63,6 +68,7 @@ module Opendata::DatasetCopy
       attributes = Hash[r.attributes]
       attributes.select!{ |k| r.fields.keys.include?(k) }
       attributes.merge!(id: nil,
+                        uuid: nil,
                         file_id: nil,
                         in_file: r.file.uploaded_file,
                         created: Time.zone.now,

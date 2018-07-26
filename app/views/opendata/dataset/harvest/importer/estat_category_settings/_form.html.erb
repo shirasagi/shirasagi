@@ -1,0 +1,35 @@
+<%= jquery do %>
+var sort = new SS_SortableForm('.sortable-index', { "limit" : 5 });
+sort.renderItems(<%== @item.conditions.to_json %>);
+<% end %>
+
+<dl class="see">
+  <dt><%= "eStat分野" %><%= @model.tt :category_id %></dt>
+  <dd>
+    <%= "#{@category.name}（#{@category.filename}）" %>
+    <%= f.hidden_field "category_id", value: @category.id %>
+  </dd>
+
+  <dt><%= "並び順" %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt>AND条件</dt>
+  <dd>
+    <table class="index form-index sortable-index">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-base="true">
+          <td style="height: 40px; width: 140px;"><%= select_tag "item[conditions][][type]", options_for_select(@item.type_condition_options) %></td>
+          <td><%= text_field_tag "item[conditions][][value]", "" %></td>
+          <td style="height: 40px; width: 120px;"><%= select_tag "item[conditions][][operator]", options_for_select(@item.operator_condition_options) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </dd>
+</dl>

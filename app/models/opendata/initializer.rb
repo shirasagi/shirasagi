@@ -1,11 +1,14 @@
 module Opendata
   class Initializer
     Cms::Node.plugin "opendata/category"
+    Cms::Node.plugin "opendata/estat_category"
     Cms::Node.plugin "opendata/area"
     Cms::Node.plugin "opendata/dataset"
     Cms::Node.plugin "opendata/dataset_category"
+    Cms::Node.plugin "opendata/dataset_area"
     Cms::Node.plugin "opendata/search_dataset_group"
     Cms::Node.plugin "opendata/search_dataset"
+    Cms::Node.plugin "opendata/dataset_map"
     Cms::Node.plugin "opendata/sparql"
     Cms::Node.plugin "opendata/api"
     Cms::Node.plugin "opendata/app"
@@ -25,6 +28,7 @@ module Opendata
     Cms::Part.plugin "opendata/idea"
     Cms::Part.plugin "opendata/dataset"
     Cms::Part.plugin "opendata/dataset_group"
+    Cms::Part.plugin "opendata/dataset_counter"
     Cms::Part.plugin "opendata/mypage_login"
 
     Cms::Role.permission :read_other_opendata_datasets
@@ -86,5 +90,10 @@ module Opendata
     Cms::Role.permission :reroute_private_opendata_ideas
     Cms::Role.permission :revoke_other_opendata_ideas
     Cms::Role.permission :revoke_private_opendata_ideas
+
+    Cms::Role.permission :edit_other_opendata_harvests
+    Cms::Role.permission :edit_other_opendata_harvested
+
+    Cms::Role.permission :edit_other_opendata_public_entity_datasets
   end
 end

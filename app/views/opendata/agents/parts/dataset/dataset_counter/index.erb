@@ -1,0 +1,17 @@
+<div class="catalog-date">
+  <div class="title"><h2 class="catalog"><%= t("opendata.dataset_catalog") %></h2></div>
+  <article class="date-number">
+    <div class="dateset">
+      <span class="number"><%= @datasets.count %></span>
+      <span><%= t("opendata.dataset") %></span>
+    </div>
+    <div class="tag">
+      <span class="number"><%= @tags.count %></span>
+      <span><%= t("opendata.tag") %></span>
+    </div>
+    <div class="group">
+      <span class="number"><%= @dataset_groups.count %></span>
+      <span><%= t("opendata.dataset_group") %></span>
+    </div>
+  </article>
+</div>

@@ -1,0 +1,18 @@
+<dl class="see mod-opendata_update-plan">
+  <dt><%= @model.t :update_plan %></dt>
+  <dd><%= @item.update_plan %></dd>
+
+  <dt><%= @model.t :update_plan_date %></dt>
+  <dd>
+    <% if @item.update_plan_date.present? %>
+      <%= @item.update_plan_date.strftime("%Y/%m/%d") %>
+      <% if @item.update_plan_unit.present? %>
+        <%= "-" %>
+        <%= @item.label :update_plan_unit %>
+      <% end %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :update_plan_mail_state %></dt>
+  <dd><%= @item.label :update_plan_mail_state %></dd>
+</dl>

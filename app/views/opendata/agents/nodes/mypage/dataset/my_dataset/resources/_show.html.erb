@@ -9,6 +9,13 @@
   </tr>
   <% end %>
 
+  <% if @item.source_url.present? %>
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :source_url %></td>
+      <td class="input"><%= link_to @item.source_url, @item.source_url, target: "_blank" %></td>
+    </tr>
+  <% end %>
+
   <tr class="parent-row">
     <td class="field"><%= @model.t :name %></td>
     <td class="input"><%= @item.send :name %></td>

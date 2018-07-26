@@ -11,6 +11,10 @@ licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c|
     <td class="input"><%= f.file_field(:in_file) %></td>
   </tr>
   <tr class="parent-row">
+    <td class="field"><%= f.label(:source_url, @model.t(:source_url)) %><%= @item.tt :source_url %></td>
+    <td class="input"><%= f.text_field(:source_url) %></td>
+  </tr>
+  <tr class="parent-row">
     <td class="field"><%= f.label(:name, @model.t(:name)) %><%= required_label %></td>
     <td class="input"><%= f.text_field(:name) %></td>
   </tr>

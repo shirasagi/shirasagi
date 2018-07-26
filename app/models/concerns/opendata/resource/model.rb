@@ -1,7 +1,6 @@
 module Opendata::Resource::Model
   extend ActiveSupport::Concern
   include SS::Relation::File
-  include Opendata::TsvParseable
   include Opendata::AllowableAny
 
   included do
@@ -10,6 +9,7 @@ module Opendata::Resource::Model
     field :filename, type: String
     field :text, type: String
     field :format, type: String
+    field :source_url, type: String
 
     belongs_to :license, class_name: "Opendata::License"
     belongs_to_file :file
@@ -20,18 +20,22 @@ module Opendata::Resource::Model
   end
 
   def url
+    return source_url if source_url.present?
     dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(filename)}"
   end
 
   def full_url
+    return source_url if source_url.present?
     dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(filename)}"
   end
 
   def content_url
+    return source_url if source_url.present?
     dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/content.html"
   end
 
   def download_url
+    return source_url if source_url.present?
     dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
   end
 

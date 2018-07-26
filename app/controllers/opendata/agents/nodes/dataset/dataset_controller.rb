@@ -70,10 +70,11 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     end
 
     max = 50
-    @areas    = aggregate_areas(max)
-    @tags     = aggregate_tags(max)
-    @formats  = aggregate_formats(max)
-    @licenses = aggregate_licenses(max)
+    @areas            = aggregate_areas(max)
+    @estat_categories = aggregate_estat_categories(max)
+    @tags             = aggregate_tags(max)
+    @formats          = aggregate_formats(max)
+    @licenses         = aggregate_licenses(max)
   end
 
   def rss

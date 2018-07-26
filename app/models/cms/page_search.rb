@@ -14,6 +14,36 @@ class Cms::PageSearch
 
   validates :name, presence: true
 
+  def csv_headers
+    %w(id filename basename name layout_id state created updated)
+  end
+
+  def to_csv(site, user)
+    self.cur_site = site
+    self.cur_user = user
+
+    CSV.generate do |data|
+      data << csv_headers.map { |k| t k }
+      search.each do |item|
+        item = item.becomes_with_route
+        data << csv_line(item)
+      end
+    end
+  end
+
+  def csv_line(item)
+    line = []
+    line << item.id
+    line << item.filename
+    line << item.basename
+    line << item.name
+    line << Cms::Layout.where(_id: item.layout_id).pluck(:name).first
+    line << item.label(:state)
+    line << item.created.try(:strftime, "%Y/%m/%d %H:%M")
+    line << item.updated.try(:strftime, "%Y/%m/%d %H:%M")
+    line
+  end
+
   class << self
     def search(params)
       criteria = self.where({})

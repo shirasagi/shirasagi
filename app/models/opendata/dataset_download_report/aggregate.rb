@@ -1,7 +1,7 @@
 module Opendata::DatasetDownloadReport::Aggregate
-  def self.generate_csv(report)
+  def self.generate(report)
     aggregate_class = "#{self}::#{report.type.classify}".constantize
-    aggregate_class.new(report).csv
+    aggregate_class.new(report)
   end
 
   class Base
@@ -11,6 +11,14 @@ module Opendata::DatasetDownloadReport::Aggregate
 
     def datasets
       Opendata::Dataset.site(@report.cur_site).node(@report.cur_node).allow(:read, @report.cur_user)
+    end
+
+    def csv
+      csv = []
+      enum_csv.each do |data|
+        csv << data
+      end
+      csv.join
     end
 
     def project_pipeline
@@ -49,31 +57,63 @@ module Opendata::DatasetDownloadReport::Aggregate
     def resource_line_header(resource)
       [nil, resource.filename, nil]
     end
+
+    def encode_sjis_csv(row)
+      row.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+    end
   end
 
   class Year < Base
-    def csv
-      results = aggregate.map(&:to_h)
+    def enum_csv
+      results = {}
+      aggregate.each do |r|
+        key = r["_id"]["year"].to_s
+        results[key] ||= {}
+        results[key][r["_id"]["dataset_id"]] ||= {}
+        results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
 
-      CSV.generate do |data|
-        data << first_line_header(ymd_header)
+      bulk_results = {}
+      bulk_aggregate.each do |r|
+        key = r["_id"]["year"].to_s
+        bulk_results[key] ||= {}
+        bulk_results[key][r["_id"]["dataset_id"]] ||= {}
+        bulk_results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
 
-        datasets.each do |dataset|
-          data << dataset_line_header(dataset)
+      dataset_results = {}
+      dataset_aggregate.each do |r|
+        key = r["_id"]["year"].to_s
+        dataset_results[key] ||= {}
+        dataset_results[key][r["_id"]["dataset_id"]] ||= {}
+        dataset_results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
 
-          dataset.resources.each do |resource|
+      dataset_ids = datasets.pluck(:id)
+
+      Enumerator.new do |data|
+        data << encode_sjis_csv(first_line_header(ymd_header))
+
+        dataset_ids.each do |dataset_id|
+          dataset = Opendata::Dataset.find(dataset_id) rescue nil
+          next unless dataset
+
+          data << encode_sjis_csv(dataset_line_header(dataset))
+
+          resources = dataset.resources.to_a
+          resources.each do |resource|
             row = resource_line_header(resource)
             ymd_header.each do |year|
-              result = results.find do |r|
-                r.extract_id == {
-                  "dataset_id" => dataset.id,
-                  "resource_id" => resource.id,
-                  "year" => year
-                }
-              end
-              row.push(result.try(:[], "count") || 0)
+              key = year.to_s
+
+              count = 0
+              count += results.dig(key, dataset.id, resource.id).to_i
+              count += bulk_results.dig(key, dataset.id, resource.id).to_i
+              count += dataset_results.dig(key, dataset.id, resource.id).to_i
+
+              row << count
             end
-            data << row
+            data << encode_sjis_csv(row)
           end
         end
       end
@@ -89,6 +129,26 @@ module Opendata::DatasetDownloadReport::Aggregate
       Opendata::ResourceDownloadHistory.collection.aggregate(pipes)
     end
 
+    def bulk_aggregate
+      group = common_group_pipeline
+      group[:_id][:year] = {"$year" => "$downloaded"}
+      pipes = []
+      pipes << {"$project" => project_pipeline}
+      pipes << {"$match" => match_pipeline}
+      pipes << {"$group" => group}
+      Opendata::ResourceBulkDownloadHistory.collection.aggregate(pipes)
+    end
+
+    def dataset_aggregate
+      group = common_group_pipeline
+      group[:_id][:year] = {"$year" => "$downloaded"}
+      pipes = []
+      pipes << {"$project" => project_pipeline}
+      pipes << {"$match" => match_pipeline}
+      pipes << {"$group" => group}
+      Opendata::ResourceDatasetDownloadHistory.collection.aggregate(pipes)
+    end
+
     # [2017, 2018]
     def ymd_header
       start_year = @report.start_date.year
@@ -98,10 +158,34 @@ module Opendata::DatasetDownloadReport::Aggregate
   end
 
   class Month < Base
-    def csv
-      results = aggregate.map(&:to_h)
+    def enum_csv
+      results = {}
+      aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}"
+        results[key] ||= {}
+        results[key][r["_id"]["dataset_id"]] ||= {}
+        results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
 
-      CSV.generate do |data|
+      bulk_results = {}
+      bulk_aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}"
+        bulk_results[key] ||= {}
+        bulk_results[key][r["_id"]["dataset_id"]] ||= {}
+        bulk_results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
+
+      dataset_results = {}
+      dataset_aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}"
+        dataset_results[key] ||= {}
+        dataset_results[key][r["_id"]["dataset_id"]] ||= {}
+        dataset_results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
+
+      dataset_ids = datasets.pluck(:id)
+
+      Enumerator.new do |data|
         prev_year = nil
         months = []
         ymd_header.each do |date|
@@ -111,12 +195,16 @@ module Opendata::DatasetDownloadReport::Aggregate
           end
           months << date.month
         end
-        data << first_line_header(months)
+        data << encode_sjis_csv(first_line_header(months))
 
-        datasets.each do |dataset|
-          data << dataset_line_header(dataset)
+        dataset_ids.each do |dataset_id|
+          dataset = Opendata::Dataset.find(dataset_id) rescue nil
+          next unless dataset
 
-          dataset.resources.each do |resource|
+          data << encode_sjis_csv(dataset_line_header(dataset))
+
+          resources = dataset.resources.to_a
+          resources.each do |resource|
             row = resource_line_header(resource)
             prev_year = nil
             ymd_header.each do |date|
@@ -125,17 +213,16 @@ module Opendata::DatasetDownloadReport::Aggregate
                 prev_year = date.year
               end
 
-              result = results.find do |r|
-                r.extract_id == {
-                  "dataset_id" => dataset.id,
-                  "resource_id" => resource.id,
-                  "year" => date.year,
-                  "month" => date.month
-                }
-              end
-              row.push(result.try(:[], "count") || 0)
+              key = "#{date.year}-#{date.month}"
+
+              count = 0
+              count += results.dig(key, dataset.id, resource.id).to_i
+              count += bulk_results.dig(key, dataset.id, resource.id).to_i
+              count += dataset_results.dig(key, dataset.id, resource.id).to_i
+
+              row << count
             end
-            data << row
+            data << encode_sjis_csv(row)
           end
         end
       end
@@ -152,6 +239,28 @@ module Opendata::DatasetDownloadReport::Aggregate
       results = Opendata::ResourceDownloadHistory.collection.aggregate(pipes)
     end
 
+    def bulk_aggregate
+      group = common_group_pipeline
+      group[:_id][:year] = {"$year" => "$downloaded"}
+      group[:_id][:month] = {"$month" => "$downloaded"}
+      pipes = []
+      pipes << {"$project" => project_pipeline}
+      pipes << {"$match" => match_pipeline}
+      pipes << {"$group" => group}
+      results = Opendata::ResourceBulkDownloadHistory.collection.aggregate(pipes)
+    end
+
+    def dataset_aggregate
+      group = common_group_pipeline
+      group[:_id][:year] = {"$year" => "$downloaded"}
+      group[:_id][:month] = {"$month" => "$downloaded"}
+      pipes = []
+      pipes << {"$project" => project_pipeline}
+      pipes << {"$match" => match_pipeline}
+      pipes << {"$group" => group}
+      results = Opendata::ResourceDatasetDownloadHistory.collection.aggregate(pipes)
+    end
+
     # [2018-01-01, 2018-02-01, 2018-03-01..]
     def ymd_header
       (@report.start_date.to_date..@report.end_date.to_date).select { |d| d.day == 1 }
@@ -159,10 +268,34 @@ module Opendata::DatasetDownloadReport::Aggregate
   end
 
   class Day < Base
-    def csv
-      results = aggregate.map(&:to_h)
+    def enum_csv
+      results = {}
+      aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}-#{r["_id"]["day"]}"
+        results[key] ||= {}
+        results[key][r["_id"]["dataset_id"]] ||= {}
+        results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
 
-      CSV.generate do |data|
+      bulk_results = {}
+      bulk_aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}-#{r["_id"]["day"]}"
+        bulk_results[key] ||= {}
+        bulk_results[key][r["_id"]["dataset_id"]] ||= {}
+        bulk_results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
+
+      dataset_results = {}
+      dataset_aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}-#{r["_id"]["day"]}"
+        dataset_results[key] ||= {}
+        dataset_results[key][r["_id"]["dataset_id"]] ||= {}
+        dataset_results[key][r["_id"]["dataset_id"]][r["_id"]["resource_id"]] = r["count"]
+      end
+
+      dataset_ids = datasets.pluck(:id)
+
+      Enumerator.new do |data|
         prev_month = nil
         days = []
         ymd_header.each do |date|
@@ -172,12 +305,16 @@ module Opendata::DatasetDownloadReport::Aggregate
           end
           days << date.day
         end
-        data << first_line_header(days)
+        data << encode_sjis_csv(first_line_header(days))
 
-        datasets.each do |dataset|
-          data << dataset_line_header(dataset)
+        dataset_ids.each do |dataset_id|
+          dataset = Opendata::Dataset.find(dataset_id) rescue nil
+          next unless dataset
 
-          dataset.resources.each do |resource|
+          data << encode_sjis_csv(dataset_line_header(dataset))
+
+          resources = dataset.resources.to_a
+          resources.each do |resource|
             row = resource_line_header(resource)
             prev_month = nil
             ymd_header.each do |date|
@@ -186,18 +323,16 @@ module Opendata::DatasetDownloadReport::Aggregate
                 prev_month = date.month
               end
 
-              result = results.find do |r|
-                r.extract_id == {
-                  "dataset_id" => dataset.id,
-                  "resource_id" => resource.id,
-                  "year" => date.year,
-                  "month" => date.month,
-                  "day" => date.day
-                }
-              end
-              row.push(result.try(:[], "count") || 0)
+              key = "#{date.year}-#{date.month}-#{date.day}"
+
+              count = 0
+              count += results.dig(key, dataset.id, resource.id).to_i
+              count += bulk_results.dig(key, dataset.id, resource.id).to_i
+              count += dataset_results.dig(key, dataset.id, resource.id).to_i
+
+              row << count
             end
-            data << row
+            data << encode_sjis_csv(row)
           end
         end
       end
@@ -215,6 +350,34 @@ module Opendata::DatasetDownloadReport::Aggregate
       pipes << {"$match" => match_pipeline}
       pipes << {"$group" => group}
       Opendata::ResourceDownloadHistory.collection.aggregate(pipes)
+    end
+
+    def bulk_aggregate
+      group = common_group_pipeline
+      group[:_id].merge!(
+        year: {"$year" => "$downloaded"},
+        month: {"$month" => "$downloaded"},
+        day: {"$dayOfMonth" => "$downloaded"}
+      )
+      pipes = []
+      pipes << {"$project" => project_pipeline}
+      pipes << {"$match" => match_pipeline}
+      pipes << {"$group" => group}
+      Opendata::ResourceBulkDownloadHistory.collection.aggregate(pipes)
+    end
+
+    def dataset_aggregate
+      group = common_group_pipeline
+      group[:_id].merge!(
+        year: {"$year" => "$downloaded"},
+        month: {"$month" => "$downloaded"},
+        day: {"$dayOfMonth" => "$downloaded"}
+      )
+      pipes = []
+      pipes << {"$project" => project_pipeline}
+      pipes << {"$match" => match_pipeline}
+      pipes << {"$group" => group}
+      Opendata::ResourceDatasetDownloadHistory.collection.aggregate(pipes)
     end
 
     # [2018-01-01 00:00:00 +0900, 2018-01-02 00:00:00 +0900..]

@@ -3,11 +3,16 @@
 
 
 <%= jquery do %>
-  SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
+SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
+$(".estat-categories a.more").colorbox({
+  fixed: true,
+  height: "80%"
+});
+
 $(".areas a.more").colorbox({
-    fixed: true,
-    height: "80%"
-  });
+  fixed: true,
+  height: "80%"
+});
 
 $(".tags a.more").colorbox({
   fixed: true,
@@ -55,6 +60,14 @@ return $(".licenses a.more").colorbox({
   </article>
   <% end %>
 </div>
+
+<article class="estat-categories nodes">
+  <header><h1><%= I18n.t("opendata.labels.estat-category") %></h1></header>
+  <%= render file: "opendata/agents/nodes/dataset/dataset/estat_categories" %>
+  <% if @estat_categories_popped %>
+    <nav><%= link_to t('ss.links.more'), "#{@node_url}estat_categories/", class: "more" %></nav>
+  <% end %>
+</article>
 
 <article class="areas nodes">
   <header><h1><%= I18n.t("opendata.labels.area") %></h1></header>

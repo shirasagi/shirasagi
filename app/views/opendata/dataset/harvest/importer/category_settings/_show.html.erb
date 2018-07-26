@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= "カテゴリー" %></dt>
+  <dd><%= "#{@item.category.name}（#{@item.category.filename}）" if @item.category %></dd>
+
+  <dt><%= "並び順" %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt>AND条件</dt>
+  <dd>
+    <table class="index">
+      <tbody>
+        <% @item.conditions.each do |cond| %>
+          <tr data-base="true">
+            <td style="height: 40px; width: 140px;"><%= t("opendata.type_condition_options.#{cond["type"]}") %></td>
+            <td><%= cond["value"] %></td>
+            <td style="height: 40px; width: 120px;"><%= t("opendata.operator_condition_options.#{cond["operator"]}") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
