@@ -287,6 +287,18 @@ module SS::Model::User
     switch_user
   end
 
+  def logged_in
+    if SS.config.gws.disable.blank?
+      gws_user.presence_logged_in
+    end
+  end
+
+  def logged_out
+    if SS.config.gws.disable.blank?
+      gws_user.presence_logged_out
+    end
+  end
+
   # Cast
   def gws_user
     @gws_user ||= is_a?(Gws::User) ? self : Gws::User.find(id)

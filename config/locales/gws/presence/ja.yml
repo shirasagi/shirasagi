@@ -1,6 +1,7 @@
 ja:
   gws/presence:
     group: グループ
+    sync_state: ステータス自動更新
     buttons:
       register_reminder: リマインダーを登録
     links:
@@ -31,6 +32,8 @@ ja:
         state: ステータス
         plan: 予定
         memo: メモ
+        sync_available_state: 在席
+        sync_unavailable_state: 離席
       gws/addon/presence/delegator_setting:
         presence_editable_title_ids: 編集可能な役職
 
@@ -42,3 +45,10 @@ ja:
         - 予定を入力します。
       memo:
         - メモを入力します。
+      sync_available_state:
+        - 設定を有効にすることで、ログイン時にステータスが離席の場合、在席に更新します。
+      sync_unavailable_state:
+        - 設定を有効にすることで、ログアウト時にステータスが在席の場合、離席に更新します。
+    gws/addon/presence/group_setting:
+      presence_notification_state:
+        - 在席状況の確認通知を設定します。

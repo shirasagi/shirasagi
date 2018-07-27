@@ -31,5 +31,7 @@ SS::Application.routes.draw do
         resources :users, only: [:index, :show, :edit, :update]
       end
     end
+
+    resource :user_setting, only: [:show, :edit, :update]
   end
 end

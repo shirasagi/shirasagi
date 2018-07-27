@@ -12,6 +12,8 @@ class Gws::Presence::UserPresence
   field :state, type: String
   field :plan, type: String
   field :memo, type: String
+  field :sync_available_state, type: String, default: "disabled"
+  field :sync_unavailable_state, type: String, default: "disabled"
   permit_params :state, :plan, :memo
 
   validates :state, inclusion: { in: I18n.t("gws/presence.options.presence_state").keys.map(&:to_s), allow_blank: true }
@@ -28,5 +30,27 @@ class Gws::Presence::UserPresence
 
   def state_options
     I18n.t("gws/presence.options.presence_state").map { |k, v| [v, k] }
+  end
+
+  def sync_available_state_options
+    [
+      [I18n.t('ss.options.state.disabled'), "disabled"],
+      [I18n.t('ss.options.state.enabled'), "enabled"]
+    ]
+  end
+
+  def sync_unavailable_state_options
+    [
+      [I18n.t('ss.options.state.disabled'), "disabled"],
+      [I18n.t('ss.options.state.enabled'), "enabled"]
+    ]
+  end
+
+  def sync_available_enabled?
+    sync_available_state == "enabled"
+  end
+
+  def sync_unavailable_enabled?
+    sync_unavailable_state == "enabled"
   end
 end

@@ -3,6 +3,8 @@ module Sns::LoginFilter
 
   included do
     protect_from_forgery except: :remote_login
+    after_action :user_logged_in, only: [:login]
+    after_action :user_logged_out, only: [:logout]
     skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
     prepend_view_path "app/views/sns/login"
     layout "ss/login"
@@ -49,6 +51,14 @@ module Sns::LoginFilter
         format.json { render json: alert, status: :unprocessable_entity }
       end
     end
+  end
+
+  def user_logged_in
+    @cur_user.logged_in if @cur_user
+  end
+
+  def user_logged_out
+    @cur_user.logged_out if @cur_user
   end
 
   public
