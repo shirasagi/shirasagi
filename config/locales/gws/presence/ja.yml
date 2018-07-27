@@ -5,7 +5,6 @@ ja:
       register_reminder: リマインダーを登録
     links:
       all_groups: 全てのグループ
-
     options:
       presence_state:
         available: 在席

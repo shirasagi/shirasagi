@@ -42,7 +42,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["name"]).to eq gws_user.name
     end
 
-    it "POST /.g:site/presence/users.json" do
+    it "PUT /.g:site/presence/users.json" do
       params = {
         presence_state: "available",
         presence_memo: "modified-memo",
@@ -50,6 +50,15 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       }
       put update_path, params: params
       expect(response.status).to eq 200
+      gws_admin = JSON.parse(response.body)
+      expect(gws_admin["id"]).to eq gws_user.id
+      expect(gws_admin["name"]).to eq gws_user.name
+      expect(gws_admin["presence_state"]).to eq "available"
+      expect(gws_admin["presence_state_label"]).to eq "在席"
+      expect(gws_admin["presence_memo"]).to eq "modified-memo"
+      expect(gws_admin["presence_plan"]).to eq "modified-plan"
+      expect(gws_admin["editable"]).to eq true
+      expect(gws_admin["manageable"]).to eq Gws::Presence::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
 
       get group_users_path
       expect(response.status).to eq 200
@@ -62,6 +71,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["presence_state_label"]).to eq "在席"
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
+      expect(gws_admin["editable"]).to eq true
+      expect(gws_admin["manageable"]).to eq Gws::Presence::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
     end
   end
 end

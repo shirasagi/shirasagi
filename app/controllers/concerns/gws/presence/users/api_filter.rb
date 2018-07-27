@@ -19,12 +19,16 @@ module Gws::Presence::Users::ApiFilter
     params.permit(:presence_state, :presence_plan, :presence_memo)
   end
 
-  def attributes_to_json
+  def user_presence_json
     {
+      id: @item.user_id,
+      name: @item.user.name,
       presence_state: @item.state,
       presence_state_label: @item.label(:state),
       presence_plan: @item.plan,
-      presence_memo: @item.memo
+      presence_memo: @item.memo,
+      editable: @editable_user_ids.include?(@item.user_id),
+      manageable: @manageable
     }
   end
 
@@ -82,7 +86,7 @@ module Gws::Presence::Users::ApiFilter
     @item.attributes = get_params
     if @item.update
       respond_to do |format|
-        format.json { render json: attributes_to_json, status: :ok, content_type: json_content_type }
+        format.json { render json: user_presence_json, status: :ok, content_type: json_content_type }
       end
     else
       respond_to do |format|
