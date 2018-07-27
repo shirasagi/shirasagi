@@ -23,7 +23,7 @@ SS::Application.routes.draw do
 
   namespace "gws", path: ".g:site" do
     get "/", to: "portal/user/portal#show", as: :portal
-    match "logout" => "login#logout", as: :logout, via: [:get]
+    match "logout" => "login#logout", as: :logout, via: [:get, :delete]
     match "login"  => "login#login", as: :login, via: [:get, :post]
   end
 
@@ -44,6 +44,7 @@ SS::Application.routes.draw do
       match :download, on: :collection, via: [:get, :post]
     end
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
+    resource :user_profile, only: [:show]
     resource :user_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do
       resources :user_form_columns, concerns: :deletion, path: '/columns'
