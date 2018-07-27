@@ -52,3 +52,6 @@ ja:
     gws/addon/presence/group_setting:
       presence_notification_state:
         - 在席状況の確認通知を設定します。
+    gws/addon/presence/delegator_setting:
+      presence_editable_title_ids:
+        - 別の役職を設定することで、その役職に該当するユーザーの在席状況を更新できます。
