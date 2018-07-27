@@ -15,7 +15,7 @@ class Gws::Presence::Group::UsersController < ApplicationController
   private
 
   def deny_with_auth
-    raise "403" unless Gws::Presence::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
   def set_crumbs

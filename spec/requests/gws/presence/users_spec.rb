@@ -58,7 +58,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
       expect(gws_admin["editable"]).to eq true
-      expect(gws_admin["manageable"]).to eq Gws::Presence::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
+      expect(gws_admin["manageable"]).to eq Gws::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
 
       get group_users_path
       expect(response.status).to eq 200
@@ -72,7 +72,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
       expect(gws_admin["editable"]).to eq true
-      expect(gws_admin["manageable"]).to eq Gws::Presence::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
+      expect(gws_admin["manageable"]).to eq Gws::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
     end
   end
 end

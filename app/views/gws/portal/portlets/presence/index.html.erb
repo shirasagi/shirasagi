@@ -1,4 +1,4 @@
-<% return "" unless Gws::Presence::UserPresence.allowed?(:edit, @cur_user, site: @cur_site) %>
+<% return "" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site) %>
 <%
   time = Time.zone.now
 
@@ -30,14 +30,14 @@
     <thead>
     <tr>
       <th class="name"><%= Gws::User.t :name %></th>
-      <th class="presence-plan"><%= Gws::Presence::UserPresence.t :plan %></th>
-      <th class="presence-memo"><%= Gws::Presence::UserPresence.t :memo %></th>
+      <th class="presence-plan"><%= Gws::UserPresence.t :plan %></th>
+      <th class="presence-memo"><%= Gws::UserPresence.t :memo %></th>
     </tr>
     </thead>
     <tbody>
 
     <% editable_users.each do |item| %>
-      <% user_presence = item.user_presence(@cur_site) || Gws::Presence::UserPresence.new %>
+      <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
       <tr data-id="<%= item.id %>">
         <td>
           <%= link_to item.name, "", class: "select-presence-state" %>
@@ -62,7 +62,7 @@
     <% end %>
 
     <% readable_users.each do |item| %>
-      <% user_presence = item.user_presence(@cur_site) || Gws::Presence::UserPresence.new %>
+      <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
       <tr data-id="<%= item.id %>">
         <td>
           <%= item.name %>

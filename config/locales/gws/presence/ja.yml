@@ -28,7 +28,7 @@ ja:
     models:
       gws/presence: 在席管理
     attributes:
-      gws/presence/user_presence:
+      gws/user_presence:
         state: ステータス
         plan: 予定
         memo: メモ
@@ -38,7 +38,7 @@ ja:
         presence_editable_title_ids: 編集可能な役職
 
   tooltip:
-    gws/presence/user_presence:
+    gws/user_presence:
       state:
         - ステータスを入力します。
       plan:

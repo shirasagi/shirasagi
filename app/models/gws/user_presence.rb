@@ -1,4 +1,4 @@
-class Gws::Presence::UserPresence
+class Gws::UserPresence
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site

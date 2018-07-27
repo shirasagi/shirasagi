@@ -42,7 +42,7 @@ module Gws::Presence::Users::ApiFilter
   end
 
   def set_manageable
-    @manageable = Gws::Presence::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
+    @manageable = Gws::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
   end
 
   def set_user
@@ -52,7 +52,7 @@ module Gws::Presence::Users::ApiFilter
   public
 
   def index
-    raise "403" unless Gws::Presence::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
 
     @items = @model.in(group_ids: @groups.pluck(:id))
     if params[:limit]
@@ -61,7 +61,7 @@ module Gws::Presence::Users::ApiFilter
   end
 
   def show
-    raise "403" unless Gws::Presence::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
 
     set_user
     raise "404" unless @user
@@ -74,12 +74,12 @@ module Gws::Presence::Users::ApiFilter
     raise "404" unless @user
 
     if @editable_user_ids.include?(@user.id)
-      raise "403" unless Gws::Presence::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+      raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
     else
-      raise "403" unless Gws::Presence::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
+      raise "403" unless Gws::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
     end
 
-    @item = @user.user_presence(@cur_site) || Gws::Presence::UserPresence.new
+    @item = @user.user_presence(@cur_site) || Gws::UserPresence.new
     @item.cur_site = @cur_site
     @item.cur_user = @user
 

@@ -3,7 +3,7 @@
 
   <h3><%= link_to t('modules.gws/schedule'), gws_schedule_user_setting_path %></h3>
 
-  <% if Gws::Presence::UserPresence.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% if Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_user_setting_path %></h3>
   <% end %>
 </nav>

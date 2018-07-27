@@ -12,7 +12,7 @@ class Gws::Presence::Management::UsersController < ApplicationController
   private
 
   def deny_with_auth
-    raise "403" unless Gws::Presence::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
   end
 
   def set_crumbs
@@ -28,7 +28,7 @@ class Gws::Presence::Management::UsersController < ApplicationController
   def set_item
     @user = @model.find(params[:id])
     @item = @user.user_presence(@cur_site)
-    @item ||= Gws::Presence::UserPresence.new(fix_params)
+    @item ||= Gws::UserPresence.new(fix_params)
   end
 
   def fix_params
@@ -36,7 +36,7 @@ class Gws::Presence::Management::UsersController < ApplicationController
   end
 
   def permit_fields
-    Gws::Presence::UserPresence.permitted_fields
+    Gws::UserPresence.permitted_fields
   end
 
   public

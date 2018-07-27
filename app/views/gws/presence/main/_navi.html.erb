@@ -5,7 +5,7 @@
 <nav class="mod-navi current-navi">
   <h2><%= link_to t("modules.gws/presence"), gws_presence_main_path, class: "icon-presence" %></h2>
   <h3><%= link_to t("modules.gws/presence/users"), gws_presence_group_users_path(group: main_group) %></h3>
-  <% if Gws::Presence::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site) %>
+  <% if Gws::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("modules.gws/presence/management/users"), gws_presence_management_group_users_path(group: main_group), class: "management" %></h3>
   <% end %>
 </nav>

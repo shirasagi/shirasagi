@@ -4,7 +4,7 @@ class Gws::Presence::UserSettingsController < ApplicationController
   include Gws::UserSettingFilter
 
   def set_item
-    @item = @cur_user.user_presence(@cur_site) || Gws::Presence::UserPresence.new(state: "available")
+    @item = @cur_user.user_presence(@cur_site) || Gws::UserPresence.new(state: "available")
   end
 
   def fix_params
