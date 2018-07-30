@@ -10,6 +10,7 @@
 <% end %>
 
 <% if @items.present? %>
+<%= stylesheet_link_tag '/assets/js/openlayers/ol.css', media: 'all' %>
 <%= javascript_include_tag "board/script" %>
 
 <div id="map-canvas"></div>
