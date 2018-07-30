@@ -43,6 +43,41 @@
   </div>
 </div>
 
+<%= jquery do %>
+var table_url = '<%= @table_url %>';
+$(".group-users .reload").on("click", function(){
+  param = $.param({ "s": { "keyword": $(".group-users [name='s[keyword]']").val() } });
+  $.ajax({
+    url: table_url + '?' + param,
+    beforeSend: function () {
+      $(".group-users .data-table-wrap").html(SS.loading);
+    },
+    success: function(data) {
+      $(".group-users .data-table-wrap").html(data);
+      var time = $(".group-users .data-table-wrap").find("time");
+      $(".group-users .list-head time").replaceWith(time).show();
+      time.show();
+    }
+  });
+});
+$(".group-users .list-head .search").on("submit", function(){
+  param = $.param({ "s": { "keyword": $(".group-users [name='s[keyword]']").val() } });
+  $.ajax({
+    url: table_url + '?' + param,
+    beforeSend: function () {
+      $(".group-users .data-table-wrap").html(SS.loading);
+    },
+    success: function(data) {
+      $(".group-users .data-table-wrap").html(data);
+      var time = $(".group-users .data-table-wrap").find("time");
+      $(".group-users .list-head time").replaceWith(time);
+      time.show();
+    }
+  });
+  return false;
+});
+<% end %>
+
 <div class="index content-main presence-users group-users">
   <div class="list-head">
     <h2 class="list-head-title">
@@ -54,7 +89,7 @@
         <% end %>
       </span>
       （<time datetime="<%= @time %>>"><%=l @time, format: :long %></time>）
-      <i class="material-icons md-18 editicon" onClick="location.reload();">refresh</i>
+      <i class="material-icons md-18 editicon reload">refresh</i>
     </h2>
     <nav>
       <%= render file: '_search' %>

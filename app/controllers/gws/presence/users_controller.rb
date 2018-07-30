@@ -28,12 +28,23 @@ class Gws::Presence::UsersController < ApplicationController
 
   def set_editable_users
     @editable_users = @cur_user.presence_editable_users
+    @editable_user_ids = @editable_users.map(&:id)
+  end
+
+  def items
+    @items = @model.in(group_ids: @groups.pluck(:id)).
+      search(params[:s]).page(params[:page]).per(25)
   end
 
   public
 
   def index
-    @items = @model.in(group_ids: @groups.pluck(:id)).
-      search(params[:s]).page(params[:page]).per(25)
+    @table_url = table_gws_presence_users_path(site: @cur_site)
+    items
+  end
+
+  def table
+    items
+    render layout: false
   end
 end

@@ -5,9 +5,11 @@
   if @portlet.custom_group
     group = @portlet.custom_group
     items = group.members.to_a
+    @table_url = portlet_gws_presence_custom_group_users_path(group: group)
   else
     group = @portlet.group || @cur_user.gws_main_group(@cur_site)
     items = group.users.to_a
+    @table_url = portlet_gws_presence_group_users_path(group: group)
   end
   editable_user_ids = [@cur_user.id]
   if @cur_user.title
@@ -18,63 +20,84 @@
   editable_user_ids.uniq!
   editable_users, readable_users = items.partition { |item| editable_user_ids.include?(item.id) }
 %>
-<%= jquery do %>Gws_Presence_User.render();<% end %>
+
+<%= jquery do %>
+Gws_Presence_User.render();
+
+var table_url = '<%== @table_url %>';
+$(".portlet-users .reload").on("click", function(){
+  $.ajax({
+    url: table_url,
+    beforeSend: function () {
+      $(".portlet-users .portlet-content").html(SS.loading);
+    },
+    success: function(data) {
+      $(".portlet-users .portlet-content").html(data);
+      var time = $(".portlet-users .portlet-content").find("time");
+      $(".portlet-users .portlet-title time").replaceWith(time).show();
+      time.show();
+    }
+  });
+});
+<% end %>
+
 <div class="main-box presence-users portlet-users">
   <div class="portlet-title">
     <span class="group"><%= group.try(:trailing_name) || group.try(:name) %></span>
     （<time datetime="<%= time %>>"><%=l time, format: :long %></time>）
-    <i class="material-icons md-18 editicon" onClick="location.reload();">refresh</i>
+    <i class="material-icons md-18 editicon reload">refresh</i>
   </div>
-
-  <table class="index data-table">
-    <thead>
-    <tr>
-      <th class="name"><%= Gws::User.t :name %></th>
-      <th class="presence-plan"><%= Gws::UserPresence.t :plan %></th>
-      <th class="presence-memo"><%= Gws::UserPresence.t :memo %></th>
-    </tr>
-    </thead>
-    <tbody>
-
-    <% editable_users.each do |item| %>
-      <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
-      <tr data-id="<%= item.id %>">
-        <td>
-          <%= link_to item.name, "", class: "select-presence-state" %>
-          <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
-            <%= user_presence.label :state %>
-          </span>
-          <%== user_presence_state_selector(item) %>
-        </td>
-        <td>
-          <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-          <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
-        </td>
-        <td>
-          <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-          <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
-        </td>
+  <div class="portlet-content">
+    <table class="index data-table">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::User.t :name %></th>
+        <th class="presence-plan"><%= Gws::UserPresence.t :plan %></th>
+        <th class="presence-memo"><%= Gws::UserPresence.t :memo %></th>
       </tr>
-    <% end %>
+      </thead>
+      <tbody>
 
-    <% readable_users.each do |item| %>
-      <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
-      <tr data-id="<%= item.id %>">
-        <td>
-          <%= item.name %>
-          <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
-            <%= user_presence.label :state %>
-          </span>
-        </td>
-        <td>
-          <%= user_presence.plan %>
-        </td>
-        <td>
-          <%= user_presence.memo %>
-        </td>
-      </tr>
-    <% end %>
+      <% editable_users.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <tr data-id="<%= item.id %>">
+          <td>
+            <%= link_to item.name, "", class: "select-presence-state" %>
+            <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+              <%= user_presence.label :state %>
+            </span>
+            <%== user_presence_state_selector(item) %>
+          </td>
+          <td>
+            <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+            <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
+          </td>
+          <td>
+            <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+            <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
+          </td>
+        </tr>
+      <% end %>
 
-    </tbody>
-  </table>
+      <% readable_users.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <tr data-id="<%= item.id %>">
+          <td>
+            <%= item.name %>
+            <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+              <%= user_presence.label :state %>
+            </span>
+          </td>
+          <td>
+            <%= user_presence.plan %>
+          </td>
+          <td>
+            <%= user_presence.memo %>
+          </td>
+        </tr>
+      <% end %>
+
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -34,11 +34,28 @@ class Gws::Presence::CustomGroup::UsersController < ApplicationController
 
   def set_editable_users
     @editable_users = @cur_user.presence_editable_users
+    @editable_user_ids = @editable_users.map(&:id)
+  end
+
+  def items
+    @items = @group.members.search(params[:s]).page(params[:page]).per(25)
   end
 
   public
 
   def index
-    @items = @group.members.search(params[:s]).page(params[:page]).per(25)
+    @table_url = table_gws_presence_custom_group_users_path(site: @cur_site, group: @group)
+    items
+  end
+
+  def table
+    items
+    render layout: false
+  end
+
+  def portlet
+    items
+    @editable_users, @readable_users = @items.partition { |item| @editable_user_ids.include?(item.id) }
+    render layout: false
   end
 end

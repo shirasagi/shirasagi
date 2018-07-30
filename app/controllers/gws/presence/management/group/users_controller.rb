@@ -45,10 +45,15 @@ class Gws::Presence::Management::Group::UsersController < ApplicationController
     Gws::UserPresence.permitted_fields
   end
 
+  def items
+    @items = @group.users.search(params[:s]).page(params[:page]).per(25)
+  end
+
   public
 
   def index
-    @items = @group.users.search(params[:s]).page(params[:page]).per(25)
+    @table_url = table_gws_presence_management_group_users_path(site: @cur_site, group: @group)
+    items
   end
 
   def edit
@@ -58,5 +63,10 @@ class Gws::Presence::Management::Group::UsersController < ApplicationController
   def update
     @item.attributes = get_params
     render_update @item.save, location: { action: :index }
+  end
+
+  def table
+    items
+    render layout: false
   end
 end
