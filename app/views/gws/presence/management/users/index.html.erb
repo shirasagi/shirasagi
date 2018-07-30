@@ -33,11 +33,9 @@
         <tr>
           <td>
             <%= link_to item.name, { action: :edit, id: item.id }, class: "group-name" %>
-            <% if user_presence.state.present? %>
-            <span class="presence_state <%= user_presence.state %>">
+            <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
               <%= user_presence.label :state %>
             </span>
-            <% end %>
           </td>
           <td>
             <%= user_presence.plan %>

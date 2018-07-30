@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @item.t :state %><%= @item.tt :state %></dt>
-  <dd><%= f.select :state, @item.state_options, include_blank: true %></dd>
+  <dd><%= f.select :state, @item.state_options %></dd>
 
   <dt><%= @item.t :plan %><%= @item.tt :plan %></dt>
   <dd><%= f.text_field :plan %></dd>

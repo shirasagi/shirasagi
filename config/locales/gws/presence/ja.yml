@@ -12,6 +12,7 @@ ja:
         unavailable: 離席
         leave: 退社
         dayoff: 休み
+        none: 未設定
 
   modules:
     gws/presence: 在席管理

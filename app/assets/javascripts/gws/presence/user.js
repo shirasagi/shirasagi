@@ -38,6 +38,10 @@ this.Gws_Presence_User = (function () {
       $(this).closest("td").find(".presence-state-selector").show();
       return false;
     });
+    $(".select-presence-state").next(".presence_state").on("click", function(){
+      $(this).prev(".select-presence-state").trigger('click');
+      return false;
+    });
     // ajax-text-field
     $(".ajax-text-field").on("click", function(){
       Gws_Presence_User.toggleForm(this);
@@ -50,8 +54,8 @@ this.Gws_Presence_User = (function () {
   };
 
   Gws_Presence_User.changedState = function (id, data) {
-    var presence_state = data["presence_state"];
-    var presence_state_label = data["presence_state_label"] || "";
+    var presence_state = data["presence_state"] || "none";
+    var presence_state_label = data["presence_state_label"];
     var state = $("tr[data-id=" + id + "] .presence_state");
     var selector = $("tr[data-id=" + id + "] .presence-state-selector");
 

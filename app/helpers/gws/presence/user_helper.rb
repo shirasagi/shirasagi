@@ -14,12 +14,6 @@ module Gws::Presence::UserHelper
       h << "<span>#{k}</span>"
       h << '</p>'
     end
-
-    s = (user_presence.state.blank?) ? "" : 'style="visibility:hidden"'
-    h << '<p data-value="">'
-    h << "<i class=\"material-icons md-16\ selected-icon\" #{s}>done</i>"
-    h << "<span>----</span>"
-    h << '</p>'
     h << '</div>'
     h.join
   end

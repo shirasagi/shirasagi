@@ -29,7 +29,13 @@ class Gws::UserPresence
   end
 
   def state_options
-    I18n.t("gws/presence.options.presence_state").map { |k, v| [v, k] }
+    [
+      [I18n.t("gws/presence.options.presence_state.available"), "available"],
+      [I18n.t("gws/presence.options.presence_state.unavailable"), "unavailable"],
+      [I18n.t("gws/presence.options.presence_state.leave"), "leave"],
+      [I18n.t("gws/presence.options.presence_state.dayoff"), "dayoff"],
+      [I18n.t("gws/presence.options.presence_state.none"), ""]
+    ]
   end
 
   def sync_available_state_options

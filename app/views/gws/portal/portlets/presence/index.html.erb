@@ -41,13 +41,9 @@
       <tr data-id="<%= item.id %>">
         <td>
           <%= link_to item.name, "", class: "select-presence-state" %>
-          <% if user_presence.state.present? %>
-            <span class="presence_state <%= user_presence.state %>">
-              <%= user_presence.label :state %>
-            </span>
-          <% else %>
-            <span class="presence_state"></span>
-          <% end %>
+          <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+            <%= user_presence.label :state %>
+          </span>
           <%== user_presence_state_selector(item) %>
         </td>
         <td>
@@ -66,13 +62,9 @@
       <tr data-id="<%= item.id %>">
         <td>
           <%= item.name %>
-          <% if user_presence.state.present? %>
-            <span class="presence_state <%= user_presence.state %>">
-              <%= user_presence.label :state %>
-            </span>
-          <% else %>
-            <span class="presence_state"></span>
-          <% end %>
+          <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+            <%= user_presence.label :state %>
+          </span>
         </td>
         <td>
           <%= user_presence.plan %>
