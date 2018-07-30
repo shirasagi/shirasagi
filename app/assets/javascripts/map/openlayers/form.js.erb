@@ -435,7 +435,10 @@ this.Openlayers_Map_Form = (function () {
       return;
     }
     var extent = this.markerLayer.getSource().getExtent();
-    this.map.getView().setCenter(ol.extent.getCenter(extent));
+    this.map.getView().fit(extent, this.map.getSize());
+    if (this.map.getView().getZoom() > this.opts.zoom) {
+      this.map.getView().setZoom(this.opts.zoom);
+    }
   };
 
   return Openlayers_Map_Form;

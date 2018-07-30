@@ -263,12 +263,6 @@ this.Openlayers_Map = (function () {
       return;
     }
     extent = this.markerLayer.getSource().getExtent();
-    //this.map.getView().setCenter(ol.extent.getCenter(extent));
-    //this.map.getView().fit(extent, this.map.getSize());
-
-  Openlayers_Map.prototype.setZoom = function (level) {
-    return this.map.getView().setZoom(level);
-  };
 
     this.map.getView().fit(extent, this.map.getSize());
     if (this.map.getView().getZoom() > this.opts.zoom) {
