@@ -10,7 +10,7 @@ module Gws::Addon::User::Presence
     @_user_presence ||= user_presences.site(site).first
   end
 
-  def presence_editable_users
+  def presence_editable_users(site)
     @_editable_users ||= begin
       editable_users = [self]
       return editable_users unless title
@@ -18,6 +18,11 @@ module Gws::Addon::User::Presence
       title.presence_editable_titles.each do |title|
         editable_users += title.users.to_a
       end
+
+      if title.presence_editable_group?
+        editable_users += gws_main_group(site).users.to_a
+      end
+
       editable_users.uniq(&:id)
     end
   end

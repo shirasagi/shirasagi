@@ -11,13 +11,7 @@
     items = group.users.to_a
     @table_url = portlet_gws_presence_group_users_path(group: group)
   end
-  editable_user_ids = [@cur_user.id]
-  if @cur_user.title
-    @cur_user.title.presence_editable_titles.each do |title|
-      editable_user_ids += title.users.pluck(:id)
-    end
-  end
-  editable_user_ids.uniq!
+  editable_user_ids = @cur_user.presence_editable_users(@cur_site).pluck(:id)
   editable_users, readable_users = items.partition { |item| editable_user_ids.include?(item.id) }
 %>
 

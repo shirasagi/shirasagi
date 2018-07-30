@@ -18,7 +18,7 @@
       </tr>
       </thead>
       <tbody>
-      <% @editable_users.each do |item| %>
+      <% [@cur_user].each do |item| %>
         <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
         <tr data-id="<%= item.id %>">
           <td>
@@ -78,7 +78,7 @@ $(".group-users .list-head .search").on("submit", function(){
 });
 <% end %>
 
-<div class="index content-main presence-users group-users">
+<div class="index content-main presence-users group-users editable-users">
   <div class="list-head">
     <h2 class="list-head-title">
       <span class="group">
@@ -108,20 +108,40 @@ $(".group-users .list-head .search").on("submit", function(){
       <tbody>
       <% @items.each do |item| %>
         <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
-        <tr>
-          <td>
-            <span class="group-name"><%= item.name %></span>
-            <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+        <% if @editable_user_ids.include?(item.id) %>
+          <tr data-id="<%= item.id %>">
+            <td>
+              <%= link_to item.name, "", class: "select-presence-state group-name" %>
+              <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
               <%= user_presence.label :state %>
             </span>
-          </td>
-          <td>
-            <%= user_presence.plan %>
-          </td>
-          <td>
-            <%= user_presence.memo %>
-          </td>
-        </tr>
+              <%== user_presence_state_selector(item) %>
+            </td>
+            <td>
+              <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+              <i class="material-icons editicon presence-plan" style="font-size: inherit">&#xE254;</i>
+            </td>
+            <td>
+              <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+              <i class="material-icons editicon presence-memo" style="font-size: inherit">&#xE254;</i>
+            </td>
+          </tr>
+        <% else %>
+          <tr>
+            <td>
+              <span class="group-name"><%= item.name %></span>
+              <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+              <%= user_presence.label :state %>
+            </span>
+            </td>
+            <td>
+              <%= user_presence.plan %>
+            </td>
+            <td>
+              <%= user_presence.memo %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
       </tbody>
     </table>

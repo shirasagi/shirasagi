@@ -33,7 +33,7 @@ class Gws::Presence::CustomGroup::UsersController < ApplicationController
   end
 
   def set_editable_users
-    @editable_users = @cur_user.presence_editable_users
+    @editable_users = @cur_user.presence_editable_users(@cur_site)
     @editable_user_ids = @editable_users.map(&:id)
   end
 

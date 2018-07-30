@@ -36,6 +36,7 @@ ja:
         sync_available_state: 在席
         sync_unavailable_state: 離席
       gws/addon/presence/delegator_setting:
+        presence_editable_group_state: 所属グループの編集
         presence_editable_title_ids: 編集可能な役職
 
   tooltip:
@@ -56,3 +57,5 @@ ja:
     gws/addon/presence/delegator_setting:
       presence_editable_title_ids:
         - 別の役職を設定することで、その役職に該当するユーザーの在席状況を更新できます。
+      presence_editable_group_state:
+        - 有効に設定することで、所属するグループ内のユーザーの在席状況を更新できます。
