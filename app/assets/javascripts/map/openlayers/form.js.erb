@@ -87,7 +87,7 @@ this.Openlayers_Map_Form = (function () {
       view: new ol.View({
         projection: "EPSG:3857",
         center: ol.proj.transform(center, "EPSG:4326", "EPSG:3857"),
-        minZoom: 5,
+        minZoom: 3,
         maxZoom: 18,
         zoom: this.opts['zoom'] || 10
       }),
