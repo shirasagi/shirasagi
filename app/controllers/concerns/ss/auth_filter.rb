@@ -24,10 +24,7 @@ module SS::AuthFilter
 
     # is session expired?
     end_of_session_time = last_logged_in + sesession_lieftime_of_user(user)
-    if Time.zone.now.to_i > end_of_session_time
-      user.logged_out
-      return nil
-    end
+    return nil if Time.zone.now.to_i > end_of_session_time
 
     user.decrypted_password = SS::Crypt.decrypt(session[:user]["password"])
     user
