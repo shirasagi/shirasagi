@@ -14,18 +14,18 @@
     <h2><%= link_to @cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path, class: "icon-schedule" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_presence_visible? %>
-    <% if Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_group_users_path(group: @cur_user.gws_main_group(@cur_site)), class: "icon-presence" %></h2>
-    <% end %>
-  <% end %>
-
   <% if @cur_site.menu_todo_visible? %>
     <h2><%= link_to @cur_site.menu_todo_label || t('modules.gws/schedule/todo'), gws_schedule_todo_main_path, class: "icon-todo" %></h2>
   <% end %>
 
   <% if @cur_site.menu_reminder_visible? %>
     <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminder_main_path, class: "icon-reminder" %></h2>
+  <% end %>
+
+  <% if @cur_site.menu_presence_visible? %>
+    <% if Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <h2><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_group_users_path(group: @cur_user.gws_main_group(@cur_site)), class: "icon-presence" %></h2>
+    <% end %>
   <% end %>
 
   <% if @cur_site.menu_memo_visible? %>
