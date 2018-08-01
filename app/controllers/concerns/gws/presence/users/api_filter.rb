@@ -10,7 +10,7 @@ module Gws::Presence::Users::ApiFilter
 
     before_action :set_groups
     before_action :set_editable_users
-    before_action :set_manageable
+    before_action :set_manageable_users
   end
 
   private
@@ -27,22 +27,24 @@ module Gws::Presence::Users::ApiFilter
       presence_state_label: @item.label(:state),
       presence_plan: @item.plan,
       presence_memo: @item.memo,
-      editable: @editable_user_ids.include?(@item.user_id),
-      manageable: @manageable
+      editable: @manageable_user_ids.include?(@item.user_id),
     }
   end
 
   def set_groups
-    @groups = [@cur_site.root.to_a, @cur_site.root.descendants.to_a].flatten
+    @groups = @cur_site.root.to_a + @cur_site.root.descendants.to_a
   end
 
   def set_editable_users
-    @editable_users = @cur_user.presence_editable_users(@cur_site)
-    @editable_user_ids = @editable_users.map(&:id)
+    @editable_user_ids = [@cur_user.id] + @cur_user.presence_title_manageable_users.map(&:id)
   end
 
-  def set_manageable
-    @manageable = Gws::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
+  def set_manageable_users
+    @custom_groups = Gws::CustomGroup.site(@cur_site).in(member_ids: @cur_user.id).to_a
+
+    @group_user_ids = @cur_user.gws_default_group.users.pluck(:id)
+    @custom_group_user_ids = @custom_groups.map { |item| item.members.pluck(:id) }.flatten.uniq
+    @manageable_user_ids = (@editable_user_ids + @group_user_ids + @custom_group_user_ids).uniq
   end
 
   def set_user
@@ -51,17 +53,8 @@ module Gws::Presence::Users::ApiFilter
 
   public
 
-  def index
-    raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
-
-    @items = @model.in(group_ids: @groups.pluck(:id))
-    if params[:limit]
-      @items = @items.page(params[:page].to_i).per(params[:limit])
-    end
-  end
-
   def show
-    raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
 
     set_user
     raise "404" unless @user
@@ -74,9 +67,13 @@ module Gws::Presence::Users::ApiFilter
     raise "404" unless @user
 
     if @editable_user_ids.include?(@user.id)
-      raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+      raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
+    elsif @group_user_ids.include?(@user.id)
+      raise "403" unless Gws::UserPresence.allowed?(:manage_private, @cur_user, site: @cur_site)
+    elsif @custom_group_user_ids.include?(@user.id)
+      raise "403" unless Gws::UserPresence.allowed?(:manage_custom_group, @cur_user, site: @cur_site)
     else
-      raise "403" unless Gws::UserPresence.other_permission?(:edit, @cur_user, site: @cur_site)
+      raise "403" unless Gws::UserPresence.allowed?(:manage_all, @cur_user, site: @cur_site)
     end
 
     @item = @user.user_presence(@cur_site) || Gws::UserPresence.new

@@ -21,7 +21,7 @@ class Gws::Presence::Apis::CustomGroup::UsersController < ApplicationController
   public
 
   def index
-    raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
 
     @items = @group.members
     if params[:limit]

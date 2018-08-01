@@ -1,8 +1,5 @@
 <div class="gws-addon-delegator_setting">
   <dl class="see">
-    <dt><%= @model.t :presence_editable_group_state %><%= @model.tt :presence_editable_group_state %></dt>
-    <dd><%= f.select :presence_editable_group_state, @item.presence_editable_group_state_options %></dd>
-
     <dt><%= @model.t :presence_editable_title_ids %><%= @model.tt :presence_editable_title_ids %></dt>
     <dd>
       <%= f.hidden_field "presence_editable_title_ids[]", value: "", class: "hidden-ids" %>

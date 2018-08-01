@@ -1,4 +1,7 @@
-<% @time = Time.zone.now %>
+<%
+  time = Time.zone.now
+  group = @group || @custom_group
+%>
 
 <div class="index presence-users editable-users">
   <%= jquery do %>Gws_Presence_User.render();<% end %>
@@ -18,14 +21,14 @@
       </tr>
       </thead>
       <tbody>
-      <% [@cur_user].each do |item| %>
+      <% @editable_users.each do |item| %>
         <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
-        <tr data-id="<%= item.id %>">
+        <tr class="editable" data-id="<%= item.id %>">
           <td>
-            <%= link_to item.name, "", class: "select-presence-state group-name" %>
-            <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+            <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
               <%= user_presence.label :state %>
             </span>
+            <%= link_to item.name, "", class: "select-presence-state group-name" %>
             <%== user_presence_state_selector(item) %>
           </td>
           <td>
@@ -72,23 +75,27 @@ $(".group-users .list-head .search").on("submit", function(){
       var time = $(".group-users .data-table-wrap").find("time");
       $(".group-users .list-head time").replaceWith(time);
       time.show();
+    },
+    error: function (xhr, status, error) {
+      console.log(error);
+      $(".group-users .data-table-wrap").html("");
     }
   });
   return false;
 });
 <% end %>
 
-<div class="index content-main presence-users group-users editable-users">
+<div class="index content-main presence-users group-users">
   <div class="list-head">
     <h2 class="list-head-title">
       <span class="group">
-        <% if @group %>
-          <%= @group.try(:trailing_name) || @group.name %>
+        <% if group %>
+          <%= group.try(:trailing_name) || group.name %>
         <% else %>
           <%= t('gws/presence.links.all_groups') %>
         <% end %>
       </span>
-      （<time datetime="<%= @time %>>"><%=l @time, format: :long %></time>）
+      （<time datetime="<%= time %>>"><%=l time, format: :long %></time>）
       <i class="material-icons md-18 editicon reload">refresh</i>
     </h2>
     <nav>
@@ -108,13 +115,13 @@ $(".group-users .list-head .search").on("submit", function(){
       <tbody>
       <% @items.each do |item| %>
         <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
-        <% if @editable_user_ids.include?(item.id) %>
-          <tr data-id="<%= item.id %>">
+        <% if @manageable %>
+          <tr class="editable" data-id="<%= item.id %>">
             <td>
+              <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+                <%= user_presence.label :state %>
+              </span>
               <%= link_to item.name, "", class: "select-presence-state group-name" %>
-              <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
-              <%= user_presence.label :state %>
-            </span>
               <%== user_presence_state_selector(item) %>
             </td>
             <td>
@@ -129,9 +136,10 @@ $(".group-users .list-head .search").on("submit", function(){
         <% else %>
           <tr>
             <td>
+              <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+                <%= user_presence.label :state %>
+              </span>
               <span class="group-name"><%= item.name %></span>
-              <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
-              <%= user_presence.label :state %>
             </span>
             </td>
             <td>

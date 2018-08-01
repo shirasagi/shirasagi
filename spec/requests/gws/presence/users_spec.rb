@@ -4,7 +4,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
   let!(:site) { gws_site }
   let(:auth_token_path) { sns_auth_token_path(format: :json) }
   let(:users_path) { gws_presence_apis_users_path(site: site.id, format: :json) }
-  let(:group_users_path) { gws_presence_apis_group_users_path(site: site.id, group: gws_user.gws_main_group.id, format: :json) }
+  let(:group_users_path) { gws_presence_apis_group_users_path(site: site.id, group: gws_user.gws_default_group.id, format: :json) }
   let(:update_path) { gws_presence_apis_user_path(site: site.id, id: gws_user.id, format: :json) }
 
   context "login with gws-admin" do
@@ -58,7 +58,6 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
       expect(gws_admin["editable"]).to eq true
-      expect(gws_admin["manageable"]).to eq Gws::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
 
       get group_users_path
       expect(response.status).to eq 200
@@ -72,7 +71,6 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
       expect(gws_admin["editable"]).to eq true
-      expect(gws_admin["manageable"]).to eq Gws::UserPresence.other_permission?(:edit, gws_user, site: gws_site)
     end
   end
 end

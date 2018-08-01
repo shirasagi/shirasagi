@@ -33,13 +33,9 @@ this.Gws_Presence_User = (function () {
       });
       return false;
     });
-    $(".select-presence-state").on("click", function(){
+    $(".editable .select-presence-state,.editable .presence-state").on("click", function(){
       $(".presence-state-selector").hide();
       $(this).closest("td").find(".presence-state-selector").show();
-      return false;
-    });
-    $(".select-presence-state").next(".presence_state").on("click", function(){
-      $(this).prev(".select-presence-state").trigger('click');
       return false;
     });
     // ajax-text-field
@@ -56,11 +52,11 @@ this.Gws_Presence_User = (function () {
   Gws_Presence_User.changedState = function (id, data) {
     var presence_state = data["presence_state"] || "none";
     var presence_state_label = data["presence_state_label"];
-    var state = $("tr[data-id=" + id + "] .presence_state");
+    var state = $("tr[data-id=" + id + "] .presence-state");
     var selector = $("tr[data-id=" + id + "] .presence-state-selector");
 
     state.removeClass();
-    state.addClass('presence_state');
+    state.addClass('presence-state');
     state.addClass(presence_state);
     state.text(presence_state_label);
 
@@ -144,6 +140,9 @@ this.Gws_Presence_User = (function () {
       });
       original.uniqueId();
       $(ele).replaceWith(original);
+
+      // support same name's ajax-text-field
+      $(".ajax-text-field[data-id='" + original.attr("data-id") + "'][data-name='" + original.attr("data-name") + "']").text(value);
     }
   };
 

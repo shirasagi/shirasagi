@@ -9,7 +9,7 @@ class Gws::Presence::Apis::Group::UsersController < ApplicationController
     @group = Gws::Group.find(params[:group]) rescue nil
     raise "404" unless @group
 
-    @groups = [@cur_site.root.to_a, @cur_site.root.descendants.to_a].flatten
+    @groups = @cur_site.root.to_a + @cur_site.root.descendants.to_a
     raise "404" unless @groups.select { |group| group.id == @group.id }
 
     @groups = [@group]
@@ -22,7 +22,7 @@ class Gws::Presence::Apis::Group::UsersController < ApplicationController
   public
 
   def index
-    raise "403" unless Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
 
     @items = @group.users
     if params[:limit]

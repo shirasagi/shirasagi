@@ -23,7 +23,7 @@
   <% end %>
 
   <% if @cur_site.menu_presence_visible? %>
-    <% if Gws::UserPresence.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site) %>
       <h2><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_group_users_path(group: @cur_user.gws_main_group(@cur_site)), class: "icon-presence" %></h2>
     <% end %>
   <% end %>

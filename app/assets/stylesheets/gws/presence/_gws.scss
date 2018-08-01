@@ -65,9 +65,7 @@
     td {
       overflow: hidden;
       text-overflow: ellipsis;
-      &:not(:first-child) {
-        white-space: nowrap;
-      }
+      white-space: nowrap;
       .group-name {
         display: inline-block;
         vertical-align: middle;
@@ -75,7 +73,7 @@
         white-space: nowrap;
         text-overflow: ellipsis;
       }
-      .presence_state, .select-presence-state {
+      .presence-state, .select-presence-state {
         display: inline-block;
         vertical-align: middle;
         &.available {
@@ -105,9 +103,9 @@
           border-radius: 4px;
         }
       }
-      .select-presence-state + .presence_state {
-        cursor: pointer;
-      }
+    }
+    .editable .presence-state {
+      cursor: pointer;
     }
   }
   &.group-users {

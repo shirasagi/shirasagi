@@ -21,21 +21,25 @@ module Gws::Presence::UserHelper
   def ajax_text_field_tag(name, value, data_id, data_url)
     data_original_tag = link_to(value, "",
       "class" => "ajax-text-field",
-      "data-tag-state" => "original"
+      "data-tag-state" => "original",
+      "data-name" => name,
+      "data-id" => data_id
     )
     data_form_tag = text_field_tag(name, "",
-     "class" => "ajax-text-field",
-     "autocomplete" => "off",
-     "data-tag-state" => "form",
-     "data-id" => data_id,
-     "data-url" => data_url
+      "class" => "ajax-text-field",
+      "autocomplete" => "off",
+      "data-tag-state" => "form",
+      "data-id" => data_id,
+      "data-url" => data_url
     )
     link_to(value, "",
       "class" => "ajax-text-field",
       "autocomplete" => "off",
       "data-original-tag" => data_original_tag,
       "data-form-tag" => data_form_tag,
-      "data-tag-state" => "original"
+      "data-tag-state" => "original",
+      "data-name" => name,
+      "data-id" => data_id
     )
   end
 end

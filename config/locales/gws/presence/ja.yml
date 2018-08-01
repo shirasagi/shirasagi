@@ -22,8 +22,10 @@ ja:
       gws/presence/delegator_setting: 在席管理
 
   gws_role:
-    edit_private_gws_user_presences: 在席状況の管理（所有）
-    edit_other_gws_user_presences: 在席状況の管理（全て）
+    use_gws_user_presences: 在席状況の閲覧
+    manage_private_gws_user_presences: 在席状況の管理（自所属）
+    manage_all_gws_user_presences: 在席状況の管理（全て）
+    manage_custom_group_gws_user_presences: 在席状況の管理（所属カスタムグループ）
 
   mongoid:
     models:
@@ -36,7 +38,6 @@ ja:
         sync_available_state: 在席
         sync_unavailable_state: 離席
       gws/addon/presence/delegator_setting:
-        presence_editable_group_state: 所属グループの編集
         presence_editable_title_ids: 編集可能な役職
 
   tooltip:
@@ -57,5 +58,3 @@ ja:
     gws/addon/presence/delegator_setting:
       presence_editable_title_ids:
         - 別の役職を設定することで、その役職に該当するユーザーの在席状況を更新できます。
-      presence_editable_group_state:
-        - 有効に設定することで、所属するグループ内のユーザーの在席状況を更新できます。

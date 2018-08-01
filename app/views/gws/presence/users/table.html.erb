@@ -1,6 +1,6 @@
 <%= jquery do %>Gws_Presence_User.render();<% end %>
-<% @time = Time.zone.now %>
-<time datetime="<%= @time %>>" style="display: none;"><%=l @time, format: :long %></time>
+<% time = Time.zone.now %>
+<time datetime="<%= time %>>" style="display: none;"><%=l time, format: :long %></time>
 <table class="index data-table">
   <thead>
   <tr>
@@ -12,13 +12,13 @@
   <tbody>
   <% @items.each do |item| %>
     <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
-    <% if @editable_user_ids.include?(item.id) %>
-      <tr data-id="<%= item.id %>">
+    <% if @manageable %>
+      <tr data-id="<%= item.id %>" class="editable">
         <td>
+          <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+            <%= user_presence.label :state %>
+          </span>
           <%= link_to item.name, "", class: "select-presence-state group-name" %>
-          <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
-              <%= user_presence.label :state %>
-            </span>
           <%== user_presence_state_selector(item) %>
         </td>
         <td>
@@ -33,10 +33,10 @@
     <% else %>
       <tr>
         <td>
+          <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+            <%= user_presence.label :state %>
+          </span>
           <span class="group-name"><%= item.name %></span>
-          <span class="presence_state <%= user_presence.state.present? ? user_presence.state : "none" %>">
-              <%= user_presence.label :state %>
-            </span>
         </td>
         <td>
           <%= user_presence.plan %>

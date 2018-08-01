@@ -2,7 +2,7 @@ class Gws::UserPresence
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::GroupPermission
+  include Gws::SitePermission
 
   set_permission_name 'gws_user_presences'
 
