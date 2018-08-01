@@ -22,6 +22,7 @@ ja:
     db_tool: DBツール
     role: 権限/ロール
     menu_settings: メニュー設定
+    password_policy: パスワードポリシー
     max_file_size: 最大ファイルサイズ
     site_copy: サイト複製
     webmail_account: メールアカウント
@@ -55,6 +56,14 @@ ja:
     postal_code: 郵便番号
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
+    password_effective_period: パスワードの有効期限
+    password_constraint: パスワードの制約
+    password_change_constraint: パスワード変更時の制約
+    password_constraint_detail: 各種文字種
+    password_login: ログイン
+    prompts:
+      char: 文字
+      count: 回
 
   sys_role:
     edit_sys_sites: サイトの管理
@@ -129,6 +138,27 @@ ja:
         cc: Cc
         mail: 内容
         error: エラー
+      sys/password_policy:
+        password_limit_use: 有効日数の使用
+        password_limit_days: 有効日数
+        password_warning_use: 有効期限切れ警告の使用
+        password_warning_days: 有効期限切れ警告
+        password_min_use: 最低文字数の使用
+        password_min_length: 最低文字数
+        password_min_upcase_use: 英大文字の最低文字数の使用
+        password_min_upcase_length: 英大文字
+        password_min_downcase_use: 英小文字の最低文字数の使用
+        password_min_downcase_length: 英小文字
+        password_min_digit_use: 数字の最低文字数の使用
+        password_min_digit_length: 数字
+        password_min_symbol_use: 記号の最低文字数の使用
+        password_min_symbol_length: 記号
+        password_prohibited_char_use: 使用禁止文字の使用
+        password_prohibited_char: 使用禁止文字
+        password_min_change_char_use: 相違数の使用
+        password_min_change_char_count: 相違数
+        password_max_failure_use: 最大失敗回数の使用
+        password_max_failure_count: 最大失敗回数
 
   errors:
     messages:
@@ -178,6 +208,38 @@ ja:
         - 数字が小さいほど一覧ページの上位にリンクが表示されます。
       state:
         -  このシステム設定を有効にするかを設定します。
+
+    sys/password_policy:
+      password_limit_days:
+        - パスワードの有効日数を設定します。
+        - ここで指定した日数以内にパスワードを変更する必要があります。
+      password_warning_days:
+        - パスワードの有効期限が切れる前に、有効期限切れ警告を表示する日数を設定します。
+        - 例えば「3」を設定すると、有効期限 3 日前に警告を表示します。
+      password_min_length:
+        - パスワードの最低文字数を設定します。
+        - ここで指定した文字数以上のパスワードを設定しなければならなくなります。
+        - 例えば「8」を設定すると、パスワードの長さは 8 文字以上でなければならなくなります。
+      password_min_upcase_length:
+        - 英大文（A〜Z）の最低文字数を設定します。
+        - 例えば「2」を設定すると、最低でも 2 文字の英大文字をパスワードに含まなければならなくなります。
+      password_min_downcase_length:
+        - 英小文字（a〜z）の最低文字数を設定します。
+        - 例えば「2」を設定すると、最低でも 2 文字の英小文字をパスワードに含まなければならなくなります。
+      password_min_digit_length:
+        - 数字（0〜9）の最低文字数を設定します。
+        - 例えば「2」を設定すると、最低でも 2 文字の数字をパスワードに含まなければならなくなります。
+      password_min_symbol_length:
+        - 記号の最低文字数を設定します。
+        - 例えば「2」を設定すると、最低でも 2 文字の記号をパスワードに含まなければならなくなります。
+      password_prohibited_char:
+        - パスワードに利用できない文字を設定します。
+        - 例えば「xyz」を設定すると、パスワードとして x, y, z の各文字を利用できなくなります。
+      password_min_change_char_count:
+        - パスワード変更時に前回のパスワードと異ならなければならない文字数を設定します。
+      password_max_failure_count:
+        - ログインの最大失敗回数を設定します。
+        - この回数を超えてログインに失敗すると、当該ユーザーは利用停止状態になります。
 
   job:
     models:

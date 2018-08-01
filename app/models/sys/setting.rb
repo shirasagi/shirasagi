@@ -1,5 +1,6 @@
 class Sys::Setting
   include SS::Document
+  include Sys::PasswordPolicy
   include Sys::Permission
 
   set_permission_name "sys_settings", :edit
