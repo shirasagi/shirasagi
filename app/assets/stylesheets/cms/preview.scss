@@ -15,6 +15,7 @@
   @include box-shadow(0px 1px 5px #666);
   background-color: rgba(255, 255, 255, 0.9);
   text-align: center;
+  z-index: 5001;
   input.date {
     width: 120px;
     margin: 0px;
@@ -25,10 +26,22 @@
     font-family: Meiryo, sans-serif;
     text-align: center;
   }
-  input.preview, input.mobile {
+  input[type=button], #preview_part {
     margin: 0px 0px 0px 2px;
     padding: 0px;
     font-size: 12px;
     font-family: Meiryo, sans-serif;
   }
+}
+.preview-part {
+  position: absolute;
+  @include box-sizing(border-box);
+  display: inline-block;
+  background: rgba(0,0,0,0.5);
+  text-decoration: none;
+  text-shadow: 1px 1px 0px #fff, -1px 1px 0px #fff, 1px -1px 0px #fff, -1px -1px 0px #fff;
+  z-index: 5000;
+}
+.preview-hide {
+  display: none;
 }

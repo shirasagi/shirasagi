@@ -72,6 +72,8 @@ module Cms::PublicFilter::Layout
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
+    @parts = {}
+
     body = @cur_layout.body.to_s
 
     body = body.sub(/<body.*?>/) do |m|
@@ -147,31 +149,41 @@ module Cms::PublicFilter::Layout
     return html if html.blank?
 
     # TODO: deprecated </ />
-    parts = {}
     html = html.gsub(/(<\/|\{\{) part "(.*?)" (\/>|\}\})/) do
       path = "#{$2}.part.html"
       path = path[0] == "/" ? path.sub(/^\//, "") : @cur_layout.dirname(path)
-      parts[path] = nil
+      @parts[path] = nil
       "{{ part \"#{path}\" }}"
     end
 
-    criteria = Cms::Part.site(@cur_site).and_public.any_in(filename: parts.keys)
+    criteria = Cms::Part.site(@cur_site).and_public.any_in(filename: @parts.keys)
     criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
-    criteria.each { |part| parts[part.filename] = part }
+    criteria.each { |part| @parts[part.filename] = part }
 
     return html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
-      part = parts[path]
+      part = @parts[path]
       part ? render_layout_part(part) : ''
     end
   end
 
   def render_layout_part(part)
-    if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
-      part.ajax_html
-    else
-      render_part(part.becomes_with_route)
+    classes = ['preview-part', "preview-part-#{part.id}", 'preview-hide'].join(' ')
+    html = []
+    if @preview && Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      html << "<a class='#{classes}' target='_blank' href='#{cms_part_path(site: @cur_site, id: part.id)}'>"
+      html << part.name
+      html << '</a>'
     end
+    if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
+      html << part.ajax_html
+    else
+      html << render_part(part.becomes_with_route)
+    end
+    if @preview && Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      html << "<span class='preview-part-#{part.id}'></span>"
+    end
+    html.join
   end
 
   def date_convert(date, format = nil, datetime = nil)
