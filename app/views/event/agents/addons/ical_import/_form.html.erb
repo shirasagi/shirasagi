@@ -2,6 +2,12 @@
   <dt><%= @model.t :ical_import_url %><%= @model.tt :ical_import_url %></dt>
   <dd><%= f.text_field :ical_import_url %></dd>
 
+  <dt><%= @model.t :ical_basic_certs %><%= @model.tt :ical_basic_certs %></dt>
+  <dd>
+    <%= f.text_field :ical_basic_user, style: "width: 30%", placeholder: "user" %>
+    <%= f.password_field :ical_basic_password, value: @item.ical_basic_password, style: "width: 30%", placeholder: "password" %>
+  </dd>
+
   <dt><%= @model.t :ical_max_docs %><%= @model.tt :ical_max_docs %></dt>
   <dd><%= f.number_field :ical_max_docs %></dd>
 

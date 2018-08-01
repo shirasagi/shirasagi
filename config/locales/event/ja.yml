@@ -68,7 +68,7 @@ ja:
       event/calendar_list: リスト表示
       event/page_list: リスト表示
       event/body: イベント情報
-      event/ical_import: iCal取込
+      event/ical_import: ical取り込み
       event/ical_link: iCal情報
 
   cms:
@@ -102,7 +102,7 @@ ja:
     models:
       event/page: イベントページ
       event/search: イベント検索ページ
-      event/ical: iCal取込
+      event/ical: ical取り込み
     attributes:
       cms/model/page:
         event_name: イベントタイトル
@@ -120,6 +120,9 @@ ja:
         event_display: 表示形式
       event/addon/ical_import:
         ical_import_url: iCal配信URL
+        ical_basic_certs: ベーシック認証
+        ical_basic_user: ベーシック認証ユーザー
+        ical_basic_password: ベーシック認証パスワード
         ical_max_docs: 最大保存件数
         ical_refresh_method: 更新方法
         ical_page_state: ページステータス
@@ -219,6 +222,8 @@ ja:
     event/addon/ical_import:
       ical_import_url:
         - iCal配信URLを設定します。
+      ical_basic_certs:
+        - iCal配信URLにベーシック認証が掛かっている場合、ユーザーとパスワードを設定します。
       ical_max_docs:
         - 最大保存件数を設定します。
         -

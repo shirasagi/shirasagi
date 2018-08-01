@@ -84,12 +84,10 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     @ical_links = []
 
     begin
-      uri = URI.parse(Cms::Node.find(node_id)[:ical_import_url])
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true if uri.scheme == 'https'
-      req = Net::HTTP::Get.new(uri.path)
-      res = http.request(req)
-      calendar = Icalendar::Calendar.parse(res.body)
+      node = Event::Node::Ical.find(node_id)
+      uri = URI.parse(node.ical_import_url)
+      file = open(uri, node.ical_url_options)
+      calendar = Icalendar::Calendar.parse(file.read)
       @events = calendar.first.events
     rescue => e
       Rails.logger.info("Icalendar::Calendar.parse failer (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

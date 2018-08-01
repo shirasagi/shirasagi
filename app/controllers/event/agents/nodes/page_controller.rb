@@ -109,7 +109,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     end
     @items.uniq! unless @index
 
-    render(:monthly_table)
+    render :monthly_table
   end
 
   def index_daily

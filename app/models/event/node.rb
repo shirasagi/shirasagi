@@ -56,7 +56,7 @@ module Event::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    default_scope ->{ where(route: "event/page") }
+    default_scope ->{ where(route: "event/ical") }
 
     def condition_hash
       cond = super
