@@ -1,0 +1,158 @@
+<%
+  time = Time.zone.now
+  group = @group || @custom_group
+%>
+
+<div class="index presence-users editable-users">
+  <%= jquery do %>Gws_Presence_User.render();<% end %>
+  <div class="list-head">
+    <h2 class="list-head-title">
+      <%= @cur_user.name %>
+    </h2>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="index data-table">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::User.t :name %></th>
+        <th class="presence-plan"><%= Gws::UserPresence.t :plan %></th>
+        <th class="presence-memo"><%= Gws::UserPresence.t :memo %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @editable_users.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <tr class="editable" data-id="<%= item.id %>">
+          <td>
+            <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+              <%= user_presence.label :state %>
+            </span>
+            <%= link_to item.name, "", class: "select-presence-state group-name" %>
+            <%== user_presence_state_selector(item) %>
+          </td>
+          <td>
+            <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+            <i class="material-icons editicon presence-plan" style="font-size: inherit">&#xE254;</i>
+          </td>
+          <td>
+            <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+            <i class="material-icons editicon presence-memo" style="font-size: inherit">&#xE254;</i>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= jquery do %>
+var table_url = '<%= @table_url %>';
+$(".group-users .reload").on("click", function(){
+  param = $.param({ "s": { "keyword": $(".group-users [name='s[keyword]']").val() } });
+  $.ajax({
+    url: table_url + '?' + param,
+    beforeSend: function () {
+      $(".group-users .data-table-wrap").html(SS.loading);
+    },
+    success: function(data) {
+      $(".group-users .data-table-wrap").html(data);
+      var time = $(".group-users .data-table-wrap").find("time");
+      $(".group-users .list-head time").replaceWith(time).show();
+      time.show();
+    }
+  });
+});
+$(".group-users .list-head .search").on("submit", function(){
+  param = $.param({ "s": { "keyword": $(".group-users [name='s[keyword]']").val() } });
+  $.ajax({
+    url: table_url + '?' + param,
+    beforeSend: function () {
+      $(".group-users .data-table-wrap").html(SS.loading);
+    },
+    success: function(data) {
+      $(".group-users .data-table-wrap").html(data);
+      var time = $(".group-users .data-table-wrap").find("time");
+      $(".group-users .list-head time").replaceWith(time);
+      time.show();
+    },
+    error: function (xhr, status, error) {
+      console.log(error);
+      $(".group-users .data-table-wrap").html("");
+    }
+  });
+  return false;
+});
+<% end %>
+
+<div class="index content-main presence-users group-users">
+  <div class="list-head">
+    <h2 class="list-head-title">
+      <span class="group">
+        <% if group %>
+          <%= group.try(:trailing_name) || group.name %>
+        <% else %>
+          <%= t('gws/presence.links.all_groups') %>
+        <% end %>
+      </span>
+      （<time datetime="<%= time %>>"><%=l time, format: :long %></time>）
+      <i class="material-icons md-18 editicon reload">refresh</i>
+    </h2>
+    <nav>
+      <%= render file: '_search' %>
+    </nav>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="index data-table">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::User.t :name %></th>
+        <th class="presence-plan"><%= Gws::UserPresence.t :plan %></th>
+        <th class="presence-memo"><%= Gws::UserPresence.t :memo %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <% if @manageable %>
+          <tr class="editable" data-id="<%= item.id %>">
+            <td>
+              <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+                <%= user_presence.label :state %>
+              </span>
+              <%= link_to item.name, "", class: "select-presence-state group-name" %>
+              <%== user_presence_state_selector(item) %>
+            </td>
+            <td>
+              <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+              <i class="material-icons editicon presence-plan" style="font-size: inherit">&#xE254;</i>
+            </td>
+            <td>
+              <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+              <i class="material-icons editicon presence-memo" style="font-size: inherit">&#xE254;</i>
+            </td>
+          </tr>
+        <% else %>
+          <tr>
+            <td>
+              <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+                <%= user_presence.label :state %>
+              </span>
+              <span class="group-name"><%= item.name %></span>
+            </span>
+            </td>
+            <td>
+              <%= user_presence.plan %>
+            </td>
+            <td>
+              <%= user_presence.memo %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+    <%= paginate @items if @items.try(:current_page) %>
+  </div>
+</div>

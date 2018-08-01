@@ -3,8 +3,8 @@ this.SS_TreeUI = (function () {
 
   SS_TreeUI.closeImagePath = "/assets/img/tree-close.png";
 
-  SS_TreeUI.render = function (tree) {
-    return new SS_TreeUI(tree);
+  SS_TreeUI.render = function (tree, options = {}) {
+    return new SS_TreeUI(tree, options);
   };
 
   SS_TreeUI.toggleImage = function (img) {
@@ -27,10 +27,14 @@ this.SS_TreeUI = (function () {
     return img.addClass("closed");
   };
 
-  function SS_TreeUI(tree) {
+  function SS_TreeUI(tree, options = {}) {
     var root;
+    var expand_all = null;
     this.tree = $(tree);
+
     root = [];
+    expand_all = options["expand_all"];
+
     this.tree.find("tbody tr").each(function () {
       return root.push(parseInt($(this).attr("data-depth")));
     });
@@ -45,7 +49,9 @@ this.SS_TreeUI = (function () {
       depth = parseInt($(this).attr("data-depth"));
       td.prepend('<img src="' + SS_TreeUI.closeImagePath + '" alt="toggle" class="toggle closed">');
       if (depth !== root) {
-        $(this).hide();
+        if (!expand_all) {
+          $(this).hide();
+        }
       }
       for (i = j = ref = root, ref1 = depth; ref <= ref1 ? j < ref1 : j > ref1; i = ref <= ref1 ? ++j : --j) {
         td.prepend('<span class="padding">');
@@ -84,7 +90,12 @@ this.SS_TreeUI = (function () {
       e.stopPropagation();
       return false;
     });
-    this.tree.find("tr[data-depth='" + root + "'] img").click();
+    if (!expand_all) {
+      this.tree.find("tr[data-depth='" + root + "'] img").click();
+    }
+    else {
+      SS_TreeUI.openImage(this.tree.find("tbody tr img"));
+    }
   }
 
   SS_TreeUI.prototype.expandAll = function () {

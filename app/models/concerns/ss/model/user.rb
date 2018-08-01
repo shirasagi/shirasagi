@@ -3,7 +3,6 @@ module SS::Model::User
   extend SS::Translation
   include SS::Document
   include SS::Fields::Normalizer
-  include SS::Reference::UserTitles
   include SS::Reference::UserExpiration
   include Ldap::Addon::User
 
@@ -286,6 +285,18 @@ module SS::Model::User
     return nil unless switch_user
     return nil unless switch_user.enabled?
     switch_user
+  end
+
+  def logged_in
+    if SS.config.gws.disable.blank?
+      gws_user.presence_logged_in
+    end
+  end
+
+  def logged_out
+    if SS.config.gws.disable.blank?
+      gws_user.presence_logged_out
+    end
   end
 
   # Cast

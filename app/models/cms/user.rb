@@ -1,5 +1,6 @@
 class Cms::User
   include SS::Model::User
+  include SS::Reference::UserTitles
   include Cms::Addon::Role
   include Cms::Reference::Role
   include Cms::SitePermission

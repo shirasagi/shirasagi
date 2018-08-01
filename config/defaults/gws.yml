@@ -42,6 +42,7 @@ production: &production
           row: 1
           size_x: 4
           size_y: 2
+      - model: presence
       - model: reminder
         reminder_filter: future
       - model: monitor

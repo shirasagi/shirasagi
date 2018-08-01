@@ -1,0 +1,128 @@
+.presence-groups {
+  width: 22% !important;
+  .all-groups {
+    border: 1px solid #dcdcdc;
+    margin-bottom: 5px;
+    line-height: 2.0;
+    a {
+      margin-left: 10px;
+    }
+  }
+  .tree-groups, .custom-groups {
+    margin-bottom: 5px;
+    .list-item {
+      background: white;
+    }
+  }
+  .list-item.current {
+    background: #f2f2f2 !important;
+  }
+}
+.presence-users {
+  width: 77% !important;
+  .presence-state-selector {
+    position: absolute;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 1px 6px #d0d0d0;
+    padding: 8px;
+    white-space: nowrap;
+    overflow: auto;
+    z-index: 10000;
+    color: #000;
+    background: #ffffff;
+    cursor: pointer;
+    p {
+      display: flex;
+    }
+  }
+  .ajax-text-field {
+    &a {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    &input {
+      width: 90%;
+    }
+  }
+  .editicon {
+    cursor: pointer;
+    color: #f25a38;
+  }
+  .data-table-wrap {
+    padding: 0px 10px 10px 10px
+  }
+  table.data-table {
+    table-layout: fixed;
+    th.name {
+      width: 18%;
+    }
+    th.presence-plan {
+      width: 32%;
+    }
+    th.presence-memo {
+      width: 50%;
+    }
+    td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .group-name {
+        display: inline-block;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .presence-state, .select-presence-state {
+        display: inline-block;
+        vertical-align: middle;
+        &.available {
+          background: springgreen;
+          padding: 0 2px;
+          border-radius: 4px;
+        }
+        &.unavailable {
+          background: red;
+          color: white;
+          padding: 0 2px;
+          border-radius: 4px;
+        }
+        &.leave {
+          background: #CCCCCC;
+          padding: 0 2px;
+          border-radius: 4px;
+        }
+        &.dayoff {
+          background: #CCCCCC;
+          padding: 0 2px;
+          border-radius: 4px;
+        }
+        &.none {
+          background: #CCCCCC;
+          padding: 0 2px;
+          border-radius: 4px;
+        }
+      }
+    }
+    .editable .presence-state {
+      cursor: pointer;
+    }
+  }
+  &.group-users {
+    .list-head {
+      .list-head-title {
+        display: flex;
+        float: left;
+      }
+      nav {
+        float: right;
+      }
+    }
+  }
+  &.portlet-users {
+    width: 100% !important;
+    .portlet-title {
+      display: flex;
+    }
+  }
+}

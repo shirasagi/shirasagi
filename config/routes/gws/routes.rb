@@ -53,6 +53,7 @@ SS::Application.routes.draw do
     namespace "apis" do
       get "groups" => "groups#index"
       get "users" => "users#index"
+      get "user_titles" => "user_titles#index"
       get "facilities" => "facilities#index"
       post "reminders" => "reminders#create"
       delete "reminders" => "reminders#destroy"

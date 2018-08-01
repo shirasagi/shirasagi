@@ -1,5 +1,6 @@
 class SS::User
   include SS::Model::User
+  include SS::Reference::UserTitles
   include Sys::Addon::Role
   include Sys::Reference::Role
   include Sys::Permission
