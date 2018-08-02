@@ -14,17 +14,18 @@ module Event::IcalHelper
       end
     end
     items.each do |item|
+      item = item.becomes_with_route
       next unless item.respond_to?(:event_dates)
       next if item.event_dates.blank?
       item.get_event_dates.each do |event|
         created = ::Icalendar::Values::DateTime.new(item.created.utc)
         calendar.event do |e|
           e.created = created
-          e.description = ::Icalendar::Values::Text.new(item.html.to_s)
+          e.description = ::Icalendar::Values::Text.new(item.summary.to_s)
           e.dtend = ::Icalendar::Values::Date.new(event.last.to_date.tomorrow)
           e.dtstart = ::Icalendar::Values::Date.new(event.first.to_date)
-          e.dtstamp = created
           e.last_modified = ::Icalendar::Values::DateTime.new(item.updated.utc)
+          e.location = ::Icalendar::Values::Text.new(item.try(:venue).to_s)
           e.summary = ::Icalendar::Values::Text.new(item.event_name || item.name)
           e.transp = 'OPAQUE'
           e.url = ::Icalendar::Values::Uri.new(item[:ical_link] || item.full_url)
@@ -32,6 +33,6 @@ module Event::IcalHelper
       end
     end
     calendar.publish
-    calendar.to_ical
+    calendar.to_ical.gsub(/\R/, "\r\n")
   end
 end

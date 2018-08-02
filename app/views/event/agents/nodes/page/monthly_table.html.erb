@@ -6,7 +6,7 @@
   </ul>
 </nav>
 
-<div class="event-calendar">
+<div class="event-table">
   <table class="calendar">
     <thead>
     <tr>
@@ -16,10 +16,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
       <% @events.each_with_index do |(date, events), i| %>
-        <% if i != 0 && (i % 7) == 0 %>
-          </tr><tr>
+        <% if (i % 7) == 0 %>
+          <tr>
         <% end %>
         <td class="<%= event_td_class(date, @date) %>">
           <div class="date">
@@ -44,8 +43,10 @@
             <% end %>
           </div>
         </td>
+        <% if (i % 7) == 6 %>
+          </tr>
+        <% end %>
       <% end %>
-      </tr>
       </tbody>
   </table>
 </div>

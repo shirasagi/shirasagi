@@ -39,11 +39,8 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
         item.name = item.event_name = event.summary
         item.layout_id = node.page_layout_id if node.page_layout_id.present?
         item.state = node.ical_page_state if node.ical_page_state.present?
-        if event.description.present?
-          description = event.description
-          description = description.push('').join(';') if description.is_a?(Icalendar::Values::Array)
-          item.html = Nokogiri::HTML.parse(description).text
-        end
+        item.html = item.content = event.description
+        item.venue = event.location
         date = event.dtstart.to_date
         end_date = event.dtend.to_date if event.dtend.present?
         event_dates = item.event_dates.split(/\R/).collect(&:to_date) if item.event_dates.present?

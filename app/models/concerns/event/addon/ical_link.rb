@@ -35,13 +35,11 @@ module Event::Addon
     end
 
     def json_path
-      return if ical_link.present?
-      super
+      ical_link.present? ? nil : super
     end
 
     def json_url
-      return if ical_link.present?
-      super
+      ical_link.present? ? nil : super
     end
 
     def serve_static_file?
