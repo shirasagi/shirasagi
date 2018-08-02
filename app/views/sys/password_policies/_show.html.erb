@@ -99,15 +99,4 @@
     <%= @item.label :password_min_change_char_use %>
     <% end %>
   </dd>
-
-  <dt class="depth-1"><%= t("sys.password_login") %></dt>
-  <dd class="depth-1"></dd>
-
-  <dt class="depth-2"><%= @model.t :password_max_failure_count %></dt>
-  <dd class="depth-2">
-    <% if @item.password_max_failure_use == "enabled" %>
-    <%= @item.password_max_failure_count %>
-    <span><%= t("sys.prompts.count") %></span>
-    <% end %>
-  </dd>
 </dl>

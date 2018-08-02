@@ -39,10 +39,6 @@ module Sys::PasswordPolicy
     field :password_min_change_char_use, type: String, default: "disabled"
     field :password_min_change_char_count, type: Integer
 
-    # パスワード入力失敗回数（ログイン拒否になるまでの回数）
-    field :password_max_failure_use, type: String, default: "disabled"
-    field :password_max_failure_count, type: Integer
-
     permit_params :password_limit_use, :password_limit_days, :password_warning_use, :password_warning_days
     permit_params :password_min_use, :password_min_length, :password_min_upcase_use, :password_min_upcase_length
     permit_params :password_min_downcase_use, :password_min_downcase_length
@@ -50,7 +46,6 @@ module Sys::PasswordPolicy
     permit_params :password_min_symbol_use, :password_min_symbol_length
     permit_params :password_prohibited_char_use, :password_prohibited_char
     permit_params :password_min_change_char_use, :password_min_change_char_count
-    permit_params :password_max_failure_use, :password_max_failure_count
   end
 
   module ClassMethods
@@ -83,7 +78,6 @@ module Sys::PasswordPolicy
   alias password_min_symbol_use_options password_limit_use_options
   alias password_prohibited_char_use_options password_limit_use_options
   alias password_min_change_char_use_options password_limit_use_options
-  alias password_max_failure_use_options password_limit_use_options
 
   def password_validator
     Sys::PasswordValidator.new(setting: self)

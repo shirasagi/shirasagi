@@ -72,14 +72,4 @@
     <%= f.number_field :password_min_change_char_count %>
     <span><%= t("sys.prompts.char") %></span>
   </dd>
-
-  <dt class="depth-1"><%= t("sys.password_login") %></dt>
-  <dd class="depth-1"></dd>
-
-  <dt class="depth-2"><%= @model.t :password_max_failure_count %><%= @model.tt :password_max_failure_count %></dt>
-  <dd class="depth-2">
-    <%= f.select :password_max_failure_use, @item.password_max_failure_use_options %>
-    <%= f.number_field :password_max_failure_count %>
-    <span><%= t("sys.prompts.count") %></span>
-  </dd>
 </dl>
