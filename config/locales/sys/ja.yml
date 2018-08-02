@@ -84,6 +84,10 @@ ja:
       sys/notice: システムのお知らせ
       sys/postal_code: 郵便番号
       sys/mail_log: メールログ
+    errors:
+      models:
+        sys/setting:
+          password_min_length_short: "は、英大文字〜記号を合計した文字数より少ない文字数が設定されています。%{count}以上に設定してください。"
     attributes:
       sys/setting:
         menu_file_state: ファイル
