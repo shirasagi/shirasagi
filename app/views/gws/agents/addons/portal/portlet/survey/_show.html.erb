@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :survey_answered_state %></dt>
+  <dd><%= @item.label :survey_answered_state %></dd>
+
+  <dt><%= @model.t :survey_sort %></dt>
+  <dd><%= @item.label :survey_sort %></dd>
+
+  <dt><%= @model.t :survey_category_ids %></dt>
+  <dd><%= br @item.survey_categories.readable(@cur_user, site: @cur_site).pluck(:name).join("\n") %></dd>
+
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.limit %></dd>
+</dl>

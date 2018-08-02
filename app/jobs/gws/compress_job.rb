@@ -1,6 +1,6 @@
-class Gws::Share::CompressJob < Gws::ApplicationJob
+class Gws::CompressJob < Gws::ApplicationJob
   def perform(attr)
-    zip = Gws::Share::Compressor.new(user, attr)
+    zip = Gws::Compressor.new(user, attr)
 
     Rails.logger.error("Error : Failed to compress share_files.") unless zip.save
 

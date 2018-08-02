@@ -1,0 +1,37 @@
+<div class="navi" style="position: relative;">
+  <div class="navi-container" style="position: absolute; top: -50px; left: 6em;">
+    <%= link_to I18n.t("gws/survey.view_files"), gws_survey_editable_files_path(editable_id: @item), class: 'btn' %>
+  </div>
+</div>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :description %></dt>
+  <dd><%= br @item.description %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label(:state) %></dd>
+
+  <dt><%= @model.t :anonymous_state %></dt>
+  <dd><%= @item.label :anonymous_state %></dd>
+
+  <dt><%= @model.t :file_state %></dt>
+  <dd><%= @item.label :file_state %></dd>
+
+  <dt><%= @model.t :file_edit_state %></dt>
+  <dd><%= @item.label :file_edit_state %></dd>
+
+  <dt><%= @model.t :due_date %></dt>
+  <dd><%= tryb { I18n.l(@item.due_date) } %></dd>
+
+  <dt><%= @model.t :release_date %></dt>
+  <dd><%= tryb { I18n.l(@item.release_date) } %></dd>
+
+  <dt><%= @model.t :close_date %></dt>
+  <dd><%= tryb { I18n.l(@item.close_date) } %></dd>
+
+  <dt><%= @model.t :memo %></dt>
+  <dd><%= br @item.memo %></dd>
+</dl>

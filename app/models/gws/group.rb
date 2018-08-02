@@ -8,6 +8,7 @@ class Gws::Group
   include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Circular::GroupSetting
   include Gws::Addon::Monitor::GroupSetting
+  include Gws::Addon::Survey::GroupSetting
   include Gws::Addon::Board::GroupSetting
   include Gws::Addon::Faq::GroupSetting
   include Gws::Addon::Qna::GroupSetting

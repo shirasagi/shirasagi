@@ -1,0 +1,12 @@
+<% return if @item.files.blank? %>
+<% limit = 5 %>
+
+<div class="see mod-survey-files-ref">
+  <p><%= t("gws/survey.notices.count_limit", count: limit) %></p>
+
+  <div class="gws-survey">
+    <%= render file: "gws/survey/files/_table", locals: { cur_form: @item, items: @item.files.order_by(updated: -1).limit(limit) } %>
+  </div>
+
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_survey_editable_files_path(editable_id: @item), class: 'btn' %></div>
+</div>

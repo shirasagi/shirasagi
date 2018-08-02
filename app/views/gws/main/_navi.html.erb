@@ -66,6 +66,10 @@
     <% end %>
   <% end %>
 
+  <% if @cur_site.menu_survey_visible? %>
+    <h2><%= link_to @cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path, class: 'icon-survey' %></h2>
+  <% end %>
+
   <% if @cur_site.menu_board_visible? %>
     <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
       <h2><%= link_to @cur_site.menu_board_label || t('modules.gws/board'), gws_board_main_path, class: "icon-board" %></h2>

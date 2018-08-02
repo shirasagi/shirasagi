@@ -25,6 +25,8 @@ module SS::Model::Column
     validates :required, inclusion: { in: %w(required optional), allow_blank: true }
     validates :prefix_label, length: { maximum: 80 }
     validates :postfix_label, length: { maximum: 80 }
+
+    scope :form, ->(form) { where(form_id: form.id, form_type: form.class.name) }
   end
 
   module ClassMethods

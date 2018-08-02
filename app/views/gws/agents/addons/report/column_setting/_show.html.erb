@@ -1,4 +1,4 @@
-<dl class="see mod-gws-facility-custom_fields">
+<dl class="see mod-gws-report-custom_fields">
   <dd class="wide">
     <%= link_to(I18n.t('gws/workflow.columns.index'), gws_report_form_columns_path(form_id: @item), class: :btn) %>
     <%= link_to(I18n.t('ss.links.preview'), new_gws_report_form_file_path(state: 'preview', form_id: @item, format: :html), class: %w(btn preview)) %>
@@ -30,7 +30,7 @@
 </dl>
 
 <%= jquery do %>
-  var $rootElement = $('#addon-gws-agents-addons-workflow-column_setting');
+  var $rootElement = $('#addon-gws-agents-addons-report-column_setting');
   $rootElement.find('.preview').colorbox({
     fixed: true,
     width: "90%",

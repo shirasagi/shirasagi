@@ -1,0 +1,6 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-survey-group-setting"); <% end %>
+
+<dl class="see addon-gws-survey-group-setting">
+  <dt><%= @model.t :survey_default_due_date %></dt>
+  <dd><%= @item.survey_default_due_date %> <%= t('datetime.prompts.day') %></dd>
+</dl>

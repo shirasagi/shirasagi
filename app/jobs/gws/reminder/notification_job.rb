@@ -1,6 +1,6 @@
 class Gws::Reminder::NotificationJob < Gws::ApplicationJob
   def now
-    @now ||= round_down_seconds(Time.zone.now)
+    @now ||= Time.zone.now.beginning_of_minute
   end
 
   def perform(opts = {})
@@ -43,11 +43,5 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     end
     Rails.logger.info("#{send_count} 件の通知を送りました")
     puts_history(:info, "#{send_count} 件の通知を送りました")
-  end
-
-  private
-
-  def round_down_seconds(time)
-    Time.zone.at((time.to_i / 60) * 60)
   end
 end

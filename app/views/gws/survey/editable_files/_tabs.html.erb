@@ -1,0 +1,8 @@
+<div class="gws-tabs">
+  <%= link_to(url_for(action: :index), class: ["index", cur_tab == "index" ? "current" : nil].compact) do %>
+    <span class="tab-name"><%= t("gws/survey.tabs.files") %></span>
+  <% end %>
+  <%= link_to(url_for(action: :summary), class: ["summary", cur_tab == "summary" ? "current" : nil].compact) do %>
+    <span class="tab-name"><%= t("gws/survey.tabs.summary") %></span>
+  <% end %>
+</div>

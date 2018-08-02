@@ -1,0 +1,19 @@
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path, class: 'icon-notice' %></h2>
+
+  <h3><%= link_to t('gws/survey.navi.readable'), gws_survey_readables_path(folder_id: '-', category_id: '-'), class: 'readable' %></h3>
+
+  <% if Gws::Survey::Form.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('ss.navi.editable'), gws_survey_editables_path(folder_id: '-', category_id: '-'), class: 'management' %></h3>
+  <% end %>
+
+  <% if Gws::Survey::Form.allowed?(:trash, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('ss.navi.trash'), gws_survey_trashes_path, class: 'trash' %></h3>
+  <% end %>
+
+  <% if Gws::Survey::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.category'), gws_survey_categories_path, class: 'management' %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

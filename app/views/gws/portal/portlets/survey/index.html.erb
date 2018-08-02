@@ -1,0 +1,67 @@
+<%
+  items = @portlet.find_survey_items(@portal, @cur_user)
+  now = Time.zone.now
+  after_1day = now + 1.day
+  after_2days = now + 2.days
+  after_3days = now + 3.days
+%>
+<div class="main-box gws-survey">
+  <div class="portlet-title"><%= @portlet.name %></div>
+
+  <ul class="list-items">
+    <% items.each do |item| %>
+      <%
+        css_classes = %w(list-item survey-item)
+        if item.answered?(@cur_user)
+          css_classes << 'answered'
+        else
+          css_classes << 'unanswered'
+          if now >= item.due_date
+            css_classes << 'over-limit'
+          elsif after_1day >= item.due_date
+            css_classes << 'near-limit'
+            css_classes << 'near-limit-1'
+          elsif after_2days >= item.due_date
+            css_classes << 'near-limit'
+            css_classes << 'near-limit-2'
+          elsif after_3days >= item.due_date
+            css_classes << 'near-limit'
+            css_classes << 'near-limit-3'
+          end
+        end
+      %>
+      <li class="<%= css_classes.join(' ') %>">
+        <div class="info">
+          <%= link_to item.name, edit_gws_survey_readable_file_path(folder_id: '-', category_id: '-', readable_id: item), class: 'title' %>
+
+          <div class="meta">
+            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+
+            <% answered = item.answered_at(@cur_user) %>
+            <% if answered %>
+              <span class="answered"><%= Gws::Survey::File.t :updated %>: <%= I18n.l(answered) %></span>
+            <% else %>
+              <span class="limit">
+                <%= Gws::Survey::Form.t(:due_date) %>:
+                <%= tryb { I18n.l(item.due_date) } %>
+                (<%= now >= item.due_date ? t("gws/survey.over_limit") : time_ago_in_words(item.due_date) %>)
+              </span>
+            <% end %>
+
+            <span class="categories">
+              <% item.categories.compact.each do |category| %>
+                <%= link_to category.trailing_name, gws_survey_readables_path(folder_id: '-', category_id: category.id),
+                            class: "gws-category-label", style: category_label_css(category) %>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+
+  <% if items.next_page %>
+    <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_survey_main_path %></div>
+  <% end %>
+</div>

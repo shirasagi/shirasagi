@@ -1,0 +1,28 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :description %><%= @model.tt :description %></dt>
+  <dd><%= f.text_area :description %></dd>
+
+  <dt><%= @model.t :anonymous_state %><%= @model.tt :anonymous_state %></dt>
+  <dd><%= f.select :anonymous_state, @item.anonymous_state_options %></dd>
+
+  <dt><%= @model.t :file_state %><%= @model.tt :file_state %></dt>
+  <dd><%= f.select :file_state, @item.file_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :file_edit_state %><%= @model.tt :file_edit_state %></dt>
+  <dd><%= f.select :file_edit_state, @item.file_edit_state_options %></dd>
+
+  <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
+  <dd><%= f.text_field :due_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.due_date) } %></dd>
+
+  <dt><%= @model.t :release_date %><%= @model.tt :release_date %></dt>
+  <dd><%= f.text_field :release_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.release_date) } %></dd>
+
+  <dt><%= @model.t :close_date %><%= @model.tt :close_date %></dt>
+  <dd><%= f.text_field :close_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.close_date) } %></dd>
+
+  <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
+  <dd><%= f.text_area :memo %></dd>
+</dl>

@@ -1,0 +1,18 @@
+<% return if @cur_form.blank? && (@item.cur_form || @item.form).blank? %>
+<% @cur_form ||= (@item.cur_form || @item.form) %>
+
+<dl class="see mod-gws-survey-custom_form">
+<% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+  <% column = value.column %>
+  <% if column.present? && column.column_show_path.present? %>
+    <%= render file: column.column_show_path, locals: { column: column, value: value } %>
+  <% else %>
+    <dt><%= value.name %></dt>
+    <dd>
+      <%= column.try(:prefix_label) %>
+      <%= br value.value %>
+      <%= column.try(:postfix_label) %>
+    </dd>
+  <% end %>
+<% end %>
+</dl>

@@ -10,4 +10,7 @@
 
   <dt><%= @model.t :notice_folder_ids %></dt>
   <dd><%= br @item.notice_folders.for_post_reader(@cur_site, @cur_user).pluck(:name).join("\n") %></dd>
+
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.limit %></dd>
 </dl>

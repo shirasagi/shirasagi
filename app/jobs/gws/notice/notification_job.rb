@@ -8,7 +8,7 @@ class Gws::Notice::NotificationJob < Gws::ApplicationJob
   private
 
   def select_items
-    criteria = Gws::Notice::Post.site(site).without_deleted.and_public
+    criteria = Gws::Notice::Post.site(site).without_deleted.and_public(@now)
     criteria = criteria.and('$or' => [{ message_notification: 'enabled' }, { email_notification: 'enabled' }])
     @items = criteria.exists(notification_noticed: false)
   end

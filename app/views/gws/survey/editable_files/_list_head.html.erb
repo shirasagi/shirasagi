@@ -1,0 +1,8 @@
+<div class="list-head">
+  <div class="operations">
+    <%= link_to(t("ss.buttons.csv"), { action: :download_all, s: @s.to_h }, { class: "btn btn-download btn-csv", style: "font-weight: normal;" }) %>
+    <%= link_to(t("gws/survey.buttons.zip_all_files"), { action: :zip_all_files, s: @s.to_h }, { class: "btn btn-download btn-zip", style: "font-weight: normal;" }) %>
+  </div>
+
+  <%= render file: "_search" %>
+</div>
