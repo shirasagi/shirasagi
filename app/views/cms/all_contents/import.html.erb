@@ -1,0 +1,38 @@
+<div class="cms-tabs">
+  <%= link_to cms_all_contents_download_path do %>
+    <span class="tab-name"><%= t("cms.all_content.download_tab") %></span>
+  <% end %>
+  <%= link_to cms_all_contents_import_path, class: 'current' do %>
+    <span class="tab-name"><%= t("cms.all_content.import_tab") %></span>
+  <% end %>
+</div>
+
+<%= form_tag({ action: :import }, { method: :post, multipart: true }) do %>
+  <div class="addon-views">
+    <div class="addon-view" id="cms-all-contents-import">
+      <div class="addon-head"><h2><%= t("cms.all_content.import_head") %></h2></div>
+      <div class="addon-body">
+        <% if @errors %>
+        <div id="errorExplanation" class="errorExplanation">
+          <h2><%= t('errors.template.header', count: @errors.length) %></h2>
+          <p><%= t('errors.template.body', count: @errors.length) %></p>
+          <ul>
+            <% @errors.each do |error| %>
+              <li><%= error %></li>
+            <% end %>
+          </ul>
+        </div>
+        <% end %>
+
+        <dl class="see">
+          <dt><%= t("ss.file") %></dt>
+          <dd><%= file_field_tag "item[in_file]" %></dd>
+        </dl>
+        <p class="description"><%= t("cms.all_content.import_description") %></p>
+      </div>
+      <footer class="send">
+        <%= submit_tag t("ss.import"), name: 'import', class: :save, data: { confirm: t("ss.confirm.import") } %>
+      </footer>
+    </div>
+  </div>
+<% end %>

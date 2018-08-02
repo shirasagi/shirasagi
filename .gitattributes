@@ -1,3 +1,4 @@
+spec/fixtures/cms/*.csv binary
 spec/fixtures/cms/role/*.csv binary
 spec/fixtures/gws/user/*.csv binary
 spec/fixtures/opendata/*.csv binary

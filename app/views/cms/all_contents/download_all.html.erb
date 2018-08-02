@@ -1,0 +1,20 @@
+<div class="cms-tabs">
+  <%= link_to cms_all_contents_download_path, class: 'current' do %>
+    <span class="tab-name"><%= t("cms.all_content.download_tab") %></span>
+  <% end %>
+  <%= link_to cms_all_contents_import_path do %>
+    <span class="tab-name"><%= t("cms.all_content.import_tab") %></span>
+  <% end %>
+</div>
+
+<div class="addon-views">
+  <div class="addon-view" id="cms-all-contents-download-all">
+    <div class="addon-head"><h2><%= t("cms.all_content.download_head") %></h2></div>
+    <div class="addon-body">
+      <p class="description"><%= t("cms.all_content.download_description") %></p>
+    </div>
+    <footer class="send">
+      <%= link_to t('ss.links.download'), cms_all_contents_download_path(format: :csv), {class: "btn btn-primary"} %>
+    </footer>
+  </div>
+</div>
