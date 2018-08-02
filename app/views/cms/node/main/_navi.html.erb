@@ -13,5 +13,7 @@
 
 <% if mod == :cms %>
   <%= node_navi :cms do %>
+    <h3><%= link_to t('ss.list'), { action: :index } rescue nil %></h3>
+    <h3><%= link_to t("ss.links.trash"), { action: :trash }, class: :trash rescue nil %></h3>
   <% end %>
 <% end %>

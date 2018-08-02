@@ -66,6 +66,16 @@ module Cms::PageFilter
     end
   end
 
+  def trash
+    if @cur_node
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+      set_items
+      @items = @items.unscope_and.only_deleted.search(params[:s]).
+        page(params[:page]).per(50)
+    end
+  end
+
   def create
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user)

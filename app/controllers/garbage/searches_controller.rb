@@ -1,6 +1,7 @@
 class Garbage::SearchesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::TrashFilter
 
   model Garbage::Node::Base
 

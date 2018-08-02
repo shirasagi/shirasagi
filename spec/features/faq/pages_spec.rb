@@ -5,10 +5,13 @@ describe "faq_pages" do
   subject(:node) { create_once :faq_node_page, filename: "docs", name: "faq" }
   subject(:item) { Faq::Page.last }
   subject(:index_path) { faq_pages_path site.id, node }
+  subject(:trash_path) { trash_faq_pages_path site.id, node }
   subject(:new_path) { new_faq_page_path site.id, node }
   subject(:show_path) { faq_page_path site.id, node, item }
   subject(:edit_path) { edit_faq_page_path site.id, node, item }
   subject(:delete_path) { delete_faq_page_path site.id, node, item }
+  subject(:soft_delete_path) { soft_delete_faq_page_path site.id, node, item }
+  subject(:undo_delete_path) { undo_delete_faq_page_path site.id, node, item }
   subject(:move_path) { move_faq_page_path site.id, node, item }
   subject(:copy_path) { copy_faq_page_path site.id, node, item }
   subject(:contains_urls_path) { contains_urls_faq_page_path site.id, node, item }
@@ -85,6 +88,26 @@ describe "faq_pages" do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
 
     it "#contains_urls" do

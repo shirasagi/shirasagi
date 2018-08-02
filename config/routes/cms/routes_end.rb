@@ -5,6 +5,14 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :copy do
     get :copy, on: :member
     put :copy, on: :member
@@ -82,16 +90,16 @@ SS::Application.routes.draw do
     end
     resources :contents, path: "contents/(:mod)"
 
-    resources :nodes, concerns: [:deletion, :command] do
+    resources :nodes, concerns: [:deletion, :trash, :command] do
       get :routes, on: :collection
     end
 
-    resources :parts, concerns: :deletion do
+    resources :parts, concerns: [:deletion, :trash] do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls]
-    resources :layouts, concerns: :deletion
+    resources :pages, concerns: [:deletion, :trash, :copy, :move, :command, :lock, :contains_urls]
+    resources :layouts, concerns: [:deletion, :trash]
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :loop_settings, concerns: :deletion
@@ -202,17 +210,17 @@ SS::Application.routes.draw do
     post "command" => "command#command"
     get "copy_nodes" => "copy_nodes#index", as: :copy
     post "copy_nodes" => "copy_nodes#run"
-    resource :conf, concerns: [:copy, :move, :command] do
+    resource :conf, concerns: [:trash, :copy, :move, :command] do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
-    resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls]
-    resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]
-    resources :import_nodes, concerns: [:deletion, :copy, :move]
+    resources :nodes, concerns: [:deletion, :trash]
+    resources :pages, concerns: [:deletion, :trash, :copy, :move, :lock, :command, :contains_urls]
+    resources :import_pages, concerns: [:deletion, :trash, :copy, :move, :convert, :index_state]
+    resources :import_nodes, concerns: [:deletion, :trash, :copy, :move]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
-    resources :parts, concerns: :deletion
-    resources :layouts, concerns: :deletion
+    resources :parts, concerns: [:deletion, :trash]
+    resources :layouts, concerns: [:deletion, :trash]
     resources :archives, only: [:index]
     resources :photo_albums, only: [:index]
   end

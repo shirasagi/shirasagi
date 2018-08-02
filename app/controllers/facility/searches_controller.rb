@@ -1,6 +1,7 @@
 class Facility::SearchesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::TrashFilter
 
   model Facility::Node::Base
 

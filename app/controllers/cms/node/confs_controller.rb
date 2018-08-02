@@ -1,6 +1,7 @@
 class Cms::Node::ConfsController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::TrashFilter
 
   model Cms::Node
 
@@ -30,5 +31,37 @@ class Cms::Node::ConfsController < ApplicationController
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user)
     render_destroy @item.destroy, location: redirect_url_on_destroy
+  end
+
+  def soft_delete
+    set_item unless @item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = Time.zone.now
+    render_destroy @item.save, location: redirect_url_on_destroy
+  end
+
+  def undo_delete
+    set_item
+    raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.deleted = nil
+
+    render_opts = {}
+    render_opts[:location] = redirect_url_on_destroy
+    render_opts[:render] = { file: :undo_delete }
+    render_opts[:notice] = t('ss.notice.restored')
+
+    render_update @item.save, render_opts
   end
 end

@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :crud do
     get :move, on: :member
     put :move, on: :member
@@ -39,7 +47,7 @@ SS::Application.routes.draw do
 
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud, :download, :import, :command, :contains_urls, :tag]
+    resources :pages, concerns: [:deletion, :trash, :crud, :download, :import, :command, :contains_urls, :tag]
     resources :searches, only: [:index]
   end
 

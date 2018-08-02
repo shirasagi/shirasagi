@@ -8,13 +8,17 @@
   <li><%= link_to t("ezine.column"), ezine_columns_path %></li>
   <li><%= link_to t("ezine.entry"), ezine_entries_path %></li>
 </ul>
-<% end %>
-<% if @cur_node.route == 'ezine/member_page' %>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("ezine.page")})", trash_ezine_pages_path, class: :trash %></h3>
+<% elsif @cur_node.route == 'ezine/member_page' %>
 <h3><%= link_to t("cms.nodes.ezine/member_page"), ezine_member_pages_path %></h3>
 <ul class="narrow-page">
   <li><%= link_to t("ezine.member_page_member"), members_ezine_member_pages_path %></li>
   <li><%= link_to t("ezine.test_member"), ezine_test_members_path %></li>
 </ul>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("cms.nodes.ezine/member_page")})", trash_ezine_member_pages_path, class: :trash %></h3>
+<% else %>
+  <h3><%= link_to Cms::Node.model_name.human, { action: :index } rescue nil %></h3>
+  <h3><%= link_to "#{t("ss.links.trash")} (#{Cms::Node.model_name.human})", { action: :trash }, class: :trash rescue nil %></h3>
 <% end %>
 
 <% end %>

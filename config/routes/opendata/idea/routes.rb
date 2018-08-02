@@ -7,13 +7,21 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :command do
     get :command, on: :member
     post :command, on: :member
   end
 
   content "opendata" do
-    resources :ideas, concerns: [:deletion, :command], module: :idea do
+    resources :ideas, concerns: [:deletion, :trash, :command], module: :idea do
       resources :comments, concerns: :deletion
     end
     resources :idea_categories, concerns: :deletion, module: :idea

@@ -5,10 +5,13 @@ describe "facility_maps" do
   subject(:node) { create_once :facility_node_page, name: "facility" }
   subject(:item) { Facility::Map.last }
   subject(:index_path) { facility_maps_path site.id, node }
+  subject(:trash_path) { trash_facility_maps_path site.id, node }
   subject(:new_path) { new_facility_map_path site.id, node }
   subject(:show_path) { facility_map_path site.id, node, item }
   subject(:edit_path) { edit_facility_map_path site.id, node, item }
   subject(:delete_path) { delete_facility_map_path site.id, node, item }
+  subject(:soft_delete_path) { soft_delete_facility_map_path site.id, node, item }
+  subject(:undo_delete_path) { undo_delete_facility_map_path site.id, node, item }
   let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
   let(:expected_addon_titles) { %w(メタ情報 公開予約 公開設定 地図 基本情報 承認 権限).sort }
 
@@ -47,6 +50,26 @@ describe "facility_maps" do
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
 
     it "#delete" do

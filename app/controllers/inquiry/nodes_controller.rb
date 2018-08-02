@@ -1,11 +1,11 @@
 class Inquiry::NodesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::TrashFilter
 
   model Inquiry::Node::Form
 
   prepend_view_path "app/views/cms/node/nodes"
-  navi_view "inquiry/nodes/navi"
 
   before_action :redirect_with_route, only: :index
 

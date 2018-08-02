@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :command do
     get :command, on: :member
     post :command, on: :member
@@ -14,7 +22,7 @@ SS::Application.routes.draw do
 
   content "ezine" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :command] do
+    resources :pages, concerns: [:deletion, :trash, :command] do
       get :delivery_confirmation, on: :member
       get :delivery_test_confirmation, on: :member
       get :sent_logs, on: :member
@@ -29,7 +37,7 @@ SS::Application.routes.draw do
     resources :columns, concerns: :deletion
     resources :backnumbers, concerns: :deletion
 
-    resources :member_pages, module: :member_page, controller: :main, concerns: [:deletion, :command] do
+    resources :member_pages, module: :member_page, controller: :main, concerns: [:deletion, :trash, :command] do
       get :delivery_confirmation, on: :member
       get :delivery_test_confirmation, on: :member
       get :sent_logs, on: :member

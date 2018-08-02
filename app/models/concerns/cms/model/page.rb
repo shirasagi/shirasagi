@@ -24,7 +24,7 @@ module Cms::Model::Page
 
     after_save :rename_file, if: ->{ @db_changes }
     after_save :generate_file, if: ->{ @db_changes }
-    after_save :remove_file, if: ->{ @db_changes && @db_changes["state"] && !public? }
+    after_save :remove_file, if: ->{ (@db_changes && @db_changes["state"] && !public?) || deleted? }
     after_destroy :remove_file
 
     template_variable_handler(:categories, :template_variable_handler_categories)
@@ -42,6 +42,8 @@ module Cms::Model::Page
     return false unless serve_static_file?
     return false unless public?
     return false unless public_node?
+    return false if deleted?
+    return false if deleted_node?
     run_callbacks :generate_file do
       Cms::Agents::Tasks::PagesController.new.generate_page(self)
     end

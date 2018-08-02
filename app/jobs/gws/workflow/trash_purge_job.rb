@@ -1,5 +1,5 @@
 class Gws::Workflow::TrashPurgeJob < Gws::ApplicationJob
-  include Gws::TrashPurge::BaseJob
+  include SS::TrashPurge::BaseJob
 
   self.model = Gws::Workflow::File
 end

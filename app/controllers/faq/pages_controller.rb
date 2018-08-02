@@ -1,6 +1,7 @@
 class Faq::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
+  include Cms::TrashFilter
   include Workflow::PageFilter
 
   model Faq::Page

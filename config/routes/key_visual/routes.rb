@@ -7,9 +7,17 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   content "key_visual" do
     get "/" => redirect { |p, req| "#{req.path}/images" }, as: :main
-    resources :images, concerns: :deletion
+    resources :images, concerns: [:deletion, :trash]
   end
 
   node "key_visual" do

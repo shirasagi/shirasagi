@@ -1,6 +1,7 @@
 class Ads::BannersController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::TrashFilter
 
   model Ads::Banner
 
@@ -24,6 +25,17 @@ class Ads::BannersController < ApplicationController
 
     @items = @model.site(@cur_site).node(@cur_node).
       allow(:read, @cur_user).
+      search(params[:s]).
+      order_by(order: 1).
+      page(params[:page]).per(50)
+  end
+
+  def trash
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
+    @items = @model.unscope_and.site(@cur_site).node(@cur_node).
+      allow(:read, @cur_user).
+      only_deleted.
       search(params[:s]).
       order_by(order: 1).
       page(params[:page]).per(50)

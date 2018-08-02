@@ -1,5 +1,6 @@
 <%= node_navi :garbage do %>
 
 <h3><%= link_to t("garbage.search"), garbage_searches_path, class: "icon-node" %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t("garbage.search")})", trash_garbage_searches_path, class: :trash %></h3>
 
 <% end %>

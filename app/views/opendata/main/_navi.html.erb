@@ -1,9 +1,9 @@
 <%= node_navi :opendata do %>
-
 <% if @cur_node.route == "opendata/dataset" %>
   <h3><%= link_to t("mongoid.models.opendata/dataset"), opendata_datasets_path, class: "icon-node" %></h3>
   <ul class="narrow-page">
     <li><%= link_to t("workflow.page.closed"), opendata_datasets_closed_path, class: "icon-node" %></li>
+    <li><%= link_to t("ss.links.trash"), trash_opendata_datasets_path, class: :trash %></li>
   </ul>
   <h3><%= link_to t("mongoid.models.opendata/dataset_group"), opendata_dataset_groups_path, class: "icon-node" %></h3>
   <h3><%= link_to t("mongoid.models.opendata/license"), opendata_licenses_path, class: "icon-node" %></h3>
@@ -12,14 +12,18 @@
   <h3><%= link_to t("mongoid.models.opendata/app"), opendata_apps_path, class: "icon-node" %></h3>
   <ul class="narrow-page">
     <li><%= link_to t("workflow.page.closed"), opendata_apps_closed_path, class: "icon-node" %></li>
+    <li><%= link_to t("ss.links.trash"), trash_opendata_apps_path, class: :trash %></li>
   </ul>
   <h3><%= link_to t("mongoid.models.opendata/license"), opendata_licenses_path, class: "icon-node" %></h3>
 <% elsif @cur_node.route == "opendata/idea" %>
   <h3><%= link_to t("mongoid.models.opendata/idea"), opendata_ideas_path, class: "icon-node" %></h3>
   <ul class="narrow-page">
     <li><%= link_to t("workflow.page.closed"), opendata_ideas_closed_path, class: "icon-node" %></li>
+    <li><%= link_to t("ss.links.trash"), trash_opendata_ideas_path, class: :trash %></li>
   </ul>
 <% else %>
+  <h3><%= link_to Cms::Node.model_name.human, { action: :index } rescue nil %></h3>
+  <h3><%= link_to "#{t("ss.links.trash")} (#{Cms::Node.model_name.human})", { action: :trash }, class: :trash rescue nil %></h3>
   <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
   <h3><%= link_to item.name, opendata_datasets_path(@cur_site, item), class: "icon-node" %></h3>
   <% end %>

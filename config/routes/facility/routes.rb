@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :download do
     get :download, :on => :collection
   end
@@ -18,15 +26,15 @@ SS::Application.routes.draw do
 
   content "facility" do
     get "/" => redirect { |p, req| "#{req.path}/searches" }, as: :main
-    resources :pages, concerns: [:deletion, :download, :import]
+    resources :pages, concerns: [:deletion, :trash, :download, :import]
     resources :nodes, concerns: :deletion
-    resources :searches, concerns: :deletion
+    resources :searches, concerns: [:deletion, :trash]
     resources :services, concerns: :deletion
     resources :locations, concerns: :deletion
     resources :categories, concerns: :deletion
 
-    resources :images, concerns: :deletion
-    resources :maps, concerns: :deletion
+    resources :images, concerns: [:deletion, :trash]
+    resources :maps, concerns: [:deletion, :trash]
   end
 
   node "facility" do

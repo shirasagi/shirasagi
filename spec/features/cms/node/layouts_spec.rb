@@ -5,10 +5,13 @@ describe "cms_node_layouts", type: :feature, dbscope: :example do
   let(:node) { create :cms_node }
   let(:item) { create :cms_layout, filename: "#{node.filename}/name" }
   let(:index_path)  { node_layouts_path site.id, node }
+  let(:trash_path)  { "#{index_path}/trash" }
   let(:new_path)    { "#{index_path}/new" }
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:soft_delete_path) { "#{index_path}/#{item.id}/soft_delete" }
+  let(:undo_delete_path) { "#{index_path}/#{item.id}/undo_delete" }
 
   context "with auth" do
     before { login_cms_user }
@@ -52,6 +55,26 @@ describe "cms_node_layouts", type: :feature, dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
   end
 end

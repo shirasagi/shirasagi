@@ -8,6 +8,7 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example do
 
   context "public" do
     let!(:item) { create :cms_page, filename: "item" }
+    let!(:deleted_item) { create :cms_page, filename: "deleted_item", deleted: Time.zone.now }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -18,6 +19,8 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_css(".pages")
       expect(page).to have_selector("article")
+      expect(page).to have_selector("a[href='/item.html']")
+      expect(page).to have_no_selector("a[href='/deleted_item.html']")
     end
 
     it "#kana", mecab: true do
@@ -26,6 +29,7 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example do
       expect(page).to have_css(".pages")
       expect(page).to have_selector("article")
       expect(page).to have_selector("a[href='/item.html']")
+      expect(page).to have_no_selector("a[href='/deleted_item.html']")
     end
 
     it "#mobile" do
@@ -34,6 +38,7 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example do
       expect(page).to have_css(".pages")
       expect(page).to have_selector(".tag-article")
       expect(page).to have_selector("a[href='/mobile/item.html']")
+      expect(page).to have_no_selector("a[href='/mobile/deleted_item.html']")
     end
   end
 end

@@ -1,5 +1,6 @@
 <%= node_navi :category do %>
 
 <h3><%= link_to t("category.node"), category_nodes_path %></h3>
+<h3><%= link_to "#{t("ss.links.trash")} (#{t('category.node')})", trash_category_nodes_path, class: :trash %></h3>
 
 <% end %>

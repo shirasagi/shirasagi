@@ -185,7 +185,7 @@ module Cms::PublicFilter
   end
 
   def send_page(page)
-    if response.content_type == "text/html" && page.layout
+    if response.content_type == "text/html" && page.layout && !page.layout.deleted?
       render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
     else
       @_response_body = response.body

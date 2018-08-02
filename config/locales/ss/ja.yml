@@ -10,6 +10,7 @@ ja:
     import: インポート
     import_log: インポートログ
     export: エクスポート
+    list: 一覧
     login: ログイン
     logout: ログアウト
     module: モジュール

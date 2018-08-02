@@ -54,7 +54,7 @@ class Cms::PreviewController < ApplicationController
     return page_not_found unless resp
     self.response = resp
 
-    if page.layout
+    if page.layout && !page.layout.deleted?
       render html: render_layout(page.layout).html_safe, layout: "cms/page"
     else
       @_response_body = response.body

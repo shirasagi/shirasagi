@@ -1,4 +1,4 @@
-module Gws::TrashPurge::BaseJob
+module SS::TrashPurge::BaseJob
   extend ActiveSupport::Concern
 
   DEFAULT_THRESHOLD_DAYS = 14

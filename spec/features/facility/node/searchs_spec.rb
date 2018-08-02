@@ -5,10 +5,13 @@ describe "facility_node_searches", type: :feature, dbscope: :example do
   let(:node) { create :cms_node }
   let(:item) { create :facility_node_search, filename: "#{node.filename}/name" }
   let(:index_path)  { facility_searches_path site.id, node }
+  let(:trash_path)  { "#{index_path}/trash" }
   let(:new_path)    { "#{index_path}/new" }
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:soft_delete_path) { "#{index_path}/#{item.id}/soft_delete" }
+  let(:undo_delete_path) { "#{index_path}/#{item.id}/undo_delete" }
   let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
   let(:expected_addon_titles) { %w(フォルダー設定 メタ情報 公開予約の既定値 公開設定 基本情報 施設の用途 施設の種類 施設地域 施設情報 権限 追加情報).sort }
 
@@ -54,6 +57,26 @@ describe "facility_node_searches", type: :feature, dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
   end
 end

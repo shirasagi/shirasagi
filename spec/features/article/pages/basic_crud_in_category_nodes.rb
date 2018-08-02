@@ -8,6 +8,8 @@ describe "article_pages", dbscope: :example do
   let(:show_path) { article_page_path site.id, node, item }
   let(:edit_path) { edit_article_page_path site.id, node, item }
   let(:delete_path) { delete_article_page_path site.id, node, item }
+  let(:soft_delete_path) { soft_delete_article_page_path site.id, node, item }
+  let(:undo_delete_path) { undo_delete_article_page_path site.id, node, item }
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
 
@@ -85,6 +87,28 @@ describe "article_pages", dbscope: :example do
       end
       expect(current_path).to eq index_path
     end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+    end
+
+    it "#undo_delete" do
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
+    end
   end
 
   context "basic crud in category_node_page" do
@@ -160,6 +184,26 @@ describe "article_pages", dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
   end
 end

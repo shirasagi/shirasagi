@@ -7,6 +7,7 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
 
   context "public" do
     let!(:item) { create :cms_node, filename: "node/item" }
+    let!(:deleted_item) { create :cms_page, filename: "node/deleted_item", deleted: Time.zone.now }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -17,6 +18,8 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_css(".nodes")
       expect(page).to have_selector("article")
+      expect(page).to have_selector("a[href='/node/item/']", text: item.name)
+      expect(page).to have_no_selector("a[href='/node/deleted_item/']")
     end
 
     it "#kana", mecab: true do
@@ -24,7 +27,8 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_css(".nodes")
       expect(page).to have_selector("article")
-      expect(page).to have_selector("a[href='/node/item/']")
+      expect(page).to have_selector("a[href='/node/item/']", text: item.name)
+      expect(page).to have_no_selector("a[href='/node/deleted_item/']")
     end
 
     it "#mobile" do
@@ -32,7 +36,8 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_css(".nodes")
       expect(page).to have_selector(".tag-article")
-      expect(page).to have_selector("a[href='/mobile/node/item/']")
+      expect(page).to have_selector("a[href='/mobile/node/item/']", text: item.name)
+      expect(page).to have_no_selector("a[href='/mobile/node/deleted_item/']")
     end
   end
 end

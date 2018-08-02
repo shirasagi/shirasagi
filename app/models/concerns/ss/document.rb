@@ -252,6 +252,10 @@ module SS::Document
     item
   end
 
+  def deleted?
+    deleted.present? && deleted <= Time.zone.now
+  end
+
   private
 
   def set_db_changes

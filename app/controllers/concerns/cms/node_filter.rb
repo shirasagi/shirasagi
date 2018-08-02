@@ -6,7 +6,7 @@ module Cms::NodeFilter
     prepend_view_path "app/views/cms/nodes"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move]
     before_action :change_item_class, if: -> { @item.present? }
-    before_action :set_tree_navi, only: [:index]
+    before_action :set_tree_navi, only: [:index, :trash]
   end
 
   private
@@ -34,6 +34,15 @@ module Cms::NodeFilter
   def index
     @items = @model.site(@cur_site).node(@cur_node).
       allow(:read, @cur_user).
+      search(params[:s]).
+      order_by(filename: 1).
+      page(params[:page]).per(50)
+  end
+
+  def trash
+    @items = @model.unscope_and.site(@cur_site).node(@cur_node).
+      allow(:read, @cur_user).
+      only_deleted.
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)

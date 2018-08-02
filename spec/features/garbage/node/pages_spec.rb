@@ -6,10 +6,13 @@ describe "garbage_node_pages", type: :feature, dbscope: :example do
   let(:item) { create :garbage_node_page, filename: "#{node.filename}/name" }
 
   let(:index_path) { garbage_nodes_path site.id, node }
+  let(:trash_path) { trash_garbage_nodes_path site.id, node }
   let(:new_path) { new_garbage_node_path site.id, node }
   let(:show_path) { garbage_node_path site.id, node, item }
   let(:edit_path) { edit_garbage_node_path site.id, node, item }
   let(:delete_path) { delete_garbage_node_path site.id, node, item }
+  let(:soft_delete_path) { soft_delete_garbage_node_path site.id, node, item }
+  let(:undo_delete_path) { undo_delete_garbage_node_path site.id, node, item }
 
   context "with auth" do
     before { login_cms_user }
@@ -53,6 +56,26 @@ describe "garbage_node_pages", type: :feature, dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#soft_delete" do
+      visit soft_delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_css("a.title", text: item.name)
+
+      visit undo_delete_path
+      within "form" do
+        click_button "元に戻す"
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a.title", text: item.name)
+      visit trash_path
+      expect(page).to have_no_css("a.title", text: item.name)
     end
   end
 end

@@ -7,6 +7,14 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :trash do
+    get :trash, on: :collection
+    delete :trash, action: :destroy_all, on: :collection
+    match :soft_delete, on: :member, via: [:get, :post]
+    match :undo_delete, on: :member, via: [:get, :post]
+    post :soft_delete_all, on: :collection
+  end
+
   concern :copy do
     get :copy, on: :member
     put :copy, on: :member
@@ -54,7 +62,8 @@ SS::Application.routes.draw do
     get "generate" => "generate#index"
     post "generate" => "generate#run"
     resources :pages, concerns: [
-      :deletion, :copy, :move, :lock, :download, :import, :command, :opendata_ref, :contains_urls, :tag
+      :deletion, :trash, :copy, :move, :lock, :download,
+      :import, :command, :opendata_ref, :contains_urls, :tag
     ]
   end
 
