@@ -1,5 +1,3 @@
-<% setting = Sys::Setting.first || Sys::Setting.new %>
-
 <nav class="main-navi main-navi-md">
   <!--
   <h2><%= link_to t("sns.profile"), sns_cur_user_profile_path %></h2>
@@ -11,7 +9,7 @@
     <% end %>
   </h2>
 
-  <% if setting.menu_file_visible? %>
+  <% if @cur_setting.menu_file_visible? %>
     <h2>
       <%= link_to sns_cur_user_files_path do %>
         <i class="material-icons">&#xE2C8;</i><%= t("sns.file") %>
@@ -19,7 +17,7 @@
     </h2>
   <% end %>
 
-  <% if setting.menu_connection_visible? %>
+  <% if @cur_setting.menu_connection_visible? %>
     <h2>
       <%= link_to sns_connection_path do %>
         <i class="material-icons">&#xE88F;</i><%= t("sns.connection") %>
