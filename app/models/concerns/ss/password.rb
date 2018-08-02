@@ -17,6 +17,7 @@ module SS::Password
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
     before_save :reset_initial_password_warning, if: -> { self_edit }
     before_save :update_password_changed_at, if: -> { password_changed? }
+    after_save :update_password_in_session, if: -> { password_changed? }
   end
 
   def initial_password_warning_options
@@ -48,5 +49,14 @@ module SS::Password
 
   def update_password_changed_at
     self.password_changed_at = Time.zone.now
+  end
+
+  def update_password_in_session
+    return if Rails.application.current_request.blank?
+
+    session = Rails.application.current_request.session
+    return if session.blank?
+    return if session[:user].blank?
+    session[:user]["password"] = SS::Crypt.encrypt(in_password)
   end
 end
