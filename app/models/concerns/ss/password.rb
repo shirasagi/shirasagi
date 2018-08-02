@@ -29,6 +29,10 @@ module SS::Password
     self.password = SS::Crypt.crypt(in_password)
   end
 
+  def password_expired
+    Sys::Setting.password_expired(self)
+  end
+
   private
 
   def validate_password

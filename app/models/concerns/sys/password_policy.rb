@@ -60,6 +60,13 @@ module Sys::PasswordPolicy
 
       item.password_validator
     end
+
+    def password_expired(record, now = Time.zone.now)
+      item = self.first
+      return :ok if item.blank?
+
+      item.password_expired(record, now)
+    end
   end
 
   def password_limit_use_options
@@ -80,5 +87,20 @@ module Sys::PasswordPolicy
 
   def password_validator
     Sys::PasswordValidator.new(setting: self)
+  end
+
+  def password_expired(record, now = Time.zone.now)
+    return :ok if password_limit_use != "enabled"
+
+    timestamp = record.password_changed_at || record.created
+    expiration_at = timestamp + password_limit_days.days
+    return :expired if now >= expiration_at
+
+    return :ok if password_warning_use != "enabled"
+
+    warn_at = expiration_at - password_warning_days.days
+    return :nearly_expired if now >= warn_at
+
+    :ok
   end
 end

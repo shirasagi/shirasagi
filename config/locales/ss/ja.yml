@@ -165,6 +165,8 @@ ja:
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
+      password_expired: パスワードの有効期限が切れました。パスワードを変更してください。
+      password_neary_expired: もうすぐパスワードの有効期限が切れます。パスワードを変更してください。
     errors:
       import:
         blank_file: ファイルを入力してください。
