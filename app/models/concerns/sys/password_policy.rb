@@ -53,6 +53,15 @@ module Sys::PasswordPolicy
     permit_params :password_max_failure_use, :password_max_failure_count
   end
 
+  module ClassMethods
+    def password_validator
+      item = self.first
+      return if item.blank?
+
+      item.password_validator
+    end
+  end
+
   def password_limit_use_options
     %w(disabled enabled).map do |v|
       [ I18n.t("ss.options.state.#{v}"), v ]
@@ -68,4 +77,8 @@ module Sys::PasswordPolicy
   alias password_prohibited_char_use_options password_limit_use_options
   alias password_min_change_char_use_options password_limit_use_options
   alias password_max_failure_use_options password_limit_use_options
+
+  def password_validator
+    Sys::PasswordValidator.new(setting: self)
+  end
 end

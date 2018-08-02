@@ -130,7 +130,7 @@ module Cms::Model::Member
   def validate_password
     return if self.in_password.blank?
 
-    errors.add :in_password, :password_short if self.in_password.length < 6
+    errors.add :in_password, :password_short, count: 6 if self.in_password.length < 6
     errors.add :in_password, :password_alphabet_only if self.in_password =~ /[A-Z]/i && self.in_password !~ /[^A-Z]/i
     errors.add :in_password, :password_numeric_only if self.in_password =~ /[0-9]/ && self.in_password !~ /[^0-9]/
     errors.add :in_password, :password_include_email \
