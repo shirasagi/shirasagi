@@ -21,7 +21,6 @@ class Fs::FilesController < ApplicationController
   def deny
     return if @item.public?
     return if SS.config.env.remote_preview
-
     user   = get_user_by_session
     member = get_member_by_session
     item   = @item.becomes_with_model

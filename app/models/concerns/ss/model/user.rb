@@ -7,7 +7,6 @@ module SS::Model::User
   include Ldap::Addon::User
 
   attr_accessor :cur_site, :cur_user, :in_password, :decrypted_password, :self_edit
-
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
 
@@ -54,6 +53,13 @@ module SS::Model::User
 
     # 利用停止
     field :lock_state, type: String
+
+    # ワンタイムトークン生成
+    field :access_token, type: String
+
+    # ワンタイムトークン有効
+    field :access_token_expiration_date, type: DateTime
+
 
     belongs_to :organization, class_name: "SS::Group"
     belongs_to :switch_user, class_name: "SS::User"
@@ -224,6 +230,13 @@ module SS::Model::User
 
   def disabled?
     !enabled?
+  end
+
+  def valid_access_token?
+    now = Time.zone.now
+    return false if access_token_expiration_date.blank?
+    return false if access_token_expiration_date <= now
+    true
   end
 
   def locked?
