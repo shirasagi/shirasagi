@@ -15,7 +15,8 @@ module SS::Password
     before_validation :encrypt_password, if: ->{ in_password.present? }
     validate :validate_password, if: -> { in_password.present? }
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
-    validate :validate_initial_password, if: -> { self_edit }
+    before_save :reset_initial_password_warning, if: -> { self_edit }
+    before_save :update_password_changed_at, if: -> { password_changed? }
   end
 
   def initial_password_warning_options
@@ -41,7 +42,11 @@ module SS::Password
     validator.validate(self)
   end
 
-  def validate_initial_password
+  def reset_initial_password_warning
     self.initial_password_warning = nil if password_changed?
+  end
+
+  def update_password_changed_at
+    self.password_changed_at = Time.zone.now
   end
 end
