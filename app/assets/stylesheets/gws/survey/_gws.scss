@@ -2,38 +2,76 @@
   .form-table {
     border: $border-gray5;
     overflow-x: auto;
-    margin: 16px;
+    margin: 16px 0;
     box-sizing: content-box;
+  }
+  &.index {
+    .form-table {
+      margin: 16px;
+    }
+  }
+  .operations {
+    @include mb {
+      float: none;
+      margin-left: 0;
+      margin-bottom: 16px;
+    }
   }
   .form-table-header-inner {
     width: 2000px;
+    @include mb {
+      width: auto;
+    }
   }
   .form-table-body {
     width: 100%;
     table {
       width: 100%;
       background: $white;
+      @include mb { border-collapse:collapse }
+      tr {
+        @include mb { border-bottom: $border-gray5; }
+      }
       tr:nth-child(2n) {
-        background: #f8f8f8;
+        // background: #f8f8f8;
       }
       tr.current, tr:hover {
         background: $gray1;
+        // background: #fbeee8
       }
       th, td {
         padding: 6px 18px;
         white-space: nowrap;
         @include mb { display: inline-block; }
       }
-      thead th {
-        background: $gray1;
-        color: $gray2;
-        &.deselect {
-          width: 100px;
+      thead {
+        tr {
+          background: $gray1;
+          @include mb {
+            display: inline-block;
+            width: 100%;
+            padding: 0 16px;
+          }
+        }
+        th {
+          color: $gray2;
+          @include mb {
+            padding: 6px 0;
+          }
+          &.deselect {
+            width: 100px;
+          }
+          &:after {
+            @include mb {
+              content: "/";
+            }
+          }
         }
       }
       tbody {
         td {
           border-top: $border-gray5;
+          @include mb { border-top: none; }
         }
       }
     }
@@ -89,6 +127,26 @@
       vertical-align: -3px;
     }
   }
+  &.addon-views {
+    .addon-body {
+      padding: 0;
+    }
+    .header {
+      float: right;
+      margin: 12px;
+    }
+    h2.title {
+      margin: 12px;
+      padding-left: 8px;
+      border-left: 3px solid #f25a38;
+      font-size: $px14;
+      font-weight: bold;
+    }
+    .description {
+      padding: 12px 12px 12px;
+      border-top: solid 1px #f2f2f2;
+    }
+  }
 }
 
 .survey-item {
@@ -110,7 +168,7 @@
   &.near-limit {
     .limit {
       font-weight: bold;
-
+      color: #ff7758;
       &:before {
         font-family: 'Material Icons';
         font-size: 108%;

@@ -207,6 +207,11 @@ td {
     }
   }
 }
+_::-webkit-full-page-media, _:future, :root .popup-notice-container .popup-notice:before {
+  @include mb {
+    right: 219px;
+  }
+}
 .gws-memo-notice {
   display: inline-block;
   &:hover {
@@ -237,6 +242,11 @@ td {
     .popup-notice:before {
       right: 279px;
     }
+  }
+}
+_::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:before {
+  @include mb {
+    right: 268px
   }
 }
 // -------------------------------------------------------------------------------------------------
@@ -1225,6 +1235,12 @@ td {
   }
   .icon-attendance:hover:before {
     background-position: -32px -864px !important;
+  }
+  .icon-survey:before {
+    background-position: left -928px !important;
+  }
+  .icon-survey:hover:before {
+    background-position: -32px -928px !important;
   }
 }
 

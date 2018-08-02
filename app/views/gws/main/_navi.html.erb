@@ -67,7 +67,7 @@
   <% end %>
 
   <% if @cur_site.menu_survey_visible? %>
-    <h2><%= link_to @cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path, class: 'icon-monitor' %></h2>
+    <h2><%= link_to @cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path, class: 'icon-survey' %></h2>
   <% end %>
 
   <% if @cur_site.menu_board_visible? %>
