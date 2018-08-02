@@ -1,5 +1,3 @@
-//= require 'openlayers/ol'
-
 // Used Openlayers 3
 // Document: http://openlayers.org/en/v3.12.1/apidoc/
 // Sample: http://maps.gsi.go.jp/development/sample.html
