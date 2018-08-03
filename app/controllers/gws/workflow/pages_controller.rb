@@ -126,7 +126,7 @@ class Gws::Workflow::PagesController < ApplicationController
       # finished workflow
       if validate_domain(@item.workflow_user_id)
         Workflow::Mailer.send_approve_mails(
-          f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
+          f_uid: @cur_user.id, t_uids: [ @item.workflow_user_id ],
           site: @cur_site, page: @item,
           url: params[:url], comment: params[:remand_comment]
         )
@@ -137,6 +137,14 @@ class Gws::Workflow::PagesController < ApplicationController
         to_users: Gws::User.where(id: @item.workflow_user_id), item: @item,
         url: params[:url], comment: params[:remand_comment]
       ) rescue nil
+
+      if @item.workflow_circulation_users.present?
+        Gws::Memo::Notifier.deliver_workflow_circulations!(
+          cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+          to_users: @item.workflow_circulation_users.active, item: @item,
+          url: params[:url], comment: params[:remand_comment]
+        ) rescue nil
+      end
 
       if @item.try(:branch?) && @item.state == "public"
         @item.delete
@@ -168,7 +176,7 @@ class Gws::Workflow::PagesController < ApplicationController
       mail_recipients = recipients.select { |user_id| validate_domain(user_id) }
       if mail_recipients.present?
         Workflow::Mailer.send_remand_mails(
-          f_uid: @cur_user._id, t_uids: mail_recipients,
+          f_uid: @cur_user.id, t_uids: mail_recipients,
           site: @cur_site, page: @item,
           url: params[:url], comment: params[:remand_comment]
         )

@@ -17,6 +17,7 @@ ja:
     request_cancelled_message: 承認申請は申請者によってキャンセルされました。
     restart_workflow: 再申請
     circulation_step: 回覧
+    circulation_comment: コメント
     state:
       request: 申請中
       approve: 承認
@@ -29,6 +30,9 @@ ja:
     circulation_state:
       seen: 既読
       unseen: 未読
+    links:
+      set_seen: 既読にする
+      unset_seen: 未読にする
     buttons:
       select: 選択
       cancel: 取消
@@ -73,8 +77,12 @@ ja:
       search: 検索
     confirm:
       request_cancel: 申請を取り消してもよろしいですか？
+      set_seen: 既読にしてもよろしいですか？
+      unset_seen: 未読にしてもよろしいですか？
     notice:
       request_cancelled: 申請を取り消しました。
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
 
   modules:
     workflow: ワークフロー

@@ -91,6 +91,15 @@ module Workflow::Approver
     self.workflow_required_counts[level - 1] || false
   end
 
+  def workflow_circulation_users
+    return approver_user_class.none if workflow_circulations.blank?
+
+    user_ids = workflow_circulations.map { |h| h[:user_id] }.compact.uniq
+    return approver_user_class.none if user_ids.blank?
+
+    approver_user_class.site(@cur_site || self.site).in(id: user_ids)
+  end
+
   def set_workflow_approver_state_to_request(level = workflow_current_level)
     return false if level.nil?
 
@@ -216,6 +225,25 @@ module Workflow::Approver
       end
       self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     end
+  end
+
+  def update_workflow_circulation_state(user_or_id, state, comment = nil)
+    user_id = user_or_id.id if user_or_id.respond_to?(:id)
+    user_id ||= user_or_id.to_i
+
+    copy = workflow_circulations.to_a
+    targets = copy.select do |workflow_circulation|
+      workflow_circulation[:user_id] == user_id
+    end
+    # do loop even though targets length is always 1
+    targets.each do |workflow_circulation|
+      workflow_circulation[:state] = state
+      workflow_circulation[:comment] = comment.gsub(/\n|\r\n/, " ") if comment.present?
+    end
+
+    # Be careful, partial update is meaningless. We must update entirely.
+    self.workflow_circulations = Workflow::Extensions::WorkflowCirculations.new(copy)
+    true
   end
 
   def finish_workflow?

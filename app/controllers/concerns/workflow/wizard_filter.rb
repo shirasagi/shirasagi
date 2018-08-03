@@ -49,4 +49,17 @@ module Workflow::WizardFilter
   rescue => e
     render json: [ e.message ], status: :bad_request
   end
+
+  def circulation
+    if request.get?
+      @redirect_to = params[:redirect_to] || request.referer
+      render file: 'circulation', layout: "ss/ajax"
+      return
+    end
+
+    @item.update_workflow_circulation_state(@cur_user, "seen", params[:comment].to_s)
+    @item.save
+
+    redirect_to params[:redirect_to], notice: I18n.t("workflow.notice.set_seen")
+  end
 end

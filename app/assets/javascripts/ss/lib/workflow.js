@@ -4,7 +4,7 @@ SS_Workflow = function (el, options) {
 
   var pThis = this;
 
-  $(document).on("click", el + " .update-item", function (e) {
+  this.$el.on("click", ".update-item", function (e) {
     pThis.updateItem($(this));
     e.preventDefault();
     return false;
@@ -34,25 +34,33 @@ SS_Workflow = function (el, options) {
     pThis.loadRouteList();
   });
 
-  $(document).on("click", el + " .workflow-route-start", function (e) {
+  this.$el.on("click", ".workflow-route-start", function (e) {
     var routeId = $(this).siblings('#workflow_route:first').val();
     pThis.loadRoute(routeId);
     e.preventDefault();
     return false;
   });
 
-  $(document).on("click", el + " .workflow-route-cacnel", function (e) {
+  this.$el.on("click", ".workflow-route-cacnel", function (e) {
     pThis.loadRouteList();
     e.preventDefault();
     return false;
   });
 
-  $(document).on("click", el + " .workflow-reroute", function (e) {
+  this.$el.on("click", ".workflow-reroute", function (e) {
     var $this = $(this);
     var level = $this.data('level');
     var userId = $this.data('user-id');
 
     pThis.reroute(level, userId);
+    e.preventDefault();
+    return false;
+  });
+
+  this.$el.on("click", "button[name=set_seen]", function (e) {
+    var $this = $(this);
+    var userId = $this.data('user-id');
+    pThis.setSeen(userId);
     e.preventDefault();
     return false;
   });
@@ -278,6 +286,21 @@ SS_Workflow.prototype = {
             }
           }
         });
+      }
+    });
+  },
+  setSeen: function(userId) {
+    var uri = this.composeWorkflowUrl('wizard');
+    uri += "/circulation";
+    uri += "?redirect_to=" + encodeURIComponent(location.href);
+
+    var pThis = this;
+    $('<a/>').attr('href', uri).colorbox({
+      maxWidth: "80%",
+      maxHeight: "80%",
+      fixed: true,
+      open: true,
+      onCleanup: function() {
       }
     });
   }
