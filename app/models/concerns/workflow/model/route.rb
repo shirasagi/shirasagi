@@ -15,8 +15,10 @@ module Workflow::Model::Route
     embeds_ids :groups, class_name: "SS::Group"
     field :approvers, type: Workflow::Extensions::Route::Approvers
     field :required_counts, type: Workflow::Extensions::Route::RequiredCounts
+    field :circulations, type: Workflow::Extensions::Route::Circulations
     permit_params :name, :pull_up, :on_remand
     permit_params group_ids: [], approvers: [ :level, :user_id, :editable ], required_counts: []
+    permit_params circulations: [ :user_id ]
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :pull_up, inclusion: { in: %w(enabled disabled), allow_blank: true }
@@ -105,6 +107,10 @@ module Workflow::Model::Route
       ret << [ I18n.t("workflow.options.required_count.minimum", required_count: required_count), required_count ]
     end
     ret
+  end
+
+  def circulation_users
+    self.class.approver_user_class.in(id: circulations.map { |h| h[:user_id] })
   end
 
   private

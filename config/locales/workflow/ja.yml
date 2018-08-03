@@ -16,6 +16,7 @@ ja:
     empty_route_options: 承認経路が設定されていません。
     request_cancelled_message: 承認申請は申請者によってキャンセルされました。
     restart_workflow: 再申請
+    circulation_step: 回覧
     state:
       request: 申請中
       approve: 承認
@@ -63,6 +64,10 @@ ja:
       index: 承認者を選択する
       select: 承認者を設定する
       search: 検索
+    search_circulations:
+      index: 回覧者を選択する
+      select: 回覧者を設定する
+      search: 検索
     confirm:
       request_cancel: 申請を取り消してもよろしいですか？
     notice:
@@ -102,6 +107,7 @@ ja:
         pull_up: 引き上げ承認
         on_remand: 差し戻し時
         approvers: 承認者
+        circulations: 回覧者
         required_counts: 必要承認数
         group_ids: グループ
         level: "%{level} 段目"
