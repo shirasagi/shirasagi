@@ -1,15 +1,3 @@
-<%= jquery do %>
-  $(".workflow-multi-select").multiSelect({
-    selectionHeader: "<div class='selectionHeader'><%= t "workflow.request_to" %></div>",
-    selectableHeader: "<div class='selectableHeader'><%= t "workflow.selectable_users" %></div>"
-  });
-
-  $(".ms-container").each(function() {
-    $(this).find(".selectableHeader").css("background-color", "#f0f3f3");
-    $(this).find(".selectionHeader").css("background-color", "#f0f3f3");
-  });
-<% end %>
-
 <dl class="see request-setting">
   <dt><%= t("workflow.route") %></dt>
   <dd><%= @route.name %></dd>
@@ -36,6 +24,22 @@
       %>
       <% users.each do |user| %>
         <%= hidden_field_tag "workflow_approvers", "#{level},#{user.id},#{@route.approver_user_editable?(level, user) ? '1' : ''},pending," %>
+      <% end %>
+      <%= br names.zip(emails).join("\n") %>
+    </dd>
+  </dl>
+<% end %>
+<% if @route.circulation_users.present? %>
+  <dl class="see request-setting">
+    <dt><%= t("workflow.circulation_step") %></dt>
+    <dd>
+      <%
+        users = @route.circulation_users.active.to_a
+        names = users.map(&:long_name)
+        emails = users.map(&:email)
+      %>
+      <% users.each do |user| %>
+        <%= hidden_field_tag "workflow_circulations", "#{user.id},unseen," %>
       <% end %>
       <%= br names.zip(emails).join("\n") %>
     </dd>

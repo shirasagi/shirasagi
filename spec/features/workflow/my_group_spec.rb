@@ -40,12 +40,14 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -154,12 +156,14 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -246,12 +250,14 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -342,12 +348,14 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{::Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end

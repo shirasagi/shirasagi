@@ -93,6 +93,7 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_on_remand = params[:workflow_on_remand]
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
+    @item.workflow_circulations = params[:workflow_circulations]
 
     if @item.save
       request_approval

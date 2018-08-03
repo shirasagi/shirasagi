@@ -138,6 +138,32 @@
         </table>
         <% end %>
       </dd>
+
+      <dt><%= @model.t :workflow_circulations %></dt>
+      <dd>
+        <% if @item.workflow_circulations.present? %>
+        <table class="index">
+          <tbody>
+            <% @item.workflow_circulations.each do |workflow_circulation| %>
+              <% user_id = workflow_circulation[:user_id] %>
+              <% user = SS::User.where(id: user_id).first %>
+              <% state = workflow_circulation[:state] %>
+              <tr>
+                <td>
+                <% if user %>
+                  <%= "#{user.long_name}(#{user.email})" %>
+                <% else %>
+                  <%= t("workflow.user_deleted") %>
+                <% end %>
+                </td>
+                <td><%= t("workflow.circulation_state.#{state}") %></td>
+                <td><%= workflow_circulation[:comment] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <% end %>
+      </dd>
     </dl>
   </div>
   <% end %>

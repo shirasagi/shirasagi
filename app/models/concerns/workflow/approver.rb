@@ -26,12 +26,14 @@ module Workflow::Approver
     field :workflow_on_remand, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
+    field :workflow_circulations, type: Workflow::Extensions::WorkflowCirculations
     field :approved, type: DateTime
 
     permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
     permit_params :workflow_reset, :workflow_cancel_request
+    permit_params workflow_circulations: []
 
     before_validation :reset_workflow, if: -> { workflow_reset }
     validates :approved, datetime: true

@@ -26,6 +26,9 @@ ja:
       other_approved: 他者承認済
       other_remanded: 他者差し戻し
       other_pulled_up: 引き上げ
+    circulation_state:
+      seen: 既読
+      unseen: 未読
     buttons:
       select: 選択
       cancel: 取消
@@ -99,6 +102,7 @@ ja:
         workflow_on_remand: 差し戻し時
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
+        workflow_circulations: 回覧者
         approved: 承認日時
         comment: 差し戻しコメント
         approver_comment: 承認者コメント
@@ -143,8 +147,10 @@ ja:
       workflow_comment:
         - 申請理由など承認者に対するコメントをを記述してください。
       workflow_approvers:
-        - 承認者を指定する場合は、右欄選択候補よりを対象者をクリックしてください。
-        - 承認者を解除する場合は、左欄申請先よりを対象者をクリックしてください。
+        - 承認者を選択します。
+      workflow_circulations:
+        - 回覧者を選択します。
+        - 回覧者へは承認後に回覧依頼の通知が送られます。
       approve_remand:
         - 承認依頼が届いています。申請者に対するコメントを入力（任意）の上、承認または差し戻しを選択してください。
       workflow_routes:

@@ -71,6 +71,15 @@ SS_Workflow.prototype = {
 
     return approvers;
   },
+  collectCirculations: function() {
+    var circulations = [];
+
+    this.$el.find("input[name='workflow_circulations']").each(function() {
+      circulations.push($(this).prop("value"));
+    });
+
+    return circulations;
+  },
   composeWorkflowUrl: function(type) {
     var uri = location.pathname.split("/");
     uri[2] = this.options.workflow_node;
@@ -107,6 +116,7 @@ SS_Workflow.prototype = {
     } else {
       forced_update_option = $("#forced-update").prop("checked");
     }
+    var circulations = this.collectCirculations();
     $.ajax({
       type: "POST",
       url: uri,
@@ -119,7 +129,8 @@ SS_Workflow.prototype = {
         workflow_required_counts: required_counts,
         remand_comment: remand_comment,
         url: this.options.request_url,
-        forced_update_option: forced_update_option
+        forced_update_option: forced_update_option,
+        workflow_circulations: circulations
       },
       success: function (data) {
         if (data["workflow_alert"]) {
