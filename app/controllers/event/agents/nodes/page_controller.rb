@@ -24,9 +24,9 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @date  = Date.new(@year, @month, 1)
     @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(@date, format: :long_month)}"
 
-    if within_one_year?(@date)
-      index_monthly
-    elsif within_one_year?(@date.advance(months: 1, days: -1))
+    if within_one_year?(@date) || within_one_year?(@date.advance(months: 1, days: -1))
+      return index_monthly if params[:display].to_s.start_with?('list')
+      return index_monthly_table if params[:display].to_s.start_with?('table') || @cur_node.event_display.to_s.start_with?('table')
       index_monthly
     else
       raise "404"
@@ -58,7 +58,9 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   def index_monthly
-    return index_monthly_table if @cur_node.event_display == 'table'
+    if @cur_node.event_display == 'table_only'
+      raise '404'
+    end
     @events = {}
     @items = [] unless @index
     start_date = Date.new(@year, @month, 1)
@@ -86,6 +88,9 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   def index_monthly_table
+    if @cur_node.event_display == 'list_only'
+      raise '404'
+    end
     @events = {}
     @items = [] unless @index
     start_date = @date.advance(days: -1 * @date.wday)

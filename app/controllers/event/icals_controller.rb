@@ -6,7 +6,7 @@ class Event::IcalsController < ApplicationController
   model Event::Page
 
   append_view_path "app/views/cms/pages"
-  navi_view "event/main/navi"
+  navi_view "event/icals/navi"
 
   private
 

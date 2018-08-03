@@ -56,9 +56,10 @@ module Event::EventHelper
     name = opts[:name].present? ? opts[:name] : "#{month}#{t_date('month')}"
     path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
     enable = (opts[:enable] != nil) ? opts[:enable] : true
+    display = opts[:display].present? ? "_#{opts[:display]}" : ''
 
     if enable && within_one_year?(date)
-      link_to name, sprintf("#{path}%04d%02d.html", year, month)
+      link_to name, sprintf("#{path}%04d%02d#{display}.html", year, month)
     else
       name
     end

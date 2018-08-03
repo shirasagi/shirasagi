@@ -46,6 +46,8 @@ ja:
       event_display:
         list: リスト形式
         table: 表形式
+        list_only: リスト形式のみ
+        table_only: 表形式のみ
       ical_refresh_method:
         manual: 手動
         auto: 自動
