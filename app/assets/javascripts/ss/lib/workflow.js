@@ -91,8 +91,9 @@ SS_Workflow.prototype = {
     return uri.join("/");
   },
   updateItem: function($this) {
+    var updatetype = $this.attr("updatetype");
     var approvers = this.collectApprovers();
-    if ($.isEmptyObject(approvers) && $this.attr("type") === "request") {
+    if ($.isEmptyObject(approvers) && updatetype === "request") {
       alert(this.options.errors.not_select);
       return;
     }
@@ -103,7 +104,6 @@ SS_Workflow.prototype = {
     });
 
     var uri = this.composeWorkflowUrl('pages');
-    var updatetype = $this.attr("updatetype");
     uri += "/" + updatetype + "_update";
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
