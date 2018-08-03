@@ -1,5 +1,4 @@
 .presence-groups {
-  width: 22% !important;
   .all-groups {
     border: 1px solid #dcdcdc;
     margin-bottom: 5px;
@@ -19,7 +18,6 @@
   }
 }
 .presence-users {
-  width: 77% !important;
   .presence-state-selector {
     position: absolute;
     border: 1px solid #d0d0d0;
@@ -33,6 +31,32 @@
     cursor: pointer;
     p {
       display: flex;
+      margin-bottom: 5px;
+      &[data-value] {
+        background: #CCCCCC;
+        padding: 0 2px;
+        border-radius: 4px;
+      }
+      &[data-value="available"] {
+        background: springgreen;
+        padding: 0 2px;
+        border-radius: 4px;
+      }
+      &[data-value="unavailable"] {
+        background: #ffc107;
+        padding: 0 2px;
+        border-radius: 4px;
+      }
+      &[data-value="leave"] {
+        background: #CCCCCC;
+        padding: 0 2px;
+        border-radius: 4px;
+      }
+      &[data-value="dayoff"] {
+        background: #CCCCCC;
+        padding: 0 2px;
+        border-radius: 4px;
+      }
     }
   }
   .ajax-text-field {
@@ -82,8 +106,7 @@
           border-radius: 4px;
         }
         &.unavailable {
-          background: red;
-          color: white;
+          background: #ffc107;
           padding: 0 2px;
           border-radius: 4px;
         }
@@ -116,6 +139,12 @@
       }
       nav {
         float: right;
+        @include mb {
+          float: none;
+          input[type="text"] {
+            width: auto !important;
+          }
+        }
       }
     }
   }

@@ -1242,6 +1242,12 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .icon-survey:hover:before {
     background-position: -32px -928px !important;
   }
+  .icon-presence:before {
+    background-position: left -896px !important;    
+  }
+  .icon-presence:hover:before {
+    background-position: -32px -896px !important;    
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
