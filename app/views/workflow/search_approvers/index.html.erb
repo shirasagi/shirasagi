@@ -35,7 +35,7 @@
 </table>
 
 <div class="search-ui-select">
-  <% btn_label = @level == "circulation" ? t("workflow.search_circulations.select") : t("workflow.search_approvers.select") %>
+  <% btn_label = @level.start_with?("circulation") ? t("workflow.search_circulations.select") : t("workflow.search_approvers.select") %>
   <%= button_tag btn_label, { type: :button, class: "select-items btn" } %>
 </div>
 

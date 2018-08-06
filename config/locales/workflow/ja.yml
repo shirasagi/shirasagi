@@ -30,6 +30,7 @@ ja:
     circulation_state:
       seen: 既読
       unseen: 未読
+      pending: 下位承認待ち
     links:
       set_seen: 既読にする
       unset_seen: 未読にする

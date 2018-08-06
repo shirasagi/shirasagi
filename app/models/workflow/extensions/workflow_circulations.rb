@@ -35,7 +35,7 @@ class Workflow::Extensions::WorkflowCirculations < Array
 
     def normalize(array)
       ret = array.map do |hash|
-        if hash.kind_of?(String)
+        if hash.is_a?(String)
           convert_from_string(hash)
         elsif hash.respond_to?(:symbolize_keys)
           hash.symbolize_keys
@@ -45,6 +45,7 @@ class Workflow::Extensions::WorkflowCirculations < Array
       end
       ret.compact!
       ret.each do |hash|
+        hash[:level] = hash[:level].to_i if hash[:level].present?
         hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
         hash[:comment] = "" if hash[:comment].blank?
       end
@@ -54,7 +55,7 @@ class Workflow::Extensions::WorkflowCirculations < Array
     def convert_from_string(text)
       return nil if text.blank?
       begin
-        Hash[[:user_id, :state, :comment].zip(text.split(",").map(&:strip))]
+        Hash[[:level, :user_id, :state, :comment].zip(text.split(",").map(&:strip))]
       rescue
         nil
       end

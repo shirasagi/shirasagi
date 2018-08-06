@@ -144,6 +144,7 @@ module Workflow::Extensions::Route
         end
         ret.compact!
         ret.each do |hash|
+          hash[:level] = hash[:level].to_i if hash[:level].present?
           hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
         end
         ret.to_a.uniq
@@ -162,7 +163,7 @@ module Workflow::Extensions::Route
       def convert_from_string(text)
         return nil if text.blank?
         begin
-          Hash[[:user_id].zip(text.split(",").map(&:strip))]
+          Hash[[:level, :user_id].zip(text.split(",").map(&:strip))]
         rescue
           nil
         end

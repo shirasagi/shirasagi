@@ -63,6 +63,7 @@ class Gws::Workflow::PagesController < ApplicationController
     @item.workflow_on_remand = params[:workflow_on_remand]
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
+    @item.workflow_current_circulation_level = 0
     @item.workflow_circulations = params[:workflow_circulations]
 
     if @item.valid?
@@ -86,6 +87,13 @@ class Gws::Workflow::PagesController < ApplicationController
       approver[:comment] = ''
     end
     @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    @item.workflow_current_circulation_level = 0
+    copy = @item.workflow_circulations.to_a
+    copy.each do |circulation|
+      circulation[:state] = @model::WORKFLOW_STATE_PENDING
+      circulation[:comment] = ''
+    end
+    @item.workflow_circulations = Workflow::Extensions::WorkflowCirculations.new(copy)
 
     if @item.save
       request_approval
@@ -138,12 +146,13 @@ class Gws::Workflow::PagesController < ApplicationController
         url: params[:url], comment: params[:remand_comment]
       ) rescue nil
 
-      if @item.workflow_circulation_users.present?
+      if @item.move_workflow_circulation_next_step
         Gws::Memo::Notifier.deliver_workflow_circulations!(
           cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-          to_users: @item.workflow_circulation_users.active, item: @item,
+          to_users: @item.workflow_current_circulation_users.active, item: @item,
           url: params[:url], comment: params[:remand_comment]
         ) rescue nil
+        @item.save
       end
 
       if @item.try(:branch?) && @item.state == "public"

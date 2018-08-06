@@ -144,27 +144,34 @@
         <% if @item.workflow_circulations.present? %>
         <table class="index">
           <tbody>
-            <% @item.workflow_circulations.each do |workflow_circulation| %>
-              <% user_id = workflow_circulation[:user_id] %>
-              <% user = SS::User.where(id: user_id).first %>
-              <% state = workflow_circulation[:state] %>
-              <tr>
-                <td>
-                <% if user %>
-                  <%= "#{user.long_name}(#{user.email})" %>
-                <% else %>
-                  <%= t("workflow.user_deleted") %>
-                <% end %>
-                </td>
-                <td>
-                  <% if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE && user_id == @cur_user.id && state == "unseen" %>
-                  <%= button_tag(t("workflow.links.set_seen"), type: "button", name: "set_seen", class: "btn", data: { user_id: user_id }) %>
-                  <% else %>
-                  <%= t("workflow.circulation_state.#{state}") %>
+            <% @item.workflow_circulations.group_by { |workflow_circulation| workflow_circulation[:level] }.each do |level, workflow_circulations| %>
+              <% workflow_circulations.each_with_index do |workflow_circulation, index| %>
+                <% user_id = workflow_circulation[:user_id] %>
+                <% user = SS::User.where(id: user_id).first %>
+                <% state = workflow_circulation[:state] %>
+                <tr>
+                  <% if index == 0 %>
+                    <td rowspan="<%= workflow_circulations.count %>">
+                      <%= t("workflow.circulation_step") %> <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+                    </td>
                   <% end %>
-                </td>
-                <td><%= workflow_circulation[:comment] %></td>
-              </tr>
+                  <td>
+                  <% if user %>
+                    <%= "#{user.long_name}(#{user.email})" %>
+                  <% else %>
+                    <%= t("workflow.user_deleted") %>
+                  <% end %>
+                  </td>
+                  <td>
+                    <% if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE && user_id == @cur_user.id && state == "unseen" %>
+                    <%= button_tag(t("workflow.links.set_seen"), type: "button", name: "set_seen", class: "btn", data: { user_id: user_id }) %>
+                    <% else %>
+                    <%= t("workflow.circulation_state.#{state}") %>
+                    <% end %>
+                  </td>
+                  <td><%= workflow_circulation[:comment] %></td>
+                </tr>
+              <% end %>
             <% end %>
           </tbody>
         </table>

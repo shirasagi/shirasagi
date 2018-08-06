@@ -57,7 +57,16 @@ module Workflow::WizardFilter
       return
     end
 
-    @item.update_workflow_circulation_state(@cur_user, "seen", params[:comment].to_s)
+    @item.update_current_workflow_circulation_state(@cur_user, "seen", comment: params[:comment].to_s)
+    if @item.workflow_current_circulation_completed?
+      if @item.move_workflow_circulation_next_step
+        Gws::Memo::Notifier.deliver_workflow_circulations!(
+          cur_site: @cur_site, cur_group: @cur_group, cur_user: @item.workflow_user,
+          to_users: @item.workflow_current_circulation_users.active, item: @item,
+          url: params[:url], comment: params[:remand_comment]
+        ) rescue nil
+      end
+    end
     @item.save
 
     redirect_to params[:redirect_to], notice: I18n.t("workflow.notice.set_seen")

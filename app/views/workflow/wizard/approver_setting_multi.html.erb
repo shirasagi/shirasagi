@@ -29,21 +29,25 @@
     </dd>
   </dl>
 <% end %>
-<% if @route.circulation_users.present? %>
-  <dl class="see request-setting">
-    <dt><%= t("workflow.circulation_step") %></dt>
-    <dd>
-      <%
-        users = @route.circulation_users.active.to_a
-        names = users.map(&:long_name)
-        emails = users.map(&:email)
-      %>
-      <% users.each do |user| %>
-        <%= hidden_field_tag "workflow_circulations", "#{user.id},unseen," %>
-      <% end %>
-      <%= br names.zip(emails).join("\n") %>
-    </dd>
-  </dl>
+<% if @route.circulations.present? %>
+  <% 1.upto(3).each do |level| %>
+    <% users = @route.circulation_users_at(level).active.to_a %>
+    <% if users.present? %>
+      <dl class="see request-setting">
+        <dt><%= t("workflow.circulation_step") %> <%= @route.class.t :level, level: level %></dt>
+        <dd>
+          <%
+            names = users.map(&:long_name)
+            emails = users.map(&:email)
+          %>
+          <% users.each do |user| %>
+            <%= hidden_field_tag "workflow_circulations", "#{level},#{user.id},pending," %>
+          <% end %>
+          <%= br names.zip(emails).join("\n") %>
+        </dd>
+      </dl>
+    <% end %>
+  <% end %>
 <% end %>
 <dl class="see request-setting">
   <dd>

@@ -93,6 +93,7 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_on_remand = params[:workflow_on_remand]
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
+    @item.workflow_current_circulation_level = 0
     @item.workflow_circulations = params[:workflow_circulations]
 
     if @item.save
@@ -117,6 +118,13 @@ class Workflow::PagesController < ApplicationController
       approver[:comment] = ''
     end
     @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    @item.workflow_current_circulation_level = 0
+    copy = @item.workflow_circulations.to_a
+    copy.each do |circulation|
+      circulation[:state] = @model::WORKFLOW_STATE_PENDING
+      circulation[:comment] = ''
+    end
+    @item.workflow_circulations = Workflow::Extensions::WorkflowCirculations.new(copy)
 
     if @item.save
       request_approval
@@ -230,7 +238,7 @@ class Workflow::PagesController < ApplicationController
     return if request.get?
 
     @item.approved = nil
-    @item.workflow_user_id = nil
+    # @item.workflow_user_id = nil
     @item.workflow_state = @model::WORKFLOW_STATE_CANCELLED
 
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)

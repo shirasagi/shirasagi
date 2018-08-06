@@ -67,7 +67,7 @@ end
     var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
 
     var $input = $('<input type="hidden" name="workflow_circulations">');
-    $input.val(id + ",unseen,");
+    $input.val("1," + id + ",pending,");
 
     var $a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
     $a.on("click", SS_SearchUI.deselect);

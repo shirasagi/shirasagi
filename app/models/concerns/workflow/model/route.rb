@@ -18,7 +18,7 @@ module Workflow::Model::Route
     field :circulations, type: Workflow::Extensions::Route::Circulations
     permit_params :name, :pull_up, :on_remand
     permit_params group_ids: [], approvers: [ :level, :user_id, :editable ], required_counts: []
-    permit_params circulations: [ :user_id ]
+    permit_params circulations: [ :level, :user_id ]
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :pull_up, inclusion: { in: %w(enabled disabled), allow_blank: true }
@@ -109,8 +109,9 @@ module Workflow::Model::Route
     ret
   end
 
-  def circulation_users
-    self.class.approver_user_class.in(id: circulations.map { |h| h[:user_id] })
+  def circulation_users_at(level)
+    user_ids = circulations.select{ |h| h[:level] == level }.map { |h| h[:user_id] }
+    self.class.approver_user_class.in(id: user_ids)
   end
 
   private

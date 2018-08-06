@@ -8,37 +8,38 @@ end
 
 %>
 
-<h1 class="workflow-level-header"><%= t("workflow.circulation_step") %></h1>
-<dl class="see workflow-approvers">
-  <dt><%= @model.t :circulations %><%= @model.tt :circulations %></dt>
-  <dd>
-    <%= f.hidden_field("circulations[]", value: "", class: "hidden-ids", id: nil) %>
-    <%= link_to t("workflow.search_circulations.index"), approvers_path(level: "circulation"), class: "ajax-box circulations" %>
-  </dd>
-  <dd>
-    <table class="index ajax-selected">
-      <thead>
-        <tr>
-          <th class="name"><%= @model.t :name %></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @item.circulation_users.each do |user| %>
-          <% if user.present? %>
-            <tr data-id="<%= "circulation,#{user.id}" %>">
+<% 1.upto(3) do |level| %>
+  <h1 class="workflow-level-header workflow-circulation-level-<%= level %>"><%= t("workflow.circulation_step") %> <%= @model.t :level, level: level %></h1>
+  <dl class="see workflow-circulations workflow-circulation-level-<%= level %>">
+    <dt><%= @model.t :circulations %><%= @model.tt :circulations %></dt>
+    <dd>
+      <%# f.hidden_field("item[circulation_required_counts][]", value: "1", class: "hidden-ids", id: nil) %>
+      <%= link_to t("workflow.search_circulations.index"), approvers_path(level: "circulation#{level}"), class: "ajax-box circulations" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead>
+          <tr>
+            <th class="name"><%= @model.t :name %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @item.circulation_users_at(level).active.each do |user| %>
+            <tr data-id="<%= "circulation#{level},#{user.id}" %>">
               <td>
+                <%= hidden_field_tag("#{f.object_name}[circulations][][level]", level, id: nil) %>
                 <%= hidden_field_tag("#{f.object_name}[circulations][][user_id]", user.id, id: nil) %>
                 <%= user.long_name %>
               </td>
               <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
             </tr>
           <% end %>
-        <% end %>
-      </tbody>
-    </table>
-  </dd>
-</dl>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+<% end %>
 
 <%= jquery do %>
   var circulationSelector = function($item) {
@@ -46,8 +47,12 @@ end
 
     var data = $item.closest("[data-id]");
     var levelAndId = data.data("id").split(',');
+    var level = levelAndId[0].replace("circulation", "");
     var id = levelAndId[1];
     var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
+
+    var $level = $('<input type="hidden" name="item[circulations][][level]">');
+    $level.val(level);
 
     var $userId = $('<input type="hidden" name="item[circulations][][user_id]">');
     $userId.val(id);
@@ -56,7 +61,7 @@ end
     $a.on("click", SS_SearchUI.deselect);
 
     var $tr = $("<tr />").attr("data-id", levelAndId.join(','));
-    $tr.append($('<td />').append($userId).append(name));
+    $tr.append($('<td />').append($level).append($userId).append(name));
     $tr.append($('<td />').append($a));
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend($tr);
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
