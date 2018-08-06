@@ -22,8 +22,6 @@
 </div>
 
 <%= jquery do %>
-  SS_Addon_TempFile.renderDrop($("#item-form .upload-drop-area"), <%== @cur_user.id.to_json %>);
-
   window.deleteContent = function (id) {
     $("#item-form .file-view").each(function() {
       if (id == $(this).find(".file-id").attr("value")) {
@@ -31,4 +29,6 @@
       }
     });
   };
+
+  var tempFile = new SS_Addon_TempFile($("#item-form .upload-drop-area"), <%== @cur_user.id.to_json %>);
 <% end %>

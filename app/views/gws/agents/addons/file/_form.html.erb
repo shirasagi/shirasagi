@@ -19,7 +19,7 @@ window.deleteContent = function(id) {
     }
   });
 };
-SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
+var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
 <div class="see gws-addon-file">
@@ -55,7 +55,7 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
         </div>
 
         <div class="action">
-          <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+          <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
         </div>
       </div>
     <% end %>
@@ -80,7 +80,7 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
 
         <div class="action">
           <!-- attach and paste not supported -->
-          <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+          <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
         </div>
       </div>
     <% end %>

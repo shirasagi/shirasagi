@@ -1,42 +1,53 @@
 this.SS_Addon_TempFile = (function () {
-  function SS_Addon_TempFile() {
+  function SS_Addon_TempFile(selector, userId, options) {
+    this.$selector = $(selector);
+    this.userId = userId;
+    this.dropEventTriggered = null;
+
+    if (options && options.select) {
+      this.select = options.select;
+    }
+
+    if (options && options.selectUrl) {
+      this.selectUrl = options.selectUrl;
+    }
+
+    if (options && options.uploadUrl) {
+      this.uploadUrl = options.uploadUrl;
+    }
+
+    this.render();
   }
 
-  SS_Addon_TempFile.select = null;
+  SS_Addon_TempFile.renderDrop = function (selector, userId) {
+    return new SS_Addon_TempFile(selector, userId, {});
+  }
 
-  SS_Addon_TempFile.userId = null;
+  SS_Addon_TempFile.prototype.select = function (files, dropArea) {
+    for (var j = 0, len = files.length; j < len; j++) {
+      var file = files[j];
+      var id = file["_id"];
+      var url = this.selectUrl(id);
+      $.ajax({
+        url: url,
+        success: function (data) {
+          $("#selected-files").append(data);
+        }
+      });
+    }
+  };
 
-  SS_Addon_TempFile.dropEventTriggered = null;
-
-  SS_Addon_TempFile.selectUrl = function (id) {
+  SS_Addon_TempFile.prototype.selectUrl = function (id) {
     return "/.u" + this.userId + "/apis/temp_files/" + id + "/select";
   };
 
-  SS_Addon_TempFile.uploadUrl = function () {
+  SS_Addon_TempFile.prototype.uploadUrl = function () {
     return "/.u" + this.userId + "/apis/temp_files.json";
   };
 
-  SS_Addon_TempFile.renderDrop = function (selector, userId) {
-    this.userId = userId;
-    if (!this.select) {
-      this.select = function (files, dropArea) {
-        var file, id, j, len, results, url;
-        results = [];
-        for (j = 0, len = files.length; j < len; j++) {
-          file = files[j];
-          id = file["_id"];
-          url = SS_Addon_TempFile.selectUrl(id);
-          results.push($.ajax({
-            url: url,
-            success: function (data) {
-              return $("#selected-files").append(data);
-            }
-          }));
-        }
-        return results;
-      };
-    }
-    return $(selector).each(function (i, da) {
+  SS_Addon_TempFile.prototype.render = function() {
+    var _this = this;
+    this.$selector.each(function (i, da) {
       da = $(da);
       da.on('dragenter', function (e) {
         da.addClass('file-dragenter');
@@ -50,51 +61,46 @@ this.SS_Addon_TempFile = (function () {
         da.addClass('file-dragenter');
         return false;
       });
-      return da.on('drop', function (e) {
-        var dropArea, file, files, formData, j, len, request, token;
-        dropArea = e.target;
-        token = $('meta[name="csrf-token"]').attr('content');
-        formData = new FormData();
+      da.on('drop', function (e) {
+        var dropArea = e.target;
+        var token = $('meta[name="csrf-token"]').attr('content');
+        var formData = new FormData();
         formData.append('authenticity_token', token);
         if ($('#file-resizing').val()) {
           formData.append('item[resizing]', $('#file-resizing').val());
         }
-        files = e.originalEvent.dataTransfer.files;
+        var files = e.originalEvent.dataTransfer.files;
         if (files.length === 0) {
           return false;
         }
-        if (SS_Addon_TempFile.dropEventTriggered) {
+        if (_this.dropEventTriggered) {
           return false;
         }
-        SS_Addon_TempFile.dropEventTriggered = true;
-        for (j = 0, len = files.length; j < len; j++) {
-          file = files[j];
-          formData.append('item[in_files][]', file);
+        _this.dropEventTriggered = true;
+        for (var j = 0, len = files.length; j < len; j++) {
+          formData.append('item[in_files][]', files[j]);
         }
-        request = new XMLHttpRequest();
-        //request.upload.addEventListener 'progress', (e) ->
-        //  return false
+        var request = new XMLHttpRequest();
         request.onload = function (e) {
-          var json;
           if (request.readyState === XMLHttpRequest.DONE) {
             da.removeClass('file-dragenter');
             if (request.status === 200 || request.status === 201) {
-              files = JSON.parse(request.response);
-              SS_Addon_TempFile.select(files, dropArea);
+              var files = JSON.parse(request.response);
+              _this.select(files, dropArea);
             } else if (request.status === 413) {
               alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
             } else {
               try {
-                json = $.parseJSON(request.response);
+                var json = $.parseJSON(request.response);
                 alert(["== Error =="].concat(json).join("\n"));
               } catch (_error) {
                 alert(["== Error =="].concat(request.statusText).join("\n"));
               }
             }
-            return SS_Addon_TempFile.dropEventTriggered = false;
+            _this.dropEventTriggered = false;
           }
         };
-        request.open("POST", SS_Addon_TempFile.uploadUrl());
+        request.open("POST", _this.uploadUrl());
         request.send(formData);
         return false;
       });

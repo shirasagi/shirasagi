@@ -42,18 +42,20 @@ this.Gws_Discussion_Thread = (function () {
       return $.colorbox.close();
     });
 
-    SS_Addon_TempFile.select = function (files, dropArea) {
-      $(files).each(function (i, file) {
-        var fileId, humanizedName, selected;
-        selected = $(dropArea).closest(".comment-files").find(".selected-files");
-        fileId = file["_id"];
-        humanizedName = file["name"];
-        return appendSelectedFile(selected, fileId, humanizedName);
-      });
-      return false;
+    var options = {
+      select: function (files, dropArea) {
+        $(files).each(function (i, file) {
+          var fileId, humanizedName, selected;
+          selected = $(dropArea).closest(".comment-files").find(".selected-files");
+          fileId = file["_id"];
+          humanizedName = file["name"];
+          return appendSelectedFile(selected, fileId, humanizedName);
+        });
+        return false;
+      }
     };
 
-    SS_Addon_TempFile.renderDrop($(".comment-files .upload-drop-area"), user);
+    new SS_Addon_TempFile($(".comment-files .upload-drop-area"), user, options);
 
     // reply
     $(".open-reply").on('click', function () {
