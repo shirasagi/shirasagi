@@ -60,6 +60,13 @@ module Workflow::WizardFilter
 
     comment = params[:comment].to_s
     @item.update_current_workflow_circulation_state(@cur_user, "seen", comment: comment)
+    if comment.present?
+      Gws::Memo::Notifier.deliver_workflow_comment!(
+        cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+        to_users: [ @item.workflow_user ], item: @item,
+        url: params[:url], comment: comment
+      )
+    end
 
     if @item.workflow_current_circulation_completed?
       if @item.move_workflow_circulation_next_step

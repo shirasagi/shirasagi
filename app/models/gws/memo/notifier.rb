@@ -123,6 +123,35 @@ class Gws::Memo::Notifier
 
       new(opts).deliver!
     end
+
+    def deliver_workflow_comment!(opts)
+      opts = opts.dup
+
+      url = opts.delete(:url)
+      comment = opts.delete(:comment)
+      cur_site = opts[:cur_site]
+      item = opts[:item]
+
+      title = "[#{I18n.t("workflow.mail.subject.#{item.workflow_state}")}]#{item.name} - #{cur_site.name}"
+      text = <<-TEXT
+      次の申請にコメントがありました。
+      コメントの内容を確認してください。
+
+      - タイトル
+        #{item.name}
+
+      - 記事URL
+        #{url}
+
+      - コメント
+        #{comment}
+      TEXT
+
+      opts[:item_title] = title
+      opts[:item_text] = text
+
+      new(opts).deliver!
+    end
   end
 
   def item_title
