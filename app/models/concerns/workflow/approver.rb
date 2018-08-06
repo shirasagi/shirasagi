@@ -56,7 +56,7 @@ module Workflow::Approver
 
   def workflow_user
     if workflow_user_id.present?
-      SS::User.where(id: workflow_user_id).first
+      self.class.approver_user_class.where(id: workflow_user_id).first
     else
       nil
     end
