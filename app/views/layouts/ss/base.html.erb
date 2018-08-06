@@ -25,7 +25,7 @@
 
 <div id="page">
 
-<header id="head">
+<header id="head" class="d-flex justify-content-center align-items-center">
   <div class="sp-menu-button">
     <a href="#" class="">
       <span></span>
@@ -34,44 +34,40 @@
     </a>
   </div>
 
-  <div class="ss-head-item application-name">
-    <%= link_to sns_mypage_path do %><%== SS.config.ss.application_logo_html %><% end %>
-  </div>
+  <div class="ss-head-item application-name dropdown d-flex align-items-center">
 
-  <div class="ss-head-item application-menu">
-    <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
-      <div class="application-menu-item cms">
+    <h1><%= link_to sns_mypage_path do %><img src="/assets/img/logo.png" srcset="/assets/img/logo.png 1x, /assets/img/logo@2x.png 2x" alt="SHIRASAGI" /><% end %></h1>
+    <button class="btn dropdown-toggle dropdown-toggle-split" type="button" id="buttonMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+
+    <div class="dropdown-menu" aria-labelledby="buttonMenu1">
+      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
         <% if @ss_mode == :cms %>
-          <%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %>
+          <%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "dropdown-item current" %>
         <% else %>
-          <%= link_to t('ss.links.cms'), sns_cms_path %>
+          <%= link_to t('ss.links.cms'), sns_cms_path, class: "dropdown-item" %>
         <% end %>
-      </div>
-    <% end %>
+      <% end %>
 
-    <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
-      <div class="application-menu-item gws">
+      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
         <% if @ss_mode == :gws %>
-          <%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %>
+          <%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "dropdown-item current" %>
         <% else %>
-          <%= link_to t('ss.links.gws'), sns_gws_path %>
+          <%= link_to t('ss.links.gws'), sns_gws_path, class: "dropdown-item" %>
         <% end %>
-      </div>
-    <% end %>
+      <% end %>
 
-    <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
-      <div class="application-menu-item webmail">
+      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
         <% if @ss_mode == :webmail %>
-          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %>
+          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "dropdown-item current" %>
         <% else %>
-          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %>
+          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "dropdown-item" %>
         <% end %>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
 
   <% if Rails.env.development? %>
-    <div class="ss-head-item env dev"><span>&lt;Development&gt;</span></div>
+    <div class="ss-head-item env dev d-flex align-items-center">&lt;Development&gt;</div>
   <% end %>
 
   <% if @cur_user %>
@@ -208,36 +204,32 @@
           </div>
         </div>
       <% end %>
-      <div class="ss-dropdown ss-dropdown-toggle" data-ref="#user-main-dropdown">
-        <h2>
+      <div class="btn-group">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <% if @cur_group %>
             <span class="group"><%= @cur_group.trailing_name %></span>
           <% end %>
           <span class="name"><%= @cur_user.name %></span>
-        </h2>
-        <ul class="ss-dropdown-menu" id="user-main-dropdown">
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <% @account_menu.to_a.each do |link_params| %>
-            <li><%= link_to *link_params %></li>
+            <%= link_to *link_params, class: "dropdown-item" %>
           <% end %>
-          <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
-          <li>
-            <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
-              <label><%= t('ss.text_zoom') %></label>
-              <span class="wrap">
-                <span class="zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></span><span class="zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></span><span class="zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></span>
-              </span>
+          <%= link_to t(:"sns.profile"), sns_cur_user_profile_path, class: "dropdown-item" %>
+          <div class="text-zoom dropdown-item btn-group flex-nowrap" role="group" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
+            <div><%= t('ss.text_zoom') %></div>
+            <div class="wrap">
+              <span class="btn btn-secondary"><%= t('ss.options.text_zoom.zoom_out') %></span><span class="btn btn-secondary"><%= t('ss.options.text_zoom.reset') %></span><span class="btn btn-secondary"><%= t('ss.options.text_zoom.zoom_in') %></span>
             </div>
-          </li>
+          </div>
           <% if @ss_mode == :gws && @cur_site.menu_contrast_visible? %>
-            <li>
-              <div class="gws-contrast cascade-menu" data-ref="#user-contrast-menu">
-                <label><%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %></label>
-                <span class="caret"><i class="material-icons">&#xE315;</i></span>
-              </div>
-            </li>
+            <div class="gws-contrast cascade-menu dropdown-item" data-ref="#user-contrast-menu">
+              <label><%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %></label>
+              <span class="caret"><i class="material-icons">&#xE315;</i></span>
+            </div>
           <% end %>
-          <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
-        </ul>
+          <%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout dropdown-item' %>
+        </div>
         <% if @ss_mode == :gws && @cur_site.menu_contrast_visible? %>
           <ul id="user-contrast-menu" class="ss-dropdown-menu cascade-sub-menu">
             <li class="user-contrast-menu-header">
@@ -282,24 +274,25 @@
 <script> SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); </script>
 <% end %>
 
+<% if @ss_mode == :cms %>
+<div class="site-navi">
+  <div class="site-navi-item view-site"><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank" %></div>
+  <div class="site-navi-item preview-site"><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank" %></div>
+</div>
+<% end %>
+
+<div id="navi">
+  <div class="wrap">
+    <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+    <%= render partial: "navi" %>
+    <% elsif controller.navi_view_file %>
+    <%= render partial: controller.navi_view_file %>
+    <% end %>
+  </div>
+</div>
+
 <div id="wrap">
   <div class="wrap">
-    <div id="navi">
-      <div class="wrap">
-        <% if @ss_mode == :cms %>
-        <div class="site-navi">
-          <div class="site-navi-item view-site"><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank" %></div>
-          <div class="site-navi-item preview-site"><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank" %></div>
-        </div>
-        <% end %>
-
-        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
-        <%= render partial: "navi" %>
-        <% elsif controller.navi_view_file %>
-        <%= render partial: controller.navi_view_file %>
-        <% end %>
-      </div>
-    </div>
 
     <article id="main">
       <% if @cur_user.present? %>

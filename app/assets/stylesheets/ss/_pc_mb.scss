@@ -9,16 +9,15 @@ header, footer, nav, section, article, figure, aside {
   @include box-sizing(border-box);
 }
 html {
-  //font-size: 87.5%;
   font-size: 13px;
 }
 html, body {
   height: 100%;
   margin: 0px;
+  background: $white;
   color: $black3;
 }
 body {
-  background: $gray1;
   font-family: $font-base;
   line-height: 1.4;
   word-wrap: break-word;
@@ -26,17 +25,6 @@ body {
 #page {
   position: relative;
   min-height: 100%;
-  &:not(.print-preview):after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 210px;
-    border-right: $border-gray4;
-    background: $white;
-    @include mb { display: none; }
-  }
 }
 h1, h2, h3, h4, h5, p {
   margin: 0px;
@@ -339,125 +327,37 @@ td {
   @include display-flex;
   position: relative;
   z-index: 100;
-  border-bottom: $border-gray4;
+  padding: 0 1rem;
   background: $black2;
   font-size: 14px;
   height: 50px;
-
   @include mb {
     @include flex-direction(column);
     height: unset;
   }
-
+  h1 {
+    display: inline-block;
+  }
+  button {
+    margin-bottom: 0;
+  }
   .ss-head-item {
     height: 100%;
-
-    -js-display: flex;
-    @include display-flex;
-    @include align-items(center);
-    @include justify-content(center);
-
-    @include mb {
-      @include justify-content(space-between);
-      padding: 3px 0;
-    }
   }
-  .application-name {
-    a {
-      display: inline-block;
-    }
-    .ss-logo-wrap {
-      width: 210px;
-      padding: 8px 15px 5px;
-    }
-    .ss-logo-application-name {
-      display: none;
-    }
-    @include mb {
-      -js-display: flex;
-      @include display-flex;
-      @include justify-content(space-between);
-      clear: both;
-    }
-  }
-  .cms, .gws, .sns, .webmail {
-    a {
-      color: $white;
-      &.current, &:hover {
-        color: $black;
-        text-decoration: none;
-      }
-    }
-  }
-  .cms a {
-    padding: 15px 20px 15px 55px;
-    background: url(/assets/img/ic-cms-off.png) no-repeat 20px center;
-    @include mb {
-      padding: 5px 10px 5px 40px;
-      background-position: 10px center;
-    }
-    &.current, &:hover {
-      background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
-      @include mb {
-        background-position: 10px center;
-      }
-    }
-  }
-  .gws a {
-    padding: 15px 20px 15px 70px;
-    background: url(/assets/img/ic-gws-off.png) no-repeat 20px center;
-    @include mb {
-      padding: 5px 10px 5px 55px;
-      background-position: 10px center;
-    }
-    &.current, &:hover {
-      background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
-      @include mb {
-        background-position: 10px center;
-      }
-    }
-  }
-  .sns a {
-    padding: 15px 20px 15px 60px;
-    background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
-    @include mb {
-      padding: 5px 10px 5px 45px;
-      background-position: 10px center;
-    }
-    &.current, &:hover {
-      background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
-      @include mb {
-        background-position: 10px center;
-      }
-    }
-  }
-  .webmail a {
-    padding: 15px 20px 15px 60px;
-    background: url(/assets/img/ic-mail-off.png) no-repeat 20px center;
-    @include mb {
-      padding: 5px 10px 5px 45px;
-      background-position: 10px center;
-    }
-    &.current, &:hover {
-      background: $white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
-      @include mb {
-        background-position: 10px center;
-      }
-    }
+  .btn:after {
+    margin-left: 1em;
+    border-top: 0.3em solid $white;
   }
   .env {
     color: $white;
-
-    span {
-      padding: 15px 10px;
-    }
-
+    vertical-align: middle;
     @include mb { display: none; }
   }
   .user {
     margin-left: auto;
-    a {
+    button {
       color: $white;
+      font-size: 1.1rem;
     }
     span {
       display: inline-block;
@@ -473,75 +373,8 @@ td {
     .group {
       margin-right: 10px;
     }
-    .ss-dropdown {
-      display: inline-block;
-      h2 {
-        padding: 15px 40px 15px 15px;
-        background: url(/assets/img/arrow-usr.png) no-repeat right 15px center;
-        color: $white;
-        @include mb { padding: 10px 40px 10px 20px; }
-      }
-      &:hover h2, &.active h2 {
-        position: relative;
-        background-color: $gray3;
-        text-decoration: none;
-      }
-      &.active ul {
-        display: block;
-      }
-    }
-    .ss-dropdown-menu {
-      top: 100%;
-      right: 0;
-      min-width: 260px;
-      margin: 0;
-      padding: 5px 0px;
-      border: $border-gray4;
-      background: $white;
-      li {
-        display: block;
-        list-style: none;
-        a {
-          display: block;
-          min-width: 120px;
-          padding: 8px 10px;
-          color: $black;
-          text-decoration: none;
-          &:hover {
-            color: $orange;
-            background: #eee;
-          }
-        }
-      }
-      .text-zoom {
-        @include clear;
-        padding: 5px 0;
-        border-top: 1px solid  #f2f2f2;
-        border-bottom: 1px solid  #f2f2f2;
-        label {
-          display: inline-block;
-          padding: 8px 10px;
-        }
-        .wrap {
-          float: right;
-          padding: 2px 10px;
-        }
-        .zoom-btn {
-          @include ss-btn;
-          cursor: pointer;
-        }
-        .zoom-out {
-          border-right: none;
-          @include border-radius(3px 0 0 3px);
-        }
-        .zoom-reset {
-          @include border-radius(0);
-        }
-        .zoom-in {
-          border-left: none;
-          @include border-radius(0 3px 3px 0);
-        }
-      }
+    .text-zoom {
+      span { margin-bottom: 0; }
     }
     .gws-bookmark {
       display: inline-block;
@@ -700,20 +533,13 @@ td {
 // -------------------------------------------------------------------------------------------------
 // nav
 #navi {
-  position: relative;
-  float: left;
-  width: 210px;
-  margin-bottom: 20px;
-  z-index: 1;
-  background: $white;
-  border-right: $border-gray4;
+  background: $black3;
   @include mb {
     display: none;
-    z-index: 200;
-    float: none;
-    width: 100%;
-    margin-bottom: 0;
-    border: none;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
   }
 }
 
@@ -772,64 +598,19 @@ td {
   padding: 10px 10px 10px 50px;
 }
 .main-navi {
-  border-bottom: $border-gray5;
-  h2 a {
-    position: relative;
-    display: block;
-    @include navi-icon;
-    color: $black;
-    &:before {
-      content: "";
-      position: absolute;
-      top: 4px;
-      left: 10px;
-      width: 32px;
-      height: 32px;
-      background: url(/assets/img/ic-main-navi.png) no-repeat left top;
-    }
+  li {
+    padding: .5rem;
+  }
+  .btn-primary {
+    margin-bottom: 0;
+    color: $white;
+    font-size: 1.1rem;
     &:hover {
-      position: relative;
-      color: $orange;
-      text-decoration: none;
-    }
-  }
-  h2 a:hover:before {
-    background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
-  }
-  h2.current {
-    background-color: $gray1;
-  }
-  h2:hover {
-    background-color: $gray1;
-  }
-  h3 {
-    display: none;
-  }
-  .current + .child-menu h3 {
-    display: block;
-  }
-  h3 a {
-    display: block;
-    padding: 5px 15px 5px 60px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
-  }
-}
-.main-navi-md {
-  h2 {
-    a {
-      padding-left: 14px;
-    }
-    a:before {
-      background: none !important;
-    }
-    .material-icons {
-      width: 30px;
-      margin-top: -2px;
-      line-height: 20px;
+      background: $red;
+      color: $white;
     }
   }
 }
-
 // -------------------------------------------------------------------------------------------------
 // mod-navi
 .mod-navi {
@@ -1240,25 +1021,6 @@ td {
     background-position: -32px -864px !important;
   }
 }
-
-// -------------------------------------------------------------------------------------------------
-// main
-#main:not(.print-preview) {
-  float: right;
-  width: 100%;
-  margin: 0 0 40px -100%;
-  @include mb {
-    float: none;
-    margin: 0 0 100px 0;
-  }
-  .wrap {
-    margin: 0 10px 0 220px;
-    @include mb {
-      margin: 10px 0;
-    }
-  }
-}
-
 // -------------------------------------------------------------------------------------------------
 // foot
 #foot {
@@ -1328,6 +1090,12 @@ td {
     font-weight: bold;
   }
   @include mb { padding-left: 10px; }
+}
+
+// -------------------------------------------------------------------------------------------------
+// main
+#main {
+  padding: 1rem;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1560,10 +1328,6 @@ td {
 .list-search .index-search {
   margin-bottom: 0;
   border: none;
-
-  span.bmd-form-group {
-    padding-top: unset;
-  }
 }
 .ss-confirm-text {
   margin: 10px;
@@ -1776,20 +1540,6 @@ dl.mod-cms-parent_crumbs {
       top: -19px;
     }
   }
-}
-footer.send {
-  padding: 28px 0 0;
-  text-align: center;
-  input, button {
-    margin: 0 5px;
-    min-width: 80px;
-    @include mb {
-      margin: 0 4px;
-    }
-  }
-  //input.publish_save, input.save, button.save, input.delete {
-  //  @include ss-btn-red;
-  //}
 }
 .field_with_errors {
   display: inline;
@@ -2097,9 +1847,6 @@ div.index {
     width: 32px;
     margin: 6px 0 6px -5px;
   }
-  .btn {
-    @include bmd-outline-border();
-  }
 }
 .list-head-title {
   margin: -10px 0 0 -18px;;
@@ -2172,98 +1919,6 @@ div.index {
     }
     .ss-tooltip {
       margin-top: 5px;
-    }
-  }
-}
-.list-items {
-  margin: 10px;
-  padding: 0;
-  .list-item {
-    -js-display: flex;
-    display: flex;
-    align-items: center;
-    padding: 8px 8px;
-    border-bottom: $border-gray1;
-    @include mb {
-      display: block;
-      padding: 8px 10px;
-    }
-    &:last-child {
-      border: none;
-    }
-    .checked, &:hover {
-      background: $orange2;
-    }
-    label + .info, .info + .links {
-      @include mb { margin-left: 26px; }
-    }
-    .up {
-      padding: 4px 0 4px 25px;
-      background: url(/assets/img/ic-arrow16up-off.png) no-repeat left center;
-      &:hover {
-        background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
-      }
-    }
-    .check {
-      float: left;
-      margin: 0 10px 0 -5px;
-    }
-    .info {
-      flex-grow: 10;
-    }
-    .title {
-      color: $orange;
-      font-size: $px15;
-      @include mb { font-size: $px14; }
-    }
-    .title--disabled {
-      color: #888;
-    }
-    .title-icon {
-      float: left;
-      margin: 0 4px 0 0;
-    }
-    .meta {
-      span {
-        margin-right: 8px;
-      }
-      .label {
-        margin-right: 0;
-        color: #844;
-        &:before { content: '['; }
-        &:after { content: ']'; }
-      }
-      .id {
-        color: #444;
-      }
-      .datetime {
-        color: #777;
-      }
-      .filename {
-        color: #080;
-      }
-      .order {
-        color: #888;
-        &:before {
-          content: '\25b9';
-        }
-      }
-      .summary {
-        color: #888;
-      }
-    }
-    .links {
-      white-space: nowrap;
-      word-wrap: normal;
-      .btn {
-        margin-top: 4px;
-      }
-    }
-    .gws-notice-file-count, .gws-notice-comment-count {
-      display: inline-block;
-      img {
-        margin-right: 2px;
-      }
     }
   }
 }
@@ -2452,32 +2107,6 @@ table.form-index.sortable-index {
     @include ss-btn-orange;
   }
 }
-//select {
-//  @include input;
-//  height: 2.4em;
-//  max-width: 100%;
-//  padding: 0 4px;
-//  -webkit-appearance: menulist;
-//  option {
-//    color: #333;
-//  }
-//  &.blank-value, &.has-blank-value :first-child {
-//    color: #888;
-//  }
-//}
-//input {
-//    &:placeholder-shown { color: #888; }
-//    &::-webkit-input-placeholder { color: #888; }
-//    &:-moz-placeholder { color: #888; opacity: 1; }
-//    &::-moz-placeholder { color: #888; opacity: 1; }
-//    &:-ms-input-placeholder { color: #888; }
-//}
-input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-input[type=email], input[type=number], input[type=tel] {
-//  @include input;
-  width: 80%;
-//  padding: 6px;
-}
 @include mb {
   input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
   input[type=email], input[type=number], input[type=tel] {
@@ -2536,12 +2165,6 @@ textarea {
   padding: 5px 5px;
   line-height: 1.4;
 }
-.bmd-form-group {
-  textarea.form-control {
-    line-height: 1.4;
-  }
-}
-
 textarea.code {
   height: 30em;
   font-size: 120%;

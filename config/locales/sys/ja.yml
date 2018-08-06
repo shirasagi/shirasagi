@@ -81,7 +81,7 @@ ja:
         menu_connection_state: 接続情報
       sys/notice:
         html: 本文
-        name: お知らせ見出し
+        name: タイトル
         notice_severity: 種別
         notice_target: 表示場所
       sys/addon/role:

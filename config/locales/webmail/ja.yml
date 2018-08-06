@@ -7,7 +7,7 @@ ja:
       webmail/apply_filter: フィルター適用
 
   webmail:
-    mail: メール
+    mail: ウェブメール
     message: メッセージ
     mailbox: フォルダー
     mailbox_root: ルート階層

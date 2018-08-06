@@ -1,51 +1,18 @@
 // -------------------------------------------------------------------------------------------------
 // login
-
 #page-login {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: $gray1 url(/assets/img/back.png) no-repeat left 60%;
-  background-size: contain;
-}
-#page-login {
-  #main {
-    .wrap {
-      margin: 0 10px;
-    }
-  }
-}
-
-.login-box {
-  display: table;
-  margin: 20px 10px 20px;
-  border: 1px solid #ccc;
-  @include border-radius(3px);
-  @include box-shadow(0px 1px 3px #ddd);
-  background: $white;
-  float: left;
-  @include mb {
-    width: calc(100% - 20px);
+  @include display-flex;
+  @include align-items(center);
+  @include justify-content(center);
+  .logo {
+    margin: 0 auto;
   }
   .version {
-    float: right;
-    padding: 2px;
-    color: #888;
-    font-size: 90%;
+    color: $gray5;
+    font-size: $px12;
   }
-  .error-message {
-    color: #e00;
-    font-weight: bold;
-  }
-  input[type="text"], input[type="password"] {
-    width: 300px;
-  }
-  footer.send {
-    margin: 20px;
-    padding: 0px;
-  }
+}
+.login-box {
   .sso {
     list-style: none;
     width: 100%;
@@ -64,65 +31,5 @@
       font-weight: bold;
     }
     .text { font-size: $px12; }
-  }
-}
-
-@include mb {
-  .login-box {
-    padding: 10px;
-    @include box-sizing(border-box);
-    header {
-      @include clear;
-      margin: 0px 0px 20px;
-      h1 {
-        float: left;
-      }
-      .version {
-        float: right;
-        color: #888;
-      }
-    }
-  }
-}
-
-.login-notice {
-  float: left;
-  margin: 20px 10px;
-
-  h2 {
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  .main-box {
-    h2 {
-      margin-bottom: 10px;
-    }
-  }
-  .datetime {
-    margin-left: 5px;
-    color: #888;
-  }
-  li {
-    width: 320px;
-  }
-}
-@include mb {
-  .login-notice {
-    padding: 10px;
-    @include box-sizing(border-box);
-    header {
-      @include clear;
-      margin: 0px 0px 20px;
-      h1 {
-        float: left;
-      }
-      .version {
-        float: right;
-        color: #888;
-      }
-    }
-    li {
-      width: 215px;
-    }
   }
 }

@@ -17,26 +17,27 @@
 
 <div id="page">
 
-<header id="head">
-  <div class="wrap">
-    <h1 class="application-name"><%= link_to service_main_path do %><%== SS.config.ss.application_logo_html %><% end %></h1>
+<header id="head" class="d-flex justify-content-center align-items-center">
+
+  <div class="ss-head-item application-name">
+
+    <h1><%= link_to sns_mypage_path do %><img src="/assets/img/logo.png" srcset="/assets/img/logo.png 1x, /assets/img/logo@2x.png 2x" alt="SHIRASAGI" /><% end %></h1>
 
     <% if Rails.env.development? %>
-    <div class="env dev">&lt;Development&gt;</div>
+      <div class="ss-head-item env dev d-flex align-items-center">&lt;Development&gt;</div>
     <% end %>
 
     <% if @cur_user %>
-    <nav class="user">
+    <div class="ss-head-item user">
       <div class="ss-dropdown ss-dropdown-toggle">
-        <h2>
-          <span class="name"><%= @cur_user.name %></span>
-        </h2>
-        <ul class="ss-dropdown-menu">
-          <li><%#= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
-          <li><%= link_to t('ss.logout'), service_logout_path, class: 'logout' %></li>
-        </ul>
+        <div class="btn-group">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><%= @cur_user.name %></span></button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <%= link_to t(:"sns.profile"), sns_cur_user_profile_path, class: 'dropdown-item' %>
+          <%= link_to t('ss.logout'), service_logout_path, class: 'logout dropdown-item' %>
+        </div>
       </div>
-    </nav>
+    </div>
     <% end %>
   </div>
 <!-- /#head --></header>

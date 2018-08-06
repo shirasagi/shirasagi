@@ -1,29 +1,27 @@
 <% setting = Sys::Setting.first || Sys::Setting.new %>
 
 <nav class="main-navi main-navi-md">
-  <!--
-  <h2><%= link_to t("sns.profile"), sns_cur_user_profile_path %></h2>
-  -->
+  <ul class="d-flex align-items-center justify-content-center flex-wrap">
+    <li><%= link_to sns_cur_user_account_path, "class" => "btn btn-primary" do %>
+      <i class="material-icons">&#xE853;</i><%= t("sns.account") %>
+    <% end %></li>
 
-  <h2><%= link_to sns_cur_user_account_path do %>
-    <i class="material-icons">&#xE853;</i><%= t("sns.account") %>
-  <% end %></h2>
+    <% if setting.try(:menu_file_visible?) %>
+      <li><%= link_to sns_cur_user_files_path, "class" => "btn btn-primary" do %>
+        <i class="material-icons">&#xE2C8;</i><%= t("sns.file") %>
+      </li><% end %>
+    <% end %>
 
-  <% if setting.try(:menu_file_visible?) %>
-    <h2><%= link_to sns_cur_user_files_path do %>
-      <i class="material-icons">&#xE2C8;</i><%= t("sns.file") %>
-    </h2><% end %>
-  <% end %>
+    <% if setting.try(:menu_connection_visible?) %>
+      <li><%= link_to sns_connection_path, "class" => "btn btn-primary" do %>
+        <i class="material-icons">&#xE88F;</i><%= t("sns.connection") %>
+      </li><% end %>
+    <% end %>
 
-  <% if setting.try(:menu_connection_visible?) %>
-    <h2><%= link_to sns_connection_path do %>
-      <i class="material-icons">&#xE88F;</i><%= t("sns.connection") %>
-    </h2><% end %>
-  <% end %>
-
-  <h2 class="sys-conf"><%= link_to "#" do %>
-    <i class="material-icons">&#xE8B8;</i><%= t("sys.conf") %>
-  </h2><% end %>
+    <li class="sys-conf"><%= link_to "#", "class" => "btn btn-primary" do %>
+      <i class="material-icons">&#xE8B8;</i><%= t("sys.conf") %>
+    </li><% end %>
+  </ul>
 </nav>
 
 <%= jquery do %>

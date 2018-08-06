@@ -6,34 +6,29 @@
   });
 <% end %>
 
-<section class="main-box login-box">
-  <header>
-    <h2><%= t("ss.login") %></h2>
-    <div class="version">ver. <%= tryb{SS.version} %></div>
-  </header>
+<%= render file: '_notices' %>
 
+<article>
   <%= form_tag action: params[:action] do |f| %>
     <% if flash[:alert] %>
-    <div class="error-message"><%= flash[:alert] %></div>
+    <div class="error-message alert alert-warning"><%= flash[:alert] %></div>
     <% end %>
 
     <%= error_messages_for :item %>
     <%= hidden_field_tag :ref, params[:ref] %>
 
-    <div class="form-group">
+    <div class="form-group mb-0">
       <label><%== t("ss.views.login/login.organization_uid") %></label>
       <%= text_field :item, :email, class: "alnum", autofocus: true %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-4">
       <label><%= t("ss.views.login/login.password") %></label>
       <%= password_field :item, :password %>
     </div>
 
     <footer class="send">
-      <%= submit_tag t("ss.login"), class: "btn-primary" %>
+      <%= submit_tag t("ss.login"), class: "btn btn-outline-primary btn-lg btn-block w-100" %>
     </footer>
   <% end %>
-</section>
-
-<%= render file: '_notices' %>
+</article>
