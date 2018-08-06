@@ -28,12 +28,12 @@ ja:
       other_remanded: 他者差し戻し
       other_pulled_up: 引き上げ
     circulation_state:
-      seen: 既読
-      unseen: 未読
+      seen: 確認済
+      unseen: 回覧中
       pending: 下位承認待ち
     links:
-      set_seen: 既読にする
-      unset_seen: 未読にする
+      set_seen: 確認済にする
+      unset_seen: 回覧中に戻す
     buttons:
       select: 選択
       cancel: 取消

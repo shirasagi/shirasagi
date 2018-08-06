@@ -109,6 +109,7 @@ class Gws::Memo::Notifier
       title = "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{cur_site.name}"
       text = <<-TEXT
       次の申請が承認されました。
+      申請内容を確認してください。
 
       - タイトル
         #{item.name}

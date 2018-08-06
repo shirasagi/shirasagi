@@ -53,18 +53,21 @@ module Workflow::WizardFilter
   def circulation
     if request.get?
       @redirect_to = params[:redirect_to] || request.referer
+      @url = params[:url] || @redirect_to
       render file: 'circulation', layout: "ss/ajax"
       return
     end
 
-    @item.update_current_workflow_circulation_state(@cur_user, "seen", comment: params[:comment].to_s)
+    comment = params[:comment].to_s
+    @item.update_current_workflow_circulation_state(@cur_user, "seen", comment: comment)
+
     if @item.workflow_current_circulation_completed?
       if @item.move_workflow_circulation_next_step
         Gws::Memo::Notifier.deliver_workflow_circulations!(
           cur_site: @cur_site, cur_group: @cur_group, cur_user: @item.workflow_user,
           to_users: @item.workflow_current_circulation_users.active, item: @item,
-          url: params[:url], comment: params[:remand_comment]
-        ) rescue nil
+          url: params[:url], comment: comment
+        )
       end
     end
     @item.save
