@@ -1,0 +1,22 @@
+<h1 class="workflow-level-header"><%= t("workflow.circulation_step") %></h1>
+<dl class="see workflow-approvers">
+  <dt><%= @model.t :circulations %></dt>
+  <dd>
+    <table class="index">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.approver_user_class.t :name %></th>
+          <th class="email"><%= @model.approver_user_class.t :email %></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @item.circulation_users.active.each do |user| %>
+        <tr>
+          <td><%= user.long_name %></td>
+          <td><%= user.email %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

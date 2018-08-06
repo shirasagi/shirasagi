@@ -89,6 +89,8 @@ ja:
     addons:
       workflow/approver: 承認
       workflow/branch: 差し替えページ
+      workflow/approver_view: 承認経路
+      workflow/circulation_view: 回覧経路
 
   cms_role:
     read_other_workflow_routes: 承認ルートの閲覧（全て）
