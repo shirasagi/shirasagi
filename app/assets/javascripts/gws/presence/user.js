@@ -34,7 +34,9 @@ this.Gws_Presence_User = (function () {
       return false;
     });
     $(".editable .select-presence-state,.editable .presence-state").on("click", function(){
+      $(".presence-state-selector").closest("li.portlet-item").css("z-index", 0);
       $(".presence-state-selector").hide();
+      $(this).closest("li.portlet-item").css("z-index", 1000);
       $(this).closest("td").find(".presence-state-selector").show();
       return false;
     });

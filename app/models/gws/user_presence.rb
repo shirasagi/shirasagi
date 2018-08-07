@@ -23,6 +23,8 @@ class Gws::UserPresence
   before_validation :set_presence_attributes
 
   def set_presence_attributes
+    self.presence_state = "" if presence_state == "none"
+
     self.state = presence_state if presence_state
     self.plan = presence_plan if presence_plan
     self.memo = presence_memo if presence_memo
