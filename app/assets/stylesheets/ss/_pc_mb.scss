@@ -9,7 +9,7 @@ header, footer, nav, section, article, figure, aside {
   @include box-sizing(border-box);
 }
 html {
-  font-size: 13px;
+  font-size: 14px;
 }
 html, body {
   height: 100%;
@@ -30,13 +30,6 @@ h1, h2, h3, h4, h5, p {
   margin: 0px;
   font-size: 100%;
   font-weight: normal;
-}
-a {
-  color: $orange;
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
 }
 nav a {
   color: $black;
@@ -345,7 +338,6 @@ td {
     height: 100%;
   }
   .btn:after {
-    margin-left: 1em;
     border-top: 0.3em solid $white;
   }
   .env {
@@ -357,7 +349,7 @@ td {
     margin-left: auto;
     button {
       color: $white;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     span {
       display: inline-block;
@@ -545,52 +537,6 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 // site-navi
-.site-navi {
-  @include clear;
-  border-bottom: $border-gray5;
-  .site-navi-item {
-    float: left;
-    text-align: center;
-    @include mb {
-      width: 50%;
-    }
-    a {
-      display: block;
-      padding: 45px 0 10px;
-      color: $black;
-      font-size: $px12;
-      &:hover {
-        color: $orange;
-        text-decoration: none;
-      }
-    }
-    a, a:hover {
-      @include mb {
-        padding: 15px 15px 15px 45px;
-        background-position: 4px center;
-        text-align: left;
-      }
-    }
-  }
-  .view-site {
-    width: 105px;
-    a {
-      background: url(/assets/img/ic-site-off.png) no-repeat center 5px;
-      &:hover {
-        background: $gray1 url(/assets/img/ic-site-on.png) no-repeat center 5px;
-      }
-    }
-  }
-  .preview-site {
-    width: 104px;
-    a {
-      background: url(/assets/img/ic-preview-off.png) no-repeat center 5px;
-      &:hover {
-        background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center 5px;
-      }
-    }
-  }
-}
 
 // -------------------------------------------------------------------------------------------------
 // main-navi
@@ -600,11 +546,18 @@ td {
 .main-navi {
   li {
     padding: .5rem;
+    a {
+      @include display-flex;
+      @include align-items(center);
+    }
+    i {
+      margin-right: .5rem;
+    }
   }
   .btn-primary {
     margin-bottom: 0;
     color: $white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     &:hover {
       background: $red;
       color: $white;
@@ -1095,7 +1048,8 @@ td {
 // -------------------------------------------------------------------------------------------------
 // main
 #main {
-  padding: 1rem;
+  padding: 2rem;
+  @include mb { padding: 1rem; }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1270,16 +1224,6 @@ td {
 
 #ajax-box {
   margin: 10px;
-}
-.main-box  {
-  @include box;
-  padding: 15px 10px;
-  @include mb { margin: 0 10px 10px; }
-  header {
-    @include box-head;
-    margin: -15px -10px 15px;
-    border-bottom: $border-gray1;
-  }
 }
 .toggle-head {
   cursor: pointer;
@@ -1804,7 +1748,12 @@ dl.mod-cms-parent_crumbs {
 }
 
 // -------------------------------------------------------------------------------------------------
-// index
+// components
+h2.h4 + .more {
+  float: right;
+  margin-top: -2.5rem;
+}
+
 .tap-menu {
   display: none;
   position: absolute;
@@ -2089,18 +2038,6 @@ table.form-index.sortable-index {
 
 // -------------------------------------------------------------------------------------------------
 // form
-//select, input, textarea, button {
-//  font-size: 100%;
-//  font-family: $font-base;
-//}
-//@include mb {
-//  input[type="submit"] {
-//    -webkit-appearance: none;
-//  }
-//  label > input {
-//    vertical-align: middle;
-//  }
-//}
 #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
   @include ss-btn;
   &.add-date {

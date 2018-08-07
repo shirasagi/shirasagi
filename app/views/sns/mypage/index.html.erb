@@ -1,62 +1,52 @@
 <% if @notices.present? %>
-<div>
-  <div class="mypage-box notices">
-    <div class="index">
-      <div class="list-head"><%= t "sys.notice" %></div>
-      <ul class="list-items">
-        <% @notices.each do |item| %>
-        <li class="list-item">
-          <div class="info">
-            <%= link_to item.name, sns_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
-            <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
-          </div>
-        </li>
-        <% end %>
-      </ul>
-      <% if @notices.next_page %>
-      <div class="notices-more"><%= link_to I18n.t("ss.links.more"), sns_sys_notices_path %></div>
+<div class="notices mb-4">
+  <h2 class="h4"><%= t "sys.notice" %></h2>
+  <% if @notices.next_page %>
+  <div class="more"><%= link_to I18n.t("ss.links.more"), sns_sys_notices_path, class: "btn btn-outline-secondary" %></div>
+  <% end %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><%= Sys::Notice.t :name %></th>
+        <th><%= Sys::Notice.t :updated %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @notices.each do |item| %>
+      <tr>
+        <td><%= link_to item.name, sns_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %></td>
+        <td class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></td>
+        </div>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>
+
+<div class="mypage-box d-flex flex-wrap">
+<% if @cms_sites.size > 0 && SS.config.cms.disable.blank? %>
+  <div class="card mb-4">
+    <div class="card-header"><i class="material-icons">web</i><%= t "cms.site" %></div>
+    <div class="list-group mypage-sites">
+      <% @cms_sites.each do |item| %>
+        <a class="list-group-item list-group-item-action d-flex justify-content-between" href="<%= cms_contents_path(site: item) %>">
+          <span class="title"><%= item.name %></span>
+          <span class="meta"><%= item.full_url %></span>
+        </a>
       <% end %>
     </div>
   </div>
-</div>
-<% end %>
-
-<% if @cms_sites.size > 0 && SS.config.cms.disable.blank? %>
-<div class="mypage-box">
-  <div class="index mypage-sites">
-    <div class="list-head"><%= t "cms.site" %></div>
-
-    <ul class="list-items">
-      <% @cms_sites.each do |item| %>
-      <li class="list-item">
-        <div class="info">
-          <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
-
-          <div class="meta">
-            <span class="id"><%= item.full_url %></span>
-          </div>
-        </div>
-      </li>
-      <% end %>
-    </ul>
-  </div>
-</div>
 <% end %>
 
 <% if @gws_sites.size > 0 && SS.config.gws.disable.blank? %>
-<div class="mypage-box">
-  <div class="index mypage-groups">
-    <div class="list-head"><%= t "gws.group" %></div>
-
-    <ul class="list-items">
+  <div class="card mb-4">
+    <div class="card-header"><i class="material-icons">group</i><%= t "gws.group" %></div>
+    <div class="list-group">
       <% @gws_sites.each do |item| %>
-      <li class="list-item">
-        <div class="info">
-          <%= link_to item.name, gws_portal_path(site: item), class: "title" %>
-        </div>
-      </li>
+      <a class="list-group-item list-group-item-action" href="<%= gws_portal_path(site: item) %>"><%= item.name %></a>
       <% end %>
-    </ul>
+    </div>
   </div>
-</div>
 <% end %>
+</div>

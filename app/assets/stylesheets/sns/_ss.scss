@@ -1,26 +1,14 @@
 .mypage-box {
-  width: 50%;
-  float: left;
-  margin-top: 10px;
-  @include mb { width: 100%; }
-}
-.mypage-box.notices {
-  width: 100%;
-}
-
-.mypage-sites {
-  min-height: 150px;
-  margin-right:5px;
-}
-.mypage-groups {
-  min-height: 150px;
-  margin-left: 5px;
-}
-.mypage-sites .list-head {
-  padding: 10px 20px 10px 45px;
-  background: url(/assets/img/ic-cms-on.png) no-repeat 18px center;
-}
-.mypage-groups .list-head {
-  padding: 10px 20px 10px 55px;
-  background: url(/assets/img/ic-gws-on.png) no-repeat 18px center;
+  margin: 0 -.75rem;
+  @include mb {
+    margin: 0;
+  }
+  .card {
+    width: calc(50% - 1.5rem);
+    margin: 0 .75rem;
+    @include mb {
+      width: 100%;
+      margin: 0;
+    }
+  }
 }

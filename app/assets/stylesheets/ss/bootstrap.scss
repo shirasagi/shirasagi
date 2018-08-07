@@ -3,29 +3,15 @@
 @import "compass-mixins/lib/compass";
 @import "bootstrap-material-design/scss/bootstrap-material-design";
 
-select.form-control:read-only, select.custom-file-control:read-only {
-  background-image: none;
+// -------------------------------------------------------------------------------------------------
+//card
+.card {
+  font-size: 1rem;
 }
-
-select, select.form-control, select.custom-file-control {
-  height: 2.4em;
-  width: auto;
-  display: inline;
-  max-width: 100%;
-  padding: 0 4px;
-  @include appearance(menulist);
-  @include bmd-outline-border();
-  @include border-radius(1px);
-  option {
-    color: #333;
-  }
-  &.blank-value, &.has-blank-value :first-child {
-    color: #888;
-  }
-}
-
-.input-group {
-  select, select.form-control, select.custom-file-control {
-    width: auto;
+.card-header {
+  @include display-flex;
+  @include align-items(center);
+  i {
+    margin-right: .5rem;
   }
 }

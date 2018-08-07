@@ -65,6 +65,12 @@
       <% end %>
     </div>
   </div>
+  <% if @ss_mode == :cms %>
+    <div class="site-navi">
+      <div class="site-navi-item view-site"><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank" %></div>
+      <div class="site-navi-item preview-site"><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank" %></div>
+    </div>
+  <% end %>
 
   <% if Rails.env.development? %>
     <div class="ss-head-item env dev d-flex align-items-center">&lt;Development&gt;</div>
@@ -272,13 +278,6 @@
 
 <% if notice %>
 <script> SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); </script>
-<% end %>
-
-<% if @ss_mode == :cms %>
-<div class="site-navi">
-  <div class="site-navi-item view-site"><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank" %></div>
-  <div class="site-navi-item preview-site"><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank" %></div>
-</div>
 <% end %>
 
 <div id="navi">
