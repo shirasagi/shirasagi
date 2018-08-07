@@ -45,6 +45,9 @@ module Workflow::Approver
     validate :validate_workflow_required_counts, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
 
     before_save :cancel_request, if: -> { workflow_cancel_request }
+    before_save :transfer_workflow_approver_file_ownerships
+
+    after_destroy :destroy_workflow_approver_files
   end
 
   def status
@@ -131,7 +134,7 @@ module Workflow::Approver
     true
   end
 
-  def approve_workflow_approver_state(user_or_id, comment = nil)
+  def approve_workflow_approver_state(user_or_id, comment: nil, file_ids: nil)
     level = workflow_current_level
     return if level.nil?
 
@@ -143,6 +146,7 @@ module Workflow::Approver
       if approver[:level] == level && approver[:user_id] == user_id
         approver[:state] = WORKFLOW_STATE_APPROVE
         approver[:comment] = comment
+        approver[:file_ids] = file_ids
       end
     end
 
@@ -160,7 +164,7 @@ module Workflow::Approver
     end
   end
 
-  def pull_up_workflow_approver_state(user_or_id, comment = nil)
+  def pull_up_workflow_approver_state(user_or_id, comment: nil, file_ids: nil)
     user_id = user_or_id.id if user_or_id.respond_to?(:id)
     user_id ||= user_or_id.to_i
 
@@ -177,6 +181,7 @@ module Workflow::Approver
       if approver[:level] == level && approver[:user_id] == user_id
         approver[:state] = WORKFLOW_STATE_APPROVE
         approver[:comment] = comment
+        approver[:file_ids] = file_ids
       end
     end
 
@@ -446,6 +451,21 @@ module Workflow::Approver
     %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_remand.#{v}"), v] }
   end
 
+  def transfer_workflow_approver_file_ownerships(model = 'workflow/approver_file')
+    file_ids = workflow_approvers.map { |workflow_approver| workflow_approver[:file_ids] }.flatten.compact.uniq
+    not_owned_file_ids = ::SS::File.in(id: file_ids).where(model: "ss/temp_file").pluck(:id)
+    not_owned_file_ids.each_slice(20) do |ids|
+      ::SS::File.in(id: ids).each do |file|
+        file.model = model
+        file.save
+      end
+    end
+  end
+
+  def destroy_workflow_approver_files
+    self.class.destroy_workflow_approver_files(self.workflow_approvers)
+  end
+
   module ClassMethods
     def search(params)
       return criteria if params.blank?
@@ -460,6 +480,13 @@ module Workflow::Approver
         end
       end
       criteria
+    end
+
+    def destroy_workflow_approver_files(workflow_approvers)
+    file_ids = workflow_approvers.map { |workflow_approver| workflow_approver[:file_ids] }.flatten
+    return if file_ids.blank?
+
+    ::SS::File.in(id: file_ids).destroy_all
     end
   end
 end

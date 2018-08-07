@@ -34,6 +34,7 @@ ja:
     links:
       set_seen: 確認済にする
       unset_seen: 回覧中に戻す
+      approver_file_upload: ファイル追加
     buttons:
       select: 選択
       cancel: 取消
@@ -84,6 +85,7 @@ ja:
       request_cancelled: 申請を取り消しました。
       set_seen: 既読にしました。
       unset_seen: 未読にしました。
+      approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
 
   modules:
     workflow: ワークフロー

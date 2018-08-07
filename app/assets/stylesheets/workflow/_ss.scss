@@ -26,3 +26,26 @@
   font-size: $px16;
   font-weight: bold;
 }
+
+.mod-workflow-view {
+  .approver-files {
+    margin-top: 5px;
+  }
+
+  .approver-file {
+    -js-display: flex;
+    @include display-flex;
+    @include align-items(center);
+    padding: 5px 0;
+
+    .thumb {
+      width: 48px;
+      max-height: 48px;
+      text-align: center;
+    }
+
+    .name {
+      margin-left: 5px;
+    }
+  }
+}

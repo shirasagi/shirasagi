@@ -61,6 +61,7 @@ class Gws::Workflow::PagesController < ApplicationController
     @item.workflow_comment = params[:workflow_comment]
     @item.workflow_pull_up = params[:workflow_pull_up]
     @item.workflow_on_remand = params[:workflow_on_remand]
+    save_workflow_approvers = @item.workflow_approvers
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
     @item.workflow_current_circulation_level = 0
@@ -68,6 +69,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
     if @item.valid?
       request_approval
+      @item.class.destroy_workflow_approver_files(save_workflow_approvers)
       render json: { workflow_state: @item.workflow_state }
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
@@ -81,10 +83,12 @@ class Gws::Workflow::PagesController < ApplicationController
     @item.workflow_user_id = @cur_user.id
     @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
     @item.workflow_comment = params[:workflow_comment]
+    save_workflow_approvers = @item.workflow_approvers
     copy = @item.workflow_approvers.to_a
     copy.each do |approver|
       approver[:state] = @model::WORKFLOW_STATE_PENDING
       approver[:comment] = ''
+      approver[:file_ids] = nil
     end
     @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     @item.workflow_current_circulation_level = 0
@@ -97,6 +101,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
     if @item.save
       request_approval
+      @item.class.destroy_workflow_approver_files(save_workflow_approvers)
       render json: { workflow_state: @item.workflow_state }
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
@@ -107,10 +112,13 @@ class Gws::Workflow::PagesController < ApplicationController
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
     save_level = @item.workflow_current_level
+    comment = params[:remand_comment]
+    file_ids = params[:workflow_file_ids]
+    opts = { comment: comment, file_ids: file_ids }
     if params[:action] == 'pull_up_update'
-      @item.pull_up_workflow_approver_state(@cur_user, params[:remand_comment])
+      @item.pull_up_workflow_approver_state(@cur_user, opts)
     else
-      @item.approve_workflow_approver_state(@cur_user, params[:remand_comment])
+      @item.approve_workflow_approver_state(@cur_user, opts)
     end
 
     if @item.finish_workflow?

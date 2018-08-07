@@ -51,8 +51,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-      expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(Sys::MailLog.count).to eq 2
       expect(Gws::Memo::Notice.count).to eq 2
@@ -75,10 +77,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to \
-        eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
-      expect(item.workflow_approvers[1]).to \
-        eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(Sys::MailLog.count).to eq 2
       expect(Gws::Memo::Notice.count).to eq 2
@@ -101,10 +103,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(item.workflow_state).to eq 'approve'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to \
-        eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
-      expect(item.workflow_approvers[1]).to \
-        eq({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil})
 
       expect(Sys::MailLog.count).to eq 3
       expect(Gws::Memo::Notice.count).to eq 3

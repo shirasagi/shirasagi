@@ -64,6 +64,16 @@ SS_Workflow = function (el, options) {
     e.preventDefault();
     return false;
   });
+
+  $('.mod-workflow-approve .btn-file-upload').data('on-select', function($item) {
+    $.colorbox.close();
+    pThis.onUploadFileSelected($item);
+  });
+
+  this.tempFile = new SS_Addon_TempFile(
+    $(".mod-workflow-approve .upload-drop-area"), this.options.user_id,
+    { select: function(files, dropArea) { pThis.onDropFile(files, dropArea); } }
+  );
 };
 
 SS_Workflow.prototype = {
@@ -87,6 +97,15 @@ SS_Workflow.prototype = {
     });
 
     return circulations;
+  },
+  collectFileIds: function() {
+    var fileIds = [];
+
+    $("input[name='workflow_file_ids[]']").each(function() {
+      fileIds.push($(this).prop("value"));
+    });
+
+    return fileIds;
   },
   composeWorkflowUrl: function(type) {
     var uri = location.pathname.split("/");
@@ -125,6 +144,7 @@ SS_Workflow.prototype = {
       forced_update_option = $("#forced-update").prop("checked");
     }
     var circulations = this.collectCirculations();
+    var workflow_file_ids = this.collectFileIds();
     $.ajax({
       type: "POST",
       url: uri,
@@ -138,7 +158,8 @@ SS_Workflow.prototype = {
         remand_comment: remand_comment,
         url: this.options.request_url,
         forced_update_option: forced_update_option,
-        workflow_circulations: circulations
+        workflow_circulations: circulations,
+        workflow_file_ids: workflow_file_ids
       },
       success: function (data) {
         if (data["workflow_alert"]) {
@@ -303,6 +324,56 @@ SS_Workflow.prototype = {
       onCleanup: function() {
       }
     });
+  },
+  fileSelectViewUrl: function(id) {
+    var template = "/.u:user/apis/temp_files/:id/select.html";
+    return template.replace(/:user/g, this.options.user_id).replace(/:id/g, id);
+  },
+  onUploadFileSelected: function($item) {
+    var pThis = this;
+    $.ajax({
+      url: this.fileSelectViewUrl($item.data("id")),
+      success: function(data, status, xhr) {
+        pThis.renderFileHtml(data);
+      },
+      error: function (xhr, status, error) {
+        alert("== Error ==");
+      }
+    });
+  },
+  renderFileHtml: function(data) {
+    var pThis = this;
+    var $html = $(data);
+    $html.find("input[name='item[file_ids][]']").attr("name", "workflow_file_ids[]");
+    $html.find(".action .action-delete").removeAttr("onclick", "").on("click", function(e) {
+      e.preventDefault();
+      pThis.deleteUploadedFile($(this));
+      return false;
+    });
+    $html.find(".action .action-attach").remove();
+    $html.find(".action .action-paste").remove();
+    $html.find(".action .action-thumb").remove();
+    $("#selected-files").append($html);
+  },
+  deleteUploadedFile: function($a) {
+    $a.closest("div[data-file-id]").remove();
+  },
+  onDropFile: function(files, dropArea) {
+    var pThis = this;
+    for (var j = 0, len = files.length; j < len; j++) {
+      var file = files[j];
+      var id = file["_id"];
+      var url = pThis.fileSelectViewUrl(id);
+      $.ajax({
+        url: url,
+        success: function(data, status, xhr) {
+          pThis.renderFileHtml(data);
+        },
+        error: function (xhr, status, error) {
+          alert("== Error ==");
+        }
+      });
+    }
   }
 };
 
