@@ -77,6 +77,7 @@ module Gws::Portal::PortletModel
   end
 
   def view_file
+    return nil unless PORTLETS.key?(portlet_model.to_sym)
     "gws/portal/portlets/#{portlet_model}/index.html.erb"
   end
 
@@ -136,9 +137,10 @@ module Gws::Portal::PortletModel
     end
 
     def portlet_addons(type)
-      portlets = PORTLETS[type.to_sym][:addons] || []
+      portlet = PORTLETS[type.to_sym] || {}
+      addons = portlet[:addons] || []
       self.addons.select do |addon|
-        addon.type.nil? || portlets.include?(addon.klass)
+        addon.type.nil? || addons.include?(addon.klass)
       end
     end
   end
