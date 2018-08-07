@@ -345,6 +345,22 @@ td {
     vertical-align: middle;
     @include mb { display: none; }
   }
+  .site-navi{
+    .btn {
+      margin-bottom: 0;
+      color: $white;
+      font-size: 1rem;
+    }
+    .view-site, .preview-site {
+      padding-left: 3rem;
+      background-image: url(/assets/img/ic_siteview.png);
+      background-repeat: no-repeat;
+      background-position: 1rem center;
+    }
+    .preview-site {
+      background-image: url(/assets/img/ic_preview.png);
+    }
+  }
   .user {
     margin-left: auto;
     button {
@@ -534,10 +550,6 @@ td {
     padding: 0;
   }
 }
-
-// -------------------------------------------------------------------------------------------------
-// site-navi
-
 // -------------------------------------------------------------------------------------------------
 // main-navi
 @mixin navi-icon {
@@ -558,9 +570,41 @@ td {
     margin-bottom: 0;
     color: $white;
     font-size: 1rem;
-    &:hover {
+    &:hover, &:active, &:focus,
+    &:not(:disabled):not(.disabled):active {
       background: $red;
       color: $white;
+    }
+  }
+  .cms-navi .btn:before {
+    content: "";
+    width: 32px;
+    height: 32px;
+  }
+  .icon-content:before {
+    background: url(/assets/img/ic_main-navi.png) no-repeat left 0;
+  }
+  .icon-node:before {
+    background: url(/assets/img/ic_main-navi.png) no-repeat left -32px;
+  }
+  .icon-page:before {
+    background: url(/assets/img/ic_main-navi.png) no-repeat left -64px;
+  }
+  .icon-part:before {
+    background: url(/assets/img/ic_main-navi.png) no-repeat left -96px;
+  }
+  .icon-layout:before {
+    background: url(/assets/img/ic_main-navi.png) no-repeat left -128px;
+  }
+  .icon-search:before {
+    background: url(/assets/img/ic_main-navi.png) no-repeat left -448px;
+  }
+  .conf {
+    .dropdown-menu {
+      min-width: 400px;
+    }
+    .dropdown-menu a {
+      width: 50%;
     }
   }
 }
@@ -801,177 +845,6 @@ td {
         }
       }
     }
-  }
-}
-
-.main-navi, .mod-navi {
-  .icon-node:before {
-    background-position: left -32px !important;
-  }
-  .icon-node:hover:before {
-    background-position: -32px -32px !important;
-  }
-  .icon-page:before {
-    background-position: left -64px !important;
-  }
-  .icon-page:hover:before {
-    background-position: -32px -64px !important;
-  }
-  .icon-part:before {
-    background-position: left -96px !important;
-  }
-  .icon-part:hover:before {
-    background-position: -32px -96px !important;
-  }
-  .icon-layout:before {
-    background-position: left -128px !important;
-  }
-  .icon-layout:hover:before {
-    background-position: -32px -128px !important;
-  }
-  .icon-conv:before {
-    background-position: left -160px !important;
-  }
-  .icon-conv:hover:before {
-    background-position: -32px -160px !important;
-  }
-  .icon-write:before {
-    background-position: left -192px !important;
-  }
-  .icon-write:hover:before {
-    background-position: -32px -192px !important;
-  }
-  .icon-conf:before {
-    background-position: left -224px !important;
-  }
-  .icon-conf:hover:before {
-    background-position: -32px -224px !important;
-  }
-  .icon-portal:before {
-    background-position: left -256px !important;
-  }
-  .icon-portal:hover:before {
-    background-position: -32px -256px !important;
-  }
-  .icon-schedule:before {
-    background-position: left -288px !important;
-  }
-  .icon-schedule:hover:before {
-    background-position: -32px -288px !important;
-  }
-  .icon-board:before {
-    background-position: left -320px !important;
-  }
-  .icon-board:hover:before {
-    background-position: -32px -320px !important;
-  }
-  .icon-todo:before {
-    background-position: left -352px !important;
-  }
-  .icon-todo:hover:before {
-    background-position: -32px -352px !important;
-  }
-  .icon-bookmark:before {
-    background-position: left -352px !important;
-  }
-  .icon-bookmark:hover:before {
-    background-position: -32px -352px !important;
-  }
-  .icon-facility:before {
-    background-position: left -384px !important;
-  }
-  .icon-facility:hover:before {
-    background-position: -32px -384px !important;
-  }
-  .icon-workflow:before {
-    background-position: left -416px !important;
-  }
-  .icon-workflow:hover:before {
-    background-position: -32px -416px !important;
-  }
-  .icon-search:before {
-    background-position: left -448px !important;
-  }
-  .icon-search:hover:before {
-    background-position: -32px -448px !important;
-  }
-  .icon-message:before {
-    background-position: left -480px !important;
-  }
-  .icon-message:hover:before {
-    background-position: -32px -480px !important;
-  }
-  .icon-memo:before {
-    background-position: left -480px !important;
-  }
-  .icon-memo:hover:before {
-    background-position: -32px -480px !important;
-  }
-  .icon-report:before {
-    background-position: left -512px !important;
-  }
-  .icon-report:hover:before {
-    background-position: -32px -512px !important;
-  }
-  .icon-question:before {
-    background-position: left -640px !important;
-  }
-  .icon-question:hover:before {
-    background-position: -32px -640px !important;
-  }
-  .icon-circular:before {
-    background-position: left -544px !important;
-  }
-  .icon-circular:hover:before {
-    background-position: -32px -544px !important;
-  }
-  .icon-monitor:before {
-    background-position: left -672px !important;
-  }
-  .icon-monitor:hover:before {
-    background-position: -32px -672px !important;
-  }
-  .icon-share:before {
-    background-position: left -576px !important;
-  }
-  .icon-share:hover:before {
-    background-position: -32px -576px !important;
-  }
-  .icon-address:before {
-    background-position: left -608px !important;
-  }
-  .icon-address:hover:before {
-    background-position: -32px -608px !important;
-  }
-  .icon-discussion:before {
-    background-position: left -736px !important;
-  }
-  .icon-discussion:hover:before {
-    background-position: -32px -736px !important;
-  }
-  .icon-reminder:before {
-    background-position: left -768px !important;
-  }
-  .icon-reminder:hover:before {
-    background-position: -32px -768px !important;
-  }
-  .icon-bookmark:before {
-    background-position: left -800px !important;
-  }
-  .icon-bookmark:hover:before {
-    background-position: -32px -800px !important;
-  }
-  .icon-faq:before {
-    background-position: left -832px !important;
-  }
-  .icon-faq:hover:before {
-    background-position: -32px -832px !important;
-  }
-  .icon-attendance:before {
-    background-position: left -864px !important;
-  }
-  .icon-attendance:hover:before {
-    background-position: -32px -864px !important;
   }
 }
 // -------------------------------------------------------------------------------------------------

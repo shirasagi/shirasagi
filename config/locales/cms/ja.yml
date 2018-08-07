@@ -42,7 +42,7 @@ ja:
     preview_mobile_page: 携帯プレビュー
     preview_page: プレビュー
     preview_pc_page: PCプレビュー
-    preview_site: サイトプレビュー
+    preview_site: プレビュー
     role: 権限/ロール
     root_menu: メインメニュー
     search_contents: サイト内検索
@@ -59,6 +59,7 @@ ja:
     source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
     theme_template: Theme切り替え
+    tool: ツール
     user: ユーザー
     view_page: 公開画面
     view_site: サイト確認

@@ -67,8 +67,8 @@
   </div>
   <% if @ss_mode == :cms %>
     <div class="site-navi">
-      <div class="site-navi-item view-site"><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank" %></div>
-      <div class="site-navi-item preview-site"><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank" %></div>
+      <%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank", class: "btn btn-secondary view-site" %>
+      <%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank", class: "btn btn-secondary preview-site" %>
     </div>
   <% end %>
 
