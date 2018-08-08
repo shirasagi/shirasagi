@@ -93,7 +93,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
       calendar = node.ical_parse
       @events = calendar.first.events
     rescue => e
-      message = "Icalendar::Calendar.parse failer (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+      message = "Icalendar::Calendar.parse failure (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
       Rails.logger.info(message)
       @errors << message
     end
