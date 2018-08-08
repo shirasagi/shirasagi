@@ -45,14 +45,13 @@ SS::Application.routes.draw do
   end
 
   node "event" do
-    get "page/(index.:format)" => "public#index", cell: "nodes/page"
-    get "page/:display.:format" => "public#index", cell: "nodes/page", display: /list|table/
-    get "page/:year:month(_:display).:format" => "public#monthly", cell: "nodes/page",
-      year: /\d{4}/, month: /\d{2}/, display: /list|table/
-    get "page/:year:month:day.:format" => "public#daily", cell: "nodes/page",
-      year: /\d{4}/, month: /\d{2}/, day: /\d{2}/
+    get ":node/(index.:format)" => "public#index", cell: "nodes/page", node: /page|ical/
+    get ":node/:display.:format" => "public#index", cell: "nodes/page", node: /page|ical/, display: /[a-z]*/
+    get ":node/:year:month(_:display).:format" => "public#monthly", cell: "nodes/page",
+      node: /page|ical/, year: /\d{4}/, month: /\d{2}/, display: /[a-z]*/
+    get ":node/:year:month:day.:format" => "public#daily", cell: "nodes/page",
+      node: /page|ical/, year: /\d{4}/, month: /\d{2}/, day: /\d{2}/
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
-    get 'ical/(index.:format)' => 'public#index', cell: 'nodes/ical'
   end
 
   part "event" do

@@ -19,6 +19,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   def monthly
+    raise '404' if params[:display].present? && params[:display].to_s != 'list' && params[:display].to_s != 'table'
+
     @year  = params[:year].to_i if @year.blank?
     @month = params[:month].to_i if @month.blank?
     @date  = Date.new(@year, @month, 1)
@@ -58,9 +60,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   def index_monthly
-    if @cur_node.event_display == 'table_only'
-      raise '404'
-    end
+    raise '404' if @cur_node.event_display == 'table_only'
     @events = {}
     @items = [] unless @index
     start_date = Date.new(@year, @month, 1)
@@ -72,7 +72,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
     dates = (start_date...close_date).map { |m| m.mongoize }
     events(dates).each do |page|
-      page.event_dates.split(/\r\n|\n/).each do |date|
+      page.event_dates.split(/\R/).each do |date|
         d = Date.parse(date)
         next unless @events[d]
         @items << page unless @index
@@ -88,9 +88,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
   end
 
   def index_monthly_table
-    if @cur_node.event_display == 'list_only'
-      raise '404'
-    end
+    raise '404' if @cur_node.event_display == 'list_only'
     @events = {}
     @items = [] unless @index
     start_date = @date.advance(days: -1 * @date.wday)
@@ -107,8 +105,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
         next unless @events[d]
         @items << page unless @index
         @events[d] << [
-          page,
-          page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
+            page,
+            page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
         ]
       end
     end
