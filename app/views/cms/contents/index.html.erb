@@ -1,71 +1,97 @@
 <% if @sys_notices.present? %>
-<div class="index notices">
-  <div class="list-head"><%= t "sys.notice" %></div>
-  <ul class="list-items">
-    <% @sys_notices.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to item.name, cms_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
-      </div>
-    </li>
+<div class="row">
+  <div class="notices col mb-4">
+    <h2 class="h4"><%= t "sys.notice" %></h2>
+    <% if @sys_notices.next_page %>
+    <div class="more"><%= link_to I18n.t("ss.links.more"), cms_sys_notices_path, class: "btn btn-outline-secondary" %></div>
     <% end %>
-  </ul>
-  <% if @sys_notices.next_page %>
-  <div class="notices-more"><%= link_to I18n.t("ss.links.more"), cms_sys_notices_path %></div>
-  <% end %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= Sys::Notice.t :name %></th>
+          <th><%= Sys::Notice.t :updated %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @sys_notices.each do |item| %>
+        <tr>
+          <td><%= link_to item.name, cms_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %></td>
+          <td class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 <% end %>
 
 <% if @cms_notices.present? %>
-<div class="index notices">
-  <div class="list-head"><%= t "cms.notice" %></div>
-  <ul class="list-items">
-    <% @cms_notices.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
-      </div>
-    </li>
+<div class="row">
+  <div class="notices col mb-4">
+    <h2 class="h4"><%= t "cms.notice" %></h2>
+    <% if @cms_notices.next_page %>
+    <div class="more"><%= link_to I18n.t("ss.links.more"), cms_public_notices_path, class: "btn btn-outline-secondary" %></div>
     <% end %>
-  </ul>
-  <% if @cms_notices.next_page %>
-  <div class="notices-more"><%= link_to I18n.t("ss.links.more"), cms_public_notices_path %></div>
-  <% end %>
+    <table class="table table-striped">
+      <% @cms_notices.each do |item| %>
+      <thead>
+        <tr>
+          <th><%= Cms::Notice.t :name %></th>
+          <th><%= Cms::Notice.t :updated %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %></td>
+          <td class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></td>
+        </tr>
+      </tbody>
+      <% end %>
+    </table>
+  </div>
 </div>
 <% end %>
 
-<div class="index">
-  <div class="list-head"><%= t "cms.content" %></div>
-
-  <ul class="list-items">
-    <% @items.each do |item| %>
-    <li class="list-item">
-      <nav class="tap-menu">
-        <%= link_to t("cms.content"), contents_path(item) %>
-        <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank %>
-        <% if @cur_site.mobile_enabled? %>
-          <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
-          <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
-        <% else %>
-          <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
+<div class="row">
+  <div class="col mb-4">
+    <h2 class="h4"><%= t "cms.content" %></h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= t "cms.status" %></th>
+          <th><%= t "cms.apis.contents.title" %></th>
+          <th><%= Cms::Node.t :route %></th>
+          <th><%= t "cms.options.sort.filename" %></th>
+          <th><%= t "cms.options.sort.updated_1" %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+        <tr>
+          <td class="state"><span><%= t "ss.state.#{item.status}" %></span></td>
+          <td><%= link_to item.name, contents_path(item), class: "title" %></td>
+          <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
+          <td class="filename"><%= File.basename item.filename %></td>
+          <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+          <td class="menu">
+            <div class="dropdown">
+              <button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
+              <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex1">
+                <%= link_to t("cms.content"), contents_path(item), class: "dropdown-item" %>
+                <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, class: "dropdown-item" %>
+                <% if @cur_site.mobile_enabled? %>
+                  <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+                  <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
+                <% else %>
+                  <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+                <% end %>
+            </div>
+          </td>
+        </tr>
         <% end %>
-      </nav>
-      <div class="info">
-        <%= link_to item.name, contents_path(item), class: "title" %>
-
-        <div class="meta">
-          <span class="id">#<%= item.id %></span>
-          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-          <span class="filename"><%= File.basename item.filename %></span>
-          <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-          <span class="state"><%= t "ss.state.#{item.status}" %></span>
-        </div>
-      </div>
-    </li>
-    <% end %>
-  </ul>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

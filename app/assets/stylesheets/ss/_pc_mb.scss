@@ -120,7 +120,7 @@ td {
 // Popup Notice
 .popup-notice-container {
   position: relative;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     position: static;
   }
 }
@@ -132,7 +132,7 @@ td {
   width: 450px;
   box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.2);
   background: #ffffff;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     right: 0;
     width: 100%;
     max-width: 450px;
@@ -148,7 +148,7 @@ td {
     border: 9px solid transparent;
     border-top: none;
     border-bottom: 14px solid $white;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       right: 229px;
     }
   }
@@ -214,7 +214,7 @@ td {
 .gws-memo-message {
   display: inline-block;
   vertical-align: bottom;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     .popup-notice:before {
       right: 279px;
     }
@@ -324,7 +324,7 @@ td {
   background: $black2;
   font-size: 14px;
   height: 50px;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     @include flex-direction(column);
     height: unset;
   }
@@ -343,7 +343,7 @@ td {
   .env {
     color: $white;
     vertical-align: middle;
-    @include mb { display: none; }
+    @include media-breakpoint-down(sm) { display: none; }
   }
   .site-navi{
     .btn {
@@ -374,7 +374,7 @@ td {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      @include mb {
+      @include media-breakpoint-down(sm) {
         max-width: 160px;
       }
     }
@@ -396,7 +396,7 @@ td {
       .ss-dropdown-menu {
         right: 0;
         padding: 5px 5px;
-        @include mb { left: 0; }
+        @include media-breakpoint-down(sm) { left: 0; }
         input[type=text] {
           width: 100%;
           margin-top: 5px;
@@ -479,7 +479,7 @@ td {
   }
   .sp-menu-button {
     display: none;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       display: block;
       position: absolute;
       top: 0;
@@ -527,7 +527,7 @@ td {
         -moz-transform: translateY(-8px) rotate(-45deg);
         -ms-transform: translateY(-8px) rotate(-45deg);
         transform: translateY(-8px) rotate(-45deg);
-      }
+      } 
     }
   }
 }
@@ -536,13 +536,17 @@ td {
 // wrap
 #wrap {
   @include clear;
+  padding: 30px;
+  @include media-breakpoint-down(sm) {
+    padding: 15px;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
 // nav
 #navi {
   background: $black3;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     display: none;
   }
   ul {
@@ -730,7 +734,7 @@ td {
     text-decoration: none;
     cursor: pointer;
   }
-  @include mb {
+  @include media-breakpoint-down(sm) {
     h3 {
       a, a:hover, a.management, a:hover.management, span {
         padding: 5px 15px 5px 35px;
@@ -768,7 +772,7 @@ td {
         border-left: 8px solid $gray1;
       }
     }
-    @include mb {
+    @include media-breakpoint-down(sm) {
       h2, &.active h2, &:hover h2 {
         background-position: 97% center;
       }
@@ -797,7 +801,7 @@ td {
       padding: 8px 0px 8px 15px;
       background: url(/assets/img/ic-li.png) no-repeat left center;
     }
-    @include mb {
+    @include media-breakpoint-down(sm) {
       position: static;
       width: 100%;
       li {
@@ -834,7 +838,7 @@ td {
     .current a {
       background-color: $gray1;
     }
-    @include mb {
+    @include media-breakpoint-down(sm) {
       @include clear;
       li {
         float: left;
@@ -869,7 +873,7 @@ td {
   border-bottom: $border-gray4;
   background: $gray5;
   list-style: none;
-  @include mb { display: none; }
+  @include media-breakpoint-down(sm) { display: none; }
   li {
     float: left;
     &:first-child a:before {
@@ -915,15 +919,11 @@ td {
     color: $black;
     font-weight: bold;
   }
-  @include mb { padding-left: 10px; }
+  @include media-breakpoint-down(sm) { padding-left: 10px; }
 }
 
 // -------------------------------------------------------------------------------------------------
 // main
-#main {
-  padding: 2rem;
-  @include mb { padding: 1rem; }
-}
 
 // -------------------------------------------------------------------------------------------------
 // menu
@@ -931,7 +931,7 @@ td {
   position: relative;
   .nav-menu, .sns-nav-menu {
     margin: 20px;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       margin: 0;
       padding: 10px;
     }
@@ -940,7 +940,7 @@ td {
       @include arrow;
       color: $black;
       &:hover { color: $orange;}
-      @include mb {
+      @include media-breakpoint-down(sm) {
         margin-bottom: 16px;
       }
     }
@@ -994,7 +994,7 @@ td {
     margin-left: 230px;
   }
 }
-@include mb {
+@include media-breakpoint-down(sm) {
   #menu {
     .nav-menu {
       margin: 10px 0px;
@@ -1027,21 +1027,13 @@ td {
     }
   }
 }
-#content-navi + .index, #content-navi ~ .content-main {
-  float: right;
-  width: calc(100% - 30% - 10px);
-}
-@include mb {
+@include media-breakpoint-down(sm) {
   #content-navi {
     float: none;
     overflow: scroll;
     width: auto;
     max-height: 200px;
     margin: 0 10px 10px;
-  }
-  #content-navi + .index, #content-navi ~ .content-main {
-    float: none;
-    width: auto;
   }
 }
 .tree-navi .loading {
@@ -1107,7 +1099,7 @@ td {
   &:not(.print) {
     @include box;
   }
-  @include mb {
+  @include media-breakpoint-down(sm) {
     margin: 0 10px 10px;
   }
   .see {
@@ -1123,7 +1115,7 @@ td {
     position: absolute;
     top: 17px;
     left: 300px;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       top: 13px;
       left: auto;
       right: 10px;
@@ -1167,7 +1159,7 @@ dl.see {
     padding: 5px 0;
     color: $orange3;
     font-weight: bold;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       float: none;
     }
   }
@@ -1175,12 +1167,12 @@ dl.see {
     @include clear;
     margin: 0px 0px 0px 180px;
     padding: 5px 0;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       margin: 0;
     }
     input, select {
       margin: -5px 0;
-      @include mb  {
+      @include media-breakpoint-down(sm)  {
         &[type="text"] ~ .btn, &[type="text"] ~ label, & ~ select {
           margin-top: 10px;
         }
@@ -1189,7 +1181,7 @@ dl.see {
         //}
       }
     }
-    @include mb {
+    @include media-breakpoint-down(sm) {
       select + input[type="text"] {
         width: 60% !important;
       }
@@ -1201,7 +1193,7 @@ dl.see {
       display: inline-block;
       margin-right: 1rem;
     }
-    @include mb {
+    @include media-breakpoint-down(sm) {
       .prefix, .postfix {
         display: block;
         margin: 5px 0;
@@ -1218,13 +1210,13 @@ dl.see {
   > dt ~ dt { margin-top: 15px; }
   > dd ~ dd {
       margin-top: 15px;
-      @include mb {
+      @include media-breakpoint-down(sm) {
         margin-top: 0;
       }
     }
   > dd + dd {
     margin-top: 0px;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       margin-top: 0;
     }
   }
@@ -1239,7 +1231,7 @@ dl.see {
     border-top: 0px;
     button, .ajax-box {
       margin-right: 5px;
-      @include mb {
+      @include media-breakpoint-down(sm) {
         margin-bottom: 10px;
       }
     }
@@ -1248,7 +1240,7 @@ dl.see {
     .input-group {
       width: 12em;
     }
-    @include mb {
+    @include media-breakpoint-down(sm) {
       -js-display: flex;
       @include display-flex;
       @include align-items(center);
@@ -1263,7 +1255,7 @@ dl.see {
   }
   > dt.depth-2 {
     padding-left: 20px;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       & + dd {
         padding-left: 20px;
       }
@@ -1392,11 +1384,11 @@ dl.mod-cms-parent_crumbs {
 #addon-cms-agents-addons-file .see, .addon-view .see {
   .upload-menu-select {
     float: right;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       margin-bottom: 10px;
     }
   }
-  @include mb {
+  @include media-breakpoint-down(sm) {
     .upload-menu-new {
       display: inline-block;
       margin-bottom: 10px;
@@ -1419,7 +1411,7 @@ dl.mod-cms-parent_crumbs {
   #selected-files {
     margin-top: 10px;
     @include clear;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       margin-top: 10px;
     }
   }
@@ -1434,7 +1426,7 @@ dl.mod-cms-parent_crumbs {
   float: left;
   width: 164px;
   margin: 0px 28px 20px 0px;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     margin: 0 10px 10px 0;
   }
   .thumb {
@@ -1482,7 +1474,7 @@ dl.mod-cms-parent_crumbs {
   #selected-member-photos {
    margin-top: 30px;
      @include clear;
-     @include mb {
+     @include media-breakpoint-down(sm) {
        margin-top: 10px;
     }
   }
@@ -1503,14 +1495,14 @@ dl.mod-cms-parent_crumbs {
   line-height: 2;
   > div {
     padding: 0 24px;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       padding: 0 10px;
     }
   }
   label {
     display: inline-block;
     margin-right: 10px;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       &.parent {
         display: block;
         border-bottom: $border-gray1;
@@ -1521,7 +1513,7 @@ dl.mod-cms-parent_crumbs {
   div.parent {
     padding: 15px 24px;
     border-bottom: $border-gray1;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       padding: 10px;
     }
     &.last-child {
@@ -1529,7 +1521,7 @@ dl.mod-cms-parent_crumbs {
     }
     .child {
       padding-left: 30px;
-      @include mb {
+      @include media-breakpoint-down(sm) {
         padding: 0;
       }
     }
@@ -1544,13 +1536,13 @@ dl.mod-cms-parent_crumbs {
 // mod-map
 .mod-map {
   padding: 0 10px;
-  @include mb { padding: 0 10px; }
+  @include media-breakpoint-down(sm) { padding: 0 10px; }
   .keyword {
     max-width: 400px;
-    @include mb { max-width: 75%; }
+    @include media-breakpoint-down(sm) { max-width: 75%; }
   }
   .location-search { margin-bottom: 20px; }
-  > button { @include mb{ margin-bottom: 10px; } }
+  > button { @include media-breakpoint-down(sm){ margin-bottom: 10px; } }
   .marker-setting {
     @include clear;
     margin: 20px 0 0;
@@ -1562,7 +1554,7 @@ dl.mod-cms-parent_crumbs {
       float: left;
       margin-left: 0px;
       margin-right: 28px;
-      @include mb {
+      @include media-breakpoint-down(sm) {
         float: none;
         margin: 0;
       }
@@ -1574,13 +1566,13 @@ dl.mod-cms-parent_crumbs {
       }
       .marker-name,.marker-text,.marker-loc-input {
         width: 260px;
-        @include mb {
+        @include media-breakpoint-down(sm) {
           width: 100%;
         }
       }
       &:last-child {
         width: 260px;
-        @include mb {
+        @include media-breakpoint-down(sm) {
           width: 100%;
         }
       }
@@ -1607,14 +1599,14 @@ dl.mod-cms-parent_crumbs {
   @include box;
   margin-bottom: 15px;
   padding: 12px;
-  @include mb { margin: 0 10px 10px; }
+  @include media-breakpoint-down(sm) { margin: 0 10px 10px; }
   .title {
     float: left;
     font-size: 140%;
   }
   form {
     float: right;
-    @include mb {
+    @include media-breakpoint-down(sm) {
       float: none;
     }
   }
@@ -1625,6 +1617,19 @@ dl.mod-cms-parent_crumbs {
 h2.h4 + .more {
   float: right;
   margin-top: -2.5rem;
+}
+.table {
+  td.state span {
+    display: inline-block;
+    padding: .1rem .5rem;
+    border-radius: .3rem;
+    background: #4caf50;
+    color: $white;
+    font-size: .875rem;
+  }
+  td.menu {
+    padding: 0.4rem 0.75rem;
+  }
 }
 
 .tap-menu {
@@ -1643,27 +1648,13 @@ h2.h4 + .more {
     &:hover { background: $gray1; }
   }
 }
-div.index {
-  @include clear;
-  @include box;
-  position: static;
-  @include mb { margin: 0 10px 10px; }
-  .more {
-    margin: 0 18px 10px;
-  }
-}
-#ajax-box {
-  div.index {
-    border: none;
-  }
-}
 .list-head {
   @include clear;
   margin: 0px 0px 10px;
   padding: 10px 18px 10px;
   border-bottom: $border-gray1;
   font-weight: bold;
-  @include mb { padding: 10px 20px; }
+  @include media-breakpoint-down(sm) { padding: 10px 20px; }
   .check {
     float: left;
     width: 32px;
@@ -1684,7 +1675,7 @@ div.index {
 .list-head-action {
   float: left;
   margin: 1px 0 10px;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     float: none;
     * { margin-bottom: 5px; }
     input[type="text"] { width: 70% !important; }
@@ -1703,12 +1694,12 @@ div.index {
 .list-head-search {
   float: right;
   margin: 0 0 10px;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     clear: both;
     float: none;
     .index-search {
       margin: 0;
-      @include mb {
+      @include media-breakpoint-down(sm) {
         -js-display: flex;
         @include display-flex;
         @include flex-wrap(wrap);
@@ -1727,7 +1718,7 @@ div.index {
   }
 }
 .list-head-search-full {
-  @include mb {
+  @include media-breakpoint-down(sm) {
     form {
       -js-display: flex;
       @include display-flex;
@@ -1745,7 +1736,7 @@ div.index {
   }
 }
 .wrap-table {
-  @include mb {
+  @include media-breakpoint-down(sm) {
     overflow: scroll;
     table.index th, table.index td {
       display: table-cell;
@@ -1771,7 +1762,7 @@ table.index {
   }
   th, td {
     padding: 6px 18px;
-    @include mb { display: inline-block; }
+    @include media-breakpoint-down(sm) { display: inline-block; }
   }
   th.checkbox,
   td.checkbox {
@@ -1785,12 +1776,12 @@ table.index {
     &.deselect {
       width: 100px;
     }
-    @include mb {
+    @include media-breakpoint-down(sm) {
       display: inline-block;
       padding: 5px 0;
       border: none;
       background: none;
-      @include mb { width: auto !important; }
+      @include media-breakpoint-down(sm) { width: auto !important; }
       &:after {
         content: "/";
       }
@@ -1805,7 +1796,7 @@ table.index {
   .toggle {
     cursor: pointer;
   }
-  @include mb {
+  @include media-breakpoint-down(sm) {
     thead {
       background: $gray1;
     }
@@ -1901,7 +1892,7 @@ table.form-index.sortable-index {
 .ads-total table.index {
   th,td {
     border: $border-gray5;
-    @include mb { display: table-cell; }
+    @include media-breakpoint-down(sm) { display: table-cell; }
   }
   thead th {
     display: table-cell;
@@ -1917,7 +1908,7 @@ table.form-index.sortable-index {
     @include ss-btn-orange;
   }
 }
-@include mb {
+@include media-breakpoint-down(sm) {
   input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
   input[type=email], input[type=number], input[type=tel] {
     width: 100% !important;
@@ -1945,25 +1936,25 @@ input.filename {
 input.datetime {
   width: 12em;
   text-align: center;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     text-align: left;
   }
 }
 input.date {
   width: 9em;
   text-align: center;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     text-align: left;
   }
 }
 input.time {
   width: 9em;
   text-align: center;
-  @include mb {
+  @include media-breakpoint-down(sm) {
     text-align: left;
   }
 }
-@include mb {
+@include media-breakpoint-down(sm) {
   input[type="file"] {
     margin-bottom: 5px;
   }
@@ -1985,7 +1976,7 @@ form .CodeMirror {
 }
 // minicolors
 .minicolors-theme-default {
-  @include mb {
+  @include media-breakpoint-down(sm) {
     &.minicolors {
       display: block;
     }
@@ -1999,7 +1990,7 @@ form .CodeMirror {
   }
 }
 //multislelct
-@include mb {
+@include media-breakpoint-down(sm) {
   .ms-container {
     width: auto;
   }
@@ -2095,7 +2086,7 @@ form .CodeMirror {
 .pagination {
   @include clear;
   margin: 20px 0px;
-  @include mb { padding: 0 10px; }
+  @include media-breakpoint-down(sm) { padding: 0 10px; }
   span a, .current, .gap {
     float: left;
     min-width: 20px;
@@ -2219,7 +2210,7 @@ form .CodeMirror {
     position: absolute;
     top: 65px;
     right: 15px;
-    @include mb { position: static;}
+    @include media-breakpoint-down(sm) { position: static;}
   }
   #map-canvas {
     margin-bottom: 10px;
@@ -2352,7 +2343,7 @@ form .CodeMirror {
 
 // -------------------------------------------------------------------------------------------------
 // hide
-@include mb {
+@include media-breakpoint-down(sm) {
   .hide-mb {
     display: none;
   }

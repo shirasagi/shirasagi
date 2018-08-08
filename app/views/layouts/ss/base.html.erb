@@ -290,6 +290,23 @@
   </div>
 </div>
 
+<% if @crumbs.size > 0 %>
+<ol class="ss-breadcrumb" id="ss-crumbs">
+  <% @crumbs.each_with_index do |item, idx| %>
+    <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+  <% end %>
+
+  <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
+    <li class="webmail-accounts">
+      <span><%= t('webmail.links.select_account') %></span>
+      <%= select_tag :select_account,
+        options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
+      %>
+    </li>
+  <% end %>
+</ol>
+<% end %>
+
 <div id="wrap">
   <div class="wrap">
 
@@ -300,23 +317,6 @@
           <%= link_to t("ss.warning.initial_password"), sns_cur_user_account_path %>
         </div>
         <% end %>
-      <% end %>
-
-      <% if @crumbs.size > 0 %>
-      <ol class="ss-breadcrumb" id="ss-crumbs">
-        <% @crumbs.each_with_index do |item, idx| %>
-          <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
-        <% end %>
-
-        <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
-          <li class="webmail-accounts">
-            <span><%= t('webmail.links.select_account') %></span>
-            <%= select_tag :select_account,
-              options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
-            %>
-          </li>
-        <% end %>
-      </ol>
       <% end %>
 
       <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>

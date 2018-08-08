@@ -57,6 +57,7 @@ ja:
     site_menu: サイトメニュー
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
+    status: ステータス
     syntax_check: アクセシビリティチェック
     theme_template: Theme切り替え
     tool: ツール
