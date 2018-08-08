@@ -5,23 +5,25 @@
     <% if @notices.next_page %>
     <div class="more"><%= link_to I18n.t("ss.links.more"), sns_sys_notices_path, class: "btn btn-outline-secondary" %></div>
     <% end %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th><%= Sys::Notice.t :name %></th>
-          <th><%= Sys::Notice.t :updated %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @notices.each do |item| %>
-        <tr>
-          <td><%= link_to item.name, sns_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %></td>
-          <td class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></td>
-          </div>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= Sys::Notice.t :name %></th>
+            <th><%= Sys::Notice.t :updated %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @notices.each do |item| %>
+          <tr>
+            <td><%= link_to item.name, sns_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %></td>
+            <td class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></td>
+            </div>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 <% end %>

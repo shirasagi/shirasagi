@@ -4,7 +4,14 @@
 @import "bootstrap-material-design/scss/bootstrap-material-design";
 
 // -------------------------------------------------------------------------------------------------
-//card
+// table
+@include media-breakpoint-down(sm) {
+  .table {
+    white-space: nowrap;
+  }
+}
+// -------------------------------------------------------------------------------------------------
+// card
 .card {
   font-size: 1rem;
 }
