@@ -9,7 +9,6 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @year  = Time.zone.today.year.to_i
     @month = Time.zone.today.month.to_i
     @cur_node.window_name = @cur_node.name
-    @index = true
 
     @items = Cms::Page.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
@@ -27,9 +26,9 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @cur_node.window_name ||= "#{@cur_node.name} #{I18n.l(@date, format: :long_month)}"
 
     if within_one_year?(@date) || within_one_year?(@date.advance(months: 1, days: -1))
-      return index_monthly if params[:display].to_s.start_with?('list')
+      return index_monthly_list if params[:display].to_s.start_with?('list')
       return index_monthly_table if params[:display].to_s.start_with?('table') || @cur_node.event_display.to_s.start_with?('table')
-      index_monthly
+      index_monthly_list
     else
       raise "404"
     end
@@ -59,59 +58,48 @@ class Event::Agents::Nodes::PageController < ApplicationController
       sort_by{ |page| page.event_dates.size }
   end
 
-  def index_monthly
-    raise '404' if @cur_node.event_display == 'table_only'
-    @events = {}
-    @items = [] unless @index
-    start_date = Date.new(@year, @month, 1)
-    close_date = @month != 12 ? Date.new(@year, @month + 1, 1) : Date.new(@year + 1, 1, 1)
+  def set_items
+    return if @items.present?
+    @items = []
+    @events.each_value do |pages|
+      @items << pages[0]
+    end
+    @items = @items.flatten.compact.uniq
+  end
 
-    (start_date...close_date).each do |d|
+  def set_events(dates)
+    @events = {}
+    dates.each do |d|
       @events[d] = []
     end
-
-    dates = (start_date...close_date).map { |m| m.mongoize }
+    dates = dates.map { |m| m.mongoize }
     events(dates).each do |page|
       page.event_dates.split(/\R/).each do |date|
         d = Date.parse(date)
         next unless @events[d]
-        @items << page unless @index
         @events[d] << [
           page,
           page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
         ]
       end
     end
-    @items.uniq! unless @index
+  end
 
-    render :monthly
+  def index_monthly_list
+    raise '404' if @cur_node.event_display == 'table_only'
+    start_date = Date.new(@year, @month, 1)
+    close_date = @month != 12 ? Date.new(@year, @month + 1, 1) : Date.new(@year + 1, 1, 1)
+    set_events((start_date...close_date))
+    set_items
+    render :monthly_list
   end
 
   def index_monthly_table
     raise '404' if @cur_node.event_display == 'list_only'
-    @events = {}
-    @items = [] unless @index
     start_date = @date.advance(days: -1 * @date.wday)
     close_date = start_date.advance(days: 7 * 6)
-
-    (start_date...close_date).each do |d|
-      @events[d] = []
-    end
-
-    dates = (start_date...close_date).map { |m| m.mongoize }
-    events(dates).each do |page|
-      page.event_dates.split(/\R/).each do |date|
-        d = Date.parse(date)
-        next unless @events[d]
-        @items << page unless @index
-        @events[d] << [
-            page,
-            page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
-        ]
-      end
-    end
-    @items.uniq! unless @index
-
+    set_events((start_date...close_date))
+    set_items
     render :monthly_table
   end
 
@@ -125,7 +113,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
         page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
       ]
     end
-    @items.uniq!
+    @items = @items.flatten.compact.uniq
 
     render :daily
   end
