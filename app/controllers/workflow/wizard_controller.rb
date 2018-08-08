@@ -3,7 +3,7 @@ class Workflow::WizardController < ApplicationController
   include Workflow::WizardFilter
 
   before_action :set_route, only: [:approver_setting]
-  before_action :set_item
+  before_action :set_item, only: [:index, :approver_setting]
 
   private
 

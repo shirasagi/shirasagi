@@ -1,0 +1,6 @@
+<% return "" unless @item.default_route %>
+
+<dl class="see">
+  <dt><%= @model.t :default_route_id %></dt>
+  <dd><%= @item.default_route.name %></dd>
+</dl>
