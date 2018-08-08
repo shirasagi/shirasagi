@@ -116,6 +116,7 @@ end
     </table>
   </dd>
 </dl>
+<% if @ss_mode == :gws %>
 <dl class="see request-setting">
   <dt><%= @model.t :workflow_circulations %><%= @model.tt :workflow_circulations %></dt>
   <dd>
@@ -133,6 +134,9 @@ end
       </tbody>
     </table>
   </dd>
+</dl>
+<% end %>
+<dl class="see request-setting">
   <dd>
     <div class="buttons">
       <%= button_tag t("workflow.buttons.request"), { updatetype: :request, class: "update-item btn-primary" } %>

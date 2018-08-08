@@ -139,6 +139,7 @@
         <% end %>
       </dd>
 
+      <% if @ss_mode == :gws %>
       <dt><%= @model.t :workflow_circulations %></dt>
       <dd>
         <% if @item.workflow_circulations.present? %>
@@ -177,6 +178,7 @@
         </table>
         <% end %>
       </dd>
+      <% end %>
     </dl>
   </div>
   <% end %>

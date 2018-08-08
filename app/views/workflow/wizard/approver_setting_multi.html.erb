@@ -29,7 +29,7 @@
     </dd>
   </dl>
 <% end %>
-<% if @route.circulations.present? %>
+<% if @ss_mode == :gws && @route.circulations.present? %>
   <% 1.upto(3).each do |level| %>
     <% users = @route.circulation_users_at(level).active.to_a %>
     <% if users.present? %>

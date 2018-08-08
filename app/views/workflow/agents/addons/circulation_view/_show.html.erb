@@ -1,3 +1,5 @@
+<% return if @ss_mode != :gws %>
+
 <% 1.upto(3) do |level| %>
   <% users = @item.circulation_users_at(level) %>
   <% if users.active.present? %>

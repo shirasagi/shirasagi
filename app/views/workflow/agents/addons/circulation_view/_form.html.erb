@@ -1,11 +1,11 @@
 <%
+  return if @ss_mode != :gws
 
-if params[:controller] =~ /^gws/
-  def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
-else
-  def approvers_path(*args); workflow_search_approvers_path(*args); end
-end
-
+  if params[:controller] =~ /^gws/
+    def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
+  else
+    def approvers_path(*args); workflow_search_approvers_path(*args); end
+  end
 %>
 
 <% 1.upto(3) do |level| %>
