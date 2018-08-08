@@ -20,41 +20,14 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
   def perform(*args)
     before_import(*args)
+    return if @errors.present?
 
     Rails.logger.info("start importing ics")
 
     if @events.present?
-      today = Time.zone.now.to_date
-      pages = Cms::Page.site(site).select{ |page| @events.collect(&:url).collect(&:to_s).include?(page.full_url) }
-      @events.each do |event|
-        next if node.ical_import_date_ago.present? && event.dtstart.to_date < today - node.ical_import_date_ago.days
-        next if node.ical_import_date_after.present? && event.dtstart.to_date > today + node.ical_import_date_after.days
-        item = model.site(site).node(node).where(ical_link: event.url.to_s).first || model.new
-        item.ical_link = event.url
-        next if site_page?(pages, item)
-        @ical_links << event.url.to_s
-        item.cur_site = site
-        item.cur_node = node
-        item.cur_user = user
-        item.name = item.event_name = event.summary
-        item.layout_id = node.page_layout_id if node.page_layout_id.present?
-        item.state = node.ical_page_state if node.ical_page_state.present?
-        item.html = item.content = event.description
-        item.venue = event.location
-        date = event.dtstart.to_date
-        end_date = event.dtend.to_date if event.dtend.present?
-        event_dates = item.event_dates.split(/\R/).collect(&:to_date) if item.event_dates.present?
-        event_dates ||= []
-        while date != end_date
-          event_dates << date
-          date += 1.day
-        end
-        event_dates.uniq! if event_dates.present?
-        item.event_dates = event_dates
-        item.save
-      end
+      save_page_by_events
     else
-      Rails.logger.info("couldn't parse ics items")
+      Rails.logger.info("no ics events")
     end
 
     after_import
@@ -69,6 +42,42 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     @model ||= Event::Page.with_repl_master
   end
 
+  def save_page_by_events
+    @today = Time.zone.now.to_date
+    @pages = Cms::Page.site(site).select{ |page| @events.collect(&:url).collect(&:to_s).include?(page.full_url) }
+    @events.each do |event|
+      save_page_by_event(event)
+    end
+  end
+
+  def save_page_by_event(event)
+    return if node.ical_import_date_ago.present? && event.dtstart.to_date < @today - node.ical_import_date_ago.days
+    return if node.ical_import_date_after.present? && event.dtstart.to_date > @today + node.ical_import_date_after.days
+    item = model.site(site).node(node).where(ical_link: event.url.to_s).first || model.new
+    item.ical_link = event.url
+    return if site_page?(@pages, item)
+    @ical_links << event.url.to_s
+    item.cur_site = site
+    item.cur_node = node
+    item.cur_user = user
+    item.name = item.event_name = event.summary
+    item.layout_id = node.page_layout_id if node.page_layout_id.present?
+    item.state = node.ical_page_state if node.ical_page_state.present?
+    item.html = item.content = event.description
+    item.venue = event.location
+    date = event.dtstart.to_date
+    end_date = event.dtend.to_date if event.dtend.present?
+    event_dates = item.event_dates.split(/\R/).collect(&:to_date) if item.event_dates.present?
+    event_dates ||= []
+    while date != end_date
+      event_dates << date
+      date += 1.day
+    end
+    event_dates.uniq! if event_dates.present?
+    item.event_dates = event_dates
+    item.save
+  end
+
   def site_page?(pages, item)
     pages.each do |page|
       return true if page.full_url == item.ical_link && page.id != item.id
@@ -81,14 +90,12 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     @ical_links = []
 
     begin
-      node = Event::Node::Ical.find(node_id)
-      uri = URI.parse(node.ical_import_url)
-      file = open(uri, node.ical_url_options)
-      calendar = Icalendar::Calendar.parse(file.read)
+      calendar = node.ical_parse
       @events = calendar.first.events
     rescue => e
-      Rails.logger.info("Icalendar::Calendar.parse failer (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      @errors << "Icalendar::Calendar.parse failer (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+      message = "Icalendar::Calendar.parse failer (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+      Rails.logger.info(message)
+      @errors << message
     end
   end
 
