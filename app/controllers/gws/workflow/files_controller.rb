@@ -197,8 +197,15 @@ class Gws::Workflow::FilesController < ApplicationController
     @new_item.workflow_user_id = nil
     @new_item.workflow_state = nil
     @new_item.workflow_comment = nil
+    @new_item.workflow_pull_up = nil
+    @new_item.workflow_on_remand = nil
     @new_item.workflow_approvers = nil
     @new_item.workflow_required_counts = nil
+    @new_item.workflow_approver_attachment_uses = nil
+    @new_item.workflow_current_circulation_level = nil
+    @new_item.workflow_circulations = nil
+    @new_item.workflow_circulation_attachment_uses = nil
+    @new_item.approved = nil
     @new_item.user_id = nil
     @new_item.user_uid = nil
     @new_item.user_name = nil
