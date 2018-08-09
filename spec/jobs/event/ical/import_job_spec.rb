@@ -95,12 +95,16 @@ describe Event::Ical::ImportJob, dbscope: :example, http_server: true do
     let(:user) { cms_user }
     let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
+    after { travel_back }
+
     it do
+      travel_to('2018-05-01 00:00')
       described_class.bind(bindings).perform_now
       expect(Event::Page.count).to eq 2
 
       http.options real_path: "/updated_event.ics"
 
+      travel_to('2018-07-01 00:00')
       described_class.bind(bindings).perform_now
       expect(Event::Page.count).to eq 1
 
