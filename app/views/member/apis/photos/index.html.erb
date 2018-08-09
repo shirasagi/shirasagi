@@ -1,12 +1,15 @@
 <%= jquery do %>
-  SS_SearchUI.modal();
-  SS.ajax("#ajax-box .select", {
-    success: function (data) {
-      $("#selected-member-photos").append(data);
-      $.colorbox.close();
+SS_SearchUI.modal();
+SS.ajax("#ajax-box .select", {
+  success: function (data) {
+    var dataId = $('<div>' + data + '</div>').find("[data-id]").attr("data-id");
+    if (dataId) {
+      $("#selected-member-photos .file-view[data-id='" + dataId + "']").remove();
     }
-  });
-
+    $("#selected-member-photos").append(data);
+    $.colorbox.close();
+  }
+});
 <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
