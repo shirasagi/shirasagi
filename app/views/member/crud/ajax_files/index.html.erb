@@ -8,6 +8,10 @@
 
   SS.ajax(".user-files .select", {
     success: function (data) {
+      var dataFileId = $('<div>' + data + '</div>').find("[data-file-id]").attr("data-file-id");
+      if (dataFileId) {
+        $("#selected-files .file-view[data-file-id='" + dataFileId + "']").remove();
+      }
       $("#selected-files").append(data);
       $.colorbox.close();
     }
