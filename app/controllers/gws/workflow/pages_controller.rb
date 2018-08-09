@@ -65,9 +65,11 @@ class Gws::Workflow::PagesController < ApplicationController
     save_workflow_approvers = @item.workflow_approvers
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
+    @item.workflow_approver_attachment_uses = params[:workflow_approver_attachment_uses]
     @item.workflow_current_circulation_level = 0
     save_workflow_circulations = @item.workflow_circulations
     @item.workflow_circulations = params[:workflow_circulations]
+    @item.workflow_circulation_attachment_uses = params[:workflow_circulation_attachment_uses]
 
     if @item.valid?
       request_approval

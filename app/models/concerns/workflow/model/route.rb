@@ -15,18 +15,22 @@ module Workflow::Model::Route
     embeds_ids :groups, class_name: "SS::Group"
     field :approvers, type: Workflow::Extensions::Route::Approvers
     field :required_counts, type: Workflow::Extensions::Route::RequiredCounts
+    field :approver_attachment_uses, type: Array
     field :circulations, type: Workflow::Extensions::Route::Circulations
-    permit_params :name, :pull_up, :on_remand
-    permit_params group_ids: [], approvers: [ :level, :user_id, :editable ], required_counts: []
-    permit_params circulations: [ :level, :user_id ]
+    field :circulation_attachment_uses, type: Array
+    permit_params :name, :pull_up, :on_remand, group_ids: []
+    permit_params approvers: [ :level, :user_id, :editable ], required_counts: [], approver_attachment_uses: []
+    permit_params circulations: [ :level, :user_id ], circulation_attachment_uses: []
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :pull_up, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validates :on_remand, inclusion: { in: %w(back_to_init back_to_previous), allow_blank: true }
+    validate :validate_groups
     validate :validate_approvers_presence
     validate :validate_approvers_consecutiveness
     validate :validate_required_counts
-    validate :validate_groups
+    validate :validate_approver_attachment_uses
+    validate :validate_circulation_attachment_uses
 
     default_scope ->{ order_by name: 1 }
   end
@@ -66,6 +70,9 @@ module Workflow::Model::Route
   def on_remand_options
     %w(back_to_init back_to_previous).map { |v| [I18n.t("workflow.options.on_remand.#{v}"), v] }
   end
+
+  alias approver_attachment_use_options pull_up_options
+  alias circulation_attachment_use_options pull_up_options
 
   def levels
     approvers.map { |h| h[:level] }.uniq.compact.sort
@@ -114,6 +121,32 @@ module Workflow::Model::Route
     self.class.approver_user_class.in(id: user_ids)
   end
 
+  def approver_attachment_use_at(level)
+    return if approver_attachment_uses.blank?
+
+    index = level - 1
+    return if index < 0 || approver_attachment_uses.length <= index
+
+    approver_attachment_uses[index]
+  end
+
+  def approver_attachment_enabled_at?(level)
+    approver_attachment_use_at(level) == "enabled"
+  end
+
+  def circulation_attachment_use_at(level)
+    return if circulation_attachment_uses.blank?
+
+    index = level - 1
+    return if index < 0 || circulation_attachment_uses.length <= index
+
+    circulation_attachment_uses[index]
+  end
+
+  def circulation_attachment_enabled_at?(level)
+    circulation_attachment_use_at(level) == "enabled"
+  end
+
   private
 
   def validate_approvers_presence
@@ -153,5 +186,19 @@ module Workflow::Model::Route
 
   def validate_groups
     self.errors.add :group_ids, :blank if groups.blank?
+  end
+
+  def validate_approver_attachment_uses
+    return if approver_attachment_uses.blank?
+    if !approver_attachment_uses.all? { |v| v.blank? || %w(enabled disabled).include?(v) }
+      errors.add :approver_attachment_uses, :invalid
+    end
+  end
+
+  def validate_circulation_attachment_uses
+    return if circulation_attachment_uses.blank?
+    if !circulation_attachment_uses.all? { |v| v.blank? || %w(enabled disabled).include?(v) }
+      errors.add :approver_attachment_uses, :invalid
+    end
   end
 end

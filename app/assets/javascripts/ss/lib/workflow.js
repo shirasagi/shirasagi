@@ -81,6 +81,15 @@ SS_Workflow.prototype = {
 
     return approvers;
   },
+  collectApproverAttachmentUses: function() {
+    var uses = [];
+
+    this.$el.find("input[name='workflow_approver_attachment_uses']").each(function() {
+      uses.push($(this).prop("value"));
+    });
+
+    return uses;
+  },
   collectCirculations: function() {
     var circulations = [];
 
@@ -89,6 +98,15 @@ SS_Workflow.prototype = {
     });
 
     return circulations;
+  },
+  collectCirculationAttachmentUses: function() {
+    var uses = [];
+
+    this.$el.find("input[name='workflow_circulation_attachment_uses']").each(function() {
+      uses.push($(this).prop("value"));
+    });
+
+    return uses;
   },
   collectFileIds: function() {
     var fileIds = [];
@@ -147,10 +165,12 @@ SS_Workflow.prototype = {
         workflow_on_remand: workflow_on_remand,
         workflow_approvers: approvers,
         workflow_required_counts: required_counts,
+        workflow_approver_attachment_uses: this.collectApproverAttachmentUses(),
         remand_comment: remand_comment,
         url: this.options.request_url,
         forced_update_option: forced_update_option,
         workflow_circulations: circulations,
+        workflow_circulation_attachment_uses: this.collectCirculationAttachmentUses(),
         workflow_file_ids: workflow_file_ids
       },
       success: function (data) {

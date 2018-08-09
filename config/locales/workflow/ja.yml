@@ -133,6 +133,8 @@ ja:
         required_count_at: "%{level} 段目の必要承認数"
         approvers_level: 段
         approvers_user_id: 申請者
+        approver_attachment_uses: 承認者によるファイル追加
+        circulation_attachment_uses: 回覧者によるファイル追加
 
   errors:
     messages:
@@ -185,5 +187,11 @@ ja:
         - 必要承認数を入力します。
         - 「全員」を選択すると、承認者全員の承認が必要となります。
         - 「n 人」を選択すると、承認者のうち n 人以上の承認が必要となります。
+      circulations:
+        - 回覧者を選択します。
       group_ids:
         - この承認経路を利用できるグループを選択します。
+      approver_attachment_uses:
+        - 承認者によるファイル追加を許可する場合は「有効」を、それ以外は「無効」を選択してください。
+      circulation_attachment_uses:
+        - 回覧者によるファイル追加を許可する場合は「有効」を、それ以外は「無効」を選択してください。

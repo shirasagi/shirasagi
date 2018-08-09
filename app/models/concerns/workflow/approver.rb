@@ -26,9 +26,11 @@ module Workflow::Approver
     field :workflow_on_remand, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
+    field :workflow_approver_attachment_uses, type: Array
     # 現在の回覧ステップ: 0 はまだ回覧が始まっていないことを意味する。
     field :workflow_current_circulation_level, type: Integer, default: 0
     field :workflow_circulations, type: Workflow::Extensions::WorkflowCirculations
+    field :workflow_circulation_attachment_uses, type: Array
     field :approved, type: DateTime
 
     permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
@@ -94,6 +96,19 @@ module Workflow::Approver
 
   def workflow_required_count_at(level)
     self.workflow_required_counts[level - 1] || false
+  end
+
+  def workflow_approver_attachment_use_at(level)
+    return if workflow_approver_attachment_uses.blank?
+
+    index = level - 1
+    return if index < 0 || workflow_approver_attachment_uses.length <= index
+
+    workflow_approver_attachment_uses[index]
+  end
+
+  def workflow_approver_attachment_enabled_at?(level)
+    workflow_approver_attachment_use_at(level) == "enabled"
   end
 
   def set_workflow_approver_state_to_request(level = workflow_current_level)
@@ -307,6 +322,19 @@ module Workflow::Approver
     workflow_circulation_completed_at?(workflow_current_circulation_level)
   end
 
+  def workflow_circulation_attachment_use_at(level)
+    return if workflow_circulation_attachment_uses.blank?
+
+    index = level - 1
+    return if index < 0 || workflow_circulation_attachment_uses.length <= index
+
+    workflow_circulation_attachment_uses[index]
+  end
+
+  def workflow_circulation_attachment_enabled_at?(level)
+    workflow_circulation_attachment_use_at(level) == "enabled"
+  end
+
   def set_workflow_circulation_state_at(level, state: 'unseen', comment: '')
     return false if level == 0
 
@@ -487,10 +515,10 @@ module Workflow::Approver
     end
 
     def destroy_workflow_files(workflow_approvers)
-    file_ids = workflow_approvers.map { |workflow_approver| workflow_approver[:file_ids] }.flatten
-    return if file_ids.blank?
+      file_ids = workflow_approvers.map { |workflow_approver| workflow_approver[:file_ids] }.flatten
+      return if file_ids.blank?
 
-    ::SS::File.in(id: file_ids).destroy_all
+      ::SS::File.in(id: file_ids).destroy_all
     end
   end
 end

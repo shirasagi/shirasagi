@@ -14,6 +14,7 @@
     <dd>
       <%= hidden_field_tag "workflow_required_counts", @route.required_count_at(level) %>
       <%= @route.required_count_label_at(level) %>
+      <%= hidden_field_tag "workflow_approver_attachment_uses", @route.approver_attachment_use_at(level) %>
     </dd>
     <dd>
       <%
@@ -33,6 +34,7 @@
   <% 1.upto(3).each do |level| %>
     <% users = @route.circulation_users_at(level).active.to_a %>
     <% if users.present? %>
+      <%= hidden_field_tag "workflow_circulation_attachment_uses", @route.circulation_attachment_use_at(level) %>
       <dl class="see request-setting">
         <dt><%= t("workflow.circulation_step") %> <%= @route.class.t :level, level: level %></dt>
         <dd>
