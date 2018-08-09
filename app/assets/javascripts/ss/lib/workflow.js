@@ -57,14 +57,6 @@ SS_Workflow = function (el, options) {
     return false;
   });
 
-  this.$el.on("click", "button[name=set_seen]", function (e) {
-    var $this = $(this);
-    var userId = $this.data('user-id');
-    pThis.setSeen(userId);
-    e.preventDefault();
-    return false;
-  });
-
   $('.mod-workflow-approve .btn-file-upload').data('on-select', function($item) {
     $.colorbox.close();
     pThis.onUploadFileSelected($item);
@@ -307,21 +299,6 @@ SS_Workflow.prototype = {
             }
           }
         });
-      }
-    });
-  },
-  setSeen: function(userId) {
-    var uri = this.composeWorkflowUrl('wizard');
-    uri += "/circulation";
-    uri += "?redirect_to=" + encodeURIComponent(location.href);
-
-    var pThis = this;
-    $('<a/>').attr('href', uri).colorbox({
-      maxWidth: "80%",
-      maxHeight: "80%",
-      fixed: true,
-      open: true,
-      onCleanup: function() {
       }
     });
   },

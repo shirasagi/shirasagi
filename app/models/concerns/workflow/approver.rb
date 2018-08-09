@@ -326,7 +326,7 @@ module Workflow::Approver
     true
   end
 
-  def update_current_workflow_circulation_state(user_or_id, state, comment: nil)
+  def update_current_workflow_circulation_state(user_or_id, state, comment: nil, file_ids: nil)
     level = workflow_current_circulation_level
     return false if level == 0
 
@@ -343,6 +343,7 @@ module Workflow::Approver
     targets.each do |workflow_circulation|
       workflow_circulation[:state] = state
       workflow_circulation[:comment] = comment.gsub(/\n|\r\n/, " ") if comment
+      workflow_circulation[:file_ids] = file_ids if file_ids
     end
 
     # Be careful, partial update is meaningless. We must update entirely.
@@ -452,7 +453,9 @@ module Workflow::Approver
   end
 
   def transfer_workflow_approver_file_ownerships(model = 'workflow/approver_file')
-    file_ids = workflow_approvers.map { |workflow_approver| workflow_approver[:file_ids] }.flatten.compact.uniq
+    file_ids = workflow_approvers.map { |approver| approver[:file_ids] }.flatten.compact.uniq
+    file_ids += workflow_circulations.map { |circulation| circulation[:file_ids] }.flatten.compact.uniq
+
     not_owned_file_ids = ::SS::File.in(id: file_ids).where(model: "ss/temp_file").pluck(:id)
     not_owned_file_ids.each_slice(20) do |ids|
       ::SS::File.in(id: ids).each do |file|
@@ -463,7 +466,8 @@ module Workflow::Approver
   end
 
   def destroy_workflow_approver_files
-    self.class.destroy_workflow_approver_files(self.workflow_approvers)
+    self.class.destroy_workflow_files(self.workflow_approvers)
+    self.class.destroy_workflow_files(self.workflow_circulations)
   end
 
   module ClassMethods
@@ -482,7 +486,7 @@ module Workflow::Approver
       criteria
     end
 
-    def destroy_workflow_approver_files(workflow_approvers)
+    def destroy_workflow_files(workflow_approvers)
     file_ids = workflow_approvers.map { |workflow_approver| workflow_approver[:file_ids] }.flatten
     return if file_ids.blank?
 

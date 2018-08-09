@@ -49,36 +49,4 @@ module Workflow::WizardFilter
   rescue => e
     render json: [ e.message ], status: :bad_request
   end
-
-  def circulation
-    if request.get?
-      @redirect_to = params[:redirect_to] || request.referer
-      @url = params[:url] || @redirect_to
-      render file: 'circulation', layout: "ss/ajax"
-      return
-    end
-
-    comment = params[:comment].to_s
-    @item.update_current_workflow_circulation_state(@cur_user, "seen", comment: comment)
-    if comment.present?
-      Gws::Memo::Notifier.deliver_workflow_comment!(
-        cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-        to_users: [ @item.workflow_user ], item: @item,
-        url: params[:url], comment: comment
-      )
-    end
-
-    if @item.workflow_current_circulation_completed?
-      if @item.move_workflow_circulation_next_step
-        Gws::Memo::Notifier.deliver_workflow_circulations!(
-          cur_site: @cur_site, cur_group: @cur_group, cur_user: @item.workflow_user,
-          to_users: @item.workflow_current_circulation_users.active, item: @item,
-          url: params[:url], comment: comment
-        )
-      end
-    end
-    @item.save
-
-    redirect_to params[:redirect_to], notice: I18n.t("workflow.notice.set_seen")
-  end
 end

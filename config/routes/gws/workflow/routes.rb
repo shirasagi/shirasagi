@@ -17,6 +17,7 @@ SS::Application.routes.draw do
     post :remand_update, on: :member
     post :pull_up_update, on: :member
     post :restart_update, on: :member
+    post :seen_update, on: :member
     match :request_cancel, on: :member, via: [:get, :post]
   end
 
@@ -45,6 +46,5 @@ SS::Application.routes.draw do
     get "/wizard/:id/reroute" => "wizard#reroute"
     post "/wizard/:id/reroute" => "wizard#do_reroute"
     match "/wizard/:id" => "wizard#index", via: [:get, :post]
-    match "/wizard/:id/circulation" => "wizard#circulation", via: [:get, :post]
   end
 end
