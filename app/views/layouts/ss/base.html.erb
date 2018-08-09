@@ -290,27 +290,134 @@
   </div>
 </div>
 
-<% if @crumbs.size > 0 %>
-<ol class="ss-breadcrumb" id="ss-crumbs">
-  <% @crumbs.each_with_index do |item, idx| %>
-    <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
-  <% end %>
+<section class="content-head">
+  <div class="d-flex justify-content-between flex-wrap">
+    <div class="title">
+      <h1 class="icon-content d-flex align-items-center">コンテンツのタイトル</h1>
+      <% if @crumbs.size > 0 %>
+      <ol class="breadcrumb">
+        <% @crumbs.each_with_index do |item, idx| %>
+          <li class="breadcrumb-item" <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+        <% end %>
 
-  <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
-    <li class="webmail-accounts">
-      <span><%= t('webmail.links.select_account') %></span>
-      <%= select_tag :select_account,
-        options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
-      %>
-    </li>
-  <% end %>
-</ol>
-<% end %>
+        <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
+          <li class="webmail-accounts">
+            <span><%= t('webmail.links.select_account') %></span>
+            <%= select_tag :select_account,
+              options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
+            %>
+          </li>
+        <% end %>
+      </ol>
+      <% end %>
+    </div>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">モジュールの切り替え</button>
+      <div class="dropdown-menu d-flex flex-wrap" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="/.s1/ads146">広告管理</a>
+        <a class="dropdown-item" href="/.s1/article146">記事</a>
+        <a class="dropdown-item" href="/.s1/board146">掲示板</a>
+        <a class="dropdown-item" href="/.s1/category146">カテゴリー</a>
+        <a class="dropdown-item" href="/.s1/ckan146">CKAN</a>
+        <a class="dropdown-item" href="/.s1/cms146/nodes?mod=cms">標準機能</a>
+        <a class="dropdown-item" href="/.s1/event146">イベント</a>
+        <a class="dropdown-item" href="/.s1/ezine146">メールマガジン</a>
+        <a class="dropdown-item" href="/.s1/facility146">施設</a>
+        <a class="dropdown-item" href="/.s1/faq146">FAQ</a>
+        <a class="dropdown-item" href="/.s1/garbage146">ゴミDB</a>
+        <a class="dropdown-item" href="/.s1/inquiry146">メールフォーム</a>
+        <a class="dropdown-item" href="/.s1/key_visual146">キービジュアル</a>
+        <a class="dropdown-item" href="/.s1/mail_page146">メール取込</a>
+        <a class="dropdown-item" href="/.s1/member146">メンバー</a>
+        <a class="dropdown-item" href="/.s1/opendata146">オープンデータ</a>
+        <a class="dropdown-item" href="/.s1/rss146">RSS取込</a>
+        <a class="dropdown-item" href="/.s1/sitemap146">サイトマップ</a>
+        <a class="dropdown-item" href="/.s1/uploader146">アップローダー</a>
+        <a class="dropdown-item" href="/.s1/urgency146">緊急災害レイアウト</a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <div id="wrap">
-  <div class="wrap">
+  <div class="wrap d-flex flex-wrap">
+    <div id="side" class="sidebar">
+      <section class="folder-list sidebar-sticky"> 
+        <h2 class="h5">フォルダー</h2>
+        <ul class="nav flex-column">
+          <li class="nav-item current"><a class="nav-link current" href="#"><i class="material-icons">folder_open</i><span>自分が一番上</span></a>
+            <ul>
+              <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>子階層までは表示</span></a></li>
+              <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>子階層までは表示</span></a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>コンテンツや詳細、編集画面には出したくない</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
+        </ul>
+        <div class="folder-navi">
+          <ul class="d-flex justify-content-between">
+            <li><a class="btn btn-secondary" href="#">上の階層へ</a></li>
+            <li><a class="btn btn-secondary" href="#">もっと見る</a></li>
+          </ul>
+        </div>
+      </section>
+    <!-- /#side --></div>
 
     <article id="main">
+      <div class="content-search card mb-5">
+        <div class="card-body">
+          <form>
+            <div class="search-group d-flex align-items-center flex-wrap">
+              <h2>絞り込み</h2>
+              <div class="d-flex align-items-center flex-wrap">
+                <div class="form-group">
+                  <select class="form-control">
+                    <option>ステータスを選択する</option>
+                    <option>公開中</option>
+                    <option>公開待ち</option>
+                    <option>非公開</option>
+                    <option>公開終了間近</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <select class="form-control">
+                    <option>承認ステータス</option>
+                    <option>申請したもの</option>
+                    <option>依頼されたもの</option>
+                    <option>差し戻されたもの</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-outline-secondary">カテゴリーを選択する</button>
+                <button type="button" class="btn btn-outline-secondary">ユーザーを選択する</button>
+              </div>
+            </div>
+            <div class="search-group d-flex align-items-center flex-wrap">
+              <h2>キーワード</h2>
+              <div class="form-group">
+                <input class="keyword form-control" type="text" placeholder="タイトル・本文から検索する">
+              </div>
+            </div>
+          </form>
+          <div class="search-group d-flex align-items-center flex-wrap justify-content-between">
+            <button type="button" class="btn btn-outline-primary btn-lg">検索</button>
+            <button type="button" class="detailed-search btn btn-outline-secondary">詳細検索</button>
+          </div>
+        </div>
+      </div>
+
       <% if @cur_user.present? %>
         <% if @cur_user.initial_password_warning.present? %>
         <div class="warning">
@@ -319,17 +426,17 @@
         <% end %>
       <% end %>
 
-      <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
-      <div id="menu"><%= render partial: "menu" %></div>
-      <% elsif controller.menu_view_file %>
-      <div id="menu"><%= render partial: controller.menu_view_file %></div>
-      <% end %>
-
       <div class="wrap">
         <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
         <%= render partial: 'content_navi' %>
         <% elsif @tree_navi %>
         <div id="content-navi"><%= render file: '_tree_navi' %></div>
+        <% end %>
+
+        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+        <div id="menu"><%= render partial: "menu" %></div>
+        <% elsif controller.menu_view_file %>
+        <div id="menu"><%= render partial: controller.menu_view_file %></div>
         <% end %>
 
         <%= yield %>

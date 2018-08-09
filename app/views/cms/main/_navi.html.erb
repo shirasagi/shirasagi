@@ -1,5 +1,5 @@
 <nav class="main-navi">
-  <ul class="d-flex align-items-center justify-content-center flex-wrap cms-navi">
+  <ul class="cms-navi d-flex align-items-center justify-content-center flex-wrap">
     <li><%= link_to t("cms.content"), cms_contents_path, class: "btn btn-primary icon-content" %></li>
     <li><%= link_to t("cms.node"), cms_nodes_path, class: "btn btn-primary icon-node" %></li>
     <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>

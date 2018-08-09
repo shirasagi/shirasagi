@@ -5,10 +5,21 @@
 
 // -------------------------------------------------------------------------------------------------
 // table
-@include media-breakpoint-down(sm) {
-  .table {
+.table {
+  @include media-breakpoint-down(sm) {
     white-space: nowrap;
   }
+  th {
+    white-space: nowrap;
+  }
+}
+// -------------------------------------------------------------------------------------------------
+// breadcrumb
+.breadcrumb {
+  margin: 0 0 0 32px;
+  padding: 0;
+  background: transparent;
+  font-size: .855rem;
 }
 // -------------------------------------------------------------------------------------------------
 // card

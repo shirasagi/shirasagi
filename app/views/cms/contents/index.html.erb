@@ -74,7 +74,7 @@
           <% @items.each do |item| %>
           <tr>
             <td class="state"><span><%= t "ss.state.#{item.status}" %></span></td>
-            <td><%= link_to item.name, contents_path(item), class: "title" %></td>
+            <td class="title"><%= link_to item.name, contents_path(item) %></td>
             <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
             <td class="filename"><%= File.basename item.filename %></td>
             <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>

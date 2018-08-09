@@ -1,92 +1,106 @@
-<div class="index">
-  <%= render file: "_list_head" %>
-
-  <ul class="list-items">
-    <% if @cur_node %>
-      <li class="list-item">
-        <div class="info">
-          <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
-          <%= link_to t('ss.links.parent_directory'), link, class: "up" %>
-        </div>
-      </li>
-    <% end %>
-
-    <% @items.each do |item| %>
-    <% item = @item_decorator.call(item) if @item_decorator %>
-    <li class="list-item">
-      <nav class="tap-menu">
-        <% if @tap_menu %>
-          <% @tap_menu.call item %>
-        <% else %>
-          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-
-          <% if @model.collection_name == :cms_nodes %>
-            <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank if item.public? %>
-            <% if @cur_site.mobile_enabled? %>
-              <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
-              <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
-            <% else %>
-              <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
-            <% end %>
-          <% elsif @model.collection_name == :cms_pages %>
-            <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank if item.public? %>
-            <% if @cur_site.mobile_enabled? %>
-              <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
-              <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
-            <% else %>
-              <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
-            <% end %>
-          <% end %>
-
-          <% if item.try(:image) %>
-            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
-          <% elsif item.try(:image?) %>
-            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
-          <% end %>
-        <% end %>
-      </nav>
-
-      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
-      <div class="info">
-        <% if @index_title %>
-          <% @index_title.call item %>
-        <% else %>
-          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, { action: :show, id: item }, class: "title" %>
-        <% end %>
-
-        <div class="meta">
-          <% if @index_meta %>
-            <% @index_meta.call item %>
-          <% else %>
-            <span class="id">#<%= item.id %></span>
-            <% if item.try(:updated) %>
-              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <% end %>
-            <% if item.try(:filename) %>
-              <% if params.dig(:s, :target) == 'descendant' %>
-              <span class="filename"><%= item.filename %></span>
-              <% else %>
-              <span class="filename"><%= File.basename item.filename %></span>
-              <% end %>
-            <% end %>
-            <% if item.try(:route) %>
-              <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-            <% end %>
+<div class="row">
+  <div class="col mb-4">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+          <thead>
+            <th class="check"><input type="checkbox" /></th>
+            <th><%= t "cms.status" %></th>
+            <th><%= t "cms.apis.contents.title" %></th>
+            <th>カテゴリー</th>
+            <th>作成者</th>
+            <th><%= t "cms.options.sort.filename" %></th>
+            <th>タグ</th>
+            <th><%= t "cms.options.sort.updated_1" %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @items.each do |item| %>
+          <% item = @item_decorator.call(item) if @item_decorator %>
+          <tr>
+            <td class="check"><div class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></div></td>
             <% if item.try(:status) %>
-              <span class="state"><%= t "ss.state.#{item.status}" %></span>
+            <td class="state">
+              <span><%= t "ss.state.#{item.status}" %></span>
+            </td>
+            <% end %>
+            <td class="title">
+              <% if @index_title %>
+                <% @index_title.call item %>
+              <% else %>
+                <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+                <%= link_to title, { action: :show, id: item } %>
+              <% end %>
+            </td>
+            <td class="categories">
+              設定されているカテゴリーを出したい
+            </td>
+            <td class="auther">
+              作成者名を出したい
+            </td>
+            <% if item.try(:filename) %>
+            <td class="filename">
+              <% if params.dig(:s, :target) == 'descendant' %>
+              <%= item.filename %>
+              <% else %>
+              <%= File.basename item.filename %>
+              <% end %>
+            </td>
             <% end %>
             <% if item.try(:tags) %>
-              <span class="tags"><%= item.tags.join(",") %></span>
+              <td class="tags"><%= item.tags.join(",") %></td>
             <% end %>
+            <% if item.try(:updated) %>
+            <td class="datetime">
+              <%= item.updated.strftime("%Y/%m/%d %H:%M") %>
+            </td>
+            <% end %>              
+            <td>
+              <div class="dropdown">
+                <button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
+                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex1">
+                  <% if @tap_menu %>
+                    <% @tap_menu.call item %>
+                  <% else %>
+                    <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+                    <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+                    <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+                    <% if @model.collection_name == :cms_nodes %>
+                      <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
+                      <% if @cur_site.mobile_enabled? %>
+                        <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+                        <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
+                      <% else %>
+                        <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+                      <% end %>
+                    <% elsif @model.collection_name == :cms_pages %>
+                      <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
+                      <% if @cur_site.mobile_enabled? %>
+                        <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+                        <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
+                      <% else %>
+                        <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+                      <% end %>
+                    <% end %>
+
+                    <% if item.try(:image) %>
+                      <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb dropdown-item", target: "_blank" } %>
+                    <% elsif item.try(:image?) %>
+                      <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb dropdown-item", target: "_blank" } %>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </td>
+          </tr>
           <% end %>
-        </div>
-      </div>
-    </li>
-    <% end %>
-  </ul>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

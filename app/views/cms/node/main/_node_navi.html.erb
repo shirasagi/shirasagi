@@ -1,33 +1,124 @@
 <nav class="main-navi">
-  <h2><%= link_to t("cms.content"), cms_contents_path, class: "icon-content" %></h2>
-  <h2><%= link_to t("cms.node"), node_nodes_path, class: "icon-node" %></h2>
-  <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.page"), node_pages_path, class: "icon-page" %></h2>
-  <% end %>
-  <% if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.part"), node_parts_path, class: "icon-part" %></h2>
-  <% end %>
-  <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.layout"), node_layouts_path, class: "icon-layout" %></h2>
-  <% end %>
-</nav>
-
-<nav class="main-navi">
-  <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.node_config"), node_conf_path, class: "icon-conf" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.import_page"), node_import_path, class: "icon-conf" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.generate_node"), node_generate_nodes_path, class: "icon-write" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.generate_page"), node_generate_pages_path, class: "icon-write" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site) %>
-      <h2><%= link_to t("cms.command"), node_command_path, class: "icon-write" %></h2>
+  <ul class="cms-navi d-flex align-items-center justify-content-center flex-wrap">
+    <li><%= link_to t("cms.content"), cms_contents_path, class: "btn btn-primary icon-content" %></li>
+    <li><%= link_to t("cms.node"), node_nodes_path, class: "btn btn-primary icon-node" %></li>
+    <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <li><%= link_to t("cms.page"), node_pages_path, class: "btn btn-primary icon-page" %></li>
     <% end %>
-  <% end %>
+    <% if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <li><%= link_to t("cms.part"), node_parts_path, class: "btn btn-primary icon-part" %></li>
+    <% end %>
+    <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <li><%= link_to t("cms.layout"), node_layouts_path, class: "btn btn-primary icon-layout" %></li>
+    <% end %>
+    <% search_folders = Cms::PageSearch.site(@cur_site).allow(:read, @cur_user, site: @cur_site).order_by(order: 1) %>
+    <% if search_folders.present? %>
+      <% search_folders.each do |search_folder| %>
+        <li><%= link_to search_folder.name, cms_page_search_contents_path(id: search_folder), class: "btn btn-primary icon-search" %></li>
+      <% end %>
+    <% end %>
+    <li class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t("cms.tool") %></button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <%= link_to t("cms.search_contents"), cms_search_contents_pages_path, class: "dropdown-item icon-conv" %>
+        <%= link_to t("cms.file"), cms_files_path, class: "dropdown-item icon-conv" %>
+        <%= link_to t("cms.check_links"), cms_check_links_pages_path, class: "dropdown-item icon-conv" %>
+        <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+          <% if @cur_node %>
+            <%= link_to t("cms.import_page"), node_import_path, class: "dropdown-item icon-conf" %>
+          <% else %>
+            <%= link_to t("cms.import_node"), cms_import_path, class: "dropdown-item icon-conf" %>
+          <% end %>
+        <% end %>
+        <%= link_to t("cms.all_contents"), cms_all_contents_path, class: "dropdown-item icon-conf" %>
+        <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+          <%= link_to t("cms.generate_node"), cms_generate_nodes_path, class: "dropdown-item icon-write" %>
+        <% end %>
+        <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+          <%= link_to t("cms.generate_page"), cms_generate_pages_path, class: "dropdown-item icon-write" %>
+        <% end %>
+        <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
+          <%= link_to t("cms.command"), cms_command_path, class: "dropdown-item icon-write" %>
+        <% end %>
+      </div>
+    </li>
+    <li class="dropdown conf">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><%= t("cms.config") %></button>
+      <div class="dropdown-menu d-flex flex-wrap" aria-labelledby="dropdownMenuButton">
+        <%= link_to t("cms.site_info"), cms_site_path, class: "dropdown-item" %>
+        <% if Cms::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.group"), cms_groups_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::User.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.user"), cms_users_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Role.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.role"), cms_roles_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("workflow.name"), workflow_routes_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Member.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.member"), cms_members_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.notice"), cms_notices_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Form.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to Cms::Form.model_name.human, cms_forms_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::EditorTemplate.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.editor_template"), cms_editor_templates_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.theme_template"), cms_theme_templates_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.source_cleaner_template"), cms_source_cleaner_templates_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::BodyLayout.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.body_layout"), cms_body_layouts_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::PageSearch.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.page_search"), cms_page_searches_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.word_dictionary"), cms_word_dictionaries_path, class: "dropdown-item" %>
+        <% end %>
+        <% if SS.config.kana.disable.blank? && Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("kana.dictionary"), kana_dictionaries_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Chorg::Revision.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("chorg.revision"), chorg_main_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("ldap.links.ldap"), ldap_server_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.link_check"), cms_check_links_path, class: "dropdown-item" %>
+        <% end %>
+        <% if SS.config.voice.disable.blank? && Voice::File.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("voice.file"), voice_files_path, class: "dropdown-item" %>
+        <% end %>
+        <% if SS.config.recommend.disable.blank? && Recommend::History::Log.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("recommend.main"), recommend_history_logs_tokens_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Rdf::Vocab.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t("rdf.links.vocabs"), rdf_vocabs_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t("job.main"), job_cms_main_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("history.log"), history_cms_logs_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::LoopSetting.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.loop_html"), cms_loop_settings_path, class: "dropdown-item" %>
+        <% end %>
+        <% if Cms::Command.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t("cms.command"), cms_command_settings_path, class: "dropdown-item" %>
+        <% end %>
+      </div>
+    </li>
+  </ul>
 </nav>

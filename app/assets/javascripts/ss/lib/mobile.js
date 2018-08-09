@@ -10,10 +10,10 @@ this.SS_Mobile = (function () {
         head.children("meta[name=viewport]").remove();
         head.append('<meta name="viewport" content="width=1024" />');
         vr = $("#ss-mb");
-        return vr.html('<a href="#" onclick="return SS_Mobile.unset()">' + vr.text() + '</a>').show();
+        return vr.html('<a href="#" onclick="return SS_Mobile.unset()" class="btn btn-secondary">' + vr.text() + '</a>').show();
       } else {
         vr = $("#ss-pc");
-        return vr.html('<a href="#" onclick="return SS_Mobile.setPc()">' + vr.text() + '</a>').show();
+        return vr.html('<a href="#" onclick="return SS_Mobile.setPc()" class="btn btn-secondary">' + vr.text() + '</a>').show();
       }
     }
   };

@@ -75,17 +75,19 @@ $px72:515%;
 
 // color
 $gray1: #f2f2f2;
-$gray2: #999999;
-$gray3: #424242;
+$gray2: rgba(0, 0, 0, 0.05);
+$gray3: rgba(0, 0, 0, 0.06);
 $gray4: #d0d0d0;
-$gray5: #666;
+$gray5: rgba(0, 0, 0, 0.5);
 
 
-$white: #ffffff;
-$black: #000000;
+$white: rgba(256, 256, 256, 1);
+$black: rgba(0, 0, 0, 1);
 $black2: #222;
 $black3: #333;
 $red: #ba1f24;
+$primary1: #4caf50;
+$primary2: #009688;
 
 $orange: #f25a38;
 $orange2: #fbeee8;
