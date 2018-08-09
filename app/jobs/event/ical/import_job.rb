@@ -1,5 +1,6 @@
 class Event::Ical::ImportJob < Cms::ApplicationJob
 
+  queue_as :external
   attr_reader :errors
 
   class << self
@@ -51,19 +52,23 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   end
 
   def save_page_by_event(event)
-    return if node.ical_import_date_ago.present? && event.dtstart.to_date < @today - node.ical_import_date_ago.days
+    return if node.ical_import_date_ago.present? && event.dtstart.to_date < @today - nical_import_date_ago.days
     return if node.ical_import_date_after.present? && event.dtstart.to_date > @today + node.ical_import_date_after.days
     item = model.site(site).node(node).where(ical_link: event.url.to_s).first || model.new
     item.ical_link = event.url
     return if site_page?(@pages, item)
     @ical_links << event.url.to_s
+    return if !item.new_record? && item.updated >= event.last_modified.to_datetime
     item.cur_site = site
     item.cur_node = node
     item.cur_user = user
+    item.created = event.created
     item.name = item.event_name = event.summary
     item.layout_id = node.page_layout_id if node.page_layout_id.present?
     item.state = node.ical_page_state if node.ical_page_state.present?
     item.html = item.content = event.description
+    item.permission_level = node.permission_level if item.permission_level.blank?
+    item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
     item.venue = event.location
     date = event.dtstart.to_date
     end_date = event.dtend.to_date if event.dtend.present?
@@ -75,7 +80,11 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     end
     event_dates.uniq! if event_dates.present?
     item.event_dates = event_dates
-    item.save
+    unless save_or_update(item)
+      Rails.logger.error(item.errors.full_messages.to_s)
+      @errors.concat(item.errors.full_messages)
+    end
+    item
   end
 
   def site_page?(pages, item)
@@ -109,8 +118,32 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     end
   end
 
+  def save_or_update(page)
+    if user
+      raise "403" unless page.allowed?(:edit, user)
+      if page.state == "public"
+        raise "403" unless page.allowed?(:release, user)
+      end
+    end
+
+    if page.new_record?
+      log_msg = "create #{page.class.to_s.underscore}(#{page.id})"
+      log_msg = "#{log_msg} by #{user.name}(#{user.id})" if user
+      Rails.logger.info(log_msg)
+      put_history_log(page, :create)
+      ret = page.save
+    else
+      log_msg = "update #{page.class.to_s.underscore}(#{page.id})"
+      log_msg = "#{log_msg} by #{user.name}(#{user.id})" if user
+      Rails.logger.info(log_msg)
+      put_history_log(page, :update)
+      ret = page.update
+    end
+    ret
+  end
+
   def remove_unimported_pages
-    return if @ical_links.blank?
+    return unless @ical_links
 
     criteria = model.site(site).node(node)
     criteria = criteria.nin(ical_link: @ical_links)

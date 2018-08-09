@@ -18,9 +18,8 @@ module Event::IcalHelper
       next unless item.respond_to?(:event_dates)
       next if item.event_dates.blank?
       item.get_event_dates.each do |event|
-        created = ::Icalendar::Values::DateTime.new(item.created.utc)
         calendar.event do |e|
-          e.created = created
+          e.created = ::Icalendar::Values::DateTime.new(item.created.utc)
           e.description = ::Icalendar::Values::Text.new(item.summary.to_s)
           e.dtend = ::Icalendar::Values::Date.new(event.last.to_date.tomorrow)
           e.dtstart = ::Icalendar::Values::Date.new(event.first.to_date)

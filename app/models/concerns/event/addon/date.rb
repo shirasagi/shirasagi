@@ -86,15 +86,13 @@ module Event::Addon
       return "" unless event_dates.present?
       @dates = []
       range = []
-      event_dates = event_dates.split(/\R/).map do |d|
-        d = Time.zone.parse(d) rescue nil
-      end.compact
-      event_dates.each do |d|
-        if range.present? && range.last.tomorrow != d
+      event_dates.split(/\R/).each do |d|
+        date = Time.zone.parse(d) rescue next
+        if range.present? && range.last.tomorrow != date
           @dates << range
           range = []
         end
-        range << d
+        range << date
       end
       @dates << range if range.present?
       @dates
