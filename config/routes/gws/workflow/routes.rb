@@ -33,6 +33,8 @@ SS::Application.routes.draw do
       resources :files, path: ':state', concerns: [:soft_deletion, :workflow], except: [:destroy] do
         get :print, on: :member
         match :copy, on: :member, via: %i[get post]
+        post :download_comment, on: :member
+        post :download_attachment, on: :member
       end
       resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end

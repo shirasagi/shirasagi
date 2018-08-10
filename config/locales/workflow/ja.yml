@@ -86,6 +86,8 @@ ja:
       set_seen: 既読にしました。
       unset_seen: 未読にしました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
+    csv:
+      approvers_or_circulations: 承認者・回覧者
 
   modules:
     workflow: ワークフロー

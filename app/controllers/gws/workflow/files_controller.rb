@@ -230,4 +230,18 @@ class Gws::Workflow::FilesController < ApplicationController
     end
     render_update result, render_opts
   end
+
+  def download_comment
+    set_item
+
+    filename = "workflow_file_#{Time.zone.now.to_i}.csv"
+    encoding = "Shift_JIS"
+    send_enum(@item.enum_csv(encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
+  def download_attachment
+    set_item
+
+    raise NotImplementedError
+  end
 end

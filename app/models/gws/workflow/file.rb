@@ -132,6 +132,10 @@ class Gws::Workflow::File
     [ *ret, options ]
   end
 
+  def enum_csv(encoding: "Shift_JIS")
+    Gws::Workflow::FileEnumerator.new(@cur_site || site, [ self ], encoding: encoding)
+  end
+
   private
 
   def rewrite_file_ref

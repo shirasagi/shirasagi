@@ -13,6 +13,8 @@ ja:
     links:
       publish: 公開する
       depublish: 非公開にする
+      download_comment: 承認/回覧コメントCSV
+      download_attachment: 添付ファイルダウンロード
     confirm:
       publish: 公開してよろしいですか？
       depublish: 非公開にしてよろしいですか？
