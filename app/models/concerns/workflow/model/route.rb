@@ -3,6 +3,8 @@ module Workflow::Model::Route
   extend SS::Translation
   include SS::Document
 
+  MAX_CIRCULATIONS = 3
+
   included do
     store_in collection: "workflow_routes"
 

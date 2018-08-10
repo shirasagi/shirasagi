@@ -1,6 +1,6 @@
 <% return if @ss_mode != :gws %>
 
-<% 1.upto(3) do |level| %>
+<% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
   <% users = @item.circulation_users_at(level) %>
   <% if users.active.present? %>
     <h1 class="workflow-level-header workflow-circulation-level-<%= level %>"><%= t("workflow.circulation_step") %> <%= @model.t :level, level: level %></h1>

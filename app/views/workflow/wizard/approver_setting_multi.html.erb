@@ -31,7 +31,7 @@
   </dl>
 <% end %>
 <% if @ss_mode == :gws && @route.circulations.present? %>
-  <% 1.upto(3).each do |level| %>
+  <% 1.upto(@route.class::MAX_CIRCULATIONS).each do |level| %>
     <% users = @route.circulation_users_at(level).active.to_a %>
     <% if users.present? %>
       <%= hidden_field_tag "workflow_circulation_attachment_uses", @route.circulation_attachment_use_at(level) %>

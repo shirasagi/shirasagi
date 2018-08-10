@@ -8,7 +8,7 @@
   end
 %>
 
-<% 1.upto(3) do |level| %>
+<% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
   <h1 class="workflow-level-header workflow-circulation-level-<%= level %>"><%= t("workflow.circulation_step") %> <%= @model.t :level, level: level %></h1>
   <dl class="see workflow-circulations workflow-circulation-level-<%= level %>">
     <dt><%= @model.t :circulation_attachment_uses %><%= @model.tt :circulation_attachment_uses %></dt>
