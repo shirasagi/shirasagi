@@ -9,20 +9,28 @@
   edit_auto_post = @item.edit_auto_post.presence || @cur_node.try(:node_edit_auto_post).presence || @cur_site.try(:site_edit_auto_post).presence
 %>
 
-<dl class="see mod-cms-sns_poster">
+<div class="see mod-cms-sns_poster form-row">
   <% if @cur_site.facebook_token_enabled? %>
-  <dt><%= @model.t :facebook_auto_post %><%= @model.tt :facebook_auto_post %></dt>
-  <dd><%= f.select :facebook_auto_post, @item.facebook_auto_post_options, :selected => facebook_auto_post %></dd>
+  <div class="col-12 mb-3">
+    <label><%= @model.t :facebook_auto_post %><%= @model.tt :facebook_auto_post %></label>
+    <%= f.select :facebook_auto_post, @item.facebook_auto_post_options, :selected => facebook_auto_post %>
+  </div>
   <% end %>
 
   <% if @cur_site.twitter_token_enabled? %>
-  <dt><%= @model.t :twitter_auto_post %><%= @model.tt :twitter_auto_post %></dt>
-  <dd><%=  f.select :twitter_auto_post, @item.twitter_auto_post_options, :selected => twitter_auto_post %></dd>
+  <div class="col-12 mb-3">
+    <label><%= @model.t :twitter_auto_post %><%= @model.tt :twitter_auto_post %></label>
+    <%=  f.select :twitter_auto_post, @item.twitter_auto_post_options, :selected => twitter_auto_post %>
+  </div>
   <% end %>
 
-  <dt><%= @model.t :sns_auto_delete %><%= @model.tt :sns_auto_delete %></dt>
-  <dd><%=  f.select :sns_auto_delete, @item.sns_auto_delete_options, :selected => sns_auto_delete %></dd>
+  <div class="col-12 mb-3">
+    <label><%= @model.t :sns_auto_delete %><%= @model.tt :sns_auto_delete %></label>
+    <%=  f.select :sns_auto_delete, @item.sns_auto_delete_options, :selected => sns_auto_delete %>
+  </div>
 
-  <dt><%= @model.t :edit_auto_post %><%= @model.tt :edit_auto_post %></dt>
-  <dd><%= f.select :edit_auto_post, @item.edit_auto_post_options, :selected => edit_auto_post %></dd>
-</dl>
+  <div class="col-12 mb-3">
+    <label><%= @model.t :edit_auto_post %><%= @model.tt :edit_auto_post %></label>
+    <%= f.select :edit_auto_post, @item.edit_auto_post_options, :selected => edit_auto_post %>
+  </div>
+</div>

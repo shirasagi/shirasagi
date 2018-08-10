@@ -4,18 +4,14 @@
 <%= error_messages_for :item %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div><% end %>
-    <div class="addon-body">
-      <%= render file: '_form', locals: { f: f } %>
-    </div>
+  <div class="addon-view mb-5" id="addon-basic">
+    <% if addons.size > 0 %><h2 class="h5"><%= t "ss.basic_info"%></h2><% end %>
+    <%= render file: '_form', locals: { f: f } %>
   </div>
   <%# render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
-  <div class="addon-view" id="addon-sys-agents-addons-saml_setting">
-    <div class="addon-head toggle-head"><h2><%= I18n.t "modules.addons.sys/saml_setting" %></h2></div>
-    <div class="addon-body toggle-body">
-      <%= render partial: 'load_metadata', locals: { f: f, a: 1 } %>
-    </div>
+  <div class="addon-view mb-5" id="addon-sys-agents-addons-saml_setting">
+    <h2 class="h4"><%= I18n.t "modules.addons.sys/saml_setting" %></h2>
+    <%= render partial: 'load_metadata', locals: { f: f, a: 1 } %>
   </div>
 </div>
 

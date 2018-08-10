@@ -73,7 +73,7 @@
         <tbody>
           <% @items.each do |item| %>
           <tr>
-            <td class="state"><span><%= t "ss.state.#{item.status}" %></span></td>
+            <td class="state"><span class="public"><%= t "ss.state.#{item.status}" %></span></td>
             <td class="title"><%= link_to item.name, contents_path(item) %></td>
             <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
             <td class="filename"><%= File.basename item.filename %></td>

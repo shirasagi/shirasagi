@@ -1,18 +1,14 @@
 <% if @item.subscribed_users_readable?(@cur_user) %>
 <div class="subscribed-users">
-  <div class="addon-head toggle-head">
-    <h2><%= t('gws/board.topic.browsing_state') %></h2>
-  </div>
+  <h2 class="h4"><%= t('gws/board.topic.browsing_state') %></h2>
 
-  <div class="addon-body toggle-body">
-    <dl class="see mod-gws-board-topic-subscribed-users">
-      <dt><%= t('gws/board.topic.browsed_user_info.title') %></dt>
-      <dd>
-        <span><%= t('gws/board.topic.browsed_user_info.format', count: @item.browsed_users.active.count, total: @item.subscribed_users.active.count) %></span>
-        <%= link_to(t('gws/board.topic.browsed_user_info.more'), gws_board_apis_browsing_states_path, class: %w(btn ajax-box)) %>
-      </dd>
-    </dl>
-  </div>
+  <dl class="see mod-gws-board-topic-subscribed-users">
+    <dt><%= t('gws/board.topic.browsed_user_info.title') %></dt>
+    <dd>
+      <span><%= t('gws/board.topic.browsed_user_info.format', count: @item.browsed_users.active.count, total: @item.subscribed_users.active.count) %></span>
+      <%= link_to(t('gws/board.topic.browsed_user_info.more'), gws_board_apis_browsing_states_path, class: %w(btn ajax-box)) %>
+    </dd>
+  </dl>
 </div>
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-board-topic-subscribed-users"); <% end %>
 <% end %>

@@ -84,10 +84,10 @@ $("#item_body_layout_id").on("change", select_body_layout);
 $("#item_body_layout_id").trigger("change");
 <% end %>
 
-<dl class="see mod-body-part-html">
-  <dd class="wide buttons">
-    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
-    <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
-    <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
-  </dd>
-</dl>
+<div class="see mod-cms-edit_lock row">
+  <div class="col-12 mb-3">
+    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn btn-outline-secondary syntax-check" } if syntax_check %>
+    <%= button_tag t("cms.link_check"), { type: :button, class: "btn btn-outline-secondary link-check" } %>
+    <%= button_tag t("cms.preview_page"), { type: :button, class: "btn btn-outline-secondary preview" } if @item.respond_to?(:route) %>
+  </div>
+</div>

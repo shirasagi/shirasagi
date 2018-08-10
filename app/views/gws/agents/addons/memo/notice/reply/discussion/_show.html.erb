@@ -29,7 +29,7 @@ Gws_Discussion_Thread.render(<%= @cur_user.id %>);
 <dl class="see addon-gws-memo-reply">
   <%= form_for :item, url: "", html: { method: :put, multipart: true, autocomplete: :off } do |f| %>
     <div class="gws-discussion">
-    <div class="addon-view">
+    <div class="addon-view mb-5">
       <div class="addon-head">
         <h2>
           <%= link_to "#{forum.name}", gws_discussion_forum_topics_path(forum_id: forum.id, mode: '-') %>

@@ -228,7 +228,7 @@ td {
   padding-bottom: 10px;
   padding-left: 10px;
 }
-.addon-view#addon-basic {
+.addon-view mb-4#addon-basic {
   .categories {
     float: left;
     margin: 20px 10px 0;
@@ -528,9 +528,39 @@ td {
 // wrap
 #wrap {
   @include clear;
-  .wrap {
+  & > .wrap {
     @include media-breakpoint-down(sm) {
       @include flex-direction(column-reverse);
+    }
+  }
+  .wrap-body {
+    width: 100%;
+  }
+  .fixed-navi {
+    position: relative;
+    min-width: 360px;
+    max-width: 360px;
+    margin: 0 -30px 0 15px;
+    border-left: 1px solid $gray3;
+    @include media-breakpoint-down(sm) {
+      min-width: auto;
+      max-width: auto;
+      width: 100%;
+      margin: 0;
+      border: none;
+      .nav {
+        display: none;
+      }
+    }
+    .wrap {
+      top: 0;
+      width: 100%;
+      &.is-fixed {
+        position: fixed;
+        @include media-breakpoint-down(sm) {
+          position: static;
+        }
+      }
     }
   }
 }
@@ -539,6 +569,9 @@ td {
   padding: 30px;
   @include media-breakpoint-down(sm) {
     padding: 15px;
+    .wrap {
+      @include flex-direction(column);
+    }
   }
 }
 #side {
@@ -1039,10 +1072,18 @@ td {
   }
 }
 
-
+// -------------------------------------------------------------------------------------------------
+// see
+.see label {
+  @include display-flex;
+  @include align-items(center);
+}
+.upload-drop-area .upload-drop-notice {
+  padding: 2rem 1rem;
+  background: $gray1;
+}
 // -------------------------------------------------------------------------------------------------
 // common view
-
 
 #ajax-box {
   margin: 10px;
@@ -1052,176 +1093,10 @@ td {
   &:hover { background: #f4f4f4; }
   &:hover { background: $orange2; }
 }
-.addon-view, .search-pages, .search-form {
-  &:not(.print) {
-    @include box;
-  }
-  @include media-breakpoint-down(sm) {
-    margin: 0 10px 10px;
-  }
-  .see {
-    padding: 0 10px;
-  }
-  + footer.send {
-    border-top: 1px solid #ddd;
-  }
-  .send {
-    padding: 14px 0;
-  }
-  .toggle {
-    position: absolute;
-    top: 17px;
-    left: 300px;
-    @include media-breakpoint-down(sm) {
-      top: 13px;
-      left: auto;
-      right: 10px;
-    }
-    a {
-      padding-left: 20px;
-      background: url(/assets/img/ic-open.png) no-repeat left center;
-      font-size: $px12;
-    }
-  }
-}
-.search-contents-pages,
-.search-contents-form,
-.search-form {
-  @include clear;
-  padding: 10px;
-}
-.list-head-search .index-search,
-.list-search .index-search {
-  margin-bottom: 0;
-  border: none;
-}
+
 .ss-confirm-text {
   margin: 10px;
 }
-.addon-head {
-  @include box-head;
-}
-.addon-body {
-  @include box-body;
-  &.print {
-    border-top: $border-black2;
-  }
-}
-dl.see {
-  margin: 5px 0px;
-  > dt {
-    @include clear;
-    float: left;
-    min-width: 180px;
-    padding: 5px 0;
-    color: $orange3;
-    font-weight: bold;
-    @include media-breakpoint-down(sm) {
-      float: none;
-    }
-  }
-  > dd {
-    @include clear;
-    margin: 0px 0px 0px 180px;
-    padding: 5px 0;
-    @include media-breakpoint-down(sm) {
-      margin: 0;
-    }
-    input, select {
-      margin: -5px 0;
-      @include media-breakpoint-down(sm)  {
-        &[type="text"] ~ .btn, &[type="text"] ~ label, & ~ select {
-          margin-top: 10px;
-        }
-        //&[type="text"] ~ label {
-        //  display: inline-block;
-        //}
-      }
-    }
-    @include media-breakpoint-down(sm) {
-      select + input[type="text"] {
-        width: 60% !important;
-      }
-      input + button {
-        margin-top: 10px;
-      }
-    }
-    label {
-      display: inline-block;
-      margin-right: 1rem;
-    }
-    @include media-breakpoint-down(sm) {
-      .prefix, .postfix {
-        display: block;
-        margin: 5px 0;
-      }
-    }
-    .form-group {
-      padding-top: 0;
-      margin-bottom: 0;
-    }
-    .form-group + .form-group {
-      margin-left: 8px;
-    }
-  }
-  > dt ~ dt { margin-top: 15px; }
-  > dd ~ dd {
-      margin-top: 15px;
-      @include media-breakpoint-down(sm) {
-        margin-top: 0;
-      }
-    }
-  > dd + dd {
-    margin-top: 0px;
-    @include media-breakpoint-down(sm) {
-      margin-top: 0;
-    }
-  }
-  > dt.wide {
-    float: none;
-    width: 100%;
-  }
-  > dd.wide {
-    float: none;
-    margin-left: 0px;
-    padding-top: 0px;
-    border-top: 0px;
-    button, .ajax-box {
-      margin-right: 5px;
-      @include media-breakpoint-down(sm) {
-        margin-bottom: 10px;
-      }
-    }
-  }
-  > dd.short {
-    .input-group {
-      width: 12em;
-    }
-    @include media-breakpoint-down(sm) {
-      -js-display: flex;
-      @include display-flex;
-      @include align-items(center);
-      .prefix, .postfix {
-        margin-left: 5px;
-        white-space: nowrap;
-      }
-    }
-  }
-  .cke_chrome {
-    @include box-shadow(none);
-  }
-  > dt.depth-2 {
-    padding-left: 20px;
-    @include media-breakpoint-down(sm) {
-      & + dd {
-        padding-left: 20px;
-      }
-    }
-  }
-}
-//:root dl.see > dd input, :root dl.see > dd select {
-//  vertical-align: middle\0;
-//}
 dl.mod-cms-parent_crumbs {
   dd { margin-bottom: 10px; }
 }
@@ -1313,19 +1188,6 @@ dl.mod-cms-parent_crumbs {
 
 // -------------------------------------------------------------------------------------------------
 // button
-
-//.btn {
-//  @include btn;
-//}
-//.btn-primary {
-//  @include ss-btn-red;
-//}
-//.btn-default {
-//  @include ss-btn-gray-l;
-//}
-//.btn-success {
-//  @include ss-btn-orange;
-//}
 .chorg-revisions {
   margin-bottom: 10px;
   .btn {
@@ -1336,94 +1198,7 @@ dl.mod-cms-parent_crumbs {
   }
 }
 
-// -------------------------------------------------------------------------------------------------
-// addon
-#addon-cms-agents-addons-file .see, .addon-view .see {
-  .upload-menu-select {
-    float: right;
-    @include media-breakpoint-down(sm) {
-      margin-bottom: 10px;
-    }
-  }
-  @include media-breakpoint-down(sm) {
-    .upload-menu-new {
-      display: inline-block;
-      margin-bottom: 10px;
-    }
-  }
-  .upload-drop-area {
-    margin-top: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    @include border-radius(3px);
-    background: #f2f2f2;
-  }
-  .upload-drop-notice {
-    margin-left: 20px;
-    color: #b30;
-  }
-  .file-dragenter {
-    background: #fbeee8;
-  }
-  #selected-files {
-    margin-top: 10px;
-    @include clear;
-    @include media-breakpoint-down(sm) {
-      margin-top: 10px;
-    }
-  }
-}
-#selected-files, .user-files {
-  -js-display: flex;
-  @include display-flex;
-  @include flex-wrap(wrap);
-  clear: both;
-}
-.file-view {
-  float: left;
-  width: 164px;
-  margin: 0px 28px 20px 0px;
-  @include media-breakpoint-down(sm) {
-    margin: 0 10px 10px 0;
-  }
-  .thumb {
-    display: block !important;
-    min-height: 110px;
-    border: 5px solid $gray4;
-    text-align: center;
-    line-height: 110px;
-    &:hover {
-      background-color: #eee;
-      text-decoration: none;
-    }
-    img {
-      vertical-align: middle;
-      max-width: 120px;
-    }
-    .ext {
-      display: block;
-      overflow: hidden;
-      color: $orange;
-      font-size: $px32;
-      font-weight: bold;
-    }
-  }
-  .name {
-    overflow: hidden;
-    padding: 10px 0;
-    font-size: 90%;
-    @include ellipsis;
-    word-wrap: nowrap;
-  }
-  .action {
-    display: inline-block;
-    margin-bottom: 5px;
-    a {
-      @include ss-btn;
-      margin-bottom: 5px;
-    }
-  }
-}
+
 // -------------------------------------------------------------------------------------------------
 // content-search
 .content-search {
@@ -1493,7 +1268,6 @@ dl.mod-cms-parent_crumbs {
     input { margin: 5px !important;}
   }
   div.parent {
-    padding: 15px 24px;
     border-bottom: $border-gray1;
     @include media-breakpoint-down(sm) {
       padding: 10px;
@@ -1631,93 +1405,6 @@ h2.h4 + .more {
     line-height: 1.8;
     white-space: nowrap;
     &:hover { background: $gray1; }
-  }
-}
-.list-head {
-  @include clear;
-  margin: 0px 0px 10px;
-  padding: 10px 18px 10px;
-  border-bottom: $border-gray1;
-  font-weight: bold;
-  @include media-breakpoint-down(sm) { padding: 10px 20px; }
-  .check {
-    float: left;
-    width: 32px;
-    margin: 6px 0 6px -5px;
-  }
-}
-.list-head-title {
-  margin: -10px 0 0 -18px;;
-  padding: 10px 12px;
-  font-weight: bold;
-  &:before {
-    margin-right: 6px;
-    padding-left: 3px;
-    background: #f25a38;
-    content: ' ';
-  }
-}
-.list-head-action {
-  float: left;
-  margin: 1px 0 10px;
-  @include media-breakpoint-down(sm) {
-    float: none;
-    * { margin-bottom: 5px; }
-    input[type="text"] { width: 70% !important; }
-    input[type="submit"] { width: auto !important; }
-    button { margin: 0 0 5px; }
-    span { display: inline-block; }
-  }
-}
-.list-head-action-tag {
-  display: inline-block;
-  margin-right: 8px;
-}
-.list-head-action-destroy {
-  display: inline-block;
-}
-.list-head-search {
-  float: right;
-  margin: 0 0 10px;
-  @include media-breakpoint-down(sm) {
-    clear: both;
-    float: none;
-    .index-search {
-      margin: 0;
-      @include media-breakpoint-down(sm) {
-        -js-display: flex;
-        @include display-flex;
-        @include flex-wrap(wrap);
-        @include align-items(center);
-      }
-    }
-    * { margin: 0 5px 5px 0; }
-    input[type="text"] { width: 70% !important; }
-    input[type="submit"] { width: auto !important; }
-    .limit {
-      display: inline-block;
-      width: 100%;
-      margin: 0 0 0 1em;
-      text-align: right;
-    }
-  }
-}
-.list-head-search-full {
-  @include media-breakpoint-down(sm) {
-    form {
-      -js-display: flex;
-      @include display-flex;
-      @include flex-wrap(wrap);
-      @include align-items(center);
-      @include justify-content(center);
-    }
-    input[type="text"] {
-      width: 80%!important;
-      margin-right: 5px;
-    }
-    .ss-tooltip {
-      margin-top: 5px;
-    }
   }
 }
 .wrap-table {
@@ -1886,221 +1573,10 @@ table.form-index.sortable-index {
 }
 
 // -------------------------------------------------------------------------------------------------
-// form
-#addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
-  @include ss-btn;
-  &.add-date {
-    @include ss-btn-orange;
-  }
-}
-@include media-breakpoint-down(sm) {
-  input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-  input[type=email], input[type=number], input[type=tel] {
-    width: 100% !important;
-  }
-}
-input[type=number] {
-  width: 12em;
-}
-.input-group.ss-number-field {
-  input[type=number] {
-    width: 12em;
-    flex-grow: unset;
-  }
-}
-input.alnum {
-  ime-mode: disabled;
-}
-input.number {
-  ime-mode: disabled;
-}
-input.filename {
-  width: 25em;
-  ime-mode: disabled;
-}
-input.datetime {
-  width: 12em;
-  text-align: center;
-  @include media-breakpoint-down(sm) {
-    text-align: left;
-  }
-}
-input.date {
-  width: 9em;
-  text-align: center;
-  @include media-breakpoint-down(sm) {
-    text-align: left;
-  }
-}
-input.time {
-  width: 9em;
-  text-align: center;
-  @include media-breakpoint-down(sm) {
-    text-align: left;
-  }
-}
-@include media-breakpoint-down(sm) {
-  input[type="file"] {
-    margin-bottom: 5px;
-  }
-}
-textarea {
-  //@include input;
-  width: 100%;
-  height: 6.5em;
-  padding: 5px 5px;
-  line-height: 1.4;
-}
-textarea.code {
-  height: 30em;
-  font-size: 120%;
-  font-family: monospace;
-}
-form .CodeMirror {
-  border: 1px solid #ccc;
-}
-// minicolors
-.minicolors-theme-default {
-  @include media-breakpoint-down(sm) {
-    &.minicolors {
-      display: block;
-    }
-  }
-  .minicolors-input {
-    height: inherit;
-    width: 8em;
-  }
-  .minicolors-swatch {
-    top: 2px;
-  }
-}
-//multislelct
-@include media-breakpoint-down(sm) {
-  .ms-container {
-    width: auto;
-  }
-}
-
-// -------------------------------------------------------------------------------------------------
-// form
-
-#notice {
-  display: none;
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  z-index: 100;
-  width: 100%;
-  padding: 10px 8px;
-  box-shadow: 0px 6px 12px rgba(0,0,0,.2);
-  background-color:rgba(90,90,90,.94);
-  color: #fff;
-  line-height: 1.8;
-  .wrap {
-    text-align: center;
-  }
-}
-.errorExplanation {
-  margin: 0px 0px 20px;
-  padding: 20px 20px;
-  border: 1px solid $orange;
-  @include border-radius(3px);
-  background-color: #fff;
-  h2 {
-    margin: -20px -20px 25px;
-    padding: 8px 20px;
-    background-color: $orange;
-    color: #fff;
-  }
-  p, ul {
-    padding: 0;
-  }
-  ul {
-    margin: 10px 0;
-    padding-left:20px;
-  }
-  li {
-    list-style: disc;
-  }
-  .code {
-    display: block;
-    margin-bottom: 10px;
-    padding: 10px;
-    @include border-radius(3px);
-    background: $black2;
-    color: $white;
-    list-style: none;
-    & + ul {
-      margin-bottom: 20px;
-      padding-left: 20px;
-      li {
-        list-style: disc;
-      }
-    }
-  }
-}
-#alertExplanation {
-  margin: 0px 0px 20px;
-  padding: 20px 20px;
-  border-bottom: 1px solid $orange;
-  background-color: #fff;
-  h2 {
-    margin: -20px -20px 25px;
-    padding: 4px 8px;
-    background: $orange;
-    color: #fff;
-  }
-  p, ul {
-    //white-space: nowrap;
-    color: #822;
-  }
-}
-.field_with_errors {
-  input, textarea, select {
-    display: inline-block;
-    border: 1px solid #e00;
-  }
-}
-
-// -------------------------------------------------------------------------------------------------
 // common
 
 .monospace {
   font-family: "Osaka−等幅", "ＭＳ ゴシック", "MS Gothic", "monospace";
-}
-.pagination {
-  @include clear;
-  margin: 20px 0px;
-  @include media-breakpoint-down(sm) { padding: 0 10px; }
-  span a, .current, .gap {
-    float: left;
-    min-width: 20px;
-    margin: 0px 4px 0px 0px;
-    padding: 10px;
-    border: $border-gray5;
-    background-color: #fff;
-    color: #444;
-    text-align: center;
-  }
-  span:first-child {
-    margin-left: 0px;
-    a { margin-left: 0px; }
-  }
-  .first a, .last a {
-    min-width: 20px;
-  }
-  .prev a, .next a  {
-    min-width: 50px;
-  }
-  .current {
-    background-color: #777;
-    color: #fff;
-  }
-  a:hover {
-    //background-color: #ddd;
-    color: #e00;
-    text-decoration: none;
-  }
 }
 
 // -------------------------------------------------------------------------------------------------

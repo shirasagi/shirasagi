@@ -24,7 +24,7 @@ Gws_Discussion_Unseen.renderUnseen(
     <% end %>
   <% end %>
   <% if @items.blank? %>
-    <div class="addon-view">
+    <div class="addon-view mb-5">
       <div class="addon-body">
         <dl class="see">
           <dd class="wide">
@@ -39,7 +39,7 @@ Gws_Discussion_Unseen.renderUnseen(
 
 <div class="gws-discussion-navi">
   <% if Gws::Schedule::Todo.allowed?(:read, @cur_user, site: @cur_site) %>
-  <div class="addon-view">
+  <div class="addon-view mb-5">
     <div class="addon-head"><h2><%= t("gws/discussion.todos") %></h2></div>
     <% @todos.each do |todo| %>
     <div class="addon-body">
@@ -58,7 +58,7 @@ Gws_Discussion_Unseen.renderUnseen(
   </div>
   <% end %>
 
-  <div class="addon-view">
+  <div class="addon-view mb-5">
     <div class="addon-head"><h2><%= t("gws/discussion.topics") %></h2></div>
     <% @recent_items.each do |item| %>
       <div class="addon-body">
@@ -77,7 +77,7 @@ Gws_Discussion_Unseen.renderUnseen(
     </div>
   </div>
 
-  <div class="addon-view">
+  <div class="addon-view mb-5">
     <div class="addon-head"><h2><%= t("gws/discussion.members") %></h2></div>
     <div class="addon-body">
       <% @forum.discussion_members.each do |member| %>
@@ -87,7 +87,7 @@ Gws_Discussion_Unseen.renderUnseen(
   </div>
 
   <% if quota = @forum.forum_quota_model %>
-  <div class="addon-view">
+  <div class="addon-view mb-5">
     <div class="addon-head"><h2><%= t('ss.quota') %></h2></div>
     <div class="addon-body">
       <div class="ss-quota-bar">

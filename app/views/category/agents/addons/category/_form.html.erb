@@ -37,14 +37,15 @@ end
 %>
 <%= jquery do %> SS_AddonTabs.hide(".mod-category-category"); <% end %>
 
-<dl class="see mod-category-category category-form">
-  <dt class="wide"><%= @model.t :categories %><%= @model.tt :categories %></dt>
-  <dd class="wide">
+<div class="see mod-category-category category-form form-row">
+  <div class="col-12 mb-3">
+    <label><%= @model.t :categories %><%= @model.tt :categories %></label>
     <%= f.hidden_field "category_ids[]", value: "" %>
 
     <% categories.each do |cate| %>
     <div class="parent">
-      <%= cate_form cate %></div>
+      <%= cate_form cate %>
+    </div>
     <% end %>
-  </dd>
-</dl>
+  </div>
+</div>

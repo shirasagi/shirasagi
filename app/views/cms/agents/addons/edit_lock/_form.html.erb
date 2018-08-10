@@ -6,11 +6,17 @@
       var editLock = new Cms_EditLock(".mod-cms-edit_lock", "<%= url_for action: :lock %>", "<%= url_for action: :unlock %>");
     <% end %>
 
-    <dl class="see mod-cms-edit_lock">
-      <dt><%= @model.t :lock_owner %><%= @model.tt :lock_owner %></dt>
-      <dd class="lock_owner"><%= @item.lock_owner.long_name %></dd>
-      <dt><%= @model.t :lock_until %></dt>
-      <dd class="lock_until"><%= @item.lock_until.strftime("%Y/%m/%d %H:%M") %></dd>
-    </dl>
+    <fieldset disabled>
+      <div class="see mod-cms-edit_lock form-row">
+        <div class="col-12 mb-3">
+          <label><%= @model.t :lock_owner %><%= @model.tt :lock_owner %></label>
+          <input class="form-control" type="text" value="<%= @item.lock_owner.long_name %>" />
+        </div>
+        <div class="col-12 mb-3">
+          <label><%= @model.t :lock_until %></label>
+          <input class="form-control" type="text" value="<%= @item.lock_until.strftime("%Y/%m/%d %H:%M") %>" />
+        </div>
+      </div>
+    </fieldset>
   <% end %>
 <% end %>

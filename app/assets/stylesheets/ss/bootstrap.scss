@@ -13,6 +13,12 @@
     white-space: nowrap;
   }
 }
+// form
+textarea.form-control {
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  background: none;
+}
 // -------------------------------------------------------------------------------------------------
 // breadcrumb
 .breadcrumb {

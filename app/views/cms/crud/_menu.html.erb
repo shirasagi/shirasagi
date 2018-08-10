@@ -1,5 +1,5 @@
-<div class="row mb-4">
-  <nav class="col">
+<div class="d-flex flex-wrap align-item-center justify-content-between mb-0">
+  <nav>
     <% if params[:action] =~ /index/ %>
       <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
         <%= link_to t('ss.links.new'), { action: :new }, class: "new btn btn-outline-primary" %>
@@ -37,5 +37,20 @@
       <% end %>
       <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index btn btn-outline-secondary" %>
     <% end %>
+  </nav>
+  <nav aria-label="Page navigation pager">
+    <ul class="pagination flex-wrap">
+      <li class="page-item first"><a class="page-link"href="#">«</a></li>
+      <li class="page-item prev"><a class="page-link"rel="prev" href="#">前のページ</a></li>
+      <li class="page-item page"><a class="page-link"rel="prev" href="#">1</a></li>
+      <li class="page-item page current"><a class="page-link"rel="prev" href="#">2</a></li>
+      <li class="page-item page"><a class="page-link"rel="next" href="#">3</a></li>
+      <li class="page-item page"><a class="page-link"href="#">4</a></li>
+      <li class="page-item page"><a class="page-link"href="#">5</a></li>
+      <li class="page-item page"><a class="page-link"href="#">6</a></li>
+      <li class="page-item page gap">...</li>
+      <li class="page-item next"><a class="page-link"rel="next" href="#">次のページ</a></li>
+      <li class="page-item last"><a class="page-link"href="#">»</a></li>
+    </ul>
   </nav>
 </div>

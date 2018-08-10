@@ -6,7 +6,7 @@
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
+  <div class="addon-view mb-5" id="addon-basic">
     <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div><% end %>
     <div class="addon-body">
       <%= render file: '_form_charge', locals: { f: f } %>

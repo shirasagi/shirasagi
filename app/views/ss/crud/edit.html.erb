@@ -6,11 +6,9 @@
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div><% end %>
-    <div class="addon-body">
-      <%= render file: '_form', locals: { f: f } %>
-    </div>
+  <div class="addon-view mb-5" id="addon-basic">
+    <% if addons.size > 0 %><h2 class="h4"><%= @addon_basic_name || t("ss.basic_info") %></h2><% end %>
+    <%= render file: '_form', locals: { f: f } %>
   </div>
   <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
@@ -19,8 +17,8 @@
   <% if @crud_buttons %>
     <% @crud_buttons.call f %>
   <% else %>
-    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
-    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn btn-primary save' %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   <% end %>
 </footer>
 

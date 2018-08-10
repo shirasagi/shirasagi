@@ -101,7 +101,7 @@ $(".workflow-partial-section").each(function () {
       <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
         <section class="mod-workflow-approve">
-          <div class="addon-view">
+          <div class="addon-view mb-5">
             <div class="addon-head">
               <h2><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h2>
             </div>

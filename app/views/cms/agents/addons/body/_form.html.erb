@@ -50,16 +50,18 @@
 
   <% end %>
 
-  <dl class="see mod-cms-body">
-    <dd class="wide"><%= f.text_area :html, class: "html", style: "height: 400px;" %></dd>
-    <dd class="wide">
-    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
-    <%= button_tag t("cms.mobile_size_check"), { type: :button, class: "btn mobile-size-check" } if @cur_site.mobile_enabled? %>
-    <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
-    <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? %>
-    <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
-    <%= link_to t("cms.apis.pages.index"), cms_apis_related_page_path, class: "ajax-box" %>
-    </dd>
-  </dl>
+  <div class="see mod-cms-edit_lock row">
+    <div class="col-12 mb-3">
+      <%= f.text_area :html, class: "html", style: "height: 400px;" %>
+    </div>
+    <div class="col-12 mb-3">
+      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn btn-outline-secondary syntax-check" } if syntax_check %>
+      <%= button_tag t("cms.mobile_size_check"), { type: :button, class: "btn btn-outline-secondary mobile-size-check" } if @cur_site.mobile_enabled? %>
+      <%= button_tag t("cms.link_check"), { type: :button, class: "btn btn-outline-secondary link-check" } %>
+      <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn btn-outline-secondary source-cleaner" } if source_cleaner_conf[:source_cleaner].present? %>
+      <%= button_tag t("cms.preview_page"), { type: :button, class: "btn btn-outline-secondary preview" } if @item.respond_to?(:route) %>
+      <%= link_to t("cms.apis.pages.index"), cms_apis_related_page_path, class: "btn btn-outline-secondary ajax-box" %>
+    </div>
+  </div>
 
 <% end %>

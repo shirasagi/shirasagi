@@ -1,8 +1,6 @@
 <% buf = render(file: @item.show_file) if @item.show_file %>
 <% return if buf.blank? %>
-<div class="addon-view" id="column-<%= @model.name.underscore.gsub('/', '-') %>">
-  <div class="addon-head toggle-head"><h2><%= @model.model_name.human %></h2></div>
-  <div class="addon-body toggle-body">
-    <%= buf %>
-  </div>
+<div class="addon-view mb-5" id="column-<%= @model.name.underscore.gsub('/', '-') %>">
+  <h2 class="h4"><%= @model.model_name.human %></h2>
+  <%= buf %>
 </div>

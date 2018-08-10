@@ -1,7 +1,7 @@
 <%= form_for :item, url: { action: :destroy }, html: { method: :delete, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
-<div class="addon-view" id="addon-basic">
+<div class="addon-view mb-5" id="addon-basic">
 <%= render file: "_delete" %>
 </div>
 

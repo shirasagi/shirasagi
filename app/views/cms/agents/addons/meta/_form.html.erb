@@ -1,18 +1,20 @@
 <%= jquery do %> SS_AddonTabs.hide(".mod-cms-meta"); <% end %>
 
-<dl class="see mod-cms-meta">
-  <dt><%= @model.t :keywords %><%= @model.tt :keywords %></dt>
-  <dd>
-    <% opts = @cur_site.auto_keywords_enabled? ? {} : { class: "presence" } %>
+<div class="see mod-cms-meta form-row">
+  <div class="col-12 mb-3">
+    <label for=""><%= @model.t :keywords %><%= @model.tt :keywords %></label>
+    <% opts = @cur_site.auto_keywords_enabled? ? {} : { class: "presence form-control" } %>
     <%= f.text_field :keywords, opts %>
-  </dd>
+  </div>
 
-  <dt><%= @model.t :description %><%= @model.tt :description %></dt>
-  <dd>
-    <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
+  <div class="col-12 mb-3">
+    <label for=""><%= @model.t :description %><%= @model.tt :description %></label>
+    <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence form-control" } %>
     <%= f.text_area :description, opts %>
-  </dd>
+  </div>
 
-  <dt><%= @model.t :summary_html %><%= @model.tt :summary_html %></dt>
-  <dd><%= f.text_area :summary_html %></dd>
-</dl>
+  <div class="col-12 mb-3">
+    <label for=""><%= @model.t :summary_html %><%= @model.tt :summary_html %></label>
+    <%= f.text_area :summary_html, class: "form-control", rows: "3" %>
+  </div>
+</div>

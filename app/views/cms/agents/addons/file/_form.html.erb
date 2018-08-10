@@ -45,8 +45,8 @@ SS_Addon_TempFile.uploadUrl = function() {
 SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
-<dl class="see">
-  <dd class="wide">
+<div class="see mod-cms-edit_lock row">
+  <div class="col-12 mb-3 justify-content-between">
     <%= f.hidden_field "file_ids[]", value: "" %>
 
     <% if @cur_site.file_resizing.present? %>
@@ -54,55 +54,55 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
       <%= hidden_field_tag "file_resizing", @cur_site.file_resizing.join(","), opts %>
     <% end %>
 
-    <span class="upload-menu-new">
-      <% if @cur_node %>
-        <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path, class: "ajax-box btn" %>
-      <% else %>
-        <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn" %>
-      <% end %>
-    </span>
+    <% if @cur_node %>
+      <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path, class: "ajax-box btn btn-outline-secondary" %>
+    <% else %>
+      <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-outline-secondary" %>
+    <% end %>
     <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn btn-outline-secondary" %>
+      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn btn-outline-secondary" %>
     </span>
-    <div class="upload-drop-area">
-      <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
-    </div>
+  </div>
+  <div class="upload-drop-area col-12 mb-3">
+    <p class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></p>
+  </div>
 
+  <div class="col-12 mb-3">
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view">
+      <div class="file-view">
 
-          <%= link_to file.url, class: :thumb, target: "_blank" do %>
-            <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.name %>
-            <% else %>
-              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-            <% end %>
+        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+          <% if file.image? %>
+            <%= image_tag file.thumb_url, alt: file.name %>
+          <% else %>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
           <% end %>
+        <% end %>
 
-          <div class="name">
-            <label>
-              <%#= f.check_box "file_ids[]", {}, file.id %>
-              <%#= f.hidden_field "file_ids[]", {}, file.id, class: "file-id" %>
-              <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
-              <%= file.name %>
-            </label><br />
-          </div>
-
-          <div class="action">
-            <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% if file.image? %>
-              <% content = image_tag file.url, alt: file.name %>
-              <%= link_to t("sns.image_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
-              <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to t("sns.thumb_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
-            <% end %>
-            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
-          </div>
+        <div class="name">
+          <label>
+            <%#= f.check_box "file_ids[]", {}, file.id %>
+            <%#= f.hidden_field "file_ids[]", {}, file.id, class: "file-id" %>
+            <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
+            <%= file.name %>
+          </label><br />
         </div>
+
+        <div class="action">
+          <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
+          <%= link_to t("sns.file_attach"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+          <% if file.image? %>
+            <% content = image_tag file.url, alt: file.name %>
+            <%= link_to t("sns.image_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
+            <%= link_to t("sns.thumb_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+          <% end %>
+          <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+        </div>
+      </div>
       <% end %>
     </div>
-  </dd>
-</dl>
+  </div>
+</div>

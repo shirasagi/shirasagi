@@ -1,8 +1,8 @@
 <% buf = render(file: @item.form_file, locals: { f: f }) if @item.form_file %>
 <% return if buf.blank? %>
-<div class="addon-view" id="column-<%= @model.name.underscore.gsub('/', '-') %>">
-  <div class="addon-head toggle-head"><h2><%= @model.model_name.human %></h2></div>
-  <div class="addon-body toggle-body">
+<div class="addon-view mb-5" id="column-<%= @model.name.underscore.gsub('/', '-') %>">
+  <div class="addon-head"><h2><%= @model.model_name.human %></h2></div>
+  <div class="addon-body">
     <%= buf %>
   </div>
 </div>

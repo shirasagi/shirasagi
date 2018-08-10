@@ -31,10 +31,11 @@
     <div class="ss-head-item user">
       <div class="ss-dropdown ss-dropdown-toggle">
         <div class="btn-group">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><%= @cur_user.name %></span></button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <%= link_to t(:"sns.profile"), sns_cur_user_profile_path, class: 'dropdown-item' %>
-          <%= link_to t('ss.logout'), service_logout_path, class: 'logout dropdown-item' %>
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="name"><%= @cur_user.name %></span></button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <%= link_to t(:"sns.profile"), sns_cur_user_profile_path, class: 'dropdown-item' %>
+            <%= link_to t('ss.logout'), service_logout_path, class: 'logout dropdown-item' %>
+          </div>
         </div>
       </div>
     </div>
