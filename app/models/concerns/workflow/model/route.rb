@@ -3,6 +3,7 @@ module Workflow::Model::Route
   extend SS::Translation
   include SS::Document
 
+  MAX_APPROVERS = 5
   MAX_CIRCULATIONS = 3
 
   included do

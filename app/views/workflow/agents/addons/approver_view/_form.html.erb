@@ -8,7 +8,7 @@ end
 
 %>
 
-<% 1.upto(5) do |level| %>
+<% 1.upto(@model::MAX_APPROVERS) do |level| %>
 <h1 class="workflow-level-header workflow-level-<%= level %>"><%= @model.t :level, level: level %></h1>
 <dl class="see workflow-approvers workflow-level-<%= level %>">
   <dt><%= @model.t :required_counts %><%= @model.tt :required_counts %></dt>
