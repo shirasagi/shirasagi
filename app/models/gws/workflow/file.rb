@@ -8,6 +8,7 @@ class Gws::Workflow::File
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Workflow::CustomForm
+  include Gws::Addon::Workflow::ApproverPrint
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
