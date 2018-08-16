@@ -136,6 +136,23 @@ class Gws::Workflow::File
     Gws::Workflow::FileEnumerator.new(@cur_site || site, [ self ], encoding: encoding)
   end
 
+  def collect_attachments
+    attachment_ids = []
+
+    attachment_ids += file_ids if file_ids.present?
+
+    if column_values.present?
+      column_values.each do |value|
+        if value.is_a?(Gws::Column::Value::FileUpload)
+          attachment_ids += value.file_ids if value.file_ids.present?
+        end
+      end
+    end
+
+    return SS::File.none if attachment_ids.blank?
+    SS::File.in(id: attachment_ids)
+  end
+
   private
 
   def rewrite_file_ref

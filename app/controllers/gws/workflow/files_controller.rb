@@ -234,7 +234,7 @@ class Gws::Workflow::FilesController < ApplicationController
   def download_comment
     set_item
 
-    filename = "workflow_file_#{Time.zone.now.to_i}.csv"
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "Shift_JIS"
     send_enum(@item.enum_csv(encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
   end
@@ -242,6 +242,25 @@ class Gws::Workflow::FilesController < ApplicationController
   def download_attachment
     set_item
 
-    raise NotImplementedError
+    files = @item.collect_attachments
+    if files.blank?
+      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
+      return
+    end
+
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
+
+    if zip.deley_download?
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :index }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
   end
 end
