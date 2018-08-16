@@ -136,18 +136,4 @@
   </div>
 </div>
 
-<nav aria-label="Page navigation pager">
-  <ul class="pagination flex-wrap justify-content-end">
-    <li class="page-item first"><a class="page-link"href="#">«</a></li>
-    <li class="page-item prev"><a class="page-link"rel="prev" href="#">前のページ</a></li>
-    <li class="page-item page"><a class="page-link"rel="prev" href="#">1</a></li>
-    <li class="page-item page current"><a class="page-link"rel="prev" href="#">2</a></li>
-    <li class="page-item page"><a class="page-link"rel="next" href="#">3</a></li>
-    <li class="page-item page"><a class="page-link"href="#">4</a></li>
-    <li class="page-item page"><a class="page-link"href="#">5</a></li>
-    <li class="page-item page"><a class="page-link"href="#">6</a></li>
-    <li class="page-item page gap">...</li>
-    <li class="page-item next"><a class="page-link"rel="next" href="#">次のページ</a></li>
-    <li class="page-item last"><a class="page-link"href="#">»</a></li>
-  </ul>
-</nav>
+<%= paginate @items if @items.try(:current_page) %>
