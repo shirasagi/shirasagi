@@ -1,7 +1,14 @@
-<dl class="see">
-  <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+<fieldset class="see" disabled>
+  <div class="form-group">
+    <h2 class="h4">権限</h2>
+    <div class="col12 mb-3">
+      <label><%= @model.t :group_ids %></label>
+      <input class="form-control" type="text" value="<%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %>" />
+    </div>
 
-  <dt><%= @model.t :permission_level %></dt>
-  <dd><%= @item.label :permission_level %></dd>
-</dl>
+    <div class="col12 mb-3">
+      <label><%= @model.t :permission_level %></label>
+      <input class="form-control" type="text" value="<%= @item.label :permission_level %>" />
+    </div>
+  </div>
+</fieldset>

@@ -1,5 +1,11 @@
 <% return "" if @item.categories.blank? %>
 
-<dl class="see">
-  <dd class="wide"><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
-</dl>
+<fieldset class="see" disabled>
+  <div class="form-group">
+    <h2 class="h5">カテゴリー</h2>
+    <div class="col12 mb-3">
+      <label>カテゴリー</label>
+      <input class="form-control" type="text" value="<%= @item.send(:categories).pluck(:name).join(", ") %>" />
+    </div>
+  </div>
+</fieldset>

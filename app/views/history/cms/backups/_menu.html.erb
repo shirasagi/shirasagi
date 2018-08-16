@@ -1,4 +1,4 @@
 <nav class="nav-menu">
-  <%= link_to t('ss.links.show'), CGI.unescape(params[:source]) %>
+  <%= link_to t('ss.links.show'), CGI.unescape(params[:source]), class: "btn btn-outline-secondary" %>
   <%= link_to t("history.restore"), action: :restore if @item.data != @data %>
 </nav>

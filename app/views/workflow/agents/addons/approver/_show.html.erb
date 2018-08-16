@@ -9,7 +9,8 @@
   var workflow = new SS_Workflow('.mod-workflow', options);
 <% end %>
 
-<div class="mod-workflow">
+<div class="mod-workflow pt-5">
+  <h2 class="h4">承認</h2>
 
   <% if @item.state == "closed" %>
     <% if @item.allowed?(:approve, @cur_user, site: @cur_site) && @item.workflow_state == "request" %>

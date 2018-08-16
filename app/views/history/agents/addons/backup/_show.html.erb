@@ -5,23 +5,39 @@ source = ERB::Util.url_encode(request.path)
 before = @item.before_backup || @item.backups.last
 
 %>
-<dl class="see mod-history-backup">
+
+<div class="see mod-history-backup pt-5">
+  <h2 class="h4">更新履歴</h2>
   <% if before %>
-    <dd>
-      <%= link_to I18n.t('history.compare_before_state'), history_cms_change_path(source: source, id: before.id), class: 'btn' %>
-    </dd>
+    <p><%= link_to I18n.t('history.compare_before_state'), history_cms_change_path(source: source, id: before.id), class: 'btn btn-outline-secondary' %></p>
   <% end %>
-  <% @item.backups.limit(10).each do |item| %>
-  <dd>
-    <% if @item.allowed?(:edit, @cur_user) %>
-      <% source = ERB::Util.url_encode(request.path) %>
-      <%= link_to l(item.created), history_cms_backup_path(source: source, id: item.id) %>
-    <% else %>
-      <%= l(item.created) %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>更新日時</th>
+        <th>更新者</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @item.backups.limit(10).each do |item| %>
+      <tr>
+        <% if @item.allowed?(:edit, @cur_user) %>
+          <td>
+            <% source = ERB::Util.url_encode(request.path) %>
+            <%= link_to l(item.created), history_cms_backup_path(source: source, id: item.id) %>
+          </td>
+        <% else %>
+          <td>
+            <%= l(item.created) %>
+          </td>
+        <% end %>
+        <% if item.user %>
+          <td>
+            <span style="margin-left: 0.5em;"><%= item.user.name %></span>
+          </td>
+        <% end %>
+      </tr>
     <% end %>
-    <% if item.user %>
-      <span style="margin-left: 0.5em;"><%= item.user.name %></span>
-    <% end %>
-  </dd>
-  <% end %>
-</dl>
+    </tbody>
+  </table>
+</div>

@@ -4,17 +4,21 @@
   <% route_options = Workflow::Route.route_options(@cur_user, item: @item) %>
 <% end %>
 <% if route_options.present? %>
-<dl class="see">
-  <dt><%= t("workflow.request") %><%= @model.tt :workflow_routes %></dt>
-  <dd>
-    <% if @ss_mode == :cms %>
-      <%= select_tag :workflow_route, options_for_select(route_options) %>
-    <% else %>
-      <%= select_tag :workflow_route, options_for_select(route_options) %>
-    <% end %>
-    <%= link_to t("workflow.buttons.select"), "#", class: "workflow-route-start btn" %>
-  </dd>
-</dl>
+<div class="see">
+  <div class="col12 mb-3">
+    <label><%= t("workflow.request") %><%= @model.tt :workflow_routes %></label>
+    <div class="input-group">
+      <% if @ss_mode == :cms %>
+        <%= select_tag :workflow_route, options_for_select(route_options) %>
+      <% else %>
+        <%= select_tag :workflow_route, options_for_select(route_options) %>
+      <% end %>
+      <div class="input-group-append">
+        <%= link_to t("workflow.buttons.select"), "#", class: "workflow-route-start btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>
 <% else %>
-<h1><%= t("workflow.empty_route_options") %></h1>
+<h2><%= t("workflow.empty_route_options") %></h2>
 <% end %>

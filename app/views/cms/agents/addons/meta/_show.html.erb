@@ -1,13 +1,22 @@
 <% return "" unless @item.meta_present? %>
 <%= jquery do %> SS_AddonTabs.hide("dl.meta"); <% end %>
 
-<dl class="see meta">
-  <dt><%= @model.t :keywords %></dt>
-  <dd><%= @item.send :keywords %></dd>
+<fieldset class="see meta" disabled>
+  <div class="form-group">
+    <h2 class="h4">メタ情報</h2>
+    <div class="col12 mb-3">
+      <label><%= @model.t :keywords %></label>
+      <input class="form-control" type="text" value="<%= @item.send :keywords %>" />
+    </div>
 
-  <dt><%= @model.t :description %></dt>
-  <dd><%= @item.send :description %></dd>
+    <div class="col12 mb-3">
+      <label><%= @model.t :description %></label>
+      <textarea class="form-control" rows="3"><%= @item.send :description %></textarea>
+    </div>
 
-  <dt><%= @model.t :summary_html %></dt>
-  <dd><%= @item.send :summary_html %></dd>
-</dl>
+    <div class="col12 mb-3">
+      <label><%= @model.t :summary_html %></label>
+      <textarea class="form-control" row="3"><%= @item.send :summary_html %></textarea>
+    </div>
+  </div>
+</fieldset>

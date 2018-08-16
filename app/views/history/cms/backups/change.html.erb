@@ -1,35 +1,39 @@
 <div class="main-box">
-  <table class="see index history-backup">
-    <tr>
-      <th></th>
-      <th><%= I18n.t('history.before_state') %></th>
-      <th><%= I18n.t('history.current_state') %></th>
-    </tr>
-    <% diff = @item.data.merge(@data).sort %>
-    <% diff.each do |k, v| %>
-    <% value = @item.data[k] %>
-    <% next if @data[k] == value %>
-    <% value ||= '' if @data[k].is_a?(String) %>
-    <tr>
-      <th><%= @item.ref_class.constantize.t k %></th>
-      <% case value %>
-      <% when Array %>
-        <% before_value = value.present? ? value.join(',') : "" %>
-        <% current_value = @data[k].present? ? @data[k].join(',') : "" %>
-        <td class="diff"><%= before_value %></td>
-        <td class="diff"><%= current_value %></td>
-      <% when String %>
-        <% before_value = value.present? ? value : "" %>
-        <% current_value = @data[k].present? ? @data[k] : "" %>
-        <td><%= diff_before_value(before_value, current_value) %></td>
-        <td><%= diff_current_value(current_value, before_value) %></td>
-      <% else %>
-        <% before_value = value.present? ? value.inspect : "" %>
-        <% current_value = @data[k].present? ? @data[k].inspect : "" %>
-        <td class="diff"><%= before_value %></td>
-        <td class="diff"><%= current_value %></td>
+  <table class="see table table-striped">
+    <thead>
+      <tr>
+        <th></th>
+        <th><%= I18n.t('history.before_state') %></th>
+        <th><%= I18n.t('history.current_state') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% diff = @item.data.merge(@data).sort %>
+      <% diff.each do |k, v| %>
+      <% value = @item.data[k] %>
+      <% next if @data[k] == value %>
+      <% value ||= '' if @data[k].is_a?(String) %>
+      <tr>
+        <th><%= @item.ref_class.constantize.t k %></th>
+        <% case value %>
+        <% when Array %>
+          <% before_value = value.present? ? value.join(',') : "" %>
+          <% current_value = @data[k].present? ? @data[k].join(',') : "" %>
+          <td class="diff"><%= before_value %></td>
+          <td class="diff"><%= current_value %></td>
+        <% when String %>
+          <% before_value = value.present? ? value : "" %>
+          <% current_value = @data[k].present? ? @data[k] : "" %>
+          <td><%= diff_before_value(before_value, current_value) %></td>
+          <td><%= diff_current_value(current_value, before_value) %></td>
+        <% else %>
+          <% before_value = value.present? ? value.inspect : "" %>
+          <% current_value = @data[k].present? ? @data[k].inspect : "" %>
+          <td class="diff"><%= before_value %></td>
+          <td class="diff"><%= current_value %></td>
+        <% end %>
+      </tr>
       <% end %>
-    </tr>
-    <% end %>
+    </tbody>
   </table>
 </div>

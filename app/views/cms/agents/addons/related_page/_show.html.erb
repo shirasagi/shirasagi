@@ -1,9 +1,15 @@
 <% return "" if @item.related_pages.blank? %>
 
-<dl class="see">
-  <dt><%= @model.t :related_pages %></dt>
-  <dd><%=br @item.send(:related_pages).pluck(:name).join("\n") %></dd>
+<fieldset class="see" disabled>
+  <div class="form-group">
+    <div class="col12 mb-3">
+      <label><%= @model.t :related_pages %></label>
+      <input class="form-control" type="text" placeholder="<%=br @item.send(:related_pages).pluck(:name).join("\n") %>" />
+    </div>
 
-  <dt><%= @model.t :related_page_sort %></dt>
-  <dd><%=br @item.label :related_page_sort %></dd>
-</dl>
+    <div class="col12 mb-3">
+      <label><%= @model.t :related_page_sort %></label>
+      <input class="form-control" type="text" placeholder="<%=br @item.label :related_page_sort %>" />
+    </div>
+  </div>
+</fieldset>

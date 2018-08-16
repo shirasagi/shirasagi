@@ -1,27 +1,46 @@
 <% return if @item.contact_state != "show" || !@item.contact_present? %>
 
-<dl class="see mod-contact">
-  <dt><%= @model.t :contact_state %></dt>
-  <dd><%= @item.label :contact_state %></dd>
+<fieldset class="see mod-contact" disabled>
+  <div class="form-group">
+    <h2 class="h4">連絡先</h2>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_state %></label>
+      <input class="form-control" type="text" value="<%= @item.label :contact_state %>" />
+    </div>
 
-  <dt><%= @model.t :contact_group_id %></dt>
-  <dd class="contact-group-id"><%= tryb { @item.contact_group.name } %></dd>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_group_id %></label>
+      <input class="contact-group-id form-control" type="text" value="<%= tryb { @item.contact_group.name } %>" />
+    </div>
 
-  <dt><%= @model.t :contact_charge %></dt>
-  <dd class="contact-charge"><%= @item.contact_charge %></dd>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_charge %></label>
+      <input class="contact-charge form-control" type="text" value="<%= @item.contact_charge %>" />
+    </div>
 
-  <dt><%= @model.t :contact_tel %></dt>
-  <dd class="contact-tel"><%= @item.contact_tel %></dd>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_tel %></label>
+      <input class="contact-tel form-control" type="text" value="<%= @item.contact_tel %>" />
+    </div>
 
-  <dt><%= @model.t :contact_fax %></dt>
-  <dd class="contact-fax"><%= @item.contact_fax %></dd>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_fax %></label>
+      <input class="contact-fax form-control" type="text" value="<%= @item.contact_fax %>" />
+    </div>
 
-  <dt><%= @model.t :contact_email %></dt>
-  <dd class="contact-email"><%= @item.contact_email %></dd>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_email %></label>
+      <input class="contact-email form-control" type="text" value="<%= @item.contact_email %>" />
+    </div>
 
-  <dt><%= @model.t :contact_link_url %></dt>
-  <dd class="contact-link-url"><%= @item.contact_link_url %></dd>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_link_url %></label>
+      <input class="contact-link-url form-control" type="text" value="<%= @item.contact_link_url %>" />
+    </div>
 
-  <dt><%= @model.t :contact_link_name %></dt>
-  <dd class="contact-link-name"><%= @item.contact_link_name %></dd>
-</dl>
+    <div class="col12 mb-3">
+      <label><%= @model.t :contact_link_name %></label>
+      <input class="contact-link-name form-control" type="text" value="<%= @item.contact_link_name %>" />
+    </div>
+    </div>
+</fieldset>

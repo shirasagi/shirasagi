@@ -45,23 +45,17 @@ $(".create-branch").on("click", function () {
 <%
   @items = @item.branch? ? [@item.master] : @item.branches
 %>
-<dl class="see branch">
+<div class="see branch col12 mb-3 pt-5">
+  <h2 class="h4"><%= t("workflow.branch_page") %></h2>
   <% if @item.branch? %>
-    <dt class="wide"><%= t("workflow.branch_message") %></dt>
-    <dd></dd>
-    <dt><%= t("workflow.master_page") %></dt>
+    <p class="text-warning"><%= t("workflow.branch_message") %></p>
+    <p><%= t("workflow.master_page") %></p>
   <% else %>
-    <% if @items.present? %>
-      <dt class="wide"><%= t("workflow.master_message") %></dt>
-      <dd></dd>
-    <% else %>
-      <dt class="wide">
-        <%= button_tag t("workflow.create_branch"), class: "create-branch btn" %>
-      </dt>
-    <% end %>
-    <dt><%= t("workflow.branch_page") %></dt>
+  <% if @items.present? %>
+    <p class="text-warning"><%= t("workflow.master_message") %></p>
+  <% else %>
+    <p><%= button_tag t("workflow.create_branch"), class: "btn btn-outline-secondary" %></p>
   <% end %>
-  <dd class="result">
-    <%= render file: "workflow/pages/branch" if @items.present? %>
-  </dd>
-</dl>
+  <% end %>
+  <%= render file: "workflow/pages/branch" if @items.present? %>
+</div>

@@ -1,4 +1,8 @@
-<dl class="see">
-  <dt><%= @model.t :home_label %></dt>
-  <dd><%= @item.send :home_label %></dd>
-</dl>
+<fieldset class="see" disabled>
+  <div class="form-group">
+    <div class="col12 mb-3">
+      <label><%= @model.t :home_label %></label>
+      <input class="form-control" type="text" placeholder="<%= @item.send :home_label %>" />
+    </div>
+  </div>
+</fieldset>
