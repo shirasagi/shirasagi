@@ -7,6 +7,10 @@ production: &production
   # Use Basic Authentication when import ics
   basic_authentication: false
 
+  # Event term that import ics
+  ical_import_date_ago: 30
+  ical_import_date_after: 30
+
 test:
   <<: *production
 

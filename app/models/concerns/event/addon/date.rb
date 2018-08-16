@@ -84,18 +84,18 @@ module Event::Addon
     def get_event_dates
       event_dates = self[:event_dates]
       return "" unless event_dates.present?
-      @dates = []
+      dates = []
       range = []
       event_dates.split(/\R/).each do |d|
         date = Time.zone.parse(d) rescue next
         if range.present? && range.last.tomorrow != date
-          @dates << range
+          dates << range
           range = []
         end
         range << date
       end
-      @dates << range if range.present?
-      @dates
+      dates << range if range.present?
+      dates
     end
 
     private

@@ -5,6 +5,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
   helper Event::EventHelper
   helper Event::IcalHelper
 
+  attr_accessor :items
+
   def index
     @year  = Time.zone.today.year.to_i
     @month = Time.zone.today.month.to_i

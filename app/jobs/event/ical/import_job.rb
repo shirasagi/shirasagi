@@ -52,7 +52,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   end
 
   def save_page_by_event(event)
-    return if node.ical_import_date_ago.present? && event.dtstart.to_date < @today - nical_import_date_ago.days
+    return if node.ical_import_date_ago.present? && event.dtstart.to_date < @today - node.ical_import_date_ago.days
     return if node.ical_import_date_after.present? && event.dtstart.to_date > @today + node.ical_import_date_after.days
     item = model.site(site).node(node).where(ical_link: event.url.to_s).first || model.new
     item.ical_link = event.url
@@ -62,7 +62,6 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item.cur_site = site
     item.cur_node = node
     item.cur_user = user
-    item.created = event.created
     item.name = item.event_name = event.summary
     item.layout_id = node.page_layout_id if node.page_layout_id.present?
     item.state = node.ical_page_state if node.ical_page_state.present?
@@ -70,6 +69,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item.permission_level = node.permission_level if item.permission_level.blank?
     item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
     item.venue = event.location
+    item.contact = event.contact
     date = event.dtstart.to_date
     end_date = event.dtend.to_date if event.dtend.present?
     event_dates = item.event_dates.split(/\R/).collect(&:to_date) if item.event_dates.present?

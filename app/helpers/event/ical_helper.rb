@@ -17,16 +17,18 @@ module Event::IcalHelper
       item = item.becomes_with_route
       next unless item.respond_to?(:event_dates)
       next if item.event_dates.blank?
-      item.get_event_dates.each do |event|
+      item.get_event_dates.each_with_index do |event, i|
         calendar.event do |e|
-          e.created = ::Icalendar::Values::DateTime.new(item.created.utc)
+          e.contact = ::Icalendar::Values::Text.new(item.try(:contact).to_s)
+          e.created = e.dtstamp = ::Icalendar::Values::DateTime.new(item.created.utc)
           e.description = ::Icalendar::Values::Text.new(item.summary.to_s)
-          e.dtend = ::Icalendar::Values::Date.new(event.last.to_date.tomorrow)
+          e.dtend = ::Icalendar::Values::Date.new(event.last.to_date.tomorrow) if event.count > 1
           e.dtstart = ::Icalendar::Values::Date.new(event.first.to_date)
           e.last_modified = ::Icalendar::Values::DateTime.new(item.updated.utc)
           e.location = ::Icalendar::Values::Text.new(item.try(:venue).to_s)
           e.summary = ::Icalendar::Values::Text.new(item.event_name || item.name)
           e.transp = 'OPAQUE'
+          e.uid = "#{e.dtstamp.value_ical}_#{item.id}_#{i}@#{item.site.domain}"
           e.url = ::Icalendar::Values::Uri.new(item[:ical_link] || item.full_url)
         end
       end

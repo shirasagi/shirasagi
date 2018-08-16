@@ -1,8 +1,9 @@
 class Event::Agents::Tasks::Node::PagesController < ApplicationController
   include Cms::PublicFilter::Node
+  include Event::GeneratorFilter::Ical
 
   def generate
-    generate_node @node
+    generate_node_ical @node
 
     @start_date = Time.zone.today.advance(years: -1)
     @close_date = Time.zone.today.advance(years: 1)
@@ -24,6 +25,8 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
       event_display_options.each do |display|
         file = "#{@node.path}/#{date}#{display}.html"
         Fs.rm_rf file if Fs.exists?(file)
+        file.sub!(/\.html$/, '.ics')
+        Fs.rm_rf file if Fs.exists?(file)
       end
     end
   end
@@ -35,7 +38,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
         url  = "#{@node.url}#{date}#{display}.html"
         file = "#{@node.path}/#{date}#{display}.html"
 
-        if generate_node @node, url: url, file: file
+        if generate_node_ical @node, url: url, file: file
           @task.log url if @task
         end
       end
