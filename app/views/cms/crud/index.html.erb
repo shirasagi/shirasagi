@@ -51,7 +51,11 @@
         </thead>
         <tbody>
           <% @items.each do |item| %>
-          <% item = @item_decorator.call(item) if @item_decorator %>
+          <% if @item_decorator %>
+            <% item = @item_decorator.call(item)  %>
+          <% else %>
+            <% item = item.becomes_with_route %>
+          <% end %>
           <tr>
             <td class="check"><div class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></div></td>
             <% if item.try(:status) %>
@@ -68,10 +72,18 @@
               <% end %>
             </td>
             <td class="categories">
-              設定されているカテゴリーを出したい
+              <% if item.categories.present? %>
+                <ul>
+                <% item.categories.each do |cate| %>
+                  <li><%= cate.name %></li>
+                <% end %>
+                </ul>
+              <% end %>
             </td>
             <td class="auther">
-              作成者名を出したい
+              <% if item.user.present? %>
+                <%= item.user.long_name %>
+              <% end %>
             </td>
             <% if item.try(:filename) %>
             <td class="filename">
@@ -97,9 +109,9 @@
                   <% if @tap_menu %>
                     <% @tap_menu.call item %>
                   <% else %>
-                    <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-                    <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-                    <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+                    <%= link_to(t('ss.links.show'), { action: :show, id: item }, { class: "dropdown-item" }) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+                    <%= link_to(t('ss.links.edit'), { action: :edit, id: item }, { class: "dropdown-item" }) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+                    <%= link_to(t('ss.links.delete'), { action: :delete, id: item }, { class: "dropdown-item" }) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
                     <% if @model.collection_name == :cms_nodes %>
                       <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
