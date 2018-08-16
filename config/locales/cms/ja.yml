@@ -749,6 +749,8 @@ ja:
       branch_page_can_not_move: 差し替え用ページは移動できません。
       check_html: 本文のアクセシビリティチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
+      set_applet_alt: アプレット要素の代替テキストを確認してください。
+      set_area_alt: エリア要素の代替テキストを確認してください。
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
       set_th_scope: 表のヘッダーにスコープ属性が設定されていません。
@@ -777,6 +779,10 @@ ja:
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
+        set_applet_alt:
+          - アプレットの内容を示す代替テキストを設定してください。
+        set_area_alt:
+          - エリア要素の内容を示す代替テキストを設定してください。
         invalid_img_scheme:
           - 画像のSRC属性にデータ形式のURIスキームが存在します。
           - 他のURIスキームを使用してください。
