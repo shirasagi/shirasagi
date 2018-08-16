@@ -239,10 +239,43 @@ class Gws::Workflow::FilesController < ApplicationController
     send_enum(@item.enum_csv(encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
   end
 
+  def download_all_comments
+    set_selected_items
+
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
+    encoding = "Shift_JIS"
+    send_enum(@items.enum_csv(site: @cur_site, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
   def download_attachment
     set_item
 
     files = @item.collect_attachments
+    if files.blank?
+      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
+      return
+    end
+
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
+
+    if zip.deley_download?
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :index }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
+  end
+
+  def download_all_attachments
+    set_selected_items
+
+    files = @items.collect_attachments
     if files.blank?
       redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
       return

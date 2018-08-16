@@ -19,7 +19,7 @@ class Gws::Workflow::FileEnumerator < Enumerator
 
   def load_forms
     if @wf_files.is_a?(Mongoid::Criteria)
-      form_ids = @wf_files.pluck(:form_ids).uniq
+      form_ids = @wf_files.pluck(:form_id).uniq
     else
       form_ids = @wf_files.map { |wf_file| wf_file.form_id }.uniq
     end

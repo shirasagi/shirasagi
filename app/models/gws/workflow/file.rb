@@ -81,6 +81,25 @@ class Gws::Workflow::File
         none
       end
     end
+
+    def enum_csv(site: nil, encoding: "Shift_JIS")
+      Gws::Workflow::FileEnumerator.new(site, all, encoding: encoding)
+    end
+
+    def collect_attachments
+      attachment_ids = []
+
+      attachment_ids += all.pluck(:file_ids).flatten.compact
+
+      all.pluck(:column_values).flatten.compact.each do |bson_doc|
+        if bson_doc["_type"] == Gws::Column::Value::FileUpload.name
+          attachment_ids += bson_doc["file_ids"] if bson_doc["file_ids"].present?
+        end
+      end
+
+      return SS::File.none if attachment_ids.blank?
+      SS::File.in(id: attachment_ids)
+    end
   end
 
   def reminder_user_ids

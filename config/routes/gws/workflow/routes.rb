@@ -35,6 +35,8 @@ SS::Application.routes.draw do
         match :copy, on: :member, via: %i[get post]
         post :download_comment, on: :member
         post :download_attachment, on: :member
+        post :download_all_comments, on: :collection
+        post :download_all_attachments, on: :collection
       end
       resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end

@@ -1,0 +1,21 @@
+.gws-workflow {
+  .list-head {
+    .operations {
+      display: inline-block;
+      float: right;
+      margin-left: 16px;
+    }
+  }
+
+  .btn-download {
+    &:before {
+      font-family: 'Material Icons';
+      font-size: 108%;
+      content: '\E2C4';
+
+      display: inline;
+      margin-right: 4px;
+      vertical-align: -3px;
+    }
+  }
+}
