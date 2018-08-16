@@ -1,211 +1,210 @@
-this.SS_ListUI = (function() {
-      function SS_ListUI() {}
+this.SS_ListUI = (function () {
+  function SS_ListUI() { }
 
-    SS_ListUI.render = function() {
-      $(".list-head input:checkbox").change(function() {
+  SS_ListUI.render = function () {
+    $(".list-head input:checkbox").change(function () {
       var chk;
-  chk = $(this).prop('checked');
-  return $('.list-item').each(function() {
-    $(this).toggleClass('checked', chk);
-  return $(this).find('input:checkbox').prop('checked', chk);
-});
-});
-$(".list-item").each(function() {
-  var list;
-list = $(this);
-list.find("input:checkbox").change(function() {
-return list.toggleClass("checked", $(this).prop("checked"));
-});
-list.mouseup(function(e) {
-  var menu, offset, relX, relY;
-if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
-  return;
-}
-menu = list.find(".tap-menu");
-if (menu.hasClass("tap-menu-relative")) {
-  offset = $(this).offset();
-  relX = e.pageX - offset.left;
-  relY = e.pageY - offset.top;
-} else {
-  relX = e.pageX;
-relY = e.pageY;
-}
-return menu.css("left", relX - menu.width() + 5).css("top", relY).show();
-});
-return list.mouseleave(function() {
-return $(".tap-menu").hide();
-});
-});
-$(".list-head .destroy-all").on("click", function() {
-  var checked, form, i, id, len, token;
-token = $('meta[name="csrf-token"]').attr('content');
-checked = $(".list-item input:checkbox:checked").map(function() {
-return $(this).val();
-});
-if (checked.length === 0) {
-  return false;
-}
-if (!confirm("<%= I18n.t('ss.confirm.delete') %>")) {
-  return false;
-}
-form = $("<form/>", {
-  action: "",
-  method: "post"
-});
-form.append($("<input/>", {
-  name: "_method",
-  value: "delete",
-  type: "hidden"
-}));
-form.append($("<input/>", {
-  name: "authenticity_token",
-  value: token,
-  type: "hidden"
-}));
-for (i = 0, len = checked.length; i < len; i++) {
-  id = checked[i];
-form.append($("<input/>", {
-  name: "ids[]",
-  value: id,
-  type: "hidden"
-}));
-}
-return form.appendTo(document.body).submit();
-});
-$(".list-head .set-tag-all").on("click", function() {
-  var checked, form, i, id, len, tag, token;
-token = $('meta[name="csrf-token"]').attr('content');
-checked = $(".list-item input:checkbox:checked").map(function() {
-return $(this).val();
-});
-tag = $(".list-head .tag").val();
-if (checked.length === 0) {
-  return false;
-}
-if (!tag) {
-  return false;
-}
-if (!confirm("<%= I18n.t('ss.confirm.set_tag') %>")) {
-  return false;
-}
-form = $("<form/>", {
-  action: "pages/tag",
-  method: "post"
-});
-form.append($("<input/>", {
-  name: "authenticity_token",
-  value: token,
-  type: "hidden"
-}));
-form.append($("<input/>", {
-  name: "tag",
-  value: tag,
-  type: "hidden"
-}));
-for (i = 0, len = checked.length; i < len; i++) {
-  id = checked[i];
-form.append($("<input/>", {
-  name: "ids[]",
-  value: id,
-  type: "hidden"
-}));
-}
-return form.appendTo(document.body).submit();
-});
-$(".list-head .reset-tag-all").on("click", function() {
-  var checked, form, i, id, len, tag, token;
-token = $('meta[name="csrf-token"]').attr('content');
-checked = $(".list-item input:checkbox:checked").map(function() {
-return $(this).val();
-});
-tag = $(".list-head .tag").val();
-if (checked.length === 0) {
-  return false;
-}
-if (!tag) {
-  return false;
-}
-if (!confirm("<%= I18n.t('ss.confirm.reset_tag') %>")) {
-  return false;
-}
-form = $("<form/>", {
-  action: "pages/tag",
-  method: "post"
-});
-form.append($("<input/>", {
-  name: "_method",
-  value: "delete",
-  type: "hidden"
-}));
-form.append($("<input/>", {
-  name: "authenticity_token",
-  value: token,
-  type: "hidden"
-}));
-form.append($("<input/>", {
-  name: "tag",
-  value: tag,
-  type: "hidden"
-}));
-for (i = 0, len = checked.length; i < len; i++) {
-  id = checked[i];
-form.append($("<input/>", {
-  name: "ids[]",
-  value: id,
-  type: "hidden"
-}));
-}
-return form.appendTo(document.body).submit();
-});
-return $(".list-head [data-ss-list-head-method]").on("click", function() {
-  var action, checked, confirmation, form, i, id, key, len, method, params, value;
-method = $(this).data('ss-list-head-method') || 'post';
-action = $(this).data('ss-list-head-action') || '';
-params = {
-  authenticity_token: $('meta[name="csrf-token"]').attr('content')
-};
-method = method.toString().toLowerCase();
-if (method === 'delete' || method === 'patch') {
-  params._method = method;
-  method = 'post';
-}
-checked = $(".list-item input:checkbox:checked").map(function() {
-return $(this).val();
-});
-if (checked.length === 0) {
-  return false;
-}
-confirmation = $(this).data('ss-confirmation') || '';
-if (confirmation) {
-    if (!confirm(confirmation)) {
-      return false;
-}
-}
-form = $("<form/>", {
-  action: action,
-  method: method
-});
-for (key in params) {
-  value = params[key];
-form.append($("<input/>", {
-  name: key,
-  value: value,
-  type: "hidden"
-}));
-}
-for (i = 0, len = checked.length; i < len; i++) {
-  id = checked[i];
-form.append($("<input/>", {
-  name: "ids[]",
-  value: id,
-  type: "hidden"
-}));
-}
-return form.appendTo(document.body).submit();
-});
-};
+      chk = $(this).prop('checked');
+      return $('.list-item').each(function () {
+        $(this).toggleClass('checked', chk);
+        return $(this).find('input:checkbox').prop('checked', chk);
+      });
+    });
+    $(".list-item").each(function () {
+      var list;
+      list = $(this);
+      list.find("input:checkbox").change(function () {
+        return list.toggleClass("checked", $(this).prop("checked"));
+      });
+      list.mouseup(function (e) {
+        var menu, offset, relX, relY;
+        if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
+          return;
+        }
+        menu = list.find(".tap-menu");
+        if (menu.hasClass("tap-menu-relative")) {
+          offset = $(this).offset();
+          relX = e.pageX - offset.left;
+          relY = e.pageY - offset.top;
+        } else {
+          relX = e.pageX;
+          relY = e.pageY;
+        }
+        return menu.css("left", relX - menu.width() + 5).css("top", relY).show();
+      });
+      return list.mouseleave(function () {
+        return $(".tap-menu").hide();
+      });
+    });
+    $(".list-head .destroy-all").on("click", function () {
+      var checked, form, i, id, len, token;
+      token = $('meta[name="csrf-token"]').attr('content');
+      checked = $(".list-item input:checkbox:checked").map(function () {
+        return $(this).val();
+      });
+      if (checked.length === 0) {
+        return false;
+      }
+      if (!confirm("<%= I18n.t('ss.confirm.delete') %>")) {
+        return false;
+      }
+      form = $("<form/>", {
+        action: "",
+        method: "post"
+      });
+      form.append($("<input/>", {
+        name: "_method",
+        value: "delete",
+        type: "hidden"
+      }));
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      for (i = 0, len = checked.length; i < len; i++) {
+        id = checked[i];
+        form.append($("<input/>", {
+          name: "ids[]",
+          value: id,
+          type: "hidden"
+        }));
+      }
+      return form.appendTo(document.body).submit();
+    });
+    $(".list-head .set-tag-all").on("click", function () {
+      var checked, form, i, id, len, tag, token;
+      token = $('meta[name="csrf-token"]').attr('content');
+      checked = $(".list-item input:checkbox:checked").map(function () {
+        return $(this).val();
+      });
+      tag = $(".list-head .tag").val();
+      if (checked.length === 0) {
+        return false;
+      }
+      if (!tag) {
+        return false;
+      }
+      if (!confirm("<%= I18n.t('ss.confirm.set_tag') %>")) {
+        return false;
+      }
+      form = $("<form/>", {
+        action: "pages/tag",
+        method: "post"
+      });
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      form.append($("<input/>", {
+        name: "tag",
+        value: tag,
+        type: "hidden"
+      }));
+      for (i = 0, len = checked.length; i < len; i++) {
+        id = checked[i];
+        form.append($("<input/>", {
+          name: "ids[]",
+          value: id,
+          type: "hidden"
+        }));
+      }
+      return form.appendTo(document.body).submit();
+    });
+    $(".list-head .reset-tag-all").on("click", function () {
+      var checked, form, i, id, len, tag, token;
+      token = $('meta[name="csrf-token"]').attr('content');
+      checked = $(".list-item input:checkbox:checked").map(function () {
+        return $(this).val();
+      });
+      tag = $(".list-head .tag").val();
+      if (checked.length === 0) {
+        return false;
+      }
+      if (!tag) {
+        return false;
+      }
+      if (!confirm("<%= I18n.t('ss.confirm.reset_tag') %>")) {
+        return false;
+      }
+      form = $("<form/>", {
+        action: "pages/tag",
+        method: "post"
+      });
+      form.append($("<input/>", {
+        name: "_method",
+        value: "delete",
+        type: "hidden"
+      }));
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      form.append($("<input/>", {
+        name: "tag",
+        value: tag,
+        type: "hidden"
+      }));
+      for (i = 0, len = checked.length; i < len; i++) {
+        id = checked[i];
+        form.append($("<input/>", {
+          name: "ids[]",
+          value: id,
+          type: "hidden"
+        }));
+      }
+      return form.appendTo(document.body).submit();
+    });
+    return $(".list-head [data-ss-list-head-method]").on("click", function () {
+      var action, checked, confirmation, form, i, id, key, len, method, params, value;
+      method = $(this).data('ss-list-head-method') || 'post';
+      action = $(this).data('ss-list-head-action') || '';
+      params = {
+        authenticity_token: $('meta[name="csrf-token"]').attr('content')
+      };
+      method = method.toString().toLowerCase();
+      if (method === 'delete' || method === 'patch') {
+        params._method = method;
+        method = 'post';
+      }
+      checked = $(".list-item input:checkbox:checked").map(function () {
+        return $(this).val();
+      });
+      if (checked.length === 0) {
+        return false;
+      }
+      confirmation = $(this).data('ss-confirmation') || '';
+      if (confirmation) {
+        if (!confirm(confirmation)) {
+          return false;
+        }
+      }
+      form = $("<form/>", {
+        action: action,
+        method: method
+      });
+      for (key in params) {
+        value = params[key];
+        form.append($("<input/>", {
+          name: key,
+          value: value,
+          type: "hidden"
+        }));
+      }
+      for (i = 0, len = checked.length; i < len; i++) {
+        id = checked[i];
+        form.append($("<input/>", {
+          name: "ids[]",
+          value: id,
+          type: "hidden"
+        }));
+      }
+      return form.appendTo(document.body).submit();
+    });
+  };
 
-return SS_ListUI;
+  return SS_ListUI;
 
 })();
-
