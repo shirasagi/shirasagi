@@ -1,7 +1,7 @@
 function SS_TreeNavi(selector) {
   this.el = $(selector);
-  this.closeMark = '<i class="material-icons">&#xE145;</i>';
-  this.openMark = '<i class="material-icons">&#xE15B;</i>';
+  this.closeMark = '<i class="material-icons">folder</i>';
+  this.openMark = '<i class="material-icons">folder_open</i>';
 }
 
 SS_TreeNavi.prototype.render = function(url) {
@@ -58,18 +58,31 @@ SS_TreeNavi.prototype.renderChildren = function(item) {
 
 SS_TreeNavi.prototype.renderItems = function(data) {
   var _this = this;
-  return $.map(data, function(item) {
+  var prevDepth = null;
+  var html = '';
+
+  $.each(data, function(index, item) {
     var is_open = item.is_current || item.is_parent
     var mark = is_open ? _this.openMark : _this.closeMark;
     var cls = is_open ? ['is-open is-cache'] : ['is-close'];
     if (item.is_current) cls.push('is-current');
 
-    return '<div class="tree-item ' + cls.join(' ') + '" data-filename="' + item.filename + '">' +
-      '<div class="item-pad"></div>'.repeat(item.depth - 1) +
-      '<a class="item-mark" href="' + item.tree_url + '">' + mark + '</a>' +
-      '<a class="item-name" href="' + item.url + '">' + item.name.replace('<','') + '</a>' +
-      '</div>';
+    if (prevDepth != null) {
+      if (prevDepth < item.depth) {
+        html += "<ul>";
+      } else if (prevDepth > item.depth) {
+        html += "</ul>";
+      }
+    }
+
+    html += '<li class="nav-item ' + cls.join(' ') + '" data-filename="' + item.filename + '">';
+    html += '<a class="nav-link" href="' + item.url + '">' + mark +'<span>' + item.name.replace('<','') + '</span></a>';
+    html += '</li>';
+
+    prevDepth = item.depth;
   });
+
+  return html;
 };
 
 SS_TreeNavi.prototype.registerEvents = function() {

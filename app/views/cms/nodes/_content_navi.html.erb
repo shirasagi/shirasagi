@@ -1,0 +1,24 @@
+<% return if @tree_navi.blank? %>
+
+<%= jquery do %>
+  var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
+  treeNavi.render("<%= @tree_navi %>");
+<% end %>
+
+<div id="side" class="sidebar">
+  <section id="content-navi" class="folder-list sidebar-sticky">
+    <h2 class="h5"><%= t("cms.node") %></h2>
+    <ul class="nav flex-column tree-navi"></ul>
+    <div class="folder-navi">
+      <ul class="d-flex justify-content-between">
+        <% if @cur_node %>
+          <li>
+            <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
+            <%= link_to t('ss.links.parent_directory'), link, class: "btn btn-secondary" %>
+          </li>
+        <% end %>
+        <li><a class="btn btn-secondary" href="#">もっと見る</a></li>
+      </ul>
+    </div>
+  </section>
+</div>

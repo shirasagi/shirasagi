@@ -341,40 +341,7 @@
 
 <div id="wrap">
   <div class="wrap d-flex flex-wrap">
-    <div id="side" class="sidebar">
-      <section class="folder-list sidebar-sticky"> 
-        <h2 class="h5">フォルダー</h2>
-        <ul class="nav flex-column">
-          <li class="nav-item current"><a class="nav-link current" href="#"><i class="material-icons">folder_open</i><span>自分が一番上</span></a>
-            <ul>
-              <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>子階層までは表示</span></a></li>
-              <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>子階層までは表示</span></a></li>
-            </ul>
-          </li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>コンテンツや詳細、編集画面には出したくない</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-          <li class="nav-item"><a class="nav-link" href="#"><i class="material-icons">folder_open</i><span>同階層のフォルダー</span></a></li>
-        </ul>
-        <div class="folder-navi">
-          <ul class="d-flex justify-content-between">
-            <li><a class="btn btn-secondary" href="#">上の階層へ</a></li>
-            <li><a class="btn btn-secondary" href="#">もっと見る</a></li>
-          </ul>
-        </div>
-      </section>
-    <!-- /#side --></div>
+    <%= begin; render(file: "_content_navi"); rescue ActionView::MissingTemplate; nil; end %>
 
     <article id="main">
       <div class="content-search card mb-5">
@@ -427,12 +394,6 @@
       <% end %>
 
       <div class="wrap d-flex">
-        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
-        <%= render partial: 'content_navi' %>
-        <% elsif @tree_navi %>
-        <div id="content-navi"><%= render file: '_tree_navi' %></div>
-        <% end %>
-
         <div class="wrap-body">
           <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
           <div id="menu"><%= render partial: "menu" %></div>
