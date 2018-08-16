@@ -75,6 +75,7 @@ this.Syntax_Checker = (function () {
     invalidAdjacentA: "<%= I18n.t('errors.messages.invalid_adjacent_a') %>",
     checkInterwordSpace: "<%= I18n.t('errors.messages.check_interword_space') %>",
     checkLinkText: "<%= I18n.t('errors.messages.check_link_text') %>",
+    checkObjectText: "<%= I18n.t('errors.messages.check_object_text') %>",
     checkEmbeddedMedia: "<%= I18n.t('errors.messages.check_embedded_media') %>",
     replaceWord: "<%= I18n.t('errors.messages.replace_word') %>"
   };
@@ -94,6 +95,7 @@ this.Syntax_Checker = (function () {
     invalidAdjacentA: <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>,
     checkInterwordSpace: <%= I18n.t('errors.messages.syntax_check_detail.check_interword_space').to_json %>,
     checkLinkText: <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>,
+    checkObjectText: <%= I18n.t('errors.messages.syntax_check_detail.check_object_text').to_json %>,
     checkEmbeddedMedia: <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>
   };
 
@@ -143,6 +145,7 @@ this.Syntax_Checker = (function () {
     Syntax_Checker.checkImgDataUriScheme(html);
     Syntax_Checker.checkInterwordSpace(html);
     Syntax_Checker.checkLinkText(html);
+    Syntax_Checker.checkObjectText(html);
     Syntax_Checker.checkEmbeddedMedia(html);
     Syntax_Checker.checkReplaceWords(html);
     $('#errorSyntaxChecker').remove();
@@ -793,6 +796,23 @@ this.Syntax_Checker = (function () {
             code: Syntax_Checker.outerHtmlSummary(this),
             msg: Syntax_Checker.message["checkLinkText"],
             detail: Syntax_Checker.detail["checkLinkText"]
+          }
+        ];
+        return Syntax_Checker.pushError(errors);
+      }
+    });
+  };
+
+  Syntax_Checker.checkObjectText = function (html) {
+    $(html).find("object").each(function () {
+      var errors, text;
+      text = $(this).text();
+      if (!$.trim(text)) {
+        errors = [
+          {
+            code: Syntax_Checker.outerHtmlSummary(this),
+            msg: Syntax_Checker.message["checkObjectText"],
+            detail: Syntax_Checker.detail["checkObjectText"]
           }
         ];
         return Syntax_Checker.pushError(errors);
